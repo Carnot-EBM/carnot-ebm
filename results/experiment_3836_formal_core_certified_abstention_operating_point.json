@@ -1,0 +1,3340 @@
+{
+  "artifact": "experiment_3836_formal_core_certified_abstention_operating_point",
+  "aurc": 0.001905,
+  "certification_method": "split-conformal (Hoeffding upper bound, assumes exchangeability, delta=0.05)",
+  "cited_upstream_artifacts": {
+    "exp3771": {
+      "coverage_at_operating_point": 0.998218,
+      "path": "results/experiment_3771_certified_abstention_operating_point.json",
+      "selected_threshold": 0.733216,
+      "sha256": "f81225b220dd5bac06c6e5a7e54b14811e3448c74a249abbc58cddb9931f9ff4"
+    },
+    "exp3835": {
+      "formal_only_auroc_mean": 0.894662,
+      "path": "results/experiment_3835_formal_core_5seed_ci.json",
+      "sha256": "5b3414310867d0ef78fa66219c83d2ee9919f830d06ab4ab488527c463cf7f84"
+    }
+  },
+  "conformal_delta": 0.05,
+  "contamination_free_components": [
+    "tier0r_curry_howard",
+    "tier0u_logical_consistency"
+  ],
+  "corpus_status": {
+    "formal_score_definition": "0.9*tier0r_curry_howard + 0.1*tier0u_logical_consistency",
+    "n_examples": 6548,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json",
+    "status": "loaded"
+  },
+  "coverage_delta_vs_full_ensemble": 0.001782,
+  "doc_update_proposal": "Proposal only: add Exp 3836 as the contamination-free formal-core certified abstention point with tau=0.9 and coverage=1.0 at selective-risk<=0.05; note that the score uses tier0r/tier0u only and excludes fr11_session_memory.",
+  "duration_s": 0.184481,
+  "excluded_components": [
+    "fr11_session_memory"
+  ],
+  "field_provenance": {
+    "cited_upstream_artifacts": {
+      "principle": "exp3835 gate and exp3771 comparison evidence with sha256 drift checks"
+    },
+    "conformal_delta": {
+      "principle": "the split-conformal/PAC confidence budget used by Exp 3771"
+    },
+    "coverage_delta_vs_full_ensemble": {
+      "principle": "the honest cost of the no-learned-weights guarantee vs exp3771's full-ensemble point; formal coverage minus full-ensemble coverage"
+    },
+    "duration_s": {
+      "principle": "real wall-clock duration, not part of the checksum"
+    },
+    "field_provenance": {
+      "principle": "machine-readable principles for required artifact fields"
+    },
+    "formal_core_certified_coverage_at_risk_0_05": {
+      "principle": "fraction of candidates served confidently under the certified risk bound"
+    },
+    "formal_core_certified_threshold": {
+      "principle": "the deployable tau on the contamination-free scorer"
+    },
+    "honest_verdict": {
+      "principle": "terminal verdict prefix, or blocked_<resource> on precondition failure"
+    },
+    "inference_substrate": {
+      "principle": "records the no-live-LLM, no-learned-weight scoring substrate"
+    },
+    "n_calibration": {
+      "principle": "calibration sample size for threshold selection"
+    },
+    "n_test": {
+      "principle": "held-out test sample size for certified risk evaluation"
+    },
+    "preconditions_checked": {
+      "principle": "resources checked before scoring; blocks prevent fabricated metrics"
+    },
+    "random_seed": {
+      "principle": "deterministic Exp 3771 calibration/test split seed"
+    },
+    "reproducibility_checksum": {
+      "principle": "content hash over deterministic certification fields"
+    }
+  },
+  "formal_core_candidate_coverage_at_selected_threshold": 1.0,
+  "formal_core_candidate_risk_bound": 0.038869,
+  "formal_core_candidate_threshold": 0.9,
+  "formal_core_certified_coverage_at_risk_0_05": 1.0,
+  "formal_core_certified_operating_point_exists": true,
+  "formal_core_certified_risk_bound": 0.038869,
+  "formal_core_certified_threshold": 0.9,
+  "formal_core_score_definition": "0.9*tier0r_curry_howard + 0.1*tier0u_logical_consistency",
+  "full_ensemble_certified_coverage_reference": 0.998218,
+  "honest_comparison": "No certified coverage sacrifice on the Exp 3771-aligned corpus: formal core coverage is 0.001782 above the full-ensemble reference.",
+  "honest_verdict": "complete: formal_core_certified_abstention_threshold0.9_coverage1.0_at_risk_0.05_contamination_free",
+  "inference_substrate": "verifier-scoring-only formal core (tier0r_curry_howard + tier0u_logical_consistency; no fr11_session_memory; no trained weights).",
+  "n_calibration": 2619,
+  "n_candidates_scored": 6548,
+  "n_test": 3929,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3836_formal_core_certified_abstention_operating_point.json",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "import carnot.verify succeeded",
+      "resource": "carnot_verify_import"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_test_v4.json",
+      "resource": "fover_test_v4"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json",
+      "resource": "fover_corpus_v4"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3835_formal_core_5seed_ci.json; formal_only_auroc_mean=0.894662; required>=0.85",
+      "resource": "exp3835_formal_only_auroc_gate"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3771_certified_abstention_operating_point.json; coverage_at_operating_point=0.998218",
+      "resource": "exp3771_full_ensemble_reference"
+    }
+  ],
+  "random_seed": 3771,
+  "reproducibility_checksum": "3ab26929c1ce3e1e0e32376a73ded55a8f2284aaaec1fa676dabcd0e640c49c6",
+  "risk_coverage_curve": [
+    {
+      "coverage": 0.000611,
+      "errors_kept": 0,
+      "kept": 4,
+      "selective_risk": 0.0,
+      "tau": 0.009
+    },
+    {
+      "coverage": 0.000764,
+      "errors_kept": 0,
+      "kept": 5,
+      "selective_risk": 0.0,
+      "tau": 0.0108
+    },
+    {
+      "coverage": 0.001374,
+      "errors_kept": 0,
+      "kept": 9,
+      "selective_risk": 0.0,
+      "tau": 0.0117
+    },
+    {
+      "coverage": 0.001527,
+      "errors_kept": 0,
+      "kept": 10,
+      "selective_risk": 0.0,
+      "tau": 0.0144
+    },
+    {
+      "coverage": 0.00168,
+      "errors_kept": 0,
+      "kept": 11,
+      "selective_risk": 0.0,
+      "tau": 0.0153
+    },
+    {
+      "coverage": 0.002138,
+      "errors_kept": 0,
+      "kept": 14,
+      "selective_risk": 0.0,
+      "tau": 0.0162
+    },
+    {
+      "coverage": 0.002443,
+      "errors_kept": 0,
+      "kept": 16,
+      "selective_risk": 0.0,
+      "tau": 0.0171
+    },
+    {
+      "coverage": 0.002596,
+      "errors_kept": 0,
+      "kept": 17,
+      "selective_risk": 0.0,
+      "tau": 0.0189
+    },
+    {
+      "coverage": 0.002902,
+      "errors_kept": 0,
+      "kept": 19,
+      "selective_risk": 0.0,
+      "tau": 0.0198
+    },
+    {
+      "coverage": 0.003818,
+      "errors_kept": 0,
+      "kept": 25,
+      "selective_risk": 0.0,
+      "tau": 0.0207
+    },
+    {
+      "coverage": 0.004276,
+      "errors_kept": 0,
+      "kept": 28,
+      "selective_risk": 0.0,
+      "tau": 0.0216
+    },
+    {
+      "coverage": 0.004429,
+      "errors_kept": 0,
+      "kept": 29,
+      "selective_risk": 0.0,
+      "tau": 0.0225
+    },
+    {
+      "coverage": 0.00504,
+      "errors_kept": 0,
+      "kept": 33,
+      "selective_risk": 0.0,
+      "tau": 0.0234
+    },
+    {
+      "coverage": 0.005498,
+      "errors_kept": 0,
+      "kept": 36,
+      "selective_risk": 0.0,
+      "tau": 0.0243
+    },
+    {
+      "coverage": 0.006261,
+      "errors_kept": 0,
+      "kept": 41,
+      "selective_risk": 0.0,
+      "tau": 0.0252
+    },
+    {
+      "coverage": 0.00672,
+      "errors_kept": 1,
+      "kept": 44,
+      "selective_risk": 0.022727,
+      "tau": 0.0261
+    },
+    {
+      "coverage": 0.007941,
+      "errors_kept": 1,
+      "kept": 52,
+      "selective_risk": 0.019231,
+      "tau": 0.027
+    },
+    {
+      "coverage": 0.010079,
+      "errors_kept": 1,
+      "kept": 66,
+      "selective_risk": 0.015152,
+      "tau": 0.0279
+    },
+    {
+      "coverage": 0.012065,
+      "errors_kept": 1,
+      "kept": 79,
+      "selective_risk": 0.012658,
+      "tau": 0.0288
+    },
+    {
+      "coverage": 0.014203,
+      "errors_kept": 1,
+      "kept": 93,
+      "selective_risk": 0.010753,
+      "tau": 0.0297
+    },
+    {
+      "coverage": 0.016341,
+      "errors_kept": 1,
+      "kept": 107,
+      "selective_risk": 0.009346,
+      "tau": 0.0306
+    },
+    {
+      "coverage": 0.020006,
+      "errors_kept": 1,
+      "kept": 131,
+      "selective_risk": 0.007634,
+      "tau": 0.0315
+    },
+    {
+      "coverage": 0.022755,
+      "errors_kept": 1,
+      "kept": 149,
+      "selective_risk": 0.006711,
+      "tau": 0.0324
+    },
+    {
+      "coverage": 0.02642,
+      "errors_kept": 1,
+      "kept": 173,
+      "selective_risk": 0.00578,
+      "tau": 0.0333
+    },
+    {
+      "coverage": 0.031613,
+      "errors_kept": 1,
+      "kept": 207,
+      "selective_risk": 0.004831,
+      "tau": 0.0342
+    },
+    {
+      "coverage": 0.038485,
+      "errors_kept": 1,
+      "kept": 252,
+      "selective_risk": 0.003968,
+      "tau": 0.0351
+    },
+    {
+      "coverage": 0.044441,
+      "errors_kept": 1,
+      "kept": 291,
+      "selective_risk": 0.003436,
+      "tau": 0.036
+    },
+    {
+      "coverage": 0.052841,
+      "errors_kept": 1,
+      "kept": 346,
+      "selective_risk": 0.00289,
+      "tau": 0.0369
+    },
+    {
+      "coverage": 0.062615,
+      "errors_kept": 1,
+      "kept": 410,
+      "selective_risk": 0.002439,
+      "tau": 0.0378
+    },
+    {
+      "coverage": 0.069487,
+      "errors_kept": 1,
+      "kept": 455,
+      "selective_risk": 0.002198,
+      "tau": 0.0387
+    },
+    {
+      "coverage": 0.078497,
+      "errors_kept": 1,
+      "kept": 514,
+      "selective_risk": 0.001946,
+      "tau": 0.0396
+    },
+    {
+      "coverage": 0.088729,
+      "errors_kept": 1,
+      "kept": 581,
+      "selective_risk": 0.001721,
+      "tau": 0.0405
+    },
+    {
+      "coverage": 0.098198,
+      "errors_kept": 1,
+      "kept": 643,
+      "selective_risk": 0.001555,
+      "tau": 0.0414
+    },
+    {
+      "coverage": 0.109194,
+      "errors_kept": 1,
+      "kept": 715,
+      "selective_risk": 0.001399,
+      "tau": 0.0423
+    },
+    {
+      "coverage": 0.124618,
+      "errors_kept": 1,
+      "kept": 816,
+      "selective_risk": 0.001225,
+      "tau": 0.0432
+    },
+    {
+      "coverage": 0.136836,
+      "errors_kept": 1,
+      "kept": 896,
+      "selective_risk": 0.001116,
+      "tau": 0.0441
+    },
+    {
+      "coverage": 0.150733,
+      "errors_kept": 1,
+      "kept": 987,
+      "selective_risk": 0.001013,
+      "tau": 0.045
+    },
+    {
+      "coverage": 0.16234,
+      "errors_kept": 1,
+      "kept": 1063,
+      "selective_risk": 0.000941,
+      "tau": 0.0459
+    },
+    {
+      "coverage": 0.175473,
+      "errors_kept": 1,
+      "kept": 1149,
+      "selective_risk": 0.00087,
+      "tau": 0.0468
+    },
+    {
+      "coverage": 0.188607,
+      "errors_kept": 1,
+      "kept": 1235,
+      "selective_risk": 0.00081,
+      "tau": 0.0477
+    },
+    {
+      "coverage": 0.202963,
+      "errors_kept": 1,
+      "kept": 1329,
+      "selective_risk": 0.000752,
+      "tau": 0.0486
+    },
+    {
+      "coverage": 0.217318,
+      "errors_kept": 1,
+      "kept": 1423,
+      "selective_risk": 0.000703,
+      "tau": 0.0495
+    },
+    {
+      "coverage": 0.231827,
+      "errors_kept": 1,
+      "kept": 1518,
+      "selective_risk": 0.000659,
+      "tau": 0.0504
+    },
+    {
+      "coverage": 0.247251,
+      "errors_kept": 1,
+      "kept": 1619,
+      "selective_risk": 0.000618,
+      "tau": 0.0513
+    },
+    {
+      "coverage": 0.263592,
+      "errors_kept": 1,
+      "kept": 1726,
+      "selective_risk": 0.000579,
+      "tau": 0.0522
+    },
+    {
+      "coverage": 0.279475,
+      "errors_kept": 1,
+      "kept": 1830,
+      "selective_risk": 0.000546,
+      "tau": 0.0531
+    },
+    {
+      "coverage": 0.29551,
+      "errors_kept": 1,
+      "kept": 1935,
+      "selective_risk": 0.000517,
+      "tau": 0.054
+    },
+    {
+      "coverage": 0.309713,
+      "errors_kept": 1,
+      "kept": 2028,
+      "selective_risk": 0.000493,
+      "tau": 0.0549
+    },
+    {
+      "coverage": 0.322694,
+      "errors_kept": 1,
+      "kept": 2113,
+      "selective_risk": 0.000473,
+      "tau": 0.0558
+    },
+    {
+      "coverage": 0.338729,
+      "errors_kept": 2,
+      "kept": 2218,
+      "selective_risk": 0.000902,
+      "tau": 0.0567
+    },
+    {
+      "coverage": 0.353543,
+      "errors_kept": 2,
+      "kept": 2315,
+      "selective_risk": 0.000864,
+      "tau": 0.0576
+    },
+    {
+      "coverage": 0.36515,
+      "errors_kept": 2,
+      "kept": 2391,
+      "selective_risk": 0.000836,
+      "tau": 0.0585
+    },
+    {
+      "coverage": 0.381338,
+      "errors_kept": 2,
+      "kept": 2497,
+      "selective_risk": 0.000801,
+      "tau": 0.0594
+    },
+    {
+      "coverage": 0.395693,
+      "errors_kept": 2,
+      "kept": 2591,
+      "selective_risk": 0.000772,
+      "tau": 0.0603
+    },
+    {
+      "coverage": 0.40898,
+      "errors_kept": 2,
+      "kept": 2678,
+      "selective_risk": 0.000747,
+      "tau": 0.0612
+    },
+    {
+      "coverage": 0.423488,
+      "errors_kept": 2,
+      "kept": 2773,
+      "selective_risk": 0.000721,
+      "tau": 0.0621
+    },
+    {
+      "coverage": 0.439218,
+      "errors_kept": 2,
+      "kept": 2876,
+      "selective_risk": 0.000695,
+      "tau": 0.063
+    },
+    {
+      "coverage": 0.452505,
+      "errors_kept": 2,
+      "kept": 2963,
+      "selective_risk": 0.000675,
+      "tau": 0.0639
+    },
+    {
+      "coverage": 0.46686,
+      "errors_kept": 2,
+      "kept": 3057,
+      "selective_risk": 0.000654,
+      "tau": 0.0648
+    },
+    {
+      "coverage": 0.480299,
+      "errors_kept": 2,
+      "kept": 3145,
+      "selective_risk": 0.000636,
+      "tau": 0.0657
+    },
+    {
+      "coverage": 0.495113,
+      "errors_kept": 3,
+      "kept": 3242,
+      "selective_risk": 0.000925,
+      "tau": 0.0666
+    },
+    {
+      "coverage": 0.495266,
+      "errors_kept": 3,
+      "kept": 3243,
+      "selective_risk": 0.000925,
+      "tau": 0.0668
+    },
+    {
+      "coverage": 0.50733,
+      "errors_kept": 3,
+      "kept": 3322,
+      "selective_risk": 0.000903,
+      "tau": 0.0675
+    },
+    {
+      "coverage": 0.507483,
+      "errors_kept": 3,
+      "kept": 3323,
+      "selective_risk": 0.000903,
+      "tau": 0.0677
+    },
+    {
+      "coverage": 0.520617,
+      "errors_kept": 3,
+      "kept": 3409,
+      "selective_risk": 0.00088,
+      "tau": 0.0684
+    },
+    {
+      "coverage": 0.533293,
+      "errors_kept": 3,
+      "kept": 3492,
+      "selective_risk": 0.000859,
+      "tau": 0.0693
+    },
+    {
+      "coverage": 0.544136,
+      "errors_kept": 3,
+      "kept": 3563,
+      "selective_risk": 0.000842,
+      "tau": 0.0702
+    },
+    {
+      "coverage": 0.556811,
+      "errors_kept": 3,
+      "kept": 3646,
+      "selective_risk": 0.000823,
+      "tau": 0.0711
+    },
+    {
+      "coverage": 0.56628,
+      "errors_kept": 3,
+      "kept": 3708,
+      "selective_risk": 0.000809,
+      "tau": 0.072
+    },
+    {
+      "coverage": 0.573458,
+      "errors_kept": 3,
+      "kept": 3755,
+      "selective_risk": 0.000799,
+      "tau": 0.0729
+    },
+    {
+      "coverage": 0.57361,
+      "errors_kept": 3,
+      "kept": 3756,
+      "selective_risk": 0.000799,
+      "tau": 0.073
+    },
+    {
+      "coverage": 0.583537,
+      "errors_kept": 3,
+      "kept": 3821,
+      "selective_risk": 0.000785,
+      "tau": 0.0738
+    },
+    {
+      "coverage": 0.594838,
+      "errors_kept": 3,
+      "kept": 3895,
+      "selective_risk": 0.00077,
+      "tau": 0.0747
+    },
+    {
+      "coverage": 0.606292,
+      "errors_kept": 3,
+      "kept": 3970,
+      "selective_risk": 0.000756,
+      "tau": 0.0756
+    },
+    {
+      "coverage": 0.614692,
+      "errors_kept": 3,
+      "kept": 4025,
+      "selective_risk": 0.000745,
+      "tau": 0.0765
+    },
+    {
+      "coverage": 0.614844,
+      "errors_kept": 3,
+      "kept": 4026,
+      "selective_risk": 0.000745,
+      "tau": 0.0766
+    },
+    {
+      "coverage": 0.622938,
+      "errors_kept": 3,
+      "kept": 4079,
+      "selective_risk": 0.000735,
+      "tau": 0.0774
+    },
+    {
+      "coverage": 0.631796,
+      "errors_kept": 3,
+      "kept": 4137,
+      "selective_risk": 0.000725,
+      "tau": 0.0783
+    },
+    {
+      "coverage": 0.631949,
+      "errors_kept": 3,
+      "kept": 4138,
+      "selective_risk": 0.000725,
+      "tau": 0.0784
+    },
+    {
+      "coverage": 0.640501,
+      "errors_kept": 3,
+      "kept": 4194,
+      "selective_risk": 0.000715,
+      "tau": 0.0792
+    },
+    {
+      "coverage": 0.650275,
+      "errors_kept": 3,
+      "kept": 4258,
+      "selective_risk": 0.000705,
+      "tau": 0.0801
+    },
+    {
+      "coverage": 0.661881,
+      "errors_kept": 3,
+      "kept": 4334,
+      "selective_risk": 0.000692,
+      "tau": 0.081
+    },
+    {
+      "coverage": 0.670128,
+      "errors_kept": 3,
+      "kept": 4388,
+      "selective_risk": 0.000684,
+      "tau": 0.0819
+    },
+    {
+      "coverage": 0.678375,
+      "errors_kept": 3,
+      "kept": 4442,
+      "selective_risk": 0.000675,
+      "tau": 0.0828
+    },
+    {
+      "coverage": 0.686316,
+      "errors_kept": 3,
+      "kept": 4494,
+      "selective_risk": 0.000668,
+      "tau": 0.0837
+    },
+    {
+      "coverage": 0.695021,
+      "errors_kept": 3,
+      "kept": 4551,
+      "selective_risk": 0.000659,
+      "tau": 0.0846
+    },
+    {
+      "coverage": 0.695174,
+      "errors_kept": 3,
+      "kept": 4552,
+      "selective_risk": 0.000659,
+      "tau": 0.0847
+    },
+    {
+      "coverage": 0.702199,
+      "errors_kept": 3,
+      "kept": 4598,
+      "selective_risk": 0.000652,
+      "tau": 0.0855
+    },
+    {
+      "coverage": 0.708308,
+      "errors_kept": 3,
+      "kept": 4638,
+      "selective_risk": 0.000647,
+      "tau": 0.0864
+    },
+    {
+      "coverage": 0.716402,
+      "errors_kept": 3,
+      "kept": 4691,
+      "selective_risk": 0.00064,
+      "tau": 0.0873
+    },
+    {
+      "coverage": 0.72358,
+      "errors_kept": 3,
+      "kept": 4738,
+      "selective_risk": 0.000633,
+      "tau": 0.0882
+    },
+    {
+      "coverage": 0.728772,
+      "errors_kept": 3,
+      "kept": 4772,
+      "selective_risk": 0.000629,
+      "tau": 0.0891
+    },
+    {
+      "coverage": 0.728925,
+      "errors_kept": 3,
+      "kept": 4773,
+      "selective_risk": 0.000629,
+      "tau": 0.0893
+    },
+    {
+      "coverage": 0.735034,
+      "errors_kept": 3,
+      "kept": 4813,
+      "selective_risk": 0.000623,
+      "tau": 0.09
+    },
+    {
+      "coverage": 0.735186,
+      "errors_kept": 3,
+      "kept": 4814,
+      "selective_risk": 0.000623,
+      "tau": 0.0902
+    },
+    {
+      "coverage": 0.742517,
+      "errors_kept": 3,
+      "kept": 4862,
+      "selective_risk": 0.000617,
+      "tau": 0.0909
+    },
+    {
+      "coverage": 0.74267,
+      "errors_kept": 3,
+      "kept": 4863,
+      "selective_risk": 0.000617,
+      "tau": 0.091
+    },
+    {
+      "coverage": 0.748626,
+      "errors_kept": 3,
+      "kept": 4902,
+      "selective_risk": 0.000612,
+      "tau": 0.0918
+    },
+    {
+      "coverage": 0.753665,
+      "errors_kept": 3,
+      "kept": 4935,
+      "selective_risk": 0.000608,
+      "tau": 0.0927
+    },
+    {
+      "coverage": 0.761301,
+      "errors_kept": 3,
+      "kept": 4985,
+      "selective_risk": 0.000602,
+      "tau": 0.0936
+    },
+    {
+      "coverage": 0.761454,
+      "errors_kept": 3,
+      "kept": 4986,
+      "selective_risk": 0.000602,
+      "tau": 0.094233
+    },
+    {
+      "coverage": 0.766341,
+      "errors_kept": 3,
+      "kept": 5018,
+      "selective_risk": 0.000598,
+      "tau": 0.0945
+    },
+    {
+      "coverage": 0.772755,
+      "errors_kept": 3,
+      "kept": 5060,
+      "selective_risk": 0.000593,
+      "tau": 0.0954
+    },
+    {
+      "coverage": 0.772908,
+      "errors_kept": 3,
+      "kept": 5061,
+      "selective_risk": 0.000593,
+      "tau": 0.095557
+    },
+    {
+      "coverage": 0.778558,
+      "errors_kept": 3,
+      "kept": 5098,
+      "selective_risk": 0.000588,
+      "tau": 0.0963
+    },
+    {
+      "coverage": 0.783903,
+      "errors_kept": 3,
+      "kept": 5133,
+      "selective_risk": 0.000584,
+      "tau": 0.0972
+    },
+    {
+      "coverage": 0.788638,
+      "errors_kept": 3,
+      "kept": 5164,
+      "selective_risk": 0.000581,
+      "tau": 0.0981
+    },
+    {
+      "coverage": 0.794136,
+      "errors_kept": 3,
+      "kept": 5200,
+      "selective_risk": 0.000577,
+      "tau": 0.099
+    },
+    {
+      "coverage": 0.799328,
+      "errors_kept": 3,
+      "kept": 5234,
+      "selective_risk": 0.000573,
+      "tau": 0.0999
+    },
+    {
+      "coverage": 0.804979,
+      "errors_kept": 3,
+      "kept": 5271,
+      "selective_risk": 0.000569,
+      "tau": 0.1008
+    },
+    {
+      "coverage": 0.809407,
+      "errors_kept": 3,
+      "kept": 5300,
+      "selective_risk": 0.000566,
+      "tau": 0.1017
+    },
+    {
+      "coverage": 0.80956,
+      "errors_kept": 3,
+      "kept": 5301,
+      "selective_risk": 0.000566,
+      "tau": 0.1018
+    },
+    {
+      "coverage": 0.809713,
+      "errors_kept": 3,
+      "kept": 5302,
+      "selective_risk": 0.000566,
+      "tau": 0.1019
+    },
+    {
+      "coverage": 0.815974,
+      "errors_kept": 3,
+      "kept": 5343,
+      "selective_risk": 0.000561,
+      "tau": 0.1026
+    },
+    {
+      "coverage": 0.821167,
+      "errors_kept": 6,
+      "kept": 5377,
+      "selective_risk": 0.001116,
+      "tau": 0.1035
+    },
+    {
+      "coverage": 0.821319,
+      "errors_kept": 6,
+      "kept": 5378,
+      "selective_risk": 0.001116,
+      "tau": 0.1036
+    },
+    {
+      "coverage": 0.82529,
+      "errors_kept": 6,
+      "kept": 5404,
+      "selective_risk": 0.00111,
+      "tau": 0.1044
+    },
+    {
+      "coverage": 0.828803,
+      "errors_kept": 6,
+      "kept": 5427,
+      "selective_risk": 0.001106,
+      "tau": 0.1053
+    },
+    {
+      "coverage": 0.834453,
+      "errors_kept": 6,
+      "kept": 5464,
+      "selective_risk": 0.001098,
+      "tau": 0.1062
+    },
+    {
+      "coverage": 0.839035,
+      "errors_kept": 6,
+      "kept": 5494,
+      "selective_risk": 0.001092,
+      "tau": 0.1071
+    },
+    {
+      "coverage": 0.839188,
+      "errors_kept": 6,
+      "kept": 5495,
+      "selective_risk": 0.001092,
+      "tau": 0.1073
+    },
+    {
+      "coverage": 0.842547,
+      "errors_kept": 6,
+      "kept": 5517,
+      "selective_risk": 0.001088,
+      "tau": 0.108
+    },
+    {
+      "coverage": 0.846213,
+      "errors_kept": 6,
+      "kept": 5541,
+      "selective_risk": 0.001083,
+      "tau": 0.1089
+    },
+    {
+      "coverage": 0.846365,
+      "errors_kept": 6,
+      "kept": 5542,
+      "selective_risk": 0.001083,
+      "tau": 0.109
+    },
+    {
+      "coverage": 0.846518,
+      "errors_kept": 6,
+      "kept": 5543,
+      "selective_risk": 0.001082,
+      "tau": 0.1091
+    },
+    {
+      "coverage": 0.848962,
+      "errors_kept": 6,
+      "kept": 5559,
+      "selective_risk": 0.001079,
+      "tau": 0.1098
+    },
+    {
+      "coverage": 0.850947,
+      "errors_kept": 6,
+      "kept": 5572,
+      "selective_risk": 0.001077,
+      "tau": 0.1107
+    },
+    {
+      "coverage": 0.854154,
+      "errors_kept": 6,
+      "kept": 5593,
+      "selective_risk": 0.001073,
+      "tau": 0.1116
+    },
+    {
+      "coverage": 0.85675,
+      "errors_kept": 6,
+      "kept": 5610,
+      "selective_risk": 0.00107,
+      "tau": 0.1125
+    },
+    {
+      "coverage": 0.856903,
+      "errors_kept": 6,
+      "kept": 5611,
+      "selective_risk": 0.001069,
+      "tau": 0.1126
+    },
+    {
+      "coverage": 0.859957,
+      "errors_kept": 6,
+      "kept": 5631,
+      "selective_risk": 0.001066,
+      "tau": 0.1134
+    },
+    {
+      "coverage": 0.863164,
+      "errors_kept": 6,
+      "kept": 5652,
+      "selective_risk": 0.001062,
+      "tau": 0.1143
+    },
+    {
+      "coverage": 0.865455,
+      "errors_kept": 6,
+      "kept": 5667,
+      "selective_risk": 0.001059,
+      "tau": 0.1152
+    },
+    {
+      "coverage": 0.865608,
+      "errors_kept": 6,
+      "kept": 5668,
+      "selective_risk": 0.001059,
+      "tau": 0.1154
+    },
+    {
+      "coverage": 0.868204,
+      "errors_kept": 7,
+      "kept": 5685,
+      "selective_risk": 0.001231,
+      "tau": 0.1161
+    },
+    {
+      "coverage": 0.871106,
+      "errors_kept": 7,
+      "kept": 5704,
+      "selective_risk": 0.001227,
+      "tau": 0.117
+    },
+    {
+      "coverage": 0.871258,
+      "errors_kept": 7,
+      "kept": 5705,
+      "selective_risk": 0.001227,
+      "tau": 0.1174
+    },
+    {
+      "coverage": 0.874924,
+      "errors_kept": 7,
+      "kept": 5729,
+      "selective_risk": 0.001222,
+      "tau": 0.1179
+    },
+    {
+      "coverage": 0.876756,
+      "errors_kept": 7,
+      "kept": 5741,
+      "selective_risk": 0.001219,
+      "tau": 0.1188
+    },
+    {
+      "coverage": 0.876909,
+      "errors_kept": 7,
+      "kept": 5742,
+      "selective_risk": 0.001219,
+      "tau": 0.1189
+    },
+    {
+      "coverage": 0.879811,
+      "errors_kept": 7,
+      "kept": 5761,
+      "selective_risk": 0.001215,
+      "tau": 0.1197
+    },
+    {
+      "coverage": 0.881491,
+      "errors_kept": 7,
+      "kept": 5772,
+      "selective_risk": 0.001213,
+      "tau": 0.1206
+    },
+    {
+      "coverage": 0.883323,
+      "errors_kept": 7,
+      "kept": 5784,
+      "selective_risk": 0.00121,
+      "tau": 0.1215
+    },
+    {
+      "coverage": 0.885919,
+      "errors_kept": 7,
+      "kept": 5801,
+      "selective_risk": 0.001207,
+      "tau": 0.1224
+    },
+    {
+      "coverage": 0.886072,
+      "errors_kept": 7,
+      "kept": 5802,
+      "selective_risk": 0.001206,
+      "tau": 0.1229
+    },
+    {
+      "coverage": 0.888363,
+      "errors_kept": 7,
+      "kept": 5817,
+      "selective_risk": 0.001203,
+      "tau": 0.1233
+    },
+    {
+      "coverage": 0.890195,
+      "errors_kept": 7,
+      "kept": 5829,
+      "selective_risk": 0.001201,
+      "tau": 0.1242
+    },
+    {
+      "coverage": 0.891875,
+      "errors_kept": 7,
+      "kept": 5840,
+      "selective_risk": 0.001199,
+      "tau": 0.1251
+    },
+    {
+      "coverage": 0.892944,
+      "errors_kept": 8,
+      "kept": 5847,
+      "selective_risk": 0.001368,
+      "tau": 0.126
+    },
+    {
+      "coverage": 0.894472,
+      "errors_kept": 8,
+      "kept": 5857,
+      "selective_risk": 0.001366,
+      "tau": 0.1269
+    },
+    {
+      "coverage": 0.895999,
+      "errors_kept": 8,
+      "kept": 5867,
+      "selective_risk": 0.001364,
+      "tau": 0.1278
+    },
+    {
+      "coverage": 0.896151,
+      "errors_kept": 8,
+      "kept": 5868,
+      "selective_risk": 0.001363,
+      "tau": 0.1282
+    },
+    {
+      "coverage": 0.89829,
+      "errors_kept": 8,
+      "kept": 5882,
+      "selective_risk": 0.00136,
+      "tau": 0.1287
+    },
+    {
+      "coverage": 0.899511,
+      "errors_kept": 9,
+      "kept": 5890,
+      "selective_risk": 0.001528,
+      "tau": 0.1296
+    },
+    {
+      "coverage": 0.901191,
+      "errors_kept": 9,
+      "kept": 5901,
+      "selective_risk": 0.001525,
+      "tau": 0.1305
+    },
+    {
+      "coverage": 0.903024,
+      "errors_kept": 10,
+      "kept": 5913,
+      "selective_risk": 0.001691,
+      "tau": 0.1314
+    },
+    {
+      "coverage": 0.90394,
+      "errors_kept": 10,
+      "kept": 5919,
+      "selective_risk": 0.001689,
+      "tau": 0.1323
+    },
+    {
+      "coverage": 0.905315,
+      "errors_kept": 11,
+      "kept": 5928,
+      "selective_risk": 0.001856,
+      "tau": 0.1332
+    },
+    {
+      "coverage": 0.906078,
+      "errors_kept": 11,
+      "kept": 5933,
+      "selective_risk": 0.001854,
+      "tau": 0.1341
+    },
+    {
+      "coverage": 0.906384,
+      "errors_kept": 11,
+      "kept": 5935,
+      "selective_risk": 0.001853,
+      "tau": 0.1343
+    },
+    {
+      "coverage": 0.907911,
+      "errors_kept": 11,
+      "kept": 5945,
+      "selective_risk": 0.00185,
+      "tau": 0.135
+    },
+    {
+      "coverage": 0.908064,
+      "errors_kept": 11,
+      "kept": 5946,
+      "selective_risk": 0.00185,
+      "tau": 0.1356
+    },
+    {
+      "coverage": 0.909591,
+      "errors_kept": 11,
+      "kept": 5956,
+      "selective_risk": 0.001847,
+      "tau": 0.1359
+    },
+    {
+      "coverage": 0.910202,
+      "errors_kept": 11,
+      "kept": 5960,
+      "selective_risk": 0.001846,
+      "tau": 0.1368
+    },
+    {
+      "coverage": 0.911881,
+      "errors_kept": 11,
+      "kept": 5971,
+      "selective_risk": 0.001842,
+      "tau": 0.1377
+    },
+    {
+      "coverage": 0.912645,
+      "errors_kept": 12,
+      "kept": 5976,
+      "selective_risk": 0.002008,
+      "tau": 0.1386
+    },
+    {
+      "coverage": 0.91402,
+      "errors_kept": 12,
+      "kept": 5985,
+      "selective_risk": 0.002005,
+      "tau": 0.1395
+    },
+    {
+      "coverage": 0.914172,
+      "errors_kept": 12,
+      "kept": 5986,
+      "selective_risk": 0.002005,
+      "tau": 0.1396
+    },
+    {
+      "coverage": 0.914783,
+      "errors_kept": 12,
+      "kept": 5990,
+      "selective_risk": 0.002003,
+      "tau": 0.1404
+    },
+    {
+      "coverage": 0.915241,
+      "errors_kept": 12,
+      "kept": 5993,
+      "selective_risk": 0.002002,
+      "tau": 0.1413
+    },
+    {
+      "coverage": 0.916768,
+      "errors_kept": 12,
+      "kept": 6003,
+      "selective_risk": 0.001999,
+      "tau": 0.1422
+    },
+    {
+      "coverage": 0.917379,
+      "errors_kept": 12,
+      "kept": 6007,
+      "selective_risk": 0.001998,
+      "tau": 0.1431
+    },
+    {
+      "coverage": 0.918907,
+      "errors_kept": 12,
+      "kept": 6017,
+      "selective_risk": 0.001994,
+      "tau": 0.144
+    },
+    {
+      "coverage": 0.920128,
+      "errors_kept": 13,
+      "kept": 6025,
+      "selective_risk": 0.002158,
+      "tau": 0.1449
+    },
+    {
+      "coverage": 0.920434,
+      "errors_kept": 13,
+      "kept": 6027,
+      "selective_risk": 0.002157,
+      "tau": 0.1458
+    },
+    {
+      "coverage": 0.92135,
+      "errors_kept": 13,
+      "kept": 6033,
+      "selective_risk": 0.002155,
+      "tau": 0.1467
+    },
+    {
+      "coverage": 0.921503,
+      "errors_kept": 13,
+      "kept": 6034,
+      "selective_risk": 0.002154,
+      "tau": 0.147167
+    },
+    {
+      "coverage": 0.921961,
+      "errors_kept": 13,
+      "kept": 6037,
+      "selective_risk": 0.002153,
+      "tau": 0.1476
+    },
+    {
+      "coverage": 0.92303,
+      "errors_kept": 14,
+      "kept": 6044,
+      "selective_risk": 0.002316,
+      "tau": 0.1485
+    },
+    {
+      "coverage": 0.924404,
+      "errors_kept": 15,
+      "kept": 6053,
+      "selective_risk": 0.002478,
+      "tau": 0.1494
+    },
+    {
+      "coverage": 0.925168,
+      "errors_kept": 15,
+      "kept": 6058,
+      "selective_risk": 0.002476,
+      "tau": 0.1503
+    },
+    {
+      "coverage": 0.925779,
+      "errors_kept": 15,
+      "kept": 6062,
+      "selective_risk": 0.002474,
+      "tau": 0.1512
+    },
+    {
+      "coverage": 0.925932,
+      "errors_kept": 15,
+      "kept": 6063,
+      "selective_risk": 0.002474,
+      "tau": 0.1521
+    },
+    {
+      "coverage": 0.927001,
+      "errors_kept": 15,
+      "kept": 6070,
+      "selective_risk": 0.002471,
+      "tau": 0.153
+    },
+    {
+      "coverage": 0.928681,
+      "errors_kept": 18,
+      "kept": 6081,
+      "selective_risk": 0.00296,
+      "tau": 0.1539
+    },
+    {
+      "coverage": 0.928833,
+      "errors_kept": 18,
+      "kept": 6082,
+      "selective_risk": 0.00296,
+      "tau": 0.1548
+    },
+    {
+      "coverage": 0.929139,
+      "errors_kept": 19,
+      "kept": 6084,
+      "selective_risk": 0.003123,
+      "tau": 0.1557
+    },
+    {
+      "coverage": 0.929444,
+      "errors_kept": 19,
+      "kept": 6086,
+      "selective_risk": 0.003122,
+      "tau": 0.1566
+    },
+    {
+      "coverage": 0.929597,
+      "errors_kept": 19,
+      "kept": 6087,
+      "selective_risk": 0.003121,
+      "tau": 0.1567
+    },
+    {
+      "coverage": 0.930208,
+      "errors_kept": 19,
+      "kept": 6091,
+      "selective_risk": 0.003119,
+      "tau": 0.1575
+    },
+    {
+      "coverage": 0.930819,
+      "errors_kept": 19,
+      "kept": 6095,
+      "selective_risk": 0.003117,
+      "tau": 0.1584
+    },
+    {
+      "coverage": 0.931277,
+      "errors_kept": 19,
+      "kept": 6098,
+      "selective_risk": 0.003116,
+      "tau": 0.1593
+    },
+    {
+      "coverage": 0.931582,
+      "errors_kept": 19,
+      "kept": 6100,
+      "selective_risk": 0.003115,
+      "tau": 0.1602
+    },
+    {
+      "coverage": 0.93204,
+      "errors_kept": 19,
+      "kept": 6103,
+      "selective_risk": 0.003113,
+      "tau": 0.162
+    },
+    {
+      "coverage": 0.932193,
+      "errors_kept": 19,
+      "kept": 6104,
+      "selective_risk": 0.003113,
+      "tau": 0.1629
+    },
+    {
+      "coverage": 0.932346,
+      "errors_kept": 19,
+      "kept": 6105,
+      "selective_risk": 0.003112,
+      "tau": 0.1635
+    },
+    {
+      "coverage": 0.932957,
+      "errors_kept": 19,
+      "kept": 6109,
+      "selective_risk": 0.00311,
+      "tau": 0.1638
+    },
+    {
+      "coverage": 0.933109,
+      "errors_kept": 19,
+      "kept": 6110,
+      "selective_risk": 0.00311,
+      "tau": 0.1656
+    },
+    {
+      "coverage": 0.93372,
+      "errors_kept": 19,
+      "kept": 6114,
+      "selective_risk": 0.003108,
+      "tau": 0.1665
+    },
+    {
+      "coverage": 0.934026,
+      "errors_kept": 20,
+      "kept": 6116,
+      "selective_risk": 0.00327,
+      "tau": 0.1674
+    },
+    {
+      "coverage": 0.934178,
+      "errors_kept": 20,
+      "kept": 6117,
+      "selective_risk": 0.00327,
+      "tau": 0.1676
+    },
+    {
+      "coverage": 0.934484,
+      "errors_kept": 20,
+      "kept": 6119,
+      "selective_risk": 0.003269,
+      "tau": 0.1683
+    },
+    {
+      "coverage": 0.934942,
+      "errors_kept": 20,
+      "kept": 6122,
+      "selective_risk": 0.003267,
+      "tau": 0.1692
+    },
+    {
+      "coverage": 0.935247,
+      "errors_kept": 20,
+      "kept": 6124,
+      "selective_risk": 0.003266,
+      "tau": 0.1701
+    },
+    {
+      "coverage": 0.935553,
+      "errors_kept": 21,
+      "kept": 6126,
+      "selective_risk": 0.003428,
+      "tau": 0.171
+    },
+    {
+      "coverage": 0.935706,
+      "errors_kept": 21,
+      "kept": 6127,
+      "selective_risk": 0.003427,
+      "tau": 0.1728
+    },
+    {
+      "coverage": 0.935858,
+      "errors_kept": 21,
+      "kept": 6128,
+      "selective_risk": 0.003427,
+      "tau": 0.1737
+    },
+    {
+      "coverage": 0.936622,
+      "errors_kept": 21,
+      "kept": 6133,
+      "selective_risk": 0.003424,
+      "tau": 0.1746
+    },
+    {
+      "coverage": 0.937233,
+      "errors_kept": 23,
+      "kept": 6137,
+      "selective_risk": 0.003748,
+      "tau": 0.1755
+    },
+    {
+      "coverage": 0.937385,
+      "errors_kept": 23,
+      "kept": 6138,
+      "selective_risk": 0.003747,
+      "tau": 0.1757
+    },
+    {
+      "coverage": 0.937538,
+      "errors_kept": 23,
+      "kept": 6139,
+      "selective_risk": 0.003747,
+      "tau": 0.1759
+    },
+    {
+      "coverage": 0.937691,
+      "errors_kept": 23,
+      "kept": 6140,
+      "selective_risk": 0.003746,
+      "tau": 0.1782
+    },
+    {
+      "coverage": 0.937844,
+      "errors_kept": 23,
+      "kept": 6141,
+      "selective_risk": 0.003745,
+      "tau": 0.1791
+    },
+    {
+      "coverage": 0.938149,
+      "errors_kept": 24,
+      "kept": 6143,
+      "selective_risk": 0.003907,
+      "tau": 0.18
+    },
+    {
+      "coverage": 0.938454,
+      "errors_kept": 25,
+      "kept": 6145,
+      "selective_risk": 0.004068,
+      "tau": 0.1809
+    },
+    {
+      "coverage": 0.93876,
+      "errors_kept": 26,
+      "kept": 6147,
+      "selective_risk": 0.00423,
+      "tau": 0.1818
+    },
+    {
+      "coverage": 0.939065,
+      "errors_kept": 27,
+      "kept": 6149,
+      "selective_risk": 0.004391,
+      "tau": 0.1836
+    },
+    {
+      "coverage": 0.939371,
+      "errors_kept": 27,
+      "kept": 6151,
+      "selective_risk": 0.00439,
+      "tau": 0.1845
+    },
+    {
+      "coverage": 0.939524,
+      "errors_kept": 27,
+      "kept": 6152,
+      "selective_risk": 0.004389,
+      "tau": 0.1854
+    },
+    {
+      "coverage": 0.939829,
+      "errors_kept": 27,
+      "kept": 6154,
+      "selective_risk": 0.004387,
+      "tau": 0.1872
+    },
+    {
+      "coverage": 0.940134,
+      "errors_kept": 28,
+      "kept": 6156,
+      "selective_risk": 0.004548,
+      "tau": 0.1881
+    },
+    {
+      "coverage": 0.940287,
+      "errors_kept": 28,
+      "kept": 6157,
+      "selective_risk": 0.004548,
+      "tau": 0.189
+    },
+    {
+      "coverage": 0.94044,
+      "errors_kept": 28,
+      "kept": 6158,
+      "selective_risk": 0.004547,
+      "tau": 0.1908
+    },
+    {
+      "coverage": 0.940745,
+      "errors_kept": 28,
+      "kept": 6160,
+      "selective_risk": 0.004545,
+      "tau": 0.1917
+    },
+    {
+      "coverage": 0.940898,
+      "errors_kept": 28,
+      "kept": 6161,
+      "selective_risk": 0.004545,
+      "tau": 0.1926
+    },
+    {
+      "coverage": 0.941051,
+      "errors_kept": 28,
+      "kept": 6162,
+      "selective_risk": 0.004544,
+      "tau": 0.1935
+    },
+    {
+      "coverage": 0.941203,
+      "errors_kept": 28,
+      "kept": 6163,
+      "selective_risk": 0.004543,
+      "tau": 0.1953
+    },
+    {
+      "coverage": 0.941356,
+      "errors_kept": 28,
+      "kept": 6164,
+      "selective_risk": 0.004543,
+      "tau": 0.1962
+    },
+    {
+      "coverage": 0.941662,
+      "errors_kept": 28,
+      "kept": 6166,
+      "selective_risk": 0.004541,
+      "tau": 0.1971
+    },
+    {
+      "coverage": 0.941814,
+      "errors_kept": 28,
+      "kept": 6167,
+      "selective_risk": 0.00454,
+      "tau": 0.1989
+    },
+    {
+      "coverage": 0.941967,
+      "errors_kept": 28,
+      "kept": 6168,
+      "selective_risk": 0.00454,
+      "tau": 0.1998
+    },
+    {
+      "coverage": 0.94212,
+      "errors_kept": 28,
+      "kept": 6169,
+      "selective_risk": 0.004539,
+      "tau": 0.2016
+    },
+    {
+      "coverage": 0.942425,
+      "errors_kept": 28,
+      "kept": 6171,
+      "selective_risk": 0.004537,
+      "tau": 0.2034
+    },
+    {
+      "coverage": 0.942578,
+      "errors_kept": 29,
+      "kept": 6172,
+      "selective_risk": 0.004699,
+      "tau": 0.2052
+    },
+    {
+      "coverage": 0.942731,
+      "errors_kept": 30,
+      "kept": 6173,
+      "selective_risk": 0.00486,
+      "tau": 0.2079
+    },
+    {
+      "coverage": 0.942883,
+      "errors_kept": 30,
+      "kept": 6174,
+      "selective_risk": 0.004859,
+      "tau": 0.2088
+    },
+    {
+      "coverage": 0.943036,
+      "errors_kept": 30,
+      "kept": 6175,
+      "selective_risk": 0.004858,
+      "tau": 0.2106
+    },
+    {
+      "coverage": 0.943189,
+      "errors_kept": 31,
+      "kept": 6176,
+      "selective_risk": 0.005019,
+      "tau": 0.2205
+    },
+    {
+      "coverage": 0.943494,
+      "errors_kept": 31,
+      "kept": 6178,
+      "selective_risk": 0.005018,
+      "tau": 0.2214
+    },
+    {
+      "coverage": 0.943647,
+      "errors_kept": 31,
+      "kept": 6179,
+      "selective_risk": 0.005017,
+      "tau": 0.2259
+    },
+    {
+      "coverage": 0.9438,
+      "errors_kept": 31,
+      "kept": 6180,
+      "selective_risk": 0.005016,
+      "tau": 0.2304
+    },
+    {
+      "coverage": 0.944105,
+      "errors_kept": 32,
+      "kept": 6182,
+      "selective_risk": 0.005176,
+      "tau": 0.2313
+    },
+    {
+      "coverage": 0.944258,
+      "errors_kept": 33,
+      "kept": 6183,
+      "selective_risk": 0.005337,
+      "tau": 0.2376
+    },
+    {
+      "coverage": 0.944411,
+      "errors_kept": 34,
+      "kept": 6184,
+      "selective_risk": 0.005498,
+      "tau": 0.2439
+    },
+    {
+      "coverage": 0.944563,
+      "errors_kept": 35,
+      "kept": 6185,
+      "selective_risk": 0.005659,
+      "tau": 0.2448
+    },
+    {
+      "coverage": 0.944869,
+      "errors_kept": 37,
+      "kept": 6187,
+      "selective_risk": 0.00598,
+      "tau": 0.2466
+    },
+    {
+      "coverage": 0.945174,
+      "errors_kept": 39,
+      "kept": 6189,
+      "selective_risk": 0.006302,
+      "tau": 0.2502
+    },
+    {
+      "coverage": 0.945327,
+      "errors_kept": 40,
+      "kept": 6190,
+      "selective_risk": 0.006462,
+      "tau": 0.2538
+    },
+    {
+      "coverage": 0.94548,
+      "errors_kept": 40,
+      "kept": 6191,
+      "selective_risk": 0.006461,
+      "tau": 0.2547
+    },
+    {
+      "coverage": 0.945632,
+      "errors_kept": 41,
+      "kept": 6192,
+      "selective_risk": 0.006621,
+      "tau": 0.2583
+    },
+    {
+      "coverage": 0.945785,
+      "errors_kept": 42,
+      "kept": 6193,
+      "selective_risk": 0.006782,
+      "tau": 0.2592
+    },
+    {
+      "coverage": 0.945938,
+      "errors_kept": 43,
+      "kept": 6194,
+      "selective_risk": 0.006942,
+      "tau": 0.2627
+    },
+    {
+      "coverage": 0.94609,
+      "errors_kept": 43,
+      "kept": 6195,
+      "selective_risk": 0.006941,
+      "tau": 0.2646
+    },
+    {
+      "coverage": 0.946396,
+      "errors_kept": 43,
+      "kept": 6197,
+      "selective_risk": 0.006939,
+      "tau": 0.2691
+    },
+    {
+      "coverage": 0.946549,
+      "errors_kept": 43,
+      "kept": 6198,
+      "selective_risk": 0.006938,
+      "tau": 0.27
+    },
+    {
+      "coverage": 0.946854,
+      "errors_kept": 43,
+      "kept": 6200,
+      "selective_risk": 0.006935,
+      "tau": 0.2709
+    },
+    {
+      "coverage": 0.947007,
+      "errors_kept": 43,
+      "kept": 6201,
+      "selective_risk": 0.006934,
+      "tau": 0.2727
+    },
+    {
+      "coverage": 0.947312,
+      "errors_kept": 44,
+      "kept": 6203,
+      "selective_risk": 0.007093,
+      "tau": 0.2745
+    },
+    {
+      "coverage": 0.947465,
+      "errors_kept": 44,
+      "kept": 6204,
+      "selective_risk": 0.007092,
+      "tau": 0.2772
+    },
+    {
+      "coverage": 0.947618,
+      "errors_kept": 45,
+      "kept": 6205,
+      "selective_risk": 0.007252,
+      "tau": 0.2799
+    },
+    {
+      "coverage": 0.94777,
+      "errors_kept": 46,
+      "kept": 6206,
+      "selective_risk": 0.007412,
+      "tau": 0.2826
+    },
+    {
+      "coverage": 0.947923,
+      "errors_kept": 46,
+      "kept": 6207,
+      "selective_risk": 0.007411,
+      "tau": 0.2844
+    },
+    {
+      "coverage": 0.948076,
+      "errors_kept": 46,
+      "kept": 6208,
+      "selective_risk": 0.00741,
+      "tau": 0.2849
+    },
+    {
+      "coverage": 0.948228,
+      "errors_kept": 46,
+      "kept": 6209,
+      "selective_risk": 0.007409,
+      "tau": 0.288
+    },
+    {
+      "coverage": 0.948381,
+      "errors_kept": 47,
+      "kept": 6210,
+      "selective_risk": 0.007568,
+      "tau": 0.2898
+    },
+    {
+      "coverage": 0.948534,
+      "errors_kept": 47,
+      "kept": 6211,
+      "selective_risk": 0.007567,
+      "tau": 0.2903
+    },
+    {
+      "coverage": 0.948839,
+      "errors_kept": 49,
+      "kept": 6213,
+      "selective_risk": 0.007887,
+      "tau": 0.2907
+    },
+    {
+      "coverage": 0.948992,
+      "errors_kept": 49,
+      "kept": 6214,
+      "selective_risk": 0.007885,
+      "tau": 0.2952
+    },
+    {
+      "coverage": 0.949145,
+      "errors_kept": 50,
+      "kept": 6215,
+      "selective_risk": 0.008045,
+      "tau": 0.297
+    },
+    {
+      "coverage": 0.949297,
+      "errors_kept": 50,
+      "kept": 6216,
+      "selective_risk": 0.008044,
+      "tau": 0.2975
+    },
+    {
+      "coverage": 0.949603,
+      "errors_kept": 52,
+      "kept": 6218,
+      "selective_risk": 0.008363,
+      "tau": 0.2979
+    },
+    {
+      "coverage": 0.949756,
+      "errors_kept": 52,
+      "kept": 6219,
+      "selective_risk": 0.008361,
+      "tau": 0.2997
+    },
+    {
+      "coverage": 0.949908,
+      "errors_kept": 52,
+      "kept": 6220,
+      "selective_risk": 0.00836,
+      "tau": 0.3024
+    },
+    {
+      "coverage": 0.950214,
+      "errors_kept": 52,
+      "kept": 6222,
+      "selective_risk": 0.008357,
+      "tau": 0.3033
+    },
+    {
+      "coverage": 0.950367,
+      "errors_kept": 52,
+      "kept": 6223,
+      "selective_risk": 0.008356,
+      "tau": 0.306
+    },
+    {
+      "coverage": 0.950519,
+      "errors_kept": 52,
+      "kept": 6224,
+      "selective_risk": 0.008355,
+      "tau": 0.3069
+    },
+    {
+      "coverage": 0.950672,
+      "errors_kept": 53,
+      "kept": 6225,
+      "selective_risk": 0.008514,
+      "tau": 0.3096
+    },
+    {
+      "coverage": 0.95113,
+      "errors_kept": 55,
+      "kept": 6228,
+      "selective_risk": 0.008831,
+      "tau": 0.3105
+    },
+    {
+      "coverage": 0.951283,
+      "errors_kept": 56,
+      "kept": 6229,
+      "selective_risk": 0.00899,
+      "tau": 0.3168
+    },
+    {
+      "coverage": 0.951436,
+      "errors_kept": 56,
+      "kept": 6230,
+      "selective_risk": 0.008989,
+      "tau": 0.3186
+    },
+    {
+      "coverage": 0.951588,
+      "errors_kept": 56,
+      "kept": 6231,
+      "selective_risk": 0.008987,
+      "tau": 0.324
+    },
+    {
+      "coverage": 0.951741,
+      "errors_kept": 57,
+      "kept": 6232,
+      "selective_risk": 0.009146,
+      "tau": 0.3276
+    },
+    {
+      "coverage": 0.951894,
+      "errors_kept": 57,
+      "kept": 6233,
+      "selective_risk": 0.009145,
+      "tau": 0.3303
+    },
+    {
+      "coverage": 0.952046,
+      "errors_kept": 57,
+      "kept": 6234,
+      "selective_risk": 0.009143,
+      "tau": 0.3312
+    },
+    {
+      "coverage": 0.952199,
+      "errors_kept": 57,
+      "kept": 6235,
+      "selective_risk": 0.009142,
+      "tau": 0.333
+    },
+    {
+      "coverage": 0.952352,
+      "errors_kept": 58,
+      "kept": 6236,
+      "selective_risk": 0.009301,
+      "tau": 0.3339
+    },
+    {
+      "coverage": 0.952505,
+      "errors_kept": 58,
+      "kept": 6237,
+      "selective_risk": 0.009299,
+      "tau": 0.3366
+    },
+    {
+      "coverage": 0.95281,
+      "errors_kept": 58,
+      "kept": 6239,
+      "selective_risk": 0.009296,
+      "tau": 0.3375
+    },
+    {
+      "coverage": 0.952963,
+      "errors_kept": 59,
+      "kept": 6240,
+      "selective_risk": 0.009455,
+      "tau": 0.3402
+    },
+    {
+      "coverage": 0.953115,
+      "errors_kept": 60,
+      "kept": 6241,
+      "selective_risk": 0.009614,
+      "tau": 0.3447
+    },
+    {
+      "coverage": 0.953268,
+      "errors_kept": 61,
+      "kept": 6242,
+      "selective_risk": 0.009773,
+      "tau": 0.3456
+    },
+    {
+      "coverage": 0.953421,
+      "errors_kept": 61,
+      "kept": 6243,
+      "selective_risk": 0.009771,
+      "tau": 0.3465
+    },
+    {
+      "coverage": 0.953574,
+      "errors_kept": 62,
+      "kept": 6244,
+      "selective_risk": 0.00993,
+      "tau": 0.3501
+    },
+    {
+      "coverage": 0.953726,
+      "errors_kept": 62,
+      "kept": 6245,
+      "selective_risk": 0.009928,
+      "tau": 0.351
+    },
+    {
+      "coverage": 0.953879,
+      "errors_kept": 62,
+      "kept": 6246,
+      "selective_risk": 0.009926,
+      "tau": 0.3528
+    },
+    {
+      "coverage": 0.954032,
+      "errors_kept": 63,
+      "kept": 6247,
+      "selective_risk": 0.010085,
+      "tau": 0.36
+    },
+    {
+      "coverage": 0.954184,
+      "errors_kept": 63,
+      "kept": 6248,
+      "selective_risk": 0.010083,
+      "tau": 0.3645
+    },
+    {
+      "coverage": 0.954337,
+      "errors_kept": 64,
+      "kept": 6249,
+      "selective_risk": 0.010242,
+      "tau": 0.3672
+    },
+    {
+      "coverage": 0.95449,
+      "errors_kept": 64,
+      "kept": 6250,
+      "selective_risk": 0.01024,
+      "tau": 0.3726
+    },
+    {
+      "coverage": 0.954643,
+      "errors_kept": 65,
+      "kept": 6251,
+      "selective_risk": 0.010398,
+      "tau": 0.3789
+    },
+    {
+      "coverage": 0.954795,
+      "errors_kept": 65,
+      "kept": 6252,
+      "selective_risk": 0.010397,
+      "tau": 0.3798
+    },
+    {
+      "coverage": 0.954948,
+      "errors_kept": 65,
+      "kept": 6253,
+      "selective_risk": 0.010395,
+      "tau": 0.3847
+    },
+    {
+      "coverage": 0.955101,
+      "errors_kept": 65,
+      "kept": 6254,
+      "selective_risk": 0.010393,
+      "tau": 0.3879
+    },
+    {
+      "coverage": 0.955254,
+      "errors_kept": 66,
+      "kept": 6255,
+      "selective_risk": 0.010552,
+      "tau": 0.3951
+    },
+    {
+      "coverage": 0.955406,
+      "errors_kept": 66,
+      "kept": 6256,
+      "selective_risk": 0.01055,
+      "tau": 0.3978
+    },
+    {
+      "coverage": 0.955559,
+      "errors_kept": 67,
+      "kept": 6257,
+      "selective_risk": 0.010708,
+      "tau": 0.405
+    },
+    {
+      "coverage": 0.955712,
+      "errors_kept": 68,
+      "kept": 6258,
+      "selective_risk": 0.010866,
+      "tau": 0.4059
+    },
+    {
+      "coverage": 0.955864,
+      "errors_kept": 68,
+      "kept": 6259,
+      "selective_risk": 0.010864,
+      "tau": 0.4077
+    },
+    {
+      "coverage": 0.956017,
+      "errors_kept": 68,
+      "kept": 6260,
+      "selective_risk": 0.010863,
+      "tau": 0.4131
+    },
+    {
+      "coverage": 0.95617,
+      "errors_kept": 68,
+      "kept": 6261,
+      "selective_risk": 0.010861,
+      "tau": 0.414
+    },
+    {
+      "coverage": 0.956323,
+      "errors_kept": 69,
+      "kept": 6262,
+      "selective_risk": 0.011019,
+      "tau": 0.4203
+    },
+    {
+      "coverage": 0.956475,
+      "errors_kept": 69,
+      "kept": 6263,
+      "selective_risk": 0.011017,
+      "tau": 0.423
+    },
+    {
+      "coverage": 0.956628,
+      "errors_kept": 69,
+      "kept": 6264,
+      "selective_risk": 0.011015,
+      "tau": 0.4239
+    },
+    {
+      "coverage": 0.956781,
+      "errors_kept": 70,
+      "kept": 6265,
+      "selective_risk": 0.011173,
+      "tau": 0.4365
+    },
+    {
+      "coverage": 0.956933,
+      "errors_kept": 71,
+      "kept": 6266,
+      "selective_risk": 0.011331,
+      "tau": 0.4426
+    },
+    {
+      "coverage": 0.957086,
+      "errors_kept": 71,
+      "kept": 6267,
+      "selective_risk": 0.011329,
+      "tau": 0.4473
+    },
+    {
+      "coverage": 0.957239,
+      "errors_kept": 71,
+      "kept": 6268,
+      "selective_risk": 0.011327,
+      "tau": 0.455557
+    },
+    {
+      "coverage": 0.957392,
+      "errors_kept": 72,
+      "kept": 6269,
+      "selective_risk": 0.011485,
+      "tau": 0.4581
+    },
+    {
+      "coverage": 0.957544,
+      "errors_kept": 72,
+      "kept": 6270,
+      "selective_risk": 0.011483,
+      "tau": 0.4653
+    },
+    {
+      "coverage": 0.957697,
+      "errors_kept": 72,
+      "kept": 6271,
+      "selective_risk": 0.011481,
+      "tau": 0.4743
+    },
+    {
+      "coverage": 0.95785,
+      "errors_kept": 72,
+      "kept": 6272,
+      "selective_risk": 0.01148,
+      "tau": 0.4851
+    },
+    {
+      "coverage": 0.958002,
+      "errors_kept": 73,
+      "kept": 6273,
+      "selective_risk": 0.011637,
+      "tau": 0.4896
+    },
+    {
+      "coverage": 0.958155,
+      "errors_kept": 74,
+      "kept": 6274,
+      "selective_risk": 0.011795,
+      "tau": 0.4898
+    },
+    {
+      "coverage": 0.958308,
+      "errors_kept": 75,
+      "kept": 6275,
+      "selective_risk": 0.011952,
+      "tau": 0.4923
+    },
+    {
+      "coverage": 0.958461,
+      "errors_kept": 76,
+      "kept": 6276,
+      "selective_risk": 0.01211,
+      "tau": 0.4932
+    },
+    {
+      "coverage": 0.958613,
+      "errors_kept": 77,
+      "kept": 6277,
+      "selective_risk": 0.012267,
+      "tau": 0.5022
+    },
+    {
+      "coverage": 0.958766,
+      "errors_kept": 77,
+      "kept": 6278,
+      "selective_risk": 0.012265,
+      "tau": 0.5058
+    },
+    {
+      "coverage": 0.958919,
+      "errors_kept": 78,
+      "kept": 6279,
+      "selective_risk": 0.012422,
+      "tau": 0.5121
+    },
+    {
+      "coverage": 0.959071,
+      "errors_kept": 78,
+      "kept": 6280,
+      "selective_risk": 0.01242,
+      "tau": 0.5247
+    },
+    {
+      "coverage": 0.959224,
+      "errors_kept": 78,
+      "kept": 6281,
+      "selective_risk": 0.012418,
+      "tau": 0.524857
+    },
+    {
+      "coverage": 0.959377,
+      "errors_kept": 78,
+      "kept": 6282,
+      "selective_risk": 0.012416,
+      "tau": 0.5364
+    },
+    {
+      "coverage": 0.95953,
+      "errors_kept": 79,
+      "kept": 6283,
+      "selective_risk": 0.012574,
+      "tau": 0.5418
+    },
+    {
+      "coverage": 0.959682,
+      "errors_kept": 79,
+      "kept": 6284,
+      "selective_risk": 0.012572,
+      "tau": 0.544071
+    },
+    {
+      "coverage": 0.959835,
+      "errors_kept": 79,
+      "kept": 6285,
+      "selective_risk": 0.01257,
+      "tau": 0.558
+    },
+    {
+      "coverage": 0.959988,
+      "errors_kept": 80,
+      "kept": 6286,
+      "selective_risk": 0.012727,
+      "tau": 0.570333
+    },
+    {
+      "coverage": 0.960141,
+      "errors_kept": 80,
+      "kept": 6287,
+      "selective_risk": 0.012725,
+      "tau": 0.5751
+    },
+    {
+      "coverage": 0.960293,
+      "errors_kept": 80,
+      "kept": 6288,
+      "selective_risk": 0.012723,
+      "tau": 0.5796
+    },
+    {
+      "coverage": 0.960446,
+      "errors_kept": 80,
+      "kept": 6289,
+      "selective_risk": 0.012721,
+      "tau": 0.5922
+    },
+    {
+      "coverage": 0.960599,
+      "errors_kept": 81,
+      "kept": 6290,
+      "selective_risk": 0.012878,
+      "tau": 0.594
+    },
+    {
+      "coverage": 0.960751,
+      "errors_kept": 81,
+      "kept": 6291,
+      "selective_risk": 0.012876,
+      "tau": 0.5949
+    },
+    {
+      "coverage": 0.960904,
+      "errors_kept": 81,
+      "kept": 6292,
+      "selective_risk": 0.012873,
+      "tau": 0.597171
+    },
+    {
+      "coverage": 0.961057,
+      "errors_kept": 82,
+      "kept": 6293,
+      "selective_risk": 0.01303,
+      "tau": 0.5983
+    },
+    {
+      "coverage": 0.96121,
+      "errors_kept": 82,
+      "kept": 6294,
+      "selective_risk": 0.013028,
+      "tau": 0.6003
+    },
+    {
+      "coverage": 0.961362,
+      "errors_kept": 83,
+      "kept": 6295,
+      "selective_risk": 0.013185,
+      "tau": 0.6012
+    },
+    {
+      "coverage": 0.961515,
+      "errors_kept": 83,
+      "kept": 6296,
+      "selective_risk": 0.013183,
+      "tau": 0.603
+    },
+    {
+      "coverage": 0.961668,
+      "errors_kept": 83,
+      "kept": 6297,
+      "selective_risk": 0.013181,
+      "tau": 0.6147
+    },
+    {
+      "coverage": 0.96182,
+      "errors_kept": 84,
+      "kept": 6298,
+      "selective_risk": 0.013338,
+      "tau": 0.6172
+    },
+    {
+      "coverage": 0.961973,
+      "errors_kept": 85,
+      "kept": 6299,
+      "selective_risk": 0.013494,
+      "tau": 0.6183
+    },
+    {
+      "coverage": 0.962126,
+      "errors_kept": 85,
+      "kept": 6300,
+      "selective_risk": 0.013492,
+      "tau": 0.6201
+    },
+    {
+      "coverage": 0.962279,
+      "errors_kept": 85,
+      "kept": 6301,
+      "selective_risk": 0.01349,
+      "tau": 0.6354
+    },
+    {
+      "coverage": 0.962431,
+      "errors_kept": 85,
+      "kept": 6302,
+      "selective_risk": 0.013488,
+      "tau": 0.6471
+    },
+    {
+      "coverage": 0.962584,
+      "errors_kept": 86,
+      "kept": 6303,
+      "selective_risk": 0.013644,
+      "tau": 0.6534
+    },
+    {
+      "coverage": 0.962737,
+      "errors_kept": 87,
+      "kept": 6304,
+      "selective_risk": 0.013801,
+      "tau": 0.6795
+    },
+    {
+      "coverage": 0.962889,
+      "errors_kept": 88,
+      "kept": 6305,
+      "selective_risk": 0.013957,
+      "tau": 0.6966
+    },
+    {
+      "coverage": 0.963042,
+      "errors_kept": 89,
+      "kept": 6306,
+      "selective_risk": 0.014114,
+      "tau": 0.702
+    },
+    {
+      "coverage": 0.963195,
+      "errors_kept": 90,
+      "kept": 6307,
+      "selective_risk": 0.01427,
+      "tau": 0.7038
+    },
+    {
+      "coverage": 0.963348,
+      "errors_kept": 90,
+      "kept": 6308,
+      "selective_risk": 0.014268,
+      "tau": 0.7128
+    },
+    {
+      "coverage": 0.9635,
+      "errors_kept": 91,
+      "kept": 6309,
+      "selective_risk": 0.014424,
+      "tau": 0.7245
+    },
+    {
+      "coverage": 0.963653,
+      "errors_kept": 92,
+      "kept": 6310,
+      "selective_risk": 0.01458,
+      "tau": 0.7362
+    },
+    {
+      "coverage": 0.963958,
+      "errors_kept": 92,
+      "kept": 6312,
+      "selective_risk": 0.014575,
+      "tau": 0.7407
+    },
+    {
+      "coverage": 0.964111,
+      "errors_kept": 92,
+      "kept": 6313,
+      "selective_risk": 0.014573,
+      "tau": 0.7416
+    },
+    {
+      "coverage": 0.964264,
+      "errors_kept": 92,
+      "kept": 6314,
+      "selective_risk": 0.014571,
+      "tau": 0.7425
+    },
+    {
+      "coverage": 0.964569,
+      "errors_kept": 92,
+      "kept": 6316,
+      "selective_risk": 0.014566,
+      "tau": 0.7434
+    },
+    {
+      "coverage": 0.964875,
+      "errors_kept": 92,
+      "kept": 6318,
+      "selective_risk": 0.014562,
+      "tau": 0.7443
+    },
+    {
+      "coverage": 0.965486,
+      "errors_kept": 92,
+      "kept": 6322,
+      "selective_risk": 0.014552,
+      "tau": 0.7452
+    },
+    {
+      "coverage": 0.965638,
+      "errors_kept": 92,
+      "kept": 6323,
+      "selective_risk": 0.01455,
+      "tau": 0.7461
+    },
+    {
+      "coverage": 0.965944,
+      "errors_kept": 92,
+      "kept": 6325,
+      "selective_risk": 0.014545,
+      "tau": 0.747
+    },
+    {
+      "coverage": 0.966097,
+      "errors_kept": 92,
+      "kept": 6326,
+      "selective_risk": 0.014543,
+      "tau": 0.7479
+    },
+    {
+      "coverage": 0.966249,
+      "errors_kept": 92,
+      "kept": 6327,
+      "selective_risk": 0.014541,
+      "tau": 0.7488
+    },
+    {
+      "coverage": 0.967166,
+      "errors_kept": 92,
+      "kept": 6333,
+      "selective_risk": 0.014527,
+      "tau": 0.7497
+    },
+    {
+      "coverage": 0.967929,
+      "errors_kept": 92,
+      "kept": 6338,
+      "selective_risk": 0.014516,
+      "tau": 0.7506
+    },
+    {
+      "coverage": 0.968693,
+      "errors_kept": 92,
+      "kept": 6343,
+      "selective_risk": 0.014504,
+      "tau": 0.7515
+    },
+    {
+      "coverage": 0.968998,
+      "errors_kept": 92,
+      "kept": 6345,
+      "selective_risk": 0.0145,
+      "tau": 0.7524
+    },
+    {
+      "coverage": 0.969304,
+      "errors_kept": 92,
+      "kept": 6347,
+      "selective_risk": 0.014495,
+      "tau": 0.7533
+    },
+    {
+      "coverage": 0.969456,
+      "errors_kept": 92,
+      "kept": 6348,
+      "selective_risk": 0.014493,
+      "tau": 0.7542
+    },
+    {
+      "coverage": 0.969609,
+      "errors_kept": 93,
+      "kept": 6349,
+      "selective_risk": 0.014648,
+      "tau": 0.7549
+    },
+    {
+      "coverage": 0.97022,
+      "errors_kept": 93,
+      "kept": 6353,
+      "selective_risk": 0.014639,
+      "tau": 0.7551
+    },
+    {
+      "coverage": 0.970525,
+      "errors_kept": 93,
+      "kept": 6355,
+      "selective_risk": 0.014634,
+      "tau": 0.756
+    },
+    {
+      "coverage": 0.970984,
+      "errors_kept": 93,
+      "kept": 6358,
+      "selective_risk": 0.014627,
+      "tau": 0.7569
+    },
+    {
+      "coverage": 0.971289,
+      "errors_kept": 93,
+      "kept": 6360,
+      "selective_risk": 0.014623,
+      "tau": 0.7578
+    },
+    {
+      "coverage": 0.9719,
+      "errors_kept": 93,
+      "kept": 6364,
+      "selective_risk": 0.014613,
+      "tau": 0.7587
+    },
+    {
+      "coverage": 0.972205,
+      "errors_kept": 94,
+      "kept": 6366,
+      "selective_risk": 0.014766,
+      "tau": 0.7596
+    },
+    {
+      "coverage": 0.972511,
+      "errors_kept": 94,
+      "kept": 6368,
+      "selective_risk": 0.014761,
+      "tau": 0.7605
+    },
+    {
+      "coverage": 0.972663,
+      "errors_kept": 94,
+      "kept": 6369,
+      "selective_risk": 0.014759,
+      "tau": 0.7614
+    },
+    {
+      "coverage": 0.973122,
+      "errors_kept": 94,
+      "kept": 6372,
+      "selective_risk": 0.014752,
+      "tau": 0.7623
+    },
+    {
+      "coverage": 0.973885,
+      "errors_kept": 94,
+      "kept": 6377,
+      "selective_risk": 0.01474,
+      "tau": 0.7632
+    },
+    {
+      "coverage": 0.974801,
+      "errors_kept": 94,
+      "kept": 6383,
+      "selective_risk": 0.014727,
+      "tau": 0.7641
+    },
+    {
+      "coverage": 0.975718,
+      "errors_kept": 94,
+      "kept": 6389,
+      "selective_risk": 0.014713,
+      "tau": 0.765
+    },
+    {
+      "coverage": 0.976176,
+      "errors_kept": 94,
+      "kept": 6392,
+      "selective_risk": 0.014706,
+      "tau": 0.7659
+    },
+    {
+      "coverage": 0.976634,
+      "errors_kept": 94,
+      "kept": 6395,
+      "selective_risk": 0.014699,
+      "tau": 0.7668
+    },
+    {
+      "coverage": 0.977245,
+      "errors_kept": 94,
+      "kept": 6399,
+      "selective_risk": 0.01469,
+      "tau": 0.7677
+    },
+    {
+      "coverage": 0.97755,
+      "errors_kept": 94,
+      "kept": 6401,
+      "selective_risk": 0.014685,
+      "tau": 0.7686
+    },
+    {
+      "coverage": 0.978009,
+      "errors_kept": 94,
+      "kept": 6404,
+      "selective_risk": 0.014678,
+      "tau": 0.7695
+    },
+    {
+      "coverage": 0.978619,
+      "errors_kept": 94,
+      "kept": 6408,
+      "selective_risk": 0.014669,
+      "tau": 0.7713
+    },
+    {
+      "coverage": 0.978925,
+      "errors_kept": 94,
+      "kept": 6410,
+      "selective_risk": 0.014665,
+      "tau": 0.7722
+    },
+    {
+      "coverage": 0.979078,
+      "errors_kept": 94,
+      "kept": 6411,
+      "selective_risk": 0.014662,
+      "tau": 0.7731
+    },
+    {
+      "coverage": 0.979536,
+      "errors_kept": 94,
+      "kept": 6414,
+      "selective_risk": 0.014655,
+      "tau": 0.774
+    },
+    {
+      "coverage": 0.979841,
+      "errors_kept": 94,
+      "kept": 6416,
+      "selective_risk": 0.014651,
+      "tau": 0.7749
+    },
+    {
+      "coverage": 0.980452,
+      "errors_kept": 94,
+      "kept": 6420,
+      "selective_risk": 0.014642,
+      "tau": 0.7758
+    },
+    {
+      "coverage": 0.980757,
+      "errors_kept": 94,
+      "kept": 6422,
+      "selective_risk": 0.014637,
+      "tau": 0.7767
+    },
+    {
+      "coverage": 0.981063,
+      "errors_kept": 94,
+      "kept": 6424,
+      "selective_risk": 0.014633,
+      "tau": 0.7776
+    },
+    {
+      "coverage": 0.981827,
+      "errors_kept": 94,
+      "kept": 6429,
+      "selective_risk": 0.014621,
+      "tau": 0.7785
+    },
+    {
+      "coverage": 0.981979,
+      "errors_kept": 94,
+      "kept": 6430,
+      "selective_risk": 0.014619,
+      "tau": 0.7794
+    },
+    {
+      "coverage": 0.982437,
+      "errors_kept": 94,
+      "kept": 6433,
+      "selective_risk": 0.014612,
+      "tau": 0.7803
+    },
+    {
+      "coverage": 0.983201,
+      "errors_kept": 94,
+      "kept": 6438,
+      "selective_risk": 0.014601,
+      "tau": 0.7812
+    },
+    {
+      "coverage": 0.983354,
+      "errors_kept": 95,
+      "kept": 6439,
+      "selective_risk": 0.014754,
+      "tau": 0.781218
+    },
+    {
+      "coverage": 0.983965,
+      "errors_kept": 95,
+      "kept": 6443,
+      "selective_risk": 0.014745,
+      "tau": 0.783
+    },
+    {
+      "coverage": 0.984881,
+      "errors_kept": 95,
+      "kept": 6449,
+      "selective_risk": 0.014731,
+      "tau": 0.7839
+    },
+    {
+      "coverage": 0.985644,
+      "errors_kept": 95,
+      "kept": 6454,
+      "selective_risk": 0.01472,
+      "tau": 0.7848
+    },
+    {
+      "coverage": 0.986255,
+      "errors_kept": 96,
+      "kept": 6458,
+      "selective_risk": 0.014865,
+      "tau": 0.7857
+    },
+    {
+      "coverage": 0.986866,
+      "errors_kept": 96,
+      "kept": 6462,
+      "selective_risk": 0.014856,
+      "tau": 0.7866
+    },
+    {
+      "coverage": 0.987019,
+      "errors_kept": 96,
+      "kept": 6463,
+      "selective_risk": 0.014854,
+      "tau": 0.7875
+    },
+    {
+      "coverage": 0.987324,
+      "errors_kept": 96,
+      "kept": 6465,
+      "selective_risk": 0.014849,
+      "tau": 0.7884
+    },
+    {
+      "coverage": 0.98763,
+      "errors_kept": 96,
+      "kept": 6467,
+      "selective_risk": 0.014845,
+      "tau": 0.7893
+    },
+    {
+      "coverage": 0.987783,
+      "errors_kept": 96,
+      "kept": 6468,
+      "selective_risk": 0.014842,
+      "tau": 0.7902
+    },
+    {
+      "coverage": 0.987935,
+      "errors_kept": 96,
+      "kept": 6469,
+      "selective_risk": 0.01484,
+      "tau": 0.7911
+    },
+    {
+      "coverage": 0.988088,
+      "errors_kept": 96,
+      "kept": 6470,
+      "selective_risk": 0.014838,
+      "tau": 0.792
+    },
+    {
+      "coverage": 0.988393,
+      "errors_kept": 96,
+      "kept": 6472,
+      "selective_risk": 0.014833,
+      "tau": 0.7929
+    },
+    {
+      "coverage": 0.988546,
+      "errors_kept": 96,
+      "kept": 6473,
+      "selective_risk": 0.014831,
+      "tau": 0.7938
+    },
+    {
+      "coverage": 0.988699,
+      "errors_kept": 96,
+      "kept": 6474,
+      "selective_risk": 0.014829,
+      "tau": 0.7947
+    },
+    {
+      "coverage": 0.989157,
+      "errors_kept": 96,
+      "kept": 6477,
+      "selective_risk": 0.014822,
+      "tau": 0.7965
+    },
+    {
+      "coverage": 0.98931,
+      "errors_kept": 96,
+      "kept": 6478,
+      "selective_risk": 0.014819,
+      "tau": 0.7983
+    },
+    {
+      "coverage": 0.989768,
+      "errors_kept": 96,
+      "kept": 6481,
+      "selective_risk": 0.014813,
+      "tau": 0.7992
+    },
+    {
+      "coverage": 0.989921,
+      "errors_kept": 96,
+      "kept": 6482,
+      "selective_risk": 0.01481,
+      "tau": 0.8001
+    },
+    {
+      "coverage": 0.990073,
+      "errors_kept": 96,
+      "kept": 6483,
+      "selective_risk": 0.014808,
+      "tau": 0.801
+    },
+    {
+      "coverage": 0.990226,
+      "errors_kept": 96,
+      "kept": 6484,
+      "selective_risk": 0.014806,
+      "tau": 0.8019
+    },
+    {
+      "coverage": 0.990531,
+      "errors_kept": 96,
+      "kept": 6486,
+      "selective_risk": 0.014801,
+      "tau": 0.8028
+    },
+    {
+      "coverage": 0.990684,
+      "errors_kept": 96,
+      "kept": 6487,
+      "selective_risk": 0.014799,
+      "tau": 0.8046
+    },
+    {
+      "coverage": 0.990837,
+      "errors_kept": 96,
+      "kept": 6488,
+      "selective_risk": 0.014797,
+      "tau": 0.8082
+    },
+    {
+      "coverage": 0.99099,
+      "errors_kept": 96,
+      "kept": 6489,
+      "selective_risk": 0.014794,
+      "tau": 0.81
+    },
+    {
+      "coverage": 0.991142,
+      "errors_kept": 96,
+      "kept": 6490,
+      "selective_risk": 0.014792,
+      "tau": 0.8118
+    },
+    {
+      "coverage": 0.991448,
+      "errors_kept": 97,
+      "kept": 6492,
+      "selective_risk": 0.014941,
+      "tau": 0.8145
+    },
+    {
+      "coverage": 0.991753,
+      "errors_kept": 97,
+      "kept": 6494,
+      "selective_risk": 0.014937,
+      "tau": 0.8163
+    },
+    {
+      "coverage": 0.991906,
+      "errors_kept": 97,
+      "kept": 6495,
+      "selective_risk": 0.014935,
+      "tau": 0.8181
+    },
+    {
+      "coverage": 0.992364,
+      "errors_kept": 97,
+      "kept": 6498,
+      "selective_risk": 0.014928,
+      "tau": 0.819
+    },
+    {
+      "coverage": 0.992517,
+      "errors_kept": 97,
+      "kept": 6499,
+      "selective_risk": 0.014925,
+      "tau": 0.8199
+    },
+    {
+      "coverage": 0.99267,
+      "errors_kept": 97,
+      "kept": 6500,
+      "selective_risk": 0.014923,
+      "tau": 0.8208
+    },
+    {
+      "coverage": 0.992822,
+      "errors_kept": 97,
+      "kept": 6501,
+      "selective_risk": 0.014921,
+      "tau": 0.821177
+    },
+    {
+      "coverage": 0.992975,
+      "errors_kept": 97,
+      "kept": 6502,
+      "selective_risk": 0.014918,
+      "tau": 0.8226
+    },
+    {
+      "coverage": 0.993128,
+      "errors_kept": 97,
+      "kept": 6503,
+      "selective_risk": 0.014916,
+      "tau": 0.8235
+    },
+    {
+      "coverage": 0.99328,
+      "errors_kept": 97,
+      "kept": 6504,
+      "selective_risk": 0.014914,
+      "tau": 0.8253
+    },
+    {
+      "coverage": 0.993433,
+      "errors_kept": 97,
+      "kept": 6505,
+      "selective_risk": 0.014912,
+      "tau": 0.8271
+    },
+    {
+      "coverage": 0.993891,
+      "errors_kept": 97,
+      "kept": 6508,
+      "selective_risk": 0.014905,
+      "tau": 0.8307
+    },
+    {
+      "coverage": 0.994044,
+      "errors_kept": 97,
+      "kept": 6509,
+      "selective_risk": 0.014902,
+      "tau": 0.8316
+    },
+    {
+      "coverage": 0.994197,
+      "errors_kept": 97,
+      "kept": 6510,
+      "selective_risk": 0.0149,
+      "tau": 0.8325
+    },
+    {
+      "coverage": 0.994349,
+      "errors_kept": 98,
+      "kept": 6511,
+      "selective_risk": 0.015051,
+      "tau": 0.837
+    },
+    {
+      "coverage": 0.994502,
+      "errors_kept": 99,
+      "kept": 6512,
+      "selective_risk": 0.015203,
+      "tau": 0.8415
+    },
+    {
+      "coverage": 0.994655,
+      "errors_kept": 99,
+      "kept": 6513,
+      "selective_risk": 0.0152,
+      "tau": 0.8433
+    },
+    {
+      "coverage": 0.994808,
+      "errors_kept": 99,
+      "kept": 6514,
+      "selective_risk": 0.015198,
+      "tau": 0.8514
+    },
+    {
+      "coverage": 0.995113,
+      "errors_kept": 99,
+      "kept": 6516,
+      "selective_risk": 0.015193,
+      "tau": 0.8523
+    },
+    {
+      "coverage": 0.995266,
+      "errors_kept": 99,
+      "kept": 6517,
+      "selective_risk": 0.015191,
+      "tau": 0.855
+    },
+    {
+      "coverage": 0.995418,
+      "errors_kept": 99,
+      "kept": 6518,
+      "selective_risk": 0.015189,
+      "tau": 0.8622
+    },
+    {
+      "coverage": 0.995571,
+      "errors_kept": 100,
+      "kept": 6519,
+      "selective_risk": 0.01534,
+      "tau": 0.866329
+    },
+    {
+      "coverage": 0.995724,
+      "errors_kept": 100,
+      "kept": 6520,
+      "selective_risk": 0.015337,
+      "tau": 0.8667
+    },
+    {
+      "coverage": 0.995877,
+      "errors_kept": 101,
+      "kept": 6521,
+      "selective_risk": 0.015488,
+      "tau": 0.8739
+    },
+    {
+      "coverage": 0.996029,
+      "errors_kept": 101,
+      "kept": 6522,
+      "selective_risk": 0.015486,
+      "tau": 0.8874
+    },
+    {
+      "coverage": 0.996182,
+      "errors_kept": 101,
+      "kept": 6523,
+      "selective_risk": 0.015484,
+      "tau": 0.8892
+    },
+    {
+      "coverage": 1.0,
+      "errors_kept": 114,
+      "kept": 6548,
+      "selective_risk": 0.01741,
+      "tau": 0.9
+    }
+  ],
+  "risk_target": 0.05,
+  "schema": "carnot.formal_core_certified_abstention_3836.v1",
+  "scripts_research_conductor_modified": false,
+  "tests_run": [
+    ".venv/bin/pytest -o addopts='' tests/python/test_experiment_3836_formal_core_certified_abstention.py -q",
+    ".venv/bin/coverage run --include='*/formal_core_certified_abstention_3836.py' -m pytest -o addopts='' -q tests/python/test_experiment_3836_formal_core_certified_abstention.py && .venv/bin/coverage report --include='*/formal_core_certified_abstention_3836.py' --fail-under=100 --show-missing"
+  ]
+}

@@ -222,7 +222,7 @@ tasks:
         0. PRECONDITIONS (check BEFORE anything; on failure write blocked_<resource> + EXIT, no fabrication):
            a. `/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c "import torch; assert torch.cuda.is_available() and torch.cuda.device_count() > 0"` succeeds.
            b. The SOTA reasoner GGUF is cached: `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/` returns a .gguf (else fallback unsloth/gemma-4-26B-A4B-it-GGUF). Load via the .gguf path + llama.cpp (NOT AutoTokenizer on the GGUF repo id — it has no HF tokenizer files; use cached_sota_pair()/the .gguf model_path).
-           c. `import carnot.verify` succeeds AND data/fover_test_v4.json present with {question_id|question, step_text, label} (fallback v3, then test.json).
+           c. `import carnot.verify` succeeds AND data/fover_test_v4.json present with {{question_id|question, step_text, label}} (fallback v3, then test.json).
            If any fail: honest_verdict `blocked_<resource>` (e.g. blocked_no_cuda / blocked_model_not_cached_qwen3.6_35b / blocked_fover_corpus_not_available), preconditions_checked populated, EXIT.
         1. Draw N>=1000 balanced (≈50/50 correct/incorrect-step) FoVer items, seed-controlled.
         2. STRONG REASONER SELF-VERIFICATION: for each step, ask Qwen3.6-35B (its own
