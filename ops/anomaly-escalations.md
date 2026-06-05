@@ -86,3 +86,13 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - INVARIANT regression: frozen_fover_auroc_unchanged=True drifted from frozen 0.9131
 - artifact: results/experiment_3840_publication_gate_regression_confirmation.json
+
+## experiment_3839_edlm_kill_gate.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - method may not have genuinely run (a precondition was False (method may have been infra-blocked)) — a 'bounded' verdict here could be an infra false-negative, not a real result (cf. Thesis-A exp3728)
+- artifact: results/experiment_3839_edlm_kill_gate.json
+
+## experiment_3843.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - INVARIANT regression: frozen_fover_auroc_unchanged=True drifted from frozen 0.9131
+- artifact: results/experiment_3843.json
