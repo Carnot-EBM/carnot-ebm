@@ -1,0 +1,27 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.357",
+  "generated_at": "2026-06-05T15:31:37Z",
+  "retro_type": "operational_in_progress",
+  "summary": "No experiment commits were found for this milestone, resulting in 0 experiments completed and 0 compute-bound tasks. The GPUs remained entirely idle at 0% utilization throughout the observed period.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "No experiments were executed, so no computational bottlenecks could be identified.",
+    "GPUs were fully idle, indicating a lack of compute-bound tasks dispatched during this milestone."
+  ],
+  "improvements_suggested": [
+    "Investigate the pipeline trigger to ensure experiments are correctly dispatched for the milestone.",
+    "Ensure memory is freed on GPUs if no processes are actively running, as 4MB remains allocated with 0% utilization."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Audit milestone activation logic to understand why no experiment commits occurred.",
+    "Check runner or scheduler logs to debug the lack of task dispatch.",
+    "Clean up stale GPU memory allocations from prior milestones."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The complete lack of milestone-scoped data indicates an orchestration or scheduling failure rather than a performance bottleneck. Resolving the dispatch issue is the primary priority before performance tuning can resume."
+}

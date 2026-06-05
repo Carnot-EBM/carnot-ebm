@@ -3200,3 +3200,11 @@ Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in t
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-06-04T19:55:26Z | 2026-06-04T20:10:31Z | Planned milestone 2026.06.351: literature sweep (unblocked recursive-refiner TRM checkpoint via arcprize/nano-trm), wrote research-roadmap-vNEXT.md + research-roadmap-next.yaml (12 tasks), appended .351 refs; exclusion-manifest lint clean (HARD=0) | ~95k |
+
+## Session: 2026-06-05 Milestone 2026.06.357 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-06-05T15:31:37Z | 2026-06-05T15:32:08Z | Wrote operational retro for 2026.06.357 | ~3k |
