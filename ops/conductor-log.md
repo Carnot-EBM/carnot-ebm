@@ -7835,3 +7835,5 @@ ERROR: {
 | 2026-06-05 07:57 UTC | Build the BALANCED step-error corpus that blocked  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 4.04s |
 | 2026-06-05 07:59 UTC | Build the BALANCED step-error corpus that blocked  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 3.86s |
 | 2026-06-05 08:01 UTC | MOAT SCISSOR AT SCALE (supersedes exp3844): of the | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3846-build-balanced-step-error-corpus) |
+| 2026-06-05 08:01 UTC | INDEPENDENCE AUDIT (arXiv:2604.07650): is Carnot's | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3847-moat-scissor-at-scale-v2.n_residua |
+| 2026-06-05 08:03 UTC | MOAT SCISSOR AT SCALE (supersedes exp3844): of the | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3846-build-balanced-step-error-corpus) |
