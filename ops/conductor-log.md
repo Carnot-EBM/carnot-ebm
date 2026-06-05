@@ -7818,3 +7818,4 @@ ERROR: {
 | 2026-06-05 04:10 UTC | FR-11 continuous self-learning v22 — Tier-4 ADAPTI | OK | 84 passed in 3.60s |
 | 2026-06-05 04:14 UTC | EDLM minimal kill-gate EXECUTION (operator-gated — | OK | 82 passed in 3.65s |
 | 2026-06-05 05:03 UTC | Publication-gate REGRESSION confirmation: run scri | OK | 85 passed in 4.28s |
+| 2026-06-05 05:16 UTC | External research refresh for .353: confirm the pl | OK | 87 passed in 3.73s |
