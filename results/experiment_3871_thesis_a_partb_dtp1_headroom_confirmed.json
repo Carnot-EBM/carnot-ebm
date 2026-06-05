@@ -1,0 +1,87 @@
+{
+  "adjudication": {
+    "principle": "ARTIFACT | FUNDAMENTAL | INCONCLUSIVE - the Phase-3 generation verdict; FUNDAMENTAL honestly bounds energy-as-generator at this scale, ARTIFACT motivates a better decoder.",
+    "value": "INCONCLUSIVE"
+  },
+  "all_configured_seeds": [],
+  "ar_best_accuracy": {
+    "principle": "The positive control - must be in [0.4,0.95]; AR<0.3 means no headroom and INCONCLUSIVE, never FUNDAMENTAL (the v2 trap).",
+    "value": null
+  },
+  "duration_s": {
+    "principle": "Pre-Launch + Adversarial-Verify + Inference-Substrate methodology - a real EBT train+generate run takes real wall-clock; implausibly short = fabrication.",
+    "value": 0.11
+  },
+  "ebt_argmin_accuracy": {
+    "principle": "Greedy energy-argmin decode accuracy - the BOUNDED baseline (~0.0 in the scaled run).",
+    "value": null
+  },
+  "ebt_beam_accuracy": {
+    "principle": "Global discrete beam-search accuracy - THE decisive probe; high => greedy was the bottleneck (ARTIFACT), ~0 => landscape misshaped (FUNDAMENTAL).",
+    "value": null
+  },
+  "experiment": 3871,
+  "honest_verdict": "blocked_scaled_harness_import",
+  "inference_substrate": {
+    "principle": "Pre-Launch + Adversarial-Verify + Inference-Substrate methodology - a real EBT train+generate run takes real wall-clock; implausibly short = fabrication.",
+    "value": "blocked_precondition"
+  },
+  "matched_flops_ratio": {
+    "principle": "EBT/AR inference-FLOP ratio - a win only counts at equal compute (the P0.1 lesson; a params-matched win that spends more passes does not count).",
+    "value": null
+  },
+  "model_specs": {
+    "principle": "Pre-Launch + Adversarial-Verify + Inference-Substrate methodology - a real EBT train+generate run takes real wall-clock; implausibly short = fabrication.",
+    "value": {
+      "ar": "matched_scaled_ar_from_scratch_or_checkpoint",
+      "ar_best_of_n": "matched_to_measured_beam_energy_evals_with_exp3727_budget_matcher",
+      "beam": 8,
+      "block_size": 48,
+      "digits": 3,
+      "dim": 768,
+      "ebt": "scaled_ebt_from_scratch_or_checkpoint",
+      "n_eval": 100,
+      "n_heads": 12,
+      "n_layers": 4,
+      "topk": 12,
+      "train_steps": 12000
+    }
+  },
+  "n_heldout": {
+    "principle": "Pre-Launch + Adversarial-Verify + Inference-Substrate methodology - a real EBT train+generate run takes real wall-clock; implausibly short = fabrication.",
+    "value": 0
+  },
+  "positive_control_passed": false,
+  "preconditions_checked": {
+    "principle": "Pre-Launch + Adversarial-Verify + Inference-Substrate methodology - a real EBT train+generate run takes real wall-clock; implausibly short = fabrication.",
+    "value": {
+      "cuda": true,
+      "cuda_device_count": 2,
+      "cuda_devices": [
+        "NVIDIA GeForce RTX 3090",
+        "NVIDIA GeForce RTX 3090"
+      ],
+      "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "scaled_harness_error": "ModuleNotFoundError(\"No module named 'scripts.thesis_a_part_b_scaled'\")",
+      "scaled_harness_import": false
+    }
+  },
+  "random_seed": {
+    "principle": "Pre-Launch + Adversarial-Verify + Inference-Substrate methodology - a real EBT train+generate run takes real wall-clock; implausibly short = fabrication.",
+    "value": null
+  },
+  "random_seeds_used": {
+    "principle": "Pre-Launch + Adversarial-Verify + Inference-Substrate methodology - a real EBT train+generate run takes real wall-clock; implausibly short = fabrication.",
+    "value": []
+  },
+  "reproducibility_checksum": {
+    "principle": "Pre-Launch + Adversarial-Verify + Inference-Substrate methodology - a real EBT train+generate run takes real wall-clock; implausibly short = fabrication.",
+    "value": "d2c6e4051c53b8b487b338913cde421ffa8aaa39ecfe266cd74e2e208c2ec907"
+  },
+  "schema": "carnot.experiment_3871_thesis_a_partb_dtp1_headroom_confirmed.v1",
+  "seed_evaluations": [],
+  "seeds_used": {
+    "principle": "Pre-Launch + Adversarial-Verify + Inference-Substrate methodology - a real EBT train+generate run takes real wall-clock; implausibly short = fabrication.",
+    "value": []
+  }
+}
