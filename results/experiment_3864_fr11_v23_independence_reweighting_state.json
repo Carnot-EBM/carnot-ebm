@@ -1,0 +1,111 @@
+{
+  "auroc_in_frozen_ci": true,
+  "memory_ablation_contribution_preserved": true,
+  "n_examples_observed": 1000,
+  "per_verifier_independence_table": [
+    {
+      "actual_positive_total": 500,
+      "false_negative": 268,
+      "false_positive": 38,
+      "independence_score": 0.332,
+      "measurement_note": "online_unique_error_catches_over_cached_verifier_masks",
+      "n_examples": 1000,
+      "precision": 0.859259259,
+      "predicted_positive_total": 270,
+      "true_negative": 462,
+      "true_positive": 232,
+      "unique_error_catches": 166,
+      "verifier": "fr11_session_memory"
+    },
+    {
+      "actual_positive_total": 500,
+      "false_negative": 462,
+      "false_positive": 22,
+      "independence_score": 0.02,
+      "measurement_note": "online_unique_error_catches_over_cached_verifier_masks",
+      "n_examples": 1000,
+      "precision": 0.633333333,
+      "predicted_positive_total": 60,
+      "true_negative": 478,
+      "true_positive": 38,
+      "unique_error_catches": 10,
+      "verifier": "tier0r_curry_howard"
+    },
+    {
+      "actual_positive_total": 500,
+      "false_negative": 438,
+      "false_positive": 164,
+      "independence_score": 0.044,
+      "measurement_note": "online_unique_error_catches_over_cached_verifier_masks",
+      "n_examples": 1000,
+      "precision": 0.274336283,
+      "predicted_positive_total": 226,
+      "true_negative": 336,
+      "true_positive": 62,
+      "unique_error_catches": 22,
+      "verifier": "tier0s_arithmetic_gap"
+    },
+    {
+      "actual_positive_total": 500,
+      "false_negative": 500,
+      "false_positive": 0,
+      "independence_score": 0.0,
+      "measurement_note": "online_unique_error_catches_over_cached_verifier_masks",
+      "n_examples": 1000,
+      "precision": 0.0,
+      "predicted_positive_total": 0,
+      "true_negative": 500,
+      "true_positive": 0,
+      "unique_error_catches": 0,
+      "verifier": "tier0u_logical_consistency"
+    }
+  ],
+  "random_seed": 3864,
+  "reweighted_ensemble_auroc": 0.90592,
+  "schema": "carnot.fr11_v23_independence_reweighting_state",
+  "sha256": "26868b7411c37fcc2fed7d7eea8e14f6943edf10b5d5152ad867b900d02773d6",
+  "stats": {
+    "fr11_session_memory": {
+      "false_negative": 268,
+      "false_positive": 38,
+      "true_negative": 462,
+      "true_positive": 232,
+      "unique_error_catches": 166
+    },
+    "tier0r_curry_howard": {
+      "false_negative": 462,
+      "false_positive": 22,
+      "true_negative": 478,
+      "true_positive": 38,
+      "unique_error_catches": 10
+    },
+    "tier0s_arithmetic_gap": {
+      "false_negative": 438,
+      "false_positive": 164,
+      "true_negative": 336,
+      "true_positive": 62,
+      "unique_error_catches": 22
+    },
+    "tier0u_logical_consistency": {
+      "false_negative": 500,
+      "false_positive": 0,
+      "true_negative": 500,
+      "true_positive": 0,
+      "unique_error_catches": 0
+    }
+  },
+  "update_cost_note": "Tier-1 hardware path: pure CPU counter updates over cached verifier scores; qualitatively <1us/update, no fabricated wall-time timing.",
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ],
+  "version": 1,
+  "weights": {
+    "fr11_session_memory": 0.618378022,
+    "tier0r_curry_howard": 0.356117249,
+    "tier0s_arithmetic_gap": 0.005413865,
+    "tier0u_logical_consistency": 0.020090863
+  }
+}

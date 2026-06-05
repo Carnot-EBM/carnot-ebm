@@ -11110,3 +11110,71 @@ behavior, proving the result uses the real persisted Tier-3 predictor
 **Then** tier0u and tier0s are pruned (marginal < 0.002)
 **And** the remaining structure holds AUROC > 0.903
 **And** compute_saving_fraction = 0.5
+
+---
+
+## REQ-LEARN-3864: FR-11 v23 Online Independence-Reweighting Tracker
+
+**Given** importable `carnot.verify`, cached FoVer-style rows, and per-verifier
+scores for the four frozen Exp 2837 verifier columns
+**When** Exp 3864 runs online over the corpus
+**Then** it SHALL maintain per-verifier precision counters and an independence
+counter for errors caught by exactly one verifier
+**And** it SHALL derive a deterministic learned weighting from the frozen prior,
+online precision, and unique-catch independence
+**And** it SHALL evaluate the reweighted ensemble AUROC against the frozen
+0.9131 CI without moving the frozen headline number
+**And** it SHALL persist the learned weighting state for the next FR-11
+milestone.
+
+### REQ-LEARN-3864 Sub-requirements
+
+- REQ-LEARN-3864-1: Preconditions SHALL require `import carnot.verify` to
+  succeed and SHALL require a cached FoVer-style corpus source before scoring;
+  missing resources SHALL produce an `honest_verdict` beginning with
+  `blocked_<resource>`.
+- REQ-LEARN-3864-2: The online tracker SHALL update precision counters and
+  unique-error-catch independence counters using only CPU counter updates over
+  cached verifier scores; it SHALL NOT load an LLM, GPU model, or mutate model
+  weights.
+- REQ-LEARN-3864-3: `independence_weight_per_verifier` SHALL include all four
+  frozen verifier names and SHALL upweight high-precision, high-independence
+  verifiers while retaining the frozen prior as a no-regression guard.
+- REQ-LEARN-3864-4: `auroc_in_frozen_ci` SHALL be emitted as a bare boolean and
+  SHALL be true exactly when `reweighted_ensemble_auroc` lies inside the frozen
+  CI95 range `[0.9027316334533082, 0.9235355665466916]`.
+- REQ-LEARN-3864-5: `memory_ablation_contribution_preserved` SHALL be emitted
+  as a bare boolean and SHALL require the Exp 2837 learning contribution to
+  round to at least `+0.0185` and the learned `fr11_session_memory` weight to
+  remain positive.
+- REQ-LEARN-3864-6: Runnable artifacts SHALL include bare values for
+  `reweighted_ensemble_auroc`, `auroc_in_frozen_ci`,
+  `independence_weight_per_verifier`,
+  `memory_ablation_contribution_preserved`, `update_cost_note`,
+  `state_persisted_path`, `preconditions_checked`, `random_seed`,
+  `reproducibility_checksum`, `inference_substrate`, and `duration_s`, plus
+  separate field-principle annotations for those fields.
+- REQ-LEARN-3864-7: The terminal verdict SHALL be
+  `complete: fr11_v23_independence_reweighting_learned_auroc<A>_in_frozen_ci_memory_contribution_preserved_state_persisted`
+  when `auroc_in_frozen_ci=true` and
+  `memory_ablation_contribution_preserved=true`; otherwise, if the learned
+  reweighting regresses below the frozen CI, the verdict SHALL be
+  `complete: fr11_v23_independence_reweighting_REGRESSED_below_frozen_ci_reverted_to_static_weights`.
+
+### SCENARIO-LEARN-3864: Unique Error Catches Increase Independence Weight
+
+**Given** labeled verifier scores where one verifier catches positive rows that
+all other verifiers miss while preserving precision
+**When** the v23 tracker processes rows online and computes weights
+**Then** the unique catches increase that verifier's independence score and
+learned weight relative to the frozen prior
+**And** the artifact reports `auroc_in_frozen_ci` and
+`memory_ablation_contribution_preserved` as bare booleans
+**And** the persisted state contains the learned weights and raw counter table
+used by the next FR-11 milestone.
+
+## Implementation Status (REQ-LEARN-3864)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-3864 | Proposed (python/carnot/fr11/continuous_self_learning_v23.py; scripts/experiments/experiment_3864_fr11_self_learning_v23_independence_reweighting.py, Exp 3864) | Proposed (tests/python/test_experiment_3864_fr11_v23_independence_reweighting.py) |
