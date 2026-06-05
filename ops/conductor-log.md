@@ -7885,3 +7885,5 @@ ERROR: {
 | 2026-06-05 13:46 UTC | LDT-lattice margin sharpening (re-issue of exp3853 | OK | 91 passed in 5.43s |
 | 2026-06-05 14:27 UTC | GateMate A1-EVB-2M hardware continuity (terminal-s | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-06-05 14:44 UTC | PolarFire SoC Discovery Kit hardware continuity (t | OK | 93 passed in 5.12s |
+| 2026-06-05 15:00 UTC | Capstone .356 — aggregate the VERIFIER-MOAT DURABI | OK | 85 passed in 5.03s |
+| 2026-06-05 15:02 UTC | Milestone 2026.06.357 activated | OK | 1 tasks queued |
