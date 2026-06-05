@@ -35656,3 +35656,63 @@ milestones:
       \ sharpening, and the two FPGA boards. paper_ready stays TRUE; frozen 0.9131 unchanged."
     deliverable: results/experiment_3856_capstone_v355.json
     result: OK (conductor)
+- id: 2026.06.355
+  correction_type: v355_total_wipeout_archive
+  title: 'Corrective archive of .355 total wipeout'
+  doc: openspec/change-proposals/research-roadmap-v356.md
+  completed: '2026-06-05'
+  finding: 'TOTAL WIPEOUT: .355 produced zero usable result artifacts. Root cause 1 was poison-test YAML corruption: the exp3833 verdict had been written as an unquoted complete-colon result, making research-complete.yaml fail yaml.safe_load and making test_docs.py fail inside the conductor smart-subset pre-test gate. Root cause 2 was the gemini-CLI archive crash in chunk-NBZI34 with 429 Too Many Requests. The outer-loop fixed the poison by quoting the exp3833 result values at lines 35485 and 35569. The moat-durability question remains open and is re-issued as .356 with fresh exp3857-exp3868 ids, all codex plus requires_codex routing, paper_ready TRUE, and the frozen FoVer 0.9131 headline unchanged.'
+  activation_recorded: exp3857-archive-v355-activate-v356
+  tasks:
+  - id: exp3845-archive-v354-activate-v355
+    title: 'Archive milestone .354 and activate .355'
+    deliverable: results/experiment_3845_archive_v354_activate_v355.json
+    result: 'FAIL: gemini-CLI chunk-NBZI34 crash / 429 Too Many Requests; archive task produced no usable result artifact'
+  - id: exp3846-build-balanced-step-error-corpus
+    title: 'Build balanced step-error corpus'
+    deliverable: data/step_error_balanced_v1.json
+    result: 'SKIPPED_BY_PRETEST_GATE: research-complete.yaml poison made test_docs.py fail before the task could run'
+  - id: exp3847-moat-scissor-at-scale-v2
+    title: 'Moat scissor at scale v2'
+    deliverable: results/experiment_3847_moat_scissor_at_scale_v2.json
+    result: 'GATE_BLOCK: upstream corpus task exp3846 was retired by the poisoned pre-test gate'
+  - id: exp3848-verifier-reasoner-independence-audit
+    title: 'Verifier-reasoner independence audit'
+    deliverable: results/experiment_3848_verifier_reasoner_independence_audit.json
+    result: 'GATE_BLOCK: upstream scissor task exp3847 did not produce residual masks'
+  - id: exp3849-thinkprm-complementarity
+    title: 'ThinkPRM complementarity'
+    deliverable: results/experiment_3849_thinkprm_complementarity.json
+    result: 'GATE_BLOCK: upstream scissor task exp3847 did not produce residual masks'
+  - id: exp3850-graph-grounding-fact-verifier-prototype
+    title: 'Graph-grounding fact-verifier prototype'
+    deliverable: results/experiment_3850_graph_grounding_fact_verifier_prototype.json
+    result: 'SKIPPED_BY_PRETEST_GATE: research-complete.yaml poison kept the task from running'
+  - id: exp3851-graph-verifier-facts-complementarity
+    title: 'Graph verifier facts complementarity'
+    deliverable: results/experiment_3851_graph_verifier_facts_complementarity.json
+    result: 'GATE_BLOCK: upstream graph prototype exp3850 was skipped by the poisoned gate'
+  - id: exp3852-fr11-v22-online-independence-reweighting
+    title: 'FR-11 v22 online independence reweighting'
+    deliverable: results/experiment_3852_fr11_self_learning_v22_independence_reweighting.json
+    result: 'SKIPPED_BY_PRETEST_GATE: research-complete.yaml poison kept the task from running'
+  - id: exp3853-ldt-lattice-margin-sharpening
+    title: 'LDT lattice margin sharpening'
+    deliverable: results/experiment_3853_ldt_lattice_margin_sharpening.json
+    result: 'SKIPPED_BY_PRETEST_GATE: research-complete.yaml poison kept the task from running'
+  - id: exp3854-gatemate-ising-tile-flash
+    title: 'GateMate Ising tile flash'
+    deliverable: results/experiment_3854_gatemate_ising_tile_flash.json
+    result: 'SKIPPED_BY_PRETEST_GATE: research-complete.yaml poison kept the hardware task from running'
+  - id: exp3855-polarfire-soc-smoke-v3
+    title: 'PolarFire SoC smoke v3'
+    deliverable: results/experiment_3855_polarfire_soc_smoke_v3.json
+    result: 'SKIPPED_BY_PRETEST_GATE: research-complete.yaml poison kept the hardware task from running'
+  - id: exp3856-capstone-v355
+    title: 'Capstone .355'
+    deliverable: results/experiment_3856_capstone_v355.json
+    result: 'SKIPPED_BY_PRETEST_GATE: zero usable upstream artifacts existed to aggregate'
+  - id: exp3857-archive-v355-activate-v356
+    title: 'Archive .355 wipeout and activate .356'
+    deliverable: results/experiment_3857_archive_v355_activate_v356.json
+    result: 'COMPLETE: exp3857 archived .355 wipeout and activated .356 with all-codex anti-wipeout routing'
