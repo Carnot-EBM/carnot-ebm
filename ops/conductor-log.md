@@ -7887,3 +7887,4 @@ ERROR: {
 | 2026-06-05 14:44 UTC | PolarFire SoC Discovery Kit hardware continuity (t | OK | 93 passed in 5.12s |
 | 2026-06-05 15:00 UTC | Capstone .356 — aggregate the VERIFIER-MOAT DURABI | OK | 85 passed in 5.03s |
 | 2026-06-05 15:02 UTC | Milestone 2026.06.357 activated | OK | 1 tasks queued |
+| 2026-06-05 15:21 UTC | MOAT SCISSOR AT SCALE v4 (supersedes blocked exp38 | OK | 98 passed in 5.14s |
