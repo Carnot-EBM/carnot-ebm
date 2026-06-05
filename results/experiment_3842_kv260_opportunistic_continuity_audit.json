@@ -1,0 +1,28 @@
+{
+  "kv260_ssh_reachable": true,
+  "accelerator_overlay_loadable": true,
+  "preconditions_checked": [
+    {
+      "resource": "kv260_ssh",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
+      "exit_code": 0,
+      "available": true,
+      "checked_before_board_operations": true
+    }
+  ],
+  "honest_verdict": "complete: kv260_terminal_state_holds_ssh_reachable_accelerator_loadable_opportunistic_audit",
+  "random_seed": 3842,
+  "reproducibility_checksum": "5c385f267e5e17902a8b3bd9eca44ba89c2199103b2305628268f1a7d622a495",
+  "duration_s": 5.810238361358643,
+  "inference_substrate": "hardware_smoke",
+  "field_principles": {
+    "kv260_ssh_reachable": "BARE bool - the correct KV260 liveness signal (SSH, not host SD card)",
+    "accelerator_overlay_loadable": "terminal-state confirmation \u2014 xmutil can list/load the overlay",
+    "preconditions_checked": "Records the SSH check was actually run before any board operation.",
+    "honest_verdict": "Terminal prefix; blocked_kv260_ssh_unreachable if the board is unreachable.",
+    "random_seed": "Determinism precondition.",
+    "reproducibility_checksum": "Content hash catches drift.",
+    "duration_s": "Wall-clock plausibility floor.",
+    "inference_substrate": "an SSH board check, not live inference."
+  }
+}
