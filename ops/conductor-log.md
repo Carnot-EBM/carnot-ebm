@@ -7888,3 +7888,5 @@ ERROR: {
 | 2026-06-05 15:00 UTC | Capstone .356 — aggregate the VERIFIER-MOAT DURABI | OK | 85 passed in 5.03s |
 | 2026-06-05 15:02 UTC | Milestone 2026.06.357 activated | OK | 1 tasks queued |
 | 2026-06-05 15:21 UTC | MOAT SCISSOR AT SCALE v4 (supersedes blocked exp38 | OK | 98 passed in 5.14s |
+| 2026-06-05 16:01 UTC | Plan milestone 2026.06.358 | OK | 11 tasks proposed |
+| 2026-06-05 16:03 UTC | Milestone 2026.06.358 activated | OK | 11 tasks queued |
