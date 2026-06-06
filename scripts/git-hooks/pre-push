@@ -1,21 +1,27 @@
 #!/usr/bin/env bash
 # Carnot pre-push hook (standalone — NOT managed by pre-commit).
 #
-# Runs the blog publish guard: refuses to push an un-approved blog post to main
-# (carnot-ebm.org is served from main via GitHub Pages; pushing a post = publishing
-# it; posts are operator-approved only). See scripts/blog_publish_guard.py and
-# ops/known-issues.md "Blog publish gate".
+# Runs the project's pre-push guards against the refs being pushed:
+#   1. blog_publish_guard.py  — no un-approved blog post reaches Pages (operator-only).
+#   2. gitlink_guard.py       — no stray submodule gitlink (mode 160000) without a
+#                               .gitmodules entry (breaks every Actions checkout).
+# See ops/known-issues.md "Blog publish gate" + "nano-trm gitlink".
 #
-# Standalone (vs a pre-commit pre-push hook) on purpose: pre-commit's pre-push
-# dispatcher stashes unstaged files for the hook run, which would put a stash
-# window on the conductor's auto-push path (CLAUDE.md "Never Stash — Always
-# Commit-First"). This hook inspects committed SHAs only and never touches the
-# working tree, so nothing is stashed.
+# Standalone (vs pre-commit's pre-push) on purpose: pre-commit's dispatcher
+# stashes unstaged files for the hook run, which would put a stash window on the
+# conductor's auto-push path (CLAUDE.md "Never Stash — Always Commit-First").
+# These guards inspect committed SHAs only and never touch the working tree.
 #
-# git passes the refs being pushed on stdin; forward them to the guard.
+# git passes the refs on stdin ('<local ref> <local sha> <remote ref> <remote
+# sha>'); stdin can only be read once, so capture it and replay to each guard.
 # $1 = remote name, $2 = remote URL.
-set -euo pipefail
+set -uo pipefail
 ROOT="$(git rev-parse --show-toplevel)"
 PY="${ROOT}/.venv/bin/python"
 [ -x "$PY" ] || PY="python3"
-exec "$PY" "${ROOT}/scripts/blog_publish_guard.py"
+
+REFS="$(cat)"   # consume the pre-push stdin once
+rc=0
+printf '%s' "$REFS" | "$PY" "${ROOT}/scripts/blog_publish_guard.py" || rc=1
+printf '%s' "$REFS" | "$PY" "${ROOT}/scripts/gitlink_guard.py"      || rc=1
+exit "$rc"

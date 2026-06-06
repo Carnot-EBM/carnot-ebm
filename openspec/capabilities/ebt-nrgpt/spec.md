@@ -147,6 +147,18 @@ Given no evaluated seed reaches held-out AR accuracy in `[0.4, 0.95]`, the Exp 3
 ## SCENARIO-EBT-3871-ADJUDICATION: Beam Accuracy Decides Artifact Versus Fundamental
 Given the positive-control AR accuracy is in `[0.4, 0.95]`, the Exp 3871 workflow writes ARTIFACT when beam accuracy recovers at least half of AR accuracy, writes FUNDAMENTAL when both beam and greedy argmin remain below 20% of AR accuracy, and otherwise writes INCONCLUSIVE while preserving matched-FLOP accounting.
 
+## REQ-EBT-3882: Thesis-A Part-B Kill-Gate Beam Search Rerun
+The system must provide `scripts/experiments/experiment_3882_thesis_a_partb_killgate.py` to rerun the Thesis-A part-b kill-gate after the Exp 3871 scaled-harness import bug. The workflow must check CUDA before live work, import `thesis_a_part_b_scaled` by inserting the repository `scripts/` directory on `sys.path`, load a reusable confirmed-headroom checkpoint when available or otherwise train configured scaled seeds with checkpointing, require held-out AR headroom in `[0.4, 0.95]` before adjudicating, and evaluate AR best-of-N, greedy EBT energy-argmin, and global cumulative-energy EBT beam search with matched inference-FLOP accounting. The artifact must be written to `results/experiment_3882_thesis_a_partb_killgate.json`, must use a terminal `complete:` or `blocked_` honest verdict, and must emit required result fields as bare JSON values rather than `{value, principle}` wrappers.
+
+## SCENARIO-EBT-3882-IMPORT: Scaled Harness Import Uses Scripts Path
+Given the repository root and the scaled Thesis-A harness, the Exp 3882 precondition path inserts `scripts/` on `sys.path` and imports `thesis_a_part_b_scaled` directly. It must not import `scripts.thesis_a_part_b_scaled`, so the Exp 3871 `ModuleNotFoundError` path cannot recur.
+
+## SCENARIO-EBT-3882-SCHEMA: Artifact Fields Are Bare Values
+Given an Exp 3882 seed evaluation, the artifact sets `positive_control_passed`, `ar_best_accuracy`, `ebt_argmin_accuracy`, `ebt_beam_accuracy`, `adjudication`, `matched_flops_ratio`, `seeds_used`, `n_heldout`, `preconditions_checked`, `model_specs`, `random_seed`, `random_seeds_used`, `reproducibility_checksum`, `duration_s`, and `inference_substrate` as bare JSON bools, numbers, strings, arrays, or objects. None of those fields may be wrapped in a `{value, principle}` dictionary.
+
+## SCENARIO-EBT-3882-ADJUDICATION: Beam Accuracy Decides The Kill-Gate
+Given positive-control AR accuracy in `[0.4, 0.95]`, Exp 3882 writes ARTIFACT when beam accuracy is at least half the AR accuracy, writes FUNDAMENTAL when both beam and greedy argmin are below 20% of AR accuracy, and writes INCONCLUSIVE otherwise. Given failed AR headroom, it writes `complete: thesis_a_partb_INCONCLUSIVE_no_headroom_ar<best>` and does not label the result ARTIFACT or FUNDAMENTAL.
+
 ## REQ-EBT-3731: Thesis-A EBT Bring-Up Capstone Aggregation
 The system must provide `scripts/experiment_3731_capstone_v341.py` to aggregate Exp 3724 through Exp 3730 from checked-in JSON artifacts only. The capstone must exclude any upstream artifact carrying `flagged_adversarial=true` from headline aggregation, cite every unflagged upstream artifact with imported fields and SHA256 hashes, preserve the paper-ready and frozen-headline invariants from Exp 3724, carry the kill-gate part-(a) verdict from Exp 3729, and write `results/experiment_3731_capstone_v341.json` with the required principle-annotated fields. The capstone must not claim that energy-as-generator works; `green_light_342=true` only means stable enough to run the matched-compute comparison, while `green_light_342=false` records Thesis-A as bounded at small scale.
 
