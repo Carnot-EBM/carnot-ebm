@@ -273,3 +273,26 @@ mechanics literature, and the analogy to our result is ours. (Naming note:
 "NVIDIA Ising" is a quantum-AI toolkit, distinct from the Ising *machines* /
 samplers Carnot's hardware path uses — say "Ising machine/sampler" explicitly in
 Carnot docs to disambiguate.) See memory `nvidia-ising-qec-amortized`.
+
+## Experiment #1 capstone — TRM standalone ceiling (Kona-reproduction step 1), 2026-06-06
+
+Operator-directed: train a REAL recursive refiner (nano-trm TRM, the published
+Tiny Recursive Model) on Sudoku-Extreme with NO energy, to measure how much of
+Kona's 96% is "learned refiner + scale" vs energy. Run: nano-trm TRM, single
+internal RTX 3090, ~7h, 1000-example random held-out val (disjoint from the 1000
+base train puzzles); metrics nano-trm/train/runs/.../csv.
+
+RESULT: **val exact-grid accuracy reached 0.86 (peak 0.8646), cell-accuracy 0.948**
+— SOTA-PARITY with nano-trm's reported ~0.87. Val loss fell monotonically with
+rising accuracy (2.65 -> 0.214), i.e. genuine generalization, NO overfitting (val
+on unseen puzzles). Compare the same Sudoku-Extreme regime: AR greedy ~0.002 /
+SC@32 0.000; EBT energy-descent (argmin + Langevin) 0.000.
+
+CONCLUSION (decisive): a learned recursive refiner with NO energy solves Sudoku-
+Extreme at SOTA (~0.86) where autoregression and energy-descent both get ~0%. So
+essentially ALL of Kona's generative capability is the LEARNED AMORTIZED REFINER +
+scale; the energy contributes at most a small increment and is NOT the generator.
+This is the strongest form of the v1->v4 + EBT-kill-gate conclusion: energy
+SCORES, refinement GENERATES. Drives the 2026-06-06 strategic reframe (ops/north-
+star.md §5): Carnot is the hybrid's energy VERIFIER, not its generator; pursue the
+verifier-earns-its-place proof, not more generator work.
