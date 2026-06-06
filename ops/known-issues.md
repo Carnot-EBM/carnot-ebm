@@ -33,11 +33,16 @@ Publishing is an explicit operator act: add the post filename to
 `docs/blog/published-allowlist.txt` and commit that.
 
 **Mechanical enforcement (shipped 2026-06-05).** `scripts/blog_publish_guard.py`
-is a **pre-push** hook (`.pre-commit-config.yaml` stage `pre-push`; install via
-`pre-commit install --hook-type pre-push`). It refuses any push to main that
-adds/modifies a `docs/blog/*.html` post not on the allowlist — at PUSH time, so it
-covers the conductor's auto-push that `--no-verify` commits would otherwise slip
-past. See memory `feedback_blog_draft_branch_not_main`.
+runs as a **standalone** git `pre-push` hook (`scripts/git-hooks/pre-push`,
+installed via `bash scripts/install-git-hooks.sh`). It refuses any push to main
+that adds/modifies a `docs/blog/*.html` post not on the allowlist — at PUSH time,
+so it covers the conductor's auto-push that `--no-verify` commits would otherwise
+slip past. Standalone (not a pre-commit hook) on purpose: pre-commit's pre-push
+dispatcher stashes unstaged files for the hook run, which would put a stash window
+on the conductor's push path (CLAUDE.md "Never Stash — Always Commit-First"); the
+standalone hook inspects committed SHAs only and never touches the working tree.
+Run `bash scripts/install-git-hooks.sh` once per clone. See memory
+`feedback_blog_draft_branch_not_main`.
 
 ### ~~2026-04-30: codex backend integration paused~~ (RESOLVED 2026-05-01 ~00:15Z)
 

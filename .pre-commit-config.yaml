@@ -228,23 +228,14 @@ repos:
         files: '^docs/index\.html$'
         pass_filenames: false
 
-      # Blog publish guard (PRE-PUSH): refuses to push any docs/blog/*.html
-      # POST to main unless it is on docs/blog/published-allowlist.txt.
-      # carnot-ebm.org is served from main via GitHub Pages, so pushing a
-      # post publishes it; blog posts are operator-approved only (CLAUDE.md
-      # "Operator-Only External Publication"). Runs at PUSH time so it covers
-      # the conductor's auto-push, which commits with --no-verify and would
-      # otherwise bypass commit-stage hooks. Origin: 2026-06-05 incident where
-      # the conductor's milestone-close push shipped an un-approved blog draft
-      # to Pages before the operator approved it. See memory
-      # feedback_blog_draft_branch_not_main + ops/known-issues.md.
-      - id: blog-publish-guard
-        name: Blog publish guard (operator-approved posts only)
-        entry: python3 scripts/blog_publish_guard.py
-        language: system
-        stages: [pre-push]
-        pass_filenames: false
-        always_run: true
+      # NOTE: the blog publish guard runs as a STANDALONE git pre-push hook
+      # (scripts/git-hooks/pre-push, installed via scripts/install-git-hooks.sh),
+      # NOT as a pre-commit hook. pre-commit's pre-push dispatcher stashes
+      # unstaged files for the duration of the hook run, which would introduce a
+      # stash window on the conductor's auto-push path (cf. CLAUDE.md "Never
+      # Stash — Always Commit-First"). The standalone hook reads committed SHAs
+      # only and never touches the working tree, so no stash is needed. See
+      # scripts/blog_publish_guard.py + ops/known-issues.md (Blog publish gate).
 
       # Verifier authenticity lint: catches adversarially-aware cheating
       # patterns in python/carnot/verify/ (sleep-padding to bypass
