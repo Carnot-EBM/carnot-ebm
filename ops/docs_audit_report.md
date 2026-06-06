@@ -4,43 +4,45 @@
 # docs_audit_report — 2026-06-05
 
 ## TL;DR (stranger's 30-second take)
-The stranger would close the tab. The page reads like an internal lab notebook littered with impenetrable acronyms, suspiciously perfect numbers, and literal file-path templating bugs injected into the text.
+I'd close the tab immediately. The page looks like an internal project dashboard full of leaked test paths (which literally break the CSS), impenetrable acronyms, and unbelievable "perfect" numbers that destroy all credibility.
 
 ## TOP 3 PROBLEMS
-1. Templating bugs injecting `.tmp-pytest` file paths into fonts, CSS, and results cards.
-2. Impenetrable acronyms (FoVer, SVAMP, CCTU, PREM) used without definitions.
-3. Suspiciously perfect metrics (1.0 TP, 60/60, exact 2.0x speedup) with no immediate proof.
+1. Broken templating with leaked local test paths replacing CSS `@media` queries, Google Fonts weights, and text (e.g., `@.tmp-pytest/...`).
+2. Blatant fabrication signals with "perfect" numbers (1.0 TP rate, 60/60 attacks, Zero false positives) presented without credibility anchors.
+3. Extreme internal jargon and milestone narratives (e.g., "5-seed dual-condition", "Repinned from v2 0.9857") instead of user-focused value propositions.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Results grid — 12 cards — cap at 6 core cards. Twelve hyper-specific metric cards overwhelm the reader and dilute the impact of the best numbers.
+- (No individual cards exceed the strict word count caps, but the Results section's 12 cards and Writing section's 7 cards create a dense, visually overwhelming wall of text that I will not read.)
 
 ### Internal jargon
-- Results / Hero section — `FoVer`, `SVAMP`, `CCTU`, `VeriCoT`, `PREM` — A stranger has no idea what these niche benchmarks or acronyms mean without context.
-- Sitewide — `@.tmp-pytest/pytest-of-ianblenke/...` — A broken regex has leaked internal pytest temporary paths into the HTML, rendering the font imports, CSS media queries, and the 35B SOTA card unreadable.
+- "Recent progress" card — "5-seed dual-condition", "architecture-only 0.8947", "FoVer math step-errors" — Unintelligible to anyone outside the project.
+- "Test-Time Compute (TTC) & PREM" card — "TTC" and "PREM" — Acronyms dropped completely without an accessible explanation.
+- Results cards — "HumanEval-50, execute-feedback-retry", "SVAMP AUC (vs 0.125 FoVer baseline)" — Internal experiment parameters and baseline names mean nothing to me.
 
 ### Per-milestone narrative
-- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit" — Reads like an internal commit message or retrospective.
-- Results: Safety card — "0.91 AUROC (publication gate)" — Mentions an internal project management threshold.
+- "Recent progress" card — "Repinned from v2 0.9857 after pre-submission adversarial audit" — Reads exactly like an internal retrospective or milestone close-out rather than a feature benefit. 
 
 ### Inconsistencies
-- Hero stat: "0.9131 AUROC on FoVer" (implies FoVer is a dataset) vs Math reasoning card: "0.90 AUC (vs 0.125 FoVer baseline)" (implies FoVer is a baseline model).
+- Claimed "0.9131 Verifier AUROC" for FoVer in hero vs "0.91 AUROC (publication gate)" for safety vs "0.9857" historical — the barrage of different AUROCs with similar numbers is confusing and inconsistent.
+- The source code contains literal local test artifacts overriding standard web syntax (e.g., `@.tmp-pytest/...` replacing `@media` in CSS, font weights in the `<link>` tag, and a leaked path `HumanEval pass @.tmp-pytest/...:real.txt` in a results card).
 
 ### Missing essentials
-- Who maintains it? The page lacks an "About" or maintainer statement (is this an academic lab, startup, or solo dev?) to contextualize the authority of the "SOTA" claims.
+- "Who maintains it?" — Buried as a tiny opacity-50 copyright string in the footer ("© 2026 Ian Blenke"). No team, lab, or organization context is provided for a tool asking me to trust its verification.
 
 ### Fabrication signals
-- Math extraction card — "GSM8K extraction TP rate: 0.5 -> 1.0" (A 1.0 true positive rate on unstructured LLM math output is suspiciously perfect).
-- Adversarial audit card — "k=5 ensemble catches 60/60 attacks" (100% success rate without a credibility anchor).
-- Training card — "2.0x speedup, identical losses" (Perfect scaling and identical floating-point losses across distributed GPUs is notoriously rare).
+- Results > Math extraction — "GSM8K extraction TP rate: 0.5 → 1.0" (A perfect 1.0 score is highly suspicious).
+- Results > Adversarial audit — "k=5 ensemble catches 60/60 attacks" (Perfect 100% catch rate on a tiny sample without a credibility anchor).
+- Blog > Dogfooding — "Zero false positives" (Exactly 0 false positives over 639 runs strains belief).
+- Results > Cascade routing — "0.0pp accuracy delta" (Suspiciously perfect retention).
 
 ## WHAT'S WORKING
-- The "Extract → Check → Repair" Bento grid clearly explains the framework's core value proposition in a digestible 3-step loop.
-- The Python/Rust Quickstart toggle gives immediate, tangible proof of what the API feels like.
+- The "Extract → Check → Repair" Bento grid is excellent. It explains the core value proposition instantly and clearly.
+- The Quick Start tabbed code block effectively demonstrates how simple the API is for both Python and Rust.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Fix the templating bug injecting `.tmp-pytest` file paths into the `<link>` font URLs, `@media` queries, and Results cards.
-2. Prune the Results grid from 12 down to the 6 most impactful metrics.
-3. Define or remove opaque internal acronyms (FoVer, CCTU, PREM).
-4. Rewrite the "Recent progress" card to focus on what the user gets, rather than the internal audit history.
-5. Soften or contextualize the "perfect" metrics (1.0 TP, 60/60, identical losses) with caveats or links so they don't trigger skepticism.
+1. Fix the build/templating script that is injecting `.tmp-pytest` file paths into the HTML/CSS/fonts.
+2. Rewrite the "Recent progress" and Results cards to eliminate internal jargon ("5-seed", "FoVer", "execute-feedback-retry") and frame them as user benefits.
+3. Remove the internal milestone narrative ("Repinned from v2...") from the hero section entirely.
+4. Add credibility anchors, error margins, or more representative metrics to replace the fabricated-looking perfect numbers (1.0 TP, 60/60, zero false positives).
+5. Add a clear, brief section or prominent link explaining who builds and maintains Carnot to establish trust.
