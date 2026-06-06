@@ -21,7 +21,7 @@
 #      and emits blocked_upstream_* if absent. A skipped upstream costs ONE task,
 #      never a chain (the .358 gated_on retire-on-skip cascade root cause).
 #   3. BARE field emission: every REQUIRED ARTIFACT FIELD value is a bare scalar;
-#      the principle: lines are guidance for the agent, NOT a {value,principle}
+#      the principle: lines are guidance for the agent, NOT a {{value,principle}}
 #      wrapper (exp3871 wrapped every value in a dict and broke the summarizer).
 #
 # ROUTING: all tasks codex + requires_codex + gpt-5.5 (anti-wipeout; gemini
@@ -92,7 +92,7 @@ tasks:
            flip authority).
 
       REQUIRED ARTIFACT FIELDS (emit each as a BARE scalar; the principle: lines are
-      guidance for YOU, do NOT wrap values in a {value,principle} dict):
+      guidance for YOU, do NOT wrap values in a {{value,principle}} dict):
         archived_milestone: principle "Provenance — which milestone was archived."
         activated_milestone: principle "Confirms .359 is live so downstream tasks resolve."
         research_complete_yaml_parses: principle "The .355 colon-poison guard — asserts the file still loads."
@@ -180,7 +180,7 @@ tasks:
         3. Compute held-out accuracy for all three. Adjudicate per the gate. >=3 seeds.
 
       REQUIRED ARTIFACT FIELDS (emit each as a BARE scalar; principle: lines are guidance for YOU,
-      do NOT wrap values in a {value,principle} dict — the exp3871 bug):
+      do NOT wrap values in a {{value,principle}} dict — the exp3871 bug):
         positive_control_passed: principle "BARE BOOL — the positive control; must be true (best held-out AR in [0.4,0.95]) before any ARTIFACT/FUNDAMENTAL verdict."
         ar_best_accuracy: principle "Positive control value — in [0.4,0.95]; AR<0.3 means no headroom and INCONCLUSIVE (the v2 trap)."
         ebt_argmin_accuracy: principle "Greedy energy-argmin decode accuracy — the BOUNDED baseline (~0.0 in the scaled run)."
@@ -253,7 +253,7 @@ tasks:
            decoder exp3882 found stronger — beam or argmin), record accuracy.
         3. Fit accuracy(K); classify MONOTONE_GAIN / PLATEAU / DEGRADING.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         accuracy_by_k: principle "The K-scaling curve — direct evidence for/against 'thinking = energy descent helps'."
         k_curve_shape: principle "MONOTONE_GAIN | PLATEAU | DEGRADING — bounds (or supports) the EBT System-2 claim at this scale."
         best_k, best_k_accuracy: principle "Compute-optimal descent budget; is more inference compute worth it."
@@ -264,7 +264,7 @@ tasks:
       FALSIFICATION GATE:
         - SYSTEM2_SUPPORTED: k_curve_shape == MONOTONE_GAIN AND accuracy_by_k[16] > accuracy_by_k[1].
           honest_verdict: `complete: ebt_system2_SUPPORTED_acc_rises_with_k_best_k<k>_acc<a>`
-        - SYSTEM2_BOUNDED: k_curve_shape in {PLATEAU, DEGRADING}.
+        - SYSTEM2_BOUNDED: k_curve_shape in {{PLATEAU, DEGRADING}}.
           honest_verdict: `complete: ebt_system2_BOUNDED_<shape>_no_usable_descent_signal_at_scale`
         honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
 
@@ -330,7 +330,7 @@ tasks:
            Write BOTH data/in_distribution_error_corpus_v1.json AND the results/ artifact carrying
            the gate field + the per-item ensemble scores.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         carnot_ensemble_auroc_on_corpus: principle "BARE FLOAT — the in-band gate; the scissor reads this off disk. Must be >=0.65 for the corpus to be usable."
         n_incorrect_steps: principle "Set-B size budget — the residual scissor CI is meaningful only at >=100 errors."
         n_total_items, frac_synthetic: principle "Provenance — keeps generated items a minority so the corpus stays a real measurement."
@@ -413,7 +413,7 @@ tasks:
         5. POSITIVE CONTROLS: reasoner_self_verify_auroc in [0.55,0.97]; carnot_ensemble_auroc>=0.65.
            Apply the gate -> verdict.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         residual_catch_rate: principle "THE moat metric — of the reasoner's MISSED errors, the fraction Carnot independently catches. High => durable; low => o1-subsumption risk."
         residual_catch_ci95: principle "Bootstrap CI95 — the gate is on the lower bound (Adversarial-Confirmation)."
         error_overlap_jaccard: principle "Independence — low overlap => different null spaces (the moat); high => redundant."
@@ -498,7 +498,7 @@ tasks:
         3. Assert duration_s >= 60 (a real model invocation over the corpus); if <60s the model was not
            actually invoked -> emit blocked_graph_verifier_not_invoked, do NOT fabricate.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         facts_catch_delta: principle "BARE FLOAT — graph_auroc - math_baseline_auroc; exp3887 disk-reads this. Must reproduce >0 with a non-fabricated run to be bankable."
         graph_auroc: principle "The new-architecture verifier's facts AUROC — must reproduce exp3862's ~0.64 with a real run."
         math_baseline_auroc: principle "The math ensemble on facts — the earned-negative baseline graph-grounding must beat."
@@ -532,7 +532,7 @@ tasks:
         verdict: blocked_graph_prototype_unavailable
         addressed_by: "exp3863 blocked because exp3862 persisted no per-item scores. THIS run disk-reads exp3886, which persists per_item_scores_path, so the complementarity computation has its inputs. Emits blocked_upstream_scores_missing if exp3886 did not reproduce a signal."
         retire_if_same_verdict: true
-    title: "Facts COMPLEMENTARITY (disk-reads exp3886, no hard gate): does the graph-grounding verifier catch factual hallucinations the math-bound ensemble MISSES (low error-mask correlation), and would {math verifiers + graph verifier} be a strictly broader fact-aware system? Quantify the independent contribution + error-mask correlation + fused AUROC."
+    title: "Facts COMPLEMENTARITY (disk-reads exp3886, no hard gate): does the graph-grounding verifier catch factual hallucinations the math-bound ensemble MISSES (low error-mask correlation), and would {{math verifiers + graph verifier}} be a strictly broader fact-aware system? Quantify the independent contribution + error-mask correlation + fused AUROC."
     priority: high
     track: research
     max_turns: 50
@@ -548,7 +548,7 @@ tasks:
       (facts_catch_delta>0) and persisted per-item scores. This task answers the
       product question: is graph-grounding COMPLEMENTARY to the math ensemble on facts
       — does it catch hallucinations the ensemble misses (independent error mask),
-      making {math + graph} a broader fact-aware verifier? This is the
+      making {{math + graph}} a broader fact-aware verifier? This is the
       broaden-the-verifier-beyond-math path (PRD Tier C factual-grounding gate).
 
       EXISTING CODE/DATA TO READ FIRST:
@@ -562,9 +562,9 @@ tasks:
         1. Build per-item error masks (which verifier caught each gold hallucination at a tuned threshold).
         2. Compute facts_error_mask_correlation (graph vs ensemble masks) and graph's independent
            contribution (gold errors caught ONLY by graph / total gold errors).
-        3. Compute the fused {math + graph} AUROC (max or learned-weight fusion) vs each alone.
+        3. Compute the fused {{math + graph}} AUROC (max or learned-weight fusion) vs each alone.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         facts_error_mask_correlation: principle "Independence — low correlation => graph and ensemble fail on DIFFERENT items => genuine complementarity; high => redundant."
         graph_independent_contribution: principle "Fraction of gold hallucinations caught ONLY by graph-grounding — the marginal value of adding it."
         fused_auroc, math_only_auroc, graph_only_auroc: principle "Does fusing beat either alone — the product case for a math+graph fact-aware verifier."
@@ -624,7 +624,7 @@ tasks:
         3. Re-measure: learned ensemble AUROC (must stay in frozen CI), memory-ablation contribution
            (must stay ~+0.0185), frozen 0.9131 unchanged. Persist v24 state.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         learned_ensemble_auroc: principle "Must stay within the frozen CI [0.9027,0.9235] — online learning must not degrade the headline."
         memory_ablation_contribution: principle "Must hold ~+0.0185 (CI [0.0125,0.0245]) — the self-learning component's measured value."
         frozen_headline_unchanged: principle "0.9131 NEVER silently substituted — the invariant guard."
@@ -683,7 +683,7 @@ tasks:
            bitstream hash. If readback is unsupported on this flow, record readback_supported=false honestly.
         3. Record sample-level on-board timing.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         duration_s: principle "Total task wall-clock — MUST be distinct from run_duration_s (the exp3866 TAUTOLOGY corrigendum)."
         run_duration_s: principle "On-board run time only — distinct timer; the bit-identity to duration_s was the flag."
         readback_verified: principle "BARE BOOL — did a JTAG readback confirm the flashed tile matches the bitstream; closes the no_readback caveat."
@@ -742,7 +742,7 @@ tasks:
         2. KV260 (if reachable): `ssh kria 'xmutil listapps'` + `ls /dev/uio*`; record loaded overlay
            and whether the Carnot Ising bitstream is active. Record terminal/non-terminal state honestly.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         polarfire_reachable, kv260_reachable: principle "Per-board SSH reachability — the honest precondition (SSH, never host SD card)."
         polarfire_state: principle "Terminal hash-verified dispatch, soft-CPU only — NO fabric-acceleration claim."
         kv260_state: principle "Loaded overlay + UIO presence — terminal/non-terminal record per Hardware-Task Continuity."
@@ -797,7 +797,7 @@ tasks:
         3. Surface the operator next-thesis decision: given the EBT adjudication + moat verdict, what is
            the recommended next forward bet (the loop recommends, the operator decides).
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         ebt_adjudication: principle "ARTIFACT/FUNDAMENTAL/INCONCLUSIVE — the Phase-3 energy-as-generator verdict."
         ebt_system2_outcome: principle "SUPPORTED/BOUNDED — whether energy-descent thinking helps at scale."
         moat_verdict: principle "MOAT_SURVIVES/SUBSUMED/INCONCLUSIVE on the IN-DISTRIBUTION corpus — the DT-P2 durability answer."

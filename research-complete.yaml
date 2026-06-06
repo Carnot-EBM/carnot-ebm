@@ -35923,3 +35923,57 @@ milestones:
       \ Surface the operator next-thesis decision."
     deliverable: results/experiment_3880_capstone_v358.json
     result: OK (conductor)
+- id: 2026.06.358
+  correction_type: v358_execution_wipeout_archive_activation
+  title: 'Archive .358 execution wipeout and activate .359 green gates'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-06'
+  finding: '.358 was an execution wipeout, not a research verdict: Exp 3871 blocked on the scaled EBT harness import, Exp 3872 blocked behind that failed gate, and Exp 3873 through Exp 3880 did not produce artifacts after the poison pretest cascade. .359 is active with the corrected EBT import incantation and no hard gated_on critical path.'
+  activation_recorded: exp3881-archive-v358-activate-v359-green-gate
+  backend_routing_recommendation: 'codex reliable; standing gemini<->codex flip authority dated 2026-06-05 remains active for auditable backend routing'
+  working_ebt_import_incantation: 'import sys; sys.path.insert(0,''scripts''); import thesis_a_part_b_scaled; print(''ok'')'
+  tasks:
+  - id: exp3870-archive-v357-activate-v358-backend-diag
+    title: 'Archive .357 and activate .358 with backend routing diagnostic'
+    deliverable: results/experiment_3870_archive_v357_activate_v358.json
+    result: 'complete: archived_v357_inconclusive_exp3869_positive_controls_degenerate_v358_active_codex_backend_recommended'
+  - id: exp3871-thesis-a-partb-dtp1-adjudication-headroom-confirmed
+    title: 'Thesis-A part-b DTP1 adjudication on a confirmed-headroom checkpoint'
+    deliverable: results/experiment_3871_thesis_a_partb_dtp1_headroom_confirmed.json
+    result: 'blocked_scaled_harness_import'
+  - id: exp3872-ebt-energy-descent-system2-diagnostic
+    title: 'EBT System-2 K-curve diagnostic gated on Exp 3871'
+    deliverable: results/experiment_3872_ebt_energy_descent_system2_diagnostic.json
+    result: 'blocked_gate_check_failed'
+  - id: exp3873-build-in-distribution-error-rich-corpus
+    title: 'Build in-distribution error-rich FoVer corpus'
+    deliverable: results/experiment_3873_in_distribution_error_rich_corpus.json
+    result: 'SKIPPED_BY_PRETEST_GATE: .358 poison pretest prevented the task from running; no artifact present'
+  - id: exp3874-moat-scissor-in-distribution
+    title: 'Moat scissor on the in-distribution corpus'
+    deliverable: results/experiment_3874_moat_scissor_in_distribution.json
+    result: 'SKIPPED_BY_PRETEST_GATE: .358 poison pretest prevented the task from running; no artifact present'
+  - id: exp3875-graph-grounding-fact-verifier-defabricated
+    title: 'Graph-grounding fact verifier defabricated rerun'
+    deliverable: results/experiment_3875_graph_grounding_fact_verifier_defabricated.json
+    result: 'SKIPPED_BY_PRETEST_GATE: .358 poison pretest prevented the task from running; no artifact present'
+  - id: exp3876-facts-complementarity
+    title: 'Facts-domain graph verifier complementarity'
+    deliverable: results/experiment_3876_facts_complementarity.json
+    result: 'SKIPPED_BY_PRETEST_GATE: .358 poison pretest prevented the task from running; no artifact present'
+  - id: exp3877-fr11-v24-online-independence-reweighting
+    title: 'FR-11 v24 online independence reweighting'
+    deliverable: results/experiment_3877_fr11_v24_independence_reweighting.json
+    result: 'SKIPPED_BY_PRETEST_GATE: .358 poison pretest prevented the task from running; no artifact present'
+  - id: exp3878-gatemate-continuity-corrigendum-readback
+    title: 'GateMate continuity corrigendum readback'
+    deliverable: results/experiment_3878_gatemate_continuity_corrigendum.json
+    result: 'SKIPPED_BY_PRETEST_GATE: .358 poison pretest prevented the task from running; no artifact present'
+  - id: exp3879-polarfire-kv260-consolidated-continuity
+    title: 'PolarFire and KV260 consolidated continuity audit'
+    deliverable: results/experiment_3879_polarfire_kv260_continuity.json
+    result: 'SKIPPED_BY_PRETEST_GATE: .358 poison pretest prevented the task from running; no artifact present'
+  - id: exp3880-capstone-v358
+    title: 'Capstone .358 forward-bet aggregation'
+    deliverable: results/experiment_3880_capstone_v358.json
+    result: 'SKIPPED_BY_PRETEST_GATE: .358 poison pretest prevented the task from running; no artifact present'
