@@ -7921,3 +7921,4 @@ ERROR: {
 | 2026-06-05 20:19 UTC | Capstone .358 — aggregate the forward-bet verdicts | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-06-06 04:02 UTC | Plan milestone 2026.06.359 | OK | 11 tasks proposed |
 | 2026-06-06 04:05 UTC | Milestone 2026.06.359 activated | OK | 11 tasks queued |
+| 2026-06-06 04:18 UTC | Archive .358 -> activate .359; GREEN-GATE de-risk: | OK | 106 passed in 4.87s |
