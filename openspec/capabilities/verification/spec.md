@@ -10469,6 +10469,48 @@ positive delta, no per-item-score claim unless scores were actually written,
 and an `honest_verdict` that starts with the terminal `blocked_<resource>`
 reason.
 
+### REQ-VERIFY-3887: Facts Complementarity From Defabricated Graph Scores
+
+The repository SHALL provide an Exp 3887 facts-complementarity aggregator that
+reads the defabricated Exp 3886 JSON artifact and its persisted per-item score
+JSONL from disk without running live inference. Before computing metrics, the
+aggregator SHALL verify that
+`results/experiment_3886_graph_grounding_fact_verifier_defabricated.json`
+exists, reports a bare positive `facts_catch_delta`, and names a loadable
+`per_item_scores_path` containing gold hallucination labels plus graph and
+math-baseline scores. If any precondition fails, it SHALL write
+`results/experiment_3887_facts_complementarity.json` with
+`honest_verdict` exactly `blocked_upstream_scores_missing` and SHALL NOT
+fabricate complementarity or AUROC metrics.
+
+For runnable inputs, the aggregator SHALL tune deterministic graph and
+math-baseline catch thresholds from the cached score rows, build per-gold
+hallucination catch masks, compute their phi/Matthews correlation, compute
+graph-grounding's independent contribution as gold hallucinations caught only
+by graph divided by total gold hallucinations, and compute graph-only,
+math-only, and max-score fused AUROCs on the same items.
+
+The Exp 3887 terminal artifact SHALL include bare fields for
+`facts_error_mask_correlation`, `graph_independent_contribution`,
+`fused_auroc`, `math_only_auroc`, `graph_only_auroc`, `n_items`,
+`preconditions_checked`, `random_seed`, `reproducibility_checksum`,
+`duration_s`, and `inference_substrate`. The `inference_substrate` SHALL state
+that the run is cached-score aggregation only and SHALL NOT include live-model,
+GGUF, or CUDA execution markers.
+
+### SCENARIO-VERIFY-3887: Complementarity Gate Falsifies Redundancy
+
+Given a positive Exp 3886 fixture and loadable per-item facts scores, when Exp
+3887 runs, then it SHALL emit
+`complete: facts_COMPLEMENTARY_corr<c>_fused<f>_graph_broadens_the_verifier`
+only when `facts_error_mask_correlation < 0.5` and
+`fused_auroc > max(math_only_auroc, graph_only_auroc) + 0.02`; otherwise it
+SHALL emit
+`complete: facts_REDUNDANT_corr<c>_fused<f>_graph_does_not_broaden`.
+When the Exp 3886 artifact is missing, has non-positive `facts_catch_delta`,
+or points to missing or malformed per-item scores, it SHALL emit
+`blocked_upstream_scores_missing`.
+
 ### REQ-VERIFY-3869: Existing-Corpus Moat Scissor v4
 
 The repository SHALL provide an Exp 3869 existing-corpus moat-scissor runner

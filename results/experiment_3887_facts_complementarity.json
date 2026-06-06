@@ -1,0 +1,72 @@
+{
+  "catch_mask_confusion": null,
+  "cited_upstream_artifact": {
+    "experiment_id": 3886,
+    "facts_catch_delta": 0.0,
+    "path": "results/experiment_3886_graph_grounding_fact_verifier_defabricated.json",
+    "per_item_scores_path": "results/experiment_3886_graph_grounding_fact_verifier_defabricated_scores.jsonl",
+    "sha256": "66aa605a81c16a3a6dac418978a4b726455d328e8012d47281b6ee9626f70ef9"
+  },
+  "duration_s": 0.000452,
+  "facts_error_mask_correlation": null,
+  "field_principles": {
+    "duration_s": "Aggregation methodology - reads upstream per-item scores only.",
+    "facts_error_mask_correlation": "Independence - low correlation => graph and ensemble fail on DIFFERENT items => genuine complementarity; high => redundant.",
+    "fused_auroc": "Does fusing beat either alone - the product case for a math+graph fact-aware verifier.",
+    "graph_independent_contribution": "Fraction of gold hallucinations caught ONLY by graph-grounding - the marginal value of adding it.",
+    "graph_only_auroc": "Does fusing beat either alone - the product case for a math+graph fact-aware verifier.",
+    "inference_substrate": "Aggregation methodology - reads upstream per-item scores only.",
+    "math_only_auroc": "Does fusing beat either alone - the product case for a math+graph fact-aware verifier.",
+    "n_items": "Aggregation methodology - reads upstream per-item scores only.",
+    "preconditions_checked": "Aggregation methodology - reads upstream per-item scores only.",
+    "random_seed": "Aggregation methodology - reads upstream per-item scores only.",
+    "reproducibility_checksum": "Aggregation methodology - reads upstream per-item scores only."
+  },
+  "frozen_fover_0_9131_untouched": true,
+  "fused_auroc": null,
+  "graph_caught_gold": 0,
+  "graph_independent_contribution": null,
+  "graph_only_auroc": null,
+  "graph_only_caught_ids": [],
+  "honest_verdict": "blocked_upstream_scores_missing",
+  "inference_substrate": "cached_exp3886_per_item_score_aggregation_only_no_live_model_execution",
+  "math_caught_gold": 0,
+  "math_only_auroc": null,
+  "math_only_caught_ids": [],
+  "n_gold_hallucinations": 0,
+  "n_items": 24,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "results/experiment_3886_graph_grounding_fact_verifier_defabricated.json",
+      "resource": "exp3886_artifact"
+    },
+    {
+      "available": false,
+      "detail": 0.0,
+      "resource": "exp3886_facts_catch_delta_positive"
+    },
+    {
+      "available": true,
+      "detail": "24 parsed rows from results/experiment_3886_graph_grounding_fact_verifier_defabricated_scores.jsonl",
+      "resource": "exp3886_per_item_scores_loadable"
+    },
+    {
+      "available": true,
+      "detail": {
+        "gold_grounded": 12,
+        "gold_hallucinations": 12
+      },
+      "resource": "gold_hallucination_and_grounded_items"
+    }
+  ],
+  "random_seed": 3887,
+  "reproducibility_checksum": "4e6fd696527a068cc9c43c13292cf8106b6e6bfe3a32ddad6202ce58a6cccb7c",
+  "scripts_research_conductor_modified": false,
+  "tests_run": [],
+  "threshold_policy": {
+    "fusion_method": "max_graph_math_scores",
+    "graph_catch_threshold": null,
+    "math_catch_threshold": null
+  }
+}
