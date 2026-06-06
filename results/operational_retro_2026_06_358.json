@@ -1,23 +1,26 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.06.358",
-  "generated_at": "2026-06-05T23:36:24Z",
-  "retro_type": "operational_full",
-  "total_wall_time_minutes": 0,
-  "experiments_completed": 0,
-  "compute_bound_experiments_count": 0,
+  "generated_at": "2026-06-05T00:00:00Z",
+  "retro_type": "operational_final",
+  "summary": "No experiments were found or completed during this milestone. Both GPUs remained idle with minimal memory allocated.",
   "slowest_experiments": [],
-  "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "The authoritative timing source reports 0 experiments completed and 0 compute-bound experiments during this milestone, accumulating 0 total wall time minutes. Because no experiment commits were found since activation, there is no performance or execution data available to evaluate.",
   "bottlenecks_identified": [
-    "no data available this milestone"
+    "Lack of scheduled or executed experiments stalled throughput."
   ],
   "improvements_suggested": [
-    "no data available this milestone"
+    "Investigate why no experiments were dispatched to completion since milestone activation.",
+    "Free 4MB zombie allocations on idle GPU 0 and GPU 1."
   ],
   "top_3_highest_leverage_actions": [
-    "no data available this milestone"
+    "Investigate empty experiment dispatch queue.",
+    "Verify conductor trigger mechanisms.",
+    "Free zombie memory allocations on GPUs."
   ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "meta_reflection": "Reporting honestly on zero data prevents hallucinated metrics. The priority is diagnosing the lack of experiment throughput.",
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "With zero experiments completed, there is no execution data to analyze. The immediate priority must be investigating the pipeline to determine why no experiments were dispatched or committed."
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0
 }
