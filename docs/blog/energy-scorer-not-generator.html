@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Perfect Scorer Is Not a Generator — Carnot Blog</title>
+  <meta name="description" content="We trained an energy model from scratch to solve Sudoku by descending its energy, in the regime where energy-based reasoning should win. It learned to score a valid grid almost perfectly and generated nothing. A recursive refiner with fewer parameters solved fourteen percent. The wall is not the energy; it is finding the answer the energy describes.">
+  <meta property="og:title" content="A Perfect Scorer Is Not a Generator">
+  <meta property="og:description" content="An energy model that scores Sudoku validity almost perfectly generates zero solutions by energy descent, even with a perfect latent and a perfectly carved landscape. A learned refiner generates. The wall is amortized inference, not the energy.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://carnot-ebm.org/blog/energy-scorer-not-generator.html">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-glass: rgba(15, 23, 42, 0.4);
+      --bg-glass-hover: rgba(30, 41, 59, 0.6);
+      --text: rgba(255, 255, 255, 0.95);
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --accent-energy: #f97316;
+      --accent-verify: #0ea5e9;
+      --accent-reason: #a855f7;
+      --accent-danger: #ef4444;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-body); background: var(--bg); color: var(--text);
+      line-height: 1.7; -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent-verify); text-decoration: none; border-bottom: 1px dotted var(--accent-verify); }
+    a:hover { color: var(--accent-energy); border-bottom-color: var(--accent-energy); }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto; padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    }
+    .nav-logo {
+      font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700;
+      color: var(--text); display: flex; align-items: center; gap: 0.5rem;
+      border: none;
+    }
+    .nav-logo svg { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { color: var(--text-muted); font-size: 0.9rem; border: none; }
+    .nav-links a:hover { color: var(--text); }
+
+    article {
+      max-width: 760px; margin: 0 auto; padding: 4rem 2rem 2rem;
+    }
+
+    .post-meta {
+      font-family: var(--font-mono); font-size: 0.85rem;
+      color: var(--text-muted); margin-bottom: 1rem;
+      display: flex; gap: 1.5rem;
+    }
+    .post-tag {
+      font-family: var(--font-heading); font-size: 0.7rem; font-weight: 700;
+      color: var(--accent-energy); text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 1rem; display: block;
+    }
+    h1 {
+      font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem;
+    }
+    .lede {
+      font-size: 1.2rem; color: var(--text-muted);
+      margin-bottom: 3rem; line-height: 1.6;
+    }
+    h2 {
+      font-family: var(--font-heading); font-size: 1.75rem;
+      font-weight: 700; margin: 3rem 0 1.25rem; line-height: 1.2;
+    }
+    h3 {
+      font-family: var(--font-heading); font-size: 1.25rem;
+      font-weight: 700; margin: 2.5rem 0 1rem;
+    }
+    article p { margin-bottom: 1.25rem; font-size: 1.05rem; }
+    article p code, article li code, article td code {
+      font-family: var(--font-mono); font-size: 0.92em;
+      background: var(--bg-glass); padding: 0.15em 0.4em;
+      border-radius: 4px; color: var(--accent-energy);
+      border: 1px solid var(--border);
+    }
+    article ul, article ol { margin: 0 0 1.5rem 1.5rem; }
+    article li { margin-bottom: 0.5rem; }
+    article blockquote {
+      border-left: 3px solid var(--accent-energy);
+      padding: 1rem 1.5rem; margin: 1.5rem 0;
+      background: var(--bg-glass); border-radius: 0 8px 8px 0;
+      color: var(--text-muted); font-style: italic;
+    }
+
+    pre.codeblock {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0; overflow-x: auto;
+      font-family: var(--font-mono); font-size: 0.88rem;
+      color: var(--text-muted); line-height: 1.6;
+    }
+    pre.codeblock .comment { color: var(--text-muted); opacity: 0.7; }
+    pre.codeblock .ident { color: var(--accent-energy); }
+    pre.codeblock .kw { color: var(--accent-reason); }
+    pre.codeblock .str { color: var(--accent-verify); }
+
+    .keypoint {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.08), rgba(168, 85, 247, 0.04));
+      border: 1px solid var(--border-hover);
+      border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0;
+    }
+    .keypoint strong { color: var(--accent-energy); font-family: var(--font-heading); }
+
+    .alert {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.10), rgba(249, 115, 22, 0.04));
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0;
+    }
+    .alert strong { color: var(--accent-danger); font-family: var(--font-heading); }
+
+    .verdict-table {
+      width: 100%; border-collapse: collapse; margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    .verdict-table th, .verdict-table td {
+      text-align: left; padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .verdict-table th {
+      font-family: var(--font-heading); font-weight: 700;
+      color: var(--text); background: var(--bg-glass);
+      font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .verdict-table td:first-child {
+      font-family: var(--font-mono); font-size: 0.85em;
+      color: var(--accent-energy); white-space: nowrap;
+    }
+    .verdict-table td { color: var(--text-muted); }
+    .verdict-table td.num { font-family: var(--font-mono); color: var(--text); white-space: nowrap; }
+
+    .footnote {
+      font-size: 0.9rem; color: var(--text-muted);
+      padding: 1.5rem 0; margin-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .further-reading {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 12px; padding: 2rem; margin: 3rem 0 2rem;
+    }
+    .further-reading h3 { margin-top: 0; }
+    .further-reading ul { margin-bottom: 0; }
+
+    .back-link {
+      display: inline-block; margin-bottom: 2rem;
+      font-family: var(--font-mono); font-size: 0.9rem;
+      color: var(--text-muted); border: none;
+    }
+    .back-link:hover { color: var(--accent-energy); }
+
+    footer {
+      max-width: 1280px; margin: 4rem auto 2rem; padding: 2rem;
+      text-align: center; color: var(--text-muted); font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <svg viewBox="0 0 100 100"><path d="M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50" fill="none" stroke="#f97316" stroke-width="8"/><circle cx="50" cy="50" r="10" fill="#f97316"/></svg>
+      Carnot
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a></li>
+      <li><a href="https://huggingface.co/Carnot-EBM">HuggingFace</a></li>
+    </ul>
+  </div>
+</nav>
+
+<article>
+
+<a href="/blog/" class="back-link">&larr; Back to blog</a>
+
+<span class="post-tag">Experiments</span>
+
+<h1>A Perfect Scorer Is Not a Generator</h1>
+
+<div class="post-meta">
+  <span>2026-06-05</span>
+  <span>~12 min read</span>
+</div>
+
+<p class="lede">
+  An energy-based model that can tell a valid Sudoku grid from an
+  invalid one almost perfectly should, in principle, be able to
+  <em>produce</em> a valid grid: just descend the energy. We trained one
+  from scratch to test exactly that, in the regime where energy-based
+  reasoning is supposed to win. It scored validity beautifully and
+  generated nothing &mdash; zero solved puzzles, even after we gave it a
+  perfectly carved landscape and a perfect latent. A recursive refiner
+  with fewer parameters solved roughly fourteen percent. The wall is not
+  the energy. It is finding the point the energy already knows how to
+  score.
+</p>
+
+<h2>Why Sudoku, and why this regime</h2>
+
+<p>
+  The appeal of energy-based reasoning is revision. An autoregressive
+  model writes an answer left to right and cannot easily walk back an
+  early commitment when a later token reveals it was wrong. An energy
+  model, in the idealized telling, holds the whole answer at once and
+  slides it downhill toward a low-energy configuration, free to change
+  any part at any time. On problems where the hard part is global
+  consistency rather than local fluency, that should be the better
+  paradigm.
+</p>
+
+<p>
+  Sudoku-Extreme is a clean place to test the claim. The puzzles are
+  genuinely hard &mdash; general-purpose language models solve only a
+  couple of percent &mdash; success is exact and unambiguous (a grid is
+  either the unique solution or it is not), and autoregression is
+  structurally weak on it, because filling cells in a fixed order is
+  precisely the thing a constraint puzzle punishes. If energy descent is
+  ever going to beat left-to-right generation, this is the home field.
+</p>
+
+<p>
+  So we trained three generators from scratch, at matched compute &mdash;
+  same parameter budget, steps, data, and batch size &mdash; and scored
+  each by held-out exact-grid solve rate, with no partial credit and no
+  constraint checker in the loop to flatter anyone:
+</p>
+
+<ul>
+  <li>An <strong>autoregressive transformer</strong> over the 81 cells, evaluated greedy and with self-consistency voting. This doubles as the headroom control: if even self-consistency is near-ceiling, the regime is too easy to be informative.</li>
+  <li>An <strong>energy-based model</strong> &mdash; a network scoring a full candidate grid &mdash; decoded by descending its energy in a continuous relaxation of the grid. This is the direct test of the &ldquo;descend the energy&rdquo; recipe.</li>
+  <li>A <strong>recursive refiner</strong> in the style of recent tiny-recursive-reasoning work: a small network applied repeatedly to revise a full candidate grid, trained end to end with deep supervision. A non-autoregressive generator that is <em>not</em> energy descent.</li>
+</ul>
+
+<h2>The headline</h2>
+
+<table class="verdict-table">
+  <thead>
+    <tr><th>Generator (matched compute)</th><th>Exact-grid solve</th><th>Blank-cell accuracy</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Autoregressive, greedy</td><td class="num">~0.004</td><td class="num">0.35</td></tr>
+    <tr><td>Autoregressive, self-consistency</td><td class="num">~0.003</td><td class="num">&mdash;</td></tr>
+    <tr><td>Energy model, argmin decode</td><td class="num">0.000</td><td class="num">0.11 (chance)</td></tr>
+    <tr><td>Energy model, energy-descent decode</td><td class="num">0.000</td><td class="num">0.11 (chance)</td></tr>
+    <tr><td>Recursive refiner</td><td class="num">0.141</td><td class="num">0.66</td></tr>
+  </tbody>
+</table>
+
+<p>
+  Two things to read off this table before anything else. First, the
+  headroom control passes: the autoregressive model genuinely learns
+  &mdash; its blank-cell accuracy of 0.35 is three times the
+  one-in-nine chance rate &mdash; yet it solves almost no complete
+  puzzles. That is the honest weak-autoregression regime we wanted, the
+  one where there is real room for a better generator to win. Second, a
+  better generator does win, by a wide margin: the recursive refiner
+  solves about one puzzle in seven, with <em>fewer</em> parameters than
+  the others. Non-autoregressive holistic generation beats left-to-right
+  generation here, exactly as the thesis predicts.
+</p>
+
+<p>
+  The surprise is the middle two rows. The energy model is the candidate
+  that was <em>supposed</em> to embody the revision advantage, and it
+  solves nothing. Worse than the autoregressive baseline, worse than
+  chance on individual cells. To understand why, you have to separate
+  two things the word &ldquo;energy model&rdquo; quietly conflates:
+  scoring an answer and producing one.
+</p>
+
+<h2>The energy is a near-perfect scorer</h2>
+
+<p>
+  Trained contrastively &mdash; push the energy of the true grid down,
+  push corrupted grids up &mdash; the model converged cleanly. The gap
+  between the energy it assigns a correct solution and the energy it
+  assigns a corrupted one is large and stable. Hand it a grid and ask
+  &ldquo;is this a valid solution to this puzzle,&rdquo; and it answers
+  correctly almost every time. As a verifier, it works.
+</p>
+
+<p>
+  Then we asked it to generate, the only way an energy model can: start
+  from a blank (or random) grid and follow the energy downhill, in a
+  continuous relaxation so the gradient is defined, then read off the
+  nearest discrete grid. We tried the two standard decoders &mdash;
+  per-cell argmin of the converged relaxation, and continuous
+  gradient/Langevin descent, which is the literal mechanism an
+  energy-based solver uses. Both produced zero solved puzzles,
+  chance-level individual cells, and more constraint violations than a
+  random fill.
+</p>
+
+<div class="keypoint">
+  <strong>Scoring and generating are different problems.</strong>
+  A contrastively trained energy carves a deep, narrow basin around the
+  true answers, because that is all the training signal asks of it. It
+  says nothing about the vast space <em>between</em> answers, which is
+  exactly the space a decoder has to traverse to find one. The model
+  learned where the valid grids are. It did not learn a path to them.
+</div>
+
+<h2>We tried to fix the decode three ways</h2>
+
+<p>
+  The natural objection is that the energy was simply trained badly for
+  decoding, and a better-shaped landscape would let descent through. We
+  spent three experiments removing that excuse, one variable at a time.
+  This is the part of the work we find most useful, because each fix
+  addresses a real, nameable failure &mdash; and the solve rate stays
+  at zero through all of them.
+</p>
+
+<table class="verdict-table">
+  <thead>
+    <tr><th>Variant</th><th>What changed</th><th>Solve</th><th>Diagnostic</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>v1</td>
+      <td>Energy on the raw grid, local (corruption) negatives</td>
+      <td class="num">0.000</td>
+      <td>Decoded grids sit <em>below</em> the true grid in energy &mdash; broad low-energy &ldquo;flatlands&rdquo; far from any solution; descent drifts into them.</td>
+    </tr>
+    <tr>
+      <td>v2</td>
+      <td>Global negatives via persistent contrastive divergence, plus an anti-collapse term</td>
+      <td class="num">0.000</td>
+      <td>The flatlands are carved away: decoded grids now sit <em>above</em> the true grid in energy. But descent still cannot find the basin &mdash; no funnel.</td>
+    </tr>
+    <tr>
+      <td>v3</td>
+      <td>Descend in a learned latent that reconstructs solutions perfectly (recon&nbsp;=&nbsp;1.00)</td>
+      <td class="num">0.000</td>
+      <td>The target provably exists and decodes exactly; the landscape is carved. Descent still ends at high energy, never reaching the solution.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  Read top to bottom, this is an elimination argument. The first failure
+  is that the energy is low in the wrong places; we fixed it, and the
+  flatland diagnostic flipped from &ldquo;decoded grids are lower energy
+  than the truth&rdquo; to &ldquo;decoded grids are higher energy than
+  the truth.&rdquo; The second failure is that even a correctly carved
+  landscape is a high plateau with a sharp, narrow spike at the answer,
+  and descent from a cold start has no slope to follow toward the spike.
+  We compressed the space into a latent that reconstructs unseen
+  solutions perfectly, so the target is reachable in principle and the
+  representation is not the bottleneck. The solve rate did not move.
+</p>
+
+<div class="keypoint">
+  <strong>Representation was not the wall, and carving was not the wall.</strong>
+  With a perfect autoencoder and a perfectly carved energy, descent from
+  a blank start still generates nothing. Whatever is missing, it is not
+  expressiveness and it is not landscape shape. It is the search.
+</div>
+
+<h2>The reversal: proving it was the starting point all along</h2>
+
+<p>
+  An elimination argument is suggestive; we wanted a direct one. So we
+  ran a final experiment that holds the energy fixed and changes only
+  where the search begins. We trained the carved energy model and the
+  recursive refiner on the same data, then evaluated four inference
+  procedures against the <em>same two trained models</em>:
+</p>
+
+<table class="verdict-table">
+  <thead>
+    <tr><th>Inference procedure</th><th>Exact-grid solve</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Energy descent from a random start</td><td class="num">0.000</td></tr>
+    <tr><td>Refiner alone (greedy)</td><td class="num">0.180</td></tr>
+    <tr><td>Energy descent from the refiner&rsquo;s output</td><td class="num">0.166</td></tr>
+    <tr><td>Energy-rerank of 32 refiner samples</td><td class="num">0.120</td></tr>
+  </tbody>
+</table>
+
+<p>
+  The first and third rows are the same energy and the same descent
+  procedure. The only difference is the starting point. From a random
+  grid, descent solves nothing. From the learned refiner&rsquo;s output,
+  the very same descent solves about one puzzle in six. A jump from zero
+  to sixteen percent, driven entirely by where the search begins, is the
+  clean statement of the result we had been circling:
+</p>
+
+<div class="keypoint">
+  <strong>The wall is amortized inference, not the energy.</strong>
+  Generation needs a learned map that lands you near the answer. The
+  energy can describe the answer and even polish a good starting guess,
+  but it cannot manufacture the starting guess by descent. The refiner
+  works because it learns that map end to end; energy descent fails
+  because it has no map, only a landscape.
+</div>
+
+<h2>The honest negative: the energy did not help the generator</h2>
+
+<p>
+  We want to be straight about the rows we did <em>not</em> get to
+  celebrate. The hope going in was a clean &ldquo;generator plus
+  verifier&rdquo; story: let the refiner propose, let the energy pick or
+  polish, and beat the refiner alone. That is not what happened. Descent
+  from the refiner&rsquo;s output (0.166) came in slightly below the
+  refiner by itself (0.180), and letting the energy rerank 32 refiner
+  samples (0.120) was worse still. In this setup, the energy model did
+  not improve the generator. It mildly hurt it.
+</p>
+
+<p>
+  The reason is consistent with everything above. The energy was trained
+  to separate true grids from globally sampled negatives &mdash; gross
+  validity. The refiner&rsquo;s mistakes are not that; they are
+  near-correct grids, a distribution the energy never saw on the wrong
+  side of its margin. Asked to rank candidates that are all almost right,
+  a validity scorer has little to say, and what it does say is noisy
+  enough to displace the refiner&rsquo;s own, better-calibrated mode. A
+  perfect coarse scorer is not a good fine-grained selector.
+</p>
+
+<div class="alert">
+  <strong>A verifier trained for validity is not automatically a good reranker.</strong>
+  The skill of telling valid from invalid is not the skill of telling
+  better from worse among things that are all nearly valid. If you want
+  an energy to rerank a strong generator&rsquo;s outputs, you likely have
+  to train it on that generator&rsquo;s own errors as the hard negatives
+  &mdash; not on generic corruptions. We did not, and the generic version
+  did not transfer to the reranking job.
+</div>
+
+<h2>What we take from it &mdash; and what it says about Kona</h2>
+
+<p>
+  The constructive reading is not that energy-based reasoning fails. It
+  is that the load-bearing component is the learned inference map, and
+  the energy&rsquo;s defensible roles are narrower and more specific than
+  &ldquo;descend me to get an answer&rdquo;:
+</p>
+
+<ul>
+  <li><strong>Generation wants a learned amortized map.</strong> A recursive refiner &mdash; a small network trained end to end to revise a whole candidate &mdash; generates where energy descent does not. For us this points squarely at recursive refinement as the generator substrate, not gradient descent on a scorer.</li>
+  <li><strong>The energy&rsquo;s job is scoring and supervision.</strong> A near-perfect validity scorer is exactly what you want as a training oracle for the generator and as a gross-validity or abstention gate at inference time. It is not, on this evidence, a drop-in rerank or polish stage on top of a strong generator.</li>
+</ul>
+
+<p>
+  This experiment was prompted by a striking public demonstration: an
+  energy-based model from Logical Intelligence (Kona) reported solving
+  Sudoku-Extreme at very high accuracy, and framed the result around
+  descending a learned energy. We want to be careful and charitable here,
+  because we did not run Kona and cannot speak to its internals. What our
+  three-experiment elimination plus the reversal does show is that the
+  <em>naive</em> reading &mdash; &ldquo;train a contrastive energy and
+  gradient-descend it from blank&rdquo; &mdash; fails on this benchmark
+  even with a perfect latent and a perfectly carved landscape. So a
+  high-accuracy energy-based Sudoku solver is, on our evidence, almost
+  certainly doing amortized inference: a learned procedure that produces
+  the trajectory, with the energy as objective and guide, rather than
+  naive descent from nothing. The energy is in the loop. It is not doing
+  the search by itself.
+</p>
+
+<h2>Caveats</h2>
+
+<p>
+  These are deliberately small, from-scratch, matched-compute models, and
+  the numbers should be read as a comparison, not as a leaderboard entry.
+  A few specific limits:
+</p>
+
+<ul>
+  <li><strong>Absolute scores are low by design.</strong> Our refiner solves about 14 percent; full-scale recursive reasoners report far higher on this benchmark. The <em>ordering</em> &mdash; refiner well above autoregression, both far above energy descent at zero &mdash; is the result, not the magnitudes.</li>
+  <li><strong>There is real seed variance.</strong> Across three seeds the refiner&rsquo;s exact-grid solve rate ranged from 0.112 to 0.182 (mean about 0.141), while its per-cell accuracy stayed stable around 0.66. The gap to the other generators is far larger than this spread, but the headline number is a mean over a noisy metric, not a precise constant.</li>
+  <li><strong>The metric is strict.</strong> Solve means all 81 cells exactly match the unique solution. No partial credit.</li>
+  <li><strong>Our reading of Kona is a reading.</strong> We did not run it. The claim we are confident in is about the naive energy-descent recipe we tested, not about any specific other system.</li>
+</ul>
+
+<p>
+  The one-line version: an energy model learned to recognize a correct
+  Sudoku grid almost perfectly and could not produce one by descent, even
+  with every excuse removed; a learned refiner could; and the same energy
+  became useful again the moment it started from the refiner&rsquo;s
+  guess instead of from nothing. A perfect scorer is not a generator. It
+  is a perfect scorer, which &mdash; for a project whose whole thesis is
+  that verification is the scarce, trustworthy primitive &mdash; turns
+  out to be exactly the role worth keeping it in.
+</p>
+
+<div class="further-reading">
+  <h3>Further reading</h3>
+  <ul>
+    <li>The full experiment notes, with the per-variant energy diagnostics: <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/research-notes/energy-as-generator-sudoku-thesis.md">energy-as-generator-sudoku-thesis.md</a></li>
+    <li>The harness (autoregressive / energy / refiner, matched compute): <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/scripts/experiments/sudoku_energy_vs_ar_v1.py">sudoku_energy_vs_ar_v1.py</a></li>
+    <li>The energy-compression and latent variants (v2, v3): <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/scripts/experiments/sudoku_energy_compression_v2.py">sudoku_energy_compression_v2.py</a> and <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/scripts/experiments/sudoku_latent_energy_v3.py">sudoku_latent_energy_v3.py</a></li>
+    <li>The reversal capstone (four inference procedures, one set of trained models): <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/scripts/experiments/sudoku_amortized_capstone_v4.py">sudoku_amortized_capstone_v4.py</a></li>
+    <li>Companion post on the verifier&rsquo;s honest limits: <a href="verifier-accuracy-paradox.html">The Verifier Accuracy Paradox: Why Your Perfect Verifier Provides Zero Information</a></li>
+  </ul>
+</div>
+
+<div class="footnote">
+  <strong>About this post.</strong> This is one of a series of notes from
+  the <a href="https://github.com/Carnot-EBM/carnot-ebm">Carnot</a>
+  project on energy-based verification and reasoning. The recurring theme
+  is that an energy function is most trustworthy in the role it is
+  actually good at &mdash; judging a candidate &mdash; and that the hard,
+  separate problem of producing a candidate wants a learned map of its
+  own.
+</div>
+
+</article>
+
+<footer>
+  Carnot is open-source under Apache 2.0.
+  <br>
+  <a href="https://github.com/Carnot-EBM/carnot-ebm">github.com/Carnot-EBM/carnot-ebm</a>
+</footer>
+
+</body>
+</html>
