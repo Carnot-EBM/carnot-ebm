@@ -1,0 +1,83 @@
+{
+  "duration_s": 20.622822,
+  "experiment": 3890,
+  "fabric_acceleration_claimed": false,
+  "field_principles": {
+    "fabric_acceleration_claimed": "Must remain false because this continuity audit does not demonstrate compute acceleration on either board.",
+    "inference_substrate": "Hardware-smoke methodology identifies this as SSH board interaction, not a model-inference substrate.",
+    "kv260_reachable": "Per-board SSH reachability is the honest KV260 precondition; host storage checks are the retired wrong mechanism.",
+    "kv260_state": "Loaded-overlay plus UIO evidence records terminal or non-terminal KV260 state for Hardware-Task Continuity.",
+    "polarfire_reachable": "Per-board SSH reachability is the honest precondition; a PolarFire miss does not suppress the KV260 audit.",
+    "polarfire_state": "Terminal hash-verified dispatch is soft-CPU over SSH only; it is not a fabric acceleration claim.",
+    "preconditions_checked": "Hardware-smoke methodology records real SSH board interaction before any board-specific command.",
+    "reproducibility_checksum": "Hardware-smoke methodology gives a content hash so later drift is visible without pretending live-model inference ran."
+  },
+  "honest_verdict": "success: polarfire_kv260_continuity_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_no_fabric_claim",
+  "inference_substrate": "hardware_smoke",
+  "kv260_carnot_ising_active": false,
+  "kv260_command_transcripts": {
+    "uio_list": {
+      "combined_output": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n/dev/uio4\n",
+      "command": "ssh kria 'ls /dev/uio*'",
+      "duration_s": 0.462809,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n/dev/uio4\n"
+    },
+    "xmutil_listapps": {
+      "combined_output": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "command": "ssh kria 'xmutil listapps'",
+      "duration_s": 2.945894,
+      "exit_code": 1,
+      "stderr": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "stdout": ""
+    }
+  },
+  "kv260_loaded_overlay": null,
+  "kv260_reachable": true,
+  "kv260_state": "nonterminal_carnot_ising_inactive_uio_present",
+  "kv260_uio_devices": [
+    "/dev/uio0",
+    "/dev/uio1",
+    "/dev/uio2",
+    "/dev/uio3",
+    "/dev/uio4"
+  ],
+  "polarfire_dispatch_summary": {
+    "board_result_sha256": "b00b011cd654e5dec0513334bd78ea288f72ea95a2d10b7ddcd6eb51040138cb",
+    "claim_boundary": "soft_cpu_ssh_dispatch_no_fpga_fabric_acceleration",
+    "cpu_reference_sha256": "b00b011cd654e5dec0513334bd78ea288f72ea95a2d10b7ddcd6eb51040138cb",
+    "exp3867_honest_verdict": "success: polarfire_carnot_dispatch_hash_verified_terminal_duration11.97s_tempunknown",
+    "inference_substrate": "hardware_smoke",
+    "polarfire_workload_validated": true,
+    "result_hash_match": true,
+    "run_duration_s": 11.970774
+  },
+  "polarfire_reachable": true,
+  "polarfire_state": "terminal_hash_verified_soft_cpu_ssh_dispatch",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "checked_before_board_operations": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "polarfire_ssh"
+    },
+    {
+      "available": true,
+      "checked_before_board_operations": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    }
+  ],
+  "random_seed": 3890,
+  "reproducibility_checksum": "c0e9e58e5bcc0d22dd873e5fcca3a7a923661176eb9f4c13a6ff1f1c1d4ebd8b",
+  "schema": "carnot.polarfire_kv260_continuity.v1",
+  "spec_refs": [
+    "REQ-HW-3890",
+    "SCENARIO-HW-3890"
+  ]
+}
