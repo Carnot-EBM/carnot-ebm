@@ -220,6 +220,27 @@ compute/latency ratio. Target result: "parity at 10–100× cheaper." Re-scope P
 to the hybrid (refiner generator + energy verifier); retire energy-generates prose.
 Staged as a MANDATORY-NEXT-MILESTONE PRIORITY in ops/known-issues.md.
 
+**THE AGENTIC PROOF VENUE — the ARC-AGI-3 harness (Phase-4, sequenced SECOND).**
+ARC-AGI-3 (the target) is interactive (act->observe->act), so it REQUIRES a harness:
+environment adapter + perception/encoding + router + generators + scoring. The
+domain-match + encodability routing (which generator per state) lives INSIDE that
+harness. Designed VERIFIER-FIRST, the harness is where the energy verifier does
+three load-bearing jobs at once — (1) ROUTER/arbiter (run the cheap encodable
+specialist, verify, escalate to the LLM on failure — the Meta-EBM Cascade Router),
+(2) ACTION-PRUNER (verifier-as-free-energy action selection; the Exp1165 pilot
+showed ~4x fewer actions on synthetic ARC-AGI-3-style puzzles), (3) scaled
+state/trajectory verification. So the harness is not plumbing — it is the AGENTIC
+PROOF of the verifier (action-efficiency + cost as metrics) AND the integration
+surface that turns the hybrid into a working agent; building it verifier-first makes
+harness-building and verifier-proving the SAME work. DISCIPLINE (so it doesn't
+become breadth): the harness's value DERIVES from the verifier (a beautiful harness
+around an unproven verifier is still glue), so SEQUENCE the OFFLINE verifier proof
+FIRST (moat-scissor + efficiency head-to-head on FoVer — no harness needed, fast,
+already staged), THEN the ARC-AGI-3 harness as the agentic extension. It is a real
+build we have NOT started (the Exp1165 pilot used a toy env, not the real
+benchmark). See memory `arc-agi3-harness-verifier-proof`,
+docs/research-notes/active-inference-phase4-bridge.md.
+
 ---
 
 ## Why this document exists
