@@ -3709,5 +3709,23 @@
   "run_date": "20260606",
   "started_at": "2026-06-06T09:25:20.747561Z",
   "status": "complete: moat_scissor_indist_INCONCLUSIVE_reasoner_self_verify_auroc",
-  "title": "moat_scissor_in_distribution"
+  "title": "moat_scissor_in_distribution",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "error_overlap_jaccard=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "n_reasoner_caught_errors=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=35.31046009063721 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }

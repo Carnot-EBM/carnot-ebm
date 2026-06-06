@@ -7930,3 +7930,4 @@ ERROR: {
 | 2026-06-06 08:14 UTC | THESIS-A PART-(b) KILL-GATE, IMPORT-FIXED: on a CO | OK | cache hit: 81 passed in 3.43s |
 | 2026-06-06 08:50 UTC | EBT System-2 K-curve diagnostic (disk-reads exp388 | OK | 89 passed in 5.21s |
 | 2026-06-06 09:11 UTC | BUILD an IN-DISTRIBUTION error-rich step-error cor | OK | 92 passed in 6.84s |
+| 2026-06-06 09:28 UTC | MOAT SCISSOR IN-DISTRIBUTION (DT-P2, disk-reads ex | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
