@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Carnot pre-push hook (standalone — NOT managed by pre-commit).
+#
+# Runs the blog publish guard: refuses to push an un-approved blog post to main
+# (carnot-ebm.org is served from main via GitHub Pages; pushing a post = publishing
+# it; posts are operator-approved only). See scripts/blog_publish_guard.py and
+# ops/known-issues.md "Blog publish gate".
+#
+# Standalone (vs a pre-commit pre-push hook) on purpose: pre-commit's pre-push
+# dispatcher stashes unstaged files for the hook run, which would put a stash
+# window on the conductor's auto-push path (CLAUDE.md "Never Stash — Always
+# Commit-First"). This hook inspects committed SHAs only and never touches the
+# working tree, so nothing is stashed.
+#
+# git passes the refs being pushed on stdin; forward them to the guard.
+# $1 = remote name, $2 = remote URL.
+set -euo pipefail
+ROOT="$(git rev-parse --show-toplevel)"
+PY="${ROOT}/.venv/bin/python"
+[ -x "$PY" ] || PY="python3"
+exec "$PY" "${ROOT}/scripts/blog_publish_guard.py"
