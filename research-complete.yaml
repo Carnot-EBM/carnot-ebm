@@ -35824,18 +35824,102 @@ milestones:
     result: OK (conductor)
 - id: 2026.06.357
   correction_type: v357_inconclusive_archive_activation
-  title: 'Archive .357 inconclusive moat-scissor verdict and activate .358'
+  title: Archive .357 inconclusive moat-scissor verdict and activate .358
   doc: docs/research-notes/verifier-moat-scissor-plot-design.md
   completed: '2026-06-05'
-  finding: 'INCONCLUSIVE: exp3869 moat-scissor-v4 ran on the existing PRMBench corpus, but both positive controls degenerate on the out-of-distribution PRMBench distribution. The archive carries the verdict forward without turning the null result into a moat negative. Milestone .358 is active and will rebuild the verifier scissor on an in-distribution error-rich corpus.'
+  finding: 'INCONCLUSIVE: exp3869 moat-scissor-v4 ran on the existing PRMBench corpus, but both positive controls degenerate
+    on the out-of-distribution PRMBench distribution. The archive carries the verdict forward without turning the null result
+    into a moat negative. Milestone .358 is active and will rebuild the verifier scissor on an in-distribution error-rich
+    corpus.'
   activation_recorded: exp3870-archive-v357-activate-v358
-  backend_routing_recommendation: 'codex remains the reliable conductor backend for .356/.357; gemini remains opt-in under the standing operator gemini<->codex flip authority dated 2026-06-05'
+  backend_routing_recommendation: codex remains the reliable conductor backend for .356/.357; gemini remains opt-in under
+    the standing operator gemini<->codex flip authority dated 2026-06-05
   tasks:
   - id: exp3869-moat-scissor-v4-against-existing-corpus
-    title: 'MOAT SCISSOR AT SCALE v4 against existing PRMBench corpus'
+    title: MOAT SCISSOR AT SCALE v4 against existing PRMBench corpus
     deliverable: results/experiment_3869_moat_scissor_v4_existing_corpus.json
-    result: 'complete: moat_scissor_v4_INCONCLUSIVE_reasoner_self_verify_auroc_and_carnot_ensemble_auroc (INCONCLUSIVE: both positive controls degenerate on the out-of-distribution PRMBench corpus; reasoner_self_verify_auroc=0.5; carnot_ensemble_auroc=0.551792)'
+    result: 'complete: moat_scissor_v4_INCONCLUSIVE_reasoner_self_verify_auroc_and_carnot_ensemble_auroc (INCONCLUSIVE: both
+      positive controls degenerate on the out-of-distribution PRMBench corpus; reasoner_self_verify_auroc=0.5; carnot_ensemble_auroc=0.551792)'
   - id: exp3870-archive-v357-activate-v358
-    title: 'Archive .357 and activate .358 with backend routing diagnostic'
+    title: Archive .357 and activate .358 with backend routing diagnostic
     deliverable: results/experiment_3870_archive_v357_activate_v358.json
     result: 'COMPLETE: exp3870 archived .357 and activated .358; codex backend diagnostic recorded'
+- id: 2026.06.358
+  title: "Adjudicate the forward bets \u2014 EBT energy-generation headroom (DT-P1), the verifier moat at scale on an IN-DISTRIBUTION\
+    \ corpus, and de-fabricate the facts graph-grounding signal."
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-06'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3870-archive-v357-activate-v358-backend-diag
+    title: Archive .357 -> activate .358; backend routing diagnostic (confirm codex is the reliable conductor backend; gemini
+      stays opt-in per operator flip authority).
+    deliverable: results/experiment_3870_archive_v357_activate_v358.json
+    result: OK (conductor)
+  - id: exp3871-thesis-a-partb-dtp1-adjudication-headroom-confirmed
+    title: 'THESIS-A PART-(b) DT-P1 ADJUDICATION on a CONFIRMED-HEADROOM checkpoint: with AR in [0.4,0.95] proven first, does
+      a GLOBAL discrete beam search over cumulative EBT energy recover AR-level accuracy (greedy was the bottleneck -> ARTIFACT)
+      or also fail (energy landscape misshaped for algorithmic generation -> FUNDAMENTAL)? The Phase-3 energy-as-GENERATOR
+      kill-gate.'
+    deliverable: results/experiment_3871_thesis_a_partb_dtp1_headroom_confirmed.json
+    result: OK (conductor)
+  - id: exp3872-ebt-energy-descent-system2-diagnostic
+    title: "EBT System-2 diagnostic (gated on exp3871 positive_control_passed): on the SAME confirmed-headroom checkpoint,\
+      \ does held-out generation accuracy improve MONOTONICALLY as the energy-descent budget K grows (1,2,4,8,16 steps)? Tests\
+      \ the core EBT 'thinking = optimization' claim \u2014 monotone gain => thinking helps; flat/degrading => the landscape\
+      \ gives no usable descent signal at this scale."
+    deliverable: results/experiment_3872_ebt_energy_descent_system2_diagnostic.json
+    result: OK (conductor)
+  - id: exp3873-build-in-distribution-error-rich-corpus
+    title: 'BUILD an IN-DISTRIBUTION error-rich step-error corpus for the moat scissor: pool FoVer-family incorrect steps
+      (fover_corpus_v3/v4/expanded) + generate/label additional math step-errors to reach >=150 gold-incorrect steps, balanced
+      ~50/50, on which Carnot''s k=15 ensemble DISCRIMINATES (AUROC>=0.65). Emit the gate field to a results/ artifact (NOT
+      only a data/ file) so the downstream gate resolves.'
+    deliverable: results/experiment_3873_in_distribution_error_rich_corpus.json
+    result: OK (conductor)
+  - id: exp3874-moat-scissor-in-distribution
+    title: 'MOAT SCISSOR IN-DISTRIBUTION (DT-P2, gated on exp3873 ensemble AUROC>=0.65): of the gold-incorrect steps a strong
+      reasoner (Qwen3.6-35B) self-verification MISSES, what fraction does Carnot''s k=15 ensemble INDEPENDENTLY catch? residual_catch
+      + bootstrap CI95 + reasoner positive control + error-overlap Jaccard. Finally adjudicates the o1-subsumption durability
+      question.'
+    deliverable: results/experiment_3874_moat_scissor_in_distribution.json
+    result: OK (conductor)
+  - id: exp3875-graph-grounding-fact-verifier-defabricated
+    title: 'Graph-grounding fact verifier, DE-FABRICATED (re-run of exp3862 with real wall-clock + per-item scores): on a
+      RAGTruth-style factual corpus, does graph-grounding (MemGraphRAG arXiv:2606.00610) reproduce facts_catch_delta>0 over
+      the math-bound ensemble baseline, with a non-fabricated duration and per-item scores persisted for complementarity?'
+    deliverable: results/experiment_3875_graph_grounding_fact_verifier_defabricated.json
+    result: OK (conductor)
+  - id: exp3876-facts-complementarity
+    title: 'Facts COMPLEMENTARITY (gated on exp3875 facts_catch_delta>0): does the graph-grounding verifier catch factual
+      hallucinations the math-bound ensemble MISSES (low error-mask correlation), and would {{math verifiers + graph verifier}}
+      be a strictly broader fact-aware system? Quantify the independent contribution + error-mask correlation.'
+    deliverable: results/experiment_3876_facts_complementarity.json
+    result: OK (conductor)
+  - id: exp3877-fr11-v24-online-independence-reweighting
+    title: "FR-11 continuous self-learning v24 (research-program.md MANDATE) \u2014 load the persisted v23 independence-reweighting\
+      \ state, continue Tier-1 ONLINE reweighting on a FRESH verification corpus (upweight verifiers that catch the residual\
+      \ others miss, arXiv:2604.07650), and confirm the learned weighting STILL holds the +0.0185 memory-ablation contribution\
+      \ + frozen 0.9131. CPU counter updates (<1us/update, the Tier-1 hardware path)."
+    deliverable: results/experiment_3877_fr11_v24_independence_reweighting.json
+    result: OK (conductor)
+  - id: exp3878-gatemate-continuity-corrigendum-readback
+    title: "GateMate A1-EVB-2M continuity \u2014 corrigendum the exp3866 TAUTOLOGY flag (duration_s was bit-identical to run_duration_s)\
+      \ by recording DISTINCT wall-clock timers, and attempt a JTAG bitstream READBACK to verify the flashed n=16 Ising tile\
+      \ actually matches the bitstream (closes the 'no_readback' caveat toward a clean gatemate_bitstream_flashed terminal)."
+    deliverable: results/experiment_3878_gatemate_continuity_corrigendum.json
+    result: OK (conductor)
+  - id: exp3879-polarfire-kv260-consolidated-continuity
+    title: "PolarFire + KV260 consolidated opportunistic continuity audit \u2014 confirm both boards reachable over SSH, record\
+      \ PolarFire's terminal hash-verified dispatch state HONESTLY (smoke-only on soft CPU, NO fabric-acceleration claim),\
+      \ and confirm KV260 terminal/loaded-overlay state via xmutil. One slot covers both per north-star \xA73 opportunistic\
+      \ relaxation."
+    deliverable: results/experiment_3879_polarfire_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp3880-capstone-v358
+    title: "Capstone .358 \u2014 aggregate the forward-bet verdicts: EBT energy-generation adjudication (ARTIFACT/FUNDAMENTAL/INCONCLUSIVE)\
+      \ + System-2 K-curve, the IN-DISTRIBUTION moat-scissor verdict (MOAT_SURVIVES/SUBSUMED/INCONCLUSIVE), facts graph-grounding\
+      \ signal + complementarity, FR-11 v24 invariant, and the two FPGA boards. paper_ready stays TRUE; frozen 0.9131 unchanged.\
+      \ Surface the operator next-thesis decision."
+    deliverable: results/experiment_3880_capstone_v358.json
+    result: OK (conductor)
