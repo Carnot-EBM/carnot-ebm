@@ -319,3 +319,64 @@ an LLM-as-verifier baseline) as a first-class result, not just AUROC. See memory
 Honest caveats (unchanged): parity itself is unproven (exp3885 moat-scissor
 INCONCLUSIVE — "not clearly better" ≠ "reaches parity"); the cost/latency ratio is
 plausible but UNMEASURED; goal-choice/research-taste (A3) remains human.
+
+---
+
+## Source D — "How Anthropic enables self-service data analytics with Claude" (2026)
+
+- Publisher: Anthropic / claude.com blog
+- URL: https://claude.com/blog/how-anthropic-enables-self-service-data-analytics-with-claude
+- Accessed: 2026-06-06 (SINGLE-PASS — two-pass verify before paper use)
+- Relevance: APPLIED BI-ops post (semantic layers, skills, validation), tangential
+  to Carnot's core thesis — but two bits are directly load-bearing for the
+  verification + efficiency-parity story. Captured per operator 2026-06-06.
+
+### D1. The "silent failure" — Carnot's exact problem, admitted unsolved, in the no-oracle regime [SINGLE-PASS]
+> the "silent failure" — wrong answers that look plausible and get used without
+> objection... "we don't have a robust solution yet."
+
+> "for analytics use cases, there's often only a single correct answer ... with no
+> deterministic way of proving the correctness."
+
+*Carnot relevance:* the cleanest external statement of the problem Carnot exists to
+solve, landing in the HARDEST version — a domain with a single correct answer but
+NO deterministic oracle (the *facts-like* regime where Carnot's verifier is
+earned-negative, [[verifier-domain-bound-math-only]]). Validates the mission AND
+names the hardest open frontier: grounded verification where there's no symbolic/
+test check to anchor the energy. Their mitigations (provenance footer, human
+sign-off, sanity-check evals) are heuristic, not externally grounded.
+
+### D2. Adversarial-review cost/accuracy datapoint — concrete Pareto calibration [SINGLE-PASS]
+> Adversarial Review: sub-agent aggressively challenges assumptions; increased
+> accuracy 6% but added 32% tokens, 72% latency.
+
+Plus: swapping the adversarial reviewer to a cheaper model "lost the accuracy wins
+with no real speedup"; and the ablation "Direct SQL corpus access moved accuracy
+<1%, despite 80% of answers being in the corpus. Conclusion: bottleneck is
+structure, not access."
+
+*Carnot relevance:* (a) a real, quantified point on the accuracy↔cost Pareto curve
+for a verification pass (+6% acc / +72% latency) — exactly the tradeoff the
+efficiency-parity win condition says to measure; (b) "structure not access" echoes
+the Sudoku finding ([[energy-as-generator-sudoku]]) that the wall is inference
+STRUCTURE, not whether the information is present; (c) caution: a cheaper judge can
+lose the accuracy win — verifier-model choice matters.
+
+### D3. Context-engineering + maintenance-decay (conductor lesson) [SINGLE-PASS]
+> "Without skills, Claude's ability to answer analytics questions accurately didn't
+> exceed 21%... Adding skills gets these numbers consistently above 95%."
+
+> Skill accuracy "drifted from ~95% to ~65% over one month without active
+> maintenance."
+
+*Carnot relevance:* transfers to Carnot's own CONDUCTOR — autonomous-agent
+reliability comes from scaffolding (CLAUDE.md disciplines, artifact templates,
+verifier-authenticity machinery) and DECAYS without active upkeep (what the
+in-process-docs reconciliation fights). Borrowable patterns: provenance footer
+(source-tier label), active correction harvesting (scan channels → auto-PR fixes),
+per-PR ablation deltas.
+
+*Net:* relevance is aspirational/by-analogy, NOT a solution — it's a well-described
+version of Carnot's hardest problem (oracle-free verification) from a team that
+says they haven't solved it, plus useful cost/accuracy calibration for the
+efficiency-parity frame.
