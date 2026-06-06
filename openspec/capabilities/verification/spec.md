@@ -10599,3 +10599,67 @@ null AUROC, zero counts, no per-item score claims, and a real duration.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3884 | Planned (`python/carnot/eval/in_distribution_error_rich_corpus.py`, `scripts/experiments/experiment_3884_in_distribution_error_rich_corpus.py`) | Planned (`tests/python/test_experiment_3884_in_distribution_error_rich_corpus.py`) |
+
+### REQ-VERIFY-3885: In-Distribution Moat Scissor
+
+The repository SHALL provide an Exp 3885 durability scissor that writes
+`results/experiment_3885_moat_scissor_in_distribution.json` by loading the
+Exp 3884 in-distribution corpus and its persisted per-item Carnot ensemble
+scores from disk. The runner SHALL NOT generate new rows and SHALL NOT
+recompute or aggregate flagged-adversarial artifacts. Before live scoring, it
+SHALL verify CUDA with the repository virtualenv Python, resolve a cached
+GGUF path for `unsloth/Qwen3.6-35B-A3B-GGUF` or the fallback
+`unsloth/gemma-4-26B-A4B-it-GGUF`, verify `import carnot.verify`, and verify
+that the Exp 3884 artifact has at least 100 gold-incorrect items with recorded
+`carnot_ensemble_auroc_on_corpus >= 0.65`. Failed hard resources SHALL write a
+terminal `blocked_<resource>` artifact; an out-of-band upstream corpus SHALL
+write `blocked_upstream_corpus_not_in_band`.
+
+For runnable inputs, the runner SHALL load the selected GGUF through
+`llama_cpp.Llama(model_path=...)` and apply the Exp 3827 self-verification
+prompt verbatim to every corpus step. Over gold-incorrect steps, it SHALL
+partition reasoner-caught errors from reasoner-missed residual errors, compute
+`residual_catch_rate` as the fraction of residual errors caught by the
+disk-loaded Carnot predictions, compute a bootstrap CI95 with at least 1000
+resamples, and compute `error_overlap_jaccard` between reasoner-caught and
+Carnot-caught gold errors. The terminal artifact SHALL include bare fields for
+`residual_catch_rate`, `residual_catch_ci95`, `error_overlap_jaccard`,
+`n_residual_errors`, `reasoner_self_verify_auroc`, `carnot_ensemble_auroc`,
+`corpus_source`, `n_items`, `preconditions_checked`, `model_specs`,
+`random_seed`, `random_seeds_used`, `reproducibility_checksum`, `duration_s`,
+and `inference_substrate`, with string principle notes in `field_principles`.
+
+The falsification gate SHALL emit `complete:
+moat_scissor_indist_MOAT_SURVIVES...` only when the reasoner control is in
+`[0.55, 0.97]`, the Carnot control is at least `0.65`, the residual CI95 lower
+bound is greater than `0.5`, `error_overlap_jaccard < 0.6`, and at least 30
+residual errors exist. It SHALL emit `complete:
+moat_scissor_indist_MOAT_SUBSUMED...` only when both controls pass and either
+the residual CI95 upper bound is below `0.3` or overlap is above `0.7`.
+Otherwise it SHALL emit a terminal `complete:
+moat_scissor_indist_INCONCLUSIVE_<reason>` verdict.
+
+### SCENARIO-VERIFY-3885: In-Distribution Residual Catch Is Measured
+
+Given Exp 3884 has produced an in-band in-distribution FoVer corpus and
+per-item Carnot ensemble scores, when Exp 3885 runs with the cached GGUF and
+live CUDA available, then it writes
+`results/experiment_3885_moat_scissor_in_distribution.json`, preserves the
+Exp 3827 residual-catch and overlap definitions, records the live
+llama.cpp model path and real duration, computes reasoner and Carnot positive
+controls, and selects `MOAT_SURVIVES`, `MOAT_SUBSUMED`, or `INCONCLUSIVE`
+strictly from the documented gates.
+
+### SCENARIO-VERIFY-3885-BLOCKED: Preconditions Do Not Fabricate Moat Metrics
+
+Given CUDA, the cached GGUF, `carnot.verify`, `llama_cpp`, or the Exp 3884
+in-band corpus is unavailable, when Exp 3885 runs, then it writes
+`results/experiment_3885_moat_scissor_in_distribution.json` with a terminal
+blocked verdict, populated precondition evidence, null residual and AUROC
+metrics, zero item counts, no per-step score claims, and a measured duration.
+
+## Implementation Status (REQ-VERIFY-3885)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3885 | Implemented (`python/carnot/eval/moat_scissor_in_distribution.py`, `scripts/experiments/experiment_3885_moat_scissor_in_distribution.py`) | Implemented (`tests/python/test_experiment_3885_moat_scissor_in_distribution.py`) |
