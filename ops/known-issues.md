@@ -44,6 +44,32 @@ standalone hook inspects committed SHAs only and never touches the working tree.
 Run `bash scripts/install-git-hooks.sh` once per clone. See memory
 `feedback_blog_draft_branch_not_main`.
 
+### 2026-06-06: NEVER commit an embedded repo as a submodule gitlink (broke all CI/Pages)
+
+**Incident.** A conductor experiment (commit `c4c612662`, "Latent-Symbol Bridge
+Task 0") cloned `nano-trm` into the working tree; the conductor's `git add -A`
+committed the embedded repo as a submodule GITLINK (tree mode 160000) with NO
+`.gitmodules` entry. Every GitHub Actions checkout that inits submodules — the
+`pages build and deployment` workflow, CI, the phase1-reproducer — then aborted
+with `fatal: No url found for submodule path 'nano-trm' in .gitmodules` (exit
+128). carnot-ebm.org froze on a stale Pages build (a freshly-approved blog post
+404'd) and CI went red for ~37 min before it was caught. Fixed by
+`git rm --cached nano-trm` + gitignoring the embedded clones (commit `d12bada96`).
+
+**Constraint (planner + agents + outer-loop + conductor experiments).** Do NOT
+commit an embedded git repo (any directory containing its own `.git`) into the
+tree. Experiments that clone a helper repo (nano-trm, trm_src, hrm_ckpt, ebt_tmp,
+etc.) MUST keep it gitignored. A `git add -A` that swallows an embedded repo
+creates a checkout-breaking gitlink.
+
+**Mechanical enforcement (shipped 2026-06-06).** `scripts/gitlink_guard.py` runs
+in the standalone pre-push hook (`scripts/git-hooks/pre-push`, alongside the blog
+guard). It refuses any push to main that adds a tree-mode-160000 gitlink with no
+matching `.gitmodules` entry, at PUSH time so it covers the conductor's
+`--no-verify` auto-push. A real submodule (with a `.gitmodules` entry) passes; an
+accidental embedded-repo gitlink is blocked with remediation instructions. Verified
+against the real `c4c612662` range. See memory `feedback_no_embedded_repo_gitlinks`.
+
 ### ~~2026-04-30: codex backend integration paused~~ (RESOLVED 2026-05-01 ~00:15Z)
 
 **Resolution:** the failure root cause was diagnosed and fixed.

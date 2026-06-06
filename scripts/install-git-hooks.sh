@@ -9,4 +9,4 @@
 set -euo pipefail
 ROOT="$(git rev-parse --show-toplevel)"
 install -m 0755 "${ROOT}/scripts/git-hooks/pre-push" "${ROOT}/.git/hooks/pre-push"
-echo "installed .git/hooks/pre-push (standalone blog publish guard)"
+echo "installed .git/hooks/pre-push (standalone guards: blog-publish + gitlink)"
