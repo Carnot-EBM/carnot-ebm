@@ -63,5 +63,18 @@
   "random_seed": 3886,
   "reproducibility_checksum": "1cf4c5908f2b9bd30e18e2d1c3d9efb56318083be35882d4441461d457c5e627",
   "scripts_research_conductor_modified": false,
-  "tests_run": []
+  "tests_run": [],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "facts_catch_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=11.48762 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
