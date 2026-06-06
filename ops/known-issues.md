@@ -13,6 +13,32 @@
 
 ## OPERATOR CONSTRAINTS (planner: do NOT propose tasks that violate these)
 
+### 2026-06-05: Blog drafts NEVER on main — publish is operator-allowlist-gated (mechanically enforced)
+
+**Incident.** An outer-loop session committed a finished blog post
+(`docs/blog/energy-scorer-not-generator.html`) to `main` "for review", then
+resumed the conductor. The conductor's milestone-close auto-push
+(`git push origin main`) shipped it to GitHub Pages a few minutes BEFORE the
+operator approved it. Content was fine and the operator did approve, but the
+operator-only-publication gate was bypassed by an automated push.
+
+**Root cause.** `carnot-ebm.org` serves from `main` via Pages (pushing main =
+publishing) AND the conductor auto-pushes main on milestone close with
+`--no-verify` commits. So any blog post sitting on main is published on the next
+conductor push, with no operator in the loop.
+
+**Constraint (planner + agents + outer-loop).** Do NOT commit an un-approved blog
+post (`docs/blog/*.html`, except `index.html`) to `main`. Drafts live on a branch.
+Publishing is an explicit operator act: add the post filename to
+`docs/blog/published-allowlist.txt` and commit that.
+
+**Mechanical enforcement (shipped 2026-06-05).** `scripts/blog_publish_guard.py`
+is a **pre-push** hook (`.pre-commit-config.yaml` stage `pre-push`; install via
+`pre-commit install --hook-type pre-push`). It refuses any push to main that
+adds/modifies a `docs/blog/*.html` post not on the allowlist — at PUSH time, so it
+covers the conductor's auto-push that `--no-verify` commits would otherwise slip
+past. See memory `feedback_blog_draft_branch_not_main`.
+
 ### ~~2026-04-30: codex backend integration paused~~ (RESOLVED 2026-05-01 ~00:15Z)
 
 **Resolution:** the failure root cause was diagnosed and fixed.

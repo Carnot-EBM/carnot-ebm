@@ -1,3 +1,12 @@
+# Default to the pre-commit (commit-time) stage for every hook that does not
+# declare its own `stages:`. Without this, installing the pre-push hook type
+# (for the blog-publish-guard below) would make ALL these commit-stage linters
+# ALSO run at push time — which would newly gate the conductor's auto-push on
+# unrelated checks (overdue-priority, torch-cuda, etc.) that previously only ran
+# at commit. Pinning the default to pre-commit keeps push-time scope to exactly
+# the hooks that opt in with `stages: [pre-push]` (i.e. blog-publish-guard).
+default_stages: [pre-commit]
+
 repos:
   # Secret scanning — gitleaks v8.x scans staged file diffs for high-
   # confidence API-key / private-key / cloud-credential patterns before
@@ -218,6 +227,24 @@ repos:
         language: system
         files: '^docs/index\.html$'
         pass_filenames: false
+
+      # Blog publish guard (PRE-PUSH): refuses to push any docs/blog/*.html
+      # POST to main unless it is on docs/blog/published-allowlist.txt.
+      # carnot-ebm.org is served from main via GitHub Pages, so pushing a
+      # post publishes it; blog posts are operator-approved only (CLAUDE.md
+      # "Operator-Only External Publication"). Runs at PUSH time so it covers
+      # the conductor's auto-push, which commits with --no-verify and would
+      # otherwise bypass commit-stage hooks. Origin: 2026-06-05 incident where
+      # the conductor's milestone-close push shipped an un-approved blog draft
+      # to Pages before the operator approved it. See memory
+      # feedback_blog_draft_branch_not_main + ops/known-issues.md.
+      - id: blog-publish-guard
+        name: Blog publish guard (operator-approved posts only)
+        entry: python3 scripts/blog_publish_guard.py
+        language: system
+        stages: [pre-push]
+        pass_filenames: false
+        always_run: true
 
       # Verifier authenticity lint: catches adversarially-aware cheating
       # patterns in python/carnot/verify/ (sleep-padding to bypass
