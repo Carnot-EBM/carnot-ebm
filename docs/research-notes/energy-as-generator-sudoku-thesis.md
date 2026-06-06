@@ -179,3 +179,63 @@ toward the answer).
   contrastively-trained energy, which we exhaustively show fails (3 experiments,
   even with perfect latent + perfect carving).
 Artifact: results/sudoku_latent_energy_v3.json.
+
+## v4 — AMORTIZED CAPSTONE: confirm the wall by REVERSAL (2026-06-05)
+
+v1->v3 argued the wall is amortized inference by ELIMINATION (energy descent fails
+even with perfect latent + perfect carving). v4 confirms it by REVERSAL: train the
+amortized generator (Refiner) AND the carved scorer (global-negative EBT) on the
+same data, then run FOUR inference procedures against the SAME two trained models
+and compare. If the wall is initialization (amortization), then descending the
+SAME energy from a learned-refiner start should jump far above descending it from a
+random start. scripts/experiments/sudoku_amortized_capstone_v4.py.
+
+| inference procedure (same trained EBT + Refiner) | exact-grid solve |
+|---|---|
+| random-init energy descent (Adam, 200 steps) | **0.000** |
+| refiner greedy (amortized generator alone) | **0.180** |
+| refiner-init energy descent (learned start, same energy) | **0.166** |
+| energy-rerank refiner@K=32 (EBT picks lowest-energy sample) | **0.120** |
+
+n_eval=500 held-out, seed 0, ~101 min on the internal RTX 3090. EBT carved cleanly
+and stably (gold pinned -5.0, Langevin/PCD negatives +5.0, loss saturated at the
+-5.0 reg bound, no divergence). Refiner greedy replicates v1 (0.180 vs 0.182).
+
+**VERDICT — SPLIT, reported honestly (not spun):**
+
+1. **AMORTIZATION WALL — CONFIRMED BY REVERSAL (the load-bearing claim).** The
+   energy landscape is IDENTICAL across rows 1 and 3; only the *initialization*
+   differs. Random-init descent = **0.000** (the v1->v3 failure, recomputed for
+   THIS exact carved EBT). Learned-refiner-init descent = **0.166**. A 0 -> 16.6%
+   jump driven purely by where descent STARTS proves the wall was the funnel /
+   getting-into-the-basin = amortized inference, NOT the energy. This is the
+   mechanistic confirmation of v1->v3: the energy was never the problem; reaching
+   its minimum from a cold start was, and a learned init solves exactly that.
+
+2. **ENERGY-AS-SCORER-ON-THE-GENERATOR — HONEST NEGATIVE (this setup).** The carved
+   EBT does NOT add value on top of the amortized generator here:
+   - refiner-init energy descent (0.166) is slightly BELOW refiner greedy (0.180) —
+     polishing with the energy mildly HURTS.
+   - energy-reranking K=32 refiner samples (0.120) is well BELOW refiner greedy
+     (0.180) — letting the EBT pick the "best" of K samples is WORSE than just
+     taking the refiner's mode.
+   Why: the EBT was contrastively carved to separate gold (one-hot) from
+   Langevin/PCD negatives (a global low-energy distribution). The refiner's errors
+   are a DIFFERENT, near-correct distribution the energy never saw as negatives, so
+   the energy ranks gross validity (gold vs corrupted, near-perfect per v1) but
+   cannot finely discriminate among near-correct candidates. The "verifier+generator
+   product" intuition — energy as a post-hoc reranker on the learned generator — is
+   NOT supported by this from-scratch tiny experiment.
+
+**What v4 sharpens.** The amortization conclusion is now confirmed two ways
+(elimination v1->v3, reversal v4): generation needs a learned inference map;
+energy-descent from a cold start generates nothing regardless of carving/latent.
+AND v4 adds an honest boundary on the energy's role: in this setup the carved EBT
+is a VALIDITY scorer, not a fine-grained candidate SELECTOR — energy-reranking the
+refiner did not help and slightly hurt. The energy's defensible role stays (a) the
+training ORACLE that teaches the refiner, and (b) a gross-validity / abstention
+gate — NOT a polish/rerank stage on a strong amortized generator's near-correct
+outputs. (Open: a verifier trained on the GENERATOR's own error distribution —
+hard negatives mined from refiner samples — might rerank usefully where this
+Langevin-carved one did not. That is a natural v5, not claimed here.)
+Artifact: results/sudoku_amortized_capstone_v4.json.
