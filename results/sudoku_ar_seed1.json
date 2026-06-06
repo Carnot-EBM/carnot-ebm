@@ -1,0 +1,32 @@
+{
+  "ar_greedy_solve_rate": 0.006,
+  "ar_sc16_solve_rate": 0.006,
+  "ar_greedy_cell_acc": 0.5250370370370371,
+  "ar_greedy_blank_cell_acc": 0.3498887533194574,
+  "ar_greedy_mean_violations": 7.704,
+  "n_eval": 500,
+  "n_params": 3206155,
+  "train_seconds": 1119.9026157855988,
+  "model": "ar",
+  "args": {
+    "model": "ar",
+    "steps": 12000,
+    "batch": 256,
+    "hidden": 256,
+    "layers": 4,
+    "heads": 4,
+    "lr": 0.0003,
+    "train_n": 400000,
+    "eval_n": 500,
+    "sc_k": 16,
+    "seed": 1,
+    "log_every": 1000,
+    "descent_steps": 200,
+    "descent_lr": 0.3,
+    "n_cycles": 8,
+    "out": "results/sudoku_ar_seed1.json"
+  },
+  "gpu": "NVIDIA GeForce RTX 3090",
+  "headroom_gate_pass": true,
+  "headroom_note": "AR greedy=0.006 SC16=0.006; PASS \u2014 weak-AR regime, real headroom (gate <0.75)"
+}
