@@ -8667,3 +8667,5 @@ Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT p
 ## 2026-06-05 (Milestone 2026.06.358 Operational Retrospective - Update)
 
 - [outer-loop] Wrote `results/operational_retro_2026_06_358.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. No data available this milestone for bottlenecks or improvements.
+
+- [outer-loop] Completed `results/operational_retro_2026_06_358.json`. Confirmed 0 experiments were executed this milestone. GPUs were correctly idle.
