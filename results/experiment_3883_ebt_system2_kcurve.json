@@ -1,0 +1,152 @@
+{
+  "accuracy_by_k": {
+    "1": 0.0,
+    "16": 0.0,
+    "2": 0.0,
+    "4": 0.0,
+    "8": 0.0
+  },
+  "best_k": 1,
+  "best_k_accuracy": 0.0,
+  "duration_s": 310.12,
+  "experiment": 3883,
+  "field_principles": {
+    "accuracy_by_k": "The K-scaling curve - direct evidence for/against 'thinking = energy descent helps'.",
+    "best_k": "Compute-optimal descent budget; is more inference compute worth it.",
+    "best_k_accuracy": "Compute-optimal descent budget; is more inference compute worth it.",
+    "duration_s": "Methodology - real K-sweep inference takes wall-clock (live floor 60s); implausibly short = fabrication.",
+    "inference_substrate": "Methodology - real K-sweep inference takes wall-clock (live floor 60s); implausibly short = fabrication.",
+    "k_curve_shape": "MONOTONE_GAIN | PLATEAU | DEGRADING - bounds (or supports) the EBT System-2 claim at this scale.",
+    "model_specs": "Methodology - real K-sweep inference takes wall-clock (live floor 60s); implausibly short = fabrication.",
+    "n_heldout": "Methodology - real K-sweep inference takes wall-clock (live floor 60s); implausibly short = fabrication.",
+    "preconditions_checked": "Methodology - real K-sweep inference takes wall-clock (live floor 60s); implausibly short = fabrication.",
+    "random_seed": "Methodology - real K-sweep inference takes wall-clock (live floor 60s); implausibly short = fabrication.",
+    "reproducibility_checksum": "Methodology - real K-sweep inference takes wall-clock (live floor 60s); implausibly short = fabrication.",
+    "seeds_used": "Methodology - real K-sweep inference takes wall-clock (live floor 60s); implausibly short = fabrication."
+  },
+  "honest_verdict": "complete: ebt_system2_BOUNDED_PLATEAU_no_usable_descent_signal_at_scale",
+  "inference_substrate": "live_llm_inference",
+  "k_curve_fit": {
+    "linear_slope_accuracy_per_k": 0.0
+  },
+  "k_curve_shape": "PLATEAU",
+  "model_specs": {
+    "block_size": 48,
+    "checkpoint_path": "results/experiment_3882_thesis_a_partb_seed2.pt",
+    "continuous_decoder": "learned emb->VOCAB MLP from thesis_a_part_b_scaled.fit_decoder",
+    "decoder_batch_size": 32,
+    "decoder_train_k": 16,
+    "decoder_train_steps": 500,
+    "digits": 3,
+    "dim": 768,
+    "ebt_checkpoint": "exp3882 selected-seed EBT weights, not retrained",
+    "exp3882_stronger_decode_path": "beam",
+    "k_values": [
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "n_eval": 100,
+    "n_heads": 12,
+    "n_layers": 4,
+    "selected_seed": 2,
+    "upstream_artifact": "results/experiment_3882_thesis_a_partb_killgate.json"
+  },
+  "n_heldout": 100,
+  "preconditions_checked": {
+    "checkpoint_loaded": true,
+    "cuda": true,
+    "cuda_device_count": 2,
+    "cuda_devices": [
+      "NVIDIA GeForce RTX 3090",
+      "NVIDIA GeForce RTX 3090"
+    ],
+    "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "scaled_harness_error": null,
+    "scaled_harness_import": true,
+    "upstream_error": null,
+    "upstream_positive_control": true
+  },
+  "random_seed": 2,
+  "reproducibility_checksum": "fe9247bc2eed55de41955838c3f70850074429749756e941c0be42b24d956493",
+  "samples": [
+    {
+      "k1": "015",
+      "k16": "015",
+      "k2": "015",
+      "k4": "050",
+      "k8": "015",
+      "prompt": "576+558=",
+      "true": "1134"
+    },
+    {
+      "k1": "016",
+      "k16": "00",
+      "k2": "016",
+      "k4": "016",
+      "k8": "016",
+      "prompt": "824+894=",
+      "true": "1718"
+    },
+    {
+      "k1": "8030",
+      "k16": "8000",
+      "k2": "8030",
+      "k4": "8000",
+      "k8": "8000",
+      "prompt": "178+412=",
+      "true": "0590"
+    },
+    {
+      "k1": "00",
+      "k16": "00",
+      "k2": "00",
+      "k4": "00",
+      "k8": "00",
+      "prompt": "883+514=",
+      "true": "1397"
+    },
+    {
+      "k1": "608",
+      "k16": "608",
+      "k2": "608",
+      "k4": "608",
+      "k8": "608",
+      "prompt": "198+229=",
+      "true": "0427"
+    },
+    {
+      "k1": "008",
+      "k16": "01=",
+      "k2": "01=",
+      "k4": "01=",
+      "k8": "01=",
+      "prompt": "293+291=",
+      "true": "0584"
+    },
+    {
+      "k1": "++",
+      "k16": "++",
+      "k2": "++",
+      "k4": "++",
+      "k8": "++",
+      "prompt": "189+510=",
+      "true": "0699"
+    },
+    {
+      "k1": "0=31",
+      "k16": "0=30",
+      "k2": "0=30",
+      "k4": "0=30",
+      "k8": "0=30",
+      "prompt": "283+479=",
+      "true": "0762"
+    }
+  ],
+  "schema": "carnot.experiment_3883_ebt_system2_kcurve.v1",
+  "seeds_used": [
+    2
+  ]
+}
