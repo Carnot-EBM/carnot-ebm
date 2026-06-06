@@ -184,6 +184,90 @@ keep the loop's outputs human-auditable.
 
 ## One-paragraph synthesis for the paper
 
+## Source C — "Automated Alignment Researchers" (public companion to Source B)
+
+- Publisher: Anthropic Research (anthropic.com/research blog)
+- URL: https://www.anthropic.com/research/automated-alignment-researchers
+- Published: April 14, 2026 (Anthropic Fellows study)
+- Accessed: 2026-06-05
+- Relationship: the polished public-facing writeup of the SAME 9-agent W2S
+  experiment as Source B; identical numbers (0.23 -> 0.97 PGR, 800h, $18k). Quotes
+  below are SINGLE-PASS (one fetch) — mark **[SINGLE-PASS — two-pass verify before
+  paper use]**. Added because Source C states three Carnot-load-bearing framings
+  more sharply than the technical paper does.
+
+### C1. The bottleneck flips from generation to evaluation [SINGLE-PASS]
+> "the core bottleneck in alignment research could become evaluation (making sure
+> that experiments are set up sufficiently well that we're confident in their
+> results), rather than generation (relying on human researchers to propose
+> promising ideas)."
+
+*Carnot relevance:* the single crispest external statement of the Carnot thesis —
+verification, not generation, is the scarce primitive.
+
+### C2. The design requirement = Carnot's architecture [SINGLE-PASS]
+> "Any deployment of automated researchers will require evaluations that the AARs
+> can't tamper with—and human inspections of both their results and their methods."
+
+*Carnot relevance:* both clauses are Carnot by construction — un-tamperable
+evaluation (energy = ground truth) + human/AI inspection of results AND methods
+(operator-in-loop + adversarial_verify.py + verifier-authenticity audit, which
+inspects HOW an artifact was produced, not just its number).
+
+### C3. Verification asymmetry, plainly [SINGLE-PASS]
+> "If their skills progress to the point where they're generating millions of lines
+> of incredibly complicated code that we can't parse ourselves, it could become very
+> difficult to tell whether they're acting in the ways we intend."
+
+### C4. Scalable-oversight framing of W2S [SINGLE-PASS]
+> "As a proxy for scalable oversight, the weak model stands in for humans, and the
+> strong model for the much-smarter-than-human models we might one day need to
+> oversee."
+
+### C5. "Research taste" — naming the goal-choice gap [SINGLE-PASS]
+> "today's frontier models still lack 'research taste' (industry parlance for having
+> an intuitive sense of which ideas might work and which won't)."
+
+*Carnot relevance:* frontier-lab vocabulary for the same gap as RSI-essay A3 +
+Deep-Think P3 "loop can't self-seed". Research taste is the missing capability; the
+human supplies it.
+
+### C6. The "alien science" risk [SINGLE-PASS]
+> "Over time, the models' ideas could become much harder to verify, or corrupted in
+> ways that are tricky for humans to parse or catch. That could mean creating an
+> 'alien science'."
+
+### C7. Methods don't transfer (humility flag) [SINGLE-PASS]
+> "AARs tend to capitalize on opportunities unique to the models and datasets
+> they're given, which means their methods might not work elsewhere."
+
+*Carnot relevance:* direct caveat for any from-scratch tiny-corpus Carnot result
+(e.g. the Sudoku v1-v4 arc) — the ordering is the finding, the absolutes are
+setup-specific.
+
+### C8. Bootstrapping research-taste via W2S [SINGLE-PASS]
+> "We could conduct weak-to-strong supervision on Claude's ability to scope research
+> projects."
+
+*Carnot relevance:* a candidate path to partially close the "loop can't self-seed"
+gap — but their own reward-hacking results are the warning: it needs an
+un-tamperable score for "good research scoping," which is the hard part. File as
+Phase-3+ idea, not a naive action.
+
+### C9. Math-vs-code generalization gradient [SINGLE-PASS]
+Best method on held-out data: math PGR **0.94**, coding PGR **0.47** (~2x baseline);
+production-scale transfer to Claude Sonnet 4 "didn't lead to a statistically
+significant improvement."
+
+*Carnot relevance — a genuine cross-program convergence:* Carnot's
+`verifier-domain-bound` finding independently shows the verifier is strong on math
+(FoVer 0.91, G2-reproduced), weak on code, earned-negative on facts. Two separate
+research programs find the SAME domain gradient — reasoning/math verification
+generalizes; code verification is materially harder. External corroboration of
+Carnot domain-boundedness, not coincidence.
+
+---
+
 The RSI essay is the worldview; the Automated-W2S paper is the controlled receipt.
 Together they establish, from the frontier lab itself, that (a) autonomous research
 on outcome-gradable problems already beats human baselines (0.23 -> 0.97 PGR,
