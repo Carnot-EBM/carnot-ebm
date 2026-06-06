@@ -10416,6 +10416,59 @@ When the Exp 3862 fixture is missing, lacks per-item score rows, or has
 `facts_catch_delta <= 0`, it SHALL write `blocked_graph_prototype_unavailable`
 instead of fabricating complementarity.
 
+### REQ-VERIFY-3886: Defabricated Graph-Grounding Fact Verifier
+
+The repository SHALL provide an Exp 3886 graph-grounding fact verifier that
+re-runs the Exp 3862 facts-domain claim with a real local SOTA GGUF invocation
+instead of the rule-based prototype. Before scoring, the runner SHALL check
+CUDA via the project virtualenv, verify `llama_cpp` imports, resolve a cached
+Qwen3.6-35B-A3B GGUF with Gemma-4-26B-A4B-it fallback, and load a labeled
+RAGTruth-style facts corpus. Missing resources SHALL produce terminal blocked
+artifacts with `blocked_no_cuda`, `blocked_model_not_cached`,
+`blocked_llama_cpp_not_installed`, or `blocked_facts_corpus_missing`.
+
+For runnable inputs, the graph verifier SHALL invoke `llama_cpp.Llama` on the
+factual corpus to extract entity and relation graphs from response and evidence
+text. It SHALL score each item using the HalluGraph decomposition: Entity
+Grounding, Relation Preservation, and a Composite Fidelity Index. The
+hallucination score SHALL be `1 - CFI`, with bounded parse-fallback handling
+for malformed model JSON. The same rows SHALL also be scored by the math-bound
+ensemble baseline used by Exp 3862, without moving the frozen 0.9131 FoVer
+headline.
+
+The Exp 3886 workflow SHALL persist per-item graph and math-baseline scores to
+`results/experiment_3886_graph_grounding_fact_verifier_defabricated_scores.jsonl`
+and write
+`results/experiment_3886_graph_grounding_fact_verifier_defabricated.json`.
+The terminal artifact SHALL include bare scalar fields for `facts_catch_delta`,
+`graph_auroc`, `math_baseline_auroc`, `per_item_scores_path`,
+`model_invoked`, `n_items`, `preconditions_checked`, `model_specs`,
+`random_seed`, `reproducibility_checksum`, `duration_s`, and
+`inference_substrate`, each covered by a string principle in
+`field_principles`. If live scoring finishes in under 60 seconds, the workflow
+SHALL emit `blocked_graph_verifier_not_invoked` rather than promoting the run.
+
+### SCENARIO-VERIFY-3886: Defabricated Facts Signal Gate
+
+Given a labeled facts corpus, a cached SOTA GGUF, and a live model-backed graph
+extractor, when Exp 3886 completes with `model_invoked=true` and
+`duration_s >= 60`, then it computes `graph_auroc`,
+`math_baseline_auroc`, and bare-float `facts_catch_delta = graph_auroc -
+math_baseline_auroc`. If `facts_catch_delta > 0.05`, the artifact SHALL emit
+`complete: graph_grounding_FACTS_SIGNAL_REPRODUCED_delta<d>_graph<g>_baseline<b>_bankable`.
+If the delta is `<= 0.05`, the artifact SHALL emit
+`complete: graph_grounding_NO_SIGNAL_delta<d>_exp3862_was_artifact_facts_stays_bound`.
+
+### SCENARIO-VERIFY-3886-BLOCKED: Defabricated Run Fails Closed
+
+Given missing CUDA, missing cached GGUF or `llama_cpp`, missing labeled facts
+corpus, failed live inference, no model calls, or a sub-60-second wall-clock
+run, when Exp 3886 builds its artifact, then it SHALL write all required
+schema fields with `model_invoked=false` when appropriate, no fabricated
+positive delta, no per-item-score claim unless scores were actually written,
+and an `honest_verdict` that starts with the terminal `blocked_<resource>`
+reason.
+
 ### REQ-VERIFY-3869: Existing-Corpus Moat Scissor v4
 
 The repository SHALL provide an Exp 3869 existing-corpus moat-scissor runner

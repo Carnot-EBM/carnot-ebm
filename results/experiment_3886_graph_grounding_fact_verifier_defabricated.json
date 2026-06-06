@@ -1,0 +1,67 @@
+{
+  "duration_s": 11.48762,
+  "facts_catch_delta": 0.0,
+  "field_principles": {
+    "duration_s": "Pre-Launch + Adversarial-Verify + Inference-Substrate - a real graph-grounding run invokes the local GGUF and takes >=60s; sub-60s is blocked.",
+    "facts_catch_delta": "BARE FLOAT - graph_auroc - math_baseline_auroc; exp3887 disk-reads this. Must reproduce >0 with a non-fabricated run to be bankable.",
+    "graph_auroc": "The new-architecture verifier's facts AUROC - must reproduce exp3862's ~0.64 with a real run.",
+    "inference_substrate": "Pre-Launch + Adversarial-Verify + Inference-Substrate - a real graph-grounding run invokes the local GGUF and takes >=60s; sub-60s is blocked.",
+    "math_baseline_auroc": "The math ensemble on facts - the earned-negative baseline graph-grounding must beat.",
+    "model_invoked": "BARE BOOL - the de-fabrication assertion; a real run invokes the model and takes >=60s.",
+    "model_specs": "Pre-Launch + Adversarial-Verify + Inference-Substrate - a real graph-grounding run invokes the local GGUF and takes >=60s; sub-60s is blocked.",
+    "n_items": "Pre-Launch + Adversarial-Verify + Inference-Substrate - a real graph-grounding run invokes the local GGUF and takes >=60s; sub-60s is blocked.",
+    "per_item_scores_path": "Persist per-item graph+ensemble scores so exp3887 complementarity can run (the exp3863 blocker).",
+    "preconditions_checked": "Pre-Launch + Adversarial-Verify + Inference-Substrate - a real graph-grounding run invokes the local GGUF and takes >=60s; sub-60s is blocked.",
+    "random_seed": "Pre-Launch + Adversarial-Verify + Inference-Substrate - a real graph-grounding run invokes the local GGUF and takes >=60s; sub-60s is blocked.",
+    "reproducibility_checksum": "Pre-Launch + Adversarial-Verify + Inference-Substrate - a real graph-grounding run invokes the local GGUF and takes >=60s; sub-60s is blocked."
+  },
+  "frozen_fover_0_9131_untouched": true,
+  "graph_auroc": null,
+  "honest_verdict": "blocked_graph_verifier_not_invoked",
+  "inference_substrate": "live_llama_cpp_sota_gguf_entity_relation_extraction_plus_hallugraph_cfi_and_same_row_math_bound_ensemble_baseline",
+  "math_baseline_auroc": null,
+  "model_invoked": false,
+  "model_specs": {
+    "fallback_used": false,
+    "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "loader": "llama_cpp.Llama",
+    "max_tokens": 220,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "n_batch": 256,
+    "n_ctx": 4096,
+    "n_gpu_layers": -1
+  },
+  "n_items": 0,
+  "per_item_scores_path": "results/experiment_3886_graph_grounding_fact_verifier_defabricated_scores.jsonl",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "returncode=0",
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "detail": "import carnot.verify OK",
+      "resource": "carnot_verify_import"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "resource": "qwen3_6_35b_gguf_cached"
+    },
+    {
+      "available": true,
+      "detail": "import llama_cpp OK",
+      "resource": "llama_cpp_import"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/data/real_factual_corpus_ragtruth.jsonl",
+      "resource": "facts_corpus_with_gold_labels"
+    }
+  ],
+  "random_seed": 3886,
+  "reproducibility_checksum": "1cf4c5908f2b9bd30e18e2d1c3d9efb56318083be35882d4441461d457c5e627",
+  "scripts_research_conductor_modified": false,
+  "tests_run": []
+}
