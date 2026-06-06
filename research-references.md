@@ -21235,3 +21235,40 @@ New / verified papers this sweep (all loaded, not inferred):
   A concrete Xilinx-FPGA p-bit Ising reference for the KV260 "energy evaluable in dedicated
   hardware" POC. (Lower-confidence: abstract confirmed via search, page not individually
   fetched.)
+
+## Post-.359 sweep (2026-06-06, planning 2026.06.360)
+
+- **arXiv:2606.05976 — "The Self-Correction Illusion: LLMs Correct Others but Not
+  Themselves" (2026):** a fresh, direct corroborator for the verifier-MOAT / DT-P2
+  o1-subsumption-durability premise. LLM agents struggle to correct errors in their OWN
+  reasoning traces yet show markedly higher correction rates when the identical claim
+  appears under an EXTERNAL source. This asymmetry is exactly the moat thesis — Carnot's
+  external k=15 ensemble catches what a reasoner's self-verification structurally misses.
+  Strengthens the Self-Verification Dilemma (arXiv:2602.03485) premise the moat scissor
+  (exp3885/exp3895) tests. The repeated INCONCLUSIVE verdicts on the scissor are a broken
+  reasoner-self-verify HARNESS (AUROC=0.5, 0/150 caught), not evidence the premise is wrong.
+
+- **arXiv:2602.07594 — "Learning to Self-Verify Makes Language Models Better Reasoners"
+  (2026):** rewarding self-verification alone yields a generator comparable to standard
+  training with better traces. Adversarial baseline for the moat: if self-verification can
+  be trained to be strong, the residual Carnot catches shrinks. The moat scissor must use a
+  STRONG reasoner self-verify (non-degenerate AUROC in [0.55,0.97]) as the positive control
+  — the .359 failure was a degenerate 0.5 control, which the gate correctly caught.
+
+- **arXiv:2603.27752 — "Retromorphic Testing with Hierarchical Verification for
+  Hallucination Detection in RAG" (2026-03):** distinguishes answer-level (single verdict)
+  from span-level (localize unfaithful fragments) hallucination detection. Directly informs
+  the facts graph-grounding verifier (exp3897): persist SPAN/per-item scores (not just an
+  answer-level AUROC) so complementarity (exp3898) can compute per-item error-mask
+  correlation vs the math ensemble. Complements HalluGraph (arXiv:2512.01659) entity/relation
+  decomposition.
+
+- **EBT generation verdict context (arXiv:2507.02092 re-read):** EBT's published wins are
+  on PERPLEXITY + System-2 denoising refinement, NOT on compute-matched discrete
+  algorithmic GENERATION accuracy. Carnot's .359 exp3882 measured the gap EBT never reports:
+  at matched inference FLOPs, EBT global-beam AND greedy energy-argmin BOTH score 0.0 vs
+  AR 0.94 on the in-band algorithmic task (FUNDAMENTAL, clean 3673s run; K-curve PLATEAU at
+  0.0, exp3883). This is a genuine, novel, trustworthy compute-matched negative for
+  energy-as-GENERATOR — the complement of the P0.1 energy-as-SELECTION negative. The next
+  EBT step is a bounded adversarial REPLICATION (reuse checkpoint, +2 seeds, decode-only) to
+  confirm FUNDAMENTAL is not a decode-harness artifact before banking the Phase-3 verdict.
