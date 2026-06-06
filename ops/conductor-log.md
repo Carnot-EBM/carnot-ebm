@@ -7937,3 +7937,5 @@ ERROR: {
 | 2026-06-06 10:37 UTC | GateMate A1-EVB-2M continuity — corrigendum the ex | OK | 92 passed in 3.99s |
 | 2026-06-06 10:54 UTC | PolarFire + KV260 consolidated opportunistic conti | OK | 92 passed in 5.24s |
 | 2026-06-06 11:08 UTC | Capstone .359 — aggregate the forward-bet verdicts | OK | 85 passed in 4.04s |
+| 2026-06-06 11:44 UTC | Plan milestone 2026.06.360 | OK | 11 tasks proposed |
+| 2026-06-06 11:46 UTC | Milestone 2026.06.360 activated | OK | 11 tasks queued |
