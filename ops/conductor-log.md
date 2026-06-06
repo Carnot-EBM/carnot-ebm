@@ -7935,3 +7935,4 @@ ERROR: {
 | 2026-06-06 10:06 UTC | Facts COMPLEMENTARITY (disk-reads exp3886, no hard | OK | 94 passed in 6.57s |
 | 2026-06-06 10:24 UTC | FR-11 continuous self-learning v24 (research-progr | OK | 87 passed in 5.15s |
 | 2026-06-06 10:37 UTC | GateMate A1-EVB-2M continuity — corrigendum the ex | OK | 92 passed in 3.99s |
+| 2026-06-06 10:54 UTC | PolarFire + KV260 consolidated opportunistic conti | OK | 92 passed in 5.24s |
