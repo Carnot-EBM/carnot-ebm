@@ -121,3 +121,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - INVARIANT regression: frozen_fover_auroc_unchanged=True drifted from frozen 0.9131
 - artifact: results/experiment_3868_capstone_v356.json
+
+## experiment_3885_moat_scissor_in_distribution.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+- artifact: results/experiment_3885_moat_scissor_in_distribution.json
