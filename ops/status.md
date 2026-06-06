@@ -1,5 +1,64 @@
 # Carnot — Operational Status
 
+## Session 2026-06-06 - Milestone 2026.06.360 Research Planning Staged
+
+Planned milestone **2026.06.360** ("HARNESS-FIRST") as the NEXT milestone after all 11 `.359`
+tasks completed. `.359` produced ONE decisive trustworthy result and TWO fabricated stubs
+(read via `scripts/summarize_artifact.py`):
+- **EBT energy-as-GENERATOR (Thesis A, Phase-3): FUNDAMENTAL** — exp3882 (clean, real 3673s):
+  at matched inference FLOPs EBT global-beam=0.0 AND greedy-argmin=0.0 vs AR=0.94 (positive
+  control passed); exp3883 System-2 K-curve PLATEAU at 0.0. Energy-as-generator is **bounded**,
+  the complement of the already-settled energy-as-SELECTION (P0.1) negative. **Both energy-core
+  foundation-model theses now have a trustworthy negative; the surviving proven asset is the
+  VERIFIER (FoVer 0.9131, frozen, G2-reproduced).**
+- **Verifier MOAT scissor: INCONCLUSIVE + FLAGGED** — exp3884 built a good in-distribution
+  corpus (150 errors, ensemble AUROC 0.967) but exp3885's reasoner self-verify caught **0/150**
+  (degenerate AUROC=0.5, 35s, DURATION_TOO_SHORT-flagged). The harness, not the premise, is broken.
+- **Facts graph-grounding: blocked + FLAGGED** — exp3886 `model_invoked=False`, `n_items=0`, 11s.
+  The verifier module exists but was never exercised.
+Mandates clean: FR-11 v24 INVARIANT_HELD (exp3888); GateMate de-flagged (exp3889 OK); PolarFire/
+KV260 continuity (exp3890 OK); capstone exp3891 `paper_ready=TRUE`, frozen 0.9131 unchanged, G1-G4 met.
+
+**The operational lesson driving `.360's shape:** the agent SUCCEEDS reusing a pre-built harness
+(EBT reused `thesis_a_part_b_scaled.py` → real 3673s run) and FABRICATES implementing a live-model
+call in a thin wrapper in one turn (moat 35s degenerate; facts 11s not-invoked; the exp3862 1.02s
+mode). `.360 is **HARNESS-FIRST**: for each live-model bet, a separate BUILD+UNIT-TEST task whose
+deliverable is a PASSING test asserting non-degenerate output on a fixture (a positive control on
+the HARNESS), THEN the measurement task imports the tested module.
+
+**`.360 shape (11 tasks, exp3892-3902):** (0) archive/activate + green-gate (exp3892);
+**Phase 1 — bank the EBT negative:** decode-only adversarial REPLICATION at +2 fresh seeds, reuse
+the exp3882 checkpoint, bounded under the codex 4800s cap (exp3893); **Phase 2 — moat, harness-first:**
+build+unit-test the reasoner-self-verify harness (exp3894, fixture AUROC>0.6) THEN run the scissor
+on the in-distribution corpus (exp3895); **Phase 3 — facts, harness-first:** build+unit-test the
+HalluGraph-style graph-grounding verifier (exp3896, real model invocation) THEN run it on RAGTruth
+(exp3897) + complementarity (exp3898); **Phase 4 — mandates+hw+capstone:** FR-11 v25 (exp3899),
+GateMate terminal-confirmation (exp3900), PolarFire/KV260 continuity (exp3901), capstone (exp3902,
+FORCING the operator next-thesis decision now that BOTH energy theses are bounded-negative).
+
+Wrote `openspec/change-proposals/research-roadmap-vNEXT.md` (+ archived prior as
+`research-roadmap-v359.md`) and `research-roadmap-next.yaml` (11 tasks). Updated
+`research-references.md` (Post-.359 sweep: arXiv:2606.05976 Self-Correction Illusion;
+2602.07594 Learning-to-Self-Verify; 2603.27752 Retromorphic/Hierarchical RAG verification).
+Validation: YAML schema OK (11 tasks, all `.360`, codex+requires_codex routing, prior_failures
+4-subfield where present, BARE-scalar discipline, terminal-prefix verdicts); `milestone ==
+_expected_next_milestone('2026.06.359') = 2026.06.360`; exclusion-manifest lint exit 0 (3
+SCOPE_MATCHED warnings, all carry `operator_override` → activation proceeds); canonical-URL +
+overdue-priority lints exit 0. Left `research-roadmap.yaml` and `scripts/research_conductor.py`
+untouched. Did NOT push.
+
+**Invariants carried:** `paper_ready=TRUE` (G1-G4; frozen 0.9131 NEVER substituted — `.360 adds
+replication + durability + breadth LENSES, not a new headline); verifier math-domain-bound until
+facts proven non-fabricated; energy-as-selection (P0.1) AND energy-as-generation (EBT) both
+bounded-negative; gated/required fields emitted BARE; no flagged-adversarial artifact aggregated;
+no external publication.
+
+**OPERATOR DECISION SURFACED (exp3902 capstone):** with BOTH energy mechanisms twice-refuted and
+the verifier proven, the honest forward framing is "verifier as a durable, broad external
+second-opinion layer" vs "energy as a generator/selector" — the loop recommends, the operator
+chooses the next thesis.
+
+
 ## Session 2026-06-05 - Milestone 2026.06.358 Research Planning Staged
 
 Planned milestone **2026.06.358** ("ADJUDICATE THE FORWARD BETS") as the NEXT milestone after
