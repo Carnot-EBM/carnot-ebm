@@ -3974,6 +3974,70 @@ partial, or blocked verdict without fabricating board evidence.
 
 ---
 
+### REQ-HW-3889
+
+**Title:** GateMate continuity corrigendum MUST de-flag Exp 3866 with distinct timers and honest readback
+
+**Description:**
+Experiment 3889 MUST rerun the GateMate A1-EVB-2M n=16 Carnot Ising tile
+continuity flow as a corrigendum for Exp 3866. Before any synthesis, packing,
+flashing, or readback attempt, it MUST check `command -v nextpnr-himbaechel`,
+`command -v yosys`, `command -v openFPGALoader`, and
+`openFPGALoader -c dirtyJtag --detect` proving the Cologne Chip GateMate/GM1Ax
+IDCODE. Missing tools MUST emit `blocked_gatemate_toolchain_missing`; missing
+board contact MUST emit `blocked_gatemate_board_unreachable`.
+
+When preconditions pass, the experiment MUST run the current open-source
+GateMate flow (`yosys synth_gatemate`, `nextpnr-himbaechel --device CCGM1A1`,
+`gmpack`, and `openFPGALoader -c dirtyJtag -b olimex_gatemateevb`) against the
+n=16 tile. The artifact MUST record `duration_s` as total task wall-clock and
+`run_duration_s` as the on-board flash/readback interval only; these two fields
+MUST be measured by distinct timers and MUST NOT be bit-identical. The artifact
+MUST probe whether the installed `openFPGALoader` advertises GateMate-compatible
+readback support, attempt readback only when supported, and compare any captured
+readback SHA256 to the flashed bitstream SHA256.
+
+**Acceptance criteria:**
+- `scripts/experiments/experiment_3889_gatemate_continuity_corrigendum.py`
+  writes `results/experiment_3889_gatemate_continuity_corrigendum.json`.
+- The artifact includes bare `duration_s`, `run_duration_s`,
+  `readback_verified`, `readback_supported`, `gatemate_bitstream_flashed`,
+  `fmax_mhz`, `lut_used`, `dff_used`, `preconditions_checked`,
+  `reproducibility_checksum`, and `inference_substrate` fields.
+- `duration_s != run_duration_s` for every non-blocked flash artifact.
+- A clean terminal artifact sets `gatemate_bitstream_flashed=true` and either
+  `readback_verified=true` or `readback_supported=false`, with
+  `honest_verdict` beginning
+  `success: gatemate_continuity_CLEAN_terminal_fmax`.
+- A flashed artifact with supported but unverified readback emits an
+  `honest_verdict` beginning
+  `success: gatemate_continuity_flashed_readback_inconclusive_fmax`.
+- Required fields are annotated through `field_provenance`; the fields
+  themselves MUST remain bare booleans, numbers, strings, or lists rather than
+  `{value, principle}` wrappers.
+
+**Implementation status:** Pending (Exp 3889)
+
+---
+
+### SCENARIO-HW-3889
+
+**Scenario:** GateMate corrigendum re-flashes the n=16 tile without timer tautology and records readback support.
+
+**Given:** The GateMate toolchain may or may not be installed, the Olimex
+GateMate A1-EVB-2M may or may not be reachable over DirtyJTAG, and the installed
+`openFPGALoader` may or may not expose a compatible `--readback` command.
+**When:** Experiment 3889 runs its preconditions and, only on pass, runs the
+synth_gatemate -> nextpnr-himbaechel -> gmpack -> openFPGALoader flow plus the
+readback probe.
+**Then:** It writes the corrigendum artifact with terminal, inconclusive, or
+blocked verdict evidence; distinct task and on-board timers; real Fmax and
+LUT/DFF counts; and an honest readback-supported/readback-verified record.
+
+**Implementation status:** Pending (Exp 3889)
+
+---
+
 ### REQ-HW-3577
 
 **Title:** KV260 hardware-task continuity verification
