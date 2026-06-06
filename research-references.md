@@ -21168,3 +21168,70 @@ New / reconfirmed papers this sweep:
   models can identify step errors, sometimes surpassing open-source PRMs — independent
   literature evidence that decorrelated verifier *families* are complementary, the exact
   property the moat scissor measures.
+
+## .359 additions — energy-as-generator peer (NRGPT), self-verification-is-error-blind, graph-grounded factuality peer, parallel-Ising correctness (2026-06-05)
+
+Context: `.358 was an EXECUTION wipeout, not a research negative. The three operator-seeded
+forward bets (EBT energy-as-GENERATOR, verifier-moat IN-DISTRIBUTION, facts graph-grounding)
+never produced bankable verdicts: exp3871 (EBT part-b kill-gate) blocked on a trivial
+`import scripts.thesis_a_part_b_scaled` ModuleNotFoundError (the scaled harness imports fine
+when `scripts/` is on `sys.path`); exp3873/3874/3875/3876/3877 SKIP-cascaded behind a poison
+pretest + gated_on retire-on-skip. `.359 re-issues all three bets with the import bug fixed,
+the gated_on chains replaced by in-script disk-read-with-fallback (the `.340 proven-safe
+pattern), and a Phase-0 green-gate. This sweep adds the closest published peers to each open
+question.
+
+New / verified papers this sweep (all loaded, not inferred):
+
+- **arXiv:2512.16762 — "NRGPT: An Energy-based Alternative for GPT" (Dehmamy, Hoover, Saha,
+  Kozachkov, Slotine, Krotov; ICLR 2026):** the closest living peer to Carnot's
+  energy-as-GENERATOR bet (Q1). A GPT unified with an EBM where inference is reframed as
+  exploration of tokens on an energy landscape that, under stated conditions, provably
+  becomes gradient descent (Shakespeare / ListOPS / OpenWebText). CRITICAL GAP TO EXPLOIT:
+  NRGPT does NOT report a compute-matched head-to-head vs standard AR GPT — exactly the
+  open question the `.359 EBT part-b adjudication (exp3882) measures (does global
+  energy-descent beam search recover AR accuracy at matched FLOPs -> ARTIFACT, or fail ->
+  FUNDAMENTAL). Cite as the peer whose gap Carnot closes.
+
+- **arXiv:2602.03485 — "Self-Verification Dilemma: Experience-Driven Suppression of Overused
+  Checking in LLM Reasoning" (Long, Jiang, Chen, Guo, Gan, Wang):** empirically shows
+  ~85-95% of a reasoning model's OWN self-verification rechecks merely confirm prior
+  reasoning and never catch errors (rechecks are 40-58% of reflective steps yet almost never
+  corrective). This is the load-bearing PREMISE for the verifier moat (Q2 / DT-P2): if a
+  frontier reasoner's self-verification is mostly error-blind, an INDEPENDENT external
+  ensemble that catches what self-verification misses has durable value. Cite as the
+  evidence that motivates the in-distribution moat scissor (exp3884/3885).
+
+- **arXiv:2504.16828 — "Process Reward Models That Think" (ThinkPRM; Khalifa et al.):** a
+  generative long-CoT process reward model fine-tuned on ~1% of discriminative-PRM labels
+  that beats best-of-N selection on ProcessBench/MATH-500/AIME'24 and scales by averaging
+  K independent verification CoTs. The strongest generative-PRM comparator for the moat
+  scissor — and its "average K INDEPENDENT verification CoTs" mechanism is the
+  error-independence/diversity argument Carnot's ensemble rests on. (Already referenced in
+  prior sweeps; reconfirmed live here.)
+
+- **arXiv:2512.01659 — "HalluGraph: Auditable Hallucination Detection for Legal RAG Systems
+  via Knowledge Graph Alignment" (Noel, Seidou, Capo-Chichi, Amari):** a near-exact peer to
+  MemGraphRAG for the FACTS domain where Carnot's verifier is earned-negative (Q3). Detects
+  hallucination via structural alignment between KGs extracted from context/query/response,
+  using Entity Grounding + Relation Preservation -> Composite Fidelity Index (AUC 0.979
+  structured / ~0.89 generative). The explicit entity/relation-consistency decomposition is
+  the concrete architecture the `.359 de-fabricated graph-grounding verifier (exp3886)
+  should implement (a real entity+relation+KB-consistency invocation, not the 1.02s
+  rule-based stub that got exp3862 fabrication-flagged).
+
+- **arXiv:2604.17109 — "A fully parallel densely connected probabilistic Ising machine with
+  inertia for real-time applications" (Zhu, Singh, Laydevant, ... McMahon; 2026-04):** adds
+  an inertia-like self-alignment term that suppresses the oscillations that break
+  fully-parallel spin updates on dense p-bit Ising networks (~35x speedup on 200-spin
+  benchmarks). Directly informs the FPGA/Ising sampler track (KV260, GateMate) where
+  fully-parallel synchronous updates are exactly the schedule under question — the inertia
+  trick is a candidate correctness fix for parallel-update samplers.
+
+- **arXiv:2504.04543 — "pc-COP: An Efficient and Configurable 2048-p-Bit Fully-Connected
+  Probabilistic Computing Accelerator for Combinatorial Optimization":** a 2048
+  fully-connected p-bit Ising accelerator on Xilinx UltraScale+ FPGA with a
+  speculate-and-select pseudo-parallel update (4x over sequential, ~99% on G-Set max-cut).
+  A concrete Xilinx-FPGA p-bit Ising reference for the KV260 "energy evaluable in dedicated
+  hardware" POC. (Lower-confidence: abstract confirmed via search, page not individually
+  fetched.)

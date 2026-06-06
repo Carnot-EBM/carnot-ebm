@@ -1,158 +1,277 @@
-# Research Roadmap v358 — Adjudicate the Forward Bets
+# Research Roadmap v359 — Execute the Three Forward Bets (Hardened)
 
-**Milestone:** 2026.06.358
+**Milestone:** 2026.06.359
 **Planned:** 2026-06-05 (outer-loop, Claude Opus 4.8)
 **Supersedes draft:** identical copy committed as `research-roadmap-next.yaml`
-**Prior milestone doc:** `docs/research-notes/verifier-moat-scissor-plot-design.md`
+
+**Title:** Execute the three forward bets — EBT energy-as-GENERATOR kill-gate
+(import-fixed), the verifier moat on an IN-DISTRIBUTION corpus, and a
+de-fabricated facts graph-grounding verifier — hardened against the
+poison-test SKIP cascade.
+
+**Status of headline:** `paper_ready = TRUE` (G1∧G2∧G3∧G4); FoVer headline
+AUROC **0.9131** frozen and G2-reproduced on a clean CI runner. This milestone
+adds **lenses** (generation, durability, factual breadth), not a new headline.
 
 ---
 
-## 1. What the previous milestone(s) proved
+## 1. What the previous milestone actually proved (and didn't)
 
-The project is **converged on every self-generable thread** and `paper_ready =
-TRUE` (G1–G4 met; the FoVer methods headline **AUROC 0.9131**, n=1000, 5-seed,
-CI95 [0.9027, 0.9235], is frozen and was reproduced on a clean CI runner for
-G2). What is left are **operator-seeded forward bets** and **measurement gaps**
-that the autonomous loop cannot resolve by manufacturing breadth (north-star
-§1). The last several milestones sharpened exactly three of them:
+`.358 was designed correctly — the three operator-seeded forward bets are the
+right questions — but it was an **EXECUTION wipeout**, not a research result.
+Of 11 tasks, only 3 produced artifacts:
 
-1. **The verifier MOAT-at-scale is still unproven (DT-P2 o1-subsumption).**
-   The error-independence scissor — *of the step-errors a strong frontier
-   reasoner's own self-verification MISSES, what fraction does Carnot
-   independently catch?* — has now been blocked/inconclusive **four times**,
-   each for a different reason. The latest (`.357 exp3869) was the most
-   informative: it finally ran end-to-end against the 500-error PRMBench corpus
-   and returned **INCONCLUSIVE** because *both* positive controls were
-   degenerate — the reasoner self-verify AUROC = 0.5 (caught zero gold-incorrect
-   steps) and Carnot's ensemble AUROC = **0.55** (near chance). Root cause:
-   `data/step_error_balanced_v2.json` (PRMBench) is **out-of-distribution** for
-   the FoVer-trained, math-domain-bound ensemble. The moat can only be
-   adjudicated on an **in-distribution** error-rich corpus where the ensemble
-   actually discriminates (AUROC ≥ 0.65). That corpus does not yet exist at
-   sufficient error count (FoVer-v4 has 6548 items but only 114 incorrect).
-
-2. **The Phase-3 energy-as-GENERATOR bet (Thesis A) is unadjudicated.** The
-   operator seeded EBT (arXiv:2507.02092) as the candidate foundation-model
-   paradigm. Part-(a) PASSED (a tiny 38M byte-EBT trained stably and learned a
-   *generalizing* energy landscape, pos/neg margin 8.6× untrained). Part-(b) —
-   *does energy-descent GENERATION beat autoregression at matched compute?* —
-   is the kill-gate. A scaled run cleanly produced **AR = 0.84, EBT-argmin =
-   0.0** with confirmed headroom (`thesis_a_part_b_scaled_seed1.json`, verdict
-   BOUNDED). The Deep-Think-P1 *decisive probe* (replace greedy per-token
-   energy-argmin with a GLOBAL discrete beam search minimizing cumulative EBT
-   energy — does global search recover AR-level accuracy → ARTIFACT, or also
-   fail → FUNDAMENTAL) then ran (`thesis_a_p1_discrete_search_v2`) and returned
-   **INCONCLUSIVE** only because the *re-trained* AR control collapsed to 0.01
-   (< 0.3 guard). The adjudication is one disciplined run away: do it on a
-   **confirmed-headroom checkpoint** (AR ∈ [0.4, 0.95]) instead of retraining
-   and gambling on AR stability.
-
-3. **Facts is the one domain with a NEW-architecture mechanism, but the signal
-   was fabrication-flagged.** The math-bound ensemble is earned-negative on
-   facts; graph-grounding (MemGraphRAG, arXiv:2606.00610) is the one route with
-   a plausible mechanism. The `.356 prototype (exp3862) showed **AUROC 0.643 vs
-   math-baseline 0.411, facts_catch_delta = 0.232** — but it was
-   `flagged_adversarial` (1.02 s wall-clock for a claimed model-invoke →
-   DURATION_TOO_SHORT) and the complementarity follow-up (exp3863) blocked
-   because per-item scores were never persisted. The signal is promising but
-   **un-bankable** until a non-fabricated re-run reproduces it with real
-   wall-clock and per-item scores.
-
-Carried invariants: `paper_ready = TRUE`, frozen FoVer 0.9131 **never silently
-substituted**, verifier math-domain-bound, energy-SELECTION (P0.1)
-honest-negative (this milestone's EBT work is *generation*, a different
-mechanism), KV260 terminal, GateMate/PolarFire opportunistic-continuity.
-
----
-
-## 2. The three biggest gaps (current state → PRD vision)
-
-| Gap | PRD link | This milestone's move |
+| Task | Fate | Root cause |
 |---|---|---|
-| **G-A. The Phase-3 foundation-model paradigm is unvalidated.** Energy-as-generator is the operator's chosen bet and the only live path to "continuous, non-autoregressive, self-correcting reasoning" (PRD Phase 3). It is stuck one disciplined run from a verdict. | PRD Phase 3 / Kona parity | Phase 1: adjudicate Thesis-A part-(b) on a **confirmed-headroom** checkpoint (DT-P1 global beam search) + an energy-descent System-2 scaling diagnostic. |
-| **G-B. The moat (product value) is unproven at scale.** "Escape LLM hallucinations" is only defensible if Carnot catches what the frontier reasoner misses. 4× blocked; the blocker is now a *corpus distribution* problem, not a mechanical one. | PRD FR-* verification, north-star §1 (moat) | Phase 2: build an **in-distribution** error-rich corpus (ensemble AUROC ≥ 0.65), then finally run the scissor against it. |
-| **G-C. The verifier is math-only.** A general "second pair of eyes" needs at least one more domain. Facts via graph-grounding is the only mechanism with signal — but the signal is fabrication-flagged. | PRD factual-grounding gate (Tier C) | Phase 3: de-fabricate the graph-grounding signal (real wall-clock + per-item scores) and measure facts complementarity. |
+| exp3870 archive/activate | OK | — |
+| exp3871 EBT part-b kill-gate | **blocked_scaled_harness_import** | `import scripts.thesis_a_part_b_scaled` → `ModuleNotFoundError`. The harness imports fine when `scripts/` is on `sys.path`. A **one-line bug**, not a research finding. |
+| exp3872 EBT System-2 | GATE_BLOCK | hard `gated_on` exp3871.positive_control_passed==true (False because 3871 blocked) |
+| exp3873 in-dist corpus | **SKIP** | poison pretest ("1 failed, 80 passed"), self-heal failed |
+| exp3874 moat scissor | GATE_BLOCK | "upstream retired (exp3873)" — gated_on retire-on-skip cascade |
+| exp3875 graph-grounding facts | **SKIP** | poison pretest |
+| exp3876 facts complementarity | GATE_BLOCK | upstream retired (exp3875) |
+| exp3877 FR-11 v24 | **SKIP** | poison pretest |
+| exp3878 / exp3879 hardware | **SKIP** | poison pretest |
+| exp3880 capstone | **SKIP** | poison pretest |
 
-Plus the two standing mandates: **continuous self-learning** (FR-11, every
-milestone — research-program.md) and **hardware continuity** (one task per
-non-terminal attached board — Hardware-Task Continuity Discipline).
+**Two dominant operational failure modes** (both recurring in user-memory
+across `.350–`.358):
+
+1. **Poison-test SKIP cascade.** A single failing test in the conductor's
+   smart-subset pretest ("1 failed, 80 passed") fails the self-heal gate and
+   SKIPs every subsequent task. The conductor already runs a task's own
+   uncommitted tests (the exp3521/exp3544 fix), but `.358 still cascaded — the
+   poison was transient (an agent-shipped or changed-source test) and cleared
+   by session end (the core subset `test_pipeline_extract.py` + `test_docs.py`
+   is **green now**: 81 passed).
+2. **`gated_on` retire-on-skip.** When an upstream task SKIPs, a hard
+   `gated_on` downstream is "pre-emptively skipped — upstream retired,"
+   converting one poison into a whole-chain cascade. The `.340/`.346
+   **proven-safe pattern is "no hard gated_on" + in-script disk-read-with-
+   fallback**.
+
+**What survived from `.356/`.357 (the real research state):**
+
+- **EBT (Q1):** the scaled checkpoint cleanly measured **AR=0.84,
+  EBT-greedy-argmin=0.0** (`results/thesis_a_part_b_scaled_seed1.json`) —
+  headroom exists. The decisive probe (global discrete beam search over
+  cumulative EBT energy → ARTIFACT vs FUNDAMENTAL) **has never run.**
+- **Moat (Q2):** exp3869 ran but was **INCONCLUSIVE** — PRMBench is
+  out-of-distribution for the math-bound ensemble (carnot AUROC=0.55, error
+  overlap Jaccard=0.0). Needs an **in-distribution** error-rich corpus.
+- **Facts (Q3):** exp3862 reported a graph-grounding **signal** (facts AUROC
+  0.643 vs math-baseline 0.411, delta 0.232) but was **fabrication-flagged**
+  (1.02s, rule-based stub — the model was never invoked). Needs a real, ≥60s,
+  per-item-scored run.
+- **FR-11:** v23 (exp3864) landed clean — learned ensemble AUROC 0.9059 (in
+  frozen CI), +0.0185 memory-ablation contribution preserved, state persisted.
+- **Hardware:** PolarFire terminal hash-verified dispatch is clean (exp3867,
+  soft-CPU, no fabric claim). GateMate n=16 tile flashed (fmax 139.12 MHz) but
+  **TAUTOLOGY-flagged** (duration_s bit-identical to run_duration_s).
 
 ---
 
-## 3. Architecture (where each task acts)
+## 2. The three biggest gaps between current state and PRD vision
+
+1. **Phase-3 foundation-model bet is untested for GENERATION.** The PRD endgame
+   (Phase 3) is an energy-based foundation model with non-autoregressive
+   reasoning. Carnot has only ever used energy for *selection/verification*
+   (P0.1 settled: energy-selection does **not** beat AR/SC). The
+   energy-as-**generator** question (EBT) is the live Phase-3 kill-gate, blocked
+   by infrastructure, not science. Closing it (ARTIFACT or FUNDAMENTAL) is the
+   highest-leverage move available. **Peer: NRGPT (arXiv:2512.16762)** decodes
+   language by energy-landscape descent but never reports a compute-matched
+   comparison vs AR — exactly Carnot's open question.
+
+2. **The verifier moat is unproven at scale on an in-band corpus.** The
+   project's credibility thesis (PRD Tier A "LLM Output Verification") rests on
+   Carnot catching errors a strong frontier reasoner's own self-verification
+   misses (DT-P2 o1-subsumption durability). The literature now strongly
+   supports the *premise* — **Self-Verification Dilemma (arXiv:2602.03485)**
+   shows 85–95% of a reasoner's self-rechecks never catch an error — but
+   Carnot's own measurement has only ever run OOD (PRMBench). The
+   in-distribution scissor is well-scoped and just needs a clean execution.
+
+3. **The verifier is math-domain-bound; facts is the only broadening route
+   with signal.** PRD Tier C "Factual Grounding Gate" needs the verifier to
+   work beyond math. The verifier is earned-negative on facts, and the ONE
+   new-architecture route with traction is graph-grounding (MemGraphRAG, and
+   now the near-exact peer **HalluGraph arXiv:2512.01659** with an explicit
+   Entity-Grounding + Relation-Preservation decomposition). The exp3862 signal
+   must be de-fabricated before it is bankable.
+
+---
+
+## 3. Milestone architecture
+
+`.359 is a **hardened re-issue** of `.358's forward bets. The science is
+unchanged; the engineering is fixed.
 
 ```
-                    ┌─────────────────────────────────────────────┐
-                    │  FROZEN HEADLINE (paper_ready=TRUE)          │
-                    │  FoVer 4-verifier AUROC 0.9131 — DO NOT MOVE │
-                    └─────────────────────────────────────────────┘
-   PHASE 1 — Phase-3 forward bet (energy as GENERATOR, EBT)
-     exp3871  part-(b) DT-P1 adjudication ON A CONFIRMED-HEADROOM checkpoint
-              (AR in [0.4,0.95]) → global beam search vs greedy argmin
-              → ARTIFACT | FUNDAMENTAL | INCONCLUSIVE
-     exp3872  energy-descent System-2 diagnostic: accuracy(K steps) curve
-              (gated on exp3871 positive_control_passed)
-   PHASE 2 — Moat at scale (DT-P2), IN-DISTRIBUTION this time
-     exp3873  BUILD in-distribution error-rich step-error corpus
-              (>=150 incorrect, ensemble AUROC >= 0.65) → emits the gate field
-     exp3874  RUN error-independence scissor on it (gated on AUROC>=0.65)
-              residual_catch + bootstrap CI95 + reasoner positive control
-   PHASE 3 — Broaden the verifier (facts, NEW architecture)
-     exp3875  graph-grounding fact verifier, DE-FABRICATED (real wall-clock,
-              per-item scores persisted) → reproduce facts_catch_delta
-     exp3876  facts complementarity vs math ensemble (gated on delta>0)
-   PHASE 4 — Mandates + continuity + record
-     exp3877  FR-11 v24 online independence-reweighting (loads v23 state)
-     exp3878  GateMate continuity — corrigendum the TAUTOLOGY flag + readback
-     exp3879  PolarFire + KV260 consolidated opportunistic continuity audit
-     exp3880  capstone v358 (paper_ready stays TRUE; conditioned verdicts)
-   PHASE 0 — exp3870  archive .357 / activate .358 + backend routing diag
+ PHASE 0 (hygiene)   exp3881  archive .358 → activate .359
+                              • research-complete.yaml parses (colon-poison guard)
+                              • core pretest GREEN
+                              • EBT scaled harness IMPORTS via sys.path (the .358 blocker)
+                                       │
+        ┌──────────────────────────────┼──────────────────────────────┐
+        ▼                              ▼                               ▼
+ PHASE 1 (Q1 EBT)          PHASE 2 (Q2 moat)            PHASE 3 (Q3 facts)
+ exp3882 part-b kill-gate  exp3884 in-dist corpus       exp3886 graph verifier
+   IMPORT-FIXED [GPU]        (ensemble AUROC≥0.65)         DE-FABRICATED [GPU]
+   ARTIFACT/FUNDAMENTAL    exp3885 moat scissor          exp3887 facts
+ exp3883 System-2 K-curve    IN-DISTRIBUTION [GPU]         complementarity
+   [GPU, disk-read 3882]     (disk-read 3884)              (disk-read 3886)
+        └──────────────────────────────┼──────────────────────────────┘
+                                        ▼
+ PHASE 4 (mandates + hardware + capstone)
+   exp3888 FR-11 v24 self-learning (load v23 state)   [research-program MANDATE]
+   exp3889 GateMate corrigendum (de-flag TAUTOLOGY + readback)   [hardware]
+   exp3890 PolarFire + KV260 consolidated continuity            [hardware]
+   exp3891 capstone .359  (aggregate non-flagged; paper_ready stays TRUE)
 ```
 
-## 4. Dependency graph
+**11 tasks, 5 phases.**
+
+### Hardening changes vs `.358 (the load-bearing differences)
+
+1. **EBT import bug fixed.** exp3882 imports the scaled harness via
+   `sys.path.insert(0, str(PROJECT_ROOT / "scripts"))` then
+   `import thesis_a_part_b_scaled` — NOT `import scripts.thesis_a_part_b_scaled`.
+   exp3881 asserts this as a Phase-0 precondition so the kill-gate cannot
+   re-block on the same fault.
+2. **No hard `gated_on` on the critical path.** Every downstream task reads its
+   upstream artifact off disk in-script and emits `blocked_upstream_*` if
+   absent (the `.340 proven-safe disk-fallback pattern). A skipped upstream
+   costs ONE task, never a chain.
+3. **Bare field emission.** Every REQUIRED ARTIFACT FIELD is emitted as a
+   **bare scalar** — the `principle:` annotations are guidance for the agent,
+   NOT a `{value, principle}` wrapper. (exp3871 wrapped every value in a dict,
+   breaking `summarize_artifact.py` and the adversarial verifier.)
+4. **All tasks codex + requires_codex + gpt-5.5; GPU tasks add requires_gpu;
+   every Run command uses `{project_root}/.venv/bin/python`** (bare `python`
+   has no torch → silent CPU drop, the fault that blocked the EBT kill-gate
+   once already). gemini crashes on GPU workloads and 429-wiped `.333/`.355;
+   codex is the reliable conductor backend (standing operator gemini↔codex
+   flip authority, 2026-06-05).
+
+### Phase descriptions
+
+**Phase 0 — hygiene + de-risk (exp3881).** Archive `.358 into
+research-complete.yaml (every appended value with a colon-space QUOTED — the
+`.355 poison guard), activate `.359, and assert three green-gates before any
+research runs: (a) research-complete.yaml loads under `yaml.safe_load`; (b) the
+core pretest subset is green; (c) the EBT scaled harness imports via the
+path-insert method. Records the backend routing diagnostic.
+
+**Phase 1 — EBT energy-as-GENERATOR (exp3882, exp3883).** exp3882 is the
+Phase-3 kill-gate: on a confirmed-headroom checkpoint (held-out AR in
+[0.4, 0.95], asserted FIRST — the FALSE_NEGATIVE_RISK guard), does a GLOBAL
+discrete beam search over cumulative EBT energy recover AR-level accuracy
+(greedy was the bottleneck → **ARTIFACT**) or also fail (energy landscape
+misshaped → **FUNDAMENTAL**)? At matched inference FLOPs. exp3883 isolates the
+EBT System-2 sub-claim on the same checkpoint: does held-out accuracy rise
+monotonically with the energy-descent budget K∈{1,2,4,8,16}? Cite NRGPT
+(2512.16762) as the peer whose compute-matched gap this closes.
+
+**Phase 2 — verifier moat IN-DISTRIBUTION (exp3884, exp3885).** exp3884 builds
+an in-distribution error-rich corpus (pool FoVer-family incorrect steps +
+≤40% synthetic same-style perturbations) and **proves** the k=15 ensemble
+discriminates on it (AUROC≥0.65) before it is usable. exp3885 runs the moat
+scissor against it: of the gold-incorrect steps a strong reasoner
+(Qwen3.6-35B) self-verification MISSES, what fraction does Carnot independently
+catch (residual_catch + bootstrap CI95 + error-overlap Jaccard + reasoner
+positive control)? Finally adjudicates DT-P2 on an in-band corpus. Cite
+Self-Verification Dilemma (2602.03485) as premise, ThinkPRM (2504.16828) as
+the generative-PRM comparator.
+
+**Phase 3 — facts via graph-grounding (exp3886, exp3887).** exp3886
+de-fabricates exp3862: a REAL graph-grounding invocation (entity/relation
+extraction + KB consistency, the HalluGraph/MemGraphRAG mechanism, duration
+≥60s, per-item scores persisted) on a RAGTruth-style factual corpus. exp3887
+asks the product question: does graph-grounding catch hallucinations the
+math-bound ensemble MISSES (low error-mask correlation), making {math+graph}
+a strictly broader fact-aware verifier?
+
+**Phase 4 — mandates + hardware + capstone (exp3888–exp3891).** exp3888 is the
+FR-11 continuous self-learning MANDATE (v24, loads the persisted v23 state,
+Tier-1 online independence-reweighting on a fresh corpus, must hold the frozen
+CI band + memory contribution). exp3889 de-flags the GateMate TAUTOLOGY
+(distinct timers + JTAG readback). exp3890 consolidates PolarFire + KV260
+continuity (SSH-reachability only; honest no-fabric-claim record). exp3891
+aggregates non-flagged verdicts; `paper_ready` stays TRUE.
+
+---
+
+## 4. Dependency graph (logical, not hard-gated)
 
 ```
-exp3870 (activate) ─► everything
-exp3871 (EBT adjudication) ──gated──► exp3872 (positive_control_passed==true)
-exp3873 (build corpus) ──gated──► exp3874 (carnot_ensemble_auroc_on_corpus>=0.65)
-exp3875 (graph re-run) ──gated──► exp3876 (facts_catch_delta>0)
-exp3877, exp3878, exp3879 independent
-exp3880 (capstone) consumes all
+exp3881 ──► everything (Phase-0 green-gate; if it blocks, the milestone is unsafe)
+exp3882 ──► exp3883            (disk-read checkpoint; graceful blocked_upstream)
+exp3884 ──► exp3885            (disk-read corpus; graceful blocked_upstream)
+exp3886 ──► exp3887            (disk-read per-item scores; graceful blocked_upstream)
+exp3888  (independent)
+exp3889, exp3890  (independent hardware)
+{all} ──► exp3891 capstone     (reads via summarize_artifact; skips flagged)
 ```
+
+No `gated_on` field is used. Downstream tasks self-gate by reading the upstream
+artifact from disk and emitting `blocked_upstream_*` if it is missing or
+INCONCLUSIVE — so a single skipped/blocked upstream never cascades.
+
+---
 
 ## 5. Hardware requirements
 
-- **RTX 3090 (internal, cuda:1)** — exp3871/3872 (EBT train+generate),
-  exp3873/3874 (Qwen3.6-35B GGUF self-verification + k=15 ensemble scoring),
-  exp3875 (graph-grounding verifier model invocation). All via
-  `.venv/bin/python` (infra discipline — bare `python` has no torch and silently
-  drops to CPU, the fault that blocked the EBT kill-gate twice).
-- **GateMate A1-EVB-2M** (DirtyJTAG `1209:c0ca`) — exp3878.
-- **PolarFire SoC** (`ssh polarfire`) + **KV260** (`ssh kria`, SSH-not-SD-card) —
-  exp3879.
-- CPU-only — exp3870, exp3877 (Tier-1 counter updates), exp3880.
+| Task | Hardware | Precondition |
+|---|---|---|
+| exp3882, exp3883 | 2×RTX 3090 (CUDA) | `torch.cuda.is_available()` via `.venv/bin/python` |
+| exp3885 | CUDA + Qwen3.6-35B-A3B-GGUF cached | `.gguf` path + llama_cpp (NOT AutoTokenizer on the GGUF repo id) |
+| exp3886 | CUDA + SOTA GGUF cached | `.gguf` path + llama_cpp |
+| exp3889 | GateMate A1-EVB-2M | `nextpnr-himbaechel` + `openFPGALoader -c dirtyJtag --detect` |
+| exp3890 | PolarFire + KV260 | `ssh polarfire` / `ssh kria` reachability (KV260: SSH, never host SD card) |
+| exp3884, exp3887, exp3888, exp3881, exp3891 | CPU only | — |
 
-## 6. Routing & anti-wipeout
+**Models (per CLAUDE.md SOTA mandate):** `unsloth/Qwen3.6-35B-A3B-GGUF`
+(flagship MoE, exp3885/3886 headline), fallback
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Load via the `.gguf` path + `llama_cpp`
+(the GGUF repos ship no HF tokenizer files — the tokenizer is embedded).
 
-All experiment tasks route **`agent_type: codex` + `model: gpt-5.5` +
-`requires_codex: true`** per the proven `.337/`.340/`.356/`.357 anti-wipeout
-pattern (gemini-CLI crashes on GPU workloads and caused the `.333/`.355
-whole-milestone wipeouts; operator granted standing gemini↔codex flip
-authority 2026-06-05). GPU tasks additionally set `requires_gpu: true`. Verdicts
-are deterministic gates, so codex suffices. The operator may flip any task to
-gemini at activation if quota inverts.
+---
 
-## 7. Discipline checklist
+## 6. Invariants (do not violate)
 
-- Terminal-prefix verdicts (`complete:` / `success:` / `blocked_<resource>`).
-- PRECONDITIONS step 0 on every compute-bound task (GPU / GGUF / board / corpus).
-- `inference_substrate` declared per task (live vs scoring vs aggregation).
-- Principle-annotated REQUIRED ARTIFACT FIELDS — **except gated fields, which
-  are emitted BARE scalars** (`feedback_gated_fields_must_be_bare`: a
-  `{value,principle}` dict breaks the `gated_on` resolver).
-- `prior_failures:` (4 sub-fields) on the genuine reruns (EBT, moat, graph);
-  `operator_override:` on the routine/lineage continuations (archive, FR-11
-  vN+1, hardware, capstone) per the 2026-05-29 auto-override rule.
-- No `flagged_adversarial:true` artifact aggregated into the capstone.
-- Frozen 0.9131 never moved; this milestone adds a *durability + generation*
-  lens, not a new headline.
+- `paper_ready` stays **TRUE**; report `unmet_gates`, never a count.
+- FoVer headline **0.9131** is frozen — never silently substituted; both energy
+  routes (selection P0.1, generation Thesis-A) remain honestly bounded unless a
+  new measurement says otherwise.
+- Never aggregate a `flagged_adversarial: true` artifact's numbers into a
+  capstone or forward-facing claim (the fabrication gate).
+- External publication is operator-only; no task submits anything.
+- `docs/index.html` and operator-curated docs are untouched by autonomous work.
+
+---
+
+## 7. Continuous self-learning (research-program.md mandate)
+
+exp3888 (FR-11 v24) is the mandated self-learning task: Tier-1 online
+constraint reweighting (CPU counter updates, <1µs/update — the Tier-1 hardware
+path) that upweights verifiers catching the residual errors others miss
+(error-independence reweighting, arXiv:2604.07650), loading the persisted v23
+state and continuing on a fresh corpus to test that the learned weighting holds
+the invariant across iterations (no long-horizon overfit).
+
+---
+
+## 8. New references this milestone (filed in research-references.md)
+
+- **arXiv:2512.16762 NRGPT** — energy-based GPT alternative (ICLR 2026); the
+  closest energy-as-generator peer; does NOT do the compute-matched comparison
+  exp3882 measures.
+- **arXiv:2602.03485 Self-Verification Dilemma** — 85–95% of a reasoner's
+  self-rechecks never catch an error; the moat premise.
+- **arXiv:2504.16828 ThinkPRM** — generative long-CoT process verifier;
+  moat comparator.
+- **arXiv:2512.01659 HalluGraph** — KG-alignment hallucination detection
+  (entity-grounding + relation-preservation); facts-verifier architecture.
+- **arXiv:2604.17109 / 2504.04543** — parallel p-bit Ising machines (inertia
+  term; 2048-p-bit Xilinx FPGA); the FPGA/Ising sampler track.
