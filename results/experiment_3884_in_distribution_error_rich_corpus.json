@@ -1,0 +1,86 @@
+{
+  "carnot_ensemble_auroc_on_corpus": 0.9666888888888889,
+  "corpus_path": "data/in_distribution_error_corpus_v1.json",
+  "corpus_sha256": "58f1c57b634d9d04fc623c1d7cff124278ffa2c3665b8614c04ddcc7b6cef2a1",
+  "corpus_sources": [
+    {
+      "correct": 6434,
+      "incorrect": 114,
+      "path": "data/fover_corpus_v4.json"
+    },
+    {
+      "correct": 0,
+      "incorrect": 0,
+      "path": "data/fover_corpus_v3.json"
+    },
+    {
+      "correct": 0,
+      "incorrect": 0,
+      "path": "data/fover_corpus_expanded.json"
+    }
+  ],
+  "duration_s": 0.6635792255401611,
+  "ensemble_definition": "Exp 2837 FoVer production aggregation: 0.9*tier0r_curry_howard + 0.1*tier0u_logical_consistency + fr11_session_memory",
+  "experiment": 3884,
+  "field_principles": {
+    "carnot_ensemble_auroc_on_corpus": "BARE FLOAT - the in-band gate; the scissor reads this off disk. Must be >=0.65 for the corpus to be usable.",
+    "corpus_path": "Where the scissor reads the corpus from (data/in_distribution_error_corpus_v1.json).",
+    "duration_s": "Verifier-scoring methodology - measured wall-clock seconds.",
+    "frac_synthetic": "Provenance - fraction of all emitted rows that were generated, with generated errors also constrained below 40% of the error class.",
+    "inference_substrate": "Verifier-scoring methodology - CPU Carnot scoring against cached FoVer rows, without live model runtime claims.",
+    "n_incorrect_steps": "Set-B size budget - the residual scissor CI is meaningful only at >=100 errors; this task requires >=150.",
+    "n_total_items": "Provenance - records the balanced corpus size on disk.",
+    "per_item_ensemble_scores_path": "Persist per-item ensemble scores so the scissor reuses them.",
+    "preconditions_checked": "Verifier-scoring methodology - carnot.verify import plus local FoVer JSON preflight before scoring.",
+    "random_seed": "Verifier-scoring methodology - deterministic corpus balancing seed.",
+    "reproducibility_checksum": "Verifier-scoring methodology - checksum over corpus identity, scores, seeds, and gates."
+  },
+  "frac_synthetic": 0.12,
+  "frac_synthetic_errors": 0.24,
+  "gate": "CORPUS_READY",
+  "honest_verdict": "complete: in_distribution_corpus_READY_nerr150_auroc0.9667_moat_scissor_can_run",
+  "inference_substrate": "cpu_carnot_verify_exp2837_cached_fover_rows",
+  "n_correct_steps": 150,
+  "n_incorrect_steps": 150,
+  "n_synthetic_errors": 36,
+  "n_total_items": 300,
+  "per_item_ensemble_scores_path": "results/experiment_3884_in_distribution_error_rich_corpus_scores.json",
+  "per_item_ensemble_scores_sha256": "fa9bcad36494abd4883b7141ed32cdd7ce27cb6c467c943e38c829d6e019f771",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "import carnot.verify OK",
+      "resource": "carnot_verify_import"
+    },
+    {
+      "available": true,
+      "detail": "json_rows=6548",
+      "resource": "fover_corpus_v4.json"
+    },
+    {
+      "available": true,
+      "detail": "json_rows=216",
+      "resource": "fover_corpus_v3.json"
+    },
+    {
+      "available": true,
+      "detail": "json_rows=85",
+      "resource": "fover_corpus_expanded.json"
+    }
+  ],
+  "random_seed": 3884,
+  "random_seeds_used": {
+    "correct_balance_sample": 3884
+  },
+  "ready_gate": {
+    "min_carnot_ensemble_auroc_on_corpus": 0.65,
+    "min_incorrect_steps": 150
+  },
+  "refinement_attempts": [],
+  "reproducibility_checksum": "8a220ad5d7d0617a67ffc8c48069b7b90a0f1c51398abda3c476c5e89f9fbf74",
+  "run_date": "20260606",
+  "schema": "carnot.in_distribution_error_rich_corpus.v1",
+  "status": "complete: in_distribution_corpus_READY_nerr150_auroc0.9667_moat_scissor_can_run",
+  "synthetic_error_fraction_lt_40pct": true,
+  "title": "in_distribution_error_rich_corpus"
+}
