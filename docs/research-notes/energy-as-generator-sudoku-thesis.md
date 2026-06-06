@@ -239,3 +239,37 @@ outputs. (Open: a verifier trained on the GENERATOR's own error distribution —
 hard negatives mined from refiner samples — might rerank usefully where this
 Langevin-carved one did not. That is a natural v5, not claimed here.)
 Artifact: results/sudoku_amortized_capstone_v4.json.
+
+## External corroboration — NVIDIA Ising QEC decoder (2026), a deployed instance
+
+The v1->v4 conclusion — a learned amortized inference net beats naive
+energy-minimization on a hard inference problem over an energy/Ising landscape —
+is not a Sudoku artifact. It is independently corroborated, in a deployed,
+production-targeted domain, by NVIDIA's open "Ising" QEC decoder (launched
+2026-04-14; decoder framework Apache-2.0; weights on HuggingFace/NGC).
+
+**The mapping (established physics, NOT NVIDIA's framing — they give no reason for
+the "Ising" name).** Decoding the rotated surface code is MAP inference on the
+random-bond Ising model (Dennis, Kitaev, Landahl & Preskill, 2002). The classical
+decoder, PyMatching / minimum-weight perfect matching (MWPM), is exactly the
+combinatorial **energy-minimization** solver for that Ising-structured problem.
+
+**The result.** NVIDIA replaced MWPM with a *learned* 3D-CNN decoder — and it wins:
+"2.5x faster than PyMatching and 1.11x more accurate" (Fast model) / "2.25x faster
+and 1.53x more accurate" (Accurate model) at code distance d=13, p=0.003. Notably
+the nets are **tiny** — ~912K and ~1.79M parameters — echoing the tiny-recursive-
+model efficiency point: a small *learned amortized* inference net beats the
+classical energy-minimizer, faster.
+
+**Why it matters here.** This is the same shape as our finding — *amortized
+inference > energy-minimization on an energy/Ising landscape* — realized in real,
+deployed quantum error correction. It answers the obvious "is this just a Sudoku
+toy?" objection: the pattern is winning in production QEC. And the neural decoder
+is functionally a fast verifier/corrector grounded in a physical error model — the
+hybrid shape (a learned amortized component grounded by an externally-defined
+energy/error model). Caveat: NVIDIA does not frame any of this in energy / Ising-
+inference terms; the energy-minimization reading is the established statistical-
+mechanics literature, and the analogy to our result is ours. (Naming note:
+"NVIDIA Ising" is a quantum-AI toolkit, distinct from the Ising *machines* /
+samplers Carnot's hardware path uses — say "Ising machine/sampler" explicitly in
+Carnot docs to disambiguate.) See memory `nvidia-ising-qec-amortized`.
