@@ -7939,3 +7939,4 @@ ERROR: {
 | 2026-06-06 11:08 UTC | Capstone .359 — aggregate the forward-bet verdicts | OK | 85 passed in 4.04s |
 | 2026-06-06 11:44 UTC | Plan milestone 2026.06.360 | OK | 11 tasks proposed |
 | 2026-06-06 11:46 UTC | Milestone 2026.06.360 activated | OK | 11 tasks queued |
+| 2026-06-06 11:59 UTC | Archive .359 -> activate .360; GREEN-GATE de-risk: | OK | 108 passed in 4.02s |
