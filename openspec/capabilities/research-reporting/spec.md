@@ -17944,3 +17944,80 @@ unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3881 | Planned (`python/carnot/reporting/archive_v358_activate_v359_3881.py`, `scripts/experiments/experiment_3881_archive_v358_activate_v359.py`) | Planned (`tests/python/test_experiment_3881_archive_v358_activate_v359.py`) |
+
+### REQ-REPORT-3892: Archive .359 Forward Bets And Activate .360 Green Gates
+
+The Exp 3892 workflow SHALL archive milestone `2026.06.359` honestly in
+`research-complete.yaml` and confirm milestone `2026.06.360` is active in
+`research-roadmap.yaml`. Before appending any research record, it SHALL confirm
+that `research-complete.yaml` exists and safe-loads. If `research-complete.yaml`
+does not safe-load, the workflow SHALL write a blocked artifact whose
+`honest_verdict` starts with `blocked_research_complete_yaml_poison` and SHALL
+NOT edit `research-complete.yaml`.
+
+On the complete path, the workflow SHALL read Exp 3882 through Exp 3891 task
+verdicts by invoking `scripts/summarize_artifact.py` rather than reading those
+JSON files directly. It SHALL preserve the Exp 3882 EBT energy-as-GENERATOR
+FUNDAMENTAL negative, the Exp 3885 moat-scissor fabrication flag, and the Exp
+3886 graph-grounding model-not-invoked flag in both the appended research record
+and the terminal artifact. Critical summarizer flags for those prior artifacts
+SHALL NOT block the archive transition; they are the archived evidence. Missing
+summarized verdicts SHALL block with `blocked_v359_summary_missing_verdict`.
+
+The workflow SHALL append an append-only `.359` archive record to
+`research-complete.yaml`, preserving all existing content as a prefix. Every
+appended `result:` value that contains `: ` SHALL be single-quoted so the YAML
+parse gate cannot be poisoned again. After the append, the workflow SHALL
+confirm `research-complete.yaml` still safe-loads.
+
+The workflow SHALL run the conductor smart-subset pretest command
+`.venv/bin/pytest tests/python/test_pipeline_extract.py tests/python/test_docs.py
+-q --no-header -n 0 --no-cov -o addopts=` and SHALL record a bare boolean
+`core_pretest_green`. It SHALL also run the corrected EBT scaled-harness import
+command `.venv/bin/python -c "import sys; sys.path.insert(0,'scripts'); import
+thesis_a_part_b_scaled; print('ok')"` and SHALL record a bare boolean
+`ebt_harness_importable`. The backend routing recommendation SHALL record codex
+as reliable and preserve the standing operator gemini<->codex flip authority.
+The workflow SHALL leave `ops/changelog.md`, `ops/status.md`,
+`_bmad/traceability.md`, and `scripts/research_conductor.py` unchanged; those
+documents are reconciled by the conductor's separate status step for this
+milestone.
+
+The terminal artifact SHALL be written to
+`results/experiment_3892_archive_v359_activate_v360.json` and SHALL include bare
+top-level values for `archived_milestone`, `activated_milestone`,
+`research_complete_yaml_parses`, `core_pretest_green`,
+`ebt_harness_importable`, `prior_milestone_verdicts_summary`,
+`backend_routing_recommendation`, `honest_verdict`, `duration_s`, and
+`inference_substrate`. On the complete path, `honest_verdict` SHALL start with
+`complete:` or `success:`. Blocked verdicts SHALL start with
+`blocked_<resource>`.
+
+#### SCENARIO-REPORT-3892: V359 Archive Records Forward-Bet Truth And Green Gates
+
+**Given** `.360` is active in `research-roadmap.yaml`,
+`research-complete.yaml` exists and safe-loads, and Exp 3882 through Exp 3891
+can be summarized
+**When** the Exp 3892 workflow runs
+**Then** it invokes `scripts/summarize_artifact.py`, appends a `.359` archive
+record with all ten task verdicts, preserves the Exp 3885 and Exp 3886 flagged
+fabrication evidence without blocking the transition, confirms
+`research-complete.yaml` still safe-loads, runs the smart-subset pretest, runs
+the corrected EBT import incantation, records codex plus the standing flip
+authority, writes the required terminal artifact, and leaves
+ops/status/traceability/conductor files unchanged.
+
+#### SCENARIO-REPORT-3892-BLOCKED-YAML: Corrupt Research Record Blocks Before Append
+
+**Given** `research-complete.yaml` does not safe-load
+**When** the Exp 3892 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_research_complete_yaml_poison`, records the failed YAML parse in
+`preconditions_checked`, and leaves `research-complete.yaml` byte-for-byte
+unchanged.
+
+## Implementation Status (REQ-REPORT-3892)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3892 | Planned (`python/carnot/reporting/archive_v359_activate_v360_3892.py`, `scripts/experiments/experiment_3892_archive_v359_activate_v360.py`) | Planned (`tests/python/test_experiment_3892_archive_v359_activate_v360.py`) |

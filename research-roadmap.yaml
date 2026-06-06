@@ -126,7 +126,7 @@ tasks:
     prior_failures:
       - experiment_id: exp3882-thesis-a-partb-killgate-import-fixed
         verdict: "complete: thesis_a_partb_FUNDAMENTAL_beam0.000_argmin0.000_both_fail_vs_ar0.940_landscape_misshaped"
-        addressed_by: "exp3882 measured FUNDAMENTAL across seeds {1,2,3} (3673s); seeds 1,2 had headroom, seed 3 AR collapsed. THIS run REPLICATES at 2 FRESH seeds (e.g. 4,5) by re-running the exp3882 measurement SCRIPT verbatim (it already trains the scaled EBT + AR control, runs EBT argmin AND global-beam decode, and accounts matched FLOPs). The scaled harness trains from scratch (no checkpoint reuse; the model is seed-coupled to its training corpus), so this is an honest retrain — bounded to 2 seeds (~2500s; exp3882 did 3 in 3673s) to stay under the 4800s cap. If the replication AGREES (beam~=argmin~=0 vs AR>0.4) the energy-as-generator thesis is banked-negative; if it DISAGREES the .359 verdict is itself an artifact."
+        addressed_by: "exp3882 measured FUNDAMENTAL across seeds {{1,2,3}} (3673s); seeds 1,2 had headroom, seed 3 AR collapsed. THIS run REPLICATES at 2 FRESH seeds (e.g. 4,5) by re-running the exp3882 measurement SCRIPT verbatim (it already trains the scaled EBT + AR control, runs EBT argmin AND global-beam decode, and accounts matched FLOPs). The scaled harness trains from scratch (no checkpoint reuse; the model is seed-coupled to its training corpus), so this is an honest retrain — bounded to 2 seeds (~2500s; exp3882 did 3 in 3673s) to stay under the 4800s cap. If the replication AGREES (beam~=argmin~=0 vs AR>0.4) the energy-as-generator thesis is banked-negative; if it DISAGREES the .359 verdict is itself an artifact."
         retire_if_same_verdict: false
     title: "EBT FUNDAMENTAL adversarial REPLICATION (2 fresh seeds, reuse exp3882 script): re-run the exp3882 measurement pipeline (train scaled EBT + AR control, then AR best-of-N vs EBT greedy-argmin vs EBT global-beam at matched FLOPs) at 2 NEW seeds. Confirms (or refutes) the .359 energy-as-GENERATOR FUNDAMENTAL verdict before it is banked as the second decisive energy-core negative (complement of the P0.1 selection negative). Bounded to 2 seeds (~2500s) to stay under the codex 4800s wall-clock cap."
     priority: critical
@@ -166,7 +166,7 @@ tasks:
            a. `{project_root}/.venv/bin/python -c "import torch; assert torch.cuda.is_available() and torch.cuda.device_count() > 0"` (blocked_no_cuda — run EVERYTHING via .venv/bin/python).
            b. Import the harness the WORKING way: sys.path.insert(0,'scripts'); import thesis_a_part_b_scaled (blocked_scaled_harness_import).
            c. Confirm the exp3882 measurement module/functions are importable/reusable (train_and_eval_seed-style entry). If the exp3882 script cannot be reused as-is, you MAY re-implement by calling its same building blocks — but do NOT invent a new decode path.
-        1. For 2 NEW seeds (distinct from {1,2,3}, e.g. 4 and 5): run the exp3882 pipeline end-to-end —
+        1. For 2 NEW seeds (distinct from {{1,2,3}}, e.g. 4 and 5): run the exp3882 pipeline end-to-end —
            train the scaled EBT + AR control for that seed, then evaluate (i) AR best-of-N at matched
            FLOPs, (ii) EBT greedy energy-argmin, (iii) EBT global discrete beam search over cumulative
            energy (beam>=8) — exactly as exp3882 did. This RETRAINS per seed (the harness has no
