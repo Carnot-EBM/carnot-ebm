@@ -146,3 +146,14 @@ ops/.pretest-cache.json
 # Vendored EBT repo (has its own .git) — must NOT be committed as a submodule gitlink;
 # an orphaned ebt_tmp gitlink with no .gitmodules broke every GitHub Pages build (checkout step).
 ebt_tmp/
+
+# Embedded experiment clones (have their own .git) — must NEVER be committed as
+# submodule gitlinks. A conductor `git add -A` committed `nano-trm` as a mode
+# 160000 gitlink with no .gitmodules (commit c4c612662, 2026-06-06), which broke
+# EVERY GitHub Actions checkout (Pages, CI, phase1-reproducer) at
+# `fatal: No url found for submodule path 'nano-trm'`. Ignore the embedded repos
+# so this cannot recur.
+/nano-trm/
+/ebt_tmp/
+/trm_src/
+/hrm_ckpt/
