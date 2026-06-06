@@ -1,0 +1,238 @@
+{
+  "adjudication": "FUNDAMENTAL",
+  "all_configured_seeds": [
+    1,
+    2,
+    3
+  ],
+  "ar_best_accuracy": 0.94,
+  "duration_s": 3673.32,
+  "ebt_argmin_accuracy": 0.0,
+  "ebt_beam_accuracy": 0.0,
+  "experiment": 3882,
+  "field_principles": {
+    "adjudication": "ARTIFACT | FUNDAMENTAL | INCONCLUSIVE.",
+    "ar_best_accuracy": "Positive control value - AR<0.3 means no headroom and INCONCLUSIVE.",
+    "duration_s": "Real wall-clock duration in seconds.",
+    "ebt_argmin_accuracy": "Greedy energy-argmin decode accuracy.",
+    "ebt_beam_accuracy": "Global cumulative-energy discrete beam-search accuracy.",
+    "inference_substrate": "Execution substrate for the artifact.",
+    "matched_flops_ratio": "EBT beam / AR best-of-N inference-FLOP ratio.",
+    "model_specs": "Scaled model and decode configuration.",
+    "n_heldout": "Held-out examples evaluated for the selected seed.",
+    "positive_control_passed": "BARE BOOL - true only when best held-out AR is in [0.4,0.95] before any ARTIFACT/FUNDAMENTAL verdict.",
+    "preconditions_checked": "CUDA and corrected scaled-harness import evidence.",
+    "random_seed": "Selected seed used for the kill-gate decision.",
+    "random_seeds_used": "All evaluated random seeds.",
+    "reproducibility_checksum": "SHA256 checksum over configuration and results.",
+    "seeds_used": "Random seeds actually evaluated."
+  },
+  "honest_verdict": "complete: thesis_a_partb_FUNDAMENTAL_beam0.000_argmin0.000_both_fail_vs_ar0.940_landscape_misshaped",
+  "inference_substrate": "live_llm_inference",
+  "matched_flops_ratio": 1.0003101736972704,
+  "model_specs": {
+    "ar": "matched_scaled_ar_from_scratch_or_checkpoint",
+    "ar_best_of_n": "matched_to_cumulative_beam_energy_evals_with_exp3727_budget_matcher",
+    "beam": 8,
+    "block_size": 48,
+    "digits": 3,
+    "dim": 768,
+    "ebt": "scaled_ebt_from_scratch_or_checkpoint",
+    "n_eval": 100,
+    "n_heads": 12,
+    "n_layers": 4,
+    "selected_seed": 2,
+    "topk": 12,
+    "train_steps": 12000
+  },
+  "n_heldout": 100,
+  "positive_control_passed": true,
+  "preconditions_checked": {
+    "cuda": true,
+    "cuda_device_count": 2,
+    "cuda_devices": [
+      "NVIDIA GeForce RTX 3090",
+      "NVIDIA GeForce RTX 3090"
+    ],
+    "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "scaled_harness_error": null,
+    "scaled_harness_import": true
+  },
+  "random_seed": 2,
+  "random_seeds_used": [
+    1,
+    2,
+    3
+  ],
+  "reproducibility_checksum": "7b82872b675df92e58ad118090a0ed64e43a73ad9963d24ff1c9d9a28037006b",
+  "schema": "carnot.experiment_3882_thesis_a_partb_killgate.v1",
+  "seed_evaluations": [
+    {
+      "ar_best_accuracy": 0.89,
+      "ar_best_of_n": 1612,
+      "ar_forward_evals": 644800,
+      "checkpoint_path": "results/experiment_3882_thesis_a_partb_seed1.pt",
+      "checkpoint_reused": true,
+      "ebt_argmin_accuracy": 0.0,
+      "ebt_argmin_evals": 103200,
+      "ebt_beam_accuracy": 0.0,
+      "ebt_beam_evals": 645000,
+      "matched_flops_ratio": 1.0003101736972704,
+      "n_heldout": 100,
+      "samples": [
+        {
+          "ar_best_of_n": "0302",
+          "ebt_argmin": "4444",
+          "ebt_beam": "4444",
+          "prompt": "043+359=",
+          "true": "0402"
+        },
+        {
+          "ar_best_of_n": "0910",
+          "ebt_argmin": "3333",
+          "ebt_beam": "\ufffd333",
+          "prompt": "131+779=",
+          "true": "0910"
+        },
+        {
+          "ar_best_of_n": "1316",
+          "ebt_argmin": "==7=",
+          "ebt_beam": "8===",
+          "prompt": "942+374=",
+          "true": "1316"
+        },
+        {
+          "ar_best_of_n": "1528",
+          "ebt_argmin": "7777",
+          "ebt_beam": "3===",
+          "prompt": "849+679=",
+          "true": "1528"
+        },
+        {
+          "ar_best_of_n": "1138",
+          "ebt_argmin": "47==",
+          "ebt_beam": "47==",
+          "prompt": "918+220=",
+          "true": "1138"
+        },
+        {
+          "ar_best_of_n": "1770",
+          "ebt_argmin": "====",
+          "ebt_beam": "====",
+          "prompt": "853+917=",
+          "true": "1770"
+        },
+        {
+          "ar_best_of_n": "1060",
+          "ebt_argmin": "1444",
+          "ebt_beam": "1444",
+          "prompt": "420+640=",
+          "true": "1060"
+        },
+        {
+          "ar_best_of_n": "0798",
+          "ebt_argmin": "====",
+          "ebt_beam": "7===",
+          "prompt": "309+489=",
+          "true": "0798"
+        }
+      ],
+      "seed": 1,
+      "training_diverged": false
+    },
+    {
+      "ar_best_accuracy": 0.94,
+      "ar_best_of_n": 1612,
+      "ar_forward_evals": 644800,
+      "checkpoint_path": "results/experiment_3882_thesis_a_partb_seed2.pt",
+      "checkpoint_reused": true,
+      "ebt_argmin_accuracy": 0.0,
+      "ebt_argmin_evals": 103200,
+      "ebt_beam_accuracy": 0.0,
+      "ebt_beam_evals": 645000,
+      "matched_flops_ratio": 1.0003101736972704,
+      "n_heldout": 100,
+      "samples": [
+        {
+          "ar_best_of_n": "1134",
+          "ebt_argmin": "3333",
+          "ebt_beam": "3233",
+          "prompt": "576+558=",
+          "true": "1134"
+        },
+        {
+          "ar_best_of_n": "1718",
+          "ebt_argmin": "3333",
+          "ebt_beam": "3333",
+          "prompt": "824+894=",
+          "true": "1718"
+        },
+        {
+          "ar_best_of_n": "0590",
+          "ebt_argmin": "3333",
+          "ebt_beam": "333",
+          "prompt": "178+412=",
+          "true": "0590"
+        },
+        {
+          "ar_best_of_n": "1397",
+          "ebt_argmin": "3333",
+          "ebt_beam": "7333",
+          "prompt": "883+514=",
+          "true": "1397"
+        },
+        {
+          "ar_best_of_n": "0427",
+          "ebt_argmin": "3333",
+          "ebt_beam": "3333",
+          "prompt": "198+229=",
+          "true": "0427"
+        },
+        {
+          "ar_best_of_n": "0584",
+          "ebt_argmin": "3333",
+          "ebt_beam": "8333",
+          "prompt": "293+291=",
+          "true": "0584"
+        },
+        {
+          "ar_best_of_n": "0699",
+          "ebt_argmin": "7==7",
+          "ebt_beam": "7233",
+          "prompt": "189+510=",
+          "true": "0699"
+        },
+        {
+          "ar_best_of_n": "0762",
+          "ebt_argmin": "3333",
+          "ebt_beam": "3333",
+          "prompt": "283+479=",
+          "true": "0762"
+        }
+      ],
+      "seed": 2,
+      "training_diverged": false
+    },
+    {
+      "ar_best_accuracy": 0.0,
+      "ar_best_of_n": 1612,
+      "ar_forward_evals": 644800,
+      "checkpoint_path": "results/experiment_3882_thesis_a_partb_seed3.pt",
+      "checkpoint_reused": false,
+      "ebt_argmin_accuracy": null,
+      "ebt_argmin_evals": null,
+      "ebt_beam_accuracy": null,
+      "ebt_beam_evals": null,
+      "matched_flops_ratio": null,
+      "n_heldout": 100,
+      "samples": [],
+      "seed": 3,
+      "training_diverged": false
+    }
+  ],
+  "seeds_used": [
+    1,
+    2,
+    3
+  ]
+}
