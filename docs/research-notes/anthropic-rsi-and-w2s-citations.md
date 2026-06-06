@@ -284,3 +284,38 @@ See also: memory references `anthropic-recursive-self-improvement`,
 `anthropic-automated-w2s-researcher`; `deep-think-post-bounded-2026-06` (P3 loop
 can't self-seed); `sakana-dgm` (self-modifying agent removed its own safety markers);
 `anthropic-teaching-why` (principle-grounded legibility).
+
+---
+
+## Strategic addendum — efficiency-parity verification is an RSI-SCALE requirement (2026-06-06)
+
+Re-reading Source A (RSI essay) after Carnot's 2026-06-06 pivot to a HYBRID
+pragmatic architecture (open LLM / TRM-refiner generator + energy ensemble as the
+*verifier*; energy-as-generator closed-negative) and the operator's win condition
+("the energy model equally as effective as the LM so long as it is cheaper and/or
+faster") yields a sharper, load-bearing reading:
+
+- A4 ("oversight, validation, and verification of an expanding 'virtual lab'") +
+  A5 (misalignment compounds if the check can't keep pace) imply a SCALE problem:
+  when AI generates work at machine scale, you **cannot afford a generative
+  LLM-judge on every artifact**. Verifying a virtual lab DEMANDS a cheap, fast,
+  scalable, un-gameable check.
+- Therefore Carnot's **efficiency-parity** win condition is not merely pragmatic —
+  it is *the property that makes "verify the virtual lab" tractable*. A
+  forward-pass, hardware-acceleratable, externally-grounded energy verifier is
+  exactly the always-on, scale-viable check the essay implies someone must build;
+  a generative judge does not survive the throughput.
+- This **elevates efficiency-parity from pragmatic-floor to strategically
+  load-bearing**, and positions Carnot's verifier as a candidate scale-viable
+  safety check for the RSI world — complementing (not competing with) Source A's
+  centralized multi-lab governance, by supplying the open/local/cheap verification
+  primitive that governance assumes exists.
+
+Carnot-relevance for the paper: cite this as the strategic motivation for the
+verifier-centric hybrid and for reporting **cost/latency at matched accuracy** (vs
+an LLM-as-verifier baseline) as a first-class result, not just AUROC. See memory
+`hybrid-pragmatic-architecture`.
+
+Honest caveats (unchanged): parity itself is unproven (exp3885 moat-scissor
+INCONCLUSIVE — "not clearly better" ≠ "reaches parity"); the cost/latency ratio is
+plausible but UNMEASURED; goal-choice/research-taste (A3) remains human.
