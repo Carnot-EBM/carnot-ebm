@@ -35925,55 +35925,140 @@ milestones:
     result: OK (conductor)
 - id: 2026.06.358
   correction_type: v358_execution_wipeout_archive_activation
-  title: 'Archive .358 execution wipeout and activate .359 green gates'
+  title: Archive .358 execution wipeout and activate .359 green gates
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-06'
-  finding: '.358 was an execution wipeout, not a research verdict: Exp 3871 blocked on the scaled EBT harness import, Exp 3872 blocked behind that failed gate, and Exp 3873 through Exp 3880 did not produce artifacts after the poison pretest cascade. .359 is active with the corrected EBT import incantation and no hard gated_on critical path.'
+  finding: '.358 was an execution wipeout, not a research verdict: Exp 3871 blocked on the scaled EBT harness import, Exp
+    3872 blocked behind that failed gate, and Exp 3873 through Exp 3880 did not produce artifacts after the poison pretest
+    cascade. .359 is active with the corrected EBT import incantation and no hard gated_on critical path.'
   activation_recorded: exp3881-archive-v358-activate-v359-green-gate
-  backend_routing_recommendation: 'codex reliable; standing gemini<->codex flip authority dated 2026-06-05 remains active for auditable backend routing'
-  working_ebt_import_incantation: 'import sys; sys.path.insert(0,''scripts''); import thesis_a_part_b_scaled; print(''ok'')'
+  backend_routing_recommendation: codex reliable; standing gemini<->codex flip authority dated 2026-06-05 remains active for
+    auditable backend routing
+  working_ebt_import_incantation: import sys; sys.path.insert(0,'scripts'); import thesis_a_part_b_scaled; print('ok')
   tasks:
   - id: exp3870-archive-v357-activate-v358-backend-diag
-    title: 'Archive .357 and activate .358 with backend routing diagnostic'
+    title: Archive .357 and activate .358 with backend routing diagnostic
     deliverable: results/experiment_3870_archive_v357_activate_v358.json
     result: 'complete: archived_v357_inconclusive_exp3869_positive_controls_degenerate_v358_active_codex_backend_recommended'
   - id: exp3871-thesis-a-partb-dtp1-adjudication-headroom-confirmed
-    title: 'Thesis-A part-b DTP1 adjudication on a confirmed-headroom checkpoint'
+    title: Thesis-A part-b DTP1 adjudication on a confirmed-headroom checkpoint
     deliverable: results/experiment_3871_thesis_a_partb_dtp1_headroom_confirmed.json
-    result: 'blocked_scaled_harness_import'
+    result: blocked_scaled_harness_import
   - id: exp3872-ebt-energy-descent-system2-diagnostic
-    title: 'EBT System-2 K-curve diagnostic gated on Exp 3871'
+    title: EBT System-2 K-curve diagnostic gated on Exp 3871
     deliverable: results/experiment_3872_ebt_energy_descent_system2_diagnostic.json
-    result: 'blocked_gate_check_failed'
+    result: blocked_gate_check_failed
   - id: exp3873-build-in-distribution-error-rich-corpus
-    title: 'Build in-distribution error-rich FoVer corpus'
+    title: Build in-distribution error-rich FoVer corpus
     deliverable: results/experiment_3873_in_distribution_error_rich_corpus.json
     result: 'SKIPPED_BY_PRETEST_GATE: .358 poison pretest prevented the task from running; no artifact present'
   - id: exp3874-moat-scissor-in-distribution
-    title: 'Moat scissor on the in-distribution corpus'
+    title: Moat scissor on the in-distribution corpus
     deliverable: results/experiment_3874_moat_scissor_in_distribution.json
     result: 'SKIPPED_BY_PRETEST_GATE: .358 poison pretest prevented the task from running; no artifact present'
   - id: exp3875-graph-grounding-fact-verifier-defabricated
-    title: 'Graph-grounding fact verifier defabricated rerun'
+    title: Graph-grounding fact verifier defabricated rerun
     deliverable: results/experiment_3875_graph_grounding_fact_verifier_defabricated.json
     result: 'SKIPPED_BY_PRETEST_GATE: .358 poison pretest prevented the task from running; no artifact present'
   - id: exp3876-facts-complementarity
-    title: 'Facts-domain graph verifier complementarity'
+    title: Facts-domain graph verifier complementarity
     deliverable: results/experiment_3876_facts_complementarity.json
     result: 'SKIPPED_BY_PRETEST_GATE: .358 poison pretest prevented the task from running; no artifact present'
   - id: exp3877-fr11-v24-online-independence-reweighting
-    title: 'FR-11 v24 online independence reweighting'
+    title: FR-11 v24 online independence reweighting
     deliverable: results/experiment_3877_fr11_v24_independence_reweighting.json
     result: 'SKIPPED_BY_PRETEST_GATE: .358 poison pretest prevented the task from running; no artifact present'
   - id: exp3878-gatemate-continuity-corrigendum-readback
-    title: 'GateMate continuity corrigendum readback'
+    title: GateMate continuity corrigendum readback
     deliverable: results/experiment_3878_gatemate_continuity_corrigendum.json
     result: 'SKIPPED_BY_PRETEST_GATE: .358 poison pretest prevented the task from running; no artifact present'
   - id: exp3879-polarfire-kv260-consolidated-continuity
-    title: 'PolarFire and KV260 consolidated continuity audit'
+    title: PolarFire and KV260 consolidated continuity audit
     deliverable: results/experiment_3879_polarfire_kv260_continuity.json
     result: 'SKIPPED_BY_PRETEST_GATE: .358 poison pretest prevented the task from running; no artifact present'
   - id: exp3880-capstone-v358
-    title: 'Capstone .358 forward-bet aggregation'
+    title: Capstone .358 forward-bet aggregation
     deliverable: results/experiment_3880_capstone_v358.json
     result: 'SKIPPED_BY_PRETEST_GATE: .358 poison pretest prevented the task from running; no artifact present'
+- id: 2026.06.359
+  title: "Execute the three forward bets (hardened) \u2014 EBT energy-as-GENERATOR kill-gate (import-fixed), the verifier\
+    \ moat on an IN-DISTRIBUTION corpus, and a de-fabricated facts graph-grounding verifier."
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-06'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3881-archive-v358-activate-v359-green-gate
+    title: 'Archive .358 -> activate .359; GREEN-GATE de-risk: assert research-complete.yaml parses (colon-poison guard),
+      the core pretest subset (test_pipeline_extract + test_docs) is green, and the EBT scaled harness imports via sys.path
+      (the .358 exp3871 blocker). Records the backend routing diagnostic.'
+    deliverable: results/experiment_3881_archive_v358_activate_v359.json
+    result: OK (conductor)
+  - id: exp3882-thesis-a-partb-killgate-import-fixed
+    title: 'THESIS-A PART-(b) KILL-GATE, IMPORT-FIXED: on a CONFIRMED-HEADROOM checkpoint (held-out AR in [0.4,0.95] asserted
+      FIRST), does a GLOBAL discrete beam search over cumulative EBT energy recover AR-level accuracy (greedy was the bottleneck
+      -> ARTIFACT) or also fail (energy landscape misshaped for algorithmic generation -> FUNDAMENTAL), at matched inference
+      FLOPs? The Phase-3 energy-as-GENERATOR verdict. Peer: NRGPT arXiv:2512.16762 (does NOT do this compute-matched comparison).'
+    deliverable: results/experiment_3882_thesis_a_partb_killgate.json
+    result: OK (conductor)
+  - id: exp3883-ebt-system2-kcurve-diagnostic
+    title: "EBT System-2 K-curve diagnostic (disk-reads exp3882, no hard gate): on the SAME confirmed-headroom checkpoint,\
+      \ does held-out generation accuracy improve MONOTONICALLY as the energy-descent budget K grows (1,2,4,8,16)? Tests the\
+      \ core EBT 'thinking = optimization' claim \u2014 monotone gain => thinking helps; flat/degrading => no usable descent\
+      \ signal at this scale."
+    deliverable: results/experiment_3883_ebt_system2_kcurve.json
+    result: OK (conductor)
+  - id: exp3884-build-in-distribution-error-rich-corpus
+    title: 'BUILD an IN-DISTRIBUTION error-rich step-error corpus for the moat scissor: pool FoVer-family incorrect steps
+      (fover_corpus_v3/v4/expanded) + generate/label additional math step-errors to reach >=150 gold-incorrect steps, balanced
+      ~50/50, on which Carnot''s k=15 ensemble DISCRIMINATES (AUROC>=0.65). Emit the gate field + per-item scores to a results/
+      artifact (NOT only a data/ file).'
+    deliverable: results/experiment_3884_in_distribution_error_rich_corpus.json
+    result: OK (conductor)
+  - id: exp3885-moat-scissor-in-distribution
+    title: 'MOAT SCISSOR IN-DISTRIBUTION (DT-P2, disk-reads exp3884, no hard gate): of the gold-incorrect steps a strong reasoner
+      (Qwen3.6-35B) self-verification MISSES, what fraction does Carnot''s k=15 ensemble INDEPENDENTLY catch? residual_catch
+      + bootstrap CI95 + reasoner positive control + error-overlap Jaccard. Finally adjudicates the o1-subsumption durability
+      question. Premise: Self-Verification Dilemma arXiv:2602.03485; comparator: ThinkPRM arXiv:2504.16828.'
+    deliverable: results/experiment_3885_moat_scissor_in_distribution.json
+    result: OK (conductor)
+  - id: exp3886-graph-grounding-fact-verifier-defabricated
+    title: 'Graph-grounding fact verifier, DE-FABRICATED (real wall-clock + per-item scores): on a RAGTruth-style factual
+      corpus, does graph-grounding (HalluGraph arXiv:2512.01659 entity-grounding + relation-preservation; MemGraphRAG arXiv:2606.00610)
+      reproduce facts_catch_delta>0 over the math-bound ensemble baseline, with a non-fabricated duration (>=60s) and per-item
+      scores persisted for complementarity?'
+    deliverable: results/experiment_3886_graph_grounding_fact_verifier_defabricated.json
+    result: OK (conductor)
+  - id: exp3887-facts-complementarity
+    title: 'Facts COMPLEMENTARITY (disk-reads exp3886, no hard gate): does the graph-grounding verifier catch factual hallucinations
+      the math-bound ensemble MISSES (low error-mask correlation), and would {{math verifiers + graph verifier}} be a strictly
+      broader fact-aware system? Quantify the independent contribution + error-mask correlation + fused AUROC.'
+    deliverable: results/experiment_3887_facts_complementarity.json
+    result: OK (conductor)
+  - id: exp3888-fr11-v24-online-independence-reweighting
+    title: "FR-11 continuous self-learning v24 (research-program.md MANDATE) \u2014 load the persisted v23 independence-reweighting\
+      \ state, continue Tier-1 ONLINE reweighting on a FRESH verification corpus (upweight verifiers that catch the residual\
+      \ others miss, arXiv:2604.07650), and confirm the learned weighting STILL holds the +0.0185 memory-ablation contribution\
+      \ + frozen 0.9131 across the v23->v24 iteration (no long-horizon overfit). CPU counter updates (<1us/update, the Tier-1\
+      \ hardware path)."
+    deliverable: results/experiment_3888_fr11_v24_independence_reweighting.json
+    result: OK (conductor)
+  - id: exp3889-gatemate-continuity-corrigendum-readback
+    title: "GateMate A1-EVB-2M continuity \u2014 corrigendum the exp3866 TAUTOLOGY flag (duration_s was bit-identical to run_duration_s)\
+      \ by recording DISTINCT wall-clock timers, and attempt a JTAG bitstream READBACK to verify the flashed n=16 Ising tile\
+      \ matches the bitstream (closes the 'no_readback' caveat toward a clean gatemate_bitstream_flashed terminal)."
+    deliverable: results/experiment_3889_gatemate_continuity_corrigendum.json
+    result: OK (conductor)
+  - id: exp3890-polarfire-kv260-consolidated-continuity
+    title: "PolarFire + KV260 consolidated opportunistic continuity audit \u2014 confirm both boards reachable over SSH, record\
+      \ PolarFire's terminal hash-verified dispatch state HONESTLY (smoke-only on soft CPU, NO fabric-acceleration claim),\
+      \ and confirm KV260 terminal/loaded-overlay state via xmutil. One slot covers both per north-star \xA73 opportunistic\
+      \ relaxation."
+    deliverable: results/experiment_3890_polarfire_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp3891-capstone-v359
+    title: "Capstone .359 \u2014 aggregate the forward-bet verdicts: EBT energy-generation adjudication (ARTIFACT/FUNDAMENTAL/INCONCLUSIVE)\
+      \ + System-2 K-curve, the IN-DISTRIBUTION moat-scissor verdict (MOAT_SURVIVES/SUBSUMED/INCONCLUSIVE), facts graph-grounding\
+      \ signal + complementarity, FR-11 v24 invariant, and the two FPGA boards. paper_ready stays TRUE; frozen 0.9131 unchanged.\
+      \ Surface the operator next-thesis decision."
+    deliverable: results/experiment_3891_capstone_v359.json
+    result: OK (conductor)
