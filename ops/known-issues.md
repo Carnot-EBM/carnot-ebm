@@ -395,6 +395,47 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-06-06 (TOP PRIORITY — supersedes generator/breadth work): VERIFIER-EARNS-ITS-PLACE PROOF
+
+**Origin:** 2026-06-06 strategic reframe (ops/north-star.md §5). Energy-as-GENERATOR
+is now closed-negative (Sudoku v1–v4 + exp3882 EBT kill-gate + exp3883 K-curve;
+external corroboration NVIDIA-Ising QEC). The generator is a learned amortized
+refiner (TRM ~0.82 standalone, no energy); Carnot is the HYBRID's energy VERIFIER,
+not its generator. With the generator commodity/third-party, **the verifier is
+Carnot's entire value-add and its value is UNPROVEN** (exp3885 moat-scissor
+INCONCLUSIVE; energy-rerank HURT; verifier domain-bound). This is now Carnot's
+single existential question. The planner MUST prioritize it over more generator
+experiments, energy-as-generator reruns, or breadth vN+1 re-measurement.
+
+**Win condition (operator 2026-06-06):** the verifier earns its place if it is
+EQUALLY EFFECTIVE as the LM at LOWER cost/latency (efficiency-parity) — no accuracy
+edge required, though accuracy gains are pursued where worthwhile (Pareto-dominate
+the LLM baseline). See memory `hybrid-pragmatic-architecture`.
+
+**Two load-bearing experiments to design into the next milestone:**
+
+1. **ACCURACY axis — moat-scissor rerun, INFRA-FIXED.** The .359 exp3885 came back
+   `moat_scissor_indist_INCONCLUSIVE` and exp3886/3887 (facts) were BLOCKED on
+   `blocked_graph_verifier_not_invoked` / `blocked_upstream_scores_missing`. Fix the
+   invocation/precondition infra first (PRECONDITIONS block per CLAUDE.md), then
+   answer: in-distribution, does the external energy/verifier-ensemble catch errors
+   the reasoner's OWN self-verification (CoT self-check) misses? Report the
+   per-error delta + a positive control (FALSE_NEGATIVE_RISK discipline). Use the
+   exp3884 in-distribution corpus (auroc 0.9667, READY).
+
+2. **EFFICIENCY axis — energy-verifier vs LLM-as-judge head-to-head (NEW first-class
+   metric).** On the same corpus, compare the energy verifier vs an LLM-as-verifier
+   (LLM-as-judge / self-verify) on BOTH: (a) accuracy parity within CI, and (b) the
+   COMPUTE/LATENCY ratio (FLOPs / wall-clock / $ per verification at matched
+   accuracy). Target headline: "parity at 10–100× cheaper." This makes cost-at-
+   matched-accuracy a reported result, not an afterthought.
+
+**Acceptance / honesty:** report parity HONESTLY (inconclusive-on-beating ≠ reaches
+parity); the cost ratio is currently UNMEASURED. A clean "parity + Nx cheaper" OR a
+clean "catches X% the model misses" is the deliverable; a null result is also
+valuable and must be reported (don't fabricate a moat). Also re-scope Phase-3 prose
+to the hybrid (retire energy-generates language) per north-star §5.
+
 ### NEW 2026-05-31: P0.1 GRAPH-COLORING RE-TEST ON A HARD, HEADROOM-PRESERVING CORPUS (exp3518 was ceiling-saturated)
 
 **Origin:** 2026-05-31 outer-loop read of exp3518

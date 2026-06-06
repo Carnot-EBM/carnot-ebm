@@ -164,6 +164,64 @@ and is NOT done automatically — the index is the low-risk first step.
 
 ---
 
+## 5. STRATEGIC REFRAME (2026-06-06): energy VERIFIES, refinement GENERATES
+
+**What is now settled (overwhelmingly, multi-domain).** Energy-as-GENERATOR is
+closed-negative: a contrastively-trained energy SCORES near-perfectly but
+GENERATES nothing by descent — refuted on Sudoku (v1–v4 ablation: 0% even with a
+perfect latent + perfect carving), on GSM8K (exp3882 EBT kill-gate: energy-descent
+0.000 vs AR 0.94, positive control passed), and reinforced by exp3883 (K-curve
+plateau) and an external corroboration (NVIDIA's open QEC neural decoder beats the
+MWPM energy-minimization decoder; surface-code decoding ↔ random-bond Ising). The
+GENERATOR is a learned amortized **recursive refiner** (TRM-class): with NO energy
+it reaches ~0.82 on Sudoku-Extreme (SOTA-adjacent) where AR and energy-descent get
+~0%. See docs/research-notes/energy-as-generator-sudoku-thesis.md, memories
+`energy-as-generator-sudoku`, `nvidia-ising-qec-amortized`.
+
+**What Carnot IS, post-reframe (HYBRID, pragmatic — memory
+`hybrid-pragmatic-architecture`).** An energy-based **VERIFICATION layer** grounding
+a learned generator — NOT an energy-based generative foundation model. Generator =
+commodity (open local LLM Qwen/Gemma) or a small third-party refiner (TRM) per
+domain; the energy ensemble is the **verifier / scorer / oracle / abstention gate**,
+never the generator. LLM-free general reasoning is a north-star research direction,
+NOT a near-term gate. Sovereignty preserved (open/local). This is exactly the role
+the publication-ready FoVer headline (§1) already occupies — the reframe prunes the
+refuted generator ambition, it does not touch the headline.
+
+**What this CONCENTRATES (the existential point).** With the generator commodity/
+third-party, the VERIFIER is Carnot's entire value-add — and its value is UNPROVEN:
+the moat-scissor (does the external verifier beat the model self-verifying?) is
+INCONCLUSIVE (exp3885); energy-rerank HURT the generator (v4); the verifier is
+domain-bound (math strong, facts earned-negative, code weak — memory
+`verifier-domain-bound-math-only`). So all of Carnot's risk now sits in ONE place.
+
+**The win condition (operator 2026-06-06).** The verifier earns its place if it is
+**equally effective as the LM at lower cost/latency** (efficiency-parity) — it does
+NOT need an accuracy edge, though accuracy gains are still pursued where worthwhile
+(Pareto: dominate the LLM baseline — cheaper at equal accuracy AND/OR more accurate
+at equal cost). Efficiency-parity is also RSI-SCALE load-bearing: verifying a
+machine-scale "virtual lab" can't afford a generative LLM-judge per artifact, so a
+cheap, hardware-acceleratable, externally-grounded forward-pass verifier is the
+property that makes scaled verification tractable (memory
+`quote-anthropic-corroboration`, docs/research-notes/anthropic-rsi-and-w2s-citations.md).
+
+**Hardware, repurposed.** The DBAE→Ising→energy-MINIMIZATION-generates path is dead.
+Ising/FPGA/thermodynamic devices instead **EVALUATE** energy (cheap forward
+verification at scale) — the verifier is the hardware-acceleratable primitive. The
+NVIDIA-Ising calibration pattern maps onto Carnot's analog-sampler drift-correction.
+Disambiguate "Ising MACHINE/sampler" from NVIDIA Ising in all docs.
+
+**THE LOAD-BEARING NEXT WORK (supersedes generator experiments).** Prove the
+verifier earns its place — two axes, both currently owed: (A) ACCURACY — an
+infra-fixed moat-scissor rerun (does the external verifier catch what the model's
+own self-verification misses, in-distribution?); (B) EFFICIENCY — an energy-verifier
+vs LLM-as-judge head-to-head reporting BOTH accuracy parity (within CI) AND the
+compute/latency ratio. Target result: "parity at 10–100× cheaper." Re-scope Phase-3
+to the hybrid (refiner generator + energy verifier); retire energy-generates prose.
+Staged as a MANDATORY-NEXT-MILESTONE PRIORITY in ops/known-issues.md.
+
+---
+
 ## Why this document exists
 
 The project has world-class **rigor** (trustworthy negatives: v4 refuted,
