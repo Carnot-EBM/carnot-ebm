@@ -7932,3 +7932,4 @@ ERROR: {
 | 2026-06-06 09:11 UTC | BUILD an IN-DISTRIBUTION error-rich step-error cor | OK | 92 passed in 6.84s |
 | 2026-06-06 09:28 UTC | MOAT SCISSOR IN-DISTRIBUTION (DT-P2, disk-reads ex | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-06 09:50 UTC | Graph-grounding fact verifier, DE-FABRICATED (real | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-06 10:06 UTC | Facts COMPLEMENTARITY (disk-reads exp3886, no hard | OK | 94 passed in 6.57s |
