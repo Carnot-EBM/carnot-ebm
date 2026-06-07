@@ -69,6 +69,7 @@ from carnot.verify.cost_instrumented_verification import (
     run_energy_verifier,
 )
 from carnot.verify.gguf_inference import load_gguf_generator
+from carnot.verify.reasoner_self_verification import build_judge_prompt
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 OUTPUT_REL_PATH = Path("results/experiment_efficiency_panel_boosted_draft.json")
@@ -150,6 +151,42 @@ def _precondition_models(models: Sequence[str]) -> list[PanelModelResult]:
     return out
 
 
+def _load_judge_generator(model_name: str, gguf_path: str) -> tuple[Any, dict[str, object]]:
+    """Load a judge generator, falling back to a direct llama.cpp load.
+
+    The shared ``load_gguf_generator`` smoke gate emits a 1-token generic prompt
+    and rejects any model whose first token is whitespace.  gemma-4-12B-it emits a
+    leading newline, so it fails that gate even though it generates valid verdict
+    JSON on a real prompt.  Rather than weaken the shared core loader (which the
+    conductor depends on), this fallback does a *real-prompt* smoke: it builds the
+    actual judge prompt, generates a few tokens, and accepts the model iff the
+    output is non-empty after stripping.  Same fair bar, judge-appropriate prompt.
+    """
+
+    try:
+        return load_gguf_generator(
+            prefer_order=[model_name], n_ctx=BOOSTED_N_CTX, max_n_gpu_layers=-1
+        )
+    except RuntimeError as exc:
+        from llama_cpp import Llama
+
+        llm = Llama(
+            model_path=gguf_path, n_ctx=BOOSTED_N_CTX, n_gpu_layers=-1, verbose=False
+        )
+        probe = llm(build_judge_prompt("47 + 28 = 75."), max_tokens=16, temperature=0.0)
+        text = str(probe["choices"][0]["text"]).strip()
+        if not text:
+            raise RuntimeError(f"{model_name} real-prompt smoke empty after fallback: {exc!r}") from exc
+        meta: dict[str, object] = {
+            "gguf_path": gguf_path,
+            "model_used": model_name,
+            "loader": "direct_llama_fallback_real_prompt_smoke",
+            "fallback_reason": f"shared_loader_smoke_gate_rejected: {exc!r}"[:240],
+            "real_prompt_smoke_tokens": int(probe["usage"]["completion_tokens"]),
+        }
+        return llm, meta
+
+
 def _score_one_model(
     model_name: str,
     gguf_path: str,
@@ -160,11 +197,7 @@ def _score_one_model(
 ) -> PanelModelResult:
     """Load one judge at the STRONG budget, score it + energy back-to-back."""
 
-    generator, meta = load_gguf_generator(
-        prefer_order=[model_name],
-        n_ctx=BOOSTED_N_CTX,
-        max_n_gpu_layers=-1,
-    )
+    generator, meta = _load_judge_generator(model_name, gguf_path)
     try:
         params = model_params_for_path(str(meta.get("gguf_path") or gguf_path))
         model_specs = {
