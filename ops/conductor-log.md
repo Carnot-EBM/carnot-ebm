@@ -8011,3 +8011,4 @@ c |
 | 2026-06-07 12:57 UTC | Capstone .362 — the VERIFIER SCORECARD (finally on | OK | 86 passed in 3.39s |
 | 2026-06-07 15:37 UTC | Plan milestone 2026.06.363 | OK | 10 tasks proposed |
 | 2026-06-07 15:40 UTC | Milestone 2026.06.363 activated | OK | 10 tasks queued |
+| 2026-06-07 15:58 UTC | Archive .362 -> activate .363; GREEN-GATE de-risk  | OK | 110 passed in 5.44s |
