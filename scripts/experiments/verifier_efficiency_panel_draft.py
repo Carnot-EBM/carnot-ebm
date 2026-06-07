@@ -68,11 +68,26 @@ from carnot.verify.cost_instrumented_verification import (
     model_params_for_path,
     run_energy_verifier,
 )
+from carnot.verify.cost_instrumented_verification import _step_text
+from carnot.verify.gguf_inference import generate as gguf_generate
 from carnot.verify.gguf_inference import load_gguf_generator
-from carnot.verify.reasoner_self_verification import build_judge_prompt
+from carnot.verify.reasoner_self_verification import (
+    build_judge_prompt,
+    parse_self_verification_response,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 OUTPUT_REL_PATH = Path("results/experiment_efficiency_panel_boosted_draft.json")
+
+# The two judge prompts. "judge" = exp3917's zero-shot prompt (what the first
+# panel run used). "boosted" = exp3916's few-shot + structured-self-check prompt,
+# the STRONGEST-prompt baseline (it lifted gemma-4-26B from 0.449 to 0.663). The
+# self-verify framing in exp3916 IS this build_boosted_judge_prompt, not a
+# separate prompt -- confirmed 2026-06-07.
+def _prompt_builders() -> dict[str, Any]:
+    from carnot.eval.moat_scissor_regated import build_boosted_judge_prompt
+
+    return {"judge": build_judge_prompt, "boosted": build_boosted_judge_prompt}
 
 # The operator-approved local SOTA panel (model_name keys -> unsloth/<name>-GGUF).
 PANEL_MODELS: tuple[str, ...] = (
@@ -187,6 +202,73 @@ def _load_judge_generator(model_name: str, gguf_path: str) -> tuple[Any, dict[st
         return llm, meta
 
 
+def _run_judge_with_prompt(
+    items: Sequence[dict[str, object]],
+    *,
+    generator: object,
+    model_specs: dict[str, object],
+    max_tokens: int,
+    prompt_builder: Any,
+) -> dict[str, object]:
+    """Score items with an arbitrary judge prompt (mirrors exp3917's judge loop)."""
+
+    scores: list[float] = []
+    total_tokens = 0
+    for item in items:
+        prompt = prompt_builder(_step_text(item))
+        prompt_tokens = base._llama_token_count(generator, prompt, add_bos=True)
+        response = gguf_generate(generator, prompt, max_tokens=max_tokens).strip()
+        completion_tokens = base._llama_token_count(generator, response, add_bos=False)
+        scores.append(parse_self_verification_response(response).score)
+        total_tokens += prompt_tokens + completion_tokens
+    model_path = str(model_specs.get("gguf_path") or "")
+    params = int(
+        model_specs.get("parameter_count_for_flop_estimate") or model_params_for_path(model_path)
+    )
+    return {"scores": scores, "est_tokens": total_tokens, "est_flops": 2 * params * total_tokens}
+
+
+def _measure_costs_with_prompt(
+    items: Sequence[dict[str, object]],
+    *,
+    generator: object,
+    model_specs: dict[str, object],
+    max_tokens: int,
+    prompt_builder: Any,
+) -> base.CostMeasurements:
+    """Energy + custom-prompt judge through the exp3905 cost harness, same state."""
+
+    energy_scores: tuple[float, ...] = ()
+    llm_scores: tuple[float, ...] = ()
+
+    def measured_energy(rows: tuple[dict[str, object], ...]) -> dict[str, object]:
+        nonlocal energy_scores
+        result = dict(run_energy_verifier(rows))
+        energy_scores = tuple(float(s) for s in result["scores"])
+        return result
+
+    def measured_llm(rows: tuple[dict[str, object], ...]) -> dict[str, object]:
+        nonlocal llm_scores
+        result = _run_judge_with_prompt(
+            rows,
+            generator=generator,
+            model_specs=model_specs,
+            max_tokens=max_tokens,
+            prompt_builder=prompt_builder,
+        )
+        llm_scores = tuple(float(s) for s in result["scores"])
+        return result
+
+    energy_cost = measure_verification_cost(measured_energy, items, "energy_verifier")
+    llm_cost = measure_verification_cost(measured_llm, items, "llm_judge")
+    return base.CostMeasurements(
+        energy_cost=energy_cost,
+        llm_cost=llm_cost,
+        energy_scores=energy_scores,
+        llm_scores=llm_scores,
+    )
+
+
 def _score_one_model(
     model_name: str,
     gguf_path: str,
@@ -194,6 +276,7 @@ def _score_one_model(
     bundle: base.CorpusBundle,
     seed: int,
     bootstrap_resamples: int,
+    prompt_builder: Any,
 ) -> PanelModelResult:
     """Load one judge at the STRONG budget, score it + energy back-to-back."""
 
@@ -207,12 +290,14 @@ def _score_one_model(
             "max_tokens": BOOSTED_MAX_TOKENS,
             "parameter_count_for_flop_estimate": params,
         }
-        # Reuse the tested exp3917 coupled measurement: energy + judge, same state.
-        measured = base.measure_head_to_head_costs(
+        # Energy + judge measured back-to-back through the exp3905 cost harness,
+        # with the selected judge prompt (zero-shot "judge" or few-shot "boosted").
+        measured = _measure_costs_with_prompt(
             bundle.items,
             generator=generator,
             model_specs=model_specs,
             max_tokens=BOOSTED_MAX_TOKENS,
+            prompt_builder=prompt_builder,
         )
     finally:
         del generator
@@ -280,17 +365,27 @@ def run_panel(
     seed: int = DEFAULT_RANDOM_SEED,
     write: bool = True,
     output_path: Path | None = None,
+    prompt_style: str = "judge",
 ) -> dict[str, object]:
     """Run the boosted judge panel (or write a blocked artifact on failed gates)."""
 
     started = time.time()
+    builders = _prompt_builders()
+    if prompt_style not in builders:
+        raise ValueError(f"prompt_style must be one of {sorted(builders)}; got {prompt_style!r}")
+    prompt_builder = builders[prompt_style]
     config = base.ExperimentConfig(
         repo_root=REPO_ROOT,
         random_seed=seed,
         max_tokens=BOOSTED_MAX_TOKENS,
         n_ctx=BOOSTED_N_CTX,
     )
-    out_path = output_path or (REPO_ROOT / OUTPUT_REL_PATH)
+    default_out = REPO_ROOT / OUTPUT_REL_PATH
+    if prompt_style != "judge":
+        default_out = default_out.with_name(
+            f"experiment_efficiency_panel_boosted_{prompt_style}_draft.json"
+        )
+    out_path = output_path or default_out
     resamples = 200 if smoke else base.DEFAULT_BOOTSTRAP_RESAMPLES
 
     # --- PRECONDITIONS (check BEFORE any GGUF load) -------------------------
@@ -365,6 +460,7 @@ def run_panel(
                 bundle=bundle,
                 seed=seed,
                 bootstrap_resamples=resamples,
+                prompt_builder=prompt_builder,
             )
         )
 
@@ -381,6 +477,7 @@ def run_panel(
         "honest_verdict": verdict,
         "status": verdict,
         "smoke": smoke,
+        "prompt_style": prompt_style,
         "energy_auroc": real[0].energy_auroc if real else None,
         "max_judge_auroc": max((float(r.llm_judge_auroc) for r in real), default=None),
         "min_cost_ratio_walltime": min(
@@ -428,6 +525,12 @@ def cli_main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--seed", type=int, default=DEFAULT_RANDOM_SEED)
     parser.add_argument("--output-path", type=Path, default=None)
     parser.add_argument(
+        "--prompt-style",
+        choices=("judge", "boosted"),
+        default="judge",
+        help="judge=exp3917 zero-shot; boosted=exp3916 few-shot strongest-prompt baseline",
+    )
+    parser.add_argument(
         "--models", nargs="*", default=None, help="override panel model_name keys"
     )
     args = parser.parse_args(argv)
@@ -436,9 +539,10 @@ def cli_main(argv: Sequence[str] | None = None) -> int:
         smoke=args.smoke,
         seed=args.seed,
         output_path=args.output_path,
+        prompt_style=args.prompt_style,
         write=True,
     )
-    print(f"{OUTPUT_REL_PATH.name}: {artifact['honest_verdict']}")
+    print(f"panel[{args.prompt_style}]: {artifact['honest_verdict']}")
     return 0 if str(artifact["honest_verdict"]).startswith("complete:") else 1
 
 
