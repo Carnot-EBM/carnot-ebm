@@ -139,10 +139,11 @@ def _evaluate(refiner: torch.nn.Module, xev: torch.Tensor, yev: torch.Tensor, *,
 
 
 def _args(seed: int) -> SimpleNamespace:
-    # Minimal arg surface matching train_refiner_model's expectations (v4 defaults).
+    # Arg surface matching v4.train_refiner_model: hidden/layers/heads/n_cycles/
+    # lr/r_steps/batch/log_every.
     return SimpleNamespace(
-        hidden=256, layers=4, heads=4, cycles=8, refiner_steps=4000, lr=3e-4,
-        batch=128, seed=seed,
+        hidden=256, layers=4, heads=4, n_cycles=8, r_steps=4000, lr=3e-4,
+        batch=128, log_every=500, seed=seed,
     )
 
 
