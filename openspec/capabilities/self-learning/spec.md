@@ -11237,3 +11237,62 @@ headline.
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-3888 | Proposed (python/carnot/fr11/continuous_self_learning_v24.py; scripts/experiments/experiment_3888_fr11_v24_independence_reweighting.py, Exp 3888) | Proposed (tests/python/test_experiment_3888_fr11_v24_independence_reweighting.py) |
+
+---
+
+## REQ-LEARN-3921: FR-11 v25 Continues Persisted v24 Independence-Reweighting State
+
+**Given** the persisted Exp 3888 v24 independence-reweighting state,
+importable `carnot.verify`, and a fresh verification-corpus slice from
+`data/fover_corpus_v4.json` with `data/fover_corpus_v3.json` as fallback
+**When** Exp 3921 runs Tier-1 online independence-reweighting
+**Then** it SHALL load the v24 state, continue the cumulative per-verifier
+counters with CPU-only cached verifier-score updates, remeasure the learned
+ensemble AUROC on the frozen FoVer headline scoring path, and persist a v25
+state for the next milestone
+**And** it SHALL report whether the frozen CI-band AUROC, FR-11 memory
+ablation contribution, and frozen `0.9131` headline invariant all hold.
+
+### REQ-LEARN-3921 Sub-requirements
+
+- REQ-LEARN-3921-1: Preconditions SHALL require `import carnot.verify` to
+  succeed, the v24 state JSON to load, and at least one fresh verification
+  corpus (`fover_corpus_v4.json` preferred, `fover_corpus_v3.json` fallback) to
+  contain both FoVer label classes; missing resources SHALL produce an
+  `honest_verdict` beginning with `blocked_<resource>`.
+- REQ-LEARN-3921-2: The online update SHALL continue the v24 counters rather
+  than reinitializing them, and SHALL upweight verifiers that uniquely catch
+  gold-incorrect rows missed by all peer verifiers.
+- REQ-LEARN-3921-3: The artifact SHALL emit bare values, not `{value,
+  principle}` wrappers, for `learned_ensemble_auroc`,
+  `memory_ablation_contribution`, `frozen_headline_unchanged`,
+  `invariant_held`, `state_persisted_path`, `n_updates`,
+  `preconditions_checked`, `random_seed`, `reproducibility_checksum`,
+  `duration_s`, and `inference_substrate`, with separate field-principle text.
+- REQ-LEARN-3921-4: `invariant_held` SHALL be a bare boolean that is true
+  exactly when `learned_ensemble_auroc` lies inside the frozen CI
+  `[0.9027, 0.9235]`, `memory_ablation_contribution >= 0.012`, and
+  `frozen_headline_unchanged=true`.
+- REQ-LEARN-3921-5: The terminal verdict SHALL be
+  `complete: fr11_v25_INVARIANT_HELD_auroc<A>_memcontrib<M>_state_persisted`
+  when the invariant holds; otherwise it SHALL be
+  `complete: fr11_v25_INVARIANT_BROKEN_auroc<A>_memcontrib<M>_online_reweighting_drifts`.
+
+### SCENARIO-LEARN-3921: Fresh v25 Update Preserves Frozen Invariant
+
+**Given** a v24 persisted state with non-zero FR-11 session-memory weight and a
+fresh balanced FoVer verification-corpus slice
+**When** v25 loads the state, applies online independence updates, and
+evaluates the learned weights against the frozen headline corpus
+**Then** the resulting artifact reports a bare `invariant_held` value
+**And** the v25 state contains cumulative counters whose observed-example count
+exceeds the v24 state by `n_updates`
+**And** the honest verdict names either `INVARIANT_HELD` or
+`INVARIANT_BROKEN` rather than silently substituting the frozen `0.9131`
+headline.
+
+## Implementation Status (REQ-LEARN-3921)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-3921 | Implemented (python/carnot/fr11/continuous_self_learning_v25.py; scripts/experiments/experiment_3921_fr11_v25_independence_reweighting.py, Exp 3921) | Implemented (tests/python/test_experiment_3921_fr11_v25_independence_reweighting.py) |
