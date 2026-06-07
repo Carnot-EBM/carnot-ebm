@@ -117,7 +117,18 @@ def _self_distill(
 ) -> torch.nn.Module:
     """STaR-style self-distillation; target chosen by ENERGY or GOLD."""
 
+    # v2 fixes (the v1 collapse was a HARNESS bug -- the gold control also fell):
+    #  1. DEEP-SUPERVISION-preserving loss (sum CE over the recurrent cycle outputs,
+    #     exactly how train_refiner_model trains the refiner). v1 used a single
+    #     forward, which degraded the recurrent model regardless of selector.
+    #  2. ANTI-FORGETTING ANCHOR (no gold): for non-certified puzzles, the target is
+    #     the FROZEN BASE's own greedy output, so the model is held to what it already
+    #     knew on the ~95% it cannot yet certify, and only MOVES on certified puzzles.
+    #  3. Higher K raises the certified yield. None of this leaks gold into the energy
+    #     arm -- the anchor is the base model, not the labels.
     model = copy.deepcopy(refiner)
+    frozen = refiner  # the base BEFORE distillation; the anti-forgetting anchor
+    frozen.eval()
     model.train()
     opt = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=0.01, betas=(0.9, 0.95))
     n = xtr.shape[0]
@@ -128,26 +139,25 @@ def _self_distill(
         xb = xtr[idx]
         B = xb.shape[0]
         if selector == "gold":
-            # UPPER BOUND: supervised fine-tune on the true solution (every puzzle).
+            # UPPER BOUND: deep-supervised SFT on the true solution (every puzzle).
             target = ytr_digits[idx]  # (B,81)
-            mask = torch.ones(B, dtype=torch.bool, device=device)
+            yields.append(1.0)
         else:
-            # ENERGY-AS-TEACHER, done right (RFT/STaR): generate K, keep ONLY the
-            # samples the perfect verifier CERTIFIES as 0-violation (= correct, since
-            # a valid givens-consistent Sudoku is unique). Skip puzzles with no
-            # certified sample -- NEVER imitate a wrong-but-low-violation grid (that
-            # soft-argmin mode is what collapsed the model in the smoke). NO gold used.
+            # ENERGY-AS-TEACHER (RFT): certified-correct self-samples where available,
+            # frozen-base anchor elsewhere. NO gold.
             with torch.no_grad():
                 samples = refiner_samples(model, xb, K, temp)  # (B,K,81) digit classes
-            viol = sudoku_violations(samples.reshape(B * K, SEQ)).reshape(B, K)  # (B,K)
-            min_viol, best = viol.min(1)  # (B,), (B,)
-            target = samples[torch.arange(B, device=device), best]  # (B,81) best sample
-            mask = min_viol == 0  # only puzzles with a verifier-CERTIFIED correct sample
-        yields.append(float(mask.float().mean().item()))
-        if int(mask.sum().item()) == 0:
-            continue  # no certified data this batch -- do not train on garbage
-        logits = model(xb)[mask]  # (M,81,9)
-        loss = F.cross_entropy(logits.reshape(-1, N_DIGITS), target[mask].reshape(-1))
+                viol = sudoku_violations(samples.reshape(B * K, SEQ)).reshape(B, K)
+                min_viol, best = viol.min(1)  # (B,), (B,)
+                cert = samples[torch.arange(B, device=device), best]  # (B,81) best sample
+                certified = min_viol == 0  # verifier-CERTIFIED correct (unique solution)
+                anchor = frozen(xb).argmax(-1)  # (B,81) base behaviour (anti-forgetting)
+            target = torch.where(certified[:, None], cert, anchor)
+            yields.append(float(certified.float().mean().item()))
+        outs = model(xb, deep_supervision=True)  # list of (B,81,9), one per cycle
+        loss = sum(
+            F.cross_entropy(o.reshape(-1, N_DIGITS), target.reshape(-1)) for o in outs
+        ) / len(outs)
         opt.zero_grad()
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
