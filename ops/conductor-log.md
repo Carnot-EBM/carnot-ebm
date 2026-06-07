@@ -7961,3 +7961,5 @@ ERROR: {
 | 2026-06-07 03:20 UTC | GateMate A1-EVB-2M terminal-state confirmation — r | OK | 90 passed in 5.03s |
 | 2026-06-07 03:31 UTC | PolarFire + KV260 consolidated opportunistic conti | OK | 87 passed in 5.57s |
 | 2026-06-07 03:45 UTC | Capstone .360 — aggregate the harness-first verdic | OK | 87 passed in 4.89s |
+| 2026-06-07 04:19 UTC | Plan milestone 2026.06.361 | OK | 11 tasks proposed |
+| 2026-06-07 04:21 UTC | Milestone 2026.06.361 activated | OK | 11 tasks queued |
