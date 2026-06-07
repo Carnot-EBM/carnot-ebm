@@ -73,3 +73,39 @@ win; the rest is allocation discipline the rules already encode but don't measur
 `#5 v1/v2/v3` are CPU-only analysis drafts (observe-only; not conductor-wired). The
 artifact (`results/experiment_meta_verifier_selection_draft.json`) carries the full
 breakdown. Wiring any of the three signals into the conductor is an operator decision.
+
+---
+
+# #2 (facts transpilation) — DEFERRED as a future new-architecture proposal, not run
+
+**Status at 2026-06-07:** the conductor RETIRED the facts line this session
+(`results/experiment_3924_archive_v362_activate_v363_retire_facts.json`), after the
+"last retry" (`experiment_3920_facts_graph_grounding_last_retry.json`) came back
+`blocked_llama_cpp_inference_failed` (flagged CRITICAL). The standing
+`verifier-domain-bound-math-only` position is that facts is an EARNED NEGATIVE — the
+verifier is a reasoning/math verifier, not a general fact-checker — and that it
+should NOT be re-tested "without a new architecture."
+
+**Why #2 is not launched now.** The originally-proposed #2 (de-flag the graph-
+grounding harness + decompose-then-verify on RAGTruth) would (a) rerun a line the
+conductor just retired, (b) hit the same recurring llama_cpp inference infra wall,
+and (c) re-test a domain-bound conclusion without clearing the memory's "new
+architecture" bar. Per Failed-Experiment-Rerun discipline, that is a doomed rerun.
+
+**The transpilation idea, captured as the candidate NEW ARCHITECTURE** (the only
+defensible way to revisit facts). The insight (from the BES corroboration,
+[[bes-bidirectional-evolutionary-search]]): do not extend the verifier TO facts —
+**transpile facts INTO the verifier's strong domain.** A soft factual claim is
+decomposed into checkable sub-assertions (entity-relation triples, quantity/logic
+constraints), each of which the already-strong math/logic verifier CAN check, then
+recomposed. This is BES's "recursive decomposition into checkable sub-goals" applied
+to fact-verification. It is architecturally DIFFERENT from the retired direct-fact-
+verification (graph-grounding scored claims directly); it routes facts through the
+verifier's competence rather than asking the verifier to generalize.
+
+**Preconditions before any run** (so it is not a doomed rerun): (1) fix the recurring
+llama_cpp inference infra failure that blocked exp3920/exp3896 (a PRECONDITIONS gate
+that actually loads the model first); (2) frame it explicitly as decompose-then-verify
+with the direct-graph-grounding result as the baseline-to-beat; (3) a falsifiable
+gate (decompose-then-verify > direct on RAGTruth, non-degenerate, real >=60s run).
+Until then, facts stays retired and this is a documented forward proposal, not work.
