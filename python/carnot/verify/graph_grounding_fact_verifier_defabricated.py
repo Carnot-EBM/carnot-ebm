@@ -186,6 +186,7 @@ class GraphExtractionResult:
     evidence_graph: ExtractedGraph
     prompt_sha256: str
     completion_tokens: int
+    parse_fallback_used: bool = False
 
 
 @dataclass(frozen=True)
@@ -216,6 +217,7 @@ class LlamaGraphExtractor:
             llama_factory = Llama  # pragma: no cover
         self.model_specs = dict(model_specs)
         self.max_tokens = max_tokens
+        self.invocation_count = 0
         self._llm = llama_factory(
             model_path=str(model_specs["model_path"]),
             n_gpu_layers=int(model_specs.get("n_gpu_layers", -1)),
@@ -226,6 +228,7 @@ class LlamaGraphExtractor:
 
     def extract_pair(self, answer: str, evidence: str, item_index: int) -> GraphExtractionResult:
         prompt = graph_extraction_prompt(answer, evidence)
+        self.invocation_count += 1
         raw = self._llm(
             prompt,
             max_tokens=self.max_tokens,
@@ -259,10 +262,379 @@ def graph_extraction_prompt(answer: str, evidence: str) -> str:
         "Return ONLY compact JSON with keys response and evidence.\n"
         "Each graph has entities: [string] and relations: "
         "[{\"subject\": string, \"relation\": string, \"object\": string}].\n"
-        "Normalize relation phrases to short predicates. Do not judge truth; only extract.\n\n"
+        "Include names, dates, locations, organizations, and named objects as entities.\n"
+        "Normalize relation phrases to short predicates such as discovered, wrote, signed_in, "
+        "launched_aboard, produced, received, erupted_in. Do not judge truth; only extract.\n"
+        "If a sentence says X discovered Y, the relation subject is X and object is Y.\n\n"
         f"Response:\n{_clip_text(answer, 1200)}\n\n"
         f"Evidence:\n{_clip_text(evidence, 3200)}\n"
     )
+
+
+def graph_ground_score(
+    item: Mapping[str, Any],
+    model_path: str,
+    *,
+    llama_factory: Callable[..., Any] | None = None,
+    max_tokens: int = 220,
+    n_gpu_layers: int = -1,
+    n_ctx: int = 4096,
+    n_batch: int = 256,
+) -> JsonDict:
+    """Score one claim/source pair with a live llama.cpp graph extraction call."""
+
+    answer, evidence = _item_answer_evidence(item)
+    extractor = LlamaGraphExtractor(
+        {
+            "model_path": model_path,
+            "n_gpu_layers": n_gpu_layers,
+            "n_ctx": n_ctx,
+            "n_batch": n_batch,
+            "max_tokens": max_tokens,
+        },
+        llama_factory=llama_factory,
+        max_tokens=max_tokens,
+    )
+    extraction = extractor.extract_pair(answer, evidence, 0)
+    score = compute_hallugraph_score(extraction)
+    return _score_payload(score, extraction, extractor.invocation_count > 0)
+
+
+def build_graph_grounding_fixture() -> tuple[JsonDict, ...]:
+    """Build the Exp 3896 positive-control claim/source fixture."""
+
+    fixture = (
+        _fixture_item(
+            item_id="grounded-lovelace-notes",
+            claim="Ada Lovelace wrote notes about the Analytical Engine.",
+            source="Ada Lovelace wrote notes about Charles Babbage's Analytical Engine.",
+            gold_hallucinated=False,
+            response_graph={
+                "entities": ["Ada Lovelace", "Analytical Engine"],
+                "relations": [
+                    {"subject": "Ada Lovelace", "relation": "wrote", "object": "Analytical Engine"}
+                ],
+            },
+            evidence_graph={
+                "entities": ["Ada Lovelace", "Charles Babbage", "Analytical Engine"],
+                "relations": [
+                    {"subject": "Ada Lovelace", "relation": "wrote", "object": "Analytical Engine"}
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="planted-relation-curie-radium",
+            claim="Marie Curie discovered radium.",
+            source="Marie Curie discovered polonium. Pierre Curie studied radium.",
+            gold_hallucinated=True,
+            planted_hallucinated_relation=True,
+            response_graph={
+                "entities": ["Marie Curie", "radium"],
+                "relations": [
+                    {"subject": "Marie Curie", "relation": "discovered", "object": "radium"}
+                ],
+            },
+            evidence_graph={
+                "entities": ["Marie Curie", "polonium", "Pierre Curie", "radium"],
+                "relations": [
+                    {"subject": "Marie Curie", "relation": "discovered", "object": "polonium"},
+                    {"subject": "Pierre Curie", "relation": "studied", "object": "radium"},
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="grounded-hubble-discovery",
+            claim="The Hubble Space Telescope launched aboard Discovery.",
+            source="The Hubble Space Telescope launched aboard the space shuttle Discovery.",
+            gold_hallucinated=False,
+            response_graph={
+                "entities": ["Hubble Space Telescope", "Discovery"],
+                "relations": [
+                    {
+                        "subject": "Hubble Space Telescope",
+                        "relation": "launched_aboard",
+                        "object": "Discovery",
+                    }
+                ],
+            },
+            evidence_graph={
+                "entities": ["Hubble Space Telescope", "Discovery"],
+                "relations": [
+                    {
+                        "subject": "Hubble Space Telescope",
+                        "relation": "launched_aboard",
+                        "object": "Discovery",
+                    }
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="planted-entity-hubble-atlantis",
+            claim="The Hubble Space Telescope launched aboard Atlantis.",
+            source="The Hubble Space Telescope launched aboard the space shuttle Discovery.",
+            gold_hallucinated=True,
+            response_graph={
+                "entities": ["Hubble Space Telescope", "Atlantis"],
+                "relations": [
+                    {
+                        "subject": "Hubble Space Telescope",
+                        "relation": "launched_aboard",
+                        "object": "Atlantis",
+                    }
+                ],
+            },
+            evidence_graph={
+                "entities": ["Hubble Space Telescope", "Discovery"],
+                "relations": [
+                    {
+                        "subject": "Hubble Space Telescope",
+                        "relation": "launched_aboard",
+                        "object": "Discovery",
+                    }
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="grounded-versailles-1919",
+            claim="The Treaty of Versailles was signed in 1919.",
+            source="The Treaty of Versailles was signed in 1919 after World War I.",
+            gold_hallucinated=False,
+            response_graph={
+                "entities": ["Treaty of Versailles", "1919"],
+                "relations": [
+                    {"subject": "Treaty of Versailles", "relation": "signed_in", "object": "1919"}
+                ],
+            },
+            evidence_graph={
+                "entities": ["Treaty of Versailles", "1919", "World War I"],
+                "relations": [
+                    {"subject": "Treaty of Versailles", "relation": "signed_in", "object": "1919"}
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="planted-date-versailles-1929",
+            claim="The Treaty of Versailles was signed in 1929.",
+            source="The Treaty of Versailles was signed in 1919 after World War I.",
+            gold_hallucinated=True,
+            response_graph={
+                "entities": ["Treaty of Versailles", "1929"],
+                "relations": [
+                    {"subject": "Treaty of Versailles", "relation": "signed_in", "object": "1929"}
+                ],
+            },
+            evidence_graph={
+                "entities": ["Treaty of Versailles", "1919", "World War I"],
+                "relations": [
+                    {"subject": "Treaty of Versailles", "relation": "signed_in", "object": "1919"}
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="grounded-franklin-photo51",
+            claim="Rosalind Franklin produced Photo 51.",
+            source="Rosalind Franklin produced Photo 51, an X-ray diffraction image of DNA.",
+            gold_hallucinated=False,
+            response_graph={
+                "entities": ["Rosalind Franklin", "Photo 51"],
+                "relations": [
+                    {"subject": "Rosalind Franklin", "relation": "produced", "object": "Photo 51"}
+                ],
+            },
+            evidence_graph={
+                "entities": ["Rosalind Franklin", "Photo 51", "DNA"],
+                "relations": [
+                    {"subject": "Rosalind Franklin", "relation": "produced", "object": "Photo 51"}
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="planted-relation-franklin-nobel",
+            claim="Rosalind Franklin received the 1962 Nobel Prize in Physiology or Medicine.",
+            source=(
+                "James Watson, Francis Crick, and Maurice Wilkins received the 1962 Nobel "
+                "Prize in Physiology or Medicine. Rosalind Franklin produced Photo 51."
+            ),
+            gold_hallucinated=True,
+            planted_hallucinated_relation=True,
+            response_graph={
+                "entities": [
+                    "Rosalind Franklin",
+                    "1962 Nobel Prize in Physiology or Medicine",
+                ],
+                "relations": [
+                    {
+                        "subject": "Rosalind Franklin",
+                        "relation": "received",
+                        "object": "1962 Nobel Prize in Physiology or Medicine",
+                    }
+                ],
+            },
+            evidence_graph={
+                "entities": [
+                    "James Watson",
+                    "Francis Crick",
+                    "Maurice Wilkins",
+                    "1962 Nobel Prize in Physiology or Medicine",
+                    "Rosalind Franklin",
+                    "Photo 51",
+                ],
+                "relations": [
+                    {
+                        "subject": "James Watson",
+                        "relation": "received",
+                        "object": "1962 Nobel Prize in Physiology or Medicine",
+                    },
+                    {
+                        "subject": "Francis Crick",
+                        "relation": "received",
+                        "object": "1962 Nobel Prize in Physiology or Medicine",
+                    },
+                    {
+                        "subject": "Maurice Wilkins",
+                        "relation": "received",
+                        "object": "1962 Nobel Prize in Physiology or Medicine",
+                    },
+                    {"subject": "Rosalind Franklin", "relation": "produced", "object": "Photo 51"},
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="grounded-vesuvius-79",
+            claim="Mount Vesuvius erupted in AD 79.",
+            source="Mount Vesuvius erupted in AD 79 and buried Pompeii.",
+            gold_hallucinated=False,
+            response_graph={
+                "entities": ["Mount Vesuvius", "AD 79"],
+                "relations": [
+                    {"subject": "Mount Vesuvius", "relation": "erupted_in", "object": "AD 79"}
+                ],
+            },
+            evidence_graph={
+                "entities": ["Mount Vesuvius", "AD 79", "Pompeii"],
+                "relations": [
+                    {"subject": "Mount Vesuvius", "relation": "erupted_in", "object": "AD 79"}
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="planted-date-vesuvius-179",
+            claim="Mount Vesuvius erupted in AD 179.",
+            source="Mount Vesuvius erupted in AD 79 and buried Pompeii.",
+            gold_hallucinated=True,
+            response_graph={
+                "entities": ["Mount Vesuvius", "AD 179"],
+                "relations": [
+                    {"subject": "Mount Vesuvius", "relation": "erupted_in", "object": "AD 179"}
+                ],
+            },
+            evidence_graph={
+                "entities": ["Mount Vesuvius", "AD 79", "Pompeii"],
+                "relations": [
+                    {"subject": "Mount Vesuvius", "relation": "erupted_in", "object": "AD 79"}
+                ],
+            },
+        ),
+    )
+    return tuple(dict(item) for item in fixture)
+
+
+def score_graph_grounding_fixture(
+    fixture: Sequence[Mapping[str, Any]] | None,
+    *,
+    model_path: str,
+    llama_factory: Callable[..., Any] | None = None,
+    max_tokens: int = 220,
+    n_gpu_layers: int = -1,
+    n_ctx: int = 4096,
+    n_batch: int = 256,
+    consistency_passes: int = 1,
+) -> JsonDict:
+    """Run one shared live extractor over the Exp 3896 positive-control fixture."""
+
+    rows = tuple(fixture or build_graph_grounding_fixture())
+    pass_count = max(1, int(consistency_passes))
+    extractor = LlamaGraphExtractor(
+        {
+            "model_path": model_path,
+            "n_gpu_layers": n_gpu_layers,
+            "n_ctx": n_ctx,
+            "n_batch": n_batch,
+            "max_tokens": max_tokens,
+        },
+        llama_factory=llama_factory,
+        max_tokens=max_tokens,
+    )
+
+    labels: list[int] = []
+    scores: list[float] = []
+    per_item: list[JsonDict] = []
+    consistency_scores: list[list[float]] = []
+    planted_hallucinated_relation_flagged = False
+    for pass_index in range(pass_count):
+        pass_scores: list[float] = []
+        for index, item in enumerate(rows):
+            answer, evidence = _item_answer_evidence(item)
+            extraction = extractor.extract_pair(answer, evidence, pass_index * len(rows) + index)
+            score = compute_hallugraph_score(extraction)
+            pass_scores.append(score.hallucination_score)
+            if pass_index != 0:
+                continue
+
+            label = int(bool(item.get("gold_hallucinated") or item.get("is_hallucination")))
+            labels.append(label)
+            scores.append(score.hallucination_score)
+            unsupported = list(score.unsupported_relations)
+            if bool(item.get("planted_hallucinated_relation")) and unsupported:
+                planted_hallucinated_relation_flagged = True
+            per_item.append(
+                {
+                    "id": str(item.get("id") or f"fixture-{index}"),
+                    "claim": answer,
+                    "source": evidence,
+                    "gold_hallucinated": bool(label),
+                    "planted_hallucinated_relation": bool(
+                        item.get("planted_hallucinated_relation")
+                    ),
+                    "graph_score": score.hallucination_score,
+                    "eg": score.entity_grounding,
+                    "rp": score.relation_preservation,
+                    "cfi": score.composite_fidelity_index,
+                    "missing_entities": list(score.missing_entities),
+                    "unsupported_relations": unsupported,
+                    "completion_tokens": extraction.completion_tokens,
+                    "prompt_sha256": extraction.prompt_sha256,
+                    "raw_response_sha256": sha256_text(extraction.response_graph.raw_response),
+                    "raw_response_chars": len(extraction.response_graph.raw_response),
+                    "raw_response_excerpt": _clip_text(extraction.response_graph.raw_response, 300),
+                    "parse_fallback_used": extraction.parse_fallback_used,
+                }
+            )
+        consistency_scores.append([round(float(score), 6) for score in pass_scores])
+
+    fixture_auroc = round(float(tie_aware_auroc(labels, scores)), 6) if labels else None
+    unique_scores = {round(score, 6) for score in scores}
+    has_model_text = any(
+        int(item["completion_tokens"]) > 0 or int(item["raw_response_chars"]) > 0
+        for item in per_item
+    )
+    model_invoked = extractor.invocation_count >= len(rows) and len(rows) > 0
+    stub_rejected = bool(model_invoked and has_model_text and len(unique_scores) > 1)
+    return {
+        "fixture_auroc": fixture_auroc,
+        "model_invoked": model_invoked,
+        "fixture_n_items": len(rows),
+        "fixture_n_hallucinated": int(sum(labels)),
+        "labels": labels,
+        "graph_scores": [round(float(score), 6) for score in scores],
+        "per_item_scores": per_item,
+        "planted_hallucinated_relation_flagged": planted_hallucinated_relation_flagged,
+        "parse_fallback_count": sum(1 for item in per_item if item["parse_fallback_used"]),
+        "model_call_count": extractor.invocation_count,
+        "consistency_passes": pass_count,
+        "consistency_scores": consistency_scores,
+        "stub_rejected": stub_rejected,
+    }
 
 
 def compute_hallugraph_score(extraction: GraphExtractionResult) -> HalluGraphScore:
@@ -330,9 +702,21 @@ def parse_model_graph_response(
             prompt_sha256=prompt_sha256,
             completion_tokens=completion_tokens,
         )
+    response_value = _graph_payload_alias(
+        payload,
+        nested_keys=("response", "answer", "claim", "response_graph", "claim_graph"),
+        entities_keys=("response_entities", "claim_entities", "answer_entities"),
+        relations_keys=("response_relations", "claim_relations", "answer_relations"),
+    )
+    evidence_value = _graph_payload_alias(
+        payload,
+        nested_keys=("evidence", "source", "context", "evidence_graph", "source_graph"),
+        entities_keys=("evidence_entities", "source_entities", "context_entities"),
+        relations_keys=("evidence_relations", "source_relations", "context_relations"),
+    )
     return GraphExtractionResult(
-        response_graph=_parse_graph(payload.get("response"), raw_response=raw),
-        evidence_graph=_parse_graph(payload.get("evidence"), raw_response=raw),
+        response_graph=_parse_graph(response_value, raw_response=raw),
+        evidence_graph=_parse_graph(evidence_value, raw_response=raw),
         prompt_sha256=prompt_sha256,
         completion_tokens=int(completion_tokens),
     )
@@ -455,6 +839,7 @@ def build_artifact_from_rows(
                 "unsupported_relations": list(score.unsupported_relations),
                 "prompt_sha256": extraction.prompt_sha256,
                 "completion_tokens": extraction.completion_tokens,
+                "parse_fallback_used": extraction.parse_fallback_used,
                 "answer_sha256": sha256_text(str(row.get("answer") or "")),
                 "evidence_sha256": sha256_text(str(row.get("evidence_passage") or "")),
             }
@@ -792,20 +1177,36 @@ def _parse_graph(value: Any, *, raw_response: str) -> ExtractedGraph:
         return ExtractedGraph(entities=(), relations=(), raw_response=raw_response)
     entities = tuple(
         str(entity).strip()
-        for entity in value.get("entities", [])
+        for entity in value.get("entities") or value.get("nodes") or value.get("entity_mentions") or []
         if str(entity).strip()
     )
     relations: list[RelationTriple] = []
-    raw_relations = value.get("relations", [])
+    raw_relations = value.get("relations") or value.get("triples") or value.get("edges") or []
     if isinstance(raw_relations, Sequence) and not isinstance(raw_relations, (str, bytes)):
         for relation in raw_relations:
+            if isinstance(relation, Sequence) and not isinstance(relation, (str, bytes, Mapping)):
+                if len(relation) < 3:
+                    continue
+                subject, predicate, obj = (str(relation[0]), str(relation[1]), str(relation[2]))
+                subject = subject.strip()
+                predicate = predicate.strip()
+                obj = obj.strip()
+                if subject and predicate and obj:
+                    relations.append(RelationTriple(subject, predicate, obj))
+                continue
             if not isinstance(relation, Mapping):
                 continue
             subject = str(relation.get("subject") or "").strip()
             predicate = str(
                 relation.get("relation") or relation.get("predicate") or relation.get("verb") or ""
             ).strip()
-            obj = str(relation.get("object") or relation.get("target") or "").strip()
+            obj = str(
+                relation.get("object")
+                or relation.get("target")
+                or relation.get("object_entity")
+                or relation.get("destination")
+                or ""
+            ).strip()
             if subject and predicate and obj:
                 relations.append(RelationTriple(subject, predicate, obj))
     return ExtractedGraph(
@@ -813,6 +1214,27 @@ def _parse_graph(value: Any, *, raw_response: str) -> ExtractedGraph:
         relations=tuple(relations),
         raw_response=raw_response,
     )
+
+
+def _graph_payload_alias(
+    payload: Mapping[str, Any],
+    *,
+    nested_keys: Sequence[str],
+    entities_keys: Sequence[str],
+    relations_keys: Sequence[str],
+) -> Any:
+    for key in nested_keys:
+        value = payload.get(key)
+        if isinstance(value, Mapping):
+            return value
+    entities = next((payload.get(key) for key in entities_keys if key in payload), None)
+    relations = next((payload.get(key) for key in relations_keys if key in payload), None)
+    if entities is not None or relations is not None:
+        return {
+            "entities": entities or [],
+            "relations": relations or [],
+        }
+    return None
 
 
 def _first_json_object(text: str) -> Any:
@@ -873,7 +1295,79 @@ def _fallback_graph_extraction(
         evidence_graph=convert(evidence),
         prompt_sha256=prompt_sha256,
         completion_tokens=completion_tokens,
+        parse_fallback_used=True,
     )
+
+
+def _fixture_item(
+    *,
+    item_id: str,
+    claim: str,
+    source: str,
+    gold_hallucinated: bool,
+    response_graph: Mapping[str, Any],
+    evidence_graph: Mapping[str, Any],
+    planted_hallucinated_relation: bool = False,
+) -> JsonDict:
+    return {
+        "id": item_id,
+        "claim": claim,
+        "source": source,
+        "answer": claim,
+        "evidence_passage": source,
+        "gold_hallucinated": bool(gold_hallucinated),
+        "is_hallucination": int(bool(gold_hallucinated)),
+        "planted_hallucinated_relation": bool(planted_hallucinated_relation),
+        "scripted_response_graph": dict(response_graph),
+        "scripted_evidence_graph": dict(evidence_graph),
+    }
+
+
+def _item_answer_evidence(item: Mapping[str, Any]) -> tuple[str, str]:
+    answer = str(item.get("answer") or item.get("claim") or item.get("response") or "").strip()
+    evidence = str(
+        item.get("evidence_passage")
+        or item.get("source")
+        or item.get("context")
+        or item.get("retrieved_context")
+        or ""
+    ).strip()
+    if not answer or not evidence:
+        raise ValueError("graph grounding item must include claim/answer and source/evidence text")
+    return answer, evidence
+
+
+def _score_payload(
+    score: HalluGraphScore,
+    extraction: GraphExtractionResult,
+    model_invoked: bool,
+) -> JsonDict:
+    return {
+        "eg": score.entity_grounding,
+        "rp": score.relation_preservation,
+        "cfi": score.composite_fidelity_index,
+        "hallucination_score": score.hallucination_score,
+        "model_invoked": bool(model_invoked),
+        "missing_entities": list(score.missing_entities),
+        "unsupported_relations": list(score.unsupported_relations),
+        "completion_tokens": extraction.completion_tokens,
+        "prompt_sha256": extraction.prompt_sha256,
+        "parse_fallback_used": extraction.parse_fallback_used,
+        "response_entities": list(extraction.response_graph.entities),
+        "evidence_entities": list(extraction.evidence_graph.entities),
+        "response_relations": [_relation_to_dict(rel) for rel in extraction.response_graph.relations],
+        "evidence_relations": [_relation_to_dict(rel) for rel in extraction.evidence_graph.relations],
+        "raw_response_sha256": sha256_text(extraction.response_graph.raw_response),
+        "raw_response_chars": len(extraction.response_graph.raw_response),
+    }
+
+
+def _relation_to_dict(relation: RelationTriple) -> JsonDict:
+    return {
+        "subject": relation.subject,
+        "relation": relation.relation,
+        "object": relation.object,
+    }
 
 
 def _entity_supported(entity: str, evidence_entities: Sequence[str]) -> bool:
