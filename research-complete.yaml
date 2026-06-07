@@ -36360,3 +36360,57 @@ milestones:
       \ unchanged."
     deliverable: results/experiment_3913_capstone_v361.json
     result: OK (conductor)
+- id: 2026.06.361
+  correction_type: v361_poison_test_cascade_archive_activation
+  title: 'Archive .361 wash and activate .362 with poison-test quarantine'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-07'
+  finding: '.361 was an infra wash, not a verifier science negative: Exp 3903 completed the archive/activation record, Exp 3904 blocked on blocked_llama_cpp_inference_failed, and Exp 3905 shipped a fixture duration-floor poison test that made the conductor pre-test report 1 failed, 105 passed and skip-cascade Exp 3906 through Exp 3913. .362 is active with the poison test quarantined.'
+  activation_recorded: exp3914-archive-v361-activate-v362-quarantine-poison-test
+  n361_wash_root_causes: 'poison-test cascade from exp3905 fixture duration floor plus blocked_llama_cpp_inference_failed in exp3904'
+  backend_routing_recommendation: 'codex reliable; standing gemini<->codex flip authority dated 2026-06-05 remains active for auditable backend routing'
+  tasks:
+  - id: exp3903-archive-v360-activate-v361-green-gate
+    title: 'Archive .360 and activate .361 green gates'
+    deliverable: results/experiment_3903_archive_v360_activate_v361.json
+    result: 'complete: archived_v360_harness_first_v361_active_green_gates_asserted_reasoner_import_ok_codex_backend_recommended'
+  - id: exp3904-moat-scissor-regated-accuracy-axis
+    title: 'Moat scissor re-gated accuracy axis'
+    deliverable: results/experiment_3904_moat_scissor_regated.json
+    result: 'blocked_llama_cpp_inference_failed'
+  - id: exp3905-build-test-cost-instrumented-verify-harness
+    title: 'Build and test cost-instrumented verification harness'
+    deliverable: results/experiment_3905_cost_instrumented_verify_harness.json
+    result: 'complete: cost_harness_NOT_READY_ratio30881.00_unit_testFalse [summarize_artifact LIVE_CRITICAL]; DURATION_TOO_SHORT poison-test cascade root cause: 10-row fixture duration floor made the conductor pre-test report 1 failed, 105 passed'
+  - id: exp3906-efficiency-head-to-head
+    title: 'Energy verifier versus LLM judge efficiency head-to-head'
+    deliverable: results/experiment_3906_efficiency_head_to_head.json
+    result: 'SKIP: poison-test cascade from exp3905; exp3906 was SKIP-cascaded by exp3905 poison-test pre-test failure (1 failed, 105 passed)'
+  - id: exp3907-meta-ebm-cascade-router-prototype
+    title: 'Meta-EBM cascade router prototype'
+    deliverable: results/experiment_3907_cascade_router_prototype.json
+    result: 'SKIP: poison-test cascade from exp3905; exp3907 was SKIP-cascaded by exp3905 poison-test pre-test failure (1 failed, 105 passed)'
+  - id: exp3908-arc-agi3-harness-scaffold-build-test
+    title: 'ARC-AGI-3 verifier-first harness scaffold'
+    deliverable: results/experiment_3908_arc_agi3_harness_scaffold.json
+    result: 'SKIP: poison-test cascade from exp3905; exp3908 was SKIP-cascaded by exp3905 poison-test pre-test failure (1 failed, 105 passed)'
+  - id: exp3909-facts-graph-grounding-harness-disciplined-retry
+    title: 'Facts graph-grounding verifier disciplined retry'
+    deliverable: results/experiment_3909_facts_graph_grounding_retry.json
+    result: 'SKIP: poison-test cascade from exp3905; exp3909 was SKIP-cascaded by exp3905 poison-test pre-test failure (1 failed, 105 passed)'
+  - id: exp3910-fr11-v25-online-independence-reweighting
+    title: 'FR-11 v25 online independence reweighting'
+    deliverable: results/experiment_3910_fr11_v25_independence_reweighting.json
+    result: 'SKIP: poison-test cascade from exp3905; exp3910 was SKIP-cascaded by exp3905 poison-test pre-test failure (1 failed, 105 passed)'
+  - id: exp3911-gatemate-terminal-confirmation
+    title: 'GateMate terminal-state confirmation'
+    deliverable: results/experiment_3911_gatemate_terminal_confirmation.json
+    result: 'SKIP: poison-test cascade from exp3905; exp3911 was SKIP-cascaded by exp3905 poison-test pre-test failure (1 failed, 105 passed)'
+  - id: exp3912-polarfire-kv260-consolidated-continuity
+    title: 'PolarFire and KV260 consolidated continuity'
+    deliverable: results/experiment_3912_polarfire_kv260_continuity.json
+    result: 'SKIP: poison-test cascade from exp3905; exp3912 was SKIP-cascaded by exp3905 poison-test pre-test failure (1 failed, 105 passed)'
+  - id: exp3913-capstone-v361
+    title: 'Capstone .361 verifier scorecard'
+    deliverable: results/experiment_3913_capstone_v361.json
+    result: 'SKIP: poison-test cascade from exp3905; exp3913 was SKIP-cascaded by exp3905 poison-test pre-test failure (1 failed, 105 passed)'

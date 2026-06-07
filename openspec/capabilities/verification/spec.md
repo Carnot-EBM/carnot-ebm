@@ -11026,6 +11026,13 @@ only when `unit_test_passed=true`, `fixture_cost_ratio > 1`, and
 resources SHALL write a terminal `blocked_<resource>` artifact with
 precondition evidence and no fabricated fixture-cost metrics.
 
+The 60-second duration floor belongs to the live Exp 3905 artifact gate and to
+full-corpus downstream science runs. Unit tests that run the bounded cost
+fixture of 12 or fewer rows SHALL assert correctness and accounting evidence
+only: both verifier paths run, item counts match, per-item costs are positive
+and distinct, and `fixture_cost_ratio > 1` when live fixture evidence is
+available. Such fixture tests SHALL NOT fail solely because `duration_s < 60`.
+
 ### SCENARIO-VERIFY-3905: Fixture Measures LLM Judge Versus Energy Verifier Cost
 
 Given CUDA, `carnot.verify`, `llama_cpp`, and a cached SOTA GGUF are available,
@@ -11034,7 +11041,8 @@ it writes `results/experiment_3905_cost_instrumented_verify_harness.json`,
 records positive and distinct per-item wall-clock costs, records a cost ratio
 greater than one, records actual LLM prompt plus completion tokens, records
 energy-verifier forward-pass operations, records `duration_s >= 60`, and emits
-the HARNESS_READY terminal verdict only if the unit test passed.
+the HARNESS_READY terminal verdict only if the unit test passed. Fixture-scope
+unit tests SHALL not assert that 60-second floor on the 10-row fixture.
 
 ### SCENARIO-VERIFY-3905-BLOCKED: Missing Live Resources Do Not Fabricate Cost Metrics
 
@@ -11048,7 +11056,7 @@ fixture-cost metrics, `unit_test_passed=false`, and no live-model cost claim.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-VERIFY-3905 | Planned (`python/carnot/verify/cost_instrumented_verification.py`, `scripts/experiments/experiment_3905_cost_instrumented_verify_harness.py`) | Planned (`tests/python/test_cost_instrumented_verification.py`) |
+| REQ-VERIFY-3905 | Implemented (`python/carnot/verify/cost_instrumented_verification.py`, `scripts/experiments/experiment_3905_cost_instrumented_verify_harness.py`) | Implemented (`tests/python/test_cost_instrumented_verification.py`) |
 
 ### REQ-VERIFY-3896: Graph-Grounding Verifier Harness Positive Control
 
