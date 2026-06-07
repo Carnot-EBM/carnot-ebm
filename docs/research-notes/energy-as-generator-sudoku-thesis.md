@@ -401,3 +401,33 @@ errors, not teaching). A truly fair #4 would need a deliberately UNDER-trained b
 (real headroom) and ask whether energy-RFT recovers a fraction of the gold-SFT lift
 -- but the strong cross-experiment prior is now that energy helps only where headroom
 exists, and a saturated model offers none.
+
+### v6 #4 v3 (under-trained base, real headroom) — SUGGESTIVE positive, within noise, 2026-06-07
+
+To test "can the verifier act as a self-improvement REWARD?" fairly, under-train the
+base (base_steps=5000 -> 4.5% solve, real headroom) then compare gold-SFT (ceiling)
+vs energy-RFT (verifier-only, no labels). One seed, n_eval=512.
+
+| arm | solve | delta |
+|---|---|---|
+| base_greedy | 0.0449 | — |
+| base_energy_gated (#3) | 0.0664 | +0.0215 |
+| energy_distilled (#4, no labels) | 0.0547 | +0.0098 |
+| gold_distilled (UB) | 0.0527 | +0.0078 |
+
+For the FIRST time energy-as-teacher is positive: energy-RFT lifted +1.0% with NO
+labels and MATCHED/edged the gold-SFT lift (+0.8%; frac of gold ceiling recovered
+~1.25). The direction the verifier-as-self-improvement-reward hypothesis predicts.
+**HONEST CAVEAT:** at ~5% solve / n_eval=512 the standard error on a proportion is
+~1.0%, so BOTH the +1.0% (energy) and +0.8% (gold) lifts are ~1 SE -- not significant
+at one seed; the gold ceiling itself only moved +0.8% (small headroom). Suggestive,
+NOT decisive.
+
+**Cross-version synthesis (the real result):** v2 saturated base (no headroom) ->
+NOBODY lifts (gold or energy); v3 under-trained base (headroom) -> BOTH lift, small
+and comparable. Consistent with the **headroom law**: the energy verifier can teach
+a generator about as well as gold WHERE headroom exists, and not at all where it
+doesn't -- the same law as P0.1/energy-as-selection. The one robust generative
+positive across all runs is the in-loop GATE (#3, +1.8 to +2.5%), a distinct
+inference-time error-pruning mechanism, not teaching. A DECISIVE #4 v4 would need
+more headroom (lower base_steps), 3+ seeds, and larger n_eval for tight CIs.

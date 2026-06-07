@@ -24,6 +24,7 @@ DEFAULT_PREFER_ORDER: tuple[str, ...] = (
     "Qwen3.6-35B-A3B",
     "gemma-4-31B-it",
 )
+REDUCED_N_GPU_LAYERS = 1
 
 
 def _hf_id_for_name(model_name: str) -> str:
@@ -80,6 +81,14 @@ def generate(generator: Any, prompt: str, max_tokens: int) -> str:
     return _extract_llama_text(result)
 
 
+def _offload_levels(model_name: str, requested_gpu_layers: int) -> tuple[int, ...]:
+    if requested_gpu_layers == 0:
+        return (0,)
+    if model_name == "gemma-4-26B-A4B-it":
+        return (requested_gpu_layers, REDUCED_N_GPU_LAYERS, 0)
+    return (REDUCED_N_GPU_LAYERS, 0, requested_gpu_layers)
+
+
 def load_gguf_generator(
     prefer_order: list[str] | tuple[str, ...] | None = None,
     n_ctx: int = 1024,
@@ -90,7 +99,6 @@ def load_gguf_generator(
     failures: list[str] = []
     candidates = tuple(prefer_order) if prefer_order is not None else DEFAULT_PREFER_ORDER
     requested_gpu_layers = int(max_n_gpu_layers)
-    offload_levels = (0,) if requested_gpu_layers == 0 else (requested_gpu_layers, 20, 0)
 
     for fallback_index, model_name in enumerate(candidates):
         gguf_paths = _resolve_candidate_paths(model_name)
@@ -99,7 +107,7 @@ def load_gguf_generator(
             continue
 
         for gguf_path in gguf_paths:
-            for n_gpu_layers in offload_levels:
+            for n_gpu_layers in _offload_levels(model_name, requested_gpu_layers):
                 load_started = time.time()
                 try:
                     generator = Llama(
