@@ -7945,3 +7945,4 @@ ERROR: {
 | 2026-06-06 23:31 UTC | EBT FUNDAMENTAL adversarial REPLICATION (2 fresh s | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: inite losses.
  |
 | 2026-06-07 00:55 UTC | EBT FUNDAMENTAL adversarial REPLICATION (2 fresh s | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: remains stable |
+| 2026-06-07 01:24 UTC | BUILD + UNIT-TEST the reasoner-self-verification h | OK | 88 passed in 60.28s (0:01:00) |
