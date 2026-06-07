@@ -11345,3 +11345,76 @@ live-model claim.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3896 | Implemented (`python/carnot/verify/graph_grounding_fact_verifier_defabricated.py`, `scripts/experiments/experiment_3896_graph_grounding_verifier_harness.py`) | Implemented (`tests/python/test_graph_grounding_fact_verifier.py`) |
+
+### REQ-VERIFY-3920: Facts Graph-Grounding Last Retry
+
+The repository SHALL provide an Exp 3920 last-retry graph-grounding facts
+verifier at `python/carnot/verify/graph_grounding_fact_verifier_defabricated.py`
+and `scripts/experiments/experiment_3920_facts_graph_grounding_last_retry.py`
+that routes live inference through the Exp 3915 robust GGUF generator harness
+instead of direct ad hoc `llama_cpp.Llama` construction.
+
+Before any scoring, the runner SHALL verify CUDA with the repository virtualenv
+Python and verify that
+`results/experiment_3915_robust_gguf_inference_harness.json` exists with
+`unit_test_passed=true` and `smoke_tokens>0`. Failed hard preconditions SHALL
+write a terminal `blocked_<resource>` artifact without fabricated fixture or
+corpus metrics.
+
+The verifier SHALL expose `graph_ground_score(item, generator, ...)` and SHALL
+invoke the supplied robust generator for every scored item. The returned score
+payload SHALL include bare `eg`, `rp`, and `cfi` fields, a bare
+`model_invoked` boolean, and per-item completion token evidence so callers can
+reject stubs. The fixed fixture SHALL contain approximately twelve
+claim/source pairs with subtle entity and relation hallucinations plus at least
+one graph-indistinguishable hallucination, so the live fixture is deliberately
+non-separable: a valid fixture AUROC is in `[0.6, 0.95]`, and AUROC `1.0`
+SHALL fail the gate.
+
+For the corpus run, the Exp 3920 runner SHALL load at least 60 labeled facts
+rows, call the same robust generator path for every row, persist per-item token
+counts and graph scores, and require the live corpus run artifact to record
+`duration_s >= 60` and `corpus_run_token_count > 0` before emitting a READY
+verdict. The terminal artifact SHALL be written to
+`results/experiment_3920_facts_graph_grounding_last_retry.json` and include
+bare top-level fields for `verifier_module_path`, `gguf_harness_model_used`,
+`fixture_auroc`, `model_invoked`, `corpus_run_token_count`,
+`unit_test_path`, `unit_test_passed`, `preconditions_checked`, `model_specs`,
+`random_seed`, `reproducibility_checksum`, `duration_s`, and
+`inference_substrate`, with string principle notes in `field_principles` and no
+`{value, principle}` metric wrappers.
+
+The falsification gate SHALL emit
+`complete: facts_graph_verifier_READY_fixture_auroc<a>_model_invoked_tokens<t>`
+only when `model_invoked=true`, `unit_test_passed=true`,
+`0.6 <= fixture_auroc <= 0.95`, `duration_s >= 60`, and
+`corpus_run_token_count > 0`. Otherwise it SHALL emit
+`complete: facts_graph_verifier_NOT_READY_fixture_auroc<a>_facts_route_retires_to_future_work`.
+
+### SCENARIO-VERIFY-3920: Robust Generator Facts Run Gates Non-Fabricated Evidence
+
+Given CUDA is available, Exp 3915 reports a ready robust GGUF generator, and a
+labeled facts corpus has at least 60 rows with both hallucinated and grounded
+labels, when Exp 3920 runs, then it writes
+`results/experiment_3920_facts_graph_grounding_last_retry.json`, records the
+GGUF model used by the robust harness, records per-item token counts for both
+the non-separable fixture and the corpus slice, computes fixture AUROC only
+from the fixture gold labels and graph scores, enforces the `[0.6, 0.95]`
+fixture range, enforces the 60-second live corpus duration floor, and selects
+the terminal READY or NOT_READY verdict from those bare fields.
+
+### SCENARIO-VERIFY-3920-BLOCKED: Missing Robust Inputs Do Not Fabricate Facts Readiness
+
+Given CUDA is unavailable, Exp 3915 is missing or not ready, no labeled facts
+corpus is available, live inference fails, no model tokens are produced, the
+fixture AUROC is `1.0`, or the corpus run finishes in under 60 seconds, when
+Exp 3920 builds its artifact, then it writes a terminal blocked or NOT_READY
+artifact with populated precondition evidence, bare null or zero metric fields
+where appropriate, `model_invoked=false` when no model call occurred, and no
+facts-domain READY claim.
+
+## Implementation Status (REQ-VERIFY-3920)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3920 | Planned (`python/carnot/verify/graph_grounding_fact_verifier_defabricated.py`, `scripts/experiments/experiment_3920_facts_graph_grounding_last_retry.py`) | Planned (`tests/python/test_graph_grounding_fact_verifier.py`) |

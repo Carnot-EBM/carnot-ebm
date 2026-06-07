@@ -28,6 +28,7 @@ from typing import Any
 
 from carnot.inference.sota_models import resolve_cached_gguf
 from carnot.verify.corrected_cross_domain_remeasurement_v4 import tie_aware_auroc
+from carnot.verify.gguf_inference import load_gguf_generator
 from carnot.verify.graph_grounding_probe import (
     FACTS_CORPUS_CANDIDATES,
     GraphGroundingProbe,
@@ -52,6 +53,12 @@ RANDOM_SEED = 3886
 DEFAULT_SAMPLE_SIZE = 120
 MIN_REAL_DURATION_S = 60.0
 CFI_ENTITY_WEIGHT = 0.7
+GRAPH_GROUNDING_PREFER_ORDER = (
+    "gemma-4-26B-A4B-it",
+    "Qwen3.6-35B-A3B",
+    "gemma-4-31B-it",
+    "Qwen3.5-0.8B",
+)
 INFERENCE_SUBSTRATE = (
     "live_llama_cpp_sota_gguf_entity_relation_extraction_plus_hallugraph_cfi_"
     "and_same_row_math_bound_ensemble_baseline"
@@ -254,6 +261,49 @@ class LlamaGraphExtractor:
         return parsed
 
 
+class RobustGeneratorGraphExtractor:
+    """Graph extractor backed by the Exp 3915 robust generator object."""
+
+    def __init__(
+        self,
+        generator: Any,
+        model_specs: Mapping[str, Any] | None = None,
+        *,
+        max_tokens: int = 160,
+    ) -> None:
+        self.generator = generator
+        self.model_specs = dict(model_specs or {})
+        self.max_tokens = max_tokens
+        self.invocation_count = 0
+        self.completion_tokens_total = 0
+
+    def extract_pair(self, answer: str, evidence: str, item_index: int) -> GraphExtractionResult:
+        prompt = graph_extraction_prompt(answer, evidence)
+        self.invocation_count += 1
+        raw = self.generator(
+            prompt,
+            max_tokens=self.max_tokens,
+            temperature=0.0,
+        )
+        text = _extract_text(raw)
+        completion_tokens = _completion_tokens(raw, text)
+        self.completion_tokens_total += completion_tokens
+        parsed = parse_model_graph_response(
+            text,
+            prompt_sha256=sha256_text(prompt),
+            completion_tokens=completion_tokens,
+        )
+        if _graph_empty(parsed.response_graph) and _graph_empty(parsed.evidence_graph):
+            return _fallback_graph_extraction(
+                answer,
+                evidence,
+                raw_response=text,
+                prompt_sha256=sha256_text(prompt),
+                completion_tokens=completion_tokens,
+            )
+        return parsed
+
+
 def graph_extraction_prompt(answer: str, evidence: str) -> str:
     """Build the strict JSON extraction prompt for llama.cpp."""
 
@@ -266,38 +316,67 @@ def graph_extraction_prompt(answer: str, evidence: str) -> str:
         "Normalize relation phrases to short predicates such as discovered, wrote, signed_in, "
         "launched_aboard, produced, received, erupted_in. Do not judge truth; only extract.\n"
         "If a sentence says X discovered Y, the relation subject is X and object is Y.\n\n"
-        f"Response:\n{_clip_text(answer, 1200)}\n\n"
-        f"Evidence:\n{_clip_text(evidence, 3200)}\n"
+        f"Response:\n{_clip_text(answer, 700)}\n\n"
+        f"Evidence:\n{_clip_text(evidence, 1200)}\n"
     )
 
 
 def graph_ground_score(
     item: Mapping[str, Any],
-    model_path: str,
+    generator: Any | None = None,
     *,
+    model_path: str | None = None,
     llama_factory: Callable[..., Any] | None = None,
     max_tokens: int = 220,
     n_gpu_layers: int = -1,
     n_ctx: int = 4096,
     n_batch: int = 256,
 ) -> JsonDict:
-    """Score one claim/source pair with a live llama.cpp graph extraction call."""
+    """Score one claim/source pair with a live graph extraction call."""
 
     answer, evidence = _item_answer_evidence(item)
-    extractor = LlamaGraphExtractor(
-        {
-            "model_path": model_path,
-            "n_gpu_layers": n_gpu_layers,
-            "n_ctx": n_ctx,
-            "n_batch": n_batch,
-            "max_tokens": max_tokens,
-        },
-        llama_factory=llama_factory,
-        max_tokens=max_tokens,
-    )
+    if generator is not None and not isinstance(generator, (str, Path)):
+        extractor: Any = RobustGeneratorGraphExtractor(
+            generator,
+            {"loader": "carnot.verify.gguf_inference.load_gguf_generator"},
+            max_tokens=max_tokens,
+        )
+    else:
+        resolved_model_path = str(model_path or generator or "")
+        if not resolved_model_path:
+            raise ValueError("graph_ground_score requires a robust generator or model_path")
+        extractor = LlamaGraphExtractor(
+            {
+                "model_path": resolved_model_path,
+                "n_gpu_layers": n_gpu_layers,
+                "n_ctx": n_ctx,
+                "n_batch": n_batch,
+                "max_tokens": max_tokens,
+            },
+            llama_factory=llama_factory,
+            max_tokens=max_tokens,
+        )
     extraction = extractor.extract_pair(answer, evidence, 0)
     score = compute_hallugraph_score(extraction)
-    return _score_payload(score, extraction, extractor.invocation_count > 0)
+    payload = _score_payload(score, extraction, extractor.invocation_count > 0)
+    payload["model_call_count"] = extractor.invocation_count
+    return payload
+
+
+def load_robust_graph_grounding_generator(
+    prefer_order: Sequence[str] | None = None,
+    *,
+    n_ctx: int = 2048,
+    max_n_gpu_layers: int = 0,
+) -> tuple[Any, JsonDict]:
+    """Load the Exp 3915 robust GGUF generator for graph-grounding calls."""
+
+    generator, meta = load_gguf_generator(
+        prefer_order=tuple(prefer_order) if prefer_order is not None else GRAPH_GROUNDING_PREFER_ORDER,
+        n_ctx=n_ctx,
+        max_n_gpu_layers=max_n_gpu_layers,
+    )
+    return generator, dict(meta)
 
 
 def build_graph_grounding_fixture() -> tuple[JsonDict, ...]:
@@ -539,10 +618,287 @@ def build_graph_grounding_fixture() -> tuple[JsonDict, ...]:
     return tuple(dict(item) for item in fixture)
 
 
+def build_nonseparable_graph_grounding_fixture() -> tuple[JsonDict, ...]:
+    """Build the Exp 3920 non-separable graph-grounding fixture."""
+
+    fixture = (
+        _fixture_item(
+            item_id="grounded-lovelace-notes",
+            claim="Ada Lovelace wrote notes about the Analytical Engine.",
+            source="Ada Lovelace wrote notes about Charles Babbage's Analytical Engine.",
+            gold_hallucinated=False,
+            response_graph={
+                "entities": ["Ada Lovelace", "Analytical Engine"],
+                "relations": [
+                    {"subject": "Ada Lovelace", "relation": "wrote", "object": "Analytical Engine"}
+                ],
+            },
+            evidence_graph={
+                "entities": ["Ada Lovelace", "Charles Babbage", "Analytical Engine"],
+                "relations": [
+                    {"subject": "Ada Lovelace", "relation": "wrote", "object": "Analytical Engine"}
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="grounded-hubble-discovery",
+            claim="The Hubble Space Telescope launched aboard Discovery.",
+            source="The Hubble Space Telescope launched aboard the space shuttle Discovery.",
+            gold_hallucinated=False,
+            response_graph={
+                "entities": ["Hubble Space Telescope", "Discovery"],
+                "relations": [
+                    {
+                        "subject": "Hubble Space Telescope",
+                        "relation": "launched_aboard",
+                        "object": "Discovery",
+                    }
+                ],
+            },
+            evidence_graph={
+                "entities": ["Hubble Space Telescope", "Discovery"],
+                "relations": [
+                    {
+                        "subject": "Hubble Space Telescope",
+                        "relation": "launched_aboard",
+                        "object": "Discovery",
+                    }
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="grounded-versailles-1919",
+            claim="The Treaty of Versailles was signed in 1919.",
+            source="The Treaty of Versailles was signed in 1919 after World War I.",
+            gold_hallucinated=False,
+            response_graph={
+                "entities": ["Treaty of Versailles", "1919"],
+                "relations": [
+                    {"subject": "Treaty of Versailles", "relation": "signed_in", "object": "1919"}
+                ],
+            },
+            evidence_graph={
+                "entities": ["Treaty of Versailles", "1919", "World War I"],
+                "relations": [
+                    {"subject": "Treaty of Versailles", "relation": "signed_in", "object": "1919"}
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="grounded-franklin-photo51",
+            claim="Rosalind Franklin produced Photo 51.",
+            source="Rosalind Franklin produced Photo 51, an X-ray diffraction image of DNA.",
+            gold_hallucinated=False,
+            response_graph={
+                "entities": ["Rosalind Franklin", "Photo 51"],
+                "relations": [
+                    {"subject": "Rosalind Franklin", "relation": "produced", "object": "Photo 51"}
+                ],
+            },
+            evidence_graph={
+                "entities": ["Rosalind Franklin", "Photo 51", "DNA"],
+                "relations": [
+                    {"subject": "Rosalind Franklin", "relation": "produced", "object": "Photo 51"}
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="grounded-vesuvius-79",
+            claim="Mount Vesuvius erupted in AD 79.",
+            source="Mount Vesuvius erupted in AD 79 and buried Pompeii.",
+            gold_hallucinated=False,
+            response_graph={
+                "entities": ["Mount Vesuvius", "AD 79"],
+                "relations": [
+                    {"subject": "Mount Vesuvius", "relation": "erupted_in", "object": "AD 79"}
+                ],
+            },
+            evidence_graph={
+                "entities": ["Mount Vesuvius", "AD 79", "Pompeii"],
+                "relations": [
+                    {"subject": "Mount Vesuvius", "relation": "erupted_in", "object": "AD 79"}
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="grounded-apollo-moon",
+            claim="Apollo 11 landed on the Moon in 1969.",
+            source="Apollo 11 landed on the Moon in July 1969.",
+            gold_hallucinated=False,
+            response_graph={
+                "entities": ["Apollo 11", "Moon", "1969"],
+                "relations": [
+                    {"subject": "Apollo 11", "relation": "landed_on", "object": "Moon"},
+                    {"subject": "Apollo 11", "relation": "landed_in", "object": "1969"},
+                ],
+            },
+            evidence_graph={
+                "entities": ["Apollo 11", "Moon", "July 1969"],
+                "relations": [
+                    {"subject": "Apollo 11", "relation": "landed_on", "object": "Moon"},
+                    {"subject": "Apollo 11", "relation": "landed_in", "object": "July 1969"},
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="planted-relation-curie-radium",
+            claim="Marie Curie discovered radium.",
+            source="Marie Curie discovered polonium. Pierre Curie studied radium.",
+            gold_hallucinated=True,
+            planted_hallucinated_relation=True,
+            response_graph={
+                "entities": ["Marie Curie", "radium"],
+                "relations": [
+                    {"subject": "Marie Curie", "relation": "discovered", "object": "radium"}
+                ],
+            },
+            evidence_graph={
+                "entities": ["Marie Curie", "polonium", "Pierre Curie", "radium"],
+                "relations": [
+                    {"subject": "Marie Curie", "relation": "discovered", "object": "polonium"},
+                    {"subject": "Pierre Curie", "relation": "studied", "object": "radium"},
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="planted-entity-hubble-atlantis",
+            claim="The Hubble Space Telescope launched aboard Atlantis.",
+            source="The Hubble Space Telescope launched aboard the space shuttle Discovery.",
+            gold_hallucinated=True,
+            response_graph={
+                "entities": ["Hubble Space Telescope", "Atlantis"],
+                "relations": [
+                    {
+                        "subject": "Hubble Space Telescope",
+                        "relation": "launched_aboard",
+                        "object": "Atlantis",
+                    }
+                ],
+            },
+            evidence_graph={
+                "entities": ["Hubble Space Telescope", "Discovery"],
+                "relations": [
+                    {
+                        "subject": "Hubble Space Telescope",
+                        "relation": "launched_aboard",
+                        "object": "Discovery",
+                    }
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="planted-date-versailles-1929",
+            claim="The Treaty of Versailles was signed in 1929.",
+            source="The Treaty of Versailles was signed in 1919 after World War I.",
+            gold_hallucinated=True,
+            response_graph={
+                "entities": ["Treaty of Versailles", "1929"],
+                "relations": [
+                    {"subject": "Treaty of Versailles", "relation": "signed_in", "object": "1929"}
+                ],
+            },
+            evidence_graph={
+                "entities": ["Treaty of Versailles", "1919", "World War I"],
+                "relations": [
+                    {"subject": "Treaty of Versailles", "relation": "signed_in", "object": "1919"}
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="planted-relation-franklin-nobel",
+            claim="Rosalind Franklin received the 1962 Nobel Prize in Physiology or Medicine.",
+            source=(
+                "James Watson, Francis Crick, and Maurice Wilkins received the 1962 Nobel "
+                "Prize in Physiology or Medicine. Rosalind Franklin produced Photo 51."
+            ),
+            gold_hallucinated=True,
+            planted_hallucinated_relation=True,
+            response_graph={
+                "entities": ["Rosalind Franklin", "1962 Nobel Prize in Physiology or Medicine"],
+                "relations": [
+                    {
+                        "subject": "Rosalind Franklin",
+                        "relation": "received",
+                        "object": "1962 Nobel Prize in Physiology or Medicine",
+                    }
+                ],
+            },
+            evidence_graph={
+                "entities": [
+                    "James Watson",
+                    "Francis Crick",
+                    "Maurice Wilkins",
+                    "1962 Nobel Prize in Physiology or Medicine",
+                    "Rosalind Franklin",
+                    "Photo 51",
+                ],
+                "relations": [
+                    {
+                        "subject": "James Watson",
+                        "relation": "received",
+                        "object": "1962 Nobel Prize in Physiology or Medicine",
+                    },
+                    {
+                        "subject": "Francis Crick",
+                        "relation": "received",
+                        "object": "1962 Nobel Prize in Physiology or Medicine",
+                    },
+                    {
+                        "subject": "Maurice Wilkins",
+                        "relation": "received",
+                        "object": "1962 Nobel Prize in Physiology or Medicine",
+                    },
+                    {"subject": "Rosalind Franklin", "relation": "produced", "object": "Photo 51"},
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="planted-apollo-mars",
+            claim="Apollo 11 landed on Mars in 1969.",
+            source="Apollo 11 landed on the Moon in July 1969.",
+            gold_hallucinated=True,
+            response_graph={
+                "entities": ["Apollo 11", "Mars", "1969"],
+                "relations": [
+                    {"subject": "Apollo 11", "relation": "landed_on", "object": "Mars"},
+                    {"subject": "Apollo 11", "relation": "landed_in", "object": "1969"},
+                ],
+            },
+            evidence_graph={
+                "entities": ["Apollo 11", "Moon", "July 1969"],
+                "relations": [
+                    {"subject": "Apollo 11", "relation": "landed_on", "object": "Moon"},
+                    {"subject": "Apollo 11", "relation": "landed_in", "object": "July 1969"},
+                ],
+            },
+        ),
+        _fixture_item(
+            item_id="subtle-negation-mayor-bridge",
+            claim="The mayor said the bridge was unsafe.",
+            source="The mayor denied the bridge was unsafe.",
+            gold_hallucinated=True,
+            response_graph={
+                "entities": ["mayor", "bridge", "unsafe"],
+                "relations": [
+                    {"subject": "bridge", "relation": "was", "object": "unsafe"}
+                ],
+            },
+            evidence_graph={
+                "entities": ["mayor", "bridge", "unsafe"],
+                "relations": [
+                    {"subject": "bridge", "relation": "was", "object": "unsafe"}
+                ],
+            },
+        ),
+    )
+    return tuple(dict(item) for item in fixture)
+
+
 def score_graph_grounding_fixture(
     fixture: Sequence[Mapping[str, Any]] | None,
     *,
-    model_path: str,
+    model_path: str | None = None,
+    generator: Any | None = None,
     llama_factory: Callable[..., Any] | None = None,
     max_tokens: int = 220,
     n_gpu_layers: int = -1,
@@ -554,17 +910,26 @@ def score_graph_grounding_fixture(
 
     rows = tuple(fixture or build_graph_grounding_fixture())
     pass_count = max(1, int(consistency_passes))
-    extractor = LlamaGraphExtractor(
-        {
-            "model_path": model_path,
-            "n_gpu_layers": n_gpu_layers,
-            "n_ctx": n_ctx,
-            "n_batch": n_batch,
-            "max_tokens": max_tokens,
-        },
-        llama_factory=llama_factory,
-        max_tokens=max_tokens,
-    )
+    if generator is not None:
+        extractor: Any = RobustGeneratorGraphExtractor(
+            generator,
+            {"loader": "carnot.verify.gguf_inference.load_gguf_generator"},
+            max_tokens=max_tokens,
+        )
+    else:
+        if not model_path:
+            raise ValueError("score_graph_grounding_fixture requires generator or model_path")
+        extractor = LlamaGraphExtractor(
+            {
+                "model_path": model_path,
+                "n_gpu_layers": n_gpu_layers,
+                "n_ctx": n_ctx,
+                "n_batch": n_batch,
+                "max_tokens": max_tokens,
+            },
+            llama_factory=llama_factory,
+            max_tokens=max_tokens,
+        )
 
     labels: list[int] = []
     scores: list[float] = []
@@ -631,10 +996,27 @@ def score_graph_grounding_fixture(
         "planted_hallucinated_relation_flagged": planted_hallucinated_relation_flagged,
         "parse_fallback_count": sum(1 for item in per_item if item["parse_fallback_used"]),
         "model_call_count": extractor.invocation_count,
+        "fixture_token_count": int(sum(int(item["completion_tokens"]) for item in per_item)),
         "consistency_passes": pass_count,
         "consistency_scores": consistency_scores,
         "stub_rejected": stub_rejected,
     }
+
+
+def score_nonseparable_graph_grounding_fixture(
+    fixture: Sequence[Mapping[str, Any]] | None = None,
+    *,
+    generator: Any,
+    max_tokens: int = 160,
+) -> JsonDict:
+    """Run the Exp 3920 non-separable fixture through the robust generator."""
+
+    return score_graph_grounding_fixture(
+        tuple(fixture or build_nonseparable_graph_grounding_fixture()),
+        generator=generator,
+        max_tokens=max_tokens,
+        consistency_passes=1,
+    )
 
 
 def compute_hallugraph_score(extraction: GraphExtractionResult) -> HalluGraphScore:

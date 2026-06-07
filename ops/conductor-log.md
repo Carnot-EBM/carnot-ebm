@@ -8002,3 +8002,6 @@ ERROR: {
 | 2026-06-07 09:38 UTC | EFFICIENCY axis — energy-verifier vs LLM-as-judge  | OK | cache hit: 100 passed in 4.99s |
 | 2026-06-07 09:54 UTC | META-EBM CASCADE ROUTER prototype (classifier-firs | OK | 90 passed in 4.56s |
 | 2026-06-07 10:07 UTC | ARC-AGI-3 harness SCAFFOLD — BUILD + UNIT-TEST the | OK | 89 passed in 5.47s |
+| 2026-06-07 11:30 UTC | FACTS graph-grounding verifier — LAST DISCIPLINED  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output:  346    49%
+
+c |

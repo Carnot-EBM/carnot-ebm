@@ -89,7 +89,8 @@ def load_gguf_generator(
 
     failures: list[str] = []
     candidates = tuple(prefer_order) if prefer_order is not None else DEFAULT_PREFER_ORDER
-    offload_levels = (int(max_n_gpu_layers), 20, 0)
+    requested_gpu_layers = int(max_n_gpu_layers)
+    offload_levels = (0,) if requested_gpu_layers == 0 else (requested_gpu_layers, 20, 0)
 
     for fallback_index, model_name in enumerate(candidates):
         gguf_paths = _resolve_candidate_paths(model_name)
