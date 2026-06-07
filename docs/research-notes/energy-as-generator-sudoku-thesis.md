@@ -333,3 +333,44 @@ This is the strongest form of the v1->v4 + EBT-kill-gate conclusion: energy
 SCORES, refinement GENERATES. Drives the 2026-06-06 strategic reframe (ops/north-
 star.md §5): Carnot is the hybrid's energy VERIFIER, not its generator; pursue the
 verifier-earns-its-place proof, not more generator work.
+
+## v5/v6 — energy as IN-LOOP GATE (#3) and as TEACHER (#4), 2026-06-07
+
+Follow-up to the retrospective "exploit the verify<<generate asymmetry to GENERATE"
+thread. Two new inference/training modes for energy, beyond descent and rerank.
+
+**#3 — energy as a per-step IN-LOOP FEASIBILITY GATE (not descent, not rerank).**
+Decode the refiner's blanks in confidence order; at each cell pick the highest-prob
+digit that does not conflict (row/col/box) with already-committed cells. First run
+was underpowered (refiner trained at ~3% vs the real ~18%, my config error) and
+showed +0.0007. Re-run on a FAIR base (v4 config, base greedy 0.1602):
+**base_energy_gated = 0.1855, delta +0.0254** (16.0% -> 18.6%). So the in-loop
+energy gate gives a real, modest lift when the generator is competent -- the first
+inference-time mode where energy ADDS generative value (descent and rerank both
+lost). Modest (+2.5pp) and just under an arbitrary 0.03 bar, but clean and
+correctly signed. Caveat: a pure greedy gate still leaves ~7-8 mean violations
+(it cannot do CSP without backtracking), so the lift comes from pruning local
+conflicts, not from solving.
+
+**#4 — energy as a TEACHER (RFT self-distillation), INCONCLUSIVE (control failed).**
+Hypothesis: energy belongs at TRAINING time (where amortization wins). Generate K=16
+samples/puzzle, keep ONLY samples the verifier CERTIFIES as 0-violation (correct,
+since a valid givens-consistent Sudoku is unique), distill the refiner toward them
+(no gold labels). Result: energy_distilled collapsed 0.16 -> 0.02. BUT the gold
+upper-bound arm (distill on the true answers) ALSO collapsed (0.16 -> 0.13) -- so by
+the positive-control discipline the distillation HARNESS, not the energy selector,
+is the fault: the self-distillation uses a single forward while the refiner was
+trained with deep_supervision over n_cycles, so naive SFT degrades the recurrent
+model regardless of selector. Compounded by a low + easy-biased certified yield
+(only 4.6% of puzzles yield a certified best-of-16 sample) causing catastrophic
+forgetting. **#4 is NOT a clean negative.** A fair #4 v2 needs: deep_supervision-
+preserving distillation, replay of the original training data (anti-forgetting),
+and higher temp/K to raise the certified yield.
+
+**Net.** #3 nudges the picture: energy is not purely a post-hoc scorer -- as an
+in-loop feasibility gate it adds a small but real generative lift on a competent
+base. The big training-time question (#4) remains open pending a non-degrading
+distillation harness. Neither result disturbs the headline: energy's dominant,
+demonstrated value is as the cheap verifier (the moat + efficiency panel), and the
+verify<<generate asymmetry stands -- in-loop gating helps a little, descent/rerank
+do not, and energy-as-teacher is still unproven.
