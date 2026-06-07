@@ -45,3 +45,9 @@
 
 ### SCENARIO-PHASE4-006
 **Description:** Running the scaffold on the tiny synthetic grid task selects the verifier-preferred action, prunes at least one low-scoring candidate, solves the task, writes the Exp 3919 readiness artifact with bare scalar readiness fields, and reports no ARC-AGI-3 benchmark performance claim.
+
+### REQ-PHASE4-007: ARC-AGI-3 Synthetic Action-Efficiency Measurement
+**Description:** The system SHALL measure verifier-as-pruner action efficiency on a richer synthetic ARC-AGI-3-style environment with deterministic transitions, a larger discrete action space, a known goal, and at least 30 episodes, comparing cheap energy-verifier action selection against a no-verifier random/greedy baseline without claiming real ARC-AGI-3 benchmark performance.
+
+### SCENARIO-PHASE4-007
+**Description:** Running Exp 3929 records mean actions-to-solve for verifier and baseline arms, bootstrap CI for the baseline/verifier action-efficiency ratio, solve rates for both arms, methodology fields, real ARC-AGI-3 access preflight reachability, and an honest verdict that reports either verifier-router help only when the CI lower bound is above 1.0 or a no-advantage synthetic finding otherwise.
