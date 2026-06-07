@@ -1,0 +1,142 @@
+{
+  "boosted_max_tokens": 160,
+  "boosted_n_ctx": 2048,
+  "caveat": "DRAFT. Closes the exp3917 weak-baseline caveat by running each judge at the strong (160 tok / 2048 ctx) budget across a local SOTA panel. Not conductor-wired.",
+  "duration_s": 2909.4969675540924,
+  "energy_auroc": 0.8100177915518825,
+  "experiment": "efficiency_panel_boosted_draft",
+  "field_principles": {
+    "boosted_max_tokens": "160 tok = exp3916 STRONG budget (0.663-capable), not exp3917's hobbled 96.",
+    "energy_accuracy_gte_judge": "Per model: does the energy verifier match-or-beat this judge.",
+    "energy_auroc": "Model-independent energy verifier accuracy on the shared labels.",
+    "max_judge_auroc": "Strongest judge in the panel; energy must match-or-beat to dominate.",
+    "min_cost_ratio_walltime": "Worst-case 'Nx cheaper' across the panel; >10x = cost dominance."
+  },
+  "honest_verdict": "complete: efficiency_panel_ENERGY_DOMINATES_all_cheaper_and_more_accurate_energy0.8100_maxjudge0.7293_mincheaper6076.5x_n4",
+  "inference_substrate": "live_llm_inference:boosted_judge_panel_strong_budget_160tok_2048ctx_plus_exp3905_cost_harness_energy_verifier",
+  "max_judge_auroc": 0.7293244949494949,
+  "min_cost_ratio_walltime": 6076.456560458977,
+  "n_items": 528,
+  "n_models_scored": 4,
+  "panel_results": [
+    {
+      "cached": true,
+      "cost_ratio_flops": 12062654310.857285,
+      "cost_ratio_walltime": 11963.389576810636,
+      "detail": "scored n=528 at 160tok/2048ctx",
+      "energy_accuracy_gte_judge": true,
+      "energy_auroc": 0.8100177915518825,
+      "energy_per_item_ms": 0.06869852079420746,
+      "energy_within_judge_ci": false,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "llm_judge_auroc": 0.6368227731864096,
+      "llm_judge_ci95": {
+        "high": 0.6815987933634993,
+        "low": 0.5908993069008567
+      },
+      "llm_per_item_ms": 821.8671676117303,
+      "model_name": "gemma-4-26B-A4B-it",
+      "parameter_count": 26000000000
+    },
+    {
+      "cached": true,
+      "cost_ratio_flops": 13733584242.331411,
+      "cost_ratio_walltime": 6076.456560458977,
+      "detail": "scored n=528 at 160tok/2048ctx",
+      "energy_accuracy_gte_judge": true,
+      "energy_auroc": 0.8100177915518825,
+      "energy_per_item_ms": 0.07393127651250159,
+      "energy_within_judge_ci": false,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "llm_judge_auroc": 0.7293244949494949,
+      "llm_judge_ci95": {
+        "high": 0.7709473533002945,
+        "low": 0.6852261624231277
+      },
+      "llm_per_item_ms": 449.2401901874969,
+      "model_name": "Qwen3.6-35B-A3B",
+      "parameter_count": 35000000000
+    },
+    {
+      "cached": true,
+      "cost_ratio_flops": 17421308300.784454,
+      "cost_ratio_walltime": 49825.41585909543,
+      "detail": "scored n=528 at 160tok/2048ctx",
+      "energy_accuracy_gte_judge": true,
+      "energy_auroc": 0.8100177915518825,
+      "energy_per_item_ms": 0.07440626326239329,
+      "energy_within_judge_ci": false,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "llm_judge_auroc": 0.4120968204775023,
+      "llm_judge_ci95": {
+        "high": 0.45607952914154465,
+        "low": 0.3699385355040233
+      },
+      "llm_per_item_ms": 3707.32300957008,
+      "model_name": "gemma-4-31B-it",
+      "parameter_count": 35000000000
+    },
+    {
+      "cached": true,
+      "cost_ratio_flops": 14209053146.756235,
+      "cost_ratio_walltime": 6087.779932239951,
+      "detail": "scored n=528 at 160tok/2048ctx",
+      "energy_accuracy_gte_judge": true,
+      "energy_auroc": 0.8100177915518825,
+      "energy_per_item_ms": 0.07397293181080992,
+      "energy_within_judge_ci": false,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
+      "llm_judge_auroc": 0.6033775252525253,
+      "llm_judge_ci95": {
+        "high": 0.6443089430894309,
+        "low": 0.5597804247990815
+      },
+      "llm_per_item_ms": 450.330929806803,
+      "model_name": "gemma-4-12B-it",
+      "parameter_count": 35000000000
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "returncode=0",
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "detail": "cached: /home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "resource": "gguf_cached:gemma-4-26B-A4B-it"
+    },
+    {
+      "available": true,
+      "detail": "cached: /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "resource": "gguf_cached:Qwen3.6-35B-A3B"
+    },
+    {
+      "available": true,
+      "detail": "cached: /home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "resource": "gguf_cached:gemma-4-31B-it"
+    },
+    {
+      "available": true,
+      "detail": "cached: /home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
+      "resource": "gguf_cached:gemma-4-12B-it"
+    },
+    {
+      "available": true,
+      "detail": "n=528",
+      "resource": "labeled_corpora"
+    }
+  ],
+  "prompt_style": "boosted",
+  "random_seed": 3917,
+  "random_seeds_used": {
+    "bootstrap_llm_judge": 3934,
+    "fover_slice": 3917
+  },
+  "reproducibility_checksum": "cfe852c4e478f24862cd715e2bfb5a5d87a6c70346c0b8e58b9de1a461b7ca47",
+  "run_date": "20260607",
+  "smoke": false,
+  "status": "complete: efficiency_panel_ENERGY_DOMINATES_all_cheaper_and_more_accurate_energy0.8100_maxjudge0.7293_mincheaper6076.5x_n4",
+  "title": "verifier_efficiency_panel_draft"
+}
