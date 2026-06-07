@@ -1,58 +1,111 @@
 {
-  "base_wasted_rate": 0.3233,
-  "churn_scope_fraction": 0.442,
+  "base_wasted_rate": 0.3231,
+  "churn_scope_fraction": 0.4419,
   "experiment": "meta_verifier_selection_draft",
-  "holdout_split_milestone_order": 490,
-  "holdout_wasted_auroc": 0.571541655396474,
-  "honest_verdict": "complete: meta_verifier_feasibility_wasted_auroc0.572_base0.323",
+  "holdout_split_milestone_order": 491,
+  "holdout_wasted_auroc": 0.5713050371663817,
+  "honest_verdict": "complete: meta_verifier_feasibility_wasted_auroc0.571_base0.323",
   "inference_substrate": "aggregation_from_upstream_artifacts",
   "label_proxy_caveat": "WASTED = verdict blocked_/doomed/skipped/flagged (clean). CHURN = title-scope proxy (no ground-truth decisiveness field). Join is by exp-number; legacy p1-* tasks are counted as unjoined, not dropped.",
   "logreg_weights": {
-    "bias": -0.9709,
-    "build_train": -0.311,
-    "churn_aggregate": 0.5278,
-    "churn_version": -0.1455,
-    "hardware": 0.0192,
-    "infra_harness": 0.5093,
+    "bias": -0.9723,
+    "build_train": -0.3098,
+    "churn_aggregate": 0.5296,
+    "churn_version": -0.1471,
+    "deliv_doc": 0.0076,
+    "deliv_experiment": 0.0,
+    "deliv_hardware": 0.0562,
+    "deliv_test": 0.0,
+    "deliv_verify_module": 0.0,
+    "hardware": 0.0062,
+    "infra_harness": 0.5075,
     "is_churn_scope": 0.2758,
-    "science_probe": -0.1758
+    "science_probe": -0.1756
   },
-  "n_churn_scope_titles": 3490,
-  "n_tasks_joined_to_verdict": 5338,
-  "n_tasks_total": 7896,
+  "n_churn_scope_titles": 3494,
+  "n_tasks_joined_to_verdict": 5348,
+  "n_tasks_total": 7906,
   "n_unjoined_legacy_or_missing": 2558,
-  "n_wasted": 1726,
+  "n_wasted": 1728,
   "per_scope_wasted_lift": {
     "build_train": {
       "lift_vs_base": 0.82,
-      "n": 1017,
-      "wasted_rate": 0.2655
+      "n": 1019,
+      "wasted_rate": 0.265
     },
     "churn_aggregate": {
       "lift_vs_base": 1.3,
-      "n": 1105,
-      "wasted_rate": 0.419
+      "n": 1108,
+      "wasted_rate": 0.4188
     },
     "churn_version": {
       "lift_vs_base": 1.04,
-      "n": 1350,
-      "wasted_rate": 0.3356
+      "n": 1352,
+      "wasted_rate": 0.3351
+    },
+    "deliv_doc": {
+      "lift_vs_base": 1.24,
+      "n": 5,
+      "wasted_rate": 0.4
+    },
+    "deliv_hardware": {
+      "lift_vs_base": 1.57,
+      "n": 429,
+      "wasted_rate": 0.5058
     },
     "hardware": {
       "lift_vs_base": 1.5,
-      "n": 462,
-      "wasted_rate": 0.4848
+      "n": 463,
+      "wasted_rate": 0.486
     },
     "infra_harness": {
-      "lift_vs_base": 1.44,
-      "n": 105,
-      "wasted_rate": 0.4667
+      "lift_vs_base": 1.41,
+      "n": 112,
+      "wasted_rate": 0.4554
     },
     "science_probe": {
-      "lift_vs_base": 0.75,
-      "n": 190,
-      "wasted_rate": 0.2421
+      "lift_vs_base": 0.73,
+      "n": 194,
+      "wasted_rate": 0.2371
     }
   },
-  "title": "meta_verifier_experiment_selection"
+  "title": "meta_verifier_experiment_selection",
+  "wasted_rate_by_quartile": [
+    {
+      "milestone_order_range": [
+        0,
+        172
+      ],
+      "n": 1639,
+      "quartile": 1,
+      "wasted_rate": 0.1861
+    },
+    {
+      "milestone_order_range": [
+        172,
+        344
+      ],
+      "n": 936,
+      "quartile": 2,
+      "wasted_rate": 0.3942
+    },
+    {
+      "milestone_order_range": [
+        344,
+        517
+      ],
+      "n": 1135,
+      "quartile": 3,
+      "wasted_rate": 0.4123
+    },
+    {
+      "milestone_order_range": [
+        517,
+        689
+      ],
+      "n": 1638,
+      "quartile": 4,
+      "wasted_rate": 0.3578
+    }
+  ]
 }

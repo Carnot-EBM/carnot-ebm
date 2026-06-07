@@ -71,6 +71,23 @@ SCOPE_KEYWORDS = {
 # CHURN proxy: aggregate/version-rerun scope that is, by construction, re-measurement.
 CHURN_BUCKETS = ("churn_version", "churn_aggregate")
 
+# v2: deliverable-path buckets (pre-run-knowable from the task's declared output).
+DELIVERABLE_KEYWORDS = {
+    "deliv_hardware": ("rtl", ".bit", ".xdc", "kv260", "gatemate", "polarfire", "fpga", "vivado"),
+    "deliv_verify_module": ("python/carnot/verify", "python/carnot/eval"),
+    "deliv_experiment": ("scripts/experiments",),
+    "deliv_doc": ("docs/", ".md", "openspec/", "_bmad/", "ops/"),
+    "deliv_test": ("tests/",),
+}
+
+
+def _deliverable_features(deliverable: str) -> dict[str, int]:
+    low = deliverable.lower()
+    return {
+        bucket: (1 if any(k in low for k in keys) else 0)
+        for bucket, keys in DELIVERABLE_KEYWORDS.items()
+    }
+
 
 def _verdict_of_artifact(path: Path) -> str | None:
     try:
@@ -181,10 +198,12 @@ def run(write: bool = True) -> dict[str, Any]:
                 continue
             tid = str(task.get("id", ""))
             title = str(task.get("title", ""))
+            deliverable = str(task.get("deliverable", ""))
             n = _exp_number(tid)
             verdict = verdict_index.get(n) if n is not None else None
             label = _label(verdict)
             feats = _scope_features(title)
+            dfeats = _deliverable_features(deliverable)
             rows.append(
                 {
                     "milestone_order": order,
@@ -194,6 +213,7 @@ def run(write: bool = True) -> dict[str, Any]:
                     "is_wasted": 1 if label == "WASTED" else 0,
                     "is_churn_scope": 1 if any(feats[b] for b in CHURN_BUCKETS) else 0,
                     **feats,
+                    **dfeats,
                 }
             )
 
@@ -203,8 +223,26 @@ def run(write: bool = True) -> dict[str, Any]:
     n_wasted = sum(r["is_wasted"] for r in joined)
     n_churn_scope = sum(r["is_churn_scope"] for r in rows)
 
+    # v2: temporal trend — wasted-rate per milestone-order quartile (are the
+    # discipline rules actually reducing waste over time, or is 32% flat?).
+    era_trend = []
+    if joined:
+        max_order = max(r["milestone_order"] for r in joined)
+        for q in range(4):
+            lo, hi = q * (max_order + 1) / 4, (q + 1) * (max_order + 1) / 4
+            era = [r for r in joined if lo <= r["milestone_order"] < hi]
+            if era:
+                era_trend.append(
+                    {
+                        "quartile": q + 1,
+                        "milestone_order_range": [round(lo), round(hi)],
+                        "n": len(era),
+                        "wasted_rate": round(sum(r["is_wasted"] for r in era) / len(era), 4),
+                    }
+                )
+
     # Temporal holdout: train on the first 70% of milestones, test on the last 30%.
-    feat_keys = list(SCOPE_KEYWORDS.keys()) + ["is_churn_scope"]
+    feat_keys = list(SCOPE_KEYWORDS.keys()) + list(DELIVERABLE_KEYWORDS.keys()) + ["is_churn_scope"]
     orders = sorted({r["milestone_order"] for r in joined})
     split = orders[int(0.7 * len(orders))] if orders else 0
     train = [r for r in joined if r["milestone_order"] < split]
@@ -225,7 +263,7 @@ def run(write: bool = True) -> dict[str, Any]:
     # Per-bucket wasted-rate lift (which scope classes waste the most wall-clock).
     bucket_lift = {}
     base_rate = n_wasted / n_joined if n_joined else 0.0
-    for bucket in SCOPE_KEYWORDS:
+    for bucket in list(SCOPE_KEYWORDS) + list(DELIVERABLE_KEYWORDS):
         inb = [r for r in joined if r[bucket] == 1]
         if inb:
             rate = sum(r["is_wasted"] for r in inb) / len(inb)
@@ -253,6 +291,7 @@ def run(write: bool = True) -> dict[str, Any]:
         "churn_scope_fraction": round(n_churn_scope / n_total, 4) if n_total else 0.0,
         "holdout_wasted_auroc": auroc,
         "holdout_split_milestone_order": split,
+        "wasted_rate_by_quartile": era_trend,
         "logreg_weights": weights,
         "per_scope_wasted_lift": bucket_lift,
         "label_proxy_caveat": (
@@ -274,6 +313,8 @@ if __name__ == "__main__":
         f"wasted base-rate {art['base_wasted_rate']} | churn-scope frac {art['churn_scope_fraction']}"
     )
     print(f"  holdout WASTED-prediction AUROC: {art['holdout_wasted_auroc']}")
+    print("  wasted-rate by quartile (early->recent):",
+          " ".join(f"Q{e['quartile']}={e['wasted_rate']}" for e in art["wasted_rate_by_quartile"]))
     print("  per-scope wasted lift:")
     for b, v in sorted(art["per_scope_wasted_lift"].items(), key=lambda kv: -(kv[1]["lift_vs_base"] or 0)):
         print(f"    {b:18s} n={v['n']:5d}  wasted_rate={v['wasted_rate']:.3f}  lift={v['lift_vs_base']}")
