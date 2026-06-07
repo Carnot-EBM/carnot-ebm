@@ -31,6 +31,7 @@ COMPETENT_PREFER_ORDER: tuple[str, ...] = (
 )
 DEFAULT_MAX_TOKENS = 128
 DEFAULT_N_CTX = 1024
+DEFAULT_MAX_N_GPU_LAYERS = -1
 ABSTAIN_PROB = 0.5
 
 
@@ -118,24 +119,29 @@ def build_judge_prompt(item: dict[str, object] | str) -> str:
 
     step = _step_text(item)
     return (
-        "You are a careful process verifier. Examine ONLY the step under review. "
-        "Do not output JSON, markdown, code fences, channel tags, or repeated prompt text.\n\n"
-        "A step is INCORRECT if an arithmetic equality is false, a calculation "
-        "result is wrong, or a logical conclusion does not follow. A step is "
-        "CORRECT if the stated calculation or implication is valid.\n\n"
-        "Example A\n"
+        "<|im_start|>system\n"
+        "You are a careful process verifier. Examine only the step under "
+        "review. A step is INCORRECT if an arithmetic equality is false, a "
+        "calculation result is wrong, or a logical conclusion does not follow. "
+        "Answer with a short reason and a final verdict.\n"
+        "<|im_end|>\n"
+        "<|im_start|>user\n"
+        "Use exactly this format:\n"
+        "REASON: <one short sentence checking the step>\n"
+        "VERDICT: <CORRECT or INCORRECT>\n\n"
+        "Example 1\n"
         "Step: 47 + 28 = 75.\n"
-        "REASON: 47 plus 28 equals 75.\n"
+        "REASON: 47 + 28 equals 75.\n"
         "VERDICT: CORRECT\n\n"
-        "Example B\n"
+        "Example 2\n"
         "Step: 47 + 28 = 65.\n"
-        "REASON: 47 plus 28 equals 75, not 65.\n"
+        "REASON: 47 + 28 equals 75, not 65.\n"
         "VERDICT: INCORRECT\n\n"
         "Step under review:\n"
-        f"{step}\n\n"
-        "Return exactly two lines and nothing else:\n"
-        "REASON: <one short sentence checking this step>\n"
-        "VERDICT: <CORRECT or INCORRECT>\n"
+        f"{step}\n"
+        "<|im_end|>\n"
+        "<|im_start|>assistant\n"
+        "REASON:"
     )
 
 
@@ -338,6 +344,7 @@ def run_judge_fixture(
 __all__ = [
     "ABSTAIN_PROB",
     "COMPETENT_PREFER_ORDER",
+    "DEFAULT_MAX_N_GPU_LAYERS",
     "DEFAULT_MAX_TOKENS",
     "DEFAULT_N_CTX",
     "ParsedJudgeResponse",

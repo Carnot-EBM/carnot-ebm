@@ -7,6 +7,7 @@ SCENARIO-VERIFY-3925-BLOCKED.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -180,14 +181,24 @@ from carnot.verify.gguf_inference import load_gguf_generator
 generator, meta = load_gguf_generator(
     prefer_order=list(judge.COMPETENT_PREFER_ORDER),
     n_ctx=judge.DEFAULT_N_CTX,
-    max_n_gpu_layers=0,
+    max_n_gpu_layers=judge.DEFAULT_MAX_N_GPU_LAYERS,
 )
 fixture = judge.build_separable_fixture()
 result = judge.run_judge_fixture(fixture, generator, max_tokens=judge.DEFAULT_MAX_TOKENS)
 print("COMPETENT_JUDGE_TEST_JSON=" + json.dumps({"meta": meta, "result": result}, sort_keys=True))
 """
+    command = [
+        "env",
+        "-i",
+        f"CUDA_VISIBLE_DEVICES={os.environ.get('CUDA_VISIBLE_DEVICES', '0')}",
+        f"HOME={os.environ['HOME']}",
+        f"PATH={os.environ['PATH']}",
+    ]
+    if os.environ.get("LD_LIBRARY_PATH"):
+        command.append(f"LD_LIBRARY_PATH={os.environ['LD_LIBRARY_PATH']}")
+    command.extend([str(REPO_ROOT / ".venv" / "bin" / "python"), "-c", code])
     live = subprocess.run(
-        [str(REPO_ROOT / ".venv" / "bin" / "python"), "-c", code],
+        command,
         capture_output=True,
         check=False,
         cwd=REPO_ROOT,

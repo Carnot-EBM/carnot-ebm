@@ -29,6 +29,7 @@ if str(PYTHON_DIR) not in sys.path:
 
 from carnot.verify.competent_llm_judge import (  # noqa: E402
     COMPETENT_PREFER_ORDER,
+    DEFAULT_MAX_N_GPU_LAYERS,
     DEFAULT_MAX_TOKENS,
     DEFAULT_N_CTX,
     build_separable_fixture,
@@ -651,7 +652,7 @@ def run_experiment(config: ExperimentConfig | None = None, *, write: bool = True
         "prefer_order": list(COMPETENT_PREFER_ORDER),
         "n_ctx": active_config.n_ctx,
         "max_tokens": active_config.max_tokens,
-        "max_n_gpu_layers": 0,
+        "max_n_gpu_layers": DEFAULT_MAX_N_GPU_LAYERS,
         "source_exp3915_model_used": gguf_source.get("model_used"),
     }
     if blocked_reason is not None:
@@ -670,7 +671,7 @@ def run_experiment(config: ExperimentConfig | None = None, *, write: bool = True
     generator, meta = load_gguf_generator(
         prefer_order=COMPETENT_PREFER_ORDER,
         n_ctx=active_config.n_ctx,
-        max_n_gpu_layers=0,
+        max_n_gpu_layers=DEFAULT_MAX_N_GPU_LAYERS,
     )
     model_specs = {
         **preflight_model_specs,
