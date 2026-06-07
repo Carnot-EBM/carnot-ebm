@@ -18196,3 +18196,85 @@ unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3914 | Implemented (`python/carnot/reporting/archive_v361_activate_v362_3914.py`, `scripts/experiments/experiment_3914_archive_v361_activate_v362.py`) | Implemented (`tests/python/test_experiment_3914_archive_v361_activate_v362.py`) |
+
+### REQ-REPORT-3924: Archive .362 And Activate .363 With Facts-Route Retirement
+
+The Exp 3924 workflow SHALL archive milestone `2026.06.362`, confirm milestone
+`2026.06.363` is active in the current research roadmap, retire the graph-
+grounding fact-verifier route, and write
+`results/experiment_3924_archive_v362_activate_v363_retire_facts.json`.
+Before editing any record, it SHALL confirm `research-complete.yaml` exists and
+safe-loads with the repository Python environment. If that precondition fails,
+it SHALL write a blocked artifact whose `honest_verdict` starts with
+`blocked_research_complete_yaml_poison` and SHALL NOT edit
+`research-complete.yaml` or `ops/exclusion_manifest.yaml`.
+
+The workflow SHALL append an idempotent retirement entry to
+`ops/exclusion_manifest.yaml` for experiment `3920` and the graph-grounding
+fact-verifier scope. The entry SHALL cite completed milestone `2026.06.362`,
+the four-outcome fabrication/block chain `exp3862/exp3886/exp3896/exp3920`,
+and `retire_if_same_verdict`. After the edit, the manifest SHALL still
+safe-load and the artifact SHALL record bare booleans `facts_route_retired` and
+`exclusion_manifest_parses`.
+
+The workflow SHALL read Exp 3914 through Exp 3923 verdicts by invoking
+`scripts/summarize_artifact.py` over the authoritative result artifacts rather
+than raw-reading the milestone JSONs for verdict extraction. It SHALL append an
+append-only `.362` archive record to `research-complete.yaml` containing all
+ten task verdicts. Every appended scalar containing `: ` SHALL be quoted so the
+.355 colon-poison failure cannot recur. The archive record SHALL explicitly
+preserve that Exp 3916 made the accuracy axis genuine, Exp 3917 used a
+below-chance LLM judge (`llm_judge_auroc=0.4423`) making the efficiency verdict
+a strawman, Exp 3918 was degenerate with zero escalation, Exp 3920 was
+blocked/flagged for the fourth facts attempt, and Exp 3922 was flagged for
+`duration_s=0.0`.
+
+After the archive and retirement edits, the workflow SHALL confirm both
+`research-complete.yaml` and `ops/exclusion_manifest.yaml` safe-load. It SHALL
+run `.venv/bin/pytest tests/python/test_pipeline_extract.py
+tests/python/test_docs.py -q --no-header -n 0 --no-cov -o addopts=` and record
+the bare boolean `core_pretest_green`. It SHALL run `.venv/bin/python -c
+"import carnot.verify; from carnot.verify import gguf_inference,
+cost_instrumented_verification; print('ok')"` and record the bare boolean
+`live_model_modules_importable`. The workflow SHALL NOT modify
+`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`; those documents are reconciled by the
+conductor's separate status step for this milestone.
+
+The terminal artifact SHALL include bare top-level values for
+`archived_milestone`, `activated_milestone`, `facts_route_retired`,
+`exclusion_manifest_parses`, `research_complete_yaml_parses`,
+`core_pretest_green`, `live_model_modules_importable`,
+`prior_milestone_verdicts_summary`, `n362_comparator_flaw_recorded`,
+`honest_verdict`, `duration_s`, and `inference_substrate`. On the complete
+path, `honest_verdict` SHALL start with `complete:` or `success:`. Blocked
+verdicts SHALL start with `blocked_<resource>`.
+
+#### SCENARIO-REPORT-3924: V362 Archive Retires Facts And Records The Comparator Flaw
+
+**Given** `.363` is active, `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` safe-load, Exp 3920's fourth facts attempt is
+available as a blocked/flagged artifact, and Exp 3914 through Exp 3923 can be
+summarized
+**When** the Exp 3924 workflow runs
+**Then** it appends the graph-grounding facts retirement entry, confirms both
+YAML files still parse, appends the `.362` task verdicts to
+`research-complete.yaml`, quotes colon-bearing scalars, records the
+below-chance Exp 3917 comparator flaw as the `.363` forward bet, runs the core
+pretest and import checks, writes the required terminal artifact, and leaves
+ops/status/traceability/conductor files unchanged.
+
+#### SCENARIO-REPORT-3924-BLOCKED-YAML: Corrupt Research Record Blocks Before Retirement
+
+**Given** `research-complete.yaml` does not safe-load
+**When** the Exp 3924 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_research_complete_yaml_poison`, records the failed YAML parse in
+`preconditions_checked`, and leaves both `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` byte-for-byte unchanged.
+
+## Implementation Status (REQ-REPORT-3924)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3924 | Implemented (`python/carnot/reporting/archive_v362_activate_v363_retire_facts_3924.py`, `scripts/experiments/experiment_3924_archive_v362_activate_v363_retire_facts.py`) | Implemented (`tests/python/test_experiment_3924_archive_v362_activate_v363_retire_facts.py`) |

@@ -38,7 +38,7 @@
 #   4. NO hard gated_on on the critical path (.340 disk-fallback). Each downstream task disk-reads
 #      its upstream and emits blocked_upstream_* if absent — a skipped upstream costs ONE task.
 #   5. BARE field emission: every REQUIRED ARTIFACT FIELD value is a bare scalar; the principle:
-#      lines guide the agent, NOT a {value,principle} wrapper (exp3871 bug).
+#      lines guide the agent, NOT a {{value,principle}} wrapper (exp3871 bug).
 #
 # ROUTING: all tasks codex + requires_codex + gpt-5.5 (anti-wipeout; gemini crashes GPU
 # workloads and 429-wiped .333/.355; standing operator gemini<->codex flip authority
@@ -111,7 +111,7 @@ tasks:
         6. Record the .362 below-chance-judge comparator flaw as the .363 forward-bet.
 
       REQUIRED ARTIFACT FIELDS (emit each as a BARE scalar; the principle: lines guide YOU, do NOT
-      wrap values in a {value,principle} dict):
+      wrap values in a {{value,principle}} dict):
         archived_milestone: principle "Provenance — which milestone was archived."
         activated_milestone: principle "Confirms .363 is live so downstream tasks resolve."
         facts_route_retired: principle "BARE BOOL — the graph-grounding facts scope was added to the exclusion manifest (4th-fabrication retirement)."
@@ -185,7 +185,7 @@ tasks:
            If flipped AUROC >> 0.5, the .362 bug was polarity/parse. Record the diagnosed_cause honestly
            (polarity_inversion / unparsed_verdict_default / weak_prompt / genuine_weakness).
         2. BUILD `python/carnot/verify/competent_llm_judge.py` exposing
-           `judge_step(item, generator) -> {verdict_prob, raw_text}` implementing a GenRM/ThinkPRM recipe:
+           `judge_step(item, generator) -> {{verdict_prob, raw_text}}` implementing a GenRM/ThinkPRM recipe:
            a per-step structured CoT ("examine THIS step; is it correct? reason, then output VERDICT: CORRECT|INCORRECT"),
            few-shot exemplars, a ROBUST parser (default to abstain, not a constant), polarity-correct scoring,
            backed by the exp3915 robust generator. Prefer a stronger model (Qwen3.6-35B-A3B / gemma-4-31B-it
@@ -195,7 +195,7 @@ tasks:
            AUROC > 0.65 (the positive control that the judge clears chance). Do NOT assert any wall-clock floor
            inside the unit test (the .361 poison-test lesson). Run the test, assert PASS.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         diagnosed_cause: principle "WHY the .362 judge was below chance (polarity_inversion / unparsed_verdict_default / weak_prompt / genuine_weakness) — the root cause."
         flipped_polarity_auroc: principle "BARE FLOAT — exp3917 judge AUROC with score polarity flipped; >>0.5 confirms a polarity/parse bug, not a model weakness."
         judge_module_path: principle "Where every .363 efficiency task imports the competent judge from."
@@ -274,7 +274,7 @@ tasks:
         4. Assert duration_s >= 60 (real competent-judge run over hundreds of items — the FULL-CORPUS
            artifact). If <60s emit blocked_llm_judge_not_invoked.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         energy_auroc, llm_judge_auroc: principle "Accuracy of each verifier on the SAME labels; the judge is now competent so parity/Pareto is testable."
         judge_positive_control_passed: principle "BARE BOOL — llm_judge_auroc>0.6 on THIS corpus; the gate the .362 comparison lacked."
         accuracy_parity: principle "BARE BOOL — energy AUROC within the competent judge's CI95 (equally effective)."
@@ -352,7 +352,7 @@ tasks:
         3. Compute cascade_auroc, escalation_fraction, cascade_cost = energy_cost(all)+judge_cost(escalated),
            cascade_cost_ratio = pure_judge_cost / cascade_cost, and auroc_gap = pure_judge_auroc - cascade_auroc.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         cascade_auroc: principle "Accuracy of the classifier-first cascade — should approach the competent-judge AUROC."
         pure_judge_auroc: principle "The pure-competent-judge baseline the cascade must (near-)match."
         escalation_fraction: principle "BARE FLOAT — fraction escalated; MUST be > 0 (the .362 positive-control failure was escfrac=0.0)."
@@ -427,7 +427,7 @@ tasks:
            fraction of (B) the energy ensemble catches; BOOTSTRAP CI95 (>=1000 resamples). error_overlap_jaccard
            over gold-incorrect. Require n_residual_errors >= 30.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         corpus_used: principle "Which independent corpus loaded (processbench_slice / fover_test_v4_fallback) — neither verifier was tuned on it."
         residual_catch_rate: principle "THE moat metric on the independent corpus — of the reasoner's MISSED errors, the fraction energy catches."
         residual_catch_ci95: principle "Bootstrap CI95; the gate is on the lower bound (>0.5)."
@@ -512,7 +512,7 @@ tasks:
         4. Real ARC-AGI-3 benchmark access preflight: probe whether the official ARC-AGI-3 env/API is
            reachable (record reachable bool + note). Do NOT claim any real-benchmark score.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         action_efficiency_ratio: principle "BARE FLOAT — baseline_actions / verifier_actions (mean over episodes); the verifier-as-pruner advantage (the Exp1165 ~4x shape, now with a real baseline)."
         action_efficiency_ci95: principle "Bootstrap CI on the ratio — the advantage is real iff the lower bound > 1.0."
         verifier_mean_actions, baseline_mean_actions: principle "Mean actions-to-solve per arm — the raw efficiency numbers."
@@ -582,7 +582,7 @@ tasks:
         3. Re-measure: learned ensemble AUROC (must stay in frozen CI), memory-ablation contribution (~+0.0185),
            frozen 0.9131 unchanged. Persist v26 state.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         learned_ensemble_auroc: principle "Must stay within the frozen CI [0.9027,0.9235] — online learning must not degrade the headline."
         memory_ablation_contribution: principle "Must hold ~+0.0185 (CI [0.0125,0.0245]) — the self-learning component's measured value."
         frozen_headline_unchanged: principle "0.9131 NEVER silently substituted — the invariant guard."
@@ -650,7 +650,7 @@ tasks:
         3. KV260 (if reachable): `ssh kria 'xmutil listapps'` + `ls /dev/uio*`; record loaded overlay + whether
            the Carnot Ising bitstream is active; assess toward-terminal. NO GGUF/CUDA markers in the artifact.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         gatemate_reachable, polarfire_reachable, kv260_reachable: principle "Per-board reachability — GateMate via JTAG detect, the others via SSH (KV260 never via host SD card)."
         gatemate_terminal_state_reached: principle "BARE BOOL — flashed + smoke + readback-or-unsupported + distinct timers; the graduation signal."
         duration_s, run_duration_s: principle "Two DISTINCT timers (the exp3866 TAUTOLOGY corrigendum); must differ."
@@ -712,7 +712,7 @@ tasks:
         3. Append the note to docs/research-notes/ and a scored candidate to research-studying.md; add any
            NEW paper to research-references.md. Do NOT touch docs/index.html / README / blog.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         synthesis_note_path: principle "Where the one-page positioning note landed (docs/research-notes/)."
         landscape_position_summary: principle "One-line — where Carnot's cheap-verifier-vs-competent-judge result sits in the 2026 landscape."
         next_highest_leverage_experiments: principle "The 1-2 proposed next experiments with rationale — the convergence steer for the next milestone."
@@ -775,7 +775,7 @@ tasks:
            offline proof now credible -> scale the ARC-AGI-3 agentic-proof venue; the loop recommends, the
            operator decides).
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         efficiency_verdict: principle "VALID_EARNS_PLACE / CHEAPER_BUT_LESS_ACCURATE / INCONCLUSIVE from exp3926 — the EFFICIENCY axis answer against a COMPETENT judge (the .362 strawman fixed)."
         efficiency_cost_ratio: principle "BARE FLOAT — the measured 'Nx cheaper' number against the competent judge."
         judge_was_competent: principle "BARE BOOL — did the .363 judge clear its positive control (fixing the .362 below-chance comparator)."
