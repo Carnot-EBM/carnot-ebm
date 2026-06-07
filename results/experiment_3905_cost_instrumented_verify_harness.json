@@ -1,0 +1,90 @@
+{
+  "duration_s": 35.861052296997514,
+  "energy_cost": {
+    "auroc": 0.5,
+    "est_flops": 2652,
+    "est_tokens": 70,
+    "n_items": 10,
+    "per_item_wall_ms": 0.09216709877364337,
+    "total_wall_s": 0.0009216709877364337
+  },
+  "experiment": 3905,
+  "field_principles": {
+    "duration_s": "Real monotonic wall-clock duration; no sleep padding.",
+    "fixture_cost_ratio": "BARE FLOAT - llm_per_item / energy_per_item on the fixture; must be >1.",
+    "fixture_energy_per_item_ms": "BARE FLOAT - energy verifier per-item wall-clock.",
+    "fixture_llm_per_item_ms": "BARE FLOAT - LLM judge per-item wall-clock.",
+    "harness_module_path": "Where exp3906 imports the tested cost harness from.",
+    "inference_substrate": "Declares the exact local inference substrate.",
+    "model_specs": "SOTA GGUF path and llama.cpp runtime parameters.",
+    "preconditions_checked": "Pre-launch resource checks before live timing.",
+    "random_seed": "Fixed seed for llama.cpp invocation.",
+    "reproducibility_checksum": "SHA256 over fixture, model specs, and measured costs.",
+    "unit_test_passed": "BARE BOOL - passing test guards against a fabricated stub.",
+    "unit_test_path": "Where the live timing test is anchored."
+  },
+  "fixture_cost_ratio": 30881.00186586782,
+  "fixture_energy_per_item_ms": 0.09216709877364337,
+  "fixture_label_balance": {
+    "gold_correct": 5,
+    "gold_error": 5
+  },
+  "fixture_llm_per_item_ms": 2846.212349200505,
+  "harness_module_path": "python/carnot/verify/cost_instrumented_verification.py",
+  "honest_verdict": "complete: cost_harness_NOT_READY_ratio30881.00_unit_testFalse",
+  "inference_substrate": "live_llama_cpp_judge_cpu_forward_plus_cpu_verifier_ensemble",
+  "llm_cost": {
+    "auroc": 0.9,
+    "est_flops": 96512000000000,
+    "est_tokens": 1856,
+    "n_items": 10,
+    "per_item_wall_ms": 2846.212349200505,
+    "total_wall_s": 28.46212349200505
+  },
+  "model_specs": {
+    "fallback_used": false,
+    "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "loader": "llama_cpp.Llama",
+    "max_tokens": 96,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-IQ2_M.gguf",
+    "n_batch": 64,
+    "n_ctx": 1024,
+    "n_gpu_layers": 0,
+    "offload_kqv": false,
+    "parameter_count_for_flop_estimate": 26000000000
+  },
+  "n_items": 10,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "returncode=0",
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "detail": "ok",
+      "resource": "carnot_verify_import"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-IQ2_M.gguf",
+      "resource": "gemma_4_26b_a4b_it_gguf_cached"
+    },
+    {
+      "available": true,
+      "detail": "ok",
+      "resource": "llama_cpp_import"
+    },
+    {
+      "available": true,
+      "detail": "tokens=10",
+      "resource": "gguf_tokenizer_load"
+    }
+  ],
+  "random_seed": 3905,
+  "reproducibility_checksum": "8051aab634f17d704f3d83f3fa85bca4b1876d4ce205fc124ecac678e065960b",
+  "status": "complete: cost_harness_NOT_READY_ratio30881.00_unit_testFalse",
+  "title": "cost_instrumented_verify_harness",
+  "unit_test_passed": false,
+  "unit_test_path": "tests/python/test_cost_instrumented_verification.py"
+}

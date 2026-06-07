@@ -10988,6 +10988,68 @@ metrics, zero item counts, no per-step score claims, and a measured duration.
 |---|---|---|
 | REQ-VERIFY-3904 | Planned (`python/carnot/eval/moat_scissor_regated.py`, `scripts/experiments/experiment_3904_moat_scissor_regated.py`) | Planned (`tests/python/test_experiment_3904_moat_scissor_regated.py`) |
 
+### REQ-VERIFY-3905: Cost-Instrumented Verifier Harness
+
+The repository SHALL provide `python/carnot/verify/cost_instrumented_verification.py`
+and `scripts/experiments/experiment_3905_cost_instrumented_verify_harness.py`
+so Exp 3906 can compare the shipped cheap verifier ensemble against a live
+LLM-as-judge with measured cost rather than inherited assumptions.
+
+The harness module SHALL expose
+`measure_verification_cost(verifier_fn, items, label)` returning bare fields
+`auroc`, `total_wall_s`, `per_item_wall_ms`, `est_tokens`, `est_flops`, and
+`n_items`. The measurement SHALL use a monotonic clock around the verifier
+call, SHALL compute AUROC from the fixture gold labels and verifier scores,
+and SHALL NOT assign one timer's value to another timer-derived field.
+
+The module SHALL include fixture wrappers for both verifier families. The
+energy-verifier wrapper SHALL run the local CPU verifier ensemble over the
+same fixed step/gold-label fixture and count estimated ensemble forward-pass
+operations. The LLM-judge wrapper SHALL load a cached SOTA GGUF through
+`llama_cpp.Llama(model_path=...)`, count actual prompt plus completion tokens
+with the GGUF tokenizer, parse the judgment with the tested Exp 3894 parser,
+and estimate FLOPs as approximately `2 * params * tokens`.
+
+The Exp 3905 artifact SHALL write
+`results/experiment_3905_cost_instrumented_verify_harness.json` with bare
+top-level fields `harness_module_path`, `fixture_cost_ratio`,
+`fixture_energy_per_item_ms`, `fixture_llm_per_item_ms`, `unit_test_path`,
+`unit_test_passed`, `preconditions_checked`, `model_specs`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, and `inference_substrate`, plus
+field-principle strings without `{value, principle}` metric wrappers.
+
+The falsification gate SHALL emit
+`complete: cost_harness_READY_ratio<r>_efficiency_head_to_head_can_run`
+only when `unit_test_passed=true`, `fixture_cost_ratio > 1`, and
+`duration_s >= 60`. Otherwise it SHALL emit
+`complete: cost_harness_NOT_READY_ratio<r>_unit_test<bool>`. Failed hard
+resources SHALL write a terminal `blocked_<resource>` artifact with
+precondition evidence and no fabricated fixture-cost metrics.
+
+### SCENARIO-VERIFY-3905: Fixture Measures LLM Judge Versus Energy Verifier Cost
+
+Given CUDA, `carnot.verify`, `llama_cpp`, and a cached SOTA GGUF are available,
+when Exp 3905 runs the fixed cost fixture through both verifier wrappers, then
+it writes `results/experiment_3905_cost_instrumented_verify_harness.json`,
+records positive and distinct per-item wall-clock costs, records a cost ratio
+greater than one, records actual LLM prompt plus completion tokens, records
+energy-verifier forward-pass operations, records `duration_s >= 60`, and emits
+the HARNESS_READY terminal verdict only if the unit test passed.
+
+### SCENARIO-VERIFY-3905-BLOCKED: Missing Live Resources Do Not Fabricate Cost Metrics
+
+Given CUDA, the cached GGUF, `llama_cpp`, or `carnot.verify` is unavailable,
+when Exp 3905 runs, then it writes
+`results/experiment_3905_cost_instrumented_verify_harness.json` with a terminal
+`blocked_<resource>` honest verdict, populated precondition evidence, null
+fixture-cost metrics, `unit_test_passed=false`, and no live-model cost claim.
+
+## Implementation Status (REQ-VERIFY-3905)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3905 | Planned (`python/carnot/verify/cost_instrumented_verification.py`, `scripts/experiments/experiment_3905_cost_instrumented_verify_harness.py`) | Planned (`tests/python/test_cost_instrumented_verification.py`) |
+
 ### REQ-VERIFY-3896: Graph-Grounding Verifier Harness Positive Control
 
 The repository SHALL provide a tested graph-grounding fact verifier harness at

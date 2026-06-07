@@ -7965,3 +7965,29 @@ ERROR: {
 | 2026-06-07 04:21 UTC | Milestone 2026.06.361 activated | OK | 11 tasks queued |
 | 2026-06-07 04:36 UTC | Archive .360 -> activate .361; GREEN-GATE de-risk: | OK | 109 passed in 4.64s |
 | 2026-06-07 05:00 UTC | ACCURACY axis — MOAT SCISSOR RE-GATED (north-star  | OK | 123 passed in 41.22s |
+| 2026-06-07 05:26 UTC | BUILD + UNIT-TEST the cost-instrumented verificati | FAIL | Post-tests failed: 1 failed, 86 passed in 4.26s |
+| 2026-06-07 05:28 UTC | BUILD + UNIT-TEST the cost-instrumented verificati | OK | Deliverable already exists in repo |
+| 2026-06-07 05:28 UTC | EFFICIENCY axis — energy-verifier vs LLM-as-judge  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 6.60s |
+| 2026-06-07 05:30 UTC | EFFICIENCY axis — energy-verifier vs LLM-as-judge  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 5.69s |
+| 2026-06-07 05:33 UTC | EFFICIENCY axis — energy-verifier vs LLM-as-judge  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 7.28s |
+| 2026-06-07 05:35 UTC | META-EBM CASCADE ROUTER prototype (classifier-firs | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 5.99s |
+| 2026-06-07 05:37 UTC | META-EBM CASCADE ROUTER prototype (classifier-firs | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 5.62s |
+| 2026-06-07 05:39 UTC | META-EBM CASCADE ROUTER prototype (classifier-firs | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 6.03s |
+| 2026-06-07 05:42 UTC | ARC-AGI-3 harness SCAFFOLD — BUILD + UNIT-TEST the | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 5.22s |
+| 2026-06-07 05:44 UTC | ARC-AGI-3 harness SCAFFOLD — BUILD + UNIT-TEST the | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 5.33s |
+| 2026-06-07 05:46 UTC | ARC-AGI-3 harness SCAFFOLD — BUILD + UNIT-TEST the | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 5.41s |
+| 2026-06-07 05:49 UTC | FACTS graph-grounding verifier — DISCIPLINED harne | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 5.60s |
+| 2026-06-07 05:51 UTC | FACTS graph-grounding verifier — DISCIPLINED harne | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 6.17s |
+| 2026-06-07 05:53 UTC | FACTS graph-grounding verifier — DISCIPLINED harne | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 6.12s |
+| 2026-06-07 05:56 UTC | FR-11 continuous self-learning v25 (research-progr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 6.74s |
+| 2026-06-07 05:58 UTC | FR-11 continuous self-learning v25 (research-progr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 5.89s |
+| 2026-06-07 06:00 UTC | FR-11 continuous self-learning v25 (research-progr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 5.86s |
+| 2026-06-07 06:03 UTC | GateMate A1-EVB-2M terminal-state confirmation — r | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 6.10s |
+| 2026-06-07 06:05 UTC | GateMate A1-EVB-2M terminal-state confirmation — r | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 6.15s |
+| 2026-06-07 06:07 UTC | GateMate A1-EVB-2M terminal-state confirmation — r | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 6.05s |
+| 2026-06-07 06:09 UTC | PolarFire + KV260 consolidated opportunistic conti | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 5.45s |
+| 2026-06-07 06:12 UTC | PolarFire + KV260 consolidated opportunistic conti | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 6.87s |
+| 2026-06-07 06:14 UTC | PolarFire + KV260 consolidated opportunistic conti | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 6.40s |
+| 2026-06-07 06:16 UTC | Capstone .361 — the VERIFIER SCORECARD: aggregate  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 6.13s |
+| 2026-06-07 06:19 UTC | Capstone .361 — the VERIFIER SCORECARD: aggregate  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 5.37s |
+| 2026-06-07 06:21 UTC | Capstone .361 — the VERIFIER SCORECARD: aggregate  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 6.56s |
