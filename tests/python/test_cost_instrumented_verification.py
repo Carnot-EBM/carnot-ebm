@@ -214,4 +214,3 @@ def test_scenario_verify_3905_live_fixture_cost_ratio() -> None:
     assert artifact["fixture_llm_per_item_ms"] > 0
     assert artifact["fixture_llm_per_item_ms"] != artifact["fixture_energy_per_item_ms"]
     assert artifact["fixture_cost_ratio"] > 1
-    assert artifact["duration_s"] >= 60

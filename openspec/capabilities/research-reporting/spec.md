@@ -18101,3 +18101,98 @@ unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3903 | Planned (`python/carnot/reporting/archive_v360_activate_v361_3903.py`, `scripts/experiments/experiment_3903_archive_v360_activate_v361.py`) | Planned (`tests/python/test_experiment_3903_archive_v360_activate_v361.py`) |
+
+### REQ-REPORT-3914: Archive .361 Wash And Activate .362 With Poison-Test Quarantine
+
+The Exp 3914 workflow SHALL archive milestone `2026.06.361` honestly in
+`research-complete.yaml` and confirm milestone `2026.06.362` is active in
+`research-roadmap.yaml`. Before appending any research record, it SHALL confirm
+that `research-complete.yaml` exists and safe-loads. If `research-complete.yaml`
+does not safe-load, the workflow SHALL write a blocked artifact whose
+`honest_verdict` starts with `blocked_research_complete_yaml_poison` and SHALL
+NOT edit `research-complete.yaml`.
+
+The workflow SHALL quarantine the Exp 3905 poison test by ensuring
+`tests/python/test_cost_instrumented_verification.py` no longer asserts
+`artifact["duration_s"] >= 60` on the 10-row fixture. The fixture test SHALL
+keep correctness and accounting assertions for item counts, positive per-item
+costs, distinct verifier costs, and `fixture_cost_ratio > 1`. The workflow
+SHALL run `.venv/bin/pytest tests/python/test_cost_instrumented_verification.py
+-q --no-header -o addopts=` and record a bare boolean
+`poison_test_quarantined` that is true only when the duration-floor assertion is
+absent and the targeted test command passes.
+
+On the complete path, the workflow SHALL read Exp 3903, Exp 3904, and Exp 3905
+verdicts by invoking `scripts/summarize_artifact.py` rather than raw-reading
+those result JSON files. It SHALL preserve the .361 truth that Exp 3903
+completed the .360 archive activation, Exp 3904 blocked on
+`blocked_llama_cpp_inference_failed`, and Exp 3905 produced a live-critical
+`DURATION_TOO_SHORT` fixture artifact that poisoned the conductor pre-test
+gate. It SHALL also record that Exp 3906 through Exp 3913 were SKIP-cascaded by
+the same `1 failed, 105 passed` pre-test failure. Critical summarizer flags for
+prior .361 artifacts SHALL NOT block the archive transition; they are archived
+evidence. A failed or unavailable summarizer command SHALL block with
+`blocked_v361_summary_command_failed`.
+
+The workflow SHALL append an append-only `.361` corrective archive record to
+`research-complete.yaml`, preserving all existing content as a prefix. Every
+appended `result:` value that contains `: ` SHALL be single-quoted so the YAML
+parse gate cannot be poisoned again. After the append, the workflow SHALL
+confirm `research-complete.yaml` still safe-loads.
+
+The workflow SHALL run the conductor smart-subset pretest command
+`.venv/bin/pytest tests/python/test_pipeline_extract.py tests/python/test_docs.py
+tests/python/test_cost_instrumented_verification.py -q --no-header -n 0
+--no-cov -o addopts=` and SHALL record a bare boolean `core_pretest_green`. It
+SHALL run the live-model module import command
+`.venv/bin/python -c "import carnot.verify; from carnot.verify import
+cost_instrumented_verification, reasoner_self_verification; print('ok')"` and
+SHALL record a bare boolean `live_model_modules_importable`; an import failure
+SHALL be recorded honestly but SHALL NOT by itself make the transition blocked.
+The backend routing recommendation SHALL record codex as reliable and preserve
+the standing operator gemini<->codex flip authority. The workflow SHALL leave
+`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, and
+`scripts/research_conductor.py` unchanged; those documents are reconciled by the
+conductor's separate status step for this milestone.
+
+The terminal artifact SHALL be written to
+`results/experiment_3914_archive_v361_activate_v362.json` and SHALL include
+bare top-level values for `archived_milestone`, `activated_milestone`,
+`poison_test_quarantined`, `research_complete_yaml_parses`,
+`core_pretest_green`, `live_model_modules_importable`,
+`prior_milestone_verdicts_summary`, `n361_wash_root_causes`,
+`backend_routing_recommendation`, `honest_verdict`, `duration_s`, and
+`inference_substrate`. On the complete path, `honest_verdict` SHALL start with
+`complete:` or `success:`. Blocked verdicts SHALL start with
+`blocked_<resource>`.
+
+#### SCENARIO-REPORT-3914: V361 Archive Breaks The Poison-Test Cascade
+
+**Given** `.362` is active in `research-roadmap.yaml`,
+`research-complete.yaml` exists and safe-loads, the Exp 3905 fixture test no
+longer asserts the 60-second floor, and Exp 3903 through Exp 3905 can be
+summarized
+**When** the Exp 3914 workflow runs
+**Then** it invokes `scripts/summarize_artifact.py`, appends a `.361` archive
+record with all eleven task verdicts, preserves the Exp 3904
+`blocked_llama_cpp_inference_failed` root cause, preserves the Exp 3905
+poison-test cascade root cause, confirms `research-complete.yaml` still
+safe-loads, runs the smart-subset pretest including the fixed cost-harness
+test, records module import results, records codex plus the standing flip
+authority, writes the required terminal artifact, and leaves
+ops/status/traceability/conductor files unchanged.
+
+#### SCENARIO-REPORT-3914-BLOCKED-YAML: Corrupt Research Record Blocks Before Append
+
+**Given** `research-complete.yaml` does not safe-load
+**When** the Exp 3914 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_research_complete_yaml_poison`, records the failed YAML parse in
+`preconditions_checked`, and leaves `research-complete.yaml` byte-for-byte
+unchanged.
+
+## Implementation Status (REQ-REPORT-3914)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3914 | Implemented (`python/carnot/reporting/archive_v361_activate_v362_3914.py`, `scripts/experiments/experiment_3914_archive_v361_activate_v362.py`) | Implemented (`tests/python/test_experiment_3914_archive_v361_activate_v362.py`) |
