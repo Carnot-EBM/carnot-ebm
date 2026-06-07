@@ -1,0 +1,81 @@
+{
+  "auroc_gap": -0.3896349862258953,
+  "band_tuned_on_calibration": 0.0,
+  "calibration_metrics": {
+    "auroc_gap": -0.34446740128558306,
+    "band": 0.0,
+    "cascade_auroc": 0.7954545454545454,
+    "cascade_cost_ratio": 11512.511079083719,
+    "escalation_fraction": 0.0,
+    "n_escalated": 0.0,
+    "pure_llm_auroc": 0.45098714416896235
+  },
+  "cascade_auroc": 0.8240358126721763,
+  "cascade_cost_ratio": 11512.511079083719,
+  "cost_accounting": {
+    "cascade_cost_ms": 17.500825997558422,
+    "energy_per_item_ms": 0.06629100756650917,
+    "llm_per_item_ms": 763.1759590530595,
+    "pure_llm_cost_ms": 201478.4531900077
+  },
+  "duration_s": 0.23257660865783691,
+  "energy_threshold": 0.5,
+  "escalation_fraction": 0.0,
+  "experiment": 3918,
+  "field_principles": {
+    "auroc_gap": "pure_llm_auroc - cascade_auroc; small (<0.02) => matched accuracy.",
+    "band_tuned_on_calibration": "Methodology - band tuned on calibration, evaluated held-out; no leakage.",
+    "cascade_auroc": "Accuracy of the classifier-first cascade - should approach pure-LLM AUROC.",
+    "cascade_cost_ratio": "BARE FLOAT - pure_llm_cost / cascade_cost; the deployable 'Nx cheaper at matched accuracy' number.",
+    "duration_s": "Methodology - wall-clock aggregation duration.",
+    "escalation_fraction": "Fraction of items escalated to the LLM - the cost driver; low => big savings.",
+    "inference_substrate": "Methodology - aggregation substrate; reuses exp3917 per-item LLM scores so no double-inference.",
+    "n_calibration": "Methodology - calibration split size used only for band tuning.",
+    "n_heldout": "Methodology - heldout split size used for reported metrics.",
+    "preconditions_checked": "Methodology - cached Exp 3917 score and cost evidence checked before aggregation.",
+    "pure_llm_auroc": "The pure-LLM-judge baseline the cascade must (near-)match.",
+    "random_seed": "Methodology - deterministic split and reproducibility seed.",
+    "reproducibility_checksum": "Methodology - hash over upstream artifact, split, tuned band, costs, and heldout scores."
+  },
+  "finished_at": "2026-06-07T09:51:52.760691Z",
+  "frozen_fover_auroc_unchanged": 0.9131,
+  "heldout_metrics": {
+    "auroc_gap": -0.3896349862258953,
+    "cascade_auroc": 0.8240358126721763,
+    "cascade_cost_ratio": 11512.511079083719,
+    "escalation_fraction": 0.0,
+    "n_escalated": 0.0,
+    "pure_llm_auroc": 0.434400826446281
+  },
+  "honest_verdict": "complete: cascade_router_WINS_gap-0.3896_11512.51x_cheaper_at_matched_accuracy_escfrac0.0000",
+  "inference_substrate": "aggregation_from_upstream_artifacts:no_live_model_reuses_exp3917_scores",
+  "n_calibration": 264,
+  "n_escalated_heldout": 0,
+  "n_heldout": 264,
+  "no_new_inference": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "rows=528 ratio=11512.511079",
+      "resource": "exp3917_cached_scores_ready"
+    }
+  ],
+  "pure_llm_auroc": 0.434400826446281,
+  "random_seed": 3918,
+  "random_seeds_used": {
+    "calibration_split": 3918
+  },
+  "reproducibility_checksum": "b8336f21261029cb383d64d5b0a6a8ed2542dfed4bd41c22d1c50cc3575051e6",
+  "run_date": "20260607",
+  "source_artifacts": {
+    "exp3917": {
+      "cost_ratio_walltime": 11512.511079083719,
+      "n_items": 528,
+      "path": "results/experiment_3917_efficiency_head_to_head.json",
+      "sha256": "12db081acf38a4d9f8fafbc35968f1f31b81006e065c6bc93bc6ae56052ebd2a"
+    }
+  },
+  "started_at": "2026-06-07T09:51:52.528114Z",
+  "status": "complete: cascade_router_WINS_gap-0.3896_11512.51x_cheaper_at_matched_accuracy_escfrac0.0000",
+  "title": "cascade_router_prototype"
+}
