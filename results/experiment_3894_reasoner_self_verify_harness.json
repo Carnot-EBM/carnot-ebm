@@ -1,0 +1,94 @@
+{
+  "degeneracy_root_cause": "Exp3827/Exp3885 reused a brittle YES/NO parser: `if \"no\" in response` classified errors, while every empty, JSON, yes/correct, or otherwise unparsed response silently defaulted to correct. Exp3827 also assigned `duration_s = max(duration, 61.0)`, fabricating the duration floor. That combination can yield 0 caught errors and AUROC 0.5 without surfacing a parser failure.",
+  "duration_s": 72.48811459541321,
+  "experiment": 3894,
+  "finished_at": "2026-06-07T01:21:47.065733Z",
+  "fixture_auroc": 0.9166666666666666,
+  "fixture_n_caught": 6,
+  "fixture_n_errors": 6,
+  "fixture_n_items": 12,
+  "harness_module_path": "python/carnot/verify/reasoner_self_verification.py",
+  "honest_verdict": "complete: reasoner_self_verify_harness_READY_fixture_auroc0.9167_ncaught6_moat_scissor_can_run",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": {
+    "fallback_used": false,
+    "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "loader": "llama_cpp.Llama",
+    "max_tokens": 96,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-IQ2_M.gguf",
+    "n_batch": 64,
+    "n_ctx": 1024,
+    "n_gpu_layers": 0,
+    "offload_kqv": false
+  },
+  "parsed_count": 12,
+  "parser_constant_prediction": false,
+  "per_step_pred": [
+    1,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1
+  ],
+  "per_step_score": [
+    1.0,
+    1.0,
+    0.2,
+    1.0,
+    0.2,
+    1.0,
+    0.2,
+    1.0,
+    0.2,
+    1.0,
+    0.2,
+    1.0
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "returncode=0",
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-IQ2_M.gguf",
+      "resource": "gemma_4_26b_a4b_it_gguf_cached"
+    },
+    {
+      "available": true,
+      "detail": "import llama_cpp OK",
+      "resource": "llama_cpp_import"
+    }
+  ],
+  "random_seed": 3894,
+  "raw_responses": [
+    "```json\n{\n  \"verdict\": \"incorrect\",\n  \"error_confidence\": 1.0\n}\n```",
+    "```json\n{\n  \"verdict\": \"incorrect\",\n  \"error_confidence\": 1.0\n}\n```",
+    "```json\n{\n  \"verdict\": \"correct\",\n  \"error_confidence\": 1.0\n}\n```",
+    "```json\n{\n  \"verdict\": \"incorrect\",\n  \"error_confidence\": 1.0\n}\n```",
+    "```json\n{\n  \"verdict\": \"correct\",\n  \"error_confidence\": 1.0\n}\n```",
+    "```json\n{\n  \"verdict\": \"incorrect\",\n  \"error_confidence\": 1.0\n}\n```",
+    "```json\n{\n  \"verdict\": \"correct\",\n  \"error_confidence\": 1.0\n}\n```",
+    "```json\n{\n  \"verdict\": \"incorrect\",\n  \"error_confidence\": 1.0\n}\n```",
+    "{\n  \"verdict\": \"correct\",\n  \"error_confidence\": 1.0\n}\n```",
+    "{\"verdict\": \"incorrect\", \"error_confidence\": 1.0}\n```\n\n**Analysis:**\nThe step states: \"If all blickets are daxes and all wugs are daxes, then all wugs are baxes [sic - likely daxes] and all wugs are blickets.\"\nWait, the actual step provided is: \"If all blickets are daxes and dax is a subset of wugs",
+    "{\n  \"verdict\": \"correct\",\n  \"error_confidence\": 1.0\n}",
+    "{\n  \"verdict\": \"incorrect\",\n  \"error_confidence\": 1.0\n}\n```\n\n<|channel>thought\n<channel|>```json\n{\n  \"verdict\": \"incorrect\",\n  \"error_confidence\": 1.0\n}\n```"
+  ],
+  "reproducibility_checksum": "00c822d0fd38e57a26136850595f1c05aa0b7e759d58eed0bebb11e7596d9a50",
+  "run_date": "20260607",
+  "started_at": "2026-06-07T01:20:34.577618Z",
+  "status": "complete: reasoner_self_verify_harness_READY_fixture_auroc0.9167_ncaught6_moat_scissor_can_run",
+  "title": "reasoner_self_verify_harness",
+  "unit_test_passed": true,
+  "unit_test_path": "tests/python/test_reasoner_self_verification.py",
+  "unparsed_count": 0
+}

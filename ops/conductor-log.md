@@ -7940,3 +7940,8 @@ ERROR: {
 | 2026-06-06 11:44 UTC | Plan milestone 2026.06.360 | OK | 11 tasks proposed |
 | 2026-06-06 11:46 UTC | Milestone 2026.06.360 activated | OK | 11 tasks queued |
 | 2026-06-06 11:59 UTC | Archive .359 -> activate .360; GREEN-GATE de-risk: | OK | 108 passed in 4.02s |
+| 2026-06-06 22:08 UTC | EBT FUNDAMENTAL adversarial REPLICATION (2 fresh s | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: till active. 
+ |
+| 2026-06-06 23:31 UTC | EBT FUNDAMENTAL adversarial REPLICATION (2 fresh s | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: inite losses.
+ |
+| 2026-06-07 00:55 UTC | EBT FUNDAMENTAL adversarial REPLICATION (2 fresh s | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: remains stable |
