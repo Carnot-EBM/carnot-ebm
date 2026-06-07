@@ -7993,3 +7993,4 @@ ERROR: {
 | 2026-06-07 06:21 UTC | Capstone .361 — the VERIFIER SCORECARD: aggregate  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 6.56s |
 | 2026-06-07 06:54 UTC | Plan milestone 2026.06.362 | OK | 10 tasks proposed |
 | 2026-06-07 06:56 UTC | Milestone 2026.06.362 activated | OK | 10 tasks queued |
+| 2026-06-07 07:14 UTC | Archive .361 -> activate .362; GREEN-GATE de-risk  | OK | 118 passed in 5.04s |
