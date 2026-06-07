@@ -21446,3 +21446,43 @@ ODAR (2602.23681), and the 4/δ bound (2512.02080) — these are NEW/adjacent.
   Efficient LLM Inference: A Survey" (Moslem & Kelleher, Feb 2026). Covers cascade-
   escalation broadly but frames it as model-routing-by-difficulty, NOT verifier-as-
   escalation-gate. Cite as related work for the cascade router, not as a core result.
+
+## 2026-06-07 (.363 planning sweep — making the efficiency win CREDIBLE)
+
+Root-cause context: .362's efficiency head-to-head (exp3917) measured the
+off-the-shelf gemma-4-26B-A4B-it LLM-judge at **AUROC 0.4423 — BELOW chance** on
+the FoVer-style in-distribution corpus, so the "CHEAPER_NOT_PARITY / earns=False"
+verdict reflects a BROKEN judge baseline, not a verifier weakness. The energy
+verifier (0.81) DOMINATED that judge at 11,512x lower cost — but a below-chance
+baseline is not a credible competitor. The .363 convergence step is a COMPETENT
+judge so the win condition (north-star §5: equally effective at lower cost) is
+honestly testable.
+
+- **ProcessBench (Qwen, arXiv:2412.06559)** — 3,400 human-annotated math
+  step-error cases (first-incorrect-step index). The canonical INDEPENDENT
+  held-out process-verification benchmark; neither Carnot's energy ensemble nor
+  the FoVer-tuned probe was trained on it. Use a ProcessBench slice (fallback:
+  the local held-out `data/fover_test_v4.json`) as the .363 efficiency
+  credibility corpus, defeating the "in-distribution-tuned" critique.
+
+- **arXiv:2504.16828 (ThinkPRM)** + **arXiv:2408.15240 (Generative Verifiers /
+  GenRM)** — the credible-judge recipe: verification as next-token prediction
+  with a CoT-then-binary-verdict, NOT a raw "is this right? yes/no". Under a
+  fixed token budget ThinkPRM beats LLM-as-judge by 7.2% on ProcessBench. The
+  .363 credible judge must be GenRM/ThinkPRM-style (structured per-step CoT +
+  parsed verdict + few-shot + polarity-checked scoring) before any parity claim.
+
+- **ProcessBench finding (instruction sensitivity)** — verification quality is
+  "highly sensitive to instruction wording" (F1 ±3-4 pts from a few words);
+  off-the-shelf reasoning models are "suboptimal as process verifiers." This is
+  the diagnosed cause of exp3917's below-chance judge. The .363 build hardens the
+  prompt + asserts the judge clears chance on a SEPARABLE fixture before use.
+
+- **arXiv:2510.14913 (Budget-aware Discriminative Verification)** — a single
+  forward-pass discriminative verifier beats generative verification at fixed
+  compute. Directly underwrites Carnot's energy verifier as the cheap layer; the
+  .363 head-to-head is the empirical instance of this claim on step-error data.
+
+- **arXiv:2502.11250 (Uncertainty-Aware Step-wise Verification with Generative
+  Reward Models)** — calibrated step-wise generative RM; informs the credible
+  judge's per-step uncertainty parse and the cascade router's escalation band.
