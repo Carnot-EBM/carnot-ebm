@@ -10817,3 +10817,83 @@ measured duration.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3894 | Implemented (`python/carnot/verify/reasoner_self_verification.py`, `scripts/experiments/experiment_3894_reasoner_self_verify_harness.py`) | Implemented (`tests/python/test_reasoner_self_verification.py`) |
+
+### REQ-VERIFY-3895: Tested-Harness In-Distribution Moat Scissor
+
+The repository SHALL provide an Exp 3895 moat-scissor runner that writes
+`results/experiment_3895_moat_scissor_tested_harness.json` by loading the Exp
+3884 in-distribution FoVer corpus and per-item Carnot ensemble scores from
+disk, and by importing the Exp 3894 tested harness from
+`python/carnot/verify/reasoner_self_verification.py`. The runner SHALL NOT
+generate new corpus rows, SHALL NOT recompute Carnot scores, SHALL NOT
+aggregate flagged-adversarial artifacts, and SHALL NOT re-implement an inline
+reasoner judge.
+
+Before live scoring, the runner SHALL verify CUDA with the repository
+virtualenv Python, resolve a cached Qwen3.6-35B GGUF path through the
+llama.cpp filesystem path with Gemma-4-26B-A4B-it GGUF fallback, verify
+`llama_cpp` and `carnot.verify` imports, verify that the Exp 3894 artifact
+exists with `unit_test_passed=true`, and verify that the Exp 3884 artifact has
+at least 100 gold-incorrect rows with
+`carnot_ensemble_auroc_on_corpus >= 0.65`. Failed hard resources SHALL write a
+terminal `blocked_<resource>` artifact; failed upstream harness or corpus
+gates SHALL write `blocked_upstream_harness_not_ready` or
+`blocked_upstream_corpus_not_in_band`.
+
+For runnable inputs, the runner SHALL call
+`reasoner_self_verify(steps, model_path, gold_labels=...)` from the tested Exp
+3894 harness over the fixed Exp 3884 corpus. It SHALL partition
+gold-incorrect steps into reasoner-caught and reasoner-missed residual errors,
+compute `residual_catch_rate` as the fraction of residual errors caught by the
+disk-loaded Carnot predictions, compute bootstrap CI95 with at least 1000
+resamples, compute `error_overlap_jaccard` between reasoner-caught and
+Carnot-caught gold errors, and compute positive-control AUROCs from the same
+rows.
+
+The terminal artifact SHALL include bare fields for `residual_catch_rate`,
+`residual_catch_ci95`, `error_overlap_jaccard`, `n_residual_errors`,
+`reasoner_self_verify_auroc`, `carnot_ensemble_auroc`, `harness_source`,
+`corpus_source`, `n_items`, `preconditions_checked`, `model_specs`,
+`random_seed`, `random_seeds_used`, `reproducibility_checksum`, `duration_s`,
+and `inference_substrate`, with string principle notes and no `{value,
+principle}` wrappers around the bare metric fields.
+
+The falsification gate SHALL emit
+`complete: moat_scissor_MOAT_SURVIVES_residcatch<mean>_ci<lo>-<hi>_overlap<j>_nres<N>`
+only when `reasoner_self_verify_auroc` is in `[0.55, 0.97]`,
+`carnot_ensemble_auroc >= 0.65`, the residual-catch CI95 lower bound is above
+`0.5`, `error_overlap_jaccard < 0.6`, and at least 30 residual errors exist.
+It SHALL emit
+`complete: moat_scissor_MOAT_SUBSUMED_residcatch<mean>_overlap<j>_o1_subsumption_risk_nres<N>`
+only when both positive controls are non-degenerate and either the residual CI95
+upper bound is below `0.3` or overlap is above `0.7`. It SHALL emit
+`complete: moat_scissor_INCONCLUSIVE_<reason>` when the reasoner control is
+degenerate or fewer than 30 residual errors remain, and for other boundary
+cases.
+
+### SCENARIO-VERIFY-3895: Tested Harness Measures Residual Catch On In-Band Corpus
+
+Given Exp 3894 reports `unit_test_passed=true`, Exp 3884 reports an in-band
+corpus with persisted per-item Carnot scores, and live CUDA plus a cached
+llama.cpp GGUF are available, when Exp 3895 runs, then it writes
+`results/experiment_3895_moat_scissor_tested_harness.json`, records the tested
+harness source, the Exp 3884 corpus and score source, real live-inference
+duration, the reasoner self-verification AUROC positive control, the Carnot
+ensemble AUROC positive control, residual catch rate, bootstrap CI95, overlap
+Jaccard, residual count, reproducibility checksum, and a terminal moat verdict
+selected only from the documented falsification gates.
+
+### SCENARIO-VERIFY-3895-BLOCKED: Missing Preconditions Do Not Fabricate Moat Metrics
+
+Given CUDA, the cached GGUF, `llama_cpp`, `carnot.verify`, the Exp 3894 tested
+harness artifact, or the Exp 3884 in-band corpus is unavailable, when Exp 3895
+runs, then it writes
+`results/experiment_3895_moat_scissor_tested_harness.json` with a terminal
+blocked verdict, populated precondition evidence, null residual and AUROC
+metrics, zero item counts, no per-step score claims, and a measured duration.
+
+## Implementation Status (REQ-VERIFY-3895)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3895 | Implemented (`python/carnot/eval/moat_scissor_tested_harness.py`, `scripts/experiments/experiment_3895_moat_scissor_tested_harness.py`) | Implemented (`tests/python/test_experiment_3895_moat_scissor_tested_harness.py`) |
