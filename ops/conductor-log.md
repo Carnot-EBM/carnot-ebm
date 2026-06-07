@@ -8018,3 +8018,4 @@ c |
 | 2026-06-07 22:15 UTC | VALID EFFICIENCY head-to-head — energy-verifier vs | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-07 22:46 UTC | NON-DEGENERATE Meta-EBM cascade router (positive-c | OK | 89 passed in 4.22s |
 | 2026-06-07 23:35 UTC | MOAT SCISSOR replication on an INDEPENDENT corpus  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-07 23:56 UTC | ARC-AGI-3 first realistic agentic run — verifier-a | OK | 90 passed in 5.63s |
