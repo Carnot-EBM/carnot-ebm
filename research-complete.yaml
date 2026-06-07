@@ -36203,3 +36203,56 @@ milestones:
       \ verifier is the surviving asset. paper_ready stays TRUE; frozen 0.9131 unchanged."
     deliverable: results/experiment_3902_capstone_v360.json
     result: OK (conductor)
+- id: 2026.06.360
+  correction_type: v360_harness_first_archive_activation
+  title: 'Archive .360 harness-first truth and activate .361 green gates'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-07'
+  finding: '.360 was harness-first and showed the harnesses mattered: Exp 3894 proved the reasoner self-verification positive control, Exp 3895 computed MOAT_SURVIVES numbers but was mis-gated on the in-distribution reasoner AUROC, Exp 3896 remained flagged/not ready, facts downstream runs did not land, and EBT replication did not finish beyond checkpoint files. .361 is active with green gates asserted.'
+  activation_recorded: exp3903-archive-v360-activate-v361-green-gate
+  backend_routing_recommendation: 'codex reliable; standing gemini<->codex flip authority dated 2026-06-05 remains active for auditable backend routing'
+  tasks:
+  - id: exp3892-archive-v359-activate-v360-green-gate
+    title: 'Archive .359 and activate .360 green gates'
+    deliverable: results/experiment_3892_archive_v359_activate_v360.json
+    result: 'complete: archived_v359_forward_bets_v360_active_green_gates_asserted_codex_backend_recommended'
+  - id: exp3893-ebt-fundamental-adversarial-replication
+    title: 'EBT FUNDAMENTAL adversarial replication'
+    deliverable: results/experiment_3893_ebt_fundamental_replication.json
+    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3893_ebt_fundamental_replication.json'
+  - id: exp3894-build-test-reasoner-self-verify-harness
+    title: 'Build and test reasoner self-verification harness'
+    deliverable: results/experiment_3894_reasoner_self_verify_harness.json
+    result: 'complete: reasoner_self_verify_harness_READY_fixture_auroc0.9167_ncaught6_moat_scissor_can_run'
+  - id: exp3895-moat-scissor-in-distribution-tested-harness
+    title: 'Moat scissor in-distribution with tested harness'
+    deliverable: results/experiment_3895_moat_scissor_tested_harness.json
+    result: 'complete: moat_scissor_INCONCLUSIVE_reasoner_self_verify_auroc; mis-gated MOAT_SURVIVES numbers: residual_catch=0.905 CI95=[0.849,0.952] overlap=0.159 carnot_ensemble=0.967; reasoner_self_verify_auroc=0.546 fell 0.004 below the obsolete 0.55 floor'
+  - id: exp3896-build-test-graph-grounding-verifier
+    title: 'Build and test graph-grounding fact verifier'
+    deliverable: results/experiment_3896_graph_grounding_verifier_harness.json
+    result: 'complete: graph_grounding_verifier_NOT_READY_fixture_auroc1.0000_model_invokedtrue [summarize_artifact LIVE_CRITICAL]; facts fabricated again / graph-grounding harness not ready'
+  - id: exp3897-graph-grounding-facts-run-tested
+    title: 'Graph-grounding facts run with tested verifier'
+    deliverable: results/experiment_3897_graph_grounding_facts_run.json
+    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3897_graph_grounding_facts_run.json'
+  - id: exp3898-facts-complementarity
+    title: 'Facts complementarity'
+    deliverable: results/experiment_3898_facts_complementarity.json
+    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3898_facts_complementarity.json'
+  - id: exp3899-fr11-v25-online-independence-reweighting
+    title: 'FR-11 v25 online independence reweighting'
+    deliverable: results/experiment_3899_fr11_v25.json
+    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3899_fr11_v25.json'
+  - id: exp3900-gatemate-terminal-confirmation
+    title: 'GateMate terminal-state confirmation'
+    deliverable: results/experiment_3900_gatemate_terminal_confirmation.json
+    result: 'blocked_gatemate_board_unreachable'
+  - id: exp3901-polarfire-kv260-consolidated-continuity
+    title: 'PolarFire and KV260 consolidated continuity'
+    deliverable: results/experiment_3901_polarfire_kv260_continuity.json
+    result: 'success: polarfire_kv260_continuity_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_no_fabric_claim'
+  - id: exp3902-capstone-v360
+    title: 'Capstone .360 harness-first aggregation'
+    deliverable: results/experiment_3902_capstone_v360.json
+    result: 'complete: capstone_v360_ebtINCONCLUSIVE_moatINCONCLUSIVE_factsINCONCLUSIVE_paper_ready_true_frozen_unchanged'

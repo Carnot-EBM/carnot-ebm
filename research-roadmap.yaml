@@ -30,7 +30,7 @@
 #      task disk-reads its upstream and emits blocked_upstream_* if absent — a skipped
 #      upstream costs ONE task, never a cascade (the .358 cascade root cause).
 #   3. BARE field emission: every REQUIRED ARTIFACT FIELD value is a bare scalar; the
-#      principle: lines guide the agent, NOT a {value,principle} wrapper (exp3871 bug).
+#      principle: lines guide the agent, NOT a {{value,principle}} wrapper (exp3871 bug).
 #   4. The moat re-gate (exp3904) REUSES the exp3894 tested harness + exp3884 corpus
 #      verbatim; it changes ONLY the gate logic (decouple harness-validity from the
 #      in-distribution reasoner AUROC) + adds a strong self-verify arm. No new build.
@@ -102,7 +102,7 @@ tasks:
         5. Record the backend routing diagnostic (codex reliable; standing gemini<->codex flip).
 
       REQUIRED ARTIFACT FIELDS (emit each as a BARE scalar; the principle: lines are guidance
-      for YOU, do NOT wrap values in a {value,principle} dict):
+      for YOU, do NOT wrap values in a {{value,principle}} dict):
         archived_milestone: principle "Provenance — which milestone was archived."
         activated_milestone: principle "Confirms .361 is live so downstream tasks resolve."
         research_complete_yaml_parses: principle "The .355 colon-poison guard — asserts the file still loads."
@@ -188,7 +188,7 @@ tasks:
            error_overlap_jaccard = |reasoner∩carnot|/|union| over gold-incorrect.
         6. Apply the corrected gate (below) using the FIXTURE control + per-arm residual_catch + overlap.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         harness_fixture_auroc: principle "The harness-validity control (from exp3894); >0.6 means the judge harness is sound — this REPLACES the in-distribution reasoner AUROC as the control (the .360 mis-gate fix)."
         residual_catch_rate_weak: principle "THE moat metric on the WEAK arm — of the reasoner's MISSED errors, the fraction Carnot independently catches."
         residual_catch_ci95_weak: principle "Bootstrap CI95 on the weak arm — the gate is on the lower bound."
@@ -224,7 +224,7 @@ tasks:
       which has never been measured. Harness-first per the .360 lesson — deliverable is a
       passing unit test, not the science. Not a scope-match of any prior experiment.
     milestone: "2026.06.361"
-    title: "BUILD + UNIT-TEST the cost-instrumented verification harness (harness-first for the EFFICIENCY axis): implement `measure_verification_cost(verifier_fn, items) -> {auroc, total_wall_s, per_item_wall_ms, est_tokens, est_flops}` that wraps BOTH (i) the energy/verifier ensemble (CPU forward-pass) and (ii) the LLM-as-judge (exp3894 reasoner self-verify over a 35B GGUF), measuring accuracy AND wall-clock/token/FLOP cost per verification. SHIP a unit test asserting both verifiers run on a tiny fixture, costs are positive and distinct, and the cost RATIO (llm/energy) is computed. Deliverable = the module + a PASSING test."
+    title: "BUILD + UNIT-TEST the cost-instrumented verification harness (harness-first for the EFFICIENCY axis): implement `measure_verification_cost(verifier_fn, items) -> {{auroc, total_wall_s, per_item_wall_ms, est_tokens, est_flops}}` that wraps BOTH (i) the energy/verifier ensemble (CPU forward-pass) and (ii) the LLM-as-judge (exp3894 reasoner self-verify over a 35B GGUF), measuring accuracy AND wall-clock/token/FLOP cost per verification. SHIP a unit test asserting both verifiers run on a tiny fixture, costs are positive and distinct, and the cost RATIO (llm/energy) is computed. Deliverable = the module + a PASSING test."
     priority: critical
     track: research
     max_turns: 80
@@ -258,8 +258,8 @@ tasks:
            b. A SOTA GGUF cached (Qwen3.6-35B-A3B or gemma-4-26B-A4B-it via .gguf path + llama_cpp) (blocked_model_not_cached).
            c. `import carnot.verify` (blocked_carnot_verify_import).
         1. Implement `python/carnot/verify/cost_instrumented_verification.py` exposing
-           `measure_verification_cost(verifier_fn, items, label) -> {auroc, total_wall_s, per_item_wall_ms,
-           est_tokens, est_flops, n_items}`. For the LLM-judge, count actual prompt+completion tokens and
+           `measure_verification_cost(verifier_fn, items, label) -> {{auroc, total_wall_s, per_item_wall_ms,
+           est_tokens, est_flops, n_items}}`. For the LLM-judge, count actual prompt+completion tokens and
            estimate FLOPs (~2*params*tokens). For the energy verifier, measure CPU wall-clock and count the
            ensemble forward-pass ops. Use a monotonic clock; never assign one timer's value to another.
         2. Build a tiny FIXTURE: ~10 (step, gold-label) items. Wrap BOTH verifiers with the harness.
@@ -268,7 +268,7 @@ tasks:
            not equal), and cost_ratio = llm_per_item / energy_per_item is computed and >1. Run the test and
            assert it PASSES (a stub cannot pass a live-model timing test). Assert duration_s >= 60.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         harness_module_path: principle "Where exp3906 imports the tested cost harness from."
         fixture_cost_ratio: principle "BARE FLOAT — llm_per_item / energy_per_item on the fixture; must be >1 (the cheap-classifier premise)."
         fixture_energy_per_item_ms, fixture_llm_per_item_ms: principle "BARE FLOATs — per-item wall-clock for each verifier; must be positive and distinct."
@@ -333,7 +333,7 @@ tasks:
         3. Assert duration_s >= 60 (real LLM-judge run over hundreds of items); if <60s emit
            blocked_llm_judge_not_invoked, do NOT fabricate.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         energy_auroc, llm_judge_auroc: principle "Accuracy of each verifier on the SAME labels — parity is energy within the LLM-judge CI."
         accuracy_parity: principle "BARE BOOL — is the energy verifier's AUROC within the LLM-judge's CI95 (equally effective)."
         cost_ratio_walltime: principle "BARE FLOAT — llm_per_item_ms / energy_per_item_ms; the 'Nx cheaper' headline (target 10-100x)."
@@ -399,7 +399,7 @@ tasks:
         2. Compute cascade_auroc, escalation_fraction, and cascade_cost = energy_cost(all) + llm_cost(escalated).
         3. Compute cascade_cost_ratio = pure_llm_cost / cascade_cost. Report cascade AUROC vs pure-LLM AUROC.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         cascade_auroc: principle "Accuracy of the classifier-first cascade — should approach pure-LLM AUROC."
         pure_llm_auroc: principle "The pure-LLM-judge baseline the cascade must (near-)match."
         escalation_fraction: principle "Fraction of items escalated to the LLM — the cost driver; low => big savings."
@@ -471,7 +471,7 @@ tasks:
         3. Record HONESTLY that this is a scaffold on a SYNTHETIC env — NOT the real ARC-AGI-3 benchmark, NO
            agentic-performance claim. The science is sequenced for after the offline proof.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         harness_module_path: principle "Where the future agentic-proof run imports the scaffold from."
         unit_test_path, unit_test_passed: principle "BARE BOOL — the deliverable; a passing env+router test cannot be a fabricated stub."
         synthetic_task_solved: principle "BARE BOOL — the router solved the tiny synthetic grid (smoke of the verifier-as-router loop)."
@@ -543,7 +543,7 @@ tasks:
            a. `{project_root}/.venv/bin/python -c "import torch; assert torch.cuda.is_available()"` (blocked_no_cuda).
            b. A SOTA GGUF cached (Qwen3.6-35B-A3B or gemma-4-26B-A4B-it via .gguf path + llama_cpp) (blocked_model_not_cached).
         1. Repair `graph_grounding_fact_verifier_defabricated.py` so `graph_ground_score(item, model_path)
-           -> {eg, rp, cfi}` ACTUALLY invokes the model per item (entity + relation extraction + consistency),
+           -> {{eg, rp, cfi}}` ACTUALLY invokes the model per item (entity + relation extraction + consistency),
            logging per-item token counts. NOT a rule-based stub.
         2. Build a NON-SEPARABLE fixture: ~12 (claim, source) pairs with SUBTLE hallucinated entities/relations
            (gold labels) chosen so a real verifier scores between 0.6 and 0.95 — NOT 1.0 (a 1.0 fixture is the
@@ -552,7 +552,7 @@ tasks:
            counts > 0), fixture AUROC in [0.6,0.95], and the run is not a stub. Run the test, assert PASS.
            Assert duration_s >= 60 BEFORE emitting any READY verdict.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         verifier_module_path: principle "Where a future facts run would import the tested verifier from."
         fixture_auroc: principle "BARE FLOAT — must be in [0.6,0.95]; a 1.0 fixture is the exp3896 separability fabrication tell."
         model_invoked: principle "BARE BOOL — must be true with per-item token counts logged (the exp3886 de-fabrication assertion)."
@@ -615,7 +615,7 @@ tasks:
         3. Re-measure: learned ensemble AUROC (must stay in frozen CI), memory-ablation contribution
            (must stay ~+0.0185), frozen 0.9131 unchanged. Persist v25 state.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         learned_ensemble_auroc: principle "Must stay within the frozen CI [0.9027,0.9235] — online learning must not degrade the headline."
         memory_ablation_contribution: principle "Must hold ~+0.0185 (CI [0.0125,0.0245]) — the self-learning component's measured value."
         frozen_headline_unchanged: principle "0.9131 NEVER silently substituted — the invariant guard."
@@ -669,7 +669,7 @@ tasks:
         2. Attempt JTAG readback and compare to the flashed bitstream hash; if unsupported, record readback_supported=false honestly.
         3. Assess terminal-state: gatemate_bitstream_flashed AND smoke OK AND (readback_verified OR readback_supported==false) AND no tautology.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         duration_s: principle "Total task wall-clock — MUST be distinct from run_duration_s (the exp3866 TAUTOLOGY corrigendum)."
         run_duration_s: principle "On-board run time only — distinct timer."
         readback_verified: principle "BARE BOOL — did a JTAG readback confirm the flashed tile matches the bitstream."
@@ -726,7 +726,7 @@ tasks:
         2. KV260 (if reachable): `ssh kria 'xmutil listapps'` + `ls /dev/uio*`; record loaded overlay
            and whether the Carnot Ising bitstream is active. Record terminal/non-terminal state honestly.
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         polarfire_reachable, kv260_reachable: principle "Per-board SSH reachability — the honest precondition (SSH, never host SD card)."
         polarfire_state: principle "Terminal hash-verified dispatch, soft-CPU only — NO fabric-acceleration claim."
         kv260_state: principle "Loaded overlay + UIO presence — terminal/non-terminal record per Hardware-Task Continuity."
@@ -785,7 +785,7 @@ tasks:
            the recommended next step (the offline proof is done -> the ARC-AGI-3 agentic-proof venue is next;
            the loop recommends, the operator decides).
 
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {value,principle} wrapper):
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         moat_verdict: principle "MOAT_SURVIVES/SUBSUMED/INCONCLUSIVE from the re-gated scissor (weak AND strong self-verify arms) — the ACCURACY axis answer."
         efficiency_verdict: principle "PARITY_AND_CHEAPER / CHEAPER_NOT_PARITY / NOT_CHEAPER — the EFFICIENCY axis answer (the operator win condition)."
         efficiency_cost_ratio: principle "BARE FLOAT — the measured 'Nx cheaper' number; the headline efficiency figure."

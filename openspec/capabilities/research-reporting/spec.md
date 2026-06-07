@@ -18021,3 +18021,83 @@ unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3892 | Planned (`python/carnot/reporting/archive_v359_activate_v360_3892.py`, `scripts/experiments/experiment_3892_archive_v359_activate_v360.py`) | Planned (`tests/python/test_experiment_3892_archive_v359_activate_v360.py`) |
+
+### REQ-REPORT-3903: Archive .360 Harness-First Truth And Activate .361 Green Gates
+
+The Exp 3903 workflow SHALL archive milestone `2026.06.360` honestly in
+`research-complete.yaml` and confirm milestone `2026.06.361` is active in
+`research-roadmap.yaml`. Before appending any research record, it SHALL confirm
+that `research-complete.yaml` exists and safe-loads. If `research-complete.yaml`
+does not safe-load, the workflow SHALL write a blocked artifact whose
+`honest_verdict` starts with `blocked_research_complete_yaml_poison` and SHALL
+NOT edit `research-complete.yaml`.
+
+On the complete path, the workflow SHALL read Exp 3892 through Exp 3902 task
+verdicts by invoking `scripts/summarize_artifact.py` rather than raw-reading
+those result JSON files. It SHALL preserve the .360 truth that Exp 3895 computed
+MOAT_SURVIVES numbers but was mis-gated by the in-distribution
+reasoner-self-verification AUROC, Exp 3896 is flagged as fabricated or not ready
+by the live summarizer, Exp 3893 did not land a JSON artifact, and downstream
+facts or FR-11 artifacts that are missing are recorded honestly. Critical
+summarizer flags for prior .360 artifacts SHALL NOT block the archive
+transition; they are archived evidence. A failed or unavailable summarizer
+command SHALL block with `blocked_v360_summary_command_failed`.
+
+The workflow SHALL append an append-only `.360` corrective archive record to
+`research-complete.yaml`, preserving all existing content as a prefix. Every
+appended `result:` value that contains `: ` SHALL be single-quoted so the YAML
+parse gate cannot be poisoned again. After the append, the workflow SHALL
+confirm `research-complete.yaml` still safe-loads.
+
+The workflow SHALL run the conductor smart-subset pretest command
+`.venv/bin/pytest tests/python/test_pipeline_extract.py tests/python/test_docs.py
+-q --no-header -n 0 --no-cov -o addopts=` and SHALL record a bare boolean
+`core_pretest_green`. It SHALL run the reasoner harness import command
+`.venv/bin/python -c "import carnot.verify; from carnot.verify import
+reasoner_self_verification; print('ok')"` and SHALL record a bare boolean
+`reasoner_harness_importable`; an import failure SHALL be recorded honestly but
+SHALL NOT by itself make the transition blocked. The backend routing
+recommendation SHALL record codex as reliable and preserve the standing
+operator gemini<->codex flip authority. The workflow SHALL leave
+`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, and
+`scripts/research_conductor.py` unchanged; those documents are reconciled by the
+conductor's separate status step for this milestone.
+
+The terminal artifact SHALL be written to
+`results/experiment_3903_archive_v360_activate_v361.json` and SHALL include bare
+top-level values for `archived_milestone`, `activated_milestone`,
+`research_complete_yaml_parses`, `core_pretest_green`,
+`reasoner_harness_importable`, `prior_milestone_verdicts_summary`,
+`backend_routing_recommendation`, `honest_verdict`, `duration_s`, and
+`inference_substrate`. On the complete path, `honest_verdict` SHALL start with
+`complete:` or `success:`. Blocked verdicts SHALL start with
+`blocked_<resource>`.
+
+#### SCENARIO-REPORT-3903: V360 Archive Records Harness-First Truth And Green Gates
+
+**Given** `.361` is active in `research-roadmap.yaml`,
+`research-complete.yaml` exists and safe-loads, and Exp 3892 through Exp 3902
+can be summarized
+**When** the Exp 3903 workflow runs
+**Then** it invokes `scripts/summarize_artifact.py`, appends a `.360` archive
+record with all eleven task verdicts, preserves the Exp 3895 moat mis-gate
+truth and Exp 3896 live critical fabrication evidence without blocking the
+transition, confirms `research-complete.yaml` still safe-loads, runs the
+smart-subset pretest, records the reasoner harness import result, records codex
+plus the standing flip authority, writes the required terminal artifact, and
+leaves ops/status/traceability/conductor files unchanged.
+
+#### SCENARIO-REPORT-3903-BLOCKED-YAML: Corrupt Research Record Blocks Before Append
+
+**Given** `research-complete.yaml` does not safe-load
+**When** the Exp 3903 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_research_complete_yaml_poison`, records the failed YAML parse in
+`preconditions_checked`, and leaves `research-complete.yaml` byte-for-byte
+unchanged.
+
+## Implementation Status (REQ-REPORT-3903)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3903 | Planned (`python/carnot/reporting/archive_v360_activate_v361_3903.py`, `scripts/experiments/experiment_3903_archive_v360_activate_v361.py`) | Planned (`tests/python/test_experiment_3903_archive_v360_activate_v361.py`) |
