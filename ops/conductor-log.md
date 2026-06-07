@@ -7959,3 +7959,4 @@ ERROR: {
 | 2026-06-07 03:05 UTC | FR-11 continuous self-learning v25 (research-progr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 10.32s |
 | 2026-06-07 03:08 UTC | FR-11 continuous self-learning v25 (research-progr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 10.22s |
 | 2026-06-07 03:20 UTC | GateMate A1-EVB-2M terminal-state confirmation — r | OK | 90 passed in 5.03s |
+| 2026-06-07 03:31 UTC | PolarFire + KV260 consolidated opportunistic conti | OK | 87 passed in 5.57s |
