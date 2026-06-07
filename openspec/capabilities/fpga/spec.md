@@ -4246,6 +4246,86 @@ passes.
 
 ---
 
+### REQ-HW-3922
+
+**Title:** Consolidated hardware continuity MUST audit GateMate, PolarFire, and KV260 independently
+
+**Description:**
+Experiment 3922 MUST produce
+`results/experiment_3922_hardware_continuity_consolidated.json` as the
+consolidated continuity audit for the attached GateMate, PolarFire, and KV260
+boards. The experiment MUST check each board independently and MUST NOT cascade
+one board's failure to the other boards. The GateMate precondition is
+`command -v nextpnr-himbaechel && command -v yosys && command -v
+openFPGALoader` plus `openFPGALoader -c dirtyJtag --detect`. PolarFire MUST use
+`ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'`. KV260 MUST use
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`; retired host SD-card
+preconditions MUST NOT be used.
+
+If GateMate is reachable, the experiment MUST re-confirm the n=16 tile flash
+state, record bare `duration_s` and `run_duration_s` fields that are distinct,
+attempt JTAG readback when the installed tool flow supports it, and set
+`gatemate_terminal_state_reached` only when flashed plus smoke evidence passes,
+the readback gate is verified or unsupported, and the timer tautology is absent.
+If PolarFire is reachable, the experiment MUST re-confirm the Exp 3867 terminal
+hash-verified Ising dispatch and record `polarfire_state` honestly as soft-CPU
+SSH dispatch with hash verification, not FPGA fabric compute acceleration. If
+KV260 is reachable, the experiment MUST run `ssh kria 'xmutil listapps'` and
+`ssh kria 'ls /dev/uio*'`, then record the loaded overlay, UIO presence, and
+whether the Carnot Ising bitstream is active. The artifact MUST keep
+`fabric_acceleration_claimed=false`.
+
+**Acceptance criteria:**
+- `scripts/experiments/experiment_3922_hardware_continuity_consolidated.py`
+  writes `results/experiment_3922_hardware_continuity_consolidated.json`.
+- The artifact includes bare `gatemate_reachable`, `polarfire_reachable`,
+  `kv260_reachable`, `gatemate_terminal_state_reached`, `duration_s`,
+  `run_duration_s`, `polarfire_state`, `kv260_state`,
+  `fabric_acceleration_claimed`, `preconditions_checked`,
+  `reproducibility_checksum`, `inference_substrate`, and `honest_verdict`
+  fields.
+- Required fields are annotated through `field_principles`; the required fields
+  themselves MUST remain bare booleans, numbers, strings, or lists rather than
+  `{value, principle}` wrappers.
+- GateMate blockers MUST be recorded per board as
+  `blocked_gatemate_toolchain_missing` or `blocked_gatemate_board_unreachable`
+  and MUST NOT prevent PolarFire or KV260 checks.
+- `duration_s != run_duration_s` whenever
+  `gatemate_terminal_state_reached=true`; equal GateMate timers MUST keep that
+  field false.
+- If at least one board is reachable and `fabric_acceleration_claimed=false`,
+  `honest_verdict` MUST begin `success: hardware_continuity_gatemate`, include
+  `pf` and `kv` state tokens, and end `_no_fabric_claim`.
+- If no board is reachable, `honest_verdict` MUST be exactly
+  `blocked_all_boards_unreachable`.
+- The artifact MUST set `inference_substrate="hardware_smoke"` and MUST NOT
+  include GGUF, CUDA, live-inference, hardware-speedup, thermalization, or host
+  SD-card markers.
+
+**Implementation status:** Planned (Exp 3922)
+
+---
+
+### SCENARIO-HW-3922
+
+**Scenario:** Three-board continuity records terminal, non-terminal, or blocked state without acceleration claims.
+
+**Given:** GateMate, PolarFire, and KV260 may independently be reachable or
+unreachable through their allowed board-specific preconditions.
+**When:** Experiment 3922 checks GateMate through JTAG detect and the current
+open-source GateMate flow, checks PolarFire through SSH and the Exp 3867
+hash-verified soft-CPU dispatch, and checks KV260 through SSH `xmutil listapps`
+plus `/dev/uio*` listing.
+**Then:** It writes
+`results/experiment_3922_hardware_continuity_consolidated.json` with per-board
+state, scalar required fields, field principles, a false fabric-acceleration
+claim flag, a terminal success verdict when any board is reachable, or the
+all-boards blocked verdict when no board precondition passes.
+
+**Implementation status:** Planned (Exp 3922)
+
+---
+
 ### REQ-HW-3577
 
 **Title:** KV260 hardware-task continuity verification
