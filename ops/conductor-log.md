@@ -7995,3 +7995,4 @@ ERROR: {
 | 2026-06-07 06:56 UTC | Milestone 2026.06.362 activated | OK | 10 tasks queued |
 | 2026-06-07 07:14 UTC | Archive .361 -> activate .362; GREEN-GATE de-risk  | OK | 118 passed in 5.04s |
 | 2026-06-07 07:33 UTC | BUILD + UNIT-TEST a ROBUST gguf_inference harness  | OK | 89 passed in 30.13s |
+| 2026-06-07 07:59 UTC | ACCURACY axis — MOAT SCISSOR on the ROBUST harness | OK | 98 passed in 4.70s |
