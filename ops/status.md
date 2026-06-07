@@ -1,5 +1,64 @@
 # Carnot — Operational Status
 
+## Session 2026-06-07 - Milestone 2026.06.361 Research Planning Staged
+
+Planned milestone **2026.06.361** ("PROVE THE VERIFIER EARNS ITS PLACE") as the NEXT
+milestone after all 11 `.360` tasks completed. `.360` was HARNESS-FIRST and surfaced that
+the decisive result was MIS-GATED, not missing (read via `scripts/summarize_artifact.py`):
+- **Moat scissor (exp3895) mis-gated INCONCLUSIVE.** It actually COMPUTED MOAT_SURVIVES
+  numbers — `residual_catch_rate=0.905` (CI95 [0.849,0.952], n_residual=126),
+  `error_overlap_jaccard=0.159`, `carnot_ensemble_auroc=0.967` — then returned INCONCLUSIVE
+  **solely** because `reasoner_self_verify_auroc=0.546` fell **0.004 below** the 0.55 control
+  floor. The exp3894 fixture (AUROC 0.917) proves the harness is SOUND, so 0.546 is the
+  **Self-Correction Illusion** (arXiv:2606.05976) — a FINDING, not a broken control.
+- **EFFICIENCY axis never run** (the operator's actual win condition: equally effective at
+  lower cost/latency).
+- **Facts graph-grounding (exp3896) fabricated again** (43.8s flagged, separable fixture
+  AUROC 1.0); downstream facts run/complementarity never landed.
+- **EBT replication (exp3893) didn't finish** (checkpoints only) — and per north-star §5
+  energy-as-GENERATOR is closed-negative, so EBT replication is **superseded/dropped**.
+- Mandates: GateMate (exp3900) + PolarFire/KV260 (exp3901) clean; FR-11 v25 (exp3899) did
+  NOT land; capstone exp3902 `paper_ready=TRUE`, frozen 0.9131 unchanged, **G1–G4 all met**.
+
+**`.361 shape (11 tasks, exp3903–3913):** (0) archive/activate + green-gate (exp3903);
+**Phase 1 — VERIFIER EARNS ITS PLACE (offline proof, north-star §5 / known-issues TOP
+PRIORITY):** ACCURACY axis = moat scissor RE-GATED (reuse exp3894 tested harness + exp3884
+corpus; harness-validity control = the FIXTURE AUROC, NOT the in-distribution reasoner AUROC;
++ a STRONG self-verify adversarial arm per arXiv:2602.07594) (exp3904); EFFICIENCY axis =
+build+unit-test a cost-instrumented harness (exp3905) THEN energy-verifier vs LLM-as-judge
+head-to-head reporting accuracy parity + cost/latency ratio "parity at Nx cheaper" (exp3906);
+Meta-EBM cascade-router prototype (exp3907, the deployable classifier-first cascade);
+**Phase 2 — agentic-proof scaffold (verifier-first, infra-only, sequenced SECOND):**
+build+unit-test the ARC-AGI-3 env adapter + verifier-as-router skeleton (exp3908, no science
+claim); **Phase 3 — facts (PRD Tier C, deprioritized):** one disciplined harness-first retry
+with non-separable fixture + duration>=60 + `retire_if_same_verdict` (exp3909); **Phase 4 —
+mandates+hw+capstone:** FR-11 v25 (exp3910), GateMate terminal (exp3911), PolarFire/KV260
+continuity (exp3912), capstone (exp3913, the VERIFIER SCORECARD forcing the operator's "does
+the verifier earn its place" call).
+
+Wrote `openspec/change-proposals/research-roadmap-vNEXT.md` (+ archived prior as
+`research-roadmap-v360.md`) and `research-roadmap-next.yaml` (11 tasks). Updated
+`research-references.md` (Post-.360 sweep: LLM-judge-vs-classifier cost 50–500x; ThinkPRM
+arXiv:2504.16828; CompassVerifier 2508.03686; OPV 2512.10756; the moat mis-gate re-read).
+Validation: YAML schema OK (11 tasks, all `.361`, codex+requires_codex routing, prior_failures
+4-subfield where present, BARE-scalar discipline, terminal-prefix verdicts); `milestone ==
+_expected_next_milestone('2026.06.360') = 2026.06.361`; exclusion-manifest lint exit 0 (6
+SCOPE_MATCHED warnings, all carry `operator_override` → activation proceeds); canonical-URL +
+overdue-priority lints exit 0. Left `research-roadmap.yaml` and `scripts/research_conductor.py`
+untouched. Did NOT push.
+
+**Invariants carried:** `paper_ready=TRUE` (G1–G4; frozen 0.9131 NEVER substituted — `.361
+adds ACCURACY + EFFICIENCY lenses, not a new headline); verifier math-domain-bound until facts
+proven non-fabricated; both energy theses (selection P0.1 + generation EBT) bounded-negative;
+EBT replication superseded/dropped; gated/required fields emitted BARE; no flagged-adversarial
+artifact aggregated; no external publication.
+
+**OPERATOR DECISION SURFACED (exp3913 capstone):** with the offline verifier proof complete
+(ACCURACY moat + EFFICIENCY parity/cost-ratio), the capstone forces the "does the verifier
+earn its place" call and recommends the ARC-AGI-3 agentic-proof venue as the next step — the
+loop recommends, the operator decides.
+
+
 ## Session 2026-06-06 - Milestone 2026.06.360 Research Planning Staged
 
 Planned milestone **2026.06.360** ("HARNESS-FIRST") as the NEXT milestone after all 11 `.359`
