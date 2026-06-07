@@ -1,0 +1,148 @@
+{
+  "caveat": "DRAFT. Whole-trace certification via the production text-verifier ensemble. Precision is the load-bearing metric for RFT (poisons training if low). A step-level certification + a harder corpus (gsm8k/hardmath) are follow-ups. If precision is high only at very low recall, RFT has few traces to learn from.",
+  "default_threshold_precision": 0.3786,
+  "default_threshold_recall": 0.8211,
+  "experiment": "verifier_certification_precision_phase0_draft",
+  "gold_correct_base_rate": 0.3405,
+  "honest_verdict": "complete: certification_INSUFFICIENT_baserate0.341_defaultprec0.379_rftprec0.3405",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "n_traces": 558,
+  "phase1_gate": "certification precision >= 0.85 at recall >= 0.20",
+  "phase1_gate_pass": false,
+  "precision_recall_sweep": [
+    {
+      "n_certified": 1,
+      "precision": 1.0,
+      "recall_of_correct": 0.0053,
+      "threshold": 0.6228
+    },
+    {
+      "n_certified": 1,
+      "precision": 1.0,
+      "recall_of_correct": 0.0053,
+      "threshold": 0.6373
+    },
+    {
+      "n_certified": 1,
+      "precision": 1.0,
+      "recall_of_correct": 0.0053,
+      "threshold": 0.6519
+    },
+    {
+      "n_certified": 2,
+      "precision": 1.0,
+      "recall_of_correct": 0.0105,
+      "threshold": 0.6664
+    },
+    {
+      "n_certified": 2,
+      "precision": 1.0,
+      "recall_of_correct": 0.0105,
+      "threshold": 0.6809
+    },
+    {
+      "n_certified": 2,
+      "precision": 1.0,
+      "recall_of_correct": 0.0105,
+      "threshold": 0.6954
+    },
+    {
+      "n_certified": 4,
+      "precision": 1.0,
+      "recall_of_correct": 0.0211,
+      "threshold": 0.71
+    },
+    {
+      "n_certified": 6,
+      "precision": 1.0,
+      "recall_of_correct": 0.0316,
+      "threshold": 0.7245
+    },
+    {
+      "n_certified": 6,
+      "precision": 1.0,
+      "recall_of_correct": 0.0316,
+      "threshold": 0.739
+    },
+    {
+      "n_certified": 6,
+      "precision": 1.0,
+      "recall_of_correct": 0.0316,
+      "threshold": 0.7535
+    },
+    {
+      "n_certified": 7,
+      "precision": 1.0,
+      "recall_of_correct": 0.0368,
+      "threshold": 0.7681
+    },
+    {
+      "n_certified": 8,
+      "precision": 1.0,
+      "recall_of_correct": 0.0421,
+      "threshold": 0.7826
+    },
+    {
+      "n_certified": 9,
+      "precision": 1.0,
+      "recall_of_correct": 0.0474,
+      "threshold": 0.7971
+    },
+    {
+      "n_certified": 9,
+      "precision": 1.0,
+      "recall_of_correct": 0.0474,
+      "threshold": 0.8116
+    },
+    {
+      "n_certified": 10,
+      "precision": 0.9,
+      "recall_of_correct": 0.0474,
+      "threshold": 0.8262
+    },
+    {
+      "n_certified": 12,
+      "precision": 0.75,
+      "recall_of_correct": 0.0474,
+      "threshold": 0.8407
+    },
+    {
+      "n_certified": 12,
+      "precision": 0.75,
+      "recall_of_correct": 0.0474,
+      "threshold": 0.8552
+    },
+    {
+      "n_certified": 13,
+      "precision": 0.6923,
+      "recall_of_correct": 0.0474,
+      "threshold": 0.8698
+    },
+    {
+      "n_certified": 14,
+      "precision": 0.6429,
+      "recall_of_correct": 0.0474,
+      "threshold": 0.8843
+    },
+    {
+      "n_certified": 16,
+      "precision": 0.625,
+      "recall_of_correct": 0.0526,
+      "threshold": 0.8988
+    },
+    {
+      "n_certified": 558,
+      "precision": 0.3405,
+      "recall_of_correct": 1.0,
+      "threshold": 0.9133
+    }
+  ],
+  "rft_operating_point": {
+    "n_certified": 558,
+    "precision": 0.3405,
+    "recall_of_correct": 1.0,
+    "threshold": 0.9133
+  },
+  "title": "verifier_certification_precision",
+  "trace_source": "data/p01_difficulty_matched_generations_flattened_v2.jsonl"
+}
