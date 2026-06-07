@@ -1,0 +1,104 @@
+{
+  "carnot_ensemble_auroc": null,
+  "corpus_source": {
+    "dataset": "Qwen/ProcessBench",
+    "label_semantics": "step is incorrect only at the human first-incorrect-step index",
+    "n_incorrect": 120,
+    "n_items": 650,
+    "processbench_problem_items": 120,
+    "source_detail": "config=default,split=gsm8k,streaming=true"
+  },
+  "corpus_used": null,
+  "duration_s": 13.105805397033691,
+  "error_overlap_jaccard": null,
+  "experiment": 3928,
+  "field_principles": {
+    "carnot_ensemble_auroc": "The energy ensemble AUROC on the independent corpus (records cross-corpus discrimination).",
+    "corpus_used": "Which independent corpus loaded (processbench_slice / fover_test_v4_fallback) - neither verifier was tuned on it.",
+    "duration_s": "Pre-Launch + Adversarial-Verify - a live self-verify run over an independent corpus takes wall-clock (live floor 60s); <60s = fabrication.",
+    "error_overlap_jaccard": "Independence - low overlap => different null spaces (the moat replicates); high => redundant.",
+    "inference_substrate": "Pre-Launch + Adversarial-Verify - a live self-verify run over an independent corpus takes wall-clock (live floor 60s); <60s = fabrication.",
+    "moat_replicates": "BARE BOOL - residual_catch_ci95.low>0.5 AND overlap<0.6 AND n_res>=30 on the SECOND corpus.",
+    "model_specs": "Pre-Launch + Adversarial-Verify - a live self-verify run over an independent corpus takes wall-clock (live floor 60s); <60s = fabrication.",
+    "n_items": "Pre-Launch + Adversarial-Verify - a live self-verify run over an independent corpus takes wall-clock (live floor 60s); <60s = fabrication.",
+    "n_residual_errors": "Size of set B; the residual CI is meaningful only if >=30.",
+    "preconditions_checked": "Pre-Launch + Adversarial-Verify - a live self-verify run over an independent corpus takes wall-clock (live floor 60s); <60s = fabrication.",
+    "random_seed": "Pre-Launch + Adversarial-Verify - a live self-verify run over an independent corpus takes wall-clock (live floor 60s); <60s = fabrication.",
+    "random_seeds_used": "Pre-Launch + Adversarial-Verify - a live self-verify run over an independent corpus takes wall-clock (live floor 60s); <60s = fabrication.",
+    "reasoner_auroc_strong": "FINDING - the strong self-verify AUROC on the independent corpus.",
+    "reproducibility_checksum": "Pre-Launch + Adversarial-Verify - a live self-verify run over an independent corpus takes wall-clock (live floor 60s); <60s = fabrication.",
+    "residual_catch_ci95": "Bootstrap CI95; the gate is on the lower bound (>0.5).",
+    "residual_catch_rate": "THE moat metric on the independent corpus - of the reasoner's MISSED errors, the fraction energy catches."
+  },
+  "honest_verdict": "blocked_all_gguf_inference_failed",
+  "inference_substrate": "none_blocked_preflight",
+  "moat_replicates": false,
+  "model_specs": {
+    "artifact_path": "results/experiment_3915_robust_gguf_inference_harness.json",
+    "artifact_sha256": "11bc3a3b4ec9da8f7a56cc3b03f2b83833e61b01c47e40ddefef5ac23408146f",
+    "harness_module_path": "python/carnot/verify/gguf_inference.py",
+    "harness_module_sha256": "523db678305ffc1a7a7b74dd8f77eb2a85b9f6499c8fb5c745a29fb3961de8b4",
+    "honest_verdict": "complete: gguf_inference_harness_READY_modelgemma-4-26B-A4B-it_ngl-1_smoke1_live_path_unblocked",
+    "model_specs": {
+      "candidate_paths": {
+        "Qwen3.6-35B-A3B": [
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"
+        ],
+        "gemma-4-26B-A4B-it": [
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+        ],
+        "gemma-4-31B-it": []
+      },
+      "loader": "llama_cpp.Llama",
+      "max_n_gpu_layers": -1,
+      "n_ctx": 1024,
+      "prefer_order": [
+        "gemma-4-26B-A4B-it",
+        "Qwen3.6-35B-A3B",
+        "gemma-4-31B-it"
+      ],
+      "selected": {
+        "fallback_index": 0,
+        "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "load_s": 8.399896144866943,
+        "model_used": "gemma-4-26B-A4B-it",
+        "n_gpu_layers_used": -1,
+        "smoke_s": 0.17024779319763184,
+        "smoke_tokens": 1
+      }
+    },
+    "model_used": "gemma-4-26B-A4B-it",
+    "n_gpu_layers_used": -1,
+    "smoke_tokens": 1,
+    "unit_test_passed": true
+  },
+  "n_gold_incorrect": 0,
+  "n_items": 0,
+  "n_residual_errors": 0,
+  "per_step_results": [],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "returncode=0",
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "detail": "model_used=gemma-4-26B-A4B-it smoke_tokens=1",
+      "resource": "exp3915_gguf_harness_ready"
+    },
+    {
+      "available": false,
+      "detail": "AttributeError(\"'ExperimentConfig' object has no attribute 'max_tokens_weak'\")",
+      "resource": "robust_gguf_generator_load"
+    }
+  ],
+  "random_seed": null,
+  "random_seeds_used": {},
+  "reasoner_auroc_strong": null,
+  "reproducibility_checksum": "7fa12f941644ac87b2c0850687f7b95ffb84564dbe407c78ae163fe1a47e2d93",
+  "residual_catch_ci95": null,
+  "residual_catch_rate": null,
+  "status": "blocked_all_gguf_inference_failed",
+  "title": "moat_scissor_replication"
+}

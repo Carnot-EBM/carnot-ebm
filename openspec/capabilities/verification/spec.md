@@ -11452,6 +11452,90 @@ split counts, no escalation claim, and a measured duration.
 |---|---|---|
 | REQ-VERIFY-3927 | Implemented (`python/carnot/eval/non_degenerate_cascade_router_3927.py`, `scripts/experiments/experiment_3927_non_degenerate_cascade_router.py`) | Implemented (`tests/python/test_experiment_3927_non_degenerate_cascade_router.py`) |
 
+### REQ-VERIFY-3928: Independent-Corpus Moat Scissor Replication
+
+The repository SHALL provide an Exp 3928 moat-scissor replication runner at
+`python/carnot/eval/moat_scissor_replication_3928.py` and
+`scripts/experiments/experiment_3928_moat_scissor_replication.py` that writes
+`results/experiment_3928_moat_scissor_replication.json`. The runner SHALL
+replicate the Exp 3916 residual-catch and error-overlap definitions on a
+second, independent held-out corpus that neither verifier was tuned on.
+
+Before scoring, the runner SHALL verify CUDA with the repository virtualenv
+Python and SHALL disk-read
+`results/experiment_3915_robust_gguf_inference_harness.json`, requiring
+`unit_test_passed=true` and `smoke_tokens>0`. Failed hard preconditions SHALL
+write a terminal `blocked_<resource>` artifact without fabricated scissor
+metrics. The Exp 3915 readiness check SHALL be recorded as disk evidence, not
+inferred from imports or prior logs.
+
+For runnable inputs, the runner SHALL first try to load a ProcessBench math
+slice from `datasets.load_dataset("Qwen/ProcessBench", ...)`, retaining at
+least 120 items with human first-incorrect-step labels when available. On any
+dataset load, schema, size, or label failure, it SHALL fall back to
+`data/fover_test_v4.json`. The chosen corpus SHALL be recorded as
+`corpus_used` with value `processbench_slice` or `fover_test_v4_fallback`,
+and `n_items` SHALL match the exact scored item count.
+
+The runner SHALL score every retained step with the Exp 2837 production energy
+ensemble path (`tier0r`, `tier0u`, and FR-11 session-memory contribution) and
+SHALL run only the strong boosted per-step reasoner self-verification arm
+through `python/carnot/verify/reasoner_self_verification.py`, backed by the
+robust generator loaded via `python/carnot/verify/gguf_inference.py`. It SHALL
+partition gold-incorrect steps into reasoner-caught and reasoner-missed
+residual errors, compute `residual_catch_rate` over the residual set, bootstrap
+CI95 with at least 1000 resamples, compute `error_overlap_jaccard` over
+gold-incorrect catches, record AUROC for both the reasoner and energy ensemble,
+and require `n_residual_errors >= 30` for a conclusive moat replication.
+
+The terminal artifact SHALL include bare top-level fields `corpus_used`,
+`residual_catch_rate`, `residual_catch_ci95`, `error_overlap_jaccard`,
+`n_residual_errors`, `reasoner_auroc_strong`, `carnot_ensemble_auroc`,
+`moat_replicates`, `n_items`, `preconditions_checked`, `model_specs`,
+`random_seed`, `random_seeds_used`, `reproducibility_checksum`, `duration_s`,
+`inference_substrate`, and `honest_verdict`, with field-principle strings and
+no `{value, principle}` wrappers around bare metric fields. The artifact SHALL
+also include per-step score evidence sufficient to audit labels, reasoner
+catches, energy catches, and the selected corpus without aggregating
+`flagged_adversarial` artifacts. The frozen FoVer AUROC headline `0.9131`
+SHALL remain unchanged and only be cited as prior context.
+
+The falsification gate SHALL emit
+`complete: moat_scissor_REPLICATES_on_<corpus_used>_residcatch<mean>_ci<lo>-<hi>_overlap<j>_nres<N>_not_a_corpus_artifact`
+only when the residual-catch CI95 lower bound is above `0.5`,
+`error_overlap_jaccard < 0.6`, and `n_residual_errors >= 30`. It SHALL emit
+`complete: moat_scissor_NOT_REPLICATED_on_<corpus_used>_residcatch<mean>_overlap<j>_corpus_sensitivity_finding`
+when the residual-catch CI95 upper bound is below `0.3` or
+`error_overlap_jaccard > 0.7`. It SHALL emit
+`complete: moat_scissor_INCONCLUSIVE_nres<N>_on_<corpus_used>` when fewer than
+30 residual errors remain.
+
+### SCENARIO-VERIFY-3928: Independent Heldout Corpus Writes Replication Artifact
+
+Given CUDA is available, Exp 3915 reports a ready robust GGUF generator, and
+ProcessBench or the FoVer heldout fallback provides labeled step items, when
+Exp 3928 runs, then it writes
+`results/experiment_3928_moat_scissor_replication.json`, records the selected
+independent corpus, scores every retained step with the production energy
+ensemble, scores the same steps with the boosted reasoner self-verifier through
+the robust GGUF path, computes residual catch, CI95, overlap Jaccard, AUROCs,
+residual count, reproducibility seeds and checksum, enforces the 60-second
+live-run floor, and chooses the terminal verdict from the replication gate.
+
+### SCENARIO-VERIFY-3928-BLOCKED: Missing Robust Resources Do Not Fabricate Replication
+
+Given CUDA or Exp 3915 readiness is unavailable, when Exp 3928 runs, then it
+writes `results/experiment_3928_moat_scissor_replication.json` with a terminal
+`blocked_<resource>` honest verdict, populated precondition evidence, null
+replication metrics, `moat_replicates=false`, zero item and residual counts,
+no per-step score claims, and a measured duration.
+
+## Implementation Status (REQ-VERIFY-3928)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3928 | Implemented (`python/carnot/eval/moat_scissor_replication_3928.py`, `scripts/experiments/experiment_3928_moat_scissor_replication.py`) | Implemented (`tests/python/test_experiment_3928_moat_scissor_replication.py`) |
+
 ### REQ-VERIFY-3905: Cost-Instrumented Verifier Harness
 
 The repository SHALL provide `python/carnot/verify/cost_instrumented_verification.py`

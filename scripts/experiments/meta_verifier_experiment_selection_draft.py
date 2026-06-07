@@ -133,6 +133,31 @@ def _scope_features(title: str) -> dict[str, int]:
     return feats
 
 
+# v3: decompose WASTED into PREVENTABLE vs honest-negative. Not all "blocked" is
+# avoidable waste -- a gate-failed experiment is a legitimate NEGATIVE result.
+_PRECONDITION_KEYS = (
+    "unreachable", "ssh", "not_cached", "model_not", "not_ready", "toolchain",
+    "credential", "no_cuda", "cuda_unavailable", "board", "vivado", "sd_card",
+    "mmcblk", "pynq", "llama_cpp", "model_load", "checkpoint", "bitfile",
+    "flash_failed", "no_bitfile", "prereq", "sklearn", "selected_python",
+)
+
+
+def _wasted_category(verdict: str) -> str:
+    """Classify a WASTED verdict by whether a cheap pre-check could prevent it."""
+
+    v = verdict.split("\t")[0]
+    if any(k in v for k in _PRECONDITION_KEYS):
+        return "preventable_precondition"  # a live pre-flight check catches this
+    if "doomed" in v:
+        return "preventable_doomed_rerun"  # the failure-ledger should catch this
+    if "skipped" in v:
+        return "preventable_cascade_skip"  # poison-test / 3-fail cascade
+    if "gate_check_failed" in v or "gate_block" in v or "gate_closed" in v:
+        return "honest_gate_negative"  # ran/blocked on an acceptance gate -- a RESULT
+    return "other_blocked"
+
+
 def _label(verdict: str | None) -> str:
     """WASTED (clean) / COMPLETED, from the joined verdict string."""
 
@@ -212,6 +237,7 @@ def run(write: bool = True) -> dict[str, Any]:
                     "label": label,
                     "is_wasted": 1 if label == "WASTED" else 0,
                     "is_churn_scope": 1 if any(feats[b] for b in CHURN_BUCKETS) else 0,
+                    "wasted_category": _wasted_category(verdict) if label == "WASTED" else None,
                     **feats,
                     **dfeats,
                 }
@@ -273,9 +299,28 @@ def run(write: bool = True) -> dict[str, Any]:
                 "lift_vs_base": round(rate / base_rate, 2) if base_rate else None,
             }
 
+    # v3: decompose the WASTED set into preventable vs honest-negative.
+    waste_cats: dict[str, int] = {}
+    for r in joined:
+        if r["is_wasted"]:
+            c = r["wasted_category"] or "other_blocked"
+            waste_cats[c] = waste_cats.get(c, 0) + 1
+    n_w = sum(waste_cats.values()) or 1
+    waste_breakdown = {
+        c: {"n": n, "pct_of_wasted": round(100 * n / n_w, 1)}
+        for c, n in sorted(waste_cats.items(), key=lambda kv: -kv[1])
+    }
+    preventable = sum(
+        n for c, n in waste_cats.items() if c.startswith("preventable_")
+    )
+
     artifact = {
         "experiment": "meta_verifier_selection_draft",
         "title": "meta_verifier_experiment_selection",
+        "wasted_category_breakdown": waste_breakdown,
+        "preventable_waste_n": preventable,
+        "preventable_pct_of_wasted": round(100 * preventable / n_w, 1),
+        "preventable_pct_of_all_tasks": round(100 * preventable / n_total, 1) if n_total else 0.0,
         "honest_verdict": (
             f"complete: meta_verifier_feasibility_wasted_auroc{auroc:.3f}_base{base_rate:.3f}"
             if auroc is not None
