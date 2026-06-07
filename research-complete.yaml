@@ -36064,50 +36064,142 @@ milestones:
     result: OK (conductor)
 - id: 2026.06.359
   correction_type: v359_forward_bets_archive_activation
-  title: 'Archive .359 forward-bet verdicts and activate .360 green gates'
+  title: Archive .359 forward-bet verdicts and activate .360 green gates
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-06'
-  finding: '.359 landed one trustworthy forward-bet negative and exposed two fabricated thin-wrapper results: Exp 3882 EBT energy-as-GENERATOR was FUNDAMENTAL at matched FLOPs, while Exp 3885 moat scissor and Exp 3886 facts graph-grounding were flagged and must be rebuilt harness-first in .360. The archive preserves those verdicts and activates .360 with the green gates asserted.'
+  finding: '.359 landed one trustworthy forward-bet negative and exposed two fabricated thin-wrapper results: Exp 3882 EBT
+    energy-as-GENERATOR was FUNDAMENTAL at matched FLOPs, while Exp 3885 moat scissor and Exp 3886 facts graph-grounding were
+    flagged and must be rebuilt harness-first in .360. The archive preserves those verdicts and activates .360 with the green
+    gates asserted.'
   activation_recorded: exp3892-archive-v359-activate-v360-green-gate
-  backend_routing_recommendation: 'codex reliable; standing gemini<->codex flip authority dated 2026-06-05 remains active for auditable backend routing'
+  backend_routing_recommendation: codex reliable; standing gemini<->codex flip authority dated 2026-06-05 remains active for
+    auditable backend routing
   tasks:
   - id: exp3882-thesis-a-partb-killgate-import-fixed
-    title: 'Thesis-A part-b energy-as-generator kill-gate, import-fixed'
+    title: Thesis-A part-b energy-as-generator kill-gate, import-fixed
     deliverable: results/experiment_3882_thesis_a_partb_killgate.json
     result: 'complete: thesis_a_partb_FUNDAMENTAL_beam0.000_argmin0.000_both_fail_vs_ar0.940_landscape_misshaped'
   - id: exp3883-ebt-system2-kcurve-diagnostic
-    title: 'EBT System-2 K-curve diagnostic'
+    title: EBT System-2 K-curve diagnostic
     deliverable: results/experiment_3883_ebt_system2_kcurve.json
     result: 'complete: ebt_system2_BOUNDED_PLATEAU_no_usable_descent_signal_at_scale'
   - id: exp3884-build-in-distribution-error-rich-corpus
-    title: 'Build in-distribution error-rich step-error corpus'
+    title: Build in-distribution error-rich step-error corpus
     deliverable: results/experiment_3884_in_distribution_error_rich_corpus.json
     result: 'complete: in_distribution_corpus_READY_nerr150_auroc0.9667_moat_scissor_can_run'
   - id: exp3885-moat-scissor-in-distribution
-    title: 'Moat scissor on the in-distribution corpus'
+    title: Moat scissor on the in-distribution corpus
     deliverable: results/experiment_3885_moat_scissor_in_distribution.json
     result: 'complete: moat_scissor_indist_INCONCLUSIVE_reasoner_self_verify_auroc'
   - id: exp3886-graph-grounding-fact-verifier-defabricated
-    title: 'Graph-grounding fact verifier de-fabricated rerun'
+    title: Graph-grounding fact verifier de-fabricated rerun
     deliverable: results/experiment_3886_graph_grounding_fact_verifier_defabricated.json
-    result: 'blocked_graph_verifier_not_invoked'
+    result: blocked_graph_verifier_not_invoked
   - id: exp3887-facts-complementarity
-    title: 'Facts-domain graph verifier complementarity'
+    title: Facts-domain graph verifier complementarity
     deliverable: results/experiment_3887_facts_complementarity.json
-    result: 'blocked_upstream_scores_missing'
+    result: blocked_upstream_scores_missing
   - id: exp3888-fr11-v24-online-independence-reweighting
-    title: 'FR-11 v24 online independence reweighting'
+    title: FR-11 v24 online independence reweighting
     deliverable: results/experiment_3888_fr11_v24_independence_reweighting.json
     result: 'complete: fr11_v24_INVARIANT_HELD_auroc0.9075_memcontrib0.0185_state_persisted'
   - id: exp3889-gatemate-continuity-corrigendum-readback
-    title: 'GateMate continuity corrigendum readback'
+    title: GateMate continuity corrigendum readback
     deliverable: results/experiment_3889_gatemate_continuity_corrigendum.json
-    result: 'blocked_gatemate_board_unreachable'
+    result: blocked_gatemate_board_unreachable
   - id: exp3890-polarfire-kv260-consolidated-continuity
-    title: 'PolarFire and KV260 consolidated continuity audit'
+    title: PolarFire and KV260 consolidated continuity audit
     deliverable: results/experiment_3890_polarfire_kv260_continuity.json
     result: 'success: polarfire_kv260_continuity_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_no_fabric_claim'
   - id: exp3891-capstone-v359
-    title: 'Capstone .359 forward-bet aggregation'
+    title: Capstone .359 forward-bet aggregation
     deliverable: results/experiment_3891_capstone_v359.json
     result: 'complete: capstone_v359_ebtFUNDAMENTAL_moatINCONCLUSIVE_factsEXCLUDED_EXP3886_FLAGGED_paper_ready_true_frozen_unchanged'
+- id: 2026.06.360
+  title: 'Harness-first: bank the EBT energy-as-GENERATOR negative (adversarial replication), and finish the moat-durability
+    + facts-breadth bets by building + unit-testing the live-model harness BEFORE the measurement.'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-07'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3892-archive-v359-activate-v360-green-gate
+    title: 'Archive .359 -> activate .360; GREEN-GATE de-risk: assert research-complete.yaml parses (colon-poison guard),
+      the core pretest subset (test_pipeline_extract + test_docs) is green, and the EBT scaled harness imports via sys.path.
+      Records the backend routing diagnostic and the .359 forward-bet verdicts (EBT FUNDAMENTAL; moat + facts FLAGGED).'
+    deliverable: results/experiment_3892_archive_v359_activate_v360.json
+    result: OK (conductor)
+  - id: exp3893-ebt-fundamental-adversarial-replication
+    title: 'EBT FUNDAMENTAL adversarial REPLICATION (2 fresh seeds, reuse exp3882 script): re-run the exp3882 measurement
+      pipeline (train scaled EBT + AR control, then AR best-of-N vs EBT greedy-argmin vs EBT global-beam at matched FLOPs)
+      at 2 NEW seeds. Confirms (or refutes) the .359 energy-as-GENERATOR FUNDAMENTAL verdict before it is banked as the second
+      decisive energy-core negative (complement of the P0.1 selection negative). Bounded to 2 seeds (~2500s) to stay under
+      the codex 4800s wall-clock cap.'
+    deliverable: results/experiment_3893_ebt_fundamental_replication.json
+    result: OK (conductor)
+  - id: exp3894-build-test-reasoner-self-verify-harness
+    title: 'BUILD + UNIT-TEST the reasoner-self-verification harness module (harness-first fix for the moat scissor): implement
+      a `reasoner_self_verify(steps, model)` that loads the SOTA GGUF, judges each step correct/incorrect, parses the verdict
+      robustly, and returns per-step scores + AUROC. SHIP a unit test that, on a tiny fixture with KNOWN injected arithmetic
+      errors, asserts the harness catches >0 errors and yields fixture-AUROC > 0.6 (a positive control on the HARNESS). Deliverable
+      = the module + a PASSING test.'
+    deliverable: results/experiment_3894_reasoner_self_verify_harness.json
+    result: OK (conductor)
+  - id: exp3895-moat-scissor-in-distribution-tested-harness
+    title: 'MOAT SCISSOR IN-DISTRIBUTION with the TESTED harness (DT-P2, disk-reads exp3894+exp3884, no hard gate): of the
+      gold-incorrect steps a strong reasoner (Qwen3.6-35B) self-verification MISSES, what fraction does Carnot''s k=15 ensemble
+      INDEPENDENTLY catch? residual_catch + bootstrap CI95 + reasoner positive control (now non-degenerate via exp3894) +
+      error-overlap Jaccard. Finally adjudicates the o1-subsumption durability question. Premise: arXiv:2606.05976 + arXiv:2602.03485;
+      comparator: ThinkPRM arXiv:2504.16828.'
+    deliverable: results/experiment_3895_moat_scissor_tested_harness.json
+    result: OK (conductor)
+  - id: exp3896-build-test-graph-grounding-verifier
+    title: 'BUILD + UNIT-TEST the graph-grounding fact-verifier module (harness-first fix for the facts bet): implement HalluGraph-style
+      (arXiv:2512.01659) Entity-Grounding + Relation-Preservation -> Composite Fidelity Index over a SOTA GGUF, and SHIP a
+      unit test asserting that on a tiny fixture with a KNOWN hallucinated relation the verifier flags it (fixture-AUROC>0.6,
+      real model invocation, duration>=60s). Also locate + record a RAGTruth-style facts corpus path. Deliverable = the module
+      + a PASSING test.'
+    deliverable: results/experiment_3896_graph_grounding_verifier_harness.json
+    result: OK (conductor)
+  - id: exp3897-graph-grounding-facts-run-tested
+    title: 'RUN graph-grounding on the facts corpus with the TESTED verifier (disk-reads exp3896, no hard gate): on the RAGTruth-style
+      corpus, does graph-grounding reproduce facts_catch_delta>0 over the math-bound ensemble baseline, with a non-fabricated
+      duration (>=60s) and per-item/span scores persisted for complementarity? The bankable facts-breadth signal.'
+    deliverable: results/experiment_3897_graph_grounding_facts_run.json
+    result: OK (conductor)
+  - id: exp3898-facts-complementarity
+    title: 'Facts COMPLEMENTARITY (disk-reads exp3897, no hard gate): does the graph-grounding verifier catch factual hallucinations
+      the math-bound ensemble MISSES (low error-mask correlation), and would {{math verifiers + graph verifier}} be a strictly
+      broader fact-aware system? Quantify independent contribution + error-mask correlation + fused AUROC. The broaden-the-verifier-beyond-math
+      product case (PRD Tier C factual-grounding gate).'
+    deliverable: results/experiment_3898_facts_complementarity.json
+    result: OK (conductor)
+  - id: exp3899-fr11-v25-online-independence-reweighting
+    title: "FR-11 continuous self-learning v25 (research-program.md MANDATE) \u2014 load the persisted v24 independence-reweighting\
+      \ state, continue Tier-1 ONLINE reweighting on a FRESH verification-corpus slice (upweight verifiers that catch the\
+      \ residual others miss, arXiv:2604.07650), and confirm the learned weighting STILL holds the +0.0185 memory-ablation\
+      \ contribution + frozen 0.9131 across the v24->v25 iteration (no long-horizon overfit). CPU counter updates (<1us/update,\
+      \ the Tier-1 hardware path)."
+    deliverable: results/experiment_3899_fr11_v25_independence_reweighting.json
+    result: OK (conductor)
+  - id: exp3900-gatemate-terminal-confirmation
+    title: "GateMate A1-EVB-2M terminal-state confirmation \u2014 re-confirm the n=16 Carnot Ising tile is flashed with DISTINCT\
+      \ wall-clock timers (the de-flagged exp3889 pattern), attempt/record JTAG readback, and ASSESS whether the board meets\
+      \ its terminal state (gatemate_bitstream_flashed + smoke + no_tautology) so it can graduate to opportunistic per Hardware-Task\
+      \ Continuity."
+    deliverable: results/experiment_3900_gatemate_terminal_confirmation.json
+    result: OK (conductor)
+  - id: exp3901-polarfire-kv260-consolidated-continuity
+    title: "PolarFire + KV260 consolidated opportunistic continuity audit \u2014 confirm both boards reachable over SSH, record\
+      \ PolarFire's terminal hash-verified dispatch state HONESTLY (smoke-only on soft CPU, NO fabric-acceleration claim),\
+      \ and confirm KV260 terminal/loaded-overlay state via xmutil. One slot covers both per north-star \xA73 opportunistic\
+      \ relaxation."
+    deliverable: results/experiment_3901_polarfire_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp3902-capstone-v360
+    title: "Capstone .360 \u2014 aggregate the harness-first verdicts: EBT FUNDAMENTAL replication (REPLICATED/REFUTED/INCONCLUSIVE),\
+      \ the moat-scissor verdict with the tested harness (MOAT_SURVIVES/SUBSUMED/INCONCLUSIVE), the facts graph-grounding\
+      \ signal + complementarity with the tested verifier, FR-11 v25 invariant, and the two FPGA boards. FORCE the operator\
+      \ next-thesis decision: BOTH energy-as-selection (P0.1) AND energy-as-generation (EBT) are now bounded-negative; the\
+      \ verifier is the surviving asset. paper_ready stays TRUE; frozen 0.9131 unchanged."
+    deliverable: results/experiment_3902_capstone_v360.json
+    result: OK (conductor)
