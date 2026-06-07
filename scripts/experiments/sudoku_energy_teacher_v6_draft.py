@@ -171,9 +171,9 @@ def _self_distill(
 
 def run(seeds: list[int], *, fast: bool, n_eval: int, bs: int, K: int, temp: float,
         distill_steps: int, distill_lr: float, base_steps: int | None = None,
-        write: bool = True) -> dict:
-    out_path = OUTPUT_PATH if base_steps is None else OUTPUT_PATH.with_name(
-        OUTPUT_PATH.stem + f"_base{base_steps}.json")
+        output_path: Path | None = None, write: bool = True) -> dict:
+    out_path = output_path or (OUTPUT_PATH if base_steps is None else OUTPUT_PATH.with_name(
+        OUTPUT_PATH.stem + f"_base{base_steps}.json"))
     device = "cuda" if torch.cuda.is_available() else "cpu"
     if device != "cuda":
         art = {"experiment": "sudoku_energy_teacher_v6_draft", "honest_verdict": "blocked_no_cuda",
@@ -281,9 +281,11 @@ def main() -> int:
     ap.add_argument("--distill_lr", type=float, default=1e-4)
     ap.add_argument("--base_steps", type=int, default=None,
                     help="#4 v3: under-train the base to this many steps for headroom")
+    ap.add_argument("--output-path", type=Path, default=None)
     args = ap.parse_args()
     art = run(args.seeds, fast=args.fast, n_eval=args.n_eval, bs=args.bs, K=args.K, temp=args.temp,
-              distill_steps=args.distill_steps, distill_lr=args.distill_lr, base_steps=args.base_steps)
+              distill_steps=args.distill_steps, distill_lr=args.distill_lr, base_steps=args.base_steps,
+              output_path=args.output_path)
     print(f"-> {art['honest_verdict']}")
     return 0 if str(art["honest_verdict"]).startswith("complete:") else 1
 
