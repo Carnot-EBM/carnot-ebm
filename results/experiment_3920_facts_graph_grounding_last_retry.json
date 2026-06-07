@@ -146,5 +146,13 @@
   "title": "facts_graph_grounding_last_retry",
   "unit_test_passed": false,
   "unit_test_path": "tests/python/test_graph_grounding_fact_verifier.py",
-  "verifier_module_path": "python/carnot/verify/graph_grounding_fact_verifier_defabricated.py"
+  "verifier_module_path": "python/carnot/verify/graph_grounding_fact_verifier_defabricated.py",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=59.709457 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }

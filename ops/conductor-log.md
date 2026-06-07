@@ -8005,3 +8005,4 @@ ERROR: {
 | 2026-06-07 11:30 UTC | FACTS graph-grounding verifier — LAST DISCIPLINED  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output:  346    49%
 
 c |
+| 2026-06-07 11:42 UTC | FACTS graph-grounding verifier — LAST DISCIPLINED  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
