@@ -1,0 +1,153 @@
+{
+  "all_clean_rule": {
+    "n_certified": 3,
+    "precision": 1.0,
+    "recall_of_correct": 0.0158
+  },
+  "best_precision_any_threshold": 1.0,
+  "caveat": "DRAFT. Per-step certification via the production text-verifier ensemble (each reasoning step scored, trace certified iff all steps clean / max-step-error <= t). If precision stays ~base-rate, the text verifiers do not discriminate correct from incorrect REASONING steps in this corpus (they target arithmetic/logic surface errors) -> bounds verifier-as-RFT-reward. Follow-up: the FoVer (problem,step)-format model verifiers, harder corpus (gsm8k/hardmath).",
+  "experiment": "verifier_certification_precision_phase0_v2_draft",
+  "gold_correct_base_rate": 0.3405,
+  "honest_verdict": "complete: perstep_certification_INSUFFICIENT_baserate0.341_allcleanprec1.0_bestprec1.0_rftprec0.5542",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "n_steps_scored": 6213,
+  "n_traces": 558,
+  "phase1_gate": "per-step certification precision >= 0.85 at recall >= 0.20",
+  "phase1_gate_pass": false,
+  "precision_recall_sweep": [
+    {
+      "n_certified": 1,
+      "precision": 1.0,
+      "recall_of_correct": 0.0053,
+      "threshold": 0.0945
+    },
+    {
+      "n_certified": 8,
+      "precision": 0.75,
+      "recall_of_correct": 0.0316,
+      "threshold": 0.1368
+    },
+    {
+      "n_certified": 33,
+      "precision": 0.6364,
+      "recall_of_correct": 0.1105,
+      "threshold": 0.179
+    },
+    {
+      "n_certified": 83,
+      "precision": 0.5542,
+      "recall_of_correct": 0.2421,
+      "threshold": 0.2213
+    },
+    {
+      "n_certified": 130,
+      "precision": 0.5154,
+      "recall_of_correct": 0.3526,
+      "threshold": 0.2636
+    },
+    {
+      "n_certified": 184,
+      "precision": 0.5163,
+      "recall_of_correct": 0.5,
+      "threshold": 0.3059
+    },
+    {
+      "n_certified": 214,
+      "precision": 0.486,
+      "recall_of_correct": 0.5474,
+      "threshold": 0.3482
+    },
+    {
+      "n_certified": 237,
+      "precision": 0.4684,
+      "recall_of_correct": 0.5842,
+      "threshold": 0.3904
+    },
+    {
+      "n_certified": 256,
+      "precision": 0.4453,
+      "recall_of_correct": 0.6,
+      "threshold": 0.4327
+    },
+    {
+      "n_certified": 270,
+      "precision": 0.4407,
+      "recall_of_correct": 0.6263,
+      "threshold": 0.475
+    },
+    {
+      "n_certified": 277,
+      "precision": 0.444,
+      "recall_of_correct": 0.6474,
+      "threshold": 0.5172
+    },
+    {
+      "n_certified": 284,
+      "precision": 0.4401,
+      "recall_of_correct": 0.6579,
+      "threshold": 0.5595
+    },
+    {
+      "n_certified": 286,
+      "precision": 0.4371,
+      "recall_of_correct": 0.6579,
+      "threshold": 0.6018
+    },
+    {
+      "n_certified": 288,
+      "precision": 0.4375,
+      "recall_of_correct": 0.6632,
+      "threshold": 0.6441
+    },
+    {
+      "n_certified": 291,
+      "precision": 0.4364,
+      "recall_of_correct": 0.6684,
+      "threshold": 0.6864
+    },
+    {
+      "n_certified": 297,
+      "precision": 0.4276,
+      "recall_of_correct": 0.6684,
+      "threshold": 0.7286
+    },
+    {
+      "n_certified": 300,
+      "precision": 0.4233,
+      "recall_of_correct": 0.6684,
+      "threshold": 0.7709
+    },
+    {
+      "n_certified": 318,
+      "precision": 0.4434,
+      "recall_of_correct": 0.7421,
+      "threshold": 0.8132
+    },
+    {
+      "n_certified": 325,
+      "precision": 0.44,
+      "recall_of_correct": 0.7526,
+      "threshold": 0.8555
+    },
+    {
+      "n_certified": 335,
+      "precision": 0.4358,
+      "recall_of_correct": 0.7684,
+      "threshold": 0.8977
+    },
+    {
+      "n_certified": 558,
+      "precision": 0.3405,
+      "recall_of_correct": 1.0,
+      "threshold": 0.94
+    }
+  ],
+  "rft_operating_point": {
+    "n_certified": 83,
+    "precision": 0.5542,
+    "recall_of_correct": 0.2421,
+    "threshold": 0.2213
+  },
+  "title": "verifier_certification_precision_perstep",
+  "trace_source": "data/p01_difficulty_matched_generations_flattened_v2.jsonl"
+}
