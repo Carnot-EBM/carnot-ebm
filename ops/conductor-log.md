@@ -7964,3 +7964,4 @@ ERROR: {
 | 2026-06-07 04:19 UTC | Plan milestone 2026.06.361 | OK | 11 tasks proposed |
 | 2026-06-07 04:21 UTC | Milestone 2026.06.361 activated | OK | 11 tasks queued |
 | 2026-06-07 04:36 UTC | Archive .360 -> activate .361; GREEN-GATE de-risk: | OK | 109 passed in 4.64s |
+| 2026-06-07 05:00 UTC | ACCURACY axis — MOAT SCISSOR RE-GATED (north-star  | OK | 123 passed in 41.22s |
