@@ -8013,3 +8013,4 @@ c |
 | 2026-06-07 15:40 UTC | Milestone 2026.06.363 activated | OK | 10 tasks queued |
 | 2026-06-07 15:58 UTC | Archive .362 -> activate .363; GREEN-GATE de-risk  | OK | 110 passed in 5.44s |
 | 2026-06-07 16:38 UTC | DIAGNOSE + FIX the .362 below-chance LLM-judge int | SKIP | Pre-tests failing, self-heal failed: 1 failed, 106 passed in 17.99s |
+| 2026-06-07 19:11 UTC | DIAGNOSE + FIX the .362 below-chance LLM-judge int | SKIP | Pre-tests failing, self-heal failed: 1 failed, 106 passed in 16.83s |
