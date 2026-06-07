@@ -11147,6 +11147,74 @@ a measured duration.
 |---|---|---|
 | REQ-VERIFY-3917 | Implemented (`python/carnot/eval/efficiency_head_to_head_3917.py`, `scripts/experiments/experiment_3917_efficiency_head_to_head.py`) | Implemented (`tests/python/test_experiment_3917_efficiency_head_to_head.py`) |
 
+### REQ-VERIFY-3918: Classifier-First Cascade Router Prototype
+
+The repository SHALL provide an Exp 3918 cascade-router prototype at
+`python/carnot/eval/cascade_router_prototype_3918.py` and
+`scripts/experiments/experiment_3918_cascade_router_prototype.py` that writes
+`results/experiment_3918_cascade_router_prototype.json`. The runner SHALL be
+aggregation-only: it MUST NOT run fresh verifier or LLM inference, and SHALL
+reuse the Exp 3917 per-item `energy_score`, `llm_judge_score`, gold labels,
+and measured per-item cost fields.
+
+Before computing cascade metrics, the runner SHALL verify that
+`results/experiment_3917_efficiency_head_to_head.json` exists, contains
+per-item energy and LLM-judge scores, contains labels for the same item order,
+and contains a measured `cost_ratio_walltime` plus energy and LLM per-item
+costs. If those cached fields are unavailable or malformed, it SHALL write a
+terminal `blocked_upstream_efficiency_missing` artifact without fabricated
+accuracy or cost claims.
+
+For runnable inputs, the runner SHALL split rows deterministically into
+calibration and held-out sets using `random_seed`, SHALL tune only the
+energy-margin escalation band on the calibration split, and SHALL evaluate the
+selected band only on the held-out split. The cascade SHALL score every heldout
+item with the energy verifier first, escalate only rows whose
+`abs(energy_score - energy_threshold) < band_tuned_on_calibration`, substitute
+the cached Exp 3917 LLM-judge score for escalated rows, and keep the cached
+energy score for non-escalated rows.
+
+The terminal artifact SHALL include bare top-level fields `cascade_auroc`,
+`pure_llm_auroc`, `escalation_fraction`, `cascade_cost_ratio`, `auroc_gap`,
+`band_tuned_on_calibration`, `n_calibration`, `n_heldout`,
+`preconditions_checked`, `random_seed`, `reproducibility_checksum`,
+`duration_s`, and `inference_substrate`, with string principle notes in
+`field_principles` and no `{value, principle}` wrappers around bare metric
+fields. `cascade_cost_ratio` SHALL be
+`pure_llm_cost / (energy_cost_for_all_heldout + llm_cost_for_escalated_heldout)`.
+`auroc_gap` SHALL be `pure_llm_auroc - cascade_auroc`.
+
+The falsification gate SHALL emit
+`complete: cascade_router_WINS_gap<g>_<ratio>x_cheaper_at_matched_accuracy_escfrac<e>`
+when `auroc_gap < 0.02` and `cascade_cost_ratio > 3`. It SHALL emit
+`complete: cascade_router_MARGINAL_gap<g>_ratio<ratio>_escfrac<e>` otherwise.
+
+### SCENARIO-VERIFY-3918: Cached Scores Produce Heldout Cascade Artifact
+
+Given Exp 3917 has a complete cached efficiency artifact with per-item energy
+and LLM-judge scores plus measured cost fields, when Exp 3918 runs, then it
+writes `results/experiment_3918_cascade_router_prototype.json`, records the
+calibration and heldout counts, records the band selected on calibration,
+computes heldout cascade AUROC versus heldout pure-LLM AUROC, computes heldout
+escalation fraction and cost ratio from the Exp 3917 per-item costs, records a
+reproducibility checksum over the upstream artifact and selected split, and
+chooses the terminal verdict from the cascade accuracy-and-cost gate.
+
+### SCENARIO-VERIFY-3918-BLOCKED: Missing Cached Scores Do Not Fabricate Cascade Claims
+
+Given the Exp 3917 artifact is absent or lacks per-item energy scores,
+per-item LLM-judge scores, labels, or measured cost-ratio fields, when Exp 3918
+runs, then it writes `results/experiment_3918_cascade_router_prototype.json`
+with `honest_verdict="blocked_upstream_efficiency_missing"`, populated
+precondition evidence, null cascade metrics, zero split counts, no escalation
+claim, and a measured duration.
+
+## Implementation Status (REQ-VERIFY-3918)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3918 | Implemented (`python/carnot/eval/cascade_router_prototype_3918.py`, `scripts/experiments/experiment_3918_cascade_router_prototype.py`) | Implemented (`tests/python/test_experiment_3918_cascade_router_prototype.py`) |
+
 ### REQ-VERIFY-3905: Cost-Instrumented Verifier Harness
 
 The repository SHALL provide `python/carnot/verify/cost_instrumented_verification.py`
