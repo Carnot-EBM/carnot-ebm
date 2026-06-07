@@ -274,6 +274,43 @@ mechanics literature, and the analogy to our result is ours. (Naming note:
 samplers Carnot's hardware path uses — say "Ising machine/sampler" explicitly in
 Carnot docs to disambiguate.) See memory `nvidia-ising-qec-amortized`.
 
+## External corroboration — BES "entropy shell" (Harvard/MIT + Yilun Du, 2026)
+
+"Self-Improving Language Models with Bidirectional Evolutionary Search" (BES; Xu,
+Qi, Su, Ye, Lakkaraju, Kakade, Yilun Du; arXiv 2605.28814, 2026-05-27) gives a
+**formal, independent** version of the central finding here.
+
+**The mapping.** Our result: autoregressive generation is *confined* (Sudoku AR
+~chance), and escaping the wall needs a NON-AR mechanism — the learned recursive
+refiner solved it; naive energy-descent did not. BES states the abstract verbatim:
+best-of-N and tree search "construct candidates primarily through autoregressive
+expansion, restricting exploration to regions with substantial model probability
+mass," and proves candidates from "expansion-only search are confined to a narrow
+**entropy shell**" that an escape operator must break out of. Same diagnosis, in
+entropy-geometry terms, from a Harvard/MIT group.
+
+**The contrast to keep sharp (corroborates the diagnosis, not "energy generates").**
+BES's escape operator is *evolutionary recombination* (crossover / translocation
+of partial trajectories); ours was *learned recursive refinement*. Critically,
+BES does NOT claim energy-descent escapes the shell — and our experiments showed
+it does not (rand-init descent 0.000). So BES confirms "AR is confined; you need a
+non-AR escape," which is exactly the wall we measured — it does not resurrect
+energy-as-generator.
+
+**It also corroborates the verifier moat.** BES's *other* stated bottleneck is
+"sparse verification signals," fixed by backward recursive decomposition into
+*checkable sub-goals* giving dense intermediate feedback — they claim this "can
+exponentially reduce the number of required samples to find a correct answer."
+That dense per-step checkable signal is precisely the role Carnot's verifier
+ensemble plays (we build it from the energy ensemble; they from task
+decomposition). Forward-generate + backward-verify is the same generator+verifier
+hybrid shape Carnot is pursuing. Regime note: BES's wins are on *open
+combinatorial* problems (real headroom), matching our regime-specific reframe that
+search/verification pays off where self-consistency is not already near-ceiling.
+Caveat: BES is a search/generation framework, not an energy verifier; absolute
+accuracy is modest; the analogy to our energy framing is ours. See memory
+`bes-bidirectional-evolutionary-search`.
+
 ## Experiment #1 capstone — TRM standalone ceiling (Kona-reproduction step 1), 2026-06-06
 
 Operator-directed: train a REAL recursive refiner (nano-trm TRM, the published
