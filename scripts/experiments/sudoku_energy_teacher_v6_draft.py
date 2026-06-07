@@ -122,27 +122,40 @@ def _self_distill(
     opt = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=0.01, betas=(0.9, 0.95))
     n = xtr.shape[0]
     t0 = time.time()
+    yields: list[float] = []
     for step in range(steps):
         idx = torch.randint(0, n, (batch,), device=device)
         xb = xtr[idx]
-        with torch.no_grad():
-            samples = refiner_samples(model, xb, K, temp)  # (B,K,81) digit classes 0..8
         B = xb.shape[0]
         if selector == "gold":
-            target = ytr_digits[idx]  # (B,81) the true solution
+            # UPPER BOUND: supervised fine-tune on the true solution (every puzzle).
+            target = ytr_digits[idx]  # (B,81)
+            mask = torch.ones(B, dtype=torch.bool, device=device)
         else:
+            # ENERGY-AS-TEACHER, done right (RFT/STaR): generate K, keep ONLY the
+            # samples the perfect verifier CERTIFIES as 0-violation (= correct, since
+            # a valid givens-consistent Sudoku is unique). Skip puzzles with no
+            # certified sample -- NEVER imitate a wrong-but-low-violation grid (that
+            # soft-argmin mode is what collapsed the model in the smoke). NO gold used.
+            with torch.no_grad():
+                samples = refiner_samples(model, xb, K, temp)  # (B,K,81) digit classes
             viol = sudoku_violations(samples.reshape(B * K, SEQ)).reshape(B, K)  # (B,K)
-            best = viol.argmin(1)  # (B,)
-            target = samples[torch.arange(B, device=device), best]  # (B,81) lowest-energy
-        logits = model(xb)  # (B,81,9)
-        loss = F.cross_entropy(logits.reshape(-1, N_DIGITS), target.reshape(-1))
+            min_viol, best = viol.min(1)  # (B,), (B,)
+            target = samples[torch.arange(B, device=device), best]  # (B,81) best sample
+            mask = min_viol == 0  # only puzzles with a verifier-CERTIFIED correct sample
+        yields.append(float(mask.float().mean().item()))
+        if int(mask.sum().item()) == 0:
+            continue  # no certified data this batch -- do not train on garbage
+        logits = model(xb)[mask]  # (M,81,9)
+        loss = F.cross_entropy(logits.reshape(-1, N_DIGITS), target[mask].reshape(-1))
         opt.zero_grad()
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         opt.step()
         if step % 200 == 0 or step == steps - 1:
-            print(f"[distill:{selector}] step={step} loss={loss.item():.4f} t={time.time()-t0:.0f}s",
-                  flush=True)
+            print(f"[distill:{selector}] step={step} loss={loss.item():.4f} "
+                  f"certified_yield={yields[-1]:.3f} t={time.time()-t0:.0f}s", flush=True)
+    model._distill_mean_yield = sum(yields) / len(yields) if yields else 0.0  # type: ignore[attr-defined]
     return model
 
 
@@ -183,6 +196,7 @@ def run(seeds: list[int], *, fast: bool, n_eval: int, bs: int, K: int, temp: flo
             "base_energy_gated": base_gated,
             "energy_distilled_greedy": energy_greedy,
             "gold_distilled_greedy": gold_greedy,
+            "energy_certified_yield": getattr(energy_model, "_distill_mean_yield", None),
             "delta_energy_teacher": energy_greedy - base_greedy,
             "delta_gate_retest": base_gated - base_greedy,
             "gold_ceiling_gap": gold_greedy - base_greedy,
