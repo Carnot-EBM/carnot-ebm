@@ -1,0 +1,92 @@
+{
+  "accuracy_parity": false,
+  "corpus_provenance": {
+    "artifact_path": "results/experiment_3884_in_distribution_error_rich_corpus.json",
+    "artifact_sha256": "62e61ce38b44f666544df9b5be50b75b0dfb3abcc4c182f52c07a2888c59afba",
+    "corpus_path": "data/in_distribution_error_corpus_v1.json",
+    "corpus_sha256": "da242cfc7db8643aff116153a6b75b45586aa93703932f7db9dc7372c2c6bb26",
+    "energy_auroc_from_scores": 0.9666888888888889,
+    "n_incorrect": 150,
+    "n_total_items": 300,
+    "scores_path": "results/experiment_3884_in_distribution_error_rich_corpus_scores.json",
+    "scores_sha256": "a1b22b944b0736c7bfb43fe5582e763456053ea0bbbed899f5507808e4e92b1a"
+  },
+  "corpus_source": "data/in_distribution_error_corpus_v1.json",
+  "cost_ratio_flops": null,
+  "cost_ratio_walltime": null,
+  "duration_s": 1.0734215900010895,
+  "energy_auroc": null,
+  "energy_cost": null,
+  "energy_est_flops": null,
+  "energy_est_tokens": null,
+  "energy_per_item_ms": null,
+  "energy_total_wall_s": null,
+  "exp3925_competent_judge_source": {},
+  "experiment": 3926,
+  "field_principles": {
+    "accuracy_parity": "BARE BOOL - energy AUROC within the competent judge's CI95 (equally effective).",
+    "corpus_source": "Pre-Launch + Adversarial-Verify - a real competent-judge run over hundreds of items takes wall-clock; <60s = fabrication.",
+    "cost_ratio_flops": "BARE FLOAT - FLOP/token-based ratio (amortized load excluded); substrate-independent corroboration.",
+    "cost_ratio_walltime": "BARE FLOAT - llm_per_item_ms / energy_per_item_ms; the 'Nx cheaper' headline.",
+    "duration_s": "Pre-Launch + Adversarial-Verify - a real competent-judge run over hundreds of items takes wall-clock; <60s = fabrication.",
+    "energy_auroc": "Accuracy of each verifier on the SAME labels; the judge is now competent so parity/Pareto is testable.",
+    "energy_per_item_ms": "Per-item latency for each verifier - the latency story.",
+    "inference_substrate": "Pre-Launch + Adversarial-Verify - a real competent-judge run over hundreds of items takes wall-clock; <60s = fabrication.",
+    "judge_model_used": "Which GGUF the competent judge loaded (records the comparator config).",
+    "judge_positive_control_passed": "BARE BOOL - llm_judge_auroc>0.6 on THIS corpus; the gate the .362 comparison lacked.",
+    "llm_judge_auroc": "Accuracy of each verifier on the SAME labels; the judge is now competent so parity/Pareto is testable.",
+    "llm_per_item_ms": "Per-item latency for each verifier - the latency story.",
+    "model_specs": "Pre-Launch + Adversarial-Verify - a real competent-judge run over hundreds of items takes wall-clock; <60s = fabrication.",
+    "n_items": "Pre-Launch + Adversarial-Verify - a real competent-judge run over hundreds of items takes wall-clock; <60s = fabrication.",
+    "pareto_dominates": "BARE BOOL - energy AUROC >= judge AUROC (more accurate AND cheaper = strict Pareto win).",
+    "preconditions_checked": "Pre-Launch + Adversarial-Verify - a real competent-judge run over hundreds of items takes wall-clock; <60s = fabrication.",
+    "random_seed": "Pre-Launch + Adversarial-Verify - a real competent-judge run over hundreds of items takes wall-clock; <60s = fabrication.",
+    "random_seeds_used": "Pre-Launch + Adversarial-Verify - a real competent-judge run over hundreds of items takes wall-clock; <60s = fabrication.",
+    "reproducibility_checksum": "Pre-Launch + Adversarial-Verify - a real competent-judge run over hundreds of items takes wall-clock; <60s = fabrication."
+  },
+  "honest_verdict": "blocked_upstream_competent_judge_not_ready",
+  "inference_substrate": "none_blocked_preflight",
+  "judge_bootstrap_ci95": null,
+  "judge_model_used": null,
+  "judge_positive_control_passed": false,
+  "llm_cost": null,
+  "llm_est_flops": null,
+  "llm_est_tokens": null,
+  "llm_judge_auroc": null,
+  "llm_per_item_ms": null,
+  "llm_total_wall_s": null,
+  "model_specs": {
+    "judge_model_used": null,
+    "max_tokens": 128,
+    "source_exp3925_model_specs": {}
+  },
+  "n_items": 0,
+  "pareto_dominates": false,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "returncode=0",
+      "resource": "cuda_available"
+    },
+    {
+      "available": false,
+      "detail": "FileNotFoundError('results/experiment_3925_competent_judge_build.json is missing')",
+      "resource": "exp3925_competent_judge_ready"
+    },
+    {
+      "available": true,
+      "detail": "python/carnot/verify/cost_instrumented_verification.py",
+      "resource": "exp3905_cost_instrumentation_import"
+    },
+    {
+      "available": true,
+      "detail": "n=300 scores=results/experiment_3884_in_distribution_error_rich_corpus_scores.json",
+      "resource": "exp3884_corpus_ready"
+    }
+  ],
+  "random_seed": 3926,
+  "random_seeds_used": {},
+  "reproducibility_checksum": "b460849608bf0f4fa7dffdb8d93d4b9a256070c3142493959211e1bda5f27861",
+  "status": "blocked_upstream_competent_judge_not_ready",
+  "title": "valid_efficiency_head_to_head"
+}
