@@ -1263,6 +1263,47 @@ different raw or normalized output hashes
 **When** Exp 3043 completes
 **Then** `deterministic_replay_passed=false`
 **And** `fingerprint_live_ready=false`
+
+### REQ-INFER-SOTA-023: Robust Reusable GGUF Generator Harness
+
+The system SHALL expose `python/carnot/verify/gguf_inference.py` as the shared
+live GGUF generation entrypoint for verifier self-check experiments.  The
+entrypoint SHALL provide `load_gguf_generator(prefer_order=None, n_ctx=1024,
+max_n_gpu_layers=-1)` and `generate(generator, prompt, max_tokens)`.
+
+`load_gguf_generator` SHALL resolve only locally cached headline GGUF files for
+`unsloth/gemma-4-26B-A4B-it-GGUF`,
+`unsloth/Qwen3.6-35B-A3B-GGUF`, and
+`unsloth/gemma-4-31B-it-GGUF`, in that default order unless an explicit
+`prefer_order` is supplied.  For each candidate, it SHALL try llama.cpp loading
+with `n_gpu_layers` values `[max_n_gpu_layers, 20, 0]`, catching and recording
+every load or generation exception before moving to the next fallback.
+
+After each successful load, the harness SHALL run a bounded one-token
+generation smoke prompt and require at least one emitted output token before it
+returns readiness.  The returned metadata SHALL include `model_used`,
+`gguf_path`, `n_gpu_layers_used`, `load_s`, `smoke_s`, `smoke_tokens`, and
+`fallback_index`.  If every candidate/offload combination fails, the harness
+SHALL raise a clear `RuntimeError` that names the failed model/offload attempts
+so callers can emit an honest `blocked_all_gguf_inference_failed` verdict.
+
+### SCENARIO-INFER-SOTA-023-001: Cached Headline GGUF Loads And Smokes
+
+**Given** CUDA, llama.cpp, and at least one mandated headline GGUF are available
+locally
+**When** `load_gguf_generator()` is called
+**Then** it returns a llama.cpp-backed generator plus metadata naming the
+selected model, GGUF path, offload level, fallback index, and positive smoke
+token count
+**And** a second `generate(...)` call returns non-empty text.
+
+### SCENARIO-INFER-SOTA-023-002: Exhausted Fallbacks Report Honest Failure
+
+**Given** every candidate model/offload attempt fails to load or emit a smoke
+token
+**When** `load_gguf_generator()` exhausts its fallback chain
+**Then** it raises `RuntimeError` with one failure entry per attempted
+model/offload combination instead of returning a fabricated generator.
 **And** the artifact records replay divergence rows instead of claiming
 deterministic readiness.
 
