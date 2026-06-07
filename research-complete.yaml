@@ -36205,54 +36205,158 @@ milestones:
     result: OK (conductor)
 - id: 2026.06.360
   correction_type: v360_harness_first_archive_activation
-  title: 'Archive .360 harness-first truth and activate .361 green gates'
+  title: Archive .360 harness-first truth and activate .361 green gates
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-07'
-  finding: '.360 was harness-first and showed the harnesses mattered: Exp 3894 proved the reasoner self-verification positive control, Exp 3895 computed MOAT_SURVIVES numbers but was mis-gated on the in-distribution reasoner AUROC, Exp 3896 remained flagged/not ready, facts downstream runs did not land, and EBT replication did not finish beyond checkpoint files. .361 is active with green gates asserted.'
+  finding: '.360 was harness-first and showed the harnesses mattered: Exp 3894 proved the reasoner self-verification positive
+    control, Exp 3895 computed MOAT_SURVIVES numbers but was mis-gated on the in-distribution reasoner AUROC, Exp 3896 remained
+    flagged/not ready, facts downstream runs did not land, and EBT replication did not finish beyond checkpoint files. .361
+    is active with green gates asserted.'
   activation_recorded: exp3903-archive-v360-activate-v361-green-gate
-  backend_routing_recommendation: 'codex reliable; standing gemini<->codex flip authority dated 2026-06-05 remains active for auditable backend routing'
+  backend_routing_recommendation: codex reliable; standing gemini<->codex flip authority dated 2026-06-05 remains active for
+    auditable backend routing
   tasks:
   - id: exp3892-archive-v359-activate-v360-green-gate
-    title: 'Archive .359 and activate .360 green gates'
+    title: Archive .359 and activate .360 green gates
     deliverable: results/experiment_3892_archive_v359_activate_v360.json
     result: 'complete: archived_v359_forward_bets_v360_active_green_gates_asserted_codex_backend_recommended'
   - id: exp3893-ebt-fundamental-adversarial-replication
-    title: 'EBT FUNDAMENTAL adversarial replication'
+    title: EBT FUNDAMENTAL adversarial replication
     deliverable: results/experiment_3893_ebt_fundamental_replication.json
     result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3893_ebt_fundamental_replication.json'
   - id: exp3894-build-test-reasoner-self-verify-harness
-    title: 'Build and test reasoner self-verification harness'
+    title: Build and test reasoner self-verification harness
     deliverable: results/experiment_3894_reasoner_self_verify_harness.json
     result: 'complete: reasoner_self_verify_harness_READY_fixture_auroc0.9167_ncaught6_moat_scissor_can_run'
   - id: exp3895-moat-scissor-in-distribution-tested-harness
-    title: 'Moat scissor in-distribution with tested harness'
+    title: Moat scissor in-distribution with tested harness
     deliverable: results/experiment_3895_moat_scissor_tested_harness.json
-    result: 'complete: moat_scissor_INCONCLUSIVE_reasoner_self_verify_auroc; mis-gated MOAT_SURVIVES numbers: residual_catch=0.905 CI95=[0.849,0.952] overlap=0.159 carnot_ensemble=0.967; reasoner_self_verify_auroc=0.546 fell 0.004 below the obsolete 0.55 floor'
+    result: 'complete: moat_scissor_INCONCLUSIVE_reasoner_self_verify_auroc; mis-gated MOAT_SURVIVES numbers: residual_catch=0.905
+      CI95=[0.849,0.952] overlap=0.159 carnot_ensemble=0.967; reasoner_self_verify_auroc=0.546 fell 0.004 below the obsolete
+      0.55 floor'
   - id: exp3896-build-test-graph-grounding-verifier
-    title: 'Build and test graph-grounding fact verifier'
+    title: Build and test graph-grounding fact verifier
     deliverable: results/experiment_3896_graph_grounding_verifier_harness.json
-    result: 'complete: graph_grounding_verifier_NOT_READY_fixture_auroc1.0000_model_invokedtrue [summarize_artifact LIVE_CRITICAL]; facts fabricated again / graph-grounding harness not ready'
+    result: 'complete: graph_grounding_verifier_NOT_READY_fixture_auroc1.0000_model_invokedtrue [summarize_artifact LIVE_CRITICAL];
+      facts fabricated again / graph-grounding harness not ready'
   - id: exp3897-graph-grounding-facts-run-tested
-    title: 'Graph-grounding facts run with tested verifier'
+    title: Graph-grounding facts run with tested verifier
     deliverable: results/experiment_3897_graph_grounding_facts_run.json
     result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3897_graph_grounding_facts_run.json'
   - id: exp3898-facts-complementarity
-    title: 'Facts complementarity'
+    title: Facts complementarity
     deliverable: results/experiment_3898_facts_complementarity.json
     result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3898_facts_complementarity.json'
   - id: exp3899-fr11-v25-online-independence-reweighting
-    title: 'FR-11 v25 online independence reweighting'
+    title: FR-11 v25 online independence reweighting
     deliverable: results/experiment_3899_fr11_v25.json
     result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3899_fr11_v25.json'
   - id: exp3900-gatemate-terminal-confirmation
-    title: 'GateMate terminal-state confirmation'
+    title: GateMate terminal-state confirmation
     deliverable: results/experiment_3900_gatemate_terminal_confirmation.json
-    result: 'blocked_gatemate_board_unreachable'
+    result: blocked_gatemate_board_unreachable
   - id: exp3901-polarfire-kv260-consolidated-continuity
-    title: 'PolarFire and KV260 consolidated continuity'
+    title: PolarFire and KV260 consolidated continuity
     deliverable: results/experiment_3901_polarfire_kv260_continuity.json
     result: 'success: polarfire_kv260_continuity_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_no_fabric_claim'
   - id: exp3902-capstone-v360
-    title: 'Capstone .360 harness-first aggregation'
+    title: Capstone .360 harness-first aggregation
     deliverable: results/experiment_3902_capstone_v360.json
     result: 'complete: capstone_v360_ebtINCONCLUSIVE_moatINCONCLUSIVE_factsINCONCLUSIVE_paper_ready_true_frozen_unchanged'
+- id: 2026.06.361
+  title: "Prove the verifier earns its place: complete the offline verifier proof \u2014 ACCURACY (moat scissor RE-GATED,\
+    \ decoupling harness-validity from the in-distribution reasoner AUROC) + EFFICIENCY (energy-verifier vs LLM-as-judge head-to-head,\
+    \ accuracy parity + cost/latency ratio) \u2014 then prototype the Meta-EBM cascade router and start the verifier-first\
+    \ ARC-AGI-3 agentic-proof scaffold."
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-07'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3903-archive-v360-activate-v361-green-gate
+    title: 'Archive .360 -> activate .361; GREEN-GATE de-risk: assert research-complete.yaml parses (colon-poison guard),
+      the core pretest subset (test_pipeline_extract + test_docs) is green, and the .360-built harnesses import (python/carnot/verify/reasoner_self_verification.py
+      + carnot.verify). Records the .360 forward-bet verdicts (moat mis-gated MOAT_SURVIVES-numbers; efficiency never run;
+      facts still fabricating; EBT superseded).'
+    deliverable: results/experiment_3903_archive_v360_activate_v361.json
+    result: OK (conductor)
+  - id: exp3904-moat-scissor-regated-accuracy-axis
+    title: "ACCURACY axis \u2014 MOAT SCISSOR RE-GATED (north-star \xA75 verifier-earns-its-place): reuse the exp3894 TESTED\
+      \ reasoner harness + the exp3884 in-distribution corpus; DECOUPLE the harness-validity control (= exp3894 fixture AUROC\
+      \ > 0.6, already 0.917) from the in-distribution reasoner AUROC (now a reported FINDING corroborating the Self-Correction\
+      \ Illusion, arXiv:2606.05976); ADD a STRONG self-verify adversarial arm (few-shot + structured per-step, arXiv:2602.07594).\
+      \ Adjudicate MOAT_SURVIVES on residual_catch_ci95.low>0.5 AND overlap<0.6 across BOTH the weak and strong arms. Finally\
+      \ answers the o1-subsumption durability question. Disk-reads exp3894+exp3884 (no hard gate)."
+    deliverable: results/experiment_3904_moat_scissor_regated.json
+    result: OK (conductor)
+  - id: exp3905-build-test-cost-instrumented-verify-harness
+    title: 'BUILD + UNIT-TEST the cost-instrumented verification harness (harness-first for the EFFICIENCY axis): implement
+      `measure_verification_cost(verifier_fn, items) -> {{auroc, total_wall_s, per_item_wall_ms, est_tokens, est_flops}}`
+      that wraps BOTH (i) the energy/verifier ensemble (CPU forward-pass) and (ii) the LLM-as-judge (exp3894 reasoner self-verify
+      over a 35B GGUF), measuring accuracy AND wall-clock/token/FLOP cost per verification. SHIP a unit test asserting both
+      verifiers run on a tiny fixture, costs are positive and distinct, and the cost RATIO (llm/energy) is computed. Deliverable
+      = the module + a PASSING test.'
+    deliverable: results/experiment_3905_cost_instrumented_verify_harness.json
+    result: OK (conductor)
+  - id: exp3906-efficiency-head-to-head
+    title: "EFFICIENCY axis \u2014 energy-verifier vs LLM-as-judge HEAD-TO-HEAD (disk-reads exp3905, no hard gate): on the\
+      \ exp3884 in-distribution corpus AND a FoVer slice, score with BOTH the energy/verifier ensemble (cheap CPU forward-pass)\
+      \ and the LLM-as-judge (35B GGUF self-verify), reporting (a) accuracy parity within CI (AUROC of each on the same labels)\
+      \ and (b) the cost/latency ratio (wall-clock + est tokens/FLOPs + $ per verification at matched accuracy). Target framing:\
+      \ 'parity at Nx cheaper.' HONEST: parity != beating; a null is a result. The verifier-earns-its-place EFFICIENCY headline."
+    deliverable: results/experiment_3906_efficiency_head_to_head.json
+    result: OK (conductor)
+  - id: exp3907-meta-ebm-cascade-router-prototype
+    title: 'META-EBM CASCADE ROUTER prototype (classifier-first cascade, disk-reads exp3906, no hard gate): the cheap energy
+      verifier scores EVERY item; only the close-calls (energy-margin within a tuned band) escalate to the LLM-as-judge. Report
+      cascade AUROC vs pure-LLM AUROC, the escalation fraction, and the resulting cost vs pure-LLM. The deployable artifact
+      behind ''parity at Nx cheaper'' (2026 best practice; the Wastefulness Condition is checkable on calibration data alone).'
+    deliverable: results/experiment_3907_cascade_router_prototype.json
+    result: OK (conductor)
+  - id: exp3908-arc-agi3-harness-scaffold-build-test
+    title: "ARC-AGI-3 harness SCAFFOLD \u2014 BUILD + UNIT-TEST the verifier-first skeleton (north-star \xA75 agentic-proof\
+      \ venue, sequenced AFTER the offline proof; infra-only, no science): implement an environment-adapter interface (reset/step/observe)\
+      \ over a tiny synthetic ARC-AGI-3-style grid task + a verifier-as-router stub (run the cheap encodable specialist, verify\
+      \ via the energy verifier, escalate on failure \u2014 the Meta-EBM Cascade Router action-pruner shape). SHIP a unit\
+      \ test asserting the env steps, the router routes by verifier score, and an action-pruning count is recorded. Deliverable\
+      \ = the module + a PASSING test. NO benchmark/agentic-performance claim."
+    deliverable: results/experiment_3908_arc_agi3_harness_scaffold.json
+    result: OK (conductor)
+  - id: exp3909-facts-graph-grounding-harness-disciplined-retry
+    title: "FACTS graph-grounding verifier \u2014 DISCIPLINED harness-first retry (PRD Tier C, deprioritized): repair the\
+      \ HalluGraph-style (arXiv:2512.01659) Entity-Grounding + Relation-Preservation -> Composite Fidelity Index verifier\
+      \ so it ACTUALLY invokes the model per item, and SHIP a unit test on a NON-separable fixture (subtle hallucinated relations\
+      \ -> fixture AUROC in [0.6,0.95], NOT 1.0) asserting model_invoked + token counts logged + duration_s>=60. LAST attempt\
+      \ before the facts route retires to honest future-work. Deliverable = the module + a PASSING test."
+    deliverable: results/experiment_3909_facts_graph_grounding_retry.json
+    result: OK (conductor)
+  - id: exp3910-fr11-v25-online-independence-reweighting
+    title: "FR-11 continuous self-learning v25 (research-program.md MANDATE) \u2014 load the persisted v24 independence-reweighting\
+      \ state (exp3888), continue Tier-1 ONLINE reweighting on a FRESH verification-corpus slice (upweight verifiers that\
+      \ catch the residual others miss, arXiv:2604.07650), and confirm the learned weighting STILL holds the +0.0185 memory-ablation\
+      \ contribution + frozen 0.9131 across the v24->v25 iteration (no long-horizon overfit). CPU counter updates (<1us/update,\
+      \ the Tier-1 hardware path)."
+    deliverable: results/experiment_3910_fr11_v25_independence_reweighting.json
+    result: OK (conductor)
+  - id: exp3911-gatemate-terminal-confirmation
+    title: "GateMate A1-EVB-2M terminal-state confirmation \u2014 re-confirm the n=16 Carnot Ising tile is flashed with DISTINCT\
+      \ wall-clock timers (the de-flagged exp3889/exp3900 pattern), attempt/record JTAG readback, and ASSESS whether the board\
+      \ meets its terminal state (gatemate_bitstream_flashed + smoke + no_tautology) so it can graduate to opportunistic per\
+      \ Hardware-Task Continuity."
+    deliverable: results/experiment_3911_gatemate_terminal_confirmation.json
+    result: OK (conductor)
+  - id: exp3912-polarfire-kv260-consolidated-continuity
+    title: "PolarFire + KV260 consolidated opportunistic continuity audit \u2014 confirm both boards reachable over SSH, record\
+      \ PolarFire's terminal hash-verified dispatch state HONESTLY (smoke-only on soft CPU, NO fabric-acceleration claim),\
+      \ and confirm KV260 terminal/loaded-overlay state via xmutil. One slot covers both per north-star \xA73 opportunistic\
+      \ relaxation."
+    deliverable: results/experiment_3912_polarfire_kv260_continuity.json
+    result: OK (conductor)
+  - id: exp3913-capstone-v361
+    title: "Capstone .361 \u2014 the VERIFIER SCORECARD: aggregate the offline verifier proof \u2014 ACCURACY (moat scissor\
+      \ RE-GATED: MOAT_SURVIVES/SUBSUMED/INCONCLUSIVE on weak AND strong self-verify arms) + EFFICIENCY (energy-verifier vs\
+      \ LLM-judge: accuracy parity + cost ratio 'parity at Nx cheaper') + the cascade-router win + the ARC scaffold readiness\
+      \ + FR-11 v25 + the two FPGA boards. FORCE the operator's 'does the verifier earn its place' decision now that BOTH\
+      \ energy theses are bounded-negative and the verifier is the surviving asset. paper_ready stays TRUE; frozen 0.9131\
+      \ unchanged."
+    deliverable: results/experiment_3913_capstone_v361.json
+    result: OK (conductor)
