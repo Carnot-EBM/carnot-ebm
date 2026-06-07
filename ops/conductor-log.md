@@ -8017,3 +8017,4 @@ c |
 | 2026-06-07 19:54 UTC | DIAGNOSE + FIX the .362 below-chance LLM-judge int | SKIP | Pre-tests failing, self-heal failed: 2 failed, 106 passed in 19.06s |
 | 2026-06-07 22:15 UTC | VALID EFFICIENCY head-to-head — energy-verifier vs | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-07 22:46 UTC | NON-DEGENERATE Meta-EBM cascade router (positive-c | OK | 89 passed in 4.22s |
+| 2026-06-07 23:35 UTC | MOAT SCISSOR replication on an INDEPENDENT corpus  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |

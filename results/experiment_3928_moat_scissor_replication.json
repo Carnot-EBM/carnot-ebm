@@ -100,5 +100,23 @@
   "residual_catch_ci95": null,
   "residual_catch_rate": null,
   "status": "blocked_all_gguf_inference_failed",
-  "title": "moat_scissor_replication"
+  "title": "moat_scissor_replication",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "n_residual_errors=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=13.105805397033691 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
+    }
+  ]
 }
