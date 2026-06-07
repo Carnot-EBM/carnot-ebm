@@ -4038,6 +4038,78 @@ LUT/DFF counts; and an honest readback-supported/readback-verified record.
 
 ---
 
+### REQ-HW-3900
+
+**Title:** GateMate terminal confirmation MUST re-confirm the n=16 flash state with distinct timers and honest readback
+
+**Description:**
+Experiment 3900 MUST re-confirm the GateMate A1-EVB-2M n=16 Carnot Ising tile
+state after the Exp 3889 timer corrigendum. Before any synthesis, packing,
+flashing, or readback attempt, it MUST check the GateMate toolchain with
+`command -v nextpnr-himbaechel && command -v yosys && command -v
+openFPGALoader` and MUST check board contact with `openFPGALoader -c dirtyJtag
+--detect` proving the Cologne Chip GateMate/GM1Ax IDCODE. Missing tools MUST
+emit `blocked_gatemate_toolchain_missing`; missing board contact MUST emit
+`blocked_gatemate_board_unreachable`.
+
+When preconditions pass, the experiment MUST run the current open-source
+GateMate flow (`yosys synth_gatemate`, `nextpnr-himbaechel --device CCGM1A1`,
+`gmpack`, and `openFPGALoader -c dirtyJtag -b olimex_gatemateevb`) against the
+n=16 tile or otherwise confirm the same flashed state with equivalent board
+evidence. The artifact MUST record `duration_s` as total task wall-clock and
+`run_duration_s` as on-board run time only; the two timer fields MUST be
+distinct and MUST NOT repeat the Exp 3866 tautology. The artifact MUST honestly
+record whether JTAG readback is supported, compare readback bytes to the flashed
+bitstream hash when supported, and set a bare `terminal_state_reached` boolean
+only when the bitstream is flashed, smoke evidence is OK, the readback gate is
+either verified or unsupported, and no timer tautology is present.
+
+**Acceptance criteria:**
+- `scripts/experiments/experiment_3900_gatemate_terminal_confirmation.py`
+  writes `results/experiment_3900_gatemate_terminal_confirmation.json`.
+- The artifact includes bare `duration_s`, `run_duration_s`,
+  `readback_verified`, `readback_supported`, `terminal_state_reached`,
+  `gatemate_bitstream_flashed`, `fmax_mhz`, `lut_used`, `dff_used`,
+  `preconditions_checked`, `reproducibility_checksum`, and
+  `inference_substrate` fields.
+- `duration_s != run_duration_s` for every flashed artifact, and
+  `terminal_state_reached=false` whenever the two timer fields are equal.
+- A terminal artifact emits an `honest_verdict` beginning
+  `success: gatemate_TERMINAL_reached_fmax` and ending
+  `_can_graduate_to_opportunistic`.
+- A flashed artifact with supported but unverified readback emits an
+  `honest_verdict` beginning
+  `success: gatemate_flashed_readback_inconclusive_fmax` and ending
+  `_stays_mandatory`.
+- Failed preconditions or failed flash/build flow artifacts emit
+  `honest_verdict` values beginning with `blocked_`.
+- Required fields are annotated through `field_provenance`; the fields
+  themselves MUST remain bare booleans, numbers, strings, or lists rather than
+  `{value, principle}` wrappers.
+
+**Implementation status:** Pending (Exp 3900)
+
+---
+
+### SCENARIO-HW-3900
+
+**Scenario:** GateMate terminal confirmation records graduation or mandatory state without timer tautology.
+
+**Given:** The GateMate toolchain may or may not be installed, the Olimex
+GateMate A1-EVB-2M may or may not be reachable over DirtyJTAG, and the installed
+`openFPGALoader` may or may not expose a compatible `--readback` command.
+**When:** Experiment 3900 runs its preconditions and, only on pass, re-confirms
+the n=16 tile through the synth_gatemate -> nextpnr-himbaechel -> gmpack ->
+openFPGALoader flow plus the readback probe.
+**Then:** It writes the terminal-confirmation artifact with distinct task and
+on-board timers, real Fmax and LUT/DFF counts, readback-supported/readback-
+verified evidence, a bare terminal-state boolean, and a terminal, caveated, or
+blocked verdict.
+
+**Implementation status:** Pending (Exp 3900)
+
+---
+
 ### REQ-HW-3890
 
 **Title:** PolarFire plus KV260 consolidated continuity audit MUST preserve SSH-only preconditions and no fabric-acceleration claim
