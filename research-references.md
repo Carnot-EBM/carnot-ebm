@@ -1,3 +1,70 @@
+## 2026-06-07 Post-.362 Planning Sweep (Milestone 2026.06.363)
+
+`.362` finally landed the **offline verifier proof** (the work blocked for three milestones by
+the live-35B GGUF inference path + a poison-test cascade). Read via
+`scripts/summarize_artifact.py`, the honest `.362` outcomes — and the **flaw the capstone
+reported at face value** that `.363` must fix:
+
+- **ACCURACY axis — MOAT_SURVIVES (genuine).** exp3916: the energy/verifier ensemble (AUROC
+  **0.967**) catches reasoning errors a strong reasoner's OWN self-verification misses —
+  reasoner self-verify AUROC **0.44** (weak arm) / **0.66** (boosted/strong arm), residual-catch
+  **0.914** (CI95 [0.843, 0.971]), error-overlap Jaccard **0.50**, n_residual=70. This corroborates
+  the **Self-Correction Illusion** (arXiv:2606.05976) and is a real, defensible result: the
+  verifier adds independent value the model cannot self-supply.
+- **EFFICIENCY axis — INVALID COMPARATOR (the .363 fix).** exp3917 reported
+  `CHEAPER_NOT_PARITY` at **11512× cheaper**, but the LLM-as-judge comparator
+  (gemma-4-26B-A4B-it, 0-shot) scored **AUROC 0.4423 — BELOW CHANCE**. So "energy fails parity"
+  is a mis-framing: the energy verifier (0.81) actually *beats* the judge; it "fails parity" only
+  because it is *above* a sub-chance strawman. The 11512× per-item wall-clock ratio (0.066 ms vs
+  763 ms) is real, but a cost ratio against a broken baseline is not a defensible efficiency claim
+  (FALSE_NEGATIVE_RISK / positive-control discipline). **`.363` must re-run the head-to-head
+  against a COMPETENT judge (AUROC defensibly above chance).**
+- **CASCADE — DEGENERATE.** exp3918 reported `WINS` but `escalation_fraction = 0.0` — the cascade
+  router **never escalated a single item**. It is just the energy verifier with an unused LLM tier
+  measured against the below-chance baseline (`auroc_gap = -0.39`). The cascade mechanism was never
+  exercised; `.363` must re-run with a competent judge so close-calls actually escalate (>0%).
+- **FACTS — retires to future-work.** exp3920 (graph-grounding fact verifier) FLAGGED again
+  (`blocked_llama_cpp_inference_failed`, model_invoked=False) — the FOURTH facts fabrication/block
+  (exp3862/3886/3896/3920). `retire_if_same_verdict` fired: the facts route now retires to honest
+  future-work (exclusion manifest). The verifier stays **math-domain-bound**.
+- **ARC scaffold — READY.** exp3919 shipped the verifier-first ARC-AGI-3 harness scaffold
+  (env adapter + verifier-as-router + action-pruner) with a passing unit test on a synthetic env.
+  North-star §5 sequences the agentic-proof venue SECOND, after the offline proof — `.363` takes
+  the first realistic agentic step on this scaffold.
+- **FR-11 v25 — INVARIANT_HELD;** hardware FLAGGED (duration tautology, needs clean re-run);
+  `paper_ready` stays TRUE (G1-G4 met, FoVer 0.9131 frozen).
+
+**New references discovered during the `.363` sweep:**
+
+- **ARC-AGI-3 Technical Report** (arXiv:2603.24621; arcprize.org/media/ARC_AGI_3_Technical_Report.pdf)
+  — interactive turn-based agentic benchmark; **human-relative action-efficiency scoring**, and the
+  report explicitly **prioritizes domains with verifiers**. Frontier models score **<1%** (Gemini
+  3.1 0.37%, GPT-5.4 0.26%, Opus 4.6 0.25%), humans 100%. Direct external corroboration of Carnot's
+  verifier-first agentic thesis: the benchmark's own scoring metric IS action-efficiency, which is
+  exactly what the verifier-as-action-pruner optimizes. THE target venue for the agentic proof.
+- **Executable World Models for ARC-AGI-3** (arXiv:2605.05138) — a coding-agent maintains an
+  executable Python world model, **verifies it against observations**, refactors toward simpler
+  abstractions, and plans before acting. Strong baseline/reference for the agentic harness; the
+  "verify world-model against observations" loop maps onto the energy-verifier-as-router.
+- **"Know When You're Wrong: Aligning Confidence with Correctness for LLM Error Detection"**
+  (arXiv:2603.06604) — directly relevant to the below-chance-judge diagnosis: LLM self-confidence is
+  frequently mis-aligned with correctness on error-detection tasks; calibration (ECE) is the fix.
+  Informs why the gemma-4-26B 0-shot judge fell below chance and how to recover a competent judge.
+- **JudgeRLVR: Judge First, Generate Second for Efficient Reasoning** (arXiv:2601.08468) — judge-first
+  efficiency framing; corroborates the classifier-first-cascade cost argument.
+- **ToolPRMBench: Evaluating and Advancing Process Reward Models for Tool-using Agents**
+  (arXiv:2601.12294) — process reward models for agentic tool use; reference for the agentic-venue
+  verifier-as-router scoring.
+- **CompassVerifier** (arXiv:2508.03686) — unified robust verifier / outcome reward; the competent
+  LLM-judge comparator baseline candidate for the efficiency re-run.
+
+**`.363` thesis:** the offline verifier proof's ACCURACY axis is solid (MOAT_SURVIVES); the
+EFFICIENCY axis was measured against a sub-chance strawman and must be re-proven against a
+competent judge, with the cascade actually escalating. Then take the first realistic agentic step
+(verifier-as-router action-efficiency) toward the ARC-AGI-3 venue. Facts retires; math-domain-bound.
+
+---
+
 ## 2026-06-01 Post-.337 Planning Sweep (Milestone 2026.06.338)
 
 `.337` took the dependency-aware weighting lead to **G1-rigor — CONFIRMED CLEAN**, but two
