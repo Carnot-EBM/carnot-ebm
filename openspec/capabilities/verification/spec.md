@@ -10897,3 +10897,64 @@ metrics, zero item counts, no per-step score claims, and a measured duration.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3895 | Implemented (`python/carnot/eval/moat_scissor_tested_harness.py`, `scripts/experiments/experiment_3895_moat_scissor_tested_harness.py`) | Implemented (`tests/python/test_experiment_3895_moat_scissor_tested_harness.py`) |
+
+### REQ-VERIFY-3896: Graph-Grounding Verifier Harness Positive Control
+
+The repository SHALL provide a tested graph-grounding fact verifier harness at
+`python/carnot/verify/graph_grounding_fact_verifier_defabricated.py` and an Exp
+3896 runner that writes
+`results/experiment_3896_graph_grounding_verifier_harness.json`. Before live
+inference, the runner SHALL verify CUDA with the repository virtualenv Python,
+resolve a cached SOTA GGUF path for either `unsloth/Qwen3.6-35B-A3B-GGUF` or
+`unsloth/gemma-4-26B-A4B-it-GGUF`, verify `llama_cpp` imports, and verify that
+a labeled facts corpus exists with nonzero grounded and
+hallucinated rows. The model SHALL be loaded only through
+`llama_cpp.Llama(model_path=...)`, not through a HuggingFace tokenizer path.
+
+The verifier SHALL expose `graph_ground_score(item, model_path, ...)` and return
+bare `eg`, `rp`, and `cfi` fields from a live model-extracted response/evidence
+entity-relation graph pair. It SHALL preserve evidence of invocation through
+model-call counts, completion tokens or raw model text, and parse-fallback
+flags so a caller can distinguish live extraction from a rule-based stub.
+
+The Exp 3896 harness SHALL evaluate a fixed fixture of approximately ten
+claim/source pairs, half grounded and half planted with a hallucinated entity or
+relation. The fixture positive control SHALL pass only when `model_invoked=true`,
+`unit_test_passed=true`, `fixture_auroc > 0.6`, a planted hallucinated relation
+is assigned an unsupported relation, and `duration_s >= 60`. The terminal
+artifact SHALL include bare top-level fields for `verifier_module_path`,
+`fixture_auroc`, `model_invoked`, `unit_test_path`, `unit_test_passed`,
+`facts_corpus_path`, `facts_corpus_n_items`, `preconditions_checked`,
+`model_specs`, `random_seed`, `reproducibility_checksum`, `duration_s`,
+`inference_substrate`, and `honest_verdict`.
+
+The falsification gate SHALL emit
+`complete: graph_grounding_verifier_READY_fixture_auroc<a>_facts_run_can_proceed`
+only when every positive-control gate passes. Otherwise it SHALL emit
+`complete: graph_grounding_verifier_NOT_READY_fixture_auroc<a>_model_invoked<bool>`.
+Failed hard resources SHALL write a terminal `blocked_<resource>` artifact with
+precondition evidence and no fabricated fixture metrics.
+
+### SCENARIO-VERIFY-3896: Live Graph Fixture Detects Planted Hallucinations
+
+Given CUDA, `llama_cpp`, a cached SOTA GGUF, and a labeled facts corpus are
+available, when Exp 3896 runs the fixed graph-grounding fixture, then it writes
+`results/experiment_3896_graph_grounding_verifier_harness.json`, records live
+llama.cpp inference, reports `model_invoked=true`, obtains fixture AUROC above
+0.6, flags the planted hallucinated relation as unsupported, records
+`duration_s >= 60`, and emits the VERIFIER_READY terminal verdict.
+
+### SCENARIO-VERIFY-3896-BLOCKED: Missing Live Resources Do Not Fabricate Graph Metrics
+
+Given CUDA, every required cached GGUF, `llama_cpp`, or a labeled facts corpus is
+unavailable, when Exp 3896 runs, then it writes
+`results/experiment_3896_graph_grounding_verifier_harness.json` with a terminal
+`blocked_<resource>` honest verdict, populated precondition evidence, null
+fixture AUROC, `model_invoked=false`, `unit_test_passed=false`, and no
+live-model claim.
+
+## Implementation Status (REQ-VERIFY-3896)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3896 | Implemented (`python/carnot/verify/graph_grounding_fact_verifier_defabricated.py`, `scripts/experiments/experiment_3896_graph_grounding_verifier_harness.py`) | Implemented (`tests/python/test_graph_grounding_fact_verifier.py`) |

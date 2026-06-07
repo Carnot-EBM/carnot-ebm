@@ -1,0 +1,286 @@
+{
+  "duration_s": 43.823710203170776,
+  "experiment": 3896,
+  "facts_corpus_n_items": 120,
+  "facts_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/real_factual_corpus_ragtruth.jsonl",
+  "finished_at": "2026-06-07T02:33:31.375121Z",
+  "fixture_auroc": 1.0,
+  "fixture_n_hallucinated": 5,
+  "fixture_n_items": 10,
+  "honest_verdict": "complete: graph_grounding_verifier_NOT_READY_fixture_auroc1.0000_model_invokedtrue",
+  "inference_substrate": "live_llama_cpp_sota_gguf_graph_grounding_fixture",
+  "model_call_count": 10,
+  "model_invoked": true,
+  "model_specs": {
+    "candidate_hf_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/Qwen3.6-35B-A3B-GGUF"
+    ],
+    "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "loader": "llama_cpp.Llama",
+    "max_tokens": 220,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "n_batch": 128,
+    "n_ctx": 2048,
+    "n_gpu_layers": -1
+  },
+  "parse_fallback_count": 9,
+  "per_item_scores": [
+    {
+      "cfi": 1.0,
+      "claim": "Ada Lovelace wrote notes about the Analytical Engine.",
+      "completion_tokens": 220,
+      "eg": 1.0,
+      "gold_hallucinated": false,
+      "graph_score": 0.0,
+      "id": "grounded-lovelace-notes",
+      "missing_entities": [],
+      "parse_fallback_used": true,
+      "planted_hallucinated_relation": false,
+      "prompt_sha256": "c119c2b5e3bdd5e55867ecfee12e294eaef5fe2d0e35aa3efd155fc56909df01",
+      "raw_response_chars": 1078,
+      "raw_response_sha256": "af7043162d199d871960e87956c6013dc51183c33e7b8017f2ca20cf8195040d",
+      "rp": 1.0,
+      "source": "Ada Lovelace wrote notes about Charles Babbage's Analytical Engine.",
+      "unsupported_relations": []
+    },
+    {
+      "cfi": 0.7,
+      "claim": "Marie Curie discovered radium.",
+      "completion_tokens": 220,
+      "eg": 1.0,
+      "gold_hallucinated": true,
+      "graph_score": 0.3,
+      "id": "planted-relation-curie-radium",
+      "missing_entities": [],
+      "parse_fallback_used": true,
+      "planted_hallucinated_relation": true,
+      "prompt_sha256": "cd43d6749cc439ea9e43aa4dc3d74bbd6dd665ad757c8ff94feb5fba3795fac0",
+      "raw_response_chars": 1051,
+      "raw_response_sha256": "81644dc78c0bd47430bcc4797ea6e296183cc8d9401cacca35d64373726349d3",
+      "rp": 0.0,
+      "source": "Marie Curie discovered polonium. Pierre Curie studied radium.",
+      "unsupported_relations": [
+        {
+          "object": "radium",
+          "relation": "related_to",
+          "subject": "marie curie"
+        }
+      ]
+    },
+    {
+      "cfi": 1.0,
+      "claim": "The Hubble Space Telescope launched aboard Discovery.",
+      "completion_tokens": 148,
+      "eg": 1.0,
+      "gold_hallucinated": false,
+      "graph_score": 0.0,
+      "id": "grounded-hubble-discovery",
+      "missing_entities": [],
+      "parse_fallback_used": false,
+      "planted_hallucinated_relation": false,
+      "prompt_sha256": "5ffad32540c5f3ca87e112d0a9a2c9569d50aeba4a4e973bcd4c180d3785a4c1",
+      "raw_response_chars": 596,
+      "raw_response_sha256": "c92a9f4b0b33aa9f11b25fce3110679531ac79bccb2fa34638b1e5f9e714d0d6",
+      "rp": 1.0,
+      "source": "The Hubble Space Telescope launched aboard the space shuttle Discovery.",
+      "unsupported_relations": []
+    },
+    {
+      "cfi": 0.35,
+      "claim": "The Hubble Space Telescope launched aboard Atlantis.",
+      "completion_tokens": 220,
+      "eg": 0.5,
+      "gold_hallucinated": true,
+      "graph_score": 0.65,
+      "id": "planted-entity-hubble-atlantis",
+      "missing_entities": [
+        "launch aboard atlanti"
+      ],
+      "parse_fallback_used": true,
+      "planted_hallucinated_relation": false,
+      "prompt_sha256": "b6803ceaaeb916e1a675e3d1cfaa59c8f16c06f47648edacd26645e4764bf9ae",
+      "raw_response_chars": 824,
+      "raw_response_sha256": "a4fe2a27df0c185d3422872a8d2724df5a2a56f6d4bdb880d2d5f93cccef6062",
+      "rp": 0.0,
+      "source": "The Hubble Space Telescope launched aboard the space shuttle Discovery.",
+      "unsupported_relations": [
+        {
+          "object": "launch aboard atlanti",
+          "relation": "related_to",
+          "subject": "hubble space telescope"
+        }
+      ]
+    },
+    {
+      "cfi": 1.0,
+      "claim": "The Treaty of Versailles was signed in 1919.",
+      "completion_tokens": 220,
+      "eg": 1.0,
+      "gold_hallucinated": false,
+      "graph_score": 0.0,
+      "id": "grounded-versailles-1919",
+      "missing_entities": [],
+      "parse_fallback_used": true,
+      "planted_hallucinated_relation": false,
+      "prompt_sha256": "5ffa28d3a59debdddee246a5fb1723dc7c4efd14842d066a482e14e56788473c",
+      "raw_response_chars": 719,
+      "raw_response_sha256": "bccdc0ba53959603a8b770455ed3a803163c1dd3ed71a3c53404de55b4bb4472",
+      "rp": 1.0,
+      "source": "The Treaty of Versailles was signed in 1919 after World War I.",
+      "unsupported_relations": []
+    },
+    {
+      "cfi": 0.35,
+      "claim": "The Treaty of Versailles was signed in 1929.",
+      "completion_tokens": 220,
+      "eg": 0.5,
+      "gold_hallucinated": true,
+      "graph_score": 0.65,
+      "id": "planted-date-versailles-1929",
+      "missing_entities": [
+        "sign 1929"
+      ],
+      "parse_fallback_used": true,
+      "planted_hallucinated_relation": false,
+      "prompt_sha256": "b934900e34e774020dc16bad6e348fbdefc946365f1e44101c9fc9a10077b735",
+      "raw_response_chars": 796,
+      "raw_response_sha256": "5979bb40e6fa820c8ad1b74f853a35f568004603237009b14289573f2ca3385b",
+      "rp": 0.0,
+      "source": "The Treaty of Versailles was signed in 1919 after World War I.",
+      "unsupported_relations": [
+        {
+          "object": "sign 1929",
+          "relation": "was",
+          "subject": "treaty"
+        }
+      ]
+    },
+    {
+      "cfi": 1.0,
+      "claim": "Rosalind Franklin produced Photo 51.",
+      "completion_tokens": 220,
+      "eg": 1.0,
+      "gold_hallucinated": false,
+      "graph_score": 0.0,
+      "id": "grounded-franklin-photo51",
+      "missing_entities": [],
+      "parse_fallback_used": true,
+      "planted_hallucinated_relation": false,
+      "prompt_sha256": "67aba18598a18065e40d1165c1e6d8cc80ff46c2801e83ef2915eb1ca6ab6e17",
+      "raw_response_chars": 780,
+      "raw_response_sha256": "ecea26a00ad949ff50947acdc47c12ead66c7bc1e8953b9fe26a426b32e27594",
+      "rp": 1.0,
+      "source": "Rosalind Franklin produced Photo 51, an X-ray diffraction image of DNA.",
+      "unsupported_relations": []
+    },
+    {
+      "cfi": 0.35,
+      "claim": "Rosalind Franklin received the 1962 Nobel Prize in Physiology or Medicine.",
+      "completion_tokens": 220,
+      "eg": 0.5,
+      "gold_hallucinated": true,
+      "graph_score": 0.65,
+      "id": "planted-relation-franklin-nobel",
+      "missing_entities": [
+        "1962 nobel prize physiology medicine"
+      ],
+      "parse_fallback_used": true,
+      "planted_hallucinated_relation": true,
+      "prompt_sha256": "86ff0168de68032f10147057ddf0f5ec4414bda99feaeb0497b65e3b9eb2489e",
+      "raw_response_chars": 832,
+      "raw_response_sha256": "73e50ca019195ec86804fb6d90db6e8fd2702876663db36df4e57d7cf00ca9e3",
+      "rp": 0.0,
+      "source": "James Watson, Francis Crick, and Maurice Wilkins received the 1962 Nobel Prize in Physiology or Medicine. Rosalind Franklin produced Photo 51.",
+      "unsupported_relations": [
+        {
+          "object": "1962 nobel prize physiology medicine",
+          "relation": "related_to",
+          "subject": "rosalind franklin"
+        }
+      ]
+    },
+    {
+      "cfi": 1.0,
+      "claim": "Mount Vesuvius erupted in AD 79.",
+      "completion_tokens": 220,
+      "eg": 1.0,
+      "gold_hallucinated": false,
+      "graph_score": 0.0,
+      "id": "grounded-vesuvius-79",
+      "missing_entities": [],
+      "parse_fallback_used": true,
+      "planted_hallucinated_relation": false,
+      "prompt_sha256": "68d2a4a2b40117fd53d5fef74f7670127f982f85fe7509e083f22f0c9bae6966",
+      "raw_response_chars": 718,
+      "raw_response_sha256": "1275904bf6d3ed274e4fc222bac10cf91838d084d51d58899761fa96516b5372",
+      "rp": 1.0,
+      "source": "Mount Vesuvius erupted in AD 79 and buried Pompeii.",
+      "unsupported_relations": []
+    },
+    {
+      "cfi": 0.35,
+      "claim": "Mount Vesuvius erupted in AD 179.",
+      "completion_tokens": 220,
+      "eg": 0.5,
+      "gold_hallucinated": true,
+      "graph_score": 0.65,
+      "id": "planted-date-vesuvius-179",
+      "missing_entities": [
+        "ad 179"
+      ],
+      "parse_fallback_used": true,
+      "planted_hallucinated_relation": false,
+      "prompt_sha256": "c363a0ad16ca538123278a3bbe682304449170ceb66fac50f1864914e57a8b39",
+      "raw_response_chars": 741,
+      "raw_response_sha256": "b82a941fcca267846524a59e011e8882a5c254c0c4990da240a2d1783dd7409c",
+      "rp": 0.0,
+      "source": "Mount Vesuvius erupted in AD 79 and buried Pompeii.",
+      "unsupported_relations": [
+        {
+          "object": "ad 179",
+          "relation": "related_to",
+          "subject": "mount vesuviu"
+        }
+      ]
+    }
+  ],
+  "planted_hallucinated_relation_flagged": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "returncode=0",
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "resource": "gemma_4_26b_a4b_it_gguf_cached"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "resource": "qwen3.6_35b_a3b_gguf_cached"
+    },
+    {
+      "available": true,
+      "detail": "import llama_cpp OK",
+      "resource": "llama_cpp_import"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/data/real_factual_corpus_ragtruth.jsonl n_items=120 labels=[0, 1]",
+      "resource": "facts_corpus_with_gold_labels"
+    }
+  ],
+  "random_seed": 3896,
+  "reproducibility_checksum": "171acf94168f3537005e577910591636ece5883622dcb0b407dc3130ebb4fb0b",
+  "run_date": "20260607",
+  "started_at": "2026-06-07T02:32:47.551411Z",
+  "status": "complete: graph_grounding_verifier_NOT_READY_fixture_auroc1.0000_model_invokedtrue",
+  "stub_rejected": true,
+  "title": "graph_grounding_verifier_harness",
+  "unit_test_passed": false,
+  "unit_test_path": "tests/python/test_graph_grounding_fact_verifier.py",
+  "verifier_module_path": "python/carnot/verify/graph_grounding_fact_verifier_defabricated.py"
+}

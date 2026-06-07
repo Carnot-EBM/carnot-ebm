@@ -7947,3 +7947,13 @@ ERROR: {
 | 2026-06-07 00:55 UTC | EBT FUNDAMENTAL adversarial REPLICATION (2 fresh s | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: remains stable |
 | 2026-06-07 01:24 UTC | BUILD + UNIT-TEST the reasoner-self-verification h | OK | 88 passed in 60.28s (0:01:00) |
 | 2026-06-07 02:18 UTC | MOAT SCISSOR IN-DISTRIBUTION with the TESTED harne | OK | 101 passed in 4.73s |
+| 2026-06-07 02:46 UTC | BUILD + UNIT-TEST the graph-grounding fact-verifie | FAIL | Post-tests failed: 1 failed, 105 passed in 10.42s |
+| 2026-06-07 02:48 UTC | BUILD + UNIT-TEST the graph-grounding fact-verifie | OK | Deliverable already exists in repo |
+| 2026-06-07 02:49 UTC | RUN graph-grounding on the facts corpus with the T | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 10.98s |
+| 2026-06-07 02:51 UTC | RUN graph-grounding on the facts corpus with the T | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 10.59s |
+| 2026-06-07 02:53 UTC | RUN graph-grounding on the facts corpus with the T | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 9.07s |
+| 2026-06-07 02:56 UTC | Facts COMPLEMENTARITY (disk-reads exp3897, no hard | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 10.89s |
+| 2026-06-07 02:58 UTC | Facts COMPLEMENTARITY (disk-reads exp3897, no hard | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 10.45s |
+| 2026-06-07 03:00 UTC | Facts COMPLEMENTARITY (disk-reads exp3897, no hard | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 9.53s |
+| 2026-06-07 03:03 UTC | FR-11 continuous self-learning v25 (research-progr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 10.78s |
+| 2026-06-07 03:05 UTC | FR-11 continuous self-learning v25 (research-progr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 10.32s |
