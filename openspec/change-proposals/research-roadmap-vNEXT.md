@@ -61,7 +61,7 @@ evidence.
    verifier-as-action-pruner. **Gap: the first realistic agentic run measuring
    action-efficiency with vs without the verifier.**
 
-## 3. Milestone design — 12 experiments across 5 phases
+## 3. Milestone design — 10 experiments across 5 phases
 
 ```
 PHASE 0 — hygiene + retire facts + record the comparator flaw
