@@ -10988,6 +10988,89 @@ metrics, zero item counts, no per-step score claims, and a measured duration.
 |---|---|---|
 | REQ-VERIFY-3904 | Planned (`python/carnot/eval/moat_scissor_regated.py`, `scripts/experiments/experiment_3904_moat_scissor_regated.py`) | Planned (`tests/python/test_experiment_3904_moat_scissor_regated.py`) |
 
+### REQ-VERIFY-3916: Robust-GGUF Moat Scissor Accuracy Measurement
+
+The repository SHALL provide an Exp 3916 moat-scissor accuracy runner that
+writes `results/experiment_3916_moat_scissor_accuracy.json` by loading the Exp
+3884 in-distribution FoVer corpus and persisted Carnot ensemble scores, loading
+the Exp 3894 reasoner self-verification fixture-control artifact, and backing
+the tested self-verification judge with the robust GGUF generator from
+`python/carnot/verify/gguf_inference.py` proven by Exp 3915. The runner SHALL
+NOT call `llama_cpp.Llama` directly, SHALL NOT generate new corpus rows, SHALL
+NOT recompute Carnot scores, SHALL NOT aggregate flagged-adversarial artifacts,
+and SHALL NOT treat in-distribution reasoner AUROC as a harness-validity gate.
+
+Before live scoring, the runner SHALL verify CUDA with the repository virtualenv
+Python, verify that the Exp 3915 artifact exists with `unit_test_passed=true`
+and `smoke_tokens>0`, verify that Exp 3894 reports `fixture_auroc > 0.6`,
+verify that Exp 3884 has at least 100 gold-incorrect rows with
+`carnot_ensemble_auroc_on_corpus >= 0.65`, and verify that `carnot.verify`,
+`carnot.verify.gguf_inference`, and the reasoner self-verification harness are
+importable. Failed preconditions SHALL write a terminal `blocked_<resource>`
+artifact with non-fabricated empty moat metrics.
+
+For runnable inputs, the runner SHALL load the live generator through
+`load_gguf_generator(...)`, call the tested Exp 3894
+`reasoner_self_verify(...)` path via a robust-generator adapter for both a weak
+default-prompt arm and a strong boosted-prompt arm, and compute for each arm:
+reasoner AUROC as a finding, residual catch rate over reasoner-missed
+gold-incorrect rows, bootstrap CI95 with at least 1000 resamples,
+error-overlap Jaccard, and residual error count.
+
+The terminal artifact SHALL include bare top-level fields for
+`gguf_harness_model_used`, `harness_fixture_auroc`,
+`residual_catch_rate_weak`, `residual_catch_ci95_weak`,
+`residual_catch_rate_strong`, `residual_catch_ci95_strong`,
+`reasoner_auroc_weak`, `reasoner_auroc_strong`,
+`error_overlap_jaccard_weak`, `error_overlap_jaccard_strong`,
+`n_residual_errors_weak`, `n_residual_errors_strong`,
+`carnot_ensemble_auroc`, `harness_source`, `corpus_source`, `n_items`,
+`preconditions_checked`, `model_specs`, `random_seed`, `random_seeds_used`,
+`reproducibility_checksum`, `duration_s`, and `inference_substrate`, with
+string principle notes in `field_principles` and no `{value, principle}`
+wrappers around bare metric fields.
+
+The falsification gate SHALL emit
+`complete: moat_scissor_MOAT_SURVIVES_residcatch_strong<mean>_ci<lo>-<hi>_overlap<j>_holds_vs_boosted_self_verify_nres<N>`
+only when `harness_fixture_auroc > 0.6`, `carnot_ensemble_auroc >= 0.65`,
+the strong-arm residual CI95 lower bound is above `0.5`,
+`error_overlap_jaccard_strong < 0.6`, and at least 30 strong-arm residual
+errors exist. It SHALL emit
+`complete: moat_scissor_MOAT_SUBSUMED_residcatch_strong<mean>_overlap<j>_o1_subsumption_risk_nres<N>`
+only when `harness_fixture_auroc > 0.6` and either the strong-arm residual CI95
+upper bound is below `0.3` or `error_overlap_jaccard_strong > 0.7`. It SHALL
+emit `complete: moat_scissor_INCONCLUSIVE_<reason>` when the fixture harness
+control fails, fewer than 30 strong-arm residual errors remain, the Carnot
+positive control is out of band, or other gate boundaries are not decisive.
+
+### SCENARIO-VERIFY-3916: Robust-GGUF Strong-Arm Moat Scissor Writes Accuracy Artifact
+
+Given Exp 3915 reports a ready robust GGUF generator, Exp 3894 reports
+`fixture_auroc > 0.6`, Exp 3884 reports an in-band corpus with persisted
+per-item Carnot scores, and CUDA plus `carnot.verify` imports are available,
+when Exp 3916 runs, then it writes
+`results/experiment_3916_moat_scissor_accuracy.json`, records the robust GGUF
+harness source and loaded model, records weak and boosted reasoner AUROC
+findings, computes weak and strong residual catch with bootstrap CI95,
+computes weak and strong overlap Jaccards, records residual counts and
+reproducibility checksum, and selects the terminal verdict from the corrected
+fixture-control plus strong-arm gate.
+
+### SCENARIO-VERIFY-3916-BLOCKED: Missing Robust Inputs Do Not Fabricate Moat Metrics
+
+Given CUDA, Exp 3915 robust GGUF readiness, `carnot.verify`, Exp 3894 fixture
+control, or the Exp 3884 in-band corpus is unavailable, when Exp 3916 runs,
+then it writes `results/experiment_3916_moat_scissor_accuracy.json` with a
+terminal blocked verdict, populated precondition evidence, null weak and strong
+residual/AUROC metrics, zero item counts, no per-step score claims, and a
+measured duration.
+
+## Implementation Status (REQ-VERIFY-3916)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3916 | Planned (`python/carnot/eval/moat_scissor_accuracy_3916.py`, `scripts/experiments/experiment_3916_moat_scissor_accuracy.py`) | Planned (`tests/python/test_experiment_3916_moat_scissor_accuracy.py`) |
+
 ### REQ-VERIFY-3905: Cost-Instrumented Verifier Harness
 
 The repository SHALL provide `python/carnot/verify/cost_instrumented_verification.py`
