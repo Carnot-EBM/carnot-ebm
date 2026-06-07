@@ -1,0 +1,842 @@
+# ============================================================================
+# Pre-staged roadmap for 2026.06.362 (outer-loop, Claude Opus 4.8, 2026-06-07).
+#
+# WHY THIS SHAPE — .361 WAS A NEAR-TOTAL INFRA WASH; .362 RECOVERS IT.
+# .361 set out to PROVE THE VERIFIER EARNS ITS PLACE (north-star §5) and produced
+# only 3 of ~11 artifacts. Two infra failures (NOT science) caused it:
+#   1. exp3904 (the CRITICAL ACCURACY axis / moat scissor) returned
+#      blocked_llama_cpp_inference_failed: the live Qwen3.6-35B GGUF inference path
+#      failed at runtime (CUDA available, model cached, carnot.verify imported — the
+#      inference CALL itself failed under llama_cpp 0.3.23 with full GPU offload).
+#      The moat scissor has now been BLOCKED/INCONCLUSIVE THREE milestones running
+#      (.359 exp3885, .360 exp3895, .361 exp3904), ALWAYS on the live-35B path.
+#   2. exp3905 (cost harness) shipped a POISON TEST
+#      (tests/python/test_cost_instrumented_verification.py asserts duration_s>=60
+#      on a 10-ITEM fixture that only takes 35.8s). That test fails in the conductor
+#      PRE-TEST gate, so EVERY task after it SKIP'd ("1 failed, 105 passed") —
+#      efficiency, cascade, ARC scaffold, facts, FR-11 v25, hardware, AND the
+#      capstone. This is the agent-shipped poison-test cascade (memory
+#      incident_agent_shipped_test_cascade). The 60s adversarial floor is for the
+#      FULL-CORPUS science artifact, NEVER for a 10-item unit-test fixture.
+#
+# .362 = UNBLOCK, then FINISH THE OFFLINE VERIFIER PROOF.
+#   Phase 0  : archive/activate + QUARANTINE the poison test (break the cascade) +
+#              fix the cost-harness fixture assertion. Then a ROBUST, TESTED GGUF
+#              inference harness with a documented fallback chain (the root-cause fix
+#              for exp3904's blocked_llama_cpp_inference_failed) that ALL live-model
+#              tasks reuse — harness-first per the .360/.361 lesson.
+#   Phase 1  : the offline proof, re-run on the hardened harness — ACCURACY (moat
+#              scissor re-gated) + EFFICIENCY (head-to-head, accuracy parity + cost
+#              ratio "parity at Nx cheaper") + the Meta-EBM cascade router.
+#   Phase 2  : the verifier-first ARC-AGI-3 agentic-proof SCAFFOLD (GPU-free, robust,
+#              never ran — sequenced SECOND per north-star §5).
+#   Phase 3  : the LAST disciplined facts graph-grounding retry (retire_if_same).
+#   Phase 4  : FR-11 v25 (research-program.md MANDATE) + hardware continuity + capstone.
+#
+# HARDENING (carried from .356-.361, TIGHTENED for the two .361 failure modes):
+#   1. NO unit-test duration floor on a tiny fixture. The 60s live-floor is asserted
+#      ONLY on the FULL-CORPUS science artifact's duration_s, NEVER inside a unit test
+#      on a <=12-item fixture (the exp3905 poison-test root cause). Fixture tests assert
+#      CORRECTNESS (ratio>1, both run, distinct, AUROC band) — not wall-clock.
+#   2. ROBUST live-model path: every live-model task imports the exp3915 gguf_inference
+#      harness, which (a) runs a 1-token GENERATE smoke before declaring ready, (b) falls
+#      back across cached headline-eligible GGUFs (gemma-4-26B-A4B-it / Qwen3.6-35B /
+#      gemma-4-31B-it), (c) reduces n_gpu_layers on OOM/failure. exp3904 blocked because
+#      no task had this — fixed at the root.
+#   3. NO hard gated_on on the critical path (.340 disk-fallback). Each downstream task
+#      disk-reads its upstream and emits blocked_upstream_* if absent — a skipped upstream
+#      costs ONE task, never a cascade.
+#   4. BARE field emission: every REQUIRED ARTIFACT FIELD value is a bare scalar; the
+#      principle: lines guide the agent, NOT a {{value,principle}} wrapper (exp3871 bug).
+#
+# ROUTING: all tasks codex + requires_codex + gpt-5.5 (anti-wipeout; gemini crashes GPU
+# workloads and 429-wiped .333/.355; standing operator gemini<->codex flip authority
+# 2026-06-05). GPU tasks add requires_gpu. Every GPU/live-model Run command uses
+# {project_root}/.venv/bin/python (bare python has no torch -> silent CPU drop).
+#
+# INVARIANTS: paper_ready stays TRUE; FoVer 0.9131 frozen; verifier math-domain-bound
+# until facts proven non-fabricated; never aggregate flagged_adversarial; EBT replication
+# superseded/dropped (energy-as-generator closed-negative); no external publication.
+# ============================================================================
+
+milestone: "2026.06.362"
+milestone_title: "Recover the .361 infra wash and FINISH the offline verifier proof: break the poison-test cascade, fix the recurring live-35B-GGUF inference blocker (a robust tested gguf_inference harness all live-model tasks reuse), then land BOTH axes that have never cleanly landed — ACCURACY (moat scissor re-gated) + EFFICIENCY (energy-verifier vs LLM-as-judge head-to-head, accuracy parity + cost/latency ratio) + the Meta-EBM cascade router — plus the verifier-first ARC-AGI-3 scaffold, the last facts retry, FR-11 v25, hardware continuity, and the verifier scorecard capstone."
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+
+tasks:
+  # ----------------------------------------------------------------------------
+  # PHASE 0 — record hygiene + UNBLOCK (break the poison-test cascade) + root-cause infra fix
+  # ----------------------------------------------------------------------------
+  - id: exp3914-archive-v361-activate-v362-quarantine-poison-test
+    operator_override: >
+      2026-06-07 operator-outer-loop directive (standing): routine milestone-transition task
+      (archive-vN-activate-vN+1) — false-positive scope-match vs every prior archive/activate
+      task; structurally never a doomed rerun. ALSO the cascade-breaker: it quarantines the
+      exp3905 poison test (test_cost_instrumented_verification.py duration_s>=60 on a 10-item
+      fixture) that SKIP-cascaded the entire .361 tail, so .362 starts with a green pre-test gate.
+    milestone: "2026.06.362"
+    title: "Archive .361 -> activate .362; GREEN-GATE de-risk + BREAK THE .361 POISON-TEST CASCADE: quarantine/fix tests/python/test_cost_instrumented_verification.py (it asserts duration_s>=60 on a 10-ITEM fixture that legitimately runs in ~36s -> it fails the conductor PRE-TEST gate and SKIP-cascaded exp3906..capstone in .361). Move the 60s live-floor off the unit-test fixture (assert it ONLY on the full-corpus science artifact). Assert research-complete.yaml parses (colon-poison guard), the core pretest subset is green AFTER the fix, and the .361-built modules import. Record the .361 wash root causes (poison-test cascade + blocked_llama_cpp_inference_failed)."
+    priority: critical
+    track: infra
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_3914_archive_v361_activate_v362.json
+    prompt: |
+      CONTEXT. Milestone .361 produced only 3 of ~11 artifacts. ROOT CAUSE #1 (the cascade):
+      exp3905 shipped tests/python/test_cost_instrumented_verification.py with
+      `assert artifact["duration_s"] >= 60`, but that test runs the harness on a TINY 10-item
+      fixture that legitimately completes in ~35.8s. The assertion fails, so the conductor's
+      PRE-TEST gate reported "1 failed, 105 passed" and SKIP-cascaded EVERY task after exp3905
+      (efficiency exp3906, cascade exp3907, ARC exp3908, facts exp3909, FR-11 exp3910, hardware,
+      AND the capstone). This is the agent-shipped poison-test cascade (memory
+      incident_agent_shipped_test_cascade). ROOT CAUSE #2 (recorded for downstream): exp3904
+      (moat scissor) returned blocked_llama_cpp_inference_failed — the live 35B GGUF inference
+      CALL failed at runtime. This task archives .361, activates .362, and — critically —
+      QUARANTINES/FIXES the poison test so .362 starts with a green pre-test gate.
+
+      THE FIX PRINCIPLE (load-bearing): the 60s adversarial-verify duration floor exists for the
+      FULL-CORPUS SCIENCE ARTIFACT (a real LLM-judge run over hundreds of items). It must NEVER
+      be asserted inside a unit test on a <=12-item fixture. Fixture tests assert CORRECTNESS
+      (both verifiers run, costs positive+distinct, cost_ratio>1) — NOT wall-clock.
+
+      EXISTING CODE TO READ FIRST:
+        - research-roadmap.yaml (the .361 milestone that just finished)
+        - research-complete.yaml (APPEND target — append only, never rewrite)
+        - tests/python/test_cost_instrumented_verification.py (THE poison test — the duration_s>=60 line on a fixture)
+        - scripts/summarize_artifact.py (read .361 results via this, not raw JSON)
+        - ops/conductor-log.md (the .361 SKIP cascade trail, for the root-cause record)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: research-complete.yaml exists and `{project_root}/.venv/bin/python -c
+           "import yaml; yaml.safe_load(open('research-complete.yaml'))"` succeeds (the .355
+           unquoted-colon poison guard). If it fails, write honest_verdict
+           blocked_research_complete_yaml_poison and EXIT.
+        1. QUARANTINE/FIX the poison test: in tests/python/test_cost_instrumented_verification.py,
+           REMOVE the `assert artifact["duration_s"] >= 60` line (the 60s floor does not belong on a
+           10-item fixture). Keep every CORRECTNESS assertion (n_items, per_item_ms>0, distinct, ratio>1).
+           Re-run `{project_root}/.venv/bin/pytest tests/python/test_cost_instrumented_verification.py -q
+           --no-header -o addopts=` and assert it PASSES. (Do NOT delete the test; quarantine = make it
+           assert what it can legitimately assert on a fixture.)
+        2. Read the .361 task verdicts via summarize_artifact.py (exp3903/3904/3905). Append the .361
+           tasks + verdicts to research-complete.yaml. QUOTE every value containing a colon-space.
+        3. GREEN-GATE A: research-complete.yaml still loads under yaml.safe_load.
+        4. GREEN-GATE B: `{project_root}/.venv/bin/pytest tests/python/test_pipeline_extract.py
+           tests/python/test_docs.py tests/python/test_cost_instrumented_verification.py -q --no-header
+           -n 0 --no-cov -o addopts=` and assert ALL pass (the cost-harness test now green = cascade broken).
+        5. GREEN-GATE C: assert `import carnot.verify` AND the .361 modules import
+           (cost_instrumented_verification, reasoner_self_verification). Record import_ok honestly.
+        6. Record the .361 wash root causes for the .362 record (poison-test cascade + blocked_llama_cpp).
+
+      REQUIRED ARTIFACT FIELDS (emit each as a BARE scalar; the principle: lines guide YOU, do NOT
+      wrap values in a {{value,principle}} dict):
+        archived_milestone: principle "Provenance — which milestone was archived."
+        activated_milestone: principle "Confirms .362 is live so downstream tasks resolve."
+        poison_test_quarantined: principle "BARE BOOL — the exp3905 duration_s>=60-on-a-fixture assertion was removed and the test now passes; the cascade-breaker."
+        research_complete_yaml_parses: principle "The .355 colon-poison guard — asserts the file still loads."
+        core_pretest_green: principle "BARE BOOL — the smart-subset core (incl. the fixed cost-harness test) passes; the poison-cascade guard."
+        live_model_modules_importable: principle "BARE BOOL — the .361 cost + reasoner harnesses import."
+        prior_milestone_verdicts_summary: principle "One-line each for exp3903/3904/3905 + the SKIP-cascade so .362 starts with the .361 truth on record."
+        n361_wash_root_causes: principle "The two infra root causes: poison-test cascade + blocked_llama_cpp_inference_failed — the .362 forward-bet context."
+        backend_routing_recommendation: principle "Codex reliable + standing gemini<->codex flip authority; auditable routing."
+        honest_verdict, duration_s, inference_substrate: principle "Terminal-prefix verdict + aggregation substrate (no GGUF/CUDA markers on a record task)."
+
+      honest_verdict MUST start with `complete:`/`success:` or `blocked_<resource>`.
+
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3914_archive_v361_activate_v362.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3915-build-test-robust-gguf-inference-harness
+    operator_override: >
+      2026-06-07 operator-outer-loop directive (standing): NEW infrastructure deliverable — a
+      robust, tested GGUF inference harness with a fallback chain. This is the ROOT-CAUSE fix for
+      exp3904's blocked_llama_cpp_inference_failed (the live-35B path that has blocked the moat
+      scissor THREE milestones). Harness-first per the .360/.361 lesson; deliverable is a passing
+      unit test, not the science. Not a scope-match of any prior experiment.
+    milestone: "2026.06.362"
+    title: "BUILD + UNIT-TEST a ROBUST gguf_inference harness (root-cause fix for the recurring blocked_llama_cpp_inference_failed): implement `load_gguf_generator(prefer_order=[...]) -> generator` that (a) probes cached headline-eligible GGUFs in a documented FALLBACK ORDER (gemma-4-26B-A4B-it -> Qwen3.6-35B-A3B -> gemma-4-31B-it), (b) runs a 1-token GENERATE smoke before returning, (c) on OOM/runtime failure RETRIES with reduced n_gpu_layers then the next model, (d) returns the model actually used + its load/smoke timing. SHIP a unit test asserting a generator loads, the smoke generate returns >0 tokens, and the fallback metadata is recorded. ALL .362 live-model tasks import this. Deliverable = the module + a PASSING test."
+    priority: critical
+    track: infra
+    max_turns: 80
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    requires_gpu: true
+    estimated_wall_time_min: 45
+    inference_substrate: live_llm_inference
+    deliverable: results/experiment_3915_robust_gguf_inference_harness.json
+    prompt: |
+      CONTEXT. The single recurring failure across .359/.360/.361 is the LIVE GGUF inference path.
+      exp3904 returned blocked_llama_cpp_inference_failed even though CUDA was available, the
+      Qwen3.6-35B GGUF was cached, and carnot.verify imported — the inference CALL itself failed
+      (a 35B Q4_K_M with n_gpu_layers=-1 full offload under llama_cpp 0.3.23). exp3905's LLM-judge
+      ran but was sub-60s on a fixture. Both point at the same gap: there is no ROBUST, TESTED,
+      reusable inference entrypoint with a fallback chain. This task builds it. ALL .362 live-model
+      tasks (moat scissor, efficiency, facts) import this harness instead of calling llama_cpp.Llama
+      directly. Per CLAUDE.md "SOTA Local Models": load via the .gguf PATH + llama_cpp, NEVER
+      AutoTokenizer on a GGUF repo id; gemma-4-26B-A4B-it (MoE ~4B active) is the cheaper
+      headline-eligible option for per-step self-verification over a corpus where the 35B wall-clock
+      is the bottleneck.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/verify/reasoner_self_verification.py (the exp3894 harness that calls the GGUF — see how it loads)
+        - results/experiment_3904_moat_scissor_regated.json (model_specs: the exact 35B path + n_gpu_layers=-1 config that FAILED)
+        - scripts/experiment_template.py (cached_sota_pair() pattern + the GGUF cache resolver)
+        - CLAUDE.md "SOTA Local Models" GGUF tokenizer rule (.gguf path + llama_cpp.Llama; vocab_only preflight)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (blocked_<resource>+EXIT on fail):
+           a. `{project_root}/.venv/bin/python -c "import torch; assert torch.cuda.is_available()"` (blocked_no_cuda).
+           b. At least one cached headline-eligible GGUF present (gemma-4-26B-A4B-it-GGUF OR Qwen3.6-35B-A3B-GGUF
+              OR gemma-4-31B-it-GGUF via `ls ~/.cache/huggingface/hub/models--unsloth--*-GGUF/`) (blocked_model_not_cached).
+           c. `import llama_cpp` succeeds (blocked_llama_cpp_missing).
+        1. Implement `python/carnot/verify/gguf_inference.py` exposing
+           `load_gguf_generator(prefer_order=None, n_ctx=1024, max_n_gpu_layers=-1) -> (generator, meta)` where:
+           - prefer_order defaults to ["gemma-4-26B-A4B-it", "Qwen3.6-35B-A3B", "gemma-4-31B-it"] (cheapest-
+             headline-eligible first, since the 35B full-offload FAILED in exp3904).
+           - For each candidate: resolve the cached .gguf path; try llama_cpp.Llama(model_path=..., n_gpu_layers=L)
+             for L in [max_n_gpu_layers, 20, 0] (full -> partial -> CPU) — catch ANY exception per attempt.
+           - After a successful load, run a 1-token GENERATE smoke (e.g. "2+2=") and require >0 output tokens;
+             if the smoke raises or returns nothing, treat the load as failed and continue the fallback.
+           - Return the generator + meta = {{model_used, gguf_path, n_gpu_layers_used, load_s, smoke_s, smoke_tokens, fallback_index}}.
+           - If ALL candidates fail every offload level, raise a clear RuntimeError naming each failure (so callers
+             can emit blocked_all_gguf_inference_failed honestly rather than fabricating).
+           Also expose a thin `generate(generator, prompt, max_tokens) -> text` helper used by callers.
+        2. SHIP `tests/python/test_gguf_inference.py` asserting: a generator loads (meta.model_used in the
+           cached set), the smoke generate returned >0 tokens (meta.smoke_tokens>0), meta.n_gpu_layers_used is
+           recorded, and a second `generate(...)` call returns non-empty text. Do NOT assert any wall-clock floor
+           inside the unit test (the .361 poison-test lesson) — assert CORRECTNESS only. Run the test, assert PASS.
+
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+        harness_module_path: principle "Where every .362 live-model task imports the robust generator from."
+        model_used: principle "Which cached GGUF actually loaded+smoked (the fallback may have skipped the 35B that failed in exp3904)."
+        n_gpu_layers_used: principle "BARE INT — the offload level that worked; <0 = full, 0 = CPU; the exp3904 root-cause datum."
+        smoke_tokens: principle "BARE INT — tokens from the 1-token generate smoke; >0 proves the inference CALL works (the exp3904 failure point)."
+        fallback_index: principle "BARE INT — which prefer_order candidate succeeded (0 = first choice); records whether the 35B still fails."
+        unit_test_path, unit_test_passed: principle "BARE BOOL — the deliverable; a passing live-generate test cannot be a fabricated stub."
+        preconditions_checked, model_specs, random_seed, reproducibility_checksum, duration_s, inference_substrate:
+          principle "Pre-Launch + Adversarial-Verify — a real load+smoke takes wall-clock (live floor 60s on THIS full task, which loads a model); <60s here = no real load."
+
+      FALSIFICATION GATE:
+        - HARNESS_READY: unit_test_passed AND smoke_tokens > 0 AND duration_s >= 60.
+          honest_verdict: `complete: gguf_inference_harness_READY_model<model_used>_ngl<n>_smoke<t>_live_path_unblocked`
+        - HARNESS_NOT_READY: otherwise.
+          honest_verdict: `complete: gguf_inference_harness_NOT_READY_smoke<t>_unit_test<bool>`
+        honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
+
+      DISCIPLINE: REAL duration (this task loads a model — live floor 60s). Do NOT move frozen 0.9131.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3915_robust_gguf_inference_harness.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ----------------------------------------------------------------------------
+  # PHASE 1 — THE OFFLINE VERIFIER PROOF (re-run on the hardened harness)
+  # ----------------------------------------------------------------------------
+  - id: exp3916-moat-scissor-accuracy-on-robust-harness
+    operator_override: >
+      2026-06-07 operator-outer-loop directive (standing): the north-star §5 / known-issues
+      TOP-PRIORITY ACCURACY axis of the VERIFIER-EARNS-ITS-PLACE proof. Versioned continuation
+      of exp3904 with a STATED forward difference — it routes the reasoner self-verify through
+      the exp3915 ROBUST gguf_inference harness (fixing the blocked_llama_cpp_inference_failed
+      that blocked exp3904) and REUSES the exp3894 tested judge + exp3884 corpus + the decoupled
+      gate verbatim. Not a doomed rerun: exp3904 blocked on INFRA, now fixed at the root.
+    milestone: "2026.06.362"
+    prior_failures:
+      - experiment_id: exp3904-moat-scissor-regated-accuracy-axis
+        verdict: blocked_llama_cpp_inference_failed
+        addressed_by: "exp3904 BLOCKED because the live 35B GGUF inference CALL failed at runtime (CUDA up, model cached, but llama_cpp.Llama generate failed at n_gpu_layers=-1). THIS run routes the reasoner self-verify through the exp3915 ROBUST gguf_inference harness (1-token smoke before use + fallback to gemma-4-26B-A4B-it + reduced n_gpu_layers), so the inference path is proven working before the scissor runs. Same tested judge (exp3894, fixture AUROC 0.917), same corpus (exp3884), same decoupled gate."
+        retire_if_same_verdict: false
+      - experiment_id: exp3895-moat-scissor-tested-harness
+        verdict: "complete: moat_scissor_INCONCLUSIVE_reasoner_self_verify_auroc"
+        addressed_by: "exp3895 COMPUTED MOAT_SURVIVES numbers (residual_catch=0.905, CI95 [0.849,0.952], overlap=0.159, carnot_ensemble=0.967) but mis-gated INCONCLUSIVE because reasoner_self_verify_auroc=0.546 fell 0.004 below a 0.55 control floor. THIS run uses the corrected gate (harness-validity control = exp3894 FIXTURE AUROC>0.6; the in-distribution reasoner AUROC is a reported FINDING, not a disqualifier; arXiv:2606.05976) + a STRONG self-verify arm (arXiv:2602.07594)."
+        retire_if_same_verdict: false
+    title: "ACCURACY axis — MOAT SCISSOR on the ROBUST harness (north-star §5 verifier-earns-its-place; finally unblocked): route the exp3894 TESTED reasoner self-verify through the exp3915 robust gguf_inference harness (fixes the blocked_llama_cpp_inference_failed that blocked exp3904 3x); reuse the exp3884 in-distribution corpus; DECOUPLE the harness-validity control (= exp3894 fixture AUROC>0.6, already 0.917) from the in-distribution reasoner AUROC (a reported FINDING corroborating the Self-Correction Illusion, arXiv:2606.05976); run BOTH a weak and a STRONG self-verify arm (few-shot + structured per-step, arXiv:2602.07594). Adjudicate MOAT_SURVIVES on residual_catch_ci95.low>0.5 AND overlap<0.6 across BOTH arms. Disk-reads exp3915+exp3894+exp3884 (no hard gate)."
+    priority: critical
+    track: research
+    max_turns: 80
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    requires_gpu: true
+    estimated_wall_time_min: 90
+    inference_substrate: live_llm_inference
+    deliverable: results/experiment_3916_moat_scissor_accuracy.json
+    prompt: |
+      CONTEXT. north-star §5 ACCURACY axis: does Carnot's energy/verifier ensemble independently
+      catch reasoning errors a strong frontier reasoner's OWN self-verification MISSES (the moat
+      durability / o1-subsumption question)? All the hard pieces exist: exp3894 shipped a TESTED
+      reasoner self-verify harness (fixture AUROC 0.917, 6/6 caught), exp3884 built an
+      in-distribution corpus where the ensemble discriminates (AUROC 0.967), and exp3895 already
+      COMPUTED residual_catch=0.905 (CI95 [0.849,0.952]), overlap=0.159 — but exp3895 mis-gated
+      INCONCLUSIVE on a wrong control floor and exp3904 then BLOCKED entirely on
+      blocked_llama_cpp_inference_failed. THIS task finally runs it: the reasoner self-verify goes
+      through the exp3915 ROBUST gguf_inference harness (smoke-proven, fallback-capable), the gate
+      is corrected (decouple harness-validity from the reasoner finding), and a STRONG self-verify
+      arm is added. PROPERTY measurement (error-set independence), NOT a generation test.
+
+      EXISTING CODE/DATA TO READ FIRST:
+        - results/experiment_3915_robust_gguf_inference_harness.json (harness_module_path + model_used; the unblocked inference path)
+        - python/carnot/verify/gguf_inference.py (load_gguf_generator + generate — use these; do NOT call llama_cpp.Llama directly)
+        - results/experiment_3895_moat_scissor_tested_harness.json (reuse its residual_catch / overlap math)
+        - results/experiment_3894_reasoner_self_verify_harness.json (fixture_auroc=0.917; the harness-validity control)
+        - python/carnot/verify/reasoner_self_verification.py (the TESTED judge — call it, backed by the robust generator)
+        - results/experiment_3884_in_distribution_error_rich_corpus.json (corpus_path + per_item_ensemble_scores_path)
+        - scripts/experiment_2837_fover_memory_leakage_v3.py (the k-verifier ensemble path)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (blocked_<resource>+EXIT on fail):
+           a. `{project_root}/.venv/bin/python -c "import torch; assert torch.cuda.is_available()"` (blocked_no_cuda).
+           b. DISK-READ FALLBACK (no hard gate): exp3915 artifact exists AND unit_test_passed AND smoke_tokens>0;
+              else blocked_upstream_gguf_harness_not_ready and EXIT. exp3894 exists AND fixture_auroc>0.6; else
+              blocked_upstream_judge_not_ready. exp3884 exists AND has >=100 incorrect items AND ensemble AUROC>=0.65;
+              else blocked_upstream_corpus_not_in_band.
+           c. `import carnot.verify` AND the reasoner harness + gguf_inference importable (blocked_carnot_verify_import).
+        1. Load the exp3884 corpus + per-item ensemble scores. Load the robust generator via the exp3915 harness
+           (record model_used + n_gpu_layers_used). Back the exp3894 reasoner self-verify with THIS generator.
+        2. HARNESS-VALIDITY CONTROL: read exp3894 fixture_auroc (>0.6). This — NOT the in-distribution reasoner
+           AUROC — is the control that the judge harness works.
+        3. WEAK ARM: run the reasoner self-verify (default prompt) over the corpus. Record its in-distribution
+           AUROC as a FINDING (expected near chance per the Self-Correction Illusion).
+        4. STRONG ARM (adversarial baseline, arXiv:2602.07594): re-run with a BOOSTED prompt — few-shot exemplars
+           + a structured per-step "is THIS step correct? why?" self-check. Record its in-distribution AUROC. The
+           moat must hold against this stronger arm too.
+        5. For EACH arm: partition gold-INCORRECT steps into (A) caught by the reasoner, (B) MISSED.
+           residual_catch_rate = fraction of (B) Carnot's ensemble catches; BOOTSTRAP CI95 (>=1000 resamples).
+           error_overlap_jaccard = |reasoner∩carnot|/|union| over gold-incorrect.
+        6. Apply the corrected gate (below) using the FIXTURE control + per-arm residual_catch + overlap.
+
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+        gguf_harness_model_used: principle "Which GGUF the robust harness loaded for the judge (fallback may skip the 35B that blocked exp3904)."
+        harness_fixture_auroc: principle "The harness-validity control (from exp3894); >0.6 means the judge harness is sound — REPLACES the in-distribution reasoner AUROC as the control (the .360 mis-gate fix)."
+        residual_catch_rate_weak: principle "THE moat metric on the WEAK arm — of the reasoner's MISSED errors, the fraction Carnot independently catches."
+        residual_catch_ci95_weak: principle "Bootstrap CI95 on the weak arm — the gate is on the lower bound."
+        residual_catch_rate_strong: principle "Moat metric on the STRONG (boosted) self-verify arm — the moat must survive a competent self-verifier (arXiv:2602.07594)."
+        residual_catch_ci95_strong: principle "Bootstrap CI95 on the strong arm — the conservative gate."
+        reasoner_auroc_weak: principle "FINDING (not a control): weak self-verify AUROC in-distribution — near chance corroborates the Self-Correction Illusion."
+        reasoner_auroc_strong: principle "FINDING: boosted self-verify AUROC — how much prompting recovers; the moat is durable iff it survives even this."
+        error_overlap_jaccard_weak, error_overlap_jaccard_strong: principle "Independence — low overlap => different null spaces (the moat); high => redundant."
+        n_residual_errors_weak, n_residual_errors_strong: principle "Size of set B per arm; the residual CI is meaningful only if >=30."
+        carnot_ensemble_auroc: principle "Positive control — in-band by the exp3884 corpus; must be non-degenerate (>=0.65)."
+        harness_source, corpus_source, n_items, preconditions_checked, model_specs, random_seed,
+        random_seeds_used, reproducibility_checksum, duration_s, inference_substrate:
+          principle "Pre-Launch + Adversarial-Verify — a live GGUF run over 2 arms takes real wall-clock (live floor 60s); implausibly short = fabrication."
+
+      FALSIFICATION GATE (harness-validity control DECOUPLED from the reasoner finding):
+        - MOAT_SURVIVES: harness_fixture_auroc>0.6 AND carnot_ensemble_auroc>=0.65 AND residual_catch_ci95_strong.low > 0.5 AND error_overlap_jaccard_strong < 0.6 AND n_residual_errors_strong >= 30.
+          honest_verdict: `complete: moat_scissor_MOAT_SURVIVES_residcatch_strong<mean>_ci<lo>-<hi>_overlap<j>_holds_vs_boosted_self_verify_nres<N>`
+        - MOAT_SUBSUMED: harness_fixture_auroc>0.6 AND (residual_catch_ci95_strong.high < 0.3 OR error_overlap_jaccard_strong > 0.7).
+          honest_verdict: `complete: moat_scissor_MOAT_SUBSUMED_residcatch_strong<mean>_overlap<j>_o1_subsumption_risk_nres<N>`
+        - INCONCLUSIVE: harness_fixture_auroc<=0.6 OR n_residual_errors_strong < 30 OR carnot_ensemble_auroc < 0.65.
+          honest_verdict: `complete: moat_scissor_INCONCLUSIVE_<which_failed>`
+        honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
+
+      DISCIPLINE: seeds + checksum + preconditions_checked + model_specs; REAL duration (live floor 60s).
+      Do NOT aggregate flagged_adversarial artifacts. Frozen 0.9131 unchanged.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3916_moat_scissor_accuracy.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3917-efficiency-head-to-head-on-robust-harness
+    operator_override: >
+      2026-06-07 operator-outer-loop directive (standing): the north-star §5 / known-issues
+      TOP-PRIORITY EFFICIENCY axis (first-class metric, NEVER cleanly measured — exp3906 was
+      SKIP-cascaded in .361). Routes the LLM-judge through the exp3915 robust harness and reuses
+      the exp3905 cost harness (now with a fixed unit test). Disk-reads exp3915+exp3905 (no hard
+      gate). Continuation of the SKIPPED exp3906, not a failed rerun.
+    milestone: "2026.06.362"
+    title: "EFFICIENCY axis — energy-verifier vs LLM-as-judge HEAD-TO-HEAD (finally unblocked; disk-reads exp3915+exp3905, no hard gate): on the exp3884 in-distribution corpus AND a FoVer slice (n>=200 each), score with BOTH the energy/verifier ensemble (cheap CPU forward-pass) and the LLM-as-judge (via the exp3915 robust GGUF harness), reporting (a) accuracy parity within CI (per-verifier AUROC on the same labels) and (b) the cost/latency ratio (wall-clock + est tokens/FLOPs per verification). Target framing: 'parity at Nx cheaper.' HONEST: parity != beating; a clean null is a result. The verifier-earns-its-place EFFICIENCY headline. The 60s live-floor is asserted on THIS full-corpus artifact (NOT a fixture)."
+    priority: critical
+    track: research
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    requires_gpu: true
+    estimated_wall_time_min: 70
+    inference_substrate: live_llm_inference
+    deliverable: results/experiment_3917_efficiency_head_to_head.json
+    prompt: |
+      CONTEXT. The EFFICIENCY axis is the operator's actual win condition (north-star §5): the
+      verifier earns its place if it is EQUALLY EFFECTIVE as the LM at LOWER cost/latency. This has
+      never cleanly landed — exp3906 was SKIP-cascaded by the .361 poison test. exp3905 shipped a
+      cost-instrumentation harness (its unit test is fixed in exp3914). This task runs the
+      head-to-head: energy/verifier ensemble (cheap CPU forward-pass) vs LLM-as-judge (via the
+      exp3915 robust GGUF harness) on the SAME labeled items, reporting accuracy parity + cost ratio.
+      The 2026 literature anchors the expectation (LLM judges 50-500x classifier cost; ThinkPRM
+      arXiv:2504.16828, CompassVerifier arXiv:2508.03686, OPV arXiv:2512.10756; the cleanest
+      precedent is Budget-aware Discriminative Verification arXiv:2510.14913 — a single-forward-pass
+      verifier beats generative verification at fixed compute). NOTE the moving target
+      (arXiv:2604.13717): the honest comparator is a cheap ENSEMBLED-SMALL-judge, not only a single
+      frontier judge — record the LLM-judge config used. Target headline "parity at 10-100x cheaper."
+      Report HONESTLY — if the energy verifier does NOT reach accuracy parity, say so (it is still
+      cheaper); a clean null is valuable.
+
+      EXISTING CODE/DATA TO READ FIRST:
+        - results/experiment_3915_robust_gguf_inference_harness.json (harness_module_path; the unblocked LLM-judge path)
+        - python/carnot/verify/gguf_inference.py (load_gguf_generator + generate — back the LLM-judge with this)
+        - results/experiment_3905_cost_instrumented_verify_harness.json (harness_module_path; the cost instrumentation)
+        - python/carnot/verify/cost_instrumented_verification.py (measure_verification_cost — import + call it)
+        - results/experiment_3884_in_distribution_error_rich_corpus.json (the in-distribution corpus)
+        - data/fover_corpus_v4.json (a FoVer slice — the headline corpus)
+        - scripts/experiment_2837_fover_memory_leakage_v3.py (the energy ensemble) + python/carnot/verify/reasoner_self_verification.py (the LLM-judge)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (blocked_<resource>+EXIT on fail):
+           a. `{project_root}/.venv/bin/python -c "import torch; assert torch.cuda.is_available()"` (blocked_no_cuda).
+           b. DISK-READ FALLBACK (no hard gate): exp3915 exists AND unit_test_passed AND smoke_tokens>0; else
+              blocked_upstream_gguf_harness_not_ready and EXIT. exp3905 exists AND its module imports; else
+              blocked_upstream_cost_harness_not_ready.
+        1. On the exp3884 corpus AND a FoVer slice (n>=200 each), score with BOTH verifiers via the exp3905 cost
+           harness, with the LLM-judge backed by the exp3915 robust generator. Record per-verifier AUROC +
+           total_wall_s + per_item_wall_ms + est_tokens + est_flops.
+        2. Compute accuracy_parity = energy_auroc within the LLM-judge AUROC's CI (bootstrap CI95 on each).
+           Compute cost_ratio_walltime = llm_per_item_ms / energy_per_item_ms and cost_ratio_flops likewise.
+        3. Assert duration_s >= 60 (real LLM-judge run over hundreds of items — this is the FULL-CORPUS artifact,
+           where the 60s live-floor legitimately applies, NOT a fixture). If <60s emit blocked_llm_judge_not_invoked,
+           do NOT fabricate.
+
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+        energy_auroc, llm_judge_auroc: principle "Accuracy of each verifier on the SAME labels — parity is energy within the LLM-judge CI."
+        accuracy_parity: principle "BARE BOOL — is the energy verifier's AUROC within the LLM-judge's CI95 (equally effective)."
+        cost_ratio_walltime: principle "BARE FLOAT — llm_per_item_ms / energy_per_item_ms; the 'Nx cheaper' headline (target 10-100x)."
+        cost_ratio_flops: principle "BARE FLOAT — FLOP-based cost ratio; substrate-independent corroboration of the wall-clock ratio."
+        energy_per_item_ms, llm_per_item_ms: principle "Per-item latency for each verifier — the latency story (sub-10ms classifier vs hundreds-of-ms judge)."
+        llm_judge_model_used: principle "Which GGUF the robust harness loaded for the judge (records whether the 35B or a fallback was used)."
+        n_items, corpus_sources, preconditions_checked, model_specs, random_seed, random_seeds_used,
+        reproducibility_checksum, duration_s, inference_substrate:
+          principle "Pre-Launch + Adversarial-Verify — a real LLM-judge run over hundreds of items takes wall-clock (live floor 60s on THIS full-corpus artifact); <60s = fabrication."
+
+      FALSIFICATION GATE:
+        - PARITY_AND_CHEAPER (the win): accuracy_parity==true AND cost_ratio_walltime > 10.
+          honest_verdict: `complete: efficiency_PARITY_AND_<ratio>x_CHEAPER_energy<ea>_llm<la>_verifier_earns_its_place`
+        - CHEAPER_NOT_PARITY (honest partial): accuracy_parity==false AND cost_ratio_walltime > 10.
+          honest_verdict: `complete: efficiency_CHEAPER_<ratio>x_but_NOT_PARITY_energy<ea>_llm<la>_honest_partial`
+        - NOT_CHEAPER: cost_ratio_walltime <= 10.
+          honest_verdict: `complete: efficiency_NOT_DECISIVELY_CHEAPER_ratio<ratio>_energy<ea>_llm<la>`
+        honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
+
+      DISCIPLINE: seeds + checksum + preconditions_checked + model_specs; REAL duration (live floor 60s on the
+      full-corpus run). Do NOT fabricate a cost advantage; report the measured ratio. Frozen 0.9131 unchanged.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3917_efficiency_head_to_head.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3918-meta-ebm-cascade-router-prototype
+    operator_override: >
+      2026-06-07 operator-outer-loop directive (standing): prototype of the Meta-EBM Cascade
+      Router (memory project_meta_ebm_cascade_router) operationalizing the EFFICIENCY win as the
+      2026 best-practice classifier-first cascade. Disk-reads exp3917 (no hard gate). Continuation
+      of the SKIPPED exp3907 (no artifact), not a failed rerun.
+    milestone: "2026.06.362"
+    title: "META-EBM CASCADE ROUTER prototype (classifier-first cascade, disk-reads exp3917, no hard gate): the cheap energy verifier scores EVERY item; only the close-calls (energy-margin within a tuned band) escalate to the LLM-as-judge (reusing exp3917's per-item LLM scores — no re-inference). Report cascade AUROC vs pure-LLM AUROC, the escalation fraction, and the resulting cost vs pure-LLM. The deployable artifact behind 'parity at Nx cheaper' (the Wastefulness Condition is checkable on calibration data alone)."
+    priority: high
+    track: research
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    requires_gpu: false
+    estimated_wall_time_min: 35
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_3918_cascade_router_prototype.json
+    prompt: |
+      CONTEXT. The 2026 best practice for cheap-yet-accurate verification is a CLASSIFIER-FIRST
+      CASCADE: a cheap classifier on every item that catches confident pass/fail and flags close
+      calls, escalating ONLY the close calls to a frontier LLM judge. This is exactly the Meta-EBM
+      Cascade Router (memory project_meta_ebm_cascade_router): the energy verifier is the cheap
+      layer, the LLM-as-judge the escalation layer. exp3917 measured both verifiers' accuracy +
+      cost + per-item scores on the same corpus. This task builds the cascade and shows it
+      (near-)matches pure-LLM accuracy at a fraction of pure-LLM cost — the deployable form of the
+      efficiency win. The cost-optimality of "cheap-score-first, escalate-on-close-calls" is
+      theory-grounded by Adaptive Generate-Rank-Verify (ADAP, arXiv:2605.17609). NO new inference:
+      it reuses exp3917's per-item LLM scores for escalated items.
+
+      EXISTING CODE/DATA TO READ FIRST:
+        - results/experiment_3917_efficiency_head_to_head.json (per-verifier AUROC + per-item cost + per-item scores; read off disk)
+        - python/carnot/verify/cost_instrumented_verification.py (reuse the tested cost harness for cost accounting)
+        - results/experiment_3884_in_distribution_error_rich_corpus.json (the corpus + per-item ensemble scores)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (blocked_<resource>+EXIT on fail):
+           a. DISK-READ FALLBACK (no hard gate): exp3917 artifact exists AND has per-item energy + llm scores
+              AND a measured cost_ratio_walltime; else blocked_upstream_efficiency_missing and EXIT.
+        1. Define the cascade: the energy verifier scores every item; items whose energy margin
+           |score - threshold| < band escalate to the LLM-judge (use the exp3917 per-item LLM scores for
+           escalated items — no re-inference). Tune the band on a calibration split, evaluate on a held-out split.
+        2. Compute cascade_auroc, escalation_fraction, and cascade_cost = energy_cost(all) + llm_cost(escalated).
+        3. Compute cascade_cost_ratio = pure_llm_cost / cascade_cost. Report cascade AUROC vs pure-LLM AUROC.
+
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+        cascade_auroc: principle "Accuracy of the classifier-first cascade — should approach pure-LLM AUROC."
+        pure_llm_auroc: principle "The pure-LLM-judge baseline the cascade must (near-)match."
+        escalation_fraction: principle "Fraction of items escalated to the LLM — the cost driver; low => big savings."
+        cascade_cost_ratio: principle "BARE FLOAT — pure_llm_cost / cascade_cost; the deployable 'Nx cheaper at matched accuracy' number."
+        auroc_gap: principle "pure_llm_auroc - cascade_auroc; small (<0.02) => matched accuracy."
+        band_tuned_on_calibration, n_calibration, n_heldout, preconditions_checked, random_seed,
+        reproducibility_checksum, duration_s, inference_substrate:
+          principle "Methodology — band tuned on calibration, evaluated held-out (no leakage); reuses exp3917 per-item LLM scores so no double-inference (aggregation substrate, no live model here)."
+
+      FALSIFICATION GATE:
+        - CASCADE_WINS: auroc_gap < 0.02 AND cascade_cost_ratio > 3.
+          honest_verdict: `complete: cascade_router_WINS_gap<g>_<ratio>x_cheaper_at_matched_accuracy_escfrac<e>`
+        - CASCADE_MARGINAL: cascade_cost_ratio <= 3 OR auroc_gap >= 0.02.
+          honest_verdict: `complete: cascade_router_MARGINAL_gap<g>_ratio<ratio>_escfrac<e>`
+        honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
+
+      DISCIPLINE: reuses exp3917 per-item scores (no re-inference); aggregation substrate. Frozen 0.9131 unchanged.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3918_cascade_router_prototype.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ----------------------------------------------------------------------------
+  # PHASE 2 — AGENTIC PROOF VENUE scaffold (verifier-first, GPU-free, never ran)
+  # ----------------------------------------------------------------------------
+  - id: exp3919-arc-agi3-harness-scaffold-build-test
+    operator_override: >
+      2026-06-07 operator-outer-loop directive (standing): NEW infrastructure deliverable — the
+      verifier-first ARC-AGI-3 agentic-proof scaffold (north-star §5, sequenced SECOND; memory
+      arc-agi3-harness-verifier-proof). Build+unit-test only (no science claim). GPU-free and
+      robust. Continuation of the SKIPPED exp3908 (no artifact), not a failed rerun. The Exp1165
+      pilot used a toy env; this is a real, not-started build.
+    milestone: "2026.06.362"
+    title: "ARC-AGI-3 harness SCAFFOLD — BUILD + UNIT-TEST the verifier-first skeleton (north-star §5 agentic-proof venue, sequenced AFTER the offline proof; infra-only, no science): implement an environment-adapter interface (reset/step/observe) over a tiny synthetic ARC-AGI-3-style grid task + a verifier-as-router stub (run the cheap encodable specialist, verify via the energy verifier, escalate on failure — the Meta-EBM Cascade Router action-pruner shape). SHIP a unit test asserting the env steps, the router routes by verifier score, and an action-pruning count is recorded. Deliverable = the module + a PASSING test. NO benchmark/agentic-performance claim. GPU-free."
+    priority: medium
+    track: research
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    requires_gpu: false
+    estimated_wall_time_min: 35
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_3919_arc_agi3_harness_scaffold.json
+    prompt: |
+      CONTEXT. north-star §5 sequences the ARC-AGI-3 harness SECOND, after the offline verifier
+      proof (which .362 Phase 1 completes). The harness is the agentic-proof venue where the energy
+      verifier does three jobs: ROUTER/arbiter, ACTION-PRUNER (verifier-as-free-energy action
+      selection; the Exp1165 pilot showed ~4x fewer actions on synthetic ARC-AGI-3-style puzzles),
+      and scaled trajectory verification. DISCIPLINE: the harness's value DERIVES from the verifier,
+      so this task is INFRASTRUCTURE ONLY — a tested skeleton, NO agentic-performance claim. The
+      science (action-efficiency on the real benchmark) is future work, gated on the offline proof.
+      Build it verifier-first so harness-building and verifier-proving are the same work. This is a
+      real build we have NOT started (Exp1165 used a toy env). GPU-free (synthetic env + cheap verifier).
+
+      EXISTING CODE TO READ FIRST:
+        - docs/research-notes/active-inference-phase4-bridge.md (the verifier-as-free-energy action-selection design)
+        - python/carnot/verify/cost_instrumented_verification.py (reuse the cheap energy-verifier scorer as the router's verify step)
+        - any existing scripts/experiments/*1165* pilot (the toy-env precedent — generalize its action-pruner)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `import carnot.verify` succeeds (blocked_carnot_verify_import + EXIT on fail). No GPU/model required.
+        1. Implement `python/carnot/agentic/arc_agi3_harness.py` with: (a) an Env interface
+           (reset()->obs, step(action)->(obs, reward, done), a tiny synthetic grid task with a known goal),
+           (b) a perception/encoding stub, (c) a verifier-as-router that, per state, proposes candidate actions,
+           scores each via the energy verifier, prunes low-scoring actions, and escalates to a fallback only when
+           all candidates verify poorly. Record the action-pruning count.
+        2. SHIP `tests/python/test_arc_agi3_harness.py` asserting: env.reset/step work, the router selects an
+           action by verifier score, action-pruning reduces the candidate set (pruned_count > 0), and the harness
+           solves the tiny synthetic task. Run the test and assert it PASSES. (No wall-clock floor — correctness only.)
+        3. Record HONESTLY that this is a scaffold on a SYNTHETIC env — NOT the real ARC-AGI-3 benchmark, NO
+           agentic-performance claim. The science is sequenced for after the offline proof.
+
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+        harness_module_path: principle "Where the future agentic-proof run imports the scaffold from."
+        unit_test_path, unit_test_passed: principle "BARE BOOL — the deliverable; a passing env+router test cannot be a fabricated stub."
+        synthetic_task_solved: principle "BARE BOOL — the router solved the tiny synthetic grid (smoke of the verifier-as-router loop)."
+        action_pruned_count: principle "BARE INT — actions the verifier pruned; the action-pruner mechanism is wired (the Exp1165 ~4x shape, synthetic)."
+        is_synthetic_not_real_benchmark: principle "MUST be true — honest scoping; NO ARC-AGI-3 benchmark performance is claimed here."
+        preconditions_checked, random_seed, reproducibility_checksum, duration_s, inference_substrate:
+          principle "Infra methodology — synthetic env + cheap verifier; no GGUF/CUDA markers; the deliverable is a passing test."
+
+      FALSIFICATION GATE:
+        - SCAFFOLD_READY: unit_test_passed AND synthetic_task_solved AND action_pruned_count > 0 AND is_synthetic_not_real_benchmark.
+          honest_verdict: `complete: arc_agi3_scaffold_READY_pruned<n>_synthetic_only_agentic_proof_can_follow_offline_proof`
+        - SCAFFOLD_NOT_READY: otherwise.
+          honest_verdict: `complete: arc_agi3_scaffold_NOT_READY_unit_test<bool>`
+        honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
+
+      DISCIPLINE: infra only — NO agentic-performance claim on the real benchmark. Frozen 0.9131 unchanged.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3919_arc_agi3_harness_scaffold.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ----------------------------------------------------------------------------
+  # PHASE 3 — FACTS (PRD Tier C, deprioritized; LAST disciplined harness-first retry)
+  # ----------------------------------------------------------------------------
+  - id: exp3920-facts-graph-grounding-last-retry
+    operator_override: >
+      2026-06-07 operator-outer-loop directive (standing): one LAST disciplined harness-first retry
+      of the graph-grounding fact-verifier (PRD Tier C factual-grounding gate). It now routes through
+      the exp3915 robust gguf_inference harness (the prior fabrications were sub-60s / model-not-invoked
+      / separable-fixture). retire_if_same_verdict: this is the last attempt before the facts route
+      retires to honest future-work.
+    milestone: "2026.06.362"
+    prior_failures:
+      - experiment_id: exp3896-build-test-graph-grounding-verifier
+        verdict: "complete: graph_grounding_verifier_NOT_READY_fixture_auroc1.0000_model_invokedtrue"
+        addressed_by: "exp3896 was FLAGGED (43.8s DURATION_TOO_SHORT) with a SEPARABLE fixture (AUROC 1.0 = trivially separable). THIS retry routes inference through the exp3915 ROBUST harness AND hardens the discipline: (1) a NON-separable fixture (subtle hallucinated relations -> real verifier scores 0.6-0.9, NOT 1.0), (2) duration_s>=60 asserted on the full corpus run BEFORE the pass verdict, (3) genuine per-item model invocation logged with token counts. If it STILL fabricates, the facts route RETIRES to honest future-work."
+        retire_if_same_verdict: true
+      - experiment_id: exp3886-graph-grounding-fact-verifier-defabricated
+        verdict: blocked_graph_verifier_not_invoked
+        addressed_by: "exp3886 never invoked the model (model_invoked=False, 11s). THIS retry backs the verifier with the exp3915 robust generator (smoke-proven) and asserts genuine per-item model invocation with logged token counts before any pass verdict."
+        retire_if_same_verdict: true
+    title: "FACTS graph-grounding verifier — LAST DISCIPLINED retry (PRD Tier C, deprioritized): repair the HalluGraph-style (arXiv:2512.01659) Entity-Grounding + Relation-Preservation -> Composite Fidelity Index verifier so it ACTUALLY invokes the model per item via the exp3915 robust gguf_inference harness, and SHIP a unit test on a NON-separable fixture (subtle hallucinated relations -> fixture AUROC in [0.6,0.95], NOT 1.0) asserting model_invoked + token counts logged. LAST attempt before the facts route retires to honest future-work. Deliverable = the module + a PASSING test."
+    priority: medium
+    track: research
+    max_turns: 80
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    requires_gpu: true
+    estimated_wall_time_min: 55
+    inference_substrate: live_llm_inference
+    deliverable: results/experiment_3920_facts_graph_grounding_last_retry.json
+    prompt: |
+      CONTEXT. The verifier is math-domain-bound and earned-negative on facts. Graph-grounding is
+      the one NEW-architecture route with prior signal, but it has fabricated three times (exp3862
+      1.02s stub; exp3886 model_invoked=False 11s; exp3896 43.8s flagged + separable fixture AUROC
+      1.0). This is the LAST disciplined retry: route inference through the exp3915 ROBUST harness
+      (so "model not invoked" can no longer happen silently), harden the fixture (non-separable),
+      assert genuine model invocation + duration>=60 on the corpus run BEFORE any pass. If it
+      fabricates again, the facts route RETIRES to honest future-work. Architecture reference:
+      HalluGraph (arXiv:2512.01659) = Entity Grounding + Relation Preservation -> Composite Fidelity
+      Index; span-level scoring per arXiv:2603.27752.
+
+      EXISTING CODE/DATA TO READ FIRST:
+        - results/experiment_3915_robust_gguf_inference_harness.json (harness_module_path; back the verifier with this)
+        - python/carnot/verify/gguf_inference.py (load_gguf_generator + generate)
+        - python/carnot/verify/graph_grounding_fact_verifier_defabricated.py (the module to FIX so it actually runs)
+        - scripts/experiments/experiment_3896_graph_grounding_verifier_harness.py (the flagged prior wrapper — diagnose the 43.8s + AUROC 1.0)
+        - data/*ragtruth* / data/*facts* (a factual corpus with gold hallucination labels)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (blocked_<resource>+EXIT on fail):
+           a. `{project_root}/.venv/bin/python -c "import torch; assert torch.cuda.is_available()"` (blocked_no_cuda).
+           b. DISK-READ FALLBACK (no hard gate): exp3915 exists AND unit_test_passed AND smoke_tokens>0; else
+              blocked_upstream_gguf_harness_not_ready and EXIT.
+        1. Repair `graph_grounding_fact_verifier_defabricated.py` so `graph_ground_score(item, generator)
+           -> {{eg, rp, cfi}}` ACTUALLY invokes the model per item (entity + relation extraction + consistency)
+           via the exp3915 robust generator, logging per-item token counts. NOT a rule-based stub.
+        2. Build a NON-SEPARABLE fixture: ~12 (claim, source) pairs with SUBTLE hallucinated entities/relations
+           (gold labels) chosen so a real verifier scores between 0.6 and 0.95 — NOT 1.0 (a 1.0 fixture is the
+           exp3896 separability fabrication tell). Run the verifier with the real model.
+        3. SHIP `tests/python/test_graph_grounding_fact_verifier.py` asserting: model_invoked per item (token
+           counts > 0), fixture AUROC in [0.6,0.95], and the run is not a stub. Run the test, assert PASS. (No
+           wall-clock floor inside the fixture test — the .361 poison-test lesson; the 60s floor is asserted on
+           the FULL corpus run artifact below.)
+        4. Run the verifier over a small facts-corpus slice (n>=60) and assert that run's duration_s >= 60 BEFORE
+           emitting any READY verdict.
+
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+        verifier_module_path: principle "Where a future facts run would import the tested verifier from."
+        gguf_harness_model_used: principle "Which GGUF the robust harness loaded (records the model that actually ran)."
+        fixture_auroc: principle "BARE FLOAT — must be in [0.6,0.95]; a 1.0 fixture is the exp3896 separability fabrication tell."
+        model_invoked: principle "BARE BOOL — must be true with per-item token counts logged (the exp3886 de-fabrication assertion)."
+        corpus_run_token_count: principle "BARE INT — total tokens consumed on the corpus slice; >0 proves genuine invocation."
+        unit_test_path, unit_test_passed: principle "BARE BOOL — the deliverable; a passing live-model test on a non-separable fixture cannot be a stub."
+        preconditions_checked, model_specs, random_seed, reproducibility_checksum, duration_s, inference_substrate:
+          principle "Pre-Launch + Adversarial-Verify — a real corpus run takes wall-clock (live floor 60s on the corpus artifact); <60s OR fixture AUROC==1.0 = fabrication -> facts route retires."
+
+      FALSIFICATION GATE:
+        - VERIFIER_READY: model_invoked AND unit_test_passed AND 0.6 <= fixture_auroc <= 0.95 AND duration_s >= 60 AND corpus_run_token_count > 0.
+          honest_verdict: `complete: facts_graph_verifier_READY_fixture_auroc<a>_model_invoked_tokens<t>`
+        - VERIFIER_NOT_READY (facts route retires to future-work): otherwise.
+          honest_verdict: `complete: facts_graph_verifier_NOT_READY_fixture_auroc<a>_facts_route_retires_to_future_work`
+        honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
+
+      DISCIPLINE: REAL duration (live floor 60s on the corpus run); NON-separable fixture; genuine per-item
+      invocation via the robust harness. Do NOT move frozen 0.9131. The verifier stays math-domain-bound until
+      facts is proven non-fabricated.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3920_facts_graph_grounding_last_retry.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ----------------------------------------------------------------------------
+  # PHASE 4 — standing mandates + hardware continuity + capstone
+  # ----------------------------------------------------------------------------
+  - id: exp3921-fr11-v25-online-independence-reweighting
+    operator_override: >
+      2026-06-07 operator-outer-loop directive (standing): FR-11 self-learning is a
+      research-program.md MANDATE (one per milestone). Versioned lineage continuation (v25) of the
+      SUCCEEDING v24 (exp3888 INVARIANT_HELD); v25 was SKIP-cascaded in .361 (no artifact), so this
+      is a continuation, not a failed rerun. STATED forward difference: loads persisted v24 state,
+      fresh corpus slice.
+    milestone: "2026.06.362"
+    title: "FR-11 continuous self-learning v25 (research-program.md MANDATE) — load the persisted v24 independence-reweighting state (exp3888), continue Tier-1 ONLINE reweighting on a FRESH verification-corpus slice (upweight verifiers that catch the residual others miss, arXiv:2604.07650), and confirm the learned weighting STILL holds the +0.0185 memory-ablation contribution + frozen 0.9131 across the v24->v25 iteration (no long-horizon overfit). CPU counter updates (<1us/update, the Tier-1 hardware path)."
+    priority: high
+    track: research
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    requires_gpu: false
+    estimated_wall_time_min: 30
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_3921_fr11_v25_independence_reweighting.json
+    prompt: |
+      CONTEXT. FR-11 continuous self-learning is the research-program.md MANDATE (Tier-1 online
+      constraint learning). v24 landed clean (exp3888): learned ensemble AUROC 0.9075 (in frozen CI
+      [0.9027,0.9235]), +0.0185 memory-ablation contribution preserved, state persisted. v25 was
+      queued in .361 but was SKIP-cascaded by the poison test. This task continues the loop on a
+      fresh corpus slice to test that online independence-reweighting holds the invariant across
+      iterations.
+
+      EXISTING CODE/DATA TO READ FIRST:
+        - results/experiment_3888_fr11_v24_independence_reweighting_state.json (the persisted v24 state to LOAD)
+        - scripts/experiment_2837_fover_memory_leakage_v3.py (the ensemble + memory-ablation path)
+        - data/fover_corpus_v4.json / data/fover_corpus_v3.json (verification corpus)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `import carnot.verify` succeeds AND the v24 state file loads (blocked_<resource> + EXIT on fail).
+        1. Load the persisted v24 reweighting state.
+        2. Run Tier-1 online independence-reweighting over a FRESH slice of the verification corpus
+           (upweight verifiers catching the residual other verifiers + the reasoner miss).
+        3. Re-measure: learned ensemble AUROC (must stay in frozen CI), memory-ablation contribution
+           (must stay ~+0.0185), frozen 0.9131 unchanged. Persist v25 state.
+
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+        learned_ensemble_auroc: principle "Must stay within the frozen CI [0.9027,0.9235] — online learning must not degrade the headline."
+        memory_ablation_contribution: principle "Must hold ~+0.0185 (CI [0.0125,0.0245]) — the self-learning component's measured value."
+        frozen_headline_unchanged: principle "0.9131 NEVER silently substituted — the invariant guard."
+        invariant_held: principle "BARE BOOL — did v25 preserve both the CI-band AUROC and the memory contribution; the milestone self-learning success signal."
+        state_persisted_path, n_updates, preconditions_checked, random_seed, reproducibility_checksum, duration_s, inference_substrate:
+          principle "Verifier-scoring methodology — CPU counter updates; persisted state lets v26 continue."
+
+      FALSIFICATION GATE:
+        - INVARIANT_HELD: learned_ensemble_auroc in [0.9027,0.9235] AND memory_ablation_contribution >= 0.012 AND frozen_headline_unchanged.
+          honest_verdict: `complete: fr11_v25_INVARIANT_HELD_auroc<a>_memcontrib<m>_state_persisted`
+        - INVARIANT_BROKEN: otherwise.
+          honest_verdict: `complete: fr11_v25_INVARIANT_BROKEN_auroc<a>_memcontrib<m>_online_reweighting_drifts`
+        honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
+
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3921_fr11_v25_independence_reweighting.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3922-hardware-continuity-consolidated
+    operator_override: >
+      2026-06-07 operator-outer-loop directive (standing): active hardware-continuity task
+      (GateMate + PolarFire + KV260) per Hardware-Task Continuity Discipline (north-star §3
+      opportunistic relaxation) — false-positive scope-match vs prior board tasks; required forward
+      work. SSH-reachability preconditions only for KV260 (SSH-not-SD-card discipline). Consolidated
+      into one slot because the .361 hardware tasks were SKIP-cascaded.
+    milestone: "2026.06.362"
+    title: "Hardware continuity (consolidated) — GateMate terminal-state re-confirmation (n=16 Carnot Ising tile flashed, DISTINCT wall-clock timers, JTAG readback attempt) + PolarFire/KV260 opportunistic SSH continuity (PolarFire terminal hash-verified soft-CPU dispatch with NO fabric-acceleration claim; KV260 loaded-overlay state via xmutil). Per-board preconditions: do NOT fail the whole task if one board is down — record blocked_<board>_unreachable per board and continue."
+    priority: medium
+    track: hardware
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    estimated_wall_time_min: 40
+    inference_substrate: hardware_smoke
+    deliverable: results/experiment_3922_hardware_continuity_consolidated.json
+    prompt: |
+      CONTEXT. Per Hardware-Task Continuity Discipline, attached non-terminal boards get continuity
+      coverage each milestone (north-star §3 relaxes to opportunistic). The .361 hardware tasks were
+      SKIP-cascaded by the poison test, so this consolidates all three boards into one continuity
+      audit. KV260 uses SSH-reachability ONLY (the retired host SD-card precondition is forbidden).
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_3900_gatemate_terminal_confirmation.json (the prior GateMate result)
+        - results/experiment_3901_polarfire_kv260_continuity.json (the prior PolarFire/KV260 continuity record)
+        - results/experiment_3867_polarfire_soc_smoke_v4.json (PolarFire terminal hash-verified dispatch)
+        - CLAUDE.md "Pre-Launch Preconditions" GateMate rows + "KV260 SSH-Not-SD-Card Discipline"
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (record per-board; do NOT fail the whole task if one board is down):
+           a. GateMate: `command -v nextpnr-himbaechel && command -v yosys && command -v openFPGALoader` AND
+              `openFPGALoader -c dirtyJtag --detect` (record blocked_gatemate_* per board and continue).
+           b. PolarFire: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'`.
+           c. KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. NEVER use the retired host SD-card precondition.
+        1. GateMate (if reachable): re-confirm the n=16 tile flashed. Record TWO DISTINCT timers (duration_s and
+           run_duration_s MUST differ — the exp3866 TAUTOLOGY corrigendum). Attempt JTAG readback; if unsupported
+           record readback_supported=false. Assess terminal-state graduation.
+        2. PolarFire (if reachable): re-confirm the terminal hash-verified Ising dispatch (exp3867) — HONESTLY a
+           soft-CPU SSH dispatch with hash verification, NO FPGA fabric / compute-acceleration claim.
+        3. KV260 (if reachable): `ssh kria 'xmutil listapps'` + `ls /dev/uio*`; record loaded overlay + whether the
+           Carnot Ising bitstream is active. Record terminal/non-terminal state honestly.
+
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+        gatemate_reachable, polarfire_reachable, kv260_reachable: principle "Per-board reachability — GateMate via JTAG detect, the others via SSH (KV260 never via host SD card)."
+        gatemate_terminal_state_reached: principle "BARE BOOL — flashed + smoke + readback-or-unsupported + distinct timers (no tautology); the graduation signal."
+        duration_s, run_duration_s: principle "GateMate timers MUST be distinct (the exp3866 TAUTOLOGY corrigendum)."
+        polarfire_state: principle "Terminal hash-verified dispatch, soft-CPU only — NO fabric-acceleration claim."
+        kv260_state: principle "Loaded overlay + UIO presence — terminal/non-terminal record."
+        fabric_acceleration_claimed: principle "MUST be false — neither board demonstrates compute acceleration; the honest narrowing (north-star §3)."
+        preconditions_checked, reproducibility_checksum, inference_substrate:
+          principle "Hardware-smoke methodology — real board interaction; no GGUF/CUDA markers."
+
+      FALSIFICATION GATE:
+        - CONTINUITY_RECORDED: at least one board reachable AND fabric_acceleration_claimed==false.
+          honest_verdict: `success: hardware_continuity_gatemate<state>_pf<state>_kv<state>_no_fabric_claim`
+        - ALL_UNREACHABLE: no board reachable.
+          honest_verdict: `blocked_all_boards_unreachable`
+        honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
+
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3922_hardware_continuity_consolidated.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3923-capstone-v362
+    operator_override: >
+      2026-06-07 operator-outer-loop directive (standing): routine capstone-vN aggregation task —
+      false-positive scope-match vs every prior capstone; structurally never a doomed rerun.
+      Aggregates only non-flagged artifacts.
+    milestone: "2026.06.362"
+    title: "Capstone .362 — the VERIFIER SCORECARD (finally on real data): aggregate the offline verifier proof now that the infra blockers are fixed — ACCURACY (moat scissor: MOAT_SURVIVES/SUBSUMED/INCONCLUSIVE on weak AND strong self-verify arms) + EFFICIENCY (energy-verifier vs LLM-judge: accuracy parity + cost ratio 'parity at Nx cheaper') + the cascade-router win + the ARC scaffold readiness + the facts last-retry outcome + FR-11 v25 + hardware. ANSWER the operator's 'does the verifier earn its place' question now that both energy theses are bounded-negative and the verifier is the surviving asset. paper_ready stays TRUE; frozen 0.9131 unchanged."
+    priority: high
+    track: research
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_3923_capstone_v362.json
+    prompt: |
+      CONTEXT. Capstone for .362 — the milestone that RECOVERS the .361 infra wash and completes the
+      OFFLINE VERIFIER PROOF on real data. Aggregate the verdicts into one VERIFIER SCORECARD,
+      CONDITIONED on which upstream artifacts landed and are non-flagged. The strategic weight: BOTH
+      energy-core theses (selection P0.1 + generation EBT) are bounded-negative; the VERIFIER is the
+      surviving asset, and this milestone measured BOTH axes of whether it earns its place — ACCURACY
+      (the moat) and EFFICIENCY (parity at lower cost). Do NOT manufacture a headline. paper_ready
+      stays TRUE.
+
+      EXISTING CODE TO READ FIRST (read each via scripts/summarize_artifact.py, NOT raw JSON):
+        - results/experiment_3916_* (moat scissor accuracy), results/experiment_3917_* (efficiency head-to-head)
+        - results/experiment_3915_* (robust gguf harness), results/experiment_3918_* (cascade router)
+        - results/experiment_3919_* (ARC scaffold), results/experiment_3920_* (facts last retry)
+        - results/experiment_3921_* (FR-11 v25), results/experiment_3922_* (hardware)
+        - scripts/publication_gate.py --json (paper_ready + unmet_gates)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: summarize_artifact.py + publication_gate.py importable/runnable.
+        1. For EACH upstream artifact: read its honest_verdict; SKIP any carrying flagged_adversarial:true
+           (never aggregate a flagged artifact's numbers — the fabrication gate). Missing/blocked upstreams are
+           recorded as their honest state (the milestone is robust to partial landing).
+        2. Record the conditioned verdicts (below). Run publication_gate.py --json for paper_ready/unmet_gates.
+        3. ANSWER the operator decision: given the ACCURACY moat verdict + the EFFICIENCY parity/cost-ratio, state
+           whether the verifier EARNS ITS PLACE (efficiency-parity per the operator win condition) and the
+           recommended next step (the offline proof done -> the ARC-AGI-3 agentic-proof venue; the loop
+           recommends, the operator decides).
+
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+        moat_verdict: principle "MOAT_SURVIVES/SUBSUMED/INCONCLUSIVE from the scissor (weak AND strong self-verify arms) — the ACCURACY axis answer."
+        efficiency_verdict: principle "PARITY_AND_CHEAPER / CHEAPER_NOT_PARITY / NOT_CHEAPER — the EFFICIENCY axis answer (the operator win condition)."
+        efficiency_cost_ratio: principle "BARE FLOAT — the measured 'Nx cheaper' number; the headline efficiency figure."
+        cascade_verdict: principle "Cascade router WINS/MARGINAL — the deployable form of the efficiency win."
+        verifier_earns_its_place: principle "BARE BOOL — TRUE iff efficiency-parity (energy within LLM-judge CI) AND decisively cheaper; the operator win condition met."
+        gguf_inference_unblocked: principle "BARE BOOL — did the robust harness (exp3915) finally unblock the live-model path that blocked the moat scissor 3x."
+        arc_scaffold_ready: principle "Is the agentic-proof venue scaffold tested+ready (the next-phase precondition)."
+        facts_outcome: principle "Graph-grounding READY or retired-to-future-work; the broaden-beyond-math status; excluded if flagged."
+        fr11_v25_invariant: principle "Self-learning mandate outcome — invariant held across v24->v25."
+        hardware_outcome: principle "GateMate terminal-assessment + PolarFire/KV260 continuity — honest no-fabric-claim record."
+        both_energy_theses_bounded: principle "BARE BOOL — TRUE (selection P0.1 + generation EBT both bounded-negative); the strategic context."
+        paper_ready: principle "MUST stay true — the milestone adds ACCURACY+EFFICIENCY lenses, not a new headline; report unmet_gates not a count."
+        unmet_gates, frozen_headline_unchanged: principle "G1-G4 status + the 0.9131 invariant guard."
+        operator_next_step_recommendation: principle "The meta-gap the loop cannot close itself — given the offline verifier proof, the recommended next forward step (ARC-AGI-3 agentic-proof venue) for the operator to choose."
+        flagged_artifacts_excluded, preconditions_checked, duration_s, inference_substrate:
+          principle "Aggregation methodology — lists which upstream artifacts were skipped for flagged_adversarial; no GGUF/CUDA markers."
+
+      FALSIFICATION GATE:
+        - CAPSTONE_COMPLETE: paper_ready==true AND frozen_headline_unchanged AND all landed non-flagged verdicts aggregated.
+          honest_verdict: `complete: capstone_v362_moat<verdict>_efficiency<verdict>_earns<bool>_paper_ready_true_frozen_unchanged`
+        honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
+
+      DISCIPLINE: never aggregate flagged_adversarial artifacts; never move frozen 0.9131.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3923_capstone_v362.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.

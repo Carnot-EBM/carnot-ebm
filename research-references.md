@@ -21312,3 +21312,70 @@ New / verified papers this sweep (all loaded, not inferred):
   the harness is sound, so the 0.546 is the Self-Correction Illusion (arXiv:2606.05976), not a
   broken control. .361 decouples harness-validity (fixture) from the in-distribution reasoner
   AUROC (a finding) — the single gate fix that finally adjudicates the moat.
+
+---
+
+## 2026-06-07 sweep — "verifier earns its place" (efficiency + accuracy-moat) corroboration (for .362)
+
+Surfaced during the 2026.06.362 planning sweep (Opus 4.8 outer-loop). These directly
+underwrite the north-star §5 offline verifier proof — EFFICIENCY (cheap discriminative
+verifier vs costly LLM-judge) and ACCURACY (does an external verifier catch what
+self-verification misses). Carnot already tracks ThinkPRM (2504.16828), CompassVerifier
+(2508.03686), OPV (2512.10756), the Self-Correction Illusion (2606.05976), strong
+self-verify (2602.07594), HalluGraph (2512.01659), reweighting ensembles (2604.07650),
+ODAR (2602.23681), and the 4/δ bound (2512.02080) — these are NEW/adjacent.
+
+- **arXiv:2510.14913** — "Budget-aware Test-time Scaling via Discriminative Verification"
+  (Montgomery et al., Oct 2025). A discriminative (single-forward-pass) verifier + self-
+  consistency BEATS costly generative verification at a fixed compute budget (+15.3% on
+  AIME2025 at equalized latency); generative verifiers need O(NM) long-CoT decodes.
+  **The cleanest published evidence for Carnot's EFFICIENCY axis** ("parity at Nx cheaper").
+  Comparator for exp3917 (efficiency head-to-head).
+
+- **arXiv:2605.17609** — "Adaptive Generate-Rank-Verify: Inference-Time Search with Costly
+  Verification" (Dughmi, Haghifam, Kalayci, May 2026). Formalizes cheap-reward + costly-
+  verifier pipelines as "generative active search"; ADAP adaptively escalates to the
+  expensive verifier only as needed, near-optimal under monotonicity.
+  **Theory-grounded cost-optimality for Carnot's CASCADE ROUTER** (exp3918) — cheap-score-
+  first, escalate-on-close-calls.
+
+- **arXiv:2605.30290** — "Self-Trained Verification for Training- and Test-Time Self-
+  Improvement" (Wu & Raghunathan, May 2026). A model cannot catch its own errors unaided
+  but can when shown a reference; trains a verifier to imitate an informed version of
+  itself. Also names the **inflated-verifier-score failure mode** (scores rise while
+  accuracy stagnates). **Load-bearing for the ACCURACY-MOAT axis** (exp3916) — quantifies
+  the self-verification blind spot AND the failure mode the external energy verifier must avoid.
+
+- **arXiv:2510.13744** — "Hard2Verify: A Step-Level Verification Benchmark for Open-Ended
+  Frontier Math" (Pandit et al., Oct 2025). 500+ human-hour step-level benchmark; 29
+  verifiers tested; self-verification remains weak; verification capability ≠ generation
+  capability. **A harder-than-FoVer evaluation venue for the moat claim** — candidate
+  corpus for a future moat-scissor extension beyond the exp3884 in-distribution corpus.
+
+- **arXiv:2603.04304** — "V₁: Unifying Generation and Self-Verification for Parallel
+  Reasoners" (Singh et al., Mar 2026). Models are stronger at PAIRWISE self-verification
+  than independent scoring; jointly RL-trains generation + tournament-style pairwise
+  verification. **The toughest o1-subsumption threat** — the strong-arm in exp3916 should
+  eventually include a pairwise self-verify variant, not just few-shot+structured.
+
+- **arXiv:2604.13717** — "On Cost-Effective LLM-as-a-Judge Improvement Techniques" (Lail &
+  Markham, Apr 2026). Ensemble scoring + criteria injection reach 85.8% on RewardBench 2;
+  small models benefit disproportionately from ensembling. **Defines the EFFICIENCY moving
+  target** — Carnot's energy verifier must beat a cheap *ensembled-small-judge*, not only a
+  single frontier judge, to claim "earns its place." Tighten the exp3917 framing accordingly.
+
+- **arXiv:2603.24621** — "ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence"
+  (ARC Prize Foundation, Mar 2026). Fully interactive, turn-based, no-instruction
+  environments; humans 100%, frontier systems <1% (Mar 2026). **The canonical citation for
+  the exp3919 ARC-AGI-3 scaffold** — the >99% gap is exactly what a verifier-grounded
+  action-pruning router targets.
+
+- **arXiv:2602.19643** — "KGHaluBench: A Knowledge Graph-Based Hallucination Benchmark"
+  (Feb 2026). KG-grounded fact-verification with an LLM entailment filter for subtle
+  discrepancies (~71% of facts). **A graded KG-grounded fact testbed** for the exp3920
+  facts last-retry — measure a cheap graph-alignment verifier against an LLM-entailment judge.
+
+- (related-work only) **arXiv:2603.04445** — "Dynamic Model Routing and Cascading for
+  Efficient LLM Inference: A Survey" (Moslem & Kelleher, Feb 2026). Covers cascade-
+  escalation broadly but frames it as model-routing-by-difficulty, NOT verifier-as-
+  escalation-gate. Cite as related work for the cascade router, not as a core result.

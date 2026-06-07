@@ -86,5 +86,14 @@
   "status": "complete: cost_harness_NOT_READY_ratio30881.00_unit_testFalse",
   "title": "cost_instrumented_verify_harness",
   "unit_test_passed": false,
-  "unit_test_path": "tests/python/test_cost_instrumented_verification.py"
+  "unit_test_path": "tests/python/test_cost_instrumented_verification.py",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=35.861052296997514 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }

@@ -1,182 +1,177 @@
-# Research Roadmap — Milestone 2026.06.361
+# Research Roadmap — Milestone 2026.06.362
 
-**PROVE THE VERIFIER EARNS ITS PLACE — complete the offline verifier proof
-(ACCURACY moat + EFFICIENCY head-to-head), then start the agentic-proof scaffold.**
+**Recover the .361 infra wash and FINISH the offline verifier proof.**
 
-Outer-loop plan (Claude Opus 4.8, 2026-06-07).
+**Author:** Outer-loop (Claude Opus 4.8), 2026-06-07.
+**Milestone doc for:** `research-roadmap-next.yaml` (10 tasks, exp3914–exp3923).
+**Status:** Pre-staged per the Pre-Staged Roadmap Convention.
 
 ---
 
-## 1. What the previous milestone (.360) proved
+## 1. What the previous milestone (.361) proved — and didn't
 
-.360 was HARNESS-FIRST: for each fabricating live-model bet, a separate
-BUILD+UNIT-TEST task whose deliverable was a passing fixture test, THEN the
-measurement. The harness-first split WORKED where it was applied, and surfaced
-the real result the prior gate had hidden.
+.361 was scoped exactly right ("Prove the verifier earns its place" — north-star §5,
+the project's TOP priority) but **executed as a near-total infra wash: only 3 of ~11
+tasks produced artifacts.** Two infrastructure failures — not science — caused it:
 
-| Bet | .360 outcome | Trustworthy? |
-|---|---|---|
-| **Reasoner self-verify HARNESS (exp3894)** | **READY** — fixture AUROC **0.9167**, n_caught 6/6, clean 72s. The harness genuinely catches injected errors. | **YES** |
-| **Verifier MOAT scissor (exp3895)** | **Mis-gated INCONCLUSIVE.** It actually *computed* `residual_catch_rate=0.905` (CI95 **[0.849, 0.952]**, n_residual=126), `error_overlap_jaccard=0.159`, `carnot_ensemble_auroc=0.967`. The gate returned INCONCLUSIVE **solely** because `reasoner_self_verify_auroc=0.546` fell **0.004 below** the 0.55 control floor. | **The NUMBERS are MOAT_SURVIVES; the GATE is wrong.** |
-| **Facts graph-grounding harness (exp3896)** | **NOT_READY + FLAGGED** — 43.8s (DURATION_TOO_SHORT) and fixture AUROC=1.0 (separable fixture). The downstream facts run (exp3897) + complementarity (exp3898) never landed. | **NO — still fabricating.** |
-| **EBT FUNDAMENTAL replication (exp3893)** | **Did not finish** — produced two training checkpoints (`seed4.pt`, `seed4_rerun1.pt`) but no adjudicated JSON; retrain-from-scratch-per-seed blew the wall-clock. | **N/A — superseded (see §2).** |
+1. **The recurring live-35B-GGUF inference blocker.** exp3904 (the *critical* ACCURACY
+   axis / moat scissor) returned `blocked_llama_cpp_inference_failed`. CUDA was up, the
+   Qwen3.6-35B GGUF was cached, `carnot.verify` imported — but the inference **call
+   itself** failed (a 35B Q4_K_M at `n_gpu_layers=-1` full offload under llama_cpp
+   0.3.23). The moat scissor has now been BLOCKED/INCONCLUSIVE **three milestones
+   running** (.359 exp3885, .360 exp3895, .361 exp3904), *always* on the live-model path.
 
-Standing mandates: GateMate (exp3900) + PolarFire/KV260 (exp3901) continuity
-landed clean; FR-11 v25 (exp3899) did **not** land (no artifact); capstone exp3902
-`paper_ready=TRUE`, frozen 0.9131 unchanged, **G1–G4 all met** (G2 closed by the
-2026-05-31 GitHub-Actions independent reproducer).
+2. **The agent-shipped poison-test cascade** (memory `incident_agent_shipped_test_cascade`).
+   exp3905 (cost harness) shipped `tests/python/test_cost_instrumented_verification.py`
+   with `assert artifact["duration_s"] >= 60` — but that test runs the harness on a
+   **10-item fixture** that legitimately completes in ~35.8s. The assertion fails, so the
+   conductor's PRE-TEST gate reported "1 failed, 105 passed" and **SKIP-cascaded every
+   task after exp3905**: efficiency (exp3906), cascade (exp3907), ARC scaffold (exp3908),
+   facts (exp3909), FR-11 v25 (exp3910), both hardware tasks, **and the capstone**. The
+   60s adversarial-verify floor is for the *full-corpus science artifact*, never for a
+   tiny unit-test fixture.
 
-**The decisive read:** the moat-scissor mis-gate is the headline of .360. The
-`reasoner_self_verify_auroc=0.546` is **not a broken harness** (exp3894 proved the
-harness at 0.917 on a clean fixture) — it is the **Self-Correction Illusion**
-itself (arXiv:2606.05976): a strong reasoner can barely tell its own correct steps
-from its incorrect ones in-distribution. With the harness validated, a residual
-catch of **0.905 (lower CI 0.849)** at overlap **0.159** is exactly the
-MOAT_SURVIVES signal. The gate conflated "the control harness is broken" with
-"the reasoner genuinely can't self-verify" — they require opposite conclusions.
+**Net:** the single most important question in the project — *does the cheap verifier
+earn its place?* — still has no clean answer. The blockers are addressable infra, and
+the prior tasks were SKIPPED (never ran), not failed-with-verdict.
 
-## 2. Strategic frame (north-star §5, 2026-06-06): energy VERIFIES, refinement GENERATES
+**Strategic context that is settled (carried in, unchanged):** both energy-core theses
+are bounded-negative — energy-as-*selection* (P0.1) and energy-as-*generation* (EBT) —
+so the **VERIFIER is the surviving asset** (north-star §5). `paper_ready` is TRUE (G1–G4
+met; FoVer 0.9131 frozen, independently reproduced via CI run 26725185125). This
+milestone does not touch the headline; it finishes the lens that decides Carnot's value.
 
-Energy-as-GENERATOR is closed-negative multi-domain (Sudoku v1–v4 + exp3882 EBT
-kill-gate + exp3883 K-curve + external NVIDIA-Ising-QEC corroboration) and
-energy-as-SELECTION (P0.1) is bounded-negative. Carnot is the **energy VERIFIER**
-in a hybrid (commodity/third-party generator + energy verifier), and **the
-verifier is now the project's entire value-add — and its value is UNPROVEN.** The
-EBT replication is therefore **superseded**: re-confirming a thesis the strategic
-reframe already closes is churn (north-star §1). It is dropped from .361.
+## 2. The three biggest gaps between current state and the PRD vision
 
-**Win condition (operator 2026-06-06):** the verifier earns its place if it is
-**equally effective as the LM at lower cost/latency** (efficiency-parity; no
-accuracy edge required, Pareto-dominate where possible). This is RSI-scale
-load-bearing — verifying a machine-scale "virtual lab" can't afford an LLM-judge
-per artifact.
+1. **The verifier's value is UNPROVEN on both axes.** ACCURACY (the moat: does the
+   external verifier catch what self-verification misses, in-distribution, vs *strong*
+   self-verify?) and EFFICIENCY (the operator win condition: equally effective at lower
+   cost/latency — "parity at Nx cheaper"). Neither has a clean landed number. **Phase 1
+   closes this.**
+2. **The live-model critical path is fragile.** The same inference call has blocked the
+   decisive result three times. Until a robust, tested, reusable inference entrypoint
+   exists, every live-model milestone is one runtime exception away from a wash. **Phase 0
+   fixes this at the root (harness-first).**
+3. **No agentic integration surface, and facts still math-bound.** The ARC-AGI-3
+   agentic-proof venue (sequenced SECOND per north-star §5) has not been started beyond a
+   toy pilot; and the verifier remains math-domain-bound (facts earned-negative, three
+   fabricated attempts). **Phase 2 starts the scaffold (GPU-free); Phase 3 gives facts
+   one last disciplined retry.**
 
-## 3. The three biggest gaps (current state vs PRD vision + north-star)
-
-1. **The ACCURACY axis (moat) is one fixed gate away from a verdict.** .360 did all
-   the hard work (tested harness exp3894 + in-distribution corpus exp3884 ensemble
-   AUROC 0.967 + the scissor compute exp3895) and then threw the answer away on a
-   mis-specified control bound. .361 re-runs the scissor with the **harness-validity
-   control decoupled from the in-distribution reasoner AUROC** (the fixture proves
-   the harness; the in-distribution reasoner AUROC is a *finding*), and adds a
-   **STRONG self-verify adversarial baseline** (few-shot/structured self-check, per
-   arXiv:2602.07594 "Learning to Self-Verify") so the moat is shown to hold even when
-   the reasoner's self-verification is boosted, not only when it is weak.
-
-2. **The EFFICIENCY axis has NEVER been run.** This is the operator's actual win
-   condition and the single most convincing card Carnot holds. The energy verifier
-   is a cheap forward-pass scorer (the FoVer headline runs in ~16s on CPU,
-   `live_model_invoked=False`); an LLM-as-judge needs a 35B GGUF forward pass per
-   item. The 2026 literature puts LLM judges at **50–500× the cost** of lightweight
-   classifiers (hundreds of ms vs sub-10ms; ~$0.00003/check) — so "parity at
-   10–100× cheaper" is a measurable, defensible headline. The 2026 best practice is
-   exactly the **classifier-first cascade** (= the Meta-EBM Cascade Router): cheap
-   verifier on every item, escalate only close calls to the LLM judge.
-
-3. **The agentic-proof venue (ARC-AGI-3 harness) has not been started.** North-star
-   §5 sequences it SECOND, after the offline proof. .361 completes the offline proof
-   AND begins the verifier-first scaffold (env adapter + verifier-as-router skeleton)
-   as pure infrastructure (a passing unit test, no science claim), so Phase-4 can run
-   the moment the offline proof lands.
-
-## 4. Milestone shape (11 tasks, exp3903–exp3913, 4 phases)
+## 3. Milestone design — 10 tasks across 5 phases
 
 ```
-Phase 0  exp3903  archive .360 / activate .361 + GREEN-GATE (yaml parses, core pretest green,
-                  reasoner-self-verify + carnot.verify import)
-Phase 1  exp3904  ACCURACY axis — MOAT-SCISSOR RE-GATED (reuse exp3894 tested harness + exp3884
-  VERIFIER          corpus; harness-validity control = fixture AUROC, NOT in-dist reasoner AUROC;
-  EARNS ITS         + STRONG self-verify adversarial baseline)            [critical]
-  PLACE     exp3905  BUILD+UNIT-TEST the cost-instrumented verification harness (wall-clock +
-  (offline           tokens/FLOPs/$ per verification for BOTH energy-verifier and LLM-judge) [critical]
-  proof)    exp3906  EFFICIENCY axis — energy-verifier vs LLM-as-judge HEAD-TO-HEAD (accuracy
-                     parity within CI + cost/latency ratio at matched accuracy)            [critical]
-          exp3907  META-EBM CASCADE ROUTER prototype (classifier-first cascade: cheap energy
-                     verifier first, escalate close-calls to LLM-judge; accuracy vs cost)  [high]
-Phase 2  exp3908  ARC-AGI-3 harness SCAFFOLD — BUILD+UNIT-TEST env adapter + verifier-as-router
-  AGENTIC           skeleton (infra only, no science claim; deliverable = passing test)    [medium]
-Phase 3  exp3909  FACTS graph-grounding harness-first retry (disciplined: hard fixture, duration
-                     >=60s, retire_if_same_verdict) — PRD Tier C; deprioritized              [medium]
-Phase 4  exp3910  FR-11 v25 continuous self-learning (research-program.md MANDATE)          [high]
-  MANDATES exp3911  GateMate A1 terminal-state confirmation (Hardware-Task Continuity)       [medium]
-  +HW      exp3912  PolarFire + KV260 consolidated continuity (SSH-only)                     [medium]
-  +CAP     exp3913  Capstone .361 — the VERIFIER SCORECARD (accuracy moat + efficiency parity
-                     + cost ratio); FORCE the operator's "does the verifier earn its place" call [high]
+PHASE 0 — record + UNBLOCK (break the cascade, fix the root cause)
+  exp3914  archive .361 -> activate .362; QUARANTINE the poison test; green-gate
+  exp3915  BUILD+TEST robust gguf_inference harness (fallback chain + 1-token smoke)   [GPU]
+PHASE 1 — the offline verifier proof (re-run on the hardened harness)
+  exp3916  ACCURACY — moat scissor (weak+strong arms, decoupled gate)   [GPU]  prior_failures
+  exp3917  EFFICIENCY — energy-verifier vs LLM-judge head-to-head        [GPU]
+  exp3918  Meta-EBM cascade router prototype (reuses exp3917 per-item scores; no re-inference)
+PHASE 2 — agentic proof venue scaffold (verifier-first, GPU-free)
+  exp3919  ARC-AGI-3 harness scaffold — build+unit-test (infra-only, synthetic, no science)
+PHASE 3 — facts (PRD Tier C; LAST disciplined retry)
+  exp3920  facts graph-grounding — last retry via robust harness   [GPU]  prior_failures, retire_if_same
+PHASE 4 — mandates + hardware + capstone
+  exp3921  FR-11 v25 online independence-reweighting (research-program.md MANDATE)
+  exp3922  hardware continuity consolidated (GateMate + PolarFire + KV260)
+  exp3923  capstone .362 — the VERIFIER SCORECARD (answers "earns its place?")
 ```
 
-### Dependency graph (all soft / disk-read — no hard `gated_on` on the critical path)
+### Dependency graph (all disk-read fallbacks — NO hard `gated_on` on the critical path)
 
 ```
-exp3903 (activate)
-  ├── exp3904 (moat re-gate)      disk-reads exp3894 harness + exp3884 corpus
-  ├── exp3905 (cost harness build)
-  │     └── exp3906 (efficiency)  disk-reads exp3905 (blocked_upstream if not ready)
-  │           └── exp3907 (cascade router) disk-reads exp3906
-  ├── exp3908 (ARC scaffold)      independent infra
-  ├── exp3909 (facts retry)       independent
-  ├── exp3910 (FR-11 v25)         loads persisted v24 state
-  ├── exp3911 / exp3912 (hardware)
-  └── exp3913 (capstone)          aggregates all non-flagged upstream
+exp3914 (green gate) ──> unblocks the whole milestone (pre-test gate green)
+exp3915 (gguf harness) ──> exp3916, exp3917, exp3920   (each disk-reads exp3915; blocked_upstream_* if absent)
+exp3917 (efficiency)   ──> exp3918 (cascade reuses per-item scores)
+exp3916..exp3922 ──> exp3923 (capstone aggregates whatever landed, skipping flagged)
 ```
 
-Every downstream task disk-reads its upstream and emits `blocked_upstream_*` if
-absent — a skipped upstream costs ONE task, never a cascade (the .358 cascade root
-cause). No hard `gated_on`.
+Per the .340/.358 lesson, **no downstream task hard-gates on an upstream**: each
+disk-reads its prerequisite and emits `blocked_upstream_*` if absent, so a single
+skipped upstream costs ONE task, never a cascade. The poison-test fix (exp3914) plus
+the robust inference harness (exp3915) are the two structural changes that make this
+milestone robust where .361 was not.
 
-## 5. The re-gated moat scissor (exp3904) — the load-bearing fix
+### Why harness-first, again
 
-The .360 gate required `reasoner_self_verify_auroc ∈ [0.55, 0.97]` as the
-*positive control*. That bound is wrong: it disqualifies the very finding the
-premise predicts (a reasoner near chance on self-verification). The corrected gate:
+.360 and .361 both showed that the failure mode is **a fragile live-model build masked
+as science.** The fix is the same one that worked for exp3894 (the tested reasoner
+judge): ship a *passing unit test on a fixture* as the deliverable, with the science as
+a separate, downstream step. exp3915 generalizes this to the inference layer itself so
+the decisive results (exp3916/3917/3920) cannot block on a raw `llama_cpp.Llama` call
+again. **Crucially, the fixture unit tests assert CORRECTNESS only — never a wall-clock
+floor (the exp3905 poison-test root cause).** The 60s live floor is asserted only on the
+full-corpus science artifacts (exp3916/3917/3920).
 
-- **Harness-validity control** = the exp3894 **fixture** AUROC (> 0.6) — proves the
-  judge harness is not broken. Already satisfied (0.917).
-- **In-distribution reasoner AUROC** = a reported FINDING, not a disqualifier. A low
-  value corroborates the Self-Correction Illusion (arXiv:2606.05976).
-- **STRONG-self-verify adversarial arm** (arXiv:2602.07594): re-run the reasoner
-  self-verify with a boosted prompt (few-shot + structured per-step self-check). The
-  moat must hold against the *stronger* arm too, or be honestly narrowed.
-- **MOAT_SURVIVES** iff harness valid AND `carnot_ensemble_auroc` non-degenerate AND,
-  **on the STRONG (boosted) self-verify arm** (the conservative case — if the moat holds
-  against a competent self-verifier it holds against a weak one), `residual_catch_ci95.low
-  > 0.5` AND `error_overlap_jaccard < 0.6` AND `n_residual >= 30`. The WEAK-arm metrics are
-  reported as supporting evidence (and corroborate the Self-Correction Illusion), not as a
-  separate gate condition.
+## 4. New literature folded in (2026-06-07 sweep → `research-references.md`)
 
-## 6. The efficiency head-to-head (exp3905/exp3906) — the new first-class metric
+- **arXiv:2510.14913** Budget-aware Discriminative Verification — cleanest precedent for
+  the EFFICIENCY axis (single-forward-pass verifier beats generative at fixed compute).
+  Cited in exp3917.
+- **arXiv:2605.17609** Adaptive Generate-Rank-Verify (ADAP) — cost-optimality theory for
+  the cascade router. Cited in exp3918.
+- **arXiv:2605.30290** Self-Trained Verification — quantifies the self-verification blind
+  spot AND the inflated-verifier-score failure mode (ACCURACY axis).
+- **arXiv:2510.13744** Hard2Verify — a harder-than-FoVer step-level moat venue (future
+  corpus extension).
+- **arXiv:2603.04304** V₁ pairwise self-verify — the toughest o1-subsumption threat; a
+  future strong-arm variant for the moat scissor.
+- **arXiv:2604.13717** Cost-effective LLM-as-judge — the EFFICIENCY moving target (beat a
+  cheap ensembled-small-judge, not only a single frontier judge). Cited in exp3917.
+- **arXiv:2603.24621** ARC-AGI-3 official — canonical citation for the exp3919 scaffold.
+- **arXiv:2602.19643** KGHaluBench — graded KG fact testbed for exp3920.
 
-Same corpus (exp3884 in-distribution + a FoVer slice), two verifiers:
-- **Energy verifier** = the k-verifier ensemble (CPU forward-pass scoring; the FoVer
-  headline path, `live_model_invoked=False`).
-- **LLM-as-judge** = the tested reasoner self-verify (exp3894) over a 35B GGUF.
+## 5. Self-learning coverage (research-program.md requirement)
 
-Report BOTH: (a) accuracy parity within CI (AUROC of each on the same labels), and
-(b) the cost/latency ratio (wall-clock + token/FLOP estimate + $ per verification at
-matched accuracy). Target headline framing: **"parity at N× cheaper."** HONEST
-reporting — parity ≠ beating; a null is still a result; do not fabricate a moat.
-Comparators: ThinkPRM (arXiv:2504.16828, beats LLM-judge +7.2% at matched token
-budget), CompassVerifier (arXiv:2508.03686), OPV (arXiv:2512.10756).
+exp3921 (FR-11 v25) is the continuous-self-learning task: Tier-1 online
+independence-reweighting, loading the persisted v24 state (exp3888 landed clean,
+INVARIANT_HELD), continuing on a fresh corpus slice, confirming the learned weighting
+holds the +0.0185 memory-ablation contribution and the frozen 0.9131 across the
+v24→v25 iteration. CPU counter updates (<1µs/update — the Tier-1 hardware path).
 
-## 7. Architecture / hardware
+## 6. Hardware requirements
 
-No architecture change. Hardware: KV260 + PolarFire opportunistic (SSH-only),
-GateMate terminal-state confirmation per Hardware-Task Continuity. The energy
-verifier's cheap forward-pass is the hardware-acceleratable primitive (north-star
-§5: Ising/FPGA devices EVALUATE energy, they do not generate by minimization).
+- **Phase 0/1/3 (exp3915/3916/3917/3920):** 1× RTX 3090 sufficient (the robust harness
+  prefers gemma-4-26B-A4B-it, the cheaper headline-eligible MoE, exactly because the 35B
+  full-offload failed in exp3904). `requires_gpu: true`, `{project_root}/.venv/bin/python`.
+- **Phase 2/4 (exp3918/3919/3921/3923):** CPU-only (aggregation / synthetic env / verifier
+  scoring). Robust by construction.
+- **exp3922 hardware:** GateMate via DirtyJTAG; PolarFire + KV260 via SSH (KV260
+  SSH-not-SD-card discipline). Per-board preconditions — one board down does not fail the task.
 
-## 8. Invariants
+## 7. Discipline checklist (planner self-audit)
 
-`paper_ready=TRUE` (G1–G4 met); FoVer 0.9131 frozen, NEVER substituted (.361 adds
-ACCURACY + EFFICIENCY lenses, not a new headline); verifier math-domain-bound until
-facts proven non-fabricated; both energy theses (selection + generation)
-bounded-negative; EBT replication superseded/dropped; never aggregate
-`flagged_adversarial` artifacts; BARE-scalar field emission; all tasks
-codex+requires_codex (anti-wipeout); no external publication.
+- [x] **Gemini-Default / routing:** all tasks `codex` + `requires_codex` + `gpt-5.5`
+      (anti-wipeout; standing operator gemini↔codex flip authority 2026-06-05).
+- [x] **Verdict Terminal-Prefix:** every `honest_verdict` starts `complete:`/`success:`/
+      `blocked_<resource>`.
+- [x] **Failed-Experiment Rerun + Exclusion-Manifest:** `prior_failures` (all 4 sub-fields)
+      on the two scope-matched tasks (exp3916 moat → exp3904/exp3895; exp3920 facts →
+      exp3896/exp3886 with `retire_if_same_verdict: true`). `operator_override` on every
+      task (routine transitions / mandates / continuations).
+- [x] **Pre-Launch Preconditions:** every compute-bound task has a step-0 PRECONDITIONS
+      block with `blocked_<resource>` exits; disk-read fallbacks (no hard `gated_on`).
+- [x] **Principle-Annotated Artifact Fields:** every REQUIRED ARTIFACT FIELD carries a
+      `principle:` line; values emitted BARE (no `{value,principle}` wrapper — exp3871 bug).
+- [x] **Adversarial-Verify / Sample-Size:** live-model artifacts assert `duration_s>=60`
+      on the FULL-CORPUS run (never a fixture); seeds + checksum + model_specs required.
+- [x] **Hardware-Task Continuity:** one consolidated hardware slot (north-star §3
+      opportunistic relaxation).
+- [x] **Self-learning:** exp3921 present (FR-11 v25).
+- [x] **Invariants:** `paper_ready` stays TRUE; frozen 0.9131 never substituted; never
+      aggregate `flagged_adversarial`; EBT replication superseded/dropped; no external
+      publication.
 
-## 9. Routing
+## 8. Success criteria for .362
 
-All tasks `agent_type: codex` + `requires_codex: true` + `model: gpt-5.5`
-(anti-wipeout; gemini crashes GPU workloads and 429-wiped .333/.355; standing
-operator gemini↔codex flip authority 2026-06-05). GPU/live-model tasks add
-`requires_gpu: true` and Run via `{project_root}/.venv/bin/python` (bare python has
-no torch → silent CPU drop).
+The milestone succeeds if it produces, on real data and non-flagged:
+1. A clean **moat verdict** (MOAT_SURVIVES / SUBSUMED / INCONCLUSIVE) from a scissor whose
+   inference path actually ran — ending the 3-milestone block.
+2. A clean **efficiency verdict** with a measured `cost_ratio_walltime` — the first-ever
+   "parity at Nx cheaper" number.
+3. A **cascade-router** prototype number (WINS / MARGINAL).
+4. A **green pre-test gate** throughout (poison test quarantined → no SKIP cascade).
+
+A capstone that can finally state `verifier_earns_its_place: <bool>` from measured
+numbers — rather than INCONCLUSIVE for a fourth time — is the milestone's purpose.
