@@ -10758,3 +10758,62 @@ metrics, zero item counts, no per-step score claims, and a measured duration.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3885 | Implemented (`python/carnot/eval/moat_scissor_in_distribution.py`, `scripts/experiments/experiment_3885_moat_scissor_in_distribution.py`) | Implemented (`tests/python/test_experiment_3885_moat_scissor_in_distribution.py`) |
+
+### REQ-VERIFY-3894: Reasoner Self-Verification Harness Positive Control
+
+The repository SHALL provide a tested reasoner self-verification harness at
+`python/carnot/verify/reasoner_self_verification.py` and an Exp 3894 runner
+that writes `results/experiment_3894_reasoner_self_verify_harness.json`. Before
+live inference, the runner SHALL verify CUDA with the repository virtualenv
+Python, resolve a cached GGUF path for `unsloth/Qwen3.6-35B-A3B-GGUF` or the
+faster fixture fallback `unsloth/gemma-4-26B-A4B-it-GGUF`, and load the model
+only through `llama_cpp.Llama(model_path=...)`.
+
+The harness SHALL expose `reasoner_self_verify(steps, model_path, ...)` and
+return bare fields for `per_step_pred`, `per_step_score`, `auroc`, and
+`n_caught`. Its judge prompt SHALL ask for a step-level correctness decision
+with a numeric error confidence, and its parser SHALL accept JSON, yes/no, and
+correct/incorrect phrasings without silently defaulting every unparsed response
+to "correct". Unparsed responses SHALL be recorded and assigned a neutral
+non-constant-safe score path so the caller can detect parser collapse.
+
+The Exp 3894 runner SHALL evaluate a fixed fixture of approximately twelve
+reasoning steps with known injected arithmetic or logic errors, half correct
+and half incorrect. The fixture positive control SHALL pass only when
+`fixture_auroc > 0.6`, `fixture_n_caught > 0`, `unit_test_passed=true`, and the
+parser predictions are not constant. The artifact SHALL include bare top-level
+fields for `harness_module_path`, `fixture_auroc`, `fixture_n_caught`,
+`unit_test_path`, `unit_test_passed`, `degeneracy_root_cause`,
+`preconditions_checked`, `model_specs`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, `inference_substrate`, and
+`honest_verdict`.
+
+The terminal falsification gate SHALL emit
+`complete: reasoner_self_verify_harness_READY_fixture_auroc<a>_ncaught<n>_moat_scissor_can_run`
+only when the positive-control gates pass. Otherwise it SHALL emit
+`complete: reasoner_self_verify_harness_NOT_READY_fixture_auroc<a>_judge_still_degenerate`.
+Failed hard resources SHALL write a terminal `blocked_<resource>` artifact with
+precondition evidence and no fabricated harness metrics.
+
+### SCENARIO-VERIFY-3894: Fixture Positive Control Detects Known Errors
+
+Given CUDA, `llama_cpp`, and a cached SOTA GGUF are available, when Exp 3894
+runs the fixed live-model fixture, then it writes
+`results/experiment_3894_reasoner_self_verify_harness.json`, records a real
+`live_llm_inference` duration, reports a non-constant parser output, catches at
+least one known injected error, obtains fixture AUROC above 0.6, and emits the
+HARNESS_READY terminal verdict.
+
+### SCENARIO-VERIFY-3894-BLOCKED: Missing Live Resources Do Not Fabricate Harness Metrics
+
+Given CUDA, `llama_cpp`, or every required cached GGUF is unavailable, when Exp
+3894 runs, then it writes `results/experiment_3894_reasoner_self_verify_harness.json`
+with a terminal `blocked_<resource>` honest verdict, populated precondition
+evidence, null fixture AUROC, zero caught errors, no live-model claim, and a
+measured duration.
+
+## Implementation Status (REQ-VERIFY-3894)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3894 | Implemented (`python/carnot/verify/reasoner_self_verification.py`, `scripts/experiments/experiment_3894_reasoner_self_verify_harness.py`) | Implemented (`tests/python/test_reasoner_self_verification.py`) |
