@@ -11374,6 +11374,84 @@ duration.
 |---|---|---|
 | REQ-VERIFY-3926 | Planned (`python/carnot/eval/valid_efficiency_head_to_head_3926.py`, `scripts/experiments/experiment_3926_valid_efficiency_head_to_head.py`) | Planned (`tests/python/test_experiment_3926_valid_efficiency_head_to_head.py`) |
 
+### REQ-VERIFY-3927: Non-Degenerate Competent-Judge Cascade Router
+
+The repository SHALL provide an Exp 3927 classifier-first cascade router at
+`python/carnot/eval/non_degenerate_cascade_router_3927.py` and
+`scripts/experiments/experiment_3927_non_degenerate_cascade_router.py` that
+writes `results/experiment_3927_non_degenerate_cascade_router.json`. The
+runner SHALL be aggregation-only: it MUST NOT run fresh verifier or LLM
+inference, and SHALL reuse only Exp 3926 per-item energy scores, competent
+judge scores, gold labels, and measured per-item cost fields.
+
+Before computing cascade metrics, the runner SHALL verify that
+`results/experiment_3926_valid_efficiency_head_to_head.json` exists, contains
+per-item energy and competent-judge scores, contains labels for the same item
+order, contains measured energy and judge costs, and has
+`judge_positive_control_passed=true`. If those cached fields are unavailable
+or malformed, it SHALL write a terminal
+`blocked_upstream_valid_efficiency_missing` artifact without fabricated
+accuracy or cost claims.
+
+For runnable inputs, the runner SHALL split rows deterministically into
+calibration and held-out sets using `random_seed`, tune only the energy-margin
+escalation band on the calibration split, and evaluate the selected band only
+on the held-out split. The cascade SHALL score every heldout item with the
+energy verifier first, escalate only rows whose
+`abs(energy_score - energy_threshold) < band_tuned_on_calibration`, substitute
+the cached Exp 3926 competent-judge score for escalated rows, and keep the
+cached energy score for non-escalated rows.
+
+The terminal artifact SHALL include bare top-level fields `cascade_auroc`,
+`pure_judge_auroc`, `escalation_fraction`, `cascade_degenerate`,
+`cascade_cost_ratio`, `auroc_gap`, `band_tuned_on_calibration`,
+`n_calibration`, `n_heldout`, `preconditions_checked`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, `inference_substrate`, and
+`honest_verdict`, with string principle notes in `field_principles` and no
+`{value, principle}` wrappers around bare metric fields. `cascade_cost_ratio`
+SHALL be
+`pure_judge_cost / (energy_cost_for_all_heldout + judge_cost_for_escalated_heldout)`.
+`auroc_gap` SHALL be `pure_judge_auroc - cascade_auroc`.
+`cascade_degenerate` SHALL be true exactly when `escalation_fraction == 0`.
+
+The falsification gate SHALL emit
+`complete: cascade_router_WINS_escfrac<e>_gap<g>_<ratio>x_cheaper_at_matched_accuracy_non_degenerate`
+only when `cascade_degenerate=false`, `escalation_fraction > 0`,
+`auroc_gap < 0.02`, and `cascade_cost_ratio > 3`. It SHALL emit
+`complete: cascade_router_MARGINAL_escfrac<e>_gap<g>_ratio<ratio>_degenerate<bool>`
+otherwise.
+
+### SCENARIO-VERIFY-3927: Competent Cached Scores Produce Non-Degenerate Heldout Cascade
+
+Given Exp 3926 has a complete valid-efficiency artifact with
+`judge_positive_control_passed=true`, per-item energy and competent-judge
+scores, labels, and measured cost fields, when Exp 3927 runs, then it writes
+`results/experiment_3927_non_degenerate_cascade_router.json`, records the
+calibration and heldout counts, records the band selected on calibration,
+computes heldout cascade AUROC versus heldout pure-judge AUROC, computes
+heldout escalation fraction and cost ratio from the Exp 3926 per-item costs,
+asserts the positive-control `escalation_fraction > 0` before any WINS claim,
+records a reproducibility checksum over the upstream artifact and selected
+split, and chooses the terminal verdict from the non-degeneracy,
+accuracy-gap, and cost-ratio gates.
+
+### SCENARIO-VERIFY-3927-BLOCKED: Missing Competent Cached Scores Do Not Fabricate Cascade Claims
+
+Given the Exp 3926 artifact is absent, blocked, lacks per-item energy scores,
+lacks per-item competent-judge scores, lacks labels, lacks measured cost
+fields, or has `judge_positive_control_passed` other than true, when Exp 3927
+runs, then it writes
+`results/experiment_3927_non_degenerate_cascade_router.json` with
+`honest_verdict="blocked_upstream_valid_efficiency_missing"`, populated
+precondition evidence, null cascade metrics, `cascade_degenerate=true`, zero
+split counts, no escalation claim, and a measured duration.
+
+## Implementation Status (REQ-VERIFY-3927)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3927 | Implemented (`python/carnot/eval/non_degenerate_cascade_router_3927.py`, `scripts/experiments/experiment_3927_non_degenerate_cascade_router.py`) | Implemented (`tests/python/test_experiment_3927_non_degenerate_cascade_router.py`) |
+
 ### REQ-VERIFY-3905: Cost-Instrumented Verifier Harness
 
 The repository SHALL provide `python/carnot/verify/cost_instrumented_verification.py`
