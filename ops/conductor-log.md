@@ -7991,3 +7991,5 @@ ERROR: {
 | 2026-06-07 06:16 UTC | Capstone .361 — the VERIFIER SCORECARD: aggregate  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 6.13s |
 | 2026-06-07 06:19 UTC | Capstone .361 — the VERIFIER SCORECARD: aggregate  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 5.37s |
 | 2026-06-07 06:21 UTC | Capstone .361 — the VERIFIER SCORECARD: aggregate  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 105 passed in 6.56s |
+| 2026-06-07 06:54 UTC | Plan milestone 2026.06.362 | OK | 10 tasks proposed |
+| 2026-06-07 06:56 UTC | Milestone 2026.06.362 activated | OK | 10 tasks queued |
