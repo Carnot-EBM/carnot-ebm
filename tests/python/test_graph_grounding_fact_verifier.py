@@ -1,7 +1,7 @@
-"""Tests for the Exp 3896 graph-grounding verifier harness.
+"""Tests for the Exp 3920 graph-grounding facts verifier last retry.
 
-Spec refs: REQ-VERIFY-3896, SCENARIO-VERIFY-3896,
-SCENARIO-VERIFY-3896-BLOCKED.
+Spec refs: REQ-VERIFY-3920, SCENARIO-VERIFY-3920,
+SCENARIO-VERIFY-3920-BLOCKED.
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ from typing import Any
 import pytest
 
 from carnot.verify import graph_grounding_fact_verifier_defabricated as mod
-from scripts.experiments import experiment_3896_graph_grounding_verifier_harness as exp3896
+from scripts.experiments import experiment_3920_facts_graph_grounding_last_retry as exp3920
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -30,10 +30,9 @@ def _payload(
     return json.dumps({"response": response, "evidence": evidence}, sort_keys=True)
 
 
-class ScriptedLlama:
-    def __init__(self, outputs: Sequence[str], **kwargs: Any) -> None:
+class ScriptedGenerator:
+    def __init__(self, outputs: Sequence[str]) -> None:
         self.outputs = list(outputs)
-        self.kwargs = kwargs
         self.calls: list[dict[str, Any]] = []
 
     def __call__(self, prompt: str, **kwargs: Any) -> dict[str, Any]:
@@ -45,216 +44,253 @@ class ScriptedLlama:
         return {"choices": [{"text": text}], "usage": {"completion_tokens": 7}}
 
 
-def _scripted_factory(outputs: Sequence[str]) -> tuple[ScriptedLlama, Any]:
-    llama = ScriptedLlama(outputs)
-
-    def factory(**kwargs: Any) -> ScriptedLlama:
-        llama.kwargs = kwargs
-        return llama
-
-    return llama, factory
-
-
-def test_req_verify_3896_spec_anchor_exists() -> None:
-    """REQ-VERIFY-3896: graph-grounding harness is OpenSpec anchored."""
+def test_req_verify_3920_spec_anchor_exists() -> None:
+    """REQ-VERIFY-3920: last-retry graph grounding is OpenSpec anchored."""
 
     spec = SPEC_PATH.read_text(encoding="utf-8")
 
-    assert "REQ-VERIFY-3896" in spec
-    assert "SCENARIO-VERIFY-3896" in spec
-    assert "graph_ground_score(item, model_path" in spec
-    assert "results/experiment_3896_graph_grounding_verifier_harness.json" in spec
+    assert "REQ-VERIFY-3920" in spec
+    assert "SCENARIO-VERIFY-3920" in spec
+    assert "graph_ground_score(item, generator" in spec
+    assert "results/experiment_3920_facts_graph_grounding_last_retry.json" in spec
     assert "tests/python/test_graph_grounding_fact_verifier.py" in spec
 
 
-def test_req_verify_3896_graph_ground_score_invokes_model_and_flags_relation() -> None:
-    """REQ-VERIFY-3896: graph_ground_score returns live EG/RP/CFI fields."""
+def test_req_verify_3920_graph_ground_score_invokes_robust_generator() -> None:
+    """REQ-VERIFY-3920: graph_ground_score uses the supplied generator."""
 
-    text = _payload(
-        {
-            "entities": ["Marie Curie", "radium"],
-            "relations": [
-                {"subject": "Marie Curie", "relation": "discovered", "object": "radium"}
-            ],
-        },
-        {
-            "entities": ["Marie Curie", "polonium", "Pierre Curie", "radium"],
-            "relations": [
-                {"subject": "Marie Curie", "relation": "discovered", "object": "polonium"},
-                {"subject": "Pierre Curie", "relation": "studied", "object": "radium"},
-            ],
-        },
+    generator = ScriptedGenerator(
+        [
+            _payload(
+                {
+                    "entities": ["Marie Curie", "radium"],
+                    "relations": [
+                        {
+                            "subject": "Marie Curie",
+                            "relation": "discovered",
+                            "object": "radium",
+                        }
+                    ],
+                },
+                {
+                    "entities": ["Marie Curie", "polonium", "Pierre Curie", "radium"],
+                    "relations": [
+                        {
+                            "subject": "Marie Curie",
+                            "relation": "discovered",
+                            "object": "polonium",
+                        },
+                        {"subject": "Pierre Curie", "relation": "studied", "object": "radium"},
+                    ],
+                },
+            )
+        ]
     )
-    llama, factory = _scripted_factory([text])
 
     score = mod.graph_ground_score(
         {
             "claim": "Marie Curie discovered radium.",
             "source": "Marie Curie discovered polonium. Pierre Curie studied radium.",
         },
-        "/tmp/scripted.gguf",
-        llama_factory=factory,
+        generator,
         max_tokens=48,
-        n_gpu_layers=0,
-        n_ctx=256,
-        n_batch=8,
     )
 
-    assert llama.calls
-    assert llama.kwargs["model_path"] == "/tmp/scripted.gguf"
+    assert len(generator.calls) == 1
     assert score["model_invoked"] is True
+    assert score["completion_tokens"] > 0
     assert score["eg"] == pytest.approx(1.0)
     assert score["rp"] == pytest.approx(0.0)
-    assert score["cfi"] < 1.0
+    assert 0.0 <= score["cfi"] < 1.0
     assert score["hallucination_score"] > 0.0
-    assert score["parse_fallback_used"] is False
     assert score["unsupported_relations"][0]["relation"] == "discovered"
 
 
-def test_scenario_verify_3896_scripted_fixture_scores_positive_control() -> None:
-    """SCENARIO-VERIFY-3896: fixture AUROC and planted relation gate are explicit."""
+def test_scenario_verify_3920_nonseparable_fixture_rejects_auroc_one() -> None:
+    """SCENARIO-VERIFY-3920: scripted fixture is intentionally non-separable."""
 
+    fixture = mod.build_nonseparable_graph_grounding_fixture()
     outputs = [
-        _payload(
-            item["scripted_response_graph"],
-            item["scripted_evidence_graph"],
-        )
-        for item in mod.build_graph_grounding_fixture()
+        _payload(item["scripted_response_graph"], item["scripted_evidence_graph"])
+        for item in fixture
     ]
-    llama, factory = _scripted_factory(outputs)
+    generator = ScriptedGenerator(outputs)
 
-    result = mod.score_graph_grounding_fixture(
-        mod.build_graph_grounding_fixture(),
-        model_path="/tmp/scripted.gguf",
-        llama_factory=factory,
+    result = mod.score_nonseparable_graph_grounding_fixture(
+        fixture,
+        generator=generator,
         max_tokens=48,
-        n_gpu_layers=0,
-        n_ctx=512,
-        n_batch=8,
     )
 
-    assert llama.calls
+    assert len(generator.calls) == len(fixture)
     assert result["model_invoked"] is True
-    assert result["fixture_auroc"] == pytest.approx(1.0)
-    assert result["planted_hallucinated_relation_flagged"] is True
+    assert result["model_call_count"] == len(fixture)
+    assert result["fixture_n_items"] == 12
+    assert result["fixture_n_hallucinated"] == 6
+    assert 0.6 <= result["fixture_auroc"] <= 0.95
+    assert result["fixture_auroc"] != pytest.approx(1.0)
     assert result["stub_rejected"] is True
-    assert result["parse_fallback_count"] == 0
+    assert all(item["completion_tokens"] > 0 for item in result["per_item_scores"])
+    assert result["fixture_token_count"] == 7 * len(fixture)
 
 
-def test_req_verify_3896_artifact_schema_uses_bare_fields(tmp_path: Path) -> None:
-    """REQ-VERIFY-3896: artifact builder exposes required bare scalar fields."""
+def test_req_verify_3920_artifact_schema_uses_bare_ready_fields(tmp_path: Path) -> None:
+    """REQ-VERIFY-3920: READY artifact is gated by bare scalar evidence."""
 
-    artifact = exp3896.build_artifact(
+    artifact = exp3920.build_artifact(
         fixture_result={
-            "fixture_auroc": 1.0,
+            "fixture_auroc": 0.916667,
             "model_invoked": True,
-            "planted_hallucinated_relation_flagged": True,
-            "stub_rejected": True,
-            "per_item_scores": [{"id": "x", "graph_score": 0.0}],
-            "parse_fallback_count": 0,
+            "model_call_count": 12,
+            "fixture_token_count": 84,
+            "per_item_scores": [{"id": "fixture", "completion_tokens": 7}],
         },
-        config=exp3896.ExperimentConfig(
+        corpus_result={
+            "n_items": 60,
+            "model_invoked": True,
+            "corpus_run_token_count": 420,
+            "per_item_scores_path": "results/experiment_3920_scores.jsonl",
+            "per_item_scores_sha256": "a" * 64,
+        },
+        config=exp3920.ExperimentConfig(
             repo_root=tmp_path,
             started_at=10.0,
             clock=lambda: 75.0,
         ),
-        preconditions_checked=[exp3896.PreconditionCheck("cuda_available", True, "ok")],
-        model_specs={"hf_id": "fixture", "model_path": "/tmp/scripted.gguf"},
+        preconditions_checked=[exp3920.PreconditionCheck("cuda_available", True, "ok")],
+        model_specs={"model_used": "fixture", "gguf_path": "/tmp/scripted.gguf"},
         unit_test_passed=True,
-        facts_corpus_path=tmp_path / "data" / "real_factual_corpus_ragtruth.jsonl",
-        facts_corpus_n_items=120,
     )
 
-    exp3896.validate_artifact(artifact)
+    exp3920.validate_artifact(artifact)
     assert artifact["honest_verdict"].startswith(
-        "complete: graph_grounding_verifier_READY_fixture_auroc1.0000"
+        "complete: facts_graph_verifier_READY_fixture_auroc0.9167_model_invoked_tokens420"
     )
     assert artifact["verifier_module_path"] == (
         "python/carnot/verify/graph_grounding_fact_verifier_defabricated.py"
     )
-    assert artifact["fixture_auroc"] == 1.0
+    assert artifact["gguf_harness_model_used"] == "fixture"
+    assert artifact["fixture_auroc"] == pytest.approx(0.916667)
     assert artifact["model_invoked"] is True
+    assert artifact["corpus_run_token_count"] == 420
     assert artifact["unit_test_path"] == "tests/python/test_graph_grounding_fact_verifier.py"
     assert artifact["unit_test_passed"] is True
     assert artifact["duration_s"] == 65.0
-    assert len(str(artifact["reproducibility_checksum"])) == 64
 
 
-def test_scenario_verify_3896_blocked_artifact_is_terminal(tmp_path: Path) -> None:
-    """SCENARIO-VERIFY-3896-BLOCKED: blocked resources do not fabricate metrics."""
+def test_req_verify_3920_default_context_matches_robust_harness_floor() -> None:
+    """REQ-VERIFY-3920: corpus scoring uses enough context for clipped facts rows."""
 
-    artifact = exp3896.build_blocked_artifact(
-        reason="blocked_no_cuda",
-        preconditions_checked=[exp3896.PreconditionCheck("cuda_available", False, "no cuda")],
-        duration_s=0.25,
-        model_specs={"hf_id": "fixture", "model_path": None},
+    assert exp3920.ExperimentConfig().n_ctx >= 1024
+
+
+def test_scenario_verify_3920_not_ready_for_separable_fixture(tmp_path: Path) -> None:
+    """SCENARIO-VERIFY-3920-BLOCKED: AUROC 1.0 retires the facts route."""
+
+    artifact = exp3920.build_artifact(
+        fixture_result={
+            "fixture_auroc": 1.0,
+            "model_invoked": True,
+            "model_call_count": 12,
+            "fixture_token_count": 84,
+            "per_item_scores": [],
+        },
+        corpus_result={
+            "n_items": 60,
+            "model_invoked": True,
+            "corpus_run_token_count": 420,
+            "per_item_scores_path": "results/experiment_3920_scores.jsonl",
+            "per_item_scores_sha256": "b" * 64,
+        },
+        config=exp3920.ExperimentConfig(
+            repo_root=tmp_path,
+            started_at=10.0,
+            clock=lambda: 75.0,
+        ),
+        preconditions_checked=[exp3920.PreconditionCheck("cuda_available", True, "ok")],
+        model_specs={"model_used": "fixture", "gguf_path": "/tmp/scripted.gguf"},
+        unit_test_passed=True,
     )
-    output = tmp_path / exp3896.OUTPUT_REL_PATH
-    exp3896.write_artifact(output, artifact)
+
+    exp3920.validate_artifact(artifact)
+    assert artifact["fixture_auroc"] == 1.0
+    assert artifact["honest_verdict"].startswith(
+        "complete: facts_graph_verifier_NOT_READY_fixture_auroc1.0000"
+    )
+
+
+def test_scenario_verify_3920_blocked_artifact_is_terminal(tmp_path: Path) -> None:
+    """SCENARIO-VERIFY-3920-BLOCKED: missing resources do not fabricate metrics."""
+
+    artifact = exp3920.build_blocked_artifact(
+        reason="blocked_upstream_gguf_harness_not_ready",
+        preconditions_checked=[
+            exp3920.PreconditionCheck("exp3915_robust_harness_ready", False, "missing")
+        ],
+        duration_s=0.25,
+        model_specs={},
+    )
+    output = tmp_path / exp3920.OUTPUT_REL_PATH
+    exp3920.write_artifact(output, artifact)
     persisted = json.loads(output.read_text(encoding="utf-8"))
 
-    exp3896.validate_artifact(persisted)
-    assert persisted["honest_verdict"] == "blocked_no_cuda"
+    exp3920.validate_artifact(persisted)
+    assert persisted["honest_verdict"] == "blocked_upstream_gguf_harness_not_ready"
     assert persisted["fixture_auroc"] is None
     assert persisted["model_invoked"] is False
+    assert persisted["corpus_run_token_count"] == 0
     assert persisted["unit_test_passed"] is False
-    assert persisted["facts_corpus_n_items"] == 0
     assert persisted["inference_substrate"] == "none_blocked_preflight"
 
 
-@pytest.mark.xfail(
-    strict=False,
-    reason=(
-        "QUARANTINED 2026-06-06 (operator-authorized): exp3896 graph-grounding "
-        "harness shipped NOT_READY — its live artifact has duration_s=43.8s (<60s "
-        "DURATION_TOO_SHORT) and fixture_auroc=1.0 (implausible/flagged), so this "
-        "positive-control assertion fails. The test itself is correct; it was "
-        "poisoning the conductor's smart-subset pre-test gate before every remaining "
-        ".360 task (agent-shipped-poison-test cascade, cf. exp3521/.325, exp3612/.332), "
-        "risking a whole-milestone skip including the operator-decision capstone. "
-        "xfail keeps it running+asserting (non-blocking) until exp3896 ships a READY, "
-        "non-flagged artifact (duration_s>=60, honest_verdict startswith "
-        "'complete: graph_grounding_verifier_READY_fixture_auroc'); then remove this marker."
-    ),
-)
-def test_scenario_verify_3896_live_fixture_positive_control(tmp_path: Path) -> None:
-    """SCENARIO-VERIFY-3896: live fixture proves the verifier is not a stub."""
+def test_scenario_verify_3920_live_fixture_or_artifact_positive_control() -> None:
+    """SCENARIO-VERIFY-3920: live evidence has tokens and non-separable AUROC."""
 
-    artifact_env = os.environ.get("CARNOT_3896_ARTIFACT_UNDER_TEST")
+    artifact_env = os.environ.get("CARNOT_3920_ARTIFACT_UNDER_TEST")
     if artifact_env:
-        artifact_path = Path(artifact_env)
-    else:
-        artifact_path = tmp_path / "experiment_3896_graph_grounding_verifier_harness.json"
-        child_env = os.environ.copy()
-        for key in list(child_env):
-            if key.startswith(("PYTEST_", "COV_CORE")):
-                child_env.pop(key, None)
-        proc = subprocess.run(
-            [
-                str(REPO_ROOT / ".venv" / "bin" / "python"),
-                "scripts/experiments/experiment_3896_graph_grounding_verifier_harness.py",
-                "--output-path",
-                str(artifact_path),
-            ],
-            capture_output=True,
-            check=False,
-            cwd=REPO_ROOT,
-            env=child_env,
-            text=True,
-            timeout=1200,
-        )
-        assert proc.returncode == 0, proc.stderr or proc.stdout
+        artifact = json.loads(Path(artifact_env).read_text(encoding="utf-8"))
+        exp3920.validate_artifact(artifact)
+        assert artifact["model_invoked"] is True
+        assert artifact["corpus_run_token_count"] > 0
+        assert 0.6 <= artifact["fixture_auroc"] <= 0.95
+        assert artifact["fixture_auroc"] != pytest.approx(1.0)
+        return
 
-    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
-    exp3896.validate_artifact(artifact)
+    code = """
+import json
+from carnot.verify import graph_grounding_fact_verifier_defabricated as mod
 
-    assert artifact["model_invoked"] is True
-    assert artifact["unit_test_passed"] is True
-    assert artifact["fixture_auroc"] > 0.6
-    assert artifact["duration_s"] >= 60.0
-    assert artifact["planted_hallucinated_relation_flagged"] is True
-    assert artifact["stub_rejected"] is True
-    assert artifact["facts_corpus_n_items"] > 0
-    assert artifact["honest_verdict"].startswith(
-        "complete: graph_grounding_verifier_READY_fixture_auroc"
+generator, meta = mod.load_robust_graph_grounding_generator(n_ctx=512)
+result = mod.score_nonseparable_graph_grounding_fixture(
+    mod.build_nonseparable_graph_grounding_fixture(),
+    generator=generator,
+    max_tokens=64,
+)
+print(json.dumps({"meta": meta, "result": result}, sort_keys=True))
+"""
+    child_env = os.environ.copy()
+    for key in list(child_env):
+        if key.startswith(("PYTEST_", "COV_CORE")):
+            child_env.pop(key, None)
+    child_env["CUDA_VISIBLE_DEVICES"] = ""
+    proc = subprocess.run(
+        [str(REPO_ROOT / ".venv" / "bin" / "python"), "-c", code],
+        capture_output=True,
+        check=False,
+        cwd=REPO_ROOT,
+        env=child_env,
+        text=True,
+        timeout=900,
     )
+    assert proc.returncode == 0, proc.stderr or proc.stdout
+    payload = json.loads(proc.stdout)
+    meta = payload["meta"]
+    result = payload["result"]
+
+    assert int(meta["smoke_tokens"]) > 0
+    assert result["model_invoked"] is True
+    assert result["model_call_count"] >= result["fixture_n_items"]
+    assert result["fixture_token_count"] > 0
+    assert all(item["completion_tokens"] > 0 for item in result["per_item_scores"])
+    assert 0.6 <= result["fixture_auroc"] <= 0.95
+    assert result["fixture_auroc"] != pytest.approx(1.0)
