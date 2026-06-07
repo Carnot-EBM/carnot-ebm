@@ -11071,6 +11071,82 @@ measured duration.
 |---|---|---|
 | REQ-VERIFY-3916 | Planned (`python/carnot/eval/moat_scissor_accuracy_3916.py`, `scripts/experiments/experiment_3916_moat_scissor_accuracy.py`) | Planned (`tests/python/test_experiment_3916_moat_scissor_accuracy.py`) |
 
+### REQ-VERIFY-3917: Efficiency Head-To-Head Verifier Comparison
+
+The repository SHALL provide an Exp 3917 efficiency head-to-head runner at
+`python/carnot/eval/efficiency_head_to_head_3917.py` and
+`scripts/experiments/experiment_3917_efficiency_head_to_head.py` that writes
+`results/experiment_3917_efficiency_head_to_head.json`. The runner SHALL compare
+the local energy/verifier ensemble against an LLM-as-judge on the same labeled
+items from both the Exp 3884 in-distribution corpus and a deterministic FoVer
+slice with at least 200 items from each source.
+
+Before scoring, the runner SHALL verify CUDA with the repository virtualenv
+Python, verify that Exp 3915 exists with `unit_test_passed=true` and
+`smoke_tokens>0`, and verify that the Exp 3905 artifact exists and
+`python/carnot/verify/cost_instrumented_verification.py` imports. Failed hard
+preconditions SHALL write a terminal `blocked_<resource>` artifact without
+fabricated accuracy or cost claims.
+
+For runnable inputs, the runner SHALL score both verifiers via the Exp 3905
+`measure_verification_cost(...)` accounting path. The energy verifier SHALL use
+the local CPU verifier ensemble from the cost harness. The LLM judge SHALL use
+the Exp 3894 judge prompt and parser, but SHALL be backed by a generator loaded
+through the Exp 3915 robust GGUF harness rather than direct ad hoc
+`llama_cpp.Llama` construction. The runner SHALL record AUROC, bootstrap CI95,
+total wall time, per-item wall milliseconds, estimated tokens, and estimated
+FLOPs for both verifiers over the exact same item order.
+
+The terminal artifact SHALL include bare top-level fields
+`energy_auroc`, `llm_judge_auroc`, `accuracy_parity`,
+`cost_ratio_walltime`, `cost_ratio_flops`, `energy_per_item_ms`,
+`llm_per_item_ms`, `llm_judge_model_used`, `n_items`, `corpus_sources`,
+`preconditions_checked`, `model_specs`, `random_seed`,
+`random_seeds_used`, `reproducibility_checksum`, `duration_s`, and
+`inference_substrate`, with string principle notes in `field_principles` and
+no `{value, principle}` wrappers around bare metric fields.
+
+`accuracy_parity` SHALL be true only when the energy AUROC is within the
+LLM-judge AUROC bootstrap CI95. `cost_ratio_walltime` SHALL be
+`llm_per_item_ms / energy_per_item_ms`; `cost_ratio_flops` SHALL be the
+LLM-judge estimated FLOPs divided by the energy-verifier estimated FLOPs.
+If the completed full-corpus run has `duration_s < 60`, the runner SHALL emit
+`blocked_llm_judge_not_invoked` rather than promoting the result.
+
+The falsification gate SHALL emit
+`complete: efficiency_PARITY_AND_<ratio>x_CHEAPER_energy<ea>_llm<la>_verifier_earns_its_place`
+when `accuracy_parity=true` and `cost_ratio_walltime > 10`. It SHALL emit
+`complete: efficiency_CHEAPER_<ratio>x_but_NOT_PARITY_energy<ea>_llm<la>_honest_partial`
+when `accuracy_parity=false` and `cost_ratio_walltime > 10`. It SHALL emit
+`complete: efficiency_NOT_DECISIVELY_CHEAPER_ratio<ratio>_energy<ea>_llm<la>`
+when `cost_ratio_walltime <= 10`.
+
+### SCENARIO-VERIFY-3917: Full-Corpus Efficiency Comparison Writes Honest Artifact
+
+Given CUDA is available, Exp 3915 reports a ready robust GGUF generator, Exp
+3905 cost instrumentation imports, the Exp 3884 corpus is in band, and the
+FoVer slice can provide at least 200 labeled rows, when Exp 3917 runs, then it
+writes `results/experiment_3917_efficiency_head_to_head.json`, records the
+GGUF model used by the robust judge, computes energy and LLM-judge AUROCs plus
+bootstrap CI95 intervals on the same labels, records wall-time and FLOP ratios,
+records reproducibility seeds and checksum, enforces the 60-second full-corpus
+duration floor, and chooses the terminal verdict from the parity-and-cost gate.
+
+### SCENARIO-VERIFY-3917-BLOCKED: Missing Inputs Do Not Fabricate Efficiency Claims
+
+Given CUDA, Exp 3915 readiness, Exp 3905 cost instrumentation, Exp 3884, or the
+FoVer slice is unavailable, when Exp 3917 runs, then it writes
+`results/experiment_3917_efficiency_head_to_head.json` with a terminal
+`blocked_<resource>` honest verdict, populated precondition evidence, null
+accuracy and cost-ratio metrics, zero item count, no per-item score claims, and
+a measured duration.
+
+## Implementation Status (REQ-VERIFY-3917)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3917 | Implemented (`python/carnot/eval/efficiency_head_to_head_3917.py`, `scripts/experiments/experiment_3917_efficiency_head_to_head.py`) | Implemented (`tests/python/test_experiment_3917_efficiency_head_to_head.py`) |
+
 ### REQ-VERIFY-3905: Cost-Instrumented Verifier Harness
 
 The repository SHALL provide `python/carnot/verify/cost_instrumented_verification.py`
