@@ -4178,6 +4178,74 @@ passes.
 
 ---
 
+### REQ-HW-3901
+
+**Title:** PolarFire plus KV260 continuity audit MUST independently record SSH reachability and no fabric-acceleration claim
+
+**Description:**
+Experiment 3901 MUST produce a consolidated PolarFire plus KV260 continuity
+artifact for the Hardware-Task Continuity Discipline. It MUST check each board
+independently and MUST continue when only one board is SSH-unreachable. The
+PolarFire precondition is `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire
+'true'`. The KV260 precondition is exactly
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`; host SD-card checks are
+retired and MUST NOT be used.
+
+If PolarFire is reachable, the experiment MUST re-confirm the Exp 3867 terminal
+hash-verified Ising dispatch and record the state as a soft-CPU SSH dispatch
+with hash verification only, with no FPGA fabric compute-acceleration claim. If
+KV260 is reachable, the experiment MUST run `ssh kria 'xmutil listapps'` and
+`ssh kria 'ls /dev/uio*'`, then record the loaded overlay, UIO presence, and
+whether a Carnot Ising bitstream is active. The artifact MUST keep
+`fabric_acceleration_claimed=false` because neither board demonstrates compute
+acceleration in this continuity audit.
+
+**Acceptance criteria:**
+- `scripts/experiments/experiment_3901_polarfire_kv260_continuity.py` writes
+  `results/experiment_3901_polarfire_kv260_continuity.json`.
+- The artifact includes bare `polarfire_reachable`, `kv260_reachable`,
+  `polarfire_state`, `kv260_state`, `fabric_acceleration_claimed`,
+  `preconditions_checked`, `reproducibility_checksum`, `inference_substrate`,
+  and `honest_verdict` fields.
+- Required fields are annotated through `field_principles`; the required fields
+  themselves MUST remain bare booleans, strings, or lists rather than
+  `{value, principle}` wrappers.
+- If one board is SSH-unreachable, the artifact records
+  `blocked_<board>_ssh_unreachable` for that board and still audits the other
+  board.
+- If at least one board is reachable and `fabric_acceleration_claimed=false`,
+  `honest_verdict` MUST begin
+  `success: polarfire_kv260_continuity_pf` and end `_no_fabric_claim`.
+- If neither board is reachable, `honest_verdict` MUST be exactly
+  `blocked_polarfire_and_kv260_ssh_unreachable`.
+- The artifact MUST set `inference_substrate="hardware_smoke"` and MUST NOT
+  include GGUF, CUDA, live-inference, hardware-speedup, thermalization, or host
+  SD-card markers.
+
+**Implementation status:** Pending (Exp 3901)
+
+---
+
+### SCENARIO-HW-3901
+
+**Scenario:** PolarFire and KV260 continuity is recorded with per-board blocked states and no acceleration claim.
+
+**Given:** PolarFire and KV260 may independently be reachable or unreachable
+over SSH.
+**When:** Experiment 3901 runs both SSH preconditions, dispatches the
+hash-verified PolarFire soft-CPU Ising check only when PolarFire is reachable,
+and runs KV260 `xmutil listapps` plus `/dev/uio*` listing only when KV260 is
+reachable.
+**Then:** It writes `results/experiment_3901_polarfire_kv260_continuity.json`
+with per-board state, raw command evidence, scalar required fields, a false
+fabric-acceleration claim flag, a terminal success verdict when either board is
+reachable, or the both-boards blocked verdict when neither SSH precondition
+passes.
+
+**Implementation status:** Pending (Exp 3901)
+
+---
+
 ### REQ-HW-3577
 
 **Title:** KV260 hardware-task continuity verification
