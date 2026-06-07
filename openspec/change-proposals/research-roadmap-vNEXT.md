@@ -1,177 +1,180 @@
-# Research Roadmap — Milestone 2026.06.362
+# Research Roadmap — Milestone 2026.06.363
 
-**Recover the .361 infra wash and FINISH the offline verifier proof.**
-
-**Author:** Outer-loop (Claude Opus 4.8), 2026-06-07.
-**Milestone doc for:** `research-roadmap-next.yaml` (10 tasks, exp3914–exp3923).
-**Status:** Pre-staged per the Pre-Staged Roadmap Convention.
+**Status:** Pre-staged by the outer-loop planner (Claude Opus 4.8), 2026-06-07.
+**Supersedes:** 2026.06.362 (the offline-verifier-proof milestone).
+**One-line:** `.362` finally LANDED the offline verifier proof — but its
+EFFICIENCY axis was measured against a **below-chance LLM-judge strawman** and
+its cascade **never escalated**. `.363` RE-PROVES efficiency against a
+**competent judge**, makes the cascade non-degenerate, **replicates the moat on
+a second corpus**, then takes the **first realistic agentic step** toward the
+ARC-AGI-3 venue (north-star §5, sequenced second). Facts retires; the verifier
+stays math-domain-bound; `paper_ready` stays TRUE; frozen 0.9131 unchanged.
 
 ---
 
-## 1. What the previous milestone (.361) proved — and didn't
+## 1. What the previous milestone (.362) proved — and what it got wrong
 
-.361 was scoped exactly right ("Prove the verifier earns its place" — north-star §5,
-the project's TOP priority) but **executed as a near-total infra wash: only 3 of ~11
-tasks produced artifacts.** Two infrastructure failures — not science — caused it:
+`.362` recovered the `.361` infra wash (a poison-test cascade + a recurring
+`blocked_llama_cpp_inference_failed`) by shipping a **robust, tested
+`gguf_inference` harness** (exp3915) with a smoke-before-use + GGUF fallback
+chain, then ran the long-blocked offline verifier proof. Read honestly via
+`scripts/summarize_artifact.py`:
 
-1. **The recurring live-35B-GGUF inference blocker.** exp3904 (the *critical* ACCURACY
-   axis / moat scissor) returned `blocked_llama_cpp_inference_failed`. CUDA was up, the
-   Qwen3.6-35B GGUF was cached, `carnot.verify` imported — but the inference **call
-   itself** failed (a 35B Q4_K_M at `n_gpu_layers=-1` full offload under llama_cpp
-   0.3.23). The moat scissor has now been BLOCKED/INCONCLUSIVE **three milestones
-   running** (.359 exp3885, .360 exp3895, .361 exp3904), *always* on the live-model path.
+| Axis | Artifact | Verdict | Honest read |
+|---|---|---|---|
+| **ACCURACY (moat scissor)** | exp3916 | **MOAT_SURVIVES** | **GENUINE.** Energy ensemble AUROC **0.967** catches errors the reasoner self-verify (0.44 weak / **0.66** strong) misses. Residual-catch **0.914** (CI95 [0.843,0.971]), overlap **0.50**, n_res=70. Corroborates the Self-Correction Illusion (arXiv:2606.05976). |
+| **EFFICIENCY (head-to-head)** | exp3917 | CHEAPER_NOT_PARITY @ 11512× | **INVALID COMPARATOR.** LLM-judge (gemma-4-26B 0-shot) AUROC **0.4423 = below chance**. Energy (0.81) *beats* the judge; "not parity" is a strawman artifact. 11512× wall-clock ratio is real (0.066 ms vs 763 ms) but worthless against a broken baseline. |
+| **CASCADE (router)** | exp3918 | WINS @ 11512× | **DEGENERATE.** `escalation_fraction = 0.0` — never escalated; the cascade mechanism was never exercised. `auroc_gap = -0.39` only because the LLM baseline is sub-chance. |
+| **FACTS (graph-grounding)** | exp3920 | FLAGGED (blocked, model not invoked) | **RETIRES.** Fourth facts fabrication/block (exp3862/3886/3896/3920). `retire_if_same_verdict` fired. |
+| **ARC scaffold** | exp3919 | READY | Verifier-first harness skeleton + passing unit test on a synthetic env. |
+| **FR-11 v25** | exp3921 | INVARIANT_HELD | Self-learning mandate held; AUROC in frozen CI, +0.0185 memory contribution preserved. |
+| **Hardware** | exp3922 | FLAGGED (duration=0 tautology) | Needs one clean continuity re-run. |
+| **Capstone** | exp3923 | paper_ready=TRUE, frozen 0.9131 | But reported the efficiency/cascade flaws at face value. |
 
-2. **The agent-shipped poison-test cascade** (memory `incident_agent_shipped_test_cascade`).
-   exp3905 (cost harness) shipped `tests/python/test_cost_instrumented_verification.py`
-   with `assert artifact["duration_s"] >= 60` — but that test runs the harness on a
-   **10-item fixture** that legitimately completes in ~35.8s. The assertion fails, so the
-   conductor's PRE-TEST gate reported "1 failed, 105 passed" and **SKIP-cascaded every
-   task after exp3905**: efficiency (exp3906), cascade (exp3907), ARC scaffold (exp3908),
-   facts (exp3909), FR-11 v25 (exp3910), both hardware tasks, **and the capstone**. The
-   60s adversarial-verify floor is for the *full-corpus science artifact*, never for a
-   tiny unit-test fixture.
+**The load-bearing correction:** the capstone set `verifier_earns_its_place =
+false` because it gated on the *pure* energy verifier reaching *parity* with a
+judge that was below chance. That gate is meaningless against a broken
+comparator. The verifier's accuracy value (MOAT_SURVIVES) is proven; its
+**efficiency value is UNPROVEN** until measured against a competent judge. This
+is exactly the FALSE_NEGATIVE_RISK / positive-control discipline (CLAUDE.md):
+a comparison against a baseline that failed its own positive control is not
+evidence.
 
-**Net:** the single most important question in the project — *does the cheap verifier
-earn its place?* — still has no clean answer. The blockers are addressable infra, and
-the prior tasks were SKIPPED (never ran), not failed-with-verdict.
+## 2. The three biggest gaps (current state vs north-star §5 / PRD)
 
-**Strategic context that is settled (carried in, unchanged):** both energy-core theses
-are bounded-negative — energy-as-*selection* (P0.1) and energy-as-*generation* (EBT) —
-so the **VERIFIER is the surviving asset** (north-star §5). `paper_ready` is TRUE (G1–G4
-met; FoVer 0.9131 frozen, independently reproduced via CI run 26725185125). This
-milestone does not touch the headline; it finishes the lens that decides Carnot's value.
+1. **The efficiency proof rests on a sub-chance comparator.** North-star §5's
+   win condition is "equally effective as the LM at lower cost/latency
+   (efficiency-parity), OR Pareto-dominate (cheaper at equal accuracy AND/OR
+   more accurate at equal cost)." We cannot claim either against a 0.44-AUROC
+   judge. **Gap: a COMPETENT LLM-judge comparator + a valid head-to-head + a
+   non-degenerate cascade.**
 
-## 2. The three biggest gaps between current state and the PRD vision
+2. **The moat is single-corpus.** MOAT_SURVIVES was measured only on the
+   exp3884 in-distribution corpus. A second corpus (FoVer slice) is needed to
+   show it is not a corpus artifact. **Gap: moat replication.**
 
-1. **The verifier's value is UNPROVEN on both axes.** ACCURACY (the moat: does the
-   external verifier catch what self-verification misses, in-distribution, vs *strong*
-   self-verify?) and EFFICIENCY (the operator win condition: equally effective at lower
-   cost/latency — "parity at Nx cheaper"). Neither has a clean landed number. **Phase 1
-   closes this.**
-2. **The live-model critical path is fragile.** The same inference call has blocked the
-   decisive result three times. Until a robust, tested, reusable inference entrypoint
-   exists, every live-model milestone is one runtime exception away from a wash. **Phase 0
-   fixes this at the root (harness-first).**
-3. **No agentic integration surface, and facts still math-bound.** The ARC-AGI-3
-   agentic-proof venue (sequenced SECOND per north-star §5) has not been started beyond a
-   toy pilot; and the verifier remains math-domain-bound (facts earned-negative, three
-   fabricated attempts). **Phase 2 starts the scaffold (GPU-free); Phase 3 gives facts
-   one last disciplined retry.**
+3. **The agentic-proof venue has a scaffold but zero science.** North-star §5
+   sequences the ARC-AGI-3 harness second, after the offline proof — which
+   `.363` Phase 1 completes. The real ARC-AGI-3 benchmark scores frontier models
+   <1% and scores by **action-efficiency**, explicitly prioritizing
+   **domains with verifiers** (arXiv:2603.24621) — the perfect venue for the
+   verifier-as-action-pruner. **Gap: the first realistic agentic run measuring
+   action-efficiency with vs without the verifier.**
 
-## 3. Milestone design — 10 tasks across 5 phases
-
-```
-PHASE 0 — record + UNBLOCK (break the cascade, fix the root cause)
-  exp3914  archive .361 -> activate .362; QUARANTINE the poison test; green-gate
-  exp3915  BUILD+TEST robust gguf_inference harness (fallback chain + 1-token smoke)   [GPU]
-PHASE 1 — the offline verifier proof (re-run on the hardened harness)
-  exp3916  ACCURACY — moat scissor (weak+strong arms, decoupled gate)   [GPU]  prior_failures
-  exp3917  EFFICIENCY — energy-verifier vs LLM-judge head-to-head        [GPU]
-  exp3918  Meta-EBM cascade router prototype (reuses exp3917 per-item scores; no re-inference)
-PHASE 2 — agentic proof venue scaffold (verifier-first, GPU-free)
-  exp3919  ARC-AGI-3 harness scaffold — build+unit-test (infra-only, synthetic, no science)
-PHASE 3 — facts (PRD Tier C; LAST disciplined retry)
-  exp3920  facts graph-grounding — last retry via robust harness   [GPU]  prior_failures, retire_if_same
-PHASE 4 — mandates + hardware + capstone
-  exp3921  FR-11 v25 online independence-reweighting (research-program.md MANDATE)
-  exp3922  hardware continuity consolidated (GateMate + PolarFire + KV260)
-  exp3923  capstone .362 — the VERIFIER SCORECARD (answers "earns its place?")
-```
-
-### Dependency graph (all disk-read fallbacks — NO hard `gated_on` on the critical path)
+## 3. Milestone design — 12 experiments across 5 phases
 
 ```
-exp3914 (green gate) ──> unblocks the whole milestone (pre-test gate green)
-exp3915 (gguf harness) ──> exp3916, exp3917, exp3920   (each disk-reads exp3915; blocked_upstream_* if absent)
-exp3917 (efficiency)   ──> exp3918 (cascade reuses per-item scores)
-exp3916..exp3922 ──> exp3923 (capstone aggregates whatever landed, skipping flagged)
+PHASE 0 — hygiene + retire facts + record the comparator flaw
+  exp3924  archive .362 / activate .363; RETIRE the facts route to future-work
+           (exclusion manifest); quarantine any poison test; green-gate; record
+           the below-chance-comparator finding as the .363 forward-bet.
+
+PHASE 1 — HARDEN THE OFFLINE VERIFIER PROOF (the real .363 science)
+  exp3925  DIAGNOSE + FIX the below-chance LLM-judge (polarity/parse bug vs
+           genuine weakness); ship a COMPETENT judge config (AUROC >> chance,
+           validated on a held-out check) backed by the robust harness.
+  exp3926  VALID efficiency head-to-head with the competent judge + a defensible
+           cost methodology (per-item wall-clock AND FLOP/token, amortized-load
+           excluded). The real efficiency verdict (parity / Pareto / neither).
+  exp3927  NON-DEGENERATE cascade router with the competent judge — escalation
+           fraction MUST be > 0 (positive control); real matched-accuracy cost.
+  exp3928  MOAT SCISSOR replication on a SECOND corpus (FoVer slice), multi-seed,
+           strong self-verify arm — confirm MOAT_SURVIVES is not a corpus artifact.
+
+PHASE 2 — AGENTIC PROOF VENUE first realistic run (north-star §5, second)
+  exp3929  ARC-AGI-3 harness: first realistic verifier-as-router agentic run on
+           a non-toy env — actions-to-solve WITH vs WITHOUT the verifier-pruner
+           (the Exp1165 ~4x shape), + a real-benchmark access preflight.
+
+PHASE 3 — standing mandates + hardware + literature
+  exp3930  FR-11 v26 (self-learning MANDATE) — online learning of the cascade
+           escalation band (Tier-1 self-learning tied to the deployable artifact).
+  exp3931  Hardware continuity (CLEAN re-run; exp3922 was flagged) — KV260 + PolarFire
+           + GateMate, distinct timers, no-fabric-claim.
+  exp3932  Literature synthesis — agentic verification + LLM-judge calibration +
+           cascade efficiency 2026; codex synthesis of the staged references.
+
+PHASE 4 — capstone
+  exp3933  Capstone .363 — the HARDENED verifier scorecard: efficiency now valid,
+           cascade non-degenerate, moat replicated, agentic first-run. Answer
+           "does the verifier earn its place" against a COMPETENT judge.
 ```
 
-Per the .340/.358 lesson, **no downstream task hard-gates on an upstream**: each
-disk-reads its prerequisite and emits `blocked_upstream_*` if absent, so a single
-skipped upstream costs ONE task, never a cascade. The poison-test fix (exp3914) plus
-the robust inference harness (exp3915) are the two structural changes that make this
-milestone robust where .361 was not.
+### Dependency graph (no hard `gated_on` on the critical path — disk-read fallback)
 
-### Why harness-first, again
+```
+exp3924 (archive/retire-facts) ─── green-gate for all
+exp3925 (competent judge) ──► exp3926 (efficiency) ──► exp3927 (cascade)
+exp3928 (moat replication)  ── independent (reuses exp3915 harness)
+exp3929 (agentic run)       ── reuses exp3919 scaffold + exp3925 verifier
+exp3930 (FR-11 v26)         ── reuses exp3927 cascade band
+exp3931 (hardware)          ── independent
+exp3932 (literature)        ── independent
+exp3933 (capstone)          ── disk-reads all above; skips flagged artifacts
+```
 
-.360 and .361 both showed that the failure mode is **a fragile live-model build masked
-as science.** The fix is the same one that worked for exp3894 (the tested reasoner
-judge): ship a *passing unit test on a fixture* as the deliverable, with the science as
-a separate, downstream step. exp3915 generalizes this to the inference layer itself so
-the decisive results (exp3916/3917/3920) cannot block on a raw `llama_cpp.Llama` call
-again. **Crucially, the fixture unit tests assert CORRECTNESS only — never a wall-clock
-floor (the exp3905 poison-test root cause).** The 60s live floor is asserted only on the
-full-corpus science artifacts (exp3916/3917/3920).
+Each downstream task **disk-reads** its upstream artifact and emits
+`blocked_upstream_*` if absent — a skipped upstream costs ONE task, never a
+cascade (the `.340/.361` lesson). No hard `gated_on`.
 
-## 4. New literature folded in (2026-06-07 sweep → `research-references.md`)
+## 4. Architecture / what this milestone touches
 
-- **arXiv:2510.14913** Budget-aware Discriminative Verification — cleanest precedent for
-  the EFFICIENCY axis (single-forward-pass verifier beats generative at fixed compute).
-  Cited in exp3917.
-- **arXiv:2605.17609** Adaptive Generate-Rank-Verify (ADAP) — cost-optimality theory for
-  the cascade router. Cited in exp3918.
-- **arXiv:2605.30290** Self-Trained Verification — quantifies the self-verification blind
-  spot AND the inflated-verifier-score failure mode (ACCURACY axis).
-- **arXiv:2510.13744** Hard2Verify — a harder-than-FoVer step-level moat venue (future
-  corpus extension).
-- **arXiv:2603.04304** V₁ pairwise self-verify — the toughest o1-subsumption threat; a
-  future strong-arm variant for the moat scissor.
-- **arXiv:2604.13717** Cost-effective LLM-as-judge — the EFFICIENCY moving target (beat a
-  cheap ensembled-small-judge, not only a single frontier judge). Cited in exp3917.
-- **arXiv:2603.24621** ARC-AGI-3 official — canonical citation for the exp3919 scaffold.
-- **arXiv:2602.19643** KGHaluBench — graded KG fact testbed for exp3920.
+- `python/carnot/verify/gguf_inference.py` — the `.362` robust harness; reused
+  verbatim by every live-model task.
+- `python/carnot/verify/reasoner_self_verification.py` — the LLM-judge; `.363`
+  ships a competent-judge config (polarity-corrected + boosted prompt + stronger
+  model option).
+- `python/carnot/verify/cost_instrumented_verification.py` — the cost harness;
+  `.363` adds amortized-load exclusion + FLOP/token accounting.
+- `python/carnot/agentic/arc_agi3_harness.py` — the `.362` scaffold; `.363`
+  adds a realistic env + the action-efficiency measurement.
+- `ops/exclusion_manifest.yaml` — `.363` retires the facts/graph-grounding route.
 
-## 5. Self-learning coverage (research-program.md requirement)
+## 5. Hardware requirements
 
-exp3921 (FR-11 v25) is the continuous-self-learning task: Tier-1 online
-independence-reweighting, loading the persisted v24 state (exp3888 landed clean,
-INVARIANT_HELD), continuing on a fresh corpus slice, confirming the learned weighting
-holds the +0.0185 memory-ablation contribution and the frozen 0.9131 across the
-v24→v25 iteration. CPU counter updates (<1µs/update — the Tier-1 hardware path).
+- **2× RTX 3090 (CUDA)** — required for the live LLM-judge runs (exp3925/3926/
+  3928). Every GPU task uses `{project_root}/.venv/bin/python` (bare `python`
+  has no torch → silent CPU drop) and routes inference through the robust
+  `gguf_inference` harness (smoke-before-use + GGUF fallback).
+- **KV260 / PolarFire / GateMate** — opportunistic continuity (north-star §3);
+  KV260 via SSH only (never host SD card). No board blocks a milestone.
 
-## 6. Hardware requirements
+## 6. Invariants (carried from .356-.362)
 
-- **Phase 0/1/3 (exp3915/3916/3917/3920):** 1× RTX 3090 sufficient (the robust harness
-  prefers gemma-4-26B-A4B-it, the cheaper headline-eligible MoE, exactly because the 35B
-  full-offload failed in exp3904). `requires_gpu: true`, `{project_root}/.venv/bin/python`.
-- **Phase 2/4 (exp3918/3919/3921/3923):** CPU-only (aggregation / synthetic env / verifier
-  scoring). Robust by construction.
-- **exp3922 hardware:** GateMate via DirtyJTAG; PolarFire + KV260 via SSH (KV260
-  SSH-not-SD-card discipline). Per-board preconditions — one board down does not fail the task.
+- `paper_ready` stays TRUE (G1-G4 met); FoVer **0.9131 frozen**, never silently
+  substituted.
+- Verifier stays **math-domain-bound** (facts retires this milestone; do not
+  re-test generalization without a new architecture).
+- Never aggregate `flagged_adversarial` artifacts into a headline or capstone.
+- Energy-as-generator is closed-negative (EBT/Route-1/Route-2 bounded) — no
+  generator experiments; the verifier is the surviving asset.
+- No external publication; operator-only.
+- Routing: all tasks `codex` + `requires_codex` + `gpt-5.5` (anti-wipeout;
+  gemini crashes GPU workloads / 429-wiped `.333/.355`; standing operator
+  gemini↔codex flip authority 2026-06-05). GPU tasks add `requires_gpu`.
 
-## 7. Discipline checklist (planner self-audit)
+## 7. Discipline notes specific to .363
 
-- [x] **Gemini-Default / routing:** all tasks `codex` + `requires_codex` + `gpt-5.5`
-      (anti-wipeout; standing operator gemini↔codex flip authority 2026-06-05).
-- [x] **Verdict Terminal-Prefix:** every `honest_verdict` starts `complete:`/`success:`/
-      `blocked_<resource>`.
-- [x] **Failed-Experiment Rerun + Exclusion-Manifest:** `prior_failures` (all 4 sub-fields)
-      on the two scope-matched tasks (exp3916 moat → exp3904/exp3895; exp3920 facts →
-      exp3896/exp3886 with `retire_if_same_verdict: true`). `operator_override` on every
-      task (routine transitions / mandates / continuations).
-- [x] **Pre-Launch Preconditions:** every compute-bound task has a step-0 PRECONDITIONS
-      block with `blocked_<resource>` exits; disk-read fallbacks (no hard `gated_on`).
-- [x] **Principle-Annotated Artifact Fields:** every REQUIRED ARTIFACT FIELD carries a
-      `principle:` line; values emitted BARE (no `{value,principle}` wrapper — exp3871 bug).
-- [x] **Adversarial-Verify / Sample-Size:** live-model artifacts assert `duration_s>=60`
-      on the FULL-CORPUS run (never a fixture); seeds + checksum + model_specs required.
-- [x] **Hardware-Task Continuity:** one consolidated hardware slot (north-star §3
-      opportunistic relaxation).
-- [x] **Self-learning:** exp3921 present (FR-11 v25).
-- [x] **Invariants:** `paper_ready` stays TRUE; frozen 0.9131 never substituted; never
-      aggregate `flagged_adversarial`; EBT replication superseded/dropped; no external
-      publication.
+- **Positive control on every comparison.** The `.362` efficiency flaw was a
+  comparison against a sub-chance baseline. exp3925 ships a validated competent
+  judge BEFORE exp3926/3927 use it; exp3926 asserts the judge AUROC is above a
+  defensible floor before reporting any parity/cost verdict; exp3927 asserts
+  `escalation_fraction > 0` before claiming the cascade works.
+- **Defensible cost.** The 11512× wall-clock ratio is reported alongside a
+  FLOP/token-based ratio with amortized model-load excluded, so the efficiency
+  headline survives adversarial review.
+- **No unit-test wall-clock floor on a fixture** (the `.361` poison-test lesson).
+  The 60 s live-floor is asserted ONLY on full-corpus science artifacts.
+- **Honest nulls are results.** If the competent judge BEATS the energy verifier
+  on accuracy, that is the real finding — and the cascade (escalate close-calls)
+  becomes the deployable story, which must then actually escalate.
 
-## 8. Success criteria for .362
+## 8. New references integrated (see research-references.md, 2026-06-07 sweep)
 
-The milestone succeeds if it produces, on real data and non-flagged:
-1. A clean **moat verdict** (MOAT_SURVIVES / SUBSUMED / INCONCLUSIVE) from a scissor whose
-   inference path actually ran — ending the 3-milestone block.
-2. A clean **efficiency verdict** with a measured `cost_ratio_walltime` — the first-ever
-   "parity at Nx cheaper" number.
-3. A **cascade-router** prototype number (WINS / MARGINAL).
-4. A **green pre-test gate** throughout (poison test quarantined → no SKIP cascade).
-
-A capstone that can finally state `verifier_earns_its_place: <bool>` from measured
-numbers — rather than INCONCLUSIVE for a fourth time — is the milestone's purpose.
+- ARC-AGI-3 Technical Report (arXiv:2603.24621) — action-efficiency scoring,
+  verifier-prioritized domains; THE agentic venue.
+- Executable World Models for ARC-AGI-3 (arXiv:2605.05138).
+- "Know When You're Wrong" (arXiv:2603.06604) — LLM error-detection calibration;
+  the below-chance-judge diagnosis.
+- JudgeRLVR (arXiv:2601.08468); ToolPRMBench (arXiv:2601.12294);
+  CompassVerifier (arXiv:2508.03686).
