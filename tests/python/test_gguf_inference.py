@@ -126,8 +126,8 @@ def test_scenario_infer_sota_023_fallback_chain_records_working_offload(
     from carnot.verify import gguf_inference
 
     ScriptedLlama.attempts = []
-    ScriptedLlama.fail_loads = {("/tmp/gemma.gguf", -1)}
-    ScriptedLlama.empty_smoke_layers = {20}
+    ScriptedLlama.fail_loads = {("/tmp/gemma.gguf", 1)}
+    ScriptedLlama.empty_smoke_layers = {0}
     _install_fake_llama(monkeypatch)
     monkeypatch.setattr(
         gguf_inference,
@@ -138,10 +138,10 @@ def test_scenario_infer_sota_023_fallback_chain_records_working_offload(
     generator, meta = gguf_inference.load_gguf_generator(prefer_order=["gemma-4-26B-A4B-it"])
     text = gguf_inference.generate(generator, "2+3=", max_tokens=4)
 
-    assert [attempt["n_gpu_layers"] for attempt in ScriptedLlama.attempts] == [-1, 20, 0]
+    assert [attempt["n_gpu_layers"] for attempt in ScriptedLlama.attempts] == [1, 0, -1]
     assert meta["model_used"] == "gemma-4-26B-A4B-it"
     assert meta["gguf_path"] == "/tmp/gemma.gguf"
-    assert meta["n_gpu_layers_used"] == 0
+    assert meta["n_gpu_layers_used"] == -1
     assert meta["smoke_tokens"] == 1
     assert meta["fallback_index"] == 0
     assert text.strip()
@@ -180,7 +180,7 @@ def test_scenario_infer_sota_023_runtime_error_names_every_attempt(
     from carnot.verify import gguf_inference
 
     ScriptedLlama.attempts = []
-    ScriptedLlama.fail_loads = {("/tmp/a.gguf", -1), ("/tmp/a.gguf", 20), ("/tmp/a.gguf", 0)}
+    ScriptedLlama.fail_loads = {("/tmp/a.gguf", 1), ("/tmp/a.gguf", 0), ("/tmp/a.gguf", -1)}
     ScriptedLlama.empty_smoke_layers = set()
     _install_fake_llama(monkeypatch)
     monkeypatch.setattr(gguf_inference, "_resolve_candidate_paths", lambda name: ["/tmp/a.gguf"])
@@ -191,7 +191,7 @@ def test_scenario_infer_sota_023_runtime_error_names_every_attempt(
     message = str(exc_info.value)
     assert "blocked_all_gguf_inference_failed" in message
     assert "gemma-4-26B-A4B-it n_gpu_layers=-1" in message
-    assert "gemma-4-26B-A4B-it n_gpu_layers=20" in message
+    assert "gemma-4-26B-A4B-it n_gpu_layers=1" in message
     assert "gemma-4-26B-A4B-it n_gpu_layers=0" in message
 
 

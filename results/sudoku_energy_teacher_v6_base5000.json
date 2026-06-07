@@ -1,0 +1,46 @@
+{
+  "caveat": "DRAFT. Energy selector uses the TRUE sudoku_violations (the perfect scorer); a follow-up should use the LEARNED EBT energy to test a learned teacher. Tiny matched-compute: the ORDERING (energy-taught vs base, and vs gold upper bound) is the result, not absolute solve rates. fast_mode shrinks training for pipeline smoke.",
+  "config": {
+    "K": 32,
+    "distill_lr": 0.0001,
+    "distill_steps": 2000,
+    "temp": 1.0
+  },
+  "duration_s": 1876.9328355789185,
+  "experiment": "sudoku_energy_teacher_v6_draft",
+  "falsification_gates": {
+    "energy_teacher_strong": ">= 50% of the gold-ceiling gap recovered (no labels)",
+    "energy_teacher_works": "energy_distilled > base by >= +0.03 every seed",
+    "gate_retest": "base_energy_gated > base by >= +0.03 (else the in-loop gate is dead)"
+  },
+  "fast_mode": false,
+  "honest_verdict": "complete: energy_teacher_no_lift_dteacher+0.0098_gate_dead+0.0215_goldfrac1.25",
+  "inference_substrate": "live_gpu_training_energy_self_distillation_plus_gate_retest",
+  "mean_delta_energy_teacher": 0.009765625,
+  "mean_delta_gate_retest": 0.021484375,
+  "mean_frac_gold_ceiling_recovered": 1.25,
+  "per_seed": [
+    {
+      "base_energy_gated": 0.06640625,
+      "base_greedy": 0.044921875,
+      "delta_energy_teacher": 0.009765625,
+      "delta_gate_retest": 0.021484375,
+      "energy_certified_yield": 0.07611328125,
+      "energy_distilled_greedy": 0.0546875,
+      "frac_of_gold_ceiling_recovered": 1.25,
+      "gold_ceiling_gap": 0.0078125,
+      "gold_distilled_greedy": 0.052734375,
+      "seed": 0
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "cuda_available"
+    }
+  ],
+  "seeds": [
+    0
+  ],
+  "title": "sudoku_energy_as_teacher_plus_gate_retest"
+}

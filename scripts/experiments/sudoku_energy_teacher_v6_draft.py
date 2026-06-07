@@ -170,13 +170,16 @@ def _self_distill(
 
 
 def run(seeds: list[int], *, fast: bool, n_eval: int, bs: int, K: int, temp: float,
-        distill_steps: int, distill_lr: float, write: bool = True) -> dict:
+        distill_steps: int, distill_lr: float, base_steps: int | None = None,
+        write: bool = True) -> dict:
+    out_path = OUTPUT_PATH if base_steps is None else OUTPUT_PATH.with_name(
+        OUTPUT_PATH.stem + f"_base{base_steps}.json")
     device = "cuda" if torch.cuda.is_available() else "cpu"
     if device != "cuda":
         art = {"experiment": "sudoku_energy_teacher_v6_draft", "honest_verdict": "blocked_no_cuda",
                "inference_substrate": "none_blocked_preflight", "duration_s": 0.0}
         if write:
-            OUTPUT_PATH.write_text(json.dumps(art, indent=2, sort_keys=True) + "\n", "utf-8")
+            out_path.write_text(json.dumps(art, indent=2, sort_keys=True) + "\n", "utf-8")
         return art
 
     started = time.time()
@@ -184,6 +187,8 @@ def run(seeds: list[int], *, fast: bool, n_eval: int, bs: int, K: int, temp: flo
     for seed in seeds:
         torch.manual_seed(seed)
         a = _base_args(seed, fast=fast)
+        if base_steps is not None:
+            a.r_steps = base_steps  # #4 v3: deliberately UNDER-train for headroom
         xtr, ytr = load_split("train", 20000 if fast else 400000, seed)
         xev, yev = load_split("test", n_eval, seed + 1000)
         xtr, ytr, xev, yev = (t.to(device) for t in (xtr, ytr, xev, yev))
@@ -260,7 +265,7 @@ def run(seeds: list[int], *, fast: bool, n_eval: int, bs: int, K: int, temp: flo
         ),
     }
     if write:
-        OUTPUT_PATH.write_text(json.dumps(art, indent=2, sort_keys=True) + "\n", "utf-8")
+        out_path.write_text(json.dumps(art, indent=2, sort_keys=True) + "\n", "utf-8")
     return art
 
 
@@ -274,9 +279,11 @@ def main() -> int:
     ap.add_argument("--temp", type=float, default=1.0)
     ap.add_argument("--distill_steps", type=int, default=2000)
     ap.add_argument("--distill_lr", type=float, default=1e-4)
+    ap.add_argument("--base_steps", type=int, default=None,
+                    help="#4 v3: under-train the base to this many steps for headroom")
     args = ap.parse_args()
     art = run(args.seeds, fast=args.fast, n_eval=args.n_eval, bs=args.bs, K=args.K, temp=args.temp,
-              distill_steps=args.distill_steps, distill_lr=args.distill_lr)
+              distill_steps=args.distill_steps, distill_lr=args.distill_lr, base_steps=args.base_steps)
     print(f"-> {art['honest_verdict']}")
     return 0 if str(art["honest_verdict"]).startswith("complete:") else 1
 
