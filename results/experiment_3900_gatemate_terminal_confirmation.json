@@ -1,0 +1,163 @@
+{
+  "bitstream_path": "",
+  "bitstream_sha256": "",
+  "build_log_paths": [],
+  "command_transcript": [],
+  "dff_used": 0,
+  "duration_s": 0.089863,
+  "experiment": 3900,
+  "field_provenance": {
+    "dff_used": {
+      "principle": "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
+    },
+    "duration_s": {
+      "principle": "Total task wall-clock -- MUST be distinct from run_duration_s (the exp3866 TAUTOLOGY corrigendum)."
+    },
+    "fmax_mhz": {
+      "principle": "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
+    },
+    "gatemate_bitstream_flashed": {
+      "principle": "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
+    },
+    "honest_verdict": {
+      "principle": "Terminal prefix or blocked prefix records whether GateMate can graduate from mandatory to opportunistic hardware continuity."
+    },
+    "inference_substrate": {
+      "principle": "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
+    },
+    "lut_dff_utilization": {
+      "principle": "Real synthesis/P&R numbers anchor the n=16 tile to actual GateMate resources instead of a paper estimate."
+    },
+    "lut_used": {
+      "principle": "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
+    },
+    "no_tautology": {
+      "principle": "BARE BOOL -- total wall-clock and board-run timers are distinct."
+    },
+    "preconditions_checked": {
+      "principle": "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
+    },
+    "readback_supported": {
+      "principle": "Honest record of whether this flow supports readback at all."
+    },
+    "readback_verified": {
+      "principle": "BARE BOOL -- did a JTAG readback confirm the flashed tile matches the bitstream."
+    },
+    "reproducibility_checksum": {
+      "principle": "Hardware-smoke methodology -- real board interaction; terminal-state evidence."
+    },
+    "run_duration_s": {
+      "principle": "On-board run time only -- distinct timer."
+    },
+    "sample_timing_basis": {
+      "principle": "Explains the timing basis so a routed clock estimate is not confused with a host-visible sampler transcript."
+    },
+    "sample_timing_note": {
+      "principle": "Explains why sample_timing_us is null when the board can be flashed but the programmed design has no supported host-visible timing path."
+    },
+    "sample_timing_us": {
+      "principle": "Sample-level one-clock spin-update timing derived from routed Fmax; this is not host readback latency."
+    },
+    "smoke_ok": {
+      "principle": "BARE BOOL -- the flash/contact smoke stage completed with board-visible success evidence."
+    },
+    "synth_pnr_pack_succeeded": {
+      "principle": "Bare bool -- the toolchain end-to-end produced a bitstream, separable from the flash step."
+    },
+    "terminal_state_reached": {
+      "principle": "BARE BOOL -- flashed + smoke + readback-or-unsupported + no-tautology; the graduation signal."
+    },
+    "thermal_note": {
+      "principle": "GateMate is passively cooled, so the artifact must disclose that burst smoke results are not sustained-load thermal evidence."
+    }
+  },
+  "fmax_mhz": null,
+  "gatemate_bitstream_flashed": false,
+  "honest_verdict": "blocked_gatemate_board_unreachable",
+  "inference_substrate": "hardware_smoke",
+  "lut_dff_utilization": null,
+  "lut_used": 0,
+  "model_specs": {
+    "device": "CCGM1A1",
+    "n_spins": 16,
+    "rtl_path": "rtl/gatemate_ising_n16.v",
+    "rtl_top": "gatemate_ising_n16"
+  },
+  "no_tautology": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "blocker": "",
+      "command": "command -v nextpnr-himbaechel && command -v yosys && command -v openFPGALoader",
+      "detail": {
+        "nextpnr-himbaechel": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+        "openFPGALoader": "/opt/oss-cad-suite/bin/openFPGALoader",
+        "yosys": "/opt/oss-cad-suite/bin/yosys"
+      },
+      "resource": "gatemate_toolchain"
+    },
+    {
+      "available": true,
+      "blocker": "",
+      "command": "command -v yosys && yosys -V && yosys -Q -p 'help synth_gatemate'",
+      "detail": "ell $_DFFE_????_ 01 -cell $_DLATCH_???_ 01\n        techmap -map +/gatemate/reg_map.v\n        opt_expr -mux_undef\n        simplemap\n        opt_clean\n\n    map_muxs:\n        muxcover  -mux4 -mux8\n        opt -full\n        simplemap\n        techmap -map +/gatemate/mux_map.v\n\n    map_luts:\n        abc  -genlib +/gatemate/lut_tree_cells.genlib    (with -luttree)\n        techmap -map +/gatemate/lut_tree_map.v    (with -luttree)\n        gatemate_foldinv    (with -luttree)\n        techmap -map +/gatemate/inv_map.v    (with -luttree)\n        abc  -dress -lut 4    (without -luttree)\n        clean\n\n    map_cells:\n        techmap -map +/gatemate/lut_map.v\n        clean\n\n    map_bufg:    (skip if '-noclkbuf')\n        clkbufmap -buf CC_BUFG O:I\n        clean\n\n    check:\n        hierarchy -check\n        stat -width\n        check -noinit\n        blackbox =A:whitebox\n\n    vlog:\n        opt_clean -purge\n        write_verilog -noattr <file-name>\n\n    json:\n        write_json <file-name>\n\nEnd of script. Logfile hash: ce4836ed80, time: 0.00s, user: 0.00s, system: 0.00s, MEM: 182.16 MB peak\nYosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)\nTime spent: 99% 1x help (0 sec), 0% 0x id_gc (0 sec)",
+      "path": "/opt/oss-cad-suite/bin/yosys",
+      "resource": "yosys",
+      "synth_gatemate_returncode": 0,
+      "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+      "version_returncode": 0
+    },
+    {
+      "available": true,
+      "blocker": "",
+      "command": "command -v nextpnr-himbaechel && nextpnr-himbaechel --help",
+      "detail": "               enable experimental timing-driven ripup\n                                        in router\n  --router2-tmg-ripup                   enable experimental timing-driven ripup\n                                        in router (deprecated; use --tmg-ripup \n                                        instead)\n  --router2-alt-weights                 use alternate router2 weights\n  --report arg                          write timing and utilization report in \n                                        JSON format to file\n  --detailed-timing-report              Append detailed net timing data to the \n                                        JSON report\n  --placed-svg arg                      write render of placement to SVG file\n  --routed-svg arg                      write render of routing to SVG file\n\nArchitecture specific options:\n  --device arg                          name of device to use\n  --chipdb arg                          override path to chip database file\n  --list-uarch                          list included uarches\n  -o [ --vopt ] arg                     options to pass to the himb\u00e4chel uarch\n                                        (use help as argument to get more info)",
+      "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+      "resource": "nextpnr-himbaechel",
+      "returncode": 0
+    },
+    {
+      "available": true,
+      "blocker": "",
+      "command": "command -v gmpack",
+      "detail": "/opt/oss-cad-suite/bin/gmpack",
+      "path": "/opt/oss-cad-suite/bin/gmpack",
+      "resource": "gmpack"
+    },
+    {
+      "available": true,
+      "blocker": "",
+      "command": "command -v openFPGALoader",
+      "detail": "/opt/oss-cad-suite/bin/openFPGALoader",
+      "path": "/opt/oss-cad-suite/bin/openFPGALoader",
+      "resource": "openFPGALoader"
+    },
+    {
+      "available": false,
+      "blocker": "blocked_gatemate_board_not_detected",
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "detail": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "resource": "gatemate_board_detect",
+      "returncode": 0
+    }
+  ],
+  "prior_corrigendum_artifact": "results/experiment_3889_gatemate_continuity_corrigendum.json",
+  "prior_corrigendum_sha256": "ef34717dfc35e16da4c4eb5c7c2014828adaec80cbc5bea6c9985fcf1d6dfc75",
+  "random_seed": 41442,
+  "readback_attempted": false,
+  "readback_reason": "not attempted: precondition or RTL failure",
+  "readback_sha256": "",
+  "readback_supported": false,
+  "readback_verified": false,
+  "reproducibility_checksum": "2479c3c7b0a6108aeffdcae7f91c92ddaccd233eded7710414bbfa57f5734b65",
+  "run_date": "20260607",
+  "run_duration_s": 0.0,
+  "sample_timing_basis": "unavailable_no_fmax",
+  "sample_timing_note": "No supported GateMate host-visible readback/timing path is present for this DirtyJTAG-flashed RTL; sample_timing_us is null and not fabricating timing.",
+  "sample_timing_us": null,
+  "smoke_ok": false,
+  "soc_temp_max_c": null,
+  "synth_pnr_pack_succeeded": false,
+  "terminal_state_reached": false,
+  "thermal_note": "passively cooled; no active fan; sustained-load results may differ from production with active cooling"
+}
