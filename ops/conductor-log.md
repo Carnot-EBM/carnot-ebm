@@ -7946,3 +7946,4 @@ ERROR: {
  |
 | 2026-06-07 00:55 UTC | EBT FUNDAMENTAL adversarial REPLICATION (2 fresh s | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: remains stable |
 | 2026-06-07 01:24 UTC | BUILD + UNIT-TEST the reasoner-self-verification h | OK | 88 passed in 60.28s (0:01:00) |
+| 2026-06-07 02:18 UTC | MOAT SCISSOR IN-DISTRIBUTION with the TESTED harne | OK | 101 passed in 4.73s |
