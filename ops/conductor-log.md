@@ -8009,3 +8009,5 @@ c |
 | 2026-06-07 11:57 UTC | FR-11 continuous self-learning v25 (research-progr | OK | 88 passed in 4.17s |
 | 2026-06-07 12:43 UTC | Hardware continuity (consolidated) — GateMate term | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-07 12:57 UTC | Capstone .362 — the VERIFIER SCORECARD (finally on | OK | 86 passed in 3.39s |
+| 2026-06-07 15:37 UTC | Plan milestone 2026.06.363 | OK | 10 tasks proposed |
+| 2026-06-07 15:40 UTC | Milestone 2026.06.363 activated | OK | 10 tasks queued |
