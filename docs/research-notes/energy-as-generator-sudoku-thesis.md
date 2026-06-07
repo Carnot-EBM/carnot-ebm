@@ -374,3 +374,30 @@ distillation harness. Neither result disturbs the headline: energy's dominant,
 demonstrated value is as the cheap verifier (the moat + efficiency panel), and the
 verify<<generate asymmetry stands -- in-loop gating helps a little, descent/rerank
 do not, and energy-as-teacher is still unproven.
+
+### v6 #4 v2 update (fixed harness) — energy-as-teacher is HEADROOM-bounded, 2026-06-07
+
+The v1 #4 collapse was a harness bug (gold control fell too). v2 fixed it: deep-
+supervision-preserving distillation + a frozen-base anti-forgetting anchor (no gold)
++ K=32. Result on the fair 18% base:
+
+| arm | solve | delta |
+|---|---|---|
+| base_greedy | 0.1758 | — |
+| base_energy_gated (#3) | 0.1934 | +0.0176 |
+| energy_distilled (#4) | 0.1680 | -0.0078 |
+| gold_distilled (UB) | 0.1621 | -0.0137 |
+
+Certified yield rose 4.6% -> **62.9%** (K=32) and the collapse is gone -- so energy
+has abundant certified self-data and a sane harness. Yet energy gives no lift. The
+decisive point: **the gold upper bound ALSO fails to beat base** (-1.4%), because
+the base is already trained to convergence on gold (15k deep-supervised steps) ->
+gold-SATURATED -> NO HEADROOM for any teacher. This is the **P0.1 lesson again**:
+energy-as-selection was bounded by SC-near-ceiling; energy-as-teacher is bounded by
+a base-at-its-compute-ceiling. Energy's generative value is gated by HEADROOM
+everywhere. The only surviving generative contribution is the in-loop gate (#3,
++1.8% robust) -- a different mechanism (inference-time pruning of residual local
+errors, not teaching). A truly fair #4 would need a deliberately UNDER-trained base
+(real headroom) and ask whether energy-RFT recovers a fraction of the gold-SFT lift
+-- but the strong cross-experiment prior is now that energy helps only where headroom
+exists, and a saturated model offers none.

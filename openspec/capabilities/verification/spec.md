@@ -11244,7 +11244,8 @@ AUROC with score polarity flipped. It SHALL set `diagnosed_cause` to one of
 For runnable inputs, the runner SHALL load the live judge only through
 `carnot.verify.gguf_inference.load_gguf_generator(...)`, preferring
 `Qwen3.6-35B-A3B`, then `gemma-4-31B-it`, then `gemma-4-26B-A4B-it`, with the
-harness fallback handling reduced GPU offload levels. It SHALL run an
+harness fallback handling full, reduced, or CPU offload levels rather than
+forcing a CPU-only load. It SHALL run an
 approximately twelve-row separable positive-control fixture with standalone
 correct and incorrect arithmetic/logic steps, record raw model outputs, parse
 rates, fixture AUROC, model provenance, random seed, reproducibility checksum,

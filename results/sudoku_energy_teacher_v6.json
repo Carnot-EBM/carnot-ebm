@@ -1,12 +1,12 @@
 {
   "caveat": "DRAFT. Energy selector uses the TRUE sudoku_violations (the perfect scorer); a follow-up should use the LEARNED EBT energy to test a learned teacher. Tiny matched-compute: the ORDERING (energy-taught vs base, and vs gold upper bound) is the result, not absolute solve rates. fast_mode shrinks training for pipeline smoke.",
   "config": {
-    "K": 16,
+    "K": 32,
     "distill_lr": 0.0001,
     "distill_steps": 2000,
     "temp": 1.0
   },
-  "duration_s": 3583.0423147678375,
+  "duration_s": 3713.883656024933,
   "experiment": "sudoku_energy_teacher_v6_draft",
   "falsification_gates": {
     "energy_teacher_strong": ">= 50% of the gold-ceiling gap recovered (no labels)",
@@ -14,22 +14,22 @@
     "gate_retest": "base_energy_gated > base by >= +0.03 (else the in-loop gate is dead)"
   },
   "fast_mode": false,
-  "honest_verdict": "complete: energy_teacher_no_lift_dteacher-0.1406_gate_dead+0.0254_goldfrac0.00",
+  "honest_verdict": "complete: energy_teacher_no_lift_dteacher-0.0078_gate_dead+0.0176_goldfrac0.00",
   "inference_substrate": "live_gpu_training_energy_self_distillation_plus_gate_retest",
-  "mean_delta_energy_teacher": -0.140625,
-  "mean_delta_gate_retest": 0.025390625,
+  "mean_delta_energy_teacher": -0.0078125,
+  "mean_delta_gate_retest": 0.017578125,
   "mean_frac_gold_ceiling_recovered": 0.0,
   "per_seed": [
     {
-      "base_energy_gated": 0.185546875,
-      "base_greedy": 0.16015625,
-      "delta_energy_teacher": -0.140625,
-      "delta_gate_retest": 0.025390625,
-      "energy_certified_yield": 0.04563671875,
-      "energy_distilled_greedy": 0.01953125,
+      "base_energy_gated": 0.193359375,
+      "base_greedy": 0.17578125,
+      "delta_energy_teacher": -0.0078125,
+      "delta_gate_retest": 0.017578125,
+      "energy_certified_yield": 0.628673828125,
+      "energy_distilled_greedy": 0.16796875,
       "frac_of_gold_ceiling_recovered": null,
-      "gold_ceiling_gap": -0.02734375,
-      "gold_distilled_greedy": 0.1328125,
+      "gold_ceiling_gap": -0.013671875,
+      "gold_distilled_greedy": 0.162109375,
       "seed": 0
     }
   ],
