@@ -39,3 +39,9 @@
 
 ### SCENARIO-DECISION-ARTIFACT-GENERATION
 **Description:** Running the decision script outputs a valid carnot.phase4_canonical_decision.v2 JSON artifact confirming the retirement of thermodynamic metrics.
+
+### REQ-PHASE4-006: ARC-AGI-3 Synthetic Harness Scaffold
+**Description:** The system SHALL provide an importable ARC-AGI-3 harness scaffold that runs without GPU or live model dependencies, checks `import carnot.verify` before declaring readiness, exposes a tiny synthetic grid environment, encodes observations into verifier inputs, uses the cheap energy verifier as a verifier-as-router score for candidate actions, prunes low-scoring actions, escalates only when all candidates score poorly, and records that the scaffold is synthetic rather than a real ARC-AGI-3 benchmark result.
+
+### SCENARIO-PHASE4-006
+**Description:** Running the scaffold on the tiny synthetic grid task selects the verifier-preferred action, prunes at least one low-scoring candidate, solves the task, writes the Exp 3919 readiness artifact with bare scalar readiness fields, and reports no ARC-AGI-3 benchmark performance claim.
