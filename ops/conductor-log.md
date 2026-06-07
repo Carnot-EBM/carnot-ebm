@@ -8007,3 +8007,4 @@ ERROR: {
 c |
 | 2026-06-07 11:42 UTC | FACTS graph-grounding verifier — LAST DISCIPLINED  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-07 11:57 UTC | FR-11 continuous self-learning v25 (research-progr | OK | 88 passed in 4.17s |
+| 2026-06-07 12:43 UTC | Hardware continuity (consolidated) — GateMate term | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
