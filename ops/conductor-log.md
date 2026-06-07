@@ -7999,3 +7999,4 @@ ERROR: {
 | 2026-06-07 09:22 UTC | EFFICIENCY axis — energy-verifier vs LLM-as-judge  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: cript
 +
 +    c |
+| 2026-06-07 09:38 UTC | EFFICIENCY axis — energy-verifier vs LLM-as-judge  | OK | cache hit: 100 passed in 4.99s |
