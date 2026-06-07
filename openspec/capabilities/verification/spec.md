@@ -11292,6 +11292,88 @@ duration.
 |---|---|---|
 | REQ-VERIFY-3925 | Implemented (`python/carnot/verify/competent_llm_judge.py`, `scripts/experiments/experiment_3925_competent_judge_build.py`) | Implemented (`tests/python/test_competent_llm_judge.py`) |
 
+### REQ-VERIFY-3926: Valid Efficiency Head-To-Head Versus Competent Judge
+
+The repository SHALL provide an Exp 3926 efficiency head-to-head runner at
+`python/carnot/eval/valid_efficiency_head_to_head_3926.py` and
+`scripts/experiments/experiment_3926_valid_efficiency_head_to_head.py` that
+writes `results/experiment_3926_valid_efficiency_head_to_head.json`. The
+runner SHALL compare the Exp 3884 in-distribution energy-verifier scores
+against an LLM judge backed by the Exp 3925 competent judge module on the same
+Exp 3884 labels and item order, using the Exp 3905 cost instrumentation for
+both verifier paths.
+
+Before scoring, the runner SHALL verify CUDA with the repository virtualenv
+Python, verify that
+`results/experiment_3925_competent_judge_build.json` exists with
+`unit_test_passed=true` and `fixture_auroc > 0.65`, verify that
+`python/carnot/verify/cost_instrumented_verification.py` imports, and verify
+that Exp 3884 provides at least 200 labeled corpus items. Failed hard
+preconditions SHALL write a terminal `blocked_<resource>` artifact without
+fabricated accuracy, parity, positive-control, or cost-ratio claims.
+
+For runnable inputs, the runner SHALL score the energy verifier and competent
+LLM judge through Exp 3905 `measure_verification_cost(...)`, excluding
+amortized model-load from per-item costs. The LLM judge SHALL call
+`carnot.verify.competent_llm_judge.judge_step(item, generator)` with a live
+generator loaded from the Exp 3925 comparator configuration. The runner SHALL
+record AUROC, the competent judge bootstrap CI95, total wall time, per-item
+wall milliseconds, estimated tokens, and estimated FLOPs for both verifiers.
+
+The runner SHALL apply a positive control on this corpus before any parity
+verdict: `judge_positive_control_passed` SHALL be true only when
+`llm_judge_auroc > 0.6`. If the competent judge fails that gate, the runner
+SHALL emit `blocked_competent_judge_failed_positive_control_on_corpus` and
+SHALL NOT report a parity or Pareto win. If the completed full-corpus run has
+`duration_s < 60`, the runner SHALL emit `blocked_llm_judge_not_invoked`.
+
+The terminal artifact SHALL include bare top-level fields `energy_auroc`,
+`llm_judge_auroc`, `judge_positive_control_passed`, `accuracy_parity`,
+`pareto_dominates`, `cost_ratio_walltime`, `cost_ratio_flops`,
+`energy_per_item_ms`, `llm_per_item_ms`, `judge_model_used`, `n_items`,
+`corpus_source`, `preconditions_checked`, `model_specs`, `random_seed`,
+`random_seeds_used`, `reproducibility_checksum`, `duration_s`,
+`inference_substrate`, and `honest_verdict`, with field-principle strings and
+no `{value, principle}` wrappers around bare metric fields.
+
+The falsification gate SHALL emit
+`complete: efficiency_VALID_EARNS_PLACE_energy<ea>_judge<la>_<ratio>x_cheaper_pareto<bool>_vs_competent_judge`
+when `judge_positive_control_passed=true`, either `accuracy_parity=true` or
+`pareto_dominates=true`, and `cost_ratio_walltime > 10`. It SHALL emit
+`complete: efficiency_CHEAPER_<ratio>x_but_JUDGE_MORE_ACCURATE_energy<ea>_judge<la>_cascade_is_the_story`
+when the positive control passes, the energy verifier is more than 10x cheaper,
+and neither parity nor Pareto dominance holds. It SHALL emit
+`complete: efficiency_INCONCLUSIVE_<which_failed>` when the positive control
+fails or the wall-time ratio is not above 10.
+
+### SCENARIO-VERIFY-3926: Competent-Judge Efficiency Comparison Writes Honest Artifact
+
+Given CUDA is available, Exp 3925 reports a competent judge with
+`unit_test_passed=true` and `fixture_auroc > 0.65`, Exp 3905 cost
+instrumentation imports, and Exp 3884 provides at least 200 labeled items, when
+Exp 3926 runs, then it evaluates the energy verifier and competent LLM judge on
+the same Exp 3884 labels, records the judge positive-control result on that
+corpus before any parity verdict, records per-item latency and FLOP ratios,
+enforces the 60-second full-corpus duration floor, and chooses the terminal
+verdict from the positive-control, parity-or-Pareto, and cost-ratio gates.
+
+### SCENARIO-VERIFY-3926-BLOCKED: Missing Or Failed Comparator Gates Do Not Fabricate Efficiency Claims
+
+Given CUDA, the Exp 3925 competent-judge artifact, Exp 3905 cost
+instrumentation, the Exp 3884 corpus, the judge positive control on that
+corpus, or the full-corpus duration floor is unavailable, when Exp 3926 runs,
+then it writes `results/experiment_3926_valid_efficiency_head_to_head.json`
+with a terminal `blocked_<resource>` honest verdict, populated precondition
+evidence, null accuracy and cost-ratio metrics when the run did not score the
+corpus, no parity or Pareto claim against a broken judge, and a measured
+duration.
+
+## Implementation Status (REQ-VERIFY-3926)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3926 | Planned (`python/carnot/eval/valid_efficiency_head_to_head_3926.py`, `scripts/experiments/experiment_3926_valid_efficiency_head_to_head.py`) | Planned (`tests/python/test_experiment_3926_valid_efficiency_head_to_head.py`) |
+
 ### REQ-VERIFY-3905: Cost-Instrumented Verifier Harness
 
 The repository SHALL provide `python/carnot/verify/cost_instrumented_verification.py`

@@ -431,3 +431,45 @@ doesn't -- the same law as P0.1/energy-as-selection. The one robust generative
 positive across all runs is the in-loop GATE (#3, +1.8 to +2.5%), a distinct
 inference-time error-pruning mechanism, not teaching. A DECISIVE #4 v4 would need
 more headroom (lower base_steps), 3+ seeds, and larger n_eval for tight CIs.
+
+### v6 #4 v4 (DECISIVE, 3 seeds, n_eval=2000) — energy TEACHES, and BEATS gold-SFT. LINE RETIRED.
+
+The decisive replication of #4 v3 (under-trained 5% base, real headroom), 3 seeds,
+n_eval=2000 (per-seed SE ~0.5%), distill 3000 steps, K=32.
+
+| arm | mean delta | per-seed | 
+|---|---|---|
+| #3 in-loop gate | +0.0217 | +0.020/+0.023/+0.022 |
+| #4 energy-teacher (NO labels) | +0.0112 | +0.006/+0.016/+0.0115 |
+| gold-SFT (control) | -0.0042 | -0.008/+0.001/-0.0055 |
+
+**DECISIVE POSITIVES (both energy generative modes):**
+1. #3 in-loop feasibility gate: +2.2%, 3/3 seeds, tight -- robustly real.
+2. #4 energy-as-teacher: +1.1%, 3/3 seeds positive (~2 SE/seed) -- SIGNIFICANT, and
+   it BEAT the gold-SFT control (-0.4%). The energy VERIFIER (no labels) taught the
+   generator BETTER than raw gold supervision.
+
+**Why energy > gold (the strategic point).** Gold-SFT pushes an under-trained model
+toward hard true answers off its own distribution (high-variance, no greedy gain).
+Energy-RFT trains on the model's OWN verifier-certified-correct samples -- on-
+distribution and learnable ("reinforce what you already get right"). That is the
+STaR/RFT mechanism, and this shows **Carnot's energy verifier can be the correctness
+filter that drives generator self-improvement -- out-performing labels on an under-
+trained base.** Direct evidence for verifier-as-self-improvement-reward (the Phase-3
+/ foundation-model thesis).
+
+**REVISED conclusion for the whole line (energy-as-generator, RETIRED 2026-06-07).**
+The earlier "energy verifies, does not generate" was too strong. Corrected: energy's
+DECISIVE, large value is verification (the moat + efficiency panel). But energy is
+NOT useless for generation -- used correctly it adds real, modest, headroom-gated
+value via TWO mechanisms: (a) an in-loop feasibility GATE at inference (+2.2%), and
+(b) as an RFT TEACHER that self-improves a generator from its own certified samples,
+beating labels where the base has headroom (+1.1%). What FAILS is the naive route:
+energy DESCENT (0.000) and energy RERANK (hurts). The unifying law is HEADROOM:
+energy aids generation only where headroom exists (v2 saturated base -> null; v3/v4
+headroom -> positive), the same law as P0.1/energy-as-selection. Caveats: tiny toy
+(Sudoku), small absolute effects (the ORDERING is the result), gold-SFT-continuation
+is a weak label-ceiling (not the best possible use of labels), single task. The
+headline is unchanged and strengthened: Carnot is the verifier -- and the verifier
+can also bootstrap a generator. Line retired; the verifier-as-self-improvement-reward
+result is the forward hook (scale from this Sudoku proxy to the ensemble-on-reasoning).

@@ -1,0 +1,72 @@
+{
+  "caveat": "DRAFT. Energy selector uses the TRUE sudoku_violations (the perfect scorer); a follow-up should use the LEARNED EBT energy to test a learned teacher. Tiny matched-compute: the ORDERING (energy-taught vs base, and vs gold upper bound) is the result, not absolute solve rates. fast_mode shrinks training for pipeline smoke.",
+  "config": {
+    "K": 32,
+    "distill_lr": 0.0001,
+    "distill_steps": 3000,
+    "temp": 1.0
+  },
+  "duration_s": 7063.749633312225,
+  "experiment": "sudoku_energy_teacher_v6_draft",
+  "falsification_gates": {
+    "energy_teacher_strong": ">= 50% of the gold-ceiling gap recovered (no labels)",
+    "energy_teacher_works": "energy_distilled > base by >= +0.03 every seed",
+    "gate_retest": "base_energy_gated > base by >= +0.03 (else the in-loop gate is dead)"
+  },
+  "fast_mode": false,
+  "honest_verdict": "complete: energy_teacher_no_lift_dteacher+0.0112_gate_dead+0.0217_goldfrac16.00",
+  "inference_substrate": "live_gpu_training_energy_self_distillation_plus_gate_retest",
+  "mean_delta_energy_teacher": 0.011166666666666665,
+  "mean_delta_gate_retest": 0.021666666666666667,
+  "mean_frac_gold_ceiling_recovered": 15.999999999999986,
+  "per_seed": [
+    {
+      "base_energy_gated": 0.0755,
+      "base_greedy": 0.0555,
+      "delta_energy_teacher": 0.005999999999999998,
+      "delta_gate_retest": 0.019999999999999997,
+      "energy_certified_yield": 0.08034635416666666,
+      "energy_distilled_greedy": 0.0615,
+      "frac_of_gold_ceiling_recovered": null,
+      "gold_ceiling_gap": -0.008,
+      "gold_distilled_greedy": 0.0475,
+      "seed": 0
+    },
+    {
+      "base_energy_gated": 0.0695,
+      "base_greedy": 0.0465,
+      "delta_energy_teacher": 0.016,
+      "delta_gate_retest": 0.023000000000000007,
+      "energy_certified_yield": 0.07823567708333333,
+      "energy_distilled_greedy": 0.0625,
+      "frac_of_gold_ceiling_recovered": 15.999999999999986,
+      "gold_ceiling_gap": 0.0010000000000000009,
+      "gold_distilled_greedy": 0.0475,
+      "seed": 1
+    },
+    {
+      "base_energy_gated": 0.084,
+      "base_greedy": 0.062,
+      "delta_energy_teacher": 0.011499999999999996,
+      "delta_gate_retest": 0.022000000000000006,
+      "energy_certified_yield": 0.09258072916666667,
+      "energy_distilled_greedy": 0.0735,
+      "frac_of_gold_ceiling_recovered": null,
+      "gold_ceiling_gap": -0.005499999999999998,
+      "gold_distilled_greedy": 0.0565,
+      "seed": 2
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "cuda_available"
+    }
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "title": "sudoku_energy_as_teacher_plus_gate_retest"
+}
