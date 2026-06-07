@@ -7963,3 +7963,4 @@ ERROR: {
 | 2026-06-07 03:45 UTC | Capstone .360 — aggregate the harness-first verdic | OK | 87 passed in 4.89s |
 | 2026-06-07 04:19 UTC | Plan milestone 2026.06.361 | OK | 11 tasks proposed |
 | 2026-06-07 04:21 UTC | Milestone 2026.06.361 activated | OK | 11 tasks queued |
+| 2026-06-07 04:36 UTC | Archive .360 -> activate .361; GREEN-GATE de-risk: | OK | 109 passed in 4.64s |
