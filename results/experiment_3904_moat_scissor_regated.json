@@ -1,0 +1,119 @@
+{
+  "carnot_ensemble_auroc": null,
+  "corpus_source": {
+    "artifact_path": "results/experiment_3884_in_distribution_error_rich_corpus.json",
+    "artifact_sha256": "62e61ce38b44f666544df9b5be50b75b0dfb3abcc4c182f52c07a2888c59afba",
+    "corpus_path": "data/in_distribution_error_corpus_v1.json",
+    "corpus_sha256": "da242cfc7db8643aff116153a6b75b45586aa93703932f7db9dc7372c2c6bb26",
+    "exp3884_recorded_carnot_ensemble_auroc_on_corpus": 0.9666888888888889,
+    "n_incorrect_steps": 150,
+    "n_items": 300,
+    "per_item_ensemble_scores_path": "results/experiment_3884_in_distribution_error_rich_corpus_scores.json",
+    "scores_sha256": "a1b22b944b0736c7bfb43fe5582e763456053ea0bbbed899f5507808e4e92b1a"
+  },
+  "duration_s": 252.93368577957153,
+  "error_overlap_jaccard_strong": null,
+  "error_overlap_jaccard_weak": null,
+  "experiment": 3904,
+  "field_principles": {
+    "carnot_ensemble_auroc": "Positive control - in-band by the exp3884 corpus; must be non-degenerate (>=0.65).",
+    "corpus_source": "Pre-Launch + Adversarial-Verify - a live 35B GGUF run over 2 arms takes real wall-clock (live floor 60s); implausibly short = fabrication.",
+    "duration_s": "Pre-Launch + Adversarial-Verify - a live 35B GGUF run over 2 arms takes real wall-clock (live floor 60s); implausibly short = fabrication.",
+    "error_overlap_jaccard_strong": "Independence - low overlap => different null spaces (the moat); high => redundant.",
+    "error_overlap_jaccard_weak": "Independence - low overlap => different null spaces (the moat); high => redundant.",
+    "harness_fixture_auroc": "The harness-validity control (from exp3894); >0.6 means the judge harness is sound - this replaces the in-distribution reasoner AUROC as the control.",
+    "harness_source": "Pre-Launch + Adversarial-Verify - a live 35B GGUF run over 2 arms takes real wall-clock (live floor 60s); implausibly short = fabrication.",
+    "inference_substrate": "Pre-Launch + Adversarial-Verify - a live 35B GGUF run over 2 arms takes real wall-clock (live floor 60s); implausibly short = fabrication.",
+    "model_specs": "Pre-Launch + Adversarial-Verify - a live 35B GGUF run over 2 arms takes real wall-clock (live floor 60s); implausibly short = fabrication.",
+    "n_items": "Pre-Launch + Adversarial-Verify - a live 35B GGUF run over 2 arms takes real wall-clock (live floor 60s); implausibly short = fabrication.",
+    "n_residual_errors_strong": "Size of set B for the strong arm; the residual CI is meaningful only if >=30.",
+    "n_residual_errors_weak": "Size of set B for the weak arm; the residual CI is meaningful only if >=30.",
+    "preconditions_checked": "Pre-Launch + Adversarial-Verify - a live 35B GGUF run over 2 arms takes real wall-clock (live floor 60s); implausibly short = fabrication.",
+    "random_seed": "Pre-Launch + Adversarial-Verify - a live 35B GGUF run over 2 arms takes real wall-clock (live floor 60s); implausibly short = fabrication.",
+    "random_seeds_used": "Pre-Launch + Adversarial-Verify - a live 35B GGUF run over 2 arms takes real wall-clock (live floor 60s); implausibly short = fabrication.",
+    "reasoner_auroc_strong": "FINDING: boosted self-verify AUROC - how much prompting recovers; the moat is durable iff it survives even this.",
+    "reasoner_auroc_weak": "FINDING (not a control): weak self-verify AUROC in-distribution - near chance corroborates the Self-Correction Illusion.",
+    "reproducibility_checksum": "Pre-Launch + Adversarial-Verify - a live 35B GGUF run over 2 arms takes real wall-clock (live floor 60s); implausibly short = fabrication.",
+    "residual_catch_ci95_strong": "Bootstrap CI95 on the strong arm - the conservative gate.",
+    "residual_catch_ci95_weak": "Bootstrap CI95 on the weak arm - the gate is on the lower bound.",
+    "residual_catch_rate_strong": "Moat metric on the STRONG boosted self-verify arm - the moat must survive a competent self-verifier, not only a weak one.",
+    "residual_catch_rate_weak": "THE moat metric on the WEAK arm - of the reasoner's MISSED errors, the fraction Carnot independently catches."
+  },
+  "harness_fixture_auroc": null,
+  "harness_source": {
+    "artifact_path": "results/experiment_3894_reasoner_self_verify_harness.json",
+    "artifact_sha256": "c13590df8aca1b9aa9eb1078e3a9f14089c5cd2b7b8550189a70705edc7ef52f",
+    "fixture_auroc": 0.9166666666666666,
+    "fixture_n_caught": 6,
+    "harness_module_path": "python/carnot/verify/reasoner_self_verification.py",
+    "harness_module_sha256": "70028f2bf5e7be58c993dd31ecb9157580e34fd386ef9235bae9e0eb9c6b80c2",
+    "honest_verdict": "complete: reasoner_self_verify_harness_READY_fixture_auroc0.9167_ncaught6_moat_scissor_can_run",
+    "unit_test_passed": true
+  },
+  "honest_verdict": "blocked_llama_cpp_inference_failed",
+  "inference_substrate": "none_blocked_preflight",
+  "model_specs": {
+    "fallback_used": false,
+    "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "loader": "llama_cpp.Llama",
+    "max_tokens": 96,
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "n_batch": 64,
+    "n_ctx": 1024,
+    "n_gpu_layers": -1,
+    "offload_kqv": true
+  },
+  "n_gold_incorrect": 0,
+  "n_items": 0,
+  "n_residual_errors_strong": 0,
+  "n_residual_errors_weak": 0,
+  "per_step_results": [],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "returncode=0",
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "resource": "qwen3.6_35b_gguf_cached"
+    },
+    {
+      "available": true,
+      "detail": "import carnot.verify OK",
+      "resource": "carnot_verify_import"
+    },
+    {
+      "available": true,
+      "detail": "import llama_cpp OK",
+      "resource": "llama_cpp_import"
+    },
+    {
+      "available": true,
+      "detail": "fixture_auroc=0.9166666666666666",
+      "resource": "exp3894_harness_ready"
+    },
+    {
+      "available": true,
+      "detail": "items=300 incorrect=150 recorded_auroc=0.9666888888888889",
+      "resource": "exp3884_corpus_in_band"
+    },
+    {
+      "available": false,
+      "detail": "ValueError('Requested tokens (1102) exceed context window of 1024')",
+      "resource": "tested_harness_inference"
+    }
+  ],
+  "random_seed": null,
+  "random_seeds_used": {},
+  "reasoner_auroc_strong": null,
+  "reasoner_auroc_weak": null,
+  "reproducibility_checksum": "981d7529b9a09f7081471277d607d3e305b6422f72aa2eedf18cbfd77727cb17",
+  "residual_catch_ci95_strong": null,
+  "residual_catch_ci95_weak": null,
+  "residual_catch_rate_strong": null,
+  "residual_catch_rate_weak": null,
+  "status": "blocked_llama_cpp_inference_failed",
+  "title": "moat_scissor_regated"
+}

@@ -10898,6 +10898,96 @@ metrics, zero item counts, no per-step score claims, and a measured duration.
 |---|---|---|
 | REQ-VERIFY-3895 | Implemented (`python/carnot/eval/moat_scissor_tested_harness.py`, `scripts/experiments/experiment_3895_moat_scissor_tested_harness.py`) | Implemented (`tests/python/test_experiment_3895_moat_scissor_tested_harness.py`) |
 
+### REQ-VERIFY-3904: Regated Tested-Harness Moat Scissor With Strong Self-Verify Arm
+
+The repository SHALL provide an Exp 3904 moat-scissor runner that writes
+`results/experiment_3904_moat_scissor_regated.json` by loading the Exp 3884
+in-distribution FoVer corpus and per-item Carnot ensemble scores from disk, by
+loading the Exp 3894 tested harness-readiness artifact, and by importing the
+tested reasoner self-verification harness from
+`python/carnot/verify/reasoner_self_verification.py`. The runner SHALL NOT
+generate new corpus rows, SHALL NOT recompute Carnot scores, SHALL NOT
+aggregate flagged-adversarial artifacts, SHALL NOT use a generation-headroom
+gate, and SHALL NOT re-implement an inline judge.
+
+Before live scoring, the runner SHALL verify CUDA with the repository
+virtualenv Python, resolve a cached Qwen3.6-35B GGUF filesystem path through
+llama.cpp with Gemma-4-26B-A4B-it GGUF fallback, verify `carnot.verify` and
+`llama_cpp` imports, verify that the Exp 3894 artifact reports
+`unit_test_passed=true` and `fixture_auroc > 0.6`, and verify that the Exp 3884
+artifact has at least 100 gold-incorrect rows with
+`carnot_ensemble_auroc_on_corpus >= 0.65`. Failed hard resources SHALL write a
+terminal `blocked_<resource>` artifact; failed upstream harness or corpus
+gates SHALL write `blocked_upstream_harness_not_ready` or
+`blocked_upstream_corpus_not_in_band`.
+
+For runnable inputs, the runner SHALL run two imported-harness arms over the
+fixed Exp 3884 corpus. The weak arm SHALL call the Exp 3894 default
+`reasoner_self_verify(steps, model_path, gold_labels=...)` prompt path. The
+strong arm SHALL call the same tested harness parser and llama.cpp invocation
+with a boosted prompt containing few-shot exemplars and a structured per-step
+`is THIS step correct? why?` self-check. For each arm, the runner SHALL
+partition gold-incorrect steps into reasoner-caught and reasoner-missed
+residual errors, compute `residual_catch_rate` as the fraction of residual
+errors caught by the disk-loaded Carnot predictions, compute bootstrap CI95
+with at least 1000 resamples, compute `error_overlap_jaccard` between
+reasoner-caught and Carnot-caught gold errors, and record the arm's
+in-distribution reasoner AUROC as a finding rather than as a harness-validity
+control.
+
+The terminal artifact SHALL include bare top-level fields for
+`harness_fixture_auroc`, `residual_catch_rate_weak`,
+`residual_catch_ci95_weak`, `residual_catch_rate_strong`,
+`residual_catch_ci95_strong`, `reasoner_auroc_weak`,
+`reasoner_auroc_strong`, `error_overlap_jaccard_weak`,
+`error_overlap_jaccard_strong`, `n_residual_errors_weak`,
+`n_residual_errors_strong`, `carnot_ensemble_auroc`, `harness_source`,
+`corpus_source`, `n_items`, `preconditions_checked`, `model_specs`,
+`random_seed`, `random_seeds_used`, `reproducibility_checksum`, `duration_s`,
+and `inference_substrate`, with string principle notes in `field_principles`
+and no `{value, principle}` wrappers around bare metric fields.
+
+The falsification gate SHALL be decoupled from the in-distribution reasoner
+AUROC. It SHALL emit
+`complete: moat_scissor_MOAT_SURVIVES_residcatch_strong<mean>_ci<lo>-<hi>_overlap<j>_holds_vs_boosted_self_verify_nres<N>`
+only when `harness_fixture_auroc > 0.6`, `carnot_ensemble_auroc >= 0.65`,
+the strong-arm residual CI95 lower bound is above `0.5`,
+`error_overlap_jaccard_strong < 0.6`, and at least 30 strong-arm residual
+errors exist. It SHALL emit
+`complete: moat_scissor_MOAT_SUBSUMED_residcatch_strong<mean>_overlap<j>_o1_subsumption_risk_nres<N>`
+only when `harness_fixture_auroc > 0.6` and either the strong-arm residual CI95
+upper bound is below `0.3` or `error_overlap_jaccard_strong > 0.7`. It SHALL
+emit `complete: moat_scissor_INCONCLUSIVE_<reason>` when the fixture harness
+control fails, fewer than 30 strong-arm residual errors remain, the Carnot
+positive control is out of band, or other gate boundaries are not decisive.
+
+### SCENARIO-VERIFY-3904: Regated Strong-Arm Moat Scissor Measures Residual Catch
+
+Given Exp 3894 reports `unit_test_passed=true` and `fixture_auroc > 0.6`, Exp
+3884 reports an in-band corpus with persisted per-item Carnot scores, and live
+CUDA plus a cached llama.cpp GGUF are available, when Exp 3904 runs, then it
+writes `results/experiment_3904_moat_scissor_regated.json`, records the tested
+harness source, the Exp 3884 corpus and score source, live-inference duration,
+weak and boosted reasoner AUROC findings, weak and boosted residual catch
+rates, bootstrap CI95 intervals, overlap Jaccards, residual counts,
+reproducibility checksum, and a terminal moat verdict selected only from the
+fixture-control and strong-arm gates.
+
+### SCENARIO-VERIFY-3904-BLOCKED: Missing Preconditions Do Not Fabricate Regated Moat Metrics
+
+Given CUDA, the cached GGUF, `llama_cpp`, `carnot.verify`, the Exp 3894 tested
+harness artifact, or the Exp 3884 in-band corpus is unavailable, when Exp 3904
+runs, then it writes
+`results/experiment_3904_moat_scissor_regated.json` with a terminal blocked
+verdict, populated precondition evidence, null weak and strong residual/AUROC
+metrics, zero item counts, no per-step score claims, and a measured duration.
+
+## Implementation Status (REQ-VERIFY-3904)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3904 | Planned (`python/carnot/eval/moat_scissor_regated.py`, `scripts/experiments/experiment_3904_moat_scissor_regated.py`) | Planned (`tests/python/test_experiment_3904_moat_scissor_regated.py`) |
+
 ### REQ-VERIFY-3896: Graph-Grounding Verifier Harness Positive Control
 
 The repository SHALL provide a tested graph-grounding fact verifier harness at

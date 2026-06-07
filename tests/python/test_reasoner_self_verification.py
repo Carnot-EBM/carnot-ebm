@@ -149,6 +149,32 @@ def test_req_verify_3894_scripted_harness_scores_nonconstant_predictions() -> No
     assert len(result["raw_responses"]) == len(fixture)
 
 
+def test_req_verify_3904_scripted_harness_accepts_custom_prompt_builder() -> None:
+    """REQ-VERIFY-3904: boosted arms reuse the tested harness with a custom prompt."""
+
+    prompts: list[str] = []
+
+    class ScriptedLlama:
+        def __init__(self, **kwargs: object) -> None:
+            self.kwargs = kwargs
+
+        def __call__(self, prompt: str, **kwargs: object) -> dict[str, object]:
+            prompts.append(prompt)
+            return {"choices": [{"text": '{"verdict":"incorrect","error_confidence":0.88}'}]}
+
+    result = rsv.reasoner_self_verify(
+        ["2 + 2 = 5."],
+        model_path="/tmp/scripted.gguf",
+        gold_labels=[1],
+        llama_factory=ScriptedLlama,
+        prompt_builder=lambda step: f"BOOSTED CHECK: {step}",
+    )
+
+    assert prompts == ["BOOSTED CHECK: 2 + 2 = 5."]
+    assert result["per_step_pred"] == [1]
+    assert result["per_step_score"] == [0.88]
+
+
 def test_scenario_verify_3894_live_fixture_positive_control() -> None:
     """SCENARIO-VERIFY-3894: live SOTA GGUF fixture catches known injected errors."""
 

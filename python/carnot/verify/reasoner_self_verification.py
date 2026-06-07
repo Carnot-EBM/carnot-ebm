@@ -296,6 +296,7 @@ def reasoner_self_verify(
     n_batch: int = 64,
     offload_kqv: bool = True,
     random_seed: int = 3894,
+    prompt_builder: Callable[[str], str] = build_judge_prompt,
 ) -> dict[str, object]:
     """Run live or injected reasoner self-verification over ``steps``.
 
@@ -328,7 +329,7 @@ def reasoner_self_verify(
     parsed_rows: list[ParsedSelfVerification] = []
     for step in step_texts:
         result = llm(
-            build_judge_prompt(step),
+            prompt_builder(step),
             max_tokens=max_tokens,
             temperature=temperature,
             stop=["\nStep:", "\n\nStep:"],
