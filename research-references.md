@@ -21272,3 +21272,43 @@ New / verified papers this sweep (all loaded, not inferred):
   energy-as-GENERATOR — the complement of the P0.1 energy-as-SELECTION negative. The next
   EBT step is a bounded adversarial REPLICATION (reuse checkpoint, +2 seeds, decode-only) to
   confirm FUNDAMENTAL is not a decode-harness artifact before banking the Phase-3 verdict.
+
+## Post-.360 sweep (2026-06-07, planning 2026.06.361 — VERIFIER-EARNS-ITS-PLACE)
+
+- **LLM-as-judge vs lightweight-classifier COST (industry 2026 synthesis):** LLM judges
+  cost ~50–500x more than lightweight classifiers per call (hundreds of ms latency vs
+  sub-10ms; ~$0.00003/check for classifiers). The 2026 best practice is a CLASSIFIER-FIRST
+  CASCADE: a cheap classifier on every span (1–10% of frontier cost) that catches confident
+  pass/fail and flags close calls, with the frontier LLM judge reserved for the flagged close
+  calls. This is exactly the Meta-EBM Cascade Router (memory project_meta_ebm_cascade_router)
+  and directly underwrites the .361 EFFICIENCY axis target "parity at 10–100x cheaper."
+  (Sources: futureagi.com deterministic-eval / eval-budget 2026; confident-ai LLM-as-judge.)
+
+- **arXiv:2504.16828 — "Process Reward Models That Think" (ThinkPRM):** a generative PRM
+  fine-tuned on ~1% of PRM800K process labels OUTPERFORMS LLM-as-a-Judge and discriminative
+  verifiers, and at a matched token budget beats LLM-as-judge by +7.2% on a ProcessBench
+  subset. The strongest comparator for the .361 efficiency head-to-head: a verifier can be
+  both cheaper AND more accurate than an LLM judge at equal compute.
+
+- **arXiv:2508.03686 — "CompassVerifier: A Unified and Robust Verifier for LLMs Evaluation
+  and Outcome Reward" (2026):** a unified robust verifier spanning evaluation + outcome
+  reward; a peer/baseline for framing the energy verifier as a general second-opinion layer.
+
+- **arXiv:2512.10756 — "OPV: Outcome-based Process Verifier for Efficient Long Chain-of-Thought
+  Verification" (2026):** outcome-grounded process verification tuned for EFFICIENT long-CoT
+  checking; reinforces that verification cost (not just accuracy) is now a first-class metric
+  — the premise of the .361 efficiency axis.
+
+- **arXiv:2602.07594 — "Learning to Self-Verify Makes Language Models Better Reasoners"
+  (re-cited):** the ADVERSARIAL baseline for the moat (axis A). If self-verification can be
+  trained/prompted to be strong, the residual Carnot catches shrinks — so exp3904 adds a
+  STRONG self-verify arm (few-shot + structured per-step self-check), and the moat must hold
+  against it, not only against the weak (chance-level) reasoner self-verify seen in .360.
+
+- **Moat-scissor .360 re-read (load-bearing):** exp3895 COMPUTED MOAT_SURVIVES numbers
+  (residual_catch 0.905, CI95 [0.849,0.952], n_residual=126, overlap_jaccard 0.159,
+  carnot_ensemble 0.967) but was mis-gated INCONCLUSIVE because reasoner_self_verify_auroc
+  (0.546) fell 0.004 below the 0.55 control floor. The exp3894 fixture (AUROC 0.917) proves
+  the harness is sound, so the 0.546 is the Self-Correction Illusion (arXiv:2606.05976), not a
+  broken control. .361 decouples harness-validity (fixture) from the in-distribution reasoner
+  AUROC (a finding) — the single gate fix that finally adjudicates the moat.
