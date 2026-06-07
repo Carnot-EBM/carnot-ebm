@@ -11215,6 +11215,82 @@ claim, and a measured duration.
 |---|---|---|
 | REQ-VERIFY-3918 | Implemented (`python/carnot/eval/cascade_router_prototype_3918.py`, `scripts/experiments/experiment_3918_cascade_router_prototype.py`) | Implemented (`tests/python/test_experiment_3918_cascade_router_prototype.py`) |
 
+### REQ-VERIFY-3925: Competent LLM Judge Positive-Control Gate
+
+The repository SHALL provide a competent process-style LLM judge at
+`python/carnot/verify/competent_llm_judge.py` and a build runner at
+`scripts/experiments/experiment_3925_competent_judge_build.py` that writes
+`results/experiment_3925_competent_judge_build.json`. The judge SHALL examine
+one reasoning step at a time with a structured reason-then-verdict prompt,
+few-shot exemplars, and a final `VERDICT: CORRECT|INCORRECT` contract. The
+judge SHALL expose `judge_step(item, generator)` returning at least bare
+`verdict_prob` and `raw_text`, where `verdict_prob` is polarity-correct as the
+probability that the step is incorrect.
+
+Before live model use, the runner SHALL verify CUDA with the repository
+virtualenv Python, verify that Exp 3915 exists with `unit_test_passed=true` and
+`smoke_tokens>0`, verify that Exp 3917 exists with `per_item_results`, verify
+that `carnot.verify`, `carnot.verify.gguf_inference`, and
+`carnot.verify.reasoner_self_verification` import, and read Exp 3884 as labeled
+fixture provenance. Failed hard preconditions SHALL write a terminal
+`blocked_<resource>` artifact without fabricated judge competence metrics.
+
+The runner SHALL diagnose the below-chance Exp 3917 LLM judge by recomputing
+AUROC over the cached per-item labels and `llm_judge_score`, then recomputing
+AUROC with score polarity flipped. It SHALL set `diagnosed_cause` to one of
+`polarity_inversion`, `unparsed_verdict_default`, `weak_prompt`, or
+`genuine_weakness` from the observed score distribution and flipped AUROC.
+
+For runnable inputs, the runner SHALL load the live judge only through
+`carnot.verify.gguf_inference.load_gguf_generator(...)`, preferring
+`Qwen3.6-35B-A3B`, then `gemma-4-31B-it`, then `gemma-4-26B-A4B-it`, with the
+harness fallback handling reduced GPU offload levels. It SHALL run an
+approximately twelve-row separable positive-control fixture with standalone
+correct and incorrect arithmetic/logic steps, record raw model outputs, parse
+rates, fixture AUROC, model provenance, random seed, reproducibility checksum,
+duration, and exact inference substrate.
+
+The terminal artifact SHALL include bare top-level fields `diagnosed_cause`,
+`flipped_polarity_auroc`, `judge_module_path`, `judge_model_used`,
+`fixture_auroc`, `verdicts_parse_rate`, `unit_test_path`, `unit_test_passed`,
+`preconditions_checked`, `model_specs`, `random_seed`,
+`reproducibility_checksum`, `duration_s`, `inference_substrate`, and
+`honest_verdict`, with field-principle strings and no `{value, principle}`
+wrappers around bare metric fields.
+
+The falsification gate SHALL emit
+`complete: competent_judge_READY_fixture_auroc<a>_cause<diagnosed_cause>_model<judge_model_used>_valid_comparator`
+only when `unit_test_passed=true`, `fixture_auroc > 0.65`,
+`verdicts_parse_rate > 0.9`, and `duration_s >= 60`. Otherwise it SHALL emit
+`complete: competent_judge_NOT_READY_fixture_auroc<a>_cause<diagnosed_cause>`.
+
+### SCENARIO-VERIFY-3925: Competent Judge Clears Separable Positive Control
+
+Given CUDA is available, Exp 3915 reports a ready robust GGUF generator, Exp
+3917 has per-item LLM judge scores, Exp 3884 labeled provenance is readable,
+and the verification modules import, when Exp 3925 runs, then it writes
+`results/experiment_3925_competent_judge_build.json`, records the flipped
+Exp 3917 AUROC and diagnosed cause, loads a headline GGUF through the robust
+generator harness, evaluates the separable fixture with the structured
+CoT-then-verdict judge, records `fixture_auroc > 0.65`, records
+`verdicts_parse_rate > 0.9`, records `duration_s >= 60`, and emits the READY
+terminal verdict only when the live unit test also passed.
+
+### SCENARIO-VERIFY-3925-BLOCKED: Missing Inputs Do Not Fabricate Competence
+
+Given CUDA, Exp 3915 readiness, Exp 3917 per-item results, Exp 3884 provenance,
+or the verification imports are unavailable, when Exp 3925 runs, then it writes
+`results/experiment_3925_competent_judge_build.json` with a terminal
+`blocked_<resource>` honest verdict, populated precondition evidence, null
+fixture metrics, `unit_test_passed=false`, no model claim, and a measured
+duration.
+
+## Implementation Status (REQ-VERIFY-3925)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3925 | Implemented (`python/carnot/verify/competent_llm_judge.py`, `scripts/experiments/experiment_3925_competent_judge_build.py`) | Implemented (`tests/python/test_competent_llm_judge.py`) |
+
 ### REQ-VERIFY-3905: Cost-Instrumented Verifier Harness
 
 The repository SHALL provide `python/carnot/verify/cost_instrumented_verification.py`

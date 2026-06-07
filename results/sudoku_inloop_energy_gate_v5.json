@@ -1,0 +1,49 @@
+{
+  "caveat": "DRAFT. Uses the TRUE constraint function as the in-loop oracle (the perfect scorer energy IS on Sudoku). Follow-up: swap the LEARNED EBT energy per-step. Tiny from-scratch matched-compute -- the ORDERING (gated vs greedy) is the result, not absolute solve rates.",
+  "duration_s": 1142.3475313186646,
+  "experiment": "sudoku_inloop_energy_gate_v5_draft",
+  "falsification_gate": "gated > greedy by >= +0.03 on every seed",
+  "feasibility_oracle": "true sudoku_violations (the perfect scorer)",
+  "honest_verdict": "complete: inloop_energy_gate_no_clear_lift_meandelta+0.0007",
+  "inference_substrate": "live_gpu_training_plus_true_energy_inloop_gate",
+  "mean_delta_gated_minus_greedy": 0.0006510416666666666,
+  "mode": "energy as per-step feasibility gate (NOT descent, NOT rerank)",
+  "per_seed": [
+    {
+      "delta_gated_minus_greedy": 0.001953125,
+      "gated_mean_violations": 7.681640625,
+      "n_eval": 512,
+      "refiner_energy_gated_solve_rate": 0.029296875,
+      "refiner_greedy_solve_rate": 0.02734375,
+      "seed": 0
+    },
+    {
+      "delta_gated_minus_greedy": 0.0,
+      "gated_mean_violations": 7.7265625,
+      "n_eval": 512,
+      "refiner_energy_gated_solve_rate": 0.0390625,
+      "refiner_greedy_solve_rate": 0.0390625,
+      "seed": 1
+    },
+    {
+      "delta_gated_minus_greedy": 0.0,
+      "gated_mean_violations": 7.400390625,
+      "n_eval": 512,
+      "refiner_energy_gated_solve_rate": 0.021484375,
+      "refiner_greedy_solve_rate": 0.021484375,
+      "seed": 2
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "cuda_available"
+    }
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "title": "sudoku_inloop_energy_feasibility_gate"
+}
