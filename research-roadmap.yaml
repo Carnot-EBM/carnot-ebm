@@ -1,73 +1,74 @@
 # ============================================================================
-# Pre-staged roadmap for 2026.06.363 (outer-loop, Claude Opus 4.8, 2026-06-07).
+# Pre-staged roadmap for 2026.06.364 (outer-loop, Claude Opus 4.8, 2026-06-08).
 #
-# WHY THIS SHAPE — .362 LANDED THE OFFLINE PROOF BUT THE EFFICIENCY AXIS IS INVALID.
-# .362 finally ran the offline verifier proof on the robust gguf_inference harness.
-# ACCURACY landed GENUINE: exp3916 MOAT_SURVIVES (energy ensemble AUROC 0.967 catches
-# 91% of the errors a STRONG self-verify misses; residual-catch CI95 [0.843,0.971],
-# overlap 0.50). But the EFFICIENCY axis is a STRAWMAN: exp3917 measured the
-# LLM-as-judge (gemma-4-26B-A4B-it, 0-shot) at AUROC 0.4423 — BELOW CHANCE. Energy
-# (0.81) BEAT the judge at 11512x lower cost, but "CHEAPER_NOT_PARITY / earns=false"
-# is meaningless against a broken comparator (FALSE_NEGATIVE_RISK: a baseline that
-# fails its own positive control is not evidence). The cascade (exp3918) was DEGENERATE
-# (escalation_fraction=0.0 — never escalated). The ProcessBench literature explains the
-# root cause: off-the-shelf judges are "highly sensitive to instruction wording" and
-# "suboptimal as process verifiers" without a structured CoT-then-verdict (GenRM/ThinkPRM)
-# recipe (arXiv:2504.16828, 2408.15240). Facts (exp3920) BLOCKED+FLAGGED a 4th time ->
-# retires. Hardware (exp3922) FLAGGED (duration_s=0.0) -> clean re-run.
+# WHY THIS SHAPE — .363 SET UP THE VERIFIER-EARNS-ITS-PLACE PROOF BUT DID NOT LAND IT.
+# .363's four load-bearing science tasks all BLOCKED on two concrete, now-understood
+# failures (verified on disk):
+#   1. exp3925 (competent GenRM/ThinkPRM judge): the module
+#      (python/carnot/verify/competent_llm_judge.py), the unit test, and the runner
+#      (scripts/experiments/experiment_3925_competent_judge_build.py) were ALL WRITTEN
+#      (Jun 7) but the ARTIFACT never landed and never reached the conductor log — the
+#      classic max-turns-exhaustion / bootstrap-and-bail failure (one task tried to
+#      diagnose + build + unit-test + run a live 35B judge in a single budget).
+#   2. exp3928 (moat replication on an independent corpus): blocked_all_gguf_inference_failed
+#      via AttributeError("'ExperimentConfig' object has no attribute 'max_tokens_weak'")
+#      inside load_robust_generator. The field is now present in
+#      moat_scissor_replication_3928.py:ExperimentConfig but the experiment never re-ran.
+# exp3926/exp3927 then correctly self-blocked (disk-fallback: a missing upstream costs ONE
+# task). GGUF inference itself is SOUND (exp3915 READY; exp3916/3917 ran live 400-490s).
 #
-# .363 = MAKE THE EFFICIENCY WIN CREDIBLE, then take the first agentic step.
-#   Phase 0 : archive/activate + RETIRE the facts route + green-gate + record the flaw.
-#   Phase 1 : the REAL .363 science — DIAGNOSE+FIX the judge into a COMPETENT GenRM/ThinkPRM
-#             comparator (clears chance on a separable fixture), VALID efficiency head-to-head
-#             (in-distribution), NON-DEGENERATE cascade (escalation>0), and MOAT REPLICATION
-#             on a SECOND/INDEPENDENT corpus (held-out FoVer / ProcessBench).
-#   Phase 2 : the FIRST realistic ARC-AGI-3 agentic run — verifier-as-router action-efficiency
-#             WITH vs WITHOUT the pruner (north-star §5, sequenced second).
-#   Phase 3 : FR-11 v26 (research-program.md MANDATE) + hardware continuity (clean re-run).
-#   Phase 4 : the hardened verifier-scorecard capstone — flip verifier_earns_its_place honestly.
+# .364 = EXECUTE + VALIDATE + FIX. The code is drafted; this milestone RUNS it, fixes the
+# two blockers, and finally answers the operator's 'does the verifier earn its place?'
+# question (capstone .363: efficiency=INCONCLUSIVE, moat_replicated=false, earns=false)
+# against a COMPETENT judge.
+#   Phase 0 : archive/activate + green-gate + record the .363 unblock-state.
+#   Phase 1 : LAND the offline proof — RUN+VALIDATE the competent judge (fixture AUROC>0.65
+#             positive control), VALID efficiency head-to-head (in-distribution), NON-DEGENERATE
+#             cascade (escalation>0), MOAT REPLICATION on an independent corpus (fix max_tokens_weak).
+#   Phase 2 : ARC-AGI-3 agentic step 2 — richer env + energy-router vs a learned-value baseline.
+#   Phase 3 : FR-11 v27 (self-learning MANDATE) + hardware continuity + a NEW-direction cross-domain map.
+#   Phase 4 : literature synthesis + the hardened verifier-scorecard capstone (flip earns honestly).
 #
-# HARDENING (carried from .356-.362):
-#   1. NO unit-test wall-clock floor on a tiny fixture (the exp3905 poison-test root cause).
-#      The 60s live-floor is asserted ONLY on the FULL-CORPUS science artifact. Fixture tests
-#      assert CORRECTNESS (judge clears chance, ratio>1, distinct) — not wall-clock.
+# REUSE: every Phase-1 eval module + runner already exists from .363 — the new runner adapts
+# the .363 script and writes to the NEW results/experiment_393N_*.json deliverable.
+#
+# ROUTING: all tasks codex + requires_codex + gpt-5.5 (anti-wipeout; gemini crashes GPU workloads
+# and 429-wiped .333/.355; standing operator gemini<->codex flip authority 2026-06-05). GPU tasks
+# add requires_gpu. Every GPU/live-model Run command uses {project_root}/.venv/bin/python.
+#
+# HARDENING (carried from .356-.363):
+#   1. NO unit-test wall-clock floor on a tiny fixture. The 60s live-floor is asserted ONLY on the
+#      FULL-CORPUS science artifact. Fixture tests assert CORRECTNESS (judge clears chance, ratio>1).
 #   2. ROBUST live-model path: every live-model task imports the exp3915 gguf_inference harness
 #      (smoke-before-use + GGUF fallback + reduced n_gpu_layers on OOM). No direct llama_cpp.Llama.
-#   3. POSITIVE CONTROL on every comparison: the competent judge must clear chance BEFORE any
-#      parity verdict; the cascade must escalate (>0) BEFORE any cascade-wins claim.
-#   4. NO hard gated_on on the critical path (.340 disk-fallback). Each downstream task disk-reads
-#      its upstream and emits blocked_upstream_* if absent — a skipped upstream costs ONE task.
+#   3. POSITIVE CONTROL on every comparison: the competent judge must clear chance BEFORE any parity
+#      verdict; the cascade must escalate (>0) BEFORE any cascade-wins claim.
+#   4. NO hard gated_on on the critical path. Each downstream task disk-reads its upstream and emits
+#      blocked_upstream_* if absent — a skipped upstream costs ONE task.
 #   5. BARE field emission: every REQUIRED ARTIFACT FIELD value is a bare scalar; the principle:
-#      lines guide the agent, NOT a {{value,principle}} wrapper (exp3871 bug).
-#
-# ROUTING: all tasks codex + requires_codex + gpt-5.5 (anti-wipeout; gemini crashes GPU
-# workloads and 429-wiped .333/.355; standing operator gemini<->codex flip authority
-# 2026-06-05). GPU tasks add requires_gpu. Every GPU/live-model Run command uses
-# {project_root}/.venv/bin/python (bare python has no torch -> silent CPU drop).
+#      lines guide the agent, NOT a {{value,principle}} wrapper.
 #
 # INVARIANTS: paper_ready stays TRUE (G1-G4 met); FoVer 0.9131 frozen; verifier math/step-error
-# domain-bound (facts retires this milestone); never aggregate flagged_adversarial; energy-as-
-# generator closed-negative (no generator experiments); no external publication.
+# domain-bound (cross-domain probe MAPS the boundary, does NOT reopen facts); never aggregate
+# flagged_adversarial; energy-as-generator closed-negative (no generator experiments); no external
+# publication.
 # ============================================================================
 
-milestone: "2026.06.363"
-milestone_title: "Make the verifier's efficiency win CREDIBLE: diagnose+fix the .362 below-chance LLM-judge into a COMPETENT GenRM/ThinkPRM comparator, re-run a VALID energy-verifier-vs-judge head-to-head (in-distribution) + a NON-DEGENERATE cascade + a MOAT REPLICATION on an INDEPENDENT held-out corpus, then take the FIRST realistic ARC-AGI-3 agentic run (verifier-as-router action-efficiency); retire the facts graph-grounding route; FR-11 v26; clean hardware continuity; and the hardened verifier-scorecard capstone that honestly flips verifier_earns_its_place against a competent judge."
+milestone: "2026.06.364"
+milestone_title: "LAND the verifier-earns-its-place proof that .363 blocked: RUN+VALIDATE the competent GenRM/ThinkPRM judge (the .363 artifact never landed), then a VALID energy-verifier-vs-judge efficiency head-to-head (in-distribution) + a NON-DEGENERATE cascade (escalation>0) + an INDEPENDENT-corpus moat replication (fix the max_tokens_weak AttributeError); ARC-AGI-3 agentic step 2 (energy-router vs a learned-value baseline); FR-11 v27 self-learning; hardware continuity; a NEW cross-domain discriminating-value map; and the hardened capstone that honestly flips verifier_earns_its_place against a competent judge."
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 
 tasks:
   # --------------------------------------------------------------------------
-  # PHASE 0 — record hygiene + RETIRE facts + green-gate
+  # PHASE 0 — transition + green-gate
   # --------------------------------------------------------------------------
-  - id: exp3924-archive-v362-activate-v363-retire-facts
+  - id: exp3934-archive-v363-activate-v364
     operator_override: >
-      2026-06-07 operator-outer-loop directive (standing): routine milestone-transition task
-      (archive-vN-activate-vN+1) + the facts-route RETIREMENT action — false-positive scope-match
-      vs every prior archive/activate task; structurally never a doomed rerun. The facts graph-
-      grounding route fabricated/blocked a 4th consecutive time (exp3862/3886/3896/3920,
-      retire_if_same_verdict fired), so this task RETIRES it to honest future-work in the exclusion
-      manifest rather than re-running it.
-    milestone: "2026.06.363"
-    title: "Archive .362 -> activate .363; GREEN-GATE de-risk + RETIRE the facts graph-grounding route to honest future-work: exp3920 BLOCKED+FLAGGED a 4th consecutive time (exp3862 stub / exp3886 model-not-invoked / exp3896 separable-fixture / exp3920 blocked_llama_cpp), so add the graph-grounding fact-verifier scope to ops/exclusion_manifest.yaml (retire_if_same_verdict satisfied) and document facts as honest future-work (KGHaluBench-graded testbed for any future revival). Assert research-complete.yaml parses, the core pretest subset is green, and record the .362 below-chance-LLM-judge comparator flaw as the .363 forward-bet."
+      2026-06-08 operator-outer-loop directive (standing): routine milestone-transition task
+      (archive-vN-activate-vN+1) — false-positive scope-match vs every prior archive/activate task;
+      structurally never a doomed rerun. Aggregation-only; records the .363 unblock-state.
+    milestone: "2026.06.364"
+    title: "Archive .363 -> activate .364; GREEN-GATE de-risk + RECORD the .363 unblock-state: the competent-judge artifact (exp3925) never landed (max-turns exhaustion; module/test/runner drafted but unrun) and exp3928 blocked on an AttributeError('ExperimentConfig' has no attribute 'max_tokens_weak'). Assert research-complete.yaml + exclusion_manifest.yaml parse, the core pretest subset is green, and the .363 eval modules import, so .364 can EXECUTE the drafted proof."
     priority: critical
     track: infra
     max_turns: 50
@@ -75,162 +76,154 @@ tasks:
     model: gpt-5.5
     requires_codex: true
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_3924_archive_v362_activate_v363_retire_facts.json
+    deliverable: results/experiment_3934_archive_v363_activate_v364.json
     prompt: |
-      CONTEXT. Milestone .362 landed all 11 artifacts and recovered the .361 infra wash. The
-      ACCURACY axis (exp3916 MOAT_SURVIVES) is GENUINE. But the EFFICIENCY axis (exp3917) was
-      measured against a below-chance LLM-judge (gemma-4-26B-A4B-it 0-shot AUROC 0.4423), so the
-      "CHEAPER_NOT_PARITY / earns=false" verdict is a strawman. The cascade (exp3918) was degenerate
-      (escalation_fraction=0.0). Facts (exp3920) BLOCKED+FLAGGED a 4th time -> retire_if_same_verdict
-      fired. Hardware (exp3922) FLAGGED (duration_s=0.0). This task archives .362, activates .363,
-      RETIRES the facts route, and records the comparator flaw so .363 fixes it.
+      CONTEXT. Milestone .363 set up the load-bearing 'does the verifier earn its place?' proof but
+      did NOT land it: capstone .363 reported efficiency=INCONCLUSIVE, moat_replicated=false,
+      earns=false. The four science tasks all BLOCKED on two concrete failures: (1) the competent
+      GenRM/ThinkPRM judge (exp3925) had its module/test/runner WRITTEN but the artifact never landed
+      (max-turns exhaustion); (2) the moat replication (exp3928) blocked on
+      AttributeError("'ExperimentConfig' object has no attribute 'max_tokens_weak'"). exp3926/exp3927
+      then correctly self-blocked (disk-fallback). GGUF inference is SOUND (exp3915 READY). This task
+      archives .363, activates .364, and green-gates so .364 can EXECUTE the already-drafted code.
 
       EXISTING CODE TO READ FIRST:
-        - research-roadmap.yaml (the .362 milestone that just finished)
+        - research-roadmap.yaml (the .363 milestone that just finished)
         - research-complete.yaml (APPEND target — append only, never rewrite)
-        - ops/exclusion_manifest.yaml (the retirement target — add the graph-grounding facts scope)
-        - scripts/summarize_artifact.py (read .362 results via this, not raw JSON)
-        - results/experiment_3920_facts_graph_grounding_last_retry.json (the 4th facts block/flag)
+        - ops/exclusion_manifest.yaml (verify it still loads; no new retirement this milestone)
+        - scripts/summarize_artifact.py (read .363 results via this, not raw JSON)
+        - python/carnot/verify/competent_llm_judge.py + scripts/experiments/experiment_3925_competent_judge_build.py
+          (the drafted-but-unrun competent judge — confirm they exist on disk)
+        - python/carnot/eval/moat_scissor_replication_3928.py (confirm ExperimentConfig now HAS max_tokens_weak)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: research-complete.yaml exists and `{project_root}/.venv/bin/python -c
            "import yaml; yaml.safe_load(open('research-complete.yaml'))"` succeeds (the .355
            unquoted-colon poison guard). If it fails, write honest_verdict
            blocked_research_complete_yaml_poison and EXIT.
-        1. RETIRE FACTS: append an entry to ops/exclusion_manifest.yaml retiring the graph-grounding
-           fact-verifier scope (experiment_id 3920, completed_milestone "2026.06.362", reason citing
-           the 4-consecutive fabrication/block chain exp3862/3886/3896/3920 + retire_if_same_verdict).
-           Verify the YAML still loads under yaml.safe_load after the edit.
-        2. Read the .362 task verdicts via summarize_artifact.py (exp3914..exp3923). Append the .362
+        1. Read the .363 task verdicts via summarize_artifact.py (exp3924..exp3933). Append the .363
            tasks + verdicts to research-complete.yaml. QUOTE every value containing a colon-space.
-        3. GREEN-GATE A: research-complete.yaml AND ops/exclusion_manifest.yaml still load under yaml.safe_load.
-        4. GREEN-GATE B: `{project_root}/.venv/bin/pytest tests/python/test_pipeline_extract.py
+        2. GREEN-GATE A: research-complete.yaml AND ops/exclusion_manifest.yaml still load under yaml.safe_load.
+        3. GREEN-GATE B: `{project_root}/.venv/bin/pytest tests/python/test_pipeline_extract.py
            tests/python/test_docs.py -q --no-header -n 0 --no-cov -o addopts=` and assert ALL pass.
-        5. GREEN-GATE C: assert `import carnot.verify` AND the .362 modules import (gguf_inference,
-           cost_instrumented_verification). Record import_ok honestly.
-        6. Record the .362 below-chance-judge comparator flaw as the .363 forward-bet.
+        4. GREEN-GATE C: assert `import carnot.verify` AND the .363 modules import (gguf_inference,
+           competent_llm_judge, valid_efficiency_head_to_head_3926, non_degenerate_cascade_router_3927,
+           moat_scissor_replication_3928). Record import_ok honestly per module.
+        5. CONFIRM the two .364 blockers are addressable: (a) the competent-judge module+runner exist
+           on disk (so .364 EXECUTES, not rebuilds); (b) moat_scissor_replication_3928.py:ExperimentConfig
+           defines max_tokens_weak + max_tokens_strong. Record both as bare bools.
 
-      REQUIRED ARTIFACT FIELDS (emit each as a BARE scalar; the principle: lines guide YOU, do NOT
-      wrap values in a {{value,principle}} dict):
-        archived_milestone: principle "Provenance — which milestone was archived."
-        activated_milestone: principle "Confirms .363 is live so downstream tasks resolve."
-        facts_route_retired: principle "BARE BOOL — the graph-grounding facts scope was added to the exclusion manifest (4th-fabrication retirement)."
-        exclusion_manifest_parses: principle "The manifest still loads under yaml.safe_load after the retirement edit."
+      REQUIRED ARTIFACT FIELDS (emit each as a BARE scalar; principle: lines guide YOU, no {{value,principle}} wrapper):
+        archived_milestone: principle "Provenance — which milestone was archived (2026.06.363)."
+        activated_milestone: principle "Confirms .364 is live so downstream tasks resolve."
         research_complete_yaml_parses: principle "The .355 colon-poison guard — asserts the file still loads."
+        exclusion_manifest_parses: principle "The manifest still loads under yaml.safe_load."
         core_pretest_green: principle "BARE BOOL — the smart-subset core passes; the poison-cascade guard."
-        live_model_modules_importable: principle "BARE BOOL — the .362 gguf_inference + cost harnesses import."
-        prior_milestone_verdicts_summary: principle "One-line each for exp3914..exp3923 so .363 starts with the .362 truth on record."
-        n362_comparator_flaw_recorded: principle "The below-chance LLM-judge (0.4423) strawman that makes the efficiency axis invalid — the .363 forward-bet."
+        eval_modules_importable: principle "BARE BOOL — the .363 gguf_inference + judge + efficiency + cascade + moat modules import (so .364 can execute them)."
+        competent_judge_drafted_present: principle "BARE BOOL — the unrun competent-judge module + runner exist on disk (.364 executes, not rebuilds)."
+        max_tokens_weak_field_present: principle "BARE BOOL — moat_scissor_replication_3928.py:ExperimentConfig now defines max_tokens_weak (the exp3928 AttributeError fix)."
+        prior_milestone_verdicts_summary: principle "One-line each for exp3924..exp3933 so .364 starts with the .363 truth on record."
+        n363_blocker_state_recorded: principle "The two .363 blockers (unrun competent judge + max_tokens_weak AttributeError) on record as the .364 forward-bet."
         honest_verdict, duration_s, inference_substrate: principle "Terminal-prefix verdict + aggregation substrate (no GGUF/CUDA markers on a record task)."
 
       honest_verdict MUST start with `complete:`/`success:` or `blocked_<resource>`.
 
-      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3924_archive_v362_activate_v363_retire_facts.py
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3934_archive_v363_activate_v364.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   # --------------------------------------------------------------------------
-  # PHASE 1 — HARDEN THE OFFLINE VERIFIER PROOF (the real .363 science)
+  # PHASE 1 — LAND THE OFFLINE VERIFIER PROOF (the .363 science that blocked)
   # --------------------------------------------------------------------------
-  - id: exp3925-diagnose-and-build-competent-judge
-    operator_override: >
-      2026-06-07 operator-outer-loop directive (standing): NEW infrastructure deliverable — diagnose
-      the .362 below-chance LLM-judge and ship a COMPETENT GenRM/ThinkPRM judge config. Versioned
-      continuation of the exp3917 judge arm with a STATED forward difference (structured CoT-then-
-      verdict + few-shot + polarity-checked scoring + stronger-model option), routed through the
-      exp3915 robust harness. Not a doomed rerun: exp3917's judge failed its own positive control
-      (sub-chance), which this task fixes at the root.
-    milestone: "2026.06.363"
+  - id: exp3935-run-validate-competent-judge
+    milestone: "2026.06.364"
     prior_failures:
+      - experiment_id: exp3925-diagnose-and-build-competent-judge
+        verdict: "blocked_no_artifact_landed (.363 — module/test/runner drafted but the experiment never reached the conductor log; max-turns exhaustion)"
+        addressed_by: "The diagnose+build work is DONE on disk (python/carnot/verify/competent_llm_judge.py + tests/python/test_competent_llm_judge.py + scripts/experiments/experiment_3925_competent_judge_build.py all written Jun 7). THIS task does NOT rebuild — it EXECUTES the drafted runner (adapted to write results/experiment_3935_*.json), validates the unit test passes + fixture AUROC>0.65, and lands the artifact the .363 task ran out of turns to produce. Heavier max_turns budget + execute-not-build scope removes the exhaustion root cause."
+        retire_if_same_verdict: false
       - experiment_id: exp3917-efficiency-head-to-head-on-robust-harness
         verdict: "complete: efficiency_CHEAPER_NOT_PARITY_energy0.8100_llm0.4423_honest_partial"
-        addressed_by: "exp3917's LLM-judge (gemma-4-26B-A4B-it, 0-shot) scored AUROC 0.4423 = below chance, so the efficiency comparison had no valid competitor. THIS task DIAGNOSES the cause (polarity inversion vs unparsed-verdict default vs weak prompt) from exp3917 per_item_results, then ships a GenRM/ThinkPRM-style judge (structured per-step CoT -> parsed binary verdict, few-shot exemplars, polarity-checked) backed by the exp3915 robust harness, and UNIT-TESTS that it clears chance (fixture AUROC>0.65) on a separable fixture BEFORE any downstream use (arXiv:2504.16828, 2408.15240)."
+        addressed_by: "exp3917's 0-shot judge scored AUROC 0.4423 (below chance), so the efficiency comparison had no valid competitor. The competent judge built here is a GenRM/ThinkPRM recipe (structured CoT -> parsed verdict, few-shot, polarity-checked, stronger model) that must clear chance on a separable fixture (AUROC>0.65) BEFORE any downstream use."
         retire_if_same_verdict: false
-    title: "DIAGNOSE + FIX the .362 below-chance LLM-judge into a COMPETENT comparator: read exp3917 per_item_results to determine WHY llm_judge_auroc=0.4423 (polarity inversion? unparsed verdicts defaulting to a constant? weak 0-shot prompt?), then BUILD + UNIT-TEST a GenRM/ThinkPRM-style judge (structured per-step CoT -> parsed binary verdict, few-shot exemplars, polarity-checked scoring; arXiv:2504.16828 / 2408.15240) backed by the exp3915 robust gguf_inference harness, with a stronger-model option (Qwen3.6-35B-A3B / gemma-4-31B-it at reduced n_gpu_layers). Deliverable = the judge module + a PASSING test asserting fixture AUROC > 0.65 on a SEPARABLE fixture (the positive control that the judge is not broken). ALL .363 efficiency tasks import this competent judge."
+    title: "RUN + VALIDATE the COMPETENT GenRM/ThinkPRM judge (the .363 artifact never landed): the module python/carnot/verify/competent_llm_judge.py + test tests/python/test_competent_llm_judge.py + runner scripts/experiments/experiment_3925_competent_judge_build.py were all drafted in .363 but the experiment ran out of turns and never produced an artifact. EXECUTE the runner (writing results/experiment_3935_*.json), backed by the exp3915 robust gguf_inference harness, preferring a stronger model (Qwen3.6-35B-A3B / gemma-4-31B-it at reduced n_gpu_layers) than the .362 26B. Deliverable = a LANDED artifact with the unit test PASSING and fixture AUROC > 0.65 on a SEPARABLE fixture (the positive control that the judge is not broken). ALL .364 efficiency tasks import this judge."
     priority: critical
     track: research
-    max_turns: 80
+    max_turns: 70
     agent_type: codex
     model: gpt-5.5
     requires_codex: true
     requires_gpu: true
-    estimated_wall_time_min: 60
+    estimated_wall_time_min: 45
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_3925_competent_judge_build.json
+    deliverable: results/experiment_3935_competent_judge_build.json
     prompt: |
-      CONTEXT. The .362 efficiency axis is invalid because its LLM-judge scored AUROC 0.4423 (below
-      chance). The ProcessBench literature explains it: off-the-shelf judges are "highly sensitive to
-      instruction wording" and "suboptimal as process verifiers" without a structured CoT-then-verdict
-      (GenRM/ThinkPRM) recipe (arXiv:2504.16828, 2408.15240). A below-chance judge is most often a
-      POLARITY/PARSE bug (the verdict is being scored inverted, or unparsed verdicts default to a
-      constant), not a genuine model weakness. This task diagnoses the cause from exp3917's per-item
-      results, then ships a COMPETENT judge that clears chance on a separable fixture BEFORE any
-      downstream efficiency task uses it. This is the positive-control fix the .362 comparison lacked.
+      CONTEXT. The .362 efficiency axis was invalid because its LLM-judge scored AUROC 0.4423 (below
+      chance). .363 diagnosed this and WROTE a competent GenRM/ThinkPRM judge (structured per-step CoT
+      -> parsed binary verdict, few-shot, polarity-checked; arXiv:2504.16828, 2408.15240) backed by the
+      exp3915 robust harness — but the experiment ran out of turns and the ARTIFACT never landed (it is
+      NOT in the conductor log; results/experiment_3925_*.json does not exist). The module, test, and
+      runner are all on disk. THIS task EXECUTES them and lands the validated artifact. Do NOT rebuild
+      from scratch — read the drafted code, run it, fix only what blocks a clean run.
 
       EXISTING CODE/DATA TO READ FIRST:
-        - results/experiment_3917_efficiency_head_to_head.json (per_item_results — the below-chance judge scores to diagnose)
-        - python/carnot/verify/reasoner_self_verification.py (the judge harness — how it prompts + parses + scores)
-        - results/experiment_3915_robust_gguf_inference_harness.json (harness_module_path — back the judge with this)
-        - python/carnot/verify/gguf_inference.py (load_gguf_generator + generate — use these; never call llama_cpp.Llama directly)
-        - results/experiment_3884_in_distribution_error_rich_corpus.json (a labeled slice for the separable-fixture check)
+        - python/carnot/verify/competent_llm_judge.py (the drafted judge: judge_step(item, generator), the GenRM/ThinkPRM recipe, the separable fixture)
+        - tests/python/test_competent_llm_judge.py (the drafted positive-control test)
+        - scripts/experiments/experiment_3925_competent_judge_build.py (the drafted runner — adapt it to write results/experiment_3935_competent_judge_build.json)
+        - results/experiment_3915_robust_gguf_inference_harness.json (harness_module_path, model_used, n_gpu_layers_used)
+        - python/carnot/verify/gguf_inference.py (load_gguf_generator + generate — use these; never llama_cpp.Llama directly)
+        - results/experiment_3884_in_distribution_error_rich_corpus_scores.json (a labeled slice for the separable check, if the fixture needs it)
         - CLAUDE.md "SOTA Local Models" GGUF tokenizer rule (.gguf path + llama_cpp; never AutoTokenizer on a GGUF repo id)
 
       CONCRETE STEPS:
         0. PRECONDITIONS (blocked_<resource>+EXIT on fail):
            a. `{project_root}/.venv/bin/python -c "import torch; assert torch.cuda.is_available()"` (blocked_no_cuda).
            b. DISK-READ FALLBACK (no hard gate): exp3915 exists AND unit_test_passed AND smoke_tokens>0;
-              else blocked_upstream_gguf_harness_not_ready and EXIT. exp3917 exists AND has per_item_results;
-              else blocked_upstream_efficiency_per_item_missing.
-           c. `import carnot.verify` AND the gguf_inference + reasoner harnesses import (blocked_carnot_verify_import).
-        1. DIAGNOSE: from exp3917 per_item_results, compute the judge AUROC with the score polarity FLIPPED.
-           If flipped AUROC >> 0.5, the .362 bug was polarity/parse. Record the diagnosed_cause honestly
-           (polarity_inversion / unparsed_verdict_default / weak_prompt / genuine_weakness).
-        2. BUILD `python/carnot/verify/competent_llm_judge.py` exposing
-           `judge_step(item, generator) -> {{verdict_prob, raw_text}}` implementing a GenRM/ThinkPRM recipe:
-           a per-step structured CoT ("examine THIS step; is it correct? reason, then output VERDICT: CORRECT|INCORRECT"),
-           few-shot exemplars, a ROBUST parser (default to abstain, not a constant), polarity-correct scoring,
-           backed by the exp3915 robust generator. Prefer a stronger model (Qwen3.6-35B-A3B / gemma-4-31B-it
-           at reduced n_gpu_layers via the harness fallback) since the 26B underperformed.
-        3. SHIP `tests/python/test_competent_llm_judge.py` on a SEPARABLE fixture (~12 clearly-correct vs
-           clearly-wrong steps) asserting: the judge runs, verdicts parse (no constant default), and fixture
-           AUROC > 0.65 (the positive control that the judge clears chance). Do NOT assert any wall-clock floor
-           inside the unit test (the .361 poison-test lesson). Run the test, assert PASS.
+              else blocked_upstream_gguf_harness_not_ready and EXIT.
+           c. `import carnot.verify.competent_llm_judge` AND `import carnot.verify.gguf_inference` (blocked_carnot_verify_import).
+        1. RUN the unit test: `{project_root}/.venv/bin/pytest tests/python/test_competent_llm_judge.py -q
+           --no-header -n 0 --no-cov -o addopts=`. If it fails for a non-infra reason (e.g. the judge
+           genuinely below chance), record the failure honestly; if it fails on a fixable bug in the
+           drafted code (parse/polarity), fix the module + rerun. Do NOT add any wall-clock floor to the test.
+        2. EXECUTE the runner to land results/experiment_3935_competent_judge_build.json: load the judge
+           via the robust exp3915 harness, preferring a STRONGER model (Qwen3.6-35B-A3B / gemma-4-31B-it
+           at reduced n_gpu_layers via the harness fallback) since the .362 26B underperformed; run the
+           judge on the separable fixture (~12 clearly-correct vs clearly-wrong steps); compute fixture AUROC.
+        3. Record diagnosed_cause for the .362 below-chance judge (polarity_inversion / unparsed_verdict_default
+           / weak_prompt / genuine_weakness) — reuse the drafted diagnosis if present.
 
       REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
-        diagnosed_cause: principle "WHY the .362 judge was below chance (polarity_inversion / unparsed_verdict_default / weak_prompt / genuine_weakness) — the root cause."
-        flipped_polarity_auroc: principle "BARE FLOAT — exp3917 judge AUROC with score polarity flipped; >>0.5 confirms a polarity/parse bug, not a model weakness."
-        judge_module_path: principle "Where every .363 efficiency task imports the competent judge from."
+        diagnosed_cause: principle "WHY the .362 judge was below chance — the root cause (polarity/parse vs genuine weakness)."
+        judge_module_path: principle "Where every .364 efficiency task imports the competent judge from."
         judge_model_used: principle "Which GGUF the competent judge loaded (records whether a stronger model than the .362 26B was used)."
-        fixture_auroc: principle "BARE FLOAT — must be > 0.65 on the SEPARABLE fixture; the positive control that the judge is not broken."
+        fixture_auroc: principle "BARE FLOAT — must be > 0.65 on the SEPARABLE fixture; the positive control that the judge is not broken (the field every downstream task disk-reads)."
         verdicts_parse_rate: principle "BARE FLOAT — fraction of judge outputs that parsed to a verdict (not the constant-default bug); should be ~1.0."
-        unit_test_path, unit_test_passed: principle "BARE BOOL — the deliverable; a passing live-judge test on a separable fixture cannot be a fabricated stub."
+        unit_test_path, unit_test_passed: principle "BARE BOOL — a passing live-judge test on a separable fixture cannot be a fabricated stub."
         preconditions_checked, model_specs, random_seed, reproducibility_checksum, duration_s, inference_substrate:
           principle "Pre-Launch + Adversarial-Verify — a real judge run that loads a model takes wall-clock (live floor 60s on THIS task); <60s = no real load."
 
       FALSIFICATION GATE:
         - JUDGE_COMPETENT: unit_test_passed AND fixture_auroc > 0.65 AND verdicts_parse_rate > 0.9 AND duration_s >= 60.
-          honest_verdict: `complete: competent_judge_READY_fixture_auroc<a>_cause<diagnosed_cause>_model<judge_model_used>_valid_comparator`
+          honest_verdict: `complete: competent_judge_READY_fixture_auroc<a>_model<judge_model_used>_valid_comparator_landed`
         - JUDGE_NOT_COMPETENT: otherwise.
           honest_verdict: `complete: competent_judge_NOT_READY_fixture_auroc<a>_cause<diagnosed_cause>`
         honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
 
       DISCIPLINE: REAL duration (this task loads a model — live floor 60s). Frozen 0.9131 unchanged.
-      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3925_competent_judge_build.py
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3935_competent_judge_build.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3926-valid-efficiency-head-to-head
-    operator_override: >
-      2026-06-07 operator-outer-loop directive (standing): the north-star §5 EFFICIENCY axis, re-run
-      against a COMPETENT judge. Versioned continuation of exp3917 with a STATED forward difference —
-      it routes the LLM-judge through the exp3925 competent_llm_judge (clears chance) instead of the
-      below-chance 0-shot judge, and reuses the exp3905 cost harness. Disk-reads exp3925+exp3905 (no
-      hard gate). Not a doomed rerun: exp3917's comparator failed its positive control, now fixed.
-    milestone: "2026.06.363"
+  - id: exp3936-valid-efficiency-head-to-head
+    milestone: "2026.06.364"
     prior_failures:
+      - experiment_id: exp3926-valid-efficiency-head-to-head
+        verdict: "blocked_upstream_competent_judge_not_ready (.363 — exp3925 artifact missing)"
+        addressed_by: "exp3926 self-blocked because the competent judge artifact never landed. exp3935 now lands a VALIDATED competent judge (fixture AUROC>0.65). This task disk-reads exp3935 + exp3905 and runs the SAME valid_efficiency_head_to_head_3926.py module, asserting the judge clears chance on THIS corpus BEFORE any verdict."
+        retire_if_same_verdict: false
       - experiment_id: exp3917-efficiency-head-to-head-on-robust-harness
         verdict: "complete: efficiency_CHEAPER_NOT_PARITY_energy0.8100_llm0.4423_honest_partial"
-        addressed_by: "exp3917 compared energy (0.81) to a below-chance judge (0.4423), so neither parity nor Pareto-dominance was testable. THIS run uses the exp3925 COMPETENT judge (fixture AUROC>0.65, positive-control-validated) on the SAME corpus, asserts the judge clears chance on THIS corpus BEFORE reporting any verdict, and reports a defensible cost methodology (wall-clock AND FLOP/token, amortized model-load excluded)."
+        addressed_by: "exp3917 compared energy (0.81) to a below-chance judge (0.4423) — no parity testable. This run uses the exp3935 COMPETENT judge on the exp3884 corpus (n>=200) and reports a defensible cost methodology (wall-clock AND FLOP/token, amortized load excluded)."
         retire_if_same_verdict: false
-    title: "VALID EFFICIENCY head-to-head — energy-verifier vs the COMPETENT judge (north-star §5, finally testable; disk-reads exp3925+exp3905, no hard gate): on the exp3884 in-distribution corpus (n>=200), score with BOTH the energy ensemble (cheap CPU forward-pass) and the exp3925 competent GenRM/ThinkPRM judge (via the robust harness). POSITIVE CONTROL: assert the judge AUROC clears a defensible floor (>0.6) on THIS corpus BEFORE any verdict. Report accuracy parity/Pareto (energy within or above the judge CI) + a defensible cost ratio (wall-clock AND FLOP/token, amortized load excluded). Target: 'parity or dominance at Nx cheaper.' HONEST: if the competent judge BEATS energy on accuracy, say so — the cascade then becomes the deployable story. The 60s live-floor applies on THIS full-corpus artifact (NOT a fixture)."
+    title: "VALID EFFICIENCY head-to-head — energy-verifier vs the COMPETENT judge (north-star §5, finally testable; disk-reads exp3935+exp3905, no hard gate): on the exp3884 in-distribution corpus (n>=200), score with BOTH the energy ensemble (cheap CPU forward-pass) and the exp3935 competent GenRM/ThinkPRM judge (via the robust harness). POSITIVE CONTROL: assert the judge AUROC clears a defensible floor (>0.6) on THIS corpus BEFORE any verdict. Report accuracy parity/Pareto (energy within or above the judge CI) + a defensible cost ratio (wall-clock AND FLOP/token, amortized load excluded). Target: 'parity or dominance at Nx cheaper.' HONEST: if the competent judge BEATS energy on accuracy, say so — the cascade then becomes the deployable story."
     priority: critical
     track: research
     max_turns: 60
@@ -238,507 +231,494 @@ tasks:
     model: gpt-5.5
     requires_codex: true
     requires_gpu: true
-    estimated_wall_time_min: 70
+    estimated_wall_time_min: 45
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_3926_valid_efficiency_head_to_head.json
+    deliverable: results/experiment_3936_valid_efficiency_head_to_head.json
     prompt: |
-      CONTEXT. north-star §5 win condition: the verifier earns its place if it is equally effective as
-      the LM at lower cost/latency (efficiency-parity) OR Pareto-dominates (cheaper at equal accuracy
-      AND/OR more accurate at equal cost). The .362 attempt (exp3917) was invalid because its judge was
-      below chance. THIS task re-runs the head-to-head against the exp3925 COMPETENT judge, with a
-      positive control (the judge must clear chance on THIS corpus first) and a defensible cost
-      methodology. The cheap discriminative verifier beating generative verification at fixed compute is
-      the expected result (Budget-aware Discriminative Verification, arXiv:2510.14913); the honest
-      comparator is a competent judge, not a strawman.
+      CONTEXT. north-star §5 defines the verifier win-condition as efficiency-parity (equally accurate
+      at lower cost) OR Pareto-dominance against a COMPETENT comparator. .363 set this up but the judge
+      never landed. exp3935 now lands a validated competent judge. The valid_efficiency_head_to_head_3926.py
+      module already exists from .363 — RUN it against the competent judge. A below-chance comparator is a
+      strawman (FALSE_NEGATIVE_RISK), so the judge MUST clear its positive control on THIS corpus first.
 
-      EXISTING CODE/DATA TO READ FIRST:
-        - results/experiment_3925_competent_judge_build.json (judge_module_path + judge_model_used; the valid comparator)
-        - python/carnot/verify/competent_llm_judge.py (judge_step — back the LLM-judge with this)
-        - results/experiment_3905_cost_instrumented_verify_harness.json + python/carnot/verify/cost_instrumented_verification.py (cost accounting)
-        - results/experiment_3884_in_distribution_error_rich_corpus.json (the in-distribution corpus + per-item ensemble scores)
-        - scripts/experiment_2837_fover_memory_leakage_v3.py (the energy ensemble path)
+      EXISTING CODE/DATA TO READ FIRST (read artifacts via scripts/summarize_artifact.py, not raw JSON):
+        - python/carnot/eval/valid_efficiency_head_to_head_3926.py (the drafted module — adapt the runner to read exp3935 + write results/experiment_3936_*.json)
+        - scripts/experiments/experiment_3926_valid_efficiency_head_to_head.py (the drafted runner)
+        - results/experiment_3935_competent_judge_build.json (the competent judge — judge_module_path, fixture_auroc)
+        - python/carnot/verify/competent_llm_judge.py (judge_step)
+        - python/carnot/verify/cost_instrumented_verification.py (the exp3905 cost harness — wall-clock + FLOP/token)
+        - results/experiment_3884_in_distribution_error_rich_corpus_scores.json (the n>=200 in-distribution corpus)
 
       CONCRETE STEPS:
         0. PRECONDITIONS (blocked_<resource>+EXIT on fail):
-           a. `{project_root}/.venv/bin/python -c "import torch; assert torch.cuda.is_available()"` (blocked_no_cuda).
-           b. DISK-READ FALLBACK (no hard gate): exp3925 exists AND unit_test_passed AND fixture_auroc>0.65;
-              else blocked_upstream_competent_judge_not_ready and EXIT. exp3905 module imports; else blocked_upstream_cost_harness.
-        1. On the exp3884 corpus (n>=200), score with BOTH verifiers via the exp3905 cost harness; the
-           LLM-judge backed by the exp3925 competent judge. Record per-verifier AUROC + total_wall_s +
-           per_item_wall_ms + est_tokens + est_flops (exclude amortized model-load from per-item cost).
-        2. POSITIVE CONTROL: assert llm_judge_auroc > 0.6 on THIS corpus. If it is NOT, write
-           blocked_competent_judge_failed_positive_control_on_corpus and EXIT — do NOT report a parity
-           verdict against a still-broken judge (the FALSE_NEGATIVE_RISK discipline).
-        3. Compute accuracy_parity = energy_auroc within the judge AUROC's bootstrap CI95; pareto_dominates
-           = energy_auroc >= judge_auroc. Compute cost_ratio_walltime + cost_ratio_flops.
-        4. Assert duration_s >= 60 (real competent-judge run over hundreds of items — the FULL-CORPUS
-           artifact). If <60s emit blocked_llm_judge_not_invoked.
+           a. torch.cuda.is_available() (blocked_no_cuda).
+           b. DISK-READ FALLBACK (no hard gate): exp3935 exists AND fixture_auroc>0.65; else
+              blocked_upstream_competent_judge_not_ready and EXIT.
+           c. exp3884 corpus exists with >=200 labeled items; else blocked_corpus_missing.
+        1. Score every corpus item with the energy ensemble (cheap CPU forward-pass) AND the exp3935
+           competent judge (live GGUF via the robust harness). Cache per-item judge scores for exp3937.
+        2. POSITIVE CONTROL: compute the judge AUROC on THIS corpus. If <= 0.6, the comparator is still
+           not competent on this distribution — record honest_partial and do NOT claim parity/dominance.
+        3. Report energy AUROC + CI, judge AUROC + CI, the accuracy verdict (PARITY / ENERGY_DOMINATES /
+           JUDGE_DOMINATES), and the cost ratio (wall-clock AND FLOP/token, amortized model-load excluded).
 
       REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
-        energy_auroc, llm_judge_auroc: principle "Accuracy of each verifier on the SAME labels; the judge is now competent so parity/Pareto is testable."
-        judge_positive_control_passed: principle "BARE BOOL — llm_judge_auroc>0.6 on THIS corpus; the gate the .362 comparison lacked."
-        accuracy_parity: principle "BARE BOOL — energy AUROC within the competent judge's CI95 (equally effective)."
-        pareto_dominates: principle "BARE BOOL — energy AUROC >= judge AUROC (more accurate AND cheaper = strict Pareto win)."
-        cost_ratio_walltime: principle "BARE FLOAT — llm_per_item_ms / energy_per_item_ms; the 'Nx cheaper' headline."
-        cost_ratio_flops: principle "BARE FLOAT — FLOP/token-based ratio (amortized load excluded); substrate-independent corroboration."
-        energy_per_item_ms, llm_per_item_ms: principle "Per-item latency for each verifier — the latency story."
-        judge_model_used: principle "Which GGUF the competent judge loaded (records the comparator config)."
-        n_items, corpus_source, preconditions_checked, model_specs, random_seed, random_seeds_used,
-        reproducibility_checksum, duration_s, inference_substrate:
-          principle "Pre-Launch + Adversarial-Verify — a real competent-judge run over hundreds of items takes wall-clock (live floor 60s on THIS full-corpus artifact); <60s = fabrication."
+        judge_auroc_on_corpus: principle "BARE FLOAT — the positive control; must clear >0.6 BEFORE any parity verdict (the .362 strawman fix)."
+        judge_clears_chance: principle "BARE BOOL — judge_auroc_on_corpus > 0.6; gates the validity of the whole comparison."
+        energy_auroc: principle "BARE FLOAT — the cheap energy verifier's accuracy on the same corpus."
+        accuracy_verdict: principle "PARITY / ENERGY_DOMINATES / JUDGE_DOMINATES — the honest accuracy answer against a competent judge."
+        cost_ratio_wallclock: principle "BARE FLOAT — the 'Nx cheaper' number by wall-clock (amortized load excluded)."
+        cost_ratio_flops: principle "BARE FLOAT — the 'Nx cheaper' number by FLOP/token; the load-invariant cost measure."
+        efficiency_verdict: principle "VALID_EARNS_PLACE / CHEAPER_BUT_LESS_ACCURATE / INCONCLUSIVE — the headline efficiency answer."
+        per_item_judge_scores_path: principle "Where exp3937 reads the cached judge scores (no re-inference in the cascade)."
+        n_items, preconditions_checked, model_specs, random_seed, reproducibility_checksum, duration_s, inference_substrate:
+          principle "Sample-size + Pre-Launch + Adversarial-Verify — live floor 60s on this full-corpus artifact."
 
       FALSIFICATION GATE:
-        - EARNS_PLACE_PARITY_OR_DOMINANCE: judge_positive_control_passed AND (accuracy_parity OR pareto_dominates) AND cost_ratio_walltime > 10.
-          honest_verdict: `complete: efficiency_VALID_EARNS_PLACE_energy<ea>_judge<la>_<ratio>x_cheaper_pareto<bool>_vs_competent_judge`
-        - CHEAPER_BUT_LESS_ACCURATE (honest partial): judge_positive_control_passed AND not(accuracy_parity OR pareto_dominates) AND cost_ratio_walltime > 10.
-          honest_verdict: `complete: efficiency_CHEAPER_<ratio>x_but_JUDGE_MORE_ACCURATE_energy<ea>_judge<la>_cascade_is_the_story`
-        - INCONCLUSIVE: judge_positive_control_passed==false OR cost_ratio_walltime <= 10.
-          honest_verdict: `complete: efficiency_INCONCLUSIVE_<which_failed>`
+        - EFFICIENCY_VALID: judge_clears_chance AND n_items>=200 AND duration_s>=60.
+          honest_verdict: `complete: valid_efficiency_<accuracy_verdict>_judge<judge_auroc_on_corpus>_energy<energy_auroc>_cheaper<cost_ratio_flops>x`
+        - COMPARATOR_STILL_WEAK: NOT judge_clears_chance.
+          honest_verdict: `complete: efficiency_INCONCLUSIVE_judge_below_floor<judge_auroc_on_corpus>_honest_partial`
         honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
 
-      DISCIPLINE: positive control before any verdict; defensible cost; REAL duration (live floor 60s on the
-      full-corpus run). Do NOT fabricate an advantage. Frozen 0.9131 unchanged.
-      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3926_valid_efficiency_head_to_head.py
+      DISCIPLINE: a below-chance judge is not a valid comparator (FALSE_NEGATIVE_RISK). Frozen 0.9131 unchanged.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3936_valid_efficiency_head_to_head.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3927-non-degenerate-cascade-router
-    operator_override: >
-      2026-06-07 operator-outer-loop directive (standing): the Meta-EBM Cascade Router (memory
-      project_meta_ebm_cascade_router), re-run NON-DEGENERATELY against a competent judge. Versioned
-      continuation of exp3918 with a STATED forward difference — escalation_fraction MUST be > 0 (the
-      positive control the .362 cascade lacked, escfrac=0.0) because the judge is now competent and
-      better than energy on close-calls. Disk-reads exp3926 (no hard gate). Not a doomed rerun.
-    milestone: "2026.06.363"
+  - id: exp3937-non-degenerate-cascade-router
+    milestone: "2026.06.364"
     prior_failures:
-      - experiment_id: exp3918-meta-ebm-cascade-router-prototype
-        verdict: "complete: cascade_router_WINS_gap-0.3896_11512.51x_cheaper_at_matched_accuracy_escfrac0.0000"
-        addressed_by: "exp3918 reported WINS but with escalation_fraction=0.0 — the cascade NEVER escalated because the .362 LLM-judge was worse than energy on every item, so the mechanism was untested. THIS run uses the exp3926 per-item COMPETENT-judge scores; with a judge that is actually better than energy on close-calls, escalation is meaningful. POSITIVE CONTROL: assert escalation_fraction>0 BEFORE any cascade-wins claim."
+      - experiment_id: exp3927-non-degenerate-cascade-router
+        verdict: "blocked_upstream_valid_efficiency_missing (.363 — cascaded from the missing exp3926)"
+        addressed_by: "exp3927 self-blocked because exp3926 never landed. exp3936 now lands valid efficiency + cached per-item judge scores. This task disk-reads exp3936 and runs the SAME non_degenerate_cascade_router_3927.py, with a positive control that escalation_fraction>0."
         retire_if_same_verdict: false
-    title: "NON-DEGENERATE Meta-EBM cascade router (positive-control escalation>0; disk-reads exp3926, no hard gate): the cheap energy verifier scores EVERY item; close-calls (energy margin within a tuned band) escalate to the COMPETENT judge (reuse exp3926 per-item judge scores — no re-inference). POSITIVE CONTROL: escalation_fraction MUST be > 0 (the .362 cascade was degenerate at escfrac=0.0). Tune the band on a calibration split, evaluate held-out; report cascade AUROC vs pure-competent-judge AUROC, escalation fraction, and cascade cost vs pure-judge. The deployable form of 'matched accuracy at Nx cheaper' (the Wastefulness Condition is checkable on calibration data alone)."
+      - experiment_id: exp3918-cascade-router-prototype
+        verdict: "complete: cascade_DEGENERATE_escalation_fraction0.0_never_escalated"
+        addressed_by: "the .362 cascade never escalated (escfrac=0.0), so the cascade-cost claim was vacuous. This task TUNES the escalation band on a calibration split so escalation_fraction>0 on held-out (the positive control), then reports cascade AUROC + cost vs the pure competent judge."
+        retire_if_same_verdict: false
+    title: "NON-DEGENERATE Meta-EBM cascade router (positive-control escalation>0; disk-reads exp3936, no hard gate): the cheap energy verifier scores EVERY item; close-calls (energy margin within a tuned band) escalate to the COMPETENT judge (reuse exp3936 cached per-item judge scores — no re-inference). POSITIVE CONTROL: escalation_fraction MUST be > 0 (the .362 cascade was degenerate at escfrac=0.0). Tune the band on a calibration split, evaluate held-out; report cascade AUROC vs pure-competent-judge AUROC, escalation fraction, and cascade cost vs pure-judge. The deployable form of 'matched accuracy at Nx cheaper' (the Wastefulness Condition is checkable on calibration data alone)."
     priority: high
     track: research
     max_turns: 50
     agent_type: codex
     model: gpt-5.5
     requires_codex: true
-    requires_gpu: false
-    estimated_wall_time_min: 30
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_3927_non_degenerate_cascade_router.json
+    deliverable: results/experiment_3937_non_degenerate_cascade_router.json
     prompt: |
-      CONTEXT. The 2026 best practice for cheap-yet-accurate verification is a classifier-first cascade:
-      a cheap classifier on every item that catches confident pass/fail and escalates ONLY the close
-      calls to a competent judge (the Meta-EBM Cascade Router, memory project_meta_ebm_cascade_router;
-      ADAP cost-optimality, arXiv:2605.17609). The .362 cascade (exp3918) was DEGENERATE — escalation_
-      fraction=0.0 — because the judge was below chance and never worth escalating to. THIS task rebuilds
-      the cascade on exp3926's COMPETENT-judge per-item scores, where escalation on close-calls is
-      meaningful, and asserts escalation_fraction>0 as a positive control before any cascade-wins claim.
-      NO new inference: it reuses exp3926 per-item scores.
+      CONTEXT. The Meta-EBM Cascade Router is the deployable form of the efficiency win: score every
+      item with the cheap energy verifier, escalate only close-calls to the competent judge. The .362/.363
+      cascade was DEGENERATE (escalation_fraction=0.0 — never escalated), so its cost claim was vacuous.
+      This task reuses exp3936's cached per-item judge scores (NO new inference) and tunes the escalation
+      band so it actually escalates (>0) on held-out, then measures cascade AUROC + cost vs the pure judge.
 
-      EXISTING CODE/DATA TO READ FIRST:
-        - results/experiment_3926_valid_efficiency_head_to_head.json (per-item energy + competent-judge scores + costs; read off disk)
-        - python/carnot/verify/cost_instrumented_verification.py (reuse the tested cost harness)
-        - results/experiment_3884_in_distribution_error_rich_corpus.json (the corpus + per-item ensemble scores)
+      EXISTING CODE TO READ FIRST (read artifacts via scripts/summarize_artifact.py):
+        - python/carnot/eval/non_degenerate_cascade_router_3927.py (the drafted cascade module — adapt to read exp3936 + write results/experiment_3937_*.json)
+        - scripts/experiments/experiment_3927_non_degenerate_cascade_router.py (the drafted runner)
+        - python/carnot/eval/cascade_router_prototype_3918.py (the prior degenerate prototype — see why escfrac=0.0)
+        - results/experiment_3936_valid_efficiency_head_to_head.json (energy scores + cached per-item judge scores)
 
       CONCRETE STEPS:
-        0. PRECONDITIONS (blocked_<resource>+EXIT on fail):
-           a. DISK-READ FALLBACK (no hard gate): exp3926 exists AND has per-item energy + competent-judge scores
-              AND judge_positive_control_passed==true; else blocked_upstream_valid_efficiency_missing and EXIT.
-        1. Define the cascade: energy scores every item; items whose energy margin |score-threshold|<band
-           escalate to the competent judge (use exp3926 per-item judge scores for escalated items — no re-inference).
-           Tune the band on a calibration split, evaluate on a held-out split.
-        2. POSITIVE CONTROL: assert escalation_fraction > 0. If 0, the cascade is untested — record
-           cascade_degenerate=true and report MARGINAL honestly (do NOT claim WINS).
-        3. Compute cascade_auroc, escalation_fraction, cascade_cost = energy_cost(all)+judge_cost(escalated),
-           cascade_cost_ratio = pure_judge_cost / cascade_cost, and auroc_gap = pure_judge_auroc - cascade_auroc.
+        0. PRECONDITIONS: DISK-READ FALLBACK (no hard gate): exp3936 exists AND has per_item_judge_scores
+           AND judge_clears_chance==true; else blocked_upstream_valid_efficiency_missing and EXIT. No GPU/model.
+        1. Split the corpus into calibration / held-out. On calibration, tune the energy-margin escalation
+           band so escalation_fraction is in a useful range (e.g. 0.05-0.40) — NOT 0.0 and NOT 1.0.
+        2. On held-out: route each item (energy if outside the band, judge if inside), compute cascade AUROC,
+           escalation_fraction, and cascade cost (energy cost for non-escalated + judge cost for escalated)
+           vs pure-judge cost. POSITIVE CONTROL: assert escalation_fraction > 0 BEFORE any cascade-wins claim.
 
       REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
-        cascade_auroc: principle "Accuracy of the classifier-first cascade — should approach the competent-judge AUROC."
-        pure_judge_auroc: principle "The pure-competent-judge baseline the cascade must (near-)match."
-        escalation_fraction: principle "BARE FLOAT — fraction escalated; MUST be > 0 (the .362 positive-control failure was escfrac=0.0)."
-        cascade_degenerate: principle "BARE BOOL — true if escalation_fraction==0 (the .362 failure mode); blocks any WINS claim."
-        cascade_cost_ratio: principle "BARE FLOAT — pure_judge_cost / cascade_cost; the deployable 'Nx cheaper at matched accuracy' number."
-        auroc_gap: principle "pure_judge_auroc - cascade_auroc; small (<0.02) => matched accuracy."
-        band_tuned_on_calibration, n_calibration, n_heldout, preconditions_checked, random_seed,
-        reproducibility_checksum, duration_s, inference_substrate:
-          principle "Methodology — band tuned on calibration, evaluated held-out (no leakage); reuses exp3926 per-item judge scores (aggregation substrate, no live model)."
+        escalation_fraction: principle "BARE FLOAT — MUST be > 0 (the .362 degeneracy fix); the positive control gating any cascade verdict."
+        cascade_non_degenerate: principle "BARE BOOL — escalation_fraction>0 AND <1; the cascade actually routes."
+        cascade_auroc: principle "BARE FLOAT — held-out cascade accuracy."
+        pure_judge_auroc: principle "BARE FLOAT — the pure-competent-judge baseline the cascade must match."
+        cascade_cost_ratio_vs_pure_judge: principle "BARE FLOAT — 'Nx cheaper than always calling the judge' — the deployable efficiency number."
+        cascade_verdict: principle "CASCADE_WINS / CASCADE_MARGINAL / CASCADE_DEGENERATE — the honest deployability answer."
+        preconditions_checked, duration_s, inference_substrate: principle "Aggregation methodology — reuses cached scores, NO new inference; no GGUF/CUDA markers."
 
       FALSIFICATION GATE:
-        - CASCADE_WINS: cascade_degenerate==false AND escalation_fraction > 0 AND auroc_gap < 0.02 AND cascade_cost_ratio > 3.
-          honest_verdict: `complete: cascade_router_WINS_escfrac<e>_gap<g>_<ratio>x_cheaper_at_matched_accuracy_non_degenerate`
-        - CASCADE_MARGINAL: cascade_degenerate==true OR cascade_cost_ratio <= 3 OR auroc_gap >= 0.02.
-          honest_verdict: `complete: cascade_router_MARGINAL_escfrac<e>_gap<g>_ratio<ratio>_degenerate<bool>`
+        - CASCADE_VALID: cascade_non_degenerate AND cascade_auroc within CI of pure_judge_auroc AND cascade_cost_ratio_vs_pure_judge>1.
+          honest_verdict: `complete: cascade_WINS_escfrac<escalation_fraction>_auroc<cascade_auroc>_cheaper<cascade_cost_ratio_vs_pure_judge>x`
+        - CASCADE_DEGENERATE: NOT cascade_non_degenerate.
+          honest_verdict: `complete: cascade_DEGENERATE_escfrac<escalation_fraction>_non_deployable`
         honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
 
-      DISCIPLINE: positive-control escalation>0; reuses exp3926 per-item scores (no re-inference). Frozen 0.9131 unchanged.
-      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3927_non_degenerate_cascade_router.py
+      DISCIPLINE: escalation_fraction>0 is the load-bearing positive control. Frozen 0.9131 unchanged.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3937_non_degenerate_cascade_router.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3928-moat-scissor-replication-second-corpus
-    operator_override: >
-      2026-06-07 operator-outer-loop directive (standing): MOAT replication on an INDEPENDENT corpus.
-      Versioned continuation of exp3916 (MOAT_SURVIVES, single corpus) with a STATED forward difference
-      — it re-runs the scissor on a SECOND held-out corpus (ProcessBench slice / fover_test_v4) neither
-      verifier was tuned on, to show the moat is not a corpus artifact. Routes through the exp3915 robust
-      harness. Not a doomed rerun.
-    milestone: "2026.06.363"
+  - id: exp3938-moat-scissor-replication-independent-corpus
+    milestone: "2026.06.364"
     prior_failures:
-      - experiment_id: exp3916-moat-scissor-accuracy-on-robust-harness
-        verdict: "complete: moat_scissor_MOAT_SURVIVES_residcatch_strong0.9143_ci0.8429-0.9714_overlap0.5000_holds_vs_boosted_self_verify_nres70"
-        addressed_by: "exp3916 proved MOAT_SURVIVES on the exp3884 IN-DISTRIBUTION corpus only — a skeptic says the energy advantage is in-distribution tuning. THIS run replicates the scissor (strong self-verify arm, bootstrap CI, residual-catch + overlap) on a SECOND, INDEPENDENT held-out corpus (ProcessBench slice, fallback data/fover_test_v4.json) neither verifier was tuned on, confirming the moat is not a corpus artifact."
+      - experiment_id: exp3928-moat-scissor-replication
+        verdict: "blocked_all_gguf_inference_failed (.363 — AttributeError: 'ExperimentConfig' has no attribute 'max_tokens_weak')"
+        addressed_by: "exp3928 crashed inside load_robust_generator because the ExperimentConfig passed lacked max_tokens_weak/max_tokens_strong. Those fields are now defined in moat_scissor_replication_3928.py:ExperimentConfig (lines 161-162). THIS task confirms the config carries the fields, then RUNS the SAME module on an independent corpus (ProcessBench math slice; fallback data/fover_test_v4.json) to replicate MOAT_SURVIVES off the in-distribution corpus."
         retire_if_same_verdict: false
-    title: "MOAT SCISSOR replication on an INDEPENDENT corpus (defeats the in-distribution-tuning critique): re-run the exp3916 scissor (strong boosted self-verify arm via the exp3915 robust harness + bootstrap CI residual-catch + error-overlap Jaccard) on a SECOND held-out corpus — a ProcessBench math slice (HuggingFace Qwen/ProcessBench), FALLBACK the local held-out data/fover_test_v4.json — that neither the energy ensemble nor the FoVer-tuned probe was trained on. Confirm MOAT_SURVIVES (residual_catch_ci95.low>0.5 AND overlap<0.6 AND n_res>=30) replicates off the original corpus. Disk-reads exp3915 (no hard gate)."
-    priority: high
+    title: "MOAT SCISSOR replication on an INDEPENDENT corpus (defeats the in-distribution-tuning critique) — FIX the max_tokens_weak AttributeError, then run: confirm moat_scissor_replication_3928.py:ExperimentConfig carries max_tokens_weak/max_tokens_strong and that load_robust_generator receives that config, then re-run the exp3916 scissor (strong boosted self-verify arm via the exp3915 robust harness + bootstrap CI residual-catch + error-overlap Jaccard) on a SECOND held-out corpus — a ProcessBench math slice (HuggingFace Qwen/ProcessBench), FALLBACK the local held-out data/fover_test_v4.json — that neither the energy ensemble nor the FoVer-tuned probe was trained on. Confirm MOAT_SURVIVES (residual_catch_ci95.low>0.5 AND overlap<0.6 AND n_res>=30) replicates off the original corpus."
+    priority: critical
     track: research
-    max_turns: 80
+    max_turns: 70
     agent_type: codex
     model: gpt-5.5
     requires_codex: true
     requires_gpu: true
-    estimated_wall_time_min: 80
+    estimated_wall_time_min: 50
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_3928_moat_scissor_replication.json
+    deliverable: results/experiment_3938_moat_scissor_replication.json
     prompt: |
-      CONTEXT. exp3916 proved MOAT_SURVIVES (the energy ensemble catches 91% of errors a strong
-      self-verifier misses) but only on the exp3884 in-distribution corpus. To rule out a corpus
-      artifact, this task replicates the scissor on a SECOND, INDEPENDENT held-out corpus neither
-      verifier was tuned on. ProcessBench (arXiv:2412.06559) is the canonical independent
-      step-error benchmark (human-annotated first-incorrect-step); the local held-out
-      data/fover_test_v4.json is the robust fallback. PROPERTY measurement (error-set independence),
-      not a generation test.
+      CONTEXT. The accuracy moat landed in-distribution (exp3916 MOAT_SURVIVES: the energy ensemble
+      catches ~91% of the errors a STRONG self-verify misses). The open critique is in-distribution
+      tuning. .363 tried to replicate on an independent corpus but crashed on
+      AttributeError("'ExperimentConfig' object has no attribute 'max_tokens_weak'") inside
+      load_robust_generator (moat_scissor_accuracy_3916.py). The field has since been added to the 3928
+      ExperimentConfig but the experiment never re-ran. THIS task confirms the fix and runs the replication.
 
       EXISTING CODE/DATA TO READ FIRST:
-        - results/experiment_3916_moat_scissor_accuracy.json (reuse its residual_catch / overlap / strong-arm math)
-        - results/experiment_3915_robust_gguf_inference_harness.json + python/carnot/verify/gguf_inference.py (the unblocked inference path)
-        - python/carnot/verify/reasoner_self_verification.py (the TESTED self-verify judge, backed by the robust generator)
-        - scripts/experiment_2837_fover_memory_leakage_v3.py (the k-verifier energy ensemble path)
-        - data/fover_test_v4.json (the held-out FALLBACK corpus; never tuned on)
+        - python/carnot/eval/moat_scissor_replication_3928.py (ExperimentConfig — confirm max_tokens_weak/max_tokens_strong present, lines ~161-162; run_experiment + the generator_loader call site ~822)
+        - python/carnot/eval/moat_scissor_accuracy_3916.py (load_robust_generator ~266-283 — it reads config.max_tokens_weak/strong)
+        - scripts/experiments/experiment_3928_moat_scissor_replication.py (the drafted runner — adapt to write results/experiment_3938_*.json)
+        - results/experiment_3915_robust_gguf_inference_harness.json + python/carnot/verify/gguf_inference.py (the robust harness)
+        - results/experiment_3916_moat_scissor_accuracy.json (the in-distribution MOAT_SURVIVES result to replicate)
+        - data/fover_test_v4.json (local held-out fallback corpus)
 
       CONCRETE STEPS:
         0. PRECONDITIONS (blocked_<resource>+EXIT on fail):
-           a. `{project_root}/.venv/bin/python -c "import torch; assert torch.cuda.is_available()"` (blocked_no_cuda).
-           b. DISK-READ FALLBACK (no hard gate): exp3915 exists AND unit_test_passed AND smoke_tokens>0;
-              else blocked_upstream_gguf_harness_not_ready and EXIT.
-        1. Load the INDEPENDENT corpus: try a ProcessBench math slice (datasets.load_dataset Qwen/ProcessBench,
-           gsm8k/math config, >=120 items with gold first-error labels); on any failure FALL BACK to
-           data/fover_test_v4.json. Record corpus_used + n_items. Score every step with the energy ensemble.
-        2. Run the STRONG (boosted few-shot + per-step) reasoner self-verify over the corpus via the robust generator.
-        3. Partition gold-INCORRECT steps into (A) caught by the reasoner, (B) MISSED. residual_catch_rate =
-           fraction of (B) the energy ensemble catches; BOOTSTRAP CI95 (>=1000 resamples). error_overlap_jaccard
-           over gold-incorrect. Require n_residual_errors >= 30.
+           a. torch.cuda.is_available() (blocked_no_cuda).
+           b. CONFIRM THE FIX: assert moat_scissor_replication_3928.py:ExperimentConfig has attributes
+              max_tokens_weak AND max_tokens_strong, and that the config object passed to the
+              generator_loader is THIS config (not a 3916 config missing the fields). Record config_fix_confirmed.
+           c. DISK-READ FALLBACK: exp3915 ready AND exp3916 has the in-distribution residual_catch baseline; else blocked_upstream_*.
+        1. Load the independent corpus: ProcessBench math slice (HuggingFace Qwen/ProcessBench); on any
+           download failure, FALLBACK to data/fover_test_v4.json. Record which corpus was used + n.
+        2. Run the scissor: strong boosted self-verify arm (live GGUF via the robust harness) vs the energy
+           ensemble; compute residual_catch (energy catches what self-verify misses) with bootstrap CI95 +
+           error-overlap Jaccard. n_res>=30 required for a verdict.
+        3. Verdict: MOAT_SURVIVES iff residual_catch_ci95.low>0.5 AND overlap<0.6 AND n_res>=30.
 
       REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
-        corpus_used: principle "Which independent corpus loaded (processbench_slice / fover_test_v4_fallback) — neither verifier was tuned on it."
-        residual_catch_rate: principle "THE moat metric on the independent corpus — of the reasoner's MISSED errors, the fraction energy catches."
-        residual_catch_ci95: principle "Bootstrap CI95; the gate is on the lower bound (>0.5)."
-        error_overlap_jaccard: principle "Independence — low overlap => different null spaces (the moat replicates); high => redundant."
-        n_residual_errors: principle "Size of set B; the residual CI is meaningful only if >=30."
-        reasoner_auroc_strong: principle "FINDING — the strong self-verify AUROC on the independent corpus."
-        carnot_ensemble_auroc: principle "The energy ensemble AUROC on the independent corpus (records cross-corpus discrimination)."
-        moat_replicates: principle "BARE BOOL — residual_catch_ci95.low>0.5 AND overlap<0.6 AND n_res>=30 on the SECOND corpus."
-        n_items, preconditions_checked, model_specs, random_seed, random_seeds_used,
-        reproducibility_checksum, duration_s, inference_substrate:
-          principle "Pre-Launch + Adversarial-Verify — a live self-verify run over an independent corpus takes wall-clock (live floor 60s); <60s = fabrication."
+        config_fix_confirmed: principle "BARE BOOL — the max_tokens_weak AttributeError fix is in place (config carries the field AND the loader receives that config)."
+        independent_corpus_used: principle "Which independent corpus scored (ProcessBench or fover_test_v4 fallback) — the in-distribution-critique answer."
+        residual_catch: principle "BARE FLOAT — fraction of self-verify-missed errors the energy ensemble catches on the INDEPENDENT corpus."
+        residual_catch_ci95_low: principle "BARE FLOAT — lower bootstrap CI bound; must exceed 0.5 for MOAT_SURVIVES."
+        error_overlap_jaccard: principle "BARE FLOAT — must be < 0.6 (the verifier catches DIFFERENT errors than self-verify)."
+        n_res: principle "BARE INT — residual sample size; must be >= 30 for a verdict."
+        moat_replicated: principle "BARE BOOL — MOAT_SURVIVES replicated off the in-distribution corpus; the headline credibility lens."
+        preconditions_checked, model_specs, random_seed, reproducibility_checksum, duration_s, inference_substrate:
+          principle "Pre-Launch + Adversarial-Verify — live GGUF inference; live floor 60s on this full-corpus artifact."
 
       FALSIFICATION GATE:
-        - MOAT_REPLICATES: residual_catch_ci95.low > 0.5 AND error_overlap_jaccard < 0.6 AND n_residual_errors >= 30.
-          honest_verdict: `complete: moat_scissor_REPLICATES_on_<corpus_used>_residcatch<mean>_ci<lo>-<hi>_overlap<j>_nres<N>_not_a_corpus_artifact`
-        - MOAT_NOT_REPLICATED: residual_catch_ci95.high < 0.3 OR error_overlap_jaccard > 0.7.
-          honest_verdict: `complete: moat_scissor_NOT_REPLICATED_on_<corpus_used>_residcatch<mean>_overlap<j>_corpus_sensitivity_finding`
-        - INCONCLUSIVE: n_residual_errors < 30.
-          honest_verdict: `complete: moat_scissor_INCONCLUSIVE_nres<N>_on_<corpus_used>`
+        - MOAT_REPLICATES: config_fix_confirmed AND residual_catch_ci95_low>0.5 AND error_overlap_jaccard<0.6 AND n_res>=30 AND duration_s>=60.
+          honest_verdict: `complete: moat_REPLICATES_independent_<independent_corpus_used>_residcatch<residual_catch>_ci<residual_catch_ci95_low>_overlap<error_overlap_jaccard>`
+        - MOAT_DOES_NOT_REPLICATE: otherwise (with config_fix_confirmed true).
+          honest_verdict: `complete: moat_DOES_NOT_REPLICATE_independent_residcatch<residual_catch>_ci<residual_catch_ci95_low>`
         honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
 
-      DISCIPLINE: seeds + checksum + preconditions_checked + model_specs; REAL duration (live floor 60s).
-      Do NOT aggregate flagged_adversarial artifacts. Frozen 0.9131 unchanged.
-      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3928_moat_scissor_replication.py
+      DISCIPLINE: confirm the config fix BEFORE inference (the .363 crash root cause). Frozen 0.9131 unchanged.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3938_moat_scissor_replication.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   # --------------------------------------------------------------------------
-  # PHASE 2 — AGENTIC PROOF VENUE first realistic run (north-star §5, second)
+  # PHASE 2 — AGENTIC PROOF VENUE (sequenced second, per north-star §5)
   # --------------------------------------------------------------------------
-  - id: exp3929-arc-agi3-verifier-router-action-efficiency
+  - id: exp3939-arc-agi3-agentic-step2
     operator_override: >
-      2026-06-07 operator-outer-loop directive (standing): the FIRST realistic ARC-AGI-3 agentic run
-      (north-star §5, sequenced SECOND after the offline proof; memory arc-agi3-harness-verifier-proof).
-      Versioned continuation of the exp3919 scaffold (READY, synthetic) with a STATED forward difference
-      — it adds a measured action-efficiency comparison (verifier-router WITH vs WITHOUT the pruner, the
-      Exp1165 ~4x shape) on a richer non-toy env + a real-benchmark access preflight. GPU-free. Not a
-      doomed rerun: exp3919 was infra-only with no science claim.
-    milestone: "2026.06.363"
-    prior_failures:
-      - experiment_id: exp3919-arc-agi3-harness-scaffold-build-test
-        verdict: "complete: arc_agi3_scaffold_READY_pruned8_synthetic_only_agentic_proof_can_follow_offline_proof"
-        addressed_by: "exp3919 shipped a tested but science-free scaffold (synthetic env + verifier-as-router stub). THIS run MEASURES the agentic proof: actions-to-solve WITH the verifier-pruner vs WITHOUT it (random/greedy baseline) on a richer non-toy synthetic ARC-AGI-3-style env, reporting the action-efficiency ratio (the Exp1165 ~4x shape) + a real ARC-AGI-3 benchmark access preflight. Honestly scoped synthetic — no real-benchmark performance claim."
-        retire_if_same_verdict: false
-    title: "ARC-AGI-3 first realistic agentic run — verifier-as-router ACTION-EFFICIENCY WITH vs WITHOUT the pruner (north-star §5, sequenced after the offline proof; GPU-free): extend the exp3919 scaffold to a richer non-toy synthetic ARC-AGI-3-style env (multi-step, larger action space, known goal); measure actions-to-solve WITH the verifier-as-action-pruner (energy-scored action selection) vs a no-verifier baseline (random/greedy), reporting the action-efficiency ratio (the Exp1165 ~4x shape, now with a real baseline). ALSO a real ARC-AGI-3 benchmark access preflight (arXiv:2603.24621). HONEST: synthetic env, NO real-benchmark performance claim."
+      2026-06-08 operator-outer-loop directive (standing): versioned continuation of the ARC-AGI-3
+      agentic-proof venue (exp3929 landed step 1, ratio 1.959 synthetic) with a STATED forward
+      difference — a richer multi-goal env + a LEARNED-VALUE baseline (not just random/greedy) + a real
+      ARC-AGI-3 access preflight. False-positive scope-match vs the prior ARC task; a forward extension,
+      not a doomed rerun.
+    milestone: "2026.06.364"
+    title: "ARC-AGI-3 agentic step 2 — verifier-as-router action-efficiency vs a LEARNED-VALUE baseline (north-star §5, sequenced after the offline proof; GPU-free): extend the exp3929 scaffold to a richer multi-goal synthetic ARC-AGI-3-style env, and compare the energy-verifier-as-action-pruner against BOTH a no-verifier baseline (random/greedy) AND a learned-value baseline (a small fitted value head) — the stronger comparator exp3929 lacked. Report the action-efficiency ratio vs EACH baseline with CIs. ALSO re-run the real ARC-AGI-3 benchmark access preflight (arXiv:2603.24621). HONEST: synthetic env, NO real-benchmark performance claim."
+    priority: high
+    track: research
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_3939_arc_agi3_agentic_step2.json
+    prompt: |
+      CONTEXT. exp3929 took the first ARC-AGI-3 agentic step: verifier-as-router HELPED (action-efficiency
+      ratio 1.959, CI95 [1.742, 2.194]) on a synthetic env vs a random/greedy baseline, and confirmed
+      real-benchmark reachability. The weakness: random/greedy is a weak comparator. This step adds a
+      LEARNED-VALUE baseline (a small fitted value head over the same state features) so the verifier's
+      advantage is measured against a real alternative, in a richer multi-goal env.
+
+      EXISTING CODE TO READ FIRST:
+        - scripts/experiments/experiment_3929_arc_agi3_action_efficiency.py (the step-1 scaffold — extend it; adapt to write results/experiment_3939_*.json)
+        - results/experiment_3929_arc_agi3_action_efficiency.json (the step-1 ratio + env definition + reachability preflight)
+        - python/carnot/eval/ (energy-verifier action-scoring helpers used by the scaffold)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: the exp3929 scaffold imports; results/experiment_3929_*.json exists. No GPU/model
+           (verifier scores cached candidate actions). blocked_upstream_arc_scaffold_missing + EXIT on fail.
+        1. Extend the env: more goal types + a larger action space (multi-step, known goal per episode).
+        2. Run THREE arms over N episodes (fixed seeds): (a) energy-verifier-as-action-pruner,
+           (b) no-verifier random/greedy, (c) a learned-value baseline (fit a small value head on the same
+           state features). Measure actions-to-solve per arm with bootstrap CIs.
+        3. Report the action-efficiency ratio of the verifier vs EACH baseline. HONEST: synthetic env only.
+        4. Re-run the real ARC-AGI-3 access preflight (arXiv:2603.24621); record reachable + any auth gate.
+
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+        ratio_vs_random: principle "BARE FLOAT — verifier action-efficiency vs the no-verifier baseline (the exp3929 comparison, richer env)."
+        ratio_vs_learned_value: principle "BARE FLOAT — verifier action-efficiency vs a LEARNED-VALUE baseline; the stronger comparator exp3929 lacked."
+        ratio_vs_random_ci95: principle "CI for the random comparison."
+        ratio_vs_learned_value_ci95: principle "CI for the learned-value comparison — does the verifier beat a fitted value head?"
+        n_episodes: principle "BARE INT — episodes per arm; sample-size for the CIs."
+        verifier_helps_vs_learned_value: principle "BARE BOOL — ratio_vs_learned_value CI excludes 1.0; the load-bearing agentic datum (verifier beats a real alternative)."
+        real_benchmark_reachable: principle "BARE BOOL — ARC-AGI-3 access preflight; informs whether a real-benchmark run is queueable next."
+        preconditions_checked, random_seed, reproducibility_checksum, duration_s, inference_substrate:
+          principle "Verifier-scoring against cached candidate actions; no live LLM; honest synthetic framing."
+
+      FALSIFICATION GATE:
+        - AGENTIC_STEP2_COMPLETE: n_episodes>=30 AND both ratios reported with CIs.
+          honest_verdict: `complete: arc_agi3_step2_vs_random<ratio_vs_random>_vs_learned_value<ratio_vs_learned_value>_helps<verifier_helps_vs_learned_value>_synthetic`
+        honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
+
+      DISCIPLINE: NO real-benchmark performance claim (synthetic env). Frozen 0.9131 unchanged.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3939_arc_agi3_agentic_step2.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # --------------------------------------------------------------------------
+  # PHASE 3 — SELF-LEARNING MANDATE + HARDWARE + BREADTH
+  # --------------------------------------------------------------------------
+  - id: exp3940-fr11-v27-cascade-band-online-learning
+    operator_override: >
+      2026-06-08 operator-outer-loop directive (standing): versioned lineage continuation (FR-11 v27)
+      with a STATED forward difference — a fresh verification-corpus slice + ONLINE learning of the
+      exp3937 cascade escalation band (Tier-1 self-learning tied to the deployable cascade). Continues
+      the SUCCEEDING v26 (invariant held); false-positive scope-match vs prior FR-11 versions, not a rerun.
+    milestone: "2026.06.364"
+    title: "FR-11 continuous self-learning v27 (research-program.md MANDATE) — load the persisted v26 state (exp3930), continue Tier-1 ONLINE reweighting on a FRESH verification-corpus slice, AND additionally learn the exp3937 cascade escalation band ONLINE (Tier-1 self-learning tied to the deployable cascade artifact). Confirm the learned weighting STILL holds the +0.0185 memory-ablation contribution + frozen 0.9131 across the v26->v27 iteration. CPU counter updates (<1us/update, the Tier-1 hardware path)."
+    priority: high
+    track: research
+    max_turns: 40
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_3940_fr11_v27_cascade_band_online_learning.json
+    prompt: |
+      CONTEXT. research-program.md mandates >=1 continuous self-learning experiment per milestone. v26
+      (exp3930) held the invariant (AUROC 0.908, memory-ablation +0.0185, frozen 0.9131). v27 continues
+      Tier-1 online reweighting on a fresh corpus slice AND newly learns the exp3937 cascade escalation
+      band online — tying the self-learning loop to the deployable cascade. Pure CPU counter updates.
+
+      EXISTING CODE/DATA TO READ FIRST:
+        - results/experiment_3930_fr11_v26_cascade_band_online_learning.json + _state.json (the v26 persisted state to load)
+        - the FR-11 self-learning module the v26 runner used (find via the v26 artifact's module path field)
+        - results/experiment_3937_non_degenerate_cascade_router.json (the cascade escalation band to learn online; disk-read fallback)
+        - a fresh verification-corpus slice (arXiv:2604.07650 reweighting corpus, or the next unused FoVer/ProcessBench slice)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: the v26 _state.json exists and loads; the FR-11 module imports. blocked_upstream_fr11_v26_state_missing + EXIT on fail. No GPU.
+        1. Load the v26 independence-reweighting state. Continue Tier-1 online reweighting on the fresh slice (counter updates only).
+        2. DISK-READ exp3937 (fallback: skip the cascade-band arm if absent, record cascade_band_learned=false). If present, learn the
+           escalation band online from the cascade's calibration outcomes (Tier-1).
+        3. Confirm the v27 weighting STILL yields memory-ablation contribution ~+0.0185 AND frozen 0.9131 unchanged. Persist v27 state.
+
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+        v27_auroc: principle "BARE FLOAT — the v27 ensemble AUROC; the self-learning iteration outcome."
+        memory_ablation_contribution: principle "BARE FLOAT — must still be ~+0.0185; the invariant the self-learning loop must not break."
+        invariant_held: principle "BARE BOOL — memory contribution within tolerance AND frozen 0.9131 unchanged."
+        cascade_band_learned: principle "BARE BOOL — the exp3937 escalation band was learned online (Tier-1 tied to the deployable cascade)."
+        frozen_headline_unchanged: principle "BARE BOOL — 0.9131 never moved by the self-learning update."
+        state_persisted_path: principle "Where the v27 state was persisted for v28."
+        update_microseconds_per_step: principle "BARE FLOAT — Tier-1 hardware-path budget (<1us/update target)."
+        preconditions_checked, random_seed, reproducibility_checksum, duration_s, inference_substrate:
+          principle "Verifier-scoring against cached candidates; CPU counter updates; no live LLM."
+
+      FALSIFICATION GATE:
+        - FR11_V27_OK: invariant_held AND frozen_headline_unchanged.
+          honest_verdict: `complete: fr11_v27_INVARIANT_HELD_auroc<v27_auroc>_memcontrib<memory_ablation_contribution>_cascade_band_learned<cascade_band_learned>_state_persisted`
+        - FR11_V27_REGRESSED: NOT invariant_held.
+          honest_verdict: `complete: fr11_v27_INVARIANT_BROKEN_memcontrib<memory_ablation_contribution>`
+        honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
+
+      DISCIPLINE: never move frozen 0.9131. Tier-1 = CPU counter updates only.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3940_fr11_v27_cascade_band_online_learning.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3941-hardware-continuity-clean
+    operator_override: >
+      2026-06-08 operator-outer-loop directive (standing): Hardware-Task Continuity Discipline — one
+      task per attached board until terminal. False-positive scope-match vs prior hardware-continuity
+      tasks; required forward work, not a doomed rerun. KV260 SSH-not-SD-card per the standing directive.
+    milestone: "2026.06.364"
+    title: "Hardware continuity clean re-run — GateMate terminal-state re-confirmation (n=16 Carnot Ising tile; the board was unreachable in .363) + PolarFire/KV260 opportunistic SSH continuity (PolarFire terminal hash-verified soft-CPU dispatch, NO fabric-acceleration claim; KV260 loaded-overlay via xmutil, toward terminal). NO GGUF/CUDA markers (hardware_smoke substrate); HONEST distinct wall-clock timers (the exp3866 TAUTOLOGY corrigendum). Per-board preconditions: record blocked_<board>_unreachable per board and continue."
+    priority: medium
+    track: infra
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    inference_substrate: hardware_smoke
+    deliverable: results/experiment_3941_hardware_continuity_clean.json
+    prompt: |
+      CONTEXT. Hardware-Task Continuity Discipline mandates one task per attached board until terminal.
+      KV260 is THE sovereignty story (drive to terminal, then freeze); GateMate + PolarFire are
+      opportunistic. In .363 GateMate was unreachable. This task re-confirms each board's state honestly,
+      with DISTINCT wall-clock timers (the exp3866 TAUTOLOGY corrigendum) and NO fabric-acceleration claim.
+
+      EXISTING CODE/DATA TO READ FIRST:
+        - results/experiment_3931_hardware_continuity_clean_rerun.json (the .363 hardware state — GateMate unreachable, PolarFire terminal, KV260 non-terminal)
+        - CLAUDE.md "Pre-Launch Preconditions Discipline" table (GateMate/PolarFire/KV260 rows) + "KV260 SSH-Not-SD-Card Discipline"
+        - ops/north-star.md §3 (KV260 = THE sovereignty story; others opportunistic)
+
+      CONCRETE STEPS (per-board PRECONDITIONS; record blocked_<board>_unreachable and CONTINUE, do not abort the whole task):
+        0a. GateMate: `openFPGALoader -c dirtyJtag --detect` returns the colognechip/GateMate IDCODE. If reachable,
+            attempt the n=16 Carnot Ising tile terminal re-confirmation (DISTINCT timers for synth vs flash vs readback).
+            If unreachable, record blocked_gatemate_board_unreachable and continue.
+        0b. PolarFire: `ssh -o ConnectTimeout=5 polarfire 'true'` exit 0. If reachable, hash-verified soft-CPU
+            dispatch (NO fabric-acceleration claim). Else blocked_polarfire_ssh_timeout.
+        0c. KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` exit 0 (ssh-reachability ONLY; NEVER a
+            host SD-card device-node check — the retired wrong-mechanism precondition). If reachable,
+            `ssh kria 'xmutil listapps'` + `ls /dev/uio*`; record loaded overlay + toward-terminal state.
+            Else blocked_kv260_ssh_unreachable.
+        1. Record each board's outcome with DISTINCT wall-clock timers per operation (no shared/copied duration).
+
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
+        gatemate_reachable, gatemate_state: principle "BARE BOOL + state — terminal re-confirmation or blocked_unreachable (the .363 unreachable follow-up)."
+        polarfire_reachable, polarfire_state: principle "BARE BOOL + state — hash-verified soft-CPU dispatch, NO fabric claim."
+        kv260_reachable, kv260_state: principle "BARE BOOL + state — ssh-reachability (NOT host SD card) + loaded overlay toward terminal."
+        no_fabric_acceleration_claim: principle "BARE BOOL — MUST be true; the narrowed honest hardware claim (POC simulator / edge deployability, not speedup)."
+        distinct_timers: principle "BARE BOOL — per-operation wall-clock timers are distinct (the exp3866 TAUTOLOGY corrigendum; no copied durations)."
+        preconditions_checked, duration_s, inference_substrate: principle "hardware_smoke substrate; NO GGUF/CUDA markers."
+
+      FALSIFICATION GATE:
+        - HARDWARE_CONTINUITY_CLEAN: distinct_timers AND no_fabric_acceleration_claim AND per-board state recorded.
+          honest_verdict: `success: hardware_continuity_clean_gatemate<gatemate_state>_pf<polarfire_state>_kv<kv260_state>_distinct_timers_no_fabric_claim`
+        honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
+
+      DISCIPLINE: KV260 SSH-not-SD-card; distinct timers; no fabric-acceleration claim; never fabricate a board run.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3941_hardware_continuity_clean.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3942-verifier-cross-domain-discriminating-value-map
+    operator_override: >
+      2026-06-08 operator-outer-loop directive (standing): NEW research direction explicitly invited by
+      north-star §5 now that Depth-Over-Breadth is RETIRED (condition met: P0.1 answered, G2 closed,
+      paper_ready=true) — map the verifier's discriminating value across domains. Not facts (retired); a
+      math-vs-code boundary map. Cross-domain scope, not a doomed rerun.
+    milestone: "2026.06.364"
+    title: "Cross-domain verifier discriminating-value MAP (NEW direction; north-star §5 'where SC is NOT near-optimal'): measure the energy ensemble's discriminating value (vs the exp3935 competent judge) on the verifier's KNOWN-STRONG domain (math/step-error) AND its KNOWN-WEAK domain (code), to MAP the moat boundary honestly. A code-domain negative is an INFORMATIVE boundary (defines where the verifier earns its place), not a failure. POSITIVE CONTROL: the math domain must reproduce a defensible energy AUROC before the code result is interpretable."
     priority: medium
     track: research
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
     requires_codex: true
-    requires_gpu: false
+    requires_gpu: true
     estimated_wall_time_min: 40
-    inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_3929_arc_agi3_action_efficiency.json
+    inference_substrate: live_llm_inference
+    deliverable: results/experiment_3942_verifier_cross_domain_map.json
     prompt: |
-      CONTEXT. north-star §5 sequences the ARC-AGI-3 agentic proof SECOND, after the offline verifier
-      proof (which .363 Phase 1 completes). The verifier does three jobs in the harness: router/arbiter,
-      ACTION-PRUNER (verifier-as-free-energy action selection — the Exp1165 pilot showed ~4x fewer
-      actions on synthetic ARC-AGI-3-style puzzles), and trajectory verification. exp3919 shipped a
-      tested scaffold but NO measurement. THIS task takes the first realistic step: measure the
-      action-efficiency advantage of the verifier-as-pruner vs a no-verifier baseline on a richer
-      synthetic env. ARC-AGI-3 (arXiv:2603.24621) scores by action-efficiency and prioritizes domains
-      with verifiers — the ideal venue. DISCIPLINE: honestly scoped — synthetic env, NO real-benchmark
-      performance claim; the real benchmark is future work (record an access preflight).
-
-      EXISTING CODE TO READ FIRST:
-        - python/carnot/agentic/arc_agi3_harness.py (the exp3919 scaffold — Env interface + verifier-as-router)
-        - results/experiment_3919_arc_agi3_harness_scaffold.json (the scaffold readiness + action_pruned_count)
-        - python/carnot/verify/cost_instrumented_verification.py (the cheap energy-verifier scorer for the router)
-        - docs/research-notes/active-inference-phase4-bridge.md (verifier-as-free-energy action selection design)
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS: `import carnot.verify` AND the exp3919 arc_agi3_harness imports
-           (blocked_arc_harness_import + EXIT on fail). No GPU/model required.
-        1. Extend the scaffold env to a richer non-toy synthetic ARC-AGI-3-style task: multi-step,
-           a larger discrete action space, a known goal, deterministic transitions. Run N>=30 episodes.
-        2. WITH-VERIFIER arm: at each state propose candidate actions, score each via the energy verifier,
-           take the lowest-energy (verifier-pruned) action. Record actions-to-solve per episode.
-        3. NO-VERIFIER baseline arm: same env, action selection by random/greedy (no verifier). Record
-           actions-to-solve per episode. Compute action_efficiency_ratio = baseline_actions / verifier_actions
-           (mean over episodes), with a bootstrap CI.
-        4. Real ARC-AGI-3 benchmark access preflight: probe whether the official ARC-AGI-3 env/API is
-           reachable (record reachable bool + note). Do NOT claim any real-benchmark score.
-
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
-        action_efficiency_ratio: principle "BARE FLOAT — baseline_actions / verifier_actions (mean over episodes); the verifier-as-pruner advantage (the Exp1165 ~4x shape, now with a real baseline)."
-        action_efficiency_ci95: principle "Bootstrap CI on the ratio — the advantage is real iff the lower bound > 1.0."
-        verifier_mean_actions, baseline_mean_actions: principle "Mean actions-to-solve per arm — the raw efficiency numbers."
-        n_episodes: principle "Episode count (>=30) — the ratio CI is meaningful only with enough episodes."
-        solve_rate_with_verifier, solve_rate_baseline: principle "Did each arm actually solve the task (not just take fewer actions on failures)."
-        real_benchmark_reachable: principle "BARE BOOL — ARC-AGI-3 official env/API access preflight; the future-work gate."
-        is_synthetic_not_real_benchmark: principle "MUST be true — honest scoping; NO real ARC-AGI-3 performance is claimed."
-        preconditions_checked, random_seed, reproducibility_checksum, duration_s, inference_substrate:
-          principle "Methodology — synthetic env + cheap CPU verifier; no GGUF/CUDA markers; the deliverable is a measured ratio."
-
-      FALSIFICATION GATE:
-        - VERIFIER_ROUTER_HELPS: action_efficiency_ci95.low > 1.0 AND solve_rate_with_verifier >= solve_rate_baseline AND is_synthetic_not_real_benchmark.
-          honest_verdict: `complete: arc_agi3_verifier_router_HELPS_ratio<r>_ci<lo>-<hi>_synthetic_first_agentic_step_real_benchmark_reachable<bool>`
-        - NO_ACTION_ADVANTAGE: action_efficiency_ci95.low <= 1.0 OR solve_rate_with_verifier < solve_rate_baseline.
-          honest_verdict: `complete: arc_agi3_verifier_router_NO_ADVANTAGE_ratio<r>_synthetic_finding`
-        honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
-
-      DISCIPLINE: synthetic only — NO real-benchmark claim. Frozen 0.9131 unchanged.
-      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3929_arc_agi3_action_efficiency.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # --------------------------------------------------------------------------
-  # PHASE 3 — standing mandates + hardware
-  # --------------------------------------------------------------------------
-  - id: exp3930-fr11-v26-cascade-band-online-learning
-    operator_override: >
-      2026-06-07 operator-outer-loop directive (standing): FR-11 self-learning is a research-program.md
-      MANDATE (one per milestone). Versioned lineage continuation (v26) of the SUCCEEDING v25 (exp3921
-      INVARIANT_HELD). STATED forward difference: loads persisted v25 state AND ties Tier-1 online
-      learning to the deployable cascade escalation band (exp3927), not just verifier reweighting.
-    milestone: "2026.06.363"
-    prior_failures:
-      - experiment_id: exp3921-fr11-v25-independence-reweighting
-        verdict: "complete: fr11_v25_INVARIANT_HELD_auroc0.9078_memcontrib0.0185_state_persisted"
-        addressed_by: "v25 landed clean (INVARIANT_HELD). v26 is the next iteration with a forward difference: it loads the persisted v25 state, continues Tier-1 online reweighting on a FRESH corpus slice, AND additionally learns the exp3927 cascade escalation band online — tying self-learning to the deployable artifact. Confirms the invariant still holds across v25->v26."
-        retire_if_same_verdict: false
-    title: "FR-11 continuous self-learning v26 (research-program.md MANDATE) — load the persisted v25 independence-reweighting state (exp3921), continue Tier-1 ONLINE reweighting on a FRESH verification-corpus slice (arXiv:2604.07650), AND additionally learn the exp3927 cascade escalation band ONLINE (Tier-1 self-learning tied to the deployable cascade artifact). Confirm the learned weighting STILL holds the +0.0185 memory-ablation contribution + frozen 0.9131 across the v25->v26 iteration. CPU counter updates (<1us/update, the Tier-1 hardware path)."
-    priority: high
-    track: research
-    max_turns: 50
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    requires_gpu: false
-    estimated_wall_time_min: 30
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_3930_fr11_v26_cascade_band_online_learning.json
-    prompt: |
-      CONTEXT. FR-11 continuous self-learning is the research-program.md MANDATE (Tier-1 online
-      constraint learning). v25 landed clean (exp3921): learned ensemble AUROC 0.9078 (in frozen CI),
-      +0.0185 memory-ablation contribution preserved, state persisted. v26 continues the loop on a fresh
-      slice AND ties self-learning to the deployable cascade escalation band (exp3927), so the
-      self-learning mandate advances the product artifact rather than re-measuring the same invariant.
+      CONTEXT. north-star §5 says the verifier is domain-bound (math strong, facts earned-negative, code
+      weak) but only math/facts were measured. With Depth-Over-Breadth retired, breadth toward NEW
+      directions is invited. This task MAPS the verifier's discriminating value across two domains —
+      math/step-error (known strong) and code (known weak) — vs the competent judge. The goal is an HONEST
+      boundary map: where does the energy moat hold? A code negative DEFINES the domain; it is not a failure.
 
       EXISTING CODE/DATA TO READ FIRST:
-        - results/experiment_3921_fr11_v25_independence_reweighting_state.json (the persisted v25 state to LOAD)
-        - results/experiment_3927_non_degenerate_cascade_router.json (the cascade escalation band to learn online; disk-read, optional)
-        - scripts/experiment_2837_fover_memory_leakage_v3.py (the ensemble + memory-ablation path)
-        - data/fover_corpus_v4.json / data/fover_corpus_v3.json (verification corpus)
+        - results/experiment_3935_competent_judge_build.json + python/carnot/verify/competent_llm_judge.py (the competent comparator)
+        - python/carnot/verify/ energy-ensemble scorers (the same 4 verifiers that score FoVer: fr11_session_memory, tier0r_curry_howard, tier0s_arithmetic_gap, tier0u_logical_consistency)
+        - results/experiment_3884_in_distribution_error_rich_corpus_scores.json (the math/step-error corpus — the POSITIVE-CONTROL domain)
+        - a small code-step corpus (HumanEval/MBPP step-labeled, or the existing code-verification corpus used by exp1999) — find the smallest labeled code-step set on disk
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: `import carnot.verify` succeeds AND the v25 state file loads (blocked_<resource> + EXIT on fail).
-        1. Load the persisted v25 reweighting state.
-        2. Run Tier-1 online independence-reweighting over a FRESH slice (upweight verifiers catching the
-           residual others + the reasoner miss). If exp3927 is present on disk, additionally update the cascade
-           escalation band online from the fresh-slice margins (record band_before -> band_after).
-        3. Re-measure: learned ensemble AUROC (must stay in frozen CI), memory-ablation contribution (~+0.0185),
-           frozen 0.9131 unchanged. Persist v26 state.
+        0. PRECONDITIONS (blocked_<resource>+EXIT on fail): torch.cuda.is_available(); exp3935 ready
+           (fixture_auroc>0.65); both corpora load (a math/step-error slice AND a code-step slice). If no
+           labeled code-step corpus exists on disk, record blocked_no_code_step_corpus and EXIT (do NOT fabricate one).
+        1. POSITIVE CONTROL (math): score the math corpus with the energy ensemble + competent judge; assert
+           energy AUROC reproduces a defensible floor (e.g. >0.8) BEFORE interpreting the code result.
+        2. Score the code corpus with the SAME energy ensemble + competent judge. Compute energy AUROC,
+           judge AUROC, and the energy-vs-judge gap per domain.
+        3. MAP: report where the energy moat holds (energy >= judge - tolerance) vs where it collapses. HONEST:
+           a code collapse is the boundary, not a failure.
 
       REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
-        learned_ensemble_auroc: principle "Must stay within the frozen CI [0.9027,0.9235] — online learning must not degrade the headline."
-        memory_ablation_contribution: principle "Must hold ~+0.0185 (CI [0.0125,0.0245]) — the self-learning component's measured value."
-        frozen_headline_unchanged: principle "0.9131 NEVER silently substituted — the invariant guard."
-        cascade_band_learned: principle "BARE BOOL — whether the exp3927 escalation band was updated online (the deployable-artifact tie-in); false if exp3927 absent."
-        invariant_held: principle "BARE BOOL — did v26 preserve both the CI-band AUROC and the memory contribution."
-        state_persisted_path, n_updates, preconditions_checked, random_seed, reproducibility_checksum, duration_s, inference_substrate:
-          principle "Verifier-scoring methodology — CPU counter updates; persisted state lets v27 continue."
+        math_energy_auroc: principle "BARE FLOAT — the POSITIVE CONTROL; must clear a defensible floor (>0.8) or the cross-domain result is uninterpretable."
+        math_positive_control_passed: principle "BARE BOOL — math energy AUROC cleared the floor; gates interpretation of the code result."
+        code_energy_auroc: principle "BARE FLOAT — the energy ensemble's discriminating value on code (the known-weak domain)."
+        code_judge_auroc: principle "BARE FLOAT — the competent judge on code; the comparator the verifier is mapped against."
+        moat_holds_math: principle "BARE BOOL — energy within/above judge tolerance on math."
+        moat_holds_code: principle "BARE BOOL — energy within/above judge tolerance on code (likely false; an informative boundary, not a failure)."
+        domain_boundary_summary: principle "One-line — where the energy moat holds vs collapses; the deliverable map."
+        preconditions_checked, model_specs, random_seed, reproducibility_checksum, duration_s, inference_substrate:
+          principle "Pre-Launch + Adversarial-Verify — live GGUF judge; live floor 60s; FALSE_NEGATIVE_RISK guarded by the math positive control."
 
       FALSIFICATION GATE:
-        - INVARIANT_HELD: learned_ensemble_auroc in [0.9027,0.9235] AND memory_ablation_contribution >= 0.012 AND frozen_headline_unchanged.
-          honest_verdict: `complete: fr11_v26_INVARIANT_HELD_auroc<a>_memcontrib<m>_cascade_band_learned<bool>_state_persisted`
-        - INVARIANT_BROKEN: otherwise.
-          honest_verdict: `complete: fr11_v26_INVARIANT_BROKEN_auroc<a>_memcontrib<m>_online_reweighting_drifts`
+        - CROSS_DOMAIN_MAPPED: math_positive_control_passed AND both domains scored.
+          honest_verdict: `complete: verifier_cross_domain_mapped_math<math_energy_auroc>_code<code_energy_auroc>_moat_holds_code<moat_holds_code>`
+        - POSITIVE_CONTROL_FAILED: NOT math_positive_control_passed.
+          honest_verdict: `complete: cross_domain_INCONCLUSIVE_math_control_failed<math_energy_auroc>`
         honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
 
-      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3930_fr11_v26_cascade_band_online_learning.py
+      DISCIPLINE: a code negative is an informative boundary; do NOT reopen facts (retired). Frozen 0.9131 unchanged.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3942_verifier_cross_domain_map.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3931-hardware-continuity-clean-rerun
+  # --------------------------------------------------------------------------
+  # PHASE 4 — synthesis + capstone
+  # --------------------------------------------------------------------------
+  - id: exp3943-literature-synthesis
     operator_override: >
-      2026-06-07 operator-outer-loop directive (standing): active hardware-continuity task (GateMate +
-      PolarFire + KV260) per Hardware-Task Continuity Discipline (north-star §3 opportunistic). The .362
-      hardware artifact (exp3922) was FLAGGED (duration_s=0.0 + GGUF/CUDA markers on a hardware-smoke
-      artifact); this CLEAN re-run fixes the methodology (honest distinct timers, NO compute markers).
-      False-positive scope-match vs prior board tasks; required forward work. KV260 via SSH only.
-    milestone: "2026.06.363"
-    prior_failures:
-      - experiment_id: exp3922-hardware-continuity-consolidated
-        verdict: "success: hardware_continuity_...no_fabric_claim"
-        addressed_by: "exp3922 was FLAGGED (duration_s=0.0 + compute-bound GGUF/CUDA markers on a hardware-smoke artifact -> DURATION_TOO_SHORT critical). THIS clean re-run records HONEST distinct timers (duration_s and run_duration_s differ, the exp3866 tautology corrigendum), carries NO GGUF/CUDA markers (inference_substrate: hardware_smoke), and per-board reachability so one board down does not fail the task."
-        retire_if_same_verdict: false
-    title: "Hardware continuity CLEAN re-run (fixes the exp3922 flag) — GateMate terminal-state re-confirmation (n=16 Carnot Ising tile, DISTINCT wall-clock timers, JTAG readback attempt) + PolarFire/KV260 opportunistic SSH continuity (PolarFire terminal hash-verified soft-CPU dispatch, NO fabric-acceleration claim; KV260 loaded-overlay via xmutil, toward terminal). NO GGUF/CUDA markers (hardware_smoke substrate); HONEST distinct timers (the exp3866 TAUTOLOGY corrigendum). Per-board preconditions: record blocked_<board>_unreachable per board and continue."
-    priority: medium
-    track: hardware
-    max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    estimated_wall_time_min: 40
-    inference_substrate: hardware_smoke
-    deliverable: results/experiment_3931_hardware_continuity_clean_rerun.json
-    prompt: |
-      CONTEXT. Per Hardware-Task Continuity Discipline, attached non-terminal boards get continuity
-      coverage each milestone (north-star §3 relaxes to opportunistic). The .362 hardware artifact
-      (exp3922) was FLAGGED for duration_s=0.0 + GGUF/CUDA markers on a hardware-smoke artifact. This
-      clean re-run fixes the methodology: honest distinct timers, NO compute markers. KV260 uses SSH-
-      reachability ONLY (the retired host SD-card precondition is forbidden).
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_3922_hardware_continuity_consolidated.json (the FLAGGED prior result — diagnose the duration_s=0.0)
-        - results/experiment_3867_polarfire_soc_smoke_v4.json (PolarFire terminal hash-verified dispatch)
-        - CLAUDE.md "Pre-Launch Preconditions" GateMate rows + "KV260 SSH-Not-SD-Card Discipline"
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS (record per-board; do NOT fail the whole task if one board is down):
-           a. GateMate: `command -v nextpnr-himbaechel && command -v yosys && command -v openFPGALoader` AND
-              `openFPGALoader -c dirtyJtag --detect` (record blocked_gatemate_* per board and continue).
-           b. PolarFire: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'`.
-           c. KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. NEVER use the retired host SD-card precondition.
-        1. GateMate (if reachable): re-confirm the n=16 tile flashed. Record TWO DISTINCT timers (duration_s
-           and run_duration_s MUST differ — the exp3866 TAUTOLOGY corrigendum). Attempt JTAG readback; if
-           unsupported record readback_supported=false. Assess terminal-state graduation.
-        2. PolarFire (if reachable): re-confirm the terminal hash-verified Ising dispatch (exp3867) — HONESTLY
-           a soft-CPU SSH dispatch with hash verification, NO FPGA fabric / compute-acceleration claim.
-        3. KV260 (if reachable): `ssh kria 'xmutil listapps'` + `ls /dev/uio*`; record loaded overlay + whether
-           the Carnot Ising bitstream is active; assess toward-terminal. NO GGUF/CUDA markers in the artifact.
-
-      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
-        gatemate_reachable, polarfire_reachable, kv260_reachable: principle "Per-board reachability — GateMate via JTAG detect, the others via SSH (KV260 never via host SD card)."
-        gatemate_terminal_state_reached: principle "BARE BOOL — flashed + smoke + readback-or-unsupported + distinct timers; the graduation signal."
-        duration_s, run_duration_s: principle "Two DISTINCT timers (the exp3866 TAUTOLOGY corrigendum); must differ."
-        polarfire_state: principle "Terminal hash-verified dispatch, soft-CPU only — NO fabric-acceleration claim."
-        kv260_state: principle "Loaded overlay + UIO presence — terminal/non-terminal record (north-star §3 KV260-to-terminal)."
-        fabric_acceleration_claimed: principle "MUST be false — neither board demonstrates compute acceleration."
-        preconditions_checked, reproducibility_checksum, inference_substrate:
-          principle "Hardware-smoke methodology — real board interaction; NO GGUF/CUDA markers (the exp3922 flag fix)."
-
-      FALSIFICATION GATE:
-        - CONTINUITY_RECORDED: at least one board reachable AND fabric_acceleration_claimed==false AND duration_s != run_duration_s.
-          honest_verdict: `success: hardware_continuity_clean_gatemate<state>_pf<state>_kv<state>_distinct_timers_no_fabric_claim`
-        - ALL_UNREACHABLE: no board reachable.
-          honest_verdict: `blocked_all_boards_unreachable`
-        honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
-
-      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3931_hardware_continuity_clean_rerun.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp3932-literature-synthesis-agentic-verification
-    operator_override: >
-      2026-06-07 operator-outer-loop directive (standing): routine literature-synthesis task —
-      false-positive scope-match vs prior literature/study-sweep tasks; structurally never a doomed
-      rerun. No-new-inference diagnostic synthesis of the staged 2026 references; updates
-      research-studying.md / research-references.md only (NEVER public docs).
-    milestone: "2026.06.363"
-    title: "Literature synthesis — agentic verification + LLM-judge calibration + cascade efficiency (2026): synthesize the staged references (ProcessBench arXiv:2412.06559, ThinkPRM arXiv:2504.16828, GenRM arXiv:2408.15240, Budget-aware Discriminative Verification arXiv:2510.14913, ARC-AGI-3 arXiv:2603.24621, Self-Correction Illusion arXiv:2606.05976) into a one-page positioning note: where Carnot's cheap-energy-verifier-vs-competent-judge result sits in the 2026 verification-efficiency landscape, and what the next 1-2 highest-leverage experiments are. Updates research-studying.md + research-references.md ONLY — never docs/index.html / README / blog (Public Documentation Discipline). No new inference."
-    priority: medium
+      2026-06-08 operator-outer-loop directive (standing): routine literature-synthesis / study-update
+      task — false-positive scope-match vs prior synthesis tasks; aggregation-only, no new inference,
+      never a doomed rerun.
+    milestone: "2026.06.364"
+    title: "Literature synthesis — where Carnot's NOW-CREDIBLE verifier-earns-its-place result sits in the 2026 verification-efficiency landscape: synthesize the .364 outcomes (competent-judge efficiency head-to-head + independent-corpus moat replication + non-degenerate cascade + ARC-AGI-3 step 2) against ProcessBench / ThinkPRM / GenRM / Budget-aware Discriminative Verification / ARC-AGI-3, and name the next 1-2 highest-leverage experiments. Updates research-studying.md + research-references.md ONLY — never docs/index.html / README / blog (Public Documentation Discipline). No new inference."
+    priority: low
     track: research
-    max_turns: 50
+    max_turns: 30
     agent_type: codex
     model: gpt-5.5
     requires_codex: true
-    requires_gpu: false
-    estimated_wall_time_min: 30
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_3932_literature_synthesis_agentic_verification.json
+    deliverable: results/experiment_3943_literature_synthesis.json
     prompt: |
-      CONTEXT. .363 produces a credible energy-verifier-vs-competent-judge efficiency result + the first
-      ARC-AGI-3 agentic step. This task positions those results in the 2026 verification-efficiency
-      literature so the next milestone's highest-leverage experiments are clear. No-new-inference
-      synthesis; updates research-studying.md + research-references.md ONLY (NEVER public docs per
-      Public Documentation Discipline).
+      CONTEXT. .364 lands the verifier-earns-its-place proof (efficiency vs a competent judge + an
+      independent-corpus moat). Position that result in the 2026 verification-efficiency landscape and
+      steer the next milestone. Public Documentation Discipline: research-studying.md + research-references.md
+      ONLY; never touch docs/index.html / README / blog.
 
-      EXISTING CODE/DOCS TO READ FIRST:
-        - research-references.md (the 2026-06-07 sweep section + prior entries — the source material)
-        - research-studying.md (the scored-candidate ledger to append to)
-        - ops/north-star.md §5 (the strategic frame the synthesis must serve)
-        - results/experiment_3926_* / results/experiment_3928_* (the .363 efficiency + moat results to position; disk-read if present)
+      EXISTING CODE TO READ FIRST (via scripts/summarize_artifact.py):
+        - results/experiment_3936_* (valid efficiency), results/experiment_3937_* (cascade), results/experiment_3938_* (moat replication), results/experiment_3939_* (ARC step 2), results/experiment_3942_* (cross-domain map)
+        - research-references.md + research-studying.md (the append targets)
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: research-references.md AND research-studying.md exist and are readable
-           (blocked_references_missing + EXIT on fail). No GPU/model required.
-        1. Synthesize a one-page positioning note: where Carnot's result (cheap discriminative energy
-           verifier vs a competent GenRM/ThinkPRM judge, parity/Pareto at Nx cheaper) sits among
-           ProcessBench / ThinkPRM / GenRM / Budget-aware Discriminative Verification / ARC-AGI-3.
-        2. Identify the next 1-2 highest-leverage experiments (e.g. ProcessBench full-benchmark
-           head-to-head; ARC-AGI-3 real-benchmark agentic run) with a one-line rationale each.
-        3. Append the note to docs/research-notes/ and a scored candidate to research-studying.md; add any
-           NEW paper to research-references.md. Do NOT touch docs/index.html / README / blog.
+        0. PRECONDITIONS: research-references.md AND research-studying.md exist and are readable (blocked_references_missing + EXIT). No GPU/model.
+        1. Synthesize a one-page positioning note: where Carnot's cheap-energy-verifier-vs-competent-judge
+           result (parity/Pareto at Nx cheaper, if it landed) + the non-degenerate cascade + the replicated
+           moat sit among ProcessBench / ThinkPRM / GenRM / Budget-aware Discriminative Verification / ARC-AGI-3.
+        2. Name the next 1-2 highest-leverage experiments (e.g. a real ARC-AGI-3 agentic run if reachable;
+           a ProcessBench full-benchmark head-to-head) with a one-line rationale each.
+        3. Append the note to docs/research-notes/ + a scored candidate to research-studying.md; file any NEW
+           paper to research-references.md. Do NOT touch docs/index.html / README / blog.
 
       REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
         synthesis_note_path: principle "Where the one-page positioning note landed (docs/research-notes/)."
-        landscape_position_summary: principle "One-line — where Carnot's cheap-verifier-vs-competent-judge result sits in the 2026 landscape."
-        next_highest_leverage_experiments: principle "The 1-2 proposed next experiments with rationale — the convergence steer for the next milestone."
+        landscape_position_summary: principle "One-line — where Carnot's now-credible result sits in the 2026 landscape."
+        next_highest_leverage_experiments: principle "The 1-2 proposed next experiments — the convergence steer for .365."
         new_references_added: principle "BARE INT — count of NEW papers filed to research-references.md (0 is valid)."
         public_docs_untouched: principle "MUST be true — research-studying.md/research-references.md only; no docs/index.html / README / blog edits."
-        preconditions_checked, duration_s, inference_substrate:
-          principle "Aggregation methodology — no new inference; no GGUF/CUDA markers."
+        preconditions_checked, duration_s, inference_substrate: principle "Aggregation; no new inference; no GGUF/CUDA markers."
 
       FALSIFICATION GATE:
-        - SYNTHESIS_COMPLETE: synthesis_note_path is non-empty AND public_docs_untouched==true.
+        - SYNTHESIS_COMPLETE: synthesis_note_path non-empty AND public_docs_untouched==true.
           honest_verdict: `complete: literature_synthesis_positioned_<new_references_added>_new_refs_public_docs_untouched`
         honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
 
-      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3932_literature_synthesis_agentic_verification.py
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3943_literature_synthesis.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  # --------------------------------------------------------------------------
-  # PHASE 4 — capstone
-  # --------------------------------------------------------------------------
-  - id: exp3933-capstone-v363
+  - id: exp3944-capstone-v364
     operator_override: >
-      2026-06-07 operator-outer-loop directive (standing): routine capstone-vN aggregation task —
+      2026-06-08 operator-outer-loop directive (standing): routine capstone-vN aggregation task —
       false-positive scope-match vs every prior capstone; structurally never a doomed rerun. Aggregates
       only non-flagged artifacts.
-    milestone: "2026.06.363"
-    title: "Capstone .363 — the HARDENED verifier scorecard (efficiency now VALID): aggregate the hardened offline proof — ACCURACY (moat REPLICATED on a second/independent corpus) + EFFICIENCY (energy vs a COMPETENT judge: parity/Pareto + cost ratio, the .362 below-chance strawman fixed) + the NON-DEGENERATE cascade (escalation>0) + the first ARC-AGI-3 agentic run (action-efficiency) + FR-11 v26 + hardware. ANSWER the operator's 'does the verifier earn its place' question against a competent judge. paper_ready stays TRUE; frozen 0.9131 unchanged."
+    milestone: "2026.06.364"
+    title: "Capstone .364 — the verifier scorecard with the efficiency axis FINALLY LANDED against a COMPETENT judge: aggregate the now-unblocked offline proof — EFFICIENCY (energy vs a competent judge: parity/Pareto + cost ratio) + the NON-DEGENERATE cascade (escalation>0) + the INDEPENDENT-corpus moat replication + the ARC-AGI-3 step-2 agentic datum + FR-11 v27 + the cross-domain map + hardware. ANSWER the operator's 'does the verifier earn its place?' question against a competent judge (the .363 INCONCLUSIVE now resolved). paper_ready stays TRUE; frozen 0.9131 unchanged."
     priority: high
     track: research
     max_turns: 50
@@ -746,21 +726,20 @@ tasks:
     model: gpt-5.5
     requires_codex: true
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_3933_capstone_v363.json
+    deliverable: results/experiment_3944_capstone_v364.json
     prompt: |
-      CONTEXT. Capstone for .363 — the milestone that makes the offline verifier proof's EFFICIENCY axis
-      CREDIBLE (the .362 efficiency comparison used a below-chance judge strawman) and REPLICATES the
-      ACCURACY moat on an independent corpus. Aggregate the verdicts into one HARDENED VERIFIER
-      SCORECARD, CONDITIONED on which upstream artifacts landed and are non-flagged. Strategic weight:
-      BOTH energy-core theses (selection P0.1 + generation EBT) are bounded-negative; the VERIFIER is the
-      surviving asset, and .363 honestly tests whether it earns its place against a competent competitor.
-      Do NOT manufacture a headline. paper_ready stays TRUE.
+      CONTEXT. Capstone for .364 — the milestone that LANDS the verifier-earns-its-place proof that .363
+      blocked (capstone .363: efficiency=INCONCLUSIVE, moat_replicated=false, earns=false). Aggregate the
+      verdicts into one HARDENED VERIFIER SCORECARD, conditioned on which upstreams landed and are
+      non-flagged. Both energy-core theses (selection P0.1 + generation EBT) remain bounded-negative; the
+      VERIFIER is the surviving asset, and .364 honestly tests whether it earns its place against a
+      competent competitor. Do NOT manufacture a headline. paper_ready stays TRUE.
 
       EXISTING CODE TO READ FIRST (read each via scripts/summarize_artifact.py, NOT raw JSON):
-        - results/experiment_3925_* (competent judge), results/experiment_3926_* (valid efficiency)
-        - results/experiment_3927_* (non-degenerate cascade), results/experiment_3928_* (moat replication)
-        - results/experiment_3929_* (ARC agentic), results/experiment_3930_* (FR-11 v26), results/experiment_3931_* (hardware)
-        - results/experiment_3932_* (literature synthesis — the next-step steer)
+        - results/experiment_3935_* (competent judge), results/experiment_3936_* (valid efficiency)
+        - results/experiment_3937_* (non-degenerate cascade), results/experiment_3938_* (moat replication)
+        - results/experiment_3939_* (ARC step 2), results/experiment_3940_* (FR-11 v27)
+        - results/experiment_3941_* (hardware), results/experiment_3942_* (cross-domain map), results/experiment_3943_* (literature steer)
         - scripts/publication_gate.py --json (paper_ready + unmet_gates)
 
       CONCRETE STEPS:
@@ -770,34 +749,33 @@ tasks:
            honest state (the milestone is robust to partial landing).
         2. Record the conditioned verdicts (below). Run publication_gate.py --json for paper_ready/unmet_gates.
         3. ANSWER the operator decision: given the EFFICIENCY verdict against a COMPETENT judge + the
-           REPLICATED moat + the cascade, state whether the verifier EARNS ITS PLACE (efficiency-parity or
-           Pareto-dominance at lower cost — the operator win condition) and the recommended next step (the
-           offline proof now credible -> scale the ARC-AGI-3 agentic-proof venue; the loop recommends, the
-           operator decides).
+           REPLICATED moat + the non-degenerate cascade, state whether the verifier EARNS ITS PLACE
+           (efficiency-parity or Pareto-dominance at lower cost — the operator win condition) and the
+           recommended next step (the loop recommends; the operator decides).
 
       REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU, no {{value,principle}} wrapper):
-        efficiency_verdict: principle "VALID_EARNS_PLACE / CHEAPER_BUT_LESS_ACCURATE / INCONCLUSIVE from exp3926 — the EFFICIENCY axis answer against a COMPETENT judge (the .362 strawman fixed)."
+        judge_was_competent: principle "BARE BOOL — did the .364 judge clear its positive control (the .362/.363 strawman finally fixed)."
+        efficiency_verdict: principle "VALID_EARNS_PLACE / CHEAPER_BUT_LESS_ACCURATE / INCONCLUSIVE from exp3936 — the efficiency answer against a COMPETENT judge."
         efficiency_cost_ratio: principle "BARE FLOAT — the measured 'Nx cheaper' number against the competent judge."
-        judge_was_competent: principle "BARE BOOL — did the .363 judge clear its positive control (fixing the .362 below-chance comparator)."
-        moat_replicated: principle "BARE BOOL — did MOAT_SURVIVES replicate on the independent corpus (exp3928); the in-distribution-critique answer."
-        cascade_verdict: principle "Cascade router WINS/MARGINAL + whether it was non-degenerate (escalation>0) — the deployable efficiency form."
-        verifier_earns_its_place: principle "BARE BOOL — TRUE iff (parity or Pareto) against a COMPETENT judge AND decisively cheaper; the operator win condition met (against a valid comparator this time)."
-        arc_agentic_advantage: principle "The verifier-as-router action-efficiency ratio (exp3929) — the first agentic-proof datum."
-        fr11_v26_invariant: principle "Self-learning mandate outcome — invariant held across v25->v26."
-        hardware_outcome: principle "GateMate terminal-assessment + PolarFire/KV260 continuity — honest no-fabric-claim record (exp3922 flag fixed)."
-        facts_route_retired: principle "BARE BOOL — the graph-grounding facts route retired to future-work (exp3924); the verifier stays math/step-error domain-bound."
+        moat_replicated: principle "BARE BOOL — did MOAT_SURVIVES replicate on the independent corpus (exp3938); the in-distribution-critique answer."
+        cascade_verdict: principle "Cascade WINS/MARGINAL/DEGENERATE + whether escalation>0 — the deployable efficiency form."
+        verifier_earns_its_place: principle "BARE BOOL — TRUE iff (parity or Pareto) against a COMPETENT judge AND decisively cheaper; the operator win condition, now against a VALID comparator."
+        arc_agentic_advantage_vs_learned_value: principle "exp3939 verifier-vs-learned-value action-efficiency — the strengthened agentic datum."
+        fr11_v27_invariant: principle "Self-learning mandate outcome — invariant held across v26->v27."
+        cross_domain_boundary: principle "Where the energy moat holds vs collapses (exp3942) — the domain map."
+        hardware_outcome: principle "GateMate/PolarFire/KV260 continuity — honest no-fabric-claim record."
         both_energy_theses_bounded: principle "BARE BOOL — TRUE (selection P0.1 + generation EBT both bounded-negative); the strategic context."
-        paper_ready: principle "MUST stay true — the milestone adds credibility lenses, not a new headline; report unmet_gates not a count."
+        paper_ready: principle "MUST stay true — the milestone resolves the .363 INCONCLUSIVE, it does not add a new headline; report unmet_gates not a count."
         unmet_gates, frozen_headline_unchanged: principle "G1-G4 status + the 0.9131 invariant guard."
-        operator_next_step_recommendation: principle "Given the now-credible offline proof, the recommended next forward step (scale the ARC-AGI-3 agentic-proof venue) for the operator to choose."
+        operator_next_step_recommendation: principle "Given the now-resolved offline proof, the recommended next forward step (scale the ARC-AGI-3 agentic-proof venue / real-benchmark run) for the operator to choose."
         flagged_artifacts_excluded, preconditions_checked, duration_s, inference_substrate:
-          principle "Aggregation methodology — lists which upstream artifacts were skipped for flagged_adversarial; no GGUF/CUDA markers."
+          principle "Aggregation methodology — lists which upstreams were skipped for flagged_adversarial; no GGUF/CUDA markers."
 
       FALSIFICATION GATE:
         - CAPSTONE_COMPLETE: paper_ready==true AND frozen_headline_unchanged AND all landed non-flagged verdicts aggregated.
-          honest_verdict: `complete: capstone_v363_efficiency<verdict>_moat_replicated<bool>_earns<bool>_paper_ready_true_frozen_unchanged`
+          honest_verdict: `complete: capstone_v364_efficiency<efficiency_verdict>_moat_replicated<moat_replicated>_earns<verifier_earns_its_place>_paper_ready_true_frozen_unchanged`
         honest_verdict MUST start with a terminal prefix or `blocked_<resource>`.
 
       DISCIPLINE: never aggregate flagged_adversarial artifacts; never move frozen 0.9131.
-      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3933_capstone_v363.py
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3944_capstone_v364.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
