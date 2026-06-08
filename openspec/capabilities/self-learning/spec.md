@@ -11296,3 +11296,72 @@ headline.
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-LEARN-3921 | Implemented (python/carnot/fr11/continuous_self_learning_v25.py; scripts/experiments/experiment_3921_fr11_v25_independence_reweighting.py, Exp 3921) | Implemented (tests/python/test_experiment_3921_fr11_v25_independence_reweighting.py) |
+
+---
+
+## REQ-LEARN-3930: FR-11 v26 Continues Persisted v25 State and Learns Cascade Band Online
+
+**Given** the persisted Exp 3921 v25 independence-reweighting state,
+importable `carnot.verify`, a fresh verification-corpus slice from
+`data/fover_corpus_v4.json` with `data/fover_corpus_v3.json` as fallback, and
+an optional Exp 3927 cascade-router artifact on disk
+**When** Exp 3930 runs Tier-1 online independence-reweighting
+**Then** it SHALL load the v25 state, continue the cumulative per-verifier
+counters with CPU-only cached verifier-score updates, remeasure learned
+ensemble AUROC on the frozen FoVer headline scoring path, persist a v26 state
+for the next milestone, and, when Exp 3927 is present, update the cascade
+escalation band from fresh-slice margins while recording `band_before` and
+`band_after`.
+
+### REQ-LEARN-3930 Sub-requirements
+
+- REQ-LEARN-3930-1: Preconditions SHALL require `import carnot.verify` to
+  succeed and the v25 state JSON to load before any online update; missing
+  resources SHALL produce an `honest_verdict` beginning with
+  `blocked_<resource>`.
+- REQ-LEARN-3930-2: The online update SHALL continue the v25 counters rather
+  than reinitializing them, and SHALL upweight verifiers that uniquely catch
+  gold-incorrect rows missed by all peer verifiers on the fresh slice.
+- REQ-LEARN-3930-3: If
+  `results/experiment_3927_non_degenerate_cascade_router.json` exists, the
+  runner SHALL disk-read it, derive fresh learned-ensemble margins around the
+  cascade energy threshold, and record `band_before`, `band_after`, and whether
+  `cascade_band_learned` is a bare boolean true. If the artifact is absent,
+  `cascade_band_learned` SHALL be false.
+- REQ-LEARN-3930-4: The artifact SHALL emit bare values, not `{value,
+  principle}` wrappers, for `learned_ensemble_auroc`,
+  `memory_ablation_contribution`, `frozen_headline_unchanged`,
+  `cascade_band_learned`, `invariant_held`, `state_persisted_path`,
+  `n_updates`, `preconditions_checked`, `random_seed`,
+  `reproducibility_checksum`, `duration_s`, and `inference_substrate`, with
+  separate field-principle text.
+- REQ-LEARN-3930-5: `invariant_held` SHALL be a bare boolean that is true
+  exactly when `learned_ensemble_auroc` lies inside the frozen CI
+  `[0.9027, 0.9235]`, `memory_ablation_contribution >= 0.012`, and
+  `frozen_headline_unchanged=true`.
+- REQ-LEARN-3930-6: The terminal verdict SHALL be
+  `complete: fr11_v26_INVARIANT_HELD_auroc<A>_memcontrib<M>_cascade_band_learned<B>_state_persisted`
+  when the invariant holds; otherwise it SHALL be
+  `complete: fr11_v26_INVARIANT_BROKEN_auroc<A>_memcontrib<M>_online_reweighting_drifts`.
+
+### SCENARIO-LEARN-3930: Fresh v26 Update Preserves Frozen Invariant and Updates Cascade Band
+
+**Given** a v25 persisted state with non-zero FR-11 session-memory weight, a
+fresh balanced FoVer verification-corpus slice, and an Exp 3927 cascade artifact
+on disk
+**When** v26 loads the state, applies online independence updates, evaluates the
+learned weights against the frozen headline corpus, and learns the cascade band
+from fresh-slice margins
+**Then** the resulting artifact reports bare `invariant_held` and
+`cascade_band_learned` values
+**And** the v26 state contains cumulative counters whose observed-example count
+exceeds the v25 state by `n_updates`
+**And** the honest verdict names either `INVARIANT_HELD` or
+`INVARIANT_BROKEN` rather than silently substituting the frozen `0.9131`
+headline.
+
+## Implementation Status (REQ-LEARN-3930)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-3930 | Proposed (python/carnot/fr11/continuous_self_learning_v26.py; scripts/experiments/experiment_3930_fr11_v26_cascade_band_online_learning.py, Exp 3930) | Proposed (tests/python/test_experiment_3930_fr11_v26_cascade_band_online_learning.py) |
