@@ -1,0 +1,90 @@
+{
+  "K": 6,
+  "corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/gsm8k_powered_600.jsonl",
+  "delta_by_regime": {
+    "gold": {
+      "lower_1sigma": 0.2484,
+      "mean_delta": 0.2622,
+      "n_seeds": 3,
+      "per_seed": [
+        0.2733,
+        0.2467,
+        0.2667
+      ],
+      "std_delta": 0.0139
+    },
+    "process_plus_sc": {
+      "lower_1sigma": -0.0444,
+      "mean_delta": 0.0133,
+      "n_seeds": 3,
+      "per_seed": [
+        -0.02,
+        0.08,
+        -0.02
+      ],
+      "std_delta": 0.0577
+    },
+    "process_weighted": {
+      "lower_1sigma": 0.0336,
+      "mean_delta": 0.0911,
+      "n_seeds": 3,
+      "per_seed": [
+        0.08,
+        0.1533,
+        0.04
+      ],
+      "std_delta": 0.0575
+    },
+    "sc_weighted": {
+      "lower_1sigma": -0.0806,
+      "mean_delta": 0.0267,
+      "n_seeds": 3,
+      "per_seed": [
+        0.0133,
+        0.14,
+        -0.0733
+      ],
+      "std_delta": 0.1073
+    },
+    "unweighted": {
+      "lower_1sigma": -0.0553,
+      "mean_delta": 0.0423,
+      "n_seeds": 3,
+      "per_seed": [
+        0.0267,
+        0.1467,
+        -0.0466
+      ],
+      "std_delta": 0.0976
+    }
+  },
+  "duration_s": 18949.5,
+  "experiment": "process_reward_weighted_sft_onpolicy_powered",
+  "gen_truncation_rate_by_seed": [
+    0.2111,
+    0.2,
+    0.1778
+  ],
+  "gold_control_ok_all_seeds": true,
+  "honest_verdict": "complete: powered_onpolicy_sft_TRUNCATION_INVALID_base0.231_procplussc_d0.0133pm0.0577_gold_d0.2622_nseed3",
+  "inference_substrate": "live_gpu_onpolicy_generation_plus_lora_sft_plus_verifier_ensemble",
+  "interpretation": "TEACHES iff a verifier-weighted regime's per-seed mean delta-vs-base clears zero at the lower 1-sigma band AND gold>=base each seed (control) AND trunc<5% each seed. process_plus_sc is the registry candidate; sc_weighted isolates the cheap self-consistency signal; if sc_weighted teaches but process_weighted doesn't, the lift is self-consistency (free) not the verifier (the honest moat question).",
+  "mean_base_accuracy": 0.2311,
+  "n_seeds_completed": 3,
+  "partial": false,
+  "principle_random_seed": "seeded generation makes the teaching signal reproducible per seed",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "status": "TRUNCATION_INVALID",
+  "teaching_by_regime": {
+    "process_plus_sc": false,
+    "process_weighted": false,
+    "sc_weighted": false
+  },
+  "temperature": 0.4,
+  "title": "powered_onpolicy_verifier_self_improvement_reward",
+  "truncation_ok_all_seeds": false
+}
