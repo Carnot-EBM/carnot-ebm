@@ -1,0 +1,22 @@
+{
+  "experiment": "outcome_verifier_learn_derisk_draft",
+  "gate": "learned held-out outcome-AUROC >= 0.80 (worth swapping into RFT)",
+  "gate_pass": true,
+  "gold_correct_base_rate": 0.8083,
+  "heldout_auroc_fraction_certified_baseline": 0.5721,
+  "heldout_auroc_learned_outcome_verifier": 0.9486,
+  "heldout_auroc_process_only_no_SC": 0.7393,
+  "honest_verdict": "complete: outcome_verifier_learn_BEATS_learned0.949_vs_fraccert0.572_base0.808",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "interpretation": "If learned >> fraction_certified (~0.73): the gold-trained outcome-verifier carries real outcome signal the fixed process-reward misses -> swap it into the process-reward RFT arm and re-test (does 'verifier teaches' turn positive?). If learned ~ fraction_certified: process features alone don't capture outcome -> add richer features (self-consistency across K samples, answer-chain arithmetic check) before the RFT build.",
+  "n_traces": 720,
+  "single_feature_auroc_full": {
+    "char_len_k": 0.3219,
+    "fraction_certified": 0.6282,
+    "mean_reward": 0.6908,
+    "min_reward": 0.6898,
+    "n_chunks": 0.5552,
+    "self_consistency": 0.9269,
+    "std_reward": 0.6657
+  }
+}
