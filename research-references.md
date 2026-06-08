@@ -21486,3 +21486,47 @@ honestly testable.
 - **arXiv:2502.11250 (Uncertainty-Aware Step-wise Verification with Generative
   Reward Models)** — calibrated step-wise generative RM; informs the credible
   judge's per-step uncertainty parse and the cascade router's escalation band.
+
+## 2026-06-08 (.364 planning sweep — LAND the credible efficiency proof after the .363 cascade-fail)
+
+Root-cause context: .363 set out to make the efficiency win credible but its core
+science cascade-FAILED. exp3925 (build a competent GenRM/ThinkPRM judge) produced
+**no artifact at all** (the live-GGUF build burned its budget in one over-scoped
+task), which blocked exp3926 (valid efficiency head-to-head) and exp3927 (cascade);
+exp3928 (moat replication on an independent corpus) hit a per-script code bug
+(`AttributeError: 'ExperimentConfig' object has no attribute 'max_tokens_weak'`) and
+emitted `blocked_all_gguf_inference_failed`. The `gguf_inference.py` harness itself
+SMOKE-PASSES (CUDA ok, model loads, 1 token generated) — the failures were
+over-scoping + an integration bug, not a broken substrate. The .363 capstone
+(exp3933) honestly recorded `efficiency INCONCLUSIVE / moat_replicated false /
+verifier_earns_its_place false`. So the north-star §5 question — does the verifier
+earn its place against a *competent* judge — is STILL OPEN.
+
+What DID land in .363 (the surviving wins): exp3929 ARC-AGI-3 verifier-as-router
+action-efficiency **HELPS 1.96x** (CI95 [1.74, 2.19]) on a synthetic env with
+`real_benchmark_reachable=true`; exp3930 FR-11 v26 INVARIANT_HELD (auroc 0.908,
+memcontrib +0.0185); exp3931 hardware (PolarFire terminal, KV260 carnot_ising
+overlay INACTIVE = non-terminal, GateMate unreachable).
+
+The .364 convergence step: DE-RISK the twice-failed competent-judge build by
+SPLITTING it — (a) a CPU-only diagnosis from exp3917's 528 cached per-item
+(energy_score + llm_judge_score + label) that flips the score polarity to prove the
+0.4423 below-chance judge was a polarity/parse bug (deterministic, cannot
+cascade-fail), shipping the corrected scorer + a unit test on cached data; then
+(b) a SMALL live-GGUF build that wires the corrected scorer + asserts fixture
+AUROC>0.65. Then the valid efficiency head-to-head + non-degenerate cascade + moat
+replication can finally land.
+
+- **ThinkPRM (arXiv:2504.16828) — corroboration refreshed 2026-06-08.** Under a
+  fixed token budget a CoT-then-verdict generative PRM beats LLM-as-judge by 7.2%
+  on a ProcessBench subset, fine-tuned on only ~1% of the process labels a
+  discriminative PRM needs. Reinforces that the .364 competent judge MUST be
+  GenRM/ThinkPRM-style (structured per-step CoT -> parsed binary verdict +
+  few-shot + polarity-checked scoring), not a raw "yes/no", before any parity
+  claim against Carnot's cheap energy verifier.
+- **Standing references (unchanged, load-bearing for .364):** ProcessBench
+  arXiv:2412.06559 (independent held-out corpus), GenRM arXiv:2408.15240,
+  Budget-aware Discriminative Verification arXiv:2510.14913 (the cheap
+  single-forward-pass verifier beating generative verification at fixed compute —
+  exactly Carnot's energy verifier), ARC-AGI-3 arXiv:2603.24621 (the agentic
+  venue, now with a measured 1.96x router advantage to extend).
