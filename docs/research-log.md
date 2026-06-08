@@ -5103,3 +5103,9 @@ The critical path for milestone .250:
 - theme: Pipeline Execution Verification
 - key result: Honest negative — no experiment commits found since activation of 2026.06.363.
 - acceptance: 0/0 criteria met
+
+### Milestone 2026.06.363
+- exp_range: no data available this milestone
+- theme: Operational Retrospective for 2026.06.363
+- key result: Honest negative: no experiment commits found since activation.
+- acceptance: 0/0 criteria met
