@@ -49,23 +49,19 @@ def _generate_on_policy(rows, *, K, temp, smoke, seed=0):
     torch.manual_seed(seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
+    from generator_spec import for_model
+    spec = for_model(MODEL_ID)  # decoupled: swap base model = change MODEL_ID (see generator_spec.py)
+
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tok = AutoTokenizer.from_pretrained(MODEL_ID)
     if tok.pad_token is None:
         tok.pad_token = tok.eos_token
-    im_end = tok.convert_tokens_to_ids("<|im_end|>")
-    stop_ids = [tok.eos_token_id] + ([im_end] if isinstance(im_end, int) and im_end >= 0 else [])
+    stop_ids = spec.resolve_stop_ids(tok)  # per-model turn-enders (eos + <|im_end|> etc.)
     max_len = 384 if smoke else 768
     max_new = 512 if smoke else 1024  # MiniCPM is verbose; +repetition_penalty below
 
     def _fmt(q):
-        msgs = [{"role": "user", "content": f"Solve the problem. End with the final number.\n\n{q}"}]
-        try:
-            # no-think: MiniCPM5 over-thinks GSM8K + rambles otherwise (100% trunc).
-            return tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True,
-                                           enable_thinking=False)
-        except Exception:
-            return f"Question: {q}\nSolution:"
+        return spec.format_prompt(tok, q)  # chat template + enable_thinking per model
 
     model = AutoModelForCausalLM.from_pretrained(MODEL_ID, dtype=torch.bfloat16).to(device)
     model.eval()

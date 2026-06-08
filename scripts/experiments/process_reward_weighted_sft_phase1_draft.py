@@ -142,28 +142,25 @@ def _run_training_and_eval(rows_tr, rows_ev, regimes, *, smoke: bool) -> dict:
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
+    from generator_spec import for_model
+    spec = for_model(MODEL_ID)  # decoupled: swap base model = change MODEL_ID (see generator_spec.py)
+
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tok = AutoTokenizer.from_pretrained(MODEL_ID)
     if tok.pad_token is None:
         tok.pad_token = tok.eos_token
-    # STOP TOKENS: the chat template ends the turn with <|im_end|> (which the model
-    # emits), NOT </s> (tok.eos_token). Passing only </s> meant generation NEVER stopped
-    # -> 97% truncation. Use BOTH (the generation_config's [</s>, <|im_end|>]).
-    _im_end = tok.convert_tokens_to_ids("<|im_end|>")
-    stop_ids = [tok.eos_token_id] + ([_im_end] if isinstance(_im_end, int) and _im_end >= 0 else [])
+    # STOP TOKENS via the spec: the classic bug is a chat model ending its turn on
+    # <|im_end|> while tok.eos_token is </s>, so passing only eos means generation never
+    # stops (-> 97% truncation). spec.resolve_stop_ids picks the right enders per model.
+    stop_ids = spec.resolve_stop_ids(tok)
     max_len = 768 if not smoke else 384
     epochs = 1 if smoke else 2
     lr = 2e-4  # v2: LoRA (adapter-only) LR. v1's full-FT at 1e-5 forgot/collapsed.
 
     def _fmt(q: str) -> str:
-        msgs = [{"role": "user", "content": f"Solve the problem. End with the final number.\n\n{q}"}]
-        try:
-            # enable_thinking=False: MiniCPM5 is a reasoning model that over-thinks GSM8K
-            # and rambles past any token cap; no-think -> concise answer that terminates.
-            return tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True,
-                                           enable_thinking=False)
-        except Exception:
-            return f"Question: {q}\nSolution:"
+        # spec.format_prompt handles the chat template + enable_thinking per model
+        # (MiniCPM5 over-thinks GSM8K -> spec sets enable_thinking=False).
+        return spec.format_prompt(tok, q)
 
     max_new = 512 if smoke else 1024  # headroom above GSM8K's ~320-token solutions
     @torch.no_grad()
