@@ -2004,3 +2004,20 @@ KAN verification, Z3+LLM on GSM8K arithmetic, cross-session memory, adversarial 
   - arXiv:2601.17223 (Score 400)
   - arXiv:2602.14189 (Score 320)
   - arXiv:2604.16753 (Score 320)
+
+## 2026-06-07 Exp 3932 - Agentic Verification Efficiency Positioning
+
+**Candidate:** Verification-efficiency positioning for the next convergence
+milestone.
+
+**Score: 5 x 5 x 4 x 4 = 400** - high alignment with north-star section 5, high
+experiment leverage, medium implementation risk, and high convergence value.
+
+**Position:** Carnot belongs in the cheap discriminative verifier lane: a
+classifier-first energy layer screens all steps/actions, while competent
+GenRM/ThinkPRM judges handle hard cases. The local Exp 3926/3928 artifacts are
+blocked, so the claim is positioned as a near-term convergence target rather
+than a landed parity result; Exp 3929 supplies the synthetic ARC-AGI-3 action-
+efficiency bridge.
+
+**Next experiments:** ProcessBench full-benchmark head-to-head: run Carnot energy scores versus a competent GenRM/ThinkPRM-style judge on the full held-out benchmark so the efficiency claim is tested against a credible comparator; ARC-AGI-3 real-benchmark agentic run: replace the synthetic grid step with the official interactive harness and report action efficiency without claiming a leaderboard score.

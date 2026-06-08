@@ -18278,3 +18278,61 @@ ops/status/traceability/conductor files unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3924 | Implemented (`python/carnot/reporting/archive_v362_activate_v363_retire_facts_3924.py`, `scripts/experiments/experiment_3924_archive_v362_activate_v363_retire_facts.py`) | Implemented (`tests/python/test_experiment_3924_archive_v362_activate_v363_retire_facts.py`) |
+
+### REQ-REPORT-3932: Literature Synthesis For Agentic Verification Efficiency
+
+The Exp 3932 workflow SHALL perform a no-new-inference literature-positioning
+synthesis for the verifier-efficiency and ARC-AGI-3 agentic-verification thread
+and write `results/experiment_3932_literature_synthesis_agentic_verification.json`.
+Before writing any synthesis artifact, it SHALL confirm `research-references.md`
+and `research-studying.md` exist and are readable. If either precondition fails,
+it SHALL write a blocked artifact whose `honest_verdict` starts with
+`blocked_references_missing` and SHALL NOT edit research notes or research
+ledgers.
+
+On the complete path, the workflow SHALL read local source material only:
+`research-references.md`, `research-studying.md`, `ops/north-star.md`, and any
+present Exp 3926, Exp 3928, and Exp 3929 result artifacts. It SHALL synthesize
+a one-page note under `docs/research-notes/` positioning Carnot's cheap
+discriminative energy verifier against competent generative/judge verifiers
+and ProcessBench, ThinkPRM, GenRM, Budget-aware Discriminative Verification,
+and ARC-AGI-3. It SHALL append a scored candidate section to
+`research-studying.md`, add only genuinely new papers to `research-references.md`
+when needed, and SHALL leave `docs/index.html`, `README.md`, `docs/blog/`,
+`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, and
+`scripts/research_conductor.py` unchanged.
+
+The terminal artifact SHALL include bare top-level fields
+`synthesis_note_path`, `landscape_position_summary`,
+`next_highest_leverage_experiments`, `new_references_added`,
+`public_docs_untouched`, `preconditions_checked`, `duration_s`,
+`inference_substrate`, and `honest_verdict`. Complete artifacts SHALL set
+`public_docs_untouched` to true, `new_references_added` to a bare integer,
+`inference_substrate` to a no-new-inference CPU/document-synthesis marker with
+no GGUF or CUDA substrings, and `honest_verdict` to
+`complete: literature_synthesis_positioned_<new_references_added>_new_refs_public_docs_untouched`.
+
+#### SCENARIO-REPORT-3932: Local Literature Synthesis Positions The Verifier Proof
+
+**Given** `research-references.md` and `research-studying.md` are readable and
+the local `.363` source artifacts may be read from disk
+**When** the Exp 3932 workflow runs
+**Then** it writes the one-page research note, appends one scored candidate to
+`research-studying.md`, records whether new references were required, writes
+the required terminal artifact, proposes the next one or two highest-leverage
+experiments, and leaves public/operator status documents untouched.
+
+#### SCENARIO-REPORT-3932-BLOCKED-REFERENCES: Missing Research Ledgers Block Synthesis
+
+**Given** either `research-references.md` or `research-studying.md` is missing
+or unreadable
+**When** the Exp 3932 workflow runs
+**Then** it writes a schema-complete blocked artifact prefixed by
+`blocked_references_missing`, records failed preconditions, and makes no
+markdown edits.
+
+## Implementation Status (REQ-REPORT-3932)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3932 | Implemented (`python/carnot/reporting/literature_synthesis_agentic_verification_3932.py`, `scripts/experiments/experiment_3932_literature_synthesis_agentic_verification.py`) | Implemented (`tests/python/test_experiment_3932_literature_synthesis_agentic_verification.py`) |
