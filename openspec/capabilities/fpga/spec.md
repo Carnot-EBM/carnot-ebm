@@ -4326,6 +4326,83 @@ all-boards blocked verdict when no board precondition passes.
 
 ---
 
+### REQ-HW-3931
+
+**Title:** Clean hardware continuity rerun MUST repair Exp 3922 zero-duration and substrate-marker flags
+
+**Description:**
+Experiment 3931 MUST produce
+`results/experiment_3931_hardware_continuity_clean_rerun.json` as the clean
+rerun of the Exp 3922 consolidated GateMate, PolarFire, and KV260 continuity
+audit. The experiment MUST check the same per-board preconditions independently:
+GateMate uses `command -v nextpnr-himbaechel && command -v yosys && command -v
+openFPGALoader` plus `openFPGALoader -c dirtyJtag --detect`, PolarFire uses
+`ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'`, and KV260 uses
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. KV260 host SD-card
+preconditions MUST NOT be used.
+
+The artifact MUST repair the Exp 3922 flag by recording two honest distinct
+top-level timers whenever any board is reachable: `duration_s` for the full
+clean-rerun wall clock and `run_duration_s` for measured board-command or
+board-dispatch time. If no board is reachable, the experiment MUST emit
+`blocked_all_boards_unreachable` while still recording measured precondition
+timers. The artifact MUST keep all required fields as bare scalar or list values, keep
+`fabric_acceleration_claimed=false`, declare `inference_substrate` as
+`hardware_smoke`, and avoid model-inference substrate markers.
+
+If GateMate is reachable, the experiment MUST re-confirm the n=16 tile flash
+state, attempt JTAG readback when supported, record readback unsupported when
+that is the honest tool-flow result, and set `gatemate_terminal_state_reached`
+only when flash plus smoke plus readback-or-unsupported evidence passes and the
+timer tautology is absent. If PolarFire is reachable, the experiment MUST
+re-confirm the Exp 3867 hash-verified dispatch as soft-CPU SSH dispatch only.
+If KV260 is reachable, the experiment MUST run `ssh kria 'xmutil listapps'` and
+`ssh kria 'ls /dev/uio*'`, then record the loaded overlay, UIO devices, and
+whether the Carnot Ising bitstream is active.
+
+**Acceptance criteria:**
+- `scripts/experiments/experiment_3931_hardware_continuity_clean_rerun.py`
+  writes `results/experiment_3931_hardware_continuity_clean_rerun.json`.
+- The artifact includes bare `gatemate_reachable`, `polarfire_reachable`,
+  `kv260_reachable`, `gatemate_terminal_state_reached`, `duration_s`,
+  `run_duration_s`, `polarfire_state`, `kv260_state`,
+  `fabric_acceleration_claimed`, `preconditions_checked`,
+  `reproducibility_checksum`, `inference_substrate`, and `honest_verdict`
+  fields.
+- If at least one board is reachable, `duration_s > 0`, `run_duration_s > 0`,
+  and `duration_s != run_duration_s`.
+- If at least one board is reachable and `fabric_acceleration_claimed=false`,
+  `honest_verdict` MUST begin
+  `success: hardware_continuity_clean_gatemate`, include `pf` and `kv` state
+  tokens, and end `_distinct_timers_no_fabric_claim`.
+- If no board is reachable, `honest_verdict` MUST be exactly
+  `blocked_all_boards_unreachable`.
+- The artifact MUST NOT include model-inference substrate markers or retired
+  KV260 host-storage markers.
+
+**Implementation status:** Planned (Exp 3931)
+
+---
+
+### SCENARIO-HW-3931
+
+**Scenario:** Clean three-board continuity records distinct timers without fabric claims.
+
+**Given:** GateMate, PolarFire, and KV260 may independently be reachable or
+unreachable through their allowed board-specific preconditions.
+**When:** Experiment 3931 runs the clean rerun, recording full wall-clock time
+separately from measured board-operation time.
+**Then:** It writes
+`results/experiment_3931_hardware_continuity_clean_rerun.json` with per-board
+state, scalar required fields, distinct success timers, field principles, a
+false fabric-acceleration claim flag, a terminal success verdict when any board
+is reachable, or the all-boards blocked verdict when no board precondition
+passes.
+
+**Implementation status:** Planned (Exp 3931)
+
+---
+
 ### REQ-HW-3577
 
 **Title:** KV260 hardware-task continuity verification
