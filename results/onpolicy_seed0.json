@@ -1,56 +1,56 @@
 {
   "accuracy_by_regime": {
     "base": {
-      "acc": 0.3333,
-      "no_answer_rate": 0.0,
-      "truncation_rate": 0.1
-    },
-    "gold": {
-      "acc": 0.4333,
-      "no_answer_rate": 0.0,
-      "truncation_rate": 0.0333
-    },
-    "gold_n_examples": 181,
-    "process_weighted": {
-      "acc": 0.3,
-      "no_answer_rate": 0.0,
-      "truncation_rate": 0.0333
-    },
-    "process_weighted_n_examples": 504,
-    "unweighted": {
-      "acc": 0.3667,
+      "acc": 0.2333,
       "no_answer_rate": 0.0,
       "truncation_rate": 0.0
+    },
+    "gold": {
+      "acc": 0.6333,
+      "no_answer_rate": 0.0,
+      "truncation_rate": 0.0667
+    },
+    "gold_n_examples": 170,
+    "process_weighted": {
+      "acc": 0.1667,
+      "no_answer_rate": 0.0,
+      "truncation_rate": 0.0
+    },
+    "process_weighted_n_examples": 507,
+    "unweighted": {
+      "acc": 0.2333,
+      "no_answer_rate": 0.0,
+      "truncation_rate": 0.0667
     },
     "unweighted_n_examples": 540
   },
   "caveat": "DRAFT, ON-POLICY (MiniCPM trains on its OWN verifier-scored traces -> no off-policy style/truncation asymmetry). 1 seed, small corpus -> ORDERING is the result. own_sample_correct_rate = the headroom the self-improvement bootstraps from (must be >0 and <1). Gates: gold>=base, max_trunc<0.05.",
-  "delta_gold_upper_bound": 0.1,
-  "delta_process_weighted": -0.0333,
-  "duration_s": 848.0176391601562,
+  "delta_gold_upper_bound": 0.4,
+  "delta_process_weighted": -0.0666,
+  "duration_s": 913.4225926399231,
   "eval_truncation_rate_by_arm": {
-    "base": 0.1,
-    "gold": 0.0333,
-    "process_weighted": 0.0333,
-    "unweighted": 0.0
+    "base": 0.0,
+    "gold": 0.0667,
+    "process_weighted": 0.0,
+    "unweighted": 0.0667
   },
   "experiment": "process_reward_weighted_sft_onpolicy_draft",
   "generation_meta": {
     "K": 6,
-    "gen_truncation_rate": 0.1333,
-    "own_sample_correct_rate": 0.3352,
+    "gen_truncation_rate": 0.1667,
+    "own_sample_correct_rate": 0.3148,
     "temperature": 0.4
   },
   "gold_control_ok": true,
-  "honest_verdict": "complete: onpolicy_process_reward_sft_TRUNCATION_INVALID_base0.333_pw0.3_gold0.433_goldfrac-0.333_maxtrunc0.1",
+  "honest_verdict": "complete: onpolicy_process_reward_sft_TRUNCATION_INVALID_base0.233_pw0.167_gold0.633_goldfrac-0.167_maxtrunc0.067",
   "inference_substrate": "live_gpu_onpolicy_generation_plus_lora_sft_plus_verifier_ensemble",
-  "max_eval_truncation_rate": 0.1,
+  "max_eval_truncation_rate": 0.0667,
   "model_id": "openbmb/MiniCPM5-1B",
   "n_eval_questions": 30,
   "n_train_questions": 90,
   "policy": "ON_POLICY_minicpm_generates_own_traces",
-  "process_weighted_frac_of_gold_lift": -0.333,
-  "random_seed": 2,
+  "process_weighted_frac_of_gold_lift": -0.167,
+  "random_seed": 0,
   "smoke": false,
   "title": "onpolicy_process_reward_weighted_sft",
   "truncation_ok": false
