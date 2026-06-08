@@ -73,9 +73,17 @@
   "blocked_resource": "",
   "bootstrap_resamples": 1000,
   "carnot_verify_imported": true,
+  "corrigendum_2026_06_08": {
+    "consequence": "The 1.96x must NOT be cited as evidence the Carnot energy verifier prunes real ARC actions. A real M3 must derive the prune signal FROM the grid against the INDUCED world-model (no oracle), measured on the real offline games solved in M2.",
+    "explanation": "The 1.959x action_efficiency_ratio is circular. encode_rich_candidate_action() (python/carnot/agentic/arc_agi3_action_efficiency.py:411) uses task_potential(), which reads ORACLE ground-truth fields the synthetic env exposes by construction (observation.key/switch/gate/goal), to decide potential_delta, then PLANTS a hard-coded arithmetic-contradiction string ('1 + 0 = 2 ... actually inconsistent.') for non-progress actions and a consistent string for progress actions. The energy verifier then 'detects' the contradiction it was handed. `if 'inconsistent' in step_text` reproduces the identical ratio. The encoder, not the energy function, makes every decision; the verifier scores a planted label, not the grid. adversarial_verify.py does NOT catch this (it is a code-logic tautology, not a numeric one).",
+    "flag": "TAUTOLOGY_ORACLE_FED_VERIFIER",
+    "found_by": "outer-loop adversarial verifier-audit workflow (wf_5c1967c2-7f9), code-confirmed",
+    "severity": "critical"
+  },
   "duration_s": 1.600117751979269,
   "experiment": 3929,
   "falsification_gate": "VERIFIER_ROUTER_HELPS",
+  "flagged_adversarial": true,
   "honest_verdict": "complete: arc_agi3_verifier_router_HELPS_ratio1.959_ci1.742-2.194_synthetic_first_agentic_step_real_benchmark_reachabletrue",
   "inference_substrate": "synthetic_arc_grid_cpu_energy_verifier",
   "is_synthetic_not_real_benchmark": true,
