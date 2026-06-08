@@ -1,0 +1,131 @@
+{
+  "cascade_band_after": 0.105988254,
+  "cascade_band_before": null,
+  "cascade_band_learned": true,
+  "cascade_band_update": {
+    "band_after": 0.105988254,
+    "band_before": null,
+    "cascade_band_learned": true,
+    "energy_threshold": 0.5,
+    "exp3927_honest_verdict": "blocked_upstream_valid_efficiency_missing",
+    "learned_from_n_margins": 228,
+    "margin_quantile": 0.1,
+    "method": "online_exponential_band_update_from_fresh_learned_ensemble_margins",
+    "path": "results/experiment_3927_non_degenerate_cascade_router.json",
+    "reason": "exp3927_present_online_margin_update",
+    "target_band_from_fresh_margins": 0.105988254
+  },
+  "invariant_held": true,
+  "learned_ensemble_auroc": 0.908036,
+  "memory_ablation_contribution": 0.0184712,
+  "n_examples_observed": 1684,
+  "n_updates": 228,
+  "per_verifier_independence_table": [
+    {
+      "actual_positive_total": 842,
+      "false_negative": 403,
+      "false_positive": 50,
+      "independence_score": 0.304038005,
+      "measurement_note": "online_unique_error_catches_over_cached_verifier_masks",
+      "n_examples": 1684,
+      "precision": 0.897750511,
+      "predicted_positive_total": 489,
+      "true_negative": 792,
+      "true_positive": 439,
+      "unique_error_catches": 256,
+      "verifier": "fr11_session_memory"
+    },
+    {
+      "actual_positive_total": 842,
+      "false_negative": 675,
+      "false_positive": 36,
+      "independence_score": 0.036817102,
+      "measurement_note": "online_unique_error_catches_over_cached_verifier_masks",
+      "n_examples": 1684,
+      "precision": 0.822660099,
+      "predicted_positive_total": 203,
+      "true_negative": 806,
+      "true_positive": 167,
+      "unique_error_catches": 31,
+      "verifier": "tier0r_curry_howard"
+    },
+    {
+      "actual_positive_total": 842,
+      "false_negative": 702,
+      "false_positive": 277,
+      "independence_score": 0.065320665,
+      "measurement_note": "online_unique_error_catches_over_cached_verifier_masks",
+      "n_examples": 1684,
+      "precision": 0.335731415,
+      "predicted_positive_total": 417,
+      "true_negative": 565,
+      "true_positive": 140,
+      "unique_error_catches": 55,
+      "verifier": "tier0s_arithmetic_gap"
+    },
+    {
+      "actual_positive_total": 842,
+      "false_negative": 842,
+      "false_positive": 0,
+      "independence_score": 0.0,
+      "measurement_note": "online_unique_error_catches_over_cached_verifier_masks",
+      "n_examples": 1684,
+      "precision": 0.0,
+      "predicted_positive_total": 0,
+      "true_negative": 842,
+      "true_positive": 0,
+      "unique_error_catches": 0,
+      "verifier": "tier0u_logical_consistency"
+    }
+  ],
+  "previous_schema": "carnot.fr11_v25_independence_reweighting_state",
+  "previous_state_path": "results/experiment_3921_fr11_v25_independence_reweighting_state.json",
+  "previous_state_sha256": "3bec80002a28acf8d73f98c11c62830df0ee5f0bd150e497d2c8e670dd7fbed3",
+  "random_seed": 3930,
+  "schema": "carnot.fr11_v26_cascade_band_online_learning_state",
+  "sha256": "68492a356b822e2197e187e47636e233723614f6d5bf7a62b316c068ab40ca00",
+  "stats": {
+    "fr11_session_memory": {
+      "false_negative": 403,
+      "false_positive": 50,
+      "true_negative": 792,
+      "true_positive": 439,
+      "unique_error_catches": 256
+    },
+    "tier0r_curry_howard": {
+      "false_negative": 675,
+      "false_positive": 36,
+      "true_negative": 806,
+      "true_positive": 167,
+      "unique_error_catches": 31
+    },
+    "tier0s_arithmetic_gap": {
+      "false_negative": 702,
+      "false_positive": 277,
+      "true_negative": 565,
+      "true_positive": 140,
+      "unique_error_catches": 55
+    },
+    "tier0u_logical_consistency": {
+      "false_negative": 842,
+      "false_positive": 0,
+      "true_negative": 842,
+      "true_positive": 0,
+      "unique_error_catches": 0
+    }
+  },
+  "update_cost_note": "Tier-1 online path: pure CPU counter updates over cached verifier scores; persisted state lets v27 continue.",
+  "verifier_names": [
+    "fr11_session_memory",
+    "tier0r_curry_howard",
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ],
+  "version": 1,
+  "weights": {
+    "fr11_session_memory": 0.581241012,
+    "tier0r_curry_howard": 0.394434052,
+    "tier0s_arithmetic_gap": 0.005566898,
+    "tier0u_logical_consistency": 0.018758038
+  }
+}
