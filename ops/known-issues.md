@@ -425,11 +425,21 @@ reasoning LLM? — is now scoped + de-risked. Full record:
    degrades, the HARNESS is broken (forgetting/over-fit) — do NOT report process-reward
    results; fix the harness first (this is what v1 caught). Use LoRA (not full-FT),
    gentle LR, ideally anti-forgetting replay.
-3. **ON-POLICY preferred.** v1/v2 are off-policy (distill p01 traces). The real
+3. **TRUNCATION GUARD (operator directive 2026-06-08).** Generation token truncation is
+   a SILENT corruptor: a cut-off solution has no final answer and scores as wrong, with
+   NO error/warning. PROVEN here — at max_new_tokens=256 the MiniCPM base read 0.30; at
+   512 it read 0.633 (66% of GSM8K solutions exceed 256 tokens = two-thirds silently
+   truncated). EVERY generation-based eval MUST report `truncation_rate` (fraction
+   hitting the token cap) + `no_answer_rate`; treat any result with truncation_rate>5%
+   as INVALID (raise max_new_tokens and re-run), never as a real accuracy. The harness
+   (`process_reward_weighted_sft_phase1_draft.py`) instruments this and emits
+   TRUNCATION_INVALID in the verdict. This applies to ANY generation eval, not just this
+   experiment.
+4. **ON-POLICY preferred.** v1/v2 are off-policy (distill p01 traces). The real
    self-improvement test has MiniCPM generate its OWN traces -> verifier scores ->
    train on its own process-reward-weighted traces. Build this once the harness gold-
    control gate passes off-policy.
-4. Multi-seed + held-out eval for any lift claim (the ORDERING is the result on a small
+5. Multi-seed + held-out eval for any lift claim (the ORDERING is the result on a small
    corpus). Process-reward = fraction-certified aggregate (the 0.73 signal).
 
 **Continuation tasks for the planner:**
