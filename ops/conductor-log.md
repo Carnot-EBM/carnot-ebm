@@ -8023,3 +8023,5 @@ c |
 | 2026-06-08 00:29 UTC | Hardware continuity CLEAN re-run (fixes the exp392 | OK | 88 passed in 4.64s |
 | 2026-06-08 00:42 UTC | Literature synthesis — agentic verification + LLM- | OK | 86 passed in 5.08s |
 | 2026-06-08 00:57 UTC | Capstone .363 — the HARDENED verifier scorecard (e | OK | 86 passed in 4.14s |
+| 2026-06-08 06:20 UTC | Plan milestone 2026.06.364 | OK | 11 tasks proposed |
+| 2026-06-08 06:23 UTC | Milestone 2026.06.364 activated | OK | 11 tasks queued |
