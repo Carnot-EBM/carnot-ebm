@@ -1,0 +1,89 @@
+{
+  "ACCURACY_total_levels_solved": 1,
+  "ACCURACY_total_win_levels": 39,
+  "budget_per_game": 1000,
+  "duration_s": 652.9,
+  "episodes_per_game": 30,
+  "experiment": "arc3_goal_prior_explore",
+  "games": [
+    "m0r0",
+    "r11l",
+    "vc33",
+    "ar25",
+    "cn04",
+    "tr87"
+  ],
+  "honest_verdict": "complete: goal_prior_E2B_levels1of39_over6games_beats_floor=True",
+  "inference_substrate": "offline_arc_agi3_graph_explore_plus_local_gemma4_goal_prior",
+  "mean_llm_latency_s": 0.566,
+  "model": "google/gemma-4-E2B-it",
+  "n_llm_calls": 1136,
+  "no_gpu_used": false,
+  "note": "M1b goal-prior de-risk: LLM generator proposes goal-directed actions, GameGraph verifier prunes deadly/no-effect/seen. Compare vs Family-A floor on the SAME games: lift => goal was the blocker; no lift => need the Family-B dynamics synthesizer (M2).",
+  "per_game": [
+    {
+      "actions_used": 1000,
+      "deadly": 6,
+      "first_solve_at": null,
+      "game_id": "m0r0-492f87ba",
+      "goal_notes": "Clear the dark brown area",
+      "graph_nodes": 356,
+      "levels_solved": 0,
+      "win_levels": 6
+    },
+    {
+      "actions_used": 1000,
+      "deadly": 16,
+      "first_solve_at": null,
+      "game_id": "r11l-495a7899",
+      "goal_notes": "Connect the black point to the green point",
+      "graph_nodes": 916,
+      "levels_solved": 0,
+      "win_levels": 6
+    },
+    {
+      "actions_used": 1000,
+      "deadly": 17,
+      "first_solve_at": 142,
+      "game_id": "vc33-5430563c",
+      "goal_notes": "Find and select the red block",
+      "graph_nodes": 136,
+      "levels_solved": 1,
+      "win_levels": 7
+    },
+    {
+      "actions_used": 1000,
+      "deadly": 9,
+      "first_solve_at": null,
+      "game_id": "ar25-0c556536",
+      "goal_notes": "Arrange the yellow and gray blocks to form a complete shape or pattern.",
+      "graph_nodes": 633,
+      "levels_solved": 0,
+      "win_levels": 8
+    },
+    {
+      "actions_used": 1000,
+      "deadly": 13,
+      "first_solve_at": null,
+      "game_id": "cn04-2fe56bfb",
+      "goal_notes": "Reach the brown block",
+      "graph_nodes": 480,
+      "levels_solved": 0,
+      "win_levels": 6
+    },
+    {
+      "actions_used": 1000,
+      "deadly": 7,
+      "first_solve_at": null,
+      "game_id": "tr87-cd924810",
+      "goal_notes": "Clear all pieces from the top section and the bottom row",
+      "graph_nodes": 983,
+      "levels_solved": 0,
+      "win_levels": 6
+    }
+  ],
+  "policy": "goal_prior_E2B",
+  "random_seed": 0,
+  "submitted_to_leaderboard": false,
+  "title": "arc3_goal_prior_E2B"
+}
