@@ -1,21 +1,25 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.06.363",
-  "generated_at": "2026-06-08T01:28:45.685243Z",
+  "generated_at": "2026-06-08T02:03:34Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "The authoritative timing source reports no experiment commits since activation, leaving total_wall_time_minutes=0, experiments_completed=0, and compute_bound_experiments_count=0.",
-  "bottlenecks_identified": [],
+  "summary": "There is no data available this milestone, with 0 experiments completed and 0 compute-bound tasks executed. Both GPUs are currently idle at 0% utilization with 4MB allocated each, which is expected since no compute-bound tasks were running.",
+  "bottlenecks_identified": [
+    "No data available this milestone."
+  ],
   "improvements_suggested": [
-    "Investigate why no experiments were dispatched to completion since milestone activation."
+    "No data available this milestone."
   ],
   "top_3_highest_leverage_actions": [
-    "Investigate the absence of dispatched experiments."
+    "Investigate why no experiment commits were found since activation.",
+    "Add a pre-retro sentinel to catch empty milestones before analysis.",
+    "Ensure experiments are dispatched immediately after milestone activation."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "Both GPUs were idle, but since there were 0 compute-bound tasks, no bottleneck was flagged."
+  "meta_reflection": "Because there were no experiments completed in this milestone, we cannot draw operational insights. We need active experiment execution to analyze bottlenecks and provide actionable tooling improvements."
 }
