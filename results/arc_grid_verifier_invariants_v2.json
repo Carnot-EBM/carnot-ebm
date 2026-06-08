@@ -1,0 +1,256 @@
+{
+  "domain": "arc_agi1_grid",
+  "experiment": "arc_grid_verifier_invariants_v2_combined",
+  "honest_verdict": "complete: arc_combined_invariant_verifier_v2_union_catches_color_swap_gold_perturbed_gold_wrong_dim_gold_logistic_catches_color_swap_gold_perturbed_gold_transposed_gold_wrong_dim_gold_n416_wall8.9s",
+  "inference_substrate": "rule_based_grid_verifier_against_cached_arc_solutions",
+  "label_source": "gold_arc_solutions",
+  "n_tasks": 400,
+  "no_induction": true,
+  "no_llm_used": true,
+  "no_test_gold_leak": true,
+  "random_seed": 0,
+  "results": {
+    "combiner_logistic_cv_oof": {
+      "catches_hard_ge_0p70": [
+        "color_swap_gold",
+        "perturbed_gold",
+        "transposed_gold",
+        "wrong_dim_gold"
+      ],
+      "delta_vs_v1_gold_strictly_better_rate": {
+        "blank": 0.8338,
+        "color_swap_gold": 0.4564,
+        "copy_input": 0.5866,
+        "perturbed_gold": 0.9222,
+        "random": 0.099,
+        "transposed_gold": 0.439,
+        "wrong_dim_gold": 0.0913,
+        "wrong_task_gold": 0.0313
+      },
+      "description": "5-fold group-CV logistic over [v1, 7 family scores]; OUT-OF-FOLD predictions. This is a LEARNED-ENSEMBLE UPPER BOUND on the cheap features (fit to the distractor distribution), an ESTIMATE of the achievable ceiling, not a deployable rule.",
+      "per_distractor": {
+        "blank": {
+          "auroc": 0.9481,
+          "gold_strictly_better_rate": 0.9687,
+          "n": 415,
+          "tie_rate": 0.0048
+        },
+        "color_swap_gold": {
+          "auroc": 0.7826,
+          "gold_strictly_better_rate": 0.8404,
+          "n": 401,
+          "tie_rate": 0.0773
+        },
+        "copy_input": {
+          "auroc": 0.9107,
+          "gold_strictly_better_rate": 0.976,
+          "n": 416,
+          "tie_rate": 0.0024
+        },
+        "perturbed_gold": {
+          "auroc": 0.7165,
+          "gold_strictly_better_rate": 0.9278,
+          "n": 360,
+          "tie_rate": 0.0083
+        },
+        "random": {
+          "auroc": 0.9818,
+          "gold_strictly_better_rate": 0.9879,
+          "n": 414,
+          "tie_rate": 0.0024
+        },
+        "transposed_gold": {
+          "auroc": 0.7153,
+          "gold_strictly_better_rate": 0.7317,
+          "n": 369,
+          "tie_rate": 0.2222
+        },
+        "wrong_dim_gold": {
+          "auroc": 0.8721,
+          "gold_strictly_better_rate": 0.9543,
+          "n": 416,
+          "tie_rate": 0.0144
+        },
+        "wrong_task_gold": {
+          "auroc": 0.9806,
+          "gold_strictly_better_rate": 0.9783,
+          "n": 415,
+          "tie_rate": 0.0
+        }
+      }
+    },
+    "combiner_mean_defined": {
+      "catches_hard_ge_0p70": [
+        "color_swap_gold",
+        "perturbed_gold",
+        "transposed_gold",
+        "wrong_dim_gold"
+      ],
+      "delta_vs_v1_gold_strictly_better_rate": {
+        "blank": 0.841,
+        "color_swap_gold": 0.4614,
+        "copy_input": 0.5842,
+        "perturbed_gold": 0.9166,
+        "random": 0.099,
+        "transposed_gold": 0.4363,
+        "wrong_dim_gold": 0.0913,
+        "wrong_task_gold": 0.0361
+      },
+      "description": "mean violation over v1 + applicable content families",
+      "per_distractor": {
+        "blank": {
+          "auroc": 0.9489,
+          "gold_strictly_better_rate": 0.9759,
+          "n": 415,
+          "tie_rate": 0.0048
+        },
+        "color_swap_gold": {
+          "auroc": 0.7947,
+          "gold_strictly_better_rate": 0.8454,
+          "n": 401,
+          "tie_rate": 0.0773
+        },
+        "copy_input": {
+          "auroc": 0.9067,
+          "gold_strictly_better_rate": 0.9736,
+          "n": 416,
+          "tie_rate": 0.0024
+        },
+        "perturbed_gold": {
+          "auroc": 0.6945,
+          "gold_strictly_better_rate": 0.9222,
+          "n": 360,
+          "tie_rate": 0.0111
+        },
+        "random": {
+          "auroc": 0.9858,
+          "gold_strictly_better_rate": 0.9879,
+          "n": 414,
+          "tie_rate": 0.0024
+        },
+        "transposed_gold": {
+          "auroc": 0.7114,
+          "gold_strictly_better_rate": 0.729,
+          "n": 369,
+          "tie_rate": 0.2222
+        },
+        "wrong_dim_gold": {
+          "auroc": 0.851,
+          "gold_strictly_better_rate": 0.9543,
+          "n": 416,
+          "tie_rate": 0.0168
+        },
+        "wrong_task_gold": {
+          "auroc": 0.9692,
+          "gold_strictly_better_rate": 0.9831,
+          "n": 415,
+          "tie_rate": 0.0
+        }
+      }
+    },
+    "combiner_union_max": {
+      "catches_hard_ge_0p70": [
+        "color_swap_gold",
+        "perturbed_gold",
+        "wrong_dim_gold"
+      ],
+      "delta_vs_v1_gold_strictly_better_rate": {
+        "blank": 0.7591,
+        "color_swap_gold": 0.3666,
+        "copy_input": 0.5144,
+        "perturbed_gold": 0.7777,
+        "random": 0.0411,
+        "transposed_gold": 0.3171,
+        "wrong_dim_gold": 0.0072,
+        "wrong_task_gold": -0.0217
+      },
+      "description": "max violation over v1 + applicable content families (ensemble pruner)",
+      "overall_easy_auroc": 0.8906,
+      "overall_hard_auroc": 0.7374,
+      "per_distractor": {
+        "blank": {
+          "auroc": 0.8623,
+          "gold_strictly_better_rate": 0.894,
+          "n": 415,
+          "tie_rate": 0.0506
+        },
+        "color_swap_gold": {
+          "auroc": 0.7477,
+          "gold_strictly_better_rate": 0.7506,
+          "n": 401,
+          "tie_rate": 0.1671
+        },
+        "copy_input": {
+          "auroc": 0.8884,
+          "gold_strictly_better_rate": 0.9038,
+          "n": 416,
+          "tie_rate": 0.0745
+        },
+        "perturbed_gold": {
+          "auroc": 0.6705,
+          "gold_strictly_better_rate": 0.7833,
+          "n": 360,
+          "tie_rate": 0.1139
+        },
+        "random": {
+          "auroc": 0.9101,
+          "gold_strictly_better_rate": 0.93,
+          "n": 414,
+          "tie_rate": 0.0604
+        },
+        "transposed_gold": {
+          "auroc": 0.705,
+          "gold_strictly_better_rate": 0.6098,
+          "n": 369,
+          "tie_rate": 0.3523
+        },
+        "wrong_dim_gold": {
+          "auroc": 0.8221,
+          "gold_strictly_better_rate": 0.8702,
+          "n": 416,
+          "tie_rate": 0.0938
+        },
+        "wrong_task_gold": {
+          "auroc": 0.902,
+          "gold_strictly_better_rate": 0.9253,
+          "n": 415,
+          "tie_rate": 0.0627
+        }
+      }
+    },
+    "family_applicability_counts": {
+      "_pct_of_test_inputs": {
+        "color_mapping": 0.276,
+        "content_overlap": 0.536,
+        "delta_pattern": 0.644,
+        "object_count": 1.0,
+        "palette_histogram_shape": 1.0,
+        "symmetry": 0.017,
+        "tiling_scaling": 0.058
+      },
+      "color_mapping": 115,
+      "content_overlap": 223,
+      "delta_pattern": 268,
+      "object_count": 416,
+      "palette_histogram_shape": 416,
+      "symmetry": 7,
+      "tiling_scaling": 24,
+      "v1_structural": 416
+    },
+    "n_eval_test_inputs": 416,
+    "v1_baseline_per_distractor": {
+      "blank": 0.1349,
+      "color_swap_gold": 0.384,
+      "copy_input": 0.3894,
+      "perturbed_gold": 0.0056,
+      "random": 0.8889,
+      "transposed_gold": 0.2927,
+      "wrong_dim_gold": 0.863,
+      "wrong_task_gold": 0.947
+    }
+  },
+  "split": "training",
+  "submitted_to_leaderboard": false,
+  "title": "arc_combined_cheap_invariant_verifier_content_ceiling",
+  "wall_time_s": 8.9
+}

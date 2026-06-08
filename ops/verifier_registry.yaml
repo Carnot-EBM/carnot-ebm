@@ -134,6 +134,42 @@ verifiers:
             structure (perturbed-gold 0.006, transpose 0.29, blank 0.14). This is the
             north-star division of labor on the actual ARC domain: verifier PRUNES
             structural errors (the efficiency axis — fewer generator actions), generator
-            INDUCES content (the accuracy axis). NEXT: richer invariants (object-count,
-            symmetry, train-output content) + induced-rule grounding to lift the content
-            ceiling. Dimension is the only feature with real signal (AUROC 0.64)."
+            INDUCES content (the accuracy axis). SUPERSEDED by v2 below, which lifts the
+            content ceiling. Dimension is the only v1 feature with real signal (AUROC 0.64)."
+
+  # ---- ARC domain v2: content ceiling LIFTED (7 invariant families combined) ----
+  - verifier_id: arc_grid_combined_verifier
+    domain: arc_agi1_grid
+    version: 2
+    kind: process_verifier         # v1 dims/palette/bg + 7 relational invariant families
+    code_commit: HEAD
+    code_path: scripts/experiments/arc_grid_verifier_invariants_v2_combined.py
+    weights_hf: null
+    weights_cid: null
+    weights_sha256: null
+    training_data_ref: /home/ianblenke/trm_src/kaggle/combined (ARC-AGI-1 public, gold solutions)
+    label_source: gold             # gold ARC solutions + cheap deterministic distractors
+    eval: {metric: "combined_gold_strictly_better_rate_hard_distractors", n: 416,
+           perturbed_gold: 0.922, color_swap_gold: 0.845, transposed_gold: 0.729, wrong_dim_gold: 0.954,
+           v1_baseline: {perturbed_gold: 0.006, color_swap_gold: 0.384, transposed_gold: 0.293, wrong_dim_gold: 0.863},
+           combiner: "applicability-flagged mean (and CV out-of-fold logistic, agrees)",
+           eval_artifact: results/arc_grid_verifier_invariants_v2.json}
+    lineage: {from: arc_grid_structural_pruner (v1),
+              change: "added 7 relational invariant families (object_count, palette_histogram,
+                       delta_pattern, content_overlap, color_mapping, symmetry, tiling_scaling);
+                       gold-blind family_score (no leak, verified by re-run); CV out-of-fold"}
+    status: candidate
+    notes: "CONTENT CEILING LIFTED. A cheap, NON-INDUCING, gold-blind, cross-validated combined
+            verifier rejects ALL FOUR hard content distractors >=0.73 (v1 was near-chance on 3
+            of them): perturbed 0.006->0.92, color_swap 0.38->0.85, transpose 0.29->0.73,
+            wrong_dim 0.86->0.95. Strongest single families: object_count (perturbation),
+            palette_histogram (color-swap). IRREDUCIBLE RESIDUAL = SQUARE-grid transpose
+            (ambiguous without the rule) + variable-dim non-positional tasks -> these need
+            genuine rule-INDUCTION (the generator's job), so the verifier-prunes/generator-
+            induces boundary holds but the verifier's prune-able share is now MUCH larger
+            (efficiency-axis win for the ARC harness: cheaply reject most wrong candidate
+            outputs, not just malformed ones). Adversarially verified: family_score gold-blind
+            (execution-checked), combined numbers reproduce independently, abstain-convention
+            confound handled via per-task applicability flags. docs/research-notes/
+            arc-grid-verifier-content-ceiling.md. NEXT: wire into the interactive harness as
+            the candidate-output pruner; test on ARC-2 (harder) to check the ceiling holds."
