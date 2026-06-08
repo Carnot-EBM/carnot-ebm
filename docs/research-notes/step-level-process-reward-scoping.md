@@ -52,7 +52,8 @@ gate.
 ## Infra (if the gate passes)
 
 The fine-tune harness is still the gap (no peft/LoRA/RL in the tree). Start with option
-1 (process-reward-weighted SFT) on a 0.5B base — simplest, no RL. Arms: base /
+1 (process-reward-weighted SFT) on Qwen3.5-0.8B (trainable, cached, the
+project-native family; NOT Qwen2.5) — simplest, no RL. Arms: base /
 process-reward-weighted / gold-RFT (upper bound) / SC. Headroom corpus, multi-seed,
 held-out eval. Only escalate to step-level RL (option 3) if weighted-SFT shows signal.
 
@@ -91,7 +92,19 @@ step -- process-vs-outcome + OOD attenuation remain), so a process-reward-traine
 generator would improve under a moderately-noisy reward (some reward-hacking risk); and
 this is correlational (reward ranks outcome) -- the causal lift needs the training run.
 
-**Next (the build, now justified):** process-reward-weighted SFT (option 1) on a 0.5B
-base; arms base / process-reward-weighted / gold-RFT (UB) / SC; multi-seed, held-out
+**Next (the build, now justified):** process-reward-weighted SFT (option 1) on
+Qwen3.5-0.8B (PoC) -> scale to Qwen3.5-9B/27B (headline); arms base / process-reward-weighted / gold-RFT (UB) / SC; multi-seed, held-out
 eval; gate on the weighted arm beating base. The fine-tune harness is the remaining
 infra to build. This is the concrete forward experiment.
+
+
+## Base-model note (2026-06-07)
+
+For FINE-TUNING we need trainable HF safetensors, NOT the GGUF SOTA models. The SOTA
+`unsloth/Qwen3.6-35B-A3B-GGUF` is GGUF-only (llama.cpp inference) -> NOT fine-tunable;
+it is the verifier/inference-side SOTA, not a trainable generator base. Cached TRAINABLE
+options: Qwen3.5 {0.8B,2B,4B,9B,27B} (the project's own per-token-EBM family) and
+gemma-4-{E2B,E4B}. Plan: PoC on Qwen3.5-0.8B (recent, trainable, cached -- NOT the
+outdated Qwen2.5), scale to Qwen3.5-9B/27B (LoRA on the 2x3090). To use literally Qwen3.6
+as the generator, download its non-GGUF base and LoRA the 35B-A3B MoE (heavier; do only
+after the mechanism is proven on Qwen3.5).
