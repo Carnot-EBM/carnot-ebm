@@ -71,7 +71,7 @@ def _generate_on_policy(rows, *, K, temp, smoke):
                       max_length=max_len).to(device)
             in_len = ids["input_ids"].shape[1]
             gen = model.generate(**ids, max_new_tokens=max_new, do_sample=True, temperature=temp,
-                                 top_p=0.95, repetition_penalty=1.3, num_return_sequences=K,
+                                 top_p=0.95, repetition_penalty=1.1, num_return_sequences=K,
                                  pad_token_id=tok.pad_token_id, eos_token_id=stop_ids)
             samples = []
             for i in range(K):
@@ -171,7 +171,7 @@ def main():
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--K", type=int, default=6)
-    ap.add_argument("--temp", type=float, default=0.6)
+    ap.add_argument("--temp", type=float, default=0.4)
     args = ap.parse_args()
     art = run(smoke=args.smoke, seed=args.seed, K=args.K, temp=args.temp)
     print(f"-> {art['honest_verdict']}")
