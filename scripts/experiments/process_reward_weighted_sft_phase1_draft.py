@@ -142,6 +142,11 @@ def _run_training_and_eval(rows_tr, rows_ev, regimes, *, smoke: bool) -> dict:
     tok = AutoTokenizer.from_pretrained(MODEL_ID)
     if tok.pad_token is None:
         tok.pad_token = tok.eos_token
+    # STOP TOKENS: the chat template ends the turn with <|im_end|> (which the model
+    # emits), NOT </s> (tok.eos_token). Passing only </s> meant generation NEVER stopped
+    # -> 97% truncation. Use BOTH (the generation_config's [</s>, <|im_end|>]).
+    _im_end = tok.convert_tokens_to_ids("<|im_end|>")
+    stop_ids = [tok.eos_token_id] + ([_im_end] if isinstance(_im_end, int) and _im_end >= 0 else [])
     max_len = 768 if not smoke else 384
     epochs = 1 if smoke else 2
     lr = 2e-4  # v2: LoRA (adapter-only) LR. v1's full-FT at 1e-5 forgot/collapsed.
@@ -166,7 +171,7 @@ def _run_training_and_eval(rows_tr, rows_ev, regimes, *, smoke: bool) -> dict:
                       max_length=max_len).to(device)
             in_len = ids["input_ids"].shape[1]
             gen = model.generate(**ids, max_new_tokens=max_new, do_sample=False,
-                                 pad_token_id=tok.pad_token_id, eos_token_id=tok.eos_token_id)
+                                 pad_token_id=tok.pad_token_id, eos_token_id=stop_ids)
             n_new = gen[0].shape[0] - in_len
             text = tok.decode(gen[0][in_len:], skip_special_tokens=True)
             ans = _extract_answer(text)
