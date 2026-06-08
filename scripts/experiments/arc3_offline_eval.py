@@ -43,7 +43,74 @@ def random_policy(frame, ctx, rng):
     return by_id.get(a_int, GameAction.ACTION1), data
 
 
-POLICIES = {"random": random_policy}
+def _objects(frame):
+    """Connected non-background components -> candidate click targets (the action-pruner).
+    Returns list of (y, x) representative cells, one per object. Pure perception, no induction."""
+    import numpy as np
+    try:
+        arr = np.array(frame.frame)
+        if arr.ndim == 3:
+            arr = arr[-1]
+    except Exception:
+        return []
+    vals, counts = np.unique(arr, return_counts=True)
+    bg = int(vals[counts.argmax()])
+    mask = arr != bg
+    if not mask.any():
+        return []
+    # simple 4-neighbour flood-fill labelling (no scipy dependency)
+    h, w = arr.shape
+    seen = np.zeros_like(mask, dtype=bool)
+    targets = []
+    for i in range(h):
+        for j in range(w):
+            if mask[i, j] and not seen[i, j]:
+                stack = [(i, j)]
+                seen[i, j] = True
+                cells = []
+                while stack:
+                    y, x = stack.pop()
+                    cells.append((y, x))
+                    for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        ny, nx = y + dy, x + dx
+                        if 0 <= ny < h and 0 <= nx < w and mask[ny, nx] and not seen[ny, nx]:
+                            seen[ny, nx] = True
+                            stack.append((ny, nx))
+                cy = sum(c[0] for c in cells) // len(cells)
+                cx = sum(c[1] for c in cells) // len(cells)
+                targets.append((cy, cx))
+    return targets
+
+
+def object_click_policy(frame, ctx, rng):
+    """Verifier-as-action-pruner: on click games, click OBJECT centroids (round-robin) instead
+    of random pixels; on keyboard games, cycle action types systematically. Pure perception +
+    structured exploration — NO rule induction (that's the generator's job, TBD)."""
+    from arcengine.enums import GameAction
+    by_id = {a.value: a for a in GameAction}
+    av = list(getattr(frame, "available_actions", []) or [])
+    if not av:
+        return None, None
+    mem = ctx.setdefault("mem", {"obj_i": 0, "kb_i": 0})
+    if 6 in av:  # click action available -> click an object, not a random pixel
+        objs = _objects(frame)
+        if objs:
+            y, x = objs[mem["obj_i"] % len(objs)]
+            mem["obj_i"] += 1
+            # small jitter within the object's neighbourhood
+            return GameAction.ACTION6, {"x": int(x), "y": int(y)}
+        # no objects -> fall back to a random click
+        return GameAction.ACTION6, {"x": rng.randrange(ctx["grid_w"]), "y": rng.randrange(ctx["grid_h"])}
+    # keyboard-only: cycle through the available non-reset actions systematically
+    kb = [a for a in av if a != 0]
+    if kb:
+        a_int = kb[mem["kb_i"] % len(kb)]
+        mem["kb_i"] += 1
+        return by_id.get(a_int, GameAction.ACTION1), None
+    return by_id.get(rng.choice(av), GameAction.ACTION1), None
+
+
+POLICIES = {"random": random_policy, "object_click": object_click_policy}
 
 
 def _grid_dims(frame):
