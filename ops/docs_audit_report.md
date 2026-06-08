@@ -4,47 +4,47 @@
 # docs_audit_report — 2026-06-08
 
 ## TL;DR (stranger's 30-second take)
-A stranger would likely bounce after the hero section. While the initial hook is strong and intuitive, the page quickly devolves into an overwhelming wall of internal acronyms (FoVer, CCTU, SVAMP) and a bloated 12-card results grid that feels like a defensive data dump rather than a clear value proposition.
+I would bounce in 15 seconds. While the high-level pitch is clear, the page quickly devolves into an impenetrable wall of internal lab notes, undefined acronyms (PREM, CCTU, FoVer), and literal temporary file paths (`@.tmp-pytest/...`) pasted directly into the UI. 
 
 ## TOP 3 PROBLEMS
-1. BLOAT — The "What we measured" section is an unreadable 12-card wall of stats.
-2. INTERNAL JARGON — "FoVer (5-seed dual-condition)" and "CCTU" mean nothing to an outsider.
-3. FABRICATION SIGNALS — Perfect "1.0" and "60/60" metrics look suspiciously like over-optimized synthetic data, damaging credibility.
+1. Raw test outputs in UI: The "Live benchmark" card leaks a `.tmp-pytest` file path directly into the headline.
+2. Incomprehensible Alphabet Soup: Acronyms like FoVer, CCTU, PREM, and TTC are used without definition, alienating outsiders.
+3. Too Many Suspicious Metrics: Throwing 0.9131, 0.8947, and 0.9857 AUROC in a single paragraph is confusing, and perfect scores like "1.0 TP rate" or "60/60" trigger AI snake-oil alarms.
 
 ## DETAILED FINDINGS
 ### Bloat
-- "What we measured" (Results grid) — 12 cards — Cap at 4-6 high-impact, generalized results.
-- "Seven capabilities" (Bento grid) — 7 cards (several over 60 words, like "Why Energy-Based" and "Multi-step reasoning") — Cap at 4 core use cases.
+- "Recent progress" card — 66 words — Suggested cap: <60 words (and significantly less dense).
+- Results Grid — 12 cards — Suggested cap: 6 cards. A stranger will skip the entire section when faced with a 12-card wall of text.
 
 ### Internal jargon
-- Stats bar & Recent progress — "FoVer math step-errors (5-seed)", "dual-condition; architecture-only" — A stranger doesn't know these internal benchmarks or evaluation setups.
-- Capabilities grid — "CCTU constrained tool-use micro-benchmark", "PREM", "TTC" — Niche acronyms and micro-benchmarks that lack context.
-- Results grid — "SVAMP", "VeriCoT", "PRM-BiasBench", "IterativeSelfRepair (HumanEval-50, execute-feedback-retry)" — Alphabet soup of internal or niche tests.
-- Blog summaries — "NTK costume", "brace bugs" — Insider shorthand.
+- Hero Stats bar / Recent progress card — "FoVer", "5-seed dual-condition" — A stranger does not know what FoVer is or what your seeding strategy means.
+- Live benchmark result card — `@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/test_req_verify_2932_run_uses_0/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real.txt` — This is a raw internal test framework file path.
+- "Typed constraints" bento card — "CCTU" — Undefined micro-benchmark acronym.
+- "Test-Time Compute (TTC) & PREM" bento card — "PREM" — Undefined framework concept.
+- "Math reasoning" result card — "EstimationVerifier", "SVAMP AUC", "FoVer baseline" — Completely opaque to anyone outside the lab.
 
 ### Per-milestone narrative
-- "Recent progress" card — "Repinned from v2 0.9857 after pre-submission adversarial audit" reads exactly like an internal PR description or retrospective, not landing page copy.
-- Results section intro — "synthetic-pilot, and adversarial-audit rows are labeled by provenance" reads like defensive internal compliance text rather than user-facing evidence framing.
+- "Recent progress" card — "Repinned from v2 0.9857 after pre-submission adversarial audit" — This reads exactly like an internal Slack update or commit message, not public landing page copy.
 
 ### Inconsistencies
-- The Stats bar claims "0.9131 Verifier AUROC — FoVer", but the Math reasoning result card cites a "0.125 FoVer baseline" (achieving 0.90 AUC). It is completely unclear to a stranger if FoVer is the dataset, the verifier, or a baseline model.
+- AUROC overload — The page claims an AUROC of 0.9131, but also mentions 0.8947, 0.9857, 0.91 (Safety), and 0.90 (Math). It's entirely unclear which metric actually represents the product's core baseline capability.
 
 ### Missing essentials
-- Who actually maintains this? The footer casually mentions "Ian Blenke · Carnot Project", but there is no clear maintainer credibility anchor or organizational backing mentioned in the main flow. 
+- Who maintains this? The footer says "Ian Blenke · Carnot Project", but it's completely unclear if this is an academic group, a startup, or a solo developer's weekend project. This context is critical for trust.
 
 ### Fabrication signals
-- "GSM8K extraction TP rate: 0.5 → 1.0" — A mathematically perfect 1.0 true positive rate looks highly suspect without deep context.
-- "k=5 ensemble catches 60/60 attacks" — 100% success on a small sample size (60) screams over-fitting.
-- "2.0× speedup, identical losses" — A suspiciously perfect flat integer speedup.
-- Blog section: "Zero false positives" over 26 days of dogfooding.
+- Math extraction result card — "TP rate: 0.5 -> 1.0" — A perfect 1.0 (100%) true positive rate without an explicit credibility anchor looks like an overfitted test or an error.
+- Adversarial audit result card — "catches 60/60 attacks" — A suspiciously perfect score on a tiny sample size (n=60) sounds fake or cherry-picked to a skeptic.
 
 ## WHAT'S WORKING
-- The core value proposition is excellent: "LLMs predict. They don't check." is a fantastic, intuitive hook.
-- The Quickstart section is highly effective. It proves the "no model fine-tuning required" claim immediately with clean, readable code snippets.
+- The one-sentence pitch ("Catch the reasoning errors your LLM states with total confidence") is excellent.
+- The 3-step "Extract -> Check -> Repair" bento cards clearly explain the mechanism.
+- The Quickstart tab showing 3 lines of actual Python code gives immediate, tangible proof that the tool is usable.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Prune the 12-card results grid down to the 4-6 most impressive, widely-understood metrics (e.g., Code pass rate, Math AUC, Safety).
-2. Scrub all mentions of niche benchmarks (FoVer, CCTU, SVAMP) and replace them with plain-English descriptions of what was actually tested.
-3. Remove or contextualize the "perfect" 1.0 and 60/60 metrics so they don't trigger fabrication alarms.
-4. Rewrite the "Recent progress" card to focus entirely on user value (installability) and remove the internal audit narrative.
-5. Condense the Bento grid to focus strictly on the top 3-4 capabilities (Code, Math, Typed constraints, Reasoning) and tighten the word counts.
+1. Immediately remove the `.tmp-pytest` file path from the Qwen "Live benchmark" card.
+2. Rewrite the "Recent progress" card to remove the internal audit narrative and "FoVer" reference. Keep it simple: "Available on PyPI. Verified at 0.91 AUROC on math benchmarks."
+3. Cut the "Test-Time Compute & PREM" bento card, or replace the acronyms with plain English explanations of the benefits.
+4. Prune the Results grid from 12 cards down to the 6 strongest, most universally understood metrics (e.g., HumanEval, simple math improvement).
+5. Anchor the perfect numbers (1.0 TP, 60/60) with context (e.g., "on a targeted 60-prompt subset") so they don't look like fabricated marketing claims.
+6. Add a one-liner explaining who is behind the project (e.g., "Developed by X lab" or "An independent research project by...").
