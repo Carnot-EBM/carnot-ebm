@@ -448,17 +448,22 @@ truncation past 768 tok) while training on the CONCISE p01 traces drops trained-
 truncation to 3%, so the base-vs-trained comparison is dominated by a truncation/style
 asymmetry, not reasoning (LoRA fixed the forgetting; the stop-token fix dropped base
 truncation 0.97->0.37, but the asymmetry remains). GO STRAIGHT TO ON-POLICY:
-- **ON-POLICY process-reward-weighted LoRA-SFT on MiniCPM5-1B/GSM8K.** MiniCPM generates
-  its OWN K traces per train question (so train + base share verbosity -> NO truncation
-  asymmetry); the verifier scores them (process-reward = fraction-certified); LoRA-SFT
-  weighted by process-reward. Arms: base / process_weighted / gold (answer-match) /
-  unweighted. ENFORCE all four disciplines (headroom precheck, gold-control gate,
-  truncation guard <5% per arm, multi-seed). Gate: process_weighted > base, recovers a
-  fraction of the gold lift, beats unweighted.
-- Then scale to Qwen3.6-27B QLoRA if the mechanism shows signal.
-- The off-policy harness `process_reward_weighted_sft_phase1_draft.py` is the starting
-  point (verifier scoring + LoRA + instrumented eval all built + validated); add the
-  on-policy generation step (MiniCPM.generate K per question -> score -> train).
+- The on-policy harness is BUILT + RAN: `process_reward_weighted_sft_onpolicy_draft.py`
+  (MiniCPM generates own K traces -> verifier scores -> LoRA-SFT weighted; instrumented).
+- **MiniCPM5-1B is UNSUITABLE as the base (proven 2026-06-08)** — it is a VERBOSE REASONING
+  model: even with `enable_thinking=False` it rambles (gen_truncation 0.71 at 1024 tokens)
+  and produces only **5% correct-AND-complete own-traces** -> no bootstrap data, AND training
+  on its truncated traces taught WORSE stopping (trained-arm eval truncation 13-30% vs base
+  0%). True no-think base acc = 0.23 (the earlier 0.49 was thinking-mode truncation).
+- **NEW DISCIPLINE — GENERATION-SUITABILITY PRECHECK** (before any on-policy run): the base
+  MUST produce CONCISE TERMINATING answers — require `gen_truncation < ~0.10` AND
+  `own_sample_correct_rate >> 0.05` (enough self-generated correct traces to bootstrap). A
+  verbose reasoning model fails this. Candidate bases: a CONCISE small INSTRUCT model
+  (e.g. Qwen2.5/3.5-Instruct small, or a non-reasoning instruct) -- NOT a reasoning model.
+  Run the precheck (own-correct + gen-trunc on a corpus sample) and pick a base that passes.
+- Then: on-policy process-reward-weighted LoRA-SFT on the SUITABLE base / GSM8K, all five
+  disciplines enforced. Gate: process_weighted > base, recovers a fraction of gold, beats
+  unweighted. Scale to Qwen3.6-27B QLoRA (also verify its gen-suitability) if signal.
 
 ### NEW 2026-06-06 (was TOP PRIORITY — substantially DONE): VERIFIER-EARNS-ITS-PLACE PROOF
 
