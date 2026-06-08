@@ -102,4 +102,38 @@ verifiers:
             verification to the EXECUTION oracle, use the cheap verifier only for syntax.
             UNTESTED next step: Carnot's DEDICATED code verifiers (ast_structure_verifier,
             nsvif_z3_extractor, code curry_howard/sat) — may or may not move the semantic
-            AUROC. Mirrors math being self-consistency-bound (the honest domain map)."
+            AUROC. Mirrors math being self-consistency-bound (the honest domain map).
+            2026-06-08 UPDATE: dedicated SHIPPED ASTStructureVerifier ALSO ~chance on v2
+            semantic (single-feature AUROC ~0.5) -> static code verification is
+            execution-bound on semantics BY DESIGN (targets structure/signature, which
+            semantic failures preserve). Caveat closed for static verifiers."
+
+  # ---- ARC domain (the north-star domain) — first cheap grid verifier, stage-2/3 prep ----
+  - verifier_id: arc_grid_structural_pruner
+    domain: arc_agi1_grid
+    version: 1
+    kind: process_verifier         # rule-based structural-consistency PRUNER (no induction)
+    code_commit: HEAD
+    code_path: scripts/experiments/arc_grid_verifier_discriminator_draft.py
+    weights_hf: null
+    weights_cid: null
+    weights_sha256: null
+    training_data_ref: /home/ianblenke/trm_src/kaggle/combined (ARC-AGI-1 public, gold solutions)
+    label_source: gold             # gold ARC solutions + cheap deterministic distractors
+    eval: {metric: "easy_discrimination_auroc", value: 0.743, n: 416,
+           structurally_malformed_separation: {wrong_task_gold: 0.947, random: 0.889, wrong_dim: 0.863},
+           content_error_separation: {perturbed_gold: 0.006, transposed: 0.293, blank: 0.135, color_swap: 0.384},
+           combined_top1: 0.0072,
+           eval_artifact: results/arc_grid_verifier_discriminator.json}
+    lineage: {from: seed, change: "first ARC-domain verifier: structural-consistency discriminator"}
+    status: candidate
+    notes: "PRUNER, NOT SELECTOR (combined_top1 ~0.7% — cannot pick gold uniquely because
+            near-miss distractors preserve all coarse invariants). Cheap dims/palette/bg
+            checks cleanly reject STRUCTURALLY-malformed candidates (wrong-task 0.95,
+            random 0.89, wrong-dim 0.86) but are BLIND to CONTENT errors that preserve
+            structure (perturbed-gold 0.006, transpose 0.29, blank 0.14). This is the
+            north-star division of labor on the actual ARC domain: verifier PRUNES
+            structural errors (the efficiency axis — fewer generator actions), generator
+            INDUCES content (the accuracy axis). NEXT: richer invariants (object-count,
+            symmetry, train-output content) + induced-rule grounding to lift the content
+            ceiling. Dimension is the only feature with real signal (AUROC 0.64)."

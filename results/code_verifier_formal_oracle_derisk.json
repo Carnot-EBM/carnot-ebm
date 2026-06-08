@@ -2,7 +2,7 @@
   "experiment": "code_verifier_formal_oracle_derisk_draft",
   "gate": "v2 (balanced semantic) learned held-out outcome-AUROC >= 0.70",
   "gate_pass": false,
-  "honest_verdict": "complete: code_formal_oracle_derisk_EXECUTION_BOUND_cheap_static_at_ceiling_v2learned0.4462_v2bestast_parse_ok0.5",
+  "honest_verdict": "complete: code_formal_oracle_derisk_EXECUTION_BOUND_cheap_static_at_ceiling_v2learned0.3385_v2bestast_parse_ok0.5",
   "inference_substrate": "verifier_ensemble_against_cached_candidates",
   "interpretation": "v2 is the HARD test (balanced, semantic failures all parse). If learned >= 0.70 a cheap code outcome-verifier exists -> mint a `code` registry entry + add to ARC domain set. If ~0.5 -> static verification is EXECUTION-BOUND on semantic code (the formal oracle is load-bearing), mirroring math being self-consistency-bound: the honest domain-coverage map the harness routes on. v1 (syntax-dominated) is the sanity baseline -> ast_parse_ok should dominate there.",
   "label_source": "formal_oracle_test_execution_precomputed",
@@ -11,12 +11,13 @@
     "v1_mbpp_humaneval_mixed": {
       "best_single_auroc": 0.799,
       "best_single_feature": "ast_parse_ok",
-      "learned_heldout_auroc": 0.9451,
+      "learned_heldout_auroc": 0.9363,
       "n": 320,
       "n_heldout": 96,
       "pass_base_rate": 0.075,
       "single_feature_auroc": {
         "ast_parse_ok": 0.799,
+        "ast_struct_verifier_score": 0.2804,
         "carnot_math_transfer_reward": 0.5053,
         "char_len_k": 0.5134,
         "has_cond": 0.7083,
@@ -29,12 +30,13 @@
     "v2_humaneval_balanced": {
       "best_single_auroc": 0.5,
       "best_single_feature": "ast_parse_ok",
-      "learned_heldout_auroc": 0.4462,
+      "learned_heldout_auroc": 0.3385,
       "n": 60,
       "n_heldout": 18,
       "pass_base_rate": 0.5,
       "single_feature_auroc": {
         "ast_parse_ok": 0.5,
+        "ast_struct_verifier_score": 0.5,
         "carnot_math_transfer_reward": 0.415,
         "char_len_k": 0.4694,
         "has_cond": 0.5,
