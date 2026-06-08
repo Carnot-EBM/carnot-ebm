@@ -36527,52 +36527,158 @@ milestones:
     result: OK (conductor)
 - id: 2026.06.362
   correction_type: v362_archive_activate_v363_retire_facts
-  title: 'Archive .362 and activate .363 with facts route retirement'
+  title: Archive .362 and activate .363 with facts route retirement
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-07'
-  finding: '.362 recovered the .361 infra wash and landed the offline proof record: exp3916 made the accuracy axis genuine with MOAT_SURVIVES, but exp3917 used a below-chance LLM judge and therefore made the efficiency verdict a strawman; exp3918 had escalation_fraction=0.0, exp3920 blocked and flagged the fourth facts attempt, and exp3922 was flagged at duration_s=0.0.'
+  finding: '.362 recovered the .361 infra wash and landed the offline proof record: exp3916 made the accuracy axis genuine
+    with MOAT_SURVIVES, but exp3917 used a below-chance LLM judge and therefore made the efficiency verdict a strawman; exp3918
+    had escalation_fraction=0.0, exp3920 blocked and flagged the fourth facts attempt, and exp3922 was flagged at duration_s=0.0.'
   activation_recorded: exp3924-archive-v362-activate-v363-retire-facts
   facts_route_retired: true
-  retired_scope: 'graph-grounding fact-verifier route (python/carnot/verify/graph_grounding_fact_verifier_defabricated.py)'
-  n362_comparator_flaw_recorded: 'exp3917 efficiency axis invalid: llm_judge_auroc=0.4423 below chance; CHEAPER_NOT_PARITY / earns=false was a strawman; .363 forward-bet: build a competent GenRM/ThinkPRM comparator before rerunning efficiency.'
+  retired_scope: graph-grounding fact-verifier route (python/carnot/verify/graph_grounding_fact_verifier_defabricated.py)
+  n362_comparator_flaw_recorded: 'exp3917 efficiency axis invalid: llm_judge_auroc=0.4423 below chance; CHEAPER_NOT_PARITY
+    / earns=false was a strawman; .363 forward-bet: build a competent GenRM/ThinkPRM comparator before rerunning efficiency.'
   tasks:
   - id: exp3914-archive-v361-activate-v362-quarantine-poison-test
-    title: 'Archive .361 and activate .362 with poison-test quarantine'
+    title: Archive .361 and activate .362 with poison-test quarantine
     deliverable: results/experiment_3914_archive_v361_activate_v362.json
     result: 'complete: archived_v361_wash_v362_active_poison_test_quarantined_import_ok_codex_backend_recommended'
   - id: exp3915-build-test-robust-gguf-inference-harness
-    title: 'Build and test robust GGUF inference harness'
+    title: Build and test robust GGUF inference harness
     deliverable: results/experiment_3915_robust_gguf_inference_harness.json
     result: 'complete: gguf_inference_harness_READY_modelgemma-4-26B-A4B-it_ngl-1_smoke1_live_path_unblocked'
   - id: exp3916-moat-scissor-accuracy-on-robust-harness
-    title: 'Moat scissor accuracy on robust harness'
+    title: Moat scissor accuracy on robust harness
     deliverable: results/experiment_3916_moat_scissor_accuracy.json
     result: 'complete: moat_scissor_MOAT_SURVIVES_residcatch_strong0.9143_ci0.8429-0.9714_overlap0.5000_holds_vs_boosted_self_verify_nres70'
   - id: exp3917-efficiency-head-to-head-on-robust-harness
-    title: 'Efficiency head-to-head on robust harness'
+    title: Efficiency head-to-head on robust harness
     deliverable: results/experiment_3917_efficiency_head_to_head.json
-    result: 'complete: efficiency_CHEAPER_11512.51x_but_NOT_PARITY_energy0.8100_llm0.4423_honest_partial [below_chance_llm_judge_auroc=0.4423 comparator_flaw]'
+    result: 'complete: efficiency_CHEAPER_11512.51x_but_NOT_PARITY_energy0.8100_llm0.4423_honest_partial [below_chance_llm_judge_auroc=0.4423
+      comparator_flaw]'
   - id: exp3918-meta-ebm-cascade-router-prototype
-    title: 'Meta-EBM cascade router prototype'
+    title: Meta-EBM cascade router prototype
     deliverable: results/experiment_3918_cascade_router_prototype.json
-    result: 'complete: cascade_router_WINS_gap-0.3896_11512.51x_cheaper_at_matched_accuracy_escfrac0.0000 [degenerate_cascade escalation_fraction=0.0]'
+    result: 'complete: cascade_router_WINS_gap-0.3896_11512.51x_cheaper_at_matched_accuracy_escfrac0.0000 [degenerate_cascade
+      escalation_fraction=0.0]'
   - id: exp3919-arc-agi3-harness-scaffold-build-test
-    title: 'ARC-AGI-3 verifier-first harness scaffold'
+    title: ARC-AGI-3 verifier-first harness scaffold
     deliverable: results/experiment_3919_arc_agi3_harness_scaffold.json
     result: 'complete: arc_agi3_scaffold_READY_pruned8_synthetic_only_agentic_proof_can_follow_offline_proof'
   - id: exp3920-facts-graph-grounding-last-retry
-    title: 'Facts graph-grounding verifier last retry'
+    title: Facts graph-grounding verifier last retry
     deliverable: results/experiment_3920_facts_graph_grounding_last_retry.json
-    result: 'blocked_llama_cpp_inference_failed [summarize_artifact LIVE_CRITICAL]'
+    result: blocked_llama_cpp_inference_failed [summarize_artifact LIVE_CRITICAL]
   - id: exp3921-fr11-v25-online-independence-reweighting
-    title: 'FR-11 v25 online independence reweighting'
+    title: FR-11 v25 online independence reweighting
     deliverable: results/experiment_3921_fr11_v25_independence_reweighting.json
     result: 'complete: fr11_v25_INVARIANT_HELD_auroc0.9078_memcontrib0.0185_state_persisted'
   - id: exp3922-hardware-continuity-consolidated
-    title: 'Hardware continuity consolidated'
+    title: Hardware continuity consolidated
     deliverable: results/experiment_3922_hardware_continuity_consolidated.json
-    result: 'success: hardware_continuity_gatemateblocked_gatemate_board_unreachable_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_no_fabric_claim [summarize_artifact LIVE_CRITICAL] [duration_s=0.0 hardware artifact flagged]'
+    result: 'success: hardware_continuity_gatemateblocked_gatemate_board_unreachable_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_no_fabric_claim
+      [summarize_artifact LIVE_CRITICAL] [duration_s=0.0 hardware artifact flagged]'
   - id: exp3923-capstone-v362
-    title: 'Capstone .362 verifier scorecard'
+    title: Capstone .362 verifier scorecard
     deliverable: results/experiment_3923_capstone_v362.json
     result: 'complete: capstone_v362_moatMOAT_SURVIVES_efficiencyCHEAPER_NOT_PARITY_earnsfalse_paper_ready_true_frozen_unchanged'
+- id: 2026.06.363
+  title: 'Make the verifier''s efficiency win CREDIBLE: diagnose+fix the .362 below-chance LLM-judge into a COMPETENT GenRM/ThinkPRM
+    comparator, re-run a VALID energy-verifier-vs-judge head-to-head (in-distribution) + a NON-DEGENERATE cascade + a MOAT
+    REPLICATION on an INDEPENDENT held-out corpus, then take the FIRST realistic ARC-AGI-3 agentic run (verifier-as-router
+    action-efficiency); retire the facts graph-grounding route; FR-11 v26; clean hardware continuity; and the hardened verifier-scorecard
+    capstone that honestly flips verifier_earns_its_place against a competent judge.'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-08'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3924-archive-v362-activate-v363-retire-facts
+    title: 'Archive .362 -> activate .363; GREEN-GATE de-risk + RETIRE the facts graph-grounding route to honest future-work:
+      exp3920 BLOCKED+FLAGGED a 4th consecutive time (exp3862 stub / exp3886 model-not-invoked / exp3896 separable-fixture
+      / exp3920 blocked_llama_cpp), so add the graph-grounding fact-verifier scope to ops/exclusion_manifest.yaml (retire_if_same_verdict
+      satisfied) and document facts as honest future-work (KGHaluBench-graded testbed for any future revival). Assert research-complete.yaml
+      parses, the core pretest subset is green, and record the .362 below-chance-LLM-judge comparator flaw as the .363 forward-bet.'
+    deliverable: results/experiment_3924_archive_v362_activate_v363_retire_facts.json
+    result: OK (conductor)
+  - id: exp3925-diagnose-and-build-competent-judge
+    title: 'DIAGNOSE + FIX the .362 below-chance LLM-judge into a COMPETENT comparator: read exp3917 per_item_results to determine
+      WHY llm_judge_auroc=0.4423 (polarity inversion? unparsed verdicts defaulting to a constant? weak 0-shot prompt?), then
+      BUILD + UNIT-TEST a GenRM/ThinkPRM-style judge (structured per-step CoT -> parsed binary verdict, few-shot exemplars,
+      polarity-checked scoring; arXiv:2504.16828 / 2408.15240) backed by the exp3915 robust gguf_inference harness, with a
+      stronger-model option (Qwen3.6-35B-A3B / gemma-4-31B-it at reduced n_gpu_layers). Deliverable = the judge module + a
+      PASSING test asserting fixture AUROC > 0.65 on a SEPARABLE fixture (the positive control that the judge is not broken).
+      ALL .363 efficiency tasks import this competent judge.'
+    deliverable: results/experiment_3925_competent_judge_build.json
+    result: OK (conductor)
+  - id: exp3926-valid-efficiency-head-to-head
+    title: "VALID EFFICIENCY head-to-head \u2014 energy-verifier vs the COMPETENT judge (north-star \xA75, finally testable;\
+      \ disk-reads exp3925+exp3905, no hard gate): on the exp3884 in-distribution corpus (n>=200), score with BOTH the energy\
+      \ ensemble (cheap CPU forward-pass) and the exp3925 competent GenRM/ThinkPRM judge (via the robust harness). POSITIVE\
+      \ CONTROL: assert the judge AUROC clears a defensible floor (>0.6) on THIS corpus BEFORE any verdict. Report accuracy\
+      \ parity/Pareto (energy within or above the judge CI) + a defensible cost ratio (wall-clock AND FLOP/token, amortized\
+      \ load excluded). Target: 'parity or dominance at Nx cheaper.' HONEST: if the competent judge BEATS energy on accuracy,\
+      \ say so \u2014 the cascade then becomes the deployable story. The 60s live-floor applies on THIS full-corpus artifact\
+      \ (NOT a fixture)."
+    deliverable: results/experiment_3926_valid_efficiency_head_to_head.json
+    result: OK (conductor)
+  - id: exp3927-non-degenerate-cascade-router
+    title: "NON-DEGENERATE Meta-EBM cascade router (positive-control escalation>0; disk-reads exp3926, no hard gate): the\
+      \ cheap energy verifier scores EVERY item; close-calls (energy margin within a tuned band) escalate to the COMPETENT\
+      \ judge (reuse exp3926 per-item judge scores \u2014 no re-inference). POSITIVE CONTROL: escalation_fraction MUST be\
+      \ > 0 (the .362 cascade was degenerate at escfrac=0.0). Tune the band on a calibration split, evaluate held-out; report\
+      \ cascade AUROC vs pure-competent-judge AUROC, escalation fraction, and cascade cost vs pure-judge. The deployable form\
+      \ of 'matched accuracy at Nx cheaper' (the Wastefulness Condition is checkable on calibration data alone)."
+    deliverable: results/experiment_3927_non_degenerate_cascade_router.json
+    result: OK (conductor)
+  - id: exp3928-moat-scissor-replication-second-corpus
+    title: "MOAT SCISSOR replication on an INDEPENDENT corpus (defeats the in-distribution-tuning critique): re-run the exp3916\
+      \ scissor (strong boosted self-verify arm via the exp3915 robust harness + bootstrap CI residual-catch + error-overlap\
+      \ Jaccard) on a SECOND held-out corpus \u2014 a ProcessBench math slice (HuggingFace Qwen/ProcessBench), FALLBACK the\
+      \ local held-out data/fover_test_v4.json \u2014 that neither the energy ensemble nor the FoVer-tuned probe was trained\
+      \ on. Confirm MOAT_SURVIVES (residual_catch_ci95.low>0.5 AND overlap<0.6 AND n_res>=30) replicates off the original\
+      \ corpus. Disk-reads exp3915 (no hard gate)."
+    deliverable: results/experiment_3928_moat_scissor_replication.json
+    result: OK (conductor)
+  - id: exp3929-arc-agi3-verifier-router-action-efficiency
+    title: "ARC-AGI-3 first realistic agentic run \u2014 verifier-as-router ACTION-EFFICIENCY WITH vs WITHOUT the pruner (north-star\
+      \ \xA75, sequenced after the offline proof; GPU-free): extend the exp3919 scaffold to a richer non-toy synthetic ARC-AGI-3-style\
+      \ env (multi-step, larger action space, known goal); measure actions-to-solve WITH the verifier-as-action-pruner (energy-scored\
+      \ action selection) vs a no-verifier baseline (random/greedy), reporting the action-efficiency ratio (the Exp1165 ~4x\
+      \ shape, now with a real baseline). ALSO a real ARC-AGI-3 benchmark access preflight (arXiv:2603.24621). HONEST: synthetic\
+      \ env, NO real-benchmark performance claim."
+    deliverable: results/experiment_3929_arc_agi3_action_efficiency.json
+    result: OK (conductor)
+  - id: exp3930-fr11-v26-cascade-band-online-learning
+    title: "FR-11 continuous self-learning v26 (research-program.md MANDATE) \u2014 load the persisted v25 independence-reweighting\
+      \ state (exp3921), continue Tier-1 ONLINE reweighting on a FRESH verification-corpus slice (arXiv:2604.07650), AND additionally\
+      \ learn the exp3927 cascade escalation band ONLINE (Tier-1 self-learning tied to the deployable cascade artifact). Confirm\
+      \ the learned weighting STILL holds the +0.0185 memory-ablation contribution + frozen 0.9131 across the v25->v26 iteration.\
+      \ CPU counter updates (<1us/update, the Tier-1 hardware path)."
+    deliverable: results/experiment_3930_fr11_v26_cascade_band_online_learning.json
+    result: OK (conductor)
+  - id: exp3931-hardware-continuity-clean-rerun
+    title: "Hardware continuity CLEAN re-run (fixes the exp3922 flag) \u2014 GateMate terminal-state re-confirmation (n=16\
+      \ Carnot Ising tile, DISTINCT wall-clock timers, JTAG readback attempt) + PolarFire/KV260 opportunistic SSH continuity\
+      \ (PolarFire terminal hash-verified soft-CPU dispatch, NO fabric-acceleration claim; KV260 loaded-overlay via xmutil,\
+      \ toward terminal). NO GGUF/CUDA markers (hardware_smoke substrate); HONEST distinct timers (the exp3866 TAUTOLOGY corrigendum).\
+      \ Per-board preconditions: record blocked_<board>_unreachable per board and continue."
+    deliverable: results/experiment_3931_hardware_continuity_clean_rerun.json
+    result: OK (conductor)
+  - id: exp3932-literature-synthesis-agentic-verification
+    title: "Literature synthesis \u2014 agentic verification + LLM-judge calibration + cascade efficiency (2026): synthesize\
+      \ the staged references (ProcessBench arXiv:2412.06559, ThinkPRM arXiv:2504.16828, GenRM arXiv:2408.15240, Budget-aware\
+      \ Discriminative Verification arXiv:2510.14913, ARC-AGI-3 arXiv:2603.24621, Self-Correction Illusion arXiv:2606.05976)\
+      \ into a one-page positioning note: where Carnot's cheap-energy-verifier-vs-competent-judge result sits in the 2026\
+      \ verification-efficiency landscape, and what the next 1-2 highest-leverage experiments are. Updates research-studying.md\
+      \ + research-references.md ONLY \u2014 never docs/index.html / README / blog (Public Documentation Discipline). No new\
+      \ inference."
+    deliverable: results/experiment_3932_literature_synthesis_agentic_verification.json
+    result: OK (conductor)
+  - id: exp3933-capstone-v363
+    title: "Capstone .363 \u2014 the HARDENED verifier scorecard (efficiency now VALID): aggregate the hardened offline proof\
+      \ \u2014 ACCURACY (moat REPLICATED on a second/independent corpus) + EFFICIENCY (energy vs a COMPETENT judge: parity/Pareto\
+      \ + cost ratio, the .362 below-chance strawman fixed) + the NON-DEGENERATE cascade (escalation>0) + the first ARC-AGI-3\
+      \ agentic run (action-efficiency) + FR-11 v26 + hardware. ANSWER the operator's 'does the verifier earn its place' question\
+      \ against a competent judge. paper_ready stays TRUE; frozen 0.9131 unchanged."
+    deliverable: results/experiment_3933_capstone_v363.json
+    result: OK (conductor)
