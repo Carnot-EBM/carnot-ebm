@@ -38,11 +38,17 @@ from process_reward_weighted_sft_phase1_draft import (  # noqa: E402
 OUT = REPO_ROOT / "results" / "process_reward_weighted_sft_onpolicy.json"
 
 
-def _generate_on_policy(rows, *, K, temp, smoke):
+def _generate_on_policy(rows, *, K, temp, smoke, seed=0):
     """Replace each question's samples with K traces MiniCPM generates ITSELF."""
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
+    # POWERED: seed generation so the teaching signal is reproducible per seed (the
+    # statistical-power discipline: unseeded gen was why process_weighted swung
+    # -0.06..+0.167 across runs). Seed varies the sampled traces between seeds.
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tok = AutoTokenizer.from_pretrained(MODEL_ID)
     if tok.pad_token is None:
@@ -103,10 +109,25 @@ def _generate_on_policy(rows, *, K, temp, smoke):
             "K": K, "temperature": temp}
 
 
-def run(*, smoke=False, seed=0, K=6, temp=0.8, write=True):
+def _load_questions(path):
+    """Load question+gold rows directly (on-policy regenerates samples, so the
+    placeholder sample in the file is only there to satisfy _load_corpus's contract)."""
+    rows = []
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            r = json.loads(line)
+            q, gold = str(r.get("question") or ""), str(r.get("gold") or "").strip()
+            if q and gold:
+                rows.append({"question": q, "gold": gold,
+                             "samples": [{"text": f"The answer is {gold}", "answer": gold}]})
+    return rows
+
+
+def run(*, smoke=False, seed=0, K=6, temp=0.8, write=True, corpus_path=None, out_path=None):
     import torch
     started = time.time()
-    rows = _load_corpus(limit_q=8 if smoke else None)
+    rows = (_load_questions(corpus_path) if corpus_path
+            else _load_corpus(limit_q=8 if smoke else None))
     rng = random.Random(seed)
     rng.shuffle(rows)
     n_ev = max(2, int(0.25 * len(rows)))
@@ -119,11 +140,11 @@ def run(*, smoke=False, seed=0, K=6, temp=0.8, write=True):
         art = {"experiment": "process_reward_weighted_sft_onpolicy_draft",
                "honest_verdict": "blocked_no_cuda", "duration_s": time.time() - started}
         if write:
-            OUT.write_text(json.dumps(art, indent=2, sort_keys=True) + "\n", "utf-8")
+            (out_path or OUT).write_text(json.dumps(art, indent=2, sort_keys=True) + "\n", "utf-8")
         return art
 
     # ON-POLICY: MiniCPM generates its OWN training traces, then we score + train on them.
-    gen_meta = _generate_on_policy(rows_tr, K=(2 if smoke else K), temp=temp, smoke=smoke)
+    gen_meta = _generate_on_policy(rows_tr, K=(2 if smoke else K), temp=temp, smoke=smoke, seed=seed)
     _process_rewards(rows_tr)  # verifier process-reward on MiniCPM's own traces
 
     regimes = ["process_weighted", "sc_weighted", "process_plus_sc", "gold", "unweighted"]
@@ -168,7 +189,7 @@ def run(*, smoke=False, seed=0, K=6, temp=0.8, write=True):
                    "bootstraps from (must be >0 and <1). Gates: gold>=base, max_trunc<0.05."),
     }
     if write:
-        OUT.write_text(json.dumps(art, indent=2, sort_keys=True) + "\n", "utf-8")
+        (out_path or OUT).write_text(json.dumps(art, indent=2, sort_keys=True) + "\n", "utf-8")
     return art
 
 
