@@ -124,3 +124,21 @@ non-GGUF base first). The small model is a HARNESS-DEBUG FIXTURE, not the scient
 claim. Cost of the 27B path: ~54GB safetensors download + slower iteration -- acceptable
 once the harness is validated. (Qwen3.6-35B-A3B MoE is the alternative headline base but
 heavier; pick 27B dense unless the MoE is specifically wanted.)
+
+
+## Base-model FINAL (2026-06-07, operator) — openbmb/MiniCPM5-1B
+
+Chosen base: **openbmb/MiniCPM5-1B** (operator suggestion, verified on HF):
+- apache-2.0, last_modified 2026-05-26 (current), 114k downloads -- recent + open
+  (decentralization-compliant) + well-adopted.
+- safetensors (TRAINABLE, single ~2-3GB shard), NOT a GGUF.
+- **Standard LlamaForCausalLM (model_type llama, no auto_map) -> NO trust_remote_code**;
+  works directly with transformers + peft (LoRA or full fine-tune).
+- 1B (hidden 1536 / 24 layers) -> fast iteration + full FT on a single 3090; ample
+  HEADROOM on hard math (MATH-500 L3-4) for process-reward to lift.
+
+This resolves both prior issues: Qwen3.6 has no small variant, and the 27B QLoRA path
+is heavy. MiniCPM5-1B is recent SOTA-class AND small AND trainable AND Apache-2.0 -- a
+credible headline base in its own right, not just a debug fixture. Qwen3.6-27B (QLoRA)
+remains the optional scale-up for a larger headline once the mechanism is proven on
+MiniCPM5-1B. Supersedes the Qwen3.5-0.8B / Qwen3.6-27B base notes above.
