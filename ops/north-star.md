@@ -15,6 +15,78 @@ Discipline). Numbers here trace to primary artifacts, not prose.
 
 ---
 
+## 0. THE NORTH STAR (operator directive 2026-06-08): solve ARC-AGI-3, accurately and efficiently
+
+> **"Solving ARC-AGI-3 is our new north star, as accurately and efficiently as
+> possible."** — operator, 2026-06-08.
+
+This is the project's **destination**. Everything below (§1 the FoVer headline,
+§2 the publication gate, §3 hardware, §5 the verifier-moat + agentic harness)
+is now **in service of this goal**, not a parallel track. The reframe is not a
+discard — the FoVer headline and the stable gate remain the things we *publish*
+and the discipline we *converge with*; they are now **supporting results** that
+de-risk the path to ARC-AGI-3, not the end of the road.
+
+**The two metrics (both first-class — "accurately AND efficiently"):**
+
+| Axis | Metric | Why it is the north star, not just a number |
+|---|---|---|
+| **ACCURACY** | ARC-AGI-3 solve-rate / official ARC score on the live benchmark | The hard, un-gamed test of *general* directed reasoning — the project's core motivation (escape hallucination, autonomous directed self-learning). |
+| **EFFICIENCY** | actions-to-solve **and** compute/latency/cost per solve | ARC-AGI-3 is interactive (act→observe→act); a solver that brute-forces actions or burns an LLM-judge per step does not scale. Efficiency is where Carnot's *verifier* earns its place (router + action-pruner; the Exp1165 pilot showed ~4× fewer actions). |
+
+**The honest division of labor (do NOT overclaim the verifier here).**
+ARC-AGI-3 is an *induction* benchmark — inferring a latent rule from few
+interactions. The **generator** does the induction: a learned amortized
+recursive refiner (TRM-class, which reaches ~0.82 on Sudoku-Extreme where AR
+and energy-descent get ~0%) and/or an open local LLM. The **energy verifier**
+does NOT induce; it makes the search *accurate and efficient* — routing the
+cheap encodable specialist vs escalating to the LLM (Meta-EBM Cascade Router),
+pruning hopeless actions (verifier-as-free-energy), and verifying
+state/trajectory at scale. This is the HYBRID architecture of §5: generator =
+commodity/third-party, energy = verification layer. The north star is the
+*system's* solve-rate; the verifier is Carnot's specific, load-bearing,
+existential contribution to it.
+
+**The binding blocker is real-benchmark ACCESS, not code.** We have NOT started
+the real build. What exists is a synthetic scaffold (the Exp1165 pilot used a
+toy env; exp3919 is a synthetic harness), and access outreach is at the
+outreach stage (exp1166). Until live ARC-AGI-3 access lands, the north star is
+pursued *indirectly* via the offline proofs that de-risk it (below).
+
+**The sequence (the §5 discipline still governs — offline proof FIRST).**
+The harness's value DERIVES from the verifier; a beautiful harness around an
+unproven verifier is still glue. So the path to the north star is:
+
+1. **Offline verifier proof** (fast, no harness, already staged): the
+   moat-scissor accuracy rerun (does the external verifier catch what the model
+   self-verification misses, in-distribution?) + the energy-verifier-vs-LLM-judge
+   efficiency head-to-head (target: "parity at 10–100× cheaper"). This is the
+   FoVer-domain proof; the published headline (§1) is its receipt.
+2. **Verifier domain expansion** (the registry program, `ops/verifier_registry.yaml`):
+   grow beyond math toward the perception/grid/rule-induction domains ARC-AGI-3
+   needs, with formal oracles where available. The verifier is domain-bound
+   today (math strong, facts earned-negative, code weak — memory
+   `verifier-domain-bound-math-only`); ARC-AGI-3 demands new domains.
+3. **ARC-AGI-3 real harness** (gated on access): the agentic integration surface
+   of §5 — router + action-pruner + state-verify — measured on the two metrics
+   above. Building it verifier-first makes harness-building and verifier-proving
+   the SAME work.
+
+**The rule (extends §1's rule).** A milestone advances the north star if it
+raises ARC-AGI-3 accuracy, lowers ARC-AGI-3 cost/actions, OR de-risks the path
+(an offline verifier proof, a new verifier domain, real-benchmark access). A
+milestone that re-measures an already-settled artifact without moving any of
+those is churn.
+
+**What does NOT change.** The §1 FoVer headline (0.9131) and the §2 G1–G4 gate
+stay fixed and remain the publication target — reframed as the *supporting
+evidence that the verification layer works*, which is the precondition for it
+to be useful inside the ARC-AGI-3 harness. Sovereignty/decentralization rules,
+hardware-as-energy-evaluator (§3, §5), and all CLAUDE.md disciplines are
+unchanged.
+
+---
+
 ## 1. THE HEADLINE CLAIM (the one surviving positive)
 
 Reconstructed 2026-05-29 by auditing every positive claim against the
