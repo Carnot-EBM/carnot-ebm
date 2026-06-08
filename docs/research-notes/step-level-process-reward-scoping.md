@@ -108,3 +108,19 @@ gemma-4-{E2B,E4B}. Plan: PoC on Qwen3.5-0.8B (recent, trainable, cached -- NOT t
 outdated Qwen2.5), scale to Qwen3.5-9B/27B (LoRA on the 2x3090). To use literally Qwen3.6
 as the generator, download its non-GGUF base and LoRA the 35B-A3B MoE (heavier; do only
 after the mechanism is proven on Qwen3.5).
+
+
+## Base-model UPDATE (2026-06-07, operator) — Qwen3.6-27B is the headline base
+
+The latest SOTA Qwen3.6 family has NO small variant: only Qwen/Qwen3.6-27B (dense) and
+Qwen/Qwen3.6-35B-A3B (MoE) exist as trainable base safetensors (verified on HF). The
+cache had only the GGUF, but the full safetensors are downloadable. Qwen3.6-27B is
+QLoRA-able on a single 3090 (4-bit ~14GB base + LoRA fits in 24GB).
+
+PLAN: the fine-tune harness is NEW, untested code -> validate it on a TINY fixture
+(Qwen3.5-0.8B, seconds/step) to confirm the process-reward-weighted-SFT loop works and
+beats base, THEN run the real headline experiment on Qwen3.6-27B (QLoRA, download the
+non-GGUF base first). The small model is a HARNESS-DEBUG FIXTURE, not the scientific
+claim. Cost of the 27B path: ~54GB safetensors download + slower iteration -- acceptable
+once the harness is validated. (Qwen3.6-35B-A3B MoE is the alternative headline base but
+heavier; pick 27B dense unless the MoE is specifically wanted.)
