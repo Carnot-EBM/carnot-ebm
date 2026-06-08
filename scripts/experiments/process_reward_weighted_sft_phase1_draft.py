@@ -161,7 +161,7 @@ def _run_training_and_eval(rows_tr, rows_ev, regimes, *, smoke: bool) -> dict:
         except Exception:
             return f"Question: {q}\nSolution:"
 
-    max_new = 384 if smoke else 768  # headroom above GSM8K's ~320-token solutions
+    max_new = 512 if smoke else 1024  # headroom above GSM8K's ~320-token solutions
     @torch.no_grad()
     def _eval(model) -> dict:
         """Returns acc AND truncation instrumentation -- truncation silently scores

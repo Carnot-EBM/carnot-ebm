@@ -6,50 +6,50 @@
       "truncation_rate": 0.0
     },
     "gold": {
-      "acc": 0.2667,
+      "acc": 0.6667,
       "no_answer_rate": 0.0,
-      "truncation_rate": 0.1333
+      "truncation_rate": 0.0667
     },
-    "gold_n_examples": 27,
+    "gold_n_examples": 194,
     "process_weighted": {
-      "acc": 0.2,
+      "acc": 0.2333,
       "no_answer_rate": 0.0,
-      "truncation_rate": 0.2
+      "truncation_rate": 0.1
     },
-    "process_weighted_n_examples": 297,
+    "process_weighted_n_examples": 504,
     "unweighted": {
-      "acc": 0.1,
+      "acc": 0.3,
       "no_answer_rate": 0.0,
-      "truncation_rate": 0.3
+      "truncation_rate": 0.0
     },
     "unweighted_n_examples": 540
   },
   "caveat": "DRAFT, ON-POLICY (MiniCPM trains on its OWN verifier-scored traces -> no off-policy style/truncation asymmetry). 1 seed, small corpus -> ORDERING is the result. own_sample_correct_rate = the headroom the self-improvement bootstraps from (must be >0 and <1). Gates: gold>=base, max_trunc<0.05.",
-  "delta_gold_upper_bound": 0.0334,
-  "delta_process_weighted": -0.0333,
-  "duration_s": 1306.9399688243866,
+  "delta_gold_upper_bound": 0.4334,
+  "delta_process_weighted": 0.0,
+  "duration_s": 873.676322221756,
   "eval_truncation_rate_by_arm": {
     "base": 0.0,
-    "gold": 0.1333,
-    "process_weighted": 0.2,
-    "unweighted": 0.3
+    "gold": 0.0667,
+    "process_weighted": 0.1,
+    "unweighted": 0.0
   },
   "experiment": "process_reward_weighted_sft_onpolicy_draft",
   "generation_meta": {
     "K": 6,
-    "gen_truncation_rate": 0.7111,
-    "own_sample_correct_rate": 0.05,
-    "temperature": 0.6
+    "gen_truncation_rate": 0.1444,
+    "own_sample_correct_rate": 0.3593,
+    "temperature": 0.4
   },
   "gold_control_ok": true,
-  "honest_verdict": "complete: onpolicy_process_reward_sft_TRUNCATION_INVALID_base0.233_pw0.2_gold0.267_goldfrac-0.997_maxtrunc0.3",
+  "honest_verdict": "complete: onpolicy_process_reward_sft_TRUNCATION_INVALID_base0.233_pw0.233_gold0.667_goldfrac0.0_maxtrunc0.1",
   "inference_substrate": "live_gpu_onpolicy_generation_plus_lora_sft_plus_verifier_ensemble",
-  "max_eval_truncation_rate": 0.3,
+  "max_eval_truncation_rate": 0.1,
   "model_id": "openbmb/MiniCPM5-1B",
   "n_eval_questions": 30,
   "n_train_questions": 90,
   "policy": "ON_POLICY_minicpm_generates_own_traces",
-  "process_weighted_frac_of_gold_lift": -0.997,
+  "process_weighted_frac_of_gold_lift": 0.0,
   "random_seed": 0,
   "smoke": false,
   "title": "onpolicy_process_reward_weighted_sft",
