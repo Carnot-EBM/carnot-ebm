@@ -1,17 +1,19 @@
 import json
-import os
+import datetime
 
-with open("results/operational_retro_2026_06_337.json", "r") as f:
+filepath = 'results/operational_retro_2026_06_363.json'
+
+with open(filepath, 'r') as f:
     data = json.load(f)
 
-data["summary"] = "Milestone 2026.06.337 completed with no experiment commits found since activation. Both GPUs were idle, but since there were zero compute-bound tasks, this is not flagged as an efficiency bottleneck."
-data["bottlenecks_identified"] = []
-data["improvements_suggested"] = ["Investigate the pipeline to determine why no experiments were triggered or committed."]
-data["top_3_highest_leverage_actions"] = ["Verify the experiment scheduler and research conductor logic for the next milestone."]
-data["estimated_time_savings_pct"] = 0
-data["meta_reflection"] = "No empirical performance data is available. The system correctly reports the null state rather than inferring from prior distributions."
+# Update interpretative fields
+data['summary'] = "The authoritative timing source reports no experiment commits since activation, leaving total_wall_time_minutes=0, experiments_completed=0, and compute_bound_experiments_count=0."
+data['bottlenecks_identified'] = []
+data['improvements_suggested'] = ["Investigate why no experiments were dispatched to completion since milestone activation."]
+data['top_3_highest_leverage_actions'] = ["Investigate the absence of dispatched experiments."]
+data['estimated_time_savings_pct'] = 0
+data['meta_reflection'] = "Both GPUs were idle, but since there were 0 compute-bound tasks, no bottleneck was flagged."
+data['generated_at'] = datetime.datetime.utcnow().isoformat() + "Z"
 
-with open("results/operational_retro_2026_06_337.json", "w") as f:
+with open(filepath, 'w') as f:
     json.dump(data, f, indent=2)
-
-print("JSON updated successfully.")
