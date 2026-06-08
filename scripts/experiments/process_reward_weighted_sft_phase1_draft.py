@@ -144,7 +144,7 @@ def _run_training_and_eval(rows_tr, rows_ev, regimes, *, smoke: bool) -> dict:
         tok.pad_token = tok.eos_token
     max_len = 768 if not smoke else 384
     epochs = 1 if smoke else 2
-    lr = 1e-5
+    lr = 2e-4  # v2: LoRA (adapter-only) LR. v1's full-FT at 1e-5 forgot/collapsed.
 
     def _fmt(q: str) -> str:
         msgs = [{"role": "user", "content": f"Solve the problem. End with the final number.\n\n{q}"}]
@@ -153,24 +153,45 @@ def _run_training_and_eval(rows_tr, rows_ev, regimes, *, smoke: bool) -> dict:
         except Exception:
             return f"Question: {q}\nSolution:"
 
+    max_new = 384 if smoke else 768  # headroom above GSM8K's ~320-token solutions
     @torch.no_grad()
-    def _eval(model) -> float:
+    def _eval(model) -> dict:
+        """Returns acc AND truncation instrumentation -- truncation silently scores
+        would-be-correct solutions as wrong (a cut-off solution has no final answer).
+        truncation_rate MUST be near 0 for the accuracy to be trustworthy."""
         model.eval()
-        hits = 0
+        hits = trunc = no_ans = 0
         for row in rows_ev:
             ids = tok(_fmt(row["question"]), return_tensors="pt", truncation=True,
                       max_length=max_len).to(device)
-            gen = model.generate(**ids, max_new_tokens=256, do_sample=False,
-                                 pad_token_id=tok.pad_token_id)
-            text = tok.decode(gen[0][ids["input_ids"].shape[1]:], skip_special_tokens=True)
-            if _extract_answer(text) == row["gold"]:
+            in_len = ids["input_ids"].shape[1]
+            gen = model.generate(**ids, max_new_tokens=max_new, do_sample=False,
+                                 pad_token_id=tok.pad_token_id, eos_token_id=tok.eos_token_id)
+            n_new = gen[0].shape[0] - in_len
+            text = tok.decode(gen[0][in_len:], skip_special_tokens=True)
+            ans = _extract_answer(text)
+            if n_new >= max_new:           # hit the cap WITHOUT emitting EOS -> truncated
+                trunc += 1
+            if ans is None:
+                no_ans += 1
+            if ans == row["gold"]:
                 hits += 1
-        return hits / len(rows_ev)
+        n = len(rows_ev)
+        return {"acc": round(hits / n, 4), "truncation_rate": round(trunc / n, 4),
+                "no_answer_rate": round(no_ans / n, 4)}
 
     def _train(examples) -> "object":
-        model = AutoModelForCausalLM.from_pretrained(MODEL_ID, torch_dtype=torch.bfloat16).to(device)
-        model.gradient_checkpointing_enable()
-        opt = torch.optim.AdamW(model.parameters(), lr=lr)
+        from peft import LoraConfig, get_peft_model
+        base_m = AutoModelForCausalLM.from_pretrained(MODEL_ID, dtype=torch.bfloat16).to(device)
+        # v2: LoRA -> base weights FROZEN, only adapters train. Structurally prevents the
+        # catastrophic forgetting that degraded ALL v1 arms (incl. the gold control).
+        lconf = LoraConfig(
+            r=16, lora_alpha=32, lora_dropout=0.05, task_type="CAUSAL_LM",
+            target_modules=["q_proj", "k_proj", "v_proj", "o_proj",
+                            "gate_proj", "up_proj", "down_proj"],
+        )
+        model = get_peft_model(base_m, lconf)
+        opt = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=lr)
         model.train()
         steps = 0
         for _ in range(epochs):
@@ -192,7 +213,7 @@ def _run_training_and_eval(rows_tr, rows_ev, regimes, *, smoke: bool) -> dict:
         return model
 
     results = {}
-    base = AutoModelForCausalLM.from_pretrained(MODEL_ID, torch_dtype=torch.bfloat16).to(device)
+    base = AutoModelForCausalLM.from_pretrained(MODEL_ID, dtype=torch.bfloat16).to(device)
     results["base"] = _eval(base)
     del base
     torch.cuda.empty_cache()
@@ -237,17 +258,31 @@ def run(*, smoke: bool = False, seed: int = 0, write: bool = True) -> dict:
     regimes = ["process_weighted", "gold", "unweighted"]
     res = _run_training_and_eval(rows_tr, rows_ev, regimes, smoke=smoke)
 
-    base = res.get("base") or 0.0
-    pw = res.get("process_weighted")
-    gold = res.get("gold")
+    def _acc(x):
+        return x["acc"] if isinstance(x, dict) else (x or 0.0)
+
+    base = _acc(res.get("base"))
+    pw = None if res.get("process_weighted") is None else _acc(res["process_weighted"])
+    gold = None if res.get("gold") is None else _acc(res["gold"])
     d_pw = None if pw is None else round(pw - base, 4)
     d_gold = None if gold is None else round(gold - base, 4)
     frac = (None if (pw is None or gold is None or (gold - base) <= 1e-6)
             else round((pw - base) / (gold - base), 3))
-    teaches = bool(pw is not None and pw - base >= 0.02)
-    verdict = (f"complete: process_reward_sft_{'TEACHES' if teaches else 'no_clear_lift'}"
+    # TRUNCATION GUARD: if any arm's eval truncation is high, the accuracy is corrupted.
+    truncs = {k: v.get("truncation_rate") for k, v in res.items() if isinstance(v, dict)}
+    max_trunc = max((t for t in truncs.values() if t is not None), default=0.0)
+    trunc_ok = max_trunc <= 0.05
+    # GOLD-CONTROL GATE: gold must hold >= base or the harness degrades regardless.
+    gold_control_ok = bool(gold is not None and gold >= base - 0.02)
+    teaches = bool(pw is not None and pw - base >= 0.02 and gold_control_ok and trunc_ok)
+    status = ("TEACHES" if teaches else
+              "TRUNCATION_INVALID" if not trunc_ok else
+              "HARNESS_BROKEN_gold_below_base" if not gold_control_ok else
+              "no_clear_lift")
+    verdict = (f"complete: process_reward_sft_{status}"
                f"_base{base:.3f}_pw{'na' if pw is None else round(pw,3)}"
-               f"_gold{'na' if gold is None else round(gold,3)}_goldfrac{frac}")
+               f"_gold{'na' if gold is None else round(gold,3)}_goldfrac{frac}"
+               f"_maxtrunc{round(max_trunc,3)}")
     art = {
         "experiment": "process_reward_weighted_sft_phase1_draft",
         "title": "process_reward_weighted_sft",
@@ -261,7 +296,11 @@ def run(*, smoke: bool = False, seed: int = 0, write: bool = True) -> dict:
         "delta_process_weighted": d_pw,
         "delta_gold_upper_bound": d_gold,
         "process_weighted_frac_of_gold_lift": frac,
-        "gate": "process_weighted > base by >= 0.02 (verifier teaches off-policy)",
+        "eval_truncation_rate_by_arm": truncs,
+        "max_eval_truncation_rate": round(max_trunc, 4),
+        "truncation_ok": trunc_ok,
+        "gold_control_ok": gold_control_ok,
+        "gate": "process_weighted > base by >= 0.02 AND gold_control_ok AND truncation_ok",
         "policy": "off_policy_reuses_p01_gsm8k_samples",
         "random_seed": seed,
         "duration_s": time.time() - started,
