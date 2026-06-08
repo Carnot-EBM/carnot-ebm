@@ -1,0 +1,116 @@
+{
+  "audit_duration_s": 20.88019,
+  "duration_s": 20.880724,
+  "experiment": 3931,
+  "fabric_acceleration_claimed": false,
+  "field_principles": {
+    "duration_s": "Full clean-rerun wall-clock timer.",
+    "fabric_acceleration_claimed": "Must remain false for this continuity audit.",
+    "gatemate_reachable": "Per-board reachability: GateMate via JTAG detect, PolarFire and KV260 via SSH.",
+    "gatemate_terminal_state_reached": "Bare bool: flashed plus smoke plus readback-or-unsupported plus distinct timers.",
+    "honest_verdict": "Success or blocked prefix records the continuity falsification gate.",
+    "inference_substrate": "Declares this as hardware_smoke board interaction.",
+    "kv260_reachable": "Per-board reachability: KV260 is checked through board SSH only, not host storage.",
+    "kv260_state": "Loaded overlay plus UIO presence records terminal or non-terminal state.",
+    "polarfire_reachable": "Per-board reachability: GateMate via JTAG detect, PolarFire and KV260 via SSH.",
+    "polarfire_state": "Hash-verified soft-CPU SSH dispatch only, with no fabric claim.",
+    "preconditions_checked": "Hardware-smoke methodology with real per-board preconditions first.",
+    "reproducibility_checksum": "Content hash over the cleaned artifact for drift checks.",
+    "run_duration_s": "Measured board-command or board-dispatch timer, distinct from duration_s."
+  },
+  "gatemate_reachable": false,
+  "gatemate_state": "blocked_gatemate_board_unreachable",
+  "gatemate_summary": null,
+  "gatemate_terminal_state_reached": false,
+  "honest_verdict": "success: hardware_continuity_clean_gatemateblocked_gatemate_board_unreachable_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_distinct_timers_no_fabric_claim",
+  "inference_substrate": "hardware_smoke",
+  "kv260_carnot_ising_active": false,
+  "kv260_command_transcripts": {
+    "uio_list": {
+      "combined_output": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n/dev/uio4\n",
+      "command": "ssh kria 'ls /dev/uio*'",
+      "duration_s": 0.434034,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n/dev/uio4\n"
+    },
+    "xmutil_listapps": {
+      "combined_output": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "command": "ssh kria 'xmutil listapps'",
+      "duration_s": 2.939125,
+      "exit_code": 1,
+      "stderr": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "stdout": ""
+    }
+  },
+  "kv260_loaded_overlay": null,
+  "kv260_reachable": true,
+  "kv260_state": "nonterminal_carnot_ising_inactive_uio_present",
+  "kv260_uio_devices": [
+    "/dev/uio0",
+    "/dev/uio1",
+    "/dev/uio2",
+    "/dev/uio3",
+    "/dev/uio4"
+  ],
+  "polarfire_dispatch_summary": {
+    "board_result_sha256": "b00b011cd654e5dec0513334bd78ea288f72ea95a2d10b7ddcd6eb51040138cb",
+    "claim_boundary": "soft_cpu_ssh_dispatch_no_fpga_fabric_acceleration",
+    "cpu_reference_sha256": "b00b011cd654e5dec0513334bd78ea288f72ea95a2d10b7ddcd6eb51040138cb",
+    "exp3867_honest_verdict": "success: polarfire_carnot_dispatch_hash_verified_terminal_duration11.98s_tempunknown",
+    "inference_substrate": "hardware_smoke",
+    "polarfire_workload_validated": true,
+    "result_hash_match": true,
+    "run_duration_s": 11.984666
+  },
+  "polarfire_reachable": true,
+  "polarfire_state": "terminal_hash_verified_soft_cpu_ssh_dispatch",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "blocker": "",
+      "checked_before_board_operations": true,
+      "command": "command -v nextpnr-himbaechel && command -v yosys && command -v openFPGALoader",
+      "detail": {
+        "nextpnr-himbaechel": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+        "openFPGALoader": "/opt/oss-cad-suite/bin/openFPGALoader",
+        "yosys": "/opt/oss-cad-suite/bin/yosys"
+      },
+      "resource": "gatemate_toolchain"
+    },
+    {
+      "available": false,
+      "blocker": "blocked_gatemate_board_unreachable",
+      "checked_before_board_operations": true,
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "exit_code": 0,
+      "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "resource": "gatemate_board_detect"
+    },
+    {
+      "available": true,
+      "checked_before_board_operations": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "polarfire_ssh"
+    },
+    {
+      "available": true,
+      "checked_before_board_operations": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    }
+  ],
+  "prior_exp3922_diagnosis": "Exp 3922 recorded zero top-level timers on a hardware_smoke artifact; Exp 3931 records distinct measured timers and keeps the no-fabric claim.",
+  "random_seed": 3931,
+  "reproducibility_checksum": "43e1cce4a9ff93d5719c84ae61f446356c532a84bda3a614d58b5c9a51c9ae4b",
+  "run_duration_s": 20.849307,
+  "schema": "carnot.hardware_continuity_clean_rerun.v1",
+  "spec_refs": [
+    "REQ-HW-3931",
+    "SCENARIO-HW-3931"
+  ]
+}
