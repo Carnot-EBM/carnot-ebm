@@ -4,53 +4,51 @@
 # docs_audit_report — 2026-06-07
 
 ## TL;DR (stranger's 30-second take)
-I would bounce before scrolling past the hero. The page starts with a clear value proposition but immediately devolves into an impenetrable wall of project-internal Jira metrics, leaked CI test paths, and academic jargon that assumes I work on your team.
+I would close the tab. While the hero effectively explains what the tool does, the page immediately devolves into a dense wall of unexplained acronyms (FoVer, CCTU, SVAMP), internal milestone notes, and suspiciously perfect numbers (1.0 TP rates) that scream "academic vaporware" rather than a usable, trustworthy tool.
 
 ## TOP 3 PROBLEMS
-1. Leaked file paths as public claims — Results grid literally prints a local `.tmp-pytest/` filepath instead of a benchmark name.
-2. Navel-gazing metrics — Hero stats boast about "Completed milestones" and "Experiment runs" which mean nothing to a user.
-3. Impenetrable internal jargon — The copy is littered with undefined acronyms (FoVer, PREM, CCTU, SVAMP) and raw internal test names.
+1. **Alienating Jargon**: The hero and feature cards throw out acronyms (FoVer, CCTU, PREM, SVAMP) and raw run configurations without defining them for an external audience.
+2. **Fabrication Signals**: Claims of perfect 1.0 extraction rates, 60/60 attack blocks, and "zero false positives" instantly destroy credibility for any serious practitioner.
+3. **Milestone Narrative Leak**: Text like "Repinned from v2 0.9857 after pre-submission adversarial audit" reads like an internal sprint retrospective, not public value positioning.
 
 ## DETAILED FINDINGS
-
 ### Bloat
-- Results grid — 12 cards — Cap at 6. A 12-card wall of tiny text with highly specific benchmark trivia is visually overwhelming and dilutes your strongest claims.
-- Writing section — 7 blog post cards with full descriptions — Cap at 3. Too much scrolling to get past the footer.
-- Features grid — 7 bento cards (some very text-dense like "Research operations" and "APIs") — Reduce word counts to < 60 words per card.
+- **Results grid** — 12 cards — Too many cards; visual fatigue sets in. A stranger will skim none of them. Cap to the 4-6 most impactful metrics.
+- **Blog section** — 7 cards — Creates an overwhelming wall of text at the bottom of the page. Cap to 3 recent or highly relevant posts.
 
 ### Internal jargon
-- Hero stats / Recent progress — `FoVer math step-errors`, `5-seed dual-condition`, `architecture-only 0.8947`. A stranger has no idea what "FoVer" is or why "architecture-only" matters here.
-- Features: Test-Time Compute (TTC) & PREM — `Process-Reward Energy Model (PREM) variance`. Word salad to anyone outside your lab.
-- Results: Math extraction — `VeriCoT equation-style CoT fix`.
-- Results: Math reasoning — `EstimationVerifier SVAMP AUC`, `0.125 FoVer baseline`.
-- Results: Code repair — `IterativeSelfRepair (execute-feedback-retry)`.
-- Results: Live benchmark — `@.tmp-pytest/pytest-of-ianblenke/pytest-3/popen-gw0/test_req_verify_2932_run_uses_0/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real.txt`. This is literally a leaked pytest temporary file path printed on your landing page.
+- **Hero Stat Bar** — "FoVer" — No explanation of what this dataset or benchmark is.
+- **Features / Typed constraints** — "CCTU constrained tool-use micro-benchmark" — CCTU is undefined.
+- **Features / Test-Time Compute** — "PREM variance" — Process-Reward Energy Model is an unexplained, hyper-specific concept.
+- **Results / Math reasoning** — "EstimationVerifier SVAMP AUC" — A word salad of internal components and acronyms.
+- **Results / Code repair** — "IterativeSelfRepair (HumanEval-50, execute-feedback-retry)" — Reads like internal flags and runner configs.
+- **Results / Math extraction** — "VeriCoT equation-style CoT fix" — Incomprehensible string of hyphenated jargon.
+- **Results / Adversarial audit** — "PRM-BiasBench-style attacks" — Highly specific without context.
+- **Results / Live benchmark** — "Qwen3.6-35B-A3B" — Raw checkpoint IDs read like internal experiment labels.
 
 ### Per-milestone narrative
-- Hero stats — "382 Completed milestones", "3,268 Experiment runs". This is a team status report, not a product value proposition.
-- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit". This reads like a copy-pasted commit message or Slack update.
-- Features: Research operations — "Carnot is developed through an autonomous research loop...". You are explaining how the sausage is made instead of what the product does for the user.
+- **Hero / Recent progress card** — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now." — This is an internal status update and defensive posturing, not a marketing hook.
 
 ### Inconsistencies
-- Code pass-rate claims: The first results card ("Code — Verify-and-repair on HumanEval") claims a modest "+3.0 points on pass-rate". Five cards later ("Code repair — IterativeSelfRepair"), you claim "8% → 80% pass rate (+72pp)". This massive discrepancy makes both numbers look completely unreliable to a casual reader.
-- AUROC claims: Hero stats claim "0.9131 Verifier AUROC", Results claim "0.91 AUROC" for safety, and the "Recent progress" card mentions "Repinned from v2 0.9857". It's a confusing mess of different scores.
+- **FoVer ambiguity** — The hero claims "0.9131 Verifier AUROC on FoVer", but the Math Reasoning result card cites a "0.125 FoVer baseline". Is FoVer the dataset being tested on, or the baseline model being compared against? It contradicts itself.
+- **Detection accuracy** — The Features section claims "99.3% of wrong code flagged" (implying imperfect detection), but the Dogfooding blog card boasts "Zero false positives", sending mixed signals on the verifier's actual reliability.
 
 ### Missing essentials
-- Social proof / Maturity: You claim "total confidence", but there is no indication of who actually uses this in production or if it's purely a research toy.
-- Supported Model requirements: You mention it "works with any LLM you can call" but then mention "Two-GPU parallel retrain" and "Test-Time Compute". What hardware do I actually need to run this effectively?
+- **Who maintains it?** — Buried in the footer copyright string ("Ian Blenke"). It's completely unclear if this is a solo open-source project, a startup venture, or an academic lab.
+- **Why should I trust the numbers?** — The "Evidence" section claims every number is backed by an artifact, but provides no actual links to those artifacts to prove it.
 
 ### Fabrication signals
-- Results: Adversarial audit — "k=5 ensemble catches 60/60 attacks". 100% success rate on an adversarial audit is highly suspect and looks like an over-fitted benchmark.
-- Results: Math extraction — "GSM8K extraction TP rate: 0.5 → 1.0". A perfect 1.0 True Positive rate is a massive red flag for anyone who has worked with LLM output extraction.
-- The literal `.tmp-pytest` file path in the Live benchmark card proves these numbers are being blindly piped from CI/CD logs directly to the HTML without human curation.
+- **Results / Math extraction** — "GSM8K extraction TP rate: 0.5 -> 1.0" — A perfect 1.0 true positive rate on LLM math extraction is highly suspect without a strong credibility anchor.
+- **Results / Adversarial audit** — "k=5 ensemble catches 60/60 attacks" — A perfect 60/60 score without explaining the simplicity or complexity of the attacks.
+- **Blog / Dogfooding** — "Zero false positives" — Claiming 0 false positives over 639 automated reasoning experiments triggers immediate skepticism.
 
 ## WHAT'S WORKING
-- The core problem statement ("LLMs predict. They don't check. / One-word-at-a-time vs Whole-answer check") is punchy, relatable, and instantly understandable.
-- The Quickstart section with the toggle between Python and Rust code is excellent. It immediately proves there is a real, usable API.
+- The "How it works" 3-step bento grid (Extract -> Check -> Repair) is exceptionally clear, punchy, and explains the core loop without resorting to jargon.
+- Quickstart code tabs clearly demonstrate how simple the API is to integrate for both Python and Rust users.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Immediately remove the leaked `.tmp-pytest` file path from the "Live benchmark" card.
-2. Delete "Completed milestones" and "Experiment runs" from the hero. Replace them with user-centric metrics (e.g., supported languages, median latency overhead).
-3. Scrub the Results section: cut it down to the 4-6 most impressive, externally comprehensible metrics. Remove all internal acronyms (FoVer, VeriCoT, PREM).
-4. Reconcile the conflicting HumanEval claims (+3.0 vs +72pp) so they don't look fabricated or contradictory.
-5. Rewrite the "Recent progress" card to speak to the user ("We just hit vX.Y with Z feature") rather than reporting internal audit statuses.
+1. Rewrite the hero "Recent progress" card to focus strictly on what users can do today, removing the AUROC repinning history entirely.
+2. Purge all internal acronyms (FoVer, CCTU, PREM, SVAMP, VeriCoT) and replace them with plain-English descriptions (e.g., "grade-school math benchmark").
+3. Add a credibility anchor or explicit caveat to the perfect 1.0, 60/60, and "zero false positives" claims, or adjust them to reflect real-world upper bounds.
+4. Prune the Results grid from 12 to 6 core cards, and the Blog grid from 7 to 3 cards to reduce visual bloat.
+5. Add a clear "Maintained by" or "About the Project" section near the top or explicitly in the footer to establish project provenance and trust.
