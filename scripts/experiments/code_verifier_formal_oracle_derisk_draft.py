@@ -41,14 +41,19 @@ from outcome_verifier_learn_derisk_draft import _auroc, _fit_logreg, _predict  #
 from carnot.eval.verifier_error_independence_scissor_at_scale import (  # noqa: E402
     FoVerPanel, score_carnot_ensemble,
 )
+from carnot.verify.ast_structure_verifier import ASTStructureVerifier  # noqa: E402
 
 CORPORA = {
     "v2_humaneval_balanced": REPO_ROOT / "data" / "code_verification_corpus_v2.jsonl",
     "v1_mbpp_humaneval_mixed": REPO_ROOT / "data" / "code_verification_corpus_v1.jsonl",
 }
 OUT = REPO_ROOT / "results" / "code_verifier_formal_oracle_derisk.json"
+# ast_struct_verifier_score = the SHIPPED dedicated code verifier (structural violation
+# energy). On v2 (semantic, all parse) it should also be ~chance -> closes the "did a
+# DEDICATED static code verifier help?" caveat with a real shipped verifier, not a proxy.
 FNAMES = ["ast_parse_ok", "n_lines", "char_len_k", "returns_none_stub", "has_loop",
-          "has_cond", "n_defs", "carnot_math_transfer_reward"]
+          "has_cond", "n_defs", "carnot_math_transfer_reward", "ast_struct_verifier_score"]
+_ASTV = ASTStructureVerifier()
 
 
 def _ast_ok(code):
@@ -110,12 +115,15 @@ def _features(rows):
     feats, labels = [], []
     for code, tr, r in zip(codes, transfer, rows):
         hl, hc, nd = _struct_feats(code)
+        # dedicated shipped verifier returns VIOLATION energy (higher=worse); use as-is
+        # (the logistic learns sign). For a correctness-AUROC it is 1 - energy direction.
+        astv = float(_ASTV.score(code))
         feats.append([
             1.0 if _ast_ok(code) else 0.0,
             float(len(code.splitlines())),
             float(len(code)) / 1000.0,
             _returns_none_stub(code),
-            hl, hc, nd, float(tr),
+            hl, hc, nd, float(tr), astv,
         ])
         labels.append(int(bool(r.get("label"))))
     return feats, labels

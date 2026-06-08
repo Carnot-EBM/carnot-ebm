@@ -1,0 +1,78 @@
+{
+  "domain": "arc_agi1_grid",
+  "experiment": "arc_grid_verifier_discriminator_draft",
+  "gate": "easy discrimination AUROC >= 0.70 (cheap pruning works) AND hard < 0.65 (induction needed -> verifier prunes, generator induces)",
+  "honest_verdict": "complete: arc_grid_verifier_MODERATE_structural_pruner_dim_dominated_PRUNER_NOT_SELECTOR_easyAUROC0.743_hardAUROC0.6987_combined_top10.0072_n416",
+  "inference_substrate": "rule_based_grid_verifier_against_cached_arc_solutions",
+  "interpretation": "The cheap verifier checks dimension/palette/background CONSISTENCY from train pairs only -- it does NOT induce the rule. If it ranks gold above EASY distractors (dimension/palette-wrong) it earns the harness PRUNER role (fewer generator actions = the ARC-AGI-3 efficiency axis). If it cannot separate HARD distractors (perturbed gold) that is the EXPECTED ceiling: discriminating a nearly-right grid needs rule-induction, which is the generator's job. This is the ARC instantiation of verifier-prunes / generator-induces (cf. math SC-bound, code execution-bound).",
+  "label_source": "gold_arc_solutions",
+  "n_tasks": 400,
+  "no_induction": true,
+  "no_llm_used": true,
+  "principle_label_source": "gold ARC solutions are the oracle; distractors are cheap deterministic perturbations -> no LLM, no induction, honest test of the PRUNER role only",
+  "random_seed": 0,
+  "results": {
+    "combined_top1_acc": 0.0072,
+    "dim_rule_coverage": {
+      "const": 58,
+      "same": 262,
+      "scale": 24,
+      "unknown": 56
+    },
+    "easy_discrimination_auroc": 0.743,
+    "easy_distractor_top1_acc": 0.0625,
+    "hard_discrimination_auroc": 0.6987,
+    "hard_distractor_top1_acc": 0.0433,
+    "n_eval_test_inputs": 416,
+    "per_distractor_separation": {
+      "blank": {
+        "gold_strictly_better_rate": 0.1349,
+        "n": 415,
+        "tie_rate": 0.5711
+      },
+      "color_swap_gold": {
+        "gold_strictly_better_rate": 0.384,
+        "n": 401,
+        "tie_rate": 0.611
+      },
+      "copy_input": {
+        "gold_strictly_better_rate": 0.3894,
+        "n": 416,
+        "tie_rate": 0.5673
+      },
+      "perturbed_gold": {
+        "gold_strictly_better_rate": 0.0056,
+        "n": 360,
+        "tie_rate": 0.9917
+      },
+      "random": {
+        "gold_strictly_better_rate": 0.8889,
+        "n": 414,
+        "tie_rate": 0.0531
+      },
+      "transposed_gold": {
+        "gold_strictly_better_rate": 0.2927,
+        "n": 369,
+        "tie_rate": 0.7046
+      },
+      "wrong_dim_gold": {
+        "gold_strictly_better_rate": 0.863,
+        "n": 416,
+        "tie_rate": 0.1346
+      },
+      "wrong_task_gold": {
+        "gold_strictly_better_rate": 0.947,
+        "n": 415,
+        "tie_rate": 0.0361
+      }
+    },
+    "per_feature_auroc": {
+      "bg": 0.5821,
+      "dim": 0.6396,
+      "palette": 0.5598,
+      "size": 0.553
+    }
+  },
+  "split": "training",
+  "title": "arc_grid_cheap_verifier_as_pruner"
+}
