@@ -50,12 +50,14 @@ def _generate_on_policy(rows, *, K, temp, smoke):
     im_end = tok.convert_tokens_to_ids("<|im_end|>")
     stop_ids = [tok.eos_token_id] + ([im_end] if isinstance(im_end, int) and im_end >= 0 else [])
     max_len = 384 if smoke else 768
-    max_new = 384 if smoke else 768
+    max_new = 512 if smoke else 1024  # MiniCPM is verbose; +repetition_penalty below
 
     def _fmt(q):
         msgs = [{"role": "user", "content": f"Solve the problem. End with the final number.\n\n{q}"}]
         try:
-            return tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
+            # no-think: MiniCPM5 over-thinks GSM8K + rambles otherwise (100% trunc).
+            return tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True,
+                                           enable_thinking=False)
         except Exception:
             return f"Question: {q}\nSolution:"
 
@@ -69,8 +71,8 @@ def _generate_on_policy(rows, *, K, temp, smoke):
                       max_length=max_len).to(device)
             in_len = ids["input_ids"].shape[1]
             gen = model.generate(**ids, max_new_tokens=max_new, do_sample=True, temperature=temp,
-                                 top_p=0.95, num_return_sequences=K, pad_token_id=tok.pad_token_id,
-                                 eos_token_id=stop_ids)
+                                 top_p=0.95, repetition_penalty=1.3, num_return_sequences=K,
+                                 pad_token_id=tok.pad_token_id, eos_token_id=stop_ids)
             samples = []
             for i in range(K):
                 n_new = gen[i].shape[0] - in_len
@@ -169,7 +171,7 @@ def main():
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--K", type=int, default=6)
-    ap.add_argument("--temp", type=float, default=0.8)
+    ap.add_argument("--temp", type=float, default=0.6)
     args = ap.parse_args()
     art = run(smoke=args.smoke, seed=args.seed, K=args.K, temp=args.temp)
     print(f"-> {art['honest_verdict']}")

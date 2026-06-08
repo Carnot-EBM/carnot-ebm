@@ -1,12 +1,12 @@
 {
   "accuracy_by_regime": {
     "base": {
-      "acc": 1.0,
+      "acc": 0.0,
       "no_answer_rate": 0.0,
       "truncation_rate": 0.0
     },
     "gold": {
-      "acc": 1.0,
+      "acc": 0.5,
       "no_answer_rate": 0.0,
       "truncation_rate": 0.0
     },
@@ -16,40 +16,40 @@
       "no_answer_rate": 0.0,
       "truncation_rate": 0.5
     },
-    "process_weighted_n_examples": 8,
+    "process_weighted_n_examples": 6,
     "unweighted": {
       "acc": 0.5,
       "no_answer_rate": 0.0,
-      "truncation_rate": 0.5
+      "truncation_rate": 0.0
     },
     "unweighted_n_examples": 12
   },
   "caveat": "DRAFT, ON-POLICY (MiniCPM trains on its OWN verifier-scored traces -> no off-policy style/truncation asymmetry). 1 seed, small corpus -> ORDERING is the result. own_sample_correct_rate = the headroom the self-improvement bootstraps from (must be >0 and <1). Gates: gold>=base, max_trunc<0.05.",
-  "delta_gold_upper_bound": 0.0,
-  "delta_process_weighted": -0.5,
-  "duration_s": 56.38866925239563,
+  "delta_gold_upper_bound": 0.5,
+  "delta_process_weighted": 0.5,
+  "duration_s": 49.19555902481079,
   "eval_truncation_rate_by_arm": {
     "base": 0.0,
     "gold": 0.0,
     "process_weighted": 0.5,
-    "unweighted": 0.5
+    "unweighted": 0.0
   },
   "experiment": "process_reward_weighted_sft_onpolicy_draft",
   "generation_meta": {
     "K": 2,
     "gen_truncation_rate": 0.6667,
     "own_sample_correct_rate": 0.25,
-    "temperature": 0.8
+    "temperature": 0.6
   },
   "gold_control_ok": true,
-  "honest_verdict": "complete: onpolicy_process_reward_sft_TRUNCATION_INVALID_base1.000_pw0.5_gold1.0_goldfracNone_maxtrunc0.5",
+  "honest_verdict": "complete: onpolicy_process_reward_sft_TRUNCATION_INVALID_base0.000_pw0.5_gold0.5_goldfrac1.0_maxtrunc0.5",
   "inference_substrate": "live_gpu_onpolicy_generation_plus_lora_sft_plus_verifier_ensemble",
   "max_eval_truncation_rate": 0.5,
   "model_id": "openbmb/MiniCPM5-1B",
   "n_eval_questions": 2,
   "n_train_questions": 6,
   "policy": "ON_POLICY_minicpm_generates_own_traces",
-  "process_weighted_frac_of_gold_lift": null,
+  "process_weighted_frac_of_gold_lift": 1.0,
   "random_seed": 0,
   "smoke": true,
   "title": "onpolicy_process_reward_weighted_sft",

@@ -154,7 +154,10 @@ def _run_training_and_eval(rows_tr, rows_ev, regimes, *, smoke: bool) -> dict:
     def _fmt(q: str) -> str:
         msgs = [{"role": "user", "content": f"Solve the problem. End with the final number.\n\n{q}"}]
         try:
-            return tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
+            # enable_thinking=False: MiniCPM5 is a reasoning model that over-thinks GSM8K
+            # and rambles past any token cap; no-think -> concise answer that terminates.
+            return tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True,
+                                           enable_thinking=False)
         except Exception:
             return f"Question: {q}\nSolution:"
 
