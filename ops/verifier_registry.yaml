@@ -1,0 +1,77 @@
+# Verifier Registry — the single, diffable source of truth for Carnot's verifiers.
+#
+# WHY: a verifier's value is that it improves over time and expands to new domains
+# (the Phase-3 self-improving-verifier program). Persisting that lineage needs three
+# layers (see ops/known-issues.md + decentralization rule 3):
+#   code + schemas        -> git (python/carnot/verify/, scripts/)
+#   provenance/registry   -> git (THIS file — small, diffable, never-pruned)
+#   weights + big data    -> HuggingFace (Carnot-EBM/*) + IPFS (content-addressed by CID),
+#                            NEVER git. (The conductor once committed 17GB of weights and a
+#                            765MB .pt that had to be purged with git-filter-repo 2026-06-03;
+#                            results/*.{pt,safetensors,bin,gguf} are now gitignored.)
+#
+# THIS FILE binds the three: each entry maps a verifier version to its code commit, its
+# weights' HF id + IPFS CID + sha256, the data it learned from, and its eval score — so a
+# third party can reproduce and verify integrity by hash (the FoVer reproduction-runbook
+# discipline). Versions ACCUMULATE (never-prune); the git history of this file IS the
+# verifier's evolution over time. Retired entries stay with status: retired.
+#
+# PERSISTENCE LOOP (the conductor pattern, extended to the verifier lifecycle):
+#   train -> eval -> push weights to HF + IPFS -> add/update entry here -> commit -> tag.
+#
+# SCHEMA (one entry per verifier/domain version):
+#   - verifier_id:        stable slug
+#     domain:             math_reasoning | code | facts | arc_agi3_<...> | constraint | ...
+#     version:            int (increments; lineage below)
+#     kind:               ensemble | outcome_head | process_verifier | abstraction_library
+#     code_commit:        git sha defining/loading it (python/carnot/verify/...)
+#     code_path:          the module
+#     weights_hf:         HuggingFace repo id (null if pure-code/symbolic, no weights)
+#     weights_cid:        IPFS CID (content-address; integrity + mirror)
+#     weights_sha256:     hash of the artifact
+#     training_data_ref:  ipfs://... or a results/ corpus path (what it learned from)
+#     label_source:       self_consistency | formal_oracle | teacher_llm | human | gold
+#     eval:               {metric: value, n: int, eval_artifact: results/...json}
+#     lineage:            {from: <version|seed>, change: "<one line>"}
+#     status:             active | candidate | retired
+#     notes:              free text
+
+verifiers:
+  # ---- Production deployed verifier (the headline, G2-reproduced) ----
+  - verifier_id: fover_production_ensemble
+    domain: math_reasoning
+    version: 4
+    kind: ensemble                 # the k=15 Tier0r/Tier0u/FR-11 production aggregation
+    code_commit: HEAD              # TODO: pin to the exact commit on next reconcile
+    code_path: python/carnot/eval/verifier_error_independence_scissor_at_scale.py
+    weights_hf: null               # text/structural verifiers + FR-11 memory (mostly code+data)
+    weights_cid: null              # TODO: pin FR-11 memory index CID once externalized
+    weights_sha256: null
+    training_data_ref: data/fover_corpus_v4.json
+    label_source: gold
+    eval: {metric: "fover_dual_condition_auroc", value: 0.9131, n: 6548,
+           eval_artifact: results/experiment_2850_fover_dual_condition_integrity_v4.json}
+    lineage: {from: v3, change: "5-seed dual-condition rescue; CI-reproduced (G2, run 26725185125)"}
+    status: active
+    notes: "The deployed cross-domain verifier; headline. G1-G4 met; frozen 0.9131."
+
+  # ---- Candidate: learned outcome-verifier (the self-improvement-reward path) ----
+  - verifier_id: outcome_verifier_math_proc_plus_sc
+    domain: math_reasoning
+    version: 1
+    kind: outcome_head             # learned: process features + self-consistency -> outcome
+    code_commit: HEAD
+    code_path: scripts/experiments/outcome_verifier_learn_derisk_draft.py
+    weights_hf: null               # de-risk only; logistic head, not yet a published artifact
+    weights_cid: null
+    weights_sha256: null
+    training_data_ref: data/p01_gsm8k_generations.jsonl
+    label_source: gold             # trained on gold-outcomes; self-consistency as a feature
+    eval: {metric: "heldout_outcome_auroc", value: 0.949, n: 720,
+           eval_artifact: results/outcome_verifier_learn_derisk.json}
+    lineage: {from: seed, change: "de-risk: process-only 0.739 + self-consistency -> 0.949"}
+    status: candidate
+    notes: "Correlational de-risk PASSED; causal RFT test underpowered (see known-issues
+            statistical-power discipline). Self-consistency dominates (0.927); verifier +0.02.
+            Promote to active only after a powered (seeded gen, >=100 eval Q, >=3 seed) RFT
+            confirms it teaches."
