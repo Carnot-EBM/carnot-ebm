@@ -1,27 +1,52 @@
 {
   "accuracy_by_regime": {
-    "base": 0.6333333333333333,
-    "gold": 0.6333333333333333,
+    "base": {
+      "acc": 0.3667,
+      "no_answer_rate": 0.0,
+      "truncation_rate": 0.9667
+    },
+    "gold": {
+      "acc": 0.5333,
+      "no_answer_rate": 0.0,
+      "truncation_rate": 0.1667
+    },
     "gold_n_examples": 441,
-    "process_weighted": 0.4666666666666667,
+    "process_weighted": {
+      "acc": 0.6333,
+      "no_answer_rate": 0.0,
+      "truncation_rate": 0.2
+    },
     "process_weighted_n_examples": 448,
-    "unweighted": 0.5666666666666667,
+    "unweighted": {
+      "acc": 0.4333,
+      "no_answer_rate": 0.0,
+      "truncation_rate": 0.1333
+    },
     "unweighted_n_examples": 540
   },
   "caveat": "DRAFT, off-policy (distills p01-generator traces; tests verifier-as-training-data-selector). 1 seed, small GSM8K subset -- the ORDERING (pw vs base vs gold vs unweighted) is the result. On-policy self-improvement (MiniCPM generates its own traces) is the follow-up. Process-reward = fraction-certified aggregate (the 0.73-outcome-AUROC signal).",
-  "delta_gold_upper_bound": 0.0,
-  "delta_process_weighted": -0.1667,
-  "duration_s": 553.9985015392303,
+  "delta_gold_upper_bound": 0.1666,
+  "delta_process_weighted": 0.2666,
+  "duration_s": 717.0031764507294,
+  "eval_truncation_rate_by_arm": {
+    "base": 0.9667,
+    "gold": 0.1667,
+    "process_weighted": 0.2,
+    "unweighted": 0.1333
+  },
   "experiment": "process_reward_weighted_sft_phase1_draft",
-  "gate": "process_weighted > base by >= 0.02 (verifier teaches off-policy)",
-  "honest_verdict": "complete: process_reward_sft_no_clear_lift_base0.633_pw0.467_gold0.633_goldfracNone",
+  "gate": "process_weighted > base by >= 0.02 AND gold_control_ok AND truncation_ok",
+  "gold_control_ok": true,
+  "honest_verdict": "complete: process_reward_sft_TRUNCATION_INVALID_base0.367_pw0.633_gold0.533_goldfrac1.6_maxtrunc0.967",
   "inference_substrate": "live_gpu_full_finetune_minicpm5_1b_plus_verifier_ensemble",
+  "max_eval_truncation_rate": 0.9667,
   "model_id": "openbmb/MiniCPM5-1B",
   "n_eval_questions": 30,
   "n_train_questions": 90,
   "policy": "off_policy_reuses_p01_gsm8k_samples",
-  "process_weighted_frac_of_gold_lift": null,
+  "process_weighted_frac_of_gold_lift": 1.6,
   "random_seed": 0,
   "smoke": false,
-  "title": "process_reward_weighted_sft"
+  "title": "process_reward_weighted_sft",
+  "truncation_ok": false
 }
