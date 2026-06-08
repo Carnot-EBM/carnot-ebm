@@ -47,6 +47,8 @@ def main():
     ap.add_argument("--batch", type=int, default=256, help="global_batch_size (eval voting is batch-invariant)")
     ap.add_argument("--save_outputs", action="store_true",
                     help="torch.save preds/inputs/puzzle_identifiers for the offline hybrid re-rank")
+    ap.add_argument("--max_batches", type=int, default=0,
+                    help="cap eval batches for an INDICATIVE (partial-vote) pass@K — 0 = full faithful eval")
     args = ap.parse_args()
 
     sub, step = CKPTS[args.ckpt]
@@ -103,8 +105,18 @@ def main():
     train_state = init_train_state(config, train_metadata, rank=RANK, world_size=WORLD_SIZE)
     train_state.model.eval()  # forward-only; NO train loop -> baked embeddings untouched
 
+    # --- optional batch cap: INDICATIVE pass@K (partial augmentation-vote) for a fast read ---
+    eval_loader_used = eval_loader
+    if args.max_batches and args.max_batches > 0:
+        import itertools
+        base_loader = eval_loader
+        def _capped():
+            yield from itertools.islice(base_loader, args.max_batches)
+        eval_loader_used = _capped()
+        print(f"[harness] CAPPED eval to {args.max_batches} batches (INDICATIVE partial-vote pass@K)", flush=True)
+
     # --- evaluate (forward + ARC majority-vote) ---
-    metrics = evaluate(config, train_state, eval_loader, eval_metadata, evaluators,
+    metrics = evaluate(config, train_state, eval_loader_used, eval_metadata, evaluators,
                        rank=RANK, world_size=WORLD_SIZE, cpu_group=CPU_GROUP)
 
     if RANK == 0:
