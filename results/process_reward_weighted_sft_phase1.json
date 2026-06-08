@@ -1,0 +1,27 @@
+{
+  "accuracy_by_regime": {
+    "base": 1.0,
+    "gold": 0.5,
+    "gold_n_examples": 25,
+    "process_weighted": 0.5,
+    "process_weighted_n_examples": 30,
+    "unweighted": 1.0,
+    "unweighted_n_examples": 36
+  },
+  "caveat": "DRAFT, off-policy (distills p01-generator traces; tests verifier-as-training-data-selector). 1 seed, small GSM8K subset -- the ORDERING (pw vs base vs gold vs unweighted) is the result. On-policy self-improvement (MiniCPM generates its own traces) is the follow-up. Process-reward = fraction-certified aggregate (the 0.73-outcome-AUROC signal).",
+  "delta_gold_upper_bound": -0.5,
+  "delta_process_weighted": -0.5,
+  "duration_s": 31.977651596069336,
+  "experiment": "process_reward_weighted_sft_phase1_draft",
+  "gate": "process_weighted > base by >= 0.02 (verifier teaches off-policy)",
+  "honest_verdict": "complete: process_reward_sft_no_clear_lift_base1.000_pw0.5_gold0.5_goldfracNone",
+  "inference_substrate": "live_gpu_full_finetune_minicpm5_1b_plus_verifier_ensemble",
+  "model_id": "openbmb/MiniCPM5-1B",
+  "n_eval_questions": 2,
+  "n_train_questions": 6,
+  "policy": "off_policy_reuses_p01_gsm8k_samples",
+  "process_weighted_frac_of_gold_lift": null,
+  "random_seed": 0,
+  "smoke": true,
+  "title": "process_reward_weighted_sft"
+}
