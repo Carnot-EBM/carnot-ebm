@@ -1,32 +1,21 @@
-import datetime
+import os
 
 changelog_entry = """
-## 2026-06-02 (Milestone 2026.06.337 Operational Retrospective - Agent Update)
+## 2026-06-08 (Milestone 2026.06.363 Operational Retrospective)
 
-- [outer-loop] Completed operational retrospective for milestone 2026.06.337. The authoritative timing source reports no experiment commits since activation, leaving total_wall_time_minutes=0 and experiments_completed=0. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks. Recommended tooling change: investigate why no experiments were triggered.
+- [outer-loop] Wrote `results/operational_retro_2026_06_363.json` (schema `carnot.operational_retro.v64`). The authoritative timing source reports no experiment commits since activation, leaving `total_wall_time_minutes=0`, `experiments_completed=0`, `compute_bound_experiments_count=0`, `slowest_experiments=[]`, and `gpu_idle_on_compute_bound_tasks=null`. Both GPUs were idle, but no bottleneck was flagged because there were 0 compute-bound tasks. Recommended tooling change: no data available this milestone.
 """
-
-with open("ops/changelog.md", "r") as f:
-    content = f.read()
-
-# Insert at the top of the changelog after the header if possible
-if "# Carnot — Changelog" in content:
-    content = content.replace("# Carnot — Changelog\n", "# Carnot — Changelog\n" + changelog_entry)
-else:
-    content = changelog_entry + "\n" + content
-
-with open("ops/changelog.md", "w") as f:
-    f.write(content)
 
 research_log_entry = """
-### Milestone 2026.06.337
-- exp_range: no experiments found
-- theme: Operational Retrospective
-- key result: Honest negative — no experiment commits found since activation of 2026.06.337.
-- acceptance: 0/0 criteria met
+### Milestone 2026.06.363
+- exp_range: no data available this milestone
+- theme: no data available this milestone
+- key result: no experiment commits found since activation of 2026.06.363.
+- acceptance: no data available this milestone
 """
 
-with open("docs/research-log.md", "a") as f:
-    f.write("\n" + research_log_entry + "\n")
+with open("ops/changelog.md", "a") as f:
+    f.write(changelog_entry)
 
-print("Logs appended.")
+with open("docs/research-log.md", "a") as f:
+    f.write(research_log_entry)
