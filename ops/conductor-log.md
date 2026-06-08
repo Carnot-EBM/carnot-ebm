@@ -8022,3 +8022,4 @@ c |
 | 2026-06-08 00:14 UTC | FR-11 continuous self-learning v26 (research-progr | OK | 89 passed in 4.70s |
 | 2026-06-08 00:29 UTC | Hardware continuity CLEAN re-run (fixes the exp392 | OK | 88 passed in 4.64s |
 | 2026-06-08 00:42 UTC | Literature synthesis — agentic verification + LLM- | OK | 86 passed in 5.08s |
+| 2026-06-08 00:57 UTC | Capstone .363 — the HARDENED verifier scorecard (e | OK | 86 passed in 4.14s |
