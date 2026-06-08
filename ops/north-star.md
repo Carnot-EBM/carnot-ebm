@@ -47,11 +47,20 @@ commodity/third-party, energy = verification layer. The north star is the
 *system's* solve-rate; the verifier is Carnot's specific, load-bearing,
 existential contribution to it.
 
-**The binding blocker is real-benchmark ACCESS, not code.** We have NOT started
-the real build. What exists is a synthetic scaffold (the Exp1165 pilot used a
-toy env; exp3919 is a synthetic harness), and access outreach is at the
-outreach stage (exp1166). Until live ARC-AGI-3 access lands, the north star is
-pursued *indirectly* via the offline proofs that de-risk it (below).
+**Access is OPEN — the blocker is the BUILD, not access (corrected 2026-06-08).**
+Earlier framing called real-benchmark access the binding blocker (exp1166
+"leaderboard_unavailable_email_drafted"). That is now disproven: the official SDK
+(`pip install arc-agi`, v0.9.8) auto-issues an **anonymous key** and exposes **25
+live ARC-AGI-3 environments** today (verified — `results/arc_agi3_access_probe.json`).
+A registered `ARC_API_KEY` (free, three.arcprize.org) is only needed for rate limits +
+official scorecards; submitting to the official leaderboard remains operator-only
+(external publication). So the real blocker is that **we have not built the harness
+against the live env** — everything to date is synthetic (Exp1165 toy env, exp3919
+synthetic scaffold, exp3929 synthetic action-efficiency). The metrics map directly:
+ACCURACY = `EnvironmentScore.score`/`levels_completed`; EFFICIENCY = actions taken vs
+`EnvironmentInfo.baseline_actions[level]` (the per-level reference count). Per the
+sequence discipline below, the OFFLINE verifier proof still goes first; but a real-env
+random/greedy baseline is now a cheap, unblocked grounding step available immediately.
 
 **The sequence (the §5 discipline still governs — offline proof FIRST).**
 The harness's value DERIVES from the verifier; a beautiful harness around an
