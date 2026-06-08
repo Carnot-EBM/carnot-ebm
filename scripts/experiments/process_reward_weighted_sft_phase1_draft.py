@@ -36,7 +36,13 @@ import time
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-GSM8K = REPO_ROOT / "data" / "p01_gsm8k_generations.jsonl"
+# GSM8K is the headroom corpus: MiniCPM5-1B base greedy = 0.492 (verified
+# minicpm_headroom_check, 120 Q) -> real room to improve. hardmath is EXCLUDED: MiniCPM
+# base = 0.000 there (too hard, no correct traces to learn from). The earlier smoke's
+# base=1.0 was a 2-question artifact; over the full 120 GSM8K, base is 0.49.
+CORPORA = [
+    REPO_ROOT / "data" / "p01_gsm8k_generations.jsonl",
+]
 OUT = REPO_ROOT / "results" / "process_reward_weighted_sft_phase1.json"
 MODEL_ID = "openbmb/MiniCPM5-1B"
 _THINK = re.compile(r"<think>.*?</think>", re.DOTALL)
@@ -56,21 +62,24 @@ def _chunks(text: str) -> list[str]:
 
 def _load_corpus(limit_q: int | None = None) -> list[dict]:
     rows = []
-    with GSM8K.open(encoding="utf-8") as f:
-        for line in f:
-            r = json.loads(line)
-            q = str(r.get("question") or "")
-            gold = str(r.get("gold") or "").strip()
-            samples = []
-            for s in (r.get("samples") or []):
-                txt = s if isinstance(s, str) else str(s.get("text") or "")
-                ans = (s.get("answer") if isinstance(s, dict) else None) or _extract_answer(txt)
-                if txt.strip():
-                    samples.append({"text": txt, "gold_correct": int(str(ans).strip() == gold)})
-            if q and gold and samples:
-                rows.append({"question": q, "gold": gold, "samples": samples})
-            if limit_q and len(rows) >= limit_q:
-                break
+    for corpus in CORPORA:
+        if not corpus.is_file():
+            continue
+        with corpus.open(encoding="utf-8") as f:
+            for line in f:
+                r = json.loads(line)
+                q = str(r.get("question") or "")
+                gold = str(r.get("gold") or "").strip()
+                samples = []
+                for s in (r.get("samples") or []):
+                    txt = s if isinstance(s, str) else str(s.get("text") or "")
+                    ans = (s.get("answer") if isinstance(s, dict) else None) or _extract_answer(txt)
+                    if txt.strip():
+                        samples.append({"text": txt, "gold_correct": int(str(ans).strip() == gold)})
+                if q and gold and samples:
+                    rows.append({"question": q, "gold": gold, "samples": samples})
+                if limit_q and len(rows) >= limit_q:
+                    return rows
     return rows
 
 
