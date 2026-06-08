@@ -294,3 +294,43 @@ experiment — NOT re-probing HRM's continuous latents (which we now know return
    Carnot angle.
 4. Read in full next if pursued: PTRM (2605.19943, the Q-head selector), GRAM (2605.19376), Coconut
    (2412.06769), Encode-Think-Decode (2510.07358).
+
+---
+
+## PRE-TRAINED ARC GENERATOR FOUND — no from-scratch training needed (2026-06-08, VERIFIED)
+
+Operator asked whether any recursive-refiner option already ships pre-trained ARC weights so we
+skip training. A weight-availability sweep (5-model workflow) + independent HF-API verification
+found a download-and-run ARC generator, better-provenance than re-training our local untrained TRM:
+
+- **#1 (USE) `arcprize/trm_arc_prize_verification`** — the ARC Prize ORG's OWN TRM verification
+  checkpoints. HF-API VERIFIED: MIT license, ships BOTH `arc_v1_public/step_518071` AND
+  `arc_v2_public/step_723914`, each bundled with `trm.py`/`losses.py`/`all_config.yaml`. Loads into
+  the local `~/trm_src` TRM code (arch `recursive_reasoning.trm@TinyRecursiveReasoningModel_ACTV1`).
+  ~1.8 GB/ckpt. Highest trust tier (official ARC Prize), covers BOTH ARC generations in one repo.
+- **#2 (fallback) `Sanjin2024/TinyRecursiveModels-ARC-AGI-1` / `-ARC-AGI-2`** — community reproductions
+  (Apache-2.0, ~41% ARC-1 pass@2 vs paper 45%), UNAUDITED. Same `~/trm_src` load path. Cross-check only.
+- **`sapientinc/HRM-checkpoint-ARC-2`** — official Sapient HRM, ARC-AGI-2-trained (2.25 GB), ~32%/2%
+  on the ARC-Prize hidden set. HRM != TRM arch (loads into sapientinc/HRM repo, not ~/trm_src). NO
+  official HRM ARC-AGI-1 checkpoint exists (only Sudoku/Maze/ARC-2).
+- **Sudoku bridges (already local / loadable):** `~/hrm_ckpt/sudoku-extreme/` (HRM, official) and
+  `Sanjin2024/TinyRecursiveModels-Sudoku-Extreme-mlp` (TRM, loads into ~/trm_src) — mechanism
+  smoke-tests only, NOT ARC solvers.
+
+**Two honest caveats on USING these as a "generator":**
+1. **Transductive / per-puzzle-embedding.** TRM/HRM use a per-puzzle sparse embedding table tied to
+   dataset-build ORDERING. "Inference on a new ARC task" = run their test-time-adaptation +
+   augmentation/majority-vote (pass@2) harness, NOT a plain `model(input)` forward. ~11pp of the
+   headline accuracy IS that TTA/voting layer (arXiv:2512.11847). Build the ARC dataset locally via
+   `dataset/build_arc_dataset.py`.
+2. **Pickle ACE risk.** `step_*` files are raw `torch.save` pickles (no extension) -> `torch.load`
+   executes arbitrary code. Per project policy SANDBOX the first load (CARNOT_USE_SANDBOX / gVisor),
+   review the shipped `trm.py`/`losses.py`, then re-serialize to safetensors. arcprize repo is
+   official (low risk) but sandbox regardless.
+
+**Reframed next step (no training):** download #1 -> sandbox-load + re-serialize -> reproduce the
+ARC baseline via TRM's harness (sanity ~40-45% ARC-1) -> THE HYBRID PROOF: TRM emits augmented
+candidate grids; rank them with the v2 grid verifier (`arc_grid_combined_verifier`); measure whether
+VERIFIER-selection beats TRM's own majority-vote (pass@2) on ARC-1/2. Unites the downloaded generator
+with today's verified v2 verifier on the north-star domain — "verifier earns its place" with a real
+accuracy story, zero generator training.
