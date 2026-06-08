@@ -441,6 +441,23 @@ reasoning LLM? — is now scoped + de-risked. Full record:
    control gate passes off-policy.
 5. Multi-seed + held-out eval for any lift claim (the ORDERING is the result on a small
    corpus). Process-reward = fraction-certified aggregate (the 0.73 signal).
+6. **STATISTICAL-POWER discipline (2026-06-08).** The on-policy generation is currently
+   UNSEEDED (torch sampling) -> each run trains on different traces; with 30 eval Q the
+   variance swamps the small verifier/SC effects. A run gave process_weighted +0.167 while
+   the 3-seed gave -0.06 (same seed). Before any verifier/SC lift claim: SEED torch
+   generation (torch.manual_seed) for reproducibility, eval on >= 100 questions, and >=3
+   seeds. The de-risk says learned(process+SC) outcome-AUROC = 0.949 (SC alone 0.927, the
+   verifier adds only +0.02), so the expected RFT lift is real-but-MODEST -> it needs power
+   to detect, and the SC arms must also pass the truncation guard (<5%; they rambled 13-17%).
+
+**Robust findings to date (replicated):** GOLD-RFT teaches (+0.24-0.30 every run -- the
+oracle drives self-improvement); the fixed process-verifier as a reward is ~base (noisy,
+NOT a reliable standalone self-improvement signal). The verifier-improvement path (learned
+outcome-verifier = process + self-consistency, trained on gold; the SC arms are BUILT in
+the harness) is de-risked POSITIVE in correlation (0.949) but the causal RFT test is
+underpowered -- rerun with discipline 6. Honest verifier position: value is the cheap
+inference-time PROXY for self-consistency + residual-catch + cascade-ROUTER (when to
+escalate to a larger-LLM teacher), NOT a standalone reward.
 
 **Continuation tasks for the planner (UPDATED 2026-06-08 after off-policy retired):**
 OFF-POLICY IS RETIRED — it is structurally confounded: base MiniCPM is verbose (37%
