@@ -1,0 +1,153 @@
+{
+  "all_clean_rule": {
+    "n_certified": 4,
+    "precision": 1.0,
+    "recall_of_correct": 0.0211
+  },
+  "experiment": "verifier_certification_chunking_bridge_draft",
+  "gold_correct_base_rate": 0.3405,
+  "honest_verdict": "complete: chunking_bridge_partial_baserate0.341_rftprec0.5595_vs_v2_0.5542_meanchunks10.8",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "interpretation": "Compare rft precision to v2's 0.554 (same setup, finer chunks). A clear climb toward v3's in-format 0.967 confirms granularity/format transfer is the lever and RFT (Path 2) is viable. Flat ~v2 means trace-level transfer is harder than the per-step in-format result; note trace-level gold is noisier than FoVer per-step.",
+  "mean_chunks_per_trace": 10.82,
+  "n_chunks_scored": 6038,
+  "n_traces": 558,
+  "phase1_gate": "trace-level certification precision >= 0.85 at recall >= 0.20",
+  "phase1_gate_pass": false,
+  "precision_recall_sweep": [
+    {
+      "n_certified": 1,
+      "precision": 1.0,
+      "recall_of_correct": 0.0053,
+      "threshold": 0.0945
+    },
+    {
+      "n_certified": 8,
+      "precision": 0.75,
+      "recall_of_correct": 0.0316,
+      "threshold": 0.1368
+    },
+    {
+      "n_certified": 34,
+      "precision": 0.6471,
+      "recall_of_correct": 0.1158,
+      "threshold": 0.179
+    },
+    {
+      "n_certified": 84,
+      "precision": 0.5595,
+      "recall_of_correct": 0.2474,
+      "threshold": 0.2213
+    },
+    {
+      "n_certified": 131,
+      "precision": 0.5191,
+      "recall_of_correct": 0.3579,
+      "threshold": 0.2636
+    },
+    {
+      "n_certified": 185,
+      "precision": 0.5189,
+      "recall_of_correct": 0.5053,
+      "threshold": 0.3059
+    },
+    {
+      "n_certified": 215,
+      "precision": 0.4884,
+      "recall_of_correct": 0.5526,
+      "threshold": 0.3482
+    },
+    {
+      "n_certified": 238,
+      "precision": 0.4706,
+      "recall_of_correct": 0.5895,
+      "threshold": 0.3904
+    },
+    {
+      "n_certified": 257,
+      "precision": 0.4475,
+      "recall_of_correct": 0.6053,
+      "threshold": 0.4327
+    },
+    {
+      "n_certified": 271,
+      "precision": 0.4428,
+      "recall_of_correct": 0.6316,
+      "threshold": 0.475
+    },
+    {
+      "n_certified": 278,
+      "precision": 0.446,
+      "recall_of_correct": 0.6526,
+      "threshold": 0.5172
+    },
+    {
+      "n_certified": 285,
+      "precision": 0.4421,
+      "recall_of_correct": 0.6632,
+      "threshold": 0.5595
+    },
+    {
+      "n_certified": 287,
+      "precision": 0.439,
+      "recall_of_correct": 0.6632,
+      "threshold": 0.6018
+    },
+    {
+      "n_certified": 289,
+      "precision": 0.4394,
+      "recall_of_correct": 0.6684,
+      "threshold": 0.6441
+    },
+    {
+      "n_certified": 292,
+      "precision": 0.4384,
+      "recall_of_correct": 0.6737,
+      "threshold": 0.6864
+    },
+    {
+      "n_certified": 298,
+      "precision": 0.4295,
+      "recall_of_correct": 0.6737,
+      "threshold": 0.7286
+    },
+    {
+      "n_certified": 301,
+      "precision": 0.4252,
+      "recall_of_correct": 0.6737,
+      "threshold": 0.7709
+    },
+    {
+      "n_certified": 320,
+      "precision": 0.4437,
+      "recall_of_correct": 0.7474,
+      "threshold": 0.8132
+    },
+    {
+      "n_certified": 327,
+      "precision": 0.4404,
+      "recall_of_correct": 0.7579,
+      "threshold": 0.8555
+    },
+    {
+      "n_certified": 337,
+      "precision": 0.4362,
+      "recall_of_correct": 0.7737,
+      "threshold": 0.8977
+    },
+    {
+      "n_certified": 558,
+      "precision": 0.3405,
+      "recall_of_correct": 1.0,
+      "threshold": 0.94
+    }
+  ],
+  "rft_operating_point": {
+    "n_certified": 84,
+    "precision": 0.5595,
+    "recall_of_correct": 0.2474,
+    "threshold": 0.2213
+  },
+  "title": "verifier_certification_chunking_bridge",
+  "v2_finegrained_rft_precision_for_comparison": 0.5542
+}
