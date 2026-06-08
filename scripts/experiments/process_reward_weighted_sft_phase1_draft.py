@@ -162,7 +162,10 @@ def _run_training_and_eval(rows_tr, rows_ev, regimes, *, smoke: bool) -> dict:
         # (MiniCPM5 over-thinks GSM8K -> spec sets enable_thinking=False).
         return spec.format_prompt(tok, q)
 
-    max_new = 512 if smoke else 1024  # headroom above GSM8K's ~320-token solutions
+    max_new = 512 if smoke else 4096  # 4096 (was 1024): seed-0 hit 9.3% eval truncation on
+    # the process_weighted arm (verbose) -> TRUNCATION_INVALID. 4096 lets every arm COMPLETE
+    # so the accuracy read is clean (most GSM8K solutions are ~320 tok; only the rambling
+    # minority uses the extra headroom -> early-eos keeps eval cost ~flat for well-behaved arms).
     @torch.no_grad()
     def _eval(model) -> dict:
         """Returns acc AND truncation instrumentation -- truncation silently scores
