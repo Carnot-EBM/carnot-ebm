@@ -395,7 +395,52 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
-### NEW 2026-06-06 (TOP PRIORITY — supersedes generator/breadth work): VERIFIER-EARNS-ITS-PLACE PROOF
+### NEW 2026-06-08 (TOP PRIORITY — outer-loop handoff): VERIFIER-AS-SELF-IMPROVEMENT-REWARD (Phase-3 endgame)
+
+**Origin:** 2026-06-07/08 outer-loop session. The energy-as-generator line was retired
+with a STRENGTHENED conclusion: energy verifies decisively AND can bootstrap a generator
+(Sudoku #4 v4: verifier-certified RFT +1.1%, 3/3 seeds, BEAT gold-SFT; in-loop gate
++2.2%). The forward hook — does Carnot's verifier drive SELF-IMPROVEMENT of a real
+reasoning LLM? — is now scoped + de-risked. Full record:
+`docs/research-notes/verifier-as-self-improvement-reward-scoping.md` +
+`docs/research-notes/step-level-process-reward-scoping.md`.
+
+**State (what's done):**
+- Process-reward path is VIABLE: dense per-step process-reward ranks correct traces at
+  trace-OUTCOME AUROC 0.73 (HARD trace-certification fails at 56% = process≠outcome;
+  use the verifier as a DENSE reward, NOT a hard certifier).
+- Harness BUILT + validated: `scripts/experiments/process_reward_weighted_sft_phase1_draft.py`
+  (4 arms: base / process_weighted / gold-UB / unweighted-control).
+- Base model: **openbmb/MiniCPM5-1B** (apache-2.0, Llama-arch, no trust_remote_code,
+  full-FT/LoRA-able). Scale-up base: Qwen3.6-27B (QLoRA; download non-GGUF base).
+- v1 (full-FT) INCONCLUSIVE — over-fit, degraded ALL arms incl. gold (harness fault).
+  v2 (LoRA + eval max_new_tokens 512) running at handoff.
+
+**MANDATORY DISCIPLINES (the conductor MUST honor — these are hard-won this session):**
+1. **HEADROOM PRECHECK before any training run.** Verify the *training model's OWN*
+   greedy base accuracy per corpus via `scripts/experiments/minicpm_headroom_check_draft.py`
+   — NEVER infer headroom from another model's sample-rate. Verified: GSM8K base=0.49
+   (headroom), hardmath base=0.00 (too hard, EXCLUDED). Use GSM8K.
+2. **GOLD-CONTROL GATE (positive control).** The gold-RFT arm MUST stay ≥ base. If gold
+   degrades, the HARNESS is broken (forgetting/over-fit) — do NOT report process-reward
+   results; fix the harness first (this is what v1 caught). Use LoRA (not full-FT),
+   gentle LR, ideally anti-forgetting replay.
+3. **ON-POLICY preferred.** v1/v2 are off-policy (distill p01 traces). The real
+   self-improvement test has MiniCPM generate its OWN traces -> verifier scores ->
+   train on its own process-reward-weighted traces. Build this once the harness gold-
+   control gate passes off-policy.
+4. Multi-seed + held-out eval for any lift claim (the ORDERING is the result on a small
+   corpus). Process-reward = fraction-certified aggregate (the 0.73 signal).
+
+**Continuation tasks for the planner:**
+- If v2 gold-control PASSES (gold ≥ base) and process_weighted shows signal: (a) ON-POLICY
+  process-reward-weighted LoRA-SFT on MiniCPM5-1B/GSM8K, multi-seed; (b) scale to
+  Qwen3.6-27B QLoRA. Gate: process_weighted > base, recovers a fraction of the gold lift,
+  and beats unweighted (verifier SELECTS, not just adds data).
+- If v2 gold-control FAILS (still degrades): harness fix only — gentler LoRA / replay /
+  on-policy — until gold ≥ base, before any process-reward claim.
+
+### NEW 2026-06-06 (was TOP PRIORITY — substantially DONE): VERIFIER-EARNS-ITS-PLACE PROOF
 
 **Origin:** 2026-06-06 strategic reframe (ops/north-star.md §5). Energy-as-GENERATOR
 is now closed-negative (Sudoku v1–v4 + exp3882 EBT kill-gate + exp3883 K-curve;
