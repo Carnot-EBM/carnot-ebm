@@ -125,10 +125,14 @@ def _build_examples(rows: list[dict], regime: str) -> list[dict]:
                 continue
             if regime == "process_weighted":
                 w = float(s["process_reward"])
-                if w <= 0.0:
-                    continue
-            else:
+            elif regime == "sc_weighted":
+                w = float(s.get("sc_agreement", 0.0))
+            elif regime == "process_plus_sc":  # the de-risked combo (outcome-AUROC 0.949)
+                w = 0.5 * float(s["process_reward"]) + 0.5 * float(s.get("sc_agreement", 0.0))
+            else:  # gold / unweighted
                 w = 1.0
+            if regime in ("process_weighted", "sc_weighted", "process_plus_sc") and w <= 0.0:
+                continue
             out.append({"question": row["question"], "completion": s["text"], "weight": w})
     return out
 

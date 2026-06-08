@@ -73,16 +73,22 @@ def _generate_on_policy(rows, *, K, temp, smoke):
             gen = model.generate(**ids, max_new_tokens=max_new, do_sample=True, temperature=temp,
                                  top_p=0.95, repetition_penalty=1.1, num_return_sequences=K,
                                  pad_token_id=tok.pad_token_id, eos_token_id=stop_ids)
-            samples = []
+            texts, answers = [], []
             for i in range(K):
                 n_new = gen[i].shape[0] - in_len
                 text = tok.decode(gen[i][in_len:], skip_special_tokens=True)
-                ans = _extract_answer(text)
-                samples.append({"text": text,
-                                "gold_correct": int(str(ans).strip() == str(row["gold"]).strip())})
+                texts.append(text)
+                answers.append(str(_extract_answer(text)).strip())
                 n_gen += 1
                 if n_new >= max_new:
                     n_trunc += 1
+            gold = str(row["gold"]).strip()
+            samples = []
+            for text, ans in zip(texts, answers):
+                # SELF-CONSISTENCY: fraction of THIS question's K samples sharing this answer
+                # (majority-agreement; the strong cheap outcome signal, free during RFT).
+                sc = answers.count(ans) / len(answers) if answers else 0.0
+                samples.append({"text": text, "gold_correct": int(ans == gold), "sc_agreement": sc})
             row["samples"] = samples
             if ri % 20 == 0:
                 print(f"[gen] {ri}/{len(rows)} t={time.time()-t0:.0f}s "
@@ -120,7 +126,7 @@ def run(*, smoke=False, seed=0, K=6, temp=0.8, write=True):
     gen_meta = _generate_on_policy(rows_tr, K=(2 if smoke else K), temp=temp, smoke=smoke)
     _process_rewards(rows_tr)  # verifier process-reward on MiniCPM's own traces
 
-    regimes = ["process_weighted", "gold", "unweighted"]
+    regimes = ["process_weighted", "sc_weighted", "process_plus_sc", "gold", "unweighted"]
     res = _run_training_and_eval(rows_tr, rows_ev, regimes, smoke=smoke)
 
     def _acc(x):
