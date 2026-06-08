@@ -59,7 +59,10 @@ def _load(model_key):
             from transformers import BitsAndBytesConfig
             kw["quantization_config"] = BitsAndBytesConfig(
                 load_in_4bit=True, bnb_4bit_compute_dtype=torch.bfloat16,
-                bnb_4bit_quant_type="nf4", bnb_4bit_use_double_quant=True)
+                bnb_4bit_quant_type="nf4", bnb_4bit_use_double_quant=True,
+                # do NOT quantize the vision tower/projector -> avoids the Byte/layernorm crash
+                llm_int8_skip_modules=["vision_tower", "multi_modal_projector", "vision_model"])
+            kw["dtype"] = torch.bfloat16
         else:
             kw["dtype"] = torch.bfloat16
         _MODEL["model"] = AutoModelForImageTextToText.from_pretrained(mid, **kw).eval()
@@ -109,6 +112,10 @@ def gemma_action(frame, ctx, model_key="E2B", reasoning=False):
     msgs = [{"role": "user", "content": [{"type": "image", "image": img}, {"type": "text", "text": txt}]}]
     inputs = proc.apply_chat_template(msgs, add_generation_prompt=True, tokenize=True,
                                       return_dict=True, return_tensors="pt").to("cuda")
+    # some Gemma-4 variants (12B/gemma4_unified) hand pixel_values through as uint8 (Byte) ->
+    # vision-tower layernorm crashes; cast to the compute dtype.
+    if "pixel_values" in inputs and inputs["pixel_values"].dtype == torch.uint8:
+        inputs["pixel_values"] = inputs["pixel_values"].to(torch.bfloat16)
     with torch.no_grad():
         out = model.generate(**inputs, max_new_tokens=max_new, do_sample=False)
     resp = proc.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
