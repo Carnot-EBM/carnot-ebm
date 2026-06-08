@@ -74,4 +74,32 @@ verifiers:
     notes: "Correlational de-risk PASSED; causal RFT test underpowered (see known-issues
             statistical-power discipline). Self-consistency dominates (0.927); verifier +0.02.
             Promote to active only after a powered (seeded gen, >=100 eval Q, >=3 seed) RFT
-            confirms it teaches."
+            confirms it teaches. POWERED RFT RUNNING 2026-06-08 (3 seeds x 600-Q GSM8K,
+            results/process_reward_weighted_sft_onpolicy_powered.json)."
+
+  # ---- Code domain (stage-2 expansion via formal oracle) — DOMAIN-COVERAGE FINDING ----
+  - verifier_id: code_outcome_verifier_formal_oracle
+    domain: code
+    version: 1
+    kind: outcome_head             # cheap static/text features + math-ensemble transfer
+    code_commit: HEAD
+    code_path: scripts/experiments/code_verifier_formal_oracle_derisk_draft.py
+    weights_hf: null
+    weights_cid: null
+    weights_sha256: null
+    training_data_ref: data/code_verification_corpus_v2.jsonl  # + v1; labels = test execution
+    label_source: formal_oracle    # test-suite execution (HumanEval/MBPP), precomputed
+    eval: {metric: "heldout_outcome_auroc_balanced_semantic_v2", value: 0.4462, n: 60,
+           syntactic_baseline_v1_auroc: 0.9451, syntactic_baseline_n: 320,
+           eval_artifact: results/code_verifier_formal_oracle_derisk.json}
+    lineage: {from: seed, change: "stage-2: formal-oracle gold -> cheap-verifier transfer test"}
+    status: candidate
+    notes: "DOMAIN-COVERAGE FINDING (not a deployable verifier yet). Cheap static/text
+            features are EXECUTION-BOUND on SEMANTIC code: balanced HumanEval (failures all
+            parse) -> learned held-out AUROC 0.446 ~= chance, every single feature ~0.5.
+            SYNTACTIC failures ARE cheaply caught (v1 ast_parse_ok 0.80, learned 0.945 =
+            working positive control). So the harness router should escalate semantic-code
+            verification to the EXECUTION oracle, use the cheap verifier only for syntax.
+            UNTESTED next step: Carnot's DEDICATED code verifiers (ast_structure_verifier,
+            nsvif_z3_extractor, code curry_howard/sat) — may or may not move the semantic
+            AUROC. Mirrors math being self-consistency-bound (the honest domain map)."
