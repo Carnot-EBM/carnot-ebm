@@ -1,0 +1,71 @@
+{
+  "accuracy_by_regime": {
+    "base": {
+      "acc": 0.2,
+      "no_answer_rate": 0.0,
+      "truncation_rate": 0.0133
+    },
+    "gold": {
+      "acc": 0.44,
+      "no_answer_rate": 0.0,
+      "truncation_rate": 0.0
+    },
+    "gold_n_examples": 895,
+    "process_plus_sc": {
+      "acc": 0.36,
+      "no_answer_rate": 0.0,
+      "truncation_rate": 0.0133
+    },
+    "process_plus_sc_n_examples": 2700,
+    "process_weighted": {
+      "acc": 0.28,
+      "no_answer_rate": 0.0,
+      "truncation_rate": 0.0
+    },
+    "process_weighted_n_examples": 2525,
+    "sc_weighted": {
+      "acc": 0.2933,
+      "no_answer_rate": 0.0,
+      "truncation_rate": 0.02
+    },
+    "sc_weighted_n_examples": 2700,
+    "unweighted": {
+      "acc": 0.2733,
+      "no_answer_rate": 0.0,
+      "truncation_rate": 0.0067
+    },
+    "unweighted_n_examples": 2700
+  },
+  "caveat": "DRAFT, ON-POLICY (MiniCPM trains on its OWN verifier-scored traces -> no off-policy style/truncation asymmetry). 1 seed, small corpus -> ORDERING is the result. own_sample_correct_rate = the headroom the self-improvement bootstraps from (must be >0 and <1). Gates: gold>=base, max_trunc<0.05.",
+  "delta_gold_upper_bound": 0.24,
+  "delta_process_weighted": 0.08,
+  "duration_s": 6451.082283973694,
+  "eval_truncation_rate_by_arm": {
+    "base": 0.0133,
+    "gold": 0.0,
+    "process_plus_sc": 0.0133,
+    "process_weighted": 0.0,
+    "sc_weighted": 0.02,
+    "unweighted": 0.0067
+  },
+  "experiment": "process_reward_weighted_sft_onpolicy_draft",
+  "generation_meta": {
+    "K": 6,
+    "gen_truncation_rate": 0.2,
+    "own_sample_correct_rate": 0.3315,
+    "temperature": 0.4
+  },
+  "gold_control_ok": true,
+  "honest_verdict": "complete: onpolicy_process_reward_sft_TEACHES_base0.200_pw0.28_gold0.44_goldfrac0.333_maxtrunc0.02",
+  "inference_substrate": "live_gpu_onpolicy_generation_plus_lora_sft_plus_verifier_ensemble",
+  "max_eval_truncation_rate": 0.02,
+  "model_id": "openbmb/MiniCPM5-1B",
+  "n_eval_questions": 150,
+  "n_train_questions": 450,
+  "policy": "ON_POLICY_minicpm_generates_own_traces",
+  "process_weighted_frac_of_gold_lift": 0.333,
+  "random_seed": 1,
+  "smoke": false,
+  "title": "onpolicy_process_reward_weighted_sft",
+  "truncation_ok": true
+}

@@ -71,11 +71,19 @@ verifiers:
            eval_artifact: results/outcome_verifier_learn_derisk.json}
     lineage: {from: seed, change: "de-risk: process-only 0.739 + self-consistency -> 0.949"}
     status: candidate
-    notes: "Correlational de-risk PASSED; causal RFT test underpowered (see known-issues
-            statistical-power discipline). Self-consistency dominates (0.927); verifier +0.02.
-            Promote to active only after a powered (seeded gen, >=100 eval Q, >=3 seed) RFT
-            confirms it teaches. POWERED RFT RUNNING 2026-06-08 (3 seeds x 600-Q GSM8K,
-            results/process_reward_weighted_sft_onpolicy_powered.json)."
+    notes: "DO NOT PROMOTE — causal RFT test came back NEGATIVE (clean, 2026-06-08). The powered
+            3-seed 4096-eval on-policy RFT (truncation-valid, gold-control passing) returned
+            no_clear_lift: gold +0.271 (robust, teaches) but process_weighted +0.033+/-0.081
+            (seed2 went -0.06, lower-1sigma below zero) and it does NOT beat self-consistency
+            (sc_weighted +0.042, lower variance). The seed-0 '+0.08 beats SC' signal did NOT
+            survive 3 clean seeds -> the MOAT claim is refuted FOR THE RFT-REWARD use in MATH.
+            Consistent with the inference-selector framing (de-risk 0.949 vs SC-alone 0.927 =
+            verifier +0.02 only). ROOT CAUSE: math is self-consistency-NEAR-CEILING (no headroom
+            for the verifier to add value) — see [[verifier-domain-bound-math-only]]. The
+            verifier's real, large value is on ARC (arc_grid_combined_verifier v2 prunes content
+            errors) where SC is NOT near-ceiling. Preserved per never-prune; flagged 1024 run at
+            results/process_reward_weighted_sft_onpolicy_*_maxnew1024.json, clean run at
+            results/process_reward_weighted_sft_onpolicy_powered.json."
 
   # ---- Code domain (stage-2 expansion via formal oracle) — DOMAIN-COVERAGE FINDING ----
   - verifier_id: code_outcome_verifier_formal_oracle
