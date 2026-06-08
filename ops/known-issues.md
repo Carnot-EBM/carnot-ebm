@@ -442,13 +442,23 @@ reasoning LLM? — is now scoped + de-risked. Full record:
 5. Multi-seed + held-out eval for any lift claim (the ORDERING is the result on a small
    corpus). Process-reward = fraction-certified aggregate (the 0.73 signal).
 
-**Continuation tasks for the planner:**
-- If v2 gold-control PASSES (gold ≥ base) and process_weighted shows signal: (a) ON-POLICY
-  process-reward-weighted LoRA-SFT on MiniCPM5-1B/GSM8K, multi-seed; (b) scale to
-  Qwen3.6-27B QLoRA. Gate: process_weighted > base, recovers a fraction of the gold lift,
-  and beats unweighted (verifier SELECTS, not just adds data).
-- If v2 gold-control FAILS (still degrades): harness fix only — gentler LoRA / replay /
-  on-policy — until gold ≥ base, before any process-reward claim.
+**Continuation tasks for the planner (UPDATED 2026-06-08 after off-policy retired):**
+OFF-POLICY IS RETIRED — it is structurally confounded: base MiniCPM is verbose (37%
+truncation past 768 tok) while training on the CONCISE p01 traces drops trained-arm
+truncation to 3%, so the base-vs-trained comparison is dominated by a truncation/style
+asymmetry, not reasoning (LoRA fixed the forgetting; the stop-token fix dropped base
+truncation 0.97->0.37, but the asymmetry remains). GO STRAIGHT TO ON-POLICY:
+- **ON-POLICY process-reward-weighted LoRA-SFT on MiniCPM5-1B/GSM8K.** MiniCPM generates
+  its OWN K traces per train question (so train + base share verbosity -> NO truncation
+  asymmetry); the verifier scores them (process-reward = fraction-certified); LoRA-SFT
+  weighted by process-reward. Arms: base / process_weighted / gold (answer-match) /
+  unweighted. ENFORCE all four disciplines (headroom precheck, gold-control gate,
+  truncation guard <5% per arm, multi-seed). Gate: process_weighted > base, recovers a
+  fraction of the gold lift, beats unweighted.
+- Then scale to Qwen3.6-27B QLoRA if the mechanism shows signal.
+- The off-policy harness `process_reward_weighted_sft_phase1_draft.py` is the starting
+  point (verifier scoring + LoRA + instrumented eval all built + validated); add the
+  on-policy generation step (MiniCPM.generate K per question -> score -> train).
 
 ### NEW 2026-06-06 (was TOP PRIORITY — substantially DONE): VERIFIER-EARNS-ITS-PLACE PROOF
 
