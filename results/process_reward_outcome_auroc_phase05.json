@@ -1,0 +1,19 @@
+{
+  "best_aggregation": "fraction_certified",
+  "best_trace_outcome_auroc": 0.73,
+  "experiment": "process_reward_outcome_auroc_phase05_draft",
+  "gate": "best trace-outcome AUROC >= 0.65 (dense process-reward carries outcome signal)",
+  "gate_pass": true,
+  "gold_correct_base_rate": 0.3405,
+  "honest_verdict": "complete: process_reward_outcome_SIGNAL_bestauroc0.73_via_fraction_certified_baserate0.341",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "interpretation": "Reference: a perfect OUTCOME verifier -> AUROC 1.0; chance -> 0.5. The moat's PER-STEP (in-format) AUROC was 0.967. This trace-OUTCOME AUROC of aggregated process-reward on FREE-FORM generations is the gate for the process-reward path. If it is ~0.5-0.6 the per-step signal does not transfer to outcome ranking -> process-reward training would reward-hack.",
+  "n_steps_scored": 6038,
+  "n_traces": 558,
+  "title": "process_reward_predicts_outcome",
+  "trace_outcome_auroc_by_aggregation": {
+    "fraction_certified": 0.73,
+    "mean_reward": 0.7217,
+    "min_reward": 0.6726
+  }
+}
