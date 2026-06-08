@@ -8020,3 +8020,4 @@ c |
 | 2026-06-07 23:35 UTC | MOAT SCISSOR replication on an INDEPENDENT corpus  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-07 23:56 UTC | ARC-AGI-3 first realistic agentic run — verifier-a | OK | 90 passed in 5.63s |
 | 2026-06-08 00:14 UTC | FR-11 continuous self-learning v26 (research-progr | OK | 89 passed in 4.70s |
+| 2026-06-08 00:29 UTC | Hardware continuity CLEAN re-run (fixes the exp392 | OK | 88 passed in 4.64s |
