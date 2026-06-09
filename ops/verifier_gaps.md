@@ -75,6 +75,46 @@ same conclusion the corrected baseline forces for the whole hand-invariant ensem
 GAP-3 learned / model-native energy (below) from "medium-high" to the **primary** path: the headroom is
 real and only a content/rule-aware energy (not more cheap invariants) can reach it.
 
+## Diagnosis: WHY the hand-invariant ensemble anti-ranks (2026-06-09, operator: diagnose before building)
+
+Two follow-up experiments decomposed the anti-ranking on TRM's real pool (n=31):
+
+**`results/arc3_verifier_antirank_diagnosis.json`** — per-family discrimination AUROC (>0.5 = ranks gold
+better) on TRM's REAL candidates (not the synthetic distractors the v2 verifier was tuned on):
+
+| family | AUROC | applicable tasks |
+|---|---|---|
+| tiling_scaling | 0.91 | 3 |
+| color_mapping | 0.71 | 6 |
+| object_count | 0.67 | 31 (always-on) |
+| content_overlap | 0.67 | 16 |
+| palette_histogram_shape | 0.56 | 31 (always-on) |
+| **delta_pattern** | **0.43** | 18 (ANTI) |
+| **v1 structural** | **0.42** | 31 (ANTI) |
+| symmetry | n/a | 0 |
+
+The `union_max` = max() aggregation is the proximate killer (pass@2 0.19): it scores each candidate by
+its WORST applicable family, so any family mis-firing on gold sinks it, and v1+delta_pattern are
+anti-discriminative. `min_defined` recovers to ~vote (0.42) but no FIXED aggregation beats vote (0.45).
+Sinking census (which family drives gold's max-violation on mis-ranks): content_overlap 7,
+palette_histogram 4, object_count 2 — discriminative-on-average families that catastrophically mis-fire
+on a subset, amplified by max().
+
+**`results/arc3_verifier_learned_combiner_ceiling.json`** — the definitive test: an OUT-OF-FOLD learned
+linear combiner (class-balanced leave-one-task-out logistic) that CAN down-weight the anti-families.
+It learned sensible weights (object_count +1.48, tiling +0.54, content_overlap +0.44, color_mapping
++0.19; v1 −0.52, palette_histogram −0.23 inverted) — and STILL scored pass@2 0.23, well below vote 0.45.
+
+**CONCLUSION — cheap hand-features are EXHAUSTED on TRM's real candidate pool.** Three independent
+measurements agree (pure union_max 0.16, best fixed aggregation 0.42, best learned combiner 0.23 — none
+beat vote 0.45). The structural reason: the only strongly-discriminative families (tiling 0.91,
+color_mapping 0.71) fire on <20% of tasks; the always-on families top out at AUROC 0.67 — insufficient
+to seat gold in top-2 against dozens of structurally-plausible candidates. **GAP-3 (a learned /
+model-native ARC energy) is the CONFIRMED only path** to the proven ~13pp oracle headroom; GAP-1/GAP-2
+(more hand-invariants) cannot close it. **CAVEAT (sample-size rigor):** 31-task/19-gold is tiny — the
+direction is strong and triply-confirmed but re-confirm at full 400-task scale before any irreversible
+strategy commitment.
+
 ## Open gaps
 
 ### GAP-1: transpose / orientation discrimination
