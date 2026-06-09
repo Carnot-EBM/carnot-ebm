@@ -24,6 +24,20 @@ candidates from TRAINING-split tasks — keeps eval-task hygiene, drops strict g
     scripts/experiments/arc3_gap3_stage2v2_mine_real_negs.py --batch 256 --max_batches 120
   # then the CPU join step:
   ~/trm_venv/bin/python scripts/experiments/arc3_gap3_stage2v2_mine_real_negs.py --join_only
+
+CORRIGENDUM (2026-06-09, post-adversarial-round — see corrigendum_2026_06_09_stage2v2 in the v2
+artifact): this miner has TWO known bugs that made the mined axis a silent no-op, documented here
+because the LINEAGE IS RETIRED and the script is preserved as evidence, not fixed for reuse:
+  1. inv_fn(_crop(inputs[i])) yields EMPTY grids on translation-augmented rows (the evaluator's _crop
+     was built for untranslated test rows) -> 240/250 mined negatives were keyed to the empty-grid
+     hash and could never join a training example.
+  2. The wrong-row rate (59.9%) was a padding artifact off ~500x: 18,380/18,390 'wrong rows' are
+     padding rows. TRM's GENUINE error rate on real rows of its own training split is 10/8,259 = 0.12%
+     (it memorizes the split) — so even a fixed miner cannot supply a real-error-dominant curriculum
+     from this checkpoint's training split.
+If mining is ever revived for a DIFFERENT lineage: keep a row only if its de-augmented label
+content-matches the kaggle gold, assert the recovered input is non-empty, and prefer an early or
+independent checkpoint whose train-split errors are not memorization-suppressed.
 """
 
 from __future__ import annotations
@@ -37,8 +51,10 @@ import sys
 import time
 
 TRM = "/home/ianblenke/trm_src"
-SNAP = ("/home/ianblenke/.cache/huggingface/hub/models--arcprize--trm_arc_prize_verification/"
-        "snapshots/55ced5dd59de74c52f53d47aa2898232b5a15b7a")
+SNAP = (
+    "/home/ianblenke/.cache/huggingface/hub/models--arcprize--trm_arc_prize_verification/"
+    "snapshots/55ced5dd59de74c52f53d47aa2898232b5a15b7a"
+)
 CARNOT = "/home/ianblenke/github.com/ianblenke/carnot"
 SUB, STEP = "arc_v1_public", "step_518071"
 DUMP_DIR = f"{TRM}/eval_out/arc_v1_trainmine"
@@ -82,11 +98,23 @@ def run_dump(args):
     # train_metadata for model init (embedding-table alignment), TRAIN split in TEST-set mode for the
     # sequential capped inference pass — test_set_mode switches the iterator, not the data.
     train_loader, train_metadata = create_dataloader(
-        config, "train", test_set_mode=False, epochs_per_iter=1,
-        global_batch_size=config.global_batch_size, rank=RANK, world_size=WORLD_SIZE)
+        config,
+        "train",
+        test_set_mode=False,
+        epochs_per_iter=1,
+        global_batch_size=config.global_batch_size,
+        rank=RANK,
+        world_size=WORLD_SIZE,
+    )
     mine_loader, mine_metadata = create_dataloader(
-        config, "train", test_set_mode=True, epochs_per_iter=1,
-        global_batch_size=config.global_batch_size, rank=RANK, world_size=WORLD_SIZE)
+        config,
+        "train",
+        test_set_mode=True,
+        epochs_per_iter=1,
+        global_batch_size=config.global_batch_size,
+        rank=RANK,
+        world_size=WORLD_SIZE,
+    )
     train_state = init_train_state(config, train_metadata, rank=RANK, world_size=WORLD_SIZE)
     train_state.model.eval()
 
@@ -102,8 +130,16 @@ def run_dump(args):
 
     # evaluators=[] -> pure forward + save; no ARC evaluator (it joins against EVAL test_puzzles,
     # meaningless for train-split rows)
-    evaluate(config, train_state, capped, mine_metadata, [], rank=RANK, world_size=WORLD_SIZE,
-             cpu_group=CPU_GROUP)
+    evaluate(
+        config,
+        train_state,
+        capped,
+        mine_metadata,
+        [],
+        rank=RANK,
+        world_size=WORLD_SIZE,
+        cpu_group=CPU_GROUP,
+    )
     if RANK == 0:
         print(f"[miner] dump DONE in {time.time() - t0:.0f}s -> {DUMP_DIR}", flush=True)
     if "LOCAL_RANK" in os.environ:
@@ -124,8 +160,10 @@ def run_join():
     from arc3_gap3_stage2_transition_ebm import ghash
 
     t0 = time.time()
-    ev = ARC(data_path=f"{TRM}/data/arc1concept-aug-1000",
-             eval_metadata=SimpleNamespace(blank_identifier_id=0))
+    ev = ARC(
+        data_path=f"{TRM}/data/arc1concept-aug-1000",
+        eval_metadata=SimpleNamespace(blank_identifier_id=0),
+    )
     shards = sorted(glob.glob(f"{DUMP_DIR}/step_0_all_preds.*"))
     assert shards, f"no dump at {DUMP_DIR} — run the torchrun dump step first"
 
@@ -150,7 +188,8 @@ def run_join():
             tin = inv_fn(_crop(inputs[i]))
             ih = ghash(np.asarray(tin).astype(int))
             slot = store.setdefault(orig_name, {}).setdefault(
-                ih, {"input": np.asarray(tin).astype(int).tolist(), "negs": {}})
+                ih, {"input": np.asarray(tin).astype(int).tolist(), "negs": {}}
+            )
             ph = ghash(np.asarray(pred).astype(int))
             if ph not in slot["negs"] and len(slot["negs"]) < 24:
                 slot["negs"][ph] = np.asarray(pred).astype(int).tolist()
@@ -175,15 +214,22 @@ def run_join():
         "n_tasks_with_negs": len(store),
         "n_distinct_negs": sum(len(s["negs"]) for t in store.values() for s in t.values()),
         "generator": f"TRM {SUB}/{STEP} on its own TRAINING split (zero eval-task leak, asserted)",
-        "tasks": {t: {ih: {"input": s["input"], "negs": list(s["negs"].values())}
-                      for ih, s in slots.items()}
-                  for t, slots in store.items()},
+        "tasks": {
+            t: {
+                ih: {"input": s["input"], "negs": list(s["negs"].values())}
+                for ih, s in slots.items()
+            }
+            for t, slots in store.items()
+        },
     }
     with gzip.open(OUT, "wt") as f:
         json.dump(out, f)
-    print(f"[join] {n_rows} rows scanned, {n_wrong} wrong ({n_wrong / max(1, n_rows):.1%}), "
-          f"{out['n_distinct_negs']} distinct negs across {len(store)} tasks "
-          f"in {time.time() - t0:.0f}s -> {OUT}", flush=True)
+    print(
+        f"[join] {n_rows} rows scanned, {n_wrong} wrong ({n_wrong / max(1, n_rows):.1%}), "
+        f"{out['n_distinct_negs']} distinct negs across {len(store)} tasks "
+        f"in {time.time() - t0:.0f}s -> {OUT}",
+        flush=True,
+    )
 
 
 if __name__ == "__main__":
