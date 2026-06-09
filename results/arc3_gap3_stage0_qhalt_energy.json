@@ -1,0 +1,76 @@
+{
+  "a0_vote_mimicry_control": {
+    "note": "The POOLED AUROC is between-task-inflated (gold q_mean is globally high, so cross-task pairs dominate) and MUST NOT be read as selection power -- the WITHIN-task AUROC is the honest selection-relevant number. If residual_beats_vote is False AND within-task AUROC <= ~0.55, q_halt's apparent lift is collinear with vote-count (frequency in disguise), NOT a model-native signal. The residual ranker regresses q_mean on vote globally and ranks by the residual.",
+    "qmean_discrimination_auroc_pooled_INFLATED": 0.966,
+    "qmean_discrimination_auroc_within_task": 0.8561,
+    "residual_beats_vote": false,
+    "residual_ranker_pass2": 0.0968,
+    "within_task_spearman_qmean_vote": 0.4448
+  },
+  "best_deconfounded_q_ranker": "Q_MAX",
+  "bootstrap_pass2_delta_vs_vote": {
+    "B": 1000,
+    "ci95_over_tasks": [
+      -0.2903,
+      -0.0323
+    ],
+    "note": "Bootstrap resamples TASKS with replacement (n tiny -> CI is wide; do not over-claim).",
+    "point": -0.1613
+  },
+  "duration_s": 6.7,
+  "experiment": "arc3_gap3_stage0_qhalt_energy",
+  "gates": {
+    "coverage_ge_0p80": true,
+    "discrimination_within_task_auroc_gt_0p70": true,
+    "headroom_capture_fraction": 0.0,
+    "headroom_capture_ge_0p30": false,
+    "selection_beats_vote": false
+  },
+  "honest_note": "GAP-3 Stage 0 (operator: proceed). Cheapest model-native probe, zero GPU. A NEGATIVE here (scalar q_halt insufficient) does NOT kill GAP-3 -- it means the lossy scalar projects away the signal and Stage 1's full penultimate-activation latent is required. A POSITIVE green-lights Stage 1. Reported as-is per FALSE_NEGATIVE_RISK; positive control = oracle 0.61 > vote so selectable headroom is real. CAVEAT: n=31; re-confirm at 400-task scale.",
+  "honest_verdict": "complete: gap3_stage0_qhalt_scalar_qhalt_does_not_beat_vote_stage1_full_latent_required_n31_vote_0.4516_bestdeconf_0.4516_withinauroc_0.8561_residbeatsvote_False",
+  "hybrid_tiebreak_gain_vs_vote_DEPLOYMENT_ONLY": 0.0323,
+  "inference_substrate": "offline_trm_candidate_rerank_no_oracle",
+  "model_native_signal_real": false,
+  "n_oracle_hit": 19,
+  "n_tasks": 31,
+  "no_gpu_used": true,
+  "no_oracle_audit": "Gold output read ONLY to LABEL correctness for scoring; NO ranker key uses it. q_halt is TRM's forward-pass halting logit (model-native), never derived from the solution.",
+  "oracle_pass2_ceiling": 0.6129,
+  "random_seed": 12345,
+  "rankers": {
+    "HYBRID_vote_then_qmean": {
+      "pass@1": 0.4194,
+      "pass@2": 0.4839
+    },
+    "Q_LSE_voteconfounded": {
+      "pass@1": 0.4516,
+      "pass@2": 0.4839
+    },
+    "Q_MAX": {
+      "pass@1": 0.4194,
+      "pass@2": 0.4516
+    },
+    "Q_MEAN": {
+      "pass@1": 0.2903,
+      "pass@2": 0.2903
+    },
+    "Q_MEAN_residual_over_vote": {
+      "pass@1": 0.0323,
+      "pass@2": 0.0968
+    },
+    "TRM_VOTE": {
+      "pass@1": 0.4194,
+      "pass@2": 0.4516
+    },
+    "min_defined_handfeat": {
+      "pass@1": 0.3871,
+      "pass@2": 0.4194
+    },
+    "union_max_handfeat": {
+      "pass@1": 0.129,
+      "pass@2": 0.1935
+    }
+  },
+  "stage0_synthesis": "NEGATIVE for the model-native-PRIMARY hypothesis, but with an encouraging nuance for Stage 1. The scalar q_halt has real SOFT within-task discrimination (gold beats most non-golds: within-task AUROC ~0.86) -- so TRM's confidence DOES carry correctness signal -- but the scalar is (a) not SHARP enough to seat gold top-2 against large candidate pools (Q_MEAN pass@2 0.29 < vote 0.45) and (b) largely REDUNDANT with frequency vote (residual-over-vote ranker collapses to 0.10; spearman(q_mean,vote) 0.44). Net: the lossy 1-D projection cannot beat vote. The 0.86 soft-AUROC is a LEADING INDICATOR that the full penultimate-activation latent (Stage 1) -- which is not collapsed to a scalar and not vote-redundant -- likely carries sharper, vote-orthogonal selection signal. GO for Stage 1 per the design's Stage-0 decision rule. (HYBRID vote-then-qmean gives +1 task, a marginal within-noise deployment nicety, NOT model-native evidence.)",
+  "title": "GAP-3 Stage 0: TRM-native q_halt confidence as a selection energy vs frequency vote"
+}
