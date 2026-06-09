@@ -1,0 +1,399 @@
+{
+  "best_ranker": "TRM_VOTE",
+  "best_ranker_pass2": 0.4839,
+  "duration_s": 1.2,
+  "experiment": "arc3_trm_verifier_rerank",
+  "flips_top1_vs_vote": {
+    "HYBRID": 1,
+    "VERIFIER": 16
+  },
+  "framing": "HYBRID = TRM vote primary + verifier as structural-prune/within-top-cluster tie-break (lowest honest-negative exposure per the design survey).",
+  "gap_captured_pass2_vs_trmvote": 0.0,
+  "honest_note": "POSITIVE CONTROL on TRM's REAL candidate pool. A wash/negative is reported as-is (per FALSE_NEGATIVE_RISK discipline): structural-only rerank is expected to be a wash; the lever is the train-pair transformation-consistency families, bounded by the transpose-invariant + variable-output-dim null space.",
+  "honest_verdict": "complete: trm_verifier_rerank_n31_trmvote_pass2_0.4839_best_TRM_VOTE_pass2_0.4839_captured_0.0_oracle_0.6129",
+  "inference_substrate": "offline_trm_candidate_rerank_no_oracle",
+  "missing_verifier_gaps": {
+    "GAP1_transpose_orientation": 2,
+    "GAP2_variable_dim_abstention": 1,
+    "GAP3_content_in_null_space": 2,
+    "uncaptured_total": 5
+  },
+  "missing_verifier_gaps_note": "Of the tasks where the correct answer is in TRM's candidate pool but the HYBRID verifier-rerank still missed it, this buckets WHY (maps to ops/verifier_gaps.md GAP-1 transpose/orientation, GAP-2 variable-output-dim abstention, GAP-3 content-in-null-space). Each non-zero bucket is empirical evidence to build the missing verifier \u2014 the project's core product backlog (CLAUDE.md Missing-Verifier Gap Logging).",
+  "n_complete_tasks_caveat": "subset of ~29 dumped tasks (small sample); the gap is directional.",
+  "n_tasks": 31,
+  "net_fixes": {
+    "HYBRID": 0,
+    "VERIFIER": -1
+  },
+  "no_gpu_used": true,
+  "oracle_ceiling": {
+    "pass@1": 0.6129,
+    "pass@10": 0.6129,
+    "pass@100": 0.6129,
+    "pass@1000": 0.6129,
+    "pass@2": 0.6129,
+    "pass@5": 0.6129
+  },
+  "per_task": [
+    {
+      "HYBRID_pass@1": true,
+      "HYBRID_pass@2": true,
+      "TRM_VOTE_pass@1": true,
+      "TRM_VOTE_pass@2": true,
+      "VERIFIER_pass@1": true,
+      "VERIFIER_pass@2": true,
+      "base_top1_correct": true,
+      "n_candidates": 5,
+      "task": "50a16a69"
+    },
+    {
+      "HYBRID_pass@1": true,
+      "HYBRID_pass@2": true,
+      "TRM_VOTE_pass@1": true,
+      "TRM_VOTE_pass@2": true,
+      "VERIFIER_pass@1": true,
+      "VERIFIER_pass@2": true,
+      "base_top1_correct": true,
+      "n_candidates": 5,
+      "task": "66e6c45b"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": false,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": false,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": false,
+      "base_top1_correct": false,
+      "n_candidates": 599,
+      "task": "17cae0c1"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": false,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": false,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": false,
+      "base_top1_correct": false,
+      "n_candidates": 656,
+      "task": "fafd9572"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": true,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": true,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": true,
+      "base_top1_correct": false,
+      "n_candidates": 7,
+      "task": "a59b95c0"
+    },
+    {
+      "HYBRID_pass@1": true,
+      "HYBRID_pass@2": true,
+      "TRM_VOTE_pass@1": true,
+      "TRM_VOTE_pass@2": true,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": true,
+      "base_top1_correct": true,
+      "n_candidates": 108,
+      "task": "4e469f39"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": false,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": false,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": false,
+      "base_top1_correct": false,
+      "n_candidates": 605,
+      "task": "a57f2f04"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": false,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": false,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": false,
+      "base_top1_correct": false,
+      "n_candidates": 633,
+      "task": "96a8c0cd"
+    },
+    {
+      "HYBRID_pass@1": true,
+      "HYBRID_pass@2": true,
+      "TRM_VOTE_pass@1": true,
+      "TRM_VOTE_pass@2": true,
+      "VERIFIER_pass@1": true,
+      "VERIFIER_pass@2": true,
+      "base_top1_correct": true,
+      "n_candidates": 5,
+      "task": "8719f442"
+    },
+    {
+      "HYBRID_pass@1": true,
+      "HYBRID_pass@2": true,
+      "TRM_VOTE_pass@1": true,
+      "TRM_VOTE_pass@2": true,
+      "VERIFIER_pass@1": true,
+      "VERIFIER_pass@2": true,
+      "base_top1_correct": true,
+      "n_candidates": 4,
+      "task": "1a2e2828"
+    },
+    {
+      "HYBRID_pass@1": true,
+      "HYBRID_pass@2": true,
+      "TRM_VOTE_pass@1": true,
+      "TRM_VOTE_pass@2": true,
+      "VERIFIER_pass@1": true,
+      "VERIFIER_pass@2": true,
+      "base_top1_correct": true,
+      "n_candidates": 11,
+      "task": "25094a63"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": false,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": false,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": false,
+      "base_top1_correct": false,
+      "n_candidates": 361,
+      "task": "2f0c5170"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": false,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": false,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": false,
+      "base_top1_correct": false,
+      "n_candidates": 213,
+      "task": "3ee1011a"
+    },
+    {
+      "HYBRID_pass@1": true,
+      "HYBRID_pass@2": true,
+      "TRM_VOTE_pass@1": true,
+      "TRM_VOTE_pass@2": true,
+      "VERIFIER_pass@1": true,
+      "VERIFIER_pass@2": true,
+      "base_top1_correct": true,
+      "n_candidates": 42,
+      "task": "2072aba6"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": false,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": false,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": false,
+      "base_top1_correct": false,
+      "n_candidates": 195,
+      "task": "712bf12e"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": false,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": false,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": false,
+      "base_top1_correct": false,
+      "n_candidates": 577,
+      "task": "505fff84"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": false,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": false,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": false,
+      "base_top1_correct": false,
+      "n_candidates": 8,
+      "task": "be03b35f"
+    },
+    {
+      "HYBRID_pass@1": true,
+      "HYBRID_pass@2": true,
+      "TRM_VOTE_pass@1": true,
+      "TRM_VOTE_pass@2": true,
+      "VERIFIER_pass@1": true,
+      "VERIFIER_pass@2": true,
+      "base_top1_correct": true,
+      "n_candidates": 4,
+      "task": "c7d4e6ad"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": false,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": false,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": false,
+      "base_top1_correct": false,
+      "n_candidates": 942,
+      "task": "1a6449f1"
+    },
+    {
+      "HYBRID_pass@1": true,
+      "HYBRID_pass@2": true,
+      "TRM_VOTE_pass@1": true,
+      "TRM_VOTE_pass@2": true,
+      "VERIFIER_pass@1": true,
+      "VERIFIER_pass@2": true,
+      "base_top1_correct": true,
+      "n_candidates": 212,
+      "task": "f0df5ff0"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": false,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": false,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": false,
+      "base_top1_correct": false,
+      "n_candidates": 305,
+      "task": "81c0276b"
+    },
+    {
+      "HYBRID_pass@1": true,
+      "HYBRID_pass@2": true,
+      "TRM_VOTE_pass@1": true,
+      "TRM_VOTE_pass@2": true,
+      "VERIFIER_pass@1": true,
+      "VERIFIER_pass@2": true,
+      "base_top1_correct": true,
+      "n_candidates": 56,
+      "task": "692cd3b6"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": false,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": true,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": false,
+      "base_top1_correct": false,
+      "n_candidates": 754,
+      "task": "c3202e5a"
+    },
+    {
+      "HYBRID_pass@1": true,
+      "HYBRID_pass@2": true,
+      "TRM_VOTE_pass@1": true,
+      "TRM_VOTE_pass@2": true,
+      "VERIFIER_pass@1": true,
+      "VERIFIER_pass@2": true,
+      "base_top1_correct": true,
+      "n_candidates": 13,
+      "task": "ac3e2b04"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": false,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": false,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": false,
+      "base_top1_correct": false,
+      "n_candidates": 50,
+      "task": "0b17323b"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": false,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": false,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": false,
+      "base_top1_correct": false,
+      "n_candidates": 995,
+      "task": "5833af48"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": false,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": false,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": false,
+      "base_top1_correct": false,
+      "n_candidates": 600,
+      "task": "79fb03f4"
+    },
+    {
+      "HYBRID_pass@1": true,
+      "HYBRID_pass@2": true,
+      "TRM_VOTE_pass@1": true,
+      "TRM_VOTE_pass@2": true,
+      "VERIFIER_pass@1": true,
+      "VERIFIER_pass@2": true,
+      "base_top1_correct": true,
+      "n_candidates": 24,
+      "task": "b9630600"
+    },
+    {
+      "HYBRID_pass@1": true,
+      "HYBRID_pass@2": true,
+      "TRM_VOTE_pass@1": true,
+      "TRM_VOTE_pass@2": true,
+      "VERIFIER_pass@1": true,
+      "VERIFIER_pass@2": true,
+      "base_top1_correct": true,
+      "n_candidates": 1,
+      "task": "00576224"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": false,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": false,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": true,
+      "base_top1_correct": false,
+      "n_candidates": 19,
+      "task": "f3e62deb"
+    },
+    {
+      "HYBRID_pass@1": false,
+      "HYBRID_pass@2": false,
+      "TRM_VOTE_pass@1": false,
+      "TRM_VOTE_pass@2": false,
+      "VERIFIER_pass@1": false,
+      "VERIFIER_pass@2": false,
+      "base_top1_correct": false,
+      "n_candidates": 32,
+      "task": "f3e62deb"
+    }
+  ],
+  "present_but_misvoted_headroom": 0.129,
+  "random_seed": 0,
+  "rankers": {
+    "HYBRID": {
+      "pass@1": 0.4194,
+      "pass@2": 0.4516
+    },
+    "TRM_VOTE": {
+      "pass@1": 0.4194,
+      "pass@2": 0.4839
+    },
+    "VERIFIER": {
+      "pass@1": 0.3871,
+      "pass@2": 0.4839
+    }
+  },
+  "submitted_to_leaderboard": false,
+  "title": "TRM candidate rerank by the Carnot invariant verifier",
+  "trm_vote_pass2": 0.4839
+}
