@@ -8113,3 +8113,4 @@ c |
 | 2026-06-09 19:19 UTC | HIDDEN-STATE v2 — Pinductor belief-likelihood (ret | OK | Deliverable already exists in repo |
 | 2026-06-09 19:30 UTC | CROSS-GAME TRANSFER v2 — ArcMemo NL concept-memory | OK | 91 passed in 4.39s |
 | 2026-06-09 20:23 UTC | M4 QUOTA-GATE READINESS (OWED from .366): run the  | OK | 88 passed in 8.48s |
+| 2026-06-09 21:28 UTC | Hardware continuity (consolidated; OWED from .366) | OK | 93 passed in 6.08s |
