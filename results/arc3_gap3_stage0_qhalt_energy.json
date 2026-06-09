@@ -8,6 +8,8 @@
     "within_task_spearman_qmean_vote": 0.4448
   },
   "best_deconfounded_q_ranker": "Q_MAX",
+  "best_deconfounded_q_ranker_beats_vote": false,
+  "best_deconfounded_q_ranker_note": "'best' = highest pass@2 among the DE-CONFOUNDED q rankers; it does NOT mean it beats vote. Here best_deconf=Q_MAX TIES vote at 0.4516 with ZERO orthogonal lift (its hit set is byte-identical to vote's 14 hits \u2014 confirmed by the adversarial-verify round); it is parity, not a win. The headline (model_native_signal_real=False) is unaffected.",
   "bootstrap_pass2_delta_vs_vote": {
     "B": 1000,
     "ci95_over_tasks": [
@@ -17,7 +19,7 @@
     "note": "Bootstrap resamples TASKS with replacement (n tiny -> CI is wide; do not over-claim).",
     "point": -0.1613
   },
-  "duration_s": 6.7,
+  "duration_s": 6.6,
   "experiment": "arc3_gap3_stage0_qhalt_energy",
   "gates": {
     "coverage_ge_0p80": true,

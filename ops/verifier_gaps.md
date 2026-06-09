@@ -115,6 +115,27 @@ model-native ARC energy) is the CONFIRMED only path** to the proven ~13pp oracle
 direction is strong and triply-confirmed but re-confirm at full 400-task scale before any irreversible
 strategy commitment.
 
+## GAP-3 build log (2026-06-09)
+
+**Stage 0 — TRM-native q_halt energy: NEGATIVE, adversarially confirmed → advance to Stage 1.**
+`results/arc3_gap3_stage0_qhalt_energy.json`: TRM's own halting confidence (scalar q_halt, already in
+the dump, zero GPU) does NOT beat its frequency vote as a model-native PRIMARY selection signal on the
+real pool (n=31). Q_MEAN pass@2 0.290 < vote 0.452; the vote-residual ranker collapses to 0.097;
+bootstrap of (Q_MEAN−vote) is [−0.290, −0.032], entirely below zero. The A0 vote-mimicry control caught
+that the only "wins" (HYBRID/Q_LSE, +1 task) are vote-primary tie-break / vote-confounded, not
+model-native. Nuance: q_mean has real SOFT within-task discrimination (AUROC 0.86 — gold beats most
+non-golds) but the lossy 1-D scalar is neither sharp enough for top-2 nor vote-orthogonal.
+
+**Adversarial-verify round** (`results/arc3_gap3_stage0_adversarial_verify.json`, GAP-3 design §4):
+5 independent reviewers re-derived every number from the 8041-candidate table (no torch) and tried to
+refute. Unanimous **NEGATIVE_CONFIRMED**, worst severity cosmetic. No reviewer found a de-confounded q
+ranker that beats vote; the decisive fact — `headroom_capture_fraction=0` — is that on the 4 tasks where
+gold is present but vote misses top-2, q_mean recovers ZERO (the scalar is redundant with vote exactly
+where it would need to add value). Positive control holds (oracle 0.613 > vote 0.452, ~16pp real
+headroom), so this is an honest negative. **Recommendation: GO for Stage 1** — the full
+penultimate-activation latent (not collapsed to a scalar, not vote-redundant); the 0.86 soft-AUROC is a
+leading indicator the latent carries sharper, vote-orthogonal signal. (Caveat: n=31; re-confirm at 400.)
+
 ## Open gaps
 
 ### GAP-1: transpose / orientation discrimination

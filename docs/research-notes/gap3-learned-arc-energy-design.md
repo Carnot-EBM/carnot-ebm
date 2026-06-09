@@ -69,7 +69,15 @@ makes the coverage win explicit and measurable.
 Staged deliberately so the cheapest stage runs on data we ALREADY have, and each stage's result decides
 whether the next is worth its compute.
 
-### Stage 0 — TRM-native halting-confidence energy (NO new GPU; data already dumped)
+### Stage 0 — TRM-native halting-confidence energy (NO new GPU; data already dumped) — DONE: NEGATIVE (2026-06-09)
+
+> **RESULT (2026-06-09): NEGATIVE, adversarially confirmed → advance to Stage 1.**
+> `results/arc3_gap3_stage0_qhalt_energy.json` + `..._adversarial_verify.json`. Scalar q_halt does NOT
+> beat frequency vote (Q_MEAN pass@2 0.290 < vote 0.452; vote-residual collapses to 0.097; bootstrap
+> CI entirely <0; `headroom_capture_fraction=0`). 5-reviewer round = unanimous NEGATIVE_CONFIRMED. The
+> 0.86 within-task soft-AUROC says the signal EXISTS in TRM's confidence but the 1-D scalar projects it
+> away → Stage 1 (full latent) is the GO. Original design text follows.
+
 
 The TRM eval dump (`eval_out/arc_v1/step_0_all_preds.*`) already contains `q_halt_logits` (shape
 `(25600,)`, float32): TRM's own per-augmentation halting confidence. This is a *model-native* scalar we
