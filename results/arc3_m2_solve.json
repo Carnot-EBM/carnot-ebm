@@ -1,0 +1,34 @@
+{
+  "ACCURACY_levels_solved": 0,
+  "blind_baseline": {
+    "actions_used": 200,
+    "final_state": "GameState.NOT_FINISHED",
+    "first_solve_at": null,
+    "levels_solved": 0
+  },
+  "blind_levels_solved": 0,
+  "budget": 200,
+  "diagnosis": "M2-v5 did NOT solve (0 levels, model_guided AND blind). Win condition read from the local game source for DIAGNOSIS ONLY (the agent did NOT hardcode it): vc33.ielczunthe() is a complex multi-sprite SPATIAL-CONFIGURATION check (collisions/pixel-match/alignment across tagged sprite groups) with available_actions=[6] (clicks only), Gravity vector, and a 50-step StepCounter -> vc33 is a gravity/Sokoban-style spatial-target puzzle, NOT a progress bar. The verified transition-model (99% accurate) is NECESSARY but NOT SUFFICIENT: solving needs (1) GOAL induction (a target spatial configuration, hard to characterize from rare wins) + (2) multi-step spatial PLANNING (Sokoban-class, PSPACE-hard). Sub-finding: codex predicted transitions at 99% while MIS-describing the mechanic as a progress bar -> accurate prediction != correct mechanistic understanding; the consistency energy certifies PREDICTION (what it measures), not interpretation.",
+  "duration_s": 1.0,
+  "experiment": "arc3_m2_solve",
+  "first_solve_at_action": null,
+  "game": "vc33-5430563c",
+  "honest_verdict": "complete: m2v5_vc33_model_guided_solve_levels0_at_actionNone_blindbaseline0_solvedFalse",
+  "inference_substrate": "offline_arc_agi3_model_guided_policy_real_env_confirmed",
+  "model_guided": {
+    "actions_used": 200,
+    "final_state": "GameState.NOT_FINISHED",
+    "first_solve_at": null,
+    "levels_solved": 0
+  },
+  "no_gpu_used": true,
+  "no_llm_used": true,
+  "note": "M2-v5 first-solve attempt. The verified world-model selects the progress-advancing action (verifier-as-pruner / efficiency role); the REAL env confirms the win via level_completed. solved=True with model_guided beating the blind baseline = first ARC-AGI-3 solve + efficiency thesis on a real game. Quota-gate: online play only when an offline solve beats the TRM baseline + best prior Carnot submission.",
+  "random_seed": 0,
+  "real_env_confirmed": true,
+  "solved": false,
+  "submitted_to_leaderboard": false,
+  "title": "arc3_m2v5_vc33_first_solve_model_guided",
+  "win_levels": 7,
+  "world_model": "results/arc3_vc33_world_model_program.py (energy 0.005/0.011, verified)"
+}
