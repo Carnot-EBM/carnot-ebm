@@ -1,25 +1,29 @@
-# Pre-staged roadmap for milestone 2026.06.365 (outer-loop, Claude Opus 4.8, 2026-06-08).
-# Operator directive: checkpoint the ARC-AGI-3 session + drive the ARC push forward tonight.
-# Context (this session, all committed): the offline ARC agent stack M0 (GameGraph) -> M1 (Family-A
-# floor) -> M2 (active-data -> codex program synthesis -> consistency-energy verification) produced the
-# FIRST trustworthy induced world-model (vc33, energy 0.005, replicated). The verifier is demonstrated
-# load-bearing at EVERY inducer tier. BUT no game is solved yet: the bottleneck moved off the verifier
-# and off inducer-expressiveness onto GOAL-grounding + the per-game WIN-INTERACTION. vc33 was refuted as
-# the first-solve target (its win is a hard Sokoban spatial config); the 25-game win-condition survey
-# (results/arc3_win_condition_survey.json) picked r11l (click-to-drag, directly-observable goal,
-# non-spatial) as the easiest inducible first-solve target. This milestone pursues the first solve.
-milestone: "2026.06.365"
-milestone_title: "ARC-AGI-3 first-solve push: reverse-engineer r11l's select/place win-interaction and SOLVE it; generalize the active-data->codex->consistency-energy pipeline across the 6 non-spatial games; induce a goal-predicate from observed level-ups; latent-register augmentation for the 11 hidden-state games; hardware continuity; capstone. The verifier is proven load-bearing; the open question is converting a trustworthy world-model into a SOLVE."
-milestone_doc: "docs/research-notes/arc-agi3-agent-research-plan.md"
+# Pre-staged roadmap for milestone 2026.06.366 (outer-loop, Claude Opus 4.8, 2026-06-09).
+# North star (ops/north-star.md §0): solve ARC-AGI-3, accurately and efficiently.
+# Context: .365 landed Carnot's FIRST ARC-AGI-3 SOLVE (exp3946: r11l level-1, real-env-confirmed,
+# 4 actions; induced mechanic = click-selects-piece, 2nd-click-places-at-target-centroid). BUT the
+# conductor ran exp3945->exp3946 then jumped to a capstone that GATE-BLOCKED on a config bug
+# (gated_on used op: exists, which is NOT a supported op), so the three Phase-2 generalization tasks
+# (exp3947 pipeline sweep, exp3948 goal-predicate, exp3949 latent-registers) + hardware (exp3950)
+# NEVER RAN, and the operational retro miscounted the milestone as 0 experiments. .366 turns one
+# solve into a verifier-load-bearing offline run: solve MORE levels + MORE games (accuracy), run the
+# three OWED generalization experiments, and prove the verifier ACTION-PRUNER cuts actions on REAL
+# solved games with a clean no-verifier ablation (M3 — the existential 'verifier earns its place'
+# proof, now in the RHAE venue where action-efficiency IS the metric). LESSON BAKED IN: no task is
+# hard-gated_on another and the capstone is UNGATED (cannot stall the milestone); op: exists is never used.
+milestone: "2026.06.366"
+milestone_title: "ARC-AGI-3 — from first solve to a verifier-load-bearing offline run: solve more r11l levels + a second non-spatial game (accuracy), run the 3 OWED generalization experiments .365 skipped (6-game pipeline sweep, goal-predicate induction, latent-register augmentation for hidden-state games), prove the verifier action-pruner cuts actions on REAL solved games WITH-vs-WITHOUT (M3 efficiency thesis), cross-game DSL transfer as self-learning, offline accuracy-vs-baseline M4 quota-gate readiness, hardware continuity, capstone. The first solve is banked; the open question is converting it into a multi-level, multi-game offline run where the verifier's value is measured, not assumed."
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 
 tasks:
-  - id: exp3945-archive-v364-activate-v365
+  - id: exp3952-archive-v365-activate-v366
     operator_override: >
-      2026-06-08 operator-outer-loop directive (standing): routine milestone-transition task
+      2026-06-09 operator-outer-loop directive (standing): routine milestone-transition task
       (archive-vN-activate-vN+1) — false-positive scope-match vs every prior archive/activate task;
-      structurally never a doomed rerun. Aggregation-only; records the .364 close-state.
-    milestone: "2026.06.365"
-    title: "Archive .364 -> activate .365; GREEN-GATE: assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load, the core pretest subset is green, and the ARC agentic modules import (carnot.agentic.arc_agi3_world_model, arc_world_model_synth, arc_world_model_dsl), so .365 can EXECUTE the ARC first-solve tasks."
+      structurally never a doomed rerun. Aggregation-only; records the .365 close-state including the
+      FIRST ARC-AGI-3 solve (exp3946) and the exp3951 op:exists capstone-gate bug.
+    milestone: "2026.06.366"
+    title: "Archive .365 -> activate .366; GREEN-GATE: assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load, the ARC substrate unit tests are green, and the ARC agentic modules import (carnot.agentic.arc_agi3_world_model, arc_world_model_synth, arc_world_model_dsl), so .366 can EXECUTE the ARC accuracy + efficiency tasks. RECORD the .365 truth: exp3946 SOLVED r11l L1 (real-env-confirmed); exp3947/3948/3949/3950 never ran; exp3951 capstone blocked on op:exists."
     priority: critical
     track: infra
     max_turns: 50
@@ -27,17 +31,24 @@ tasks:
     model: gpt-5.5
     requires_codex: true
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_3945_archive_v364_activate_v365.json
+    deliverable: results/experiment_3952_archive_v365_activate_v366.json
     prompt: |
-      CONTEXT. Milestone .364 closed. This task archives it and activates .365, the ARC-AGI-3
-      first-solve push. Read the .364 verdicts (exp3934..exp3944) and the 2026-06-08 ARC entries in
-      ops/changelog.md so .365 starts on the recorded truth.
+      CONTEXT. Milestone .365 closed having achieved Carnot's FIRST ARC-AGI-3 solve (exp3946: r11l
+      level-1, real_env_confirmed=true, 4 actions). But the conductor skipped exp3947/3948/3949/3950
+      and the capstone (exp3951) blocked on a gated_on `op: exists` bug. This task archives .365 and
+      activates .366 so the OWED + new ARC tasks can execute. Read the .365 verdicts so .366 starts on
+      the recorded truth.
+
+      EXISTING CODE/EVIDENCE TO READ FIRST:
+        - results/experiment_3946_r11l_first_solve.json (the FIRST SOLVE — the banked win)
+        - results/experiment_3951_capstone_v365.json (the op:exists gate-block to learn from)
+        - ops/changelog.md (the 2026-06-09 .365 entries)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `{project_root}/.venv/bin/python -c "import yaml; yaml.safe_load(open('research-complete.yaml'))"`
            succeeds (the .355 unquoted-colon poison guard). If it fails, write honest_verdict
            blocked_research_complete_yaml_poison and EXIT.
-        1. Read the .364 task verdicts via scripts/summarize_artifact.py (NOT raw JSON). Append the .364
+        1. Read the .365 task verdicts via scripts/summarize_artifact.py (NOT raw JSON). Append the .365
            tasks + verdicts to research-complete.yaml. QUOTE every value containing a colon-space.
         2. GREEN-GATE A: research-complete.yaml AND ops/exclusion_manifest.yaml load under yaml.safe_load.
         3. GREEN-GATE B: `{project_root}/.venv/bin/pytest tests/python/test_arc_agi3_world_model.py
@@ -47,29 +58,30 @@ tasks:
            `arc_world_model_dsl` all import. Record import_ok honestly per module.
 
       REQUIRED ARTIFACT FIELDS (emit each as a BARE scalar; principle: lines guide YOU):
-        archived_milestone: principle "Provenance — which milestone was archived (2026.06.364)."
-        activated_milestone: principle "Confirms .365 is live so downstream tasks resolve."
+        archived_milestone: principle "Provenance — which milestone was archived (2026.06.365)."
+        activated_milestone: principle "Confirms .366 is live so downstream tasks resolve."
         research_complete_yaml_parses: principle "BARE BOOL — the colon-poison guard; the file still loads."
         exclusion_manifest_parses: principle "BARE BOOL — the manifest still loads under yaml.safe_load."
-        arc_substrate_tests_green: principle "BARE BOOL — the 16 ARC M0/M2 unit tests pass; the substrate is sound before the solve tasks run."
-        arc_modules_importable: principle "BARE BOOL — the agentic ARC modules import so .365 can execute them."
+        arc_substrate_tests_green: principle "BARE BOOL — the ARC M0/M2 unit tests pass; the substrate is sound before the solve tasks run."
+        arc_modules_importable: principle "BARE BOOL — the agentic ARC modules import so .366 can execute them."
+        prior_milestone_first_solve_recorded: principle "BARE BOOL — confirms exp3946 r11l L1 solve is recorded in research-complete.yaml (the banked win is not lost)."
         honest_verdict, duration_s, inference_substrate: principle "Terminal-prefix verdict + aggregation substrate (no GGUF/CUDA markers on a record task)."
 
       honest_verdict MUST start with `complete:`/`success:` or `blocked_<resource>`.
-      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3945_archive_v364_activate_v365.py
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3952_archive_v365_activate_v366.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   # --------------------------------------------------------------------------
-  # PHASE 1 — THE FIRST SOLVE (r11l, the survey's easiest inducible target)
+  # PHASE 1 — ACCURACY: solve more levels and more games
   # --------------------------------------------------------------------------
-  - id: exp3946-r11l-first-solve
-    milestone: "2026.06.365"
-    prior_failures:
-      - experiment_id: arc3_m2_solve (M2-v5, vc33)
-        verdict: "complete: m2v5_vc33_no_solve — vc33's win is a hard Sokoban spatial-target config; a trustworthy transition-model is necessary but not sufficient (needs goal-grounding + PSPACE-class planning)."
-        addressed_by: "DIFFERENT GAME + DIFFERENT difficulty class. The 25-game win-condition survey (results/arc3_win_condition_survey.json) selected r11l: NON-spatial (is_spatial_planning=false), goal DIRECTLY OBSERVABLE (gray templates show each piece's destination), near-trivial plan (per piece: click-piece, click-its-target). r11l mechanic already reverse-engineered partway (results/arc3_r11l_solve.json diagnosis): pieces = color-3 sprites (one auto-selected at level start), targets = flkdtg sprites, gray color-2 = decorative; a click selects the piece under the cursor, a 2nd click places the SELECTED piece centered at the cursor if valid; next_level() when all pieces are on targets. The FIRST attempt's generic gray-as-template perception was wrong; this task pins the exact select/place interaction empirically."
-        retire_if_same_verdict: false
-    title: "FIRST ARC-AGI-3 SOLVE: reverse-engineer r11l's exact select/place WIN-INTERACTION empirically and SOLVE level 1 (ideally more), offline. The transition dynamics are inducible (hidden_state=false); the open problem is the click semantics + piece->target matching. Build on scripts/experiments/arc3_r11l_solve.json's diagnosis: pieces=color-3 (one auto-selected), targets=flkdtg sprites. Probe each click type, watch the grid delta, determine how a piece is picked up and placed, match each color-3 piece to its target by shape, execute click-pairs, and CONFIRM the solve via the REAL env level_completed (ground truth)."
+  - id: exp3953-r11l-full-solve
+    operator_override: >
+      2026-06-09 operator directive (standing ARC north-star push): versioned-lineage continuation of
+      the SUCCESSFUL exp3946 first solve — false-positive scope-match vs exp3946/arc3_r11l_solve. NEW
+      forward difference: extend r11l from 1/6 to levels 2-6 (harder per-level configs) reusing the
+      proven select/place mechanic; not a rerun of a failed approach (exp3946 SUCCEEDED).
+    milestone: "2026.06.366"
+    title: "r11l FULL solve: take r11l from 1/6 (exp3946) to as many of levels 2-6 as the induced select/place mechanic + perception reach, offline, real-env-confirmed. exp3946 induced: a click selects a piece, a 2nd click places it so the pieces' average position aligns on the target centroid; placing exactly on top re-selects. Reuse that mechanic + perception (pieces=color-3 sprites, targets=flkdtg) and drive level-by-level to ACCURACY_levels_solved as high as possible. Report per-level actions vs baseline_actions (the RHAE efficiency axis). RHAE weights LATER levels more, so each additional level is worth more than the first."
     priority: critical
     track: research
     max_turns: 80
@@ -77,56 +89,116 @@ tasks:
     model: opus
     requires_claude: true
     inference_substrate: offline_arc_agi3_perception_planner_real_env_confirmed
-    deliverable: results/experiment_3946_r11l_first_solve.json
+    deliverable: results/experiment_3953_r11l_full_solve.json
     prompt: |
-      CONTEXT. This is the ARC push's first-solve attempt. The offline stack already produced a
-      trustworthy world-model for a click-game (vc33, energy 0.005). The blocker for a SOLVE is the
-      per-game GOAL + WIN-INTERACTION. r11l (the survey's easiest target) is a click-to-drag placement
-      puzzle: drag each colored PIECE onto its matching GRAY-TEMPLATE target; win when all placed.
+      CONTEXT. exp3946 achieved Carnot's FIRST ARC-AGI-3 solve: r11l level-1 (1/6 levels), real-env
+      confirmed, 4 actions. RHAE scores nothing on an unsolved level and weights LATER levels more, so
+      converting 1/6 into 4/6 or 6/6 is the highest-value accuracy move available. r11l is non-spatial,
+      hidden_state=false, directly-observable per-sprite goal — the levels differ in piece/target count
+      and layout, not in mechanic. This task drives r11l to as many levels as the induced mechanic reaches.
 
       EXISTING CODE/EVIDENCE TO READ FIRST:
-        - results/arc3_win_condition_survey.json (the survey; r11l entry + rationale)
-        - results/arc3_r11l_solve.json (the diagnosis: pieces=color-3 auto-selected, targets=flkdtg,
-          gray=decorative; the generic perception that FAILED and why)
-        - scripts/experiments/arc3_r11l_solve.py (the first solver — has _components/_perceive/_match)
-        - environment_files/r11l/*/r11l.py step() + on_set_level() + the win check (for DIAGNOSIS of the
-          mechanic — the SOLVER must INDUCE from observation, but you may read source to design probes)
+        - results/experiment_3946_r11l_first_solve.json (the induced mechanic + solve_log + perception)
+        - scripts/experiments/experiment_3946_r11l_first_solve.py (the solver — _perceive/_match/_place)
+        - results/arc3_r11l_solve.json (the perception diagnosis: pieces=color-3, targets=flkdtg, gray=decorative)
+        - python/carnot/agentic/arc_agi3_world_model.py (GameGraph, objects, compute_grid_delta, frame_hash)
 
       CONCRETE STEPS:
         0. PRECONDITIONS: offline env loads — `{project_root}/.venv/bin/python -c "import sys;
            sys.path.insert(0,'python'); from arc_agi import Arcade; from arc_agi.base import OperationMode;
            Arcade(arc_api_key='', operation_mode=OperationMode.OFFLINE, environments_dir='environment_files')"`
-           succeeds. If not, honest_verdict blocked_arc_offline_env_unavailable and EXIT.
-        1. EMPIRICALLY pin the select/place interaction: from reset, probe single clicks on a color-3
-           piece, on empty cells, on a target — record the grid delta + levels_completed each time.
-           Determine: is a piece auto-selected at start? Does clicking a piece select it? Does a 2nd
-           click place it (where)? Is there a pickup/drag phase? Document the induced mechanic.
-        2. PERCEPTION: identify the color-3 piece(s) and their target locations (NOT the gray decoration).
-           Match each piece to its target by shape/size.
-        3. PLAN + EXECUTE: for each (piece, target), execute the induced select->place click sequence in
-           the REAL env. Confirm a solve via levels_completed > 0 (the env is ground truth).
-        4. If the first matching does not win, search piece->target assignments with env feedback
-           (resetting on lose, within the 60-action budget). Report honestly whether L1 (or more) solved.
+           succeeds. If not, honest_verdict blocked_arc_offline_env_unavailable and EXIT (no fabrication).
+        1. Reuse the exp3946 perception (color-3 pieces, flkdtg targets) + select/place mechanic. After a
+           level-up, RE-PERCEIVE the new level's pieces+targets (counts/layout change per level).
+        2. For each level 1..6: match each piece to its target by shape/size, execute the induced
+           select->place click-pairs in the REAL env, confirm the level-up via levels_completed.
+        3. On a non-winning match, search piece->target assignments with env feedback (reset on lose),
+           within the per-game action budget. Continue until a level fails to solve or all 6 are solved.
+        4. Record per-level actions used and the baseline_actions reference for each solved level.
 
       REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU):
-        ACCURACY_levels_solved: principle "The headline — levels of r11l solved, confirmed by the REAL env (the first ARC-AGI-3 solve if > 0)."
-        first_solve_at_action: principle "Action count to the first level-up — the efficiency axis (RHAE) for the quota-gate."
-        induced_select_place_mechanic: principle "Plain-English description of the click semantics induced empirically — so the next game reuses the method."
-        real_env_confirmed: principle "BARE BOOL — the solve was confirmed by levels_completed from the real env, not a model or a heuristic (no fabrication)."
-        n_pieces_perceived, n_targets_perceived: principle "Perception sanity — should be a sensible 1:1-ish piece:target count, not the decorative gray over-count of the first attempt."
+        ACCURACY_levels_solved: principle "The headline — how many of r11l's 6 levels solved (>=1 from exp3946; goal is to raise it), real-env-confirmed."
+        per_level_actions: principle "Actions used per solved level — paired with baseline_actions it gives the RHAE efficiency per level."
+        baseline_actions_ref: principle "The env's per-level reference action counts — the RHAE denominator (efficiency = (human/AI)^2)."
+        levels_attempted, first_fail_level: principle "Where the induced mechanic stopped generalizing across levels (the next-build signal)."
+        real_env_confirmed: principle "BARE BOOL — every level-up confirmed by levels_completed from the real env, not a model/heuristic (no fabrication)."
         random_seed, honest_verdict, duration_s, inference_substrate: principle "Reproducibility + terminal-prefix verdict + the real-env substrate."
 
-      honest_verdict MUST start with `complete:`/`success:` or `blocked_<resource>`. A 0-solve is an
-      honest `complete: r11l_no_solve_<reason>` with the induced mechanic recorded — NOT a fabricated win.
-      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3946_r11l_first_solve.py
-      Do NOT push.
+      honest_verdict MUST start with `complete:`/`success:` or `blocked_<resource>`. Solving only level 1
+      again is an honest `complete: r11l_levels1_of6_<reason>`; do NOT fabricate higher levels.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3953_r11l_full_solve.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  # --------------------------------------------------------------------------
-  # PHASE 2 — GENERALIZE THE TRUSTWORTHY-MODEL PIPELINE
-  # --------------------------------------------------------------------------
-  - id: exp3947-active-data-codex-nonspatial-sweep
-    milestone: "2026.06.365"
-    title: "Generalize the active-data -> codex-program-synthesis -> consistency-energy-verification pipeline across the 6 NON-SPATIAL games (r11l, sc25, lp85, tn36, dc22, su15): how many reach a TRUSTWORTHY world-model (held-out consistency energy <= 0.15)? vc33 reached 0.005 from active data; this measures whether that generalizes. Build on scripts/experiments/arc3_m2_active_codex.py (passive-vs-active codex synthesis) — extend it to the 6-game set and report a per-game trustworthy-model table."
+  - id: exp3954-second-game-solve
+    prior_failures:
+      - experiment_id: arc3_m2_solve_vc33
+        verdict: "complete: m2v5_vc33_no_solve — vc33's win is a multi-sprite SPATIAL-CONFIGURATION (gravity/Sokoban, PSPACE-class) check; a 99%-accurate transition-model is necessary but NOT sufficient (needs goal-induction + spatial planning). Sub-finding: codex predicted transitions at 99% while MIS-describing the mechanic — consistency energy certifies PREDICTION, not interpretation."
+        addressed_by: "DIFFERENT GAME CLASS. This task targets a NON-SPATIAL game (lp85 — EWM arXiv:2605.05138 solves it 100%; or su15/sc25/tn36), where the win is a directly-observable object<->target coincidence, NOT a PSPACE spatial configuration. It reuses the exp3946-PROVEN perception->select/place->goal-predicate method that already produced the first solve, not vc33's spatial planner. The plan picks the next-easiest non-spatial game empirically by L0 budget + inducibility."
+        retire_if_same_verdict: false
+    milestone: "2026.06.366"
+    title: "SECOND ARC-AGI-3 game solve: solve level-0 of the next-easiest NON-SPATIAL game (lp85-305b61c3 is known-tractable — EWM solves it 100%; su15-1944f8ab / sc25-635fd71a / tn36-ef4dde99 are candidates) via the perception -> induced-model -> goal-predicate loop that produced the r11l first solve. A SECOND solved game is the first evidence the method GENERALIZES beyond r11l (one solve could be game-specific luck; two is a method). Real-env-confirmed; pick the game empirically by L0 action budget + inducibility, do NOT hardcode the win from source."
+    priority: critical
+    track: research
+    max_turns: 80
+    agent_type: claude
+    model: opus
+    requires_claude: true
+    inference_substrate: offline_arc_agi3_perception_planner_real_env_confirmed
+    deliverable: results/experiment_3954_second_game_solve.json
+    prompt: |
+      CONTEXT. exp3946 solved r11l L1 — the first solve. One solve could be game-specific; a SECOND
+      solved game (different game) is the first evidence the perception->induce->exploit METHOD
+      generalizes. Target a NON-SPATIAL game (the survey's 6: r11l[solved], sc25, lp85, tn36, dc22, su15),
+      avoiding vc33's PSPACE spatial trap (see prior_failures). lp85 is known-tractable (EWM 100%).
+
+      EXISTING CODE/EVIDENCE TO READ FIRST:
+        - results/experiment_3946_r11l_first_solve.json (the method that worked: perceive objects+targets,
+          induce select/place, confirm via levels_completed)
+        - results/arc3_win_condition_survey.json (the 6 non-spatial games + per-game win summaries)
+        - results/arc_agi3_access_probe.json (game_ids + baseline_actions: lp85-305b61c3 L0=17,
+          su15-1944f8ab, sc25-635fd71a, tn36-ef4dde99)
+        - python/carnot/agentic/arc_agi3_world_model.py + arc_world_model_synth.py (GameGraph + InducedWorldModel + grade_predictions)
+        - scripts/experiments/arc3_gemma_policy.py (_render — for OPTIONAL local-Gemma object semantics when a delta is ambiguous)
+
+      MODEL_SPECS (only if a local LLM is needed for ambiguous object semantics / DSL proposal — perception
+      is PRIMARILY deterministic numpy, NOT an LLM): SOTA local proposer unsloth/gemma-4-26B-A4B-it-GGUF
+      (multimodal, headline-eligible) with gemma-4-E4B-it as the fast per-step fallback. PRECONDITION the
+      GGUF cache before any LLM call; if absent, fall back to deterministic perception only and record it.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: offline env loads (the exp3946 Arcade OFFLINE check). If not,
+           honest_verdict blocked_arc_offline_env_unavailable and EXIT.
+        1. Pick the target game empirically: among {lp85, su15, sc25, tn36}, prefer the smallest L0
+           baseline_actions budget with a directly-observable object<->target goal. Record why.
+        2. Active-collect transitions; deterministically perceive objects (movable pieces) + their target
+           locations (compute_grid_delta + objects). Induce the select/place (or game-specific) mechanic.
+        3. Induce a goal predicate from any observed level-up (object-on-target coincidence). PLAN+EXECUTE
+           the click/keyboard sequence in the REAL env; confirm a solve via levels_completed > 0.
+        4. If the first game does not solve within budget, try the next non-spatial candidate (record each
+           attempt). Report honestly which game (if any) solved and at what action count.
+
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU):
+        ACCURACY_levels_solved: principle "The headline — levels solved on the SECOND game, real-env-confirmed (>0 = the method generalizes beyond r11l)."
+        game_solved: principle "Which game_id was solved (or 'none') — the generalization datum."
+        first_solve_at_action: principle "Action count to the first level-up on the 2nd game — the efficiency axis."
+        induced_mechanic: principle "Plain-English mechanic induced for the 2nd game — does it reuse r11l's select/place or differ (transfer signal)."
+        games_attempted: principle "Which non-spatial games were tried + their outcomes — honest coverage, not silent truncation."
+        real_env_confirmed: principle "BARE BOOL — solve confirmed by the real env's levels_completed (no fabrication)."
+        random_seed, honest_verdict, duration_s, inference_substrate: principle "Reproducibility + terminal-prefix verdict + the real-env substrate."
+
+      honest_verdict MUST start with `complete:`/`success:` or `blocked_<resource>`. A 0-solve across the
+      candidates is an honest `complete: second_game_no_solve_<reason>` with the induced mechanics recorded.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3954_second_game_solve.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3955-active-codex-nonspatial-sweep
+    operator_override: >
+      2026-06-09 operator directive (standing ARC north-star push): OWED .365 task (exp3947) that the
+      conductor never ran (jumped to the op:exists-blocked capstone) — false-positive scope-match vs the
+      never-executed exp3947 and vs vc33's arc3_m2_active_codex (which SUCCEEDED at 0.005). This is the
+      owed-not-failed re-attempt of the 6-game generalization sweep; no prior verdict exists to address.
+    milestone: "2026.06.366"
+    title: "OWED from .365: generalize the active-data -> codex-program-synthesis -> consistency-energy-verification pipeline across the 6 NON-SPATIAL games (r11l, sc25, lp85, tn36, dc22, su15). How many reach a TRUSTWORTHY world-model (held-out consistency energy <= 0.15)? vc33 reached 0.005 from active data; this measures whether that generalizes. Reuse scripts/experiments/arc3_m2_active_codex.py (passive-vs-active codex synthesis) — extend it to the 6-game set and report a per-game trustworthy-model table. This is the accuracy-side verifier-load-bearing measurement: the consistency energy CERTIFIES which induced model is trustworthy, with no oracle."
     priority: high
     track: research
     max_turns: 70
@@ -134,44 +206,53 @@ tasks:
     model: opus
     requires_claude: true
     inference_substrate: offline_arc_agi3_plus_codex_program_synthesis_consistency_verified
-    deliverable: results/experiment_3947_active_data_codex_nonspatial_sweep.json
+    deliverable: results/experiment_3955_active_codex_nonspatial_sweep.json
     prompt: |
       CONTEXT. M2-v4b proved active data -> codex program synthesis -> consistency-energy verification
-      produces a trustworthy world-model on vc33 (energy 0.005, replicated). This task tests whether the
-      pipeline GENERALIZES across the 6 non-spatial games the survey identified.
+      produces a trustworthy world-model on vc33 (energy 0.005, replicated). The .365 task (exp3947) that
+      was to test generalization across the 6 non-spatial games NEVER RAN (conductor skipped it). This is
+      the owed re-attempt. Reminder caveat (from m2_solve): consistency energy certifies PREDICTION, not
+      interpretation — a low energy means the model PREDICTS transitions well, not that the mechanic is
+      correctly named; report energy as the trustworthiness signal, not as 'understanding'.
 
       EXISTING CODE TO READ + REUSE:
-        - scripts/experiments/arc3_m2_active_codex.py (the codex passive-vs-active comparison; reuse its
+        - scripts/experiments/arc3_m2_active_codex.py (codex passive-vs-active comparison; reuse
           codex_best_energy + active_collect + grade_predictions wiring)
         - scripts/experiments/arc3_m2_active_data.py (active_collect — the coverage-driven collector)
-        - python/carnot/agentic/arc_world_model_synth.py (grade_predictions — the oracle-free verifier)
+        - python/carnot/agentic/arc_world_model_synth.py (grade_predictions / consistency_energy — the oracle-free verifier)
         - results/arc3_m2_active_codex.json (the vc33 0.005 baseline)
         - results/arc3_win_condition_survey.json (the 6 non-spatial games)
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: codex CLI available (`command -v codex` succeeds) AND the offline env loads.
-           If codex is unavailable, honest_verdict blocked_codex_unavailable and EXIT (do NOT fabricate
-           a synthesis result).
-        1. For each of the 6 games (r11l, sc25, lp85, tn36, dc22, su15): active-collect transitions,
-           run codex program synthesis with the consistency-energy refactor-from-best loop, grade the
-           best program on a common held-out test. Bound codex iters (<=3) + reasoning_effort=medium for
-           wall-time.
+        0. PRECONDITIONS: codex CLI available (`command -v codex` succeeds) AND the offline env loads
+           (the exp3946 Arcade OFFLINE check). If codex is unavailable, honest_verdict
+           blocked_codex_unavailable and EXIT (do NOT fabricate a synthesis result). If only the offline
+           env is unavailable, honest_verdict blocked_arc_offline_env_unavailable and EXIT.
+        1. For each of the 6 games (r11l, sc25, lp85, tn36, dc22, su15): active-collect transitions, run
+           codex program synthesis with the consistency-energy refactor-from-best loop, grade the best
+           program on a common held-out test. Bound codex iters (<=3) + reasoning_effort=medium for wall-time.
         2. Report a per-game table: best held-out consistency energy, whether it is trustworthy (<=0.15),
-           and how it compares to vc33's 0.005.
+           and how it compares to vc33's 0.005. Cross-reference the determinism probe (hidden-state games
+           are expected to have HIGHER energy — that is the exp3957 latent-register motivation, not a bug).
 
       REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU):
-        n_trustworthy_at_0.15: principle "How many of the 6 reach a plan-able world-model — the generalization headline."
-        per_game_best_energy: principle "Per-game best held-out consistency energy (the verifier's trustworthiness signal, no oracle)."
+        n_trustworthy_at_0.15: principle "How many of the 6 reach a plan-able world-model — the generalization headline (vc33's 0.005 is the existence proof; this measures breadth)."
+        per_game_best_energy: principle "Per-game best held-out consistency energy (the verifier's oracle-free trustworthiness signal)."
         total_codex_calls, total_codex_seconds: principle "Wall-time provenance — codex synthesis is the heavy inducer; implausibly-short = fabrication."
+        markov_vs_hidden_split: principle "Which games are Markov (low energy) vs hidden-state (high energy) — sets up the exp3957 latent-register need; certifies prediction not interpretation."
         random_seed, honest_verdict, duration_s, inference_substrate: principle "Reproducibility + terminal-prefix verdict + the codex-synthesis substrate."
 
       honest_verdict MUST start with `complete:`/`success:` or `blocked_<resource>`.
-      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3947_active_data_codex_nonspatial_sweep.py
-      Do NOT push.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3955_active_codex_nonspatial_sweep.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3948-goal-predicate-induction
-    milestone: "2026.06.365"
-    title: "Induce a GOAL-PREDICATE from observed level-up transitions: the M2-v5 finding is that a trustworthy transition-model is necessary but not sufficient — you also need to recognize the WIN state. Collect level-up transitions (via active/goal-directed play on the non-spatial games), characterize the grid-state property that holds at a win (e.g. all pieces on targets / a matched pattern), and emit a reusable goal_predicate(grid) check. Measure: on a held-out set, does the induced predicate correctly flag win-vs-non-win states (precision/recall)?"
+  - id: exp3956-goal-predicate-induction
+    operator_override: >
+      2026-06-09 operator directive (standing ARC north-star push): OWED .365 task (exp3948) that the
+      conductor never ran — false-positive scope-match vs the never-executed exp3948. Owed-not-failed
+      re-attempt of goal-predicate induction; no prior verdict exists to address.
+    milestone: "2026.06.366"
+    title: "OWED from .365: induce a GOAL-PREDICATE from observed level-up transitions. The M2-v5 finding is that a trustworthy transition-model is necessary but NOT sufficient — you also need to RECOGNIZE the WIN state. Collect level-up transitions (via active/goal-directed play on the non-spatial games), characterize the grid-state property that holds at a win (e.g. all pieces on targets / a matched pattern), and emit a reusable goal_predicate(grid)->bool. Measure: on a held-out set, does the induced predicate correctly flag win-vs-non-win states (precision/recall)? Require >=2 level-up examples before committing a predicate (single-example goal mis-induction is the named M1/M2 risk)."
     priority: high
     track: research
     max_turns: 60
@@ -179,44 +260,54 @@ tasks:
     model: opus
     requires_claude: true
     inference_substrate: offline_arc_agi3_world_model_consistency_energy
-    deliverable: results/experiment_3948_goal_predicate_induction.json
+    deliverable: results/experiment_3956_goal_predicate_induction.json
     prompt: |
       CONTEXT. M2-v5 (results/arc3_m2_solve.json) showed converting a world-model into a SOLVE requires
-      grounding the GOAL. This task induces a goal-predicate from observed wins.
+      grounding the GOAL — a trustworthy transition-model predicts the next frame but does not know which
+      frame is a WIN. The .365 task (exp3948) that was to induce a goal-predicate NEVER RAN. This is the
+      owed re-attempt. The r11l first solve (exp3946) implicitly used 'all pieces on targets' as the goal;
+      generalize that into an explicitly-induced, held-out-validated predicate.
 
       EXISTING CODE TO READ:
-        - python/carnot/agentic/arc_agi3_world_model.py (GameGraph, perception primitives)
-        - scripts/experiments/arc3_goal_prior_explore.py (goal-directed play that previously reached
-          level-ups — a source of win transitions)
+        - python/carnot/agentic/arc_agi3_world_model.py (GameGraph, perception primitives, compute_grid_delta)
+        - scripts/experiments/arc3_goal_prior_explore.py (goal-directed play that previously reached level-ups — a source of win transitions)
+        - results/experiment_3946_r11l_first_solve.json (the implicit r11l goal = pieces-on-targets coincidence)
         - results/arc3_win_condition_survey.json (per-game win summaries — the ground-truth goal shapes)
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: offline env loads. Else honest_verdict blocked_arc_offline_env_unavailable, EXIT.
+        0. PRECONDITIONS: offline env loads (the exp3946 Arcade OFFLINE check). Else honest_verdict
+           blocked_arc_offline_env_unavailable, EXIT.
         1. For 1-3 non-spatial games where level-ups are reachable, collect transitions where
-           levels_completed increments; capture the grid-state at the win.
+           levels_completed increments; capture the grid-state at the win AND non-win states for contrast.
         2. Induce a goal_predicate(grid) -> bool that characterizes the win-state property (object/target
            coincidence, pattern match, etc.). Keep it grid-grounded (no oracle / no source-hardcoding).
+           Require >=2 level-up examples before committing (single-example goal mis-induction is the risk).
         3. EVALUATE on held-out states: precision/recall of goal_predicate at flagging win-vs-non-win.
 
       REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU):
-        goal_predicate_precision, goal_predicate_recall: principle "Does the induced win-recognizer correctly flag wins on held-out states — the plan-ability gate."
-        n_level_ups_observed: principle "How many real wins the induction trained on — too few = an under-determined predicate (FALSE_NEGATIVE_RISK)."
-        games_covered: principle "Which games the predicate was induced/validated on."
+        goal_predicate_precision: principle "Of states the predicate flags as WIN, the fraction that truly are — high precision means it won't plan toward a false goal."
+        goal_predicate_recall: principle "Of true WIN states, the fraction the predicate flags — high recall means it recognizes the goal when reached (the plan-ability gate)."
+        n_level_ups_observed: principle "How many real wins the induction trained on — <2 = an under-determined predicate (FALSE_NEGATIVE_RISK); >=2 required to commit."
+        games_covered: principle "Which games the predicate was induced/validated on — coverage, not a single-game artifact."
         random_seed, honest_verdict, duration_s, inference_substrate: principle "Reproducibility + terminal-prefix verdict + substrate."
 
       honest_verdict MUST start with `complete:`/`success:` or `blocked_<resource>`.
-      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3948_goal_predicate_induction.py
-      Do NOT push.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3956_goal_predicate_induction.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3949-hidden-state-latent-registers
+  # --------------------------------------------------------------------------
+  # PHASE 2 — hidden state + self-learning
+  # --------------------------------------------------------------------------
+  - id: exp3957-hidden-state-latent-registers
     operator_override: >
-      2026-06-08 operator directive (standing): versioned-lineage continuation — false-positive
-      scope-match vs retired exp899-drift-hidden-state-probe (shared "hidden-state" keyword only). This
-      is a NEW technique (latent boolean register augmentation to recover Markov dynamics on the 11
-      determinism-probe hidden-state games), not a rerun of exp899's drift probe; forward difference is
-      the register-augmentation method + the consistency-energy measurement.
-    milestone: "2026.06.365"
-    title: "Latent-register augmentation for the 11 HIDDEN-STATE games: the determinism probe (results/arc3_determinism_probe.json) found 11/25 games where the visible grid does NOT determine the dynamics (same frame_hash + action -> different next grid). Augment the state with inferred latent boolean registers (counter / collected-flag / phase) so the augmented state becomes Markov, and measure: does the induced model's consistency energy DROP on the hidden-state games vs the grid-only baseline?"
+      2026-06-09 operator directive (standing ARC north-star push): OWED .365 task (exp3949) the
+      conductor never ran, AND a versioned-lineage continuation — false-positive scope-match vs (a) the
+      never-executed exp3949 and (b) retired exp899-drift-hidden-state-probe (shared 'hidden-state'
+      keyword only). NEW technique: latent boolean register augmentation to recover Markov dynamics on
+      the 11 determinism-probe hidden-state games, NOT a rerun of exp899's drift probe; forward
+      difference = the register-augmentation method + the consistency-energy measurement.
+    milestone: "2026.06.366"
+    title: "OWED from .365: latent-register augmentation for the 11 HIDDEN-STATE games. The determinism probe (results/arc3_determinism_probe.json) found 11/25 games where the visible grid does NOT determine the dynamics (same frame_hash + action -> different next grid). Augment the state with inferred latent boolean registers (counter / collected-flag / phase) so the augmented state becomes Markov, and measure: does the induced model's consistency energy DROP on the hidden-state games vs the grid-only baseline? This is the named direction-killer (a grid->grid model is under-determined on hidden state); CASSANDRA (arXiv:2601.18620) corroborates programmatic+stochastic world modeling for exactly this regime."
     priority: high
     track: research
     max_turns: 70
@@ -224,46 +315,225 @@ tasks:
     model: opus
     requires_claude: true
     inference_substrate: offline_arc_agi3_world_model_consistency_energy
-    deliverable: results/experiment_3949_hidden_state_latent_registers.json
+    deliverable: results/experiment_3957_hidden_state_latent_registers.json
     prompt: |
       CONTEXT. 11/25 games are hidden-state (results/arc3_determinism_probe.json). For those, a grid->grid
-      world-model is under-determined. This task adds latent registers to make the augmented state Markov.
+      world-model is under-determined and NO consistent program exists on the visible grid alone — the
+      single largest named direction-killer in the ARC plan. The .365 task (exp3949) that was to test
+      latent-register augmentation NEVER RAN. This is the owed re-attempt: add latent registers to make
+      the augmented state Markov and measure the consistency-energy drop.
 
       EXISTING CODE TO READ:
         - scripts/experiments/arc3_determinism_probe.py (the (frame_hash,action)->multiple-next detector)
-        - python/carnot/agentic/arc_world_model_synth.py + arc_world_model_dsl.py (the inducers + grade_predictions)
+        - python/carnot/agentic/arc_world_model_synth.py + arc_world_model_dsl.py (the inducers + grade_predictions/consistency_energy)
         - results/arc3_determinism_probe.json (the 11 hidden-state games + their nondeterminism rates)
+        - python/carnot/agentic/arc_agi3_action_efficiency.py (the key/switch/gate latent-register pattern already prototyped)
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: offline env loads. Else honest_verdict blocked_arc_offline_env_unavailable, EXIT.
-        1. For 2-4 high-nondeterminism games (dc22 0.82, g50t 0.74, m0r0 0.72, cn04 0.71): infer candidate
-           latent registers (a step counter, a per-color collected/visited flag, a phase bit) from the
-           transition history; augment each state's signature with them.
+        0. PRECONDITIONS: offline env loads (the exp3946 Arcade OFFLINE check). Else honest_verdict
+           blocked_arc_offline_env_unavailable, EXIT.
+        1. For 2-4 high-nondeterminism games (e.g. dc22 0.82, g50t 0.74, m0r0 0.72, cn04 0.71): infer
+           candidate latent registers (a step counter, a per-color collected/visited flag, a phase bit)
+           from the transition history; augment each state's signature with them.
         2. Re-measure the (augmented_state, action) -> next determinism, and the induced-model consistency
            energy vs the grid-only baseline. Does augmentation reduce apparent non-determinism + energy?
-        3. Report which register types helped which games.
+        3. Report which register types helped which games (the reusable, transferable finding).
 
       REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU):
-        mean_energy_grid_only, mean_energy_with_latent_registers: principle "The headline — does latent augmentation lower the consistency energy on hidden-state games?"
-        nondeterminism_reduction: principle "Does augmenting the state make (state,action)->next more deterministic (the Markov-recovery test)?"
-        registers_that_helped: principle "Which latent register types reduced energy on which games — the reusable finding."
+        mean_energy_grid_only: principle "Baseline consistency energy with grid-only state (high on hidden-state games — the problem)."
+        mean_energy_with_latent_registers: principle "Consistency energy with latent augmentation — the headline: does it DROP (Markov recovery)?"
+        nondeterminism_reduction: principle "Does augmenting the state make (state,action)->next more deterministic — the direct Markov-recovery test."
+        registers_that_helped: principle "Which latent register types reduced energy on which games — the reusable transferable finding."
         random_seed, honest_verdict, duration_s, inference_substrate: principle "Reproducibility + terminal-prefix verdict + substrate."
 
-      honest_verdict MUST start with `complete:`/`success:` or `blocked_<resource>`.
-      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3949_hidden_state_latent_registers.py
-      Do NOT push.
+      honest_verdict MUST start with `complete:`/`success:` or `blocked_<resource>`. If augmentation does
+      NOT reduce energy, that is an honest `complete: latent_registers_no_drop_<reason>` — a real negative
+      that the grid-only state is not the bottleneck on those games (run a positive control per FALSE_NEGATIVE_RISK).
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3957_hidden_state_latent_registers.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3958-cross-game-dsl-transfer
+    operator_override: >
+      2026-06-09 operator directive (standing ARC north-star push + research-program.md self-learning
+      MANDATE): NEW self-learning experiment (DreamCoder-style cross-game DSL library transfer) — any
+      scope-match vs prior FR-11 self-learning tasks is a false positive on the 'self-learning' keyword;
+      this is a NEW technique (DSL fragment reuse across ARC games, Tier-2 constraint memory in the ARC
+      venue), forward difference = the cross-game library + the cheaper-induction-on-later-games measurement.
+    milestone: "2026.06.366"
+    title: "CROSS-GAME DSL TRANSFER (self-learning MANDATE, research-program.md Tier-2 constraint memory): build a DreamCoder-style DSL fragment library across the games modeled this milestone, and measure whether reusing the library makes the Nth game's induction CHEAPER than the 1st — fewer codex/proposer calls and/or lower held-out consistency energy at EQUAL active-data budget. This is Carnot's self-learning thesis IN the ARC venue: the agent gets better at NEW games by reusing learned constraint fragments (the persistent GameGraph + DSL library are the Tier-2 memory hardware path). A measured transfer win is the cross-game generalization signal the EWM SOTA also reports (DSL fragment reuse)."
+    priority: high
+    track: research
+    max_turns: 70
+    agent_type: claude
+    model: opus
+    requires_claude: true
+    inference_substrate: offline_arc_agi3_plus_codex_program_synthesis_consistency_verified
+    deliverable: results/experiment_3958_cross_game_dsl_transfer.json
+    prompt: |
+      CONTEXT. research-program.md MANDATES at least one self-learning experiment per milestone. In the
+      ARC venue, the self-learning mechanism is a CROSS-GAME DSL LIBRARY: fragments induced on one game
+      (e.g. r11l's select/place, a move/copy/recolor primitive) are reused as building blocks when
+      inducing the next game's model — DreamCoder-style library learning. This is Tier-2 constraint
+      memory (research-program.md): the persistent GameGraph + DSL library are the CPU+memory hardware
+      path. The EWM SOTA (arXiv:2605.05138) reports cross-game abstraction reuse; this measures ours.
+
+      EXISTING CODE TO READ:
+        - python/carnot/agentic/arc_world_model_dsl.py (the DSL primitives + program representation)
+        - python/carnot/agentic/arc_world_model_synth.py (synthesis + consistency_energy/grade_predictions)
+        - scripts/experiments/arc3_m2_active_codex.py (the synthesis loop to instrument for call-counting)
+        - results/arc3_m2_active_codex.json + the exp3955 per-game sweep output (the per-game induced models to mine for fragments)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: offline env loads (the exp3946 Arcade OFFLINE check) AND, if codex synthesis is
+           used, `command -v codex` succeeds. If codex is needed and unavailable, honest_verdict
+           blocked_codex_unavailable and EXIT; if only the env is missing, blocked_arc_offline_env_unavailable.
+        1. Induce models for an ORDERED sequence of >=3 non-spatial games. Maintain a DSL fragment library:
+           after each game, extract reused sub-programs (the DreamCoder 'abstraction' step) into the library.
+        2. Run TWO arms at EQUAL active-data budget per game: (A) NO library (induce from scratch each game)
+           vs (B) WITH the growing library (synthesis may reuse library fragments). Instrument
+           proposer/codex call counts + held-out consistency energy per game.
+        3. Measure: does arm B reach trustworthy energy (<=0.15) with FEWER calls / LOWER energy on the
+           LATER games than arm A — i.e. does the library make later games cheaper (the transfer/self-learning win)?
+
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU):
+        transfer_win: principle "BARE BOOL — does the WITH-library arm reach trustworthy models with fewer calls / lower energy on later games than from-scratch (the self-learning claim)."
+        calls_per_game_no_library, calls_per_game_with_library: principle "Per-game proposer/codex call counts in each arm — the cost axis of self-learning (Tier-2 memory should cut induction cost)."
+        energy_per_game_no_library, energy_per_game_with_library: principle "Per-game held-out consistency energy in each arm — the accuracy axis at equal data."
+        n_library_fragments, fragments_reused_across_games: principle "Library size + how many fragments were reused on a LATER game (the concrete transfer evidence, not assumed)."
+        random_seed, honest_verdict, duration_s, inference_substrate: principle "Reproducibility + terminal-prefix verdict + the codex-synthesis substrate."
+
+      honest_verdict MUST start with `complete:`/`success:` or `blocked_<resource>`. No transfer win is an
+      honest `complete: dsl_transfer_no_win_<reason>` (run a positive control where reuse is possible, per
+      FALSE_NEGATIVE_RISK — a degenerate sequence with no shareable structure cannot show transfer).
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3958_cross_game_dsl_transfer.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   # --------------------------------------------------------------------------
-  # PHASE 3 — MANDATES (hardware continuity) + CAPSTONE
+  # PHASE 3 — EFFICIENCY: the verifier's real venue (M3)
   # --------------------------------------------------------------------------
-  - id: exp3950-hardware-continuity
+  - id: exp3959-m3-efficiency-real-games
     operator_override: >
-      2026-06-08 operator directive (standing): ARC-focused milestone — consolidated hardware-continuity
-      task per the Hardware-Task Continuity Discipline; false-positive scope-match vs prior KV260/GateMate/
-      PolarFire continuity tasks. Forward continuity check only (no doomed rerun); keeps the boards visible
-      while the milestone focus is ARC.
-    milestone: "2026.06.365"
-    title: "Hardware continuity (consolidated): SSH-reachability + terminal-state check for each attached board — KV260 (ssh kria, xmutil listapps), GateMate (openFPGALoader -c dirtyJtag --detect), PolarFire (ssh polarfire). Record per-board reachability + the next concrete forward step; no bitstream redesign. Per CLAUDE.md KV260 SSH-Not-SD-Card Discipline: NEVER use /dev/mmcblk as a KV260 precondition."
+      2026-06-09 operator directive (standing ARC north-star push): versioned-lineage continuation of
+      exp3929 (synthetic action-efficiency, HELPS 1.96x) — false-positive scope-match vs exp3929/exp1165.
+      NEW forward difference: measure the verifier action-pruner WITH-vs-WITHOUT on the REAL ARC-AGI-3
+      games solved this milestone (not the synthetic env), with bootstrap CIs — the M3 transfer test.
+    milestone: "2026.06.366"
+    title: "M3 EFFICIENCY THESIS (LOAD-BEARING — the existential 'verifier earns its place' proof in the RHAE venue): on the REAL games SOLVED this milestone (r11l + any 2nd game), run the solver in two arms — (i) WITH the Carnot verifier action-pruner + state-value, (ii) ablation with the pruner DISABLED (random/uninformed legal-action order). Measure EFFICIENCY_mean_action_ratio_on_solved (actions used vs baseline_actions) per arm with bootstrap 95% CIs. Non-overlapping CIs in the exp3929 direction (synthetic 1.96x, CI 1.74-2.19) = the efficiency thesis TRANSFERS from synthetic to a real, externally-defined benchmark. RHAE squares action efficiency, so a pruning win is a direct score win AND the cleanest external evidence for the project thesis."
+    priority: critical
+    track: research
+    max_turns: 80
+    agent_type: claude
+    model: opus
+    requires_claude: true
+    inference_substrate: offline_arc_agi3_perception_planner_real_env_confirmed
+    deliverable: results/experiment_3959_m3_efficiency_real_games.json
+    prompt: |
+      CONTEXT. north-star §5: with the generator commodity, the VERIFIER is Carnot's entire value-add and
+      its efficiency value is INCONCLUSIVE on FoVer (capstone .363/.364: earns=false). ARC-AGI-3 is the
+      headroom venue: exp3929 measured the verifier action-pruner at 1.96x fewer actions (CI 1.74-2.19) on
+      a SYNTHETIC env. This task is the M3 transfer test — does that hold on the REAL games we can now
+      solve (r11l from exp3953, + any 2nd game from exp3954)? This is the highest-leverage result available.
+
+      EXISTING CODE/EVIDENCE TO READ FIRST:
+        - results/experiment_3929_arc_agi3_action_efficiency.json (the synthetic 1.96x baseline + method)
+        - python/carnot/agentic/arc_agi3_action_efficiency.py (select_verifier_pruned_action, task_potential, encode_rich_candidate_action — the pruner WITH-arm)
+        - results/experiment_3953_r11l_full_solve.json + results/experiment_3954_second_game_solve.json (the solved games to measure on; if absent, fall back to the .365 exp3946 r11l solve)
+        - scripts/experiments/arc3_offline_eval.py (ACCURACY/EFFICIENCY artifact shape, baseline_actions)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: offline env loads (the exp3946 Arcade OFFLINE check). Identify which real games
+           are SOLVED (read exp3953/exp3954; if neither landed, use the exp3946 r11l L1 solve as the single
+           solved game and SAY SO). If NO solved game is available at all, honest_verdict
+           blocked_no_solved_real_game and EXIT (do NOT measure efficiency on an unsolved game — RHAE is 0 there).
+        1. WITH-arm: solve each available real level using the verifier action-pruner + state-value to order
+           actions. Record actions_to_solve + the baseline_actions ratio per solved level. Seed for reproducibility.
+        2. WITHOUT-arm (ablation): solve the SAME levels with the pruner DISABLED (uniform-random order among
+           legal actions, same perception + same goal). Record actions_to_solve + ratio per solved level.
+        3. Bootstrap 95% CIs on EFFICIENCY_mean_action_ratio_on_solved for each arm (>=1000 resamples).
+           Report whether the CIs are non-overlapping in the pruner-helps direction, and the WITH/WITHOUT ratio.
+
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU):
+        efficiency_ratio_with_over_without: principle "The headline — actions(without)/actions(with); >1 means the verifier-pruner cuts actions on REAL games (the RHAE multiplier transfers)."
+        ci95_with, ci95_without: principle "Bootstrap 95% CIs for each arm's mean action ratio — non-overlap is the significance gate (per the exp3929 CI methodology)."
+        cis_non_overlapping_pruner_helps: principle "BARE BOOL — the M3 falsifiable gate: pruner-WITH significantly more efficient than ablation on real games."
+        n_solved_levels_measured, games_measured: principle "Sample size + which real games — too few solved levels = underpowered (FALSE_NEGATIVE_RISK; say so honestly)."
+        random_seed, honest_verdict, duration_s, inference_substrate: principle "Reproducibility + terminal-prefix verdict + the real-env substrate."
+
+      honest_verdict MUST start with `complete:`/`success:` or `blocked_<resource>`. Overlapping CIs is an
+      honest `complete: m3_efficiency_inconclusive_on_real_games_<reason>` — the efficiency thesis did NOT
+      transfer; per the false-negative discipline, downgrade the efficiency claim in forward docs, do NOT
+      bury it. Too few solved levels -> report underpowered, do not over-claim a win.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3959_m3_efficiency_real_games.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # --------------------------------------------------------------------------
+  # PHASE 4 — M4 readiness + mandates + capstone
+  # --------------------------------------------------------------------------
+  - id: exp3960-m4-offline-accuracy-sweep
+    operator_override: >
+      2026-06-09 operator directive (standing ARC north-star push): NEW M4 quota-gate-readiness sweep —
+      false-positive scope-match vs prior arc3_offline_eval baseline runs (random/object_click). NEW
+      forward difference: register the hybrid perception+verifier policy and report the offline
+      ACCURACY/EFFICIENCY vs baselines to assess whether the operator QUOTA-GATE (beat prior 0 + a
+      no-induction baseline) is cleared; prepares (does NOT submit) the operator-only scored-run package.
+    milestone: "2026.06.366"
+    title: "M4 QUOTA-GATE READINESS: run the hybrid perception+verifier policy through scripts/experiments/arc3_offline_eval.py across the start_here games; report ACCURACY_total_levels_solved + EFFICIENCY_mean_action_ratio_on_solved vs the random/object_click baselines AND vs the documented comparators (frontier-LLM <0.4%, Graph-Explore median 30/52 no-induction, EWM v2 58.12% RHAE). Emit an HONEST quota-gate verdict: per the operator gate, an ONLINE scored run is justified ONLY when offline ACCURACY (then EFFICIENCY) beats BOTH our prior submitted run (0) AND a no-induction baseline. PREPARE the operator-only scored-run assessment; do NOT submit (Operator-Only External Publication)."
+    priority: high
+    track: research
+    max_turns: 70
+    agent_type: claude
+    model: opus
+    requires_claude: true
+    inference_substrate: offline_arc_agi3_perception_planner_real_env_confirmed
+    deliverable: results/experiment_3960_m4_offline_accuracy_sweep.json
+    prompt: |
+      CONTEXT. The operator QUOTA-GATE (memory feedback_arc3_online_gated_on_offline_beating_baselines):
+      an online/scored ARC-AGI-3 run is permitted ONLY when an OFFLINE result beats BOTH a no-induction
+      baseline AND our best prior submitted run (which is 0 — we have never submitted). This task measures
+      our offline standing and emits the readiness verdict. TRM has NO ARC-AGI-3 number (refiner only), so
+      the operative comparators are our prior 0, the no-induction baselines (random/object_click/graph-explore),
+      and the documented frontier-LLM <0.4%. Online submission is OPERATOR-ONLY — this task only PREPARES.
+
+      EXISTING CODE TO READ + REUSE:
+        - scripts/experiments/arc3_offline_eval.py (POLICIES, run(), ACCURACY/EFFICIENCY artifact, budget_factor)
+        - results/experiment_3953_r11l_full_solve.json + experiment_3954_second_game_solve.json (the solved games to fold in)
+        - results/arc_agi3_random_baseline_smoke.json + arc3_offline_eval_random.json + arc3_offline_eval_object_click.json (the no-induction baselines)
+        - research-references.md 2026-06-09 ARC-AGI-3 SOTA refresh (the documented comparators)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: offline env loads (the exp3946 Arcade OFFLINE check). Else honest_verdict
+           blocked_arc_offline_env_unavailable, EXIT.
+        1. Register a `hybrid` policy in arc3_offline_eval.py:POLICIES (perception + induced-model +
+           verifier-pruner + goal-predicate, reusing the solved-game solvers). Run it across the
+           start_here games with a budget_factor that allows multi-episode accumulation.
+        2. Run the random + object_click baselines on the SAME games/budget for a clean comparison.
+        3. Report ACCURACY_total_levels_solved + EFFICIENCY_mean_action_ratio_on_solved for hybrid vs
+           baselines, and the documented frontier/graph-explore/EWM numbers (context, not re-measured).
+        4. Emit the quota-gate verdict: does offline beat prior-0 AND a no-induction baseline? Write the
+           operator-only scored-run readiness assessment (NOT a submission).
+
+      REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU):
+        hybrid_accuracy_levels_solved: principle "Offline levels solved by the hybrid across start_here — the accuracy axis of the quota-gate."
+        baseline_accuracy_levels_solved: principle "Offline levels solved by the no-induction baselines — the gate's comparator (hybrid must beat this)."
+        hybrid_efficiency_ratio: principle "Hybrid EFFICIENCY_mean_action_ratio_on_solved — the RHAE efficiency axis."
+        quota_gate_cleared: principle "BARE BOOL — does offline beat BOTH prior-0 AND a no-induction baseline (the operator gate for justifying an online run)."
+        scored_run_ready_for_operator: principle "BARE BOOL — is the operator-only scored-run package prepared (True=ready for OPERATOR to submit; this task NEVER submits)."
+        random_seed, honest_verdict, duration_s, inference_substrate: principle "Reproducibility + terminal-prefix verdict + the real-env substrate."
+
+      honest_verdict MUST start with `complete:`/`success:` or `blocked_<resource>`. Not clearing the gate
+      is an honest `complete: quota_gate_not_cleared_<reason>` — the expected early-state result; report
+      the gap to clearing it. NEVER run an online/scored submission (Operator-Only External Publication).
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3960_m4_offline_accuracy_sweep.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp3961-hardware-continuity
+    operator_override: >
+      2026-06-09 operator directive (standing): ARC-focused milestone — consolidated hardware-continuity
+      task per the Hardware-Task Continuity Discipline; OWED from .365 (exp3950 produced no artifact);
+      false-positive scope-match vs prior KV260/GateMate/PolarFire continuity tasks. Forward continuity
+      check only (no doomed rerun, no bitstream redesign); keeps the boards visible while ARC is the focus.
+    milestone: "2026.06.366"
+    title: "Hardware continuity (consolidated; OWED from .365): SSH-reachability + terminal-state check for each attached board — KV260 (ssh kria, xmutil listapps), GateMate (openFPGALoader -c dirtyJtag --detect), PolarFire (ssh polarfire). Record per-board reachability + the next concrete forward step; no bitstream redesign. Per CLAUDE.md KV260 SSH-Not-SD-Card Discipline: NEVER use the host SD-card block device as a KV260 precondition (SSH-reachability is the ONLY valid KV260 precondition). Use DISTINCT wall-clock timers per board (the exp3866 TAUTOLOGY corrigendum)."
     priority: medium
     track: hardware
     max_turns: 40
@@ -271,37 +541,43 @@ tasks:
     model: gpt-5.5
     requires_codex: true
     inference_substrate: hardware_smoke
-    deliverable: results/experiment_3950_hardware_continuity.json
+    deliverable: results/experiment_3961_hardware_continuity.json
     prompt: |
       CONTEXT. Per the Hardware-Task Continuity Discipline, keep the three attached boards visible each
-      milestone. This is a reachability/continuity check only (ARC is the milestone focus).
+      milestone. This is a reachability/continuity check only (ARC is the milestone focus). The .365
+      hardware task (exp3950) produced no artifact; this is the owed re-run.
 
       CONCRETE STEPS (per board; record honestly, never fabricate):
         0. PRECONDITIONS (per board, SSH/USB — NOT host SD card):
            - KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` (exit 0 = reachable). NEVER
-             check the host SD-card block device (the host slot is irrelevant once the board is booted —
-             CLAUDE.md KV260 SSH-Not-SD-Card Discipline; SSH-reachability is the only valid precondition).
+             check the host SD-card block device — the host slot is irrelevant once the
+             board is booted (CLAUDE.md KV260 SSH-Not-SD-Card Discipline; SSH-reachability is the only
+             valid precondition).
            - GateMate: `openFPGALoader -c dirtyJtag --detect` returns the colognechip/GateMate IDCODE.
            - PolarFire: `ssh -o ConnectTimeout=5 polarfire 'true'` (exit 0 = reachable).
         1. For each REACHABLE board, record the loaded-overlay / detect output + the next forward step.
+           Use a DISTINCT wall-clock timer per board (do NOT reuse one duration across boards — the
+           exp3866 TAUTOLOGY corrigendum).
         2. For any UNREACHABLE board, write blocked_<board>_unreachable for that board and continue.
 
       REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU):
         kv260_reachable, gatemate_reachable, polarfire_reachable: principle "BARE BOOLs — per-board SSH/USB reachability (the continuity signal; keeps boards from being silently dropped)."
         per_board_next_step: principle "The next concrete forward step per reachable board."
+        per_board_duration_s: principle "DISTINCT wall-clock per board — identical durations across boards is a TAUTOLOGY flag (exp3866)."
         preconditions_checked: principle "list of {{resource, available}} — records WHICH checks ran (pre-empts the fabrication mode)."
         honest_verdict, duration_s, inference_substrate: principle "Terminal-prefix verdict + hardware_smoke substrate."
 
       honest_verdict MUST start with `complete:`/`success:` or `blocked_<resource>`.
-      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3950_hardware_continuity.py
-      Do NOT push.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3961_hardware_continuity.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp3951-capstone-v365
+  - id: exp3962-capstone-v366
     operator_override: >
-      2026-06-08 operator directive (standing): routine milestone capstone — false-positive scope-match
-      vs every prior capstone task; aggregation-only, never a doomed rerun.
-    milestone: "2026.06.365"
-    title: "Capstone .365: aggregate the ARC first-solve push — did r11l SOLVE (exp3946 ACCURACY_levels_solved > 0, real-env-confirmed)? how many of the 6 non-spatial games reached a trustworthy world-model (exp3947)? did goal-predicate induction (exp3948) and latent-register augmentation (exp3949) advance plan-ability? Honest verdict on first-solve progress. SKIP any flagged_adversarial artifact; cite upstream sha256."
+      2026-06-09 operator directive (standing): routine milestone capstone — false-positive scope-match
+      vs every prior capstone task; aggregation-only, never a doomed rerun. UNGATED by design (the .365
+      exp3951 op:exists gate-block lesson): the capstone must aggregate whatever landed and cannot stall.
+    milestone: "2026.06.366"
+    title: "Capstone .366 (UNGATED — the .365 op:exists lesson): aggregate the ARC accuracy + efficiency push — how many r11l levels solved (exp3953), did a SECOND game solve (exp3954), how many of the 6 non-spatial games reached a trustworthy world-model (exp3955), goal-predicate precision/recall (exp3956), latent-register energy delta (exp3957), cross-game DSL transfer win (exp3958), the M3 efficiency CIs on REAL games (exp3959 — the load-bearing 'verifier earns its place' datum), and the M4 quota-gate readiness (exp3960). Honest verdict on accuracy + efficiency progress. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on — aggregate whatever exists."
     priority: high
     track: infra
     max_turns: 50
@@ -309,33 +585,36 @@ tasks:
     model: gpt-5.5
     requires_codex: true
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_3951_capstone_v365.json
-    gated_on:
-      - upstream: exp3946-r11l-first-solve
-        artifact_field: honest_verdict
-        op: exists
-        value: true
+    deliverable: results/experiment_3962_capstone_v366.json
     prompt: |
-      CONTEXT. Capstone for the ARC first-solve push. Aggregate the .365 ARC results into an honest
-      milestone verdict. Read every upstream artifact via scripts/summarize_artifact.py (Reading-Results
-      Discipline); SKIP any artifact carrying flagged_adversarial: true (never aggregate a flagged number).
+      CONTEXT. Capstone for the ARC accuracy+efficiency push. Aggregate the .366 ARC results into an
+      honest milestone verdict. Read every upstream artifact via scripts/summarize_artifact.py
+      (Reading-Results Discipline); SKIP any artifact carrying flagged_adversarial: true (never aggregate
+      a flagged number). This capstone is UNGATED (no gated_on) — the .365 capstone stalled the whole
+      milestone by gating on `op: exists`; aggregate whatever upstream artifacts EXIST and note any missing.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: the upstream ARC artifacts exist (exp3946..exp3949). Summarize each via
-           summarize_artifact.py. If exp3946 is missing, honest_verdict blocked_upstream_missing, EXIT.
-        1. Extract: r11l ACCURACY_levels_solved + real_env_confirmed (exp3946); n_trustworthy_at_0.15
-           (exp3947); goal_predicate precision/recall (exp3948); latent-register energy delta (exp3949).
-        2. Compute the milestone headline: FIRST_SOLVE_ACHIEVED := exp3946.ACCURACY_levels_solved > 0 AND
-           real_env_confirmed. Record cited_upstream_artifacts with {{experiment_id, fields_imported, sha256}}.
+        0. PRECONDITIONS: summarize each existing upstream artifact (exp3953..exp3960) via
+           summarize_artifact.py. Missing artifacts are recorded as missing, NOT a block — proceed.
+        1. Extract: r11l ACCURACY_levels_solved (exp3953); 2nd-game game_solved + levels (exp3954);
+           n_trustworthy_at_0.15 (exp3955); goal_predicate precision/recall (exp3956); latent-register
+           energy delta (exp3957); transfer_win (exp3958); efficiency_ratio + cis_non_overlapping (exp3959);
+           quota_gate_cleared (exp3960).
+        2. Compute the milestone headline: ACCURACY_progress (total real levels solved across games this
+           milestone vs the .365 baseline of 1) AND VERIFIER_EARNS_EFFICIENCY := exp3959
+           cis_non_overlapping_pruner_helps (the load-bearing datum). Record cited_upstream_artifacts with
+           {{experiment_id, fields_imported, sha256}}.
 
       REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU):
-        first_solve_achieved: principle "BARE BOOL — the milestone's load-bearing question: did we get a real ARC-AGI-3 solve?"
-        n_trustworthy_world_models: principle "How many of the 6 non-spatial games reached a plan-able model (generalization of the vc33 result)."
-        plan_ability_advanced: principle "Did goal-induction + latent registers move plan-ability forward (honest, not celebratory)?"
+        total_real_levels_solved: principle "BARE INT — total real ARC-AGI-3 levels solved this milestone across all games (the accuracy headline; .365 baseline was 1)."
+        second_game_solved: principle "BARE BOOL — did a non-r11l game solve (the method-generalizes datum)."
+        n_trustworthy_world_models: principle "How many of the 6 non-spatial games reached a plan-able model (generalization of vc33's 0.005)."
+        verifier_earns_efficiency_on_real_games: principle "BARE BOOL — exp3959's M3 gate: did the verifier action-pruner significantly cut actions on REAL games (the existential 'verifier earns its place' answer in the RHAE venue)."
+        quota_gate_cleared: principle "BARE BOOL — is offline accuracy past the operator gate for justifying an online run (exp3960)."
         cited_upstream_artifacts: principle "list of {{experiment_id, fields_imported, sha256}} — the audit trail so the capstone numbers trace to real measurements."
         flagged_artifacts_skipped: principle "Which upstream artifacts were flagged_adversarial and therefore EXCLUDED from aggregation."
         honest_verdict, duration_s, inference_substrate: principle "Terminal-prefix verdict + aggregation substrate."
 
       honest_verdict MUST start with `complete:`/`success:` or `blocked_<resource>`.
-      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3951_capstone_v365.py
-      Do NOT push.
+      Run: {project_root}/.venv/bin/python scripts/experiments/experiment_3962_capstone_v366.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
