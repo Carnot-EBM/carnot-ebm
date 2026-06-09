@@ -317,6 +317,13 @@ def run(write=True):
         "oracle_pass2_ceiling": oracle2,
         "rankers": res,
         "best_deconfounded_q_ranker": best_deconf,
+        "best_deconfounded_q_ranker_beats_vote": bool(sel_pass),
+        "best_deconfounded_q_ranker_note": (
+            "'best' = highest pass@2 among the DE-CONFOUNDED q rankers; it does NOT mean it beats vote. "
+            "Here best_deconf=Q_MAX TIES vote at 0.4516 with ZERO orthogonal lift (its hit set is "
+            "byte-identical to vote's 14 hits — confirmed by the adversarial-verify round); it is parity, "
+            "not a win. The headline (model_native_signal_real=False) is unaffected."
+        ),
         "hybrid_tiebreak_gain_vs_vote_DEPLOYMENT_ONLY": hybrid_tiebreak_gain,
         "a0_vote_mimicry_control": {
             "within_task_spearman_qmean_vote": spearman_qmean_vote,
