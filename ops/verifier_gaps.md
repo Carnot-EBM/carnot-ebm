@@ -30,6 +30,18 @@ Never-prune; `status: filled` (with the registry verifier_id that closed it) rat
 
 ---
 
+## Empirical confirmation (TRM rerank, 2026-06-09)
+
+`results/arc3_trm_verifier_rerank.json` (n=31-task subset of TRM's arc_v1 candidate pool) tested
+whether the `union_max` ensemble reranks TRM's candidates better than its own frequency vote. **It
+did NOT** (best = TRM_VOTE pass@2 0.484; verifier captured 0.0 of the ~13pp present-but-mis-voted
+headroom; HYBRID hurt to 0.452). This is an honest WASH (reported as-is per FALSE_NEGATIVE_RISK) — and
+it is the *value*: of the 5 uncaptured tasks (correct answer in TRM's pool, verifier still missed it),
+the census split **GAP-1: 2, GAP-2: 1, GAP-3: 2**, confirming all three gaps below on REAL mis-votes
+(not just the synthetic distractors the v2 ensemble was measured on). Building any of these three
+verifiers is the direct path to capturing that headroom. (Caveat: 31-task subset; counts are small but
+directional — re-confirm at scale.)
+
 ## Open gaps
 
 ### GAP-1: transpose / orientation discrimination
@@ -66,6 +78,14 @@ Never-prune; `status: filled` (with the registry verifier_id that closed it) rat
   score candidate disagreement) and/or a learned program-consistency energy (the ARC-domain energy
   instance, per `project_verifier_domain_bound`).
 - priority: high (~half of ARC is variable-output-dim; this is the biggest coverage hole).
+- ALT candidate design (model-native, 2026-06-09): per arXiv:2604.17614 ("Characterizing Model-Native
+  Skills"), recover a compact ORTHOGONAL basis from the GENERATOR's own activations and score candidate
+  consistency along it, instead of hand-imposed grid invariants. Feasible here because TRM is open/local
+  (we have its activations). Directly attacks GAP-2/GAP-3 (the content/rule axes hand-features miss) AND
+  the verifier-orthogonality program (a model-native orthogonal basis = principled distinct null spaces,
+  vs the SHARED transpose-invariance of object_count+palette_histogram = GAP-1). White-box-complement to
+  the black-box energy verifier ([[reference_cognometry]], [[reference_goodfire_silico]]). TRM-specific
+  (needs generator activations) — not a general verifier. The GAP-3 follow-up if hand-invariants wash.
 
 ### GAP-3: content errors that preserve ALL cheap invariants
 - status: open (partially mitigated by the v2 transformation families)
