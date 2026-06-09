@@ -8026,3 +8026,25 @@ c |
 | 2026-06-08 06:20 UTC | Plan milestone 2026.06.364 | OK | 11 tasks proposed |
 | 2026-06-08 06:23 UTC | Milestone 2026.06.364 activated | OK | 11 tasks queued |
 | 2026-06-09 02:17 UTC | Archive .363 -> activate .364; GREEN-GATE de-risk  | OK | cache hit: 112 passed in 4.91s |
+| 2026-06-09 02:46 UTC | RUN + VALIDATE the COMPETENT GenRM/ThinkPRM judge  | FAIL | Post-tests failed: 1 failed, 114 passed in 42.59s |
+| 2026-06-09 02:48 UTC | RUN + VALIDATE the COMPETENT GenRM/ThinkPRM judge | OK | Deliverable already exists in repo |
+| 2026-06-09 02:48 UTC | VALID EFFICIENCY head-to-head — energy-verifier vs | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 30.06s |
+| 2026-06-09 02:51 UTC | VALID EFFICIENCY head-to-head — energy-verifier vs | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 31.68s |
+| 2026-06-09 02:54 UTC | VALID EFFICIENCY head-to-head — energy-verifier vs | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 30.97s |
+| 2026-06-09 02:57 UTC | NON-DEGENERATE Meta-EBM cascade router (positive-c | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 30.21s |
+| 2026-06-09 02:59 UTC | NON-DEGENERATE Meta-EBM cascade router (positive-c | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 31.95s |
+| 2026-06-09 03:02 UTC | NON-DEGENERATE Meta-EBM cascade router (positive-c | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 30.13s |
+| 2026-06-09 03:05 UTC | MOAT SCISSOR replication on an INDEPENDENT corpus  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 29.94s |
+| 2026-06-09 03:08 UTC | MOAT SCISSOR replication on an INDEPENDENT corpus  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 29.46s |
+| 2026-06-09 03:10 UTC | MOAT SCISSOR replication on an INDEPENDENT corpus  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 31.16s |
+| 2026-06-09 03:13 UTC | ARC-AGI-3 agentic step 2 — verifier-as-router acti | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 31.28s |
+| 2026-06-09 03:16 UTC | ARC-AGI-3 agentic step 2 — verifier-as-router acti | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 30.34s |
+| 2026-06-09 03:18 UTC | ARC-AGI-3 agentic step 2 — verifier-as-router acti | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 32.12s |
+| 2026-06-09 03:21 UTC | FR-11 continuous self-learning v27 (research-progr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 31.72s |
+| 2026-06-09 03:24 UTC | FR-11 continuous self-learning v27 (research-progr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 30.50s |
+| 2026-06-09 03:27 UTC | FR-11 continuous self-learning v27 (research-progr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 30.75s |
+| 2026-06-09 03:29 UTC | Hardware continuity clean re-run — GateMate termin | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 30.52s |
+| 2026-06-09 03:32 UTC | Hardware continuity clean re-run — GateMate termin | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 32.02s |
+| 2026-06-09 03:35 UTC | Hardware continuity clean re-run — GateMate termin | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 30.21s |
+| 2026-06-09 03:38 UTC | Cross-domain verifier discriminating-value MAP (NE | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 30.50s |
+| 2026-06-09 03:40 UTC | Cross-domain verifier discriminating-value MAP (NE | SKIP | Pre-tests failing, self-heal failed: 1 failed, 114 passed in 31.08s |

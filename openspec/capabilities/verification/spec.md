@@ -11219,8 +11219,10 @@ claim, and a measured duration.
 
 The repository SHALL provide a competent process-style LLM judge at
 `python/carnot/verify/competent_llm_judge.py` and a build runner at
-`scripts/experiments/experiment_3925_competent_judge_build.py` that writes
-`results/experiment_3925_competent_judge_build.json`. The judge SHALL examine
+`scripts/experiments/experiment_3925_competent_judge_build.py`, with the
+3935 execution entry point at
+`scripts/experiments/experiment_3935_competent_judge_build.py`, that writes
+`results/experiment_3935_competent_judge_build.json`. The judge SHALL examine
 one reasoning step at a time with a structured reason-then-verdict prompt,
 few-shot exemplars, and a final `VERDICT: CORRECT|INCORRECT` contract. The
 judge SHALL expose `judge_step(item, generator)` returning at least bare
@@ -11270,7 +11272,7 @@ only when `unit_test_passed=true`, `fixture_auroc > 0.65`,
 Given CUDA is available, Exp 3915 reports a ready robust GGUF generator, Exp
 3917 has per-item LLM judge scores, Exp 3884 labeled provenance is readable,
 and the verification modules import, when Exp 3925 runs, then it writes
-`results/experiment_3925_competent_judge_build.json`, records the flipped
+`results/experiment_3935_competent_judge_build.json`, records the flipped
 Exp 3917 AUROC and diagnosed cause, loads a headline GGUF through the robust
 generator harness, evaluates the separable fixture with the structured
 CoT-then-verdict judge, records `fixture_auroc > 0.65`, records
@@ -11281,7 +11283,7 @@ terminal verdict only when the live unit test also passed.
 
 Given CUDA, Exp 3915 readiness, Exp 3917 per-item results, Exp 3884 provenance,
 or the verification imports are unavailable, when Exp 3925 runs, then it writes
-`results/experiment_3925_competent_judge_build.json` with a terminal
+`results/experiment_3935_competent_judge_build.json` with a terminal
 `blocked_<resource>` honest verdict, populated precondition evidence, null
 fixture metrics, `unit_test_passed=false`, no model claim, and a measured
 duration.
@@ -11290,7 +11292,7 @@ duration.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-VERIFY-3925 | Implemented (`python/carnot/verify/competent_llm_judge.py`, `scripts/experiments/experiment_3925_competent_judge_build.py`) | Implemented (`tests/python/test_competent_llm_judge.py`) |
+| REQ-VERIFY-3925 | Implemented (`python/carnot/verify/competent_llm_judge.py`, `scripts/experiments/experiment_3925_competent_judge_build.py`, `scripts/experiments/experiment_3935_competent_judge_build.py`) | Implemented (`tests/python/test_competent_llm_judge.py`) |
 
 ### REQ-VERIFY-3926: Valid Efficiency Head-To-Head Versus Competent Judge
 

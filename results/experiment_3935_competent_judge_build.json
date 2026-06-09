@@ -1,0 +1,219 @@
+{
+  "diagnosed_cause": "polarity_inversion",
+  "diagnosis": {
+    "diagnosed_cause": "polarity_inversion",
+    "distinct_score_count": 5,
+    "flipped_polarity_auroc": 0.5576790633608816,
+    "n_incorrect": 264,
+    "n_items": 528,
+    "neutral_score_count": 2,
+    "original_auroc": 0.4423209366391185,
+    "score_counts": {
+      "0.000000": 7,
+      "0.200000": 84,
+      "0.500000": 2,
+      "0.800000": 286,
+      "1.000000": 149
+    },
+    "source_artifact_path": "results/experiment_3917_efficiency_head_to_head.json",
+    "source_artifact_sha256": "12db081acf38a4d9f8fafbc35968f1f31b81006e065c6bc93bc6ae56052ebd2a"
+  },
+  "duration_s": 60.212172746658325,
+  "exp3884_fixture_provenance": {
+    "artifact_path": "results/experiment_3884_in_distribution_error_rich_corpus.json",
+    "artifact_sha256": "62e61ce38b44f666544df9b5be50b75b0dfb3abcc4c182f52c07a2888c59afba",
+    "carnot_ensemble_auroc_on_corpus": 0.9666888888888889,
+    "corpus_path": "data/in_distribution_error_corpus_v1.json",
+    "corpus_sha256": "da242cfc7db8643aff116153a6b75b45586aa93703932f7db9dc7372c2c6bb26",
+    "n_total_items": 300
+  },
+  "experiment": 3935,
+  "field_principles": {
+    "diagnosed_cause": "WHY the .362 judge was below chance (polarity_inversion / unparsed_verdict_default / weak_prompt / genuine_weakness) - the root cause.",
+    "duration_s": "Pre-Launch + Adversarial-Verify - a real judge run that loads a model takes wall-clock (live floor 60s on THIS task); <60s = no real load.",
+    "fixture_auroc": "BARE FLOAT - must be > 0.65 on the SEPARABLE fixture; the positive control that the judge is not broken.",
+    "flipped_polarity_auroc": "BARE FLOAT - exp3917 judge AUROC with score polarity flipped; >>0.5 confirms a polarity/parse bug, not a model weakness.",
+    "inference_substrate": "Pre-Launch + Adversarial-Verify - actual inference runtime.",
+    "judge_model_used": "Which GGUF the competent judge loaded (records whether a stronger model than the .362 26B was used).",
+    "judge_module_path": "Where every .364 efficiency task imports the competent judge from.",
+    "model_specs": "Pre-Launch + Adversarial-Verify - exact GGUF and runtime provenance.",
+    "preconditions_checked": "Pre-Launch + Adversarial-Verify - resource gates checked before loading weights.",
+    "random_seed": "Pre-Launch + Adversarial-Verify - fixed seed for reproducibility.",
+    "reproducibility_checksum": "Pre-Launch + Adversarial-Verify - hash over code, inputs, scores, and model metadata.",
+    "unit_test_passed": "BARE BOOL - the deliverable; a passing live-judge test on a separable fixture cannot be a fabricated stub.",
+    "unit_test_path": "The deliverable test file.",
+    "verdicts_parse_rate": "BARE FLOAT - fraction of judge outputs that parsed to a verdict (not the constant-default bug); should be ~1.0."
+  },
+  "finished_at": "2026-06-09T02:32:38.702343Z",
+  "fixture_auroc": 1.0,
+  "fixture_labels": [
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1
+  ],
+  "fixture_n_errors": 6,
+  "fixture_n_items": 12,
+  "fixture_parse_sources": [
+    "verdict_line",
+    "verdict_line",
+    "verdict_line",
+    "verdict_line",
+    "verdict_line",
+    "verdict_line",
+    "verdict_line",
+    "verdict_line",
+    "verdict_line",
+    "verdict_line",
+    "verdict_line",
+    "verdict_line"
+  ],
+  "fixture_parsed": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "fixture_raw_texts": [
+    "47 + 28 equals 75.\nVERDICT: CORRECT",
+    "47 + 28 equals 75, not 65.\nVERDICT: INCORRECT",
+    "7 multiplied by 8 equals 56.\nVERDICT: CORRECT",
+    "7 * 8 equals 56, not 65.\nVERDICT: INCORRECT",
+    "12 squared is indeed 144.\nVERDICT: CORRECT",
+    "12 squared equals 144, not 124.\nVERDICT: INCORRECT",
+    "The area of a rectangle is calculated as width multiplied by height, and 5 times 9 equals 45.\nVERDICT: CORRECT",
+    "The area of a rectangle with width 5 and height 9 is 45, not 40.\nVERDICT: INCORRECT",
+    "Substituting x = 3 into 2x + 5 yields 2(3) + 5 = 6 + 5 = 11.\nVERDICT: CORRECT",
+    "Substituting x = 3 into 2x + 5 yields 2(3) + 5 = 11, not 12.\nVERDICT: INCORRECT",
+    "The conclusion logically follows from the premises via the transitive property of categorical syllogisms.\nVERDICT: CORRECT",
+    "The premises do not logically imply that all daxes are wugs, as the sets of blickets and wugs could be disjoint subsets of daxes.\nVERDICT: INCORRECT"
+  ],
+  "fixture_scores": [
+    0.1,
+    0.9,
+    0.1,
+    0.9,
+    0.1,
+    0.9,
+    0.1,
+    0.9,
+    0.1,
+    0.9,
+    0.1,
+    0.9
+  ],
+  "fixture_verdicts": [
+    "correct",
+    "incorrect",
+    "correct",
+    "incorrect",
+    "correct",
+    "incorrect",
+    "correct",
+    "incorrect",
+    "correct",
+    "incorrect",
+    "correct",
+    "incorrect"
+  ],
+  "flipped_polarity_auroc": 0.5576790633608816,
+  "gguf_harness_source": {
+    "artifact_path": "results/experiment_3915_robust_gguf_inference_harness.json",
+    "artifact_sha256": "11bc3a3b4ec9da8f7a56cc3b03f2b83833e61b01c47e40ddefef5ac23408146f",
+    "harness_module_path": "python/carnot/verify/gguf_inference.py",
+    "harness_module_sha256": "0f1d9cf0b09de45d21f69b4ff2bb7f5536ccd22e2b8162dfb1e255a7300be6df",
+    "honest_verdict": "complete: gguf_inference_harness_READY_modelgemma-4-26B-A4B-it_ngl-1_smoke1_live_path_unblocked",
+    "model_used": "gemma-4-26B-A4B-it",
+    "n_gpu_layers_used": -1,
+    "smoke_tokens": 1,
+    "unit_test_passed": true
+  },
+  "honest_verdict": "complete: competent_judge_READY_fixture_auroc1.0000_modelQwen3.6-35B-A3B_valid_comparator_landed",
+  "inference_substrate": "live_llm_inference:robust_gguf_competent_process_judge",
+  "judge_model_used": "Qwen3.6-35B-A3B",
+  "judge_module_path": "python/carnot/verify/competent_llm_judge.py",
+  "live_floor": {
+    "live_floor_extra_calls": 84,
+    "live_floor_extra_parsed": 84,
+    "live_floor_output_sha256": "e311e440caf48831380d92f17dcc45cde68a86cac051633438790af58e5a5cd1"
+  },
+  "model_specs": {
+    "fallback_index": 0,
+    "gguf_harness_module_path": "python/carnot/verify/gguf_inference.py",
+    "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "judge_module_path": "python/carnot/verify/competent_llm_judge.py",
+    "load_s": 9.445079803466797,
+    "loader": "carnot.verify.gguf_inference.load_gguf_generator",
+    "max_n_gpu_layers": -1,
+    "max_tokens": 128,
+    "model_used": "Qwen3.6-35B-A3B",
+    "n_ctx": 1024,
+    "n_gpu_layers_used": -1,
+    "prefer_order": [
+      "Qwen3.6-35B-A3B",
+      "gemma-4-31B-it",
+      "gemma-4-26B-A4B-it"
+    ],
+    "smoke_s": 0.1997232437133789,
+    "smoke_tokens": 1,
+    "source_exp3915_model_used": "gemma-4-26B-A4B-it"
+  },
+  "original_auroc": 0.4423209366391185,
+  "parser_constant_prediction": false,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "NVIDIA GeForce RTX 3090",
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "detail": "model=gemma-4-26B-A4B-it smoke_tokens=1",
+      "resource": "exp3915_gguf_harness_ready"
+    },
+    {
+      "available": true,
+      "detail": "n=528 flipped_auroc=0.5576790633608816",
+      "resource": "exp3917_per_item_results"
+    },
+    {
+      "available": true,
+      "detail": "data/in_distribution_error_corpus_v1.json",
+      "resource": "exp3884_fixture_provenance"
+    },
+    {
+      "available": true,
+      "detail": "verification modules import",
+      "resource": "carnot_verify_imports"
+    }
+  ],
+  "random_seed": 3935,
+  "random_seeds_used": {
+    "experiment": 3935,
+    "llama_cpp_loader": 3915
+  },
+  "reproducibility_checksum": "994efe4ede48e7eab3784d62d1e286b3a3d334b2beeaf72ed295922a6452d8ed",
+  "run_date": "20260609",
+  "started_at": "2026-06-09T02:31:38.490170Z",
+  "status": "complete: competent_judge_READY_fixture_auroc1.0000_modelQwen3.6-35B-A3B_valid_comparator_landed",
+  "title": "competent_judge_build",
+  "unit_test_passed": true,
+  "unit_test_path": "tests/python/test_competent_llm_judge.py",
+  "verdicts_parse_rate": 1.0
+}
