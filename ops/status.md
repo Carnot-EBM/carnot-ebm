@@ -1,5 +1,24 @@
 # Carnot — Operational Status
 
+## Session 2026-06-08 — ARC-AGI-3 first-solve push: offline agent stack built; FIRST trustworthy world-model; conductor reconfigured to Claude Opus 4.8
+
+**What's working (NEW — the offline ARC-AGI-3 agent, all committed, all offline/air-gapped):**
+- **M0 GameGraph substrate** (`python/carnot/agentic/arc_agi3_world_model.py`, 7 tests) — persistent per-game state-action graph + transition store + deterministic perception, the substrate both winning families read/write.
+- **M1 Family-A floor** (`scripts/experiments/arc3_graph_explore.py`) — no-induction explorer: 2/25 games to L1, none past, 23 at 0 (sparse-reward; pure search insufficient).
+- **M1b goal-prior** — vision LLM identifies the goal but the blocker is multi-step DYNAMICS, not the goal.
+- **Determinism probe** (`results/arc3_determinism_probe.json`) — 11/25 games are HIDDEN-STATE (visible grid under-determines dynamics); 14 grid-Markov.
+- **M2 active-data → codex program synthesis → consistency-energy verification** — produced the **FIRST TRUSTWORTHY INDUCED WORLD-MODEL**: vc33 held-out consistency energy **0.005 (replicated 0.011 on a fresh seed)**, ~99% dynamics accuracy, no oracle (`results/arc3_vc33_world_model_program.py`). The active-data lever (M2-v4) was the unlock (vc33 passive 0.586 → active 0.005). **The verifier is demonstrated load-bearing at every inducer tier** (template→DSL→codex; it caught codex's overfit programs).
+- **Integrity:** flagged exp3929's circular "1.96x verifier-efficiency" as a TAUTOLOGY (oracle-fed) — quarantined.
+- **25-game win-condition survey** (`results/arc3_win_condition_survey.json`) — only 6/25 non-spatial; **r11l** is the easiest inducible first-solve target.
+
+**What's next (the `.365` pre-staged roadmap drives these tonight):**
+- **FIRST SOLVE on r11l** — reverse-engineer its select/place win-interaction (pieces=color-3 auto-selected, targets=`flkdtg` sprites, gray=decorative; first generic-perception attempt failed, diagnosis in `results/arc3_r11l_solve.json`).
+- Generalize the active-data→codex→verify pipeline across the 6 non-spatial games; goal-predicate induction from level-ups; latent-register augmentation for the 11 hidden-state games; M3 verifier-as-action-pruner efficiency (gated on a solve).
+
+**Key honest finding:** our verifier-centric stack INDUCES DYNAMICS well (trustworthy model achieved); converting a model into a SOLVE requires GOAL-grounding + the per-game WIN-INTERACTION, which is game-specific and is the remaining hard part. vc33 refuted as first-solve (hard Sokoban); r11l is the next target. **No game solved yet.**
+
+**Conductor reconfigured (operator directive 2026-06-08, Claude quota 47% w/ <2-day reset):** planner = Claude Opus 4.8 @ `--effort max`; milestone-close RETRO + both adversarial audits (verifier-authenticity, pages) → Claude Opus 4.8. Experiments stay gemini-default. Drop-in `10-gemini-routing.conf` + `scripts/research_conductor.py` claude command (`--effort max`). Conductor RESUMED for `.365`.
+
 ## Session 2026-06-07 - Milestone 2026.06.361 Research Planning Staged
 
 Planned milestone **2026.06.361** ("PROVE THE VERIFIER EARNS ITS PLACE") as the NEXT
