@@ -240,7 +240,34 @@ lineage is on `ops/exclusion_manifest.yaml` (`gap3_trained_content_energy_select
 AUROC ≥ 0.70, held out from training AND checkpoint selection) passed BEFORE any selection eval.
 
 ### GAP-4: same-shape rule-application consistency (the missing discriminator, quantified by Stages 2v1+2v2)
-- status: **open** — the concrete missing-verifier spec distilled from the GAP-3 lineage retirement.
+- status: **open — FIRST POSITIVE LANDED (2026-06-09/10, PRELIMINARY, adversarially confirmed as
+  scoped).** The rule-execution verifier (`results/arc3_gap4_rule_exec_verifier.json` +
+  `corrigendum_2026_06_10_gap4` + `..._adversarial_verify.json`, 5/5 POSITIVE_CONFIRMED) implements
+  exactly this gap's candidate design: codex (gpt-5.5, 44 calls/23 min) induces `def transform(grid)`
+  from demo pairs only (no task id, no candidates, no gold in prompt); a model-free verifier requires
+  exact reproduction of ALL demos (29/31 entries demo-perfect); the demo-perfect program executes on
+  the test input and the GATED rerank promotes the exact-matching candidate else no-ops to vote.
+  **Pool-restricted pass@2: vote 0.4516 → gated 0.5806 (+4 recovered / 0 lost at pass@2; ~0.80 of the
+  oracle headroom), pass@1 0.4194 → 0.5484.** The recovered set is exactly the GAP-4 class the whole
+  GAP-3 lineage scored ~chance on — including 17cae0c1 (gold at vote-rank 65) and c3202e5a (the
+  one-cell-diff task). All numbers re-derived bit-exact by 5 hostile reviewers from the SAVED programs
+  (`results/arc3_gap4_induced_programs.json`) + frozen pool with zero API calls; programs audited
+  generic (no hardcoded grids; mutation-battery clean).
+- **ESTABLISHED:** the mechanism (demo-fit execution verification reranks a candidate pool with zero
+  pass@2 downside on this pool) and the gate's safety behavior. **NOT (yet) ESTABLISHED:** statistical
+  significance (exact sign test p=0.0625 one-sided; tie-robust recovery count 3, delta +0.0968 under
+  gold-favorable vote ties); verifier value independent of the generator (codex-standalone scores
+  26/31 = 0.8387 against TRUE gold — ABOVE the 0.6129 pool ceiling; the trivial codex-first arm scores
+  0.903; the lift is GENERATOR-attributable and the gate is the safety wrapper); the induction rate on
+  uncontaminated tasks (30/31 pool tasks appear verbatim in public ARC-AGI-2 TRAINING data; gpt-5.5
+  generator; the 29/31 rate has near-zero transfer value); 400-task scale; any local-model generator.
+  Pass@1 caveat: one gate mis-fire (25094a63) — zero-loss is a pass@2 property.
+- **Forward protocol (before `status: filled`):** sandboxed (no filesystem bypass) 400-task
+  re-confirmation on a host without ARC solutions on disk, with archived transcripts, genuinely
+  held-out tasks (ARC-AGI-2 eval / ConceptARC holdout / post-cutoff), the codex-first arm, cluster
+  bootstrap + exact tests (zero-loss design needs ≥6 discordant wins for two-sided p<0.05), a hardened
+  exec sandbox (timeout; block np.load/np.save/np.fromfile/type), and a local open-weight generator
+  arm (Gemma-4/Qwen3.6) for the decentralization tier.
 - failure mode: candidates that match gold's SHAPE and look structurally coherent but apply the WRONG
   rule (59.1% of TRM's real errors; 81.4% of wrong-candidate pairs; median Hamming-to-gold 0.40).
   Every content signal tested scores ~chance here (hand-invariants ≤0.67; trained content-EBMs

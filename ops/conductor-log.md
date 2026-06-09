@@ -8115,3 +8115,5 @@ c |
 | 2026-06-09 20:23 UTC | M4 QUOTA-GATE READINESS (OWED from .366): run the  | OK | 88 passed in 8.48s |
 | 2026-06-09 21:28 UTC | Hardware continuity (consolidated; OWED from .366) | OK | 93 passed in 6.08s |
 | 2026-06-09 21:43 UTC | Capstone .367 (UNGATED — the .365 op:exists + .366 | OK | 88 passed in 5.10s |
+| 2026-06-09 23:40 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-06-09 23:42 UTC | Milestone 2026.06.368 activated | OK | 12 tasks queued |

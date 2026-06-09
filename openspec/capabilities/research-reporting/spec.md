@@ -18705,3 +18705,85 @@ ops/status/traceability/conductor files unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3963 | Planned (`python/carnot/reporting/archive_v366_activate_v367_3963.py`, `scripts/experiments/experiment_3963_archive_v366_activate_v367.py`) | Planned (`tests/python/test_experiment_3963_archive_v366_activate_v367.py`) |
+
+### REQ-REPORT-3974: Archive .367 And Activate .368 With GAP-4 Readiness Preservation
+
+The Exp 3974 workflow SHALL archive milestone `2026.06.367`, confirm
+milestone `2026.06.368` is active in the current research roadmap, and write
+`results/experiment_3974_archive_v367_activate_v368.json`. Before editing any
+record, it SHALL run `.venv/bin/python -c "import yaml;
+yaml.safe_load(open('research-complete.yaml'))"` from the repository root. If
+that precondition fails, it SHALL write a blocked artifact whose
+`honest_verdict` starts with `blocked_research_complete_yaml_poison` and SHALL
+NOT edit `research-complete.yaml` or `ops/exclusion_manifest.yaml`.
+
+The workflow SHALL read Exp 3963 through Exp 3973 verdicts by invoking
+`scripts/summarize_artifact.py` over the authoritative result artifact paths
+rather than raw-reading the milestone JSONs for verdict extraction. It SHALL
+append an idempotent `.367` archive record in `research-complete.yaml`
+containing all eleven task verdicts. Every appended scalar containing `: `
+SHALL be quoted so the .355 colon-poison failure cannot recur.
+
+The archive record SHALL preserve the `.367` truth that three distinct
+ARC-AGI-3 games are solved at level 1 (`r11l`, `lp85`, and `sc25`), that Exp
+3967 left M3 efficiency honestly open with `blocked_verifier_not_in_loop`, and
+that Exp 3968 found 0 of 6 non-spatial games with trustworthy induced world
+models. The workflow SHALL also confirm `ops/verifier_gaps.md` contains the
+GAP-4 execution/program-synthesis verifier specification and that
+`ops/exclusion_manifest.yaml` still safe-loads with the retired GAP-3
+trained-content-energy lineage present.
+
+After the archive append, the workflow SHALL confirm both
+`research-complete.yaml` and `ops/exclusion_manifest.yaml` safe-load under
+`yaml.safe_load`. It SHALL run `.venv/bin/pytest
+tests/python/test_arc_agi3_world_model.py
+tests/python/test_arc_world_model_synth.py
+tests/python/test_arc_world_model_dsl.py -q --no-header -n 0 --no-cov -o
+addopts=` and record the bare boolean `arc_substrate_tests_green`. It SHALL
+run an import probe for `carnot.agentic.arc_agi3_world_model`,
+`carnot.agentic.arc_world_model_synth`,
+`carnot.agentic.arc_world_model_dsl`, and
+`carnot.agentic.arc_agi3_action_efficiency`, recording the aggregate bare
+boolean `arc_modules_importable` plus per-module import results.
+
+The terminal artifact SHALL include bare top-level fields
+`archived_milestone`, `activated_milestone`,
+`research_complete_yaml_parses`, `exclusion_manifest_parses`,
+`arc_substrate_tests_green`, `arc_modules_importable`,
+`prior_three_games_solved_recorded`, `prior_m3_still_open_recorded`,
+`gap4_spec_present`, `honest_verdict`, `duration_s`, and
+`inference_substrate`. On the complete path, `honest_verdict` SHALL start with
+`complete:` or `success:`. Blocked verdicts SHALL start with
+`blocked_<resource>`. This is a record-only aggregation task and SHALL NOT
+modify `ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`; those documents are reconciled by the
+conductor's separate status step.
+
+#### SCENARIO-REPORT-3974: V367 Archive Opens GAP-4 Milestone .368
+
+**Given** `.368` is active, `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` safe-load, the Exp 3963 through Exp 3973
+artifacts can be summarized, GAP-4 is present in `ops/verifier_gaps.md`, the
+ARC substrate tests pass, and the four ARC agentic modules import
+**When** the Exp 3974 workflow runs
+**Then** it records the `.367` task verdicts in `research-complete.yaml`,
+quotes colon-bearing scalars, confirms both YAML files still parse, records
+the r11l/lp85/sc25 three-game solve state, records Exp 3967 as an open
+verifier-efficiency debt, records GAP-4 readiness, writes the required
+terminal artifact, and leaves ops/status/traceability/conductor files
+unchanged.
+
+#### SCENARIO-REPORT-3974-BLOCKED-YAML: Corrupt Research Record Blocks Before Append
+
+**Given** `research-complete.yaml` does not safe-load
+**When** the Exp 3974 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_research_complete_yaml_poison`, records the failed YAML parse in
+`preconditions_checked`, and leaves both `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` byte-for-byte unchanged.
+
+## Implementation Status (REQ-REPORT-3974)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3974 | Planned (`python/carnot/reporting/archive_v367_activate_v368_3974.py`, `scripts/experiments/experiment_3974_archive_v367_activate_v368.py`) | Planned (`tests/python/test_experiment_3974_archive_v367_activate_v368.py`) |

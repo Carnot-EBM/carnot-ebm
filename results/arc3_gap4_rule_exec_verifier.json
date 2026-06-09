@@ -1,0 +1,486 @@
+{
+  "adversarial_verify": {
+    "final_verdict": "POSITIVE_CONFIRMED (as scoped)",
+    "report": "results/arc3_gap4_adversarial_verify.json",
+    "reviewers": 5,
+    "unanimous": true,
+    "worst_severity": "major (reporting/attribution-level; all numbers reproduced bit-exact 5x)"
+  },
+  "bootstrap": {
+    "B": 1000,
+    "gated_vs_union_pass2_ci95": [
+      0.0,
+      0.1935
+    ],
+    "gated_vs_vote_pass2_ci95": [
+      0.0323,
+      0.2581
+    ]
+  },
+  "corrigendum_2026_06_10_gap4": {
+    "contamination_sharpened": "30/31 pool tasks appear VERBATIM in the public ARC-AGI-2 TRAINING set (stronger than the 'ARC-1 eval is public' wording); the single non-overlap task (79fb03f4) is among codex's 3 failures; failures do not concentrate on hard tasks. The 29/31 induction rate has near-zero transfer value to uncontaminated tasks. Also: codex ran with --dangerously-bypass-approvals-and-sandbox on a host where the eval solutions file is readable, and transcripts were not archived \u2014 the no-oracle invariant is verified at prompt+code level only (mitigants: 5/31 failures, visible iterative refinement, zero hardcoded grids, no task id in the prompt).",
+    "exact_significance": "Exact paired sign test: gated-vs-vote one-sided p=0.0625 (4W/0L/27T; two-sided 0.125); gated-vs-union p=0.125 (3W/0L). NOT significant at 0.05 at n=31. The bootstrap CI lower bound >0 is a percentile-discreteness artifact; gates.selection_beats_union is point-estimate-only. The entry-level bootstrap also treats f3e62deb's two correlated entries as independent; use a unique-task cluster bootstrap at 400 scale.",
+    "file_hygiene": "The histories array double-lists f3e62deb's single induction (45 records vs 44 calls; artifact accounting already correct).",
+    "forward_protocol": "400-task re-confirmation MUST: run codex filesystem/network-jailed on a host without ARC solutions on disk; archive full transcripts; include genuinely held-out tasks (ARC-AGI-2 eval / ConceptARC holdout / post-cutoff); add the codex-first arm; cluster bootstrap + exact tests (zero-loss design needs >=6 discordant wins for two-sided p<0.05); harden the exec sandbox (timeout; block np.load/np.save/np.fromfile/type).",
+    "generator_attribution": "THE KEY REFRAME: codex-standalone (trust the demo-perfect program's output directly) scores 0.8387 against true gold \u2014 ABOVE the pool oracle ceiling 0.6129; the trivial codex-first arm (program output if demo-perfect else vote) scores 28/31 = 0.903. The rerank venue CLIPS the generator by ~42%. The pass@2 lift is generator-attributable; the gate contributes the zero-pass@2-loss safety wrapper + abstention, not independent selection signal. UNION+exec == GATED exactly (TRM scalar features are dead weight given exec).",
+    "origin": "5-reviewer hostile round. Every number re-derived bit-exact from the saved programs + frozen pool with zero API calls; programs audited generic (no hardcoded grids, mutation-battery clean). The disclosures below are BLOCKING for any forward-facing aggregation; the headline survives AS SCOPED.",
+    "pass1_gate_misfire": "vote_wins_lost=0 is a pass@2-only property: at pass@1 the gate wrongly promoted once (25094a63 \u2014 a demo-perfect program's WRONG output exact-matched a 32-vote non-gold, demoting the 945-vote gold 1->2; net pass@1 still +4). 1 of 16 gate fires exhibited the docstring's 'expected 0' failure mode.",
+    "tie_sensitivity": "Recovery c3202e5a rides a vote tie (gold tied 15-15 at the pass@2 boundary; pool order pessimal for vote). Gold-favorable ties: vote@2=0.4839, delta +0.0968, recovered=3 (tie-robust set: 17cae0c1, be03b35f, f3e62deb), gated-vs-vote CI [0.0, 0.1935]. Expected-value ties: delta ~+0.113. GAP4_GATED itself is tie-invariant at 0.5806.",
+    "true_gold_scoring": "pred_is_gold in per_task means gold-AND-IN-POOL (15/29) and understates program correctness: against the official Kaggle gold the demo-perfect programs are correct on 26/29 (26/31 overall = 0.8387), including 11/12 entries where gold is absent from TRM's pool (the gate correctly abstains but discards genuinely-correct answers)."
+  },
+  "decentralization_note": "Closed-weight generator (gpt-5.5) used as the escalation-tier inducer per the M2-v3 precedent; deployment tier targets a local open-weight inducer (Gemma-4/Qwen3.6 GGUF). The verifier side (demo-fit + execution + rerank) is fully local and model-free.",
+  "duration_s": 374.6,
+  "experiment": "arc3_gap4_rule_exec_verifier",
+  "gates": {
+    "coverage_demo_perfect": 0.9355,
+    "headroom_capture_fraction": 0.7998,
+    "headroom_recovered": 4,
+    "selection_beats_union": true,
+    "selection_beats_vote": true,
+    "vote_wins_lost": 0
+  },
+  "generator": {
+    "data_handling_class": "minimize (public ARC demo grids + test input only)",
+    "iters_per_task_max": 3,
+    "model": "gpt-5.5 via codex exec (reasoning_effort=medium)",
+    "total_codex_calls": 44,
+    "total_codex_seconds": 1387.2
+  },
+  "headroom_recovered_tasks": [
+    "17cae0c1",
+    "be03b35f",
+    "c3202e5a",
+    "f3e62deb"
+  ],
+  "honest_verdict": "complete: gap4_rule_exec_BEATS_vote_n31_vote_0.4516_gated_0.5806_recovered_4_lost_0_demoperfect_29of31",
+  "inference_substrate": "codex_program_induction_plus_offline_trm_candidate_rerank_no_oracle",
+  "model_specs": {
+    "generator_model": "gpt-5.5 (codex exec CLI 0.137.0, model_reasoning_effort=medium)",
+    "induced_programs_archive": "results/arc3_gap4_induced_programs.json",
+    "target_model": "gpt-5.5",
+    "verifier": "model-free: demo-fit exact-reproduction gate + restricted-namespace execution + content-hash candidate match"
+  },
+  "n_oracle_hit": 19,
+  "n_tasks": 31,
+  "n_unique_tasks": 30,
+  "no_gpu_used": true,
+  "no_oracle_audit": "The codex prompt contains demo pairs + the test INPUT only \u2014 never the test gold and never the candidate pool. Programs are verified on demos (public context); the gated ranker overrides vote ONLY on demo_fit==1.0 AND exact candidate match of the executed output; otherwise it IS vote. 'correct' labels score rankings post-hoc.",
+  "oracle_pass2_ceiling": 0.6129,
+  "per_task": [
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 0,
+      "n_cands": 5,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "50a16a69",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 1,
+      "n_cands": 5,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "66e6c45b",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 2,
+      "n_cands": 599,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "17cae0c1",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 3,
+      "n_cands": 656,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "fafd9572",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 4,
+      "n_cands": 7,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "a59b95c0",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 5,
+      "n_cands": 108,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "4e469f39",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 6,
+      "n_cands": 605,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "a57f2f04",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 7,
+      "n_cands": 633,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "96a8c0cd",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.3333,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 8,
+      "n_cands": 5,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "8719f442",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 9,
+      "n_cands": 4,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "1a2e2828",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 10,
+      "n_cands": 11,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "pred_is_gold": false,
+      "task": "25094a63",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 11,
+      "n_cands": 361,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "2f0c5170",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 12,
+      "n_cands": 213,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "3ee1011a",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 13,
+      "n_cands": 42,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "2072aba6",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 14,
+      "n_cands": 195,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "712bf12e",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 15,
+      "n_cands": 577,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "505fff84",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 16,
+      "n_cands": 8,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "be03b35f",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 17,
+      "n_cands": 4,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "c7d4e6ad",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 18,
+      "n_cands": 942,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "1a6449f1",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 19,
+      "n_cands": 212,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "f0df5ff0",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 20,
+      "n_cands": 305,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "81c0276b",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.3333,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 21,
+      "n_cands": 56,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "692cd3b6",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 22,
+      "n_cands": 754,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "c3202e5a",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 23,
+      "n_cands": 13,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "ac3e2b04",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 24,
+      "n_cands": 50,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "0b17323b",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 25,
+      "n_cands": 995,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "5833af48",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 26,
+      "n_cands": 600,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "79fb03f4",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 27,
+      "n_cands": 24,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "b9630600",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 28,
+      "n_cands": 1,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "00576224",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 29,
+      "n_cands": 19,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "pred_is_gold": true,
+      "task": "f3e62deb",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 30,
+      "n_cands": 32,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "f3e62deb",
+      "vote_top2": false
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "codex_cli"
+    },
+    {
+      "available": true,
+      "resource": "eval_pool"
+    }
+  ],
+  "random_ranker_pass2_baseline": 0.1432,
+  "random_seed": 12345,
+  "rankers": {
+    "EXEC_PURE": {
+      "pass@1": 0.5484,
+      "pass@2": 0.5484
+    },
+    "GAP4_GATED": {
+      "pass@1": 0.5484,
+      "pass@2": 0.5806
+    },
+    "GAP4_GRADED": {
+      "pass@1": 0.5484,
+      "pass@2": 0.5484
+    },
+    "TRM_VOTE": {
+      "pass@1": 0.4194,
+      "pass@2": 0.4516
+    },
+    "UNION_plus_exec": {
+      "pass@1": 0.5484,
+      "pass@2": 0.5806
+    },
+    "UNION_votes_qmean_voteshare": {
+      "pass@1": 0.4516,
+      "pass@2": 0.4839
+    }
+  },
+  "reproducibility_checksum": "d1516bf795c46a93",
+  "reproducibility_note": "Codex generation is stochastic, but the induced programs are SAVED verbatim in results/arc3_gap4_induced_programs.json (sha256 prefix above): the entire rerank re-derives deterministically from the saved programs + the eval pool with zero API calls.",
+  "surprising_result_acknowledgment": "First positive of the GAP-3/GAP-4 program (+0.129 pass@2 over vote, bootstrap CI [0.0323, 0.2581] above zero at n=31). PRELIMINARY until: (a) the adversarial round confirms (in flight), and (b) re-confirmation at 400-task scale per the standing GAP-3 caveat. KNOWN CONFOUND, disclosed up-front: ARC-AGI-1 evaluation tasks are PUBLIC and plausibly in gpt-5.5's training data \u2014 the 29/31 demo-perfect induction rate may overstate induction on truly held-out tasks (benchmark contamination). The no-oracle invariant holds at the PROMPT level (demos + test input only); it cannot hold at the WEIGHTS level for a public benchmark. The mechanical claims (gate safety: 0 vote-wins lost; exact-match promotion; demo-fit verification) are contamination-independent; the INDUCTION RATE is not.",
+  "title": "GAP-4: program-induction + execution-consistency verifier vs TRM frequency vote",
+  "vote_wins_lost_tasks": []
+}
