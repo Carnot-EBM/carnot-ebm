@@ -1,4 +1,12 @@
 {
+  "adversarial_verify": {
+    "final_verdict": "NEGATIVE_CONFIRMED",
+    "report": "results/arc3_gap3_stage2v2_adversarial_verify.json",
+    "retirement": true,
+    "reviewers": 5,
+    "unanimous_negative": true,
+    "worst_severity": "major (artifact self-description, not the numbers \u2014 all reproduced bit-for-bit)"
+  },
   "auroc": {
     "ebm_hard_neg_votes_ge5": 0.4518,
     "ebm_macro": 0.4902,
@@ -16,6 +24,17 @@
       0.0,
       0.0
     ]
+  },
+  "corrigendum_2026_06_09_stage2v2": {
+    "disposition": "LINEAGE RETIRED per the pre-registered v1-panel condition (letter and spirit; dissenting reviewer's terminal-v3 path refuted on yield/ceiling/signal-class grounds \u2014 see the synthesis). Honest bound + missing-discriminator gap recorded in ops/verifier_gaps.md; lineage added to ops/exclusion_manifest.yaml. Remaining serious candidates: execution/program-synthesis verification (synthesizing the missing negative class IS program synthesis) and vote-primary hybrids gated by executed-rule consistency.",
+    "dominant_class_regression": "Same-shape plausible-but-wrong rule applications (59.1% of real errors, 81.4% of wrong-candidate pairs, median Hamming 0.40): v2 scored 0.502 macro / 0.3283 pair-weighted \u2014 BELOW chance and REGRESSED from v1 (0.6283/0.4707). Mechanism: the near-miss curriculum (median changed-cell fraction 0.083) teaches 'gold + small defect = bad', ranking coherent wrong rule-applications BELOW gold.",
+    "gate1_blind_spot": "Gate-1 (synthetic near-miss AUROC 0.7893) measures curriculum-fitting, not transfer: the v1 model passes the IDENTICAL synthetic gate at 0.7291 (>0.70). The committed 'v1 measured 0.481 here' contrast was a category error (v1's REAL-pool near-miss AUROC vs the synthetic gate). v2's REAL-pool <=5%-cell near-miss AUROC: 0.58-0.60 plain / 0.60-0.69 TTA (vote: 0.95 on the same class). Gate-1 was honest as computed (seed-stable 0.79-0.83; committed value the lowest of four seeds) but does not predict selection.",
+    "generator_independence_violation": "Negatives were mined from the SAME TRM checkpoint (arc_v1_public/step_518071) as the eval-pool generator; the panel spec'd a different seed/early checkpoint. The violation is in the direction that should HELP selection \u2014 and selection still landed at random, which strengthens the negative.",
+    "mined_axis_was_a_silent_noop": "The 'mined REAL TRM errors' curriculum axis never effectively ran. Miner bug (scripts/experiments/arc3_gap3_stage2v2_mine_real_negs.py run_join: inv_fn(_crop(inputs[i])) yields EMPTY grids on translation-augmented rows): 240/250 mined negatives are keyed to the empty-grid hash and are structurally unjoinable by the (task, input-hash) collate key. Effective coverage: 10 usable negatives / 6 slots / 3 tasks / 688 exposures = 0.04% of ~1.74M negative exposures (~24x less than the disclosed 'THIN 250/10/16'). v2 therefore tested the structured-synthetic arm ONLY \u2014 which makes the negative cleaner.",
+    "mining_yield_was_a_padding_artifact": "mined_meta.n_wrong_rows=18390 (59.9%) is off ~500x: 18,380 of the 18,390 'wrong rows' are padding rows. TRM's genuine error rate on real rows of its own training split is 10/8,259 = 0.12% (it MEMORIZES the split). A fixed full-split miner would yield ~O(500) real negatives, not ~12k \u2014 the real-error-dominant curriculum is structurally unsuppliable from this checkpoint's training split.",
+    "origin": "5-reviewer adversarial round (workflow gap3-stage2v2-adversarial-verify). Every committed number reproduced bit-for-bit. The corrections below are MATERIAL to interpretation; the headline negative is UNCHANGED and strengthened.",
+    "selection_at_random_significance": "gates.selection_beats_random=true is a point-estimate artifact: 5/31 pass@2 hits vs E[X]=4.44 under the exact Poisson-binomial random null, P(X>=5)=0.468. Selection is statistically AT random.",
+    "tta_non_replication": "Dihedral-8 TTA HURT v2 (macro AUROC 0.4902 -> 0.4604; pass@1 4 -> 2 hits; per-transform macro AUROCs 0.43-0.54, all chance-level). The v1 panel's 'free +0.03' did not generalize; no TTA bug (independent re-derivation matches to 7.75e-07)."
   },
   "duration_s": 431.2,
   "eval_duration_s": 17.1,

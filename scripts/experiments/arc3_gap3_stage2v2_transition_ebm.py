@@ -96,8 +96,12 @@ def components(a):
                 cells.append((cy, cx))
                 for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                     ny, nx = cy + dy, cx + dx
-                    if (0 <= ny < a.shape[0] and 0 <= nx < a.shape[1]
-                            and not seen[ny, nx] and a[ny, nx] == color):
+                    if (
+                        0 <= ny < a.shape[0]
+                        and 0 <= nx < a.shape[1]
+                        and not seen[ny, nx]
+                        and a[ny, nx] == color
+                    ):
                         seen[ny, nx] = True
                         stack.append((ny, nx))
             out.append((color, cells))
@@ -175,7 +179,9 @@ def near_miss_negatives(rng, gold, k, max_frac=None):
         k_cells = 1 + int(rng.integers(3))
         nz = np.argwhere(gold > 0)
         for _ in range(k_cells):
-            if len(nz) and rng.random() < 0.7:  # bias toward content cells — junk flips are too easy
+            if (
+                len(nz) and rng.random() < 0.7
+            ):  # bias toward content cells — junk flips are too easy
                 y, x = nz[rng.integers(len(nz))]
             else:
                 y, x = rng.integers(a.shape[0]), rng.integers(a.shape[1])
@@ -210,9 +216,14 @@ def load_mined():
     for task, slots in m["tasks"].items():
         for ih, s in slots.items():
             lut[(task, ih)] = [clip_grid(g) for g in s["negs"]]
-    meta = {"available": True, "n_tasks_with_negs": m["n_tasks_with_negs"],
-            "n_distinct_negs": m["n_distinct_negs"], "n_rows_scanned": m["n_rows_scanned"],
-            "n_wrong_rows": m["n_wrong_rows"], "generator": m["generator"]}
+    meta = {
+        "available": True,
+        "n_tasks_with_negs": m["n_tasks_with_negs"],
+        "n_distinct_negs": m["n_distinct_negs"],
+        "n_rows_scanned": m["n_rows_scanned"],
+        "n_wrong_rows": m["n_wrong_rows"],
+        "generator": m["generator"],
+    }
     return lut, meta
 
 
@@ -224,14 +235,21 @@ class SpatialPairEncoder(nn.Module):
     def __init__(self):
         super().__init__()
         self.trunk = nn.Sequential(
-            nn.Conv2d(2 * (N_COLORS + 1), 48, 3, padding=1), nn.GroupNorm(8, 48), nn.GELU(),
-            nn.Conv2d(48, 64, 3, padding=1), nn.GroupNorm(8, 64), nn.GELU(),
+            nn.Conv2d(2 * (N_COLORS + 1), 48, 3, padding=1),
+            nn.GroupNorm(8, 48),
+            nn.GELU(),
+            nn.Conv2d(48, 64, 3, padding=1),
+            nn.GroupNorm(8, 64),
+            nn.GELU(),
         )
         down = []
         ch = [64, 96, 128, 192]
         for i in range(3):
-            down += [nn.Conv2d(ch[i], ch[i + 1], 3, stride=2, padding=1),
-                     nn.GroupNorm(8, ch[i + 1]), nn.GELU()]
+            down += [
+                nn.Conv2d(ch[i], ch[i + 1], 3, stride=2, padding=1),
+                nn.GroupNorm(8, ch[i + 1]),
+                nn.GELU(),
+            ]
         self.down = nn.Sequential(*down)
         self.proj = nn.Linear(2 * ch[-1], EMB)
         self.norm = nn.LayerNorm(EMB)
@@ -254,8 +272,10 @@ class SpatialTransitionEBM(nn.Module):
         self.enc = SpatialPairEncoder()
         self.film = nn.Linear(EMB, 2 * 64)
         self.local = nn.Sequential(
-            nn.Conv2d(64, 64, 3, padding=1), nn.GELU(),
-            nn.Conv2d(64, 32, 3, padding=1), nn.GELU(),
+            nn.Conv2d(64, 64, 3, padding=1),
+            nn.GELU(),
+            nn.Conv2d(64, 32, 3, padding=1),
+            nn.GELU(),
             nn.Conv2d(32, 1, 1),
         )
         self.head = nn.Sequential(
@@ -269,7 +289,9 @@ class SpatialTransitionEBM(nn.Module):
         denom = cand_mask.sum(dim=(1, 2)).clamp(min=1.0)
         e_mean = (emap * cand_mask).sum(dim=(1, 2)) / denom
         e_max = (emap + (cand_mask - 1.0) * 1e4).amax(dim=(1, 2))  # -inf outside the valid mask
-        z = torch.cat([rule_emb, cand_emb, rule_emb * cand_emb, (rule_emb - cand_emb).abs()], dim=-1)
+        z = torch.cat(
+            [rule_emb, cand_emb, rule_emb * cand_emb, (rule_emb - cand_emb).abs()], dim=-1
+        )
         return self.head(z).squeeze(-1) + e_mean + 0.5 * e_max
 
 
@@ -299,8 +321,9 @@ def collate_v2(rng, batch_examples, gold_pool, mined_lut, augment=True):
         if augment:
             demos2, tin2, tout2, f = augment_instance_v2(rng, demos, tin, tout)
         else:
-            demos2 = [{"input": clip_grid(p["input"]), "output": clip_grid(p["output"])}
-                      for p in demos]
+            demos2 = [
+                {"input": clip_grid(p["input"]), "output": clip_grid(p["output"])} for p in demos
+            ]
             tin2, tout2, f = clip_grid(tin), clip_grid(tout), clip_grid
         gold_h = ghash(np.asarray(tout2))
         seen = {gold_h}
@@ -339,8 +362,13 @@ def collate_v2(rng, batch_examples, gold_pool, mined_lut, augment=True):
         demo_m.append(dm)
         cand_t.append(ct)
         n_cands.append(len(cands))
-    return (torch.stack(demo_t), torch.stack(demo_m), torch.stack(cand_t),
-            torch.tensor(n_cands), n_mined_used)
+    return (
+        torch.stack(demo_t),
+        torch.stack(demo_m),
+        torch.stack(cand_t),
+        torch.tensor(n_cands),
+        n_mined_used,
+    )
 
 
 def forward_batch_v2(model, demo_t, demo_m, cand_t, device):
@@ -371,12 +399,18 @@ def train(args, device):
     if mined_meta["available"]:
         mined_train = {k for k in mined_lut if k[0] in set(train_names)}
         mined_val = {k for k in mined_lut if k[0] in set(val_names)}
-        print(f"[train] mined negatives: {mined_meta['n_distinct_negs']} across "
-              f"{mined_meta['n_tasks_with_negs']} tasks ({len(mined_train)} train-task slots, "
-              f"{len(mined_val)} val-task slots)", flush=True)
+        print(
+            f"[train] mined negatives: {mined_meta['n_distinct_negs']} across "
+            f"{mined_meta['n_tasks_with_negs']} tasks ({len(mined_train)} train-task slots, "
+            f"{len(mined_val)} val-task slots)",
+            flush=True,
+        )
     else:
-        print("[train] WARNING: no mined-negatives file — structured-only curriculum "
-              "(disclosed in artifact)", flush=True)
+        print(
+            "[train] WARNING: no mined-negatives file — structured-only curriculum "
+            "(disclosed in artifact)",
+            flush=True,
+        )
 
     train_ex = build_examples(tasks, train_names)
     val_ex = build_examples(tasks, val_names)
@@ -388,7 +422,11 @@ def train(args, device):
     n_params = sum(p.numel() for p in model.parameters())
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01)
     sched = torch.optim.lr_scheduler.LambdaLR(
-        opt, lambda s: min(1.0, s / 300) * 0.5 * (1 + math.cos(math.pi * min(s, args.steps) / args.steps)))
+        opt,
+        lambda s: (
+            min(1.0, s / 300) * 0.5 * (1 + math.cos(math.pi * min(s, args.steps) / args.steps))
+        ),
+    )
 
     def eval_val(n_batches=12):
         model.eval()
@@ -415,7 +453,7 @@ def train(args, device):
         E = forward_batch_v2(model, dt, dm, ct, device)
         logits = -E
         for b in range(len(bt)):
-            logits[b, nc[b]:] = -1e9
+            logits[b, nc[b] :] = -1e9
         loss = F.cross_entropy(logits, torch.zeros(len(bt), dtype=torch.long, device=device))
         opt.zero_grad(set_to_none=True)
         loss.backward()
@@ -424,10 +462,14 @@ def train(args, device):
         sched.step()
         if step % args.eval_every == 0:
             vacc = eval_val()
-            log.append({"step": step, "loss": round(float(loss.item()), 4),
-                        "val_top1_acc": round(vacc, 4)})
-            print(f"[train] step {step}/{args.steps} loss={loss.item():.4f} val_top1={vacc:.4f} "
-                  f"(mined used so far: {total_mined})", flush=True)
+            log.append(
+                {"step": step, "loss": round(float(loss.item()), 4), "val_top1_acc": round(vacc, 4)}
+            )
+            print(
+                f"[train] step {step}/{args.steps} loss={loss.item():.4f} val_top1={vacc:.4f} "
+                f"(mined used so far: {total_mined})",
+                flush=True,
+            )
             if vacc > best_val:
                 best_val, bad = vacc, 0
                 best_state = {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
@@ -442,19 +484,41 @@ def train(args, device):
     last10 = [r["val_top1_acc"] for r in log[-10:]]
     mean_val_last10 = round(float(np.mean(last10)), 4) if last10 else None
     corpus_hash = hashlib.sha256(",".join(sorted(tasks)).encode()).hexdigest()[:16]
-    torch.save({"state_dict": model.state_dict(), "best_val_top1": best_val,
-                "mean_val_top1_last10": mean_val_last10, "log": log,
-                "train_names": train_names, "val_names": val_names, "n_params": n_params,
-                "corpus_hash": corpus_hash, "config": vars(args), "seed": SEED,
-                "mined_meta": mined_meta, "total_mined_negs_used": total_mined}, CKPT)
+    torch.save(
+        {
+            "state_dict": model.state_dict(),
+            "best_val_top1": best_val,
+            "mean_val_top1_last10": mean_val_last10,
+            "log": log,
+            "train_names": train_names,
+            "val_names": val_names,
+            "n_params": n_params,
+            "corpus_hash": corpus_hash,
+            "config": vars(args),
+            "seed": SEED,
+            "mined_meta": mined_meta,
+            "total_mined_negs_used": total_mined,
+        },
+        CKPT,
+    )
     dur = time.time() - t0
-    print(f"[train] DONE in {dur:.0f}s best_val={best_val:.4f} mean_val_last10={mean_val_last10} "
-          f"params={n_params}", flush=True)
-    return {"train_duration_s": round(dur, 1), "best_val_top1_acc": round(best_val, 4),
-            "mean_val_top1_last10": mean_val_last10, "n_params": n_params,
-            "n_train_tasks": len(train_names), "n_val_tasks": len(val_names),
-            "corpus_hash": corpus_hash, "mined_meta": mined_meta,
-            "total_mined_negs_used": total_mined, "train_log": log}
+    print(
+        f"[train] DONE in {dur:.0f}s best_val={best_val:.4f} mean_val_last10={mean_val_last10} "
+        f"params={n_params}",
+        flush=True,
+    )
+    return {
+        "train_duration_s": round(dur, 1),
+        "best_val_top1_acc": round(best_val, 4),
+        "mean_val_top1_last10": mean_val_last10,
+        "n_params": n_params,
+        "n_train_tasks": len(train_names),
+        "n_val_tasks": len(val_names),
+        "corpus_hash": corpus_hash,
+        "mined_meta": mined_meta,
+        "total_mined_negs_used": total_mined,
+        "train_log": log,
+    }
 
 
 # ------------------------------------------------------------------------------------ gate 1
@@ -470,8 +534,9 @@ def gate1_near_miss_auroc(model, device, tasks, val_names, n_examples=150, seed=
     with torch.no_grad():
         for i in idx:
             name, demos, tin, tout = val_ex[i]
-            demos_c = [{"input": clip_grid(p["input"]), "output": clip_grid(p["output"])}
-                       for p in demos][:MAX_DEMOS]
+            demos_c = [
+                {"input": clip_grid(p["input"]), "output": clip_grid(p["output"])} for p in demos
+            ][:MAX_DEMOS]
             tout_c = clip_grid(tout)
             negs = near_miss_negatives(rng, tout_c, k=10, max_frac=0.05)
             if len(negs) < 3:
@@ -500,9 +565,13 @@ def score_pool(model, device, entries, tta=False):
         for e in entries:
             acc = np.zeros(len(e["candidates"]))
             for d in transforms:
-                demos = [{"input": d(clip_grid(p["input"])).copy(),
-                          "output": d(clip_grid(p["output"])).copy()}
-                         for p in e["demos"]][:MAX_DEMOS]
+                demos = [
+                    {
+                        "input": d(clip_grid(p["input"])).copy(),
+                        "output": d(clip_grid(p["output"])).copy(),
+                    }
+                    for p in e["demos"]
+                ][:MAX_DEMOS]
                 tin = d(clip_grid(e["test_input"])).copy()
                 dt = torch.zeros(1, MAX_DEMOS, 2 * (N_COLORS + 1), MAX_HW, MAX_HW)
                 dm = torch.zeros(1, MAX_DEMOS)
@@ -514,7 +583,7 @@ def score_pool(model, device, entries, tta=False):
                 Es = []
                 grids = [d(clip_grid(c["grid"])).copy() for c in e["candidates"]]
                 for i0 in range(0, len(grids), 192):
-                    ct = torch.stack([encode_pair(tin, g) for g in grids[i0: i0 + 192]])
+                    ct = torch.stack([encode_pair(tin, g) for g in grids[i0 : i0 + 192]])
                     cm, ce, cmask = model.enc(ct.to(device))
                     Es.append(model.energy(rule.expand(len(ce), -1), cm, ce, cmask).cpu().numpy())
                 acc += np.concatenate(Es)
@@ -544,9 +613,17 @@ def evaluate_pool(args, device, train_meta, gate1, gate1_n):
     tasks = []
     for e, ep, et in zip(entries, E_plain, E_tta):
         tot = sum(c["votes"] for c in e["candidates"])
-        cands = [{"votes": c["votes"], "q_mean": c["q_mean"], "correct": c["correct"],
-                  "E": float(a), "E_tta": float(b), "vote_share": c["votes"] / max(1, tot)}
-                 for c, a, b in zip(e["candidates"], ep, et)]
+        cands = [
+            {
+                "votes": c["votes"],
+                "q_mean": c["q_mean"],
+                "correct": c["correct"],
+                "E": float(a),
+                "E_tta": float(b),
+                "vote_share": c["votes"] / max(1, tot),
+            }
+            for c, a, b in zip(e["candidates"], ep, et)
+        ]
         tasks.append({"task": e["task"], "cands": cands})
 
     n = len(tasks)
@@ -558,8 +635,13 @@ def evaluate_pool(args, device, train_meta, gate1, gate1_n):
     for t in tasks:
         ng = sum(1 for c in t["cands"] if c["correct"])
         nc = len(t["cands"])
-        rand_terms.append(0.0 if ng == 0 else 1.0 - math.comb(nc - ng, min(2, nc)) / math.comb(nc, min(2, nc))
-                          if nc >= 2 else 1.0)
+        rand_terms.append(
+            0.0
+            if ng == 0
+            else 1.0 - math.comb(nc - ng, min(2, nc)) / math.comb(nc, min(2, nc))
+            if nc >= 2
+            else 1.0
+        )
     random_baseline = round(float(np.mean(rand_terms)), 4)
 
     allc = [c for t in tasks for c in t["cands"]]
@@ -571,12 +653,15 @@ def evaluate_pool(args, device, train_meta, gate1, gate1_n):
         for c in allc:
             c[f"_{key}_resid"] = c[key] - (alpha + beta * c["votes"])
 
-    _grouped_loto_union(tasks, lambda c: np.array([np.log1p(c["votes"]), c["vote_share"], c["q_mean"]]))
+    _grouped_loto_union(
+        tasks, lambda c: np.array([np.log1p(c["votes"]), c["vote_share"], c["q_mean"]])
+    )
     for t in tasks:
         for c in t["cands"]:
             c["_union_noE"] = c["_u"]
-    _grouped_loto_union(tasks, lambda c: np.array(
-        [np.log1p(c["votes"]), c["vote_share"], c["q_mean"], c["E_tta"]]))
+    _grouped_loto_union(
+        tasks, lambda c: np.array([np.log1p(c["votes"]), c["vote_share"], c["q_mean"], c["E_tta"]])
+    )
     for t in tasks:
         for c in t["cands"]:
             c["_union_withE"] = c["_u"]
@@ -604,8 +689,10 @@ def evaluate_pool(args, device, train_meta, gate1, gate1_n):
             auh = _auroc(g, ngh)
             if auh is not None:
                 hard.append(auh)
-        return (round(float(np.mean(per)), 4) if per else None,
-                round(float(np.mean(hard)), 4) if hard else None)
+        return (
+            round(float(np.mean(per)), 4) if per else None,
+            round(float(np.mean(hard)), 4) if hard else None,
+        )
 
     auroc_plain, hard_plain = auroc_suite(lambda c: -c["E"])
     auroc_tta, hard_tta = auroc_suite(lambda c: -c["E_tta"])
@@ -618,9 +705,12 @@ def evaluate_pool(args, device, train_meta, gate1, gate1_n):
 
     def _boot(kA, kB):
         gen, deltas = _lcg(SEED), []
+
         def p2(sample, key):
-            return sum(int(any(c["correct"] for c in sorted(t["cands"], key=key)[:2]))
-                       for t in sample) / len(sample)
+            return sum(
+                int(any(c["correct"] for c in sorted(t["cands"], key=key)[:2])) for t in sample
+            ) / len(sample)
+
         for _ in range(1000):
             samp = [tasks[next(gen) % n] for _ in range(n)]
             deltas.append(p2(samp, kA) - p2(samp, kB))
@@ -631,17 +721,24 @@ def evaluate_pool(args, device, train_meta, gate1, gate1_n):
     e2 = res["EBM_v2_TTA8"]["pass@2"]
     gates = {
         "gate1_near_miss_auroc_gt_0p70": bool((gate1 or 0) > 0.70),
-        "gate1_value": gate1, "gate1_n_examples": gate1_n,
+        "gate1_value": gate1,
+        "gate1_n_examples": gate1_n,
         "selection_beats_random": bool(e2 > random_baseline),
         "selection_beats_vote": bool(e2 > vote2),
-        "union_value_add": bool(res["UNION_plus_E_tta"]["pass@2"]
-                                > res["UNION_votes_qmean_voteshare"]["pass@2"]),
+        "union_value_add": bool(
+            res["UNION_plus_E_tta"]["pass@2"] > res["UNION_votes_qmean_voteshare"]["pass@2"]
+        ),
         "headroom_capture_fraction": round((e2 - vote2) / max(1e-9, oracle2 - vote2), 4),
     }
     verdict = (
         "complete: gap3_stage2v2_"
-        + ("BEATS_vote" if gates["selection_beats_vote"]
-           else ("beats_random_not_vote" if gates["selection_beats_random"] else "at_or_below_random"))
+        + (
+            "BEATS_vote"
+            if gates["selection_beats_vote"]
+            else (
+                "beats_random_not_vote" if gates["selection_beats_random"] else "at_or_below_random"
+            )
+        )
         + f"_n{n}_vote_{vote2}_ebmtta_{e2}_rand_{random_baseline}"
         + f"_gate1_{gate1}_auroctta_{auroc_tta}_unionadd_{gates['union_value_add']}"
     )
@@ -650,18 +747,27 @@ def evaluate_pool(args, device, train_meta, gate1, gate1_n):
         "title": "GAP-3 Stage 2 v2: mined-real + structured-near-miss curriculum, spatial FiLM energy",
         "honest_verdict": verdict,
         "inference_substrate": "live_gpu_ebm_train_plus_offline_trm_candidate_rerank_no_oracle",
-        "n_tasks": n, "n_oracle_hit": n_oracle, "oracle_pass2_ceiling": oracle2,
+        "n_tasks": n,
+        "n_oracle_hit": n_oracle,
+        "oracle_pass2_ceiling": oracle2,
         "random_ranker_pass2_baseline": random_baseline,
         "random_baseline_note": RANDOM_BASELINE_NOTE,
         "rankers": res,
-        "auroc": {"ebm_macro": auroc_plain, "ebm_hard_neg_votes_ge5": hard_plain,
-                  "ebm_tta_macro": auroc_tta, "ebm_tta_hard_neg_votes_ge5": hard_tta,
-                  "vote_macro_reference": 0.9235},
+        "auroc": {
+            "ebm_macro": auroc_plain,
+            "ebm_hard_neg_votes_ge5": hard_plain,
+            "ebm_tta_macro": auroc_tta,
+            "ebm_tta_hard_neg_votes_ge5": hard_tta,
+            "vote_macro_reference": 0.9235,
+        },
         "gates": gates,
-        "bootstrap": {"ebm_tta_vs_vote_pass2_ci95": _boot(rankers["EBM_v2_TTA8"], rankers["TRM_VOTE"]),
-                      "union_plus_E_vs_union_pass2_ci95": _boot(
-                          rankers["UNION_plus_E_tta"], rankers["UNION_votes_qmean_voteshare"]),
-                      "B": 1000},
+        "bootstrap": {
+            "ebm_tta_vs_vote_pass2_ci95": _boot(rankers["EBM_v2_TTA8"], rankers["TRM_VOTE"]),
+            "union_plus_E_vs_union_pass2_ci95": _boot(
+                rankers["UNION_plus_E_tta"], rankers["UNION_votes_qmean_voteshare"]
+            ),
+            "B": 1000,
+        },
         "training": train_meta,
         "generator_independence_disclosure": (
             "FORFEITED at the negative-mining level (panel-approved trade): up to 3 negatives per "
@@ -671,19 +777,21 @@ def evaluate_pool(args, device, train_meta, gate1, gate1_n):
         ),
         "model_specs": {
             "architecture": "SpatialPairEncoder (stride-1 hi-res trunk + downsample path, mean+max "
-                            "pool) -> 256-d; rule = mean over demo embeddings; E = global relation MLP "
-                            "+ FiLM-conditioned local energy map (mean + 0.5*max over valid cells)",
+            "pool) -> 256-d; rule = mean over demo embeddings; E = global relation MLP "
+            "+ FiLM-conditioned local energy map (mean + 0.5*max over valid cells)",
             "n_params": train_meta.get("n_params"),
             "curriculum": "per positive: <=3 mined real TRM errors + structured same-shape "
-                          "near-misses (component recolor/move/delete/swap, 1-3 cell flips) + 2 v1 "
-                          "coverage corruptions",
+            "near-misses (component recolor/move/delete/swap, 1-3 cell flips) + 2 v1 "
+            "coverage corruptions",
             "tta": "dihedral-8 energy averaging at eval",
         },
         "preconditions_checked": [
             {"resource": "cuda_available", "available": bool(torch.cuda.is_available())},
             {"resource": "eval_pool_export", "available": Path(POOL).exists()},
-            {"resource": "mined_negatives", "available": train_meta.get("mined_meta", {}).get(
-                "available", False)},
+            {
+                "resource": "mined_negatives",
+                "available": train_meta.get("mined_meta", {}).get("available", False),
+            },
         ],
         "random_seed": SEED,
         "reproducibility_checksum": train_meta.get("corpus_hash"),
@@ -697,8 +805,10 @@ def evaluate_pool(args, device, train_meta, gate1, gate1_n):
     print(f"   oracle={oracle2} random={random_baseline} gate1={gate1} (n={gate1_n})")
     print(f"   auroc: plain={auroc_plain}/{hard_plain} tta={auroc_tta}/{hard_tta} (vote 0.9235)")
     print(f"   gates={gates}")
-    print(f"   bootstrap tta-vote={art['bootstrap']['ebm_tta_vs_vote_pass2_ci95']} "
-          f"union+E-union={art['bootstrap']['union_plus_E_vs_union_pass2_ci95']}")
+    print(
+        f"   bootstrap tta-vote={art['bootstrap']['ebm_tta_vs_vote_pass2_ci95']} "
+        f"union+E-union={art['bootstrap']['union_plus_E_vs_union_pass2_ci95']}"
+    )
     return art
 
 
@@ -708,12 +818,17 @@ def write_gate_blocked_artifact(train_meta, gate1, gate1_n):
     art = {
         "experiment": "arc3_gap3_stage2v2_transition_ebm",
         "title": "GAP-3 Stage 2 v2: mined-real + structured-near-miss curriculum, spatial FiLM energy",
-        "honest_verdict": (f"complete: gap3_stage2v2_gate1_failed_near_miss_auroc_{gate1}"
-                           f"_lt_0p70_no_selection_eval_run"),
+        "honest_verdict": (
+            f"complete: gap3_stage2v2_gate1_failed_near_miss_auroc_{gate1}"
+            f"_lt_0p70_no_selection_eval_run"
+        ),
         "inference_substrate": "live_gpu_ebm_train_plus_offline_trm_candidate_rerank_no_oracle",
-        "gates": {"gate1_near_miss_auroc_gt_0p70": False, "gate1_value": gate1,
-                  "gate1_n_examples": gate1_n,
-                  "note": "selection eval deliberately NOT run per the Stage-2 panel rule"},
+        "gates": {
+            "gate1_near_miss_auroc_gt_0p70": False,
+            "gate1_value": gate1,
+            "gate1_n_examples": gate1_n,
+            "note": "selection eval deliberately NOT run per the Stage-2 panel rule",
+        },
         "training": train_meta,
         "random_seed": SEED,
         "reproducibility_checksum": train_meta.get("corpus_hash"),
@@ -733,8 +848,9 @@ def main():
     ap.add_argument("--eval_every", type=int, default=250)
     ap.add_argument("--patience", type=int, default=10)
     ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
-    ap.add_argument("--skip_gate", action="store_true",
-                    help="CPU smoke only — never use on a real run")
+    ap.add_argument(
+        "--skip_gate", action="store_true", help="CPU smoke only — never use on a real run"
+    )
     args = ap.parse_args()
     torch.manual_seed(SEED)
     np.random.seed(SEED)
@@ -745,18 +861,28 @@ def main():
     if args.mode in ("eval", "all"):
         ck = torch.load(CKPT, map_location="cpu")
         if not train_meta:
-            train_meta = {"best_val_top1_acc": ck.get("best_val_top1"),
-                          "mean_val_top1_last10": ck.get("mean_val_top1_last10"),
-                          "n_params": ck.get("n_params"), "corpus_hash": ck.get("corpus_hash"),
-                          "mined_meta": ck.get("mined_meta", {}), "train_duration_s": 0.0,
-                          "reused_checkpoint": True}
+            train_meta = {
+                "best_val_top1_acc": ck.get("best_val_top1"),
+                "mean_val_top1_last10": ck.get("mean_val_top1_last10"),
+                "n_params": ck.get("n_params"),
+                "corpus_hash": ck.get("corpus_hash"),
+                "mined_meta": ck.get("mined_meta", {}),
+                "train_duration_s": 0.0,
+                "reused_checkpoint": True,
+            }
         model = SpatialTransitionEBM().to(device)
         model.load_state_dict(ck["state_dict"])
         tasks = load_training_corpus()
-        gate1, gate1_n = (None, 0) if args.skip_gate else gate1_near_miss_auroc(
-            model, device, tasks, ck["val_names"])
-        print(f"[gate1] gold-vs-same-shape-near-miss AUROC = {gate1} over {gate1_n} examples "
-              f"(bar: >0.70; v1 measured 0.481 post-hoc)", flush=True)
+        gate1, gate1_n = (
+            (None, 0)
+            if args.skip_gate
+            else gate1_near_miss_auroc(model, device, tasks, ck["val_names"])
+        )
+        print(
+            f"[gate1] gold-vs-same-shape-near-miss AUROC = {gate1} over {gate1_n} examples "
+            f"(bar: >0.70; v1 measured 0.481 post-hoc)",
+            flush=True,
+        )
         if args.skip_gate or (gate1 or 0) > 0.70:
             evaluate_pool(args, device, train_meta, gate1, gate1_n)
         else:

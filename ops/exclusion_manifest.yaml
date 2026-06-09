@@ -443,3 +443,34 @@ retired_extras:
       retire_if_same_verdict: graph-grounding fact-verifier route retired after four consecutive fabrication/block outcomes in exp3862/exp3886/exp3896/exp3920; exp3920 blocked_llama_cpp_inference_failed and was flagged, so future facts work must be reopened as KGHaluBench-graded future-work rather than requeued.
     retire_if_same_verdict: true
     retirement_marker: 'graph_grounding_fact_verifier_scope_retired_exp3920_v362'
+  # Added 2026-06-09 — GAP-3 trained-content-energy selector lineage retirement.
+  # Pre-registered condition (Stage-2 v1 adversarial panel,
+  # results/arc3_gap3_stage2_adversarial_verify.json): "if structured-negative
+  # v2 still lands at random, RETIRE the trained-content-energy lineage on
+  # this pool." Met on letter and spirit per the v2 panel
+  # (results/arc3_gap3_stage2v2_adversarial_verify.json, 5/5 NEGATIVE_CONFIRMED,
+  # retire_lineage=true): v2 passed its synthetic gate (0.7893 — but the gate
+  # measures curriculum-fitting; v1 passes it at 0.7291) and still landed
+  # statistically AT random on selection (pass@2 0.1613 vs random 0.1432,
+  # P(X>=5)=0.468; real-candidate AUROC 0.46-0.49; dominant error class
+  # regressed below chance). The mined-real-error rescue path is structurally
+  # unsuppliable (TRM memorizes its train split: genuine error rate 0.12%).
+  - experiment_scope: 'GAP-3 trained-content-energy ARC candidate selector (Stage-2 lineage: arc3_gap3_stage2_transition_ebm / arc3_gap3_stage2v2_transition_ebm — any vN content-energy EBM trained to rank TRM ARC candidates)'
+    completed_milestone: '2026.06.366'
+    reason: |
+      retire_if_same_verdict condition met across v1+v2: trained content
+      energies master their training curriculum (synthetic near-miss AUROC
+      0.79-0.85; real wrong-shape 0.77-0.96) but score AUROC 0.43-0.50 on the
+      dominant real-error class (same-shape plausible-but-wrong rule
+      applications, 59.1% of errors / 81.4% of wrong-pair mass) across BOTH
+      architectures and curricula; selection statistically at random both
+      times; every eval-side steelman tops out at exactly the no-E union
+      0.4839. Lineage ceiling ~0.63-0.69 vs the ~0.92-0.99 per-task AUROC
+      needed to match vote. Re-open requires operator authorization AND the
+      pre-registered gate-1R (gold-vs-REAL-mined-near-miss AUROC >= 0.70 on
+      tasks held out from both training and checkpoint selection) passed
+      BEFORE any selection eval — and the yield forensics say that gate
+      cannot currently be fed from this checkpoint's training split.
+    retire_if_same_verdict: true
+    operator_reopen_required: true
+    retirement_marker: 'gap3_trained_content_energy_selector_retired_stage2v2_2026_06_09'

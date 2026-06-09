@@ -204,6 +204,57 @@ Hamming 0.10) and plausible-but-wrong rule applications (59.1%). On these the en
   serious candidates beyond v2 are execution/program-synthesis verification and hybrids, not cheaper
   energies.
 
+**Stage 2 v2 — RAN SAME-DAY (operator "run it"); NEGATIVE, adversarially confirmed; LINEAGE RETIRED
+per the pre-registered condition.** (`results/arc3_gap3_stage2v2_transition_ebm.json` +
+`corrigendum_2026_06_09_stage2v2` + `..._adversarial_verify.json`, 5/5 NEGATIVE_CONFIRMED,
+retire_lineage=true.) The v2 spatial FiLM/max energy + structured near-miss curriculum PASSED its gate
+(synthetic near-miss AUROC 0.7893; seed-stable 0.79–0.83) and the model demonstrably resolves what it
+trains on — yet selection landed statistically AT random AGAIN (pass@2 0.1613 vs random 0.1432,
+P(X≥5)=0.468; real-candidate AUROC 0.46–0.49; every steelman tops out at exactly the no-E union 0.4839).
+The round's forensics (all committed numbers reproduced bit-for-bit; severity "major" attaches to the
+artifact's self-description):
+
+- **The mined-real axis was a silent no-op** — miner de-aug bug keyed 240/250 mined negatives to empty
+  input grids (unjoinable); effective real-error exposure was 10 negatives / 3 tasks / 0.04% of the
+  curriculum. v2 was therefore a CLEAN test of the structured-synthetic arm alone.
+- **The mining premise is structurally barren** — the "59.9% wrong" yield was a padding artifact off
+  ~500×; TRM's genuine train-split error rate is 10/8,259 = 0.12% (memorization). No miner fix can
+  supply a real-error-dominant curriculum from this checkpoint's training split.
+- **Gate-1 was a self-licking ice cream cone** — the v1 model passes the identical synthetic gate at
+  0.7291. Synthetic-negative gates measure curriculum-fitting, not transfer; v2's REAL-pool ≤5%-cell
+  near-miss AUROC is 0.58–0.60 (vote: 0.95 on the same class).
+- **The near-miss curriculum REGRESSED the dominant class** — same-shape plausible-but-wrong rule
+  applications (59.1% of errors, 81.4% of wrong-pair mass) scored 0.502 macro / 0.3283 pair-weighted,
+  below chance and worse than v1 (0.6283/0.4707): the curriculum teaches "gold + small defect = bad,"
+  ranking coherent wrong rule-applications BELOW gold.
+- Also recorded: TTA non-replication (hurt v2); independence violation (mined from the eval generator's
+  own checkpoint — in the direction that should HELP, and it still landed at random).
+
+**HONEST BOUND (lineage closed; full wording in the v2 synthesis):** the ~16pp present-but-mis-voted
+oracle headroom (0.6129 vs vote 0.4516) is REAL but UNREACHED by scalar (q_halt), latent (z_H probe),
+or trained-content-energy selectors (v1 + v2, two architectures, two curricula). These selectors master
+what they train on but score AUROC 0.43–0.50 on the dominant real-error class; matching vote needs
+per-task AUROC ~0.92–0.99; the lineage ceiling is ~0.63–0.69 with ~36% synthetic→real transfer. The
+lineage is on `ops/exclusion_manifest.yaml` (`gap3_trained_content_energy_selector_retired_stage2v2_
+2026_06_09`); re-open requires operator authorization + the pre-registered gate-1R (REAL-mined-negative
+AUROC ≥ 0.70, held out from training AND checkpoint selection) passed BEFORE any selection eval.
+
+### GAP-4: same-shape rule-application consistency (the missing discriminator, quantified by Stages 2v1+2v2)
+- status: **open** — the concrete missing-verifier spec distilled from the GAP-3 lineage retirement.
+- failure mode: candidates that match gold's SHAPE and look structurally coherent but apply the WRONG
+  rule (59.1% of TRM's real errors; 81.4% of wrong-candidate pairs; median Hamming-to-gold 0.40).
+  Every content signal tested scores ~chance here (hand-invariants ≤0.67; trained content-EBMs
+  0.43–0.50 across v1+v2) while frequency vote scores 0.92–0.98 via generator-marginal signal.
+- missing discriminator: **does the candidate output follow from applying the task's induced rule to
+  the test input** — "is this the right transformation," not "is this grid damaged."
+- candidate design: execution/program-synthesis verification — induce the rule as a program from the
+  demo pairs, execute it on the test input, compare to the candidate (the M2-v3/v4 codex+consistency-
+  energy stack already built for ARC-AGI-3 is the in-house precedent); or vote-primary hybrids gated by
+  an executed-rule consistency check. Synthesizing the missing negative class IS program synthesis —
+  which is why no cheaper energy can fake it.
+- priority: HIGH — it is the entire residual 16pp headroom on the TRM rerank pool, and the same class
+  blocks any generator-side verifier moat claim on ARC-AGI-1.
+
 ## Open gaps
 
 ### GAP-1: transpose / orientation discrimination
