@@ -8081,3 +8081,5 @@ c |
 | 2026-06-09 08:41 UTC | r11l FULL solve: take r11l from 1/6 (exp3946) to a | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: pend((p, t))\\n     |
 | 2026-06-09 09:06 UTC | SECOND ARC-AGI-3 game solve: solve level-0 of the  | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1286s (300s silence). Last out |
 | 2026-06-09 09:22 UTC | SECOND ARC-AGI-3 game solve: solve level-0 of the  | OK | 87 passed in 4.48s |
+| 2026-06-09 09:34 UTC | OWED from .365: generalize the active-data -> code | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-06-09 09:41 UTC | OWED from .365: generalize the active-data -> code | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed in 308.18s (0:05:08) |
