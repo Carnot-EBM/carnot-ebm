@@ -47,6 +47,10 @@ def main():
     ap.add_argument("--batch", type=int, default=256, help="global_batch_size (eval voting is batch-invariant)")
     ap.add_argument("--save_outputs", action="store_true",
                     help="torch.save preds/inputs/puzzle_identifiers for the offline hybrid re-rank")
+    ap.add_argument("--save_latent", action="store_true",
+                    help="GAP-3 Stage 1: ALSO dump z_h_pool (the penultimate latent z_H[:,0], hidden=512) "
+                         "to a SEPARATE eval_out/<ckpt>_latent dir, so the model-native energy uses the "
+                         "full latent instead of the scalar q_halt. Implies --save_outputs.")
     ap.add_argument("--max_batches", type=int, default=0,
                     help="cap eval batches for an INDICATIVE (partial-vote) pass@K — 0 = full faithful eval")
     args = ap.parse_args()
@@ -66,14 +70,16 @@ def main():
     # --- config straight from the checkpoint's own all_config.yaml ---
     cfg_dict = yaml.safe_load(open(f"{SNAP}/{sub}/all_config.yaml"))
     cfg_dict["load_checkpoint"] = f"{SNAP}/{sub}/{step}"
-    cfg_dict["checkpoint_path"] = f"eval_out/{args.ckpt}"
+    cfg_dict["checkpoint_path"] = f"eval_out/{args.ckpt}_latent" if args.save_latent else f"eval_out/{args.ckpt}"
     cfg_dict["data_paths"] = [f"data/arc1concept-aug-1000" if args.ckpt == "arc_v1" else "data/arc2concept-aug-1000"]
     cfg_dict["ema"] = False              # ckpt already EMA; eval loaded weights directly
     cfg_dict["freeze_weights"] = True    # build SignSGD-only optimizer (skip AdamATan2)
     cfg_dict["global_batch_size"] = args.batch
     cfg_dict["epochs"] = 1               # only used for a total_steps estimate; we never train
-    cfg_dict["eval_save_outputs"] = (["preds", "inputs", "puzzle_identifiers", "q_halt_logits"]
-                                     if args.save_outputs else [])  # q added for the verifier-rerank dump (avg_q tiebreak)
+    _save_keys = ["preds", "inputs", "puzzle_identifiers", "q_halt_logits"]  # q for the rerank avg_q tiebreak
+    if args.save_latent:
+        _save_keys.append("z_h_pool")    # GAP-3 Stage 1: the full penultimate latent (hidden=512)
+    cfg_dict["eval_save_outputs"] = _save_keys if (args.save_outputs or args.save_latent) else []
     cfg_dict["project_name"] = cfg_dict.get("project_name") or "trm_arc_eval"
     cfg_dict["run_name"] = f"{args.ckpt}_carnot_eval"
     config = PretrainConfig(**cfg_dict)
