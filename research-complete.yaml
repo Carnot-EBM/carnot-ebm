@@ -36960,37 +36960,146 @@ milestones:
     result: OK (conductor)
 - id: 2026.06.365
   correction_type: v365_archive_activate_v366_arc_truth
-  title: 'Archive .365 and activate .366 with the first ARC solve preserved'
+  title: Archive .365 and activate .366 with the first ARC solve preserved
   doc: docs/research-notes/arc-agi3-agent-research-plan.md
   completed: '2026-06-09'
-  finding: '.365 achieved Carnot''s first ARC-AGI-3 solve in exp3946, skipped exp3947 through exp3950, and blocked exp3951 on an unsupported op: exists gate.'
+  finding: '.365 achieved Carnot''s first ARC-AGI-3 solve in exp3946, skipped exp3947 through exp3950, and blocked exp3951
+    on an unsupported op: exists gate.'
   activation_recorded: exp3952-archive-v365-activate-v366
   tasks:
   - id: exp3945-archive-v364-activate-v365
-    title: 'Archive .364 and activate .365 with ARC substrate gates'
+    title: Archive .364 and activate .365 with ARC substrate gates
     deliverable: results/experiment_3945_archive_v364_activate_v365.json
     result: 'complete: archived_v364_v365_active_arc_substrate_green_modules_importable'
   - id: exp3946-r11l-first-solve
-    title: 'First ARC-AGI-3 solve on r11l level 1'
+    title: First ARC-AGI-3 solve on r11l level 1
     deliverable: results/experiment_3946_r11l_first_solve.json
-    result: 'complete: r11l_first_solve_levels1_of6_solvedTrue_pieces2_targets1 [FIRST_SOLVE real_env_confirmed=true levels_solved=1 actions=4]'
+    result: 'complete: r11l_first_solve_levels1_of6_solvedTrue_pieces2_targets1 [FIRST_SOLVE real_env_confirmed=true levels_solved=1
+      actions=4]'
   - id: exp3947-active-data-codex-nonspatial-sweep
-    title: 'Active-data codex nonspatial sweep'
+    title: Active-data codex nonspatial sweep
     deliverable: results/experiment_3947_active_data_codex_nonspatial_sweep.json
     result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3947_active_data_codex_nonspatial_sweep.json'
   - id: exp3948-goal-predicate-induction
-    title: 'Goal-predicate induction from level-up transitions'
+    title: Goal-predicate induction from level-up transitions
     deliverable: results/experiment_3948_goal_predicate_induction.json
     result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3948_goal_predicate_induction.json'
   - id: exp3949-hidden-state-latent-registers
-    title: 'Hidden-state latent-register augmentation'
+    title: Hidden-state latent-register augmentation
     deliverable: results/experiment_3949_hidden_state_latent_registers.json
     result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3949_hidden_state_latent_registers.json'
   - id: exp3950-hardware-continuity
-    title: 'Hardware continuity for attached boards'
+    title: Hardware continuity for attached boards
     deliverable: results/experiment_3950_hardware_continuity.json
     result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3950_hardware_continuity.json'
   - id: exp3951-capstone-v365
-    title: 'Capstone .365 ARC first-solve aggregation'
+    title: Capstone .365 ARC first-solve aggregation
     deliverable: results/experiment_3951_capstone_v365.json
-    result: 'blocked_gate_check_failed [op_exists_gate_bug=unknown_op_exists]'
+    result: blocked_gate_check_failed [op_exists_gate_bug=unknown_op_exists]
+- id: 2026.06.366
+  title: "ARC-AGI-3 \u2014 from first solve to a verifier-load-bearing offline run: solve more r11l levels + a second non-spatial\
+    \ game (accuracy), run the 3 OWED generalization experiments .365 skipped (6-game pipeline sweep, goal-predicate induction,\
+    \ latent-register augmentation for hidden-state games), prove the verifier action-pruner cuts actions on REAL solved games\
+    \ WITH-vs-WITHOUT (M3 efficiency thesis), cross-game DSL transfer as self-learning, offline accuracy-vs-baseline M4 quota-gate\
+    \ readiness, hardware continuity, capstone. The first solve is banked; the open question is converting it into a multi-level,\
+    \ multi-game offline run where the verifier's value is measured, not assumed."
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-09'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3952-archive-v365-activate-v366
+    title: 'Archive .365 -> activate .366; GREEN-GATE: assert research-complete.yaml + ops/exclusion_manifest.yaml parse under
+      yaml.safe_load, the ARC substrate unit tests are green, and the ARC agentic modules import (carnot.agentic.arc_agi3_world_model,
+      arc_world_model_synth, arc_world_model_dsl), so .366 can EXECUTE the ARC accuracy + efficiency tasks. RECORD the .365
+      truth: exp3946 SOLVED r11l L1 (real-env-confirmed); exp3947/3948/3949/3950 never ran; exp3951 capstone blocked on op:exists.'
+    deliverable: results/experiment_3952_archive_v365_activate_v366.json
+    result: OK (conductor)
+  - id: exp3953-r11l-full-solve
+    title: 'r11l FULL solve: take r11l from 1/6 (exp3946) to as many of levels 2-6 as the induced select/place mechanic +
+      perception reach, offline, real-env-confirmed. exp3946 induced: a click selects a piece, a 2nd click places it so the
+      pieces'' average position aligns on the target centroid; placing exactly on top re-selects. Reuse that mechanic + perception
+      (pieces=color-3 sprites, targets=flkdtg) and drive level-by-level to ACCURACY_levels_solved as high as possible. Report
+      per-level actions vs baseline_actions (the RHAE efficiency axis). RHAE weights LATER levels more, so each additional
+      level is worth more than the first.'
+    deliverable: results/experiment_3953_r11l_full_solve.json
+    result: OK (conductor)
+  - id: exp3954-second-game-solve
+    title: "SECOND ARC-AGI-3 game solve: solve level-0 of the next-easiest NON-SPATIAL game (lp85-305b61c3 is known-tractable\
+      \ \u2014 EWM solves it 100%; su15-1944f8ab / sc25-635fd71a / tn36-ef4dde99 are candidates) via the perception -> induced-model\
+      \ -> goal-predicate loop that produced the r11l first solve. A SECOND solved game is the first evidence the method GENERALIZES\
+      \ beyond r11l (one solve could be game-specific luck; two is a method). Real-env-confirmed; pick the game empirically\
+      \ by L0 action budget + inducibility, do NOT hardcode the win from source."
+    deliverable: results/experiment_3954_second_game_solve.json
+    result: OK (conductor)
+  - id: exp3955-active-codex-nonspatial-sweep
+    title: "OWED from .365: generalize the active-data -> codex-program-synthesis -> consistency-energy-verification pipeline\
+      \ across the 6 NON-SPATIAL games (r11l, sc25, lp85, tn36, dc22, su15). How many reach a TRUSTWORTHY world-model (held-out\
+      \ consistency energy <= 0.15)? vc33 reached 0.005 from active data; this measures whether that generalizes. Reuse scripts/experiments/arc3_m2_active_codex.py\
+      \ (passive-vs-active codex synthesis) \u2014 extend it to the 6-game set and report a per-game trustworthy-model table.\
+      \ This is the accuracy-side verifier-load-bearing measurement: the consistency energy CERTIFIES which induced model\
+      \ is trustworthy, with no oracle."
+    deliverable: results/experiment_3955_active_codex_nonspatial_sweep.json
+    result: OK (conductor)
+  - id: exp3956-goal-predicate-induction
+    title: "OWED from .365: induce a GOAL-PREDICATE from observed level-up transitions. The M2-v5 finding is that a trustworthy\
+      \ transition-model is necessary but NOT sufficient \u2014 you also need to RECOGNIZE the WIN state. Collect level-up\
+      \ transitions (via active/goal-directed play on the non-spatial games), characterize the grid-state property that holds\
+      \ at a win (e.g. all pieces on targets / a matched pattern), and emit a reusable goal_predicate(grid)->bool. Measure:\
+      \ on a held-out set, does the induced predicate correctly flag win-vs-non-win states (precision/recall)? Require >=2\
+      \ level-up examples before committing a predicate (single-example goal mis-induction is the named M1/M2 risk)."
+    deliverable: results/experiment_3956_goal_predicate_induction.json
+    result: OK (conductor)
+  - id: exp3957-hidden-state-latent-registers
+    title: 'OWED from .365: latent-register augmentation for the 11 HIDDEN-STATE games. The determinism probe (results/arc3_determinism_probe.json)
+      found 11/25 games where the visible grid does NOT determine the dynamics (same frame_hash + action -> different next
+      grid). Augment the state with inferred latent boolean registers (counter / collected-flag / phase) so the augmented
+      state becomes Markov, and measure: does the induced model''s consistency energy DROP on the hidden-state games vs the
+      grid-only baseline? This is the named direction-killer (a grid->grid model is under-determined on hidden state); CASSANDRA
+      (arXiv:2601.18620) corroborates programmatic+stochastic world modeling for exactly this regime.'
+    deliverable: results/experiment_3957_hidden_state_latent_registers.json
+    result: OK (conductor)
+  - id: exp3958-cross-game-dsl-transfer
+    title: "CROSS-GAME DSL TRANSFER (self-learning MANDATE, research-program.md Tier-2 constraint memory): build a DreamCoder-style\
+      \ DSL fragment library across the games modeled this milestone, and measure whether reusing the library makes the Nth\
+      \ game's induction CHEAPER than the 1st \u2014 fewer codex/proposer calls and/or lower held-out consistency energy at\
+      \ EQUAL active-data budget. This is Carnot's self-learning thesis IN the ARC venue: the agent gets better at NEW games\
+      \ by reusing learned constraint fragments (the persistent GameGraph + DSL library are the Tier-2 memory hardware path).\
+      \ A measured transfer win is the cross-game generalization signal the EWM SOTA also reports (DSL fragment reuse)."
+    deliverable: results/experiment_3958_cross_game_dsl_transfer.json
+    result: OK (conductor)
+  - id: exp3959-m3-efficiency-real-games
+    title: "M3 EFFICIENCY THESIS (LOAD-BEARING \u2014 the existential 'verifier earns its place' proof in the RHAE venue):\
+      \ on the REAL games SOLVED this milestone (r11l + any 2nd game), run the solver in two arms \u2014 (i) WITH the Carnot\
+      \ verifier action-pruner + state-value, (ii) ablation with the pruner DISABLED (random/uninformed legal-action order).\
+      \ Measure EFFICIENCY_mean_action_ratio_on_solved (actions used vs baseline_actions) per arm with bootstrap 95% CIs.\
+      \ Non-overlapping CIs in the exp3929 direction (synthetic 1.96x, CI 1.74-2.19) = the efficiency thesis TRANSFERS from\
+      \ synthetic to a real, externally-defined benchmark. RHAE squares action efficiency, so a pruning win is a direct score\
+      \ win AND the cleanest external evidence for the project thesis."
+    deliverable: results/experiment_3959_m3_efficiency_real_games.json
+    result: OK (conductor)
+  - id: exp3960-m4-offline-accuracy-sweep
+    title: 'M4 QUOTA-GATE READINESS: run the hybrid perception+verifier policy through scripts/experiments/arc3_offline_eval.py
+      across the start_here games; report ACCURACY_total_levels_solved + EFFICIENCY_mean_action_ratio_on_solved vs the random/object_click
+      baselines AND vs the documented comparators (frontier-LLM <0.4%, Graph-Explore median 30/52 no-induction, EWM v2 58.12%
+      RHAE). Emit an HONEST quota-gate verdict: per the operator gate, an ONLINE scored run is justified ONLY when offline
+      ACCURACY (then EFFICIENCY) beats BOTH our prior submitted run (0) AND a no-induction baseline. PREPARE the operator-only
+      scored-run assessment; do NOT submit (Operator-Only External Publication).'
+    deliverable: results/experiment_3960_m4_offline_accuracy_sweep.json
+    result: OK (conductor)
+  - id: exp3961-hardware-continuity
+    title: "Hardware continuity (consolidated; OWED from .365): SSH-reachability + terminal-state check for each attached\
+      \ board \u2014 KV260 (ssh kria, xmutil listapps), GateMate (openFPGALoader -c dirtyJtag --detect), PolarFire (ssh polarfire).\
+      \ Record per-board reachability + the next concrete forward step; no bitstream redesign. Per CLAUDE.md KV260 SSH-Not-SD-Card\
+      \ Discipline: NEVER use the host SD-card block device as a KV260 precondition (SSH-reachability is the ONLY valid KV260\
+      \ precondition). Use DISTINCT wall-clock timers per board (the exp3866 TAUTOLOGY corrigendum)."
+    deliverable: results/experiment_3961_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp3962-capstone-v366
+    title: "Capstone .366 (UNGATED \u2014 the .365 op:exists lesson): aggregate the ARC accuracy + efficiency push \u2014\
+      \ how many r11l levels solved (exp3953), did a SECOND game solve (exp3954), how many of the 6 non-spatial games reached\
+      \ a trustworthy world-model (exp3955), goal-predicate precision/recall (exp3956), latent-register energy delta (exp3957),\
+      \ cross-game DSL transfer win (exp3958), the M3 efficiency CIs on REAL games (exp3959 \u2014 the load-bearing 'verifier\
+      \ earns its place' datum), and the M4 quota-gate readiness (exp3960). Honest verdict on accuracy + efficiency progress.\
+      \ SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on \u2014 aggregate whatever exists."
+    deliverable: results/experiment_3962_capstone_v366.json
+    result: OK (conductor)
