@@ -8099,3 +8099,5 @@ c |
 | 2026-06-09 11:06 UTC | Capstone .366 (UNGATED — the .365 op:exists lesson | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 4.88s |
 | 2026-06-09 11:09 UTC | Capstone .366 (UNGATED — the .365 op:exists lesson | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 5.02s |
 | 2026-06-09 11:11 UTC | Capstone .366 (UNGATED — the .365 op:exists lesson | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 4.91s |
+| 2026-06-09 12:14 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-06-09 12:16 UTC | Milestone 2026.06.367 activated | OK | 11 tasks queued |
