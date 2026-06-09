@@ -1,0 +1,259 @@
+{
+  "caveat": "Consistency energy certifies that the synthesized program predicts transitions on held-out data; it does not certify that the mechanic interpretation is correctly named. Report energy as the trustworthiness signal.",
+  "duration_s": 1082.4,
+  "episodes": 32,
+  "experiment": "experiment_3968_active_codex_nonspatial_sweep",
+  "games": [
+    "r11l",
+    "sc25",
+    "lp85",
+    "tn36",
+    "dc22",
+    "su15"
+  ],
+  "games_evaluated": [
+    "dc22",
+    "lp85",
+    "r11l",
+    "sc25",
+    "su15",
+    "tn36"
+  ],
+  "honest_verdict": "complete: exp3968_active_codex_nonspatial_sweep_trustworthy_0of6",
+  "inference_substrate": "offline_arc_agi3_plus_codex_program_synthesis_consistency_verified",
+  "iters": 3,
+  "markov_vs_hidden_split": {
+    "determinism_probe_hidden_state": [
+      "dc22",
+      "sc25"
+    ],
+    "determinism_probe_markov": [
+      "lp85",
+      "r11l",
+      "su15",
+      "tn36"
+    ],
+    "energy_high_or_missing": [
+      "dc22",
+      "lp85",
+      "r11l",
+      "sc25",
+      "su15",
+      "tn36"
+    ],
+    "energy_trustworthy_low": [],
+    "note": "The determinism split comes from results/arc3_determinism_probe.json. The energy split certifies held-out prediction trustworthiness, not whether the mechanic has been correctly named."
+  },
+  "n_games": 6,
+  "n_trustworthy_at_0.15": 0,
+  "no_gpu_used": true,
+  "per_game": [
+    {
+      "best_energy": 0.7616,
+      "codex_calls": 3,
+      "codex_seconds": 100.9,
+      "determinism_probe_hidden_state": true,
+      "diff_from_vc33_0.005": 0.7566,
+      "game": "dc22",
+      "history": [
+        {
+          "codex_s": 34.6,
+          "iter": 0,
+          "status": "unsafe_or_uncompilable"
+        },
+        {
+          "codex_s": 31.0,
+          "energy": 0.7616,
+          "iter": 1,
+          "status": "graded"
+        },
+        {
+          "codex_s": 35.3,
+          "energy": 0.8655,
+          "iter": 2,
+          "status": "graded"
+        }
+      ],
+      "n_active": 899,
+      "n_test": 600,
+      "trustworthy": false
+    },
+    {
+      "best_energy": 0.7996,
+      "codex_calls": 3,
+      "codex_seconds": 155.8,
+      "determinism_probe_hidden_state": false,
+      "diff_from_vc33_0.005": 0.7946,
+      "game": "lp85",
+      "history": [
+        {
+          "codex_s": 74.1,
+          "energy": 1.0,
+          "iter": 0,
+          "status": "graded"
+        },
+        {
+          "codex_s": 41.3,
+          "energy": 1.0,
+          "iter": 1,
+          "status": "graded"
+        },
+        {
+          "codex_s": 40.4,
+          "energy": 0.7996,
+          "iter": 2,
+          "status": "graded"
+        }
+      ],
+      "n_active": 899,
+      "n_test": 35,
+      "trustworthy": false
+    },
+    {
+      "best_energy": 0.7752,
+      "codex_calls": 3,
+      "codex_seconds": 193.1,
+      "determinism_probe_hidden_state": false,
+      "diff_from_vc33_0.005": 0.7702,
+      "game": "r11l",
+      "history": [
+        {
+          "codex_s": 39.8,
+          "energy": 0.9057,
+          "iter": 0,
+          "status": "graded"
+        },
+        {
+          "codex_s": 42.0,
+          "energy": 0.8721,
+          "iter": 1,
+          "status": "graded"
+        },
+        {
+          "codex_s": 111.3,
+          "energy": 0.7752,
+          "iter": 2,
+          "status": "graded"
+        }
+      ],
+      "n_active": 899,
+      "n_test": 600,
+      "trustworthy": false
+    },
+    {
+      "best_energy": 0.6155,
+      "codex_calls": 3,
+      "codex_seconds": 204.7,
+      "determinism_probe_hidden_state": true,
+      "diff_from_vc33_0.005": 0.6105,
+      "game": "sc25",
+      "history": [
+        {
+          "codex_s": 98.8,
+          "energy": 0.9151,
+          "iter": 0,
+          "status": "graded"
+        },
+        {
+          "codex_s": 55.4,
+          "energy": 0.6155,
+          "iter": 1,
+          "status": "graded"
+        },
+        {
+          "codex_s": 50.5,
+          "energy": 0.6889,
+          "iter": 2,
+          "status": "graded"
+        }
+      ],
+      "n_active": 899,
+      "n_test": 200,
+      "trustworthy": false
+    },
+    {
+      "best_energy": 0.214,
+      "codex_calls": 3,
+      "codex_seconds": 267.4,
+      "determinism_probe_hidden_state": false,
+      "diff_from_vc33_0.005": 0.209,
+      "game": "su15",
+      "history": [
+        {
+          "codex_s": 127.9,
+          "energy": 0.214,
+          "iter": 0,
+          "status": "graded"
+        },
+        {
+          "codex_s": 93.5,
+          "energy": 0.8933,
+          "iter": 1,
+          "status": "graded"
+        },
+        {
+          "codex_s": 46.0,
+          "energy": 0.2649,
+          "iter": 2,
+          "status": "graded"
+        }
+      ],
+      "n_active": 899,
+      "n_test": 600,
+      "trustworthy": false
+    },
+    {
+      "best_energy": 0.2359,
+      "codex_calls": 3,
+      "codex_seconds": 95.9,
+      "determinism_probe_hidden_state": false,
+      "diff_from_vc33_0.005": 0.2309,
+      "game": "tn36",
+      "history": [
+        {
+          "codex_s": 25.7,
+          "energy": 0.2359,
+          "iter": 0,
+          "status": "graded"
+        },
+        {
+          "codex_s": 32.6,
+          "energy": 0.2459,
+          "iter": 1,
+          "status": "graded"
+        },
+        {
+          "codex_s": 37.6,
+          "energy": 0.249,
+          "iter": 2,
+          "status": "graded"
+        }
+      ],
+      "n_active": 899,
+      "n_test": 600,
+      "trustworthy": false
+    }
+  ],
+  "per_game_best_energy": {
+    "dc22": 0.7616,
+    "lp85": 0.7996,
+    "r11l": 0.7752,
+    "sc25": 0.6155,
+    "su15": 0.214,
+    "tn36": 0.2359
+  },
+  "random_seed": 0,
+  "source_artifacts": [
+    "results/arc3_m2_active_codex.json",
+    "results/arc3_win_condition_survey.json",
+    "results/arc3_determinism_probe.json"
+  ],
+  "submitted_to_leaderboard": false,
+  "test_budget": 1400,
+  "title": "active_data_codex_nonspatial_sweep_reattempt",
+  "total_codex_calls": 18,
+  "total_codex_seconds": 1017.8,
+  "train_budget": 900,
+  "trust_threshold": 0.15,
+  "vc33_baseline_energy": 0.005
+}
