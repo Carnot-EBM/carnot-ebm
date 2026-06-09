@@ -5121,3 +5121,9 @@ The critical path for milestone .250:
 - theme: Operational Retrospective for 2026.06.363
 - key result: Honest negative: no experiment commits found since activation.
 - acceptance: no data available this milestone
+
+### Milestone 2026.06.365
+- exp_range: no data available this milestone
+- theme: Zero-artifact milestone — capstone stalled at the .365 first-solve aggregation gate
+- key result: Honest negative — no experiment commits found since activation of 2026.06.365; both GPUs correctly idle (0 compute-bound tasks).
+- acceptance: 0/0 criteria met
