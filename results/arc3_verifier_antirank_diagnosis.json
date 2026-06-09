@@ -1,0 +1,62 @@
+{
+  "aggregation_pass2": {
+    "TRM_VOTE": 0.4516,
+    "loo_drop_color_mapping": 0.1935,
+    "loo_drop_content_overlap": 0.1935,
+    "loo_drop_delta_pattern": 0.1935,
+    "loo_drop_object_count": 0.1613,
+    "loo_drop_palette_histogram_shape": 0.2258,
+    "loo_drop_symmetry": 0.1935,
+    "loo_drop_tiling_scaling": 0.1613,
+    "mean_defined": 0.1613,
+    "median_defined": 0.2258,
+    "min_defined": 0.4194,
+    "union_max": 0.1935,
+    "v1_only": 0.3871
+  },
+  "aggregations_beating_vote": [],
+  "best_aggregation": "min_defined",
+  "duration_s": 7.2,
+  "experiment": "arc3_verifier_antirank_diagnosis",
+  "family_applicable_task_counts": {
+    "color_mapping": 6,
+    "content_overlap": 16,
+    "delta_pattern": 18,
+    "object_count": 31,
+    "palette_histogram_shape": 31,
+    "symmetry": 0,
+    "tiling_scaling": 3,
+    "v1": 31
+  },
+  "honest_note": "DIAGNOSIS per operator directive (2026-06-09). If aggregations_beating_vote is empty AND every per_family AUROC <= ~0.55, the cheap hand-features genuinely lack ARC rule-correctness signal on real candidates => GAP-3 learned/model-native energy is the only path (not more invariants). If one leave-one-out recovers ranking, that family is a fixable rogue.",
+  "honest_verdict": "complete: antirank_diagnosis_no_hand_aggregation_beats_vote_signal_absent_n31_bestagg_0.4194_vote_0.4516",
+  "inference_substrate": "offline_trm_candidate_rerank_no_oracle",
+  "n_oracle_hit": 19,
+  "n_tasks": 31,
+  "n_union_max_misranked": 13,
+  "no_gpu_used": true,
+  "per_family_auroc_note": "AUROC over all (gold, non-gold) candidate pairs within a task, applicable-only, fed -score so >0.5 = family scores gold LOWER (better/discriminative), ~0.5 = blind, <0.5 = ANTI-discriminative (prefers wrong candidates). This is on TRM's REAL mis-predictions, NOT the synthetic distractor protocol the v2 verifier was tuned on.",
+  "per_family_discrimination_auroc": {
+    "color_mapping": 0.7098,
+    "content_overlap": 0.6722,
+    "delta_pattern": 0.4314,
+    "object_count": 0.6748,
+    "palette_histogram_shape": 0.5613,
+    "symmetry": null,
+    "tiling_scaling": 0.9074,
+    "v1": 0.4183
+  },
+  "random_seed": 0,
+  "sinking_family_census": {
+    "color_mapping": 0,
+    "content_overlap": 7,
+    "delta_pattern": 0,
+    "object_count": 2,
+    "palette_histogram_shape": 4,
+    "symmetry": 0,
+    "tiling_scaling": 0,
+    "v1": 0
+  },
+  "sinking_family_note": "Of tasks where union_max ranks a wrong candidate above gold, which applicable family is gold's argmax (drives gold's high max-violation). Names the family sinking correct answers.",
+  "title": "Why the Carnot v2 hand-invariant ensemble anti-ranks on TRM's real candidate pool"
+}
