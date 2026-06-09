@@ -8104,3 +8104,5 @@ c |
 | 2026-06-09 12:33 UTC | Archive .366 -> activate .367; GREEN-GATE: assert  | OK | 110 passed in 5.51s |
 | 2026-06-09 12:46 UTC | r11l INCREMENTAL solve (+1..+2 levels, per the MAN | OK | 84 passed in 4.69s |
 | 2026-06-09 12:59 UTC | lp85 INCREMENTAL solve (+1 level, per the MANDATOR | OK | 88 passed in 4.58s |
+| 2026-06-09 13:12 UTC | THIRD ARC-AGI-3 game first-solve: solve level-1 of | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-06-09 13:28 UTC | THIRD ARC-AGI-3 game first-solve: solve level-1 of | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: /v1internal:streamG |
