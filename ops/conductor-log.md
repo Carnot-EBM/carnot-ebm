@@ -8052,3 +8052,4 @@ c |
 | 2026-06-09 04:44 UTC | Literature synthesis — where Carnot's NOW-CREDIBLE | OK | 86 passed in 4.03s |
 | 2026-06-09 04:59 UTC | Capstone .364 — the verifier scorecard with the ef | OK | 86 passed in 5.17s |
 | 2026-06-09 05:01 UTC | Milestone 2026.06.365 activated | OK | 7 tasks queued |
+| 2026-06-09 05:16 UTC | Archive .364 -> activate .365; GREEN-GATE: assert  | OK | 108 passed in 5.13s |
