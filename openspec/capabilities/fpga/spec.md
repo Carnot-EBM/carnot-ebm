@@ -4403,6 +4403,75 @@ passes.
 
 ---
 
+### REQ-HW-3972
+
+**Title:** Hardware continuity owed rerun MUST keep KV260, GateMate, and PolarFire visible with per-board timers
+
+**Description:**
+Experiment 3972 MUST produce
+`results/experiment_3972_hardware_continuity.json` as the owed rerun for the
+Exp 3961 hardware-continuity slot that produced no artifact. The experiment is
+a reachability and continuity check only; ARC work remains the milestone focus.
+The three attached boards MUST be checked independently and honestly:
+KV260 MUST use only `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` as
+the board precondition, GateMate MUST use
+`openFPGALoader -c dirtyJtag --detect` and require a colognechip/GateMate
+IDCODE in the output, and PolarFire MUST use
+`ssh -o ConnectTimeout=5 polarfire 'true'`. KV260 host SD-card block-device
+checks MUST NOT be used.
+
+For each reachable board, the artifact MUST record the detected or loaded
+continuity evidence and the next concrete forward step. KV260 evidence MUST
+include the loaded overlay from `ssh kria 'xmutil listapps'` plus `/dev/uio*`
+state from `ssh kria 'ls /dev/uio*'`. GateMate evidence MUST include the
+`openFPGALoader --detect` output. PolarFire evidence MUST include the live SSH
+continuity output gathered after the precondition. For any unreachable board,
+the board's next step MUST be exactly `blocked_<board>_unreachable`, where
+`<board>` is `kv260`, `gatemate`, or `polarfire`.
+
+The artifact MUST include bare `kv260_reachable`, `gatemate_reachable`,
+`polarfire_reachable`, `per_board_next_step`, `per_board_duration_s`,
+`preconditions_checked`, `honest_verdict`, `duration_s`, and
+`inference_substrate` fields. `per_board_duration_s` MUST contain one measured
+wall-clock timer per board, and all three values MUST be positive and distinct
+so the Exp 3866 timer-tautology failure mode cannot recur. The artifact MUST
+set `inference_substrate="hardware_smoke"`. `honest_verdict` MUST start with
+`success:` or `complete:` when at least one board is reachable, or with
+`blocked_` when no board is reachable.
+
+**Acceptance criteria:**
+- `scripts/experiments/experiment_3972_hardware_continuity.py` writes
+  `results/experiment_3972_hardware_continuity.json`.
+- The required artifact fields are present as bare values; field principles
+  annotate those fields separately through `field_principles`.
+- `preconditions_checked` records which resource checks ran, with at least
+  `{resource, available}` for `kv260_ssh`, `gatemate_jtag_detect`, and
+  `polarfire_ssh`.
+- Reachable boards have concrete next steps derived from their recorded
+  continuity evidence; unreachable boards have the required
+  `blocked_<board>_unreachable` next-step string.
+- The artifact contains no KV260 host SD-card marker such as `/dev/mmcblk`.
+
+**Implementation status:** Planned (Exp 3972)
+
+---
+
+### SCENARIO-HW-3972
+
+**Scenario:** Owed three-board continuity rerun records reachability, evidence, and distinct board timers.
+
+**Given:** KV260, GateMate, and PolarFire may independently be reachable or
+unreachable through their allowed SSH/JTAG preconditions.
+**When:** Experiment 3972 runs the hardware-smoke continuity rerun.
+**Then:** It writes `results/experiment_3972_hardware_continuity.json` with
+the bare required fields, per-board precondition records, per-board next steps,
+distinct positive per-board durations, a hardware-smoke substrate declaration,
+and an honest terminal-prefix or blocked verdict.
+
+**Implementation status:** Planned (Exp 3972)
+
+---
+
 ### REQ-HW-3577
 
 **Title:** KV260 hardware-task continuity verification
