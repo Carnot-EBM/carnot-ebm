@@ -8076,3 +8076,7 @@ c |
 +) -> None:
 +    """REQ-REPORT |
 | 2026-06-09 07:46 UTC | Archive .365 -> activate .366; GREEN-GATE: assert  | OK | cache hit: 109 passed in 4.51s |
+| 2026-06-09 07:59 UTC | r11l FULL solve: take r11l from 1/6 (exp3946) to a | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-06-09 08:20 UTC | r11l FULL solve: take r11l from 1/6 (exp3946) to a | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: abled. All tool cal |
+| 2026-06-09 08:41 UTC | r11l FULL solve: take r11l from 1/6 (exp3946) to a | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: pend((p, t))\\n     |
+| 2026-06-09 09:06 UTC | SECOND ARC-AGI-3 game solve: solve level-0 of the  | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1286s (300s silence). Last out |
