@@ -5,6 +5,14 @@
     "residual_beats_vote": false,
     "residual_ranker_pass2": 0.0645
   },
+  "adversarial_verify": {
+    "final_verdict": "NEGATIVE_CONFIRMED",
+    "report": "results/arc3_gap3_stage1_adversarial_verify.json",
+    "reviewers": 5,
+    "stage2_recommendation": "GO",
+    "unanimous": true,
+    "worst_severity": "minor"
+  },
   "bootstrap_pass2_delta_vs_vote": {
     "B": 1000,
     "ci95_over_tasks": [
@@ -12,6 +20,21 @@
       0.0645
     ],
     "point": -0.0322
+  },
+  "corrigendum_2026_06_09": {
+    "bootstrap_point_exact": -0.0323,
+    "discrimination_gate_correction": "gates.discrimination_within_task_auroc_gt_0p70=True is based on a macro-AUROC inflated by 84.6% one-vote junk negatives. Hard-negative variants: pair-weighted 0.7815; top-10-by-vote negatives 0.7948; votes>=5 negatives 0.6646 (FAILS the 0.70 gate). The gate as originally defined passes; the hard-negative variant does not \u2014 record both.",
+    "framing_correction": "The 'signal exists but does not convert' reading over-credits the latent. Vote's own within-task AUROC is 0.9235 > probe 0.8689, and the vote-orthogonal probe residual has AUROC 0.3176 (below chance) \u2014 the latent carries NO incremental gold signal beyond vote; it is a partial vote shadow, not an independent signal that fails to convert.",
+    "loto_caveat": "The split is leave-one-ENTRY-out; task f3e62deb contributes two test entries that sit in each other's training folds (direction favors the probe). Strict task-grouped LOTO reproduces identical probe numbers (pass@2=0.4194) \u2014 immaterial here, but use grouped LOTO at 400-task scale.",
+    "origin": "5-reviewer adversarial-verify round (workflow gap3-stage1-adversarial-verify). All original numbers above reproduce exactly (probe column re-fits from raw z_mean to max|diff|=5.1e-7). The corrections below sharpen interpretation; the headline verdict is UNCHANGED.",
+    "residual_control_caveat": "The global-OLS vote-residualization is mildly anti-vote (pearson(votes,probe)=-0.227 slope tilt). Fairer variants: within-task vote-rank residual pass@2=0.1613; per-fold LOTO residualization identical 0.0323/0.0645 \u2014 all far below vote 0.4516.",
+    "stage2_carry_forwards": [
+      "Include probe24+knn25 within-task rank-average as a cheap latent steelman arm in the 400-task re-confirmation.",
+      "Baseline-to-beat for Stage 2 is the no-latent votes+q_mean+vote_share union (pass@2 0.4839; 0.5161 with latent, which only TIES Stage-0's top-3-then-q_mean shortlist ceiling) \u2014 vote_share is a cheap feature worth keeping.",
+      "n=31 CI upper edge (+0.0645) cannot exclude a small positive: re-confirm the negative at 400-task scale."
+    ],
+    "steelman_ceiling": "Best latent construction found across ~300 swept variants: pass@2=0.4839 (+1 task; unbalanced ridge PCA-24 / probe_k192 / lda_k24 / probe24+knn25 rank-average all hit the same single-task ceiling, rescuing f3e62deb gold at vote-rank 2). Bootstrap CI95 [0.0, +0.0968] touches zero, post-hoc selected from 16-240 configs, and 0.4839 equals vote's own optimistic tie-break ceiling. 'Does not beat vote' holds at the sweep maximum too.",
+    "vote_leak_mechanism": "Per-candidate mean-pooling of z_H[:,0] over the candidate's `votes` augmentation views injects vote count into the feature (corr(||z_mean||, log1p(votes)) ~ -0.80 raw-norm, ~ -0.41 Spearman; ~ -0.014 after centering). Stage-2 design constraint: energies MUST be computed from grid content generator-independently with NO augmentation pooling."
   },
   "duration_s": 17.3,
   "experiment": "arc3_gap3_stage1_latent_energy",

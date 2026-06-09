@@ -136,6 +136,34 @@ headroom), so this is an honest negative. **Recommendation: GO for Stage 1** —
 penultimate-activation latent (not collapsed to a scalar, not vote-redundant); the 0.86 soft-AUROC is a
 leading indicator the latent carries sharper, vote-orthogonal signal. (Caveat: n=31; re-confirm at 400.)
 
+**Stage 1 — TRM penultimate-latent energy (z_H[:,0], hidden=512): NEGATIVE, adversarially confirmed →
+advance to Stage 2.** Re-run completed 2026-06-09 after the Fable-5 switch abort (fresh 29.4-min capped
+latent dump, 100 batches, GPU 1; `results/arc3_gap3_stage1_latent_energy.json`). The out-of-fold LOTO
+PCA-24 + balanced-logistic probe over z_mean does NOT beat vote: probe pass@2 0.4194 < vote 0.4516;
+vote-residualized probe collapses to 0.0645; HYBRID adds nothing (0.4516); headroom_capture = −0.20
+(probe recovers 1 of 5 recoverable tasks but LOSES 2 vote-wins, net −1); bootstrap Δpass@2 point −0.0323,
+CI95 [−0.129, +0.0645].
+
+**Adversarial-verify round** (`results/arc3_gap3_stage1_adversarial_verify.json`): 5 independent
+reviewers re-derived every number from the exported 8041-candidate table + (8041,512) latents and swept
+~300 alternative OOF/LOTO constructions (PCA-k 4–192, raw-512 logistic/ridge/LDA/Mahalanobis, kNN-to-gold,
+centroid/softmin, RankNet, GBM stumps, feature unions, shortlist re-ranks). Unanimous **NEGATIVE_CONFIRMED**,
+worst severity minor, zero de-confounded rankers beating vote. The round SHARPENED the Stage-0 leading
+indicator into a refutation of it: the latent is a **partial vote shadow**, not an independent signal —
+vote's own within-task AUROC 0.9235 > probe 0.8689, the vote-orthogonal residual has AUROC 0.3176 (below
+chance), and the hard-negative (votes≥5) probe AUROC is 0.6646 (fails the 0.70 gate the macro number
+passed). Mechanism: per-candidate mean-pooling of the latent over its `votes` augmentation views bakes
+vote count into the feature (corr(‖z_mean‖, log-votes) ≈ −0.80 raw / −0.41 Spearman). On the deep-headroom
+tasks gold is MORE latent-buried than vote-buried (t2: latent rank ~329 vs vote 65 of 599). Steelman
+ceiling across the whole sweep: 0.4839 (+1 task, CI touches 0, equals vote's optimistic tie-break ceiling).
+**Recommendation: GO for Stage 2** (trained generator-INDEPENDENT ARC transition-EBM) with design
+constraints from this round: compute energy from grid CONTENT (no generator activations, no augmentation
+pooling — the structural vote leak), use task-GROUPED LOTO at 400-task scale, and the baseline-to-beat is
+the no-latent votes+q_mean+vote_share union (pass@2 0.4839; with-latent 0.5161 only ties Stage-0's
+top-3-then-q_mean shortlist ceiling). Corrigendum details added in-place to the Stage-1 artifact
+(`corrigendum_2026_06_09` block). (Caveat: n=31; CI upper edge +0.0645 cannot exclude a small positive —
+re-confirm at 400.)
+
 ## Open gaps
 
 ### GAP-1: transpose / orientation discrimination
