@@ -1,0 +1,24 @@
+{
+  "experiment": 3951,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-06-09",
+  "started_at": "2026-06-09T06:29:44.612264+00:00",
+  "finished_at": "2026-06-09T06:29:44.612264+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Capstone .365: aggregate the ARC first-solve push \u2014 did r11l SOLVE (exp3946 ACCURACY_levels_solved > 0, real-env-confirmed)? how many of the 6 non-spatial games reached a trustworthy world-model (exp3947)? did goal-predicate induction (exp3948) and latent-register augmentation (exp3949) advance plan-ability? Honest verdict on first-solve progress. SKIP any flagged_adversarial artifact; cite upstream sha256.",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3946-r11l-first-solve.honest_verdict (unknown op 'exists')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3946-r11l-first-solve",
+      "artifact_field": "honest_verdict",
+      "op": "exists",
+      "expected": true,
+      "actual": "complete: r11l_first_solve_levels1_of6_solvedTrue_pieces2_targets1",
+      "passed": false,
+      "reason": "unknown op 'exists'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

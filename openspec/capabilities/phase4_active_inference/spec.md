@@ -51,3 +51,9 @@
 
 ### SCENARIO-PHASE4-007
 **Description:** Running Exp 3929 records mean actions-to-solve for verifier and baseline arms, bootstrap CI for the baseline/verifier action-efficiency ratio, solve rates for both arms, methodology fields, real ARC-AGI-3 access preflight reachability, and an honest verdict that reports either verifier-router help only when the CI lower bound is above 1.0 or a no-advantage synthetic finding otherwise.
+
+### REQ-PHASE4-008: Active Data Codex Nonspatial Sweep
+**Description:** The system SHALL test whether the "active data -> codex program synthesis -> consistency-energy verification" pipeline generalizes across the 6 non-spatial games. It MUST collect active transitions, run codex program synthesis with the consistency-energy refactor-from-best loop (bounded to <=3 iterations), and grade the best program on a common held-out test. It MUST report a per-game table including best held-out consistency energy, whether it is trustworthy (<=0.15), and the vc33 baseline diff.
+
+### SCENARIO-PHASE4-008
+**Description:** Running Exp 3947 produces a valid artifact with fields `n_trustworthy_at_0.15`, `per_game_best_energy`, `total_codex_calls`, `total_codex_seconds`, and an honest verdict.

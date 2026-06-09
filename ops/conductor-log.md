@@ -8053,3 +8053,17 @@ c |
 | 2026-06-09 04:59 UTC | Capstone .364 — the verifier scorecard with the ef | OK | 86 passed in 5.17s |
 | 2026-06-09 05:01 UTC | Milestone 2026.06.365 activated | OK | 7 tasks queued |
 | 2026-06-09 05:16 UTC | Archive .364 -> activate .365; GREEN-GATE: assert  | OK | 108 passed in 5.13s |
+| 2026-06-09 05:29 UTC | FIRST ARC-AGI-3 SOLVE: reverse-engineer r11l's exa | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: e is enabled. All t |
+| 2026-06-09 05:31 UTC | FIRST ARC-AGI-3 SOLVE: reverse-engineer r11l's exa | OK | Deliverable already exists in repo |
+| 2026-06-09 05:41 UTC | Generalize the active-data -> codex-program-synthe | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-06-09 05:54 UTC | Generalize the active-data -> codex-program-synthe | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-06-09 06:06 UTC | Generalize the active-data -> codex-program-synthe | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-06-09 06:08 UTC | Induce a GOAL-PREDICATE from observed level-up tra | SKIP | Pre-tests failing, self-heal failed: 1 failed, 87 passed in 9.30s |
+| 2026-06-09 06:11 UTC | Induce a GOAL-PREDICATE from observed level-up tra | SKIP | Pre-tests failing, self-heal failed: 1 failed, 87 passed in 10.23s |
+| 2026-06-09 06:13 UTC | Induce a GOAL-PREDICATE from observed level-up tra | SKIP | Pre-tests failing, self-heal failed: 1 failed, 87 passed in 10.44s |
+| 2026-06-09 06:15 UTC | Latent-register augmentation for the 11 HIDDEN-STA | SKIP | Pre-tests failing, self-heal failed: 1 failed, 87 passed in 9.62s |
+| 2026-06-09 06:18 UTC | Latent-register augmentation for the 11 HIDDEN-STA | SKIP | Pre-tests failing, self-heal failed: 1 failed, 87 passed in 9.91s |
+| 2026-06-09 06:20 UTC | Latent-register augmentation for the 11 HIDDEN-STA | SKIP | Pre-tests failing, self-heal failed: 1 failed, 87 passed in 10.00s |
+| 2026-06-09 06:23 UTC | Hardware continuity (consolidated): SSH-reachabili | SKIP | Pre-tests failing, self-heal failed: 1 failed, 87 passed in 9.88s |
+| 2026-06-09 06:25 UTC | Hardware continuity (consolidated): SSH-reachabili | SKIP | Pre-tests failing, self-heal failed: 1 failed, 87 passed in 9.32s |
+| 2026-06-09 06:27 UTC | Hardware continuity (consolidated): SSH-reachabili | SKIP | Pre-tests failing, self-heal failed: 1 failed, 87 passed in 10.06s |
