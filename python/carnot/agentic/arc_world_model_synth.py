@@ -27,12 +27,26 @@ Perception/induction is deterministic numpy; the only learning is frequency-coun
 
 from __future__ import annotations
 
+import ast
 from collections import Counter, defaultdict
 from typing import Optional
 
 import numpy as np
 
 from .arc_agi3_world_model import frame_hash
+
+
+def extract_library_fragments(code: str) -> list[str]:
+    """Extract all functions EXCEPT 'predict' from a code snippet."""
+    try:
+        tree = ast.parse(code)
+    except SyntaxError:
+        return []
+    fragments = []
+    for node in tree.body:
+        if isinstance(node, ast.FunctionDef) and node.name != "predict":
+            fragments.append(ast.unparse(node).strip())
+    return fragments
 
 
 def _click_xy(akey: tuple) -> Optional[tuple[int, int]]:
