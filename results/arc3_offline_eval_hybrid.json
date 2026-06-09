@@ -1,15 +1,15 @@
 {
-  "ACCURACY_solve_rate": 0.0,
-  "ACCURACY_total_levels_solved": 0,
+  "ACCURACY_solve_rate": 0.0429,
+  "ACCURACY_total_levels_solved": 3,
   "ACCURACY_total_win_levels": 70,
-  "EFFICIENCY_mean_action_ratio_on_solved": null,
+  "EFFICIENCY_mean_action_ratio_on_solved": 0.316,
   "budget_cap": 3000,
   "budget_factor": 3.0,
-  "duration_s": 1.1,
+  "duration_s": 9.6,
   "experiment": "arc3_offline_eval",
-  "games_with_any_progress": 0,
+  "games_with_any_progress": 3,
   "gate_note": "Offline, air-gapped. This is the number the quota-gate compares: only go ONLINE when ACCURACY_total_levels_solved (then EFFICIENCY) beats BOTH the TRM-agent baseline AND our best prior submitted Carnot run.",
-  "honest_verdict": "complete: arc3_offline_random_levels0of70_games_with_progress0_meaneffNone",
+  "honest_verdict": "complete: arc3_offline_hybrid_levels3of70_games_with_progress3_meaneff0.316",
   "inference_substrate": "offline_air_gapped_arc_agi3_local_environments",
   "n_games": 9,
   "no_llm_used": true,
@@ -34,7 +34,7 @@
       "win_levels": 7
     },
     {
-      "actions_used": 494,
+      "actions_used": 1164,
       "baseline_actions": [
         17,
         38,
@@ -46,15 +46,19 @@
         159
       ],
       "budget": 1164,
-      "final_state": "GameState.GAME_OVER",
+      "final_state": "GameState.NOT_FINISHED",
       "game_id": "lp85-305b61c3",
-      "levels_solved": 0,
-      "per_level_action_ratio": [],
-      "per_level_actions": [],
+      "levels_solved": 1,
+      "per_level_action_ratio": [
+        0.294
+      ],
+      "per_level_actions": [
+        5
+      ],
       "win_levels": 8
     },
     {
-      "actions_used": 201,
+      "actions_used": 639,
       "baseline_actions": [
         18,
         28,
@@ -66,7 +70,7 @@
         18
       ],
       "budget": 639,
-      "final_state": "GameState.GAME_OVER",
+      "final_state": "GameState.NOT_FINISHED",
       "game_id": "sb26-7fbdac44",
       "levels_solved": 0,
       "per_level_action_ratio": [],
@@ -115,7 +119,7 @@
       "win_levels": 8
     },
     {
-      "actions_used": 54,
+      "actions_used": 64,
       "baseline_actions": [
         21,
         48,
@@ -136,7 +140,7 @@
       "win_levels": 9
     },
     {
-      "actions_used": 60,
+      "actions_used": 15,
       "baseline_actions": [
         22,
         33,
@@ -148,13 +152,17 @@
       "budget": 699,
       "final_state": "GameState.GAME_OVER",
       "game_id": "r11l-495a7899",
-      "levels_solved": 0,
-      "per_level_action_ratio": [],
-      "per_level_actions": [],
+      "levels_solved": 1,
+      "per_level_action_ratio": [
+        0.182
+      ],
+      "per_level_actions": [
+        4
+      ],
       "win_levels": 6
     },
     {
-      "actions_used": 92,
+      "actions_used": 35,
       "baseline_actions": [
         22,
         42,
@@ -175,7 +183,7 @@
       "win_levels": 9
     },
     {
-      "actions_used": 59,
+      "actions_used": 120,
       "baseline_actions": [
         36,
         6,
@@ -187,14 +195,18 @@
       "budget": 1050,
       "final_state": "GameState.GAME_OVER",
       "game_id": "sc25-635fd71a",
-      "levels_solved": 0,
-      "per_level_action_ratio": [],
-      "per_level_actions": [],
+      "levels_solved": 1,
+      "per_level_action_ratio": [
+        0.472
+      ],
+      "per_level_actions": [
+        17
+      ],
       "win_levels": 6
     }
   ],
-  "policy": "random",
+  "policy": "hybrid",
   "random_seed": 3971,
   "submitted_to_leaderboard": false,
-  "title": "arc3_offline_eval_random"
+  "title": "arc3_offline_eval_hybrid"
 }

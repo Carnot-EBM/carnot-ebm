@@ -3227,3 +3227,11 @@ Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in t
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-06-06T03:34:12Z | 2026-06-06T03:34:49Z | Wrote operational retro for 2026.06.358 | ~2k |
+
+## Session: 2026-06-09 GAP-3 Stage-1 re-run (Fable 5, outer-loop interactive)
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-06-09T19:40:55Z | (in progress) | Re-run GAP-3 Stage 1 per project_gap3_verifier_program.md: paused-state verified, 29.4-min TRM latent dump (100 batches, GPU 1), Stage-1 LOTO probe -> NEGATIVE (probe pass@2 0.4194 < vote 0.4516, within-AUROC 0.8689), conductor restored, 5-reviewer adversarial-verify workflow launched | ~40k |
