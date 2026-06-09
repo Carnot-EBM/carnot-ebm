@@ -69,3 +69,9 @@
 
 ### SCENARIO-PHASE4-012
 **Description:** Running Exp 3959 produces a valid artifact with fields `ci95_with`, `ci95_without`, `efficiency_ratio_with_over_without`, `cis_non_overlapping_pruner_helps`, `n_solved_levels_measured`, and `honest_verdict`. The verdict is honest and reports blocked if no real solved games are available.
+
+### REQ-PHASE4-013: ARC-AGI-3 r11l Incremental Real-Env Solve
+**Description:** The system SHALL extend the real-env-confirmed r11l solve monotonically beyond the prior L1 artifact by reusing the induced select-place mechanic, re-perceiving piece-target pairs after each level-up, stopping after L3 or the first unsolved level, and writing `results/experiment_3964_r11l_incremental_l2.json` with bare artifact fields for total levels solved, newly solved levels beyond L1, per-level actions, baseline action references, first failed level, real-env confirmation, random seed, duration, inference substrate, and terminal-prefix honest verdict.
+
+### SCENARIO-PHASE4-013
+**Description:** Running Exp 3964 against the offline r11l environment either writes `blocked_arc_offline_env_unavailable` when the offline ARC environment cannot load, or confirms each solved level through `levels_completed`, records actions and baseline references per solved level, reports at least the prior L1 total honestly, and never attempts a full all-level solve beyond the scoped L2/L3 target.
