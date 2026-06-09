@@ -58,6 +58,9 @@
 ### SCENARIO-PHASE4-008
 **Description:** Running Exp 3947 produces a valid artifact with fields `n_trustworthy_at_0.15`, `per_game_best_energy`, `total_codex_calls`, `total_codex_seconds`, and an honest verdict.
 
+### SCENARIO-PHASE4-008-3968
+**Description:** Running Exp 3968 re-attempts the active-data codex non-spatial sweep and writes `results/experiment_3968_active_codex_nonspatial_sweep.json` with `n_trustworthy_at_0.15`, `per_game_best_energy`, `total_codex_calls`, `total_codex_seconds`, `markov_vs_hidden_split`, `random_seed`, `honest_verdict`, `duration_s`, and `inference_substrate`; the run must block honestly with `blocked_codex_unavailable` or `blocked_arc_offline_env_unavailable` when either required substrate is absent.
+
 ### REQ-PHASE4-009: ARC-AGI-3 Goal Predicate Induction
 **Description:** The system SHALL induce a grid-grounded goal predicate from observed level-up transitions for non-spatial ARC-AGI-3 games. It MUST collect transitions where `levels_completed` increments, requiring at least 2 examples to avoid mis-induction. It MUST evaluate the precision and recall of the induced predicate on held-out win vs. non-win states.
 
