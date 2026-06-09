@@ -8086,3 +8086,4 @@ c |
 | 2026-06-09 09:50 UTC | OWED from .365: generalize the active-data -> code | SKIP | Pre-tests failing, self-heal failed: 1 failed, 84 passed in 388.54s (0:06:28) |
 | 2026-06-09 10:03 UTC | OWED from .365: induce a GOAL-PREDICATE from obser | OK | 122 passed in 5.08s |
 | 2026-06-09 10:09 UTC | OWED from .365: latent-register augmentation for t | OK | 83 passed in 4.47s |
+| 2026-06-09 10:22 UTC | CROSS-GAME DSL TRANSFER (self-learning MANDATE, re | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
