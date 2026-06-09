@@ -1,0 +1,109 @@
+{
+  "activated_milestone": "2026.06.365",
+  "active_milestone_confirmed": true,
+  "active_roadmap_path": "research-roadmap.yaml",
+  "arc_module_import_results": {
+    "carnot.agentic.arc_agi3_world_model": {
+      "error": null,
+      "import_ok": true
+    },
+    "carnot.agentic.arc_world_model_dsl": {
+      "error": null,
+      "import_ok": true
+    },
+    "carnot.agentic.arc_world_model_synth": {
+      "error": null,
+      "import_ok": true
+    }
+  },
+  "arc_modules_import_command": [
+    ".venv/bin/python",
+    "-c",
+    "import importlib, json, sys\nmods = ['carnot.agentic.arc_agi3_world_model', 'carnot.agentic.arc_world_model_synth', 'carnot.agentic.arc_world_model_dsl']\nout = {}\nfor mod in mods:\n    try:\n        importlib.import_module(mod)\n        out[mod] = {'import_ok': True, 'error': None}\n    except Exception as exc:\n        out[mod] = {'import_ok': False, 'error': repr(exc)}\nprint(json.dumps(out, sort_keys=True))\nsys.exit(0 if all(v['import_ok'] for v in out.values()) else 1)\n"
+  ],
+  "arc_modules_import_exit_code": 0,
+  "arc_modules_importable": true,
+  "arc_substrate_test_command": [
+    ".venv/bin/pytest",
+    "tests/python/test_arc_agi3_world_model.py",
+    "tests/python/test_arc_world_model_synth.py",
+    "tests/python/test_arc_world_model_dsl.py",
+    "-q",
+    "--no-header",
+    "-n",
+    "0",
+    "--no-cov",
+    "-o",
+    "addopts="
+  ],
+  "arc_substrate_test_exit_code": 0,
+  "arc_substrate_tests_green": true,
+  "archived_milestone": "2026.06.364",
+  "duration_s": 9.843966,
+  "exclusion_manifest_parses": true,
+  "experiment_id": "exp3945",
+  "field_principles": {
+    "activated_milestone": "Confirms .365 is live so downstream tasks resolve.",
+    "arc_modules_importable": "Bare bool: the agentic ARC modules import for .365 execution.",
+    "arc_substrate_tests_green": "Bare bool: the ARC M0/M2 unit tests pass.",
+    "archived_milestone": "Provenance: which milestone was archived (2026.06.364).",
+    "duration_s": "Aggregation wall-clock duration with a small floor.",
+    "exclusion_manifest_parses": "Bare bool: the manifest still loads under yaml.safe_load.",
+    "honest_verdict": "Terminal-prefix verdict for the record task.",
+    "inference_substrate": "Aggregation substrate for a record-only task.",
+    "research_complete_yaml_parses": "Bare bool: the colon-poison guard still loads."
+  },
+  "honest_verdict": "complete: archived_v364_v365_active_arc_substrate_green_modules_importable",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "n_tasks_archived": 11,
+  "preconditions_checked": {
+    "active_milestone": "2026.06.365",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "exclusion_manifest_exists": true,
+    "exclusion_manifest_parsed": true,
+    "research_complete_yaml_exists": true,
+    "research_complete_yaml_parsed_after": true,
+    "research_complete_yaml_parsed_before": true
+  },
+  "prior_milestone_verdicts_summary": "exp3934: complete: archived_v363_v364_active_unblock_state_recorded_green_gates\nexp3935: complete: competent_judge_READY_fixture_auroc1.0000_modelQwen3.6-35B-A3B_valid_comparator_landed\nexp3936: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3936_valid_efficiency_head_to_head.json\nexp3937: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3937_non_degenerate_cascade_router.json\nexp3938: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3938_moat_scissor_replication.json\nexp3939: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3939_arc_agi3_agentic_step2.json\nexp3940: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3940_fr11_v27_cascade_band_online_learning.json\nexp3941: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3941_hardware_continuity_clean.json\nexp3942: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3942_verifier_cross_domain_map.json\nexp3943: complete: literature_synthesis_positioned_0_new_refs_public_docs_untouched\nexp3944: complete: capstone_v364_efficiencyINCONCLUSIVE_moat_replicatedfalse_earnsfalse_paper_ready_true_frozen_unchanged [efficiency=INCONCLUSIVE moat_replicated=false earns=false]",
+  "random_seed": 3945,
+  "reproducibility_checksum": "d78f8cf7a4c2617c285f77769f89f7671ebd01c641712786460ef9a30982f3c5",
+  "research_complete_parse_command": [
+    ".venv/bin/python",
+    "-c",
+    "import yaml; yaml.safe_load(open('research-complete.yaml'))"
+  ],
+  "research_complete_parse_exit_code": 0,
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v364_to_v365_3945.v1",
+  "summary_command": [
+    ".venv/bin/python",
+    "scripts/summarize_artifact.py",
+    "results/experiment_3934_archive_v363_activate_v364.json",
+    "results/experiment_3935_competent_judge_build.json",
+    "results/experiment_3936_valid_efficiency_head_to_head.json",
+    "results/experiment_3937_non_degenerate_cascade_router.json",
+    "results/experiment_3938_moat_scissor_replication.json",
+    "results/experiment_3939_arc_agi3_agentic_step2.json",
+    "results/experiment_3940_fr11_v27_cascade_band_online_learning.json",
+    "results/experiment_3941_hardware_continuity_clean.json",
+    "results/experiment_3942_verifier_cross_domain_map.json",
+    "results/experiment_3943_literature_synthesis.json",
+    "results/experiment_3944_capstone_v364.json"
+  ],
+  "summary_exit_code": 0,
+  "task_id": "exp3945-archive-v364-activate-v365",
+  "task_verdicts": {
+    "exp3934-archive-v363-activate-v364": "complete: archived_v363_v364_active_unblock_state_recorded_green_gates",
+    "exp3935-run-validate-competent-judge": "complete: competent_judge_READY_fixture_auroc1.0000_modelQwen3.6-35B-A3B_valid_comparator_landed",
+    "exp3936-valid-efficiency-head-to-head": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3936_valid_efficiency_head_to_head.json",
+    "exp3937-non-degenerate-cascade-router": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3937_non_degenerate_cascade_router.json",
+    "exp3938-moat-scissor-replication-independent-corpus": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3938_moat_scissor_replication.json",
+    "exp3939-arc-agi3-agentic-step2": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3939_arc_agi3_agentic_step2.json",
+    "exp3940-fr11-v27-cascade-band-online-learning": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3940_fr11_v27_cascade_band_online_learning.json",
+    "exp3941-hardware-continuity-clean": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3941_hardware_continuity_clean.json",
+    "exp3942-verifier-cross-domain-discriminating-value-map": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3942_verifier_cross_domain_map.json",
+    "exp3943-literature-synthesis": "complete: literature_synthesis_positioned_0_new_refs_public_docs_untouched",
+    "exp3944-capstone-v364": "complete: capstone_v364_efficiencyINCONCLUSIVE_moat_replicatedfalse_earnsfalse_paper_ready_true_frozen_unchanged [efficiency=INCONCLUSIVE moat_replicated=false earns=false]"
+  }
+}
