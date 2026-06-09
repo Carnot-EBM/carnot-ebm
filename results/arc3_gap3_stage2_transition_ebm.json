@@ -1,38 +1,38 @@
 {
   "a1_shortcut_diagnostics": {
-    "mean_within_task_spearman_E_vs_voterank": 0.0388,
-    "pearson_E_gridsize": 0.1816,
-    "pearson_E_logvotes": -0.078,
-    "pearson_E_votes": -0.041
+    "mean_within_task_spearman_E_vs_voterank": 0.0198,
+    "pearson_E_gridsize": -0.0896,
+    "pearson_E_logvotes": -0.0076,
+    "pearson_E_votes": -0.0113
   },
   "a2_overfit_audit": {
     "note": "val measures gold-vs-SYNTHETIC-corruption top-1 on held-out TRAINING tasks; the eval pool is real TRM candidates on the ARC-1 EVAL split \u2014 fully disjoint tasks (asserted at train time). A large val-vs-eval gap = distribution shift between synthetic corruptions and real generator errors, not task leak.",
-    "train_val_top1_acc_vs_synthetic_negatives": 0.0938
+    "train_val_top1_acc_vs_synthetic_negatives": 0.5903
   },
   "a3_no_oracle_audit": "Energy computed from (demos, test_input, candidate_grid) only. The eval pool file does not contain gold output grids (exporter drops them); `correct` labels are used exclusively to score rankings post-hoc. Training corpus is arc-agi_training+concept; arc-agi_training2 was EXCLUDED after an overlap audit found 376/400 ARC-1 eval tasks inside it (29/30 pool tasks).",
   "auroc": {
-    "ebm_hard_negatives_votes_ge5": 0.6168,
-    "ebm_macro": 0.5253,
-    "ebm_pair_weighted": 0.4661,
+    "ebm_hard_negatives_votes_ge5": 0.6181,
+    "ebm_macro": 0.5442,
+    "ebm_pair_weighted": 0.5228,
     "vote_macro_reference": 0.9235
   },
   "bootstrap": {
     "B": 1000,
     "ebm_vs_vote_pass2_ci95": [
       -0.4516,
-      -0.1613
+      -0.129
     ],
     "union_plus_E_vs_union_pass2_ci95": [
       0.0,
       0.0
     ]
   },
-  "duration_s": 15.6,
-  "eval_duration_s": 11.1,
+  "duration_s": 230.8,
+  "eval_duration_s": 8.4,
   "experiment": "arc3_gap3_stage2_transition_ebm",
   "gates": {
     "coverage_ge_0p80": true,
-    "discrimination_hard_neg_auroc": 0.6168,
+    "discrimination_hard_neg_auroc": 0.6181,
     "discrimination_macro_auroc_gt_0p70": false,
     "headroom_capture_fraction": -1.7998,
     "headroom_capture_ge_0p30": false,
@@ -41,7 +41,7 @@
   },
   "generator_independent_signal_real": false,
   "honest_note": "GAP-3 Stage 2. POSITIVE that survives the residual controls = a generator-independent content-aware energy reaches the present-but-mis-voted headroom -> register + re-confirm at 400 scale (grouped folds). NEGATIVE = even a trained content energy cannot beat vote on this pool; the remaining moves are training on real generator errors (forfeits strict generator-independence) or richer context encoding. Reported as-is per FALSE_NEGATIVE_RISK; the positive control holds (oracle > vote). CAVEAT n=31; CI upper edge governs; re-confirm at 400 before any irreversible claim.",
-  "honest_verdict": "complete: gap3_stage2_transition_ebm_does_not_beat_vote_n31_vote_0.4516_ebm_0.1613_macroauroc_0.5253_hardauroc_0.6168_unionadd_False",
+  "honest_verdict": "complete: gap3_stage2_transition_ebm_does_not_beat_vote_n31_vote_0.4516_ebm_0.1613_macroauroc_0.5442_hardauroc_0.6181_unionadd_False",
   "inference_substrate": "live_gpu_ebm_train_plus_offline_trm_candidate_rerank_no_oracle",
   "model_specs": {
     "architecture": "PairEncoder CNN (4 conv blocks, GroupNorm, GELU) -> 256-d; rule = mean over demo-pair embeddings; energy head MLP([r,p,r*p,|r-p|])",
@@ -79,16 +79,16 @@
   "random_seed": 12345,
   "rankers": {
     "EBM_ENERGY": {
-      "pass@1": 0.0968,
+      "pass@1": 0.0645,
       "pass@2": 0.1613
     },
     "EBM_ENERGY_vote_tiebreak": {
-      "pass@1": 0.0968,
+      "pass@1": 0.0645,
       "pass@2": 0.1613
     },
     "EBM_rank_residual_within_task": {
-      "pass@1": 0.0323,
-      "pass@2": 0.1613
+      "pass@1": 0.0645,
+      "pass@2": 0.0645
     },
     "EBM_residual_over_vote_global": {
       "pass@1": 0.0323,
@@ -96,7 +96,7 @@
     },
     "HYBRID_vote_then_E": {
       "pass@1": 0.4194,
-      "pass@2": 0.4839
+      "pass@2": 0.4516
     },
     "Q_MEAN": {
       "pass@1": 0.2903,
@@ -118,25 +118,115 @@
   "reproducibility_checksum": "b830e5a8d8e5a089",
   "title": "GAP-3 Stage 2: trained generator-independent ARC transition-EBM vs TRM frequency vote",
   "training": {
-    "best_val_top1_acc": 0.0938,
+    "best_val_top1_acc": 0.5903,
     "corpus_hash": "b830e5a8d8e5a089",
     "n_params": 1107489,
     "n_train_examples": 2355,
     "n_train_tasks": 504,
     "n_val_tasks": 56,
-    "train_duration_s": 4.5,
+    "train_duration_s": 222.4,
     "train_log": [
       {
-        "loss": 2.3998,
-        "step": 15,
-        "val_gold_rank_mean": 5.969,
-        "val_top1_acc": 0.0938
+        "loss": 2.0312,
+        "step": 250,
+        "val_gold_rank_mean": 3.299,
+        "val_top1_acc": 0.2083
       },
       {
-        "loss": 2.3971,
-        "step": 30,
-        "val_gold_rank_mean": 5.323,
-        "val_top1_acc": 0.0521
+        "loss": 1.3363,
+        "step": 500,
+        "val_gold_rank_mean": 2.802,
+        "val_top1_acc": 0.3542
+      },
+      {
+        "loss": 0.9176,
+        "step": 750,
+        "val_gold_rank_mean": 2.712,
+        "val_top1_acc": 0.434
+      },
+      {
+        "loss": 1.016,
+        "step": 1000,
+        "val_gold_rank_mean": 2.872,
+        "val_top1_acc": 0.4479
+      },
+      {
+        "loss": 0.6519,
+        "step": 1250,
+        "val_gold_rank_mean": 2.5,
+        "val_top1_acc": 0.5
+      },
+      {
+        "loss": 1.4875,
+        "step": 1500,
+        "val_gold_rank_mean": 2.625,
+        "val_top1_acc": 0.4792
+      },
+      {
+        "loss": 0.7979,
+        "step": 1750,
+        "val_gold_rank_mean": 2.292,
+        "val_top1_acc": 0.5903
+      },
+      {
+        "loss": 0.8502,
+        "step": 2000,
+        "val_gold_rank_mean": 2.667,
+        "val_top1_acc": 0.4965
+      },
+      {
+        "loss": 0.8039,
+        "step": 2250,
+        "val_gold_rank_mean": 2.347,
+        "val_top1_acc": 0.5069
+      },
+      {
+        "loss": 1.1324,
+        "step": 2500,
+        "val_gold_rank_mean": 2.396,
+        "val_top1_acc": 0.559
+      },
+      {
+        "loss": 1.0311,
+        "step": 2750,
+        "val_gold_rank_mean": 2.462,
+        "val_top1_acc": 0.5278
+      },
+      {
+        "loss": 0.4753,
+        "step": 3000,
+        "val_gold_rank_mean": 2.285,
+        "val_top1_acc": 0.5347
+      },
+      {
+        "loss": 0.6269,
+        "step": 3250,
+        "val_gold_rank_mean": 2.278,
+        "val_top1_acc": 0.5486
+      },
+      {
+        "loss": 0.7907,
+        "step": 3500,
+        "val_gold_rank_mean": 2.413,
+        "val_top1_acc": 0.566
+      },
+      {
+        "loss": 0.645,
+        "step": 3750,
+        "val_gold_rank_mean": 2.309,
+        "val_top1_acc": 0.5382
+      },
+      {
+        "loss": 0.7707,
+        "step": 4000,
+        "val_gold_rank_mean": 2.58,
+        "val_top1_acc": 0.5104
+      },
+      {
+        "loss": 0.9464,
+        "step": 4250,
+        "val_gold_rank_mean": 2.309,
+        "val_top1_acc": 0.5451
       }
     ]
   }
