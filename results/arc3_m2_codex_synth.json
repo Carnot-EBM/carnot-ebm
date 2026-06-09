@@ -1,0 +1,189 @@
+{
+  "budget_per_game": 1000,
+  "claim": "Codex (gpt-5.5) writes a per-game predict(grid,action) program; the grid-grounded consistency energy (no oracle) grades held-out transitions and drives a bounded refactor loop. Generator=codex, verifier=energy. Win = trustworthy model (energy<=0.15) on games the fixed DSL could not model.",
+  "duration_s": 390.7,
+  "episodes_per_game": 30,
+  "experiment": "arc3_m2_codex_synth",
+  "games": [
+    "vc33",
+    "sb26",
+    "m0r0",
+    "ls20"
+  ],
+  "honest_verdict": "complete: m2v3_codex_synth_trustworthy0of4_beatsdsl3_meanBestEnergy0.7278",
+  "inference_substrate": "offline_arc_agi3_plus_codex_program_synthesis_consistency_verified",
+  "iters_per_game": 3,
+  "mean_codex_best_energy": 0.7278,
+  "n_beats_dsl_by_0.05": 3,
+  "n_games": 4,
+  "n_trustworthy_at_0.15": 0,
+  "no_gpu_used": true,
+  "note": "M2-v3 escalation tier. Codex is the rare heavy inducer; the consistency energy is the oracle-free verifier that prunes/certifies its programs. A trustworthy model (energy low) on a game the DSL couldn't model = the escalation works -> M2-v3b plans on it for a first solve. If codex also can't reach low energy, the games need richer interaction/observation -> honest finding.",
+  "per_game": [
+    {
+      "best_code": "def predict(grid, action):\n    out = grid.copy()\n    if len(action) != 1:\n        return out\n\n    k = action[0]\n    dirs = {1: (-5, 0), 2: (5, 0), 3: (0, -5), 4: (0, 5)}\n    if k not in dirs:\n        return out\n\n    h, w = grid.shape\n    bg = np.bincount(grid.ravel()).argmax()\n\n    vals, counts = np.unique(grid, return_counts=True)\n    count = {int(v): int(c) for v, c in zip(vals, counts)}\n\n    # The board usually has a true background plus a walkable/empty color.  Infer\n    # the walkable color as the largest non-background connected-looking region;\n    # in the examples this is 3, but do not assume that when possible.\n    non_bg = [int(v) for v in vals if int(v) != bg]\n    floor = None\n    if non_bg:\n        floor = max(non_bg, key=lambda v: count[v])\n    empty_colors = {bg}\n    if floor is not None:\n        empty_colors.add(floor)\n\n    # Find 4-connected monochrome components.  The controlled piece is the largest\n    # multi-cell object that is not background, not empty floor, and not a tiny\n    # two-cell marker/crumb.\n    seen = np.zeros(grid.shape, dtype=bool)\n    comps = []\n    for r in range(h):\n        for c in range(w):\n            if seen[r, c]:\n                continue\n            col = int(grid[r, c])\n            stack = [(r, c)]\n            seen[r, c] = True\n            cells = []\n            while stack:\n                rr, cc = stack.pop()\n                cells.append((rr, cc))\n                for nr, nc in ((rr - 1, cc), (rr + 1, cc), (rr, cc - 1), (rr, cc + 1)):\n                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and int(grid[nr, nc]) == col:\n                        seen[nr, nc] = True\n                        stack.append((nr, nc))\n            comps.append((col, cells))\n\n    object_colors = set()\n    for col, cells in comps:\n        if col in empty_colors:\n            continue\n        if len(cells) >= 4:\n            object_colors.add(col)\n\n    # Drop large fixed terrain colors: fixed blocks tend to touch the border and\n    # be ",
+      "codex_best_energy": 0.7755,
+      "dsl_energy": 0.8577,
+      "game": "ls20",
+      "history": [
+        {
+          "code_len": 2443,
+          "codex_s": 28.2,
+          "dynamics_accuracy": 0.0,
+          "energy": 1.0,
+          "iter": 0,
+          "nonnoop_on_changing": "0/20",
+          "status": "graded"
+        },
+        {
+          "code_len": 4823,
+          "codex_s": 39.1,
+          "dynamics_accuracy": 0.2245,
+          "energy": 0.7755,
+          "iter": 1,
+          "nonnoop_on_changing": "20/20",
+          "status": "graded"
+        },
+        {
+          "code_len": 5243,
+          "codex_s": 41.6,
+          "dynamics_accuracy": 0.0002,
+          "energy": 0.9998,
+          "iter": 2,
+          "nonnoop_on_changing": "20/20",
+          "status": "graded"
+        }
+      ],
+      "improvement_over_dsl": 0.0822,
+      "iters_run": 3,
+      "n_transitions": 999,
+      "naive_energy": 0.9714,
+      "trustworthy_at_0.15": false
+    },
+    {
+      "best_code": "def predict(grid, action):\n    out = grid.copy()\n    h, w = out.shape\n\n    vals, counts = np.unique(out, return_counts=True)\n    bg = vals[np.argmax(counts)]\n\n    # The moving piece is the non-background, non-terrain color forming compact blocks.\n    movable = None\n    best = None\n    for c in vals:\n        if c == bg:\n            continue\n        mask = out == c\n        n = int(mask.sum())\n        if n == 0 or n > h * w // 4:\n            continue\n        rr, cc = np.where(mask)\n        bh = rr.max() - rr.min() + 1\n        bw = cc.max() - cc.min() + 1\n        density = n / max(1, bh * bw)\n        score = (density, -n)\n        if best is None or score > best:\n            best = score\n            movable = c\n\n    if movable is None:\n        return out\n\n    mask = out == movable\n    rr, cc = np.where(mask)\n    if rr.size == 0:\n        return out\n\n    # Infer the tile quantum from contiguous runs of the movable color.\n    runs = []\n    for r in range(h):\n        xs = np.where(mask[r])[0]\n        if xs.size:\n            cuts = np.r_[0, np.where(np.diff(xs) > 1)[0] + 1, xs.size]\n            runs.extend((cuts[1:] - cuts[:-1]).tolist())\n    for c in range(w):\n        ys = np.where(mask[:, c])[0]\n        if ys.size:\n            cuts = np.r_[0, np.where(np.diff(ys) > 1)[0] + 1, ys.size]\n            runs.extend((cuts[1:] - cuts[:-1]).tolist())\n    step = int(round(np.median(runs))) if runs else 1\n    step = max(1, step)\n\n    if len(action) == 1:\n        k = action[0]\n        if k == 1:\n            dr, dc = -step, 0\n        elif k == 2:\n            dr, dc = step, 0\n        elif k == 3:\n            dr, dc = 0, -step\n        elif k == 4:\n            dr, dc = 0, step\n        else:\n            return out\n    elif len(action) == 3 and action[0] == 6:\n        x, y = action[1], action[2]\n        cy = (rr.min() + rr.max()) / 2.0\n        cx = (cc.min() + cc.max()) / 2.0\n        if abs(y - cy) >= abs(x - cx):\n            dr, dc = (step if y > cy else -step), 0\n        else:\n            d",
+      "codex_best_energy": 0.5004,
+      "dsl_energy": 0.5581,
+      "game": "m0r0",
+      "history": [
+        {
+          "code_len": 2426,
+          "codex_s": 27.0,
+          "dynamics_accuracy": 0.3816,
+          "energy": 0.6184,
+          "iter": 0,
+          "nonnoop_on_changing": "11/20",
+          "status": "graded"
+        },
+        {
+          "code_len": 3451,
+          "codex_s": 31.7,
+          "dynamics_accuracy": 0.4996,
+          "energy": 0.5004,
+          "iter": 1,
+          "nonnoop_on_changing": "20/20",
+          "status": "graded"
+        },
+        {
+          "code_len": 3894,
+          "codex_s": 37.4,
+          "dynamics_accuracy": 0.4384,
+          "energy": 0.5616,
+          "iter": 2,
+          "nonnoop_on_changing": "20/20",
+          "status": "graded"
+        }
+      ],
+      "improvement_over_dsl": 0.0577,
+      "iters_run": 3,
+      "n_transitions": 999,
+      "naive_energy": 1.0,
+      "trustworthy_at_0.15": false
+    },
+    {
+      "best_code": "def predict(grid, action):\n    out = grid.copy()\n    bg = int(np.bincount(grid.ravel(), minlength=16).argmax())\n\n    if len(action) == 1 and action[0] == 5:\n        vals, counts = np.unique(grid[grid != bg], return_counts=True)\n        if len(vals) == 0:\n            return out\n\n        vals_set = set(int(v) for v in vals)\n\n        source = None\n        for v in sorted(vals_set):\n            if v + 1 in vals_set:\n                source = v\n                break\n\n        if source is None:\n            source = int(vals[np.argmax(counts)])\n\n        target = source + 1 if source < 15 else source\n        out[grid == source] = target\n        return out\n\n    if len(action) == 3 and action[0] == 6:\n        _, x, y = action\n        h, w = grid.shape\n        if not (0 <= y < h and 0 <= x < w):\n            return out\n\n        color = int(grid[y, x])\n        if color == bg:\n            return out\n\n        target = color + 1 if color < 15 else 0\n        seen = np.zeros(grid.shape, dtype=bool)\n        stack = [(y, x)]\n        seen[y, x] = True\n\n        while stack:\n            r, c = stack.pop()\n            out[r, c] = target\n            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                nr, nc = r + dr, c + dc\n                if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] == color:\n                    seen[nr, nc] = True\n                    stack.append((nr, nc))\n\n        return out\n\n    return out",
+      "codex_best_energy": 0.988,
+      "dsl_energy": 0.9893,
+      "game": "sb26",
+      "history": [
+        {
+          "code_len": 1867,
+          "codex_s": 23.3,
+          "dynamics_accuracy": 0.0,
+          "energy": 1.0,
+          "iter": 0,
+          "nonnoop_on_changing": "19/20",
+          "status": "graded"
+        },
+        {
+          "code_len": 2489,
+          "codex_s": 24.6,
+          "dynamics_accuracy": 0.0,
+          "energy": 1.0,
+          "iter": 1,
+          "nonnoop_on_changing": "19/20",
+          "status": "graded"
+        },
+        {
+          "code_len": 1445,
+          "codex_s": 20.3,
+          "dynamics_accuracy": 0.012,
+          "energy": 0.988,
+          "iter": 2,
+          "nonnoop_on_changing": "19/20",
+          "status": "graded"
+        }
+      ],
+      "improvement_over_dsl": 0.0013,
+      "iters_run": 3,
+      "n_transitions": 999,
+      "naive_energy": 0.7803,
+      "trustworthy_at_0.15": false
+    },
+    {
+      "best_code": "def predict(grid, action):\n    out = grid.copy()\n    if not action or action[0] != 6:\n        return out\n\n    bg = np.bincount(grid.ravel()).argmax()\n\n    # The visible mechanic is a progress/record strip: clicks consume one small\n    # run from the non-background header row, repainting the rightmost remaining\n    # run of the header's dominant unconsumed color into the consumed color.\n    rows, cols = grid.shape\n\n    header_r = None\n    best_score = -1\n    for r in range(rows):\n        vals, counts = np.unique(grid[r], return_counts=True)\n        if len(vals) < 2:\n            score = cols if vals[0] != bg else 0\n        else:\n            score = counts[vals != bg].sum()\n        if score > best_score:\n            best_score = score\n            header_r = r\n\n    row = grid[header_r]\n    vals, counts = np.unique(row, return_counts=True)\n\n    # Source is the most common header color that is not background.\n    non_bg = vals[vals != bg]\n    if len(non_bg) == 0:\n        return out\n    src = non_bg[np.argmax([np.sum(row == v) for v in non_bg])]\n\n    # Destination is an existing secondary header color if present, otherwise\n    # use a stable contrasting color inferred from the palette.\n    other = [v for v in vals if v != src and v != bg]\n    if other:\n        dst = max(other, key=lambda v: np.sum(row == v))\n    else:\n        dst = 4 if src != 4 else (0 if bg != 0 else 1)\n\n    mask = row == src\n    if not mask.any():\n        return out\n\n    # Repaint the rightmost contiguous unconsumed run.  If the click lands on a\n    # non-background object, consume one cell; otherwise allow a short run, which\n    # handles double-width marks in unseen states without relying on coordinates.\n    idx = np.flatnonzero(mask)\n    end = idx[-1]\n    start = end\n    while start - 1 >= 0 and row[start - 1] == src:\n        start -= 1\n\n    x, y = action[1], action[2]\n    clicked = grid[y, x] if 0 <= y < rows and 0 <= x < cols else bg\n    n = 1 if clicked != bg else min(2, end - start + 1)\n\n    out[",
+      "codex_best_energy": 0.6472,
+      "dsl_energy": 1.0,
+      "game": "vc33",
+      "history": [
+        {
+          "code_len": 2051,
+          "codex_s": 23.1,
+          "dynamics_accuracy": 0.3528,
+          "energy": 0.6472,
+          "iter": 0,
+          "nonnoop_on_changing": "20/20",
+          "status": "graded"
+        },
+        {
+          "code_len": 1852,
+          "codex_s": 60.4,
+          "dynamics_accuracy": 0.0952,
+          "energy": 0.9048,
+          "iter": 1,
+          "nonnoop_on_changing": "20/20",
+          "status": "graded"
+        },
+        {
+          "code_len": 2315,
+          "codex_s": 25.2,
+          "dynamics_accuracy": 0.3528,
+          "energy": 0.6472,
+          "iter": 2,
+          "nonnoop_on_changing": "20/20",
+          "status": "graded"
+        }
+      ],
+      "improvement_over_dsl": 0.3528,
+      "iters_run": 3,
+      "n_transitions": 1000,
+      "naive_energy": 1.0,
+      "trustworthy_at_0.15": false
+    }
+  ],
+  "random_seed": 0,
+  "submitted_to_leaderboard": false,
+  "title": "arc3_m2v3_codex_program_synthesis_verified",
+  "total_codex_calls": 12,
+  "total_codex_seconds": 381.9
+}
