@@ -1,193 +1,228 @@
-# Research Roadmap — Milestone 2026.06.364
+# Research Roadmap — Milestone 2026.06.366
 
-**Planned:** 2026-06-08 (outer-loop planning agent, Claude Opus 4.8)
-**Milestone doc for:** `research-roadmap-next.yaml` (`milestone: 2026.06.364`)
-**Prior milestone:** 2026.06.363
+**Planned:** 2026-06-09 (outer-loop planning agent, Claude Opus 4.8)
+**Milestone doc for:** `research-roadmap-next.yaml` (`milestone: 2026.06.366`)
+**Prior milestone:** 2026.06.365
+**North star:** `ops/north-star.md` §0 — solve ARC-AGI-3, accurately and efficiently.
 
 ---
 
 ## 0. One-line thesis
 
-**.363 set up the load-bearing "does the verifier earn its place?" proof but
-failed to LAND it. .364 lands it.** The competent GenRM/ThinkPRM judge, the
-valid efficiency head-to-head, the non-degenerate cascade, and the
-independent-corpus moat replication were all BLOCKED in .363 by two concrete,
-now-understood failures. .364 executes and validates the work that is already
-drafted on disk, fixes the two blockers, and finally answers the operator's
-question against a *competent* comparator.
-
-This is the highest-leverage milestone available: per `ops/north-star.md` §5,
-the verifier is Carnot's entire surviving value-add, and whether it "earns its
-place" is currently `INCONCLUSIVE` (capstone .363: `efficiency=INCONCLUSIVE,
-moat_replicated=false, earns=false`). Every other research direction is
-downstream of this answer.
+**.365 landed Carnot's FIRST ARC-AGI-3 solve (r11l level-1, real-env-confirmed,
+4 actions). .366 turns one solve into a verifier-load-bearing offline run:**
+solve more levels and more games (accuracy), run the three owed generalization
+experiments that .365 skipped, and — the load-bearing one — prove the verifier
+ACTION-PRUNER cuts actions on REAL solved games with a clean no-verifier ablation
+(M3). That M3 result is the project's existential "verifier earns its place"
+proof, now measurable in the one venue (ARC-AGI-3 / RHAE) where the metric IS
+action efficiency and where self-consistency is NOT already near-optimal.
 
 ---
 
-## 1. What the previous milestone (.363) proved — and where it stalled
+## 1. What .365 proved — and where it stalled
 
-### Landed (genuine)
-- **exp3929 — first ARC-AGI-3 agentic run:** verifier-as-router HELPS,
-  action-efficiency ratio **1.959** (CI95 [1.742, 2.194]) on a synthetic
-  ARC-AGI-3-style env; real-benchmark reachability preflight = true. The first
-  datum for the agentic-proof venue (north-star §5 Phase-4).
-- **exp3930 — FR-11 v26 self-learning:** invariant HELD across v25→v26
-  (AUROC 0.908, memory-ablation contribution +0.0185, frozen 0.9131
-  unchanged). The self-learning mandate continues to hold.
-- **exp3924 — facts route retired:** the graph-grounding fact-verifier scope
-  (exp3920) blocked/fabricated a 4th consecutive time and was retired to
-  honest future-work in `ops/exclusion_manifest.yaml`. The verifier stays
-  **math/step-error domain-bound** — an honest scoping, not a regression.
+### Landed (genuine, real-env-confirmed)
+- **exp3946 — FIRST ARC-AGI-3 SOLVE.** r11l level-1 solved offline, confirmed by
+  the real env (`real_env_confirmed: true`, `ACCURACY_levels_solved: 1`,
+  `first_solve_at_action: 4`). The induced mechanic: a click selects a piece, a
+  second click places it so the pieces' average position aligns on the target
+  centroid. This is the decisive M1 result the ARC plan ladder was built to reach
+  — a persistent perception+planner beat the 0/183 reactive ceiling.
+- **exp3945 — activation green-gate** clean (ARC substrate tests green, agentic
+  modules import, YAMLs parse).
 
-### Stalled (the .364 work-list)
-The four load-bearing science tasks all BLOCKED:
+### Stalled / owed / broken (the .366 work list)
+- **exp3947 / exp3948 / exp3949 NEVER RAN.** The conductor ran exp3945 → exp3946,
+  then jumped to the capstone, skipping the three Phase-2 generalization tasks:
+  the 6-non-spatial-game pipeline sweep, goal-predicate induction, and
+  latent-register augmentation. These are owed-not-failed (no verdict produced).
+- **exp3950 hardware continuity** produced no artifact (empty).
+- **exp3951 capstone BLOCKED by a conductor-config bug.** The capstone's
+  `gated_on` used `op: exists`, which is NOT a supported op (supported: `==`,
+  `!=`, `>`, `>=`, `<`, `<=`, `in`, `not_in`, `contains`, `not_contains`). The
+  gate threw `unknown op 'exists'`, emitted three identical pre-gate-block commits,
+  and the operational retro then miscounted the milestone as "0 experiments"
+  (a git-heuristic artifact of the repeated block commits). **LESSON BAKED INTO
+  .366: never use `op: exists`; the capstone is UNGATED so it aggregates whatever
+  landed and cannot stall the milestone.**
 
-| Exp (.363) | Verdict | Root cause (verified on disk) |
-|---|---|---|
-| exp3925 competent judge build | **no artifact landed** | Module (`competent_llm_judge.py`), test, and runner script were all WRITTEN (Jun 7) but the experiment artifact never landed and never reached the conductor log — the classic **max-turns-exhaustion / bootstrap-and-bail** failure: one task tried to diagnose + build + unit-test + run a live 35B judge in a single budget. |
-| exp3926 valid efficiency | `blocked_upstream_competent_judge_not_ready` | Disk-read of the missing exp3925 artifact failed → correctly self-blocked (the .363 disk-fallback discipline working as designed: a missing upstream costs ONE task, not the chain). |
-| exp3927 non-degenerate cascade | `blocked_upstream_valid_efficiency_missing` | Cascaded from exp3926. |
-| exp3928 moat replication (independent corpus) | `blocked_all_gguf_inference_failed` | `AttributeError("'ExperimentConfig' object has no attribute 'max_tokens_weak'")` raised inside `load_robust_generator` (`moat_scissor_accuracy_3916.py`). The field has since been added to `moat_scissor_replication_3928.py:ExperimentConfig` (lines 161-162) but the experiment never re-ran to confirm. |
-
-**Crucially, GGUF inference itself is sound.** exp3915 (robust harness) is
-READY, and exp3916/exp3917 ran live 400-490s GPU inference in .362. The
-blockers are an unexecuted task and a one-line config mismatch — NOT an infra
-wash. This is why .364 is an execute/validate/fix milestone, not a rebuild.
-
----
-
-## 2. The three biggest gaps between current state and the PRD vision
-
-1. **The verifier's value is UNPROVEN against a competent competitor.**
-   north-star §5 makes this existential: with the generator now commodity
-   (open LLM + TRM refiner), the energy verifier IS Carnot. The accuracy moat
-   landed in-distribution (exp3916 MOAT_SURVIVES) but (a) was never replicated
-   on an independent corpus, and (b) the efficiency comparison used a
-   below-chance strawman judge. **Gap: a credible, competent-judge efficiency
-   result + an independent-corpus accuracy result.** This milestone closes it.
-
-2. **No deployable "matched accuracy at Nx cheaper" artifact.** The Meta-EBM
-   Cascade Router is the deployable form of the efficiency win, but the .362/.363
-   cascade was degenerate (escalation_fraction = 0.0 — it never escalated).
-   **Gap: a non-degenerate cascade with a measured cost ratio.**
-
-3. **The verifier's domain boundary is asserted, not mapped.** north-star §5
-   says math is strong, facts earned-negative, code weak — but only math/facts
-   were measured. Per the now-RETIRED Depth-Over-Breadth forcing function
-   (its retirement condition is met: P0.1 answered, G2 closed, paper_ready=true),
-   breadth toward NEW directions is explicitly invited. **Gap: a disciplined
-   cross-domain discriminating-value map** (where does the moat hold?). One
-   such probe is included, honestly framed so a code-domain negative is an
-   informative boundary, not a failure.
+### Carry-forward from the SOTA scan (verified 2026-06-09, research-references.md)
+- **EWM is now SOTA v2: 58.12% mean RHAE, 15/25 games (GPT-5.5)** — the
+  induce-world-model + verify-transitions + stop-on-divergence architecture IS
+  Carnot's division of labor. Cite v2, not the old 32.58%.
+- **Graph-Based Exploration (no induction) solves median 30/52 levels** — the
+  efficiency floor Carnot's pruner competes against.
+- **TRM has NO ARC-AGI-3 result** (static ARC-1/2 only) — there is no published
+  TRM ARC-3 number to "beat"; the offline quota-gate's operative comparators are
+  our prior 0/183, a no-induction baseline, and frontier-LLM <0.4%.
+- New energy-as-planner corroborator **Planning-as-Descent (2512.17846)** and
+  stochastic-world-model **CASSANDRA (2601.18620)** strengthen the hidden-state
+  and pruner experiments.
 
 ---
 
-## 3. Architecture / dependency graph
+## 2. The three biggest gaps (current state vs north star)
+
+1. **ACCURACY is one level on one game.** RHAE scores nothing on an unsolved
+   level and weights later levels more. We have r11l-L1. The gap: more r11l
+   levels + ≥1 more game, and an honest count of how many of the 6 non-spatial
+   games reach a plan-able (trustworthy) world-model.
+2. **The verifier's efficiency value is proven only on a SYNTHETIC env.** exp3929
+   measured the action-pruner at 1.96x (CI 1.74-2.19) on a synthetic ARC-style
+   env. The north-star §5 existential question — does the verifier earn its place
+   — is INCONCLUSIVE on FoVer (capstone .363/.364: `earns=false`). ARC-AGI-3 is
+   the headroom venue; the gap is a REAL-game WITH-vs-WITHOUT ablation.
+3. **Hidden latent state is the named direction-killer, untested on live games.**
+   11/25 games are non-Markov on the visible grid. A grid→grid model is
+   under-determined there. The gap: does latent-register augmentation recover
+   Markov dynamics (lower consistency energy) on the real hidden-state games?
+
+---
+
+## 3. Architecture (unchanged hybrid; this milestone exercises each role on REAL games)
 
 ```
-PHASE 0 — transition + green-gate
-  exp3934  archive .363 -> activate .364; record the .363 unblock-state;
-           green-gate (yaml parses, core pretest green, .363 modules import)
-     |
-     v
-PHASE 1 — LAND THE OFFLINE VERIFIER PROOF (the .363 science that blocked)
-  exp3935  RUN + VALIDATE the competent GenRM/ThinkPRM judge   [GPU, live]
-           (module/test/runner already drafted in .363; EXECUTE them;
-            fixture AUROC > 0.65 positive control)
-     | (disk-read; missing upstream costs ONE task, no hard gate)
-     +--> exp3936  VALID efficiency head-to-head: energy vs competent judge  [GPU, live]
-     |         | (reuse exp3936 per-item judge scores — no re-inference)
-     |         +--> exp3937  NON-DEGENERATE cascade router (escalation > 0)
-     |
-  exp3938  MOAT replication on an INDEPENDENT corpus (ProcessBench /        [GPU, live]
-           fover_test_v4) — FIX the max_tokens_weak AttributeError, then run
-     |
-     v
-PHASE 2 — AGENTIC PROOF VENUE (sequenced second, per north-star §5)
-  exp3939  ARC-AGI-3 agentic step 2: richer env + energy-router vs a
-           learned-value baseline + real-benchmark access preflight   [GPU-free]
-     |
-     v
-PHASE 3 — SELF-LEARNING MANDATE + HARDWARE + BREADTH
-  exp3940  FR-11 v27 self-learning: online-learn the exp3937 cascade band;  [CPU]
-           confirm +0.0185 / frozen 0.9131 invariant
-  exp3941  hardware continuity clean: GateMate terminal re-confirm +        [FPGA/SSH]
-           PolarFire/KV260 opportunistic (distinct timers, no fabric claim)
-  exp3942  cross-domain verifier discriminating-value MAP (NEW direction):  [GPU, live]
-           where does the energy moat hold vs the competent judge?
-     |
-     v
-PHASE 4 — synthesis + capstone
-  exp3943  literature synthesis / study update (no new inference)
-  exp3944  Capstone .364 — verifier scorecard, efficiency axis FINALLY
-           landed against a competent judge; flip verifier_earns_its_place
-           honestly; paper_ready stays TRUE, frozen 0.9131 unchanged
+            ARC-AGI-3 offline env (arc_agi SDK, OPERATION_MODE=OFFLINE, 25 games)
+                                   |  act -> observe -> act
+                 +-----------------+------------------+
+   GENERATOR (induces the rule)            VERIFIER  (Carnot's value-add)
+   ---------------------------            ------------------------------
+   - deterministic numpy perception        - consistency_energy(model, held_out)
+     (objects, compute_grid_delta)           = misprediction rate (load-bearing,
+   - program/DSL synthesis from the           accuracy-side: certifies a model)
+     observed sparse local delta            - action-PRUNER (efficiency-side, the
+   - codex (gpt-5.5) = rare heavy             RHAE multiplier): prune looping /
+     inducer at escalation points            null-effect / deadly actions
+   - local Gemma-4 (SOTA GGUF) = cheap      - goal-predicate / task_potential =
+     sovereign perception + proposer         per-step progress (state-value)
+                          |                            |
+                          +----------> GameGraph <-----+
+                   (persistent per-game state-action graph + transition store;
+                    cross-episode persistence + cross-game DSL library = SELF-LEARNING)
 ```
 
-**Critical path:** exp3934 → exp3935 → exp3936 → exp3937 → exp3944.
-**Independent:** exp3938 (own harness), exp3939, exp3940, exp3941, exp3942.
+The generator induces; the verifier (a) certifies which induced model is
+trustworthy (consistency energy), (b) prunes wasteful actions (RHAE multiplier),
+and (c) supplies the goal-distance progress signal. .366 measures each on real
+games, with the M3 ablation isolating the pruner's contribution.
 
 ---
 
-## 4. Why this is NOT churn (north-star §1 self-check)
+## 4. Phases & experiments (11 tasks, exp3952-exp3962)
 
-Every .364 task either advances the headline/win-condition or closes a G-gate
-or lands a load-bearing-unproven link:
+### Phase 0 - Activation (1)
+- **exp3952** archive .365 -> activate .366; green-gate (ARC substrate tests, module
+  imports, YAML parse). *codex.*
 
-- exp3935-3938 are NOT `vN+1` re-measurements — they answer questions .363
-  blocked on (a competent-judge efficiency number; an independent-corpus moat
-  number; a non-degenerate cascade). Each is a *blocked* task being unblocked,
-  not a re-run of an answered question.
-- exp3939 advances the agentic-proof venue with a NEW baseline (learned-value
-  ablation) the synthetic exp3929 lacked.
-- exp3940 is the standing self-learning MANDATE (research-program.md), now
-  tied to the new cascade band.
-- exp3942 is a NEW direction (cross-domain map) explicitly invited by
-  north-star §5 now that Depth-Over-Breadth has retired.
+### Phase 1 - ACCURACY: solve more levels and more games (4)
+- **exp3953** r11l FULL solve: take r11l from 1/6 to as many of levels 2-6 as the
+  induced select/place mechanic + perception reach; real-env-confirmed; report
+  per-level actions vs `baseline_actions` (RHAE-style efficiency). *claude/opus.*
+- **exp3954** SECOND game solve: solve level-0 of the next-easiest non-spatial game
+  (lp85 known-tractable per EWM; su15 / sc25 / tn36 candidates) via the
+  perception -> induced-model -> goal-predicate loop; real-env-confirmed.
+  *claude/opus.* (prior_failures: vc33 no-solve.)
+- **exp3955** the OWED pipeline sweep: active-data -> codex program synthesis ->
+  consistency-energy verification across the 6 non-spatial games; per-game
+  trustworthy-model table (held-out energy <= 0.15 vs vc33's 0.005). *claude/opus.*
+- **exp3956** the OWED goal-predicate induction: induce `goal_predicate(grid)->bool`
+  from observed level-ups; precision/recall on held-out win-vs-non-win states.
+  *claude/opus.*
 
-Re-measurement-for-its-own-sake (`vN+1 because vN exists`) is excluded.
+### Phase 2 - hidden state + self-learning (2)
+- **exp3957** the OWED latent-register augmentation: add latent boolean registers
+  (counter / collected-flag / phase) to the 11 hidden-state games; does
+  consistency energy DROP vs grid-only? *claude/opus.*
+- **exp3958** CROSS-GAME DSL TRANSFER (SELF-LEARNING mandate, research-program.md
+  Tier-2 constraint memory): build a DreamCoder-style DSL fragment library across
+  the modeled games; measure whether reusing the library makes the Nth game's
+  induction CHEAPER (fewer codex calls / lower energy at equal data) than the 1st.
+  *claude/opus.*
+
+### Phase 3 - EFFICIENCY: the project's real venue (1)
+- **exp3959** M3 EFFICIENCY THESIS (load-bearing): on the games solved this
+  milestone (r11l + 2nd game), run the verifier action-pruner WITH vs WITHOUT
+  (ablation); measure `EFFICIENCY_mean_action_ratio_on_solved` with bootstrap 95%
+  CIs; non-overlapping CIs in the exp3929 direction (1.96x) = the efficiency
+  thesis transfers from synthetic to REAL. *claude/opus.* This is the strongest
+  available external evidence that the verifier earns its place.
+
+### Phase 4 - M4 readiness + mandates + capstone (3)
+- **exp3960** OFFLINE ACCURACY-vs-BASELINE sweep (M4 quota-gate readiness): run the
+  hybrid policy through `arc3_offline_eval.py` across the start_here_top8 games;
+  report `ACCURACY_total_levels_solved` + `EFFICIENCY` vs the random/object_click
+  baselines and the documented frontier-LLM / graph-explore numbers; emit an
+  HONEST quota-gate verdict (offline must beat our prior 0 AND a no-induction
+  baseline before an online run is justified). Prepare - do NOT submit - the
+  operator-only scored-run assessment. *claude/opus.*
+- **exp3961** hardware continuity (consolidated; the OWED .365 task): KV260
+  (`ssh kria`, SSH-not-SD-card) / GateMate (`openFPGALoader --detect`) / PolarFire
+  (`ssh polarfire`) reachability + next step. *codex.*
+- **exp3962** capstone .366 (UNGATED - the .365 `op: exists` lesson): aggregate the
+  accuracy push (levels solved, trustworthy models, goal-predicate P/R), the
+  hidden-state energy delta, the self-learning transfer result, the M3 efficiency
+  CIs, and the M4 readiness verdict. SKIP any `flagged_adversarial` artifact; cite
+  upstream sha256. *codex.*
 
 ---
 
-## 5. Hardware requirements
+## 5. Dependency graph
 
-- **2× RTX 3090 (CUDA):** exp3935, 3936, 3938, 3942 (live GGUF judge +
-  generator inference). Use the robust exp3915 harness (`gguf_inference.py`),
-  never `llama_cpp.Llama` directly; `.gguf` path + embedded tokenizer (never
-  `AutoTokenizer` on a GGUF repo id).
-- **CPU:** exp3937 (cascade reuses cached judge scores), exp3940 (FR-11
-  counter updates), exp3934/3943/3944 (aggregation).
-- **FPGA / SSH:** exp3941 — GateMate (`openFPGALoader -c dirtyJtag --detect`),
-  PolarFire (`ssh polarfire`), KV260 (`ssh kria` + `xmutil`; NEVER host
-  `/dev/mmcblk*`). `hardware_smoke` substrate; opportunistic, do not block the
-  milestone on board reachability.
+```
+exp3952 (activate)
+   |-> exp3953 r11l full -------------+
+   |-> exp3954 2nd game --------------+
+   |-> exp3955 pipeline sweep --------+
+   |-> exp3956 goal predicate --------+
+   |-> exp3957 latent registers ------+
+   |-> exp3958 DSL transfer ----------+
+   |-> exp3959 M3 efficiency (reads solved games from exp3953/3954; falls back
+   |            to the .365 r11l solve if new solves miss - NOT hard-gated)
+   |-> exp3960 M4 offline sweep
+   +-> exp3961 hardware
+        +-> exp3962 capstone (UNGATED; aggregates whatever landed, skips flagged)
+```
 
----
-
-## 6. SOTA models (per CLAUDE.md)
-
-Live-model tasks prefer (via the robust harness fallback order):
-`unsloth/Qwen3.6-35B-A3B-GGUF` → `unsloth/gemma-4-31B-it-GGUF` →
-`unsloth/gemma-4-26B-A4B-it-GGUF`. The .362 26B-0-shot judge underperformed
-(AUROC 0.4423); exp3935 prefers a stronger model at reduced `n_gpu_layers`.
-GGUF tokenizer rule honored (`.gguf` path, llama.cpp `vocab_only` preflight).
+No task is hard-`gated_on` another, by design - the .365 stall came from a gated
+capstone. Each task self-checks its preconditions and emits an honest `blocked_*`
+on a missing prerequisite rather than cascade-blocking the milestone.
 
 ---
 
-## 7. Invariants (carried forward)
+## 6. Models & substrate
 
-- `paper_ready` stays **TRUE** (G1-G4 met); this milestone adds credibility
-  lenses, not a new headline.
-- FoVer **0.9131** frozen; never moved; never aggregate `flagged_adversarial`.
-- Energy-as-generator is **closed-negative** — NO generator experiments.
-- Verifier is **math/step-error domain-bound** (facts retired in .363); the
-  cross-domain probe (exp3942) MAPS the boundary, it does not re-open facts.
-- No external publication (operator-only).
-- **Routing:** all tasks `codex` + `requires_codex` + `gpt-5.5` (anti-wipeout;
-  gemini crashes GPU workloads and 429-wiped .333/.355; standing operator
-  gemini↔codex flip authority 2026-06-05). Live-model Run commands use
-  `{project_root}/.venv/bin/python`.
-- **Hardening carried from .356-.363:** no unit-test wall-clock floor on
-  fixtures; robust live-model path via the exp3915 harness; positive control
-  on every comparison; NO hard `gated_on` on the critical path (disk-read
-  fallback — a missing upstream costs ONE task); BARE field emission.
+- **Generator/inducer:** codex (gpt-5.5) as the rare heavy inducer; local **Gemma-4
+  SOTA GGUF (`unsloth/gemma-4-26B-A4B-it-GGUF`)** as the sovereign multimodal
+  perception/proposer, with `gemma-4-E4B-it` as the fast per-step fallback.
+  Deterministic numpy perception (`compute_grid_delta`, `objects`) is primary -
+  the LLM is used only for ambiguous object semantics / DSL proposal.
+- **Verifier:** CPU energy/consistency ensemble (`consistency_energy`,
+  `arc_agi3_action_efficiency.select_verifier_pruned_action`, the SAT/AST/AND
+  composition verifiers) - no GPU required.
+- **Substrate declarations:** ARC solve/induction tasks declare
+  `offline_arc_agi3_*` substrates (low duration floor, real-env-confirmed);
+  pipeline sweep declares the codex-synthesis substrate; capstone/activate declare
+  `aggregation_from_upstream_artifacts`; hardware declares `hardware_smoke`.
+
+## 7. Hardware requirements
+
+- **None blocking.** All ARC work is CPU + the offline `arc_agi` SDK +
+  `environment_files/`; Gemma perception is GPU-optional (small model). The
+  consolidated hardware-continuity task (exp3961) keeps KV260/GateMate/PolarFire
+  visible per the Hardware-Task Continuity Discipline (KV260 SSH-not-SD-card).
+
+## 8. Disciplines honored
+
+- **Capstone UNGATED** (the .365 `op: exists` fix); no task hard-`gated_on` another.
+- **PRECONDITIONS-first** on every compute/offline-env/codex task; honest
+  `blocked_<resource>` on a miss (no fabrication).
+- **Verdict terminal-prefix** (`complete:` / `success:` / `blocked_`).
+- **inference_substrate** declared per task; real `duration_s`, `random_seed`.
+- **Principle-annotated** REQUIRED ARTIFACT FIELDS + gate conditions.
+- **operator_override** on every routine/continuation/owed task (standing
+  2026-06-08 ARC directive) + **prior_failures** on the 2nd-game task (vc33
+  no-solve root cause). Exclusion-manifest scan: no ARC scope-matches retired ids.
+- **Self-learning** experiment present (exp3958 cross-game DSL transfer).
+- **Operator-only external publication:** exp3960 PREPARES the scored-run
+  assessment; the operator triggers any online run.

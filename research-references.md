@@ -21530,3 +21530,88 @@ replication can finally land.
   single-forward-pass verifier beating generative verification at fixed compute —
   exactly Carnot's energy verifier), ARC-AGI-3 arXiv:2603.24621 (the agentic
   venue, now with a measured 1.96x router advantage to extend).
+
+## 2026-06-09 — ARC-AGI-3 SOTA refresh (planning for milestone 2026.06.366)
+
+Web-verified during 2026.06.366 planning, the milestone AFTER Carnot's FIRST
+ARC-AGI-3 solve (exp3946: r11l level-1, real-env-confirmed, 4 actions). All
+arXiv IDs + headline numbers checked against primary sources. The verified-SOTA
+scan reorganizes the offline-first ladder; the new corroborators are independent
+2025-2026 evidence for the hybrid (induce-then-verify, energy-as-planner) thesis.
+
+- **Executable World Models for ARC-AGI-3, arXiv:2605.05138 — CURRENT SOTA,
+  v2 NUMBER CORRECTION.** Single author (Sergey Rodionov). The 32.58% we have
+  been citing is the **v1 (GPT-5.4)** figure; the **v2 revision (2026-06-06)**
+  with **GPT-5.5 high-reasoning reaches 58.12% mean RHAE, 15/25 games fully
+  solved** (GPT-5.4 v2 = 41.29% / 8 games). Method: a coding agent maintains an
+  executable Python transition model, VERIFIES it reproduces recorded
+  transitions, REFACTORS toward simpler abstractions (MDL/Occam), plans through
+  the model, and STOPS/re-derives on prediction divergence. This is the Carnot
+  division of labor exactly — generator induces the world-model, verifier checks
+  transitions + stops on divergence. Carnot's differentiator: replace the paper's
+  per-game ad-hoc "verifier programs" with a LEARNED energy ensemble scoring
+  transition-consistency + action-waste uniformly, and bank the quadratic RHAE
+  payoff on the pruning side. **Cite v2 (58.12%) as current SOTA.** Confidence: HIGH.
+
+- **Graph-Based Exploration for ARC-AGI-3, arXiv:2512.24156 — the no-induction
+  floor (3rd place preview).** Rudakov/Shock/Cowley (Helsinki/UCT). Training-free
+  vision frame-segmentation + salience-prioritized actions + directed
+  state-transition graph; **median 30/52 levels across 6 games**; open-source
+  (github.com/dolphin-in-a-coma/arc-agi-3-just-explore). This is the
+  exploration baseline Carnot's verifier-pruner competes against on efficiency
+  (Family A) and the safety floor for the offline ladder. Confidence: HIGH.
+
+- **ARC-AGI-3 tech report, arXiv:2603.24621 — RHAE confirmed.** Per completed
+  level, score = (human_actions / AI_actions)^2 (normalized to upper-median best
+  human), weighted toward later levels. Frontier-LLM Official numbers confirmed:
+  Gemini 3.1 Pro 0.37%, GPT-5.4 High 0.26%, Opus 4.6 Max 0.25%, Grok-4.20 0.00%.
+  The squared-efficiency objective is why an energy ACTION-PRUNER is load-bearing,
+  not decorative. Community-harness leaderboard permits a custom offline harness.
+  Confidence: HIGH.
+
+- **TRM has NO ARC-AGI-3 result — it is a refiner COMPONENT, not a baseline.**
+  Both the foundational TRM (arXiv:2510.04871, 45% ARC-AGI-1 / 8% ARC-AGI-2) and
+  TRM test-time-adaptation (arXiv:2511.02886, 6.67% semi-private ARC-AGI-2)
+  report STATIC ARC-1/2 grid results ONLY; neither touches the interactive
+  ARC-AGI-3. Consequence for the quota-gate: there is NO published TRM ARC-AGI-3
+  number to "beat". The operative offline comparators are our own prior 0/183, a
+  no-induction baseline (random / object_click / graph-explore), and the
+  documented frontier-LLM <0.4%. TRM remains the recursive-refiner candidate for
+  the GENERATOR slot, not an ARC-3 baseline. Confidence: HIGH.
+
+- **Planning as Descent (PaD), arXiv:2512.17846 — energy-as-planner corroborator.**
+  Learns a goal-conditioned ENERGY function (low = feasible goal-consistent
+  future) and plans by GRADIENT DESCENT in the energy landscape; 95% on OGBench
+  vs 68% prior, and IMPROVES on noisy/suboptimal data. The cleanest 2025-2026
+  demonstration that energy-based planning beats a direct policy AND is robust to
+  the suboptimal data an exploration agent generates — direct support for using
+  the energy verifier as the planning/pruning substrate over a learned policy.
+  Confidence: HIGH.
+
+- **CASSANDRA, arXiv:2601.18620 — stochastic world models (hidden-state ally).**
+  Extends programmatic code-world-models to STOCHASTIC dynamics. ARC-AGI-3's
+  hidden-state games (11/25 per our determinism probe) break a deterministic
+  Python model + hard divergence-stop; an energy verifier degrades gracefully
+  (soft consistency score) where a brittle executable model fails. The peer to
+  cite for the energy-verifier robustness advantage, and the conceptual partner
+  to the latent-register augmentation experiment. Confidence: HIGH.
+
+- **Code World Models for General Game Playing, arXiv:2510.04542 — EWM ancestor.**
+  LLM synthesizes a Python world model (transition + reward), then plans over it.
+  Establishes "induce executable dynamics, then plan/verify" as a general
+  paradigm beyond ARC-AGI-3. Confidence: HIGH (id+title verified).
+
+- **Verifiable Process Reward Models (VPRM), arXiv:2601.17223 — deterministic
+  step-verifier > neural judge.** Each reasoning step scored by a deterministic
+  rule-based verifier; +20% F1 vs SOTA, +6.5% vs verifiable outcome rewards (on
+  structured clinical reasoning). Independent 2026 evidence that rule-grounded
+  step verifiers beat neural judges AND outcome-only rewards — the PRM-side analog
+  of Carnot's energy-ensemble-as-step-verifier, useful for the FoVer positioning.
+  Confidence: HIGH.
+
+- **Could-not-verify / flags:** the LIVE arcprize.org/leaderboard current standings
+  are JS-rendered (not scrapable headlessly) — the frontier values above are from
+  launch-time reporting, not a live read; "Tufa Labs current leader" is the only
+  live signal. "Seed IQ / active inference 95.49%" (Themesis) remains UNVERIFIED
+  (no code/scores/dates) — do NOT anchor on it. "Debugging Code World Models"
+  (arXiv:2602.07672) surfaced as a lead, not fetched.
