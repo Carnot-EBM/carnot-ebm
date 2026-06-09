@@ -1,0 +1,83 @@
+{
+  "domain": "arc_agi1_grid",
+  "experiment": "arc_invariant_object_count_draft",
+  "family": "object_count",
+  "honest_verdict": "complete: arc_invariant_object_count_catches_perturbed_gold_easyAUROC0.8707_hardAUROC0.6047_n416",
+  "inference_substrate": "rule_based_grid_verifier_against_cached_arc_solutions",
+  "interpretation": "object_count derives a per-task object-statistics signature (connected-component count / size-multiset / per-color object counts) from the TRAIN OUTPUTS only, then scores a candidate by deviation from that signature. It is designed to catch CONTENT errors v1 is blind to: blank (zero objects) and perturbed_gold (fragmentation shifts the count/size profile). It is EXPECTED to stay weak on transposed_gold (component count/sizes are transpose-invariant). Honest comparison vs the v1 ceiling is in delta_vs_v1_gold_strictly_better_rate.",
+  "label_source": "gold_arc_solutions",
+  "n_tasks": 400,
+  "no_induction": true,
+  "no_llm_used": true,
+  "no_test_gold_leak": true,
+  "random_seed": 0,
+  "results": {
+    "catches_hard": [
+      "perturbed_gold"
+    ],
+    "delta_vs_v1_gold_strictly_better_rate": {
+      "blank": 0.8193,
+      "color_swap_gold": -0.0099,
+      "copy_input": 0.2668,
+      "perturbed_gold": 0.8083,
+      "transposed_gold": -0.29,
+      "wrong_dim_gold": -0.5697
+    },
+    "family": "object_count",
+    "n_eval_test_inputs": 416,
+    "overall_easy_auroc": 0.8707,
+    "overall_hard_auroc": 0.6047,
+    "per_distractor": {
+      "blank": {
+        "auroc": 0.958,
+        "gold_strictly_better_rate": 0.9542,
+        "n": 415,
+        "tie_rate": 0.0458
+      },
+      "color_swap_gold": {
+        "auroc": 0.603,
+        "gold_strictly_better_rate": 0.3741,
+        "n": 401,
+        "tie_rate": 0.5436
+      },
+      "copy_input": {
+        "auroc": 0.7291,
+        "gold_strictly_better_rate": 0.6562,
+        "n": 416,
+        "tie_rate": 0.1707
+      },
+      "perturbed_gold": {
+        "auroc": 0.7631,
+        "gold_strictly_better_rate": 0.8139,
+        "n": 360,
+        "tie_rate": 0.1278
+      },
+      "random": {
+        "auroc": 0.9163,
+        "gold_strictly_better_rate": 0.9469,
+        "n": 414,
+        "tie_rate": 0.0314
+      },
+      "transposed_gold": {
+        "auroc": 0.5007,
+        "gold_strictly_better_rate": 0.0027,
+        "n": 369,
+        "tie_rate": 0.9973
+      },
+      "wrong_dim_gold": {
+        "auroc": 0.5679,
+        "gold_strictly_better_rate": 0.2933,
+        "n": 416,
+        "tie_rate": 0.5841
+      },
+      "wrong_task_gold": {
+        "auroc": 0.8801,
+        "gold_strictly_better_rate": 0.8747,
+        "n": 415,
+        "tie_rate": 0.0337
+      }
+    }
+  },
+  "split": "training",
+  "title": "arc_object_count_invariant_family_discriminator"
+}

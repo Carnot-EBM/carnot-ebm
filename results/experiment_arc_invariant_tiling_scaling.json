@@ -1,0 +1,131 @@
+{
+  "catches_hard": [
+    "perturbed_gold",
+    "wrong_dim_gold"
+  ],
+  "domain": "arc_agi1_grid",
+  "experiment": "arc_invariant_tiling_scaling_draft",
+  "family": "tiling_scaling",
+  "honest_verdict": "complete: arc_tiling_scaling_invariant_scale_subset_n24_perturbed0.8261_transposed0.3913_colorswap0.625_catches2hard",
+  "inference_substrate": "rule_based_grid_verifier_against_cached_arc_solutions",
+  "interpretation": "The tiling/scaling invariant fires ONLY on scale-rule tasks (output dims = k*input dims). It verifies the candidate is a valid TILING/UPSCALING of the TEST INPUT under a train-selected structural model (subtile-transform with a FIXED 8-symmetry vocabulary, or block-upscale), scoring the fraction of subtiles/blocks that violate that decomposition. Unlike v1 (dims/palette/bg only), this is CONTENT-SENSITIVE: a perturbed gold breaks subtile equality. On non-scale tasks it abstains (0.0). The headline numbers are on the SCALE subset, where the family actually fires.",
+  "label_source": "gold_arc_solutions",
+  "n_tasks": 400,
+  "no_gpu_used": true,
+  "no_induction": true,
+  "no_label_leak": "scorer uses only train pairs + candidate; test gold is never read into the score",
+  "no_llm_used": true,
+  "principle_label_source": "gold ARC solutions are the oracle; distractors are cheap deterministic perturbations; the scorer is derived from train pairs only -> no LLM, no induction-by-search, no leak",
+  "random_seed": 0,
+  "results": {
+    "n_eval_test_inputs": 416,
+    "n_eval_test_inputs_scale_subset": 24,
+    "n_scale_tasks": 24,
+    "overall_easy_auroc_ALL": 0.5147,
+    "overall_easy_auroc_SCALE": 0.8116,
+    "overall_hard_auroc_ALL": 0.5191,
+    "overall_hard_auroc_SCALE": 0.834,
+    "per_distractor_separation_ALL_tasks": {
+      "blank": {
+        "auroc": 0.4928,
+        "gold_strictly_better_rate": 0.0,
+        "n": 415,
+        "tie_rate": 0.9855
+      },
+      "color_swap_gold": {
+        "auroc": 0.5188,
+        "gold_strictly_better_rate": 0.0374,
+        "n": 401,
+        "tie_rate": 0.9626
+      },
+      "copy_input": {
+        "auroc": 0.5219,
+        "gold_strictly_better_rate": 0.0529,
+        "n": 416,
+        "tie_rate": 0.9471
+      },
+      "perturbed_gold": {
+        "auroc": 0.5234,
+        "gold_strictly_better_rate": 0.0528,
+        "n": 360,
+        "tie_rate": 0.9472
+      },
+      "random": {
+        "auroc": 0.522,
+        "gold_strictly_better_rate": 0.0531,
+        "n": 414,
+        "tie_rate": 0.9469
+      },
+      "transposed_gold": {
+        "auroc": 0.511,
+        "gold_strictly_better_rate": 0.0244,
+        "n": 369,
+        "tie_rate": 0.9756
+      },
+      "wrong_dim_gold": {
+        "auroc": 0.5219,
+        "gold_strictly_better_rate": 0.0529,
+        "n": 416,
+        "tie_rate": 0.9471
+      },
+      "wrong_task_gold": {
+        "auroc": 0.522,
+        "gold_strictly_better_rate": 0.053,
+        "n": 415,
+        "tie_rate": 0.947
+      }
+    },
+    "per_distractor_separation_SCALE_subset": {
+      "blank": {
+        "auroc": 0.375,
+        "gold_strictly_better_rate": 0.0,
+        "n": 24,
+        "tie_rate": 0.75
+      },
+      "color_swap_gold": {
+        "auroc": 0.8472,
+        "gold_strictly_better_rate": 0.625,
+        "n": 24,
+        "tie_rate": 0.375
+      },
+      "copy_input": {
+        "auroc": 0.9583,
+        "gold_strictly_better_rate": 0.9167,
+        "n": 24,
+        "tie_rate": 0.0833
+      },
+      "perturbed_gold": {
+        "auroc": 0.8195,
+        "gold_strictly_better_rate": 0.8261,
+        "n": 23,
+        "tie_rate": 0.1739
+      },
+      "random": {
+        "auroc": 0.9566,
+        "gold_strictly_better_rate": 0.9167,
+        "n": 24,
+        "tie_rate": 0.0833
+      },
+      "transposed_gold": {
+        "auroc": 0.7032,
+        "gold_strictly_better_rate": 0.3913,
+        "n": 23,
+        "tie_rate": 0.6087
+      },
+      "wrong_dim_gold": {
+        "auroc": 0.9583,
+        "gold_strictly_better_rate": 0.9167,
+        "n": 24,
+        "tie_rate": 0.0833
+      },
+      "wrong_task_gold": {
+        "auroc": 0.9566,
+        "gold_strictly_better_rate": 0.9167,
+        "n": 24,
+        "tie_rate": 0.0833
+      }
+    }
+  },
+  "split": "training",
+  "title": "arc_tiling_scaling_structural_invariant"
+}

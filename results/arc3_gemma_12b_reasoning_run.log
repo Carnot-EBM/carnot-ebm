@@ -1,0 +1,44 @@
+INFO:arc_agi.scorecard:Initialized ScorecardManager with idle_for=0:15:00 and max_open_for=3 days, 0:00:00
+2026-06-08 18:53:21 | INFO | Created new scorecard: 243dd64d-643d-4f0f-828a-ce9a9dcf3ddd
+2026-06-08 18:53:21 | INFO | Successfully loaded game class G50t from /home/ianblenke/github.com/ianblenke/carnot/environment_files/g50t/5849a774/g50t.py
+[transformers] You are using a model of type `gemma4_unified` to instantiate a model of type ``. This may be expected if you are loading a checkpoint that shares a subset of the architecture (e.g., loading a `sam2_video` checkpoint into `Sam2Model`), but is otherwise not supported and can yield errors. Please verify that the checkpoint is compatible with the model you are instantiating.
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/transformers/models/auto/configuration_auto.py", line 405, in from_pretrained
+    config_class = CONFIG_MAPPING[config_dict["model_type"]]
+                   ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/transformers/models/auto/configuration_auto.py", line 105, in __getitem__
+    raise KeyError(key)
+KeyError: 'gemma4_unified'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/arc3_gemma_policy.py", line 209, in <module>
+    run(model_key=a.model, n_games=a.n_games, max_actions=a.max_actions, seed=a.seed, reasoning=a.reasoning)
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/arc3_gemma_policy.py", line 154, in run
+    action, data, raw = gemma_action(f, ctx, model_key=model_key, reasoning=reasoning)
+                        ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/arc3_gemma_policy.py", line 77, in gemma_action
+    proc, model = _load(model_key)
+                  ~~~~~^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/arc3_gemma_policy.py", line 65, in _load
+    _MODEL["model"] = AutoModelForImageTextToText.from_pretrained(mid, **kw).eval()
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/transformers/models/auto/auto_factory.py", line 339, in from_pretrained
+    config, kwargs = AutoConfig.from_pretrained(
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        pretrained_model_name_or_path,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+        **kwargs,
+        ^^^^^^^^^
+    )
+    ^
+  File "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/transformers/models/auto/configuration_auto.py", line 407, in from_pretrained
+    raise ValueError(
+    ...<8 lines>...
+    )
+ValueError: The checkpoint you are trying to load has model type `gemma4_unified` but Transformers does not recognize this architecture. This could be because of an issue with the checkpoint, or because your version of Transformers is out of date.
+
+You can update Transformers with the command `pip install --upgrade transformers`. If this does not work, and the checkpoint is very new, then there may not be a release version that supports this model yet. In this case, you can get the most up-to-date code by installing Transformers from source with the command `pip install git+https://github.com/huggingface/transformers.git`

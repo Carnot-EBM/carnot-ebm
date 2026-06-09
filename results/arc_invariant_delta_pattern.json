@@ -1,0 +1,125 @@
+{
+  "domain": "arc_agi1_grid",
+  "experiment": "arc_invariant_delta_pattern_draft",
+  "family": "delta_pattern",
+  "honest_verdict": "complete: arc_delta_pattern_catches_none_hard_easyAUROC0.7953_hardAUROC0.6338_active268_of_416",
+  "inference_substrate": "rule_based_grid_verifier_against_cached_arc_solutions",
+  "interpretation": "delta_pattern scores how inconsistent the (test_input -> candidate) change is with the per-task change signature derived ONLY from train pairs (which colors appear/disappear at changed cells, the change-footprint band, and whether any change is expected at all). It is designed to catch CONTENT errors that the v1 structural verifier is blind to -- copy_input (empty delta when a change is expected) most cleanly, and perturbed_gold via off-signature colors / inflated footprint. It ABSTAINS (score 0) on non-same-dim tasks where a cell-wise delta is undefined, so the 'active_only' numbers show the true headroom.",
+  "label_source": "gold_arc_solutions",
+  "n_tasks": 400,
+  "no_induction": true,
+  "no_label_leak": true,
+  "no_llm_used": true,
+  "random_seed": 0,
+  "results": {
+    "catches_hard": [],
+    "n_active_same_dim": 268,
+    "n_eval_test_inputs": 416,
+    "overall_easy_auroc": 0.7953,
+    "overall_easy_auroc_active": 0.9105,
+    "overall_hard_auroc": 0.6338,
+    "overall_hard_auroc_active": 0.7087,
+    "per_distractor_separation": {
+      "blank": {
+        "auroc": 0.7222,
+        "gold_strictly_better_rate": 0.6265,
+        "n": 415,
+        "tie_rate": 0.2506
+      },
+      "color_swap_gold": {
+        "auroc": 0.7213,
+        "gold_strictly_better_rate": 0.5711,
+        "n": 401,
+        "tie_rate": 0.3965
+      },
+      "copy_input": {
+        "auroc": 0.8175,
+        "gold_strictly_better_rate": 0.6659,
+        "n": 416,
+        "tie_rate": 0.2909
+      },
+      "perturbed_gold": {
+        "auroc": 0.6749,
+        "gold_strictly_better_rate": 0.5806,
+        "n": 360,
+        "tie_rate": 0.3833
+      },
+      "random": {
+        "auroc": 0.9124,
+        "gold_strictly_better_rate": 0.9082,
+        "n": 414,
+        "tie_rate": 0.0459
+      },
+      "transposed_gold": {
+        "auroc": 0.649,
+        "gold_strictly_better_rate": 0.4499,
+        "n": 369,
+        "tie_rate": 0.5041
+      },
+      "wrong_dim_gold": {
+        "auroc": 0.5003,
+        "gold_strictly_better_rate": 0.2067,
+        "n": 416,
+        "tie_rate": 0.7043
+      },
+      "wrong_task_gold": {
+        "auroc": 0.7285,
+        "gold_strictly_better_rate": 0.6072,
+        "n": 415,
+        "tie_rate": 0.212
+      }
+    },
+    "per_distractor_separation_active_only": {
+      "blank": {
+        "auroc": 0.925,
+        "gold_strictly_better_rate": 0.9142,
+        "n": 268,
+        "tie_rate": 0.0485
+      },
+      "color_swap_gold": {
+        "auroc": 0.8511,
+        "gold_strictly_better_rate": 0.8577,
+        "n": 267,
+        "tie_rate": 0.0936
+      },
+      "copy_input": {
+        "auroc": 0.9877,
+        "gold_strictly_better_rate": 0.9813,
+        "n": 268,
+        "tie_rate": 0.0149
+      },
+      "perturbed_gold": {
+        "auroc": 0.7563,
+        "gold_strictly_better_rate": 0.8031,
+        "n": 259,
+        "tie_rate": 0.1467
+      },
+      "random": {
+        "auroc": 0.9698,
+        "gold_strictly_better_rate": 0.9851,
+        "n": 268,
+        "tie_rate": 0.0
+      },
+      "transposed_gold": {
+        "auroc": 0.7314,
+        "gold_strictly_better_rate": 0.664,
+        "n": 250,
+        "tie_rate": 0.268
+      },
+      "wrong_dim_gold": {
+        "auroc": 0.5042,
+        "gold_strictly_better_rate": 0.306,
+        "n": 268,
+        "tie_rate": 0.5634
+      },
+      "wrong_task_gold": {
+        "auroc": 0.7587,
+        "gold_strictly_better_rate": 0.6592,
+        "n": 267,
+        "tie_rate": 0.1723
+      }
+    }
+  },
+  "split": "training",
+  "title": "arc_invariant_delta_pattern_change_consistency"
+}
