@@ -1,0 +1,124 @@
+{
+  "claim": "Active coverage-driven data vs passive random, same budget, both fed to codex program synthesis, graded by consistency energy on a COMMON held-out test. Active wins if it lowers codex's energy (less overfitting).",
+  "duration_s": 624.0,
+  "experiment": "arc3_m2_active_codex",
+  "games": [
+    "m0r0",
+    "vc33"
+  ],
+  "honest_verdict": "complete: m2v4b_active_data_for_codex_meanE_passive0.4099_active0.1366_active_better1of2",
+  "inference_substrate": "offline_arc_agi3_plus_codex_program_synthesis_consistency_verified",
+  "iters": 3,
+  "mean_codex_energy_active": 0.1366,
+  "mean_codex_energy_passive": 0.4099,
+  "n_games": 2,
+  "n_games_active_better_by_0.03": 1,
+  "no_gpu_used": true,
+  "note": "M2-v4b: tests the data hypothesis where it bites (the expressive overfitting inducer). If active data lowers codex energy, the operator's data lever is confirmed -> scale active collection + iterate toward a trustworthy model + plan. If not, the bottleneck is observation/representation (latent state), not exploration policy.",
+  "per_game": [
+    {
+      "active_history": [
+        {
+          "codex_s": 89.9,
+          "energy": 0.3039,
+          "iter": 0,
+          "status": "graded"
+        },
+        {
+          "codex_s": 36.7,
+          "energy": 0.2683,
+          "iter": 1,
+          "status": "graded"
+        },
+        {
+          "codex_s": 135.9,
+          "energy": 0.2878,
+          "iter": 2,
+          "status": "graded"
+        }
+      ],
+      "codex_energy_active": 0.2683,
+      "codex_energy_passive": 0.2341,
+      "game": "m0r0",
+      "improvement_active_over_passive": -0.0342,
+      "n_active": 899,
+      "n_passive": 899,
+      "n_test": 600,
+      "passive_history": [
+        {
+          "codex_s": 29.9,
+          "energy": 0.4725,
+          "iter": 0,
+          "status": "graded"
+        },
+        {
+          "codex_s": 32.2,
+          "energy": 0.4184,
+          "iter": 1,
+          "status": "graded"
+        },
+        {
+          "codex_s": 38.9,
+          "energy": 0.2341,
+          "iter": 2,
+          "status": "graded"
+        }
+      ]
+    },
+    {
+      "active_history": [
+        {
+          "codex_s": 30.1,
+          "energy": 0.7474,
+          "iter": 0,
+          "status": "graded"
+        },
+        {
+          "codex_s": 23.9,
+          "energy": 0.6931,
+          "iter": 1,
+          "status": "graded"
+        },
+        {
+          "codex_s": 97.1,
+          "energy": 0.005,
+          "iter": 2,
+          "status": "graded"
+        }
+      ],
+      "codex_energy_active": 0.005,
+      "codex_energy_passive": 0.5858,
+      "game": "vc33",
+      "improvement_active_over_passive": 0.5808,
+      "n_active": 900,
+      "n_passive": 899,
+      "n_test": 600,
+      "passive_history": [
+        {
+          "codex_s": 24.1,
+          "energy": 0.5858,
+          "iter": 0,
+          "status": "graded"
+        },
+        {
+          "codex_s": 23.3,
+          "energy": 0.5858,
+          "iter": 1,
+          "status": "graded"
+        },
+        {
+          "codex_s": 34.1,
+          "energy": 0.6125,
+          "iter": 2,
+          "status": "graded"
+        }
+      ]
+    }
+  ],
+  "random_seed": 0,
+  "submitted_to_leaderboard": false,
+  "test_budget": 1400,
+  "title": "arc3_m2v4b_active_data_reduces_codex_overfitting",
+  "total_codex_seconds": 596.1,
+  "train_budget": 900
+}
