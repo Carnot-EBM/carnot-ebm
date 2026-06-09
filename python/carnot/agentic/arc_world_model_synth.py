@@ -39,6 +39,47 @@ def _click_xy(akey: tuple) -> Optional[tuple[int, int]]:
     return (akey[1], akey[2]) if len(akey) == 3 and akey[0] == 6 else None
 
 
+def grade_predictions(predict_fn, held_out) -> dict:
+    """Shared GRID-GROUNDED grader so any world-model can be scored on the identical metric (fair
+    cross-model comparison). predict_fn(s_grid, akey) -> predicted next grid; graded against the
+    OBSERVED next grid (no oracle). The static background dominates a 64x64 grid, so the load-bearing
+    signal is over the CHANGED region (the dynamics):
+      energy = 1 - dynamics_accuracy, where dynamics_accuracy is, over transitions that ACTUALLY
+      changed, the fraction of the changed region (reality's delta UNION the prediction's delta) the
+      model gets right. 0 = captures the dynamics; high = cannot (untrustworthy)."""
+    n = 0
+    exact_hit = 0
+    cell_acc_sum = 0.0
+    dyn_acc_sum = 0.0
+    n_changed = 0
+    for s, akey, s2 in held_out:
+        s = np.asarray(s, dtype=np.int16); s2 = np.asarray(s2, dtype=np.int16)
+        pred = np.asarray(predict_fn(s, tuple(akey)), dtype=np.int16)
+        n += 1
+        if pred.shape != s2.shape:
+            n_changed += 1
+            continue
+        exact_hit += int(np.array_equal(pred, s2))
+        cell_acc_sum += float((pred == s2).mean())
+        real_changed = (s != s2)
+        if real_changed.any():
+            n_changed += 1
+            union = real_changed | (s != pred)
+            dyn_acc_sum += float(((pred == s2) & union).sum() / union.sum())
+    if n == 0:
+        return {"energy": None, "n_heldout": 0}
+    dynamics_accuracy = round(dyn_acc_sum / n_changed, 4) if n_changed else None
+    return {
+        "energy": round(1.0 - dynamics_accuracy, 4) if dynamics_accuracy is not None else None,
+        "dynamics_accuracy": dynamics_accuracy,
+        "n_changed_transitions": n_changed,
+        "energy_exact": round(1.0 - exact_hit / n, 4),
+        "transition_exact_rate": round(exact_hit / n, 4),
+        "cell_accuracy": round(cell_acc_sum / n, 4),
+        "n_heldout": n,
+    }
+
+
 def _relative_template(s: np.ndarray, s2: np.ndarray, x: int, y: int) -> tuple:
     """Express the (s -> s2) change as offsets RELATIVE to the click (x, y): a sorted tuple of
     (dy, dx, new_color). This is the click's local effect, position-independent, so it can be applied
@@ -125,25 +166,12 @@ class InducedWorldModel:
         return s.copy()                                 # nothing learned -> no-op
 
     def consistency_energy(self, held_out) -> dict:
-        """GRID-GROUNDED verifier: predict each held-out transition, grade against the OBSERVED next
-        grid. The static background dominates a 64x64 grid, so whole-grid exact-match is too brittle
-        and cell-accuracy is trivially ~1.0; the load-bearing signal is over the CHANGED region (the
-        dynamics). We report:
-          - energy_exact   : 1 - whole-grid exact-match rate (reference; brittle)
-          - cell_accuracy  : mean per-cell match (reference; background-dominated)
-          - dynamics_accuracy : on transitions that ACTUALLY changed in reality, the fraction of the
-                changed-region (reality's delta UNION the model's predicted delta) the model gets right.
-                A model that mispredicts the change, or predicts no-op when reality changed, scores low.
-          - energy = 1 - dynamics_accuracy  : THE headline. 0 = the model captures the dynamics
-                (trustworthy -> plan on it); high = it cannot (untrustworthy -> escalate)."""
-        n = 0
-        exact_hit = 0
-        cell_acc_sum = 0.0
-        dyn_acc_sum = 0.0
-        n_changed = 0
+        """GRID-GROUNDED verifier (delegates the metric to the shared grade_predictions so any model is
+        scored identically), plus this model's prediction-path coverage diagnostics."""
+        base = grade_predictions(self.predict, held_out)
         by_path = Counter()
-        for s, akey, s2 in held_out:
-            s = np.asarray(s, dtype=np.int16); s2 = np.asarray(s2, dtype=np.int16)
+        for s, akey, _ in held_out:
+            s = np.asarray(s, dtype=np.int16)
             akey = tuple(akey)
             fh = frame_hash(s)
             if self._exact.get((fh, akey)):
@@ -155,32 +183,8 @@ class InducedWorldModel:
                 by_path["kbd_template"] += 1
             else:
                 by_path["noop_fallback"] += 1
-            pred = self.predict(s, akey)
-            n += 1
-            if pred.shape != s2.shape:
-                n_changed += 1  # shape mismatch = a real change the model failed to predict
-                continue
-            exact_hit += int(np.array_equal(pred, s2))
-            cell_acc_sum += float((pred == s2).mean())
-            real_changed = (s != s2)
-            if real_changed.any():                       # only score transitions that actually changed
-                n_changed += 1
-                pred_changed = (s != pred)
-                union = real_changed | pred_changed       # cells either side thinks changed
-                dyn_acc_sum += float(((pred == s2) & union).sum() / union.sum())
-        if n == 0:
-            return {"energy": None, "n_heldout": 0}
-        dynamics_accuracy = round(dyn_acc_sum / n_changed, 4) if n_changed else None
-        return {
-            "energy": round(1.0 - dynamics_accuracy, 4) if dynamics_accuracy is not None else None,
-            "dynamics_accuracy": dynamics_accuracy,
-            "n_changed_transitions": n_changed,
-            "energy_exact": round(1.0 - exact_hit / n, 4),
-            "transition_exact_rate": round(exact_hit / n, 4),
-            "cell_accuracy": round(cell_acc_sum / n, 4),
-            "n_heldout": n,
-            "prediction_paths": dict(by_path),
-        }
+        base["prediction_paths"] = dict(by_path)
+        return base
 
     def is_trustworthy(self, held_out, energy_threshold: float = 0.2) -> bool:
         """The Meta-EBM cascade gate: trust the model for planning only if held-out (dynamics) energy
