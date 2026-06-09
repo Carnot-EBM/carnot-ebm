@@ -33,19 +33,54 @@ Never-prune; `status: filled` (with the registry verifier_id that closed it) rat
 ## Empirical confirmation (TRM rerank, 2026-06-09)
 
 `results/arc3_trm_verifier_rerank.json` (n=31-task subset of TRM's arc_v1 candidate pool) tested
-whether the `union_max` ensemble reranks TRM's candidates better than its own frequency vote. **It
-did NOT** (best = TRM_VOTE pass@2 0.484; verifier captured 0.0 of the ~13pp present-but-mis-voted
-headroom; HYBRID hurt to 0.452). This is an honest WASH (reported as-is per FALSE_NEGATIVE_RISK) — and
-it is the *value*: of the 5 uncaptured tasks (correct answer in TRM's pool, verifier still missed it),
-the census split **GAP-1: 2, GAP-2: 1, GAP-3: 2**, confirming all three gaps below on REAL mis-votes
-(not just the synthetic distractors the v2 ensemble was measured on). Building any of these three
-verifiers is the direct path to capturing that headroom. (Caveat: 31-task subset; counts are small but
-directional — re-confirm at scale.)
+whether the `union_max` ensemble reranks TRM's candidates better than its own frequency vote.
+
+**CORRIGENDUM (2026-06-09, same day): the first version of this experiment was DEGENERATE — do not
+cite its "captured 0.0 wash" numbers.** `_verifier_scores` passed numpy grids to `V._combined_scores`,
+whose grid helpers (`_dims`/`_colors`) raise `ValueError: truth value of an array ... ambiguous` on a
+numpy grid — so EVERY candidate routed to the `except → 1e9` branch and the verifier scored all
+candidates identically (all-tied). The "wash" was the verifier doing literally nothing, which is
+harmless-by-accident, not neutral-on-the-merits. Fixed by converting candidate grid + test_input to
+`list[list[int]]` before scoring (`_as_list`, commit pending). The corrected numbers below SUPERSEDE
+the wash.
+
+**Corrected result — the hand-invariant verifier ANTI-RANKS on TRM's real candidate pool.** With the
+verifier actually scoring:
+
+| Ranker | pass@1 | pass@2 | vs TRM_VOTE | net_fix |
+|---|---|---|---|---|
+| TRM_VOTE (baseline) | 0.419 | **0.484** | — | — |
+| VERIFIER (pure union_max) | 0.065 | **0.161** | **−0.323** | −11 |
+| HYBRID (vote-primary + verifier tie-break) | 0.419 | 0.452 | −0.032 | 0 |
+| oracle ceiling (pass@1000) | — | 0.613 | +0.129 | — |
+
+The pure verifier ranks the correct answer *near the bottom* (pass@2 0.16 ≪ vote 0.48 ≪ oracle 0.61);
+it breaks 11 correct votes (net_fix −11) over 28 flips. Even the safe vote-primary HYBRID loses ~3pp.
+**This is an INFORMATIVE negative, not a degenerate one** (per FALSE_NEGATIVE_RISK): the oracle ceiling
+0.613 > vote 0.484 proves ~13pp of *selectable* headroom genuinely exists in the pool, and the verifier
+DOES change picks (28 flips) — it just changes them WRONG. So the discriminating signal for ARC
+content/rule correctness is NOT in the cheap hand-invariants; on this corpus they are anti-correlated
+with correctness. Of the 5 uncaptured tasks (correct answer in pool, HYBRID top-2 missed it) the census
+split **GAP-1: 2, GAP-2: 1, GAP-3: 2**, confirming all three gaps below on REAL mis-votes. (Caveat:
+31-task subset; counts small but directional — re-confirm at scale.)
+
+**GAP-1 hand-invariant candidate (directional-adjacency) — TESTED, REFUTED (2026-06-09).**
+`results/arc3_trm_verifier_rerank_gap1.json`: adding the `arc_invariant_directional_adjacency_draft`
+family as a within-top-vote-cluster orientation tie-break made HYBRID *worse* (pass@2 0.452 → 0.419),
+captured ZERO of the 2 transpose mis-votes, and raised total uncaptured 5 → 6. The directional family
+scores a candidate's H/V color-transition distribution against the *train-output average*, which is a
+noisy proxy (test-output directional stats legitimately differ from the train average), so it penalizes
+correct candidates. **Lesson: GAP-1 is real, but a hand-invariant is the wrong tool to fill it** — the
+same conclusion the corrected baseline forces for the whole hand-invariant ensemble. This escalates the
+GAP-3 learned / model-native energy (below) from "medium-high" to the **primary** path: the headroom is
+real and only a content/rule-aware energy (not more cheap invariants) can reach it.
 
 ## Open gaps
 
 ### GAP-1: transpose / orientation discrimination
-- status: open
+- status: open — hand-invariant candidate (`arc_invariant_directional_adjacency_draft`) TESTED & REFUTED
+  2026-06-09 (degraded TRM HYBRID rerank pass@2 0.452→0.419, captured 0/2 transpose mis-votes; see
+  CORRIGENDUM above). The capability is still missing; a cheap hand-invariant is the wrong tool for it.
 - evidence: design survey of `arc_grid_verifier_invariants_v2_combined` (2026-06-09) +
   `results/arc_grid_verifier_invariants_v2.json` — the square-transpose distractor subset (239 tasks)
   sits at `union_max ≈ 0.53` (≈ chance); `transposed` gold-strictly-better-rate 0.293 (well below the
@@ -98,7 +133,15 @@ directional — re-confirm at scale.)
 - missing discriminator: a genuine rule-application / consistency-ENERGY verifier trained on ARC
   transitions (not a hand invariant) — the "new ARC energy instance" the domain-bound analysis calls
   for (`project_verifier_domain_bound`).
-- priority: medium-high (this is the deep version of GAP-2; a learned energy may subsume both).
+- priority: **PRIMARY (escalated 2026-06-09)**. The corrected TRM rerank showed the full hand-invariant
+  ensemble is anti-correlated with correctness on TRM's real pool (VERIFIER pass@2 0.16 vs vote 0.48 vs
+  oracle 0.61), and the GAP-1 hand-invariant attempt made things worse — so cheap invariants cannot
+  reach the proven ~13pp headroom. Only a content/rule-aware learned energy can. A learned energy likely
+  subsumes GAP-1 and GAP-2 as well.
+- candidate design (escalated): the model-native basis from arXiv:2604.17614 — recover a compact
+  orthogonal basis from TRM's OWN activations (open/local weights) and score candidate consistency along
+  it, instead of hand-imposed grid invariants. See `reference_model_native_skills` memory + GAP-2 ALT
+  block above. This is the next experiment, not another hand-invariant family.
 
 ---
 
