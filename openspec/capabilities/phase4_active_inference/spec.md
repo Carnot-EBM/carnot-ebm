@@ -75,3 +75,9 @@
 
 ### SCENARIO-PHASE4-013
 **Description:** Running Exp 3964 against the offline r11l environment either writes `blocked_arc_offline_env_unavailable` when the offline ARC environment cannot load, or confirms each solved level through `levels_completed`, records actions and baseline references per solved level, reports at least the prior L1 total honestly, and never attempts a full all-level solve beyond the scoped L2/L3 target.
+
+### REQ-PHASE4-014: ARC-AGI-3 lp85 Incremental Real-Env Solve
+**Description:** The system SHALL extend the real-env-confirmed lp85 solve monotonically beyond the prior L1 artifact by reusing the Exp 3954 permutation-via-button-click mechanic, re-perceiving the lp85 button configuration after each level-up, stopping after L2 or the first unsolved level, and writing `results/experiment_3965_lp85_incremental_l2.json` with bare fields for total levels solved, newly solved levels beyond L1, per-level actions, baseline action references, whether the induced mechanic held at L2, real-env confirmation, random seed, duration, inference substrate, and a terminal-prefix honest verdict.
+
+### SCENARIO-PHASE4-014
+**Description:** Running Exp 3965 against the offline lp85 environment either writes `blocked_arc_offline_env_unavailable` when the offline ARC environment cannot load, or confirms each solved level through `levels_completed`, records the per-level action counts and `results/arc_agi3_access_probe.json` baseline references for every solved lp85 level, reports only one new level beyond L1 when L2 is solved, and does not continue beyond the scoped L2 target.
