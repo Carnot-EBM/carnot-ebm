@@ -1,0 +1,206 @@
+{
+  "arc_agentic_advantage_vs_learned_value": 0.0,
+  "both_energy_theses_bounded": true,
+  "cascade_verdict": "DEGENERATE_ESCALATION_0",
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 3935,
+      "honest_verdict": "complete: competent_judge_READY_fixture_auroc1.0000_modelQwen3.6-35B-A3B_valid_comparator_landed",
+      "path": "results/experiment_3935_competent_judge_build.json",
+      "sha256": "1f13dc30befb62da9791a0299eb4fbf840639def41cbecbe33f646d5583a5848",
+      "summarize_artifact_returncode": 0
+    },
+    {
+      "experiment_id": 3943,
+      "honest_verdict": "complete: literature_synthesis_positioned_0_new_refs_public_docs_untouched",
+      "path": "results/experiment_3943_literature_synthesis.json",
+      "sha256": "268a82db2d8ea74089a69e910b34ddfd591fe2b307a910abca21fab0e03436e0",
+      "summarize_artifact_returncode": 0
+    }
+  ],
+  "conditioned_upstream_verdicts": {
+    "3935": "complete: competent_judge_READY_fixture_auroc1.0000_modelQwen3.6-35B-A3B_valid_comparator_landed",
+    "3936": "missing",
+    "3937": "missing",
+    "3938": "missing",
+    "3939": "missing",
+    "3940": "missing",
+    "3941": "missing",
+    "3942": "missing",
+    "3943": "complete: literature_synthesis_positioned_0_new_refs_public_docs_untouched"
+  },
+  "cross_domain_boundary": "MISSING",
+  "duration_s": 0.26017643400700763,
+  "efficiency_cost_ratio": 0.0,
+  "efficiency_verdict": "INCONCLUSIVE",
+  "experiment_id": 3944,
+  "field_principles": {
+    "arc_agentic_advantage_vs_learned_value": "Exp3939 verifier-vs-learned-value action-efficiency scalar.",
+    "both_energy_theses_bounded": "BARE BOOL - true because selection P0.1 and generation EBT are both bounded-negative.",
+    "cascade_verdict": "Cascade WINS/MARGINAL/DEGENERATE plus whether escalation was greater than zero.",
+    "cross_domain_boundary": "Where the energy moat holds versus collapses from exp3942.",
+    "duration_s": "Aggregation wall-clock duration.",
+    "efficiency_cost_ratio": "BARE FLOAT - measured 'Nx cheaper' number against the competent judge.",
+    "efficiency_verdict": "VALID_EARNS_PLACE / CHEAPER_BUT_LESS_ACCURATE / INCONCLUSIVE from exp3936 - the efficiency answer against a competent judge.",
+    "flagged_artifacts_excluded": "Artifacts skipped for flagged_adversarial:true before any scorecard aggregation.",
+    "fr11_v27_invariant": "Self-learning mandate outcome - invariant held across v26 to v27.",
+    "frozen_headline_unchanged": "G1-G4 status plus the frozen FoVer 0.9131 invariant guard.",
+    "hardware_outcome": "GateMate/PolarFire/KV260 continuity - honest no-fabric-claim record.",
+    "inference_substrate": "Aggregation methodology without GGUF/CUDA markers.",
+    "judge_was_competent": "BARE BOOL - did the .364 judge clear its positive control.",
+    "moat_replicated": "BARE BOOL - did MOAT_SURVIVES replicate on the independent corpus in exp3938.",
+    "operator_next_step_recommendation": "Operator decision and next forward step after the conditioned verifier scorecard.",
+    "paper_ready": "MUST stay true - the milestone resolves the verifier proof without adding a new headline.",
+    "preconditions_checked": "Aggregation methodology, upstream landing state, and precondition command status.",
+    "unmet_gates": "G1-G4 publication-gate status from scripts/publication_gate.py --json.",
+    "verifier_earns_its_place": "BARE BOOL - true iff parity or Pareto holds against a competent judge and is decisively cheaper."
+  },
+  "flagged_artifacts_excluded": [],
+  "fr11_v27_invariant": "INCONCLUSIVE",
+  "frozen_fover_auroc": 0.9131,
+  "frozen_headline_unchanged": true,
+  "hardware_outcome": "MISSING",
+  "honest_verdict": "complete: capstone_v364_efficiencyINCONCLUSIVE_moat_replicatedfalse_earnsfalse_paper_ready_true_frozen_unchanged",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "judge_was_competent": true,
+  "moat_replicated": false,
+  "operator_next_step_recommendation": "Operator decision: verifier does not yet earn its place under landed non-flagged inputs. Conditioned scorecard: efficiency=INCONCLUSIVE, moat_replicated=false, cascade=DEGENERATE_ESCALATION_0. Recommended next forward step is to scale the ARC-AGI-3 agentic-proof venue / real-benchmark run; the loop recommends, the operator decides.",
+  "paper_ready": true,
+  "preconditions_checked": {
+    "all_landed_nonflagged_verdicts_aggregated": true,
+    "capstone_complete": true,
+    "publication_gate_checked": true,
+    "publication_gate_importable": true,
+    "publication_gate_runnable": true,
+    "summarize_artifact_importable": true,
+    "summarize_artifact_runnable": true,
+    "upstream_artifacts": {
+      "3935": {
+        "exists": true,
+        "flagged_adversarial": false,
+        "honest_verdict": "complete: competent_judge_READY_fixture_auroc1.0000_modelQwen3.6-35B-A3B_valid_comparator_landed",
+        "included": true,
+        "landed": true,
+        "matching_files": [
+          "results/experiment_3935_competent_judge_build.json"
+        ],
+        "path": "results/experiment_3935_competent_judge_build.json",
+        "summarize_artifact_returncode": 0
+      },
+      "3936": {
+        "exists": false,
+        "flagged_adversarial": false,
+        "honest_verdict": "missing",
+        "included": false,
+        "landed": false,
+        "matching_files": [],
+        "path": "",
+        "summarize_artifact_returncode": 1
+      },
+      "3937": {
+        "exists": false,
+        "flagged_adversarial": false,
+        "honest_verdict": "missing",
+        "included": false,
+        "landed": false,
+        "matching_files": [],
+        "path": "",
+        "summarize_artifact_returncode": 1
+      },
+      "3938": {
+        "exists": false,
+        "flagged_adversarial": false,
+        "honest_verdict": "missing",
+        "included": false,
+        "landed": false,
+        "matching_files": [],
+        "path": "",
+        "summarize_artifact_returncode": 1
+      },
+      "3939": {
+        "exists": false,
+        "flagged_adversarial": false,
+        "honest_verdict": "missing",
+        "included": false,
+        "landed": false,
+        "matching_files": [],
+        "path": "",
+        "summarize_artifact_returncode": 1
+      },
+      "3940": {
+        "exists": false,
+        "flagged_adversarial": false,
+        "honest_verdict": "missing",
+        "included": false,
+        "landed": false,
+        "matching_files": [],
+        "path": "",
+        "summarize_artifact_returncode": 1
+      },
+      "3941": {
+        "exists": false,
+        "flagged_adversarial": false,
+        "honest_verdict": "missing",
+        "included": false,
+        "landed": false,
+        "matching_files": [],
+        "path": "",
+        "summarize_artifact_returncode": 1
+      },
+      "3942": {
+        "exists": false,
+        "flagged_adversarial": false,
+        "honest_verdict": "missing",
+        "included": false,
+        "landed": false,
+        "matching_files": [],
+        "path": "",
+        "summarize_artifact_returncode": 1
+      },
+      "3943": {
+        "exists": true,
+        "flagged_adversarial": false,
+        "honest_verdict": "complete: literature_synthesis_positioned_0_new_refs_public_docs_untouched",
+        "included": true,
+        "landed": true,
+        "matching_files": [
+          "results/experiment_3943_literature_synthesis.json"
+        ],
+        "path": "results/experiment_3943_literature_synthesis.json",
+        "summarize_artifact_returncode": 0
+      }
+    }
+  },
+  "publication_gate": {
+    "__source__": "scripts/publication_gate.py --json",
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "random_seed": 3944,
+  "reproducibility_checksum": "39b44e7a7b22bd739dfe392484f524cad184f943d7599c53609c8f7662036298",
+  "schema": "carnot.capstone_v364_3944.v1",
+  "unmet_gates": [],
+  "verifier_earns_its_place": false
+}
