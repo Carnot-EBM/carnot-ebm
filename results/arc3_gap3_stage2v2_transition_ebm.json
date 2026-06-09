@@ -1,0 +1,258 @@
+{
+  "auroc": {
+    "ebm_hard_neg_votes_ge5": 0.4518,
+    "ebm_macro": 0.4902,
+    "ebm_tta_hard_neg_votes_ge5": 0.4531,
+    "ebm_tta_macro": 0.4604,
+    "vote_macro_reference": 0.9235
+  },
+  "bootstrap": {
+    "B": 1000,
+    "ebm_tta_vs_vote_pass2_ci95": [
+      -0.4516,
+      -0.1613
+    ],
+    "union_plus_E_vs_union_pass2_ci95": [
+      0.0,
+      0.0
+    ]
+  },
+  "duration_s": 431.2,
+  "eval_duration_s": 17.1,
+  "experiment": "arc3_gap3_stage2v2_transition_ebm",
+  "gates": {
+    "gate1_n_examples": 150,
+    "gate1_near_miss_auroc_gt_0p70": true,
+    "gate1_value": 0.7893,
+    "headroom_capture_fraction": -1.7998,
+    "selection_beats_random": true,
+    "selection_beats_vote": false,
+    "union_value_add": false
+  },
+  "generator_independence_disclosure": "FORFEITED at the negative-mining level (panel-approved trade): up to 3 negatives per positive are real wrong candidates mined from TRM arc_v1 on its own TRAINING split (zero eval-task leak, hard-asserted). The energy itself reads only (demos, test_input, candidate_grid) at inference \u2014 REQ-GAP3-2 intact.",
+  "honest_verdict": "complete: gap3_stage2v2_beats_random_not_vote_n31_vote_0.4516_ebmtta_0.1613_rand_0.1432_gate1_0.7893_auroctta_0.4604_unionadd_False",
+  "inference_substrate": "live_gpu_ebm_train_plus_offline_trm_candidate_rerank_no_oracle",
+  "model_specs": {
+    "architecture": "SpatialPairEncoder (stride-1 hi-res trunk + downsample path, mean+max pool) -> 256-d; rule = mean over demo embeddings; E = global relation MLP + FiLM-conditioned local energy map (mean + 0.5*max over valid cells)",
+    "curriculum": "per positive: <=3 mined real TRM errors + structured same-shape near-misses (component recolor/move/delete/swap, 1-3 cell flips) + 2 v1 coverage corruptions",
+    "n_params": 1269586,
+    "tta": "dihedral-8 energy averaging at eval"
+  },
+  "n_oracle_hit": 19,
+  "n_tasks": 31,
+  "oracle_pass2_ceiling": 0.6129,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "resource": "eval_pool_export"
+    },
+    {
+      "available": true,
+      "resource": "mined_negatives"
+    }
+  ],
+  "random_baseline_note": "exact E[pass@2] of a uniform-random ranker on this pool (panel fix)",
+  "random_ranker_pass2_baseline": 0.1432,
+  "random_seed": 12345,
+  "rankers": {
+    "EBM_v2": {
+      "pass@1": 0.129,
+      "pass@2": 0.1613
+    },
+    "EBM_v2_TTA8": {
+      "pass@1": 0.0645,
+      "pass@2": 0.1613
+    },
+    "EBM_v2_TTA8_residual_global": {
+      "pass@1": 0.0323,
+      "pass@2": 0.0645
+    },
+    "HYBRID_vote_then_E_tta": {
+      "pass@1": 0.4194,
+      "pass@2": 0.4839
+    },
+    "TRM_VOTE": {
+      "pass@1": 0.4194,
+      "pass@2": 0.4516
+    },
+    "UNION_plus_E_tta": {
+      "pass@1": 0.4516,
+      "pass@2": 0.4839
+    },
+    "UNION_votes_qmean_voteshare": {
+      "pass@1": 0.4516,
+      "pass@2": 0.4839
+    }
+  },
+  "reproducibility_checksum": "b830e5a8d8e5a089",
+  "title": "GAP-3 Stage 2 v2: mined-real + structured-near-miss curriculum, spatial FiLM energy",
+  "training": {
+    "best_val_top1_acc": 0.4444,
+    "corpus_hash": "b830e5a8d8e5a089",
+    "mean_val_top1_last10": 0.3913,
+    "mined_meta": {
+      "available": true,
+      "generator": "TRM arc_v1_public/step_518071 on its own TRAINING split (zero eval-task leak, asserted)",
+      "n_distinct_negs": 250,
+      "n_rows_scanned": 30720,
+      "n_tasks_with_negs": 10,
+      "n_wrong_rows": 18390
+    },
+    "n_params": 1269586,
+    "n_train_tasks": 504,
+    "n_val_tasks": 56,
+    "total_mined_negs_used": 688,
+    "train_duration_s": 414.1,
+    "train_log": [
+      {
+        "loss": 2.2135,
+        "step": 250,
+        "val_top1_acc": 0.1319
+      },
+      {
+        "loss": 2.0088,
+        "step": 500,
+        "val_top1_acc": 0.1597
+      },
+      {
+        "loss": 1.9019,
+        "step": 750,
+        "val_top1_acc": 0.2743
+      },
+      {
+        "loss": 1.8015,
+        "step": 1000,
+        "val_top1_acc": 0.2431
+      },
+      {
+        "loss": 1.8263,
+        "step": 1250,
+        "val_top1_acc": 0.2778
+      },
+      {
+        "loss": 1.4121,
+        "step": 1500,
+        "val_top1_acc": 0.3229
+      },
+      {
+        "loss": 1.8482,
+        "step": 1750,
+        "val_top1_acc": 0.316
+      },
+      {
+        "loss": 1.6529,
+        "step": 2000,
+        "val_top1_acc": 0.2986
+      },
+      {
+        "loss": 1.8139,
+        "step": 2250,
+        "val_top1_acc": 0.2917
+      },
+      {
+        "loss": 1.0869,
+        "step": 2500,
+        "val_top1_acc": 0.2917
+      },
+      {
+        "loss": 1.8543,
+        "step": 2750,
+        "val_top1_acc": 0.2639
+      },
+      {
+        "loss": 2.4003,
+        "step": 3000,
+        "val_top1_acc": 0.3507
+      },
+      {
+        "loss": 1.6774,
+        "step": 3250,
+        "val_top1_acc": 0.3611
+      },
+      {
+        "loss": 1.5666,
+        "step": 3500,
+        "val_top1_acc": 0.3889
+      },
+      {
+        "loss": 1.3486,
+        "step": 3750,
+        "val_top1_acc": 0.4028
+      },
+      {
+        "loss": 1.3939,
+        "step": 4000,
+        "val_top1_acc": 0.4062
+      },
+      {
+        "loss": 1.0583,
+        "step": 4250,
+        "val_top1_acc": 0.3576
+      },
+      {
+        "loss": 1.2438,
+        "step": 4500,
+        "val_top1_acc": 0.3229
+      },
+      {
+        "loss": 1.5679,
+        "step": 4750,
+        "val_top1_acc": 0.4444
+      },
+      {
+        "loss": 1.4535,
+        "step": 5000,
+        "val_top1_acc": 0.3542
+      },
+      {
+        "loss": 1.0396,
+        "step": 5250,
+        "val_top1_acc": 0.3958
+      },
+      {
+        "loss": 1.2993,
+        "step": 5500,
+        "val_top1_acc": 0.3715
+      },
+      {
+        "loss": 1.3495,
+        "step": 5750,
+        "val_top1_acc": 0.4062
+      },
+      {
+        "loss": 1.2097,
+        "step": 6000,
+        "val_top1_acc": 0.4062
+      },
+      {
+        "loss": 1.4872,
+        "step": 6250,
+        "val_top1_acc": 0.3993
+      },
+      {
+        "loss": 1.0659,
+        "step": 6500,
+        "val_top1_acc": 0.3819
+      },
+      {
+        "loss": 1.1869,
+        "step": 6750,
+        "val_top1_acc": 0.3611
+      },
+      {
+        "loss": 0.961,
+        "step": 7000,
+        "val_top1_acc": 0.4167
+      },
+      {
+        "loss": 1.2819,
+        "step": 7250,
+        "val_top1_acc": 0.4201
+      }
+    ]
+  }
+}
