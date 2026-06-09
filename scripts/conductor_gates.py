@@ -198,6 +198,25 @@ def _eval_op(actual: Any, op: str, expected: Any) -> tuple[bool, str]:
         if actual is None:
             return True, f"actual is None, vacuously does not contain {expected!r}"
         return expected not in actual, f"actual={actual!r} does not contain expected={expected!r}"
+    if op == "exists":
+        # The field is considered to EXIST when it is present with a real (non-null)
+        # value. `evaluate_gates` fetches via data.get(field), so a missing key and an
+        # explicit null both arrive as actual=None — both mean "the upstream hasn't
+        # produced this field yet", which is exactly what `exists` should reject.
+        # The required `value` (schema mandates one) is honored: value true/None ->
+        # pass when present; value false -> pass when absent (an inline not_exists).
+        present = actual is not None
+        want = _coerce_gate_value(expected)
+        if isinstance(want, bool):
+            return present == want, (
+                f"field is {'present' if present else 'absent'} "
+                f"(actual={actual!r}); expected exists={want}"
+            )
+        return present, f"field is {'present' if present else 'absent'} (actual={actual!r})"
+    if op == "not_exists":
+        return actual is None, (
+            f"field is {'absent' if actual is None else 'present'} (actual={actual!r})"
+        )
     return False, f"unknown op {op!r}"
 
 

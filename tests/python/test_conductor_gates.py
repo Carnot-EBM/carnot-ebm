@@ -153,6 +153,58 @@ def test_contains_operator(tmp_path):
     assert result.passed is True
 
 
+def test_exists_operator_passes_when_field_present(tmp_path):
+    """`exists` (a schema-valid op that the runtime previously rejected as 'unknown op',
+    blocking the .365 ARC capstone exp3951) passes when the upstream produced the field."""
+    _seed_artifact(tmp_path, 3946, "r11l-first-solve", {"honest_verdict": "complete: r11l_solved"})
+    task = {
+        "id": "exp3951-capstone",
+        "title": "Capstone gated on the r11l solve having landed",
+        "gated_on": [
+            {
+                "upstream": "exp3946-r11l-first-solve",
+                "artifact_field": "honest_verdict",
+                "op": "exists",
+                "value": True,
+            },
+        ],
+    }
+    result = evaluate_gates(task, results_dir=tmp_path)
+    assert result.passed is True
+
+
+def test_exists_operator_fails_when_field_missing(tmp_path):
+    """`exists` rejects when the upstream artifact is missing the gated field (or it is null)."""
+    _seed_artifact(tmp_path, 3946, "r11l-first-solve", {"some_other_field": 1})
+    task = {
+        "id": "exp3951-capstone",
+        "title": "Capstone gated on a field the upstream did not produce",
+        "gated_on": [
+            {
+                "upstream": "exp3946-r11l-first-solve",
+                "artifact_field": "honest_verdict",
+                "op": "exists",
+                "value": True,
+            },
+        ],
+    }
+    result = evaluate_gates(task, results_dir=tmp_path)
+    assert result.passed is False
+    assert "absent" in result.gates_evaluated[0].reason
+
+
+def test_exists_value_false_means_should_not_exist(tmp_path):
+    """`exists` with value False is an inline not-exists: passes only when the field is absent."""
+    _seed_artifact(tmp_path, 3946, "r11l-first-solve", {"honest_verdict": "complete: x"})
+    task = {
+        "id": "exp-demo",
+        "title": "demo",
+        "gated_on": [{"upstream": "exp3946-r11l-first-solve", "artifact_field": "honest_verdict",
+                      "op": "exists", "value": False}],
+    }
+    assert evaluate_gates(task, results_dir=tmp_path).passed is False
+
+
 def test_numeric_op_with_none_actual_fails(tmp_path):
     """Comparing None numerically must fail rather than raise TypeError."""
     _seed_artifact(tmp_path, 819, "field_fix", {"discrimination_rate": None})
