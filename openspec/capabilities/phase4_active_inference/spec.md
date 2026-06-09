@@ -84,3 +84,9 @@
 
 ### SCENARIO-PHASE4-014
 **Description:** Running Exp 3965 against the offline lp85 environment either writes `blocked_arc_offline_env_unavailable` when the offline ARC environment cannot load, or confirms each solved level through `levels_completed`, records the per-level action counts and `results/arc_agi3_access_probe.json` baseline references for every solved lp85 level, reports only one new level beyond L1 when L2 is solved, and does not continue beyond the scoped L2 target.
+
+### REQ-PHASE4-015: ARC-AGI-3 ArcMemo Cross-Game Concept Memory
+**Description:** The system SHALL run an ArcMemo-style cross-game memory experiment over an ordered sequence of at least three non-spatial ARC-AGI-3 games. It MUST compare a no-memory induction arm against a with-memory arm at equal active-data budget per game, seed concept-level records from the real-env-confirmed r11l select/place and lp85 permutation solves, retrieve concept records for later games, and write `results/experiment_3970_cross_game_arcmemo_transfer.json` with bare fields for transfer win, per-game call counts, per-game held-out consistency energy, stored concept count, reused concept count, random seed, duration, inference substrate, and a terminal-prefix honest verdict.
+
+### SCENARIO-PHASE4-015
+**Description:** Running Exp 3970 either blocks honestly with `blocked_arc_offline_env_unavailable` when the offline ARC environment cannot load, blocks with `blocked_codex_unavailable` only when fresh Codex synthesis is required and unavailable, or completes with concrete concept-reuse evidence showing which stored concepts were retrieved on later games and whether the with-memory arm reached trustworthy energy (`<=0.15`) with fewer calls or lower energy than the no-memory arm.
