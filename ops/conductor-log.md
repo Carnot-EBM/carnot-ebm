@@ -8067,3 +8067,4 @@ c |
 | 2026-06-09 06:23 UTC | Hardware continuity (consolidated): SSH-reachabili | SKIP | Pre-tests failing, self-heal failed: 1 failed, 87 passed in 9.88s |
 | 2026-06-09 06:25 UTC | Hardware continuity (consolidated): SSH-reachabili | SKIP | Pre-tests failing, self-heal failed: 1 failed, 87 passed in 9.32s |
 | 2026-06-09 06:27 UTC | Hardware continuity (consolidated): SSH-reachabili | SKIP | Pre-tests failing, self-heal failed: 1 failed, 87 passed in 10.06s |
+| 2026-06-09 06:29 UTC | Capstone .365: aggregate the ARC first-solve push  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3946-r11l-first-solve.honest_verdict (u |
