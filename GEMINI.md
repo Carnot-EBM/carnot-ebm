@@ -7,6 +7,7 @@ If you notice the user's request is based on a misconception, say so.
 Never claim 'all tests pass' when output shows failures.
 Keep text between tool calls concise and high-signal.
 Spawn an adversarial sub-agent (using the `generalist` tool) to review non-trivial changes before reporting completion.
+NEVER write scratch/debug/one-off scripts to the repo ROOT. Your CWD is the repo root, so a quick `probe.py`/`check_acc.py`/`test_foo.py` lands there and clutters the project. Put real experiment scripts in `scripts/experiments/`, real tests in `tests/python/`, and throwaway probes in `/tmp`. Root-level `*.py` is gitignored (`/*.py`) and a janitor quarantines it, so a root scratch file is also silently lost.
 
 ## Development Workflow (MANDATORY)
 

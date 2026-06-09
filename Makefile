@@ -1,4 +1,4 @@
-.PHONY: up down logs status build test clean
+.PHONY: up down logs status build test clean clean-scratch clean-scratch-apply
 
 # ─── Infrastructure ───────────────────────────────────────────────
 
@@ -16,6 +16,14 @@ up:
 ## Stop all services
 down:
 	docker compose down
+
+## Show what root-clutter would be swept (dry-run; agent/experiment scratch + build artifacts)
+clean-scratch:
+	python3 scripts/root_clutter_sweep.py
+
+## Sweep agent/experiment scratch out of the repo root (quarantine .py, delete build artifacts)
+clean-scratch-apply:
+	python3 scripts/root_clutter_sweep.py --apply
 
 ## Tail service logs
 logs:

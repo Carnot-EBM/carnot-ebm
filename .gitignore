@@ -165,6 +165,9 @@ tests/python/test_conductor_supervisor.py
 /main.synctex.gz
 # Vivado per-invocation clock report written to CWD (regenerable scratch)
 /clockInfo.txt
+# Quarantine dir for the root-clutter sweeper (scripts/root_clutter_sweep.py) — it
+# relocates untracked root scratch here (reversible) instead of hard-deleting it.
+.root-scratch-trash/
 
 # Conductor pre-test fingerprint cache — local-only, regenerated on first run
 ops/.pretest-cache.json
