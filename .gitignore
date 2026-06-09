@@ -140,6 +140,32 @@ output/carnot_ising_v[0-9]*_bd/
 # Conductor supervisor test must stay quarantined — running it kills the conductor
 tests/python/test_conductor_supervisor.py
 
+# ------------------------------------------------------------------------------
+# Root-clutter guard (2026-06-09). Agents/experiments repeatedly write one-off
+# scratch scripts (probe*.py, check_*.py, test_*.py, append_*.py, fix_*.py, ...)
+# into the REPO ROOT instead of scripts/experiments/ or tests/python/. Ignoring
+# root-level *.py stops `git add -A` (including the conductor's --no-verify
+# commits, which still honor .gitignore) from re-tracking them. Real Python lives
+# in python/, scripts/, tests/ — never the repo root. ~155 prior scratch files
+# were archived to legacy/root-scratch-2026-06/ in this cleanup. conftest.py and
+# setup.py are whitelisted in case a build ever legitimately needs them at root.
+/*.py
+!/conftest.py
+!/setup.py
+
+# LaTeX build artifacts written to the repo root by paper compiles (regenerable)
+/main.aux
+/main.log
+/main.out
+/main.bbl
+/main.blg
+/main.toc
+/main.fls
+/main.fdb_latexmk
+/main.synctex.gz
+# Vivado per-invocation clock report written to CWD (regenerable scratch)
+/clockInfo.txt
+
 # Conductor pre-test fingerprint cache — local-only, regenerated on first run
 ops/.pretest-cache.json
 
