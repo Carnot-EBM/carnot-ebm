@@ -8072,3 +8072,6 @@ c |
 | 2026-06-09 06:33 UTC | Capstone .365: aggregate the ARC first-solve push  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3946-r11l-first-solve.honest_verdict (u |
 | 2026-06-09 07:21 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-06-09 07:23 UTC | Milestone 2026.06.366 activated | OK | 11 tasks queued |
+| 2026-06-09 07:39 UTC | Archive .365 -> activate .366; GREEN-GATE: assert  | FAIL | Codex CLI error: : pytest.CaptureFixture[str],
++) -> None:
++    """REQ-REPORT |

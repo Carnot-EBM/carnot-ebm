@@ -36958,3 +36958,39 @@ milestones:
       \ flagged_adversarial artifact; cite upstream sha256."
     deliverable: results/experiment_3951_capstone_v365.json
     result: OK (conductor)
+- id: 2026.06.365
+  correction_type: v365_archive_activate_v366_arc_truth
+  title: 'Archive .365 and activate .366 with the first ARC solve preserved'
+  doc: docs/research-notes/arc-agi3-agent-research-plan.md
+  completed: '2026-06-09'
+  finding: '.365 achieved Carnot''s first ARC-AGI-3 solve in exp3946, skipped exp3947 through exp3950, and blocked exp3951 on an unsupported op: exists gate.'
+  activation_recorded: exp3952-archive-v365-activate-v366
+  tasks:
+  - id: exp3945-archive-v364-activate-v365
+    title: 'Archive .364 and activate .365 with ARC substrate gates'
+    deliverable: results/experiment_3945_archive_v364_activate_v365.json
+    result: 'complete: archived_v364_v365_active_arc_substrate_green_modules_importable'
+  - id: exp3946-r11l-first-solve
+    title: 'First ARC-AGI-3 solve on r11l level 1'
+    deliverable: results/experiment_3946_r11l_first_solve.json
+    result: 'complete: r11l_first_solve_levels1_of6_solvedTrue_pieces2_targets1 [FIRST_SOLVE real_env_confirmed=true levels_solved=1 actions=4]'
+  - id: exp3947-active-data-codex-nonspatial-sweep
+    title: 'Active-data codex nonspatial sweep'
+    deliverable: results/experiment_3947_active_data_codex_nonspatial_sweep.json
+    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3947_active_data_codex_nonspatial_sweep.json'
+  - id: exp3948-goal-predicate-induction
+    title: 'Goal-predicate induction from level-up transitions'
+    deliverable: results/experiment_3948_goal_predicate_induction.json
+    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3948_goal_predicate_induction.json'
+  - id: exp3949-hidden-state-latent-registers
+    title: 'Hidden-state latent-register augmentation'
+    deliverable: results/experiment_3949_hidden_state_latent_registers.json
+    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3949_hidden_state_latent_registers.json'
+  - id: exp3950-hardware-continuity
+    title: 'Hardware continuity for attached boards'
+    deliverable: results/experiment_3950_hardware_continuity.json
+    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3950_hardware_continuity.json'
+  - id: exp3951-capstone-v365
+    title: 'Capstone .365 ARC first-solve aggregation'
+    deliverable: results/experiment_3951_capstone_v365.json
+    result: 'blocked_gate_check_failed [op_exists_gate_bug=unknown_op_exists]'
