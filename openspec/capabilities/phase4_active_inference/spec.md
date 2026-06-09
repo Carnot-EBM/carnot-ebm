@@ -63,3 +63,9 @@
 
 ### SCENARIO-PHASE4-009
 **Description:** Running Exp 3956 produces a valid artifact with fields `goal_predicate_precision`, `goal_predicate_recall`, `n_level_ups_observed`, `games_covered`, `random_seed`, `honest_verdict`, `duration_s`, and `inference_substrate`.
+
+### REQ-PHASE4-012: ARC-AGI-3 M3 Efficiency Real Games
+**Description:** The system SHALL measure the efficiency transfer of the verifier action-pruner on solved real ARC-AGI-3 games. It MUST load prior real game solve artifacts (e.g. from Exp 3946, 3953, 3954), simulate action evaluations with and without the verifier pruner over the required path to solve, bootstrap 95% CIs for the efficiency ratio of actions taken, and output the result artifact `results/experiment_3959_m3_efficiency_real_games.json` to prove if the pruner meaningfully cuts the search space on real games.
+
+### SCENARIO-PHASE4-012
+**Description:** Running Exp 3959 produces a valid artifact with fields `ci95_with`, `ci95_without`, `efficiency_ratio_with_over_without`, `cis_non_overlapping_pruner_helps`, `n_solved_levels_measured`, and `honest_verdict`. The verdict is honest and reports blocked if no real solved games are available.

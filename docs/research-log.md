@@ -5127,3 +5127,9 @@ The critical path for milestone .250:
 - theme: Zero-artifact milestone — capstone stalled at the .365 first-solve aggregation gate
 - key result: Honest negative — no experiment commits found since activation of 2026.06.365; both GPUs correctly idle (0 compute-bound tasks).
 - acceptance: 0/0 criteria met
+
+### Milestone 2026.06.366
+- exp_range: no data available this milestone
+- theme: Operational retrospective — zero-commit detector verdict vs visible changelog activity
+- key result: Honest negative per authoritative timing (0 experiment commits since activation; both GPUs correctly idle, 0 compute-bound tasks). Third consecutive zero-count (.363/.365/.366) despite committed experiments in the changelog window — points at a milestone-scoped commit-detection gap to audit, not three genuinely empty milestones.
+- acceptance: 0/0 criteria met

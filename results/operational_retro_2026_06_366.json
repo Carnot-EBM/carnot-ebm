@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.366",
+  "generated_at": "2026-06-09T11:31:58Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative timing source reports 0 experiment commits since activation of 2026.06.366 (0 completed, 0 compute-bound, 0 tracked wall-minutes), so per-experiment efficiency metrics are undefined and GPU idle is correct behaviour (gpu_idle_on_compute_bound_tasks=null; 0 compute-bound tasks). However, ops/changelog.md records completed experiment activity within this milestone window, and this is the THIRD consecutive milestone (.363, .365, .366) to report a zero count — which points at a commit-range attribution/timing gap in the retro's milestone-scoping rather than three genuinely empty milestones.",
+  "bottlenecks_identified": [
+    "Milestone-scoped commit detection returned zero experiment commits, yet ops/changelog.md shows completed experiment activity dated within the .366 window and the same zero-count recurred for .363 and .365. The likely real bottleneck is a commit-range attribution/timing gap in the retro's milestone-scoping detector, NOT an empty milestone — this should be verified before concluding nothing ran.",
+    "With the authoritative experiments_completed count at 0, all per-experiment timing, throughput, and slowest-experiment analysis is undefined this milestone (no data available this milestone).",
+    "GPU idle is explicitly NOT flagged as a bottleneck: gpu_idle_on_compute_bound_tasks=null because there were 0 compute-bound tasks; 0% utilization on both RTX 3090s is the expected state when no GGUF/CUDA task is running."
+  ],
+  "improvements_suggested": [
+    "Audit the retro's milestone-scoped commit detector: confirm how the activation-to-close commit range is computed and how experiment commits are attributed to a milestone. Three consecutive zero-commit retros (.363/.365/.366) against a changelog showing completed experiments is the single strongest signal of a detection bug worth fixing before any other tooling change.",
+    "Add a self-check to the retro generator: when the timing detector finds 0 commits BUT the milestone window contains files matching results/experiment_*.json, emit a 'detector_undercount_suspected' flag instead of silently reporting zero.",
+    "Wire a zero-commit milestone alarm into the conductor close path so a genuinely empty milestone (as distinct from a detector miss) is surfaced immediately rather than discovered only at retro time.",
+    "Apply the ARC-AGI-3 Incremental-Progress Scoping rule (CLAUDE.md, 2026-06-09): scope solve tasks to advance +1..+n levels rather than all-or-nothing FULL solves, so partial success banks committed progress instead of 3-fail-skipping an over-ambitious task to zero output."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Verify the milestone-scoped commit detector against ops/changelog.md and git log for the .366 activation window before the next planning cycle — determine whether the recurring zero-count is a detection/attribution gap rather than three genuinely empty milestones.",
+    "Add a detector self-check (0 commits found AND results/experiment_*.json present in the window => flag 'detector_undercount_suspected') so future retros never silently report a false zero and the efficiency telemetry stays trustworthy.",
+    "If the window is in fact genuinely empty, instrument a conductor zero-commit alarm at milestone close so an empty milestone becomes an immediate operator signal instead of a retro-time discovery."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The recurring 'zero experiment commits' verdict across .363/.365/.366 — alongside a changelog full of completed experiments in the same window — is itself the operational signal: the highest leverage is auditing the retro's own commit-detection, not re-explaining an apparently empty milestone. estimated_time_savings_pct is reported as 0 because total_wall_time_minutes is 0 in the authoritative data; the payoff of fixing the detector is restoring trustworthy efficiency telemetry, not shaving measured per-experiment time."
+}
