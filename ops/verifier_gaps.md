@@ -164,6 +164,46 @@ top-3-then-q_mean shortlist ceiling). Corrigendum details added in-place to the 
 (`corrigendum_2026_06_09` block). (Caveat: n=31; CI upper edge +0.0645 cannot exclude a small positive —
 re-confirm at 400.)
 
+**Stage 2 v1 — trained generator-INDEPENDENT ARC transition-EBM: NEGATIVE, adversarially confirmed;
+failure attributed to RECIPE, not concept.** Same-day build + run (2026-06-09,
+`results/arc3_gap3_stage2_transition_ebm.json` + `..._adversarial_verify.json`, 5/5 NEGATIVE_CONFIRMED,
+worst severity minor). A ~1.1M-param relation-network EBM (shared pair-encoder CNN; rule = mean over
+demo-pair embeddings; E = MLP([r,p,r·p,|r−p|])), trained with InfoNCE (gold vs 10 synthetic corruption
+negatives) on ARC-1 training (400) + ConceptARC (160) — `training2` EXCLUDED after an overlap audit
+found 376/400 ARC-1 eval tasks inside it (29/30 pool tasks) — then evaluated zero-shot as a re-ranker on
+TRM's real pool. It learns its curriculum (val top-1 0.59 vs 0.09 chance; on the REAL pool the lone
+identity-copy ranks dead last, demo-copy AUROC 0.833) but is **statistically indistinguishable from a
+RANDOM ranker on real candidates**: pass@2 0.1613 vs random-baseline 0.1432 (P(X≥5)=0.468) vs vote
+0.4516; macro AUROC 0.5442; union value-add zero (31/31 top-2 sets unchanged); E's hit-set is a strict
+subset of vote's, and complementarity is structurally impossible (Pareto-dominated gold on 4/5
+vote-missed entries — no monotone vote+E combination can exceed the no-E union's 0.4839).
+
+**Why (the quantified gap — this is the missing-discriminator spec):** only 3.8% of TRM's real wrong
+candidates (28.2% by vote mass) belong to the 8 trained corruption families. **91.5% of real wrong
+candidates share gold's SHAPE**; the dominant error classes are structured near-misses (29.7%, median
+Hamming 0.10) and plausible-but-wrong rule applications (59.1%). On these the energy is at/below chance
+(gold-vs-near-miss(≤5% cells) AUROC 0.481) and the global-mean-pooled encoder cannot even resolve
+1–2-cell differences (c3202e5a: gold differs from the vote leader by ONE cell, ranks 747/754).
+
+- **missing discriminator:** same-shape near-miss rule-consistency — score whether a candidate that
+  matches gold's shape applies the demonstrated rule correctly at the 1–5%-cells-wrong resolution. The
+  91.5% class where the trained E sits at ~0.52 pair-weighted AUROC and vote sits at 0.92.
+- **candidate design (Stage-2 v2, ONE run behind hard gates):** (1) negatives = REAL wrong candidates
+  mined from a generator run on TRAINING-split tasks only (different TRM seed/early checkpoint or a
+  weaker non-TRM model — preserves eval-generator independence + task hygiene) + STRUCTURED near-miss
+  synthesis (single-object recolor/move/delete, off-by-one placement) so same-shape ≤5%-cell errors
+  dominate; (2) architecture drops global mean-pooling for spatial features / per-cell cross-attention
+  (cellwise-diff resolvable); keep dihedral-8 TTA at eval (demonstrated free +0.03 pass@2). (3) GATES:
+  gold-vs-same-shape-near-miss AUROC > 0.70 on held-out TRAINING tasks BEFORE any selection eval; at
+  eval require pass@2 > 0.1432 (random), then > vote. If v2 still lands at random → RETIRE the
+  trained-content-energy lineage and close GAP-3 with the honest bound below.
+- **honest bound after three stages:** the 16pp oracle headroom (0.6129 vs vote 0.4516; 5
+  present-but-mis-voted entries) is real, replicated, and untouched by scalar (Stage 0), latent
+  (Stage 1), and trained content-energy v1 (Stage 2) selectors. Vote's own within-task AUROC 0.9235 is
+  effectively a 1000-sample TRM self-ensemble — the bar any content energy must clear. The remaining
+  serious candidates beyond v2 are execution/program-synthesis verification and hybrids, not cheaper
+  energies.
+
 ## Open gaps
 
 ### GAP-1: transpose / orientation discrimination

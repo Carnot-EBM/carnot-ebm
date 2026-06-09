@@ -55,7 +55,7 @@ from pathlib import Path
 import numpy as np
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+import torch.nn.functional as F  # noqa: N812 — the universal torch convention
 
 CARNOT = "/home/ianblenke/github.com/ianblenke/carnot"
 KAGGLE = "/home/ianblenke/trm_src/kaggle/combined"
@@ -153,18 +153,23 @@ def make_negatives(rng, gold, test_input, demos, other_golds, k=K_NEG):
     if demos:
         fams.append(lambda: np.asarray(demos[rng.integers(len(demos))]["output"]))  # demo copy
     fams.append(lambda: DIHEDRAL[1 + rng.integers(7)](gold).copy())  # orientation
+
     def _cperm():
         perm = np.arange(N_COLORS)
         perm[1:] = rng.permutation(perm[1:])
         return apply_color_perm(gold, perm)
+
     fams.append(_cperm)  # palette
+
     def _noise():
         a = gold.copy()
         n = max(1, int(a.size * rng.uniform(0.02, 0.30)))
         idx = rng.choice(a.size, size=min(n, a.size), replace=False)
         a.flat[idx] = rng.integers(0, N_COLORS, size=len(idx))
         return a
+
     fams.append(_noise)  # near-miss
+
     def _resize():
         a = gold
         if rng.random() < 0.5 and a.shape[0] > 1:  # delete a row/col
@@ -174,18 +179,24 @@ def make_negatives(rng, gold, test_input, demos, other_golds, k=K_NEG):
         ax = rng.integers(2)
         i = int(rng.integers(a.shape[ax]))
         return np.insert(a, i, np.take(a, i, axis=ax), axis=ax)[:MAX_HW, :MAX_HW]
+
     fams.append(_resize)  # off-by-one size
+
     def _shift():
         a = gold.copy()
         dy, dx = int(rng.integers(-2, 3)), int(rng.integers(-2, 3))
         if dy == 0 and dx == 0:
             dy = 1
         out = np.zeros_like(a)
-        ys, xs = slice(max(0, dy), a.shape[0] + min(0, dy)), slice(max(0, dx), a.shape[1] + min(0, dx))
+        ys, xs = (
+            slice(max(0, dy), a.shape[0] + min(0, dy)),
+            slice(max(0, dx), a.shape[1] + min(0, dx)),
+        )
         ys2 = slice(max(0, -dy), a.shape[0] + min(0, -dy))
         xs2 = slice(max(0, -dx), a.shape[1] + min(0, -dx))
         out[ys, xs] = a[ys2, xs2]
         return out
+
     fams.append(_shift)  # translation
     if other_golds:
         fams.append(lambda: np.asarray(other_golds[rng.integers(len(other_golds))]))  # other-task
@@ -245,7 +256,9 @@ class TransitionEBM(nn.Module):
         )
 
     def energy(self, rule_emb, pair_emb):
-        z = torch.cat([rule_emb, pair_emb, rule_emb * pair_emb, (rule_emb - pair_emb).abs()], dim=-1)
+        z = torch.cat(
+            [rule_emb, pair_emb, rule_emb * pair_emb, (rule_emb - pair_emb).abs()], dim=-1
+        )
         return self.head(z).squeeze(-1)
 
 
@@ -286,7 +299,9 @@ def collate(rng, batch_examples, gold_pool, augment=True):
         if augment:
             demos, tin, tout = augment_instance(rng, demos, tin, tout)
         else:
-            demos = [{"input": clip_grid(p["input"]), "output": clip_grid(p["output"])} for p in demos]
+            demos = [
+                {"input": clip_grid(p["input"]), "output": clip_grid(p["output"])} for p in demos
+            ]
             tin, tout = clip_grid(tin), clip_grid(tout)
         if len(demos) > MAX_DEMOS:
             demos = [demos[j] for j in rng.choice(len(demos), MAX_DEMOS, replace=False)]
@@ -349,7 +364,9 @@ def train(args, device):
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01)
     sched = torch.optim.lr_scheduler.LambdaLR(
         opt,
-        lambda s: min(1.0, s / 300) * 0.5 * (1 + math.cos(math.pi * min(s, args.steps) / args.steps)),
+        lambda s: (
+            min(1.0, s / 300) * 0.5 * (1 + math.cos(math.pi * min(s, args.steps) / args.steps))
+        ),
     )
 
     def eval_val(n_batches=12):
@@ -388,10 +405,19 @@ def train(args, device):
         sched.step()
         if step % args.eval_every == 0:
             vacc, vrank = eval_val()
-            log.append({"step": step, "loss": round(float(loss.item()), 4),
-                        "val_top1_acc": round(vacc, 4), "val_gold_rank_mean": round(vrank, 3)})
-            print(f"[train] step {step}/{args.steps} loss={loss.item():.4f} "
-                  f"val_top1={vacc:.4f} val_rank={vrank:.2f}", flush=True)
+            log.append(
+                {
+                    "step": step,
+                    "loss": round(float(loss.item()), 4),
+                    "val_top1_acc": round(vacc, 4),
+                    "val_gold_rank_mean": round(vrank, 3),
+                }
+            )
+            print(
+                f"[train] step {step}/{args.steps} loss={loss.item():.4f} "
+                f"val_top1={vacc:.4f} val_rank={vrank:.2f}",
+                flush=True,
+            )
             if vacc > best_val:
                 best_val, bad = vacc, 0
                 best_state = {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
@@ -405,17 +431,34 @@ def train(args, device):
         model.load_state_dict(best_state)
     corpus_hash = hashlib.sha256(",".join(sorted(tasks)).encode()).hexdigest()[:16]
     torch.save(
-        {"state_dict": model.state_dict(), "best_val_top1": best_val, "log": log,
-         "train_names": train_names, "val_names": val_names, "n_params": n_params,
-         "corpus_hash": corpus_hash, "config": vars(args), "seed": SEED},
+        {
+            "state_dict": model.state_dict(),
+            "best_val_top1": best_val,
+            "log": log,
+            "train_names": train_names,
+            "val_names": val_names,
+            "n_params": n_params,
+            "corpus_hash": corpus_hash,
+            "config": vars(args),
+            "seed": SEED,
+        },
         CKPT,
     )
     dur = time.time() - t0
-    print(f"[train] DONE in {dur:.0f}s best_val_top1={best_val:.4f} params={n_params} -> {CKPT}",
-          flush=True)
-    return {"train_duration_s": round(dur, 1), "best_val_top1_acc": round(best_val, 4),
-            "n_params": n_params, "n_train_tasks": len(train_names), "n_val_tasks": len(val_names),
-            "n_train_examples": len(train_ex), "corpus_hash": corpus_hash, "train_log": log}
+    print(
+        f"[train] DONE in {dur:.0f}s best_val_top1={best_val:.4f} params={n_params} -> {CKPT}",
+        flush=True,
+    )
+    return {
+        "train_duration_s": round(dur, 1),
+        "best_val_top1_acc": round(best_val, 4),
+        "n_params": n_params,
+        "n_train_tasks": len(train_names),
+        "n_val_tasks": len(val_names),
+        "n_train_examples": len(train_ex),
+        "corpus_hash": corpus_hash,
+        "train_log": log,
+    }
 
 
 # ----------------------------------------------------------------------------- evaluation
@@ -477,10 +520,19 @@ def evaluate(args, device, train_meta):
     with gzip.open(POOL, "rt") as f:
         pool = json.load(f)
     entries = pool["entries"]
-    # no-oracle structural audit: the pool must not contain gold output grids anywhere
-    assert "gold" not in json.dumps(entries[0])[:2000].lower() or True
+    # no-oracle structural audit (REAL checks — the first version of these was dead code
+    # `assert X or True`, caught by the adversarial round; corrigendum_2026_06_09_stage2):
+    # (a) entries/candidates carry ONLY the whitelisted keys; (b) no top-level gold field exists.
+    # Demo pairs legitimately contain "output" grids (public context); the TEST gold grid must not
+    # appear anywhere, which the whitelist enforces structurally (candidates have no gold/output key).
+    _ENTRY_KEYS = {"task", "demos", "test_input", "candidates"}
+    _CAND_KEYS = {"votes", "q_mean", "correct", "grid"}
     for e in entries:
-        assert "output" not in e or True
+        assert set(e.keys()) == _ENTRY_KEYS, f"unexpected entry keys: {set(e.keys()) - _ENTRY_KEYS}"
+        for c in e["candidates"]:
+            assert set(c.keys()) == _CAND_KEYS, (
+                f"unexpected candidate keys: {set(c.keys()) - _CAND_KEYS}"
+            )
     # score every candidate: E(cand | test_input, demos) — ONE forward per candidate grid, no pooling
     tasks = []
     with torch.no_grad():
@@ -504,14 +556,20 @@ def evaluate(args, device, train_meta):
             tot_votes = sum(c["votes"] for c in e["candidates"])
             for c, E in zip(e["candidates"], Es):
                 g = np.asarray(c["grid"])
-                cands.append({
-                    "votes": c["votes"], "q_mean": c["q_mean"], "correct": c["correct"],
-                    "E": float(E), "vote_share": c["votes"] / max(1, tot_votes),
-                    "size": int(g.size),
-                    "changed": float((clip_grid(c["grid"]).shape != clip_grid(e["test_input"]).shape)
-                                     or not np.array_equal(clip_grid(c["grid"]),
-                                                           clip_grid(e["test_input"]))),
-                })
+                cands.append(
+                    {
+                        "votes": c["votes"],
+                        "q_mean": c["q_mean"],
+                        "correct": c["correct"],
+                        "E": float(E),
+                        "vote_share": c["votes"] / max(1, tot_votes),
+                        "size": int(g.size),
+                        "changed": float(
+                            (clip_grid(c["grid"]).shape != clip_grid(e["test_input"]).shape)
+                            or not np.array_equal(clip_grid(c["grid"]), clip_grid(e["test_input"]))
+                        ),
+                    }
+                )
             tasks.append({"task": e["task"], "cands": cands})
 
     n = len(tasks)
@@ -534,12 +592,15 @@ def evaluate(args, device, train_meta):
             c["_E_rank_resid"] = float(a - b)
 
     # union baselines (grouped LOTO): no-latent control vs +E value-add
-    _grouped_loto_union(tasks, lambda c: np.array([np.log1p(c["votes"]), c["vote_share"], c["q_mean"]]))
+    _grouped_loto_union(
+        tasks, lambda c: np.array([np.log1p(c["votes"]), c["vote_share"], c["q_mean"]])
+    )
     for t in tasks:
         for c in t["cands"]:
             c["_union_noE"] = c["_u"]
-    _grouped_loto_union(tasks, lambda c: np.array(
-        [np.log1p(c["votes"]), c["vote_share"], c["q_mean"], c["E"]]))
+    _grouped_loto_union(
+        tasks, lambda c: np.array([np.log1p(c["votes"]), c["vote_share"], c["q_mean"], c["E"]])
+    )
     for t in tasks:
         for c in t["cands"]:
             c["_union_withE"] = c["_u"]
@@ -573,9 +634,11 @@ def evaluate(args, device, train_meta):
             auh = _auroc(g, ngh)
             if auh is not None:
                 hard.append(auh)
-        return (round(float(np.mean(per)), 4) if per else None,
-                round(wsum / wtot, 4) if wtot else None,
-                round(float(np.mean(hard)), 4) if hard else None)
+        return (
+            round(float(np.mean(per)), 4) if per else None,
+            round(wsum / wtot, 4) if wtot else None,
+            round(float(np.mean(hard)), 4) if hard else None,
+        )
 
     e_macro, e_pairw, e_hard = auroc_suite(lambda c: -c["E"])
     v_macro, _, _ = auroc_suite(lambda c: c["votes"])
@@ -584,18 +647,22 @@ def evaluate(args, device, train_meta):
     def _sp(a, b):
         ar = np.argsort(np.argsort(a)).astype(float)
         br = np.argsort(np.argsort(b)).astype(float)
-        ar -= ar.mean(); br -= br.mean()
-        d = (np.linalg.norm(ar) * np.linalg.norm(br))
+        ar -= ar.mean()
+        br -= br.mean()
+        d = np.linalg.norm(ar) * np.linalg.norm(br)
         return float(ar @ br / d) if d else 0.0
+
     within_sp = [
         _sp(np.array([c["E"] for c in t["cands"]]), np.array([-c["votes"] for c in t["cands"]]))
-        for t in tasks if len(t["cands"]) > 2
+        for t in tasks
+        if len(t["cands"]) > 2
     ]
     shortcuts = {
         "pearson_E_votes": round(float(np.corrcoef(es, vs)[0, 1]), 4),
         "pearson_E_logvotes": round(float(np.corrcoef(es, np.log1p(vs))[0, 1]), 4),
-        "pearson_E_gridsize": round(float(np.corrcoef(
-            es, np.array([c["size"] for c in allc], float))[0, 1]), 4),
+        "pearson_E_gridsize": round(
+            float(np.corrcoef(es, np.array([c["size"] for c in allc], float))[0, 1]), 4
+        ),
         "mean_within_task_spearman_E_vs_voterank": round(float(np.mean(within_sp)), 4),
     }
 
@@ -605,16 +672,21 @@ def evaluate(args, device, train_meta):
         while True:
             x = (1103515245 * x + 12345) & 0x7FFFFFFF
             yield x
+
     def _boot(kA, kB):
         gen, B, deltas = _lcg(SEED), 1000, []
+
         def p2(sample, key):
-            return sum(int(any(c["correct"] for c in sorted(t["cands"], key=key)[:2]))
-                       for t in sample) / len(sample)
+            return sum(
+                int(any(c["correct"] for c in sorted(t["cands"], key=key)[:2])) for t in sample
+            ) / len(sample)
+
         for _ in range(B):
             samp = [tasks[next(gen) % n] for _ in range(n)]
             deltas.append(p2(samp, kA) - p2(samp, kB))
         deltas.sort()
         return [round(deltas[25], 4), round(deltas[974], 4)]
+
     ci_E_vote = _boot(rankers["EBM_ENERGY"], rankers["TRM_VOTE"])
     ci_unionE_union = _boot(rankers["UNION_plus_E"], rankers["UNION_votes_qmean_voteshare"])
 
@@ -628,17 +700,27 @@ def evaluate(args, device, train_meta):
         "coverage_ge_0p80": True,
         "headroom_capture_ge_0p30": bool(headroom >= 0.30),
         "headroom_capture_fraction": round(headroom, 4),
-        "union_value_add": bool(res["UNION_plus_E"]["pass@2"] > res["UNION_votes_qmean_voteshare"]["pass@2"]),
+        "union_value_add": bool(
+            res["UNION_plus_E"]["pass@2"] > res["UNION_votes_qmean_voteshare"]["pass@2"]
+        ),
     }
-    resid_beats_vote = (res["EBM_residual_over_vote_global"]["pass@2"] > vote2
-                        or res["EBM_rank_residual_within_task"]["pass@2"] > vote2)
+    resid_beats_vote = (
+        res["EBM_residual_over_vote_global"]["pass@2"] > vote2
+        or res["EBM_rank_residual_within_task"]["pass@2"] > vote2
+    )
     generator_independent_real = bool(gates["selection_beats_vote"] and resid_beats_vote)
 
     verdict = (
         "complete: gap3_stage2_transition_ebm_"
-        + ("BEATS_vote_generator_independent" if generator_independent_real
-           else ("beats_vote_but_vote_confounded" if gates["selection_beats_vote"]
-                 else "does_not_beat_vote"))
+        + (
+            "BEATS_vote_generator_independent"
+            if generator_independent_real
+            else (
+                "beats_vote_but_vote_confounded"
+                if gates["selection_beats_vote"]
+                else "does_not_beat_vote"
+            )
+        )
         + f"_n{n}_vote_{vote2}_ebm_{e2}_macroauroc_{e_macro}_hardauroc_{e_hard}"
         + f"_unionadd_{gates['union_value_add']}"
     )
@@ -648,21 +730,32 @@ def evaluate(args, device, train_meta):
         "title": "GAP-3 Stage 2: trained generator-independent ARC transition-EBM vs TRM frequency vote",
         "honest_verdict": verdict,
         "inference_substrate": "live_gpu_ebm_train_plus_offline_trm_candidate_rerank_no_oracle",
-        "n_tasks": n, "n_oracle_hit": n_oracle, "oracle_pass2_ceiling": oracle2,
+        "n_tasks": n,
+        "n_oracle_hit": n_oracle,
+        "oracle_pass2_ceiling": oracle2,
         "rankers": res,
-        "auroc": {"ebm_macro": e_macro, "ebm_pair_weighted": e_pairw,
-                  "ebm_hard_negatives_votes_ge5": e_hard, "vote_macro_reference": v_macro},
+        "auroc": {
+            "ebm_macro": e_macro,
+            "ebm_pair_weighted": e_pairw,
+            "ebm_hard_negatives_votes_ge5": e_hard,
+            "vote_macro_reference": v_macro,
+        },
         "gates": gates,
         "generator_independent_signal_real": generator_independent_real,
-        "bootstrap": {"ebm_vs_vote_pass2_ci95": ci_E_vote,
-                      "union_plus_E_vs_union_pass2_ci95": ci_unionE_union, "B": 1000},
+        "bootstrap": {
+            "ebm_vs_vote_pass2_ci95": ci_E_vote,
+            "union_plus_E_vs_union_pass2_ci95": ci_unionE_union,
+            "B": 1000,
+        },
         "a1_shortcut_diagnostics": shortcuts,
         "a2_overfit_audit": {
             "train_val_top1_acc_vs_synthetic_negatives": train_meta.get("best_val_top1_acc"),
-            "note": ("val measures gold-vs-SYNTHETIC-corruption top-1 on held-out TRAINING tasks; the "
-                     "eval pool is real TRM candidates on the ARC-1 EVAL split — fully disjoint tasks "
-                     "(asserted at train time). A large val-vs-eval gap = distribution shift between "
-                     "synthetic corruptions and real generator errors, not task leak."),
+            "note": (
+                "val measures gold-vs-SYNTHETIC-corruption top-1 on held-out TRAINING tasks; the "
+                "eval pool is real TRM candidates on the ARC-1 EVAL split — fully disjoint tasks "
+                "(asserted at train time). A large val-vs-eval gap = distribution shift between "
+                "synthetic corruptions and real generator errors, not task leak."
+            ),
         },
         "a3_no_oracle_audit": (
             "Energy computed from (demos, test_input, candidate_grid) only. The eval pool file does not "
@@ -673,13 +766,21 @@ def evaluate(args, device, train_meta):
         "training": train_meta,
         "model_specs": {
             "architecture": "PairEncoder CNN (4 conv blocks, GroupNorm, GELU) -> 256-d; rule = mean over "
-                            "demo-pair embeddings; energy head MLP([r,p,r*p,|r-p|])",
+            "demo-pair embeddings; energy head MLP([r,p,r*p,|r-p|])",
             "n_params": train_meta.get("n_params"),
             "negatives_per_positive": K_NEG,
-            "negative_families": ["identity_copy", "demo_output_copy", "dihedral", "color_perm",
-                                  "cell_noise", "row_col_resize", "shift", "other_task_output"],
+            "negative_families": [
+                "identity_copy",
+                "demo_output_copy",
+                "dihedral",
+                "color_perm",
+                "cell_noise",
+                "row_col_resize",
+                "shift",
+                "other_task_output",
+            ],
             "generator_provenance": "candidates from TRM arc_v1 step_518071 capped eval dump (eval only; "
-                                    "no TRM data in training)",
+            "no TRM data in training)",
         },
         "preconditions_checked": [
             {"resource": "cuda_available", "available": bool(torch.cuda.is_available())},
@@ -704,7 +805,9 @@ def evaluate(args, device, train_meta):
     print(f"-> {verdict}")
     for r in rankers:
         print(f"   {r:34s} pass@1={res[r]['pass@1']} pass@2={res[r]['pass@2']}")
-    print(f"   oracle={oracle2} auroc: macro={e_macro} pairw={e_pairw} hard={e_hard} (vote ref {v_macro})")
+    print(
+        f"   oracle={oracle2} auroc: macro={e_macro} pairw={e_pairw} hard={e_hard} (vote ref {v_macro})"
+    )
     print(f"   gates={gates}")
     print(f"   shortcuts={shortcuts}")
     print(f"   bootstrap E-vote CI95={ci_E_vote} | union+E - union CI95={ci_unionE_union}")
@@ -730,9 +833,13 @@ def main():
     if args.mode in ("eval", "all"):
         if not train_meta:
             ck = torch.load(CKPT, map_location="cpu")
-            train_meta = {"best_val_top1_acc": ck.get("best_val_top1"),
-                          "n_params": ck.get("n_params"), "corpus_hash": ck.get("corpus_hash"),
-                          "train_duration_s": 0.0, "reused_checkpoint": True}
+            train_meta = {
+                "best_val_top1_acc": ck.get("best_val_top1"),
+                "n_params": ck.get("n_params"),
+                "corpus_hash": ck.get("corpus_hash"),
+                "train_duration_s": 0.0,
+                "reused_checkpoint": True,
+            }
         evaluate(args, device, train_meta)
 
 

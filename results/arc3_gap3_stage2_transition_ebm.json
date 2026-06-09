@@ -10,6 +10,14 @@
     "train_val_top1_acc_vs_synthetic_negatives": 0.5903
   },
   "a3_no_oracle_audit": "Energy computed from (demos, test_input, candidate_grid) only. The eval pool file does not contain gold output grids (exporter drops them); `correct` labels are used exclusively to score rankings post-hoc. Training corpus is arc-agi_training+concept; arc-agi_training2 was EXCLUDED after an overlap audit found 376/400 ARC-1 eval tasks inside it (29/30 pool tasks).",
+  "adversarial_verify": {
+    "failure_attribution": "RECIPE (synthetic-negative distribution + encoder resolution), not CONCEPT",
+    "final_verdict": "NEGATIVE_CONFIRMED",
+    "report": "results/arc3_gap3_stage2_adversarial_verify.json",
+    "reviewers": 5,
+    "unanimous": true,
+    "worst_severity": "minor"
+  },
   "auroc": {
     "ebm_hard_negatives_votes_ge5": 0.6181,
     "ebm_macro": 0.5442,
@@ -26,6 +34,18 @@
       0.0,
       0.0
     ]
+  },
+  "corrigendum_2026_06_09_stage2": {
+    "architecture_resolution_bottleneck": "Global mean-pooled CNN cannot resolve 1-2-cell differences: on c3202e5a gold differs from the vote leader by ONE cell yet ranks 747/754 by E. Capacity exists where differences are coarse (f0df5ff0: gold ranked 1/212 above one-cell perturbations of it).",
+    "complementarity_structurally_impossible": "E's pass@2 hit-set is a STRICT SUBSET of vote's; on 4/5 vote-missed oracle entries >=2 wrong candidates Pareto-dominate gold in (votes,E), so NO monotone vote+E combination can exceed 0.4839 \u2014 the value the no-E union already reaches. Best steelman anywhere (dihedral-8 TTA-averaged E): pass@2 0.1935, AUROC 0.5852, CI95 vs vote still entirely below zero.",
+    "hard_neg_auroc_caveat": "hard-negatives AUROC 0.6181 rests on 90 pairs, per-task values quantized to {0,0.5,1}; the macro-vs-hard 'inversion' is statistically unsupported (paired sign test 8-vs-7, p~1.0; pair-weighted hard 0.5667 vs easy 0.5206).",
+    "max_demos_truncation": "MAX_DEMOS=4 truncated demos on 6/31 eval entries; verified metric-invariant (pass@2 identical at 0.1613 scoring with all demos).",
+    "negative_distribution_gap": "Only 72/1890 = 3.8% of TRM's real wrong candidates (28.2% by vote mass) are members of the 8 trained corruption families. 91.5% of real negatives share gold's SHAPE; the dominant classes are structured near-misses (29.7%, median Hamming 0.10) and plausible-but-wrong rule applications (59.1%) \u2014 neither represented in training. The EBM aces its curriculum on the real pool (lone identity-copy ranked dead last; gold-vs-demo-copy AUROC 0.833; size violators at E-pct 0.764) but is at/below chance on the untrained 96%: gold-vs-near-miss(<=5% cells) AUROC 0.481, gold-vs-same-shape-far 0.469, spearman(E, Hamming-to-gold)=0.04. The cleanest possible recipe-failure fingerprint.",
+    "origin": "5-reviewer adversarial round (workflow gap3-stage2-adversarial-verify). Every committed number reproduced bit-for-bit from the shipped checkpoint. Corrections sharpen interpretation; headline verdict UNCHANGED.",
+    "random_ranker_baseline": "EBM pass@2 0.1613 (5/31) is statistically indistinguishable from a RANDOM ranker on this pool: exact Poisson-binomial expected pass@2 = 0.1432 (E[hits]=4.44, P(X>=5)=0.468). 'Weak but vote-orthogonal' should read 'approximately random at selection'. Vote's 14 hits: p=8.9e-9.",
+    "tautological_asserts_fixed": "The in-script no-oracle asserts were dead code (`assert X or True`); the property itself was independently verified (no gold grids in the pool; 12/31 entries contain no correct candidate). Fixed in-script same-day with a real key-whitelist + no-gold-grid scan.",
+    "union_ci_gloss": "union_plus_E_vs_union CI [0,0] means 0/31 top-2 candidate sets changed by adding E (decision-identical refits; E gets a right-signed +0.16 std-ized weight), not a measured confidence interval.",
+    "val_headline_optimism": "best_val_top1=0.5903 is a max over 17 noisy evals; mean-of-last-10 = 0.5333; fresh-negative re-measurement (seed 999, n=269) = 0.5204 +/- 0.0597 (~5.7x chance). Transfer-failure contrast stands."
   },
   "duration_s": 230.8,
   "eval_duration_s": 8.4,
