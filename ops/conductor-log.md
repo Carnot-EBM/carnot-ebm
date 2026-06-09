@@ -8088,3 +8088,14 @@ c |
 | 2026-06-09 10:09 UTC | OWED from .365: latent-register augmentation for t | OK | 83 passed in 4.47s |
 | 2026-06-09 10:22 UTC | CROSS-GAME DSL TRANSFER (self-learning MANDATE, re | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
 | 2026-06-09 10:31 UTC | CROSS-GAME DSL TRANSFER (self-learning MANDATE, re | OK | cache hit: 104 passed in 4.90s |
+| 2026-06-09 10:50 UTC | M3 EFFICIENCY THESIS (LOAD-BEARING — the existenti | FAIL | Post-tests failed: 1 failed, 86 passed in 5.14s |
+| 2026-06-09 10:52 UTC | M3 EFFICIENCY THESIS (LOAD-BEARING — the existenti | OK | Deliverable already exists in repo |
+| 2026-06-09 10:53 UTC | M4 QUOTA-GATE READINESS: run the hybrid perception | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 4.94s |
+| 2026-06-09 10:55 UTC | M4 QUOTA-GATE READINESS: run the hybrid perception | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 5.05s |
+| 2026-06-09 10:57 UTC | M4 QUOTA-GATE READINESS: run the hybrid perception | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 5.14s |
+| 2026-06-09 11:00 UTC | Hardware continuity (consolidated; OWED from .365) | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 5.00s |
+| 2026-06-09 11:02 UTC | Hardware continuity (consolidated; OWED from .365) | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 4.93s |
+| 2026-06-09 11:04 UTC | Hardware continuity (consolidated; OWED from .365) | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 5.04s |
+| 2026-06-09 11:06 UTC | Capstone .366 (UNGATED — the .365 op:exists lesson | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 4.88s |
+| 2026-06-09 11:09 UTC | Capstone .366 (UNGATED — the .365 op:exists lesson | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 5.02s |
+| 2026-06-09 11:11 UTC | Capstone .366 (UNGATED — the .365 op:exists lesson | SKIP | Pre-tests failing, self-heal failed: 1 failed, 86 passed in 4.91s |
