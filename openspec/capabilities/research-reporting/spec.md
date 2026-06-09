@@ -18554,3 +18554,77 @@ and leaves ops/status/traceability/conductor files unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3945 | Planned (`python/carnot/reporting/archive_v364_activate_v365_3945.py`, `scripts/experiments/experiment_3945_archive_v364_activate_v365.py`) | Planned (`tests/python/test_experiment_3945_archive_v364_activate_v365.py`) |
+
+### REQ-REPORT-3952: Archive .365 And Activate .366 With First-Solve Preservation
+
+The Exp 3952 workflow SHALL archive milestone `2026.06.365`, confirm
+milestone `2026.06.366` is active in the current research roadmap, and write
+`results/experiment_3952_archive_v365_activate_v366.json`. Before editing any
+record, it SHALL run `.venv/bin/python -c "import yaml;
+yaml.safe_load(open('research-complete.yaml'))"` from the repository root. If
+that precondition fails, it SHALL write a blocked artifact whose
+`honest_verdict` starts with `blocked_research_complete_yaml_poison` and SHALL
+NOT edit `research-complete.yaml` or `ops/exclusion_manifest.yaml`.
+
+The workflow SHALL read Exp 3945 through Exp 3951 verdicts by invoking
+`scripts/summarize_artifact.py` over the authoritative result artifact paths
+rather than raw-reading the milestone JSONs for verdict extraction. It SHALL
+append an idempotent `.365` archive record to `research-complete.yaml`
+containing all seven task verdicts, recording Exp 3947 through Exp 3950 as
+missing artifacts when they did not land and recording Exp 3951 as the
+`op: exists` gate-block. Every appended scalar containing `: ` SHALL be quoted
+so the .355 colon-poison failure cannot recur. The appended record SHALL
+preserve the Exp 3946 r11l first solve as a complete verdict, not as a generic
+conductor OK placeholder.
+
+After the archive append, the workflow SHALL confirm both
+`research-complete.yaml` and `ops/exclusion_manifest.yaml` safe-load under
+`yaml.safe_load`. It SHALL run `.venv/bin/pytest
+tests/python/test_arc_agi3_world_model.py
+tests/python/test_arc_world_model_synth.py
+tests/python/test_arc_world_model_dsl.py -q --no-header -n 0 --no-cov -o
+addopts=` and record the bare boolean `arc_substrate_tests_green`. It SHALL
+run an import probe for `carnot.agentic.arc_agi3_world_model`,
+`carnot.agentic.arc_world_model_synth`, and
+`carnot.agentic.arc_world_model_dsl`, recording the aggregate bare boolean
+`arc_modules_importable` plus per-module import results.
+
+The terminal artifact SHALL include bare top-level fields
+`archived_milestone`, `activated_milestone`,
+`research_complete_yaml_parses`, `exclusion_manifest_parses`,
+`arc_substrate_tests_green`, `arc_modules_importable`,
+`prior_milestone_first_solve_recorded`, `honest_verdict`, `duration_s`, and
+`inference_substrate`. On the complete path, `honest_verdict` SHALL start with
+`complete:` or `success:`. Blocked verdicts SHALL start with
+`blocked_<resource>`. This is a record-only aggregation task and SHALL NOT
+modify `ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`; those documents are reconciled by the
+conductor's separate status step.
+
+#### SCENARIO-REPORT-3952: V365 Archive Opens The .366 ARC Run
+
+**Given** `.366` is active, `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` safe-load, the Exp 3945 through Exp 3951
+artifacts can be summarized, the ARC substrate tests pass, and the ARC agentic
+modules import
+**When** the Exp 3952 workflow runs
+**Then** it appends the `.365` task verdicts to `research-complete.yaml`,
+quotes colon-bearing scalars, confirms both YAML files still parse, records
+the Exp 3946 r11l first solve, records the missing Exp 3947 through Exp 3950
+artifacts and Exp 3951 `op: exists` gate-block, writes the required terminal
+artifact, and leaves ops/status/traceability/conductor files unchanged.
+
+#### SCENARIO-REPORT-3952-BLOCKED-YAML: Corrupt Research Record Blocks Before Append
+
+**Given** `research-complete.yaml` does not safe-load
+**When** the Exp 3952 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_research_complete_yaml_poison`, records the failed YAML parse in
+`preconditions_checked`, and leaves both `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` byte-for-byte unchanged.
+
+## Implementation Status (REQ-REPORT-3952)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3952 | Planned (`python/carnot/reporting/archive_v365_activate_v366_3952.py`, `scripts/experiments/experiment_3952_archive_v365_activate_v366.py`) | Planned (`tests/python/test_experiment_3952_archive_v365_activate_v366.py`) |

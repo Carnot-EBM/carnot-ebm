@@ -1,0 +1,105 @@
+{
+  "activated_milestone": "2026.06.366",
+  "active_milestone_confirmed": true,
+  "active_roadmap_path": "research-roadmap.yaml",
+  "arc_module_import_results": {
+    "carnot.agentic.arc_agi3_world_model": {
+      "error": null,
+      "import_ok": true
+    },
+    "carnot.agentic.arc_world_model_dsl": {
+      "error": null,
+      "import_ok": true
+    },
+    "carnot.agentic.arc_world_model_synth": {
+      "error": null,
+      "import_ok": true
+    }
+  },
+  "arc_modules_import_command": [
+    ".venv/bin/python",
+    "-c",
+    "import importlib, json, sys\nmods = ['carnot.agentic.arc_agi3_world_model', 'carnot.agentic.arc_world_model_synth', 'carnot.agentic.arc_world_model_dsl']\nout = {}\nfor mod in mods:\n    try:\n        importlib.import_module(mod)\n        out[mod] = {'import_ok': True, 'error': None}\n    except Exception as exc:\n        out[mod] = {'import_ok': False, 'error': repr(exc)}\nprint(json.dumps(out, sort_keys=True))\nsys.exit(0 if all(v['import_ok'] for v in out.values()) else 1)\n"
+  ],
+  "arc_modules_import_exit_code": 0,
+  "arc_modules_importable": true,
+  "arc_substrate_test_command": [
+    ".venv/bin/pytest",
+    "tests/python/test_arc_agi3_world_model.py",
+    "tests/python/test_arc_world_model_synth.py",
+    "tests/python/test_arc_world_model_dsl.py",
+    "-q",
+    "--no-header",
+    "-n",
+    "0",
+    "--no-cov",
+    "-o",
+    "addopts="
+  ],
+  "arc_substrate_test_exit_code": 0,
+  "arc_substrate_tests_green": true,
+  "archived_milestone": "2026.06.365",
+  "duration_s": 11.056669,
+  "exclusion_manifest_parses": true,
+  "experiment_id": "exp3952",
+  "field_principles": {
+    "activated_milestone": "Confirms .366 is live so downstream tasks resolve.",
+    "arc_modules_importable": "Bare bool: the agentic ARC modules import for .366 execution.",
+    "arc_substrate_tests_green": "Bare bool: the ARC M0/M2 unit tests pass.",
+    "archived_milestone": "Provenance: which milestone was archived (2026.06.365).",
+    "duration_s": "Aggregation wall-clock duration with a small floor.",
+    "exclusion_manifest_parses": "Bare bool: the manifest still loads under yaml.safe_load.",
+    "honest_verdict": "Terminal-prefix verdict for the record task.",
+    "inference_substrate": "Aggregation substrate for a record-only task.",
+    "prior_milestone_first_solve_recorded": "Bare bool: exp3946 r11l L1 solve is preserved.",
+    "research_complete_yaml_parses": "Bare bool: the colon-poison guard still loads."
+  },
+  "honest_verdict": "complete: archived_v365_v366_active_first_solve_recorded_arc_substrate_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "n_tasks_archived": 7,
+  "preconditions_checked": {
+    "active_milestone": "2026.06.366",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "exclusion_manifest_exists": true,
+    "exclusion_manifest_parsed": true,
+    "prior_milestone_first_solve_recorded": true,
+    "research_complete_yaml_exists": true,
+    "research_complete_yaml_parsed_after": true,
+    "research_complete_yaml_parsed_before": true
+  },
+  "prior_milestone_first_solve_recorded": true,
+  "prior_milestone_verdicts_summary": "exp3945: complete: archived_v364_v365_active_arc_substrate_green_modules_importable\nexp3946: complete: r11l_first_solve_levels1_of6_solvedTrue_pieces2_targets1 [FIRST_SOLVE real_env_confirmed=true levels_solved=1 actions=4]\nexp3947: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3947_active_data_codex_nonspatial_sweep.json\nexp3948: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3948_goal_predicate_induction.json\nexp3949: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3949_hidden_state_latent_registers.json\nexp3950: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3950_hardware_continuity.json\nexp3951: blocked_gate_check_failed [op_exists_gate_bug=unknown_op_exists]",
+  "random_seed": 3952,
+  "reproducibility_checksum": "ea1623d5a618aaf3fed81373c603169f40f1b2fb7582224ff212d8a30f6c37b7",
+  "research_complete_parse_command": [
+    ".venv/bin/python",
+    "-c",
+    "import yaml; yaml.safe_load(open('research-complete.yaml'))"
+  ],
+  "research_complete_parse_exit_code": 0,
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v365_to_v366_3952.v1",
+  "summary_command": [
+    ".venv/bin/python",
+    "scripts/summarize_artifact.py",
+    "results/experiment_3945_archive_v364_activate_v365.json",
+    "results/experiment_3946_r11l_first_solve.json",
+    "results/experiment_3947_active_data_codex_nonspatial_sweep.json",
+    "results/experiment_3948_goal_predicate_induction.json",
+    "results/experiment_3949_hidden_state_latent_registers.json",
+    "results/experiment_3950_hardware_continuity.json",
+    "results/experiment_3951_capstone_v365.json"
+  ],
+  "summary_exit_code": 0,
+  "task_id": "exp3952-archive-v365-activate-v366",
+  "task_verdicts": {
+    "exp3945-archive-v364-activate-v365": "complete: archived_v364_v365_active_arc_substrate_green_modules_importable",
+    "exp3946-r11l-first-solve": "complete: r11l_first_solve_levels1_of6_solvedTrue_pieces2_targets1 [FIRST_SOLVE real_env_confirmed=true levels_solved=1 actions=4]",
+    "exp3947-active-data-codex-nonspatial-sweep": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3947_active_data_codex_nonspatial_sweep.json",
+    "exp3948-goal-predicate-induction": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3948_goal_predicate_induction.json",
+    "exp3949-hidden-state-latent-registers": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3949_hidden_state_latent_registers.json",
+    "exp3950-hardware-continuity": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3950_hardware_continuity.json",
+    "exp3951-capstone-v365": "blocked_gate_check_failed [op_exists_gate_bug=unknown_op_exists]"
+  },
+  "v365_truth_summary": "exp3946 first solve recorded; exp3947-exp3950 missing; exp3951 blocked on unsupported op: exists gate"
+}
