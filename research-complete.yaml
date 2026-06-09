@@ -36845,53 +36845,116 @@ milestones:
     result: OK (conductor)
 - id: 2026.06.364
   correction_type: v364_archive_activate_v365_arc_push
-  title: 'Archive .364 and activate .365 for the ARC first-solve push'
+  title: Archive .364 and activate .365 for the ARC first-solve push
   doc: docs/research-notes/arc-agi3-agent-research-plan.md
   completed: '2026-06-09'
-  finding: '.364 landed the competent-judge fixture but left the verifier-earns-place proof inconclusive: most proof tasks lack landed artifacts, and the .365 push shifts to ARC first-solve work on the recorded substrate.'
+  finding: '.364 landed the competent-judge fixture but left the verifier-earns-place proof inconclusive: most proof tasks
+    lack landed artifacts, and the .365 push shifts to ARC first-solve work on the recorded substrate.'
   activation_recorded: exp3945-archive-v364-activate-v365
   tasks:
   - id: exp3934-archive-v363-activate-v364
-    title: 'Archive .363 and activate .364 with unblock-state gates'
+    title: Archive .363 and activate .364 with unblock-state gates
     deliverable: results/experiment_3934_archive_v363_activate_v364.json
     result: 'complete: archived_v363_v364_active_unblock_state_recorded_green_gates'
   - id: exp3935-run-validate-competent-judge
-    title: 'Run and validate the competent GenRM/ThinkPRM judge'
+    title: Run and validate the competent GenRM/ThinkPRM judge
     deliverable: results/experiment_3935_competent_judge_build.json
     result: 'complete: competent_judge_READY_fixture_auroc1.0000_modelQwen3.6-35B-A3B_valid_comparator_landed'
   - id: exp3936-valid-efficiency-head-to-head
-    title: 'Valid efficiency head-to-head'
+    title: Valid efficiency head-to-head
     deliverable: results/experiment_3936_valid_efficiency_head_to_head.json
     result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3936_valid_efficiency_head_to_head.json'
   - id: exp3937-non-degenerate-cascade-router
-    title: 'Non-degenerate Meta-EBM cascade router'
+    title: Non-degenerate Meta-EBM cascade router
     deliverable: results/experiment_3937_non_degenerate_cascade_router.json
     result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3937_non_degenerate_cascade_router.json'
   - id: exp3938-moat-scissor-replication-independent-corpus
-    title: 'Moat scissor replication on an independent corpus'
+    title: Moat scissor replication on an independent corpus
     deliverable: results/experiment_3938_moat_scissor_replication.json
     result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3938_moat_scissor_replication.json'
   - id: exp3939-arc-agi3-agentic-step2
-    title: 'ARC-AGI-3 agentic step 2'
+    title: ARC-AGI-3 agentic step 2
     deliverable: results/experiment_3939_arc_agi3_agentic_step2.json
     result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3939_arc_agi3_agentic_step2.json'
   - id: exp3940-fr11-v27-cascade-band-online-learning
-    title: 'FR-11 v27 cascade-band online learning'
+    title: FR-11 v27 cascade-band online learning
     deliverable: results/experiment_3940_fr11_v27_cascade_band_online_learning.json
     result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3940_fr11_v27_cascade_band_online_learning.json'
   - id: exp3941-hardware-continuity-clean
-    title: 'Hardware continuity clean rerun'
+    title: Hardware continuity clean rerun
     deliverable: results/experiment_3941_hardware_continuity_clean.json
     result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3941_hardware_continuity_clean.json'
   - id: exp3942-verifier-cross-domain-discriminating-value-map
-    title: 'Verifier cross-domain discriminating-value map'
+    title: Verifier cross-domain discriminating-value map
     deliverable: results/experiment_3942_verifier_cross_domain_map.json
     result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3942_verifier_cross_domain_map.json'
   - id: exp3943-literature-synthesis
-    title: 'Literature synthesis for verifier efficiency proof'
+    title: Literature synthesis for verifier efficiency proof
     deliverable: results/experiment_3943_literature_synthesis.json
     result: 'complete: literature_synthesis_positioned_0_new_refs_public_docs_untouched'
   - id: exp3944-capstone-v364
-    title: 'Capstone .364 verifier scorecard'
+    title: Capstone .364 verifier scorecard
     deliverable: results/experiment_3944_capstone_v364.json
-    result: 'complete: capstone_v364_efficiencyINCONCLUSIVE_moat_replicatedfalse_earnsfalse_paper_ready_true_frozen_unchanged [efficiency=INCONCLUSIVE moat_replicated=false earns=false]'
+    result: 'complete: capstone_v364_efficiencyINCONCLUSIVE_moat_replicatedfalse_earnsfalse_paper_ready_true_frozen_unchanged
+      [efficiency=INCONCLUSIVE moat_replicated=false earns=false]'
+- id: 2026.06.365
+  title: 'ARC-AGI-3 first-solve push: reverse-engineer r11l''s select/place win-interaction and SOLVE it; generalize the active-data->codex->consistency-energy
+    pipeline across the 6 non-spatial games; induce a goal-predicate from observed level-ups; latent-register augmentation
+    for the 11 hidden-state games; hardware continuity; capstone. The verifier is proven load-bearing; the open question is
+    converting a trustworthy world-model into a SOLVE.'
+  doc: docs/research-notes/arc-agi3-agent-research-plan.md
+  completed: '2026-06-09'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3945-archive-v364-activate-v365
+    title: 'Archive .364 -> activate .365; GREEN-GATE: assert research-complete.yaml + ops/exclusion_manifest.yaml parse under
+      yaml.safe_load, the core pretest subset is green, and the ARC agentic modules import (carnot.agentic.arc_agi3_world_model,
+      arc_world_model_synth, arc_world_model_dsl), so .365 can EXECUTE the ARC first-solve tasks.'
+    deliverable: results/experiment_3945_archive_v364_activate_v365.json
+    result: OK (conductor)
+  - id: exp3946-r11l-first-solve
+    title: 'FIRST ARC-AGI-3 SOLVE: reverse-engineer r11l''s exact select/place WIN-INTERACTION empirically and SOLVE level
+      1 (ideally more), offline. The transition dynamics are inducible (hidden_state=false); the open problem is the click
+      semantics + piece->target matching. Build on scripts/experiments/arc3_r11l_solve.json''s diagnosis: pieces=color-3 (one
+      auto-selected), targets=flkdtg sprites. Probe each click type, watch the grid delta, determine how a piece is picked
+      up and placed, match each color-3 piece to its target by shape, execute click-pairs, and CONFIRM the solve via the REAL
+      env level_completed (ground truth).'
+    deliverable: results/experiment_3946_r11l_first_solve.json
+    result: OK (conductor)
+  - id: exp3947-active-data-codex-nonspatial-sweep
+    title: "Generalize the active-data -> codex-program-synthesis -> consistency-energy-verification pipeline across the 6\
+      \ NON-SPATIAL games (r11l, sc25, lp85, tn36, dc22, su15): how many reach a TRUSTWORTHY world-model (held-out consistency\
+      \ energy <= 0.15)? vc33 reached 0.005 from active data; this measures whether that generalizes. Build on scripts/experiments/arc3_m2_active_codex.py\
+      \ (passive-vs-active codex synthesis) \u2014 extend it to the 6-game set and report a per-game trustworthy-model table."
+    deliverable: results/experiment_3947_active_data_codex_nonspatial_sweep.json
+    result: OK (conductor)
+  - id: exp3948-goal-predicate-induction
+    title: "Induce a GOAL-PREDICATE from observed level-up transitions: the M2-v5 finding is that a trustworthy transition-model\
+      \ is necessary but not sufficient \u2014 you also need to recognize the WIN state. Collect level-up transitions (via\
+      \ active/goal-directed play on the non-spatial games), characterize the grid-state property that holds at a win (e.g.\
+      \ all pieces on targets / a matched pattern), and emit a reusable goal_predicate(grid) check. Measure: on a held-out\
+      \ set, does the induced predicate correctly flag win-vs-non-win states (precision/recall)?"
+    deliverable: results/experiment_3948_goal_predicate_induction.json
+    result: OK (conductor)
+  - id: exp3949-hidden-state-latent-registers
+    title: 'Latent-register augmentation for the 11 HIDDEN-STATE games: the determinism probe (results/arc3_determinism_probe.json)
+      found 11/25 games where the visible grid does NOT determine the dynamics (same frame_hash + action -> different next
+      grid). Augment the state with inferred latent boolean registers (counter / collected-flag / phase) so the augmented
+      state becomes Markov, and measure: does the induced model''s consistency energy DROP on the hidden-state games vs the
+      grid-only baseline?'
+    deliverable: results/experiment_3949_hidden_state_latent_registers.json
+    result: OK (conductor)
+  - id: exp3950-hardware-continuity
+    title: "Hardware continuity (consolidated): SSH-reachability + terminal-state check for each attached board \u2014 KV260\
+      \ (ssh kria, xmutil listapps), GateMate (openFPGALoader -c dirtyJtag --detect), PolarFire (ssh polarfire). Record per-board\
+      \ reachability + the next concrete forward step; no bitstream redesign. Per CLAUDE.md KV260 SSH-Not-SD-Card Discipline:\
+      \ NEVER use /dev/mmcblk as a KV260 precondition."
+    deliverable: results/experiment_3950_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp3951-capstone-v365
+    title: "Capstone .365: aggregate the ARC first-solve push \u2014 did r11l SOLVE (exp3946 ACCURACY_levels_solved > 0, real-env-confirmed)?\
+      \ how many of the 6 non-spatial games reached a trustworthy world-model (exp3947)? did goal-predicate induction (exp3948)\
+      \ and latent-register augmentation (exp3949) advance plan-ability? Honest verdict on first-solve progress. SKIP any\
+      \ flagged_adversarial artifact; cite upstream sha256."
+    deliverable: results/experiment_3951_capstone_v365.json
+    result: OK (conductor)
