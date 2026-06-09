@@ -8102,3 +8102,4 @@ c |
 | 2026-06-09 12:14 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-06-09 12:16 UTC | Milestone 2026.06.367 activated | OK | 11 tasks queued |
 | 2026-06-09 12:33 UTC | Archive .366 -> activate .367; GREEN-GATE: assert  | OK | 110 passed in 5.51s |
+| 2026-06-09 12:46 UTC | r11l INCREMENTAL solve (+1..+2 levels, per the MAN | OK | 84 passed in 4.69s |
