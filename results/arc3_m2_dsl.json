@@ -1,0 +1,297 @@
+{
+  "best_modelled_markov_games_dsl": [
+    {
+      "energy": 0.8103,
+      "game": "tr87"
+    },
+    {
+      "energy": 0.826,
+      "game": "tu93"
+    },
+    {
+      "energy": 0.8577,
+      "game": "ls20"
+    },
+    {
+      "energy": 0.9515,
+      "game": "sp80"
+    },
+    {
+      "energy": 0.9753,
+      "game": "bp35"
+    }
+  ],
+  "budget_per_game": 1200,
+  "claim": "Object-level delta-DSL inducer vs the M2-v1a naive pixel template, on identical transitions/split/verifier. Win = DSL lowers GENERALIZATION energy on Markov games and the consistency energy separates Markov (trustworthy) from hidden (not).",
+  "duration_s": 74.5,
+  "episodes_per_game": 35,
+  "experiment": "arc3_m2_dsl",
+  "generalization_auroc_dsl": 0.3766,
+  "generalization_auroc_naive": 0.4643,
+  "honest_verdict": "complete: m2v2_dsl_inducer_genAUROC_naive0.4643_dsl0.3766_markovGenE_naive0.9584_dsl0.9576_hiddenGenE_dsl0.8599_n_improved5of25",
+  "inference_substrate": "offline_arc_agi3_world_model_consistency_energy",
+  "mean_gen_energy_hidden_dsl": 0.8599,
+  "mean_gen_energy_hidden_naive": 0.9639,
+  "mean_gen_energy_markov_dsl": 0.9576,
+  "mean_gen_energy_markov_naive": 0.9584,
+  "n_games": 25,
+  "n_games_dsl_improved_gt_0.05": 5,
+  "no_gpu_used": true,
+  "no_llm_used": true,
+  "note": "M2-v2 inducer upgrade. If DSL gen-energy on Markov games << naive (~0.95) AND the energy now separates Markov from hidden (AUROC up), the verifier can certify trustworthy models -> M2-v2b plans on the low-energy (trusted) games for first solves. If the DSL also cannot generalize, the games need richer (object-relational / latent) modeling -> honest finding caught before building the planner.",
+  "per_game": [
+    {
+      "dyn_acc_dsl": 0.3339,
+      "dyn_acc_naive": 0.0705,
+      "energy_gen_dsl": 0.6661,
+      "energy_gen_naive": 0.9295,
+      "game": "ar25",
+      "improvement": 0.2634,
+      "is_hidden_state_truth": true,
+      "n_transitions": 1199
+    },
+    {
+      "dyn_acc_dsl": 0.0247,
+      "dyn_acc_naive": 0.0316,
+      "energy_gen_dsl": 0.9753,
+      "energy_gen_naive": 0.9684,
+      "game": "bp35",
+      "improvement": -0.0069,
+      "is_hidden_state_truth": false,
+      "n_transitions": 1199
+    },
+    {
+      "dyn_acc_dsl": 0.0025,
+      "dyn_acc_naive": 0.0201,
+      "energy_gen_dsl": 0.9975,
+      "energy_gen_naive": 0.9799,
+      "game": "cd82",
+      "improvement": -0.0176,
+      "is_hidden_state_truth": true,
+      "n_transitions": 1200
+    },
+    {
+      "dyn_acc_dsl": 0.0454,
+      "dyn_acc_naive": 0.0254,
+      "energy_gen_dsl": 0.9546,
+      "energy_gen_naive": 0.9746,
+      "game": "cn04",
+      "improvement": 0.02,
+      "is_hidden_state_truth": true,
+      "n_transitions": 1200
+    },
+    {
+      "dyn_acc_dsl": 0.0186,
+      "dyn_acc_naive": 0.0,
+      "energy_gen_dsl": 0.9814,
+      "energy_gen_naive": 1.0,
+      "game": "dc22",
+      "improvement": 0.0186,
+      "is_hidden_state_truth": true,
+      "n_transitions": 1199
+    },
+    {
+      "dyn_acc_dsl": 0.0,
+      "dyn_acc_naive": 0.0,
+      "energy_gen_dsl": 1.0,
+      "energy_gen_naive": 1.0,
+      "game": "ft09",
+      "improvement": 0.0,
+      "is_hidden_state_truth": false,
+      "n_transitions": 1199
+    },
+    {
+      "dyn_acc_dsl": 0.0,
+      "dyn_acc_naive": 0.0956,
+      "energy_gen_dsl": 1.0,
+      "energy_gen_naive": 0.9044,
+      "game": "g50t",
+      "improvement": -0.0956,
+      "is_hidden_state_truth": true,
+      "n_transitions": 1199
+    },
+    {
+      "dyn_acc_dsl": 0.0,
+      "dyn_acc_naive": 0.0049,
+      "energy_gen_dsl": 1.0,
+      "energy_gen_naive": 0.9951,
+      "game": "ka59",
+      "improvement": -0.0049,
+      "is_hidden_state_truth": true,
+      "n_transitions": 1200
+    },
+    {
+      "dyn_acc_dsl": 0.0001,
+      "dyn_acc_naive": 0.0,
+      "energy_gen_dsl": 0.9999,
+      "energy_gen_naive": 1.0,
+      "game": "lf52",
+      "improvement": 0.0001,
+      "is_hidden_state_truth": false,
+      "n_transitions": 1199
+    },
+    {
+      "dyn_acc_dsl": 0.0,
+      "dyn_acc_naive": 0.004,
+      "energy_gen_dsl": 1.0,
+      "energy_gen_naive": 0.996,
+      "game": "lp85",
+      "improvement": -0.004,
+      "is_hidden_state_truth": false,
+      "n_transitions": 1199
+    },
+    {
+      "dyn_acc_dsl": 0.1423,
+      "dyn_acc_naive": 0.0286,
+      "energy_gen_dsl": 0.8577,
+      "energy_gen_naive": 0.9714,
+      "game": "ls20",
+      "improvement": 0.1137,
+      "is_hidden_state_truth": false,
+      "n_transitions": 1199
+    },
+    {
+      "dyn_acc_dsl": 0.4419,
+      "dyn_acc_naive": 0.0,
+      "energy_gen_dsl": 0.5581,
+      "energy_gen_naive": 1.0,
+      "game": "m0r0",
+      "improvement": 0.4419,
+      "is_hidden_state_truth": true,
+      "n_transitions": 1199
+    },
+    {
+      "dyn_acc_dsl": 0.0033,
+      "dyn_acc_naive": 0.0966,
+      "energy_gen_dsl": 0.9967,
+      "energy_gen_naive": 0.9034,
+      "game": "r11l",
+      "improvement": -0.0933,
+      "is_hidden_state_truth": false,
+      "n_transitions": 1199
+    },
+    {
+      "dyn_acc_dsl": 0.0531,
+      "dyn_acc_naive": 0.0518,
+      "energy_gen_dsl": 0.9469,
+      "energy_gen_naive": 0.9482,
+      "game": "re86",
+      "improvement": 0.0013,
+      "is_hidden_state_truth": true,
+      "n_transitions": 1200
+    },
+    {
+      "dyn_acc_dsl": 0.0,
+      "dyn_acc_naive": 0.0083,
+      "energy_gen_dsl": 1.0,
+      "energy_gen_naive": 0.9917,
+      "game": "s5i5",
+      "improvement": -0.0083,
+      "is_hidden_state_truth": false,
+      "n_transitions": 1200
+    },
+    {
+      "dyn_acc_dsl": 0.0107,
+      "dyn_acc_naive": 0.2197,
+      "energy_gen_dsl": 0.9893,
+      "energy_gen_naive": 0.7803,
+      "game": "sb26",
+      "improvement": -0.209,
+      "is_hidden_state_truth": false,
+      "n_transitions": 1199
+    },
+    {
+      "dyn_acc_dsl": 0.0093,
+      "dyn_acc_naive": 0.1119,
+      "energy_gen_dsl": 0.9907,
+      "energy_gen_naive": 0.8881,
+      "game": "sc25",
+      "improvement": -0.1026,
+      "is_hidden_state_truth": true,
+      "n_transitions": 1199
+    },
+    {
+      "dyn_acc_dsl": 0.0,
+      "dyn_acc_naive": 0.0167,
+      "energy_gen_dsl": 1.0,
+      "energy_gen_naive": 0.9833,
+      "game": "sk48",
+      "improvement": -0.0167,
+      "is_hidden_state_truth": true,
+      "n_transitions": 1199
+    },
+    {
+      "dyn_acc_dsl": 0.0485,
+      "dyn_acc_naive": 0.0367,
+      "energy_gen_dsl": 0.9515,
+      "energy_gen_naive": 0.9633,
+      "game": "sp80",
+      "improvement": 0.0118,
+      "is_hidden_state_truth": false,
+      "n_transitions": 1050
+    },
+    {
+      "dyn_acc_dsl": 0.0,
+      "dyn_acc_naive": 0.0,
+      "energy_gen_dsl": 1.0,
+      "energy_gen_naive": 1.0,
+      "game": "su15",
+      "improvement": 0.0,
+      "is_hidden_state_truth": false,
+      "n_transitions": 1199
+    },
+    {
+      "dyn_acc_dsl": 0.0,
+      "dyn_acc_naive": 0.0,
+      "energy_gen_dsl": 1.0,
+      "energy_gen_naive": 1.0,
+      "game": "tn36",
+      "improvement": 0.0,
+      "is_hidden_state_truth": false,
+      "n_transitions": 1199
+    },
+    {
+      "dyn_acc_dsl": 0.1897,
+      "dyn_acc_naive": 0.1434,
+      "energy_gen_dsl": 0.8103,
+      "energy_gen_naive": 0.8566,
+      "game": "tr87",
+      "improvement": 0.0463,
+      "is_hidden_state_truth": false,
+      "n_transitions": 1199
+    },
+    {
+      "dyn_acc_dsl": 0.174,
+      "dyn_acc_naive": 0.0136,
+      "energy_gen_dsl": 0.826,
+      "energy_gen_naive": 0.9864,
+      "game": "tu93",
+      "improvement": 0.1604,
+      "is_hidden_state_truth": false,
+      "n_transitions": 1200
+    },
+    {
+      "dyn_acc_dsl": 0.0,
+      "dyn_acc_naive": 0.0,
+      "energy_gen_dsl": 1.0,
+      "energy_gen_naive": 1.0,
+      "game": "vc33",
+      "improvement": 0.0,
+      "is_hidden_state_truth": false,
+      "n_transitions": 1199
+    },
+    {
+      "dyn_acc_dsl": 0.6361,
+      "dyn_acc_naive": 0.0,
+      "energy_gen_dsl": 0.3639,
+      "energy_gen_naive": 1.0,
+      "game": "wa30",
+      "improvement": 0.6361,
+      "is_hidden_state_truth": true,
+      "n_transitions": 1200
+    }
+  ],
+  "random_seed": 0,
+  "submitted_to_leaderboard": false,
+  "title": "arc3_m2v2_object_dsl_vs_naive_inducer"
+}
