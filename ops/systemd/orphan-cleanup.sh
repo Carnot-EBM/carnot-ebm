@@ -26,6 +26,21 @@ HEARTBEAT=/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/ops/conductor-heartbe
 LOG=/tmp/orphan-cleanup.log
 THRESHOLD_MIN=120  # 2 hours
 
+# --- Root-clutter sweep (added 2026-06-09) — relocate untracked agent/experiment
+# scratch out of the REPO ROOT. The conductor launches every subagent with
+# cwd=PROJECT_ROOT, so quick probe.py / check_*.py / test_*.py debug scripts accrete
+# at the repo root (~155 had piled up before the 2026-06-09 cleanup). Conservative:
+# 120-min age guard (never sweeps in-flight scratch), allowlist of legit root files,
+# NEVER touches tracked files; untracked root *.py -> .root-scratch-trash/ (reversible),
+# regenerable build artifacts (main.*, vivado*, clockInfo.txt) -> deleted. Runs
+# regardless of conductor liveness (clutter accrues regardless), above the heartbeat
+# early-exits. `|| true` so a failure never trips set -e. Uses stdlib only -> python3.
+# NOTE: the deployed copy (~/.carnot/orphan-cleanup.sh) is the live instance; this
+# tracked copy has historically lagged it (missing the 2026-06-03 /tmp-reaping +
+# anomaly-escalation blocks) — reconcile the two when convenient.
+python3 /home/ianblenke/github.com/Carnot-EBM/carnot-ebm/scripts/root_clutter_sweep.py --apply \
+  >> /tmp/root-clutter-sweep.log 2>&1 || true
+
 # Get active conductor PID; bail if file missing or not parseable
 if [ ! -f "$HEARTBEAT" ]; then
   echo "$(date -u +%FT%TZ) no heartbeat — skipping" >> "$LOG"
