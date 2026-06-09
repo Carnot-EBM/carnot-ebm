@@ -1,0 +1,322 @@
+{
+  "experiment": "arc3_win_condition_survey",
+  "honest_verdict": "complete: win_survey_top_pick_r11l_8of25_nonspatial",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "method": "26-agent workflow read each local game source + classified win difficulty; synthesis ranked by win-ease x modellability",
+  "n_games": 25,
+  "n_nonspatial": 6,
+  "no_gpu_used": true,
+  "no_llm_used": false,
+  "note": "vc33 confirmed HARD (spatial). r11l chosen: directly-observable per-sprite gray-template goal, click-to-drag, non-spatial, inducible (hidden_state=false). Sources read for SURVEY/target-selection; the agent must still INDUCE goal+dynamics at solve time.",
+  "per_game_surveys": [
+    {
+      "available_actions": "keyboard 1-5 + click [6] + keyboard 7",
+      "difficulty_reason": "This is a geometric constraint satisfaction puzzle requiring spatial planning. The player must configure multiple movable sprites such that their computed reflections cover all goal positions. The bidirectional reflection mechanics (horizontal and vertical mirrors) create complex geometric dependencies. Success requires planning multi-step sequences within tight move budgets (64-320 steps per level), not reactive single-action responses.",
+      "first_solve_recipe": "Extract goal sprite positions from level definition. Build search space of all valid sprite position configurations. For each configuration: (1) compute the reflection grid using naxbskjmlg() which calls skqtojxvbv() to reflect movable sprites across mirrors, (2) check if all goal positions have grid[y][x] >= 0 (win condition checked by vplrhaovhr()), (3) if win found, use BFS to find minimal action sequence from initial state to winning configuration using movement actions 1-4. State = {current_sprite_index, all_sprite_positions}. Transitions via movement actions (1-4) or cycling (5). Prune paths exceeding move budget.",
+      "game": "ar25",
+      "is_spatial_planning": true,
+      "n_levels": 8,
+      "step_budget": "Per level: 64 (levels 1-2), 128 (levels 3-5), 320 (levels 6-8)",
+      "win_condition_summary": "All goal sprites (tagged \"0001sruqbuvukh\") must be positioned at grid cells where the composite reflection grid has non-negative values. The reflection grid is computed by reflecting movable sprites across horizontal axes (marked by sprite with \"0054kgxrvfihgm\") and vertical axes (marked by sprite with \"0002nuguepuujf\"). The player moves sprites using arrow keys (actions 1-4), cycles through available sprites (action 5), and can undo moves (action 7).",
+      "win_difficulty": "hard"
+    },
+    {
+      "available_actions": "left-right-click [3, 4, 6, 7]",
+      "difficulty_reason": "This is a gravity-based platformer requiring spatial planning. The agent must understand: (1) gravity mechanics (player falls down), (2) platform layouts and spike positions, (3) multi-step navigation paths to reach gems while avoiding spikes, (4) step budgets (64 steps for levels 1-6, 128 steps for levels 7-9). No direct goal visibility; must infer gem location and navigate around obstacles.",
+      "first_solve_recipe": "Observe the initial game state to identify: (1) player position, (2) platform/spike layout, (3) gem location. Execute a breadth-first search of positions reachable via left/right moves combined with gravity to find a path from player start to gem. For each reachable position, simulate falling and check if it lands on gem (win), spike (lose), or solid ground (continue). The goal predicate is: landed_on_gem == True after a sequence of moves. Use step budget as a constraint to prune paths longer than 63/127 steps respectively.",
+      "game": "bp35",
+      "is_spatial_planning": true,
+      "n_levels": 9,
+      "step_budget": "Levels 1-6: 64 steps (win before reaching 64); Levels 7-9: 128 steps (win before reaching 128)",
+      "win_condition_summary": "Land on a gem (colored sprite \"fjlzdjxhant\") by moving left or right on platforms. The player automatically falls due to gravity until landing on solid ground, spikes, or the gem. Collect the gem to win the level.",
+      "win_difficulty": "hard"
+    },
+    {
+      "available_actions": "keyboard 1-5 + click [6]",
+      "difficulty_reason": "The goal is observable (target pattern shown at start of level), and the action space is limited (8 positions, ~7-10 colors per level). However, the player must plan a sequence of selections and clicks to build up the pattern correctly, and the grid fills are applied region-by-region in specific locations (corners and edges), requiring careful planning of which basket position and color to use for each action. Not spatial pathfinding like Sokoban, but pattern-matching with logical sequencing.",
+      "first_solve_recipe": "1. Observe the target pattern (eoqnvkspoa-* sprite) shown at level start, noting which colors and regions differ from the initial 10x10 grid. 2. Use actions 1-4 to navigate through the 8 basket positions (arranged as: 0=top-left corner, 1=top-right diagonal, 2=top-right corner, 3=right-bottom corner, 4=bottom-right diagonal, 5=bottom-left corner, 6=left-bottom diagonal, 7=left-top corner). 3. For each basket position, use action 6 to click on one of the available colored items at the top of the screen to fill that region of the 10x10 grid with that color. 4. Repeat steps 2-3 until all non-diagonal pixels match the target pattern, then the level auto-completes via next_level() call. Success requires matching colors to regions and planning the fill order to build the full pattern within 100 action steps.",
+      "game": "cd82",
+      "is_spatial_planning": false,
+      "n_levels": 6,
+      "step_budget": "100 moves per level",
+      "win_condition_summary": "Match the pixels in a 10x10 grid sprite (excluding the two diagonals) to a target pattern. The player selects from 8 basket positions (actions 1-4 navigate a 3x3 menu) and uses action 6 (click) to apply colored fills to the grid. When the non-diagonal pixels match the target, the level advances.",
+      "win_difficulty": "medium"
+    },
+    {
+      "available_actions": "keyboard 1-5 + click [6]",
+      "difficulty_reason": "This is a spatial planning puzzle requiring multi-sprite configuration matching. The player must understand the constraint system (color-coded pixels 8 and 13 indicate spatial goals), rotate sprites in 90-degree increments (affecting constraint point coordinates), manage overlapping sprites at the same grid position, and find valid arrangements within step budgets (75-200 steps per level). The constraint point tracking across rotations (0, 90, 180, 270 degrees) adds geometric complexity similar to Sokoban-style puzzles. An automated agent must induce the goal structure from observation of sprite compositions and constraint pixel overlaps, then plan a sequence of moves and rotations to achieve the target configuration.",
+      "first_solve_recipe": "1) Identify all visible sprites and their initial positions/rotations. 2) Extract constraint pixels (colors 8 and 13) from each sprite's original pixel data by examining overlapping sprites at matching grid coordinates. 3) For each constraint point, determine which sprite(s) must be repositioned or rotated to eliminate it (constraint pixels must not appear in the final rendered output). 4) Use keyboard navigation (up/down/left/right) to move the selected sprite, rotation action to rotate 90 degrees, and click action to select different sprites. 5) After each move/rotation, recompute constraint status by checking for any remaining color 8 or 13 pixels in the sprite array accounting for rotation transformations. 6) Repeat until sjwqloivve() returns true (no constraint pixels remain) or step limit is exceeded. Success requires understanding that constraint pixels are rotation-aware: the pixel coordinates transform under rotation (90\u00b0: (x,y)\u2192(y,height-1-x); 180\u00b0: (x,y)\u2192(width-1-x,height-1-y); 270\u00b0: (x,y)\u2192(width-1-y,x)).",
+      "game": "cn04",
+      "is_spatial_planning": true,
+      "n_levels": 6,
+      "step_budget": "Level 1: 75; Level 2: 100; Level 3: 125; Level 4: 125; Level 5: 150; Level 6: 200",
+      "win_condition_summary": "All visible sprites must have their constraint pixels (marked as colors 8 and 13 in the original sprite definitions) completely eliminated or hidden. The constraint points are determined by overlapping sprite pixels at grid positions. The player manipulates sprites by moving them with arrow keys, rotating them with a dedicated action, cycling through overlapped sprites, and clicking to select different sprites, until no constraint pixels (8 or 13) remain visible in any sprite.",
+      "win_difficulty": "hard"
+    },
+    {
+      "available_actions": "keyboard 1-4,6 (1=up, 2=down, 3=left, 4=right, 6=click)",
+      "difficulty_reason": "Interactive maze-solving with pathfinding required. Obstacles block direct routes and must sometimes be cleared by clicking interactive elements (buezna sprites toggle piyqze blockers). Fully observable goal. No spatial multi-constraint satisfaction or gravity physics. Solvable with A*/BFS + interactive element management, but requires more than simple direct action sequences.",
+      "first_solve_recipe": "1. Extract goal position from goknoi sprite and player position from jfva sprite. 2. Build walkable grid by identifying obstacle positions (walls tagged tacugo-plelvb). 3. For each walkable path from player to goal using A*/BFS, check if blocked by piyqze sprites. 4. If blocked, identify adjacent buezna sprites (clickable obstacles) and simulate clicking them to toggle blocking. 5. Once a clear path is found, execute movement sequence using actions 1-4 (up/down/left/right). 6. Win when player position equals goal position within step limit.",
+      "game": "dc22",
+      "is_spatial_planning": false,
+      "n_levels": 6,
+      "step_budget": "Varies per level: L1=128, L2=192, L3=192, L4=192, L5=512, L6=1024 steps",
+      "win_condition_summary": "Navigate the player sprite (jfva) to reach the goal sprite (goknoi) at the exact same grid position within the step limit. The step limit varies per level (128-1024 steps).",
+      "win_difficulty": "medium"
+    },
+    {
+      "available_actions": "click-only [6]",
+      "difficulty_reason": "Multiple constraint sprites impose spatial color-matching rules on neighboring Hkx/NTi sprites. Agent must induce constraint pattern semantics, determine required colors for each sprite, and solve the resulting constraint satisfaction problem within a limited step budget. Similar spatial planning complexity to Sokoban-style puzzles but applied to color constraints.",
+      "first_solve_recipe": "Decode constraint patterns: extract 0s (equality) and non-0s (inequality) from each bsT sprite's 3x3 pixels. For each Hkx/NTi sprite at each of 8 neighbor positions, determine required color (must match or must differ from constraint center). Build constraint graph and solve via backtracking or CSP solver. Execute clicks in sequence to cycle colors to solution. Verify cgj() returns true.",
+      "game": "ft09",
+      "is_spatial_planning": true,
+      "n_levels": 6,
+      "step_budget": "Per level: levels 0-1 = 32 steps; levels 2-3 = 96 steps; levels 4-5 = 128 steps",
+      "win_condition_summary": "For each constraint sprite (3x3 pattern with 0s and non-0s), examine its 8 neighbors. If neighbor position has a 0 in the constraint pattern, the neighbor sprite's center color must equal the constraint's center color. If non-zero, the neighbor must NOT equal it. Win when all constraints are satisfied.",
+      "win_difficulty": "hard"
+    },
+    {
+      "available_actions": "keyboard 1-5",
+      "difficulty_reason": "This is a spatial planning puzzle requiring multi-step pathfinding similar to Sokoban. The player must navigate a maze-like environment with static obstacles and moving sprites following predefined paths, while managing time pressure from an automatically scrolling sprite that pushes left every 2 steps. Failure occurs if this sprite pushes the player off-screen. The goal requires positioning a specific sprite in a precise spatial relationship to another sprite, demanding careful planning across multiple moves while anticipating dynamic obstacles.",
+      "first_solve_recipe": "To solve each level: (1) Identify the current positions of the goal sprite (gilbljmfbc) and target sprite (qftsebtxuc), and compute the required goal position (target_x-1, target_y-1). (2) Plan a collision-free path from the goal sprite's current position to the required position, accounting for static obstacles (uwxkstolmf) and moving sprites with predefined paths. (3) Execute the planned sequence of directional moves (actions 1-4), using the undo action (action 5) if blocked by moving obstacles. (4) Manage the time pressure by completing the sequence before the auto-scrolling sprite (ppfvilwwnk) pushes the player off the left edge. Verify win condition is met when the goal sprite reaches (target_x-1, target_y-1).",
+      "game": "g50t",
+      "is_spatial_planning": true,
+      "n_levels": 7,
+      "step_budget": "none (no explicit step limit)",
+      "win_condition_summary": "A sprite (gilbljmfbc) must be positioned at exactly one cell diagonally down-left from a target sprite (qftsebtxuc). The player controls a central sprite and must navigate around obstacles and moving sprites with predefined paths to position the goal sprite at the correct location relative to the target.",
+      "win_difficulty": "hard"
+    },
+    {
+      "available_actions": "keyboard 1-4 + click [6]",
+      "difficulty_reason": "Multi-constraint spatial planning with precise containment requirements. Objects must be pushed to exact positions within containers using 4-directional movement with collision physics and explosive forces. The game involves Sokoban-like mechanics (pushing objects with collision constraints), additional explosion animations that push sprites in cardinal directions, enemy chasing that can cause level loss, and strict step budget per level. Automated agents must induce the target container structure from observation and plan multi-step pushes to satisfy all constraints simultaneously.",
+      "first_solve_recipe": "Goal: For each level, identify which objects need containment (tagged 0010xzmuziohuf or 0027jbgxilrocf) and which containers hold them (tagged 0022vrxelxosfy or 0001uqqokjrptk respectively). Plan a sequence of directional moves (actions 1-4) to push objects into containers with exact positional fit. Use the step budget wisely; avoid collision with enemies (which trigger lose condition) by tracking their chase behavior. Test moves mentally: an object in container at container position (cx,cy) with dimensions (ch,cw) must reach (cx+1, cy+1) with size (ch-2, cw-2). Execute moves sequentially and validate containment after object settling (watch for explosion animation completion), then advance to next level.",
+      "game": "ka59",
+      "is_spatial_planning": true,
+      "n_levels": 7,
+      "step_budget": "Varies per level: 100 (L1), 127 (L2), 100 (L3), 127 (L4), 100 (L5), 150 (L6), 200 (L7)",
+      "win_condition_summary": "All objects tagged as \"0010xzmuziohuf\" must be contained within grid cells tagged as \"0022vrxelxosfy\" (positioned exactly 1 pixel inset on all sides), AND all objects tagged as \"0027jbgxilrocf\" must be contained within grid cells tagged as \"0001uqqokjrptk\" (same inset positioning rule). The spatial fit is strict: object must be at (container.x+1, container.y+1) with dimensions reduced by 2 in each axis.",
+      "win_difficulty": "hard"
+    },
+    {
+      "available_actions": "keyboard 1-4 + click [6]",
+      "difficulty_reason": "Requires spatial planning to position units in correct configurations. An automated agent must infer from observation that units must be arranged in specific spatial relationships, understand multi-cell targeting mechanics, and execute multi-step movement sequences within strict move budgets (64-640 moves per level depending on difficulty).",
+      "first_solve_recipe": "Goal predicate: locate all goal targets (hupkpseyuim/hupkpseyuim2 sprites) and movable units (fozwvlovdui sprite). For each goal, calculate the required adjacency (one cell away) and double-adjacency (two cells away) configurations. Use BFS or A* to plan movement sequences that position the unit correctly, then click to trigger win. Manage move budget: Level 1=64, Levels 2-5=320, Levels 6+=640 moves.",
+      "game": "lf52",
+      "is_spatial_planning": true,
+      "n_levels": 10,
+      "step_budget": "Level 1: 64 moves; Levels 2-5: 320 moves; Levels 6-10: 640 moves (asqvqzpfdi counter increments by 1 per move or click)",
+      "win_condition_summary": "Click on the movable unit (fozwvlovdui) when positioned adjacent to another unit/target with a goal target in the double-adjacent cell. The click triggers animations and advances to the next level.",
+      "win_difficulty": "hard"
+    },
+    {
+      "available_actions": "click-only [6]",
+      "difficulty_reason": "The game is a logic puzzle requiring understanding of circular permutation mechanics and constraint satisfaction. Clicking buttons triggers predetermined rotations of piece groups. Unlike easy reactive games, an agent must plan multiple button sequences to reach the goal configuration. Unlike hard spatial planning (Sokoban), there is no free movement or pathfinding\u2014only discrete logical transitions between states.",
+      "first_solve_recipe": "Identify all moveable pieces (tagged bghvgbtwcb and fdgmtkfrxl) and their goal positions (marked by goal and goal-o sprites). Map each button's effect by determining which pieces rotate and to which positions. Use BFS or constraint satisfaction to find a sequence of button clicks that aligns all pieces with their goals. Execute clicks in order, staying within the step budget.",
+      "game": "lp85",
+      "is_spatial_planning": false,
+      "n_levels": 8,
+      "step_budget": "Level 1: 13 moves; Level 2: 60; Level 3: 80; Level 4: 150; Levels 5-8: 80 each",
+      "win_condition_summary": "All moveable pieces of type \"bghvgbtwcb\" must have a \"goal\" sprite positioned diagonally down-right at (piece.x + 1, piece.y + 1). All moveable pieces of type \"fdgmtkfrxl\" must have a \"goal-o\" sprite at the same relative position. Win occurs when both constraints are satisfied and step counter remains positive.",
+      "win_difficulty": "medium"
+    },
+    {
+      "available_actions": "keyboard 1-4 (move left/right/up/down)",
+      "difficulty_reason": "Requires multi-constraint spatial planning: navigate a 60x60 grid to visit all goal locations within 42-step budget, while managing three independent property cycles (shape, color, rotation) that must synchronize with each goal's specific requirements through environment collision mechanics.",
+      "first_solve_recipe": "Observe current shape/color/rotation state. Identify all goal locations (rjlbuycveu sprites) and their required properties. Plan optimal visiting order respecting 42-step limit. For each goal: navigate using ACTION1-4 to trigger collisions with shape/color/rotation modifier sprites (ttfwljgohq/soyhouuebz/rhsxkxzdjz) until displayed properties match goal properties, then move to goal position to collect. Repeat for all goals to advance level.",
+      "game": "ls20",
+      "is_spatial_planning": true,
+      "n_levels": 7,
+      "step_budget": "42 steps per level",
+      "win_condition_summary": "Collect all goal sprites by moving the player to each goal location while the displayed shape, color, and rotation match the goal's required properties. All goal items must be collected within 42 steps per level.",
+      "win_difficulty": "hard"
+    },
+    {
+      "available_actions": "keyboard 1-4 + click 6",
+      "difficulty_reason": "Spatial planning required: the player must coordinate movement of 4 sprites that move in mirrored/reflected patterns (each arrow key moves them differently), positioning them to overlap in valid configurations. This involves multi-constraint path planning with dependency on understanding how each sprite responds to each movement command.",
+      "first_solve_recipe": "Observe initial sprite positions. Induce that sprites must occupy the same grid cell to satisfy win condition (by observing overlay mechanics). Use BFS/planning over action space to explore how each arrow key (1-4) moves the 4 sprites in distinct patterns (some reflect horizontally/vertically). Search for action sequences that create 2+ overlaps, terminating when all 4 sprites are intangible (piznjwrdhn count drops to 0).",
+      "game": "m0r0",
+      "is_spatial_planning": true,
+      "n_levels": 6,
+      "step_budget": "150 moves per level",
+      "win_condition_summary": "All four movable sprites must be positioned such that they overlap in pairs (2+ sprites at same grid location), causing them to become intangible and marking the level complete when no active sprites remain.",
+      "win_difficulty": "hard"
+    },
+    {
+      "available_actions": "click-only [6]",
+      "difficulty_reason": "The game requires a sequence of clicks to select and drag multiple sprites to specific target positions. While there are typically 3-6 sprite categories per level to position, there is no complex spatial reasoning or multi-constraint planning required. The task is a straightforward multi-step puzzle where each sprite has a clear, visible target location that can be inferred from the sprite positioning and collision feedback. An automated agent can solve this by: (1) identifying colored sprites and their target positions via observation, (2) iterating through each sprite to click-select it, (3) clicking the target location to drag it there, and (4) repeating until all sprites are placed. The 60-action budget is generous for the 6 levels.",
+      "first_solve_recipe": "Detect colored sprites (those with names like 'roefwulewcui-*') and gray template sprites (those with names like 'flkdtg-*' or 'roefwu-*'). For each colored sprite: (1) Click it to select (turns it brighter); (2) Click its corresponding target position (the gray template sprite at a different location); this triggers drag animation. The game automatically animates the sprite from current position to target over ~20 frames. Win condition is satisfied when all sprites have been dragged to their targets and the collision + animation timeout is reached (approximately 5 ticks of contact = level advance). Repeat for all 6 levels with no spatial constraints\u2014purely click-to-drag positioning.",
+      "game": "r11l",
+      "is_spatial_planning": false,
+      "n_levels": 6,
+      "step_budget": "60 actions per level (enforced by _max_actions=60 and step counter UI showing remaining actions)",
+      "win_condition_summary": "Select colored sprites by clicking them, then click target positions to drag each sprite to its corresponding target location. A sprite is successfully placed when it reaches its target position and remains there briefly for the placement animation to complete. Advance to the next level when all colored sprites in the current level have been successfully placed at their target positions.",
+      "win_difficulty": "medium"
+    },
+    {
+      "available_actions": "keyboard 1-5",
+      "difficulty_reason": "Requires spatial planning to position multiple movable sprites to recreate exact target patterns. Sprites can be transformed/resized via ACTION5 based on collisions. Multi-constraint optimization: must match multiple target patterns simultaneously within step budget while managing sprite state mutations.",
+      "first_solve_recipe": "Observe target sprites and movable sprites. Use graph search (BFS/A*) to explore action sequences. For each candidate sequence: apply ACTION1-4 movements and ACTION5 transformations, compute composite overlay of movable sprites onto canvas after each step, check if composite exactly matches all target sprites (via jeiavrvavi predicate). Return first sequence that wins before step limit.",
+      "game": "re86",
+      "is_spatial_planning": true,
+      "n_levels": 8,
+      "step_budget": "100-400 steps per level (Level 1-2: 100, Level 3-4: 200, Level 5: 250, Level 6-7: 200/300, Level 8: 400)",
+      "win_condition_summary": "All target sprites (tag 0054xnsuqceejm) must exactly match the visual composition created by overlaying all movable sprites (tag 0031cppcuvqlbi) onto a canvas. Pixels must match precisely, allowing only -1 (transparent) and 4 (background color) as don't-care values.",
+      "win_difficulty": "hard"
+    },
+    {
+      "available_actions": "click-only [6]",
+      "difficulty_reason": "Requires spatial planning and multi-constraint satisfaction: agent must induce unobservable target positions from observation, resize items correctly (via clicking sliders at half-way points to increment/decrement size), position them precisely at targets while avoiding collisions, and ensure color matching. No explicit goal visualization; agent must reason about spatial relationships between items and infer targets.",
+      "first_solve_recipe": "Goal: All target positions must contain matching items. Procedure: (1) Observe initial level to identify movable items (0001qwdmnlybkb tag) and infer target positions by noting empty item placeholders (0064ocqkuqacti). (2) For each item, determine its color from pixel [1,1]. (3) Use color selector (0089rvqdprjwpz) clicks to filter for target items. (4) Use slider (0066ghlkyvdbgg) clicks to resize items (click left half to decrement, right half to increment). (5) Drag to position items at inferred target coordinates. (6) Repeat until neurwiqfry() returns true (all targets filled with matching items). Handle collisions by reverting last action (whoonmfbnp backup system).",
+      "game": "s5i5",
+      "is_spatial_planning": true,
+      "n_levels": 8,
+      "step_budget": "Per-level step limits: Level 1: 50, Level 2: 150, Level 3: 200, Level 4: 100, Level 5: 150, Level 6: 150, Level 7: 200, Level 8: 200",
+      "win_condition_summary": "Complete a level by placing all movable items at their target positions with correct size and color. The game checks that every target sprite (0087vvmblxkzdi) has a matching item (0064ocqkuqacti) at the same x,y coordinates. Items must match by their central pixel color, be resized to fit targets, and positioned without collision.",
+      "win_difficulty": "hard"
+    },
+    {
+      "available_actions": "click-only [6] + 2 additional actions [5, 7]",
+      "difficulty_reason": "The game requires multi-step spatial planning: the player must identify item-slot color relationships and execute a sequence of correct matches across multiple target positions. Failure requires undo and re-planning. The constraint that items must be placed in the correct sequence (tracked by pmygakdvy and buvfjfmpp state) makes this a spatial constraint-satisfaction problem similar to block-sorting puzzles.",
+      "first_solve_recipe": "Observe the game state: colored items at top (quhhhthrri), empty colored target slots at bottom (lngftsryyw). For each target slot from left to right, identify its color from the sprite pixels. Scan the available items and find one matching that color. Click the item to select it, then click the target slot to place it. If a mismatch occurs or the wrong item is selected, use ACTION7 to undo. Repeat until all target slots are filled with matching colors and the completion animation plays, triggering next_level().",
+      "game": "sb26",
+      "is_spatial_planning": true,
+      "n_levels": 8,
+      "step_budget": "64 moves per level",
+      "win_condition_summary": "Match a sequence of colored items to empty colored target slots. The player clicks pairs of items and slots until all target positions are filled with color-matching items, progressing left-to-right through target slots.",
+      "win_difficulty": "hard"
+    },
+    {
+      "available_actions": "keyboard 1-4 + click-only [6]",
+      "difficulty_reason": "The game requires two distinct skills: (1) pattern matching via grid clicking (low cognitive load\u2014a direct observation task of comparing a 3x3 boolean grid), and (2) simple pathfinding to the visible exit sprite. Neither component involves hard spatial constraints (gravity, blocking collisions, or Sokoban-style puzzle boxes). An automated agent can: observe the target pattern from sprite data (zzpoabuniyn dictionary), iteratively click grid cells until the pattern matches (checked by ettrdfsixg()), and then perform straightforward movement toward the exit. The challenge is moderate because the agent must infer the goal structure from game state without explicit win predicates displayed to the player, and must manage a move budget (25-65 moves per level). However, no hard planning is required.",
+      "first_solve_recipe": "Goal: Match the target 3x3 pattern in xhhaqjfncnp, then reach the exydhv sprite. Recipe: (1) Extract the target pattern from the level's jlpticwjyvy list (e.g., \"tevyeq\" or \"fibcey\") and look up its 3x3 boolean matrix in zzpoabuniyn. (2) Iteratively click grid cells via ACTION6 (click coordinates 24-34 x, 49-59 y, in 5-pixel increments) to build a search that toggles cells until xhhaqjfncnp matches the target (verified by ettrdfsixg()). Use a greedy or BFS strategy: for each mismatch at grid[i][j], click the corresponding cell sprite to toggle it. (3) Once the pattern is complete (jsdgfdkecx() returns non-None), navigate toward the exydhv sprite using keyboard actions 1-4, moving in the direction that decreases Manhattan distance. Continue until the player sprite overlaps exydhv, which triggers abvgsmnbrj() \u2192 next_level().",
+      "game": "sc25",
+      "is_spatial_planning": false,
+      "win_condition_summary": "To complete a level: (1) Observe the target 3x3 grid pattern shown as reference sprites, (2) Click cells in the 3x3 grid at grid positions to toggle them True/False until the clicked pattern matches the target pattern exactly, (3) Navigate the player sprite via keyboard arrow keys (1=up, 2=down, 3=left, 4=right) to the exit sprite (exydhv), which triggers level advancement.",
+      "win_difficulty": "medium"
+    },
+    {
+      "available_actions": "keyboard 1-4 + click [6] + undo [7]",
+      "difficulty_reason": "Requires complex spatial planning with multiple constrained snakes that grow/shrink, navigate through movement zones, and match precise color configurations across multi-segment entities with limited move budget",
+      "first_solve_recipe": "Observe snake configurations and target sprites; for each snake, compute required segment count from target comparison; grow/shrink using forward/backward movement (actions 1-4); navigate using actions constrained by movement zones; click (action 6) to switch active snake; verify all segments match target colors; progress when gvtmoopqgy() returns true",
+      "game": "sk48",
+      "is_spatial_planning": true,
+      "n_levels": 8,
+      "step_budget": "196 moves per level",
+      "win_condition_summary": "Position snake chains such that every segment in each snake matches the color at pixel [1,1] of corresponding target sprites, verified for all snakes simultaneously",
+      "win_difficulty": "hard"
+    },
+    {
+      "available_actions": "keyboard 1-6 (ACTION1-6: up, down, left, right, pour/spill, click-select)",
+      "difficulty_reason": "Complex spatial planning puzzle with multi-sprite liquid physics simulation. Must induce the goal from observation (filling barrier sprites). Requires selecting correct source sprites, positioning them strategically, understanding directional liquid flow behavior, and managing step budget constraints (30-120 steps per level). Multiple barriers must be filled through careful control of liquid propagation in a constrained environment.",
+      "first_solve_recipe": "Observe initial board state to identify all barrier sprites (repwkzbkhxl, visually distinct). These are the targets to fill. Select a liquid source sprite (plzwjbfyfli or tuvkdkhdokr) using ACTION6 click. Move it to a position adjacent to barriers using ACTION1-4. Trigger ACTION5 to activate the pour mechanism, causing liquid to flow downward and spread, filling adjacent barriers. Monitor which barriers become filled (change color to 13). Repeat from different starting positions or with different source sprites until all barriers are filled. The level auto-completes (next_level() called) when the condition `all(barrier in filled_set for barrier in all_barriers)` is satisfied.",
+      "game": "sp80",
+      "is_spatial_planning": true,
+      "n_levels": 6,
+      "step_budget": "Per-level limits: Level 1=30, Level 2=45, Level 3=100, Level 4=120, Level 5=100, Level 6=120 steps. Each action costs 1 step. Loss occurs when step counter reaches 0.",
+      "win_condition_summary": "Complete a level by filling all barrier sprites (repwkzbkhxl) with liquid. Start by clicking (ACTION6) to select a movable liquid source sprite, move it into position using directional actions (1-4), then trigger a pour/spill action (ACTION5) to simulate liquid flow. The liquid propagates through the grid following physics rules and fills barriers on contact. Win when all barrier sprites have been filled (are in the cevwbinfgl set).",
+      "win_difficulty": "hard"
+    },
+    {
+      "available_actions": "click-only [6, 7]",
+      "difficulty_reason": "Requires spatial reasoning to identify which sprites to move into the target zone, but no complex gravity/pathfinding mechanics. The mechanics are: click a sprite to move it toward a clicked target location, count-matching puzzles with up to 3 different sprite types, and step budgets (32-48 moves) prevent brute force. Action 7 (undo) enables trial-and-error planning. Observable colors/positions make the goal discoverable through interaction.",
+      "first_solve_recipe": "Win condition: self.cbdhpcilgb() returns True, which requires all sprites in (self.lkujttxgs + self.fezhhzhih) that overlap with self.powykypsm (target zone) to match counts in self.dsqlbvwaj (goal spec). Goal predicate: count({color: sprite count in target zone}) == goal_counts. Strategy: (1) Observe level layout and read goal from level data \"xkstxyqbs\" (e.g., \"[3, 1]\" = 3 sprites of type 3, 1 sprite of type 2). (2) Identify which sprites are which color by visual inspection. (3) Click each required sprite and drag/move it into the large target zone (sprite with tag \"xkstxyqbs\"). (4) Use undo (action 7) to revert misplaced moves. (5) Verify overlap by checking if sprites visually appear within the target region. (6) Once counts match goal, level auto-advances after animation (~10 steps of painting).",
+      "game": "su15",
+      "is_spatial_planning": true,
+      "win_condition_summary": "Get the correct number and type of colored sprites into the target zone (marked by the \"xkstxyqbs\" sprite). Each level specifies required counts in its goal data (e.g., \"[3, 1]\" means 3 of color 3 and 1 of color 2). Sprites selected via clicking move towards the target zone; the game validates that sprites within the zone match the required counts and types.",
+      "win_difficulty": "medium"
+    },
+    {
+      "available_actions": "click-only [6]",
+      "difficulty_reason": "Requires observing target properties, learning button mappings through experimentation, and discovering the correct click sequence before a time limit (moving background sprite) expires. Involves spatial reasoning about rotations and positions but no complex multi-constraint pathfinding.",
+      "first_solve_recipe": "Goal: Observe the target sprite (taptxx) for position, rotation, and scale. Identify the two adjustable sprites (plljmx tagged). Systematically click on selectable button sprites (tozzsf tagged) to adjust the main sprites' properties. Track which button clicks correspond to which property changes (position, rotation, or scale). Execute the click sequence that makes both sprites match the target before the background sprite timer reaches collision.",
+      "game": "tn36",
+      "is_spatial_planning": false,
+      "n_levels": 7,
+      "step_budget": "Variable per level - each click increments a counter that controls a background sprite moving from right to left. Collision with the main sprite triggers a loss. Move limit depends on the distance the background must travel.",
+      "win_condition_summary": "Match a target sprite's position, rotation, scale, and color by clicking selectable button sprites to adjust two main sprites until both reach the exact configuration shown by the target sprite (taptxx).",
+      "win_difficulty": "medium"
+    },
+    {
+      "available_actions": "keyboard 1-4",
+      "difficulty_reason": "Requires constraint-satisfaction planning with pattern recognition. The player must induce the target pattern from observation alone, managing a tight action budget (128-256 moves). Multiple modes (alter_rules, double_translation, tree_translation) add complexity via sequence expansion and multi-layer constraints. Success demands efficient search through a large action space.",
+      "first_solve_recipe": "Use breadth-first search or A* with state hashing to explore the action space. For each level: (1) Observe the visible sprite sequences and target markers (tjaqvwdgkxe sprites). (2) Iterate through ACTION3/ACTION4 to cycle position selections. (3) For each position, iterate ACTION1/ACTION2 to try sprite mutations. (4) After each action, check if bsqsshqpox() returns True. (5) When True, the level auto-advances with animation. (6) Prune states exceeding the action budget to ensure completion within 128-256 moves per level.",
+      "game": "tr87",
+      "is_spatial_planning": true,
+      "n_levels": 6,
+      "step_budget": "Levels 1-5: 128 actions; Level 6: 256 actions. Game loses if budget reaches 0 (upmkivwyrxz == 0).",
+      "win_condition_summary": "Configure the bottom sprite sequence to match a valid pattern that ends with a specific marker. The player cycles through target sprite positions (ACTION3/ACTION4) and mutates sprite variants (ACTION1/ACTION2) until the bsqsshqpox() validation method returns True, triggering an automatic animation and level advance.",
+      "win_difficulty": "hard"
+    },
+    {
+      "available_actions": "keyboard 1-4",
+      "difficulty_reason": "Requires spatial constraint solving with multiple sprites converging to exact target positions. Movement is direction-dependent on rotation state. Tight step budgets (20-60 steps) combined with multi-sprite coordination and grid-based pathfinding constraints make this a hard spatial planning problem similar to Sokoban.",
+      "first_solve_recipe": "Use BFS/A* search over action sequences [1,2,3,4] to explore state space. For each game state: (1) identify current positions of all movable sprites (0017unajnymcki), (2) compute paths to any target position (0015msvpvzxhqf coordinates), (3) prioritize actions that move sprites toward targets while respecting rotation-based movement constraints. Continue search until all sprites reach target positions or step budget expires. Victory is automatically detected when all sprites match target x,y coordinates.",
+      "game": "tu93",
+      "is_spatial_planning": true,
+      "n_levels": 9,
+      "step_budget": "Level-dependent: Level 1-3,5,8-9: 50 steps; Level 4: 20 steps; Level 6: 60 steps; Level 7: 30 steps",
+      "win_condition_summary": "All movable sprites (tagged 0017unajnymcki) must be navigated to target positions (coordinates matching sprites tagged 0015msvpvzxhqf) using rotation-based directional movement. Each action (1-4) sets the moving sprite's rotation (0/180/270/90 degrees) which determines movement direction, then executes pathfinding logic. The level is won when every movable sprite occupies a target position before the step counter reaches zero.",
+      "win_difficulty": "hard"
+    },
+    {
+      "available_actions": "click-only [6]",
+      "difficulty_reason": "Requires spatial planning with gravity-dependent coordinate transformations, multi-block positioning relative to walls and goals, Sokoban-like mechanics, non-obvious win conditions that must be discovered through observation.",
+      "first_solve_recipe": "To solve a level: (1) Observe the gravity direction from level data to understand coordinate axes. (2) Identify colored blocks (tag 0016uciqlhjlom), goal targets (tag 0010gnulkywfpz), and wall placements (tag 0025yfyiswdvoh). (3) Click goal toggles or blocks to animate them toward aligned positions where block color matches target location. (4) Ensure each moved block ends adjacent to a wall in the direction perpendicular to gravity. (5) Repeat until ielczunthe() returns true (all blocks satisfy constraints). Use gravity direction to guide movement direction and plan wall-relative positioning.",
+      "game": "vc33",
+      "is_spatial_planning": true,
+      "n_levels": 7,
+      "step_budget": "50, 50, 75, 50, 200, 50, 200 (per level)",
+      "win_condition_summary": "All colored blocks must be positioned with their color pixel matching a goal target, properly aligned in the gravity axis, with a wall adjacent to the block in the perpendicular axis. The ielczunthe() function verifies each block satisfies this multi-sprite spatial constraint.",
+      "win_difficulty": "hard"
+    },
+    {
+      "available_actions": "keyboard 1-5",
+      "difficulty_reason": "Requires spatial planning and sequencing - not just reactive actions - but avoids hard constraints like gravity/pushing. The goal is explicit (place items in target zones), items can be picked up and dropped at will, and movement is free navigation rather than pushing-based. Moderate step budgets (70-200 per level) require efficient pathfinding but allow room for error.",
+      "first_solve_recipe": "Map all items (geezpjgiyd) and target zones (fsjjayjoeg) at level start. For each item: navigate to it using BFS pathfinding, pickup via action 5 when adjacent (respecting facing direction), navigate to nearest unoccupied target zone, and drop via action 5. Repeat until all items are on targets and the win condition (ymzfopzgbq) returns true. Prioritize closer item-target pairs to minimize total steps.",
+      "game": "wa30",
+      "is_spatial_planning": true,
+      "n_levels": 9,
+      "step_budget": "Per-level limits: level 1=200, 2=70, 3=100, 4=100, 5=125, 6=75, 7=125, 8=150, 9=70 (enforced via StepCounter in level data)",
+      "win_condition_summary": "All movable items (tag geezpjgiyd) must be positioned on target zones (tag fsjjayjoeg) and not held by the player. The player must navigate a grid, pickup items via action 5 when adjacent based on facing direction, and drop them on target zones to win.",
+      "win_difficulty": "medium"
+    }
+  ],
+  "ranked_targets": [
+    {
+      "confidence": "high",
+      "game": "r11l",
+      "modellability_note": "dsl_energy=0.9967 (object-DSL alone effectively fails to model it) BUT hidden_state=false \u2014 the visible grid fully determines dynamics. This is exactly the regime where vc33 succeeded: the click-game's per-click transition (select highlights a sprite; click-on-target launches a deterministic drag animation) is simple, fully-observable, and learnable by codex program synthesis from actively-collected transitions, even though the static object-DSL can't capture the click semantics. High dsl_energy here is the 'needs active data + synthesis' signal, not a blocker.",
+      "solve_approach": "1) Actively probe: issue a click on each candidate sprite, record that it highlights/brightens (induces the SELECT transition); click an empty target, record the drag animation (induces the PLACE transition). 2) Codex synthesizes a transition model: state=(selected_sprite, sprite_positions); click(sprite)->select; click(target_pos while selected)->sprite moves to target over ~20 frames. Verify with the consistency energy as on vc33. 3) Induce GOAL from a level-up: after all colored sprites coincide with their gray templates the level advances \u2014 predicate = every colored sprite overlaps its matching template. 4) Plan trivially: for each colored sprite emit [click-sprite, click-its-template]; 60-action budget easily covers 3-6 sprites/level.",
+      "why_good_first_target": "Pure click-to-drag positioning: select a colored sprite, click its visible gray template target, the engine auto-animates it home. The survey explicitly marks is_spatial_planning=false with 'no complex spatial reasoning or multi-constraint planning' and a 'generous' 60-action budget for only 6 levels. Each sprite has a CLEAR, VISIBLE target (the gray template at a different location), so the GOAL predicate (all colored sprites overlap their templates) is directly observable from the very first frame \u2014 no induction of a hidden objective is needed. This is the structural twin of vc33 (the already-proven click-game) but WITHOUT vc33's hard gravity/wall spatial constraints.",
+      "win_difficulty": "medium"
+    },
+    {
+      "confidence": "medium",
+      "game": "sc25",
+      "modellability_note": "dsl_energy=0.9907 (object-DSL near-fails) and hidden_state=true. The hidden_state is the main caveat: the pattern-toggle and exit-navigation phases are gated by an internal mode flag (pattern-complete?) not fully visible in the grid, so the world-model must induce that phase transition from a level-up-like cue. Still tractable because the toggle map is deterministic and the exit move is observable; codex can model the two phases as a small FSM, but it's a notch harder to induce than r11l's single-mode click dynamics.",
+      "solve_approach": "1) Active-collect: click each grid cell, observe it flips one boolean \u2014 induce the deterministic toggle transition. 2) Read the reference 3x3 pattern from the displayed target sprites (observable). 3) GOAL phase-1 = clicked grid == target; greedily click each mismatched cell exactly once. 4) After completion, induce phase-2 (movement enabled) from the state change; greedily move (keys 1-4) toward the visible exit sprite via Manhattan descent until overlap triggers next_level().",
+      "why_good_first_target": "is_spatial_planning=false. The core sub-goal is a DIRECTLY-OBSERVABLE 3x3 boolean pattern match: click a grid cell to toggle it True/False until the displayed grid equals the shown reference pattern \u2014 a clean, reactive, single-correct-action-per-cell task with a tiny (2^9) state space and an obvious greedy solver (toggle every mismatched cell once). The only added piece is walking the player to a fully-visible exit sprite afterward (greedy Manhattan-descent move, the survey says 'no hard planning required').",
+      "win_difficulty": "medium"
+    },
+    {
+      "confidence": "medium",
+      "game": "lp85",
+      "modellability_note": "dsl_energy=1.0 (object-DSL fails outright) but hidden_state=false. Like vc33/r11l, the static DSL can't express the click->group-rotation map, but because the grid fully determines state and each button is a fixed permutation, active probing makes the dynamics fully learnable: click each button once, observe which pieces move where, and you've recovered the exact permutation generators. Once the generator set is known the solve is pure BFS over a tiny discrete group.",
+      "solve_approach": "1) Probe each button with a single click; record the induced permutation of piece positions (codex synthesizes each button as a fixed mapping; consistency energy confirms determinism). 2) Induce GOAL = every bghvgbtwcb piece has a 'goal' sprite at (x+1,y+1) and every fdgmtkfrxl piece has a 'goal-o' there. 3) Plan with BFS over the recovered permutation generators to reach the goal configuration; Level-1 budget is only 13 moves, so the generator structure is small and search is cheap.",
+      "why_good_first_target": "is_spatial_planning=false \u2014 explicitly a 'logic puzzle' of circular permutations, not pathfinding. Click-only with a very small discrete action effect: each button click triggers a PREDETERMINED rotation of a piece group. Goal positions are fully observable (goal / goal-o sprites mark where each piece must end up), so the objective predicate is directly readable.",
+      "win_difficulty": "medium"
+    },
+    {
+      "confidence": "low",
+      "game": "tn36",
+      "modellability_note": "dsl_energy=1.0, hidden_state=false. DSL fails statically but the grid determines state, so codex can synthesize each button as a fixed property increment by active probing. CAVEAT: there is a soft time pressure (a background sprite advances per click and a collision = loss), so the model must also induce a step-budget/loss dynamic \u2014 adds a little induction overhead versus the budget-generous r11l, and over-probing risks the loss timer.",
+      "solve_approach": "1) Cautiously probe each button once, recording the property delta it applies (position/rotation/scale step) while tracking the advancing background timer. 2) Read target properties from taptxx (observable). 3) Compute the required delta vector per sprite and emit the minimal click sequence, staying under the collision timer. Lower priority than r11l because the loss-timer makes free exploration costlier.",
+      "why_good_first_target": "is_spatial_planning=false. Click-only property-matching: adjust two sprites' position/rotation/scale/color via button clicks until they match a fully-VISIBLE target sprite (taptxx). The objective is directly observable (just read the target's properties), and the solve is to learn the button->property-delta map then apply the deltas \u2014 a reactive, near-single-correct-sequence task.",
+      "win_difficulty": "medium"
+    }
+  ],
+  "rationale": "r11l is the single easiest first-solve target. It is the ONLY candidate that is simultaneously (a) easy-win \u2014 the survey marks it is_spatial_planning=false with 'no complex spatial reasoning or multi-constraint planning required,' a generous 60-action budget over just 6 levels, and a fully-VISIBLE per-sprite target (the gray template), so the GOAL predicate is directly observable and needs no inference; and (b) inducible via exactly the path that already worked on vc33 \u2014 a click-game whose dynamics the static object-DSL can't capture (dsl_energy=0.9967) but whose hidden_state=false means the visible grid fully determines its deterministic click->select / click->drag transitions, which active data collection plus codex program synthesis (verified by the consistency energy) recovers cleanly. Crucially, r11l keeps vc33's proven click-synthesis modellability while DROPPING vc33's hard gravity/wall spatial-planning constraints, so it strictly dominates vc33 on win-ease. The planner step is near-trivial: for each colored sprite emit [click-sprite, click-its-template], which always fits the budget. sc25, lp85, and tn36 are credible backups but each adds an induction wrinkle \u2014 sc25 a hidden phase-mode (hidden_state=true), lp85 a permutation-group BFS, tn36 a loss-timer that penalizes free exploration \u2014 making r11l the clear top pick.",
+  "submitted_to_leaderboard": false,
+  "title": "arc3_25game_win_condition_survey_for_first_solve",
+  "top_pick": "r11l"
+}
