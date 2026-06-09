@@ -8,9 +8,17 @@
     "low": 37.91
   },
   "cis_non_overlapping_pruner_helps": true,
+  "corrigendum_2026_06_09": {
+    "consequence": "Do NOT cite 24.662x (or 'cis_non_overlapping_pruner_helps') as the efficiency-axis 'verifier earns its place' datum. The REAL M3 proof requires running the SAME solving agent WITH the energy-verifier/induced-model pruning candidate actions vs WITHOUT (random/full-space) on the actual offline env, counting REAL actions-to-solve on the 2 solved levels \u2014 that proof remains UNMET. Capstone must skip this flagged artifact (it self-instructs to skip flagged_adversarial).",
+    "explanation": "The 24.662x 'efficiency_ratio' does NOT measure the energy-verifier pruning actions on real games. (1) VERIFIER NOT IN LOOP: experiment_3959 computes p_with=1/num_objects (object-level selection) vs p_without=target_area/total_pixels (random-pixel selection) from grid geometry \u2014 the consistency-energy verifier / induced world-model is never invoked. The ratio is just object-vs-pixel search geometry. (2) SIMULATED, NOT MEASURED: both arms are simulate_geometric() draws (1000 simulated geometric trials from those assumed probabilities), NOT the agent run WITH vs WITHOUT the verifier on the live env counting real solve actions \u2014 despite inference_substrate claiming 'real games'. (3) SURPRISING+UNREPLICATED: 24.7x vs the prior honest 1.96x (exp3929, itself a flagged tautology) and ~4x peer, with no real measurement.",
+    "flag": "SIMULATED_NOT_REAL + VERIFIER_NOT_IN_LOOP + SURPRISING_UNREPLICATED",
+    "found_by": "outer-loop adversarial review of the M3 efficiency datum",
+    "severity": "critical"
+  },
   "duration_s": 0.9,
   "efficiency_ratio_with_over_without": 24.662,
   "experiment": "experiment_3959_m3_efficiency_real_games",
+  "flagged_adversarial": true,
   "games_measured": [
     "lp85-305b61c3",
     "r11l-495a7899"
