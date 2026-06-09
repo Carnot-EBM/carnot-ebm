@@ -1,0 +1,143 @@
+{
+  "a1_shortcut_diagnostics": {
+    "mean_within_task_spearman_E_vs_voterank": 0.0388,
+    "pearson_E_gridsize": 0.1816,
+    "pearson_E_logvotes": -0.078,
+    "pearson_E_votes": -0.041
+  },
+  "a2_overfit_audit": {
+    "note": "val measures gold-vs-SYNTHETIC-corruption top-1 on held-out TRAINING tasks; the eval pool is real TRM candidates on the ARC-1 EVAL split \u2014 fully disjoint tasks (asserted at train time). A large val-vs-eval gap = distribution shift between synthetic corruptions and real generator errors, not task leak.",
+    "train_val_top1_acc_vs_synthetic_negatives": 0.0938
+  },
+  "a3_no_oracle_audit": "Energy computed from (demos, test_input, candidate_grid) only. The eval pool file does not contain gold output grids (exporter drops them); `correct` labels are used exclusively to score rankings post-hoc. Training corpus is arc-agi_training+concept; arc-agi_training2 was EXCLUDED after an overlap audit found 376/400 ARC-1 eval tasks inside it (29/30 pool tasks).",
+  "auroc": {
+    "ebm_hard_negatives_votes_ge5": 0.6168,
+    "ebm_macro": 0.5253,
+    "ebm_pair_weighted": 0.4661,
+    "vote_macro_reference": 0.9235
+  },
+  "bootstrap": {
+    "B": 1000,
+    "ebm_vs_vote_pass2_ci95": [
+      -0.4516,
+      -0.1613
+    ],
+    "union_plus_E_vs_union_pass2_ci95": [
+      0.0,
+      0.0
+    ]
+  },
+  "duration_s": 15.6,
+  "eval_duration_s": 11.1,
+  "experiment": "arc3_gap3_stage2_transition_ebm",
+  "gates": {
+    "coverage_ge_0p80": true,
+    "discrimination_hard_neg_auroc": 0.6168,
+    "discrimination_macro_auroc_gt_0p70": false,
+    "headroom_capture_fraction": -1.7998,
+    "headroom_capture_ge_0p30": false,
+    "selection_beats_vote": false,
+    "union_value_add": false
+  },
+  "generator_independent_signal_real": false,
+  "honest_note": "GAP-3 Stage 2. POSITIVE that survives the residual controls = a generator-independent content-aware energy reaches the present-but-mis-voted headroom -> register + re-confirm at 400 scale (grouped folds). NEGATIVE = even a trained content energy cannot beat vote on this pool; the remaining moves are training on real generator errors (forfeits strict generator-independence) or richer context encoding. Reported as-is per FALSE_NEGATIVE_RISK; the positive control holds (oracle > vote). CAVEAT n=31; CI upper edge governs; re-confirm at 400 before any irreversible claim.",
+  "honest_verdict": "complete: gap3_stage2_transition_ebm_does_not_beat_vote_n31_vote_0.4516_ebm_0.1613_macroauroc_0.5253_hardauroc_0.6168_unionadd_False",
+  "inference_substrate": "live_gpu_ebm_train_plus_offline_trm_candidate_rerank_no_oracle",
+  "model_specs": {
+    "architecture": "PairEncoder CNN (4 conv blocks, GroupNorm, GELU) -> 256-d; rule = mean over demo-pair embeddings; energy head MLP([r,p,r*p,|r-p|])",
+    "generator_provenance": "candidates from TRM arc_v1 step_518071 capped eval dump (eval only; no TRM data in training)",
+    "n_params": 1107489,
+    "negative_families": [
+      "identity_copy",
+      "demo_output_copy",
+      "dihedral",
+      "color_perm",
+      "cell_noise",
+      "row_col_resize",
+      "shift",
+      "other_task_output"
+    ],
+    "negatives_per_positive": 10
+  },
+  "n_oracle_hit": 19,
+  "n_tasks": 31,
+  "oracle_pass2_ceiling": 0.6129,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "resource": "eval_pool_export"
+    },
+    {
+      "available": true,
+      "resource": "kaggle_arc_corpus"
+    }
+  ],
+  "random_seed": 12345,
+  "rankers": {
+    "EBM_ENERGY": {
+      "pass@1": 0.0968,
+      "pass@2": 0.1613
+    },
+    "EBM_ENERGY_vote_tiebreak": {
+      "pass@1": 0.0968,
+      "pass@2": 0.1613
+    },
+    "EBM_rank_residual_within_task": {
+      "pass@1": 0.0323,
+      "pass@2": 0.1613
+    },
+    "EBM_residual_over_vote_global": {
+      "pass@1": 0.0323,
+      "pass@2": 0.0645
+    },
+    "HYBRID_vote_then_E": {
+      "pass@1": 0.4194,
+      "pass@2": 0.4839
+    },
+    "Q_MEAN": {
+      "pass@1": 0.2903,
+      "pass@2": 0.2903
+    },
+    "TRM_VOTE": {
+      "pass@1": 0.4194,
+      "pass@2": 0.4516
+    },
+    "UNION_plus_E": {
+      "pass@1": 0.4516,
+      "pass@2": 0.4839
+    },
+    "UNION_votes_qmean_voteshare": {
+      "pass@1": 0.4516,
+      "pass@2": 0.4839
+    }
+  },
+  "reproducibility_checksum": "b830e5a8d8e5a089",
+  "title": "GAP-3 Stage 2: trained generator-independent ARC transition-EBM vs TRM frequency vote",
+  "training": {
+    "best_val_top1_acc": 0.0938,
+    "corpus_hash": "b830e5a8d8e5a089",
+    "n_params": 1107489,
+    "n_train_examples": 2355,
+    "n_train_tasks": 504,
+    "n_val_tasks": 56,
+    "train_duration_s": 4.5,
+    "train_log": [
+      {
+        "loss": 2.3998,
+        "step": 15,
+        "val_gold_rank_mean": 5.969,
+        "val_top1_acc": 0.0938
+      },
+      {
+        "loss": 2.3971,
+        "step": 30,
+        "val_gold_rank_mean": 5.323,
+        "val_top1_acc": 0.0521
+      }
+    ]
+  }
+}
