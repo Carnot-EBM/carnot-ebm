@@ -2698,6 +2698,57 @@ routine breadth.
 - CLAUDE.md "Scope-Reduction-When-Flagged" — the sibling rule for explicit
   scope-reduction directives; this one is the standing depth-vs-breadth default
 
+## ARC-AGI-3 Incremental-Progress Scoping (MANDATORY)
+
+**Origin:** 2026-06-09 operator directive after the FIRST ARC-AGI-3 solves landed
+(r11l L1 in 4 actions, exp3946; lp85 L1, exp3954) but the `.366` task exp3953
+("r11l FULL solve: take r11l from 1/6 to all 6 levels") 3-fail-SKIPPED across the
+whole milestone:
+
+> "perhaps we should be trying to solve one or more additional levels of a
+>  particular game for each experiment rather than trying to solve them all.
+>  progress is key."
+
+The all-or-nothing framing is exactly why exp3953 stalled: a task that swings for
+all 6 levels and lands 0 is strictly WORSE than a task that targets +2 and banks +1.
+
+**The rule.** Every ARC-AGI-3 SOLVE experiment targets **incremental level-progress
+on ONE game** — solve one or more ADDITIONAL levels beyond the prior milestone's
+recorded best for that game — NOT a "FULL solve" / "all N levels" / all-games solve
+in a single task. **Progress is the metric: each milestone must MONOTONICALLY advance
+the total solved-level count, even by +1.**
+
+**Falsifiable per-experiment gate.** The acceptance gate for a solve task is "at
+least one NEW level solved, real-env-confirmed (`levels_completed` from the live
+env), beyond the prior best for that game." A solve task whose gate is "all 6 levels"
+is malformed — re-scope it to "+1..+n levels from L\<k\>".
+
+**Planner-side scoping (when generating `research-roadmap-next.yaml`).**
+- Read the recorded solved-level state (research-complete.yaml / the prior capstone /
+  the game's last solve artifact) and scope each solve task as
+  **"advance \<game\> from L\<k\> to L\<k+1..k+n\>"** (small n, typically 1–3) or
+  **"first solve of \<new non-spatial game\> L1"** (the 6 non-spatial games from the
+  win-condition survey, results/arc3_win_condition_survey.json, are the targets).
+- Prefer breadth-of-progress across a milestone: several small "+1–2 levels" tasks on
+  different games beat one "solve everything" task. A milestone that banks +1 level on
+  three games (net +3) is better than one that attempts a full game and lands 0.
+- NEVER emit a "FULL solve" / "all levels" / "solve them all" solve task. Mechanical
+  re-scope: if a draft solve title contains "FULL", "all N levels", or "to 6/6",
+  rewrite it to the next 1–3 levels.
+
+**Why this is in CLAUDE.md.** The planner reads CLAUDE.md as required input on every
+plan generation. Putting the incremental-scoping principle here ensures every future
+ARC milestone advances the solved-level count monotonically rather than stalling on
+over-ambitious all-levels tasks. This is the ARC-specific specialization of the
+Depth-Over-Breadth / progress-not-churn ethos (north-star §1).
+
+**Cross-references:**
+- 2026-06-09 operator directive — origin
+- exp3946 (r11l L1), exp3954 (lp85 L1) — the incremental solves that landed
+- exp3953 ("r11l FULL solve") — the all-levels task that 3-fail-skipped (the anti-pattern)
+- results/arc3_win_condition_survey.json — the 6 non-spatial first-solve targets
+- `ops/north-star.md` §1 — the headline-progress / no-churn ethos this specializes
+
 ## Overdue-Priority Forcing Function (MANDATORY)
 
 > **STATUS (2026-05-29): MECHANICALLY ENFORCED — prose is reference-only.**
