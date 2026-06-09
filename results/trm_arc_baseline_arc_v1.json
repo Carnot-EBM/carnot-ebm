@@ -1,0 +1,33 @@
+{
+  "experiment": "trm_arc_eval_harness",
+  "ckpt": "arc_v1",
+  "step": "step_518071",
+  "batch": 256,
+  "duration_s": 1763.6,
+  "metrics": {
+    "all": {
+      "accuracy": "0.82548773",
+      "exact_accuracy": "0.37761718",
+      "lm_loss": "0.920342",
+      "q_halt_accuracy": "0.7670703",
+      "q_halt_loss": "1.0068858",
+      "steps": "16.0"
+    },
+    "ARC/pass@1": 0.0325,
+    "ARC/pass@2": 0.0375,
+    "ARC/pass@5": 0.04,
+    "ARC/pass@10": 0.0425,
+    "ARC/pass@100": 0.045,
+    "ARC/pass@1000": 0.045
+  },
+  "arc_passK": {
+    "ARC/pass@1": 0.0325,
+    "ARC/pass@2": 0.0375,
+    "ARC/pass@5": 0.04,
+    "ARC/pass@10": 0.0425,
+    "ARC/pass@100": 0.045,
+    "ARC/pass@1000": 0.045
+  },
+  "inference_substrate": "live_gpu_trm_recursive_refiner_arc_eval",
+  "note": "standalone eval, no training, baked embeddings aligned (876406 gate passed)"
+}

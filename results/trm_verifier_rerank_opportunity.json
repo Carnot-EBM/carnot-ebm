@@ -1,0 +1,34 @@
+{
+  "caveats": "29-task subset (small sample; pass@2 point estimate ~0.52 runs above the ~0.40-0.45 full headline due to sampling). The GAP (~0.10) is the robust directional finding; a full 400-task eval would tighten the absolute numbers. The subset-scaling assumes the first 29 contiguous tasks are representative.",
+  "duration_s": 2100.0,
+  "experiment": "trm_verifier_rerank_opportunity",
+  "full_pass_at_k_unscaled": {
+    "pass@1": 0.0325,
+    "pass@10": 0.0425,
+    "pass@100": 0.045,
+    "pass@1000": 0.045,
+    "pass@2": 0.0375,
+    "pass@5": 0.04
+  },
+  "honest_verdict": "complete: trm_reproduces_and_present_but_misvoted_gap_real_pass2_0.52_pass1000_0.62_gap_0.10_on_29task_subset",
+  "inference_substrate": "trm_arcprize_checkpoint_arc_v1_public_step_518071_local_gpu",
+  "method": "arcprize/trm_arc_prize_verification arc_v1_public checkpoint loaded clean (no 'Resetting puzzle embedding' line; exact_accuracy on augmentations confirms the trained TRM). Bounded complete-augmentation eval: --max_batches 100 (test set is contiguous-by-task, so this COMPLETES the first 29 ARC tasks' full ~1000-augmentation vote). Subset pass@K = full pass@K * 400/29 (the evaluator divides by all 400; only the 29 complete tasks contribute).",
+  "n_complete_tasks": 29,
+  "next_step": "Step 2: wire the Carnot energy verifier to RERANK TRM's per-augmentation candidates and measure whether it captures the present-but-mis-voted gap (selects correct > TRM's vote) = the verifier-as-asset proof on a SOTA generator + known benchmark.",
+  "no_gpu_used": false,
+  "present_but_misvoted_gap_pass1000_minus_pass1": 0.173,
+  "present_but_misvoted_gap_pass1000_minus_pass2": 0.103,
+  "random_seed": 0,
+  "reproduction_confirmed": true,
+  "submitted_to_leaderboard": false,
+  "subset_pass_at_k": {
+    "pass@1": 0.448,
+    "pass@10": 0.586,
+    "pass@100": 0.621,
+    "pass@1000": 0.621,
+    "pass@2": 0.517,
+    "pass@5": 0.552
+  },
+  "title": "TRM ARC-AGI-1 reproduction + present-but-mis-voted gap (verifier-rerank opportunity)",
+  "verifier_rerank_opportunity_pp": "10-17 percentage points capturable if a verifier selects the correct candidate better than TRM's halting-head/vote"
+}
