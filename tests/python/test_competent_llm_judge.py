@@ -16,6 +16,7 @@ import pytest
 
 from carnot.verify import competent_llm_judge as judge
 from scripts.experiments import experiment_3925_competent_judge_build as exp3925
+from scripts.experiments import experiment_3935_competent_judge_build as exp3935
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -48,7 +49,7 @@ def test_req_verify_3925_spec_anchor_exists() -> None:
     assert "REQ-VERIFY-3925" in spec
     assert "SCENARIO-VERIFY-3925" in spec
     assert "python/carnot/verify/competent_llm_judge.py" in spec
-    assert "results/experiment_3925_competent_judge_build.json" in spec
+    assert "results/experiment_3935_competent_judge_build.json" in spec
 
 
 def test_req_verify_3925_parser_abstains_instead_of_constant_default() -> None:
@@ -136,6 +137,8 @@ def test_req_verify_3925_artifact_uses_bare_fields_and_ready_gate(tmp_path: Path
     assert artifact["judge_module_path"] == "python/carnot/verify/competent_llm_judge.py"
     assert artifact["judge_model_used"] == "Qwen3.6-35B-A3B"
     assert artifact["fixture_auroc"] == 0.9
+    assert exp3925.OUTPUT_REL_PATH.as_posix() == "results/experiment_3935_competent_judge_build.json"
+    assert exp3935.main is exp3925.main
     assert artifact["unit_test_passed"] is True
     assert not isinstance(artifact["fixture_auroc"], dict)
 
@@ -175,11 +178,24 @@ def test_scenario_verify_3925_live_fixture_positive_control() -> None:
 
     code = """
 import json
+import resource
 from carnot.verify import competent_llm_judge as judge
 from carnot.verify.gguf_inference import load_gguf_generator
 
+_soft, hard = resource.getrlimit(resource.RLIMIT_AS)
+if hard == resource.RLIM_INFINITY:
+    resource.setrlimit(resource.RLIMIT_AS, (resource.RLIM_INFINITY, hard))
+elif hard > _soft:
+    resource.setrlimit(resource.RLIMIT_AS, (hard, hard))
+
+source = json.loads(open("results/experiment_3915_robust_gguf_inference_harness.json", encoding="utf-8").read())
+source_model = source.get("model_used")
+prefer_order = []
+if source_model in judge.COMPETENT_PREFER_ORDER:
+    prefer_order.append(source_model)
+prefer_order.extend(model for model in judge.COMPETENT_PREFER_ORDER if model not in prefer_order)
 generator, meta = load_gguf_generator(
-    prefer_order=list(judge.COMPETENT_PREFER_ORDER),
+    prefer_order=prefer_order,
     n_ctx=judge.DEFAULT_N_CTX,
     max_n_gpu_layers=judge.DEFAULT_MAX_N_GPU_LAYERS,
 )
@@ -187,21 +203,14 @@ fixture = judge.build_separable_fixture()
 result = judge.run_judge_fixture(fixture, generator, max_tokens=judge.DEFAULT_MAX_TOKENS)
 print("COMPETENT_JUDGE_TEST_JSON=" + json.dumps({"meta": meta, "result": result}, sort_keys=True))
 """
-    command = [
-        "env",
-        "-i",
-        f"CUDA_VISIBLE_DEVICES={os.environ.get('CUDA_VISIBLE_DEVICES', '0')}",
-        f"HOME={os.environ['HOME']}",
-        f"PATH={os.environ['PATH']}",
-    ]
-    if os.environ.get("LD_LIBRARY_PATH"):
-        command.append(f"LD_LIBRARY_PATH={os.environ['LD_LIBRARY_PATH']}")
-    command.extend([str(REPO_ROOT / ".venv" / "bin" / "python"), "-c", code])
+    live_env = os.environ.copy()
+    live_env.setdefault("CUDA_VISIBLE_DEVICES", "0")
     live = subprocess.run(
-        command,
+        [str(REPO_ROOT / ".venv" / "bin" / "python"), "-c", code],
         capture_output=True,
         check=False,
         cwd=REPO_ROOT,
+        env=live_env,
         text=True,
         timeout=900,
     )

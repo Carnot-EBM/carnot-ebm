@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exp 3925 competent LLM judge build artifact.
+"""Exp 3935 competent LLM judge build artifact.
 
 Spec refs: REQ-VERIFY-3925, SCENARIO-VERIFY-3925,
 SCENARIO-VERIFY-3925-BLOCKED.
@@ -39,7 +39,7 @@ from carnot.verify.competent_llm_judge import (  # noqa: E402
 from carnot.verify.gguf_inference import load_gguf_generator  # noqa: E402
 
 
-OUTPUT_REL_PATH = Path("results/experiment_3925_competent_judge_build.json")
+OUTPUT_REL_PATH = Path("results/experiment_3935_competent_judge_build.json")
 EXP3915_ARTIFACT_REL_PATH = Path("results/experiment_3915_robust_gguf_inference_harness.json")
 EXP3917_ARTIFACT_REL_PATH = Path("results/experiment_3917_efficiency_head_to_head.json")
 EXP3884_ARTIFACT_REL_PATH = Path("results/experiment_3884_in_distribution_error_rich_corpus.json")
@@ -48,9 +48,9 @@ GGUF_HARNESS_MODULE_PATH = "python/carnot/verify/gguf_inference.py"
 REASONER_HARNESS_MODULE_PATH = "python/carnot/verify/reasoner_self_verification.py"
 UNIT_TEST_PATH = "tests/python/test_competent_llm_judge.py"
 SPEC_PATH = "openspec/capabilities/verification/spec.md"
-EXPERIMENT_ID = 3925
+EXPERIMENT_ID = 3935
 TITLE = "competent_judge_build"
-RANDOM_SEED = 3925
+RANDOM_SEED = 3935
 LIVE_FLOOR_S = 60.0
 INFERENCE_SUBSTRATE = "live_llm_inference:robust_gguf_competent_process_judge"
 
@@ -81,7 +81,7 @@ FIELD_PRINCIPLES = {
         "BARE FLOAT - exp3917 judge AUROC with score polarity flipped; >>0.5 confirms "
         "a polarity/parse bug, not a model weakness."
     ),
-    "judge_module_path": "Where every .363 efficiency task imports the competent judge from.",
+    "judge_module_path": "Where every .364 efficiency task imports the competent judge from.",
     "judge_model_used": (
         "Which GGUF the competent judge loaded (records whether a stronger model than the .362 26B was used)."
     ),
@@ -405,16 +405,18 @@ def probe_preconditions(
 def _run_unit_test(config: ExperimentConfig) -> bool:
     if not config.run_unit_test:
         return True
+    pytest_bin = config.repo_root / ".venv" / "bin" / "pytest"
     proc = subprocess.run(
         [
-            str(config.venv_python()),
-            "-m",
-            "pytest",
+            str(pytest_bin),
             UNIT_TEST_PATH,
             "-q",
-            "--no-cov",
+            "--no-header",
             "-n",
             "0",
+            "--no-cov",
+            "-o",
+            "addopts=",
         ],
         cwd=config.repo_root,
         check=False,
@@ -461,8 +463,8 @@ def _classify_verdict(artifact: dict[str, object]) -> str:
         model = str(artifact.get("judge_model_used") or "unknown")
         return (
             "complete: "
-            f"competent_judge_READY_fixture_auroc{rendered_auroc}_cause{cause}_"
-            f"model{model}_valid_comparator"
+            f"competent_judge_READY_fixture_auroc{rendered_auroc}_"
+            f"model{model}_valid_comparator_landed"
         )
     return f"complete: competent_judge_NOT_READY_fixture_auroc{rendered_auroc}_cause{cause}"
 

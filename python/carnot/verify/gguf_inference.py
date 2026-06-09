@@ -84,9 +84,8 @@ def generate(generator: Any, prompt: str, max_tokens: int) -> str:
 def _offload_levels(model_name: str, requested_gpu_layers: int) -> tuple[int, ...]:
     if requested_gpu_layers == 0:
         return (0,)
-    if model_name == "gemma-4-26B-A4B-it":
-        return (requested_gpu_layers, REDUCED_N_GPU_LAYERS, 0)
-    return (REDUCED_N_GPU_LAYERS, 0, requested_gpu_layers)
+    levels = (requested_gpu_layers, REDUCED_N_GPU_LAYERS, 0)
+    return tuple(dict.fromkeys(levels))
 
 
 def load_gguf_generator(
