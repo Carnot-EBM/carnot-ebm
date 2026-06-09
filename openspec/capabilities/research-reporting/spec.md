@@ -18485,3 +18485,72 @@ markdown edits.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3943 | Implemented (`python/carnot/reporting/literature_synthesis_3943.py`, `scripts/experiments/experiment_3943_literature_synthesis.py`) | Implemented (`tests/python/test_experiment_3943_literature_synthesis.py`) |
+
+### REQ-REPORT-3945: Archive .364 And Activate .365 With ARC Substrate Gates
+
+The Exp 3945 workflow SHALL archive milestone `2026.06.364`, confirm milestone
+`2026.06.365` is active in the current research roadmap, and write
+`results/experiment_3945_archive_v364_activate_v365.json`. Before editing any
+record, it SHALL run `.venv/bin/python -c "import yaml;
+yaml.safe_load(open('research-complete.yaml'))"` from the repository root. If
+that precondition fails, it SHALL write a blocked artifact whose
+`honest_verdict` starts with `blocked_research_complete_yaml_poison` and SHALL
+NOT edit `research-complete.yaml` or `ops/exclusion_manifest.yaml`.
+
+The workflow SHALL read Exp 3934 through Exp 3944 verdicts by invoking
+`scripts/summarize_artifact.py` over the authoritative result artifact paths
+rather than raw-reading the milestone JSONs for verdict extraction. It SHALL
+append an idempotent `.364` archive record to `research-complete.yaml`
+containing all eleven task verdicts, recording missing artifacts as missing
+rather than fabricating conductor success. Every appended scalar containing
+`: ` SHALL be quoted so the .355 colon-poison failure cannot recur.
+
+After the archive append, the workflow SHALL confirm both
+`research-complete.yaml` and `ops/exclusion_manifest.yaml` safe-load under
+`yaml.safe_load`. It SHALL run `.venv/bin/pytest
+tests/python/test_arc_agi3_world_model.py
+tests/python/test_arc_world_model_synth.py
+tests/python/test_arc_world_model_dsl.py -q --no-header -n 0 --no-cov -o
+addopts=` and record the bare boolean `arc_substrate_tests_green`. It SHALL
+run an import probe for `carnot.agentic.arc_agi3_world_model`,
+`carnot.agentic.arc_world_model_synth`, and
+`carnot.agentic.arc_world_model_dsl`, recording the aggregate bare boolean
+`arc_modules_importable` plus per-module import results.
+
+The terminal artifact SHALL include bare top-level fields
+`archived_milestone`, `activated_milestone`,
+`research_complete_yaml_parses`, `exclusion_manifest_parses`,
+`arc_substrate_tests_green`, `arc_modules_importable`, `honest_verdict`,
+`duration_s`, and `inference_substrate`. On the complete path,
+`honest_verdict` SHALL start with `complete:` or `success:`. Blocked verdicts
+SHALL start with `blocked_<resource>`. This is a record-only aggregation task
+and SHALL NOT modify `ops/changelog.md`, `ops/status.md`,
+`_bmad/traceability.md`, or `scripts/research_conductor.py`; those documents
+are reconciled by the conductor's separate status step.
+
+#### SCENARIO-REPORT-3945: V364 Archive Opens The ARC First-Solve Push
+
+**Given** `.365` is active, `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` safe-load, the Exp 3934 through Exp 3944
+artifacts can be summarized, the ARC substrate tests pass, and the ARC agentic
+modules import
+**When** the Exp 3945 workflow runs
+**Then** it appends the `.364` task verdicts to `research-complete.yaml`,
+quotes colon-bearing scalars, confirms both YAML files still parse, records
+the ARC test and import green gates, writes the required terminal artifact,
+and leaves ops/status/traceability/conductor files unchanged.
+
+#### SCENARIO-REPORT-3945-BLOCKED-YAML: Corrupt Research Record Blocks Before Append
+
+**Given** `research-complete.yaml` does not safe-load
+**When** the Exp 3945 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_research_complete_yaml_poison`, records the failed YAML parse in
+`preconditions_checked`, and leaves both `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` byte-for-byte unchanged.
+
+## Implementation Status (REQ-REPORT-3945)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3945 | Planned (`python/carnot/reporting/archive_v364_activate_v365_3945.py`, `scripts/experiments/experiment_3945_archive_v364_activate_v365.py`) | Planned (`tests/python/test_experiment_3945_archive_v364_activate_v365.py`) |
