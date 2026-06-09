@@ -1,0 +1,75 @@
+{
+  "claim": "Active coverage-driven collection vs passive random, same budget, graded by the DSL inducer's consistency energy on a COMMON held-out test. Active wins if energy lower.",
+  "duration_s": 26.0,
+  "experiment": "arc3_m2_active_data",
+  "honest_verdict": "complete: m2v4_active_data_meanE_passive0.8362_active0.8362_improved0_regressed0of5_tractableMeanE_passive0.7953_active0.7953",
+  "inference_substrate": "offline_arc_agi3_world_model_consistency_energy",
+  "mean_energy_active": 0.8362,
+  "mean_energy_passive": 0.8362,
+  "n_games": 5,
+  "n_improved_gt_0.03": 0,
+  "n_regressed_gt_0.03": 0,
+  "n_tractable_games": 4,
+  "no_gpu_used": true,
+  "no_llm_used": true,
+  "note": "M2-v4a active data collection. If active lowers energy (esp. on DSL-tractable games), the data hypothesis holds -> apply to codex synthesis (M2-v4b) + add latent-state tracking for hidden-state games. If not, the bottleneck is observation/representation, not exploration policy -> latent registers become primary.",
+  "per_game": [
+    {
+      "energy_active": 0.8664,
+      "energy_passive": 0.8664,
+      "game": "ls20",
+      "improvement": 0.0,
+      "is_hidden_state_truth": false,
+      "n_active": 699,
+      "n_passive": 699,
+      "n_test": 600
+    },
+    {
+      "energy_active": 0.6753,
+      "energy_passive": 0.6753,
+      "game": "m0r0",
+      "improvement": 0.0,
+      "is_hidden_state_truth": true,
+      "n_active": 699,
+      "n_passive": 699,
+      "n_test": 600
+    },
+    {
+      "energy_active": 0.8207,
+      "energy_passive": 0.8207,
+      "game": "tr87",
+      "improvement": 0.0,
+      "is_hidden_state_truth": false,
+      "n_active": 699,
+      "n_passive": 699,
+      "n_test": 600
+    },
+    {
+      "energy_active": 0.8186,
+      "energy_passive": 0.8186,
+      "game": "tu93",
+      "improvement": 0.0,
+      "is_hidden_state_truth": false,
+      "n_active": 700,
+      "n_passive": 700,
+      "n_test": 569
+    },
+    {
+      "energy_active": 1.0,
+      "energy_passive": 1.0,
+      "game": "vc33",
+      "improvement": 0.0,
+      "is_hidden_state_truth": false,
+      "n_active": 700,
+      "n_passive": 700,
+      "n_test": 600
+    }
+  ],
+  "random_seed": 0,
+  "submitted_to_leaderboard": false,
+  "test_budget": 1200,
+  "title": "arc3_m2v4_active_vs_passive_data_collection",
+  "tractable_games_mean_energy_active": 0.7953,
+  "tractable_games_mean_energy_passive": 0.7953,
+  "train_budget": 700
+}

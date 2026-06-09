@@ -289,7 +289,7 @@ tasks:
       REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU):
         kv260_reachable, gatemate_reachable, polarfire_reachable: principle "BARE BOOLs — per-board SSH/USB reachability (the continuity signal; keeps boards from being silently dropped)."
         per_board_next_step: principle "The next concrete forward step per reachable board."
-        preconditions_checked: principle "list of {resource, available} — records WHICH checks ran (pre-empts the fabrication mode)."
+        preconditions_checked: principle "list of {{resource, available}} — records WHICH checks ran (pre-empts the fabrication mode)."
         honest_verdict, duration_s, inference_substrate: principle "Terminal-prefix verdict + hardware_smoke substrate."
 
       honest_verdict MUST start with `complete:`/`success:` or `blocked_<resource>`.
@@ -326,13 +326,13 @@ tasks:
         1. Extract: r11l ACCURACY_levels_solved + real_env_confirmed (exp3946); n_trustworthy_at_0.15
            (exp3947); goal_predicate precision/recall (exp3948); latent-register energy delta (exp3949).
         2. Compute the milestone headline: FIRST_SOLVE_ACHIEVED := exp3946.ACCURACY_levels_solved > 0 AND
-           real_env_confirmed. Record cited_upstream_artifacts with {experiment_id, fields_imported, sha256}.
+           real_env_confirmed. Record cited_upstream_artifacts with {{experiment_id, fields_imported, sha256}}.
 
       REQUIRED ARTIFACT FIELDS (BARE scalars; principle: lines guide YOU):
         first_solve_achieved: principle "BARE BOOL — the milestone's load-bearing question: did we get a real ARC-AGI-3 solve?"
         n_trustworthy_world_models: principle "How many of the 6 non-spatial games reached a plan-able model (generalization of the vc33 result)."
         plan_ability_advanced: principle "Did goal-induction + latent registers move plan-ability forward (honest, not celebratory)?"
-        cited_upstream_artifacts: principle "list of {experiment_id, fields_imported, sha256} — the audit trail so the capstone numbers trace to real measurements."
+        cited_upstream_artifacts: principle "list of {{experiment_id, fields_imported, sha256}} — the audit trail so the capstone numbers trace to real measurements."
         flagged_artifacts_skipped: principle "Which upstream artifacts were flagged_adversarial and therefore EXCLUDED from aggregation."
         honest_verdict, duration_s, inference_substrate: principle "Terminal-prefix verdict + aggregation substrate."
 

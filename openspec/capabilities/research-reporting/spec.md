@@ -18336,3 +18336,88 @@ markdown edits.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3932 | Implemented (`python/carnot/reporting/literature_synthesis_agentic_verification_3932.py`, `scripts/experiments/experiment_3932_literature_synthesis_agentic_verification.py`) | Implemented (`tests/python/test_experiment_3932_literature_synthesis_agentic_verification.py`) |
+
+### REQ-REPORT-3934: Archive .363 And Activate .364 With Unblock-State Gates
+
+The Exp 3934 workflow SHALL archive milestone `2026.06.363`, confirm milestone
+`2026.06.364` is active in the current research roadmap, and write
+`results/experiment_3934_archive_v363_activate_v364.json`. Before editing any
+record, it SHALL confirm `research-complete.yaml` exists and safe-loads with
+the repository Python environment. If that precondition fails, it SHALL write a
+blocked artifact whose `honest_verdict` starts with
+`blocked_research_complete_yaml_poison` and SHALL NOT edit
+`research-complete.yaml` or `ops/exclusion_manifest.yaml`.
+
+The workflow SHALL read Exp 3924 through Exp 3933 verdicts by invoking
+`scripts/summarize_artifact.py` over the authoritative result artifacts rather
+than raw-reading the milestone JSONs for verdict extraction. It SHALL append an
+append-only `.363` archive record to `research-complete.yaml` containing all
+ten task verdicts. Missing Exp 3925 shall be recorded as a missing artifact,
+Exp 3926 and Exp 3927 shall preserve their upstream-blocked state, Exp 3928
+shall preserve the moat replication block, and Exp 3933 shall preserve
+`efficiency=INCONCLUSIVE`, `moat_replicated=false`, and `earns=false`. Every
+appended scalar containing `: ` SHALL be quoted so the .355 colon-poison
+failure cannot recur.
+
+After the archive append, the workflow SHALL confirm both
+`research-complete.yaml` and `ops/exclusion_manifest.yaml` safe-load. It SHALL
+run `.venv/bin/pytest tests/python/test_pipeline_extract.py
+tests/python/test_docs.py -q --no-header -n 0 --no-cov -o addopts=` and record
+the bare boolean `core_pretest_green`. It SHALL run an import probe for
+`carnot.verify`, `carnot.verify.gguf_inference`,
+`carnot.verify.competent_llm_judge`,
+`carnot.eval.valid_efficiency_head_to_head_3926`,
+`carnot.eval.non_degenerate_cascade_router_3927`, and
+`carnot.eval.moat_scissor_replication_3928`, recording the aggregate bare
+boolean `eval_modules_importable` plus per-module import results.
+
+The workflow SHALL confirm that the drafted competent-judge module and runner
+exist on disk, and that
+`python/carnot/eval/moat_scissor_replication_3928.py:ExperimentConfig` defines
+both `max_tokens_weak` and `max_tokens_strong`. The artifact SHALL record
+`competent_judge_drafted_present` and `max_tokens_weak_field_present` as bare
+booleans, and SHALL record the two `.363` blocker states as the `.364`
+forward-bet. This is a record-only aggregation task and SHALL NOT modify
+`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`; those documents are reconciled by the
+conductor's separate status step.
+
+The terminal artifact SHALL include bare top-level values for
+`archived_milestone`, `activated_milestone`,
+`research_complete_yaml_parses`, `exclusion_manifest_parses`,
+`core_pretest_green`, `eval_modules_importable`,
+`competent_judge_drafted_present`, `max_tokens_weak_field_present`,
+`prior_milestone_verdicts_summary`, `n363_blocker_state_recorded`,
+`honest_verdict`, `duration_s`, and `inference_substrate`. On the complete
+path, `honest_verdict` SHALL start with `complete:` or `success:`. Blocked
+verdicts SHALL start with `blocked_<resource>`.
+
+#### SCENARIO-REPORT-3934: V363 Archive Records The .364 Forward Bet
+
+**Given** `.364` is active, `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` safe-load, the Exp 3924 through Exp 3933
+artifacts can be summarized, the competent-judge draft files exist, the moat
+replication config exposes the missing token fields, and the required modules
+import
+**When** the Exp 3934 workflow runs
+**Then** it appends the `.363` task verdicts to `research-complete.yaml`,
+quotes colon-bearing scalars, confirms both YAML files still parse, records the
+missing Exp 3925 artifact and Exp 3928 token-field blocker as the `.364`
+unblock state, runs the core pretest and import checks, writes the required
+terminal artifact, and leaves ops/status/traceability/conductor files
+unchanged.
+
+#### SCENARIO-REPORT-3934-BLOCKED-YAML: Corrupt Research Record Blocks Before Append
+
+**Given** `research-complete.yaml` does not safe-load
+**When** the Exp 3934 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_research_complete_yaml_poison`, records the failed YAML parse in
+`preconditions_checked`, and leaves both `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` byte-for-byte unchanged.
+
+## Implementation Status (REQ-REPORT-3934)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3934 | Implemented (`python/carnot/reporting/archive_v363_activate_v364_3934.py`, `scripts/experiments/experiment_3934_archive_v363_activate_v364.py`) | Implemented (`tests/python/test_experiment_3934_archive_v363_activate_v364.py`) |

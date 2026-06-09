@@ -1,0 +1,133 @@
+{
+  "domain": "arc_agi1_grid",
+  "duration_s": 0.8883,
+  "experiment": "arc_invariant_content_overlap_draft",
+  "honest_verdict": "complete: arc_invariant_content_overlap easyAUROC0.6511 hardAUROC0.6304 catches_hard=NONE n416",
+  "inference_substrate": "rule_based_grid_verifier_against_cached_arc_solutions",
+  "interpretation": "content_overlap adds two cell-LEVEL relational signals the v1 structural verifier lacked: (A) per-position mode agreement vs the train outputs' shared scaffold, and (B) input->output copy-consistency projected onto the test input. Both are cheap, deterministic, and use ONLY the train pairs + candidate + test input (no test gold). Targets the content-preserving distractors (perturbed, transposed, color_swap) the v1 dims/palette/bg checks were blind to.",
+  "label_source": "gold_arc_solutions",
+  "n_tasks": 400,
+  "no_induction": true,
+  "no_label_leak": true,
+  "no_llm_used": true,
+  "random_seed": 0,
+  "results": {
+    "catches_hard": [],
+    "catches_hard_when_signal_defined": [
+      "perturbed_gold",
+      "color_swap_gold",
+      "wrong_dim_gold"
+    ],
+    "easy_discrimination_auroc": 0.6511,
+    "family": "content_overlap",
+    "hard_discrimination_auroc": 0.6304,
+    "n_eval_test_inputs": 416,
+    "per_distractor": {
+      "blank": {
+        "auroc": 0.4989,
+        "gold_strictly_better_rate": 0.1904,
+        "n": 415,
+        "tie_rate": 0.5373
+      },
+      "color_swap_gold": {
+        "auroc": 0.6701,
+        "gold_strictly_better_rate": 0.3965,
+        "n": 401,
+        "tie_rate": 0.5362
+      },
+      "copy_input": {
+        "auroc": 0.5657,
+        "gold_strictly_better_rate": 0.2476,
+        "n": 416,
+        "tie_rate": 0.5337
+      },
+      "perturbed_gold": {
+        "auroc": 0.5212,
+        "gold_strictly_better_rate": 0.3694,
+        "n": 360,
+        "tie_rate": 0.5861
+      },
+      "random": {
+        "auroc": 0.7663,
+        "gold_strictly_better_rate": 0.4638,
+        "n": 414,
+        "tie_rate": 0.5193
+      },
+      "transposed_gold": {
+        "auroc": 0.5672,
+        "gold_strictly_better_rate": 0.3306,
+        "n": 369,
+        "tie_rate": 0.6152
+      },
+      "wrong_dim_gold": {
+        "auroc": 0.7844,
+        "gold_strictly_better_rate": 0.4808,
+        "n": 416,
+        "tie_rate": 0.5192
+      },
+      "wrong_task_gold": {
+        "auroc": 0.7757,
+        "gold_strictly_better_rate": 0.4723,
+        "n": 415,
+        "tie_rate": 0.5205
+      }
+    },
+    "per_distractor_signal_defined": {
+      "blank": {
+        "auroc": 0.4727,
+        "gold_strictly_better_rate": 0.3559,
+        "n": 222,
+        "tie_rate": 0.1351
+      },
+      "color_swap_gold": {
+        "auroc": 0.7558,
+        "gold_strictly_better_rate": 0.7536,
+        "n": 211,
+        "tie_rate": 0.1185
+      },
+      "copy_input": {
+        "auroc": 0.5966,
+        "gold_strictly_better_rate": 0.4619,
+        "n": 223,
+        "tie_rate": 0.13
+      },
+      "perturbed_gold": {
+        "auroc": 0.5588,
+        "gold_strictly_better_rate": 0.7557,
+        "n": 176,
+        "tie_rate": 0.1534
+      },
+      "random": {
+        "auroc": 0.893,
+        "gold_strictly_better_rate": 0.8688,
+        "n": 221,
+        "tie_rate": 0.0995
+      },
+      "transposed_gold": {
+        "auroc": 0.6118,
+        "gold_strictly_better_rate": 0.6387,
+        "n": 191,
+        "tie_rate": 0.2565
+      },
+      "wrong_dim_gold": {
+        "auroc": 0.9484,
+        "gold_strictly_better_rate": 0.8969,
+        "n": 223,
+        "tie_rate": 0.1031
+      },
+      "wrong_task_gold": {
+        "auroc": 0.9347,
+        "gold_strictly_better_rate": 0.8829,
+        "n": 222,
+        "tie_rate": 0.1036
+      }
+    },
+    "signal_coverage": {
+      "both_abstain": 193,
+      "copy_expectation_defined": 131,
+      "mode_template_defined": 223
+    }
+  },
+  "split": "training",
+  "title": "arc_content_overlap_cell_level_relational_verifier"
+}

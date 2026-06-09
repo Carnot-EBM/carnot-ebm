@@ -1,0 +1,133 @@
+{
+  "activated_milestone": "2026.06.364",
+  "active_milestone_confirmed": true,
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.363",
+  "competent_judge_drafted_present": true,
+  "competent_judge_module_path": "python/carnot/verify/competent_llm_judge.py",
+  "competent_judge_runner_path": "scripts/experiments/experiment_3925_competent_judge_build.py",
+  "core_pretest_command": [
+    ".venv/bin/pytest",
+    "tests/python/test_pipeline_extract.py",
+    "tests/python/test_docs.py",
+    "-q",
+    "--no-header",
+    "-n",
+    "0",
+    "--no-cov",
+    "-o",
+    "addopts="
+  ],
+  "core_pretest_exit_code": 0,
+  "core_pretest_green": true,
+  "duration_s": 14.089807,
+  "eval_module_import_results": {
+    "carnot.eval.moat_scissor_replication_3928": {
+      "error": null,
+      "import_ok": true
+    },
+    "carnot.eval.non_degenerate_cascade_router_3927": {
+      "error": null,
+      "import_ok": true
+    },
+    "carnot.eval.valid_efficiency_head_to_head_3926": {
+      "error": null,
+      "import_ok": true
+    },
+    "carnot.verify": {
+      "error": null,
+      "import_ok": true
+    },
+    "carnot.verify.competent_llm_judge": {
+      "error": null,
+      "import_ok": true
+    },
+    "carnot.verify.gguf_inference": {
+      "error": null,
+      "import_ok": true
+    }
+  },
+  "eval_modules_import_command": [
+    ".venv/bin/python",
+    "-c",
+    "import importlib, json, sys\nmods = ['carnot.verify', 'carnot.verify.gguf_inference', 'carnot.verify.competent_llm_judge', 'carnot.eval.valid_efficiency_head_to_head_3926', 'carnot.eval.non_degenerate_cascade_router_3927', 'carnot.eval.moat_scissor_replication_3928']\nout = {}\nfor mod in mods:\n    try:\n        importlib.import_module(mod)\n        out[mod] = {'import_ok': True, 'error': None}\n    except Exception as exc:\n        out[mod] = {'import_ok': False, 'error': repr(exc)}\nprint(json.dumps(out, sort_keys=True))\nsys.exit(0 if all(v['import_ok'] for v in out.values()) else 1)\n"
+  ],
+  "eval_modules_import_exit_code": 0,
+  "eval_modules_importable": true,
+  "exclusion_manifest_parses": true,
+  "experiment_id": "exp3934",
+  "field_principles": {
+    "activated_milestone": "Confirms .364 is live so downstream tasks resolve.",
+    "archived_milestone": "Provenance: which milestone was archived.",
+    "competent_judge_drafted_present": "Bare bool: the unrun judge module and runner exist.",
+    "core_pretest_green": "Bare bool: the smart-subset core passes.",
+    "duration_s": "Aggregation wall-clock duration with a small floor.",
+    "eval_modules_importable": "Bare bool: the .363 eval modules import for .364 execution.",
+    "exclusion_manifest_parses": "The manifest still loads under yaml.safe_load.",
+    "honest_verdict": "Terminal-prefix verdict for the record task.",
+    "inference_substrate": "Aggregation methodology for a record-only task.",
+    "max_tokens_weak_field_present": "Bare bool: the moat config exposes max_tokens_weak.",
+    "n363_blocker_state_recorded": "Records the two .363 blockers as the .364 forward bet.",
+    "prior_milestone_verdicts_summary": "One-line verdicts for Exp 3924 through Exp 3933.",
+    "research_complete_yaml_parses": "The .355 colon-poison guard still loads."
+  },
+  "honest_verdict": "complete: archived_v363_v364_active_unblock_state_recorded_green_gates",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "max_tokens_strong_field_present": true,
+  "max_tokens_weak_field_present": true,
+  "moat_replication_module_path": "python/carnot/eval/moat_scissor_replication_3928.py",
+  "n363_blocker_state_recorded": "exp3925 artifact missing while module/test/runner are drafted on disk; exp3925_verdict=missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3925_competent_judge_build.json; exp3928 blocked on max_tokens_weak before ExperimentConfig was repaired; exp3928_verdict=blocked_all_gguf_inference_failed [summarize_artifact LIVE_CRITICAL] [prior_blocker=max_tokens_weak_field_absent_at_run]; .364 executes drafted code.",
+  "n_tasks_archived": 10,
+  "preconditions_checked": {
+    "active_milestone": "2026.06.364",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "competent_judge_module_exists": true,
+    "competent_judge_runner_exists": true,
+    "exclusion_manifest_exists": true,
+    "exclusion_manifest_parsed": true,
+    "max_tokens_strong_field_present": true,
+    "max_tokens_weak_field_present": true,
+    "research_complete_yaml_exists": true,
+    "research_complete_yaml_parsed_after": true,
+    "research_complete_yaml_parsed_before": true
+  },
+  "prior_milestone_verdicts_summary": "exp3924: complete: archived_v362_v363_active_facts_retired_comparator_flaw_recorded_green_gates\nexp3925: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3925_competent_judge_build.json\nexp3926: blocked_upstream_competent_judge_not_ready [summarize_artifact LIVE_CRITICAL]\nexp3927: blocked_upstream_valid_efficiency_missing\nexp3928: blocked_all_gguf_inference_failed [summarize_artifact LIVE_CRITICAL] [prior_blocker=max_tokens_weak_field_absent_at_run]\nexp3929: complete: arc_agi3_verifier_router_HELPS_ratio1.959_ci1.742-2.194_synthetic_first_agentic_step_real_benchmark_reachabletrue [summarize_artifact stamped_flagged]\nexp3930: complete: fr11_v26_INVARIANT_HELD_auroc0.908_memcontrib0.0185_cascade_band_learnedtrue_state_persisted\nexp3931: success: hardware_continuity_clean_gatemateblocked_gatemate_board_unreachable_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_distinct_timers_no_fabric_claim\nexp3932: complete: literature_synthesis_positioned_0_new_refs_public_docs_untouched\nexp3933: complete: capstone_v363_efficiencyINCONCLUSIVE_moat_replicatedfalse_earnsfalse_paper_ready_true_frozen_unchanged [efficiency=INCONCLUSIVE moat_replicated=false earns=false]",
+  "random_seed": 3934,
+  "reproducibility_checksum": "6d5d5c1e501d9b03d63365c12c7df24ef238f7cc95a3a9c4872a37d2a8ab0083",
+  "research_complete_parse_command": [
+    ".venv/bin/python",
+    "-c",
+    "import yaml; yaml.safe_load(open('research-complete.yaml'))"
+  ],
+  "research_complete_parse_exit_code": 0,
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v363_to_v364_3934.v1",
+  "summary_command": [
+    ".venv/bin/python",
+    "scripts/summarize_artifact.py",
+    "results/experiment_3924_archive_v362_activate_v363_retire_facts.json",
+    "results/experiment_3925_competent_judge_build.json",
+    "results/experiment_3926_valid_efficiency_head_to_head.json",
+    "results/experiment_3927_non_degenerate_cascade_router.json",
+    "results/experiment_3928_moat_scissor_replication.json",
+    "results/experiment_3929_arc_agi3_action_efficiency.json",
+    "results/experiment_3930_fr11_v26_cascade_band_online_learning.json",
+    "results/experiment_3931_hardware_continuity_clean_rerun.json",
+    "results/experiment_3932_literature_synthesis_agentic_verification.json",
+    "results/experiment_3933_capstone_v363.json"
+  ],
+  "summary_exit_code": 2,
+  "task_id": "exp3934-archive-v363-activate-v364",
+  "task_verdicts": {
+    "exp3924-archive-v362-activate-v363-retire-facts": "complete: archived_v362_v363_active_facts_retired_comparator_flaw_recorded_green_gates",
+    "exp3925-diagnose-and-build-competent-judge": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3925_competent_judge_build.json",
+    "exp3926-valid-efficiency-head-to-head": "blocked_upstream_competent_judge_not_ready [summarize_artifact LIVE_CRITICAL]",
+    "exp3927-non-degenerate-cascade-router": "blocked_upstream_valid_efficiency_missing",
+    "exp3928-moat-scissor-replication-second-corpus": "blocked_all_gguf_inference_failed [summarize_artifact LIVE_CRITICAL] [prior_blocker=max_tokens_weak_field_absent_at_run]",
+    "exp3929-arc-agi3-verifier-router-action-efficiency": "complete: arc_agi3_verifier_router_HELPS_ratio1.959_ci1.742-2.194_synthetic_first_agentic_step_real_benchmark_reachabletrue [summarize_artifact stamped_flagged]",
+    "exp3930-fr11-v26-cascade-band-online-learning": "complete: fr11_v26_INVARIANT_HELD_auroc0.908_memcontrib0.0185_cascade_band_learnedtrue_state_persisted",
+    "exp3931-hardware-continuity-clean-rerun": "success: hardware_continuity_clean_gatemateblocked_gatemate_board_unreachable_pfterminal_hash_verified_soft_cpu_ssh_dispatch_kvnonterminal_carnot_ising_inactive_uio_present_distinct_timers_no_fabric_claim",
+    "exp3932-literature-synthesis-agentic-verification": "complete: literature_synthesis_positioned_0_new_refs_public_docs_untouched",
+    "exp3933-capstone-v363": "complete: capstone_v363_efficiencyINCONCLUSIVE_moat_replicatedfalse_earnsfalse_paper_ready_true_frozen_unchanged [efficiency=INCONCLUSIVE moat_replicated=false earns=false]"
+  }
+}

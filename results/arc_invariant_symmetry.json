@@ -1,0 +1,131 @@
+{
+  "domain": "arc_agi1_grid",
+  "experiment": "arc_invariant_symmetry_draft",
+  "family": "symmetry",
+  "honest_verdict": "complete: arc_invariant_symmetry_n416_symtasks7of400_easyAUROC0.5138_hardAUROC0.5046_catches_hard0",
+  "inference_substrate": "rule_based_grid_verifier_against_cached_arc_solutions",
+  "interpretation": "The symmetry family checks whether ONE member of a fixed 8-element dihedral group (identity / flips / rotations / transposes) maps every train input to its train output. When it does, the gold test output must equal T(test_input), so any CONTENT error (perturbed, color-swapped) or wrong geometry (transposed) shows up as cell-disagreement -- the content signal v1 lacks. When no transform is consistent (most tasks), the family ABSTAINS with a neutral tie score rather than fabricating discrimination. Lift is therefore concentrated on the symmetry-applicable subset; over all 400 tasks it is diluted by abstention.",
+  "label_source": "gold_arc_solutions",
+  "n_tasks": 400,
+  "no_induction_beyond_fixed_symmetry_group": true,
+  "no_label_leak": true,
+  "no_llm_used": true,
+  "random_seed": 0,
+  "results": {
+    "catches_hard": [],
+    "n_eval_test_inputs": 416,
+    "n_symmetry_applicable_tasks": 7,
+    "n_tasks": 400,
+    "overall_easy_auroc": 0.5138,
+    "overall_hard_auroc": 0.5046,
+    "per_distractor_all_tasks": {
+      "blank": {
+        "auroc": 0.512,
+        "gold_strictly_better_rate": 0.0169,
+        "n": 415,
+        "tie_rate": 0.9831
+      },
+      "color_swap_gold": {
+        "auroc": 0.51,
+        "gold_strictly_better_rate": 0.0175,
+        "n": 401,
+        "tie_rate": 0.9825
+      },
+      "copy_input": {
+        "auroc": 0.5096,
+        "gold_strictly_better_rate": 0.0168,
+        "n": 416,
+        "tie_rate": 0.9832
+      },
+      "perturbed_gold": {
+        "auroc": 0.5001,
+        "gold_strictly_better_rate": 0.0167,
+        "n": 360,
+        "tie_rate": 0.9833
+      },
+      "random": {
+        "auroc": 0.5168,
+        "gold_strictly_better_rate": 0.0169,
+        "n": 414,
+        "tie_rate": 0.9831
+      },
+      "transposed_gold": {
+        "auroc": 0.5055,
+        "gold_strictly_better_rate": 0.019,
+        "n": 369,
+        "tie_rate": 0.981
+      },
+      "wrong_dim_gold": {
+        "auroc": 0.5025,
+        "gold_strictly_better_rate": 0.0168,
+        "n": 416,
+        "tie_rate": 0.9832
+      },
+      "wrong_task_gold": {
+        "auroc": 0.5167,
+        "gold_strictly_better_rate": 0.0169,
+        "n": 415,
+        "tie_rate": 0.9831
+      }
+    },
+    "per_distractor_symmetry_subset": {
+      "blank": {
+        "auroc": 1.0,
+        "gold_strictly_better_rate": 1.0,
+        "n": 7,
+        "tie_rate": 0.0
+      },
+      "color_swap_gold": {
+        "auroc": 1.0,
+        "gold_strictly_better_rate": 1.0,
+        "n": 7,
+        "tie_rate": 0.0
+      },
+      "copy_input": {
+        "auroc": 1.0,
+        "gold_strictly_better_rate": 1.0,
+        "n": 7,
+        "tie_rate": 0.0
+      },
+      "perturbed_gold": {
+        "auroc": 1.0,
+        "gold_strictly_better_rate": 1.0,
+        "n": 6,
+        "tie_rate": 0.0
+      },
+      "random": {
+        "auroc": 1.0,
+        "gold_strictly_better_rate": 1.0,
+        "n": 7,
+        "tie_rate": 0.0
+      },
+      "transposed_gold": {
+        "auroc": 1.0,
+        "gold_strictly_better_rate": 1.0,
+        "n": 7,
+        "tie_rate": 0.0
+      },
+      "wrong_dim_gold": {
+        "auroc": 1.0,
+        "gold_strictly_better_rate": 1.0,
+        "n": 7,
+        "tie_rate": 0.0
+      },
+      "wrong_task_gold": {
+        "auroc": 1.0,
+        "gold_strictly_better_rate": 1.0,
+        "n": 7,
+        "tie_rate": 0.0
+      }
+    },
+    "symmetry_transform_distribution": {
+      "flip_h": 1,
+      "flip_v": 1,
+      "rot180": 2,
+      "rot90_ccw": 1,
+      "transpose": 2
+    }
+  },
+  "split": "training",
+  "title": "arc_grid_symmetry_invariant_content_verifier"
+}
