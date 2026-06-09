@@ -5133,3 +5133,9 @@ The critical path for milestone .250:
 - theme: Operational retrospective — zero-commit detector verdict vs visible changelog activity
 - key result: Honest negative per authoritative timing (0 experiment commits since activation; both GPUs correctly idle, 0 compute-bound tasks). Third consecutive zero-count (.363/.365/.366) despite committed experiments in the changelog window — points at a milestone-scoped commit-detection gap to audit, not three genuinely empty milestones.
 - acceptance: 0/0 criteria met
+
+### Milestone 2026.06.367
+- exp_range: no data available this milestone
+- theme: Operational retrospective — 4th consecutive false zero-count; milestone-scoped commit detector is the bottleneck, not the experiments
+- key result: Honest negative per authoritative timing (0 experiment commits since activation; both GPUs correctly idle, 0 compute-bound tasks, so the idle GPU is correct not a bug). But the .367 changelog window shows real committed work (ARC-AGI-3 incremental solves, GAP-3 Stage-1/Stage-2 verifier program, the capstone) — so the zero-count is a milestone->commit attribution gap, now recurring across .363/.365/.366/.367. Highest-leverage fix: repair the detector/windowing so retros stop running on empty inputs.
+- acceptance: 0/0 criteria met

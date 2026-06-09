@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.367",
+  "generated_at": "2026-06-09T21:47:55Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Per the authoritative milestone-scoped timing block, 2026.06.367 recorded 0 experiment commits, 0 compute-bound experiments, and 0 wall-clock minutes; with no compute-bound task, both RTX 3090s idle at 0% util is correct behaviour, not a bottleneck. However, the .367 changelog window shows multiple committed experiment artifacts (ARC-AGI-3 incremental solves, the GAP-3 Stage-1/Stage-2 verifier work, and the capstone), so the zero-count almost certainly reflects a milestone-scoped commit-detection gap rather than a genuinely empty milestone. This is now the 4th consecutive zero-count (.363/.365/.366/.367), and the .366 retro already flagged the same contradiction.",
+  "bottlenecks_identified": [
+    "Milestone-scoped commit detector reported 0 experiment commits while the .367 changelog window contains committed experiment artifacts. This measurement/attribution gap (commits not mapped to the active milestone window) blinds the retrospective to the real per-experiment timing that exists.",
+    "Recurrence is the real signal: this is the 4th consecutive false zero-count (.363/.365/.366/.367). A one-off empty milestone is unremarkable; four in a row against visible changelog activity indicates a systematic detector bug, not four empty milestones.",
+    "GPU idle is NOT flagged as a bottleneck: gpu_idle_on_compute_bound_tasks is null because the timing block lists 0 compute-bound tasks. Both GPUs at 0% with no GGUF/CUDA task present is the expected idle state per the GPU idle interpretation rule."
+  ],
+  "improvements_suggested": [
+    "Audit the conductor's milestone->commit attribution in the timing harness (how it derives 'experiment commits since activation of <milestone>'). The recurring zero-count across .363/.365/.366/.367 despite visible changelog activity localizes the bug to the detection/windowing step, not to the experiments.",
+    "Likely root causes to check: the activation-boundary commit SHA or timestamp is stale/misread; the detector matches only a narrow filename pattern (results/experiment_*.json) and misses other artifact shapes (arc3_gap3_*, capstone) committed this window; or the milestone tag on commits is not what the detector greps for.",
+    "Add a cheap cross-check the retro can run itself: count results/*.json files touched in the activation..HEAD commit range and compare to the detector's number; when they disagree, emit detector_gap_suspected=true so the discrepancy is mechanically surfaced instead of re-discovered by hand each milestone.",
+    "Until the detector is fixed, treat consecutive zero-counts as a harness-health alert (escalate at >=2 in a row) rather than re-writing an honest-negative retro each time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the milestone-scoped commit-detection / windowing in the conductor's timing harness so retros capture the experiments that actually ran. Four consecutive false zero-counts (.363/.365/.366/.367) means every recent operational retro has been blind to real timing data; this single fix restores the entire retrospective signal.",
+    "Add a self-check to the retro generator: diff the detector's experiment count against a direct git-range count of touched result artifacts, and stamp detector_gap_suspected when they disagree, so the gap is caught automatically rather than inferred from the changelog by hand.",
+    "Backfill once fixed: re-run the operational timing analysis over the .363/.365/.366/.367 window so the genuinely-executed experiments get their bottleneck/GPU-efficiency review that the false zeros suppressed."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "There is no execution-efficiency signal to act on from this milestone's numbers because the timing harness reported zero experiments while the changelog shows real work landed — the honest finding is a measurement gap, not slowness, so a wall-time-savings estimate would be fabricated (kept at 0). The highest-leverage process change is fixing the milestone->commit attribution so the retrospective stops being blind: four consecutive false zero-counts means the meta-process meant to improve execution has itself been running on empty inputs."
+}
