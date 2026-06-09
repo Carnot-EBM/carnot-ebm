@@ -8025,3 +8025,4 @@ c |
 | 2026-06-08 00:57 UTC | Capstone .363 — the HARDENED verifier scorecard (e | OK | 86 passed in 4.14s |
 | 2026-06-08 06:20 UTC | Plan milestone 2026.06.364 | OK | 11 tasks proposed |
 | 2026-06-08 06:23 UTC | Milestone 2026.06.364 activated | OK | 11 tasks queued |
+| 2026-06-09 02:17 UTC | Archive .363 -> activate .364; GREEN-GATE de-risk  | OK | cache hit: 112 passed in 4.91s |
