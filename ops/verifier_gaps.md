@@ -182,6 +182,12 @@ strategy commitment.
   orthogonal basis from TRM's OWN activations (open/local weights) and score candidate consistency along
   it, instead of hand-imposed grid invariants. See `reference_model_native_skills` memory + GAP-2 ALT
   block above. This is the next experiment, not another hand-invariant family.
+- DESIGN (2026-06-09): full staged build plan at `docs/research-notes/gap3-learned-arc-energy-design.md`
+  — Stage 0 TRM-native q_halt-confidence energy (NO new GPU; data already dumped), Stage 1 TRM
+  penultimate-activation energy (model-native basis / probe; GPU dump), Stage 2 trained ARC
+  transition-EBM (generator-independent). Per-stage empirical gates (selection > vote, AUROC > 0.70,
+  coverage ≥ 80%, headroom-capture ≥ 30%) + adversarial checks (vote-mimicry, activation-shortcut,
+  task-leak, oracle-leak, sample-size). Recommended first experiment: Stage 0 (runnable now, zero GPU).
 
 ---
 
