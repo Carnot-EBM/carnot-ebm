@@ -1,3 +1,106 @@
+## 2026-06-09 Post-.366 Planning Sweep (Milestone 2026.06.367)
+
+`.366` banked Carnot's **SECOND** ARC-AGI-3 solve (exp3954: lp85-305b61c3 level-1,
+5 actions, real-env-confirmed — a permutation-via-button-click mechanic, *distinct*
+from r11l's select/place). So the method has now solved **2 distinct games × 1 level
+each** — the first evidence the perceive→induce→exploit pipeline generalizes beyond a
+single game. But `.366` also exposed three concrete failures the `.367` design must fix,
+and 5 of 11 tasks produced **no artifact** (likely opus-quota / 3-fail-skip — `.366`
+ran 8 opus tasks; `.367` rebalances to 3 opus + 8 codex):
+
+- **M3 efficiency FABRICATED + FLAGGED_ADVERSARIAL (the load-bearing failure).** exp3959
+  claimed the verifier action-pruner cuts actions **24.7×** on real games, but the artifact
+  self-flags `VERIFIER_NOT_IN_LOOP` (it scored object-geometry vs pixel-geometry; the
+  consistency-energy verifier was **never invoked**) + `SIMULATED_NOT_REAL` (both arms were
+  1000-draw geometric simulations, not real `env.step()` agent runs) + `SURPRISING_UNREPLICATED`
+  (24.7× vs the prior synthetic 1.96×). **The existential "verifier earns its place" proof
+  does not yet exist on real games.** `.367` redoes it HONESTLY: verifier genuinely in the
+  loop, real env actions counted, WITH-vs-WITHOUT ablation, anti-fabrication self-audit fields.
+- **Cross-game DSL transfer produced ZERO fragments (self-learning mandate UNMET).** exp3958:
+  `transfer_win=false`, `n_library_fragments=0`, `fragments_reused=0`. The AST-fragment-extraction
+  approach found nothing shareable. `.367` retries with **ArcMemo-style NL concept memory** (below).
+- **Latent registers did NOT drop hidden-state energy.** exp3957: "no_drop_energy" — step_counter /
+  colors_clicked eliminated nondeterminism on 3/4 games but energy gains were ≤2%. `.367` retries
+  with **Pinductor-style belief-likelihood latent inference** (below), with a positive control.
+- **Goal-predicate over-triggers.** exp3956: recall 1.00 but precision 0.40 on r11l — recognizes
+  every win but false-alarms; folded into the `.367` solve tasks (real-env `levels_completed` is
+  the ground-truth arbiter, the predicate is only a planning heuristic).
+
+**Net-new references (verified by direct arxiv.org/abs WebFetch; arXiv-API false-negatives avoided).**
+The four highest-leverage for `.367` are starred:
+
+- **★ Update-Free On-Policy Steering via Verifiers** (arXiv:2603.10282; Attarian, Vyse, Voelcker, …,
+  **Yilun Du**, Gilitschenski; 2026-06-02). Steers a **frozen** policy at inference time with **no
+  parameter updates** by treating verifier networks as **energy-based models that score and guide
+  action selection on-policy**. This is verbatim Carnot's ARC harness (generator frozen, energy
+  verifier routes/prunes). **The strongest same-year corroboration of the verifier-as-EBM action-
+  selection thesis** — cite it as the theoretical backbone of the honest M3 (exp3967), and borrow
+  its update-free scoring formulation so the verifier is provably *in the loop*.
+- **★ Pinductor — Learning POMDP World Models from Observations with Language-Model Priors**
+  (arXiv:2605.13740; Six, Panse, …, Da Costa, Schölkopf, Hennig; 2026-05-13). An LLM proposes
+  candidate POMDP models from (obs, action) trajectories and refines them to optimize a **belief-
+  based likelihood** — inducing executable POMDP world models **without ground-truth latent state**,
+  with far less interaction data than baselines. **The direct recipe for `.367`'s hidden-state v2
+  (exp3969):** replace hand-added registers (which failed, exp3957) with belief-likelihood latent
+  inference; the belief-likelihood is itself a verifier-style objective the energy ensemble supplies.
+- **★ ArcMemo — Abstract Reasoning Composition with Lifelong LLM Memory** (arXiv:2509.04439; UC San
+  Diego + UMD; 2025-09, rev. v2). Stores reusable, modular, parameterized **concept-level abstractions
+  in natural language**, distilled from solution traces, and selectively retrieves them at test time
+  for continual learning with **no weight updates**: **+7.5% relative over a strong no-memory baseline
+  on ARC-AGI**, scaling with inference compute. **The recipe for `.367`'s cross-game transfer v2
+  (exp3970):** the AST-fragment library found nothing (exp3958); an NL concept-memory is the
+  demonstrated-to-work alternative, and "+7.5% from reuse, scaling with compute" is the measured
+  transfer-win signal to reproduce in the energy-verifier setting (Tier-2 constraint memory).
+- **★ Executable World Models for ARC-AGI-3** (arXiv:2605.05138; Sergey Rodionov; 2026-05-06, rev.
+  2026-06-06). The **SOTA comparator**: a coding-agent maintains an executable Python world model,
+  verifies it against observed transitions, refactors toward simpler abstractions, and plans before
+  acting — **GPT-5.5 (high reasoning) fully solves 15/25 public games, mean RHAE 58.12%**; GPT-4.5
+  solves 8, RHAE 41.29%. It IS the generate-world-model-then-verify thesis but uses a frontier closed
+  LLM as both generator and verifier; Carnot's differentiator is the *decentralized, local energy-
+  verifier ensemble* doing the routing/pruning. **The number to position against** in the M4 quota-gate
+  (exp3971). (Promotes the operator-tracked "EWM" to a confirmed-authorship, RHAE-anchored citation.)
+- **Code World Models for General Game Playing** (arXiv:2510.04542; Lehrach, Hennes, Lázaro-Gredilla,
+  …, Murphy; DeepMind; 2025-10-06). LLM translates game rules into an executable Python world model
+  used as a formal spec so a classical planner (MCTS) enumerates only legal moves across 10 games;
+  beats direct LLM prompting. Borrowable planning backbone: "code is a formal spec the planner verifies
+  against" = Carnot's verifier role; MCTS-over-induced-model is a candidate planner for multi-step games.
+  (ICLR-2026 acceptance surfaced in a related OpenReview PDF but is **unconfirmed** on the arXiv page.)
+- **OneLife — Inferring Symbolic World Models for Stochastic Environments from Unguided Exploration**
+  (arXiv:2510.12088; Khan, Prasad, Stengel-Eskin, Cho, Bansal; UNC; 2025-10-14, rev. 2026-04-08).
+  Models dynamics via **conditionally-activated programmatic precondition→effect laws** (a dynamic
+  computation graph routing only through applicable laws) learned from minimal exploration in
+  stochastic worlds. The "one life / unguided / minimal data" regime matches ARC-AGI-3's single-
+  episode-per-level constraint; precondition→effect laws map onto Carnot's verifier constraints.
+- **Agent2World — Generating Symbolic World Models via Adaptive Multi-Agent Feedback** (arXiv:2512.22336;
+  Hu, Xia, Wu, …, Luo; 2025-12-26). Three-stage pipeline (researcher→developer→testing-team) generates
+  verifiable PDDL-style world models grounded in **interactive-execution feedback** (not static
+  validation), using the trajectories as an SFT data engine (avg +30.95% generation quality). The
+  "testing team catches behavior-level errors during development" role is the verifier-as-second-pair-
+  of-eyes; the self-generated-trajectory engine is a candidate for cross-game library bootstrapping.
+- **VFScale — Intrinsic Reasoning through Verifier-Free Test-time Scalable Diffusion Model**
+  (arXiv:2502.01989; Zhang, Pan, Feng, Wu; v1 2025-02, rev. v5 2026-02-06). Uses a model's own learned
+  **energy function as an intrinsic verifier** for test-time scaling (MRNCL loss + KL regularization to
+  make the energy landscape reliable) + hybrid MCTS — demonstrated on maze-solving and Sudoku. The
+  MRNCL+KL recipe is directly relevant to making Carnot's energy verifier *discriminative enough to rank
+  candidate actions* (the M3 pruner's core requirement).
+- **Graph-Based Exploration for ARC-AGI-3** (arXiv:2512.24156; Rudakov, Shock, Cowley; 2025-12-30) —
+  freshly confirmed. **Training-free**, no induction: vision-based frame segmentation + action priority
+  by visual prominence + a directed state-transition graph routing to the shortest path to untested
+  state-action pairs. **Median 30/52 levels across 6 games, 3rd on the private leaderboard** — a strong,
+  cheap no-induction baseline (the comparator floor for the M4 quota-gate exp3971; its directed-graph
+  state tracking = Carnot's GameGraph backbone the verifier prunes over).
+
+**`.367` thesis:** with 2 games banked, convert the milestone into (1) the **honest** existential
+verifier-efficiency proof on real games (the M3 redo — `.366`'s fabrication makes this the single
+highest-priority result), (2) **monotonic accuracy progress** per the new Incremental-Progress Scoping
+rule (+1..+n levels on r11l and lp85, + a third non-spatial first-solve), and (3) fixing the two broken
+generalization mechanisms with the demonstrated-to-work techniques above (Pinductor belief-likelihood
+for hidden-state; ArcMemo NL concept-memory for cross-game transfer/self-learning). Plus the 5 owed
+`.366`/`.365` tasks (active-codex sweep, M4 quota-gate, hardware, capstone) re-run robustly (no hard
+gating; ungated capstone).
+
+---
+
 ## 2026-06-07 Post-.362 Planning Sweep (Milestone 2026.06.363)
 
 `.362` finally landed the **offline verifier proof** (the work blocked for three milestones by
