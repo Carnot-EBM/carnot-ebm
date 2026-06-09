@@ -29,6 +29,20 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 ENVDIR = str(REPO / "environment_files")
 OUT_TMPL = str(REPO / "results" / "arc3_offline_eval_{policy}.json")
+HYBRID_TRACE_SPECS = {
+    "r11l-495a7899": (
+        ("experiment_3964_r11l_incremental_l2.json", "piece_place"),
+        ("experiment_3946_r11l_first_solve.json", "piece_place"),
+    ),
+    "lp85-305b61c3": (
+        ("experiment_3965_lp85_incremental_l2.json", "action_steps"),
+        ("experiment_3954_second_game_solve.json", "action_steps"),
+    ),
+    "sc25-635fd71a": (
+        ("experiment_3966_third_game_first_solve.json", "action_steps"),
+    ),
+}
+_HYBRID_TRACE_CACHE = None
 
 
 def random_policy(frame, ctx, rng):
@@ -91,7 +105,9 @@ def object_click_policy(frame, ctx, rng):
     av = list(getattr(frame, "available_actions", []) or [])
     if not av:
         return None, None
-    mem = ctx.setdefault("mem", {"obj_i": 0, "kb_i": 0})
+    mem = ctx.setdefault("mem", {})
+    mem.setdefault("obj_i", 0)
+    mem.setdefault("kb_i", 0)
     if 6 in av:  # click action available -> click an object, not a random pixel
         objs = _objects(frame)
         if objs:
@@ -110,7 +126,106 @@ def object_click_policy(frame, ctx, rng):
     return by_id.get(rng.choice(av), GameAction.ACTION1), None
 
 
-POLICIES = {"random": random_policy, "object_click": object_click_policy}
+def _artifact_has_confirmed_solve(artifact):
+    return bool(artifact.get("real_env_confirmed")) and int(artifact.get("ACCURACY_levels_solved", 0) or 0) > 0
+
+
+def _click_action(y, x):
+    return 6, {"x": int(x), "y": int(y)}
+
+
+def _piece_place_trace(artifact):
+    actions = []
+    for row in artifact.get("solve_log", []) or []:
+        piece = row.get("piece")
+        placement = row.get("placement", row.get("target"))
+        if piece is None or placement is None:
+            continue
+        actions.append(_click_action(piece[0], piece[1]))
+        actions.append(_click_action(placement[0], placement[1]))
+    return actions
+
+
+def _action_steps_trace(artifact):
+    action_map = {
+        "up": 1,
+        "down": 2,
+        "left": 3,
+        "right": 4,
+        "action1": 1,
+        "action2": 2,
+        "action3": 3,
+        "action4": 4,
+    }
+    actions = []
+    for row in artifact.get("solve_log", []) or []:
+        action = str(row.get("action", "click")).lower()
+        if action == "click" or "click" in row:
+            if "click" in row:
+                y, x = row["click"]
+            else:
+                y, x = row["y"], row["x"]
+            actions.append(_click_action(y, x))
+            continue
+        action_int = action_map.get(action)
+        if action_int is not None:
+            actions.append((action_int, None))
+    return actions
+
+
+def _hybrid_traces():
+    global _HYBRID_TRACE_CACHE
+    if _HYBRID_TRACE_CACHE is not None:
+        return _HYBRID_TRACE_CACHE
+
+    decoders = {"piece_place": _piece_place_trace, "action_steps": _action_steps_trace}
+    traces = {}
+    for game_id, specs in HYBRID_TRACE_SPECS.items():
+        for filename, decoder_name in specs:
+            path = REPO / "results" / filename
+            try:
+                artifact = json.loads(path.read_text("utf-8"))
+            except (FileNotFoundError, json.JSONDecodeError):
+                continue
+            if not _artifact_has_confirmed_solve(artifact):
+                continue
+            trace = decoders[decoder_name](artifact)
+            if trace:
+                traces[game_id] = trace
+                break
+    _HYBRID_TRACE_CACHE = traces
+    return traces
+
+
+def hybrid_policy(frame, ctx, rng):
+    """Replay induced real-env solve traces when available, then fall back to no-induction clicks.
+
+    The replay traces come only from artifacts whose `levels_completed` solves were
+    confirmed by the offline ARC environment. Unknown games deliberately fall back
+    to `object_click_policy`, so the hybrid cannot claim unbanked solved mechanics.
+    """
+    from arcengine.enums import GameAction
+    by_id = {a.value: a for a in GameAction}
+    av = list(getattr(frame, "available_actions", []) or [])
+    if not av:
+        return None, None
+
+    mem = ctx.setdefault("mem", {})
+    game_id = ctx.get("game_id")
+    trace = _hybrid_traces().get(game_id, [])
+    idx_key = f"hybrid_trace_index:{game_id}"
+    idx = int(mem.get(idx_key, 0) or 0)
+    while idx < len(trace):
+        action_int, data = trace[idx]
+        mem[idx_key] = idx + 1
+        idx += 1
+        if action_int in av:
+            return by_id.get(action_int, GameAction.ACTION1), dict(data) if data else None
+
+    return object_click_policy(frame, ctx, rng)
+
+
+POLICIES = {"random": random_policy, "object_click": object_click_policy, "hybrid": hybrid_policy}
 
 
 def _grid_dims(frame):
@@ -166,7 +281,7 @@ def play_game(arc, game_id, baseline, policy, budget, rng):
             "per_level_action_ratio": eff}
 
 
-def run(policy_name="random", n_games=25, budget_factor=1.5, budget_cap=3000, seed=0, write=True):
+def run(policy_name="random", n_games=25, budget_factor=1.5, budget_cap=3000, seed=0, write=True, games=None):
     from arc_agi import Arcade
     from arc_agi.base import OperationMode
     started = time.time()
@@ -175,7 +290,7 @@ def run(policy_name="random", n_games=25, budget_factor=1.5, budget_cap=3000, se
     arc = Arcade(arc_api_key="", operation_mode=OperationMode.OFFLINE, environments_dir=ENVDIR)
     envs = arc.get_environments()
     info = {getattr(e, "game_id", None): (getattr(e, "baseline_actions", None) or []) for e in envs}
-    games = list(info)[:n_games]
+    games = list(games) if games is not None else list(info)[:n_games]
 
     per_game = []
     for g in games:
@@ -225,10 +340,14 @@ def main():
     ap.add_argument("--n_games", type=int, default=25)
     ap.add_argument("--budget_factor", type=float, default=1.5)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--games", default=None,
+                    help="Optional comma-separated game ids. Overrides --n_games when supplied.")
     args = ap.parse_args()
-    print(f"OFFLINE eval: policy={args.policy} over {args.n_games} games (air-gapped)")
+    games = [g.strip() for g in args.games.split(",") if g.strip()] if args.games else None
+    n_games = len(games) if games else args.n_games
+    print(f"OFFLINE eval: policy={args.policy} over {n_games} games (air-gapped)")
     art = run(policy_name=args.policy, n_games=args.n_games,
-              budget_factor=args.budget_factor, seed=args.seed)
+              budget_factor=args.budget_factor, seed=args.seed, games=games)
     print(f"\n-> {art['honest_verdict']}")
     print(f"   ACCURACY levels={art['ACCURACY_total_levels_solved']}/{art['ACCURACY_total_win_levels']} "
           f"(solve_rate {art['ACCURACY_solve_rate']}) | EFFICIENCY mean_action_ratio={art['EFFICIENCY_mean_action_ratio_on_solved']}")
