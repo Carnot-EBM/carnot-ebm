@@ -2749,6 +2749,40 @@ Depth-Over-Breadth / progress-not-churn ethos (north-star §1).
 - results/arc3_win_condition_survey.json — the 6 non-spatial first-solve targets
 - `ops/north-star.md` §1 — the headline-progress / no-churn ethos this specializes
 
+## Missing-Verifier Gap Logging (MANDATORY)
+
+**Origin:** 2026-06-09 operator directive — "make note of any 'missing' Carnot ARC verifiers
+that might help improve our results; this will help us improve the core function of Carnot as
+a verifier, which has become the point of this project."
+
+Carnot's value-add IS the verifier. Every case where a verifier CANNOT select the correct
+answer — because no existing invariant/energy captures the discriminating signal — is a
+**missing-verifier spec**, and filling those specs is the product. The complement of
+`ops/verifier_registry.yaml` (the verifiers we HAVE) is `ops/verifier_gaps.md` (the verifiers
+we NEED).
+
+**The rule.** Any experiment that evaluates or reranks with a verifier and finds a
+*present-but-unselectable* failure — an oracle ceiling the verifier can't reach, a distractor
+class at ≈chance discrimination, a task family where every applicable family abstains — MUST
+append a gap entry to `ops/verifier_gaps.md` (schema in that file): the failure mode, the
+**missing discriminator** (the signal a new verifier would need to compute), a candidate
+design, and a priority by the headroom it would unlock. Verifier experiments should therefore
+EMIT a `missing_verifier_gaps` field in their artifact characterizing the residual failures,
+not just a headline score.
+
+**Planner-side.** When generating roadmaps, treat the open entries in `ops/verifier_gaps.md`
+as a first-class build backlog: queue verifier-building tasks (new invariant families,
+ARC-domain energy instances) against the highest-priority open gaps. Closing a gap (a new
+registry verifier that captures a previously-unselectable slice) is direct progress on the
+project's core, and is recorded by moving the entry to `status: filled (<verifier_id>)`
+(never-prune).
+
+**Why this is in CLAUDE.md.** The planner + agents read CLAUDE.md as required input. A
+verifier whose gaps are systematically logged and built-against improves monotonically — the
+Phase-3 self-improving-verifier program made concrete. Cross-refs: `ops/verifier_gaps.md`,
+`ops/verifier_registry.yaml`, `project_verifier_domain_bound` (the ARC-domain energy the deep
+gaps call for).
+
 ## Overdue-Priority Forcing Function (MANDATORY)
 
 > **STATUS (2026-05-29): MECHANICALLY ENFORCED — prose is reference-only.**
