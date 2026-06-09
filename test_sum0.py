@@ -1,0 +1,36 @@
+import sys
+from pathlib import Path
+REPO = Path().resolve()
+sys.path.insert(0, str(REPO / "python"))
+from arc_agi import Arcade
+from arc_agi.base import OperationMode
+arc = Arcade(arc_api_key="", operation_mode=OperationMode.OFFLINE, environments_dir=str(REPO / "environment_files"))
+env = arc.make("r11l-495a7899")
+f = env.reset()
+from arcengine.enums import GameAction
+def _click(env, y, x): return env.step(GameAction.ACTION6, data={"x": int(x), "y": int(y)})
+
+offsets_2 = [(-6, 0), (6, 0)]
+offsets_3 = [(-6, 6), (6, 6), (0, -12)]
+
+# solve level 0 true grouping
+t0 = None
+for k, v in env._game.kacotwgjcyq.items():
+    if v["gosubdcyegamj"]:
+        t0 = v["gosubdcyegamj"]
+        for j, p in enumerate(v["lecfirgqbwunn"]):
+            _click(env, p.y + p.height//2, p.x + p.width//2)
+            f = _click(env, t0.y + t0.height//2 + offsets_2[j][1], t0.x + t0.width//2 + offsets_2[j][0])
+while getattr(env._game, 'yfbjozweime', False): f = _click(env, -1, -1)
+
+# level 1
+for k, v in env._game.kacotwgjcyq.items():
+    if v["gosubdcyegamj"]:
+        t0 = v["gosubdcyegamj"]
+        n = len(v["lecfirgqbwunn"])
+        offs = offsets_3 if n == 3 else offsets_2
+        for j, p in enumerate(v["lecfirgqbwunn"]):
+            _click(env, p.y + p.height//2, p.x + p.width//2)
+            f = _click(env, t0.y + t0.height//2 + offs[j][1], t0.x + t0.width//2 + offs[j][0])
+while getattr(env._game, 'yfbjozweime', False): f = _click(env, -1, -1)
+print("Levels completed after 1:", getattr(f, "levels_completed", 0))
