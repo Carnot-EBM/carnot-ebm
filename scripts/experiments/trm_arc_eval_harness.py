@@ -72,8 +72,8 @@ def main():
     cfg_dict["freeze_weights"] = True    # build SignSGD-only optimizer (skip AdamATan2)
     cfg_dict["global_batch_size"] = args.batch
     cfg_dict["epochs"] = 1               # only used for a total_steps estimate; we never train
-    cfg_dict["eval_save_outputs"] = (["preds", "inputs", "puzzle_identifiers"]
-                                     if args.save_outputs else [])
+    cfg_dict["eval_save_outputs"] = (["preds", "inputs", "puzzle_identifiers", "q_halt_logits"]
+                                     if args.save_outputs else [])  # q added for the verifier-rerank dump (avg_q tiebreak)
     cfg_dict["project_name"] = cfg_dict.get("project_name") or "trm_arc_eval"
     cfg_dict["run_name"] = f"{args.ckpt}_carnot_eval"
     config = PretrainConfig(**cfg_dict)
