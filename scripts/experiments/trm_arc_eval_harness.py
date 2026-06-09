@@ -80,6 +80,10 @@ def main():
     if args.save_latent:
         _save_keys.append("z_h_pool")    # GAP-3 Stage 1: the full penultimate latent (hidden=512)
     cfg_dict["eval_save_outputs"] = _save_keys if (args.save_outputs or args.save_latent) else []
+    # pretrain.evaluate() only makedirs the PARENT of checkpoint_path before torch.save, so a fresh
+    # leaf dir (e.g. eval_out/arc_v1_latent) does not exist and the save crashes AFTER all GPU
+    # inference has run (wasting ~25 min). Pre-create the full leaf dir here so the save always lands.
+    os.makedirs(cfg_dict["checkpoint_path"], exist_ok=True)
     cfg_dict["project_name"] = cfg_dict.get("project_name") or "trm_arc_eval"
     cfg_dict["run_name"] = f"{args.ckpt}_carnot_eval"
     config = PretrainConfig(**cfg_dict)
