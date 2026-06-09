@@ -152,11 +152,11 @@ def call_gemini(prompt: str, body: str, model: str = "gemini-3.1-pro-preview") -
         return False, str(exc)
 
 
-def call_claude(prompt: str, body: str, model: str = "sonnet") -> tuple[bool, str]:
+def call_claude(prompt: str, body: str, model: str = "claude-opus-4-8") -> tuple[bool, str]:
     try:
         full = f"{prompt}\n\n---\nVERIFIER SOURCE:\n\n{body}"
         proc = subprocess.run(
-            ["claude", "--model", model, "--print", full],
+            ["claude", "--model", model, "--effort", "max", "--print", full],
             capture_output=True,
             text=True,
             timeout=300,

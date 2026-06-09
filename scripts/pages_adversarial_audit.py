@@ -163,8 +163,8 @@ def call_gemini(prompt: str, model: str = "gemini-3.1-pro-preview") -> tuple[boo
         return False, str(exc)
 
 
-def call_claude(prompt: str, model: str = "sonnet") -> tuple[bool, str]:
-    """Invoke claude CLI with the audit prompt."""
+def call_claude(prompt: str, model: str = "claude-opus-4-8") -> tuple[bool, str]:
+    """Invoke claude CLI with the audit prompt (Opus 4.8 + max effort per 2026-06-08 directive)."""
     try:
         full = (
             f"{prompt}\n\n"
@@ -173,7 +173,7 @@ def call_claude(prompt: str, model: str = "sonnet") -> tuple[bool, str]:
             f"{INDEX_HTML.read_text()}\n"
         )
         proc = subprocess.run(
-            ["claude", "--model", model, "--print", full],
+            ["claude", "--model", model, "--effort", "max", "--print", full],
             capture_output=True,
             text=True,
             timeout=600,

@@ -294,6 +294,10 @@ def _build_agent_command(
         )
 
     # Default path: claude
+    # 2026-06-08 operator directive: run all claude-type agents (planner, retro,
+    # adversarial, requires_claude experiments) at the CLI's highest session effort.
+    # The claude CLI exposes --effort {low|medium|high|xhigh|max}; "max" is the
+    # ceiling ('ultracode' is a separate cloud subcommand, NOT an effort level).
     return (
         [
             bin_path,
@@ -304,9 +308,11 @@ def _build_agent_command(
             str(max_turns),
             "--model",
             model,
+            "--effort",
+            "max",
         ],
         prompt,
-        f"Calling {display} ({max_turns} max turns, model: {model})...",
+        f"Calling {display} ({max_turns} max turns, model: {model}, effort: max)...",
     )
 
 
@@ -4348,6 +4354,8 @@ def research_step(
                         [
                             sys.executable,
                             str(PROJECT_ROOT / "scripts" / "pages_adversarial_audit.py"),
+                            # 2026-06-08 operator directive: adversarial agent on Claude Opus 4.8 (was gemini)
+                            "--model", "claude", "--model-name", "claude-opus-4-8",
                         ],
                         cwd=PROJECT_ROOT,
                         timeout=720,
@@ -4374,6 +4382,8 @@ def research_step(
                             sys.executable,
                             str(PROJECT_ROOT / "scripts" / "verifier_authenticity_audit.py"),
                             "--limit", "20",
+                            # 2026-06-08 operator directive: adversarial agent on Claude Opus 4.8 (was gemini)
+                            "--model", "claude", "--model-name", "claude-opus-4-8",
                         ],
                         cwd=PROJECT_ROOT,
                         timeout=900,
