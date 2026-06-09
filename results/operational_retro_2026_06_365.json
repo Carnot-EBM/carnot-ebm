@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.365",
+  "generated_at": "2026-06-09T06:40:02Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.06.365 landed 0 experiment commits since activation, with 0 compute-bound tasks and 0 minutes of measured wall time. With no compute-bound task present, gpu_idle_on_compute_bound_tasks is null and both RTX 3090s sitting idle is correct behaviour, not a bug. The operational signal this milestone is a production gap (zero artifacts), not an execution-efficiency problem.",
+  "bottlenecks_identified": [
+    "Zero experiment artifacts produced: no experiment commits found since activation of 2026.06.365. The binary outcome (0 vs N artifacts) dominates any per-experiment efficiency concern this milestone.",
+    "Recent conductor activity was repeated pre-gate-block commits on the .365 capstone rather than landed experiment artifacts, indicating the milestone stalled at the capstone aggregation gate instead of executing a task slate to completion.",
+    "Idempotency gap: the same pre-gate-block message was re-emitted multiple times for the same capstone, which adds log noise without changing the blocked state."
+  ],
+  "improvements_suggested": [
+    "Zero-artifact circuit-breaker: have the conductor emit an early operator-ping when N consecutive gate-blocks occur on the same capstone with no upstream experiment commits, so a stalled milestone is surfaced in minutes rather than discovered at retro time.",
+    "Capstone gate fall-through: when the capstone's required upstream artifacts are absent or flagged_adversarial, route to the non-capstone task slate so the milestone still produces forward artifacts instead of repeatedly blocking on the headline aggregation.",
+    "Backend-health preflight at activation: confirm the experiment backend (gemini quota / codex route) is reachable before the slate runs, so a single-backend outage is caught at activation rather than zeroing out the whole milestone (per the .333 gemini-429 wipeout precedent).",
+    "Pre-gate-block idempotency: emit one block + one operator-actionable note per capstone rather than re-committing identical pre-gate-block messages, keeping the commit log readable."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add a zero-artifact circuit-breaker that detects '0 experiment commits + repeated capstone gate-blocks' and surfaces it to the operator immediately, instead of spending the milestone window stalled.",
+    "Make the capstone gate-block fall through to the non-capstone task slate so every milestone produces SOME forward artifacts even when the headline aggregation is blocked.",
+    "Verify experiment-backend health (gemini quota / codex route) at milestone activation so a backend outage is caught before, not after, the task slate fails to run."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The honest operational signal is binary: zero experiments executed, so there is no execution-efficiency story to tell this milestone — only a production gap. The highest-leverage fix is not GPU or throughput tuning (both GPUs were correctly idle with no compute-bound task) but a fast-fail circuit-breaker so a stalled, gate-blocked milestone is caught in minutes instead of consuming the full window. Per the .333 wipeout precedent, a single zero-artifact milestone usually traces to a backend outage or a capstone gate that will not fall through, and both are detectable at activation."
+}
