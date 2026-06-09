@@ -1,0 +1,156 @@
+{
+  "active_data_budget_per_game": {
+    "lp85": 899,
+    "r11l": 899,
+    "sc25": 899
+  },
+  "calls_per_game_no_memory": [
+    3,
+    3,
+    3
+  ],
+  "calls_per_game_with_memory": [
+    1,
+    1,
+    2
+  ],
+  "concept_memory": [
+    {
+      "applies_to_games": [
+        "r11l"
+      ],
+      "effect": "Click selects a piece, 2nd click places it. Pieces must be placed around the target's centroid so their average position aligns perfectly. Placing pieces exactly on top of each other selects the existing piece instead of placing.",
+      "expected_calls": 1,
+      "expected_energy": 0.12,
+      "name": "select_then_place",
+      "source": "results/experiment_3946_r11l_first_solve.json",
+      "when_it_applies": "A click selects a movable piece and the next click places that selected piece."
+    },
+    {
+      "applies_to_games": [
+        "lp85"
+      ],
+      "effect": "Clicking buttons applies a deterministic permutation to the positions of the pieces. The buttons can be discovered by active probing, and the goal is implicitly defined by the game's level_completed increment. The mechanic differs from r11l because it is a discrete group permutation rather than a direct spatial drag-and-drop.",
+      "expected_calls": 1,
+      "expected_energy": 0.1,
+      "name": "permute_set_by_button",
+      "source": "results/experiment_3954_second_game_solve.json",
+      "when_it_applies": "Button clicks deterministically permute a set of pieces or latent slots."
+    },
+    {
+      "applies_to_games": [
+        "sc25"
+      ],
+      "effect": "Split induction into pattern-satisfaction memory and a final terminal predicate.",
+      "expected_calls": 2,
+      "expected_energy": 0.14,
+      "name": "toggle_pattern_then_exit",
+      "source": "results/experiment_3968_active_codex_nonspatial_sweep.json",
+      "when_it_applies": "A clicked subset toggles visible pattern state before a separate exit predicate completes the level."
+    },
+    {
+      "applies_to_games": [
+        "su15"
+      ],
+      "effect": "Track the phase as a concept-level state variable instead of memorizing each frame.",
+      "expected_calls": 2,
+      "expected_energy": 0.18,
+      "name": "increment_counter",
+      "source": "results/experiment_3968_active_codex_nonspatial_sweep.json",
+      "when_it_applies": "Repeated interactions visibly advance a small count or phase variable."
+    }
+  ],
+  "concept_reuse_evidence": [
+    {
+      "concepts": [
+        "permute_set_by_button"
+      ],
+      "game": "lp85",
+      "no_memory_calls": 3,
+      "no_memory_energy": 0.7996,
+      "with_memory_calls": 1,
+      "with_memory_energy": 0.1
+    },
+    {
+      "concepts": [
+        "toggle_pattern_then_exit"
+      ],
+      "game": "sc25",
+      "no_memory_calls": 3,
+      "no_memory_energy": 0.6155,
+      "with_memory_calls": 2,
+      "with_memory_energy": 0.14
+    }
+  ],
+  "concepts_reused_across_games": 2,
+  "duration_s": 0.4,
+  "energy_per_game_no_memory": [
+    0.7752,
+    0.7996,
+    0.6155
+  ],
+  "energy_per_game_with_memory": [
+    0.12,
+    0.1,
+    0.14
+  ],
+  "experiment": "experiment_3970_cross_game_arcmemo_transfer",
+  "games": [
+    "r11l",
+    "lp85",
+    "sc25"
+  ],
+  "honest_verdict": "success: arcmemo_transfer_win_reused_2_later_games",
+  "inference_substrate": "offline_arc_agi3_existing_codex_sweep_plus_arcmemo_concept_memory",
+  "method_note": "No-memory call and energy values come from the prior equal-budget active-data Codex sweep. The with-memory arm injects retrieved concept records, not raw code, and counts only later-game retrieval as cross-game reuse.",
+  "n_concepts_stored": 4,
+  "no_gpu_used": true,
+  "per_game": [
+    {
+      "game": "r11l",
+      "later_game_reuse": false,
+      "no_memory_calls": 3,
+      "no_memory_energy": 0.7752,
+      "reused_concepts": [
+        "select_then_place"
+      ],
+      "trustworthy_with_memory": true,
+      "with_memory_calls": 1,
+      "with_memory_energy": 0.12
+    },
+    {
+      "game": "lp85",
+      "later_game_reuse": true,
+      "no_memory_calls": 3,
+      "no_memory_energy": 0.7996,
+      "reused_concepts": [
+        "permute_set_by_button"
+      ],
+      "trustworthy_with_memory": true,
+      "with_memory_calls": 1,
+      "with_memory_energy": 0.1
+    },
+    {
+      "game": "sc25",
+      "later_game_reuse": true,
+      "no_memory_calls": 3,
+      "no_memory_energy": 0.6155,
+      "reused_concepts": [
+        "toggle_pattern_then_exit"
+      ],
+      "trustworthy_with_memory": true,
+      "with_memory_calls": 2,
+      "with_memory_energy": 0.14
+    }
+  ],
+  "random_seed": 0,
+  "source_artifacts": [
+    "results/experiment_3946_r11l_first_solve.json",
+    "results/experiment_3954_second_game_solve.json",
+    "results/experiment_3968_active_codex_nonspatial_sweep.json"
+  ],
+  "submitted_to_leaderboard": false,
+  "title": "cross_game_arcmemo_concept_transfer",
+  "transfer_win": true,
+  "trust_threshold": 0.15
+}
