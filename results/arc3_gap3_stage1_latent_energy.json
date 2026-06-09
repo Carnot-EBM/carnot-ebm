@@ -1,0 +1,61 @@
+{
+  "a0_vote_mimicry_control": {
+    "note": "LATENT_PROBE is an OUT-OF-FOLD leave-one-task-out PCA-basis + balanced logistic probe; the held-out task's gold labels and latents never train its own probe/basis. residual regresses the probe on vote-count globally and ranks by the residual -- if it does not beat vote, the latent's lift is vote-collinear, not orthogonal model-native signal.",
+    "probe_within_task_auroc": 0.8689,
+    "residual_beats_vote": false,
+    "residual_ranker_pass2": 0.0645
+  },
+  "bootstrap_pass2_delta_vs_vote": {
+    "B": 1000,
+    "ci95_over_tasks": [
+      -0.129,
+      0.0645
+    ],
+    "point": -0.0322
+  },
+  "duration_s": 17.3,
+  "experiment": "arc3_gap3_stage1_latent_energy",
+  "gates": {
+    "coverage_ge_0p80": true,
+    "discrimination_within_task_auroc_gt_0p70": true,
+    "headroom_capture_fraction": -0.1996,
+    "headroom_capture_ge_0p30": false,
+    "selection_beats_vote": false
+  },
+  "honest_note": "GAP-3 Stage 1. A POSITIVE that survives the residual control = the model-native energy works -> register it + re-confirm at 400 scale. A NEGATIVE = even the full latent can't beat vote on this corpus (deeper: the headroom may need a generator-INDEPENDENT trained ARC energy, Stage 2). Reported as-is per FALSE_NEGATIVE_RISK; positive control = oracle > vote (real headroom). CAVEAT n~31 + 512-d latent over ~31 LOTO folds overfits easily; PCA-K + L2 + balanced classes + OOF are the guards. Re-confirm at 400 before any irreversible claim.",
+  "honest_verdict": "complete: gap3_stage1_latent_full_latent_does_not_beat_vote_n31_vote_0.4516_probe_0.4194_withinauroc_0.8689_residbeatsvote_False_pcak24",
+  "inference_substrate": "offline_trm_candidate_rerank_no_oracle",
+  "latent_hidden_dim": 512,
+  "model_native_signal_real": false,
+  "n_oracle_hit": 19,
+  "n_tasks": 31,
+  "no_gpu_used_for_this_step": true,
+  "no_oracle_audit": "Gold output read ONLY to LABEL correctness; the probe is trained OUT-OF-FOLD (LOTO) so a held-out task's gold never trains its own ranker; PCA basis fit on train folds only.",
+  "oracle_pass2_ceiling": 0.6129,
+  "pca_k": 24,
+  "random_seed": 12345,
+  "rankers": {
+    "HYBRID_vote_then_probe": {
+      "pass@1": 0.4194,
+      "pass@2": 0.4516
+    },
+    "LATENT_PROBE": {
+      "pass@1": 0.2903,
+      "pass@2": 0.4194
+    },
+    "LATENT_PROBE_residual_over_vote": {
+      "pass@1": 0.0323,
+      "pass@2": 0.0645
+    },
+    "Q_MEAN": {
+      "pass@1": 0.2903,
+      "pass@2": 0.2903
+    },
+    "TRM_VOTE": {
+      "pass@1": 0.4194,
+      "pass@2": 0.4516
+    }
+  },
+  "title": "GAP-3 Stage 1: TRM penultimate-latent model-native selection energy vs frequency vote",
+  "vs_stage0": "Stage 0 (scalar q_halt) did NOT beat vote (Q_MEAN pass@2 0.290; residual 0.097). Stage 1 tests whether the FULL un-collapsed latent (hidden-dim) recovers the signal the scalar lost."
+}
