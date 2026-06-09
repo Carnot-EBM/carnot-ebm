@@ -2021,3 +2021,20 @@ than a landed parity result; Exp 3929 supplies the synthetic ARC-AGI-3 action-
 efficiency bridge.
 
 **Next experiments:** ProcessBench full-benchmark head-to-head: run Carnot energy scores versus a competent GenRM/ThinkPRM-style judge on the full held-out benchmark so the efficiency claim is tested against a credible comparator; ARC-AGI-3 real-benchmark agentic run: replace the synthetic grid step with the official interactive harness and report action efficiency without claiming a leaderboard score.
+
+## 2026-06-08 Exp 3943 - Verifier Efficiency Landscape Positioning
+
+**Candidate:** .365 convergence steer after the verifier-efficiency proof.
+
+**Score: 5 x 5 x 5 x 4 = 500** - maximum north-star alignment, maximum
+experiment leverage, maximum public-positioning value, and medium execution
+risk because real benchmark access and full ProcessBench throughput can still
+block.
+
+**Position:** Carnot now belongs in the cheap discriminative verifier lane:
+energy verification screens every candidate cheaply, while GenRM/ThinkPRM-style
+judges handle close or high-value cases. The .364 result should be framed as a
+cost-normalized verifier proof, not as a claim that energy scoring replaces
+generative reasoning.
+
+**Next experiments:** ProcessBench full-benchmark head-to-head: run the landed cheap-energy verifier and the competent GenRM/ThinkPRM-style judge on the full held-out benchmark with cost-normalized parity/Pareto reporting; ARC-AGI-3 real agentic run / real ARC-AGI-3 agentic run: move from synthetic action-pruning to an official interactive harness run, reporting action efficiency only under the benchmark protocol.
