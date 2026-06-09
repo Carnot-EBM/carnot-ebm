@@ -1,0 +1,30 @@
+{
+  "ACCURACY_levels_solved": 0,
+  "attempts": [
+    {
+      "actions": 8,
+      "attempt": 0,
+      "level_reached": 0,
+      "n_pairs": 4
+    }
+  ],
+  "budget": 60,
+  "diagnosis": "First attempt did NOT solve (perceived 7 pieces / 4 templates; gray-as-template assumption WRONG). r11l source (read for diagnosis): each puzzle group has a selectable PIECE sprite (roefwulewcui-*, color_remap(0,3) -> rendered with color 3, tagged sys_click) and a TARGET sprite (flkdtg-*, tracked in xaalmogcsnh for the win check); the gray color-2 corner blocks are DECORATIVE, not targets. A piece is AUTO-SELECTED at level start (ecernfbexd(bbijaigbknc[0])). So the correct perception is: pieces = color-3 clickable sprites; targets = flkdtg sprite locations; win = each piece on its flkdtg. Getting the solve needs r11l-specific perception (identify the color-3 pieces + their target outlines + handle the auto-selected piece), a focused next build. The mechanic + budget (60 actions, 6 levels) remain favorable; this is perception refinement, not a hard-planning wall like vc33.",
+  "duration_s": 0.0,
+  "experiment": "arc3_r11l_solve",
+  "game": "r11l-495a7899",
+  "honest_verdict": "complete: r11l_first_solve_levels0_of6_solvedFalse_pieces7_templates4_attempts1",
+  "inference_substrate": "offline_arc_agi3_perception_planner_real_env_confirmed",
+  "n_pieces_perceived": 7,
+  "n_templates_perceived": 4,
+  "no_gpu_used": true,
+  "no_llm_used": true,
+  "note": "M2-v5b first-solve attempt on r11l (survey's easiest target). Perception matches pieces to gray templates by shape; the REAL env confirms via level_completed. solved=True = the FIRST ARC-AGI-3 solve. Quota-gate: online play only when an offline solve beats the TRM baseline + best prior Carnot submission (operator-gated).",
+  "real_env_confirmed": true,
+  "solve_log": [],
+  "solved": false,
+  "submitted_to_leaderboard": false,
+  "title": "arc3_m2v5b_r11l_first_solve_attempt",
+  "total_actions": 8,
+  "win_levels": 6
+}
