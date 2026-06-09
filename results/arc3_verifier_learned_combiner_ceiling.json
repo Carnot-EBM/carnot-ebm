@@ -1,0 +1,42 @@
+{
+  "beats_vote": [],
+  "duration_s": 205.8,
+  "experiment": "arc3_verifier_learned_combiner_ceiling",
+  "honest_note": "DEFINITIVE hand-feature ceiling (operator: diagnose before building). If beats_vote is empty, even an out-of-fold learned linear combiner over the 8 cheap families cannot beat TRM's frequency vote on its real candidate pool => the cheap hand-features are exhausted and GAP-3 (learned/model-native ARC energy from TRM's local activations) is the only path to the proven oracle headroom. Caveat: 31-task / 19-gold sample is tiny; out-of-fold + class-balanced LOTO are the honest guards but the number is noisy \u2014 re-confirm at scale before any irreversible strategy commitment.",
+  "honest_verdict": "complete: learned_combiner_ceiling_no_learned_combiner_beats_vote_handfeatures_exhausted_n31_vote_0.4516_loto_0.2258_5fold_0.1613",
+  "inference_substrate": "offline_trm_candidate_rerank_no_oracle",
+  "loto_balanced_avg_standardized_weights": {
+    "color_mapping": 0.1909,
+    "content_overlap": 0.4422,
+    "delta_pattern": 0.6805,
+    "object_count": 1.4809,
+    "palette_histogram_shape": -0.2297,
+    "symmetry": 0.0,
+    "tiling_scaling": 0.5403,
+    "v1": -0.5226
+  },
+  "n_oracle_hit": 19,
+  "n_tasks": 31,
+  "no_gpu_used": true,
+  "random_seed": 0,
+  "rankers": {
+    "TRM_VOTE": {
+      "pass@1": 0.4194,
+      "pass@2": 0.4516
+    },
+    "logreg_5fold_groupcv": {
+      "pass@1": 0.0968,
+      "pass@2": 0.1613
+    },
+    "logreg_loto_balanced": {
+      "pass@1": 0.0645,
+      "pass@2": 0.2258
+    },
+    "min_defined": {
+      "pass@1": 0.3871,
+      "pass@2": 0.4194
+    }
+  },
+  "title": "Learned-combiner ceiling for the cheap hand-features on TRM's real candidate pool",
+  "weights_note": "Avg per-fold standardized logistic weights (label 1 = prune). POSITIVE weight => higher family score pushes 'prune' (so the combiner trusts the family to flag wrong candidates); weight near 0 => ignored; NEGATIVE => the combiner learned the family is anti-discriminative and inverts it. Expect v1/delta_pattern near 0 or negative, color_mapping/object_count/tiling positive (per the diagnosis AUROCs)."
+}
