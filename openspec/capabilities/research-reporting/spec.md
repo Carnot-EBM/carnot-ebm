@@ -18421,3 +18421,67 @@ unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3934 | Implemented (`python/carnot/reporting/archive_v363_activate_v364_3934.py`, `scripts/experiments/experiment_3934_archive_v363_activate_v364.py`) | Implemented (`tests/python/test_experiment_3934_archive_v363_activate_v364.py`) |
+
+### REQ-REPORT-3943: Literature Synthesis Positions The .364 Verifier Efficiency Proof
+
+The Exp 3943 workflow SHALL perform a no-new-inference literature synthesis for
+the `.364` verifier-earns-its-place result and write
+`results/experiment_3943_literature_synthesis.json`. Before writing any
+synthesis note or research ledger update, it SHALL confirm
+`research-references.md` and `research-studying.md` exist and are readable. If
+either precondition fails, it SHALL write a schema-complete blocked artifact
+whose `honest_verdict` starts with `blocked_references_missing` and SHALL NOT
+edit research notes or research ledgers.
+
+On the complete path, the workflow SHALL read local source material only:
+`research-references.md`, `research-studying.md`, any present
+`results/experiment_3936_*`, `results/experiment_3937_*`,
+`results/experiment_3938_*`, `results/experiment_3939_*`, and
+`results/experiment_3942_*` artifacts, plus nearby prior artifacts when those
+`.364` source artifacts are not present in the checkout. Missing source
+artifacts SHALL be recorded as source gaps rather than fabricated. It SHALL
+synthesize a one-page note under `docs/research-notes/` positioning Carnot's
+cheap energy verifier versus a competent GenRM/ThinkPRM-style judge, the
+non-degenerate cascade, and the independent-corpus moat among ProcessBench,
+ThinkPRM, GenRM, Budget-aware Discriminative Verification, and ARC-AGI-3. It
+SHALL append one scored candidate section to `research-studying.md`, add only
+genuinely new papers to `research-references.md` when needed, and SHALL leave
+`docs/index.html`, `README.md`, `docs/blog/`, `ops/changelog.md`,
+`ops/status.md`, `_bmad/traceability.md`, and `scripts/research_conductor.py`
+unchanged.
+
+The terminal artifact SHALL include bare top-level fields
+`synthesis_note_path`, `landscape_position_summary`,
+`next_highest_leverage_experiments`, `new_references_added`,
+`public_docs_untouched`, `preconditions_checked`, `duration_s`,
+`inference_substrate`, and `honest_verdict`. Complete artifacts SHALL set
+`public_docs_untouched` to true, `new_references_added` to a bare integer,
+`inference_substrate` to a no-new-inference document-synthesis marker with no
+GGUF or CUDA substrings, and `honest_verdict` to
+`complete: literature_synthesis_positioned_<new_references_added>_new_refs_public_docs_untouched`.
+
+#### SCENARIO-REPORT-3943: Local Literature Synthesis Positions The Landed Verifier Proof
+
+**Given** `research-references.md` and `research-studying.md` are readable and
+local `.364` source artifacts may or may not be present
+**When** the Exp 3943 workflow runs
+**Then** it writes the one-page positioning note, appends one scored candidate
+to `research-studying.md`, records whether new references were required, writes
+the required terminal artifact, proposes the next one or two highest-leverage
+experiments for `.365`, records missing source artifacts without fabricating
+metrics, and leaves public/operator status documents untouched.
+
+#### SCENARIO-REPORT-3943-BLOCKED-REFERENCES: Missing Research Ledgers Block Synthesis
+
+**Given** either `research-references.md` or `research-studying.md` is missing
+or unreadable
+**When** the Exp 3943 workflow runs
+**Then** it writes a schema-complete blocked artifact prefixed by
+`blocked_references_missing`, records failed preconditions, and makes no
+markdown edits.
+
+## Implementation Status (REQ-REPORT-3943)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3943 | Implemented (`python/carnot/reporting/literature_synthesis_3943.py`, `scripts/experiments/experiment_3943_literature_synthesis.py`) | Implemented (`tests/python/test_experiment_3943_literature_synthesis.py`) |
