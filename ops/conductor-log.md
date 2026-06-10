@@ -8133,3 +8133,4 @@ c |
 | 2026-06-10 02:25 UTC | ArcMemo SOLVE-transfer (self-learning MANDATE; ext | OK | 90 passed in 4.67s |
 | 2026-06-10 03:37 UTC | Hardware continuity (consolidated): SSH/USB-reacha | OK | 87 passed in 3.64s |
 | 2026-06-10 03:49 UTC | INFRA FIX (reserved slot): repair the operational- | OK | 86 passed in 3.97s |
+| 2026-06-10 04:04 UTC | Capstone .368 (UNGATED — the .365 op:exists + .366 | OK | 88 passed in 4.96s |
