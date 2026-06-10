@@ -1,0 +1,787 @@
+{
+  "k_samples_per_task": 8,
+  "local_model_used": "gemma-4-12B",
+  "schema": "carnot.experiment_4012_gap4_local_best_of_n.checkpoint.v1",
+  "tasks": {
+    "00576224": [
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The input is a 2x2 grid.\n    # The output is a 6x6 grid.\n    # Let the input be:\n    # [[a, b],\n    #  [c, d]]\n    # The output is constructed by repeating the 2x2 block 3 times horizontally\n    # and 3 times vertically, but with a twist:\n    # The even rows (0, 2, 4) are the original rows (0, 1) repeated.\n    # The odd rows (1, 3, 5) are the original rows (0, 1) but with columns swapped.\n    # Wait, looking closer at Demo 1:\n    # Input: [[8, 6], [6, 4]]\n    # Output Row 0: [8, 6, 8, 6, 8, 6] (Input Row 0 repeated)\n    # Output Row 1: [6, 4, 6, 4, 6, 4] (Input Row 1 repeated)\n    # Output Row 2: [6, 8, 6, 8, 6, 8] (Input Row 0 reversed/swapped)\n    # Output Row 3: [4, 6, 4, 6, 4, 6] (Input Row 1 reversed/swapped)\n    # Output Row 4: [8, 6, 8, 6, 8, 6] (Input Row 0 repeated)\n    # Output Row 5: [6, 4, 6, 4, 6, 4] (Input Row 1 repeated)\n    \n    # Let's re-examine Demo 2:\n    # Input: [[7, 9], [4, 3]]\n    # Output Row 0: [7, 9, 7, 9, 7, 9] (Row 0 repeated)\n    # Output Row 1: [4, 3, 4, 3, 4, 3] (Row 1 repeated)\n    # Output Row 2: [9, 7, 9, 7, 9, 7] (Row 0 swapped)\n    # Output Row 3: [3, 4, 3, 4, 3, 4] (Row 1 swapped)\n    # Output Row 4: [7, 9, 7, 9, 7, 9] (Row 0 repeated)\n    # Output Row 5: [4, 3, 4, 3, 4, 3] (Row 1 repeated)\n    \n    # Pattern:\n    # Row 0: Input Row 0 repeated 3 times\n    # Row 1: Input Row 1 repeated 3 times\n    # Row 2: Input Row 0 (swapped) repeated 3 times\n    # Row 3: Input Row 1 (swapped) repeated 3 times\n    # Row 4: Input Row 0 repeated 3 times\n    # Row 5: Input Row 1 repeated 3 times\n    \n    # Actually, it's simpler:\n    # The output is a 6x6 grid.\n    # It is composed of 3x3 blocks of 2x2 units.\n    # Each 2x2 unit at (block_row, block_col) is:\n    # If block_row + block_col is even: Input grid\n    # If block_row + block_col is odd: Input grid with columns swapped\n    \n    # Let's check Demo 1 again:\n    # Block (0,0): [[8, 6], [6, 4]] (Even sum) -> Correct\n    # Block (0,1): [[6, 8], [4, 6]] (Odd sum) -> Correct (Row 0 is [6,8], Row 1 is [4,6])\n    # Block (1,0): [[6, 8], [4, 6]] (Odd sum) -> Correct\n    # Block (1,1): [[8, 6], [6, 4]] (Even sum) -> Correct\n    # Block (2,0): [[8, 6], [6, 4]] (Even sum) -> Correct\n    # Block (2,1): [[6, 8], [4, 6]] (Odd sum) -> Correct\n    # Block (2,2): [[8, 6], [6, 4]] (Even sum) -> Correct\n    \n    # Wait, the output is 6x6. 3 blocks of 2x2.\n    # Let's check the rows of Demo 1 again:\n    # Row 0: 8, 6, 8, 6, 8, 6\n    # Row 1: 6, 4, 6, 4, 6, 4\n    # Row 2: 6, 8, 6, 8, 6, 8\n    # Row 3: 4, 6, 4, 6, 4, 6\n    # Row 4: 8, 6, 8, 6, 8, 6\n    # Row 5: 6, 4, 6, 4, 6, 4\n    \n    # This is exactly:\n    # Row 0: Input[0] repeated\n    # Row 1: Input[1] repeated\n    # Row 2: Input[0] reversed repeated\n    # Row 3: Input[1] reversed repeated\n    # Row 4: Input[0] repeated\n    # Row 5: Input[1] repeated\n    \n    # Let's check Demo 2:\n    # Row 0: 7, 9, 7, 9, 7, 9 (Input[0] repeated)\n    # Row 1: 4, 3, 4, 3, 4, 3 (Input[1] repeated)\n    # Row 2: 9, 7, 9, 7, 9, 7 (Input[0] reversed repeated)\n    # Row 3: 3, 4, 3, 4, 3, 4 (Input[1] reversed repeated)\n    # Row 4: 7, 9, 7, 9, 7, 9 (Input[0] repeated)\n    # Row 5: 4, 3, 4, 3, 4, 3 (Input[1] repeated)\n    \n    # The rule is:\n    # For row i in 0..5:\n    #   If i % 4 == 0 or i % 4 == 1:\n    #     Take Input[i % 2] and repeat it 3 times\n    #   If i % 4 == 2 or i % 4 == 3:\n    #     Take Input[i % 2] reversed and repeat it 3 times\n    # Wait, that's not quite right for i=4,5.\n    \n    # Let's try another pattern:\n    # Row 0: Input[0] repeated\n    # Row 1: Input[1] repeated\n    # Row 2: Input[0] reversed repeated\n    # Row 3: Input[1] reversed repeated\n    # Row 4: Input[0] repeated\n    # Row 5: Input[1] repeated\n    \n    # This is:\n    # Row i:\n    #   base_row = Input[i % 2]\n    #   if (i // 2) % 2 == 1:\n    #     base_row = base_row[:, ::-1]\n    #   output_row = np.tile(base_row, (1, 3))\n    \n    res = np.zeros((6, 6), dtype=int)\n    for i in range(6):\n        base_row = grid[i % 2].copy()\n        if (i // 2) % 2 == 1:\n            base_row = base_row[::-1]\n        res[i] = np.tile(base_row, (1, 3))\n    return res",
+        "code_len": 4136,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 0,
+        "local_s": 27.67,
+        "status": "graded",
+        "task": "00576224"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The input is a 2x2 grid.\n    # The output is a 6x6 grid.\n    # Looking at the pattern:\n    # Row 0: grid[0,0], grid[0,1] repeated 3 times\n    # Row 1: grid[1,0], grid[1,1] repeated 3 times\n    # Row 2: grid[0,1], grid[0,0] repeated 3 times\n    # Row 3: grid[1,1], grid[1,0] repeated 3 times\n    # Row 4: grid[0,0], grid[0,1] repeated 3 times\n    # Row 5: grid[1,0], grid[1,1] repeated 3 times\n    \n    # Basically, it's a 3x3 tiling of a 2x2 block where the \n    # second column of the 2x2 block is swapped with the first \n    # column in the second row of the tiling? \n    # Let's re-examine:\n    # Demo 1:\n    # Row 0: [8, 6] (Row 0 of input)\n    # Row 1: [6, 4] (Row 1 of input)\n    # Row 2: [6, 8] (Row 0 of input reversed)\n    # Row 3: [4, 6] (Row 1 of input reversed)\n    # Row 4: [8, 6] (Row 0 of input)\n    # Row 5: [6, 4] (Row 1 of input)\n    \n    # Wait, let's look at the indices:\n    # Row 0: grid[0,0], grid[0,1]\n    # Row 1: grid[1,0], grid[1,1]\n    # Row 2: grid[0,1], grid[0,0]\n    # Row 3: grid[1,1], grid[1,0]\n    # Row 4: grid[0,0], grid[0,1]\n    # Row 5: grid[1,0], grid[1,1]\n    \n    # This is a 3x3 tiling of a 2x2 block where the \n    # middle row of the 3x3 block is the horizontal flip of the top row.\n    # No, let's look at the 2x2 block structure:\n    # Block 1 (Rows 0-1):\n    # [grid[0,0], grid[0,1]]\n    # [grid[1,0], grid[1,1]]\n    # Block 2 (Rows 2-3):\n    # [grid[0,1], grid[0,0]]\n    # [grid[1,1], grid[1,0]]\n    # Block 3 (Rows 4-5):\n    # [grid[0,0], grid[0,1]]\n    # [grid[1,0], grid[1,1]]\n    \n    # Each block is repeated 3 times horizontally.\n    \n    res = np.zeros((6, 6), dtype=int)\n    \n    # Define the three 2x2 blocks\n    blocks = [\n        [[grid[0,0], grid[0,1]], [grid[1,0], grid[1,1]]],\n        [[grid[0,1], grid[0,0]], [grid[1,1], grid[1,0]]],\n        [[grid[0,0], grid[0,1]], [grid[1,0], grid[1,1]]]\n    ]\n    \n    for b_idx in range(3):\n        block = blocks[b_idx]\n        for r in range(2):\n            for c in range(3):\n                res[b_idx*2 + r, c*2 : c*2 + 2] = block[r]\n                \n    return res",
+        "code_len": 2117,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 1,
+        "local_s": 12.44,
+        "status": "graded",
+        "task": "00576224"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 29.75,
+        "status": "no_code",
+        "task": "00576224"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The input is a 2x2 grid.\n    # The output is a 6x6 grid.\n    # Let's analyze the pattern:\n    # Demo 1:\n    # Input:\n    # [A, B]\n    # [C, D]\n    # Output:\n    # [A, B, A, B, A, B]\n    # [C, D, C, D, C, D]\n    # [B, A, B, A, B, A]\n    # [D, C, D, C, D, C]\n    # [A, B, A, B, A, B]\n    # [C, D, C, D, C, D]\n    \n    # Looking at the rows:\n    # Row 0: [A, B] repeated 3 times\n    # Row 1: [C, D] repeated 3 times\n    # Row 2: [B, A] repeated 3 times\n    # Row 3: [D, C] repeated 3 times\n    # Row 4: [A, B] repeated 3 times\n    # Row 5: [C, D] repeated 3 times\n    \n    # The pattern is:\n    # Row 0: input[0] repeated\n    # Row 1: input[1] repeated\n    # Row 2: input[0] reversed (horizontally) repeated\n    # Row 3: input[1] reversed (horizontally) repeated\n    # Row 4: input[0] repeated\n    # Row 5: input[1] repeated\n    \n    # Wait, let's re-examine Demo 1 Row 2: [6, 8, 6, 8, 6, 8]\n    # Input Row 0 is [8, 6]. Reversed is [6, 8]. Correct.\n    # Row 3: [4, 6, 4, 6, 4, 6]. Input Row 1 is [6, 4]. Reversed is [4, 6]. Correct.\n    \n    # Let's check Demo 2:\n    # Input:\n    # [7, 9]\n    # [4, 3]\n    # Row 0: [7, 9, 7, 9, 7, 9]\n    # Row 1: [4, 3, 4, 3, 4, 3]\n    # Row 2: [9, 7, 9, 7, 9, 7] (Reversed Row 0)\n    # Row 3: [3, 4, 3, 4, 3, 4] (Reversed Row 1)\n    # Row 4: [7, 9, 7, 9, 7, 9]\n    # Row 5: [4, 3, 4, 3, 4, 3]\n    \n    # The logic is:\n    # Output Row 0 = Input Row 0 repeated 3 times\n    # Output Row 1 = Input Row 1 repeated 3 times\n    # Output Row 2 = Input Row 0 reversed repeated 3 times\n    # Output Row 3 = Input Row 1 reversed repeated 3 times\n    # Output Row 4 = Input Row 0 repeated 3 times\n    # Output Row 5 = Input Row 1 repeated 3 times\n    \n    res = np.zeros((6, 6), dtype=int)\n    \n    row0 = grid[0].tolist()\n    row1 = grid[1].tolist()\n    rev_row0 = row0[::-1]\n    rev_row1 = row1[::-1]\n    \n    res[0] = np.array(row0 * 3)\n    res[1] = np.array(row1 * 3)\n    res[2] = np.array(rev_row0 * 3)\n    res[3] = np.array(rev_row1 * 3)\n    res[4] = np.array(row0 * 3)\n    res[5] = np.array(row1 * 3)\n    \n    return res",
+        "code_len": 2098,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 3,
+        "local_s": 13.18,
+        "status": "graded",
+        "task": "00576224"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The input is a 2x2 grid.\n    # The output is a 6x6 grid.\n    # Looking at Demo 1:\n    # Input: [[8, 6], [6, 4]]\n    # Output row 0: [8, 6, 8, 6, 8, 6] (Row 0 repeated 3 times)\n    # Output row 1: [6, 4, 6, 4, 6, 4] (Row 1 repeated 3 times)\n    # Output row 2: [6, 8, 6, 8, 6, 8] (Row 0 flipped horizontally, repeated 3 times)\n    # Output row 3: [4, 6, 4, 6, 4, 6] (Row 1 flipped horizontally, repeated 3 times)\n    # Output row 4: [8, 6, 8, 6, 8, 6] (Row 0 repeated 3 times)\n    # Output row 5: [6, 4, 6, 4, 6, 4] (Row 1 repeated 3 times)\n    \n    # Looking at Demo 2:\n    # Input: [[7, 9], [4, 3]]\n    # Output row 0: [7, 9, 7, 9, 7, 9]\n    # Output row 1: [4, 3, 4, 3, 4, 3]\n    # Output row 2: [9, 7, 9, 7, 9, 7] (Row 0 reversed, repeated 3 times)\n    # Output row 3: [3, 4, 3, 4, 3, 4] (Row 1 reversed, repeated 3 times)\n    # Output row 4: [7, 9, 7, 9, 7, 9]\n    # Output row 5: [4, 3, 4, 3, 4, 3]\n    \n    # The pattern is:\n    # Row 0: Input Row 0 repeated 3 times\n    # Row 1: Input Row 1 repeated 3 times\n    # Row 2: Input Row 0 reversed, repeated 3 times\n    # Row 3: Input Row 1 reversed, repeated 3 times\n    # Row 4: Input Row 0 repeated 3 times\n    # Row 5: Input Row 1 repeated 3 times\n    \n    row0 = grid[0].tolist()\n    row1 = grid[1].tolist()\n    row0_rev = row0[::-1]\n    row1_rev = row1[::-1]\n    \n    res = [\n        row0 * 3,\n        row1 * 3,\n        row0_rev * 3,\n        row1_rev * 3,\n        row0 * 3,\n        row1 * 3\n    ]\n    \n    return np.array(res)",
+        "code_len": 1530,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 4,
+        "local_s": 9.44,
+        "status": "graded",
+        "task": "00576224"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The input is a 2x2 grid.\n    # The output is a 6x6 grid.\n    # Looking at Demo 1:\n    # Input: [[8, 6], [6, 4]]\n    # Output row 0: 8, 6, 8, 6, 8, 6 (Repeat row 0 of input 3 times)\n    # Output row 1: 6, 4, 6, 4, 6, 4 (Repeat row 1 of input 3 times)\n    # Output row 2: 6, 8, 6, 8, 6, 8 (Repeat row 0 of input flipped horizontally? No, it's row 0 swapped with row 1? No.)\n    \n    # Let's re-examine Demo 1:\n    # Input:\n    # R0: [8, 6]\n    # R1: [6, 4]\n    # Output:\n    # R0: [8, 6, 8, 6, 8, 6] (R0 repeated 3x)\n    # R1: [6, 4, 6, 4, 6, 4] (R1 repeated 3x)\n    # R2: [6, 8, 6, 8, 6, 8] (R0 elements swapped: [6, 8] repeated 3x)\n    # R3: [4, 6, 4, 6, 4, 6] (R1 elements swapped: [4, 6] repeated 3x)\n    # R4: [8, 6, 8, 6, 8, 6] (R0 repeated 3x)\n    # R5: [6, 4, 6, 4, 6, 4] (R1 repeated 3x)\n    \n    # Let's check Demo 2:\n    # Input:\n    # R0: [7, 9]\n    # R1: [4, 3]\n    # Output:\n    # R0: [7, 9, 7, 9, 7, 9] (R0 repeated 3x)\n    # R1: [4, 3, 4, 3, 4, 3] (R1 repeated 3x)\n    # R2: [9, 7, 9, 7, 9, 7] (R0 swapped: [9, 7] repeated 3x)\n    # R3: [3, 4, 3, 4, 3, 4] (R1 swapped: [3, 4] repeated 3x)\n    # R4: [7, 9, 7, 9, 7, 9] (R0 repeated 3x)\n    # R5: [4, 3, 4, 3, 4, 3] (R1 repeated 3x)\n    \n    # Rule:\n    # The output is 6x6.\n    # Row 0: Input[0] repeated 3 times horizontally.\n    # Row 1: Input[1] repeated 3 times horizontally.\n    # Row 2: Input[0] reversed horizontally, repeated 3 times.\n    # Row 3: Input[1] reversed horizontally, repeated 3 times.\n    # Row 4: Input[0] repeated 3 times horizontally.\n    # Row 5: Input[1] repeated 3 times horizontally.\n    \n    res = np.zeros((6, 6), dtype=int)\n    \n    r0 = grid[0].tolist()\n    r1 = grid[1].tolist()\n    r0_rev = r0[::-1]\n    r1_rev = r1[::-1]\n    \n    # Row 0, 4\n    row_a = r0 * 3\n    res[0, :] = row_a\n    res[4, :] = row_a\n    \n    # Row 1, 5\n    row_b = r1 * 3\n    res[1, :] = row_b\n    res[5, :] = row_b\n    \n    # Row 2\n    res[2, :] = r0_rev * 3\n    # Row 3\n    res[3, :] = r1_rev * 3\n    \n    return res",
+        "code_len": 2034,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 5,
+        "local_s": 14.06,
+        "status": "graded",
+        "task": "00576224"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The input is a 2x2 grid.\n    # The output is a 6x6 grid.\n    # Looking at the pattern:\n    # Row 0: grid[0, 0], grid[0, 1] repeated 3 times\n    # Row 1: grid[1, 0], grid[1, 1] repeated 3 times\n    # Row 2: grid[0, 1], grid[0, 0] repeated 3 times\n    # Row 3: grid[1, 1], grid[1, 0] repeated 3 times\n    # Row 4: grid[0, 0], grid[0, 1] repeated 3 times\n    # Row 5: grid[1, 0], grid[1, 1] repeated 3 times\n    \n    # Essentially, the 6x6 grid is constructed by taking the 2x2 grid\n    # and tiling it horizontally 3 times, and vertically 3 times,\n    # but every second row in the vertical tiling is flipped horizontally.\n    \n    res = np.zeros((6, 6), dtype=int)\n    \n    # Row 0 and 2 and 4 are based on grid row 0\n    # Row 1 and 3 and 5 are based on grid row 1\n    # Wait, let's re-examine Demo 1:\n    # Row 0: 8, 6 (grid[0])\n    # Row 1: 6, 4 (grid[1])\n    # Row 2: 6, 8 (grid[0] flipped)\n    # Row 3: 4, 6 (grid[1] flipped)\n    # Row 4: 8, 6 (grid[0])\n    # Row 5: 6, 4 (grid[1])\n    \n    # Actually, it's simpler:\n    # The 6x6 grid is a 3x3 block of 2x2 blocks.\n    # Block (0,0) is grid\n    # Block (0,1) is grid\n    # Block (0,2) is grid\n    # Block (1,0) is grid flipped horizontally\n    # Block (1,1) is grid flipped horizontally\n    # Block (1,2) is grid flipped horizontally\n    # Block (2,0) is grid\n    # Block (2,1) is grid\n    # Block (2,2) is grid\n    \n    # Let's check Demo 1 again:\n    # Row 0: 8, 6, 8, 6, 8, 6  (grid[0] repeated)\n    # Row 1: 6, 4, 6, 4, 6, 4  (grid[1] repeated)\n    # Row 2: 6, 8, 6, 8, 6, 8  (grid[0] reversed repeated)\n    # Row 3: 4, 6, 4, 6, 4, 6  (grid[1] reversed repeated)\n    # Row 4: 8, 6, 8, 6, 8, 6  (grid[0] repeated)\n    # Row 5: 6, 4, 6, 4, 6, 4  (grid[1] repeated)\n    \n    # This means the 6x6 grid is constructed by:\n    # Taking the 2x2 grid, repeating it 3 times horizontally.\n    # Then taking that result, and for the middle horizontal strip (rows 2 and 3),\n    # we flip those rows horizontally.\n    # Then we repeat that whole 3x2 block vertically.\n    \n    # Let's try a different view:\n    # The 6x6 grid is a 3x3 grid of 2x2 blocks.\n    # The blocks are:\n    # [grid, grid, grid]\n    # [grid_flipped_h, grid_flipped_h, grid_flipped_h]\n    # [grid, grid, grid]\n    \n    # Let's check Demo 1 with this:\n    # grid = [[8, 6], [6, 4]]\n    # grid_flipped_h = [[6, 8], [4, 6]]\n    # Result:\n    # Row 0: 8, 6, 8, 6, 8, 6\n    # Row 1: 6, 4, 6, 4, 6, 4\n    # Row 2: 6, 8, 6, 8, 6, 8\n    # Row 3: 4, 6, 4, 6, 4, 6\n    # Row 4: 8, 6, 8, 6, 8, 6\n    # Row 5: 6, 4, 6, 4, 6, 4\n    # Matches perfectly.\n    \n    grid_h_flipped = grid[:, ::-1]\n    \n    # Construct the 3x3 of 2x2 blocks\n    # Row 0 & 1 of 6x6: grid repeated 3 times\n    # Row 2 & 3 of 6x6: grid_h_flipped repeated 3 times\n    # Row 4 & 5 of 6x6: grid repeated 3 times\n    \n    res = np.zeros((6, 6), dtype=int)\n    \n    # Rows 0, 1, 4, 5 use grid\n    # Rows 2, 3 use grid_h_flipped\n    \n    for i in range(3):\n        # Row 2*i and 2*i + 1\n        # But wait, the pattern is:\n        # Row 0, 1: grid\n        # Row 2, 3: grid_h_flipped\n        # Row 4, 5: grid\n        pass\n        \n    # Let's just do it row by row\n    for r in range(6):\n        if r in [0, 1, 4, 5]:\n            source_row = grid[r % 2]\n        else:\n            source_row = grid_h_flipped[r % 2]\n            \n        # Wait, the logic above is slightly wrong because of the index.\n        # Let's re-verify:\n        # Row 0: grid[0]\n        # Row 1: grid[1]\n        # Row 2: grid_h_flipped[0]\n        # Row 3: grid_h_flipped[1]\n        # Row 4: grid[0]\n        # Row 5: grid[1]\n        \n    # Correct logic:\n    # Row 0, 1 -> grid\n    # Row 2, 3 -> grid_h_flipped\n    # Row 4, 5 -> grid\n    \n    # Implementation:\n    res = np.zeros((6, 6), dtype=int)\n    for r in range(6):\n        if r < 2 or r > 3:\n            row_data = grid[r % 2]\n        else:\n            row_data = grid_h_flipped[r % 2]\n        \n        for c in range(6):\n            res[r, c] = row_data[c % 2]\n            \n    return res",
+        "code_len": 4039,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 6,
+        "local_s": 24.58,
+        "status": "graded",
+        "task": "00576224"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule is to create a 6x6 grid by tiling the 2x2 input grid.\n    However, it's not a simple tiling. \n    Looking at Demo 1:\n    Input:\n    [8, 6]\n    [6, 4]\n    Output:\n    [8, 6, 8, 6, 8, 6]  <- Row 0 (Input Row 0)\n    [6, 4, 6, 4, 6, 4]  <- Row 1 (Input Row 1)\n    [6, 8, 6, 8, 6, 8]  <- Row 2 (Input Row 0 reversed horizontally? No, it's Input Row 0 with columns swapped? No, it's Input Row 0 but the first and second elements are flipped? Let's check Row 2: [6, 8] is [8, 6] flipped.)\n    \n    Wait, let's re-examine:\n    Demo 1:\n    Row 0: [8, 6] repeated 3 times\n    Row 1: [6, 4] repeated 3 times\n    Row 2: [6, 8] repeated 3 times (This is Input Row 0 reversed)\n    Row 3: [4, 6] repeated 3 times (This is Input Row 1 reversed)\n    Row 4: [8, 6] repeated 3 times (Input Row 0)\n    Row 5: [6, 4] repeated 3 times (Input Row 1)\n    \n    Actually, let's look at the columns:\n    Col 0: [8, 6, 6, 4, 8, 6]\n    Col 1: [6, 4, 8, 6, 6, 4]\n    \n    Let's look at the 2x2 blocks:\n    Top-left 2x2: [[8, 6], [6, 4]] (Same as input)\n    Top-right 2x2: [[8, 6], [6, 4]]\n    Bottom-left 2x2: [[6, 8], [4, 6]] (This is the input 2x2 rotated 90 degrees clockwise? No, that would be [6, 8], [4, 6]. Wait, let's check:\n    Input:\n    (0,0)=8, (0,1)=6\n    (1,0)=6, (1,1)=4\n    \n    Rotation 90 deg clockwise:\n    (0,0) becomes (0,1) -> 8\n    (0,1) becomes (1,1) -> 6\n    (1,0) becomes (0,0) -> 6\n    (1,1) becomes (1,0) -> 4\n    So 90 deg clockwise is [[6, 8], [4, 6]].\n    \n    Let's check Demo 2:\n    Input:\n    [7, 9]\n    [4, 3]\n    Output:\n    Row 0: [7, 9, 7, 9, 7, 9]\n    Row 1: [4, 3, 4, 3, 4, 3]\n    Row 2: [9, 7, 9, 7, 9, 7] (Input Row 0 reversed)\n    Row 3: [3, 4, 3, 4, 3, 4] (Input Row 1 reversed)\n    Row 4: [7, 9, 7, 9, 7, 9]\n    Row 5: [4, 3, 4, 3, 4, 3]\n    \n    Actually, the pattern is simpler.\n    The 6x6 grid is composed of 3x3 blocks of 2x2 tiles.\n    Wait, no. It is a 3x3 tiling of 2x2 blocks? 3*2=6.\n    The blocks are:\n    Block (0,0): Input\n    Block (0,1): Input\n    Block (0,2): Input\n    Block (1,0): Input rotated 90 deg clockwise\n    Block (1,1): Input rotated 90 deg clockwise\n    Block (1,2): Input rotated 90 deg clockwise\n    Block (2,0): Input\n    Block (2,1): Input\n    Block (2,2): Input\n    \n    Let's re-verify Demo 1:\n    Input: [[8, 6], [6, 4]]\n    Rotated 90 CW: [[6, 8], [4, 6]]\n    Result:\n    Row 0-1: [[8, 6], [6, 4]] repeated 3 times (Correct)\n    Row 2-3: [[6, 8], [4, 6]] repeated 3 times (Correct)\n    Row 4-5: [[8, 6], [6, 4]] repeated 3 times (Correct)\n    \n    Let's re-verify Demo 2:\n    Input: [[7, 9], [4, 3]]\n    Rotated 90 CW: [[4, 7], [3, 9]] ... wait.\n    Let's check Demo 2 Row 2: [9, 7, 9, 7, 9, 7].\n    If Input Row 0 is [7, 9], then Row 2 is [9, 7].\n    If Input Row 1 is [4, 3], then Row 3 is [3, 4].\n    So Row 2-3 is indeed Input reversed horizontally.\n    \n    Let's check the rotation again for Demo 2.\n    Input:\n    7 9\n    4 3\n    Rotated 90 CW:\n    4 7\n    3 9\n    Row 2 of output is [9, 7]. That's not the rotated version.\n    \n    Let's look at the pattern again.\n    Demo 1:\n    Rows 0,1: Input\n    Rows 2,3: Input with rows swapped and columns swapped?\n    Input:\n    8 6\n    6 4\n    Swap rows:\n    6 4\n    8 6\n    Swap cols:\n    4 6\n    6 8\n    Still not matching [6, 8], [4, 6].\n    \n    Let's try:\n    Row 0,1: Input\n    Row 2,3: Input with columns swapped (8,6 -> 6,8 and 6,4 -> 4,6)\n    Row 4,5: Input\n    \n    Check Demo 1:\n    Row 0,1: [8,6], [6,4]\n    Row 2,3: [6,8], [4,6] (Matches!)\n    Row 4,5: [8,6], [6,4] (Matches!)\n    \n    Check Demo 2:\n    Input: [7,9], [4,3]\n    Row 0,1: [7,9], [4,3]\n    Row 2,3: [9,7], [3,4] (Matches!)\n    Row 4,5: [7,9], [4,3] (Matches!)\n    \n    The rule is:\n    The 6x6 grid is made of three 2x6 horizontal strips.\n    Strip 1 (Rows 0-1): Input repeated 3 times horizontally.\n    Strip 2 (Rows 2-3): Input with columns swapped, repeated 3 times horizontally.\n    Strip 3 (Rows 4-5): Input repeated 3 times horizontally.\n    \"\"\"\n    res = np.zeros((6, 6), dtype=int)\n    \n    # Strip 1\n    for r in range(2):\n        for c in range(6):\n            res[r, c] = grid[r, c % 2]\n            \n    # Strip 2\n    for r in range(2):\n        for c in range(6):\n            # Swap columns: 0 becomes 1, 1 becomes 0\n            res[r+2, c] = grid[r, 1 - (c % 2)]\n            \n    # Strip 3\n    for r in range(2):\n        for c in range(6):\n            res[r+4, c] = grid[r, c % 2]\n            \n    return res",
+        "code_len": 4461,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 7,
+        "local_s": 29.12,
+        "status": "graded",
+        "task": "00576224"
+      }
+    ],
+    "0b17323b": [
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The rule is to find all cells with value 1 and \n    # create a sequence of cells with value 2 starting from \n    # the last '1' found, moving diagonally down-right.\n    \n    # Find all coordinates of 1s\n    ones = []\n    rows, cols = grid.shape\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 1:\n                ones.append((r, c))\n    \n    # If no 1s are found, return the grid as is\n    if not ones:\n        return grid.copy()\n    \n    # The transformation creates a diagonal of 2s starting \n    # from the last 1 found.\n    # In Demo 1: 1s at (1,1), (3,3), (5,5). \n    # Last 1 is (5,5). 2s appear at (7,7), (9,9), (11,11), (13,13).\n    # In Demo 2: 1s at (0,0), (4,4), (8,8).\n    # Last 1 is (8,8). 2s appear at (12,12).\n    \n    # The pattern is: starting from the last 1, \n    # place 2s at (r+2k, c+2k) for k=1, 2, ... \n    # as long as they are within bounds.\n    \n    res = grid.copy()\n    last_r, last_c = ones[-1]\n    \n    k = 1\n    while True:\n        nr, nc = last_r + 2 * k, last_c + 2 * k\n        if nr < rows and nc < cols:\n            res[nr, nc] = 2\n            k += 1\n        else:\n            break\n            \n    return res",
+        "code_len": 1230,
+        "demo_fit": 0.5,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 7.65,
+        "status": "graded",
+        "task": "0b17323b"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule identifies the positions of the color '1' in the grid.\n    It then creates a sequence of new points starting from the first '1' \n    found (in row-major order) and moving diagonally down-right.\n    Specifically, it seems to place a '2' at a position (r, c) \n    where r = r_start + k and c = c_start + k, for k = 1, 2, 3...\n    until the grid boundaries are reached.\n    \n    Wait, looking closer at Demo 1:\n    '1's are at (1,1), (3,3), (5,5).\n    '2's are at (7,7), (9,9), (11,11), (13,13).\n    \n    Looking at Demo 2:\n    '1's are at (0,0), (4,4), (8,8).\n    '2's are at (12,12).\n    \n    The rule is:\n    1. Find all coordinates (r, c) where grid[r, c] == 1.\n    2. Let the last such coordinate be (r_last, c_last).\n    3. The new points (r, c) for color '2' are (r_last + 2*k, c_last + 2*k) \n       for k = 1, 2, 3... as long as they are within bounds.\n    \n    Let's re-check Demo 1:\n    Last '1' is at (5,5).\n    k=1: (5+2, 5+2) = (7,7)\n    k=2: (5+4, 5+4) = (9,9)\n    k=3: (5+6, 5+6) = (11,11)\n    k=4: (5+8, 5+8) = (13,13)\n    Matches perfectly.\n    \n    Let's re-check Demo 2:\n    Last '1' is at (8,8).\n    k=1: (8+2, 8+2) = (10,10) -- Wait, Demo 2 output has '2' at (12,12).\n    Let's re-calculate:\n    Last '1' is at (8,8).\n    k=1: (8+4, 8+4) = (12,12).\n    \n    Wait, let's look at the gap between '1's.\n    Demo 1: (1,1) to (3,3) to (5,5). Gap is 2.\n    Demo 2: (0,0) to (4,4) to (8,8). Gap is 4.\n    \n    The rule:\n    1. Find all coordinates of '1'.\n    2. Calculate the step size: step = (r_last - r_penultimate) or (c_last - c_penultimate).\n       In Demo 1: 5 - 3 = 2.\n       In Demo 2: 8 - 4 = 4.\n    3. The next '2' is at (r_last + step, c_last + step).\n    4. Subsequent '2's are at (r_last + n*step, c_last + n*step).\n    \n    Let's check Demo 1 again:\n    Last '1' is (5,5). Step is 2.\n    Next '2' is (5+2, 5+2) = (7,7).\n    Next '2' is (7+2, 7+2) = (9,9).\n    Next '2' is (9+2, 9+2) = (11,11).\n    Next '2' is (11+2, 11+2) = (13,13).\n    \n    Let's check Demo 2 again:\n    Last '1' is (8,8). Step is 4.\n    Next '2' is (8+4, 8+4) = (12,12).\n    \n    This fits both!\n    \"\"\"\n    grid = np.array(grid)\n    coords = []\n    rows, cols = grid.shape\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 1:\n                coords.append((r, c))\n    \n    if len(coords) < 2:\n        return grid.tolist()\n    \n    r_last, c_last = coords[-1]\n    r_prev, c_prev = coords[-2]\n    step = r_last - r_prev\n    \n    new_grid = grid.copy()\n    curr_r, curr_c = r_last + step, c_last + step\n    while curr_r < rows and curr_c < cols:\n        new_grid[curr_r, curr_c] = 2\n        curr_r += step\n        curr_c += step\n        \n    return new_grid.tolist()",
+        "code_len": 2758,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 1,
+        "local_s": 18.89,
+        "status": "graded",
+        "task": "0b17323b"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The rule seems to be:\n    # Identify all cells with value 1.\n    # For each cell with value 1, check if it's part of a sequence \n    # that can be extended diagonally down-right.\n    # In Demo 1: (1,1), (3,3), (5,5) are 1s. \n    # The output shows (7,7), (9,9), (11,11), (13,13) as 2s.\n    # This looks like a pattern where a sequence of 1s is extended.\n    # However, looking closer at Demo 1:\n    # Input 1s: (1,1), (3,3), (5,5)\n    # Output 2s: (7,7), (9,9), (11,11), (13,13)\n    # It seems the 1s are \"continued\" as 2s.\n    # In Demo 2:\n    # Input 1s: (0,0), (4,4), (8,8)\n    # Output 2s: (12,12)\n    # The pattern is: find the 1s. They are spaced by (2,2).\n    # The 2s are placed at (r+4, c+4), (r+8, c+8), etc. \n    # Wait, let's re-examine.\n    # Demo 1: 1s at (1,1), (3,3), (5,5). 2s at (7,7), (9,9), (11,11), (13,13).\n    # Demo 2: 1s at (0,0), (4,4), (8,8). 2s at (12,12).\n    # In both cases, the 2s start at (last_1_pos + (2,2)) and continue.\n    # Actually, it's simpler: The 1s are a sequence with step (2,2).\n    # The 2s continue that same sequence starting from the next step.\n    \n    # Let's find all 1s\n    ones = []\n    for r in range(len(grid)):\n        for c in range(len(grid[0])):\n            if grid[r][c] == 1:\n                ones.append((r, c))\n    \n    ones.sort()\n    \n    # Create a copy of the grid\n    new_grid = np.copy(grid).tolist()\n    \n    if not ones:\n        return np.array(new_grid)\n    \n    # The 2s start after the last 1 in the sequence.\n    # In Demo 1: last 1 is (5,5). Next is (7,7), (9,9), (11,11), (13,13).\n    # In Demo 2: last 1 is (8,8). Next is (10,10)? No, output shows (12,12).\n    # Wait, Demo 2 output has 2 at (12,12). \n    # If the step is (2,2), (8,8) + (2,2) = (10,10). (10,10) + (2,2) = (12,12).\n    # In Demo 1: (5,5) + (2,2) = (7,7). (7,7) + (2,2) = (9,9). (9,9) + (2,2) = (11,11). (11,11) + (2,2) = (13,13).\n    # In Demo 2: (8,8) + (2,2) = (10,10) [not shown?], (10,10) + (2,2) = (12,12).\n    # Let's re-check Demo 2 output. (12,12) is 2. (10,10) is 0.\n    # This means the 2s are placed every 4 units? \n    # Demo 1: 1s at 1, 3, 5. 2s at 7, 9, 11, 13. (Step 2)\n    # Demo 2: 1s at 0, 4, 8. 2s at 12. (Step 4)\n    # The step is the distance between the last two 1s?\n    # Demo 1: 5-3 = 2. Demo 2: 8-4 = 4.\n    \n    if len(ones) >= 2:\n        last_r, last_c = ones[-1]\n        prev_r, prev_c = ones[-2]\n        dr = last_r - prev_r\n        dc = last_c - prev_c\n        \n        curr_r, curr_c = last_r + dr, last_c + dc\n        while curr_r < len(grid) and curr_c < len(grid[0]):\n            new_grid[curr_r][curr_c] = 2\n            curr_r += dr\n            curr_c += dc\n            \n    return np.array(new_grid)",
+        "code_len": 2729,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 2,
+        "local_s": 19.59,
+        "status": "graded",
+        "task": "0b17323b"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The rule appears to be:\n    # 1. Identify the positions of all pixels with value 1.\n    # 2. If there are more than 2 such pixels, they seem to be preserved or handled differently.\n    # 3. However, looking at the demos:\n    # Demo 1: 3 pixels of value 1 at (1,1), (3,3), (5,5).\n    # Output: (1,1) and (3,3) remain 1. New pixels of value 2 are added at (7,7), (9,9), (11,11), (13,13).\n    # Demo 2: 3 pixels of value 1 at (0,0), (4,4), (8,8).\n    # Output: (0,0) and (4,4) remain 1. (8,8) remains 1? No, wait.\n    # Let's re-examine Demo 2:\n    # Input 1s: (0,0), (4,4), (8,8).\n    # Output 1s: (0,0), (4,4), (8,8).\n    # New 2: (12,12).\n    \n    # Let's look at the pattern of the new 2s:\n    # Demo 1: 1s at (1,1), (3,3), (5,5). New 2s at (7,7), (9,9), (11,11), (13,13).\n    # These are (5+2, 5+2), (5+4, 5+4), (5+6, 5+6), (5+8, 5+8).\n    # Demo 2: 1s at (0,0), (4,4), (8,8). New 2 at (12,12).\n    # This is (8+4, 8+4).\n    \n    # Actually, the pattern is simpler:\n    # The 1s are at (i, i) where i is 1, 3, 5... (Demo 1) or 0, 4, 8... (Demo 2).\n    # The output adds 2s at (i, i) where i is 7, 9, 11, 13... (Demo 1) or 12... (Demo 2).\n    # In Demo 1, the 1s are at indices 1, 3, 5. The 2s are at 7, 9, 11, 13.\n    # In Demo 2, the 1s are at indices 0, 4, 8. The 2s are at 12.\n    \n    # Let's check the gaps:\n    # Demo 1: 1s are at 1, 3, 5 (gap 2). Next would be 7, 9, 11, 13.\n    # Demo 2: 1s are at 0, 4, 8 (gap 4). Next would be 12, 16... (16 is out of bounds).\n    \n    # Rule:\n    # 1. Find all coordinates (r, c) where grid[r, c] == 1.\n    # 2. If these coordinates are (r, r), find the common difference 'd' between consecutive r's.\n    # 3. The next r values are r_last + d, r_last + 2d, ... as long as they are < grid_size.\n    # 4. Place value 2 at those new (r, r) positions.\n    \n    rows, cols = grid.shape\n    ones = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 1:\n                ones.append((r, c))\n    \n    if not ones:\n        return grid.copy()\n    \n    # Check if they are on the diagonal (r == c)\n    diag_ones = [pos[0] for pos in ones if pos[0] == pos[1]]\n    \n    if len(diag_ones) >= 2:\n        # Calculate difference\n        diffs = []\n        for i in range(len(diag_ones) - 1):\n            diffs.append(diag_ones[i+1] - diag_ones[i])\n        \n        # Use the most frequent difference or the first one\n        d = diffs[0]\n        last_r = diag_ones[-1]\n        \n        curr_r = last_r + d\n        while curr_r < rows and curr_r < cols:\n            grid[curr_r, curr_r] = 2\n            curr_r += d\n            \n    return grid",
+        "code_len": 2653,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 3,
+        "local_s": 17.79,
+        "status": "graded",
+        "task": "0b17323b"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    \n    # Find all positions of color 1\n    ones = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 1:\n                ones.append((r, c))\n    \n    # Sort ones by row, then column\n    ones.sort()\n    \n    # The rule seems to be: \n    # For every '1' found, we check if it's part of a sequence.\n    # In Demo 1: (1,1), (3,3), (5,5) are 1s. They are followed by \n    # (7,7), (9,9), (11,11), (13,13) which become 2s.\n    # In Demo 2: (0,0), (4,4), (8,8) are 1s. They are followed by \n    # (12,12) which becomes a 2.\n    \n    # Observation: The 2s appear at (r+k, c+k) where k is a step.\n    # Let's look at the indices of 1s:\n    # Demo 1: (1,1), (3,3), (5,5). The next indices are (7,7), (9,9), (11,11), (13,13).\n    # Demo 2: (0,0), (4,4), (8,8). The next index is (12,12).\n    \n    # The pattern: The 1s are at (i, i) where i is some value.\n    # The 2s are at (j, j) where j > max(i) and j follows a specific progression.\n    # Actually, looking closely at the 1s and 2s:\n    # Demo 1: 1s at 1, 3, 5. 2s at 7, 9, 11, 13.\n    # Demo 2: 1s at 0, 4, 8. 2s at 12.\n    # The 2s start at the next available index in the sequence of \n    # arithmetic progression of the 1s.\n    \n    # Let's re-evaluate:\n    # Demo 1: 1s are at indices 1, 3, 5. Step is 2. Next is 7, 9, 11, 13.\n    # Demo 2: 1s are at indices 0, 4, 8. Step is 4. Next is 12.\n    \n    if len(ones) >= 2:\n        # Calculate step from the first two 1s\n        r1, c1 = ones[0]\n        r2, c2 = ones[1]\n        step = r2 - r1\n        \n        # Find the last 1\n        last_r, last_c = ones[-1]\n        \n        # The 2s start at last_r + step\n        # and continue as long as they are within bounds.\n        curr_r, curr_c = last_r + step, last_c + step\n        while curr_r < rows and curr_c < cols:\n            grid[curr_r, curr_c] = 2\n            curr_r += step\n            curr_c += step\n            \n    return grid.tolist()",
+        "code_len": 2026,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 4,
+        "local_s": 12.63,
+        "status": "graded",
+        "task": "0b17323b"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    \n    # Find all coordinates of color 1\n    ones = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 1:\n                ones.append((r, c))\n    \n    # Sort ones by row and then column\n    ones.sort()\n    \n    # The rule seems to be:\n    # For each '1' found, if it's followed by another '1' \n    # that is at least some distance away, we might be creating a sequence.\n    # Looking at Demo 1:\n    # Input 1s: (1,1), (3,3), (5,5)\n    # Output 1s: (1,1), (3,3), (5,5)\n    # Output 2s: (7,7), (9,9), (11,11), (13,13)\n    # It looks like the pattern of 1s is extended by adding 2s.\n    # The 1s are at (1+2k, 1+2k) for k=0,1,2.\n    # The 2s are at (1+2k, 1+2k) for k=3,4,5,6.\n    \n    # Looking at Demo 2:\n    # Input 1s: (0,0), (4,4), (8,8)\n    # Output 1s: (0,0), (4,4), (8,8)\n    # Output 2s: (12,12)\n    # The 1s are at (0+4k, 0+4k) for k=0,1,2.\n    # The 2s are at (0+4k, 0+4k) for k=3.\n    \n    # General Rule:\n    # 1. Identify the positions of all 1s.\n    # 2. Determine the step (delta) between consecutive 1s.\n    #    In Demo 1: (1,1) to (3,3) is delta 2.\n    #    In Demo 2: (0,0) to (4,4) is delta 4.\n    # 3. The sequence of points (r, c) follows (r0 + k*delta, c0 + k*delta).\n    # 4. The 1s occupy k = 0, 1, ..., N-1.\n    # 5. The 2s occupy k = N, N+1, ..., N+M.\n    # How many 2s? In Demo 1: 4 more. In Demo 2: 1 more.\n    # Wait, let's look at the grid size. \n    # Demo 1: 15x15. Last point (13,13) is the last one before edge.\n    # Demo 2: 15x15. Last point (12,12) is the last one before edge.\n    # It seems we fill the diagonal with 2s until we hit the boundary.\n    \n    if not ones:\n        return grid\n    \n    # Calculate delta\n    delta = (ones[1][0] - ones[0][0]) if len(ones) > 1 else (ones[0][0] - 0)\n    # In Demo 2, (0,0) to (4,4) is delta 4.\n    # Actually, let's just find the pattern of the 1s.\n    \n    # Let's re-examine:\n    # Demo 1: 1s at (1,1), (3,3), (5,5). Next would be (7,7), (9,9), (11,11), (13,13).\n    # Demo 2: 1s at (0,0), (4,4), (8,8). Next would be (12,12).\n    \n    # The rule is: find the sequence of 1s, then continue that sequence with 2s\n    # until the next point in the sequence would fall outside the grid.\n    \n    r0, c0 = ones[0]\n    # Find the step. If only one 1, we need to infer it.\n    # In Demo 2, 1s are (0,0), (4,4), (8,8) -> delta is 4.\n    # In Demo 1, 1s are (1,1), (3,3), (5,5) -> delta is 2.\n    \n    if len(ones) > 1:\n        delta = ones[1][0] - ones[0][0]\n    else:\n        # If only one 1, we need to find the delta. \n        # This is tricky. Let's look at the 1s again.\n        # In Demo 2, the 1s are (0,0), (4,4), (8,8). \n        # Wait, the 1s are already there. We just need to extend them.\n        delta = (ones[1][0] - ones[0][0]) if len(ones) > 1 else 1 # fallback\n        # But wait, in Demo 2, the 1s are (0,0), (4,4), (8,8). Delta is 4.\n        # Let's try to find delta from the 1s.\n        if len(ones) > 1:\n            delta = ones[1][0] - ones[0][0]\n        else:\n            # If only one 1, we can't know delta. Let's assume delta = 1.\n            delta = 1\n            \n    # However, the 1s are already in the grid.\n    # The 2s are placed at (r0 + n*delta, c0 + n*delta) for n = len(ones) ...\n    # until r0 + n*delta >= rows or c0 + n*delta >= cols.\n    \n    # Let's re-calculate delta for Demo 2: (0,0), (4,4), (8,8) -> delta = 4.\n    # For Demo 1: (1,1), (3,3), (5,5) -> delta = 2.\n    \n    # Let's refine delta calculation:\n    if len(ones) > 1:\n        delta = ones[1][0] - ones[0][0]\n    else:\n        # If there's only one 1, we need to find the delta.\n        # Looking at the pattern, it's likely the distance to the next \"logical\" 1.\n        # Since we don't have it, let's see if there's another way.\n        # In both demos, the 1s are equally spaced.\n        delta = 1 # default\n        \n    # Actually, let's just find the delta from the existing 1s.\n    # If there's only one 1, we might need to guess.\n    # But in both demos, there are multiple 1s.\n    \n    # Let's try to find the delta by looking at all 1s.\n    # If there's only one 1, we'll assume delta = 1.\n    if len(ones) > 1:\n        delta = ones[1][0] - ones[0][0]\n    else:\n        delta = 1\n        \n    # Now place 2s\n    n = len(ones)\n    while True:\n        nr = r0 + n * delta\n        nc = c0 + n * delta\n        if nr < rows and nc < cols:\n            grid[nr, nc] = 2\n            n += 1\n        else:\n            break\n            \n    return grid",
+        "code_len": 4567,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 5,
+        "local_s": 29.84,
+        "status": "graded",
+        "task": "0b17323b"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The rule seems to be:\n    # 1. Identify all pixels of color 1.\n    # 2. For every pixel of color 1, find the \"next\" position in a diagonal sequence.\n    # 3. In Demo 1, there are 3 pixels of color 1 at (1,1), (3,3), (5,5).\n    #    The output shows those 3 remain, and a new diagonal sequence of 1s\n    #    is added starting from (7,7), (9,9), (11,11), (13,13) with color 2.\n    # 4. In Demo 2, there are 3 pixels of color 1 at (0,0), (4,4), (8,8).\n    #    The output shows those 3 remain, and a new diagonal sequence of 1s\n    #    is added starting from (12,12) with color 2.\n    \n    # Observation:\n    # Demo 1: 1s at (1,1), (3,3), (5,5). The next \"step\" in the diagonal is (7,7).\n    # The sequence of 1s is (r, r) for r=1, 3, 5. The next is r=7, 9, 11, 13.\n    # Demo 2: 1s at (0,0), (4,4), (8,8). The next \"step\" is (12,12).\n    # The sequence of 1s is (r, r) for r=0, 4, 8. The next is r=12.\n    \n    # General rule:\n    # Find all coordinates (r, c) where grid[r, c] == 1.\n    # Sort them by row index.\n    # Calculate the step (difference between row indices).\n    # In Demo 1: 3-1=2, 5-3=2. Step is 2.\n    # In Demo 2: 4-0=4, 8-4=4. Step is 4.\n    # Find the last row index 'last_r' of a 1.\n    # The next row index is 'last_r + step'.\n    # Place color 2 at (last_r + step, last_r + step), (last_r + 2*step, last_r + 2*step), etc.\n    # until the boundary of the grid.\n    \n    rows, cols = grid.shape\n    ones = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 1:\n                ones.append((r, c))\n    \n    if not ones:\n        return grid.copy()\n    \n    ones.sort()\n    \n    # Determine step\n    if len(ones) >= 2:\n        step = ones[1][0] - ones[0][0]\n    else:\n        # If only one 1 exists, we need a heuristic. \n        # However, the demos have 3. Let's assume step is constant.\n        step = 1 \n        \n    last_r, last_c = ones[-1]\n    \n    new_grid = grid.copy()\n    curr_r = last_r + step\n    curr_c = last_c + step\n    \n    while curr_r < rows and curr_c < cols:\n        new_grid[curr_r, curr_c] = 2\n        curr_r += step\n        curr_c += step\n        \n    return new_grid",
+        "code_len": 2193,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 6,
+        "local_s": 13.07,
+        "status": "graded",
+        "task": "0b17323b"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    \n    # Find all coordinates of color 1\n    ones = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 1:\n                ones.append((r, c))\n    \n    # Sort by row, then column\n    ones.sort()\n    \n    # The rule seems to be: \n    # For every '1' found, if it's at an index (r, c) that is part of a \n    # sequence of ones, it stays 1.\n    # However, looking at the demos:\n    # Demo 1: Ones at (1,1), (3,3), (5,5). Output has ones at those same spots.\n    # Additional ones are added at (7,7), (9,9), (11,11), (13,13) as color 2.\n    # Demo 2: Ones at (0,0), (4,4), (8,8). Output has ones at those same spots.\n    # Additional one is added at (12,12) as color 2.\n    \n    # Let's re-examine the pattern:\n    # Demo 1: 1s at (1,1), (3,3), (5,5). The next in sequence is (7,7), (9,9), (11,11), (13,13).\n    # These are filled with 2.\n    # Demo 2: 1s at (0,0), (4,4), (8,8). The next in sequence is (12,12).\n    # This is filled with 2.\n    \n    # Pattern: The '1's are placed at (i, i) where i is a multiple of some step.\n    # In Demo 1: i = 1, 3, 5. Step is 2. Next are 7, 9, 11, 13.\n    # In Demo 2: i = 0, 4, 8. Step is 4. Next is 12.\n    \n    # Let's find the step:\n    if len(ones) >= 2:\n        step = ones[1][0] - ones[0][0]\n        # Verify step is consistent\n        for i in range(1, len(ones)):\n            if ones[i][0] - ones[i-1][0] != step:\n                # If not consistent, maybe it's not a simple arithmetic progression\n                # but let's check the first two.\n                pass\n    elif len(ones) == 1:\n        # If only one, we can't determine step easily, but let's look at the gap.\n        # In Demo 2, there are 3 ones.\n        pass\n    else:\n        return grid\n\n    # The sequence of indices is i = start, start + step, start + 2*step...\n    # We find the last index in the input and continue the sequence.\n    start = ones[0][0]\n    last_idx = ones[-1][0]\n    \n    # Find next indices\n    current = last_idx + step\n    while current < rows:\n        # Check if (current, current) is within bounds\n        if current < rows and current < cols:\n            grid[current, current] = 2\n        current += step\n        \n    return grid.tolist()\n\n# Since the prompt asks for a numpy array return or list depending on input type, \n# but standard ARC logic usually expects the same type. \n# The prompt says \"return a 2D numpy int array\".\n\ndef transform(grid):\n    import numpy as np\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    \n    ones = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 1:\n                ones.append((r, c))\n    \n    if len(ones) < 1:\n        return grid\n    \n    # Determine step\n    if len(ones) >= 2:\n        step = ones[1][0] - ones[0][0]\n    else:\n        # If only one, we might need to infer from the grid size or other logic\n        # but the demos both have multiple ones.\n        step = 1 # fallback\n        \n    last_r = ones[-1][0]\n    curr_r = last_r + step\n    \n    while curr_r < rows and curr_r < cols:\n        grid[curr_r, curr_r] = 2\n        curr_r += step\n        \n    return grid",
+        "code_len": 3237,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 7,
+        "local_s": 17.38,
+        "status": "graded",
+        "task": "0b17323b"
+      }
+    ],
+    "17cae0c1": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 30.76,
+        "status": "no_code",
+        "task": "17cae0c1"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 30.69,
+        "status": "no_code",
+        "task": "17cae0c1"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 30.61,
+        "status": "no_code",
+        "task": "17cae0c1"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 30.77,
+        "status": "no_code",
+        "task": "17cae0c1"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 30.85,
+        "status": "no_code",
+        "task": "17cae0c1"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 30.68,
+        "status": "no_code",
+        "task": "17cae0c1"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 30.69,
+        "status": "no_code",
+        "task": "17cae0c1"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 30.71,
+        "status": "no_code",
+        "task": "17cae0c1"
+      }
+    ],
+    "1a2e2828": [
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule identifies the color of the 'horizontal' or 'vertical' line \n    that spans across the grid or acts as a divider/separator.\n    \n    Looking at the demos:\n    Demo 1: A horizontal line of 6s exists. Output [[6]].\n    Demo 2: A vertical line of 8s exists. Output [[8]].\n    Demo 3: A vertical line of 6s exists. Output [[6]].\n    Demo 4: A horizontal line of 1s exists. Output [[1]].\n    Demo 5: A horizontal line of 3s exists. Output [[3]].\n    \n    The rule seems to be: find the color of the line that spans the \n    entire width or height of the grid (or nearly all of it, \n    intersecting with other structures).\n    \n    More specifically, it's the color of the 'separator' line.\n    In Demo 1, the row of 6s is a full horizontal line.\n    In Demo 2, the column of 8s is a full vertical line.\n    In Demo 3, the column of 6s is a full vertical line.\n    In Demo 4, the row of 1s is a full horizontal line.\n    In Demo 5, the row of 3s is a full horizontal line.\n    \"\"\"\n    rows, cols = grid.shape\n    \n    # Check for a full horizontal line (same color across all columns)\n    # or a full vertical line (same color across all rows).\n    # We check for colors that are not 0.\n    \n    # Check horizontal lines\n    for r in range(rows):\n        row_colors = [grid[r, c] for c in range(cols)]\n        unique_colors = set(row_colors)\n        if len(unique_colors) == 1 and list(unique_colors)[0] != 0:\n            return np.array([[list(unique_colors)[0]]])\n            \n    # Check vertical lines\n    for c in range(cols):\n        col_colors = [grid[r, c] for r in range(rows)]\n        unique_colors = set(col_colors)\n        if len(unique_colors) == 1 and list(unique_colors)[0] != 0:\n            return np.array([[list(unique_colors)[0]]])\n            \n    # If no perfect line, check for lines that are almost full \n    # (e.g., Demo 2 where 8s are interrupted by 6s at the bottom)\n    # Actually, in Demo 2, the 8s are in a column, but one cell is 6.\n    # Let's refine: find a color that appears in a column/row \n    # and has a high frequency in that specific row/column.\n    \n    # Re-evaluating Demo 2: Column 8 has 8s at (0,8), (1,8), (2,8), (3,8), (4,8), (5,8), (6,8), (7,8), (8,8).\n    # Wait, in Demo 2, the 8s are at (0,8) to (8,8). That is a full column!\n    # Let's re-check Demo 2 input:\n    # [0, 0, 0, 4, 4, 0, 0, 0, 8, 0, 0] -> col 8 is 8\n    # [0, 0, 0, 4, 4, 0, 0, 0, 8, 0, 0] -> col 8 is 8\n    # [3, 3, 3, 4, 4, 3, 3, 3, 8, 3, 3] -> col 8 is 8\n    # ... and so on. It is a full column of 8s.\n    \n    # Let's check Demo 3: Column 4 is all 6s.\n    # Let's check Demo 4: Row 3 and 4 are all 1s.\n    # Let's check Demo 5: Row 1 is all 3s.\n    \n    # The logic is: find a row or column that consists entirely of the same non-zero color.\n    \n    for r in range(rows):\n        row_vals = grid[r, :]\n        if np.all(row_vals == row_vals[0]) and row_vals[0] != 0:\n            return np.array([[row_vals[0]]])\n            \n    for c in range(cols):\n        col_vals = grid[:, c]\n        if np.all(col_vals == col_vals[0]) and col_vals[0] != 0:\n            return np.array([[col_vals[0]]])\n\n    # Fallback for cases where the line might be interrupted by one pixel (like Demo 2 if I misread)\n    # But based on the analysis, they are full lines.\n    return np.array([[0]])",
+        "code_len": 3353,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 0,
+        "local_s": 17.92,
+        "status": "graded",
+        "task": "1a2e2828"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule identifies the color that forms a horizontal line spanning the entire width \n    of the grid (or a significant portion of it) or is the most prominent 'divider' \n    color. \n    \n    Looking at the demos:\n    Demo 1: Row 5 is all 6s. Output is [[6]].\n    Demo 2: Row 5 and 6 have 8s in the middle, but row 5/6 are mostly 6s. \n             Wait, Demo 2 output is [[8]]. Let's re-examine.\n    \n    Re-evaluating:\n    Demo 1: Row 5 is all 6s. Output [[6]].\n    Demo 2: Column 8 is all 8s. Output [[8]].\n    Demo 3: Column 4 is all 6s. Output [[6]].\n    Demo 4: Row 3 and 4 are all 1s. Output [[1]].\n    Demo 5: Row 1 is all 3s. Output [[3]].\n    \n    Rule: Find the color that forms a continuous line (row or column) \n    spanning the full dimension of the grid.\n    \"\"\"\n    rows, cols = grid.shape\n    \n    # Check for full rows\n    for r in range(rows):\n        row_vals = grid[r, :]\n        unique_vals = np.unique(row_vals)\n        if len(unique_vals) == 1 and unique_vals[0] != 0:\n            return np.array([[unique_vals[0]]])\n            \n    # Check for full columns\n    for c in range(cols):\n        col_vals = grid[:, c]\n        unique_vals = np.unique(col_vals)\n        if len(unique_vals) == 1 and unique_vals[0] != 0:\n            return np.array([[unique_vals[0]]])\n            \n    # Fallback: If no full line, find the most frequent non-zero color\n    # (though the demos suggest a full line always exists)\n    flat = grid.flatten()\n    non_zero = flat[flat != 0]\n    if len(non_zero) == 0:\n        return np.array([[0]])\n    counts = np.bincount(non_zero)\n    return np.array([[np.argmax(counts)]])",
+        "code_len": 1674,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 1,
+        "local_s": 7.8,
+        "status": "graded",
+        "task": "1a2e2828"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 32.07,
+        "status": "no_code",
+        "task": "1a2e2828"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule identifies the color that forms a 'horizontal' or 'vertical' \n    divider or a distinct 'cross-cutting' structure that spans a significant \n    portion of the grid's dimensions.\n    \n    Looking at the demos:\n    Demo 1: Row 5 is all 6s. Output [[6]].\n    Demo 2: Row 5 and 6 have 8s as a vertical line, but the 6s are the horizontal line. \n             Wait, Demo 2 output is [[8]]. Let's re-examine.\n    \n    Re-evaluating:\n    Demo 1: Color 6 is a full horizontal line.\n    Demo 2: Color 8 is a full vertical line.\n    Demo 3: Color 6 is a full vertical line.\n    Demo 4: Color 1 is a full horizontal line.\n    Demo 5: Color 3 is a full horizontal line.\n    \n    The rule is: Find the color that forms a continuous line (either horizontal or vertical) \n    that spans the entire width or height of the grid (or nearly the entire grid, \n    excluding a single pixel if it's a divider).\n    \n    Wait, let's look at the 'divider' logic:\n    Demo 1: Color 6 is a full row.\n    Demo 2: Color 8 is a full column.\n    Demo 3: Color 6 is a full column.\n    Demo 4: Color 1 is a full row.\n    Demo 5: Color 3 is a full row.\n    \n    Actually, in Demo 2, the 8s are a column. In Demo 3, the 6s are a column.\n    In Demo 1, 4, and 5, the output is a row.\n    \n    The rule is: The output is the color of the line that \"cuts\" the grid into \n    distinct regions.\n    \"\"\"\n    rows, cols = grid.shape\n    \n    # Check for full rows\n    for r in range(rows):\n        row_colors = np.unique(grid[r])\n        if len(row_colors) == 1 and row_colors[0] != 0:\n            # Check if it's a divider (not just a background)\n            # In Demo 1, 6 is the only row that is solid.\n            # In Demo 4, 1 is the only row that is solid.\n            # In Demo 5, 3 is the only row that is solid.\n            # We need to ensure it's not the background color 0.\n            return np.array([[row_colors[0]]])\n\n    # Check for full columns\n    for c in range(cols):\n        col_colors = np.unique(grid[:, c])\n        if len(col_colors) == 1 and col_colors[0] != 0:\n            return np.array([[col_colors[0]]])\n            \n    # If no full line, check for lines that are nearly full (e.g. one pixel off)\n    # Demo 2: Color 8 is a column. Let's check that.\n    for c in range(cols):\n        col_data = grid[:, c]\n        # Count non-zero colors\n        unique_colors = np.unique(col_data[col_data != 0])\n        if len(unique_colors) == 1:\n            # If it's a single color and spans most of the column\n            # In Demo 2, the 8s are at column index 8.\n            # Let's see if it's the only column that is mostly one color.\n            # Actually, in Demo 2, the 8s are a vertical line.\n            # Let's check if it's a \"dominant\" line.\n            count = np.sum(col_data == unique_colors[0])\n            if count > rows * 0.8:\n                return np.array([[unique_colors[0]]])\n\n    # Fallback for Demo 2/3 logic if row/col check fails\n    # Find the color that appears in a straight line\n    for c in range(cols):\n        col_data = grid[:, c]\n        unique_colors = np.unique(col_data)\n        for color in unique_colors:\n            if color == 0: continue\n            if np.sum(col_data == color) > rows * 0.7:\n                return np.array([[color]])\n                \n    for r in range(rows):\n        row_data = grid[r]\n        unique_colors = np.unique(row_data)\n        for color in unique_colors:\n            if color == 0: continue\n            if np.sum(row_data == color) > cols * 0.7:\n                return np.array([[color]])\n\n    return np.array([[0]])",
+        "code_len": 3635,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 3,
+        "local_s": 16.4,
+        "status": "graded",
+        "task": "1a2e2828"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule identifies the color of the row or column that acts as a \n    'separator' or 'divider' between different regions. \n    In most cases, the output is a 1x1 grid containing the color of \n    the horizontal or vertical line that divides the grid into distinct \n    rectangular blocks.\n    \n    Looking at the demos:\n    Demo 1: Row 5 (index 5) is all 6s. It separates the top and bottom. Output: [[6]]\n    Demo 2: Column 8 (index 8) is all 8s. It separates the left and right. Output: [[8]]\n    Demo 3: Column 4 (index 4) is all 6s. It separates the left and right. Output: [[6]]\n    Demo 4: Row 3 (index 3) and Row 4 (index 4) are all 1s. Output: [[1]]\n    Demo 5: Row 1 (index 1) is all 3s. Output: [[3]]\n    \n    The rule seems to be: find a row or column that is composed entirely of a \n    single non-zero color (excluding 0) and that serves as a structural \n    divider. If multiple exist, we choose the one that is most \"central\" or \n    prominent.\n    \"\"\"\n    rows, cols = grid.shape\n    \n    best_color = -1\n    \n    # Check rows for a solid line of a single color (not 0)\n    for r in range(rows):\n        row_values = grid[r, :]\n        unique_vals = np.unique(row_values)\n        if len(unique_vals) == 1 and unique_vals[0] != 0:\n            best_color = unique_vals[0]\n            \n    # Check columns for a solid line of a single color (not 0)\n    for c in range(cols):\n        col_values = grid[:, c]\n        unique_vals = np.unique(col_values)\n        if len(unique_vals) == 1 and unique_vals[0] != 0:\n            # If a column is a solid line, it's a strong candidate.\n            # In Demo 2, the 8s are a column.\n            best_color = unique_vals[0]\n\n    # Special case for Demo 4: The row of 1s is a divider.\n    # If multiple lines exist, we need to decide which one.\n    # In Demo 4, there are rows of 1s and columns of 3s and 5s.\n    # However, the output is 1.\n    \n    # Let's refine: The output is the color of the line that \n    # spans the entire width or height of the grid.\n    \n    final_color = 0\n    # Check rows first\n    for r in range(rows):\n        row_vals = grid[r, :]\n        if np.all(row_vals == row_vals[0]) and row_vals[0] != 0:\n            # This row is a solid line.\n            # In Demo 1, row 5 is all 6s.\n            # In Demo 4, rows 3 and 4 are all 1s.\n            # In Demo 5, row 1 is all 3s.\n            final_color = row_vals[0]\n            \n    # Check columns\n    for c in range(cols):\n        col_vals = grid[:, c]\n        if np.all(col_vals == col_vals[0]) and col_vals[0] != 0:\n            # This column is a solid line.\n            # In Demo 2, col 8 is all 8s.\n            # In Demo 3, col 4 is all 6s.\n            final_color = col_vals[0]\n\n    return np.array([[final_color]])",
+        "code_len": 2802,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 4,
+        "local_s": 13.43,
+        "status": "graded",
+        "task": "1a2e2828"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule identifies the color that forms a continuous horizontal or vertical line \n    across the entire width or height of the grid.\n    In Demo 1: Row 5 is all 6s (width 12). Output [[6]].\n    In Demo 2: Column 8 is all 8s (height 9). Output [[8]].\n    In Demo 3: Column 4 is all 6s (height 11). Output [[6]].\n    In Demo 4: Row 3 and 4 are all 1s (width 12). Output [[1]].\n    In Demo 5: Row 1 is all 3s (width 3). Output [[3]].\n    \n    If multiple such lines exist, it seems to pick one. If a line is \n    found, the output is a 1x1 grid containing that color.\n    \"\"\"\n    rows, cols = grid.shape\n    \n    # Check for horizontal lines (full width)\n    for r in range(rows):\n        row_vals = grid[r, :]\n        if np.all(row_vals != 0) and np.all(row_vals == row_vals[0]):\n            return np.array([[row_vals[0]]])\n            \n    # Check for vertical lines (full height)\n    for c in range(cols):\n        col_vals = grid[:, c]\n        if np.all(col_vals != 0) and np.all(col_vals == col_vals[0]):\n            return np.array([[col_vals[0]]])\n            \n    # Fallback: if no full line, check for a line that spans most of the dimension \n    # or a specific pattern. Looking at Demo 2, column 8 is all 8s.\n    # Let's re-check the logic:\n    # Demo 1: Row 5 is all 6.\n    # Demo 2: Col 8 is all 8.\n    # Demo 3: Col 4 is all 6.\n    # Demo 4: Row 3 and 4 are all 1.\n    # Demo 5: Row 1 is all 3.\n    \n    # The logic is: find a color that occupies a full row or full column.\n    # If multiple exist, the first one found is returned.\n    \n    # Re-checking Demo 2:\n    # Col 8: [8, 8, 8, 8, 8, 8, 8, 8, 8] -> All 8s. Correct.\n    \n    # Let's refine the loop to be more robust.\n    for r in range(rows):\n        row_vals = grid[r, :]\n        if np.all(row_vals != 0) and np.all(row_vals == row_vals[0]):\n            return np.array([[row_vals[0]]])\n            \n    for c in range(cols):\n        col_vals = grid[:, c]\n        if np.all(col_vals != 0) and np.all(col_vals == col_vals[0]):\n            return np.array([[col_vals[0]]])\n\n    # If no full line, return a default or try to find the most frequent \"full-ish\" line\n    # but the demos suggest there is always a full line.\n    return np.array([[0]])",
+        "code_len": 2269,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 5,
+        "local_s": 11.22,
+        "status": "graded",
+        "task": "1a2e2828"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule identifies the color that forms a horizontal line spanning \n    the entire width of the grid (or the most significant horizontal structure).\n    \n    Looking at the demos:\n    Demo 1: Row 5 is all 6s. Output is [[6]].\n    Demo 2: Row 5 and 6 are mostly 6s, but Row 5/6 also has an 8. \n             Wait, Row 5 is 6,6,6,6,6,6,6,6,8,6,6. \n             Actually, looking at Demo 2, the 8 is a vertical line.\n             The output is [[8]].\n    Demo 3: Row 6 and 7 are all 4s, but Column 4 is all 6s. \n             Wait, the output is [[6]].\n    Demo 4: Row 3 and 4 are all 1s. Output is [[1]].\n    Demo 5: Row 1 is all 3s. Output is [[3]].\n\n    Re-evaluating:\n    The output is the color of the horizontal line that spans the entire width \n    OR the vertical line that spans the entire height.\n    \n    Demo 1: Row 5 is all 6s (width 12). Output [[6]].\n    Demo 2: Column 8 is all 8s (height 9). Output [[8]].\n    Demo 3: Column 4 is all 6s (height 11). Output [[6]].\n    Demo 4: Row 3 and 4 are all 1s (width 12). Output [[1]].\n    Demo 5: Row 1 is all 3s (width 3). Output [[3]].\n\n    Rule: Find the color of the row or column that is completely filled \n    with a single non-zero color.\n    \"\"\"\n    rows, cols = grid.shape\n    \n    # Check for full horizontal lines\n    for r in range(rows):\n        row = grid[r]\n        unique_colors = np.unique(row)\n        if len(unique_colors) == 1 and unique_colors[0] != 0:\n            return np.array([[unique_colors[0]]])\n            \n    # Check for full vertical lines\n    for c in range(cols):\n        col = grid[:, c]\n        unique_colors = np.unique(col)\n        if len(unique_colors) == 1 and unique_colors[0] != 0:\n            return np.array([[unique_colors[0]]])\n            \n    # Fallback (should not happen based on demos)\n    return np.array([[0]])",
+        "code_len": 1870,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 6,
+        "local_s": 8.77,
+        "status": "graded",
+        "task": "1a2e2828"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The pattern identifies a single row or column that acts as a \"separator\" or \n    a \"divider\" that spans the entire width or height of the grid.\n    In each demo:\n    - Demo 1: Row 5 is all 6s (full width). Output is [[6]].\n    - Demo 2: Row 5 and 6 are mostly 6s, but the output is [[8]]. Wait, let's re-examine.\n    \n    Let's look at the unique colors and their distribution.\n    Demo 1: Color 6 is a horizontal line. Color 8 is a vertical line.\n    Demo 2: Color 8 is a vertical line. Color 6 is a horizontal line.\n    Demo 3: Color 6 is a vertical line. Color 8 is a vertical line.\n    Demo 4: Color 1 is a horizontal line.\n    Demo 5: Color 3 is a horizontal line.\n    \n    Actually, the rule is: Find the color that forms a continuous line (row or column) \n    that spans the entire dimension.\n    Wait, in Demo 2, color 8 is a vertical line. In Demo 1, color 6 is a horizontal line.\n    \n    Let's count the occurrences of each color that forms a full line.\n    Demo 1: Color 6 (row 5) is a full line. Color 8 (col 7) is a full line.\n    Wait, Demo 1 output is 6. Demo 2 output is 8.\n    \n    Let's look at the \"center\" of the grid.\n    Demo 1: Row 5 is the middle-ish row.\n    Demo 2: Col 8 is the middle-ish column.\n    Demo 3: Col 4 is a vertical line.\n    Demo 4: Row 3 and 4 are horizontal lines.\n    Demo 5: Row 1 is a horizontal line.\n    \n    Let's check the \"uniqueness\" or \"dominance\".\n    In Demo 1, color 6 is a horizontal line spanning the whole width.\n    In Demo 2, color 8 is a vertical line spanning the whole height.\n    In Demo 3, color 6 is a vertical line spanning the whole height.\n    In Demo 4, color 1 is a horizontal line spanning the whole width.\n    In Demo 5, color 3 is a horizontal line spanning the whole width.\n    \n    Wait, in Demo 2, color 6 is also a horizontal line, but it's broken (last col is 8).\n    In Demo 3, color 6 is a vertical line.\n    \n    The rule seems to be: Find the color that forms a perfect line (row or column) \n    spanning the entire dimension, and if there are multiple, pick the one that is \n    \"central\" or \"distinct\".\n    \n    Actually, looking at Demo 2 again: \n    Row 5: [6, 6, 6, 6, 6, 6, 6, 6, 8, 6, 6] -> Not a perfect line because of the 8.\n    Col 8: [8, 8, 8, 8, 8, 8, 8, 8, 8] -> Perfect line!\n    \n    Demo 1:\n    Row 5: [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6] -> Perfect line.\n    Col 7: [8, 8, 8, 8, 8, 8, 8, 8] -> Perfect line.\n    Why 6? 6 is the only color that is a horizontal line.\n    \n    Demo 3:\n    Col 4: [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6] -> Perfect line.\n    Col 7: [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8] -> Perfect line.\n    Why 6? \n    \n    Let's re-evaluate:\n    Demo 1: Row 5 is all 6s.\n    Demo 2: Col 8 is all 8s.\n    Demo 3: Col 4 is all 6s.\n    Demo 4: Row 3 & 4 are all 1s.\n    Demo 5: Row 1 is all 3s.\n    \n    The output is the color of the \"divider\" line. \n    In Demo 1, there are two lines: a row of 6s and a col of 8s. Output is 6.\n    In Demo 2, there is a col of 8s. Output is 8.\n    In Demo 3, there are two lines: a col of 6s and a col of 8s. Output is 6.\n    In Demo 4, there is a row of 1s. Output is 1.\n    In Demo 5, there is a row of 3s. Output is 3.\n    \n    Why 6 in Demo 1 and 3?\n    In Demo 1, the row of 6s is at index 5. The col of 8s is at index 7.\n    In Demo 3, the col of 6s is at index 4. The col of 8s is at index 7.\n    \n    Maybe it's the one with the smaller index?\n    Demo 1: Row 5 vs Col 7. 5 < 7.\n    Demo 3: Col 4 vs Col 7. 4 < 7.\n    \n    Let's check Demo 2:\n    Col 8 is the only perfect line. (Row 5 is broken by an 8).\n    \n    Let's check Demo 4:\n    Row 3 and Row 4 are perfect lines of 1s.\n    \n    Rule: Find all colors that form a perfect row or column (all elements in that row/column are the same non-zero color). \n    If multiple exist, pick the one with the smallest index (row or column).\n    \"\"\"\n    rows, cols = grid.shape\n    candidates = []\n    \n    # Check rows\n    for r in range(rows):\n        row_vals = grid[r, :]\n        color = row_vals[0]\n        if color != 0 and np.all(row_vals == color):\n            candidates.append((r, color))\n            \n    # Check columns\n    for c in range(cols):\n        col_vals = grid[:, c]\n        color = col_vals[0]\n        if color != 0 and np.all(col_vals == color):\n            candidates.append((c, color))\n            \n    # Sort by index (the first element of the tuple)\n    candidates.sort(key=lambda x: x[0])\n    \n    # Return the color of the first candidate\n    if candidates:\n        result_color = candidates[0][1]\n        return np.array([[result_color]])\n    else:\n        # Fallback (should not happen based on demos)\n        return np.array([[0]])",
+        "code_len": 4709,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 7,
+        "local_s": 25.73,
+        "status": "graded",
+        "task": "1a2e2828"
+      }
+    ],
+    "1a6449f1": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 37.08,
+        "status": "no_code",
+        "task": "1a6449f1"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    \n    best_content = None\n    max_area = -1\n    \n    # Identify colors that could be frames\n    colors = np.unique(grid)\n    colors = colors[colors != 0]\n    \n    for c in colors:\n        coords = np.argwhere(grid == c)\n        if coords.size == 0:\n            continue\n            \n        r_min, c_min = coords.min(axis=0)\n        r_max, c_max = coords.max(axis=0)\n        \n        # The content is the subgrid strictly inside the bounding box of color c\n        # We need to check if this subgrid is actually \"inside\" a frame of color c\n        # A simple way to check is to see if the boundary of the bounding box is mostly color c\n        \n        # Check if the frame is mostly color c\n        # (This is a heuristic, but works for ARC)\n        is_frame = True\n        # Check top and bottom rows of the bounding box\n        for r in [r_min, r_max]:\n            if np.sum(grid[r, c_min:c_max+1] == c) < (c_max - c_min + 1) * 0.8:\n                is_frame = False\n                break\n        if not is_frame: continue\n        \n        # Check left and right columns\n        for col in [c_min, c_max]:\n            if np.sum(grid[r_min:r_max+1, col] == c) < (r_max - r_min + 1) * 0.8:\n                is_frame = False\n                break\n        if not is_frame: continue\n        \n        # Extract content\n        content_r_min, content_r_max = r_min + 1, r_max - 1\n        content_c_min, content_c_max = c_min + 1, c_max - 1\n        \n        if content_r_min <= content_r_max and content_c_min <= content_c_max:\n            content = grid[content_r_min:content_r_max+1, content_c_min:content_c_max+1]\n            area = content.shape[0] * content.shape[1]\n            if area > max_area:\n                max_area = area\n                best_content = content\n                \n    return best_content.tolist() if best_content is not None else []",
+        "code_len": 1951,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 35.8,
+        "status": "graded",
+        "task": "1a6449f1"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 36.02,
+        "status": "no_code",
+        "task": "1a6449f1"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 36.0,
+        "status": "no_code",
+        "task": "1a6449f1"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 35.84,
+        "status": "no_code",
+        "task": "1a6449f1"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 35.85,
+        "status": "no_code",
+        "task": "1a6449f1"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The rule is to find the largest contiguous block of a non-zero color (excluding 8)\n    # that forms a rectangular shape. However, looking at the examples, \n    # the output is a subgrid of the original grid.\n    # Let's re-examine.\n    \n    # Demo 1: Input (19x13), Output (6x7)\n    # Demo 2: Input (21x23), Output (8x10)\n    # Demo 3: Input (22x21), Output (4x5)\n    \n    # Looking at the colors:\n    # In Demo 1, the output contains colors 4, 0, 6, 7, 5, 2, 8, 9, 1, 3.\n    # Wait, the output is actually a subgrid. Let's find the bounding box of \n    # a specific shape.\n    # In Demo 1, there is a 6x7 block of 8s? No.\n    # Let's look at the \"8\"s. In Demo 1, there's a large block of 8s.\n    # Rows 1-8, Col 1-9 are mostly 8s.\n    # In Demo 2, there's a large block of 2s and 4s.\n    # In Demo 3, there's a large block of 1s and 7s.\n    \n    # Let's try a different approach: The output is a subgrid that contains \n    # a specific \"pattern\" or is a specific region.\n    # Actually, looking at the output of Demo 1:\n    # It's rows 10 to 15, columns 5 to 11? No.\n    \n    # Let's look at the colors in the output.\n    # Demo 1 Output:\n    # [4, 0, 0, 0, 0, 0, 0]\n    # [0, 0, 6, 0, 0, 7, 5]\n    # [4, 2, 0, 0, 0, 8, 0]\n    # [9, 1, 9, 6, 0, 0, 0]\n    # [0, 0, 0, 0, 8, 0, 0]\n    # [0, 0, 0, 0, 4, 0, 4]\n    \n    # These values appear in the input at specific locations.\n    # In Demo 1, these are rows 10 to 15, columns 5 to 11.\n    # Let's check:\n    # Row 10: [5, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] -> col 5-11: [0, 0, 0, 0, 0, 0, 0]\n    # This is not matching.\n    \n    # Let's try: The output is the subgrid that is \"surrounded\" by the largest \n    # contiguous block of a single color (the \"frame\").\n    # In Demo 1, the 8s form a frame.\n    # The 8s are at:\n    # Row 1: Col 1-9\n    # Row 2: Col 1, 9\n    # Row 3: Col 1, 7, 9, 11\n    # Row 4: Col 1, 7, 9\n    # Row 5: Col 1, 9\n    # Row 6: Col 1, 6, 9\n    # Row 7: Col 1, 9\n    # Row 8: Col 1-9\n    # This is a frame around a 6x7 area.\n    # The area inside the 8s (Rows 2-7, Cols 2-8) is:\n    # Row 2: [4, 0, 0, 0, 0, 0, 0]\n    # Row 3: [0, 0, 6, 0, 0, 7, 5]\n    # Row 4: [4, 2, 0, 0, 0, 8, 0]\n    # Row 5: [9, 1, 9, 6, 0, 0, 0]\n    # Row 6: [0, 0, 0, 0, 8, 0, 0]\n    # Row 7: [0, 0, 0, 0, 4, 0, 4]\n    # This matches exactly!\n    \n    # Rule: Find the largest rectangular frame of a single color (not 0).\n    # The output is the subgrid inside that frame.\n    \n    rows, cols = grid.shape\n    max_area = -1\n    best_subgrid = None\n    \n    # Check all possible rectangular frames\n    for r1 in range(rows):\n        for r2 in range(r1 + 1, rows):\n            for c1 in range(cols):\n                for c2 in range(c1 + 2, cols):\n                    # A frame is the boundary of the rectangle (r1, c1) to (r2, c2)\n                    # The thickness is 1.\n                    # Check if all pixels on the boundary are the same non-zero color.\n                    \n                    # Boundary pixels:\n                    # Top: (r1, c1...c2)\n                    # Bottom: (r2, c1...c2)\n                    # Left: (r1...r2, c1)\n                    # Right: (r1...r2, c2)\n                    \n                    boundary_color = -1\n                    is_frame = True\n                    \n                    # Check top and bottom rows\n                    for c in range(c1, c2 + 1):\n                        color = grid[r1, c]\n                        if color == 0:\n                            is_frame = False\n                            break\n                        if boundary_color == -1:\n                            boundary_color = color\n                        elif color != boundary_color:\n                            is_frame = False\n                            break\n                    if not is_frame: continue\n                    \n                    # Check left and right columns\n                    for r in range(r1, r2 + 1):\n                        color = grid[r, c1]\n                        if color == 0:\n                            is_frame = False\n                            break\n                        if color != boundary_color:\n                            is_frame = False\n                            break\n                        \n                        color = grid[r, c2]\n                        if color == 0:\n                            is_frame = False\n                            break\n                        if color != boundary_color:\n                            is_frame = False\n                            break\n                    \n                    if is_frame:\n                        # The subgrid is inside: (r1+1, c1+1) to (r2-1, c2-1)\n                        # Only if the subgrid is at least 1x1\n                        inner_r1, inner_r2 = r1 + 1, r2 - 1\n                        inner_c1, inner_c2 = c1 + 1, c2 - 1\n                        \n                        if inner_r1 <= inner_r2 and inner_c1 <= inner_c2:\n                            subgrid = grid[inner_r1:inner_r2+1, inner_c1:inner_c2+1]\n                            area = (inner_r2 - inner_r1 + 1) * (inner_c2 - inner_c1 + 1)\n                            if area > max_area:\n                                max_area = area\n                                best_subgrid = subgrid\n                                \n    return best_subgrid",
+        "code_len": 5362,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 6,
+        "local_s": 31.42,
+        "status": "graded",
+        "task": "1a6449f1"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 35.87,
+        "status": "no_code",
+        "task": "1a6449f1"
+      }
+    ],
+    "2072aba6": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 30.51,
+        "status": "no_code",
+        "task": "2072aba6"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The input is always 3x3. The output is always 6x6.\n    # The output is a 2x2 tiling of a 3x3 block.\n    # The 3x3 block is constructed by replacing each '5' in the input \n    # with a 2x2 checkerboard pattern of 1s and 2s.\n    # However, looking at the demos, the 6x6 is actually a 2x2 tiling \n    # of a 3x3 grid where each '5' in the original grid is replaced by \n    # a 2x2 block of 1s and 2s.\n    \n    # Let's re-examine:\n    # Demo 1: Input has 5s at (0,1), (1,0), (1,1), (1,2), (2,1).\n    # Output 6x6 is a 2x2 tiling of a 3x3 grid.\n    # Let's find the 3x3 base grid.\n    # Demo 1 Output:\n    # Row 0: [0, 0, 1, 2, 0, 0] -> Base Row 0: [0, 0, 1]\n    # Row 1: [0, 0, 2, 1, 0, 0] -> Base Row 1: [0, 0, 2]\n    # Row 2: [1, 2, 1, 2, 1, 2] -> Base Row 2: [1, 2, 1]\n    # Wait, the output is a 2x2 tiling of a 3x3 grid? \n    # Let's check Demo 1 again. \n    # Output Row 0: [0, 0, 1, 2, 0, 0]\n    # Output Row 1: [0, 0, 2, 1, 0, 0]\n    # Output Row 2: [1, 2, 1, 2, 1, 2]\n    # Output Row 3: [2, 1, 2, 1, 2, 1]\n    # Output Row 4: [0, 0, 1, 2, 0, 0]\n    # Output Row 5: [0, 0, 2, 1, 0, 0]\n    # This is a 2x2 tiling of a 3x3 grid where the 3x3 grid is:\n    # [[0, 0, 1],\n    #  [0, 0, 2],\n    #  [1, 2, 1]]\n    # No, that's not right. Let's look at the 5s.\n    # In Demo 1, the 5s are at (0,1), (1,0), (1,1), (1,2), (2,1).\n    # If we replace each 5 with a 2x2 block:\n    # (0,1) -> (0,1) and (0,2) and (1,1) and (1,2) ?? No.\n    \n    # Let's try another logic:\n    # The output is a 6x6 grid. It is composed of 2x2 blocks.\n    # Each 5 in the 3x3 input grid corresponds to a 2x2 block in the 6x6 output.\n    # A 5 at (r, c) in the 3x3 grid becomes a 2x2 block at (2r, 2c) in the 6x6 grid.\n    # The 2x2 block is:\n    # [[1, 2],\n    #  [2, 1]]\n    # Any 0 in the 3x3 grid remains 0 in the 6x6 grid (but expanded to 2x2).\n    \n    # Let's test this on Demo 1:\n    # Input 5s at (0,1), (1,0), (1,1), (1,2), (2,1)\n    # Output 6x6:\n    # (0,1) -> (0,2), (0,3), (1,2), (1,3) are 1,2,2,1\n    # (1,0) -> (2,0), (2,1), (3,0), (3,1) are 1,2,2,1\n    # (1,1) -> (2,2), (2,3), (3,2), (3,3) are 1,2,2,1\n    # (1,2) -> (2,4), (2,5), (3,4), (3,5) are 1,2,2,1\n    # (2,1) -> (4,2), (4,3), (5,2), (5,3) are 1,2,2,1\n    # Let's check Demo 1 Output:\n    # Row 0: [0, 0, 1, 2, 0, 0] -> (0,2),(0,3) are 1,2. Correct.\n    # Row 1: [0, 0, 2, 1, 0, 0] -> (1,2),(1,3) are 2,1. Correct.\n    # Row 2: [1, 2, 1, 2, 1, 2] -> (2,0),(2,1) are 1,2; (2,2),(2,3) are 1,2; (2,4),(2,5) are 1,2. Correct.\n    # Row 3: [2, 1, 2, 1, 2, 1] -> (3,0),(3,1) are 2,1; (3,2),(3,3) are 2,1; (3,4),(3,5) are 2,1. Correct.\n    # Row 4: [0, 0, 1, 2, 0, 0] -> (4,2),(4,3) are 1,2. Correct.\n    # Row 5: [0, 0, 2, 1, 0, 0] -> (5,2),(5,3) are 2,1. Correct.\n    \n    # Rule:\n    # 1. Create a 6x6 grid of 0s.\n    # 2. For each cell (r, c) in the 3x3 input:\n    #    If grid[r, c] == 5:\n    #        Set output[2r:2r+2, 2c:2c+2] to [[1, 2], [2, 1]]\n    #    Else:\n    #        Set output[2r:2r+2, 2c:2c+2] to [[0, 0], [0, 0]]\n    # Wait, if grid[r, c] is 0, the 2x2 block is all 0s.\n    # If grid[r, c] is 5, the 2x2 block is [[1, 2], [2, 1]].\n    \n    res = np.zeros((6, 6), dtype=int)\n    for r in range(3):\n        for c in range(3):\n            if grid[r, c] == 5:\n                res[2*r : 2*r+2, 2*c : 2*c+2] = [[1, 2], [2, 1]]\n            else:\n                res[2*r : 2*r+2, 2*c : 2*c+2] = [[0, 0], [0, 0]]\n    return res",
+        "code_len": 3426,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 1,
+        "local_s": 26.86,
+        "status": "graded",
+        "task": "2072aba6"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The input is always 3x3.\n    # The output is always 6x6.\n    # Each cell (r, c) in the 3x3 input is expanded into a 2x2 block in the 6x6 output.\n    # The 2x2 block at (2*r, 2*c) in the 6x6 grid is determined by the value at (r, c) in the 3x3 grid.\n    # If the input value is 5, it is replaced by a 2x2 checkerboard of 1s and 2s.\n    # Specifically, the 2x2 block at (2*r, 2*c) becomes:\n    # [[1, 2],\n    #  [2, 1]]\n    # If the input value is 0, the 2x2 block remains all 0s.\n    \n    output = np.zeros((6, 6), dtype=int)\n    \n    for r in range(3):\n        for c in range(3):\n            val = grid[r, c]\n            if val == 5:\n                # Fill the 2x2 block starting at (2*r, 2*c)\n                output[2*r : 2*r+2, 2*c : 2*c+2] = [[1, 2],\n                                                       [2, 1]]\n            else:\n                # If it's 0, it stays 0 (already 0 from np.zeros)\n                pass\n                \n    return output",
+        "code_len": 1003,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 2,
+        "local_s": 4.88,
+        "status": "graded",
+        "task": "2072aba6"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The input is always 3x3. The output is always 6x6.\n    # The 6x6 grid is composed of 2x2 blocks.\n    # There are 9 such 2x2 blocks in a 6x6 grid (3x3 arrangement of blocks).\n    # Each 2x2 block corresponds to a cell in the original 3x3 grid.\n    # If the input cell is 5, the 2x2 block contains a checkerboard of 1s and 2s.\n    # If the input cell is 0, the 2x2 block contains all 0s.\n    \n    # Specifically, the checkerboard pattern for a 5 is:\n    # [[1, 2],\n    #  [2, 1]]\n    \n    # Let's check the pattern:\n    # Demo 1: 5s at (0,1), (1,0), (1,1), (1,2), (2,1).\n    # Output 6x6 has blocks at:\n    # (0,1) -> block at row 0-1, col 2-3 (indices 1,2 in 3x3 block grid)\n    # (1,0) -> block at row 2-3, col 0-1 (indices 2,0 in 3x3 block grid)\n    # (1,1) -> block at row 2-3, col 2-3 (indices 2,2 in 3x3 block grid)\n    # (1,2) -> block at row 2-3, col 4-5 (indices 2,3 in 3x3 block grid)\n    # (2,1) -> block at row 4-5, col 2-3 (indices 3,2 in 3x3 block grid)\n    \n    # Wait, the mapping is simpler. \n    # The 6x6 grid is divided into 3x3 blocks of size 2x2.\n    # Let's re-examine Demo 1:\n    # Input (3x3):\n    # [0, 5, 0]\n    # [5, 5, 5]\n    # [0, 5, 0]\n    # Output (6x6) blocks (2x2 each):\n    # Block (0,0): [[0,0],[0,0]] -> Input (0,0) is 0\n    # Block (0,1): [[0,0],[0,0]] -> Input (0,1) is 5? No, output (0,1) is [[0,0],[0,0]]\n    # Let's look at the output again.\n    # Demo 1 Output:\n    # Row 0: [0, 0, 1, 2, 0, 0]\n    # Row 1: [0, 0, 2, 1, 0, 0]\n    # Row 2: [1, 2, 1, 2, 1, 2]\n    # Row 3: [2, 1, 2, 1, 2, 1]\n    # Row 4: [0, 0, 1, 2, 0, 0]\n    # Row 5: [0, 0, 2, 1, 0, 0]\n    \n    # Let's map the 2x2 blocks:\n    # Block (0,0) [0:2, 0:2]: [[0,0],[0,0]] -> Input (0,0) is 0\n    # Block (0,1) [0:2, 2:4]: [[1,2],[2,1]] -> Input (0,1) is 5\n    # Block (0,2) [0:2, 4:6]: [[0,0],[0,0]] -> Input (0,2) is 0\n    # Block (1,0) [2:4, 0:2]: [[1,2],[2,1]] -> Input (1,0) is 5\n    # Block (1,1) [2:4, 2:4]: [[1,2],[2,1]] -> Input (1,1) is 5\n    # Block (1,2) [2:4, 4:6]: [[1,2],[2,1]] -> Input (1,2) is 5\n    # Block (2,0) [4:6, 0:2]: [[0,0],[0,0]] -> Input (2,0) is 0\n    # Block (2,1) [4:6, 2:4]: [[1,2],[2,1]] -> Input (2,1) is 5\n    # Block (2,2) [4:6, 4:6]: [[0,0],[0,0]] -> Input (2,2) is 0\n    \n    # This matches perfectly! \n    # The 6x6 grid is a 3x3 grid of 2x2 blocks.\n    # Each 2x2 block is:\n    # If input[i, j] == 5: [[1, 2], [2, 1]]\n    # If input[i, j] == 0: [[0, 0], [0, 0]]\n    \n    res = np.zeros((6, 6), dtype=int)\n    for i in range(3):\n        for j in range(3):\n            if grid[i, j] == 5:\n                res[2*i : 2*i+2, 2*j : 2*j+2] = [[1, 2], [2, 1]]\n            else:\n                res[2*i : 2*i+2, 2*j : 2*j+2] = [[0, 0], [0, 0]]\n    return res",
+        "code_len": 2739,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 3,
+        "local_s": 19.54,
+        "status": "graded",
+        "task": "2072aba6"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The input is a 3x3 grid. The output is a 6x6 grid.\n    # Each cell (r, c) in the 3x3 grid corresponds to a 2x2 block in the 6x6 grid.\n    # The 2x2 block at (2*r, 2*c) to (2*r+1, 2*c+1) is filled based on the input value at (r, c).\n    # If input[r, c] is 5, the 2x2 block is filled with a checkerboard of 1 and 2.\n    # Specifically, the top-left of the 2x2 block is 1, top-right is 2, \n    # bottom-left is 2, bottom-right is 1.\n    # If input[r, c] is 0, the 2x2 block is filled with 0s.\n    \n    output = np.zeros((6, 6), dtype=int)\n    \n    for r in range(3):\n        for c in range(3):\n            val = grid[r, c]\n            if val == 5:\n                # Top-left of the 2x2 block\n                output[2*r, 2*c] = 1\n                output[2*r, 2*c + 1] = 2\n                output[2*r + 1, 2*c] = 2\n                output[2*r + 1, 2*c + 1] = 1\n            else:\n                # If it's 0, it remains 0 (already initialized to 0)\n                pass\n                \n    return output",
+        "code_len": 1043,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 4,
+        "local_s": 5.31,
+        "status": "graded",
+        "task": "2072aba6"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The input is a 3x3 grid.\n    # The output is a 6x6 grid.\n    # Each cell (r, c) in the 3x3 input represents a 2x2 block in the 6x6 output.\n    # If the input cell (r, c) is 5, the corresponding 2x2 block in the output \n    # is filled with a checkerboard pattern of 1s and 2s.\n    # The checkerboard pattern is:\n    # [[1, 2],\n    #  [2, 1]]\n    # If the input cell (r, c) is 0, the corresponding 2x2 block in the output \n    # is filled with 0s.\n    \n    rows, cols = grid.shape\n    out_rows = rows * 2\n    out_cols = cols * 2\n    output = np.zeros((out_rows, out_cols), dtype=int)\n    \n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 5:\n                # Fill the 2x2 block starting at (2*r, 2*c)\n                output[2*r : 2*r+2, 2*c : 2*c+2] = [\n                    [1, 2],\n                    [2, 1]\n                ]\n            else:\n                # Fill with 0s (already 0 from np.zeros)\n                output[2*r : 2*r+2, 2*c : 2*c+2] = 0\n                \n    return output",
+        "code_len": 1071,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 5,
+        "local_s": 5.22,
+        "status": "graded",
+        "task": "2072aba6"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The input is a 3x3 grid.\n    # The output is a 6x6 grid.\n    # Each cell (i, j) in the 3x3 input is expanded into a 2x2 block in the 6x6 output.\n    # The color 5 in the input is replaced by a 2x2 checkerboard of colors 1 and 2.\n    # The color 0 in the input remains 0 in the output.\n    \n    # Specifically:\n    # If input[i, j] == 5:\n    #   The 2x2 block starting at (2*i, 2*j) in the 6x6 output consists of:\n    #   [[1, 2],\n    #    [2, 1]]\n    # If input[i, j] == 0:\n    #   The 2x2 block starting at (2*i, 2*j) in the 6x6 output consists of:\n    #   [[0, 0],\n    #    [0, 0]]\n    \n    # Wait, looking at Demo 1:\n    # Input (3x3):\n    # [[0, 5, 0],\n    #  [5, 5, 5],\n    #  [0, 5, 0]]\n    # Output (6x6):\n    # [[0, 0, 1, 2, 0, 0],\n    #  [0, 0, 2, 1, 0, 0],\n    #  [1, 2, 1, 2, 1, 2],\n    #  [2, 1, 2, 1, 2, 1],\n    #  [0, 0, 1, 2, 0, 0],\n    #  [0, 0, 2, 1, 0, 0]]\n    # This confirms the 2x2 block expansion.\n    \n    # Let's re-verify Demo 2:\n    # Input: [[5, 0, 0], [0, 5, 0], [0, 0, 5]]\n    # Output:\n    # [[1, 2, 0, 0, 0, 0],\n    #  [2, 1, 0, 0, 0, 0],\n    #  [0, 0, 1, 2, 0, 0],\n    #  [0, 0, 2, 1, 0, 0],\n    #  [0, 0, 0, 0, 1, 2],\n    #  [0, 0, 0, 0, 2, 1]]\n    # Correct.\n    \n    # Let's re-verify Demo 3:\n    # Input: [[0, 5, 0], [0, 5, 5], [5, 5, 0]]\n    # Output:\n    # [[0, 0, 1, 2, 0, 0],\n    #  [0, 0, 2, 1, 0, 0],\n    #  [0, 0, 1, 2, 1, 2],\n    #  [0, 0, 2, 1, 2, 1],\n    #  [1, 2, 1, 2, 0, 0],\n    #  [2, 1, 2, 1, 0, 0]]\n    # Correct.\n    \n    output = np.zeros((6, 6), dtype=int)\n    for i in range(3):\n        for j in range(3):\n            if grid[i, j] == 5:\n                output[2*i : 2*i+2, 2*j : 2*j+2] = [[1, 2], [2, 1]]\n            else:\n                output[2*i : 2*i+2, 2*j : 2*j+2] = [[0, 0], [0, 0]]\n                \n    return output",
+        "code_len": 1829,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 6,
+        "local_s": 13.5,
+        "status": "graded",
+        "task": "2072aba6"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    rows, cols = grid.shape\n    # The output is always 2 * rows by 2 * cols\n    out_rows, out_cols = rows * 2, cols * 2\n    output = np.zeros((out_rows, out_cols), dtype=int)\n    \n    # The transformation maps each cell (r, c) in the input grid \n    # to a 2x2 block in the output grid starting at (2*r, 2*c).\n    # If input[r, c] is 5, the 2x2 block is filled with:\n    # [[1, 2],\n    #  [2, 1]]\n    # If input[r, c] is 0, the 2x2 block remains all 0s.\n    \n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 5:\n                # Top-left of the 2x2 block\n                output[2*r, 2*c] = 1\n                output[2*r, 2*c + 1] = 2\n                output[2*r + 1, 2*c] = 2\n                output[2*r + 1, 2*c + 1] = 1\n            else:\n                # If it's 0, the block remains 0s (already initialized)\n                pass\n                \n    return output",
+        "code_len": 941,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 7,
+        "local_s": 4.57,
+        "status": "graded",
+        "task": "2072aba6"
+      }
+    ],
+    "25094a63": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 54.09,
+        "status": "no_code",
+        "task": "25094a63"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    \n    # The transformation identifies specific rectangular regions of \n    # identical values (excluding 0) and replaces them with the color 4.\n    # In Demo 1, the regions are 10x10 blocks of 8s or 6s or 1s.\n    # In Demo 2, the regions are 10x10 blocks of 6s or 8s.\n    # Looking closely at the output:\n    # Demo 1: Rows 2-7, Cols 4-13 (10x10) and Rows 2-7, Cols 20-28 (9x9? no, 20-28 is 9 wide).\n    # Let's re-examine the output.\n    # Demo 1:\n    # Rows 2-7, Cols 4-13 (10x10) -> all 4s.\n    # Rows 2-7, Cols 20-28 (9x9) -> all 4s.\n    # Rows 12-17, Cols 22-28 (6x7) -> all 4s.\n    # Rows 17-22, Cols 10-17 (6x8) -> all 4s.\n    # Rows 22-23, Cols 10-17 (2x8) -> all 4s.\n    \n    # Actually, the rule is simpler: find rectangles of the same color \n    # that are \"large\" and replace them with 4.\n    # Let's look at the change:\n    # Demo 1:\n    # (2,4) to (7,13) is a 6x10 block of 8s.\n    # (2,20) to (7,28) is a 6x9 block of 8s.\n    # (12,22) to (17,28) is a 6x7 block of 8s.\n    # (17,10) to (22,17) is a 6x8 block of 1s.\n    # (22,10) to (23,17) is a 2x8 block of 1s.\n    \n    # Wait, the pattern is: find contiguous blocks of the same color \n    # that are larger than a certain size and replace with 4.\n    # Let's check the blocks in Demo 2:\n    # (2,5) to (7,13) is 6x9 block of 6s.\n    # (16,13) to (21,18) is 6x6 block of 8s.\n    # (21,13) to (23,18) is 3x6 block of 8s.\n    \n    # Let's try a different approach: find any rectangle of same-colored \n    # pixels where the width and height are both >= 5 and replace with 4.\n    \n    output = grid.copy()\n    \n    # We need to find these rectangles. Since it's a 30x30 grid, \n    # we can iterate through all possible rectangles.\n    for r1 in range(rows):\n        for r2 in range(r1 + 4, rows):\n            for c1 in range(cols):\n                for c2 in range(c1 + 4, cols):\n                    region = grid[r1:r2+1, c1:c2+1]\n                    # If all pixels in this rectangle are the same color and not 0\n                    if np.all(region == region[0, 0]) and region[0, 0] != 0:\n                        # Check if this is the \"maximal\" such rectangle \n                        # (not contained in a larger one of the same color)\n                        is_maximal = True\n                        # Check if expanding it keeps the same color\n                        for dr in [-1, 1]:\n                            for dc in [-1, 1]:\n                                nr1, nr2 = r1 + dr, r2 + dr\n                                nc1, nc2 = c1 + dc, c2 + dc\n                                if 0 <= nr1 < rows and 0 <= nr2 < rows and 0 <= nc1 < cols and 0 <= nc2 < cols:\n                                    if np.all(grid[nr1:nr2+1, nc1:nc2+1] == region[0, 0]):\n                                        is_maximal = False\n                                        break\n                        \n                        if is_maximal:\n                            # Check if it's one of the target rectangles\n                            # In Demo 1, the 8s and 1s were replaced.\n                            # In Demo 2, the 6s and 8s were replaced.\n                            # The rule seems to be: if it's a large enough rectangle \n                            # of a color that appears in a \"block\" structure.\n                            output[r1:r2+1, c1:c2+1] = 4\n                            \n    return output\n\n# The logic above is slightly flawed because it might find many small rectangles.\n# Let's refine: The rectangles are specifically the ones that are \"solid\".\n# In Demo 1, the 8s and 1s are replaced. In Demo 2, the 6s and 8s are replaced.\n# Let's look at the output again.\n# Demo 1: (2,4)-(7,13) is 6x10. (2,20)-(7,28) is 6x9. (12,22)-(17,28) is 6x7. (17,10)-(22,17) is 6x8. (22,10)-(23,17) is 2x8.\n# These are all rectangles of the same color.\n# Let's try to find all maximal rectangles of same-colored pixels and if \n# their area is >= 40, replace with 4.\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    output = grid.copy()\n    \n    # Find all maximal rectangles of the same color\n    for r1 in range(rows):\n        for r2 in range(r1, rows):\n            for c1 in range(cols):\n                for c2 in range(c1, cols):\n                    region = grid[r1:r2+1, c1:c2+1]\n                    if np.all(region == region[0, 0]) and region[0, 0] != 0:\n                        # Check if maximal\n                        is_maximal = True\n                        # Check up/down\n                        if r1 > 0 and np.all(grid[r1-1:r2+1, c1:c2+1] == region[0, 0]): is_maximal = False\n                        if r2 < rows-1 and np.all(grid[r1:r2+2, c1:c2+1] == region[0, 0]): is_maximal = False\n                        # Check left/right\n                        if c1 > 0 and np.all(grid[r1:r2+1, c1-1:c2+1] == region[0, 0]): is_maximal = False\n                        if c2 < cols-1 and np.all(grid[r1:r2+1, c1:c2+2] == region[0, 0]): is_maximal = False\n                        \n                        if is_maximal:\n                            area = (r2 - r1 + 1) * (c2 - c1 + 1)\n                            if area >= 40:\n                                output[r1:r2+1, c1:c2+1] = 4\n                                \n    return output",
+        "code_len": 5345,
+        "demo_fit": 0.5,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 45.38,
+        "status": "graded",
+        "task": "25094a63"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    \n    # The transformation involves identifying a specific rectangular region \n    # and filling it with the color 4.\n    # In Demo 1, the region is from row 2 to 7 and col 4 to 26 (approx).\n    # In Demo 2, the region is from row 2 to 7 and col 5 to 13 (approx).\n    # Looking closely at the output:\n    # Demo 1: Rows 2-7, Cols 4-26 are filled with 4.\n    # Demo 2: Rows 2-7, Cols 5-13 are filled with 4.\n    # Wait, let's re-examine.\n    \n    # Demo 1:\n    # Row 2: col 4 to 26 (23 columns)\n    # Row 3: col 4 to 26\n    # Row 4: col 4 to 26\n    # Row 5: col 4 to 26\n    # Row 6: col 4 to 26\n    # Row 7: col 4 to 26\n    # Row 12: col 22 to 26 (5 columns)\n    # Row 13: col 22 to 26\n    # Row 14: col 22 to 26\n    # Row 15: col 22 to 26\n    # Row 16: col 22 to 26\n    # Row 17: col 10 to 16 (7 columns)\n    # Row 18: col 10 to 16\n    # Row 19: col 10 to 16\n    # Row 20: col 10 to 16\n    # Row 21: col 10 to 16\n    # Row 22: col 10 to 16\n    \n    # Let's look for a pattern in the input.\n    # In Demo 1, rows 2-7, cols 4-26 are all 8s in the input.\n    # In Demo 2, rows 2-7, cols 5-13 are all 6s in the input.\n    # In Demo 1, rows 12-16, cols 22-26 are all 3s in the input.\n    # In Demo 2, rows 16-22, cols 13-18 are all 8s in the input.\n    \n    # Rule: Find contiguous blocks of the same color that are larger than a threshold\n    # and replace them with color 4? No, that's too vague.\n    # Let's look at the input again.\n    # Demo 1: Rows 2-7, Cols 4-26 are all 8.\n    # Demo 2: Rows 2-7, Cols 5-13 are all 6.\n    # Demo 1: Rows 12-16, Cols 22-26 are all 3.\n    # Demo 2: Rows 16-22, Cols 13-18 are all 8.\n    # Demo 1: Rows 17-22, Cols 10-16 are all 1.\n    \n    # Let's try a different approach: find rectangles of same-colored pixels \n    # that are \"isolated\" or \"prominent\".\n    # In Demo 1:\n    # Rect 1: Rows 2-7, Cols 4-26, Color 8\n    # Rect 2: Rows 12-16, Cols 22-26, Color 3\n    # Rect 3: Rows 17-22, Cols 10-16, Color 1\n    \n    # In Demo 2:\n    # Rect 1: Rows 2-7, Cols 5-13, Color 6\n    # Rect 2: Rows 16-22, Cols 13-18, Color 8\n    \n    # The rule seems to be: find rectangles of the same color that are \n    # surrounded by different colors and replace them with 4.\n    \n    res = grid.copy()\n    \n    # Helper to find rectangles of same color\n    # We look for rectangles where all internal pixels are same color \n    # and the boundary is different.\n    for r in range(rows):\n        for c in range(cols):\n            color = grid[r, c]\n            if color == 0: continue\n            \n            # Try all possible rectangle sizes\n            for h in range(2, rows - r + 1):\n                for w in range(2, cols - c + 1):\n                    # Check if all pixels in rectangle are same color\n                    sub = grid[r:r+h, c:c+w]\n                    if np.all(sub == color):\n                        # Check if it's a maximal rectangle (boundary check)\n                        # This is a bit complex, let's simplify.\n                        # Just check if the rectangle is \"distinct\"\n                        # In the demos, these rectangles are quite large.\n                        \n                        # Let's check if the neighbors are different\n                        is_distinct = True\n                        # Check top/bottom/left/right boundaries\n                        if r > 0 and np.any(grid[r-1, c:c+w] == color): is_distinct = False\n                        if r+h < rows and np.any(grid[r+h, c:c+w] == color): is_distinct = False\n                        if c > 0 and np.any(grid[r:r+h, c-1] == color): is_distinct = False\n                        if c+w < cols and np.any(grid[r:r+h, c+w] == color): is_distinct = False\n                        \n                        if is_distinct:\n                            # Check if it's the largest such rectangle starting at (r,c)\n                            # Actually, just check if it's the one from the demo.\n                            # In Demo 1, the 8s are at (2,4) to (7,26)\n                            # In Demo 2, the 6s are at (2,5) to (7,13)\n                            # These are the only ones that change to 4.\n                            \n                            # Let's refine the \"distinct\" check: \n                            # The rectangle must be surrounded by colors that are NOT 'color'.\n                            # And we only change it if it's a \"large\" rectangle.\n                            if h * w > 10: # Threshold for size\n                                # Check if any pixel inside is different\n                                # (Already done by np.all)\n                                # Check if any pixel immediately adjacent is same color\n                                # (Already done by is_distinct)\n                                \n                                # To avoid replacing small parts of a larger rectangle,\n                                # we check if it's the largest possible rectangle of that color.\n                                is_maximal = True\n                                # Check if we can expand it\n                                if r > 0 and np.all(grid[r-1, c:c+w] == color): is_maximal = False\n                                if r+h < rows and np.all(grid[r+h, c:c+w] == color): is_maximal = False\n                                if c > 0 and np.all(grid[r:r+h, c-1] == color): is_maximal = False\n                                if c+w < cols and np.all(grid[r:r+h, c+w] == color): is_maximal = False\n                                \n                                if is_maximal:\n                                    res[r:r+h, c:c+w] = 4\n                                    # Once we fill it with 4, we don't want to process \n                                    # its internal pixels as start points.\n                                    # But we are iterating r and c, so we just continue.\n                                    # To prevent overlapping, we could skip.\n                                    pass\n                                    \n    return res",
+        "code_len": 6139,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 46.39,
+        "status": "graded",
+        "task": "25094a63"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 51.24,
+        "status": "no_code",
+        "task": "25094a63"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 50.94,
+        "status": "no_code",
+        "task": "25094a63"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    \n    # The rule identifies rectangular regions of a specific color (6 or 8)\n    # and replaces them with a new color (4) if they are \"solid\" and \n    # surrounded by a boundary of different colors or the grid edge.\n    # In Demo 1, the color 8 regions are replaced by 4.\n    # In Demo 2, the color 6 regions are replaced by 4.\n    # Actually, looking closer at the output:\n    # Demo 1: Rows 2-7, Cols 4-26 (approx) are replaced by 4.\n    # Demo 2: Rows 2-7, Cols 5-13 (approx) are replaced by 4.\n    # It seems we look for the largest rectangular block of a single color \n    # (excluding the background/other colors) and change it to 4.\n    \n    # Let's refine: The transformation replaces a large rectangular block \n    # of color 8 (Demo 1) or color 6 (Demo 2) with color 4.\n    # The block is defined by a continuous region of that color.\n    \n    # Identify the target color to replace.\n    # In Demo 1, there is a large block of 8s. In Demo 2, a large block of 6s.\n    # Let's find the color that appears in a large rectangular block.\n    \n    target_color = -1\n    max_area = 0\n    \n    # Check for color 6 and 8\n    for color in [6, 8]:\n        # Find all rectangles of this color\n        for r1 in range(rows):\n            for c1 in range(cols):\n                if grid[r1, c1] == color:\n                    # Try to expand rectangle\n                    for r2 in range(r1, rows):\n                        for c2 in range(c1, cols):\n                            # Check if all pixels in [r1:r2+1, c1:c2+1] are 'color'\n                            if np.all(grid[r1:r2+1, c1:c2+1] == color):\n                                area = (r2 - r1 + 1) * (c2 - c1 + 1)\n                                if area > max_area:\n                                    max_area = area\n                                    target_color = color\n                                    best_rect = (r1, c1, r2, c2)\n                            else:\n                                break\n                        else:\n                            continue\n                        break\n                    else:\n                        continue\n                    break\n                else:\n                    break\n                    \n    if target_color != -1:\n        r1, c1, r2, c2 = best_rect\n        grid[r1:r2+1, c1:c2+1] = 4\n        \n    return grid.tolist()\n\n# Re-evaluating the logic: The rectangles are quite specific.\n# In Demo 1, the rectangle is roughly rows 2-7, cols 4-26.\n# In Demo 2, the rectangle is roughly rows 2-7, cols 5-13.\n# Actually, the rectangles are the ones that are \"filled\" with a single color \n# and are surrounded by a \"frame\" or just distinct.\n# Let's try a simpler approach: find the largest rectangle of a single color \n# that is not the most frequent color in the whole grid? No, 8 and 6 are common.\n# Let's look at the output again. \n# Demo 1: The block is rows 2-7, cols 4-26.\n# Demo 2: The block is rows 2-7, cols 5-13.\n# Wait, the block in Demo 2 is rows 2-7, cols 5-13.\n# Let's look at the input for Demo 2. Those cells are all 6.\n# Let's look at the input for Demo 1. Those cells are all 8.\n# So the rule is: find the largest rectangle of color 8 or 6 and change to 4.\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    best_rect = None\n    max_area = 0\n    \n    for color in [6, 8]:\n        for r1 in range(rows):\n            for c1 in range(cols):\n                if grid[r1, c1] == color:\n                    for r2 in range(r1, rows):\n                        for c2 in range(c1, cols):\n                            if np.all(grid[r1:r2+1, c1:c2+1] == color):\n                                area = (r2 - r1 + 1) * (c2 - c1 + 1)\n                                if area > max_area:\n                                    max_area = area\n                                    best_rect = (r1, c1, r2, c2)\n                            else:\n                                break\n                        else: continue\n                        break\n                    else: continue\n                    break\n                else: break\n                \n    if best_rect:\n        r1, c1, r2, c2 = best_rect\n        grid[r1:r2+1, c1:c2+1] = 4\n        \n    return grid.tolist()",
+        "code_len": 4320,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 50.9,
+        "status": "graded",
+        "task": "25094a63"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    \n    # The rule identifies rectangular regions of a specific color (6 or 8)\n    # that are surrounded by a different color (the \"background\" or \"border\").\n    # In these demos, it seems to target large continuous blocks of color 6 \n    # (or 8) and replaces them with color 4.\n    \n    # Let's re-examine the change:\n    # Demo 1: Rows 2-7, Cols 4-26 (approx) and Rows 12-22, Cols 21-26 (approx)\n    # and Rows 17-22, Cols 10-16 (approx) are changed to color 4.\n    # These regions in the input are all color 8.\n    \n    # Looking at Demo 2:\n    # Rows 2-7, Cols 5-13 (approx) are changed to color 4.\n    # Rows 16-21, Cols 13-18 (approx) are changed to color 4.\n    # These regions in the input are all color 6.\n    \n    # Rule: Find rectangular blocks of color 6 or 8 that are \"interior\" \n    # and replace them with color 4.\n    # A block is \"interior\" if it's a large rectangle of the same color.\n    \n    # Let's try a more specific approach:\n    # Find all connected components of color 6 and 8.\n    # If a component is a perfect rectangle and has a large area, change it to 4.\n    \n    output = grid.copy()\n    \n    # Find all rectangles of color 6 or 8\n    # A rectangle can be defined by (r1, c1, r2, c2)\n    # We look for maximal rectangles of color 6 or 8.\n    \n    # Since the grid is 30x30, we can iterate over all possible rectangles.\n    for r1 in range(rows):\n        for c1 in range(cols):\n            for r2 in range(r1, rows):\n                for c2 in range(c1, cols):\n                    # Check if the rectangle is filled with the same color (6 or 8)\n                    sub = grid[r1:r2+1, c1:c2+1]\n                    color = sub[0, 0]\n                    if color in [6, 8] and np.all(sub == color):\n                        # Check if it's \"maximal\" (no larger rectangle of same color contains it)\n                        # and check if it's surrounded by a different color or boundary.\n                        \n                        # To avoid replacing small bits, let's check if it's a large enough block\n                        # In Demo 1, the blocks are roughly 4x10 or 6x6.\n                        # In Demo 2, the blocks are roughly 6x9 or 6x6.\n                        \n                        # Let's check if the rectangle is \"isolated\" or \"distinct\"\n                        # A simple heuristic: if the rectangle is not contained in a larger one\n                        # and its area is > 20.\n                        \n                        is_maximal = True\n                        # Check if any larger rectangle of the same color contains this one\n                        for dr in range(r1, r2+1):\n                            for dc in range(c1, c2+1):\n                                # This is slow, let's simplify.\n                                pass\n                        \n                        # Let's try a simpler logic: \n                        # If a block of 6 or 8 is surrounded by a different color, \n                        # and it's a rectangle, change it to 4.\n                        \n                        # Check neighbors\n                        is_surrounded = True\n                        # Top\n                        if r1 > 0:\n                            if not np.all(grid[r1-1, c1:c2+1] != color):\n                                is_surrounded = False\n                        # Bottom\n                        if r2 < rows - 1:\n                            if not np.all(grid[r2+1, c1:c2+1] != color):\n                                is_surrounded = False\n                        # Left\n                        if c1 > 0:\n                            if not np.all(grid[r1:r2+1, c1-1] != color):\n                                is_surrounded = False\n                        # Right\n                        if c2 < cols - 1:\n                            if not np.all(grid[r1:r2+1, c2+1] != color):\n                                is_surrounded = False\n                        \n                        if is_surrounded and (r2-r1+1) * (c2-c1+1) >= 20:\n                            # Check if it's the largest such rectangle for this area\n                            # (to avoid sub-rectangles)\n                            # If we find a rectangle, we mark it as processed.\n                            # But we need to ensure we don't overwrite a smaller one first.\n                            # We'll use a mask.\n                            pass\n\n    # Refined approach:\n    # 1. Find all maximal rectangles of color 6 and 8.\n    # 2. For each, if it's \"surrounded\" by a different color, change to 4.\n    \n    # Let's find all rectangles of color 6 or 8\n    rects = []\n    for r1 in range(rows):\n        for c1 in range(cols):\n            for r2 in range(r1, rows):\n                for c2 in range(c1, cols):\n                    sub = grid[r1:r2+1, c1:c2+1]\n                    color = sub[0, 0]\n                    if color in [6, 8] and np.all(sub == color):\n                        # Check if it's maximal\n                        is_maximal = True\n                        # Check if any larger rectangle of same color covers it\n                        # Actually, just check if it's surrounded by different colors\n                        # and is \"large\" enough.\n                        \n                        # To handle maximality, we check if any neighbor is the same color\n                        # If any neighbor is same color, it's not a maximal rectangle.\n                        \n                        # Check 4 sides\n                        surrounded = True\n                        if r1 > 0 and np.any(grid[r1-1, c1:c2+1] == color): surrounded = False\n                        if r2 < rows-1 and np.any(grid[r2+1, c1:c2+1] == color): surrounded = False\n                        if c1 > 0 and np.any(grid[r1:r2+1, c1-1] == color): surrounded = False\n                        if c2 < cols-1 and np.any(grid[r1:r2+1, c2+1] == color): surrounded = False\n                        \n                        if surrounded and (r2-r1+1)*(c2-c1+1) >= 20:\n                            rects.append((r1, c1, r2, c2, color))\n                            \n    # Sort rectangles by area descending to process largest first\n    rects.sort(key=lambda x: (x[2]-x[0]+1)*(x[3]-x[1]+1), reverse=True)\n    \n    mask = np.zeros_like(grid, dtype=bool)\n    for r1, c1, r2, c2, color in rects:\n        # If any part of this rectangle is already covered by a larger one, skip\n        if not np.any(mask[r1:r2+1, c1:c2+1]):\n            output[r1:r2+1, c1:c2+1] = 4\n            mask[r1:r2+1, c1:c2+1] = True\n            \n    return output",
+        "code_len": 6692,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 45.12,
+        "status": "graded",
+        "task": "25094a63"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    Identifies rectangular regions of a specific color (6) and \n    replaces them with the color 4.\n    \n    In Demo 1, the regions are found in the middle-right area.\n    In Demo 2, the regions are found in the middle-bottom area.\n    The rule is to find maximal rectangles of color 6 that are \n    surrounded by other colors and replace them with color 4.\n    However, looking closer at the demos, it's simpler: \n    identify rectangles of color 6 that are 'solid' and replace them with 4.\n    \n    Wait, looking at the coordinates:\n    Demo 1:\n    Rows 2-7, Cols 4-26 (approx)\n    Rows 12-17, Cols 22-26 (approx)\n    Rows 17-22, Cols 10-16 (approx)\n    \n    Actually, the rule is to find rectangles of color 6 and replace them with 4.\n    Let's refine: find all connected components of 6s. If a component is a rectangle, \n    replace it with 4.\n    \"\"\"\n    grid = np.array(grid)\n    output = grid.copy()\n    rows, cols = grid.shape\n    \n    # Find all connected components of color 6\n    visited = np.zeros_like(grid, dtype=bool)\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 6 and not visited[r, c]:\n                # Flood fill to find the component\n                component = []\n                stack = [(r, c)]\n                visited[r, c] = True\n                while stack:\n                    curr_r, curr_c = stack.pop()\n                    component.append((curr_r, curr_c))\n                    for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:\n                        nr, nc = curr_r + dr, curr_c + dc\n                        if 0 <= nr < rows and 0 <= nc < cols and \\\n                           grid[nr, nc] == 6 and not visited[nr, nc]:\n                            visited[nr, nc] = True\n                            stack.append((nr, nc))\n                \n                # Check if component is a rectangle\n                min_r = min(p[0] for p in component)\n                max_r = max(p[0] for p in component)\n                min_c = min(p[1] for p in component)\n                max_c = max(p[1] for p in component)\n                \n                num_cells = (max_r - min_r + 1) * (max_c - min_c + 1)\n                if len(component) == num_cells:\n                    # It's a rectangle. Check if all cells in this \n                    # bounding box are actually in the component.\n                    is_rect = True\n                    for rr in range(min_r, max_r + 1):\n                        for cc in range(min_c, max_c + 1):\n                            if grid[rr, cc] != 6:\n                                is_rect = False\n                                break\n                        if not is_rect: break\n                    \n                    if is_rect:\n                        # Replace with 4\n                        for rr in range(min_r, max_r + 1):\n                            for cc in range(min_c, max_c + 1):\n                                output[rr, cc] = 4\n                                \n    return output.tolist()",
+        "code_len": 3051,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 19.85,
+        "status": "graded",
+        "task": "25094a63"
+      }
+    ],
+    "2f0c5170": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 37.45,
+        "status": "no_code",
+        "task": "2f0c5170"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # Convert to numpy array if not already\n    grid = np.array(grid)\n    \n    # Find all non-background (non-8) pixels\n    # The background is color 8.\n    rows, cols = grid.shape\n    non_bg_coords = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] != 8:\n                non_bg_coords.append((r, c))\n    \n    if not non_bg_coords:\n        return np.zeros((1, 1), dtype=int)\n    \n    # Find the bounding box of all non-background pixels\n    min_r = min(r for r, c in non_bg_coords)\n    max_r = max(r for r, c in non_bg_coords)\n    min_c = min(c for r, c in non_bg_coords)\n    max_c = max(c for r, c in non_bg_coords)\n    \n    # The output is the bounding box of the non-background pixels\n    # However, looking at the demos, the bounding box is strictly \n    # the smallest rectangle containing all non-8 pixels.\n    # Let's re-verify:\n    # Demo 1: non-8 pixels are in a block.\n    # Demo 2: non-8 pixels are in a block.\n    # Demo 3: non-8 pixels are in a block.\n    \n    # Actually, the rule is: \n    # 1. Identify the bounding box of all pixels that are NOT 8.\n    # 2. The output is that bounding box.\n    # 3. Any pixel inside that bounding box that was 8 in the input \n    #    becomes 0 in the output.\n    # 4. Any pixel inside that bounding box that was NOT 8 remains its color.\n    \n    height = max_r - min_r + 1\n    width = max_c - min_c + 1\n    \n    output = np.zeros((height, width), dtype=int)\n    \n    for r, c in non_bg_coords:\n        output[r - min_r, c - min_c] = grid[r, c]\n        \n    return output.tolist()\n\n# The prompt asks for a function that returns a 2D numpy int array.\n# Let's refine the return type.\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    \n    non_bg_coords = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] != 8:\n                non_bg_coords.append((r, c))\n    \n    if not non_bg_coords:\n        return np.zeros((1, 1), dtype=int)\n    \n    min_r = min(r for r, c in non_bg_coords)\n    max_r = max(r for r, c in non_bg_coords)\n    min_c = min(c for r, c in non_bg_coords)\n    max_c = max(c for r, c in non_bg_coords)\n    \n    height = max_r - min_r + 1\n    width = max_c - min_c + 1\n    \n    output = np.zeros((height, width), dtype=int)\n    \n    for r, c in non_bg_coords:\n        output[r - min_r, c - min_c] = grid[r, c]\n        \n    return output",
+        "code_len": 2437,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 14.07,
+        "status": "graded",
+        "task": "2f0c5170"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 36.48,
+        "status": "no_code",
+        "task": "2f0c5170"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 36.34,
+        "status": "no_code",
+        "task": "2f0c5170"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 36.59,
+        "status": "no_code",
+        "task": "2f0c5170"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 36.13,
+        "status": "no_code",
+        "task": "2f0c5170"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 36.46,
+        "status": "no_code",
+        "task": "2f0c5170"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 36.38,
+        "status": "no_code",
+        "task": "2f0c5170"
+      }
+    ],
+    "3ee1011a": [
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # Identify all distinct non-zero colors and their bounding boxes\n    objects = []\n    visited = np.zeros_like(grid, dtype=bool)\n    rows, cols = grid.shape\n    \n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] != 0 and not visited[r, c]:\n                color = grid[r, c]\n                # Flood fill to find the connected component\n                component = []\n                stack = [(r, c)]\n                visited[r, c] = True\n                while stack:\n                    curr_r, curr_c = stack.pop()\n                    component.append((curr_r, curr_c))\n                    for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:\n                        nr, nc = curr_r + dr, curr_c + dc\n                        if 0 <= nr < rows and 0 <= nc < cols and \\\n                           not visited[nr, nc] and grid[nr, nc] == color:\n                            visited[nr, nc] = True\n                            stack.append((nr, nc))\n                \n                min_r = min(p[0] for p in component)\n                max_r = max(p[0] for p in component)\n                min_c = min(p[1] for p in component)\n                max_c = max(p[1] for p in component)\n                objects.append({\n                    'color': color,\n                    'min_r': min_r,\n                    'max_r': max_r,\n                    'min_c': min_c,\n                    'max_c': max_c,\n                    'height': max_r - min_r + 1,\n                    'width': max_c - min_c + 1\n                })\n\n    # Sort objects by area (descending) or some logic to determine layers\n    # In these examples, the \"outer\" frame is the largest/most prominent.\n    # Let's sort by area descending.\n    objects.sort(key=lambda x: (x['height'] * x['width']), reverse=True)\n    \n    # The rule seems to be: \n    # 1. Find the largest object (the frame).\n    # 2. Find the next largest object (the inner border).\n    # 3. Find the smallest object (the center).\n    # 4. Construct a nested grid.\n    \n    # Actually, looking at the outputs:\n    # Demo 1: Frame (2), Inner (3), Center (8)\n    # Demo 2: Frame (1), Inner (3), Center (6)\n    # Demo 3: Frame (8), Inner (3), Middle (4), Center (7)\n    \n    # The logic is:\n    # The objects are nested. The largest one is the outermost frame.\n    # The next largest is the next layer, and so on.\n    # The final output is a grid of size (H_outer + H_inner + ... + H_center) \n    # No, the output size is simply the bounding box of the nested structure? \n    # Let's re-examine:\n    # Demo 1: Frame (2) is 5x5. Inner (3) is 3x3. Center (8) is 1x1.\n    # Output is 5x5.\n    # Demo 2: Frame (1) is 6x6. Inner (3) is 4x4. Center (6) is 2x2.\n    # Output is 6x6.\n    # Demo 3: Frame (8) is 8x8. Inner (3) is 6x6. Middle (4) is 4x4. Center (7) is 2x2.\n    # Output is 8x8.\n    \n    # The output size is the size of the largest object's bounding box.\n    # The output is constructed by placing the objects inside each other.\n    \n    outer = objects[0]\n    out_h = outer['height']\n    out_w = outer['width']\n    \n    res = np.zeros((out_h, out_w), dtype=int)\n    \n    # Fill the frame\n    for r in range(out_h):\n        for c in range(out_w):\n            # If it's on the boundary of the outer object's box\n            if r == 0 or r == out_h - 1 or c == 0 or c == out_w - 1:\n                res[r, c] = outer['color']\n                \n    # Place subsequent objects centered inside\n    current_r_offset = 1\n    current_c_offset = 1\n    \n    for i in range(1, len(objects)):\n        obj = objects[i]\n        h = obj['height']\n        w = obj['width']\n        \n        # Calculate center position relative to the outer box\n        # The objects are perfectly centered.\n        start_r = (out_h - h) // 2\n        start_c = (out_w - w) // 2\n        \n        # Fill the boundary of this object\n        for r in range(start_r, start_r + h):\n            for c in range(start_c, start_c + w):\n                # If it's on the boundary of this object's box\n                if r == start_r or r == start_r + h - 1 or c == start_c or c == start_c + w - 1:\n                    # Only overwrite if it's not already the center of a smaller object\n                    # But we process from largest to smallest, so we just overwrite.\n                    # Wait, the center is the smallest.\n                    # Let's check Demo 1: \n                    # Frame (2) is 5x5. Inner (3) is 3x3. Center (8) is 1x1.\n                    # The 3x3 is at (1,1) to (3,3).\n                    # The 1x1 is at (2,2).\n                    # The output is:\n                    # 2 2 2 2 2\n                    # 2 3 3 3 2\n                    # 2 3 8 3 2\n                    # 2 3 3 3 2\n                    # 2 2 2 2 2\n                    # This means we fill the boundary of the current object.\n                    # If it's the smallest object, we fill the whole thing.\n                    \n                    if i == len(objects) - 1:\n                        # Smallest object: fill the whole box\n                        for r2 in range(start_r, start_r + h):\n                            for c2 in range(start_c, start_c + w):\n                                res[r2, c2] = obj['color']\n                    else:\n                        res[r, c] = obj['color']\n                        \n    return res",
+        "code_len": 5368,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 31.19,
+        "status": "graded",
+        "task": "3ee1011a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 38.41,
+        "status": "no_code",
+        "task": "3ee1011a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 38.43,
+        "status": "no_code",
+        "task": "3ee1011a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 38.34,
+        "status": "no_code",
+        "task": "3ee1011a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 38.33,
+        "status": "no_code",
+        "task": "3ee1011a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 38.44,
+        "status": "no_code",
+        "task": "3ee1011a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 38.3,
+        "status": "no_code",
+        "task": "3ee1011a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 38.25,
+        "status": "no_code",
+        "task": "3ee1011a"
+      }
+    ],
+    "4e469f39": [
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    output = grid.copy()\n    \n    # Identify distinct objects of color 5\n    # An object is a group of connected 5s (4-connectivity)\n    visited = np.zeros_like(grid, dtype=bool)\n    objects = []\n    \n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 5 and not visited[r, c]:\n                obj = []\n                stack = [(r, c)]\n                visited[r, c] = True\n                while stack:\n                    curr_r, curr_c = stack.pop()\n                    obj.append((curr_r, curr_c))\n                    for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:\n                        nr, nc = curr_r + dr, curr_c + dc\n                        if 0 <= nr < rows and 0 <= nc < cols and \\\n                           grid[nr, nc] == 5 and not visited[nr, nc]:\n                            visited[nr, nc] = True\n                            stack.append((nr, nc))\n                objects.append(obj)\n    \n    # For each object, find its bounding box and the \"hole\" inside it\n    # The rule seems to be: find the bounding box of the 5s, \n    # and fill the interior \"hole\" with color 2.\n    # However, looking at the demos, it's specifically filling the \n    # empty space (0s) that is completely enclosed by the 5s.\n    \n    for obj in objects:\n        min_r = min(p[0] for p in obj)\n        max_r = max(p[0] for p in obj)\n        min_c = min(p[1] for p in obj)\n        max_c = max(p[1] for p in obj)\n        \n        # The bounding box of the object\n        # We check every cell inside the bounding box\n        for r in range(min_r, max_r + 1):\n            for c in range(min_c, max_c + 1):\n                if grid[r, c] == 0:\n                    # Check if this 0 is \"surrounded\" by 5s\n                    # In the demos, the 2s appear in the middle of the 5s structure\n                    # specifically where there is a gap in the shape.\n                    # Let's check if it's surrounded by 5s in the object's bounding box.\n                    is_surrounded = True\n                    # A simple way to check \"enclosed\" is to see if it's not reachable \n                    # from the outside of the bounding box without crossing a 5.\n                    # But looking at the demos, it's simpler: \n                    # it fills the 0s that are \"inside\" the shape.\n                    \n                    # Let's refine: the 2s appear in the \"inner\" part of the 5-shape.\n                    # In Demo 1: 5s form a 3x3-ish block with a hole at (3,3), (4,3), (5,3) etc?\n                    # No, Demo 1: 5s are at (3,2),(4,2),(5,2),(6,2),(3,3),(6,3),(6,4),(6,5),(4,5),(3,5),(5,5)\n                    # The 2s are at (2,0..4), (3,4), (4,3..4), (5,3..4).\n                    # Wait, the 2s are actually forming a new shape or filling a gap.\n                    # Let's re-examine Demo 1:\n                    # Input 5s: (3,2),(4,2),(5,2),(6,2), (3,3),(6,3), (6,4),(6,5), (4,5),(3,5),(5,5)\n                    # Output 2s: (2,0..4), (3,4), (4,3..4), (5,3..4)\n                    # This looks like the 2s are filling the \"concave\" parts or the \"center\".\n                    pass\n\n    # Re-evaluating: The 2s are placed in the 0-cells that are \"interior\" to the 5-shape.\n    # An interior cell is one that is not reachable from the boundary of the bounding box \n    # without passing through a 5.\n    \n    for obj in objects:\n        min_r = min(p[0] for p in obj)\n        max_r = max(p[0] for p in obj)\n        min_c = min(p[1] for p in obj)\n        max_c = max(p[1] for p in obj)\n        \n        # Flood fill from the edges of the bounding box to find \"exterior\" 0s\n        exterior = np.zeros((max_r - min_r + 1, max_c - min_c + 1), dtype=bool)\n        # Any 0 on the edge of the bounding box is exterior\n        # Actually, any 0 reachable from the outside of the bounding box is exterior.\n        \n        # Let's use a simpler logic: \n        # The 2s are the 0s that are \"surrounded\" by 5s.\n        # A 0 is surrounded if all paths to the boundary of the grid pass through a 5.\n        \n        # Let's try a different approach: The 2s are the 0s that are \"inside\" the 5-shape.\n        # We can find these by taking the bounding box and flood filling from the outside.\n        \n        # Create a mask of the object\n        mask = np.zeros((rows, cols), dtype=int)\n        for r, c in obj:\n            mask[r, c] = 1\n            \n        # Flood fill from the outside (all 0s reachable from the boundary)\n        reachable = np.zeros((rows, cols), dtype=bool)\n        stack = []\n        for r in range(rows):\n            for c in [0, cols-1]:\n                if mask[r, c] == 0:\n                    stack.append((r, c))\n                    reachable[r, c] = True\n        for c in range(cols):\n            for r in [0, rows-1]:\n                if mask[r, c] == 0 and not reachable[r, c]:\n                    stack.append((r, c))\n                    reachable[r, c] = True\n                    \n        while stack:\n            curr_r, curr_c = stack.pop()\n            for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:\n                nr, nc = curr_r + dr, curr_c + dc\n                if 0 <= nr < rows and 0 <= nc < cols and \\\n                   mask[nr, nc] == 0 and not reachable[nr, nc]:\n                    reachable[nr, nc] = True\n                    stack.append((nr, nc))\n        \n        # The 2s are the 0s that are NOT reachable from the outside\n        for r in range(rows):\n            for c in range(cols):\n                if mask[r, c] == 0 and not reachable[r, c]:\n                    output[r, c] = 2\n                    \n    return output",
+        "code_len": 5693,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 27.7,
+        "status": "graded",
+        "task": "4e469f39"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 32.3,
+        "status": "no_code",
+        "task": "4e469f39"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 32.55,
+        "status": "no_code",
+        "task": "4e469f39"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 32.43,
+        "status": "no_code",
+        "task": "4e469f39"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    output = grid.copy()\n    \n    # Identify distinct objects of color 5\n    # An object is a connected component of 5s\n    visited = np.zeros_like(grid, dtype=bool)\n    objects = []\n    \n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 5 and not visited[r, c]:\n                # BFS/DFS to find the component\n                component = []\n                stack = [(r, c)]\n                visited[r, c] = True\n                while stack:\n                    curr_r, curr_c = stack.pop()\n                    component.append((curr_r, curr_c))\n                    for dr, dc in [(0,1), (0,-1), (1,0), (-1,0)]:\n                        nr, nc = curr_r + dr, curr_c + dc\n                        if 0 <= nr < rows and 0 <= nc < cols and \\\n                           grid[nr, nc] == 5 and not visited[nr, nc]:\n                            visited[nr, nc] = True\n                            stack.append((nr, nc))\n                objects.append(component)\n    \n    # For each object, find its bounding box\n    # and fill the \"hole\" or the \"gap\" between the two vertical bars\n    # In the demos, the 5s form two vertical bars. \n    # The space between them is filled with 2s.\n    # Additionally, a horizontal bar of 2s is placed above the top of the object\n    # or below the bottom of the object? \n    # Let's re-examine:\n    # Demo 1: 5s at (3,2)-(6,2) and (3,5)-(6,5). Gap at col 3,4.\n    # Output: 2s at (3,4),(4,3),(4,4),(5,3),(5,4) and a horizontal bar at row 2.\n    # Actually, the rule seems to be:\n    # 1. Find the bounding box of the 5s.\n    # 2. Fill the interior of the bounding box that is 0 with 2.\n    # 3. If the bounding box is at row r_min to r_max and col c_min to c_max:\n    #    Place a horizontal bar of 2s at row r_min - 1.\n    \n    for obj in objects:\n        r_coords = [p[0] for p in obj]\n        c_coords = [p[1] for p in obj]\n        r_min, r_max = min(r_coords), max(r_coords)\n        c_min, c_max = min(c_coords), max(c_coords)\n        \n        # Fill the interior of the bounding box\n        for r in range(r_min, r_max + 1):\n            for c in range(c_min, c_max + 1):\n                if output[r, c] == 0:\n                    output[r, c] = 2\n                    \n        # Place a horizontal bar of 2s at row r_min - 1\n        # spanning the width of the bounding box\n        if r_min > 0:\n            for c in range(c_min, c_max + 1):\n                output[r_min - 1, c] = 2\n                \n    return output.tolist() if isinstance(grid[0][0], int) else output # Adjusting for return type\n    # The prompt asks for a 2D numpy int array, but usually ARC expects a list of lists.\n    # Let's ensure it returns a numpy array as requested.\n    return np.array(output)\n\n# Re-writing to strictly follow the numpy array requirement and the logic.\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    res = grid.copy()\n    visited = np.zeros_like(grid, dtype=bool)\n    \n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 5 and not visited[r, c]:\n                comp = []\n                stack = [(r, c)]\n                visited[r, c] = True\n                while stack:\n                    curr_r, curr_c = stack.pop()\n                    comp.append((curr_r, curr_c))\n                    for dr, dc in [(0,1), (0,-1), (1,0), (-1,0)]:\n                        nr, nc = curr_r + dr, curr_c + dc\n                        if 0 <= nr < rows and 0 <= nc < cols and \\\n                           grid[nr, nc] == 5 and not visited[nr, nc]:\n                            visited[nr, nc] = True\n                            stack.append((nr, nc))\n                \n                r_coords = [p[0] for p in comp]\n                c_coords = [p[1] for p in comp]\n                r_min, r_max = min(r_coords), max(r_coords)\n                c_min, c_max = min(c_coords), max(c_coords)\n                \n                # Fill interior\n                for i in range(r_min, r_max + 1):\n                    for j in range(c_min, c_max + 1):\n                        if res[i, j] == 0:\n                            res[i, j] = 2\n                \n                # Horizontal bar above\n                if r_min > 0:\n                    for j in range(c_min, c_max + 1):\n                        res[r_min - 1, j] = 2\n                        \n    return res",
+        "code_len": 4444,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 20.61,
+        "status": "graded",
+        "task": "4e469f39"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 32.55,
+        "status": "no_code",
+        "task": "4e469f39"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 32.51,
+        "status": "no_code",
+        "task": "4e469f39"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 32.35,
+        "status": "no_code",
+        "task": "4e469f39"
+      }
+    ]
+  }
+}
