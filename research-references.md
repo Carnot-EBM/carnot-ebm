@@ -1,3 +1,56 @@
+## 2026-06-10 Post-.369 Planning Sweep (Milestone 2026.06.370)
+
+`.369` was DESIGNED to turn the GAP-4 program-induction execution verifier from a
+PRELIMINARY positive into a CONFIRMED + DECENTRALIZED + DEPLOYED one (the operator's
+four verbatim `conductor_followups` + the owed local-open-weight generator arm). It did
+NOT: a single **agent-shipped poison pre-test** (`1 failed, 108 passed`, shipped by the
+archive task's post-test phase and marked OK because the deliverable already existed)
+cascade-SKIPped exp3987-3991 — the ENTIRE confirm+decentralize+deploy phase — before it
+was quarantined ~06:23. The capstone verdict is therefore
+`gap4_UNCONFIRMED_NOT_DECENTRALIZED_NOT_DEPLOYED ... missing5`. This is the **4th
+recurrence** of the agent-shipped poison-test cascade (.325/.326/.332/.369; memory
+`incident_agent_shipped_test_cascade`). **`.370`'s first task hardens the green-gate to
+quarantine any red test BEFORE completing, so the owed GAP-4 followups actually run.**
+
+But `.369` also banked two REAL wins on the live north star:
+- **exp3992: r11l broke the L2 wall and reached L3** (`success:
+  verifier_validated_reinduction_advanced_r11l_to_L3`, +2 levels, per_level_actions
+  [4,8,12], 2 actions saved vs open-loop). The GAP-4 execution verifier, used IN the
+  solve loop to VALIDATE a re-induced per-level rule before committing actions, is the
+  mechanism that broke the wall — the verifier earned its place on a real solve.
+- **exp3994: ArcMemo solve-transfer v2 won again** (concept-memory-seeded solve 2668→17
+  actions). Tier-2 constraint memory compounds across games.
+- exp3993 (4th game) did NOT solve: `pruner_rejected_unseen_dynamics` — the
+  verifier-pruner rejected every action because the dynamics were never INDUCED first
+  (you cannot prune by a model you have not built). The `.370` fix: active dynamics
+  exploration FIRST, then induce, then prune.
+
+**Net-new references (verified by WebSearch June 2026; the executable-world-model peer
+arXiv:2605.05138 is already in memory `reference_arc_agi3_sota_and_plan`).**
+
+- **★ OOD Generalization in the ARC-AGI Domain: Execution-Guided Neural Program Synthesis
+  vs Test-Time Fine-Tuning** (arXiv:2507.15877). Directly adjacent to GAP-4: it isolates
+  **execution-guided program synthesis** (write `def transform`, execute against the demo
+  pairs, keep only demo-consistent programs — verbatim Carnot's model-free verifier) and
+  measures its **out-of-distribution** transfer vs TTFT. This is the published frame for
+  Carnot's ARC-1→ARC-2 transfer probe (induction 0.93→0.57): execution-guided synthesis is
+  known to strain OOD, which corroborates the "honest induction strain, not collapse-to-
+  recall" reading. Cite it as the methodological backbone for the de-selection coverage
+  (followup #1) and the local-generator decentralization arm.
+- **Procedural Refinement by LLM-driven Algorithmic Debugging for ARC-AGI-2**
+  (arXiv:2603.20334). An iterative **feedback-refinement** loop where the LLM debugs its
+  own induced program against demo failures — exactly the ≤3-iteration feedback chain whose
+  value vs plain iid resampling is the OPEN question that GAP-4 conductor_followup #3
+  (feedback-vs-redraw) decides. Read it before designing the same-run paired control; it is
+  the prior art arguing feedback *does* help, which our McNemar test must confirm or refute
+  on the ARC-2 venue.
+
+Sources: [arXiv:2507.15877](https://arxiv.org/pdf/2507.15877) ·
+[arXiv:2603.20334](https://arxiv.org/html/2603.20334v3) ·
+[ARC-AGI-3 Tech Report](https://arxiv.org/html/2603.24621v1)
+
+---
+
 ## 2026-06-09 Post-.366 Planning Sweep (Milestone 2026.06.367)
 
 `.366` banked Carnot's **SECOND** ARC-AGI-3 solve (exp3954: lp85-305b61c3 level-1,
