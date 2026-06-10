@@ -1,0 +1,246 @@
+{
+  "arcmemo_solve_transfer_win": true,
+  "banked_games_solved_before_v368": 3,
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 3975,
+      "fields_imported": [
+        "positive_control_passed",
+        "program_synthesis_coverage"
+      ],
+      "sha256": "ea25819938717c3101253dc9b80b3ba3182d9407d2dda89c7bf3d898ecd4e9a1"
+    },
+    {
+      "experiment_id": 3976,
+      "fields_imported": [
+        "gap4_beats_vote",
+        "executed_consistency_pass2",
+        "headroom_capture_fraction",
+        "program_synthesis_coverage"
+      ],
+      "sha256": "b8dedc91a2f09e101f25c999c86111fdcc261256528ebeac1fcb1da2109a8f7a"
+    },
+    {
+      "experiment_id": 3978,
+      "fields_imported": [
+        "accuracy_parity",
+        "cost_ratio_judge_over_verifier",
+        "verifier_actually_invoked"
+      ],
+      "sha256": "e0df3b0bdf9b3281ddd3e5a10b95aee564f6e8e9e529b66df4c77b0bec217d48"
+    },
+    {
+      "experiment_id": 3979,
+      "fields_imported": [
+        "n_trustworthy_at_0.15",
+        "positive_control_passed"
+      ],
+      "sha256": "a71b671c4912b71a3ac5c3a7b6d45f7d6d9c71428298a4d88ac461cdb9c6b38d"
+    },
+    {
+      "experiment_id": 3980,
+      "fields_imported": [
+        "new_levels_solved_this_task"
+      ],
+      "sha256": "2ee2b6f9e5fc622df7170069e46c4573e981cc46694c58a8e9e38bb3318a25f9"
+    },
+    {
+      "experiment_id": 3981,
+      "fields_imported": [
+        "game_solved",
+        "ACCURACY_levels_solved"
+      ],
+      "sha256": "1c2314e20d7aa5222807c524f1b5d4ba54f76669a278b6e23a5c6b3633735211"
+    },
+    {
+      "experiment_id": 3982,
+      "fields_imported": [
+        "solve_transfer_win"
+      ],
+      "sha256": "c99f17e13f967c80dca446f6abdd4a243ea4dbc0a62357ccfc20bebf8c643d1c"
+    },
+    {
+      "experiment_id": 3983,
+      "fields_imported": [],
+      "sha256": "644f6b6cc5b1e899677bf42c1b48115e1cc45944f0f484e8abb24e91a7f2cd9d"
+    },
+    {
+      "experiment_id": 3984,
+      "fields_imported": [],
+      "sha256": "7492864dff4d1ea06454e19e0358251f68654c34572031441d99026431b13d2f"
+    }
+  ],
+  "duration_s": 0.3841149849467911,
+  "efficiency_accuracy_parity": true,
+  "efficiency_cost_ratio_judge_over_verifier": 8789.706,
+  "efficiency_verifier_actually_invoked": true,
+  "experiment_id": 3985,
+  "field_principles": {
+    "arcmemo_solve_transfer_win": "BARE BOOL - did concept memory make a SOLVE cheaper (the self-learning datum).",
+    "cited_upstream_artifacts": "list of {experiment_id, fields_imported, sha256} - the audit trail so the capstone numbers trace to real measurements.",
+    "duration_s": "Aggregation wall-clock duration.",
+    "flagged_artifacts_skipped": "Which upstream artifacts were flagged_adversarial and EXCLUDED.",
+    "gap4_program_synthesis_coverage": "BARE FLOAT - the binding constraint on the accuracy axis (how many tasks a program induced for).",
+    "honest_verdict": "Terminal-prefix verdict.",
+    "inference_substrate": "Aggregation substrate.",
+    "n_trustworthy_world_models": "BARE INT - how many of the 6 non-spatial games reached a plan-able model with execution-guided synthesis (vs exp3968's 0).",
+    "total_games_solved": "BARE INT - the ARC-AGI-3 games-solved headline, starting from the 3 banked games and adding one only for a real fourth-game solve.",
+    "total_new_levels_this_milestone": "BARE INT - monotonic level progress from incremental re-induction and any fourth-game first solve.",
+    "verifier_earns_accuracy": "BARE BOOL - did the GAP-4 executed-rule verifier select past vote toward the 16pp headroom AND survive the re-derivation audit (the accuracy-moat existential answer; a flagged/unconfirmed result is FALSE).",
+    "verifier_earns_efficiency": "BARE BOOL - did the energy verifier reach accuracy parity with the LLM-judge at >=10x lower cost WITH the verifier provably invoked (the efficiency existential answer; the .366 fabrication + .367 block did not recur)."
+  },
+  "flagged_artifacts_skipped": [],
+  "fourth_game_accuracy_levels_solved": 0,
+  "fourth_game_solved": false,
+  "gap4_beats_vote": false,
+  "gap4_executed_consistency_pass2": false,
+  "gap4_headroom_capture_fraction": 0.0,
+  "gap4_positive_confirmed": false,
+  "gap4_program_synthesis_coverage": 0.0,
+  "honest_verdict": "success: capstone_v368_verifier_earned_efficiency_only_games3_new_levels0_missing1_flagged_skipped0",
+  "incremental_new_levels": 0,
+  "inference_substrate": "aggregation_from_upstream_artifacts_via_summarize_artifact_py",
+  "missing_upstream_artifacts": [
+    {
+      "experiment_id": 3977
+    }
+  ],
+  "n_trustworthy_world_models": 0,
+  "random_seed": 3985,
+  "reproducibility_checksum": "6f56ae6f2b836cfa2503d892405ff069efe9e7db698b6135d370004fc5fc4a40",
+  "schema": "carnot.capstone_v368_3985.v1",
+  "summarize_artifact_status": {
+    "3975": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_3975_gap4_execution_verifier_build.json\n------------------------------------------------------------------------------\n  verdict          : complete: gap4_positive_control_failed_auroc0.00\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.07524847984313965   substrate: dsl-only\n  headline metrics :\n      gold_vs_nearmiss_auroc = 0.0\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "3976": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_3976_gap4_trm_rerank_eval.json\n------------------------------------------------------------------------------\n  verdict          : blocked_gate_check_failed\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = '1 of 1 gate(s) failed; first failure: exp3975-gap4-execution-verifier-build.positive_control_passed (actual=False == expected=True)'\n  duration_s       : 0.0   substrate: None\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "3978": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_3978_verifier_vs_judge_efficiency.json\n------------------------------------------------------------------------------\n  verdict          : success: verifier_earns_place_efficiency_parity_8789.7x_cheaper\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 31.8   substrate: offline_arc_agi3_plus_local_gemma4_gguf_judge\n  headline metrics :\n      judge_accuracy = 1.0\n      verifier_accuracy = 1.0\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "3979": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_3979_world_model_gen_execution_guided.json\n------------------------------------------------------------------------------\n  verdict          : complete: exec_guided_trustworthy_0of6\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gap4_executed_consistency_gate = {'exists': True, 'gate_applied_here': 'candidate programs must exactly replay accepted observed transitions', 'prior_honest_verdict': 'complete: gap4_positive_control_failed_auroc0.00', 'prior_positive_control_passed': False, 'source_artifact': 'results/experiment_3975_gap4_execution_verifier_build.json'}\n  duration_s       : 61.8   substrate: offline_arc_agi3_execution_guided_program_synthesis_exact_replay_consistency_verified\n  headline metrics :\n      vc33_baseline_energy = 0.005\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "3980": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_3980_incremental_levels_reinduction.json\n------------------------------------------------------------------------------\n  verdict          : complete: l2_wall_holds_r11l_l2_re_induction_found_a_collision_forbidden_mask_rule_different_from_l1_remainin\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.678   substrate: offline_arc_agi3_per_level_execution_guided_reinduction\n  headline metrics :\n      ACCURACY_levels_solved = 1\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "3981": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_3981_fourth_game_first_solve.json\n------------------------------------------------------------------------------\n  verdict          : complete: fourth_game_no_solve_budget_exceeded\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.0   substrate: offline_arc_agi3_perception_planner_real_env_confirmed\n  headline metrics :\n      ACCURACY_levels_solved = 0\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "3982": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_3982_arcmemo_solve_transfer.json\n------------------------------------------------------------------------------\n  verdict          : success: arcmemo_solve_transfer_2668to17_actions\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 1.9   substrate: offline_arc_agi3_real_env_steps_plus_gamegraph_arcmemo_concept_memory\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "3983": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_3983_hardware_continuity.json\n------------------------------------------------------------------------------\n  verdict          : complete: hardware_continuity_3983_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 7.555079   substrate: hardware_smoke\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "3984": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_3984_retro_commit_detector_fix.json\n------------------------------------------------------------------------------\n  verdict          : complete: retro_commit_detector_fixed_backfill_counts_restored\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.342871   substrate: git_history_added_terminal_artifact_scan\n  adversarial flags: none\n==============================================================================\n"
+    }
+  },
+  "total_games_solved": 3,
+  "total_new_levels_this_milestone": 0,
+  "upstream_artifact_state": {
+    "3975": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: gap4_positive_control_failed_auroc0.00",
+      "included": true,
+      "path": "results/experiment_3975_gap4_execution_verifier_build.json",
+      "summarize_artifact_returncode": 0
+    },
+    "3976": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "included": true,
+      "path": "results/experiment_3976_gap4_trm_rerank_eval.json",
+      "summarize_artifact_returncode": 0
+    },
+    "3977": {
+      "exists": false,
+      "flagged_adversarial": false,
+      "honest_verdict": "missing",
+      "included": false,
+      "path": "",
+      "summarize_artifact_returncode": null
+    },
+    "3978": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "success: verifier_earns_place_efficiency_parity_8789.7x_cheaper",
+      "included": true,
+      "path": "results/experiment_3978_verifier_vs_judge_efficiency.json",
+      "summarize_artifact_returncode": 0
+    },
+    "3979": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: exec_guided_trustworthy_0of6",
+      "included": true,
+      "path": "results/experiment_3979_world_model_gen_execution_guided.json",
+      "summarize_artifact_returncode": 0
+    },
+    "3980": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: l2_wall_holds_r11l_l2_re_induction_found_a_collision_forbidden_mask_rule_different_from_l1_remainin",
+      "included": true,
+      "path": "results/experiment_3980_incremental_levels_reinduction.json",
+      "summarize_artifact_returncode": 0
+    },
+    "3981": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: fourth_game_no_solve_budget_exceeded",
+      "included": true,
+      "path": "results/experiment_3981_fourth_game_first_solve.json",
+      "summarize_artifact_returncode": 0
+    },
+    "3982": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "success: arcmemo_solve_transfer_2668to17_actions",
+      "included": true,
+      "path": "results/experiment_3982_arcmemo_solve_transfer.json",
+      "summarize_artifact_returncode": 0
+    },
+    "3983": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: hardware_continuity_3983_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded",
+      "included": true,
+      "path": "results/experiment_3983_hardware_continuity.json",
+      "summarize_artifact_returncode": 0
+    },
+    "3984": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: retro_commit_detector_fixed_backfill_counts_restored",
+      "included": true,
+      "path": "results/experiment_3984_retro_commit_detector_fix.json",
+      "summarize_artifact_returncode": 0
+    }
+  },
+  "verifier_earns_accuracy": false,
+  "verifier_earns_efficiency": true,
+  "world_model_positive_control_passed": true
+}

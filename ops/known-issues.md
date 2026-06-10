@@ -395,6 +395,54 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-06-10 (TOP PRIORITY — outer-loop overnight handoff): GAP-4 RULE-EXECUTION VERIFIER — CONFIRMATORY + DEPLOYMENT FOLLOW-UPS
+
+**Origin:** 2026-06-09/10 outer-loop session (operator-directed, going to sleep — explicit
+handoff to the conductor). The GAP-3 program closed (4 adversarially-confirmed negatives;
+trained-content-energy lineage retired to the exclusion manifest) and its successor GAP-4
+(codex program-induction + execution-consistency verification) produced the program's
+first POSITIVES, all 5/5-adversarially-verified, full record in `ops/verifier_gaps.md`
+(GAP-4 entry) + memory `project_gap3_verifier_program.md`:
+
+- ARC-1 rerank: vote 0.4516 → gated 0.5806 (+4/−0 pass@2; generator-attributable;
+  contaminated pool — upper bound).
+- ARC-2 transfer probe: induction 0.93→0.57, precision 0.90→0.47; demo-overfit asymmetry
+  proves genuine induction, not recall.
+- Precision fixes: graded gate production setting τ=0.005 (ARC-1-validated, 0 losses);
+  k=3 single-shot agreement = precise but coverage-collapsed.
+- **k=3 CHAIN-arms (pre-registered, commit 9e1a070af; landed bc8b2b9d0):** agreement
+  10/16 entries, gold 8/10 (0.80 vs 0.52 baseline), fresh-chain per-arm rate 0.833 —
+  chain mechanism confirmed; the strict all-gold prereg bar NOT met (2 wrong-wrong
+  agreements). Adversarial round in flight at session end; its synthesis (in
+  `results/arc3_gap4_chain_arms_adversarial_verify.json` when written, or re-runnable)
+  carries `conductor_followups`.
+
+**Planner: queue these as gemini/codex tasks (honest gates, no operator action needed):**
+
+1. **CONFIRMATORY agreement run** (the prereg failed the all-gold bar; the observed 0.80
+   needs fresh confirmation): k=3 chain arms on the 11 NON-chain-feasible ARC-2 tasks +
+   any fresh clean tasks; pre-register the gate variant BEFORE running (use the
+   chain-arms script's docstring pattern; commit first). Gate: report-as-is; significance
+   needs ~n≥13 agreement events at 0.80 to beat 0.52 at α=0.05.
+2. **Tiered-harness offline eval + registration:** measure the full tier stack
+   [chain-arms agreement → graded τ=0.005 → promote-any-demo-perfect → vote] on BOTH
+   saved pools (zero codex — all programs/preds saved); register the configuration in
+   `ops/verifier_registry.yaml` as a candidate verifier with the honest caveats (rerank
+   framing degenerate on weak pools; standalone-solver framing is where agreement pays).
+3. **Local open-weight generator arm** (decentralization rule 1): replicate the induction
+   protocol with Qwen3.6-35B-A3B / gemma-4 GGUF via llama.cpp on a small clean task set;
+   measure demo-perfect rate + agreement precision vs the codex arms. GPU task — use the
+   standard conductor GPU path.
+4. **Wrong-agreement autopsy follow-through:** implement the adversarial synthesis's
+   recommended gate variant (e.g. unanimity / majority-of-k) ONLY as a fresh pre-registered
+   confirmation, never post-hoc.
+
+**Hygiene rules for these tasks (from this session's incidents):** commit artifacts at
+landing time (untracked = zero clobber protection); transcripts archived for every
+generator call; word-boundary sandbox matching; ≥600s codex timeouts; never cite
+P(gold|agree) point estimates without n + CI; the ARC-1 pool is contaminated (upper
+bounds only); aa4ec2a5/16b78196 are flagged reuse tasks (exclude from clean sets).
+
 ### NEW 2026-06-08 (TOP PRIORITY — outer-loop handoff): VERIFIER-AS-SELF-IMPROVEMENT-REWARD (Phase-3 endgame)
 
 **Origin:** 2026-06-07/08 outer-loop session. The energy-as-generator line was retired
