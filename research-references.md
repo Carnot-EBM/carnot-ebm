@@ -21718,3 +21718,99 @@ scan reorganizes the offline-first ladder; the new corroborators are independent
   live signal. "Seed IQ / active inference 95.49%" (Themesis) remains UNVERIFIED
   (no code/scores/dates) — do NOT anchor on it. "Debugging Code World Models"
   (arXiv:2602.07672) surfaced as a lead, not fetched.
+
+---
+
+## 2026-06-10 scan — GAP-4 execution-verifier corroboration + agreement-selection + cheap-verifier efficiency (.369 planning)
+
+Filed during 2026.06.369 planning (the GAP-4 program-induction verifier confirmation/
+decentralization milestone). Focus: execution-guided program-synthesis verification,
+agreement/consensus selection, demo-underdetermination, and LLM-judge-vs-cheap-verifier
+efficiency. IDs WebFetch-verified (search APIs gave false negatives on several).
+
+### Tier A — directly corroborate execution-guided program-synthesis verification (GAP-4 core)
+
+- **Executable World Models for ARC-AGI-3, arXiv:2605.05138 (EWM, Rodionov 2026) — the
+  published instance of GAP-4 on our north-star benchmark.** A coding agent induces an
+  executable Python world model, VERIFIES it against prior observations via dedicated
+  "verifier programs," refactors toward simpler abstractions (MDL-like simplicity bias),
+  then plans. Open-source (astroseger/arc-3-agents-baseline1). **Uses closed GPT-5.5/5.4
+  (15/8 games solved, 58% mean RHAE)** — so a strong LOCAL open-weight proposer + energy-
+  verifier rerank is an open differentiator we can own. CORRECTION to propagate: the EWM
+  headline is "15 games / 58% RHAE w/ GPT-5.5," NOT "<0.4%" (that figure is raw frontier-LLM
+  play WITHOUT the world-model harness). Confidence: HIGH.
+
+- **ABPR: Procedural Refinement by LLM-driven Algorithmic Debugging for ARC-AGI-2,
+  arXiv:2603.20334 — richer-than-output-agreement verifier signal.** Treats each candidate
+  program as an "executable declarative hypothesis of the latent rule," refines via
+  Prolog/SLD proof-tree algorithmic debugging (which sub-abstraction failed), NOT outcome
+  feedback. GPT-5.5+ABPR 98.33% Pass@2 (public eval — contamination-inflated; method
+  validation, not headroom). Upgrade path for the GAP-4 reranker: structured execution-trace
+  disagreement is a stronger discriminator than final-grid agreement. Confidence: HIGH.
+
+- **Compositional Neuro-Symbolic Reasoning, arXiv:2604.02434 — a published agreement/
+  consensus selection method for ARC.** Perception -> neural-guided DSL proposal -> CROSS-
+  EXAMPLE CONSISTENCY (consensus) filtering across demonstrations to narrow candidate
+  programs (16%->24.4% on ARC-AGI-2 public). The cleanest off-the-shelf design for the GAP-4
+  selector AND a remedy for GAP-5 demo-underdetermination (filter hypotheses by consistency
+  across demos / sibling inputs). Confidence: HIGH.
+
+### Tier B — generator-verifier gap, agreement selection, weak-verifier ensembling
+
+- **Weaver: Shrinking the Generation-Verification Gap with Weak Verifiers,
+  arXiv:2506.18203 — weak-supervision ensemble + distill-to-400M efficiency proof.** Estimates
+  each imperfect verifier's accuracy WITHOUT labels and weights them (o3-mini accuracy w/
+  Llama-3.3-70B generator), then distills the ensemble into a 400M cross-encoder for cheap
+  deployment. Two load-bearing points for Carnot: (a) principled label-free aggregation of a
+  heterogeneous verifier ensemble (alternative to hand-weighting), (b) ensemble-quality
+  verification at small-model cost = the efficiency proof for the north-star §5 axis.
+  Confidence: HIGH.
+
+- **Combining Induction and Transduction for Abstract Reasoning, arXiv:2411.02272 (Li/Ellis
+  et al.) — why program-synthesis verification is a DISTINCT, complementary selector.** On
+  identical ARC problems, inductive program synthesis and transduction solve DIFFERENT task
+  sets (induction = precise composition; transduction = fuzzy perception). Grounds routing:
+  use the GAP-4 execution-verifier exactly where induction has the edge. Confidence: HIGH.
+
+- **Scalable Best-of-N via Self-Certainty, arXiv:2502.18581 — the reward-free cheap baseline
+  GAP-4 must beat.** Self-certainty (KL of output dist vs uniform) + Borda voting selects
+  best-of-N with NO external reward model, handles open-ended tasks where self-consistency
+  can't vote. Use as the "free" control arm in the GAP-4 acceptance gate: if executed-rule
+  agreement does not beat self-certainty + self-consistency, the verifier has not earned its
+  place. Confidence: HIGH.
+
+### Tier C — LLM-as-judge efficiency vs cheap learned verifiers (the cost-at-matched-accuracy axis)
+
+- **Calibrated Reasoning: An Explanatory Verifier, arXiv:2509.19681 — verifier wins most at
+  small budgets.** A calibrated explanatory verifier reaches higher accuracy at low k and
+  comparable at high k vs self-consistency using 1-3x FEWER tokens (0.77 AIME-2025 w/
+  Qwen3-32B at 75% of SC tokens). Direct cost-at-matched-accuracy evidence; matters for ARC
+  where you want few candidate executions. Confidence: HIGH.
+
+- **One-Token Verification for Reasoning Correctness, arXiv:2603.01025 — extreme-cheap
+  verifier signal** (~single verifier token). The far end of the cost-efficiency spectrum; an
+  ensemble component for the "10-100x cheaper than an LLM judge" claim. Confidence: MEDIUM-HIGH.
+
+- **xVerify: Efficient Answer Verifier, arXiv:2504.10481 — distill-large-judge-into-small
+  pattern.** Small verifier distilled from GPT-4o judgments matches large-judge accuracy at a
+  fraction of cost — template for a cheap local answer-equivalence checker (the agreement
+  scorer comparing executed output to candidates) + aligned with the decentralization arm.
+  Confidence: MEDIUM-HIGH.
+
+### Cross-cutting notes for the milestone plan
+- Most actionable for GAP-4 selector design: 2604.02434 (cross-example consistency filtering)
+  and 2603.20334 (executable-hypothesis algorithmic debugging) = two concrete agreement
+  mechanisms beyond plain output-voting; 2502.18581 + 2509.19681 = the must-beat cheap
+  baselines for the acceptance gate.
+- Efficiency axis ("10-100x cheaper"): 2506.18203 / 2509.19681 / 2603.01025 / 2504.10481
+  collectively show a cheap/distilled verifier can match an LLM judge at far lower cost — but
+  NONE reports an apples-to-apples cost ratio ON ARC, so that measurement remains an open,
+  ownable Carnot contribution.
+- Local-generator decentralization arm: published ARC SOTA (EWM, ABPR) uses closed
+  GPT-5.x/Gemini-3; NO paper found reports local-open-weight ARC-AGI-3 program synthesis with
+  execution-verifier reranking — a Gemma-4/Qwen3.6 GGUF proposer + model-free verifier number
+  is genuinely novel. (Open-weight ARC induction is viable but lower per BARC/Llama-3.1-8B.)
+- Secondary leads (lower fit, not deep-read): 2603.13372 (ARC living survey — 2-3x drop
+  ARC-1->ARC-2 across all paradigms), 2601.10904 (ARC Prize 2025 report — 24% private top),
+  2507.14172 (SOAR self-improving evolutionary synthesis), 2505.14744 (transductively-informed
+  inductive synthesis), 2602.07672 (Debugging Code World Models — lead, not fetched).
