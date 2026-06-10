@@ -18841,3 +18841,85 @@ fabricating wall-time or estimated savings.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3984 | Implemented (`python/carnot/reporting/retro_commit_detector_3984.py`, `scripts/experiments/experiment_3984_retro_commit_detector_fix.py`) | Implemented (`tests/python/test_experiment_3984_retro_commit_detector_fix.py`) |
+
+### REQ-REPORT-3986: Archive .368 And Activate .369 GAP-4 Follow-Up Milestone
+
+The Exp 3986 workflow SHALL archive milestone `2026.06.368`, confirm
+milestone `2026.06.369` is active in the current research roadmap, and write
+`results/experiment_3986_archive_v368_activate_v369.json`. Before editing any
+record, it SHALL run `.venv/bin/python -c "import yaml;
+yaml.safe_load(open('research-complete.yaml'))"` from the repository root. If
+that precondition fails, it SHALL write a blocked artifact whose
+`honest_verdict` starts with `blocked_research_complete_yaml_poison` and SHALL
+NOT edit `research-complete.yaml` or `ops/exclusion_manifest.yaml`.
+
+The workflow SHALL read the `.368` task verdicts by invoking
+`scripts/summarize_artifact.py` rather than raw-reading JSON verdicts. It SHALL
+append an idempotent `.368` archive record in `research-complete.yaml`
+containing the milestone task verdicts, including a missing-artifact verdict
+for any task such as Exp 3977 whose declared deliverable is absent. Every
+appended scalar containing `: ` SHALL be quoted so the .355 colon-poison
+failure cannot recur.
+
+The workflow SHALL preserve the `.368` truth that the working GAP-4 positive is
+the outer-loop `results/arc3_gap4_rule_exec_verifier.json` result, while the
+conductor's autonomous DSL-only Exp 3975 build failed and SHALL NOT be
+re-attempted as the `.369` basis. It SHALL confirm the four Phase-1
+`synthesis.conductor_followups` are present in
+`results/arc3_gap4_chain_arms_adversarial_verify.json`, because those
+follow-ups are the verbatim source for `.369`.
+
+After the archive append, the workflow SHALL confirm both
+`research-complete.yaml` and `ops/exclusion_manifest.yaml` safe-load under
+`yaml.safe_load`. It SHALL run `.venv/bin/pytest
+tests/python/test_arc_agi3_world_model.py
+tests/python/test_arc_world_model_synth.py
+tests/python/test_arc_world_model_dsl.py -q --no-header -n 0 --no-cov -o
+addopts=` and record the bare boolean `arc_substrate_tests_green`. It SHALL
+run an import probe for `carnot.agentic.arc_agi3_world_model`,
+`carnot.agentic.arc_world_model_synth`,
+`carnot.agentic.arc_world_model_dsl`, and
+`carnot.agentic.arc_agi3_action_efficiency`, recording the aggregate bare
+boolean `arc_modules_importable` plus per-module import results.
+
+The terminal artifact SHALL include bare top-level fields
+`archived_milestone`, `activated_milestone`,
+`research_complete_yaml_parses`, `exclusion_manifest_parses`,
+`arc_substrate_tests_green`, `arc_modules_importable`,
+`gap4_outer_loop_positive_recorded`,
+`conductor_dsl_build_failed_recorded`, `followups_present`,
+`honest_verdict`, `duration_s`, and `inference_substrate`. On the complete
+path, `honest_verdict` SHALL start with `complete:` or `success:`. Blocked
+verdicts SHALL start with `blocked_<resource>`. This is a record-only
+aggregation task and SHALL NOT modify `ops/changelog.md`, `ops/status.md`,
+`_bmad/traceability.md`, or `scripts/research_conductor.py`; those documents
+are reconciled by the conductor's separate status step.
+
+#### SCENARIO-REPORT-3986: V368 Archive Opens GAP-4 Milestone .369
+
+**Given** `.369` is active, `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` safe-load, the `.368` artifacts can be
+summarized, the outer-loop GAP-4 positive and conductor DSL failure are
+present, the chain-arm synthesis exposes four conductor follow-ups, the ARC
+substrate tests pass, and the four ARC agentic modules import
+**When** the Exp 3986 workflow runs
+**Then** it records the `.368` task verdicts in `research-complete.yaml`,
+quotes colon-bearing scalars, confirms both YAML files still parse, records
+the outer-loop positive and failed DSL-only build as distinct facts, records
+that the follow-up source exists, writes the required terminal artifact, and
+leaves ops/status/traceability/conductor files unchanged.
+
+#### SCENARIO-REPORT-3986-BLOCKED-YAML: Corrupt Research Record Blocks Before Append
+
+**Given** `research-complete.yaml` does not safe-load
+**When** the Exp 3986 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_research_complete_yaml_poison`, records the failed YAML parse in
+`preconditions_checked`, and leaves both `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` byte-for-byte unchanged.
+
+## Implementation Status (REQ-REPORT-3986)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3986 | Implemented (`python/carnot/reporting/archive_v368_activate_v369_3986.py`, `scripts/experiments/experiment_3986_archive_v368_activate_v369.py`) | Implemented (`tests/python/test_experiment_3986_archive_v368_activate_v369.py`) |

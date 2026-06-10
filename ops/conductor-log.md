@@ -8136,3 +8136,21 @@ c |
 | 2026-06-10 04:04 UTC | Capstone .368 (UNGATED — the .365 op:exists + .366 | OK | 88 passed in 4.96s |
 | 2026-06-10 04:55 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-06-10 04:57 UTC | Milestone 2026.06.369 activated | OK | 11 tasks queued |
+| 2026-06-10 05:22 UTC | Archive .368 -> activate .369; GREEN-GATE: assert  | FAIL | Post-tests failed: 1 failed, 108 passed in 3.77s |
+| 2026-06-10 05:24 UTC | Archive .368 -> activate .369; GREEN-GATE: assert | OK | Deliverable already exists in repo |
+| 2026-06-10 05:24 UTC | GAP-4 conductor_followup #1 — DE-SELECTION COVERAG | SKIP | Pre-tests failing, self-heal failed: 1 failed, 108 passed in 4.91s |
+| 2026-06-10 05:27 UTC | GAP-4 conductor_followup #1 — DE-SELECTION COVERAG | SKIP | Pre-tests failing, self-heal failed: 1 failed, 108 passed in 4.92s |
+| 2026-06-10 05:29 UTC | GAP-4 conductor_followup #1 — DE-SELECTION COVERAG | SKIP | Pre-tests failing, self-heal failed: 1 failed, 108 passed in 4.46s |
+| 2026-06-10 05:31 UTC | GAP-4 conductor_followup #2 — PRE-REGISTERED PRECI | SKIP | Pre-tests failing, self-heal failed: 1 failed, 108 passed in 4.14s |
+| 2026-06-10 05:33 UTC | GAP-4 conductor_followup #2 — PRE-REGISTERED PRECI | SKIP | Pre-tests failing, self-heal failed: 1 failed, 108 passed in 4.27s |
+| 2026-06-10 05:36 UTC | GAP-4 conductor_followup #2 — PRE-REGISTERED PRECI | SKIP | Pre-tests failing, self-heal failed: 1 failed, 108 passed in 3.73s |
+| 2026-06-10 05:38 UTC | GAP-4 conductor_followup #3 — FEEDBACK-VS-REDRAW D | SKIP | Pre-tests failing, self-heal failed: 1 failed, 108 passed in 4.54s |
+| 2026-06-10 05:40 UTC | GAP-4 conductor_followup #3 — FEEDBACK-VS-REDRAW D | SKIP | Pre-tests failing, self-heal failed: 1 failed, 108 passed in 4.49s |
+| 2026-06-10 05:43 UTC | GAP-4 conductor_followup #3 — FEEDBACK-VS-REDRAW D | SKIP | Pre-tests failing, self-heal failed: 1 failed, 108 passed in 3.99s |
+| 2026-06-10 05:45 UTC | GAP-4 conductor_followup #4 — HARNESS REGISTRATION | SKIP | Pre-tests failing, self-heal failed: 1 failed, 108 passed in 3.98s |
+| 2026-06-10 05:47 UTC | GAP-4 conductor_followup #4 — HARNESS REGISTRATION | SKIP | Pre-tests failing, self-heal failed: 1 failed, 108 passed in 4.43s |
+| 2026-06-10 05:49 UTC | GAP-4 conductor_followup #4 — HARNESS REGISTRATION | SKIP | Pre-tests failing, self-heal failed: 1 failed, 108 passed in 4.13s |
+| 2026-06-10 05:52 UTC | GAP-4 DECENTRALIZATION arm (the owed local-first t | SKIP | Pre-tests failing, self-heal failed: 1 failed, 108 passed in 4.75s |
+| 2026-06-10 05:54 UTC | GAP-4 DECENTRALIZATION arm (the owed local-first t | SKIP | Pre-tests failing, self-heal failed: 1 failed, 108 passed in 4.90s |
+| 2026-06-10 05:56 UTC | GAP-4 DECENTRALIZATION arm (the owed local-first t | SKIP | Pre-tests failing, self-heal failed: 1 failed, 108 passed in 4.77s |
+| 2026-06-10 05:59 UTC | ARC-AGI-3 INCREMENTAL LEVELS via VERIFIER-VALIDATE | SKIP | Pre-tests failing, self-heal failed: 1 failed, 108 passed in 4.43s |
