@@ -21867,3 +21867,60 @@ efficiency. IDs WebFetch-verified (search APIs gave false negatives on several).
   ARC-1->ARC-2 across all paradigms), 2601.10904 (ARC Prize 2025 report — 24% private top),
   2507.14172 (SOAR self-improving evolutionary synthesis), 2505.14744 (transductively-informed
   inductive synthesis), 2602.07672 (Debugging Code World Models — lead, not fetched).
+
+## 2026-06-10 (.371 planning sweep — CLOSE the open-weight ARC-induction gap; CONFIRM the agreement selector)
+
+Filed during 2026.06.371 planning. Focus chosen by the two decisive `.370 gaps: (1) the
+GAP-4 precision confirmation NEVER EXECUTED (exp3999 `protocol_preregistered_pending_execution`,
+0 codex calls — owed for a 2nd milestone after the `.369 poison-skip); (2) the decentralization
+arm (exp4002) is WEAK — a generic SOTA GGUF at <=3 attempts induced demo-perfect programs for only
+25.81% of tasks (vs codex 0.94), gated pass@2 = vote 0.4516 (NO lift), failing 20/31 tasks codex
+solved. The literature says the fix is method, not model.
+
+### Tier A — open-weight ARC induction is a BEST-OF-N + demo-fit-filter regime (the decentralization fix)
+
+- **BARC — Bootstrapping ARC (xu3kev/BARC; barc0/Llama-3.1-ARC-Potpourri-Induction-8B).** The
+  canonical open-weight ARC INDUCTION result: an 8B Llama-3.1 fine-tuned to emit `def solve(grid)`
+  programs solves **~22% of ARC-AGI-1 eval at a budget of 512 sampled predictions** with demo-fit
+  filtering — i.e. open-weight induction is a HIGH-N SAMPLING + CHEAP-VERIFIER-FILTER regime, NOT a
+  few-shot one. **Directly diagnoses exp4002's failure:** it drew only <=3 samples from a generic
+  instruct GGUF. At a per-attempt demo-perfect rate of 0.2581, best-of-k raises the per-task hit
+  rate to 1-(1-0.2581)^k (k=8 ~= 0.91); the model-free verifier is ~0.11 s/task (essentially free),
+  so spending MORE local samples + free demo-fit filtering is the decentralization-clean,
+  sovereign efficiency path. `.371 decentralization arm = best-of-N local sampling + verifier
+  filter (optionally a BARC-style tuned proposer), not a single generic GGUF call. Confidence: HIGH.
+
+- **RSPC — Repeated-Sampling Planning-aided Code generation (ARC program synthesis).** Across open
+  + closed models, REPEATED SAMPLING + planning is the highest-accuracy program-synthesis recipe
+  (e.g. QwQ-32B 14.25%, DeepSeek-R1-70B 7.75% public-eval). Reinforces best-of-N + filter over
+  single-shot for the local arm. Confidence: MEDIUM-HIGH.
+
+- **The Surprising Effectiveness of Test-Time Training for Few-Shot Learning, arXiv:2411.07279.**
+  BARC + TTT solves 73.5% of the tasks program-synthesis solves; per-task TTT lifts the neural
+  inductive model markedly. A FUTURE lever for the local arm (per-task adaptation), beyond this
+  milestone's sampling-budget fix. Confidence: MEDIUM.
+
+### Tier B — self-improving open-weight synthesis (self-learning track corroboration)
+
+- **SOAR — Self-Improving LMs for Evolutionary Program Synthesis, arXiv:2507.14172.** Open-weight
+  search lifts ARC from 1-2% to 14-26%; then SOAR's self-improvement (hindsight-relabel sampled
+  programs into SFT data) breaks the fixed-model ceiling by +10-19% over 4 iterations, reaching 52%.
+  Corroborates the ArcMemo self-learning mandate (concept memory compounding) and points at a
+  hindsight-relabel data flywheel for a future local-induction self-improvement loop. Confidence: HIGH.
+
+### Cross-cutting notes for the `.371 plan
+- Decentralization (exp4012): the BARC regime says raise local induction via best-of-N sampling +
+  the free demo-fit verifier filter (use the fast gemma-4-12B-it-GGUF for throughput; PRECONDITION
+  the cache — it is newly released). Report whether best-of-N local + filter beats vote AND
+  approaches the codex tier, plus the cost (local-generator seconds vs codex seconds; the verifier
+  is ~free). NO published work reports local-open-weight ARC induction with execution-verifier
+  reranking — still a novel, ownable, sovereign number.
+- Selector confirmation (exp4009): the prior-filed 2604.02434 (cross-example consistency filtering)
+  and 2502.18581 (self-certainty best-of-N, the must-beat free baseline) remain the design + control
+  for the agreement-selector confirmation; this milestone's job is to ACTUALLY RUN the powered
+  binomial confirmation that has not executed for two milestones.
+- Efficiency (exp4013): no paper reports an apples-to-apples model-free-verifier-vs-LLM-judge cost
+  ratio ON ARC selection — the north-star §5 efficiency datum remains an open Carnot contribution.
+
+Sources (this sweep): github.com/xu3kev/BARC; featherless.ai/models/barc0/Llama-3.1-ARC-Potpourri-Induction-8B;
+arxiv.org/abs/2411.07279 (TTT); arxiv.org/abs/2507.14172 (SOAR); lewish.io/posts/arc-agi-2025-research-review.
