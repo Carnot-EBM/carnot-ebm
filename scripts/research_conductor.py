@@ -4926,19 +4926,27 @@ def research_step(
     # affected — those paths use AGENT_TYPE_PLANNER / AGENT_TYPE_RETRO env
     # overrides directly and bypass this per-task coercion.
     if os.environ.get("CODEX_FORCE_EXPERIMENTS") == "1":
-        if task_agent_type == "claude" and not task.get("requires_claude"):
+        # 2026-06-10 (mirrors the 2026-05-31 GEMINI_FORCE anti-abuse fix):
+        # `requires_claude` is an ABUSED planner signal (.322-.325 marked
+        # 12/12 tasks requires_claude), so the claude→codex coercion ignores
+        # it; only the operator-only `requires_claude_verified: true` bypass
+        # keeps a task on claude. Without this, the codex-default flip would
+        # silently leak whole milestones back to claude via the abused flag.
+        if task_agent_type == "claude" and not task.get("requires_claude_verified"):
             logger.warning(
                 "CODEX_FORCE_EXPERIMENTS=1: coercing task %r agent_type "
-                "claude → codex (operator quota directive 2026-05-03 23:30Z; "
-                "set requires_claude:true to bypass)",
+                "claude → codex (codex-default, operator directive "
+                "2026-06-10; planner requires_claude is an abused signal — "
+                "set operator-only requires_claude_verified:true to bypass)",
                 task.get("id", "?"),
             )
             task_agent_type = "codex"
-        elif task_agent_type == "gemini" and not task.get("requires_gemini"):
+        elif task_agent_type == "gemini" and not task.get("requires_gemini_verified"):
             logger.warning(
                 "CODEX_FORCE_EXPERIMENTS=1: coercing task %r agent_type "
-                "gemini → codex (gemini quota window; set "
-                "requires_gemini:true to bypass)",
+                "gemini → codex (gemini-cli unreliable as of the 2026-06-10 "
+                "global-stall incident; set operator-only "
+                "requires_gemini_verified:true to bypass)",
                 task.get("id", "?"),
             )
             task_agent_type = "codex"
