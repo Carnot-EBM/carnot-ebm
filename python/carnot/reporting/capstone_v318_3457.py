@@ -196,7 +196,9 @@ def run_capstone(results_dir: Path | None = None) -> dict:
     paper_ready: bool = g1 and g2 and g3 and g4
 
     # -- P0.1 v4 (exp3449) — flagged; no clean verdict ----------------------
-    p01_artifact = _load_upstream(results_dir, 3449) or {}
+    p01_loaded = _load_upstream(results_dir, 3449)
+    p01_artifact = p01_loaded or {}
+    p01_present = p01_loaded is not None
     p01_flagged: bool = bool(p01_artifact.get("flagged_adversarial", False))
     # Raw verdict preserved for transparency; numbers excluded if flagged.
     p01_raw_verdict: str = str(
@@ -318,7 +320,7 @@ def run_capstone(results_dir: Path | None = None) -> dict:
         "paper_ready": paper_ready,
         # P0.1 v4 headline outcome
         "p0_1_v4_verdict": p01_v4_verdict,
-        "p0_1_v4_is_clean": not p01_flagged,
+        "p0_1_v4_is_clean": p01_present and not p01_flagged,
         "p0_1_v4_summary": (
             "P0.1 v4 (exp3449): FLAGGED — adversarial verifier found TAUTOLOGY "
             "(energy_weighted_vote_accuracy == self_consistency_accuracy to >5 sig "

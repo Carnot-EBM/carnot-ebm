@@ -18923,3 +18923,84 @@ leaves ops/status/traceability/conductor files unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3986 | Implemented (`python/carnot/reporting/archive_v368_activate_v369_3986.py`, `scripts/experiments/experiment_3986_archive_v368_activate_v369.py`) | Implemented (`tests/python/test_experiment_3986_archive_v368_activate_v369.py`) |
+
+### REQ-REPORT-4008: Archive .370 And Activate .371 With Hardened Green-Gate Preservation
+
+The Exp 4008 workflow SHALL archive milestone `2026.06.370`, confirm
+milestone `2026.06.371` is active in the current research roadmap, and write
+`results/experiment_4008_archive_v370_activate_v371.json`. Before editing any
+record, it SHALL run `.venv/bin/python -c "import yaml;
+yaml.safe_load(open('research-complete.yaml'))"` from the repository root. If
+that precondition fails, it SHALL write a blocked artifact whose
+`honest_verdict` starts with `blocked_research_complete_yaml_poison` and SHALL
+NOT edit `research-complete.yaml` or `ops/exclusion_manifest.yaml`.
+
+The workflow SHALL read the `.370` task verdicts by invoking
+`scripts/summarize_artifact.py` rather than raw-reading JSON verdicts. It
+SHALL append an idempotent `.370` archive record in `research-complete.yaml`
+containing the milestone task verdicts, including a missing-artifact verdict
+for Exp 3997 when its declared deliverable is absent. Every appended scalar
+containing `: ` SHALL be quoted so the .355 colon-poison failure cannot recur.
+
+After the archive append, the workflow SHALL confirm both
+`research-complete.yaml` and `ops/exclusion_manifest.yaml` safe-load under
+`yaml.safe_load`. It SHALL run an import probe for
+`carnot.agentic.arc_agi3_world_model`,
+`carnot.agentic.arc_world_model_synth`,
+`carnot.agentic.arc_world_model_dsl`, and
+`carnot.agentic.arc_agi3_action_efficiency`, recording the aggregate bare
+boolean `arc_modules_importable` plus per-module import results.
+
+The workflow SHALL run the full pre-test command `.venv/bin/pytest
+tests/python -q --no-header -p no:cacheprovider -o addopts=`. If the suite is
+red, it SHALL record failing test ids by source file, quarantine any still-red
+test files outside `tests/python` under `tests/quarantine/`, rerun the same
+full pre-test command until it is green, and record the quarantined paths and
+failing test ids in `quarantined_tests`.
+
+The archive record SHALL preserve the `.370` truth that the GAP-4 phase ran
+but Exp 3999 still owes execution because it reported
+`protocol_preregistered_pending_execution` with zero Codex calls and zero
+agreement events. It SHALL also record that Exp 4001 deployed the GAP-4 stack
+by registering the verifier and reproducing ARC-2 19/31 plus ARC-1 28/31
+bit-exact offline.
+
+The terminal artifact SHALL include bare top-level fields
+`archived_milestone`, `activated_milestone`,
+`research_complete_yaml_parses`, `exclusion_manifest_parses`,
+`arc_modules_importable`, `pretest_suite_green`, `quarantined_tests`,
+`confirmation_still_owed_recorded`, `gap4_deployed_recorded`,
+`honest_verdict`, `duration_s`, and `inference_substrate`. On the complete
+path, `honest_verdict` SHALL start with `complete:` or `success:`. Blocked
+verdicts SHALL start with `blocked_<resource>`. This is a record-only
+aggregation task and SHALL NOT modify `ops/changelog.md`, `ops/status.md`,
+`_bmad/traceability.md`, or `scripts/research_conductor.py`; those documents
+are reconciled by the conductor's separate status step.
+
+#### SCENARIO-REPORT-4008: V370 Archive Opens The .371 Confirmation Milestone
+
+**Given** `.371` is active, `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` safe-load, the `.370` artifacts can be
+summarized, the four ARC agentic modules import, and the full pre-test suite is
+green after any required quarantine
+**When** the Exp 4008 workflow runs
+**Then** it records the `.370` task verdicts in `research-complete.yaml`,
+quotes colon-bearing scalars, confirms both YAML files still parse, records
+that Exp 3999 is still owed because it never executed, records the Exp 4001
+deployment win, writes the required terminal artifact, and leaves
+ops/status/traceability/conductor files unchanged.
+
+#### SCENARIO-REPORT-4008-BLOCKED-YAML: Corrupt Research Record Blocks Before Append
+
+**Given** `research-complete.yaml` does not safe-load
+**When** the Exp 4008 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_research_complete_yaml_poison`, records the failed YAML parse in
+`preconditions_checked`, and leaves both `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` byte-for-byte unchanged.
+
+## Implementation Status (REQ-REPORT-4008)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4008 | Implemented (`python/carnot/reporting/archive_v370_activate_v371_4008.py`, `scripts/experiments/experiment_4008_archive_v370_activate_v371.py`) | Implemented (`tests/python/test_experiment_4008_archive_v370_activate_v371.py`) |

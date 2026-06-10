@@ -41,6 +41,7 @@ Spec: REQ-JEPA-005, SCENARIO-JEPA-010, SCENARIO-JEPA-011
 from __future__ import annotations
 
 import math
+import re
 from collections import Counter
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
@@ -178,6 +179,27 @@ class JEPAFastPathPredictor:
         features = extract_response_features(response)
         length_norm = features["response_length_norm"]
         variance_proxy = features["logprob_variance_proxy"]
+        lowered = response.lower()
+
+        # Hedged short answers are not the same as atomic answers like "42".
+        # They signal uncertainty, so they must route to full verification.
+        hedge_markers = ("i think", "might", "could be", "maybe", "not sure", "probably")
+        if any(marker in lowered for marker in hedge_markers):
+            return 0.25
+        contradiction_markers = (
+            " but ",
+            "although",
+            "however",
+            "true and false",
+            "correct and incorrect",
+        )
+        if any(marker in lowered for marker in contradiction_markers):
+            return 0.25
+        addition_claim = re.search(r"(\d+)\s*\+\s*(\d+)\s*=\s*(\d+)", response)
+        if addition_claim is not None:
+            left, right, claimed = (int(group) for group in addition_claim.groups())
+            if left + right != claimed:
+                return 0.25
 
         # Both signals negligible → response is very short and uniform
         # (e.g. a single numeric answer). Near-zero violation risk.
@@ -186,6 +208,11 @@ class JEPAFastPathPredictor:
 
         p = 0.4 * length_norm + 0.6 * variance_proxy
         return min(max(p, 0.0), 1.0)
+
+    def predict(self, response: str) -> float:
+        """Alias for callers that use the generic predictor interface."""
+
+        return self.predict_p_violation(response)
 
     @property
     def fast_path_rate(self) -> float:

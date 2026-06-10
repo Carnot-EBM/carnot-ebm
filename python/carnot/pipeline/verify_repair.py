@@ -589,6 +589,10 @@ class VerifyRepairPipeline:
         # if p < jepa_fast_path_threshold the Ising pass is skipped entirely.
         self._jepa_fast_path_predictor = jepa_fast_path_predictor
         self._jepa_fast_path_threshold = jepa_fast_path_threshold
+        self._session_log: list[dict[str, object]] = []
+        self._online_observation_count = 0
+        self._online_fast_path_taken_count = 0
+        self._n_partial_fits = 0
         self._repair_router = None
         if self.routing_mode == "odar":
             from carnot.pipeline.odar_router import OdarRouter
@@ -1303,6 +1307,41 @@ class VerifyRepairPipeline:
             producing_tier=3,
             tier_reached=3,
         )
+
+    def online_update(self, observation: dict[str, object]) -> None:
+        """Accumulate JEPA observations and periodically call predictor.partial_fit.
+
+        The fast-path predictor is optional, so this method always records
+        session statistics and trains only predictors that expose a
+        ``partial_fit`` method.
+        """
+
+        self._online_observation_count += 1
+        if observation.get("fast_path_taken") is True:
+            self._online_fast_path_taken_count += 1
+        self._session_log.append(dict(observation))
+        if len(self._session_log) < 10:
+            return
+        batch = self._session_log[:10]
+        del self._session_log[:10]
+        partial_fit = getattr(self._jepa_fast_path_predictor, "partial_fit", None)
+        if callable(partial_fit):
+            partial_fit(batch)
+            self._n_partial_fits += 1
+
+    def get_session_stats(self) -> dict[str, object]:
+        """Return JEPA online-update counters for the current pipeline session."""
+
+        rate = (
+            self._online_fast_path_taken_count / self._online_observation_count
+            if self._online_observation_count
+            else 0.0
+        )
+        return {
+            "n_observations": self._online_observation_count,
+            "n_partial_fits": self._n_partial_fits,
+            "current_fast_path_rate": rate,
+        }
 
     def verify(
         self,

@@ -134,6 +134,7 @@ class MockLogprobProvider:
     mock_logprobs_used = True
 
     def __init__(self, candidates: list[CompletionCandidate] | None = None) -> None:
+        self.mock_logprobs_used = True
         self._candidates = list(candidates) if candidates is not None else None
 
     def enumerate_completions(
@@ -396,6 +397,8 @@ class BEAVERLiteBounder:
             model_path or os.getenv("CARNOT_BEAVER_LITE_GGUF") or os.getenv("LLAMA_CPP_MODEL_PATH")
         )
         if path:
+            if not Path(path).exists():
+                return MockLogprobProvider()
             try:
                 return LlamaCppLogprobProvider(path)
             except Exception:

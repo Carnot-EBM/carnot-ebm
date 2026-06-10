@@ -106,12 +106,15 @@ def _exp3452_clean() -> dict:
     }
 
 
+_DEFAULT_ARTIFACT = object()
+
+
 def _artifact_loader(
     *,
     exp3449: dict | None = None,
-    exp3450: dict | None = None,
-    exp3451: dict | None = None,
-    exp3452: dict | None = None,
+    exp3450: dict | None | object = _DEFAULT_ARTIFACT,
+    exp3451: dict | None | object = _DEFAULT_ARTIFACT,
+    exp3452: dict | None | object = _DEFAULT_ARTIFACT,
 ) -> dict:
     """Return artifacts dict for patching load_artifact."""
     return {
@@ -120,9 +123,9 @@ def _artifact_loader(
             "honest_verdict": "complete: p01_generation_corpus_partial_resumable",
         },
         3449: exp3449,
-        3450: exp3450 if exp3450 is not None else _exp3450_clean(),
-        3451: exp3451 if exp3451 is not None else _exp3451_clean(),
-        3452: exp3452 if exp3452 is not None else _exp3452_flagged(),
+        3450: _exp3450_clean() if exp3450 is _DEFAULT_ARTIFACT else exp3450,
+        3451: _exp3451_clean() if exp3451 is _DEFAULT_ARTIFACT else exp3451,
+        3452: _exp3452_flagged() if exp3452 is _DEFAULT_ARTIFACT else exp3452,
     }
 
 
