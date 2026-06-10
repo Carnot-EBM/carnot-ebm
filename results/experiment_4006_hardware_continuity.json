@@ -1,0 +1,131 @@
+{
+  "duration_s": 7.549209,
+  "experiment": 4006,
+  "fabric_acceleration_claimed": false,
+  "field_principles": {
+    "duration_s": "Terminal-prefix verdict + hardware_smoke substrate.",
+    "gatemate_reachable": "BARE BOOLs \u2014 per-board SSH/USB reachability (keeps boards from being silently dropped).",
+    "honest_verdict": "Terminal-prefix verdict + hardware_smoke substrate.",
+    "inference_substrate": "Terminal-prefix verdict + hardware_smoke substrate.",
+    "kv260_reachable": "BARE BOOLs \u2014 per-board SSH/USB reachability (keeps boards from being silently dropped).",
+    "per_board_duration_s": "DISTINCT wall-clock per board \u2014 identical durations is a TAUTOLOGY flag (exp3866).",
+    "per_board_next_step": "The next concrete forward step per reachable board (KV260 toward terminal per north-star \u00a73).",
+    "polarfire_reachable": "BARE BOOLs \u2014 per-board SSH/USB reachability (keeps boards from being silently dropped).",
+    "preconditions_checked": "list of {resource, available} \u2014 records WHICH checks ran (pre-empts the fabrication mode)."
+  },
+  "gatemate_command_transcript": {
+    "combined_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n",
+    "command": "openFPGALoader -c dirtyJtag --detect",
+    "duration_s": 0.023323,
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
+  },
+  "gatemate_detect_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+  "gatemate_reachable": false,
+  "gatemate_state": "blocked_gatemate_unreachable",
+  "honest_verdict": "complete: hardware_continuity_4006_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded",
+  "inference_substrate": "hardware_smoke",
+  "kv260_command_transcripts": {
+    "ssh_true": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.601398,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "uio_list": {
+      "combined_output": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n",
+      "command": "ssh kria 'ls /dev/uio*'",
+      "duration_s": 0.457539,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n"
+    },
+    "xmutil_listapps": {
+      "combined_output": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "command": "ssh kria 'xmutil listapps'",
+      "duration_s": 0.766208,
+      "exit_code": 1,
+      "stderr": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "stdout": ""
+    }
+  },
+  "kv260_loaded_overlay": null,
+  "kv260_reachable": true,
+  "kv260_state": "reachable_overlay_absent",
+  "kv260_uio_devices": [
+    "/dev/uio0",
+    "/dev/uio1",
+    "/dev/uio2",
+    "/dev/uio3"
+  ],
+  "per_board_duration_s": {
+    "gatemate": 0.023373,
+    "kv260": 5.825551,
+    "polarfire": 1.700266
+  },
+  "per_board_next_step": {
+    "gatemate": "blocked_gatemate_unreachable",
+    "kv260": "kv260_forward_step_load_terminal_overlay_per_north_star_section_3",
+    "polarfire": "polarfire_forward_step_run_hash_verified_soft_cpu_dispatch"
+  },
+  "polarfire_command_transcripts": {
+    "continuity": {
+      "combined_output": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\n 12:53:55 up 5 days, 14:50,  0 user,  load average: 0.14, 0.03, 0.01\n",
+      "command": "ssh polarfire 'uname -a && uptime'",
+      "duration_s": 0.822471,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\n 12:53:55 up 5 days, 14:50,  0 user,  load average: 0.14, 0.03, 0.01\n"
+    },
+    "ssh_true": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 polarfire true",
+      "duration_s": 0.877684,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    }
+  },
+  "polarfire_continuity_output": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\n 12:53:55 up 5 days, 14:50,  0 user,  load average: 0.14, 0.03, 0.01",
+  "polarfire_reachable": true,
+  "polarfire_state": "reachable_ssh_continuity_recorded",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "checked_before_board_operations": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.601398,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    },
+    {
+      "available": false,
+      "checked_before_board_operations": true,
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.023323,
+      "exit_code": 0,
+      "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "resource": "gatemate_jtag_detect"
+    },
+    {
+      "available": true,
+      "checked_before_board_operations": true,
+      "command": "ssh -o ConnectTimeout=5 polarfire true",
+      "duration_s": 0.877684,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "polarfire_ssh"
+    }
+  ],
+  "random_seed": 4006,
+  "reproducibility_checksum": "d96c08dad1b2f9d1c1f5bab4707c8c8a58ecca45d246cf9faf7120de25dbdef4",
+  "schema": "carnot.hardware_continuity_arc_reachability.v2",
+  "spec_refs": [
+    "REQ-HW-4006",
+    "SCENARIO-HW-4006"
+  ]
+}

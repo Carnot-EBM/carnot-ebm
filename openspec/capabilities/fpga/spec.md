@@ -4613,6 +4613,77 @@ and an honest terminal-prefix or blocked verdict.
 
 ---
 
+### REQ-HW-4006
+
+**Title:** ARC hardware continuity check MUST preserve KV260, GateMate, and PolarFire visibility
+
+**Description:**
+Experiment 4006 MUST produce
+`results/experiment_4006_hardware_continuity.json` as a reachability-only
+hardware-continuity artifact while ARC remains the focus. The check is limited
+to board reachability and continuity evidence; it MUST NOT claim model
+inference or acceleration. KV260 work is relaxed to the next terminal-confirming
+step per north-star section 3. The experiment MUST check the three attached
+boards independently:
+KV260 MUST use only `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` as
+the board precondition, GateMate MUST use
+`openFPGALoader -c dirtyJtag --detect` and require a colognechip/GateMate
+IDCODE in the output, and PolarFire MUST use
+`ssh -o ConnectTimeout=5 polarfire 'true'`. KV260 host SD-card block-device
+checks MUST NOT be used.
+
+For each reachable board, the artifact MUST record the loaded-overlay or
+detect/continuity output and the next concrete forward step. KV260 evidence
+MUST include the loaded overlay from `ssh kria 'xmutil listapps'` plus
+`/dev/uio*` state from `ssh kria 'ls /dev/uio*'`, and the KV260 next step MUST
+point toward terminal confirmation. GateMate evidence MUST include the
+`openFPGALoader --detect` output. PolarFire evidence MUST include live SSH
+continuity output gathered after the precondition. For any unreachable board,
+the board's next step MUST be exactly `blocked_<board>_unreachable`, where
+`<board>` is `kv260`, `gatemate`, or `polarfire`.
+
+The artifact MUST include bare `kv260_reachable`, `gatemate_reachable`,
+`polarfire_reachable`, `per_board_next_step`, `per_board_duration_s`,
+`preconditions_checked`, `honest_verdict`, `duration_s`, and
+`inference_substrate` fields. `preconditions_checked` MUST record which checks
+ran with at least `{resource, available}` for the three board preconditions.
+`per_board_duration_s` MUST contain one measured wall-clock timer per board,
+and all three values MUST be positive and distinct so the Exp 3866
+timer-tautology failure mode cannot recur. The artifact MUST set
+`inference_substrate="hardware_smoke"`. `honest_verdict` MUST start with
+`success:` or `complete:` when at least one board is reachable, or with
+`blocked_` when no board is reachable.
+
+**Acceptance criteria:**
+- `scripts/experiments/experiment_4006_hardware_continuity.py` writes
+  `results/experiment_4006_hardware_continuity.json`.
+- The required artifact fields are present as bare values; field principles
+  annotate those fields separately through `field_principles`.
+- Reachable boards record the requested overlay/detect/continuity evidence and
+  concrete next forward steps; unreachable boards record the required
+  `blocked_<board>_unreachable` next-step string.
+- The artifact contains no KV260 host SD-card marker such as `/dev/mmcblk`.
+
+**Implementation status:** Implemented (Exp 4006)
+
+---
+
+### SCENARIO-HW-4006
+
+**Scenario:** ARC continuity check records board reachability, evidence, and distinct timers.
+
+**Given:** KV260, GateMate, and PolarFire may independently be reachable or
+unreachable through their allowed SSH/JTAG preconditions.
+**When:** Experiment 4006 runs the hardware-smoke continuity check.
+**Then:** It writes `results/experiment_4006_hardware_continuity.json` with
+the bare required fields, per-board precondition records, per-board next steps,
+distinct positive per-board durations, a hardware-smoke substrate declaration,
+and an honest terminal-prefix or blocked verdict.
+
+**Implementation status:** Implemented (Exp 4006)
+
+---
+
 ### REQ-HW-3577
 
 **Title:** KV260 hardware-task continuity verification
