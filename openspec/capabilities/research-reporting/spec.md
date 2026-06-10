@@ -18787,3 +18787,57 @@ unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3974 | Planned (`python/carnot/reporting/archive_v367_activate_v368_3974.py`, `scripts/experiments/experiment_3974_archive_v367_activate_v368.py`) | Planned (`tests/python/test_experiment_3974_archive_v367_activate_v368.py`) |
+
+### REQ-REPORT-3984: Operational Retro Commit Detector Gap Self-Check
+
+The Exp 3984 workflow SHALL repair the operational retrospective
+milestone-scoped experiment detector without modifying
+`scripts/research_conductor.py`. It SHALL reproduce the known `.367` false
+zero by applying the legacy subject predicate to the bounded range after
+`[conductor] Activate milestone 2026.06.367` and before
+`[conductor] Activate milestone 2026.06.368`. The reproduced legacy count
+SHALL be `0` while at least one direct terminal artifact matching
+`results/experiment_<digits>_*.json` is present in that same range.
+
+The repaired detector SHALL count newly added terminal experiment artifacts in
+the bounded git range, excluding auxiliary state files such as
+`*_state.json`, rather than relying on a literal `Exp ` token in the commit
+subject. For a closed milestone the end bound SHALL be the next activation
+commit; for the active milestone it SHALL be `HEAD`. The detector SHALL expose
+the legacy count, the direct artifact count, the corrected experiment count,
+and the exact artifact paths used as evidence.
+
+The detector SHALL add a `detector_gap_suspected` self-check: when the legacy
+commit count is `0` and the direct artifact count is at least `1`, the result
+is stamped with `detector_gap_suspected=true` and the direct artifact count.
+The Exp 3984 artifact SHALL backfill corrected counts for milestones
+`2026.06.363` through `2026.06.368`, SHALL keep estimated time savings at `0`
+when no measured wall-time is recovered, and SHALL write
+`results/experiment_3984_retro_commit_detector_fix.json` with terminal-prefix
+`honest_verdict`, `duration_s`, and `inference_substrate`.
+
+#### SCENARIO-REPORT-3984-REPRO: Legacy Subject Predicate Misses .367
+
+**Given** the `.367` bounded git range contains newly added terminal artifacts
+such as `results/experiment_3964_r11l_incremental_l2.json`
+**When** the legacy detector counts only commit subjects containing literal
+`Exp `
+**Then** it returns `0`
+**And** the repaired artifact scan returns a non-zero corrected count
+**And** `detector_gap_suspected` is true for the legacy detector gap.
+
+#### SCENARIO-REPORT-3984-BACKFILL: Corrected Counts Are Bounded By Activation Windows
+
+**Given** activation commits exist for milestones `2026.06.363` through
+`2026.06.368`
+**When** the repaired detector backfills those milestones
+**Then** closed milestones are bounded by the next activation commit
+**And** the active milestone is bounded by `HEAD`
+**And** the output reports corrected per-milestone experiment counts without
+fabricating wall-time or estimated savings.
+
+## Implementation Status (REQ-REPORT-3984)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3984 | Implemented (`python/carnot/reporting/retro_commit_detector_3984.py`, `scripts/experiments/experiment_3984_retro_commit_detector_fix.py`) | Implemented (`tests/python/test_experiment_3984_retro_commit_detector_fix.py`) |
