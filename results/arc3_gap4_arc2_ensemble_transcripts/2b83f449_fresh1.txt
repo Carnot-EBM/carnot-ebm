@@ -1,0 +1,193 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (13x19):
+[[3, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 7, 7, 7, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 7, 7, 7, 0, 0, 7, 7, 7, 0, 0, 0, 0, 7, 7, 7, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0],
+ [8, 8, 0, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 1 OUTPUT (13x19):
+[[8, 8, 8, 8, 6, 8, 8, 0, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 8],
+ [0, 0, 0, 8, 6, 8, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0],
+ [3, 3, 8, 8, 6, 8, 6, 8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 8],
+ [0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0],
+ [8, 8, 8, 6, 8, 8, 6, 8, 6, 8, 8, 8, 8, 6, 8, 6, 8, 8, 8],
+ [0, 0, 8, 6, 8, 0, 0, 8, 6, 8, 0, 0, 0, 0, 8, 6, 8, 0, 0],
+ [3, 3, 8, 6, 8, 6, 8, 8, 6, 8, 8, 6, 8, 8, 8, 6, 8, 3, 3],
+ [0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 6, 8, 8, 6, 8, 8, 6, 8, 8, 3, 0, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8],
+ [0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0],
+ [8, 8, 0, 3, 8, 6, 8, 8, 0, 3, 8, 8, 8, 6, 8, 8, 8, 8, 3]]
+
+Demo 2 INPUT (11x16):
+[[3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 2 OUTPUT (11x16):
+[[8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 3, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 6, 8, 8, 8],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0],
+ [8, 8, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 6, 8, 3, 3],
+ [0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 6, 8, 8, 8, 8],
+ [0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0],
+ [3, 3, 8, 6, 8, 8, 8, 6, 8, 8, 8, 6, 8, 8, 3, 3],
+ [0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 3]]
+
+TEST INPUT (19x17):
+[[3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0],
+ [8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    g = np.array(grid, copy=True)
+    h, w = g.shape
+
+    colors, counts = np.unique(g[g != 0], return_counts=True)
+    track = colors[np.argmax(counts)]
+
+    other = [c for c in colors if c != track]
+    run_counts = {c: 0 for c in other}
+    for r in range(h):
+        c = 0
+        while c < w:
+            v = g[r, c]
+            a = c
+            while c < w and g[r, c] == v:
+                c += 1
+            if v in run_counts and c - a >= 3:
+                run_counts[v] += c - a
+
+    bridge = max(other, key=lambda c: run_counts[c])
+    marker = [c for c in other if c != bridge][0]
+    new_color = bridge - 1
+
+    out = g.copy()
+    orig_marker = (g == marker)
+    out[(g == marker) | (g == bridge)] = track
+
+    for r in range(h):
+        c = 0
+        while c < w:
+            if g[r, c] == bridge:
+                a = c
+                while c < w and g[r, c] == bridge:
+                    c += 1
+                m = (a + c - 1) // 2
+                for rr in (r - 1, r, r + 1):
+                    if 0 <= rr < h:
+                        out[rr, m] = new_color
+            else:
+                c += 1
+
+    seen = np.zeros((h, w), dtype=bool)
+    for sr in range(h):
+        for sc in range(w):
+            if seen[sr, sc] or out[sr, sc] != track:
+                continue
+
+            comp = []
+            stack = [(sr, sc)]
+            seen[sr, sc] = True
+            k = 0
+
+            while stack:
+                r, c = stack.pop()
+                comp.append((r, c))
+                if orig_marker[r, c]:
+                    k += 1
+
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and out[nr, nc] == track:
+                        seen[nr, nc] = True
+                        stack.append((nr, nc))
+
+            if not k:
+                continue
+
+            comp_set = set(comp)
+            br = max(r for r, c in comp)
+            cols = sorted(c for r, c in comp if r == br)
+
+            segs = []
+            a = b = cols[0]
+            for c in cols[1:]:
+                if c == b + 1:
+                    b = c
+                else:
+                    segs.append((a, b))
+                    a = b = c
+            segs.append((a, b))
+
+            best = None
+            best_score = None
+            for a, b in segs:
+                left_up = (br - 1, a) in comp_set
+                right_up = (br - 1, b) in comp_set
+                score = (left_up != right_up, b - a)
+                if best is None or score > best_score:
+                    best = (a, b, left_up, right_up)
+                    best_score = score
+
+            a, b, left_up, right_up = best
+            if left_up and not right_up:
+                places = [(br, c) for c in range(b, b - k, -1)]
+            elif right_up and not left_up:
+                places = [(br, c) for c in range(a, a + k)]
+            else:
+                src_cols = [c for r, c in comp if orig_marker[r, c]]
+                if sum(src_cols) / len(src_cols) <= (a + b) / 2:
+                    places = [(br, c) for c in range(a, a + k)]
+                else:
+                    places = [(br, c) for c in range(b, b - k, -1)]
+
+            for r, c in places:
+                out[r, c] = marker
+
+    return out
+```

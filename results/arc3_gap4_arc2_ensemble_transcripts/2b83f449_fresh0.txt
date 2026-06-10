@@ -1,0 +1,162 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (13x19):
+[[3, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 7, 7, 7, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 7, 7, 7, 0, 0, 7, 7, 7, 0, 0, 0, 0, 7, 7, 7, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0],
+ [8, 8, 0, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 1 OUTPUT (13x19):
+[[8, 8, 8, 8, 6, 8, 8, 0, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 8],
+ [0, 0, 0, 8, 6, 8, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0],
+ [3, 3, 8, 8, 6, 8, 6, 8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 8],
+ [0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0],
+ [8, 8, 8, 6, 8, 8, 6, 8, 6, 8, 8, 8, 8, 6, 8, 6, 8, 8, 8],
+ [0, 0, 8, 6, 8, 0, 0, 8, 6, 8, 0, 0, 0, 0, 8, 6, 8, 0, 0],
+ [3, 3, 8, 6, 8, 6, 8, 8, 6, 8, 8, 6, 8, 8, 8, 6, 8, 3, 3],
+ [0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 6, 8, 8, 6, 8, 8, 6, 8, 8, 3, 0, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8],
+ [0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0],
+ [8, 8, 0, 3, 8, 6, 8, 8, 0, 3, 8, 8, 8, 6, 8, 8, 8, 8, 3]]
+
+Demo 2 INPUT (11x16):
+[[3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 2 OUTPUT (11x16):
+[[8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 3, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 6, 8, 8, 8],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0],
+ [8, 8, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 6, 8, 3, 3],
+ [0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 6, 8, 8, 8, 8],
+ [0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0],
+ [3, 3, 8, 6, 8, 8, 8, 6, 8, 8, 8, 6, 8, 8, 3, 3],
+ [0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 3]]
+
+TEST INPUT (19x17):
+[[3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0],
+ [8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h, w = grid.shape
+    out = grid.copy()
+
+    above = {r: [] for r in range(h)}
+    below = {r: [] for r in range(h)}
+
+    centers_by_gap = {}
+    for r in range(1, h, 2):
+        centers = []
+        c = 0
+        while c < w:
+            if grid[r, c] == 7:
+                start = c
+                while c < w and grid[r, c] == 7:
+                    c += 1
+                end = c
+                if end - start == 3:
+                    centers.append(start + 1)
+            else:
+                c += 1
+        centers_by_gap[r] = centers
+
+    out[out == 3] = 8
+
+    for r, centers in centers_by_gap.items():
+        for m in centers:
+            if m - 1 >= 0:
+                out[r, m - 1] = 8
+            out[r, m] = 6
+            if m + 1 < w:
+                out[r, m + 1] = 8
+            if r - 1 >= 0:
+                out[r - 1, m] = 6
+                below[r - 1].append(m)
+            if r + 1 < h:
+                out[r + 1, m] = 6
+                above[r + 1].append(m)
+
+    def mark_left(row, m):
+        blockers = [x for x in above[row] + below[row] if x < m]
+        zeros = [x for x in range(m - 1, -1, -1) if grid[row, x] == 0]
+        nearest_blocker = max(blockers) if blockers else None
+        nearest_zero = max(zeros) if zeros else None
+
+        if nearest_zero is not None and (nearest_blocker is None or nearest_zero > nearest_blocker):
+            if nearest_zero + 1 < w and out[row, nearest_zero + 1] == 8:
+                out[row, nearest_zero + 1] = 3
+        elif nearest_blocker is None:
+            out[row, 0] = 3
+            if m <= 4 and w > 1 and out[row, 1] == 8:
+                out[row, 1] = 3
+
+    def mark_right(row, m):
+        blockers = [x for x in above[row] + below[row] if x > m]
+        if blockers:
+            return
+
+        last = m + 1
+        for z in range(m + 1, w):
+            if grid[row, z] == 0:
+                if z - 1 >= 0 and out[row, z - 1] == 8:
+                    out[row, z - 1] = 3
+                last = z + 1
+
+        if w - 1 >= last and out[row, w - 1] == 8:
+            out[row, w - 1] = 3
+        if w - 2 >= last and (w - 1 - m) <= 4 and out[row, w - 2] == 8:
+            out[row, w - 2] = 3
+
+    for r in range(0, h, 2):
+        for m in above[r]:
+            mark_left(r, m)
+            mark_right(r, m)
+
+    return out
+```
