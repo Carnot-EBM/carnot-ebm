@@ -1,0 +1,32 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.369",
+  "generated_at": "2026-06-10T07:13:23Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative TIMING DATA block reports zero milestone-scoped experiment commits since activation, so experiments_completed=0, compute_bound_experiments_count=0, and total_wall_time_minutes=0 — there is no per-experiment timing to rank. Both RTX 3090 GPUs were idle at 0% utilization, which is correct behaviour because no compute-bound (GGUF/CUDA) task is in the block; with zero compute-bound tasks, gpu_idle_on_compute_bound_tasks is null (not a bug). However, the .369 changelog window read this turn shows roughly ten committed experiment artifacts (the capstone plus its cited GAP-4 verifier arms and ARC-AGI-3 solves), so the zero is a milestone->commit detector artifact, not an empty milestone.",
+  "detector_gap_suspected": true,
+  "bottlenecks_identified": [
+    "Recurring observability gap (the headline finding, NOT a measured slowdown): the authoritative timing detector reports 0 commits for the SIXTH consecutive milestone (.363/.365/.366/.367/.368/.369) while the changelog window shows real committed experiment artifacts each time. This is a milestone->commit attribution/windowing defect in the retro-timing feed, not six genuinely empty milestones.",
+    "exp3984 (landed in .368) claimed 'retro_commit_detector_fixed_backfill_counts_restored', yet .369 still received a zero timing block — so that fix is still NOT verified end-to-end on the LIVE retro-timing generator. The fix either did not reach this code path or regressed.",
+    "Because timing is empty, no experiment wall-time, GPU efficiency, or DualGPURunner question can be answered from the data this milestone — the retro is running on empty inputs, which is itself the bottleneck worth fixing."
+  ],
+  "improvements_suggested": [
+    "Prove the exp3984 detector fix reaches the LIVE retro-timing generator with an end-to-end test over .369: feed the real activation SHA and assert the count is ~10 (the changelog-visible artifacts), not 0. A zero must fail the test.",
+    "Add a glob-based experiments_completed fallback (count results/experiment_*.json newer than the activation SHA) as a detector-independent cross-check, so the count never silently collapses to 0 when artifacts exist on disk.",
+    "Wire the detector_gap_suspected self-check into the retro generator: zero-count WITH on-disk/changelog artifacts in the window must fail loud, never emit a silent all-zero retro.",
+    "Have the collector emit a zero-count reason code (capstone_aggregation_only | all_tasks_blocked | window_misaligned | genuinely_idle) so an empty timing set is self-explaining.",
+    "No GPU action needed: both 3090s idle at 0% is correct with no compute-bound task in the block; do NOT propose DualGPURunner this milestone (no 2+-model parallel load occurred)."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Repair the milestone->commit detection/windowing in the LIVE retro-timing generator and verify it end-to-end on .369 (must report ~10, not 0) — the single fix that ends the six-milestone false-zero streak and makes every future retro actionable.",
+    "Add the detector-independent glob fallback (results/experiment_*.json since activation SHA) plus a loud self-check that fails when count==0 but artifacts exist — defense in depth so the count can never silently be 0 again.",
+    "Emit a zero-count reason code distinguishing capstone/aggregation milestones from blocked/window-misaligned/idle ones, so a legitimately experiment-free milestone is never confused with a measurement miss."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "For the sixth milestone running, the operational retro adds near-zero value not because the milestone was idle but because its own input feed is broken — the highest-leverage work is repairing the timing-data collector, not optimizing experiment wall-time (there is none in the block to optimize) or GPU scheduling (idle is correct here). The most important meta-signal is that a same-milestone 'detector fixed' claim (.368 exp3984) did NOT hold on the live feed, so the next milestone must treat the detector fix as unverified until an end-to-end .369 test proves a non-zero count."
+}
