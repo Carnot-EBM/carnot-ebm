@@ -37278,53 +37278,193 @@ milestones:
     result: OK (conductor)
 - id: 2026.06.367
   correction_type: v367_archive_activate_v368_gap4_readiness
-  title: 'Archive .367 and activate .368 with GAP-4 readiness preserved'
+  title: Archive .367 and activate .368 with GAP-4 readiness preserved
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-09'
-  finding: '.367 preserved three ARC-AGI-3 level-1 solves (r11l, lp85, sc25), kept M3 efficiency open after exp3967 blocked verifier_not_in_loop, recorded exp3968 trustworthy_0of6, and activated the GAP-4 execution verifier milestone.'
+  finding: .367 preserved three ARC-AGI-3 level-1 solves (r11l, lp85, sc25), kept M3 efficiency open after exp3967 blocked
+    verifier_not_in_loop, recorded exp3968 trustworthy_0of6, and activated the GAP-4 execution verifier milestone.
   activation_recorded: exp3974-archive-v367-activate-v368
   tasks:
   - id: exp3963-archive-v366-activate-v367
-    title: 'Archive .366 and activate .367'
+    title: Archive .366 and activate .367
     deliverable: results/experiment_3963_archive_v366_activate_v367.json
     result: 'complete: archived_v366_v367_active_second_solve_m3_fabrication_recorded_arc_substrate_green'
   - id: exp3964-r11l-incremental-l2
-    title: 'r11l incremental level-2 attempt'
+    title: r11l incremental level-2 attempt
     deliverable: results/experiment_3964_r11l_incremental_l2.json
     result: 'complete: r11l_levels1_of6_first_fail2 [R11L_SOLVED real_env_confirmed=true game=r11l levels_solved=1]'
   - id: exp3965-lp85-incremental-l2
-    title: 'lp85 incremental level-2 attempt'
+    title: lp85 incremental level-2 attempt
     deliverable: results/experiment_3965_lp85_incremental_l2.json
     result: 'complete: lp85_levels1_first_fail2 [LP85_SOLVED real_env_confirmed=true game=lp85 levels_solved=1]'
   - id: exp3966-third-game-first-solve
-    title: 'Third ARC-AGI-3 first solve on sc25 level 1'
+    title: Third ARC-AGI-3 first solve on sc25 level 1
     deliverable: results/experiment_3966_third_game_first_solve.json
-    result: 'complete: third_game_solve_sc25-635fd71a_levels1_solvedTrue [SC25_SOLVED THIRD_SOLVE real_env_confirmed=true game=sc25-635fd71a levels_solved=1]'
+    result: 'complete: third_game_solve_sc25-635fd71a_levels1_solvedTrue [SC25_SOLVED THIRD_SOLVE real_env_confirmed=true
+      game=sc25-635fd71a levels_solved=1]'
   - id: exp3967-m3-honest-efficiency
-    title: 'M3 honest efficiency with verifier genuinely in loop'
+    title: M3 honest efficiency with verifier genuinely in loop
     deliverable: results/experiment_3967_m3_honest_efficiency.json
-    result: 'blocked_verifier_not_in_loop [M3_STILL_OPEN VERIFIER_NOT_IN_LOOP EFFICIENCY_EXISTENTIAL_OWED]'
+    result: blocked_verifier_not_in_loop [M3_STILL_OPEN VERIFIER_NOT_IN_LOOP EFFICIENCY_EXISTENTIAL_OWED]
   - id: exp3968-active-codex-nonspatial-sweep
-    title: 'Active-codex nonspatial world-model sweep'
+    title: Active-codex nonspatial world-model sweep
     deliverable: results/experiment_3968_active_codex_nonspatial_sweep.json
     result: 'complete: exp3968_active_codex_nonspatial_sweep_trustworthy_0of6 [WORLD_MODEL_TRUSTWORTHY_0OF6]'
   - id: exp3969-hidden-state-pinductor
-    title: 'Hidden-state Pinductor latent inference retry'
+    title: Hidden-state Pinductor latent inference retry
     deliverable: results/experiment_3969_hidden_state_pinductor.json
     result: 'complete: pinductor_latents_no_drop_energy'
   - id: exp3970-cross-game-arcmemo-transfer
-    title: 'Cross-game ArcMemo transfer'
+    title: Cross-game ArcMemo transfer
     deliverable: results/experiment_3970_cross_game_arcmemo_transfer.json
     result: 'success: arcmemo_transfer_win_reused_2_later_games'
   - id: exp3971-m4-offline-quota-gate
-    title: 'M4 offline quota gate readiness'
+    title: M4 offline quota gate readiness
     deliverable: results/experiment_3971_m4_offline_quota_gate.json
     result: 'success: quota_gate_cleared_hybrid_levels3_baseline0_prior0_operator_ready'
   - id: exp3972-hardware-continuity
-    title: 'Hardware continuity'
+    title: Hardware continuity
     deliverable: results/experiment_3972_hardware_continuity.json
     result: 'complete: hardware_continuity_3972_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded'
   - id: exp3973-capstone-v367
-    title: 'Capstone .367'
+    title: Capstone .367
     deliverable: results/experiment_3973_capstone_v367.json
     result: 'complete: capstone_v367_accuracy_progress1_total_real_levels3_verifier_earns_efficiencyfalse_missing0_flagged_skipped0'
+- id: 2026.06.368
+  title: "ARC-AGI-3 \u2014 build and prove the EXECUTION/PROGRAM-SYNTHESIS verifier (GAP-4), the path BOTH retired ARC verifier\
+    \ threads converged on: prove the verifier earns its place on the ACCURACY axis (executed-rule-consistency selects gold\
+    \ past frequency-vote toward the proven 16pp oracle headroom the retired trained-content-energy lineage could not reach)\
+    \ AND the EFFICIENCY axis (the north-star-\xA75 owed head-to-head: energy-consistency-verifier vs SOTA-local-LLM-judge\
+    \ for the induced-world-model acceptance decision, target parity at 10-100x cheaper). Grow ARC-AGI-3 accuracy via execution-guided\
+    \ re-induction (the L2-fails fix + a 4th non-spatial first-solve), continue self-learning (ArcMemo SOLVE-transfer, not\
+    \ just induction-cost), hardware continuity, and fix the operational-retro commit-detector that has false-zero-counted\
+    \ 4 consecutive milestones. Both existential proofs carry mandatory anti-fabrication self-audits; the .366 fabricated-M3\
+    \ and .367 honestly-blocked-M3 are the prior failures these address."
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-10'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3974-archive-v367-activate-v368
+    title: "Archive .367 -> activate .368; GREEN-GATE: assert research-complete.yaml + ops/exclusion_manifest.yaml parse under\
+      \ yaml.safe_load, the ARC substrate unit tests are green, and the ARC agentic modules import (carnot.agentic.arc_agi3_world_model,\
+      \ arc_world_model_synth, arc_world_model_dsl, arc_agi3_action_efficiency), so .368 can EXECUTE the GAP-4 verifier-build\
+      \ + the honest verifier-axis proofs. RECORD the .367 truth: THREE games solved (r11l/lp85/sc25 L1, exp3966 added sc25);\
+      \ M3 efficiency BLOCKED (exp3967 verifier_not_in_loop \u2014 existential question still open); world-model induction\
+      \ 0/6 trustworthy (exp3968); Pinductor no-drop (exp3969, latent-aug RETIRED); ArcMemo transfer WIN (exp3970); quota-gate\
+      \ CLEARED (exp3971); GAP-3 trained-content-energy selector lineage RETIRED (exclusion_manifest gap3_trained_content_energy_selector_retired_stage2v2_2026_06_09)."
+    deliverable: results/experiment_3974_archive_v367_activate_v368.json
+    result: OK (conductor)
+  - id: exp3975-gap4-execution-verifier-build
+    title: "BUILD the GAP-4 executed-rule-consistency verifier (the convergent next step both retired ARC threads name): synthesize\
+      \ the task's transformation rule as an EXECUTABLE grid->grid program from the demo input/output pairs (reuse the local\
+      \ object-DSL induction pattern in arc_world_model_dsl.py; add a SOTA local GGUF (gemma-4) program-proposer for rules\
+      \ the DSL cannot express; codex optional stronger comparator), EXECUTE the program on the test input to get predicted_output*,\
+      \ and define the verifier energy E(candidate) = disagreement(candidate, predicted_output*). POSITIVE CONTROL + COVERAGE\
+      \ on held-out ARC-1 TRAINING tasks: on tasks where a correct program synthesizes, does E rank gold ABOVE same-shape\
+      \ near-misses (AUROC > 0.70)? Report program-synthesis COVERAGE (fraction of tasks a program induces for) honestly \u2014\
+      \ coverage is the binding constraint, NOT a random-vs-signal question. This is execution-based verification, NOT a trained\
+      \ content-energy (that lineage is retired)."
+    deliverable: results/experiment_3975_gap4_execution_verifier_build.json
+    result: OK (conductor)
+  - id: exp3976-gap4-trm-rerank-eval
+    title: "EVALUATE the GAP-4 execution-verifier on the TRM-rerank headroom pool (the moat-scissor ACCURACY proof; gated\
+      \ on exp3975 positive control): rank the 8041 real TRM candidates across the 31-task headroom pool by executed-rule-consistency\
+      \ (exp3975's synthesizer -> program -> execute on test_input -> score candidate agreement), as a PRIMARY selector AND\
+      \ as a vote-primary-hybrid gated by executed-consistency. Does it beat frequency-vote (pass@2 0.4516) toward the oracle\
+      \ ceiling (0.6129) on the COVERED tasks \u2014 reaching headroom the retired trained-content-energy lineage (0.16, at\
+      \ random) could NOT? Report program-synthesis coverage honestly; bootstrap 95% CI; Poisson-binomial random-null check.\
+      \ retire_if_same_verdict: if executed-consistency ALSO lands statistically at random WITH adequate coverage, the executed-consistency\
+      \ TRM selector is retired and GAP-4 closes with the honest bound."
+    deliverable: results/experiment_3976_gap4_trm_rerank_eval.json
+    result: OK (conductor)
+  - id: exp3977-gap4-rederive-audit
+    title: "RE-DERIVATION + independence audit of the GAP-4 positive (gated on exp3976 beating vote \u2014 only runs if there\
+      \ IS a surprising positive to confirm, per the adversarial-confirmation discipline): independently re-score the executed-consistency\
+      \ rankers from the saved synthesizer + eval pool on CPU, reproduce every committed number (pass@1/pass@2, headroom_capture,\
+      \ bootstrap CI, Poisson-binomial null), and forensically audit for the failure modes that killed the trained-energy\
+      \ lineage's apparent wins \u2014 (1) gold/test-input LEAK into the synthesizer, (2) COVERAGE inflation (is the lift\
+      \ only on a handful of trivially-synthesizable tasks?), (3) vote-confounding (does the executed-consistency ranker just\
+      \ shadow vote?), (4) tie-sensitivity. A GAP-4 accuracy headline is citable ONLY if this confirms it."
+    deliverable: results/experiment_3977_gap4_rederive_audit.json
+    result: OK (conductor)
+  - id: exp3978-verifier-vs-judge-efficiency
+    title: "VERIFIER EARNS ITS PLACE, EFFICIENCY AXIS (north-star \xA75 owed head-to-head; the honest M3 redo on a venue that\
+      \ EXISTS): energy-consistency-VERIFIER vs SOTA-local-LLM-as-JUDGE for the induced-world-model ACCEPTANCE decision. On\
+      \ the induced programs from the 6 non-spatial games (exp3968 + exp3979), have BOTH decide ACCEPT/REJECT (is this program\
+      \ a trustworthy model?) \u2014 the energy verifier via held-out consistency_energy (a forward pass), the LLM-judge via\
+      \ a SOTA-local-GGUF prompt that inspects the program + transitions. Measure ACCURACY PARITY (each vs the held-out-oracle\
+      \ ground truth: does the accepted program actually predict held-out transitions?) AND the COST RATIO (judge tokens+seconds\
+      \ vs verifier forward-pass seconds). Target: parity within CI at 10-100x cheaper. Anti-fabrication self-audit: verifier_actually_invoked\
+      \ + judge_tokens_counted + n_programs_judged MUST be non-trivial. This is the offline efficiency proof that does NOT\
+      \ need a real-env action loop (the .366 fabrication + .367 block lesson)."
+    deliverable: results/experiment_3978_verifier_vs_judge_efficiency.json
+    result: OK (conductor)
+  - id: exp3979-world-model-gen-execution-guided
+    title: 'WORLD-MODEL INDUCTION GENERALIZATION via EXECUTION-GUIDED synthesis (the 0/6 fix; retry of exp3968''s trustworthy_0of6):
+      across the 6 non-spatial games (r11l, sc25, lp85, tn36, dc22, su15), induce the transition model with EXECUTION-GUIDED
+      program synthesis (arXiv:2507.15877: keep only programs that exactly reproduce observed transitions; compose incrementally)
+      gated by the GAP-4 executed-consistency acceptance, instead of exp3968''s active-codex refactor loop. How many of the
+      6 reach a TRUSTWORTHY model (held-out consistency energy <= 0.15)? MANDATORY POSITIVE CONTROL: vc33 (known-inducible
+      at 0.005) must re-pass, else the harness is broken (FALSE_NEGATIVE_RISK). retire_if_same_verdict: a SECOND 0/6 across
+      two distinct inducers bounds offline non-spatial world-model induction and redirects to per-game solve.'
+    deliverable: results/experiment_3979_world_model_gen_execution_guided.json
+    result: OK (conductor)
+  - id: exp3980-incremental-levels-reinduction
+    title: 'INCREMENTAL levels via execution-guided RE-INDUCTION (the L2-fails fix; +1 level per the MANDATORY Incremental-Progress
+      rule): r11l + lp85 + sc25 all SOLVED L1 but STALL at L2 (exp3964/3965 first_fail2). Diagnosis (arXiv:2507.15877): the
+      agent re-fits the L1 mechanic; the fix is to RE-INDUCE the L2 rule from L2 observations (the harder config is a NEW
+      induction problem, not a transfer of L1). For ONE game that re-induces, advance from L1 to L2 (and L3 if reached), re-perceiving
+      + re-inducing per level. Report ACCURACY_levels_solved + new_levels_solved_this_task (the monotonic counter the milestone
+      must raise past the banked 3xL1). Real-env-confirmed; solving only L1 again is an honest no-regression complete, NOT
+      a fabricated higher level.'
+    deliverable: results/experiment_3980_incremental_levels_reinduction.json
+    result: OK (conductor)
+  - id: exp3981-fourth-game-first-solve
+    title: 'FOURTH ARC-AGI-3 game first-solve: solve level-1 of the next-easiest NON-SPATIAL game (tn36-ef4dde99 / su15-1944f8ab
+      / dc22 are candidates) via the perception -> induced-model -> goal-predicate -> exploit loop that produced the r11l
+      (exp3946), lp85 (exp3954), and sc25 (exp3966) solves. A FOURTH distinct solved game raises generalization 3->4 (robustness
+      of the method). Real-env-confirmed; pick the game empirically by L0 action budget + inducibility, do NOT hardcode the
+      win from source. AVOID vc33''s PSPACE spatial trap (see prior_failures). Where a delta is ambiguous, the SOTA local
+      GGUF may propose object semantics; perception is PRIMARILY deterministic numpy.'
+    deliverable: results/experiment_3981_fourth_game_first_solve.json
+    result: OK (conductor)
+  - id: exp3982-arcmemo-solve-transfer
+    title: "ArcMemo SOLVE-transfer (self-learning MANDATE; extends exp3970's induction-cost transfer win to the SOLVE loop):\
+      \ exp3970 showed NL concept-memory reuse cuts INDUCTION cost across games. This tests whether the SAME concept memory\
+      \ makes a NEW game's SOLVE cheaper \u2014 does retrieving the banked solved-game concepts ('select-then-place' r11l,\
+      \ 'permute-set' lp85, 'pattern-match-then-navigate' sc25, + the 4th game from exp3981) reduce the ACTIONS/ATTEMPTS to\
+      \ solve the 4th game vs a cold-start solver with no memory? Two arms at equal perception: (A) cold-start, (B) concept-memory-seeded.\
+      \ This is Tier-2 constraint memory (research-program.md) in the SOLVE loop, the self-learning datum that compounds across\
+      \ games. POSITIVE CONTROL: the sequence must share structure (>=2 select/place-family games) or transfer is impossible\
+      \ by construction (FALSE_NEGATIVE_RISK)."
+    deliverable: results/experiment_3982_arcmemo_solve_transfer.json
+    result: OK (conductor)
+  - id: exp3983-hardware-continuity
+    title: "Hardware continuity (consolidated): SSH/USB-reachability + terminal-state check for each attached board \u2014\
+      \ KV260 (ssh kria, xmutil listapps), GateMate (openFPGALoader -c dirtyJtag --detect), PolarFire (ssh polarfire). Record\
+      \ per-board reachability + the next concrete forward step; no bitstream redesign. Per north-star \xA73, KV260 is the\
+      \ sovereignty story to drive to terminal then freeze; GateMate/PolarFire are opportunistic. Per CLAUDE.md KV260 SSH-Not-SD-Card\
+      \ Discipline: NEVER use the host SD-card block device as a KV260 precondition (SSH-reachability is the ONLY valid KV260\
+      \ precondition). Use DISTINCT wall-clock timers per board (the exp3866 TAUTOLOGY corrigendum)."
+    deliverable: results/experiment_3983_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp3984-retro-commit-detector-fix
+    title: 'INFRA FIX (reserved slot): repair the operational-retro milestone->commit detector that has reported false zero-counts
+      for 4 consecutive milestones (.363/.365/.366/.367) while ops/changelog.md shows real committed experiment work in the
+      same windows. Audit the activation-boundary SHA + the artifact-filename match in the timing harness; add a detector_gap_suspected
+      self-check that stamps when the detector count is 0 AND results/experiment_*.json files exist in the milestone window;
+      do NOT fabricate wall-time (estimated_time_savings stays 0 if no real timing exists). Deliver the fixed detector + a
+      backfill over .363-.368. This is the .367-retro-flagged highest-leverage infra action.'
+    deliverable: results/experiment_3984_retro_commit_detector_fix.json
+    result: OK (conductor)
+  - id: exp3985-capstone-v368
+    title: "Capstone .368 (UNGATED \u2014 the .365 op:exists + .366 no-artifact lessons): the milestone's headline question\
+      \ is DID THE VERIFIER EARN ITS PLACE ON EITHER AXIS. Aggregate: the GAP-4 ACCURACY moat (exp3976 gap4_beats_vote + exp3977\
+      \ gap4_positive_confirmed \u2014 does executed-rule-consistency select past vote toward the 16pp headroom the retired\
+      \ lineage couldn't reach?); the EFFICIENCY head-to-head (exp3978 accuracy_parity + cost_ratio \u2014 verifier at parity\
+      \ with the LLM-judge for 10-100x less?); world-model induction generalization (exp3979 n_trustworthy vs exp3968's 0/6);\
+      \ incremental levels (exp3980 new_levels_solved); the 4th game (exp3981 game_solved); ArcMemo solve-transfer (exp3982).\
+      \ Honest verdict on whether .368 advanced the north star on accuracy, efficiency, or both. SKIP any flagged_adversarial\
+      \ artifact; cite upstream sha256. NO gated_on \u2014 aggregate whatever exists."
+    deliverable: results/experiment_3985_capstone_v368.json
+    result: OK (conductor)
