@@ -1,0 +1,308 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (12x20):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 8, 8, 2, 2, 2],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 0, 0, 7, 0, 7, 8, 8, 7, 7, 7],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 7, 0, 0, 0, 7, 8, 8, 7, 7, 7],
+ [8, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 7, 0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 7, 0, 7, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 8, 8],
+ [8, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 2, 7, 8, 8],
+ [8, 7, 2, 7, 2, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 2, 7, 8, 8],
+ [8, 7, 2, 2, 2, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 4, 8],
+ [8, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 1 OUTPUT (12x20):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 0, 0, 0, 0, 0, 0, 0, 7, 0, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 2, 7, 2, 2, 2, 2, 2, 2, 2, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 2, 2, 2, 7, 7, 7, 7, 7, 2, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+
+Demo 2 INPUT (10x10):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 4, 4, 8, 8, 8, 9, 9, 3, 8],
+ [8, 4, 3, 3, 3, 8, 3, 3, 3, 8],
+ [8, 8, 3, 9, 9, 8, 3, 3, 3, 8],
+ [8, 8, 3, 9, 9, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 3, 3, 3, 8, 8, 3, 9, 9, 8],
+ [8, 9, 9, 3, 8, 8, 3, 9, 3, 8],
+ [8, 9, 9, 3, 8, 8, 3, 3, 3, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 2 OUTPUT (10x10):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 3, 3, 3, 3, 3, 3, 8, 8],
+ [8, 8, 3, 9, 9, 9, 9, 3, 8, 8],
+ [8, 8, 3, 9, 9, 9, 9, 3, 8, 8],
+ [8, 8, 3, 9, 9, 9, 9, 3, 8, 8],
+ [8, 8, 3, 9, 3, 3, 3, 3, 8, 8],
+ [8, 8, 3, 3, 3, 3, 3, 3, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+
+TEST INPUT (26x26):
+[[4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 4, 1, 1, 1],
+ [4, 1, 3, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 3, 3, 3, 4, 6, 6, 1],
+ [4, 1, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 3, 1, 1, 4, 1, 6, 1],
+ [4, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 3, 1, 1, 4, 1, 6, 1],
+ [4, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6, 1],
+ [4, 1, 1, 6, 6, 4, 1, 1, 1, 1, 3, 1, 4, 4, 4, 4, 1, 1, 7, 1, 1, 1, 4, 1, 1, 1],
+ [4, 1, 1, 6, 1, 4, 3, 3, 3, 3, 3, 1, 4, 4, 4, 4, 1, 1, 7, 1, 1, 1, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 7, 7, 7, 1, 1, 1, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4],
+ [1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [6, 6, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [1, 1, 1, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 1, 1, 4, 4, 4, 4, 3, 3, 3, 3, 3, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 6, 6, 4, 4, 4, 4, 1, 1, 1, 1, 3, 1, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1],
+ [4, 1, 1, 4, 4, 4, 4, 1, 1, 1, 1, 3, 1, 4, 1, 1, 6, 1, 1, 4, 7, 7, 7, 1, 1, 1],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 6, 6, 6, 4, 1, 1, 7, 1, 1, 1],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 4, 1, 1, 7, 1, 1, 1],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 1, 7, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 7, 7, 7, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 1, 7, 7, 7, 4, 4, 4, 4, 4, 4, 4, 4, 1, 7, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 7, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 2, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 7, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 2, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h0, w0 = grid.shape
+    vals, cnts = np.unique(grid, return_counts=True)
+    bg = vals[np.argmax(cnts)]
+    non = [(int(v), int(c)) for v, c in zip(vals, cnts) if v != bg]
+    frame = max(non, key=lambda x: x[1])[0]
+
+    keep = {frame}
+    marker_colors = set()
+    for v, c in non:
+        if v == frame or c >= 4:
+            keep.add(v)
+        else:
+            marker_colors.add(v)
+
+    mask = np.isin(grid, list(keep)) & (grid != bg)
+    seen = np.zeros(grid.shape, dtype=bool)
+    comps = []
+
+    for r in range(h0):
+        for c in range(w0):
+            if mask[r, c] and not seen[r, c]:
+                q = [(r, c)]
+                seen[r, c] = True
+                cells = []
+                for rr, cc in q:
+                    cells.append((rr, cc, int(grid[rr, cc])))
+                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nr, nc = rr + dr, cc + dc
+                        if 0 <= nr < h0 and 0 <= nc < w0 and mask[nr, nc] and not seen[nr, nc]:
+                            seen[nr, nc] = True
+                            q.append((nr, nc))
+                mr = min(x[0] for x in cells)
+                mc = min(x[1] for x in cells)
+                comps.append({
+                    "origin": (mr, mc),
+                    "cells": [(rr - mr, cc - mc, v) for rr, cc, v in cells],
+                    "abs": [(rr, cc) for rr, cc, _ in cells],
+                })
+
+    def bounds(cells):
+        return (max(r for r, c, v in cells) + 1, max(c for r, c, v in cells) + 1)
+
+    def norm(cells):
+        mr = min(r for r, c, v in cells)
+        mc = min(c for r, c, v in cells)
+        return sorted((r - mr, c - mc, v) for r, c, v in cells)
+
+    def rot(cells):
+        return [(c, -r, v) for r, c, v in cells]
+
+    variants = []
+    for comp in comps:
+        cur = comp["cells"]
+        vs = []
+        for _ in range(4):
+            n = norm(cur)
+            if n not in vs:
+                vs.append(n)
+            cur = rot(cur)
+        variants.append(vs)
+
+    marker_cells = [(r, c) for r in range(h0) for c in range(w0) if int(grid[r, c]) in marker_colors]
+    anchor = 0
+    if marker_cells:
+        best = (-1, -1)
+        for i, comp in enumerate(comps):
+            s = set(comp["abs"])
+            touches = 0
+            for r, c in marker_cells:
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    if (r + dr, c + dc) in s:
+                        touches += 1
+            if touches > best[0]:
+                best = (touches, i)
+        anchor = best[1] if best[0] > 0 else 0
+
+    ar0, ac0 = comps[anchor]["origin"]
+    ah, aw = bounds(comps[anchor]["cells"])
+    mark_dirs = set()
+    for r, c in marker_cells:
+        if ar0 <= r < ar0 + ah:
+            if c < ac0:
+                mark_dirs.add("left")
+            if c >= ac0 + aw:
+                mark_dirs.add("right")
+        if ac0 <= c < ac0 + aw:
+            if r < ar0:
+                mark_dirs.add("top")
+            if r >= ar0 + ah:
+                mark_dirs.add("bottom")
+
+    area = sum(len(c["cells"]) for c in comps)
+    dims = []
+    for hh in range(1, h0 + 1):
+        if area % hh == 0:
+            ww = area // hh
+            if ww <= w0:
+                dims.append((hh, ww))
+    dims.sort(key=lambda x: (abs(x[0] - x[1]), x[0] + x[1]))
+
+    def cell_ok(rr, cc, v, hh, ww):
+        return not ((rr == 0 or cc == 0 or rr == hh - 1 or cc == ww - 1) and v != frame)
+
+    def solve_for(hh, ww, off_r, off_c):
+        n = len(comps)
+        full = (1 << (hh * ww)) - 1
+
+        placements = [[] for _ in range(n)]
+        for i in range(n):
+            use_vars = [comps[i]["cells"]] if i == anchor else variants[i]
+            for cells in use_vars:
+                ph, pw = bounds(cells)
+                row_range = [comps[i]["origin"][0] - off_r] if i == anchor else range(hh - ph + 1)
+                col_range = [comps[i]["origin"][1] - off_c] if i == anchor else range(ww - pw + 1)
+                for rr0 in row_range:
+                    for cc0 in col_range:
+                        bits = 0
+                        placed = []
+                        ok = True
+                        for r, c, v in cells:
+                            rr, cc = rr0 + r, cc0 + c
+                            if rr < 0 or cc < 0 or rr >= hh or cc >= ww or not cell_ok(rr, cc, v, hh, ww):
+                                ok = False
+                                break
+                            bit = 1 << (rr * ww + cc)
+                            if bits & bit:
+                                ok = False
+                                break
+                            bits |= bit
+                            placed.append((rr, cc, v))
+                        if ok:
+                            placements[i].append((bits, placed))
+
+        if not placements[anchor]:
+            return None
+
+        start_bits, start_cells = placements[anchor][0]
+        result = [None] * n
+        result[anchor] = start_cells
+        remaining = set(range(n))
+        remaining.remove(anchor)
+
+        def dfs(filled):
+            if filled == full:
+                return True
+            best_cell = None
+            best_opts = None
+
+            empty = full ^ filled
+            b = empty
+            while b:
+                bit = b & -b
+                opts = []
+                for i in remaining:
+                    for bits, cells in placements[i]:
+                        if bits & bit and not (bits & filled):
+                            opts.append((i, bits, cells))
+                if best_opts is None or len(opts) < len(best_opts):
+                    best_opts = opts
+                    best_cell = bit
+                    if len(opts) <= 1:
+                        break
+                b -= bit
+
+            if not best_opts:
+                return False
+
+            best_opts.sort(key=lambda x: -len(x[2]))
+            for i, bits, cells in best_opts:
+                if i not in remaining or bits & filled:
+                    continue
+                remaining.remove(i)
+                result[i] = cells
+                if dfs(filled | bits):
+                    return True
+                result[i] = None
+                remaining.add(i)
+            return False
+
+        if dfs(start_bits):
+            out = np.full((h0, w0), bg, dtype=grid.dtype)
+            for cells in result:
+                for r, c, v in cells:
+                    out[off_r + r, off_c + c] = v
+            return out
+        return None
+
+    for hh, ww in dims:
+        r_candidates = range(max(0, ar0 + ah - hh), min(ar0, h0 - hh) + 1)
+        c_candidates = range(max(0, ac0 + aw - ww), min(ac0, w0 - ww) + 1)
+
+        pref_r = None
+        pref_c = None
+        if "top" in mark_dirs:
+            pref_r = ar0
+        if "bottom" in mark_dirs:
+            pref_r = ar0 + ah - hh
+        if "left" in mark_dirs:
+            pref_c = ac0
+        if "right" in mark_dirs:
+            pref_c = ac0 + aw - ww
+
+        rs = list(r_candidates)
+        cs = list(c_candidates)
+        if pref_r in rs:
+            rs.remove(pref_r)
+            rs = [pref_r] + rs
+        if pref_c in cs:
+            cs.remove(pref_c)
+            cs = [pref_c] + cs
+
+        for rr in rs:
+            for cc in cs:
+                ans = solve_for(hh, ww, rr, cc)
+                if ans is not None:
+                    return ans
+
+    return grid.copy()
+```
