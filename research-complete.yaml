@@ -37802,3 +37802,55 @@ milestones:
       \ flagged_adversarial artifact; cite upstream sha256. NO gated_on \u2014 aggregate whatever exists."
     deliverable: results/experiment_4007_capstone_v370.json
     result: OK (conductor)
+- id: 2026.06.370
+  correction_type: v370_archive_activate_v371_green_gate
+  title: 'Archive .370 and activate .371 with hardened green-gate preserved'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-10'
+  finding: '.370 ran the GAP-4 phase but left the decisive precision confirmation owed: Exp 3999 stayed pending_execution with zero Codex calls. Exp 4001 deployed the registered ARC-2/ARC-1 verifier stack; Exp 4002 remained weak locally; Exp 4004 solved su15 as the fourth game; Exp 4005 kept ArcMemo transfer positive.'
+  activation_recorded: exp4008-archive-v370-activate-v371
+  tasks:
+  - id: exp3997-archive-v369-activate-v370
+    title: 'Archive .369 and activate .370 with hardened green-gate'
+    deliverable: results/experiment_3997_archive_v369_activate_v370.json
+    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3997_archive_v369_activate_v370.json'
+  - id: exp3998-gap4-deselection-coverage
+    title: 'GAP-4 de-selection coverage'
+    deliverable: results/experiment_3998_gap4_deselection_coverage.json
+    result: 'complete: gap4_deselection_coverage_0.4091_n11'
+  - id: exp3999-gap4-precision-confirmation-v2
+    title: 'GAP-4 precision confirmation v2'
+    deliverable: results/experiment_3999_gap4_precision_confirmation_v2.json
+    result: 'complete: protocol_preregistered_pending_execution [CONFIRMATION_STILL_OWED_EXP4009]'
+  - id: exp4000-gap4-feedback-vs-redraw
+    title: 'GAP-4 feedback versus redraw'
+    deliverable: results/experiment_4000_gap4_feedback_vs_redraw.json
+    result: 'complete: feedback_no_better_than_redraw_p1.0_FALSE_NEGATIVE_RISK'
+  - id: exp4001-gap4-registration-offline-eval
+    title: 'GAP-4 registration and offline eval'
+    deliverable: results/experiment_4001_gap4_registration_offline_eval.json
+    result: 'success: gap4_stack_registered_arc2_19of31_arc1_28of31_reproduced [GAP4_DEPLOYED_REGISTRATION_RECORDED]'
+  - id: exp4002-gap4-local-generator-arm
+    title: 'GAP-4 local generator arm'
+    deliverable: results/experiment_4002_gap4_local_generator_arm.json
+    result: 'complete: gap4_local_induction0.2581_pass20.4516_below_codex'
+  - id: exp4003-scale-level-frontier
+    title: 'Scale ARC-AGI-3 level frontier'
+    deliverable: results/experiment_4003_scale_level_frontier.json
+    result: 'complete: level_frontier_holds_r11l_L4_no_verifier_validated_candidate_advanced_the_level_total5'
+  - id: exp4004-fourth-game-explore-first
+    title: 'Fourth game explore-first solve'
+    deliverable: results/experiment_4004_fourth_game_explore_first.json
+    result: 'success: fourth_game_solved_su15-1944f8ab_at_action14'
+  - id: exp4005-arcmemo-solve-transfer-v3
+    title: 'ArcMemo solve-transfer v3'
+    deliverable: results/experiment_4005_arcmemo_solve_transfer_v3.json
+    result: 'success: arcmemo_solve_transfer_v3_14to10_actions'
+  - id: exp4006-hardware-continuity
+    title: 'Hardware continuity'
+    deliverable: results/experiment_4006_hardware_continuity.json
+    result: 'complete: hardware_continuity_4006_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded'
+  - id: exp4007-capstone-v370
+    title: 'Capstone .370'
+    deliverable: results/experiment_4007_capstone_v370.json
+    result: 'success: capstone_v370_gap4_PHASE_RAN_UNCONFIRMED_DECENTRALIZED_DEPLOYED_local_not_beats_vote_games4_levels5_arcmemo_transfer_win_missing1_flagged_skipped0'

@@ -11881,6 +11881,54 @@ has more A-only wins than B-only wins with exact paired `mcnemar_p<=0.05`, emits
 otherwise emits `complete: feedback_no_better_than_redraw_p<val>`, and records
 `FALSE_NEGATIVE_RISK` in the verdict when the discordant-pair count is small.
 
+### REQ-VERIFY-4009: GAP-4 Precision Confirmation v3 Execution Floor
+
+The repository SHALL provide Exp 4009 at
+`scripts/experiments/experiment_4009_gap4_precision_confirmation_v3.py` to
+actually execute the GAP-4 k=3 all-fresh precision confirmation that Exp 3999
+pre-registered but did not run. Before any Codex call, the runner SHALL verify
+that `codex` is available and that
+`results/arc3_gap4_arc2_eval_pool.json.gz` is readable as JSON, select clean
+ARC-2 pool tasks not used in `results/arc3_gap4_arc2_chain_ensemble.json`,
+exclude `aa4ec2a5` and `16b78196`, and write the committed task set plus the
+primary binomial gate (`n>=19`, `>=14` gold), secondary fresh-arm-base
+comparator, k=3 all-fresh chain count, and equal timeout to the result artifact
+with `protocol_preregistered=true`.
+
+The terminal artifact SHALL include bare top-level fields
+`execution_floor_met`, `protocol_preregistered`, `n_agreement_events`,
+`n_gold_given_agreement`, `primary_gate_passed`,
+`precision_vs_fresharm_base`, `agreement_is_selector_not_label`,
+`missing_verifier_gaps`, `total_codex_calls`, `total_codex_seconds`,
+`leak_clean`, `random_seed`, `honest_verdict`, `duration_s`, and
+`inference_substrate`. `execution_floor_met` SHALL equal
+`total_codex_calls>0 AND n_agreement_events>0`. A terminal `complete:` or
+`success:` verdict SHALL be invalid unless `execution_floor_met=true`; the
+runner SHALL never emit `pending_execution`.
+
+For a complete run, the runner SHALL run k=3 fresh Codex chains with equal
+timeouts, show the generator only ARC demo pairs and the test input, archive
+the full transcript for every call, compute agreement events only when at
+least two demo-perfect fresh programs emit the same test output, score true
+gold only post-hoc, keep drawing committed tasks until
+`n_agreement_events>=19` or the clean pool is exhausted, run the GAP-4
+word-boundary leak audit on every transcript, compute the in-run fresh-arm
+base rate, and record residual wrong-agreement cases in
+`missing_verifier_gaps`.
+
+### SCENARIO-VERIFY-4009: Execution Floor Prevents Preregister-Only Completion
+
+Given the Codex CLI and ARC-2 pool are available, when Exp 4009 runs, then it
+writes the preregistered task set before invoking induction, runs three fresh
+chains per selected task, and reports
+`success: gap4_precision_confirmed_<gold>of<events>_gold` only when
+`n_agreement_events>=19` and `n_gold_given_agreement>=14`. If the powered
+primary gate is not cleared after real execution, then it reports
+`complete: gap4_agreement_confidence_label_only_<gold>of<events>`. If zero
+Codex calls or zero agreement events remain after execution with Codex
+available, then it reports a `blocked_` verdict instead of a complete verdict
+and leaves `execution_floor_met=false`.
+
 ### REQ-VERIFY-4002: GAP-4 Local Open-Weight Generator Arm
 
 The repository SHALL provide Exp 4002 at

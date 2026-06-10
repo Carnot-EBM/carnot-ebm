@@ -8181,3 +8181,4 @@ c |
 | 2026-06-10 13:59 UTC | Milestone 2026.06.371 activated | OK | 11 tasks queued |
 | 2026-06-10 15:09 UTC | Archive .370 -> activate .371; KEEP the HARDENED G | FAIL | Codex CLI error: Wall-clock+idle timeout after 4027s (300s silence). Last out |
 | 2026-06-10 16:33 UTC | Archive .370 -> activate .371; KEEP the HARDENED G | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: "latency" in d |
+| 2026-06-10 16:57 UTC | Archive .370 -> activate .371; KEEP the HARDENED G | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
