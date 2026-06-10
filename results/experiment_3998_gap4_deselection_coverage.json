@@ -1,0 +1,798 @@
+{
+  "cp95_high": 0.6365,
+  "cp95_low": 0.2071,
+  "debiased_coverage_combined": 0.6304,
+  "demo_perfect_arms_nonselected": 9,
+  "duration_s": 2475.8,
+  "experiment": "experiment_3998_gap4_deselection_coverage",
+  "field_principles": {
+    "cp95_high": "Clopper-Pearson 95% interval upper bound on that rate.",
+    "cp95_low": "Clopper-Pearson 95% interval lower bound on that rate.",
+    "debiased_coverage_combined": "BARE FLOAT - selected fresh-chain arms plus nonselected fresh-chain arms.",
+    "duration_s": "Wall-clock seconds for this runner.",
+    "fresh_chain_demo_perfect_rate_nonselected": "BARE FLOAT - the demo-perfect rate on the 11 never-chained tasks.",
+    "honest_verdict": "Terminal-prefix verdict; complete regardless of measured rate.",
+    "inference_substrate": "Codex program induction plus cached ARC-2 pool scoring.",
+    "iter0_vs_chainfinal": "Decomposition of demo-perfect attributable to iter0 vs chain final.",
+    "leak_clean": "BARE BOOL - every archived transcript passed the word-boundary leak audit.",
+    "n_tasks_chained": "Number of raw complement tasks chained in this de-selection run.",
+    "per_arm_gold_given_perfect": "P(true-gold | demo-perfect) per fresh arm; gold is post-hoc.",
+    "preconditions_checked": "List of {resource, available} for codex and eval pool.",
+    "random_seed": "Shared GAP-4 substrate seed.",
+    "total_codex_calls": "Total Codex induction calls recorded by chain histories.",
+    "total_codex_seconds": "Total Codex seconds recorded by chain histories."
+  },
+  "fresh_chain_demo_perfect_rate_nonselected": 0.4091,
+  "honest_verdict": "complete: gap4_deselection_coverage_0.4091_n11",
+  "inference_substrate": "codex_program_induction_executed_consistency_vs_cached_arc_pool",
+  "iter0_vs_chainfinal": {
+    "chain_final_demo_perfect": 9,
+    "chain_final_rate": 0.4091,
+    "failed_after_chain": 13,
+    "iter0_demo_perfect": 5,
+    "iter0_rate": 0.2273,
+    "recovered_by_chain": 4,
+    "total_arms": 22
+  },
+  "leak_audit": {
+    "clean": true,
+    "n_transcripts": 55,
+    "violations": []
+  },
+  "leak_clean": true,
+  "n_chain_arms_nonselected": 22,
+  "n_tasks_chained": 11,
+  "never_chained_tasks": [
+    "16b78196",
+    "21897d95",
+    "269e22fb",
+    "28a6681f",
+    "2c181942",
+    "3a25b0d8",
+    "3dc255db",
+    "a6f40cea",
+    "aa4ec2a5",
+    "b9e38dc0",
+    "dd6b8c4b"
+  ],
+  "per_arm_gold_given_perfect": {
+    "fresh": {
+      "gold": 5,
+      "n": 12,
+      "rate": 0.4167
+    },
+    "fresh_chain1": {
+      "gold": 4,
+      "n": 8,
+      "rate": 0.5
+    },
+    "fresh_chain2": {
+      "gold": 1,
+      "n": 4,
+      "rate": 0.25
+    }
+  },
+  "per_task": [
+    {
+      "arms": [
+        {
+          "code": "def transform(grid):\n    g = grid.copy()\n    h, w = g.shape\n\n    def components(mask):\n        seen = np.zeros(mask.shape, dtype=bool)\n        out = []\n        for r in range(h):\n            for c in range(w):\n                if mask[r, c] and not seen[r, c]:\n                    stack = [(r, c)]\n                    seen[r, c] = True\n                    pts = []\n                    while stack:\n                        x, y = stack.pop()\n                        pts.append((x, y))\n                        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                            nx, ny = x + dx, y + dy\n                            if 0 <= nx < h and 0 <= ny < w and mask[nx, ny] and not seen[nx, ny]:\n                                seen[nx, ny] = True\n                                stack.append((nx, ny))\n                    out.append(pts)\n        return out\n\n    comps = []\n    for col in np.unique(g):\n        if col == 0:\n            continue\n        for pts in components(g == col):\n            comps.append((len(pts), int(col), pts))\n\n    _, wall_col, wall_pts = max(comps, key=lambda x: x[0])\n    wall_set = set(wall_pts)\n    wr = [p[0] for p in wall_pts]\n    wc = [p[1] for p in wall_pts]\n    r0, r1, c0, c1 = min(wr), max(wr), min(wc), max(wc)\n    horizontal = (c1 - c0) >= (r1 - r0)\n\n    base = np.zeros_like(g)\n    for r, c in wall_pts:\n        base[r, c] = wall_col\n\n    objs = []\n    for _, col, pts in comps:\n        if col == wall_col and set(pts) == wall_set:\n            continue\n        rs = [p[0] for p in pts]\n        cs = [p[1] for p in pts]\n        a, b, l, rr = min(rs), max(rs), min(cs), max(cs)\n        pat = np.zeros((b - a + 1, rr - l + 1), dtype=int)\n        for x, y in pts:\n            pat[x - a, y - l] = col\n        objs.append({\n            \"color\": col,\n            \"pat\": pat,\n            \"hh\": pat.shape[0],\n            \"ww\": pat.shape[1],\n            \"pr\": (a + b) / 2.0,\n            \"pc\": (l + rr) / 2.0\n        })\n\n    def can_place(arr, pat, tr, tc):\n        ph, pw = pat.shape\n        if tr < 0 or tc < 0 or tr + ph > h or tc + pw > w:\n            return False\n        area = arr[tr:tr + ph, tc:tc + pw]\n        return not np.any((pat != 0) & (area != 0))\n\n    def put(arr, pat, tr, tc):\n        m = pat != 0\n        arr[tr:tr + pat.shape[0], tc:tc + pat.shape[1]][m] = pat[m]\n\n    def perms(items):\n        if len(items) <= 1:\n            return [items[:]]\n        if len(items) > 7:\n            return [sorted(items, key=lambda o: (o[\"pr\"], o[\"pc\"], o[\"color\"]))]\n        out = []\n        for i in range(len(items)):\n            rest = items[:i] + items[i + 1:]\n            for p in perms(rest):\n                out.append([items[i]] + p)\n        return out\n\n    def pack_horizontal(arr0, group, tc, side):\n        best = None\n        for order in perms(group):\n            arr = arr0.copy()\n            placed = []\n            ok = True\n            for o in order:\n                found = None\n                if side == \"top\":\n                    starts = range(r1 - o[\"hh\"] + 1, -1, -1)\n                else:\n                    starts = range(r0, h - o[\"hh\"] + 1)\n                for tr in starts:\n                    if can_place(arr, o[\"pat\"], tr, tc):\n                        found = tr\n                        break\n                if found is None:\n                    ok = False\n                    break\n                put(arr, o[\"pat\"], found, tc)\n                placed.append((o, found, tc))\n            if not ok:\n                continue\n            pts = []\n            for o, tr, tc2 in placed:\n                ph, pw = o[\"pat\"].shape\n                for x in range(ph):\n                    for y in range(pw):\n                        if o[\"pat\"][x, y] != 0:\n                            pts.append((tr + x, tc2 + y))\n            if not pts:\n                continue\n            mn, mx = min(p[0] for p in pts), max(p[0] for p in pts)\n            span = mx - mn + 1\n            if side == \"top\":\n                key = (-span, mx, mn)\n            else:\n                key = (-span, -mn, -mx)\n            if best is None or key > best[0]:\n                best = (key, arr)\n        return arr0 if best is None else best[1]\n\n    def pack_vertical(arr0, group, tr, side):\n        best = None\n        for order in perms(group):\n            arr = arr0.copy()\n            placed = []\n            ok = True\n            for o in order:\n                found = None\n                if side == \"left\":\n                    starts = range(c1 - o[\"ww\"] + 1, -1, -1)\n                else:\n                    starts = range(c0, w - o[\"ww\"] + 1)\n                for tc in starts:\n                    if can_place(arr, o[\"pat\"], tr, tc):\n                        found = tc\n                        break\n                if found is None:\n                    ok = False\n                    break\n                put(arr, o[\"pat\"], tr, found)\n                placed.append((o, tr, found))\n            if not ok:\n                continue\n            pts = []\n            for o, tr2, tc in placed:\n                ph, pw = o[\"pat\"].shape\n                for x in range(ph):\n                    for y in range(pw):\n                        if o[\"pat\"][x, y] != 0:\n                            pts.append((tr2 + x, tc + y))\n            if not pts:\n                continue\n            mn, mx = min(p[1] for p in pts), max(p[1] for p in pts)\n            span = mx - mn + 1\n            if side == \"left\":\n                key = (-span, mx, mn)\n            else:\n                key = (-span, -mn, -mx)\n            if best is None or key > best[0]:\n                best = (key, arr)\n        return arr0 if best is None else best[1]\n\n    out = base.copy()\n\n    if horizontal:\n        ports = []\n        for row, side in ((r0, \"top\"), (r1, \"bottom\")):\n            c = c0\n            while c <= c1:\n                if base[row, c] == 0:\n                    s = c\n                    while c <= c1 and base[row, c] == 0:\n                        c += 1\n                    e = c - 1\n                    if s - 1 >= c0 and e + 1 <= c1 and base[row, s - 1] == wall_col and base[row, e + 1] == wall_col:\n                        ports.append((e - s + 3, s - 1, side))\n                else:\n                    c += 1\n\n        groups = {}\n        for o in objs:\n            groups.setdefault(o[\"ww\"], []).append(o)\n\n        used_ports = set()\n        for ww, group in groups.items():\n            cand = [p for p in ports if p[0] == ww and (p[1], p[2]) not in used_ports]\n            if not cand:\n                continue\n            center = sum(o[\"pc\"] for o in group) / len(group)\n            _, tc, side = min(cand, key=lambda p: abs((p[1] + (ww - 1) / 2.0) - center))\n            used_ports.add((tc, side))\n            out = pack_horizontal(out, group, tc, side)\n        return out\n\n    ports = []\n    for col, side in ((c0, \"left\"), (c1, \"right\")):\n        r = r0\n        while r <= r1:\n            if base[r, col] == 0:\n                s = r\n                while r <= r1 and base[r, col] == 0:\n                    r += 1\n                e = r - 1\n                if s - 1 >= r0 and e + 1 <= r1 and base[s - 1, col] == wall_col and base[e + 1, col] == wall_col:\n                    ports.append((e - s + 3, s - 1, side))\n            else:\n                r += 1\n\n    groups = {}\n    for o in objs:\n        groups.setdefault(o[\"hh\"], []).append(o)\n\n    used_ports = set()\n    for hh, group in groups.items():\n        cand = [p for p in ports if p[0] == hh and (p[1], p[2]) not in used_ports]\n        if not cand:\n            continue\n        center = sum(o[\"pr\"] for o in group) / len(group)\n        _, tr, side = min(cand, key=lambda p: abs((p[1] + (hh - 1) / 2.0) - center))\n        used_ports.add((tr, side))\n        out = pack_vertical(out, group, tr, side)\n\n    return out",
+          "codex_seconds": 569.7,
+          "demo_fit": 1.0,
+          "demo_perfect": true,
+          "history": [
+            {
+              "code_len": 6610,
+              "codex_s": 293.9,
+              "demo_fit": 0.5,
+              "iter": 0,
+              "status": "graded"
+            },
+            {
+              "code_len": 6944,
+              "codex_s": 108.8,
+              "demo_fit": 0.0,
+              "iter": 1,
+              "status": "graded"
+            },
+            {
+              "code_len": 7812,
+              "codex_s": 167.0,
+              "demo_fit": 1.0,
+              "iter": 2,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": false,
+          "n_calls": 3,
+          "source": "fresh_chain1"
+        },
+        {
+          "code": "def transform(grid):\n    import numpy as np\n\n    g = grid.copy()\n    h, w = g.shape\n    colors = [c for c in np.unique(g) if c != 0]\n\n    def comps_for_color(c):\n        seen = np.zeros((h, w), bool)\n        out = []\n        for r in range(h):\n            for col in range(w):\n                if g[r, col] == c and not seen[r, col]:\n                    stack = [(r, col)]\n                    seen[r, col] = True\n                    pts = []\n                    while stack:\n                        x, y = stack.pop()\n                        pts.append((x, y))\n                        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                            nx, ny = x + dx, y + dy\n                            if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and g[nx, ny] == c:\n                                seen[nx, ny] = True\n                                stack.append((nx, ny))\n                    out.append(pts)\n        return out\n\n    comps = []\n    for c in colors:\n        for pts in comps_for_color(c):\n            rs = [p[0] for p in pts]\n            cs = [p[1] for p in pts]\n            comps.append({\n                \"color\": int(c),\n                \"pts\": pts,\n                \"area\": len(pts),\n                \"r0\": min(rs), \"r1\": max(rs),\n                \"c0\": min(cs), \"c1\": max(cs),\n            })\n\n    # The divider is the dominant non-background object.\n    divider = max(comps, key=lambda x: x[\"area\"])\n    div_color = divider[\"color\"]\n\n    objects = [o for o in comps if o is not divider]\n    out = np.zeros_like(g)\n    out[g == div_color] = div_color\n\n    dr0, dr1, dc0, dc1 = divider[\"r0\"], divider[\"r1\"], divider[\"c0\"], divider[\"c1\"]\n    horizontal = (dc1 - dc0 + 1) >= (dr1 - dr0 + 1)\n\n    if horizontal:\n        top = [o for o in objects if o[\"r1\"] < dr0]\n        bottom = [o for o in objects if o[\"r0\"] > dr1]\n        cols = [o[\"c0\"] for o in bottom] or [o[\"c0\"] for o in objects]\n        base_c = min(cols)\n        order = sorted(bottom, key=lambda o: o[\"c0\"], reverse=True) + sorted(top, key=lambda o: o[\"c0\"], reverse=True)\n        cur_bottom = dr1\n        for o in order:\n            oh, ow = o[\"r1\"] - o[\"r0\"] + 1, o[\"c1\"] - o[\"c0\"] + 1\n            nr0 = cur_bottom - oh + 1\n            nc0 = base_c\n            for r, c in o[\"pts\"]:\n                out[nr0 + r - o[\"r0\"], nc0 + c - o[\"c0\"]] = o[\"color\"]\n            cur_bottom = nr0 - 1\n    else:\n        left = [o for o in objects if o[\"c1\"] < dc0]\n        right = [o for o in objects if o[\"c0\"] > dc1]\n        rows = [o[\"r0\"] for o in left] or [o[\"r0\"] for o in objects]\n        base_r = min(rows)\n        order = sorted(left, key=lambda o: o[\"r0\"]) + sorted(right, key=lambda o: o[\"r0\"])\n        cur_right = dc0\n        for o in order:\n            oh, ow = o[\"r1\"] - o[\"r0\"] + 1, o[\"c1\"] - o[\"c0\"] + 1\n            nr0 = base_r\n            nc0 = cur_right - ow + 1\n            for r, c in o[\"pts\"]:\n                out[nr0 + r - o[\"r0\"], nc0 + c - o[\"c0\"]] = o[\"color\"]\n            cur_right = nc0 - 1\n\n    return out",
+          "codex_seconds": 95.4,
+          "demo_fit": 0.0,
+          "demo_perfect": false,
+          "history": [
+            {
+              "code_len": 3014,
+              "codex_s": 29.7,
+              "demo_fit": 0.0,
+              "iter": 0,
+              "status": "graded"
+            },
+            {
+              "code_len": 3285,
+              "codex_s": 32.4,
+              "demo_fit": 0.0,
+              "iter": 1,
+              "status": "graded"
+            },
+            {
+              "code_len": 3618,
+              "codex_s": 33.3,
+              "demo_fit": 0.0,
+              "iter": 2,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": false,
+          "n_calls": 3,
+          "source": "fresh_chain2"
+        }
+      ],
+      "codex_seconds": 665.1,
+      "n_calls": 6,
+      "task": "16b78196"
+    },
+    {
+      "arms": [
+        {
+          "code": "def transform(grid):\n    g = grid.copy()\n    H, W = g.shape\n\n    templates = [\n        ((3, 2), ((0, 0), (1, 0), (2, 0), (1, 1)), (0, 1)),\n        ((3, 2), ((0, 1), (1, 1), (2, 1), (1, 0)), (0, -1)),\n        ((2, 3), ((0, 0), (0, 1), (0, 2), (1, 1)), (1, 0)),\n        ((2, 3), ((1, 0), (1, 1), (1, 2), (0, 1)), (-1, 0)),\n    ]\n\n    cands = []\n    for shape, pts, direction in templates:\n        h, w = shape\n        for r0 in range(H - h + 1):\n            for c0 in range(W - w + 1):\n                cells = [(r0 + r, c0 + c) for r, c in pts]\n                vals = [int(g[r, c]) for r, c in cells]\n                if vals.count(1) < 3:\n                    continue\n                labels = [v for v in vals if v != 1]\n                if len(labels) > 1:\n                    continue\n\n                label = labels[0] if labels else None\n                neigh = []\n                for r, c in cells:\n                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                        rr, cc = r + dr, c + dc\n                        if 0 <= rr < H and 0 <= cc < W:\n                            v = int(g[rr, cc])\n                            if v != 1 and (label is None or v != label):\n                                neigh.append(v)\n                if not neigh:\n                    continue\n\n                src = max(set(neigh), key=lambda x: (neigh.count(x), -x))\n                if neigh.count(src) >= 2:\n                    cands.append((cells, direction, src, label if label is not None else src, (r0, c0)))\n\n    arrows = []\n    used_ones = set()\n    seen = set()\n\n    def cand_key(x):\n        cells, _, _, _, pos = x\n        ones = sum(1 for r, c in cells if int(g[r, c]) == 1)\n        return (-ones, pos[0], pos[1])\n\n    for cells, direction, src, label, _ in sorted(cands, key=cand_key):\n        key = tuple(sorted(cells))\n        onecells = {(r, c) for r, c in cells if int(g[r, c]) == 1}\n        if key in seen or (onecells & used_ones):\n            continue\n        seen.add(key)\n        used_ones |= onecells\n        arrows.append((cells, direction, src, label))\n\n    patched = g.copy()\n    for cells, _, src, _ in arrows:\n        for r, c in cells:\n            patched[r, c] = src\n\n    def components(arr):\n        comp = -np.ones((H, W), dtype=int)\n        colors = []\n        cid = 0\n        for r in range(H):\n            for c in range(W):\n                if comp[r, c] >= 0:\n                    continue\n                col = int(arr[r, c])\n                stack = [(r, c)]\n                comp[r, c] = cid\n                while stack:\n                    x, y = stack.pop()\n                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                        xx, yy = x + dx, y + dy\n                        if 0 <= xx < H and 0 <= yy < W and comp[xx, yy] < 0 and int(arr[xx, yy]) == col:\n                            comp[xx, yy] = cid\n                            stack.append((xx, yy))\n                colors.append(col)\n                cid += 1\n        return comp, colors, cid\n\n    changed = True\n    while changed:\n        changed = False\n        comp, colors, n = components(patched)\n        for cid in range(n):\n            cells = np.argwhere(comp == cid)\n            touches = any(r == 0 or r == H - 1 or c == 0 or c == W - 1 for r, c in cells)\n            neigh = set()\n            for r, c in cells:\n                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                    rr, cc = int(r) + dr, int(c) + dc\n                    if 0 <= rr < H and 0 <= cc < W and comp[rr, cc] != cid:\n                        neigh.add(int(patched[rr, cc]))\n\n            area = len(cells)\n            rs = [int(x[0]) for x in cells]\n            cs = [int(x[1]) for x in cells]\n            bbox = (max(rs) - min(rs) + 1) * (max(cs) - min(cs) + 1)\n\n            if ((not touches and len(neigh) == 1) or (area <= 8 and area < bbox and len(neigh) > 0)):\n                counts = {}\n                for r, c in cells:\n                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                        rr, cc = int(r) + dr, int(c) + dc\n                        if 0 <= rr < H and 0 <= cc < W and comp[rr, cc] != cid:\n                            v = int(patched[rr, cc])\n                            counts[v] = counts.get(v, 0) + 1\n                new = max(counts, key=counts.get)\n                if new != colors[cid]:\n                    patched[comp == cid] = new\n                    changed = True\n\n    comp, colors, n = components(patched)\n    assign = {}\n    first_dir = None\n    first_pos = None\n\n    for cells, (dr, dc), src, label in arrows:\n        rows = [r for r, _ in cells]\n        cols = [c for _, c in cells]\n        minr, maxr = min(rows), max(rows)\n        minc, maxc = min(cols), max(cols)\n\n        if first_pos is None or (minr, minc) < first_pos:\n            first_pos = (minr, minc)\n            first_dir = (dr, dc)\n\n        source_ids = [int(comp[r, c]) for r, c in cells]\n        source = max(set(source_ids), key=source_ids.count)\n        target = None\n\n        if dc == 1:\n            for c in range(maxc + 1, W):\n                ids = [int(comp[r, c]) for r in range(minr, maxr + 1) if int(comp[r, c]) != source]\n                if ids:\n                    target = max(set(ids), key=ids.count)\n                    break\n        elif dc == -1:\n            for c in range(minc - 1, -1, -1):\n                ids = [int(comp[r, c]) for r in range(minr, maxr + 1) if int(comp[r, c]) != source]\n                if ids:\n                    target = max(set(ids), key=ids.count)\n                    break\n        elif dr == 1:\n            for r in range(maxr + 1, H):\n                ids = [int(comp[r, c]) for c in range(minc, maxc + 1) if int(comp[r, c]) != source]\n                if ids:\n                    target = max(set(ids), key=ids.count)\n                    break\n        else:\n            for r in range(minr - 1, -1, -1):\n                ids = [int(comp[r, c]) for c in range(minc, maxc + 1) if int(comp[r, c]) != source]\n                if ids:\n                    target = max(set(ids), key=ids.count)\n                    break\n\n        if target is not None:\n            assign[target] = label\n\n    out = patched.copy()\n    for cid, col in enumerate(colors):\n        out[comp == cid] = assign.get(cid, col)\n\n    if H != W and first_dir is not None:\n        if first_dir == (0, 1):\n            out = np.rot90(out, 1)\n        elif first_dir == (0, -1):\n            out = np.rot90(out, -1)\n\n    return out",
+          "codex_seconds": 621.4,
+          "demo_fit": 1.0,
+          "demo_perfect": true,
+          "history": [
+            {
+              "code_len": 5179,
+              "codex_s": 307.4,
+              "demo_fit": 0.0,
+              "iter": 0,
+              "status": "graded"
+            },
+            {
+              "code_len": 6484,
+              "codex_s": 314.0,
+              "demo_fit": 1.0,
+              "iter": 1,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": false,
+          "n_calls": 2,
+          "source": "fresh_chain1"
+        },
+        {
+          "code": "def transform(grid):\n    h, w = grid.shape\n    g = grid.copy()\n\n    def neigh(r, c):\n        for dr in (-1, 0, 1):\n            for dc in (-1, 0, 1):\n                if dr or dc:\n                    rr, cc = r + dr, c + dc\n                    if 0 <= rr < h and 0 <= cc < w:\n                        yield rr, cc\n\n    # First recover the underlying large color at every marker/noise cell.\n    clean = g.copy()\n    for _ in range(4):\n        changed = False\n        for r in range(h):\n            for c in range(w):\n                if clean[r, c] == 1:\n                    cnt = {}\n                    for rr, cc in neigh(r, c):\n                        v = clean[rr, cc]\n                        if v != 1:\n                            cnt[v] = cnt.get(v, 0) + 1\n                    if cnt:\n                        clean[r, c] = max(cnt, key=cnt.get)\n                        changed = True\n        if not changed:\n            break\n\n    # Connected components of the recovered picture.\n    seen = [[False] * w for _ in range(h)]\n    comps = []\n    comp_id = [[-1] * w for _ in range(h)]\n\n    for sr in range(h):\n        for sc in range(w):\n            if seen[sr][sc]:\n                continue\n            col = clean[sr, sc]\n            stack = [(sr, sc)]\n            seen[sr][sc] = True\n            cells = []\n            while stack:\n                r, c = stack.pop()\n                comp_id[r][c] = len(comps)\n                cells.append((r, c))\n                for rr, cc in ((r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1)):\n                    if 0 <= rr < h and 0 <= cc < w and not seen[rr][cc] and clean[rr, cc] == col:\n                        seen[rr][cc] = True\n                        stack.append((rr, cc))\n            comps.append({\"color\": col, \"cells\": cells})\n\n    # Each 1-marker indicates the color that should replace the larger region\n    # it is embedded in: use colors touching the marker but outside its host.\n    repl = {}\n    for i, comp in enumerate(comps):\n        host = comp[\"color\"]\n        votes = {}\n        for r, c in comp[\"cells\"]:\n            if g[r, c] == 1:\n                for rr, cc in neigh(r, c):\n                    v = g[rr, cc]\n                    if v != 1 and v != host:\n                        votes[v] = votes.get(v, 0) + 1\n        if votes:\n            repl[i] = max(votes, key=votes.get)\n\n    # Regions without their own marker inherit the strongest replacement from\n    # a neighboring region of the same recovered color, otherwise stay stable.\n    for i, comp in enumerate(comps):\n        if i in repl:\n            continue\n        boundary_votes = {}\n        for r, c in comp[\"cells\"]:\n            for rr, cc in ((r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1)):\n                if 0 <= rr < h and 0 <= cc < w:\n                    j = comp_id[rr][cc]\n                    if j != i and j in repl:\n                        boundary_votes[repl[j]] = boundary_votes.get(repl[j], 0) + 1\n        repl[i] = max(boundary_votes, key=boundary_votes.get) if boundary_votes else comp[\"color\"]\n\n    out = clean.copy()\n    for i, comp in enumerate(comps):\n        v = repl[i]\n        for r, c in comp[\"cells\"]:\n            out[r, c] = v\n\n    return np.rot90(out, 1) if h != w else out",
+          "codex_seconds": 1061.4,
+          "demo_fit": 0.0,
+          "demo_perfect": false,
+          "history": [
+            {
+              "code_len": 3219,
+              "codex_s": 303.2,
+              "demo_fit": 0.0,
+              "iter": 0,
+              "status": "graded"
+            },
+            {
+              "code_len": 5454,
+              "codex_s": 287.5,
+              "demo_fit": 0.0,
+              "iter": 1,
+              "status": "graded"
+            },
+            {
+              "code_len": 6135,
+              "codex_s": 470.7,
+              "demo_fit": 0.0,
+              "iter": 2,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": false,
+          "n_calls": 3,
+          "source": "fresh_chain2"
+        }
+      ],
+      "codex_seconds": 1682.8,
+      "n_calls": 5,
+      "task": "21897d95"
+    },
+    {
+      "arms": [
+        {
+          "code": "def transform(grid):\n    g = np.array(grid)\n    vals, counts = np.unique(g, return_counts=True)\n    bg = vals[np.argmax(counts)]\n    fg = vals[np.argmin(counts)]\n    mask = (g == fg).astype(int)\n    h, w = mask.shape\n\n    bases = []\n\n    bases.append(np.array([\n        [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0],\n        [1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0],\n        [1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,0],\n        [1,1,0,0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,0,0],\n        [0,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,1,1,0],\n        [0,0,0,0,0,0,0,1,1,1,0,0,0,0,1,0,0,1,1,0],\n        [0,0,0,0,0,0,0,0,1,1,0,0,1,1,1,0,0,1,1,0],\n        [0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,1,1,0],\n        [0,0,0,0,0,0,0,0,0,1,1,1,1,0,1,0,0,1,1,0],\n        [0,1,1,1,1,1,1,1,1,1,0,1,1,0,1,0,0,1,1,0],\n        [0,1,0,0,0,0,0,0,0,1,1,1,1,0,1,0,0,1,1,0],\n        [0,1,1,1,1,1,1,1,1,1,0,0,1,0,1,0,0,1,1,0],\n        [0,1,0,1,0,0,0,0,0,1,0,0,1,1,1,0,0,1,1,0],\n        [1,1,1,0,1,1,1,1,1,1,0,0,0,0,1,0,0,1,1,0],\n        [0,1,0,1,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,0],\n        [1,1,1,0,1,0,0,0,0,1,0,0,0,1,1,0,1,1,0,0],\n        [0,1,0,1,1,0,0,0,0,1,0,0,0,1,0,0,0,1,1,0],\n        [1,1,1,0,1,0,0,0,0,1,0,0,0,1,1,0,0,0,1,1],\n        [0,1,0,1,1,0,0,0,1,0,1,0,0,0,1,0,1,1,1,0],\n        [1,1,1,0,0,0,0,1,0,0,0,1,0,0,1,1,1,0,0,0],\n    ]))\n\n    bases.append(np.array([\n        [0,0,0,1,1,1,0,0,1,0,0,0,1,0,0,0,0,1,1,1],\n        [0,1,1,1,0,1,0,0,0,1,0,1,0,0,0,1,1,0,1,0],\n        [1,1,0,0,0,1,1,0,0,0,1,0,0,0,0,1,0,1,1,1],\n        [0,1,1,0,0,0,1,0,0,0,1,0,0,0,0,1,1,0,1,0],\n        [0,0,1,1,0,1,1,0,0,0,1,0,0,0,0,1,0,1,1,1],\n        [0,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,1,0,1,0],\n        [0,1,1,0,0,1,0,0,0,0,1,1,1,1,1,1,0,1,1,1],\n        [0,1,1,0,0,1,1,1,0,0,1,0,0,0,0,0,1,0,1,0],\n        [0,1,1,0,0,1,0,1,0,0,1,1,1,1,1,1,1,1,1,0],\n        [0,1,1,0,0,1,0,1,1,1,1,0,0,0,0,0,0,0,1,0],\n        [0,1,1,0,0,1,0,1,1,0,1,1,1,1,1,1,1,1,1,0],\n        [0,1,1,0,0,1,0,1,1,1,1,0,0,0,0,0,0,0,0,0],\n        [0,1,1,0,0,1,0,1,0,0,1,0,0,0,0,0,0,0,0,0],\n        [0,1,1,0,0,1,1,1,0,0,1,1,0,0,0,0,0,0,0,0],\n        [0,1,1,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0],\n        [0,1,1,1,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0],\n        [0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,0,1,1],\n        [0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1],\n        [0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1],\n        [0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],\n    ]))\n\n    bases.append(np.array([\n        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],\n        [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0],\n        [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0],\n        [1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1],\n        [1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1],\n        [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1],\n        [0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,1,1,0,0],\n        [0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0],\n        [0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1],\n        [0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0],\n        [0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],\n        [0,0,0,0,1,1,1,0,0,1,0,1,0,1,0,0,0,0,1,0],\n        [0,0,0,1,1,1,0,0,0,1,0,1,0,1,0,0,0,0,0,1],\n        [0,0,1,1,1,0,0,0,0,1,0,1,0,1,0,0,0,0,0,0],\n        [0,1,1,1,0,0,0,0,0,1,0,1,0,1,0,0,0,0,0,0],\n        [0,1,1,0,0,0,0,0,0,1,0,1,0,1,1,1,1,1,1,0],\n        [0,1,1,0,0,0,0,0,0,1,0,1,1,0,1,0,1,0,1,0],\n        [0,1,1,0,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,1],\n        [1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1],\n        [1,1,1,1,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1],\n    ]))\n\n    candidates = []\n    for b in bases:\n        for k in range(4):\n            r = np.rot90(b, k)\n            candidates.append(r)\n            candidates.append(np.fliplr(r))\n            candidates.append(np.flipud(r))\n\n    for cand in candidates:\n        if cand.shape != (20, 20):\n            continue\n        for i in range(21 - h):\n            for j in range(21 - w):\n                if np.array_equal(cand[i:i+h, j:j+w], mask):\n                    return np.where(cand == 1, fg, bg).astype(int)\n\n    out = np.empty((20, 20), dtype=int)\n    for i in range(20):\n        for j in range(20):\n            out[i, j] = g[i % h, j % w]\n    return out",
+          "codex_seconds": 562.3,
+          "demo_fit": 1.0,
+          "demo_perfect": true,
+          "history": [
+            {
+              "code_len": 4052,
+              "codex_s": 562.3,
+              "demo_fit": 1.0,
+              "iter": 0,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": true,
+          "n_calls": 1,
+          "source": "fresh_chain1"
+        },
+        {
+          "code": "def transform(grid):\n    pats = [\n        [[1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0],[1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0],[1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,0],[1,1,0,0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,0,0],[0,0,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,1,1,0],[0,0,0,0,0,0,0,1,1,1,0,0,0,0,1,0,0,1,1,0],[0,0,0,0,0,0,0,0,1,1,0,0,1,1,1,0,0,1,1,0],[0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,1,1,0],[0,0,0,0,0,0,0,0,0,1,1,1,1,0,1,0,0,1,1,0],[0,1,1,1,1,1,1,1,1,1,0,1,1,0,1,0,0,1,1,0],[0,1,0,0,0,0,0,0,0,1,1,1,1,0,1,0,0,1,1,0],[0,1,1,1,1,1,1,1,1,1,0,0,1,0,1,0,0,1,1,0],[0,1,0,1,0,0,0,0,0,1,0,0,1,1,1,0,0,1,1,0],[1,1,1,0,1,1,1,1,1,1,0,0,0,0,1,0,0,1,1,0],[0,1,0,1,1,0,0,0,0,1,0,0,0,0,1,1,1,1,1,0],[1,1,1,0,1,0,0,0,0,1,0,0,0,1,1,0,1,1,0,0],[0,1,0,1,1,0,0,0,0,1,0,0,0,1,0,0,0,1,1,0],[1,1,1,0,1,0,0,0,0,1,0,0,0,1,1,0,0,0,1,1],[0,1,0,1,1,0,0,0,1,0,1,0,0,0,1,0,1,1,1,0],[1,1,1,0,0,0,0,1,0,0,0,1,0,0,1,1,1,0,0,0]],\n        [[0,0,0,1,1,1,0,0,1,0,0,0,1,0,0,0,0,1,1,1],[0,1,1,1,0,1,0,0,0,1,0,1,0,0,0,1,1,0,1,0],[1,1,0,0,0,1,1,0,0,0,1,0,0,0,0,1,0,1,1,1],[0,1,1,0,0,0,1,0,0,0,1,0,0,0,0,1,1,0,1,0],[0,0,1,1,0,1,1,0,0,0,1,0,0,0,0,1,0,1,1,1],[0,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,1,0,1,0],[0,1,1,0,0,1,0,0,0,0,1,1,1,1,1,1,0,1,1,1],[0,1,1,0,0,1,1,1,0,0,1,0,0,0,0,0,1,0,1,0],[0,1,1,0,0,1,0,1,0,0,1,1,1,1,1,1,1,1,1,0],[0,1,1,0,0,1,0,1,1,1,1,0,0,0,0,0,0,0,1,0],[0,1,1,0,0,1,0,1,1,0,1,1,1,1,1,1,1,1,1,0],[0,1,1,0,0,1,0,1,1,1,1,0,0,0,0,0,0,0,0,0],[0,1,1,0,0,1,0,1,0,0,1,0,0,0,0,0,0,0,0,0],[0,1,1,0,0,1,1,1,0,0,1,1,0,0,0,0,0,0,0,0],[0,1,1,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0],[0,1,1,1,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0],[0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,0,1,1],[0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1],[0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1],[0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1]],\n        [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],[0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,0],[1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1],[1,1,1,1,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1],[0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1],[0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,1,1,0,0],[0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,1],[0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0],[0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,0,0,1,1,1,0,0,1,0,1,0,1,0,0,0,0,1,0],[0,0,0,1,1,1,0,0,0,1,0,1,0,1,0,0,0,0,0,1],[0,0,1,1,1,0,0,0,0,1,0,1,0,1,0,0,0,0,0,0],[0,1,1,1,0,0,0,0,0,1,0,1,0,1,0,0,0,0,0,0],[0,1,1,0,0,0,0,0,0,1,0,1,0,1,1,1,1,1,1,0],[0,1,1,0,0,0,0,0,0,1,0,1,1,0,1,0,1,0,1,0],[0,1,1,0,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,1],[1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1]],\n        [[0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],[0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1],[0,0,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1],[0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,0,1,1],[0,1,1,1,1,1,0,0,0,0,0,1,1,1,0,0,0,0,0,0],[0,1,1,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,0,0],[0,1,1,0,0,1,1,1,0,0,1,1,0,0,0,0,0,0,0,0],[0,1,1,0,0,1,0,1,0,0,1,0,0,0,0,0,0,0,0,0],[0,1,1,0,0,1,0,1,1,1,1,0,0,0,0,0,0,0,0,0],[0,1,1,0,0,1,0,1,1,0,1,1,1,1,1,1,1,1,1,0],[0,1,1,0,0,1,0,1,1,1,1,0,0,0,0,0,0,0,1,0],[0,1,1,0,0,1,0,1,0,0,1,1,1,1,1,1,1,1,1,0],[0,1,1,0,0,1,1,1,0,0,1,0,0,0,0,0,1,0,1,0],[0,1,1,0,0,1,0,0,0,0,1,1,1,1,1,1,0,1,1,1],[0,1,1,1,1,1,0,0,0,0,1,0,0,0,0,1,1,0,1,0],[0,0,1,1,0,1,1,0,0,0,1,0,0,0,0,1,0,1,1,1],[0,1,1,0,0,0,1,0,0,0,1,0,0,0,0,1,1,0,1,0],[1,1,0,0,0,1,1,0,0,0,1,0,0,0,0,1,0,1,1,1],[0,1,1,1,0,1,0,0,0,1,0,1,0,0,0,1,1,0,1,0],[0,0,0,1,1,1,0,0,1,0,0,0,1,0,0,0,0,1,1,1]]\n    ]\n\n    vals, counts = np.unique(grid, return_counts=True)\n    vals = list(vals)\n    colors = [(vals[0], vals[0])] if len(vals) == 1 else [(vals[0], vals[1]), (vals[1], vals[0])]\n    h, w = grid.shape\n\n    best = None\n    for pat in pats:\n        p = np.array(pat, dtype=int)\n        for zero, one in colors:\n            full = np.where(p == 1, one, zero)\n            for r in range(21 - h):\n                for c in range(21 - w):\n                    diff = np.sum(full[r:r+h, c:c+w] != grid)\n                    if diff == 0:\n                        return full.astype(int)\n                    if best is None or diff < best[0]:\n                        best = (diff, full)\n\n    return best[1].astype(int)",
+          "codex_seconds": 401.4,
+          "demo_fit": 1.0,
+          "demo_perfect": true,
+          "history": [
+            {
+              "code_len": 4146,
+              "codex_s": 401.4,
+              "demo_fit": 1.0,
+              "iter": 0,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": true,
+          "n_calls": 1,
+          "source": "fresh_chain2"
+        }
+      ],
+      "codex_seconds": 963.7,
+      "n_calls": 2,
+      "task": "269e22fb"
+    },
+    {
+      "arms": [
+        {
+          "code": "def transform(grid):\n    h, w = grid.shape\n    water = 1\n\n    out = grid.copy()\n    n = int((out == water).sum())\n    out[out == water] = 0\n\n    solid = (out != 0)\n    filled = (out == water)\n\n    active_left = bool((grid[:, 0] == water).any())\n    active_right = bool((grid[:, w - 1] == water).any())\n\n    remaining = n\n\n    for r in range(h - 1, -1, -1):\n        c = 0\n        while c < w and remaining > 0:\n            if solid[r, c]:\n                c += 1\n                continue\n\n            start = c\n            while c < w and not solid[r, c]:\n                c += 1\n            end = c - 1\n\n            left_wall = (start > 0 and solid[r, start - 1]) or (start == 0 and active_left)\n            right_wall = (end < w - 1 and solid[r, end + 1]) or (end == w - 1 and active_right)\n\n            if left_wall and right_wall:\n                supported = True\n                for cc in range(start, end + 1):\n                    if r != h - 1 and not solid[r + 1, cc] and not filled[r + 1, cc]:\n                        supported = False\n                        break\n\n                length = end - start + 1\n                if supported and remaining >= length:\n                    out[r, start:end + 1] = water\n                    filled[r, start:end + 1] = True\n                    remaining -= length\n\n    return out",
+          "codex_seconds": 169.1,
+          "demo_fit": 1.0,
+          "demo_perfect": true,
+          "history": [
+            {
+              "code_len": 1623,
+              "codex_s": 22.1,
+              "demo_fit": 0.3333,
+              "iter": 0,
+              "status": "graded"
+            },
+            {
+              "code_len": 1435,
+              "codex_s": 21.9,
+              "demo_fit": 0.0,
+              "iter": 1,
+              "status": "graded"
+            },
+            {
+              "code_len": 1325,
+              "codex_s": 125.1,
+              "demo_fit": 1.0,
+              "iter": 2,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": false,
+          "n_calls": 3,
+          "source": "fresh_chain1"
+        },
+        {
+          "code": "def transform(grid):\n    h, w = grid.shape\n    out = grid.copy()\n    out[grid == 1] = 0\n\n    colors = [int(x) for x in np.unique(grid) if x not in (0, 1)]\n\n    # Rebuild 1s as horizontal space enclosed by, or extending from, non-1\n    # objects. A row is active from the first row where such support appears\n    # downward through the connected band of the same situation.\n    keep = np.zeros((h, w), dtype=bool)\n\n    for r in range(h):\n        nz = [(c, int(grid[r, c])) for c in range(w) if grid[r, c] not in (0, 1)]\n\n        # Gaps between two cells of the same colored object on the row.\n        for i in range(len(nz) - 1):\n            c1, a = nz[i]\n            c2, b = nz[i + 1]\n            if a == b and c2 - c1 > 1:\n                keep[r, c1 + 1:c2] = True\n\n        # Gaps between neighboring non-background objects, when the gap is\n        # already indicated by original 1s or is part of a lower supported band.\n        for i in range(len(nz) - 1):\n            c1, a = nz[i]\n            c2, b = nz[i + 1]\n            if c2 - c1 <= 1:\n                continue\n            if np.any(grid[r, c1 + 1:c2] == 1):\n                keep[r, c1 + 1:c2] = True\n            elif r > 0 and np.any(keep[r - 1, c1 + 1:c2]):\n                keep[r, c1 + 1:c2] = True\n            elif r + 1 < h and np.any(grid[r + 1, c1 + 1:c2] == 1):\n                keep[r, c1 + 1:c2] = True\n\n        # Extend an indicated 1-region horizontally from the nearest colored\n        # support on its left, but only once that support has appeared.\n        one_cols = [c for c in range(w) if grid[r, c] == 1]\n        if one_cols:\n            first = min(one_cols)\n            left = [c for c in range(first) if grid[r, c] not in (0, 1)]\n            if left:\n                c0 = max(left)\n                if first - c0 <= 4:\n                    end = w\n                    for c in range(c0 + 1, w):\n                        if grid[r, c] not in (0, 1):\n                            end = c\n                            break\n                    keep[r, c0 + 1:end] = True\n\n    # Keep only original 1-components that touch the rebuilt supported area or\n    # an edge after their unsupported top part is removed.\n    seen = np.zeros((h, w), dtype=bool)\n    for sr in range(h):\n        for sc in range(w):\n            if grid[sr, sc] != 1 or seen[sr, sc]:\n                continue\n            stack = [(sr, sc)]\n            seen[sr, sc] = True\n            comp = []\n            while stack:\n                r, c = stack.pop()\n                comp.append((r, c))\n                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                    nr, nc = r + dr, c + dc\n                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] == 1:\n                        seen[nr, nc] = True\n                        stack.append((nr, nc))\n\n            supported_rows = []\n            for r, c in comp:\n                side = (c > 0 and grid[r, c - 1] not in (0, 1)) or (c + 1 < w and grid[r, c + 1] not in (0, 1))\n                if side or keep[r, c]:\n                    supported_rows.append(r)\n\n            if supported_rows:\n                top = min(supported_rows)\n                for r, c in comp:\n                    if r >= top:\n                        keep[r, c] = True\n\n    out[keep] = 1\n    return out",
+          "codex_seconds": 307.0,
+          "demo_fit": 0.6667,
+          "demo_perfect": false,
+          "history": [
+            {
+              "code_len": 2994,
+              "codex_s": 249.8,
+              "demo_fit": 0.3333,
+              "iter": 0,
+              "status": "graded"
+            },
+            {
+              "code_len": 2035,
+              "codex_s": 26.8,
+              "demo_fit": 0.0,
+              "iter": 1,
+              "status": "graded"
+            },
+            {
+              "code_len": 3300,
+              "codex_s": 30.4,
+              "demo_fit": 0.6667,
+              "iter": 2,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": false,
+          "n_calls": 3,
+          "source": "fresh_chain2"
+        }
+      ],
+      "codex_seconds": 476.1,
+      "n_calls": 6,
+      "task": "28a6681f"
+    },
+    {
+      "arms": [
+        {
+          "code": "def transform(grid):\n    bg = int(np.bincount(grid.ravel()).argmax())\n    h, w = grid.shape\n\n    seen = np.zeros((h, w), dtype=bool)\n    comps = []\n    for r in range(h):\n        for c in range(w):\n            if seen[r, c] or grid[r, c] == bg:\n                continue\n            color = int(grid[r, c])\n            stack = [(r, c)]\n            seen[r, c] = True\n            cells = []\n            while stack:\n                x, y = stack.pop()\n                cells.append((x, y))\n                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                    nx, ny = x + dx, y + dy\n                    if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and grid[nx, ny] == color:\n                        seen[nx, ny] = True\n                        stack.append((nx, ny))\n            rs = [p[0] for p in cells]\n            cs = [p[1] for p in cells]\n            comps.append({\n                \"color\": color,\n                \"cells\": cells,\n                \"area\": len(cells),\n                \"r0\": min(rs), \"r1\": max(rs),\n                \"c0\": min(cs), \"c1\": max(cs),\n            })\n\n    comp_by_pos = {}\n    for i, comp in enumerate(comps):\n        comp_by_pos[frozenset(comp[\"cells\"])] = i\n\n    hub = None\n    for r in range(h - 3):\n        for c in range(w - 3):\n            needed = {\n                \"top\": frozenset([(r, c + 1), (r, c + 2)]),\n                \"left\": frozenset([(r + 1, c), (r + 2, c)]),\n                \"right\": frozenset([(r + 1, c + 3), (r + 2, c + 3)]),\n                \"bottom\": frozenset([(r + 3, c + 1), (r + 3, c + 2)]),\n            }\n            if all(s in comp_by_pos for s in needed.values()):\n                ids = [comp_by_pos[s] for s in needed.values()]\n                if len(set(ids)) == 4:\n                    hub = {side: comp_by_pos[s] for side, s in needed.items()}\n                    break\n        if hub is not None:\n            break\n\n    out = np.full_like(grid, bg)\n\n    def variants(mask):\n        mats = []\n        for base in (mask, np.fliplr(mask)):\n            for k in range(4):\n                m = np.rot90(base, k)\n                key = tuple(map(tuple, m.tolist()))\n                if key not in [x[0] for x in mats]:\n                    mats.append((key, m))\n        return [m for _, m in mats]\n\n    side_vec = {\n        \"top\": (-1, 0),\n        \"bottom\": (1, 0),\n        \"left\": (0, -1),\n        \"right\": (0, 1),\n    }\n\n    for side, idx in hub.items():\n        marker = comps[idx]\n        color = marker[\"color\"]\n        for r, c in marker[\"cells\"]:\n            out[r, c] = color\n\n        others = [comp for j, comp in enumerate(comps) if j != idx and comp[\"color\"] == color]\n        if not others:\n            continue\n        obj = max(others, key=lambda x: x[\"area\"])\n\n        mh = obj[\"r1\"] - obj[\"r0\"] + 1\n        mw = obj[\"c1\"] - obj[\"c0\"] + 1\n        mask = np.zeros((mh, mw), dtype=int)\n        for r, c in obj[\"cells\"]:\n            mask[r - obj[\"r0\"], c - obj[\"c0\"]] = 1\n\n        dr, dc = side_vec[side]\n        target = frozenset((r + dr, c + dc) for r, c in marker[\"cells\"])\n\n        placed = None\n        for m in variants(mask):\n            coords = [tuple(p) for p in np.argwhere(m)]\n            if side == \"top\":\n                edge_val = max(r for r, c in coords)\n                edge = [(r, c) for r, c in coords if r == edge_val]\n            elif side == \"bottom\":\n                edge_val = min(r for r, c in coords)\n                edge = [(r, c) for r, c in coords if r == edge_val]\n            elif side == \"left\":\n                edge_val = max(c for r, c in coords)\n                edge = [(r, c) for r, c in coords if c == edge_val]\n            else:\n                edge_val = min(c for r, c in coords)\n                edge = [(r, c) for r, c in coords if c == edge_val]\n\n            if len(edge) != len(target):\n                continue\n\n            for er, ec in edge:\n                for tr, tc in target:\n                    rr, cc = tr - er, tc - ec\n                    if frozenset((r + rr, c + cc) for r, c in edge) == target:\n                        placed = [(r + rr, c + cc) for r, c in coords]\n                        break\n                if placed is not None:\n                    break\n            if placed is not None:\n                break\n\n        if placed is not None:\n            for r, c in placed:\n                if 0 <= r < h and 0 <= c < w:\n                    out[r, c] = color\n\n    return out",
+          "codex_seconds": 188.0,
+          "demo_fit": 0.0,
+          "demo_perfect": false,
+          "history": [
+            {
+              "code_len": 4422,
+              "codex_s": 111.8,
+              "demo_fit": 0.0,
+              "iter": 0,
+              "status": "graded"
+            },
+            {
+              "code_len": 4801,
+              "codex_s": 37.7,
+              "demo_fit": 0.0,
+              "iter": 1,
+              "status": "graded"
+            },
+            {
+              "code_len": 4905,
+              "codex_s": 38.5,
+              "demo_fit": 0.0,
+              "iter": 2,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": false,
+          "n_calls": 3,
+          "source": "fresh_chain1"
+        },
+        {
+          "code": "def transform(grid):\n    h, w = grid.shape\n    vals, counts = np.unique(grid, return_counts=True)\n    bg = vals[np.argmax(counts)]\n\n    def components():\n        seen = np.zeros(grid.shape, dtype=bool)\n        out = []\n        for r in range(h):\n            for c in range(w):\n                if seen[r, c] or grid[r, c] == bg:\n                    continue\n                color = grid[r, c]\n                stack = [(r, c)]\n                seen[r, c] = True\n                pts = []\n                while stack:\n                    x, y = stack.pop()\n                    pts.append((x, y))\n                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                        nx, ny = x + dx, y + dy\n                        if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and grid[nx, ny] == color:\n                            seen[nx, ny] = True\n                            stack.append((nx, ny))\n                rs = [p[0] for p in pts]\n                cs = [p[1] for p in pts]\n                out.append({\n                    \"color\": color,\n                    \"pts\": pts,\n                    \"size\": len(pts),\n                    \"r0\": min(rs), \"r1\": max(rs),\n                    \"c0\": min(cs), \"c1\": max(cs),\n                })\n        return out\n\n    comps = components()\n    small = [o for o in comps if o[\"size\"] == 2]\n\n    def same_cells(obj, cells):\n        return set(obj[\"pts\"]) == set(cells)\n\n    anchor = None\n    for top in small:\n        if top[\"r0\"] != top[\"r1\"] or top[\"c1\"] != top[\"c0\"] + 1:\n            continue\n        r0 = top[\"r0\"]\n        c0 = top[\"c0\"] - 1\n        left = right = bottom = None\n        for o in small:\n            if same_cells(o, [(r0 + 1, c0), (r0 + 2, c0)]):\n                left = o\n            if same_cells(o, [(r0 + 1, c0 + 3), (r0 + 2, c0 + 3)]):\n                right = o\n            if same_cells(o, [(r0 + 3, c0 + 1), (r0 + 3, c0 + 2)]):\n                bottom = o\n        if left is not None and right is not None and bottom is not None:\n            anchor = {\"top\": top, \"left\": left, \"right\": right, \"bottom\": bottom, \"r0\": r0, \"c0\": c0}\n            break\n\n    out = np.full_like(grid, bg)\n    if anchor is None:\n        return out\n\n    def object_array(obj):\n        a = np.zeros((obj[\"r1\"] - obj[\"r0\"] + 1, obj[\"c1\"] - obj[\"c0\"] + 1), dtype=bool)\n        for r, c in obj[\"pts\"]:\n            a[r - obj[\"r0\"], c - obj[\"c0\"]] = True\n        return a\n\n    def symmetries(a):\n        res = []\n        seen = set()\n        for k in range(4):\n            b = np.rot90(a, k)\n            for m in (b, np.fliplr(b)):\n                key = tuple(map(tuple, m.tolist()))\n                if key not in seen:\n                    seen.add(key)\n                    res.append(m)\n        return res\n\n    def edge_pair(a, side):\n        if side == \"left\":\n            line = a[:, 0]\n        elif side == \"right\":\n            line = a[:, -1]\n        elif side == \"top\":\n            line = a[0, :]\n        else:\n            line = a[-1, :]\n        idx = np.where(line)[0]\n        if len(idx) == 2 and idx[1] == idx[0] + 1:\n            return int(idx[0])\n        return None\n\n    def choose_shape(obj, side):\n        a = object_array(obj)\n        face = {\"left\": \"right\", \"right\": \"left\", \"top\": \"bottom\", \"bottom\": \"top\"}[side]\n        candidates = []\n        for s in symmetries(a):\n            p = edge_pair(s, face)\n            if p is None:\n                continue\n            hh, ww = s.shape\n            if side in (\"left\", \"right\"):\n                score = (hh, ww)\n            else:\n                score = (ww, hh)\n            candidates.append((score, p, s))\n        if not candidates:\n            return a, 0\n        candidates.sort(key=lambda x: x[0], reverse=True)\n        return candidates[0][2], candidates[0][1]\n\n    sides = (\"top\", \"left\", \"right\", \"bottom\")\n    for side in sides:\n        color = anchor[side][\"color\"]\n        anchor_pts = set(anchor[side][\"pts\"])\n        objs = [o for o in comps if o[\"color\"] == color and set(o[\"pts\"]) != anchor_pts]\n        if not objs:\n            continue\n        obj = max(objs, key=lambda o: o[\"size\"])\n        shape, pair_start = choose_shape(obj, side)\n        sh, sw = shape.shape\n        r0, c0 = anchor[\"r0\"], anchor[\"c0\"]\n\n        if side == \"left\":\n            nr = r0 + 1 - pair_start\n            nc = c0 - sw\n        elif side == \"right\":\n            nr = r0 + 1 - pair_start\n            nc = c0 + 4\n        elif side == \"top\":\n            nr = r0 - sh\n            nc = c0 + 1 - pair_start\n        else:\n            nr = r0 + 4\n            nc = c0 + 1 - pair_start\n\n        for rr in range(sh):\n            for cc in range(sw):\n                if shape[rr, cc]:\n                    x, y = nr + rr, nc + cc\n                    if 0 <= x < h and 0 <= y < w:\n                        out[x, y] = color\n\n    for side in sides:\n        for r, c in anchor[side][\"pts\"]:\n            out[r, c] = anchor[side][\"color\"]\n\n    return out",
+          "codex_seconds": 271.8,
+          "demo_fit": 0.3333,
+          "demo_perfect": false,
+          "history": [
+            {
+              "code_len": 3408,
+              "codex_s": 31.2,
+              "demo_fit": 0.0,
+              "iter": 0,
+              "status": "graded"
+            },
+            {
+              "code_len": 4945,
+              "codex_s": 201.9,
+              "demo_fit": 0.3333,
+              "iter": 1,
+              "status": "graded"
+            },
+            {
+              "code_len": 4802,
+              "codex_s": 38.7,
+              "demo_fit": 0.0,
+              "iter": 2,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": false,
+          "n_calls": 3,
+          "source": "fresh_chain2"
+        }
+      ],
+      "codex_seconds": 459.8,
+      "n_calls": 6,
+      "task": "2c181942"
+    },
+    {
+      "arms": [
+        {
+          "code": "def transform(grid):\n    bg = int(np.bincount(grid.ravel(), minlength=10).argmax())\n    h, w = grid.shape\n\n    def comps(mask):\n        seen = np.zeros(mask.shape, dtype=bool)\n        out = []\n        for r in range(mask.shape[0]):\n            for c in range(mask.shape[1]):\n                if not mask[r, c] or seen[r, c]:\n                    continue\n                stack = [(r, c)]\n                seen[r, c] = True\n                cells = []\n                while stack:\n                    x, y = stack.pop()\n                    cells.append((x, y))\n                    for dx in (-1, 0, 1):\n                        for dy in (-1, 0, 1):\n                            if dx == 0 and dy == 0:\n                                continue\n                            nx, ny = x + dx, y + dy\n                            if 0 <= nx < mask.shape[0] and 0 <= ny < mask.shape[1]:\n                                if mask[nx, ny] and not seen[nx, ny]:\n                                    seen[nx, ny] = True\n                                    stack.append((nx, ny))\n                rs = [p[0] for p in cells]\n                cs = [p[1] for p in cells]\n                out.append((min(rs), max(rs), min(cs), max(cs), len(cells)))\n        return out\n\n    objects = []\n    for r0, r1, c0, c1, n in comps(grid != bg):\n        crop = grid[r0:r1 + 1, c0:c1 + 1]\n        vals = [int(x) for x in np.unique(crop) if int(x) != bg]\n        if not vals:\n            continue\n        objects.append({\n            \"bbox\": (r0, r1, c0, c1),\n            \"crop\": crop,\n            \"colors\": vals,\n            \"area\": (r1 - r0 + 1) * (c1 - c0 + 1),\n            \"n\": n\n        })\n\n    sources = [o for o in objects if len(o[\"colors\"]) > 1]\n    targets = [o for o in objects if len(o[\"colors\"]) == 1]\n\n    best = None\n    for s in sources:\n        vals = s[\"crop\"][s[\"crop\"] != bg]\n        counts = np.bincount(vals.ravel(), minlength=10)\n        frame = int(counts.argmax())\n        for t in targets:\n            if t[\"colors\"][0] != frame:\n                continue\n            score = t[\"area\"] + s[\"area\"]\n            if best is None or score > best[0]:\n                best = (score, s, t, frame)\n\n    _, src_obj, tgt_obj, frame = best\n    src = src_obj[\"crop\"]\n    tgt = tgt_obj[\"crop\"]\n    sh, sw = src.shape\n    th, tw = tgt.shape\n\n    def align_rows(a, b):\n        ah, aw = a.shape\n        bh, bw = b.shape\n        inf = 10 ** 9\n        dp = np.full((ah + 1, bh + 1), inf, dtype=float)\n        prev = [[None for _ in range(bh + 1)] for __ in range(ah + 1)]\n        dp[0, 0] = 0.0\n        for i in range(1, ah + 1):\n            dp[i, 0] = dp[i - 1, 0] + 0.75\n            prev[i][0] = (i - 1, 0, \"skip\")\n        for i in range(1, ah + 1):\n            for j in range(1, bh + 1):\n                cost = float(np.count_nonzero(a[i - 1] != b[j - 1]))\n                opts = [\n                    (dp[i - 1, j - 1] + cost, i - 1, j - 1, \"diag\"),\n                    (dp[i, j - 1] + cost + 0.15, i, j - 1, \"rep\"),\n                    (dp[i - 1, j] + 0.75, i - 1, j, \"skip\"),\n                ]\n                val, pi, pj, mv = min(opts, key=lambda x: x[0])\n                dp[i, j] = val\n                prev[i][j] = (pi, pj, mv)\n\n        mp = [0] * bh\n        i, j = ah, bh\n        while i > 0 or j > 0:\n            pi, pj, mv = prev[i][j]\n            if mv in (\"diag\", \"rep\"):\n                mp[j - 1] = i - 1\n            i, j = pi, pj\n        return mp\n\n    rowmap = align_rows(src == frame, tgt == frame)\n    colmap = align_rows((src == frame).T, (tgt == frame).T)\n\n    out = tgt.copy()\n\n    for r in range(th):\n        c = 0\n        while c < tw:\n            if tgt[r, c] == frame:\n                c += 1\n                continue\n            start = c\n            while c < tw and tgt[r, c] != frame:\n                c += 1\n            end = c\n\n            if start == 0 or end == tw:\n                continue\n            if not np.any(tgt[r, :start] == frame) or not np.any(tgt[r, end:] == frame):\n                continue\n\n            src_cols = sorted(set(colmap[start:end]))\n            chosen = None\n            sr0 = rowmap[r]\n            for d in range(max(sh, th) + 1):\n                rows = []\n                if 0 <= sr0 - d < sh:\n                    rows.append(sr0 - d)\n                if d and 0 <= sr0 + d < sh:\n                    rows.append(sr0 + d)\n                found = []\n                for sr in rows:\n                    for sc in src_cols:\n                        v = int(src[sr, sc])\n                        if v != bg and v != frame:\n                            found.append(v)\n                if found:\n                    chosen = int(np.bincount(np.array(found), minlength=10).argmax())\n                    break\n\n            if chosen is not None:\n                out[r, start:end] = chosen\n\n    return out",
+          "codex_seconds": 554.1,
+          "demo_fit": 0.0,
+          "demo_perfect": false,
+          "history": [
+            {
+              "code_len": 4817,
+              "codex_s": 181.8,
+              "demo_fit": 0.0,
+              "iter": 0,
+              "status": "graded"
+            },
+            {
+              "code_len": 4524,
+              "codex_s": 194.8,
+              "demo_fit": 0.0,
+              "iter": 1,
+              "status": "graded"
+            },
+            {
+              "code_len": 4595,
+              "codex_s": 177.5,
+              "demo_fit": 0.0,
+              "iter": 2,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": false,
+          "n_calls": 3,
+          "source": "fresh_chain1"
+        },
+        {
+          "code": "def transform(grid):\n    bg = int(np.bincount(grid.ravel(), minlength=10).argmax())\n    H, W = grid.shape\n\n    def comps(mask):\n        seen = np.zeros(mask.shape, dtype=bool)\n        out = []\n        h, w = mask.shape\n        for r in range(h):\n            for c in range(w):\n                if mask[r, c] and not seen[r, c]:\n                    stack = [(r, c)]\n                    seen[r, c] = True\n                    cells = []\n                    while stack:\n                        x, y = stack.pop()\n                        cells.append((x, y))\n                        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                            nx, ny = x + dx, y + dy\n                            if 0 <= nx < h and 0 <= ny < w and mask[nx, ny] and not seen[nx, ny]:\n                                seen[nx, ny] = True\n                                stack.append((nx, ny))\n                    out.append(cells)\n        return out\n\n    objects = comps(grid != bg)\n\n    obj_info = []\n    for cells in objects:\n        vals = {int(grid[r, c]) for r, c in cells}\n        rs = [r for r, c in cells]\n        cs = [c for r, c in cells]\n        obj_info.append((cells, vals, min(rs), max(rs), min(cs), max(cs)))\n\n    template = None\n    for info in obj_info:\n        cells, vals, r0, r1, c0, c1 = info\n        if len(vals) == 1:\n            area = len(cells)\n            if template is None or area > template[0]:\n                template = (area, info)\n\n    _, (_, tvals, tr0, tr1, tc0, tc1) = template\n    outline = next(iter(tvals))\n    target = grid[tr0:tr1 + 1, tc0:tc1 + 1].copy()\n    th, tw = target.shape\n\n    source_info = None\n    for info in obj_info:\n        cells, vals, r0, r1, c0, c1 = info\n        if any(v != outline for v in vals):\n            area = len(cells)\n            if source_info is None or area > source_info[0]:\n                source_info = (area, info)\n\n    _, (_, _, sr0, sr1, sc0, sc1) = source_info\n    source = grid[sr0:sr1 + 1, sc0:sc1 + 1].copy()\n\n    if source.shape[1] > tw:\n        best_score = None\n        best = source\n        for start in range(source.shape[1] - tw + 1):\n            cand = source[:, start:start + tw]\n            score = 0\n            for r in range(min(cand.shape[0], th)):\n                rr = 0 if th == 1 else round(r * (cand.shape[0] - 1) / max(th - 1, 1))\n                score += np.sum((cand[rr] == outline) == (target[r] == outline))\n                score += np.sum((cand[rr] == bg) == (target[r] == bg))\n            if best_score is None or score > best_score:\n                best_score = score\n                best = cand\n        source = best\n    elif source.shape[1] < tw:\n        pad = tw - source.shape[1]\n        left = pad // 2\n        right = pad - left\n        source = np.pad(source, ((0, 0), (left, right)), constant_values=bg)\n\n    sh, sw = source.shape\n\n    colored = source != bg\n    colored &= source != outline\n\n    color_parts = []\n    for cells in comps(colored):\n        vals = [int(source[r, c]) for r, c in cells]\n        counts = np.bincount(vals, minlength=10)\n        color = int(counts.argmax())\n        ys = np.array([r for r, c in cells], dtype=float)\n        xs = np.array([c for r, c in cells], dtype=float)\n        cy = ys.mean() / max(sh - 1, 1)\n        cx = xs.mean() / max(sw - 1, 1)\n        color_parts.append((cy, cx, color))\n\n    result = target.copy()\n    bg_parts = comps(target == bg)\n\n    for cells in bg_parts:\n        if any(r == 0 or c == 0 or r == th - 1 or c == tw - 1 for r, c in cells):\n            continue\n        ys = np.array([r for r, c in cells], dtype=float)\n        xs = np.array([c for r, c in cells], dtype=float)\n        cy = ys.mean() / max(th - 1, 1)\n        cx = xs.mean() / max(tw - 1, 1)\n\n        best = None\n        for py, px, color in color_parts:\n            d = (cy - py) ** 2 + (cx - px) ** 2\n            if best is None or d < best[0]:\n                best = (d, color)\n\n        if best is not None:\n            for r, c in cells:\n                result[r, c] = best[1]\n\n    return result",
+          "codex_seconds": 335.8,
+          "demo_fit": 0.0,
+          "demo_perfect": false,
+          "history": [
+            {
+              "code_len": 4035,
+              "codex_s": 168.0,
+              "demo_fit": 0.0,
+              "iter": 0,
+              "status": "graded"
+            },
+            {
+              "code_len": 3305,
+              "codex_s": 78.4,
+              "demo_fit": 0.0,
+              "iter": 1,
+              "status": "graded"
+            },
+            {
+              "code_len": 3204,
+              "codex_s": 89.4,
+              "demo_fit": 0.0,
+              "iter": 2,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": false,
+          "n_calls": 3,
+          "source": "fresh_chain2"
+        }
+      ],
+      "codex_seconds": 889.9,
+      "n_calls": 6,
+      "task": "3a25b0d8"
+    },
+    {
+      "arms": [
+        {
+          "code": "def transform(grid):\n    h, w = grid.shape\n    out = grid.copy()\n\n    def comps_of_color(color):\n        seen = set()\n        comps = []\n        for r in range(h):\n            for c in range(w):\n                if grid[r, c] == color and (r, c) not in seen:\n                    stack = [(r, c)]\n                    seen.add((r, c))\n                    comp = []\n                    while stack:\n                        x, y = stack.pop()\n                        comp.append((x, y))\n                        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                            nx, ny = x + dx, y + dy\n                            if 0 <= nx < h and 0 <= ny < w and grid[nx, ny] == color and (nx, ny) not in seen:\n                                seen.add((nx, ny))\n                                stack.append((nx, ny))\n                    comps.append(comp)\n        return comps\n\n    containers = []\n    for color in range(1, 10):\n        for comp in comps_of_color(color):\n            if len(comp) >= 3:\n                rs = [p[0] for p in comp]\n                cs = [p[1] for p in comp]\n                containers.append((len(comp), color, comp, min(rs), max(rs), min(cs), max(cs)))\n    containers.sort(reverse=True)\n\n    moved = set()\n\n    for _, color, comp, r0, r1, c0, c1 in containers:\n        comp_set = set(comp)\n        by_color = {}\n        foreign_total = 0\n        for r in range(r0, r1 + 1):\n            for c in range(c0, c1 + 1):\n                v = int(grid[r, c])\n                if v != 0 and v != color and (r, c) not in moved:\n                    by_color.setdefault(v, []).append((r, c))\n                    foreign_total += 1\n\n        if not by_color or foreign_total >= len(comp):\n            continue\n\n        br = (r0 + r1) / 2.0\n        bc = (c0 + c1) / 2.0\n        cr = sum(r for r, c in comp) / float(len(comp))\n        cc = sum(c for r, c in comp) / float(len(comp))\n        rh = max(1, r1 - r0)\n        cw = max(1, c1 - c0)\n\n        for fcolor, pts in by_color.items():\n            fr = sum(r for r, c in pts) / float(len(pts))\n            fc = sum(c for r, c in pts) / float(len(pts))\n\n            prefs = []\n            dy = (fr - br) / rh\n            dx = (fc - bc) / cw\n            cdy = (fr - cr) / rh\n            cdx = (fc - cc) / cw\n\n            if dy > 0:\n                prefs.append((abs(dy), \"up\"))\n            elif dy < 0:\n                prefs.append((abs(dy), \"down\"))\n            if dx > 0:\n                prefs.append((abs(dx), \"left\"))\n            elif dx < 0:\n                prefs.append((abs(dx), \"right\"))\n\n            if cdy > 0:\n                prefs.append((abs(cdy) * 0.99, \"up\"))\n            elif cdy < 0:\n                prefs.append((abs(cdy) * 0.99, \"down\"))\n            if cdx > 0:\n                prefs.append((abs(cdx) * 0.99, \"left\"))\n            elif cdx < 0:\n                prefs.append((abs(cdx) * 0.99, \"right\"))\n\n            for d in (\"up\", \"down\", \"left\", \"right\"):\n                prefs.append((0.0, d))\n\n            prefs.sort(reverse=True)\n\n            chosen = None\n            for _, d in prefs:\n                if d == \"up\":\n                    er = min(r for r, c in comp)\n                    cols = [c for r, c in comp if r == er]\n                    ec = int(round(sum(cols) / float(len(cols))))\n                    avail = er\n                elif d == \"down\":\n                    er = max(r for r, c in comp)\n                    cols = [c for r, c in comp if r == er]\n                    ec = int(round(sum(cols) / float(len(cols))))\n                    avail = h - er - 1\n                elif d == \"left\":\n                    ec = min(c for r, c in comp)\n                    rows = [r for r, c in comp if c == ec]\n                    er = int(round(sum(rows) / float(len(rows))))\n                    avail = ec\n                else:\n                    ec = max(c for r, c in comp)\n                    rows = [r for r, c in comp if c == ec]\n                    er = int(round(sum(rows) / float(len(rows))))\n                    avail = w - ec - 1\n\n                if avail > 0:\n                    chosen = (d, er, ec, avail)\n                    break\n\n            if chosen is None:\n                continue\n\n            d, er, ec, avail = chosen\n            n = min(len(pts), avail)\n\n            for r, c in pts:\n                out[r, c] = 0\n                moved.add((r, c))\n\n            for i in range(1, n + 1):\n                if d == \"up\":\n                    nr, nc = er - i, ec\n                elif d == \"down\":\n                    nr, nc = er + i, ec\n                elif d == \"left\":\n                    nr, nc = er, ec - i\n                else:\n                    nr, nc = er, ec + i\n                out[nr, nc] = fcolor\n\n    return out",
+          "codex_seconds": 264.2,
+          "demo_fit": 0.0,
+          "demo_perfect": false,
+          "history": [
+            {
+              "code_len": 4738,
+              "codex_s": 197.1,
+              "demo_fit": 0.0,
+              "iter": 0,
+              "status": "graded"
+            },
+            {
+              "code_len": 3709,
+              "codex_s": 29.9,
+              "demo_fit": 0.0,
+              "iter": 1,
+              "status": "graded"
+            },
+            {
+              "code_len": 5156,
+              "codex_s": 37.2,
+              "demo_fit": 0.0,
+              "iter": 2,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": false,
+          "n_calls": 3,
+          "source": "fresh_chain1"
+        },
+        {
+          "code": "def transform(grid):\n    h, w = grid.shape\n    out = grid.copy()\n\n    colors = [int(x) for x in np.unique(grid) if x != 0]\n    dirs = {\n        \"up\": (-1, 0),\n        \"down\": (1, 0),\n        \"left\": (0, -1),\n        \"right\": (0, 1),\n    }\n\n    def in_bounds(r, c):\n        return 0 <= r < h and 0 <= c < w\n\n    actions = []\n\n    for color in colors:\n        cells = [(r, c) for r in range(h) for c in range(w) if grid[r, c] == color]\n        if not cells:\n            continue\n\n        rs = [r for r, _ in cells]\n        cs = [c for _, c in cells]\n        r0, r1 = min(rs), max(rs)\n        c0, c1 = min(cs), max(cs)\n\n        foreign = {}\n        for r in range(r0, r1 + 1):\n            for c in range(c0, c1 + 1):\n                v = int(grid[r, c])\n                if v != 0 and v != color:\n                    foreign.setdefault(v, []).append((r, c))\n\n        if not foreign:\n            continue\n\n        cellset = set(cells)\n        candidates = []\n\n        top = [(r, c) for r, c in cells if r == r0]\n        if len(top) == 1:\n            candidates.append((\"up\", top[0]))\n\n        bottom = [(r, c) for r, c in cells if r == r1]\n        if len(bottom) == 1:\n            candidates.append((\"down\", bottom[0]))\n\n        left = [(r, c) for r, c in cells if c == c0]\n        if len(left) == 1:\n            candidates.append((\"left\", left[0]))\n\n        right = [(r, c) for r, c in cells if c == c1]\n        if len(right) == 1:\n            candidates.append((\"right\", right[0]))\n\n        if not candidates:\n            continue\n\n        def room_from(tip, dname):\n            dr, dc = dirs[dname]\n            r, c = tip[0] + dr, tip[1] + dc\n            n = 0\n            while in_bounds(r, c):\n                n += 1\n                r += dr\n                c += dc\n            return n\n\n        def inner_width(dname, offset):\n            if dname == \"up\":\n                row = r0 + offset\n                return sum(1 for r, _ in cellset if r == row)\n            if dname == \"down\":\n                row = r1 - offset\n                return sum(1 for r, _ in cellset if r == row)\n            if dname == \"left\":\n                col = c0 + offset\n                return sum(1 for _, c in cellset if c == col)\n            col = c1 - offset\n            return sum(1 for _, c in cellset if c == col)\n\n        def score(item):\n            dname, tip = item\n            needed = sum(len(v) for v in foreign.values())\n            return (\n                room_from(tip, dname) >= needed,\n                inner_width(dname, 1),\n                inner_width(dname, 2),\n                inner_width(dname, 3),\n                room_from(tip, dname),\n            )\n\n        dname, tip = max(candidates, key=score)\n        actions.append((foreign, dname, tip))\n\n    for foreign, dname, tip in actions:\n        dr, dc = dirs[dname]\n        for fcolor, fcells in foreign.items():\n            for r, c in fcells:\n                out[r, c] = 0\n\n            remaining = len(fcells)\n            r, c = tip[0] + dr, tip[1] + dc\n            while remaining and in_bounds(r, c):\n                if out[r, c] == 0:\n                    out[r, c] = fcolor\n                    remaining -= 1\n                r += dr\n                c += dc\n\n    return out",
+          "codex_seconds": 204.0,
+          "demo_fit": 0.6667,
+          "demo_perfect": false,
+          "history": [
+            {
+              "code_len": 3803,
+              "codex_s": 145.7,
+              "demo_fit": 0.0,
+              "iter": 0,
+              "status": "graded"
+            },
+            {
+              "code_len": 2835,
+              "codex_s": 27.7,
+              "demo_fit": 0.0,
+              "iter": 1,
+              "status": "graded"
+            },
+            {
+              "code_len": 3227,
+              "codex_s": 30.6,
+              "demo_fit": 0.6667,
+              "iter": 2,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": false,
+          "n_calls": 3,
+          "source": "fresh_chain2"
+        }
+      ],
+      "codex_seconds": 468.2,
+      "n_calls": 6,
+      "task": "3dc255db"
+    },
+    {
+      "arms": [
+        {
+          "code": "def transform(grid):\n    h, w = grid.shape\n    bg = np.bincount(grid.ravel(), minlength=10).argmax()\n\n    def comps(mask):\n        seen = np.zeros(mask.shape, dtype=bool)\n        out = []\n        for sr, sc in zip(*np.where(mask)):\n            if seen[sr, sc]:\n                continue\n            q = [(sr, sc)]\n            seen[sr, sc] = True\n            pts = []\n            while q:\n                r, c = q.pop()\n                pts.append((r, c))\n                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                    nr, nc = r + dr, c + dc\n                    if 0 <= nr < h and 0 <= nc < w and mask[nr, nc] and not seen[nr, nc]:\n                        seen[nr, nc] = True\n                        q.append((nr, nc))\n            out.append(pts)\n        return out\n\n    best = None\n    for col in range(10):\n        if col == bg:\n            continue\n        for pts in comps(grid == col):\n            if len(pts) < 8:\n                continue\n            rs = [p[0] for p in pts]\n            cs = [p[1] for p in pts]\n            r1, r2, c1, c2 = min(rs), max(rs), min(cs), max(cs)\n            if r2 - r1 < 2 or c2 - c1 < 2:\n                continue\n            if (np.all(grid[r1, c1:c2 + 1] == col) and\n                np.all(grid[r2, c1:c2 + 1] == col) and\n                np.all(grid[r1:r2 + 1, c1] == col) and\n                np.all(grid[r1:r2 + 1, c2] == col)):\n                area = (r2 - r1 + 1) * (c2 - c1 + 1)\n                if best is None or area > best[0]:\n                    best = (area, col, r1, r2, c1, c2)\n\n    _, frame, r1, r2, c1, c2 = best\n    inner = grid[r1 + 1:r2, c1 + 1:c2].copy()\n    ih, iw = inner.shape\n    fill = np.bincount(inner.ravel(), minlength=10).argmax()\n\n    cand = np.ones(grid.shape, dtype=bool)\n    cand &= grid != bg\n    cand &= grid != frame\n    cand &= grid != fill\n\n    groups = []\n    for pts in comps(cand):\n        m = np.zeros(grid.shape, dtype=bool)\n        for r, c in pts:\n            m[r, c] = True\n        groups.append(m)\n\n    for col in range(10):\n        m = cand & (grid == col)\n        if m.any():\n            groups.append(m)\n\n    def side_pattern(mask, side, rr1, rr2, cc1, cc2):\n        vals = []\n        if side in (\"top\", \"bottom\"):\n            r = rr1 if side == \"top\" else rr2\n            cols = [c for c in range(cc1, cc2 + 1) if mask[r, c]]\n            if not cols:\n                return None\n            if max(cols) == cc2 and min(cols) > cc1:\n                cols = cols[::-1]\n            vals = [grid[r, c] for c in cols]\n        else:\n            c = cc1 if side == \"left\" else cc2\n            rows = [r for r in range(rr1, rr2 + 1) if mask[r, c]]\n            if not rows:\n                return None\n            vals = [grid[r, c] for r in rows]\n        return vals if vals else None\n\n    def color_at(mask, rr, cc, rr1, rr2, cc1, cc2):\n        if rr == rr1:\n            pat = side_pattern(mask, \"top\", rr1, rr2, cc1, cc2)\n            if pat:\n                return pat[(cc - cc1) % len(pat)]\n        if rr == rr2:\n            pat = side_pattern(mask, \"bottom\", rr1, rr2, cc1, cc2)\n            if pat:\n                return pat[(cc - cc1) % len(pat)]\n        if cc == cc1:\n            pat = side_pattern(mask, \"left\", rr1, rr2, cc1, cc2)\n            if pat:\n                return pat[(rr - rr1) % len(pat)]\n        if cc == cc2:\n            pat = side_pattern(mask, \"right\", rr1, rr2, cc1, cc2)\n            if pat:\n                return pat[(rr - rr1) % len(pat)]\n        rs, cs = np.where(mask)\n        return grid[rs[0], cs[0]]\n\n    done = set()\n    for mask in groups:\n        rs, cs = np.where(mask)\n        if len(rs) == 0:\n            continue\n        rr1, rr2, cc1, cc2 = rs.min(), rs.max(), cs.min(), cs.max()\n        key = (rr1, rr2, cc1, cc2, tuple(sorted(set(grid[mask].tolist()))))\n        if key in done:\n            continue\n        done.add(key)\n\n        if rr2 < r1 + 1 or rr1 > r2 - 1 or cc2 < c1 + 1 or cc1 > c2 - 1:\n            continue\n        if rr2 - rr1 < 1 or cc2 - cc1 < 1:\n            continue\n\n        for rr in range(max(rr1, r1 + 1), min(rr2, r2 - 1) + 1):\n            for cc in range(max(cc1, c1 + 1), min(cc2, c2 - 1) + 1):\n                if rr in (rr1, rr2) or cc in (cc1, cc2):\n                    inner[rr - (r1 + 1), cc - (c1 + 1)] = color_at(mask, rr, cc, rr1, rr2, cc1, cc2)\n\n    return inner",
+          "codex_seconds": 243.7,
+          "demo_fit": 0.6667,
+          "demo_perfect": false,
+          "history": [
+            {
+              "code_len": 1709,
+              "codex_s": 28.7,
+              "demo_fit": 0.0,
+              "iter": 0,
+              "status": "graded"
+            },
+            {
+              "code_len": 3270,
+              "codex_s": 30.6,
+              "demo_fit": 0.0,
+              "iter": 1,
+              "status": "graded"
+            },
+            {
+              "code_len": 4334,
+              "codex_s": 184.4,
+              "demo_fit": 0.6667,
+              "iter": 2,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": false,
+          "n_calls": 3,
+          "source": "fresh_chain1"
+        },
+        {
+          "code": "def transform(grid):\n    h, w = grid.shape\n\n    vals, counts = np.unique(grid, return_counts=True)\n    bg = vals[np.argmax(counts)]\n\n    def components(mask):\n        seen = np.zeros(mask.shape, dtype=bool)\n        out = []\n        hh, ww = mask.shape\n        for r in range(hh):\n            for c in range(ww):\n                if not mask[r, c] or seen[r, c]:\n                    continue\n                stack = [(r, c)]\n                seen[r, c] = True\n                cells = []\n                while stack:\n                    rr, cc = stack.pop()\n                    cells.append((rr, cc))\n                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                        nr, nc = rr + dr, cc + dc\n                        if 0 <= nr < hh and 0 <= nc < ww and mask[nr, nc] and not seen[nr, nc]:\n                            seen[nr, nc] = True\n                            stack.append((nr, nc))\n                out.append(cells)\n        return out\n\n    # The central object is the largest single-color rectangular border.\n    best = None\n    for col in vals:\n        if col == bg:\n            continue\n        for cells in components(grid == col):\n            rs = [r for r, c in cells]\n            cs = [c for r, c in cells]\n            r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)\n            if r1 - r0 < 2 or c1 - c0 < 2:\n                continue\n            ok = True\n            for c in range(c0, c1 + 1):\n                if grid[r0, c] != col or grid[r1, c] != col:\n                    ok = False\n                    break\n            if ok:\n                for r in range(r0, r1 + 1):\n                    if grid[r, c0] != col or grid[r, c1] != col:\n                        ok = False\n                        break\n            if ok:\n                area = (r1 - r0 + 1) * (c1 - c0 + 1)\n                if best is None or area > best[0]:\n                    best = (area, col, r0, r1, c0, c1)\n\n    _, frame_col, fr0, fr1, fc0, fc1 = best\n    ir0, ir1, ic0, ic1 = fr0 + 1, fr1 - 1, fc0 + 1, fc1 - 1\n\n    interior = grid[ir0:ir1 + 1, ic0:ic1 + 1]\n    ivals, icounts = np.unique(interior, return_counts=True)\n    fill = ivals[np.argmax(icounts)]\n    out = np.full(interior.shape, fill, dtype=grid.dtype)\n\n    mask = (grid != bg) & (grid != frame_col)\n    for cells in components(mask):\n        rs = [r for r, c in cells]\n        cs = [c for r, c in cells]\n        r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)\n\n        rr0, rr1 = max(r0, ir0), min(r1, ir1)\n        cc0, cc1 = max(c0, ic0), min(c1, ic1)\n        if rr0 > rr1 or cc0 > cc1:\n            continue\n\n        known = {}\n        color_counts = {}\n        for r, c in cells:\n            col = grid[r, c]\n            known[(r, c)] = col\n            color_counts[col] = color_counts.get(col, 0) + 1\n        fallback = max(color_counts, key=color_counts.get)\n\n        row_pat = {}\n        col_pat = {}\n        parity_counts = [{}, {}]\n        for r, c in cells:\n            col = grid[r, c]\n            row_pat.setdefault(r, {})[(c - c0) % 2] = col\n            col_pat.setdefault(c, {})[(r - r0) % 2] = col\n            p = (r + c) & 1\n            parity_counts[p][col] = parity_counts[p].get(col, 0) + 1\n\n        parity_color = []\n        for p in (0, 1):\n            if parity_counts[p]:\n                parity_color.append(max(parity_counts[p], key=parity_counts[p].get))\n            else:\n                parity_color.append(fallback)\n\n        def color_at(r, c):\n            if (r, c) in known:\n                return known[(r, c)]\n            if r in row_pat and ((c - c0) % 2) in row_pat[r]:\n                return row_pat[r][(c - c0) % 2]\n            if c in col_pat and ((r - r0) % 2) in col_pat[c]:\n                return col_pat[c][(r - r0) % 2]\n            return parity_color[(r + c) & 1]\n\n        for r in range(rr0, rr1 + 1):\n            for c in range(cc0, cc1 + 1):\n                if r == r0 or r == r1 or c == c0 or c == c1:\n                    out[r - ir0, c - ic0] = color_at(r, c)\n\n    return out",
+          "codex_seconds": 204.4,
+          "demo_fit": 0.3333,
+          "demo_perfect": false,
+          "history": [
+            {
+              "code_len": 3813,
+              "codex_s": 128.7,
+              "demo_fit": 0.0,
+              "iter": 0,
+              "status": "graded"
+            },
+            {
+              "code_len": 4007,
+              "codex_s": 44.1,
+              "demo_fit": 0.3333,
+              "iter": 1,
+              "status": "graded"
+            },
+            {
+              "code_len": 3753,
+              "codex_s": 31.6,
+              "demo_fit": 0.0,
+              "iter": 2,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": false,
+          "n_calls": 3,
+          "source": "fresh_chain2"
+        }
+      ],
+      "codex_seconds": 448.1,
+      "n_calls": 6,
+      "task": "a6f40cea"
+    },
+    {
+      "arms": [
+        {
+          "code": "def transform(grid):\n    h, w = grid.shape\n    out = grid.copy()\n    seen = np.zeros((h, w), dtype=bool)\n\n    dirs4 = [(1, 0), (-1, 0), (0, 1), (0, -1)]\n    dirs8 = [(dr, dc) for dr in (-1, 0, 1) for dc in (-1, 0, 1) if not (dr == 0 and dc == 0)]\n\n    for sr in range(h):\n        for sc in range(w):\n            if grid[sr, sc] != 1 or seen[sr, sc]:\n                continue\n\n            stack = [(sr, sc)]\n            seen[sr, sc] = True\n            comp = []\n\n            while stack:\n                r, c = stack.pop()\n                comp.append((r, c))\n                for dr, dc in dirs4:\n                    nr, nc = r + dr, c + dc\n                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] == 1:\n                        seen[nr, nc] = True\n                        stack.append((nr, nc))\n\n            rows = [p[0] for p in comp]\n            cols = [p[1] for p in comp]\n            r0, r1 = max(0, min(rows) - 1), min(h - 1, max(rows) + 1)\n            c0, c1 = max(0, min(cols) - 1), min(w - 1, max(cols) + 1)\n\n            comp_mask = np.zeros((r1 - r0 + 1, c1 - c0 + 1), dtype=bool)\n            for r, c in comp:\n                comp_mask[r - r0, c - c0] = True\n\n            reachable = np.zeros_like(comp_mask)\n            q = []\n\n            hh, ww = comp_mask.shape\n            for r in range(hh):\n                for c in (0, ww - 1):\n                    if not comp_mask[r, c] and not reachable[r, c]:\n                        reachable[r, c] = True\n                        q.append((r, c))\n            for c in range(ww):\n                for r in (0, hh - 1):\n                    if not comp_mask[r, c] and not reachable[r, c]:\n                        reachable[r, c] = True\n                        q.append((r, c))\n\n            while q:\n                r, c = q.pop()\n                for dr, dc in dirs4:\n                    nr, nc = r + dr, c + dc\n                    if 0 <= nr < hh and 0 <= nc < ww and not comp_mask[nr, nc] and not reachable[nr, nc]:\n                        reachable[nr, nc] = True\n                        q.append((nr, nc))\n\n            holes = []\n            for r in range(hh):\n                for c in range(ww):\n                    if not comp_mask[r, c] and not reachable[r, c]:\n                        holes.append((r + r0, c + c0))\n\n            fill_color = 8 if holes else 1\n            for r, c in comp:\n                out[r, c] = fill_color\n\n            for r, c in comp:\n                for dr, dc in dirs8:\n                    nr, nc = r + dr, c + dc\n                    if 0 <= nr < h and 0 <= nc < w and grid[nr, nc] != 1:\n                        out[nr, nc] = 2\n\n            for r, c in holes:\n                out[r, c] = 6\n\n    return out",
+          "codex_seconds": 46.8,
+          "demo_fit": 1.0,
+          "demo_perfect": true,
+          "history": [
+            {
+              "code_len": 2721,
+              "codex_s": 46.8,
+              "demo_fit": 1.0,
+              "iter": 0,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": true,
+          "n_calls": 1,
+          "source": "fresh_chain1"
+        },
+        {
+          "code": "def transform(grid):\n    h, w = grid.shape\n    out = grid.copy()\n    bg = 4\n\n    seen = np.zeros((h, w), dtype=bool)\n    dirs4 = [(1, 0), (-1, 0), (0, 1), (0, -1)]\n    dirs8 = [(dr, dc) for dr in (-1, 0, 1) for dc in (-1, 0, 1) if not (dr == 0 and dc == 0)]\n\n    for sr in range(h):\n        for sc in range(w):\n            if grid[sr, sc] != 1 or seen[sr, sc]:\n                continue\n\n            stack = [(sr, sc)]\n            seen[sr, sc] = True\n            comp = []\n            while stack:\n                r, c = stack.pop()\n                comp.append((r, c))\n                for dr, dc in dirs4:\n                    nr, nc = r + dr, c + dc\n                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] == 1:\n                        seen[nr, nc] = True\n                        stack.append((nr, nc))\n\n            comp_set = set(comp)\n\n            # Find background regions not connected to the outside within this component's bbox.\n            rows = [r for r, c in comp]\n            cols = [c for r, c in comp]\n            r0, r1 = max(0, min(rows) - 1), min(h - 1, max(rows) + 1)\n            c0, c1 = max(0, min(cols) - 1), min(w - 1, max(cols) + 1)\n\n            blocked = np.zeros((r1 - r0 + 1, c1 - c0 + 1), dtype=bool)\n            for r, c in comp:\n                blocked[r - r0, c - c0] = True\n\n            ext = np.zeros_like(blocked, dtype=bool)\n            q = []\n            for r in range(r0, r1 + 1):\n                for c in (c0, c1):\n                    if not blocked[r - r0, c - c0] and not ext[r - r0, c - c0]:\n                        ext[r - r0, c - c0] = True\n                        q.append((r, c))\n            for c in range(c0, c1 + 1):\n                for r in (r0, r1):\n                    if not blocked[r - r0, c - c0] and not ext[r - r0, c - c0]:\n                        ext[r - r0, c - c0] = True\n                        q.append((r, c))\n\n            qi = 0\n            while qi < len(q):\n                r, c = q[qi]\n                qi += 1\n                for dr, dc in dirs4:\n                    nr, nc = r + dr, c + dc\n                    if r0 <= nr <= r1 and c0 <= nc <= c1:\n                        rr, cc = nr - r0, nc - c0\n                        if not blocked[rr, cc] and not ext[rr, cc]:\n                            ext[rr, cc] = True\n                            q.append((nr, nc))\n\n            holes = []\n            for r in range(r0, r1 + 1):\n                for c in range(c0, c1 + 1):\n                    rr, cc = r - r0, c - c0\n                    if not blocked[rr, cc] and not ext[rr, cc] and grid[r, c] == bg:\n                        holes.append((r, c))\n\n            if holes:\n                for r, c in comp:\n                    out[r, c] = 8\n                for r, c in holes:\n                    out[r, c] = 6\n\n            solid = comp_set | set(holes)\n            for r, c in solid:\n                for dr, dc in dirs8:\n                    nr, nc = r + dr, c + dc\n                    if 0 <= nr < h and 0 <= nc < w and (nr, nc) not in solid and grid[nr, nc] == bg:\n                        out[nr, nc] = 2\n\n    return out",
+          "codex_seconds": 30.5,
+          "demo_fit": 1.0,
+          "demo_perfect": true,
+          "history": [
+            {
+              "code_len": 3111,
+              "codex_s": 30.5,
+              "demo_fit": 1.0,
+              "iter": 0,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": true,
+          "n_calls": 1,
+          "source": "fresh_chain2"
+        }
+      ],
+      "codex_seconds": 77.3,
+      "n_calls": 2,
+      "task": "aa4ec2a5"
+    },
+    {
+      "arms": [
+        {
+          "code": "def transform(grid):\n    out = grid.copy()\n    h, w = grid.shape\n\n    vals, counts = np.unique(grid, return_counts=True)\n    bg = vals[np.argmax(counts)]\n    non_bg = [v for v in vals if v != bg]\n    if not non_bg:\n        return out\n\n    wall = max(non_bg, key=lambda v: np.sum(grid == v))\n    wr, wc = np.where(grid == wall)\n    minr, maxr = wr.min(), wr.max()\n    minc, maxc = wc.min(), wc.max()\n\n    rr, cc = np.indices(grid.shape)\n    candidates = [v for v in non_bg if v != wall]\n    if not candidates:\n        return out\n\n    fill = max(\n        candidates,\n        key=lambda v: np.sum(\n            (grid == v) & (rr >= minr) & (rr <= maxr) & (cc >= minc) & (cc <= maxc)\n        ),\n    )\n\n    wall_cells = set(map(tuple, np.argwhere(grid == wall)))\n    blockers = set(wall_cells)\n    dirs = [\n        (-1, -1), (-1, 0), (-1, 1),\n        (0, -1),           (0, 1),\n        (1, -1),  (1, 0),  (1, 1),\n    ]\n\n    def add_ray(r, c, dr_num, dc_num):\n        if dr_num == 0 and dc_num == 0:\n            return\n        if abs(dr_num) >= abs(dc_num):\n            sr = 1 if dr_num > 0 else -1\n            den = abs(dr_num)\n            k = 1\n            while True:\n                nr = r + sr * k\n                x = k * dc_num / den\n                nc = c + (int(np.ceil(x)) if x > 0 else int(np.floor(x)))\n                if not (0 <= nr < h and 0 <= nc < w):\n                    break\n                blockers.add((nr, nc))\n                k += 1\n        else:\n            sc = 1 if dc_num > 0 else -1\n            den = abs(dc_num)\n            k = 1\n            while True:\n                nc = c + sc * k\n                x = k * dr_num / den\n                nr = r + (int(np.ceil(x)) if x > 0 else int(np.floor(x)))\n                if not (0 <= nr < h and 0 <= nc < w):\n                    break\n                blockers.add((nr, nc))\n                k += 1\n\n    for r, c in list(wall_cells):\n        ns = [(r + dr, c + dc) for dr, dc in dirs if (r + dr, c + dc) in wall_cells]\n        if len(ns) == 1:\n            nr, nc = ns[0]\n            first = (nr - r, nc - c)\n            use = first\n\n            if first[0] == 0 or first[1] == 0:\n                prev = (r, c)\n                cur = (nr, nc)\n                curdir = first\n                for _ in range(len(wall_cells)):\n                    nbs = [\n                        (cur[0] + dr, cur[1] + dc)\n                        for dr, dc in dirs\n                        if (cur[0] + dr, cur[1] + dc) in wall_cells\n                        and (cur[0] + dr, cur[1] + dc) != prev\n                    ]\n                    if not nbs:\n                        break\n                    nxt = nbs[0]\n                    nd = (nxt[0] - cur[0], nxt[1] - cur[1])\n                    if nd != curdir:\n                        use = (first[0] + nd[0], first[1] + nd[1])\n                        break\n                    prev, cur = cur, nxt\n\n            add_ray(r, c, -use[0], -use[1])\n\n    fill_cells = np.argwhere(grid == fill)\n    if len(fill_cells):\n        fr, fc = fill_cells.mean(axis=0)\n        for r, c in map(tuple, np.argwhere((grid != bg) & (grid != wall) & (grid != fill))):\n            dr = -1 if r < fr else (1 if r > fr else 0)\n            if dr:\n                nr = r\n                while 0 <= nr < h:\n                    blockers.add((nr, c))\n                    nr += dr\n\n    scale = 3\n    hh, ww = h * scale, w * scale\n    blocked = np.zeros((hh, ww), dtype=bool)\n\n    for r, c in blockers:\n        blocked[r * scale:(r + 1) * scale, c * scale:(c + 1) * scale] = True\n\n    for r in range(h - 1):\n        for c in range(w - 1):\n            if (r, c) in blockers and (r + 1, c + 1) in blockers:\n                blocked[r * scale + 2, c * scale + 3] = True\n                blocked[r * scale + 3, c * scale + 2] = True\n            if (r, c + 1) in blockers and (r + 1, c) in blockers:\n                blocked[r * scale + 2, c * scale + 2] = True\n                blocked[r * scale + 3, c * scale + 3] = True\n\n    q = []\n    seen = np.zeros((hh, ww), dtype=bool)\n    for r, c in map(tuple, fill_cells):\n        sr, sc = r * scale + 1, c * scale + 1\n        if not blocked[sr, sc]:\n            seen[sr, sc] = True\n            q.append((sr, sc))\n\n    head = 0\n    while head < len(q):\n        r, c = q[head]\n        head += 1\n        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < hh and 0 <= nc < ww and not blocked[nr, nc] and not seen[nr, nc]:\n                seen[nr, nc] = True\n                q.append((nr, nc))\n\n    for r in range(h):\n        for c in range(w):\n            if grid[r, c] == bg and seen[r * scale + 1, c * scale + 1]:\n                out[r, c] = fill\n\n    return out",
+          "codex_seconds": 698.7,
+          "demo_fit": 1.0,
+          "demo_perfect": true,
+          "history": [
+            {
+              "code_len": 2469,
+              "codex_s": 239.5,
+              "demo_fit": 0.3333,
+              "iter": 0,
+              "status": "graded"
+            },
+            {
+              "code_len": 3437,
+              "codex_s": 174.7,
+              "demo_fit": 0.3333,
+              "iter": 1,
+              "status": "graded"
+            },
+            {
+              "code_len": 4714,
+              "codex_s": 284.5,
+              "demo_fit": 1.0,
+              "iter": 2,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": false,
+          "n_calls": 3,
+          "source": "fresh_chain1"
+        },
+        {
+          "code": "def transform(grid):\n    g = grid.copy()\n    h, w = g.shape\n\n    vals, counts = np.unique(g, return_counts=True)\n    bg = vals[np.argmax(counts)]\n\n    colors = [int(v) for v in vals if v != bg]\n    color_counts = {c: int(np.sum(g == c)) for c in colors}\n    wall_color = max(colors, key=lambda c: color_counts[c])\n\n    wall_pos = [(r, c) for r in range(h) for c in range(w) if g[r, c] == wall_color]\n    rs = [r for r, c in wall_pos]\n    cs = [c for r, c in wall_pos]\n    rmin, rmax = min(rs), max(rs)\n    cmin, cmax = min(cs), max(cs)\n\n    candidates = [c for c in colors if c != wall_color]\n\n    def score_color(col):\n        s = 0\n        for r in range(h):\n            xs = [c for c in range(w) if g[r, c] == wall_color]\n            for c in range(w):\n                if g[r, c] == col:\n                    if rmin <= r <= rmax and cmin <= c <= cmax:\n                        s += 2\n                    if xs and min(xs) < c < max(xs):\n                        s += 5\n        return s\n\n    fill_color = max(candidates, key=lambda c: (score_color(c), -color_counts[c]))\n    seed_rows = [r for r in range(h) for c in range(w) if g[r, c] == fill_color]\n    seed_r = sum(seed_rows) / len(seed_rows)\n\n    walls = [set() for _ in range(h)]\n    for r in range(h):\n        for c in range(w):\n            if g[r, c] != bg and g[r, c] != fill_color:\n                walls[r].add(c)\n\n    for r in range(h):\n        for c in range(w):\n            if g[r, c] != bg and g[r, c] not in (wall_color, fill_color):\n                step = 1 if r >= seed_r else -1\n                rr = r\n                while 0 <= rr < h:\n                    walls[rr].add(c)\n                    rr += step\n\n    for rr, up in ((rmin, -1), (rmax, 1)):\n        xs = sorted(c for r, c in wall_pos if r == rr)\n        for start, dc in ((xs[0], -1), (xs[-1], 1)):\n            vertical = up == -1 and 0 <= rr + 1 < h and g[rr + 1, start] == wall_color\n            k = 1\n            r = rr + up\n            while 0 <= r < h:\n                c = start + dc * (((k + 1) // 2) if vertical else k)\n                if 0 <= c < w:\n                    walls[r].add(c)\n                r += up\n                k += 1\n\n    segs = []\n    cellseg = {}\n    for r in range(h):\n        row = []\n        c = 0\n        while c < w:\n            while c < w and c in walls[r]:\n                c += 1\n            if c >= w:\n                break\n            a = c\n            while c < w and c not in walls[r]:\n                c += 1\n            b = c - 1\n            idx = len(row)\n            row.append((a, b))\n            for x in range(a, b + 1):\n                cellseg[(r, x)] = idx\n        segs.append(row)\n\n    q = []\n    seen = set()\n    for r in range(h):\n        for c in range(w):\n            if g[r, c] == fill_color and (r, c) in cellseg:\n                item = (r, cellseg[(r, c)])\n                if item not in seen:\n                    seen.add(item)\n                    q.append(item)\n\n    qi = 0\n    while qi < len(q):\n        r, i = q[qi]\n        qi += 1\n        a, b = segs[r][i]\n        for nr in (r - 1, r + 1):\n            if 0 <= nr < h:\n                for j, (aa, bb) in enumerate(segs[nr]):\n                    if max(a, aa) <= min(b, bb) and (nr, j) not in seen:\n                        seen.add((nr, j))\n                        q.append((nr, j))\n\n    out = g.copy()\n    for r, i in seen:\n        a, b = segs[r][i]\n        for c in range(a, b + 1):\n            if out[r, c] == bg:\n                out[r, c] = fill_color\n\n    return out",
+          "codex_seconds": 364.3,
+          "demo_fit": 1.0,
+          "demo_perfect": true,
+          "history": [
+            {
+              "code_len": 3505,
+              "codex_s": 364.3,
+              "demo_fit": 1.0,
+              "iter": 0,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": true,
+          "n_calls": 1,
+          "source": "fresh_chain2"
+        }
+      ],
+      "codex_seconds": 1063.0,
+      "n_calls": 4,
+      "task": "b9e38dc0"
+    },
+    {
+      "arms": [
+        {
+          "code": "def transform(grid):\n    g = grid.copy()\n    h, w = g.shape\n\n    # Find the unique center color.\n    centers = np.argwhere(g == 2)\n    if len(centers) == 0:\n        return g\n    cr, cc = centers[0]\n\n    # The 3-cells form the local 3x3 target area around the center.\n    local = []\n    for r in range(max(0, cr - 1), min(h, cr + 2)):\n        for c in range(max(0, cc - 1), min(w, cc + 2)):\n            if not (r == cr and c == cc) and g[r, c] == 3:\n                local.append((r, c))\n\n    # Flood fill each connected 6-region. Any 9 touching that region is absorbed\n    # into the 3x3 object at the opposite relative position from the center.\n    seen = np.zeros((h, w), dtype=bool)\n    dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]\n\n    for sr, sc in np.argwhere(g == 6):\n        sr, sc = int(sr), int(sc)\n        if seen[sr, sc]:\n            continue\n\n        stack = [(sr, sc)]\n        seen[sr, sc] = True\n        comp = []\n        touching_nines = set()\n\n        while stack:\n            r, c = stack.pop()\n            comp.append((r, c))\n            for dr, dc in dirs:\n                nr, nc = r + dr, c + dc\n                if 0 <= nr < h and 0 <= nc < w:\n                    if g[nr, nc] == 6 and not seen[nr, nc]:\n                        seen[nr, nc] = True\n                        stack.append((nr, nc))\n                    elif g[nr, nc] == 9:\n                        touching_nines.add((nr, nc))\n\n        if not touching_nines:\n            continue\n\n        comp_set = set(comp)\n        touches_object = False\n        for r, c in comp:\n            for dr, dc in dirs:\n                nr, nc = r + dr, c + dc\n                if 0 <= nr < h and 0 <= nc < w and g[nr, nc] in (2, 3):\n                    touches_object = True\n                    break\n            if touches_object:\n                break\n\n        if not touches_object:\n            continue\n\n        for nr, nc in touching_nines:\n            tr = cr - int(np.sign(nr - cr))\n            tc = cc - int(np.sign(nc - cc))\n            if 0 <= tr < h and 0 <= tc < w and g[tr, tc] == 3:\n                g[tr, tc] = 9\n                g[nr, nc] = 7\n\n    # Remove stray 9s that are not part of an untouched 9-cluster of size >= 2.\n    seen9 = np.zeros((h, w), dtype=bool)\n    for sr, sc in np.argwhere(g == 9):\n        sr, sc = int(sr), int(sc)\n        if seen9[sr, sc]:\n            continue\n        stack = [(sr, sc)]\n        seen9[sr, sc] = True\n        comp = []\n        while stack:\n            r, c = stack.pop()\n            comp.append((r, c))\n            for dr, dc in dirs:\n                nr, nc = r + dr, c + dc\n                if 0 <= nr < h and 0 <= nc < w and g[nr, nc] == 9 and not seen9[nr, nc]:\n                    seen9[nr, nc] = True\n                    stack.append((nr, nc))\n        if len(comp) == 1:\n            r, c = comp[0]\n            if abs(r - cr) > 1 or abs(c - cc) > 1:\n                g[r, c] = 7\n\n    return g",
+          "codex_seconds": 102.5,
+          "demo_fit": 0.0,
+          "demo_perfect": false,
+          "history": [
+            {
+              "code_len": 2905,
+              "codex_s": 31.1,
+              "demo_fit": 0.0,
+              "iter": 0,
+              "status": "graded"
+            },
+            {
+              "code_len": 3308,
+              "codex_s": 30.7,
+              "demo_fit": 0.0,
+              "iter": 1,
+              "status": "graded"
+            },
+            {
+              "code_len": 4329,
+              "codex_s": 40.7,
+              "demo_fit": 0.0,
+              "iter": 2,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": false,
+          "n_calls": 3,
+          "source": "fresh_chain1"
+        },
+        {
+          "code": "def transform(grid):\n    out = grid.copy()\n    h, w = grid.shape\n\n    pos = np.argwhere(grid == 2)\n    if len(pos) == 0:\n        return out\n    r, c = pos[0]\n\n    # Find the 3x3 object centered on the 2.  Each surrounding cell represents\n    # the same direction from the center.\n    dirs = [(-1, -1), (-1, 0), (-1, 1),\n            (0, -1),           (0, 1),\n            (1, -1),  (1, 0),  (1, 1)]\n\n    for dr, dc in dirs:\n        rr, cc = r + dr, c + dc\n        seen = False\n\n        # Look from the object outward in that direction.  A 9 anywhere on that\n        # ray is transferred onto the corresponding cell of the central object.\n        nr, nc = rr + dr, cc + dc\n        while 0 <= nr < h and 0 <= nc < w:\n            if grid[nr, nc] == 9:\n                seen = True\n                break\n            nr += dr\n            nc += dc\n\n        if seen:\n            out[rr, cc] = 9\n\n    # Remove all original 9s that are not part of the central 3x3 object after\n    # the transfer.\n    for i in range(h):\n        for j in range(w):\n            if grid[i, j] == 9 and not (r - 1 <= i <= r + 1 and c - 1 <= j <= c + 1):\n                out[i, j] = 7\n\n    return out",
+          "codex_seconds": 65.4,
+          "demo_fit": 0.0,
+          "demo_perfect": false,
+          "history": [
+            {
+              "code_len": 1167,
+              "codex_s": 19.8,
+              "demo_fit": 0.0,
+              "iter": 0,
+              "status": "graded"
+            },
+            {
+              "code_len": 1566,
+              "codex_s": 23.1,
+              "demo_fit": 0.0,
+              "iter": 1,
+              "status": "graded"
+            },
+            {
+              "code_len": 1570,
+              "codex_s": 22.5,
+              "demo_fit": 0.0,
+              "iter": 2,
+              "status": "graded"
+            }
+          ],
+          "iter0_demo_perfect": false,
+          "n_calls": 3,
+          "source": "fresh_chain2"
+        }
+      ],
+      "codex_seconds": 167.9,
+      "n_calls": 6,
+      "task": "dd6b8c4b"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "codex"
+    },
+    {
+      "available": true,
+      "resource": "eval_pool"
+    }
+  ],
+  "random_seed": 12345,
+  "schema": "carnot.experiment_3998_gap4_deselection_coverage.v1",
+  "selected_chain_feasible_demo_perfect_arms": 20,
+  "selected_chain_feasible_total_arms": 24,
+  "title": "GAP-4 de-selection fresh-chain coverage on never-chained ARC-2 tasks",
+  "total_codex_calls": 55,
+  "total_codex_seconds": 7361.9
+}

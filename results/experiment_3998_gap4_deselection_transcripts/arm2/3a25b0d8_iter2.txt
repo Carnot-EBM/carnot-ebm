@@ -1,0 +1,362 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (22x22):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 1, 1, 1, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 1, 1, 8, 8, 8, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 1, 1, 1, 8, 8, 8, 1, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 1, 8, 1, 1, 1, 1, 1, 1, 1, 8, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 1, 8, 8, 1, 8, 8, 8, 1, 8, 8, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 1, 8, 1, 1, 1, 1, 1, 1, 1, 8, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 1, 1, 8, 8, 1, 8, 8, 1, 1, 8, 8, 1, 1, 1, 1, 1, 8, 8, 8, 8],
+ [8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 8, 8, 1, 1, 7, 7, 7, 1, 1, 8, 8, 8],
+ [8, 8, 8, 8, 1, 8, 8, 8, 1, 8, 8, 1, 1, 1, 1, 7, 1, 1, 1, 1, 8, 8],
+ [8, 8, 8, 8, 1, 8, 8, 8, 1, 8, 1, 3, 1, 1, 4, 1, 4, 1, 1, 3, 1, 8],
+ [8, 8, 8, 8, 1, 1, 1, 1, 1, 8, 1, 3, 3, 1, 4, 4, 4, 1, 3, 3, 1, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 6, 6, 1, 6, 6, 1, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 9, 9, 9, 1, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 1, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 1 OUTPUT (11x11):
+[[8, 8, 8, 1, 1, 1, 1, 1, 8, 8, 8],
+ [8, 8, 1, 1, 7, 7, 7, 1, 1, 8, 8],
+ [8, 1, 1, 1, 7, 7, 7, 1, 1, 1, 8],
+ [1, 3, 1, 1, 1, 1, 1, 1, 1, 3, 1],
+ [1, 3, 3, 1, 4, 4, 4, 1, 3, 3, 1],
+ [1, 3, 1, 1, 1, 1, 1, 1, 1, 3, 1],
+ [8, 1, 1, 6, 6, 1, 6, 6, 1, 1, 8],
+ [8, 8, 1, 1, 1, 1, 1, 1, 1, 8, 8],
+ [8, 8, 8, 1, 9, 9, 9, 1, 8, 8, 8],
+ [8, 8, 8, 1, 9, 9, 9, 1, 8, 8, 8],
+ [8, 8, 8, 1, 1, 1, 1, 1, 8, 8, 8]]
+
+Demo 2 INPUT (22x22):
+[[1, 1, 2, 2, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 2, 4, 4, 2, 4, 4, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 2, 2, 3, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 2, 3, 3, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 2, 3, 2, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 2, 2, 2, 8, 2, 2, 2, 1, 1, 1, 1, 2, 2, 1, 2, 2, 1, 1, 1, 1, 1],
+ [1, 1, 1, 2, 8, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1],
+ [1, 1, 1, 2, 8, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1],
+ [1, 1, 2, 2, 8, 2, 2, 1, 1, 1, 1, 1, 2, 2, 1, 2, 2, 1, 1, 1, 1, 1],
+ [1, 1, 2, 8, 8, 8, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
+ [1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 2, 2, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 2, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+Demo 2 OUTPUT (13x7):
+[[1, 2, 2, 1, 2, 2, 1],
+ [2, 4, 4, 2, 4, 4, 2],
+ [2, 4, 4, 2, 4, 4, 2],
+ [1, 2, 2, 3, 2, 2, 1],
+ [1, 2, 3, 3, 3, 2, 1],
+ [1, 2, 3, 3, 3, 2, 1],
+ [2, 2, 2, 2, 2, 2, 2],
+ [1, 1, 2, 8, 2, 1, 1],
+ [1, 1, 2, 8, 2, 1, 1],
+ [1, 2, 2, 8, 2, 2, 1],
+ [1, 2, 8, 8, 8, 2, 1],
+ [2, 2, 8, 8, 8, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2]]
+
+TEST INPUT (30x30):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 3, 3, 3, 3, 4, 8, 8, 8, 8, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 3, 3, 3, 3, 4, 8, 8, 8, 8, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 4, 3, 3, 4, 8, 8, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 4, 5, 5, 4, 2, 4, 5, 5, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 4, 5, 5, 4, 2, 4, 5, 5, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 4, 4, 4, 2, 2, 2, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 1, 4, 7, 4, 2, 4, 7, 4, 1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 4, 7, 4, 4, 4, 7, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 4, 7, 7, 7, 4, 7, 7, 7, 4, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 4, 4, 0, 0, 0, 0],
+ [0, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 4, 4, 0, 0, 0, 0, 4, 0, 0, 4, 4, 4, 0, 0, 4, 0, 0, 0],
+ [0, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 4, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0],
+ [0, 4, 7, 7, 7, 7, 4, 4, 4, 7, 7, 7, 7, 4, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0],
+ [0, 4, 4, 4, 4, 4, 6, 6, 6, 4, 4, 4, 4, 4, 0, 0, 0, 4, 4, 4, 0, 0, 4, 0, 0, 4, 4, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 4, 4, 0, 0, 0, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 4, 0, 0, 0, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 0, 0, 0, 4, 4, 4, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 4, 4, 4, 0, 4, 4, 4, 0, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 0, 4, 4, 4, 0, 4, 4, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (11x11):
+[[8, 8, 8, 1, 1, 1, 1, 1, 8, 8, 8],
+ [8, 8, 1, 1, 7, 7, 7, 1, 1, 8, 8],
+ [8, 1, 1, 1, 7, 7, 7, 1, 1, 1, 8],
+ [1, 3, 1, 1, 1, 1, 1, 1, 1, 3, 1],
+ [1, 3, 3, 1, 4, 4, 4, 1, 3, 3, 1],
+ [1, 3, 1, 1, 1, 1, 1, 1, 1, 3, 1],
+ [8, 1, 1, 6, 6, 1, 6, 6, 1, 1, 8],
+ [8, 8, 1, 1, 1, 1, 1, 1, 1, 8, 8],
+ [8, 8, 8, 1, 9, 9, 9, 1, 8, 8, 8],
+ [8, 8, 8, 1, 9, 9, 9, 1, 8, 8, 8],
+ [8, 8, 8, 1, 1, 1, 1, 1, 8, 8, 8]]
+your function returned:
+(crash / illegal output)
+
+Demo 2: expected OUTPUT (13x7):
+[[1, 2, 2, 1, 2, 2, 1],
+ [2, 4, 4, 2, 4, 4, 2],
+ [2, 4, 4, 2, 4, 4, 2],
+ [1, 2, 2, 3, 2, 2, 1],
+ [1, 2, 3, 3, 3, 2, 1],
+ [1, 2, 3, 3, 3, 2, 1],
+ [2, 2, 2, 2, 2, 2, 2],
+ [1, 1, 2, 8, 2, 1, 1],
+ [1, 1, 2, 8, 2, 1, 1],
+ [1, 2, 2, 8, 2, 2, 1],
+ [1, 2, 8, 8, 8, 2, 1],
+ [2, 2, 8, 8, 8, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2]]
+your function returned:
+(crash / illegal output)
+
+Previous code:
+```python
+def transform(grid):
+    bg = int(np.bincount(grid.ravel(), minlength=10).argmax())
+    H, W = grid.shape
+
+    def comps(mask):
+        seen = np.zeros(mask.shape, dtype=bool)
+        out = []
+        h, w = mask.shape
+        for r in range(h):
+            for c in range(w):
+                if mask[r, c] and not seen[r, c]:
+                    stack = [(r, c)]
+                    seen[r, c] = True
+                    cells = []
+                    while stack:
+                        x, y = stack.pop()
+                        cells.append((x, y))
+                        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                            nx, ny = x + dx, y + dy
+                            if 0 <= nx < h and 0 <= ny < w and mask[nx, ny] and not seen[nx, ny]:
+                                seen[nx, ny] = True
+                                stack.append((nx, ny))
+                    out.append(cells)
+        return out
+
+    objects = comps(grid != bg)
+
+    obj_info = []
+    for cells in objects:
+        vals = {int(grid[r, c]) for r, c in cells}
+        rs = [r for r, c in cells]
+        cs = [c for r, c in cells]
+        obj_info.append((cells, vals, min(rs), max(rs), min(cs), max(cs)))
+
+    template = None
+    for info in obj_info:
+        cells, vals, r0, r1, c0, c1 = info
+        if len(vals) == 1:
+            area = len(cells)
+            if template is None or area > template[0]:
+                template = (area, info)
+
+    _, (_, tvals, tr0, tr1, tc0, tc1) = template
+    outline = next(iter(tvals))
+    target = grid[tr0:tr1 + 1, tc0:tc1 + 1].copy()
+    th, tw = target.shape
+
+    source_info = None
+    for info in obj_info:
+        cells, vals, r0, r1, c0, c1 = info
+        if any(v != outline for v in vals):
+            area = len(cells)
+            if source_info is None or area > source_info[0]:
+                source_info = (area, info)
+
+    _, (_, _, sr0, sr1, sc0, sc1) = source_info
+    source = grid[sr0:sr1 + 1, sc0:sc1 + 1].copy()
+
+    if source.shape[1] > tw:
+        best_score = None
+        best = source
+        for start in range(source.shape[1] - tw + 1):
+            cand = source[:, start:start + tw]
+            score = 0
+            for r in range(min(cand.shape[0], th)):
+                rr = 0 if th == 1 else round(r * (cand.shape[0] - 1) / max(th - 1, 1))
+                score += np.sum((cand[rr] == outline) == (target[r] == outline))
+                score += np.sum((cand[rr] == bg) == (target[r] == bg))
+            if best_score is None or score > best_score:
+                best_score = score
+                best = cand
+        source = best
+    elif source.shape[1] < tw:
+        pad = tw - source.shape[1]
+        left = pad // 2
+        right = pad - left
+        source = np.pad(source, ((0, 0), (left, right)), constant_values=bg)
+
+    sh, sw = source.shape
+
+    colored = source != bg
+    colored &= source != outline
+
+    color_parts = []
+    for cells in comps(colored):
+        vals = [int(source[r, c]) for r, c in cells]
+        counts = np.bincount(vals, minlength=10)
+        color = int(counts.argmax())
+        ys = np.array([r for r, c in cells], dtype=float)
+        xs = np.array([c for r, c in cells], dtype=float)
+        cy = ys.mean() / max(sh - 1, 1)
+        cx = xs.mean() / max(sw - 1, 1)
+        color_parts.append((cy, cx, color))
+
+    result = target.copy()
+    bg_parts = comps(target == bg)
+
+    for cells in bg_parts:
+        if any(r == 0 or c == 0 or r == th - 1 or c == tw - 1 for r, c in cells):
+            continue
+        ys = np.array([r for r, c in cells], dtype=float)
+        xs = np.array([c for r, c in cells], dtype=float)
+        cy = ys.mean() / max(th - 1, 1)
+        cx = xs.mean() / max(tw - 1, 1)
+
+        best = None
+        for py, px, color in color_parts:
+            d = (cy - py) ** 2 + (cx - px) ** 2
+            if best is None or d < best[0]:
+                best = (d, color)
+
+        if best is not None:
+            for r, c in cells:
+                result[r, c] = best[1]
+
+    return result
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    bg = int(np.bincount(grid.ravel(), minlength=10).argmax())
+    H, W = grid.shape
+
+    def components(mask):
+        seen = np.zeros(mask.shape, dtype=bool)
+        out = []
+        h, w = mask.shape
+        for r in range(h):
+            for c in range(w):
+                if mask[r, c] and not seen[r, c]:
+                    stack = [(r, c)]
+                    seen[r, c] = True
+                    cells = []
+                    while stack:
+                        x, y = stack.pop()
+                        cells.append((x, y))
+                        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                            nx, ny = x + dx, y + dy
+                            if 0 <= nx < h and 0 <= ny < w and mask[nx, ny] and not seen[nx, ny]:
+                                seen[nx, ny] = True
+                                stack.append((nx, ny))
+                    out.append(cells)
+        return out
+
+    objs = []
+    for cells in components(grid != bg):
+        vals = {int(grid[r, c]) for r, c in cells}
+        rs = [r for r, c in cells]
+        cs = [c for r, c in cells]
+        objs.append({
+            "cells": cells,
+            "vals": vals,
+            "r0": min(rs), "r1": max(rs),
+            "c0": min(cs), "c1": max(cs),
+            "area": len(cells),
+        })
+
+    template_obj = max(
+        (o for o in objs if len(o["vals"]) == 1),
+        key=lambda o: o["area"]
+    )
+    outline = next(iter(template_obj["vals"]))
+
+    source_obj = max(
+        (o for o in objs if any(v != outline for v in o["vals"])),
+        key=lambda o: o["area"]
+    )
+
+    tr0, tr1, tc0, tc1 = template_obj["r0"], template_obj["r1"], template_obj["c0"], template_obj["c1"]
+    sr0, sr1, sc0, sc1 = source_obj["r0"], source_obj["r1"], source_obj["c0"], source_obj["c1"]
+
+    template = grid[tr0:tr1 + 1, tc0:tc1 + 1].copy()
+    source = grid[sr0:sr1 + 1, sc0:sc1 + 1]
+    th, tw = template.shape
+    sh, sw = source.shape
+
+    color_parts = []
+    colored_mask = (source != bg) & (source != outline)
+    for cells in components(colored_mask):
+        vals = [int(source[r, c]) for r, c in cells]
+        color = int(np.bincount(vals, minlength=10).argmax())
+        ys = np.array([r for r, c in cells], dtype=float)
+        xs = np.array([c for r, c in cells], dtype=float)
+        cy = ys.mean() / max(sh - 1, 1)
+        cx = xs.mean() / max(sw - 1, 1)
+        color_parts.append((cy, cx, color))
+
+    result = template.copy()
+    for cells in components(template == bg):
+        if any(r == 0 or c == 0 or r == th - 1 or c == tw - 1 for r, c in cells):
+            continue
+
+        ys = np.array([r for r, c in cells], dtype=float)
+        xs = np.array([c for r, c in cells], dtype=float)
+        cy = ys.mean() / max(th - 1, 1)
+        cx = xs.mean() / max(tw - 1, 1)
+
+        best_color = None
+        best_dist = None
+        for py, px, color in color_parts:
+            d = (cy - py) ** 2 + (cx - px) ** 2
+            if best_dist is None or d < best_dist:
+                best_dist = d
+                best_color = color
+
+        if best_color is not None:
+            for r, c in cells:
+                result[r, c] = best_color
+
+    return result
+```

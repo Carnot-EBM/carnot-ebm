@@ -1,0 +1,190 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 6, 6, 6, 6, 6, 6, 6, 9, 9, 7],
+ [7, 6, 9, 9, 7, 7, 7, 6, 9, 9, 7],
+ [7, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
+ [7, 7, 7, 6, 3, 3, 3, 6, 7, 7, 7],
+ [7, 7, 7, 6, 3, 2, 3, 6, 7, 9, 7],
+ [7, 9, 7, 6, 3, 3, 3, 6, 7, 7, 7],
+ [9, 9, 7, 6, 6, 7, 6, 6, 6, 6, 7],
+ [7, 7, 7, 6, 7, 7, 7, 9, 9, 6, 7],
+ [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+Demo 1 OUTPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 6, 6, 6, 6, 6, 6, 6, 9, 9, 7],
+ [7, 6, 9, 9, 7, 7, 7, 6, 9, 9, 7],
+ [7, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
+ [7, 7, 7, 6, 9, 9, 3, 6, 7, 7, 7],
+ [7, 7, 7, 6, 3, 2, 3, 6, 7, 9, 7],
+ [7, 9, 7, 6, 3, 3, 3, 6, 7, 7, 7],
+ [9, 9, 7, 6, 6, 7, 6, 6, 6, 6, 7],
+ [7, 7, 7, 6, 7, 7, 7, 7, 7, 6, 7],
+ [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+
+Demo 2 INPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 9, 7, 7, 9],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9],
+ [9, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6],
+ [7, 7, 7, 6, 3, 3, 3, 6, 9, 7, 7],
+ [7, 7, 9, 6, 3, 2, 3, 6, 7, 7, 7],
+ [7, 7, 7, 6, 3, 3, 3, 6, 7, 9, 7],
+ [7, 7, 7, 6, 7, 7, 7, 6, 7, 7, 7],
+ [7, 9, 7, 6, 7, 9, 7, 6, 7, 7, 7],
+ [7, 7, 9, 6, 7, 9, 7, 6, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+Demo 2 OUTPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 9, 7, 7, 9],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9],
+ [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6],
+ [7, 7, 7, 6, 9, 9, 9, 6, 7, 7, 7],
+ [7, 7, 7, 6, 9, 9, 9, 6, 7, 7, 7],
+ [7, 7, 7, 6, 9, 9, 9, 6, 7, 7, 7],
+ [7, 7, 7, 6, 7, 7, 7, 6, 7, 7, 7],
+ [7, 7, 7, 6, 7, 7, 7, 6, 7, 7, 7],
+ [7, 7, 7, 6, 7, 7, 7, 6, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+
+Demo 3 INPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 7],
+ [7, 7, 9, 7, 7, 7, 7, 7, 7, 7, 9],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 3, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 2, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 3, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 9, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+Demo 3 OUTPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 9, 9, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 2, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 3, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+
+TEST INPUT (11x11):
+[[6, 6, 9, 7, 7, 7, 7, 7, 9, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [9, 6, 9, 7, 7, 7, 7, 7, 9, 6, 7],
+ [7, 6, 7, 6, 6, 7, 6, 6, 7, 6, 9],
+ [7, 6, 7, 6, 3, 3, 3, 6, 7, 6, 7],
+ [7, 6, 7, 7, 3, 2, 3, 7, 7, 6, 9],
+ [7, 6, 7, 6, 3, 3, 3, 6, 7, 6, 7],
+ [7, 6, 7, 6, 6, 7, 6, 6, 7, 6, 9],
+ [7, 6, 9, 7, 7, 9, 7, 7, 9, 6, 7],
+ [7, 6, 6, 6, 6, 6, 6, 6, 7, 6, 6],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    g = grid.copy()
+    h, w = g.shape
+
+    # Find the unique center color.
+    centers = np.argwhere(g == 2)
+    if len(centers) == 0:
+        return g
+    cr, cc = centers[0]
+
+    # The 3-cells form the local 3x3 target area around the center.
+    local = []
+    for r in range(max(0, cr - 1), min(h, cr + 2)):
+        for c in range(max(0, cc - 1), min(w, cc + 2)):
+            if not (r == cr and c == cc) and g[r, c] == 3:
+                local.append((r, c))
+
+    # Flood fill each connected 6-region. Any 9 touching that region is absorbed
+    # into the 3x3 object at the opposite relative position from the center.
+    seen = np.zeros((h, w), dtype=bool)
+    dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+    for sr, sc in np.argwhere(g == 6):
+        sr, sc = int(sr), int(sc)
+        if seen[sr, sc]:
+            continue
+
+        stack = [(sr, sc)]
+        seen[sr, sc] = True
+        comp = []
+        touching_nines = set()
+
+        while stack:
+            r, c = stack.pop()
+            comp.append((r, c))
+            for dr, dc in dirs:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < h and 0 <= nc < w:
+                    if g[nr, nc] == 6 and not seen[nr, nc]:
+                        seen[nr, nc] = True
+                        stack.append((nr, nc))
+                    elif g[nr, nc] == 9:
+                        touching_nines.add((nr, nc))
+
+        if not touching_nines:
+            continue
+
+        comp_set = set(comp)
+        touches_object = False
+        for r, c in comp:
+            for dr, dc in dirs:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < h and 0 <= nc < w and g[nr, nc] in (2, 3):
+                    touches_object = True
+                    break
+            if touches_object:
+                break
+
+        if not touches_object:
+            continue
+
+        for nr, nc in touching_nines:
+            tr = cr - int(np.sign(nr - cr))
+            tc = cc - int(np.sign(nc - cc))
+            if 0 <= tr < h and 0 <= tc < w and g[tr, tc] == 3:
+                g[tr, tc] = 9
+                g[nr, nc] = 7
+
+    # Remove stray 9s that are not part of an untouched 9-cluster of size >= 2.
+    seen9 = np.zeros((h, w), dtype=bool)
+    for sr, sc in np.argwhere(g == 9):
+        sr, sc = int(sr), int(sc)
+        if seen9[sr, sc]:
+            continue
+        stack = [(sr, sc)]
+        seen9[sr, sc] = True
+        comp = []
+        while stack:
+            r, c = stack.pop()
+            comp.append((r, c))
+            for dr, dc in dirs:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < h and 0 <= nc < w and g[nr, nc] == 9 and not seen9[nr, nc]:
+                    seen9[nr, nc] = True
+                    stack.append((nr, nc))
+        if len(comp) == 1:
+            r, c = comp[0]
+            if abs(r - cr) > 1 or abs(c - cc) > 1:
+                g[r, c] = 7
+
+    return g
+```

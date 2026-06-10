@@ -1,0 +1,392 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (20x20):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 2, 2, 2, 2, 2, 2, 2, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 2, 8, 8, 8, 8, 8, 2, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 2, 8, 8, 8, 8, 8, 2, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 3, 3, 3, 3, 3, 3, 3, 3, 3, 8, 2, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 3, 8, 8, 8, 8, 8, 8, 8, 3, 8, 2, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 3, 8, 8, 8, 8, 8, 8, 8, 3, 8, 2, 8, 8, 8, 8, 8],
+ [8, 8, 4, 4, 3, 8, 8, 8, 8, 8, 8, 8, 3, 2, 2, 8, 8, 8, 8, 8],
+ [8, 8, 4, 8, 3, 8, 8, 8, 8, 8, 8, 8, 3, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 4, 8, 3, 3, 3, 3, 3, 3, 3, 3, 3, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 4, 8, 8, 8, 4, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 4, 4, 4, 4, 4, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 1 OUTPUT (4x7):
+[[8, 8, 8, 2, 8, 8, 8],
+ [8, 8, 8, 2, 8, 8, 8],
+ [4, 4, 8, 2, 2, 2, 2],
+ [8, 4, 8, 8, 8, 8, 8]]
+
+Demo 2 INPUT (30x30):
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 8, 8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 8, 1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 8, 1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8, 8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+Demo 2 OUTPUT (13x14):
+[[6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [2, 2, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6]]
+
+Demo 3 INPUT (22x22):
+[[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 5, 4, 5, 4, 5, 4, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 4, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 5, 2, 2, 2, 2, 2, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 4, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 5, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 4, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 5, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 4, 5, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 9, 8, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 9, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 8, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 8, 2, 2, 2, 2, 2, 2, 2, 2, 9, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 9, 8, 9, 8, 9, 8, 9, 8, 9, 8, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]]
+Demo 3 OUTPUT (7x8):
+[[2, 2, 2, 4, 2, 2, 2, 2],
+ [2, 2, 2, 5, 2, 2, 2, 2],
+ [5, 4, 5, 4, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 8, 9, 8, 9, 8, 9, 8],
+ [2, 9, 2, 2, 2, 2, 2, 2]]
+
+TEST INPUT (24x24):
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 8, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 1, 8, 1, 1, 1, 1, 1],
+ [1, 1, 0, 0, 0, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 1, 8, 1, 1, 1, 1, 1],
+ [1, 1, 0, 1, 1, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 8, 8, 1, 1, 1, 1, 1],
+ [1, 1, 0, 1, 1, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 0, 1, 1, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 0, 1, 1, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 4, 9, 1, 1, 1, 1, 1],
+ [1, 1, 0, 1, 1, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 0, 1, 1, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 1, 9, 1, 1, 1, 1, 1],
+ [1, 1, 0, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 4, 1, 1, 1, 1, 9, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 9, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 9, 1, 1, 1, 1, 1],
+ [1, 1, 1, 3, 3, 3, 1, 1, 3, 3, 3, 3, 1, 9, 4, 9, 4, 9, 4, 1, 1, 1, 1, 1],
+ [1, 1, 1, 3, 6, 3, 1, 1, 3, 6, 6, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 3, 3, 3, 1, 1, 3, 6, 6, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (4x7):
+[[8, 8, 8, 2, 8, 8, 8],
+ [8, 8, 8, 2, 8, 8, 8],
+ [4, 4, 8, 2, 2, 2, 2],
+ [8, 4, 8, 8, 8, 8, 8]]
+your function returned:
+(crash / illegal output)
+
+Demo 2: expected OUTPUT (13x14):
+[[6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [2, 2, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6]]
+your function returned:
+(crash / illegal output)
+
+Previous code:
+```python
+def transform(grid):
+    h, w = grid.shape
+
+    vals, counts = np.unique(grid, return_counts=True)
+    bg = vals[np.argmax(counts)]
+
+    def comps(mask):
+        seen = np.zeros(mask.shape, dtype=bool)
+        out = []
+        for r in range(h):
+            for c in range(w):
+                if not mask[r, c] or seen[r, c]:
+                    continue
+                q = [(r, c)]
+                seen[r, c] = True
+                cells = []
+                while q:
+                    rr, cc = q.pop()
+                    cells.append((rr, cc))
+                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nr, nc = rr + dr, cc + dc
+                        if 0 <= nr < h and 0 <= nc < w and mask[nr, nc] and not seen[nr, nc]:
+                            seen[nr, nc] = True
+                            q.append((nr, nc))
+                out.append(cells)
+        return out
+
+    # Find the largest complete single-color rectangular border: the occluding frame.
+    best = None
+    for col in vals:
+        if col == bg:
+            continue
+        for cells in comps(grid == col):
+            rs = [p[0] for p in cells]
+            cs = [p[1] for p in cells]
+            r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
+            if r1 <= r0 or c1 <= c0:
+                continue
+            ok = True
+            for cc in range(c0, c1 + 1):
+                if grid[r0, cc] != col or grid[r1, cc] != col:
+                    ok = False
+                    break
+            if ok:
+                for rr in range(r0, r1 + 1):
+                    if grid[rr, c0] != col or grid[rr, c1] != col:
+                        ok = False
+                        break
+            if ok:
+                area = (r1 - r0 + 1) * (c1 - c0 + 1)
+                if best is None or area > best[0]:
+                    best = (area, col, r0, r1, c0, c1)
+
+    _, frame_col, fr0, fr1, fc0, fc1 = best
+    ir0, ir1, ic0, ic1 = fr0 + 1, fr1 - 1, fc0 + 1, fc1 - 1
+
+    inside = grid[ir0:ir1 + 1, ic0:ic1 + 1]
+    ivals, icounts = np.unique(inside, return_counts=True)
+    fill = ivals[np.argmax(icounts)]
+    out = np.full((ir1 - ir0 + 1, ic1 - ic0 + 1), fill, dtype=grid.dtype)
+
+    outside_frame = np.ones(grid.shape, dtype=bool)
+    outside_frame[fr0:fr1 + 1, fc0:fc1 + 1] = False
+    obj_mask = (grid != bg) & (grid != frame_col) & outside_frame
+
+    for cells in comps(obj_mask):
+        rs = [p[0] for p in cells]
+        cs = [p[1] for p in cells]
+        r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
+
+        colors = {}
+        for r, c in cells:
+            colors[grid[r, c]] = colors.get(grid[r, c], 0) + 1
+
+        if len(colors) == 1:
+            only_color = next(iter(colors))
+            def color_at(r, c, only_color=only_color):
+                return only_color
+        else:
+            parity_counts = [{}, {}]
+            for r, c in cells:
+                p = (r + c) & 1
+                col = grid[r, c]
+                parity_counts[p][col] = parity_counts[p].get(col, 0) + 1
+            fallback = max(colors, key=colors.get)
+            parity_color = []
+            for p in (0, 1):
+                if parity_counts[p]:
+                    parity_color.append(max(parity_counts[p], key=parity_counts[p].get))
+                else:
+                    parity_color.append(fallback)
+
+            def color_at(r, c, parity_color=parity_color):
+                return parity_color[(r + c) & 1]
+
+        rr0, rr1 = max(ir0, r0), min(ir1, r1)
+        cc0, cc1 = max(ic0, c0), min(ic1, c1)
+        if rr0 > rr1 or cc0 > cc1:
+            continue
+
+        for r in range(rr0, rr1 + 1):
+            for c in range(cc0, cc1 + 1):
+                if r == r0 or r == r1 or c == c0 or c == c1:
+                    out[r - ir0, c - ic0] = color_at(r, c)
+
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h, w = grid.shape
+
+    vals, counts = np.unique(grid, return_counts=True)
+    bg = vals[np.argmax(counts)]
+
+    def components(mask):
+        seen = np.zeros(mask.shape, dtype=bool)
+        out = []
+        hh, ww = mask.shape
+        for r in range(hh):
+            for c in range(ww):
+                if not mask[r, c] or seen[r, c]:
+                    continue
+                stack = [(r, c)]
+                seen[r, c] = True
+                cells = []
+                while stack:
+                    rr, cc = stack.pop()
+                    cells.append((rr, cc))
+                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nr, nc = rr + dr, cc + dc
+                        if 0 <= nr < hh and 0 <= nc < ww and mask[nr, nc] and not seen[nr, nc]:
+                            seen[nr, nc] = True
+                            stack.append((nr, nc))
+                out.append(cells)
+        return out
+
+    # The central object is the largest single-color rectangular border.
+    best = None
+    for col in vals:
+        if col == bg:
+            continue
+        for cells in components(grid == col):
+            rs = [r for r, c in cells]
+            cs = [c for r, c in cells]
+            r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
+            if r1 - r0 < 2 or c1 - c0 < 2:
+                continue
+            ok = True
+            for c in range(c0, c1 + 1):
+                if grid[r0, c] != col or grid[r1, c] != col:
+                    ok = False
+                    break
+            if ok:
+                for r in range(r0, r1 + 1):
+                    if grid[r, c0] != col or grid[r, c1] != col:
+                        ok = False
+                        break
+            if ok:
+                area = (r1 - r0 + 1) * (c1 - c0 + 1)
+                if best is None or area > best[0]:
+                    best = (area, col, r0, r1, c0, c1)
+
+    _, frame_col, fr0, fr1, fc0, fc1 = best
+    ir0, ir1, ic0, ic1 = fr0 + 1, fr1 - 1, fc0 + 1, fc1 - 1
+
+    interior = grid[ir0:ir1 + 1, ic0:ic1 + 1]
+    ivals, icounts = np.unique(interior, return_counts=True)
+    fill = ivals[np.argmax(icounts)]
+    out = np.full(interior.shape, fill, dtype=grid.dtype)
+
+    mask = (grid != bg) & (grid != frame_col)
+    for cells in components(mask):
+        rs = [r for r, c in cells]
+        cs = [c for r, c in cells]
+        r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
+
+        rr0, rr1 = max(r0, ir0), min(r1, ir1)
+        cc0, cc1 = max(c0, ic0), min(c1, ic1)
+        if rr0 > rr1 or cc0 > cc1:
+            continue
+
+        known = {}
+        color_counts = {}
+        for r, c in cells:
+            col = grid[r, c]
+            known[(r, c)] = col
+            color_counts[col] = color_counts.get(col, 0) + 1
+        fallback = max(color_counts, key=color_counts.get)
+
+        row_pat = {}
+        col_pat = {}
+        parity_counts = [{}, {}]
+        for r, c in cells:
+            col = grid[r, c]
+            row_pat.setdefault(r, {})[(c - c0) % 2] = col
+            col_pat.setdefault(c, {})[(r - r0) % 2] = col
+            p = (r + c) & 1
+            parity_counts[p][col] = parity_counts[p].get(col, 0) + 1
+
+        parity_color = []
+        for p in (0, 1):
+            if parity_counts[p]:
+                parity_color.append(max(parity_counts[p], key=parity_counts[p].get))
+            else:
+                parity_color.append(fallback)
+
+        def color_at(r, c):
+            if (r, c) in known:
+                return known[(r, c)]
+            if r in row_pat and ((c - c0) % 2) in row_pat[r]:
+                return row_pat[r][(c - c0) % 2]
+            if c in col_pat and ((r - r0) % 2) in col_pat[c]:
+                return col_pat[c][(r - r0) % 2]
+            return parity_color[(r + c) & 1]
+
+        for r in range(rr0, rr1 + 1):
+            for c in range(cc0, cc1 + 1):
+                if r == r0 or r == r1 or c == c0 or c == c1:
+                    out[r - ir0, c - ic0] = color_at(r, c)
+
+    return out
+```

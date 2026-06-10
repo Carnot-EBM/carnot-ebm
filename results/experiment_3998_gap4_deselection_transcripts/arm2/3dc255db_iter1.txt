@@ -1,0 +1,372 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 6, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 6, 0, 4, 4, 4, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 7, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 7, 0, 0, 0, 0],
+ [0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+Demo 1 OUTPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 4, 4, 4, 6, 6, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 7, 7, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+
+Demo 2 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 9, 3, 0, 0, 6, 9, 6, 0],
+ [3, 9, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Demo 2 OUTPUT (10x10):
+[[0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 9, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 0, 3, 0, 0, 6, 0, 6, 0],
+ [3, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Demo 3 INPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0],
+ [0, 0, 0, 6, 6, 0, 0, 6, 0, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 7, 7, 7, 7, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 7, 0, 6, 0, 0, 0],
+ [0, 0, 6, 7, 0, 7, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Demo 3 OUTPUT (12x12):
+[[0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0],
+ [0, 0, 0, 6, 6, 0, 0, 6, 0, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+TEST INPUT (12x13):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 4, 4, 4, 0, 2, 0, 0],
+ [0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 9, 0, 0, 0, 0, 0, 8, 0, 0, 0],
+ [0, 9, 0, 0, 9, 0, 0, 0, 0, 0, 8, 0, 0],
+ [0, 9, 7, 7, 9, 0, 0, 2, 0, 0, 2, 8, 0],
+ [0, 9, 0, 7, 9, 0, 0, 0, 0, 2, 8, 0, 0],
+ [0, 9, 7, 0, 9, 0, 0, 0, 0, 8, 0, 0, 0]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 4, 4, 4, 6, 6, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 7, 7, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+your function returned:
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 4, 4, 4, 6, 6, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 7, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 7, 0, 0, 0, 0],
+ [0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+
+Demo 2: expected OUTPUT (10x10):
+[[0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 9, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 0, 3, 0, 0, 6, 0, 6, 0],
+ [3, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+your function returned:
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 9, 3, 0, 0, 6, 9, 6, 0],
+ [3, 9, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Previous code:
+```python
+def transform(grid):
+    h, w = grid.shape
+    out = grid.copy()
+    seen = np.zeros((h, w), dtype=bool)
+
+    dirs = {
+        "up": (-1, 0),
+        "down": (1, 0),
+        "left": (0, -1),
+        "right": (0, 1),
+    }
+
+    comps = []
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] == 0 or seen[r, c]:
+                continue
+            color = grid[r, c]
+            stack = [(r, c)]
+            seen[r, c] = True
+            cells = []
+            while stack:
+                rr, cc = stack.pop()
+                cells.append((rr, cc))
+                for dr, dc in dirs.values():
+                    nr, nc = rr + dr, cc + dc
+                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] == color:
+                        seen[nr, nc] = True
+                        stack.append((nr, nc))
+            comps.append((color, cells))
+
+    def available_from(tip, dname):
+        dr, dc = dirs[dname]
+        r, c = tip[0] + dr, tip[1] + dc
+        n = 0
+        while 0 <= r < h and 0 <= c < w:
+            n += 1
+            r += dr
+            c += dc
+        return n
+
+    def slice_width(cellset, dname, offset):
+        if dname == "up":
+            row = min(r for r, _ in cellset) + offset
+            return sum(1 for r, _ in cellset if r == row)
+        if dname == "down":
+            row = max(r for r, _ in cellset) - offset
+            return sum(1 for r, _ in cellset if r == row)
+        if dname == "left":
+            col = min(c for _, c in cellset) + offset
+            return sum(1 for _, c in cellset if c == col)
+        col = max(c for _, c in cellset) - offset
+        return sum(1 for _, c in cellset if c == col)
+
+    actions = []
+    for color, cells in comps:
+        rs = [r for r, _ in cells]
+        cs = [c for _, c in cells]
+        r0, r1 = min(rs), max(rs)
+        c0, c1 = min(cs), max(cs)
+
+        foreign = {}
+        for r in range(r0, r1 + 1):
+            for c in range(c0, c1 + 1):
+                v = grid[r, c]
+                if v != 0 and v != color:
+                    foreign.setdefault(v, []).append((r, c))
+
+        if not foreign:
+            continue
+
+        cellset = set(cells)
+        candidates = []
+
+        top = [(r, c) for r, c in cells if r == r0]
+        if len(top) == 1 and available_from(top[0], "up"):
+            candidates.append(("up", top[0]))
+
+        bottom = [(r, c) for r, c in cells if r == r1]
+        if len(bottom) == 1 and available_from(bottom[0], "down"):
+            candidates.append(("down", bottom[0]))
+
+        left = [(r, c) for r, c in cells if c == c0]
+        if len(left) == 1 and available_from(left[0], "left"):
+            candidates.append(("left", left[0]))
+
+        right = [(r, c) for r, c in cells if c == c1]
+        if len(right) == 1 and available_from(right[0], "right"):
+            candidates.append(("right", right[0]))
+
+        if not candidates:
+            continue
+
+        def score(item):
+            dname, tip = item
+            return (
+                slice_width(cellset, dname, 1),
+                slice_width(cellset, dname, 2),
+                slice_width(cellset, dname, 3),
+                available_from(tip, dname),
+            )
+
+        dname, tip = max(candidates, key=score)
+        actions.append((foreign, dname, tip))
+
+    for foreign, dname, tip in actions:
+        dr, dc = dirs[dname]
+        for fcolor, fcells in foreign.items():
+            for r, c in fcells:
+                out[r, c] = 0
+
+            remaining = len(fcells)
+            r, c = tip[0] + dr, tip[1] + dc
+            while remaining and 0 <= r < h and 0 <= c < w:
+                if out[r, c] == 0:
+                    out[r, c] = fcolor
+                    remaining -= 1
+                r += dr
+                c += dc
+
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h, w = grid.shape
+    out = grid.copy()
+
+    dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
+    seen = np.zeros((h, w), dtype=bool)
+    comps = []
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] == 0 or seen[r, c]:
+                continue
+            col = grid[r, c]
+            stack = [(r, c)]
+            seen[r, c] = True
+            cells = []
+            while stack:
+                rr, cc = stack.pop()
+                cells.append((rr, cc))
+                for dr, dc in dirs:
+                    nr, nc = rr + dr, cc + dc
+                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] == col:
+                        seen[nr, nc] = True
+                        stack.append((nr, nc))
+            comps.append((col, cells))
+
+    def line_capacity(tip, d):
+        dr, dc = d
+        r, c = tip[0] + dr, tip[1] + dc
+        n = 0
+        while 0 <= r < h and 0 <= c < w:
+            n += 1
+            r += dr
+            c += dc
+        return n
+
+    actions = []
+    for col, cells in comps:
+        if len(cells) < 2:
+            continue
+
+        rs = [r for r, _ in cells]
+        cs = [c for _, c in cells]
+        r0, r1 = min(rs), max(rs)
+        c0, c1 = min(cs), max(cs)
+
+        foreign = {}
+        for r in range(r0, r1 + 1):
+            for c in range(c0, c1 + 1):
+                v = grid[r, c]
+                if v != 0 and v != col:
+                    foreign.setdefault(v, []).append((r, c))
+        if not foreign:
+            continue
+
+        candidates = []
+        borders = [
+            ((-1, 0), [(r, c) for r, c in cells if r == r0]),
+            ((1, 0), [(r, c) for r, c in cells if r == r1]),
+            ((0, -1), [(r, c) for r, c in cells if c == c0]),
+            ((0, 1), [(r, c) for r, c in cells if c == c1]),
+        ]
+
+        for d, edge in borders:
+            if len(edge) == 1 and line_capacity(edge[0], d) > 0:
+                dr, dc = d
+                score = 0
+                for frs in foreign.values():
+                    for r, c in frs:
+                        score += (r - edge[0][0]) * dr + (c - edge[0][1]) * dc
+                candidates.append((score, line_capacity(edge[0], d), d, edge[0]))
+
+        if candidates:
+            candidates.sort()
+            _, _, d, tip = candidates[0]
+            actions.append((foreign, d, tip))
+
+    for foreign, d, tip in actions:
+        dr, dc = d
+        for fcol, fcells in foreign.items():
+            for r, c in fcells:
+                out[r, c] = 0
+
+            need = len(fcells)
+            r, c = tip[0] + dr, tip[1] + dc
+            while need and 0 <= r < h and 0 <= c < w:
+                if out[r, c] == 0:
+                    out[r, c] = fcol
+                    need -= 1
+                r += dr
+                c += dc
+
+    return out
+```
