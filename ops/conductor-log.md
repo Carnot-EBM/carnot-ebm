@@ -8130,3 +8130,4 @@ c |
 | 2026-06-10 01:21 UTC | WORLD-MODEL INDUCTION GENERALIZATION via EXECUTION | OK | Deliverable already exists in repo |
 | 2026-06-10 02:00 UTC | INCREMENTAL levels via execution-guided RE-INDUCTI | OK | 122 passed in 18.89s |
 | 2026-06-10 02:13 UTC | FOURTH ARC-AGI-3 game first-solve: solve level-1 o | OK | 95 passed in 11.95s |
+| 2026-06-10 02:25 UTC | ArcMemo SOLVE-transfer (self-learning MANDATE; ext | OK | 90 passed in 4.67s |
