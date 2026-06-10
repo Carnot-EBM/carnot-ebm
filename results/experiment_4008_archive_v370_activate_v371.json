@@ -1,0 +1,121 @@
+{
+  "activated_milestone": "2026.06.371",
+  "active_milestone_confirmed": true,
+  "active_roadmap_path": "research-roadmap.yaml",
+  "arc_module_import_results": {
+    "carnot.agentic.arc_agi3_action_efficiency": {
+      "error": null,
+      "import_ok": true
+    },
+    "carnot.agentic.arc_agi3_world_model": {
+      "error": null,
+      "import_ok": true
+    },
+    "carnot.agentic.arc_world_model_dsl": {
+      "error": null,
+      "import_ok": true
+    },
+    "carnot.agentic.arc_world_model_synth": {
+      "error": null,
+      "import_ok": true
+    }
+  },
+  "arc_modules_import_command": [
+    ".venv/bin/python",
+    "-c",
+    "import importlib, json, sys\nmods = ['carnot.agentic.arc_agi3_world_model', 'carnot.agentic.arc_world_model_synth', 'carnot.agentic.arc_world_model_dsl', 'carnot.agentic.arc_agi3_action_efficiency']\nout = {}\nfor mod in mods:\n    try:\n        importlib.import_module(mod)\n        out[mod] = {'import_ok': True, 'error': None}\n    except Exception as exc:\n        out[mod] = {'import_ok': False, 'error': repr(exc)}\nprint(json.dumps(out, sort_keys=True))\nsys.exit(0 if all(v['import_ok'] for v in out.values()) else 1)\n"
+  ],
+  "arc_modules_import_exit_code": 0,
+  "arc_modules_importable": true,
+  "archived_milestone": "2026.06.370",
+  "confirmation_still_owed_recorded": true,
+  "duration_s": 2077.811521,
+  "exclusion_manifest_parses": true,
+  "experiment_id": "exp4008",
+  "field_principles": {
+    "activated_milestone": "Confirms .371 is live so downstream tasks resolve.",
+    "arc_modules_importable": "BARE BOOL -- the 4 agentic ARC modules import so .371 can execute them.",
+    "archived_milestone": "Provenance -- which milestone was archived (2026.06.370).",
+    "confirmation_still_owed_recorded": "BARE BOOL -- exp3999 never executed, so exp4009 is the re-run.",
+    "duration_s": "Terminal-prefix verdict + aggregation substrate; no live compute markers.",
+    "exclusion_manifest_parses": "BARE BOOL -- the manifest still loads under yaml.safe_load.",
+    "gap4_deployed_recorded": "BARE BOOL -- Exp 4001 registered and reproduced ARC-2/ARC-1.",
+    "honest_verdict": "Terminal-prefix verdict + aggregation substrate; no live compute markers.",
+    "inference_substrate": "Terminal-prefix verdict + aggregation substrate; no live compute markers.",
+    "pretest_suite_green": "BARE BOOL -- the FULL tests/python suite is GREEN at completion; false would poison-skip.",
+    "quarantined_tests": "List of quarantined test file paths and failing test ids.",
+    "research_complete_yaml_parses": "BARE BOOL -- the colon-poison guard; the file still loads."
+  },
+  "full_pretest_suite_command": [
+    ".venv/bin/pytest",
+    "tests/python",
+    "-q",
+    "--no-header",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "addopts="
+  ],
+  "full_pretest_suite_exit_codes": [
+    -6
+  ],
+  "gap4_deployed_recorded": true,
+  "honest_verdict": "blocked_pretest_suite_failed_unquarantined",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "n_tasks_archived": 11,
+  "preconditions_checked": {
+    "active_milestone": "2026.06.371",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "confirmation_still_owed_recorded": true,
+    "exclusion_manifest_exists": true,
+    "exclusion_manifest_parsed": true,
+    "gap4_deployed_recorded": true,
+    "research_complete_yaml_exists": true,
+    "research_complete_yaml_parsed_after": true,
+    "research_complete_yaml_parsed_before": true
+  },
+  "pretest_suite_green": false,
+  "prior_milestone_verdicts_summary": "exp3997: missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3997_archive_v369_activate_v370.json\nexp3998: complete: gap4_deselection_coverage_0.4091_n11\nexp3999: complete: protocol_preregistered_pending_execution [CONFIRMATION_STILL_OWED_EXP4009]\nexp4000: complete: feedback_no_better_than_redraw_p1.0_FALSE_NEGATIVE_RISK\nexp4001: success: gap4_stack_registered_arc2_19of31_arc1_28of31_reproduced [GAP4_DEPLOYED_REGISTRATION_RECORDED]\nexp4002: complete: gap4_local_induction0.2581_pass20.4516_below_codex\nexp4003: complete: level_frontier_holds_r11l_L4_no_verifier_validated_candidate_advanced_the_level_total5\nexp4004: success: fourth_game_solved_su15-1944f8ab_at_action14\nexp4005: success: arcmemo_solve_transfer_v3_14to10_actions\nexp4006: complete: hardware_continuity_4006_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded\nexp4007: success: capstone_v370_gap4_PHASE_RAN_UNCONFIRMED_DECENTRALIZED_DEPLOYED_local_not_beats_vote_games4_levels5_arcmemo_transfer_win_missing1_flagged_skipped0",
+  "quarantined_tests": [],
+  "random_seed": 4008,
+  "reproducibility_checksum": "2bacfa5fd642bc552a11d7f9824e5a2ac52db316553d9d89ebdbb094f0afe2ce",
+  "research_complete_parse_command": [
+    ".venv/bin/python",
+    "-c",
+    "import yaml; yaml.safe_load(open('research-complete.yaml'))"
+  ],
+  "research_complete_parse_exit_code": 0,
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v370_to_v371_4008.v1",
+  "summary_command": [
+    ".venv/bin/python",
+    "scripts/summarize_artifact.py",
+    "results/experiment_3997_archive_v369_activate_v370.json",
+    "results/experiment_3998_gap4_deselection_coverage.json",
+    "results/experiment_3999_gap4_precision_confirmation_v2.json",
+    "results/experiment_4000_gap4_feedback_vs_redraw.json",
+    "results/experiment_4001_gap4_registration_offline_eval.json",
+    "results/experiment_4002_gap4_local_generator_arm.json",
+    "results/experiment_4003_scale_level_frontier.json",
+    "results/experiment_4004_fourth_game_explore_first.json",
+    "results/experiment_4005_arcmemo_solve_transfer_v3.json",
+    "results/experiment_4006_hardware_continuity.json",
+    "results/experiment_4007_capstone_v370.json"
+  ],
+  "summary_exit_code": 0,
+  "task_id": "exp4008-archive-v370-activate-v371",
+  "task_verdicts": {
+    "exp3997-archive-v369-activate-v370": "missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3997_archive_v369_activate_v370.json",
+    "exp3998-gap4-deselection-coverage": "complete: gap4_deselection_coverage_0.4091_n11",
+    "exp3999-gap4-precision-confirmation-v2": "complete: protocol_preregistered_pending_execution [CONFIRMATION_STILL_OWED_EXP4009]",
+    "exp4000-gap4-feedback-vs-redraw": "complete: feedback_no_better_than_redraw_p1.0_FALSE_NEGATIVE_RISK",
+    "exp4001-gap4-registration-offline-eval": "success: gap4_stack_registered_arc2_19of31_arc1_28of31_reproduced [GAP4_DEPLOYED_REGISTRATION_RECORDED]",
+    "exp4002-gap4-local-generator-arm": "complete: gap4_local_induction0.2581_pass20.4516_below_codex",
+    "exp4003-scale-level-frontier": "complete: level_frontier_holds_r11l_L4_no_verifier_validated_candidate_advanced_the_level_total5",
+    "exp4004-fourth-game-explore-first": "success: fourth_game_solved_su15-1944f8ab_at_action14",
+    "exp4005-arcmemo-solve-transfer-v3": "success: arcmemo_solve_transfer_v3_14to10_actions",
+    "exp4006-hardware-continuity": "complete: hardware_continuity_4006_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded",
+    "exp4007-capstone-v370": "success: capstone_v370_gap4_PHASE_RAN_UNCONFIRMED_DECENTRALIZED_DEPLOYED_local_not_beats_vote_games4_levels5_arcmemo_transfer_win_missing1_flagged_skipped0"
+  },
+  "v370_truth_summary": "GAP-4 phase ran; precision confirmation still owed after zero-call pending execution; GAP-4 stack deployed; local generator arm weak; fourth game and ArcMemo wins recorded"
+}
