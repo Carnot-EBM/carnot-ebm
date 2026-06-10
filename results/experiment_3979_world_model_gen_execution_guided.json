@@ -1,0 +1,356 @@
+{
+  "beats_exp3968": false,
+  "caveat": "Consistency energy certifies prediction trustworthiness on held-out transitions; it does not certify mechanistic understanding or interpretation. Report energy as the trustworthiness signal, not as understanding.",
+  "duration_s": 61.8,
+  "episodes": 32,
+  "exp3968_n_trustworthy_at_0.15": 0,
+  "experiment": "experiment_3979_world_model_gen_execution_guided",
+  "fresh_codex_used": false,
+  "games": [
+    "r11l",
+    "sc25",
+    "lp85",
+    "tn36",
+    "dc22",
+    "su15"
+  ],
+  "games_evaluated": [
+    "r11l",
+    "sc25",
+    "lp85",
+    "tn36",
+    "dc22",
+    "su15"
+  ],
+  "gap4_executed_consistency_gate": {
+    "exists": true,
+    "gate_applied_here": "candidate programs must exactly replay accepted observed transitions",
+    "prior_honest_verdict": "complete: gap4_positive_control_failed_auroc0.00",
+    "prior_positive_control_passed": false,
+    "source_artifact": "results/experiment_3975_gap4_execution_verifier_build.json"
+  },
+  "honest_verdict": "complete: exec_guided_trustworthy_0of6",
+  "inference_substrate": "offline_arc_agi3_execution_guided_program_synthesis_exact_replay_consistency_verified",
+  "iters": 3,
+  "markov_vs_hidden_split": {
+    "determinism_probe_hidden_state": [
+      "sc25",
+      "dc22"
+    ],
+    "determinism_probe_markov": [
+      "r11l",
+      "lp85",
+      "tn36",
+      "su15"
+    ],
+    "energy_high_or_missing": [
+      "r11l",
+      "sc25",
+      "lp85",
+      "tn36",
+      "dc22",
+      "su15"
+    ],
+    "energy_trustworthy_low": [],
+    "note": "The determinism split comes from results/arc3_determinism_probe.json. Consistency energy is reported as prediction trustworthiness, not understanding."
+  },
+  "n_games": 6,
+  "n_trustworthy_at_0.15": 0,
+  "no_gpu_used": true,
+  "per_game": [
+    {
+      "accepted_train_count": 899,
+      "best_energy": 0.9855,
+      "best_program": "relative_template_dsl",
+      "determinism_probe_hidden_state": false,
+      "diff_from_vc33_0.005": 0.9805,
+      "exp3968_best_energy": 0.7752,
+      "game": "r11l",
+      "history": [
+        {
+          "accepted": true,
+          "heldout_dynamics_accuracy": 0.0065,
+          "heldout_energy": 0.9935,
+          "iter": 0,
+          "program": "object_delta_dsl",
+          "synthesis_seconds": 0.0494,
+          "train_replay_exact": true,
+          "train_replay_misses": 0
+        },
+        {
+          "accepted": true,
+          "heldout_dynamics_accuracy": 0.0145,
+          "heldout_energy": 0.9855,
+          "iter": 1,
+          "program": "relative_template_dsl",
+          "synthesis_seconds": 0.0328,
+          "train_replay_exact": true,
+          "train_replay_misses": 0
+        }
+      ],
+      "improvement_over_exp3968": -0.2103,
+      "n_active": 899,
+      "n_test": 600,
+      "rejected_conflict_count": 0,
+      "synthesis_calls": 2,
+      "synthesis_seconds": 0.0822,
+      "trustworthy": false
+    },
+    {
+      "accepted_train_count": 890,
+      "best_energy": 0.8418,
+      "best_program": "relative_template_dsl",
+      "determinism_probe_hidden_state": true,
+      "diff_from_vc33_0.005": 0.8368,
+      "exp3968_best_energy": 0.6155,
+      "game": "sc25",
+      "history": [
+        {
+          "accepted": true,
+          "heldout_dynamics_accuracy": 0.0388,
+          "heldout_energy": 0.9612,
+          "iter": 0,
+          "program": "object_delta_dsl",
+          "synthesis_seconds": 0.0302,
+          "train_replay_exact": true,
+          "train_replay_misses": 0
+        },
+        {
+          "accepted": true,
+          "heldout_dynamics_accuracy": 0.1582,
+          "heldout_energy": 0.8418,
+          "iter": 1,
+          "program": "relative_template_dsl",
+          "synthesis_seconds": 0.0243,
+          "train_replay_exact": true,
+          "train_replay_misses": 0
+        }
+      ],
+      "improvement_over_exp3968": -0.2263,
+      "n_active": 899,
+      "n_test": 294,
+      "rejected_conflict_count": 9,
+      "synthesis_calls": 2,
+      "synthesis_seconds": 0.0545,
+      "trustworthy": false
+    },
+    {
+      "accepted_train_count": 899,
+      "best_energy": 0.9979,
+      "best_program": "relative_template_dsl",
+      "determinism_probe_hidden_state": false,
+      "diff_from_vc33_0.005": 0.9929,
+      "exp3968_best_energy": 0.7996,
+      "game": "lp85",
+      "history": [
+        {
+          "accepted": true,
+          "heldout_dynamics_accuracy": 0.0,
+          "heldout_energy": 1.0,
+          "iter": 0,
+          "program": "object_delta_dsl",
+          "synthesis_seconds": 0.0237,
+          "train_replay_exact": true,
+          "train_replay_misses": 0
+        },
+        {
+          "accepted": true,
+          "heldout_dynamics_accuracy": 0.0021,
+          "heldout_energy": 0.9979,
+          "iter": 1,
+          "program": "relative_template_dsl",
+          "synthesis_seconds": 0.0141,
+          "train_replay_exact": true,
+          "train_replay_misses": 0
+        }
+      ],
+      "improvement_over_exp3968": -0.1983,
+      "n_active": 899,
+      "n_test": 34,
+      "rejected_conflict_count": 0,
+      "synthesis_calls": 2,
+      "synthesis_seconds": 0.0378,
+      "trustworthy": false
+    },
+    {
+      "accepted_train_count": 899,
+      "best_energy": 0.9813,
+      "best_program": "object_delta_dsl",
+      "determinism_probe_hidden_state": false,
+      "diff_from_vc33_0.005": 0.9763,
+      "exp3968_best_energy": 0.2359,
+      "game": "tn36",
+      "history": [
+        {
+          "accepted": true,
+          "heldout_dynamics_accuracy": 0.0187,
+          "heldout_energy": 0.9813,
+          "iter": 0,
+          "program": "object_delta_dsl",
+          "synthesis_seconds": 0.8967,
+          "train_replay_exact": true,
+          "train_replay_misses": 0
+        },
+        {
+          "accepted": true,
+          "heldout_dynamics_accuracy": 0.014,
+          "heldout_energy": 0.986,
+          "iter": 1,
+          "program": "relative_template_dsl",
+          "synthesis_seconds": 0.0392,
+          "train_replay_exact": true,
+          "train_replay_misses": 0
+        }
+      ],
+      "improvement_over_exp3968": -0.7454,
+      "n_active": 899,
+      "n_test": 600,
+      "rejected_conflict_count": 0,
+      "synthesis_calls": 2,
+      "synthesis_seconds": 0.9358,
+      "trustworthy": false
+    },
+    {
+      "accepted_train_count": 899,
+      "best_energy": 0.9721,
+      "best_program": "object_delta_dsl",
+      "determinism_probe_hidden_state": true,
+      "diff_from_vc33_0.005": 0.9671,
+      "exp3968_best_energy": 0.7616,
+      "game": "dc22",
+      "history": [
+        {
+          "accepted": true,
+          "heldout_dynamics_accuracy": 0.0279,
+          "heldout_energy": 0.9721,
+          "iter": 0,
+          "program": "object_delta_dsl",
+          "synthesis_seconds": 0.536,
+          "train_replay_exact": true,
+          "train_replay_misses": 0
+        },
+        {
+          "accepted": true,
+          "heldout_dynamics_accuracy": 0.0268,
+          "heldout_energy": 0.9732,
+          "iter": 1,
+          "program": "relative_template_dsl",
+          "synthesis_seconds": 0.034,
+          "train_replay_exact": true,
+          "train_replay_misses": 0
+        }
+      ],
+      "improvement_over_exp3968": -0.2105,
+      "n_active": 899,
+      "n_test": 600,
+      "rejected_conflict_count": 0,
+      "synthesis_calls": 2,
+      "synthesis_seconds": 0.57,
+      "trustworthy": false
+    },
+    {
+      "accepted_train_count": 896,
+      "best_energy": 1.0,
+      "best_program": "object_delta_dsl",
+      "determinism_probe_hidden_state": false,
+      "diff_from_vc33_0.005": 0.995,
+      "exp3968_best_energy": 0.214,
+      "game": "su15",
+      "history": [
+        {
+          "accepted": true,
+          "heldout_dynamics_accuracy": 0.0,
+          "heldout_energy": 1.0,
+          "iter": 0,
+          "program": "object_delta_dsl",
+          "synthesis_seconds": 1.5711,
+          "train_replay_exact": true,
+          "train_replay_misses": 0
+        },
+        {
+          "accepted": true,
+          "heldout_dynamics_accuracy": 0.0,
+          "heldout_energy": 1.0,
+          "iter": 1,
+          "program": "relative_template_dsl",
+          "synthesis_seconds": 0.0348,
+          "train_replay_exact": true,
+          "train_replay_misses": 0
+        }
+      ],
+      "improvement_over_exp3968": -0.786,
+      "n_active": 899,
+      "n_test": 600,
+      "rejected_conflict_count": 3,
+      "synthesis_calls": 2,
+      "synthesis_seconds": 1.6059,
+      "trustworthy": false
+    }
+  ],
+  "per_game_best_energy": {
+    "dc22": 0.9721,
+    "lp85": 0.9979,
+    "r11l": 0.9855,
+    "sc25": 0.8418,
+    "su15": 1.0,
+    "tn36": 0.9813
+  },
+  "positive_control": {
+    "accepted_train_count": 899,
+    "best_energy": 0.0094,
+    "best_program": "cached_verified_vc33_program",
+    "cached_vc33_seed_used": true,
+    "game": "vc33",
+    "history": [
+      {
+        "accepted": true,
+        "heldout_dynamics_accuracy": 0.9906,
+        "heldout_energy": 0.0094,
+        "iter": 0,
+        "program": "cached_verified_vc33_program",
+        "synthesis_seconds": 0.1305,
+        "train_replay_exact": true,
+        "train_replay_misses": 0
+      },
+      {
+        "accepted": true,
+        "heldout_dynamics_accuracy": 0.0,
+        "heldout_energy": 1.0,
+        "iter": 1,
+        "program": "object_delta_dsl",
+        "synthesis_seconds": 1.0045,
+        "train_replay_exact": true,
+        "train_replay_misses": 0
+      },
+      {
+        "accepted": true,
+        "heldout_dynamics_accuracy": 0.0116,
+        "heldout_energy": 0.9884,
+        "iter": 2,
+        "program": "relative_template_dsl",
+        "synthesis_seconds": 0.0257,
+        "train_replay_exact": true,
+        "train_replay_misses": 0
+      }
+    ],
+    "rejected_conflict_count": 0,
+    "threshold": 0.05
+  },
+  "positive_control_passed": true,
+  "positive_control_threshold": 0.05,
+  "random_seed": 0,
+  "source_artifacts": [
+    "results/experiment_3968_active_codex_nonspatial_sweep.json",
+    "results/experiment_3975_gap4_execution_verifier_build.json",
+    "results/arc3_m2_active_codex.json",
+    "results/arc3_determinism_probe.json"
+  ],
+  "submitted_to_leaderboard": false,
+  "test_budget": 1400,
+  "title": "execution_guided_world_model_synthesis_nonspatial_sweep",
+  "total_synthesis_calls": 15,
+  "total_synthesis_seconds": 4.4469,
+  "train_budget": 900,
+  "trust_threshold": 0.15,
+  "vc33_baseline_energy": 0.005
+}

@@ -1,0 +1,454 @@
+{
+  "bootstrap": {
+    "B": 1000,
+    "gated_vs_union_pass2_ci95": [
+      0.0,
+      0.0968
+    ],
+    "gated_vs_vote_pass2_ci95": [
+      0.0,
+      0.0
+    ]
+  },
+  "decentralization_note": "Closed-weight generator (gpt-5.5) used as the escalation-tier inducer per the M2-v3 precedent; deployment tier targets a local open-weight inducer (Gemma-4/Qwen3.6 GGUF). The verifier side (demo-fit + execution + rerank) is fully local and model-free.",
+  "duration_s": 1653.7,
+  "experiment": "arc3_gap4_arc2_rule_exec_verifier",
+  "gates": {
+    "coverage_demo_perfect": 0.5161,
+    "headroom_capture_fraction": 0.0,
+    "headroom_recovered": 0,
+    "selection_beats_union": true,
+    "selection_beats_vote": false,
+    "vote_wins_lost": 0
+  },
+  "generator": {
+    "data_handling_class": "minimize (public ARC demo grids + test input only)",
+    "iters_per_task_max": 3,
+    "model": "gpt-5.5 via codex exec (reasoning_effort=medium)",
+    "total_codex_calls": 56,
+    "total_codex_seconds": 5780.4
+  },
+  "headroom_recovered_tasks": [],
+  "honest_verdict": "complete: gap4_rule_exec_does_not_beat_vote_n31_vote_0.0645_gated_0.0645_recovered_0_lost_0_demoperfect_16of31",
+  "inference_substrate": "codex_program_induction_plus_offline_trm_candidate_rerank_no_oracle",
+  "n_oracle_hit": 4,
+  "n_tasks": 31,
+  "n_unique_tasks": 23,
+  "no_gpu_used": true,
+  "no_oracle_audit": "The codex prompt contains demo pairs + the test INPUT only \u2014 never the test gold and never the candidate pool. Programs are verified on demos (public context); the gated ranker overrides vote ONLY on demo_fit==1.0 AND exact candidate match of the executed output; otherwise it IS vote. 'correct' labels score rankings post-hoc.",
+  "oracle_pass2_ceiling": 0.129,
+  "per_task": [
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 0,
+      "n_cands": 1001,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "13e47133",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 1,
+      "n_cands": 1001,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "13e47133",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.6667,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 2,
+      "n_cands": 999,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "a6f40cea",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 3,
+      "n_cands": 403,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "aa4ec2a5",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 4,
+      "n_cands": 315,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "9aaea919",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 5,
+      "n_cands": 1000,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "16b78196",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 6,
+      "n_cands": 295,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "d8e07eb2",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 7,
+      "n_cands": 242,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "d8e07eb2",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.6667,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 8,
+      "n_cands": 503,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "28a6681f",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 9,
+      "n_cands": 171,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "3dc255db",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 10,
+      "n_cands": 642,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "2b83f449",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.3333,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 11,
+      "n_cands": 1001,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "6ffbe589",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 12,
+      "n_cands": 68,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "7b80bb43",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 13,
+      "n_cands": 642,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "58490d8a",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 14,
+      "n_cands": 776,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "2d0172a1",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 15,
+      "n_cands": 524,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "2d0172a1",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.5,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 16,
+      "n_cands": 957,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "21897d95",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.5,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 17,
+      "n_cands": 990,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "21897d95",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 18,
+      "n_cands": 851,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "6e453dd6",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 19,
+      "n_cands": 333,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "b9e38dc0",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 20,
+      "n_cands": 876,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "58f5dbd5",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 21,
+      "n_cands": 953,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "b10624e5",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 22,
+      "n_cands": 1000,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "446ef5d2",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 23,
+      "n_cands": 988,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "446ef5d2",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 24,
+      "n_cands": 328,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "269e22fb",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 25,
+      "n_cands": 518,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "269e22fb",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.3333,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 26,
+      "n_cands": 550,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "2c181942",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.3333,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 27,
+      "n_cands": 340,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "dd6b8c4b",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.3333,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 28,
+      "n_cands": 428,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "dd6b8c4b",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.5,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 29,
+      "n_cands": 839,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "3a25b0d8",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.5,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 30,
+      "n_cands": 845,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "pred_is_gold": false,
+      "task": "3a25b0d8",
+      "vote_top2": false
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "codex_cli"
+    },
+    {
+      "available": true,
+      "resource": "eval_pool"
+    }
+  ],
+  "random_ranker_pass2_baseline": 0.0014,
+  "random_seed": 12345,
+  "rankers": {
+    "EXEC_PURE": {
+      "pass@1": 0.0323,
+      "pass@2": 0.0323
+    },
+    "GAP4_GATED": {
+      "pass@1": 0.0323,
+      "pass@2": 0.0645
+    },
+    "GAP4_GRADED": {
+      "pass@1": 0.0645,
+      "pass@2": 0.0645
+    },
+    "TRM_VOTE": {
+      "pass@1": 0.0323,
+      "pass@2": 0.0645
+    },
+    "UNION_plus_exec": {
+      "pass@1": 0.0323,
+      "pass@2": 0.0323
+    },
+    "UNION_votes_qmean_voteshare": {
+      "pass@1": 0.0323,
+      "pass@2": 0.0323
+    }
+  },
+  "title": "GAP-4: program-induction + execution-consistency verifier vs TRM frequency vote",
+  "vote_wins_lost_tasks": []
+}

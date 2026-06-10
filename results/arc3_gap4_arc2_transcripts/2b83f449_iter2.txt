@@ -1,0 +1,278 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (13x19):
+[[3, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 7, 7, 7, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 7, 7, 7, 0, 0, 7, 7, 7, 0, 0, 0, 0, 7, 7, 7, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0],
+ [8, 8, 0, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 1 OUTPUT (13x19):
+[[8, 8, 8, 8, 6, 8, 8, 0, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 8],
+ [0, 0, 0, 8, 6, 8, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0],
+ [3, 3, 8, 8, 6, 8, 6, 8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 8],
+ [0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0],
+ [8, 8, 8, 6, 8, 8, 6, 8, 6, 8, 8, 8, 8, 6, 8, 6, 8, 8, 8],
+ [0, 0, 8, 6, 8, 0, 0, 8, 6, 8, 0, 0, 0, 0, 8, 6, 8, 0, 0],
+ [3, 3, 8, 6, 8, 6, 8, 8, 6, 8, 8, 6, 8, 8, 8, 6, 8, 3, 3],
+ [0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 6, 8, 8, 6, 8, 8, 6, 8, 8, 3, 0, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8],
+ [0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0],
+ [8, 8, 0, 3, 8, 6, 8, 8, 0, 3, 8, 8, 8, 6, 8, 8, 8, 8, 3]]
+
+Demo 2 INPUT (11x16):
+[[3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 2 OUTPUT (11x16):
+[[8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 3, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 6, 8, 8, 8],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0],
+ [8, 8, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 6, 8, 3, 3],
+ [0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 6, 8, 8, 8, 8],
+ [0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0],
+ [3, 3, 8, 6, 8, 8, 8, 6, 8, 8, 8, 6, 8, 8, 3, 3],
+ [0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 3]]
+
+TEST INPUT (19x17):
+[[3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0],
+ [8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (13x19):
+[[8, 8, 8, 8, 6, 8, 8, 0, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 8],
+ [0, 0, 0, 8, 6, 8, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0],
+ [3, 3, 8, 8, 6, 8, 6, 8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 8],
+ [0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0],
+ [8, 8, 8, 6, 8, 8, 6, 8, 6, 8, 8, 8, 8, 6, 8, 6, 8, 8, 8],
+ [0, 0, 8, 6, 8, 0, 0, 8, 6, 8, 0, 0, 0, 0, 8, 6, 8, 0, 0],
+ [3, 3, 8, 6, 8, 6, 8, 8, 6, 8, 8, 6, 8, 8, 8, 6, 8, 3, 3],
+ [0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 6, 8, 8, 6, 8, 8, 6, 8, 8, 3, 0, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8],
+ [0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0],
+ [8, 8, 0, 3, 8, 6, 8, 8, 0, 3, 8, 8, 8, 6, 8, 8, 8, 8, 3]]
+your function returned:
+[[8, 8, 8, 3, 6, 3, 3, 0, 3, 3, 6, 3, 8, 8, 8, 8, 8, 8, 8],
+ [0, 0, 0, 8, 6, 8, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 3, 6, 3, 6, 3, 8, 3, 6, 3, 3, 6, 3, 8, 8, 8, 8],
+ [0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0],
+ [8, 8, 3, 6, 3, 3, 6, 3, 6, 3, 8, 8, 3, 6, 3, 6, 3, 8, 8],
+ [0, 0, 8, 6, 8, 0, 0, 8, 6, 8, 0, 0, 0, 0, 8, 6, 8, 0, 0],
+ [8, 8, 3, 6, 3, 6, 3, 3, 6, 3, 3, 6, 3, 8, 3, 6, 3, 8, 8],
+ [0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 3, 6, 3, 3, 6, 3, 3, 6, 3, 8, 3, 0, 3, 8, 8],
+ [0, 0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 3, 6, 3, 3, 6, 3, 8, 8, 3, 6, 3, 8, 8, 8, 8],
+ [0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0],
+ [8, 3, 0, 3, 3, 6, 3, 3, 0, 3, 8, 8, 3, 6, 3, 8, 8, 8, 8]]
+
+Demo 2: expected OUTPUT (11x16):
+[[8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 3, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 6, 8, 8, 8],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0],
+ [8, 8, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 6, 8, 3, 3],
+ [0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 6, 8, 8, 8, 8],
+ [0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0],
+ [3, 3, 8, 6, 8, 8, 8, 6, 8, 8, 8, 6, 8, 8, 3, 3],
+ [0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 3]]
+your function returned:
+[[8, 8, 8, 3, 6, 3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 3, 6, 3, 8, 8, 8, 8, 8, 3, 6, 3, 8, 8],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0],
+ [8, 8, 8, 8, 8, 3, 6, 3, 8, 8, 8, 3, 6, 3, 8, 8],
+ [0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 3, 6, 3, 3, 6, 3, 8, 8, 3, 6, 3, 8, 8, 8],
+ [0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0],
+ [8, 8, 3, 6, 3, 8, 3, 6, 3, 8, 3, 6, 3, 8, 8, 8],
+ [0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 8, 8, 3, 6, 3, 8, 8, 8, 8, 8, 8, 8]]
+
+Previous code:
+```python
+def transform(grid):
+    out = grid.copy()
+    h, w = out.shape
+
+    # Convert each 7-7-7 bridge into a vertical 6 line with 8 rails beside it.
+    centers_by_even_row = {}
+    for r in range(h):
+        c = 0
+        while c < w:
+            if grid[r, c] == 7:
+                start = c
+                while c < w and grid[r, c] == 7:
+                    c += 1
+                end = c
+                if end - start == 3:
+                    mid = start + 1
+                    for cc in range(start, end):
+                        out[r, cc] = 6 if cc == mid else 8
+                    for rr in (r - 1, r + 1):
+                        if 0 <= rr < h and grid[rr, mid] != 0:
+                            out[rr, mid] = 6
+                            centers_by_even_row.setdefault(rr, []).append(mid)
+                continue
+            c += 1
+
+    # Endpoint color 3 marks the loose horizontal rail ends after the vertical
+    # connectors split each rail. Existing 0 gaps also split rails.
+    for r in range(0, h, 2):
+        split_cols = sorted(set(centers_by_even_row.get(r, [])) | set(np.where(grid[r] == 0)[0]))
+        bounds = [-1] + split_cols + [w]
+        for a, b in zip(bounds, bounds[1:]):
+            lo, hi = a + 1, b - 1
+            if lo > hi:
+                continue
+
+            touches_left = (a == -1)
+            touches_right = (b == w)
+
+            if touches_left and grid[r, lo] == 3:
+                out[r, lo] = 8
+            if touches_right and grid[r, hi] == 3:
+                out[r, hi] = 8
+
+            if not touches_left and grid[r, lo] != 0:
+                out[r, lo] = 3
+            if not touches_right and grid[r, hi] != 0:
+                out[r, hi] = 3
+
+    # In the examples, left-edge terminals that remain open are doubled.
+    for r in range(0, h - 1, 2):
+        if out[r, 0] == 3 and w > 1 and out[r, 1] == 8:
+            out[r, 1] = 3
+
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    out = grid.copy()
+    h, w = out.shape
+
+    out[out == 3] = 8
+    centers = {}
+
+    for r in range(h):
+        c = 0
+        while c < w:
+            if grid[r, c] == 7:
+                start = c
+                while c < w and grid[r, c] == 7:
+                    c += 1
+                if c - start == 3:
+                    mid = start + 1
+                    centers.setdefault(r, []).append(mid)
+                    for cc in range(start, c):
+                        out[r, cc] = 6 if cc == mid else 8
+                    for rr in (r - 1, r + 1):
+                        if 0 <= rr < h and grid[rr, mid] != 0:
+                            out[rr, mid] = 6
+                continue
+            c += 1
+
+    for r in range(0, h, 2):
+        c = 0
+        while c < w:
+            if grid[r, c] == 0:
+                c += 1
+                continue
+
+            lo = c
+            while c < w and grid[r, c] != 0:
+                c += 1
+            hi = c - 1
+
+            above = [x for x in centers.get(r - 1, []) if lo <= x <= hi and grid[r, x] != 0]
+            below = [x for x in centers.get(r + 1, []) if lo <= x <= hi and grid[r, x] != 0]
+
+            sides = []
+            doubled = bool(above and below)
+
+            if above and below:
+                mina, maxa = min(above), max(above)
+                minb, maxb = min(below), max(below)
+
+                if mina < minb and maxa > maxb:
+                    sides = ["left", "right"]
+                elif mina > minb and maxa < maxb:
+                    sides = []
+                elif mina < minb and maxa <= maxb:
+                    sides = ["left"]
+                elif mina >= minb and maxa > maxb:
+                    sides = ["right"]
+
+            elif above and not below:
+                sides = ["left"]
+                if hi == w - 1:
+                    sides.append("right")
+
+            elif not above and not below:
+                if grid[r, lo] == 3:
+                    sides.append("left")
+                if hi != lo and grid[r, hi] == 3:
+                    sides.append("right")
+
+            for side in sides:
+                if side == "left":
+                    out[r, lo] = 3
+                    if doubled and lo == 0 and hi == w - 1 and lo + 1 <= hi:
+                        out[r, lo + 1] = 3
+                else:
+                    out[r, hi] = 3
+                    if doubled and lo == 0 and hi == w - 1 and hi - 1 >= lo:
+                        out[r, hi - 1] = 3
+
+    return out
+```

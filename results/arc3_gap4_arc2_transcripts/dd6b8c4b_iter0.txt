@@ -1,0 +1,159 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 6, 6, 6, 6, 6, 6, 6, 9, 9, 7],
+ [7, 6, 9, 9, 7, 7, 7, 6, 9, 9, 7],
+ [7, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
+ [7, 7, 7, 6, 3, 3, 3, 6, 7, 7, 7],
+ [7, 7, 7, 6, 3, 2, 3, 6, 7, 9, 7],
+ [7, 9, 7, 6, 3, 3, 3, 6, 7, 7, 7],
+ [9, 9, 7, 6, 6, 7, 6, 6, 6, 6, 7],
+ [7, 7, 7, 6, 7, 7, 7, 9, 9, 6, 7],
+ [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+Demo 1 OUTPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 6, 6, 6, 6, 6, 6, 6, 9, 9, 7],
+ [7, 6, 9, 9, 7, 7, 7, 6, 9, 9, 7],
+ [7, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
+ [7, 7, 7, 6, 9, 9, 3, 6, 7, 7, 7],
+ [7, 7, 7, 6, 3, 2, 3, 6, 7, 9, 7],
+ [7, 9, 7, 6, 3, 3, 3, 6, 7, 7, 7],
+ [9, 9, 7, 6, 6, 7, 6, 6, 6, 6, 7],
+ [7, 7, 7, 6, 7, 7, 7, 7, 7, 6, 7],
+ [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+
+Demo 2 INPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 9, 7, 7, 9],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9],
+ [9, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6],
+ [7, 7, 7, 6, 3, 3, 3, 6, 9, 7, 7],
+ [7, 7, 9, 6, 3, 2, 3, 6, 7, 7, 7],
+ [7, 7, 7, 6, 3, 3, 3, 6, 7, 9, 7],
+ [7, 7, 7, 6, 7, 7, 7, 6, 7, 7, 7],
+ [7, 9, 7, 6, 7, 9, 7, 6, 7, 7, 7],
+ [7, 7, 9, 6, 7, 9, 7, 6, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+Demo 2 OUTPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 9, 7, 7, 9],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9],
+ [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6],
+ [7, 7, 7, 6, 9, 9, 9, 6, 7, 7, 7],
+ [7, 7, 7, 6, 9, 9, 9, 6, 7, 7, 7],
+ [7, 7, 7, 6, 9, 9, 9, 6, 7, 7, 7],
+ [7, 7, 7, 6, 7, 7, 7, 6, 7, 7, 7],
+ [7, 7, 7, 6, 7, 7, 7, 6, 7, 7, 7],
+ [7, 7, 7, 6, 7, 7, 7, 6, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+
+Demo 3 INPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 7],
+ [7, 7, 9, 7, 7, 7, 7, 7, 7, 7, 9],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 3, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 2, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 3, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 9, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+Demo 3 OUTPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 9, 9, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 2, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 3, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+
+TEST INPUT (11x11):
+[[6, 6, 9, 7, 7, 7, 7, 7, 9, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [9, 6, 9, 7, 7, 7, 7, 7, 9, 6, 7],
+ [7, 6, 7, 6, 6, 7, 6, 6, 7, 6, 9],
+ [7, 6, 7, 6, 3, 3, 3, 6, 7, 6, 7],
+ [7, 6, 7, 7, 3, 2, 3, 7, 7, 6, 9],
+ [7, 6, 7, 6, 3, 3, 3, 6, 7, 6, 7],
+ [7, 6, 7, 6, 6, 7, 6, 6, 7, 6, 9],
+ [7, 6, 9, 7, 7, 9, 7, 7, 9, 6, 7],
+ [7, 6, 6, 6, 6, 6, 6, 6, 7, 6, 6],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    out = grid.copy()
+    h, w = grid.shape
+
+    pos2 = np.argwhere(grid == 2)[0]
+    cr, cc = int(pos2[0]), int(pos2[1])
+
+    # Find the 3-colored object containing/around the 2.
+    obj = set()
+    for r in range(max(0, cr - 1), min(h, cr + 2)):
+        for c in range(max(0, cc - 1), min(w, cc + 2)):
+            if grid[r, c] in (2, 3):
+                obj.add((r, c))
+
+    dirs = [(-1, -1), (-1, 0), (-1, 1),
+            (0, -1),           (0, 1),
+            (1, -1),  (1, 0),  (1, 1)]
+
+    def line_has_9(dr, dc):
+        r, c = cr + dr, cc + dc
+        seen6 = False
+        while 0 <= r < h and 0 <= c < w:
+            if grid[r, c] == 6:
+                seen6 = True
+            elif grid[r, c] == 9:
+                return True, seen6
+            r += dr
+            c += dc
+        return False, seen6
+
+    hits = []
+    blocked_hits = []
+    for dr, dc in dirs:
+        hit, through6 = line_has_9(dr, dc)
+        if hit:
+            hits.append((dr, dc))
+            if through6:
+                blocked_hits.append((dr, dc))
+
+    # Remove 9s that are embedded in the 6-structure: they are cues, not final marks.
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] == 9:
+                neigh6 = False
+                for dr, dc in dirs:
+                    rr, cc2 = r + dr, c + dc
+                    if 0 <= rr < h and 0 <= cc2 < w and grid[rr, cc2] == 6:
+                        neigh6 = True
+                        break
+                if neigh6:
+                    out[r, c] = 7
+
+    # Paint the 3x3 object positions indicated by visible 9 cues.
+    paint = blocked_hits if blocked_hits else hits
+    for dr, dc in paint:
+        rr, cc2 = cr + dr, cc + dc
+        if (rr, cc2) in obj:
+            out[rr, cc2] = 9
+
+    return out
+```

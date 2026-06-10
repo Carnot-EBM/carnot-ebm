@@ -61,6 +61,37 @@ def test_sandbox_allows_numpy_internal_lazy_imports():
     assert out is not None and out.shape == (1, 5)
 
 
+def test_sandbox_blocks_numpy_io_and_type_vectors():
+    # SCENARIO (panel hardening, corrigendum_2026_06_10_gap4): np file-IO and type( escape vectors
+    # must be rejected at the token level.
+    for bad in [
+        "def transform(g):\n    return np.load('/tmp/x.npy')",
+        "def transform(g):\n    np.save('/tmp/x', g)\n    return g",
+        "def transform(g):\n    return np.fromfile('/etc/passwd', dtype=np.int64)[:4].reshape(2,2)",
+        "def transform(g):\n    return type(g).__mro__[1]",
+    ]:
+        assert safe_transform_from_code(bad) is None
+
+
+def test_sandbox_times_out_runaway_program():
+    # SCENARIO (panel hardening): a runaway loop must abandon the call within EXEC_TIMEOUT_S and
+    # abstain (None), not hang the run. Uses a long finite loop ('while True' would also be caught
+    # by the timeout, but a bounded loop keeps the leaked thread short-lived).
+    fn = safe_transform_from_code(
+        "def transform(grid):\n"
+        "    x = 0\n"
+        "    for i in range(10**10):\n"
+        "        x += i\n"
+        "    return grid\n"
+    )
+    import time as _t
+
+    t0 = _t.time()
+    out = fn(np.ones((3, 3), dtype=int))
+    assert out is None
+    assert _t.time() - t0 < 30  # well-bounded: EXEC_TIMEOUT_S=5 plus overhead
+
+
 def test_demo_fit_gate():
     # SCENARIO: demo_fit is the oracle-free verification — only exact reproduction of every demo
     # output counts; a near-miss program must NOT reach 1.0.

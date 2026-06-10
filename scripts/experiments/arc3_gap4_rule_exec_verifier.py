@@ -100,6 +100,19 @@ _FORBIDDEN = (
     "setattr(",
     "globals(",
     "locals(",
+    # 2026-06-10 hardening per the GAP-4 adversarial panel (corrigendum_2026_06_10_gap4):
+    "type(",
+    "np.load",
+    "np.save",
+    "np.fromfile",
+    "np.memmap",
+    "np.DataSource",
+    "numpy.load",
+    "numpy.save",
+    ".tofile",
+)
+EXEC_TIMEOUT_S = (
+    5.0  # per-call wall-clock cap (panel hardening); ARC transforms run in microseconds
 )
 _SAFE_BUILTIN_NAMES = [
     "range",
@@ -165,16 +178,33 @@ def safe_transform_from_code(code: str):
     if not callable(fn):
         return None
 
+    def _call(grid):
+        return np.asarray(fn(np.asarray(grid, dtype=np.int64).copy()), dtype=np.int64)
+
     def wrapped(grid):
+        # Timeout per the panel hardening: a runaway loop in an induced program must abandon the
+        # call, not hang the run. Thread-abandonment is a CONTAINMENT measure, not isolation (the
+        # stuck thread leaks until process exit) — full subprocess isolation is the 400-task-run
+        # protocol; legit ARC transforms finish in microseconds so 5s is generous.
+        from concurrent.futures import ThreadPoolExecutor as _TPE
+        from concurrent.futures import TimeoutError as _Timeout
+
+        _ex = _TPE(max_workers=1)
         try:
-            out = np.asarray(fn(np.asarray(grid, dtype=np.int64).copy()), dtype=np.int64)
+            out = _ex.submit(_call, grid).result(timeout=EXEC_TIMEOUT_S)
             if out.ndim != 2 or out.size == 0 or out.shape[0] > 30 or out.shape[1] > 30:
                 return None
             if out.min() < 0 or out.max() > 9:
                 return None
             return out
+        except _Timeout:
+            # NOTE: shutdown(wait=False) — a `with` block would join the stuck thread and defeat
+            # the timeout entirely.
+            return None  # runaway program -> abandon -> abstain
         except Exception:
             return None  # crash -> abstain; the gated ranker falls back to vote
+        finally:
+            _ex.shutdown(wait=False)
 
     return wrapped
 
@@ -226,13 +256,21 @@ def _extract_code(text: str):
     return None
 
 
-def ask_codex(prompt, timeout=300):
+def ask_codex(prompt, timeout=300, transcript_path=None):
+    """transcript_path (panel hardening): archive the FULL raw codex stdout per call — not just the
+    extracted code — so the no-oracle invariant is auditable post-hoc (grep transcripts for any
+    file-access attempt / solution lookup)."""
     t0 = time.time()
     try:
         r = subprocess.run(CODEX, input=prompt, capture_output=True, text=True, timeout=timeout)
-        return r.stdout or "", round(time.time() - t0, 1)
+        out = r.stdout or ""
     except Exception as e:
-        return f"__codex_error__:{type(e).__name__}", round(time.time() - t0, 1)
+        out = f"__codex_error__:{type(e).__name__}"
+    if transcript_path is not None:
+        Path(transcript_path).write_text(
+            "===== PROMPT =====\n" + prompt + "\n===== RAW OUTPUT =====\n" + out
+        )
+    return out, round(time.time() - t0, 1)
 
 
 def demo_fit(fn, demos):
@@ -262,14 +300,15 @@ def _failing_demos(fn, demos, k=2, cap=20):
     return "\n\n".join(out)
 
 
-def induce_program(task_name, demos, test_input, iters=3, timeout=300):
+def induce_program(task_name, demos, test_input, iters=3, timeout=300, transcripts_dir=None):
     """Codex induction with refactor-from-best. Returns a record with the best program, its demo_fit,
     the executed test prediction (hash + grid), and the call history."""
     best_fit, best_code, best_fn = -1.0, None, None
     history = []
     prior_code, failures = None, None
     for it in range(iters):
-        raw, dt = ask_codex(induction_prompt(demos, test_input, prior_code, failures), timeout)
+        tp = f"{transcripts_dir}/{task_name}_iter{it}.txt" if transcripts_dir else None
+        raw, dt = ask_codex(induction_prompt(demos, test_input, prior_code, failures), timeout, tp)
         code = _extract_code(raw)
         if code is None:
             history.append({"iter": it, "status": "no_code", "codex_s": dt})
@@ -340,27 +379,38 @@ def build_rankers(tasks):
     }
 
 
-def run(limit=0, iters=3, workers=4, timeout=300, write=True):
+def run(
+    limit=0,
+    iters=3,
+    workers=4,
+    timeout=300,
+    write=True,
+    pool_path=POOL,
+    artifact_path=ARTIFACT,
+    programs_path=PROGRAMS,
+    transcripts_dir=None,
+    experiment_name="arc3_gap4_rule_exec_verifier",
+):
     started = time.time()
     pre = {
         "codex_cli": subprocess.run(
             ["bash", "-lc", "command -v codex"], capture_output=True, text=True
         ).returncode
         == 0,
-        "eval_pool": Path(POOL).exists(),
+        "eval_pool": Path(pool_path).exists(),
     }
     if not all(pre.values()):
         art = {
-            "experiment": "arc3_gap4_rule_exec_verifier",
+            "experiment": experiment_name,
             "honest_verdict": "blocked_" + "_".join(k for k, v in pre.items() if not v),
             "preconditions_checked": [{"resource": k, "available": v} for k, v in pre.items()],
         }
         if write:
-            Path(ARTIFACT).write_text(json.dumps(art, indent=2) + "\n")
+            Path(artifact_path).write_text(json.dumps(art, indent=2) + "\n")
         print(f"-> {art['honest_verdict']}")
         return art
 
-    with gzip.open(POOL, "rt") as f:
+    with gzip.open(pool_path, "rt") as f:
         pool = json.load(f)
     entries = pool["entries"]
     if limit:
@@ -374,7 +424,9 @@ def run(limit=0, iters=3, workers=4, timeout=300, write=True):
     def _induce_for(task_name):
         ents = by_task[task_name]
         # induce once from demos; execute per entry test_input
-        rec = induce_program(task_name, ents[0]["demos"], ents[0]["test_input"], iters, timeout)
+        rec = induce_program(
+            task_name, ents[0]["demos"], ents[0]["test_input"], iters, timeout, transcripts_dir
+        )
         recs = [rec]
         for extra in ents[1:]:  # extra test entries of the same task: reuse the program, re-execute
             fn = safe_transform_from_code(rec["code"]) if rec["code"] else None
@@ -390,6 +442,8 @@ def run(limit=0, iters=3, workers=4, timeout=300, write=True):
             )
         return task_name, recs
 
+    if transcripts_dir:
+        Path(transcripts_dir).mkdir(parents=True, exist_ok=True)
     print(
         f"[gap4] inducing programs for {len(by_task)} unique tasks "
         f"({len(entries)} entries, iters<={iters}, workers={workers})",
@@ -540,7 +594,7 @@ def run(limit=0, iters=3, workers=4, timeout=300, write=True):
         + f"_lost_{len(vote_wins_lost)}_demoperfect_{n_perfect}of{n}"
     )
     art = {
-        "experiment": "arc3_gap4_rule_exec_verifier",
+        "experiment": experiment_name,
         "title": "GAP-4: program-induction + execution-consistency verifier vs TRM frequency vote",
         "honest_verdict": verdict,
         "inference_substrate": "codex_program_induction_plus_offline_trm_candidate_rerank_no_oracle",
@@ -583,13 +637,13 @@ def run(limit=0, iters=3, workers=4, timeout=300, write=True):
         "duration_s": round(time.time() - started, 1),
     }
     if write:
-        Path(ARTIFACT).write_text(json.dumps(art, indent=2, sort_keys=True) + "\n")
+        Path(artifact_path).write_text(json.dumps(art, indent=2, sort_keys=True) + "\n")
         progs = [
             {k: v for k, v in t["prog"].items() if k != "history"} | {"entry_i": i}
             for i, t in enumerate(tasks)
             if t["prog"]
         ]
-        Path(PROGRAMS).write_text(
+        Path(programs_path).write_text(
             json.dumps(
                 {
                     "experiment": "arc3_gap4_induced_programs",
@@ -626,5 +680,22 @@ if __name__ == "__main__":
     ap.add_argument("--iters", type=int, default=3)
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--timeout", type=int, default=300)
+    ap.add_argument("--pool", default=POOL)
+    ap.add_argument("--artifact", default=ARTIFACT)
+    ap.add_argument("--programs", default=PROGRAMS)
+    ap.add_argument(
+        "--transcripts", default=None, help="dir to archive full per-call codex transcripts"
+    )
+    ap.add_argument("--name", default="arc3_gap4_rule_exec_verifier")
     a = ap.parse_args()
-    run(limit=a.limit, iters=a.iters, workers=a.workers, timeout=a.timeout)
+    run(
+        limit=a.limit,
+        iters=a.iters,
+        workers=a.workers,
+        timeout=a.timeout,
+        pool_path=a.pool,
+        artifact_path=a.artifact,
+        programs_path=a.programs,
+        transcripts_dir=a.transcripts,
+        experiment_name=a.name,
+    )

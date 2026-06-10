@@ -1,0 +1,314 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (15x15):
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 1, 1, 9, 1, 1, 1, 3, 1, 1],
+ [1, 1, 1, 1, 3, 1, 1, 1, 1, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 1, 1, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 1, 1, 3, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 5, 5, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+Demo 1 OUTPUT (15x15):
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 9, 9, 9, 9, 9, 9, 3, 1, 1],
+ [1, 1, 1, 1, 3, 9, 9, 9, 9, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 3, 9, 9, 9, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 9, 9, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 9, 9, 3, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 9, 9, 9, 9, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 3, 9, 9, 9, 9, 9, 9, 3, 1, 1, 1],
+ [1, 1, 1, 1, 9, 9, 9, 5, 5, 9, 9, 9, 1, 1, 1],
+ [1, 1, 1, 9, 9, 9, 9, 1, 1, 9, 9, 9, 9, 1, 1],
+ [1, 1, 9, 9, 9, 9, 9, 1, 1, 9, 9, 9, 9, 9, 1],
+ [1, 9, 9, 9, 9, 9, 9, 1, 1, 9, 9, 9, 9, 9, 9]]
+
+Demo 2 INPUT (8x15):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 5, 5, 5, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 5, 0, 0, 5, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 4, 5, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 5, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 5, 5, 5, 5, 0]]
+Demo 2 OUTPUT (8x15):
+[[4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [4, 4, 4, 4, 4, 4, 4, 5, 0, 0, 0, 5, 5, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 5, 0, 5, 4, 4, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 4, 4, 4, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 4, 4, 4, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 5, 0, 5, 5, 5, 5, 0]]
+
+Demo 3 INPUT (18x16):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 7, 7, 7, 7, 7, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 7, 7, 6, 7, 7, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 7, 7, 7, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 7, 7, 7, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 7, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 7, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 7, 7, 9, 9, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 7, 7, 7, 7, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 7, 7, 3, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 7, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 7, 7],
+ [7, 7, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+Demo 3 OUTPUT (18x16):
+[[7, 7, 7, 3, 3, 7, 3, 7, 3, 3, 3, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 6, 3, 7, 3, 3, 3, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 3, 3, 7, 3, 3, 3, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 7, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 6, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 3, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 3, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 9, 9, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 3, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 3, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 7, 7],
+ [7, 7, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+
+TEST INPUT (15x19):
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 4, 4, 4, 1, 1],
+ [1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 4, 4, 1, 4, 1, 1, 4, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 4, 1, 1],
+ [1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 4, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 4, 4, 1, 1, 4, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 4, 4, 4, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (15x15):
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 9, 9, 9, 9, 9, 9, 3, 1, 1],
+ [1, 1, 1, 1, 3, 9, 9, 9, 9, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 3, 9, 9, 9, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 9, 9, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 9, 9, 3, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 9, 9, 9, 9, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 3, 9, 9, 9, 9, 9, 9, 3, 1, 1, 1],
+ [1, 1, 1, 1, 9, 9, 9, 5, 5, 9, 9, 9, 1, 1, 1],
+ [1, 1, 1, 9, 9, 9, 9, 1, 1, 9, 9, 9, 9, 1, 1],
+ [1, 1, 9, 9, 9, 9, 9, 1, 1, 9, 9, 9, 9, 9, 1],
+ [1, 9, 9, 9, 9, 9, 9, 1, 1, 9, 9, 9, 9, 9, 9]]
+your function returned:
+[[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+ [9, 9, 9, 9, 9, 9, 3, 3, 3, 3, 3, 3, 9, 9, 9],
+ [9, 9, 9, 9, 9, 3, 9, 9, 9, 9, 9, 9, 3, 9, 9],
+ [9, 9, 9, 9, 3, 9, 9, 9, 9, 3, 3, 3, 9, 9, 9],
+ [9, 9, 9, 9, 3, 9, 9, 9, 3, 9, 9, 9, 9, 9, 9],
+ [9, 9, 9, 9, 9, 3, 9, 9, 3, 9, 9, 9, 9, 9, 9],
+ [9, 9, 9, 9, 9, 9, 3, 9, 9, 3, 9, 9, 9, 9, 9],
+ [9, 9, 9, 9, 9, 3, 9, 9, 9, 9, 3, 9, 9, 9, 9],
+ [9, 9, 9, 9, 3, 9, 9, 9, 9, 9, 9, 3, 9, 9, 9],
+ [9, 9, 9, 9, 9, 9, 9, 5, 5, 9, 9, 9, 9, 9, 9],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9]]
+
+Demo 2: expected OUTPUT (8x15):
+[[4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [4, 4, 4, 4, 4, 4, 4, 5, 0, 0, 0, 5, 5, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 5, 0, 5, 4, 4, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 4, 4, 4, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 4, 4, 4, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 5, 0, 5, 5, 5, 5, 0]]
+your function returned:
+[[4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 5, 4, 4, 4, 5, 5, 5, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 5, 4, 5, 4, 4, 5, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 4, 4, 4, 5, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 4, 4, 4, 5, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 5, 0, 5, 5, 5, 5, 4]]
+
+Previous code:
+```python
+def transform(grid):
+    h, w = grid.shape
+    out = grid.copy()
+
+    vals, counts = np.unique(grid, return_counts=True)
+    bg = vals[np.argmax(counts)]
+
+    colors = [v for v in vals if v != bg]
+    comps = []
+    seen = np.zeros((h, w), dtype=bool)
+
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] == bg or seen[r, c]:
+                continue
+            col = grid[r, c]
+            stack = [(r, c)]
+            seen[r, c] = True
+            cells = []
+            while stack:
+                rr, cc = stack.pop()
+                cells.append((rr, cc))
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nr, nc = rr + dr, cc + dc
+                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] == col:
+                        seen[nr, nc] = True
+                        stack.append((nr, nc))
+            comps.append((col, cells))
+
+    frame_color = None
+    best = -1
+    for col, cells in comps:
+        if len(cells) > best:
+            best = len(cells)
+            frame_color = col
+
+    seed_colors = [v for v in colors if v != frame_color]
+    fill_color = None
+    for col in seed_colors:
+        if np.sum(grid == col) == 1:
+            fill_color = col
+            break
+    if fill_color is None:
+        fill_color = seed_colors[0]
+
+    barrier = (grid == frame_color)
+
+    for col in seed_colors:
+        if col != fill_color:
+            barrier |= (grid == col)
+
+    starts = list(zip(*np.where(grid == fill_color)))
+    q = list(starts)
+    reached = np.zeros((h, w), dtype=bool)
+    for r, c in starts:
+        reached[r, c] = True
+
+    while q:
+        r, c = q.pop(0)
+        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < h and 0 <= nc < w and not reached[nr, nc] and not barrier[nr, nc]:
+                reached[nr, nc] = True
+                q.append((nr, nc))
+
+    out[(reached) & (grid == bg)] = fill_color
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h, w = grid.shape
+    out = grid.copy()
+
+    vals, counts = np.unique(grid, return_counts=True)
+    bg = vals[np.argmax(counts)]
+
+    # The drawing color is the non-background color with the most cells.
+    non_bg = [v for v in vals if v != bg]
+    wall = max(non_bg, key=lambda v: np.sum(grid == v))
+
+    # The fill color is the rare non-background, non-wall color that is nearest
+    # to the wall drawing; other rare colors are just obstacles/markers.
+    others = [v for v in non_bg if v != wall]
+    wall_cells = list(zip(*np.where(grid == wall)))
+    best_col = others[0]
+    best_key = None
+    for col in others:
+        pts = list(zip(*np.where(grid == col)))
+        md = min(abs(r - rr) + abs(c - cc) for r, c in pts for rr, cc in wall_cells)
+        key = (md, np.sum(grid == col))
+        if best_key is None or key < best_key:
+            best_key = key
+            best_col = col
+    fill = best_col
+
+    # Trace the outline as a graph.  Fill proceeds from the seed toward the side
+    # indicated by the nearest outline point, stopping at the outline and at any
+    # non-background marker colors.
+    wall_mask = grid == wall
+    pts = list(zip(*np.where(fill == grid)))
+    sr = sum(r for r, c in pts) / len(pts)
+    sc = sum(c for r, c in pts) / len(pts)
+
+    wr, wc = min(wall_cells, key=lambda p: abs(p[0] - sr) + abs(p[1] - sc))
+    vr, vc = sr - wr, sc - wc
+
+    block = wall_mask.copy()
+    for col in others:
+        if col != fill:
+            block |= grid == col
+
+    # Add an invisible half-plane guard through the nearest wall point.  This is
+    # what keeps the paint on the same side of an open outline instead of leaking
+    # around its ends.
+    guard = np.zeros((h, w), dtype=bool)
+    for r in range(h):
+        for c in range(w):
+            if (r - wr) * vr + (c - wc) * vc < -1e-9:
+                guard[r, c] = True
+
+    seen = np.zeros((h, w), dtype=bool)
+    q = []
+    for r, c in pts:
+        seen[r, c] = True
+        q.append((r, c))
+
+    qi = 0
+    while qi < len(q):
+        r, c = q[qi]
+        qi += 1
+        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc]:
+                if not block[nr, nc] and not guard[nr, nc]:
+                    seen[nr, nc] = True
+                    q.append((nr, nc))
+
+    out[seen & (grid == bg)] = fill
+    return out
+```
