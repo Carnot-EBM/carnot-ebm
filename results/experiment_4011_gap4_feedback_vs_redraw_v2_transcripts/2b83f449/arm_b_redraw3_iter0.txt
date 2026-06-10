@@ -1,0 +1,205 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (13x19):
+[[3, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 7, 7, 7, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 7, 7, 7, 0, 0, 7, 7, 7, 0, 0, 0, 0, 7, 7, 7, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0],
+ [8, 8, 0, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 1 OUTPUT (13x19):
+[[8, 8, 8, 8, 6, 8, 8, 0, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 8],
+ [0, 0, 0, 8, 6, 8, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0],
+ [3, 3, 8, 8, 6, 8, 6, 8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 8],
+ [0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0],
+ [8, 8, 8, 6, 8, 8, 6, 8, 6, 8, 8, 8, 8, 6, 8, 6, 8, 8, 8],
+ [0, 0, 8, 6, 8, 0, 0, 8, 6, 8, 0, 0, 0, 0, 8, 6, 8, 0, 0],
+ [3, 3, 8, 6, 8, 6, 8, 8, 6, 8, 8, 6, 8, 8, 8, 6, 8, 3, 3],
+ [0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 6, 8, 8, 6, 8, 8, 6, 8, 8, 3, 0, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8],
+ [0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0],
+ [8, 8, 0, 3, 8, 6, 8, 8, 0, 3, 8, 8, 8, 6, 8, 8, 8, 8, 3]]
+
+Demo 2 INPUT (11x16):
+[[3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 2 OUTPUT (11x16):
+[[8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 3, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 6, 8, 8, 8],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0],
+ [8, 8, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 6, 8, 3, 3],
+ [0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 6, 8, 8, 8, 8],
+ [0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0],
+ [3, 3, 8, 6, 8, 8, 8, 6, 8, 8, 8, 6, 8, 8, 3, 3],
+ [0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 3]]
+
+TEST INPUT (19x17):
+[[3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0],
+ [8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h, w = grid.shape
+    out = grid.copy()
+
+    rail_rows = [r for r in range(h) if any(grid[r, c] == 8 or grid[r, c] == 3 for c in range(w))]
+    rail_index = {r: i for i, r in enumerate(rail_rows)}
+    n = len(rail_rows)
+
+    switches = [[] for _ in range(max(0, n - 1))]
+    holes = [[] for _ in range(n)]
+
+    for i, r in enumerate(rail_rows):
+        for c in range(w):
+            if grid[r, c] == 0:
+                holes[i].append(c)
+
+    for r in range(h):
+        c = 0
+        while c <= w - 3:
+            if grid[r, c] == 7 and grid[r, c + 1] == 7 and grid[r, c + 2] == 7:
+                above = max([rr for rr in rail_rows if rr < r], default=None)
+                below = min([rr for rr in rail_rows if rr > r], default=None)
+                if above is not None and below is not None:
+                    i = rail_index[above]
+                    center = c + 1
+                    switches[i].append(center)
+                    out[r, c] = 8
+                    out[r, center] = 6
+                    out[r, c + 2] = 8
+                    if out[above, center] != 0:
+                        out[above, center] = 6
+                    if out[below, center] != 0:
+                        out[below, center] = 6
+                c += 3
+            else:
+                c += 1
+
+    for r in rail_rows:
+        for c in range(w):
+            if out[r, c] == 3:
+                out[r, c] = 8
+
+    def endpoint(i, direction):
+        return 0 if direction < 0 else w - 1
+
+    terminals = {}
+
+    for i0, r0 in enumerate(rail_rows):
+        for side in (0, w - 1):
+            if grid[r0, side] != 3:
+                continue
+
+            direction = 1 if side == 0 else -1
+            i = i0
+            x = side
+            came_from = None
+            moved_down = False
+
+            while True:
+                events = []
+
+                if i < n - 1:
+                    for c in switches[i]:
+                        if c == came_from:
+                            continue
+                        if (direction == 1 and c > x) or (direction == -1 and c < x):
+                            events.append((abs(c - x), "down", c))
+
+                if i > 0:
+                    for c in switches[i - 1]:
+                        if c == came_from:
+                            continue
+                        if (direction == 1 and c > x) or (direction == -1 and c < x):
+                            events.append((abs(c - x), "block", c))
+
+                for c in holes[i]:
+                    if (direction == 1 and c > x) or (direction == -1 and c < x):
+                        events.append((abs(c - x), "hole", c))
+
+                if not events:
+                    pos = (i, endpoint(i, direction))
+                    terminals[pos] = terminals.get(pos, 0) + 1
+                    break
+
+                events.sort()
+                _, kind, c = events[0]
+
+                if kind == "down":
+                    i += 1
+                    x = c
+                    came_from = c
+                    moved_down = True
+                elif kind == "block":
+                    pos = (i, endpoint(i, direction))
+                    terminals[pos] = terminals.get(pos, 0) + 1
+                    break
+                else:
+                    if moved_down:
+                        if i == n - 1:
+                            p = c + 1 if c + 1 < w else c - 1
+                        else:
+                            p = c - direction
+                        pos = (i, p)
+                    else:
+                        pos = (i0, side)
+                    terminals[pos] = terminals.get(pos, 0) + 1
+                    break
+
+    for (i, c), count in terminals.items():
+        r = rail_rows[i]
+        if 0 <= c < w and out[r, c] != 0:
+            out[r, c] = 3
+
+        if c == 0 and count > 1 and w > 1 and out[r, 1] != 0:
+            out[r, 1] = 3
+        elif c == w - 1 and count > 1 and w > 1 and out[r, w - 2] != 0:
+            out[r, w - 2] = 3
+
+    return out
+```

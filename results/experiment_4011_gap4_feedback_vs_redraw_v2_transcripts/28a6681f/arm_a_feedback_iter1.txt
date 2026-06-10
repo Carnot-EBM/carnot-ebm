@@ -1,0 +1,290 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 0, 3, 1, 1],
+ [0, 2, 2, 2, 2, 3, 3, 3, 1, 1]]
+Demo 1 OUTPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
+ [0, 2, 2, 2, 2, 3, 3, 3, 1, 1]]
+
+Demo 2 INPUT (10x10):
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 1],
+ [0, 0, 3, 0, 0, 0, 0, 1, 1, 1],
+ [0, 0, 3, 0, 0, 0, 0, 1, 1, 1],
+ [0, 0, 3, 0, 0, 0, 1, 1, 1, 1],
+ [0, 0, 3, 0, 0, 3, 1, 1, 1, 1],
+ [0, 0, 3, 0, 0, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+Demo 2 OUTPUT (10x10):
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 1, 1, 1, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+
+Demo 3 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 1, 1, 0, 0, 0, 0, 9, 9],
+ [0, 9, 9, 1, 0, 0, 0, 9, 9, 0],
+ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
+ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 0, 0, 4, 0, 4, 0, 0, 0, 0],
+ [2, 0, 2, 4, 0, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
+Demo 3 OUTPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 0, 0, 0, 0, 0, 0, 9, 9],
+ [0, 9, 9, 0, 0, 0, 0, 9, 9, 0],
+ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
+ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 0, 0, 4, 1, 4, 0, 0, 0, 0],
+ [2, 1, 2, 4, 1, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
+
+TEST INPUT (10x10):
+[[1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 1, 1, 0, 0, 0, 0, 0, 0],
+ [0, 9, 9, 1, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 9, 9, 0, 0, 0, 0, 5],
+ [0, 0, 0, 0, 9, 9, 9, 0, 0, 5],
+ [0, 0, 0, 0, 0, 0, 0, 5, 0, 5],
+ [3, 0, 0, 0, 0, 0, 0, 0, 0, 5],
+ [3, 3, 0, 0, 0, 0, 5, 5, 0, 5],
+ [3, 3, 3, 0, 0, 5, 5, 5, 0, 5],
+ [3, 3, 3, 3, 5, 5, 5, 5, 0, 5]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
+ [0, 2, 2, 2, 2, 3, 3, 3, 1, 1]]
+your function returned:
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 0],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 0],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 0],
+ [0, 0, 0, 0, 0, 3, 0, 3, 1, 0],
+ [0, 0, 0, 0, 0, 3, 0, 3, 1, 0],
+ [0, 0, 0, 0, 2, 3, 0, 3, 1, 0],
+ [0, 0, 0, 0, 2, 3, 0, 3, 1, 0],
+ [0, 2, 2, 2, 2, 3, 3, 3, 1, 0]]
+
+Demo 2: expected OUTPUT (10x10):
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 1, 1, 1, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+your function returned:
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 1, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 1, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 1, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 1, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 3, 1, 0, 0, 1],
+ [0, 0, 3, 0, 0, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+
+Previous code:
+```python
+def transform(grid):
+    out = grid.copy()
+    rows, cols = out.shape
+
+    colors = [c for c in np.unique(out) if c != 0]
+    one = 1
+    others = [c for c in colors if c != one]
+
+    for r in range(rows):
+        nz = np.where(out[r] != 0)[0]
+        if len(nz) >= 2:
+            for c in range(nz[0], nz[-1] + 1):
+                if out[r, c] == 0:
+                    left = out[r, :c][out[r, :c] != 0]
+                    right = out[r, c + 1:][out[r, c + 1:] != 0]
+                    if len(left) and len(right) and left[-1] != right[0]:
+                        out[r, c] = one
+
+    for c in range(cols):
+        nz = np.where(out[:, c] != 0)[0]
+        if len(nz) >= 2:
+            for r in range(nz[0], nz[-1] + 1):
+                if out[r, c] == 0:
+                    up = out[:r, c][out[:r, c] != 0]
+                    down = out[r + 1:, c][out[r + 1:, c] != 0]
+                    if len(up) and len(down) and up[-1] != down[0]:
+                        out[r, c] = one
+
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r, c] == one:
+                keep = False
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    rr, cc = r + dr, c + dc
+                    if 0 <= rr < rows and 0 <= cc < cols and grid[rr, cc] == one:
+                        keep = True
+                touches_other = False
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    rr, cc = r + dr, c + dc
+                    if 0 <= rr < rows and 0 <= cc < cols and grid[rr, cc] in others:
+                        touches_other = True
+                if not touches_other:
+                    out[r, c] = 0
+
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    out = grid.copy()
+    h, w = grid.shape
+
+    one = 1
+    barriers = (grid != 0) & (grid != one)
+
+    def comps(mask):
+        seen = np.zeros(mask.shape, dtype=bool)
+        res = []
+        for sr in range(h):
+            for sc in range(w):
+                if mask[sr, sc] and not seen[sr, sc]:
+                    q = [(sr, sc)]
+                    seen[sr, sc] = True
+                    cells = []
+                    for r, c in q:
+                        cells.append((r, c))
+                        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                            rr, cc = r + dr, c + dc
+                            if 0 <= rr < h and 0 <= cc < w and mask[rr, cc] and not seen[rr, cc]:
+                                seen[rr, cc] = True
+                                q.append((rr, cc))
+                    res.append(cells)
+        return res
+
+    # Remove all old 1s first; the correct 1s are reconstructed as
+    # horizontal/vertical spans between non-1 colored boundary objects.
+    out[grid == one] = 0
+
+    objects = comps(barriers)
+    obj_id = -np.ones((h, w), dtype=int)
+    for i, cells in enumerate(objects):
+        for r, c in cells:
+            obj_id[r, c] = i
+
+    fill = np.zeros((h, w), dtype=bool)
+
+    def mark_between(r1, c1, r2, c2):
+        if r1 == r2:
+            r = r1
+            a, b = sorted((c1, c2))
+            if b - a > 1:
+                fill[r, a + 1:b] = True
+        elif c1 == c2:
+            c = c1
+            a, b = sorted((r1, r2))
+            if b - a > 1:
+                fill[a + 1:b, c] = True
+
+    # Fill zero/old-1 cells lying directly between two distinct non-1
+    # boundary components in the same row or column.
+    for r in range(h):
+        nz = [c for c in range(w) if barriers[r, c]]
+        for a in range(len(nz)):
+            for b in range(a + 1, len(nz)):
+                c1, c2 = nz[a], nz[b]
+                if obj_id[r, c1] != obj_id[r, c2]:
+                    mid = grid[r, c1 + 1:c2]
+                    if np.all(mid == 0) or np.any(mid == one):
+                        mark_between(r, c1, r, c2)
+
+    for c in range(w):
+        nz = [r for r in range(h) if barriers[r, c]]
+        for a in range(len(nz)):
+            for b in range(a + 1, len(nz)):
+                r1, r2 = nz[a], nz[b]
+                if obj_id[r1, c] != obj_id[r2, c]:
+                    mid = grid[r1 + 1:r2, c]
+                    if np.all(mid == 0) or np.any(mid == one):
+                        mark_between(r1, c, r2, c)
+
+    # Keep reconstructed cells only in the region indicated by the original
+    # 1-color marks: same connected background pocket, using non-1 colors as walls.
+    passable = ~barriers
+    seed = (grid == one)
+    seen = np.zeros((h, w), dtype=bool)
+    keep_region = np.zeros((h, w), dtype=bool)
+
+    for sr in range(h):
+        for sc in range(w):
+            if passable[sr, sc] and not seen[sr, sc]:
+                q = [(sr, sc)]
+                seen[sr, sc] = True
+                cells = []
+                has_seed = False
+                for r, c in q:
+                    cells.append((r, c))
+                    if seed[r, c]:
+                        has_seed = True
+                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        rr, cc = r + dr, c + dc
+                        if 0 <= rr < h and 0 <= cc < w and passable[rr, cc] and not seen[rr, cc]:
+                            seen[rr, cc] = True
+                            q.append((rr, cc))
+                if has_seed:
+                    for r, c in cells:
+                        keep_region[r, c] = True
+
+    out[fill & keep_region] = one
+    return out
+```

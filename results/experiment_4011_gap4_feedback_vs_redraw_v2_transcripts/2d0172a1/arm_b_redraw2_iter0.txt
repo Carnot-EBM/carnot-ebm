@@ -1,0 +1,402 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (20x25):
+[[3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 4, 4, 4, 3, 3, 3, 3, 3, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 3, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 4, 4, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 4, 3, 3, 4, 4, 3, 3, 3, 3, 3],
+ [4, 3, 3, 4, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 4, 3, 3, 4, 4, 4, 3, 3, 3, 3],
+ [4, 3, 3, 4, 3, 4, 4, 4, 3, 3, 4, 3, 3, 3, 3, 4, 3, 3, 3, 4, 4, 3, 3, 3, 3],
+ [4, 3, 4, 4, 3, 3, 4, 4, 3, 3, 4, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 4, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 4, 4, 3, 3, 3, 3, 4, 4, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 3, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 4, 3, 3, 3, 4, 4, 4, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [3, 4, 3, 3, 3, 4, 4, 4, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]]
+Demo 1 OUTPUT (11x12):
+[[4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3],
+ [4, 3, 4, 4, 4, 4, 4, 3, 4, 3, 3, 3],
+ [4, 3, 4, 3, 3, 3, 4, 3, 4, 3, 3, 3],
+ [4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3],
+ [4, 3, 4, 3, 3, 3, 4, 3, 4, 3, 3, 3],
+ [4, 3, 4, 4, 4, 4, 4, 3, 4, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3],
+ [4, 3, 3, 3, 4, 3, 3, 3, 4, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3]]
+
+Demo 2 INPUT (20x16):
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1],
+ [1, 1, 1, 4, 4, 4, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 4, 4, 1, 1, 1, 4, 1, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 4, 1, 1, 4, 4, 4, 1, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 4, 1, 1, 4, 4, 4, 1, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 4, 1, 1, 1, 4, 1, 1, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 4, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 1],
+ [1, 1, 4, 4, 1, 1, 1, 4, 4, 4, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+Demo 2 OUTPUT (5x5):
+[[4, 4, 4, 4, 4],
+ [4, 1, 1, 1, 4],
+ [4, 1, 4, 1, 4],
+ [4, 1, 1, 1, 4],
+ [4, 4, 4, 4, 4]]
+
+Demo 3 INPUT (20x16):
+[[4, 4, 4, 4, 9, 9, 9, 9, 9, 9, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 9, 9, 4, 4, 4, 4, 9, 4, 4, 4, 4, 4, 4],
+ [4, 9, 9, 9, 4, 4, 4, 4, 4, 9, 9, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 4, 4, 4, 4, 4, 4, 9, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 4, 9, 9, 4, 4, 4, 9, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 9, 9, 9, 4, 4, 4, 9, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 9, 9, 4, 4, 4, 4, 9, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 4, 4, 4, 4, 4, 4, 9, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 4, 4, 9, 4, 4, 4, 9, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 9, 9, 9, 4, 4, 9, 9, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 4, 9, 9, 4, 4, 9, 4, 4, 4, 4, 4, 4],
+ [4, 9, 9, 4, 4, 4, 4, 4, 4, 9, 4, 4, 4, 4, 4, 4],
+ [4, 4, 9, 4, 4, 4, 4, 4, 4, 9, 4, 4, 4, 4, 4, 4],
+ [4, 9, 9, 4, 4, 4, 4, 4, 4, 9, 4, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 4, 4, 4, 4, 9, 9, 4, 4, 4, 4, 4, 4],
+ [4, 9, 9, 9, 9, 4, 4, 9, 9, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 9, 9, 9, 9, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]]
+Demo 3 OUTPUT (7x5):
+[[9, 9, 9, 9, 9],
+ [9, 4, 4, 4, 9],
+ [9, 4, 9, 4, 9],
+ [9, 4, 4, 4, 9],
+ [9, 4, 9, 4, 9],
+ [9, 4, 4, 4, 9],
+ [9, 9, 9, 9, 9]]
+
+Demo 4 INPUT (20x25):
+[[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 4, 2, 2, 2, 4, 4, 4, 4, 4, 4, 2, 2, 2, 4, 4, 4, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 4, 2, 2, 4, 4, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 4, 4, 2, 2, 2, 2],
+ [2, 2, 2, 2, 4, 2, 2, 4, 2, 2, 4, 4, 2, 4, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2],
+ [2, 2, 2, 2, 4, 2, 2, 4, 2, 4, 4, 4, 2, 4, 2, 4, 4, 4, 2, 2, 4, 2, 2, 2, 2],
+ [2, 2, 2, 2, 4, 4, 2, 4, 2, 4, 4, 4, 2, 4, 2, 4, 4, 2, 2, 2, 4, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 4, 2, 4, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 4, 4, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 4, 2, 4, 4, 4, 2, 2, 4, 4, 2, 2, 2, 4, 4, 4, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 4, 2, 2, 2, 4, 4, 4, 4, 2, 2, 2, 4, 4, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]]
+Demo 4 OUTPUT (9x11):
+[[4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4],
+ [4, 2, 4, 4, 4, 4, 4, 2, 2, 2, 4],
+ [4, 2, 4, 2, 2, 2, 4, 2, 2, 2, 4],
+ [4, 2, 4, 2, 4, 2, 4, 2, 4, 2, 4],
+ [4, 2, 4, 2, 2, 2, 4, 2, 2, 2, 4],
+ [4, 2, 4, 4, 4, 4, 4, 2, 2, 2, 4],
+ [4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]]
+
+TEST INPUT (25x25):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 9, 9, 9, 9, 9, 9, 9, 7, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 7, 7, 7, 7, 7, 7],
+ [7, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7, 7, 7],
+ [7, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7],
+ [7, 9, 7, 7, 7, 7, 9, 9, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 7],
+ [7, 9, 7, 7, 7, 9, 9, 7, 7, 7, 7, 7, 9, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 9, 9],
+ [7, 9, 7, 7, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 7, 7, 7, 7, 7, 7, 9],
+ [7, 9, 7, 7, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 7, 9, 9, 7, 7, 9],
+ [7, 9, 7, 7, 9, 7, 7, 9, 9, 7, 7, 7, 9, 9, 9, 9, 7, 7, 9, 7, 9, 9, 7, 7, 9],
+ [7, 9, 7, 7, 9, 7, 7, 9, 9, 9, 7, 7, 9, 9, 9, 9, 7, 7, 9, 7, 7, 7, 7, 7, 9],
+ [7, 9, 7, 7, 9, 7, 7, 7, 9, 9, 7, 7, 9, 9, 9, 7, 7, 9, 9, 7, 7, 7, 7, 7, 9],
+ [7, 9, 7, 7, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 7, 7, 7, 7, 7, 7, 9],
+ [7, 9, 7, 7, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7, 7, 7, 7, 7, 9, 9],
+ [7, 9, 9, 7, 7, 7, 9, 9, 9, 9, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7, 9, 7],
+ [7, 7, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 7],
+ [7, 7, 7, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 9, 9, 7, 7, 7],
+ [7, 7, 7, 9, 9, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 9, 9, 9, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h, w = grid.shape
+    vals, counts = np.unique(grid, return_counts=True)
+    bg = vals[np.argmax(counts)]
+    fg = vals[np.argmin(counts)]
+
+    def neigh4(r, c):
+        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            rr, cc = r + dr, c + dc
+            if 0 <= rr < h and 0 <= cc < w:
+                yield rr, cc
+
+    # Background components; non-border components are the enclosed regions.
+    seen = np.zeros((h, w), dtype=bool)
+    holes = []
+    outside = np.zeros((h, w), dtype=bool)
+
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] == bg and not seen[r, c]:
+                q = [(r, c)]
+                seen[r, c] = True
+                cells = []
+                touches_edge = False
+                for x, y in q:
+                    cells.append((x, y))
+                    if x == 0 or y == 0 or x == h - 1 or y == w - 1:
+                        touches_edge = True
+                    for nx, ny in neigh4(x, y):
+                        if grid[nx, ny] == bg and not seen[nx, ny]:
+                            seen[nx, ny] = True
+                            q.append((nx, ny))
+                if touches_edge:
+                    for x, y in cells:
+                        outside[x, y] = True
+                else:
+                    rs = [x for x, y in cells]
+                    cs = [y for x, y in cells]
+                    holes.append({
+                        "cells": cells,
+                        "bbox": (min(rs), max(rs), min(cs), max(cs)),
+                        "children": [],
+                        "dots": []
+                    })
+
+    # Foreground parts protected from the outside are the useful internal marks.
+    protected = []
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] == fg:
+                if not any(outside[nr, nc] for nr, nc in neigh4(r, c)):
+                    protected.append((r, c))
+
+    protected = set(protected)
+    comps = []
+    while protected:
+        start = protected.pop()
+        q = [start]
+        cells = [start]
+        for x, y in q:
+            for nx, ny in neigh4(x, y):
+                if (nx, ny) in protected:
+                    protected.remove((nx, ny))
+                    q.append((nx, ny))
+                    cells.append((nx, ny))
+        if len(cells) > 1:
+            rs = [x for x, y in cells]
+            cs = [y for x, y in cells]
+            comps.append({
+                "cells": cells,
+                "bbox": (min(rs), max(rs), min(cs), max(cs)),
+                "cy": (min(rs) + max(rs)) / 2,
+                "cx": (min(cs) + max(cs)) / 2,
+                "kind": "dot"
+            })
+
+    def contains_box(a, b):
+        ar0, ar1, ac0, ac1 = a
+        br0, br1, bc0, bc1 = b
+        return ar0 <= br0 and br1 <= ar1 and ac0 <= bc0 and bc1 <= ac1 and a != b
+
+    # Nest enclosed regions by their bounding boxes.
+    parents = [None] * len(holes)
+    for i, hole in enumerate(holes):
+        best = None
+        best_area = None
+        for j, other in enumerate(holes):
+            if contains_box(other["bbox"], hole["bbox"]):
+                r0, r1, c0, c1 = other["bbox"]
+                area = (r1 - r0 + 1) * (c1 - c0 + 1)
+                if best is None or area < best_area:
+                    best = j
+                    best_area = area
+        parents[i] = best
+        if best is not None:
+            holes[best]["children"].append(i)
+
+    def inside_box(pt, box):
+        r, c = pt
+        r0, r1, c0, c1 = box
+        return r0 <= r <= r1 and c0 <= c <= c1
+
+    def overlaps(a, b):
+        ar0, ar1, ac0, ac1 = a
+        br0, br1, bc0, bc1 = b
+        return ar0 <= br1 and br0 <= ar1 and ac0 <= bc1 and bc0 <= ac1
+
+    # Assign dot components to the smallest enclosing hole unless they are part
+    # of a child loop boundary.
+    root_dots = []
+    for comp in comps:
+        center = (comp["cy"], comp["cx"])
+        owner = None
+        owner_area = None
+        for i, hole in enumerate(holes):
+            if inside_box(center, hole["bbox"]):
+                r0, r1, c0, c1 = hole["bbox"]
+                area = (r1 - r0 + 1) * (c1 - c0 + 1)
+                if owner is None or area < owner_area:
+                    owner = i
+                    owner_area = area
+        if owner is None:
+            root_dots.append(comp)
+            continue
+
+        skip = False
+        for ch in holes[owner]["children"]:
+            cr0, cr1, cc0, cc1 = holes[ch]["bbox"]
+            pad = (cr0 - 1, cr1 + 1, cc0 - 1, cc1 + 1)
+            if overlaps(comp["bbox"], pad):
+                skip = True
+                break
+        if not skip:
+            holes[owner]["dots"].append(comp)
+
+    def cluster_positions(features, axis):
+        # axis 0 = rows, axis 1 = columns. Features sharing overlapping source
+        # intervals are aligned in the compact drawing.
+        items = []
+        for f in features:
+            r0, r1, c0, c1 = f["src_bbox"]
+            lo, hi = (r0, r1) if axis == 0 else (c0, c1)
+            size = f["shape"][axis]
+            items.append([lo, hi, size, f])
+
+        items.sort(key=lambda x: (x[0] + x[1]) / 2)
+        groups = []
+        for item in items:
+            placed = False
+            for g in groups:
+                if item[0] <= g["hi"] and g["lo"] <= item[1]:
+                    g["lo"] = min(g["lo"], item[0])
+                    g["hi"] = max(g["hi"], item[1])
+                    g["items"].append(item)
+                    g["size"] = max(g["size"], item[2])
+                    placed = True
+                    break
+            if not placed:
+                groups.append({"lo": item[0], "hi": item[1], "size": item[2], "items": [item]})
+
+        pos = {}
+        cur = 0
+        for g in groups:
+            if pos:
+                cur += 2
+            center = cur + g["size"] // 2
+            for _, _, size, f in g["items"]:
+                pos[id(f)] = center - size // 2
+            cur += g["size"]
+        return pos, cur
+
+    def render_feature(feat):
+        if feat["kind"] == "dot":
+            return np.array([[fg]], dtype=grid.dtype)
+
+        node = holes[feat["hole"]]
+        child_features = []
+        for ch in node["children"]:
+            child_features.append({"kind": "hole", "hole": ch})
+        child_features.extend(node["dots"])
+
+        if not child_features:
+            return np.array([[fg, fg, fg], [fg, bg, fg], [fg, fg, fg]], dtype=grid.dtype)
+
+        rendered = []
+        for ch in child_features:
+            arr = render_feature(ch)
+            ch["arr"] = arr
+            ch["shape"] = arr.shape
+            if ch["kind"] == "hole":
+                ch["src_bbox"] = holes[ch["hole"]]["bbox"]
+            else:
+                ch["src_bbox"] = ch["bbox"]
+            rendered.append(ch)
+
+        ypos, inner_h = cluster_positions(rendered, 0)
+        xpos, inner_w = cluster_positions(rendered, 1)
+        out = np.full((inner_h + 4, inner_w + 4), bg, dtype=grid.dtype)
+        out[0, :] = fg
+        out[-1, :] = fg
+        out[:, 0] = fg
+        out[:, -1] = fg
+
+        for ch in rendered:
+            rr = ypos[id(ch)] + 2
+            cc = xpos[id(ch)] + 2
+            a = ch["arr"]
+            out[rr:rr + a.shape[0], cc:cc + a.shape[1]] = a
+        return out
+
+    roots = []
+    for i in range(len(holes)):
+        if parents[i] is None:
+            roots.append({"kind": "hole", "hole": i})
+    roots.extend(root_dots)
+
+    if not roots:
+        rr, cc = np.where(grid == fg)
+        return grid[rr.min():rr.max() + 1, cc.min():cc.max() + 1].copy()
+
+    if len(roots) == 1:
+        return render_feature(roots[0])
+
+    rendered = []
+    for f in roots:
+        arr = render_feature(f)
+        f["arr"] = arr
+        f["shape"] = arr.shape
+        f["src_bbox"] = holes[f["hole"]]["bbox"] if f["kind"] == "hole" else f["bbox"]
+        rendered.append(f)
+
+    ypos, oh = cluster_positions(rendered, 0)
+    xpos, ow = cluster_positions(rendered, 1)
+    out = np.full((oh, ow), bg, dtype=grid.dtype)
+    for f in rendered:
+        rr = ypos[id(f)]
+        cc = xpos[id(f)]
+        a = f["arr"]
+        out[rr:rr + a.shape[0], cc:cc + a.shape[1]] = a
+    return out
+```
