@@ -11753,3 +11753,43 @@ facts-domain READY claim.
 ## Implementation Status (REQ-VERIFY-3975)
 
 | REQ-VERIFY-3975 | Implemented (`python/carnot/agentic/arc_gap4_execution_verifier.py`, `scripts/experiments/experiment_3975_gap4_execution_verifier_build.py`) | Implemented (`tests/python/agentic/test_arc_gap4_execution_verifier.py`) |
+
+### REQ-VERIFY-3998: GAP-4 De-Selection Coverage Measurement
+
+The repository SHALL provide Exp 3998 at
+`scripts/experiments/experiment_3998_gap4_deselection_coverage.py` to de-bias
+the GAP-4 fresh-chain demo-perfect coverage estimate by running k=2 fresh
+Codex <=3-iteration chains on the 11 ARC-2 pool tasks that are the raw
+complement of the 12 probe-chain-feasible tasks recorded in
+`results/arc3_gap4_arc2_chain_ensemble.json`.
+
+Before any induction call, the runner SHALL verify that `codex` is available
+and that `results/arc3_gap4_arc2_eval_pool.json.gz` is readable as JSON. A
+failed precondition SHALL write a terminal artifact with
+`honest_verdict=blocked_codex_unavailable` or
+`honest_verdict=blocked_eval_pool_unreadable` and no fabricated coverage
+metrics.
+
+For a complete run, the runner SHALL prompt the inducer only with ARC demo
+pairs and the test input, archive the full transcript for every call, score
+demo-perfect reproduction oracle-free, score true gold only post-hoc, run the
+word-boundary GAP-4 leak audit on every transcript, and write
+`results/experiment_3998_gap4_deselection_coverage.json` with bare top-level
+fields `fresh_chain_demo_perfect_rate_nonselected`, `cp95_low`, `cp95_high`,
+`debiased_coverage_combined`, `per_arm_gold_given_perfect`,
+`iter0_vs_chainfinal`, `leak_clean`, `n_tasks_chained`,
+`total_codex_calls`, `total_codex_seconds`, `preconditions_checked`,
+`random_seed`, `honest_verdict`, `duration_s`, and
+`inference_substrate`.
+
+### SCENARIO-VERIFY-3998: De-Selection Run Reports Honest Nonselected Coverage
+
+Given the Codex CLI and ARC-2 pool are available, when Exp 3998 runs, then it
+chains exactly the 11 raw nonselected tasks, computes the nonselected
+fresh-chain demo-perfect rate with a Clopper-Pearson 95% interval, combines
+that denominator with the selected-task fresh-chain denominator from
+`results/arc3_gap4_arc2_chain_ensemble.json`, records per-arm
+`P(true-gold | demo-perfect)` using gold only after induction, records the
+iter0-vs-chain-final decomposition, sets `leak_clean=true` only when every
+archived transcript passes the word-boundary leak audit, and emits an
+`honest_verdict` beginning with `complete:` regardless of the measured rate.

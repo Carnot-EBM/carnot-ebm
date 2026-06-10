@@ -1,0 +1,462 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (16x12):
+[[6, 6, 6, 6, 6, 7, 7, 7, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 7, 7, 7, 4, 4, 4, 4],
+ [6, 6, 6, 1, 6, 7, 7, 7, 4, 4, 4, 4],
+ [6, 6, 6, 3, 1, 7, 7, 7, 4, 9, 9, 9],
+ [6, 6, 6, 1, 6, 7, 7, 7, 4, 4, 4, 9],
+ [6, 6, 6, 6, 6, 7, 7, 7, 4, 4, 4, 9],
+ [6, 6, 6, 6, 6, 7, 1, 7, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 7, 1, 1, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 7, 1, 7, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 7, 7, 7, 4, 4, 4, 4],
+ [7, 7, 1, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 1, 0, 1, 7, 7, 7, 7, 7, 1, 1, 1],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 1, 7],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 1 OUTPUT (12x16):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7]]
+
+Demo 2 INPUT (10x10):
+[[7, 7, 7, 7, 7, 7, 1, 7, 3, 3],
+ [7, 7, 7, 7, 7, 7, 1, 1, 3, 3],
+ [7, 7, 7, 7, 7, 7, 1, 7, 3, 3],
+ [8, 8, 8, 3, 1, 7, 7, 7, 3, 1],
+ [8, 8, 8, 1, 1, 7, 7, 7, 1, 6],
+ [8, 1, 8, 3, 1, 7, 7, 7, 3, 1],
+ [8, 1, 1, 3, 3, 1, 9, 1, 3, 3],
+ [8, 1, 8, 3, 3, 7, 1, 7, 3, 3],
+ [8, 8, 8, 3, 3, 5, 5, 5, 3, 3],
+ [8, 8, 8, 3, 3, 5, 5, 5, 3, 3]]
+Demo 2 OUTPUT (10x10):
+[[6, 6, 6, 6, 6, 6, 6, 6, 7, 7],
+ [6, 6, 6, 6, 6, 6, 6, 6, 7, 7],
+ [6, 6, 6, 6, 6, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 9, 9, 9, 7, 7],
+ [3, 3, 3, 8, 8, 9, 9, 9, 7, 7]]
+
+Demo 3 INPUT (14x9):
+[[6, 6, 6, 3, 1, 3, 3, 3, 3],
+ [6, 6, 6, 1, 1, 3, 3, 3, 3],
+ [6, 6, 6, 3, 1, 3, 3, 3, 3],
+ [6, 6, 6, 4, 4, 4, 4, 1, 4],
+ [6, 6, 6, 4, 4, 4, 1, 1, 1],
+ [6, 6, 6, 4, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 1, 6, 4, 4, 4],
+ [6, 6, 6, 6, 1, 1, 4, 4, 4],
+ [6, 6, 6, 6, 1, 6, 4, 4, 4],
+ [5, 5, 5, 4, 4, 4, 4, 4, 4],
+ [9, 9, 9, 8, 8, 8, 8, 8, 8],
+ [9, 5, 5, 8, 8, 8, 1, 7, 1],
+ [9, 5, 5, 8, 8, 8, 8, 1, 8],
+ [5, 5, 5, 4, 4, 4, 4, 4, 4]]
+Demo 3 OUTPUT (9x14):
+[[5, 5, 5, 5, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [5, 5, 5, 5, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [5, 5, 5, 5, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [7, 8, 8, 8, 6, 3, 3, 3, 6, 6, 6, 4, 4, 4],
+ [7, 8, 8, 8, 6, 3, 3, 3, 6, 6, 6, 4, 4, 4],
+ [7, 8, 8, 8, 6, 3, 3, 3, 6, 6, 6, 4, 4, 4],
+ [7, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4],
+ [7, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4],
+ [7, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4]]
+
+Demo 4 INPUT (10x10):
+[[2, 2, 2, 2, 2, 1, 2, 3, 3, 3],
+ [2, 2, 2, 2, 2, 1, 1, 3, 3, 3],
+ [2, 2, 2, 2, 2, 1, 2, 3, 3, 3],
+ [6, 6, 6, 6, 1, 6, 6, 3, 1, 3],
+ [6, 6, 6, 1, 1, 1, 6, 1, 1, 3],
+ [1, 1, 1, 6, 6, 6, 6, 3, 1, 3],
+ [6, 1, 6, 6, 6, 6, 6, 3, 3, 3],
+ [4, 4, 4, 4, 4, 4, 4, 3, 3, 3],
+ [4, 4, 4, 4, 4, 4, 4, 3, 3, 3],
+ [4, 4, 4, 4, 4, 4, 4, 3, 3, 3]]
+Demo 4 OUTPUT (10x10):
+[[6, 6, 6, 6, 6, 6, 6, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 2, 2, 2],
+ [3, 3, 3, 3, 3, 3, 3, 2, 2, 2],
+ [3, 3, 3, 3, 3, 3, 3, 2, 2, 2],
+ [3, 3, 3, 3, 3, 3, 3, 2, 2, 2],
+ [3, 3, 3, 3, 3, 3, 3, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 2, 2, 2]]
+
+TEST INPUT (30x30):
+[[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 7, 7, 9, 9, 9],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 1, 3, 3, 3, 3, 3, 3, 9, 9, 9, 7, 7, 7, 7, 9, 9],
+ [9, 9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1, 3, 3, 3, 3, 3, 9, 9, 9, 7, 7, 7, 7, 9, 9],
+ [9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 9, 9, 7, 7, 7, 7, 9, 9],
+ [9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 9, 9, 9, 1, 9, 9, 9, 9],
+ [9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 9, 9, 1, 1, 1, 9, 9, 4],
+ [9, 3, 3, 3, 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 9, 9, 9, 9, 9, 9, 4, 4],
+ [9, 3, 3, 3, 0, 1, 8, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 9, 9, 9, 9, 4, 4, 4],
+ [9, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 2, 2, 0, 0, 0, 0, 0, 9, 9, 9, 9, 9, 4, 4, 4],
+ [9, 3, 3, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 1, 1, 1, 2, 2, 2, 2, 0, 0, 9, 9, 9, 9, 4, 4, 4, 4],
+ [9, 3, 3, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 9, 9, 9, 9, 4, 4, 4, 4],
+ [9, 3, 3, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 9, 9, 4, 4, 4, 4],
+ [9, 3, 3, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 6, 0, 1, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 9, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 6, 9, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 9, 8, 8, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 2, 2, 2, 2, 2, 2, 2, 9, 9, 9, 8, 8, 8, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 9, 9, 2, 2, 2, 2, 9, 9, 9, 9, 8, 8, 8, 8, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8, 1, 8],
+ [6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 1],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 1, 9, 9, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 0, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 1, 9, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (12x16):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7]]
+your function returned:
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8]]
+
+Demo 2: expected OUTPUT (10x10):
+[[6, 6, 6, 6, 6, 6, 6, 6, 7, 7],
+ [6, 6, 6, 6, 6, 6, 6, 6, 7, 7],
+ [6, 6, 6, 6, 6, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 9, 9, 9, 7, 7],
+ [3, 3, 3, 8, 8, 9, 9, 9, 7, 7]]
+your function returned:
+[[3, 3, 3, 3, 3, 3, 3, 3, 6, 6],
+ [3, 3, 3, 3, 3, 3, 3, 3, 6, 6],
+ [3, 3, 3, 3, 3, 3, 3, 3, 6, 6],
+ [3, 3, 3, 3, 3, 3, 3, 3, 6, 6],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 6],
+ [3, 3, 3, 3, 3, 3, 3, 3, 6, 6],
+ [3, 3, 3, 3, 3, 3, 3, 3, 6, 6],
+ [3, 3, 3, 3, 3, 3, 3, 3, 6, 6],
+ [3, 3, 3, 3, 3, 3, 3, 3, 6, 6],
+ [3, 3, 3, 3, 3, 3, 3, 3, 6, 6]]
+
+Previous code:
+```python
+def transform(grid):
+    h, w = grid.shape
+    g = grid.copy()
+
+    def neigh(r, c):
+        for dr in (-1, 0, 1):
+            for dc in (-1, 0, 1):
+                if dr or dc:
+                    rr, cc = r + dr, c + dc
+                    if 0 <= rr < h and 0 <= cc < w:
+                        yield rr, cc
+
+    # First recover the underlying large color at every marker/noise cell.
+    clean = g.copy()
+    for _ in range(4):
+        changed = False
+        for r in range(h):
+            for c in range(w):
+                if clean[r, c] == 1:
+                    cnt = {}
+                    for rr, cc in neigh(r, c):
+                        v = clean[rr, cc]
+                        if v != 1:
+                            cnt[v] = cnt.get(v, 0) + 1
+                    if cnt:
+                        clean[r, c] = max(cnt, key=cnt.get)
+                        changed = True
+        if not changed:
+            break
+
+    # Connected components of the recovered picture.
+    seen = [[False] * w for _ in range(h)]
+    comps = []
+    comp_id = [[-1] * w for _ in range(h)]
+
+    for sr in range(h):
+        for sc in range(w):
+            if seen[sr][sc]:
+                continue
+            col = clean[sr, sc]
+            stack = [(sr, sc)]
+            seen[sr][sc] = True
+            cells = []
+            while stack:
+                r, c = stack.pop()
+                comp_id[r][c] = len(comps)
+                cells.append((r, c))
+                for rr, cc in ((r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1)):
+                    if 0 <= rr < h and 0 <= cc < w and not seen[rr][cc] and clean[rr, cc] == col:
+                        seen[rr][cc] = True
+                        stack.append((rr, cc))
+            comps.append({"color": col, "cells": cells})
+
+    # Each 1-marker indicates the color that should replace the larger region
+    # it is embedded in: use colors touching the marker but outside its host.
+    repl = {}
+    for i, comp in enumerate(comps):
+        host = comp["color"]
+        votes = {}
+        for r, c in comp["cells"]:
+            if g[r, c] == 1:
+                for rr, cc in neigh(r, c):
+                    v = g[rr, cc]
+                    if v != 1 and v != host:
+                        votes[v] = votes.get(v, 0) + 1
+        if votes:
+            repl[i] = max(votes, key=votes.get)
+
+    # Regions without their own marker inherit the strongest replacement from
+    # a neighboring region of the same recovered color, otherwise stay stable.
+    for i, comp in enumerate(comps):
+        if i in repl:
+            continue
+        boundary_votes = {}
+        for r, c in comp["cells"]:
+            for rr, cc in ((r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1)):
+                if 0 <= rr < h and 0 <= cc < w:
+                    j = comp_id[rr][cc]
+                    if j != i and j in repl:
+                        boundary_votes[repl[j]] = boundary_votes.get(repl[j], 0) + 1
+        repl[i] = max(boundary_votes, key=boundary_votes.get) if boundary_votes else comp["color"]
+
+    out = clean.copy()
+    for i, comp in enumerate(comps):
+        v = repl[i]
+        for r, c in comp["cells"]:
+            out[r, c] = v
+
+    return np.rot90(out, 1) if h != w else out
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h, w = grid.shape
+    dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    opp = {0: 1, 1: 0, 2: 3, 3: 2}
+
+    # Small non-1 connected components are payload/symbol cells, not regions.
+    seen = np.zeros((h, w), dtype=bool)
+    symbol = np.zeros((h, w), dtype=bool)
+    for r in range(h):
+        for c in range(w):
+            if seen[r, c]:
+                continue
+            col = grid[r, c]
+            stack = [(r, c)]
+            seen[r, c] = True
+            cells = []
+            while stack:
+                x, y = stack.pop()
+                cells.append((x, y))
+                for dr, dc in dirs:
+                    xx, yy = x + dr, y + dc
+                    if 0 <= xx < h and 0 <= yy < w and not seen[xx, yy] and grid[xx, yy] == col:
+                        seen[xx, yy] = True
+                        stack.append((xx, yy))
+            if col != 1 and len(cells) <= 5:
+                for x, y in cells:
+                    symbol[x, y] = True
+
+    region = (grid != 1) & (~symbol)
+
+    comp_id = -np.ones((h, w), dtype=int)
+    comps = []
+    seen = np.zeros((h, w), dtype=bool)
+    for r in range(h):
+        for c in range(w):
+            if seen[r, c] or not region[r, c]:
+                continue
+            col = grid[r, c]
+            idx = len(comps)
+            stack = [(r, c)]
+            seen[r, c] = True
+            cells = []
+            while stack:
+                x, y = stack.pop()
+                cells.append((x, y))
+                comp_id[x, y] = idx
+                for dr, dc in dirs:
+                    xx, yy = x + dr, y + dc
+                    if 0 <= xx < h and 0 <= yy < w and not seen[xx, yy] and region[xx, yy] and grid[xx, yy] == col:
+                        seen[xx, yy] = True
+                        stack.append((xx, yy))
+            comps.append({"color": int(col), "cells": cells})
+
+    # Attach marker/payload cells to their surrounding large region.
+    owner = comp_id.copy()
+    for _ in range(h + w):
+        changed = False
+        for r in range(h):
+            for c in range(w):
+                if owner[r, c] >= 0:
+                    continue
+                cnt = {}
+                for dr in (-1, 0, 1):
+                    for dc in (-1, 0, 1):
+                        if dr == 0 and dc == 0:
+                            continue
+                        rr, cc = r + dr, c + dc
+                        if 0 <= rr < h and 0 <= cc < w and owner[rr, cc] >= 0:
+                            j = int(owner[rr, cc])
+                            cnt[j] = cnt.get(j, 0) + 1
+                if cnt:
+                    owner[r, c] = max(cnt, key=cnt.get)
+                    changed = True
+        if not changed:
+            break
+
+    def ray_comp(r, c, di, skip_color=None):
+        dr, dc = dirs[di]
+        r += dr
+        c += dc
+        while 0 <= r < h and 0 <= c < w:
+            j = int(owner[r, c])
+            if j >= 0 and (skip_color is None or comps[j]["color"] != skip_color):
+                return j
+            r += dr
+            c += dc
+        return None
+
+    maps = {}
+
+    def add_map(j, target, priority):
+        if j is None or target == comps[j]["color"]:
+            return
+        if j not in maps or priority > maps[j][0]:
+            maps[j] = (priority, int(target))
+
+    # Explicit plaques: a colored payload cell with three 1-neighbors.
+    for r in range(h):
+        for c in range(w):
+            if not symbol[r, c]:
+                continue
+            ones = []
+            miss = []
+            for k, (dr, dc) in enumerate(dirs):
+                rr, cc = r + dr, c + dc
+                if 0 <= rr < h and 0 <= cc < w and grid[rr, cc] == 1:
+                    ones.append(k)
+                else:
+                    miss.append(k)
+            if len(ones) == 3 and len(miss) == 1:
+                host = comps[int(owner[r, c])]["color"] if owner[r, c] >= 0 else None
+                add_map(ray_comp(r, c, opp[miss[0]], host), int(grid[r, c]), 3)
+
+    # Host-color plaques: a T-shaped 1 tetromino names its surrounding host color.
+    seen = np.zeros((h, w), dtype=bool)
+    for r in range(h):
+        for c in range(w):
+            if seen[r, c] or grid[r, c] != 1:
+                continue
+            stack = [(r, c)]
+            seen[r, c] = True
+            cells = []
+            while stack:
+                x, y = stack.pop()
+                cells.append((x, y))
+                for dr, dc in dirs:
+                    xx, yy = x + dr, y + dc
+                    if 0 <= xx < h and 0 <= yy < w and not seen[xx, yy] and grid[xx, yy] == 1:
+                        seen[xx, yy] = True
+                        stack.append((xx, yy))
+
+            if len(cells) != 4:
+                continue
+            s = set(cells)
+            for x, y in cells:
+                neigh = [k for k, (dr, dc) in enumerate(dirs) if (x + dr, y + dc) in s]
+                if len(neigh) != 3:
+                    continue
+                if owner[x, y] < 0:
+                    continue
+                host = comps[int(owner[x, y])]["color"]
+                missing = [k for k in range(4) if k not in neigh][0]
+                add_map(ray_comp(x, y, missing, host), host, 1)
+                add_map(ray_comp(x, y, opp[missing], host), host, 1)
+
+    # Unmarked regions inherit the strongest adjacent region color.
+    for i, comp in enumerate(comps):
+        if i in maps:
+            continue
+        cnt = {}
+        for r, c in comp["cells"]:
+            for dr, dc in dirs:
+                rr, cc = r + dr, c + dc
+                if 0 <= rr < h and 0 <= cc < w:
+                    j = int(owner[rr, cc])
+                    if j >= 0 and j != i:
+                        col = comps[j]["color"]
+                        cnt[col] = cnt.get(col, 0) + 1
+        if cnt:
+            maps[i] = (0, max(cnt, key=cnt.get))
+
+    out = np.zeros((h, w), dtype=int)
+    for r in range(h):
+        for c in range(w):
+            j = int(owner[r, c])
+            if j >= 0:
+                out[r, c] = maps.get(j, (0, comps[j]["color"]))[1]
+            else:
+                out[r, c] = grid[r, c]
+
+    return out.T if h != w else out
+```

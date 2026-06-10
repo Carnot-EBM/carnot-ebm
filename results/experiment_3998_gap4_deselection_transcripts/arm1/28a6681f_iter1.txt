@@ -1,0 +1,234 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 0, 3, 1, 1],
+ [0, 2, 2, 2, 2, 3, 3, 3, 1, 1]]
+Demo 1 OUTPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
+ [0, 2, 2, 2, 2, 3, 3, 3, 1, 1]]
+
+Demo 2 INPUT (10x10):
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 1],
+ [0, 0, 3, 0, 0, 0, 0, 1, 1, 1],
+ [0, 0, 3, 0, 0, 0, 0, 1, 1, 1],
+ [0, 0, 3, 0, 0, 0, 1, 1, 1, 1],
+ [0, 0, 3, 0, 0, 3, 1, 1, 1, 1],
+ [0, 0, 3, 0, 0, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+Demo 2 OUTPUT (10x10):
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 1, 1, 1, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+
+Demo 3 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 1, 1, 0, 0, 0, 0, 9, 9],
+ [0, 9, 9, 1, 0, 0, 0, 9, 9, 0],
+ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
+ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 0, 0, 4, 0, 4, 0, 0, 0, 0],
+ [2, 0, 2, 4, 0, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
+Demo 3 OUTPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 0, 0, 0, 0, 0, 0, 9, 9],
+ [0, 9, 9, 0, 0, 0, 0, 9, 9, 0],
+ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
+ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 0, 0, 4, 1, 4, 0, 0, 0, 0],
+ [2, 1, 2, 4, 1, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
+
+TEST INPUT (10x10):
+[[1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 1, 1, 0, 0, 0, 0, 0, 0],
+ [0, 9, 9, 1, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 9, 9, 0, 0, 0, 0, 5],
+ [0, 0, 0, 0, 9, 9, 9, 0, 0, 5],
+ [0, 0, 0, 0, 0, 0, 0, 5, 0, 5],
+ [3, 0, 0, 0, 0, 0, 0, 0, 0, 5],
+ [3, 3, 0, 0, 0, 0, 5, 5, 0, 5],
+ [3, 3, 3, 0, 0, 5, 5, 5, 0, 5],
+ [3, 3, 3, 3, 5, 5, 5, 5, 0, 5]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
+ [0, 2, 2, 2, 2, 3, 3, 3, 1, 1]]
+your function returned:
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 3, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 3, 0, 0],
+ [0, 1, 1, 0, 0, 0, 0, 3, 0, 0],
+ [0, 1, 1, 1, 1, 3, 1, 3, 0, 0],
+ [0, 1, 1, 1, 1, 3, 1, 3, 0, 0],
+ [0, 1, 1, 1, 2, 3, 1, 3, 0, 0],
+ [0, 1, 1, 1, 2, 3, 1, 3, 0, 0],
+ [0, 2, 2, 2, 2, 3, 3, 3, 0, 0]]
+
+Demo 3: expected OUTPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 0, 0, 0, 0, 0, 0, 9, 9],
+ [0, 9, 9, 0, 0, 0, 0, 9, 9, 0],
+ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
+ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 0, 0, 4, 1, 4, 0, 0, 0, 0],
+ [2, 1, 2, 4, 1, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
+your function returned:
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 0, 0, 0, 0, 0, 0, 9, 9],
+ [0, 9, 9, 0, 0, 0, 0, 9, 9, 0],
+ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
+ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 1, 0, 4, 0, 4, 0, 0, 0, 0],
+ [2, 1, 2, 4, 1, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
+
+Previous code:
+```python
+def transform(grid):
+    h, w = grid.shape
+    out = grid.copy()
+
+    movable = 1
+    n = int((grid == movable).sum())
+    out[grid == movable] = 0
+
+    fixed = out != 0
+
+    # Empty cells that have support below: a fixed cell somewhere below in the
+    # same column, with no fixed cell above them in that column segment.
+    candidates = []
+    for r in range(h - 1, -1, -1):
+        for c in range(w):
+            if fixed[r, c]:
+                continue
+
+            below = any(fixed[rr, c] for rr in range(r + 1, h))
+            if not below:
+                continue
+
+            # Prefer cells lying in horizontal gaps between fixed material.
+            left = any(fixed[r, cc] for cc in range(c))
+            right = any(fixed[r, cc] for cc in range(c + 1, w))
+            if left and right:
+                candidates.append((r, c))
+
+    # Fill from bottom upward, then left to right, matching the settling of the
+    # displaced color into supported gaps.
+    candidates.sort(key=lambda x: (-x[0], x[1]))
+
+    for r, c in candidates[:n]:
+        out[r, c] = movable
+
+    # If not all movable pixels fit in supported gaps, keep filling the lowest
+    # remaining empty supported cells.
+    if len(candidates) < n:
+        used = set(candidates)
+        rest = []
+        for r in range(h - 1, -1, -1):
+            for c in range(w):
+                if fixed[r, c] or (r, c) in used:
+                    continue
+                if any(fixed[rr, c] for rr in range(r + 1, h)):
+                    rest.append((r, c))
+        for r, c in rest[: n - len(candidates)]:
+            out[r, c] = movable
+
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h, w = grid.shape
+    out = grid.copy()
+
+    moving = 1
+    moving_count = int((grid == moving).sum())
+    out[grid == moving] = 0
+    solid = out != 0
+
+    # Find the lowest empty cells that are enclosed by solid material on both
+    # the left and right of the same row. The movable color settles into these
+    # basins, bottom-up.
+    basin = []
+    for r in range(h - 1, -1, -1):
+        for c in range(w):
+            if solid[r, c]:
+                continue
+            if any(solid[r, cc] for cc in range(c)) and any(solid[r, cc] for cc in range(c + 1, w)):
+                # Require some solid support at or below this height in the same
+                # column, so unsupported overhang gaps are not filled first.
+                if any(solid[rr, c] for rr in range(r + 1, h)):
+                    basin.append((r, c))
+
+    basin.sort(key=lambda p: (-p[0], p[1]))
+
+    placed = set()
+    for r, c in basin[:moving_count]:
+        out[r, c] = moving
+        placed.add((r, c))
+
+    remaining = moving_count - len(placed)
+
+    # Any movable cells that cannot fit in enclosed basins remain in their
+    # original positions, but only after the settling positions have priority.
+    if remaining > 0:
+        originals = [(r, c) for r in range(h) for c in range(w) if grid[r, c] == moving and (r, c) not in placed]
+        for r, c in originals[:remaining]:
+            out[r, c] = moving
+
+    return out
+```

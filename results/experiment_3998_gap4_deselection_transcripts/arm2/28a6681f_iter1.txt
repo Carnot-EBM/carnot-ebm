@@ -1,0 +1,298 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 0, 3, 1, 1],
+ [0, 2, 2, 2, 2, 3, 3, 3, 1, 1]]
+Demo 1 OUTPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
+ [0, 2, 2, 2, 2, 3, 3, 3, 1, 1]]
+
+Demo 2 INPUT (10x10):
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 1],
+ [0, 0, 3, 0, 0, 0, 0, 1, 1, 1],
+ [0, 0, 3, 0, 0, 0, 0, 1, 1, 1],
+ [0, 0, 3, 0, 0, 0, 1, 1, 1, 1],
+ [0, 0, 3, 0, 0, 3, 1, 1, 1, 1],
+ [0, 0, 3, 0, 0, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+Demo 2 OUTPUT (10x10):
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 1, 1, 1, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+
+Demo 3 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 1, 1, 0, 0, 0, 0, 9, 9],
+ [0, 9, 9, 1, 0, 0, 0, 9, 9, 0],
+ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
+ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 0, 0, 4, 0, 4, 0, 0, 0, 0],
+ [2, 0, 2, 4, 0, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
+Demo 3 OUTPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 0, 0, 0, 0, 0, 0, 9, 9],
+ [0, 9, 9, 0, 0, 0, 0, 9, 9, 0],
+ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
+ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 0, 0, 4, 1, 4, 0, 0, 0, 0],
+ [2, 1, 2, 4, 1, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
+
+TEST INPUT (10x10):
+[[1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 1, 1, 0, 0, 0, 0, 0, 0],
+ [0, 9, 9, 1, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 9, 9, 0, 0, 0, 0, 5],
+ [0, 0, 0, 0, 9, 9, 9, 0, 0, 5],
+ [0, 0, 0, 0, 0, 0, 0, 5, 0, 5],
+ [3, 0, 0, 0, 0, 0, 0, 0, 0, 5],
+ [3, 3, 0, 0, 0, 0, 5, 5, 0, 5],
+ [3, 3, 3, 0, 0, 5, 5, 5, 0, 5],
+ [3, 3, 3, 3, 5, 5, 5, 5, 0, 5]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+
+Your PREVIOUS function failed these demos:
+Demo 2: expected OUTPUT (10x10):
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 1, 1, 1, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+your function returned:
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 1, 1, 1, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 1, 1, 1, 1],
+ [0, 0, 3, 0, 0, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+
+Demo 3: expected OUTPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 0, 0, 0, 0, 0, 0, 9, 9],
+ [0, 9, 9, 0, 0, 0, 0, 9, 9, 0],
+ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
+ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 0, 0, 4, 1, 4, 0, 0, 0, 0],
+ [2, 1, 2, 4, 1, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
+your function returned:
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 0, 0, 0, 0, 0, 0, 9, 9],
+ [0, 9, 9, 0, 0, 0, 0, 9, 9, 0],
+ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
+ [0, 0, 0, 9, 1, 1, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 0, 0, 4, 1, 4, 0, 0, 0, 0],
+ [2, 1, 2, 4, 1, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
+
+Previous code:
+```python
+def transform(grid):
+    h, w = grid.shape
+    out = grid.copy()
+    original_one = (grid == 1)
+
+    # Start by removing all 1s; valid ones are rebuilt below.
+    out[original_one] = 0
+
+    # Connected components of the original 1s.
+    seen = [[False] * w for _ in range(h)]
+    comps = []
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] == 1 and not seen[r][c]:
+                stack = [(r, c)]
+                seen[r][c] = True
+                comp = []
+                while stack:
+                    rr, cc = stack.pop()
+                    comp.append((rr, cc))
+                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nr, nc = rr + dr, cc + dc
+                        if 0 <= nr < h and 0 <= nc < w and not seen[nr][nc] and grid[nr, nc] == 1:
+                            seen[nr][nc] = True
+                            stack.append((nr, nc))
+                comps.append(comp)
+
+    keep_one = [[False] * w for _ in range(h)]
+
+    def has_side_anchor(r, c):
+        return (c > 0 and grid[r, c - 1] not in (0, 1)) or (c + 1 < w and grid[r, c + 1] not in (0, 1))
+
+    for comp in comps:
+        touches_stable_edge = any(r == h - 1 or c == w - 1 for r, c in comp)
+        if not touches_stable_edge:
+            continue
+
+        anchors = [r for r, c in comp if has_side_anchor(r, c)]
+        if not anchors:
+            continue
+        top = min(anchors)
+
+        for r, c in comp:
+            if r >= top:
+                keep_one[r][c] = True
+
+    # Horizontal bridges from a colored cell to a nearby 1-run.
+    for r in range(h):
+        one_cols = [c for c in range(w) if original_one[r, c]]
+        if not one_cols:
+            continue
+        first_one = min(one_cols)
+        left_colors = [c for c in range(first_one) if grid[r, c] not in (0, 1)]
+        if left_colors:
+            left = max(left_colors)
+            gap = first_one - left - 1
+            if 1 <= gap <= 3:
+                for c in range(left + 1, w):
+                    if grid[r, c] == 0 or grid[r, c] == 1:
+                        keep_one[r][c] = True
+
+    # Fill short horizontal gaps inside same-colored objects with 1.
+    for r in range(h):
+        colored = [(c, grid[r, c]) for c in range(w) if grid[r, c] not in (0, 1)]
+        for i in range(len(colored) - 1):
+            c1, col1 = colored[i]
+            c2, col2 = colored[i + 1]
+            if col1 != col2:
+                continue
+            gap = c2 - c1 - 1
+            if gap <= 0 or gap > 2:
+                continue
+
+            followed_by_other_color = c2 + 1 < w and grid[r, c2 + 1] not in (0, 1, col1)
+            gap_has_one = any(original_one[r, c] for c in range(c1 + 1, c2))
+            if gap == 1 or gap_has_one or not followed_by_other_color:
+                for c in range(c1 + 1, c2):
+                    keep_one[r][c] = True
+
+    for r in range(h):
+        for c in range(w):
+            if keep_one[r][c]:
+                out[r, c] = 1
+
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h, w = grid.shape
+    solid = (grid != 0) & (grid != 1)
+    n = int((grid == 1).sum())
+
+    out = grid.copy()
+    out[grid == 1] = 0
+
+    def stable_cells():
+        stable = set()
+        changed = True
+        while changed:
+            changed = False
+            for r in range(h - 1, -1, -1):
+                for c in range(w):
+                    if solid[r, c] or (r, c) in stable:
+                        continue
+                    below_ok = (r == h - 1) or solid[r + 1, c] or ((r + 1, c) in stable)
+                    if not below_ok:
+                        continue
+
+                    side_ok = False
+                    for dc in (-1, 1):
+                        nc = c + dc
+                        if 0 <= nc < w and (solid[r, nc] or (r, nc) in stable):
+                            side_ok = True
+                    if r == h - 1:
+                        side_ok = True
+
+                    if side_ok:
+                        stable.add((r, c))
+                        changed = True
+        return stable
+
+    candidates = sorted(stable_cells(), key=lambda p: (-p[0], p[1]))
+
+    chosen = set()
+    for r, c in candidates:
+        if len(chosen) >= n:
+            break
+        chosen.add((r, c))
+
+    # Prefer retaining original grains when there is a tie at the same support level.
+    by_row = {}
+    for r, c in candidates:
+        by_row.setdefault(r, []).append(c)
+
+    remaining = n
+    chosen = set()
+    for r in sorted(by_row.keys(), reverse=True):
+        cols = by_row[r]
+        if remaining <= 0:
+            break
+        if len(cols) <= remaining:
+            for c in cols:
+                chosen.add((r, c))
+            remaining -= len(cols)
+        else:
+            orig = [c for c in cols if grid[r, c] == 1]
+            other = [c for c in cols if grid[r, c] != 1]
+            ordered = orig + other
+            for c in ordered[:remaining]:
+                chosen.add((r, c))
+            remaining = 0
+
+    for r, c in chosen:
+        out[r, c] = 1
+
+    return out
+```

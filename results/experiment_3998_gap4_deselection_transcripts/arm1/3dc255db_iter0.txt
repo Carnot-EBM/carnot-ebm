@@ -1,0 +1,240 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 6, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 6, 0, 4, 4, 4, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 7, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 7, 0, 0, 0, 0],
+ [0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+Demo 1 OUTPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 4, 4, 4, 6, 6, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 7, 7, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+
+Demo 2 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 9, 3, 0, 0, 6, 9, 6, 0],
+ [3, 9, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Demo 2 OUTPUT (10x10):
+[[0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 9, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 0, 3, 0, 0, 6, 0, 6, 0],
+ [3, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Demo 3 INPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0],
+ [0, 0, 0, 6, 6, 0, 0, 6, 0, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 7, 7, 7, 7, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 7, 0, 6, 0, 0, 0],
+ [0, 0, 6, 7, 0, 7, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Demo 3 OUTPUT (12x12):
+[[0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0],
+ [0, 0, 0, 6, 6, 0, 0, 6, 0, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+TEST INPUT (12x13):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 4, 4, 4, 0, 2, 0, 0],
+ [0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 9, 0, 0, 0, 0, 0, 8, 0, 0, 0],
+ [0, 9, 0, 0, 9, 0, 0, 0, 0, 0, 8, 0, 0],
+ [0, 9, 7, 7, 9, 0, 0, 2, 0, 0, 2, 8, 0],
+ [0, 9, 0, 7, 9, 0, 0, 0, 0, 2, 8, 0, 0],
+ [0, 9, 7, 0, 9, 0, 0, 0, 0, 8, 0, 0, 0]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h, w = grid.shape
+    out = grid.copy()
+
+    def comps_of_color(color):
+        seen = set()
+        comps = []
+        for r in range(h):
+            for c in range(w):
+                if grid[r, c] == color and (r, c) not in seen:
+                    stack = [(r, c)]
+                    seen.add((r, c))
+                    comp = []
+                    while stack:
+                        x, y = stack.pop()
+                        comp.append((x, y))
+                        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                            nx, ny = x + dx, y + dy
+                            if 0 <= nx < h and 0 <= ny < w and grid[nx, ny] == color and (nx, ny) not in seen:
+                                seen.add((nx, ny))
+                                stack.append((nx, ny))
+                    comps.append(comp)
+        return comps
+
+    containers = []
+    for color in range(1, 10):
+        for comp in comps_of_color(color):
+            if len(comp) >= 3:
+                rs = [p[0] for p in comp]
+                cs = [p[1] for p in comp]
+                containers.append((len(comp), color, comp, min(rs), max(rs), min(cs), max(cs)))
+    containers.sort(reverse=True)
+
+    moved = set()
+
+    for _, color, comp, r0, r1, c0, c1 in containers:
+        comp_set = set(comp)
+        by_color = {}
+        foreign_total = 0
+        for r in range(r0, r1 + 1):
+            for c in range(c0, c1 + 1):
+                v = int(grid[r, c])
+                if v != 0 and v != color and (r, c) not in moved:
+                    by_color.setdefault(v, []).append((r, c))
+                    foreign_total += 1
+
+        if not by_color or foreign_total >= len(comp):
+            continue
+
+        br = (r0 + r1) / 2.0
+        bc = (c0 + c1) / 2.0
+        cr = sum(r for r, c in comp) / float(len(comp))
+        cc = sum(c for r, c in comp) / float(len(comp))
+        rh = max(1, r1 - r0)
+        cw = max(1, c1 - c0)
+
+        for fcolor, pts in by_color.items():
+            fr = sum(r for r, c in pts) / float(len(pts))
+            fc = sum(c for r, c in pts) / float(len(pts))
+
+            prefs = []
+            dy = (fr - br) / rh
+            dx = (fc - bc) / cw
+            cdy = (fr - cr) / rh
+            cdx = (fc - cc) / cw
+
+            if dy > 0:
+                prefs.append((abs(dy), "up"))
+            elif dy < 0:
+                prefs.append((abs(dy), "down"))
+            if dx > 0:
+                prefs.append((abs(dx), "left"))
+            elif dx < 0:
+                prefs.append((abs(dx), "right"))
+
+            if cdy > 0:
+                prefs.append((abs(cdy) * 0.99, "up"))
+            elif cdy < 0:
+                prefs.append((abs(cdy) * 0.99, "down"))
+            if cdx > 0:
+                prefs.append((abs(cdx) * 0.99, "left"))
+            elif cdx < 0:
+                prefs.append((abs(cdx) * 0.99, "right"))
+
+            for d in ("up", "down", "left", "right"):
+                prefs.append((0.0, d))
+
+            prefs.sort(reverse=True)
+
+            chosen = None
+            for _, d in prefs:
+                if d == "up":
+                    er = min(r for r, c in comp)
+                    cols = [c for r, c in comp if r == er]
+                    ec = int(round(sum(cols) / float(len(cols))))
+                    avail = er
+                elif d == "down":
+                    er = max(r for r, c in comp)
+                    cols = [c for r, c in comp if r == er]
+                    ec = int(round(sum(cols) / float(len(cols))))
+                    avail = h - er - 1
+                elif d == "left":
+                    ec = min(c for r, c in comp)
+                    rows = [r for r, c in comp if c == ec]
+                    er = int(round(sum(rows) / float(len(rows))))
+                    avail = ec
+                else:
+                    ec = max(c for r, c in comp)
+                    rows = [r for r, c in comp if c == ec]
+                    er = int(round(sum(rows) / float(len(rows))))
+                    avail = w - ec - 1
+
+                if avail > 0:
+                    chosen = (d, er, ec, avail)
+                    break
+
+            if chosen is None:
+                continue
+
+            d, er, ec, avail = chosen
+            n = min(len(pts), avail)
+
+            for r, c in pts:
+                out[r, c] = 0
+                moved.add((r, c))
+
+            for i in range(1, n + 1):
+                if d == "up":
+                    nr, nc = er - i, ec
+                elif d == "down":
+                    nr, nc = er + i, ec
+                elif d == "left":
+                    nr, nc = er, ec - i
+                else:
+                    nr, nc = er, ec + i
+                out[nr, nc] = fcolor
+
+    return out
+```

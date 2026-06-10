@@ -1,0 +1,377 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (15x15):
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 1, 1, 9, 1, 1, 1, 3, 1, 1],
+ [1, 1, 1, 1, 3, 1, 1, 1, 1, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 1, 1, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 1, 1, 3, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 5, 5, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+Demo 1 OUTPUT (15x15):
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 9, 9, 9, 9, 9, 9, 3, 1, 1],
+ [1, 1, 1, 1, 3, 9, 9, 9, 9, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 3, 9, 9, 9, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 9, 9, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 9, 9, 3, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 9, 9, 9, 9, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 3, 9, 9, 9, 9, 9, 9, 3, 1, 1, 1],
+ [1, 1, 1, 1, 9, 9, 9, 5, 5, 9, 9, 9, 1, 1, 1],
+ [1, 1, 1, 9, 9, 9, 9, 1, 1, 9, 9, 9, 9, 1, 1],
+ [1, 1, 9, 9, 9, 9, 9, 1, 1, 9, 9, 9, 9, 9, 1],
+ [1, 9, 9, 9, 9, 9, 9, 1, 1, 9, 9, 9, 9, 9, 9]]
+
+Demo 2 INPUT (8x15):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 5, 5, 5, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 5, 0, 0, 5, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 4, 5, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 5, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 5, 5, 5, 5, 0]]
+Demo 2 OUTPUT (8x15):
+[[4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [4, 4, 4, 4, 4, 4, 4, 5, 0, 0, 0, 5, 5, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 5, 0, 5, 4, 4, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 4, 4, 4, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 4, 4, 4, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 5, 0, 5, 5, 5, 5, 0]]
+
+Demo 3 INPUT (18x16):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 7, 7, 7, 7, 7, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 7, 7, 6, 7, 7, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 7, 7, 7, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 7, 7, 7, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 7, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 7, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 7, 7, 9, 9, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 7, 7, 7, 7, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 7, 7, 3, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 7, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 7, 7],
+ [7, 7, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+Demo 3 OUTPUT (18x16):
+[[7, 7, 7, 3, 3, 7, 3, 7, 3, 3, 3, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 6, 3, 7, 3, 3, 3, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 3, 3, 7, 3, 3, 3, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 7, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 6, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 3, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 3, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 9, 9, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 3, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 3, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 7, 7],
+ [7, 7, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+
+TEST INPUT (15x19):
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 4, 4, 4, 1, 1],
+ [1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 4, 4, 1, 4, 1, 1, 4, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 4, 1, 1],
+ [1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 4, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 4, 4, 1, 1, 4, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 4, 4, 4, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (15x15):
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 9, 9, 9, 9, 9, 9, 3, 1, 1],
+ [1, 1, 1, 1, 3, 9, 9, 9, 9, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 3, 9, 9, 9, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 9, 9, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 9, 9, 3, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 9, 9, 9, 9, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 3, 9, 9, 9, 9, 9, 9, 3, 1, 1, 1],
+ [1, 1, 1, 1, 9, 9, 9, 5, 5, 9, 9, 9, 1, 1, 1],
+ [1, 1, 1, 9, 9, 9, 9, 1, 1, 9, 9, 9, 9, 1, 1],
+ [1, 1, 9, 9, 9, 9, 9, 1, 1, 9, 9, 9, 9, 9, 1],
+ [1, 9, 9, 9, 9, 9, 9, 1, 1, 9, 9, 9, 9, 9, 9]]
+your function returned:
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 5, 5, 9, 1, 1, 1, 3, 1, 1],
+ [1, 1, 1, 1, 3, 5, 5, 5, 5, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 3, 5, 5, 5, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 5, 5, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 5, 5, 3, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 5, 5, 5, 5, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 3, 5, 5, 5, 5, 5, 5, 3, 1, 1, 1],
+ [1, 1, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1, 1],
+ [1, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 1],
+ [1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1],
+ [1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]]
+
+Demo 3: expected OUTPUT (18x16):
+[[7, 7, 7, 3, 3, 7, 3, 7, 3, 3, 3, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 6, 3, 7, 3, 3, 3, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 3, 3, 7, 3, 3, 3, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 7, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 6, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 3, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 3, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 9, 9, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 3, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 3, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 7, 7],
+ [7, 7, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+your function returned:
+[[7, 7, 7, 7, 7, 3, 3, 3, 3, 3, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 6, 3, 3, 3, 3, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 3, 3, 3, 3, 3, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 3, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 6, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 3, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 3, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 9, 9, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 3, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 3, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 7, 7],
+ [7, 7, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+
+Previous code:
+```python
+def transform(grid):
+    out = grid.copy()
+    h, w = grid.shape
+
+    vals, counts = np.unique(grid, return_counts=True)
+    bg = vals[np.argmax(counts)]
+    non_bg = [v for v in vals if v != bg]
+
+    wall = max(non_bg, key=lambda v: np.sum(grid == v))
+    fill = max([v for v in non_bg if v != wall], key=lambda v: np.sum(grid == v))
+
+    wall_cells = set(map(tuple, np.argwhere(grid == wall)))
+    blockers = set(wall_cells)
+
+    dirs = [(-1, -1), (-1, 0), (-1, 1),
+            (0, -1),           (0, 1),
+            (1, -1),  (1, 0),  (1, 1)]
+
+    for r, c in list(wall_cells):
+        ns = [(r + dr, c + dc) for dr, dc in dirs
+              if (r + dr, c + dc) in wall_cells]
+        if len(ns) == 1:
+            nr, nc = ns[0]
+            dr = r - nr
+            dc = c - nc
+            rr, cc = r + dr, c + dc
+            while 0 <= rr < h and 0 <= cc < w:
+                blockers.add((rr, cc))
+                rr += dr
+                cc += dc
+
+    scale = 3
+    hh, ww = h * scale, w * scale
+    blocked = np.zeros((hh, ww), dtype=bool)
+
+    for r, c in blockers:
+        blocked[r*scale:(r+1)*scale, c*scale:(c+1)*scale] = True
+
+    for r in range(h - 1):
+        for c in range(w - 1):
+            if (r, c) in blockers and (r + 1, c + 1) in blockers:
+                blocked[r*scale + 2, c*scale + 3] = True
+                blocked[r*scale + 3, c*scale + 2] = True
+            if (r, c + 1) in blockers and (r + 1, c) in blockers:
+                blocked[r*scale + 2, c*scale + 2] = True
+                blocked[r*scale + 3, c*scale + 3] = True
+
+    for r, c in map(tuple, np.argwhere((grid != bg) & (grid != wall) & (grid != fill))):
+        blocked[r*scale:(r+1)*scale, c*scale:(c+1)*scale] = True
+
+    q = []
+    seen = np.zeros((hh, ww), dtype=bool)
+    for r, c in map(tuple, np.argwhere(grid == fill)):
+        sr, sc = r * scale + 1, c * scale + 1
+        if not blocked[sr, sc]:
+            q.append((sr, sc))
+            seen[sr, sc] = True
+
+    head = 0
+    while head < len(q):
+        r, c = q[head]
+        head += 1
+        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < hh and 0 <= nc < ww and not blocked[nr, nc] and not seen[nr, nc]:
+                seen[nr, nc] = True
+                q.append((nr, nc))
+
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] == bg and seen[r * scale + 1, c * scale + 1]:
+                out[r, c] = fill
+
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    out = grid.copy()
+    h, w = grid.shape
+
+    vals, counts = np.unique(grid, return_counts=True)
+    bg = vals[np.argmax(counts)]
+    colors = [v for v in vals if v != bg]
+
+    wall = max(colors, key=lambda v: np.sum(grid == v))
+    wall_pts = np.argwhere(grid == wall)
+    r0, c0 = wall_pts.min(axis=0)
+    r1, c1 = wall_pts.max(axis=0)
+
+    candidates = [v for v in colors if v != wall]
+    fill = max(
+        candidates,
+        key=lambda v: (np.sum(grid[r0:r1 + 1, c0:c1 + 1] == v), np.sum(grid == v))
+    )
+
+    def sign(x):
+        return 1 if x > 0 else (-1 if x < 0 else 0)
+
+    wall_cells = set(map(tuple, wall_pts))
+    blockers = set(wall_cells)
+
+    dirs = [(-1, -1), (-1, 0), (-1, 1),
+            (0, -1),           (0, 1),
+            (1, -1),  (1, 0),  (1, 1)]
+
+    for r, c in list(wall_cells):
+        ns = [(r + dr, c + dc) for dr, dc in dirs
+              if (r + dr, c + dc) in wall_cells]
+        if len(ns) == 1:
+            nr, nc = ns[0]
+            ns2 = [(nr + dr, nc + dc) for dr, dc in dirs
+                   if (nr + dr, nc + dc) in wall_cells and (nr + dr, nc + dc) != (r, c)]
+            if ns2:
+                br, bc = max(ns2, key=lambda p: (p[0] - nr) * (nr - r) + (p[1] - nc) * (nc - c))
+                er, ec = sign(r - br), sign(c - bc)
+            else:
+                er, ec = sign(r - nr), sign(c - nc)
+
+            rr, cc = r + er, c + ec
+            while 0 <= rr < h and 0 <= cc < w:
+                blockers.add((rr, cc))
+                rr += er
+                cc += ec
+
+    fill_pts = np.argwhere(grid == fill)
+    fr, fc = fill_pts.mean(axis=0)
+
+    other_pts = np.argwhere((grid != bg) & (grid != wall) & (grid != fill))
+    for r, c in map(tuple, other_pts):
+        blockers.add((r, c))
+        dr, dc = r - fr, c - fc
+        if abs(dr) >= abs(dc):
+            er, ec = sign(dr), 0
+        else:
+            er, ec = 0, sign(dc)
+
+        rr, cc = r + er, c + ec
+        while 0 <= rr < h and 0 <= cc < w:
+            blockers.add((rr, cc))
+            rr += er
+            cc += ec
+
+    scale = 3
+    hh, ww = h * scale, w * scale
+    blocked = np.zeros((hh, ww), dtype=bool)
+
+    for r, c in blockers:
+        blocked[r * scale:(r + 1) * scale, c * scale:(c + 1) * scale] = True
+
+    for r in range(h - 1):
+        for c in range(w - 1):
+            if (r, c) in blockers and (r + 1, c + 1) in blockers:
+                blocked[r * scale + 2, c * scale + 3] = True
+                blocked[r * scale + 3, c * scale + 2] = True
+            if (r, c + 1) in blockers and (r + 1, c) in blockers:
+                blocked[r * scale + 2, c * scale + 2] = True
+                blocked[r * scale + 3, c * scale + 3] = True
+
+    seen = np.zeros((hh, ww), dtype=bool)
+    q = []
+    for r, c in map(tuple, fill_pts):
+        sr, sc = r * scale + 1, c * scale + 1
+        if not blocked[sr, sc]:
+            seen[sr, sc] = True
+            q.append((sr, sc))
+
+    head = 0
+    while head < len(q):
+        r, c = q[head]
+        head += 1
+        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < hh and 0 <= nc < ww and not blocked[nr, nc] and not seen[nr, nc]:
+                seen[nr, nc] = True
+                q.append((nr, nc))
+
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] == bg and seen[r * scale + 1, c * scale + 1]:
+                out[r, c] = fill
+
+    return out
+```

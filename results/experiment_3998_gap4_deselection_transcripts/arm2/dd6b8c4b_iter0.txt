@@ -1,0 +1,139 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 6, 6, 6, 6, 6, 6, 6, 9, 9, 7],
+ [7, 6, 9, 9, 7, 7, 7, 6, 9, 9, 7],
+ [7, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
+ [7, 7, 7, 6, 3, 3, 3, 6, 7, 7, 7],
+ [7, 7, 7, 6, 3, 2, 3, 6, 7, 9, 7],
+ [7, 9, 7, 6, 3, 3, 3, 6, 7, 7, 7],
+ [9, 9, 7, 6, 6, 7, 6, 6, 6, 6, 7],
+ [7, 7, 7, 6, 7, 7, 7, 9, 9, 6, 7],
+ [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+Demo 1 OUTPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 6, 6, 6, 6, 6, 6, 6, 9, 9, 7],
+ [7, 6, 9, 9, 7, 7, 7, 6, 9, 9, 7],
+ [7, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7],
+ [7, 7, 7, 6, 9, 9, 3, 6, 7, 7, 7],
+ [7, 7, 7, 6, 3, 2, 3, 6, 7, 9, 7],
+ [7, 9, 7, 6, 3, 3, 3, 6, 7, 7, 7],
+ [9, 9, 7, 6, 6, 7, 6, 6, 6, 6, 7],
+ [7, 7, 7, 6, 7, 7, 7, 7, 7, 6, 7],
+ [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+
+Demo 2 INPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 9, 7, 7, 9],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9],
+ [9, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6],
+ [7, 7, 7, 6, 3, 3, 3, 6, 9, 7, 7],
+ [7, 7, 9, 6, 3, 2, 3, 6, 7, 7, 7],
+ [7, 7, 7, 6, 3, 3, 3, 6, 7, 9, 7],
+ [7, 7, 7, 6, 7, 7, 7, 6, 7, 7, 7],
+ [7, 9, 7, 6, 7, 9, 7, 6, 7, 7, 7],
+ [7, 7, 9, 6, 7, 9, 7, 6, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+Demo 2 OUTPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 9, 7, 7, 9],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9],
+ [7, 7, 7, 6, 6, 6, 6, 6, 6, 6, 6],
+ [7, 7, 7, 6, 9, 9, 9, 6, 7, 7, 7],
+ [7, 7, 7, 6, 9, 9, 9, 6, 7, 7, 7],
+ [7, 7, 7, 6, 9, 9, 9, 6, 7, 7, 7],
+ [7, 7, 7, 6, 7, 7, 7, 6, 7, 7, 7],
+ [7, 7, 7, 6, 7, 7, 7, 6, 7, 7, 7],
+ [7, 7, 7, 6, 7, 7, 7, 6, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+
+Demo 3 INPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 7],
+ [7, 7, 9, 7, 7, 7, 7, 7, 7, 7, 9],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 3, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 2, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 3, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 9, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+Demo 3 OUTPUT (11x11):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 9, 9, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 2, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 3, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+
+TEST INPUT (11x11):
+[[6, 6, 9, 7, 7, 7, 7, 7, 9, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [9, 6, 9, 7, 7, 7, 7, 7, 9, 6, 7],
+ [7, 6, 7, 6, 6, 7, 6, 6, 7, 6, 9],
+ [7, 6, 7, 6, 3, 3, 3, 6, 7, 6, 7],
+ [7, 6, 7, 7, 3, 2, 3, 7, 7, 6, 9],
+ [7, 6, 7, 6, 3, 3, 3, 6, 7, 6, 7],
+ [7, 6, 7, 6, 6, 7, 6, 6, 7, 6, 9],
+ [7, 6, 9, 7, 7, 9, 7, 7, 9, 6, 7],
+ [7, 6, 6, 6, 6, 6, 6, 6, 7, 6, 6],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    out = grid.copy()
+    h, w = grid.shape
+
+    pos = np.argwhere(grid == 2)
+    if len(pos) == 0:
+        return out
+    r, c = pos[0]
+
+    # Find the 3x3 object centered on the 2.  Each surrounding cell represents
+    # the same direction from the center.
+    dirs = [(-1, -1), (-1, 0), (-1, 1),
+            (0, -1),           (0, 1),
+            (1, -1),  (1, 0),  (1, 1)]
+
+    for dr, dc in dirs:
+        rr, cc = r + dr, c + dc
+        seen = False
+
+        # Look from the object outward in that direction.  A 9 anywhere on that
+        # ray is transferred onto the corresponding cell of the central object.
+        nr, nc = rr + dr, cc + dc
+        while 0 <= nr < h and 0 <= nc < w:
+            if grid[nr, nc] == 9:
+                seen = True
+                break
+            nr += dr
+            nc += dc
+
+        if seen:
+            out[rr, cc] = 9
+
+    # Remove all original 9s that are not part of the central 3x3 object after
+    # the transfer.
+    for i in range(h):
+        for j in range(w):
+            if grid[i, j] == 9 and not (r - 1 <= i <= r + 1 and c - 1 <= j <= c + 1):
+                out[i, j] = 7
+
+    return out
+```
