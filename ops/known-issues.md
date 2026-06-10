@@ -410,32 +410,40 @@ first POSITIVES, all 5/5-adversarially-verified, full record in `ops/verifier_ga
   proves genuine induction, not recall.
 - Precision fixes: graded gate production setting τ=0.005 (ARC-1-validated, 0 losses);
   k=3 single-shot agreement = precise but coverage-collapsed.
-- **k=3 CHAIN-arms (pre-registered, commit 9e1a070af; landed bc8b2b9d0):** agreement
-  10/16 entries, gold 8/10 (0.80 vs 0.52 baseline), fresh-chain per-arm rate 0.833 —
-  chain mechanism confirmed; the strict all-gold prereg bar NOT met (2 wrong-wrong
-  agreements). Adversarial round in flight at session end; its synthesis (in
-  `results/arc3_gap4_chain_arms_adversarial_verify.json` when written, or re-runnable)
-  carries `conductor_followups`.
+- **k=3 CHAIN-arms (pre-registered 9e1a070af; landed bc8b2b9d0; adversarially CONFIRMED
+  5/5 — `results/arc3_gap4_chain_arms_adversarial_verify.json`):** agreement 10/16
+  entries, gold 8/10; fresh-chain per-arm rate 0.833 (45 calls / 3780 codex-s). Prereg
+  all-gold bar honestly NOT met. NARROWED by the round: the chain COVERAGE lift is real
+  (matched controls, Fisher p=1.5e-5) but the 0.80 "precision uplift" is NOT established
+  (ns vs 0.52, p=0.07; ns vs the in-run fresh-arm rate 0.73, p=0.47) — **agreement is a
+  CONFIDENCE LABEL, not a selector** (agreement-first is net −1 pass@1); the probe arm
+  is weak (0.31 gold) and must never join a quorum; feedback-vs-iid-redraw UNRESOLVED;
+  2.2× between-run codex variance ⇒ all controls must be same-run interleaved.
+  **Deployment frontier (measured offline): graded-snap τ≤0.005 → promote-first-FRESH-
+  chain-raw-output → vote = ARC-2 pass@1 19/31 = 0.6129 (vs vote 1/31), ARC-1 28/31.**
 
-**Planner: queue these as gemini/codex tasks (honest gates, no operator action needed):**
+**Planner: queue the panel's four `conductor_followups` VERBATIM from the synthesis in
+`results/arc3_gap4_chain_arms_adversarial_verify.json` (field
+`synthesis.conductor_followups` — they carry the full REQUIRED-ARTIFACT-FIELDS-grade
+specs). In brief:**
 
-1. **CONFIRMATORY agreement run** (the prereg failed the all-gold bar; the observed 0.80
-   needs fresh confirmation): k=3 chain arms on the 11 NON-chain-feasible ARC-2 tasks +
-   any fresh clean tasks; pre-register the gate variant BEFORE running (use the
-   chain-arms script's docstring pattern; commit first). Gate: report-as-is; significance
-   needs ~n≥13 agreement events at 0.80 to beat 0.52 at α=0.05.
-2. **Tiered-harness offline eval + registration:** measure the full tier stack
-   [chain-arms agreement → graded τ=0.005 → promote-any-demo-perfect → vote] on BOTH
-   saved pools (zero codex — all programs/preds saved); register the configuration in
-   `ops/verifier_registry.yaml` as a candidate verifier with the honest caveats (rerank
-   framing degenerate on weak pools; standalone-solver framing is where agreement pays).
-3. **Local open-weight generator arm** (decentralization rule 1): replicate the induction
-   protocol with Qwen3.6-35B-A3B / gemma-4 GGUF via llama.cpp on a small clean task set;
-   measure demo-perfect rate + agreement precision vs the codex arms. GPU task — use the
-   standard conductor GPU path.
-4. **Wrong-agreement autopsy follow-through:** implement the adversarial synthesis's
-   recommended gate variant (e.g. unanimity / majority-of-k) ONLY as a fresh pre-registered
-   confirmation, never post-hoc.
+1. **DE-SELECTION COVERAGE RUN** (codex, ~3.5k codex-s): k=2 fresh ≤3-iter 600s chains on
+   the 11 never-chained ARC-2 pool tasks; report the demo-perfect rate honestly (de-biases
+   the 0.833 estimate); transcripts + gold-leak audit; no all-gold bar.
+2. **PRE-REGISTERED PRECISION CONFIRMATION v2** (codex, ~90–135 calls, splittable): k=3
+   ALL-FRESH chains on NEW clean tasks; protocol committed BEFORE any call; primary gate =
+   binomial critical-value rule (n≥19 events, ≥14 gold ⇒ size 0.046 / power 0.837 at
+   p=0.80); secondary vs in-run fresh-arm rate; tertiary = task-level
+   unanimity-with-abstention (post-hoc 5/5 here). retire_if_same_verdict on the
+   precision-uplift claim.
+3. **FEEDBACK-VS-REDRAW DECIDING CONTROL** (codex, same-run paired): per task, one
+   feedback chain vs 3 independent singles, same 600s, interleaved in ONE run; exact
+   McNemar/Fisher; resolves whether feedback beats iid resampling (currently ambiguous).
+4. **HARNESS REGISTRATION + OFFLINE TIER-STACK EVAL** (gemini, CPU, zero codex): register
+   `gap4_program_induction_stack` in `ops/verifier_registry.yaml` (snap τ≤0.005 →
+   promote-first-fresh-raw → vote; agreement = confidence label only, fresh arms only);
+   reusable module + bit-exact offline re-eval (must reproduce 19/31 and 28/31); append
+   the 446ef5d2 demo-underdetermination gap entry to `ops/verifier_gaps.md`.
 
 **Hygiene rules for these tasks (from this session's incidents):** commit artifacts at
 landing time (untracked = zero clobber protection); transcripts archived for every

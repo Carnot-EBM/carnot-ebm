@@ -1,4 +1,11 @@
 {
+  "adversarial_verify": {
+    "final_verdict": "CONFIRMED (artifact authentic; prereg honestly failed; interpretation narrowed)",
+    "report": "results/arc3_gap4_chain_arms_adversarial_verify.json",
+    "reviewers": 5,
+    "unanimous": true,
+    "worst_severity": "major (attached to the INTERPRETATION wording, not the artifact)"
+  },
   "agreement_entries": 10,
   "agreement_gold_entries": 8,
   "agreement_rows": [
@@ -53,6 +60,16 @@
       "task": "d8e07eb2"
     }
   ],
+  "corrigendum_2026_06_10_chain_arms": {
+    "chain_mechanism_narrowed": "Chain COVERAGE lift confirmed on reviewer-built matched controls (same-12-task same-600s singles 5/24 vs chains 20/24, Fisher p=1.5e-5; within-run iter0 11/24 -> 20/24, McNemar p=0.0039). UNRESOLVED: feedback-vs-iid-redraw (post-feedback per-call 9/21=0.4286 ~ iter0 0.4583; iid 3-redraw predicts 0.841 vs 0.833 observed). Measured 2.2x identical-protocol BETWEEN-RUN codex variance -> never compare per-call rates across runs; all future controls must be same-run, interleaved, matched-timeout.",
+    "cost_correction": "The session summary's '40 calls/4747.6s' was wrong: the artifact records 45 calls / 3780.0 codex-seconds / 1156.5s wall (verified by all 5 reviewers).",
+    "deployment_frontier": "Best measured offline stack: graded pool-snap tau<=0.005 > promote-first-FRESH-chain-raw-output > TRM vote = ARC-2 pass@1 19/31=0.6129 (vs banked 2/31, vote 1/31; 16 wins/0 losses, sign p=2e-5; ARC-1 sanity 28/31=0.9032). Registered per the synthesis harness_recommendation with all caveats.",
+    "origin": "5/5 hostile round; all numbers bit-exact via five independent re-derivations.",
+    "precision_claim_narrowed": "8/10=0.80 agreement precision is NOT a demonstrated uplift: p=0.0702 vs the 0.52 baseline; p=0.469 vs the in-run fresh-arm gold rate 19/26=0.7308; CP95 [0.444,0.975] spans both nulls; cluster-conservative 6/8 tasks p=0.172. The demonstrated gain is COVERAGE (~10x: 10/31 vs 1/31 entries), driven by the chain-rate lift. Agreement is a CONFIDENCE LABEL, not a precision amplifier or selector (agreement-first is net -1 pass@1 on the deployment frontier).",
+    "prereg_design_flaw": "The all-gold acceptance rule's power DECREASES with coverage (10.7% at the realized 10 events under true p=0.80) \u2014 structurally near-unpassable. Future preregs in this lineage use binomial critical-value rules (n=19 events, >=14 gold: size 0.046, power 0.837 at p=0.80) with the in-run fresh-arm rate as comparator.",
+    "probe_arm0_demoted": "Probe arm0 gold-given-perfect is 5/16=0.3125 (vs fresh 19/26=0.7308, p=0.0094); it CAUSED the 9aaea919 wrong agreement by outvoting an exact-gold fresh arm. Never include stale/probe arms in an agreement quorum. (Docstring wording fix: arm0 takes the EARLIEST demo-perfect probe iteration, not 'its FINAL program'.)",
+    "wrong_agreement_anatomy": "9aaea919 (gate-fixable: unanimity would abstain; majority-of-3 picks wrong) vs 446ef5d2 (NOT fixable: 3/3 unanimous hash-identical wrong from structurally DISJOINT code, difflib 0.02-0.10, hamming-to-gold 0.459 \u2014 convergent wrong inference from rule-underdetermining demos). Post-hoc rescue: TASK-LEVEL unanimity (sibling-input disagreement as underdetermination tripwire) = 5/5 gold at 0.3125 coverage \u2014 POST-HOC, needs fresh pre-registered confirmation."
+  },
   "d8e07eb2_caveat": "arm0 uses the task's final chained program; its iter0 transcript carries a known provenance ambiguity (recorded in the precision-fixes round).",
   "duration_s": 1156.5,
   "experiment": "arc3_gap4_arc2_chain_ensemble",
