@@ -1,0 +1,274 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (12x20):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 8, 8, 2, 2, 2],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 0, 0, 7, 0, 7, 8, 8, 7, 7, 7],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 7, 0, 0, 0, 7, 8, 8, 7, 7, 7],
+ [8, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 7, 0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 7, 0, 7, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 8, 8],
+ [8, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 2, 7, 8, 8],
+ [8, 7, 2, 7, 2, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 2, 7, 8, 8],
+ [8, 7, 2, 2, 2, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 4, 8],
+ [8, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 1 OUTPUT (12x20):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 0, 0, 0, 0, 0, 0, 0, 7, 0, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 2, 7, 2, 2, 2, 2, 2, 2, 2, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 2, 2, 2, 7, 7, 7, 7, 7, 2, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+
+Demo 2 INPUT (10x10):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 4, 4, 8, 8, 8, 9, 9, 3, 8],
+ [8, 4, 3, 3, 3, 8, 3, 3, 3, 8],
+ [8, 8, 3, 9, 9, 8, 3, 3, 3, 8],
+ [8, 8, 3, 9, 9, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 3, 3, 3, 8, 8, 3, 9, 9, 8],
+ [8, 9, 9, 3, 8, 8, 3, 9, 3, 8],
+ [8, 9, 9, 3, 8, 8, 3, 3, 3, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 2 OUTPUT (10x10):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 3, 3, 3, 3, 3, 3, 8, 8],
+ [8, 8, 3, 9, 9, 9, 9, 3, 8, 8],
+ [8, 8, 3, 9, 9, 9, 9, 3, 8, 8],
+ [8, 8, 3, 9, 9, 9, 9, 3, 8, 8],
+ [8, 8, 3, 9, 3, 3, 3, 3, 8, 8],
+ [8, 8, 3, 3, 3, 3, 3, 3, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+
+TEST INPUT (26x26):
+[[4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 4, 1, 1, 1],
+ [4, 1, 3, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 3, 3, 3, 4, 6, 6, 1],
+ [4, 1, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 3, 1, 1, 4, 1, 6, 1],
+ [4, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 3, 1, 1, 4, 1, 6, 1],
+ [4, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6, 1],
+ [4, 1, 1, 6, 6, 4, 1, 1, 1, 1, 3, 1, 4, 4, 4, 4, 1, 1, 7, 1, 1, 1, 4, 1, 1, 1],
+ [4, 1, 1, 6, 1, 4, 3, 3, 3, 3, 3, 1, 4, 4, 4, 4, 1, 1, 7, 1, 1, 1, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 7, 7, 7, 1, 1, 1, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4],
+ [1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [6, 6, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [1, 1, 1, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 1, 1, 4, 4, 4, 4, 3, 3, 3, 3, 3, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 6, 6, 4, 4, 4, 4, 1, 1, 1, 1, 3, 1, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1],
+ [4, 1, 1, 4, 4, 4, 4, 1, 1, 1, 1, 3, 1, 4, 1, 1, 6, 1, 1, 4, 7, 7, 7, 1, 1, 1],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 6, 6, 6, 4, 1, 1, 7, 1, 1, 1],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 4, 1, 1, 7, 1, 1, 1],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 1, 7, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 7, 7, 7, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 1, 7, 7, 7, 4, 4, 4, 4, 4, 4, 4, 4, 1, 7, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 7, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 2, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 7, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 2, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    g = np.array(grid)
+    H, W = g.shape
+
+    vals, cnts = np.unique(g, return_counts=True)
+    bg = vals[np.argmax(cnts)]
+    counts = {int(v): int(c) for v, c in zip(vals, cnts)}
+    non_bg = [int(v) for v in vals if int(v) != int(bg)]
+    frame = max(non_bg, key=lambda x: counts[x])
+
+    keep = set([frame])
+    for c in non_bg:
+        if counts[c] >= 4:
+            keep.add(c)
+
+    mask = np.zeros(g.shape, dtype=bool)
+    for c in keep:
+        mask |= (g == c)
+
+    seen = np.zeros(g.shape, dtype=bool)
+    pieces = []
+    origins = []
+
+    for r in range(H):
+        for c in range(W):
+            if not mask[r, c] or seen[r, c]:
+                continue
+            stack = [(r, c)]
+            seen[r, c] = True
+            pts = []
+            while stack:
+                x, y = stack.pop()
+                pts.append((x, y))
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < H and 0 <= ny < W and mask[nx, ny] and not seen[nx, ny]:
+                        seen[nx, ny] = True
+                        stack.append((nx, ny))
+
+            rs = [p[0] for p in pts]
+            cs = [p[1] for p in pts]
+            r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
+            sub = g[r0:r1 + 1, c0:c1 + 1]
+            pat = np.full(sub.shape, -1, dtype=int)
+            for k in keep:
+                pat[sub == k] = k
+
+            rr = np.where(np.any(pat != -1, axis=1))[0]
+            cc = np.where(np.any(pat != -1, axis=0))[0]
+            pat = pat[rr[0]:rr[-1] + 1, cc[0]:cc[-1] + 1]
+            r0 += int(rr[0])
+            c0 += int(cc[0])
+
+            for _ in range(pat.size):
+                changed = False
+                for i in range(pat.shape[0]):
+                    for j in range(pat.shape[1]):
+                        if pat[i, j] != -1:
+                            continue
+                        row = pat[i, pat[i] != -1]
+                        col = pat[pat[:, j] != -1, j]
+                        val = None
+                        if len(row) and np.all(row == row[0]):
+                            val = int(row[0])
+                        elif len(col):
+                            fcnt = np.sum(col == frame)
+                            if fcnt >= len(col) - fcnt or i in (0, pat.shape[0] - 1) or j in (0, pat.shape[1] - 1):
+                                val = frame
+                            elif np.all(col == col[0]):
+                                val = int(col[0])
+                        if val is None and len(row):
+                            vals2, cnts2 = np.unique(row, return_counts=True)
+                            val = int(vals2[np.argmax(cnts2)])
+                        if val is None:
+                            val = frame
+                        pat[i, j] = val
+                        changed = True
+                if not changed:
+                    break
+
+            pieces.append(pat)
+            origins.append((r0, c0))
+
+    n = len(pieces)
+    total = sum(p.shape[0] * p.shape[1] for p in pieces)
+    maxh = max(p.shape[0] for p in pieces)
+    maxw = max(p.shape[1] for p in pieces)
+
+    dims = []
+    for h in range(maxh, total + 1):
+        if total % h == 0:
+            w = total // h
+            if w >= maxw:
+                dims.append((h, w))
+    dims.sort(key=lambda x: (abs(x[0] - x[1]), x[0] * x[1]))
+
+    order = sorted(range(n), key=lambda i: -pieces[i].size)
+    solutions = []
+
+    def boundary_ok(p, x, y, oh, ow):
+        ph, pw = p.shape
+        if x == 0 and np.any(p[0, :] != frame):
+            return False
+        if x + ph == oh and np.any(p[-1, :] != frame):
+            return False
+        if y == 0 and np.any(p[:, 0] != frame):
+            return False
+        if y + pw == ow and np.any(p[:, -1] != frame):
+            return False
+        return True
+
+    def search(oh, ow):
+        occ = np.zeros((oh, ow), dtype=bool)
+        loc = [None] * n
+        used = [False] * n
+
+        def rec(k):
+            if len(solutions) >= 100:
+                return
+            if k == n:
+                canvas = np.full((oh, ow), frame, dtype=int)
+                for i, (x, y) in enumerate(loc):
+                    p = pieces[i]
+                    canvas[x:x + p.shape[0], y:y + p.shape[1]] = p
+                if np.all(canvas[0, :] == frame) and np.all(canvas[-1, :] == frame) and np.all(canvas[:, 0] == frame) and np.all(canvas[:, -1] == frame):
+                    solutions.append((canvas, list(loc)))
+                return
+
+            empty = np.argwhere(~occ)
+            if len(empty) == 0:
+                return
+            x0, y0 = empty[0]
+
+            for idx in order:
+                if used[idx]:
+                    continue
+                p = pieces[idx]
+                ph, pw = p.shape
+                for x in range(max(0, x0 - ph + 1), min(x0, oh - ph) + 1):
+                    y = y0
+                    if not (y <= y0 < y + pw) or y + pw > ow:
+                        continue
+                    if not boundary_ok(p, x, y, oh, ow):
+                        continue
+                    if np.any(occ[x:x + ph, y:y + pw]):
+                        continue
+                    occ[x:x + ph, y:y + pw] = True
+                    used[idx] = True
+                    loc[idx] = (x, y)
+                    rec(k + 1)
+                    loc[idx] = None
+                    used[idx] = False
+                    occ[x:x + ph, y:y + pw] = False
+
+        rec(0)
+
+    for d in dims:
+        search(*d)
+        if solutions:
+            break
+
+    if not solutions:
+        return g.copy()
+
+    best = None
+    best_score = None
+
+    for obj, loc in solutions:
+        oh, ow = obj.shape
+        for ox in range(0, max(1, H - oh + 1)):
+            for oy in range(0, max(1, W - ow + 1)):
+                if ox + oh > H or oy + ow > W:
+                    continue
+                out = np.full((H, W), bg, dtype=int)
+                out[ox:ox + oh, oy:oy + ow] = obj
+                overlap = int(np.sum((out == g) & (out != bg)))
+                move = 0
+                for i, (x, y) in enumerate(loc):
+                    move += abs((ox + x) - origins[i][0]) + abs((oy + y) - origins[i][1])
+                score = (overlap, -move)
+                if best_score is None or score > best_score:
+                    best_score = score
+                    best = out
+
+    return best
+```
