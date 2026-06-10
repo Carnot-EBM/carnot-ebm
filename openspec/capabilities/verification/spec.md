@@ -12081,3 +12081,61 @@ open-vs-closed induction gap as a real finding, records in
 `missing_verifier_gaps` which tasks the local inducer could not synthesize a
 demo-perfect program for that codex could, and never reports the verifier as
 modified.
+
+### REQ-VERIFY-4012: GAP-4 Local Best-of-N Generator Arm
+
+The repository SHALL provide Exp 4012 at
+`scripts/experiments/experiment_4012_gap4_local_best_of_n.py` to re-run the
+GAP-4 local open-weight generator arm as a best-of-N local sampling experiment
+over the same 31-entry ARC-1 rerank pool. The generator SHALL be a local GGUF
+program proposer, preferring `unsloth/gemma-4-12B-it-GGUF` when cached and
+falling back only to `unsloth/gemma-4-26B-A4B-it-GGUF`; it SHALL load through a
+concrete `.gguf` path and `llama_cpp`, not through `AutoTokenizer` or any
+closed-weight/codex generator. The verifier side SHALL remain unchanged from
+GAP-4: restricted-namespace execution, demo-fit filtering, candidate
+content-hash match, normalized min-Hamming snap with `tau <= 0.005`, and
+vote-primary gated pass@2 scoring.
+
+Before any induction call, the runner SHALL verify that a preferred/fallback
+GGUF is cached, `llama_cpp` is importable, and the ARC-1 pool plus verifier
+primitives load. A failed GGUF precondition SHALL write
+`results/experiment_4012_gap4_local_best_of_n.json` with
+`honest_verdict=blocked_local_gguf_not_cached`; a failed `llama_cpp`
+precondition SHALL write `blocked_llama_cpp_unavailable`; and a failed pool or
+verifier load SHALL write `blocked_eval_pool_unreadable`. The runner SHALL NOT
+fall back to DSL-only, codex, or any non-GGUF proposer.
+
+For a complete run, the runner SHALL draw `k=8..16` independent local samples
+per unique task using only demo pairs in the generation prompt, varying
+temperature and seed across draws. It SHALL checkpoint completed task samples so
+a wall-clock timeout preserves partial coverage. It SHALL keep every program
+that reproduces all demos exactly, execute those programs on the test input,
+snap each demo-perfect prediction to a same/near candidate only when normalized
+Hamming distance is at most `0.005`, otherwise fall back to vote, and then
+compute the unchanged GAP-4 gated pass@2 plus a bootstrap 95% CI of
+`local_gated - vote`.
+
+The terminal artifact SHALL include bare top-level fields
+`local_demo_perfect_coverage_bestofn`, `k_samples_per_task`,
+`local_gated_pass2`, `local_beats_vote`, `coverage_gain_vs_3attempt`,
+`local_model_used`, `cost_local_seconds`, `cost_codex_seconds_ref`,
+`cost_verifier_seconds`, `ci95_local_minus_vote`, `verifier_side_unchanged`,
+`missing_verifier_gaps`, `preconditions_checked`, `random_seed`,
+`honest_verdict`, `duration_s`, and `inference_substrate`.
+
+### SCENARIO-VERIFY-4012: Best-of-N Local Sampling Drives GAP-4
+
+Given the preferred or fallback local Gemma GGUF is cached, `llama_cpp` is
+importable, and the 31-entry ARC-1 pool is readable, when Exp 4012 runs with
+`k` local samples per task, then it records
+`local_demo_perfect_coverage_bestofn` as the fraction of pool entries whose task
+has at least one demo-perfect local sample, records
+`coverage_gain_vs_3attempt` against the Exp 4002 `0.2581` local baseline,
+computes `local_gated_pass2` using the unchanged GAP-4 pass@2 scorer, sets
+`local_beats_vote=true` only when the point estimate beats vote and the
+bootstrap CI lower bound strictly excludes 0, emits
+`success: gap4_local_bestofn_beats_vote_pass2<val>_cov<val>_inducer<model>` for
+that sovereign positive, otherwise emits
+`complete: gap4_local_bestofn_cov<val>_pass2<val>_below_codex`, and lists
+remaining codex-demo-perfect tasks without a local best-of-N demo-perfect sample
+in `missing_verifier_gaps`.
