@@ -11880,3 +11880,63 @@ has more A-only wins than B-only wins with exact paired `mcnemar_p<=0.05`, emits
 `success: feedback_beats_redraw_p<val>` for that positive mechanism result,
 otherwise emits `complete: feedback_no_better_than_redraw_p<val>`, and records
 `FALSE_NEGATIVE_RISK` in the verdict when the discordant-pair count is small.
+
+### REQ-VERIFY-4002: GAP-4 Local Open-Weight Generator Arm
+
+The repository SHALL provide Exp 4002 at
+`scripts/experiments/experiment_4002_gap4_local_generator_arm.py` to measure
+whether a SOTA local open-weight GGUF model (Qwen3.6-35B-A3B /
+gemma-4-26B-A4B-it / gemma-4-12B-it), used as the program INDUCER in place of
+the closed-weight codex (gpt-5.5) generator, can drive the proven model-free
+GAP-4 verifier on the same 31-entry ARC-1 rerank pool
+(`results/arc3_gap3_stage2_eval_pool.json.gz`). The verifier side — demo-fit
+exact-reproduction gate, restricted-namespace execution, graded min-hamming
+snap, and the vote-primary gated rerank — SHALL be reused UNCHANGED from
+`arc3_gap4_rule_exec_verifier`; only the generator is swapped. This isolates
+the open-vs-closed induction gap and establishes the decentralization-clean
+deployment-tier headline path (CLAUDE.md Decentralization Rule 1).
+
+Before any induction call, the runner SHALL verify that (a) the selected SOTA
+GGUF is cached on disk (resolvable via `resolve_cached_gguf`), (b) `llama_cpp`
+is importable, and (c) the eval pool is readable as JSON. A failed precondition
+SHALL write `results/experiment_4002_gap4_local_generator_arm.json` with
+`honest_verdict=blocked_local_gguf_not_cached`,
+`honest_verdict=blocked_llama_cpp_unavailable`, or
+`honest_verdict=blocked_eval_pool_unreadable`, zero induction calls, and no
+fabricated win. The runner SHALL NOT fall back to a DSL-only proposer or to
+codex when the local GGUF is absent.
+
+For a complete run, the runner SHALL prompt the LOCAL GGUF to induce
+`def transform(grid)` from the demo pairs only (no task id, no candidates, no
+gold), allow at most three demo-feedback iterations mirroring the codex chain,
+keep a program only if it reproduces every demo exactly, execute the
+demo-perfect program on each test input, apply the unchanged graded-snap gated
+rerank, and report the local induction demo-perfect rate, the gated pass@2
+against vote/oracle/codex references, a bootstrap 95% CI of (local gated −
+vote) pass@2, and the per-task wall-cost of the local inducer vs the codex
+reference vs the model-free verifier.
+
+The terminal artifact SHALL include bare top-level fields
+`local_induction_demo_perfect_rate`, `local_gated_pass2`, `local_beats_vote`,
+`local_model_used`, `cost_local_seconds`, `cost_codex_seconds_ref`,
+`cost_verifier_seconds`, `ci95_local_minus_vote`, `verifier_side_unchanged`,
+`missing_verifier_gaps`, `preconditions_checked`, `random_seed`,
+`honest_verdict`, `duration_s`, and `inference_substrate`.
+
+### SCENARIO-VERIFY-4002: Open Model Drives the Model-Free Verifier
+
+Given the selected SOTA GGUF is cached, `llama_cpp` is importable, and the
+31-entry ARC-1 pool is readable, when Exp 4002 runs, then it loads the local
+GGUF as the only generator, reuses the GAP-4 demo-fit / execution / gated-rerank
+verifier primitives unchanged (`verifier_side_unchanged=true`), computes
+`local_gated_pass2` from the same `_pass` pass@2 metric over the same candidate
+pool, sets `local_beats_vote=true` only when the local gated pass@2 exceeds the
+TRM vote pass@2 AND the bootstrap 95% CI lower bound of (local gated − vote)
+strictly excludes 0, emits
+`success: gap4_local_generator_beats_vote_pass2<val>_inducer<model>` for that
+sovereign-moat positive, otherwise emits
+`complete: gap4_local_induction<rate>_pass2<val>_below_codex` quantifying the
+open-vs-closed induction gap as a real finding, records in
+`missing_verifier_gaps` which tasks the local inducer could not synthesize a
+demo-perfect program for that codex could, and never reports the verifier as
+modified.

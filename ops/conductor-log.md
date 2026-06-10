@@ -8170,3 +8170,4 @@ c |
 | 2026-06-10 11:02 UTC | GAP-4 conductor_followup #3 — FEEDBACK-VS-REDRAW D | OK | 88 passed in 5.90s |
 | 2026-06-10 11:16 UTC | GAP-4 conductor_followup #4 — HARNESS REGISTRATION | FAIL | Claude Code error: Error: Reached max turns (70) |
 | 2026-06-10 11:23 UTC | GAP-4 conductor_followup #4 — HARNESS REGISTRATION | OK | 122 passed in 3.59s |
+| 2026-06-10 11:46 UTC | GAP-4 DECENTRALIZATION arm (re-run of the poison-s | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
