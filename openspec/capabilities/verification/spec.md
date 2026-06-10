@@ -11929,6 +11929,51 @@ Codex calls or zero agreement events remain after execution with Codex
 available, then it reports a `blocked_` verdict instead of a complete verdict
 and leaves `execution_floor_met=false`.
 
+### REQ-VERIFY-4010: GAP-5 Cross-Example Consistency Selector
+
+The repository SHALL provide Exp 4010 at
+`scripts/experiments/experiment_4010_gap5_cross_example_consistency_selector.py`
+to replay the saved ARC-2 GAP-4 induced programs offline and test whether a
+cross-example-consistency selector improves over plain final-grid
+output-agreement. Before scoring, the runner SHALL verify that
+`results/arc3_gap4_arc2_induced_programs.json`,
+`results/arc3_gap4_induced_programs.json`,
+`results/arc3_gap4_arc2_chain_ensemble.json`, and
+`results/arc3_gap4_arc2_eval_pool.json.gz` load successfully. Missing or
+unreadable saved programs SHALL produce `blocked_saved_programs_missing`;
+an unreadable eval pool SHALL produce `blocked_eval_pool_unreadable`. The
+offline path SHALL make zero Codex calls.
+
+For each ARC-2 chain-feasible task with at least two demo-perfect candidate
+programs, the runner SHALL execute candidates with the existing GAP-4 sandbox,
+score each candidate's leave-one-demo-out reproduction rate using the shared
+grid-grounded grading primitive, score sibling-input agreement against other
+candidates, choose a cross-example candidate only when the combined score has a
+unique dominating maximum, and otherwise abstain as the GAP-5 tripwire. The
+artifact SHALL compare cross-example precision and coverage against the plain
+output-agreement baseline with a paired bootstrap confidence interval and write
+`results/experiment_4010_gap5_cross_example_consistency_selector.json` with
+bare top-level fields `cross_example_precision`,
+`output_agreement_precision_ref`, `cross_example_coverage`,
+`selector_beats_output_agreement`, `sibling_abstention_gold_rate`,
+`n_tasks_scored`, `n_codex_calls`, `missing_verifier_gaps`, `random_seed`,
+`honest_verdict`, `duration_s`, and `inference_substrate`.
+
+### SCENARIO-VERIFY-4010: Cross-Example Selector Reports Lift Or Bounded No-Lift
+
+Given the saved ARC-2 GAP-4 program artifacts and eval pool are readable, when
+Exp 4010 runs, then it uses only offline replay (`n_codex_calls=0`), evaluates
+candidate programs on demonstrations and sibling inputs without exposing gold
+to selection, computes `cross_example_precision` as selected gold divided by
+confident cross-example selections, computes `cross_example_coverage` as
+confident selections divided by scored tasks, sets
+`selector_beats_output_agreement=true` only when the paired CI for precision or
+coverage lift excludes zero, reports
+`success: gap5_cross_example_selector_beats_agreement_prec<val>_cov<val>` for a
+CI-supported lift, otherwise reports
+`complete: gap5_cross_example_no_better_than_agreement_<reason>`, and records
+remaining undecidable cases in `missing_verifier_gaps`.
+
 ### REQ-VERIFY-4002: GAP-4 Local Open-Weight Generator Arm
 
 The repository SHALL provide Exp 4002 at

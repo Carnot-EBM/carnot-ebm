@@ -1,0 +1,604 @@
+{
+  "cross_example_coverage": 0.0,
+  "cross_example_precision": 0.0,
+  "duration_s": 2.2,
+  "experiment": "experiment_4010_gap5_cross_example_consistency_selector",
+  "field_principles": {
+    "cross_example_coverage": "BARE FLOAT -- fraction of tasks with a confident cross-example selection (the coverage side).",
+    "cross_example_precision": "BARE FLOAT -- P(gold | cross-example-consistency selected) on the ARC-2 pool (the precision side).",
+    "duration_s": "Wall-clock seconds for the offline replay.",
+    "honest_verdict": "Terminal-prefix verdict.",
+    "inference_substrate": "Aggregation/offline substrate.",
+    "missing_verifier_gaps": "What the cross-example selector still cannot disambiguate (the next gap per the Missing-Verifier Gap Logging mandate).",
+    "n_codex_calls": "Coverage provenance: 0 means pure offline replay over saved programs.",
+    "n_tasks_scored": "Coverage provenance: ARC-2 chain-feasible tasks with >=2 demo-perfect programs.",
+    "output_agreement_precision_ref": "BARE FLOAT -- the plain output-agreement precision baseline (the must-beat).",
+    "random_seed": "Reproducibility seed for the paired bootstrap.",
+    "selector_beats_output_agreement": "BARE BOOL -- does the cross-example selector beat output-agreement on precision and/or coverage with a CI excluding 0 (the verifier-improvement claim).",
+    "sibling_abstention_gold_rate": "BARE FLOAT -- gold rate on tasks where the selector abstains due to sibling-input disagreement (the GAP-5 tripwire datum)."
+  },
+  "honest_verdict": "complete: gap5_cross_example_no_better_than_agreement_coverage_lower",
+  "inference_substrate": "offline_saved_gap4_program_replay_cross_example_consistency",
+  "missing_verifier_gaps": [
+    {
+      "failure_mode": "cross_example_selector_abstained_sibling_input_disagreement",
+      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
+      "task": "13e47133"
+    },
+    {
+      "failure_mode": "cross_example_selector_abstained_no_sibling_inputs",
+      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
+      "task": "2b83f449"
+    },
+    {
+      "failure_mode": "cross_example_selector_abstained_sibling_input_disagreement",
+      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
+      "task": "2d0172a1"
+    },
+    {
+      "failure_mode": "cross_example_selector_abstained_sibling_input_disagreement",
+      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
+      "task": "446ef5d2"
+    },
+    {
+      "failure_mode": "cross_example_selector_abstained_no_sibling_inputs",
+      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
+      "task": "58490d8a"
+    },
+    {
+      "failure_mode": "cross_example_selector_abstained_no_sibling_inputs",
+      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
+      "task": "58f5dbd5"
+    },
+    {
+      "failure_mode": "cross_example_selector_abstained_no_sibling_inputs",
+      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
+      "task": "6e453dd6"
+    },
+    {
+      "failure_mode": "cross_example_selector_abstained_no_sibling_inputs",
+      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
+      "task": "6ffbe589"
+    },
+    {
+      "failure_mode": "cross_example_selector_abstained_no_sibling_inputs",
+      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
+      "task": "9aaea919"
+    },
+    {
+      "failure_mode": "cross_example_selector_abstained_no_sibling_inputs",
+      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
+      "task": "b10624e5"
+    },
+    {
+      "failure_mode": "cross_example_selector_abstained_score_tie",
+      "missing_discriminator": "higher-order rule consistency beyond demo reproduction and sibling agreement",
+      "task": "d8e07eb2"
+    }
+  ],
+  "n_codex_calls": 0,
+  "n_tasks_scored": 11,
+  "output_agreement_coverage_ref": 0.7273,
+  "output_agreement_precision_ref": 0.0,
+  "paired_comparison": {
+    "coverage_lift": -0.7273,
+    "coverage_lift_ci95": [
+      -1.0,
+      -0.4545
+    ],
+    "precision_lift": 0.0,
+    "precision_lift_ci95": [
+      0.0,
+      0.0
+    ]
+  },
+  "per_task": [
+    {
+      "candidate_scores": [
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "171fd9d45d530baf6939552f5f6c86081e4fdba6",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "probe_chain"
+        },
+        {
+          "combined_score": 0.3333,
+          "demo_reproduction_rate": 0.6667,
+          "executable": true,
+          "primary_pred_hash": "9b01c37bc00250cd8b0b958044fe6faf45cfce08",
+          "selectable": false,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain1"
+        },
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "b1ec4c640247c89d7fe5d2e8ef59558345a6b909",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain2"
+        }
+      ],
+      "cross_example_abstain_reason": "sibling_input_disagreement",
+      "cross_example_selected": false,
+      "cross_example_selected_gold": false,
+      "cross_example_selected_source": null,
+      "n_candidates": 3,
+      "n_demo_perfect_candidates": 2,
+      "n_entries": 2,
+      "n_sibling_inputs": 1,
+      "output_agreement_n_matching": 1,
+      "output_agreement_selected": false,
+      "output_agreement_selected_gold": false,
+      "task": "13e47133"
+    },
+    {
+      "candidate_scores": [
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "f3309e087caef042ec8b1381b021549cbe9b1438",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "probe_chain"
+        },
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "9d5fdf4bdb72f32f0d16c1034bdf2d47e3c6854a",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain1"
+        },
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "129d1c479f6a4ef4cb8cf715fdbea5b04b323a36",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain2"
+        }
+      ],
+      "cross_example_abstain_reason": "no_sibling_inputs",
+      "cross_example_selected": false,
+      "cross_example_selected_gold": false,
+      "cross_example_selected_source": null,
+      "n_candidates": 3,
+      "n_demo_perfect_candidates": 3,
+      "n_entries": 1,
+      "n_sibling_inputs": 0,
+      "output_agreement_n_matching": 1,
+      "output_agreement_selected": false,
+      "output_agreement_selected_gold": false,
+      "task": "2b83f449"
+    },
+    {
+      "candidate_scores": [
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "765134ea0bd3a6fab96a399fa84be8369d30e178",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "probe_chain"
+        },
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "b9f6b231d305f2cd9a6b0d5337e6ddbe6620a8ef",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain1"
+        },
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "b9f6b231d305f2cd9a6b0d5337e6ddbe6620a8ef",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain2"
+        }
+      ],
+      "cross_example_abstain_reason": "sibling_input_disagreement",
+      "cross_example_selected": false,
+      "cross_example_selected_gold": false,
+      "cross_example_selected_source": null,
+      "n_candidates": 3,
+      "n_demo_perfect_candidates": 3,
+      "n_entries": 2,
+      "n_sibling_inputs": 1,
+      "output_agreement_n_matching": 2,
+      "output_agreement_selected": true,
+      "output_agreement_selected_gold": false,
+      "task": "2d0172a1"
+    },
+    {
+      "candidate_scores": [
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "86a4c2fe5b8f3169131cd2b5aaba3e582b93843e",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "probe_chain"
+        },
+        {
+          "combined_score": 0.75,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "86a4c2fe5b8f3169131cd2b5aaba3e582b93843e",
+          "selectable": true,
+          "sibling_agreement": 0.5,
+          "source": "fresh_chain1"
+        },
+        {
+          "combined_score": 0.75,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "86a4c2fe5b8f3169131cd2b5aaba3e582b93843e",
+          "selectable": true,
+          "sibling_agreement": 0.5,
+          "source": "fresh_chain2"
+        }
+      ],
+      "cross_example_abstain_reason": "sibling_input_disagreement",
+      "cross_example_selected": false,
+      "cross_example_selected_gold": false,
+      "cross_example_selected_source": null,
+      "n_candidates": 3,
+      "n_demo_perfect_candidates": 3,
+      "n_entries": 2,
+      "n_sibling_inputs": 1,
+      "output_agreement_n_matching": 3,
+      "output_agreement_selected": true,
+      "output_agreement_selected_gold": false,
+      "task": "446ef5d2"
+    },
+    {
+      "candidate_scores": [
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "0514dd954306615e201590c1450308d61e87c541",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "probe_chain"
+        },
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "0514dd954306615e201590c1450308d61e87c541",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain1"
+        },
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "0514dd954306615e201590c1450308d61e87c541",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain2"
+        }
+      ],
+      "cross_example_abstain_reason": "no_sibling_inputs",
+      "cross_example_selected": false,
+      "cross_example_selected_gold": false,
+      "cross_example_selected_source": null,
+      "n_candidates": 3,
+      "n_demo_perfect_candidates": 3,
+      "n_entries": 1,
+      "n_sibling_inputs": 0,
+      "output_agreement_n_matching": 3,
+      "output_agreement_selected": true,
+      "output_agreement_selected_gold": false,
+      "task": "58490d8a"
+    },
+    {
+      "candidate_scores": [
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "d4b61dbb89820a3861f4d58e0a4a3e62a1252831",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "probe_chain"
+        },
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "d4b61dbb89820a3861f4d58e0a4a3e62a1252831",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain1"
+        },
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "d4b61dbb89820a3861f4d58e0a4a3e62a1252831",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain2"
+        }
+      ],
+      "cross_example_abstain_reason": "no_sibling_inputs",
+      "cross_example_selected": false,
+      "cross_example_selected_gold": false,
+      "cross_example_selected_source": null,
+      "n_candidates": 3,
+      "n_demo_perfect_candidates": 3,
+      "n_entries": 1,
+      "n_sibling_inputs": 0,
+      "output_agreement_n_matching": 3,
+      "output_agreement_selected": true,
+      "output_agreement_selected_gold": false,
+      "task": "58f5dbd5"
+    },
+    {
+      "candidate_scores": [
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "bb899a79088512256f9e2a65641478acee57e966",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "probe_chain"
+        },
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "d758fde486f20ccd22273b8f20b44dce5b910e65",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain1"
+        },
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "d758fde486f20ccd22273b8f20b44dce5b910e65",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain2"
+        }
+      ],
+      "cross_example_abstain_reason": "no_sibling_inputs",
+      "cross_example_selected": false,
+      "cross_example_selected_gold": false,
+      "cross_example_selected_source": null,
+      "n_candidates": 3,
+      "n_demo_perfect_candidates": 3,
+      "n_entries": 1,
+      "n_sibling_inputs": 0,
+      "output_agreement_n_matching": 2,
+      "output_agreement_selected": true,
+      "output_agreement_selected_gold": false,
+      "task": "6e453dd6"
+    },
+    {
+      "candidate_scores": [
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "69625ce7304ec85a43796f47e9ef883fba6288ea",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "probe_chain"
+        },
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "503b6067824ed39b72874f1d53be1aee3ac1d152",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain1"
+        },
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "9d3c20573e428e20e78dfe93d63b29a92a75aae0",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain2"
+        }
+      ],
+      "cross_example_abstain_reason": "no_sibling_inputs",
+      "cross_example_selected": false,
+      "cross_example_selected_gold": false,
+      "cross_example_selected_source": null,
+      "n_candidates": 3,
+      "n_demo_perfect_candidates": 3,
+      "n_entries": 1,
+      "n_sibling_inputs": 0,
+      "output_agreement_n_matching": 1,
+      "output_agreement_selected": false,
+      "output_agreement_selected_gold": false,
+      "task": "6ffbe589"
+    },
+    {
+      "candidate_scores": [
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "807eed9022ed6d1980b7366665eb09f7b69eb5a8",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "probe_chain"
+        },
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "df3554812830a16978aca1a15cfb73c8fc9f3343",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain1"
+        },
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "807eed9022ed6d1980b7366665eb09f7b69eb5a8",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain2"
+        }
+      ],
+      "cross_example_abstain_reason": "no_sibling_inputs",
+      "cross_example_selected": false,
+      "cross_example_selected_gold": false,
+      "cross_example_selected_source": null,
+      "n_candidates": 3,
+      "n_demo_perfect_candidates": 3,
+      "n_entries": 1,
+      "n_sibling_inputs": 0,
+      "output_agreement_n_matching": 2,
+      "output_agreement_selected": true,
+      "output_agreement_selected_gold": false,
+      "task": "9aaea919"
+    },
+    {
+      "candidate_scores": [
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "fa27056422de36f0d53f5ce8b8611d3c87ca9d3b",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "probe_chain"
+        },
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "fa27056422de36f0d53f5ce8b8611d3c87ca9d3b",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain1"
+        },
+        {
+          "combined_score": 0.5,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "fa27056422de36f0d53f5ce8b8611d3c87ca9d3b",
+          "selectable": true,
+          "sibling_agreement": 0.0,
+          "source": "fresh_chain2"
+        }
+      ],
+      "cross_example_abstain_reason": "no_sibling_inputs",
+      "cross_example_selected": false,
+      "cross_example_selected_gold": false,
+      "cross_example_selected_source": null,
+      "n_candidates": 3,
+      "n_demo_perfect_candidates": 3,
+      "n_entries": 1,
+      "n_sibling_inputs": 0,
+      "output_agreement_n_matching": 3,
+      "output_agreement_selected": true,
+      "output_agreement_selected_gold": false,
+      "task": "b10624e5"
+    },
+    {
+      "candidate_scores": [
+        {
+          "combined_score": 1.0,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "4478f0122d4b8aedf8f41f1d6295b4c1406ba17d",
+          "selectable": true,
+          "sibling_agreement": 1.0,
+          "source": "probe_chain"
+        },
+        {
+          "combined_score": 0.9,
+          "demo_reproduction_rate": 0.8,
+          "executable": true,
+          "primary_pred_hash": "4478f0122d4b8aedf8f41f1d6295b4c1406ba17d",
+          "selectable": false,
+          "sibling_agreement": 1.0,
+          "source": "fresh_chain1"
+        },
+        {
+          "combined_score": 1.0,
+          "demo_reproduction_rate": 1.0,
+          "executable": true,
+          "primary_pred_hash": "4478f0122d4b8aedf8f41f1d6295b4c1406ba17d",
+          "selectable": true,
+          "sibling_agreement": 1.0,
+          "source": "fresh_chain2"
+        }
+      ],
+      "cross_example_abstain_reason": "score_tie",
+      "cross_example_selected": false,
+      "cross_example_selected_gold": false,
+      "cross_example_selected_source": null,
+      "n_candidates": 3,
+      "n_demo_perfect_candidates": 2,
+      "n_entries": 2,
+      "n_sibling_inputs": 1,
+      "output_agreement_n_matching": 2,
+      "output_agreement_selected": true,
+      "output_agreement_selected_gold": false,
+      "task": "d8e07eb2"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "arc2_saved_programs"
+    },
+    {
+      "available": true,
+      "resource": "arc1_saved_programs"
+    },
+    {
+      "available": true,
+      "resource": "chain_candidate_sets"
+    },
+    {
+      "available": true,
+      "resource": "eval_pool"
+    }
+  ],
+  "random_seed": 12345,
+  "saved_program_counts": {
+    "arc1_programs": 31,
+    "arc2_programs": 31,
+    "chain_tasks": 12
+  },
+  "schema": "carnot.experiment_4010_gap5_cross_example_consistency_selector.v1",
+  "selector_beats_output_agreement": false,
+  "sibling_abstention_gold_rate": 0.0,
+  "skipped_tasks": [
+    {
+      "reason": "fewer_than_two_demo_perfect_candidates",
+      "task": "7b80bb43"
+    }
+  ],
+  "title": "GAP-5 cross-example consistency selector over saved GAP-4 programs"
+}
