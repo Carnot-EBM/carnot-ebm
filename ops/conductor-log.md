@@ -8182,3 +8182,5 @@ c |
 | 2026-06-10 15:09 UTC | Archive .370 -> activate .371; KEEP the HARDENED G | FAIL | Codex CLI error: Wall-clock+idle timeout after 4027s (300s silence). Last out |
 | 2026-06-10 16:33 UTC | Archive .370 -> activate .371; KEEP the HARDENED G | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: "latency" in d |
 | 2026-06-10 16:57 UTC | Archive .370 -> activate .371; KEEP the HARDENED G | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-06-10 17:13 UTC | GAP-4 PRE-REGISTERED PRECISION CONFIRMATION v3 (TH | OK | 91 passed in 5.82s |
+| 2026-06-10 17:15 UTC | Archive .370 -> activate .371; KEEP the HARDENED G | OK | Deliverable already exists in repo |
