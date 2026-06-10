@@ -307,6 +307,39 @@ now AUDITED, not just asserted). `results/arc3_gap4_arc2_rule_exec_verifier.json
   timeouts); (4) the local open-weight generator arm; (5) a 400-task run is NOT yet worth it — the
   gate is structurally inert where TRM is weak; it becomes worth it only after (1)/(2), framed as
   generator+selector precision, not pool-rerank.
+
+**PRECISION FIXES RAN (2026-06-10, 5/5 adversarially CONFIRMED with narrowings; the round also caught
+a live artifact-clobber bug — record reconstructed from transcripts, guard added).**
+(`results/arc3_gap4_arc2_consistency_ensemble.json` + `corrigendum_2026_06_10_precision_fixes` +
+`..._precision_fixes_adversarial_verify.json`.)
+
+- **Graded min-hamming gate (Part A): harmless everywhere, pays only at ARC-2 pass@1.** ARC-1: pass@2
+  0.5806 FLAT from τ=0 to τ=2.0, zero pass@2 vote-wins lost — but all 4 recoveries are τ=0 exact-match
+  fires, the relaxation adds nothing there, and "safety" is pool structure (the contaminated
+  exact-match bimodality), not a measured τ boundary (band precision at τ≤0.02 is 1/7 = 14%). ARC-2
+  τ=0.005 fires once (the 1/493-cells near-miss) doubling pass@1 0.0323→0.0645. **Production: τ=0.005
+  ONLY + a vote-aware guard** (the 25094a63 exact-match mis-promotion over a 945-vote gold is
+  τ-untouchable; the gate's sole pass@1 loss, gross +5/−1).
+- **k=3 independent-induction agreement gate (Part B): the precision mechanism is real; the coverage
+  collapse is arithmetic.** Any-of-3 demo-perfect 18/31; agreement on 1/31 (gold — but n=1, CP95
+  [0.025,1.0], and the event is one of the 2 flagged ARC-1-reuse tasks; deduped with the probe: 2/2
+  task-level, CP95 [0.158,1.0] — nothing claimable above the 0.52 baseline yet). Bottleneck =
+  singletons (14/31 entries had exactly one demo-perfect sample, 8 of them gold); binomial predicts
+  1.42 agreement events vs 1 observed. Single-shot per-call induction 0.196 vs the 3-iter chain's
+  ~0.52-0.57 per lineage (chain-vs-variance confound: Fisher p=0.092). Disagreements = 2/3
+  junk-killing, 1/3 recall cost. Correlated arms restore coverage at exactly the unconditional 0.5
+  precision — **independence IS the precision signal**. Near-miss output clustering REFUTED (the only
+  near-pair is wrong-wrong); no cheap observable separates gold from wrong demo-perfect programs
+  (AUCs 0.43–0.62) — agreement is the only measured discriminator.
+- **Banked successor (zero new codex):** tiered harness = chain+agreement hybrid (saved chained
+  program + 2 archived fresh singles: measured 2/31 at 2/2 gold, doubles Part-B coverage free;
+  exclude chain-iter0 pairs — provenance ambiguity) → graded gate τ=0.005 → vote. On weak-vote venues
+  the EV-optimal composite is promote-ANY-demo-perfect (~0.306 expected pass@1 at 0.52 precision,
+  ~9.5× vote) — measurable offline. **Next codex purchase when bought: k=3 CHAIN arms on the ~13
+  chain-feasible tasks** (projects ~5/31 agreement-gold, ~2.5× the graded gate; also disambiguates
+  the chain-vs-variance confound), pre-registered on clean tasks, ≥5/5 clean agreement-gold to beat
+  0.52 at α=0.05. NOT k=5–7 singles (the binomial model overpredicts k=3 by ~3×; 21/31 entries have
+  zero single-shot-reachable gold at any k).
 - failure mode: candidates that match gold's SHAPE and look structurally coherent but apply the WRONG
   rule (59.1% of TRM's real errors; 81.4% of wrong-candidate pairs; median Hamming-to-gold 0.40).
   Every content signal tested scores ~chance here (hand-invariants ≤0.67; trained content-EBMs

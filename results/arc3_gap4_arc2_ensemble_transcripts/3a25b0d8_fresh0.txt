@@ -1,0 +1,228 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (22x22):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 1, 1, 1, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 1, 1, 8, 8, 8, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 1, 1, 1, 8, 8, 8, 1, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 1, 8, 1, 1, 1, 1, 1, 1, 1, 8, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 1, 8, 8, 1, 8, 8, 8, 1, 8, 8, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 1, 8, 1, 1, 1, 1, 1, 1, 1, 8, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 1, 1, 8, 8, 1, 8, 8, 1, 1, 8, 8, 1, 1, 1, 1, 1, 8, 8, 8, 8],
+ [8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 8, 8, 1, 1, 7, 7, 7, 1, 1, 8, 8, 8],
+ [8, 8, 8, 8, 1, 8, 8, 8, 1, 8, 8, 1, 1, 1, 1, 7, 1, 1, 1, 1, 8, 8],
+ [8, 8, 8, 8, 1, 8, 8, 8, 1, 8, 1, 3, 1, 1, 4, 1, 4, 1, 1, 3, 1, 8],
+ [8, 8, 8, 8, 1, 1, 1, 1, 1, 8, 1, 3, 3, 1, 4, 4, 4, 1, 3, 3, 1, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 6, 6, 1, 6, 6, 1, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 9, 9, 9, 1, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 1, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 1 OUTPUT (11x11):
+[[8, 8, 8, 1, 1, 1, 1, 1, 8, 8, 8],
+ [8, 8, 1, 1, 7, 7, 7, 1, 1, 8, 8],
+ [8, 1, 1, 1, 7, 7, 7, 1, 1, 1, 8],
+ [1, 3, 1, 1, 1, 1, 1, 1, 1, 3, 1],
+ [1, 3, 3, 1, 4, 4, 4, 1, 3, 3, 1],
+ [1, 3, 1, 1, 1, 1, 1, 1, 1, 3, 1],
+ [8, 1, 1, 6, 6, 1, 6, 6, 1, 1, 8],
+ [8, 8, 1, 1, 1, 1, 1, 1, 1, 8, 8],
+ [8, 8, 8, 1, 9, 9, 9, 1, 8, 8, 8],
+ [8, 8, 8, 1, 9, 9, 9, 1, 8, 8, 8],
+ [8, 8, 8, 1, 1, 1, 1, 1, 8, 8, 8]]
+
+Demo 2 INPUT (22x22):
+[[1, 1, 2, 2, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 2, 4, 4, 2, 4, 4, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 2, 2, 3, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 2, 3, 3, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 2, 3, 2, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 2, 2, 2, 8, 2, 2, 2, 1, 1, 1, 1, 2, 2, 1, 2, 2, 1, 1, 1, 1, 1],
+ [1, 1, 1, 2, 8, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1],
+ [1, 1, 1, 2, 8, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1],
+ [1, 1, 2, 2, 8, 2, 2, 1, 1, 1, 1, 1, 2, 2, 1, 2, 2, 1, 1, 1, 1, 1],
+ [1, 1, 2, 8, 8, 8, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
+ [1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 2, 2, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 2, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+Demo 2 OUTPUT (13x7):
+[[1, 2, 2, 1, 2, 2, 1],
+ [2, 4, 4, 2, 4, 4, 2],
+ [2, 4, 4, 2, 4, 4, 2],
+ [1, 2, 2, 3, 2, 2, 1],
+ [1, 2, 3, 3, 3, 2, 1],
+ [1, 2, 3, 3, 3, 2, 1],
+ [2, 2, 2, 2, 2, 2, 2],
+ [1, 1, 2, 8, 2, 1, 1],
+ [1, 1, 2, 8, 2, 1, 1],
+ [1, 2, 2, 8, 2, 2, 1],
+ [1, 2, 8, 8, 8, 2, 1],
+ [2, 2, 8, 8, 8, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2]]
+
+TEST INPUT (30x30):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 3, 3, 3, 3, 4, 8, 8, 8, 8, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 3, 3, 3, 3, 4, 8, 8, 8, 8, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 4, 3, 3, 4, 8, 8, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 4, 5, 5, 4, 2, 4, 5, 5, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 4, 5, 5, 4, 2, 4, 5, 5, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 4, 4, 4, 2, 2, 2, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 1, 4, 7, 4, 2, 4, 7, 4, 1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 4, 7, 4, 4, 4, 7, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 4, 7, 7, 7, 4, 7, 7, 7, 4, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 4, 4, 0, 0, 0, 0],
+ [0, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 4, 4, 0, 0, 0, 0, 4, 0, 0, 4, 4, 4, 0, 0, 4, 0, 0, 0],
+ [0, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 4, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0],
+ [0, 4, 7, 7, 7, 7, 4, 4, 4, 7, 7, 7, 7, 4, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0],
+ [0, 4, 4, 4, 4, 4, 6, 6, 6, 4, 4, 4, 4, 4, 0, 0, 0, 4, 4, 4, 0, 0, 4, 0, 0, 4, 4, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 4, 4, 0, 0, 0, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 4, 0, 0, 0, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 0, 0, 0, 4, 4, 4, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 4, 4, 4, 0, 4, 4, 4, 0, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 0, 4, 4, 4, 0, 4, 4, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0, 0, 0, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h, w = grid.shape
+
+    vals, cnts = np.unique(grid, return_counts=True)
+    bg = vals[np.argmax(cnts)]
+
+    non_bg = grid[grid != bg]
+    vals2, cnts2 = np.unique(non_bg, return_counts=True)
+    frame = vals2[np.argmax(cnts2)]
+
+    def components(mask):
+        seen = np.zeros(mask.shape, dtype=bool)
+        comps = []
+        hh, ww = mask.shape
+        for r in range(hh):
+            for c in range(ww):
+                if mask[r, c] and not seen[r, c]:
+                    q = [(r, c)]
+                    seen[r, c] = True
+                    pts = []
+                    for rr, cc in q:
+                        pts.append((rr, cc))
+                        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                            nr, nc = rr + dr, cc + dc
+                            if 0 <= nr < hh and 0 <= nc < ww and mask[nr, nc] and not seen[nr, nc]:
+                                seen[nr, nc] = True
+                                q.append((nr, nc))
+                    comps.append(pts)
+        return comps
+
+    non_bg_comps = components(grid != bg)
+
+    source = None
+    best = -1
+    for comp in non_bg_comps:
+        colored = sum(grid[r, c] != frame for r, c in comp)
+        if colored > best:
+            best = colored
+            source = comp
+
+    source_set = set(source)
+    source_mask = np.zeros(grid.shape, dtype=bool)
+    for r, c in source:
+        source_mask[r, c] = True
+
+    target_cells = [(r, c) for r in range(h) for c in range(w)
+                    if grid[r, c] == frame and not source_mask[r, c]]
+
+    tr0 = min(r for r, c in target_cells)
+    tr1 = max(r for r, c in target_cells)
+    tc0 = min(c for r, c in target_cells)
+    tc1 = max(c for r, c in target_cells)
+
+    sr0 = min(r for r, c in source)
+    sr1 = max(r for r, c in source)
+    sc0 = min(c for r, c in source)
+    sc1 = max(c for r, c in source)
+
+    th, tw = tr1 - tr0 + 1, tc1 - tc0 + 1
+    sh, sw = sr1 - sr0 + 1, sc1 - sc0 + 1
+
+    out = np.full((th, tw), bg, dtype=grid.dtype)
+    target_frame = np.zeros((th, tw), dtype=bool)
+    for r, c in target_cells:
+        target_frame[r - tr0, c - tc0] = True
+        out[r - tr0, c - tc0] = frame
+
+    source_crop = grid[sr0:sr1 + 1, sc0:sc1 + 1]
+    colored_mask = (source_crop != bg) & (source_crop != frame)
+    colored_pts = []
+    for r in range(sh):
+        for c in range(sw):
+            if colored_mask[r, c]:
+                colored_pts.append((r, c, source_crop[r, c]))
+
+    colored_comps = []
+    for comp in components(colored_mask):
+        color_counts = {}
+        for r, c in comp:
+            color_counts[source_crop[r, c]] = color_counts.get(source_crop[r, c], 0) + 1
+        color = max(color_counts, key=color_counts.get)
+        cr = sum(r for r, c in comp) / len(comp)
+        cc = sum(c for r, c in comp) / len(comp)
+        colored_comps.append((cr / max(sh - 1, 1), cc / max(sw - 1, 1), color))
+
+    open_mask = ~target_frame
+    for reg in components(open_mask):
+        if any(r == 0 or c == 0 or r == th - 1 or c == tw - 1 for r, c in reg):
+            continue
+
+        votes = {}
+        for r, c in reg:
+            sr = int((r + 0.5) * sh / th)
+            sc = int((c + 0.5) * sw / tw)
+            sr = min(max(sr, 0), sh - 1)
+            sc = min(max(sc, 0), sw - 1)
+            col = source_crop[sr, sc]
+            if col != bg and col != frame:
+                votes[col] = votes.get(col, 0) + 1
+
+        if votes:
+            fill = max(votes, key=votes.get)
+        else:
+            rr = sum(r for r, c in reg) / len(reg) / max(th - 1, 1)
+            cc = sum(c for r, c in reg) / len(reg) / max(tw - 1, 1)
+            fill = min(colored_comps, key=lambda x: (x[0] - rr) ** 2 + (x[1] - cc) ** 2)[2]
+
+        for r, c in reg:
+            out[r, c] = fill
+
+    return out
+```

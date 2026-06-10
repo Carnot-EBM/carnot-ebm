@@ -1,0 +1,162 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 0, 3, 1, 1],
+ [0, 2, 2, 2, 2, 3, 3, 3, 1, 1]]
+Demo 1 OUTPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
+ [0, 2, 2, 2, 2, 3, 3, 3, 1, 1]]
+
+Demo 2 INPUT (10x10):
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 1],
+ [0, 0, 3, 0, 0, 0, 0, 1, 1, 1],
+ [0, 0, 3, 0, 0, 0, 0, 1, 1, 1],
+ [0, 0, 3, 0, 0, 0, 1, 1, 1, 1],
+ [0, 0, 3, 0, 0, 3, 1, 1, 1, 1],
+ [0, 0, 3, 0, 0, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+Demo 2 OUTPUT (10x10):
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 1, 1, 1, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+
+Demo 3 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 1, 1, 0, 0, 0, 0, 9, 9],
+ [0, 9, 9, 1, 0, 0, 0, 9, 9, 0],
+ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
+ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 0, 0, 4, 0, 4, 0, 0, 0, 0],
+ [2, 0, 2, 4, 0, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
+Demo 3 OUTPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 0, 0, 0, 0, 0, 0, 9, 9],
+ [0, 9, 9, 0, 0, 0, 0, 9, 9, 0],
+ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
+ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 0, 0, 4, 1, 4, 0, 0, 0, 0],
+ [2, 1, 2, 4, 1, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
+
+TEST INPUT (10x10):
+[[1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 1, 1, 0, 0, 0, 0, 0, 0],
+ [0, 9, 9, 1, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 9, 9, 0, 0, 0, 0, 5],
+ [0, 0, 0, 0, 9, 9, 9, 0, 0, 5],
+ [0, 0, 0, 0, 0, 0, 0, 5, 0, 5],
+ [3, 0, 0, 0, 0, 0, 0, 0, 0, 5],
+ [3, 3, 0, 0, 0, 0, 5, 5, 0, 5],
+ [3, 3, 3, 0, 0, 5, 5, 5, 0, 5],
+ [3, 3, 3, 3, 5, 5, 5, 5, 0, 5]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h, w = grid.shape
+    out = grid.copy()
+    out[out == 1] = 0
+
+    ones = (grid == 1)
+    seen = [[False] * w for _ in range(h)]
+    comps = []
+
+    for r in range(h):
+        for c in range(w):
+            if ones[r, c] and not seen[r][c]:
+                stack = [(r, c)]
+                seen[r][c] = True
+                comp = []
+                while stack:
+                    rr, cc = stack.pop()
+                    comp.append((rr, cc))
+                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nr, nc = rr + dr, cc + dc
+                        if 0 <= nr < h and 0 <= nc < w and ones[nr, nc] and not seen[nr][nc]:
+                            seen[nr][nc] = True
+                            stack.append((nr, nc))
+                comps.append(comp)
+
+    # Preserve right-side 1-regions only where they are horizontally supported
+    # by a nearby non-1 colored boundary, filling the short gap to that boundary.
+    for comp in comps:
+        if not any(c == w - 1 for _, c in comp):
+            continue
+        by_row = {}
+        for r, c in comp:
+            by_row.setdefault(r, []).append(c)
+
+        for r, cols in by_row.items():
+            left = min(cols)
+            boundary = None
+            for c in range(left - 1, -1, -1):
+                if grid[r, c] != 0 and grid[r, c] != 1:
+                    boundary = c
+                    break
+            if boundary is not None and left - boundary - 1 <= 3:
+                for c in range(boundary + 1, max(cols) + 1):
+                    if grid[r, c] == 0 or grid[r, c] == 1:
+                        out[r, c] = 1
+
+    # Fill short horizontal gaps between matching non-1 colors. If a row already
+    # contains an original 1-bridge, keep those bridges but do not create a second
+    # unrelated zero-only bridge in the same row.
+    for r in range(h):
+        valid_gaps = []
+        row_has_original_bridge = False
+
+        colored = [c for c in range(w) if grid[r, c] != 0 and grid[r, c] != 1]
+        for i in range(len(colored) - 1):
+            a, b = colored[i], colored[i + 1]
+            if grid[r, a] == grid[r, b] and 0 < b - a - 1 <= 3:
+                gap = list(range(a + 1, b))
+                if all(grid[r, c] == 0 or grid[r, c] == 1 for c in gap):
+                    has_one = any(grid[r, c] == 1 for c in gap)
+                    valid_gaps.append((gap, has_one))
+                    if has_one:
+                        row_has_original_bridge = True
+
+        for gap, has_one in valid_gaps:
+            if has_one or not row_has_original_bridge:
+                for c in gap:
+                    out[r, c] = 1
+
+    return out
+```

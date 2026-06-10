@@ -1,0 +1,299 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (16x12):
+[[6, 6, 6, 6, 6, 7, 7, 7, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 7, 7, 7, 4, 4, 4, 4],
+ [6, 6, 6, 1, 6, 7, 7, 7, 4, 4, 4, 4],
+ [6, 6, 6, 3, 1, 7, 7, 7, 4, 9, 9, 9],
+ [6, 6, 6, 1, 6, 7, 7, 7, 4, 4, 4, 9],
+ [6, 6, 6, 6, 6, 7, 7, 7, 4, 4, 4, 9],
+ [6, 6, 6, 6, 6, 7, 1, 7, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 7, 1, 1, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 7, 1, 7, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 7, 7, 7, 4, 4, 4, 4],
+ [7, 7, 1, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 1, 0, 1, 7, 7, 7, 7, 7, 1, 1, 1],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 1, 7],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 1 OUTPUT (12x16):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7]]
+
+Demo 2 INPUT (10x10):
+[[7, 7, 7, 7, 7, 7, 1, 7, 3, 3],
+ [7, 7, 7, 7, 7, 7, 1, 1, 3, 3],
+ [7, 7, 7, 7, 7, 7, 1, 7, 3, 3],
+ [8, 8, 8, 3, 1, 7, 7, 7, 3, 1],
+ [8, 8, 8, 1, 1, 7, 7, 7, 1, 6],
+ [8, 1, 8, 3, 1, 7, 7, 7, 3, 1],
+ [8, 1, 1, 3, 3, 1, 9, 1, 3, 3],
+ [8, 1, 8, 3, 3, 7, 1, 7, 3, 3],
+ [8, 8, 8, 3, 3, 5, 5, 5, 3, 3],
+ [8, 8, 8, 3, 3, 5, 5, 5, 3, 3]]
+Demo 2 OUTPUT (10x10):
+[[6, 6, 6, 6, 6, 6, 6, 6, 7, 7],
+ [6, 6, 6, 6, 6, 6, 6, 6, 7, 7],
+ [6, 6, 6, 6, 6, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 9, 9, 9, 7, 7],
+ [3, 3, 3, 8, 8, 9, 9, 9, 7, 7]]
+
+Demo 3 INPUT (14x9):
+[[6, 6, 6, 3, 1, 3, 3, 3, 3],
+ [6, 6, 6, 1, 1, 3, 3, 3, 3],
+ [6, 6, 6, 3, 1, 3, 3, 3, 3],
+ [6, 6, 6, 4, 4, 4, 4, 1, 4],
+ [6, 6, 6, 4, 4, 4, 1, 1, 1],
+ [6, 6, 6, 4, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 1, 6, 4, 4, 4],
+ [6, 6, 6, 6, 1, 1, 4, 4, 4],
+ [6, 6, 6, 6, 1, 6, 4, 4, 4],
+ [5, 5, 5, 4, 4, 4, 4, 4, 4],
+ [9, 9, 9, 8, 8, 8, 8, 8, 8],
+ [9, 5, 5, 8, 8, 8, 1, 7, 1],
+ [9, 5, 5, 8, 8, 8, 8, 1, 8],
+ [5, 5, 5, 4, 4, 4, 4, 4, 4]]
+Demo 3 OUTPUT (9x14):
+[[5, 5, 5, 5, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [5, 5, 5, 5, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [5, 5, 5, 5, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [7, 8, 8, 8, 6, 3, 3, 3, 6, 6, 6, 4, 4, 4],
+ [7, 8, 8, 8, 6, 3, 3, 3, 6, 6, 6, 4, 4, 4],
+ [7, 8, 8, 8, 6, 3, 3, 3, 6, 6, 6, 4, 4, 4],
+ [7, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4],
+ [7, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4],
+ [7, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4]]
+
+Demo 4 INPUT (10x10):
+[[2, 2, 2, 2, 2, 1, 2, 3, 3, 3],
+ [2, 2, 2, 2, 2, 1, 1, 3, 3, 3],
+ [2, 2, 2, 2, 2, 1, 2, 3, 3, 3],
+ [6, 6, 6, 6, 1, 6, 6, 3, 1, 3],
+ [6, 6, 6, 1, 1, 1, 6, 1, 1, 3],
+ [1, 1, 1, 6, 6, 6, 6, 3, 1, 3],
+ [6, 1, 6, 6, 6, 6, 6, 3, 3, 3],
+ [4, 4, 4, 4, 4, 4, 4, 3, 3, 3],
+ [4, 4, 4, 4, 4, 4, 4, 3, 3, 3],
+ [4, 4, 4, 4, 4, 4, 4, 3, 3, 3]]
+Demo 4 OUTPUT (10x10):
+[[6, 6, 6, 6, 6, 6, 6, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 2, 2, 2],
+ [3, 3, 3, 3, 3, 3, 3, 2, 2, 2],
+ [3, 3, 3, 3, 3, 3, 3, 2, 2, 2],
+ [3, 3, 3, 3, 3, 3, 3, 2, 2, 2],
+ [3, 3, 3, 3, 3, 3, 3, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 2, 2, 2]]
+
+TEST INPUT (30x30):
+[[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 7, 7, 9, 9, 9],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 1, 3, 3, 3, 3, 3, 3, 9, 9, 9, 7, 7, 7, 7, 9, 9],
+ [9, 9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1, 3, 3, 3, 3, 3, 9, 9, 9, 7, 7, 7, 7, 9, 9],
+ [9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 9, 9, 7, 7, 7, 7, 9, 9],
+ [9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 9, 9, 9, 1, 9, 9, 9, 9],
+ [9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 9, 9, 1, 1, 1, 9, 9, 4],
+ [9, 3, 3, 3, 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 9, 9, 9, 9, 9, 9, 4, 4],
+ [9, 3, 3, 3, 0, 1, 8, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 9, 9, 9, 9, 4, 4, 4],
+ [9, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 2, 2, 0, 0, 0, 0, 0, 9, 9, 9, 9, 9, 4, 4, 4],
+ [9, 3, 3, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 1, 1, 1, 2, 2, 2, 2, 0, 0, 9, 9, 9, 9, 4, 4, 4, 4],
+ [9, 3, 3, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 9, 9, 9, 9, 4, 4, 4, 4],
+ [9, 3, 3, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 9, 9, 4, 4, 4, 4],
+ [9, 3, 3, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 6, 0, 1, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 9, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 6, 9, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 9, 8, 8, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 2, 2, 2, 2, 2, 2, 2, 9, 9, 9, 8, 8, 8, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 9, 9, 2, 2, 2, 2, 9, 9, 9, 9, 8, 8, 8, 8, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8, 1, 8],
+ [6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 1],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 1, 9, 9, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 0, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 1, 9, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h, w = grid.shape
+    g = grid.copy()
+
+    def neigh4(r, c):
+        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            rr, cc = r + dr, c + dc
+            if 0 <= rr < h and 0 <= cc < w:
+                yield rr, cc
+
+    def norm(cells):
+        rs = [p[0] for p in cells]
+        cs = [p[1] for p in cells]
+        r0, c0 = min(rs), min(cs)
+        return tuple(sorted((r - r0, c - c0) for r, c in cells))
+
+    def canonical(cells):
+        pts = list(cells)
+        forms = []
+        for k in range(8):
+            q = []
+            for r, c in pts:
+                if k == 0:
+                    x, y = r, c
+                elif k == 1:
+                    x, y = r, -c
+                elif k == 2:
+                    x, y = -r, c
+                elif k == 3:
+                    x, y = -r, -c
+                elif k == 4:
+                    x, y = c, r
+                elif k == 5:
+                    x, y = c, -r
+                elif k == 6:
+                    x, y = -c, r
+                else:
+                    x, y = -c, -r
+                q.append((x, y))
+            forms.append(norm(q))
+        return min(forms)
+
+    seen = np.zeros((h, w), dtype=bool)
+    marks = []
+
+    for r in range(h):
+        for c in range(w):
+            if g[r, c] != 1 or seen[r, c]:
+                continue
+
+            stack = [(r, c)]
+            comp = []
+            seen[r, c] = True
+            while stack:
+                p = stack.pop()
+                comp.append(p)
+                for q in neigh4(*p):
+                    if not seen[q] and g[q] == 1:
+                        seen[q] = True
+                        stack.append(q)
+
+            border = []
+            for p in comp:
+                for q in neigh4(*p):
+                    if g[q] != 1:
+                        border.append(int(g[q]))
+            if not border:
+                continue
+            bg = max(set(border), key=border.count)
+
+            cells = set(comp)
+            labels = []
+            changed = True
+            while changed:
+                changed = False
+                for p in list(cells):
+                    for q in neigh4(*p):
+                        v = int(g[q])
+                        if q not in cells and v != 1 and v != bg:
+                            same_bg = 0
+                            for x in neigh4(*q):
+                                if int(g[x]) == bg or x in cells:
+                                    same_bg += 1
+                            if same_bg >= 2:
+                                cells.add(q)
+                                labels.append(v)
+                                changed = True
+
+            marks.append({"cells": cells, "shape": canonical(cells), "bg": bg, "labels": labels})
+            for p in cells:
+                g[p] = bg
+
+    # Also catch small non-1 islands embedded inside a different color.
+    seen2 = np.zeros((h, w), dtype=bool)
+    for r in range(h):
+        for c in range(w):
+            if seen2[r, c]:
+                continue
+            col = int(grid[r, c])
+            stack = [(r, c)]
+            comp = []
+            seen2[r, c] = True
+            while stack:
+                p = stack.pop()
+                comp.append(p)
+                for q in neigh4(*p):
+                    if not seen2[q] and int(grid[q]) == col:
+                        seen2[q] = True
+                        stack.append(q)
+            if col == 1 or len(comp) > 9:
+                continue
+            border = []
+            for p in comp:
+                for q in neigh4(*p):
+                    if q not in comp and int(grid[q]) != 1:
+                        border.append(int(grid[q]))
+            if border:
+                bg = max(set(border), key=border.count)
+                if bg != col and border.count(bg) >= len(border) - 1:
+                    cells = set(comp)
+                    marks.append({"cells": cells, "shape": canonical(cells), "bg": bg, "labels": [col]})
+                    for p in cells:
+                        g[p] = bg
+
+    by_shape = {}
+    for m in marks:
+        by_shape.setdefault(m["shape"], []).append(m)
+
+    cmap = {}
+    for shape, ms in by_shape.items():
+        plain = [m for m in ms if not m["labels"]]
+        labeled = [m for m in ms if m["labels"]]
+        if plain and labeled:
+            for m in plain:
+                labs = []
+                for x in labeled:
+                    labs += x["labels"]
+                if labs:
+                    cmap[m["bg"]] = max(set(labs), key=labs.count)
+            pbg = plain[0]["bg"]
+            for m in labeled:
+                cmap[m["bg"]] = pbg
+
+    for m in marks:
+        if m["bg"] not in cmap and m["labels"]:
+            labs = m["labels"]
+            cmap[m["bg"]] = max(set(labs), key=labs.count)
+
+    out = g.copy()
+    for color, new_color in cmap.items():
+        out[g == color] = new_color
+
+    return out.T if h != w else out
+```
