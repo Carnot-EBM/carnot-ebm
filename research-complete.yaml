@@ -37470,57 +37470,196 @@ milestones:
     result: OK (conductor)
 - id: 2026.06.368
   correction_type: v368_archive_activate_v369_gap4_handoff
-  title: 'Archive .368 and activate .369 with GAP-4 handoff preserved'
+  title: Archive .368 and activate .369 with GAP-4 handoff preserved
   doc: openspec/change-proposals/research-roadmap-vNEXT.md
   completed: '2026-06-10'
-  finding: '.368 recorded the working outer-loop GAP-4 program-induction execution verifier positive, preserved the conductor DSL-only failure as a path not to re-attempt, kept world-model induction at 0 of 6 trustworthy, recorded no fourth-game solve, and carried forward the ArcMemo solve-transfer win into .369.'
+  finding: .368 recorded the working outer-loop GAP-4 program-induction execution verifier positive, preserved the conductor
+    DSL-only failure as a path not to re-attempt, kept world-model induction at 0 of 6 trustworthy, recorded no fourth-game
+    solve, and carried forward the ArcMemo solve-transfer win into .369.
   activation_recorded: exp3986-archive-v368-activate-v369
   tasks:
   - id: exp3974-archive-v367-activate-v368
-    title: 'Archive .367 and activate .368'
+    title: Archive .367 and activate .368
     deliverable: results/experiment_3974_archive_v367_activate_v368.json
     result: 'complete: archived_v367_v368_active_three_games_m3_open_gap4_ready_arc_substrate_green'
   - id: exp3975-gap4-execution-verifier-build
-    title: 'Conductor GAP-4 DSL-only verifier build'
+    title: Conductor GAP-4 DSL-only verifier build
     deliverable: results/experiment_3975_gap4_execution_verifier_build.json
     result: 'complete: gap4_positive_control_failed_auroc0.00 [CONDUCTOR_DSL_BUILD_FAILED DO_NOT_REATTEMPT_DSL_PATH]'
   - id: exp3976-gap4-trm-rerank-eval
-    title: 'GAP-4 TRM rerank eval'
+    title: GAP-4 TRM rerank eval
     deliverable: results/experiment_3976_gap4_trm_rerank_eval.json
-    result: 'blocked_gate_check_failed'
+    result: blocked_gate_check_failed
   - id: exp3977-gap4-rederive-audit
-    title: 'GAP-4 re-derivation audit'
+    title: GAP-4 re-derivation audit
     deliverable: results/experiment_3977_gap4_rederive_audit.json
     result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3977_gap4_rederive_audit.json'
   - id: exp3978-verifier-vs-judge-efficiency
-    title: 'Verifier versus judge efficiency'
+    title: Verifier versus judge efficiency
     deliverable: results/experiment_3978_verifier_vs_judge_efficiency.json
     result: 'success: verifier_earns_place_efficiency_parity_8789.7x_cheaper'
   - id: exp3979-world-model-gen-execution-guided
-    title: 'Execution-guided world-model generation'
+    title: Execution-guided world-model generation
     deliverable: results/experiment_3979_world_model_gen_execution_guided.json
     result: 'complete: exec_guided_trustworthy_0of6'
   - id: exp3980-incremental-levels-reinduction
-    title: 'Incremental levels via re-induction'
+    title: Incremental levels via re-induction
     deliverable: results/experiment_3980_incremental_levels_reinduction.json
     result: 'complete: l2_wall_holds_r11l_l2_re_induction_found_a_collision_forbidden_mask_rule_different_from_l1_remainin'
   - id: exp3981-fourth-game-first-solve
-    title: 'Fourth ARC-AGI-3 game first solve'
+    title: Fourth ARC-AGI-3 game first solve
     deliverable: results/experiment_3981_fourth_game_first_solve.json
     result: 'complete: fourth_game_no_solve_budget_exceeded'
   - id: exp3982-arcmemo-solve-transfer
-    title: 'ArcMemo solve transfer'
+    title: ArcMemo solve transfer
     deliverable: results/experiment_3982_arcmemo_solve_transfer.json
     result: 'success: arcmemo_solve_transfer_2668to17_actions [ARCMEMO_SOLVE_TRANSFER_WIN EXTEND_IN_V369]'
   - id: exp3983-hardware-continuity
-    title: 'Hardware continuity'
+    title: Hardware continuity
     deliverable: results/experiment_3983_hardware_continuity.json
     result: 'complete: hardware_continuity_3983_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded'
   - id: exp3984-retro-commit-detector-fix
-    title: 'Operational retro commit detector fix'
+    title: Operational retro commit detector fix
     deliverable: results/experiment_3984_retro_commit_detector_fix.json
     result: 'complete: retro_commit_detector_fixed_backfill_counts_restored'
   - id: exp3985-capstone-v368
-    title: 'Capstone .368'
+    title: Capstone .368
     deliverable: results/experiment_3985_capstone_v368.json
     result: 'success: capstone_v368_verifier_earned_efficiency_only_games3_new_levels0_missing1_flagged_skipped0'
+- id: 2026.06.369
+  title: "GAP-4 program-induction execution verifier \u2014 CONFIRM it (the operator's four verbatim conductor_followups:\
+    \ de-selection coverage de-biasing the 0.833 estimate; pre-registered precision confirmation with the binomial critical-value\
+    \ gate + the GAP-5 sibling-input tertiary; the feedback-vs-iid-redraw deciding control; harness registration + bit-exact\
+    \ offline re-eval reproducing ARC-2 19/31 and ARC-1 28/31), DECENTRALIZE it (the owed LOCAL open-weight GGUF program-proposer\
+    \ arm replacing closed-weight gpt-5.5 \u2014 CLAUDE.md decentralization Rule 1 + the GAP-4 forward protocol; a genuinely\
+    \ novel number no published ARC work reports), and DEPLOY it IN the ARC-AGI-3 solve loop to grow accuracy (one incremental\
+    \ level via verifier-validated re-induction of the L2 rule + a verifier-pruned 4th-game first-solve). Continue self-learning\
+    \ (ArcMemo SOLVE-transfer v2 extending exp3982's 2668->17 win to a new game), hardware continuity (KV260 toward terminal),\
+    \ and an UNGATED capstone whose headline question is: is the GAP-4 verifier now CONFIRMED, DECENTRALIZED, and DEPLOYED.\
+    \ gemini BANNED."
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-10'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp3986-archive-v368-activate-v369
+    title: 'Archive .368 -> activate .369; GREEN-GATE: assert research-complete.yaml + ops/exclusion_manifest.yaml parse under
+      yaml.safe_load, the ARC substrate unit tests are green, and the ARC agentic modules import (carnot.agentic.arc_agi3_world_model,
+      arc_world_model_synth, arc_world_model_dsl, arc_agi3_action_efficiency), so .369 can EXECUTE the GAP-4 confirmatory
+      follow-ups + the decentralization arm + the verifier-in-the-loop solves. RECORD the .368 truth: the GAP-4 program-induction
+      verifier''s outer-loop positive (ARC-1 vote 0.4516 -> gated 0.5806; results/arc3_gap4_rule_exec_verifier.json) vs the
+      CONDUCTOR''s failed DSL-only build (exp3975 positive_control_failed, coverage 0.0); efficiency parity 8789x cheaper
+      at n=5 (exp3978); world-model induction 0/6 trustworthy (exp3979, 2nd negative); incremental L2 wall holds (exp3980);
+      4th game no-solve budget (exp3981); ArcMemo SOLVE-transfer 2668->17 actions (exp3982, WIN).'
+    deliverable: results/experiment_3986_archive_v368_activate_v369.json
+    result: OK (conductor)
+  - id: exp3987-gap4-deselection-coverage
+    title: "GAP-4 conductor_followup #1 \u2014 DE-SELECTION COVERAGE RUN: run k=2 FRESH <=3-iteration 600s codex chains on\
+      \ the 11 NEVER-CHAINED ARC-2 pool tasks (the complement of the 12 probe-chain-feasible tasks in results/arc3_gap4_arc2_eval_pool.json.gz),\
+      \ transcripts archived, gold-leak audit with the validated word-boundary detector, gold used POST-HOC for scoring only.\
+      \ This de-biases the 0.8333 fresh-chain demo-perfect coverage estimate (it was measured on chain-feasible tasks only).\
+      \ Report the demo-perfect rate honestly whatever it is \u2014 NO all-gold bar. Per the handoff hygiene rules: commit\
+      \ artifacts at landing, archive every transcript, >=600s codex timeouts, never cite P(gold|agree) without n+CI."
+    deliverable: results/experiment_3987_gap4_deselection_coverage.json
+    result: OK (conductor)
+  - id: exp3988-gap4-precision-confirmation-v2
+    title: "GAP-4 conductor_followup #2 \u2014 PRE-REGISTERED PRECISION CONFIRMATION v2: k=3 ALL-FRESH chains (no probe/stale\
+      \ arms), equal 600s timeouts, on NEW clean chain-feasible ARC-2 tasks, protocol committed BEFORE any call. PRIMARY gate\
+      \ = binomial critical-value rule: n>=19 agreement events, reject H0 p=0.52 if >=14 gold (size 0.046, power 0.837 at\
+      \ p=0.80). SECONDARY = precision vs the in-run fresh-arm base rate (~0.73). TERTIARY (the GAP-5 tripwire) = task-level\
+      \ unanimity-with-abstention on sibling-input disagreement (post-hoc 5/5 gold last round; needs fresh confirmation).\
+      \ One event per task where possible or pre-registered cluster collapse. Honest verdict either way; retire_if_same_verdict\
+      \ on the precision-uplift claim (if the agreement signal AGAIN fails to beat 0.52 with power, the agreement-as-selector\
+      \ claim is retired and agreement is logged as a confidence-label-only signal). EXCLUDE the flagged reuse tasks aa4ec2a5/16b78196\
+      \ from the clean set."
+    deliverable: results/experiment_3988_gap4_precision_confirmation_v2.json
+    result: OK (conductor)
+  - id: exp3989-gap4-feedback-vs-redraw
+    title: "GAP-4 conductor_followup #3 \u2014 FEEDBACK-VS-REDRAW DECIDING CONTROL (same-run paired design): per task, arm\
+      \ A = one <=3-iteration FEEDBACK chain vs arm B = 3 INDEPENDENT singles, SAME 600s budget, INTERLEAVED within ONE codex\
+      \ run (the measured 2.2x between-run variance forbids cross-run comparison \u2014 all controls must be same-run). Exact\
+      \ McNemar/Fisher on paired task outcomes. Resolves whether feedback CONTENT beats iid resampling (current evidence ambiguous:\
+      \ post-feedback per-call 9/21=0.4286 ~ iter0 0.4583; iid 3-redraw predicts 0.841 vs 0.833 observed). Either outcome\
+      \ is a publishable mechanism finding \u2014 does the chain's feedback add value, or is it just 3 draws? Honest verdict\
+      \ required."
+    deliverable: results/experiment_3989_gap4_feedback_vs_redraw.json
+    result: OK (conductor)
+  - id: exp3990-gap4-registration-offline-eval
+    title: "GAP-4 conductor_followup #4 \u2014 HARNESS REGISTRATION + OFFLINE TIER-STACK EVAL (CPU-only, zero codex calls):\
+      \ register gap4_program_induction_stack in ops/verifier_registry.yaml per the synthesis recommendation (the tiered policy:\
+      \ snap tau<=0.005 -> promote-first-fresh-raw -> vote; agreement = confidence label only, fresh arms only); implement\
+      \ the tiered policy as a REUSABLE module (python/carnot/verify/ or scripts/); re-run the offline eval BIT-EXACT from\
+      \ the saved artifacts on the 31-entry ARC-2 pool + ARC-1 sanity (MUST reproduce ARC-2 19/31 and ARC-1 28/31); append\
+      \ the 446ef5d2 demo-underdetermination GAP-5 entry to ops/verifier_gaps.md with missing_verifier_gaps emitted; fix the\
+      \ committed cost line (45 calls / 3780.0 codex-s / 1156.5 s wall) wherever it appears in ops/. NO new codex calls \u2014\
+      \ pure offline replay from saved induced programs."
+    deliverable: results/experiment_3990_gap4_registration_offline_eval.json
+    result: OK (conductor)
+  - id: exp3991-gap4-local-generator-arm
+    title: "GAP-4 DECENTRALIZATION arm (the owed local-first tier; CLAUDE.md Rule 1 + the GAP-4 forward protocol): replace\
+      \ the closed-weight gpt-5.5 program inducer with a SOTA LOCAL GGUF proposer (unsloth/Qwen3.6-35B-A3B-GGUF or unsloth/gemma-4-26B-A4B-it-GGUF,\
+      \ loaded via the .gguf path) and re-run the GAP-4 venue: the LOCAL model induces def transform(grid) from demo pairs\
+      \ only -> the model-free verifier (demo-fit exact-reproduction gate + restricted-namespace execution + content-hash\
+      \ candidate match) reranks on the SAME ARC-1 31-task pool. Report the LOCAL induction demo-perfect rate, the gated rerank\
+      \ pass@2 vs vote 0.4516 / oracle 0.6129 / the codex tier's 0.5806, AND the COST (local-GGUF seconds vs codex seconds\
+      \ vs the model-free-verifier seconds \u2014 the decentralized efficiency datum strengthening exp3978's n=5). No published\
+      \ work reports local-open-weight ARC program synthesis with execution-verifier reranking \u2014 this is a novel, ownable,\
+      \ SOVEREIGN number. The verifier side is unchanged + already proven; this tests whether an OPEN local generator can\
+      \ drive it."
+    deliverable: results/experiment_3991_gap4_local_generator_arm.json
+    result: OK (conductor)
+  - id: exp3992-incremental-levels-verifier-validated
+    title: "ARC-AGI-3 INCREMENTAL LEVELS via VERIFIER-VALIDATED re-induction (the L2-wall fix; +1 level per the MANDATORY\
+      \ Incremental-Progress rule): exp3980 diagnosed that r11l L2 needs a DIFFERENT rule than L1 (a collision-forbidden mask)\
+      \ but could not solve it open-loop. RE-INDUCE the L2 rule from L2 observations AND use the GAP-4 execution verifier\
+      \ (demo-fit + executed-consistency on held-out L2 transitions) to VALIDATE the candidate L2 rule BEFORE committing the\
+      \ action sequence \u2014 the verifier's efficiency value applied to a real solve. For ONE game that re-induces (r11l,\
+      \ or lp85/sc25 if easier), advance from L1 to L2 (and L3 if reached), re-perceiving + re-inducing + verifier-validating\
+      \ per level. Report ACCURACY_levels_solved + new_levels_solved_this_task (the monotonic counter the milestone must raise\
+      \ past the banked 3xL1). Real-env-confirmed; solving only L1 again is an honest no-regression complete, NOT a fabricated\
+      \ higher level. retire_if_same_verdict: a SECOND L2-wall-holds across two distinct approaches bounds the offline L2\
+      \ solve for that game."
+    deliverable: results/experiment_3992_incremental_levels_verifier_validated.json
+    result: OK (conductor)
+  - id: exp3993-fourth-game-verifier-pruned
+    title: 'FOURTH ARC-AGI-3 game first-solve, VERIFIER-PRUNED (the budget fix; raises games-solved 3->4): exp3981 ran out
+      of action budget on open-loop search. Use the GAP-4 execution verifier as an ACTION-PRUNER (verifier-as-free-energy;
+      the Exp1165 ~4x action-efficiency precedent) to prune hopeless branches by executed-consistency before committing, fitting
+      the budget. Solve level-1 of the next-easiest NON-SPATIAL game (tn36-ef4dde99 / su15-1944f8ab / dc22 are candidates,
+      picked empirically by smallest L0 baseline_actions + inducibility) via the perceive -> induced-model -> goal-predicate
+      -> exploit loop that produced r11l/lp85/sc25. A 4th distinct solved game raises generalization 3->4. Real-env-confirmed;
+      AVOID vc33''s PSPACE spatial trap. Report first_solve_at_action + actions_vs_baseline (the efficiency axis the verifier-pruner
+      targets).'
+    deliverable: results/experiment_3993_fourth_game_verifier_pruned.json
+    result: OK (conductor)
+  - id: exp3994-arcmemo-solve-transfer-v2
+    title: "ArcMemo SOLVE-transfer v2 (self-learning MANDATE; extends exp3982's 2668->17 win to a NEW game): exp3982 showed\
+      \ concept-memory-seeded solving cut actions 2668->17 on a held-out solved game. This tests whether the SAME concept\
+      \ memory makes the 4th game's solve cheaper (the NEW game from exp3993, or sc25 re-held-out if no 4th game). Two arms\
+      \ at equal perception: (A) cold-start (no memory), (B) concept-memory-seeded (retrieve+try the banked concepts: 'select-then-place'\
+      \ r11l, 'permute-set' lp85, 'pattern-match-then-navigate' sc25 + any 4th-game concept). Does retrieving banked concepts\
+      \ reduce ACTIONS/ATTEMPTS to solve a genuinely NEW game vs cold-start? This is Tier-2 constraint memory (research-program.md)\
+      \ compounding across games \u2014 the self-learning datum. POSITIVE CONTROL: the target must share structure with >=2\
+      \ banked concepts (else transfer is impossible by construction; FALSE_NEGATIVE_RISK)."
+    deliverable: results/experiment_3994_arcmemo_solve_transfer_v2.json
+    result: OK (conductor)
+  - id: exp3995-hardware-continuity
+    title: "Hardware continuity (consolidated): SSH/USB-reachability + terminal-state check for each attached board \u2014\
+      \ KV260 (ssh kria, xmutil listapps), GateMate (openFPGALoader -c dirtyJtag --detect), PolarFire (ssh polarfire). Record\
+      \ per-board reachability + the next concrete forward step; no bitstream redesign. Per north-star \xA73, KV260 is the\
+      \ sovereignty story to drive to terminal then freeze; GateMate/PolarFire are opportunistic. Per CLAUDE.md KV260 SSH-Not-SD-Card\
+      \ Discipline: NEVER use the host SD-card block device as a KV260 precondition (SSH-reachability is the ONLY valid KV260\
+      \ precondition). Use DISTINCT wall-clock timers per board (the exp3866 TAUTOLOGY corrigendum)."
+    deliverable: results/experiment_3995_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp3996-capstone-v369
+    title: "Capstone .369 (UNGATED \u2014 the .365 op:exists + .366 no-artifact lessons): the milestone's headline question\
+      \ is IS THE GAP-4 VERIFIER NOW CONFIRMED, DECENTRALIZED, AND DEPLOYED. Aggregate: CONFIRMED = the precision confirmation\
+      \ (exp3988 primary_gate_passed / agreement_is_selector_not_label) + de-selection coverage (exp3987 debiased_coverage_combined)\
+      \ + feedback-vs-redraw (exp3989 feedback_beats_redraw); DECENTRALIZED = the local-generator arm (exp3991 local_beats_vote\
+      \ + local_induction_demo_perfect_rate + the cost vs codex); DEPLOYED = the registration + bit-exact replay (exp3990\
+      \ verifier_registered + arc2_reproduced_19of31 + arc1_reproduced_28of31). Plus ARC-AGI-3 ACCURACY (exp3992 new_levels_solved_this_task\
+      \ + exp3993 game_solved -> total_games_solved + total_new_levels) and SELF-LEARNING (exp3994 solve_transfer_win). Honest\
+      \ verdict on whether .369 CONFIRMED + DECENTRALIZED + DEPLOYED the verifier and advanced ARC accuracy. SKIP any flagged_adversarial\
+      \ artifact; cite upstream sha256. NO gated_on \u2014 aggregate whatever exists."
+    deliverable: results/experiment_3996_capstone_v369.json
+    result: OK (conductor)
