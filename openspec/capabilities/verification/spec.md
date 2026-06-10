@@ -11793,3 +11793,49 @@ that denominator with the selected-task fresh-chain denominator from
 iter0-vs-chain-final decomposition, sets `leak_clean=true` only when every
 archived transcript passes the word-boundary leak audit, and emits an
 `honest_verdict` beginning with `complete:` regardless of the measured rate.
+
+### REQ-VERIFY-3999: GAP-4 Precision Confirmation v2
+
+The repository SHALL provide Exp 3999 at
+`scripts/experiments/experiment_3999_gap4_precision_confirmation_v2.py` to
+pre-register and run the GAP-4 k=3 all-fresh precision confirmation on new
+clean ARC-2 chain-feasible tasks. Before any Codex call, the runner SHALL
+verify that `codex` is available and that
+`results/arc3_gap4_arc2_eval_pool.json.gz` is readable as JSON, select only
+tasks not used in `results/arc3_gap4_arc2_chain_ensemble.json`, exclude
+`aa4ec2a5` and `16b78196`, and write a preregistered artifact containing the
+committed task set, primary binomial gate (`n>=19`, `>=14` gold), secondary
+fresh-arm-base comparator, tertiary sibling-input unanimity-with-abstention
+tripwire, and `protocol_preregistered=true`.
+
+A blocked precondition SHALL write a terminal artifact with
+`honest_verdict=blocked_codex_unavailable` or
+`honest_verdict=blocked_eval_pool_unreadable`, zero Codex calls, and no
+fabricated agreement metrics.
+
+For a complete run, the runner SHALL run k=3 fresh Codex chains with equal
+timeouts, show the generator only ARC demo pairs and the test input, archive
+all transcripts, compute agreement events only when at least two
+demo-perfect fresh programs emit the same test output, score gold only
+post-hoc, compute the in-run fresh-arm base rate, compute the primary,
+secondary, and tertiary gates, and write
+`results/experiment_3999_gap4_precision_confirmation_v2.json` with bare
+top-level fields `protocol_preregistered`, `n_agreement_events`,
+`n_gold_given_agreement`, `primary_gate_passed`,
+`precision_vs_fresharm_base`, `sibling_disagreement_tripwire_gold_rate`,
+`agreement_is_selector_not_label`, `missing_verifier_gaps`,
+`total_codex_calls`, `total_codex_seconds`, `leak_clean`, `random_seed`,
+`honest_verdict`, `duration_s`, and `inference_substrate`.
+
+### SCENARIO-VERIFY-3999: Precision Confirmation Reports Selector Or Retirement
+
+Given the Codex CLI and ARC-2 pool are available, when Exp 3999 runs, then it
+writes the preregistered task set before invoking induction, runs three
+fresh chains per selected task, treats each majority-equal demo-perfect
+output as one agreement event, sets `primary_gate_passed=true` only when
+`n_agreement_events>=19` and `n_gold_given_agreement>=14`, sets
+`agreement_is_selector_not_label` to the same powered primary decision,
+reports `success: gap4_precision_confirmed_<gold>of<events>_gold` only for a
+passing primary gate, otherwise reports
+`complete: gap4_agreement_confidence_label_only_<gold>of<events>`, and records
+residual wrong-agreement cases in `missing_verifier_gaps`.

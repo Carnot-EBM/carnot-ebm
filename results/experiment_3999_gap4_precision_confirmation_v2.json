@@ -1,0 +1,78 @@
+{
+  "agreement_is_selector_not_label": false,
+  "duration_s": 1.0,
+  "experiment": "experiment_3999_gap4_precision_confirmation_v2",
+  "field_principles": {
+    "agreement_is_selector_not_label": "BARE BOOL - true only when the powered primary selector gate passes.",
+    "duration_s": "Wall-clock seconds for this runner.",
+    "honest_verdict": "Terminal-prefix verdict.",
+    "inference_substrate": "Codex program induction substrate and post-hoc scoring mode.",
+    "leak_clean": "BARE BOOL - every archived transcript passed the leak audit.",
+    "missing_verifier_gaps": "Residual wrong-agreement cases for missing-verifier logging.",
+    "n_agreement_events": "BARE INT - agreement events observed; the binomial n.",
+    "n_gold_given_agreement": "BARE INT - gold agreement events; the binomial successes.",
+    "precision_vs_fresharm_base": "BARE FLOAT - agreement precision minus fresh-arm base rate.",
+    "primary_gate_passed": "BARE BOOL - n>=19 and gold>=14.",
+    "protocol_preregistered": "BARE BOOL - the gate + task set were committed before any codex call.",
+    "random_seed": "Shared GAP-4 substrate seed.",
+    "sibling_disagreement_tripwire_gold_rate": "BARE FLOAT - gold rate after unanimity/sibling-disagreement abstention.",
+    "total_codex_calls": "Total Codex induction calls recorded by fresh chains.",
+    "total_codex_seconds": "Total Codex wall seconds recorded by fresh chains."
+  },
+  "honest_verdict": "complete: protocol_preregistered_pending_execution",
+  "inference_substrate": "codex_program_induction_all_fresh_k3_posthoc_arc2_gold_scoring",
+  "leak_clean": false,
+  "missing_verifier_gaps": [],
+  "n_agreement_events": 0,
+  "n_gold_given_agreement": 0,
+  "precision_vs_fresharm_base": 0.0,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "codex"
+    },
+    {
+      "available": true,
+      "resource": "eval_pool"
+    }
+  ],
+  "preregistration": {
+    "committed_event_capacity_entries": 13,
+    "excluded_reuse_tasks": [
+      "aa4ec2a5",
+      "16b78196"
+    ],
+    "n_fresh_chains": 3,
+    "powered_target_reachable_from_committed_pool": false,
+    "primary_binomial_gate": {
+      "min_agreement_events": 19,
+      "min_gold_given_agreement": 14,
+      "null_precision": 0.52,
+      "size": 0.046
+    },
+    "registered_before_codex_call": true,
+    "secondary": "agreement precision minus in-run fresh-arm gold rate",
+    "selection_rule": "all tasks in the ARC-2 GAP-4 eval pool not used in the prior chain-ensemble round, excluding flagged reuse contamination",
+    "task_set": [
+      "21897d95",
+      "269e22fb",
+      "28a6681f",
+      "2c181942",
+      "3a25b0d8",
+      "3dc255db",
+      "a6f40cea",
+      "b9e38dc0",
+      "dd6b8c4b"
+    ],
+    "tertiary": "task-level unanimity-with-abstention sibling-input tripwire",
+    "timeout_s_per_chain": 600
+  },
+  "primary_gate_passed": false,
+  "protocol_preregistered": true,
+  "random_seed": 12345,
+  "schema": "carnot.experiment_3999_gap4_precision_confirmation_v2.v1",
+  "sibling_disagreement_tripwire_gold_rate": 0.0,
+  "title": "GAP-4 k=3 all-fresh agreement precision confirmation v2",
+  "total_codex_calls": 0,
+  "total_codex_seconds": 0.0
+}
