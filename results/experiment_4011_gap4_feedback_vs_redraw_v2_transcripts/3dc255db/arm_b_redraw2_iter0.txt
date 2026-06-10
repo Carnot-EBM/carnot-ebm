@@ -1,0 +1,215 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 6, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 6, 0, 4, 4, 4, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 7, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 7, 0, 0, 0, 0],
+ [0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+Demo 1 OUTPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 4, 4, 4, 6, 6, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 7, 7, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+
+Demo 2 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 9, 3, 0, 0, 6, 9, 6, 0],
+ [3, 9, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Demo 2 OUTPUT (10x10):
+[[0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 9, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 0, 3, 0, 0, 6, 0, 6, 0],
+ [3, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Demo 3 INPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0],
+ [0, 0, 0, 6, 6, 0, 0, 6, 0, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 7, 7, 7, 7, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 7, 0, 6, 0, 0, 0],
+ [0, 0, 6, 7, 0, 7, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Demo 3 OUTPUT (12x12):
+[[0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0],
+ [0, 0, 0, 6, 6, 0, 0, 6, 0, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+TEST INPUT (12x13):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 4, 4, 4, 0, 2, 0, 0],
+ [0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 9, 0, 0, 0, 0, 0, 8, 0, 0, 0],
+ [0, 9, 0, 0, 9, 0, 0, 0, 0, 0, 8, 0, 0],
+ [0, 9, 7, 7, 9, 0, 0, 2, 0, 0, 2, 8, 0],
+ [0, 9, 0, 7, 9, 0, 0, 0, 0, 2, 8, 0, 0],
+ [0, 9, 7, 0, 9, 0, 0, 0, 0, 8, 0, 0, 0]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    g = grid.copy()
+    h, w = g.shape
+
+    def comps(mask):
+        seen = np.zeros(mask.shape, dtype=bool)
+        out = []
+        for r in range(h):
+            for c in range(w):
+                if mask[r, c] and not seen[r, c]:
+                    q = [(r, c)]
+                    seen[r, c] = True
+                    comp = []
+                    for rr, cc in q:
+                        comp.append((rr, cc))
+                        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                            nr, nc = rr + dr, cc + dc
+                            if 0 <= nr < h and 0 <= nc < w and mask[nr, nc] and not seen[nr, nc]:
+                                seen[nr, nc] = True
+                                q.append((nr, nc))
+                    out.append(comp)
+        return out
+
+    main_comps = []
+    for col in range(1, 10):
+        for comp in comps(g == col):
+            if len(comp) >= 3:
+                main_comps.append((col, comp))
+
+    for main_col, comp in main_comps:
+        cells = set(comp)
+        rs = [r for r, c in comp]
+        cs = [c for r, c in comp]
+        rmin, rmax, cmin, cmax = min(rs), max(rs), min(cs), max(cs)
+
+        foreign = []
+        for r in range(rmin, rmax + 1):
+            for c in range(cmin, cmax + 1):
+                if g[r, c] not in (0, main_col) and (r, c) not in cells:
+                    col = g[r, c]
+                    if any((r + dr, c + dc) in cells for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1))):
+                        foreign.append((r, c, col))
+
+        if not foreign:
+            continue
+
+        by_col = {}
+        for r, c, col in foreign:
+            by_col.setdefault(col, []).append((r, c))
+
+        for mark_col, pts in by_col.items():
+            for r, c in pts:
+                g[r, c] = 0
+
+            candidates = []
+            for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+                best_run = []
+                best_anchor = None
+                groups = {}
+
+                if dr != 0:
+                    for r, c in comp:
+                        groups.setdefault(c, []).append(r)
+                    for c, rows in groups.items():
+                        edge = min(rows) if dr < 0 else max(rows)
+                        run = []
+                        rr = edge + dr
+                        while 0 <= rr < h and g[rr, c] == 0:
+                            run.append((rr, c))
+                            rr += dr
+                        if len(run) > len(best_run):
+                            best_run = run
+                            best_anchor = (edge, c)
+                else:
+                    for r, c in comp:
+                        groups.setdefault(r, []).append(c)
+                    for r, cols in groups.items():
+                        edge = min(cols) if dc < 0 else max(cols)
+                        run = []
+                        cc = edge + dc
+                        while 0 <= cc < w and g[r, cc] == 0:
+                            run.append((r, cc))
+                            cc += dc
+                        if len(run) > len(best_run):
+                            best_run = run
+                            best_anchor = (r, edge)
+
+                if len(best_run) >= len(pts):
+                    candidates.append((len(best_run), dr, dc, best_run, best_anchor))
+
+            if not candidates:
+                continue
+
+            # Prefer the outside direction whose boundary line is most aligned with
+            # the removed marker pixels. Ties keep the longer clear run.
+            def score(item):
+                run_len, dr, dc, run, anchor = item
+                ar, ac = anchor
+                if dr != 0:
+                    align = -sum(abs(c - ac) for r, c in pts)
+                else:
+                    align = -sum(abs(r - ar) for r, c in pts)
+                return (align, run_len)
+
+            _, dr, dc, run, anchor = max(candidates, key=score)
+
+            place = run[:len(pts)]
+            if dr < 0 or dc < 0:
+                place = place[::-1]
+            for r, c in place:
+                g[r, c] = mark_col
+
+    return g
+```

@@ -1,0 +1,336 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (20x20):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 2, 2, 2, 2, 2, 2, 2, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 2, 8, 8, 8, 8, 8, 2, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 2, 8, 8, 8, 8, 8, 2, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 3, 3, 3, 3, 3, 3, 3, 3, 3, 8, 2, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 3, 8, 8, 8, 8, 8, 8, 8, 3, 8, 2, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 3, 8, 8, 8, 8, 8, 8, 8, 3, 8, 2, 8, 8, 8, 8, 8],
+ [8, 8, 4, 4, 3, 8, 8, 8, 8, 8, 8, 8, 3, 2, 2, 8, 8, 8, 8, 8],
+ [8, 8, 4, 8, 3, 8, 8, 8, 8, 8, 8, 8, 3, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 4, 8, 3, 3, 3, 3, 3, 3, 3, 3, 3, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 4, 8, 8, 8, 4, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 4, 4, 4, 4, 4, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 1 OUTPUT (4x7):
+[[8, 8, 8, 2, 8, 8, 8],
+ [8, 8, 8, 2, 8, 8, 8],
+ [4, 4, 8, 2, 2, 2, 2],
+ [8, 4, 8, 8, 8, 8, 8]]
+
+Demo 2 INPUT (30x30):
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 8, 8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 8, 1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 8, 1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8, 8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+Demo 2 OUTPUT (13x14):
+[[6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [2, 2, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6]]
+
+Demo 3 INPUT (22x22):
+[[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 5, 4, 5, 4, 5, 4, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 4, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 5, 2, 2, 2, 2, 2, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 4, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 5, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 4, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 5, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 4, 5, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 9, 8, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 9, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 8, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 8, 2, 2, 2, 2, 2, 2, 2, 2, 9, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 9, 8, 9, 8, 9, 8, 9, 8, 9, 8, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]]
+Demo 3 OUTPUT (7x8):
+[[2, 2, 2, 4, 2, 2, 2, 2],
+ [2, 2, 2, 5, 2, 2, 2, 2],
+ [5, 4, 5, 4, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 8, 9, 8, 9, 8, 9, 8],
+ [2, 9, 2, 2, 2, 2, 2, 2]]
+
+TEST INPUT (24x24):
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 8, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 1, 8, 1, 1, 1, 1, 1],
+ [1, 1, 0, 0, 0, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 1, 8, 1, 1, 1, 1, 1],
+ [1, 1, 0, 1, 1, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 8, 8, 1, 1, 1, 1, 1],
+ [1, 1, 0, 1, 1, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 0, 1, 1, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 0, 1, 1, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 4, 9, 1, 1, 1, 1, 1],
+ [1, 1, 0, 1, 1, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 0, 1, 1, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 1, 9, 1, 1, 1, 1, 1],
+ [1, 1, 0, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 4, 1, 1, 1, 1, 9, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 9, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 9, 1, 1, 1, 1, 1],
+ [1, 1, 1, 3, 3, 3, 1, 1, 3, 3, 3, 3, 1, 9, 4, 9, 4, 9, 4, 1, 1, 1, 1, 1],
+ [1, 1, 1, 3, 6, 3, 1, 1, 3, 6, 6, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 3, 3, 3, 1, 1, 3, 6, 6, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+
+Your PREVIOUS function failed these demos:
+Demo 3: expected OUTPUT (7x8):
+[[2, 2, 2, 4, 2, 2, 2, 2],
+ [2, 2, 2, 5, 2, 2, 2, 2],
+ [5, 4, 5, 4, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 8, 9, 8, 9, 8, 9, 8],
+ [2, 9, 2, 2, 2, 2, 2, 2]]
+your function returned:
+[[2, 2, 2, 4, 2, 2, 2, 2],
+ [2, 2, 2, 5, 2, 2, 2, 2],
+ [5, 4, 5, 4, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 9, 8, 9, 8, 9, 8, 9],
+ [2, 8, 2, 2, 2, 2, 2, 2]]
+
+Previous code:
+```python
+def transform(grid):
+    bg = np.bincount(grid.ravel()).argmax()
+    vals = [int(c) for c in np.unique(grid)]
+
+    def color_components(c):
+        pts = set(map(tuple, np.argwhere(grid == c)))
+        comps = []
+        while pts:
+            p = pts.pop()
+            stack = [p]
+            comp = [p]
+            while stack:
+                r, col = stack.pop()
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    q = (r + dr, col + dc)
+                    if q in pts:
+                        pts.remove(q)
+                        stack.append(q)
+                        comp.append(q)
+            comps.append(comp)
+        return comps
+
+    # Find the largest single-color rectangular frame.
+    best = None
+    for c in vals:
+        if c == bg:
+            continue
+        for comp in color_components(c):
+            rs = [p[0] for p in comp]
+            cs = [p[1] for p in comp]
+            r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
+            if r1 - r0 < 2 or c1 - c0 < 2:
+                continue
+            if (np.all(grid[r0, c0:c1 + 1] == c) and
+                np.all(grid[r1, c0:c1 + 1] == c) and
+                np.all(grid[r0:r1 + 1, c0] == c) and
+                np.all(grid[r0:r1 + 1, c1] == c)):
+                area = (r1 - r0 - 1) * (c1 - c0 - 1)
+                if best is None or area > best[0]:
+                    best = (area, c, r0, r1, c0, c1)
+
+    _, frame, r0, r1, c0, c1 = best
+    out = grid[r0 + 1:r1, c0 + 1:c1].copy()
+    fill = np.bincount(out.ravel()).argmax()
+
+    h, w = out.shape
+    inside_frame = np.zeros(grid.shape, dtype=bool)
+    inside_frame[r0:r1 + 1, c0:c1 + 1] = True
+
+    for c in vals:
+        if c in (bg, frame, fill):
+            continue
+
+        pts = np.argwhere((grid == c) & (~inside_frame))
+        if len(pts) == 0:
+            continue
+
+        rr0, cc0 = pts.min(axis=0)
+        rr1, cc1 = pts.max(axis=0)
+        if rr1 - rr0 < 1 or cc1 - cc0 < 1:
+            continue
+
+        # Use only colors that are visible as the border of a rectangle.
+        ok = True
+        for rr, cc in pts:
+            if not (rr == rr0 or rr == rr1 or cc == cc0 or cc == cc1):
+                ok = False
+                break
+        if not ok:
+            continue
+
+        parities = set((int(rr) + int(cc)) % 2 for rr, cc in pts)
+
+        for rr in range(max(rr0, r0 + 1), min(rr1, r1 - 1) + 1):
+            for cc in range(max(cc0, c0 + 1), min(cc1, c1 - 1) + 1):
+                if not (rr == rr0 or rr == rr1 or cc == cc0 or cc == cc1):
+                    continue
+                if len(parities) == 1 and ((rr + cc) % 2) not in parities:
+                    continue
+                out[rr - (r0 + 1), cc - (c0 + 1)] = c
+
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    bg = np.bincount(grid.ravel()).argmax()
+    colors = [int(c) for c in np.unique(grid)]
+
+    def comps_of_color(color):
+        pts = set(map(tuple, np.argwhere(grid == color)))
+        comps = []
+        while pts:
+            start = pts.pop()
+            stack = [start]
+            comp = [start]
+            while stack:
+                r, c = stack.pop()
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    q = (r + dr, c + dc)
+                    if q in pts:
+                        pts.remove(q)
+                        stack.append(q)
+                        comp.append(q)
+            comps.append(comp)
+        return comps
+
+    # The output is the interior of the largest rectangular frame.
+    best = None
+    for color in colors:
+        if color == bg:
+            continue
+        for comp in comps_of_color(color):
+            rs = [p[0] for p in comp]
+            cs = [p[1] for p in comp]
+            r0, r1 = min(rs), max(rs)
+            c0, c1 = min(cs), max(cs)
+            if r1 - r0 < 2 or c1 - c0 < 2:
+                continue
+            if (np.all(grid[r0, c0:c1 + 1] == color) and
+                np.all(grid[r1, c0:c1 + 1] == color) and
+                np.all(grid[r0:r1 + 1, c0] == color) and
+                np.all(grid[r0:r1 + 1, c1] == color)):
+                area = (r1 - r0 - 1) * (c1 - c0 - 1)
+                if best is None or area > best[0]:
+                    best = (area, color, r0, r1, c0, c1)
+
+    _, frame_color, r0, r1, c0, c1 = best
+    out = grid[r0 + 1:r1, c0 + 1:c1].copy()
+    fill = int(np.bincount(out.ravel()).argmax())
+
+    frame_box = (r0, r1, c0, c1)
+    inside = np.zeros(grid.shape, dtype=bool)
+    inside[r0:r1 + 1, c0:c1 + 1] = True
+
+    for color in colors:
+        if color in (bg, frame_color, fill):
+            continue
+
+        outside_pts = np.argwhere((grid == color) & (~inside))
+        if len(outside_pts) == 0:
+            continue
+
+        rr0, cc0 = outside_pts.min(axis=0)
+        rr1, cc1 = outside_pts.max(axis=0)
+        if rr1 - rr0 < 1 or cc1 - cc0 < 1:
+            continue
+
+        # Keep only colors whose visible outside cells lie on one rectangle border.
+        ok = True
+        for rr, cc in outside_pts:
+            if not (rr == rr0 or rr == rr1 or cc == cc0 or cc == cc1):
+                ok = False
+                break
+        if not ok:
+            continue
+
+        # If the border alternates colors, the color visible at one end of a line
+        # determines the continuation through the hidden/overlapped part.
+        line_parity = None
+        if len(outside_pts) > 0:
+            line_parity = int((outside_pts[0, 0] + outside_pts[0, 1]) % 2)
+            if any(int((rr + cc) % 2) != line_parity for rr, cc in outside_pts):
+                line_parity = None
+
+        for rr in range(max(rr0, r0 + 1), min(rr1, r1 - 1) + 1):
+            for cc in range(max(cc0, c0 + 1), min(cc1, c1 - 1) + 1):
+                if not (rr == rr0 or rr == rr1 or cc == cc0 or cc == cc1):
+                    continue
+                if line_parity is not None and (rr + cc) % 2 != line_parity:
+                    continue
+                out[rr - r0 - 1, cc - c0 - 1] = color
+
+    return out
+```

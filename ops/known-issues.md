@@ -395,6 +395,33 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-06-10 (PLANNER DISCIPLINE — split long codex experiments): POWERED MULTI-CODEX-CALL EXPERIMENTS MUST BE TASK-SPLIT
+
+**Origin:** 2026-06-10 outer-loop watchdog. The .371 powered GAP-4 experiments (exp4011
+feedback-vs-redraw v2; the precision-confirmation class) each make MANY sequential codex
+induction calls (per task: up to 3×600s feedback chain + 3×600s independent singles, across
+~13 tasks = multiple HOURS). They repeatedly hit the conductor's 80-min wall-clock HARD CAP
+(4× the 1200s research timeout) — exp4011 FAILed 3× (18:54/20:18/~21:40), burning ~4h, then
+3-fail-skipped. The conductor's own design (research_conductor.py:~535) already prescribes the
+fix: **"Experiments that legitimately require >20 min should split: a subagent writes the
+script (under 20 min); a separate long-running executor runs it."** The planner is NOT doing
+this — it emits one monolithic long task.
+
+**The rule (planner-side).** When a task's CONCRETE STEPS make >~5 sequential 600s-timeout
+codex/GGUF calls (any powered induction sweep, best-of-N, feedback-vs-redraw, multi-task
+agreement), SPLIT it into two roadmap tasks: (1) `*-build` — a short (<20 min) task that writes
+the standalone runner script + commits it; (2) `*-run` — uses `inference_substrate:
+long_running_executor` semantics OR is structured so the conductor agent only LAUNCHES the
+script (backgrounded) and polls, rather than holding one agent call open for hours. A single
+agent task that must stay open >80 min will ALWAYS hit the hard cap; do not emit it.
+
+**Why this is here, not just in code.** The conductor enforces the cap; only the PLANNER can
+avoid emitting a doomed long task. The cap is correct (idle hangs die at 10 min via IDLE_GRACE);
+the failure mode is monolithic multi-hour tasks, which is a planning choice. Cross-ref:
+research_conductor.py wall-clock-cap comment (~line 535); the IDLE_GRACE 300→600 bump
+(commit 7142c7eac); exp4011 .371 wall-clock-cap failures.
+
+
 ### NEW 2026-06-10 (TOP PRIORITY — outer-loop overnight handoff): GAP-4 RULE-EXECUTION VERIFIER — CONFIRMATORY + DEPLOYMENT FOLLOW-UPS
 
 **Origin:** 2026-06-09/10 outer-loop session (operator-directed, going to sleep — explicit

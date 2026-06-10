@@ -1,0 +1,525 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (16x12):
+[[6, 6, 6, 6, 6, 7, 7, 7, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 7, 7, 7, 4, 4, 4, 4],
+ [6, 6, 6, 1, 6, 7, 7, 7, 4, 4, 4, 4],
+ [6, 6, 6, 3, 1, 7, 7, 7, 4, 9, 9, 9],
+ [6, 6, 6, 1, 6, 7, 7, 7, 4, 4, 4, 9],
+ [6, 6, 6, 6, 6, 7, 7, 7, 4, 4, 4, 9],
+ [6, 6, 6, 6, 6, 7, 1, 7, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 7, 1, 1, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 7, 1, 7, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 7, 7, 7, 4, 4, 4, 4],
+ [7, 7, 1, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 1, 0, 1, 7, 7, 7, 7, 7, 1, 1, 1],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 1, 7],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 1 OUTPUT (12x16):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7]]
+
+Demo 2 INPUT (10x10):
+[[7, 7, 7, 7, 7, 7, 1, 7, 3, 3],
+ [7, 7, 7, 7, 7, 7, 1, 1, 3, 3],
+ [7, 7, 7, 7, 7, 7, 1, 7, 3, 3],
+ [8, 8, 8, 3, 1, 7, 7, 7, 3, 1],
+ [8, 8, 8, 1, 1, 7, 7, 7, 1, 6],
+ [8, 1, 8, 3, 1, 7, 7, 7, 3, 1],
+ [8, 1, 1, 3, 3, 1, 9, 1, 3, 3],
+ [8, 1, 8, 3, 3, 7, 1, 7, 3, 3],
+ [8, 8, 8, 3, 3, 5, 5, 5, 3, 3],
+ [8, 8, 8, 3, 3, 5, 5, 5, 3, 3]]
+Demo 2 OUTPUT (10x10):
+[[6, 6, 6, 6, 6, 6, 6, 6, 7, 7],
+ [6, 6, 6, 6, 6, 6, 6, 6, 7, 7],
+ [6, 6, 6, 6, 6, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 9, 9, 9, 7, 7],
+ [3, 3, 3, 8, 8, 9, 9, 9, 7, 7]]
+
+Demo 3 INPUT (14x9):
+[[6, 6, 6, 3, 1, 3, 3, 3, 3],
+ [6, 6, 6, 1, 1, 3, 3, 3, 3],
+ [6, 6, 6, 3, 1, 3, 3, 3, 3],
+ [6, 6, 6, 4, 4, 4, 4, 1, 4],
+ [6, 6, 6, 4, 4, 4, 1, 1, 1],
+ [6, 6, 6, 4, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 1, 6, 4, 4, 4],
+ [6, 6, 6, 6, 1, 1, 4, 4, 4],
+ [6, 6, 6, 6, 1, 6, 4, 4, 4],
+ [5, 5, 5, 4, 4, 4, 4, 4, 4],
+ [9, 9, 9, 8, 8, 8, 8, 8, 8],
+ [9, 5, 5, 8, 8, 8, 1, 7, 1],
+ [9, 5, 5, 8, 8, 8, 8, 1, 8],
+ [5, 5, 5, 4, 4, 4, 4, 4, 4]]
+Demo 3 OUTPUT (9x14):
+[[5, 5, 5, 5, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [5, 5, 5, 5, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [5, 5, 5, 5, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [7, 8, 8, 8, 6, 3, 3, 3, 6, 6, 6, 4, 4, 4],
+ [7, 8, 8, 8, 6, 3, 3, 3, 6, 6, 6, 4, 4, 4],
+ [7, 8, 8, 8, 6, 3, 3, 3, 6, 6, 6, 4, 4, 4],
+ [7, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4],
+ [7, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4],
+ [7, 8, 8, 8, 6, 6, 6, 6, 6, 6, 6, 4, 4, 4]]
+
+Demo 4 INPUT (10x10):
+[[2, 2, 2, 2, 2, 1, 2, 3, 3, 3],
+ [2, 2, 2, 2, 2, 1, 1, 3, 3, 3],
+ [2, 2, 2, 2, 2, 1, 2, 3, 3, 3],
+ [6, 6, 6, 6, 1, 6, 6, 3, 1, 3],
+ [6, 6, 6, 1, 1, 1, 6, 1, 1, 3],
+ [1, 1, 1, 6, 6, 6, 6, 3, 1, 3],
+ [6, 1, 6, 6, 6, 6, 6, 3, 3, 3],
+ [4, 4, 4, 4, 4, 4, 4, 3, 3, 3],
+ [4, 4, 4, 4, 4, 4, 4, 3, 3, 3],
+ [4, 4, 4, 4, 4, 4, 4, 3, 3, 3]]
+Demo 4 OUTPUT (10x10):
+[[6, 6, 6, 6, 6, 6, 6, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 2, 2, 2],
+ [3, 3, 3, 3, 3, 3, 3, 2, 2, 2],
+ [3, 3, 3, 3, 3, 3, 3, 2, 2, 2],
+ [3, 3, 3, 3, 3, 3, 3, 2, 2, 2],
+ [3, 3, 3, 3, 3, 3, 3, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 2, 2, 2]]
+
+TEST INPUT (30x30):
+[[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 7, 7, 9, 9, 9],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 1, 3, 3, 3, 3, 3, 3, 9, 9, 9, 7, 7, 7, 7, 9, 9],
+ [9, 9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1, 3, 3, 3, 3, 3, 9, 9, 9, 7, 7, 7, 7, 9, 9],
+ [9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 9, 9, 7, 7, 7, 7, 9, 9],
+ [9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 9, 9, 9, 1, 9, 9, 9, 9],
+ [9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 9, 9, 1, 1, 1, 9, 9, 4],
+ [9, 3, 3, 3, 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 9, 9, 9, 9, 9, 9, 4, 4],
+ [9, 3, 3, 3, 0, 1, 8, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 9, 9, 9, 9, 4, 4, 4],
+ [9, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 2, 2, 0, 0, 0, 0, 0, 9, 9, 9, 9, 9, 4, 4, 4],
+ [9, 3, 3, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 1, 1, 1, 2, 2, 2, 2, 0, 0, 9, 9, 9, 9, 4, 4, 4, 4],
+ [9, 3, 3, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 9, 9, 9, 9, 4, 4, 4, 4],
+ [9, 3, 3, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 9, 9, 4, 4, 4, 4],
+ [9, 3, 3, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 6, 0, 1, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 4, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 6, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 9, 4, 4, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 6, 9, 2, 2, 2, 2, 2, 2, 2, 2, 9, 9, 9, 8, 8, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 2, 2, 2, 2, 2, 2, 2, 9, 9, 9, 8, 8, 8, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 9, 9, 2, 2, 2, 2, 9, 9, 9, 9, 8, 8, 8, 8, 4, 4],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8, 1, 8],
+ [6, 6, 6, 6, 6, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 1],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 1, 9, 9, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 0, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 1, 9, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (12x16):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7]]
+your function returned:
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 9, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 9, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7],
+ [7, 7, 7, 9, 9, 9, 7, 7, 7, 7, 3, 3, 7, 7, 7, 7]]
+
+Demo 2: expected OUTPUT (10x10):
+[[6, 6, 6, 6, 6, 6, 6, 6, 7, 7],
+ [6, 6, 6, 6, 6, 6, 6, 6, 7, 7],
+ [6, 6, 6, 6, 6, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 6, 6, 6, 7, 7],
+ [3, 3, 3, 8, 8, 9, 9, 9, 7, 7],
+ [3, 3, 3, 8, 8, 9, 9, 9, 7, 7]]
+your function returned:
+[[6, 6, 6, 6, 6, 6, 7, 7, 7, 7],
+ [6, 6, 6, 6, 6, 6, 7, 7, 7, 7],
+ [6, 6, 6, 6, 6, 6, 7, 6, 7, 7],
+ [7, 7, 7, 6, 6, 6, 6, 6, 7, 7],
+ [7, 7, 7, 6, 6, 6, 6, 6, 7, 7],
+ [7, 7, 7, 8, 6, 6, 6, 6, 3, 7],
+ [7, 7, 7, 8, 8, 6, 6, 6, 3, 3],
+ [7, 7, 7, 8, 8, 9, 6, 9, 3, 3],
+ [7, 7, 7, 8, 8, 9, 9, 9, 3, 3],
+ [7, 7, 7, 8, 8, 9, 9, 9, 3, 3]]
+
+Previous code:
+```python
+def transform(grid):
+    g = np.array(grid)
+    h, w = g.shape
+    dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    opp = {0: 1, 1: 0, 2: 3, 3: 2}
+
+    def inside(r, c):
+        return 0 <= r < h and 0 <= c < w
+
+    clusters = []
+    marker = set()
+
+    for r in range(h):
+        for c in range(w):
+            ns = []
+            for i, (dr, dc) in enumerate(dirs):
+                rr, cc = r + dr, c + dc
+                if inside(rr, cc) and g[rr, cc] == 1:
+                    ns.append(i)
+
+            if len(ns) != 3:
+                continue
+
+            ptr = None
+            if 0 in ns and 1 in ns:
+                if 2 in ns and 3 not in ns:
+                    ptr = 2
+                elif 3 in ns and 2 not in ns:
+                    ptr = 3
+            elif 2 in ns and 3 in ns:
+                if 0 in ns and 1 not in ns:
+                    ptr = 0
+                elif 1 in ns and 0 not in ns:
+                    ptr = 1
+
+            if ptr is not None:
+                cells = {(r, c)}
+                for i in ns:
+                    dr, dc = dirs[i]
+                    cells.add((r + dr, c + dc))
+                clusters.append((r, c, ptr, cells))
+                marker |= cells
+
+    base = g != 1
+    for r, c, _, _ in clusters:
+        if g[r, c] != 1:
+            base[r, c] = False
+
+    comp = -np.ones((h, w), dtype=int)
+    comps = []
+
+    for r in range(h):
+        for c in range(w):
+            if not base[r, c] or comp[r, c] >= 0:
+                continue
+
+            cid = len(comps)
+            color = int(g[r, c])
+            stack = [(r, c)]
+            comp[r, c] = cid
+            cells = []
+            touches_edge = False
+
+            while stack:
+                x, y = stack.pop()
+                cells.append((x, y))
+                touches_edge = touches_edge or x == 0 or y == 0 or x == h - 1 or y == w - 1
+
+                for dr, dc in dirs:
+                    xx, yy = x + dr, y + dc
+                    if inside(xx, yy) and base[xx, yy] and comp[xx, yy] < 0 and g[xx, yy] == color:
+                        comp[xx, yy] = cid
+                        stack.append((xx, yy))
+
+            comps.append({"color": color, "cells": cells, "edge": touches_edge})
+
+    for cid, co in enumerate(comps):
+        if not co["cells"] or co["edge"] or len(co["cells"]) > 5:
+            continue
+
+        counts = {}
+        for r, c in co["cells"]:
+            for dr, dc in dirs:
+                rr, cc = r + dr, c + dc
+                if inside(rr, cc):
+                    nid = comp[rr, cc]
+                    if nid >= 0 and nid != cid:
+                        counts[nid] = counts.get(nid, 0) + 1
+
+        if counts:
+            dest = max(counts, key=counts.get)
+            for r, c in co["cells"]:
+                comp[r, c] = dest
+            comps[dest]["cells"].extend(co["cells"])
+            co["cells"] = []
+
+    def first_component(r, c, d):
+        dr, dc = dirs[d]
+        r += dr
+        c += dc
+        while inside(r, c):
+            if comp[r, c] >= 0:
+                return comp[r, c]
+            r += dr
+            c += dc
+        return -1
+
+    def source_component(r, c, ptr, target):
+        dr, dc = dirs[ptr]
+        arm = (r + dr, c + dc)
+        perps = [2, 3] if ptr in (0, 1) else [0, 1]
+        counts = {}
+
+        for x, y in ((r, c), arm):
+            for p in perps:
+                pr, pc = dirs[p]
+                rr, cc = x + pr, y + pc
+                if inside(rr, cc):
+                    cid = comp[rr, cc]
+                    if cid >= 0 and cid != target:
+                        counts[cid] = counts.get(cid, 0) + 1
+
+        if counts:
+            return max(counts, key=counts.get)
+
+        back = first_component(r, c, opp[ptr])
+        if back >= 0 and back != target:
+            return back
+        return -1
+
+    mapping = {}
+    fill_clusters = []
+
+    for r, c, ptr, cells in clusters:
+        target = first_component(r, c, ptr)
+        source = source_component(r, c, ptr, target)
+
+        if target >= 0:
+            if g[r, c] == 1:
+                if source >= 0:
+                    mapping[target] = comps[source]["color"]
+            else:
+                mapping[target] = int(g[r, c])
+
+        fill_clusters.append((cells, source))
+
+    out = np.zeros_like(g)
+    done = np.zeros((h, w), dtype=bool)
+
+    for cid, co in enumerate(comps):
+        if not co["cells"]:
+            continue
+        color = mapping.get(cid, co["color"])
+        for r, c in co["cells"]:
+            out[r, c] = color
+            done[r, c] = True
+
+    for cells, source in fill_clusters:
+        if source >= 0:
+            color = mapping.get(source, comps[source]["color"])
+            for r, c in cells:
+                out[r, c] = color
+                done[r, c] = True
+
+    changed = True
+    while not done.all() and changed:
+        changed = False
+        for r in range(h):
+            for c in range(w):
+                if done[r, c]:
+                    continue
+                for dr, dc in dirs:
+                    rr, cc = r + dr, c + dc
+                    if inside(rr, cc) and done[rr, cc]:
+                        out[r, c] = out[rr, cc]
+                        done[r, c] = True
+                        changed = True
+                        break
+
+    return out.T if h > w else out
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    g = np.array(grid)
+    h, w = g.shape
+    dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    opp = [1, 0, 3, 2]
+
+    def inside(r, c):
+        return 0 <= r < h and 0 <= c < w
+
+    def neigh_ones(r, c):
+        a = []
+        for i, (dr, dc) in enumerate(dirs):
+            rr, cc = r + dr, c + dc
+            if inside(rr, cc) and g[rr, cc] == 1:
+                a.append(i)
+        return a
+
+    marks = []
+    mark_cells = set()
+    for r in range(h):
+        for c in range(w):
+            ns = neigh_ones(r, c)
+            if len(ns) == 3:
+                missing = ({0, 1, 2, 3} - set(ns)).pop()
+                cells = {(r, c)}
+                for d in ns:
+                    dr, dc = dirs[d]
+                    cells.add((r + dr, c + dc))
+                marks.append((r, c, missing, cells))
+                mark_cells |= cells
+
+    blocked = np.zeros((h, w), dtype=bool)
+    for r, c in mark_cells:
+        blocked[r, c] = True
+
+    comp = -np.ones((h, w), dtype=int)
+    comps = []
+    for r in range(h):
+        for c in range(w):
+            if blocked[r, c] or comp[r, c] >= 0:
+                continue
+            color = int(g[r, c])
+            cid = len(comps)
+            stack = [(r, c)]
+            comp[r, c] = cid
+            cells = []
+            while stack:
+                x, y = stack.pop()
+                cells.append((x, y))
+                for dr, dc in dirs:
+                    xx, yy = x + dr, y + dc
+                    if inside(xx, yy) and not blocked[xx, yy] and comp[xx, yy] < 0 and g[xx, yy] == color:
+                        comp[xx, yy] = cid
+                        stack.append((xx, yy))
+            comps.append({"color": color, "cells": cells})
+
+    def first_comp(r, c, d):
+        dr, dc = dirs[d]
+        r += dr
+        c += dc
+        while inside(r, c):
+            if comp[r, c] >= 0:
+                return comp[r, c]
+            r += dr
+            c += dc
+        return -1
+
+    def side_comps(r, c, d):
+        seed = first_comp(r, c, d)
+        if seed < 0:
+            return set()
+        color = comps[seed]["color"]
+        q = list(comps[seed]["cells"])
+        seen = set(q)
+        out = {seed}
+        while q:
+            x, y = q.pop()
+            for dr, dc in dirs:
+                xx, yy = x + dr, y + dc
+                if not inside(xx, yy) or blocked[xx, yy] or (xx, yy) in seen:
+                    continue
+                if g[xx, yy] == color:
+                    seen.add((xx, yy))
+                    q.append((xx, yy))
+                    out.add(comp[xx, yy])
+        return out
+
+    mapping = {}
+
+    for r, c, missing, cells in marks:
+        target_dir = opp[missing]
+        target = side_comps(r, c, target_dir)
+        if not target:
+            target = side_comps(r, c, missing)
+
+        if g[r, c] != 1:
+            new_color = int(g[r, c])
+        else:
+            src = first_comp(r, c, missing)
+            if src < 0:
+                src = first_comp(r, c, opp[target_dir])
+            if src < 0:
+                continue
+            new_color = comps[src]["color"]
+
+        for cid in target:
+            mapping[cid] = new_color
+
+    out = np.array(g, copy=True)
+
+    for cid, co in enumerate(comps):
+        color = mapping.get(cid, co["color"])
+        for r, c in co["cells"]:
+            out[r, c] = color
+
+    for _ in range(h + w):
+        changed = False
+        for r, c in list(mark_cells):
+            vals = []
+            for dr, dc in dirs:
+                rr, cc = r + dr, c + dc
+                if inside(rr, cc) and (rr, cc) not in mark_cells:
+                    vals.append(int(out[rr, cc]))
+            if vals:
+                vals.sort(key=lambda x: (-vals.count(x), x))
+                if out[r, c] != vals[0]:
+                    out[r, c] = vals[0]
+                    changed = True
+                    mark_cells.discard((r, c))
+        if not changed:
+            break
+
+    for r, c in mark_cells:
+        vals = []
+        for dr, dc in dirs:
+            rr, cc = r + dr, c + dc
+            if inside(rr, cc):
+                vals.append(int(out[rr, cc]))
+        if vals:
+            vals.sort(key=lambda x: (-vals.count(x), x))
+            out[r, c] = vals[0]
+
+    return out.T
+```

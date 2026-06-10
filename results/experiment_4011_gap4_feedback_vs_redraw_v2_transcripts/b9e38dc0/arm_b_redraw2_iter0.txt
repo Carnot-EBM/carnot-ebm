@@ -1,0 +1,244 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (15x15):
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 1, 1, 9, 1, 1, 1, 3, 1, 1],
+ [1, 1, 1, 1, 3, 1, 1, 1, 1, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 3, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 1, 1, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 1, 1, 3, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 5, 5, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+Demo 1 OUTPUT (15x15):
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 9, 9, 9, 9, 9, 9, 3, 1, 1],
+ [1, 1, 1, 1, 3, 9, 9, 9, 9, 3, 3, 3, 1, 1, 1],
+ [1, 1, 1, 1, 3, 9, 9, 9, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 9, 9, 3, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 9, 9, 3, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 3, 9, 9, 9, 9, 3, 1, 1, 1, 1],
+ [1, 1, 1, 1, 3, 9, 9, 9, 9, 9, 9, 3, 1, 1, 1],
+ [1, 1, 1, 1, 9, 9, 9, 5, 5, 9, 9, 9, 1, 1, 1],
+ [1, 1, 1, 9, 9, 9, 9, 1, 1, 9, 9, 9, 9, 1, 1],
+ [1, 1, 9, 9, 9, 9, 9, 1, 1, 9, 9, 9, 9, 9, 1],
+ [1, 9, 9, 9, 9, 9, 9, 1, 1, 9, 9, 9, 9, 9, 9]]
+
+Demo 2 INPUT (8x15):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 5, 5, 5, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 5, 0, 0, 5, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 4, 5, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 5, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 5, 5, 5, 5, 0]]
+Demo 2 OUTPUT (8x15):
+[[4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [4, 4, 4, 4, 4, 4, 4, 5, 0, 0, 0, 5, 5, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 5, 0, 5, 4, 4, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 4, 4, 4, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 4, 4, 4, 5, 0],
+ [4, 4, 4, 4, 4, 4, 4, 4, 5, 0, 5, 5, 5, 5, 0]]
+
+Demo 3 INPUT (18x16):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 7, 7, 7, 7, 7, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 7, 7, 6, 7, 7, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 7, 7, 7, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 7, 7, 7, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 7, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 7, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 7, 7, 9, 9, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 7, 7, 7, 7, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 7, 7, 3, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 7, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 7, 7],
+ [7, 7, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+Demo 3 OUTPUT (18x16):
+[[7, 7, 7, 3, 3, 7, 3, 7, 3, 3, 3, 3, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 6, 3, 7, 3, 3, 3, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 3, 3, 3, 7, 3, 3, 3, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 7, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 6, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 3, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 3, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 9, 9, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 3, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 3, 3, 3, 3, 3, 9, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 9, 3, 3, 3, 9, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 7, 7],
+ [7, 7, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+
+TEST INPUT (15x19):
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 4, 4, 4, 1, 1],
+ [1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 4, 4, 1, 4, 1, 1, 4, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 4, 1, 1],
+ [1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 4, 1, 1],
+ [1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 4, 4, 1, 1, 4, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 4, 4, 4, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    from collections import deque, Counter
+
+    a = grid.copy()
+    h, w = a.shape
+    bg = Counter(a.ravel()).most_common(1)[0][0]
+    dirs8 = [(i, j) for i in (-1, 0, 1) for j in (-1, 0, 1) if i or j]
+    colors = [int(x) for x in np.unique(a) if x != bg]
+
+    def comps(col):
+        seen = np.zeros((h, w), bool)
+        out = []
+        for r, c in zip(*np.where(a == col)):
+            r, c = int(r), int(c)
+            if seen[r, c]:
+                continue
+            q = deque([(r, c)])
+            seen[r, c] = True
+            comp = []
+            while q:
+                x, y = q.popleft()
+                comp.append((x, y))
+                for dx, dy in dirs8:
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and a[nx, ny] == col:
+                        seen[nx, ny] = True
+                        q.append((nx, ny))
+            out.append(comp)
+        return out
+
+    outline = max(colors, key=lambda c: max(len(x) for x in comps(c)))
+    wall = set((int(r), int(c)) for r, c in zip(*np.where(a == outline)))
+
+    candidates = []
+    for col in colors:
+        if col == outline:
+            continue
+        adj = 0
+        for r, c in zip(*np.where(a == col)):
+            r, c = int(r), int(c)
+            if any((r + dr, c + dc) in wall for dr, dc in dirs8):
+                adj += 1
+        if adj:
+            candidates.append((adj, max(len(x) for x in comps(col)), -int(np.sum(a == col)), col))
+    fill = max(candidates)[3]
+
+    blockers = set(wall)
+    for r, c in zip(*np.where((a != bg) & (a != fill) & (a != outline))):
+        blockers.add((int(r), int(c)))
+
+    endpoints = []
+    for p in wall:
+        if sum((p[0] + dr, p[1] + dc) in wall for dr, dc in dirs8) == 1:
+            endpoints.append(p)
+
+    for ep in endpoints:
+        ns = [(ep[0] + dr, ep[1] + dc) for dr, dc in dirs8
+              if (ep[0] + dr, ep[1] + dc) in wall]
+        if not ns:
+            continue
+        n = ns[0]
+        sdr, sdc = ep[0] - n[0], ep[1] - n[1]
+        if sdr != 0 and sdc != 0:
+            dr, dc = int(np.sign(sdr)), int(np.sign(sdc))
+            vertical_first = False
+        else:
+            nxt = [(n[0] + dr, n[1] + dc) for dr, dc in dirs8
+                   if (n[0] + dr, n[1] + dc) in wall and (n[0] + dr, n[1] + dc) != ep]
+            ref = nxt[0] if nxt else n
+            dr, dc = int(np.sign(ep[0] - ref[0])), int(np.sign(ep[1] - ref[1]))
+            if dr == 0 and dc == 0:
+                dr, dc = int(np.sign(sdr)), int(np.sign(sdc))
+            vertical_first = ep[1] == n[1]
+
+        r, c, step = ep[0] + dr, ep[1] + dc, 1
+        while 0 <= r < h and 0 <= c < w:
+            if a[r, c] == bg:
+                blockers.add((r, c))
+            if vertical_first and dr and dc and step >= 2:
+                cc = c - dc
+                if 0 <= cc < w and a[r, cc] == bg:
+                    blockers.add((r, cc))
+            r += dr
+            c += dc
+            step += 1
+
+    fill_cells = [(int(r), int(c)) for r, c in zip(*np.where(a == fill))]
+    fr = sum(r for r, c in fill_cells) / len(fill_cells)
+    fc = sum(c for r, c in fill_cells) / len(fill_cells)
+
+    for col in colors:
+        if col in (outline, fill):
+            continue
+        for comp in comps(col):
+            cr = sum(r for r, c in comp) / len(comp)
+            cc = sum(c for r, c in comp) / len(comp)
+            if abs(cr - fr) >= abs(cc - fc):
+                dr, dc = (1 if cr > fr else -1), 0
+            else:
+                dr, dc = 0, (1 if cc > fc else -1)
+            for pr, pc in comp:
+                r, c = pr + dr, pc + dc
+                while 0 <= r < h and 0 <= c < w:
+                    if a[r, c] == bg:
+                        blockers.add((r, c))
+                    r += dr
+                    c += dc
+
+    seen = np.zeros((h, w), bool)
+    q = deque(fill_cells)
+    for r, c in fill_cells:
+        seen[r, c] = True
+
+    while q:
+        r, c = q.popleft()
+        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc]:
+                if (nr, nc) not in blockers and (a[nr, nc] == bg or a[nr, nc] == fill):
+                    seen[nr, nc] = True
+                    q.append((nr, nc))
+
+    out = a.copy()
+    out[(seen) & (a == bg)] = fill
+    return out
+```

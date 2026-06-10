@@ -1,0 +1,213 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 6, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 6, 0, 4, 4, 4, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 7, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 7, 0, 0, 0, 0],
+ [0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+Demo 1 OUTPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 4, 4, 4, 6, 6, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 7, 7, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+
+Demo 2 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 9, 3, 0, 0, 6, 9, 6, 0],
+ [3, 9, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Demo 2 OUTPUT (10x10):
+[[0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 9, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 0, 3, 0, 0, 6, 0, 6, 0],
+ [3, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Demo 3 INPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0],
+ [0, 0, 0, 6, 6, 0, 0, 6, 0, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 7, 7, 7, 7, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 7, 0, 6, 0, 0, 0],
+ [0, 0, 6, 7, 0, 7, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Demo 3 OUTPUT (12x12):
+[[0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0],
+ [0, 0, 0, 6, 6, 0, 0, 6, 0, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+TEST INPUT (12x13):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 4, 4, 4, 0, 2, 0, 0],
+ [0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 9, 0, 0, 0, 0, 0, 8, 0, 0, 0],
+ [0, 9, 0, 0, 9, 0, 0, 0, 0, 0, 8, 0, 0],
+ [0, 9, 7, 7, 9, 0, 0, 2, 0, 0, 2, 8, 0],
+ [0, 9, 0, 7, 9, 0, 0, 0, 0, 2, 8, 0, 0],
+ [0, 9, 7, 0, 9, 0, 0, 0, 0, 8, 0, 0, 0]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    out = grid.copy()
+    h, w = grid.shape
+
+    seen = np.zeros((h, w), dtype=bool)
+    comps = []
+
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] == 0 or seen[r, c]:
+                continue
+            col = grid[r, c]
+            stack = [(r, c)]
+            seen[r, c] = True
+            cells = []
+            while stack:
+                x, y = stack.pop()
+                cells.append((x, y))
+                for dx in (-1, 0, 1):
+                    for dy in (-1, 0, 1):
+                        if dx == 0 and dy == 0:
+                            continue
+                        nx, ny = x + dx, y + dy
+                        if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and grid[nx, ny] == col:
+                            seen[nx, ny] = True
+                            stack.append((nx, ny))
+            comps.append((col, cells))
+
+    jobs = []
+    for col, cells in comps:
+        if len(cells) < 4:
+            continue
+
+        rows = [p[0] for p in cells]
+        cols = [p[1] for p in cells]
+        r0, r1 = min(rows), max(rows)
+        c0, c1 = min(cols), max(cols)
+
+        inside = []
+        for r in range(r0, r1 + 1):
+            for c in range(c0, c1 + 1):
+                if grid[r, c] != 0 and grid[r, c] != col:
+                    inside.append((r, c, grid[r, c]))
+
+        if not inside:
+            continue
+
+        mr = sum(p[0] for p in inside) / len(inside)
+        mc = sum(p[1] for p in inside) / len(inside)
+
+        candidates = []
+
+        top = [(r, c) for r, c in cells if r == r0]
+        if len(top) <= 2:
+            cc = int(round(sum(c for _, c in top) / len(top)))
+            candidates.append(("up", r0, cc, mr - r0))
+
+        bottom = [(r, c) for r, c in cells if r == r1]
+        if len(bottom) <= 2:
+            cc = int(round(sum(c for _, c in bottom) / len(bottom)))
+            candidates.append(("down", r1, cc, r1 - mr))
+
+        left = [(r, c) for r, c in cells if c == c0]
+        if len(left) <= 2:
+            rr = int(round(sum(r for r, _ in left) / len(left)))
+            candidates.append(("left", rr, c0, mc - c0))
+
+        right = [(r, c) for r, c in cells if c == c1]
+        if len(right) <= 2:
+            rr = int(round(sum(r for r, _ in right) / len(right)))
+            candidates.append(("right", rr, c1, c1 - mc))
+
+        if not candidates:
+            continue
+
+        direction, tr, tc, _ = max(candidates, key=lambda x: x[3])
+        jobs.append((inside, direction, tr, tc))
+
+    for inside, direction, tr, tc in jobs:
+        move_color = inside[0][2]
+        for r, c, _ in inside:
+            out[r, c] = 0
+
+        n = len(inside)
+        placed = 0
+        if direction == "up":
+            r = tr - 1
+            while r >= 0 and placed < n:
+                out[r, tc] = move_color
+                placed += 1
+                r -= 1
+        elif direction == "down":
+            r = tr + 1
+            while r < h and placed < n:
+                out[r, tc] = move_color
+                placed += 1
+                r += 1
+        elif direction == "left":
+            c = tc - 1
+            while c >= 0 and placed < n:
+                out[tr, c] = move_color
+                placed += 1
+                c -= 1
+        else:
+            c = tc + 1
+            while c < w and placed < n:
+                out[tr, c] = move_color
+                placed += 1
+                c += 1
+
+    return out
+```

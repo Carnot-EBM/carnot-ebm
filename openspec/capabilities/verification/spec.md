@@ -11881,6 +11881,54 @@ has more A-only wins than B-only wins with exact paired `mcnemar_p<=0.05`, emits
 otherwise emits `complete: feedback_no_better_than_redraw_p<val>`, and records
 `FALSE_NEGATIVE_RISK` in the verdict when the discordant-pair count is small.
 
+### REQ-VERIFY-4011: GAP-4 Feedback-vs-Redraw Powered Paired Control V2
+
+The repository SHALL provide Exp 4011 at
+`scripts/experiments/experiment_4011_gap4_feedback_vs_redraw_v2.py` as the
+powered rerun of Exp 4000. The runner SHALL read
+`results/experiment_4000_gap4_feedback_vs_redraw.json` as the underpowered
+pilot evidence, verify that `codex` is available, verify that
+`results/arc3_gap4_arc2_eval_pool.json.gz` is readable as JSON, and block with
+`honest_verdict=blocked_codex_unavailable` or
+`honest_verdict=blocked_eval_pool_unreadable` before any Codex call when either
+precondition fails.
+
+For a complete run, the runner SHALL select chain-feasible tasks from the
+ARC-2 GAP-4 eval pool, run arm A as one <=3-iteration feedback chain and arm B
+as three independent one-call redraws at the same 600 second per-call budget,
+interleave A/B calls within the same runner invocation, archive transcripts,
+score demo-perfect plus gold only after induction, run the transcript leak
+audit, and keep adding tasks until `n_discordant_pairs>=10` or the pool is
+exhausted. The runner SHALL compute the paired contingency table, exact
+two-sided McNemar p-value, achieved power against the preregistered 10
+discordant-pair target, and the exact minimum detectable discordant-pair effect
+for 80% power.
+
+The terminal artifact SHALL include bare top-level fields
+`same_run_interleaved`, `feedback_beats_redraw`, `n_discordant_pairs`,
+`mcnemar_p`, `achieved_power`, `min_detectable_effect`, `arm_a_gold_rate`,
+`arm_b_gold_rate`, `total_codex_calls`, `total_codex_seconds`, `leak_clean`,
+`random_seed`, `honest_verdict`, `duration_s`, and `inference_substrate`.
+The null verdict SHALL be
+`complete: feedback_no_better_than_redraw_powered_p<val>` only when the
+discordant-pair target is reached, while exhausted-pool underpowered nulls
+SHALL use `complete: feedback_vs_redraw_underpowered_n<discordant>` and SHALL
+not append the Exp 4000 `FALSE_NEGATIVE_RISK` suffix.
+
+### SCENARIO-VERIFY-4011: Powered Same-Run Mechanism Verdict
+
+Given the Codex CLI and ARC-2 chain-feasible eval pool are available, when Exp
+4011 runs, then it records `same_run_interleaved=true`, runs each task's
+feedback and redraw arms interleaved within one runner invocation, records the
+Exp 4000 pilot `n_discordant_pairs` as underpowered context, stops once the
+paired discordant count reaches 10 or the pool is exhausted, sets
+`feedback_beats_redraw=true` only when A-only wins exceed B-only wins with
+exact paired `mcnemar_p<=0.05`, emits `success: feedback_beats_redraw_p<val>`
+for that positive mechanism result, emits
+`complete: feedback_no_better_than_redraw_powered_p<val>` for a powered null,
+or emits `complete: feedback_vs_redraw_underpowered_n<discordant>` only when
+the eval pool is exhausted before the discordant target.
+
 ### REQ-VERIFY-4009: GAP-4 Precision Confirmation v3 Execution Floor
 
 The repository SHALL provide Exp 4009 at

@@ -1,0 +1,248 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (12x20):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 8, 8, 2, 2, 2],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 0, 0, 7, 0, 7, 8, 8, 7, 7, 7],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 7, 0, 0, 0, 7, 8, 8, 7, 7, 7],
+ [8, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 7, 0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 7, 0, 7, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 8, 8],
+ [8, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 2, 7, 8, 8],
+ [8, 7, 2, 7, 2, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 2, 7, 8, 8],
+ [8, 7, 2, 2, 2, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 4, 8],
+ [8, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 1 OUTPUT (12x20):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 0, 0, 0, 0, 0, 0, 0, 7, 0, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 2, 7, 2, 2, 2, 2, 2, 2, 2, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 2, 2, 2, 7, 7, 7, 7, 7, 2, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+
+Demo 2 INPUT (10x10):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 4, 4, 8, 8, 8, 9, 9, 3, 8],
+ [8, 4, 3, 3, 3, 8, 3, 3, 3, 8],
+ [8, 8, 3, 9, 9, 8, 3, 3, 3, 8],
+ [8, 8, 3, 9, 9, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 3, 3, 3, 8, 8, 3, 9, 9, 8],
+ [8, 9, 9, 3, 8, 8, 3, 9, 3, 8],
+ [8, 9, 9, 3, 8, 8, 3, 3, 3, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 2 OUTPUT (10x10):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 3, 3, 3, 3, 3, 3, 8, 8],
+ [8, 8, 3, 9, 9, 9, 9, 3, 8, 8],
+ [8, 8, 3, 9, 9, 9, 9, 3, 8, 8],
+ [8, 8, 3, 9, 9, 9, 9, 3, 8, 8],
+ [8, 8, 3, 9, 3, 3, 3, 3, 8, 8],
+ [8, 8, 3, 3, 3, 3, 3, 3, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+
+TEST INPUT (26x26):
+[[4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 4, 1, 1, 1],
+ [4, 1, 3, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 3, 3, 3, 4, 6, 6, 1],
+ [4, 1, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 3, 1, 1, 4, 1, 6, 1],
+ [4, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 3, 1, 1, 4, 1, 6, 1],
+ [4, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6, 1],
+ [4, 1, 1, 6, 6, 4, 1, 1, 1, 1, 3, 1, 4, 4, 4, 4, 1, 1, 7, 1, 1, 1, 4, 1, 1, 1],
+ [4, 1, 1, 6, 1, 4, 3, 3, 3, 3, 3, 1, 4, 4, 4, 4, 1, 1, 7, 1, 1, 1, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 7, 7, 7, 1, 1, 1, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4],
+ [1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [6, 6, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [1, 1, 1, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 1, 1, 4, 4, 4, 4, 3, 3, 3, 3, 3, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 6, 6, 4, 4, 4, 4, 1, 1, 1, 1, 3, 1, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1],
+ [4, 1, 1, 4, 4, 4, 4, 1, 1, 1, 1, 3, 1, 4, 1, 1, 6, 1, 1, 4, 7, 7, 7, 1, 1, 1],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 6, 6, 6, 4, 1, 1, 7, 1, 1, 1],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 4, 1, 1, 7, 1, 1, 1],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 1, 7, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 7, 7, 7, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 1, 7, 7, 7, 4, 4, 4, 4, 4, 4, 4, 4, 1, 7, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 7, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 2, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 7, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 2, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    vals, cnts = np.unique(grid, return_counts=True)
+    bg = vals[cnts.argmax()]
+    non = [(v, c) for v, c in zip(vals, cnts) if v != bg]
+    if not non:
+        return grid.copy()
+
+    frame = max(non, key=lambda x: x[1])[0]
+    allowed = {frame} | {v for v, c in non if c >= 4}
+
+    H0, W0 = grid.shape
+    mask = np.isin(grid, list(allowed)) & (grid != bg)
+    seen = np.zeros(grid.shape, dtype=bool)
+    pieces = []
+    centers = []
+
+    for r, c in zip(*np.where(mask)):
+        if seen[r, c]:
+            continue
+        q = [(r, c)]
+        seen[r, c] = True
+        cells = []
+        for x, y in q:
+            cells.append((x, y))
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < H0 and 0 <= ny < W0 and mask[nx, ny] and not seen[nx, ny]:
+                    seen[nx, ny] = True
+                    q.append((nx, ny))
+
+        rs = [x for x, y in cells]
+        cs = [y for x, y in cells]
+        r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
+        part = np.full((r1 - r0 + 1, c1 - c0 + 1), bg, dtype=grid.dtype)
+        for x, y in cells:
+            part[x - r0, y - c0] = grid[x, y]
+        pieces.append(part)
+        centers.append(((r0 + r1) / 2, (c0 + c1) / 2))
+
+    items = []
+    area = 0
+    for i, part in enumerate(pieces):
+        cells = []
+        for r in range(part.shape[0]):
+            for c in range(part.shape[1]):
+                if part[r, c] != bg:
+                    cells.append((r, c, part[r, c]))
+        area += len(cells)
+        items.append((i, part, cells))
+
+    factors = []
+    for h in range(1, area + 1):
+        if area % h == 0:
+            w = area // h
+            if h <= H0 and w <= W0:
+                factors.append((h, w))
+            if w <= H0 and h <= W0:
+                factors.append((w, h))
+
+    factors = sorted(
+        set(factors),
+        key=lambda s: (abs((s[0] / s[1]) - (H0 / W0)), abs(s[0] - s[1]))
+    )
+
+    def solve(h, w):
+        if any(p.shape[0] > h or p.shape[1] > w for _, p, _ in items):
+            return None
+
+        placements = []
+        cell_to = [[] for _ in range(h * w)]
+
+        for idx, (_, part, cells) in enumerate(items):
+            for y in range(h - part.shape[0] + 1):
+                for x in range(w - part.shape[1] + 1):
+                    occ = []
+                    ok = True
+                    for r, c, v in cells:
+                        rr, cc = y + r, x + c
+                        if (rr == 0 or cc == 0 or rr == h - 1 or cc == w - 1) and v != frame:
+                            ok = False
+                            break
+                        occ.append(rr * w + cc)
+                    if ok:
+                        pi = len(placements)
+                        placements.append((idx, y, x, occ, cells))
+                        for cell in occ:
+                            cell_to[cell].append(pi)
+
+        occupied = [False] * (h * w)
+        used = [False] * len(items)
+        chosen = []
+
+        def search(filled=0):
+            if len(chosen) == len(items):
+                return filled == h * w
+
+            best = None
+            for cell in range(h * w):
+                if occupied[cell]:
+                    continue
+                opts = []
+                for pi in cell_to[cell]:
+                    idx, _, _, occ, _ = placements[pi]
+                    if not used[idx] and all(not occupied[o] for o in occ):
+                        opts.append(pi)
+                if best is None or len(opts) < len(best):
+                    best = opts
+                    if len(best) <= 1:
+                        break
+
+            if not best:
+                return False
+
+            for pi in best:
+                idx, _, _, occ, _ = placements[pi]
+                used[idx] = True
+                chosen.append(pi)
+                for o in occ:
+                    occupied[o] = True
+
+                if search(filled + len(occ)):
+                    return True
+
+                for o in occ:
+                    occupied[o] = False
+                chosen.pop()
+                used[idx] = False
+
+            return False
+
+        if not search():
+            return None
+
+        out = np.full((h, w), bg, dtype=grid.dtype)
+        for pi in chosen:
+            _, y, x, _, cells = placements[pi]
+            for r, c, v in cells:
+                out[y + r, x + c] = v
+        return out
+
+    packed = None
+    for h, w in factors:
+        packed = solve(h, w)
+        if packed is not None:
+            break
+
+    if packed is None:
+        return grid.copy()
+
+    out = np.full_like(grid, bg)
+    h, w = packed.shape
+    top = int(np.ceil((H0 - h) / 2))
+    avg_c = sum(c for _, c in centers) / len(centers)
+    left = int(round(avg_c - (w - 1) / 2))
+
+    top = max(0, min(H0 - h, top))
+    left = max(0, min(W0 - w, left))
+    out[top:top + h, left:left + w] = packed
+    return out
+```

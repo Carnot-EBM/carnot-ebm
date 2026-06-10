@@ -1,0 +1,225 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 6, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 6, 0, 4, 4, 4, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 7, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 7, 0, 0, 0, 0],
+ [0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+Demo 1 OUTPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 4, 4, 4, 6, 6, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 7, 7, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+
+Demo 2 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 9, 3, 0, 0, 6, 9, 6, 0],
+ [3, 9, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Demo 2 OUTPUT (10x10):
+[[0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 9, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 0, 3, 0, 0, 6, 0, 6, 0],
+ [3, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Demo 3 INPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0],
+ [0, 0, 0, 6, 6, 0, 0, 6, 0, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 7, 7, 7, 7, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 7, 0, 6, 0, 0, 0],
+ [0, 0, 6, 7, 0, 7, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Demo 3 OUTPUT (12x12):
+[[0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0],
+ [0, 0, 0, 6, 6, 0, 0, 6, 0, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+TEST INPUT (12x13):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 4, 4, 4, 0, 2, 0, 0],
+ [0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 9, 0, 0, 0, 0, 0, 8, 0, 0, 0],
+ [0, 9, 0, 0, 9, 0, 0, 0, 0, 0, 8, 0, 0],
+ [0, 9, 7, 7, 9, 0, 0, 2, 0, 0, 2, 8, 0],
+ [0, 9, 0, 7, 9, 0, 0, 0, 0, 2, 8, 0, 0],
+ [0, 9, 7, 0, 9, 0, 0, 0, 0, 8, 0, 0, 0]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h, w = grid.shape
+    g = grid.copy()
+
+    seen = set()
+    comps = []
+
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] == 0 or (r, c) in seen:
+                continue
+            stack = [(r, c)]
+            seen.add((r, c))
+            comp = []
+            while stack:
+                x, y = stack.pop()
+                comp.append((x, y))
+                for dx in (-1, 0, 1):
+                    for dy in (-1, 0, 1):
+                        if dx == 0 and dy == 0:
+                            continue
+                        nx, ny = x + dx, y + dy
+                        if 0 <= nx < h and 0 <= ny < w and grid[nx, ny] != 0 and (nx, ny) not in seen:
+                            seen.add((nx, ny))
+                            stack.append((nx, ny))
+            comps.append(comp)
+
+    placements = []
+
+    for comp in comps:
+        colors = {}
+        for r, c in comp:
+            colors[int(grid[r, c])] = colors.get(int(grid[r, c]), 0) + 1
+
+        if len(colors) <= 1:
+            continue
+
+        host = max(colors, key=lambda k: colors[k])
+        host_cells = [(r, c) for r, c in comp if grid[r, c] == host]
+        hr = sum(r for r, c in host_cells) / len(host_cells)
+        hc = sum(c for r, c in host_cells) / len(host_cells)
+
+        rows = [r for r, c in host_cells]
+        cols = [c for r, c in host_cells]
+        rmin, rmax = min(rows), max(rows)
+        cmin, cmax = min(cols), max(cols)
+
+        extremes = {
+            "up": [(r, c) for r, c in host_cells if r == rmin],
+            "down": [(r, c) for r, c in host_cells if r == rmax],
+            "left": [(r, c) for r, c in host_cells if c == cmin],
+            "right": [(r, c) for r, c in host_cells if c == cmax],
+        }
+
+        for col in colors:
+            if col == host:
+                continue
+
+            foreign = [(r, c) for r, c in comp if grid[r, c] == col]
+            for r, c in foreign:
+                g[r, c] = 0
+
+            fset = set(foreign)
+            used = set()
+            n_parts = 0
+            for cell in foreign:
+                if cell in used:
+                    continue
+                n_parts += 1
+                stack = [cell]
+                used.add(cell)
+                while stack:
+                    x, y = stack.pop()
+                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nb = (x + dx, y + dy)
+                        if nb in fset and nb not in used:
+                            used.add(nb)
+                            stack.append(nb)
+
+            fr = sum(r for r, c in foreign) / len(foreign)
+            fc = sum(c for r, c in foreign) / len(foreign)
+
+            scores = {
+                "up": fr - hr,
+                "down": hr - fr,
+                "left": fc - hc,
+                "right": hc - fc,
+            }
+
+            candidates = [d for d in scores if len(extremes[d]) == 1]
+            if not candidates:
+                candidates = list(scores)
+
+            direction = max(candidates, key=lambda d: scores[d])
+            edge = extremes[direction]
+            if len(edge) == 1:
+                ar, ac = edge[0]
+            else:
+                ar = round(sum(r for r, c in edge) / len(edge))
+                ac = round(sum(c for r, c in edge) / len(edge))
+
+            for i in range(1, n_parts + 1):
+                if direction == "up":
+                    placements.append((ar - i, ac, col))
+                elif direction == "down":
+                    placements.append((ar + i, ac, col))
+                elif direction == "left":
+                    placements.append((ar, ac - i, col))
+                else:
+                    placements.append((ar, ac + i, col))
+
+    min_r = min([0] + [r for r, c, col in placements])
+    min_c = min([0] + [c for r, c, col in placements])
+    max_r = max([h - 1] + [r for r, c, col in placements])
+    max_c = max([w - 1] + [c for r, c, col in placements])
+
+    out = np.zeros((max_r - min_r + 1, max_c - min_c + 1), dtype=grid.dtype)
+    out[-min_r:h - min_r, -min_c:w - min_c] = g
+
+    for r, c, col in placements:
+        out[r - min_r, c - min_c] = col
+
+    return out
+```
