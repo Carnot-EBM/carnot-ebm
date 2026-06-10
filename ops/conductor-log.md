@@ -8177,3 +8177,5 @@ c |
 | 2026-06-10 12:45 UTC | ArcMemo SOLVE-transfer v3 (self-learning MANDATE;  | OK | 95 passed in 4.85s |
 | 2026-06-10 12:56 UTC | Hardware continuity (consolidated): SSH/USB-reacha | OK | 87 passed in 5.33s |
 | 2026-06-10 13:10 UTC | Capstone .370 (UNGATED — the .365 op:exists + .366 | OK | 89 passed in 5.14s |
+| 2026-06-10 13:57 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-06-10 13:59 UTC | Milestone 2026.06.371 activated | OK | 11 tasks queued |
