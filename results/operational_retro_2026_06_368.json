@@ -1,0 +1,33 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.368",
+  "generated_at": "2026-06-10T04:09:17Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "detector_gap_suspected": true,
+  "detector_gap_evidence": "Authoritative timing block reports 0 experiment commits since .368 activation, but ~10 .368 experiment artifacts exist on disk and in ops/changelog.md (exp3975 gap4 build, exp3976 trm-rerank, exp3978 verifier-vs-judge, exp3979 world-model-gen, exp3980 incremental-levels, exp3981 fourth-game, exp3982 arcmemo-transfer, exp3983 hardware-continuity, exp3984 detector-fix, exp3985 capstone_v368; exp3977 genuinely absent = capstone 'missing1'). detector_count==0 AND results/experiment_*.json present in window => the exp3984-mandated detector_gap_suspected self-check condition holds. This is the 5th consecutive false-zero (.363/.365/.366/.367/.368).",
+  "summary": "The locked numeric fields (0 experiments, 0 wall-time, empty slowest list) are a KNOWN false-zero detector artifact, not a true empty milestone. The .368 milestone committed substantial work (exp3975-exp3985, visible in ops/changelog.md and on disk), but the milestone->commit timing detector again reported zero, so no authoritative per-experiment timing or GPU-efficiency analysis is possible from the data block. Critically, exp3984 THIS SAME MILESTONE landed honest_verdict=complete:retro_commit_detector_fixed_backfill_counts_restored, yet this retrospective still received a zero timing block — so the fix has not been verified end-to-end in the live retro-timing feed.",
+  "bottlenecks_identified": [
+    "MEASUREMENT/OBSERVABILITY bottleneck (not compute): the milestone->commit detector feeding the retro timing harness emitted a false zero for .368, so the retrospective runs on empty input and cannot rank experiments or measure wall-time. 5th consecutive occurrence (.363/.365/.366/.367/.368).",
+    "exp3984's '.368 detector fixed + backfill restored' verdict is NOT yet verified end-to-end: this retro's TIMING DATA block still shows 0 commits, indicating the fix either did not propagate to the live retro-timing generator (vs. only the offline backfill script) or this block predates the fix landing.",
+    "Likely root cause (to confirm): the window/attribution logic misses [outer-loop] commits that land artifacts without the milestone tag, and/or the activation-boundary SHA + 'results/experiment_NNNN' filename match is off — the .368 window has both conductor and outer-loop GAP-4 commits."
+  ],
+  "improvements_suggested": [
+    "Add an END-TO-END regression that runs the LIVE retro-timing generator (the path that produced this prompt's TIMING DATA block) over the .368 window and asserts experiments_completed > 0 (~10 expected). Do not consider exp3984 closed until this passes.",
+    "Wire the exp3984-mandated detector_gap_suspected self-check into the retro generator itself: when detector_count==0 AND results/experiment_*.json exist newer than the activation SHA, STAMP detector_gap_suspected=true and alarm — never silently emit 'no commits found'.",
+    "Anchor the milestone window on the activation-boundary commit SHA and match on the conductor's 'results/experiment_NNNN' artifact-filename pattern in BOTH commit diffs and ops/changelog.md, so [outer-loop] artifact-landing commits without a milestone tag are still attributed.",
+    "Add a glob-based fallback count (results/experiment_*.json with mtime/commit newer than activation SHA) as a cross-check so retros never run on empty input even if the commit-attribution path regresses again.",
+    "Do NOT fabricate wall-time: keep estimated_time_savings at 0 until the detector produces real per-experiment timing (per the exp3984 INFRA-FIX spec)."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Prove exp3984's detector fix reaches the LIVE retro-timing feed: an end-to-end test over .368 itself must report ~10 experiments, not 0. This single fix unblocks meaningful retros for .363-.368 and every milestone forward — it is the recurring highest-leverage action the .366/.367 retros already named.",
+    "Make the zero-count-with-artifacts condition fail loud, not silent: stamp detector_gap_suspected + alarm in the retro generator so a broken detector can never again masquerade as 5 'empty' milestones.",
+    "Add the glob-based experiments_completed fallback (results/experiment_*.json since activation SHA) so the retrospective always has a non-empty ground-truth cross-check independent of commit-message attribution."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The .368 retrospective is itself the strongest evidence that the milestone's headline infra task (exp3984, 'detector fixed') is not yet verified end-to-end: a 'fixed' verdict landed in the very milestone whose retro still receives a false zero. The recurring 5-milestone failure is an OBSERVABILITY gap, not an execution gap — real work shipped (GAP-4 verifier program, the exp3978 efficiency-axis win, 3 ARC games held, ArcMemo solve-transfer) but the retro harness cannot see it. The discipline lesson: a self-reported 'complete' on an infra fix must be gated on an end-to-end test of the live path it claims to repair, and any future '0 experiments' timing block must be treated as detector-suspect until a glob cross-check confirms the window is genuinely empty."
+}
