@@ -191,79 +191,74 @@ def transform(grid):
     h, w = grid.shape
     out = grid.copy()
 
-    bg = 4
-    src = 1
-    border = 2
-    fill = 8
-    hole = 6
-
-    seen = np.zeros((h, w), dtype=bool)
+    seen = set()
     comps = []
 
     for r in range(h):
         for c in range(w):
-            if grid[r, c] == src and not seen[r, c]:
-                q = [(r, c)]
-                seen[r, c] = True
-                cells = []
-                for rr, cc in q:
-                    cells.append((rr, cc))
-                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        nr, nc = rr + dr, cc + dc
-                        if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] == src:
-                            seen[nr, nc] = True
-                            q.append((nr, nc))
-                comps.append(cells)
+            if grid[r, c] == 1 and (r, c) not in seen:
+                stack = [(r, c)]
+                seen.add((r, c))
+                comp = []
+                while stack:
+                    x, y = stack.pop()
+                    comp.append((x, y))
+                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nx, ny = x + dx, y + dy
+                        if 0 <= nx < h and 0 <= ny < w and grid[nx, ny] == 1 and (nx, ny) not in seen:
+                            seen.add((nx, ny))
+                            stack.append((nx, ny))
+                comps.append(comp)
 
-    for cells in comps:
-        cellset = set(cells)
-        rs = [r for r, c in cells]
-        cs = [c for r, c in cells]
-        r0, r1 = min(rs), max(rs)
-        c0, c1 = min(cs), max(cs)
+    for comp in comps:
+        comp_set = set(comp)
+        rs = [p[0] for p in comp]
+        cs = [p[1] for p in comp]
+        r0, r1 = max(0, min(rs) - 1), min(h - 1, max(rs) + 1)
+        c0, c1 = max(0, min(cs) - 1), min(w - 1, max(cs) + 1)
 
-        # Paint a one-cell 8-neighbor outline around the component.
-        for r, c in cells:
-            for dr in (-1, 0, 1):
-                for dc in (-1, 0, 1):
-                    nr, nc = r + dr, c + dc
-                    if 0 <= nr < h and 0 <= nc < w and grid[nr, nc] == bg:
-                        out[nr, nc] = border
+        ext = set()
+        stack = []
 
-        # Find background pockets inside the component's bounding box.
-        box_h = r1 - r0 + 1
-        box_w = c1 - c0 + 1
-        local = np.zeros((box_h, box_w), dtype=bool)
-        for r, c in cells:
-            local[r - r0, c - c0] = True
+        for r in range(r0, r1 + 1):
+            for c in (c0, c1):
+                if (r, c) not in comp_set and (r, c) not in ext:
+                    ext.add((r, c))
+                    stack.append((r, c))
+        for c in range(c0, c1 + 1):
+            for r in (r0, r1):
+                if (r, c) not in comp_set and (r, c) not in ext:
+                    ext.add((r, c))
+                    stack.append((r, c))
 
-        ext = np.zeros((box_h, box_w), dtype=bool)
-        q = []
-        for rr in range(box_h):
-            for cc in range(box_w):
-                if (rr in (0, box_h - 1) or cc in (0, box_w - 1)) and not local[rr, cc]:
-                    ext[rr, cc] = True
-                    q.append((rr, cc))
-
-        for rr, cc in q:
-            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                nr, nc = rr + dr, cc + dc
-                if 0 <= nr < box_h and 0 <= nc < box_w and not ext[nr, nc] and not local[nr, nc]:
-                    ext[nr, nc] = True
-                    q.append((nr, nc))
+        while stack:
+            x, y = stack.pop()
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                nx, ny = x + dx, y + dy
+                if r0 <= nx <= r1 and c0 <= ny <= c1 and (nx, ny) not in comp_set and (nx, ny) not in ext:
+                    ext.add((nx, ny))
+                    stack.append((nx, ny))
 
         holes = []
-        for rr in range(box_h):
-            for cc in range(box_w):
-                if not local[rr, cc] and not ext[rr, cc]:
-                    holes.append((rr + r0, cc + c0))
+        for r in range(r0, r1 + 1):
+            for c in range(c0, c1 + 1):
+                if (r, c) not in comp_set and (r, c) not in ext:
+                    holes.append((r, c))
 
-        # Components with enclosed holes are highlighted; their holes become 6.
         if holes:
-            for r, c in cells:
-                out[r, c] = fill
+            for r, c in comp:
+                out[r, c] = 8
             for r, c in holes:
-                out[r, c] = hole
+                out[r, c] = 6
+
+        for r, c in comp:
+            for dr in (-1, 0, 1):
+                for dc in (-1, 0, 1):
+                    if dr == 0 and dc == 0:
+                        continue
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < h and 0 <= nc < w and grid[nr, nc] != 1 and (nr, nc) in ext:
+                        out[nr, nc] = 2
 
     return out
 ```

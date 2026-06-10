@@ -150,93 +150,61 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    out = grid.copy()
     h, w = grid.shape
-
     vals, counts = np.unique(grid, return_counts=True)
     bg = vals[np.argmax(counts)]
 
-    wall = None
+    # The divider color is the most common non-background color.
+    sep = None
     best = -1
     for v, c in zip(vals, counts):
         if v != bg and c > best:
-            wall = v
+            sep = v
             best = c
+    if sep is None:
+        return grid.copy()
 
-    if wall is None:
-        return out
-
+    out = grid.copy()
     seen = np.zeros((h, w), dtype=bool)
 
     for sr in range(h):
         for sc in range(w):
-            if seen[sr, sc] or grid[sr, sc] == wall:
+            if seen[sr, sc] or grid[sr, sc] == sep:
                 continue
 
-            q = [(sr, sc)]
+            stack = [(sr, sc)]
             seen[sr, sc] = True
-            cells = []
-            qi = 0
+            comp = []
 
-            while qi < len(q):
-                r, c = q[qi]
-                qi += 1
-                cells.append((r, c))
-
-                for nr, nc in ((r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1)):
-                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] != wall:
+            while stack:
+                r, c = stack.pop()
+                comp.append((r, c))
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] != sep:
                         seen[nr, nc] = True
-                        q.append((nr, nc))
+                        stack.append((nr, nc))
 
-            seeds = [(r, c, grid[r, c]) for r, c in cells if grid[r, c] != bg and grid[r, c] != wall]
-            if not seeds:
+            markers = [(r, c, grid[r, c]) for r, c in comp if grid[r, c] != bg]
+            if not markers:
                 continue
 
-            rows = [r for r, c in cells]
-            cols = [c for r, c in cells]
-            r0, r1 = min(rows), max(rows)
-            c0, c1 = min(cols), max(cols)
+            rs = [r for r, _ in comp]
+            cs = [c for _, c in comp]
+            r0, r1 = min(rs), max(rs)
+            c0, c1 = min(cs), max(cs)
 
-            corners = (
-                (r0, c0, 1, 1),
-                (r0, c1, 1, -1),
-                (r1, c0, -1, 1),
-                (r1, c1, -1, -1),
-            )
-
-            best_diag = {}
-            best_score = (-1, 0)
-
-            for cr, cc, rr, cs in corners:
-                diag = {}
-                for r, c, color in seeds:
-                    dr = (r - cr) * rr
-                    dc = (c - cc) * cs
-                    if dr >= 0 and dc >= 0 and dr == dc:
-                        diag[dr] = color
-
-                if diag:
-                    score = (len(diag), -min(diag))
-                    if score > best_score:
-                        best_score = score
-                        best_diag = diag
-
-            if not best_diag:
-                continue
-
-            max_off = max(best_diag)
-            seq = []
-            for i in range(max_off + 1):
-                seq.append(best_diag.get(i, bg))
-
-            if not seq:
-                continue
-
-            period = len(seq)
-
-            for r, c in cells:
+            by_depth = {}
+            for r, c, color in markers:
                 d = min(r - r0, r1 - r, c - c0, c1 - c)
-                out[r, c] = seq[d % period]
+                by_depth[d] = color
+
+            max_d = max(by_depth)
+            pattern = [by_depth.get(d, bg) for d in range(max_d + 1)]
+
+            for r, c in comp:
+                d = min(r - r0, r1 - r, c - c0, c1 - c)
+                out[r, c] = pattern[d % len(pattern)]
 
     return out
 ```

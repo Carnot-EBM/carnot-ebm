@@ -138,58 +138,60 @@ def transform(grid):
     bg = np.bincount(grid.ravel(), minlength=10).argmax()
     h, w = grid.shape
 
-    # Find all solid 5x5 color blocks, bordered/separated by the background.
-    blocks = []
-    for r in range(h - 4):
-        for c in range(w - 4):
-            vals = grid[r:r+5, c:c+5]
-            col = vals[0, 0]
-            if col != bg and np.all(vals == col):
-                blocks.append((r, c, col))
+    def comps_for(color):
+        seen = np.zeros((h, w), dtype=bool)
+        comps = []
+        for r in range(h):
+            for c in range(w):
+                if grid[r, c] == color and not seen[r, c]:
+                    stack = [(r, c)]
+                    seen[r, c] = True
+                    cells = []
+                    while stack:
+                        x, y = stack.pop()
+                        cells.append((x, y))
+                        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                            nx, ny = x + dx, y + dy
+                            if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and grid[nx, ny] == color:
+                                seen[nx, ny] = True
+                                stack.append((nx, ny))
+                    rs = [p[0] for p in cells]
+                    cs = [p[1] for p in cells]
+                    comps.append((min(rs), max(rs), min(cs), max(cs), cells))
+        return comps
 
-    # Remove overlapping duplicate detections just in case.
-    kept = []
-    for b in sorted(blocks):
-        r, c, col = b
-        if not any(col == kcol and abs(r - kr) < 5 and abs(c - kc) < 5
-                   for kr, kc, kcol in kept):
-            kept.append(b)
-    blocks = kept
-
-    # Find each color's small 3x3 pattern.
+    large = []
     patterns = {}
-    for col in set(int(x[2]) for x in blocks):
-        best = None
-        best_count = -1
-        for r in range(h - 2):
-            for c in range(w - 2):
-                if any(abs(r - br) < 5 and abs(c - bc) < 5 for br, bc, bcol in blocks if bcol == col):
-                    continue
-                sub = grid[r:r+3, c:c+3]
-                cnt = int(np.sum(sub == col))
-                other = np.any((sub != col) & (sub != bg))
-                if cnt > best_count and not other:
-                    best_count = cnt
-                    best = (sub == col)
-        if best is not None and best_count > 0:
-            patterns[col] = best
+    for color in range(10):
+        if color == bg:
+            continue
+        for r1, r2, c1, c2, cells in comps_for(color):
+            hh, ww = r2 - r1 + 1, c2 - c1 + 1
+            if hh == 5 and ww == 5 and len(cells) == 25:
+                large.append((r1, c1, color))
+            elif hh <= 3 and ww <= 3:
+                pat = np.zeros((3, 3), dtype=bool)
+                for r, c in cells:
+                    pat[r - r1, c - c1] = True
+                patterns[color] = pat
 
-    rows = sorted(set(r for r, c, col in blocks))
-    cols = sorted(set(c for r, c, col in blocks))
+    rows = sorted(set(r for r, c, color in large))
+    cols = sorted(set(c for r, c, color in large))
+    out_h = 6 * len(rows) + 1
+    out_w = 6 * len(cols) + 1
+    out = np.full((out_h, out_w), bg, dtype=grid.dtype)
 
-    out = np.full((len(rows) * 6 + 1, len(cols) * 6 + 1), bg, dtype=grid.dtype)
-
-    pos = {(r, c): col for r, c, col in blocks}
+    pos = {(r, c): color for r, c, color in large}
     for i, r in enumerate(rows):
         for j, c in enumerate(cols):
-            if (r, c) not in pos:
+            color = pos.get((r, c))
+            if color is None:
                 continue
-            col = pos[(r, c)]
-            rr, cc = i * 6 + 1, j * 6 + 1
-            out[rr:rr+5, cc:cc+5] = col
-            pat = patterns.get(col)
+            rr, cc = 6 * i + 1, 6 * j + 1
+            out[rr:rr + 5, cc:cc + 5] = color
+            pat = patterns.get(color)
             if pat is not None:
-                out[rr+1:rr+4, cc+1:cc+4][pat] = bg
+                out[rr + 1:rr + 4, cc + 1:cc + 4][pat] = bg
 
     return out
 ```

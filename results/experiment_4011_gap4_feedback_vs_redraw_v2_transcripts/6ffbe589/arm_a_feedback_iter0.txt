@@ -133,83 +133,139 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    g = grid
-    H, W = g.shape
+    H, W = grid.shape
 
-    best = None
-    for s in range(5, min(H, W) + 1):
-        for r in range(H - s + 1):
-            for c in range(W - s + 1):
-                n = np.count_nonzero(g[r:r+s, c:c+s])
-                if n == 0:
-                    continue
-                dens = n / (s * s)
-                if dens < 0.20:
-                    continue
-                key = (n, dens, -s)
-                if best is None or key > best[0]:
-                    best = (key, r, c, s)
+    # connected components of nonzero cells
+    seen = np.zeros((H, W), dtype=bool)
+    comps = []
+    for r in range(H):
+        for c in range(W):
+            if grid[r, c] != 0 and not seen[r, c]:
+                color = grid[r, c]
+                stack = [(r, c)]
+                seen[r, c] = True
+                cells = []
+                while stack:
+                    x, y = stack.pop()
+                    cells.append((x, y))
+                    for dx in (-1, 0, 1):
+                        for dy in (-1, 0, 1):
+                            if dx == 0 and dy == 0:
+                                continue
+                            nx, ny = x + dx, y + dy
+                            if 0 <= nx < H and 0 <= ny < W and not seen[nx, ny] and grid[nx, ny] != 0:
+                                seen[nx, ny] = True
+                                stack.append((nx, ny))
+                rs = [p[0] for p in cells]
+                cs = [p[1] for p in cells]
+                comps.append([min(rs), max(rs), min(cs), max(cs), len(cells)])
 
-    if best is None:
-        pts = np.argwhere(g != 0)
-        if len(pts) == 0:
-            return g[:0, :0].copy()
-        r0, c0 = pts.min(axis=0)
-        r1, c1 = pts.max(axis=0)
-        crop = g[r0:r1+1, c0:c1+1]
-        return crop.copy()
+    n = len(comps)
+    parent = list(range(n))
 
-    _, r0, c0, s = best
-    crop = g[r0:r0+s, c0:c0+s]
-    out = np.zeros_like(crop)
+    def find(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
 
-    colors = [int(x) for x in np.unique(g) if x != 0]
+    def union(a, b):
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            parent[rb] = ra
 
-    for col in colors:
-        layer = (crop == col)
+    def box_gap(a, b):
+        ar0, ar1, ac0, ac1, _ = a
+        br0, br1, bc0, bc1, _ = b
+        rg = max(0, max(ar0, br0) - min(ar1, br1) - 1)
+        cg = max(0, max(ac0, bc0) - min(ac1, bc1) - 1)
+        return max(rg, cg)
 
-        outside = np.zeros_like(g, dtype=bool)
-        outside[g == col] = True
-        outside[r0:r0+s, c0:c0+s] = False
-        pts = np.argwhere(outside)
+    for i in range(n):
+        for j in range(i + 1, n):
+            if box_gap(comps[i], comps[j]) <= 2:
+                union(i, j)
 
-        if len(pts) == 0:
-            trans = layer
-        else:
-            rr0, cc0 = pts.min(axis=0)
-            rr1, cc1 = pts.max(axis=0)
-            h = rr1 - rr0 + 1
-            w = cc1 - cc0 + 1
-            cr = (rr0 + rr1) / 2
-            cc = (cc0 + cc1) / 2
-            mr = r0 + (s - 1) / 2
-            mc = c0 + (s - 1) / 2
-            dr = cr - mr
-            dc = cc - mc
+    clusters = {}
+    for i, comp in enumerate(comps):
+        root = find(i)
+        if root not in clusters:
+            clusters[root] = [comp[0], comp[1], comp[2], comp[3], 0]
+        clusters[root][0] = min(clusters[root][0], comp[0])
+        clusters[root][1] = max(clusters[root][1], comp[1])
+        clusters[root][2] = min(clusters[root][2], comp[2])
+        clusters[root][3] = max(clusters[root][3], comp[3])
+        clusters[root][4] += comp[4]
 
-            if h > w:
-                trans = np.rot90(layer, 2)
-            elif w > h:
-                if dr < 0:
-                    trans = np.rot90(layer, 1)
-                else:
-                    trans = np.rot90(layer, 2)
-            else:
-                lpts = np.argwhere(layer)
-                touches = False
-                if len(lpts):
-                    lr0, lc0 = lpts.min(axis=0)
-                    lr1, lc1 = lpts.max(axis=0)
-                    touches = (lr0 == 0 and lc0 == 0 and lr1 == s - 1 and lc1 == s - 1)
+    r0, r1, c0, c1, _ = max(clusters.values(), key=lambda x: x[4])
+    crop = grid[r0:r1 + 1, c0:c1 + 1]
+    h, w = crop.shape
 
-                if touches and dr > 0 and dc < 0:
-                    trans = np.rot90(layer, -1)
-                elif abs(dc) >= abs(dr):
-                    trans = np.fliplr(layer)
-                else:
-                    trans = np.flipud(layer)
+    colors = [int(x) for x in np.unique(crop) if x != 0]
+    counts = {col: int(np.sum(crop == col)) for col in colors}
+    out = np.zeros((h, w), dtype=grid.dtype)
 
-        out[trans] = col
+    def op_for(col):
+        mask = (grid == col)
+        outside = np.argwhere(mask & ~((np.indices(grid.shape)[0] >= r0) &
+                                       (np.indices(grid.shape)[0] <= r1) &
+                                       (np.indices(grid.shape)[1] >= c0) &
+                                       (np.indices(grid.shape)[1] <= c1)))
+        if outside.size == 0:
+            return "id"
+
+        gr0, gc0 = outside.min(axis=0)
+        gr1, gc1 = outside.max(axis=0)
+        gh, gw = gr1 - gr0 + 1, gc1 - gc0 + 1
+
+        if gh > gw:
+            return "rot180"
+        if gw > gh:
+            return "id" if gw == 2 else "rot270"
+
+        gr = (gr0 + gr1) / 2.0
+        gc = (gc0 + gc1) / 2.0
+
+        if gr < r0 and gc > c1:
+            return "h"
+        if gr > r1 and gc < c0:
+            dl = c0 - gc
+            db = gr - r1
+            if dl == 1:
+                return "rot90"
+            return "h" if dl > db else "v"
+        if gr < r0 and gc < c0:
+            return "rot270"
+        if gr > r1 and gc > c1:
+            return "rot90"
+        if gr < r0:
+            return "rot270"
+        if gr > r1:
+            return "rot90"
+        if gc < c0 or gc > c1:
+            return "h"
+        return "id"
+
+    def map_cell(r, c, op):
+        if op == "h":
+            return r, w - 1 - c
+        if op == "v":
+            return h - 1 - r, c
+        if op == "rot180":
+            return h - 1 - r, w - 1 - c
+        if op == "rot90":
+            return c, h - 1 - r
+        if op == "rot270":
+            return w - 1 - c, r
+        return r, c
+
+    for col in sorted(colors, key=lambda x: counts[x]):
+        op = op_for(col)
+        pts = np.argwhere(crop == col)
+        for r, c in pts:
+            nr, nc = map_cell(int(r), int(c), op)
+            if 0 <= nr < h and 0 <= nc < w:
+                out[nr, nc] = col
 
     return out
 ```

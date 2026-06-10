@@ -164,156 +164,366 @@ Write exactly one Python function:
         # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
         # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
 Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (30x30):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 1, 6, 6, 6, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 2, 1, 2, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 8, 2, 2, 2, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 3, 3, 8],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3]]
+your function returned:
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 8, 0, 0, 0, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 0, 0, 8],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Demo 2: expected OUTPUT (30x30):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 0, 2],
+ [0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3, 1, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 4, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3, 4, 4, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0]]
+your function returned:
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 4, 4, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 0, 2],
+ [0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Previous code:
+```python
+def transform(grid):
+    import numpy as np
+
+    g = grid.copy()
+    h, w = g.shape
+
+    # Find connected components of nonzero cells.
+    seen = np.zeros((h, w), dtype=bool)
+    comps = []
+    for r in range(h):
+        for c in range(w):
+            if g[r, c] == 0 or seen[r, c]:
+                continue
+            color = g[r, c]
+            stack = [(r, c)]
+            seen[r, c] = True
+            cells = []
+            while stack:
+                x, y = stack.pop()
+                cells.append((x, y))
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and g[nx, ny] == color:
+                        seen[nx, ny] = True
+                        stack.append((nx, ny))
+            comps.append({"color": color, "cells": cells})
+
+    # The separator is the largest component.
+    sep = max(comps, key=lambda x: len(x["cells"]))
+    sep_cells = set(sep["cells"])
+    small = [x for x in comps if x is not sep]
+
+    out = np.zeros_like(g)
+    for r, c in sep_cells:
+        out[r, c] = sep["color"]
+
+    sr0 = min(r for r, c in sep_cells)
+    sr1 = max(r for r, c in sep_cells)
+    sc0 = min(c for r, c in sep_cells)
+    sc1 = max(c for r, c in sep_cells)
+
+    # Choose the main direction of the separator and a slot through one of its gaps.
+    if (sr1 - sr0) <= (sc1 - sc0):
+        # Horizontal separator: stack objects vertically through the most informative gap.
+        gap_cols = []
+        for c in range(w):
+            zeros = [r for r in range(sr0, sr1 + 1) if (r, c) not in sep_cells]
+            if zeros:
+                gap_cols.append(c)
+
+        def overlap_score(c0):
+            score = 0
+            for obj in small:
+                cs = [c for r, c in obj["cells"]]
+                ow = max(0, min(c0 + 3, max(cs)) - max(c0, min(cs)) + 1)
+                score += ow * len(obj["cells"])
+            return score
+
+        if gap_cols:
+            starts = range(max(0, min(gap_cols) - 4), min(w - 3, max(gap_cols)) + 1)
+        else:
+            starts = range(0, w - 3)
+        x0 = max(starts, key=overlap_score)
+
+        objs = []
+        for obj in small:
+            rs = [r for r, c in obj["cells"]]
+            cs = [c for r, c in obj["cells"]]
+            pat = [(r - min(rs), c - min(cs)) for r, c in obj["cells"]]
+            objs.append((min(rs), min(cs), obj["color"], pat, max(rs) - min(rs) + 1, max(cs) - min(cs) + 1))
+
+        objs.sort(key=lambda t: t[0])
+        y = sr0
+        for _, _, color, pat, oh, ow in reversed(objs):
+            best = x0
+            for dx in range(-4, 5):
+                xx = x0 + dx
+                if 0 <= xx and xx + ow <= w:
+                    best = xx
+                    break
+            y -= oh
+            for rr, cc in pat:
+                if 0 <= y + rr < h and 0 <= best + cc < w:
+                    out[y + rr, best + cc] = color
+
+    else:
+        # Vertical separator: stack objects horizontally through the separator.
+        gap_rows = []
+        for r in range(h):
+            zeros = [c for c in range(sc0, sc1 + 1) if (r, c) not in sep_cells]
+            if zeros:
+                gap_rows.append(r)
+
+        y0 = min(gap_rows) if gap_rows else sr0
+        objs = []
+        for obj in small:
+            rs = [r for r, c in obj["cells"]]
+            cs = [c for r, c in obj["cells"]]
+            pat = [(r - min(rs), c - min(cs)) for r, c in obj["cells"]]
+            objs.append((min(cs), min(rs), obj["color"], pat, max(rs) - min(rs) + 1, max(cs) - min(cs) + 1))
+
+        objs.sort(key=lambda t: t[0])
+        x = sc0
+        for _, _, color, pat, oh, ow in objs:
+            x -= ow
+            for rr, cc in pat:
+                if 0 <= y0 + rr < h and 0 <= x + cc < w:
+                    out[y0 + rr, x + cc] = color
+
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
     g = grid
-    n, m = g.shape
+    H, W = g.shape
 
-    def comps(a):
+    def components(a):
         h, w = a.shape
         seen = np.zeros((h, w), dtype=bool)
-        out = []
+        res = []
         for r in range(h):
             for c in range(w):
                 if a[r, c] == 0 or seen[r, c]:
                     continue
                 col = int(a[r, c])
-                q = [(r, c)]
+                st = [(r, c)]
                 seen[r, c] = True
-                pts = []
-                while q:
-                    x, y = q.pop()
-                    pts.append((x, y))
+                cells = []
+                while st:
+                    x, y = st.pop()
+                    cells.append((x, y))
                     for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        xx, yy = x + dx, y + dy
-                        if 0 <= xx < h and 0 <= yy < w and not seen[xx, yy] and a[xx, yy] == col:
-                            seen[xx, yy] = True
-                            q.append((xx, yy))
-                out.append((col, pts))
-        return out
+                        nx, ny = x + dx, y + dy
+                        if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and int(a[nx, ny]) == col:
+                            seen[nx, ny] = True
+                            st.append((nx, ny))
+                res.append((col, cells))
+        return res
 
-    def pack(items):
-        occ = np.zeros((1, items[0][1].shape[1]), dtype=bool)
+    comps = components(g)
+    sep_col, sep_cells = max(comps, key=lambda x: len(x[1]))
+    sr0 = min(r for r, c in sep_cells)
+    sr1 = max(r for r, c in sep_cells)
+    sc0 = min(c for r, c in sep_cells)
+    sc1 = max(c for r, c in sep_cells)
+
+    if (sr1 - sr0) > (sc1 - sc0):
+        return transform(g.T).T
+
+    sep_set = set(sep_cells)
+    out = np.zeros_like(g)
+    for r, c in sep_cells:
+        out[r, c] = sep_col
+
+    objs = []
+    for col, cells in comps:
+        if cells is sep_cells:
+            continue
+        rs = [r for r, c in cells]
+        cs = [c for r, c in cells]
+        r0, r1 = min(rs), max(rs)
+        c0, c1 = min(cs), max(cs)
+        loc = [(r - r0, c - c0) for r, c in cells]
+        side = 0 if r1 < sr0 else 1
+        objs.append({
+            "color": col,
+            "cells": loc,
+            "h": r1 - r0 + 1,
+            "w": c1 - c0 + 1,
+            "r0": r0,
+            "c0": c0,
+            "side": side,
+        })
+
+    groups = {}
+    for o in objs:
+        groups.setdefault(o["w"], []).append(o)
+
+    def pack_down(seq, x, y0):
         placed = []
-        height = 0
-        width = items[0][1].shape[1]
-        for col, mask in items:
-            mh, mw = mask.shape
-            if mw != width:
-                raise ValueError
-            y = 0
-            while True:
-                need = max(height, y + mh)
-                if occ.shape[0] < need:
-                    test = np.zeros((need, width), dtype=bool)
-                    test[:occ.shape[0], :] = occ
-                else:
-                    test = occ
-                if not np.any(test[y:y + mh, :] & mask):
-                    occ = test
-                    occ[y:y + mh, :] |= mask
-                    placed.append((col, mask, y))
-                    height = max(height, y + mh)
+        occ = set()
+        for i, o in enumerate(seq):
+            start = y0 if i == 0 else 0
+            found = None
+            for y in range(start, H - o["h"] + 1):
+                cells = [(y + rr, x + cc) for rr, cc in o["cells"]]
+                if all(p not in occ for p in cells):
+                    found = y
                     break
-                y += 1
-        return placed, height, width
+            if found is None:
+                return None
+            for rr, cc in o["cells"]:
+                occ.add((found + rr, x + cc))
+            placed.append((o, found, x))
+        return placed
 
-    def solve(a):
-        h, w = a.shape
-        cs = comps(a)
-        main_col, main_pts = max(cs, key=lambda x: len(x[1]))
-        mr0 = min(p[0] for p in main_pts)
-        mr1 = max(p[0] for p in main_pts)
-        mc0 = min(p[1] for p in main_pts)
-        mc1 = max(p[1] for p in main_pts)
+    def pack_up(seq, x, y0):
+        placed = [None] * len(seq)
+        occ = set()
+        last = len(seq) - 1
+        o = seq[last]
+        if not (0 <= y0 and y0 + o["h"] <= H):
+            return None
+        for rr, cc in o["cells"]:
+            occ.add((y0 + rr, x + cc))
+        placed[last] = (o, y0, x)
+        limit = y0
+        for i in range(last - 1, -1, -1):
+            o = seq[i]
+            found = None
+            for y in range(min(limit, H - o["h"]), -1, -1):
+                cells = [(y + rr, x + cc) for rr, cc in o["cells"]]
+                if all(p not in occ for p in cells):
+                    found = y
+                    break
+            if found is None:
+                return None
+            for rr, cc in o["cells"]:
+                occ.add((found + rr, x + cc))
+            placed[i] = (o, found, x)
+            limit = found
+        return placed
 
-        if (mr1 - mr0 + 1) > (mc1 - mc0 + 1):
-            return solve(a.T).T
+    for width, seq in groups.items():
+        seq = sorted(seq, key=lambda o: (o["side"], -o["c0"]))
+        best_score = None
+        best_place = None
 
-        out = np.zeros_like(a)
-        for r, c in main_pts:
-            out[r, c] = main_col
-
-        objs = []
-        for col, pts in cs:
-            if col == main_col and set(pts) == set(main_pts):
-                continue
-            r0 = min(p[0] for p in pts)
-            r1 = max(p[0] for p in pts)
-            c0 = min(p[1] for p in pts)
-            c1 = max(p[1] for p in pts)
-            mask = np.zeros((r1 - r0 + 1, c1 - c0 + 1), dtype=bool)
-            for r, c in pts:
-                mask[r - r0, c - c0] = True
-            side = 0 if (r0 + r1) / 2 < mr0 else 1
-            objs.append({
-                "col": col, "mask": mask, "r0": r0, "r1": r1,
-                "c0": c0, "c1": c1, "side": side,
-                "w": c1 - c0 + 1
-            })
-
-        groups = {}
-        for o in objs:
-            groups.setdefault(o["w"], []).append(o)
-
-        used = np.zeros(w, dtype=bool)
-        rows = []
-        for r in range(mr0, mr1 + 1):
-            fill = np.count_nonzero(a[r, mc0:mc1 + 1] == main_col) / (mc1 - mc0 + 1)
-            if fill > 0.45:
-                rows.append(r)
-        if not rows:
-            rows = list(range(mr0, mr1 + 1))
-
-        for width in sorted(groups.keys(), reverse=True):
-            group = sorted(groups[width], key=lambda o: (o["side"], -(o["c0"] + o["c1"])))
-            items = [(o["col"], o["mask"]) for o in group]
-            placed, ph, pw = pack(items)
-
-            best = None
-            for y in range(max(0, mr0 - ph + 1), min(h - ph, mr1) + 1):
-                for x in range(0, w - pw + 1):
-                    if np.any(used[x:x + pw]):
+        for x in range(0, W - width + 1):
+            y_lo = max(0, sr0 - max(o["h"] for o in seq) + 1)
+            y_hi = min(H - 1, sr1)
+            for direction in (0, 1):
+                for y0 in range(y_lo, y_hi + 1):
+                    placed = pack_up(seq, x, y0) if direction == 0 else pack_down(seq, x, y0)
+                    if placed is None:
                         continue
-                    score = 0
-                    overw = 0
-                    for col, mask, yy in placed:
-                        rr0 = y + yy
-                        cc0 = x
-                        for rr in range(mask.shape[0]):
-                            gr = rr0 + rr
-                            if gr not in rows:
-                                continue
-                            for cc in range(mask.shape[1]):
-                                if not mask[rr, cc]:
-                                    continue
-                                gc = cc0 + cc
-                                if a[gr, gc] == 0:
-                                    score += 10
-                                elif a[gr, gc] == main_col:
-                                    overw += 1
-                    if score == 0:
+
+                    holes = 0
+                    hits = 0
+                    inside_rows = []
+                    for o, y, xx in placed:
+                        for rr, cc in o["cells"]:
+                            r, c = y + rr, xx + cc
+                            if sr0 <= r <= sr1 and sc0 <= c <= sc1:
+                                inside_rows.append(r)
+                                if (r, c) in sep_set:
+                                    hits += 1
+                                else:
+                                    holes += 1
+
+                    if holes == 0:
                         continue
-                    edge_pref = 0 if (y < mr0 or y + ph - 1 > mr1) else 1
-                    cand = (score - overw, -edge_pref, -abs((y + ph / 2) - ((mr0 + mr1) / 2)), -x, -y, x, y)
-                    if best is None or cand > best:
-                        best = cand
+                    mean_r = sum(inside_rows) / len(inside_rows)
+                    prefer = 1 if ((mean_r <= (sr0 + sr1) / 2 and direction == 0) or
+                                   (mean_r > (sr0 + sr1) / 2 and direction == 1)) else 0
+                    compact = -sum(abs((y + o["h"] / 2) - (sr0 + sr1) / 2) for o, y, xx in placed)
+                    score = holes * 10000 - hits * 1000000 + prefer * 1000 + compact
 
-            if best is None:
-                x = max(0, min(w - pw, mc0))
-                y = max(0, min(h - ph, mr1))
-            else:
-                x, y = best[-2], best[-1]
+                    if best_score is None or score > best_score:
+                        best_score = score
+                        best_place = placed
 
-            used[x:x + pw] = True
-            for col, mask, yy in placed:
-                for rr in range(mask.shape[0]):
-                    for cc in range(mask.shape[1]):
-                        if mask[rr, cc]:
-                            out[y + yy + rr, x + cc] = col
+        if best_place is not None:
+            for o, y, x in best_place:
+                for rr, cc in o["cells"]:
+                    r, c = y + rr, x + cc
+                    if 0 <= r < H and 0 <= c < W:
+                        out[r, c] = o["color"]
 
-        return out
-
-    return solve(g)
+    return out
 ```

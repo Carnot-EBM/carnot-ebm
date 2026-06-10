@@ -191,13 +191,16 @@ def transform(grid):
     h, w = grid.shape
     out = grid.copy()
     bg = 4
-    fg = 1
+    obj = 1
+    border = 2
+    filled_obj = 8
+    hole_col = 6
 
     seen = np.zeros((h, w), dtype=bool)
 
     for sr in range(h):
         for sc in range(w):
-            if grid[sr, sc] != fg or seen[sr, sc]:
+            if grid[sr, sc] != obj or seen[sr, sc]:
                 continue
 
             stack = [(sr, sc)]
@@ -209,56 +212,68 @@ def transform(grid):
                 comp.append((r, c))
                 for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                     nr, nc = r + dr, c + dc
-                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] == fg:
+                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] == obj:
                         seen[nr, nc] = True
                         stack.append((nr, nc))
 
-            comp_set = set(comp)
             rs = [p[0] for p in comp]
             cs = [p[1] for p in comp]
-            r0, r1 = min(rs), max(rs)
-            c0, c1 = min(cs), max(cs)
+            r0, r1 = max(0, min(rs) - 1), min(h - 1, max(rs) + 1)
+            c0, c1 = max(0, min(cs) - 1), min(w - 1, max(cs) + 1)
 
-            # Find background holes fully enclosed by this component inside its bounding box.
-            holes = set()
-            box_bg_seen = set()
-            for r in range(r0, r1 + 1):
-                for c in range(c0, c1 + 1):
-                    if (r, c) in comp_set or (r, c) in box_bg_seen:
+            comp_set = set(comp)
+
+            # Find background regions inside the component's padded box. Any such
+            # region that cannot reach the padded box edge is a hole.
+            box_h = r1 - r0 + 1
+            box_w = c1 - c0 + 1
+            bseen = np.zeros((box_h, box_w), dtype=bool)
+            holes = []
+
+            for rr in range(r0, r1 + 1):
+                for cc in range(c0, c1 + 1):
+                    br, bc = rr - r0, cc - c0
+                    if bseen[br, bc] or (rr, cc) in comp_set:
                         continue
 
-                    q = [(r, c)]
-                    box_bg_seen.add((r, c))
                     region = []
-                    touches_box_edge = False
+                    touches_edge = False
+                    stack = [(rr, cc)]
+                    bseen[br, bc] = True
 
-                    while q:
-                        cr, cc = q.pop()
-                        region.append((cr, cc))
-                        if cr in (r0, r1) or cc in (c0, c1):
-                            touches_box_edge = True
+                    while stack:
+                        r, c = stack.pop()
+                        region.append((r, c))
+                        if r == r0 or r == r1 or c == c0 or c == c1:
+                            touches_edge = True
                         for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                            nr, nc = cr + dr, cc + dc
-                            if r0 <= nr <= r1 and c0 <= nc <= c1 and (nr, nc) not in comp_set and (nr, nc) not in box_bg_seen:
-                                box_bg_seen.add((nr, nc))
-                                q.append((nr, nc))
+                            nr, nc = r + dr, c + dc
+                            if r0 <= nr <= r1 and c0 <= nc <= c1:
+                                nbr, nbc = nr - r0, nc - c0
+                                if not bseen[nbr, nbc] and (nr, nc) not in comp_set:
+                                    bseen[nbr, nbc] = True
+                                    stack.append((nr, nc))
 
-                    if not touches_box_edge:
-                        holes.update(region)
+                    if not touches_edge:
+                        holes.extend(region)
 
-            if holes:
-                for r, c in comp:
-                    out[r, c] = 8
-                for r, c in holes:
-                    out[r, c] = 6
+            comp_color = filled_obj if holes else obj
 
-            # Add a one-cell blue outline around the component and any filled holes.
-            body = comp_set | holes
-            for r, c in body:
-                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    nr, nc = r + dr, c + dc
-                    if 0 <= nr < h and 0 <= nc < w and (nr, nc) not in body and grid[nr, nc] == bg:
-                        out[nr, nc] = 2
+            for r, c in comp:
+                out[r, c] = comp_color
+
+            for r, c in holes:
+                out[r, c] = hole_col
+
+            protected = comp_set | set(holes)
+            for r, c in protected:
+                for dr in (-1, 0, 1):
+                    for dc in (-1, 0, 1):
+                        if dr == 0 and dc == 0:
+                            continue
+                        nr, nc = r + dr, c + dc
+                        if 0 <= nr < h and 0 <= nc < w and (nr, nc) not in protected:
+                            out[nr, nc] = border
 
     return out
 ```

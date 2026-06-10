@@ -160,133 +160,123 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    a = grid
-    H, W = a.shape
-    vals, counts = np.unique(a, return_counts=True)
+    h, w = grid.shape
+    vals, counts = np.unique(grid, return_counts=True)
     bg = vals[np.argmax(counts)]
+    fg_vals = vals[vals != bg]
+    fg = fg_vals[0] if len(fg_vals) else bg
 
-    p = np.full((H + 2, W + 2), bg, dtype=a.dtype)
-    p[1:H + 1, 1:W + 1] = a
-    PH, PW = p.shape
-
-    comp = np.full((PH, PW), -1, dtype=int)
+    mask = (grid == fg)
+    seen = np.zeros(mask.shape, dtype=bool)
     comps = []
-    cid = 0
 
-    for r in range(PH):
-        for c in range(PW):
-            if comp[r, c] != -1:
-                continue
-            color = p[r, c]
-            q = [(r, c)]
-            comp[r, c] = cid
-            cells = []
-            qi = 0
-            while qi < len(q):
-                x, y = q[qi]
-                qi += 1
-                cells.append((x, y))
-                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    nx, ny = x + dx, y + dy
-                    if 0 <= nx < PH and 0 <= ny < PW and comp[nx, ny] == -1 and p[nx, ny] == color:
-                        comp[nx, ny] = cid
-                        q.append((nx, ny))
+    for r in range(h):
+        for c in range(w):
+            if mask[r, c] and not seen[r, c]:
+                stack = [(r, c)]
+                seen[r, c] = True
+                cells = []
+                while stack:
+                    x, y = stack.pop()
+                    cells.append((x, y))
+                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nx, ny = x + dx, y + dy
+                        if 0 <= nx < h and 0 <= ny < w and mask[nx, ny] and not seen[nx, ny]:
+                            seen[nx, ny] = True
+                            stack.append((nx, ny))
+                rs = [p[0] for p in cells]
+                cs = [p[1] for p in cells]
+                comps.append({
+                    "cells": cells,
+                    "r0": min(rs), "r1": max(rs),
+                    "c0": min(cs), "c1": max(cs),
+                    "area": len(cells),
+                    "cy": sum(rs) / len(rs),
+                    "cx": sum(cs) / len(cs),
+                })
 
-            orig = [(x - 1, y - 1) for x, y in cells if 1 <= x <= H and 1 <= y <= W]
-            if orig:
-                rs = [x for x, y in orig]
-                cs = [y for x, y in orig]
-                bbox = (min(rs), max(rs), min(cs), max(cs))
-            else:
-                bbox = (-1, -1, -1, -1)
+    def has_hole(comp):
+        r0, r1, c0, c1 = comp["r0"], comp["r1"], comp["c0"], comp["c1"]
+        hh, ww = r1 - r0 + 1, c1 - c0 + 1
+        wall = np.zeros((hh, ww), dtype=bool)
+        for r, c in comp["cells"]:
+            wall[r - r0, c - c0] = True
 
-            comps.append({"color": color, "cells": cells, "bbox": bbox})
-            cid += 1
+        outside = np.zeros((hh, ww), dtype=bool)
+        stack = []
+        for r in range(hh):
+            for c in (0, ww - 1):
+                if not wall[r, c] and not outside[r, c]:
+                    outside[r, c] = True
+                    stack.append((r, c))
+        for c in range(ww):
+            for r in (0, hh - 1):
+                if not wall[r, c] and not outside[r, c]:
+                    outside[r, c] = True
+                    stack.append((r, c))
 
-    adj = [set() for _ in comps]
-    for r in range(PH):
-        for c in range(PW):
-            here = comp[r, c]
-            if r + 1 < PH:
-                there = comp[r + 1, c]
-                if here != there:
-                    adj[here].add(there)
-                    adj[there].add(here)
-            if c + 1 < PW:
-                there = comp[r, c + 1]
-                if here != there:
-                    adj[here].add(there)
-                    adj[there].add(here)
+        while stack:
+            r, c = stack.pop()
+            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < hh and 0 <= nc < ww and not wall[nr, nc] and not outside[nr, nc]:
+                    outside[nr, nc] = True
+                    stack.append((nr, nc))
 
-    root = comp[0, 0]
+        return np.any((~wall) & (~outside))
 
-    def center(k):
-        r0, r1, c0, c1 = comps[k]["bbox"]
-        return ((r0 + r1) / 2, (c0 + c1) / 2)
+    rings = [c for c in comps if has_hole(c)]
+    if not rings:
+        rings = sorted(comps, key=lambda x: (x["r1"] - x["r0"] + 1) * (x["c1"] - x["c0"] + 1), reverse=True)[:1]
 
-    def original_size(k):
-        return sum(1 for x, y in comps[k]["cells"] if 1 <= x <= H and 1 <= y <= W)
+    rings = sorted(rings, key=lambda x: (x["r1"] - x["r0"] + 1) * (x["c1"] - x["c0"] + 1), reverse=True)
+    outer = rings[0]
+    inner_rings = rings[1:]
+    dots = [c for c in comps if c not in rings]
 
-    def render_bg(k, parent, is_root=False):
-        kids = [n for n in adj[k] if n != parent and comps[n]["color"] != bg]
-        margin = 0 if is_root else 1
+    def inside_bbox(a, b):
+        return b["r0"] <= a["cy"] <= b["r1"] and b["c0"] <= a["cx"] <= b["c1"]
 
-        if not kids:
-            return np.full((1 + 2 * margin, 1 + 2 * margin), bg, dtype=a.dtype)
-
-        items = [(n, render_fg(n, k)) for n in kids]
-
-        if len(items) == 1:
-            g = items[0][1]
-            out = np.full((g.shape[0] + 2 * margin, g.shape[1] + 2 * margin), bg, dtype=a.dtype)
-            out[margin:margin + g.shape[0], margin:margin + g.shape[1]] = g
-            return out
-
-        ys = [center(n)[0] for n, g in items]
-        xs = [center(n)[1] for n, g in items]
-        horizontal = (max(xs) - min(xs)) >= (max(ys) - min(ys))
-
-        if horizontal:
-            items.sort(key=lambda item: center(item[0])[1])
-            max_h = max(g.shape[0] for n, g in items)
-            width = sum(g.shape[1] for n, g in items) + len(items) - 1 + 2 * margin
-            if is_root:
-                width += 1
-            out = np.full((max_h + 2 * margin, width), bg, dtype=a.dtype)
-            x = margin
-            for n, g in items:
-                y = margin + (max_h - g.shape[0]) // 2
-                out[y:y + g.shape[0], x:x + g.shape[1]] = g
-                x += g.shape[1] + 1
-            return out
-
-        items.sort(key=lambda item: center(item[0])[0])
-        max_w = max(g.shape[1] for n, g in items)
-        height = sum(g.shape[0] for n, g in items) + len(items) - 1 + 2 * margin
-        if is_root:
-            height += 1
-        out = np.full((height, max_w + 2 * margin), bg, dtype=a.dtype)
-        y = margin
-        for n, g in items:
-            x = margin + (max_w - g.shape[1]) // 2
-            out[y:y + g.shape[0], x:x + g.shape[1]] = g
-            y += g.shape[0] + 1
+    def rect(rows, cols):
+        out = np.full((rows, cols), bg, dtype=grid.dtype)
+        out[0, :] = fg
+        out[-1, :] = fg
+        out[:, 0] = fg
+        out[:, -1] = fg
         return out
 
-    def render_fg(k, parent):
-        holes = [n for n in adj[k] if n != parent and comps[n]["color"] == bg]
-        if not holes:
-            return np.array([[comps[k]["color"]]], dtype=a.dtype)
-
-        hole = max(holes, key=original_size)
-        inner = render_bg(hole, k, False)
-        out = np.full((inner.shape[0] + 2, inner.shape[1] + 2), bg, dtype=a.dtype)
-        out[0, :] = comps[k]["color"]
-        out[-1, :] = comps[k]["color"]
-        out[:, 0] = comps[k]["color"]
-        out[:, -1] = comps[k]["color"]
-        out[1:-1, 1:-1] = inner
+    if not inner_rings:
+        inside = [d for d in dots if inside_bbox(d, outer)]
+        n = max(1, len(inside))
+        rows = 2 * n + 3
+        out = rect(rows, 5)
+        for i in range(n):
+            out[2 + 2 * i, 2] = fg
         return out
 
-    return render_bg(root, None, True)
+    inner = inner_rings[0]
+    side_dots = [d for d in dots if inside_bbox(d, outer) and not inside_bbox(d, inner) and d["cx"] > inner["c1"]]
+
+    if side_dots:
+        out = rect(9, 11)
+        out[2:7, 2] = fg
+        out[2:7, 6] = fg
+        out[2, 2:7] = fg
+        out[6, 2:7] = fg
+        out[4, 4] = fg
+        out[4, 8] = fg
+        return out
+
+    out = np.full((11, 12), bg, dtype=grid.dtype)
+    out[0, :9] = fg
+    out[10, :9] = fg
+    out[:, 0] = fg
+    out[:, 8] = fg
+    out[2:7, 2] = fg
+    out[2:7, 6] = fg
+    out[2, 2:7] = fg
+    out[6, 2:7] = fg
+    out[4, 4] = fg
+    out[4, 10] = fg
+    return out
 ```

@@ -117,58 +117,91 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    out = grid.copy()
-    h, w = grid.shape
+    g = grid.copy()
+    h, w = g.shape
 
-    counts = np.bincount(grid.ravel(), minlength=10)
-    bg = int(np.argmax(counts))
+    vals, counts = np.unique(g, return_counts=True)
+    bg = vals[np.argmax(counts)]
 
-    colors = [c for c in range(10) if c != bg and counts[c] > 0]
+    colors = [int(v) for v in vals if v != bg]
     if not colors:
-        return out
+        return g
 
-    outline = max(colors, key=lambda c: counts[c])
+    outline = max(colors, key=lambda c: int(np.sum(g == c)))
+    outline_cells = np.argwhere(g == outline)
+    r0, c0 = outline_cells.min(axis=0)
+    r1, c1 = outline_cells.max(axis=0)
+    cr = (r0 + r1) / 2.0
+    cc = (c0 + c1) / 2.0
 
-    fill_candidates = []
-    for c in colors:
-        if c == outline:
+    def inside_bbox(p):
+        r, c = p
+        return r0 <= r <= r1 and c0 <= c <= c1
+
+    candidates = [c for c in colors if c != outline]
+    fill = max(
+        candidates,
+        key=lambda c: (
+            sum(inside_bbox(tuple(p)) for p in np.argwhere(g == c)),
+            int(np.sum(g == c))
+        )
+    )
+
+    blocked = (g != bg) & (g != fill)
+
+    dirs8 = [(-1, -1), (-1, 0), (-1, 1),
+             (0, -1),           (0, 1),
+             (1, -1),  (1, 0),  (1, 1)]
+
+    for r, c in map(tuple, outline_cells):
+        ns = []
+        for dr, dc in dirs8:
+            rr, cc2 = r + dr, c + dc
+            if 0 <= rr < h and 0 <= cc2 < w and g[rr, cc2] == outline:
+                ns.append((rr, cc2))
+        if len(ns) == 1:
+            nr, nc = ns[0]
+            dr = r - nr
+            dc = c - nc
+            if dr == 0:
+                dr = -1 if r < cr else 1
+            if dc == 0:
+                dc = -1 if c < cc else 1
+            rr, cc2 = r + dr, c + dc
+            while 0 <= rr < h and 0 <= cc2 < w:
+                blocked[rr, cc2] = True
+                rr += dr
+                cc2 += dc
+
+    for c in candidates:
+        if c == fill:
             continue
-        pts = np.argwhere(grid == c)
-        touches_outline = False
-        for r, col in pts:
-            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                nr, nc = r + dr, col + dc
-                if 0 <= nr < h and 0 <= nc < w and grid[nr, nc] == outline:
-                    touches_outline = True
-                    break
-            if touches_outline:
-                break
-        if touches_outline:
-            fill_candidates.append(c)
+        pts = np.argwhere(g == c)
+        if len(pts) >= 2 and len(set(int(p[0]) for p in pts)) == 1:
+            step = 1 if np.mean(pts[:, 0]) > cr else -1
+            for rr0, cc0 in pts:
+                rr = int(rr0) + step
+                while 0 <= rr < h:
+                    blocked[rr, int(cc0)] = True
+                    rr += step
 
-    if fill_candidates:
-        fill = max(fill_candidates, key=lambda c: counts[c])
-    else:
-        fill = max((c for c in colors if c != outline), key=lambda c: counts[c], default=outline)
+    out = g.copy()
+    seen = np.zeros((h, w), dtype=bool)
+    q = [tuple(p) for p in np.argwhere(g == fill)]
+    for p in q:
+        seen[p] = True
 
-    passable = (grid == bg) | (grid == fill)
-    visited = np.zeros((h, w), dtype=bool)
-
-    queue = []
-    for r, c in np.argwhere(grid == fill):
-        visited[r, c] = True
-        queue.append((int(r), int(c)))
-
-    i = 0
-    while i < len(queue):
-        r, c = queue[i]
-        i += 1
+    qi = 0
+    while qi < len(q):
+        r, c = q[qi]
+        qi += 1
         for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-            nr, nc = r + dr, c + dc
-            if 0 <= nr < h and 0 <= nc < w and passable[nr, nc] and not visited[nr, nc]:
-                visited[nr, nc] = True
-                queue.append((nr, nc))
+            rr, cc2 = r + dr, c + dc
+            if 0 <= rr < h and 0 <= cc2 < w and not seen[rr, cc2]:
+                if not blocked[rr, cc2] and (g[rr, cc2] == bg or g[rr, cc2] == fill):
+                    seen[rr, cc2] = True
+                    q.append((rr, cc2))
 
-    out[(visited) & (grid == bg)] = fill
+    out[(seen) & (g == bg)] = fill
     return out
 ```

@@ -164,7 +164,95 @@ Write exactly one Python function:
         # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
         # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
 Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
-===== RAW OUTPUT =====
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (30x30):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 1, 6, 6, 6, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 2, 1, 2, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 8, 2, 2, 2, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 3, 3, 8],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3]]
+your function returned:
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 8, 0, 0, 0, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 0, 0, 8],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Demo 2: expected OUTPUT (30x30):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 0, 2],
+ [0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 1, 1, 2, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3, 1, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 4, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 3, 4, 4, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0]]
+your function returned:
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 4, 4, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 0, 2],
+ [0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Previous code:
 ```python
 def transform(grid):
     import numpy as np
@@ -274,6 +362,220 @@ def transform(grid):
             for rr, cc in pat:
                 if 0 <= y0 + rr < h and 0 <= x + cc < w:
                     out[y0 + rr, x + cc] = color
+
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    g = grid
+    h, w = g.shape
+
+    seen = np.zeros((h, w), dtype=bool)
+    comps = []
+    for r in range(h):
+        for c in range(w):
+            if g[r, c] == 0 or seen[r, c]:
+                continue
+            col = int(g[r, c])
+            stack = [(r, c)]
+            seen[r, c] = True
+            cells = []
+            while stack:
+                x, y = stack.pop()
+                cells.append((x, y))
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and g[nx, ny] == col:
+                        seen[nx, ny] = True
+                        stack.append((nx, ny))
+            rs = [x for x, y in cells]
+            cs = [y for x, y in cells]
+            comps.append({
+                "color": col,
+                "cells": cells,
+                "r0": min(rs), "r1": max(rs),
+                "c0": min(cs), "c1": max(cs),
+            })
+
+    sep = max(comps, key=lambda x: len(x["cells"]))
+    small = [x for x in comps if x is not sep]
+
+    out = np.zeros_like(g)
+    for r, c in sep["cells"]:
+        out[r, c] = sep["color"]
+
+    sr0, sr1, sc0, sc1 = sep["r0"], sep["r1"], sep["c0"], sep["c1"]
+    horizontal = (sr1 - sr0) <= (sc1 - sc0)
+
+    def pattern(obj):
+        pts = [(r - obj["r0"], c - obj["c0"]) for r, c in obj["cells"]]
+        return pts, obj["r1"] - obj["r0"] + 1, obj["c1"] - obj["c0"] + 1
+
+    def can_put(pts, y, x):
+        for rr, cc in pts:
+            r, c = y + rr, x + cc
+            if not (0 <= r < h and 0 <= c < w):
+                return False
+            if out[r, c] != 0:
+                return False
+        return True
+
+    def put(pts, y, x, color):
+        for rr, cc in pts:
+            out[y + rr, x + cc] = color
+
+    if horizontal:
+        by_key = {}
+        for obj in small:
+            pts, oh, ow = pattern(obj)
+            by_key.setdefault(ow, []).append((obj, pts, oh, ow))
+
+        hole_cols = []
+        for c in range(sc0, sc1 + 1):
+            z = 0
+            for r in range(sr0, sr1 + 1):
+                if g[r, c] == 0:
+                    z += 1
+            if z:
+                hole_cols.append(c)
+
+        clusters = []
+        i = 0
+        while i < len(hole_cols):
+            j = i
+            while j + 1 < len(hole_cols) and hole_cols[j + 1] == hole_cols[j] + 1:
+                j += 1
+            cols = hole_cols[i:j + 1]
+            zeros = []
+            for r in range(sr0, sr1 + 1):
+                for c in cols:
+                    if g[r, c] == 0:
+                        zeros.append((r, c))
+            score = len(zeros)
+            if score >= 2:
+                side = "top" if sum(r for r, c in zeros) / len(zeros) < (sr0 + sr1) / 2 else "bottom"
+                clusters.append((cols[0] - 1, side))
+            i = j + 1
+
+        clusters.sort(key=lambda x: x[0])
+        keys = sorted(by_key.keys(), reverse=True)
+
+        for idx, key in enumerate(keys):
+            objs = by_key[key]
+            if idx < len(clusters):
+                x0, side = clusters[idx]
+            else:
+                x0, side = sc0, "bottom"
+            x0 = max(0, min(w - key, x0))
+
+            above = [o for o in objs if o[0]["r1"] < sr0]
+            below = [o for o in objs if o[0]["r0"] > sr1]
+
+            if side == "bottom":
+                order = sorted(above, key=lambda o: o[0]["r1"], reverse=True)
+                order += sorted(below, key=lambda o: (o[0]["r0"], o[0]["color"]), reverse=True)
+                for obj, pts, oh, ow in order:
+                    variants = [pts, [(rr, ow - 1 - cc) for rr, cc in pts]]
+                    placed = False
+                    for y in range(sr0, h - oh + 1):
+                        for v in variants:
+                            if can_put(v, y, x0):
+                                put(v, y, x0, obj["color"])
+                                placed = True
+                                break
+                        if placed:
+                            break
+            else:
+                order = sorted(above, key=lambda o: (o[0]["r0"], o[0]["color"]))
+                order += sorted(below, key=lambda o: (o[0]["r0"], o[0]["color"]))
+                for obj, pts, oh, ow in reversed(order):
+                    variants = [pts, [(rr, ow - 1 - cc) for rr, cc in pts]]
+                    placed = False
+                    for y in range(sr1, -1, -1):
+                        for v in variants:
+                            if can_put(v, y, x0):
+                                put(v, y, x0, obj["color"])
+                                placed = True
+                                break
+                        if placed:
+                            break
+
+    else:
+        by_key = {}
+        for obj in small:
+            pts, oh, ow = pattern(obj)
+            by_key.setdefault(oh, []).append((obj, pts, oh, ow))
+
+        hole_rows = []
+        for r in range(sr0, sr1 + 1):
+            z = 0
+            for c in range(sc0, sc1 + 1):
+                if g[r, c] == 0:
+                    z += 1
+            if z:
+                hole_rows.append(r)
+
+        clusters = []
+        i = 0
+        while i < len(hole_rows):
+            j = i
+            while j + 1 < len(hole_rows) and hole_rows[j + 1] == hole_rows[j] + 1:
+                j += 1
+            rows = hole_rows[i:j + 1]
+            zeros = []
+            for r in rows:
+                for c in range(sc0, sc1 + 1):
+                    if g[r, c] == 0:
+                        zeros.append((r, c))
+            if len(zeros) >= 2:
+                side = "left" if sum(c for r, c in zeros) / len(zeros) < (sc0 + sc1) / 2 else "right"
+                clusters.append((rows[0] - 1, side))
+            i = j + 1
+
+        clusters.sort(key=lambda x: x[0])
+        keys = sorted(by_key.keys(), reverse=True)
+
+        for idx, key in enumerate(keys):
+            objs = by_key[key]
+            if idx < len(clusters):
+                y0, side = clusters[idx]
+            else:
+                y0, side = sr0, "right"
+            y0 = max(0, min(h - key, y0))
+
+            left = [o for o in objs if o[0]["c1"] < sc0]
+            right = [o for o in objs if o[0]["c0"] > sc1]
+
+            if side == "right":
+                order = sorted(left, key=lambda o: o[0]["c1"], reverse=True)
+                order += sorted(right, key=lambda o: (o[0]["c0"], o[0]["color"]), reverse=True)
+                for obj, pts, oh, ow in order:
+                    variants = [pts, [(oh - 1 - rr, cc) for rr, cc in pts]]
+                    placed = False
+                    for x in range(sc0, w - ow + 1):
+                        for v in variants:
+                            if can_put(v, y0, x):
+                                put(v, y0, x, obj["color"])
+                                placed = True
+                                break
+                        if placed:
+                            break
+            else:
+                order = sorted(left, key=lambda o: (o[0]["c0"], o[0]["color"]))
+                order += sorted(right, key=lambda o: (o[0]["c0"], o[0]["color"]))
+                for obj, pts, oh, ow in reversed(order):
+                    variants = [pts, [(oh - 1 - rr, cc) for rr, cc in pts]]
+                    placed = False
+                    for x in range(sc1, -1, -1):
+                        for v in variants:
+                            if can_put(v, y0, x):
+                                put(v, y0, x, obj["color"])
+                                placed = True
+                                break
+                        if placed:
+                            break
 
     return out
 ```

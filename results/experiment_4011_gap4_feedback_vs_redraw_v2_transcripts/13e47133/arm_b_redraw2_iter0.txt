@@ -151,61 +151,70 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ```python
 def transform(grid):
     h, w = grid.shape
-    vals, counts = np.unique(grid, return_counts=True)
+    out = grid.copy()
 
+    vals, counts = np.unique(grid, return_counts=True)
     bg = vals[np.argmax(counts)]
 
-    sep = None
-    sep_count = -1
-    for v, c in zip(vals, counts):
-        if v != bg and c > sep_count:
-            sep = v
-            sep_count = c
+    non_bg = vals[vals != bg]
+    line = None
+    best = -1
+    for c in non_bg:
+        cnt = int(np.sum(grid == c))
+        if cnt > best:
+            best = cnt
+            line = c
 
-    if sep is None:
-        return grid.copy()
+    blocked = (grid == line)
 
-    out = grid.copy()
     seen = np.zeros((h, w), dtype=bool)
+    dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
     for sr in range(h):
         for sc in range(w):
-            if seen[sr, sc] or grid[sr, sc] == sep:
+            if blocked[sr, sc] or seen[sr, sc]:
                 continue
 
             stack = [(sr, sc)]
             seen[sr, sc] = True
-            comp = []
+            cells = []
 
             while stack:
                 r, c = stack.pop()
-                comp.append((r, c))
-                for nr, nc in ((r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1)):
-                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] != sep:
+                cells.append((r, c))
+                for dr, dc in dirs:
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and not blocked[nr, nc]:
                         seen[nr, nc] = True
                         stack.append((nr, nc))
 
-            rmin = min(r for r, c in comp)
-            rmax = max(r for r, c in comp)
-            cmin = min(c for r, c in comp)
-            cmax = max(c for r, c in comp)
+            rs = [p[0] for p in cells]
+            cs = [p[1] for p in cells]
+            r0, r1 = min(rs), max(rs)
+            c0, c1 = min(cs), max(cs)
 
-            ring_colors = {}
-            for r, c in comp:
+            seeds = []
+            for r, c in cells:
                 v = grid[r, c]
-                if v != bg and v != sep:
-                    d = min(r - rmin, rmax - r, c - cmin, cmax - c)
-                    ring_colors.setdefault(d, v)
+                if v != bg:
+                    d = min(r - r0, r1 - r, c - c0, c1 - c)
+                    seeds.append((d, r, c, v))
 
-            if not ring_colors:
+            if not seeds:
                 continue
 
-            max_seed_ring = max(ring_colors)
-            cycle = [ring_colors.get(i, bg) for i in range(max_seed_ring + 1)]
+            seeds.sort()
+            colors = []
+            for _, _, _, v in seeds:
+                if not colors or colors[-1] != v:
+                    colors.append(v)
 
-            for r, c in comp:
-                d = min(r - rmin, rmax - r, c - cmin, cmax - c)
-                out[r, c] = cycle[d % len(cycle)]
+            n = len(colors)
+            for r, c in cells:
+                if grid[r, c] == line:
+                    continue
+                d = min(r - r0, r1 - r, c - c0, c1 - c)
+                out[r, c] = colors[d % n]
 
     return out
 ```

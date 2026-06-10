@@ -134,83 +134,82 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    bg = np.bincount(grid.ravel()).argmax()
-    fg = grid != bg
-    h, w = grid.shape
-    out = np.full_like(grid, bg)
+    a = np.array(grid, copy=True)
+    h, w = a.shape
 
-    vals = grid[fg]
-    if vals.size == 0:
-        return out
-    color = np.bincount(vals).argmax()
+    vals, counts = np.unique(a, return_counts=True)
+    bg = vals[np.argmax(counts)]
+    fg_vals = vals[vals != bg]
+    if len(fg_vals) == 0:
+        return a
+    fg = fg_vals[0]
 
-    def max_run(arr):
-        best = cur = 0
-        for x in arr:
-            if x:
-                cur += 1
-                best = max(best, cur)
-            else:
-                cur = 0
-        return best
+    mask = a != bg
 
-    strong_rows = [max_run(fg[r, :]) >= 2 for r in range(h)]
-    strong_cols = [max_run(fg[:, c]) >= 2 for c in range(w)]
+    base = np.zeros_like(mask, dtype=bool)
+    base[:, :-1] |= mask[:, :-1] & mask[:, 1:]
+    base[:, 1:] |= mask[:, 1:] & mask[:, :-1]
+    base[:-1, :] |= mask[:-1, :] & mask[1:, :]
+    base[1:, :] |= mask[1:, :] & mask[:-1, :]
 
-    def has_h_neighbor(r, c):
-        return (c > 0 and fg[r, c - 1]) or (c + 1 < w and fg[r, c + 1])
+    out = np.full_like(a, bg)
+    out[base] = fg
 
-    def has_v_neighbor(r, c):
-        return (r > 0 and fg[r - 1, c]) or (r + 1 < h and fg[r + 1, c])
+    noise = mask & ~base
 
     for r in range(h):
-        for c in range(w):
-            if not fg[r, c]:
+        cols = np.flatnonzero(mask[r])
+        for i in range(len(cols) - 1):
+            left, right = cols[i], cols[i + 1]
+            if right == left + 1:
                 continue
-            if strong_rows[r] and has_h_neighbor(r, c):
-                out[r, c] = color
-            if strong_cols[c] and has_v_neighbor(r, c):
-                out[r, c] = color
-            if strong_rows[r] and strong_cols[c]:
-                out[r, c] = color
-            if strong_cols[c] and (r == 0 or r == h - 1):
-                out[r, c] = color
 
-    def row_diag_evidence(r, c1, c2):
-        d = c2 - c1
-        for s in range(1, d):
-            for rr in (r - s, r + s):
-                if 0 <= rr < h and fg[rr, c1 + s]:
-                    return True
-                if 0 <= rr < h and fg[rr, c2 - s]:
-                    return True
-        return False
+            fill = False
+            for rr in range(h):
+                if fill:
+                    break
+                dr = abs(rr - r)
+                if dr == 0:
+                    continue
+                for cc in range(left + 1, right):
+                    if not noise[rr, cc]:
+                        continue
+                    if base[r, left] and cc - left == dr:
+                        fill = True
+                        break
+                    if base[r, right] and right - cc == dr:
+                        fill = True
+                        break
 
-    def col_diag_evidence(c, r1, r2):
-        d = r2 - r1
-        for s in range(1, d):
-            for cc in (c - s, c + s):
-                if 0 <= cc < w and fg[r1 + s, cc]:
-                    return True
-                if 0 <= cc < w and fg[r2 - s, cc]:
-                    return True
-        return False
-
-    for r in range(h):
-        if not strong_rows[r]:
-            continue
-        cols = [c for c in range(w) if fg[r, c]]
-        for a, b in zip(cols, cols[1:]):
-            if 1 < b - a <= 4 and row_diag_evidence(r, a, b):
-                out[r, a:b + 1] = color
+            if fill:
+                out[r, left:right + 1] = fg
 
     for c in range(w):
-        if not strong_cols[c]:
-            continue
-        rows = [r for r in range(h) if fg[r, c]]
-        for a, b in zip(rows, rows[1:]):
-            if 1 < b - a <= 4 and col_diag_evidence(c, a, b):
-                out[a:b + 1, c] = color
+        rows = np.flatnonzero(mask[:, c])
+        for i in range(len(rows) - 1):
+            top, bottom = rows[i], rows[i + 1]
+            if bottom == top + 1:
+                continue
+
+            fill = False
+            for rr in range(top + 1, bottom):
+                if fill:
+                    break
+                for cc in range(w):
+                    if not noise[rr, cc]:
+                        continue
+                    dc = abs(cc - c)
+                    if dc == 0:
+                        continue
+                    if base[top, c] and rr - top == dc:
+                        fill = True
+                        break
+                    if base[bottom, c] and bottom - rr == dc:
+                        fill = True
+                        break
+
+            if fill:
+                out[top:bottom + 1, c] = fg
 
     return out
 ```

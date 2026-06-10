@@ -353,146 +353,350 @@ Write exactly one Python function:
         # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
         # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
 Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (30x22):
+[[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [3, 3, 0, 0, 0, 3, 3, 2, 2, 3, 3, 3, 7, 3, 3, 3, 3, 3, 6, 6],
+ [3, 3, 0, 0, 0, 3, 3, 2, 2, 2, 3, 3, 7, 7, 7, 3, 3, 3, 3, 6],
+ [3, 3, 0, 0, 0, 3, 3, 3, 2, 3, 3, 3, 7, 3, 3, 3, 3, 3, 6, 6],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 2, 8, 2, 8, 8, 0, 8, 8, 8, 8, 8, 8, 7, 8, 8, 9, 8, 9],
+ [8, 8, 8, 2, 8, 8, 8, 0, 0, 0, 8, 8, 8, 8, 7, 8, 8, 9, 9, 8],
+ [8, 8, 2, 8, 2, 8, 8, 0, 8, 0, 8, 8, 7, 7, 7, 8, 8, 9, 9, 9],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [8, 3, 7, 3, 3, 3, 3, 1, 1, 1, 3, 3, 3, 6, 6, 3, 3, 0, 0, 0],
+ [8, 3, 7, 7, 7, 3, 3, 3, 1, 3, 3, 3, 3, 3, 6, 3, 3, 0, 0, 0],
+ [8, 3, 7, 3, 3, 3, 3, 1, 1, 1, 3, 3, 3, 6, 6, 3, 3, 0, 0, 0],
+ [8, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 4, 8, 4, 8, 8, 2, 2, 8, 8, 8, 5, 5, 8, 8, 8, 1, 8, 1],
+ [8, 8, 4, 8, 4, 8, 8, 2, 2, 2, 8, 8, 5, 8, 8, 8, 8, 1, 1, 8]]
+your function returned:
+[[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [3, 3, 0, 0, 0, 3, 3, 2, 2, 3, 3, 3, 7, 3, 3, 3, 3, 3, 6, 6],
+ [3, 3, 0, 0, 0, 3, 3, 2, 2, 2, 3, 3, 7, 7, 7, 3, 3, 3, 3, 6],
+ [3, 3, 0, 0, 0, 3, 3, 3, 2, 3, 3, 3, 7, 3, 3, 3, 3, 3, 6, 6],
+ [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 2, 8, 2, 8, 8, 0, 8, 8, 8, 8, 8, 8, 7, 8, 8, 9, 8, 9],
+ [8, 8, 8, 2, 8, 8, 8, 0, 0, 0, 8, 8, 8, 8, 7, 8, 8, 9, 9, 8],
+ [8, 8, 2, 8, 2, 8, 8, 0, 8, 0, 8, 8, 7, 7, 7, 8, 8, 9, 9, 9],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 8, 3, 3, 3, 3, 3, 3, 3, 3],
+ [8, 3, 7, 3, 3, 3, 3, 1, 1, 1, 3, 8, 3, 6, 6, 3, 3, 0, 0, 0],
+ [8, 3, 7, 7, 7, 3, 3, 3, 1, 3, 3, 8, 3, 3, 6, 3, 3, 0, 0, 0],
+ [8, 3, 7, 3, 3, 3, 3, 1, 1, 1, 3, 8, 3, 6, 6, 3, 3, 0, 0, 0],
+ [8, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 8, 3, 3, 3, 3, 3, 3, 3, 3],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 4, 8, 4, 8, 8, 2, 2, 8, 8, 8, 5, 5, 8, 8, 8, 1, 8, 1],
+ [8, 8, 4, 8, 4, 8, 8, 2, 2, 2, 8, 8, 5, 8, 8, 8, 8, 1, 1, 8]]
+
+Demo 4: expected OUTPUT (30x22):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 0, 0, 0, 8, 8, 2, 2, 8, 8, 8, 7, 8, 8, 8, 8, 8, 6, 6],
+ [8, 8, 0, 0, 0, 8, 8, 2, 2, 2, 8, 8, 7, 7, 7, 8, 8, 8, 8, 6],
+ [8, 8, 0, 0, 0, 8, 8, 8, 2, 8, 8, 8, 7, 8, 8, 8, 8, 8, 6, 6],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 2, 8, 2, 8, 8, 0, 8, 8, 8, 8, 8, 8, 7, 8, 8, 9, 8, 9],
+ [8, 8, 8, 2, 8, 8, 8, 0, 0, 0, 8, 8, 8, 8, 7, 8, 8, 9, 9, 8],
+ [8, 8, 2, 8, 2, 8, 8, 0, 8, 0, 8, 8, 7, 7, 7, 8, 8, 9, 9, 9],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 3, 3, 3, 3, 3, 8, 8, 8, 8, 8, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [8, 3, 7, 3, 3, 3, 8, 1, 1, 1, 8, 3, 3, 6, 6, 3, 3, 0, 0, 0],
+ [8, 3, 7, 7, 7, 3, 8, 8, 1, 8, 8, 3, 3, 3, 6, 3, 3, 0, 0, 0],
+ [8, 3, 7, 3, 3, 3, 8, 1, 1, 1, 8, 3, 3, 6, 6, 3, 3, 0, 0, 0],
+ [8, 3, 3, 3, 3, 3, 8, 8, 8, 8, 8, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [8, 8, 8, 8, 8, 8, 3, 3, 3, 3, 3, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 4, 8, 4, 8, 3, 2, 2, 3, 3, 8, 5, 5, 8, 8, 8, 1, 8, 1],
+ [8, 8, 4, 8, 4, 8, 3, 2, 2, 2, 3, 8, 5, 8, 8, 8, 8, 1, 1, 8]]
+your function returned:
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 0, 0, 0, 8, 8, 2, 2, 8, 8, 8, 7, 8, 8, 8, 8, 8, 6, 6],
+ [8, 8, 0, 0, 0, 8, 8, 2, 2, 2, 8, 8, 7, 7, 7, 8, 8, 8, 8, 6],
+ [8, 8, 0, 0, 0, 8, 8, 8, 2, 8, 8, 8, 7, 8, 8, 8, 8, 8, 6, 6],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 2, 8, 2, 8, 8, 0, 8, 8, 8, 8, 8, 8, 7, 8, 8, 9, 8, 9],
+ [8, 8, 8, 2, 8, 8, 8, 0, 0, 0, 8, 8, 8, 8, 7, 8, 8, 9, 9, 8],
+ [8, 8, 2, 8, 2, 8, 8, 0, 8, 0, 8, 8, 7, 7, 7, 8, 8, 9, 9, 9],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 3, 3, 3, 3, 3, 8, 8, 8, 8, 8, 8, 3, 3, 3, 3, 3, 3, 3, 3],
+ [8, 3, 7, 3, 3, 3, 8, 1, 1, 1, 8, 8, 3, 6, 6, 3, 3, 0, 0, 0],
+ [8, 3, 7, 7, 7, 3, 8, 8, 1, 8, 8, 8, 3, 3, 6, 3, 3, 0, 0, 0],
+ [8, 3, 7, 3, 3, 3, 8, 1, 1, 1, 8, 8, 3, 6, 6, 3, 3, 0, 0, 0],
+ [8, 3, 3, 3, 3, 3, 8, 8, 8, 8, 8, 8, 3, 3, 3, 3, 3, 3, 3, 3],
+ [8, 8, 8, 8, 8, 8, 3, 3, 3, 3, 3, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 4, 8, 4, 8, 3, 2, 2, 3, 3, 8, 5, 5, 8, 8, 8, 1, 8, 1],
+ [8, 8, 4, 8, 4, 8, 3, 2, 2, 2, 3, 8, 5, 8, 8, 8, 8, 1, 1, 8]]
+
+Previous code:
+```python
+def transform(grid):
+    g = grid.copy()
+    h, w = g.shape
+    bg = 8
+
+    sep_rows = [r for r in range(h) if len(set(g[r].tolist())) == 1 and g[r, 0] == 6]
+    first_sep = sep_rows[0]
+    second_sep = sep_rows[-1]
+
+    def components(r0, r1):
+        seen = set()
+        comps = []
+        for r in range(r0, r1):
+            for c in range(w):
+                if g[r, c] == bg or (r, c) in seen:
+                    continue
+                stack = [(r, c)]
+                seen.add((r, c))
+                cells = []
+                while stack:
+                    rr, cc = stack.pop()
+                    cells.append((rr, cc))
+                    for dr in (-1, 0, 1):
+                        for dc in (-1, 0, 1):
+                            if dr == 0 and dc == 0:
+                                continue
+                            nr, nc = rr + dr, cc + dc
+                            if r0 <= nr < r1 and 0 <= nc < w and (nr, nc) not in seen and g[nr, nc] != bg:
+                                seen.add((nr, nc))
+                                stack.append((nr, nc))
+                rs = [x for x, _ in cells]
+                cs = [y for _, y in cells]
+                comps.append({
+                    "cells": cells,
+                    "bbox": (min(rs), max(rs), min(cs), max(cs)),
+                    "center": ((min(rs) + max(rs)) // 2, (min(cs) + max(cs)) // 2)
+                })
+        return comps
+
+    def sig(comp):
+        r0, r1, c0, c1 = comp["bbox"]
+        vals = []
+        cellset = set(comp["cells"])
+        for r in range(r0, r1 + 1):
+            row = []
+            for c in range(c0, c1 + 1):
+                row.append(int(g[r, c]) if (r, c) in cellset else -1)
+            vals.append(tuple(row))
+        return tuple(vals)
+
+    top = components(0, first_sep)
+    db = components(first_sep + 1, second_sep)
+
+    keys = {sig(c) for c in top}
+    matches = [c for c in db if sig(c) in keys]
+
+    out = g.copy()
+
+    for comp in matches:
+        r0, r1, c0, c1 = comp["bbox"]
+        for r in range(max(0, r0 - 1), min(h, r1 + 2)):
+            if r in sep_rows:
+                continue
+            for c in range(max(0, c0 - 1), min(w, c1 + 2)):
+                if out[r, c] == bg:
+                    out[r, c] = 3
+
+    rows = [c["center"][0] for c in matches]
+    cols = [c["center"][1] for c in matches]
+    is_line = len(matches) > 1 and (len(set(rows)) == 1 or len(set(cols)) == 1)
+
+    if is_line:
+        for r in range(0, first_sep):
+            for c in range(w):
+                if out[r, c] == bg:
+                    out[r, c] = 3
+
+        # Preserve the demo behavior for horizontal matches: when a top slot
+        # exactly matches the selected database row in the same slot, advance it
+        # to the next database row's symbol in that slot.
+        if len(set(rows)) == 1:
+            db_sorted = sorted(db, key=lambda x: (x["center"][0], x["center"][1]))
+            row_vals = sorted(set(c["center"][0] for c in db_sorted))
+            col_vals = sorted(set(c["center"][1] for c in db_sorted))
+            by_pos = {}
+            for c in db_sorted:
+                ri = min(range(len(row_vals)), key=lambda i: abs(row_vals[i] - c["center"][0]))
+                ci = min(range(len(col_vals)), key=lambda i: abs(col_vals[i] - c["center"][1]))
+                by_pos[(ri, ci)] = c
+
+            match_row = min(range(len(row_vals)), key=lambda i: abs(row_vals[i] - rows[0]))
+            top_sorted = sorted(top, key=lambda x: x["center"][1])
+            for tc in top_sorted:
+                ci = min(range(len(col_vals)), key=lambda i: abs(col_vals[i] - tc["center"][1]))
+                cur = by_pos.get((match_row, ci))
+                nxt = by_pos.get((match_row + 1, ci))
+                if cur is not None and nxt is not None and sig(tc) == sig(cur):
+                    tr0, tr1, tc0, tc1 = tc["bbox"]
+                    nr0, nr1, nc0, nc1 = nxt["bbox"]
+                    for rr in range(tr0, tr1 + 1):
+                        for cc in range(tc0, tc1 + 1):
+                            out[rr, cc] = 3
+                    nset = set(nxt["cells"])
+                    for rr in range(nr0, nr1 + 1):
+                        for cc in range(nc0, nc1 + 1):
+                            if (rr, cc) in nset:
+                                out[tr0 + rr - nr0, tc0 + cc - nc0] = g[rr, cc]
+
+    fill = 3 if is_line else 2
+    for r in range(second_sep + 1, h):
+        out[r, :] = fill
+
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    out = grid.copy()
+    g = grid.copy()
+    h, w = g.shape
     bg = 8
 
-    sep_rows = [r for r in range(grid.shape[0]) if len(set(grid[r].tolist())) == 1 and grid[r, 0] != bg]
-    first_sep, second_sep = sep_rows[0], sep_rows[-1]
+    sep_rows = [r for r in range(h) if np.all(g[r] == 6)]
+    first_sep = sep_rows[0]
+    second_sep = sep_rows[-1]
 
-    def groups(vals):
-        vals = sorted(vals)
-        res = []
-        cur = []
-        for v in vals:
-            if not cur or v == cur[-1] + 1:
-                cur.append(v)
-            else:
-                res.append(cur)
-                cur = [v]
-        if cur:
-            res.append(cur)
-        return res
+    def comps(r0, r1):
+        seen = np.zeros(g.shape, dtype=bool)
+        out = []
+        for r in range(r0, r1):
+            for c in range(w):
+                if seen[r, c] or g[r, c] == bg:
+                    continue
+                col = int(g[r, c])
+                stack = [(r, c)]
+                seen[r, c] = True
+                cells = []
+                while stack:
+                    rr, cc = stack.pop()
+                    cells.append((rr, cc))
+                    for dr in (-1, 0, 1):
+                        for dc in (-1, 0, 1):
+                            if dr == 0 and dc == 0:
+                                continue
+                            nr, nc = rr + dr, cc + dc
+                            if r0 <= nr < r1 and 0 <= nc < w and not seen[nr, nc] and g[nr, nc] == col:
+                                seen[nr, nc] = True
+                                stack.append((nr, nc))
+                rs = [p[0] for p in cells]
+                cs = [p[1] for p in cells]
+                out.append({
+                    "cells": cells,
+                    "bbox": (min(rs), max(rs), min(cs), max(cs)),
+                    "center": ((min(rs) + max(rs)) // 2, (min(cs) + max(cs)) // 2),
+                    "color": col
+                })
+        return out
 
-    table_rows_with_content = [
-        r for r in range(first_sep + 1, second_sep)
-        if any(grid[r, c] != bg for c in range(grid.shape[1]))
-    ]
-    row_starts = [g[0] for g in groups(table_rows_with_content)]
+    def sig(c):
+        r0, r1, c0, c1 = c["bbox"]
+        s = set(c["cells"])
+        pat = []
+        for r in range(r0, r1 + 1):
+            row = []
+            for cc in range(c0, c1 + 1):
+                row.append(int(g[r, cc]) if (r, cc) in s else -1)
+            pat.append(tuple(row))
+        return tuple(pat)
 
-    table_cols_with_content = [
-        c for c in range(grid.shape[1])
-        if any(grid[r, c] != bg for r in table_rows_with_content)
-    ]
-    col_starts = [g[0] for g in groups(table_cols_with_content)]
+    top = comps(0, first_sep)
+    db = comps(first_sep + 1, second_sep)
 
-    query_row = next(
-        r for r in range(first_sep)
-        if any(grid[r, c] != bg for c in range(grid.shape[1]))
-    )
+    top_sigs = {sig(c) for c in top}
+    matches = [c for c in db if sig(c) in top_sigs]
 
-    def cell_sig(r, c):
-        block = grid[r:r+3, c:c+3]
-        mask = block != bg
-        if not mask.any():
-            return None
-        colors = set(block[mask].tolist())
-        if len(colors) != 1:
-            return None
-        return (next(iter(colors)), mask.astype(int))
+    out = g.copy()
 
-    def variants(mask):
-        seen = []
-        ms = [
-            mask,
-            np.fliplr(mask),
-            np.flipud(mask),
-            np.rot90(mask, 1),
-            np.rot90(mask, 2),
-            np.rot90(mask, 3),
-            np.fliplr(np.rot90(mask, 1)),
-            np.flipud(np.rot90(mask, 1)),
-        ]
-        for m in ms:
-            if not any(np.array_equal(m, x) for x in seen):
-                seen.append(m)
-        return seen
+    if not matches:
+        return out
 
-    table = {}
-    cells = []
-    for i, r in enumerate(row_starts):
-        for j, c in enumerate(col_starts):
-            sig = cell_sig(r, c)
-            table[(i, j)] = sig
-            cells.append((i, j, r, c, sig))
+    db_rows = sorted(set(c["center"][0] for c in db))
+    db_cols = sorted(set(c["center"][1] for c in db))
 
-    selected = []
-    query = []
-    for j, c in enumerate(col_starts):
-        sig = cell_sig(query_row, c)
-        query.append(sig)
-        if sig is None:
-            continue
-        color, mask = sig
-        for i2, j2, r2, c2, tsig in cells:
-            if tsig is None:
+    def row_index(c):
+        return min(range(len(db_rows)), key=lambda i: abs(db_rows[i] - c["center"][0]))
+
+    def col_index(c):
+        return min(range(len(db_cols)), key=lambda i: abs(db_cols[i] - c["center"][1]))
+
+    match_rows = {row_index(c) for c in matches}
+    match_cols = {col_index(c) for c in matches}
+
+    full_row = len(match_rows) == 1 and len(matches) > 1
+    full_col = len(match_cols) == 1 and len(matches) > 1
+
+    def paint_box(r0, r1, c0, c1):
+        for r in range(max(0, r0), min(h, r1 + 1)):
+            if r in sep_rows:
                 continue
-            tcolor, tmask = tsig
-            if color == tcolor and any(np.array_equal(tmask, v) for v in variants(mask)):
-                if (i2, j2) not in selected:
-                    selected.append((i2, j2))
+            for c in range(max(0, c0), min(w, c1 + 1)):
+                if out[r, c] == bg:
+                    out[r, c] = 3
 
-    def fill_rect(r0, r1, c0, c1, color=3):
-        r0, c0 = max(0, r0), max(0, c0)
-        r1, c1 = min(out.shape[0], r1), min(out.shape[1], c1)
-        area = out[r0:r1, c0:c1]
-        area[area == bg] = color
-
-    def fill_cell(i, j):
-        fill_rect(row_starts[i] - 1, row_starts[i] + 4,
-                  col_starts[j] - 1, col_starts[j] + 4, 3)
-
-    nonempty_query = sum(s is not None for s in query)
-    line = False
-    if nonempty_query == len(col_starts) and len(selected) == len(col_starts):
-        rs = {p[0] for p in selected}
-        cs = {p[1] for p in selected}
-        line = len(rs) == 1 or len(cs) == 1
-
-    if line:
-        rs = {p[0] for p in selected}
-        cs = {p[1] for p in selected}
-
-        fill_rect(0, first_sep, 0, out.shape[1], 3)
-
-        if len(rs) == 1:
-            i = next(iter(rs))
-            fill_rect(row_starts[i] - 1, row_starts[i] + 4,
-                      col_starts[0] - 1, col_starts[-1] + 4, 3)
-
-            for j, sig in enumerate(query):
-                if sig is not None:
-                    tsig = table.get((i, j))
-                    if tsig is not None and sig[0] == tsig[0] and np.array_equal(sig[1], tsig[1]):
-                        ni = (i + 1) % len(row_starts)
-                        repl = table[(ni, j)]
-                        if repl is not None:
-                            color, mask = repl
-                            rr, cc = query_row, col_starts[j]
-                            out[rr:rr+3, cc:cc+3] = 3
-                            out[rr:rr+3, cc:cc+3][mask.astype(bool)] = color
-        else:
-            j = next(iter(cs))
-            fill_rect(row_starts[0] - 1, row_starts[-1] + 4,
-                      col_starts[j] - 1, col_starts[j] + 4, 3)
-
-        out[second_sep + 1:, :] = 3
+    if full_row:
+        ri = next(iter(match_rows))
+        row_comps = [c for c in db if row_index(c) == ri and sig(c) in top_sigs]
+        r0 = min(c["bbox"][0] for c in row_comps) - 1
+        r1 = max(c["bbox"][1] for c in row_comps) + 1
+        c0 = min(c["bbox"][2] for c in row_comps) - 1
+        c1 = max(c["bbox"][3] for c in row_comps) + 1
+        paint_box(r0, r1, c0, c1)
+    elif full_col:
+        ci = next(iter(match_cols))
+        col_comps = [c for c in db if col_index(c) == ci and sig(c) in top_sigs]
+        r0 = min(c["bbox"][0] for c in col_comps) - 1
+        r1 = max(c["bbox"][1] for c in col_comps) + 1
+        c0 = min(c["bbox"][2] for c in col_comps) - 1
+        c1 = max(c["bbox"][3] for c in col_comps) + 1
+        paint_box(r0, r1, c0, c1)
     else:
-        for i, j in selected:
-            fill_cell(i, j)
-        out[second_sep + 1:, :] = 2
+        for c in matches:
+            r0, r1, c0, c1 = c["bbox"]
+            paint_box(r0 - 1, r1 + 1, c0 - 1, c1 + 1)
+
+    if full_row or full_col:
+        for r in range(0, first_sep):
+            for c in range(w):
+                if out[r, c] == bg:
+                    out[r, c] = 3
+
+    if full_row:
+        ri = next(iter(match_rows))
+        by_pos = {}
+        for c in db:
+            by_pos[(row_index(c), col_index(c))] = c
+        for tc in sorted(top, key=lambda x: x["center"][1]):
+            ci = min(range(len(db_cols)), key=lambda i: abs(db_cols[i] - tc["center"][1]))
+            cur = by_pos.get((ri, ci))
+            nxt = by_pos.get((ri + 1, ci))
+            if cur is not None and nxt is not None and sig(tc) == sig(cur):
+                tr0, tr1, tc0, tc1 = tc["bbox"]
+                nr0, nr1, nc0, nc1 = nxt["bbox"]
+                for r in range(tr0, tr1 + 1):
+                    for c in range(tc0, tc1 + 1):
+                        out[r, c] = 3
+                nset = set(nxt["cells"])
+                for r in range(nr0, nr1 + 1):
+                    for c in range(nc0, nc1 + 1):
+                        if (r, c) in nset:
+                            out[tr0 + r - nr0, tc0 + c - nc0] = g[r, c]
+
+    fill = 3 if (full_row or full_col) else 2
+    for r in range(second_sep + 1, h):
+        out[r, :] = fill
 
     return out
 ```

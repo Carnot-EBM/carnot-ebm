@@ -123,107 +123,104 @@ def transform(grid):
     vals, counts = np.unique(g, return_counts=True)
     bg = vals[np.argmax(counts)]
 
-    non_bg = [(v, c) for v, c in zip(vals, counts) if v != bg]
-    wall = max(non_bg, key=lambda x: x[1])[0]
+    colors = [int(v) for v in vals if v != bg]
+    if not colors:
+        return g
 
-    wall_cells = set(map(tuple, np.argwhere(g == wall)))
-    rmin = min(r for r, c in wall_cells)
-    rmax = max(r for r, c in wall_cells)
-    cmin = min(c for r, c in wall_cells)
-    cmax = max(c for r, c in wall_cells)
+    boundary = max(colors, key=lambda c: int(np.sum(g == c)))
+    br, bc = np.where(g == boundary)
+    r0, r1 = int(br.min()), int(br.max())
+    c0, c1 = int(bc.min()), int(bc.max())
 
-    candidates = []
-    for v, c in non_bg:
-        if v == wall:
-            continue
-        pts = np.argwhere(g == v)
-        inside = any(rmin <= r <= rmax and cmin <= cc <= cmax for r, cc in pts)
-        if inside:
-            candidates.append((v, c))
-    if candidates:
-        fill = max(candidates, key=lambda x: x[1])[0]
+    def inside_bbox(c):
+        rr, cc = np.where(g == c)
+        return int(np.sum((rr >= r0) & (rr <= r1) & (cc >= c0) & (cc <= c1)))
+
+    candidates = [c for c in colors if c != boundary]
+    fill = max(candidates, key=lambda c: (inside_bbox(c), int(np.sum(g == c))))
+
+    rr, cc = np.where(g == fill)
+    cr, ccg = float(rr.mean()), float(cc.mean())
+    mr, mc = (r0 + r1) / 2.0, (c0 + c1) / 2.0
+
+    if abs(cr - mr) >= abs(ccg - mc):
+        dr, dc = (1, 0) if cr < mr else (-1, 0)
     else:
-        fill = min((v for v, c in non_bg if v != wall), key=lambda x: x)
+        dr, dc = (0, 1) if ccg < mc else (0, -1)
 
-    seeds = set(map(tuple, np.argwhere(g == fill)))
+    block = (g != bg) & (g != fill)
 
-    virtual_wall = set(wall_cells)
-    endpoint_info = []
-    for r, c in wall_cells:
+    # Extend loose ends of the main boundary as invisible barriers.
+    virtual = np.zeros((h, w), dtype=bool)
+    bmask = g == boundary
+    for r, c in zip(br, bc):
         neigh = []
-        for dr in (-1, 0, 1):
-            for dc in (-1, 0, 1):
-                if dr == 0 and dc == 0:
+        for ar in (-1, 0, 1):
+            for ac in (-1, 0, 1):
+                if ar == 0 and ac == 0:
                     continue
-                p = (r + dr, c + dc)
-                if p in wall_cells:
-                    neigh.append(p)
+                nr, nc = r + ar, c + ac
+                if 0 <= nr < h and 0 <= nc < w and bmask[nr, nc]:
+                    neigh.append((nr, nc))
         if len(neigh) == 1:
             nr, nc = neigh[0]
-            dr, dc = r - nr, c - nc
-            endpoint_info.append((r, c, dr, dc))
-            rr, cc = r + dr, c + dc
-            while 0 <= rr < h and 0 <= cc < w:
-                virtual_wall.add((rr, cc))
-                rr += dr
-                cc += dc
+            er, ec = r - nr, c - nc
+            tr, tc = r + er, c + ec
+            while 0 <= tr < h and 0 <= tc < w:
+                virtual[tr, tc] = True
+                tr += er
+                tc += ec
 
-    blockers = set(virtual_wall)
-    other_cells = set()
-    for r in range(h):
-        for c in range(w):
-            if g[r, c] != bg and g[r, c] != fill:
-                blockers.add((r, c))
-                if g[r, c] != wall:
-                    other_cells.add((r, c))
+    block = block | virtual
+    fillmask = g == fill
 
-    if seeds:
-        sr = sum(r for r, c in seeds) / len(seeds)
-        for r, c in list(other_cells):
-            if r > sr:
-                comp = [(r, c)]
-                for rr, cc in comp:
-                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        p = (rr + dr, cc + dc)
-                        if p in other_cells and p not in comp:
-                            comp.append(p)
-                if len({cc for rr, cc in comp}) > 1:
-                    for rr, cc in comp:
-                        for x in range(rr + 1, h):
-                            blockers.add((x, cc))
+    changed = True
+    while changed:
+        changed = False
 
-    seen = set(seeds)
-    q = list(seeds)
-    while q:
-        r, c = q.pop(0)
-        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-            p = (r + dr, c + dc)
-            if 0 <= p[0] < h and 0 <= p[1] < w and p not in seen and p not in blockers:
-                seen.add(p)
-                q.append(p)
+        if dc == 0:
+            for r in range(h):
+                c = 0
+                while c < w:
+                    if block[r, c]:
+                        c += 1
+                        continue
+                    s = c
+                    while c < w and not block[r, c]:
+                        c += 1
+                    e = c
+                    if np.any(fillmask[r, s:e]):
+                        add = (g[r, s:e] == bg) & (~fillmask[r, s:e])
+                        if np.any(add):
+                            fillmask[r, s:e][add] = True
+                            changed = True
+        else:
+            for c in range(w):
+                r = 0
+                while r < h:
+                    if block[r, c]:
+                        r += 1
+                        continue
+                    s = r
+                    while r < h and not block[r, c]:
+                        r += 1
+                    e = r
+                    if np.any(fillmask[s:e, c]):
+                        add = (g[s:e, c] == bg) & (~fillmask[s:e, c])
+                        if np.any(add):
+                            fillmask[s:e, c][add] = True
+                            changed = True
 
-    vertical_tops = [(r, c, dr, dc) for r, c, dr, dc in endpoint_info if dc == 0 and dr < 0]
-    if len(vertical_tops) >= 2:
-        center = sum(c for r, c in wall_cells) / len(wall_cells)
-        for r, c, dr, dc in vertical_tops:
-            for rr in range(0, r):
-                if g[rr, c] == bg:
-                    seen.add((rr, c))
-            side = -1 if c < center else 1
-            cc = c + side
-            if 0 <= cc < w and g[0, cc] == bg:
-                seen.add((0, cc))
-
-        lo = min(c for r, c, dr, dc in vertical_tops)
-        hi = max(c for r, c, dr, dc in vertical_tops)
-        for r, c in other_cells:
-            if lo <= c <= hi:
-                for rr in range(0, r):
-                    seen.discard((rr, c))
+        old = fillmask.copy()
+        src = np.argwhere(old)
+        for r, c in src:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < h and 0 <= nc < w and not block[nr, nc] and g[nr, nc] == bg:
+                if not fillmask[nr, nc]:
+                    fillmask[nr, nc] = True
+                    changed = True
 
     out = g.copy()
-    for r, c in seen:
-        if out[r, c] == bg:
-            out[r, c] = fill
+    out[(out == bg) & fillmask] = fill
     return out
 ```

@@ -101,125 +101,112 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ```python
 def transform(grid):
     h, w = grid.shape
-    g = grid.copy()
+    out = grid.copy()
 
-    seen = set()
-    comps = []
+    dirs4 = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    dirs8 = [(-1, -1), (-1, 0), (-1, 1),
+             (0, -1),           (0, 1),
+             (1, -1),  (1, 0),  (1, 1)]
 
-    for r in range(h):
-        for c in range(w):
-            if grid[r, c] == 0 or (r, c) in seen:
-                continue
-            stack = [(r, c)]
-            seen.add((r, c))
-            comp = []
-            while stack:
-                x, y = stack.pop()
-                comp.append((x, y))
-                for dx in (-1, 0, 1):
-                    for dy in (-1, 0, 1):
-                        if dx == 0 and dy == 0:
-                            continue
+    def components(connectivity):
+        seen = np.zeros((h, w), dtype=bool)
+        comps = []
+        comp_id = -np.ones((h, w), dtype=int)
+        neigh = dirs8 if connectivity == 8 else dirs4
+
+        for r in range(h):
+            for c in range(w):
+                if grid[r, c] == 0 or seen[r, c]:
+                    continue
+                color = grid[r, c]
+                q = [(r, c)]
+                seen[r, c] = True
+                cells = []
+                while q:
+                    x, y = q.pop()
+                    cells.append((x, y))
+                    for dx, dy in neigh:
                         nx, ny = x + dx, y + dy
-                        if 0 <= nx < h and 0 <= ny < w and grid[nx, ny] != 0 and (nx, ny) not in seen:
-                            seen.add((nx, ny))
-                            stack.append((nx, ny))
-            comps.append(comp)
+                        if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and grid[nx, ny] == color:
+                            seen[nx, ny] = True
+                            q.append((nx, ny))
+                idx = len(comps)
+                for x, y in cells:
+                    comp_id[x, y] = idx
+                comps.append({"color": int(color), "cells": cells})
+        return comps, comp_id
 
-    placements = []
+    main_comps, main_id = components(4)
+    content_comps, _ = components(8)
 
-    for comp in comps:
-        colors = {}
-        for r, c in comp:
-            colors[int(grid[r, c])] = colors.get(int(grid[r, c]), 0) + 1
+    assigned = {}
+    for comp in content_comps:
+        color = comp["color"]
+        cells = comp["cells"]
+        candidates = set()
 
-        if len(colors) <= 1:
+        for r, c in cells:
+            for dr, dc in dirs8:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < h and 0 <= nc < w and grid[nr, nc] != 0 and grid[nr, nc] != color:
+                    mid = main_id[nr, nc]
+                    if mid >= 0 and len(main_comps[mid]["cells"]) > len(cells):
+                        candidates.add(mid)
+
+        if not candidates:
             continue
 
-        host = max(colors, key=lambda k: colors[k])
-        host_cells = [(r, c) for r, c in comp if grid[r, c] == host]
-        hr = sum(r for r, c in host_cells) / len(host_cells)
-        hc = sum(c for r, c in host_cells) / len(host_cells)
+        best = max(candidates, key=lambda i: len(main_comps[i]["cells"]))
+        assigned.setdefault((best, color), []).extend(cells)
 
-        rows = [r for r, c in host_cells]
-        cols = [c for r, c in host_cells]
-        rmin, rmax = min(rows), max(rows)
-        cmin, cmax = min(cols), max(cols)
+    def empty_run(r, c, dr, dc):
+        n = 0
+        r += dr
+        c += dc
+        while 0 <= r < h and 0 <= c < w and out[r, c] == 0:
+            n += 1
+            r += dr
+            c += dc
+        return n
 
-        extremes = {
-            "up": [(r, c) for r, c in host_cells if r == rmin],
-            "down": [(r, c) for r, c in host_cells if r == rmax],
-            "left": [(r, c) for r, c in host_cells if c == cmin],
-            "right": [(r, c) for r, c in host_cells if c == cmax],
-        }
+    def choose_exit(cells):
+        rows = [r for r, c in cells]
+        cols = [c for r, c in cells]
+        minr, maxr = min(rows), max(rows)
+        minc, maxc = min(cols), max(cols)
 
-        for col in colors:
-            if col == host:
-                continue
-
-            foreign = [(r, c) for r, c in comp if grid[r, c] == col]
-            for r, c in foreign:
-                g[r, c] = 0
-
-            fset = set(foreign)
-            used = set()
-            n_parts = 0
-            for cell in foreign:
-                if cell in used:
-                    continue
-                n_parts += 1
-                stack = [cell]
-                used.add(cell)
-                while stack:
-                    x, y = stack.pop()
-                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        nb = (x + dx, y + dy)
-                        if nb in fset and nb not in used:
-                            used.add(nb)
-                            stack.append(nb)
-
-            fr = sum(r for r, c in foreign) / len(foreign)
-            fc = sum(c for r, c in foreign) / len(foreign)
-
-            scores = {
-                "up": fr - hr,
-                "down": hr - fr,
-                "left": fc - hc,
-                "right": hc - fc,
-            }
-
-            candidates = [d for d in scores if len(extremes[d]) == 1]
-            if not candidates:
-                candidates = list(scores)
-
-            direction = max(candidates, key=lambda d: scores[d])
-            edge = extremes[direction]
-            if len(edge) == 1:
-                ar, ac = edge[0]
+        sides = []
+        for name, dr, dc, side_cells in [
+            ("N", -1, 0, [(r, c) for r, c in cells if r == minr]),
+            ("S", 1, 0, [(r, c) for r, c in cells if r == maxr]),
+            ("W", 0, -1, [(r, c) for r, c in cells if c == minc]),
+            ("E", 0, 1, [(r, c) for r, c in cells if c == maxc]),
+        ]:
+            if name in ("N", "S"):
+                side_cells = sorted(side_cells, key=lambda x: x[1])
             else:
-                ar = round(sum(r for r, c in edge) / len(edge))
-                ac = round(sum(c for r, c in edge) / len(edge))
+                side_cells = sorted(side_cells, key=lambda x: x[0])
+            ar, ac = side_cells[len(side_cells) // 2]
+            run = empty_run(ar, ac, dr, dc)
+            sides.append((len(side_cells), -run, name, ar, ac, dr, dc))
 
-            for i in range(1, n_parts + 1):
-                if direction == "up":
-                    placements.append((ar - i, ac, col))
-                elif direction == "down":
-                    placements.append((ar + i, ac, col))
-                elif direction == "left":
-                    placements.append((ar, ac - i, col))
-                else:
-                    placements.append((ar, ac + i, col))
+        sides.sort()
+        _, _, _, ar, ac, dr, dc = sides[0]
+        return ar, ac, dr, dc
 
-    min_r = min([0] + [r for r, c, col in placements])
-    min_c = min([0] + [c for r, c, col in placements])
-    max_r = max([h - 1] + [r for r, c, col in placements])
-    max_c = max([w - 1] + [c for r, c, col in placements])
+    for (mid, color), cells in assigned.items():
+        for r, c in cells:
+            out[r, c] = 0
 
-    out = np.zeros((max_r - min_r + 1, max_c - min_c + 1), dtype=grid.dtype)
-    out[-min_r:h - min_r, -min_c:w - min_c] = g
-
-    for r, c, col in placements:
-        out[r - min_r, c - min_c] = col
+    for (mid, color), cells in assigned.items():
+        ar, ac, dr, dc = choose_exit(main_comps[mid]["cells"])
+        r, c = ar + dr, ac + dc
+        remaining = len(cells)
+        while remaining > 0 and 0 <= r < h and 0 <= c < w and out[r, c] == 0:
+            out[r, c] = color
+            remaining -= 1
+            r += dr
+            c += dc
 
     return out
 ```

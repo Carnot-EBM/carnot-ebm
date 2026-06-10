@@ -149,47 +149,47 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
+    h, w = grid.shape
     out = grid.copy()
-    h, w = out.shape
-
-    sep_cols = np.where(np.any(out == 5, axis=0))[0]
+    sep_cols = [c for c in range(w) if (grid[:, c] == 5).all()]
     sep = sep_cols[0]
+    bg = 6
 
-    left = out[:, :sep]
-    visited = np.zeros(left.shape, dtype=bool)
-    comps = []
+    left = grid[:, :sep]
+    right_w = w - sep - 1
+    out[:, :sep] = bg
+    out[:, sep + 1:] = bg
 
+    seen = np.zeros((h, sep), dtype=bool)
     for r in range(h):
         for c in range(sep):
-            if left[r, c] == 0 and not visited[r, c]:
-                stack = [(r, c)]
-                visited[r, c] = True
-                cells = []
-                while stack:
-                    rr, cc = stack.pop()
-                    cells.append((rr, cc))
-                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        nr, nc = rr + dr, cc + dc
-                        if 0 <= nr < h and 0 <= nc < sep and not visited[nr, nc] and left[nr, nc] == 0:
-                            visited[nr, nc] = True
-                            stack.append((nr, nc))
-                comps.append(cells)
+            if left[r, c] != 0 or seen[r, c]:
+                continue
 
-    out[:, :sep] = np.where(out[:, :sep] == 5, 5, 6)
+            stack = [(r, c)]
+            seen[r, c] = True
+            cells = []
+            while stack:
+                rr, cc = stack.pop()
+                cells.append((rr, cc))
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nr, nc = rr + dr, cc + dc
+                    if 0 <= nr < h and 0 <= nc < sep and not seen[nr, nc] and left[nr, nc] == 0:
+                        seen[nr, nc] = True
+                        stack.append((nr, nc))
 
-    for cells in comps:
-        max_c = max(c for _, c in cells)
-        shift = (sep - 1) - max_c
-        shifted = [(r, c + shift) for r, c in cells]
-        for r, c in shifted:
-            out[r, c] = 0
+            minc = min(cc for _, cc in cells)
+            maxc = max(cc for _, cc in cells)
+            shift = (sep - 1) - maxc
+            cellset = set(cells)
 
-        rows = sorted(set(r for r, _ in shifted))
-        if len(rows) >= 3:
-            top, bottom = rows[0], rows[-1]
-            for r in rows:
-                if r != top and r != bottom and out[r, sep - 1] == 0:
-                    out[r, sep + 1:] = 2
+            for rr, cc in cells:
+                out[rr, cc + shift] = 0
+
+            if right_w:
+                for rr, cc in cells:
+                    if cc == maxc and (rr, cc - 1) not in cellset:
+                        out[rr, sep + 1:] = 2
 
     return out
 ```

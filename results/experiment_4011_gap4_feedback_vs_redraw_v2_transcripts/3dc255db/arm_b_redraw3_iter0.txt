@@ -100,105 +100,112 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    h, w = grid.shape
-    out = grid.copy()
+    g = grid.copy()
+    h, w = g.shape
 
-    seen = np.zeros((h, w), dtype=bool)
+    colors = [c for c in np.unique(g) if c != 0]
     comps = []
+    seen = np.zeros((h, w), dtype=bool)
 
-    for r in range(h):
-        for c in range(w):
-            col = grid[r, c]
-            if col == 0 or seen[r, c]:
+    for c in colors:
+        pts = np.argwhere((g == c) & (~seen))
+        for sr, sc in pts:
+            if seen[sr, sc] or g[sr, sc] != c:
                 continue
-
-            stack = [(r, c)]
-            seen[r, c] = True
-            cells = []
-
+            stack = [(sr, sc)]
+            seen[sr, sc] = True
+            comp = []
             while stack:
-                rr, cc = stack.pop()
-                cells.append((rr, cc))
+                r, col = stack.pop()
+                comp.append((r, col))
                 for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    nr, nc = rr + dr, cc + dc
-                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] == col:
+                    nr, nc = r + dr, col + dc
+                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and g[nr, nc] == c:
                         seen[nr, nc] = True
                         stack.append((nr, nc))
+            comps.append((c, comp))
 
-            comps.append((int(col), cells))
+    bg = set(map(tuple, np.argwhere(g == 0)))
 
-    def arrow_tip(cells):
-        rs = [p[0] for p in cells]
-        cs = [p[1] for p in cells]
-        mn_r, mx_r = min(rs), max(rs)
-        mn_c, mx_c = min(cs), max(cs)
+    def touches(comp, r, c):
+        s = set(comp)
+        for rr, cc in s:
+            if abs(rr - r) + abs(cc - c) == 1:
+                return True
+        return False
 
-        candidates = []
-        top = [(r, c) for r, c in cells if r == mn_r]
-        bottom = [(r, c) for r, c in cells if r == mx_r]
-        left = [(r, c) for r, c in cells if c == mn_c]
-        right = [(r, c) for r, c in cells if c == mx_c]
-
-        if len(top) == 1:
-            candidates.append(("up", top[0], (-1, 0)))
-        if len(bottom) == 1:
-            candidates.append(("down", bottom[0], (1, 0)))
-        if len(left) == 1:
-            candidates.append(("left", left[0], (0, -1)))
-        if len(right) == 1:
-            candidates.append(("right", right[0], (0, 1)))
-
-        if not candidates:
-            return None
-
-        # Prefer the unique point that has the longest clear path outward.
-        best = None
-        best_space = -1
-        for _, (r, c), (dr, dc) in candidates:
-            space = 0
-            nr, nc = r + dr, c + dc
-            while 0 <= nr < h and 0 <= nc < w:
-                space += 1
-                nr += dr
-                nc += dc
-            if space > best_space:
-                best_space = space
-                best = ((r, c), (dr, dc), space)
-
-        return best
-
-    moves = []
-
-    for main_col, cells in comps:
-        if len(cells) < 5:
+    anchors = []
+    for c, comp in comps:
+        if len(comp) < 3:
             continue
+        rs = [p[0] for p in comp]
+        cs = [p[1] for p in comp]
+        r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
 
-        tip = arrow_tip(cells)
-        if tip is None:
-            continue
+        other = []
+        for oc, ocomp in comps:
+            if oc == c:
+                continue
+            for p in ocomp:
+                if r0 <= p[0] <= r1 and c0 <= p[1] <= c1 and touches(comp, p[0], p[1]):
+                    other.append((oc, p))
+        if other:
+            anchors.append((c, comp, other))
 
-        rs = [p[0] for p in cells]
-        cs = [p[1] for p in cells]
-        mn_r, mx_r = min(rs), max(rs)
-        mn_c, mx_c = min(cs), max(cs)
+    out = g.copy()
 
-        inside = {}
-        for r in range(mn_r, mx_r + 1):
-            for c in range(mn_c, mx_c + 1):
-                col = int(grid[r, c])
-                if col != 0 and col != main_col:
-                    inside.setdefault(col, []).append((r, c))
+    for base, comp, marks in anchors:
+        mark_color = marks[0][0]
+        mark_pts = [p for _, p in marks]
 
-        for payload_col, payload_cells in inside.items():
-            moves.append((payload_col, payload_cells, tip))
-
-    for payload_col, payload_cells, ((tr, tc), (dr, dc), space) in moves:
-        for r, c in payload_cells:
+        for r, c in mark_pts:
             out[r, c] = 0
 
-        n = min(len(payload_cells), space)
-        for i in range(1, n + 1):
-            out[tr + dr * i, tc + dc * i] = payload_col
+        rs = np.array([p[0] for p in comp])
+        cs = np.array([p[1] for p in comp])
+        mr = np.mean([p[0] for p in mark_pts])
+        mc = np.mean([p[1] for p in mark_pts])
+
+        top = rs.min()
+        bottom = rs.max()
+        left = cs.min()
+        right = cs.max()
+
+        dists = {
+            "up": mr - top,
+            "down": bottom - mr,
+            "left": mc - left,
+            "right": right - mc,
+        }
+        direction = max(dists, key=dists.get)
+
+        if direction == "up":
+            col = int(round(np.median([p[1] for p in mark_pts])))
+            r = top - 1
+            while r >= 0 and out[r, col] == 0:
+                out[r, col] = mark_color
+                r -= 1
+
+        elif direction == "down":
+            col = int(round(np.median([p[1] for p in mark_pts])))
+            r = bottom + 1
+            while r < h and out[r, col] == 0:
+                out[r, col] = mark_color
+                r += 1
+
+        elif direction == "left":
+            row = int(round(np.median([p[0] for p in mark_pts])))
+            c = left - 1
+            while c >= 0 and out[row, c] == 0:
+                out[row, c] = mark_color
+                c -= 1
+
+        else:
+            row = int(round(np.median([p[0] for p in mark_pts])))
+            c = right + 1
+            while c < w and out[row, c] == 0:
+                out[row, c] = mark_color
+                c += 1
 
     return out
 ```

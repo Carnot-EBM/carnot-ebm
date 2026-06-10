@@ -149,25 +149,30 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    out = grid.copy()
     h, w = grid.shape
+
+    vals, counts = np.unique(grid, return_counts=True)
+    bg = vals[np.argmax(counts)]
 
     sep = None
     for c in range(w):
-        if np.all(grid[:, c] == 5):
+        col_vals = np.unique(grid[:, c])
+        if len(col_vals) == 1 and col_vals[0] != bg:
             sep = c
             break
 
-    bg = 6
-    out[:, :sep] = bg
-    out[:, sep] = 5
+    left = grid[:, :sep]
+    obj_colors = [v for v in np.unique(left) if v != bg and v != grid[0, sep]]
+    obj = obj_colors[0]
 
-    zeros = grid[:, :sep] == 0
-    seen = np.zeros_like(zeros, dtype=bool)
+    out = grid.copy()
+    out[:, :sep] = bg
+
+    seen = np.zeros((h, sep), dtype=bool)
 
     for r in range(h):
         for c in range(sep):
-            if not zeros[r, c] or seen[r, c]:
+            if seen[r, c] or grid[r, c] != obj:
                 continue
 
             stack = [(r, c)]
@@ -179,20 +184,23 @@ def transform(grid):
                 comp.append((rr, cc))
                 for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                     nr, nc = rr + dr, cc + dc
-                    if 0 <= nr < h and 0 <= nc < sep and zeros[nr, nc] and not seen[nr, nc]:
+                    if 0 <= nr < h and 0 <= nc < sep and not seen[nr, nc] and grid[nr, nc] == obj:
                         seen[nr, nc] = True
                         stack.append((nr, nc))
 
             max_c = max(cc for _, cc in comp)
             shift = (sep - 1) - max_c
 
+            by_row = {}
             for rr, cc in comp:
-                out[rr, cc + shift] = 0
+                out[rr, cc + shift] = obj
+                by_row.setdefault(rr, []).append(cc)
 
-            shifted = {(rr, cc + shift) for rr, cc in comp}
-            edge_col = sep - 1
-            for rr, cc in shifted:
-                if cc == edge_col and (rr - 1, cc) in shifted and (rr + 1, cc) in shifted:
+            for rr, cols in by_row.items():
+                mn, mx = min(cols), max(cols)
+                has_gap = (mx - mn + 1) > len(cols)
+                touches_right_edge = mx == max_c
+                if touches_right_edge and has_gap:
                     out[rr, sep + 1:] = 2
 
     return out

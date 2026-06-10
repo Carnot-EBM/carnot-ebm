@@ -125,85 +125,82 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
+    bg = None
+    vals, counts = np.unique(grid, return_counts=True)
+    bg = vals[np.argmax(counts)]
+
+    mask0 = (grid == 0)
+    visited = np.zeros(grid.shape, dtype=bool)
+    comps0 = []
     h, w = grid.shape
 
-    # Find the zero "panel" as the largest connected component of 0s.
-    seen = np.zeros((h, w), dtype=bool)
-    best = []
-
     for r in range(h):
         for c in range(w):
-            if grid[r, c] == 0 and not seen[r, c]:
+            if mask0[r, c] and not visited[r, c]:
                 stack = [(r, c)]
-                seen[r, c] = True
-                comp = []
-
+                visited[r, c] = True
+                cells = []
                 while stack:
-                    rr, cc = stack.pop()
-                    comp.append((rr, cc))
-                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        nr, nc = rr + dr, cc + dc
-                        if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] == 0:
-                            seen[nr, nc] = True
-                            stack.append((nr, nc))
+                    x, y = stack.pop()
+                    cells.append((x, y))
+                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nx, ny = x + dx, y + dy
+                        if 0 <= nx < h and 0 <= ny < w and mask0[nx, ny] and not visited[nx, ny]:
+                            visited[nx, ny] = True
+                            stack.append((nx, ny))
+                comps0.append(cells)
 
-                if len(comp) > len(best):
-                    best = comp
+    best = None
+    best_area = -1
+    for cells in comps0:
+        rs = [p[0] for p in cells]
+        cs = [p[1] for p in cells]
+        r0, r1 = min(rs), max(rs)
+        c0, c1 = min(cs), max(cs)
+        area = (r1 - r0 + 1) * (c1 - c0 + 1)
+        if area == len(cells) and area > best_area:
+            best_area = area
+            best = (r0, r1, c0, c1)
 
-    rows = [p[0] for p in best]
-    cols = [p[1] for p in best]
-    r0, r1 = min(rows), max(rows)
-    c0, c1 = min(cols), max(cols)
+    r0, r1, c0, c1 = best
+    out = np.zeros((r1 - r0 + 1, c1 - c0 + 1), dtype=int)
 
-    ph, pw = r1 - r0 + 1, c1 - c0 + 1
-    out = np.zeros((ph, pw), dtype=int)
-
-    panel_mask = np.zeros((h, w), dtype=bool)
-    panel_mask[r0:r1 + 1, c0:c1 + 1] = True
-
-    # Colored cells inside the panel are the query markers.
-    markers = []
+    marker_rows = {}
     for r in range(r0, r1 + 1):
         for c in range(c0, c1 + 1):
-            val = grid[r, c]
-            if val != 0:
-                markers.append((r - r0, c - c0, val))
+            v = grid[r, c]
+            if v != 0:
+                marker_rows[v] = r - r0
 
-    marker_colors = {val for _, _, val in markers}
-
-    # Count outside connected components for each marker color.
-    counts = {color: 0 for color in marker_colors}
-    seen = np.zeros((h, w), dtype=bool)
+    counts_by_color = {v: 0 for v in marker_rows}
+    visited = np.zeros(grid.shape, dtype=bool)
 
     for r in range(h):
         for c in range(w):
-            color = grid[r, c]
-            if panel_mask[r, c] or color not in marker_colors or seen[r, c]:
-                continue
+            v = grid[r, c]
+            if v in counts_by_color and not visited[r, c]:
+                stack = [(r, c)]
+                visited[r, c] = True
+                cells = []
+                in_panel = False
+                while stack:
+                    x, y = stack.pop()
+                    cells.append((x, y))
+                    if r0 <= x <= r1 and c0 <= y <= c1:
+                        in_panel = True
+                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nx, ny = x + dx, y + dy
+                        if 0 <= nx < h and 0 <= ny < w and not visited[nx, ny] and grid[nx, ny] == v:
+                            visited[nx, ny] = True
+                            stack.append((nx, ny))
+                if not in_panel:
+                    counts_by_color[v] += 1
 
-            counts[color] += 1
-            stack = [(r, c)]
-            seen[r, c] = True
-
-            while stack:
-                rr, cc = stack.pop()
-                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    nr, nc = rr + dr, cc + dc
-                    if (
-                        0 <= nr < h and 0 <= nc < w
-                        and not panel_mask[nr, nc]
-                        and not seen[nr, nc]
-                        and grid[nr, nc] == color
-                    ):
-                        seen[nr, nc] = True
-                        stack.append((nr, nc))
-
-    # Fill each marker row with one mark per outside object, spaced every other column.
-    for rr, cc, color in markers:
-        for i in range(counts[color]):
-            nc = cc + 2 * i
-            if nc < pw:
-                out[rr, nc] = color
+    for color, row in marker_rows.items():
+        for i in range(counts_by_color[color]):
+            col = 1 + 2 * i
+            if col < out.shape[1]:
+                out[row, col] = color
 
     return out
 ```

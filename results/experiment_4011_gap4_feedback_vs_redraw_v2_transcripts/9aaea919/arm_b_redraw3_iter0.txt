@@ -231,94 +231,83 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ```python
 def transform(grid):
     out = grid.copy()
-    h, w = grid.shape
+    h, w = out.shape
 
     vals, counts = np.unique(grid, return_counts=True)
     bg = vals[np.argmax(counts)]
 
-    # Bottom-row markers are horizontal bars. Color 2 marks columns to recolor;
-    # color 3 marks columns to extend upward.
-    markers = []
-    c = 0
-    while c < w:
-        if grid[h - 1, c] == bg:
-            c += 1
-            continue
-        color = grid[h - 1, c]
-        start = c
-        while c < w and grid[h - 1, c] == color:
-            c += 1
-        end = c - 1
-        markers.append((color, (start + end) // 2, start, end))
-
-    out[h - 1, grid[h - 1] != bg] = bg
-
-    visited = np.zeros((h, w), dtype=bool)
+    seen = np.zeros((h, w), dtype=bool)
     comps = []
-    for r in range(h - 1):
+
+    for r in range(h):
         for c in range(w):
-            color = grid[r, c]
-            if color == bg or visited[r, c]:
+            if seen[r, c] or grid[r, c] == bg:
                 continue
-
+            color = grid[r, c]
             stack = [(r, c)]
-            visited[r, c] = True
-            coords = []
+            seen[r, c] = True
+            cells = []
             while stack:
-                rr, cc = stack.pop()
-                coords.append((rr, cc))
-                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    nr, nc = rr + dr, cc + dc
-                    if 0 <= nr < h - 1 and 0 <= nc < w:
-                        if not visited[nr, nc] and grid[nr, nc] == color:
-                            visited[nr, nc] = True
-                            stack.append((nr, nc))
-
-            rs = [p[0] for p in coords]
-            cs = [p[1] for p in coords]
+                x, y = stack.pop()
+                cells.append((x, y))
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nx, ny = x + dx, y + dy
+                    if (
+                        0 <= nx < h and 0 <= ny < w
+                        and not seen[nx, ny]
+                        and grid[nx, ny] == color
+                    ):
+                        seen[nx, ny] = True
+                        stack.append((nx, ny))
+            rs = [p[0] for p in cells]
+            cs = [p[1] for p in cells]
             comps.append({
-                "color": color,
-                "coords": coords,
-                "top": min(rs),
-                "center": (min(cs) + max(cs)) // 2,
+                "color": int(color),
+                "cells": cells,
+                "r0": min(rs),
+                "r1": max(rs),
+                "c0": min(cs),
+                "c1": max(cs),
             })
 
-    by_center = {}
+    motifs = []
+    bars = []
     for comp in comps:
-        by_center.setdefault(comp["center"], []).append(comp)
+        bh = comp["r1"] - comp["r0"] + 1
+        bw = comp["c1"] - comp["c0"] + 1
+        n = len(comp["cells"])
+        if bh == 3 and bw == 5 and n == 11:
+            motifs.append(comp)
+        elif bh == 1 and bw == 5 and n == 5:
+            bars.append(comp)
 
-    marker2_centers = [center for color, center, _, _ in markers if color == 2]
-    marker3_centers = [center for color, center, _, _ in markers if color == 3]
+    shape_offsets = [(0, 1), (0, 2), (0, 3),
+                     (1, 0), (1, 1), (1, 2), (1, 3), (1, 4),
+                     (2, 1), (2, 2), (2, 3)]
 
-    extend_count = 0
-    for center in marker2_centers:
-        for comp in by_center.get(center, []):
-            extend_count += 1
-            for r, c in comp["coords"]:
-                out[r, c] = 5
+    for bar in bars:
+        for r, c in bar["cells"]:
+            out[r, c] = bg
 
-    for center in marker3_centers:
-        col_comps = by_center.get(center, [])
-        if not col_comps:
+    for bar in bars:
+        col = bar["c0"]
+        col_motifs = [m for m in motifs if m["c0"] == col]
+        if not col_motifs:
             continue
 
-        col_comps = sorted(col_comps, key=lambda x: x["top"])
-        top_comp = col_comps[0]
-        color = top_comp["color"]
-        rel = [(r - top_comp["top"], c - center) for r, c in top_comp["coords"]]
+        if bar["color"] == 2:
+            for m in col_motifs:
+                for r, c in m["cells"]:
+                    out[r, c] = 5
 
-        if len(col_comps) >= 2:
-            step = col_comps[1]["top"] - col_comps[0]["top"]
-        else:
-            height = max(r for r, _ in top_comp["coords"]) - top_comp["top"] + 1
-            step = height + 1
-
-        for i in range(1, extend_count + 1):
-            new_top = top_comp["top"] - step * i
-            for dr, dc in rel:
-                nr, nc = new_top + dr, center + dc
-                if 0 <= nr < h and 0 <= nc < w:
-                    out[nr, nc] = color
+        elif bar["color"] == 3:
+            color = col_motifs[0]["color"]
+            top = min(m["r0"] for m in col_motifs)
+            for k in range(1, color + 2):
+                nr = top - 4 * k
+                if 0 <= nr and nr + 2 < h:
+                    for dr, dc in shape_offsets:
+                        out[nr + dr, col + dc] = color
 
     return out
 ```

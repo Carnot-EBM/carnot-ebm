@@ -230,62 +230,107 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    bg = grid[0, 0]
     out = grid.copy()
     h, w = out.shape
 
-    # Detect the common 3x5 object shape by its middle row of length 5.
-    centers = []
-    for r in range(h):
-        c = 0
-        while c < w:
-            if grid[r, c] != bg:
-                color = grid[r, c]
-                start = c
-                while c < w and grid[r, c] == color:
-                    c += 1
-                if c - start == 5:
-                    centers.append((r, start + 2, color))
-            else:
-                c += 1
+    counts = np.bincount(out.ravel(), minlength=10)
+    bg = int(np.argmax(counts))
 
-    bottom_r = max(r for r, _, _ in centers)
-    instruction_row = bottom_r
-    object_centers = [(r, c, color) for r, c, color in centers if r != instruction_row]
-
-    # Remove the instruction row.
-    out[instruction_row, :] = bg
-
-    by_col = {}
-    for r, c, color in object_centers:
-        by_col.setdefault(c, []).append((r, color))
-
-    def paint_shape(arr, mid_r, center_c, color):
-        arr[mid_r - 1, center_c - 1:center_c + 2] = color
-        arr[mid_r, center_c - 2:center_c + 3] = color
-        arr[mid_r + 1, center_c - 1:center_c + 2] = color
-
-    for _, c, instr in centers:
-        if instruction_row != _:
+    markers = []
+    r = h - 1
+    c = 0
+    while c < w:
+        if out[r, c] == bg:
+            c += 1
             continue
-        if c not in by_col:
+        color = int(out[r, c])
+        start = c
+        while c < w and out[r, c] == color:
+            c += 1
+        end = c - 1
+        markers.append((color, start, end, (start + end) // 2))
+        out[r, start:end + 1] = bg
+
+    seen = np.zeros((h, w), dtype=bool)
+    comps = []
+
+    for rr in range(h - 1):
+        for cc in range(w):
+            if seen[rr, cc] or out[rr, cc] == bg:
+                continue
+
+            color = int(out[rr, cc])
+            stack = [(rr, cc)]
+            seen[rr, cc] = True
+            cells = []
+
+            while stack:
+                y, x = stack.pop()
+                cells.append((y, x))
+                for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    ny, nx = y + dy, x + dx
+                    if 0 <= ny < h - 1 and 0 <= nx < w:
+                        if not seen[ny, nx] and out[ny, nx] == color:
+                            seen[ny, nx] = True
+                            stack.append((ny, nx))
+
+            ys = [p[0] for p in cells]
+            xs = [p[1] for p in cells]
+            minr, maxr = min(ys), max(ys)
+            minc, maxc = min(xs), max(xs)
+            comps.append({
+                "color": color,
+                "cells": cells,
+                "minr": minr,
+                "maxr": maxr,
+                "minc": minc,
+                "maxc": maxc,
+                "center": (minc + maxc) // 2,
+            })
+
+    def comps_for_marker(marker):
+        _, start, end, center = marker
+        return [comp for comp in comps if start <= comp["center"] <= end]
+
+    all_tops = sorted({comp["minr"] for comp in comps})
+    diffs = [b - a for a, b in zip(all_tops, all_tops[1:]) if b > a]
+    default_pitch = min(diffs) if diffs else 4
+
+    color2_markers = [m for m in markers if m[0] == 2]
+    color3_markers = [m for m in markers if m[0] == 3]
+
+    extend_count = 0
+    fill_color = 2 + 3
+
+    for marker in color2_markers:
+        marked = comps_for_marker(marker)
+        extend_count += len(marked)
+        for comp in marked:
+            for y, x in comp["cells"]:
+                out[y, x] = fill_color
+
+    for marker in color3_markers:
+        marked = sorted(comps_for_marker(marker), key=lambda comp: comp["minr"])
+        if not marked or extend_count == 0:
             continue
 
-        rows = sorted(r for r, _ in by_col[c])
-        color = by_col[c][0][1]
+        tops = [comp["minr"] for comp in marked]
+        local_diffs = [b - a for a, b in zip(tops, tops[1:]) if b > a]
+        pitch = min(local_diffs) if local_diffs else default_pitch
 
-        if instr == 2:
-            for r in rows:
-                paint_shape(out, r, c, 5)
+        source = marked[0]
+        offsets = [(y - source["minr"], x - source["minc"]) for y, x in source["cells"]]
+        color = int(out[source["cells"][0][0], source["cells"][0][1]])
 
-        elif instr == 3:
-            step = 4
-            top = min(rows)
-            count = len(rows)
-            for k in range(count - 2):
-                nr = top - step * (k + 1)
-                if nr - 1 >= 0:
-                    paint_shape(out, nr, c, color)
+        for k in range(1, extend_count + 1):
+            new_top = source["minr"] - k * pitch
+            if new_top < 0:
+                continue
+            for dy, dx in offsets:
+                y = new_top + dy
+                x = source["minc"] + dx
+                if 0 <= y < h and 0 <= x < w:
+                    out[y, x] = color
 
     return out
 ```

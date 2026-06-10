@@ -87,78 +87,108 @@ def transform(grid):
     h, w = grid.shape
     out = grid.copy()
 
-    out[out == 3] = 8
-    out[out == 7] = 8
+    centers_by_gap = {}
 
-    centers_below = {r: [] for r in range(0, h, 2)}
-
-    for r in range(1, h, 2):
+    for r in range(h):
         c = 0
+        centers = []
         while c < w:
             if grid[r, c] == 7:
                 start = c
                 while c < w and grid[r, c] == 7:
                     c += 1
                 end = c
-                if end - start == 3:
-                    mid = start + 1
-                    out[r, start] = 8
-                    out[r, mid] = 6
-                    out[r, end - 1] = 8
-                    if r - 1 >= 0 and grid[r - 1, mid] != 0:
-                        out[r - 1, mid] = 6
-                    if r + 1 < h and grid[r + 1, mid] != 0:
-                        out[r + 1, mid] = 6
-                    if r - 1 >= 0:
-                        centers_below.setdefault(r - 1, []).append(mid)
+                mid = (start + end - 1) // 2
+                centers.append(mid)
+
+                for x in range(start, end):
+                    out[r, x] = 8
+                out[r, mid] = 6
+
+                if r - 1 >= 0 and out[r - 1, mid] != 0:
+                    out[r - 1, mid] = 6
+                if r + 1 < h and out[r + 1, mid] != 0:
+                    out[r + 1, mid] = 6
             else:
                 c += 1
+        if centers:
+            centers_by_gap[r] = centers
 
-    def centers_above(row):
-        if row - 2 >= 0:
-            return centers_below.get(row - 2, [])
-        return []
+    out[out == 3] = 8
 
-    def segment(row, col):
-        left = col
-        while left > 0 and grid[row, left - 1] != 0:
-            left -= 1
-        right = col
-        while right + 1 < w and grid[row, right + 1] != 0:
-            right += 1
-        return left, right
+    def holes_on_row(r):
+        return [c for c in range(w) if grid[r, c] == 0]
 
-    def mark(row, col):
-        out[row, col] = 3
-        row_has_zero = (grid[row] == 0).any()
-        if not row_has_zero:
-            if col == 0 and grid[row, 0] == 3 and w > 1:
-                out[row, 1] = 3
-            elif col == w - 1 and grid[row, w - 1] == 3 and w > 1:
-                out[row, w - 2] = 3
+    def put(r, c):
+        if 0 <= r < h and 0 <= c < w and out[r, c] == 8:
+            out[r, c] = 3
 
-    for row in range(2, h, 2):
-        above = centers_above(row)
-        below = centers_below.get(row, [])
+    def put_left(r, pair=True):
+        put(r, 0)
+        if pair:
+            put(r, 1)
 
-        for mid in above:
-            left, right = segment(row, mid)
+    def put_right(r, pair=True):
+        if pair:
+            put(r, w - 2)
+        put(r, w - 1)
 
-            blocked_left = any(left <= b < mid for b in below)
-            if not blocked_left:
-                mark(row, left)
+    def put_bottom_like(r):
+        hs = holes_on_row(r)
+        if hs:
+            for x in hs:
+                put(r, x + 1)
+            put(r, w - 1)
+        else:
+            put(r, 0)
+            put(r, w - 1)
 
-            blocked_right = any(mid < b <= right for b in below)
-            too_short_before_gap = right + 1 < w and grid[row, right + 1] == 0 and right - mid <= 2
-            if not blocked_right and not too_short_before_gap:
-                mark(row, right)
+    for r in range(0, h, 2):
+        above = centers_by_gap.get(r - 1, [])
+        below = centers_by_gap.get(r + 1, [])
+        hs = holes_on_row(r)
 
-        all_centers = above + below
-        for end in (0, w - 1):
-            if grid[row, end] == 3:
-                left, right = segment(row, end)
-                if not any(left <= c <= right for c in all_centers):
-                    mark(row, end)
+        if not above and below:
+            continue
+
+        if above and not below:
+            put_bottom_like(r)
+            continue
+
+        if not above and not below:
+            continue
+
+        left = False
+        right = False
+
+        if len(above) == len(below):
+            if all(b > a for a, b in zip(above, below)):
+                left = True
+            elif all(b < a for a, b in zip(above, below)):
+                right = True
+        elif len(above) > len(below) and below:
+            if min(above) < min(below):
+                left = True
+            if max(above) > max(below):
+                right = True
+        elif len(above) < len(below) and above:
+            if len(above) == 1 and len(below) == 2 and below[0] < above[0] < below[1]:
+                pass
+            else:
+                if min(below) > min(above):
+                    left = True
+                if max(below) < max(above):
+                    right = True
+
+        if left:
+            put_left(r, pair=(not hs))
+        if right:
+            if hs:
+                for x in hs:
+                    put(r, x - 1)
+                put(r, w - 1)
+            else:
+                put_right(r, pair=True)
 
     return out
 ```

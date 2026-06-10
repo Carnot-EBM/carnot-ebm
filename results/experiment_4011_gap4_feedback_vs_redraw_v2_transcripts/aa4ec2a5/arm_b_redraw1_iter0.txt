@@ -190,87 +190,80 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 def transform(grid):
     h, w = grid.shape
     out = grid.copy()
+
     seen = np.zeros((h, w), dtype=bool)
-
     dirs4 = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-    dirs8 = [
-        (-1, -1), (-1, 0), (-1, 1),
-        (0, -1),           (0, 1),
-        (1, -1),  (1, 0),  (1, 1),
-    ]
+    dirs8 = [(dr, dc) for dr in (-1, 0, 1) for dc in (-1, 0, 1) if not (dr == 0 and dc == 0)]
 
-    for sr in range(h):
-        for sc in range(w):
-            if grid[sr, sc] != 1 or seen[sr, sc]:
-                continue
+    comps = []
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] == 1 and not seen[r, c]:
+                q = [(r, c)]
+                seen[r, c] = True
+                cells = []
+                for rr, cc in q:
+                    cells.append((rr, cc))
+                    for dr, dc in dirs4:
+                        nr, nc = rr + dr, cc + dc
+                        if 0 <= nr < h and 0 <= nc < w and grid[nr, nc] == 1 and not seen[nr, nc]:
+                            seen[nr, nc] = True
+                            q.append((nr, nc))
+                comps.append(cells)
 
-            stack = [(sr, sc)]
-            seen[sr, sc] = True
-            comp = []
+    for cells in comps:
+        cellset = set(cells)
+        rs = [r for r, c in cells]
+        cs = [c for r, c in cells]
+        r0, r1 = min(rs), max(rs)
+        c0, c1 = min(cs), max(cs)
 
-            while stack:
-                r, c = stack.pop()
-                comp.append((r, c))
-                for dr, dc in dirs4:
-                    nr, nc = r + dr, c + dc
-                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] == 1:
-                        seen[nr, nc] = True
-                        stack.append((nr, nc))
+        area = len(cells)
+        box_area = (r1 - r0 + 1) * (c1 - c0 + 1)
+        recolor = area < box_area
 
-            rows = [p[0] for p in comp]
-            cols = [p[1] for p in comp]
-            r0 = max(0, min(rows) - 1)
-            r1 = min(h - 1, max(rows) + 1)
-            c0 = max(0, min(cols) - 1)
-            c1 = min(w - 1, max(cols) + 1)
+        if recolor:
+            for r, c in cells:
+                out[r, c] = 8
 
-            wall = np.zeros((r1 - r0 + 1, c1 - c0 + 1), dtype=bool)
-            for r, c in comp:
-                wall[r - r0, c - c0] = True
-
-            exterior = np.zeros_like(wall)
+            bh, bw = r1 - r0 + 1, c1 - c0 + 1
+            outside = np.zeros((bh, bw), dtype=bool)
             q = []
-            lh, lw = wall.shape
 
-            for r in range(lh):
-                for c in (0, lw - 1):
-                    if not wall[r, c] and not exterior[r, c]:
-                        exterior[r, c] = True
-                        q.append((r, c))
-            for c in range(lw):
-                for r in (0, lh - 1):
-                    if not wall[r, c] and not exterior[r, c]:
-                        exterior[r, c] = True
-                        q.append((r, c))
+            for rr in range(r0, r1 + 1):
+                for cc in (c0, c1):
+                    if (rr, cc) not in cellset:
+                        outside[rr - r0, cc - c0] = True
+                        q.append((rr, cc))
+            for cc in range(c0, c1 + 1):
+                for rr in (r0, r1):
+                    if (rr, cc) not in cellset and not outside[rr - r0, cc - c0]:
+                        outside[rr - r0, cc - c0] = True
+                        q.append((rr, cc))
 
-            qi = 0
-            while qi < len(q):
-                r, c = q[qi]
-                qi += 1
+            for rr, cc in q:
                 for dr, dc in dirs4:
-                    nr, nc = r + dr, c + dc
-                    if 0 <= nr < lh and 0 <= nc < lw and not wall[nr, nc] and not exterior[nr, nc]:
-                        exterior[nr, nc] = True
-                        q.append((nr, nc))
+                    nr, nc = rr + dr, cc + dc
+                    if r0 <= nr <= r1 and c0 <= nc <= c1:
+                        if (nr, nc) not in cellset and not outside[nr - r0, nc - c0]:
+                            outside[nr - r0, nc - c0] = True
+                            q.append((nr, nc))
 
-            holes = set()
-            for lr in range(lh):
-                for lc in range(lw):
-                    gr, gc = r0 + lr, c0 + lc
-                    if not wall[lr, lc] and not exterior[lr, lc] and grid[gr, gc] == 4:
-                        holes.add((gr, gc))
+            for rr in range(r0, r1 + 1):
+                for cc in range(c0, c1 + 1):
+                    if (rr, cc) not in cellset and not outside[rr - r0, cc - c0]:
+                        out[rr, cc] = 6
 
-            if holes:
-                for r, c in comp:
-                    out[r, c] = 8
-                for r, c in holes:
-                    out[r, c] = 6
+        border = set()
+        for r, c in cells:
+            for dr, dc in dirs8:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < h and 0 <= nc < w and grid[nr, nc] != 1:
+                    border.add((nr, nc))
 
-            for r, c in comp:
-                for dr, dc in dirs8:
-                    nr, nc = r + dr, c + dc
-                    if 0 <= nr < h and 0 <= nc < w and grid[nr, nc] == 4 and (nr, nc) not in holes:
-                        out[nr, nc] = 2
+        for r, c in border:
+            if out[r, c] == 4:
+                out[r, c] = 2
 
     return out
 ```

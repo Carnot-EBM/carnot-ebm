@@ -144,50 +144,75 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    g = grid.copy()
-    h, w = g.shape
+    g0 = grid.copy()
+    h0, w0 = g0.shape
 
-    # Remove blue clue pixels by local non-blue majority.
-    out = g.copy()
-    changed = True
-    while changed:
-        changed = False
-        for r in range(h):
-            for c in range(w):
-                if out[r, c] == 1:
-                    vals = []
-                    for dr in (-1, 0, 1):
-                        for dc in (-1, 0, 1):
-                            if dr == 0 and dc == 0:
-                                continue
-                            rr, cc = r + dr, c + dc
-                            if 0 <= rr < h and 0 <= cc < w and out[rr, cc] != 1:
-                                vals.append(out[rr, cc])
-                    if vals:
-                        counts = {}
-                        for v in vals:
-                            counts[int(v)] = counts.get(int(v), 0) + 1
-                        out[r, c] = max(counts, key=lambda k: (counts[k], -k))
-                        changed = True
+    def repaint(g):
+        h, w = g.shape
+        specs = [
+            ((0, 1),  [(-1, 0), (1, 0), (0, 1)],  (0, -1)),
+            ((0, -1), [(-1, 0), (1, 0), (0, -1)], (0, 1)),
+            ((-1, 0), [(0, -1), (0, 1), (-1, 0)], (1, 0)),
+            ((1, 0),  [(0, -1), (0, 1), (1, 0)],  (-1, 0)),
+        ]
 
-    # Remove tiny single-pixel clue payloads surrounded by another color.
-    for r in range(h):
-        for c in range(w):
-            vals = []
-            for dr in (-1, 0, 1):
-                for dc in (-1, 0, 1):
-                    if dr == 0 and dc == 0:
-                        continue
-                    rr, cc = r + dr, c + dc
-                    if 0 <= rr < h and 0 <= cc < w:
-                        vals.append(int(out[rr, cc]))
-            if vals:
-                counts = {}
-                for v in vals:
-                    counts[v] = counts.get(v, 0) + 1
-                m = max(counts, key=counts.get)
-                if counts[m] >= 5 and out[r, c] != m:
-                    out[r, c] = m
+        found = []
+        for r in range(1, h - 1):
+            for c in range(1, w - 1):
+                for step, arms, missing in specs:
+                    if all(g[r + dr, c + dc] == 1 for dr, dc in arms) and g[r + missing[0], c + missing[1]] != 1:
+                        vals = []
+                        for rr in range(max(0, r - 1), min(h, r + 2)):
+                            for cc in range(max(0, c - 1), min(w, c + 2)):
+                                if (rr, cc) != (r, c) and g[rr, cc] != 1:
+                                    vals.append(int(g[rr, cc]))
+                        if not vals:
+                            continue
+                        base = max(set(vals), key=lambda x: (vals.count(x), -x))
+                        center = int(g[r, c])
+                        if center != 1 and center == base:
+                            continue
+                        paint = center if center != 1 else base
+                        found.append((r, c, step, arms, base, paint))
 
-    return out.T.copy()
+        by_center = {}
+        for m in found:
+            by_center.setdefault((m[0], m[1]), []).append(m)
+        markers = [v[0] for v in by_center.values() if len(v) == 1]
+
+        clean = g.copy()
+        for r, c, step, arms, base, paint in markers:
+            clean[r, c] = base
+            for dr, dc in arms:
+                clean[r + dr, c + dc] = base
+
+        out = clean.copy()
+
+        def component(sr, sc, color):
+            seen = {(sr, sc)}
+            stack = [(sr, sc)]
+            while stack:
+                r, c = stack.pop()
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < h and 0 <= nc < w and (nr, nc) not in seen and clean[nr, nc] == color:
+                        seen.add((nr, nc))
+                        stack.append((nr, nc))
+            return seen
+
+        for r, c, step, arms, base, paint in markers:
+            dr, dc = step
+            nr, nc = r, c
+            while 0 <= nr < h and 0 <= nc < w and clean[nr, nc] == base:
+                nr += dr
+                nc += dc
+            if 0 <= nr < h and 0 <= nc < w:
+                target = clean[nr, nc]
+                for rr, cc in component(nr, nc, target):
+                    out[rr, cc] = paint
+
+        return out
+
+    ans = repaint(g0)
+    return ans if h0 == w0 else ans.T
 ```

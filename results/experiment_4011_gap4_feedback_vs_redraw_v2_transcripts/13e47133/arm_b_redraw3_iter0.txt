@@ -154,72 +154,113 @@ def transform(grid):
     vals, counts = np.unique(grid, return_counts=True)
     bg = vals[np.argmax(counts)]
 
-    non_bg = [(c, int(np.sum(grid == c))) for c in vals if c != bg]
-    sep = max(non_bg, key=lambda x: x[1])[0] if non_bg else bg
+    # The separator is the non-background color with the largest connected component
+    # made of row/column-like strokes.
+    def comps(mask):
+        seen = np.zeros(mask.shape, dtype=bool)
+        out = []
+        for r in range(h):
+            for c in range(w):
+                if mask[r, c] and not seen[r, c]:
+                    stack = [(r, c)]
+                    seen[r, c] = True
+                    pts = []
+                    while stack:
+                        x, y = stack.pop()
+                        pts.append((x, y))
+                        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                            nx, ny = x + dx, y + dy
+                            if 0 <= nx < h and 0 <= ny < w and mask[nx, ny] and not seen[nx, ny]:
+                                seen[nx, ny] = True
+                                stack.append((nx, ny))
+                    out.append(pts)
+        return out
+
+    line = None
+    best = -1
+    for v in vals:
+        if v == bg:
+            continue
+        cs = comps(grid == v)
+        m = max((len(c) for c in cs), default=0)
+        if m > best:
+            best = m
+            line = v
 
     out = grid.copy()
-    seen = np.zeros((h, w), dtype=bool)
-    dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+    walls = (grid == line)
+    open_mask = ~walls
 
+    seen = np.zeros((h, w), dtype=bool)
     for sr in range(h):
         for sc in range(w):
-            if seen[sr, sc] or grid[sr, sc] == sep:
+            if not open_mask[sr, sc] or seen[sr, sc]:
                 continue
 
-            comp = []
-            q = [(sr, sc)]
+            stack = [(sr, sc)]
             seen[sr, sc] = True
-
-            for r, c in q:
-                comp.append((r, c))
-                for dr, dc in dirs:
+            cells = []
+            while stack:
+                r, c = stack.pop()
+                cells.append((r, c))
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                     nr, nc = r + dr, c + dc
-                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] != sep:
+                    if 0 <= nr < h and 0 <= nc < w and open_mask[nr, nc] and not seen[nr, nc]:
                         seen[nr, nc] = True
-                        q.append((nr, nc))
+                        stack.append((nr, nc))
 
-            comp_set = set(comp)
-            dist = {}
-            frontier = []
-
-            for r, c in comp:
-                boundary = False
-                for dr, dc in dirs:
-                    nr, nc = r + dr, c + dc
-                    if not (0 <= nr < h and 0 <= nc < w) or grid[nr, nc] == sep:
-                        boundary = True
-                        break
-                if boundary:
-                    dist[(r, c)] = 0
-                    frontier.append((r, c))
-
-            qi = 0
-            while qi < len(frontier):
-                r, c = frontier[qi]
-                qi += 1
-                for dr, dc in dirs:
-                    nr, nc = r + dr, c + dc
-                    if (nr, nc) in comp_set and (nr, nc) not in dist:
-                        dist[(nr, nc)] = dist[(r, c)] + 1
-                        frontier.append((nr, nc))
-
-            layer_colors = {}
-            for r, c in comp:
-                col = grid[r, c]
-                if col != bg and col != sep:
-                    layer_colors[dist[(r, c)]] = col
-
-            if not layer_colors:
+            cellset = set(cells)
+            seeds = [(r, c, grid[r, c]) for r, c in cells if grid[r, c] != bg]
+            seeds = [(r, c, v) for r, c, v in seeds if v != line]
+            if not seeds:
                 continue
 
-            max_layer = max(layer_colors)
-            period = max_layer + 1
-            pattern = [bg] * period
-            for d, col in layer_colors.items():
-                pattern[d] = col
+            rows = [r for r, c in cells]
+            cols = [c for r, c in cells]
+            r0, r1, c0, c1 = min(rows), max(rows), min(cols), max(cols)
 
-            for r, c in comp:
-                out[r, c] = pattern[dist[(r, c)] % period]
+            # If a component is a solid rectangle, seed colors define successive
+            # rectangular layers by their distance from the component boundary.
+            if len(cells) == (r1 - r0 + 1) * (c1 - c0 + 1):
+                seed_layers = {}
+                for r, c, v in seeds:
+                    d = min(r - r0, r1 - r, c - c0, c1 - c)
+                    seed_layers[d] = v
+                if seed_layers:
+                    max_layer = max(seed_layers)
+                    for r, c in cells:
+                        d = min(r - r0, r1 - r, c - c0, c1 - c)
+                        use_d = d if d in seed_layers else max_layer
+                        while use_d >= 0 and use_d not in seed_layers:
+                            use_d -= 1
+                        if use_d >= 0:
+                            out[r, c] = seed_layers[use_d]
+                continue
+
+            # Non-rectangular components in these tasks are corridors/rooms bounded
+            # by separator strokes. Expand each seed along the region using
+            # Manhattan distance; ties keep the earlier scan-order seed.
+            dist = np.full((h, w), 10**9, dtype=int)
+            owner = np.full((h, w), -1, dtype=int)
+            q = []
+            for i, (r, c, v) in enumerate(sorted(seeds)):
+                dist[r, c] = 0
+                owner[r, c] = i
+                q.append((r, c))
+            head = 0
+            while head < len(q):
+                r, c = q[head]
+                head += 1
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nr, nc = r + dr, c + dc
+                    if (nr, nc) in cellset and dist[nr, nc] > dist[r, c] + 1:
+                        dist[nr, nc] = dist[r, c] + 1
+                        owner[nr, nc] = owner[r, c]
+                        q.append((nr, nc))
+            ordered = sorted(seeds)
+            for r, c in cells:
+                if owner[r, c] >= 0:
+                    out[r, c] = ordered[owner[r, c]][2]
 
     return out
 ```

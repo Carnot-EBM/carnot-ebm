@@ -133,199 +133,127 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    H, W = grid.shape
+    h, w = grid.shape
+    seen = np.zeros((h, w), dtype=bool)
+    comps = []
 
-    def comps(mask):
-        seen = np.zeros(mask.shape, dtype=bool)
-        out = []
-        h, w = mask.shape
-        for i in range(h):
-            for j in range(w):
-                if mask[i, j] and not seen[i, j]:
-                    q = [(i, j)]
-                    seen[i, j] = True
-                    pts = []
-                    while q:
-                        r, c = q.pop()
-                        pts.append((r, c))
-                        for dr in (-1, 0, 1):
-                            for dc in (-1, 0, 1):
-                                if dr == 0 and dc == 0:
-                                    continue
-                                nr, nc = r + dr, c + dc
-                                if 0 <= nr < h and 0 <= nc < w and mask[nr, nc] and not seen[nr, nc]:
-                                    seen[nr, nc] = True
-                                    q.append((nr, nc))
-                    out.append(pts)
-        return out
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] != 0 and not seen[r, c]:
+                stack = [(r, c)]
+                seen[r, c] = True
+                cells = []
+                while stack:
+                    x, y = stack.pop()
+                    cells.append((x, y))
+                    for dx in (-1, 0, 1):
+                        for dy in (-1, 0, 1):
+                            if dx == 0 and dy == 0:
+                                continue
+                            nx, ny = x + dx, y + dy
+                            if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and grid[nx, ny] != 0:
+                                seen[nx, ny] = True
+                                stack.append((nx, ny))
+                rs = [p[0] for p in cells]
+                cs = [p[1] for p in cells]
+                comps.append({
+                    "cells": cells,
+                    "n": len(cells),
+                    "r0": min(rs), "r1": max(rs),
+                    "c0": min(cs), "c1": max(cs),
+                    "cr": (min(rs) + max(rs)) / 2,
+                    "cc": (min(cs) + max(cs)) / 2,
+                })
 
-    all_comps = comps(grid != 0)
-    boxes = []
-    for pts in all_comps:
-        rs = [p[0] for p in pts]
-        cs = [p[1] for p in pts]
-        boxes.append([min(rs), max(rs), min(cs), max(cs), len(pts), set(pts)])
+    if not comps:
+        return grid.copy()
 
-    groups = [[i] for i in range(len(boxes))]
+    main = set()
+    seed = max(comps, key=lambda x: x["n"])
+    main.update(range(comps.index(seed), comps.index(seed) + 1))
+
     changed = True
     while changed:
         changed = False
-        new_groups = []
-        used = [False] * len(groups)
-        for i in range(len(groups)):
-            if used[i]:
-                continue
-            cur = list(groups[i])
-            used[i] = True
-            again = True
-            while again:
-                again = False
-                r1 = min(boxes[k][0] for k in cur)
-                r2 = max(boxes[k][1] for k in cur)
-                c1 = min(boxes[k][2] for k in cur)
-                c2 = max(boxes[k][3] for k in cur)
-                for j in range(len(groups)):
-                    if used[j]:
-                        continue
-                    s1 = min(boxes[k][0] for k in groups[j])
-                    s2 = max(boxes[k][1] for k in groups[j])
-                    t1 = min(boxes[k][2] for k in groups[j])
-                    t2 = max(boxes[k][3] for k in groups[j])
-                    rgap = max(0, max(s1 - r2 - 1, r1 - s2 - 1))
-                    cgap = max(0, max(t1 - c2 - 1, c1 - t2 - 1))
-                    if rgap <= 2 and cgap <= 2:
-                        cur += groups[j]
-                        used[j] = True
-                        changed = True
-                        again = True
-            new_groups.append(cur)
-        groups = new_groups
+        r0 = min(comps[i]["r0"] for i in main)
+        r1 = max(comps[i]["r1"] for i in main)
+        c0 = min(comps[i]["c0"] for i in main)
+        c1 = max(comps[i]["c1"] for i in main)
+        mh = r1 - r0 + 1
+        mw = c1 - c0 + 1
+        rm = mh / 2
+        cm = mw / 2
 
-    best = max(groups, key=lambda g: sum(boxes[k][4] for k in g))
-    r0 = min(boxes[k][0] for k in best)
-    r1 = max(boxes[k][1] for k in best)
-    c0 = min(boxes[k][2] for k in best)
-    c1 = max(boxes[k][3] for k in best)
+        for i, comp in enumerate(comps):
+            if i in main:
+                continue
+            if r0 - rm <= comp["cr"] <= r1 + rm and c0 - cm <= comp["cc"] <= c1 + cm:
+                main.add(i)
+                changed = True
+
+    r0 = min(comps[i]["r0"] for i in main)
+    r1 = max(comps[i]["r1"] for i in main)
+    c0 = min(comps[i]["c0"] for i in main)
+    c1 = max(comps[i]["c1"] for i in main)
 
     crop = grid[r0:r1 + 1, c0:c1 + 1]
-    h, w = crop.shape
-    ans = np.zeros_like(crop)
+    out_shape = crop.shape
+    out = np.zeros(out_shape, dtype=grid.dtype)
 
-    def apply_pts(pts, mode):
-        res = []
-        for r, c in pts:
-            if mode == "h":
-                res.append((r, w - 1 - c))
-            elif mode == "v":
-                res.append((h - 1 - r, c))
-            elif mode == "rot":
-                res.append((h - 1 - r, w - 1 - c))
-            elif mode == "ccw" and h == w:
-                res.append((w - 1 - c, r))
-            elif mode == "cw" and h == w:
-                res.append((c, h - 1 - r))
-            else:
-                res.append((r, c))
-        return res
+    center_r = (r0 + r1) / 2
+    center_c = (c0 + c1) / 2
 
-    def frame_rotate(layer):
-        pts = np.argwhere(layer)
-        if len(pts) == 0:
-            return None
-        rs, cs = pts[:, 0], pts[:, 1]
-        for a in range(h):
-            for b in range(a + 2, h):
-                for l in range(w):
-                    d = l + (b - a)
-                    if d >= w:
-                        continue
-                    ok = True
-                    for x in range(l, d + 1):
-                        if not layer[a, x] or not layer[b, x]:
-                            ok = False
-                            break
-                    if ok:
-                        for y in range(a, b + 1):
-                            if not layer[y, l] or not layer[y, d]:
-                                ok = False
-                                break
-                    if not ok:
-                        continue
-                    inside = np.zeros_like(layer, dtype=bool)
-                    inside[a:b + 1, l:d + 1] = True
-                    extras = [(int(r), int(c)) for r, c in pts if not inside[r, c]]
-                    if not extras:
-                        continue
-                    out = np.zeros_like(layer, dtype=bool)
-                    for x in range(l, d + 1):
-                        out[a, x] = True
-                        out[b, x] = True
-                    for y in range(a, b + 1):
-                        out[y, l] = True
-                        out[y, d] = True
-                    for y, x in extras:
-                        if y == a - 1 and l <= x <= d and d + 1 < w:
-                            out[a + (x - l), d + 1] = True
-                        elif x == d + 1 and a <= y <= b and b + 1 < h:
-                            out[b + 1, l + (y - a)] = True
-                        elif y == b + 1 and l <= x <= d and l - 1 >= 0:
-                            out[a + (x - l), l - 1] = True
-                        elif x == l - 1 and a <= y <= b and a - 1 >= 0:
-                            nx = l + (y - a) + 1
-                            if 0 <= nx < w:
-                                out[a - 1, nx] = True
-                        else:
-                            out[y, x] = True
-                    return out
-        return None
+    colors = [x for x in np.unique(crop) if x != 0]
+    for color in colors:
+        mask = (crop == color)
+        pts = np.argwhere((grid == color) & ~((np.indices(grid.shape)[0] >= r0) &
+                                             (np.indices(grid.shape)[0] <= r1) &
+                                             (np.indices(grid.shape)[1] >= c0) &
+                                             (np.indices(grid.shape)[1] <= c1)))
 
-    colors = [int(x) for x in np.unique(grid) if x != 0]
-    for col in colors:
-        layer = crop == col
-        pts = [(int(r), int(c)) for r, c in np.argwhere(layer)]
-        if not pts:
-            continue
+        op = "id"
+        if len(pts) > 0:
+            pr0, pc0 = pts.min(axis=0)
+            pr1, pc1 = pts.max(axis=0)
+            ph = pr1 - pr0 + 1
+            pw = pc1 - pc0 + 1
+            pr = (pr0 + pr1) / 2
+            pc = (pc0 + pc1) / 2
 
-        ext = []
-        for r, c in np.argwhere(grid == col):
-            r, c = int(r), int(c)
-            if not (r0 <= r <= r1 and c0 <= c <= c1):
-                ext.append((r, c))
+            above = pr < center_r
+            left = pc < center_c
 
-        mode = "id"
-        special = None
-        if ext:
-            er = [(p[0]) for p in ext]
-            ec = [(p[1]) for p in ext]
-            eh = max(er) - min(er) + 1
-            ew = max(ec) - min(ec) + 1
-            ecr = (min(er) + max(er)) / 2.0
-            ecc = (min(ec) + max(ec)) / 2.0
-            mcr = (r0 + r1) / 2.0
-            mcc = (c0 + c1) / 2.0
-
-            if len(ext) == 1:
-                special = frame_rotate(layer)
-                if special is None:
-                    if abs(ecr - mcr) >= abs(ecc - mcc):
-                        mode = "v"
-                    else:
-                        mode = "h"
-            elif eh > ew:
-                mode = "h"
-            elif ew > eh:
-                if ecr < mcr and h == w:
-                    mode = "ccw"
+            if ph == 1 and pw == 1:
+                if above and left:
+                    op = "rot"
+                elif above and not left:
+                    op = "ccw"
+                elif not above and left:
+                    op = "cw"
                 else:
-                    mode = "id"
+                    op = "id"
+            elif pw > ph:
+                op = "ccw" if above else "id"
+            elif ph > pw:
+                op = "rot"
+            else:
+                op = "id"
 
-        if special is not None:
-            rr, cc = np.where(special)
-            ans[rr, cc] = col
-        else:
-            for r, c in apply_pts(pts, mode):
-                if 0 <= r < h and 0 <= c < w:
-                    ans[r, c] = col
+        if op == "cw":
+            mask = np.rot90(mask, -1)
+        elif op == "ccw":
+            mask = np.rot90(mask, 1)
+        elif op == "rot":
+            mask = np.rot90(mask, 2)
 
-    return ans
+        if mask.shape != out_shape:
+            fixed = np.zeros(out_shape, dtype=bool)
+            rr = min(out_shape[0], mask.shape[0])
+            cc = min(out_shape[1], mask.shape[1])
+            fixed[:rr, :cc] = mask[:rr, :cc]
+            mask = fixed
+
+        out[mask] = color
+
+    return out
 ```

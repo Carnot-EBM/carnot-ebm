@@ -190,74 +190,81 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 def transform(grid):
     h, w = grid.shape
     out = grid.copy()
-    bg = 4
-
     seen = np.zeros((h, w), dtype=bool)
-    dirs4 = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-    dirs8 = [(dr, dc) for dr in (-1, 0, 1) for dc in (-1, 0, 1) if not (dr == 0 and dc == 0)]
 
+    dirs4 = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+    dirs8 = [
+        (dr, dc)
+        for dr in (-1, 0, 1)
+        for dc in (-1, 0, 1)
+        if not (dr == 0 and dc == 0)
+    ]
+
+    components = []
     for r in range(h):
         for c in range(w):
-            if grid[r, c] != 1 or seen[r, c]:
-                continue
+            if grid[r, c] == 1 and not seen[r, c]:
+                q = [(r, c)]
+                seen[r, c] = True
+                comp = []
+                while q:
+                    cr, cc = q.pop()
+                    comp.append((cr, cc))
+                    for dr, dc in dirs4:
+                        nr, nc = cr + dr, cc + dc
+                        if 0 <= nr < h and 0 <= nc < w and grid[nr, nc] == 1 and not seen[nr, nc]:
+                            seen[nr, nc] = True
+                            q.append((nr, nc))
+                components.append(comp)
 
-            stack = [(r, c)]
-            seen[r, c] = True
-            comp = []
+    for comp in components:
+        comp_set = set(comp)
 
-            while stack:
-                cr, cc = stack.pop()
-                comp.append((cr, cc))
-                for dr, dc in dirs4:
-                    nr, nc = cr + dr, cc + dc
-                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] == 1:
-                        seen[nr, nc] = True
-                        stack.append((nr, nc))
+        for r, c in comp:
+            for dr, dc in dirs8:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < h and 0 <= nc < w and grid[nr, nc] == 4:
+                    out[nr, nc] = 2
 
-            comp_set = set(comp)
+        rs = [p[0] for p in comp]
+        cs = [p[1] for p in comp]
+        r0, r1 = min(rs), max(rs)
+        c0, c1 = min(cs), max(cs)
 
-            for cr, cc in comp:
-                for dr, dc in dirs8:
-                    nr, nc = cr + dr, cc + dc
-                    if 0 <= nr < h and 0 <= nc < w and grid[nr, nc] == bg:
-                        out[nr, nc] = 2
+        outside = set()
+        q = []
 
-            rs = [p[0] for p in comp]
-            cs = [p[1] for p in comp]
-            r0, r1 = min(rs), max(rs)
-            c0, c1 = min(cs), max(cs)
+        for r in range(r0, r1 + 1):
+            for c in (c0, c1):
+                if (r, c) not in comp_set and (r, c) not in outside:
+                    outside.add((r, c))
+                    q.append((r, c))
+        for c in range(c0, c1 + 1):
+            for r in (r0, r1):
+                if (r, c) not in comp_set and (r, c) not in outside:
+                    outside.add((r, c))
+                    q.append((r, c))
 
-            enclosed = []
-            local_seen = set()
-            for rr in range(r0, r1 + 1):
-                for cc in range(c0, c1 + 1):
-                    if grid[rr, cc] != bg or (rr, cc) in local_seen:
-                        continue
+        while q:
+            cr, cc = q.pop()
+            for dr, dc in dirs4:
+                nr, nc = cr + dr, cc + dc
+                if r0 <= nr <= r1 and c0 <= nc <= c1:
+                    if (nr, nc) not in comp_set and (nr, nc) not in outside:
+                        outside.add((nr, nc))
+                        q.append((nr, nc))
 
-                    q = [(rr, cc)]
-                    local_seen.add((rr, cc))
-                    region = []
-                    escapes = False
+        holes = []
+        for r in range(r0, r1 + 1):
+            for c in range(c0, c1 + 1):
+                if (r, c) not in comp_set and (r, c) not in outside:
+                    holes.append((r, c))
 
-                    while q:
-                        ar, ac = q.pop()
-                        region.append((ar, ac))
-                        if ar == r0 or ar == r1 or ac == c0 or ac == c1:
-                            escapes = True
-                        for dr, dc in dirs4:
-                            nr, nc = ar + dr, ac + dc
-                            if r0 <= nr <= r1 and c0 <= nc <= c1 and (nr, nc) not in local_seen and grid[nr, nc] == bg:
-                                local_seen.add((nr, nc))
-                                q.append((nr, nc))
-
-                    if not escapes:
-                        enclosed.extend(region)
-
-            if enclosed:
-                for cr, cc in comp:
-                    out[cr, cc] = 8
-                for cr, cc in enclosed:
-                    out[cr, cc] = 6
+        if holes:
+            for r, c in comp:
+                out[r, c] = 8
+            for r, c in holes:
+                out[r, c] = 6
 
     return out
 ```

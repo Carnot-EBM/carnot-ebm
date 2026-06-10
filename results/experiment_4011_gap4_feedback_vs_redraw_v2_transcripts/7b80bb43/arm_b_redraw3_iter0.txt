@@ -134,112 +134,64 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    bg = np.bincount(grid.ravel(), minlength=10).argmax()
-    out = np.full_like(grid, bg)
-    h, w = grid.shape
+    out = grid.copy()
+    vals, counts = np.unique(grid, return_counts=True)
+    bg = vals[np.argmax(counts)]
 
-    for col in [c for c in np.unique(grid) if c != bg]:
-        mask = grid == col
+    for color in vals:
+        if color == bg:
+            continue
 
-        # Length of the horizontal foreground run containing each cell.
-        hrun = np.zeros((h, w), dtype=int)
-        axis_rows = set()
+        mask = grid == color
+        h, w = mask.shape
+        keep = np.zeros_like(mask, dtype=bool)
+
+        # Keep pixels that belong to an original horizontal or vertical run
+        # of length at least 2.
         for r in range(h):
-            c = 0
-            while c < w:
-                if not mask[r, c]:
-                    c += 1
-                    continue
-                s = c
-                while c < w and mask[r, c]:
-                    c += 1
-                ln = c - s
-                hrun[r, s:c] = ln
-                if ln >= 3:
-                    axis_rows.add(r)
+            cols = np.where(mask[r])[0]
+            if cols.size:
+                start = cols[0]
+                prev = cols[0]
+                for c in cols[1:]:
+                    if c == prev + 1:
+                        prev = c
+                    else:
+                        if prev - start + 1 >= 2:
+                            keep[r, start:prev + 1] = True
+                        start = prev = c
+                if prev - start + 1 >= 2:
+                    keep[r, start:prev + 1] = True
 
-        axis_cols = set()
         for c in range(w):
-            r = 0
-            while r < h:
-                if not mask[r, c]:
-                    r += 1
-                    continue
-                s = r
-                while r < h and mask[r, c]:
-                    r += 1
-                if r - s >= 3:
-                    axis_cols.add(c)
+            rows = np.where(mask[:, c])[0]
+            if rows.size:
+                start = rows[0]
+                prev = rows[0]
+                for r in rows[1:]:
+                    if r == prev + 1:
+                        prev = r
+                    else:
+                        if prev - start + 1 >= 2:
+                            keep[start:prev + 1, c] = True
+                        start = prev = r
+                if prev - start + 1 >= 2:
+                    keep[start:prev + 1, c] = True
 
-        # 8-connected components of the original foreground color.
-        labels = np.full((h, w), -1, dtype=int)
-        comp = 0
+        # Fill gaps between kept pixels on the same row/column.
+        fill = keep.copy()
         for r in range(h):
-            for c in range(w):
-                if not mask[r, c] or labels[r, c] != -1:
-                    continue
-                stack = [(r, c)]
-                labels[r, c] = comp
-                while stack:
-                    rr, cc = stack.pop()
-                    for dr in (-1, 0, 1):
-                        for dc in (-1, 0, 1):
-                            if dr == 0 and dc == 0:
-                                continue
-                            nr, nc = rr + dr, cc + dc
-                            if 0 <= nr < h and 0 <= nc < w and mask[nr, nc] and labels[nr, nc] == -1:
-                                labels[nr, nc] = comp
-                                stack.append((nr, nc))
-                comp += 1
+            cols = np.where(keep[r])[0]
+            if cols.size >= 2:
+                fill[r, cols.min():cols.max() + 1] = True
 
-        # Keep true vertical axes, and horizontal run pieces on true horizontal axes.
-        for r in range(h):
-            for c in range(w):
-                if mask[r, c] and (c in axis_cols or (r in axis_rows and hrun[r, c] >= 2)):
-                    out[r, c] = col
+        for c in range(w):
+            rows = np.where(keep[:, c])[0]
+            if rows.size >= 2:
+                fill[rows.min():rows.max() + 1, c] = True
 
-        # Complete short broken horizontal axes when the missing section is supported
-        # by diagonal foreground from one of the endpoints.
-        for r in axis_rows:
-            xs = [c for c in range(w) if mask[r, c]]
-            for a, b in zip(xs, xs[1:]):
-                gap = b - a - 1
-                if not (1 <= gap <= 4):
-                    continue
-                endpoint_labels = {labels[r, a], labels[r, b]}
-                supported = False
-                for rr in range(max(0, r - gap - 1), min(h, r + gap + 2)):
-                    if rr == r:
-                        continue
-                    for cc in range(a + 1, b):
-                        if mask[rr, cc] and labels[rr, cc] in endpoint_labels:
-                            supported = True
-                            break
-                    if supported:
-                        break
-                if supported:
-                    out[r, a:b + 1] = col
-
-        # Complete short broken vertical axes in the same way.
-        for c in axis_cols:
-            ys = [r for r in range(h) if mask[r, c]]
-            for a, b in zip(ys, ys[1:]):
-                gap = b - a - 1
-                if not (1 <= gap <= 4):
-                    continue
-                endpoint_labels = {labels[a, c], labels[b, c]}
-                supported = False
-                for rr in range(a + 1, b):
-                    for cc in range(max(0, c - gap - 1), min(w, c + gap + 2)):
-                        if cc == c:
-                            continue
-                        if mask[rr, cc] and labels[rr, cc] in endpoint_labels:
-                            supported = True
-                            break
-                    if supported:
-                        break
-                if supported:
-                    out[a:b + 1, c] = col
+        out[mask] = bg
+        out[fill] = color
 
     return out
 ```

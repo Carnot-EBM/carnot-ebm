@@ -153,76 +153,80 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ```python
 def transform(grid):
     out = grid.copy()
+
     h, w = grid.shape
+    sep_rows = [r for r in range(h) if np.all(grid[r, :] == 1)]
+    sep_cols = [c for c in range(w) if np.all(grid[:, c] == 1)]
+    sr, sc = sep_rows[0], sep_cols[0]
 
-    # Find the full divider row and column.
-    div_rows = [r for r in range(h) if np.all(grid[r, :] == 1)]
-    div_cols = [c for c in range(w) if np.all(grid[:, c] == 1)]
-    mid_r = div_rows[0]
-    mid_c = div_cols[0]
+    bg = 4
 
-    quads = [
-        (0, mid_r, 0, mid_c, 1, 1),          # top-left: original
-        (0, mid_r, mid_c + 1, w, 1, -1),     # top-right: mirror horizontally
-        (mid_r + 1, h, 0, mid_c, -1, 1),     # bottom-left: mirror vertically
-        (mid_r + 1, h, mid_c + 1, w, -1, -1) # bottom-right: rotate 180
+    def bbox(mask):
+        pts = np.argwhere(mask)
+        if len(pts) == 0:
+            return None
+        r0, c0 = pts.min(axis=0)
+        r1, c1 = pts.max(axis=0) + 1
+        return r0, r1, c0, c1
+
+    source_area = grid[:sr, :sc]
+    sb = bbox(source_area != bg)
+    r0, r1, c0, c1 = sb
+    source = source_area[r0:r1, c0:c1]
+
+    source_two_box = bbox(source == 2)
+    tr0, tr1, tc0, tc1 = source_two_box
+    source_two_h = tr1 - tr0
+    source_two_w = tc1 - tc0
+
+    def scale_axis(arr, factor_num, factor_den, axis):
+        if factor_num == factor_den:
+            return arr
+        if factor_num > factor_den:
+            rep = factor_num // factor_den
+            return np.repeat(arr, rep, axis=axis)
+        step = factor_den // factor_num
+        sl = [slice(None)] * arr.ndim
+        sl[axis] = slice(0, None, step)
+        return arr[tuple(sl)]
+
+    quadrants = [
+        (slice(0, sr), slice(sc + 1, w), False, True),
+        (slice(sr + 1, h), slice(0, sc), True, False),
+        (slice(sr + 1, h), slice(sc + 1, w), True, True),
     ]
 
-    # The complete exemplar is the quadrant containing non-background
-    # colors other than the marker color 2.
-    exemplar = None
-    best_count = -1
-    for r0, r1, c0, c1, _, _ in quads:
-        q = grid[r0:r1, c0:c1]
-        count = np.sum((q != 4) & (q != 2))
-        if count > best_count:
-            best_count = count
-            exemplar = (r0, r1, c0, c1)
-
-    er0, er1, ec0, ec1 = exemplar
-    ex = grid[er0:er1, ec0:ec1]
-
-    # Bounding box of the exemplar object, excluding background.
-    pts = np.argwhere(ex != 4)
-    min_r, min_c = pts.min(axis=0)
-    max_r, max_c = pts.max(axis=0)
-    pattern = ex[min_r:max_r + 1, min_c:max_c + 1]
-
-    # The marker color 2 is used to align the transformed pattern in each quadrant.
-    p2 = np.argwhere(pattern == 2)
-    p2_min_r, p2_min_c = p2.min(axis=0)
-
-    for r0, r1, c0, c1, sr, sc in quads:
-        q = grid[r0:r1, c0:c1]
-        q2 = np.argwhere(q == 2)
-        if len(q2) == 0:
+    for rs, cs, flip_v, flip_h in quadrants:
+        area = grid[rs, cs]
+        ab = bbox(area == 2)
+        if ab is None:
             continue
 
-        if sr == 1 and sc == 1:
-            pat = pattern
-        elif sr == 1 and sc == -1:
-            pat = pattern[:, ::-1]
-        elif sr == -1 and sc == 1:
-            pat = pattern[::-1, :]
-        else:
-            pat = pattern[::-1, ::-1]
+        ar0, ar1, ac0, ac1 = ab
+        anchor_h = ar1 - ar0
+        anchor_w = ac1 - ac0
 
-        pat2 = np.argwhere(pat == 2)
-        pat2_min_r, pat2_min_c = pat2.min(axis=0)
-        q2_min_r, q2_min_c = q2.min(axis=0)
+        pat = source.copy()
+        if flip_v:
+            pat = pat[::-1, :]
+        if flip_h:
+            pat = pat[:, ::-1]
 
-        start_r = r0 + q2_min_r - pat2_min_r
-        start_c = c0 + q2_min_c - pat2_min_c
+        pat = scale_axis(pat, anchor_h, source_two_h, 0)
+        pat = scale_axis(pat, anchor_w, source_two_w, 1)
 
-        for pr in range(pat.shape[0]):
-            for pc in range(pat.shape[1]):
-                val = pat[pr, pc]
-                if val == 4:
-                    continue
-                rr = start_r + pr
-                cc = start_c + pc
-                if 0 <= rr < h and 0 <= cc < w:
-                    out[rr, cc] = val
+        pb = bbox(pat == 2)
+        pr0, pr1, pc0, pc1 = pb
+
+        base_r = (rs.start or 0) + ar0 - pr0
+        base_c = (cs.start or 0) + ac0 - pc0
+
+        for rr in range(pat.shape[0]):
+            for cc in range(pat.shape[1]):
+                if pat[rr, cc] != bg:
+                    gr, gc = base_r + rr, base_c + cc
+                    if 0 <= gr < h and 0 <= gc < w:
+                        out[gr, gc] = pat[rr, cc]
 
     return out
 ```

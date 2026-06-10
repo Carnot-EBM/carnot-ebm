@@ -139,105 +139,142 @@ Write exactly one Python function:
 Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
 
 Your PREVIOUS function failed these demos:
-Demo 3: expected OUTPUT (7x8):
-[[2, 2, 2, 4, 2, 2, 2, 2],
- [2, 2, 2, 5, 2, 2, 2, 2],
- [5, 4, 5, 4, 2, 2, 2, 2],
- [2, 2, 2, 2, 2, 2, 2, 2],
- [2, 2, 2, 2, 2, 2, 2, 2],
- [2, 8, 9, 8, 9, 8, 9, 8],
- [2, 9, 2, 2, 2, 2, 2, 2]]
+Demo 2: expected OUTPUT (13x14):
+[[6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [2, 2, 2, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 8, 6, 6, 8, 6, 6, 6]]
 your function returned:
-[[2, 2, 2, 4, 2, 2, 2, 2],
- [2, 2, 2, 5, 2, 2, 2, 2],
- [5, 4, 5, 4, 2, 2, 2, 2],
- [2, 2, 2, 2, 2, 2, 2, 2],
- [2, 2, 2, 2, 2, 2, 2, 2],
- [2, 9, 8, 9, 8, 9, 8, 9],
- [2, 8, 2, 2, 2, 2, 2, 2]]
+[[6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [6, 6, 2, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [6, 2, 2, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6]]
 
 Previous code:
 ```python
 def transform(grid):
-    bg = np.bincount(grid.ravel()).argmax()
-    vals = [int(c) for c in np.unique(grid)]
+    h, w = grid.shape
 
-    def color_components(c):
-        pts = set(map(tuple, np.argwhere(grid == c)))
-        comps = []
-        while pts:
-            p = pts.pop()
-            stack = [p]
-            comp = [p]
-            while stack:
-                r, col = stack.pop()
-                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    q = (r + dr, col + dc)
-                    if q in pts:
-                        pts.remove(q)
-                        stack.append(q)
-                        comp.append(q)
-            comps.append(comp)
-        return comps
+    vals, counts = np.unique(grid, return_counts=True)
+    bg = vals[np.argmax(counts)]
 
-    # Find the largest single-color rectangular frame.
+    def comps(mask):
+        seen = np.zeros(mask.shape, dtype=bool)
+        out = []
+        for r in range(h):
+            for c in range(w):
+                if not mask[r, c] or seen[r, c]:
+                    continue
+                q = [(r, c)]
+                seen[r, c] = True
+                cells = []
+                while q:
+                    rr, cc = q.pop()
+                    cells.append((rr, cc))
+                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nr, nc = rr + dr, cc + dc
+                        if 0 <= nr < h and 0 <= nc < w and mask[nr, nc] and not seen[nr, nc]:
+                            seen[nr, nc] = True
+                            q.append((nr, nc))
+                out.append(cells)
+        return out
+
+    # Find the largest complete rectangular border. This is the window frame.
     best = None
-    for c in vals:
-        if c == bg:
+    for col in vals:
+        if col == bg:
             continue
-        for comp in color_components(c):
-            rs = [p[0] for p in comp]
-            cs = [p[1] for p in comp]
-            r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
+        for cells in comps(grid == col):
+            rs = [p[0] for p in cells]
+            cs = [p[1] for p in cells]
+            r0, r1 = min(rs), max(rs)
+            c0, c1 = min(cs), max(cs)
             if r1 - r0 < 2 or c1 - c0 < 2:
                 continue
-            if (np.all(grid[r0, c0:c1 + 1] == c) and
-                np.all(grid[r1, c0:c1 + 1] == c) and
-                np.all(grid[r0:r1 + 1, c0] == c) and
-                np.all(grid[r0:r1 + 1, c1] == c)):
+            ok = True
+            for c in range(c0, c1 + 1):
+                if grid[r0, c] != col or grid[r1, c] != col:
+                    ok = False
+                    break
+            if ok:
+                for r in range(r0, r1 + 1):
+                    if grid[r, c0] != col or grid[r, c1] != col:
+                        ok = False
+                        break
+            if ok:
                 area = (r1 - r0 - 1) * (c1 - c0 - 1)
                 if best is None or area > best[0]:
-                    best = (area, c, r0, r1, c0, c1)
+                    best = (area, col, r0, r1, c0, c1)
 
-    _, frame, r0, r1, c0, c1 = best
-    out = grid[r0 + 1:r1, c0 + 1:c1].copy()
-    fill = np.bincount(out.ravel()).argmax()
+    _, frame, fr0, fr1, fc0, fc1 = best
+    ir0, ir1 = fr0 + 1, fr1 - 1
+    ic0, ic1 = fc0 + 1, fc1 - 1
+    out = grid[ir0:ir1 + 1, ic0:ic1 + 1].copy()
 
-    h, w = out.shape
-    inside_frame = np.zeros(grid.shape, dtype=bool)
-    inside_frame[r0:r1 + 1, c0:c1 + 1] = True
+    mask = (grid != bg) & (grid != frame)
 
-    for c in vals:
-        if c in (bg, frame, fill):
+    for cells in comps(mask):
+        rs = [p[0] for p in cells]
+        cs = [p[1] for p in cells]
+        r0, r1 = min(rs), max(rs)
+        c0, c1 = min(cs), max(cs)
+
+        if r1 < ir0 or r0 > ir1 or c1 < ic0 or c0 > ic1:
             continue
 
-        pts = np.argwhere((grid == c) & (~inside_frame))
-        if len(pts) == 0:
-            continue
+        comp_colors = sorted(set(int(grid[r, c]) for r, c in cells))
 
-        rr0, cc0 = pts.min(axis=0)
-        rr1, cc1 = pts.max(axis=0)
-        if rr1 - rr0 < 1 or cc1 - cc0 < 1:
-            continue
+        if len(comp_colors) == 1:
+            def color_at(r, c, col=comp_colors[0]):
+                return col
+        else:
+            parity_counts = [{}, {}]
+            for r, c in cells:
+                p = (r + c) & 1
+                v = int(grid[r, c])
+                parity_counts[p][v] = parity_counts[p].get(v, 0) + 1
 
-        # Use only colors that are visible as the border of a rectangle.
-        ok = True
-        for rr, cc in pts:
-            if not (rr == rr0 or rr == rr1 or cc == cc0 or cc == cc1):
-                ok = False
-                break
-        if not ok:
-            continue
+            parity_color = {}
+            for p in (0, 1):
+                if parity_counts[p]:
+                    parity_color[p] = max(parity_counts[p], key=parity_counts[p].get)
+                else:
+                    parity_color[p] = comp_colors[p % len(comp_colors)]
 
-        parities = set((int(rr) + int(cc)) % 2 for rr, cc in pts)
+            # Alternating border patterns on the lower-right side are seen through
+            # the opposite side of the frame, so their parity phase is reversed.
+            flip = (r0 >= ir0 and r1 > ir1 and c1 > ic1)
+            if flip and len(comp_colors) == 2:
+                parity_color = {0: parity_color[1], 1: parity_color[0]}
 
-        for rr in range(max(rr0, r0 + 1), min(rr1, r1 - 1) + 1):
-            for cc in range(max(cc0, c0 + 1), min(cc1, c1 - 1) + 1):
-                if not (rr == rr0 or rr == rr1 or cc == cc0 or cc == cc1):
-                    continue
-                if len(parities) == 1 and ((rr + cc) % 2) not in parities:
-                    continue
-                out[rr - (r0 + 1), cc - (c0 + 1)] = c
+            def color_at(r, c, pc=parity_color):
+                return pc[(r + c) & 1]
+
+        rr0, rr1 = max(r0, ir0), min(r1, ir1)
+        cc0, cc1 = max(c0, ic0), min(c1, ic1)
+
+        for r in range(rr0, rr1 + 1):
+            for c in range(cc0, cc1 + 1):
+                if r == r0 or r == r1 or c == c0 or c == c1:
+                    out[r - ir0, c - ic0] = color_at(r, c)
 
     return out
 ```
@@ -245,92 +282,129 @@ Fix the rule inference and output the corrected function as one ```python block.
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    bg = np.bincount(grid.ravel()).argmax()
-    colors = [int(c) for c in np.unique(grid)]
+    h, w = grid.shape
+    vals, counts = np.unique(grid, return_counts=True)
+    bg = int(vals[np.argmax(counts)])
 
-    def comps_of_color(color):
-        pts = set(map(tuple, np.argwhere(grid == color)))
-        comps = []
-        while pts:
-            start = pts.pop()
-            stack = [start]
-            comp = [start]
-            while stack:
-                r, c = stack.pop()
-                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    q = (r + dr, c + dc)
-                    if q in pts:
-                        pts.remove(q)
-                        stack.append(q)
-                        comp.append(q)
-            comps.append(comp)
-        return comps
+    def components(mask):
+        hh, ww = mask.shape
+        seen = np.zeros((hh, ww), dtype=bool)
+        res = []
+        for r in range(hh):
+            for c in range(ww):
+                if not mask[r, c] or seen[r, c]:
+                    continue
+                stack = [(r, c)]
+                seen[r, c] = True
+                cells = []
+                while stack:
+                    rr, cc = stack.pop()
+                    cells.append((rr, cc))
+                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nr, nc = rr + dr, cc + dc
+                        if 0 <= nr < hh and 0 <= nc < ww and mask[nr, nc] and not seen[nr, nc]:
+                            seen[nr, nc] = True
+                            stack.append((nr, nc))
+                res.append(cells)
+        return res
 
-    # The output is the interior of the largest rectangular frame.
     best = None
-    for color in colors:
-        if color == bg:
+    for col in vals:
+        col = int(col)
+        if col == bg:
             continue
-        for comp in comps_of_color(color):
-            rs = [p[0] for p in comp]
-            cs = [p[1] for p in comp]
+        for cells in components(grid == col):
+            rs = [r for r, c in cells]
+            cs = [c for r, c in cells]
             r0, r1 = min(rs), max(rs)
             c0, c1 = min(cs), max(cs)
             if r1 - r0 < 2 or c1 - c0 < 2:
                 continue
-            if (np.all(grid[r0, c0:c1 + 1] == color) and
-                np.all(grid[r1, c0:c1 + 1] == color) and
-                np.all(grid[r0:r1 + 1, c0] == color) and
-                np.all(grid[r0:r1 + 1, c1] == color)):
+
+            ok = True
+            for c in range(c0, c1 + 1):
+                if grid[r0, c] != col or grid[r1, c] != col:
+                    ok = False
+                    break
+            if ok:
+                for r in range(r0, r1 + 1):
+                    if grid[r, c0] != col or grid[r, c1] != col:
+                        ok = False
+                        break
+
+            if ok:
                 area = (r1 - r0 - 1) * (c1 - c0 - 1)
                 if best is None or area > best[0]:
-                    best = (area, color, r0, r1, c0, c1)
+                    best = (area, col, r0, r1, c0, c1)
 
-    _, frame_color, r0, r1, c0, c1 = best
-    out = grid[r0 + 1:r1, c0 + 1:c1].copy()
-    fill = int(np.bincount(out.ravel()).argmax())
+    _, frame, fr0, fr1, fc0, fc1 = best
+    ir0, ir1 = fr0 + 1, fr1 - 1
+    ic0, ic1 = fc0 + 1, fc1 - 1
+    out = grid[ir0:ir1 + 1, ic0:ic1 + 1].copy()
 
-    frame_box = (r0, r1, c0, c1)
-    inside = np.zeros(grid.shape, dtype=bool)
-    inside[r0:r1 + 1, c0:c1 + 1] = True
+    mask = (grid != bg) & (grid != frame)
+    groups = components(mask)
 
-    for color in colors:
-        if color in (bg, frame_color, fill):
+    for col in vals:
+        col = int(col)
+        if col == bg or col == frame:
+            continue
+        cmask = grid == col
+        comps = components(cmask)
+        if len(comps) > 1:
+            merged = []
+            for comp in comps:
+                merged.extend(comp)
+            groups.append(merged)
+
+    seen_groups = set()
+    for cells in groups:
+        key = tuple(sorted(cells))
+        if key in seen_groups:
+            continue
+        seen_groups.add(key)
+
+        rs = [r for r, c in cells]
+        cs = [c for r, c in cells]
+        r0, r1 = min(rs), max(rs)
+        c0, c1 = min(cs), max(cs)
+
+        if r1 < ir0 or r0 > ir1 or c1 < ic0 or c0 > ic1:
+            continue
+        if r0 == r1 and c0 == c1:
             continue
 
-        outside_pts = np.argwhere((grid == color) & (~inside))
-        if len(outside_pts) == 0:
-            continue
+        colors = sorted(set(int(grid[r, c]) for r, c in cells))
+        if len(colors) == 1:
+            def color_at(r, c, col=colors[0]):
+                return col
+        else:
+            by_parity = [{}, {}]
+            for r, c in cells:
+                p = (r + c) & 1
+                v = int(grid[r, c])
+                by_parity[p][v] = by_parity[p].get(v, 0) + 1
 
-        rr0, cc0 = outside_pts.min(axis=0)
-        rr1, cc1 = outside_pts.max(axis=0)
-        if rr1 - rr0 < 1 or cc1 - cc0 < 1:
-            continue
+            parity_color = {}
+            for p in (0, 1):
+                if by_parity[p]:
+                    parity_color[p] = max(by_parity[p], key=by_parity[p].get)
+                else:
+                    parity_color[p] = colors[p % len(colors)]
 
-        # Keep only colors whose visible outside cells lie on one rectangle border.
-        ok = True
-        for rr, cc in outside_pts:
-            if not (rr == rr0 or rr == rr1 or cc == cc0 or cc == cc1):
-                ok = False
-                break
-        if not ok:
-            continue
+            if r0 >= ir0 and r1 > ir1 and c1 > ic1 and len(colors) == 2:
+                parity_color = {0: parity_color[1], 1: parity_color[0]}
 
-        # If the border alternates colors, the color visible at one end of a line
-        # determines the continuation through the hidden/overlapped part.
-        line_parity = None
-        if len(outside_pts) > 0:
-            line_parity = int((outside_pts[0, 0] + outside_pts[0, 1]) % 2)
-            if any(int((rr + cc) % 2) != line_parity for rr, cc in outside_pts):
-                line_parity = None
+            def color_at(r, c, pc=parity_color):
+                return pc[(r + c) & 1]
 
-        for rr in range(max(rr0, r0 + 1), min(rr1, r1 - 1) + 1):
-            for cc in range(max(cc0, c0 + 1), min(cc1, c1 - 1) + 1):
-                if not (rr == rr0 or rr == rr1 or cc == cc0 or cc == cc1):
-                    continue
-                if line_parity is not None and (rr + cc) % 2 != line_parity:
-                    continue
-                out[rr - r0 - 1, cc - c0 - 1] = color
+        rr0, rr1 = max(r0, ir0), min(r1, ir1)
+        cc0, cc1 = max(c0, ic0), min(c1, ic1)
+
+        for r in range(rr0, rr1 + 1):
+            for c in range(cc0, cc1 + 1):
+                if r == r0 or r == r1 or c == c0 or c == c1:
+                    out[r - ir0, c - ic0] = color_at(r, c)
 
     return out
 ```

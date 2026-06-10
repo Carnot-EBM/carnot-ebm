@@ -135,65 +135,63 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    bg = grid[0, 0]
-    H, W = grid.shape
+    bg = np.bincount(grid.ravel()).argmax()
+    h, w = grid.shape
 
-    # Find monochrome rectangular blocks (at least 5x5) that are not background.
-    seen = np.zeros((H, W), dtype=bool)
-    blocks = []
-    for r in range(H):
-        for c in range(W):
-            if seen[r, c] or grid[r, c] == bg:
-                continue
-            col = grid[r, c]
-            stack = [(r, c)]
-            seen[r, c] = True
-            cells = []
-            while stack:
-                x, y = stack.pop()
-                cells.append((x, y))
-                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    nx, ny = x + dx, y + dy
-                    if 0 <= nx < H and 0 <= ny < W and not seen[nx, ny] and grid[nx, ny] == col:
-                        seen[nx, ny] = True
-                        stack.append((nx, ny))
-            rs = [x for x, y in cells]
-            cs = [y for x, y in cells]
-            r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
-            h, w = r1 - r0 + 1, c1 - c0 + 1
-            if h >= 5 and w >= 5 and len(cells) == h * w:
-                blocks.append((r0, r1, c0, c1, col))
+    def comps(mask):
+        seen = np.zeros(mask.shape, dtype=bool)
+        out = []
+        for r in range(mask.shape[0]):
+            for c in range(mask.shape[1]):
+                if mask[r, c] and not seen[r, c]:
+                    q = [(r, c)]
+                    seen[r, c] = True
+                    cells = []
+                    for rr, cc in q:
+                        cells.append((rr, cc))
+                        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                            nr, nc = rr + dr, cc + dc
+                            if 0 <= nr < mask.shape[0] and 0 <= nc < mask.shape[1]:
+                                if mask[nr, nc] and not seen[nr, nc]:
+                                    seen[nr, nc] = True
+                                    q.append((nr, nc))
+                    out.append(cells)
+        return out
 
-    # Find the minimal background-separated block lattice containing large blocks.
-    br0 = min(b[0] for b in blocks)
-    br1 = max(b[1] for b in blocks)
-    bc0 = min(b[2] for b in blocks)
-    bc1 = max(b[3] for b in blocks)
-
-    out = grid[br0:br1 + 1, bc0:bc1 + 1].copy()
-
-    # For each block color, find its small 3x3 pattern outside the block lattice.
-    for r0, r1, c0, c1, col in blocks:
-        pattern = None
-        for r in range(H - 2):
-            for c in range(W - 2):
-                if br0 <= r <= br1 and bc0 <= c <= bc1:
-                    continue
-                sub = grid[r:r + 3, c:c + 3]
-                vals = set(sub.flatten())
-                if col in vals and vals.issubset({bg, col}):
-                    pattern = (sub == col)
-                    break
-            if pattern is not None:
-                break
-
-        if pattern is None:
+    large = []
+    patterns = {}
+    for color in np.unique(grid):
+        if color == bg:
             continue
+        for cells in comps(grid == color):
+            rs = [p[0] for p in cells]
+            cs = [p[1] for p in cells]
+            r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
+            bh, bw = r1 - r0 + 1, c1 - c0 + 1
+            if bh == 5 and bw == 5 and len(cells) == 25:
+                large.append((r0, c0, color))
+            else:
+                pat = np.zeros((3, 3), dtype=bool)
+                for rr, cc in cells:
+                    pat[rr - r0, cc - c0] = True
+                patterns[color] = pat
 
-        rr = r0 - br0
-        cc = c0 - bc0
-        interior = out[rr + 1:rr + 4, cc + 1:cc + 4]
-        interior[:] = np.where(pattern, bg, col)
+    minr = min(r for r, c, col in large)
+    minc = min(c for r, c, col in large)
+    maxr = max(r for r, c, col in large)
+    maxc = max(c for r, c, col in large)
+
+    out = np.full((maxr - minr + 7, maxc - minc + 7), bg, dtype=grid.dtype)
+
+    for r, c, color in large:
+        orow, ocol = r - minr + 1, c - minc + 1
+        out[orow:orow + 5, ocol:ocol + 5] = color
+        if color in patterns:
+            pat = patterns[color]
+            for pr in range(3):
+                for pc in range(3):
+                    if pat[pr, pc]:
+                        out[orow + pr + 1, ocol + pc + 1] = bg
 
     return out
 ```

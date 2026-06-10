@@ -137,78 +137,71 @@ def transform(grid):
     out = grid.copy()
     vals, counts = np.unique(grid, return_counts=True)
     bg = vals[np.argmax(counts)]
-    colors = vals[vals != bg]
-    if len(colors) == 0:
-        return out
-    fg = colors[np.argmax([np.sum(grid == c) for c in colors])]
+    h, w = grid.shape
 
-    mask = grid == fg
-    h, w = mask.shape
+    for color in vals:
+        if color == bg:
+            continue
 
-    row_runs = []
-    for r in range(h):
-        cs = np.where(mask[r])[0]
-        if len(cs) >= 2:
-            runs = []
-            start = prev = cs[0]
-            for c in cs[1:]:
-                if c == prev + 1:
-                    prev = c
-                else:
-                    runs.append((start, prev))
-                    start = prev = c
-            runs.append((start, prev))
-            for a, b in runs:
-                if b - a + 1 >= 2:
-                    row_runs.append((r, a, b))
+        mask = (grid == color)
 
-    col_runs = []
-    for c in range(w):
-        rs = np.where(mask[:, c])[0]
-        if len(rs) >= 2:
-            runs = []
-            start = prev = rs[0]
-            for r in rs[1:]:
-                if r == prev + 1:
-                    prev = r
-                else:
-                    runs.append((start, prev))
-                    start = prev = r
-            runs.append((start, prev))
-            for a, b in runs:
-                if b - a + 1 >= 2:
-                    col_runs.append((c, a, b))
+        orth = np.zeros_like(mask, dtype=bool)
+        orth[1:, :] |= mask[:-1, :]
+        orth[:-1, :] |= mask[1:, :]
+        orth[:, 1:] |= mask[:, :-1]
+        orth[:, :-1] |= mask[:, 1:]
 
-    keep = np.zeros_like(mask, dtype=bool)
+        diag = np.zeros_like(mask, dtype=bool)
+        diag[1:, 1:] |= mask[:-1, :-1]
+        diag[1:, :-1] |= mask[:-1, 1:]
+        diag[:-1, 1:] |= mask[1:, :-1]
+        diag[:-1, :-1] |= mask[1:, 1:]
 
-    for r, a, b in row_runs:
-        keep[r, a:b + 1] = True
-    for c, a, b in col_runs:
-        keep[a:b + 1, c] = True
+        diag_only = mask & (~orth) & diag
 
-    for r in range(h):
-        spans = [(a, b) for rr, a, b in row_runs if rr == r]
-        for i in range(len(spans)):
-            for j in range(i + 1, len(spans)):
-                a1, b1 = spans[i]
-                a2, b2 = spans[j]
-                if a2 < a1:
-                    a1, b1, a2, b2 = a2, b2, a1, b1
-                if a2 - b1 <= 4:
-                    keep[r, b1:a2 + 1] = True
+        for r in range(h):
+            for c in range(w):
+                if not mask[r, c] or not orth[r, c]:
+                    continue
 
-    for c in range(w):
-        spans = [(a, b) for cc, a, b in col_runs if cc == c]
-        for i in range(len(spans)):
-            for j in range(i + 1, len(spans)):
-                a1, b1 = spans[i]
-                a2, b2 = spans[j]
-                if a2 < a1:
-                    a1, b1, a2, b2 = a2, b2, a1, b1
-                if a2 - b1 <= 4:
-                    keep[b1:a2 + 1, c] = True
+                has_h = (c > 0 and mask[r, c - 1]) or (c + 1 < w and mask[r, c + 1])
+                has_v = (r > 0 and mask[r - 1, c]) or (r + 1 < h and mask[r + 1, c])
 
-    out[mask & ~keep] = bg
-    out[keep] = fg
+                for dr, dc in ((-1, -1), (-1, 1), (1, -1), (1, 1)):
+                    rr, cc = r + dr, c + dc
+                    if not (0 <= rr < h and 0 <= cc < w and diag_only[rr, cc]):
+                        continue
+
+                    length = 0
+                    tr, tc = rr, cc
+                    while 0 <= tr < h and 0 <= tc < w and diag_only[tr, tc]:
+                        length += 1
+                        tr += dr
+                        tc += dc
+
+                    limit = length + 2
+
+                    if has_h and not (0 <= c + dc < w and mask[r, c + dc]):
+                        for step in range(1, limit + 1):
+                            nc = c + dc * step
+                            if not (0 <= nc < w):
+                                break
+                            if mask[r, nc]:
+                                a, b = sorted((c, nc))
+                                out[r, a:b + 1] = color
+                                break
+
+                    if has_v and not (0 <= r + dr < h and mask[r + dr, c]):
+                        for step in range(1, limit + 1):
+                            nr = r + dr * step
+                            if not (0 <= nr < h):
+                                break
+                            if mask[nr, c]:
+                                a, b = sorted((r, nr))
+                                out[a:b + 1, c] = color
+                                break
+
+        out[diag_only] = bg
+
     return out
 ```
