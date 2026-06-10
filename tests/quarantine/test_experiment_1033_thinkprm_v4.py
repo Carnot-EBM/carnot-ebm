@@ -252,6 +252,11 @@ def test_deliverable_has_required_schema_fields(tmp_path, monkeypatch):
     # Redirect deliverable to a temp location so we don't clobber results/.
     original_deliverable = mod.DELIVERABLE
     mod.DELIVERABLE = str(tmp_path / "experiment_1033_thinkprm_v4.json")
+    monkeypatch.setattr(
+        mod,
+        "_try_load_gemma31b_caller",
+        lambda: (mod._make_ci_stub_caller(), "ci_stub"),
+    )
 
     try:
         mod.main()

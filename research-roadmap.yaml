@@ -50,6 +50,12 @@ tasks:
     agent_type: claude
     model: opus
     requires_claude: true
+    # 2026-06-10 outer-loop: operator-only bypass so Codex-Default v2 does NOT coerce this
+    # multi-file transition task to codex. exp4008 hit the 80-min wall-clock HARD CAP twice on
+    # gpt-5.5 (15:09 + 16:33); the deliverables already exist and the test passes (29/29), but
+    # codex-as-agent loops past the cap without emitting the artifact. Route to claude/Opus
+    # (STALL_TIMEOUT=0 — the planner's correct original choice) to close it out cleanly.
+    requires_claude_verified: true
     inference_substrate: aggregation_from_upstream_artifacts
     deliverable: results/experiment_4008_archive_v370_activate_v371.json
     prompt: |
