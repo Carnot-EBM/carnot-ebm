@@ -1,211 +1,263 @@
-# Research Roadmap — Milestone 2026.06.368
+# Research Roadmap — Milestone 2026.06.369
 
-**Planned:** 2026-06-09 (outer-loop planning agent, Claude Opus 4.8)
-**Milestone doc for:** `research-roadmap-next.yaml` (`milestone: 2026.06.368`)
-**Prior milestone:** 2026.06.367
+**Planned:** 2026-06-10 (outer-loop planning agent, Claude Opus 4.8)
+**Milestone doc for:** `research-roadmap-next.yaml` (`milestone: 2026.06.369`)
+**Prior milestone:** 2026.06.368
 **North star:** `ops/north-star.md` §0 — solve ARC-AGI-3, accurately AND efficiently.
 
 ---
 
 ## 0. One-line thesis
 
-Build and prove the **execution / program-synthesis verifier (GAP-4)** — the single
-direction BOTH retired ARC verifier threads independently converged on — and use it to
-answer the project's existential question on BOTH owed axes: ACCURACY (executed-rule
-consistency selects gold past the generator's own vote, reaching the proven 16pp headroom
-the retired content-energy lineage could not) and EFFICIENCY (the energy verifier at parity
-with an LLM-judge for 10–100× less cost). Plus: grow ARC-AGI-3 accuracy via execution-guided
-re-induction (the L2-fails fix + a 4th game), continue self-learning (ArcMemo solve-transfer),
-hardware continuity.
+The GAP-4 **program-induction execution verifier** produced the project's FIRST positive
+verifier result on ARC content/rule selection (ARC-1 rerank vote 0.4516 → gated 0.5806,
+~0.80 of the proven oracle headroom, +4/−0, 5/5 adversarially confirmed). It is
+**PRELIMINARY** in five named ways. **.369 turns the preliminary positive into a CONFIRMED,
+DECENTRALIZED, DEPLOYED verifier** by executing the operator's four verbatim
+`conductor_followups` (de-selection coverage, pre-registered precision confirmation,
+feedback-vs-redraw control, harness registration), adding the owed **local open-weight
+generator arm** (the decentralization tier — no published work reports it), and continuing
+the north-star accuracy push (one incremental level + a 4th game, both verifier-assisted),
+self-learning (ArcMemo solve-transfer v2), hardware, and an ungated capstone.
 
 ---
 
-## 1. What the previous milestones proved (the convergence)
+## 1. What the previous milestone (.368) proved
 
-Two distinct ARC verifier programs ran to ground on 2026-06-09. They failed for the SAME
-reason and point at the SAME next step.
+### Thread A — the conductor's autonomous GAP-4 build FAILED; the outer-loop's SUCCEEDED
 
-### Thread A — the ARC-AGI-3 interactive agent (.365/.366/.367)
+The .368 conductor task `exp3975` tried to build the GAP-4 verifier **DSL-only** and came
+back `gap4_positive_control_failed_auroc0.00`, `coverage 0.0`, `llm_proposer_used=False` —
+the deterministic DSL could not synthesize the rules, and the SOTA GGUF proposer was never
+invoked. `exp3976` (the rerank) consequently `blocked_gate_check_failed`. **The DSL-only
+path is superseded — .369 does not re-attempt it.**
 
-| Result | Status | Artifact |
+In parallel, the **outer-loop session** (operator-directed, 2026-06-09/10) built GAP-4 the
+right way — **codex (gpt-5.5) program-induction + a model-free execution verifier** — and
+landed the program's first positives, all 5/5 adversarially confirmed
+(`ops/verifier_gaps.md` GAP-4, memory `project_gap3_verifier_program`):
+
+| Result | Number | Artifact |
 |---|---|---|
-| **THREE games solved** (r11l, lp85, sc25), each at level 1 | ✅ method generalizes (2 = coincidence, 3 = method) | exp3946 / exp3954 / exp3966 |
-| **Incremental level progress** (L1→L2) | ❌ r11l + lp85 both stop at L2 (`first_fail2`) — the induced L1 mechanic does not transfer to the harder config | exp3964 / exp3965 |
-| **M3 "verifier earns its place" efficiency** | ❌ FABRICATED .366 (exp3959, flagged), HONESTLY BLOCKED .367 (exp3967, `blocked_verifier_not_in_loop`) — **unanswered for a 2nd milestone** | exp3959 / exp3967 |
-| **World-model induction across the 6 non-spatial games** | ❌ 0/6 trustworthy (consistency energy ≤0.15); vc33's 0.005 is a one-off | exp3968 |
-| **Hidden-state recovery** (Pinductor belief-likelihood) | ❌ no energy drop (2nd negative) → latent-augmentation hypothesis RETIRED | exp3969 |
-| **Cross-game self-learning** (ArcMemo NL concept memory) | ✅ transfer win — reused 2 concepts at lower induction cost | exp3970 |
-| **Offline quota-gate** | ✅ CLEARED — hybrid 3 levels vs 0 baselines → operator MAY run an online scored game | exp3971 |
+| **ARC-1 rerank** (contaminated pool — upper bound) | vote 0.4516 → **gated 0.5806** pass@2 (+4/−0; ~0.80 of oracle headroom) | `results/arc3_gap4_rule_exec_verifier.json` |
+| **ARC-2 transfer probe** (reduced-exposure) | induction 0.93→**0.57**, precision 0.90→**0.47**; demo-overfit asymmetry ⇒ genuine induction, not recall | `results/arc3_gap4_arc2_rule_exec_verifier.json` |
+| **Precision fixes** | graded min-hamming gate production τ=0.005 (ARC-1: 0 losses); k=3 single-shot agreement precise but coverage-collapsed | `results/arc3_gap4_arc2_consistency_ensemble.json` |
+| **k=3 CHAIN-arms** | agreement 10/16 entries, gold 8/10; fresh-chain per-arm 0.833; **prereg all-gold bar NOT met**; agreement = a CONFIDENCE LABEL, not a selector | `results/arc3_gap4_chain_arms_adversarial_verify.json` |
 
-### Thread B — the GAP-3 TRM-candidate-rerank verifier (offline ARC-AGI-1 pool)
+**Deployment frontier (measured offline):** graded-snap τ≤0.005 → promote-first-FRESH-chain-
+raw-output → vote = ARC-2 pass@1 **19/31 (0.6129)** (vs vote 1/31), ARC-1 28/31.
 
-The trained-content-energy ARC selector lineage RETIRED in full (Stages 0/1/2v1/2v2 all
-NEGATIVE, adversarially confirmed 5/5; on `ops/exclusion_manifest.yaml`). The honest bound:
+### Thread B — the other .368 outcomes (the verifier on the two owed axes)
 
-> The ~16pp oracle headroom (oracle pass@2 **0.6129** vs frequency-vote **0.4516** on the
-> 31-task headroom pool) is REAL but UNREACHED by scalar (q_halt), latent (z_H probe), or
-> trained-content-energy (v1+v2) selectors. They master what they train on but score AUROC
-> 0.43–0.50 on the **dominant real-error class — same-shape, plausible-but-wrong rule
-> applications** (59.1% of errors, 81.4% of wrong-pair mass), where vote scores 0.92–0.98.
+| Question | .368 verdict | Artifact |
+|---|---|---|
+| **Verifier earns ACCURACY?** | ❌ **No** — the conductor's DSL build failed; the real positive came from the outer-loop (codex), still PRELIMINARY | capstone exp3985 `verifier_earns_accuracy=False` |
+| **Verifier earns EFFICIENCY?** | ⚠️ **Yes but n=5** — energy-consistency verifier vs LLM-judge: parity at **8789× cheaper**, verifier provably invoked — but only **5 programs judged** (underpowered) | exp3978 |
+| **World-model induction (6 non-spatial games)** | ❌ **0/6** trustworthy AGAIN (second negative, positive control passed) → offline non-spatial world-model induction is **bounded** | exp3979 |
+| **Incremental L1→L2** | ❌ r11l L2 wall holds; re-induction found L2 needs a **different rule** (collision-forbidden mask) — diagnosis, not a solve | exp3980 |
+| **4th game first-solve** | ❌ `fourth_game_no_solve_budget_exceeded` | exp3981 |
+| **Self-learning (ArcMemo solve-transfer)** | ✅ **Big win** — concept-memory-seeded solve **2668 → 17 actions** | exp3982 |
+| Hardware continuity / retro detector fix | ✅ boards visible; retro commit-detector bug fixed + self-check added | exp3983 / exp3984 |
 
-The distilled missing-verifier spec (`ops/verifier_gaps.md` **GAP-4**, priority HIGH):
+### The five ways the GAP-4 positive is PRELIMINARY (the .369 work list)
 
-> **missing discriminator:** *does the candidate output follow from applying the task's
-> induced rule to the test input* — "is this the right transformation," not "is this grid
-> damaged." **candidate design:** execution / program-synthesis verification — induce the
-> rule as a program from the demo pairs, execute it on the test input, compare to the
-> candidate. *Synthesizing the missing negative class IS program synthesis — which is why no
-> cheaper energy can fake it.*
+The `ops/verifier_gaps.md` GAP-4 "NOT yet ESTABLISHED" list + the 2026-06-10 handoff name
+exactly five gaps, and .369 closes or advances each:
 
-### The convergence (why this milestone exists)
+1. **Statistical significance** — ARC-1 sign test p=0.0625 (borderline); chain-arms prereg
+   all-gold bar NOT met (p=0.07 vs 0.52). → **followups #1 (de-selection coverage) + #2
+   (pre-registered precision confirmation)**.
+2. **Feedback vs iid resampling unresolved** — does a feedback chain beat 3 independent
+   singles? (post-feedback per-call 0.43 ≈ iter0 0.46). → **followup #3 (deciding control)**.
+3. **Decentralization** — the lift is generator-attributable and the generator is **closed-
+   weight gpt-5.5**; the verifier side is local+model-free but the inducer is not. → **the
+   LOCAL open-weight generator arm** (CLAUDE.md decentralization Rule 1 + the GAP-4 forward
+   protocol "local open-weight generator arm (Gemma-4/Qwen3.6)").
+4. **Deployment** — the tiered policy is measured but not registered as a reusable verifier.
+   → **followup #4 (harness registration + bit-exact offline re-eval)**.
+5. **Demo-underdetermination (GAP-5)** — three disjoint demo-perfect programs can converge
+   on the SAME wrong output; the only tripwire is task-level sibling-input disagreement. →
+   **carried as followup #2's registered tertiary gate + the GAP-5 entry append in #4**.
 
-Both threads independently conclude the next verifier must be **execution-based**:
-- Thread B (GAP-4): induce the rule as a program, execute it, compare → reach the 16pp headroom.
-- Thread A (M2/M3): the induced world-model already IS a program; the consistency-energy
-  already verifies it with no oracle (it caught codex's overfit programs). The in-house
-  M2-v3/v4 codex+consistency-energy stack is the named in-house precedent for GAP-4.
-
-External literature (2025–2026) corroborates this as the dominant, OOD-robust ARC technique:
-- **arXiv:2507.15877** (Ouellette) — execution-guided neural program synthesis OUTPERFORMS all
-  references at composing NOVEL solutions; test-time fine-tuning only elicits in-distribution
-  knowledge and does NOT generalize → execution-guidance is the right tool for a harder level
-  or a new game, NOT re-fitting.
-- **arXiv:2603.20334** (ABPR) — candidate programs as "executable declarative hypotheses of the
-  latent rule"; proof-trees expose WHY a rule fails → targeted semantic refinement; GPT-5.5
-  98.33% Pass@2 on ARC-AGI-2 public eval.
-- **arXiv:2605.05138** (EWM, ARC-AGI-3 SOTA RHAE 58.12%) — coding-agent maintains an executable
-  world model, verifies it against transitions, plans before acting.
-- **arXiv:2603.10282** (Yilun Du) — verifier-as-EBM scores/steers a frozen policy with no
-  parameter updates (the update-free in-the-loop verifier formulation).
+(NOT pursued: a 400-task scale run — the handoff is explicit that it "is NOT yet worth it;
+it becomes worth it only after (1)/(2)". Respected.)
 
 ---
 
-## 2. The three biggest gaps (current state vs PRD / north-star)
+## 2. The three biggest gaps between current state and the PRD vision
 
-1. **The verifier's existential proof is UNPROVEN — on BOTH axes.** North-star §5: with the
-   generator commodity, the verifier is Carnot's entire value-add and its value is owed on two
-   axes — ACCURACY (does the external verifier beat the generator's self-verification?) and
-   EFFICIENCY (parity at 10–100× cheaper than an LLM-judge?). The ACCURACY moat is inconclusive;
-   the EFFICIENCY proof failed/blocked twice. This milestone proves both with the GAP-4
-   execution verifier as the common primitive.
-2. **ARC-AGI-3 accuracy cannot grow.** Every solved game stops at level 2 because the agent
-   re-fits the L1 mechanic instead of RE-INDUCING the harder L2 rule — the exact failure mode
-   arXiv:2507.15877 predicts for non-execution-guided adaptation. Accuracy is frozen at 3×L1.
-3. **The execution/program-synthesis verifier (GAP-4) is unbuilt.** It is Carnot's #1
-   core-product backlog item (`ops/verifier_gaps.md`, HIGH) and the convergent conclusion of
-   both retired threads — yet no experiment has built it.
+1. **The verifier's accuracy moat is real but UNCONFIRMED and CLOSED-WEIGHT.** The PRD/north-
+   star require an externally-grounded verifier that works *locally* (decentralization Rule
+   1). The GAP-4 positive depends on gpt-5.5 induction and a contaminated pool. .369 confirms
+   the significance (followups #1–#3) and replaces the closed-weight inducer with a SOTA
+   local GGUF (the decentralization arm) — without which the headline cannot be published as
+   a sovereignty result.
+2. **ARC-AGI-3 accuracy has stalled at 3×L1.** The method generalizes (3 games) but every
+   game stalls at L2 and the 4th game ran out of budget. The PRD's accuracy axis needs
+   *monotonic* level progress. .369 uses the now-working GAP-4 execution verifier IN the
+   solve loop (validate a re-induced L2 rule before committing actions; prune the 4th-game
+   search) — turning the verifier's efficiency value into real accuracy progress.
+3. **Self-learning is proven on induction-cost and one solve, not yet as a compounding
+   loop.** exp3970 (induction transfer) + exp3982 (solve transfer 2668→17) are two points.
+   The PRD's continuous-self-learning goal needs the concept memory to compound across a
+   *new* game. .369 extends ArcMemo to the 4th game's solve with a positive control.
 
 ---
 
-## 3. Architecture — the GAP-4 execution verifier (generator induces, verifier executes)
+## 3. Architecture — the GAP-4 program-induction execution verifier (and its decentralization tier)
 
 ```
-                       demo pairs (input_i -> output_i)
-                                  │
-              ┌───────────────────┴────────────────────┐
-              │  GENERATOR (induction; commodity/local) │   ← NOT energy-descent
-              │  local grid-DSL  +  SOTA local GGUF      │     (closed-negative)
-              │  proposer (gemma-4)  [+ codex optional]  │
-              └───────────────────┬────────────────────┘
-                                  │  rule as an EXECUTABLE PROGRAM  P
-                                  ▼
-                          P( test_input )  =  predicted_output*
-                                  │
-   candidate grids ──────────────┤
-   (TRM pool / ARC-AGI-3          ▼
-    action outcomes)   ┌──────────────────────────────────────┐
-                       │  VERIFIER (Carnot's value-add)        │
-                       │  executed-rule-consistency:           │
-                       │  E(cand) = disagreement(cand, P(test))│  ← execution, NOT trained
-                       │  + held-out consistency_energy(P)     │     energy (retired lineage)
-                       └──────────────────┬───────────────────┘
-                                          │
-              ┌───────────────────────────┼───────────────────────────┐
-              ▼                            ▼                           ▼
-    ACCURACY (Phase 1)          EFFICIENCY (Phase 2)        ARC-AGI-3 accuracy (Phase 3)
-    select gold past vote        verifier vs LLM-judge:      EG re-induction per level;
-    toward oracle (16pp)         parity at 10-100x cheaper   4th game first-solve
+                    ARC task = { demo (input,output) pairs , test_input , candidate pool }
+                                              │
+            ┌─────────────────────────────────┴──────────────────────────────────┐
+            │                          GENERATOR (induces)                         │
+            │   escalation tier:  gpt-5.5 via codex exec  ──┐                      │
+            │   DECENTRALIZATION tier (NEW, .369):          ├─►  def transform(grid): ...
+            │     SOTA local GGUF (Qwen3.6-35B-A3B /        │    (a program = an executable
+            │     gemma-4-26B-A4B) proposes the program ────┘     hypothesis of the rule)
+            └─────────────────────────────────┬──────────────────────────────────┘
+                                              │  k≥1 candidate programs
+                    ┌──────────────────────────┴───────────────────────────┐
+                    │      VERIFIER  (Carnot's value-add — LOCAL, MODEL-FREE)             │
+                    │  (1) DEMO-FIT gate: keep a program only if it exactly reproduces     │
+                    │      ALL demo outputs (execution-guided acceptance, arXiv:2507.15877)│
+                    │  (2) EXECUTE the demo-perfect program on test_input → predicted*     │
+                    │  (3) graded min-hamming snap (τ≤0.005) of predicted* to candidates   │
+                    │  (4) AGREEMENT across k fresh inductions = CONFIDENCE LABEL (not a    │
+                    │      selector); sibling-input disagreement = underdetermination flag │
+                    └──────────────────────────┬───────────────────────────┘
+                                              │  promote-first-fresh-raw → else vote
+                                       reranked candidate  →  ARC-AGI-3 solve loop / pass@2
 ```
 
-**On-thesis (north-star §5):** the program synthesizer is the GENERATOR (commodity/local);
-Carnot's contribution is the **executed-consistency VERIFIER** that scores candidates. This is
-NOT energy-as-generator (closed-negative) and NOT a trained content-energy (retired lineage) —
-it is execution-based verification, the endorsed remaining candidate.
-
-**Decentralization (Rule 1):** the headline synthesizer is the LOCAL grid-DSL + a SOTA local
-GGUF proposer (`unsloth/gemma-4-26B-A4B-it-GGUF`); codex is an optional stronger comparator arm
-only. The accuracy/efficiency headline must be reproducible local-only.
+**What is ESTABLISHED:** the verifier side is fully local + model-free; the gate is safe
+(+4/−0 on ARC-1); agreement is a confidence label (agreement-first selection is net −1).
+**What .369 adds:** independence/significance confirmation (#1–#3), a local inducer (the
+decentralization arm), a registered reusable module (#4), and verifier-in-the-loop solving
+(accuracy phase). Corroborated by EWM (2605.05138, induce→verify-program→plan), ABPR
+(2603.20334, executable-hypothesis verification), cross-example consistency filtering
+(2604.02434), and the must-beat cheap baselines self-certainty/self-consistency (2502.18581).
 
 ---
 
-## 4. Phases & experiments (12 tasks)
+## 4. Phases
 
-**Phase 0 — Activation**
-- **exp3974** archive .367 → activate .368; green-gate (ARC substrate tests + agentic-module
-  imports + YAML parse); record the .367 truth.
+### Phase 0 — milestone transition (1 task)
+- **exp3986** archive .368 → activate .369; GREEN-GATE (yaml parse, ARC substrate tests,
+  ARC agentic-module imports), record the .368 truth (GAP-4 outer-loop positive; conductor
+  DSL build failed; efficiency n=5; 0/6 world-model; 3×L1; ArcMemo solve-transfer win).
 
-**Phase 1 — GAP-4 verifier, the ACCURACY moat**
-- **exp3975** BUILD the GAP-4 executed-rule-consistency verifier for ARC-1 static grids; positive
-  control + program-synthesis COVERAGE on held-out ARC-1 training tasks. *opus.*
-- **exp3976** EVALUATE on the TRM-rerank headroom pool: executed-consistency selector +
-  vote-primary-hybrid-gated-by-consistency vs vote (0.45) → oracle (0.61). *opus; gated on
-  exp3975 positive control.*
-- **exp3977** RE-DERIVATION / independence audit of any exp3976 positive (CPU re-score, leak +
-  coverage forensics). *codex; gated on exp3976 beating vote.*
+### Phase 1 — GAP-4 CONFIRMATORY (the operator's four verbatim follow-ups) (4 tasks)
+Queued **verbatim** from `results/arc3_gap4_chain_arms_adversarial_verify.json`
+`synthesis.conductor_followups` per the 2026-06-10 TOP-PRIORITY handoff.
+- **exp3987 — DE-SELECTION COVERAGE RUN** (codex): k=2 fresh ≤3-iter 600s chains on the 11
+  never-chained ARC-2 pool tasks; de-bias the 0.833 coverage estimate; transcripts + gold-
+  leak audit; no all-gold bar.
+- **exp3988 — PRE-REGISTERED PRECISION CONFIRMATION v2** (codex): k=3 ALL-FRESH chains on NEW
+  clean tasks; protocol committed BEFORE any call; **primary binomial critical-value gate
+  (n≥19 events, ≥14 gold ⇒ size 0.046 / power 0.837 at p=0.80)**; secondary vs in-run fresh-
+  arm rate; **tertiary = task-level unanimity-with-abstention on sibling-input disagreement
+  (the GAP-5 tripwire)**; `retire_if_same_verdict` on the precision-uplift claim.
+- **exp3989 — FEEDBACK-VS-REDRAW DECIDING CONTROL** (codex): same-run paired — one feedback
+  chain vs 3 independent singles, equal 600s, interleaved in ONE run; exact McNemar/Fisher;
+  resolves whether feedback content beats iid resampling.
+- **exp3990 — HARNESS REGISTRATION + OFFLINE TIER-STACK EVAL** (claude, CPU, zero codex):
+  register `gap4_program_induction_stack` in `ops/verifier_registry.yaml`; reusable module;
+  **bit-exact offline re-eval must reproduce ARC-2 19/31 and ARC-1 28/31**; append the
+  446ef5d2 demo-underdetermination GAP-5 entry to `ops/verifier_gaps.md`; fix the committed
+  cost line. (Handoff said gemini — gemini is BANNED this milestone, route to claude/CPU.)
 
-**Phase 2 — verifier EFFICIENCY (north-star §5 owed head-to-head)**
-- **exp3978** energy-consistency-VERIFIER vs SOTA-local-LLM-as-JUDGE for the induced-world-model
-  acceptance decision: accuracy parity AND cost ratio (target "parity at 10–100× cheaper");
-  anti-fabrication token/second audit. *opus; replaces the unwireable env-step action-pruner M3.*
+### Phase 2 — DECENTRALIZATION (the owed deployment tier) (1 task)
+- **exp3991 — LOCAL OPEN-WEIGHT GENERATOR ARM** (opus, GGUF): replace the gpt-5.5 inducer
+  with a SOTA **local GGUF** program proposer (`Qwen3.6-35B-A3B` / `gemma-4-26B-A4B-it`,
+  loaded via the `.gguf` path per the GGUF tokenizer rule). Measure local induction
+  demo-perfect rate + the gated rerank on the SAME ARC-1 pool (reproduce the venue) + the
+  **cost** (local-GGUF seconds vs codex seconds vs the model-free verifier seconds — the
+  decentralized efficiency datum that strengthens exp3978's n=5 result). CLAUDE.md
+  decentralization Rule 1 + the GAP-4 forward-protocol "local open-weight generator arm";
+  no published work reports local-open-weight ARC program synthesis with execution-verifier
+  reranking — a genuinely novel, ownable number.
 
-**Phase 3 — ARC-AGI-3 accuracy (execution-guided)**
-- **exp3979** world-model induction generalization via EXECUTION-GUIDED synthesis (the 0/6 fix).
-- **exp3980** INCREMENTAL levels via execution-guided RE-INDUCTION (the L2-fails fix); +1 level.
-- **exp3981** FOURTH game first-solve (tn36 / su15 / dc22). *opus.*
+### Phase 3 — ARC-AGI-3 ACCURACY (verifier-in-the-loop; monotonic progress) (2 tasks)
+- **exp3992 — INCREMENTAL LEVELS via verifier-validated re-induction** (codex): exp3980
+  diagnosed r11l L2 needs a different rule; RE-INDUCE the L2 rule from L2 observations and
+  **use the GAP-4 execution verifier to validate the candidate L2 rule against L2 transitions
+  BEFORE committing actions** (the verifier's efficiency value applied to a real solve).
+  Target +1 level on ONE game (Incremental-Progress Scoping). `retire_if_same_verdict`.
+- **exp3993 — FOURTH GAME first-solve, verifier-pruned** (opus): exp3981 ran out of budget;
+  use the GAP-4 verifier as an action-pruner (verifier-as-free-energy, the Exp1165 ~4×
+  precedent) + pick the empirically-easiest non-spatial game by L0 budget. Real-env-
+  confirmed; raises games-solved 3→4.
 
-**Phase 4 — self-learning + hardware + infra + capstone**
-- **exp3982** ArcMemo SOLVE-transfer (self-learning mandate): does concept memory make the SOLVE
-  cheaper, not just induction?
-- **exp3983** Hardware continuity (KV260 drive-to-terminal; GateMate/PolarFire opportunistic).
-- **exp3984** Operational-retro commit-detector fix (4-milestone false-zero-count infra bug).
-- **exp3985** Capstone .368 (UNGATED): did the verifier earn its place on EITHER axis?
+### Phase 4 — self-learning + hardware + capstone (3 tasks)
+- **exp3994 — ArcMemo SOLVE-transfer v2** (codex): extend exp3982's win — does the banked
+  concept memory make the 4th game's solve cheaper than cold-start? Two arms at equal
+  perception; positive control (≥2 same-family games). Self-learning MANDATE.
+- **exp3995 — Hardware continuity** (codex): KV260 (`ssh kria`, toward terminal per north-
+  star §3) + GateMate + PolarFire reachability; distinct per-board timers (exp3866 tautology
+  corrigendum); SSH-not-SD-card.
+- **exp3996 — Capstone .369** (codex, UNGATED): headline question — is the GAP-4 verifier now
+  **CONFIRMED** (significance from #1–#3), **DECENTRALIZED** (local arm), and **DEPLOYED**
+  (registered)? Plus ARC accuracy (games + new levels) and ArcMemo solve-transfer. Skip any
+  `flagged_adversarial` artifact; cite upstream sha256; aggregate whatever exists.
 
 ---
 
 ## 5. Dependency graph
 
 ```
-exp3974 (activate)
-   ├─► exp3975 (GAP-4 build) ─► exp3976 (GAP-4 eval, gated) ─► exp3977 (re-derive, gated on +)
-   ├─► exp3978 (verifier-vs-judge efficiency)          [uses exp3968 induced models]
-   ├─► exp3979 (world-model gen via EG-synthesis)      [retries exp3968]
-   ├─► exp3980 (incremental levels via EG re-induction) [continues exp3964/3965]
-   ├─► exp3981 (4th game solve) ─► exp3982 (ArcMemo solve-transfer)
-   ├─► exp3983 (hardware), exp3984 (retro fix)
-   └─► exp3985 (capstone, UNGATED — aggregates whatever landed)
+exp3986 (archive/activate, green-gate)
+   │
+   ├─► exp3987 de-selection coverage ─────────────┐
+   ├─► exp3988 precision confirmation v2 ──────────┤
+   ├─► exp3989 feedback-vs-redraw control ─────────┼─► exp3990 registration + offline re-eval
+   │        (the 3 codex confirmatory arms feed #4's tier-stack + GAP-5 entry)
+   │
+   ├─► exp3991 LOCAL generator arm (GGUF; reuses the model-free verifier from the gap4 artifacts)
+   │
+   ├─► exp3992 incremental L2 (verifier-validated re-induction)
+   ├─► exp3993 fourth game (verifier-pruned) ──────► exp3994 ArcMemo solve-transfer v2
+   │                                                     (held-out target = the 4th game)
+   ├─► exp3995 hardware continuity
+   │
+   └─► exp3996 capstone .369  (UNGATED — aggregates whatever landed)
 ```
 
-Two structured gates only: exp3976←exp3975 (positive control), exp3977←exp3976 (beats vote).
-Everything else runs independently; the capstone is UNGATED (the .365 `op:exists` and .366
-no-artifact lessons).
+No hard prerequisite is allowed to cascade-block: every confirmatory arm runs independently
+and the capstone is ungated by design (the .365 op:exists + .366 no-artifact lessons).
 
-## 6. Hardware requirements
+---
 
-- **GPU:** none required for the headline GAP-4 / efficiency tasks (CPU re-scoring of the saved
-  8041-candidate pool). The SOTA local GGUF proposer (gemma-4-26B-A4B-it) runs on the RTX 3090
-  rig when invoked; precondition the cache first.
-- **Boards (continuity only):** KV260 (`ssh kria`), GateMate (`openFPGALoader --detect`),
-  PolarFire (`ssh polarfire`). KV260 = sovereignty story → drive to terminal then freeze
-  (north-star §3); the other two opportunistic. NEVER use a host SD-card device as a KV260
-  precondition (SSH-reachability only).
+## 6. Routing (gemini BANNED — every .367/.368 gemini task stalled; `incident_333` quota crash)
 
-## 7. Disciplines honored
+| Tasks | Agent | Why |
+|---|---|---|
+| exp3987 / exp3988 / exp3989 | **codex (gpt-5.5)** + `requires_codex` | the program INDUCER *is* gpt-5.5 via codex exec — these tasks generate programs |
+| exp3986 / exp3990 / exp3992 / exp3994 / exp3995 / exp3996 | **codex (gpt-5.5)** + `requires_codex` | mechanical/aggregation/registry/hardware; codex is the available formulaic backend (exp3990 is CPU-only, no induction) |
+| exp3991 / exp3993 | **claude opus** + `requires_claude` | LOCAL GGUF supervision + real-env solve = anti-fabrication, multi-step tool choreography, high judgment |
 
-Incremental-Progress Scoping (exp3980 +1 level, exp3981 first-solve — never "all levels") ·
-Missing-Verifier Gap Logging (exp3975/3976 build against GAP-4; emit `missing_verifier_gaps`) ·
-Failed-Experiment Rerun (prior_failures on exp3976/3978/3979; operator_override on routine
-continuations) · Adversarial Artifact Verification + anti-fabrication self-audits on both
-existential proofs (exp3976/3978) · Gemini banned → codex for mechanical + opus for the 4
-anti-fabrication-critical / real-env tasks · SOTA local GGUF + local-first (decentralization
-Rule 1) · Hardware-Task Continuity (exp3983) · Pre-Launch Preconditions (step-0 blocks) ·
-Principle-annotated bare-scalar artifact fields · Verdict Terminal-Prefix.
+2 opus (exp3991/exp3993) + 9 codex. No gemini.
+
+## 7. Hardware requirements
+
+- **codex (gpt-5.5)** quota for the 3 program-induction confirmatory arms (~3.5k + ~90–135
+  calls + a same-run paired control; ≥600s timeouts per the handoff hygiene rules).
+- **2× RTX 3090 / local GGUF cache** for exp3991 (the local program proposer —
+  `Qwen3.6-35B-A3B-GGUF` / `gemma-4-26B-A4B-it-GGUF`, PRECONDITION the cache; load via the
+  `.gguf` path, never `AutoTokenizer` on the GGUF repo id).
+- **ARC offline env** (`environment_files/` present; `arc_agi` SDK importable) for the solve
+  + transfer tasks.
+- **FPGA boards** (KV260 via `ssh kria`, GateMate via `openFPGALoader -c dirtyJtag --detect`,
+  PolarFire via `ssh polarfire`) for the continuity task.
+
+## 8. New references incorporated (filed in research-references.md, 2026-06-10 scan)
+
+- **2605.05138 EWM** — the published induce→verify-program→plan instance on ARC-AGI-3 (closed
+  GPT-5.x → local arm is an open differentiator).
+- **2603.20334 ABPR** — executable-hypothesis verification via algorithmic debugging (richer
+  GAP-4 signal; a future gap entry for execution-trace disagreement).
+- **2604.02434** — cross-example consistency (consensus) filtering = a concrete agreement-
+  selection method + GAP-5 underdetermination remedy.
+- **2506.18203 Weaver** — label-free weak-verifier ensembling + distill-to-400M efficiency.
+- **2502.18581 self-certainty** + **2509.19681 calibrated reasoning** — the must-beat cheap
+  baselines + cost-at-matched-accuracy evidence for the efficiency axis.

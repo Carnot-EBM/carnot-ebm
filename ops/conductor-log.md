@@ -8134,3 +8134,5 @@ c |
 | 2026-06-10 03:37 UTC | Hardware continuity (consolidated): SSH/USB-reacha | OK | 87 passed in 3.64s |
 | 2026-06-10 03:49 UTC | INFRA FIX (reserved slot): repair the operational- | OK | 86 passed in 3.97s |
 | 2026-06-10 04:04 UTC | Capstone .368 (UNGATED — the .365 op:exists + .366 | OK | 88 passed in 4.96s |
+| 2026-06-10 04:55 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-06-10 04:57 UTC | Milestone 2026.06.369 activated | OK | 11 tasks queued |
