@@ -441,12 +441,23 @@ registry version that closed them when a new verifier captures a previously-open
 - failure mode: THREE structurally disjoint demo-perfect programs (difflib 0.02–0.10)
   unanimously produce the SAME wrong test output (hamming-to-gold 0.459) — convergent
   wrong inference from demos that under-determine the rule. No per-entry agreement/
-  ensemble policy can rescue it (even unanimity agrees on the wrong answer).
+  ensemble policy can rescue it (even unanimity agrees on the wrong answer). This is the
+  irreducible failure mode of the program-induction line: structural disjointness of the
+  programs (difflib 0.020–0.101) confirms the convergence is due to demo ambiguity, not
+  correlated sampling — no quorum design can rescue it.
 - missing discriminator: a demo-underdetermination detector — "do these demos pin down
   the rule on THIS test input?" The one measured tripwire: task-level sibling-input
   disagreement (the same arms DISAGREE on the task's other test input) — post-hoc 5/5
   gold at 0.3125 coverage; needs fresh pre-registered confirmation (conductor follow-up
   #2 carries it as the tertiary gate).
+- candidate design: task-level sibling-input disagreement tripwire — when the induced
+  programs disagree on the task's SECOND test input (idx1) while agreeing on idx0, flag
+  the task as underdetermined and abstain (return None / confidence=low). Measured
+  performance: post-hoc 5/5 gold, 0.3125 coverage — strong precision, low recall.
+  Alternative: a formal demo-coverage checker that enumerates whether the demo set has
+  ambiguities (requires program synthesis over the demo manifold; expensive but principled).
+  Near-term implementation: extend tiered_select() in gap4_program_induction_stack.py to
+  accept multi-input per task and return agreement=False when sibling-input programs diverge.
 - priority: MEDIUM-HIGH — it is the irreducible failure mode of the entire
   program-induction verifier line; everything else (coverage, arm quality, quorum
   design) is now engineering.

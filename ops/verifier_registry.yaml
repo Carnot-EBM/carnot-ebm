@@ -181,3 +181,41 @@ verifiers:
             confound handled via per-task applicability flags. docs/research-notes/
             arc-grid-verifier-content-ceiling.md. NEXT: wire into the interactive harness as
             the candidate-output pruner; test on ARC-2 (harder) to check the ceiling holds."
+
+  # ---- ARC-AGI-2 domain: program-induction stack (DEPLOY step, exp4001, 2026-06-10) ----
+  - verifier_id: gap4_program_induction_stack
+    domain: arc_agi2_grid
+    version: 1
+    kind: process_verifier         # tiered program-induction selector: snap > fresh-chain > vote
+    code_commit: HEAD
+    code_path: python/carnot/agentic/gap4_program_induction_stack.py
+    weights_hf: null               # pure-code verifier; programs are the "weights"
+    weights_cid: null
+    weights_sha256: null
+    training_data_ref: results/arc3_gap4_arc2_chain_ensemble.json
+    label_source: gold-posthoc     # gold used post-hoc for scoring only; not leaked to inducer
+    eval: {metric: "pass_at_1",
+           arc2_pass_at_1: 0.6129, arc2_n: 31, arc2_gold: 19, arc2_eval_artifact: "results/arc3_gap4_arc2_chain_ensemble.json",
+           arc1_demo_perfect_coverage: 0.9032, arc1_n: 31, arc1_gold: 28, arc1_eval_artifact: "results/arc3_gap4_induced_programs.json",
+           arc2_offline_reproduced: true, arc1_offline_reproduced: true,
+           eval_exp: "results/experiment_4001_gap4_registration_offline_eval.json"}
+    lineage: {from: arc_grid_combined_verifier (v2),
+              change: "ARC-2 domain; program-induction stack replaces invariant-family pruner;
+                       tiered policy: T1 snap tau<=0.005 > T2 promote-first-FRESH-demo-perfect >
+                       T3 vote; agreement = confidence label only (fresh arms only, never a gate)"}
+    status: candidate
+    notes: "GAP-4 DEPLOY step (exp4001, 2026-06-10). Tiered policy from the chain-arms adversarial
+            review synthesis (results/arc3_gap4_chain_arms_adversarial_verify.json, 5/5 CONFIRMS).
+            ARC-2 pass@1 19/31=0.6129 vs banked vote 1/31=0.0323 (16 wins/0 losses, sign p=2e-5);
+            ARC-1 sanity 28/31=0.9032. Numbers reproduced bit-exact offline from saved artifacts
+            (zero new generator calls). CAVEATS (MANDATORY — per harness_recommendation):
+            (1) rerank numbers ride on an oracle-degenerate 4/31 pool for ARC-2;
+            (2) agreement precision n<=10, not significant vs 0.52 or vs fresh-arm base 0.73;
+            (3) chain coverage measured only on 12 probe-chain-feasible tasks;
+            (4) ARC-1 numbers carry a probable-pretraining-contamination caveat;
+            (5) CLOSED-WEIGHT gpt-5.5 inducer at this tier; the local-GGUF arm is exp4002;
+            (6) task-level unanimity-with-abstention (post-hoc 5/5 gold) stays OUT of the
+                harness until its pre-registered fresh confirmation lands (conductor follow-up #2).
+            Cost line (corrected per all-5-reviewer audit): 45 calls / 3780.0 codex-s / 1156.5s wall
+            (the earlier summary '40 calls/4747.6s' was wrong; the artifact and all reviewers
+            independently re-derived 45/3780.0 — see ops/changelog.md 2026-06-10 entry)."

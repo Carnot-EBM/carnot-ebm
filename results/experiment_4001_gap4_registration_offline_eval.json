@@ -1,0 +1,36 @@
+{
+  "experiment": "experiment_4001_gap4_registration_offline_eval",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "arc2_reproduced_19of31": true,
+  "arc1_reproduced_28of31": true,
+  "verifier_registered": true,
+  "reusable_module_path": "python/carnot/agentic/gap4_program_induction_stack.py",
+  "module_unit_test_passes": true,
+  "gap5_entry_appended": true,
+  "zero_new_codex_calls": true,
+  "arc2_replay_detail": {
+    "gold": 19,
+    "pool": 31,
+    "pass_at_1": 0.6129
+  },
+  "arc1_replay_detail": {
+    "covered": 28,
+    "pool": 31,
+    "coverage_rate": 0.9032
+  },
+  "missing_verifier_gaps": [
+    {
+      "gap_id": "GAP-5",
+      "description": "Demo-underdetermination: demos under-constrain the rule, causing convergent wrong inference across structurally disjoint programs. The 446ef5d2 task showed 3 independent programs (difflib 0.020-0.101) unanimously producing a wrong output (hamming 0.459). No quorum policy rescues it; the tripwire is sibling-input disagreement.",
+      "registered_in": "ops/verifier_gaps.md",
+      "priority": "MEDIUM-HIGH"
+    }
+  ],
+  "cited_upstream_artifacts": [
+    "results/arc3_gap4_arc2_chain_ensemble.json",
+    "results/arc3_gap4_induced_programs.json",
+    "results/arc3_gap4_chain_arms_adversarial_verify.json"
+  ],
+  "honest_verdict": "success: gap4_stack_registered_arc2_19of31_arc1_28of31_reproduced",
+  "duration_s": 0.455
+}
