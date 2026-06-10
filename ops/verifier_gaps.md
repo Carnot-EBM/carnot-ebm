@@ -434,3 +434,19 @@ a live artifact-clobber bug — record reconstructed from transcripts, guard add
 
 *(none yet — append `### GAP-<n>` entries here with `status: filled (<verifier_id>)` and the
 registry version that closed them when a new verifier captures a previously-open gap.)*
+
+### GAP-5: demo-underdetermination detection (from the chain-arms round, 2026-06-10)
+- status: open — distilled from the 446ef5d2 wrong-agreement anatomy
+  (`results/arc3_gap4_chain_arms_adversarial_verify.json`).
+- failure mode: THREE structurally disjoint demo-perfect programs (difflib 0.02–0.10)
+  unanimously produce the SAME wrong test output (hamming-to-gold 0.459) — convergent
+  wrong inference from demos that under-determine the rule. No per-entry agreement/
+  ensemble policy can rescue it (even unanimity agrees on the wrong answer).
+- missing discriminator: a demo-underdetermination detector — "do these demos pin down
+  the rule on THIS test input?" The one measured tripwire: task-level sibling-input
+  disagreement (the same arms DISAGREE on the task's other test input) — post-hoc 5/5
+  gold at 0.3125 coverage; needs fresh pre-registered confirmation (conductor follow-up
+  #2 carries it as the tertiary gate).
+- priority: MEDIUM-HIGH — it is the irreducible failure mode of the entire
+  program-induction verifier line; everything else (coverage, arm quality, quorum
+  design) is now engineering.
