@@ -8124,3 +8124,5 @@ c |
 | 2026-06-10 00:16 UTC | EVALUATE the GAP-4 execution-verifier on the TRM-r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3975-gap4-execution-verifier-build.posi |
 | 2026-06-10 00:18 UTC | EVALUATE the GAP-4 execution-verifier on the TRM-r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3975-gap4-execution-verifier-build.posi |
 | 2026-06-10 00:20 UTC | RE-DERIVATION + independence audit of the GAP-4 po | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3976-gap4-trm-rerank-eval) |
+| 2026-06-10 00:26 UTC | VERIFIER EARNS ITS PLACE, EFFICIENCY AXIS (north-s | OK | 85 passed in 4.40s |
+| 2026-06-10 00:28 UTC | RE-DERIVATION + independence audit of the GAP-4 po | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3976-gap4-trm-rerank-eval) |
