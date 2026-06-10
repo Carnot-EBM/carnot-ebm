@@ -1,0 +1,184 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (13x19):
+[[3, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 7, 7, 7, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 7, 7, 7, 0, 0, 7, 7, 7, 0, 0, 0, 0, 7, 7, 7, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0],
+ [8, 8, 0, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 1 OUTPUT (13x19):
+[[8, 8, 8, 8, 6, 8, 8, 0, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 8],
+ [0, 0, 0, 8, 6, 8, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0],
+ [3, 3, 8, 8, 6, 8, 6, 8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 8],
+ [0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0],
+ [8, 8, 8, 6, 8, 8, 6, 8, 6, 8, 8, 8, 8, 6, 8, 6, 8, 8, 8],
+ [0, 0, 8, 6, 8, 0, 0, 8, 6, 8, 0, 0, 0, 0, 8, 6, 8, 0, 0],
+ [3, 3, 8, 6, 8, 6, 8, 8, 6, 8, 8, 6, 8, 8, 8, 6, 8, 3, 3],
+ [0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 6, 8, 8, 6, 8, 8, 6, 8, 8, 3, 0, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8],
+ [0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0],
+ [8, 8, 0, 3, 8, 6, 8, 8, 0, 3, 8, 8, 8, 6, 8, 8, 8, 8, 3]]
+
+Demo 2 INPUT (11x16):
+[[3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 2 OUTPUT (11x16):
+[[8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 3, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 6, 8, 8, 8],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0],
+ [8, 8, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 6, 8, 3, 3],
+ [0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0, 0],
+ [8, 8, 8, 6, 8, 8, 6, 8, 8, 8, 8, 6, 8, 8, 8, 8],
+ [0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0],
+ [3, 3, 8, 6, 8, 8, 8, 6, 8, 8, 8, 6, 8, 8, 3, 3],
+ [0, 0, 0, 0, 0, 0, 8, 6, 8, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 3]]
+
+TEST INPUT (19x17):
+[[3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0],
+ [3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3],
+ [0, 0, 7, 7, 7, 0, 0, 0, 0, 0, 0, 7, 7, 7, 0, 0, 0],
+ [8, 8, 8, 8, 8, 8, 8, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    out = grid.copy()
+    h, w = out.shape
+
+    centers_by_row = {}
+    for r in range(h):
+        centers = []
+        c = 0
+        while c < w:
+            if grid[r, c] == 7:
+                start = c
+                while c < w and grid[r, c] == 7:
+                    c += 1
+                end = c
+                if end - start == 3:
+                    centers.append(start + 1)
+            else:
+                c += 1
+        if centers:
+            centers_by_row[r] = centers
+
+    out[out == 3] = 8
+    out[out == 7] = 8
+
+    for r, centers in centers_by_row.items():
+        for c in centers:
+            out[r, c] = 6
+            if r - 1 >= 0 and out[r - 1, c] != 0:
+                out[r - 1, c] = 6
+            if r + 1 < h and out[r + 1, c] != 0:
+                out[r + 1, c] = 6
+
+    def put_left(r):
+        if w > 0 and out[r, 0] != 0:
+            out[r, 0] = 3
+        if w > 1 and out[r, 1] != 0:
+            out[r, 1] = 3
+
+    def put_right(r):
+        if w > 0 and out[r, w - 1] != 0:
+            out[r, w - 1] = 3
+        if w > 1 and out[r, w - 2] != 0:
+            out[r, w - 2] = 3
+
+    candidate_rows = [
+        r for r in range(h)
+        if r not in centers_by_row and any(grid[r, c] in (3, 8) for c in range(w))
+    ]
+
+    for r in candidate_rows:
+        above = centers_by_row.get(r - 1, [])
+        below = centers_by_row.get(r + 1, [])
+
+        side = None
+        if len(above) > len(below):
+            side = "both"
+        elif len(above) == len(below) and len(above) > 0:
+            if sum(below) > sum(above):
+                side = "left"
+            elif sum(below) < sum(above):
+                side = "right"
+
+        if side is None:
+            continue
+
+        zero_cols = [c for c in range(w) if grid[r, c] == 0]
+        is_last_end = len(above) > 0 and len(below) == 0
+
+        if side == "left":
+            put_left(r)
+        elif side == "right":
+            put_right(r)
+        else:
+            if zero_cols:
+                if is_last_end and grid[r, 0] != 3 and grid[r, w - 1] != 3:
+                    for z in zero_cols:
+                        if z + 1 < w and out[r, z + 1] != 0:
+                            out[r, z + 1] = 3
+                    if out[r, w - 1] != 0:
+                        out[r, w - 1] = 3
+                else:
+                    if grid[r, 0] == 3 and out[r, 0] != 0:
+                        out[r, 0] = 3
+                    if grid[r, w - 1] == 3 and out[r, w - 1] != 0:
+                        out[r, w - 1] = 3
+                    for z in zero_cols:
+                        if z - 1 >= 0 and out[r, z - 1] != 0:
+                            out[r, z - 1] = 3
+            elif is_last_end and grid[r, 0] != 3 and grid[r, w - 1] != 3:
+                if out[r, 0] != 0:
+                    out[r, 0] = 3
+                if out[r, w - 1] != 0:
+                    out[r, w - 1] = 3
+            else:
+                put_left(r)
+                put_right(r)
+
+    return out
+```

@@ -1,0 +1,328 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (20x25):
+[[3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 4, 4, 4, 3, 3, 3, 3, 3, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 3, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 4, 4, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 4, 3, 3, 4, 4, 3, 3, 3, 3, 3],
+ [4, 3, 3, 4, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 4, 3, 3, 4, 4, 4, 3, 3, 3, 3],
+ [4, 3, 3, 4, 3, 4, 4, 4, 3, 3, 4, 3, 3, 3, 3, 4, 3, 3, 3, 4, 4, 3, 3, 3, 3],
+ [4, 3, 4, 4, 3, 3, 4, 4, 3, 3, 4, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 4, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 4, 4, 3, 3, 3, 3, 4, 4, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 3, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [4, 4, 3, 3, 3, 4, 4, 4, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [3, 4, 3, 3, 3, 4, 4, 4, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+ [3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]]
+Demo 1 OUTPUT (11x12):
+[[4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3],
+ [4, 3, 4, 4, 4, 4, 4, 3, 4, 3, 3, 3],
+ [4, 3, 4, 3, 3, 3, 4, 3, 4, 3, 3, 3],
+ [4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3],
+ [4, 3, 4, 3, 3, 3, 4, 3, 4, 3, 3, 3],
+ [4, 3, 4, 4, 4, 4, 4, 3, 4, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3],
+ [4, 3, 3, 3, 4, 3, 3, 3, 4, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3]]
+
+Demo 2 INPUT (20x16):
+[[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1],
+ [1, 1, 1, 4, 4, 4, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 4, 4, 1, 1, 1, 4, 1, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 4, 1, 1, 4, 4, 4, 1, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 4, 1, 1, 4, 4, 4, 1, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 4, 1, 1, 1, 4, 1, 1, 1, 4, 1, 1, 1, 1, 1],
+ [1, 1, 4, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 1],
+ [1, 1, 4, 4, 1, 1, 1, 4, 4, 4, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+ [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+Demo 2 OUTPUT (5x5):
+[[4, 4, 4, 4, 4],
+ [4, 1, 1, 1, 4],
+ [4, 1, 4, 1, 4],
+ [4, 1, 1, 1, 4],
+ [4, 4, 4, 4, 4]]
+
+Demo 3 INPUT (20x16):
+[[4, 4, 4, 4, 9, 9, 9, 9, 9, 9, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 9, 9, 4, 4, 4, 4, 9, 4, 4, 4, 4, 4, 4],
+ [4, 9, 9, 9, 4, 4, 4, 4, 4, 9, 9, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 4, 4, 4, 4, 4, 4, 9, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 4, 9, 9, 4, 4, 4, 9, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 9, 9, 9, 4, 4, 4, 9, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 9, 9, 4, 4, 4, 4, 9, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 4, 4, 4, 4, 4, 4, 9, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 4, 4, 9, 4, 4, 4, 9, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 9, 9, 9, 4, 4, 9, 9, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 4, 9, 9, 4, 4, 9, 4, 4, 4, 4, 4, 4],
+ [4, 9, 9, 4, 4, 4, 4, 4, 4, 9, 4, 4, 4, 4, 4, 4],
+ [4, 4, 9, 4, 4, 4, 4, 4, 4, 9, 4, 4, 4, 4, 4, 4],
+ [4, 9, 9, 4, 4, 4, 4, 4, 4, 9, 4, 4, 4, 4, 4, 4],
+ [4, 9, 4, 4, 4, 4, 4, 4, 9, 9, 4, 4, 4, 4, 4, 4],
+ [4, 9, 9, 9, 9, 4, 4, 9, 9, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 9, 9, 9, 9, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]]
+Demo 3 OUTPUT (7x5):
+[[9, 9, 9, 9, 9],
+ [9, 4, 4, 4, 9],
+ [9, 4, 9, 4, 9],
+ [9, 4, 4, 4, 9],
+ [9, 4, 9, 4, 9],
+ [9, 4, 4, 4, 9],
+ [9, 9, 9, 9, 9]]
+
+Demo 4 INPUT (20x25):
+[[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 4, 2, 2, 2, 4, 4, 4, 4, 4, 4, 2, 2, 2, 4, 4, 4, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 4, 2, 2, 4, 4, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 4, 4, 2, 2, 2, 2],
+ [2, 2, 2, 2, 4, 2, 2, 4, 2, 2, 4, 4, 2, 4, 2, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2],
+ [2, 2, 2, 2, 4, 2, 2, 4, 2, 4, 4, 4, 2, 4, 2, 4, 4, 4, 2, 2, 4, 2, 2, 2, 2],
+ [2, 2, 2, 2, 4, 4, 2, 4, 2, 4, 4, 4, 2, 4, 2, 4, 4, 2, 2, 2, 4, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 4, 2, 4, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2, 4, 4, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 4, 2, 4, 4, 4, 2, 2, 4, 4, 2, 2, 2, 4, 4, 4, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 4, 2, 2, 2, 4, 4, 4, 4, 2, 2, 2, 4, 4, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+ [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]]
+Demo 4 OUTPUT (9x11):
+[[4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4],
+ [4, 2, 4, 4, 4, 4, 4, 2, 2, 2, 4],
+ [4, 2, 4, 2, 2, 2, 4, 2, 2, 2, 4],
+ [4, 2, 4, 2, 4, 2, 4, 2, 4, 2, 4],
+ [4, 2, 4, 2, 2, 2, 4, 2, 2, 2, 4],
+ [4, 2, 4, 4, 4, 4, 4, 2, 2, 2, 4],
+ [4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]]
+
+TEST INPUT (25x25):
+[[7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 9, 9, 9, 9, 9, 9, 9, 7, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 7, 7, 7, 7, 7, 7],
+ [7, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7, 7, 7],
+ [7, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7],
+ [7, 9, 7, 7, 7, 7, 9, 9, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 7],
+ [7, 9, 7, 7, 7, 9, 9, 7, 7, 7, 7, 7, 9, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 9, 9],
+ [7, 9, 7, 7, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 7, 7, 7, 7, 7, 7, 9],
+ [7, 9, 7, 7, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 7, 9, 9, 7, 7, 9],
+ [7, 9, 7, 7, 9, 7, 7, 9, 9, 7, 7, 7, 9, 9, 9, 9, 7, 7, 9, 7, 9, 9, 7, 7, 9],
+ [7, 9, 7, 7, 9, 7, 7, 9, 9, 9, 7, 7, 9, 9, 9, 9, 7, 7, 9, 7, 7, 7, 7, 7, 9],
+ [7, 9, 7, 7, 9, 7, 7, 7, 9, 9, 7, 7, 9, 9, 9, 7, 7, 9, 9, 7, 7, 7, 7, 7, 9],
+ [7, 9, 7, 7, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 7, 7, 7, 7, 7, 7, 9],
+ [7, 9, 7, 7, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 7, 7, 7, 7, 7, 7, 9, 9],
+ [7, 9, 9, 7, 7, 7, 9, 9, 9, 9, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7, 9, 7],
+ [7, 7, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 7],
+ [7, 7, 7, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 9, 9, 7, 7, 7],
+ [7, 7, 7, 9, 9, 7, 7, 7, 7, 7, 7, 7, 9, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 9, 9, 9, 9, 9, 9, 9, 9, 9, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+ [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    bg = np.bincount(grid.ravel()).argmax()
+    vals = [v for v in np.unique(grid) if v != bg]
+    fg = vals[0]
+
+    H, W = grid.shape
+
+    def comps(mask):
+        seen = np.zeros(mask.shape, dtype=bool)
+        out = []
+        h, w = mask.shape
+        for r in range(h):
+            for c in range(w):
+                if mask[r, c] and not seen[r, c]:
+                    q = [(r, c)]
+                    seen[r, c] = True
+                    cells = []
+                    for x, y in q:
+                        cells.append((x, y))
+                        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                            nx, ny = x + dx, y + dy
+                            if 0 <= nx < h and 0 <= ny < w and mask[nx, ny] and not seen[nx, ny]:
+                                seen[nx, ny] = True
+                                q.append((nx, ny))
+                    out.append(cells)
+        return out
+
+    holes = []
+    for cells in comps(grid == bg):
+        touch = any(r == 0 or c == 0 or r == H - 1 or c == W - 1 for r, c in cells)
+        if not touch:
+            rs = [r for r, c in cells]
+            cs = [c for r, c in cells]
+            holes.append({
+                "cells": set(cells),
+                "bbox": (min(rs), max(rs), min(cs), max(cs)),
+                "children": [],
+                "islands": []
+            })
+
+    def contains(a, b):
+        ar0, ar1, ac0, ac1 = a["bbox"]
+        br0, br1, bc0, bc1 = b["bbox"]
+        return ar0 <= br0 and br1 <= ar1 and ac0 <= bc0 and bc1 <= ac1 and a is not b
+
+    roots = []
+    for h in holes:
+        parents = [p for p in holes if contains(p, h)]
+        if parents:
+            parent = min(parents, key=lambda p: (p["bbox"][1] - p["bbox"][0] + 1) * (p["bbox"][3] - p["bbox"][2] + 1))
+            parent["children"].append(h)
+            h["parent"] = parent
+        else:
+            roots.append(h)
+            h["parent"] = None
+
+    fg_comps = comps(grid == fg)
+
+    def strictly_inside_bbox(comp, hole):
+        r0, r1, c0, c1 = hole["bbox"]
+        rs = [r for r, c in comp]
+        cs = [c for r, c in comp]
+        return r0 <= min(rs) and max(rs) <= r1 and c0 <= min(cs) and max(cs) <= c1
+
+    def borders_hole(comp, hole):
+        s = set(comp)
+        for r, c in hole["cells"]:
+            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                if (r + dr, c + dc) in s:
+                    return True
+        return False
+
+    top_islands = []
+    for comp in fg_comps:
+        containing = [h for h in holes if strictly_inside_bbox(comp, h)]
+        if not containing:
+            top_islands.append(comp)
+            continue
+        h = min(containing, key=lambda x: (x["bbox"][1] - x["bbox"][0] + 1) * (x["bbox"][3] - x["bbox"][2] + 1))
+        if any(borders_hole(comp, ch) for ch in h["children"]):
+            continue
+        h["islands"].append(comp)
+
+    def center_of_cells(cells):
+        return (sum(r for r, c in cells) / len(cells), sum(c for r, c in cells) / len(cells))
+
+    def border(h, w):
+        a = np.full((h, w), bg, dtype=int)
+        a[0, :] = fg
+        a[-1, :] = fg
+        a[:, 0] = fg
+        a[:, -1] = fg
+        return a
+
+    def render_leaf(islands):
+        pts = [center_of_cells(x) for x in islands]
+        n = max(1, len(pts))
+        if n == 1:
+            a = border(5, 5)
+            a[2, 2] = fg
+            return a
+        vertical = (max(p[0] for p in pts) - min(p[0] for p in pts)) >= (max(p[1] for p in pts) - min(p[1] for p in pts))
+        if vertical:
+            pts = sorted(pts)
+            a = border(2 * n + 3, 5)
+            for i in range(n):
+                a[2 + 2 * i, 2] = fg
+        else:
+            pts = sorted(pts, key=lambda x: x[1])
+            a = border(5, 2 * n + 3)
+            for i in range(n):
+                a[2, 2 + 2 * i] = fg
+        return a
+
+    def render_hole(h):
+        items = []
+        for ch in h["children"]:
+            items.append((center_of_cells(ch["cells"]), render_hole(ch)))
+        for isl in h["islands"]:
+            items.append((center_of_cells(isl), np.array([[fg]], dtype=int)))
+        if not items:
+            return border(3, 3)
+        if not h["children"]:
+            return render_leaf(h["islands"])
+
+        vertical = (max(p[0] for p, a in items) - min(p[0] for p, a in items)) > (max(p[1] for p, a in items) - min(p[1] for p, a in items))
+        if vertical:
+            items.sort(key=lambda x: x[0][0])
+            inner_h = sum(a.shape[0] for p, a in items) + len(items) - 1
+            inner_w = max(a.shape[1] for p, a in items)
+            out = border(inner_h + 4, inner_w + 4)
+            r = 2
+            for p, a in items:
+                c = 2 + (inner_w - a.shape[1]) // 2
+                out[r:r + a.shape[0], c:c + a.shape[1]] = a
+                r += a.shape[0] + 1
+        else:
+            items.sort(key=lambda x: x[0][1])
+            inner_h = max(a.shape[0] for p, a in items)
+            inner_w = sum(a.shape[1] for p, a in items) + len(items) - 1
+            out = border(inner_h + 4, inner_w + 4)
+            c = 2
+            for p, a in items:
+                r = 2 + (inner_h - a.shape[0]) // 2
+                out[r:r + a.shape[0], c:c + a.shape[1]] = a
+                c += a.shape[1] + 1
+        return out
+
+    pieces = [(center_of_cells(r["cells"]), render_hole(r)) for r in roots]
+    for comp in top_islands:
+        if len(comp) > 1:
+            pieces.append((center_of_cells(comp), np.array([[fg]], dtype=int)))
+
+    if len(pieces) == 1:
+        return pieces[0][1]
+
+    pieces.sort(key=lambda x: x[0][1])
+    h = max(a.shape[0] for p, a in pieces)
+    w = sum(a.shape[1] for p, a in pieces) + 2 * (len(pieces) - 1)
+    out = np.full((h, w), bg, dtype=int)
+    c = 0
+    for p, a in pieces:
+        r = (h - a.shape[0]) // 2
+        out[r:r + a.shape[0], c:c + a.shape[1]] = a
+        c += a.shape[1] + 2
+    return out
+```
