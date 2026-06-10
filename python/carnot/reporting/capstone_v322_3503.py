@@ -288,11 +288,12 @@ def run_capstone(results_dir: Path | None = None) -> dict:
     )
 
     # -- FR-11 beta_min=f(lambda_min) law (exp3498) — CLEAN -------------------
-    fr11_artifact = _load_upstream(results_dir, 3498) or {}
+    fr11_loaded = _load_upstream(results_dir, 3498)
+    fr11_artifact = fr11_loaded or {}
     fr11_flagged: bool = bool(fr11_artifact.get("flagged_adversarial", False))
     fr11_beta_law: str | None = (
-        str(fr11_artifact.get("recommended_phase5_rule", "MISSING"))
-        if not fr11_flagged else None
+        str(fr11_artifact.get("recommended_phase5_rule"))
+        if fr11_loaded is not None and not fr11_flagged else None
     )
     fr11_r2: float | None = (
         (fr11_artifact.get("beta_min_lambda_min_fit") or {}).get("r_squared")
@@ -387,6 +388,9 @@ def run_capstone(results_dir: Path | None = None) -> dict:
             )
 
     # -- Build result ----------------------------------------------------------
+    cal5_gap_display = f"{cal5_step_vs_final_gap:.5f}" if cal5_step_vs_final_gap is not None else "unavailable"
+    fr11_r2_display = f"{fr11_r2:.3f}" if fr11_r2 is not None else "unavailable"
+
     result: dict = {
         "schema": "carnot.milestone_capstone.v322.v1",
         "experiment": 3503,
@@ -426,9 +430,9 @@ def run_capstone(results_dir: Path | None = None) -> dict:
             "size n=21 < 40.  "
             "Secondary advances: (1) MATH-aware recalibration (exp3497, CLEAN) "
             "recovers correctness signal from 0.601→0.625 AUROC by correcting "
-            f"step-vs-final domain shift (gap={cal5_step_vs_final_gap:.5f}); "
+            f"step-vs-final domain shift (gap={cal5_gap_display}); "
             "(2) FR-11 beta_min=f(lambda_min) Phase-5 deployment law established "
-            f"(exp3498, CLEAN, R²={fr11_r2:.3f}): "
+            f"(exp3498, CLEAN, R²={fr11_r2_display}): "
             "beta_min = -0.3001 + 1.8461 * lambda_min, out-of-sample validated; "
             "(3) G2 package regression clean (exp3499, CLEAN), "
             f"AUROC={g2_package_auroc} in CI={g2_package_auroc_in_ci}, "

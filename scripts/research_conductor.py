@@ -701,7 +701,12 @@ def run_agent(
             # hard 1201s wall-clock kill mid-training despite making real
             # progress. The user wants long training runs to complete as
             # long as they're actually doing work.
-            IDLE_GRACE = 300  # 5 min of silence before we consider the run stuck
+            # 2026-06-10: 300 -> 600. gpt-5.5 (Codex-Default v2) pauses >5 min while
+            # thinking through large multi-file transition tasks: the .371 archive task
+            # was killed at 4027s wall / 300s silence AFTER 67 min of real progress
+            # (writing tests + modules). Same rationale as the codex STALL_TIMEOUT=600
+            # bump of 2026-05-04; the 4x HARD_CAP still bounds genuine infinite hangs.
+            IDLE_GRACE = 600  # 10 min of silence before we consider the run stuck
             HARD_CAP_MULTIPLIER = 4  # absolute backstop relative to soft cap
             elapsed_total = now - start_time
             elapsed_silence = now - last_output_time
