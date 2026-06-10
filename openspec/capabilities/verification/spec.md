@@ -11741,3 +11741,15 @@ facts-domain READY claim.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-3920 | Planned (`python/carnot/verify/graph_grounding_fact_verifier_defabricated.py`, `scripts/experiments/experiment_3920_facts_graph_grounding_last_retry.py`) | Planned (`tests/python/test_graph_grounding_fact_verifier.py`) |
+
+### REQ-VERIFY-3975: GAP-4 ARC Execution Verifier Build
+
+- REQ-VERIFY-3975-1: The execution verifier SHALL synthesize an object-level program or DSL rule from ARC demo pairs.
+- REQ-VERIFY-3975-2: The execution verifier SHALL require the program to reproduce ALL training demos exactly to be kept.
+- REQ-VERIFY-3975-3: The execution verifier SHALL use the program to rank test output candidates.
+- REQ-VERIFY-3975-4: Experiment 3975 SHALL evaluate the execution verifier on held-out ARC-1 training tasks.
+- REQ-VERIFY-3975-5: Experiment 3975 SHALL output `results/experiment_3975_gap4_execution_verifier_build.json` with the required metrics.
+
+## Implementation Status (REQ-VERIFY-3975)
+
+| REQ-VERIFY-3975 | Implemented (`python/carnot/agentic/arc_gap4_execution_verifier.py`, `scripts/experiments/experiment_3975_gap4_execution_verifier_build.py`) | Implemented (`tests/python/agentic/test_arc_gap4_execution_verifier.py`) |
