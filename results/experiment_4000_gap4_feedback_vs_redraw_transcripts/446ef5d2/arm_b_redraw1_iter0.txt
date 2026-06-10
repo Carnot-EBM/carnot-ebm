@@ -1,0 +1,236 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (12x20):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 8, 8, 2, 2, 2],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 0, 0, 7, 0, 7, 8, 8, 7, 7, 7],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 0, 7, 0, 0, 0, 7, 8, 8, 7, 7, 7],
+ [8, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 7, 0, 0, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 7, 0, 7, 0, 0, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 8, 8],
+ [8, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 2, 2, 7, 8, 8],
+ [8, 7, 2, 7, 2, 2, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 2, 7, 8, 8],
+ [8, 7, 2, 2, 2, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 4, 8],
+ [8, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 1 OUTPUT (12x20):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 0, 0, 0, 0, 0, 0, 0, 7, 0, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 0, 7, 0, 0, 0, 7, 0, 0, 0, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 2, 7, 2, 2, 2, 2, 2, 2, 2, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 2, 2, 2, 7, 7, 7, 7, 7, 2, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+
+Demo 2 INPUT (10x10):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 4, 4, 8, 8, 8, 9, 9, 3, 8],
+ [8, 4, 3, 3, 3, 8, 3, 3, 3, 8],
+ [8, 8, 3, 9, 9, 8, 3, 3, 3, 8],
+ [8, 8, 3, 9, 9, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 3, 3, 3, 8, 8, 3, 9, 9, 8],
+ [8, 9, 9, 3, 8, 8, 3, 9, 3, 8],
+ [8, 9, 9, 3, 8, 8, 3, 3, 3, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+Demo 2 OUTPUT (10x10):
+[[8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 3, 3, 3, 3, 3, 3, 8, 8],
+ [8, 8, 3, 9, 9, 9, 9, 3, 8, 8],
+ [8, 8, 3, 9, 9, 9, 9, 3, 8, 8],
+ [8, 8, 3, 9, 9, 9, 9, 3, 8, 8],
+ [8, 8, 3, 9, 3, 3, 3, 3, 8, 8],
+ [8, 8, 3, 3, 3, 3, 3, 3, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8],
+ [8, 8, 8, 8, 8, 8, 8, 8, 8, 8]]
+
+TEST INPUT (26x26):
+[[4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 4, 1, 1, 1],
+ [4, 1, 3, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 3, 3, 3, 4, 6, 6, 1],
+ [4, 1, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 3, 1, 1, 4, 1, 6, 1],
+ [4, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 3, 1, 1, 4, 1, 6, 1],
+ [4, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 6, 6, 1],
+ [4, 1, 1, 6, 6, 4, 1, 1, 1, 1, 3, 1, 4, 4, 4, 4, 1, 1, 7, 1, 1, 1, 4, 1, 1, 1],
+ [4, 1, 1, 6, 1, 4, 3, 3, 3, 3, 3, 1, 4, 4, 4, 4, 1, 1, 7, 1, 1, 1, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 7, 7, 7, 1, 1, 1, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4],
+ [1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [6, 6, 6, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [1, 1, 1, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 1, 1, 4, 4, 4, 4, 3, 3, 3, 3, 3, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 6, 6, 4, 4, 4, 4, 1, 1, 1, 1, 3, 1, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1],
+ [4, 1, 1, 4, 4, 4, 4, 1, 1, 1, 1, 3, 1, 4, 1, 1, 6, 1, 1, 4, 7, 7, 7, 1, 1, 1],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 6, 6, 6, 4, 1, 1, 7, 1, 1, 1],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 4, 1, 1, 7, 1, 1, 1],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 1, 7, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 7, 7, 7, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 1, 7, 7, 7, 4, 4, 4, 4, 4, 4, 4, 4, 1, 7, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 7, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 2, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 1, 7, 1, 1, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 2, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    g = np.array(grid)
+    H0, W0 = g.shape
+
+    vals, cnts = np.unique(g, return_counts=True)
+    bg = vals[np.argmax(cnts)]
+
+    counts = {int(v): int(c) for v, c in zip(vals, cnts) if int(v) != int(bg)}
+    border = max(counts, key=lambda k: counts[k])
+    target = {c for c, n in counts.items() if c == border or n >= 4}
+
+    mask = np.isin(g, list(target))
+    seen = np.zeros(g.shape, dtype=bool)
+    pieces = []
+
+    for r in range(H0):
+        for c in range(W0):
+            if not mask[r, c] or seen[r, c]:
+                continue
+            stack = [(r, c)]
+            seen[r, c] = True
+            cells = []
+            while stack:
+                y, x = stack.pop()
+                cells.append((y, x))
+                for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    ny, nx = y + dy, x + dx
+                    if 0 <= ny < H0 and 0 <= nx < W0 and mask[ny, nx] and not seen[ny, nx]:
+                        seen[ny, nx] = True
+                        stack.append((ny, nx))
+
+            rows = [p[0] for p in cells]
+            cols = [p[1] for p in cells]
+            r1, r2 = min(rows), max(rows)
+            c1, c2 = min(cols), max(cols)
+            submask = mask[r1:r2 + 1, c1:c2 + 1]
+
+            if submask.all():
+                pieces.append(g[r1:r2 + 1, c1:c2 + 1].copy())
+            else:
+                row_ranges = []
+                ok = True
+                for yy in range(submask.shape[0]):
+                    xs = np.where(submask[yy])[0]
+                    if len(xs) == 0:
+                        row_ranges.append(None)
+                    elif xs[-1] - xs[0] + 1 == len(xs):
+                        row_ranges.append((int(xs[0]), int(xs[-1])))
+                    else:
+                        ok = False
+                        break
+                if ok:
+                    yy = 0
+                    while yy < len(row_ranges):
+                        if row_ranges[yy] is None:
+                            yy += 1
+                            continue
+                        a, b = row_ranges[yy]
+                        y2 = yy
+                        while y2 + 1 < len(row_ranges) and row_ranges[y2 + 1] == (a, b):
+                            y2 += 1
+                        arr = g[r1 + yy:r1 + y2 + 1, c1 + a:c1 + b + 1]
+                        if np.isin(arr, list(target)).all():
+                            pieces.append(arr.copy())
+                        yy = y2 + 1
+
+    pieces.sort(key=lambda a: (-a.size, -a.shape[0], -a.shape[1]))
+
+    total = sum(p.size for p in pieces)
+    maxh = max(p.shape[0] for p in pieces)
+    maxw = max(p.shape[1] for p in pieces)
+
+    candidates = []
+    for h in range(maxh, min(H0, total) + 1):
+        if total % h == 0:
+            w = total // h
+            if maxw <= w <= W0:
+                candidates.append((h, w))
+    candidates.sort(key=lambda hw: (abs((hw[1] / hw[0]) - (W0 / H0)), abs(hw[0] - hw[1])))
+
+    def side_ok(piece, y, x, h, w, OH, OW):
+        if y == 0 and not np.all(piece[0, :] == border):
+            return False
+        if y + h == OH and not np.all(piece[-1, :] == border):
+            return False
+        if x == 0 and not np.all(piece[:, 0] == border):
+            return False
+        if x + w == OW and not np.all(piece[:, -1] == border):
+            return False
+        return True
+
+    def pack(OH, OW):
+        occ = np.zeros((OH, OW), dtype=bool)
+        canvas = np.full((OH, OW), bg, dtype=g.dtype)
+        used = [False] * len(pieces)
+
+        def bt(n):
+            if n == len(pieces):
+                return (np.all(canvas[0, :] == border) and
+                        np.all(canvas[-1, :] == border) and
+                        np.all(canvas[:, 0] == border) and
+                        np.all(canvas[:, -1] == border))
+            pos = np.argwhere(~occ)
+            if len(pos) == 0:
+                return False
+            y, x = map(int, pos[0])
+
+            for i, p in enumerate(pieces):
+                if used[i]:
+                    continue
+                h, w = p.shape
+                if y + h > OH or x + w > OW:
+                    continue
+                if np.any(occ[y:y + h, x:x + w]):
+                    continue
+                if not side_ok(p, y, x, h, w, OH, OW):
+                    continue
+
+                used[i] = True
+                occ[y:y + h, x:x + w] = True
+                canvas[y:y + h, x:x + w] = p
+
+                if bt(n + 1):
+                    return True
+
+                used[i] = False
+                occ[y:y + h, x:x + w] = False
+                canvas[y:y + h, x:x + w] = bg
+            return False
+
+        return canvas if bt(0) else None
+
+    assembled = None
+    for h, w in candidates:
+        assembled = pack(h, w)
+        if assembled is not None:
+            break
+
+    if assembled is None:
+        return g.copy()
+
+    out = np.full_like(g, bg)
+    h, w = assembled.shape
+    top = max(0, H0 - h - 2)
+    left = max(0, W0 - w - 2)
+    out[top:top + h, left:left + w] = assembled
+    return out
+```

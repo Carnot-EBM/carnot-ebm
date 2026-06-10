@@ -11839,3 +11839,44 @@ reports `success: gap4_precision_confirmed_<gold>of<events>_gold` only for a
 passing primary gate, otherwise reports
 `complete: gap4_agreement_confidence_label_only_<gold>of<events>`, and records
 residual wrong-agreement cases in `missing_verifier_gaps`.
+
+### REQ-VERIFY-4000: GAP-4 Feedback-vs-Redraw Paired Control
+
+The repository SHALL provide Exp 4000 at
+`scripts/experiments/experiment_4000_gap4_feedback_vs_redraw.py` to decide
+whether GAP-4 <=3-iteration failure-feedback chains beat three independent
+single-call redraws at equal Codex-call budget. Before any induction call, the
+runner SHALL verify that `codex` is available and that
+`results/arc3_gap4_arc2_eval_pool.json.gz` is readable as JSON. A failed
+precondition SHALL write `results/experiment_4000_gap4_feedback_vs_redraw.json`
+with `honest_verdict=blocked_codex_unavailable` or
+`honest_verdict=blocked_eval_pool_unreadable`, zero Codex calls, and no
+fabricated paired-test win.
+
+For a complete run, the runner SHALL select the chain-feasible tasks from
+`results/arc3_gap4_arc2_chain_ensemble.json`, run arm A as one <=3-iteration
+feedback chain and arm B as three independent one-call redraws for every task,
+interleave the A/B calls within the same runner invocation rather than
+comparing across historical runs, archive every transcript, score demo-perfect
+and true gold only after induction, run the GAP-4 word-boundary leak audit on
+the archived transcripts, compute a task-level paired contingency table, and
+compute an exact two-sided McNemar p-value from the discordant pairs.
+
+The terminal artifact SHALL include bare top-level fields
+`same_run_interleaved`, `feedback_beats_redraw`, `mcnemar_p`,
+`n_discordant_pairs`, `arm_a_gold_rate`, `arm_b_gold_rate`,
+`total_codex_calls`, `total_codex_seconds`, `leak_clean`, `random_seed`,
+`honest_verdict`, `duration_s`, and `inference_substrate`.
+
+### SCENARIO-VERIFY-4000: Same-Run Paired Mechanism Verdict
+
+Given the Codex CLI and ARC-2 chain-feasible pool are available, when Exp 4000
+runs, then it records `same_run_interleaved=true`, uses exactly one feedback
+chain and three independent redraw singles per task, computes arm correctness
+at the task level from post-hoc gold scoring, emits the paired contingency
+counts for A-correct/B-correct, A-correct/B-wrong, A-wrong/B-correct, and
+A-wrong/B-wrong, sets `feedback_beats_redraw=true` only when the feedback arm
+has more A-only wins than B-only wins with exact paired `mcnemar_p<=0.05`, emits
+`success: feedback_beats_redraw_p<val>` for that positive mechanism result,
+otherwise emits `complete: feedback_no_better_than_redraw_p<val>`, and records
+`FALSE_NEGATIVE_RISK` in the verdict when the discordant-pair count is small.
