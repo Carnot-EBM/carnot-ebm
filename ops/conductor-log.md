@@ -8164,3 +8164,4 @@ c |
 | 2026-06-10 07:57 UTC | Milestone 2026.06.370 activated | OK | 11 tasks queued |
 | 2026-06-10 08:09 UTC | Archive .369 -> activate .370; HARDENED GREEN-GATE | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: rminal with at leas |
 | 2026-06-10 08:22 UTC | Archive .369 -> activate .370; HARDENED GREEN-GATE | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-06-10 08:34 UTC | Archive .369 -> activate .370; HARDENED GREEN-GATE | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
