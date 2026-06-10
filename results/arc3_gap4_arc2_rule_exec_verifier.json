@@ -1,4 +1,11 @@
 {
+  "adversarial_verify": {
+    "final_verdict": "CONFIRMED (honest transfer decay, as scoped)",
+    "report": "results/arc3_gap4_arc2_adversarial_verify.json",
+    "reviewers": 5,
+    "unanimous": true,
+    "worst_severity": "minor"
+  },
   "bootstrap": {
     "B": 1000,
     "gated_vs_union_pass2_ci95": [
@@ -9,6 +16,18 @@
       0.0,
       0.0
     ]
+  },
+  "corrigendum_2026_06_10_arc2": {
+    "consistency_ensemble_micro_evidence": "From saved histories: 3 tasks have >=2 INDEPENDENT demo-perfect programs; test-output agreement 2/3; agreed pairs are gold 3/3 (vs 0.50 unconditional) with a measured recall cost (446ef5d2's correct program disagreed with its wrong sibling). The k=2-3 independent-induction agreement gate is the precision fix to run next.",
+    "contamination_audit_adjudicated": "0/23 probe tasks appear in ARC-AGI-2 training2 (removes the ARC-1 round's contamination channel), BUT 2/23 (16b78196, aa4ec2a5) are content-identical ARC-1-eval reuses (demos+test inputs+outputs identical; only demo order differs) and evaluation2 itself has been public since ~March 2025. Correct phrase: 'reduced-exposure, increased-difficulty transfer probe' \u2014 NEVER 'held-out' or 'contamination-free'.",
+    "cost_framing": "Correct per-task framing: ARC-2 251.3 s/unique-task vs ARC-1 46.2 (5.4x); 67.3% of ARC-2 codex-seconds burned on the 11 never-demo-perfect tasks; 5/56 calls died at the 300s timeout including ALL 3 iterations of 269e22fb (an oracle-hit task) \u2014 part of the venue degeneracy is infrastructure. Adaptive iteration caps + >=600s timeouts next time.",
+    "file_hygiene": "histories are duplicated per entry (naive recount 76 calls/8809.6s vs correct 56/5780.4s); the pool gz retains the builder name 'arc3_gap3_stage2_eval_pool' (provenance, not an error).",
+    "gate_never_fired": "pred_in_pool = 0/31: GAP4_GATED is bit-identical to TRM_VOTE; '0 recovered / 0 lost' is VACUOUS here, not a measured safety property. The 8 demo-perfect-but-wrong predictions are near-misses (6/8 same-shape, hamming 0.002-0.032) \u2014 at ~0.5 precision the ARC-1 '+4/-0' safety record must not be quoted forward.",
+    "graded_signal": "The one live rerank signal: 7b80bb43's demo-perfect prediction was 1/493 cells from gold (absent from pool); GRADED min-hamming promoted gold vote-rank 2->1 (GRADED pass@1 0.0645 > GATED 0.0323). Exact-match gating is too brittle on hard tasks; a graded execution-energy gate (demo_fit==1 AND min-hamming <= ~0.005) is the successor design \u2014 validate on the non-degenerate ARC-1 venue first.",
+    "memorization_asymmetry": "The load-bearing contamination evidence: demo-perfect-but-test-WRONG rises 3/29=10.3% (ARC-1) to 8/16=50% (ARC-2), Fisher p=0.0085 \u2014 memorization predicts the OPPOSITE signature (test-correct fits) \u2014 and the maximally-exposed task 16b78196 (verbatim 5-years-public ARC-1-eval reuse) fails completely at demo_fit 0.0 across all 3 iterations. Exposure does not function as recall in this pipeline. Corollary: ARC-1's 0.897 precision is an UPPER BOUND on genuine induction (measured on a maximally-contaminated pool); the design cannot decompose difficulty from residual contamination and claims neither separately.",
+    "noise_annotations": "gates.selection_beats_union=true is ONE discordant task (McNemar p=1.0, CI [0.0,0.0968] spans 0) \u2014 noise, never aggregate as a positive gate. 'Codex doubles the pool oracle ceiling' (8/31 vs 4/31, fully disjoint sets) is descriptive only (paired p=0.388); defensible vs TRM arc_v2's global 0.0125 indicative rate (p~3e-7, subset-selection caveat).",
+    "origin": "5/5 hostile round (workflow gap4-arc2-probe-adversarial-verify). All committed numbers reproduced bit-exact; corrections below are interpretation/hygiene-level.",
+    "sandbox_false_positive_regrade": "The hardened substring blacklist false-rejected legitimate numpy code ('type(' matched 'astype(', 'os.' matched 'pos.'): 5/5 blacklist hits on these transcripts were false positives, costing ONE demo-perfect program (6ffbe589, not gold). CORRECTED numbers: unique-task induction 13/23 (vs committed 12/23); precision 8/17 = 0.47 (vs committed 8/16 = 0.50) \u2014 moves precision DOWN, reinforcing the honest-decay reading. Fixed same-day with word-boundary regex matching + regression test."
   },
   "decentralization_note": "Closed-weight generator (gpt-5.5) used as the escalation-tier inducer per the M2-v3 precedent; deployment tier targets a local open-weight inducer (Gemma-4/Qwen3.6 GGUF). The verifier side (demo-fit + execution + rerank) is fully local and model-free.",
   "duration_s": 1653.7,
@@ -450,5 +469,13 @@
     }
   },
   "title": "GAP-4: program-induction + execution-consistency verifier vs TRM frequency vote",
+  "true_gold_scoring": {
+    "method": "post-hoc SCORING ONLY: each entry's saved program re-executed on its test input; output compared to the official arc-agi_evaluation2_solutions.json gold via test-input-hash join (0 join failures). per_task.pred_is_gold means gold-AND-IN-POOL and reads false on all 8 true-gold entries \u2014 do not confuse the two.",
+    "n_entries": 31,
+    "note": "vs ARC-1: true-gold 26/31=0.8387, precision 26/29=0.897.",
+    "precision_given_demo_perfect": 0.5,
+    "true_gold_entries": 8,
+    "true_gold_rate": 0.2581
+  },
   "vote_wins_lost_tasks": []
 }

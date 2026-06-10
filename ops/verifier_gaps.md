@@ -268,6 +268,45 @@ AUROC ≥ 0.70, held out from training AND checkpoint selection) passed BEFORE a
   bootstrap + exact tests (zero-loss design needs ≥6 discordant wins for two-sided p<0.05), a hardened
   exec sandbox (timeout; block np.load/np.save/np.fromfile/type), and a local open-weight generator
   arm (Gemma-4/Qwen3.6) for the decentralization tier.
+
+**ARC-2 TRANSFER PROBE (2026-06-10, 5/5 adversarially CONFIRMED, worst severity minor) — the
+two-point transfer curve.** Same pipeline on a fresh pool from TRM arc_v2 scored on ARC-AGI-2 eval
+(locally rebuilt arc2concept dataset, identifier-aligned; 31 entries / 23 unique tasks / 20,379
+candidates; only 4 oracle entries — TRM arc_v2 is far weaker here). Sandbox hardened first (exec
+timeout + numpy-I/O blocks; then a word-boundary fix after the round caught 'type('/'os.' substring
+false-rejections). Full per-call transcripts archived — all 56 leak-clean (the no-oracle invariant is
+now AUDITED, not just asserted). `results/arc3_gap4_arc2_rule_exec_verifier.json` (+
+`corrigendum_2026_06_10_arc2`) + `..._adversarial_verify.json` + transcripts.
+
+| | ARC-1 (contaminated/easy) | ARC-2 eval (reduced-exposure/hard) |
+|---|---|---|
+| induction (demo-perfect, unique tasks) | 28/30 (0.93) | 13/23 (0.57, post-regrade; Fisher p=4e-4) |
+| precision P(true-gold \| demo-perfect) | 26/29 (0.897) | 8/17 (0.47; p=0.0085) |
+| true-gold overall (entries) | 26/31 (0.839) | 8/31 (0.258; end-to-end p=8.2e-6) |
+| rerank effect | +4/−0 (gate fired 16×) | nil (gate fired 0× — pred_in_pool=0; venue degenerate) |
+| cost | 46 s/task | 251 s/task (5.4×) |
+
+- **The decay is honest induction strain, NOT collapse-to-recall:** demo-overfit (demo-perfect but
+  test-wrong) rises 10.3% → 50% — memorization predicts the OPPOSITE signature — and the maximally
+  exposed task (16b78196, content-identical 5-years-public ARC-1-eval reuse) fails completely at
+  demo_fit 0.0. Exposure does not function as recall in this pipeline. Corollary: ARC-1's 0.897
+  precision is an UPPER BOUND on genuine induction; difficulty vs residual contamination cannot be
+  decomposed by this design (evaluation2 is public-era; 2/23 tasks are verbatim ARC-1-eval reuses —
+  say "reduced-exposure", never "held-out").
+- **Where the rerank venue pays:** only where the candidate generator is strong-but-mis-voted (ARC-1).
+  Where the generator is weak (ARC-2), value migrates to codex-standalone (0.258, 2× the pool oracle
+  0.129 — descriptive; vs TRM arc_v2's global 0.0125, p~3e-7) and the gate is inert. The '+4/−0'
+  safety record is ARC-1-specific: at ~0.5 precision the wrong predictions are near-misses (hamming
+  0.002–0.032) and must not be promoted by an exact-match gate fed a richer pool.
+- **Next moves (panel-ranked):** (1) consistency-ensemble precision fix — k=2–3 INDEPENDENT inductions
+  + agreement gate (micro-evidence from saved histories: agreed pairs gold 3/3 vs 0.50 unconditional);
+  (2) graded execution-energy gate (demo_fit==1 AND min-hamming ≤ ~0.005) — the round found the one
+  live signal: a 1-cell-off prediction GRADED promoted to rank 1 where exact-match missed; validate on
+  the non-degenerate ARC-1 venue first; (3) adaptive iteration caps + ≥600s timeouts (67% of ARC-2
+  codex-seconds burned on never-perfect tasks; an oracle-hit task lost all 3 iterations to 300s
+  timeouts); (4) the local open-weight generator arm; (5) a 400-task run is NOT yet worth it — the
+  gate is structurally inert where TRM is weak; it becomes worth it only after (1)/(2), framed as
+  generator+selector precision, not pool-rerank.
 - failure mode: candidates that match gold's SHAPE and look structurally coherent but apply the WRONG
   rule (59.1% of TRM's real errors; 81.4% of wrong-candidate pairs; median Hamming-to-gold 0.40).
   Every content signal tested scores ~chance here (hand-invariants ≤0.67; trained content-EBMs
