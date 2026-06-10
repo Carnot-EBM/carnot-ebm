@@ -1,0 +1,264 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 0, 3, 1, 1],
+ [0, 2, 2, 2, 2, 3, 3, 3, 1, 1]]
+Demo 1 OUTPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
+ [0, 2, 2, 2, 2, 3, 3, 3, 1, 1]]
+
+Demo 2 INPUT (10x10):
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 1],
+ [0, 0, 3, 0, 0, 0, 0, 1, 1, 1],
+ [0, 0, 3, 0, 0, 0, 0, 1, 1, 1],
+ [0, 0, 3, 0, 0, 0, 1, 1, 1, 1],
+ [0, 0, 3, 0, 0, 3, 1, 1, 1, 1],
+ [0, 0, 3, 0, 0, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+Demo 2 OUTPUT (10x10):
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 1, 1, 1, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+
+Demo 3 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 1, 1, 0, 0, 0, 0, 9, 9],
+ [0, 9, 9, 1, 0, 0, 0, 9, 9, 0],
+ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
+ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 0, 0, 4, 0, 4, 0, 0, 0, 0],
+ [2, 0, 2, 4, 0, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
+Demo 3 OUTPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 0, 0, 0, 0, 0, 0, 9, 9],
+ [0, 9, 9, 0, 0, 0, 0, 9, 9, 0],
+ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
+ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 0, 0, 4, 1, 4, 0, 0, 0, 0],
+ [2, 1, 2, 4, 1, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
+
+TEST INPUT (10x10):
+[[1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 1, 1, 0, 0, 0, 0, 0, 0],
+ [0, 9, 9, 1, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 9, 9, 0, 0, 0, 0, 5],
+ [0, 0, 0, 0, 9, 9, 9, 0, 0, 5],
+ [0, 0, 0, 0, 0, 0, 0, 5, 0, 5],
+ [3, 0, 0, 0, 0, 0, 0, 0, 0, 5],
+ [3, 3, 0, 0, 0, 0, 5, 5, 0, 5],
+ [3, 3, 3, 0, 0, 5, 5, 5, 0, 5],
+ [3, 3, 3, 3, 5, 5, 5, 5, 0, 5]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+
+Your PREVIOUS function failed these demos:
+Demo 2: expected OUTPUT (10x10):
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 1, 1, 1, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+your function returned:
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 1],
+ [0, 0, 3, 0, 0, 0, 0, 1, 1, 1],
+ [0, 0, 3, 0, 0, 0, 0, 1, 1, 1],
+ [0, 0, 3, 0, 0, 0, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+
+Previous code:
+```python
+def transform(grid):
+    g = grid.copy()
+    h, w = g.shape
+    bg = 0
+    paint = 1
+
+    def components(color):
+        seen = np.zeros((h, w), dtype=bool)
+        out = []
+        for r in range(h):
+            for c in range(w):
+                if g[r, c] == color and not seen[r, c]:
+                    stack = [(r, c)]
+                    seen[r, c] = True
+                    cells = []
+                    while stack:
+                        rr, cc = stack.pop()
+                        cells.append((rr, cc))
+                        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                            nr, nc = rr + dr, cc + dc
+                            if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and g[nr, nc] == color:
+                                seen[nr, nc] = True
+                                stack.append((nr, nc))
+                    out.append(cells)
+        return out
+
+    anchors = np.zeros((h, w), dtype=bool)
+    fill = np.zeros((h, w), dtype=bool)
+
+    for color in [x for x in np.unique(g) if x not in (bg, paint)]:
+        for cells in components(color):
+            s = set(cells)
+            rows = {}
+            cols = {}
+            for r, c in cells:
+                rows.setdefault(r, []).append(c)
+                cols.setdefault(c, []).append(r)
+
+            made = False
+
+            for r, cs in rows.items():
+                if len(cs) >= 2:
+                    a, b = min(cs), max(cs)
+                    if any(g[r, c] == bg for c in range(a + 1, b)):
+                        made = True
+                        for c in range(a + 1, b):
+                            if g[r, c] == bg:
+                                fill[r, c] = True
+
+            for c, rs in cols.items():
+                if len(rs) >= 2:
+                    a, b = min(rs), max(rs)
+                    if any(g[r, c] == bg for r in range(a + 1, b)):
+                        made = True
+                        for r in range(a + 1, b):
+                            if g[r, c] == bg:
+                                fill[r, c] = True
+
+            row_items = sorted((r, min(cs), max(cs)) for r, cs in rows.items())
+            for i in range(len(row_items)):
+                r1, a1, b1 = row_items[i]
+                for j in range(i + 1, len(row_items)):
+                    r2, a2, b2 = row_items[j]
+                    a, b = max(a1, a2), min(b1, b2)
+                    if a > b:
+                        continue
+                    if all((rr, a) in s or (rr, b) in s for rr in range(r1, r2 + 1)):
+                        for rr in range(r1 + 1, r2):
+                            for cc in range(a, b + 1):
+                                if g[rr, cc] == bg:
+                                    fill[rr, cc] = True
+                                    made = True
+
+            col_items = sorted((c, min(rs), max(rs)) for c, rs in cols.items())
+            for i in range(len(col_items)):
+                c1, a1, b1 = col_items[i]
+                for j in range(i + 1, len(col_items)):
+                    c2, a2, b2 = col_items[j]
+                    a, b = max(a1, a2), min(b1, b2)
+                    if a > b:
+                        continue
+                    if all((a, cc) in s or (b, cc) in s for cc in range(c1, c2 + 1)):
+                        for rr in range(a, b + 1):
+                            for cc in range(c1 + 1, c2):
+                                if g[rr, cc] == bg:
+                                    fill[rr, cc] = True
+                                    made = True
+
+            if made:
+                for r, c in cells:
+                    anchors[r, c] = True
+
+    for r in range(h):
+        seen_border = False
+        for c in range(w):
+            if anchors[r, c]:
+                seen_border = True
+            elif seen_border and g[r, c] == paint:
+                fill[r, c] = True
+
+    out = g.copy()
+    for r in range(h):
+        for c in range(w):
+            if out[r, c] == paint and not fill[r, c]:
+                out[r, c] = bg
+            elif fill[r, c] and out[r, c] == bg:
+                out[r, c] = paint
+
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    g = grid.copy()
+    h, w = g.shape
+    out = g.copy()
+    bg = 0
+    paint = 1
+
+    # Remove all movable paint first; it will be redrawn only where supported
+    # by the colored structure.
+    out[out == paint] = bg
+
+    solid = (g != bg) & (g != paint)
+
+    for r in range(h):
+        cols = np.where(solid[r])[0]
+        if len(cols) == 0:
+            continue
+
+        left = int(cols.min())
+
+        # A row can carry paint to the right of its leftmost solid marker when
+        # the original row already had paint there, or when it is horizontally
+        # supported by paint on the row immediately below.
+        row_has_paint_right = np.any(g[r, left + 1:] == paint)
+        supported_below = False
+        if r + 1 < h:
+            supported_below = np.any(out[r + 1, left + 1:] == paint)
+
+        if row_has_paint_right or supported_below:
+            for c in range(left + 1, w):
+                if not solid[r, c]:
+                    out[r, c] = paint
+
+    return out
+```

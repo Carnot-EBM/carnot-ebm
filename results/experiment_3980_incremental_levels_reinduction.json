@@ -1,0 +1,116 @@
+{
+  "ACCURACY_levels_solved": 1,
+  "baseline_actions_ref": [
+    4
+  ],
+  "candidate_reason": "stalled exactly at L2; visible L2 piece-target structure remains perceivable; prior solver already exposes engine-side piece-target groups",
+  "duration_s": 0.678,
+  "experiment": "experiment_3980_incremental_levels_reinduction",
+  "first_fail_level": 2,
+  "game_advanced": "r11l-495a7899_to_L1",
+  "honest_verdict": "complete: l2_wall_holds_r11l_l2_re_induction_found_a_collision_forbidden_mask_rule_different_from_l1_remainin",
+  "inference_substrate": "offline_arc_agi3_per_level_execution_guided_reinduction",
+  "l1_mechanic_transferred_to_l2": false,
+  "l1_transfer_simulated_actions": 10,
+  "l1_transfer_simulated_levels_after": 1,
+  "l2_attempted_actions": 2,
+  "level_summaries": [
+    {
+      "actions_used": 4,
+      "level": 1,
+      "levels_completed_after": 1,
+      "n_pairs": 2,
+      "n_targets": 1
+    },
+    {
+      "budget_left": 56,
+      "level": 2,
+      "n_pairs": 5,
+      "n_targets": 2
+    }
+  ],
+  "new_levels_solved_this_task": 0,
+  "per_level": [
+    {
+      "actions_used": 2,
+      "group_id": "pumlzd",
+      "level": 2,
+      "levels_completed_after": 1,
+      "rule": "single-piece move chosen so the group-average proxy collides with the L2 target while respecting the forbidden mask"
+    }
+  ],
+  "per_level_actions": [
+    4
+  ],
+  "precondition_blocked": false,
+  "prior_l1_mechanic": "Click selects a color-3 piece, then click a flkdtg target-relative placement. Pieces sharing a target are placed at zero-mean offsets around the target centroid.",
+  "random_seed": 3980,
+  "real_env_confirmed": true,
+  "reinduction_found_different_rule": true,
+  "rule_diagnosis": "L2 re-induction found a collision/forbidden-mask rule different from L1; remaining unsolved groups need multi-piece path search: orrqlj",
+  "selected_game": "r11l",
+  "solve_log": [
+    {
+      "group_id": "pumlzd",
+      "level": 1,
+      "piece": [
+        36,
+        7
+      ],
+      "piece_index": 0,
+      "placement": [
+        20,
+        34
+      ],
+      "target": [
+        20,
+        38
+      ]
+    },
+    {
+      "group_id": "pumlzd",
+      "level": 1,
+      "piece": [
+        59,
+        27
+      ],
+      "piece_index": 1,
+      "placement": [
+        20,
+        42
+      ],
+      "target": [
+        20,
+        38
+      ]
+    },
+    {
+      "action": "reinduced_collision_aware_place",
+      "click": [
+        9,
+        63
+      ],
+      "composite_after": [
+        20,
+        52
+      ],
+      "group_id": "pumlzd",
+      "level": 2,
+      "piece_index": 1,
+      "piece_top_left_after": [
+        7,
+        61
+      ],
+      "settle_steps": 0,
+      "target": [
+        15,
+        54
+      ],
+      "target_after_collides": true
+    }
+  ],
+  "state_after": "NOT_FINISHED",
+  "submitted_to_leaderboard": false,
+  "title": "arc3_incremental_per_level_reinduction",
+  "total_actions": 6
+}

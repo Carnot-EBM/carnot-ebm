@@ -1,0 +1,391 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 6, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 6, 0, 4, 4, 4, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 7, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 7, 0, 0, 0, 0],
+ [0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+Demo 1 OUTPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 4, 4, 4, 6, 6, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 7, 7, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+
+Demo 2 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 9, 3, 0, 0, 6, 9, 6, 0],
+ [3, 9, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Demo 2 OUTPUT (10x10):
+[[0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 9, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 0, 3, 0, 0, 6, 0, 6, 0],
+ [3, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Demo 3 INPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0],
+ [0, 0, 0, 6, 6, 0, 0, 6, 0, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 7, 7, 7, 7, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 7, 0, 6, 0, 0, 0],
+ [0, 0, 6, 7, 0, 7, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+Demo 3 OUTPUT (12x12):
+[[0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 6, 6, 6, 0, 0, 0, 0, 0],
+ [0, 0, 0, 6, 6, 0, 0, 6, 0, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 6, 0, 0, 0, 0, 0, 6, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+TEST INPUT (12x13):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 4, 4, 4, 0, 2, 0, 0],
+ [0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 9, 0, 0, 0, 0, 0, 8, 0, 0, 0],
+ [0, 9, 0, 0, 9, 0, 0, 0, 0, 0, 8, 0, 0],
+ [0, 9, 7, 7, 9, 0, 0, 2, 0, 0, 2, 8, 0],
+ [0, 9, 0, 7, 9, 0, 0, 0, 0, 2, 8, 0, 0],
+ [0, 9, 7, 0, 9, 0, 0, 0, 0, 8, 0, 0, 0]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 4, 4, 4, 6, 6, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 7, 7, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+your function returned:
+[[0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 6, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 4, 4, 4, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 7, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 7, 0, 0, 0, 0],
+ [0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 7, 3, 3, 3, 0, 0, 0]]
+
+Demo 2: expected OUTPUT (10x10):
+[[0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 9, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 0, 3, 0, 0, 6, 0, 6, 0],
+ [3, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+your function returned:
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 9, 3, 0, 0, 6, 9, 6, 0],
+ [3, 9, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Previous code:
+```python
+def transform(grid):
+    h, w = grid.shape
+    out = grid.copy()
+
+    colors = [c for c in np.unique(grid) if c != 0]
+
+    def comps_for_color(color):
+        seen = np.zeros((h, w), dtype=bool)
+        comps = []
+        for r in range(h):
+            for c in range(w):
+                if grid[r, c] == color and not seen[r, c]:
+                    q = [(r, c)]
+                    seen[r, c] = True
+                    comp = []
+                    for rr, cc in q:
+                        comp.append((rr, cc))
+                        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                            nr, nc = rr + dr, cc + dc
+                            if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] == color:
+                                seen[nr, nc] = True
+                                q.append((nr, nc))
+                    comps.append(comp)
+        return comps
+
+    host_comps = []
+    for color in colors:
+        for comp in comps_for_color(color):
+            if len(comp) >= 3:
+                host_comps.append((color, comp, set(comp)))
+
+    moves = []
+    for host_color, comp, comp_set in host_comps:
+        other = set()
+        for r, c in comp:
+            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < h and 0 <= nc < w:
+                    v = grid[nr, nc]
+                    if v != 0 and v != host_color:
+                        other.add((nr, nc, int(v)))
+
+        if not other:
+            continue
+
+        by_color = {}
+        for r, c, v in other:
+            by_color.setdefault(v, set()).add((r, c))
+
+        rs = [p[0] for p in comp]
+        cs = [p[1] for p in comp]
+        top, bot, left, right = min(rs), max(rs), min(cs), max(cs)
+
+        sides = [
+            ("up", top, [(r, c) for r, c in comp if r == top]),
+            ("down", h - 1 - bot, [(r, c) for r, c in comp if r == bot]),
+            ("left", left, [(r, c) for r, c in comp if c == left]),
+            ("right", w - 1 - right, [(r, c) for r, c in comp if c == right]),
+        ]
+
+        for color, cells in by_color.items():
+            cr = sum(r for r, c in cells) / len(cells)
+            cc = sum(c for r, c in cells) / len(cells)
+
+            best = None
+            for side, dist, edge_cells in sides:
+                if dist <= 0:
+                    continue
+                if side in ("up", "down"):
+                    er, ec = min(edge_cells, key=lambda p: (abs(p[1] - cc), abs(p[0] - cr)))
+                else:
+                    er, ec = min(edge_cells, key=lambda p: (abs(p[0] - cr), abs(p[1] - cc)))
+                score = (dist, abs(ec - cc) if side in ("up", "down") else abs(er - cr))
+                if best is None or score < best[0]:
+                    best = (score, side, er, ec, dist)
+
+            if best is None:
+                continue
+
+            _, side, er, ec, dist = best
+            n = min(len(cells), dist)
+
+            for r, c in cells:
+                out[r, c] = 0
+
+            for i in range(1, n + 1):
+                if side == "up":
+                    out[er - i, ec] = color
+                elif side == "down":
+                    out[er + i, ec] = color
+                elif side == "left":
+                    out[er, ec - i] = color
+                else:
+                    out[er, ec + i] = color
+
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h, w = grid.shape
+    out = grid.copy()
+
+    def components(mask):
+        seen = np.zeros(mask.shape, dtype=bool)
+        comps = []
+        for r in range(h):
+            for c in range(w):
+                if mask[r, c] and not seen[r, c]:
+                    q = [(r, c)]
+                    seen[r, c] = True
+                    comp = []
+                    for rr, cc in q:
+                        comp.append((rr, cc))
+                        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                            nr, nc = rr + dr, cc + dc
+                            if 0 <= nr < h and 0 <= nc < w and mask[nr, nc] and not seen[nr, nc]:
+                                seen[nr, nc] = True
+                                q.append((nr, nc))
+                    comps.append(comp)
+        return comps
+
+    colors = [int(c) for c in np.unique(grid) if c != 0]
+    hosts = []
+    for col in colors:
+        for comp in components(grid == col):
+            if len(comp) >= 3:
+                s = set(comp)
+                rs = [p[0] for p in comp]
+                cs = [p[1] for p in comp]
+                hosts.append({
+                    "color": col,
+                    "cells": comp,
+                    "set": s,
+                    "top": min(rs),
+                    "bot": max(rs),
+                    "left": min(cs),
+                    "right": max(cs),
+                })
+
+    moves = []
+    used_movers = set()
+
+    for host in hosts:
+        hc = host["color"]
+        hs = host["set"]
+
+        touching = {}
+        for r, c in host["cells"]:
+            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < h and 0 <= nc < w:
+                    v = int(grid[nr, nc])
+                    if v != 0 and v != hc:
+                        touching.setdefault(v, set()).add((nr, nc))
+
+        for mc, seeds in touching.items():
+            all_m = set()
+            for comp in components(grid == mc):
+                cs = set(comp)
+                if cs & seeds:
+                    all_m |= cs
+
+            movable = set()
+            for r, c in all_m:
+                if (r, c) in used_movers:
+                    continue
+                if host["left"] <= c <= host["right"] and host["top"] <= r <= host["bot"]:
+                    movable.add((r, c))
+                else:
+                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        if (r + dr, c + dc) in hs:
+                            movable.add((r, c))
+                            break
+
+            if not movable:
+                continue
+
+            rs = [r for r, c in movable]
+            cs = [c for r, c in movable]
+            cr = sum(rs) / len(rs)
+            cc = sum(cs) / len(cs)
+
+            gaps = {
+                "up": max(0, host["top"]),
+                "down": max(0, h - 1 - host["bot"]),
+                "left": max(0, host["left"]),
+                "right": max(0, w - 1 - host["right"]),
+            }
+
+            candidates = []
+            if cr >= (host["top"] + host["bot"]) / 2:
+                candidates.append("up")
+            else:
+                candidates.append("down")
+            if cc >= (host["left"] + host["right"]) / 2:
+                candidates.append("left")
+            else:
+                candidates.append("right")
+
+            side = max(candidates, key=lambda s: (gaps[s], s in ("up", "down")))
+            if gaps[side] == 0:
+                side = max(gaps, key=gaps.get)
+            if gaps[side] == 0:
+                continue
+
+            if side == "up":
+                edge = [(r, c) for r, c in host["cells"] if r == host["top"]]
+                er, ec = min(edge, key=lambda p: (abs(p[1] - cc), p[0]))
+                dr, dc = -1, 0
+            elif side == "down":
+                edge = [(r, c) for r, c in host["cells"] if r == host["bot"]]
+                er, ec = min(edge, key=lambda p: (abs(p[1] - cc), -p[0]))
+                dr, dc = 1, 0
+            elif side == "left":
+                edge = [(r, c) for r, c in host["cells"] if c == host["left"]]
+                er, ec = min(edge, key=lambda p: (abs(p[0] - cr), p[1]))
+                dr, dc = 0, -1
+            else:
+                edge = [(r, c) for r, c in host["cells"] if c == host["right"]]
+                er, ec = min(edge, key=lambda p: (abs(p[0] - cr), -p[1]))
+                dr, dc = 0, 1
+
+            n = min(len(movable), gaps[side])
+            dest = [(er + dr * i, ec + dc * i) for i in range(1, n + 1)]
+            moves.append((movable, mc, dest))
+            used_movers |= movable
+
+    for cells, mc, dest in moves:
+        for r, c in cells:
+            out[r, c] = 0
+        for r, c in dest:
+            if 0 <= r < h and 0 <= c < w:
+                out[r, c] = mc
+
+    return out
+```

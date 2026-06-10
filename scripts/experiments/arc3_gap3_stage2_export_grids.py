@@ -18,6 +18,7 @@ candidate grid only (REQ-GAP3-2).
 
 from __future__ import annotations
 
+import argparse
 import glob
 import gzip
 import json
@@ -32,16 +33,17 @@ sys.path.insert(0, TRM)
 
 DATA = f"{TRM}/data/arc1concept-aug-1000"
 LATENT_GLOB = f"{TRM}/eval_out/arc_v1_latent/step_0_all_preds.*"
+OUT = f"{CARNOT}/results/arc3_gap3_stage2_eval_pool.json.gz"
 
 import torch  # noqa: E402
 from evaluators.arc import ARC, _crop  # noqa: E402
 from dataset.build_arc_dataset import inverse_aug, grid_hash, arc_grid_to_np  # noqa: E402
 
 
-def main():
-    ev = ARC(data_path=DATA, eval_metadata=SimpleNamespace(blank_identifier_id=0))
-    shards = sorted(glob.glob(LATENT_GLOB))
-    assert shards, f"no latent dump at {LATENT_GLOB}"
+def main(data=DATA, dump_glob=LATENT_GLOB, out_path=OUT, crosscheck=True):
+    ev = ARC(data_path=data, eval_metadata=SimpleNamespace(blank_identifier_id=0))
+    shards = sorted(glob.glob(dump_glob))
+    assert shards, f"no dump at {dump_glob}"
     # accumulate per (orig_task, input_hash): {pred_hash: {votes, qs[], grid}} — same join as Stage 1,
     # but carrying the de-augmented predicted GRID instead of the latent.
     store = {}
@@ -108,10 +110,14 @@ def main():
         ),
         "entries": entries,
     }
-    path = f"{CARNOT}/results/arc3_gap3_stage2_eval_pool.json.gz"
+    path = out_path
     with gzip.open(path, "wt") as f:
         json.dump(out, f)
     # cross-check against the Stage-1 sidecar: per-entry candidate count + vote multiset must match
+    if not crosscheck:
+        print(f"exported {len(entries)} entries / {out['n_candidates']} candidates -> {path} "
+              f"(stage-1 cross-check skipped: non-arc1 pool)")
+        return
     s1 = json.load(open(f"{CARNOT}/results/arc3_gap3_stage1_candidate_table.json"))
     assert len(entries) == s1["n_tasks"], (len(entries), s1["n_tasks"])
     s1_votes = {}
@@ -128,4 +134,11 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--data", default=DATA, help="baked TRM dataset dir (has test_puzzles.json)")
+    ap.add_argument("--dump_glob", default=LATENT_GLOB)
+    ap.add_argument("--out", default=OUT)
+    ap.add_argument("--skip_crosscheck", action="store_true",
+                    help="skip the arc1 Stage-1 sidecar cross-check (use for non-arc1 pools)")
+    a = ap.parse_args()
+    main(data=a.data, dump_glob=a.dump_glob, out_path=a.out, crosscheck=not a.skip_crosscheck)

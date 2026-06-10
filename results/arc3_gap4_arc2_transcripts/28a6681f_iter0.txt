@@ -1,0 +1,201 @@
+===== PROMPT =====
+You are solving an ARC (Abstraction and Reasoning Corpus) puzzle. The demonstration pairs below all share ONE transformation rule.
+
+Demo 1 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 0, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 0, 3, 1, 1],
+ [0, 2, 2, 2, 2, 3, 3, 3, 1, 1]]
+Demo 1 OUTPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
+ [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
+ [0, 2, 2, 2, 2, 3, 3, 3, 1, 1]]
+
+Demo 2 INPUT (10x10):
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 1],
+ [0, 0, 3, 0, 0, 0, 0, 1, 1, 1],
+ [0, 0, 3, 0, 0, 0, 0, 1, 1, 1],
+ [0, 0, 3, 0, 0, 0, 1, 1, 1, 1],
+ [0, 0, 3, 0, 0, 3, 1, 1, 1, 1],
+ [0, 0, 3, 0, 0, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+Demo 2 OUTPUT (10x10):
+[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 1, 1, 1, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 1, 1, 1, 1],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
+ [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+
+Demo 3 INPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 1, 1, 0, 0, 0, 0, 9, 9],
+ [0, 9, 9, 1, 0, 0, 0, 9, 9, 0],
+ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
+ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 0, 0, 4, 0, 4, 0, 0, 0, 0],
+ [2, 0, 2, 4, 0, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
+Demo 3 OUTPUT (10x10):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 0, 0, 0, 0, 0, 0, 9, 9],
+ [0, 9, 9, 0, 0, 0, 0, 9, 9, 0],
+ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
+ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 0, 0, 4, 1, 4, 0, 0, 0, 0],
+ [2, 1, 2, 4, 1, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
+
+TEST INPUT (10x10):
+[[1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+ [9, 9, 1, 1, 0, 0, 0, 0, 0, 0],
+ [0, 9, 9, 1, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 9, 9, 0, 0, 0, 0, 5],
+ [0, 0, 0, 0, 9, 9, 9, 0, 0, 5],
+ [0, 0, 0, 0, 0, 0, 0, 5, 0, 5],
+ [3, 0, 0, 0, 0, 0, 0, 0, 0, 5],
+ [3, 3, 0, 0, 0, 0, 5, 5, 0, 5],
+ [3, 3, 3, 0, 0, 5, 5, 5, 0, 5],
+ [3, 3, 3, 3, 5, 5, 5, 5, 0, 5]]
+
+Write exactly one Python function:
+    def transform(grid):
+        # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
+        # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
+Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    g = grid.copy()
+    h, w = g.shape
+
+    vals = [v for v in np.unique(g) if v != 0]
+    one = 1
+    frame_cols = [v for v in vals if v != one]
+
+    def comps(color):
+        seen = np.zeros((h, w), dtype=bool)
+        out = []
+        for r in range(h):
+            for c in range(w):
+                if g[r, c] == color and not seen[r, c]:
+                    stack = [(r, c)]
+                    seen[r, c] = True
+                    cells = []
+                    while stack:
+                        rr, cc = stack.pop()
+                        cells.append((rr, cc))
+                        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                            nr, nc = rr + dr, cc + dc
+                            if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and g[nr, nc] == color:
+                                seen[nr, nc] = True
+                                stack.append((nr, nc))
+                    out.append(cells)
+        return out
+
+    def is_container(cells):
+        s = set(cells)
+        rows = {}
+        cols = {}
+        for r, c in cells:
+            rows.setdefault(r, []).append(c)
+            cols.setdefault(c, []).append(r)
+        for r, cs in rows.items():
+            if len(cs) >= 2:
+                a, b = min(cs), max(cs)
+                for c in range(a + 1, b):
+                    if g[r, c] == 0:
+                        return True
+        for c, rs in cols.items():
+            if len(rs) >= 2:
+                a, b = min(rs), max(rs)
+                for r in range(a + 1, b):
+                    if g[r, c] == 0:
+                        return True
+        return False
+
+    containers = []
+    for col in frame_cols:
+        for cells in comps(col):
+            if is_container(cells):
+                containers.append((col, set(cells)))
+
+    fill = set()
+    barriers = set()
+    for _, cells in containers:
+        barriers |= cells
+
+    for _, cells in containers:
+        rr = [r for r, c in cells]
+        cc = [c for r, c in cells]
+        r0, r1 = min(rr), max(rr)
+        c0, c1 = min(cc), max(cc)
+        for r in range(r0, r1 + 1):
+            xs = [c for c in range(c0, c1 + 1) if (r, c) in cells]
+            if len(xs) >= 2:
+                for c in range(min(xs) + 1, max(xs)):
+                    if g[r, c] == 0:
+                        fill.add((r, c))
+        for c in range(c0, c1 + 1):
+            ys = [r for r in range(r0, r1 + 1) if (r, c) in cells]
+            if len(ys) >= 2:
+                for r in range(min(ys) + 1, max(ys)):
+                    if g[r, c] == 0:
+                        fill.add((r, c))
+
+    if containers:
+        mask = np.zeros((h, w), dtype=bool)
+        for r, c in barriers | fill:
+            mask[r, c] = True
+
+        seen = np.zeros((h, w), dtype=bool)
+        for r in range(h):
+            for c in range(w):
+                if g[r, c] == one and not seen[r, c]:
+                    stack = [(r, c)]
+                    seen[r, c] = True
+                    cells = []
+                    touches = False
+                    while stack:
+                        rr, cc = stack.pop()
+                        cells.append((rr, cc))
+                        if mask[rr, cc]:
+                            touches = True
+                        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                            nr, nc = rr + dr, cc + dc
+                            if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and g[nr, nc] == one:
+                                seen[nr, nc] = True
+                                stack.append((nr, nc))
+                    if not touches:
+                        for rr, cc in cells:
+                            g[rr, cc] = 0
+
+        for r, c in fill:
+            g[r, c] = one
+
+    return g
+```
