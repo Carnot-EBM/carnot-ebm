@@ -229,7 +229,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--model",
-        default="gemini",
+        default="codex",  # 2026-06-10 operator directive: codex-default anywhere gemini would run
         choices=["gemini", "claude"],
     )
     parser.add_argument("--model-name", default=None)
