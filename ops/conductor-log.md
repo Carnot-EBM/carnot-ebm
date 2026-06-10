@@ -8174,3 +8174,4 @@ c |
 | 2026-06-10 11:52 UTC | GAP-4 DECENTRALIZATION arm (re-run of the poison-s | OK | cache hit: 119 passed in 5.65s |
 | 2026-06-10 12:13 UTC | ARC-AGI-3 SCALE THE LEVEL FRONTIER via verifier-va | OK | 88 passed in 6.81s |
 | 2026-06-10 12:32 UTC | FOURTH ARC-AGI-3 game first-solve via ACTIVE DYNAM | OK | 89 passed in 5.32s |
+| 2026-06-10 12:45 UTC | ArcMemo SOLVE-transfer v3 (self-learning MANDATE;  | OK | 95 passed in 4.85s |
