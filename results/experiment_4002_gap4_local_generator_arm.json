@@ -1,0 +1,449 @@
+{
+  "ci95_local_minus_vote": [
+    0.0,
+    0.0
+  ],
+  "cost_codex_seconds_ref": 46.24,
+  "cost_local_seconds": 60.16,
+  "cost_verifier_seconds": 0.1118,
+  "decentralization_note": "Inducer is a LOCAL open-weight GGUF (gemma-4-26B-A4B) loaded via llama.cpp; the verifier side is fully local and model-free. This is the decentralization-clean deployment-tier path (CLAUDE.md Decentralization Rule 1) \u2014 no closed-weight call in the headline arm.",
+  "duration_s": 1817.28,
+  "experiment": "experiment_4002_gap4_local_generator_arm",
+  "field_principles": {
+    "ci95_local_minus_vote": "Bootstrap 95% CI of (local gated - vote) pass@2; non-overlap with 0 is significance.",
+    "cost_codex_seconds_ref": "Per-task wall-cost of the codex tier (reference, from the saved codex artifact).",
+    "cost_local_seconds": "Per-task wall-cost of the LOCAL inducer (sovereign, on-box; should beat codex network calls per the decentralized-efficiency datum).",
+    "cost_verifier_seconds": "Per-task wall-cost of the model-free verifier (rerank + scoring); the cheap local layer.",
+    "duration_s": "Wall-clock seconds for this runner.",
+    "honest_verdict": "Terminal-prefix verdict (success/complete/blocked).",
+    "inference_substrate": "live_llm_inference - the local GGUF is loaded and run for real.",
+    "local_beats_vote": "BARE BOOL - local gated rerank beats vote pass@2 with a bootstrap CI excluding 0 (the sovereign accuracy claim).",
+    "local_gated_pass2": "BARE FLOAT - the LOCAL-inducer gated rerank pass@2 (vs vote 0.4516, oracle 0.6129, codex tier 0.5806 - does an OPEN model reach the moat).",
+    "local_induction_demo_perfect_rate": "BARE FLOAT - fraction of pool entries the LOCAL GGUF induced a demo-perfect program for (the open-model induction capability; the binding constraint vs codex 0.9355).",
+    "local_model_used": "Which SOTA local GGUF was the inducer - the decentralization provenance.",
+    "missing_verifier_gaps": "What the local inducer could NOT synthesize that codex could (the open-vs-closed induction gap, per the Missing-Verifier Gap Logging mandate).",
+    "preconditions_checked": "list of {resource, available} - the GGUF cache + llama_cpp checks (pre-empts the exp3975 silent-DSL-fallback failure).",
+    "random_seed": "Shared GAP-4 substrate seed for reproducible bootstrap + greedy decoding.",
+    "verifier_side_unchanged": "BARE BOOL - the model-free verifier primitives were reused unchanged (only the inducer was swapped; isolates the generator's contribution)."
+  },
+  "gates": {
+    "coverage_demo_perfect": 0.2581,
+    "headroom_recovered": 0,
+    "selection_beats_union": false,
+    "selection_beats_vote": false,
+    "vote_wins_lost": 0
+  },
+  "headroom_recovered_tasks": [],
+  "honest_verdict": "complete: gap4_local_induction0.2581_pass20.4516_below_codex",
+  "inference_substrate": "live_llm_inference",
+  "local_beats_vote": false,
+  "local_gated_pass2": 0.4516,
+  "local_induction_demo_perfect_rate": 0.2581,
+  "local_model_used": "gemma-4-26B-A4B",
+  "missing_verifier_gaps": "Local inducer could NOT synthesize a demo-perfect program for 20 task(s) that codex could: 17cae0c1, 1a6449f1, 25094a63, 2f0c5170, 4e469f39, 505fff84, 50a16a69, 5833af48, 712bf12e, 79fb03f4, 81c0276b, 96a8c0cd, a57f2f04, ac3e2b04, b9630600, be03b35f, c3202e5a, c7d4e6ad, f3e62deb, fafd9572. These are open-vs-closed induction-capability gaps (stronger local model / richer few-shot prompt), not verifier defects.",
+  "model_specs": {
+    "generator_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "generator_model": "gemma-4-26B-A4B",
+    "verifier": "model-free: demo-fit exact-reproduction gate + restricted-namespace execution + content-hash candidate match (imported unchanged from arc3_gap4_rule_exec_verifier)"
+  },
+  "n_entries": 31,
+  "n_local_demo_perfect": 8,
+  "n_unique_tasks": 30,
+  "no_gpu_used": false,
+  "per_task": [
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 0,
+      "n_cands": 5,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "50a16a69",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 1,
+      "n_cands": 5,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "task": "66e6c45b",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 2,
+      "n_cands": 599,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "17cae0c1",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 3,
+      "n_cands": 656,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "fafd9572",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 4,
+      "n_cands": 7,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "task": "a59b95c0",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 5,
+      "n_cands": 108,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "4e469f39",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 6,
+      "n_cands": 605,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "a57f2f04",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 7,
+      "n_cands": 633,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "96a8c0cd",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 8,
+      "n_cands": 5,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "8719f442",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 9,
+      "n_cands": 4,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "task": "1a2e2828",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 10,
+      "n_cands": 11,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "25094a63",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 11,
+      "n_cands": 361,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "2f0c5170",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 12,
+      "n_cands": 213,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "3ee1011a",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 13,
+      "n_cands": 42,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "task": "2072aba6",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 14,
+      "n_cands": 195,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "712bf12e",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 15,
+      "n_cands": 577,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "505fff84",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 16,
+      "n_cands": 8,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "be03b35f",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 17,
+      "n_cands": 4,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "c7d4e6ad",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 18,
+      "n_cands": 942,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "1a6449f1",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 19,
+      "n_cands": 212,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "task": "f0df5ff0",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 20,
+      "n_cands": 305,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "81c0276b",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 21,
+      "n_cands": 56,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "692cd3b6",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 22,
+      "n_cands": 754,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "c3202e5a",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 23,
+      "n_cands": 13,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "ac3e2b04",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 24,
+      "n_cands": 50,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "0b17323b",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 25,
+      "n_cands": 995,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "5833af48",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 26,
+      "n_cands": 600,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "79fb03f4",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 27,
+      "n_cands": 24,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "b9630600",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 28,
+      "n_cands": 1,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "task": "00576224",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 29,
+      "n_cands": 19,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "f3e62deb",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 30,
+      "n_cands": 32,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "f3e62deb",
+      "vote_top2": false
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "local_gguf_cached"
+    },
+    {
+      "available": true,
+      "resource": "llama_cpp"
+    },
+    {
+      "available": true,
+      "resource": "eval_pool"
+    }
+  ],
+  "random_seed": 12345,
+  "rankers": {
+    "EXEC_PURE": {
+      "pass@1": 0.4194,
+      "pass@2": 0.4839
+    },
+    "GAP4_GATED": {
+      "pass@1": 0.4516,
+      "pass@2": 0.4516
+    },
+    "GAP4_GRADED": {
+      "pass@1": 0.4516,
+      "pass@2": 0.4516
+    },
+    "TRM_VOTE": {
+      "pass@1": 0.4194,
+      "pass@2": 0.4516
+    },
+    "UNION_plus_exec": {
+      "pass@1": 0.4839,
+      "pass@2": 0.4839
+    },
+    "UNION_votes_qmean_voteshare": {
+      "pass@1": 0.4516,
+      "pass@2": 0.4839
+    }
+  },
+  "references": {
+    "codex_gated_pass2": 0.5806,
+    "oracle_pass2": 0.6129,
+    "vote_pass2": 0.4516
+  },
+  "reproducibility_checksum": "a4b34d3217fd977d",
+  "schema": "carnot.experiment_4002_gap4_local_generator_arm.v1",
+  "title": "GAP-4 local open-weight generator arm vs the model-free verifier",
+  "total_local_calls": 77,
+  "total_local_seconds": 1804.68,
+  "verifier_side_unchanged": true,
+  "vote_wins_lost_tasks": []
+}

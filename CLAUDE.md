@@ -23,12 +23,14 @@ read only if debugging the enforcer):**
 - Exclusion-Manifest Cross-Check → `_ensure_exclusion_manifest_loaded()`
 
 **HISTORICAL / SUPERSEDED (preserved per never-prune; not active guidance):**
-- Codex-Default for Experiments → superseded by Gemini-Default (2026-05-20)
+- Codex-Default for Experiments (2026-05) → superseded by Gemini-Default (2026-05-20)
+- Gemini-Default for Experiments → superseded by Codex-Default v2 (2026-06-10;
+  gemini-cli global-stall incident — see the new rule below the historical one)
 - Paper-v6 Narrowing Discipline → forward-only; retires when the 3 Deep Think
   corrigenda land + paper rewritten
 
 **ACTIVE — require judgment, read these when planning/executing:**
-Gemini-Default · Failed-Experiment Rerun · Pre-Launch Preconditions ·
+Codex-Default-v2 (2026-06-10) · Failed-Experiment Rerun · Pre-Launch Preconditions ·
 Adversarial Artifact Verification + Sample-Size Rigor · Inference-Substrate
 Declaration · Principle-Annotated Artifact Fields · Phase Prototype+Validation ·
 Scope-Reduction-When-Flagged · Hardware-Task Continuity (see north-star §3 for
@@ -1090,6 +1092,68 @@ next milestone. The pre-staged-roadmap check in `_plan_next_milestone`
 compares the existing draft's `milestone:` field against this
 expectation. Stale prefixes (e.g., `2026.04.120` drafted in May)
 trigger planner re-run.
+
+## Codex-Default for Experiments v2 (MANDATORY — 2026-06-10, supersedes Gemini-Default)
+
+**Origin:** 2026-06-10 operator directive after gemini-cli stalled GLOBALLY
+(the `.370 planner timed out at 1201s; the archive task failed 3x at 600s
+silence; a trivial `gemini -p "Reply with exactly: OK"` smoke test hung):
+
+> "Let's make sure we're using codex by default anywhere that gemini would
+>  get used as that still seems to be a problem."
+
+This is the second gemini reliability incident in two weeks (cf. the `.333
+quota-crash wipeout that produced ZERO artifacts from 14 tasks). The operator
+has now made codex the STANDING default — not an emergency fallback that
+auto-reverts when gemini recovers. Re-enabling gemini requires an explicit
+operator directive + a fresh smoke verification.
+
+**The rule.** When planning a new milestone, **all experiment tasks default to
+`agent_type: codex` and `model: gpt-5.5`**. Do NOT emit `agent_type: gemini`.
+The narrow exceptions are unchanged in structure from the prior defaults:
+
+1. **Planner / retro / adversarial audits** — stay on Claude Opus 4.8 via
+   `AGENT_TYPE_PLANNER` / `AGENT_TYPE_RETRO` env + explicit `--model claude`
+   audit invocations (operator directives 2026-05-30 and 2026-06-08).
+2. **Cross-file refactors with deep tool choreography** — `agent_type: claude`
+   ONLY with the operator-only `requires_claude_verified: true` flag (the
+   planner-emitted `requires_claude` is an ABUSED signal since `.322-`.325 and
+   is IGNORED by the runtime coercion).
+3. **Gemini tasks** — none, until the operator re-verifies gemini. A task that
+   genuinely needs gemini (1M-context long-corpus synthesis) waits or chunks
+   for codex; if truly blocking, escalate to the operator rather than emitting
+   gemini.
+
+**Mechanical enforcement (lives in `scripts/research_conductor.py` +
+systemd drop-in `30-codex-fallback-20260610.conf`):**
+
+- `CODEX_FORCE_EXPERIMENTS=1` (standing) coerces `claude → codex` (ignoring
+  the abused `requires_claude`; only `requires_claude_verified: true`
+  bypasses) AND `gemini → codex` (only `requires_gemini_verified: true`
+  bypasses — operator-only).
+- `GEMINI_FORCE_EXPERIMENTS=0` (standing) disables the old back-flip coercion.
+- `AGENT_TYPE=codex`, `AGENT_MODEL=gpt-5.5` are the conductor's process env.
+- The planner prompt's AGENT ROUTING section now reads CODEX-DEFAULT.
+- The standalone audit scripts (`verifier_authenticity_audit.py`,
+  `pages_adversarial_audit.py`) default to `--model claude` (Opus); gemini is
+  opt-in only.
+
+**Known codex risk (acknowledged, monitored):** the 2026-05-29 long-prompt
+hang/HTTP-400 incident benched codex once before. codex-cli 0.137.0 ran ~150
+GAP-4 calls + the full post-flip `.370 task stream without a hang (2026-06-10).
+If codex hangs recur on the conductor's long prompts, the fallback is CLAUDE
+(not gemini) for the affected task class, via `requires_claude_verified`.
+
+**Calibration table:** the agent-fungible task categories in the historical
+Gemini-Default table below now read `codex` in the default column, per the
+same agent-fungibility reasoning that moved them codex→gemini in May.
+
+---
+
+### Historical: Gemini-Default rule (2026-05-20 — 2026-06-10; preserved per never-prune)
+
+> **STATUS (2026-06-10): SUPERSEDED by Codex-Default v2 above** after the
+> gemini-cli global-stall incident. Prose preserved unchanged below.
 
 ## Gemini-Default for Experiments (MANDATORY — Quota Preservation)
 

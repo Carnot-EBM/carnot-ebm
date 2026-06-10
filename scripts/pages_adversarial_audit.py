@@ -203,7 +203,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--model",
-        default="codex",  # 2026-06-10 operator directive: codex-default anywhere gemini would run
+        default="claude",  # 2026-06-10 operator directive: gemini is NEVER the default (global-stall incident); claude=Opus is the audit agent per the 2026-06-08 directive
         choices=["gemini", "claude"],
         help="Which CLI backend to use (default: codex per the 2026-06-10 Codex-Default directive)",
     )
