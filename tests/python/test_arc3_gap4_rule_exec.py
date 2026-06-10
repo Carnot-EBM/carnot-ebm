@@ -73,6 +73,21 @@ def test_sandbox_blocks_numpy_io_and_type_vectors():
         assert safe_transform_from_code(bad) is None
 
 
+def test_sandbox_word_boundary_does_not_false_reject():
+    # SCENARIO (regression — the ARC-2 round bug): bare substring matching rejected legitimate numpy
+    # code ('type(' matched 'astype(', 'os.' matched 'pos.'), costing a demo-perfect program. The
+    # word-boundary check must pass these through while still blocking the bare tokens.
+    fn = safe_transform_from_code(
+        "def transform(grid):\n"
+        "    pos = np.argwhere(grid > 0)\n"
+        "    out = grid.astype(np.int64)\n"
+        "    return out if len(pos) else grid\n"
+    )
+    assert fn is not None
+    out = fn(np.ones((3, 3), dtype=int))
+    assert out is not None and out.shape == (3, 3)
+
+
 def test_sandbox_times_out_runaway_program():
     # SCENARIO (panel hardening): a runaway loop must abandon the call within EXEC_TIMEOUT_S and
     # abstain (None), not hang the run. Uses a long finite loop ('while True' would also be caught

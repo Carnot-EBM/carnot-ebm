@@ -164,8 +164,13 @@ def safe_transform_from_code(code: str):
     """Compile codex's transform() in a restricted namespace. Unlike the M2-v3 wrapper, the output
     SHAPE MAY DIFFER from the input (ARC rules crop/tile/grow); a crash or illegal output -> None
     (treated as abstention, never trusted)."""
-    if any(tok in code for tok in _FORBIDDEN):
-        return None
+    # Word-boundary matching (2026-06-10 fix, ARC-2 round): bare substring matching false-rejected
+    # legitimate numpy code — 'type(' matched 'astype(' and 'os.' matched 'pos.' (5/5 blacklist hits
+    # on the ARC-2 transcripts were false positives, costing one demo-perfect program). The negative
+    # lookbehind requires the token NOT to be preceded by an identifier character.
+    for tok in _FORBIDDEN:
+        if re.search(r"(?<![A-Za-z0-9_])" + re.escape(tok), code):
+            return None
     body = "\n".join(
         ln for ln in code.splitlines() if not ln.strip().startswith(("import ", "from "))
     )

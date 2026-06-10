@@ -76,7 +76,9 @@ def main(data=DATA, dump_glob=LATENT_GLOB, out_path=OUT, crosscheck=True):
             continue
         for pair in puzzle["test"]:
             ih = grid_hash(arc_grid_to_np(pair["input"]))
-            lh = grid_hash(arc_grid_to_np(pair["output"]))  # gold hash — LABEL ONLY, grid not exported
+            lh = grid_hash(
+                arc_grid_to_np(pair["output"])
+            )  # gold hash — LABEL ONLY, grid not exported
             bucket = store[name].get(ih)
             if not bucket:
                 continue
@@ -115,8 +117,10 @@ def main(data=DATA, dump_glob=LATENT_GLOB, out_path=OUT, crosscheck=True):
         json.dump(out, f)
     # cross-check against the Stage-1 sidecar: per-entry candidate count + vote multiset must match
     if not crosscheck:
-        print(f"exported {len(entries)} entries / {out['n_candidates']} candidates -> {path} "
-              f"(stage-1 cross-check skipped: non-arc1 pool)")
+        print(
+            f"exported {len(entries)} entries / {out['n_candidates']} candidates -> {path} "
+            f"(stage-1 cross-check skipped: non-arc1 pool)"
+        )
         return
     s1 = json.load(open(f"{CARNOT}/results/arc3_gap3_stage1_candidate_table.json"))
     assert len(entries) == s1["n_tasks"], (len(entries), s1["n_tasks"])
@@ -138,7 +142,10 @@ if __name__ == "__main__":
     ap.add_argument("--data", default=DATA, help="baked TRM dataset dir (has test_puzzles.json)")
     ap.add_argument("--dump_glob", default=LATENT_GLOB)
     ap.add_argument("--out", default=OUT)
-    ap.add_argument("--skip_crosscheck", action="store_true",
-                    help="skip the arc1 Stage-1 sidecar cross-check (use for non-arc1 pools)")
+    ap.add_argument(
+        "--skip_crosscheck",
+        action="store_true",
+        help="skip the arc1 Stage-1 sidecar cross-check (use for non-arc1 pools)",
+    )
     a = ap.parse_args()
     main(data=a.data, dump_glob=a.dump_glob, out_path=a.out, crosscheck=not a.skip_crosscheck)
