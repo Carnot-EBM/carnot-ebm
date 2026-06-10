@@ -8162,3 +8162,4 @@ c |
 | 2026-06-10 07:08 UTC | Capstone .369 (UNGATED — the .365 op:exists + .366 | OK | 89 passed in 4.64s |
 | 2026-06-10 07:55 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-06-10 07:57 UTC | Milestone 2026.06.370 activated | OK | 11 tasks queued |
+| 2026-06-10 08:09 UTC | Archive .369 -> activate .370; HARDENED GREEN-GATE | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: rminal with at leas |
