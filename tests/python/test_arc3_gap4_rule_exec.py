@@ -23,10 +23,12 @@ from arc3_gap3_stage2_transition_ebm import _pass  # noqa: E402
 def test_sandbox_rejects_forbidden_tokens():
     # SCENARIO: codex-written code runs in-process; file/os/network/introspection access must be
     # rejected at the token level before compilation.
-    for bad in ["import os\ndef transform(g): return g",
-                "def transform(g):\n    open('/etc/passwd')\n    return g",
-                "def transform(g):\n    return eval('g')",
-                "def transform(g):\n    return globals()['g']"]:
+    for bad in [
+        "import os\ndef transform(g): return g",
+        "def transform(g):\n    open('/etc/passwd')\n    return g",
+        "def transform(g):\n    return eval('g')",
+        "def transform(g):\n    return globals()['g']",
+    ]:
         assert safe_transform_from_code(bad) is None
 
 
@@ -62,8 +64,10 @@ def test_sandbox_allows_numpy_internal_lazy_imports():
 def test_demo_fit_gate():
     # SCENARIO: demo_fit is the oracle-free verification — only exact reproduction of every demo
     # output counts; a near-miss program must NOT reach 1.0.
-    demos = [{"input": [[1, 0], [0, 0]], "output": [[0, 1], [0, 0]]},
-             {"input": [[0, 0], [2, 0]], "output": [[0, 0], [0, 2]]}]
+    demos = [
+        {"input": [[1, 0], [0, 0]], "output": [[0, 1], [0, 0]]},
+        {"input": [[0, 0], [2, 0]], "output": [[0, 0], [0, 2]]},
+    ]
     fn_right = safe_transform_from_code("def transform(grid):\n    return grid[:, ::-1]")
     fn_wrong = safe_transform_from_code("def transform(grid):\n    return grid")
     assert demo_fit(fn_right, demos) == 1.0
@@ -93,8 +97,8 @@ def test_gated_rerank_promotes_match_and_abstains_safely():
     ]
     rankers = build_rankers(tasks)
     got = {name: _pass(tasks, key, ks=(1,)) for name, key in rankers.items()}
-    assert got["TRM_VOTE"]["pass@1"] == 0.5      # vote misses the gated task at rank 1
-    assert got["GAP4_GATED"]["pass@1"] == 1.0    # gate promotes gold; abstained task untouched
+    assert got["TRM_VOTE"]["pass@1"] == 0.5  # vote misses the gated task at rank 1
+    assert got["GAP4_GATED"]["pass@1"] == 1.0  # gate promotes gold; abstained task untouched
 
 
 def test_norm_hamming_orders_shape_mismatch_below_same_shape():

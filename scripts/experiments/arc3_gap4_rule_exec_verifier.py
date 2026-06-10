@@ -67,15 +67,66 @@ from arc3_gap3_stage2_transition_ebm import (  # noqa: E402  (shared substrate)
 ARTIFACT = f"{CARNOT}/results/arc3_gap4_rule_exec_verifier.json"
 PROGRAMS = f"{CARNOT}/results/arc3_gap4_induced_programs.json"
 
-CODEX = ["codex", "exec", "--color", "never", "--model", "gpt-5.5",
-         "-c", "model_reasoning_effort=medium",
-         "--dangerously-bypass-approvals-and-sandbox", "--cd", "/tmp", "--ephemeral"]
-_FORBIDDEN = ("__import__", "open(", "eval(", "exec(", "compile(", "subprocess", "os.", "sys.",
-              "import os", "import sys", "import subprocess", "socket", "shutil", "Path(",
-              "getattr(", "setattr(", "globals(", "locals(")
-_SAFE_BUILTIN_NAMES = ["range", "len", "min", "max", "abs", "enumerate", "zip", "sum", "sorted",
-                       "list", "dict", "set", "tuple", "int", "float", "bool", "map", "filter",
-                       "reversed", "any", "all", "round", "isinstance", "str"]
+CODEX = [
+    "codex",
+    "exec",
+    "--color",
+    "never",
+    "--model",
+    "gpt-5.5",
+    "-c",
+    "model_reasoning_effort=medium",
+    "--dangerously-bypass-approvals-and-sandbox",
+    "--cd",
+    "/tmp",
+    "--ephemeral",
+]
+_FORBIDDEN = (
+    "__import__",
+    "open(",
+    "eval(",
+    "exec(",
+    "compile(",
+    "subprocess",
+    "os.",
+    "sys.",
+    "import os",
+    "import sys",
+    "import subprocess",
+    "socket",
+    "shutil",
+    "Path(",
+    "getattr(",
+    "setattr(",
+    "globals(",
+    "locals(",
+)
+_SAFE_BUILTIN_NAMES = [
+    "range",
+    "len",
+    "min",
+    "max",
+    "abs",
+    "enumerate",
+    "zip",
+    "sum",
+    "sorted",
+    "list",
+    "dict",
+    "set",
+    "tuple",
+    "int",
+    "float",
+    "bool",
+    "map",
+    "filter",
+    "reversed",
+    "any",
+    "all",
+    "round",
+    "isinstance",
+    "str",
+]
 
 
 def _numpy_only_import(name, *args, **kwargs):
@@ -158,8 +209,10 @@ def induction_prompt(demos, test_input, prior_code=None, failures=None):
     base = "\n".join(lines)
     if prior_code and failures:
         base += (
-            "\n\nYour PREVIOUS function failed these demos:\n" + failures
-            + "\n\nPrevious code:\n```python\n" + prior_code
+            "\n\nYour PREVIOUS function failed these demos:\n"
+            + failures
+            + "\n\nPrevious code:\n```python\n"
+            + prior_code
             + "\n```\nFix the rule inference and output the corrected function as one ```python block."
         )
     return base
@@ -226,8 +279,15 @@ def induce_program(task_name, demos, test_input, iters=3, timeout=300):
             history.append({"iter": it, "status": "unsafe_or_uncompilable", "codex_s": dt})
             continue
         fit = demo_fit(fn, demos)
-        history.append({"iter": it, "status": "graded", "demo_fit": round(fit, 4), "codex_s": dt,
-                        "code_len": len(code)})
+        history.append(
+            {
+                "iter": it,
+                "status": "graded",
+                "demo_fit": round(fit, 4),
+                "codex_s": dt,
+                "code_len": len(code),
+            }
+        )
         if fit > best_fit:
             best_fit, best_code, best_fn = fit, code, fn
         if best_fit >= 1.0:
@@ -266,7 +326,9 @@ def build_rankers(tasks):
         gated_hash = prog["pred_hash"] if (prog and prog["demo_perfect"]) else None
         pred = np.asarray(prog["pred_grid"]) if (prog and prog["pred_grid"] is not None) else None
         for c in t["cands"]:
-            c["_exec_match"] = 1.0 if (gated_hash is not None and ghash(c["grid"]) == gated_hash) else 0.0
+            c["_exec_match"] = (
+                1.0 if (gated_hash is not None and ghash(c["grid"]) == gated_hash) else 0.0
+            )
             c["_exec_hamming"] = norm_hamming(c["grid"], pred) if pred is not None else 2.0
         t["_has_gate"] = gated_hash is not None
         t["_gate_hit_pool"] = any(c["_exec_match"] for c in t["cands"])
@@ -281,14 +343,18 @@ def build_rankers(tasks):
 def run(limit=0, iters=3, workers=4, timeout=300, write=True):
     started = time.time()
     pre = {
-        "codex_cli": subprocess.run(["bash", "-lc", "command -v codex"], capture_output=True,
-                                    text=True).returncode == 0,
+        "codex_cli": subprocess.run(
+            ["bash", "-lc", "command -v codex"], capture_output=True, text=True
+        ).returncode
+        == 0,
         "eval_pool": Path(POOL).exists(),
     }
     if not all(pre.values()):
-        art = {"experiment": "arc3_gap4_rule_exec_verifier",
-               "honest_verdict": "blocked_" + "_".join(k for k, v in pre.items() if not v),
-               "preconditions_checked": [{"resource": k, "available": v} for k, v in pre.items()]}
+        art = {
+            "experiment": "arc3_gap4_rule_exec_verifier",
+            "honest_verdict": "blocked_" + "_".join(k for k, v in pre.items() if not v),
+            "preconditions_checked": [{"resource": k, "available": v} for k, v in pre.items()],
+        }
         if write:
             Path(ARTIFACT).write_text(json.dumps(art, indent=2) + "\n")
         print(f"-> {art['honest_verdict']}")
@@ -313,40 +379,69 @@ def run(limit=0, iters=3, workers=4, timeout=300, write=True):
         for extra in ents[1:]:  # extra test entries of the same task: reuse the program, re-execute
             fn = safe_transform_from_code(rec["code"]) if rec["code"] else None
             pred = fn(extra["test_input"]) if (fn is not None and rec["demo_perfect"]) else None
-            recs.append({**rec, "pred_hash": ghash(pred) if pred is not None else None,
-                         "pred_grid": pred.tolist() if pred is not None else None,
-                         "n_calls": 0, "codex_seconds": 0.0})
+            recs.append(
+                {
+                    **rec,
+                    "pred_hash": ghash(pred) if pred is not None else None,
+                    "pred_grid": pred.tolist() if pred is not None else None,
+                    "n_calls": 0,
+                    "codex_seconds": 0.0,
+                }
+            )
         return task_name, recs
 
-    print(f"[gap4] inducing programs for {len(by_task)} unique tasks "
-          f"({len(entries)} entries, iters<={iters}, workers={workers})", flush=True)
+    print(
+        f"[gap4] inducing programs for {len(by_task)} unique tasks "
+        f"({len(entries)} entries, iters<={iters}, workers={workers})",
+        flush=True,
+    )
     prog_by_entry = {}
     with ThreadPoolExecutor(max_workers=workers) as ex:
         for task_name, recs in ex.map(_induce_for, sorted(by_task)):
             for ent, rec in zip(by_task[task_name], recs):
                 prog_by_entry[id(ent)] = rec
             fit = recs[0]["demo_fit"]
-            print(f"  {task_name}: demo_fit={fit} perfect={recs[0]['demo_perfect']} "
-                  f"calls={recs[0]['n_calls']} ({recs[0]['codex_seconds']}s)", flush=True)
+            print(
+                f"  {task_name}: demo_fit={fit} perfect={recs[0]['demo_perfect']} "
+                f"calls={recs[0]['n_calls']} ({recs[0]['codex_seconds']}s)",
+                flush=True,
+            )
 
     tasks = []
     for e in entries:
         tot = sum(c["votes"] for c in e["candidates"])
-        cands = [{"votes": c["votes"], "q_mean": c["q_mean"], "correct": c["correct"],
-                  "grid": c["grid"], "vote_share": c["votes"] / max(1, tot)}
-                 for c in e["candidates"]]
+        cands = [
+            {
+                "votes": c["votes"],
+                "q_mean": c["q_mean"],
+                "correct": c["correct"],
+                "grid": c["grid"],
+                "vote_share": c["votes"] / max(1, tot),
+            }
+            for c in e["candidates"]
+        ]
         tasks.append({"task": e["task"], "cands": cands, "prog": prog_by_entry[id(e)]})
 
     rankers = build_rankers(tasks)
     # union baselines (grouped LOTO): no-exec control vs +exec features
-    _grouped_loto_union(tasks, lambda c: np.array(
-        [np.log1p(c["votes"]), c["vote_share"], c["q_mean"]]))
+    _grouped_loto_union(
+        tasks, lambda c: np.array([np.log1p(c["votes"]), c["vote_share"], c["q_mean"]])
+    )
     for t in tasks:
         for c in t["cands"]:
             c["_union_noX"] = c["_u"]
-    _grouped_loto_union(tasks, lambda c: np.array(
-        [np.log1p(c["votes"]), c["vote_share"], c["q_mean"], c["_exec_match"],
-         min(c["_exec_hamming"], 2.0)]))
+    _grouped_loto_union(
+        tasks,
+        lambda c: np.array(
+            [
+                np.log1p(c["votes"]),
+                c["vote_share"],
+                c["q_mean"],
+                c["_exec_match"],
+                min(c["_exec_hamming"], 2.0),
+            ]
+        ),
+    )
     for t in tasks:
         for c in t["cands"]:
             c["_union_withX"] = c["_u"]
@@ -362,34 +457,48 @@ def run(limit=0, iters=3, workers=4, timeout=300, write=True):
         ng = sum(1 for c in t["cands"] if c["correct"])
         nc = len(t["cands"])
         rand_terms.append(
-            0.0 if ng == 0
-            else (1.0 - math.comb(nc - ng, min(2, nc)) / math.comb(nc, min(2, nc)) if nc >= 2 else 1.0))
+            0.0
+            if ng == 0
+            else (
+                1.0 - math.comb(nc - ng, min(2, nc)) / math.comb(nc, min(2, nc)) if nc >= 2 else 1.0
+            )
+        )
     random_baseline = round(float(np.mean(rand_terms)), 4)
 
     # safety + headroom accounting for the GATED ranker (the headline)
     kv, kg = rankers["TRM_VOTE"], rankers["GAP4_GATED"]
-    vote_hits = {i for i, t in enumerate(tasks)
-                 if any(c["correct"] for c in sorted(t["cands"], key=kv)[:2])}
-    gated_hits = {i for i, t in enumerate(tasks)
-                  if any(c["correct"] for c in sorted(t["cands"], key=kg)[:2])}
+    vote_hits = {
+        i for i, t in enumerate(tasks) if any(c["correct"] for c in sorted(t["cands"], key=kv)[:2])
+    }
+    gated_hits = {
+        i for i, t in enumerate(tasks) if any(c["correct"] for c in sorted(t["cands"], key=kg)[:2])
+    }
     vote_wins_lost = sorted(vote_hits - gated_hits)
     headroom_recovered = sorted(
-        i for i in gated_hits - vote_hits if any(c["correct"] for c in tasks[i]["cands"]))
+        i for i in gated_hits - vote_hits if any(c["correct"] for c in tasks[i]["cands"])
+    )
     per_task = []
     for i, t in enumerate(tasks):
         prog = t["prog"]
         gold_pred = bool(
-            prog and prog["pred_hash"]
-            and any(c["correct"] and ghash(c["grid"]) == prog["pred_hash"] for c in t["cands"]))
-        per_task.append({
-            "i": i, "task": t["task"], "n_cands": len(t["cands"]),
-            "oracle_hit": any(c["correct"] for c in t["cands"]),
-            "vote_top2": i in vote_hits, "gated_top2": i in gated_hits,
-            "demo_fit": prog["demo_fit"] if prog else None,
-            "demo_perfect": bool(prog and prog["demo_perfect"]),
-            "pred_in_pool": bool(t["_gate_hit_pool"]),
-            "pred_is_gold": gold_pred,  # post-hoc scoring only
-        })
+            prog
+            and prog["pred_hash"]
+            and any(c["correct"] and ghash(c["grid"]) == prog["pred_hash"] for c in t["cands"])
+        )
+        per_task.append(
+            {
+                "i": i,
+                "task": t["task"],
+                "n_cands": len(t["cands"]),
+                "oracle_hit": any(c["correct"] for c in t["cands"]),
+                "vote_top2": i in vote_hits,
+                "gated_top2": i in gated_hits,
+                "demo_fit": prog["demo_fit"] if prog else None,
+                "demo_perfect": bool(prog and prog["demo_perfect"]),
+                "pred_in_pool": bool(t["_gate_hit_pool"]),
+                "pred_is_gold": gold_pred,  # post-hoc scoring only
+            }
+        )
 
     def _lcg(seed):
         x = seed
@@ -401,8 +510,9 @@ def run(limit=0, iters=3, workers=4, timeout=300, write=True):
         gen, deltas = _lcg(SEED), []
 
         def p2(sample, key):
-            return sum(int(any(c["correct"] for c in sorted(t["cands"], key=key)[:2]))
-                       for t in sample) / len(sample)
+            return sum(
+                int(any(c["correct"] for c in sorted(t["cands"], key=key)[:2])) for t in sample
+            ) / len(sample)
 
         for _ in range(1000):
             samp = [tasks[next(gen) % n] for _ in range(n)]
@@ -434,19 +544,28 @@ def run(limit=0, iters=3, workers=4, timeout=300, write=True):
         "title": "GAP-4: program-induction + execution-consistency verifier vs TRM frequency vote",
         "honest_verdict": verdict,
         "inference_substrate": "codex_program_induction_plus_offline_trm_candidate_rerank_no_oracle",
-        "n_tasks": n, "n_unique_tasks": len(by_task), "n_oracle_hit": n_oracle,
-        "oracle_pass2_ceiling": oracle2, "random_ranker_pass2_baseline": random_baseline,
-        "rankers": res, "gates": gates,
+        "n_tasks": n,
+        "n_unique_tasks": len(by_task),
+        "n_oracle_hit": n_oracle,
+        "oracle_pass2_ceiling": oracle2,
+        "random_ranker_pass2_baseline": random_baseline,
+        "rankers": res,
+        "gates": gates,
         "vote_wins_lost_tasks": [per_task[i]["task"] for i in vote_wins_lost],
         "headroom_recovered_tasks": [per_task[i]["task"] for i in headroom_recovered],
-        "bootstrap": {"gated_vs_vote_pass2_ci95": _boot(kg, kv),
-                      "gated_vs_union_pass2_ci95": _boot(kg, rankers["UNION_votes_qmean_voteshare"]),
-                      "B": 1000},
+        "bootstrap": {
+            "gated_vs_vote_pass2_ci95": _boot(kg, kv),
+            "gated_vs_union_pass2_ci95": _boot(kg, rankers["UNION_votes_qmean_voteshare"]),
+            "B": 1000,
+        },
         "per_task": per_task,
-        "generator": {"model": "gpt-5.5 via codex exec (reasoning_effort=medium)",
-                      "total_codex_calls": total_calls, "total_codex_seconds": total_codex_s,
-                      "iters_per_task_max": iters,
-                      "data_handling_class": "minimize (public ARC demo grids + test input only)"},
+        "generator": {
+            "model": "gpt-5.5 via codex exec (reasoning_effort=medium)",
+            "total_codex_calls": total_calls,
+            "total_codex_seconds": total_codex_s,
+            "iters_per_task_max": iters,
+            "data_handling_class": "minimize (public ARC demo grids + test input only)",
+        },
         "no_oracle_audit": (
             "The codex prompt contains demo pairs + the test INPUT only — never the test gold and "
             "never the candidate pool. Programs are verified on demos (public context); the gated "
@@ -465,20 +584,38 @@ def run(limit=0, iters=3, workers=4, timeout=300, write=True):
     }
     if write:
         Path(ARTIFACT).write_text(json.dumps(art, indent=2, sort_keys=True) + "\n")
-        progs = [{k: v for k, v in t["prog"].items() if k != "history"} | {"entry_i": i}
-                 for i, t in enumerate(tasks) if t["prog"]]
-        Path(PROGRAMS).write_text(json.dumps(
-            {"experiment": "arc3_gap4_induced_programs", "programs": progs,
-             "histories": [{"task": t["task"], "history": t["prog"]["history"]}
-                           for t in tasks if t["prog"]]},
-            indent=2, sort_keys=True) + "\n")
+        progs = [
+            {k: v for k, v in t["prog"].items() if k != "history"} | {"entry_i": i}
+            for i, t in enumerate(tasks)
+            if t["prog"]
+        ]
+        Path(PROGRAMS).write_text(
+            json.dumps(
+                {
+                    "experiment": "arc3_gap4_induced_programs",
+                    "programs": progs,
+                    "histories": [
+                        {"task": t["task"], "history": t["prog"]["history"]}
+                        for t in tasks
+                        if t["prog"]
+                    ],
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n"
+        )
     print(f"\n-> {verdict}")
     for r in rankers:
         print(f"   {r:30s} pass@1={res[r]['pass@1']} pass@2={res[r]['pass@2']}")
-    print(f"   oracle={oracle2} random={random_baseline} demo_perfect={n_perfect}/{n} gates={gates}")
+    print(
+        f"   oracle={oracle2} random={random_baseline} demo_perfect={n_perfect}/{n} gates={gates}"
+    )
     print(f"   recovered={art['headroom_recovered_tasks']} lost={art['vote_wins_lost_tasks']}")
-    print(f"   bootstrap gated-vote={art['bootstrap']['gated_vs_vote_pass2_ci95']} "
-          f"gated-union={art['bootstrap']['gated_vs_union_pass2_ci95']}")
+    print(
+        f"   bootstrap gated-vote={art['bootstrap']['gated_vs_vote_pass2_ci95']} "
+        f"gated-union={art['bootstrap']['gated_vs_union_pass2_ci95']}"
+    )
     print(f"   codex: {total_calls} calls / {total_codex_s}s")
     return art
 
