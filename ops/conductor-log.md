@@ -8160,3 +8160,5 @@ c |
 | 2026-06-10 06:45 UTC | ArcMemo SOLVE-transfer v2 (self-learning MANDATE;  | OK | 89 passed in 4.82s |
 | 2026-06-10 06:56 UTC | Hardware continuity (consolidated): SSH/USB-reacha | OK | 87 passed in 4.91s |
 | 2026-06-10 07:08 UTC | Capstone .369 (UNGATED — the .365 op:exists + .366 | OK | 89 passed in 4.64s |
+| 2026-06-10 07:55 UTC | Plan next milestone | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-06-10 07:57 UTC | Milestone 2026.06.370 activated | OK | 11 tasks queued |
