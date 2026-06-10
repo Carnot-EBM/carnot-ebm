@@ -8184,3 +8184,4 @@ c |
 | 2026-06-10 16:57 UTC | Archive .370 -> activate .371; KEEP the HARDENED G | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-06-10 17:13 UTC | GAP-4 PRE-REGISTERED PRECISION CONFIRMATION v3 (TH | OK | 91 passed in 5.82s |
 | 2026-06-10 17:15 UTC | Archive .370 -> activate .371; KEEP the HARDENED G | OK | Deliverable already exists in repo |
+| 2026-06-10 17:31 UTC | GAP-5 CROSS-EXAMPLE-CONSISTENCY SELECTOR upgrade ( | OK | 86 passed in 6.45s |
