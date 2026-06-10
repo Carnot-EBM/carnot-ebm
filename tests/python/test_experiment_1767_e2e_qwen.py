@@ -26,9 +26,9 @@ def test_experiment_1767_e2e_qwen_runs():
         assert report is not None
         assert report["experiment_id"] == "1767"
         assert report["model"] == model_name
-        assert "latency" in report
+        assert "latency_ms" in report
         assert "parse_rate" in report
-        assert "energy_scores" in report
+        assert "energy_score" in report
         
         # Verify file artifact
         assert os.path.exists(output_path)
@@ -36,6 +36,6 @@ def test_experiment_1767_e2e_qwen_runs():
             data = json.load(f)
             assert data["experiment_id"] == "1767"
             assert data["model"] == model_name
-            assert "latency" in data
+            assert "latency_ms" in data
             assert "parse_rate" in data
-            assert "energy_scores" in data
+            assert "energy_score" in data
