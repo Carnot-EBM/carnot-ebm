@@ -8122,3 +8122,5 @@ c |
 | 2026-06-10 00:12 UTC | BUILD the GAP-4 executed-rule-consistency verifier | OK | 91 passed in 3.20s |
 | 2026-06-10 00:14 UTC | EVALUATE the GAP-4 execution-verifier on the TRM-r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3975-gap4-execution-verifier-build.posi |
 | 2026-06-10 00:16 UTC | EVALUATE the GAP-4 execution-verifier on the TRM-r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3975-gap4-execution-verifier-build.posi |
+| 2026-06-10 00:18 UTC | EVALUATE the GAP-4 execution-verifier on the TRM-r | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3975-gap4-execution-verifier-build.posi |
+| 2026-06-10 00:20 UTC | RE-DERIVATION + independence audit of the GAP-4 po | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3976-gap4-trm-rerank-eval) |
