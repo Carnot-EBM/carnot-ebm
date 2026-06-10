@@ -157,7 +157,34 @@ Write exactly one Python function:
         # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
         # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
 Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
-===== RAW OUTPUT =====
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (11x12):
+[[4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3],
+ [4, 3, 4, 4, 4, 4, 4, 3, 4, 3, 3, 3],
+ [4, 3, 4, 3, 3, 3, 4, 3, 4, 3, 3, 3],
+ [4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 4, 3],
+ [4, 3, 4, 3, 3, 3, 4, 3, 4, 3, 3, 3],
+ [4, 3, 4, 4, 4, 4, 4, 3, 4, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3],
+ [4, 3, 3, 3, 4, 3, 3, 3, 4, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3]]
+your function returned:
+[[4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3],
+ [4, 3, 4, 4, 4, 4, 4, 3, 4, 3, 3, 3],
+ [4, 3, 4, 3, 3, 3, 4, 3, 4, 3, 3, 3],
+ [4, 3, 4, 3, 4, 3, 4, 3, 4, 3, 3, 3],
+ [4, 3, 4, 3, 3, 3, 4, 3, 4, 3, 4, 3],
+ [4, 3, 4, 4, 4, 4, 4, 3, 4, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3],
+ [4, 3, 3, 3, 4, 3, 3, 3, 4, 3, 3, 3],
+ [4, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3],
+ [4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3]]
+
+Previous code:
 ```python
 def transform(grid):
     bg = int(np.bincount(grid.ravel()).argmax())
@@ -315,6 +342,213 @@ def transform(grid):
     for r in roots:
         rh, rw = comps[r]["size"]
         comps[r]["pos"] = (ys[r] - rh // 2, xs[r] - rw // 2)
+
+    pad_right = any(not comps[r]["loop"] for r in roots)
+    out = np.full((out_h, out_w + (1 if pad_right else 0)), bg, dtype=grid.dtype)
+
+    def draw(i, off_r=0, off_c=0):
+        comp = comps[i]
+        r, c = comp["pos"]
+        r += off_r
+        c += off_c
+        hh, ww = comp["size"]
+
+        if comp["loop"]:
+            out[r, c:c + ww] = fg_color
+            out[r + hh - 1, c:c + ww] = fg_color
+            out[r:r + hh, c] = fg_color
+            out[r:r + hh, c + ww - 1] = fg_color
+            for ch in comp["children"]:
+                draw(ch, r, c)
+        else:
+            out[r, c] = fg_color
+
+    for r in roots:
+        draw(r)
+
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    bg = int(np.bincount(grid.ravel()).argmax())
+    vals, counts = np.unique(grid, return_counts=True)
+    fg_color = int(vals[np.argmin(counts)])
+    mask = grid == fg_color
+    h, w = mask.shape
+
+    seen = np.zeros(mask.shape, dtype=bool)
+    comps = []
+    for r in range(h):
+        for c in range(w):
+            if mask[r, c] and not seen[r, c]:
+                q = [(r, c)]
+                seen[r, c] = True
+                cells = []
+                while q:
+                    x, y = q.pop()
+                    cells.append((x, y))
+                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nx, ny = x + dx, y + dy
+                        if 0 <= nx < h and 0 <= ny < w and mask[nx, ny] and not seen[nx, ny]:
+                            seen[nx, ny] = True
+                            q.append((nx, ny))
+                rs = [p[0] for p in cells]
+                cs = [p[1] for p in cells]
+                comps.append({
+                    "cells": cells,
+                    "bbox": (min(rs), max(rs), min(cs), max(cs)),
+                    "children": [],
+                    "parent": None,
+                    "enclosed": set(),
+                    "loop": False,
+                    "size": None,
+                    "pos": None,
+                })
+
+    def enclosed_for(comp):
+        r0, r1, c0, c1 = comp["bbox"]
+        subh, subw = r1 - r0 + 3, c1 - c0 + 3
+        blocked = np.zeros((subh, subw), dtype=bool)
+        for r, c in comp["cells"]:
+            blocked[r - r0 + 1, c - c0 + 1] = True
+
+        vis = np.zeros((subh, subw), dtype=bool)
+        q = []
+        for r in range(subh):
+            for c in (0, subw - 1):
+                if not blocked[r, c] and not vis[r, c]:
+                    vis[r, c] = True
+                    q.append((r, c))
+        for c in range(subw):
+            for r in (0, subh - 1):
+                if not blocked[r, c] and not vis[r, c]:
+                    vis[r, c] = True
+                    q.append((r, c))
+
+        while q:
+            x, y = q.pop()
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < subh and 0 <= ny < subw and not blocked[nx, ny] and not vis[nx, ny]:
+                    vis[nx, ny] = True
+                    q.append((nx, ny))
+
+        enc = set()
+        for r in range(1, subh - 1):
+            for c in range(1, subw - 1):
+                if not blocked[r, c] and not vis[r, c]:
+                    enc.add((r + r0 - 1, c + c0 - 1))
+        return enc
+
+    for comp in comps:
+        comp["enclosed"] = enclosed_for(comp)
+        comp["loop"] = len(comp["enclosed"]) > 0 or len(comp["cells"]) >= 12
+
+    for i, a in enumerate(comps):
+        if not a["loop"]:
+            continue
+        ar0, ar1, ac0, ac1 = a["bbox"]
+        area = (ar1 - ar0 + 1) * (ac1 - ac0 + 1)
+        for j, b in enumerate(comps):
+            if i == j:
+                continue
+            if any(cell in a["enclosed"] for cell in b["cells"]):
+                cur = b["parent"]
+                if cur is None:
+                    b["parent"] = i
+                else:
+                    br0, br1, bc0, bc1 = comps[cur]["bbox"]
+                    cur_area = (br1 - br0 + 1) * (bc1 - bc0 + 1)
+                    if area < cur_area:
+                        b["parent"] = i
+
+    for i, comp in enumerate(comps):
+        if comp["parent"] is not None:
+            comps[comp["parent"]]["children"].append(i)
+
+    def place_axis(nodes, axis):
+        groups = []
+        for n in nodes:
+            b = comps[n]["bbox"]
+            lo, hi = (b[0], b[1]) if axis == 0 else (b[2], b[3])
+            placed = False
+            for g in groups:
+                if not (hi < g["lo"] or lo > g["hi"]):
+                    g["nodes"].append(n)
+                    g["lo"] = min(g["lo"], lo)
+                    g["hi"] = max(g["hi"], hi)
+                    placed = True
+                    break
+            if not placed:
+                groups.append({"lo": lo, "hi": hi, "nodes": [n]})
+        groups.sort(key=lambda g: (g["lo"] + g["hi"]) / 2)
+
+        coords = {}
+        cur = 0
+        for g in groups:
+            extent = max(comps[n]["size"][axis] for n in g["nodes"])
+            center = cur + extent // 2
+            for n in g["nodes"]:
+                coords[n] = center
+            cur += extent + 1
+        return coords, max(0, cur - 1)
+
+    def layout(i):
+        comp = comps[i]
+        for ch in comp["children"]:
+            layout(ch)
+
+        if not comp["loop"]:
+            comp["size"] = (1, 1)
+            return
+
+        children = comp["children"]
+        if not children:
+            r0, r1, c0, c1 = comp["bbox"]
+            comp["size"] = (max(5, (r1 - r0 + 2) // 2), max(5, (c1 - c0 + 2) // 2))
+            return
+
+        ys, inner_h = place_axis(children, 0)
+        xs, inner_w = place_axis(children, 1)
+        for ch in children:
+            chh, chw = comps[ch]["size"]
+            comps[ch]["pos"] = (2 + ys[ch] - chh // 2, 2 + xs[ch] - chw // 2)
+
+        comp["size"] = (max(5, inner_h + 4), max(5, inner_w + 4))
+
+    roots = [i for i, c in enumerate(comps) if c["parent"] is None]
+    for r in roots:
+        layout(r)
+
+    ys, out_h = place_axis(roots, 0)
+    xs, out_w = place_axis(roots, 1)
+    for r in roots:
+        rh, rw = comps[r]["size"]
+        comps[r]["pos"] = (ys[r] - rh // 2, xs[r] - rw // 2)
+
+    loop_roots = [r for r in roots if comps[r]["loop"]]
+    for r in roots:
+        if comps[r]["loop"]:
+            continue
+        r0, r1, c0, c1 = comps[r]["bbox"]
+        cy = (r0 + r1) / 2
+        cx = (c0 + c1) / 2
+        for lr in loop_roots:
+            lr0, lr1, lc0, lc1 = comps[lr]["bbox"]
+            ph, pw = comps[lr]["size"]
+            pr, pc = comps[lr]["pos"]
+
+            if r1 >= lr0 and r0 <= lr1 and (c1 < lc0 or c0 > lc1):
+                if lr1 > lr0:
+                    comps[r]["pos"] = (pr + int(((cy - lr0) * (ph - 1)) / (lr1 - lr0) + 0.5), comps[r]["pos"][1])
+                break
+
+            if c1 >= lc0 and c0 <= lc1 and (r1 < lr0 or r0 > lr1):
+                if lc1 > lc0:
+                    comps[r]["pos"] = (comps[r]["pos"][0], pc + int(((cx - lc0) * (pw - 1)) / (lc1 - lc0) + 0.5))
+                break
 
     pad_right = any(not comps[r]["loop"] for r in roots)
     out = np.full((out_h, out_w + (1 if pad_right else 0)), bg, dtype=grid.dtype)

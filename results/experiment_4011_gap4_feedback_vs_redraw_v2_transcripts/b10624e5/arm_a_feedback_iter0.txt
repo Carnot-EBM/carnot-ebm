@@ -152,141 +152,120 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    g = grid.copy()
-    h, w = g.shape
+    out = grid.copy()
+    h, w = grid.shape
 
-    vals, counts = np.unique(g, return_counts=True)
+    vals, counts = np.unique(grid, return_counts=True)
     bg = vals[np.argmax(counts)]
 
-    row_axis = None
-    for r in range(h):
-        if g[r, 0] != bg and np.all(g[r, :] == g[r, 0]):
-            row_axis = r
+    div_rows = [r for r in range(h) if np.all(grid[r, :] == grid[r, 0]) and grid[r, 0] != bg]
+    div_cols = [c for c in range(w) if np.all(grid[:, c] == grid[0, c]) and grid[0, c] != bg]
+    rdiv = div_rows[len(div_rows) // 2] if div_rows else h // 2
+    cdiv = div_cols[len(div_cols) // 2] if div_cols else w // 2
+
+    quads = {
+        (0, 0): (0, rdiv, 0, cdiv),
+        (0, 1): (0, rdiv, cdiv + 1, w),
+        (1, 0): (rdiv + 1, h, 0, cdiv),
+        (1, 1): (rdiv + 1, h, cdiv + 1, w),
+    }
+
+    source_key = None
+    best = (-1, -1)
+    for key, (r0, r1, c0, c1) in quads.items():
+        q = grid[r0:r1, c0:c1]
+        colors = np.unique(q[q != bg])
+        score = (len(colors), np.sum(q != bg))
+        if score > best:
+            best = score
+            source_key = key
+
+    sr0, sr1, sc0, sc1 = quads[source_key]
+    src = grid[sr0:sr1, sc0:sc1]
+    ys, xs = np.where(src != bg)
+    minr, maxr = ys.min(), ys.max()
+    minc, maxc = xs.min(), xs.max()
+    box = src[minr:maxr + 1, minc:maxc + 1]
+    bh, bw = box.shape
+
+    def gcd(a, b):
+        while b:
+            a, b = b, a % b
+        return a
+
+    unit = 1
+    g = gcd(bh, bw)
+    for k in range(g, 0, -1):
+        if bh % k or bw % k:
+            continue
+        ok = True
+        for rr in range(0, bh, k):
+            for cc in range(0, bw, k):
+                block = box[rr:rr + k, cc:cc + k]
+                if not np.all(block == block[0, 0]):
+                    ok = False
+                    break
+            if not ok:
+                break
+        if ok:
+            unit = k
             break
 
-    col_axis = None
-    for c in range(w):
-        if g[0, c] != bg and np.all(g[:, c] == g[0, c]):
-            col_axis = c
-            break
+    coarse = np.empty((bh // unit, bw // unit), dtype=grid.dtype)
+    for rr in range(coarse.shape[0]):
+        for cc in range(coarse.shape[1]):
+            coarse[rr, cc] = box[rr * unit, cc * unit]
 
-    quads = [
-        (0, 0, slice(0, row_axis), slice(0, col_axis)),
-        (0, 1, slice(0, row_axis), slice(col_axis + 1, w)),
-        (1, 0, slice(row_axis + 1, h), slice(0, col_axis)),
-        (1, 1, slice(row_axis + 1, h), slice(col_axis + 1, w)),
-    ]
-
-    # The anchor color is the non-background color that appears in every quadrant.
-    anchor_color = None
-    best_seen = -1
-    for color in vals:
-        if color == bg:
-            continue
-        seen = 0
-        for _, _, rs, cs in quads:
-            if np.any(g[rs, cs] == color):
-                seen += 1
-        if seen > best_seen:
-            best_seen = seen
-            anchor_color = color
-
-    # The template quadrant contains the most distinct non-background colors.
-    template_quad = None
-    best_distinct = -1
-    for qr, qc, rs, cs in quads:
-        sub = g[rs, cs]
-        distinct = len([x for x in np.unique(sub) if x != bg])
-        if distinct > best_distinct:
-            best_distinct = distinct
-            template_quad = (qr, qc, rs, cs)
-
-    sqr, sqc, srs, scs = template_quad
-    source = g[srs, scs]
-    mask = source != bg
-    rr, cc = np.where(mask)
-    r0, r1 = rr.min(), rr.max() + 1
-    c0, c1 = cc.min(), cc.max() + 1
-    crop = source[r0:r1, c0:c1]
-
-    amask = crop == anchor_color
-    ar, ac = np.where(amask)
-    sa_r0, sa_r1 = ar.min(), ar.max() + 1
-    sa_c0, sa_c1 = ac.min(), ac.max() + 1
-    sh, sw = sa_r1 - sa_r0, sa_c1 - sa_c0
-
-    def component_bbox(arr):
-        pts = np.argwhere(arr == anchor_color)
-        if len(pts) == 0:
-            return None
-        seen = np.zeros(arr.shape, dtype=bool)
-        comps = []
-        for pr, pc in pts:
-            if seen[pr, pc]:
-                continue
-            stack = [(pr, pc)]
-            seen[pr, pc] = True
-            comp = []
-            while stack:
-                x, y = stack.pop()
-                comp.append((x, y))
-                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    nx, ny = x + dx, y + dy
-                    if 0 <= nx < arr.shape[0] and 0 <= ny < arr.shape[1]:
-                        if not seen[nx, ny] and arr[nx, ny] == anchor_color:
-                            seen[nx, ny] = True
-                            stack.append((nx, ny))
-            comps.append(comp)
-        comp = max(comps, key=len)
-        cr = [p[0] for p in comp]
-        cc = [p[1] for p in comp]
-        return min(cr), max(cr) + 1, min(cc), max(cc) + 1
-
-    for qr, qc, rs, cs in quads:
-        target = g[rs, cs]
-        tb = component_bbox(target)
-        if tb is None:
+    for key, (r0, r1, c0, c1) in quads.items():
+        if key == source_key:
             continue
 
-        tr0, tr1, tc0, tc1 = tb
-        th, tw = tr1 - tr0, tc1 - tc0
+        q = grid[r0:r1, c0:c1]
+        my, mx = np.where(q != bg)
+        if len(my) == 0:
+            continue
 
-        pat = crop.copy()
-        pa_r0, pa_r1, pa_c0, pa_c1 = sa_r0, sa_r1, sa_c0, sa_c1
+        marker_vals, marker_counts = np.unique(q[q != bg], return_counts=True)
+        marker_color = marker_vals[np.argmax(marker_counts)]
+        my, mx = np.where(q == marker_color)
+        mr0, mr1 = my.min(), my.max()
+        mc0, mc1 = mx.min(), mx.max()
 
-        if qr != sqr:
+        pat = coarse.copy()
+        if key[0] != source_key[0]:
             pat = pat[::-1, :]
-            ph = pat.shape[0]
-            pa_r0, pa_r1 = ph - pa_r1, ph - pa_r0
-
-        if qc != sqc:
+        if key[1] != source_key[1]:
             pat = pat[:, ::-1]
-            pw = pat.shape[1]
-            pa_c0, pa_c1 = pw - pa_c1, pw - pa_c0
 
-        scale_r = th / float(sh)
-        scale_c = tw / float(sw)
+        py, px = np.where(pat == marker_color)
+        if len(py) == 0:
+            continue
 
-        out_h = int(round(pat.shape[0] * scale_r))
-        out_w = int(round(pat.shape[1] * scale_c))
-        place_r = int(round(tr0 - pa_r0 * scale_r))
-        place_c = int(round(tc0 - pa_c0 * scale_c))
+        pr0, pr1 = py.min(), py.max()
+        pc0, pc1 = px.min(), px.max()
 
-        for r in range(out_h):
-            sr = min(int(np.floor(r / scale_r)), pat.shape[0] - 1)
-            gr = place_r + r
-            if gr < 0 or gr >= target.shape[0]:
-                continue
-            for c in range(out_w):
-                sc = min(int(np.floor(c / scale_c)), pat.shape[1] - 1)
-                val = pat[sr, sc]
-                if val == bg:
-                    continue
-                gc = place_c + c
-                if 0 <= gc < target.shape[1]:
-                    target[gr, gc] = val
+        ph = pr1 - pr0 + 1
+        pw = pc1 - pc0 + 1
+        mh = mr1 - mr0 + 1
+        mw = mc1 - mc0 + 1
+        if mh % ph or mw % pw:
+            continue
 
-        g[rs, cs] = target
+        scale = mh // ph
+        if scale != mw // pw:
+            continue
 
-    return g
+        start_r = mr0 - pr0 * scale
+        start_c = mc0 - pc0 * scale
+
+        for rr in range(pat.shape[0]):
+            for cc in range(pat.shape[1]):
+                gr0 = r0 + start_r + rr * scale
+                gc0 = c0 + start_c + cc * scale
+                gr1 = gr0 + scale
+                gc1 = gc0 + scale
+                if gr0 >= r0 and gc0 >= c0 and gr1 <= r1 and gc1 <= c1:
+                    out[gr0:gr1, gc0:gc1] = pat[rr, cc]
+
+    return out
 ```

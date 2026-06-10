@@ -145,142 +145,169 @@ def transform(grid):
     vals, counts = np.unique(grid, return_counts=True)
     bg = int(vals[np.argmax(counts)])
 
-    def comps_for_color(color):
-        seen = np.zeros((h, w), dtype=bool)
-        comps = []
-        for r in range(h):
-            for c in range(w):
-                if seen[r, c] or grid[r, c] != color:
-                    continue
-                stack = [(r, c)]
-                seen[r, c] = True
-                pts = []
-                while stack:
-                    x, y = stack.pop()
-                    pts.append((x, y))
-                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        nx, ny = x + dx, y + dy
-                        if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and grid[nx, ny] == color:
-                            seen[nx, ny] = True
-                            stack.append((nx, ny))
-                comps.append(pts)
-        return comps
-
     best = None
-    for color in vals:
-        color = int(color)
-        if color == bg:
-            continue
-        for pts in comps_for_color(color):
-            rs = [p[0] for p in pts]
-            cs = [p[1] for p in pts]
-            r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
-            if r1 - r0 < 2 or c1 - c0 < 2:
-                continue
-            ok = True
-            for c in range(c0, c1 + 1):
-                if grid[r0, c] != color or grid[r1, c] != color:
-                    ok = False
-                    break
-            if ok:
-                for r in range(r0, r1 + 1):
-                    if grid[r, c0] != color or grid[r, c1] != color:
-                        ok = False
-                        break
-            if ok:
-                area = (r1 - r0 - 1) * (c1 - c0 - 1)
-                if best is None or area > best[0]:
-                    best = (area, color, r0, r1, c0, c1)
+    best_area = -1
+    for col in vals:
+        col = int(col)
+        m = (grid == col)
+        for r1 in range(h - 2):
+            for r2 in range(r1 + 2, h):
+                for c1 in range(w - 2):
+                    for c2 in range(c1 + 2, w):
+                        area = (r2 - r1 - 1) * (c2 - c1 - 1)
+                        if area <= best_area:
+                            continue
+                        if (m[r1, c1:c2 + 1].all() and
+                            m[r2, c1:c2 + 1].all() and
+                            m[r1:r2 + 1, c1].all() and
+                            m[r1:r2 + 1, c2].all()):
+                            best = (r1, r2, c1, c2, col)
+                            best_area = area
 
-    _, frame, r0, r1, c0, c1 = best
-    ir0, ir1, ic0, ic1 = r0 + 1, r1 - 1, c0 + 1, c1 - 1
-    out = grid[ir0:ir1 + 1, ic0:ic1 + 1].copy()
+    r1, r2, c1, c2, frame = best
+    ir1, ir2 = r1 + 1, r2 - 1
+    ic1, ic2 = c1 + 1, c2 - 1
 
-    cand = np.zeros((h, w), dtype=bool)
-    for r in range(h):
-        for c in range(w):
-            if ir0 <= r <= ir1 and ic0 <= c <= ic1:
-                continue
-            if grid[r, c] != bg and grid[r, c] != frame:
-                cand[r, c] = True
+    interior = grid[ir1:ir2 + 1, ic1:ic2 + 1]
+    ivals, icounts = np.unique(interior, return_counts=True)
+    fill = int(ivals[np.argmax(icounts)])
+
+    out = np.full((ir2 - ir1 + 1, ic2 - ic1 + 1), fill, dtype=grid.dtype)
+
+    object_mask = (grid != bg) & (grid != frame) & (grid != fill)
+
+    groups = []
+
+    for col in np.unique(grid[object_mask]):
+        pts = [(int(r), int(c)) for r, c in zip(*np.where(grid == col))]
+        if pts:
+            groups.append(pts)
 
     seen = np.zeros((h, w), dtype=bool)
-    groups = []
-    for r in range(h):
-        for c in range(w):
-            if not cand[r, c] or seen[r, c]:
-                continue
-            stack = [(r, c)]
-            seen[r, c] = True
-            pts = []
-            while stack:
-                x, y = stack.pop()
-                pts.append((x, y))
-                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    nx, ny = x + dx, y + dy
-                    if 0 <= nx < h and 0 <= ny < w and cand[nx, ny] and not seen[nx, ny]:
-                        seen[nx, ny] = True
-                        stack.append((nx, ny))
-            groups.append(pts)
-
-    by_color = {}
-    for r in range(h):
-        for c in range(w):
-            if cand[r, c]:
-                by_color.setdefault(int(grid[r, c]), []).append((r, c))
-    for pts in by_color.values():
-        if len(pts) > 1:
-            groups.append(pts)
-
-    def color_at(pts, rr, cc, a, b, d, e):
-        s = set(pts)
-        if (rr, cc) in s:
-            return int(grid[rr, cc])
-
-        colors = {int(grid[x, y]) for x, y in pts}
-        if len(colors) == 1:
-            return next(iter(colors))
-
-        samples = []
-        if rr == a or rr == b:
-            samples = [(y, int(grid[x, y])) for x, y in pts if x == rr]
-            coord = cc
-        if not samples and (cc == d or cc == e):
-            samples = [(x, int(grid[x, y])) for x, y in pts if y == cc]
-            coord = rr
-
-        if samples:
-            same = [(abs(coord - p), col) for p, col in samples if (coord - p) % 2 == 0]
-            if same:
-                same.sort()
-                return same[0][1]
-            samples = [(abs(coord - p), col) for p, col in samples]
-            samples.sort()
-            return samples[0][1]
-
-        all_samples = [(abs(rr - x) + abs(cc - y), int(grid[x, y])) for x, y in pts]
-        all_samples.sort()
-        return all_samples[0][1]
-
-    used = set()
-    for pts in groups:
-        key = tuple(sorted(pts))
-        if key in used:
+    for sr, sc in zip(*np.where(object_mask)):
+        sr, sc = int(sr), int(sc)
+        if seen[sr, sc]:
             continue
-        used.add(key)
+        stack = [(sr, sc)]
+        seen[sr, sc] = True
+        pts = []
+        while stack:
+            r, c = stack.pop()
+            pts.append((r, c))
+            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < h and 0 <= nc < w and object_mask[nr, nc] and not seen[nr, nc]:
+                    seen[nr, nc] = True
+                    stack.append((nr, nc))
+        groups.append(pts)
 
+    def put(r, c, color):
+        if ir1 <= r <= ir2 and ic1 <= c <= ic2:
+            out[r - ir1, c - ic1] = color
+
+    def side_cells(pts, side, fixed):
+        if side == "row":
+            cells = sorted([(c, int(grid[fixed, c])) for rr, c in pts if rr == fixed])
+        else:
+            cells = sorted([(r, int(grid[r, fixed])) for r, cc in pts if cc == fixed])
+        return cells
+
+    def color_from_left(cells, x):
+        if not cells:
+            return None
+        start = cells[0][0]
+        seq = [v for _, v in cells]
+        return seq[(x - start) % len(seq)]
+
+    def color_from_right(cells, x):
+        if not cells:
+            return None
+        start = cells[0][0]
+        seq = [v for _, v in cells]
+        return seq[(start - x - 1) % len(seq)]
+
+    def color_from_top(cells, y):
+        if not cells:
+            return None
+        start = cells[0][0]
+        seq = [v for _, v in cells]
+        return seq[(y - start) % len(seq)]
+
+    def color_from_bottom(cells, y):
+        if not cells:
+            return None
+        start = cells[0][0]
+        seq = [v for _, v in cells]
+        return seq[(start - y - 1) % len(seq)]
+
+    for pts in groups:
         rs = [p[0] for p in pts]
         cs = [p[1] for p in pts]
-        a, b, d, e = min(rs), max(rs), min(cs), max(cs)
-        if b < ir0 or a > ir1 or e < ic0 or d > ic1:
-            continue
-        if a == b and d == e:
+        br1, br2, bc1, bc2 = min(rs), max(rs), min(cs), max(cs)
+
+        if br2 < ir1 or br1 > ir2 or bc2 < ic1 or bc1 > ic2:
             continue
 
-        for rr in range(max(a, ir0), min(b, ir1) + 1):
-            for cc in range(max(d, ic0), min(e, ic1) + 1):
-                if rr == a or rr == b or cc == d or cc == e:
-                    out[rr - ir0, cc - ic0] = color_at(pts, rr, cc, a, b, d, e)
+        top = side_cells(pts, "row", br1)
+        bottom = side_cells(pts, "row", br2)
+        left = side_cells(pts, "col", bc1)
+        right = side_cells(pts, "col", bc2)
+
+        top_left = [p for p in top if p[0] < ic1]
+        top_right = [p for p in top if p[0] > ic2]
+        bottom_left = [p for p in bottom if p[0] < ic1]
+        bottom_right = [p for p in bottom if p[0] > ic2]
+
+        for c in range(max(ic1, bc1), min(ic2, bc2) + 1):
+            if ir1 <= br1 <= ir2:
+                color = None
+                if top_left:
+                    color = color_from_left(top_left, c)
+                elif top_right:
+                    color = color_from_right(top_right, c)
+                elif top:
+                    color = color_from_left(top, c)
+                if color is not None:
+                    put(br1, c, color)
+
+            if ir1 <= br2 <= ir2:
+                color = None
+                if bottom_left:
+                    color = color_from_left(bottom_left, c)
+                elif bottom_right:
+                    color = color_from_right(bottom_right, c)
+                elif bottom:
+                    color = color_from_left(bottom, c)
+                if color is not None:
+                    put(br2, c, color)
+
+        left_top = [p for p in left if p[0] < ir1]
+        left_bottom = [p for p in left if p[0] > ir2]
+        right_top = [p for p in right if p[0] < ir1]
+        right_bottom = [p for p in right if p[0] > ir2]
+
+        for r in range(max(ir1, br1), min(ir2, br2) + 1):
+            if ic1 <= bc1 <= ic2:
+                color = None
+                if left_top:
+                    color = color_from_top(left_top, r)
+                elif left_bottom:
+                    color = color_from_bottom(left_bottom, r)
+                elif left:
+                    color = color_from_top(left, r)
+                if color is not None:
+                    put(r, bc1, color)
+
+            if ic1 <= bc2 <= ic2:
+                color = None
+                if right_top:
+                    color = color_from_top(right_top, r)
+                elif right_bottom:
+                    color = color_from_bottom(right_bottom, r)
+                elif right:
+                    color = color_from_top(right, r)
+                if color is not None:
+                    put(r, bc2, color)
 
     return out
 ```

@@ -169,185 +169,112 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 def transform(grid):
     h, w = grid.shape
 
-    def components(a):
-        hh, ww = a.shape
-        seen = np.zeros((hh, ww), dtype=bool)
+    def comps(a):
+        seen = np.zeros(a.shape, dtype=bool)
         out = []
-        for r in range(hh):
-            for c in range(ww):
-                if a[r, c] == 0 or seen[r, c]:
-                    continue
-                col = int(a[r, c])
-                q = [(r, c)]
-                seen[r, c] = True
-                cells = []
-                while q:
-                    x, y = q.pop()
-                    cells.append((x, y))
-                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        nx, ny = x + dx, y + dy
-                        if 0 <= nx < hh and 0 <= ny < ww and not seen[nx, ny] and a[nx, ny] == col:
-                            seen[nx, ny] = True
-                            q.append((nx, ny))
-                rs = [p[0] for p in cells]
-                cs = [p[1] for p in cells]
-                out.append({
-                    "color": col,
-                    "cells": cells,
-                    "minr": min(rs), "maxr": max(rs),
-                    "minc": min(cs), "maxc": max(cs),
-                    "area": len(cells)
-                })
+        for r in range(h):
+            for c in range(w):
+                if a[r, c] != 0 and not seen[r, c]:
+                    col = int(a[r, c])
+                    q = [(r, c)]
+                    seen[r, c] = True
+                    pts = []
+                    while q:
+                        x, y = q.pop()
+                        pts.append((x, y))
+                        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                            nx, ny = x + dx, y + dy
+                            if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and a[nx, ny] == col:
+                                seen[nx, ny] = True
+                                q.append((nx, ny))
+                    out.append((col, pts))
         return out
 
-    def solve_horizontal(a):
-        hh, ww = a.shape
-        comps = components(a)
-        main = max(comps, key=lambda x: x["area"])
-        out = np.zeros_like(a)
-        for r, c in main["cells"]:
-            out[r, c] = main["color"]
+    allc = comps(grid)
+    wall_i = max(range(len(allc)), key=lambda i: len(allc[i][1]))
+    wall_col, wall_pts = allc[wall_i]
 
-        small = [x for x in comps if x is not main]
-        groups = {}
-        for comp in small:
-            bw = comp["maxc"] - comp["minc"] + 1
-            groups.setdefault(bw, []).append(comp)
+    out = np.zeros_like(grid)
+    occ = np.zeros_like(grid, dtype=bool)
+    for r, c in wall_pts:
+        out[r, c] = wall_col
+        occ[r, c] = True
 
-        placed = np.zeros((hh, ww), dtype=bool)
-        for r, c in main["cells"]:
-            placed[r, c] = True
+    rs = [p[0] for p in wall_pts]
+    cs = [p[1] for p in wall_pts]
+    horizontal = (max(cs) - min(cs)) >= (max(rs) - min(rs))
+    wall_mid = (min(rs) + max(rs)) / 2 if horizontal else (min(cs) + max(cs)) / 2
 
-        def make_mask(comp):
-            bh = comp["maxr"] - comp["minr"] + 1
-            bw = comp["maxc"] - comp["minc"] + 1
-            m = np.zeros((bh, bw), dtype=int)
-            for r, c in comp["cells"]:
-                m[r - comp["minr"], c - comp["minc"]] = comp["color"]
-            return m
+    pieces = []
+    for i, (col, pts) in enumerate(allc):
+        if i == wall_i:
+            continue
+        rr = [p[0] for p in pts]
+        cc = [p[1] for p in pts]
+        center_perp = (sum(rr) / len(rr)) if horizontal else (sum(cc) / len(cc))
+        center_para = (sum(cc) / len(cc)) if horizontal else (sum(rr) / len(rr))
+        pieces.append({
+            "col": col,
+            "pts": pts,
+            "perp": center_perp,
+            "para": center_para,
+            "side": 1 if center_perp > wall_mid else -1,
+        })
 
-        def can_put(canvas, mask, y):
-            mh, mw = mask.shape
-            if y < 0:
-                return False
-            if canvas.shape[0] < y + mh:
-                return False
-            return not np.any((canvas[y:y + mh, :mw] != 0) & (mask != 0))
+    pos = [p for p in pieces if p["side"] == 1]
+    neg = [p for p in pieces if p["side"] == -1]
+    pos.sort(key=lambda p: (p["perp"], p["para"]), reverse=True)
+    neg.sort(key=lambda p: (p["perp"], p["para"]), reverse=True)
+    order = pos + neg
 
-        group_items = []
-        for bw, items in groups.items():
-            above = [x for x in items if x["maxr"] < main["minr"]]
-            below = [x for x in items if x["minr"] > main["maxr"]]
+    def shifted(pts, dperp, dpara):
+        if horizontal:
+            return [(r + dperp, c + dpara) for r, c in pts]
+        return [(r + dpara, c + dperp) for r, c in pts]
 
-            above.sort(key=lambda x: (x["maxr"], (x["minc"] + x["maxc"]) / 2), reverse=True)
-            below.sort(key=lambda x: (x["minr"], (x["minc"] + x["maxc"]) / 2), reverse=True)
-            order = above + below
-            if not order:
+    def valid(pts):
+        return all(0 <= r < h and 0 <= c < w and not occ[r, c] for r, c in pts)
+
+    def contact(pts):
+        s = 0
+        for r, c in pts:
+            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < h and 0 <= nc < w and occ[nr, nc]:
+                    s += 1
+        return s
+
+    for p in order:
+        pts = p["pts"]
+        rr = [x for x, y in pts]
+        cc = [y for x, y in pts]
+        para_vals = cc if horizontal else rr
+        dperp_dir = -1 if p["side"] == 1 else 1
+
+        best = None
+        for dpara in range(-min(para_vals), (w if horizontal else h) - max(para_vals)):
+            cur = shifted(pts, 0, dpara)
+            if not valid(cur):
                 continue
+            dperp = 0
+            while True:
+                nxt = shifted(pts, dperp + dperp_dir, dpara)
+                if valid(nxt):
+                    dperp += dperp_dir
+                else:
+                    break
+            final = shifted(pts, dperp, dpara)
+            perps = [r if horizontal else c for r, c in final]
+            primary = -min(perps) if dperp_dir == -1 else max(perps)
+            close = -abs((sum((c if horizontal else r) for r, c in final) / len(final)) - p["para"])
+            score = (primary, contact(final), close)
+            if best is None or score > best[0]:
+                best = (score, final)
 
-            canvas = np.zeros((1, bw), dtype=int)
-            for comp in order:
-                mask = make_mask(comp)
-                if canvas.shape[0] < mask.shape[0]:
-                    new_canvas = np.zeros((mask.shape[0], bw), dtype=int)
-                    new_canvas[:canvas.shape[0], :] = canvas
-                    canvas = new_canvas
+        if best is not None:
+            for r, c in best[1]:
+                out[r, c] = p["col"]
+                occ[r, c] = True
 
-                y = 0
-                while not can_put(canvas, mask, y):
-                    y += 1
-                    if canvas.shape[0] < y + mask.shape[0]:
-                        new_canvas = np.zeros((y + mask.shape[0], bw), dtype=int)
-                        new_canvas[:canvas.shape[0], :] = canvas
-                        canvas = new_canvas
-
-                canvas[y:y + mask.shape[0], :bw][mask != 0] = mask[mask != 0]
-
-            centers = [((x["minc"] + x["maxc"]) / 2) for x in order]
-            group_items.append((bw, canvas, sum(centers) / len(centers)))
-
-        group_items.sort(key=lambda x: x[2])
-
-        used_x = set()
-        for bw, mask, avg_center in group_items:
-            mh, mw = mask.shape
-            best = None
-
-            for x in range(0, ww - mw + 1):
-                if x in used_x:
-                    continue
-
-                for direction in (1, -1):
-                    if direction == 1:
-                        y = -mh
-                        while y + mh < hh:
-                            ny = y + 1
-                            collision = False
-                            if 0 <= ny and ny + mh <= hh:
-                                collision = np.any(placed[ny:ny + mh, x:x + mw] & (mask != 0))
-                            elif ny + mh > hh:
-                                collision = True
-                            if collision:
-                                break
-                            y = ny
-                    else:
-                        y = hh
-                        while y > -mh:
-                            ny = y - 1
-                            collision = False
-                            if 0 <= ny and ny + mh <= hh:
-                                collision = np.any(placed[ny:ny + mh, x:x + mw] & (mask != 0))
-                            elif ny < 0:
-                                collision = True
-                            if collision:
-                                break
-                            y = ny
-
-                    if not (0 <= y and y + mh <= hh):
-                        continue
-                    if np.any(placed[y:y + mh, x:x + mw] & (mask != 0)):
-                        continue
-
-                    fill = 0
-                    contact = 0
-                    for rr in range(mh):
-                        for cc in range(mw):
-                            if mask[rr, cc] == 0:
-                                continue
-                            ar, ac = y + rr, x + cc
-                            if main["minr"] <= ar <= main["maxr"] and main["minc"] <= ac <= main["maxc"] and a[ar, ac] == 0:
-                                fill += 1
-                            br = ar + direction
-                            if 0 <= br < hh and placed[br, ac]:
-                                contact += 1
-
-                    if contact == 0:
-                        continue
-
-                    center = x + (mw - 1) / 2
-                    score = (fill, contact, -abs(center - avg_center), -x)
-                    if best is None or score > best[0]:
-                        best = (score, y, x)
-
-            if best is None:
-                continue
-
-            _, y, x = best
-            used_x.add(x)
-            for rr in range(mh):
-                for cc in range(mw):
-                    if mask[rr, cc] != 0:
-                        out[y + rr, x + cc] = mask[rr, cc]
-                        placed[y + rr, x + cc] = True
-
-        return out
-
-    comps0 = components(grid)
-    main0 = max(comps0, key=lambda x: x["area"])
-    main_h = main0["maxr"] - main0["minr"] + 1
-    main_w = main0["maxc"] - main0["minc"] + 1
-
-    if main_h > main_w:
-        return solve_horizontal(grid.T).T
-    return solve_horizontal(grid)
+    return out
 ```

@@ -100,116 +100,95 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    g = grid.copy()
-    h, w = g.shape
+    h, w = grid.shape
+    out = grid.copy()
 
-    def comps(mask):
-        seen = np.zeros(mask.shape, dtype=bool)
-        out = []
-        for r in range(h):
-            for c in range(w):
-                if mask[r, c] and not seen[r, c]:
-                    q = [(r, c)]
-                    seen[r, c] = True
-                    comp = []
-                    for rr, cc in q:
-                        comp.append((rr, cc))
-                        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                            nr, nc = rr + dr, cc + dc
-                            if 0 <= nr < h and 0 <= nc < w and mask[nr, nc] and not seen[nr, nc]:
-                                seen[nr, nc] = True
-                                q.append((nr, nc))
-                    out.append(comp)
-        return out
+    seen = np.zeros((h, w), dtype=bool)
+    comps = []
+    dirs = [(-1, -1), (-1, 0), (-1, 1),
+            (0, -1),           (0, 1),
+            (1, -1),  (1, 0),  (1, 1)]
 
-    main_comps = []
-    for col in range(1, 10):
-        for comp in comps(g == col):
-            if len(comp) >= 3:
-                main_comps.append((col, comp))
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] != 0 and not seen[r, c]:
+                col = grid[r, c]
+                stack = [(r, c)]
+                seen[r, c] = True
+                cells = []
+                while stack:
+                    x, y = stack.pop()
+                    cells.append((x, y))
+                    for dx, dy in dirs:
+                        nx, ny = x + dx, y + dy
+                        if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and grid[nx, ny] == col:
+                            seen[nx, ny] = True
+                            stack.append((nx, ny))
+                comps.append((len(cells), col, cells))
 
-    for main_col, comp in main_comps:
-        cells = set(comp)
-        rs = [r for r, c in comp]
-        cs = [c for r, c in comp]
-        rmin, rmax, cmin, cmax = min(rs), max(rs), min(cs), max(cs)
+    comps.sort(reverse=True)
+    consumed = np.zeros((h, w), dtype=bool)
+
+    for size, col, cells in comps:
+        rows = [p[0] for p in cells]
+        cols = [p[1] for p in cells]
+        r0, r1 = min(rows), max(rows)
+        c0, c1 = min(cols), max(cols)
 
         foreign = []
-        for r in range(rmin, rmax + 1):
-            for c in range(cmin, cmax + 1):
-                if g[r, c] not in (0, main_col) and (r, c) not in cells:
-                    col = g[r, c]
-                    if any((r + dr, c + dc) in cells for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1))):
-                        foreign.append((r, c, col))
+        for r in range(r0, r1 + 1):
+            for c in range(c0, c1 + 1):
+                if out[r, c] != 0 and out[r, c] != col and not consumed[r, c]:
+                    foreign.append((r, c, out[r, c]))
 
-        if not foreign:
+        if not foreign or size <= len(foreign):
             continue
 
-        by_col = {}
-        for r, c, col in foreign:
-            by_col.setdefault(col, []).append((r, c))
+        colors = {}
+        for _, _, fc in foreign:
+            colors[fc] = colors.get(fc, 0) + 1
+        move_col = max(colors, key=colors.get)
+        moving = [(r, c) for r, c, fc in foreign if fc == move_col]
+        n = len(moving)
 
-        for mark_col, pts in by_col.items():
-            for r, c in pts:
-                g[r, c] = 0
+        for r, c in moving:
+            out[r, c] = 0
+            consumed[r, c] = True
 
-            candidates = []
-            for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):
-                best_run = []
-                best_anchor = None
-                groups = {}
+        bh = r1 - r0 + 1
+        bw = c1 - c0 + 1
 
-                if dr != 0:
-                    for r, c in comp:
-                        groups.setdefault(c, []).append(r)
-                    for c, rows in groups.items():
-                        edge = min(rows) if dr < 0 else max(rows)
-                        run = []
-                        rr = edge + dr
-                        while 0 <= rr < h and g[rr, c] == 0:
-                            run.append((rr, c))
-                            rr += dr
-                        if len(run) > len(best_run):
-                            best_run = run
-                            best_anchor = (edge, c)
-                else:
-                    for r, c in comp:
-                        groups.setdefault(r, []).append(c)
-                    for r, cols in groups.items():
-                        edge = min(cols) if dc < 0 else max(cols)
-                        run = []
-                        cc = edge + dc
-                        while 0 <= cc < w and g[r, cc] == 0:
-                            run.append((r, cc))
-                            cc += dc
-                        if len(run) > len(best_run):
-                            best_run = run
-                            best_anchor = (r, edge)
+        if bh >= bw:
+            top_cols = [c for r, c in cells if r == r0]
+            ac = sorted(top_cols)[len(top_cols) // 2]
+            start = max(0, r0 - n)
+            for rr in range(start, r0):
+                out[rr, ac] = move_col
+        else:
+            top_mean = sum(c for r, c in cells if r == r0) / max(1, sum(1 for r, c in cells if r == r0))
+            bot_mean = sum(c for r, c in cells if r == r1) / max(1, sum(1 for r, c in cells if r == r1))
 
-                if len(best_run) >= len(pts):
-                    candidates.append((len(best_run), dr, dc, best_run, best_anchor))
+            if bot_mean < top_mean:
+                side = "L"
+            elif bot_mean > top_mean:
+                side = "R"
+            else:
+                left_count = sum(1 for r, c in cells if c == c0)
+                right_count = sum(1 for r, c in cells if c == c1)
+                side = "R" if right_count <= left_count else "L"
 
-            if not candidates:
-                continue
+            if side == "R":
+                side_rows = [r for r, c in cells if c == c1]
+                ar = sorted(side_rows)[len(side_rows) // 2]
+                end = min(w, c1 + 1 + n)
+                for cc in range(c1 + 1, end):
+                    out[ar, cc] = move_col
+            else:
+                side_rows = [r for r, c in cells if c == c0]
+                ar = sorted(side_rows)[len(side_rows) // 2]
+                start = max(0, c0 - n)
+                for cc in range(start, c0):
+                    out[ar, cc] = move_col
 
-            # Prefer the outside direction whose boundary line is most aligned with
-            # the removed marker pixels. Ties keep the longer clear run.
-            def score(item):
-                run_len, dr, dc, run, anchor = item
-                ar, ac = anchor
-                if dr != 0:
-                    align = -sum(abs(c - ac) for r, c in pts)
-                else:
-                    align = -sum(abs(r - ar) for r, c in pts)
-                return (align, run_len)
-
-            _, dr, dc, run, anchor = max(candidates, key=score)
-
-            place = run[:len(pts)]
-            if dr < 0 or dc < 0:
-                place = place[::-1]
-            for r, c in place:
-                g[r, c] = mark_col
-
-    return g
+    return out
 ```

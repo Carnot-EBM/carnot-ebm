@@ -356,125 +356,142 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    out = grid.copy()
-    h, w = grid.shape
+    g = grid.copy()
+    vals, counts = np.unique(g, return_counts=True)
+    bg = vals[np.argmax(counts)]
+    h, w = g.shape
 
-    sep_rows = [r for r in range(h) if np.all(grid[r] == 6)]
+    sep_rows = []
+    for r in range(h):
+        if np.all(g[r] == g[r, 0]) and g[r, 0] != bg:
+            sep_rows.append(r)
+
     first_sep = sep_rows[0]
     last_sep = sep_rows[-1]
 
-    active_rows = []
-    for r in range(h):
-        if r in sep_rows:
-            continue
-        if np.any((grid[r] != 8) & (grid[r] != 6)):
-            active_rows.append(r)
-        elif np.any((grid[r] != 8) & (r != first_sep) & (r != last_sep)):
-            active_rows.append(r)
+    def row_runs_between(a, b):
+        rows = []
+        for r in range(a, b):
+            if r in sep_rows:
+                continue
+            if np.any(g[r] != bg):
+                rows.append(r)
+        runs = []
+        if rows:
+            start = prev = rows[0]
+            for r in rows[1:]:
+                if r == prev + 1:
+                    prev = r
+                else:
+                    runs.append((start, prev))
+                    start = prev = r
+            runs.append((start, prev))
+        return runs
 
-    row_bands = []
-    for r in active_rows:
-        if not row_bands or r != row_bands[-1][1] + 1:
-            row_bands.append([r, r])
-        else:
-            row_bands[-1][1] = r
+    top_runs = row_runs_between(0, first_sep)
+    main_runs = row_runs_between(first_sep + 1, last_sep)
 
-    top_band = None
-    catalog_bands = []
-    for a, b in row_bands:
-        if b < first_sep:
-            top_band = (a, b)
-        elif a > first_sep and b < last_sep:
-            catalog_bands.append((a, b))
+    main_rows = []
+    for a, b in main_runs:
+        if b - a + 1 >= 3:
+            main_rows.append(a)
 
-    catalog_cols_active = []
+    cols_used = []
     for c in range(w):
         found = False
-        for a, b in catalog_bands:
-            if np.any(grid[a:b + 1, c] != 8):
+        for r in range(first_sep + 1, last_sep):
+            if r not in sep_rows and g[r, c] != bg:
                 found = True
                 break
         if found:
-            catalog_cols_active.append(c)
+            cols_used.append(c)
 
-    col_bands = []
-    for c in catalog_cols_active:
-        if not col_bands or c != col_bands[-1][1] + 1:
-            col_bands.append([c, c])
-        else:
-            col_bands[-1][1] = c
-    col_bands = [(a, b) for a, b in col_bands]
+    col_runs = []
+    if cols_used:
+        start = prev = cols_used[0]
+        for c in cols_used[1:]:
+            if c == prev + 1:
+                prev = c
+            else:
+                col_runs.append((start, prev))
+                start = prev = c
+        col_runs.append((start, prev))
 
-    def key_for(rb, cb):
-        ra, rb2 = rb
-        ca, cb2 = cb
-        block = grid[ra:rb2 + 1, ca:cb2 + 1]
-        if np.all(block == 8):
-            return None
-        return tuple(tuple(int(x) for x in row) for row in block)
+    main_cols = [a for a, b in col_runs if b - a + 1 >= 1]
 
-    catalog = {}
-    catalog_grid = []
-    for ri, rb in enumerate(catalog_bands):
-        row = []
-        for ci, cb in enumerate(col_bands):
-            k = key_for(rb, cb)
-            row.append(k)
-            if k is not None:
-                catalog[k] = (ri, ci)
-        catalog_grid.append(row)
+    def extract(r, c):
+        return g[r:r + 3, c:c + 3].copy()
 
-    selected = set()
-    top_keys = []
-    if top_band is not None:
-        for cb in col_bands:
-            k = key_for(top_band, cb)
-            top_keys.append(k)
-            if k in catalog:
-                selected.add(catalog[k])
+    def nonempty(p):
+        return np.any(p != bg)
 
-    for ri, ci in selected:
-        ra, rb = catalog_bands[ri]
-        ca, cb = col_bands[ci]
-        for r in range(max(0, ra - 1), min(h, rb + 2)):
-            for c in range(max(0, ca - 1), min(w, cb + 2)):
-                if out[r, c] == 8:
-                    out[r, c] = 3
+    query_patterns = []
+    if top_runs:
+        top_r = top_runs[0][0]
+        for c in main_cols:
+            p = extract(top_r, c)
+            if nonempty(p):
+                query_patterns.append(p)
 
-    complete = False
-    for ri in range(len(catalog_bands)):
-        if all((ri, ci) in selected for ci in range(len(col_bands))):
-            complete = True
-    for ci in range(len(col_bands)):
-        if all((ri, ci) in selected for ri in range(len(catalog_bands))):
-            complete = True
+    selected = []
+    for i, r in enumerate(main_rows):
+        for j, c in enumerate(main_cols):
+            cell = extract(r, c)
+            for q in query_patterns:
+                if cell.shape == q.shape and np.array_equal(cell, q):
+                    selected.append((i, j))
+                    break
 
-    if complete and top_band is not None:
-        for r in range(0, first_sep):
-            for c in range(w):
-                if out[r, c] == 8:
-                    out[r, c] = 3
+    out = g.copy()
+    mark = 3
 
-        complete_rows = [
-            ri for ri in range(len(catalog_bands))
-            if all((ri, ci) in selected for ci in range(len(col_bands)))
-        ]
-        if complete_rows:
-            ri = complete_rows[0]
-            for ci, k in enumerate(top_keys):
-                if k is not None and ci < len(catalog_grid[ri]) and k == catalog_grid[ri][ci]:
-                    ni = (ri + 1) % len(catalog_bands)
-                    repl = catalog_grid[ni][ci]
-                    if repl is not None:
-                        ra, rb = top_band
-                        ca, cb = col_bands[ci]
-                        for rr, row in enumerate(repl):
-                            for cc, val in enumerate(row):
-                                out[ra + rr, ca + cc] = val if val != 8 else 3
+    for i, j in selected:
+        r = main_rows[i]
+        c = main_cols[j]
+        r0, r1 = max(0, r - 1), min(h, r + 4)
+        c0, c1 = max(0, c - 1), min(w, c + 4)
+        area = out[r0:r1, c0:c1]
+        area[area == bg] = mark
 
-    fill_color = 3 if complete else 2
-    for r in range(last_sep + 1, h):
-        out[r, :] = fill_color
+    nrows, ncols = len(main_rows), len(main_cols)
+    complete_line = False
+    line_is_row = False
+    line_index = None
+
+    if len(selected) == ncols and ncols:
+        rs = {i for i, j in selected}
+        cs = {j for i, j in selected}
+        if len(rs) == 1 and len(cs) == ncols:
+            complete_line = True
+            line_is_row = True
+            line_index = next(iter(rs))
+
+    if len(selected) == nrows and nrows:
+        rs = {i for i, j in selected}
+        cs = {j for i, j in selected}
+        if len(cs) == 1 and len(rs) == nrows:
+            complete_line = True
+            line_is_row = False
+            line_index = next(iter(cs))
+
+    signal = 3 if complete_line else 2
+
+    if complete_line:
+        top_area = out[:first_sep, :]
+        top_area[top_area == bg] = mark
+
+        if line_is_row and top_runs:
+            k = line_index
+            if k + 1 < nrows and k < ncols:
+                src = extract(main_rows[k + 1], main_cols[k])
+                rr = top_runs[0][0]
+                cc = main_cols[k]
+                repl = src.copy()
+                repl[repl == bg] = mark
+                out[rr:rr + 3, cc:cc + 3] = repl
+
+    if last_sep + 1 < h:
+        out[last_sep + 1:, :] = signal
 
     return out
 ```

@@ -97,7 +97,59 @@ Write exactly one Python function:
         # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
         # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
 Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
-===== RAW OUTPUT =====
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 4, 4, 4, 6, 6, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 7, 7, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+your function returned:
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 4, 4, 4, 6, 6, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 7, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 7, 0, 0, 0, 0],
+ [0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+
+Demo 2: expected OUTPUT (10x10):
+[[0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 9, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 0, 3, 0, 0, 6, 0, 6, 0],
+ [3, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+your function returned:
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 9, 3, 0, 0, 6, 9, 6, 0],
+ [3, 9, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Previous code:
 ```python
 def transform(grid):
     h, w = grid.shape
@@ -197,6 +249,80 @@ def transform(grid):
 
     for r, c, color in draws:
         out[r, c] = color
+
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h, w = grid.shape
+    out = grid.copy()
+
+    colors = [int(x) for x in np.unique(grid) if int(x) != 0]
+
+    for color in colors:
+        pts = np.argwhere(grid == color)
+        if len(pts) == 0:
+            continue
+
+        r0, c0 = pts.min(axis=0)
+        r1, c1 = pts.max(axis=0)
+
+        foreign = {}
+        foreign_cells = []
+        for r in range(int(r0), int(r1) + 1):
+            for c in range(int(c0), int(c1) + 1):
+                v = int(grid[r, c])
+                if v != 0 and v != color:
+                    foreign[v] = foreign.get(v, 0) + 1
+                    foreign_cells.append((r, c))
+
+        if not foreign_cells:
+            continue
+
+        cellset = set(map(tuple, pts.tolist()))
+        candidates = []
+
+        edges = [
+            ((-1, 0), [p for p in cellset if p[0] == r0]),
+            ((1, 0), [p for p in cellset if p[0] == r1]),
+            ((0, -1), [p for p in cellset if p[1] == c0]),
+            ((0, 1), [p for p in cellset if p[1] == c1]),
+        ]
+
+        for step, edge in edges:
+            if len(edge) != 1:
+                continue
+
+            tr, tc = edge[0]
+            dr, dc = step
+
+            if dr:
+                support = sum((tr - dr, c) in cellset for c in range(int(c0), int(c1) + 1))
+            else:
+                support = sum((r, tc - dc) in cellset for r in range(int(r0), int(r1) + 1))
+
+            candidates.append((support, edge[0], step))
+
+        if not candidates:
+            continue
+
+        candidates.sort(key=lambda x: x[0], reverse=True)
+        _, tip, step = candidates[0]
+
+        for r, c in foreign_cells:
+            out[r, c] = 0
+
+        for fcolor in sorted(foreign):
+            count = foreign[fcolor]
+            r, c = tip
+            dr, dc = step
+            for _ in range(count):
+                r += dr
+                c += dc
+                if 0 <= r < h and 0 <= c < w:
+                    out[r, c] = fcolor
 
     return out
 ```

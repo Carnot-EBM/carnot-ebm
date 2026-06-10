@@ -86,95 +86,84 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 def transform(grid):
     h, w = grid.shape
     out = grid.copy()
-
-    # Remove original endpoint markers; they are recomputed.
     out[out == 3] = 8
 
-    centers_by_row = {}
-    for r in range(h):
-        centers = []
+    centers = {}
+    for r in range(1, h, 2):
+        cs = []
         c = 0
-        while c < w:
-            if grid[r, c] == 7:
-                start = c
-                while c < w and grid[r, c] == 7:
-                    c += 1
-                end = c
-                mid = (start + end - 1) // 2
-                centers.append(mid)
-                for x in range(start, end):
-                    out[r, x] = 6 if x == mid else 8
+        while c <= w - 3:
+            if grid[r, c] == 7 and grid[r, c + 1] == 7 and grid[r, c + 2] == 7:
+                m = c + 1
+                cs.append(m)
+                out[r, c] = 8
+                out[r, m] = 6
+                out[r, c + 2] = 8
+                if r > 0 and grid[r - 1, m] != 0:
+                    out[r - 1, m] = 6
+                if r + 1 < h and grid[r + 1, m] != 0:
+                    out[r + 1, m] = 6
+                c += 3
             else:
                 c += 1
-        if centers:
-            centers_by_row[r] = centers
+        centers[r] = cs
 
-    # Extend each 7-run's center into the track rows above and below.
-    for r, centers in centers_by_row.items():
-        for c in centers:
-            for rr in (r - 1, r + 1):
-                if 0 <= rr < h and grid[rr, c] != 0:
-                    out[rr, c] = 6
+    used_gaps = set()
 
-    def runs_between(row, lo, hi):
-        runs = []
-        c = lo
-        while c <= hi:
-            while c <= hi and out[row, c] != 8:
-                c += 1
-            if c > hi:
-                break
-            s = c
-            while c <= hi and out[row, c] == 8:
-                c += 1
-            runs.append((s, c - 1))
-        return runs
+    def segment_bounds(r, x):
+        a = x
+        while a > 0 and grid[r, a - 1] != 0:
+            a -= 1
+        b = x
+        while b + 1 < w and grid[r, b + 1] != 0:
+            b += 1
+        return a, b
 
-    for r in range(0, h, 2):
-        above = centers_by_row.get(r - 1, [])
-        below = centers_by_row.get(r + 1, [])
+    def mark(r, c, switched):
+        gap = None
+        if c > 0 and grid[r, c - 1] == 0:
+            gap = (r, c - 1)
+        if c + 1 < w and grid[r, c + 1] == 0:
+            gap = (r, c + 1)
+        if gap is not None:
+            if gap in used_gaps:
+                return
+            used_gaps.add(gap)
 
-        if r == 0:
-            continue
+        if switched and (c == 0 or c == w - 1) and grid[r, c] == 3:
+            cols = (0, 1) if c == 0 else (w - 2, w - 1)
+        else:
+            cols = (c,)
 
-        if r == h - 1:
-            for c in above:
-                left = runs_between(r, 0, c - 1)
-                if left:
-                    out[r, left[-1][0]] = 3
-            if above:
-                c = max(above)
-                right = runs_between(r, c + 1, w - 1)
-                if right:
-                    out[r, right[-1][1]] = 3
-            continue
+        for cc in cols:
+            if 0 <= cc < w and out[r, cc] != 0:
+                out[r, cc] = 3
 
-        events = [(c, 0) for c in above] + [(c, 1) for c in below]
-        if not events:
-            continue
-        events.sort()
+    for r0 in range(0, h, 2):
+        for start, d0 in ((0, 1), (w - 1, -1)):
+            if grid[r0, start] != 3:
+                continue
 
-        if events[0][1] == 0:
-            first = events[0][0]
-            left = runs_between(r, 0, first - 1)
-            if left:
-                s, e = left[0]
-                n = 2 if first <= 4 else 1
-                for x in range(s, min(e, s + n - 1) + 1):
-                    out[r, x] = 3
+            r, x, d = r0, start, d0
+            switched = False
 
-        if events[-1][1] == 0:
-            last = events[-1][0]
-            right = runs_between(r, last + 1, w - 1)
-            if right:
-                if (w - 1 - last) <= 4:
-                    s, e = right[-1]
-                    n = 2
-                    for x in range(max(s, e - n + 1), e + 1):
-                        out[r, x] = 3
-                else:
-                    for s, e in right:
-                        out[r, e] = 3
+            while True:
+                a, b = segment_bounds(r, x)
+                choices = []
+                if r + 1 < h:
+                    choices = [
+                        c for c in centers.get(r + 1, [])
+                        if a <= c <= b and ((d == 1 and c > x) or (d == -1 and c < x))
+                    ]
+
+                if not choices:
+                    mark(r, (b if d == 1 else a) if switched else start, switched)
+                    break
+
+                x = min(choices) if d == 1 else max(choices)
+                r += 2
+                d = -d
+                switched = True
 
     return out
 ```

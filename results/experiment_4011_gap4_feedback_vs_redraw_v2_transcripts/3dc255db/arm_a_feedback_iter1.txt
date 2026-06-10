@@ -97,7 +97,59 @@ Write exactly one Python function:
         # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
         # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
 Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
-===== RAW OUTPUT =====
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (12x12):
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 4, 4, 4, 6, 6, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 7, 7, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+your function returned:
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
+ [6, 0, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 4, 4, 4, 6, 6, 0, 0, 0],
+ [0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0],
+ [0, 0, 0, 0, 3, 3, 7, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 3, 0, 7, 0, 0, 0, 0],
+ [0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0]]
+
+Demo 2: expected OUTPUT (10x10):
+[[0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 0, 0, 0, 9, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 0, 3, 0, 0, 6, 0, 6, 0],
+ [3, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+your function returned:
+[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+ [0, 0, 3, 0, 0, 0, 0, 6, 0, 0],
+ [0, 0, 3, 0, 0, 0, 6, 0, 6, 0],
+ [0, 3, 9, 3, 0, 0, 6, 9, 6, 0],
+ [3, 9, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 9, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+ [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+Previous code:
 ```python
 def transform(grid):
     h, w = grid.shape
@@ -195,6 +247,134 @@ def transform(grid):
     for r, c in removals:
         out[r, c] = 0
 
+    for r, c, color in draws:
+        out[r, c] = color
+
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
+===== RAW OUTPUT =====
+```python
+def transform(grid):
+    h, w = grid.shape
+    out = grid.copy()
+
+    seen = np.zeros((h, w), dtype=bool)
+    comps = []
+    for r in range(h):
+        for c in range(w):
+            col = int(grid[r, c])
+            if col == 0 or seen[r, c]:
+                continue
+            stack = [(r, c)]
+            seen[r, c] = True
+            cells = []
+            while stack:
+                rr, cc = stack.pop()
+                cells.append((rr, cc))
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nr, nc = rr + dr, cc + dc
+                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and int(grid[nr, nc]) == col:
+                        seen[nr, nc] = True
+                        stack.append((nr, nc))
+            comps.append((col, cells))
+
+    def median2(vals):
+        vals = sorted(vals)
+        n = len(vals)
+        return (vals[(n - 1) // 2] + vals[n // 2]) / 2.0
+
+    removals = []
+    draws = []
+
+    for color, cells in comps:
+        rs = [r for r, c in cells]
+        cs = [c for r, c in cells]
+        r0, r1 = min(rs), max(rs)
+        c0, c1 = min(cs), max(cs)
+        cellset = set(cells)
+
+        foreign = {}
+        foreign_cells = []
+        for r in range(r0, r1 + 1):
+            for c in range(c0, c1 + 1):
+                v = int(grid[r, c])
+                if v != 0 and v != color:
+                    foreign[v] = foreign.get(v, 0) + 1
+                    foreign_cells.append((r, c))
+
+        if not foreign_cells:
+            continue
+
+        frs = [r for r, c in foreign_cells]
+        fcs = [c for r, c in foreign_cells]
+        fmr = median2(frs)
+        fmc = median2(fcs)
+
+        edge_specs = [
+            ("up", (min(rs), None), (-1, 0)),
+            ("down", (max(rs), None), (1, 0)),
+            ("left", (None, min(cs)), (0, -1)),
+            ("right", (None, max(cs)), (0, 1)),
+        ]
+
+        candidates = []
+        for name, (_, _), step in edge_specs:
+            if name == "up":
+                edge = [(r, c) for r, c in cells if r == r0]
+                tip = min(edge, key=lambda p: abs(p[1] - fmc))
+                dist = fmr - r0
+                align = abs(tip[1] - fmc)
+                span = len(set(c for r, c in edge))
+            elif name == "down":
+                edge = [(r, c) for r, c in cells if r == r1]
+                tip = min(edge, key=lambda p: abs(p[1] - fmc))
+                dist = r1 - fmr
+                align = abs(tip[1] - fmc)
+                span = len(set(c for r, c in edge))
+            elif name == "left":
+                edge = [(r, c) for r, c in cells if c == c0]
+                tip = min(edge, key=lambda p: abs(p[0] - fmr))
+                dist = fmc - c0
+                align = abs(tip[0] - fmr)
+                span = len(set(r for r, c in edge))
+            else:
+                edge = [(r, c) for r, c in cells if c == c1]
+                tip = min(edge, key=lambda p: abs(p[0] - fmr))
+                dist = c1 - fmc
+                align = abs(tip[0] - fmr)
+                span = len(set(r for r, c in edge))
+
+            inward = 0
+            tr, tc = tip
+            if name in ("up", "down"):
+                ir = tr - step[0]
+                for c in range(c0, c1 + 1):
+                    if (ir, c) in cellset:
+                        inward += 1
+            else:
+                ic = tc - step[1]
+                for r in range(r0, r1 + 1):
+                    if (r, ic) in cellset:
+                        inward += 1
+
+            candidates.append((dist, -align, -span, inward, tip, step))
+
+        candidates.sort(reverse=True)
+        _, _, _, _, tip, step = candidates[0]
+
+        removals.extend(foreign_cells)
+        dr, dc = step
+        for fcolor, count in foreign.items():
+            r, c = tip
+            for _ in range(count):
+                r += dr
+                c += dc
+                if 0 <= r < h and 0 <= c < w:
+                    draws.append((r, c, fcolor))
+
+    for r, c in removals:
+        out[r, c] = 0
     for r, c, color in draws:
         out[r, c] = color
 

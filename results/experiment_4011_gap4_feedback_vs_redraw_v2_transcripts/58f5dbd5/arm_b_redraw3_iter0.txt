@@ -136,73 +136,82 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ```python
 def transform(grid):
     bg = grid[0, 0]
-    h, w = grid.shape
+    H, W = grid.shape
 
-    # Find the solid 5x5 template blocks.
-    large = []
-    for r in range(h - 4):
-        for c in range(w - 4):
-            col = grid[r, c]
-            if col == bg:
+    seen = np.zeros((H, W), dtype=bool)
+    bigs = []
+
+    for r in range(H):
+        for c in range(W):
+            if seen[r, c] or grid[r, c] == bg:
                 continue
-            if np.all(grid[r:r+5, c:c+5] == col):
-                large.append((r, c, col))
 
-    # Keep only top-lefts of maximal solid 5x5 blocks bounded by background/outside.
-    filtered = []
-    for r, c, col in large:
-        ok = True
-        for rr, cc in ((r-1, c), (r+5, c), (r, c-1), (r, c+5)):
-            if 0 <= rr < h and 0 <= cc < w and grid[rr, cc] == col:
-                ok = False
-                break
-        if ok:
-            filtered.append((r, c, col))
-    large = filtered
+            color = grid[r, c]
+            stack = [(r, c)]
+            seen[r, c] = True
+            cells = []
 
-    # Find compact 3x3 patterns for each color: a 3x3 box containing that color,
-    # not a solid block. Store the foreground mask.
+            while stack:
+                x, y = stack.pop()
+                cells.append((x, y))
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < H and 0 <= ny < W and not seen[nx, ny] and grid[nx, ny] == color:
+                        seen[nx, ny] = True
+                        stack.append((nx, ny))
+
+            rs = [p[0] for p in cells]
+            cs = [p[1] for p in cells]
+            r0, r1 = min(rs), max(rs)
+            c0, c1 = min(cs), max(cs)
+            h, w = r1 - r0 + 1, c1 - c0 + 1
+
+            if h >= 5 and w >= 5 and len(cells) == h * w:
+                bigs.append((r0, r1, c0, c1, color))
+
+    min_r = max(0, min(b[0] for b in bigs) - 1)
+    max_r = min(H - 1, max(b[1] for b in bigs) + 1)
+    min_c = max(0, min(b[2] for b in bigs) - 1)
+    max_c = min(W - 1, max(b[3] for b in bigs) + 1)
+
+    out = grid[min_r:max_r + 1, min_c:max_c + 1].copy()
+
+    in_big = np.zeros((H, W), dtype=bool)
+    for r0, r1, c0, c1, color in bigs:
+        in_big[r0:r1 + 1, c0:c1 + 1] = True
+
     patterns = {}
-    for col in set(int(x[2]) for x in large):
-        cells = np.argwhere(grid == col)
-        candidates = []
-        for r0 in range(h - 2):
-            for c0 in range(w - 2):
-                box = grid[r0:r0+3, c0:c0+3]
-                if np.any(box == col) and not np.all(box == col):
-                    # A pattern should be isolated from same-color cells just outside its 3x3 box.
-                    rs = slice(max(0, r0-1), min(h, r0+4))
-                    cs = slice(max(0, c0-1), min(w, c0+4))
-                    region = grid[rs, cs]
-                    total = np.sum(region == col)
-                    inside = np.sum(box == col)
-                    if total == inside:
-                        candidates.append((r0, c0, box == col))
-        if candidates:
-            # Prefer the densest isolated 3x3 pattern for this color.
-            candidates.sort(key=lambda x: np.sum(x[2]), reverse=True)
-            patterns[col] = candidates[0][2]
-
-    # Crop to the large-block arrangement.
-    rmin = min(r for r, c, col in large) - 1
-    cmin = min(c for r, c, col in large) - 1
-    rmax = max(r for r, c, col in large) + 6
-    cmax = max(c for r, c, col in large) + 6
-    rmin = max(0, rmin)
-    cmin = max(0, cmin)
-    rmax = min(h, rmax)
-    cmax = min(w, cmax)
-
-    out = grid[rmin:rmax, cmin:cmax].copy()
-
-    for r, c, col in large:
-        rr = r - rmin
-        cc = c - cmin
-        mask = patterns.get(int(col))
-        if mask is None:
+    for r0, r1, c0, c1, color in bigs:
+        if color in patterns:
             continue
-        out[rr:rr+5, cc:cc+5] = col
-        out[rr+1:rr+4, cc+1:cc+4] = np.where(mask, bg, col)
+
+        pts = []
+        for r in range(H):
+            for c in range(W):
+                if grid[r, c] == color and not in_big[r, c]:
+                    pts.append((r, c))
+
+        if pts:
+            prs = [p[0] for p in pts]
+            pcs = [p[1] for p in pts]
+            pr0, pr1 = min(prs), max(prs)
+            pc0, pc1 = min(pcs), max(pcs)
+            mask = grid[pr0:pr1 + 1, pc0:pc1 + 1] == color
+            patterns[color] = mask
+
+    for r0, r1, c0, c1, color in bigs:
+        if color not in patterns:
+            continue
+
+        mask = patterns[color]
+        inner_h = r1 - r0 - 1
+        inner_w = c1 - c0 - 1
+        mh, mw = mask.shape
+
+        for i in range(min(inner_h, mh)):
+            for j in range(min(inner_w, mw)):
+                if mask[i, j]:
+                    out[(r0 + 1 + i) - min_r, (c0 + 1 + j) - min_c] = bg
 
     return out
 ```

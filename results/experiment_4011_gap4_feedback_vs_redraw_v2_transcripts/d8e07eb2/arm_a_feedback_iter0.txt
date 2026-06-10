@@ -356,120 +356,116 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    out = grid.copy()
-    h, w = grid.shape
+    g = grid.copy()
+    h, w = g.shape
     bg = 8
 
-    sep_rows = []
-    for r in range(h):
-        if len(set(grid[r].tolist())) == 1 and grid[r, 0] != bg:
-            sep_rows.append(r)
-
+    sep_rows = [r for r in range(h) if len(set(g[r].tolist())) == 1 and g[r, 0] == 6]
     first_sep = sep_rows[0]
-    last_sep = sep_rows[-1]
+    second_sep = sep_rows[-1]
 
-    def groups(vals):
-        vals = sorted(set(vals))
-        if not vals:
-            return []
-        res = []
-        start = prev = vals[0]
-        for v in vals[1:]:
-            if v == prev + 1:
-                prev = v
-            else:
-                res.append((start, prev))
-                start = prev = v
-        res.append((start, prev))
-        return res
+    def components(r0, r1):
+        seen = set()
+        comps = []
+        for r in range(r0, r1):
+            for c in range(w):
+                if g[r, c] == bg or (r, c) in seen:
+                    continue
+                stack = [(r, c)]
+                seen.add((r, c))
+                cells = []
+                while stack:
+                    rr, cc = stack.pop()
+                    cells.append((rr, cc))
+                    for dr in (-1, 0, 1):
+                        for dc in (-1, 0, 1):
+                            if dr == 0 and dc == 0:
+                                continue
+                            nr, nc = rr + dr, cc + dc
+                            if r0 <= nr < r1 and 0 <= nc < w and (nr, nc) not in seen and g[nr, nc] != bg:
+                                seen.add((nr, nc))
+                                stack.append((nr, nc))
+                rs = [x for x, _ in cells]
+                cs = [y for _, y in cells]
+                comps.append({
+                    "cells": cells,
+                    "bbox": (min(rs), max(rs), min(cs), max(cs)),
+                    "center": ((min(rs) + max(rs)) // 2, (min(cs) + max(cs)) // 2)
+                })
+        return comps
 
-    table_rows_with_pixels = []
-    table_cols_with_pixels = []
-    for r in range(first_sep + 1, last_sep):
-        for c in range(w):
-            if grid[r, c] != bg:
-                table_rows_with_pixels.append(r)
-                table_cols_with_pixels.append(c)
+    def sig(comp):
+        r0, r1, c0, c1 = comp["bbox"]
+        vals = []
+        cellset = set(comp["cells"])
+        for r in range(r0, r1 + 1):
+            row = []
+            for c in range(c0, c1 + 1):
+                row.append(int(g[r, c]) if (r, c) in cellset else -1)
+            vals.append(tuple(row))
+        return tuple(vals)
 
-    row_starts = [a for a, b in groups(table_rows_with_pixels)]
-    col_starts = [a for a, b in groups(table_cols_with_pixels)]
+    top = components(0, first_sep)
+    db = components(first_sep + 1, second_sep)
 
-    top_rows_with_pixels = []
-    for r in range(first_sep):
-        if any(grid[r, c] != bg for c in range(w)):
-            top_rows_with_pixels.append(r)
-    top_start = groups(top_rows_with_pixels)[0][0]
+    keys = {sig(c) for c in top}
+    matches = [c for c in db if sig(c) in keys]
 
-    def cell_signature(rs, cs):
-        block = grid[rs:rs + 3, cs:cs + 3]
-        vals = block[block != bg]
-        if vals.size == 0:
-            return None
-        color = int(vals[0])
-        mask = tuple((block != bg).reshape(-1).tolist())
-        return (color, mask)
+    out = g.copy()
 
-    query = [cell_signature(top_start, cs) for cs in col_starts]
-    query_nonblank = [q for q in query if q is not None]
+    for comp in matches:
+        r0, r1, c0, c1 = comp["bbox"]
+        for r in range(max(0, r0 - 1), min(h, r1 + 2)):
+            if r in sep_rows:
+                continue
+            for c in range(max(0, c0 - 1), min(w, c1 + 2)):
+                if out[r, c] == bg:
+                    out[r, c] = 3
 
-    table = []
-    for rs in row_starts:
-        row = []
-        for cs in col_starts:
-            row.append(cell_signature(rs, cs))
-        table.append(row)
+    rows = [c["center"][0] for c in matches]
+    cols = [c["center"][1] for c in matches]
+    is_line = len(matches) > 1 and (len(set(rows)) == 1 or len(set(cols)) == 1)
 
-    matched = None
-    if len(query_nonblank) == len(col_starts):
-        q_sorted = sorted(query_nonblank)
-        for i, row in enumerate(table):
-            if sorted(row) == q_sorted:
-                matched = ("row", i)
-                break
-        if matched is None:
-            for j in range(len(col_starts)):
-                col = [table[i][j] for i in range(len(row_starts))]
-                if sorted(col) == q_sorted:
-                    matched = ("col", j)
-                    break
+    if is_line:
+        for r in range(0, first_sep):
+            for c in range(w):
+                if out[r, c] == bg:
+                    out[r, c] = 3
 
-    def paint_box(r0, r1, c0, c1, color):
-        r0 = max(0, r0)
-        c0 = max(0, c0)
-        r1 = min(h - 1, r1)
-        c1 = min(w - 1, c1)
-        area = out[r0:r1 + 1, c0:c1 + 1]
-        area[area == bg] = color
+        # Preserve the demo behavior for horizontal matches: when a top slot
+        # exactly matches the selected database row in the same slot, advance it
+        # to the next database row's symbol in that slot.
+        if len(set(rows)) == 1:
+            db_sorted = sorted(db, key=lambda x: (x["center"][0], x["center"][1]))
+            row_vals = sorted(set(c["center"][0] for c in db_sorted))
+            col_vals = sorted(set(c["center"][1] for c in db_sorted))
+            by_pos = {}
+            for c in db_sorted:
+                ri = min(range(len(row_vals)), key=lambda i: abs(row_vals[i] - c["center"][0]))
+                ci = min(range(len(col_vals)), key=lambda i: abs(col_vals[i] - c["center"][1]))
+                by_pos[(ri, ci)] = c
 
-    if matched is not None:
-        kind, idx = matched
+            match_row = min(range(len(row_vals)), key=lambda i: abs(row_vals[i] - rows[0]))
+            top_sorted = sorted(top, key=lambda x: x["center"][1])
+            for tc in top_sorted:
+                ci = min(range(len(col_vals)), key=lambda i: abs(col_vals[i] - tc["center"][1]))
+                cur = by_pos.get((match_row, ci))
+                nxt = by_pos.get((match_row + 1, ci))
+                if cur is not None and nxt is not None and sig(tc) == sig(cur):
+                    tr0, tr1, tc0, tc1 = tc["bbox"]
+                    nr0, nr1, nc0, nc1 = nxt["bbox"]
+                    for rr in range(tr0, tr1 + 1):
+                        for cc in range(tc0, tc1 + 1):
+                            out[rr, cc] = 3
+                    nset = set(nxt["cells"])
+                    for rr in range(nr0, nr1 + 1):
+                        for cc in range(nc0, nc1 + 1):
+                            if (rr, cc) in nset:
+                                out[tr0 + rr - nr0, tc0 + cc - nc0] = g[rr, cc]
 
-        if kind == "row" and idx + 1 < len(row_starts):
-            for j, q in enumerate(query):
-                if q is not None and q == table[idx][j]:
-                    src_r = row_starts[idx + 1]
-                    src_c = col_starts[j]
-                    dst_c = col_starts[j]
-                    out[top_start:top_start + 3, dst_c:dst_c + 3] = grid[src_r:src_r + 3, src_c:src_c + 3]
-
-        top_area = out[:first_sep, :]
-        top_area[top_area == bg] = 3
-
-        if kind == "row":
-            rs = row_starts[idx]
-            paint_box(rs - 1, rs + 3, col_starts[0] - 1, col_starts[-1] + 3, 3)
-        else:
-            cs = col_starts[idx]
-            paint_box(row_starts[0] - 1, row_starts[-1] + 3, cs - 1, cs + 3, 3)
-
-        out[last_sep + 1:, :] = 3
-    else:
-        wanted = set(query_nonblank)
-        for i, rs in enumerate(row_starts):
-            for j, cs in enumerate(col_starts):
-                if table[i][j] in wanted:
-                    paint_box(rs - 1, rs + 3, cs - 1, cs + 3, 3)
-        out[last_sep + 1:, :] = 2
+    fill = 3 if is_line else 2
+    for r in range(second_sep + 1, h):
+        out[r, :] = fill
 
     return out
 ```

@@ -135,75 +135,78 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    bg = grid[0, 0]
+    bg = np.bincount(grid.ravel()).argmax()
     h, w = grid.shape
 
-    # Find all non-background connected components.
     seen = np.zeros((h, w), dtype=bool)
     comps = []
+
     for r in range(h):
         for c in range(w):
-            if grid[r, c] != bg and not seen[r, c]:
-                color = grid[r, c]
-                stack = [(r, c)]
-                seen[r, c] = True
-                cells = []
-                while stack:
-                    x, y = stack.pop()
-                    cells.append((x, y))
-                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        nx, ny = x + dx, y + dy
-                        if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and grid[nx, ny] == color:
-                            seen[nx, ny] = True
-                            stack.append((nx, ny))
-                rs = [p[0] for p in cells]
-                cs = [p[1] for p in cells]
-                comps.append({
-                    "color": color,
-                    "cells": cells,
-                    "r0": min(rs), "r1": max(rs),
-                    "c0": min(cs), "c1": max(cs),
-                    "area": len(cells),
-                })
+            if grid[r, c] == bg or seen[r, c]:
+                continue
+            color = grid[r, c]
+            stack = [(r, c)]
+            seen[r, c] = True
+            cells = []
 
-    # Large solid 5x5 objects are the output templates.
-    bigs = []
-    for comp in comps:
-        rh = comp["r1"] - comp["r0"] + 1
-        cw = comp["c1"] - comp["c0"] + 1
-        if rh == 5 and cw == 5 and comp["area"] == 25:
-            bigs.append(comp)
+            while stack:
+                x, y = stack.pop()
+                cells.append((x, y))
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and grid[nx, ny] == color:
+                        seen[nx, ny] = True
+                        stack.append((nx, ny))
 
-    # Small 3x3-ish objects encode holes for matching color.
+            rs = [p[0] for p in cells]
+            cs = [p[1] for p in cells]
+            comps.append({
+                "color": color,
+                "cells": cells,
+                "r0": min(rs),
+                "r1": max(rs),
+                "c0": min(cs),
+                "c1": max(cs),
+                "area": len(cells),
+            })
+
+    big = [
+        c for c in comps
+        if c["r1"] - c["r0"] + 1 == 5
+        and c["c1"] - c["c0"] + 1 == 5
+        and c["area"] == 25
+    ]
+
     patterns = {}
-    for comp in comps:
-        if comp in bigs:
+    for c in comps:
+        if c in big:
             continue
-        rh = comp["r1"] - comp["r0"] + 1
-        cw = comp["c1"] - comp["c0"] + 1
+        rh = c["r1"] - c["r0"] + 1
+        cw = c["c1"] - c["c0"] + 1
         if rh <= 3 and cw <= 3:
-            pat = np.zeros((3, 3), dtype=bool)
-            for r, c in comp["cells"]:
-                pat[r - comp["r0"], c - comp["c0"]] = True
-            patterns[comp["color"]] = pat
+            pat = np.full((3, 3), bg, dtype=grid.dtype)
+            for x, y in c["cells"]:
+                pat[x - c["r0"], y - c["c0"]] = c["color"]
+            patterns[c["color"]] = pat
 
-    r0 = min(b["r0"] for b in bigs) - 1
-    r1 = max(b["r1"] for b in bigs) + 1
-    c0 = min(b["c0"] for b in bigs) - 1
-    c1 = max(b["c1"] for b in bigs) + 1
+    r0 = min(c["r0"] for c in big)
+    r1 = max(c["r1"] for c in big)
+    c0 = min(c["c0"] for c in big)
+    c1 = max(c["c1"] for c in big)
 
     out = grid[r0:r1 + 1, c0:c1 + 1].copy()
 
-    for b in bigs:
+    for b in big:
         color = b["color"]
         if color not in patterns:
             continue
-        br = b["r0"] - r0
-        bc = b["c0"] - c0
+        rr = b["r0"] - r0
+        cc = b["c0"] - c0
         pat = patterns[color]
         for i in range(3):
             for j in range(3):
-                out[br + 1 + i, bc + 1 + j] = bg if pat[i, j] else color
+                out[rr + 1 + i, cc + 1 + j] = bg if pat[i, j] == color else color
 
     return out
 ```

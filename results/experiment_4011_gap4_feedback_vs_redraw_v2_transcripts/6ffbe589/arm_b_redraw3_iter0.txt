@@ -133,123 +133,102 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    H, W = grid.shape
+    g = grid
+    rows = np.where(np.any(g != 0, axis=1))[0]
+    if len(rows) == 0:
+        return g.copy()
 
-    seen = np.zeros((H, W), dtype=bool)
-    comps = []
-    for r in range(H):
-        for c in range(W):
-            if grid[r, c] != 0 and not seen[r, c]:
-                q = [(r, c)]
-                seen[r, c] = True
-                cells = []
-                while q:
-                    x, y = q.pop()
-                    cells.append((x, y))
-                    for dx in (-1, 0, 1):
-                        for dy in (-1, 0, 1):
-                            if dx == 0 and dy == 0:
-                                continue
-                            nx, ny = x + dx, y + dy
-                            if 0 <= nx < H and 0 <= ny < W and not seen[nx, ny] and grid[nx, ny] != 0:
-                                seen[nx, ny] = True
-                                q.append((nx, ny))
-                rs = [x for x, y in cells]
-                cs = [y for x, y in cells]
-                comps.append({
-                    "cells": cells,
-                    "r0": min(rs), "r1": max(rs),
-                    "c0": min(cs), "c1": max(cs),
-                    "n": len(cells),
-                })
+    clusters = []
+    start = rows[0]
+    prev = rows[0]
+    for r in rows[1:]:
+        if r == prev + 1:
+            prev = r
+        else:
+            clusters.append((start, prev))
+            start = prev = r
+    clusters.append((start, prev))
 
-    def box_dist(a, b):
-        rgap = max(0, max(a["r0"], b["r0"]) - min(a["r1"], b["r1"]) - 1)
-        cgap = max(0, max(a["c0"], b["c0"]) - min(a["c1"], b["c1"]) - 1)
-        return max(rgap, cgap)
+    def cluster_weight(cl):
+        a, b = cl
+        return int(np.count_nonzero(g[a:b + 1]))
 
-    n = len(comps)
-    parent = list(range(n))
+    r0, r1 = max(clusters, key=cluster_weight)
+    cols = np.where(np.any(g[r0:r1 + 1] != 0, axis=0))[0]
+    c0, c1 = cols[0], cols[-1]
 
-    def find(x):
-        while parent[x] != x:
-            parent[x] = parent[parent[x]]
-            x = parent[x]
-        return x
-
-    def union(a, b):
-        ra, rb = find(a), find(b)
-        if ra != rb:
-            parent[rb] = ra
-
-    for i in range(n):
-        for j in range(i + 1, n):
-            if box_dist(comps[i], comps[j]) <= 2:
-                union(i, j)
-
-    groups = {}
-    for i, comp in enumerate(comps):
-        groups.setdefault(find(i), []).append(comp)
-
-    best = max(groups.values(), key=lambda gs: sum(g["n"] for g in gs))
-    r0 = min(g["r0"] for g in best)
-    r1 = max(g["r1"] for g in best)
-    c0 = min(g["c0"] for g in best)
-    c1 = max(g["c1"] for g in best)
-
-    crop = grid[r0:r1 + 1, c0:c1 + 1]
+    crop = g[r0:r1 + 1, c0:c1 + 1]
     h, w = crop.shape
+
+    outside = g.copy()
+    outside[r0:r1 + 1, c0:c1 + 1] = 0
+
+    clues = {}
+    for color in np.unique(outside):
+        if color == 0:
+            continue
+        pts = np.argwhere(outside == color)
+        rr = pts[:, 0]
+        cc = pts[:, 1]
+        clues[int(color)] = {
+            "height": int(rr.max() - rr.min() + 1),
+            "width": int(cc.max() - cc.min() + 1),
+            "cy": (rr.min() + rr.max()) / 2.0,
+            "cx": (cc.min() + cc.max()) / 2.0,
+        }
+
+    def apply_op(mask, op):
+        if op == "h":
+            return mask[:, ::-1]
+        if op == "v":
+            return mask[::-1, :]
+        if op == "rot":
+            return mask[::-1, ::-1]
+        if op == "cw":
+            return np.rot90(mask, -1)
+        if op == "ccw":
+            return np.rot90(mask, 1)
+        return mask
+
     out = np.zeros_like(crop)
+    center_y = (r0 + r1) / 2.0
+    center_x = (c0 + c1) / 2.0
 
     for color in np.unique(crop):
         if color == 0:
             continue
 
-        inside = np.argwhere(crop == color)
-        outside = np.argwhere((grid == color) & ~(
-            (np.arange(H)[:, None] >= r0) &
-            (np.arange(H)[:, None] <= r1) &
-            (np.arange(W)[None, :] >= c0) &
-            (np.arange(W)[None, :] <= c1)
-        ))
+        color = int(color)
+        op = "id"
 
-        flip_h = False
-        flip_v = False
+        if color in clues:
+            clue = clues[color]
+            ch, cw = clue["height"], clue["width"]
 
-        if len(outside):
-            or0, oc0 = outside.min(axis=0)
-            or1, oc1 = outside.max(axis=0)
+            if ch > cw:
+                op = "rot"
+            elif cw > ch:
+                op = "ccw" if clue["cy"] < r0 else "rot"
+            else:
+                if clue["cy"] < r0:
+                    op = "ccw"
+                else:
+                    mask_pts = np.argwhere(crop == color)
+                    touches_border = (
+                        np.any(mask_pts[:, 0] == 0) or
+                        np.any(mask_pts[:, 0] == h - 1) or
+                        np.any(mask_pts[:, 1] == 0) or
+                        np.any(mask_pts[:, 1] == w - 1)
+                    )
+                    if touches_border:
+                        op = "cw"
+                    else:
+                        dy = clue["cy"] - center_y
+                        dx = clue["cx"] - center_x
+                        op = "h" if abs(dx) > abs(dy) else "v"
 
-            dx = -1 if oc1 < c0 else (1 if oc0 > c1 else 0)
-            dy = -1 if or1 < r0 else (1 if or0 > r1 else 0)
-
-            hgap = 0
-            if oc1 < c0:
-                hgap = c0 - oc1 - 1
-            elif oc0 > c1:
-                hgap = oc0 - c1 - 1
-
-            vgap = 0
-            if or1 < r0:
-                vgap = r0 - or1 - 1
-            elif or0 > r1:
-                vgap = or0 - r1 - 1
-
-            if dx != 0 and (dy == 0 or hgap >= vgap):
-                flip_h = True
-            if dy != 0 and (dx == 0 or vgap > hgap):
-                flip_v = True
-
-            if dx != 0 and dy != 0 and (or1 - or0) > (oc1 - oc0):
-                flip_v = True
-
-        for rr, cc in inside:
-            nr, nc = rr, cc
-            if flip_v:
-                nr = h - 1 - nr
-            if flip_h:
-                nc = w - 1 - nc
-            out[nr, nc] = color
+        moved = apply_op(crop == color, op)
+        out[moved] = color
 
     return out
 ```

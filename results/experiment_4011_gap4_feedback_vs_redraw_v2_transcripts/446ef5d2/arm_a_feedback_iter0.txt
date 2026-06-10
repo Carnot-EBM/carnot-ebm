@@ -87,129 +87,189 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    g = grid
-    h0, w0 = g.shape
+    vals, cnts = np.unique(grid, return_counts=True)
+    bg = vals[np.argmax(cnts)]
+    counts = {int(v): int(c) for v, c in zip(vals, cnts)}
+    nonbg = [c for c in counts if c != int(bg)]
+    frame = max(nonbg, key=lambda c: counts[c])
 
-    vals, counts = np.unique(g, return_counts=True)
-    bg = vals[np.argmax(counts)]
-    non = [(int(v), int(c)) for v, c in zip(vals, counts) if v != bg]
+    allowed = set([frame])
+    for c in nonbg:
+        if c != frame and counts[c] >= 4:
+            allowed.add(c)
+    rare = set(nonbg) - allowed
 
-    frame = max(non, key=lambda x: x[1])[0]
-    rare = min(non, key=lambda x: x[1])[0]
-    valid = [v for v, _ in non if v != rare]
+    h0, w0 = grid.shape
+    mask = np.zeros(grid.shape, dtype=bool)
+    for c in allowed:
+        mask |= (grid == c)
 
-    mask = np.isin(g, valid)
-    seen = np.zeros(g.shape, dtype=bool)
-    patches = []
-
+    seen = np.zeros(grid.shape, dtype=bool)
+    frags = []
     for r in range(h0):
         for c in range(w0):
-            if mask[r, c] and not seen[r, c]:
-                q = [(r, c)]
-                seen[r, c] = True
-                cells = []
-                for x, y in q:
-                    cells.append((x, y))
-                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        nx, ny = x + dx, y + dy
-                        if 0 <= nx < h0 and 0 <= ny < w0 and mask[nx, ny] and not seen[nx, ny]:
-                            seen[nx, ny] = True
-                            q.append((nx, ny))
+            if not mask[r, c] or seen[r, c]:
+                continue
+            q = [(r, c)]
+            seen[r, c] = True
+            cells = []
+            qi = 0
+            while qi < len(q):
+                x, y = q[qi]
+                qi += 1
+                cells.append((x, y))
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < h0 and 0 <= ny < w0 and mask[nx, ny] and not seen[nx, ny]:
+                        seen[nx, ny] = True
+                        q.append((nx, ny))
+            if len(cells) < 2:
+                continue
+            rs = [p[0] for p in cells]
+            cs = [p[1] for p in cells]
+            r1, r2, c1, c2 = min(rs), max(rs), min(cs), max(cs)
+            arr = grid[r1:r2 + 1, c1:c2 + 1].copy()
+            trans = np.ones(arr.shape, dtype=bool)
+            for a in allowed:
+                trans &= (arr != a)
+            frags.append({
+                "arr": arr,
+                "trans": trans,
+                "origin": (r1, c1),
+                "cells": set(cells)
+            })
 
-                rs = [x for x, _ in cells]
-                cs = [y for _, y in cells]
-                patches.append(g[min(rs):max(rs) + 1, min(cs):max(cs) + 1].copy())
+    total = sum(int(np.sum(~f["trans"])) for f in frags)
+    frags.sort(key=lambda f: -int(np.sum(~f["trans"])))
 
-    total = sum(p.size for p in patches)
-    max_h = max(p.shape[0] for p in patches)
-    max_w = max(p.shape[1] for p in patches)
-    patches = [patches[i] for i in sorted(range(len(patches)), key=lambda i: -patches[i].size)]
+    def edge_bad(arr, tr, side):
+        if side == 0:
+            a, t = arr[0], tr[0]
+        elif side == 1:
+            a, t = arr[-1], tr[-1]
+        elif side == 2:
+            a, t = arr[:, 0], tr[:, 0]
+        else:
+            a, t = arr[:, -1], tr[:, -1]
+        return np.any((~t) & (a != frame))
 
-    def tile(rect_h, rect_w):
-        occ = np.zeros((rect_h, rect_w), dtype=bool)
-        canvas = np.full((rect_h, rect_w), bg, dtype=g.dtype)
-        used = [False] * len(patches)
+    solution = None
+    factors = []
+    for hh in range(1, total + 1):
+        if total % hh == 0:
+            factors.append((hh, total // hh))
+
+    for H, W in factors:
+        if any(f["arr"].shape[0] > H or f["arr"].shape[1] > W for f in frags):
+            continue
+
+        poslists = []
+        for f in frags:
+            arr, tr = f["arr"], f["trans"]
+            hh, ww = arr.shape
+            ps = []
+            for y in range(H - hh + 1):
+                if y == 0 and edge_bad(arr, tr, 0):
+                    continue
+                if y + hh == H and edge_bad(arr, tr, 1):
+                    continue
+                for x in range(W - ww + 1):
+                    if x == 0 and edge_bad(arr, tr, 2):
+                        continue
+                    if x + ww == W and edge_bad(arr, tr, 3):
+                        continue
+                    ps.append((y, x))
+            poslists.append(ps)
+
+        if any(len(p) == 0 for p in poslists):
+            continue
+
+        order = sorted(range(len(frags)), key=lambda i: len(poslists[i]))
+        canvas = np.full((H, W), -1, dtype=int)
+        cover = np.zeros((H, W), dtype=bool)
+        placed = [None] * len(frags)
 
         def backtrack(k):
-            if k == len(patches):
-                if (np.all(canvas[0, :] == frame) and np.all(canvas[-1, :] == frame) and
-                    np.all(canvas[:, 0] == frame) and np.all(canvas[:, -1] == frame)):
-                    return canvas.copy()
-                return None
+            if k == len(order):
+                if not np.all(cover):
+                    return False
+                if not (np.all(canvas[0] == frame) and np.all(canvas[-1] == frame) and
+                        np.all(canvas[:, 0] == frame) and np.all(canvas[:, -1] == frame)):
+                    return False
+                return True
 
-            empty = np.argwhere(~occ)
-            if empty.size == 0:
-                return None
-
-            r, c = empty[0]
-            for i, p in enumerate(patches):
-                if used[i]:
+            i = order[k]
+            f = frags[i]
+            arr, tr = f["arr"], f["trans"]
+            hh, ww = arr.shape
+            for y, x in poslists[i]:
+                changes = []
+                ok = True
+                for rr in range(hh):
+                    for cc in range(ww):
+                        if tr[rr, cc]:
+                            continue
+                        yy, xx = y + rr, x + cc
+                        if cover[yy, xx]:
+                            ok = False
+                            break
+                        changes.append((yy, xx, int(arr[rr, cc])))
+                    if not ok:
+                        break
+                if not ok:
                     continue
+                for yy, xx, val in changes:
+                    canvas[yy, xx] = val
+                    cover[yy, xx] = True
+                placed[i] = (y, x)
+                if backtrack(k + 1):
+                    return True
+                placed[i] = None
+                for yy, xx, val in changes:
+                    canvas[yy, xx] = -1
+                    cover[yy, xx] = False
+            return False
 
-                ph, pw = p.shape
-                if r + ph > rect_h or c + pw > rect_w:
-                    continue
-                if occ[r:r + ph, c:c + pw].any():
-                    continue
-
-                if r == 0 and not np.all(p[0, :] == frame):
-                    continue
-                if c == 0 and not np.all(p[:, 0] == frame):
-                    continue
-                if r + ph == rect_h and not np.all(p[-1, :] == frame):
-                    continue
-                if c + pw == rect_w and not np.all(p[:, -1] == frame):
-                    continue
-
-                used[i] = True
-                occ[r:r + ph, c:c + pw] = True
-                old = canvas[r:r + ph, c:c + pw].copy()
-                canvas[r:r + ph, c:c + pw] = p
-
-                ans = backtrack(k + 1)
-                if ans is not None:
-                    return ans
-
-                canvas[r:r + ph, c:c + pw] = old
-                occ[r:r + ph, c:c + pw] = False
-                used[i] = False
-
-            return None
-
-        return backtrack(0)
-
-    candidates = []
-    for rh in range(max_h, total + 1):
-        if total % rh == 0:
-            rw = total // rh
-            if rw >= max_w and rh <= h0 and rw <= w0:
-                candidates.append((rh, rw))
-    candidates.sort(key=lambda x: (abs(x[0] - x[1]), x[0]))
-
-    rect = None
-    for rh, rw in candidates:
-        rect = tile(rh, rw)
-        if rect is not None:
+        if backtrack(0):
+            solution = (canvas.copy(), placed[:])
             break
 
-    rr, cc = np.where(g == rare)
-    rmin, rmax = rr.min(), rr.max()
-    cmin, cmax = cc.min(), cc.max()
-    corner = [(r, c) for r in (rmin, rmax) for c in (cmin, cmax) if g[r, c] != rare][0]
+    if solution is None:
+        return grid.copy()
 
-    cr, cl = corner
-    rh, rw = rect.shape
+    obj, placed = solution
 
-    if cr == rmin and cl == cmin:
-        top, left = cr - rh + 1, cl - rw + 1
-    elif cr == rmin and cl == cmax:
-        top, left = cr - rh + 1, cl
-    elif cr == rmax and cl == cmin:
-        top, left = cr, cl - rw + 1
+    anchor = None
+    rare_cells = []
+    for r in range(h0):
+        for c in range(w0):
+            if int(grid[r, c]) in rare:
+                rare_cells.append((r, c))
+
+    for i, f in enumerate(frags):
+        for r, c in f["cells"]:
+            for rr, cc in rare_cells:
+                if abs(r - rr) <= 1 and abs(c - cc) <= 1:
+                    anchor = i
+                    break
+            if anchor is not None:
+                break
+        if anchor is not None:
+            break
+
+    if anchor is None:
+        off_r = (h0 - obj.shape[0] + 1) // 2
+        off_c = (w0 - obj.shape[1] + 1) // 2
     else:
-        top, left = cr, cl
+        py, px = placed[anchor]
+        oy, ox = frags[anchor]["origin"]
+        off_r, off_c = oy - py, ox - px
 
-    out = np.full_like(g, bg)
-    out[top:top + rh, left:left + rw] = rect
+    out = np.full(grid.shape, bg, dtype=grid.dtype)
+    for r in range(obj.shape[0]):
+        for c in range(obj.shape[1]):
+            rr, cc = off_r + r, off_c + c
+            if 0 <= rr < out.shape[0] and 0 <= cc < out.shape[1]:
+                out[rr, cc] = obj[r, c]
     return out
 ```

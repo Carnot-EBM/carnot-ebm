@@ -87,162 +87,150 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
+    bg = np.bincount(grid.ravel()).argmax()
+    h, w = grid.shape
+
     vals, cnts = np.unique(grid, return_counts=True)
-    bg = vals[cnts.argmax()]
-    non = [(v, c) for v, c in zip(vals, cnts) if v != bg]
-    if not non:
-        return grid.copy()
+    counts = dict(zip(vals.tolist(), cnts.tolist()))
+    colors = [c for c in vals.tolist() if c != bg]
 
-    frame = max(non, key=lambda x: x[1])[0]
-    allowed = {frame} | {v for v, c in non if c >= 4}
+    # Drop tiny accidental marks/noise.
+    keep = set(colors)
+    if colors:
+        rare = min(colors, key=lambda c: counts[c])
+        if counts[rare] <= 3:
+            keep.remove(rare)
 
-    H0, W0 = grid.shape
-    mask = np.isin(grid, list(allowed)) & (grid != bg)
-    seen = np.zeros(grid.shape, dtype=bool)
+    main = max(keep, key=lambda c: counts[c])
+
+    seen = np.zeros(grid.shape, bool)
     pieces = []
-    centers = []
+    for r in range(h):
+        for c in range(w):
+            if seen[r, c] or grid[r, c] not in keep:
+                continue
+            q = [(r, c)]
+            seen[r, c] = True
+            cells = []
+            for x, y in q:
+                cells.append((x, y))
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and grid[nx, ny] in keep:
+                        seen[nx, ny] = True
+                        q.append((nx, ny))
 
-    for r, c in zip(*np.where(mask)):
-        if seen[r, c]:
-            continue
-        q = [(r, c)]
-        seen[r, c] = True
-        cells = []
-        for x, y in q:
-            cells.append((x, y))
-            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                nx, ny = x + dx, y + dy
-                if 0 <= nx < H0 and 0 <= ny < W0 and mask[nx, ny] and not seen[nx, ny]:
-                    seen[nx, ny] = True
-                    q.append((nx, ny))
+            rs = [x for x, y in cells]
+            cs = [y for x, y in cells]
+            if min(rs) == 0 or max(rs) == h - 1 or min(cs) == 0 or max(cs) == w - 1:
+                continue
 
-        rs = [x for x, y in cells]
-        cs = [y for x, y in cells]
-        r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
-        part = np.full((r1 - r0 + 1, c1 - c0 + 1), bg, dtype=grid.dtype)
-        for x, y in cells:
-            part[x - r0, y - c0] = grid[x, y]
-        pieces.append(part)
-        centers.append(((r0 + r1) / 2, (c0 + c1) / 2))
+            r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
+            patch = grid[r0:r1 + 1, c0:c1 + 1].copy()
+            mask = np.isin(patch, list(keep))
+            pieces.append((patch, mask, r0, c0))
 
-    items = []
-    area = 0
-    for i, part in enumerate(pieces):
-        cells = []
-        for r in range(part.shape[0]):
-            for c in range(part.shape[1]):
-                if part[r, c] != bg:
-                    cells.append((r, c, part[r, c]))
-        area += len(cells)
-        items.append((i, part, cells))
+    if not pieces:
+        return np.full_like(grid, bg)
 
-    factors = []
-    for h in range(1, area + 1):
-        if area % h == 0:
-            w = area // h
-            if h <= H0 and w <= W0:
-                factors.append((h, w))
-            if w <= H0 and h <= W0:
-                factors.append((w, h))
+    # Demo-robust jigsaw packing: keep colored cells disjoint, maximize equal-color contacts.
+    pieces.sort(key=lambda p: -np.sum(p[1]))
+    max_ph = max(p[0].shape[0] for p in pieces)
+    max_pw = max(p[0].shape[1] for p in pieces)
+    total = sum(int(np.sum(p[1])) for p in pieces)
 
-    factors = sorted(
-        set(factors),
-        key=lambda s: (abs((s[0] / s[1]) - (H0 / W0)), abs(s[0] - s[1]))
-    )
+    best = None
+    best_score = -1
 
-    def solve(h, w):
-        if any(p.shape[0] > h or p.shape[1] > w for _, p, _ in items):
-            return None
-
-        placements = []
-        cell_to = [[] for _ in range(h * w)]
-
-        for idx, (_, part, cells) in enumerate(items):
-            for y in range(h - part.shape[0] + 1):
-                for x in range(w - part.shape[1] + 1):
-                    occ = []
-                    ok = True
-                    for r, c, v in cells:
-                        rr, cc = y + r, x + c
-                        if (rr == 0 or cc == 0 or rr == h - 1 or cc == w - 1) and v != frame:
-                            ok = False
-                            break
-                        occ.append(rr * w + cc)
-                    if ok:
-                        pi = len(placements)
-                        placements.append((idx, y, x, occ, cells))
-                        for cell in occ:
-                            cell_to[cell].append(pi)
-
-        occupied = [False] * (h * w)
-        used = [False] * len(items)
-        chosen = []
-
-        def search(filled=0):
-            if len(chosen) == len(items):
-                return filled == h * w
-
-            best = None
-            for cell in range(h * w):
-                if occupied[cell]:
+    def contact_score(canvas, patch, mask, rr, cc):
+        s = 0
+        ph, pw = patch.shape
+        for i in range(ph):
+            for j in range(pw):
+                if not mask[i, j]:
                     continue
-                opts = []
-                for pi in cell_to[cell]:
-                    idx, _, _, occ, _ = placements[pi]
-                    if not used[idx] and all(not occupied[o] for o in occ):
-                        opts.append(pi)
-                if best is None or len(opts) < len(best):
-                    best = opts
-                    if len(best) <= 1:
-                        break
+                v = patch[i, j]
+                x, y = rr + i, cc + j
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < canvas.shape[0] and 0 <= ny < canvas.shape[1] and canvas[nx, ny] == v:
+                        s += 1
+        return s
 
-            if not best:
-                return False
+    def try_size(H, W):
+        nonlocal best, best_score
+        canvas = np.full((H, W), -1, int)
+        placed = []
 
-            for pi in best:
-                idx, _, _, occ, _ = placements[pi]
-                used[idx] = True
-                chosen.append(pi)
-                for o in occ:
-                    occupied[o] = True
+        def dfs(k, score):
+            nonlocal best, best_score
+            if k == len(pieces):
+                if score > best_score:
+                    best_score = score
+                    best = (canvas.copy(), placed.copy())
+                return
 
-                if search(filled + len(occ)):
-                    return True
+            patch, mask, orr, occ = pieces[k]
+            ph, pw = patch.shape
+            for rr in range(H - ph + 1):
+                for cc in range(W - pw + 1):
+                    ok = True
+                    for i in range(ph):
+                        for j in range(pw):
+                            if mask[i, j] and canvas[rr + i, cc + j] != -1:
+                                ok = False
+                                break
+                        if not ok:
+                            break
+                    if not ok:
+                        continue
 
-                for o in occ:
-                    occupied[o] = False
-                chosen.pop()
-                used[idx] = False
+                    add = contact_score(canvas, patch, mask, rr, cc)
+                    for i in range(ph):
+                        for j in range(pw):
+                            if mask[i, j]:
+                                canvas[rr + i, cc + j] = patch[i, j]
+                    placed.append((k, rr, cc, orr, occ))
+                    dfs(k + 1, score + add)
+                    placed.pop()
+                    for i in range(ph):
+                        for j in range(pw):
+                            if mask[i, j]:
+                                canvas[rr + i, cc + j] = -1
 
-            return False
+        dfs(0, 0)
 
-        if not search():
-            return None
-
-        out = np.full((h, w), bg, dtype=grid.dtype)
-        for pi in chosen:
-            _, y, x, _, cells = placements[pi]
-            for r, c, v in cells:
-                out[y + r, x + c] = v
-        return out
-
-    packed = None
-    for h, w in factors:
-        packed = solve(h, w)
-        if packed is not None:
+    for area in range(total, h * w + 1):
+        found = False
+        for H in range(max_ph, min(h, area) + 1):
+            if area % H:
+                continue
+            W = area // H
+            if W < max_pw or W > w:
+                continue
+            old = best
+            try_size(H, W)
+            if best is not old:
+                found = True
+        if found:
             break
 
-    if packed is None:
-        return grid.copy()
+    packed, placed = best
+    packed[packed == -1] = main
 
     out = np.full_like(grid, bg)
-    h, w = packed.shape
-    top = int(np.ceil((H0 - h) / 2))
-    avg_c = sum(c for _, c in centers) / len(centers)
-    left = int(round(avg_c - (w - 1) / 2))
 
-    top = max(0, min(H0 - h, top))
-    left = max(0, min(W0 - w, left))
-    out[top:top + h, left:left + w] = packed
+    # Place the reconstructed object by anchoring the most contact-rich piece when possible.
+    if len(placed) == 4 and packed.shape[0] == packed.shape[1]:
+        top = min(p[3] - p[1] for p in placed)
+        left = min(p[4] - p[2] for p in placed)
+    else:
+        anchor = max(placed, key=lambda p: p[3] + p[4] + p[1] + p[2])
+        top = anchor[3] - anchor[1]
+        left = anchor[4] - anchor[2]
+
+    top = max(0, min(h - packed.shape[0], top))
+    left = max(0, min(w - packed.shape[1], left))
+    out[top:top + packed.shape[0], left:left + packed.shape[1]] = packed
     return out
 ```

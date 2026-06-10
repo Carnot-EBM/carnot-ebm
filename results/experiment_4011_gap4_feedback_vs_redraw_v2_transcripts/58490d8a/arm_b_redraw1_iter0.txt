@@ -125,64 +125,54 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    # Find the rectangular zero panel.
-    zero = (grid == 0)
-    rows = np.where(zero.any(axis=1))[0]
-    cols = np.where(zero.any(axis=0))[0]
-    r0, r1 = rows.min(), rows.max()
-    c0, c1 = cols.min(), cols.max()
+    h, w = grid.shape
+
+    # Find the all/mostly-zero panel: the bounding rectangle of all zeros.
+    zr, zc = np.where(grid == 0)
+    r0, r1 = zr.min(), zr.max()
+    c0, c1 = zc.min(), zc.max()
+    out_h, out_w = r1 - r0 + 1, c1 - c0 + 1
 
     panel = grid[r0:r1 + 1, c0:c1 + 1]
-    out = np.zeros_like(panel)
+    labels = []
+    for v in np.unique(panel):
+        if v != 0:
+            rr, cc = np.where(panel == v)
+            labels.append((int(rr[0]), int(cc[0]), int(v)))
 
-    h, w = grid.shape
-    ph, pw = panel.shape
-
-    # Background is the most common non-zero color outside the panel.
-    outside = grid.copy()
-    outside[r0:r1 + 1, c0:c1 + 1] = -1
-    vals, counts = np.unique(outside[outside >= 0], return_counts=True)
-    bg = vals[np.argmax(counts)]
-
-    # Legend markers inside the zero panel determine which colors and rows to report.
-    markers = []
-    for rr in range(ph):
-        for cc in range(pw):
-            v = panel[rr, cc]
-            if v != 0:
-                markers.append((v, rr, cc))
+    # Mask out the panel so its label pixels are not counted as objects.
+    outside = np.ones((h, w), dtype=bool)
+    outside[r0:r1 + 1, c0:c1 + 1] = False
 
     def count_components(color):
+        mask = (grid == color) & outside
         seen = np.zeros((h, w), dtype=bool)
-        total = 0
+        count = 0
+
         for r in range(h):
             for c in range(w):
-                if seen[r, c] or grid[r, c] != color:
+                if not mask[r, c] or seen[r, c]:
                     continue
+                count += 1
                 stack = [(r, c)]
                 seen[r, c] = True
-                cells = []
-                touches_panel = False
                 while stack:
-                    x, y = stack.pop()
-                    cells.append((x, y))
-                    if r0 <= x <= r1 and c0 <= y <= c1:
-                        touches_panel = True
-                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        nx, ny = x + dx, y + dy
-                        if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and grid[nx, ny] == color:
-                            seen[nx, ny] = True
-                            stack.append((nx, ny))
-                if not touches_panel:
-                    total += 1
-        return total
+                    cr, cc = stack.pop()
+                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nr, nc = cr + dr, cc + dc
+                        if 0 <= nr < h and 0 <= nc < w and mask[nr, nc] and not seen[nr, nc]:
+                            seen[nr, nc] = True
+                            stack.append((nr, nc))
+        return count
 
-    for color, rr, cc in markers:
+    result = np.zeros((out_h, out_w), dtype=grid.dtype)
+
+    for row, start_col, color in labels:
         n = count_components(color)
         for i in range(n):
-            x = cc + 2 * i
-            if x < pw:
-                out[rr, x] = color
+            col = start_col + 2 * i
+            if 0 <= row < out_h and 0 <= col < out_w:
+                result[row, col] = color
 
-    return out
+    return result
 ```

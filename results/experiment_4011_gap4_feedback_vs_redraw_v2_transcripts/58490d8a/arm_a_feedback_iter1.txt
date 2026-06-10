@@ -161,75 +161,52 @@ your function returned:
 Previous code:
 ```python
 def transform(grid):
-    bg = np.bincount(grid.ravel(), minlength=10).argmax()
-    h, w = grid.shape
+    bg = np.bincount(grid.ravel()).argmax()
 
-    # Find the rectangular zero panel.
-    zero = (grid == 0)
-    seen = np.zeros_like(zero, dtype=bool)
-    panels = []
+    zero_rows, zero_cols = np.where(grid == 0)
+    r0, r1 = zero_rows.min(), zero_rows.max()
+    c0, c1 = zero_cols.min(), zero_cols.max()
+
+    out = grid[r0:r1 + 1, c0:c1 + 1].copy()
+
+    h, w = grid.shape
+    seen = np.zeros((h, w), dtype=bool)
+
+    counts = {}
     for r in range(h):
         for c in range(w):
-            if zero[r, c] and not seen[r, c]:
-                stack = [(r, c)]
-                seen[r, c] = True
-                cells = []
-                while stack:
-                    x, y = stack.pop()
-                    cells.append((x, y))
-                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        nx, ny = x + dx, y + dy
-                        if 0 <= nx < h and 0 <= ny < w and zero[nx, ny] and not seen[nx, ny]:
-                            seen[nx, ny] = True
-                            stack.append((nx, ny))
-                rs = [p[0] for p in cells]
-                cs = [p[1] for p in cells]
-                r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
-                area = (r1 - r0 + 1) * (c1 - c0 + 1)
-                if area >= len(cells) and len(cells) > 1:
-                    panels.append((len(cells), r0, r1, c0, c1))
+            color = grid[r, c]
+            if color in (bg, 0) or seen[r, c]:
+                continue
 
-    _, pr0, pr1, pc0, pc1 = max(panels)
-    out = np.zeros((pr1 - pr0 + 1, pc1 - pc0 + 1), dtype=int)
+            stack = [(r, c)]
+            seen[r, c] = True
+            cells = []
 
-    markers = []
-    for r in range(pr0, pr1 + 1):
-        for c in range(pc0, pc1 + 1):
-            v = grid[r, c]
-            if v != 0:
-                markers.append((v, r - pr0, c - pc0))
+            while stack:
+                rr, cc = stack.pop()
+                cells.append((rr, cc))
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nr, nc = rr + dr, cc + dc
+                    if (
+                        0 <= nr < h and 0 <= nc < w
+                        and not seen[nr, nc]
+                        and grid[nr, nc] == color
+                    ):
+                        seen[nr, nc] = True
+                        stack.append((nr, nc))
 
-    def in_panel(r, c):
-        return pr0 <= r <= pr1 and pc0 <= c <= pc1
+            inside_marker = all(r0 <= rr <= r1 and c0 <= cc <= c1 for rr, cc in cells)
+            if not inside_marker:
+                counts[color] = counts.get(color, 0) + 1
 
-    for color, orow, ocol in markers:
-        mask = (grid == color)
-        seen = np.zeros_like(mask, dtype=bool)
-        count = 0
-        for r in range(h):
-            for c in range(w):
-                if mask[r, c] and not seen[r, c]:
-                    stack = [(r, c)]
-                    seen[r, c] = True
-                    cells = []
-                    touches_panel = False
-                    while stack:
-                        x, y = stack.pop()
-                        cells.append((x, y))
-                        if in_panel(x, y):
-                            touches_panel = True
-                        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                            nx, ny = x + dx, y + dy
-                            if 0 <= nx < h and 0 <= ny < w and mask[nx, ny] and not seen[nx, ny]:
-                                seen[nx, ny] = True
-                                stack.append((nx, ny))
-                    if not touches_panel:
-                        count += 1
-
-        for i in range(count):
-            col = ocol + 2 * i
-            if 0 <= orow < out.shape[0] and 0 <= col < out.shape[1]:
-                out[orow, col] = color
+    markers = np.argwhere(out != 0)
+    for rr, cc in markers:
+        color = out[rr, cc]
+        for k in range(1, counts.get(color, 1)):
+            nc = cc + 2 * k
+            if nc < out.shape[1]:
+                out[rr, nc] = color
 
     return out
 ```
@@ -237,82 +214,76 @@ Fix the rule inference and output the corrected function as one ```python block.
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    bg = np.bincount(grid.ravel(), minlength=10).argmax()
     h, w = grid.shape
 
-    zero = (grid == 0)
-    seen = np.zeros_like(zero, dtype=bool)
-    panels = []
+    # The output frame is the rectangular zero panel.
+    zr, zc = np.where(grid == 0)
+    r0, r1 = zr.min(), zr.max()
+    c0, c1 = zc.min(), zc.max()
+    out = grid[r0:r1 + 1, c0:c1 + 1].copy()
 
-    for r in range(h):
-        for c in range(w):
-            if zero[r, c] and not seen[r, c]:
+    bg = np.bincount(grid.ravel()).argmax()
+
+    def components(color):
+        seen = np.zeros((h, w), dtype=bool)
+        comps = []
+        for r in range(h):
+            for c in range(w):
+                if seen[r, c] or grid[r, c] != color:
+                    continue
                 stack = [(r, c)]
                 seen[r, c] = True
                 cells = []
                 while stack:
-                    x, y = stack.pop()
-                    cells.append((x, y))
-                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        nx, ny = x + dx, y + dy
-                        if 0 <= nx < h and 0 <= ny < w and zero[nx, ny] and not seen[nx, ny]:
-                            seen[nx, ny] = True
-                            stack.append((nx, ny))
+                    rr, cc = stack.pop()
+                    cells.append((rr, cc))
+                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nr, nc = rr + dr, cc + dc
+                        if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] == color:
+                            seen[nr, nc] = True
+                            stack.append((nr, nc))
+                comps.append(cells)
+        return comps
 
-                rs = [p[0] for p in cells]
-                cs = [p[1] for p in cells]
-                r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
-                if len(cells) > 1:
-                    panels.append((len(cells), r0, r1, c0, c1))
+    markers = [(r, c, out[r, c]) for r, c in zip(*np.where(out != 0))]
 
-    _, pr0, pr1, pc0, pc1 = max(panels)
-    out = np.zeros((pr1 - pr0 + 1, pc1 - pc0 + 1), dtype=int)
+    for mr, mc, color in markers:
+        shapes = []
+        for cells in components(color):
+            inside_panel = all(r0 <= r <= r1 and c0 <= c <= c1 for r, c in cells)
+            if inside_panel:
+                continue
 
-    markers = []
-    marker_positions = set()
-    for r in range(pr0, pr1 + 1):
-        for c in range(pc0, pc1 + 1):
-            v = grid[r, c]
-            if v != 0:
-                markers.append((v, r - pr0, c - pc0))
-                marker_positions.add((r, c))
+            rs = [r for r, c in cells]
+            cs = [c for r, c in cells]
+            bh = max(rs) - min(rs) + 1
+            bw = max(cs) - min(cs) + 1
 
-    def in_panel(r, c):
-        return pr0 <= r <= pr1 and pc0 <= c <= pc1
+            # Ignore tiny noise/singletons and use only real objects.
+            if len(cells) < 2:
+                continue
 
-    for color, orow, ocol in markers:
-        mask = (grid == color)
-        seen = np.zeros_like(mask, dtype=bool)
-        count = 0
+            # Normalize shape so identical symbols count together.
+            norm = tuple(sorted((r - min(rs), c - min(cs)) for r, c in cells))
+            shapes.append((norm, len(cells), bh, bw))
 
-        for r in range(h):
-            for c in range(w):
-                if mask[r, c] and not seen[r, c]:
-                    stack = [(r, c)]
-                    seen[r, c] = True
-                    touches_panel = False
+        if not shapes:
+            count = 1
+        else:
+            freqs = {}
+            for s in shapes:
+                freqs[s] = freqs.get(s, 0) + 1
 
-                    while stack:
-                        x, y = stack.pop()
-                        if in_panel(x, y):
-                            touches_panel = True
+            # The panel marker asks for the repeated external symbol type of that color:
+            # choose the most common same-shaped object; ties prefer larger objects.
+            best = max(freqs, key=lambda s: (freqs[s], s[1], s[2] * s[3]))
+            count = freqs[best]
 
-                        for dx in (-1, 0, 1):
-                            for dy in (-1, 0, 1):
-                                if dx == 0 and dy == 0:
-                                    continue
-                                nx, ny = x + dx, y + dy
-                                if 0 <= nx < h and 0 <= ny < w and mask[nx, ny] and not seen[nx, ny]:
-                                    seen[nx, ny] = True
-                                    stack.append((nx, ny))
-
-                    if not touches_panel:
-                        count += 1
-
-        for i in range(count):
-            col = ocol + 2 * i
-            if 0 <= orow < out.shape[0] and 0 <= col < out.shape[1]:
-                out[orow, col] = color
+        out[mr, :] = 0
+        for k in range(count):
+            nc = mc + 2 * k
+            if nc < out.shape[1]:
+                out[mr, nc] = color
 
     return out
 ```

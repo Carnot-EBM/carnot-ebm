@@ -117,56 +117,114 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    out = grid.copy()
-    vals, counts = np.unique(grid, return_counts=True)
+    g = grid.copy()
+    h, w = g.shape
+
+    vals, counts = np.unique(g, return_counts=True)
     bg = vals[np.argmax(counts)]
 
-    non_bg = [v for v in vals if v != bg]
-    if not non_bg:
-        return out
+    colors = [v for v in vals if v != bg]
+    wall = max(colors, key=lambda c: np.sum(g == c))
 
-    # The main drawn color is the barrier/wall.
-    barrier = max(non_bg, key=lambda v: int(np.sum(grid == v)))
+    wr, wc = np.where(g == wall)
+    r0, r1 = wr.min(), wr.max()
+    c0, c1 = wc.min(), wc.max()
 
-    br, bc = np.where(grid == barrier)
-    r0, r1 = int(br.min()), int(br.max())
-    c0, c1 = int(bc.min()), int(bc.max())
-
-    # The paint seed is the non-background, non-wall color whose marks lie inside
-    # the wall's bounding box.
-    candidates = []
-    for v in non_bg:
-        if v == barrier:
+    fill_candidates = []
+    for c in colors:
+        if c == wall:
             continue
-        rr, cc = np.where(grid == v)
-        inside = np.all((rr >= r0) & (rr <= r1) & (cc >= c0) & (cc <= c1))
-        if inside:
-            candidates.append(v)
-
-    if candidates:
-        fill = max(candidates, key=lambda v: int(np.sum(grid == v)))
+        rr, cc = np.where(g == c)
+        inside = (rr >= r0) & (rr <= r1) & (cc >= c0) & (cc <= c1)
+        if np.any(inside):
+            fill_candidates.append((np.sum(inside), c))
+    if fill_candidates:
+        fill = max(fill_candidates)[1]
     else:
-        fill = max([v for v in non_bg if v != barrier], key=lambda v: int(np.sum(grid == v)))
+        fill = max([c for c in colors if c != wall], key=lambda c: np.sum(g == c))
 
-    h, w = grid.shape
-    seen = np.zeros((h, w), dtype=bool)
-    stack = [(int(r), int(c)) for r, c in zip(*np.where(grid == fill))]
+    fr, fc = np.where(g == fill)
+    cr, cc = fr.mean(), fc.mean()
 
-    while stack:
-        r, c = stack.pop()
-        if r < 0 or r >= h or c < 0 or c >= w or seen[r, c]:
-            continue
-        if grid[r, c] != bg and grid[r, c] != fill:
-            continue
+    dists = [
+        (cr - r0, "down"),
+        (r1 - cr, "up"),
+        (cc - c0, "right"),
+        (c1 - cc, "left"),
+    ]
+    direction = min(dists, key=lambda x: x[0])[1]
 
-        seen[r, c] = True
-        if grid[r, c] == bg:
-            out[r, c] = fill
+    vertical = direction in ("up", "down")
+    step = 1 if direction in ("down", "right") else -1
 
-        stack.append((r - 1, c))
-        stack.append((r + 1, c))
-        stack.append((r, c - 1))
-        stack.append((r, c + 1))
+    if vertical:
+        start = fr.min() if step == 1 else fr.max()
+        line_range = range(start, h, step) if step == 1 else range(start, -1, step)
+        length = w
 
-    return out
+        def line_values(t):
+            return g[t, :]
+
+        def sources_on_line(t):
+            return list(fc[fr == t])
+
+        def paint(t, positions):
+            for p in positions:
+                if g[t, p] == bg:
+                    g[t, p] = fill
+    else:
+        start = fc.min() if step == 1 else fc.max()
+        line_range = range(start, w, step) if step == 1 else range(start, -1, step)
+        length = h
+
+        def line_values(t):
+            return g[:, t]
+
+        def sources_on_line(t):
+            return list(fr[fc == t])
+
+        def paint(t, positions):
+            for p in positions:
+                if g[p, t] == bg:
+                    g[p, t] = fill
+
+    active = set()
+    shadow = set()
+    first = True
+
+    for t in line_range:
+        line = line_values(t)
+        blockers = {i for i, v in enumerate(line) if v != bg and v != fill}
+        nonwall_blockers = {i for i, v in enumerate(line) if v != bg and v != fill and v != wall}
+        srcs = sources_on_line(t)
+
+        if first:
+            new_active = set()
+            for s in srcs:
+                a = s
+                while a - 1 >= 0 and (a - 1) not in blockers:
+                    a -= 1
+                b = s
+                while b + 1 < length and (b + 1) not in blockers:
+                    b += 1
+                new_active.update(range(a, b + 1))
+            first = False
+        else:
+            new_active = set()
+            for p in active:
+                if 0 <= p < length:
+                    new_active.add(p)
+                if p not in blockers:
+                    if p - 1 >= 0:
+                        new_active.add(p - 1)
+                    if p + 1 < length:
+                        new_active.add(p + 1)
+            new_active.update(srcs)
+
+        new_active = {p for p in new_active if 0 <= p < length and p not in blockers and p not in shadow}
+        paint(t, new_active)
+        active = new_active
+        shadow.update(nonwall_blockers)
+
+    return g
 ```

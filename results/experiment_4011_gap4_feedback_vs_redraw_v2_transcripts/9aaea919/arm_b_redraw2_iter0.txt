@@ -233,90 +233,91 @@ def transform(grid):
     out = grid.copy()
     h, w = out.shape
 
-    vals, counts = np.unique(out, return_counts=True)
+    vals, counts = np.unique(grid, return_counts=True)
     bg = vals[np.argmax(counts)]
 
-    # Bottom-row horizontal marker runs of colors 2 and 3.
-    marker_runs = []
-    r = h - 1
+    # Find bottom control bars.
+    controls = []
     c = 0
     while c < w:
-        if out[r, c] != bg:
-            col = out[r, c]
-            c0 = c
-            while c < w and out[r, c] == col:
-                c += 1
-            c1 = c - 1
-            if col in (2, 3):
-                marker_runs.append((col, c0, c1))
-        else:
+        if grid[h - 1, c] == bg:
             c += 1
+            continue
+        color = grid[h - 1, c]
+        start = c
+        while c < w and grid[h - 1, c] == color:
+            c += 1
+        end = c - 1
+        controls.append((color, (start + end) // 2, start, end))
 
-    twos = [(c0, c1) for col, c0, c1 in marker_runs if col == 2]
-    threes = [(c0, c1) for col, c0, c1 in marker_runs if col == 3]
+    grow_centers = [x for color, x, _, _ in controls if color == 3]
+    lose_centers = [x for color, x, _, _ in controls if color == 2]
 
-    # Remove the bottom instruction markers.
-    for _, c0, c1 in marker_runs:
-        out[r, c0:c1 + 1] = bg
+    # Remove bottom control bars.
+    out[h - 1, :] = bg
 
-    # Find connected components above the bottom marker row.
-    seen = np.zeros(out.shape, dtype=bool)
+    # Identify object components above the control row.
+    seen = np.zeros((h, w), dtype=bool)
     comps = []
-    for i in range(h - 1):
-        for j in range(w):
-            if seen[i, j] or out[i, j] == bg:
+    for r in range(h - 1):
+        for c in range(w):
+            if seen[r, c] or grid[r, c] == bg:
                 continue
-            color = out[i, j]
-            stack = [(i, j)]
-            seen[i, j] = True
+            color = grid[r, c]
+            stack = [(r, c)]
+            seen[r, c] = True
             cells = []
             while stack:
-                x, y = stack.pop()
-                cells.append((x, y))
-                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    nx, ny = x + dx, y + dy
-                    if 0 <= nx < h - 1 and 0 <= ny < w and not seen[nx, ny] and out[nx, ny] == color:
-                        seen[nx, ny] = True
-                        stack.append((nx, ny))
+                rr, cc = stack.pop()
+                cells.append((rr, cc))
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nr, nc = rr + dr, cc + dc
+                    if 0 <= nr < h - 1 and 0 <= nc < w and not seen[nr, nc] and grid[nr, nc] == color:
+                        seen[nr, nc] = True
+                        stack.append((nr, nc))
             rs = [p[0] for p in cells]
             cs = [p[1] for p in cells]
             comps.append({
                 "color": color,
                 "cells": cells,
-                "r0": min(rs), "r1": max(rs),
-                "c0": min(cs), "c1": max(cs)
+                "rmin": min(rs),
+                "rmax": max(rs),
+                "cmin": min(cs),
+                "cmax": max(cs),
+                "cx": (min(cs) + max(cs)) // 2,
             })
 
-    def in_slot(comp, slot):
-        c0, c1 = slot
-        return comp["c0"] >= c0 and comp["c1"] <= c1
+    def nearest_column_components(center):
+        return [comp for comp in comps if comp["cx"] == center]
 
-    two_count = sum(1 for comp in comps for slot in twos if in_slot(comp, slot))
+    lose_count = 0
+    for center in lose_centers:
+        col_comps = nearest_column_components(center)
+        lose_count += len(col_comps)
+        for comp in col_comps:
+            for r, c in comp["cells"]:
+                out[r, c] = 5
 
-    # Columns marked 2 are recolored to 5.
-    for comp in comps:
-        if any(in_slot(comp, slot) for slot in twos):
-            for i, j in comp["cells"]:
-                out[i, j] = 5
-
-    # Infer vertical repeat spacing for the repeated motif.
-    tops = sorted({comp["r0"] for comp in comps})
-    diffs = [b - a for a, b in zip(tops, tops[1:]) if b > a]
-    period = min(diffs) if diffs else None
-
-    # Columns marked 3 receive extra copies above, one for each 2-marked object.
-    for slot in threes:
-        slot_comps = [comp for comp in comps if in_slot(comp, slot)]
-        if not slot_comps:
+    for center in grow_centers:
+        col_comps = nearest_column_components(center)
+        if not col_comps:
             continue
-        template = min(slot_comps, key=lambda x: x["r0"])
-        step = period if period is not None else (template["r1"] - template["r0"] + 2)
-        for k in range(1, two_count + 1):
-            dr = -step * k
-            for i, j in template["cells"]:
-                ni = i + dr
-                if 0 <= ni < h:
-                    out[ni, j] = template["color"]
+
+        col_comps = sorted(col_comps, key=lambda comp: comp["rmin"])
+        template = col_comps[0]
+        color = col_comps[0]["color"]
+        top = min(comp["rmin"] for comp in col_comps)
+
+        rel_cells = [(r - template["rmin"], c - template["cmin"]) for r, c in template["cells"]]
+        step = max(comp["rmax"] - comp["rmin"] for comp in col_comps) + 2
+
+        for i in range(lose_count):
+            nr = top - step * (i + 1)
+            nc = template["cmin"]
+            for dr, dc in rel_cells:
+                rr, cc = nr + dr, nc + dc
+                if 0 <= rr < h and 0 <= cc < w:
+                    out[rr, cc] = color
 
     return out
 ```

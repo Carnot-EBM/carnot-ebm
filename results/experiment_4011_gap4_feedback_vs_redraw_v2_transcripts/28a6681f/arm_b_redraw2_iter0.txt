@@ -90,57 +90,58 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    g = grid.copy()
-    h, w = g.shape
+    out = grid.copy()
+    h, w = out.shape
+    add = set()
 
-    vals, counts = np.unique(g[g != 0], return_counts=True)
-    mover = vals[np.argmin(counts)]
+    colors = [c for c in np.unique(grid) if c not in (0, 1)]
 
-    out = g.copy()
-    out[out == mover] = 0
-    n = int(np.sum(g == mover))
+    for color in colors:
+        rows, cols = np.where(grid == color)
+        if len(rows) == 0:
+            continue
 
-    fixed = out != 0
+        bottom = rows.max()
+        bottom_cols = sorted(np.where(grid[bottom] == color)[0])
 
-    candidates = []
-    for r in range(h):
-        nz = np.where(fixed[r])[0]
-        for c in range(w):
-            if fixed[r, c]:
-                continue
+        col_top = {}
+        for c in bottom_cols:
+            rr = np.where(grid[:, c] == color)[0]
+            if len(rr):
+                col_top[c] = rr.min()
 
-            score = 0
+        for i, left in enumerate(bottom_cols):
+            for right in bottom_cols[i + 1:]:
+                if right - left <= 1:
+                    continue
 
-            if len(nz):
-                left = nz[nz < c]
-                right = nz[nz > c]
-                if len(left) and len(right):
-                    score += 100
-                    score += int(right[0] - left[-1] == 2) * 8
+                top_l = col_top.get(left)
+                top_r = col_top.get(right)
+                if top_l is None or top_r is None:
+                    continue
 
-            colnz = np.where(fixed[:, c])[0]
-            if len(colnz):
-                up = colnz[colnz < r]
-                down = colnz[colnz > r]
-                if len(up) and len(down):
-                    score += 25
-                if len(down):
-                    score += 5
+                start = max(top_l, top_r)
+                for r in range(start, bottom + 1):
+                    for c in range(left + 1, right):
+                        if grid[r, c] == 0:
+                            add.add((r, c))
 
-            adj = 0
-            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                rr, cc = r + dr, c + dc
-                if 0 <= rr < h and 0 <= cc < w and fixed[rr, cc]:
-                    adj += 1
-            score += adj * 3
+                if top_r > top_l:
+                    r = top_r - 1
+                    if r >= 0 and np.any(grid[r, right + 1:] == 1):
+                        for c in range(left + 1, right + 1):
+                            if grid[r, c] == 0:
+                                add.add((r, c))
 
-            if score:
-                candidates.append((score, r, c))
+    ones = sorted(map(tuple, np.argwhere(grid == 1)))
+    additions = sorted(add)
+    n = min(len(ones), len(additions))
 
-    candidates.sort(key=lambda x: (-x[0], -x[1], x[2]))
+    for r, c in ones[:n]:
+        out[r, c] = 0
 
-    for _, r, c in candidates[:n]:
-        out[r, c] = mover
+    for r, c in additions[:n]:
+        out[r, c] = 1
 
     return out
 ```

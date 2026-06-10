@@ -89,97 +89,101 @@ Write exactly one Python function:
 Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
 
 Your PREVIOUS function failed these demos:
-Demo 1: expected OUTPUT (10x10):
+Demo 3: expected OUTPUT (10x10):
 [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
- [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
- [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
- [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
- [0, 0, 0, 0, 0, 0, 0, 3, 1, 1],
- [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
- [0, 0, 0, 0, 0, 3, 1, 3, 1, 1],
- [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
- [0, 0, 0, 0, 2, 3, 1, 3, 1, 1],
- [0, 2, 2, 2, 2, 3, 3, 3, 1, 1]]
+ [9, 9, 0, 0, 0, 0, 0, 0, 9, 9],
+ [0, 9, 9, 0, 0, 0, 0, 9, 9, 0],
+ [0, 0, 9, 9, 0, 0, 0, 9, 0, 0],
+ [0, 0, 0, 9, 0, 0, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 0, 0, 4, 1, 4, 0, 0, 0, 0],
+ [2, 1, 2, 4, 1, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
 your function returned:
 [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
- [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
- [0, 0, 0, 0, 0, 0, 0, 3, 1, 0],
- [0, 0, 0, 0, 0, 0, 0, 3, 1, 0],
- [0, 0, 0, 0, 0, 0, 0, 3, 1, 0],
- [0, 0, 0, 0, 0, 3, 0, 3, 1, 0],
- [0, 0, 0, 0, 0, 3, 0, 3, 1, 0],
- [0, 0, 0, 0, 2, 3, 0, 3, 1, 0],
- [0, 0, 0, 0, 2, 3, 0, 3, 1, 0],
- [0, 2, 2, 2, 2, 3, 3, 3, 1, 0]]
-
-Demo 2: expected OUTPUT (10x10):
-[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
- [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
- [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
- [0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
- [0, 0, 3, 1, 1, 1, 1, 1, 1, 1],
- [0, 0, 3, 1, 1, 3, 1, 1, 1, 1],
- [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
- [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
- [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
- [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
-your function returned:
-[[0, 0, 3, 0, 0, 0, 0, 0, 0, 0],
- [0, 0, 3, 1, 0, 0, 0, 0, 0, 0],
- [0, 0, 3, 1, 0, 0, 0, 0, 0, 0],
- [0, 0, 3, 1, 0, 0, 0, 0, 0, 0],
- [0, 0, 3, 1, 0, 0, 0, 0, 0, 0],
- [0, 0, 3, 0, 0, 3, 1, 0, 0, 1],
- [0, 0, 3, 0, 0, 3, 5, 1, 1, 5],
- [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
- [0, 0, 3, 1, 1, 3, 5, 1, 1, 5],
- [0, 0, 3, 3, 3, 3, 5, 5, 5, 5]]
+ [9, 9, 1, 1, 1, 1, 1, 1, 9, 9],
+ [0, 9, 9, 1, 1, 1, 1, 9, 9, 0],
+ [0, 0, 9, 9, 1, 1, 1, 9, 0, 0],
+ [0, 0, 0, 9, 1, 1, 9, 9, 0, 0],
+ [0, 0, 0, 0, 0, 9, 9, 0, 0, 0],
+ [0, 0, 0, 0, 0, 4, 0, 0, 0, 0],
+ [2, 0, 0, 4, 1, 4, 0, 0, 0, 0],
+ [2, 1, 2, 4, 1, 4, 0, 0, 0, 0],
+ [2, 2, 2, 4, 4, 4, 0, 0, 0, 0]]
 
 Previous code:
 ```python
 def transform(grid):
     out = grid.copy()
-    rows, cols = out.shape
+    out[out == 1] = 0
+    h, w = grid.shape
+    solid = (grid != 0) & (grid != 1)
 
-    colors = [c for c in np.unique(out) if c != 0]
-    one = 1
-    others = [c for c in colors if c != one]
+    # Fill horizontal gaps inside same-colored solid shapes.
+    for r in range(h):
+        for cval in set(grid[r][solid[r]].tolist()):
+            cols = [c for c in range(w) if grid[r, c] == cval]
+            if len(cols) >= 2:
+                a, b = min(cols), max(cols)
+                for c in range(a + 1, b):
+                    if not solid[r, c]:
+                        out[r, c] = 1
 
-    for r in range(rows):
-        nz = np.where(out[r] != 0)[0]
-        if len(nz) >= 2:
-            for c in range(nz[0], nz[-1] + 1):
-                if out[r, c] == 0:
-                    left = out[r, :c][out[r, :c] != 0]
-                    right = out[r, c + 1:][out[r, c + 1:] != 0]
-                    if len(left) and len(right) and left[-1] != right[0]:
-                        out[r, c] = one
+    def edge_runs(side):
+        runs = []
+        for r in range(h):
+            if side == "right":
+                c = w - 1
+                if grid[r, c] != 1:
+                    continue
+                while c >= 0 and grid[r, c] == 1:
+                    c -= 1
+                runs.append((r, c + 1, w - 1, w - c - 1))
+            else:
+                c = 0
+                if grid[r, c] != 1:
+                    continue
+                while c < w and grid[r, c] == 1:
+                    c += 1
+                runs.append((r, 0, c - 1, c))
+        return runs
 
-    for c in range(cols):
-        nz = np.where(out[:, c] != 0)[0]
-        if len(nz) >= 2:
-            for r in range(nz[0], nz[-1] + 1):
-                if out[r, c] == 0:
-                    up = out[:r, c][out[:r, c] != 0]
-                    down = out[r + 1:, c][out[r + 1:, c] != 0]
-                    if len(up) and len(down) and up[-1] != down[0]:
-                        out[r, c] = one
+    # Preserve/fill liquid basins that use a grid edge as one side.
+    for side in ("left", "right"):
+        runs = edge_runs(side)
+        if not runs:
+            continue
+        max_width = max(run[3] for run in runs)
+        start = None
+        for r, a, b, width in runs:
+            if width == max_width and solid[r].any():
+                if side == "right" and solid[r, :a].any():
+                    start = r
+                    break
+                if side == "left" and solid[r, b + 1:].any():
+                    start = r
+                    break
+        if start is None:
+            continue
 
-    for r in range(rows):
-        for c in range(cols):
-            if grid[r, c] == one:
-                keep = False
-                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    rr, cc = r + dr, c + dc
-                    if 0 <= rr < rows and 0 <= cc < cols and grid[rr, cc] == one:
-                        keep = True
-                touches_other = False
-                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    rr, cc = r + dr, c + dc
-                    if 0 <= rr < rows and 0 <= cc < cols and grid[rr, cc] in others:
-                        touches_other = True
-                if not touches_other:
-                    out[r, c] = 0
+        for r in range(start, h):
+            if side == "right":
+                walls = [c for c in range(w) if solid[r, c]]
+                if not walls:
+                    continue
+                left = max(walls)
+                for c in range(left + 1, w):
+                    if not solid[r, c]:
+                        out[r, c] = 1
+            else:
+                walls = [c for c in range(w) if solid[r, c]]
+                if not walls:
+                    continue
+                right = min(walls)
+                for c in range(0, right):
+                    if not solid[r, c]:
+                        out[r, c] = 1
 
     return out
 ```
@@ -190,101 +194,112 @@ def transform(grid):
     out = grid.copy()
     h, w = grid.shape
 
-    one = 1
-    barriers = (grid != 0) & (grid != one)
+    fill = 1
+    solid = (grid != 0) & (grid != fill)
 
-    def comps(mask):
-        seen = np.zeros(mask.shape, dtype=bool)
-        res = []
-        for sr in range(h):
-            for sc in range(w):
-                if mask[sr, sc] and not seen[sr, sc]:
-                    q = [(sr, sc)]
-                    seen[sr, sc] = True
-                    cells = []
-                    for r, c in q:
-                        cells.append((r, c))
-                        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                            rr, cc = r + dr, c + dc
-                            if 0 <= rr < h and 0 <= cc < w and mask[rr, cc] and not seen[rr, cc]:
-                                seen[rr, cc] = True
-                                q.append((rr, cc))
-                    res.append(cells)
-        return res
+    def has_solid_below(r, c):
+        for rr in range(r + 1, h):
+            if solid[rr, c]:
+                return True
+        return False
 
-    # Remove all old 1s first; the correct 1s are reconstructed as
-    # horizontal/vertical spans between non-1 colored boundary objects.
-    out[grid == one] = 0
+    def supported(r, c):
+        if r == h - 1:
+            return True
+        if solid[r + 1, c] or out[r + 1, c] == fill:
+            return True
+        return False
 
-    objects = comps(barriers)
-    obj_id = -np.ones((h, w), dtype=int)
-    for i, cells in enumerate(objects):
-        for r, c in cells:
-            obj_id[r, c] = i
-
-    fill = np.zeros((h, w), dtype=bool)
-
-    def mark_between(r1, c1, r2, c2):
-        if r1 == r2:
-            r = r1
-            a, b = sorted((c1, c2))
-            if b - a > 1:
-                fill[r, a + 1:b] = True
-        elif c1 == c2:
-            c = c1
-            a, b = sorted((r1, r2))
-            if b - a > 1:
-                fill[a + 1:b, c] = True
-
-    # Fill zero/old-1 cells lying directly between two distinct non-1
-    # boundary components in the same row or column.
+    # First remove all unstable fill.
     for r in range(h):
-        nz = [c for c in range(w) if barriers[r, c]]
-        for a in range(len(nz)):
-            for b in range(a + 1, len(nz)):
-                c1, c2 = nz[a], nz[b]
-                if obj_id[r, c1] != obj_id[r, c2]:
-                    mid = grid[r, c1 + 1:c2]
-                    if np.all(mid == 0) or np.any(mid == one):
-                        mark_between(r, c1, r, c2)
+        for c in range(w):
+            if grid[r, c] == fill and not (has_solid_below(r, c) and supported(r, c)):
+                out[r, c] = 0
 
-    for c in range(w):
-        nz = [r for r in range(h) if barriers[r, c]]
-        for a in range(len(nz)):
-            for b in range(a + 1, len(nz)):
-                r1, r2 = nz[a], nz[b]
-                if obj_id[r1, c] != obj_id[r2, c]:
-                    mid = grid[r1 + 1:r2, c]
-                    if np.all(mid == 0) or np.any(mid == one):
-                        mark_between(r1, c, r2, c)
+    # Fill horizontal basins: empty cells between non-fill walls, when the
+    # cell has support and does not leak downward.
+    changed = True
+    while changed:
+        changed = False
+        for r in range(h - 1, -1, -1):
+            row_solid_cols = [c for c in range(w) if solid[r, c]]
+            if len(row_solid_cols) < 2:
+                continue
 
-    # Keep reconstructed cells only in the region indicated by the original
-    # 1-color marks: same connected background pocket, using non-1 colors as walls.
-    passable = ~barriers
-    seed = (grid == one)
-    seen = np.zeros((h, w), dtype=bool)
-    keep_region = np.zeros((h, w), dtype=bool)
+            for a_i in range(len(row_solid_cols)):
+                for b_i in range(a_i + 1, len(row_solid_cols)):
+                    a, b = row_solid_cols[a_i], row_solid_cols[b_i]
+                    if grid[r, a] != grid[r, b]:
+                        continue
 
-    for sr in range(h):
-        for sc in range(w):
-            if passable[sr, sc] and not seen[sr, sc]:
-                q = [(sr, sc)]
-                seen[sr, sc] = True
-                cells = []
-                has_seed = False
-                for r, c in q:
-                    cells.append((r, c))
-                    if seed[r, c]:
-                        has_seed = True
-                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        rr, cc = r + dr, c + dc
-                        if 0 <= rr < h and 0 <= cc < w and passable[rr, cc] and not seen[rr, cc]:
-                            seen[rr, cc] = True
-                            q.append((rr, cc))
-                if has_seed:
-                    for r, c in cells:
-                        keep_region[r, c] = True
+                    ok = True
+                    cells = []
+                    for c in range(a + 1, b):
+                        if solid[r, c]:
+                            ok = False
+                            break
+                        if out[r, c] != fill:
+                            if supported(r, c) and has_solid_below(r, c):
+                                cells.append(c)
+                            else:
+                                ok = False
+                                break
 
-    out[fill & keep_region] = one
+                    if ok:
+                        for c in cells:
+                            out[r, c] = fill
+                            changed = True
+
+    # Fill edge basins whose open side is the grid boundary, but only from the
+    # first row where the boundary run reaches its maximum stable width.
+    for side in (0, w - 1):
+        runs = []
+        for r in range(h):
+            if side == w - 1:
+                c = w - 1
+                while c >= 0 and grid[r, c] == fill:
+                    c -= 1
+                if c < w - 1:
+                    runs.append((r, c + 1, w - 1, w - c - 1))
+            else:
+                c = 0
+                while c < w and grid[r, c] == fill:
+                    c += 1
+                if c > 0:
+                    runs.append((r, 0, c - 1, c))
+
+        if not runs:
+            continue
+
+        max_width = max(run[3] for run in runs)
+        start = None
+        for r, a, b, width in runs:
+            if width != max_width:
+                continue
+            if side == w - 1 and any(solid[r, :a]):
+                start = r
+                break
+            if side == 0 and any(solid[r, b + 1:]):
+                start = r
+                break
+
+        if start is None:
+            continue
+
+        for r in range(start, h):
+            walls = [c for c in range(w) if solid[r, c]]
+            if not walls:
+                continue
+            if side == w - 1:
+                left = max(walls)
+                for c in range(left + 1, w):
+                    if not solid[r, c] and has_solid_below(r, c):
+                        out[r, c] = fill
+            else:
+                right = min(walls)
+                for c in range(right):
+                    if not solid[r, c] and has_solid_below(r, c):
+                        out[r, c] = fill
+
     return out
 ```

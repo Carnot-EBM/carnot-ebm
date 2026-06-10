@@ -134,85 +134,90 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ```python
 def transform(grid):
     h, w = grid.shape
-    pts = np.argwhere(grid != 0)
 
-    # Cluster nearby nonzero cells; the main puzzle object is the largest dense cluster.
-    n = len(pts)
-    seen = np.zeros(n, dtype=bool)
-    clusters = []
-    for i in range(n):
-        if seen[i]:
-            continue
-        seen[i] = True
-        q = [i]
-        comp = []
-        while q:
-            k = q.pop()
-            comp.append(k)
-            r, c = pts[k]
-            for j in range(n):
-                if not seen[j] and abs(int(pts[j, 0]) - int(r)) <= 2 and abs(int(pts[j, 1]) - int(c)) <= 2:
-                    seen[j] = True
-                    q.append(j)
-        clusters.append(comp)
+    def components():
+        seen = np.zeros((h, w), dtype=bool)
+        comps = []
+        for r in range(h):
+            for c in range(w):
+                if grid[r, c] == 0 or seen[r, c]:
+                    continue
+                stack = [(r, c)]
+                seen[r, c] = True
+                cells = []
+                while stack:
+                    x, y = stack.pop()
+                    cells.append((x, y))
+                    for dx in (-1, 0, 1):
+                        for dy in (-1, 0, 1):
+                            if dx == 0 and dy == 0:
+                                continue
+                            nx, ny = x + dx, y + dy
+                            if 0 <= nx < h and 0 <= ny < w and not seen[nx, ny] and grid[nx, ny] != 0:
+                                seen[nx, ny] = True
+                                stack.append((nx, ny))
+                rs = [p[0] for p in cells]
+                cs = [p[1] for p in cells]
+                comps.append({
+                    "cells": cells,
+                    "colors": set(int(grid[x, y]) for x, y in cells),
+                    "bbox": (min(rs), max(rs), min(cs), max(cs)),
+                    "size": len(cells)
+                })
+        return comps
 
-    main = max(clusters, key=len)
-    main_pts = pts[main]
-    r0, c0 = main_pts.min(axis=0)
-    r1, c1 = main_pts.max(axis=0)
+    comps = components()
+    main_i = max(range(len(comps)), key=lambda i: comps[i]["size"])
+    included = {main_i}
+
+    changed = True
+    while changed:
+        changed = False
+        r0 = min(comps[i]["bbox"][0] for i in included)
+        r1 = max(comps[i]["bbox"][1] for i in included)
+        c0 = min(comps[i]["bbox"][2] for i in included)
+        c1 = max(comps[i]["bbox"][3] for i in included)
+        for i, comp in enumerate(comps):
+            if i in included:
+                continue
+            a0, a1, b0, b1 = comp["bbox"]
+            if a1 >= r0 - 1 and a0 <= r1 + 1 and b1 >= c0 - 1 and b0 <= c1 + 1:
+                included.add(i)
+                changed = True
+
+    r0 = min(comps[i]["bbox"][0] for i in included)
+    r1 = max(comps[i]["bbox"][1] for i in included)
+    c0 = min(comps[i]["bbox"][2] for i in included)
+    c1 = max(comps[i]["bbox"][3] for i in included)
+
     crop = grid[r0:r1 + 1, c0:c1 + 1]
-    oh, ow = crop.shape
-
     out = np.zeros_like(crop)
 
-    def apply_op(mask, op):
-        if op == "fliplr":
-            return np.fliplr(mask)
-        if op == "flipud":
-            return np.flipud(mask)
-        if op == "rot90":
-            return np.rot90(mask, 1)
-        if op == "rot270":
-            return np.rot90(mask, 3)
-        return mask
+    marker = {}
+    for i, comp in enumerate(comps):
+        if i in included:
+            continue
+        colors = comp["colors"]
+        if len(colors) != 1:
+            continue
+        color = next(iter(colors))
+        a0, a1, b0, b1 = comp["bbox"]
+        mh, mw = a1 - a0 + 1, b1 - b0 + 1
+        marker[color] = (mh, mw)
 
-    colors = [int(x) for x in np.unique(crop) if x != 0]
-    for color in colors:
-        mask = crop == color
-        ext = np.argwhere((grid == color) & ~((np.indices(grid.shape)[0] >= r0) &
-                                              (np.indices(grid.shape)[0] <= r1) &
-                                              (np.indices(grid.shape)[1] >= c0) &
-                                              (np.indices(grid.shape)[1] <= c1)))
-
-        op = "id"
-        if len(ext):
-            er0, ec0 = ext.min(axis=0)
-            er1, ec1 = ext.max(axis=0)
-            eh, ew = er1 - er0 + 1, ec1 - ec0 + 1
-
-            if len(ext) > 1:
-                if eh > ew:
-                    op = "flipud"
-                elif ew > eh:
-                    if er1 < r0:
-                        op = "rot90"
-                    else:
-                        op = "id"
+    for color in sorted(int(x) for x in np.unique(crop) if x != 0):
+        mask = (crop == color)
+        if color in marker:
+            mh, mw = marker[color]
+            if mh == 1 and mw > 1:
+                new_mask = mask
+            elif mw == 1 and mh > 1:
+                new_mask = np.rot90(mask, 2)
             else:
-                er, ec = ext[0]
-                touches_edge = (mask[0].any() or mask[-1].any() or
-                                mask[:, 0].any() or mask[:, -1].any())
-                if touches_edge and er > r1 and ec < c0:
-                    op = "rot270"
-                else:
-                    cr = (r0 + r1) / 2.0
-                    cc = (c0 + c1) / 2.0
-                    if abs(ec - cc) >= abs(er - cr):
-                        op = "fliplr"
-                    else:
-                        op = "flipud"
-
-        out[apply_op(mask, op)] = color
+                new_mask = np.rot90(mask, -1)
+        else:
+            new_mask = mask
+        out[new_mask] = color
 
     return out
 ```

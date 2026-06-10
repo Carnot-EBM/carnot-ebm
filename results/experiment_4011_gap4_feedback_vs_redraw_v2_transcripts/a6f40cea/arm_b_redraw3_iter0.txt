@@ -140,38 +140,37 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
+    bg = int(np.bincount(grid.ravel()).argmax())
     h, w = grid.shape
 
-    vals, counts = np.unique(grid, return_counts=True)
-    bg = int(vals[np.argmax(counts)])
-
-    def same_color_components(color):
-        seen = np.zeros((h, w), dtype=bool)
-        comps = []
-        for r in range(h):
-            for c in range(w):
-                if seen[r, c] or int(grid[r, c]) != color:
+    def comps(mask):
+        seen = np.zeros(mask.shape, dtype=bool)
+        out = []
+        for r in range(mask.shape[0]):
+            for c in range(mask.shape[1]):
+                if not mask[r, c] or seen[r, c]:
                     continue
-                stack = [(r, c)]
+                q = [(r, c)]
                 seen[r, c] = True
                 cells = []
-                while stack:
-                    rr, cc = stack.pop()
-                    cells.append((rr, cc))
-                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                        nr, nc = rr + dr, cc + dc
-                        if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and int(grid[nr, nc]) == color:
-                            seen[nr, nc] = True
-                            stack.append((nr, nc))
-                comps.append(cells)
-        return comps
+                while q:
+                    x, y = q.pop()
+                    cells.append((x, y))
+                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nx, ny = x + dx, y + dy
+                        if 0 <= nx < mask.shape[0] and 0 <= ny < mask.shape[1]:
+                            if mask[nx, ny] and not seen[nx, ny]:
+                                seen[nx, ny] = True
+                                q.append((nx, ny))
+                out.append(cells)
+        return out
 
+    # Find the largest rectangular border component.
     best = None
-    for color in vals:
-        color = int(color)
-        if color == bg:
+    for col in np.unique(grid):
+        if int(col) == bg:
             continue
-        for cells in same_color_components(color):
+        for cells in comps(grid == col):
             rs = [p[0] for p in cells]
             cs = [p[1] for p in cells]
             r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
@@ -179,134 +178,82 @@ def transform(grid):
                 continue
             ok = True
             for c in range(c0, c1 + 1):
-                if int(grid[r0, c]) != color or int(grid[r1, c]) != color:
+                if grid[r0, c] != col or grid[r1, c] != col:
                     ok = False
                     break
             if ok:
                 for r in range(r0, r1 + 1):
-                    if int(grid[r, c0]) != color or int(grid[r, c1]) != color:
+                    if grid[r, c0] != col or grid[r, c1] != col:
                         ok = False
                         break
             if ok:
-                area = (r1 - r0 - 1) * (c1 - c0 - 1)
-                if best is None or area > best[0]:
-                    best = (area, color, r0, r1, c0, c1)
+                score = (r1 - r0 - 1) * (c1 - c0 - 1)
+                if best is None or score > best[0]:
+                    best = (score, int(col), r0, r1, c0, c1)
 
-    _, frame_color, fr0, fr1, fc0, fc1 = best
-    out = grid[fr0 + 1:fr1, fc0 + 1:fc1].copy()
+    _, frame_col, fr0, fr1, fc0, fc1 = best
+    ir0, ir1, ic0, ic1 = fr0 + 1, fr1, fc0 + 1, fc1
+    inside = grid[ir0:ir1, ic0:ic1]
 
-    object_mask = np.ones((h, w), dtype=bool)
-    object_mask &= grid != bg
-    object_mask &= grid != frame_color
-    object_mask[fr0 + 1:fr1, fc0 + 1:fc1] = False
+    vals, cnts = np.unique(inside, return_counts=True)
+    base = int(vals[np.argmax(cnts)])
+    ans = np.full((ir1 - ir0, ic1 - ic0), base, dtype=grid.dtype)
 
-    seen = np.zeros((h, w), dtype=bool)
+    outside = np.ones_like(grid, dtype=bool)
+    outside[fr0:fr1 + 1, fc0:fc1 + 1] = False
+    mask = (grid != bg) & outside
+
+    raw = comps(mask)
     groups = []
-    for r in range(h):
-        for c in range(w):
-            if seen[r, c] or not object_mask[r, c]:
-                continue
-            stack = [(r, c)]
-            seen[r, c] = True
-            cells = []
-            colors = set()
-            while stack:
-                rr, cc = stack.pop()
-                cells.append((rr, cc))
-                colors.add(int(grid[rr, cc]))
-                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-                    nr, nc = rr + dr, cc + dc
-                    if 0 <= nr < h and 0 <= nc < w and not seen[nr, nc] and object_mask[nr, nc]:
-                        seen[nr, nc] = True
-                        stack.append((nr, nc))
-            groups.append({"cells": cells, "colors": frozenset(colors)})
+    singles = {}
+    for cells in raw:
+        cols = set(int(grid[r, c]) for r, c in cells)
+        if len(cols) == 1:
+            col = next(iter(cols))
+            singles.setdefault(col, []).extend(cells)
+        else:
+            groups.append(cells)
+    groups.extend(singles.values())
 
-    changed = True
-    while changed:
-        changed = False
-        merged = []
-        used = [False] * len(groups)
-        for i in range(len(groups)):
-            if used[i]:
-                continue
-            cur = dict(groups[i])
-            cur["cells"] = list(cur["cells"])
-            used[i] = True
-            again = True
-            while again:
-                again = False
-                rs = [p[0] for p in cur["cells"]]
-                cs = [p[1] for p in cur["cells"]]
-                a0, a1, b0, b1 = min(rs), max(rs), min(cs), max(cs)
-                for j in range(len(groups)):
-                    if used[j] or groups[j]["colors"] != cur["colors"]:
-                        continue
-                    rs2 = [p[0] for p in groups[j]["cells"]]
-                    cs2 = [p[1] for p in groups[j]["cells"]]
-                    a2, a3, b2, b3 = min(rs2), max(rs2), min(cs2), max(cs2)
-                    col_overlap = max(b0, b2) <= min(b1, b3)
-                    row_overlap = max(a0, a2) <= min(a1, a3)
-                    separated_vertically = (a1 < fr0 and a2 > fr1) or (a3 < fr0 and a0 > fr1)
-                    separated_horizontally = (b1 < fc0 and b2 > fc1) or (b3 < fc0 and b0 > fc1)
-                    if (col_overlap and separated_vertically) or (row_overlap and separated_horizontally):
-                        cur["cells"].extend(groups[j]["cells"])
-                        used[j] = True
-                        changed = True
-                        again = True
-                        break
-            merged.append(cur)
-        groups = merged
-
-    for g in groups:
-        cells = g["cells"]
+    for cells in groups:
         rs = [p[0] for p in cells]
         cs = [p[1] for p in cells]
         r0, r1, c0, c1 = min(rs), max(rs), min(cs), max(cs)
-        if r1 == r0 or c1 == c0:
+
+        if r1 < ir0 or r0 >= ir1 or c1 < ic0 or c0 >= ic1:
             continue
 
-        visible = {(r, c): int(grid[r, c]) for r, c in cells}
-        colors = sorted(g["colors"])
+        colors = sorted(set(int(grid[r, c]) for r, c in cells))
+        known = {(r, c): int(grid[r, c]) for r, c in cells}
 
-        parity_color = {}
-        for parity in (0, 1):
-            tally = {}
-            for (r, c), col in visible.items():
+        parity = {}
+        parity_ok = True
+        if len(colors) == 2:
+            for r, c in cells:
+                p = (r + c) & 1
+                v = int(grid[r, c])
+                if p in parity and parity[p] != v:
+                    parity_ok = False
+                    break
+                parity[p] = v
+            if len(parity) < 2:
+                parity_ok = False
+        else:
+            parity_ok = False
+
+        def cell_color(r, c):
+            if (r, c) in known:
+                return known[(r, c)]
+            if len(colors) == 1:
+                return colors[0]
+            if parity_ok:
+                return parity[(r + c) & 1]
+            return colors[0]
+
+        for r in range(max(r0, ir0), min(r1, ir1 - 1) + 1):
+            for c in range(max(c0, ic0), min(c1, ic1 - 1) + 1):
                 if r in (r0, r1) or c in (c0, c1):
-                    if (r + c) % 2 == parity:
-                        tally[col] = tally.get(col, 0) + 1
-            if tally:
-                parity_color[parity] = max(tally, key=tally.get)
+                    ans[r - ir0, c - ic0] = cell_color(r, c)
 
-        perim = []
-        for c in range(c0, c1 + 1):
-            perim.append((r0, c))
-        for r in range(r0 + 1, r1 + 1):
-            perim.append((r, c1))
-        for c in range(c1 - 1, c0 - 1, -1):
-            perim.append((r1, c))
-        for r in range(r1 - 1, r0, -1):
-            perim.append((r, c0))
-
-        index = {p: i for i, p in enumerate(perim)}
-        vis_on_perim = [(index[p], col) for p, col in visible.items() if p in index]
-        n = len(perim)
-
-        for r, c in perim:
-            if not (fr0 < r < fr1 and fc0 < c < fc1):
-                continue
-            if (r, c) in visible:
-                col = visible[(r, c)]
-            elif len(colors) == 1:
-                col = colors[0]
-            elif (r + c) % 2 in parity_color:
-                col = parity_color[(r + c) % 2]
-            elif vis_on_perim:
-                k = index[(r, c)]
-                _, col = min(vis_on_perim, key=lambda x: min((x[0] - k) % n, (k - x[0]) % n))
-            else:
-                col = colors[0]
-            out[r - fr0 - 1, c - fc0 - 1] = col
-
-    return out
+    return ans
 ```

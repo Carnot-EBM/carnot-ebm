@@ -146,40 +146,178 @@ Write exactly one Python function:
         # grid: 2D numpy int array (colors 0-9). Return the transformed grid as a numpy
         # int array. THE OUTPUT SHAPE MAY DIFFER from the input shape.
 Infer the rule from the demos and implement it GENERICALLY (np is provided; no imports, no file/network access). Your function MUST reproduce every demo output exactly from its demo input, and must then generalize to the test input by applying the SAME rule. Do NOT hardcode demo-specific coordinates/colors or anything specific to the test input. Output ONLY one ```python code block.
+
+Your PREVIOUS function failed these demos:
+Demo 1: expected OUTPUT (16x16):
+[[6, 6, 6, 6, 6, 0, 0, 0, 0, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 0, 0, 6, 0, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 6, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 0, 5, 2, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 0, 5, 2, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 0, 5, 2, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 0, 5, 2, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 0, 5, 2, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6]]
+your function returned:
+[[6, 6, 6, 6, 6, 0, 0, 0, 0, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 0, 0, 6, 0, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 0, 0, 0, 0, 6, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 5, 2, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 0, 5, 2, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 0, 5, 2, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 0, 5, 2, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 5, 2, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 5, 2, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 0, 5, 2, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 6, 0, 6, 0, 5, 2, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 6, 0, 0, 0, 5, 2, 2, 2, 2],
+ [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6, 6]]
+
+Demo 2: expected OUTPUT (16x10):
+[[6, 0, 0, 0, 6, 5, 6, 6, 6, 6],
+ [6, 0, 6, 0, 6, 5, 6, 6, 6, 6],
+ [6, 0, 0, 0, 0, 5, 6, 6, 6, 6],
+ [6, 6, 0, 6, 0, 5, 2, 2, 2, 2],
+ [6, 6, 0, 0, 0, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 0, 0, 0, 5, 6, 6, 6, 6],
+ [6, 6, 0, 6, 0, 5, 2, 2, 2, 2],
+ [6, 6, 0, 0, 0, 5, 6, 6, 6, 6],
+ [6, 6, 0, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 0, 0, 0, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 0, 0, 0, 5, 6, 6, 6, 6],
+ [6, 6, 0, 6, 0, 5, 2, 2, 2, 2],
+ [6, 6, 0, 0, 0, 5, 6, 6, 6, 6]]
+your function returned:
+[[6, 0, 0, 0, 6, 5, 6, 6, 6, 6],
+ [6, 0, 6, 0, 6, 5, 6, 6, 6, 6],
+ [6, 0, 0, 0, 0, 5, 2, 2, 2, 2],
+ [6, 6, 0, 6, 0, 5, 2, 2, 2, 2],
+ [6, 6, 0, 0, 0, 5, 2, 2, 2, 2],
+ [6, 6, 6, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 6, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 0, 0, 0, 5, 2, 2, 2, 2],
+ [6, 6, 0, 6, 0, 5, 2, 2, 2, 2],
+ [6, 6, 0, 0, 0, 5, 2, 2, 2, 2],
+ [6, 6, 0, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 0, 0, 0, 5, 2, 2, 2, 2],
+ [6, 6, 6, 6, 6, 5, 6, 6, 6, 6],
+ [6, 6, 0, 0, 0, 5, 2, 2, 2, 2],
+ [6, 6, 0, 6, 0, 5, 2, 2, 2, 2],
+ [6, 6, 0, 0, 0, 5, 2, 2, 2, 2]]
+
+Previous code:
+```python
+def transform(grid):
+    out = grid.copy()
+    h, w = out.shape
+
+    sep_cols = np.where(np.any(out == 5, axis=0))[0]
+    if len(sep_cols) == 0:
+        return out
+    sep = sep_cols[0]
+
+    left = grid[:, :sep]
+    seen = np.zeros(left.shape, dtype=bool)
+
+    for r0 in range(h):
+        for c0 in range(sep):
+            if left[r0, c0] != 0 or seen[r0, c0]:
+                continue
+
+            stack = [(r0, c0)]
+            seen[r0, c0] = True
+            cells = []
+
+            while stack:
+                r, c = stack.pop()
+                cells.append((r, c))
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < h and 0 <= nc < sep and not seen[nr, nc] and left[nr, nc] == 0:
+                        seen[nr, nc] = True
+                        stack.append((nr, nc))
+
+            max_c = max(c for _, c in cells)
+            shift = (sep - 1) - max_c
+
+            if shift:
+                for r, c in cells:
+                    out[r, c] = 6
+                for r, c in cells:
+                    out[r, c + shift] = 0
+
+            rows = {}
+            for r, c in cells:
+                rows.setdefault(r, []).append(c + shift)
+
+            for r, cols in rows.items():
+                if min(cols) != sep - 1 and max(cols) == sep - 1:
+                    out[r, sep + 1:] = 2
+
+    return out
+```
+Fix the rule inference and output the corrected function as one ```python block.
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
     out = grid.copy()
     h, w = out.shape
 
-    bg = 6
-    sep_color = 5
-
-    sep_cols = np.where(np.all(out == sep_color, axis=0))[0]
-    sep = int(sep_cols[0])
-
-    left = out[:, :sep]
-    zero_cols = np.where(np.any(left == 0, axis=0))[0]
-    if len(zero_cols) == 0:
+    sep_cols = np.where(np.any(grid == 5, axis=0))[0]
+    if len(sep_cols) == 0:
         return out
+    sep = sep_cols[0]
 
-    shift = (sep - 1) - int(zero_cols.max())
+    left = grid[:, :sep]
+    bg = 6
+    seen = np.zeros(left.shape, dtype=bool)
 
-    new_left = np.full_like(left, bg)
-    for r in range(h):
-        for c in range(sep):
-            if left[r, c] == 0:
-                nc = c + shift
-                if 0 <= nc < sep:
-                    new_left[r, nc] = 0
+    for r0 in range(h):
+        for c0 in range(sep):
+            if left[r0, c0] != 0 or seen[r0, c0]:
+                continue
 
-    out[:, :sep] = new_left
+            stack = [(r0, c0)]
+            seen[r0, c0] = True
+            cells = []
 
-    if sep + 1 < w:
-        edge = new_left[:, sep - 1] == 0
-        for r in range(1, h - 1):
-            if edge[r] and edge[r - 1] and edge[r + 1]:
-                out[r, sep + 1:] = 2
+            while stack:
+                r, c = stack.pop()
+                cells.append((r, c))
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nr, nc = r + dr, c + dc
+                    if 0 <= nr < h and 0 <= nc < sep and not seen[nr, nc] and left[nr, nc] == 0:
+                        seen[nr, nc] = True
+                        stack.append((nr, nc))
+
+            max_c = max(c for _, c in cells)
+            shift = (sep - 1) - max_c
+
+            if shift:
+                for r, c in cells:
+                    out[r, c] = bg
+                for r, c in cells:
+                    out[r, c + shift] = 0
+
+            edge_rows = sorted(r for r, c in cells if c + shift == sep - 1)
+            edge_set = set(edge_rows)
+
+            for r in edge_rows:
+                if (r - 1) in edge_set and (r + 1) in edge_set:
+                    out[r, sep + 1:] = 2
 
     return out
 ```

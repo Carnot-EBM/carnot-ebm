@@ -153,76 +153,106 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ```python
 def transform(grid):
     out = grid.copy()
-
-    # Find the dividing cross.
-    div_rows = [r for r in range(grid.shape[0]) if np.all(grid[r, :] == 1)]
-    div_cols = [c for c in range(grid.shape[1]) if np.all(grid[:, c] == 1)]
-    dr, dc = div_rows[0], div_cols[0]
+    h, w = grid.shape
 
     bg = 4
+    sep = 1
 
-    def bbox(mask):
-        pts = np.argwhere(mask)
-        if len(pts) == 0:
-            return None
-        r0, c0 = pts.min(axis=0)
-        r1, c1 = pts.max(axis=0)
-        return int(r0), int(c0), int(r1), int(c1)
+    sep_rows = [r for r in range(h) if (grid[r, :] == sep).all()]
+    sep_cols = [c for c in range(w) if (grid[:, c] == sep).all()]
+    if not sep_rows or not sep_cols:
+        return out
 
-    def scale_pattern(pat, sy, sx):
-        h, w = pat.shape
-        nh = max(1, int(round(h * sy)))
-        nw = max(1, int(round(w * sx)))
-        res = np.full((nh, nw), bg, dtype=pat.dtype)
-        for r in range(nh):
-            sr = min(h - 1, int(np.floor(r / sy)))
-            for c in range(nw):
-                sc = min(w - 1, int(np.floor(c / sx)))
-                res[r, c] = pat[sr, sc]
-        return res
+    sr, sc = sep_rows[0], sep_cols[0]
+    quads = [
+        (0, sr, 0, sc),
+        (0, sr, sc + 1, w),
+        (sr + 1, h, 0, sc),
+        (sr + 1, h, sc + 1, w),
+    ]
 
-    # Source template is the complete object in the upper-left quadrant.
-    tl = grid[:dr, :dc]
-    sb = bbox(tl != bg)
-    sr0, sc0, sr1, sc1 = sb
-    source = tl[sr0:sr1 + 1, sc0:sc1 + 1]
+    def cells_in(q):
+        r0, r1, c0, c1 = q
+        cells = []
+        for r in range(r0, r1):
+            for c in range(c0, c1):
+                if grid[r, c] != bg:
+                    cells.append((r - r0, c - c0, grid[r, c]))
+        return cells
 
-    def paste_quadrant(r_slice, c_slice, flip_v=False, flip_h=False):
-        quad = grid[r_slice, c_slice]
-        seed_box = bbox(quad == 2)
-        if seed_box is None:
-            return
+    templates = []
+    for qi, q in enumerate(quads):
+        cells = cells_in(q)
+        colors = {v for _, _, v in cells}
+        if len(colors - {2}) >= 2:
+            templates.append((qi, q, cells))
 
-        pat = source
-        if flip_v:
-            pat = pat[::-1, :]
-        if flip_h:
-            pat = pat[:, ::-1]
+    if not templates:
+        return out
 
-        red_box = bbox(pat == 2)
-        pr0, pc0, pr1, pc1 = red_box
-        qr0, qc0, qr1, qc1 = seed_box
+    _, tq, tcells = templates[0]
+    tr0, tr1, tc0, tc1 = tq
+    qh, qw = tr1 - tr0, tc1 - tc0
 
-        sy = (qr1 - qr0 + 1) / (pr1 - pr0 + 1)
-        sx = (qc1 - qc0 + 1) / (pc1 - pc0 + 1)
+    transforms = [
+        lambda r, c: (r, c),
+        lambda r, c: (r, qw - 1 - c),
+        lambda r, c: (qh - 1 - r, c),
+        lambda r, c: (qh - 1 - r, qw - 1 - c),
+    ]
 
-        spat = scale_pattern(pat, sy, sx)
-        s_red = bbox(spat == 2)
-        tr0, tc0, tr1, tc1 = s_red
+    for qi, q in enumerate(quads):
+        r0, r1, c0, c1 = q
+        existing = cells_in(q)
+        if not existing:
+            continue
 
-        base_r = r_slice.start + qr0 - tr0
-        base_c = c_slice.start + qc0 - tc0
+        colors = {v for _, _, v in existing}
+        if len(colors - {2}) >= 2:
+            continue
 
-        for r in range(spat.shape[0]):
-            for c in range(spat.shape[1]):
-                if spat[r, c] != bg:
-                    rr, cc = base_r + r, base_c + c
-                    if r_slice.start <= rr < r_slice.stop and c_slice.start <= cc < c_slice.stop:
-                        out[rr, cc] = spat[r, c]
+        anchors = [(r, c) for r, c, v in existing if v == 2]
+        if not anchors:
+            continue
 
-    paste_quadrant(slice(0, dr), slice(dc + 1, grid.shape[1]), flip_h=True)
-    paste_quadrant(slice(dr + 1, grid.shape[0]), slice(0, dc), flip_v=True)
-    paste_quadrant(slice(dr + 1, grid.shape[0]), slice(dc + 1, grid.shape[1]), flip_v=True, flip_h=True)
+        ar0, ar1 = min(r for r, _ in anchors), max(r for r, _ in anchors)
+        ac0, ac1 = min(c for _, c in anchors), max(c for _, c in anchors)
+        ah, aw = ar1 - ar0 + 1, ac1 - ac0 + 1
+
+        best = None
+        for t in transforms:
+            mapped = [(t(r, c)[0], t(r, c)[1], v) for r, c, v in tcells]
+            twos = [(r, c) for r, c, v in mapped if v == 2]
+            mr0, mr1 = min(r for r, _ in twos), max(r for r, _ in twos)
+            mc0, mc1 = min(c for _, c in twos), max(c for _, c in twos)
+
+            mh, mw = mr1 - mr0 + 1, mc1 - mc0 + 1
+            if mh == 0 or mw == 0 or ah % mh or aw % mw:
+                continue
+
+            sy, sx = ah // mh, aw // mw
+            dr, dc = ar0 - mr0 * sy, ac0 - mc0 * sx
+
+            expanded = []
+            ok = True
+            for r, c, v in mapped:
+                for yy in range(sy):
+                    for xx in range(sx):
+                        nr, nc = dr + r * sy + yy, dc + c * sx + xx
+                        if not (0 <= nr < r1 - r0 and 0 <= nc < c1 - c0):
+                            ok = False
+                        else:
+                            expanded.append((nr, nc, v))
+            if not ok:
+                continue
+
+            score = sum(1 for r, c, v in expanded if grid[r0 + r, c0 + c] == v)
+            if best is None or score > best[0]:
+                best = (score, expanded)
+
+        if best is not None:
+            for r, c, v in best[1]:
+                out[r0 + r, c0 + c] = v
 
     return out
 ```

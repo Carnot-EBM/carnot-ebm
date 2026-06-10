@@ -90,60 +90,78 @@ Infer the rule from the demos and implement it GENERICALLY (np is provided; no i
 ===== RAW OUTPUT =====
 ```python
 def transform(grid):
-    out = grid.copy()
-    out[out == 1] = 0
-
     h, w = grid.shape
-    eligible = set(int(x) for x in grid[-1] if x not in (0, 1))
+    out = grid.copy()
 
-    starts = []
-    for c in eligible:
-        rs = np.where(grid == c)[0]
-        if len(rs) and rs.min() > 0:
-            starts.append(int(rs.min()))
-    threshold = max(0, min(starts) - 2) if starts else 0
+    wall = (grid != 0) & (grid != 1)
+    seen = np.zeros((h, w), dtype=bool)
+    direct = np.zeros((h, w), dtype=bool)
 
     for r in range(h):
-        wall_pos = [c for c in range(w) if grid[r, c] not in (0, 1)]
+        for c in range(w):
+            if wall[r, c] and not seen[r, c]:
+                color = grid[r, c]
+                stack = [(r, c)]
+                seen[r, c] = True
+                cells = []
 
-        for i, left in enumerate(wall_pos):
-            if int(grid[r, left]) not in eligible:
+                while stack:
+                    rr, cc = stack.pop()
+                    cells.append((rr, cc))
+                    for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nr, nc = rr + dr, cc + dc
+                        if 0 <= nr < h and 0 <= nc < w:
+                            if not seen[nr, nc] and grid[nr, nc] == color:
+                                seen[nr, nc] = True
+                                stack.append((nr, nc))
+
+                rows = {}
+                for rr, cc in cells:
+                    rows.setdefault(rr, []).append(cc)
+
+                for rr, cols in rows.items():
+                    if len(cols) >= 2:
+                        a, b = min(cols), max(cols)
+                        for cc in range(a + 1, b):
+                            if not wall[rr, cc]:
+                                direct[rr, cc] = True
+
+    targets = set()
+    for r in range(h):
+        for c in range(w):
+            if grid[r, c] == 0 and direct[r, c]:
+                targets.add((r, c))
+
+    support = wall | direct
+
+    for r in range(h - 1):
+        c = 0
+        while c < w:
+            if wall[r, c]:
+                c += 1
                 continue
-            right = wall_pos[i + 1] if i + 1 < len(wall_pos) else w
-            if right <= left + 1:
-                continue
 
-            seg = range(left + 1, right)
-            if r >= threshold and any(grid[r, c] == 1 for c in seg):
-                for c in seg:
-                    if grid[r, c] == 0 or grid[r, c] == 1:
-                        out[r, c] = 1
+            start = c
+            has_one = False
+            while c < w and not wall[r, c]:
+                if grid[r, c] == 1:
+                    has_one = True
+                c += 1
+            end = c
 
-        for i in range(len(wall_pos) - 1):
-            left, right = wall_pos[i], wall_pos[i + 1]
-            color = int(grid[r, left])
-            if color not in eligible or int(grid[r, right]) != color:
-                continue
-            if right <= left + 1 or r < threshold:
-                continue
+            if has_one:
+                for cc in range(start, end):
+                    if grid[r, cc] == 0 and support[r + 1, cc]:
+                        targets.add((r, cc))
 
-            seg = range(left + 1, right)
-            has_original = any(grid[r, c] == 1 for c in seg)
+    ones = [(r, c) for r in range(h) for c in range(w) if grid[r, c] == 1]
+    ones.sort()
 
-            skip = False
-            if not has_original and right + 1 < w:
-                next_color = int(grid[r, right + 1])
-                if next_color not in (0, 1, color) and next_color in eligible:
-                    for j in range(i + 2, len(wall_pos)):
-                        if int(grid[r, wall_pos[j]]) == next_color:
-                            if any(grid[r, c] == 1 for c in range(right + 2, wall_pos[j])):
-                                skip = True
-                            break
+    for r, c in ones[:len(targets)]:
+        out[r, c] = 0
 
-            if not skip:
-                for c in seg:
-                    if grid[r, c] == 0 or grid[r, c] == 1:
-                        out[r, c] = 1
+    for r, c in targets:
+        out[r, c] = 1
 
     return out
 ```
