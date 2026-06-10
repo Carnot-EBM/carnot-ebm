@@ -1,0 +1,31 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.370",
+  "generated_at": "2026-06-10T13:15:29Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "detector_gap_suspected": true,
+  "summary": "The authoritative TIMING DATA reports 0 experiment commits since activation of 2026.06.370 and 0 minutes of measured wall time, with both RTX 3090s idle (0% util, 4MB allocated). With zero compute-bound tasks in the block, gpu_idle_on_compute_bound_tasks is null and the idle GPUs are CORRECT behaviour, not a bottleneck. The locked numerics stay 0/empty and no wall-time is fabricated.",
+  "bottlenecks_identified": [
+    "Milestone->commit detection gap, now the SEVENTH consecutive false-zero (.363/.365/.366/.367/.368/.369/.370): the authoritative timing block reports 0 experiments, but the on-disk ops/changelog.md window for this milestone visibly contains committed experiment artifacts (the GAP-4 verifier confirmation arms, the ARC-AGI-3 level-frontier + fourth-game solves, the ArcMemo solve-transfer, hardware continuity, and the capstone). The recurring failure is observability, not execution.",
+    "Unverified same-milestone fix: a prior milestone's experiment claimed the retro commit-detector was fixed, yet THIS retro still received a zero timing block — so that fix is still not verified end-to-end on the live retro-timing feed.",
+    "No wall-time signal to mine: because the detector hands the retro an empty block, there is no per-experiment timing to rank, so no genuine efficiency bottleneck can be identified from the authoritative data this milestone."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone->commit detector/windowing and PROVE it end-to-end on this milestone's own feed: the retro must report the real committed count (the changelog window shows ~11 artifacts, range exp3997-exp4007), not 0.",
+    "Add a detector-independent fallback: glob results/experiment_*.json committed since the activation SHA and reconcile against the detector count; emit a loud self-check that FAILS the retro when count==0 while matching artifacts exist on disk.",
+    "Emit a zero-count reason code (capstone_aggregation_only | all_tasks_blocked | window_misaligned | genuinely_idle) so a 0 is never silently ambiguous between an empty milestone and a detector miss.",
+    "Verify-or-revert the prior 'detector fixed' claim: it has now failed to take effect on two subsequent live retros, so either the fix did not land on the timing path or it regressed."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the retro commit-detector and demonstrate it end-to-end on 2026.06.370: a passing fix reports the real exp3997-exp4007 range, not 0. This is the single highest-leverage action because it has now silently mis-reported seven consecutive milestones.",
+    "Ship the detector-independent glob fallback + a self-check that fails loudly when count==0 but committed experiment artifacts exist for the milestone window — this makes the false-zero impossible to ship unnoticed again.",
+    "Re-open and verify the previously-claimed detector fix end-to-end on the live retro feed (it has not taken effect across two later retros); if it cannot be verified, revert the claim so it stops masking the open bug."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "An operational retro is only as trustworthy as the timing breadcrumbs it is handed; for the seventh milestone running, the detector handed this retro a zero that the on-disk changelog contradicts, so the honest efficiency verdict is 'no analyzable signal' and no wall-time saving is claimed. The load-bearing lesson is process: a fix asserted complete in a prior milestone has gone two milestones without taking effect on the live feed, which is exactly the kind of unverified-fix drift a detector-independent self-check would have caught immediately."
+}
