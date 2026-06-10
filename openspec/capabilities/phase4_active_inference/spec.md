@@ -108,3 +108,9 @@
 
 ### SCENARIO-PHASE4-018
 **Description:** Running Exp 3980 either writes `blocked_arc_offline_env_unavailable` when the offline Arcade cannot load, or reports an honest terminal-prefix artifact for the selected game. A successful L2 advance MUST use `success: reinduction_advanced_<game>_to_L<n>` and record whether L2 required a different rule than L1; an unsolved attempt MUST use `complete: l2_wall_holds_<game>_<reason>` and record the first failed level without chasing unrelated games or all remaining levels.
+
+### REQ-PHASE4-019: ARC-AGI-3 Fourth Game First Solve
+**Description:** The system SHALL run Exp 3981 as a targeted first-solve attempt for a fourth distinct ARC-AGI-3 game, choosing a non-spatial candidate from {tn36, su15, dc22} empirically based on L0 baseline budget and inducibility. The agent MUST actively collect transitions, deterministically perceive objects and target locations, induce the mechanic and goal predicate from observation or level-up, and plan and execute moves in the offline environment. The terminal artifact `results/experiment_3981_fourth_game_first_solve.json` MUST include bare fields `ACCURACY_levels_solved`, `game_solved`, `first_solve_at_action`, `induced_mechanic`, `games_attempted`, `real_env_confirmed`, `random_seed`, `honest_verdict`, `duration_s`, and `inference_substrate`.
+
+### SCENARIO-PHASE4-019
+**Description:** Running Exp 3981 either writes `blocked_arc_offline_env_unavailable` when the offline Arcade cannot load, or reports an honest terminal-prefix artifact tracking the fourth game attempt. A successful L1 solve MUST use `success: <game>_first_solve_levels1_...` and record the action count; a 0-solve attempt MUST use `complete: fourth_game_no_solve_<reason>` and record the induced mechanics for all attempted candidates.
