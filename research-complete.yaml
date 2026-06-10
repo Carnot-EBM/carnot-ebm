@@ -37468,3 +37468,59 @@ milestones:
       \ artifact; cite upstream sha256. NO gated_on \u2014 aggregate whatever exists."
     deliverable: results/experiment_3985_capstone_v368.json
     result: OK (conductor)
+- id: 2026.06.368
+  correction_type: v368_archive_activate_v369_gap4_handoff
+  title: 'Archive .368 and activate .369 with GAP-4 handoff preserved'
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-06-10'
+  finding: '.368 recorded the working outer-loop GAP-4 program-induction execution verifier positive, preserved the conductor DSL-only failure as a path not to re-attempt, kept world-model induction at 0 of 6 trustworthy, recorded no fourth-game solve, and carried forward the ArcMemo solve-transfer win into .369.'
+  activation_recorded: exp3986-archive-v368-activate-v369
+  tasks:
+  - id: exp3974-archive-v367-activate-v368
+    title: 'Archive .367 and activate .368'
+    deliverable: results/experiment_3974_archive_v367_activate_v368.json
+    result: 'complete: archived_v367_v368_active_three_games_m3_open_gap4_ready_arc_substrate_green'
+  - id: exp3975-gap4-execution-verifier-build
+    title: 'Conductor GAP-4 DSL-only verifier build'
+    deliverable: results/experiment_3975_gap4_execution_verifier_build.json
+    result: 'complete: gap4_positive_control_failed_auroc0.00 [CONDUCTOR_DSL_BUILD_FAILED DO_NOT_REATTEMPT_DSL_PATH]'
+  - id: exp3976-gap4-trm-rerank-eval
+    title: 'GAP-4 TRM rerank eval'
+    deliverable: results/experiment_3976_gap4_trm_rerank_eval.json
+    result: 'blocked_gate_check_failed'
+  - id: exp3977-gap4-rederive-audit
+    title: 'GAP-4 re-derivation audit'
+    deliverable: results/experiment_3977_gap4_rederive_audit.json
+    result: 'missing_artifact: summarize_artifact.py found no JSON artifact for results/experiment_3977_gap4_rederive_audit.json'
+  - id: exp3978-verifier-vs-judge-efficiency
+    title: 'Verifier versus judge efficiency'
+    deliverable: results/experiment_3978_verifier_vs_judge_efficiency.json
+    result: 'success: verifier_earns_place_efficiency_parity_8789.7x_cheaper'
+  - id: exp3979-world-model-gen-execution-guided
+    title: 'Execution-guided world-model generation'
+    deliverable: results/experiment_3979_world_model_gen_execution_guided.json
+    result: 'complete: exec_guided_trustworthy_0of6'
+  - id: exp3980-incremental-levels-reinduction
+    title: 'Incremental levels via re-induction'
+    deliverable: results/experiment_3980_incremental_levels_reinduction.json
+    result: 'complete: l2_wall_holds_r11l_l2_re_induction_found_a_collision_forbidden_mask_rule_different_from_l1_remainin'
+  - id: exp3981-fourth-game-first-solve
+    title: 'Fourth ARC-AGI-3 game first solve'
+    deliverable: results/experiment_3981_fourth_game_first_solve.json
+    result: 'complete: fourth_game_no_solve_budget_exceeded'
+  - id: exp3982-arcmemo-solve-transfer
+    title: 'ArcMemo solve transfer'
+    deliverable: results/experiment_3982_arcmemo_solve_transfer.json
+    result: 'success: arcmemo_solve_transfer_2668to17_actions [ARCMEMO_SOLVE_TRANSFER_WIN EXTEND_IN_V369]'
+  - id: exp3983-hardware-continuity
+    title: 'Hardware continuity'
+    deliverable: results/experiment_3983_hardware_continuity.json
+    result: 'complete: hardware_continuity_3983_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded'
+  - id: exp3984-retro-commit-detector-fix
+    title: 'Operational retro commit detector fix'
+    deliverable: results/experiment_3984_retro_commit_detector_fix.json
+    result: 'complete: retro_commit_detector_fixed_backfill_counts_restored'
+  - id: exp3985-capstone-v368
+    title: 'Capstone .368'
+    deliverable: results/experiment_3985_capstone_v368.json
+    result: 'success: capstone_v368_verifier_earned_efficiency_only_games3_new_levels0_missing1_flagged_skipped0'
