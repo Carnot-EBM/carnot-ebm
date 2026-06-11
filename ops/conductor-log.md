@@ -8271,3 +8271,4 @@ c |
 | 2026-06-11 18:46 UTC | Archive .374 -> activate .375; KEEP the hardened g | OK | 138 passed in 3.71s |
 | 2026-06-11 19:28 UTC | SOTA-INGESTION SLOT (mandatory per the standing 20 | OK | 95 passed in 3.72s |
 | 2026-06-11 20:32 UTC | OFF-ARC TRANSFER POWER on an UN-SATURATED corpus - | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-11 20:48 UTC | OFF-ARC TRANSFER POWER (EvalPlus) -- COLLECT+VALID | OK | 102 passed in 6.02s |
