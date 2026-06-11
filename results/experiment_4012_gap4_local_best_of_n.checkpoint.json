@@ -782,6 +782,1450 @@
         "status": "no_code",
         "task": "4e469f39"
       }
+    ],
+    "505fff84": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 32.46,
+        "status": "no_code",
+        "task": "505fff84"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 31.67,
+        "status": "no_code",
+        "task": "505fff84"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 31.76,
+        "status": "no_code",
+        "task": "505fff84"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The rule identifies regions of color 1 and 8 as \"markers\" or \"noise\".\n    # The output is a subgrid of the input grid that excludes these markers.\n    # Looking at the demos, the output is the largest contiguous block of \n    # 0s and 2s that does not contain any 1s or 8s.\n    # Wait, looking closer at the dimensions:\n    # Demo 1: Input 14x11 -> Output 5x5.\n    # Demo 2: Input 4x11 -> Output 1x7.\n    # Demo 3: Input 5x10 -> Output 2x3.\n    # Demo 4: Input 6x12 -> Output 3x4.\n    # Demo 5: Input 8x12 -> Output 3x6.\n    \n    # Let's re-examine the relationship between input and output.\n    # The output seems to be a subgrid of the input.\n    # Let's check the content.\n    # Demo 1: Output is a 5x5 block.\n    # Demo 2: Output is a 1x7 block.\n    # Demo 3: Output is a 2x3 block.\n    # Demo 4: Output is a 3x4 block.\n    # Demo 5: Output is a 3x6 block.\n    \n    # Looking at the values:\n    # Demo 1: Output is at grid[0:5, 0:5] but with some changes? No.\n    # Let's look at the 1s and 8s. They seem to act as boundaries.\n    # The output is the largest rectangle of 0s and 2s.\n    \n    # Let's try a different hypothesis: The output is the largest rectangle \n    # containing only 0s and 2s.\n    \n    rows, cols = grid.shape\n    max_area = 0\n    best_rect = None\n    \n    # Find all rectangles containing only 0 and 2\n    for r1 in range(rows):\n        for r2 in range(r1, rows):\n            for c1 in range(cols):\n                for c2 in range(c1, cols):\n                    sub = grid[r1:r2+1, c1:c2+1]\n                    if np.all(np.isin(sub, [0, 2])):\n                        area = (r2 - r1 + 1) * (c2 - c1 + 1)\n                        if area > max_area:\n                            max_area = area\n                            best_rect = sub\n                            \n    # In some cases, there might be multiple rectangles of the same max area.\n    # Let's check the demos again.\n    # Demo 1: Max area 25. (5x5)\n    # Demo 2: Max area 7. (1x7)\n    # Demo 3: Max area 6. (2x3)\n    # Demo 4: Max area 12. (3x4)\n    # Demo 5: Max area 18. (3x6)\n    \n    # If there are multiple, we need a tie-breaker. \n    # Usually, it's the first one found (top-leftmost).\n    \n    # Let's refine the search to find the largest rectangle.\n    # To handle ties, we prefer the one with the largest height or width?\n    # Actually, the logic seems to be: find the largest rectangle of {0, 2}.\n    \n    best_rect = None\n    max_area = -1\n    \n    for r1 in range(rows):\n        for r2 in range(r1, rows):\n            for c1 in range(cols):\n                for c2 in range(c1, cols):\n                    sub = grid[r1:r2+1, c1:c2+1]\n                    if np.all(np.isin(sub, [0, 2])):\n                        area = (r2 - r1 + 1) * (c2 - c1 + 1)\n                        if area > max_area:\n                            max_area = area\n                            best_rect = sub\n                        elif area == max_area:\n                            # Tie breaker: prefer more \"square\" or first found?\n                            # Let's stick to first found for now.\n                            pass\n                            \n    return best_rect",
+        "code_len": 3205,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 15.11,
+        "status": "graded",
+        "task": "505fff84"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 31.86,
+        "status": "no_code",
+        "task": "505fff84"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 31.85,
+        "status": "no_code",
+        "task": "505fff84"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 31.98,
+        "status": "no_code",
+        "task": "505fff84"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule is to identify all pixels with color 1 and color 8.\n    These pixels act as \"boundaries\" or \"noise\" that are excluded.\n    The output is a subgrid of the original grid that contains only colors 0 and 2.\n    \n    Looking at the dimensions:\n    Demo 1: 14x11 -> 5x5\n    Demo 2: 4x11 -> 1x7\n    Demo 3: 5x10 -> 2x3\n    Demo 4: 6x12 -> 3x4\n    Demo 5: 8x12 -> 3x6\n    \n    The output dimensions (H_out, W_out) are related to the input dimensions (H_in, W_in).\n    Observation:\n    Demo 1: (14-4)/2 = 5, (11-1)/2 = 5 (No, let's look for a pattern)\n    Wait, the output is the largest contiguous block of 0s and 2s that does not contain 1s or 8s?\n    No, looking at the demos, the output is the largest rectangular subgrid containing ONLY colors 0 and 2.\n    \n    Let's re-examine.\n    Demo 1: 14x11 -> 5x5.\n    Demo 2: 4x11 -> 1x7.\n    Demo 3: 5x10 -> 2x3.\n    Demo 4: 6x12 -> 3x4.\n    Demo 5: 8x12 -> 3x6.\n    \n    Actually, the output is the largest rectangular subgrid that contains NO 1s and NO 8s,\n    where the elements are only 0s and 2s.\n    Wait, in all demos, the output is the largest rectangle of 0s and 2s.\n    Let's check Demo 2: 4x11. Output 1x7.\n    The input has 1 at (2,1) and 8 at (2,9).\n    The output is [[0, 2, 0, 0, 0, 0, 2]]. This is a 1x7 block.\n    \n    Let's look at the grid and find the largest rectangle of {0, 2}.\n    Demo 3: 5x10. Output 2x3.\n    \n    Actually, there is a simpler pattern:\n    The output is the largest rectangle of {0, 2} that does not contain any 1 or 8.\n    Let's verify Demo 1: 14x11. Max rectangle of {0, 2} is 5x5.\n    \"\"\"\n    h, w = np.array(grid).shape\n    max_area = -1\n    best_rect = None\n    \n    # Convert to numpy array for easier slicing\n    grid = np.array(grid)\n    \n    # Valid colors are 0 and 2\n    valid_mask = np.isin(grid, [0, 2])\n    \n    # Find the largest rectangle of True values in the mask\n    for top in range(h):\n        for left in range(w):\n            for height in range(1, h - top + 1):\n                for width in range(1, w - left + 1):\n                    sub = valid_mask[top:top+height, left:left+width]\n                    if np.all(sub):\n                        area = height * width\n                        if area > max_area:\n                            max_area = area\n                            best_rect = grid[top:top+height, left:left+width]\n                            \n    return best_rect.tolist() if hasattr(best_rect, 'tolist') else np.array(best_rect)\n\n# Re-evaluating the logic: The output is simply the largest rectangle of 0s and 2s.\n# Let's refine the implementation to be more robust.\ndef transform(grid):\n    grid = np.array(grid)\n    h, w = grid.shape\n    valid_mask = np.isin(grid, [0, 2])\n    \n    max_area = 0\n    best_rect = np.array([])\n    \n    # Optimization: for each row, find the height of consecutive valid pixels above it\n    heights = np.zeros(w, dtype=int)\n    for r in range(h):\n        for c in range(w):\n            if valid_mask[r, c]:\n                heights[c] += 1\n            else:\n                heights[c] = 0\n        \n        # For each row, find the largest rectangle ending at this row\n        for c in range(w):\n            min_h = heights[c]\n            for k in range(c, -1, -1):\n                min_h = min(min_h, heights[k])\n                if min_h == 0:\n                    break\n                area = min_h * (c - k + 1)\n                if area > max_area:\n                    max_area = area\n                    best_rect = grid[r - min_h + 1 : r + 1, k : c + 1]\n                    \n    return best_rect",
+        "code_len": 3613,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 18.26,
+        "status": "graded",
+        "task": "505fff84"
+      }
+    ],
+    "50a16a69": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 35.54,
+        "status": "no_code",
+        "task": "50a16a69"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 34.65,
+        "status": "no_code",
+        "task": "50a16a69"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 34.62,
+        "status": "no_code",
+        "task": "50a16a69"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 34.85,
+        "status": "no_code",
+        "task": "50a16a69"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 34.73,
+        "status": "no_code",
+        "task": "50a16a69"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The rule is to identify the repeating pattern in the grid \n    # and fill the entire grid with it, shifting it by one position \n    # horizontally or vertically if necessary to match the output.\n    # Looking at the demos, the last row/column is a \"filler\" \n    # and the rest of the grid is a repeating pattern.\n    # The output is a perfectly tiled version of that pattern.\n    \n    rows, cols = grid.shape\n    \n    # Identify the repeating pattern. In all demos, the pattern is \n    # found in the first (rows-1) or (cols-1) elements.\n    # Let's find the smallest repeating unit.\n    \n    # For Demo 1: Pattern is [5, 2] or [2, 5]. \n    # The output is a tiling of [2, 5, 2, 5, 2, 5, 2, 5] horizontally and vertically.\n    # For Demo 2: Pattern is [6, 3, 5, 7].\n    # For Demo 3: Pattern is [7, 6, 3].\n    \n    # A robust way to find the pattern:\n    # The output is a checkerboard-like tiling of a sequence.\n    # Let's try to find the sequence by looking at the first row (excluding the last element).\n    \n    # In Demo 1: row 0 is [5, 2, 5, 2, 5, 2, 5, 1]. Pattern is [5, 2].\n    # In Demo 2: row 0 is [6, 3, 5, 7, 6, 3, 5, 7, 6, 3, 5, 8, ...]. Pattern is [6, 3, 5, 7].\n    # In Demo 3: row 0 is [7, 6, 3, 7, 6, 3, 7, 6, 4]. Pattern is [7, 6, 3].\n    \n    # Let's find the period 'p' of the first row (ignoring the last element).\n    first_row = [grid[0][i] for i in range(cols - 1)]\n    p = 1\n    for period in range(1, len(first_row) // 2 + 1):\n        is_periodic = True\n        for i in range(len(first_row)):\n            if first_row[i] != first_row[i % period]:\n                is_periodic = False\n                break\n        if is_periodic:\n            p = period\n            break\n    else:\n        p = len(first_row) # Fallback\n        \n    # The pattern is the first p elements of the first row.\n    pattern = first_row[:p]\n    \n    # The output is a grid where grid[r][c] = pattern[(r + c) % p]\n    # But we need to check the offset. In Demo 1, output[0][0] is 2. \n    # Pattern was [5, 2]. So it's shifted.\n    # Let's find the offset by checking the first element of the output.\n    # Actually, the output is simply a tiling where the sequence \n    # is shifted such that it perfectly tiles the grid.\n    \n    # Let's re-examine:\n    # Demo 1: Pattern [5, 2], Output[0,0]=2, Output[0,1]=5.\n    # Demo 2: Pattern [6, 3, 5, 7], Output[0,0]=3, Output[0,1]=5, Output[0,2]=7, Output[0,3]=6.\n    # Demo 3: Pattern [7, 6, 3], Output[0,0]=6, Output[0,1]=3, Output[0,2]=7.\n    \n    # It seems the output[r][c] = pattern[(r + c + 1) % p]\n    # Let's test this:\n    # Demo 1: p=2, pattern=[5, 2]. (0+0+1)%2 = 1. pattern[1]=2. Correct.\n    # Demo 2: p=4, pattern=[6, 3, 5, 7]. (0+0+1)%4 = 1. pattern[1]=3. Correct.\n    # Demo 3: p=3, pattern=[7, 6, 3]. (0+0+1)%3 = 1. pattern[1]=6. Correct.\n    \n    res = np.zeros((rows, cols), dtype=int)\n    for r in range(rows):\n        for c in range(cols):\n            res[r, c] = pattern[(r + c + 1) % p]\n            \n    return res",
+        "code_len": 3030,
+        "demo_fit": 0.3333,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 18.32,
+        "status": "graded",
+        "task": "50a16a69"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The rule is to identify the repeating pattern in the grid \n    # (excluding the row/column that is all the same color, which acts as a border).\n    # Then, the entire grid is filled with that pattern, shifted such that \n    # the pattern repeats perfectly across the whole dimensions.\n    \n    grid = np.array(grid)\n    rows, cols = grid.shape\n    \n    # Identify the pattern. In the demos, the pattern is the repeating \n    # sequence of colors in the main body of the grid.\n    # We can find this by looking at the first few rows/cols that aren't uniform.\n    \n    # Find the repeating sequence (the pattern)\n    # In Demo 1: [5, 2, 5, 2...] -> pattern [5, 2]\n    # In Demo 2: [6, 3, 5, 7...] -> pattern [6, 3, 5, 7]\n    # In Demo 3: [7, 6, 3...] -> pattern [7, 6, 3]\n    \n    # Let's find the smallest period for the first row (or a row that isn't uniform)\n    pattern = []\n    for r in range(rows):\n        row = grid[r]\n        if not np.all(row == row[0]):\n            # Try to find the smallest period p such that row[i] == row[i % p]\n            for p in range(1, cols):\n                is_period = True\n                for i in range(cols):\n                    if row[i] != row[i % p]:\n                        is_period = False\n                        break\n                if is_period:\n                    pattern = row[:p].tolist()\n                    break\n            if pattern:\n                break\n    \n    # If no pattern found in rows, check columns\n    if not pattern:\n        for c in range(cols):\n            col = grid[:, c]\n            if not np.all(col == col[0]):\n                for p in range(1, rows):\n                    is_period = True\n                    for i in range(rows):\n                        if col[i] != col[i % p]:\n                            is_period = False\n                            break\n                    if is_period:\n                        # This is a vertical pattern, but the output shows \n                        # the pattern is still horizontal.\n                        # Actually, in all demos, the output is a perfectly \n                        # tiled version of the main pattern.\n                        pass\n                break\n\n    # The output is a grid where every cell (r, c) is pattern[c % len(pattern)]\n    # But wait, looking at Demo 1: \n    # Input row 0: [5, 2, 5, 2, 5, 2, 5, 1] -> Output row 0: [2, 5, 2, 5, 2, 5, 2, 5]\n    # It seems the pattern is shifted or the grid is filled such that \n    # the pattern is consistent across the whole grid.\n    \n    # Let's re-examine:\n    # Demo 1: Pattern [5, 2]. Output is [2, 5, 2, 5, 2, 5, 2, 5]\n    # Demo 2: Pattern [6, 3, 5, 7]. Output is [3, 5, 7, 6, 3, 5, 7, 6...]\n    # Demo 3: Pattern [7, 6, 3]. Output is [6, 3, 7, 6, 3, 7, 6, 3, 7]\n    \n    # Rule: The output grid is filled with the pattern such that \n    # output[r, c] = pattern[(r + c + 1) % len(pattern)]\n    # Let's check Demo 1: pattern [5, 2]. \n    # r=0, c=0: (0+0+1)%2 = 1 -> pattern[1] = 2. Correct.\n    # r=0, c=1: (0+1+1)%2 = 0 -> pattern[0] = 5. Correct.\n    # Demo 2: pattern [6, 3, 5, 7].\n    # r=0, c=0: (0+0+1)%4 = 1 -> pattern[1] = 3. Correct.\n    # r=0, c=1: (0+1+1)%4 = 2 -> pattern[2] = 5. Correct.\n    # Demo 3: pattern [7, 6, 3].\n    # r=0, c=0: (0+0+1)%3 = 1 -> pattern[1] = 6. Correct.\n    \n    # Wait, the pattern is actually the first few elements of the input \n    # excluding the \"border\" element.\n    # Demo 1: [5, 2, 5, 2, 5, 2, 5, 1] -> pattern [5, 2]\n    # Demo 2: [6, 3, 5, 7, 6, 3, 5, 7, 6, 3, 5, 8...] -> pattern [6, 3, 5, 7]\n    # Demo 3: [7, 6, 3, 7, 6, 3, 7, 6, 4] -> pattern [7, 6, 3]\n    \n    # Let's refine pattern extraction:\n    # It's the repeating sequence in the first row before it hits a different color \n    # (the border color).\n    \n    first_row = grid[0]\n    pattern = []\n    for i in range(len(first_row)):\n        if first_row[i] != first_row[0]:\n            # The pattern is the sequence before this index\n            # But we need to find the smallest repeating unit.\n            sub = first_row[:i].tolist()\n            # Find smallest period of 'sub'\n            for p in range(1, len(sub) + 1):\n                if len(sub) % p == 0:\n                    unit = sub[:p]\n                    if unit * (len(sub) // p) == sub:\n                        pattern = unit\n                        break\n            break\n        if i == len(first_row) - 1: # Entire row is same except last\n            sub = first_row[:-1].tolist()\n            for p in range(1, len(sub) + 1):\n                if len(sub) % p == 0:\n                    unit = sub[:p]\n                    if unit * (len(sub) // p) == sub:\n                        pattern = unit\n                        break\n    \n    # If pattern still empty, try the first row again but look for the first change\n    if not pattern:\n        for i in range(1, len(first_row)):\n            if first_row[i] != first_row[0]:\n                sub = first_row[:i].tolist()\n                # Just take the first two or three elements if no period found\n                pattern = sub[:2] if len(sub) >= 2 else sub\n                break\n\n    # Final construction:\n    # The output grid is filled such that output[r, c] = pattern[(r + c + 1) % len(pattern)]\n    # Wait, looking at Demo 1 again:\n    # Output row 0: [2, 5, 2, 5, 2, 5, 2, 5]\n    # Pattern was [5, 2]. \n    # Index 0: (0+0+1)%2 = 1 -> pattern[1] = 2\n    # Index 1: (0+1+1)%2 = 0 -> pattern[0] = 5\n    # This works.\n    \n    res = np.zeros((rows, cols), dtype=int)\n    p_len = len(pattern)\n    for r in range(rows):\n        for c in range(cols):\n            res[r, c] = pattern[(r + c + 1) % p_len]\n            \n    return res",
+        "code_len": 5708,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 32.39,
+        "status": "graded",
+        "task": "50a16a69"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 34.74,
+        "status": "no_code",
+        "task": "50a16a69"
+      }
+    ],
+    "5833af48": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 35.88,
+        "status": "no_code",
+        "task": "5833af48"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 34.74,
+        "status": "no_code",
+        "task": "5833af48"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 34.87,
+        "status": "no_code",
+        "task": "5833af48"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 35.08,
+        "status": "no_code",
+        "task": "5833af48"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 35.15,
+        "status": "no_code",
+        "task": "5833af48"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 34.78,
+        "status": "no_code",
+        "task": "5833af48"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 34.82,
+        "status": "no_code",
+        "task": "5833af48"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 35.2,
+        "status": "no_code",
+        "task": "5833af48"
+      }
+    ],
+    "66e6c45b": [
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The rule is to move the non-zero elements to the four corners of the grid.\n    # Specifically, the elements at (1,1), (1,2), (2,1), (2,2) are moved to \n    # (0,0), (0,3), (3,0), (3,3) respectively.\n    # Looking at Demo 1:\n    # Input: (1,1)=3, (1,2)=4, (2,1)=7, (2,2)=6\n    # Output: (0,0)=3, (0,3)=4, (3,0)=7, (3,3)=6\n    # Looking at Demo 2:\n    # Input: (1,1)=5, (1,2)=6, (2,1)=8, (2,2)=3\n    # Output: (0,0)=5, (0,3)=6, (3,0)=8, (3,3)=3\n    \n    # The transformation is:\n    # (1,1) -> (0,0)\n    # (1,2) -> (0,3)\n    # (2,1) -> (3,0)\n    # (2,2) -> (3,3)\n    \n    rows, cols = grid.shape\n    new_grid = np.zeros_like(grid)\n    \n    # Map the specific coordinates\n    new_grid[0, 0] = grid[1, 1]\n    new_grid[0, cols-1] = grid[1, 2]\n    new_grid[rows-1, 0] = grid[2, 1]\n    new_grid[rows-1, cols-1] = grid[2, 2]\n    \n    return new_grid",
+        "code_len": 888,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 0,
+        "local_s": 5.69,
+        "status": "graded",
+        "task": "66e6c45b"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The rule identifies the non-zero elements and moves them to the corners\n    # of the grid.\n    # In Demo 1: (1,1)->(0,0), (1,2)->(0,3), (2,1)->(3,0), (2,2)->(3,3)\n    # In Demo 2: (1,1)->(0,0), (1,2)->(0,3), (2,1)->(3,0), (2,2)->(3,3)\n    # The transformation maps the 2x2 block of non-zero values to the 4 corners.\n    \n    rows, cols = grid.shape\n    output = np.zeros_like(grid)\n    \n    # Find the bounding box of non-zero elements\n    coords = np.argwhere(grid != 0)\n    if coords.size == 0:\n        return output\n    \n    r_min, c_min = coords.min(axis=0)\n    r_max, c_max = coords.max(axis=0)\n    \n    # The non-zero elements form a 2x2 block in the center\n    # We map them to the 4 corners of the grid\n    # Top-left of block -> Top-left of grid\n    # Top-right of block -> Top-right of grid\n    # Bottom-left of block -> Bottom-left of grid\n    # Bottom-right of block -> Bottom-right of grid\n    \n    # Specifically, based on the demos:\n    # The block is at (r_min, c_min) to (r_max, c_max)\n    # We extract these 4 values and place them at (0,0), (0, cols-1), (rows-1, 0), (rows-1, cols-1)\n    \n    # Let's identify the 4 values in the 2x2 block\n    # In Demo 1: (1,1)=3, (1,2)=4, (2,1)=7, (2,2)=6\n    # In Demo 2: (1,1)=5, (1,2)=6, (2,1)=8, (2,2)=3\n    \n    # The logic is:\n    # output[0, 0] = grid[r_min, c_min]\n    # output[0, cols-1] = grid[r_min, c_max]\n    # output[rows-1, 0] = grid[r_max, c_min]\n    # output[rows-1, cols-1] = grid[r_max, c_max]\n    \n    output[0, 0] = grid[r_min, c_min]\n    output[0, cols-1] = grid[r_min, c_max]\n    output[rows-1, 0] = grid[r_max, c_min]\n    output[rows-1, cols-1] = grid[r_max, c_max]\n    \n    return output",
+        "code_len": 1714,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 1,
+        "local_s": 9.5,
+        "status": "graded",
+        "task": "66e6c45b"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The transformation moves the non-zero elements to the corners\n    # of the grid.\n    # In Demo 1:\n    # (1,1) -> (0,0)\n    # (1,2) -> (0,3)\n    # (2,1) -> (3,0)\n    # (2,2) -> (3,3)\n    #\n    # In Demo 2:\n    # (1,1) -> (0,0)\n    # (1,2) -> (0,3)\n    # (2,1) -> (3,0)\n    # (2,2) -> (3,3)\n    #\n    # The rule is: \n    # The element at (r, c) moves to a corner based on its relative position \n    # to the center of the non-zero block.\n    # Specifically, for a 2x2 block of non-zero values at (r, c), (r, c+1), (r+1, c), (r+1, c+1):\n    # (r, c) -> (0, 0)\n    # (r, c+1) -> (0, 3)\n    # (r+1, c) -> (3, 0)\n    # (r+1, c+1) -> (3, 3)\n    \n    rows, cols = grid.shape\n    output = np.zeros_like(grid)\n    \n    # Find all non-zero coordinates\n    coords = np.argwhere(grid != 0)\n    \n    if len(coords) == 0:\n        return output\n    \n    # In the demos, the non-zero elements form a 2x2 block.\n    # Let's find the bounding box of non-zero elements.\n    min_r = coords[:, 0].min()\n    max_r = coords[:, 0].max()\n    min_c = coords[:, 1].min()\n    max_c = coords[:, 1].max()\n    \n    # The logic seems to be:\n    # The top-left of the block moves to (0,0)\n    # The top-right of the block moves to (0, rows-1)\n    # The bottom-left of the block moves to (rows-1, 0)\n    # The bottom-right of the block moves to (rows-1, cols-1)\n    \n    # Let's map the specific values found in the 2x2 block\n    # We iterate through the original grid and if it's part of the 2x2 block,\n    # we place it in the corresponding corner.\n    \n    # To be robust, we identify the 2x2 block.\n    # In both demos, the non-zero elements are at (1,1), (1,2), (2,1), (2,2)\n    # which is a 2x2 block.\n    \n    # Let's find the 2x2 block bounds\n    # In Demo 1: min_r=1, max_r=2, min_c=1, max_c=2\n    # In Demo 2: min_r=1, max_r=2, min_c=1, max_c=2\n    \n    # Map:\n    # (min_r, min_c) -> (0, 0)\n    # (min_r, max_c) -> (0, cols-1)\n    # (max_r, min_c) -> (rows-1, 0)\n    # (max_r, max_c) -> (rows-1, cols-1)\n    \n    # However, we must handle the case where the block might be larger or smaller,\n    # but based on the demos, it's a 2x2 block.\n    \n    # Let's just find the 4 points and map them.\n    # We need to know which point is which.\n    # Since it's a 2x2 block:\n    # Top-left is (min_r, min_c)\n    # Top-right is (min_r, max_c)\n    # Bottom-left is (max_r, min_c)\n    # Bottom-right is (max_r, max_c)\n    \n    output[0, 0] = grid[min_r, min_c]\n    output[0, cols-1] = grid[min_r, max_c]\n    output[rows-1, 0] = grid[max_r, min_c]\n    output[rows-1, cols-1] = grid[max_r, max_c]\n    \n    return output",
+        "code_len": 2630,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 2,
+        "local_s": 14.91,
+        "status": "graded",
+        "task": "66e6c45b"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The transformation takes the non-zero elements and moves them to the four corners\n    # of the grid.\n    # In Demo 1: (1,1)=3, (1,2)=4, (2,1)=7, (2,2)=6\n    # Output: (0,0)=3, (0,3)=4, (3,0)=7, (3,3)=6\n    # In Demo 2: (1,1)=5, (1,2)=6, (2,1)=8, (2,2)=3\n    # Output: (0,0)=5, (0,3)=6, (3,0)=8, (3,3)=3\n    \n    # The rule is:\n    # Top-left of the 2x2 block of non-zero numbers moves to (0,0)\n    # Top-right of the 2x2 block moves to (0, last_col)\n    # Bottom-left of the 2x2 block moves to (last_row, 0)\n    # Bottom-right of the 2x2 block moves to (last_row, last_col)\n    \n    rows, cols = grid.shape\n    output = np.zeros_like(grid)\n    \n    # Find the non-zero elements\n    coords = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] != 0:\n                coords.append((r, c))\n    \n    # Based on the demos, the input non-zero elements form a 2x2 block.\n    # We sort them by row then column to identify their relative positions.\n    coords.sort()\n    \n    # Map the 4 elements of the 2x2 block to the 4 corners of the grid\n    # coords[0] is top-left, coords[1] is top-right, \n    # coords[2] is bottom-left, coords[3] is bottom-right\n    if len(coords) >= 4:\n        output[0, 0] = grid[coords[0][0], coords[0][1]]\n        output[0, cols-1] = grid[coords[1][0], coords[1][1]]\n        output[rows-1, 0] = grid[coords[2][0], coords[2][1]]\n        output[rows-1, cols-1] = grid[coords[3][0], coords[3][1]]\n        \n    return output",
+        "code_len": 1521,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 3,
+        "local_s": 7.76,
+        "status": "graded",
+        "task": "66e6c45b"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 29.89,
+        "status": "no_code",
+        "task": "66e6c45b"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # Get dimensions\n    rows, cols = grid.shape\n    # Create an empty output grid\n    output = np.zeros_like(grid)\n    \n    # Find all non-zero pixels\n    coords = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] != 0:\n                coords.append((r, c, grid[r, c]))\n    \n    # Sort coordinates by row then column to identify the 2x2 block\n    coords.sort()\n    \n    # The pattern identifies a 2x2 block of non-zero numbers.\n    # In both demos, the 2x2 block is at (1,1) to (2,2).\n    # The transformation moves:\n    # (1,1) -> (0,0)\n    # (1,2) -> (0,3)\n    # (2,1) -> (3,0)\n    # (2,2) -> (3,3)\n    # This is a rotation/re-mapping of the 2x2 block corners to the 4 corners of the 4x4 grid.\n    \n    # Specifically, based on the demos:\n    # Input (1,1) goes to Output (0,0)\n    # Input (1,2) goes to Output (0,3)\n    # Input (2,1) goes to Output (3,0)\n    # Input (2,2) goes to Output (3,3)\n    \n    # Let's generalize: find the top-left of the 2x2 block\n    # In both demos, it's at (1,1).\n    r_start, c_start = 1, 1\n    \n    # Map the values\n    output[0, 0] = grid[r_start, c_start]\n    output[0, 3] = grid[r_start, c_start + 1]\n    output[3, 0] = grid[r_start + 1, c_start]\n    output[3, 3] = grid[r_start + 1, c_start + 1]\n    \n    return output",
+        "code_len": 1334,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 5,
+        "local_s": 6.75,
+        "status": "graded",
+        "task": "66e6c45b"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # The rule identifies the non-zero elements and moves them to the corners.\n    # Looking at the demos:\n    # Input 1: (1,1)=3, (1,2)=4, (2,1)=7, (2,2)=6\n    # Output 1: (0,0)=3, (0,3)=4, (3,0)=7, (3,3)=6\n    #\n    # Input 2: (1,1)=5, (1,2)=6, (2,1)=8, (2,2)=3\n    # Output 2: (0,0)=5, (0,3)=6, (3,0)=8, (3,3)=3\n    #\n    # The mapping is:\n    # Top-left of the 2x2 block -> Top-left corner of the grid (0,0)\n    # Top-right of the 2x2 block -> Top-right corner of the grid (0, N-1)\n    # Bottom-left of the 2x2 block -> Bottom-left corner of the grid (N-1, 0)\n    # Bottom-right of the 2x2 block -> Bottom-right corner of the grid (N-1, N-1)\n    \n    rows, cols = grid.shape\n    output = np.zeros_like(grid)\n    \n    # Find the 2x2 block of non-zero values.\n    # In these demos, it's centered. Let's find the bounding box of non-zero values.\n    coords = np.argwhere(grid != 0)\n    if coords.size == 0:\n        return output\n    \n    r_min, c_min = coords.min(axis=0)\n    r_max, c_max = coords.max(axis=0)\n    \n    # The non-zero values form a 2x2 block.\n    # We map these 4 positions to the 4 corners of the grid.\n    # Based on the demos, the order is:\n    # (r_min, c_min) -> (0, 0)\n    # (r_min, c_max) -> (0, cols-1)\n    # (r_max, c_min) -> (rows-1, 0)\n    # (r_max, c_max) -> (rows-1, cols-1)\n    \n    output[0, 0] = grid[r_min, c_min]\n    output[0, cols-1] = grid[r_min, c_max]\n    output[rows-1, 0] = grid[r_max, c_min]\n    output[rows-1, cols-1] = grid[r_max, c_max]\n    \n    return output",
+        "code_len": 1545,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 6,
+        "local_s": 8.77,
+        "status": "graded",
+        "task": "66e6c45b"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # Find the bounding box of non-zero elements\n    rows = np.where(grid != 0)[0]\n    cols = np.where(grid != 0)[1]\n    \n    if len(rows) == 0:\n        return grid.copy()\n    \n    r_min, r_max = np.min(rows), np.max(rows)\n    c_min, c_max = np.min(cols), np.max(cols)\n    \n    # The input contains a 2x2 block of non-zero numbers.\n    # The transformation moves these four numbers to the four corners \n    # of the grid, maintaining their relative positions but mirrored/rotated.\n    # Looking at Demo 1:\n    # Input: (1,1)=3, (1,2)=4, (2,1)=7, (2,2)=6\n    # Output: (0,0)=3, (0,3)=4, (3,0)=7, (3,3)=6\n    # The logic is: \n    # Top-left of block -> Top-left of grid\n    # Top-right of block -> Top-right of grid\n    # Bottom-left of block -> Bottom-left of grid\n    # Bottom-right of block -> Bottom-right of grid\n    \n    output = np.zeros_like(grid)\n    \n    # Identify the values in the 2x2 block\n    # Based on demos, the non-zero values form a 2x2 square.\n    # Let's find the top-left corner of that 2x2 square.\n    r_start, c_start = r_min, c_min\n    \n    # Map the 2x2 block to the 4 corners of the grid\n    output[0, 0] = grid[r_start, c_start]\n    output[0, -1] = grid[r_start, c_start + 1]\n    output[-1, 0] = grid[r_start + 1, c_start]\n    output[-1, -1] = grid[r_start + 1, c_start + 1]\n    \n    return output",
+        "code_len": 1365,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 7,
+        "local_s": 6.76,
+        "status": "graded",
+        "task": "66e6c45b"
+      }
+    ],
+    "692cd3b6": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 37.23,
+        "status": "no_code",
+        "task": "692cd3b6"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 36.18,
+        "status": "no_code",
+        "task": "692cd3b6"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 36.0,
+        "status": "no_code",
+        "task": "692cd3b6"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 36.27,
+        "status": "no_code",
+        "task": "692cd3b6"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 36.19,
+        "status": "no_code",
+        "task": "692cd3b6"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 36.1,
+        "status": "no_code",
+        "task": "692cd3b6"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 36.2,
+        "status": "no_code",
+        "task": "692cd3b6"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 36.4,
+        "status": "no_code",
+        "task": "692cd3b6"
+      }
+    ],
+    "712bf12e": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 35.48,
+        "status": "no_code",
+        "task": "712bf12e"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 34.52,
+        "status": "no_code",
+        "task": "712bf12e"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 34.71,
+        "status": "no_code",
+        "task": "712bf12e"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 34.71,
+        "status": "no_code",
+        "task": "712bf12e"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    output = grid.copy()\n    \n    coords = np.argwhere(grid == 2)\n    rows_with_2 = set()\n    cols_with_2 = set()\n    for r, c in coords:\n        rows_with_2.add(r)\n        cols_with_2.add(c)\n        \n    for r in rows_with_2:\n        for j in range(cols):\n            if output[r, j] == 0:\n                output[r, j] = 2\n                \n    for c in cols_with_2:\n        for i in range(rows):\n            if output[i, c] == 0:\n                output[i, c] = 2\n                \n    return output.tolist()",
+        "code_len": 602,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 34.65,
+        "status": "graded",
+        "task": "712bf12e"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule is to identify the positions of the color '2' in the input grid.\n    These positions define a \"projection\" or a \"shadow\" effect.\n    Specifically, for every cell (r, c) where grid[r][c] == 2,\n    we look at the vertical column (c) and the horizontal row (r).\n    However, looking closely at the demos, the '2's are placed in a way \n    that they seem to \"fill\" the gaps or are placed in every row/column \n    intersecting with the existing '2's or some other logic.\n    \n    Wait, re-evaluating the demos:\n    In Demo 1, there are '2's at (11, 2), (11, 5), (11, 9).\n    In the output, many new '2's appear.\n    Looking at the change:\n    In Demo 1, (11, 2) is a 2. In the output, column 2 has 2s at (0,2), (1,2), (2,2)...\n    Actually, it looks like for every '2' at (r, c), the entire row r and \n    entire column c are filled with '2's, but only where the current value is 0.\n    \n    Let's check Demo 1:\n    Input '2's: (11, 2), (11, 5), (11, 9)\n    Output '2's: \n    Col 2: (0,2), (1,2), (2,2), (3,2), (4,2), (5,2), (6,2), (7,2), (8,2), (9,2), (10,2), (11,2)\n    Col 5: (0,5), (1,5), (2,5), (3,5), (4,5), (5,5), (6,5), (7,5), (8,5), (9,5), (10,5), (11,5)\n    Col 9: (0,9), (1,9), (2,9), (3,9), (4,9), (5,9), (6,9), (7,9), (8,9), (9,9), (10,9), (11,9)\n    Row 11: (11,0), (11,1), (11,2), (11,3), (11,4), (11,5), (11,6), (11,7), (11,8), (11,9), (11,10), (11,11), (11,12)\n    \n    Wait, let's check Demo 2:\n    Input '2's: (12, 2), (12, 5), (12, 10)\n    Output '2's:\n    Col 2: (0,2), (1,2), (2,2), (3,2), (4,2), (5,2), (6,2), (7,2), (8,2), (9,2), (10,2), (11,2), (12,2)\n    Col 5: (0,5), (1,5), (2,5), (3,5), (4,5), (5,5), (6,5), (7,5), (8,5), (9,5), (10,5), (11,5), (12,5)\n    Col 10: (0,10), (1,10), (2,10), (3,10), (4,10), (5,10), (6,10), (7,10), (8,10), (9,10), (10,10), (11,10), (12,10)\n    Row 12: (12,0), (12,1), (12,2), (12,3), (12,4), (12,5), (12,6), (12,7), (12,8), (12,9), (12,10), (12,11), (12,12), (12,13)\n    \n    And Demo 3:\n    Input '2's: (12, 3), (12, 7), (12, 9)\n    Output '2's:\n    Col 3: (0,3), (1,3), (2,3), (3,3), (4,3), (5,3), (6,3), (7,3), (8,3), (9,3), (10,3), (11,3), (12,3)\n    Col 7: (0,7), (1,7), (2,7), (3,7), (4,7), (5,7), (6,7), (7,7), (8,7), (9,7), (10,7), (11,7), (12,7)\n    Col 9: (0,9), (1,9), (2,9), (3,9), (4,9), (5,9), (6,9), (7,9), (8,9), (9,9), (10,9), (11,9), (12,9)\n    Row 12: (12,0), (12,1), (12,2), (12,3), (12,4), (12,5), (12,6), (12,7), (12,8), (12,9), (12,10), (12,11), (12,12), (12,13), (12,14)\n    \n    The rule is: For every cell (r, c) where the input grid contains a 2, \n    fill the entire row r and the entire column c with 2s, but only overwrite 0s.\n    \"\"\"\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    output = grid.copy()\n    \n    # Find all coordinates of color 2\n    coords = np.argwhere(grid == 2)\n    \n    for r, c in coords:\n        # Fill row r\n        for j in range(cols):\n            if output[r, j] == 0:\n                output[r, j] = 2\n        # Fill column c\n        for i in range(rows):\n            if output[i, c] == 0:\n                output[i, c] = 2\n                \n    return output.tolist()",
+        "code_len": 3150,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 26.62,
+        "status": "graded",
+        "task": "712bf12e"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 34.68,
+        "status": "no_code",
+        "task": "712bf12e"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    output = grid.copy()\n    \n    # The rule is to find all '2's in the input.\n    # For every '2' at (r, c), we find the nearest '5's in the 4 cardinal directions.\n    # If a '5' exists in a direction, we fill the path between '2' and '5' with '2's.\n    # Actually, looking closer at the demos:\n    # The '2's act as \"seeds\". They expand towards the nearest '5's.\n    # In Demo 1, '2's are at (11, 2), (11, 5), (11, 9).\n    # In the output, these '2's have \"grown\" towards the '5's.\n    # Specifically, for each '2', it looks for the nearest '5' in each of the 4 directions.\n    # If a '5' is found, all cells between the '2' and that '5' (exclusive of '5') become '2'.\n    \n    # However, a simpler interpretation of the transformation:\n    # For every cell (r, c) that is 0:\n    # If there is a '2' such that the path to the nearest '5' (if one exists) \n    # passes through (r, c), it becomes a '2'.\n    \n    # Let's re-examine: The '2's expand to fill the space between themselves and the nearest '5's.\n    # If a '2' is at (r, c), and there is a '5' at (r, c+k), then all cells (r, c+1...c+k-1) become '2'.\n    # If there is a '5' at (r, c-k), then all cells (r, c-k+1...c-1) become '2'.\n    # Same for rows.\n    \n    # Let's implement this:\n    new_grid = grid.copy()\n    \n    # Find all initial '2's\n    seeds = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 2:\n                seeds.append((r, c))\n                \n    for r_seed, c_seed in seeds:\n        # Check 4 directions\n        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]\n        for dr, dc in directions:\n            curr_r, curr_c = r_seed + dr, c_seed + dc\n            while 0 <= curr_r < rows and 0 <= curr_c < cols:\n                if grid[curr_r, curr_c] == 5:\n                    # Found a 5, fill the path between seed and this 5\n                    # The path is from (r_seed, c_seed) to (curr_r, curr_c)\n                    # We only fill cells that are currently 0 or 2 (but not 5)\n                    # Actually, the demos show they fill the path.\n                    path_r = range(r_seed, curr_r + 1) if dr > 0 else range(r_seed, curr_r - 1, -1)\n                    path_c = range(c_seed, curr_c + 1) if dc > 0 else range(c_seed, curr_c - 1, -1)\n                    \n                    # If it's a straight line (one of dr or dc is 0)\n                    if dr == 0:\n                        # Horizontal line\n                        start_c = min(c_seed, curr_c)\n                        end_c = max(c_seed, curr_c)\n                        for c in range(start_c + 1, end_c):\n                            if new_grid[r_seed, c] == 0:\n                                new_grid[r_seed, c] = 2\n                    else:\n                        # Vertical line\n                        start_r = min(r_seed, curr_r)\n                        end_r = max(r_seed, curr_r)\n                        for r in range(start_r + 1, end_r):\n                            if new_grid[r, c_seed] == 0:\n                                new_grid[r, c_seed] = 2\n                    break\n                elif grid[curr_r, curr_c] == 2:\n                    # If we hit another 2, it's like a new seed? \n                    # Let's just continue. The path logic handles it.\n                    pass\n                \n                curr_r += dr\n                curr_c += dc\n                \n    return new_grid",
+        "code_len": 3500,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 17.86,
+        "status": "graded",
+        "task": "712bf12e"
+      }
+    ],
+    "79fb03f4": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 39.06,
+        "status": "no_code",
+        "task": "79fb03f4"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 37.68,
+        "status": "no_code",
+        "task": "79fb03f4"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 37.62,
+        "status": "no_code",
+        "task": "79fb03f4"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    output = grid.copy()\n    \n    # The rule involves identifying \"anchor\" points (color 1 or color 5/8)\n    # and expanding them into 3x3 blocks.\n    # Specifically, if a cell is a 1 or a 5/8, and it's part of a \n    # specific structure, it expands. \n    # Looking at the demos, the logic is:\n    # For every cell (r, c) that contains a 1, it acts as a seed.\n    # However, the more consistent rule is:\n    # For every cell (r, c) that contains a 5 or 8, if it's \"isolated\" \n    # or part of a pattern, it expands into a 3x3 block of 1s.\n    # Let's refine: The 1s in the output are formed by 3x3 blocks \n    # centered on the 5s and 8s of the input, but the 5s and 8s \n    # themselves remain.\n    # Wait, looking at Demo 3: Input has 5 at (1,2) and (3,3). \n    # Output has 1s at (2,2), (2,3), (2,4), (3,1), (3,2), (3,4), (3,5), (4,2), (4,3), (4,4).\n    # This is a 3x3 block of 1s centered at (3,3) and a 3x3 block of 1s centered at (2,2)?\n    # No, it's a 3x3 block of 1s centered at (3,3) and a 3x3 block of 1s centered at (2,2) \n    # but they overlap.\n    # Let's re-examine Demo 4: Input 8 at (2,2) and (3,1).\n    # Output: 3x3 block of 1s centered at (2,2) and 3x3 block of 1s centered at (3,1).\n    # The 1s are placed in the 3x3 area around the 8s and 5s, \n    # but the 8s and 5s themselves are preserved.\n    \n    # Let's check Demo 1: Many 8s. Each 8 becomes a 3x3 block of 1s.\n    # Let's check Demo 2: 5s become 3x3 blocks of 1s.\n    # Let's check Demo 5: 5s become 3x3 blocks of 1s.\n    \n    # Rule: For every cell (r, c) where grid[r, c] is 5 or 8:\n    # Create a 3x3 block of 1s centered at (r, c).\n    # The value at (r, c) remains 5 or 8.\n    # All other cells in the 3x3 block become 1 if they were 0.\n    # If a cell was already 1, it stays 1.\n    # If a cell was 5 or 8, it stays 5 or 8.\n    \n    # Wait, there's a catch. In Demo 1, there are already 1s in the input.\n    # In Demo 1, the 1s are at (6,0), (10,0), (11,0), (15,0), (11,1), (15,1), (15,2), etc.\n    # Let's look at the output of Demo 1. The 1s are much more extensive.\n    # It seems the 1s are \"filling\" the 3x3 areas around the 8s.\n    \n    # Let's try the 3x3 expansion rule:\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 5 or grid[r, c] == 8:\n                for dr in range(-1, 2):\n                    for dc in range(-1, 2):\n                        nr, nc = r + dr, c + dc\n                        if 0 <= nr < rows and 0 <= nc < cols:\n                            if output[nr, nc] == 0:\n                                output[nr, nc] = 1\n                                \n    return output",
+        "code_len": 2718,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 18.0,
+        "status": "graded",
+        "task": "79fb03f4"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    output = grid.copy()\n    \n    anchor_color = -1\n    for r in range(rows):\n        for c in range(cols):\n            val = grid[r, c]\n            if val != 0 and val != 1:\n                anchor_color = val\n                break\n        if anchor_color != -1:\n            break\n            \n    if anchor_color == -1:\n        return grid.tolist()\n\n    # The logic: For every anchor point, fill the 3x3 neighborhood with 1s.\n    # If a cell is already an anchor point, it stays as the anchor point.\n    # If a cell is already a 1, it stays 1.\n    # If a cell is 0, it becomes 1.\n    \n    # We must iterate through the original grid to find anchors\n    anchors = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == anchor_color:\n                anchors.append((r, c))\n                \n    for r, c in anchors:\n        for dr in range(-1, 2):\n            for dc in range(-1, 2):\n                nr, nc = r + dr, c + dc\n                if 0 <= nr < rows and 0 <= nc < cols:\n                    if output[nr, nc] == 0:\n                        output[nr, nc] = 1\n                        \n    return output.tolist()",
+        "code_len": 1242,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 18.68,
+        "status": "graded",
+        "task": "79fb03f4"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 37.69,
+        "status": "no_code",
+        "task": "79fb03f4"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    output = grid.copy()\n    \n    # Identify the \"seed\" color (the color that forms the pattern, usually 8 or 5)\n    # and the \"background\" color (usually 0).\n    # In these puzzles, 1 is the color used to fill the pattern.\n    \n    # Find all points where the color is not 0 and not 1. \n    # These are the \"anchor\" points (8 or 5).\n    anchors = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] != 0 and grid[r, c] != 1:\n                anchors.append((r, c))\n    \n    # The rule seems to be: for every anchor point (r, c), \n    # if it's part of a structure, it's surrounded by a 3x3 area of 1s.\n    # However, looking at the demos, the 1s are placed in a 3x3 area \n    # centered at (r, c) but only if they don't overwrite an existing anchor.\n    \n    # Let's refine: The pattern is a 3x3 block of 1s centered at (r, c)\n    # for every anchor (r, c) that is \"active\".\n    # An anchor is active if it's part of a cluster or if it's a standalone \n    # point that is being \"expanded\".\n    \n    # Actually, looking at Demo 3, 4, 6:\n    # Demo 3: Anchor at (1, 2) and (3, 3). \n    # Output has 3x3 block of 1s centered at (3, 3).\n    # Demo 4: Anchor at (2, 2) and (3, 1). \n    # Output has 3x3 block of 1s centered at (2, 2).\n    # Demo 6: Anchors at (0, 3), (3, 2), (3, 4), (5, 2).\n    # Output has 3x3 block of 1s centered at (3, 3) - wait, no.\n    # Let's re-examine Demo 6: Output has 3x3 block of 1s centered at (3, 3).\n    # But there is no anchor at (3, 3) in the input!\n    \n    # Let's re-examine Demo 1:\n    # There are many 8s. The 1s appear in many places.\n    # It looks like the 1s are filling the gaps between 8s to form 3x3 blocks.\n    # Or more specifically, it looks like the 1s are filling a 3x3 area \n    # centered at every point (r, c) such that (r, c) is \"between\" two 8s?\n    # No, let's look at the 1s in Demo 1 again.\n    # They form a large connected component or many small ones.\n    \n    # Let's try a different hypothesis:\n    # For every anchor (r, c), we check its neighbors.\n    # If an anchor is \"isolated\" or \"connected\", we fill a 3x3 area.\n    # Looking at Demo 6: Input has 8s at (0,3), (3,2), (3,4), (5,2).\n    # Output has a 3x3 block of 1s centered at (3,3).\n    # (3,3) is the midpoint between (3,2) and (3,4).\n    \n    # Let's try: For every pair of anchors (r1, c1) and (r2, c2) \n    # that are \"close\" to each other, we fill the 3x3 area centered \n    # at their midpoint.\n    \n    # Let's try a simpler one: For every anchor (r, c), \n    # if it's \"part of a pair\" (distance is small), \n    # fill the 3x3 area centered at the midpoint.\n    \n    # Actually, let's look at Demo 3 again.\n    # Input: (1, 2) and (3, 3). Midpoint is (2, 2.5). \n    # Output: 3x3 block of 1s centered at (3,3) and (2,3)? No, centered at (3,3).\n    \n    # Let's look at Demo 4:\n    # Input: (2, 2) and (3, 1). Midpoint (2.5, 1.5).\n    # Output: 3x3 block of 1s centered at (2,2).\n    \n    # New Hypothesis: \n    # For every anchor (r, c), if there is another anchor (r', c') \n    # such that they are \"near\" (e.g., Manhattan distance <= 2 or 3),\n    # we fill a 3x3 area of 1s centered at (r, c).\n    \n    # Let's test this on Demo 6:\n    # Anchors: (0,3), (3,2), (3,4), (5,2).\n    # (3,2) and (3,4) are near each other. Midpoint is (3,3).\n    # If we fill 3x3 around (3,3), we get the output.\n    \n    # Let's try: For every pair of anchors (r1, c1) and (r2, c2):\n    # If dist is small, find midpoint (mr, mc).\n    # If mr, mc are integers, fill 3x3 around (mr, mc) with 1s.\n    \n    # Demo 1: Many 8s. Many pairs.\n    # Let's try: For every pair of anchors (r1, c1) and (r2, c2) \n    # such that |r1-r2| <= 2 and |c1-c2| <= 2:\n    # mr = (r1+r2)//2, mc = (c1+c2)//2\n    # Fill 3x3 around (mr, mc) with 1s.\n    \n    # Let's try this logic.\n    \n    anchors = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] != 0 and grid[r, c] != 1:\n                anchors.append((r, c))\n    \n    for i in range(len(anchors)):\n        for j in range(i + 1, len(anchors)):\n            r1, c1 = anchors[i]\n            r2, c2 = anchors[j]\n            if abs(r1 - r2) <= 2 and abs(c1 - c2) <= 2:\n                mr, mc = (r1 + r2) // 2, (c1 + c2) // 2\n                for dr in range(-1, 2):\n                    for dc in range(-1, 2):\n                        nr, nc = mr + dr, mc + dc\n                        if 0 <= nr < rows and 0 <= nc < cols:\n                            if output[nr, nc] == 0:\n                                output[nr, nc] = 1\n                                \n    return output",
+        "code_len": 4676,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 31.62,
+        "status": "graded",
+        "task": "79fb03f4"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    # Identify the \"seed\" colors (non-zero colors that are not 1)\n    # In the demos, 8 and 5 are the primary markers. 1 is the fill color.\n    # The rule seems to be: for every non-zero color (except 1), \n    # if it is surrounded by a \"1\" or if it's part of a pattern, \n    # expand the \"1\"s into a 3x3 area around the markers.\n    # More accurately: find all non-zero, non-1 colors. \n    # For each such color, if it's part of a cluster or isolated, \n    # we fill a 3x3 area around it with 1s, but only if the center is the marker.\n    \n    # Looking closer at the demos:\n    # The pattern is: For every marker (color 5 or 8), \n    # if it's part of a 3x3 block of 1s, it stays.\n    # Actually, it looks like the rule is:\n    # For every marker (5 or 8), if there is a 1 nearby or if it's \n    # \"active\", it generates a 3x3 cross or square of 1s.\n    # Let's re-examine Demo 3: marker at (1,2) and (3,3). \n    # Output has a 3x3 block of 1s centered at (3,3) and (2,3).\n    # It's a 3x3 block of 1s centered at (3,3) and a 3x3 block of 1s centered at (2,3)? No.\n    # It's a 3x3 block of 1s centered at (3,3) and a 3x3 block of 1s centered at (2,2)? No.\n    \n    # Let's try this: For every marker (color != 0 and != 1), \n    # we check if it's \"active\". A marker is active if it's \n    # adjacent to a 1 or if it's part of a group.\n    # Actually, the transformation is: \n    # For every marker (color 5 or 8), we look at its 3x3 neighborhood.\n    # If the marker is part of a 3x3 area where we can place 1s \n    # without overwriting the marker itself.\n    \n    # Let's try a simpler rule:\n    # For every marker (color 5 or 8), if it's \"connected\" to a 1 \n    # or if it's in a position that allows a 3x3 block of 1s \n    # centered at a neighbor.\n    \n    # Re-evaluating Demo 4: Marker at (2,2) and (3,1) and (4,4).\n    # Output: 3x3 block of 1s centered at (2,2). \n    # Marker (2,2) is 8. Neighbors are (1,1), (1,2), (1,3), (2,1), (2,3), (3,1), (3,2), (3,3).\n    # In output, (1,1), (1,2), (1,3), (2,1), (2,3), (3,1), (3,2), (3,3) are all 1.\n    # This is a 3x3 block of 1s centered at (2,2) where the center (2,2) is the marker 8.\n    \n    # Rule: For every marker (color 5 or 8), \n    # if it is \"active\" (meaning it's near another marker or a 1),\n    # fill the 8 surrounding cells with 1.\n    # Wait, Demo 3: markers at (1,2) and (3,3). \n    # Output: 3x3 block of 1s centered at (3,3). \n    # (3,3) is a marker. The 8 neighbors are filled with 1.\n    # Also, there's a 3x3 block of 1s centered at (2,3)? No, (2,2), (2,3), (2,4) are 1s.\n    # That's a 3x3 block of 1s centered at (2,3).\n    # Is (2,3) a neighbor of (1,2) or (3,3)? Yes, it's a neighbor of both.\n    \n    # Let's try: For every marker, fill its 8 neighbors with 1.\n    # Then, for every 1, if it has enough 1-neighbors, it stays.\n    # Actually, the rule is: \n    # For every marker (5 or 8), if it is \"active\", fill its 8 neighbors with 1.\n    # A marker is \"active\" if it's within distance 2 of another marker or a 1.\n    \n    res = grid.copy()\n    markers = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] != 0 and grid[r, c] != 1:\n                markers.append((r, c))\n    \n    # A marker is active if it's near another marker or a 1\n    active_markers = []\n    for r, c in markers:\n        is_active = False\n        for dr in range(-2, 3):\n            for dc in range(-2, 3):\n                nr, nc = r + dr, c + dc\n                if 0 <= nr < rows and 0 <= nc < cols:\n                    if grid[nr, nc] != 0 and (grid[nr, nc] == 1 or (grid[nr, nc] != 1 and (nr, nc) != (r, c))):\n                        is_active = True\n                        break\n            if is_active: break\n        if is_active:\n            active_markers.append((r, c))\n            \n    # If no markers are active, check if they are just near each other\n    if not active_markers:\n        for r, c in markers:\n            for dr in range(-2, 3):\n                for dc in range(-2, 3):\n                    nr, nc = r + dr, c + dc\n                    if 0 <= nr < rows and 0 <= nc < cols:\n                        if grid[nr, nc] != 0 and (nr, nc) != (r, c):\n                            active_markers.append((r, c))\n                            break\n                if (r, c) in active_markers: break\n\n    # Fill neighbors of active markers\n    for r, c in active_markers:\n        for dr in range(-1, 2):\n            for dc in range(-1, 2):\n                nr, nc = r + dr, c + dc\n                if 0 <= nr < rows and 0 <= nc < cols:\n                    if res[nr, nc] == 0:\n                        res[nr, nc] = 1\n                        \n    return res",
+        "code_len": 4753,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 30.18,
+        "status": "graded",
+        "task": "79fb03f4"
+      }
+    ],
+    "81c0276b": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 34.15,
+        "status": "no_code",
+        "task": "81c0276b"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 33.54,
+        "status": "no_code",
+        "task": "81c0276b"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 33.58,
+        "status": "no_code",
+        "task": "81c0276b"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 33.72,
+        "status": "no_code",
+        "task": "81c0276b"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 33.58,
+        "status": "no_code",
+        "task": "81c0276b"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 33.58,
+        "status": "no_code",
+        "task": "81c0276b"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 33.53,
+        "status": "no_code",
+        "task": "81c0276b"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 33.84,
+        "status": "no_code",
+        "task": "81c0276b"
+      }
+    ],
+    "8719f442": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 33.41,
+        "status": "no_code",
+        "task": "8719f442"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 32.78,
+        "status": "no_code",
+        "task": "8719f442"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 33.05,
+        "status": "no_code",
+        "task": "8719f442"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 32.89,
+        "status": "no_code",
+        "task": "8719f442"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 32.86,
+        "status": "no_code",
+        "task": "8719f442"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 32.89,
+        "status": "no_code",
+        "task": "8719f442"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 33.03,
+        "status": "no_code",
+        "task": "8719f442"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 32.92,
+        "status": "no_code",
+        "task": "8719f442"
+      }
+    ],
+    "96a8c0cd": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 42.56,
+        "status": "no_code",
+        "task": "96a8c0cd"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 40.72,
+        "status": "no_code",
+        "task": "96a8c0cd"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 40.76,
+        "status": "no_code",
+        "task": "96a8c0cd"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 40.83,
+        "status": "no_code",
+        "task": "96a8c0cd"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 40.91,
+        "status": "no_code",
+        "task": "96a8c0cd"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 40.78,
+        "status": "no_code",
+        "task": "96a8c0cd"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 40.81,
+        "status": "no_code",
+        "task": "96a8c0cd"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 41.01,
+        "status": "no_code",
+        "task": "96a8c0cd"
+      }
+    ],
+    "a57f2f04": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 44.98,
+        "status": "no_code",
+        "task": "a57f2f04"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 42.65,
+        "status": "no_code",
+        "task": "a57f2f04"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 42.78,
+        "status": "no_code",
+        "task": "a57f2f04"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 42.8,
+        "status": "no_code",
+        "task": "a57f2f04"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 42.84,
+        "status": "no_code",
+        "task": "a57f2f04"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 42.56,
+        "status": "no_code",
+        "task": "a57f2f04"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 42.66,
+        "status": "no_code",
+        "task": "a57f2f04"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    height, width = grid.shape\n    \n    # Identify distinct objects (connected components of non-background colors)\n    # In these puzzles, background is usually 8.\n    # We need to find clusters of non-zero, non-eight colors and their surrounding 0s.\n    \n    # A more robust way to find the regions: \n    # The pattern seems to be: find a \"seed\" of non-zero/non-8 colors \n    # and expand it to fill a bounding box or a specific pattern.\n    # Looking at the demos:\n    # Demo 1: 2s and 0s form a region. The 0s are filled with 2s in a checkerboard/grid pattern.\n    # Demo 2: 1s and 0s form a region; 3s and 0s form a region.\n    # Demo 3: 2s and 0s form a region; 4s and 0s form a region.\n    \n    # Actually, the rule is:\n    # 1. Identify regions composed of a specific color (C) and color 0.\n    # 2. These regions are bounded by color 8.\n    # 3. Within these regions, the 0s are filled with color C in a way that \n    #    creates a repeating pattern (checkerboard or similar).\n    \n    # Let's refine: The regions are bounded by 8.\n    # Each region contains a primary color (1, 2, 3, or 4) and 0s.\n    # The 0s are filled with the primary color to complete a pattern.\n    \n    # Let's look at the transformation again:\n    # Demo 1: The 0s in the middle are filled with 2s.\n    # Demo 2: The 0s in the top region (near 1s) are filled with 1s.\n    # The 0s in the bottom region (near 3s) are filled with 3s.\n    # Demo 3: The 0s in the top region (near 2s) are filled with 2s.\n    # The 0s in the bottom region (near 4s) are filled with 4s.\n    \n    # The pattern is:\n    # For every region bounded by 8:\n    # If it contains color C and 0, fill the 0s with C such that \n    # it forms a \"grid\" or \"checkerboard\".\n    # Looking at the output, it's a repeating pattern of C and 0.\n    # Specifically, it looks like a grid where every other cell is C.\n    # Wait, it's even simpler: The 0s are filled with C to form a \n    # consistent tiling of C and 0.\n    \n    # Let's re-examine:\n    # Demo 1: The 2s and 0s form a 10x8 area (roughly). \n    # The output shows a pattern of 2s and 0s.\n    # It looks like a 2x2 block of [2, 2; 2, 2] is replaced by [2, 0; 0, 2]? No.\n    # Let's look at Demo 1 Output:\n    # Row 4: [8, 8, 0, 2, 2, 0, 2, 2, 8...]\n    # Row 5: [8, 8, 2, 0, 2, 2, 0, 2, 8...]\n    # This is a checkerboard of 2s and 0s.\n    \n    # Rule:\n    # 1. Find connected components of {0, C} where C is a color != 0, 8.\n    # 2. For each such component, identify the color C.\n    # 3. Fill the component such that it becomes a checkerboard of C and 0.\n    # 4. The checkerboard is determined by the existing C positions.\n    \n    res = grid.copy()\n    \n    # Find all colors that are not 0 and not 8\n    colors = np.unique(grid[grid != 0][grid != 8])\n    \n    for c in colors:\n        # Find all cells that are either color c or color 0, and are adjacent to c\n        # Actually, let's find the bounding box of the {c, 0} region.\n        # The regions are separated by 8s.\n        \n        # We can find connected components of {c, 0}\n        # But we must ensure they are bounded by 8.\n        \n        # Let's try a simpler approach:\n        # For each cell that is 0, if it is part of a component that contains color c \n        # and is surrounded by 8, check if it should be c or 0 based on a checkerboard.\n        \n        # To find the checkerboard:\n        # A cell (r, c) is color 'c' if (r + col) % 2 == (r0 + col0) % 2\n        # where (r0, col0) is a known position of color 'c'.\n        \n        # Find all positions of color c\n        c_coords = np.argwhere(grid == c)\n        if c_coords.size == 0: continue\n        \n        # For each 0, check if it's \"inside\" a region of c and 0\n        # A region is a connected component of {c, 0}\n        \n        # Let's use a flood fill to find components of {c, 0}\n        visited = np.zeros_like(grid, dtype=bool)\n        for r in range(height):\n            for col in range(width):\n                if grid[r, col] == c or grid[r, col] == 0:\n                    if not visited[r, col]:\n                        # Start flood fill\n                        component = []\n                        q = [(r, col)]\n                        visited[r, col] = True\n                        while q:\n                            curr_r, curr_col = q.pop(0)\n                            component.append((curr_r, curr_col))\n                            for dr, dc in [(0,1),(0,-1),(1,0),(-1,0)]:\n                                nr, nc = curr_r + dr, curr_col + dc\n                                if 0 <= nr < height and 0 <= nc < width:\n                                    if not visited[nr, nc] and (grid[nr, nc] == c or grid[nr, nc] == 0):\n                                        # Check if it's bounded by 8 (or edges)\n                                        # If it's adjacent to 8, it's a valid region.\n                                        # Actually, the rule is simpler: if the component \n                                        # contains at least one 'c', it's a 'c' region.\n                                        visited[nr, nc] = True\n                                        q.append((nr, nc))\n                        \n                        # Check if this component contains color c\n                        has_c = False\n                        for cr, cc in component:\n                            if grid[cr, cc] == c:\n                                has_c = True\n                                break\n                        \n                        if has_c:\n                            # This is a 'c' region.\n                            # Find a reference point (r0, col0) where grid == c\n                            r0, col0 = -1, -1\n                            for cr, cc in component:\n                                if grid[cr, cc] == c:\n                                    r0, col0 = cr, cc\n                                    break\n                            \n                            # For every cell in the component, if it's 0, \n                            # decide if it should be c or 0 based on checkerboard.\n                            # The checkerboard is: (r + col) % 2 == (r0 + col0) % 2 => color c\n                            for cr, cc in component:\n                                if grid[cr, cc] == 0:\n                                    if (cr + cc) % 2 == (r0 + col0) % 2:\n                                        res[cr, cc] = c\n                                    else:\n                                        res[cr, cc] = 0\n                                    \n    return res.tolist()",
+        "code_len": 6656,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 39.99,
+        "status": "graded",
+        "task": "a57f2f04"
+      }
+    ],
+    "a59b95c0": [
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule is to tile the input grid horizontally and vertically.\n    The number of tiles is determined by the output dimensions.\n    Looking at the demos:\n    Demo 1: 3x3 -> 9x9 (3x3 tiles)\n    Demo 2: 3x3 -> 6x6 (2x2 tiles)\n    Demo 3: 3x3 -> 12x12 (4x4 tiles)\n    Demo 4: 3x3 -> 6x6 (2x2 tiles)\n    Demo 5: 3x3 -> 9x9 (3x3 tiles)\n    \n    The number of tiles is (Output_Dim / Input_Dim).\n    However, since we don't know the output dimension, we look for a pattern.\n    Wait, the output dimension is always a multiple of the input dimension.\n    In all demos, the output is a tiling of the input grid.\n    The number of repetitions is (Output_Dim / Input_Dim).\n    \n    Actually, the rule is simpler: the output is a tiling of the input grid.\n    The number of repetitions is determined by the fact that the output is \n    always a square (or rectangle) where the dimensions are multiples of \n    the input dimensions.\n    \n    Let's re-examine:\n    Demo 1: 3x3 -> 9x9 (3 repetitions)\n    Demo 2: 3x3 -> 6x6 (2 repetitions)\n    Demo 3: 3x3 -> 12x12 (4 repetitions)\n    Demo 4: 3x3 -> 6x6 (2 repetitions)\n    Demo 5: 3x3 -> 9x9 (3 repetitions)\n    \n    Wait, there is no fixed number of repetitions. Let's look at the input \n    values. Is there a clue?\n    Demo 1: Input has 9, 7, 6. Output is 9x9.\n    Demo 2: Input has 3, 4. Output is 6x6.\n    Demo 3: Input has 8, 2, 1, 3. Output is 12x12.\n    Demo 4: Input has 7, 2. Output is 6x6.\n    Demo 5: Input has 2, 3, 1. Output is 9x9.\n    \n    Actually, the number of repetitions is the sum of the unique colors \n    present in the input grid?\n    Demo 1: {9, 7, 6} -> 3 colors. 3x3 tiles.\n    Demo 2: {3, 4} -> 2 colors. 2x2 tiles.\n    Demo 3: {8, 2, 1, 3} -> 4 colors. 4x4 tiles.\n    Demo 4: {7, 2} -> 2 colors. 2x2 tiles.\n    Demo 5: {2, 3, 1} -> 3 colors. 3x3 tiles.\n    \n    This fits perfectly!\n    \"\"\"\n    unique_colors = len(np.unique(grid))\n    \n    h, w = grid.shape\n    # Create a tiled array\n    # np.tile repeats the array along the specified axes\n    tiled_grid = np.tile(grid, (unique_colors, unique_colors))\n    \n    return tiled_grid",
+        "code_len": 2151,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 0,
+        "local_s": 11.7,
+        "status": "graded",
+        "task": "a59b95c0"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule is to tile the input grid.\n    The number of tiles in the horizontal and vertical directions is determined \n    by the dimensions of the output grid relative to the input grid.\n    \n    Looking at the demos:\n    Demo 1: Input 3x3, Output 9x9 -> Tiled 3x3 times.\n    Demo 2: Input 3x3, Output 6x6 -> Tiled 2x2 times.\n    Demo 3: Input 3x3, Output 12x12 -> Tiled 4x4 times.\n    Demo 4: Input 3x3, Output 6x6 -> Tiled 2x2 times.\n    Demo 5: Input 3x3, Output 9x9 -> Tiled 3x3 times.\n    \n    The tiling factor is (Output_Dim / Input_Dim). \n    Since the output dimension is always a multiple of the input dimension,\n    we can determine the tiling factor by looking at the output size.\n    Wait, the output size is not provided in the input. \n    However, in ARC, the output size is usually a multiple of the input size.\n    In all demos, the output size is (Input_Size * Factor) x (Input_Size * Factor).\n    \n    Actually, looking at the examples:\n    Demo 1: 3x3 -> 9x9 (Factor 3)\n    Demo 2: 3x3 -> 6x6 (Factor 2)\n    Demo 3: 3x3 -> 12x12 (Factor 4)\n    Demo 4: 3x3 -> 6x6 (Factor 2)\n    Demo 5: 3x3 -> 9x9 (Factor 3)\n    \n    The factor is simply the integer result of (Output_Dim / Input_Dim).\n    Since we don't know the output dimension, we must infer it.\n    In ARC, the output size is often a power of 2 or a small integer multiple.\n    Wait, the prompt doesn't give the output size. I must find a way to determine \n    the factor from the input or a fixed rule.\n    \n    Let's re-examine:\n    Demo 1: Input 3x3, Output 9x9. 9 is 3^2.\n    Demo 2: Input 3x3, Output 6x6. 6 is 3*2.\n    Demo 3: Input 3x3, Output 12x12. 12 is 3*4.\n    Demo 4: Input 3x3, Output 6x6. 6 is 3*2.\n    Demo 5: Input 3x3, Output 9x9. 9 is 3*3.\n    \n    Is there a pattern in the input?\n    Demo 1: Max value is 9. Factor is 3.\n    Demo 2: Max value is 4. Factor is 2.\n    Demo 3: Max value is 8. Factor is 4.\n    Demo 4: Max value is 7. Factor is 2.\n    Demo 5: Max value is 3. Factor is 3.\n    \n    Wait, let's look at the unique colors or the sum?\n    Demo 1: Colors {9, 7, 6}. Max is 9. \n    Demo 2: Colors {3, 4}. Max is 4.\n    Demo 3: Colors {8, 2, 1, 3}. Max is 8.\n    Demo 4: Colors {7, 2}. Max is 7.\n    Demo 5: Colors {2, 3, 1}. Max is 3.\n    \n    Actually, the factor is simply the number of unique colors?\n    Demo 1: {9, 7, 6} -> 3 colors. Factor 3.\n    Demo 2: {3, 4} -> 2 colors. Factor 2.\n    Demo 3: {8, 2, 1, 3} -> 4 colors. Factor 4.\n    Demo 4: {7, 2} -> 2 colors. Factor 2.\n    Demo 5: {2, 3, 1} -> 3 colors. Factor 3.\n    \n    This fits perfectly! The factor is the count of unique colors in the input grid.\n    \"\"\"\n    unique_colors = len(np.unique(grid))\n    factor = unique_colors\n    \n    h, w = grid.shape\n    new_h = h * factor\n    new_w = w * factor\n    \n    output = np.zeros((new_h, new_w), dtype=grid.dtype)\n    for i in range(factor):\n        for j in range(factor):\n            output[i*h:(i+1)*h, j*w:(j+1)*w] = grid\n            \n    return output",
+        "code_len": 3023,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 1,
+        "local_s": 16.83,
+        "status": "graded",
+        "task": "a59b95c0"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The transformation rule is a tiling operation. \n    The output grid is a repetition of the input grid.\n    The number of repetitions is determined by the dimensions of the output.\n    \n    Looking at the demos:\n    Demo 1: Input 3x3, Output 9x9 -> 3 repetitions horizontally, 3 vertically.\n    Demo 2: Input 3x3, Output 6x6 -> 2 repetitions horizontally, 2 vertically.\n    Demo 3: Input 3x3, Output 12x12 -> 4 repetitions horizontally, 4 vertically.\n    Demo 4: Input 3x3, Output 6x6 -> 2 repetitions horizontally, 2 vertically.\n    Demo 5: Input 3x3, Output 9x9 -> 3 repetitions horizontally, 3 vertically.\n    \n    Wait, the output size is always a multiple of the input size. \n    In all demos, the input is 3x3.\n    The output size is (3 * k) x (3 * k).\n    The rule is: tile the input grid k times horizontally and k times vertically.\n    \n    Wait, how is k determined?\n    Demo 1: 9x9 / 3x3 = 3x3 (k=3)\n    Demo 2: 6x6 / 3x3 = 2x2 (k=2)\n    Demo 3: 12x12 / 3x3 = 4x4 (k=4)\n    Demo 4: 6x6 / 3x3 = 2x2 (k=2)\n    Demo 5: 9x9 / 3x3 = 3x3 (k=3)\n    \n    Since the input is always 3x3 in these examples, we need to find k.\n    However, the problem asks for a generic rule. \n    Looking at the output dimensions:\n    Demo 1: 9x9\n    Demo 2: 6x6\n    Demo 3: 12x12\n    Demo 4: 6x6\n    Demo 5: 9x9\n    \n    Actually, the rule is simply to tile the input grid such that the output \n    dimensions are some multiple of the input dimensions. \n    In ARC, if the output size isn't specified, we look for a pattern.\n    In all examples, the output is a square (k*H x k*W) where H, W are input dims.\n    But the question is: what is k?\n    \n    Let's re-examine the input/output.\n    Demo 1: Input 3x3, Output 9x9. 9 is a multiple of 3.\n    Demo 2: Input 3x3, Output 6x6. 6 is a multiple of 3.\n    Demo 3: Input 3x3, Output 12x12. 12 is a multiple of 3.\n    Demo 4: Input 3x3, Output 6x6. 6 is a multiple of 3.\n    Demo 5: Input 3x3, Output 9x9. 9 is a multiple of 3.\n    \n    Is there a property of the input that determines k?\n    Demo 1: Max value 9. k = 9/3 = 3.\n    Demo 2: Max value 4. k = 4/2? No.\n    Demo 3: Max value 8. k = 8/2? No.\n    \n    Wait, let's look at the number of unique colors?\n    Demo 1: {9, 7, 6} -> 3 colors. k = 3.\n    Demo 2: {3, 4} -> 2 colors. k = 2.\n    Demo 3: {8, 2, 1, 3} -> 4 colors. k = 4.\n    Demo 4: {7, 2} -> 2 colors. k = 2.\n    Demo 5: {2, 3, 1} -> 3 colors. k = 3.\n    \n    The rule is: k = number of unique colors in the input grid.\n    The output is a tiling of the input grid k times horizontally and k times vertically.\n    \"\"\"\n    unique_colors = len(np.unique(grid))\n    k = unique_colors\n    \n    # Create the tiled grid\n    # Repeat rows k times, then repeat each row k times? \n    # No, it's a block tiling.\n    \n    # The output is a block tiling:\n    # [Input, Input, ...]\n    # [Input, Input, ...]\n    # ...\n    \n    # Use np.tile to repeat the whole grid k times in both directions\n    res = np.tile(grid, (k, k))\n    return res",
+        "code_len": 3029,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 2,
+        "local_s": 16.56,
+        "status": "graded",
+        "task": "a59b95c0"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule is to tile the input grid.\n    The output dimensions are determined by the number of repetitions.\n    \n    Demo 1: 3x3 -> 9x9 (3x3 repetitions)\n    Demo 2: 3x3 -> 6x6 (2x2 repetitions)\n    Demo 3: 3x3 -> 12x12 (4x4 repetitions)\n    Demo 4: 3x3 -> 6x6 (2x2 repetitions)\n    Demo 5: 3x3 -> 9x9 (3x3 repetitions)\n    \n    Looking at the output dimensions:\n    Demo 1: 9/3 = 3\n    Demo 2: 6/3 = 2\n    Demo 3: 12/3 = 4\n    Demo 4: 6/3 = 2\n    Demo 5: 9/3 = 3\n    \n    The number of repetitions is the smallest integer k such that \n    the output grid is a k x k tiling of the input grid.\n    Wait, actually, the output is simply a tiling where the number of \n    repetitions is the smallest integer k such that the output size is \n    (input_height * k) x (input_width * k).\n    \n    Let's re-examine the output sizes:\n    Demo 1: Input 3x3, Output 9x9. Repetitions = 3.\n    Demo 2: Input 3x3, Output 6x6. Repetitions = 2.\n    Demo 3: Input 3x3, Output 12x12. Repetitions = 4.\n    Demo 4: Input 3x3, Output 6x6. Repetitions = 2.\n    Demo 5: Input 3x3, Output 9x9. Repetitions = 3.\n    \n    The number of repetitions k is the smallest integer such that \n    k * input_height and k * input_width match the output dimensions.\n    However, the output dimensions are always k * input_height and k * input_width.\n    How is k determined?\n    Demo 1: 3\n    Demo 2: 2\n    Demo 3: 4\n    Demo 4: 2\n    Demo 5: 3\n    \n    Wait, the number of repetitions k is simply the value of the \n    maximum color present in the input grid?\n    Demo 1: Max color is 9. No, that's not it.\n    Demo 1: Max color is 9. Repetitions = 3.\n    Demo 2: Max color is 4. Repetitions = 2.\n    Demo 3: Max color is 8. Repetitions = 4.\n    Demo 4: Max color is 7. Repetitions = 2.\n    Demo 5: Max color is 3. Repetitions = 3.\n    \n    Let's look at the colors again.\n    Demo 1: Colors are {9, 7, 6}. Max is 9. Reps = 3.\n    Demo 2: Colors are {3, 4}. Max is 4. Reps = 2.\n    Demo 3: Colors are {8, 2, 1, 3}. Max is 8. Reps = 4.\n    Demo 4: Colors are {7, 2}. Max is 7. Reps = 2.\n    Demo 5: Colors are {2, 3, 1}. Max is 3. Reps = 3.\n    \n    Is k = floor(max_color / 2)?\n    Demo 1: 9/2 = 4.5 -> 4? No, reps = 3.\n    Demo 2: 4/2 = 2. Reps = 2.\n    Demo 3: 8/2 = 4. Reps = 4.\n    Demo 4: 7/2 = 3.5 -> 3? No, reps = 2.\n    Demo 5: 3/2 = 1.5 -> 1? No, reps = 3.\n    \n    Let's look at the number of unique colors.\n    Demo 1: {9, 7, 6} -> 3 colors. Reps = 3.\n    Demo 2: {3, 4} -> 2 colors. Reps = 2.\n    Demo 3: {8, 2, 1, 3} -> 4 colors. Reps = 4.\n    Demo 4: {7, 2} -> 2 colors. Reps = 2.\n    Demo 5: {2, 3, 1} -> 3 colors. Reps = 3.\n    \n    The number of repetitions k is the number of unique colors in the input grid!\n    \"\"\"\n    unique_colors = len(np.unique(grid))\n    \n    # The output is a tiling of the input grid k times in both directions\n    # where k is the number of unique colors.\n    # Wait, let's check Demo 1 again.\n    # Demo 1: Unique colors {9, 7, 6} -> 3. Reps = 3. Correct.\n    # Demo 2: Unique colors {3, 4} -> 2. Reps = 2. Correct.\n    # Demo 3: Unique colors {8, 2, 1, 3} -> 4. Reps = 4. Correct.\n    # Demo 4: Unique colors {7, 2} -> 2. Reps = 2. Correct.\n    # Demo 5: Unique colors {2, 3, 1} -> 3. Reps = 3. Correct.\n    \n    k = unique_colors\n    \n    # Create the tiled grid\n    # We repeat the grid k times horizontally and k times vertically\n    # Using np.tile is the most efficient way.\n    \n    # Note: The input is a 2D array. np.tile(grid, (k, k)) \n    # will repeat the whole block k times vertically and k times horizontally.\n    # Let's check:\n    # If grid is [[a, b], [c, d]] and k=2:\n    # np.tile(grid, (2, 2)) -> \n    # [[a, b, a, b],\n    #  [c, d, c, d],\n    #  [a, b, a, b],\n    #  [c, d, c, d]]\n    # This matches the pattern in the demos.\n    \n    return np.tile(grid, (k, k))",
+        "code_len": 3846,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 3,
+        "local_s": 23.39,
+        "status": "graded",
+        "task": "a59b95c0"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule is to tile the input grid horizontally and vertically.\n    The number of repetitions is determined by the dimensions of the output.\n    \n    Looking at the demos:\n    Demo 1: Input 3x3, Output 9x9 -> Tiled 3x3 times.\n    Demo 2: Input 3x3, Output 6x6 -> Tiled 2x2 times.\n    Demo 3: Input 3x3, Output 12x12 -> Tiled 4x4 times.\n    Demo 4: Input 3x3, Output 6x6 -> Tiled 2x2 times.\n    Demo 5: Input 3x3, Output 9x9 -> Tiled 3x3 times.\n    \n    Wait, the dimensions of the output are always multiples of the input dimensions.\n    The number of repetitions is (Output_Dim / Input_Dim).\n    Since the output dimension is not provided in the input, we must infer it.\n    However, in ARC, the output dimension is usually a fixed multiple.\n    Let's look at the repetition count:\n    1: 9/3 = 3\n    2: 6/3 = 2\n    3: 12/3 = 4\n    4: 6/3 = 2\n    5: 9/3 = 3\n    \n    The pattern is that the output is a tiling of the input. \n    How many times? In ARC, the output size is usually provided by the task.\n    Since we are writing a function to perform the transformation, we need to \n    determine the tiling factor.\n    \n    Looking closely at the demos, the output size is always a multiple of the input size.\n    Let's check if there's a logic to the tiling factor.\n    Actually, in these specific demos, the output size is simply a multiple of the input size.\n    Wait, looking at the prompt, I need to find the rule. \n    The rule is: Tile the input grid N times horizontally and N times vertically, \n    where N is the factor such that Output_Dim = Input_Dim * N.\n    \n    Wait, I don't know the target output dimension. But in ARC, the function \n    is called with the input and we must return the output.\n    The only way to know the output size is if it's a fixed rule or \n    if the output size is implied.\n    Looking at the examples again, the output size is always a multiple of the input size.\n    Let's re-examine the input/output dimensions:\n    1: 3x3 -> 9x9 (Factor 3)\n    2: 3x3 -> 6x6 (Factor 2)\n    3: 3x3 -> 12x12 (Factor 4)\n    4: 3x3 -> 6x6 (Factor 2)\n    5: 3x3 -> 9x9 (Factor 3)\n    \n    Is there a pattern in the input that determines the factor?\n    Demo 1: Max value is 9. Factor is 3? No, 9/3=3.\n    Demo 2: Max value is 4. Factor is 2? No.\n    Demo 3: Max value is 8. Factor is 4?\n    Demo 4: Max value is 7. Factor is 2?\n    Demo 5: Max value is 3. Factor is 3?\n    \n    Let's look at the number of unique colors:\n    1: {9, 7, 6} -> 3 colors. Factor 3.\n    2: {3, 4} -> 2 colors. Factor 2.\n    3: {8, 2, 1, 3} -> 4 colors. Factor 4.\n    4: {7, 2} -> 2 colors. Factor 2.\n    5: {2, 3, 1} -> 3 colors. Factor 3.\n    \n    The rule is: The number of unique colors in the input grid is N.\n    The output grid is the input grid tiled N times horizontally and N times vertically.\n    \"\"\"\n    unique_colors = len(np.unique(grid))\n    \n    # Create the tiled grid\n    # np.tile repeats the array\n    # We repeat the grid 'unique_colors' times along axis 0 and axis 1\n    res = np.tile(grid, (unique_colors, unique_colors))\n    return res",
+        "code_len": 3112,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 4,
+        "local_s": 14.96,
+        "status": "graded",
+        "task": "a59b95c0"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The transformation rule is to tile the input grid.\n    The number of tiles horizontally and vertically is determined by:\n    - Demo 1: 3x3 -> 9x9 (3x3 tiles)\n    - Demo 2: 3x3 -> 6x6 (2x2 tiles)\n    - Demo 3: 3x3 -> 12x12 (4x4 tiles)\n    - Demo 4: 3x3 -> 6x6 (2x2 tiles)\n    - Demo 5: 3x3 -> 9x9 (3x3 tiles)\n    \n    Looking at the output dimensions:\n    Output_Width = Input_Width * repetitions_h\n    Output_Height = Input_Height * repetitions_v\n    \n    Wait, the pattern is simply that the output is a repetition of the input grid.\n    The number of repetitions is the largest integer such that the output is a \n    multiple of the input dimensions.\n    \n    Actually, looking at the demos:\n    Demo 1: Input 3x3, Output 9x9. Repetitions = 3.\n    Demo 2: Input 3x3, Output 6x6. Repetitions = 2.\n    Demo 3: Input 3x3, Output 12x12. Repetitions = 4.\n    Demo 4: Input 3x3, Output 6x6. Repetitions = 2.\n    Demo 5: Input 3x3, Output 9x9. Repetitions = 3.\n    \n    The rule is: The output grid is the input grid tiled N times horizontally and N times vertically,\n    where N is the largest integer such that the output dimensions are multiples of the input dimensions.\n    However, in all examples, the output is a square of size (3*N)x(3*N) where the input is 3x3.\n    The number of repetitions N is simply (Output_Dimension / Input_Dimension).\n    \n    Wait, there's a simpler pattern: The output is the input grid tiled N times, \n    where N is the number of rows/cols in the input grid? \n    Demo 1: Input 3x3, N=3. Output 3*3 x 3*3 = 9x9.\n    Demo 2: Input 3x3, N=2. Output 3*2 x 3*2 = 6x6.\n    Demo 3: Input 3x3, N=4. Output 3*4 x 3*4 = 12x12.\n    Demo 4: Input 3x3, N=2. Output 3*2 x 3*2 = 6x6.\n    Demo 5: Input 3x3, N=3. Output 3*3 x 3*3 = 9x9.\n    \n    Wait, the number of repetitions N is the number of distinct colors in the input?\n    Demo 1: Colors {9, 7, 6} -> 3 colors. N=3.\n    Demo 2: Colors {3, 4} -> 2 colors. N=2.\n    Demo 3: Colors {8, 2, 1, 3} -> 4 colors. N=4.\n    Demo 4: Colors {7, 2} -> 2 colors. N=2.\n    Demo 5: Colors {2, 3, 1} -> 3 colors. N=3.\n    \n    This matches perfectly! \n    Rule: Count unique colors in input grid. Let this be N. \n    Tile the input grid N times horizontally and N times vertically.\n    \"\"\"\n    unique_colors = len(np.unique(grid))\n    \n    # Create the tiled grid\n    # np.tile repeats the array N times along each axis\n    res = np.tile(grid, (unique_colors, unique_colors))\n    return res",
+        "code_len": 2501,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 5,
+        "local_s": 13.11,
+        "status": "graded",
+        "task": "a59b95c0"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The transformation rule is to tile the input grid.\n    The number of tiles horizontally (H) and vertically (V) is determined \n    by the dimensions of the output.\n    \n    Looking at the demos:\n    Demo 1: 3x3 -> 9x9 (3x3 tiles)\n    Demo 2: 3x3 -> 6x6 (2x2 tiles)\n    Demo 3: 3x3 -> 12x12 (4x4 tiles)\n    Demo 4: 3x3 -> 6x6 (2x2 tiles)\n    Demo 5: 3x3 -> 9x9 (3x3 tiles)\n    \n    Wait, the output size is always a multiple of the input size.\n    Let's re-examine.\n    Demo 1: Output is 9x9. Input is 3x3. 9/3 = 3.\n    Demo 2: Output is 6x6. Input is 3x3. 6/3 = 2.\n    Demo 3: Output is 12x12. Input is 3x3. 12/3 = 4.\n    Demo 4: Output is 6x6. Input is 3x3. 6/3 = 2.\n    Demo 5: Output is 9x9. Input is 3x3. 9/3 = 3.\n    \n    The rule is to repeat the input grid N times horizontally and N times vertically,\n    where N is the factor by which the side length is multiplied.\n    How is N determined? \n    In all demos, the input is 3x3.\n    Demo 1: N=3\n    Demo 2: N=2\n    Demo 3: N=4\n    Demo 4: N=2\n    Demo 5: N=3\n    \n    Let's look at the values.\n    Demo 1: Max value is 9. N = 9 / 3 = 3.\n    Demo 2: Max value is 4. N = 4 / 2? No.\n    Actually, look at the input contents.\n    Demo 1: Max value is 9. N = 3.\n    Demo 2: Max value is 4. N = 2.\n    Demo 3: Max value is 8. N = 4.\n    Demo 4: Max value is 7. N = 2.\n    Demo 5: Max value is 3. N = 3.\n    \n    Wait, the number of repetitions N is simply (Max Value in Input) // 2?\n    Demo 1: 9 // 2 = 4 (No, N=3)\n    Demo 2: 4 // 2 = 2 (Yes, N=2)\n    Demo 3: 8 // 2 = 4 (Yes, N=4)\n    Demo 4: 7 // 2 = 3 (No, N=2)\n    Demo 5: 3 // 2 = 1 (No, N=3)\n    \n    Let's look at the input again.\n    Demo 1: Input 3x3. Output 9x9. N=3.\n    Demo 2: Input 3x3. Output 6x6. N=2.\n    Demo 3: Input 3x3. Output 12x12. N=4.\n    Demo 4: Input 3x3. Output 6x6. N=2.\n    Demo 5: Input 3x3. Output 9x9. N=3.\n    \n    Is N related to the number of unique colors?\n    Demo 1: Colors {9, 7, 6} (3 colors). N=3.\n    Demo 2: Colors {3, 4} (2 colors). N=2.\n    Demo 3: Colors {8, 2, 1, 3} (4 colors). N=4.\n    Demo 4: Colors {7, 2} (2 colors). N=2.\n    Demo 5: Colors {2, 3, 1} (3 colors). N=3.\n    \n    Yes! N = number of unique colors in the input grid.\n    \"\"\"\n    unique_colors = len(np.unique(grid))\n    \n    # The output is a tiling of the input grid N times horizontally and N times vertically\n    # where N is the number of unique colors.\n    # However, looking at the demos, the output size is (Input_Size * N) x (Input_Size * N).\n    \n    # Let's verify:\n    # Demo 1: 3 colors. Output 3*3 x 3*3 = 9x9.\n    # Demo 2: 2 colors. Output 3*2 x 3*2 = 6x6.\n    # Demo 3: 4 colors. Output 3*4 x 3*4 = 12x12.\n    # Demo 4: 2 colors. Output 3*2 x 3*2 = 6x6.\n    # Demo 5: 3 colors. Output 3*3 x 3*3 = 9x9.\n    \n    # The logic is:\n    # 1. Count unique colors in input. Let this be N.\n    # 2. Create a new grid by tiling the input N times horizontally and N times vertically.\n    \n    # Wait, there's a slight ambiguity. Is it N tiles or N total size?\n    # In all demos, the output is (Input_Width * N) x (Input_Height * N).\n    # This means the input is tiled N times in each direction.\n    \n    rows, cols = grid.shape\n    output = np.tile(grid, (unique_colors, unique_colors))\n    return output",
+        "code_len": 3282,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 6,
+        "local_s": 20.18,
+        "status": "graded",
+        "task": "a59b95c0"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The transformation rule is to tile the input grid horizontally and vertically.\n    The number of tiles is determined by the dimensions of the output.\n    \n    Looking at the demos:\n    Demo 1: 3x3 -> 9x9 (3x3 tiles)\n    Demo 2: 3x3 -> 6x6 (2x2 tiles)\n    Demo 3: 3x3 -> 12x12 (4x4 tiles)\n    Demo 4: 3x3 -> 6x6 (2x2 tiles)\n    Demo 5: 3x3 -> 9x9 (3x3 tiles)\n    \n    The number of tiles (N) is the output dimension divided by the input dimension.\n    Wait, the output dimension is always a multiple of the input dimension.\n    Let's check:\n    D1: 9/3 = 3 tiles\n    D2: 6/3 = 2 tiles\n    D3: 12/3 = 4 tiles\n    D4: 6/3 = 2 tiles\n    D5: 9/3 = 3 tiles\n    \n    The rule is: find a multiplier k such that Output = Input tiled k*k times.\n    Wait, looking at the examples again:\n    D1: 3x3 -> 9x9 (3x3 tiles)\n    D2: 3x3 -> 6x6 (2x2 tiles)\n    D3: 3x3 -> 12x12 (4x4 tiles)\n    D4: 3x3 -> 6x6 (2x2 tiles)\n    D5: 3x3 -> 9x9 (3x3 tiles)\n    \n    Actually, the pattern is simpler:\n    The output is a tiling of the input grid. \n    The number of repetitions is (Output_Dim // Input_Dim).\n    However, since the output dimensions are not provided in the input, \n    how do we know the multiplier?\n    \n    Let's re-examine the demos.\n    D1: 3x3 input, 9x9 output. Multiplier = 3.\n    D2: 3x3 input, 6x6 output. Multiplier = 2.\n    D3: 3x3 input, 12x12 output. Multiplier = 4.\n    D4: 3x3 input, 6x6 output. Multiplier = 2.\n    D5: 3x3 input, 9x9 output. Multiplier = 3.\n    \n    In all cases, the multiplier is the smallest integer k such that \n    the output size is (k * input_height) x (k * input_width).\n    Wait, the prompt doesn't give the output size. \n    Actually, in ARC, the rule is usually consistent. \n    Let's look at the input again. Is there a hint in the input?\n    D1: Max value 9? No.\n    \n    Wait, the multiplier is simply the number of times the grid is repeated.\n    How to find it?\n    D1: 9x9 / 3x3 = 3x3 tiles.\n    D2: 6x6 / 3x3 = 2x2 tiles.\n    D3: 12x12 / 3x3 = 4x4 tiles.\n    D4: 6x6 / 3x3 = 2x2 tiles.\n    D5: 9x9 / 3x3 = 3x3 tiles.\n    \n    Notice a pattern? \n    D1: Input has 3 unique values? No.\n    D1: Input has 3 rows?\n    D2: Input has 3 rows?\n    \n    Let's look at the grid values.\n    D1: 9, 7, 6. (3 colors)\n    D2: 3, 4. (2 colors)\n    D3: 8, 2, 1, 3. (4 colors)\n    D4: 7, 2. (2 colors)\n    D5: 2, 3, 1. (3 colors)\n    \n    The multiplier k = number of unique colors in the input grid!\n    D1: Colors {9, 7, 6} -> 3 colors. Multiplier 3. Output 3*3 x 3*3.\n    D2: Colors {3, 4} -> 2 colors. Multiplier 2. Output 2*3 x 2*3.\n    D3: Colors {8, 2, 1, 3} -> 4 colors. Multiplier 4. Output 4*3 x 4*3.\n    D4: Colors {7, 2} -> 2 colors. Multiplier 2. Output 2*3 x 2*3.\n    D5: Colors {2, 3, 1} -> 3 colors. Multiplier 3. Output 3*3 x 3*3.\n    \n    This fits perfectly!\n    \"\"\"\n    unique_colors = len(np.unique(grid))\n    k = unique_colors\n    \n    h, w = grid.shape\n    # Create a tiled array\n    # np.tile repeats the array k times along axis 0 and k times along axis 1\n    return np.tile(grid, (k, k))",
+        "code_len": 3091,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 7,
+        "local_s": 18.57,
+        "status": "graded",
+        "task": "a59b95c0"
+      }
+    ],
+    "ac3e2b04": [
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    output = grid.copy()\n    \n    # Identify all 3x3 regions that contain a 3x3 block of 3s with a 2 in the center\n    # or are part of a structure where 3s form a 3x3 area with a 2 in the middle.\n    # Looking at the demos, the rule is:\n    # For every 3x3 block of 3s (with a 2 in the center), \n    # we project a \"cross\" or \"diamond\" shape of 1s outwards.\n    # Actually, looking closer:\n    # The 3x3 block of 3s (with a 2 in the center) acts as a source.\n    # It generates a 5x5 diamond shape of 1s centered at the same position.\n    # The 2s in the input that are part of the 3x3 block's \"cross\" or \"diamond\" \n    # are preserved, and the empty spaces (0s) within that 5x5 diamond are filled with 1s.\n    \n    # Let's refine:\n    # 1. Find all 3x3 blocks where the perimeter is 3s and the center is 2.\n    # 2. For each such block, the center is at (r, c).\n    # 3. The 5x5 diamond area centered at (r, c) is filled with 1s, \n    #    except where there is a 2 (which is preserved).\n    \n    for r in range(rows - 2):\n        for c in range(cols - 2):\n            # Check if it's a 3x3 block of 3s with a 2 in the center\n            block = grid[r:r+3, c:c+3]\n            if np.all(block[0, :] == 3) and \\\n               np.all(block[1, 0] == 3) and \\\n               np.all(block[1, 2] == 3) and \\\n               np.all(block[2, :] == 3) and \\\n               block[1, 1] == 2:\n                \n                center_r, center_c = r + 1, c + 1\n                \n                # The diamond shape for a 5x5 area:\n                # Row offset: -2, -1, 0, 1, 2\n                # Col offset: depends on row offset\n                # Row -2: col 0\n                # Row -1: col -1, 0, 1\n                # Row  0: col -2, -1, 0, 1, 2\n                # Row  1: col -1, 0, 1\n                # Row  2: col  0\n                \n                diamond = [\n                    [(0,)], \n                    [(-1, 0, 1)], \n                    [(-2, -1, 0, 1, 2)], \n                    [(-1, 0, 1)], \n                    [(0,)]\n                ]\n                \n                for i, row_offsets in enumerate(diamond):\n                    curr_r = center_r + (i - 2)\n                    if 0 <= curr_r < rows:\n                        for col_offset in row_offsets:\n                            curr_c = center_c + col_offset\n                            if 0 <= curr_c < cols:\n                                # If it's 0, change to 1. If it's 2, keep it 2.\n                                if output[curr_r, curr_c] == 0:\n                                    output[curr_r, curr_c] = 1\n                                    \n    return output.tolist() if isinstance(grid[0][0], int) else output # Handle list/array return\n    # The prompt asks for a 2D numpy int array, but usually ARC expects a list of lists or array.\n    # Let's ensure it returns a numpy array as requested.\n    return np.array(output)\n\n# Re-writing to be strictly compliant with the \"return a 2D numpy int array\"\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    output = grid.copy()\n    \n    for r in range(rows - 2):\n        for c in range(cols - 2):\n            block = grid[r:r+3, c:c+3]\n            # Check for 3x3 block of 3s with a 2 in the center\n            if np.all(block[0, :] == 3) and \\\n               np.all(block[1, 0] == 3) and \\\n               np.all(block[1, 2] == 3) and \\\n               np.all(block[2, :] == 3) and \\\n               block[1, 1] == 2:\n                \n                center_r, center_c = r + 1, c + 1\n                diamond_offsets = [\n                    (0, 0), (0, 1), (0, -1),\n                    (1, 0), (1, 1), (1, -1), (1, 2), (1, -2),\n                    (2, 0), (2, 1), (2, -1),\n                    (-1, 0), (-1, 1), (-1, -1), (-1, 2), (-1, -2),\n                    (-2, 0), (-2, 1), (-2, -1)\n                ]\n                # Wait, the diamond shape is simpler:\n                # Distance from center (dr, dc) such that |dr| + |dc| <= 2\n                for dr in range(-2, 3):\n                    for dc in range(-2, 3):\n                        if abs(dr) + abs(dc) <= 2:\n                            curr_r, curr_c = center_r + dr, center_c + dc\n                            if 0 <= curr_r < rows and 0 <= curr_c < cols:\n                                if output[curr_r, curr_c] == 0:\n                                    output[curr_r, curr_c] = 1\n                                    \n    return output",
+        "code_len": 4535,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 25.9,
+        "status": "graded",
+        "task": "ac3e2b04"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 35.81,
+        "status": "no_code",
+        "task": "ac3e2b04"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 35.91,
+        "status": "no_code",
+        "task": "ac3e2b04"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 36.04,
+        "status": "no_code",
+        "task": "ac3e2b04"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 36.03,
+        "status": "no_code",
+        "task": "ac3e2b04"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 35.85,
+        "status": "no_code",
+        "task": "ac3e2b04"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 36.06,
+        "status": "no_code",
+        "task": "ac3e2b04"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 35.9,
+        "status": "no_code",
+        "task": "ac3e2b04"
+      }
+    ],
+    "b9630600": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 0.0,
+        "status": "no_code",
+        "task": "b9630600"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 0.0,
+        "status": "no_code",
+        "task": "b9630600"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 0.0,
+        "status": "no_code",
+        "task": "b9630600"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 0.0,
+        "status": "no_code",
+        "task": "b9630600"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 0.0,
+        "status": "no_code",
+        "task": "b9630600"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 0.0,
+        "status": "no_code",
+        "task": "b9630600"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 0.0,
+        "status": "no_code",
+        "task": "b9630600"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 0.0,
+        "status": "no_code",
+        "task": "b9630600"
+      }
+    ],
+    "be03b35f": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 30.21,
+        "status": "no_code",
+        "task": "be03b35f"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 30.01,
+        "status": "no_code",
+        "task": "be03b35f"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 30.16,
+        "status": "no_code",
+        "task": "be03b35f"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 29.87,
+        "status": "no_code",
+        "task": "be03b35f"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 30.11,
+        "status": "no_code",
+        "task": "be03b35f"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 29.96,
+        "status": "no_code",
+        "task": "be03b35f"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 29.82,
+        "status": "no_code",
+        "task": "be03b35f"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 29.98,
+        "status": "no_code",
+        "task": "be03b35f"
+      }
+    ],
+    "c3202e5a": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 39.19,
+        "status": "no_code",
+        "task": "c3202e5a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 37.86,
+        "status": "no_code",
+        "task": "c3202e5a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 37.74,
+        "status": "no_code",
+        "task": "c3202e5a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 37.79,
+        "status": "no_code",
+        "task": "c3202e5a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 37.8,
+        "status": "no_code",
+        "task": "c3202e5a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 37.66,
+        "status": "no_code",
+        "task": "c3202e5a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 37.77,
+        "status": "no_code",
+        "task": "c3202e5a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 37.93,
+        "status": "no_code",
+        "task": "c3202e5a"
+      }
+    ],
+    "c7d4e6ad": [
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule is to identify the color '5' and replace it with the color \n    of the nearest non-zero color (excluding '5' itself) that is \n    horizontally or vertically adjacent to the '5' shape.\n    \n    Looking at the demos:\n    Demo 1:\n    - The '5's are adjacent to '8's and '2's.\n    - The '5's at (2,5), (3,5), (4,3), (4,4), (4,5), (5,3), (6,3), (7,3), (7,4), (7,5), (7,6), (8,6)\n    - In the output, these '5's are replaced by the color of the object they are \"part of\" or \"near\".\n    - Actually, looking closer: the '5's are replaced by the color of the object they are spatially closest to.\n    - In Demo 1:\n        - The '5's at (2,5), (3,5), (4,3), (4,4), (4,5) are replaced by '8'.\n        - The '5's at (5,3), (6,3), (7,3), (7,4), (7,5), (7,6), (8,6) are replaced by '2'.\n    - In Demo 2:\n        - The '5's at (1,5), (2,5), (3,4), (3,5), (4,3), (4,4), (4,5), (5,3), (5,5), (6,5), (7,5), (8,4), (8,5)\n        - (1,5), (2,5), (3,4), (3,5), (4,3), (4,4), (4,5), (5,3), (5,5) are replaced by '9' or '6'.\n        - (6,5), (7,5) are replaced by '4'.\n        - (8,4), (8,5) are replaced by '4'.\n    \n    Refined Rule:\n    The '5's are replaced by the color of the nearest non-zero, non-5 color.\n    Distance is calculated as Manhattan distance.\n    \"\"\"\n    rows, cols = grid.shape\n    new_grid = grid.copy()\n    \n    # Find all non-zero, non-5 pixels\n    targets = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] != 0 and grid[r, c] != 5:\n                targets.append((r, c, grid[r, c]))\n                \n    # For every pixel that is 5, find the nearest target\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 5:\n                min_dist = float('inf')\n                best_color = 5\n                for tr, tc, color in targets:\n                    dist = abs(r - tr) + abs(c - tc)\n                    if dist < min_dist:\n                        min_dist = dist\n                        best_color = color\n                    elif dist == min_dist:\n                        # If distances are equal, usually the one with smaller row/col or just first found\n                        pass\n                new_grid[r, c] = best_color\n                \n    return new_grid",
+        "code_len": 2298,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 0,
+        "local_s": 11.94,
+        "status": "graded",
+        "task": "c7d4e6ad"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule is to identify the color 5, which acts as a \"template\" or \"mask\".\n    The colors surrounding or adjacent to the 5s are replaced by the color \n    that is \"corresponding\" to them.\n    \n    Looking at the demos:\n    In Demo 1:\n    - Color 8 is at (2,0), (3,0), (4,0). Color 5 is at (2,5), (3,5), (4,4), (4,5), (5,3), (7,3), (7,4), (7,5), (7,6), (8,6).\n    - The output shows that the color 8 is placed where the color 5 was.\n    - The color 2 is placed where the color 5 was in the second cluster.\n    \n    Wait, a simpler rule:\n    The color 5 is replaced by the color of the \"nearest\" non-zero color \n    that is not 5.\n    \n    Let's re-examine:\n    Demo 1:\n    - Color 8 is at (2,0), (3,0), (4,0).\n    - Color 5 is at (2,5), (3,5), (4,4), (4,5), (5,3), (7,3), (7,4), (7,5), (7,6), (8,6).\n    - In the output, the 5s at (2,5), (3,5), (4,4), (4,5) become 8s.\n    - The 5s at (5,3), (7,3), (7,4), (7,5), (7,6), (8,6) become 2s.\n    \n    This suggests that the 5s are replaced by the color of the nearest \n    non-zero color (excluding 5).\n    \n    Let's check Demo 2:\n    - Color 9 is at (1,0), (2,0). 5s at (1,5), (2,5) become 9s.\n    - Color 6 is at (3,0), (4,0), (5,0). 5s at (3,4), (3,5), (4,3), (4,4), (4,5), (5,4), (5,5) become 6s.\n    - Color 4 is at (6,0), (7,0), (8,0). 5s at (6,5), (7,5), (8,4), (8,5) become 4s.\n    \n    Rule: For every cell containing 5, replace it with the color of the \n    closest non-zero, non-5 cell.\n    \"\"\"\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    output = grid.copy()\n    \n    # Find all non-zero, non-5 cells\n    targets = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] != 0 and grid[r, c] != 5:\n                targets.append((r, c, grid[r, c]))\n                \n    # For every cell that is 5, find the closest target\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 5:\n                min_dist = float('inf')\n                best_color = 5\n                for tr, tc, color in targets:\n                    dist = (r - tr)**2 + (c - tc)**2\n                    if dist < min_dist:\n                        min_dist = dist\n                        best_color = color\n                output[r, c] = best_color\n                \n    return output.tolist() if isinstance(grid[0][0], int) else output # Handle input type\n    # The prompt says return a 2D numpy int array.\n    # Let's ensure it returns a numpy array.\n    return np.array(output)\n\n# Correction: The prompt asks for a numpy array.\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    output = grid.copy()\n    \n    targets = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] != 0 and grid[r, c] != 5:\n                targets.append((r, c, grid[r, c]))\n                \n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 5:\n                min_dist = float('inf')\n                best_color = 5\n                for tr, tc, color in targets:\n                    dist = (r - tr)**2 + (c - tc)**2\n                    if dist < min_dist:\n                        min_dist = dist\n                        best_color = color\n                output[r, c] = best_color\n                \n    return output",
+        "code_len": 3333,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 1,
+        "local_s": 17.12,
+        "status": "graded",
+        "task": "c7d4e6ad"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule is to identify the color '5' as a \"template\" or \"mask\".\n    Every cell that has color '5' in the input grid should be replaced \n    by the color of the non-zero object it belongs to.\n    \n    Looking at the demos:\n    In Demo 1:\n    - The 8s are at (2,0), (3,0), (4,0).\n    - The 5s are at (2,5), (3,5), (4,3), (4,4), (4,5), (5,3), (6,3), (7,3), (7,4), (7,5), (7,6), (8,6).\n    - The 2s are at (5,0), (6,0), (7,0), (8,0).\n    \n    Wait, a simpler observation:\n    The color '5' is being replaced by the color of the nearest non-zero color \n    that is NOT '5'.\n    \n    Let's re-examine:\n    In Demo 1:\n    - The 5s at (2,5) and (3,5) are replaced by 8.\n    - The 5s at (4,3), (4,4), (4,5) are replaced by 8.\n    - The 5s at (5,3), (6,3), (7,3), (7,4), (7,5), (7,6) are replaced by 2.\n    - The 5 at (8,6) is replaced by 2.\n    \n    Actually, it looks like the grid is divided into regions by the 5s.\n    Or more simply: The 5s are replaced by the color of the closest non-zero color \n    (excluding 5 itself).\n    \n    Let's check Demo 2:\n    - 5s at (1,5), (2,5) replaced by 9.\n    - 5s at (3,4), (3,5), (4,3), (4,4), (4,5), (5,3), (5,5) replaced by 6.\n    - 5s at (6,5), (7,5), (8,4), (8,5) replaced by 4.\n    \n    Rule: For every cell where grid[r, c] == 5, replace it with the color of the \n    nearest non-zero cell (where color != 5).\n    \"\"\"\n    rows, cols = grid.shape\n    output = grid.copy()\n    \n    # Find all non-5 non-zero cells\n    targets = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] != 0 and grid[r, c] != 5:\n                targets.append((r, c, grid[r, c]))\n                \n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 5:\n                min_dist = float('inf')\n                best_color = 0\n                for tr, tc, color in targets:\n                    dist = (r - tr)**2 + (c - tc)**2\n                    if dist < min_dist:\n                        min_dist = dist\n                        best_color = color\n                output[r, c] = best_color\n                \n    return output",
+        "code_len": 2156,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 2,
+        "local_s": 11.39,
+        "status": "graded",
+        "task": "c7d4e6ad"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule identifies objects (connected components of non-zero colors).\n    In both examples, there is a 'template' or 'skeleton' formed by color 5.\n    The other colors (8, 2, 9, 6, 4) are positioned relative to this skeleton.\n    Specifically, the color 5 represents a set of positions that are replaced \n    by the color of the nearest non-zero, non-5 object.\n    \n    Looking closer at the demos:\n    Demo 1:\n    - Color 8 is at (2,0), (3,0), (4,0)\n    - Color 2 is at (5,0), (6,0), (7,0), (8,0)\n    - Color 5 is at (2,5), (3,5), (4,3), (4,4), (4,5), (5,3), (6,3), (7,3), (7,4), (7,5), (8,6)\n    In the output, the positions of color 5 are replaced by the color of the \n    closest non-5 object.\n    \n    Actually, a simpler rule:\n    The color 5 acts as a \"placeholder\" or \"mask\". \n    Every cell that was color 5 in the input is replaced by the color of the \n    closest non-zero, non-5 color in the input.\n    \"\"\"\n    rows, cols = grid.shape\n    output = grid.copy()\n    \n    # Find all non-zero, non-5 cells\n    targets = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] != 0 and grid[r, c] != 5:\n                targets.append((r, c, grid[r, c]))\n    \n    # For every cell that is 5, find the closest target\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 5:\n                min_dist = float('inf')\n                best_color = 5\n                for tr, tc, color in targets:\n                    dist = (r - tr)**2 + (c - tc)**2\n                    if dist < min_dist:\n                        min_dist = dist\n                        best_color = color\n                output[r, c] = best_color\n                \n    return output",
+        "code_len": 1762,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 3,
+        "local_s": 7.83,
+        "status": "graded",
+        "task": "c7d4e6ad"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule is to identify the color 5 (gray) and replace it with the \n    color of the nearest non-zero, non-five color object.\n    \n    In Demo 1:\n    - The 5s near the 8s (top left) become 8s.\n    - The 5s near the 2s (bottom left) become 2s.\n    \n    In Demo 2:\n    - The 5s near the 9s (top left) become 9s.\n    - The 5s near the 6s (middle left) become 6s.\n    - The 5s near the 4s (bottom left) become 4s.\n    \n    Looking closely at the structure, the 5s are being replaced by the \n    color of the \"object\" they are associated with. In both demos, \n    the 5s form a shape that is \"mirrored\" or \"paired\" with a shape \n    of a different color. \n    \n    Actually, a simpler rule: Every pixel with value 5 is replaced by the \n    color of the nearest non-zero, non-five pixel.\n    \"\"\"\n    grid = np.array(grid)\n    output = grid.copy()\n    rows, cols = grid.shape\n    \n    # Find all non-zero, non-five pixels\n    targets = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] != 0 and grid[r, c] != 5:\n                targets.append((r, c, grid[r, c]))\n    \n    # For every 5, find the closest target\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 5:\n                min_dist = float('inf')\n                best_color = 5\n                for tr, tc, color in targets:\n                    dist = (r - tr)**2 + (c - tc)**2\n                    if dist < min_dist:\n                        min_dist = dist\n                        best_color = color\n                output[r, c] = best_color\n                \n    return output.tolist()\n\n# Since the prompt asks for a function returning a 2D numpy int array \n# and the input is a 2D numpy int array, I will adjust the return type.\ndef transform(grid):\n    grid = np.array(grid)\n    output = grid.copy()\n    rows, cols = grid.shape\n    \n    targets = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] != 0 and grid[r, c] != 5:\n                targets.append((r, c, grid[r, c]))\n    \n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 5:\n                min_dist = float('inf')\n                best_color = 5\n                for tr, tc, color in targets:\n                    dist = (r - tr)**2 + (c - tc)**2\n                    if dist < min_dist:\n                        min_dist = dist\n                        best_color = color\n                output[r, c] = best_color\n                \n    return output",
+        "code_len": 2546,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 4,
+        "local_s": 11.0,
+        "status": "graded",
+        "task": "c7d4e6ad"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The rule is to identify the color 5 (which acts as a 'template' or 'filler') \n    and replace it with the color of the object it is associated with.\n    \n    Looking at the demos:\n    - In Demo 1, there are three distinct vertical-ish shapes (colors 8, 2, and 5).\n      The color 5 is replaced by the color of the shape it is geometrically \n      aligned with or closest to. Specifically, it seems to be replaced by the \n      color of the shape that shares its relative position or \"partner\" shape.\n    \n    Actually, looking closer at the transformation:\n    The color 5 is replaced by the color of the shape that is \"mirrored\" or \n    \"complementary\" to it.\n    In Demo 1:\n    - Shape 8 (left) and Shape 5 (middle/right) are related.\n    - Shape 2 (left) and Shape 5 (middle/right) are related.\n    Wait, the simplest rule:\n    The color 5 is replaced by the color of the shape that is \"opposite\" to it \n    horizontally or vertically.\n    \n    Let's re-examine:\n    Demo 1:\n    - Color 8 is at col 0. Color 5 is at col 5.\n    - Color 2 is at col 0. Color 5 is at col 3-6.\n    - The color 5 is replaced by the color of the shape on the far left (8 and 2).\n    \n    Wait, looking at the output:\n    In Demo 1, the 5s become 8s where they were next to the 8-shape, \n    and they become 2s where they were next to the 2-shape.\n    \n    Actually, it's even simpler: \n    The color 5 is replaced by the color of the shape that is \"parallel\" to it.\n    In both demos, there are two main shapes (e.g., 8 and 2 in Demo 1, 9, 6, 4 in Demo 2)\n    and a set of 5s. The 5s are replaced by the color of the shape they are \n    aligned with vertically or horizontally.\n    \n    Let's look at the coordinates of 5s and the colors of other shapes.\n    In Demo 1:\n    5s are at (2,5), (3,5), (4,3), (4,4), (4,5), (5,3), (6,3), (7,3), (7,4), (7,5), (7,6), (8,6).\n    The shape 8 is at (2,0), (3,0), (4,0).\n    The shape 2 is at (5,0), (6,0), (7,0), (8,0).\n    \n    Looking at the output:\n    The 5s at (2,5), (3,5), (4,3), (4,4), (4,5) became 8s.\n    The 5s at (5,3), (6,3), (7,3), (7,4), (7,5), (7,6), (8,6) became 2s.\n    \n    Rule: For each 5, find the nearest non-zero color (excluding 5 itself).\n    Replace 5 with that color.\n    \"\"\"\n    rows, cols = grid.shape\n    new_grid = grid.copy()\n    \n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 5:\n                min_dist = float('inf')\n                best_color = 0\n                for dr in range(-3, 4):\n                    for dc in range(-3, 4):\n                        nr, nc = r + dr, c + dc\n                        if 0 <= nr < rows and 0 <= nc < cols:\n                            color = grid[nr, nc]\n                            if color != 0 and color != 5:\n                                dist = abs(dr) + abs(dc)\n                                if dist < min_dist:\n                                    min_dist = dist\n                                    best_color = color\n                                elif dist == min_dist:\n                                    # If same distance, prefer the one with smaller row index\n                                    pass \n                new_grid[r, c] = best_color\n                \n    return new_grid",
+        "code_len": 3285,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 14.97,
+        "status": "graded",
+        "task": "c7d4e6ad"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    output = grid.copy()\n    rows, cols = grid.shape\n    \n    for r in range(rows):\n        source_color = None\n        # Find the leftmost color that is NOT 0 and NOT 5\n        for c in range(cols):\n            if grid[r, c] != 0 and grid[r, c] != 5:\n                source_color = grid[r, c]\n                break\n        \n        if source_color is not None:\n            for c in range(cols):\n                if grid[r, c] == 5:\n                    output[r, c] = source_color\n                    \n    return output",
+        "code_len": 585,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 6,
+        "local_s": 23.97,
+        "status": "graded",
+        "task": "c7d4e6ad"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The transformation rule is to replace all occurrences of the color 5 \n    with the color of the nearest non-zero neighbor (excluding 5 itself).\n    In both examples, the color 5 acts as a placeholder/template that \n    is filled by the surrounding distinct colors.\n    \n    Looking closely at the demos:\n    Demo 1: \n    - 8s are at (2,0), (3,0), (4,0)\n    - 2s are at (5,0), (6,0), (7,0), (8,0)\n    - 5s are at (2,5), (3,5), (4,3-5), (5,3), (6,3), (7,3-6), (8,6)\n    - In Output, 5s at col 5 become 8s.\n    - In Output, 5s at col 3 become 2s.\n    - In Output, 5s at col 6 become 2s.\n    \n    Actually, a simpler rule:\n    The color 5 is replaced by the color of the object it is 'attached' to \n    or is part of the same shape. \n    In Demo 1:\n    - The 5s at (2,5), (3,5) are adjacent to 8s? No, they are at col 5. \n      The 8s are at col 0.\n    - Wait, the 5s are replaced by the color of the shape they are 'filling' \n      or are associated with. \n      In Demo 1, the 8s are at (2,0) and the 5s at (2,5) become 8s.\n      The 2s are at (5,0) and the 5s at (5,3) become 2s.\n    \n    Let's re-examine:\n    In Demo 1:\n    - (2,0), (3,0), (4,0) are 8s.\n    - (2,5), (3,5), (4,3), (4,4), (4,5), (5,3), (6,3), (7,3), (7,4), (7,5), (7,6), (8,6) are 5s.\n    - Output: (2,5), (3,5), (4,3), (4,4), (4,5) become 8s.\n    - Output: (5,3), (6,3), (7,3), (7,4), (7,5), (8,6) become 2s.\n    \n    In Demo 2:\n    - 9s at (1,0), (2,0). 5s at (1,5), (2,5), (3,4), (3,5), (4,3), (4,4), (4,5), (5,3), (5,5), (6,5), (7,5), (8,4), (8,5).\n    - Output: 5s at (1,5), (2,5) become 9s.\n    - Output: 5s at (3,4), (3,5), (4,3), (4,4), (4,5), (5,3), (5,5) become 6s.\n    - Output: 5s at (6,5), (7,5), (8,4), (8,5) become 4s.\n    \n    Rule:\n    The grid contains several 'objects' of different colors (not 5).\n    The color 5 is replaced by the color of the object it is 'paired' with.\n    In both cases, there are 3 objects (colors).\n    Object 1 (top) -> replaces 5s in the top part of the 5-block.\n    Object 2 (middle) -> replaces 5s in the middle part of the 5-block.\n    Object 3 (bottom) -> replaces 5s in the bottom part of the 5-block.\n    \n    Actually, looking at the coordinates:\n    The 5s are replaced by the color of the non-zero block that is 'horizontally' \n    aligned with them or closest to them.\n    \n    Let's try a simpler approach:\n    For every 5, find the closest non-zero, non-5 color.\n    Demo 1:\n    (2,5) closest non-5 is (2,0) which is 8.\n    (5,3) closest non-5 is (5,0) which is 2.\n    (8,6) closest non-5 is (8,0) which is 2.\n    \n    Demo 2:\n    (1,5) closest non-5 is (1,0) which is 9.\n    (3,4) closest non-5 is (3,0) which is 6.\n    (6,5) closest non-5 is (6,0) which is 4.\n    \n    This fits!\n    \"\"\"\n    grid = np.array(grid)\n    output = grid.copy()\n    rows, cols = grid.shape\n    \n    # Find all non-zero, non-5 pixels\n    targets = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] != 0 and grid[r, c] != 5:\n                targets.append((r, c, grid[r, c]))\n                \n    # For every 5, find the nearest target\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] == 5:\n                min_dist = float('inf')\n                best_color = 5\n                for tr, tc, color in targets:\n                    dist = (r - tr)**2 + (c - tc)**2\n                    if dist < min_dist:\n                        min_dist = dist\n                        best_color = color\n                output[r, c] = best_color\n                \n    return output.tolist()",
+        "code_len": 3592,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 7,
+        "local_s": 21.02,
+        "status": "graded",
+        "task": "c7d4e6ad"
+      }
+    ],
+    "f0df5ff0": [
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    output = grid.copy()\n    \n    # The rule identifies 3x3 blocks of zeros (or near-zeros) \n    # and fills them with the color 1.\n    # Looking at the demos, it seems to be specifically 3x3 blocks \n    # of 0s that are \"surrounded\" or \"adjacent\" to existing colors.\n    # Actually, looking closer at Demo 1, 2, and 3:\n    # The transformation fills 3x3 areas of 0s with the color 1.\n    # Let's check the coordinates.\n    \n    # Demo 1: \n    # (3,5) to (5,7) is a 3x3 block of 0s in input, becomes 1s in output.\n    # (6,0) to (8,2) is a 3x3 block of 0s in input, becomes 1s in output.\n    # (9,7) to (11,9) is a 3x3 block of 0s in input, becomes 1s in output.\n    # (12,7) to (14,9) is a 3x3 block of 0s in input, becomes 1s in output.\n    # (12,10) to (14,12) is a 3x3 block of 0s in input, becomes 1s in output.\n    \n    # The pattern is: find 3x3 blocks of 0s and fill them with 1.\n    # However, we must be careful not to overlap or fill if it's not a perfect 3x3.\n    # Let's re-examine Demo 2:\n    # (1,2) to (3,4) is 3x3 of 0s -> filled with 1s.\n    # (2,6) to (4,8) is 3x3 of 0s -> filled with 1s.\n    # (10,2) to (12,4) is 3x3 of 0s -> filled with 1s.\n    # (12,7) to (14,9) is 3x3 of 0s -> filled with 1s.\n    # (12,10) to (14,12) is 3x3 of 0s -> filled with 1s.\n    \n    # Let's re-examine Demo 3:\n    # (2,12) to (4,14) is 3x3 of 0s -> filled with 1s.\n    # (3,0) to (5,2) is 3x3 of 0s -> filled with 1s.\n    # (7,5) to (9,7) is 3x3 of 0s -> filled with 1s.\n    # (9,12) to (11,14) is 3x3 of 0s -> filled with 1s.\n    \n    # It seems the rule is: Find every 3x3 block of 0s and change them to 1s.\n    # Let's check if there are any constraints. \n    # In Demo 1, (3,5) to (5,7) is a 3x3 block of 0s.\n    # In Demo 1, (0,1) to (2,3) is NOT a 3x3 block of 0s (contains 3, 2, 2, 3).\n    \n    # Let's try the 3x3 block of 0s rule.\n    for r in range(rows - 2):\n        for c in range(cols - 2):\n            # Check if the 3x3 block starting at (r, c) is all zeros\n            block = grid[r:r+3, c:c+3]\n            if np.all(block == 0):\n                output[r:r+3, c:c+3] = 1\n                \n    return output",
+        "code_len": 2219,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 16.97,
+        "status": "graded",
+        "task": "f0df5ff0"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 36.23,
+        "status": "no_code",
+        "task": "f0df5ff0"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 36.0,
+        "status": "no_code",
+        "task": "f0df5ff0"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 36.04,
+        "status": "no_code",
+        "task": "f0df5ff0"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    output = grid.copy()\n    \n    # The rule identifies 3x3 blocks of 0s that are adjacent to a 1 or \n    # are surrounded by a specific context. \n    # Looking at Demo 1:\n    # (3,5) to (5,7) is a 3x3 block of 0s. In output, it becomes 1s.\n    # (6,0) to (8,2) is a 3x3 block of 0s. In output, it becomes 1s.\n    # (9,7) to (11,9) is a 3x3 block of 0s. In output, it becomes 1s.\n    # (12,7) to (14,9) is a 3x3 block of 0s. In output, it becomes 1s.\n    # (12,10) to (14,12) is a 3x3 block of 0s. In output, it becomes 1s.\n    \n    # Looking at Demo 2:\n    # (1,2) to (3,4) is a 3x3 block of 0s. In output, it becomes 1s.\n    # (11,2) to (13,4) is a 3x3 block of 0s. In output, it becomes 1s.\n    # (12,7) to (14,9) is a 3x3 block of 0s. In output, it becomes 1s.\n    # (12,10) to (14,12) is a 3x3 block of 0s. In output, it becomes 1s.\n    \n    # Looking at Demo 3:\n    # (2,12) to (4,14) is a 3x3 block of 0s. In output, it becomes 1s.\n    # (5,0) to (7,2) is a 3x3 block of 0s. In output, it becomes 1s.\n    # (7,5) to (9,7) is a 3x3 block of 0s. In output, it becomes 1s.\n    # (9,8) to (11,10) is a 3x3 block of 0s. In output, it becomes 1s.\n    # (12,1) to (14,3) is a 3x3 block of 0s. In output, it becomes 1s.\n    # (12,7) to (14,9) is a 3x3 block of 0s. In output, it becomes 1s.\n    \n    # Rule: Identify 3x3 blocks of zeros. \n    # If a 3x3 block of zeros is adjacent to at least one '1' (either inside or outside), \n    # or if it's a specific set of blocks. \n    # Actually, looking closer: a 3x3 block of zeros is filled with 1s if \n    # it is \"surrounded\" or \"near\" a non-zero value in a way that it forms a \n    # distinct 3x3 region.\n    \n    # Let's try a simpler rule: Find all 3x3 blocks of 0s. \n    # If a 3x3 block of 0s is completely surrounded by non-zero values \n    # (or the boundary), fill it with 1s.\n    \n    for r in range(rows - 2):\n        for c in range(cols - 2):\n            # Check if 3x3 block is all zeros\n            block = grid[r:r+3, c:c+3]\n            if np.all(block == 0):\n                # Check neighbors\n                is_surrounded = True\n                # Check 4-connectivity or 8-connectivity? \n                # Let's check if any neighbor is non-zero.\n                # Actually, the rule seems to be: if a 3x3 block of 0s \n                # is \"isolated\" or \"contained\".\n                \n                # Let's re-examine Demo 1:\n                # (3,5) to (5,7) is 3x3 zeros. Neighbors:\n                # (2,4),(2,5),(2,6),(2,7),(2,8) -> 0,0,0,7,0\n                # (3,4) -> 2, (3,8) -> 0, (4,4) -> 0, (4,8) -> 8, (5,4) -> 2, (5,8) -> 7\n                # (6,5),(6,6),(6,7) -> 0,3,0\n                # It's surrounded by 2, 0, 0, 8, 2, 7, 0, 3, 0.\n                \n                # Let's try: if a 3x3 block of 0s has at least one non-zero \n                # neighbor in the 1-pixel perimeter.\n                \n                # Actually, the simplest rule that fits all:\n                # A 3x3 block of 0s is filled with 1s if it is \"enclosed\" \n                # by non-zero values or the boundary.\n                \n                # Let's try: if a 3x3 block of 0s is filled with 1s \n                # if it's NOT adjacent to any other 0s that are part of a \n                # larger 0-region.\n                \n                # Let's try a different approach:\n                # A 3x3 block of 0s is filled with 1s if it's a \n                # \"hole\" in the non-zero structure.\n                pass\n\n    # Re-evaluating: In all demos, the 3x3 blocks of 0s that are filled \n    # are those that are completely surrounded by non-zero values.\n    \n    for r in range(rows - 2):\n        for c in range(cols - 2):\n            block = grid[r:r+3, c:c+3]\n            if np.all(block == 0):\n                # Check perimeter\n                surrounded = True\n                # Perimeter coordinates\n                perimeter = []\n                for i in range(3):\n                    for j in range(3):\n                        # Check neighbors of the 3x3 block\n                        # This is slightly complex. Let's simplify.\n                        pass\n                \n                # Let's try the \"isolated 3x3 block of zeros\" rule.\n                # A block of 3x3 zeros is filled if all its \n                # immediate neighbors (8-connectivity) are non-zero.\n                \n                is_isolated = True\n                for i in range(r-1, r+4):\n                    for j in range(c-1, c+4):\n                        if i < 0 or i >= rows or j < 0 or j >= cols:\n                            continue\n                        if i >= r and i < r+3 and j >= c and j < c+3:\n                            continue\n                        if grid[i, j] == 0:\n                            is_isolated = False\n                            break\n                    if not is_isolated: break\n                \n                if is_isolated:\n                    output[r:r+3, c:c+3] = 1\n                    \n    return output.tolist()\n\n# Refined logic: The 3x3 blocks of zeros are filled with 1s if \n# they are surrounded by non-zero values.\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    res = grid.copy()\n    \n    for r in range(rows - 2):\n        for c in range(cols - 2):\n            # Check if 3x3 block is all zeros\n            if np.all(grid[r:r+3, c:c+3] == 0):\n                # Check if all surrounding cells are non-zero\n                surrounded = True\n                for i in range(r-1, r+4):\n                    for j in range(c-1, c+4):\n                        if i < 0 or i >= rows or j < 0 or j >= cols:\n                            continue\n                        if r <= i < r+3 and c <= j < c+3:\n                            continue\n                        if grid[i, j] == 0:\n                            surrounded = False\n                            break\n                    if not surrounded: break\n                \n                if surrounded:\n                    res[r:r+3, c:c+3] = 1\n                    \n    return res.tolist()",
+        "code_len": 6148,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 36.21,
+        "status": "graded",
+        "task": "f0df5ff0"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 36.11,
+        "status": "no_code",
+        "task": "f0df5ff0"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 36.04,
+        "status": "no_code",
+        "task": "f0df5ff0"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 36.04,
+        "status": "no_code",
+        "task": "f0df5ff0"
+      }
+    ],
+    "f3e62deb": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 36.46,
+        "status": "no_code",
+        "task": "f3e62deb"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 35.3,
+        "status": "no_code",
+        "task": "f3e62deb"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 35.26,
+        "status": "no_code",
+        "task": "f3e62deb"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 35.46,
+        "status": "no_code",
+        "task": "f3e62deb"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 35.37,
+        "status": "no_code",
+        "task": "f3e62deb"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 35.46,
+        "status": "no_code",
+        "task": "f3e62deb"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 35.42,
+        "status": "no_code",
+        "task": "f3e62deb"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 35.48,
+        "status": "no_code",
+        "task": "f3e62deb"
+      }
     ]
   }
 }
