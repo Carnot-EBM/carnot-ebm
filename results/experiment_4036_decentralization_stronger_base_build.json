@@ -1,0 +1,44 @@
+{
+  "build_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4036_decentralization_stronger_base_build.json",
+  "duration_s": 60.21,
+  "experiment": "experiment_4036_decentralization_stronger_base_build",
+  "full_k_samples_per_task": 8,
+  "full_time_budget_s": 4500.0,
+  "honest_verdict": "success: decentralization_stronger_base_runner_launched_Gemma4-31B-it",
+  "inference_substrate": "live_llm_inference",
+  "launch_command": "nohup /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_4037_decentralization_stronger_base_best_of_n.py --model gemma31 --k 8 --max-wall-s 4500.0 --n-ctx 16384 --output /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4037_decentralization_stronger_base_raw.json --checkpoint /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4037_decentralization_stronger_base_raw.checkpoint.json > /home/ianblenke/github.com/ianblenke/carnot/logs/decentralization_run.log 2>&1 &",
+  "launched_pid": 2762394,
+  "model_specs": {
+    "comparator_exp4012_model": "gemma-4-12B",
+    "generator_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+    "generator_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+    "generator_model": "Gemma4-31B-it",
+    "selection_note": "preferred cached faster stronger base for ARC code emission",
+    "verifier": "model-free: demo-fit exact-reproduction gate + restricted-namespace execution + min-hamming snap + content-hash candidate match"
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "stronger_base_gguf_cached",
+      "selected_model": "Gemma4-31B-it"
+    },
+    {
+      "available": true,
+      "resource": "llama_cpp"
+    },
+    {
+      "available": true,
+      "resource": "exp4012_arc1_pool_and_verifier_primitives"
+    }
+  ],
+  "random_seed": 12345,
+  "raw_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4037_decentralization_stronger_base_raw.json",
+  "reproducibility_checksum": "1c0ea39b031d1425",
+  "runner_ready": true,
+  "schema": "carnot.experiment_4036_decentralization_stronger_base_build.v1",
+  "smoke_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4037_decentralization_stronger_base_smoke.json",
+  "smoke_best_of_n_coverage": 0.5,
+  "smoke_passed": true,
+  "stronger_base_model": "Gemma4-31B-it",
+  "title": "Decentralization stronger-base runner build and launch gate"
+}

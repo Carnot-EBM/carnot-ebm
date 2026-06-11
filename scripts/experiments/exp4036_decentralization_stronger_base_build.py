@@ -203,7 +203,7 @@ def make_launch_spec(
 
 def launch_background(spec: LaunchSpec) -> int:  # pragma: no cover - exercised by operator run.
     spec.log_path.parent.mkdir(parents=True, exist_ok=True)
-    log_handle = spec.log_path.open("ab")
+    log_handle = spec.log_path.open("wb")
     proc = subprocess.Popen(
         spec.argv,
         cwd=REPO_ROOT,
