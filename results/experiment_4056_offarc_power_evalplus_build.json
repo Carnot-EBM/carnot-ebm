@@ -1,0 +1,61 @@
+{
+  "arms_implemented": [
+    "armA_vote",
+    "armAplusplus_aces",
+    "armB_demofit",
+    "armC_symbolic_equivalence_partition"
+  ],
+  "duration_s": 8.12,
+  "error": "ValueError: Exceeds the limit (4300 digits) for integer string conversion; use sys.set_int_max_str_digits() to increase the limit",
+  "evaluation_corpus": "EvalPlus HumanEval+/MBPP+ hidden tests",
+  "experiment": "experiment_4056_offarc_power_evalplus_build",
+  "field_principles": {
+    "evaluation_corpus": "EvalPlus hidden tests are the unsaturated corpus fix.",
+    "honest_verdict": "Terminal-prefix build verdict; blocked resources stop before inference.",
+    "launched_pid": "Bare int; Exp 4057 polls the process owning this run.",
+    "resumed_from_n": "Bare int count from the Exp 4045 candidate-generation checkpoint.",
+    "runner_ready": "Bare bool; the COLLECT task gates on this value.",
+    "smoke_oracle_headroom_present": "Bare bool; oracle<1.0 catches saturation before claims.",
+    "smoke_passed": "Bare bool; a failed two-task smoke must not launch the full run.",
+    "stable_checkpoint_path": "Corpus+model+k-keyed checkpoint accumulates across windows."
+  },
+  "honest_verdict": "blocked_smoke_failed",
+  "inference_substrate": "live_llm_inference",
+  "launched_pid": 0,
+  "log_path": "/home/ianblenke/github.com/ianblenke/carnot/logs/offarc_power_evalplus.log",
+  "needs_harder_corpus_livecodebench": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
+      "resource": "local_gguf_cached"
+    },
+    {
+      "available": true,
+      "resource": "llama_cpp_importable"
+    },
+    {
+      "available": true,
+      "detail": "loaded=2 skipped=0",
+      "resource": "evalplus_humaneval_plus_loadable"
+    },
+    {
+      "available": true,
+      "detail": "loaded=2 skipped=0",
+      "resource": "evalplus_mbpp_plus_loadable"
+    },
+    {
+      "available": true,
+      "resource": "restricted_exec_importable"
+    }
+  ],
+  "raw_output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4057_offarc_power_evalplus_raw.json",
+  "resumed_from_n": 23,
+  "runner_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/offarc_power_evalplus_run.py",
+  "runner_ready": true,
+  "schema": "carnot.experiment_4056_offarc_power_evalplus_build.v1",
+  "smoke_oracle_headroom_present": false,
+  "smoke_passed": false,
+  "smoke_raw_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4056_offarc_power_evalplus_smoke_raw.json",
+  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/offarc_power_evalplus_gemma12b_k8.checkpoint.json"
+}
