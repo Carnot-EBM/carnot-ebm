@@ -22228,3 +22228,44 @@ Sources (this sweep): arxiv.org/abs/2408.13745 (DOCE); arxiv.org/abs/2604.03922 
 arxiv.org/abs/2604.06485 (symbolic equivalence partitioning); arxiv.org/abs/2602.04254 (agentic
 verifier coding); arxiv.org/abs/2504.09643 (reinforced re-ranking); arxiv.org/abs/2604.03208 (HWM);
 arxiv.org/abs/2506.07255 (subgoal-guided PHS); arxiv.org/abs/2504.04366 (Sokoban HRL landmarks).
+
+## 2026-06-11 Post-.375 Planning Sweep (Milestone 2026.06.376)
+
+**Planning agent (Claude Opus 4.8). Theme: the off-ARC + sovereign-base powering runs
+have failed to MEASURE for 3 milestones (.373/.374/.375) — not on the science, on the
+split-BUILD-background-COLLECT MECHANISM (the .375 off-ARC build was `blocked_smoke_failed`
+with `launched_pid=0`, accumulated N=0; the MoE build codex-1202s-timed-out and shipped a
+poison test that cascade-SKIPPED 3 tasks). .376 replaces that mechanism with a single
+synchronous bounded-batch resume-accumulate runner. Two confirmatory findings for the
+re-architected runs:**
+
+- **Corpus headroom for the off-ARC transfer (exp4068) — LiveCodeBench v6 is the right
+  EvalPlus escalation.** Web-confirmed (2026-06): LiveCodeBench v6 (contamination-free,
+  contest-sourced) nears saturation for FRONTIER models (DeepSeek V4 Pro 93.5%, top cluster
+  within ~1.9 pts) — BUT the off-ARC transfer measurement induces with a LOCAL gemma-4-12B,
+  which is nowhere near that ceiling, so a local 12B has LARGE oracle headroom on LiveCodeBench
+  v6. This is the fix for the .375 `smoke_oracle_headroom_present:false` on EvalPlus: HEADROOM-
+  ROUTE (EvalPlus → LiveCodeBench v6 if the 12B is saturated/erroring on EvalPlus), never block
+  the whole measurement on a saturated smoke. arXiv:2403.07974 (LiveCodeBench);
+  arXiv:2305.01210 (EvalPlus HumanEval+/MBPP+, 80× hidden tests).
+- **Verifier-guided ONLINE action pruning (exp4071) is a live 2025-2026 line.** ICLR 2026
+  agentic-RL uses verifier-scored admissible-action ranking + iterative action-masking to cut
+  unnecessary actions while preserving the optimal policy. NEW citation for the pruner:
+  **"Update-Free On-Policy Steering via Verifiers" (arXiv:2603.10282)** — a verifier steers an
+  agent's action distribution online with no weight updates, exactly the GAP-4-verifier-as-
+  action-pruner shape. Pairs with the already-filed online-verification result (arXiv:2602.01070,
+  online verification beats post-hoc reranking). Positive control mandatory: the pruner must not
+  reduce solve-rate (an over-aggressive mask that prunes the winning action is a regression).
+
+**Mechanism note (the load-bearing planning decision).** The .375 SOTA-ingestion (exp4055)
+already filed EvalPlus / SAGA / ACES / symbolic-equivalence / EquivPruner / Invisible-Leash;
+those references stand. The NEW planning insight is not a paper — it is that the powering-run
+EXECUTION SHELL (split BUILD/LAUNCH-backgrounded + COLLECT-poll) is the diagnosed root cause of
+3 milestones of non-measurement, and the fix is a single synchronous resume-accumulate task with
+per-task progress output (so codex's 1201s idle-timeout never fires) and a stable
+(corpus+model+k)-keyed checkpoint (the operator's resume-not-restart intent, made robust). See
+openspec/change-proposals/research-roadmap-v376.md §3.
+
+Sources (this sweep): arxiv.org/abs/2403.07974 (LiveCodeBench v6); arxiv.org/abs/2305.01210
+(EvalPlus); arxiv.org/abs/2603.10282 (update-free on-policy steering via verifiers);
+arxiv.org/abs/2602.01070 (online verification); arxiv.org/abs/2507.14843 (The Invisible Leash).
