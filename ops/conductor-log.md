@@ -8197,3 +8197,9 @@ c |
 | 2026-06-11 01:45 UTC | FIFTH ARC-AGI-3 game first-solve via the PROVEN ex | OK | 87 passed in 5.08s |
 | 2026-06-11 01:58 UTC | ArcMemo SOLVE-transfer v4 (self-learning MANDATE;  | OK | 94 passed in 5.33s |
 | 2026-06-11 02:08 UTC | Hardware continuity (consolidated): SSH/USB-reacha | OK | 87 passed in 5.15s |
+| 2026-06-11 02:24 UTC | Capstone .371 (UNGATED -- the .365 op:exists + .36 | OK | 90 passed in 5.78s |
+| 2026-06-11 02:26 UTC | Activation REFUSED: milestone 2026.06.372 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-06-11 02:29 UTC | Activation REFUSED: milestone 2026.06.372 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-06-11 02:31 UTC | Activation REFUSED: milestone 2026.06.372 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-06-11 02:33 UTC | Activation REFUSED: milestone 2026.06.372 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-06-11 02:35 UTC | Milestone 2026.06.372 activated | OK | 10 tasks queued |
