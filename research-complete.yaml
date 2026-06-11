@@ -38377,3 +38377,144 @@ milestones:
       exists.'
     deliverable: results/experiment_4053_capstone_v374.json
     result: OK (conductor)
+- id: 2026.06.375
+  title: 'POWER the off-ARC verifier transfer on an UN-SATURATED corpus (resume-not-restart) + bank the WM-planning ceiling
+    + accumulate the sovereign-base measurement. .374 diagnosed all three: G1 the off-ARC power run completed only 22/160
+    tasks AND was ceiling-saturated (all arms + oracle = 1.0 on base HumanEval/MBPP -- no headroom); G2 closed-loop grounding
+    did NOT break vc33 (21%/step WM<->real sim2real divergence = a decision-grade negative, banked); G3 the MoE throughput
+    fix WORKED (14 tasks/window) but is UNDERPOWERED, NOT retired (CI [0.143,0.643] spans the 0.2581 ceiling). This milestone
+    makes G1 + G3 decision-grade by fixing the root causes. G1 (operator TOP PRIORITY): evaluate arms against EvalPlus HumanEval+/MBPP+
+    HIDDEN tests (un-saturated -> oracle headroom) while demo-fit selects on VISIBLE tests, and RESUME the candidate-generation
+    checkpoint into a stable corpus+model+k path that ACCUMULATES toward N>=160 -> does the best-arm bootstrap CI95 EXCLUDE
+    zero with headroom present? G3: RESUME the MoE checkpoint toward accumulated N>=30 -> latent (CI excludes 0.2581) or absent?
+    EFFICIENCY (the G2 pivot): the GAP-4 verifier as an online action-pruner on solved games. KEEP: 9th-game first-solve (+1
+    monotonic), ArcMemo v8 richer cross-game transfer, GateMate/PolarFire toward terminal. Capstone: did the verifier transfer
+    SIGNIFICANTLY off-ARC on an un-saturated corpus, and is the sovereign base latent or absent?'
+  doc: openspec/change-proposals/research-roadmap-v375.md
+  completed: '2026-06-11'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4054-archive-v374-activate-v375
+    title: 'Archive .374 -> activate .375; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
+      + ops/exclusion_manifest.yaml parse under yaml.safe_load and the python/carnot/agentic ARC modules import, run the smart-subset
+      pre-test gate green, then RECORD the .374 close-state truth: G1 incomplete-AND-saturated (22/160, all arms+oracle=1.0);
+      G2 DECISION-GRADE NEGATIVE (closed-loop no-solve vc33, 0.207 sim2real divergence, WM-planning RETIRED); G3 UNDERPOWERED-NOT-RETIRED
+      (MoE 14 tasks, 0.3571 vs 0.2581, CI spans ceiling -- the capstone''s retired_non_measurement was a FALSE retirement
+      per operator known-issues); 8 games solved; KV260 TERMINAL; exp4044+exp4047 flagged-skipped.'
+    deliverable: results/experiment_4054_archive_v374_activate_v375.json
+    result: OK (conductor)
+  - id: exp4055-sota-ingestion-unsaturated-execverif-and-verifier-pruner
+    title: 'SOTA-INGESTION SLOT (mandatory per the standing 2026-06-11 discipline; .375 headline is a bleeding-edge track):
+      read research-references.md (the ''2026-06-11 Post-.374 Planning Sweep'' section already filed) + research-studying.md
+      filtered to .375''s two bleeding-edge tracks (un-saturated execution-verification corpora for the off-ARC POWER measurement
+      + verifier-guided online action-pruning for the efficient harness), run a FOCUSED fresh sweep via scripts/sweep_clusters.py
+      + sweep_semscholar.py + low-concurrency WebSearch/WebFetch (NEVER /deep-research -- it rate-limited 4x/6M-tokens/zero-output
+      2026-06-11), and emit a SOTA->experiment mapping artifact (strongest 3-5 methods per track, implementation-over-current-stack,
+      pitfalls). Flag the strongest method(s) as candidate inputs for the .376 roadmap. Every method claim MUST cite a real
+      arXiv ID/URL (no-fabrication bar).'
+    deliverable: docs/research-notes/sota-ingestion-2026-06-11-unsaturated-execverif-and-verifier-pruner.md
+    result: OK (conductor)
+  - id: exp4056-offarc-power-evalplus-build
+    title: 'OFF-ARC TRANSFER POWER on an UN-SATURATED corpus -- BUILD+LAUNCH (operator TOP PRIORITY; G1; split-long-codex
+      BUILD half; resume-not-restart): .374 completed only 22/160 tasks AND they were ceiling-saturated (all arms+oracle=1.0
+      on base HumanEval/MBPP -- no headroom). FIX BOTH: (1) EVALUATE arms against EvalPlus HumanEval+/MBPP+ HIDDEN tests (the
+      demo-fit verifier still SELECTS on VISIBLE example tests -- the visible-under-determines-hidden gap is exactly GAP-CODE-EXEC-DEMOFIT,
+      and EvalPlus''s 80x hidden tests maximize it); (2) RESUME the candidate-generation checkpoint into a STABLE (corpus+model+k-keyed)
+      path that ACCUMULATES across milestone windows toward N>=160. Same gemma-4-12B inducer, k>=8. Arms: Arm A vote, Arm
+      A++ ACES leave-one-out (arXiv:2604.03922), Arm B demo-fit (the SHARED ARC primitive -- headline), Arm C symbolic-equivalence
+      partition (arXiv:2604.06485). SMOKE must VERIFY oracle headroom EXISTS (oracle < 1.0 on EvalPlus eval) before launching
+      -- the check that would have caught the .374 saturation. setsid-detach the run so it survives the iteration boundary;
+      checkpoint per task; ~75-min window -> report partial via the stable checkpoint.'
+    deliverable: results/experiment_4056_offarc_power_evalplus_build.json
+    result: OK (conductor)
+  - id: exp4057-offarc-power-evalplus-collect
+    title: 'OFF-ARC TRANSFER POWER (EvalPlus) -- COLLECT+VALIDATE (operator TOP PRIORITY; G1; THE headline question): poll
+      the backgrounded run launched by exp4056; read the CUMULATIVE stable checkpoint; report ACCUMULATED-N (across .374+.375
+      windows). Verify oracle headroom on accumulated-N (oracle < 1.0 on EvalPlus eval -- if oracle ~= 1.0 the corpus is STILL
+      saturated: report uninformative + recommend LiveCodeBench, do NOT report ''verifier fails''). Compute the 10,000-resample
+      TASK-LEVEL bootstrap CI95 for (best_arm - Arm A vote) -- DOES THE CI EXCLUDE ZERO with headroom present? best_arm in
+      {{demo-fit, ACES, symbolic-partition}}. Emit the four-outcome verdict: (1) demo-fit CI EXCLUDES 0 -> the shared GAP-4
+      primitive MEASURABLY generalizes to code; (2) demo-fit touches 0 but a stronger arm excludes 0 -> needs a code-specialized
+      discriminator (log GAP-CODE-EXEC-DEMOFIT); (3) all arms touch 0 with headroom -> honest small-magnitude transfer; (4)
+      accumulated-N < 160 -> PROGRESS, report accumulated-N for the next window (NOT a retirement).'
+    deliverable: results/experiment_4057_offarc_power_evalplus.json
+    result: OK (conductor)
+  - id: exp4058-decentralization-moe-resume-build
+    title: 'DECENTRALIZATION sovereign-base -- BUILD+LAUNCH (G3; split-long-codex BUILD half; resume-not-restart): exp4012
+      = gemma-4-12B = 0.2581 coverage. exp4048 MoE Qwen3.6-35B-A3B scored 14 tasks (throughput fix WORKED), coverage 0.3571
+      vs 0.2581, CI [0.143,0.643] spans the ceiling -> underpowered, NOT retired. RESUME the exp4048 MoE candidate checkpoint
+      into a STABLE (corpus+model+k-keyed) path and ACCUMULATE toward N>=30 on the SAME 30-task ARC-1 pool as exp4012 (apples-to-apples),
+      k=8, BATCHED + RoBoN-style early-stop (arXiv:2512.05542), same model-free demo-fit verifier. Per ''The Invisible Leash''
+      (arXiv:2507.14843): a stronger base raises the CEILING only if the ARC-induction abstraction is LATENT in it. Smoke
+      on 2 tasks, commit, setsid-detach the run, checkpoint per task, ~75-min window. Report ACCUMULATED-N (14 + this window).'
+    deliverable: results/experiment_4058_decentralization_moe_resume_build.json
+    result: OK (conductor)
+  - id: exp4059-decentralization-moe-resume-collect
+    title: 'DECENTRALIZATION sovereign-base -- COLLECT+VALIDATE (G3; resume-not-restart): poll the backgrounded run from exp4058;
+      read the CUMULATIVE checkpoint; report ACCUMULATED coverage (exp4048''s 14 + this window) and accumulated-N. Bootstrap
+      CI95 of (MoE coverage - 0.2581); POSITIVE CONTROL mandatory (oracle/best-of-pool -- if oracle ~= 0.2581 the pool is
+      saturated, uninformative). Diagnose: coverage materially up (CI excludes 0.2581) -> LATENT in the larger local model
+      -> distillation viable, the sovereign path scales with base size; coverage flat (CI includes 0.2581) -> ABSENT (the
+      Invisible Leash holds) -> sovereignty needs a still-stronger base. Report local seconds/task vs codex 46s. If accumulated-N
+      < 30, that is PROGRESS -- report accumulated-N for the next window, do NOT retire (only retire if accumulated-N >= 30
+      AND coverage CI still includes 0.2581).'
+    deliverable: results/experiment_4059_decentralization_moe_resume.json
+    result: OK (conductor)
+  - id: exp4060-ninth-game-explore-first
+    title: 'NINTH ARC-AGI-3 game first-solve via the PROVEN explore-first method (raises games-solved 8->9; monotonic +1 per
+      the Incremental-Progress rule): exp4049 solved the 8th game (sb26-7fbdac44). Apply the proven loop -- (1) active exploration
+      OBSERVES transitions, (2) induce mechanic + goal predicate from OBSERVED transitions, (3) GAP-4 verifier validates the
+      rule, (4) act -- to a NEW non-spatial-planning game from the win-condition survey not yet solved (AVOID vc33''s spatial-planning
+      trap -- WM-planning is RETIRED per G2). Honest no-solve is a COMPLETE verdict. Save the full solve trace for exp4062
+      (ArcMemo v8 cross-game transfer).'
+    deliverable: results/experiment_4060_ninth_game_explore_first.json
+    result: OK (conductor)
+  - id: exp4061-verifier-action-pruner-efficiency
+    title: 'VERIFIER-AS-ONLINE-ACTION-PRUNER efficiency (the north-star ''efficient'' axis; the forward pivot from the banked
+      G2 WM-planning negative): the GAP-4 verifier is proven CHEAP (95.3x cheaper than an LLM-judge at parity, .371 exp4026)
+      and accurate; this measures it as an ONLINE action-pruner in the live ARC harness. On 3-5 of the SOLVED games, run the
+      explore-first solver WITH vs WITHOUT the GAP-4 verifier pruning candidate actions before execution (prune actions the
+      verifier predicts are inconsistent with the induced mechanic / will not advance the goal predicate). Measure actions-to-solve
+      + wall-clock at EQUAL solve-rate (the pruner MUST NOT reduce solve-rate -- positive control). Per arXiv:2602.01070 online
+      verification beats post-hoc reranking. Honest null (no efficiency gain) is a COMPLETE verdict.'
+    deliverable: results/experiment_4061_verifier_action_pruner_efficiency.json
+    result: OK (conductor)
+  - id: exp4062-arcmemo-cross-game-transfer-v8
+    title: 'ArcMemo v8: RICHER cross-game concept-library transfer (self-learning MANDATE; extends the exp4050 v7 weak result):
+      v7 reused only 1 abstraction and LOST to within-game v6 on the 8th game. v8 builds a RICHER abstraction library from
+      all 8 prior solved games (more fragments -> more reusable abstractions per LILO/Stitch arXiv:2310.19791) and tests whether
+      it REDUCES the cost of solving the NEW 9th game (exp4060) below BOTH (a) a cold start AND (b) within-game-only memory
+      -- the bar that distinguishes self-learning (transfer) from caching (replay). Measure action-count + induction-call
+      reduction + n_reused_abstractions. Honest no-transfer is a COMPLETE verdict.'
+    deliverable: results/experiment_4062_arcmemo_cross_game_transfer_v8.json
+    result: OK (conductor)
+  - id: exp4063-verifier-registry-and-gaps-hygiene
+    title: 'VERIFIER-REGISTRY + GAPS HYGIENE (infrastructure; reserved infra slot): bit-exact OFFLINE re-eval that reproduces
+      the canonical GAP-4 ARC-1 (vote 0.4516 -> gated 0.5806) and ARC-2 numbers from cached candidates (zero codex, zero GGUF
+      -- the regression guard); RECORD the .375 G1 EvalPlus off-ARC outcome from exp4057 (update GAP-CODE-EXEC-DEMOFIT with
+      the accumulated-N CI on the un-saturated corpus -- did demo-fit or a stronger discriminator clear it?); RECORD the G3
+      accumulated coverage from exp4059 (update GAP-DECENTRALIZATION-MOE-BASE-4048 -- latent/absent/still-accumulating); ENSURE
+      GAP-ARC3-VC33-SIM2REAL-CEILING (the G2 banked negative) is logged with the 0.207 divergence. Keeps ops/verifier_registry.yaml
+      + ops/verifier_gaps.md the honest source of truth.'
+    deliverable: results/experiment_4063_verifier_registry_and_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4064-hardware-continuity-gatemate-polarfire
+    title: 'Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 is DONE): exp4052 brought
+      KV260 to TERMINAL (overlay loaded + board-latency transcript). KV260 is now opportunistic-confirm only. Drive the remaining
+      non-terminal boards: GateMate (openFPGALoader -c dirtyJtag --detect -> if reachable, next concrete step toward n=16
+      Ising tile flash) + PolarFire (ssh polarfire -> next step toward an end-to-end Carnot dispatch). Per KV260 SSH-Not-SD-Card
+      Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board (no
+      shared-timestamp tautology).'
+    deliverable: results/experiment_4064_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4065-capstone-v375
+    title: 'Capstone .375 (UNGATED): the milestone''s headline question is DID THE VERIFIER TRANSFER SIGNIFICANTLY OFF-ARC
+      ON AN UN-SATURATED CORPUS (EvalPlus CI now excludes zero with headroom?), AND IS THE SOVEREIGN BASE LATENT OR ABSENT?
+      Aggregate: G1 VERIFIER-POWER = exp4057 (does the EvalPlus off-ARC demo-fit/best-arm CI EXCLUDE zero at accumulated N,
+      with oracle headroom present, or is it still accumulating?); G3 DECENTRALIZATION = exp4059 (accumulated MoE coverage
+      vs 0.2581 -- latent/absent/accumulating?); EFFICIENCY = exp4061 (verifier-as-action-pruner action+wallclock reduction
+      at equal solve-rate?); ACCURACY = exp4060 (total_games_solved); SELF-LEARNING = exp4062 (cross_game_transfer_win); HARDWARE
+      = exp4064 (GateMate/PolarFire progress; KV260 terminal). Honest verdict. SKIP any flagged_adversarial artifact; cite
+      upstream sha256. NO gated_on -- aggregate whatever exists.'
+    deliverable: results/experiment_4065_capstone_v375.json
+    result: OK (conductor)
