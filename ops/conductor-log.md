@@ -8243,3 +8243,4 @@ c |
 | 2026-06-11 08:44 UTC | OFF-ARC EXECUTION-VERIFIER TRANSFER -- COLLECT+VAL | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-06-11 08:46 UTC | OFF-ARC EXECUTION-VERIFIER TRANSFER -- COLLECT+VAL | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-06-11 08:49 UTC | OFF-ARC EXECUTION-VERIFIER TRANSFER -- COLLECT+VAL | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-06-11 09:09 UTC | VERIFIER-REGISTRY + HARNESS REGISTRATION (infrastr | OK | 94 passed in 4.98s |
