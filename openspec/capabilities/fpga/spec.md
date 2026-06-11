@@ -6865,6 +6865,81 @@ and no KV260 host SD-card precondition.
 
 ---
 
+### REQ-HW-4052
+
+**Title:** Hardware continuity MUST complete the KV260 latency-transcript terminal step
+
+**Description:**
+Experiment 4052 MUST produce
+`results/experiment_4052_hardware_continuity.json` as a hardware-smoke
+continuity artifact for KV260, GateMate, and PolarFire. The experiment MUST
+check each board independently with separate wall-clock timers and continue the
+remaining boards when one board is unavailable. The required preconditions are:
+
+- KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`.
+- GateMate: `openFPGALoader -c dirtyJtag --detect`.
+- PolarFire: `ssh -o ConnectTimeout=5 polarfire 'true'`.
+
+KV260 MUST NOT use a host SD-card block-device precondition such as
+`/dev/mmcblk`. If KV260 SSH is reachable, the experiment MUST run
+`xmutil listapps` over SSH, may fall back to `sudo xmutil listapps` when xmutil
+requires root, MUST confirm or load a `carnot_ising` overlay from a listed
+`id_ok` or active handle row, and MUST take the board-level latency-transcript
+terminal step by reading a UIO register or timing an energy-eval round trip over
+SSH. GateMate and PolarFire MUST record reachability plus the next concrete step
+opportunistically.
+
+The artifact MUST include principle-annotated top-level fields
+`honest_verdict`, `per_board_reachability`, `kv260_latency_step_taken`,
+`kv260_overlay_loaded`, `preconditions_checked`, and
+`inference_substrate`. `honest_verdict` MUST use a terminal prefix such as
+`complete: hardware_continuity_kv260_latency_transcript_landed_4052` when the
+KV260 overlay and latency transcript land. Unreachable boards MUST use
+`blocked_<board>_unreachable` for that board and MUST NOT block the other board
+checks. `kv260_latency_step_taken` MUST be true only when the KV260 SSH path
+records a successful board-latency transcript after overlay confirmation.
+`inference_substrate` MUST be exactly `"hardware_smoke"`, and the artifact MUST
+avoid fabric speedup or live inference claims.
+
+**Acceptance criteria:**
+- `results/experiment_4052_hardware_continuity.json` is generated.
+- `per_board_reachability` is a dict of booleans for KV260, GateMate, and
+  PolarFire and matches scalar reachability fields.
+- `kv260_overlay_loaded` is a bare boolean and is true only after a confirmed
+  listed or active Carnot overlay appears in a KV260 `xmutil listapps`
+  transcript.
+- `kv260_latency_step_taken` is a bare boolean and is true only after a
+  successful KV260 board-latency transcript command.
+- `preconditions_checked` records the three board preconditions before any
+  board smoke step, with at least `{resource, available}` per entry.
+- `honest_verdict` starts with `complete:`, `success:`, or `blocked_`;
+  terminal KV260 success uses the `kv260_latency_transcript_landed_4052`
+  wording; `inference_substrate` is exactly `"hardware_smoke"`; and no KV260
+  host SD-card marker such as `/dev/mmcblk` appears in the artifact.
+
+**Implementation status:** Pending (Exp 4052)
+
+---
+
+### SCENARIO-HW-4052
+
+**Scenario:** KV260 latency-transcript terminal step records board evidence while other boards remain visible.
+
+**Given:** KV260, GateMate, and PolarFire may independently be reachable or
+unreachable through their SSH or DirtyJTAG preconditions.
+**When:** Experiment 4052 runs the hardware-smoke continuity check.
+**Then:** It writes `results/experiment_4052_hardware_continuity.json` with a
+terminal-prefix verdict, `inference_substrate="hardware_smoke"`, bare
+`per_board_reachability`, precondition evidence, bare boolean
+`kv260_overlay_loaded`, bare boolean `kv260_latency_step_taken`, KV260
+xmutil/loadapp/latency transcripts when reachable, per-board next steps,
+distinct per-board timers, deterministic seed, checksum, and no KV260 host
+SD-card precondition.
+
+**Implementation status:** Pending (Exp 4052)
+
+---
+
 ### SCENARIO-HW-4017
 
 **Scenario:** ARC continuity records reachable boards and blocked board next steps.

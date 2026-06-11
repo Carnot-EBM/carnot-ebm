@@ -1,0 +1,196 @@
+{
+  "duration_s": 8.519552,
+  "experiment": 4052,
+  "fabric_acceleration_claimed": false,
+  "field_principles": {
+    "duration_s": "Total wall-clock for the hardware-smoke continuity run.",
+    "gatemate_reachable": "Bare bool for GateMate reachability through DirtyJTAG detect.",
+    "honest_verdict": "Terminal prefix naming the observed KV260 latency-transcript gate plus per-board blockers.",
+    "inference_substrate": "Must remain hardware_smoke because this artifact records board smoke, not model inference.",
+    "kv260_latency_step_taken": "principle: the KV260 terminal-state gate -- true only after a successful board-level latency transcript over SSH",
+    "kv260_overlay_loaded": "principle: the KV260 terminal-state gate -- overlay present is the precondition for a board-latency claim",
+    "kv260_reachable": "Bare bool for KV260 SSH reachability through kria.",
+    "per_board_duration_s": "Distinct positive wall-clock timer per board.",
+    "per_board_next_step": "Bare dict of the next concrete step for each board.",
+    "per_board_reachability": "principle: the continuity record that keeps boards visible in retros",
+    "per_board_terminal_state": "Bare dict of observed terminal-state progress or exact per-board blocker.",
+    "polarfire_reachable": "Bare bool for PolarFire SSH reachability.",
+    "preconditions_checked": "principle: records which board accesses were verified before the smoke, pre-empting the fabricate-when-unreachable failure mode"
+  },
+  "gatemate_command_transcript": {
+    "combined_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\nindex 0:\n\tidcode 0x20000001\n\tmanufacturer colognechip\n\tfamily GateMate Series\n\tmodel  GM1Ax\n\tirlength 6\n",
+    "command": "openFPGALoader -c dirtyJtag --detect",
+    "duration_s": 0.016858387039974332,
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\nindex 0:\n\tidcode 0x20000001\n\tmanufacturer colognechip\n\tfamily GateMate Series\n\tmodel  GM1Ax\n\tirlength 6\n"
+  },
+  "gatemate_detect_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\nindex 0:\n\tidcode 0x20000001\n\tmanufacturer colognechip\n\tfamily GateMate Series\n\tmodel  GM1Ax\n\tirlength 6",
+  "gatemate_reachable": true,
+  "gatemate_state": "reachable_detected_gatemate_idcode",
+  "honest_verdict": "complete: hardware_continuity_kv260_latency_transcript_landed_4052_gmreachable_detected_gatemate_idcode_pfreachable_ssh_continuity_recorded",
+  "inference_substrate": "hardware_smoke",
+  "kv260_command_transcripts": {
+    "latency_harness": {
+      "combined_output": "BOARD_HARNESS_START exp4052\n{\"final_register_value_hex\": \"0x0\", \"fixed_compute_budget\": {\"beta_final_q88\": 256, \"max_degree\": 16, \"sample_count\": 32, \"spin_count\": 64, \"trigger_mode\": \"uio_register_read_once_per_sample\"}, \"per_batch_wall_ms\": 0.239723, \"per_sample_wall_ms\": [0.013201, 0.00429, 0.0025, 0.0022, 0.0022, 0.00216, 0.00216, 0.00212, 0.00207, 0.00216, 0.00216, 0.00215, 0.00203, 0.00209, 0.00213, 0.00214, 0.00205, 0.00209, 0.00217, 0.00211, 0.00206, 0.00204, 0.00214, 0.00209, 0.00217, 0.00212, 0.00219, 0.00211, 0.00208, 0.0021, 0.0021, 0.00209], \"read_offset_hex\": \"0x0\", \"sample_count\": 32, \"schema\": \"carnot.kv260.uio_register_latency_transcript.v1\", \"selected_uio\": \"/dev/uio0\", \"selected_uio_addr_hex\": \"0x00000000ffa00000\"}\n",
+      "command": "ssh kria 'sudo python3 -'",
+      "duration_s": 0.7016680589877069,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "BOARD_HARNESS_START exp4052\n{\"final_register_value_hex\": \"0x0\", \"fixed_compute_budget\": {\"beta_final_q88\": 256, \"max_degree\": 16, \"sample_count\": 32, \"spin_count\": 64, \"trigger_mode\": \"uio_register_read_once_per_sample\"}, \"per_batch_wall_ms\": 0.239723, \"per_sample_wall_ms\": [0.013201, 0.00429, 0.0025, 0.0022, 0.0022, 0.00216, 0.00216, 0.00212, 0.00207, 0.00216, 0.00216, 0.00215, 0.00203, 0.00209, 0.00213, 0.00214, 0.00205, 0.00209, 0.00217, 0.00211, 0.00206, 0.00204, 0.00214, 0.00209, 0.00217, 0.00212, 0.00219, 0.00211, 0.00208, 0.0021, 0.0021, 0.00209], \"read_offset_hex\": \"0x0\", \"sample_count\": 32, \"schema\": \"carnot.kv260.uio_register_latency_transcript.v1\", \"selected_uio\": \"/dev/uio0\", \"selected_uio_addr_hex\": \"0x00000000ffa00000\"}\n"
+    },
+    "ssh_true": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.451605036971159,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "xmutil_listapps_after_load": null,
+    "xmutil_listapps_after_load_sudo": null,
+    "xmutil_listapps_initial": {
+      "combined_output": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "command": "ssh kria 'xmutil listapps'",
+      "duration_s": 0.86606347898487,
+      "exit_code": 1,
+      "stderr": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "stdout": ""
+    },
+    "xmutil_listapps_initial_sudo": {
+      "combined_output": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)           0->0,\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)              -1\n",
+      "command": "ssh kria 'sudo xmutil listapps'",
+      "duration_s": 0.8941822850611061,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)           0->0,\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)              -1\n"
+    },
+    "xmutil_loadapp": null,
+    "xmutil_loadapp_sudo": null
+  },
+  "kv260_latency_batch_ms": 0.239723,
+  "kv260_latency_median_ms": 0.002125,
+  "kv260_latency_samples_ms": [
+    0.013201,
+    0.00429,
+    0.0025,
+    0.0022,
+    0.0022,
+    0.00216,
+    0.00216,
+    0.00212,
+    0.00207,
+    0.00216,
+    0.00216,
+    0.00215,
+    0.00203,
+    0.00209,
+    0.00213,
+    0.00214,
+    0.00205,
+    0.00209,
+    0.00217,
+    0.00211,
+    0.00206,
+    0.00204,
+    0.00214,
+    0.00209,
+    0.00217,
+    0.00212,
+    0.00219,
+    0.00211,
+    0.00208,
+    0.0021,
+    0.0021,
+    0.00209
+  ],
+  "kv260_latency_step_summary": {
+    "sample_count": 32,
+    "schema": "carnot.kv260.uio_register_latency_transcript.v1",
+    "selected_uio": "/dev/uio0",
+    "selected_uio_addr_hex": "0x00000000ffa00000"
+  },
+  "kv260_latency_step_taken": true,
+  "kv260_loaded_overlay_name": "carnot_ising_v2_n64",
+  "kv260_overlay_loaded": true,
+  "kv260_reachable": true,
+  "kv260_state": "reachable_overlay_loaded_latency_transcript_recorded",
+  "per_board_duration_s": {
+    "gatemate": 0.016896,
+    "kv260": 6.91401,
+    "polarfire": 1.588359
+  },
+  "per_board_next_step": {
+    "gatemate": "gatemate_forward_step_run_minimal_ising_tile_smoke",
+    "kv260": "kv260_terminal_state_overlay_loaded_latency_transcript_landed",
+    "polarfire": "polarfire_forward_step_run_hash_verified_soft_cpu_dispatch"
+  },
+  "per_board_reachability": {
+    "gatemate": true,
+    "kv260": true,
+    "polarfire": true
+  },
+  "per_board_terminal_state": {
+    "gatemate": "reachable_detected_gatemate_idcode",
+    "kv260": "reachable_overlay_loaded_latency_transcript_recorded",
+    "polarfire": "reachable_ssh_continuity_recorded"
+  },
+  "polarfire_command_transcripts": {
+    "continuity": {
+      "combined_output": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\n 17:20:36 up 6 days, 19:17,  0 user,  load average: 0.00, 0.00, 0.00\n",
+      "command": "ssh polarfire 'uname -a && uptime'",
+      "duration_s": 0.8324190799612552,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\n 17:20:36 up 6 days, 19:17,  0 user,  load average: 0.00, 0.00, 0.00\n"
+    },
+    "ssh_true": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 polarfire true",
+      "duration_s": 0.7556694329250604,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    }
+  },
+  "polarfire_continuity_output": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\n 17:20:36 up 6 days, 19:17,  0 user,  load average: 0.00, 0.00, 0.00",
+  "polarfire_reachable": true,
+  "polarfire_state": "reachable_ssh_continuity_recorded",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "checked_before_board_operations": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.451605,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    },
+    {
+      "available": true,
+      "checked_before_board_operations": true,
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.016858,
+      "exit_code": 0,
+      "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\nindex 0:\n\tidcode 0x20000001\n\tmanufacturer colognechip\n\tfamily GateMate Series\n\tmodel  GM1Ax\n\tirlength 6",
+      "resource": "gatemate_jtag_detect"
+    },
+    {
+      "available": true,
+      "checked_before_board_operations": true,
+      "command": "ssh -o ConnectTimeout=5 polarfire true",
+      "duration_s": 0.755669,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "polarfire_ssh"
+    }
+  ],
+  "random_seed": 4052,
+  "reproducibility_checksum": "7d1f37046721f4bfa9eca7cde344938fa4158ec351977584304faa5d0a14edd1",
+  "schema": "carnot.hardware_continuity_kv260_latency_transcript.v1",
+  "spec_refs": [
+    "REQ-HW-4052",
+    "SCENARIO-HW-4052"
+  ],
+  "speedup_claim_made": false
+}
