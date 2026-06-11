@@ -5,8 +5,36 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-06-11 (Exp 4043 SOTA ingestion mapped .374 OFF-ARC power and closed-loop planning).
+**Updated:** 2026-06-11 (Exp 4055 SOTA ingestion mapped .375 unsaturated execution verification and verifier-pruner tracks).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
+
+## 2026-06-11 Exp 4055 - .375 SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-2026-06-11-unsaturated-execverif-and-verifier-pruner.md`.
+
+**Filtered tracks:** UN-SATURATED execution-verification corpus for exp4056/4057 off-ARC
+demo-fit transfer measurement, and VERIFIER-GUIDED online action-pruning for the efficient
+ARC harness over explore-first + GAP-4.
+
+**Seed candidates marked ingested:**
+- EvalPlus / HumanEval+ / MBPP+, arXiv:2305.01210 - mapped as the default hidden-test rescore path that fixes the `.374` base HumanEval/MBPP saturation failure.
+- LiveCodeBench v6, arXiv:2403.07974 - mapped as the contamination-free escalation corpus if EvalPlus hidden tests lack headroom.
+- SAGA / Rethinking Verification for LLM Code Generation, arXiv:2507.06920 - mapped as the generated-test discrimination arm after the fixed-pool EvalPlus path is stable.
+- DryRUN / You Don't Need Public Tests to Generate Correct Code, arXiv:2604.21598 - mapped as the public-test-free self-simulation tie-break arm, not as authoritative final scoring.
+- What If We Allocate Test-Time Compute Adaptively?, arXiv:2602.01070 - mapped as the online verifier-guided prune/expand control rule for ARC frontier expansion.
+- Marco DeepResearch, arXiv:2603.28376 - mapped as the verification-centric budget-ledger precedent for agentic search.
+- Pushing Test-Time Scaling Limits of Deep Search with Asymmetric Verification, arXiv:2510.06135 - mapped as the cheap-verifier-vs-expensive-search budget split for GAP-4 pruning.
+
+**Fresh-pass confirmations marked ingested:**
+- Adaptive Test-Time Compute Allocation via Learned Heuristics over Categorical Structure, arXiv:2602.03975 - mapped as verifier-cost-limited selective GAP-4 calls over intermediate ARC states.
+- EquivPruner, arXiv:2505.16312 - mapped as exact state/action equivalence caching before approximate pruning.
+- CoT2-Meta, arXiv:2603.28135 - mapped as the explicit expand/prune/repair/stop/fallback controller shape for explore-first telemetry.
+- SEP, arXiv:2604.06485, and ACES, arXiv:2604.03922 - carried forward as same-pool baselines around the EvalPlus measurement, not as the headline fix.
+
+**Bottom line for the .376 roadmap:** prioritize `evalplus_hidden_rescore_fixed_pool`
+and `gap4_online_pruner_for_explore_first_arc`; add `saga_generated_tests_as_discriminator_arm`
+only after the fixed-pool EvalPlus adapter is stable, and add `equivpruner_state_action_cache_for_arc`
+before any learned/approximate pruning.
 
 ## 2026-06-11 Exp 4043 - .374 SOTA ingestion ingested
 
