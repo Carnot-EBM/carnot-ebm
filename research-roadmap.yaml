@@ -219,6 +219,15 @@ tasks:
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp4032-offarc-exec-verifier-transfer-collect
+    operator_override: >
+      2026-06-11 operator-outer-loop directive: COLLECT half of the operator's TOP PRIORITY off-ARC
+      split-pair. The doomed-rerun guard scope-matched exp4031-offarc-transfer-build, whose
+      DURATION_TOO_SHORT flag is a FALSE POSITIVE (a 14.13s build+smoke+LAUNCH task that declared
+      live_llm_inference but only backgrounds the real run; smoke_passed=True, runner built+launched
+      successfully). The backgrounded run already produced a real 286KB checkpoint
+      (results/experiment_4032_offarc_exec_verifier_transfer.checkpoint.json, 40 MBPP tasks x k=8).
+      This collect step validates that EXISTING data -- it is the legit forward half, not a doomed
+      rerun.
     milestone: "2026.06.373"
     gated_on:
       - upstream: exp4031-offarc-exec-verifier-transfer-build
