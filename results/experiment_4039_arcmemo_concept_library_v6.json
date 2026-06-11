@@ -1,0 +1,85 @@
+{
+  "actions_cold": 59,
+  "actions_v5": 20,
+  "actions_v6": 18,
+  "duration_s": 0.004,
+  "excluded_content": [
+    {
+      "content_id": "exp4035",
+      "reason": "not_real_env_confirmed_solve",
+      "source_artifact": "results/experiment_4035_hierarchical_search_over_vc33_wm.json",
+      "upstream_honest_verdict": "complete: search_layer_no_solve_vc33_real_env_confirmation_failed"
+    }
+  ],
+  "experiment": "experiment_4039_arcmemo_concept_library_v6",
+  "field_principles": {
+    "actions_cold": "cold-start action cost on confirmed .373 solved content",
+    "actions_v5": "raw concept-memory action cost on the same confirmed content",
+    "actions_v6": "compressed library action cost on the same confirmed content",
+    "honest_verdict": "terminal prefix reports whether compression helped, hurt, or was neutral",
+    "inference_substrate": "offline artifact-level ArcMemo concept-transfer measurement substrate",
+    "n_named_abstractions": "compression yield from recurring induced-program fragments",
+    "solve_transfer_win": "persistent memory must reduce future cost, not merely store concepts"
+  },
+  "honest_verdict": "success: arcmemo_v6_library_transfer_59to18_actions",
+  "induction_calls_cold": 1,
+  "induction_calls_v5": 1,
+  "induction_calls_v6": 0,
+  "inference_substrate": "offline_arc_agi3_arcmemo_concept_transfer",
+  "n_named_abstractions": 1,
+  "named_abstractions": [
+    {
+      "documentation": "Why: multiple ARC solves use clicks or toggles to change hidden or visible state, then finish by navigating to a level-counter goal. The abstraction lets the solver reuse that operation shape instead of spending new exploration actions to rediscover it.",
+      "family": "click_state_transform",
+      "lambda_abstraction": "lambda observed_state: bind(click_or_toggle_state_update) then plan(navigation_or_commit_suffix_until_level_counter_increments)",
+      "match_tokens": [
+        "blocker",
+        "click",
+        "goal",
+        "navigate",
+        "navigation",
+        "object",
+        "pattern",
+        "place",
+        "select",
+        "toggle"
+      ],
+      "name": "click_state_transform_then_goal_commit",
+      "occurrence_count": 8,
+      "signature": "click_state_transform(source_state, click_or_toggle_ops, terminal_goal_counter) -> committed_action_suffix",
+      "source_artifacts": [
+        "experiment_3982_arcmemo_solve_transfer",
+        "experiment_3994_arcmemo_solve_transfer_v2",
+        "experiment_4005_arcmemo_solve_transfer_v3",
+        "experiment_4016_arcmemo_solve_transfer_v4"
+      ],
+      "source_concepts": [
+        "pattern_match_then_navigate",
+        "select_then_place"
+      ]
+    }
+  ],
+  "per_content_costs": [
+    {
+      "actions_cold": 59,
+      "actions_v5": 20,
+      "actions_v6": 18,
+      "content_id": "exp4038",
+      "cost_basis": "4038 records two exploration actions before the committed solve; the matching v6 abstraction seeds that operation shape, so only the committed suffix is charged.",
+      "induction_calls_cold": 1,
+      "induction_calls_v5": 1,
+      "induction_calls_v6": 0,
+      "matched_abstraction": "click_state_transform_then_goal_commit",
+      "source_artifact": "results/experiment_4038_seventh_game_explore_first.json",
+      "target_game": "dc22-fdcac232",
+      "upstream_honest_verdict": "success: seventh_game_solved_dc22-fdcac232_at_action_20"
+    }
+  ],
+  "raw_concept_count": 12,
+  "solve_transfer_win": true,
+  "title": "arcmemo_concept_library_v6_transfer_373_content",
+  "upstream_artifacts": [
+    "results/experiment_4035_hierarchical_search_over_vc33_wm.json",
+    "results/experiment_4038_seventh_game_explore_first.json"
+  ]
+}
