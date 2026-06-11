@@ -11366,3 +11366,59 @@ headline.
 |-------------|--------|-------|
 | REQ-LEARN-3930 | Proposed (python/carnot/fr11/continuous_self_learning_v26.py; scripts/experiments/experiment_3930_fr11_v26_cascade_band_online_learning.py, Exp 3930) | Proposed (tests/python/test_experiment_3930_fr11_v26_cascade_band_online_learning.py) |
 \n## REQ-LEARN-3958: Cross-game DSL fragment transfer\n\n**Given** an ordered sequence of non-spatial games\n**When** models are induced with a growing library of extracted helper functions\n**Then** later games require fewer codex calls or achieve lower consistency energy.\n\n## SCENARIO-LEARN-3958: Extracts only helper functions, not predict\n**Given** a python module with predict and a helper\n**When** extract_library_fragments is called\n**Then** only the helper function is returned.\n\n## Implementation Status\n| Requirement | Python | Tests |\n|---|---|---|\n| REQ-LEARN-3958 | Implemented (scripts/experiments/experiment_3958_cross_game_dsl_transfer.py) | Implemented (tests/python/test_experiment_3958_cross_game_dsl_transfer.py) |\n
+
+---
+
+## REQ-LEARN-4039: ArcMemo v6 Compressed Concept Library Transfer
+
+**Given** accumulated ArcMemo concept records from prior real-env-confirmed
+ARC-AGI-3 solve-transfer artifacts and the `.373` candidate artifacts
+`results/experiment_4035_hierarchical_search_over_vc33_wm.json` and
+`results/experiment_4038_seventh_game_explore_first.json`
+**When** Exp 4039 builds the ArcMemo v6 library
+**Then** it SHALL cluster recurring induced-program fragments by family,
+operation tokens, and observed effects into named, documented abstractions
+rather than storing only raw concepts
+**And** it SHALL measure transfer cost on `.373` content against cold start and
+the v5 raw-memory arm, counting only real-env-confirmed solved content as
+eligible transfer evidence
+**And** it SHALL write
+`results/experiment_4039_arcmemo_concept_library_v6.json`.
+
+### REQ-LEARN-4039 Sub-requirements
+
+- REQ-LEARN-4039-1: The compressed library SHALL expose at least one named
+  abstraction with `name`, `signature`, `documentation`,
+  `source_concepts`, and `lambda_abstraction` fields.
+- REQ-LEARN-4039-2: Exp 4039 SHALL report bare top-level fields
+  `honest_verdict`, `solve_transfer_win`, `actions_cold`, `actions_v5`,
+  `actions_v6`, `n_named_abstractions`, and `inference_substrate`.
+- REQ-LEARN-4039-3: `inference_substrate` SHALL equal
+  `offline_arc_agi3_arcmemo_concept_transfer`.
+- REQ-LEARN-4039-4: `solve_transfer_win` SHALL be true only when
+  `actions_v6 < actions_cold` and `actions_v6 < actions_v5`; otherwise the
+  honest verdict SHALL begin with `complete: arcmemo_v6_no_transfer_`.
+- REQ-LEARN-4039-5: `.373` artifacts that are not real-env-confirmed solves
+  SHALL be preserved as excluded evidence and SHALL NOT contribute to aggregate
+  action totals.
+
+### SCENARIO-LEARN-4039: v6 Compression Must Beat Cold and v5
+
+**Given** one confirmed `.373` solve with a cold baseline, a v5 action cost, and
+a matching compressed abstraction
+**When** Exp 4039 builds the compressed library and evaluates that content
+**Then** it reports `solve_transfer_win=true` only if the v6 action count is
+strictly below both baselines
+**And** the honest verdict uses
+`success: arcmemo_v6_library_transfer_<cold>to<v6>_actions`.
+
+**Given** a `.373` artifact whose real environment confirmation is false
+**When** Exp 4039 evaluates transfer content
+**Then** that artifact appears in excluded evidence and does not lower or raise
+`actions_cold`, `actions_v5`, or `actions_v6`.
+
+## Implementation Status (REQ-LEARN-4039)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4039 | Proposed (python/carnot/agentic/arc_arcmemo_concept_library_v6.py; scripts/experiments/exp4039_arcmemo_concept_library_v6.py, Exp 4039) | Proposed (tests/python/test_exp4039_arcmemo_concept_library_v6.py) |
