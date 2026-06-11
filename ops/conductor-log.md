@@ -8291,3 +8291,4 @@ c |
 | 2026-06-11 22:39 UTC | Capstone .375 (UNGATED): the milestone's headline  | OK | 87 passed in 4.91s |
 | 2026-06-11 23:22 UTC | Plan milestone 2026.06.376 | OK | 10 tasks proposed |
 | 2026-06-11 23:25 UTC | Milestone 2026.06.376 activated | OK | 10 tasks queued |
+| 2026-06-11 23:42 UTC | Archive .375 -> activate .376; KEEP the hardened g | OK | 155 passed in 4.17s |
