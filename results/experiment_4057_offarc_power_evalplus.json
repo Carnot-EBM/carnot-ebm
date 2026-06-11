@@ -1,0 +1,65 @@
+{
+  "accumulated_n_tasks": 0,
+  "armA_vote_passrate": 0.0,
+  "armApp_aces_passrate": 0.0,
+  "armApp_bootstrap_ci95": [
+    0.0,
+    0.0
+  ],
+  "armApp_ci_excludes_zero": false,
+  "armApp_delta_pp": 0.0,
+  "armB_demofit_passrate": 0.0,
+  "armC_bootstrap_ci95": [
+    0.0,
+    0.0
+  ],
+  "armC_ci_excludes_zero": false,
+  "armC_delta_pp": 0.0,
+  "armC_symbolic_passrate": 0.0,
+  "best_arm": "armC_symbolic",
+  "best_arm_ci95": [
+    0.0,
+    0.0
+  ],
+  "best_arm_ci_excludes_zero": false,
+  "best_arm_delta_pp": 0.0,
+  "bootstrap_resamples": 10000,
+  "corpus": "evalplus_humaneval_plus_mbpp_plus_partial_checkpoint",
+  "demofit_bootstrap_ci95": [
+    0.0,
+    0.0
+  ],
+  "demofit_ci_excludes_zero": false,
+  "demofit_delta_pp": 0.0,
+  "evaluation_corpus": "EvalPlus HumanEval+/MBPP+ hidden tests",
+  "experiment": "experiment_4057_offarc_power_evalplus",
+  "field_principles": {
+    "accumulated_n_tasks": "Bare int; resume-not-restart N accumulates across windows toward >=160.",
+    "best_arm_ci_excludes_zero": "Bare bool for whether a stronger verifier arm clears the CI gate.",
+    "demofit_ci_excludes_zero": "Bare bool for the operator's headline Arm B minus Arm A gate.",
+    "honest_verdict": "Terminal-prefix verdict; accumulating, saturated, and honest negative outcomes are complete.",
+    "inference_substrate": "Collector scores cached candidates and never invokes live LLM inference.",
+    "missing_verifier_gaps": "Residual selectable slices become future verifier-build specs.",
+    "oracle_headroom_present": "Bare bool; EvalPlus oracle<1.0 rules out saturated-corpus false negatives."
+  },
+  "honest_verdict": "complete: offarc_power_evalplus_accumulating_n_0",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "log_tail": "",
+  "missing_verifier_gaps": [],
+  "model_specs": {
+    "candidate_pool_policy": "same generated pool shared by all four arms",
+    "evaluation_corpus": "EvalPlus HumanEval+/MBPP+ hidden tests",
+    "local_generator": "unsloth/gemma-4-12B-it-GGUF",
+    "source_checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/results/offarc_power_evalplus_gemma12b_k8.checkpoint.json",
+    "verifier": "cached candidate verifier ensemble replay"
+  },
+  "oracle_headroom_present": false,
+  "oracle_passrate": 0.0,
+  "partial_reason": "offarc_power_evalplus_accumulating_n_0",
+  "powered_task_floor": 160,
+  "random_seed": 4057,
+  "raw_artifact_present": false,
+  "reproducibility_checksum": "a2dfcb616cfdcf05a7231016c141f43a453f5590ee42d150e407044e57bf1b7e",
+  "schema": "carnot.experiment_4057_offarc_power_evalplus_collect.v1",
+  "source_reproducibility_checksum": "ee5112d91c396f179c783f76ddcadb4cc41fa1e93008bbfeeaa4cf532991a7fa"
+}
