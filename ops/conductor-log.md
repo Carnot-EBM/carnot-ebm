@@ -8266,3 +8266,5 @@ c |
 | 2026-06-11 17:06 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (infrastructure;  | OK | 91 passed in 5.12s |
 | 2026-06-11 17:23 UTC | Hardware continuity (consolidated; KV260 drive-tow | OK | 88 passed in 5.45s |
 | 2026-06-11 17:38 UTC | Capstone .374 (UNGATED): the milestone's headline  | OK | 87 passed in 5.19s |
+| 2026-06-11 18:26 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-06-11 18:28 UTC | Milestone 2026.06.375 activated | OK | 12 tasks queued |

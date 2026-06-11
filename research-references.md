@@ -41,7 +41,81 @@ numbers confirmed). Cross-ref: `reference_self_harness` (memory), `feedback_oute
 
 ---
 
-## 2026-06-11 Post-.373 Planning Sweep (Milestone 2026.06.374)
+## 2026-06-11 Post-.374 Planning Sweep (Milestone 2026.06.375)
+
+`.374`'s job was to make three `.373` measurements decision-grade. The honest read, straight from
+the artifacts via `summarize_artifact.py` (capstone exp4053 + the known-issues operator entry, NOT
+the per-task prose):
+
+- **G1 — verifier off-ARC transfer (operator TOP PRIORITY): INCOMPLETE *and* CORPUS-SATURATED.**
+  The full-power run completed only **22 of the target N≥160 tasks** in the 75-min window — and on
+  that subset **every arm AND the oracle scored 1.0** (`armA_vote=armB_demofit=armC_symbolic=oracle=1.0`,
+  delta 0.0, CI [0,0]). The build half (exp4044) was flagged DURATION_TOO_SHORT. So the result is
+  a NON-measurement for TWO compounding reasons, not one: **(a) throughput** (only 22 tasks fit the
+  window) and **(b) corpus saturation** — base HumanEval/MBPP have **no oracle headroom** for the
+  demo-fit verifier, so even at full N the measurement would be uninformative.
+- **G2 — closed-loop grounding over the vc33 verified WM: DECISION-GRADE NEGATIVE (banked).**
+  exp4046 replaced open-loop search with closed-loop per-step replanning + a WM-trust/divergence
+  gate. It did **NOT** break vc33's wall (`closed_loop_broke_wall=false`, no real-env solve); the
+  diagnostic is the load-bearing finding: **per-step WM↔real divergence rate = 0.207** — the
+  "99%-accurate" verified WM diverges from the real env ~21% of the time under the *planning*
+  distribution. This is a clean **sim2real ceiling** on the verified-WM-as-simulator approach for
+  vc33 (logged GAP-ARC3-VC33-SIM2REAL-CEILING). Per the Failed-Experiment Rerun Discipline, vc33
+  WM-planning is **retired** — the forward planning path is the PROVEN explore-first + verifier-pruner
+  line (8 games solved), not WM-simulation-planning.
+- **G3 — sovereign-base latent-vs-absent: UNDERPOWERED, *NOT* retired** (the capstone's
+  `retired_non_measurement` was a FALSE retirement — operator known-issues 2026-06-11). The MoE
+  Qwen3.6-35B-A3B throughput fix **WORKED** (14 tasks/window vs the 31B-dense's 0); the run was
+  killed mid-generation at **14 tasks**, coverage **0.3571 vs the 12B 0.2581 ceiling** but
+  bootstrap95 **[0.143, 0.643] spans the ceiling** → underpowered. The line resumes.
+- **Accuracy:** 8th game solved (sb26-7fbdac44, action 9, real-env-confirmed). +1 monotonic.
+- **Self-learning:** ArcMemo v7 cross-game transfer helped vs cold (18→9 actions) but **lost to
+  within-game v6** (7 actions); only 1 abstraction reused → weak cross-game transfer.
+- **Hardware:** KV260 reached **TERMINAL** (overlay loaded + board-latency transcript recorded,
+  median 0.002 ms / batch 0.24 ms). Drops to opportunistic; GateMate + PolarFire remain non-terminal.
+
+**The operator's #1 MANDATORY directive for `.375 (known-issues 2026-06-11): RESUME-NOT-RESTART.**
+Large-N statistically-gated powering runs must use a STABLE (corpus+model+k-keyed, not exp-id-keyed)
+checkpoint that ACCUMULATES across milestones (14→28→42 clears N≥30 in ~2 windows; 22→44→… clears
+N≥160 in ~7), report ACCUMULATED-N not per-window-N, and NEVER fire `retire_if_same_verdict` on a
+throughput-truncated window (only when accumulated-N ≥ target AND the gate still fails). Protect the
+detached generation subprocess from premature reaping (`setsid`).
+
+**Net-new references for the `.375 tracks (verified by WebSearch/WebFetch June 2026):**
+
+TRACK 1 — un-saturated execution-verification corpus (the G1 saturation FIX):
+- **★ EvalPlus / HumanEval+ / MBPP+ (the saturation fix, confirmed).** Base HumanEval & MBPP
+  **saturated by 2023** (frontier pass@1 >95%, no signal); EvalPlus **reopened the gap with adversarial
+  hidden tests** — a ~15% pass-rate drop with **80× more tests**. This is the exact root cause of the
+  `.374 G1 all-arms-1.0 degeneracy: base-test evaluation gives the demo-fit verifier no headroom.
+  **`.375 fix: keep the demo-fit verifier selecting on VISIBLE example tests, but EVALUATE arms against
+  EvalPlus HIDDEN tests** (HumanEval+/MBPP+) — the visible-under-determines-hidden gap is exactly what
+  GAP-CODE-EXEC-DEMOFIT measures, and EvalPlus maximizes it. Resume the candidate-generation checkpoint
+  (no wasted generation), re-score against the harder hidden tests.
+- **★ LiveCodeBench v6 (arXiv:2403.07974, contamination-free, harder).** Time-windowed
+  post-cutoff problems, sandboxed execution under real-time/memory limits. The escalation corpus if
+  EvalPlus hidden tests still saturate for the local generator.
+- **★ "Rethinking Verification for LLM Code Generation: From Generation to Testing" — SAGA**
+  (arXiv:2507.06920). Verification-centric: generate tests that identify solutions which
+  **superficially pass visible tests but fail on hidden semantics** — the direct algorithmic analog of
+  GAP-CODE-EXEC-DEMOFIT. A candidate STRONGER ARM for the `.375 G1 panel (generated-test discrimination
+  beyond naive demo-fit).
+- **"You Don't Need Public Tests to Generate Correct Code" — DryRUN** (arXiv:2604.21598; Silva,
+  Perera). The model autonomously constructs valid inputs and simulates execution for self-correction
+  WITHOUT public tests; matches a test-dependent SOTA on LiveCodeBench v6 at lower token cost.
+  Relevant as a public-test-free candidate-discrimination arm (and a decentralization-friendly one).
+
+TRACK 2 — verifier-guided action pruning / efficiency (the north-star "efficient" axis; the forward
+pivot from the banked G2 planning negative):
+- **★ "What If We Allocate Test-Time Compute Adaptively?"** (arXiv:2602.01070). **Online
+  verification beats post-hoc reranking** at converting compute→accuracy — the thesis behind
+  verifier-as-action-pruner (prune bad actions *before* executing) over passive candidate reranking.
+- **Marco DeepResearch: Efficient Deep Research Agents via Verification-Centric Design**
+  (arXiv:2603.28376) + **Asymmetric Verification for Deep Search** (arXiv:2510.06135). A cheap
+  verifier selecting/pruning is the efficiency lever — corroborates the `.371 exp4026 result (the
+  model-free GAP-4 verifier is ~95× cheaper than an LLM-judge at parity).
+
+
 
 `.373` converted three open arguments into measurements (capstone exp4041). The honest read,
 straight from the artifacts (not the prose):
