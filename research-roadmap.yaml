@@ -142,7 +142,7 @@ tasks:
         - honest_verdict: terminal prefix (e.g. complete: sota_ingestion_offarc_and_search_mapped)
         - methods_mapped_count: int (principle: an ingestion that maps zero methods is discovery, not
           ingestion -- the slot's whole purpose is actionable mapping)
-        - citations: list of {arxiv_id_or_url} (principle: every method claim must trace to a real
+        - citations: list of {{arxiv_id_or_url}} (principle: every method claim must trace to a real
           source -- adversarial_verify treats an uncited method as fabrication)
         - flagged_for_v374: list of str (principle: closes the discover->ingest->plan loop)
         - inference_substrate: aggregation_from_upstream_artifacts
@@ -212,7 +212,7 @@ tasks:
           principle-dict value would break the gate, per the gated-fields-must-be-bare rule)
         - smoke_passed: bool (principle: a runner that fails its 2-task smoke must not be launched)
         - launched_pid: int (principle: exp4032 polls for the bg run this PID owns)
-        - preconditions_checked: list of {resource, available} (principle: records what was verified
+        - preconditions_checked: list of {{resource, available}} (principle: records what was verified
           before launch, pre-empting the fabricate-when-unavailable failure mode)
         - inference_substrate: live_llm_inference
       Run: cd {project_root} && python scripts/experiments/exp4031_offarc_transfer_build.py
@@ -507,7 +507,7 @@ tasks:
         - stronger_base_model: str (principle: the apples-to-apples comparator to exp4012's gemma-4-12B
           must be named so the coverage delta is attributable to base size)
         - smoke_passed: bool; launched_pid: int
-        - preconditions_checked: list of {resource, available}
+        - preconditions_checked: list of {{resource, available}}
         - inference_substrate: live_llm_inference
       Run: cd {project_root} && python scripts/experiments/exp4036_decentralization_stronger_base_build.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -715,7 +715,7 @@ tasks:
         - per_board_reachability: dict (principle: the continuity record that keeps boards visible in retros)
         - kv260_overlay_loaded: bool (principle: the KV260 terminal-state gate -- overlay present is
           the precondition for a board-latency claim)
-        - preconditions_checked: list of {resource, available} (principle: records which board accesses
+        - preconditions_checked: list of {{resource, available}} (principle: records which board accesses
           were verified before the smoke, pre-empting the fabricate-when-unreachable failure mode)
         - inference_substrate: hardware_smoke
       Run: cd {project_root} && python scripts/experiments/exp4040_hardware_continuity.py
@@ -762,7 +762,7 @@ tasks:
         - decentralization_diagnosis: str (latent | absent | partial | flagged_skipped; principle: the
           sovereign-base branch G3 resolved)
         - total_games_solved: int (principle: the monotonic ARC accuracy counter)
-        - flagged_artifacts_skipped: list; cited_upstream_artifacts: list of {experiment_id, sha256}
+        - flagged_artifacts_skipped: list; cited_upstream_artifacts: list of {{experiment_id, sha256}}
         - inference_substrate: aggregation_from_upstream_artifacts
       Run: cd {project_root} && python scripts/experiments/exp4041_capstone_v373.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
