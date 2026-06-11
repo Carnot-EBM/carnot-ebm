@@ -1,58 +1,58 @@
-# Pre-staged roadmap for milestone 2026.06.373 (planning agent, Claude Opus 4.8, 2026-06-11).
+# Pre-staged roadmap for milestone 2026.06.374 (planning agent, Claude Opus 4.8, 2026-06-11).
 #
-# PROVENANCE: this REPLACES an earlier overnight outer-loop draft of .373 (preserved in git
-# history). The planning agent re-read the ACTUAL .372 result artifacts and found the overnight
-# draft (a) treated a THIN result as solid ("double down" on the search layer), (b) had an
-# off-by-one game count (it said .372 ended at 5 games; the exp4028 capstone shows 6), and (c)
-# proposed verifier-reward distillation on gemma-4-12B -- a base exp4012 already showed is
-# representationally capped (0.2581 demo-perfect, NO lift), which "The Invisible Leash" predicts
-# is a foregone negative. This version is more rigorous on the two load-bearing questions.
+# THE HONEST .373 READ (from the artifacts via summarize_artifact.py, not the prose):
+#   - G1 (operator TOP PRIORITY) exp4032: the SAME GAP-4 execution primitive transferred to MBPP code
+#     DIRECTIONALLY -- Arm B demo-fit +5.0pp over Arm A vote, SAME SIGN as ARC-1 (+16pp), positive
+#     control PASSES (oracle headroom present). BUT n=40, bootstrap CI95 [0.0, 12.5] TOUCHES ZERO ->
+#     not yet significant. The artifact's own recommendation: scale to full HumanEval(164)/MBPP(~500).
+#     New gap logged: GAP-CODE-EXEC-DEMOFIT (visible tests under-determine hidden semantics).
+#   - G2 exp4034+exp4035: vc33 goal predicate induced at held-out precision/recall 1.0 (SOLID); the
+#     search was REAL + non-bespoke (169 nodes, general heuristic, subgoals) and FOUND A PLAN -- but
+#     the plan was DEGENERATE ([6,38,28] x70) that satisfied is_goal INSIDE the 99%-accurate WM yet
+#     FAILED real-env confirmation. Textbook planner-exploits-world-model-error (MuZero 2306.00840):
+#     open-loop search over a data-collection-validated WM does NOT transfer. search_layer_generalizes
+#     = FALSE.
+#   - G3 exp4036+exp4037: gemma-4-31B-it best-of-N launched but COLLECTED 0 TASKS (31B dense too slow
+#     for 30xk=8). coverage=0.0 is a NON-measurement, not "absent." latent-vs-absent still OPEN.
+#   - Accuracy: 7th game solved (dc22-fdcac232, real-env-confirmed). Self-learning: ArcMemo v6 won
+#     (59->18 actions, 0 induction calls). Hardware: KV260 overlay loaded, latency step still BLOCKED.
 #
-# THE HONEST .372 READ (from the artifacts, not the prose):
-#   - exp4021 "search SOLVED r11l L4" BUT nodes_expanded=3 with r11l-SPECIFIC hardcoded macros
-#     (r11l_safe_composite_path_macro). One bespoke data point -- NOT a demonstrated general planner.
-#   - exp4020 goal-predicate separation worked (held-out precision 1.0) -- SOLID, reusable.
-#   - exp4022 decentralization branch was FLAGGED adversarial (DURATION_TOO_SHORT 0.746s, no
-#     methodology) -> skipped -> decentralization UNRESOLVED. exp4012: gemma-4-12B best-of-N k=8 =
-#     0.2581 coverage = NO lift over the 3-attempt baseline, 5x slower than codex.
-#   - exp4026 efficiency: verifier vs LLM-judge parity at 95.3x cheaper WALL-CLOCK -- CLEAN win.
-#   - 6 ARC-AGI-3 games solved (exp4024 cd82 was the 6th).
+# THE THREE GAPS .374 ATTACKS (design doc: openspec/change-proposals/research-roadmap-v374.md):
+#   G1 (operator TOP PRIORITY): CLOSE THE CI. Scale the off-ARC demo-fit transfer to full HumanEval(164)
+#      + an MBPP slice, ADD stronger arms (symbolic-equivalence partition 2604.06485, ACES leave-one-out
+#      2604.03922), 10k-resample task-level bootstrap -> does the CI EXCLUDE zero? (exp4044 build + exp4045
+#      collect). Converts the operator's directional datum into a measured one.
+#   G2: ROBUST PLANNING. Replace open-loop search with CLOSED-LOOP per-step replanning (re-observe the
+#      REAL env each step; MuZero 2306.00840 + GC-IDM 2605.08732 + World-in-World 2510.18135) + a
+#      WM-TRUST/DIVERGENCE GATE (2508.06096) that refuses degenerate WM-exploiting plans. Does closed-loop
+#      grounding break vc33's wall where open-loop failed? (exp4046). The strategic depth test.
+#   G3: DECISIVE DECENTRALIZATION. TRACTABLE rerun on Qwen3.6-35B-A3B (MoE ~3B active) with batching +
+#      RoBoN-style early-stop -> does coverage beat the 0.2581 12B ceiling (latent) or stay flat (absent)?
+#      Clean replacement for the flagged exp4022 + the 0-task exp4037; retire_if_same_verdict (exp4047
+#      build + exp4048 collect).
 #
-# THE THREE GAPS .373 ATTACKS (design doc: openspec/change-proposals/research-roadmap-v373.md):
-#   G1 (operator TOP PRIORITY 2026-06-11): MEASURE the execution verifier OFF-ARC on MBPP/HumanEval
-#      -> convert "argued domain-general" into a measured datum (exp4031 build + exp4032 collect).
-#   G2: GENERALIZE the search/navigator to a SECOND game's wall -- vc33, the canonical 99%-accurate-
-#      WM-still-fails case the .372 doc itself named but exp4021 substituted r11l for -- with a
-#      NON-bespoke heuristic + subgoal decomposition + an HONEST node count (exp4034 + exp4035).
-#      General planner, or r11l-specific trick? This is the strategic depth test.
-#   G3: CLEAN decentralization rerun on a STRONGER local base (gemma-4-31B / Qwen3.6-35B) -- does
-#      best-of-N coverage beat the 0.2581 12B ceiling (latent -> distillation viable) or stay flat
-#      (absent -> Invisible Leash holds, need a bigger base)? Clean replacement for flagged exp4022.
-#      Distillation is correctly SEQUENCED for after a base shows latent support, not run blind here.
+# ROUTING: Codex-Default v2 (gemini BANNED). All experiment tasks codex/gpt-5.5. The two many-GGUF-call
+# experiments (G1 exp4044/4045, G3 exp4047/4048) are SPLIT into a fast BUILD+LAUNCH (backgrounds the real
+# run) + a COLLECT/poll task per the split-long-codex discipline so no agent is held past the 80-min cap.
+# exp4042 archive/activate = claude + opus + requires_claude_verified (the milestone-transition lesson).
+# ARC solve (exp4049) is INCREMENTAL (+1, never "solve all") per the Incremental-Progress rule.
 #
-# ROUTING: Codex-Default v2 (gemini BANNED). All experiment tasks codex/gpt-5.5. The two
-# many-GGUF-call experiments (off-ARC transfer exp4031/4032, decentralization exp4036/4037) are
-# SPLIT into a fast BUILD+LAUNCH task + a COLLECT/poll task per the 2026-06-10 split-long-codex
-# discipline so no agent is held open past the conductor's 80-min wall-clock cap. exp4029
-# archive/activate = claude + opus + requires_claude_verified (the exp4019/exp4008 lesson). All
-# ARC solve tasks are INCREMENTAL (+1, never "solve all") per the Incremental-Progress rule.
-#
-# OPERATOR REVIEW: the G1 off-ARC transfer (exp4031/4032) is the operator's literal 2026-06-11 TOP
-# PRIORITY; the G2 vc33 generalization (exp4034/4035) is the strategic bet on whether the .372
-# search layer is real or game-specific. Adjust freely.
-milestone: "2026.06.373"
-milestone_title: "MEASURE the verifier OFF-ARC + GENERALIZE the search layer past one bespoke point. The .372 pivot ADVANCED but THINLY: exp4021 solved r11l L4 with a 3-node search over r11l-SPECIFIC hardcoded macros (not a general planner), exp4022 decentralization was fabrication-FLAGGED (unresolved), and the GAP-4 execution verifier -- Carnot's entire value-add -- has NEVER been measured off-ARC. This milestone converts three open arguments into measurements. G1 (operator TOP PRIORITY): run the SAME induce->restricted-exec->output-match primitive on MBPP/HumanEval (visible tests=demos, hidden tests=gold) with a bootstrap-CI gate + positive control -> does the verifier MEASURABLY generalize to code? G2: generalize the search/navigator to vc33 (the 99%-accurate-WM-still-fails case) with subgoal decomposition + a non-bespoke heuristic + a real search -> general planner or r11l trick? G3: clean decentralization rerun on a STRONGER local base (gemma-4-31B/Qwen3.6-35B) -> does best-of-N coverage beat the 0.2581 12B ceiling (latent->distillation viable) or stay flat (absent->leash holds)? KEEP the proven tracks: 7th-game first-solve (monotonic +1), ArcMemo v6 concept-library, KV260 drive-toward-terminal. Capstone: did the verifier generalize off-ARC AND did the search layer generalize past r11l?"
-milestone_doc: "openspec/change-proposals/research-roadmap-v373.md"
+# OPERATOR REVIEW: G1 (exp4044/4045) is the operator's literal TOP PRIORITY -- .373 brought it within one
+# power-bump of CI-excludes-0. G2 (exp4046) is the strategic bet on whether the search-layer pivot is
+# salvageable with closed-loop grounding. Adjust freely.
+milestone: "2026.06.374"
+milestone_title: "PROVE the off-ARC verifier transfer (close the CI) + replace open-loop WM search with closed-loop grounding. .373 converted three arguments into measurements: G1 the GAP-4 execution verifier transferred to code DIRECTIONALLY (+5pp, right sign, oracle headroom) but n=40 CI [0.0,12.5] TOUCHES ZERO; G2 the search FOUND a plan over the verified vc33 WM but it was a DEGENERATE WM-exploiting plan ([6,38,28]x70) that FAILED real-env confirmation (planner-exploits-model-error); G3 the stronger-base run COLLECTED 0 TASKS (throughput failure, not a clean answer). This milestone makes all three decision-grade. G1 (operator TOP PRIORITY): scale the SAME demo-fit primitive to full HumanEval(164)+MBPP + stronger arms (symbolic-equivalence-partition, ACES leave-one-out), 10k-resample task-level bootstrap -> does the CI EXCLUDE zero? G2: closed-loop per-step replanning (re-observe the REAL env each step) + a WM-trust/divergence gate that refuses WM-exploiting plans -> does grounding break vc33's wall where open-loop failed? G3: TRACTABLE rerun on Qwen3.6-35B-A3B MoE (~3B active) + early-stop -> latent (coverage>0.2581) or absent (retire). KEEP the proven tracks: 8th-game first-solve (monotonic +1), ArcMemo v7 CROSS-GAME concept-library transfer, KV260 drive-toward-terminal. Capstone: did the verifier transfer SIGNIFICANTLY off-ARC, and is the search layer salvageable with closed-loop grounding?"
+milestone_doc: "openspec/change-proposals/research-roadmap-v374.md"
 
 tasks:
-  - id: exp4029-archive-v372-activate-v373
+  - id: exp4042-archive-v373-activate-v374
     operator_override: >
       2026-06-11 planning-agent directive (standing 2026-05-29 auto-override class 1):
       routine milestone-transition task (archive-vN-activate-vN+1) -- false-positive scope-match
-      vs every prior archive/activate task; structurally never a doomed rerun. Aggregation +
-      infra-hardening only.
-    milestone: "2026.06.373"
-    title: "Archive .372 -> activate .373; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load and the python/carnot/agentic ARC modules import, run the smart-subset pre-test gate green, then RECORD the .372 close-state truth (search-layer thin-win: nodes_expanded=3 r11l-macros; exp4022 flagged-skipped; 6 games solved; efficiency 95.3x clean win)."
+      vs every prior archive/activate task (exp4029/exp4019/exp4008); structurally never a doomed
+      rerun. Aggregation + infra-hardening only.
+    milestone: "2026.06.374"
+    title: "Archive .373 -> activate .374; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load and the python/carnot/agentic ARC modules import, run the smart-subset pre-test gate green, then RECORD the .373 close-state truth (G1 directional+underpowered CI-touches-0; G2 no-generalization (WM-exploiting degenerate plan); G3 absent/0-tasks-throughput-failure; 7 games solved; ArcMemo v6 win)."
     priority: critical
     track: infra
     max_turns: 100
@@ -61,70 +61,75 @@ tasks:
     requires_claude: true
     requires_claude_verified: true
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4029_archive_v372_activate_v373.json
+    deliverable: results/experiment_4042_archive_v373_activate_v374.json
     prompt: |
-      CONTEXT: milestone .372 (the Deep-Think search-layer pivot) has completed. You are archiving
-      it and activating .373. The .373 headline (design doc openspec/change-proposals/
-      research-roadmap-v373.md) converts three open arguments into measurements: G1 measure the
-      execution verifier OFF-ARC, G2 generalize the search layer to vc33, G3 clean decentralization
-      on a stronger local base.
+      CONTEXT: milestone .373 (MEASURE the verifier off-ARC + generalize the search layer) has
+      completed. You are archiving it and activating .374. The .374 headline (design doc
+      openspec/change-proposals/research-roadmap-v374.md) makes the three .373 measurements
+      decision-grade: G1 close the off-ARC transfer CI, G2 replace open-loop WM search with
+      closed-loop grounding, G3 a tractable decentralization measurement.
 
       EXISTING CODE TO READ FIRST:
-        - research-complete.yaml (append the .372 record; yaml.safe_load MUST still parse after)
+        - research-complete.yaml (append the .373 record; yaml.safe_load MUST still parse after)
         - ops/exclusion_manifest.yaml (assert it parses)
-        - results/experiment_4028_capstone_v372.json (the .372 close-state source of truth)
+        - results/experiment_4041_capstone_v373.json (the .373 close-state source of truth)
         - python/carnot/agentic/ (assert the ARC modules import)
 
-      TASK: archive .372, activate .373, keep the green-gate + poison-test quarantine, record the
-      .372 close-state honestly.
+      TASK: archive .373, activate .374, keep the green-gate + poison-test quarantine, record the
+      .373 close-state honestly.
 
       CONCRETE STEPS:
-        1. Append a .372 record to research-complete.yaml (milestone, the 10 tasks exp4019-exp4028
-           with OK/FAIL/skip, key results). Verify yaml.safe_load parses the whole file after.
+        1. Append a .373 record to research-complete.yaml (milestone, the 13 tasks exp4029-exp4041
+           with OK/FAIL/skip/FLAGGED, key results). Verify yaml.safe_load parses the whole file after.
         2. Assert ops/exclusion_manifest.yaml parses under yaml.safe_load.
         3. Assert the python/carnot/agentic ARC modules import (python -c "import ...").
         4. Run the smart-subset pre-test gate. If ANY test is red, git mv it into tests/quarantine/
-           and record which (the poison-test quarantine that held through .370/.371/.372).
-        5. RECORD the .372 close-state: per-task OK/FAIL/skip/FLAGGED; the search-layer thin-win
-           (exp4021 nodes_expanded=3 with r11l-specific macros); exp4022 flagged-skipped;
-           total_games_solved=6; the efficiency clean win (95.3x cheaper wall-clock).
+           and record which (the poison-test quarantine that held through .370/.371/.372/.373).
+        5. RECORD the .373 close-state: per-task OK/FAIL/skip/FLAGGED; G1 directional-underpowered
+           (delta +5pp, CI95 [0.0,12.5] touches 0, n=40); G2 no-generalization (the degenerate
+           WM-exploiting plan that failed real-env confirmation); G3 absent/0-tasks (throughput
+           failure); total_games_solved=7; exp4031 flagged-skipped.
       REQUIRED ARTIFACT FIELDS (principle-annotated):
-        - honest_verdict: MUST start complete:/success:/passed:/shipped:
+        - honest_verdict: MUST start complete:/success:/passed:/shipped: (principle: the terminal
+          prefix is what the conductor reconciler classifies as terminal -- words like "blocked"
+          mid-string risk a false-positive partial classification)
         - pretest_suite_green: bool (principle: a red pre-test gate cascade-SKIPs the whole
-          milestone -- this is the 4x-recurrence poison-test failure mode)
-        - active_milestone_confirmed: str (principle: the conductor must agree .373 is active)
-        - milestone_372_closestate: dict (principle: the next planner reads this as ground truth)
+          milestone -- the 4x-recurrence poison-test failure mode)
+        - active_milestone_confirmed: str (principle: the conductor must agree .374 is active)
+        - milestone_373_closestate: dict (principle: the next planner reads this as ground truth)
         - inference_substrate: aggregation_from_upstream_artifacts
-      Run: cd {project_root} && python scripts/experiments/exp4029_archive_v372_activate_v373.py
+      Run: cd {project_root} && python scripts/experiments/exp4042_archive_v373_activate_v374.py
       (or inline). Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4030-sota-ingestion-offarc-and-search
-    milestone: "2026.06.373"
-    title: "SOTA-INGESTION SLOT (mandatory per the standing 2026-06-11 discipline; .373 headline is a bleeding-edge track): read research-studying.md / research-references.md filtered to .373's two bleeding-edge tracks (off-ARC execution-consistency verification + hierarchical/subgoal search over induced world models), run a FOCUSED fresh sweep via scripts/sweep_clusters.py + sweep_semscholar.py + low-concurrency WebSearch/WebFetch (NEVER /deep-research -- it rate-limited 4x/6M-tokens/zero-output 2026-06-11), and emit a SOTA->experiment mapping artifact (strongest 3-5 methods per track, implementation-over-current-stack, pitfalls). Flag the strongest method(s) as candidate inputs for the .374 roadmap. Every method claim MUST cite a real arXiv ID/URL (no-fabrication bar)."
+  - id: exp4043-sota-ingestion-offarc-power-and-closed-loop-planning
+    milestone: "2026.06.374"
+    title: "SOTA-INGESTION SLOT (mandatory per the standing 2026-06-11 discipline; .374 headline is a bleeding-edge track): read research-references.md (the '2026-06-11 Post-.373 Planning Sweep' section already filed) + research-studying.md filtered to .374's two bleeding-edge tracks (off-ARC execution-verifier statistical POWER + closed-loop planning over a verified world model under model-error), run a FOCUSED fresh sweep via scripts/sweep_clusters.py + sweep_semscholar.py + low-concurrency WebSearch/WebFetch (NEVER /deep-research -- it rate-limited 4x/6M-tokens/zero-output 2026-06-11), and emit a SOTA->experiment mapping artifact (strongest 3-5 methods per track, implementation-over-current-stack, pitfalls). Flag the strongest method(s) as candidate inputs for the .375 roadmap. Every method claim MUST cite a real arXiv ID/URL (no-fabrication bar)."
     priority: high
     track: research
     max_turns: 50
     agent_type: codex
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: docs/research-notes/sota-ingestion-2026-06-11-offarc-and-search.md
+    deliverable: docs/research-notes/sota-ingestion-2026-06-11-offarc-power-and-closed-loop-planning.md
     prompt: |
       CONTEXT: institutionalize the deep-research pattern (SOTA-Ingestion Cycle Discipline, CLAUDE.md).
-      The .373 headline attacks two bleeding-edge tracks: (1) OFF-ARC execution-consistency
-      verification (the G1 verifier-transfer experiment exp4031/4032), and (2) hierarchical/subgoal
-      search over an induced+verified world model (the G2 generalization exp4034/4035). The .373
-      planning sweep ALREADY filed Tier-A/B references (see research-references.md "2026-06-11 (.373
-      planning sweep ...)"): DOCE 2408.13745, ACES 2604.03922, symbolic-equiv 2604.06485 for code
-      selection; HWM 2604.03208, Subgoal-PHS 2506.07255, Sokoban-HRL 2504.04366 for search. Your job
-      is to turn those (plus a fresh focused pass) into an actionable SOTA->experiment mapping.
+      The .374 headline attacks two bleeding-edge tracks: (1) the statistical POWER + stronger
+      discriminator for off-ARC execution-verifier transfer (the G1 exp4044/4045 measurement), and
+      (2) CLOSED-LOOP planning over a verified world model under model-error (the G2 exp4046
+      experiment). The .374 planning sweep ALREADY filed verified references (see research-references.md
+      "2026-06-11 Post-.373 Planning Sweep"): 2604.06485 (symbolic-equivalence partition), 2602.04254
+      (agentic verifier), 2510.05197 (pass@k power) for track 1; 2306.00840 (MuZero model-error),
+      2605.08732 (GC-IDM per-step replan), 2510.18135 (World-in-World closed-loop), 2508.06096
+      (novelty-MPC trust gate) for track 2. Your job is to turn those (plus a fresh focused pass) into
+      an actionable SOTA->experiment mapping.
 
       EXISTING CODE TO READ FIRST:
-        - research-references.md (the "2026-06-11 (.373 planning sweep ...)" section -- the seed corpus)
+        - research-references.md (the "2026-06-11 Post-.373 Planning Sweep" section -- the seed corpus)
         - research-studying.md (filter to the two tracks)
-        - docs/research-notes/search-layer-literature-2026-06-11.md (the .372 exemplar template)
+        - docs/research-notes/sota-ingestion-2026-06-11-offarc-and-search.md (the .373 exemplar template)
         - scripts/sweep_clusters.py + scripts/sweep_semscholar.py (the reliable discovery channel)
 
-      TASK: emit a SOTA->experiment mapping note for the two .373 tracks.
+      TASK: emit a SOTA->experiment mapping note for the two .374 tracks.
 
       CONCRETE STEPS:
         1. Read the seed references above; filter research-studying.md to the two tracks.
@@ -132,398 +137,337 @@ tasks:
            track + low-concurrency WebSearch/WebFetch of the top 5-8 papers. DO NOT invoke the
            /deep-research skill (banned from the autonomous loop -- rate-limits to zero output).
         3. Synthesize per track: the strongest 3-5 methods, what each would take to implement OVER
-           the current Carnot stack (arc_gap4_execution_verifier.py + sandbox.py for code; the
-           verified-WM simulator + exp4020 goal predicate for search), and the pitfalls / where each
-           fails. Use docs/research-notes/search-layer-literature-2026-06-11.md as the template.
+           the current Carnot stack (the demo-fit code verifier + sandbox for track 1; the vc33
+           verified WM + exp4034 goal predicate for track 2), and the pitfalls / where each fails.
         4. Update research-studying.md (mark the seed candidates ingested) and add a "bottom line for
-           the .374 roadmap" section flagging the strongest method(s).
+           the .375 roadmap" section flagging the strongest method(s).
       REQUIRED ARTIFACT FIELDS (in the markdown note; also emit a tiny JSON receipt
-      results/experiment_4030_sota_ingestion_receipt.json with):
-        - honest_verdict: terminal prefix (e.g. complete: sota_ingestion_offarc_and_search_mapped)
+      results/experiment_4043_sota_ingestion_receipt.json with):
+        - honest_verdict: terminal prefix (e.g. complete: sota_ingestion_offarc_power_and_closed_loop_mapped)
         - methods_mapped_count: int (principle: an ingestion that maps zero methods is discovery, not
           ingestion -- the slot's whole purpose is actionable mapping)
         - citations: list of {{arxiv_id_or_url}} (principle: every method claim must trace to a real
           source -- adversarial_verify treats an uncited method as fabrication)
-        - flagged_for_v374: list of str (principle: closes the discover->ingest->plan loop)
+        - flagged_for_v375: list of str (principle: closes the discover->ingest->plan loop)
         - inference_substrate: aggregation_from_upstream_artifacts
       Run: cd {project_root} && python scripts/sweep_clusters.py (+ WebSearch/WebFetch as needed),
       then write the note. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4031-offarc-exec-verifier-transfer-build
+  - id: exp4044-offarc-transfer-power-build
     operator_override: >
-      2026-06-11 operator directive (explicit, this session): "queue the off-ARC execution-verifier
-      measurement as a next milestone task so this stops being an open argument." Full spec in
-      ops/known-issues.md MANDATORY-NEXT-MILESTONE PRIORITIES (2026-06-11 TOP PRIORITY). Genuinely
-      NEW scope (CODE domain, not ARC) -- the scope-match vs exp3975-gap4-execution-verifier-build
-      is a false positive; this is the first cross-domain transfer measurement, not a rerun.
-    milestone: "2026.06.373"
-    title: "OFF-ARC EXECUTION-VERIFIER TRANSFER -- BUILD+LAUNCH (operator TOP PRIORITY 2026-06-11; G1; split-long-codex BUILD half): write the standalone two-arm + positive-control runner that measures whether the SAME GAP-4 execution-consistency primitive transfers to CODE. Reuse the DOMAIN-GENERAL primitives (python/carnot/verify/sandbox.py restricted exec + the demo-fit/content-hash logic in python/carnot/agentic/arc_gap4_execution_verifier.py) -- do NOT write a code-specific verifier; the whole point is the primitive is SHARED. Corpus: MBPP (and/or HumanEval); visible example tests = the 'demos', hidden tests = held-out 'gold'. Smoke on 2 tasks, commit the runner, then LAUNCH the full run BACKGROUNDED (the run makes N>=30 x k>=8 local-GGUF generations and must not hold an agent past the 80-min cap)."
+      2026-06-11 operator directive (standing TOP PRIORITY, this session): the off-ARC
+      execution-verifier transfer is the operator's literal top priority. This is a forward SCALE-UP
+      of exp4032's DIRECTIONAL positive (+5pp, CI touches 0) -- a versioned-lineage continuation with
+      a STATED forward difference (full HumanEval(164)+MBPP slice instead of n=40, PLUS stronger
+      discriminator arms: symbolic-equivalence partition + ACES leave-one-out). The scope-match vs
+      exp4031/exp4032 is a legit continuation the artifact ITSELF recommended ("scale to full
+      MBPP/HumanEval for the CI-excludes-0 gate"), not a doomed rerun.
+    milestone: "2026.06.374"
+    title: "OFF-ARC TRANSFER POWER + STRONGER DISCRIMINATOR -- BUILD+LAUNCH (operator TOP PRIORITY; G1; split-long-codex BUILD half): exp4032 got +5pp on MBPP n=40 but CI95 [0.0,12.5] TOUCHES ZERO. Scale the SAME shared GAP-4 demo-fit primitive to full HumanEval(164)+an MBPP slice (target N>=160 completed), k>=8 LOCAL-GGUF generations per task, and ADD stronger arms on the SAME candidate pool: Arm A vote, Arm A++ ACES leave-one-out test-consistency (arXiv:2604.03922), Arm B demo-fit (the shared ARC primitive -- the headline arm), Arm C symbolic-equivalence partition (arXiv:2604.06485). Compute the oracle/best-of-pool POSITIVE CONTROL. Smoke on 2 tasks, commit the runner, LAUNCH the full run BACKGROUNDED (batched generation, checkpoint per task, ~75-min cap -> report partial via checkpoint; must not hold an agent past the 80-min cap)."
     priority: critical
     track: verifier
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4031_offarc_transfer_build.json
+    deliverable: results/experiment_4044_offarc_transfer_power_build.json
     prompt: |
-      CONTEXT: the operator TOP PRIORITY (ops/known-issues.md, 2026-06-11): convert "the verifier is
-      domain-general" from ARGUED to MEASURED. The GAP-4 execution primitive (induce a program from
-      demos -> execute in a restricted namespace -> accept iff exact-output-match) is domain-general
-      BY CONSTRUCTION but has only ever run on ARC grids. MBPP/HumanEval is the 1:1 off-ARC analog:
-      visible example tests = demos, hidden tests = gold, restricted-exec + output-match = the
-      verifier. This is the BUILD half of a split-long-codex pair (the RUN half is exp4032). Prior
-      art (read first): DOCE arXiv:2408.13745 (the execution-based reranking protocol + baselines),
-      ACES arXiv:2604.03922 (leave-one-out test-consistency = a STRONGER baseline than plain vote).
+      CONTEXT: the operator TOP PRIORITY. exp4032 measured that the SAME GAP-4 execution primitive
+      (induce a program from demos -> execute in a restricted namespace -> accept iff exact-output-
+      match) transfers to MBPP code DIRECTIONALLY (Arm B demo-fit +5.0pp over Arm A vote, same sign as
+      ARC-1, positive control passes) but at n=40 the bootstrap CI95 [0.0, 12.5] TOUCHES ZERO. This
+      milestone closes the CI two ways: (1) POWER -- full HumanEval(164)+MBPP slice; (2) STRONGER
+      DISCRIMINATOR -- the naive demo-fit's +5pp may lift with symbolic-equivalence partitioning
+      (arXiv:2604.06485, HumanEval+ 0.754->0.826) or ACES leave-one-out test-consistency
+      (arXiv:2604.03922). This is the BUILD half of a split-long-codex pair (RUN/COLLECT = exp4045).
 
       EXISTING CODE TO READ FIRST:
-        - python/carnot/agentic/arc_gap4_execution_verifier.py (the demo-fit / content-hash logic to REUSE)
+        - results/experiment_4032_offarc_exec_verifier_transfer_collect.json + the raw artifact
+          (the n=40 directional result + the runner shape to scale up)
+        - python/carnot/agentic/arc_gap4_execution_verifier.py (the SHARED demo-fit / content-hash
+          logic to REUSE unchanged -- the whole point is the primitive is the same)
         - python/carnot/verify/sandbox.py (the restricted-namespace executor to REUSE)
-        - results/experiment_4012_gap4_local_best_of_n.json (the local-GGUF best-of-N pattern to mirror)
-        - docs/research-notes/sota-ingestion-2026-06-11-offarc-and-search.md (exp4030 -- read if present)
+        - docs/research-notes/sota-ingestion-2026-06-11-offarc-power-and-closed-loop-planning.md (exp4043, read if present)
 
-      TASK: write scripts/experiments/offarc_exec_verifier_transfer_run.py and launch it backgrounded.
+      TASK: write scripts/experiments/offarc_transfer_power_run.py and launch it backgrounded.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (check BEFORE any inference; on ANY miss write honest_verdict
            blocked_<resource> and STOP -- no fabrication):
            a. local GGUF cached: ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/
-              returns non-empty
+              returns non-empty (the fast lightweight SOTA from exp4032; keep the SAME inducer so
+              the only change vs exp4032 is N + discriminator arm)
            b. python -c "import llama_cpp" succeeds
-           c. the code corpus loads: HF datasets MBPP (or HumanEval), or a cached copy
-           d. python -c "from carnot.verify import sandbox" succeeds (the restricted exec primitive)
-        1. Write the runner: for N>=30 code tasks (prefer >=40 for power; full MBPP is the stretch),
-           generate k>=8 candidate programs each from the LOCAL gemma-4-12B GGUF. Two arms, SAME pool:
-             - Arm A (baseline): majority-vote / self-consistency over candidate hidden-behavior
-               (the TRM-vote analog). ALSO compute Arm A++ = ACES leave-one-out test-consistency.
-             - Arm B (the verifier): demo-fit selection -- execute each candidate on the VISIBLE
-               example tests in the restricted namespace, keep the demo_perfect ones (pass ALL
-               visible tests), rerank/select among them (the model-free execution verifier).
-           Measure held-out HIDDEN-test pass@1/pass@2 for A, A++, B. Compute the bootstrap CI95 of
-           (B - A). Compute the oracle/best-of-pool hidden pass-rate (the POSITIVE CONTROL).
-           Emit results/experiment_4032_offarc_exec_verifier_transfer_raw.json with model_specs,
-           random_seed, reproducibility_checksum, truncation_rate (generation-eval truncation guard).
+           c. the code corpora load: HF datasets HumanEval (164) AND an MBPP slice (or cached copies)
+           d. python -c "from carnot.verify import sandbox" succeeds
+        1. Write the runner: for the full HumanEval(164) + an MBPP slice (target N>=160 COMPLETED),
+           generate k>=8 candidate programs each from the LOCAL gemma-4-12B GGUF (BATCHED for
+           throughput). Four arms over the SAME candidate pool:
+             - Arm A (baseline vote): self-consistency over candidate hidden-behavior.
+             - Arm A++ (ACES): leave-one-out test-consistency.
+             - Arm B (the SHARED demo-fit primitive -- HEADLINE arm): execute each candidate on the
+               VISIBLE example tests in the restricted namespace, keep demo_perfect ones, rerank/select.
+             - Arm C (symbolic-equivalence partition, arXiv:2604.06485): filter by public tests, then
+               partition survivors into functional-equivalence classes (behavioral fingerprint over
+               held-out inputs is an acceptable proxy if symbolic execution is impractical), pick the
+               dominant class.
+           Measure held-out HIDDEN-test pass@1/pass@2 for every arm. Compute oracle/best-of-pool
+           hidden pass-rate (POSITIVE CONTROL). Emit
+           results/experiment_4045_offarc_transfer_power_raw.json with per-arm per-task results,
+           model_specs, random_seed, reproducibility_checksum, truncation_rate. CHECKPOINT per task.
         2. SMOKE the runner on 2 tasks (assert it produces a well-formed raw artifact); commit the runner.
-        3. LAUNCH the full run BACKGROUNDED (nohup python ... > logs/offarc_transfer_run.log 2>&1 &),
-           record the PID, and EXIT. Do NOT hold the agent open for the full run.
-      REQUIRED ARTIFACT FIELDS (principle-annotated) for results/experiment_4031_offarc_transfer_build.json:
-        - honest_verdict: terminal prefix (e.g. success: offarc_transfer_runner_built_smoked_launched
+        3. LAUNCH the full run BACKGROUNDED (nohup python ... > logs/offarc_power_run.log 2>&1 &),
+           record the PID, EXIT. Do NOT hold the agent open for the full run. Time-budget ~75 min.
+      REQUIRED ARTIFACT FIELDS: (principle-annotated; results/experiment_4044_offarc_transfer_power_build.json)
+        - honest_verdict: terminal prefix (e.g. success: offarc_power_runner_built_smoked_launched_humaneval_mbpp
           or blocked_<resource>)
         - runner_ready: bool (BARE bool; principle: the COLLECT task gates on this -- a non-bare
           principle-dict value would break the gate, per the gated-fields-must-be-bare rule)
         - smoke_passed: bool (principle: a runner that fails its 2-task smoke must not be launched)
-        - launched_pid: int (principle: exp4032 polls for the bg run this PID owns)
+        - launched_pid: int (principle: exp4045 polls for the bg run this PID owns)
+        - arms_implemented: list of str (principle: the four arms must all be present for the
+          stronger-discriminator comparison to be meaningful)
         - preconditions_checked: list of {{resource, available}} (principle: records what was verified
           before launch, pre-empting the fabricate-when-unavailable failure mode)
         - inference_substrate: live_llm_inference
-      Run: cd {project_root} && python scripts/experiments/exp4031_offarc_transfer_build.py
+      Run: cd {project_root} && python scripts/experiments/exp4044_offarc_transfer_power_build.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4032-offarc-exec-verifier-transfer-collect
+  - id: exp4045-offarc-transfer-power-collect
     operator_override: >
       2026-06-11 operator-outer-loop directive: COLLECT half of the operator's TOP PRIORITY off-ARC
-      split-pair. The doomed-rerun guard scope-matched exp4031-offarc-transfer-build, whose
-      DURATION_TOO_SHORT flag is a FALSE POSITIVE (a 14.13s build+smoke+LAUNCH task that declared
-      live_llm_inference but only backgrounds the real run; smoke_passed=True, runner built+launched
-      successfully). The backgrounded run already produced a real 286KB checkpoint
-      (results/experiment_4032_offarc_exec_verifier_transfer.checkpoint.json, 40 MBPP tasks x k=8).
-      This collect step validates that EXISTING data -- it is the legit forward half, not a doomed
-      rerun.
-    milestone: "2026.06.373"
+      power split-pair. Forward continuation of exp4032's directional positive -- validates the
+      EXISTING backgrounded data from exp4044, not a doomed rerun. The split mirrors the .373
+      exp4031/exp4032 split-long-codex pattern.
+    milestone: "2026.06.374"
     gated_on:
-      - upstream: exp4031-offarc-exec-verifier-transfer-build
+      - upstream: exp4044-offarc-transfer-power-build
         artifact_field: runner_ready
         op: '=='
         value: true
     milestone_title_note: "COLLECT half of the split-long-codex pair; gated on the BUILD runner being ready."
-    title: "OFF-ARC EXECUTION-VERIFIER TRANSFER -- COLLECT+VALIDATE (G1; operator TOP PRIORITY): poll for the backgrounded run launched by exp4031; validate the bootstrap CI95 and the POSITIVE CONTROL (if oracle ~= vote, the corpus is ceiling-saturated and the null is UNINFORMATIVE -> escalate, never report 'verifier fails to transfer'); emit the three-outcome verdict: (1) B>A CI excludes 0 + headroom exists -> the execution primitive MEASURABLY generalizes to code; (2) B~=A + headroom exists -> honest negative, log the missing discriminator; (3) no headroom -> uninformative, harder corpus needed. This converts the operator's open argument into a measurement."
+    title: "OFF-ARC TRANSFER POWER -- COLLECT+VALIDATE (operator TOP PRIORITY; G1; THE headline question): poll for the backgrounded run launched by exp4044; recompute the 10,000-resample TASK-LEVEL bootstrap CI95 for (Arm B demo-fit - Arm A vote) over N>=160 -- DOES THE CI NOW EXCLUDE ZERO? Also report whether a stronger arm (Arm C symbolic-partition / Arm A++ ACES) lifts the delta above naive demo-fit. Check the POSITIVE CONTROL (oracle headroom present -> informative; oracle~=vote -> ceiling-saturated, uninformative, escalate). Emit the verdict: (1) demo-fit CI EXCLUDES 0 -> the shared GAP-4 primitive MEASURABLY generalizes to code (the operator's headline); (2) demo-fit CI still touches 0 but a stronger arm excludes 0 -> the primitive transfers but needs a code-specialized discriminator (log GAP-CODE-EXEC-DEMOFIT); (3) all arms touch 0 with headroom -> honest small-magnitude transfer; (4) no headroom -> uninformative, harder corpus."
     priority: critical
     track: verifier
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4032_offarc_exec_verifier_transfer.json
+    deliverable: results/experiment_4045_offarc_transfer_power.json
     prompt: |
-      CONTEXT: exp4031 launched the off-ARC transfer run backgrounded (it writes
-      results/experiment_4032_offarc_exec_verifier_transfer_raw.json). Your job is to COLLECT that
-      raw result, VALIDATE it statistically, and emit the final three-outcome verdict. This is the
-      operator's TOP PRIORITY measurement (ARC->code verifier transfer). Honest negatives and
-      "uninformative" outcomes are COMPLETE verdicts, not failures.
+      CONTEXT: exp4044 launched the full-corpus off-ARC transfer run backgrounded (it writes
+      results/experiment_4045_offarc_transfer_power_raw.json). Your job: COLLECT, VALIDATE
+      statistically, and answer the operator's TOP-PRIORITY question -- does the off-ARC transfer CI
+      now EXCLUDE zero? Honest negatives and "uninformative" outcomes are COMPLETE verdicts, not
+      failures. The HEADLINE arm is Arm B demo-fit (the SHARED ARC primitive); the stronger arms (A++
+      ACES, C symbolic-partition) contextualize whether a code-specialized discriminator is needed.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4031_offarc_transfer_build.json (runner_ready, launched_pid)
-        - results/experiment_4032_offarc_exec_verifier_transfer_raw.json (the bg run output, when present)
+        - results/experiment_4044_offarc_transfer_power_build.json (runner_ready, launched_pid, arms)
+        - results/experiment_4045_offarc_transfer_power_raw.json (the bg run output, when present)
         - scripts/adversarial_verify.py + scripts/summarize_artifact.py (the validation discipline)
 
-      TASK: poll, validate, and verdict the off-ARC transfer.
+      TASK: poll, validate, and verdict the off-ARC transfer power measurement.
 
       CONCRETE STEPS:
-        0. PRECONDITION: read results/experiment_4031_offarc_transfer_build.json. If runner_ready is
-           not true, emit honest_verdict blocked_build_runner_not_ready and STOP.
-        1. POLL for results/experiment_4032_offarc_exec_verifier_transfer_raw.json up to a bounded
-           budget (e.g. check every ~60s; tail logs/offarc_transfer_run.log). If still absent after
-           the budget (the bg run did not finish), emit honest_verdict
-           complete: offarc_transfer_run_incomplete_partial_<n>_tasks with whatever partial data
-           exists -- do NOT fabricate a result.
-        2. VALIDATE: recompute the bootstrap CI95 of (Arm B - Arm A) over N>=30 tasks. Check the
-           POSITIVE CONTROL: oracle/best-of-pool hidden pass-rate. If oracle ~= vote (no selectable
-           headroom), the corpus is ceiling-saturated -> outcome (3) uninformative, recommend a
-           harder corpus -- do NOT report "verifier fails to transfer" (FALSE_NEGATIVE_RISK).
-        3. EMIT the three-outcome verdict (B>A CI-excl-0 -> generalizes; B~=A+headroom -> honest
-           negative + log the missing discriminator to ops/verifier_gaps.md; no headroom ->
-           uninformative). Run summarize_artifact.py / adversarial_verify.py on the final artifact.
+        0. PRECONDITION: read results/experiment_4044_offarc_transfer_power_build.json. If runner_ready
+           is not true, emit honest_verdict blocked_build_runner_not_ready and STOP.
+        1. POLL for results/experiment_4045_offarc_transfer_power_raw.json up to a bounded budget
+           (check ~every 60s; tail logs/offarc_power_run.log). If still incomplete after the budget,
+           emit honest_verdict complete: offarc_power_run_incomplete_partial_<n>_tasks with whatever
+           partial data exists and recompute the CI on that partial N -- do NOT fabricate.
+        2. VALIDATE: 10,000-resample TASK-LEVEL bootstrap CI95 for (Arm B - Arm A) over N>=160 (per
+           the .374 sweep sizing rule: a ~5pp lift needs N in the low hundreds, not n=30). Repeat for
+           (Arm A++ - Arm A) and (Arm C - Arm A). Check the POSITIVE CONTROL: oracle/best-of-pool
+           hidden pass-rate; if oracle~=vote (no headroom), outcome (4) uninformative -- do NOT report
+           "verifier fails to transfer" (FALSE_NEGATIVE_RISK).
+        3. EMIT the four-outcome verdict (demo-fit CI-excl-0 -> generalizes; demo-fit touches-0 but a
+           stronger arm excl-0 -> needs code-specialized discriminator, append to GAP-CODE-EXEC-DEMOFIT
+           in ops/verifier_gaps.md; all touch-0 w/ headroom -> small-magnitude honest transfer; no
+           headroom -> uninformative). Run summarize_artifact.py / adversarial_verify.py on the final.
       REQUIRED ARTIFACT FIELDS (principle-annotated):
-        - honest_verdict: terminal prefix (e.g. complete: exec_verifier_transfers_to_code_deltaPP_ci_excl0,
-          complete: exec_verifier_no_transfer_code_vote_near_ceiling, or
-          complete: offarc_transfer_uninformative_no_headroom)
-        - corpus: str + n_tasks: int (principle: N>=30 for a pp-delta claim, per Adversarial Artifact
-          Verification + Sample-Size Rigor)
-        - armA_vote_passrate, armB_demofit_passrate: float; delta_pp: float; bootstrap_ci95: [lo,hi]
-          (principle: the CI excluding 0 is what distinguishes a real lift from noise)
-        - oracle_passrate: float (principle: the positive control that rules out the degenerate
-          no-headroom null -- FALSE_NEGATIVE_RISK)
-        - missing_verifier_gaps: list (principle: per the Missing-Verifier rule, characterize any
-          residual unselectable slice as a verifier-build spec)
+        - honest_verdict: terminal prefix (e.g. complete: offarc_demofit_transfers_to_code_ci_excl0_n160,
+          complete: offarc_demofit_touches0_symbolic_partition_excl0, or
+          complete: offarc_transfer_small_magnitude_all_arms_touch0)
+        - corpus: str + n_tasks: int (principle: N>=160 for a ~5pp-delta CI-excludes-0 claim, per the
+          sweep sizing rule + Adversarial Artifact Verification + Sample-Size Rigor)
+        - armA_vote_passrate, armApp_aces_passrate, armB_demofit_passrate, armC_symbolic_passrate: float
+        - demofit_delta_pp: float; demofit_bootstrap_ci95: [lo,hi]; demofit_ci_excludes_zero: bool
+          (BARE bool; principle: the CI excluding 0 is the operator's headline gate)
+        - best_arm: str; best_arm_delta_pp: float; best_arm_ci_excludes_zero: bool (principle: whether
+          a code-specialized discriminator clears the bar the shared primitive could not)
+        - oracle_passrate: float (principle: the positive control ruling out the no-headroom null -- FALSE_NEGATIVE_RISK)
+        - missing_verifier_gaps: list (principle: per the Missing-Verifier rule, characterize residual
+          unselectable slices as verifier-build specs)
         - model_specs, random_seed, reproducibility_checksum (principle: a third party must re-run)
         - inference_substrate: verifier_ensemble_against_cached_candidates
-      Run: cd {project_root} && python scripts/experiments/exp4032_offarc_transfer_collect.py
+      Run: cd {project_root} && python scripts/experiments/exp4045_offarc_transfer_power_collect.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4033-verifier-registry-harness-registration
-    operator_override: >
-      2026-06-11 planning-agent directive (standing 2026-05-29 auto-override class 1):
-      infrastructure registry/harness-registration task (reserved infra slot 2) -- scope-matches
-      the prior exp4001/exp4023 registry tasks but is forward registry hygiene, never a doomed
-      rerun. Forward difference = registers the OFF-ARC code-domain outcome from exp4032.
-    milestone: "2026.06.373"
-    title: "VERIFIER-REGISTRY + HARNESS REGISTRATION (infrastructure; reserved infra slot; GAP-4 conductor follow-up #4): register gap4_program_induction_stack as a reusable module in ops/verifier_registry.yaml, bit-exact OFFLINE re-eval that reproduces the ARC-1 (28/31) and ARC-2 (19/31 or current canonical) numbers from cached candidates (zero codex, zero GGUF), and RECORD the off-ARC outcome from exp4032 -- a code-domain registry entry if exp4032 showed transfer, OR a ops/verifier_gaps.md entry naming the missing discriminator if it did not. Keeps the registry the honest source of truth for what the verifier covers."
-    priority: medium
-    track: infra
-    max_turns: 40
-    agent_type: codex
-    model: gpt-5.5
-    inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4033_verifier_registry_harness_registration.json
-    prompt: |
-      CONTEXT: the GAP-4 execution verifier is Carnot's live winning verifier line (ARC-1 vote
-      0.4516 -> gated 0.5806). conductor_followup #4 (ops/known-issues.md 2026-06-10) asks to
-      register it as a reusable module + offline-re-eval it bit-exact. This is the reserved infra
-      slot for .373. It also records the off-ARC outcome (exp4032) into the registry/gaps ledger so
-      the registry stays the honest map of what the verifier covers.
-
-      EXISTING CODE TO READ FIRST:
-        - ops/verifier_registry.yaml (the registry to update)
-        - ops/verifier_gaps.md (the gaps ledger -- GAP-4 entry)
-        - python/carnot/agentic/arc_gap4_execution_verifier.py (the stack to register as a module)
-        - results/arc3_gap4_*.json + results/experiment_4032_offarc_exec_verifier_transfer.json
-          (the numbers to reproduce / the off-ARC outcome to record)
-
-      TASK: register the stack, offline re-eval bit-exact, record the off-ARC outcome.
-
-      CONCRETE STEPS:
-        1. Register gap4_program_induction_stack in ops/verifier_registry.yaml as a reusable module
-           (snap tau<=0.005 -> promote-first-fresh-raw -> vote; agreement = confidence label only).
-        2. OFFLINE bit-exact re-eval from cached candidates (NO codex, NO GGUF): reproduce the
-           canonical ARC-1 and ARC-2 pass@2 numbers. Assert they match (bit-exact).
-        3. RECORD the exp4032 off-ARC outcome: if it showed transfer (CI excludes 0), add a
-           code-domain entry to ops/verifier_registry.yaml; if not, append a ops/verifier_gaps.md
-           entry naming the missing discriminator. If exp4032 is absent/incomplete, record
-           "off_arc_pending" honestly.
-      REQUIRED ARTIFACT FIELDS (principle-annotated):
-        - honest_verdict: terminal prefix (e.g. complete: gap4_stack_registered_offline_reeval_bitexact_offarc_<outcome>)
-        - registry_updated: bool (principle: the registry is the honest map of verifier coverage)
-        - offline_reeval_bitexact: bool (principle: a reusable module that does not reproduce the
-          headline numbers is not the same verifier -- regression guard)
-        - off_arc_outcome_recorded: str (one of: code_entry_added | gap_logged | off_arc_pending;
-          principle: the off-ARC measurement must land in the ledger, not just an artifact)
-        - inference_substrate: aggregation_from_upstream_artifacts
-      Run: cd {project_root} && python scripts/experiments/exp4033_verifier_registry_harness_registration.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4034-vc33-goal-predicate-induction
-    milestone: "2026.06.373"
-    title: "GOAL-PREDICATE INDUCTION for a SECOND game (vc33) -- the G2 prerequisite: exp4020 induced is_goal(state) for r11l at held-out precision 1.0. Apply the SAME separation (goal predicate distinct from dynamics) to vc33 -- the canonical 99%-accurate-verified-world-model-that-still-fails-to-solve case (arc3_vc33_world_model_program.py is already on disk). Induce is_goal(state) from observed level-up transitions; verify on HELD-OUT level-ups (fires exactly on solved states, not before/after). This is the reusable navigator half that exp4035's search will consume. No new env exploration sweep -- reuse the saved vc33 transition store / WM program."
-    priority: high
-    track: planning
-    max_turns: 70
-    agent_type: codex
-    model: gpt-5.5
-    inference_substrate: offline_arc_agi3_goal_predicate_induction_no_oracle
-    deliverable: results/experiment_4034_vc33_goal_predicate_induction.json
-    prompt: |
-      CONTEXT: the .372 central bet (search over a verified world model) ADVANCED but THINLY -- only
-      on r11l, with a 3-node search over r11l-specific hardcoded macros. G2 tests whether the layer
-      GENERALIZES. The first half is a goal predicate for a SECOND game. vc33 is the honest target:
-      we have a 99%-accurate verified world model for it (arc3_vc33_world_model_program.py) that
-      single-step approaches still FAILED to solve -- exactly the "search not representation" case.
-
-      EXISTING CODE TO READ FIRST:
-        - results/arc3_vc33_world_model_program.py (the 99%-accurate verified WM already on disk)
-        - results/experiment_4020_goal_induction_separation.json (the r11l goal-predicate exemplar to mirror)
-        - results/arc3_codex_policy_vc33.json + results/arc3_graph_explore_vc33.json (saved vc33 transitions)
-
-      TASK: induce is_goal(state) for vc33, separate from dynamics, verified on held-out level-ups.
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS: assert results/arc3_vc33_world_model_program.py exists and the saved vc33
-           transition store loads. On miss -> honest_verdict blocked_vc33_world_model_missing, STOP.
-        1. From the OBSERVED vc33 level-completion transitions (states at/just-before a
-           level_completed), induce a GOAL PREDICATE is_goal(state) -> bool (Eureka-style LLM-coded
-           predicate in the restricted sandbox). This is oracle-free: the env's own level_completed
-           signal is the label.
-        2. Verify on HELD-OUT level-ups: does it fire exactly on the solved states (not early/late)?
-           Report held-out precision AND recall.
-        3. Save the induced predicate code for exp4035 to consume. NO new env exploration sweep.
-      REQUIRED ARTIFACT FIELDS (principle-annotated):
-        - honest_verdict: terminal prefix (e.g. complete: vc33_goal_predicate_induced_heldout_precision_X
-          or complete: vc33_goal_predicate_not_separable_<reason>)
-        - goal_predicate_heldout_precision: float (BARE float; principle: exp4035's search gates on
-          this -- a goal test that fires early/late makes any search unsolvable, and a non-bare
-          principle-dict value would break the gate)
-        - goal_predicate_heldout_recall: float (principle: low recall means the predicate misses real
-          goals -> search never terminates)
-        - goal_predicate_code: str (principle: the search target exp4035 consumes)
-        - game: str ("vc33"); n_levelup_transitions: int
-        - inference_substrate: offline_arc_agi3_goal_predicate_induction_no_oracle
-      Run: cd {project_root} && python scripts/experiments/exp4034_vc33_goal_predicate_induction.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4035-hierarchical-search-over-vc33-wm
-    milestone: "2026.06.373"
-    gated_on:
-      - upstream: exp4034-vc33-goal-predicate-induction
-        artifact_field: goal_predicate_heldout_precision
-        op: '>='
-        value: 0.5
-    milestone_title_note: "gated on exp4034 producing a usable goal predicate (precision >= 0.5); a worse-than-coin-flip predicate makes search meaningless."
-    title: "HIERARCHICAL SEARCH OVER THE VERIFIED vc33 WORLD MODEL (the G2 DEPTH TEST -- is the .372 search layer a general planner or an r11l trick?): build a planning search over the vc33 verified WM (reuse exp4034's goal predicate + the saved WM program as the forward simulator) with (a) SUBGOAL/LANDMARK decomposition (HWM arXiv:2604.03208 / Subgoal-PHS arXiv:2506.07255 -- the lever for long-horizon where flat search blows up), (b) a NON-bespoke coded heuristic over the goal predicate (unmet goal components / manhattan-to-target / progress-delta -- NOT game-specific hardcoded macros like exp4021's r11l_safe_composite_path_macro), (c) a REAL bounded best-first/A* search (report nodes_expanded + branching honestly -- exp4021 expanded only 3). REAL-ENV-CONFIRM any solve via level_completed. Honest no-solve is a COMPLETE verdict. The diagnostic: did the search break vc33's wall (where the 99%-WM single-step approach failed), and did it do so with a GENERAL heuristic or did it need vc33-specific macros?"
+  - id: exp4046-closed-loop-replan-over-vc33-wm
+    prior_failures:
+      - experiment_id: exp4035-hierarchical-search-over-vc33-wm
+        verdict: "complete: search_layer_no_solve_vc33_real_env_confirmation_failed (open-loop search found a DEGENERATE plan -- [6,38,28] x70 -- that satisfied is_goal INSIDE the 99%-accurate WM but FAILED real-env confirmation; search_layer_generalizes=false)"
+        addressed_by: >
+          exp4035 diagnosed the root cause precisely: OPEN-LOOP search over a world model validated
+          only on the data-collection distribution lets the planner search OUT-OF-DISTRIBUTION and
+          EXPLOIT a WM defect (textbook planner-exploits-model-error, MuZero arXiv:2306.00840). THIS
+          attempt changes the technique: CLOSED-LOOP per-step replanning (execute one action, observe
+          the REAL env, replan from the real state -- GC-IDM arXiv:2605.08732 / World-in-World
+          arXiv:2510.18135) PLUS a WM-trust/divergence gate (compare WM-predicted next-state vs real
+          observed next-state; when they diverge, distrust the WM in that region and refuse the plan
+          -- novelty-MPC arXiv:2508.06096). The degenerate [6,38,28]x70 plan would be caught at step 1
+          by the divergence gate. Different architecture addressing the named root cause, not a rerun.
+        retire_if_same_verdict: true
+    milestone: "2026.06.374"
+    title: "CLOSED-LOOP GROUNDED REPLANNING over the vc33 verified WM (G2 -- is the search layer salvageable?): exp4035's open-loop search found a DEGENERATE plan that exploited a WM defect and failed in the real env. Replace open-loop planning with CLOSED-LOOP per-step grounding: (a) plan a short horizon over the verified WM (reuse exp4034's precision-1.0 goal predicate + the vc33 WM program), execute ONLY the first action in the REAL env, RE-OBSERVE the real state, replan from there (receding horizon / MPC); (b) a WM-TRUST/DIVERGENCE gate -- after each real step compare the WM-predicted next-state vs the REAL observed next-state; on divergence, distrust the WM locally and re-induce / fall back / abstain (this is what catches the degenerate [6,38,28]x70 exploit); (c) refuse degenerate plans (single-action-repeat that the WM claims reaches goal). REAL-ENV-CONFIRM any solve via level_completed. Honest no-solve is a COMPLETE verdict -- but it must DISTINGUISH 'closed-loop grounding broke the wall' from 'the verified-WM-as-simulator has a sim2real ceiling on vc33' (report the per-step WM<->real divergence rate)."
     priority: critical
     track: planning
     max_turns: 110
     agent_type: codex
     model: gpt-5.5
-    inference_substrate: offline_arc_agi3_planning_search_over_verified_world_model
-    deliverable: results/experiment_4035_hierarchical_search_over_vc33_wm.json
+    inference_substrate: offline_arc_agi3_closed_loop_replanning_with_real_env_grounding
+    deliverable: results/experiment_4046_closed_loop_replan_over_vc33_wm.json
     prompt: |
-      CONTEXT: this is the strategic depth test of .373. The .372 capstone claimed the search layer
-      "advanced past the planning wall," but exp4021 expanded only 3 nodes using r11l-SPECIFIC
-      hardcoded macros (r11l_safe_composite_path_macro) -- one bespoke data point. If the layer only
-      works with hand-coded per-game macros, the pivot is game-specific. vc33 is the honest harder
-      test: a 99%-accurate verified WM that single-step approaches STILL failed to solve. PRIOR ART
-      (read first): HWM arXiv:2604.03208 (high-level planner emits SUBGOALS; flat planner struggles
-      on long horizon), Subgoal-PHS arXiv:2506.07255 (automatic subgoal discovery for policy-guided
-      search), Sokoban-HRL-landmarks arXiv:2504.04366. Our exact-verifier-as-simulator avoids the
-      rollout-hallucination failure of latent world models -- a structural advantage to state.
+      CONTEXT: the strategic depth test of .374. The .373 search layer FOUND a plan over the vc33
+      verified WM but it was a DEGENERATE WM-exploiting plan ([6,38,28] repeated 70x) that satisfied
+      the induced goal predicate INSIDE the 99%-accurate WM yet FAILED real-env confirmation
+      (levels_completed=0). This is the generic failure of OPEN-LOOP planning over a model validated
+      only on its data-collection distribution: the planner searches OOD and exploits model error
+      (MuZero arXiv:2306.00840 names this exactly). PRIOR ART (read first via exp4043 ingestion note):
+      GC-IDM arXiv:2605.08732 (closed-loop single-step replan + re-encode every step), World-in-World
+      arXiv:2510.18135 (high WM fidelity != task success; replan on new observation), novelty-MPC
+      arXiv:2508.06096 ("when to trust the model" -- distrust the WM when the rollout leaves the
+      trusted region). The fix is to STOP committing to a plan found in the WM and instead GROUND every
+      step in the REAL env.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4021_heuristic_search_over_verified_wm.json (the r11l exemplar -- and its
-          bespoke-macro / 3-node limitation to AVOID)
-        - results/experiment_4034_vc33_goal_predicate_induction.json (the goal predicate to consume)
-        - results/arc3_vc33_world_model_program.py (the forward simulator)
-        - docs/research-notes/search-layer-literature-2026-06-11.md + exp4030 ingestion note
+        - results/experiment_4035_hierarchical_search_over_vc33_wm.json (the open-loop failure -- and
+          its degenerate-plan / real_env_confirmation_failed signature to AVOID)
+        - results/experiment_4034_vc33_goal_predicate_induction.json (the precision-1.0 goal predicate to reuse)
+        - results/arc3_vc33_world_model_program.py (the verified WM = the per-step forward simulator)
+        - python/carnot/agentic/ (the ARC env harness + GAP-4 verifier)
 
-      TASK: hierarchical search over the vc33 verified WM with a NON-bespoke heuristic.
+      TASK: closed-loop grounded replanning over the vc33 verified WM with a WM-trust/divergence gate.
 
       CONCRETE STEPS:
-        0. PRECONDITION: read exp4034's goal predicate (precision >= 0.5 per the gate) + the vc33 WM
-           program. On miss -> honest_verdict blocked_vc33_goal_predicate_or_wm_missing, STOP.
-        1. Build a planning search over the vc33 verified WM. The verifier/WM is the forward
-           simulator (expands legal next states T(s,a), tests is_goal(s)). Add:
-           (a) SUBGOAL/LANDMARK decomposition (decompose the goal predicate into ordered sub-targets;
-               plan to each subgoal in turn -- the long-horizon tractability lever).
-           (b) a NON-bespoke CODED heuristic h(s) over the goal predicate (unmet goal-predicate
-               components, manhattan-to-target, progress-bar delta). It MUST NOT be a vc33-specific
-               hardcoded macro -- the test is whether a GENERAL heuristic works.
-           (c) a real bounded best-first / A* / depth-limited search (bound expansions, e.g. <=50k).
+        0. PRECONDITIONS: (a) the ARC env is reachable (SDK auto-issues an anonymous key; 25 live
+           envs) -- on miss honest_verdict blocked_arc_env_unreachable, STOP; (b) exp4034's goal
+           predicate (precision>=0.5) + the vc33 WM program load -- on miss
+           blocked_vc33_goal_predicate_or_wm_missing, STOP.
+        1. Build the CLOSED-LOOP controller:
+           (a) RECEDING-HORIZON plan: at each real step, run a SHORT-horizon bounded best-first search
+               over the verified WM (reuse exp4034 is_goal + the WM as the forward simulator) to pick
+               the next action; execute ONLY the first action in the REAL env; RE-OBSERVE the real
+               state; replan from the real state. Do NOT commit a long open-loop plan.
+           (b) WM-TRUST/DIVERGENCE gate: after each real step, compare the WM-predicted next-state
+               vs the REAL observed next-state. Track the per-step divergence. On divergence above a
+               threshold, distrust the WM locally -- re-induce the dynamics from the new real
+               transitions, fall back to exploration, or abstain. This is the gate that catches the
+               degenerate exploit.
+           (c) DEGENERATE-PLAN refusal: reject single-action-repeat plans the WM claims reach goal.
         2. Run it on vc33's wall level. REAL-ENV-CONFIRM any claimed solve via level_completed.
-        3. Report honestly: nodes_expanded, branching factor, whether the search broke the wall, and
-           the diagnosis -- general heuristic vs needed-game-specific-macros (the generality verdict).
+        3. Report honestly and DISTINGUISH the two outcomes: did closed-loop grounding BREAK the wall
+           (real-env-confirmed solve where open-loop failed -> the search layer generalizes WHEN
+           grounded), OR does a high per-step WM<->real divergence rate show the verified-WM-as-
+           simulator has a sim2real ceiling on vc33 (honest architectural finding)?
       REQUIRED ARTIFACT FIELDS (principle-annotated):
-        - honest_verdict: terminal prefix (e.g. complete: search_layer_solved_vc33_L<k>_real_env_confirmed,
-          or complete: search_layer_no_solve_vc33_<bottleneck>)
-        - new_levels_solved_this_task: int (principle: monotonic ARC progress per the Incremental-Progress rule)
-        - search_layer_generalizes: bool (principle: the G2 question -- did the SAME architecture that
-          solved r11l also break a SECOND game's wall, with a GENERAL heuristic?)
-        - heuristic_was_non_bespoke: bool (principle: a win with vc33-specific hardcoded macros is NOT
-          generalization -- it must be a general heuristic to count)
-        - nodes_expanded: int + branching_factor: float (principle: exp4021 expanded only 3 -- a real
-          planner must show a real search, reported honestly)
-        - subgoal_decomposition_used: bool; real_env_confirmed: bool
-        - inference_substrate: offline_arc_agi3_planning_search_over_verified_world_model
-      Run: cd {project_root} && python scripts/experiments/exp4035_hierarchical_search_over_vc33_wm.py
+        - honest_verdict: terminal prefix (e.g. complete: closed_loop_solved_vc33_L<k>_real_env_confirmed,
+          or complete: closed_loop_no_solve_vc33_wm_sim2real_ceiling_divergence_<rate>)
+        - new_levels_solved_this_task: int (principle: monotonic ARC progress per Incremental-Progress)
+        - closed_loop_broke_wall: bool (BARE bool; principle: the G2 question -- did per-step grounding
+          succeed where open-loop search exploited the WM and failed?)
+        - per_step_wm_real_divergence_rate: float (principle: the diagnostic that separates 'grounding
+          fixes it' from 'the WM is too inaccurate under the planning distribution' -- a sim2real ceiling)
+        - divergence_gate_fired_count: int (principle: did the trust gate actually catch WM-exploiting
+          steps, or was it inert?)
+        - real_env_confirmed: bool; degenerate_plan_refused: bool
+        - inference_substrate: offline_arc_agi3_closed_loop_replanning_with_real_env_grounding
+      Run: cd {project_root} && python scripts/experiments/exp4046_closed_loop_replan_over_vc33_wm.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4036-decentralization-stronger-base-build
+  - id: exp4047-decentralization-moe-base-build
     prior_failures:
       - experiment_id: exp4022-decentralization-gated-on-exp4012
-        verdict: "flagged_adversarial DURATION_TOO_SHORT + METHODOLOGY_MISSING (CRITICAL) -- skipped by the .372 capstone, decentralization left UNRESOLVED"
+        verdict: "flagged_adversarial DURATION_TOO_SHORT + METHODOLOGY_MISSING (CRITICAL) -- the branch decision ran 0.746s with no methodology; never ran live inference; skipped, decentralization UNRESOLVED"
         addressed_by: >
-          exp4022 claimed compute-bound markers (GGUF/live model) but ran 0.746s with no
-          model_specs/random_seed/reproducibility_checksum -- it did NOT actually run live local
-          inference. THIS pair fixes the root cause: exp4036 runs REAL live best-of-N inference on a
-          STRONGER local base (gemma-4-31B dense or Qwen3.6-35B MoE, not the 12B exp4012 ceiling),
-          backgrounded with full methodology fields + a plausible multi-minute duration, and exp4037
-          validates it. The NEW hypothesis: per "The Invisible Leash" (arXiv:2507.14843), a stronger
-          local base may have the ARC-induction abstraction in-support where gemma-4-12B did not.
+          exp4022 fabricated a branch decision without running inference. exp4037 then DID launch a
+          real run but on gemma-4-31B DENSE which was too slow to score any tasks in budget
+          (partial_0_tasks). THIS attempt fixes the throughput root cause: use Qwen3.6-35B-A3B (MoE,
+          ~3B ACTIVE params -- far faster than 31B dense at comparable quality), BATCHED generation,
+          and RoBoN-style early-stop (arXiv:2512.05542) so 30 tasks x k=8 actually COMPLETES, with
+          full methodology fields + a plausible multi-minute duration. Different substrate addressing
+          the named throughput failure, not a rerun.
         retire_if_same_verdict: true
-    milestone: "2026.06.373"
-    title: "DECENTRALIZATION clean rerun on a STRONGER local base -- BUILD+LAUNCH (G3; split-long-codex BUILD half; clean replacement for the flagged exp4022): exp4012 measured gemma-4-12B best-of-N (k=8) at 0.2581 demo-perfect coverage = NO lift over the 3-attempt baseline (representational-gap-likely on the 12B). Per 'The Invisible Leash' (arXiv:2507.14843) the gap closes ONLY if the abstraction is LATENT in the base; a STRONGER local base may have it where 12B did not. Write the best-of-N runner for gemma-4-31B dense (or Qwen3.6-35B-A3B MoE -- pick by cache/throughput), smoke on 2 tasks, commit, then LAUNCH the full run BACKGROUNDED on the SAME 30-task ARC-1 pool as exp4012 (apples-to-apples). Time-budget/checkpoint the run; it must not hold an agent past the 80-min cap."
+      - experiment_id: exp4037-decentralization-stronger-base-collect
+        verdict: "complete: decentralization_stronger_base_partial_0_tasks (gemma-4-31B dense too slow; 0 tasks scored in budget; coverage=0.0 is a NON-measurement)"
+        addressed_by: >
+          exp4037's run never completed because 31B dense throughput was inadequate. THIS attempt
+          swaps to a MoE (~3B active) + batching + early-stop + a proper checkpointed budget so the
+          measurement actually lands. If it AGAIN fails to score >=30 tasks, the stronger-base lineage
+          retires per retire_if_same_verdict and the honest bound is recorded.
+        retire_if_same_verdict: true
+    milestone: "2026.06.374"
+    title: "DECENTRALIZATION on a TRACTABLE MoE base -- BUILD+LAUNCH (G3; split-long-codex BUILD half; clean replacement for the flagged exp4022 + the 0-task exp4037): exp4012 = gemma-4-12B best-of-N k=8 = 0.2581 coverage (no lift). exp4037 launched 31B DENSE but scored 0 tasks (too slow). THIS uses Qwen3.6-35B-A3B (MoE, ~3B ACTIVE -- the throughput fix) on the SAME 30-task ARC-1 pool as exp4012 (apples-to-apples), k=8, BATCHED generation + RoBoN-style early-stop (arXiv:2512.05542), same model-free demo-fit verifier. Per 'The Invisible Leash' (arXiv:2507.14843) + RL-vs-Distillation (arXiv:2505.14216): a stronger base raises the CEILING only if the ARC-induction abstraction is LATENT in it. Smoke on 2 tasks, commit, LAUNCH BACKGROUNDED, checkpoint per task, ~75-min cap. MUST actually complete >=30 tasks this time."
     priority: high
     track: decentralization
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4036_decentralization_stronger_base_build.json
+    deliverable: results/experiment_4047_decentralization_moe_base_build.json
     prompt: |
       CONTEXT: decentralization rule 1 (local-first using open models) needs a LOCAL generator that
-      can induce ARC rules. exp4012 showed gemma-4-12B cannot (best-of-N k=8 = 0.2581 coverage, NO
-      lift, 5x slower than codex -- representational-gap-likely). exp4022 (the branch decision) was
-      fabrication-FLAGGED, so decentralization is UNRESOLVED. The clean next step: does a STRONGER
-      LOCAL base have the abstraction in-support? Per "The Invisible Leash" (arXiv:2507.14843),
-      best-of-N at high k surfacing demo-perfect inductions = LATENT (distillation viable); only
-      confident failures = ABSENT (leash holds, need a bigger base). This is the BUILD half (RUN
-      half = exp4037). Distillation is correctly SEQUENCED for after a base shows latent support.
+      can induce ARC rules. exp4012: gemma-4-12B cannot (0.2581 coverage, no lift). exp4037 launched
+      gemma-4-31B DENSE but it was too slow to score any tasks (partial_0_tasks -- a NON-measurement).
+      The fix is THROUGHPUT: Qwen3.6-35B-A3B is a MoE with ~3B ACTIVE params (much faster than 31B
+      dense at comparable capability), so 30 tasks x k=8 can actually complete. Per "The Invisible
+      Leash" (arXiv:2507.14843), best-of-N at high k surfacing demo-perfect inductions = LATENT
+      (distillation viable); only confident failures = ABSENT (need a still-bigger base). Per
+      RL-vs-Distillation (arXiv:2505.14216), raising the CEILING needs new knowledge (a stronger base),
+      NOT RLVR self-improvement. This is the BUILD half (COLLECT = exp4048).
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4012_gap4_local_best_of_n.json (the gemma-4-12B baseline + the EXACT
-          30-task ARC-1 pool + the model-free verifier primitives to REUSE unchanged)
+        - results/experiment_4012_gap4_local_best_of_n.json (the gemma-4-12B baseline 0.2581 + the
+          EXACT 30-task ARC-1 pool + the model-free verifier primitives to REUSE unchanged)
+        - results/experiment_4037_decentralization_stronger_base.json (the 0-task throughput failure to AVOID)
         - python/carnot/agentic/arc_gap4_execution_verifier.py (the model-free verifier)
         - scripts/experiment_template.py (cached_sota_pair() for GGUF path resolution)
 
-      TASK: write the stronger-base best-of-N runner and launch it backgrounded.
+      TASK: write the MoE-base best-of-N runner and launch it backgrounded.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (check BEFORE any inference; on miss -> honest_verdict blocked_<resource>, STOP):
-           a. a STRONGER local GGUF is cached: prefer
-              ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/ ; else
-              ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/ . Pick whichever is
-              cached + faster. If NEITHER cached, download one here (or blocked_stronger_base_not_cached).
+           a. the MoE GGUF is cached: ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/
+              returns non-empty. If absent, download it here (or blocked_moe_base_not_cached).
            b. python -c "import llama_cpp" succeeds
            c. the exp4012 ARC-1 30-task pool loads
-        1. Write the runner mirroring exp4012 EXACTLY (same 30-task pool, k=8, same model-free
-           demo-fit verifier) but with the STRONGER base as the inducer. Emit
-           results/experiment_4037_decentralization_stronger_base_raw.json with per-task demo-perfect,
+        1. Write the runner mirroring exp4012 EXACTLY (same 30-task pool, k=8, same model-free demo-fit
+           verifier) but with Qwen3.6-35B-A3B as the inducer, BATCHED generation, and RoBoN-style
+           early-stop (stop sampling a task once a demo-perfect candidate is found). Emit
+           results/experiment_4048_decentralization_moe_base_raw.json with per-task demo-perfect,
            best-of-N coverage, gated pass@2, local seconds, model_specs, random_seed,
-           reproducibility_checksum. CHECKPOINT after each task (the run is long).
-        2. SMOKE on 2 tasks (well-formed raw artifact); commit the runner.
-        3. LAUNCH the full run BACKGROUNDED (nohup ... > logs/decentralization_run.log 2>&1 &),
-           record the PID, EXIT. Time-budget the run (e.g. cap ~75 min; report partial via checkpoint).
-      REQUIRED ARTIFACT FIELDS (principle-annotated) for results/experiment_4036_..._build.json:
-        - honest_verdict: terminal prefix (e.g. success: decentralization_stronger_base_runner_launched_<model>
+           reproducibility_checksum. CHECKPOINT after EACH task (the throughput-failure guard).
+        2. SMOKE on 2 tasks (well-formed raw artifact, plausible per-task seconds); commit the runner.
+        3. LAUNCH BACKGROUNDED (nohup ... > logs/decentralization_moe_run.log 2>&1 &), record the PID,
+           EXIT. Time-budget ~75 min; report partial via checkpoint. MUST score >=30 tasks if it runs
+           to budget (verify the per-task seconds in the smoke project under the budget).
+      REQUIRED ARTIFACT FIELDS: (principle-annotated; results/experiment_4047_decentralization_moe_base_build.json)
+        - honest_verdict: terminal prefix (e.g. success: decentralization_moe_base_runner_launched_qwen35moe
           or blocked_<resource>)
-        - runner_ready: bool (BARE bool; principle: exp4037 gates on this -- non-bare breaks the gate)
-        - stronger_base_model: str (principle: the apples-to-apples comparator to exp4012's gemma-4-12B
-          must be named so the coverage delta is attributable to base size)
+        - runner_ready: bool (BARE bool; principle: exp4048 gates on this -- non-bare breaks the gate)
+        - moe_base_model: str (principle: the apples-to-apples comparator to exp4012's gemma-4-12B)
+        - smoke_per_task_seconds: float (principle: the throughput check -- smoke seconds x 30 tasks
+          must fit the budget, or the 0-task failure recurs)
         - smoke_passed: bool; launched_pid: int
         - preconditions_checked: list of {{resource, available}}
         - inference_substrate: live_llm_inference
-      Run: cd {project_root} && python scripts/experiments/exp4036_decentralization_stronger_base_build.py
+      Run: cd {project_root} && python scripts/experiments/exp4047_decentralization_moe_base_build.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4037-decentralization-stronger-base-collect
+  - id: exp4048-decentralization-moe-base-collect
     gated_on:
-      - upstream: exp4036-decentralization-stronger-base-build
+      - upstream: exp4047-decentralization-moe-base-build
         artifact_field: runner_ready
         op: '=='
         value: true
@@ -531,226 +475,304 @@ tasks:
       - experiment_id: exp4022-decentralization-gated-on-exp4012
         verdict: "flagged_adversarial DURATION_TOO_SHORT + METHODOLOGY_MISSING (CRITICAL)"
         addressed_by: >
-          exp4022 reported a distillation-feasibility branch in 0.746s with no methodology fields
-          (it never ran live inference). exp4037 instead VALIDATES a real backgrounded best-of-N run
-          on a stronger local base with full methodology + a bootstrap CI vs the exp4012 0.2581
-          baseline, and diagnoses latent-vs-absent honestly per "The Invisible Leash."
+          exp4022 reported a branch decision in 0.746s with no methodology (never ran inference).
+          exp4048 instead VALIDATES a real backgrounded best-of-N run on a tractable MoE base with full
+          methodology + a bootstrap CI vs the exp4012 0.2581 baseline + a positive control, diagnosing
+          latent-vs-absent honestly per "The Invisible Leash."
         retire_if_same_verdict: true
-    milestone: "2026.06.373"
-    title: "DECENTRALIZATION stronger-base -- COLLECT+VALIDATE (G3): poll the backgrounded run from exp4036; report whether the stronger local base's best-of-N demo-perfect coverage rises above exp4012's 0.2581 (gemma-4-12B) ceiling. Diagnose: coverage rises materially (CI excludes the 0.2581 baseline) -> the abstraction is LATENT in the larger local model -> distillation/RLVR viable, the sovereign path scales with base size; coverage stays flat -> the abstraction is ABSENT (the Invisible Leash holds) -> sovereignty needs a still-stronger base, not more training. Report the cost (local seconds vs codex 46s/task; the model-free verifier is ~free). Honest negative is a COMPLETE verdict."
+      - experiment_id: exp4037-decentralization-stronger-base-collect
+        verdict: "complete: decentralization_stronger_base_partial_0_tasks"
+        addressed_by: >
+          exp4037 collected 0 tasks (31B dense throughput failure). exp4048 collects the MoE run which
+          is built to complete >=30 tasks; if it AGAIN lands partial_0_tasks (or another non-measurement),
+          retire the stronger-base lineage per retire_if_same_verdict and record the honest bound.
+        retire_if_same_verdict: true
+    milestone: "2026.06.374"
+    title: "DECENTRALIZATION MoE-base -- COLLECT+VALIDATE (G3): poll the backgrounded run from exp4047; report whether the MoE base's best-of-N demo-perfect coverage rises above exp4012's 0.2581 (gemma-4-12B) ceiling. Bootstrap CI95 of (MoE coverage - 0.2581); POSITIVE CONTROL mandatory (oracle/best-of-pool -- if oracle~=baseline the pool is saturated, uninformative). Diagnose: coverage materially up (CI excludes 0.2581) -> the abstraction is LATENT in the larger local model -> distillation viable, the sovereign path scales with base size; coverage flat -> ABSENT (the Invisible Leash holds) -> sovereignty needs a still-stronger base, not more training. Report local seconds/task vs codex 46s. If the run AGAIN failed to score >=30 tasks, that is the SAME-verdict retirement trigger."
     priority: high
     track: decentralization
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4037_decentralization_stronger_base.json
+    deliverable: results/experiment_4048_decentralization_moe_base.json
     prompt: |
-      CONTEXT: exp4036 launched a real best-of-N run on a STRONGER local base (vs exp4012's
-      gemma-4-12B 0.2581 ceiling), backgrounded. Your job: COLLECT, VALIDATE, and diagnose
-      latent-vs-absent per "The Invisible Leash" (arXiv:2507.14843). This is the clean replacement
-      for the fabrication-flagged exp4022.
+      CONTEXT: exp4047 launched a real best-of-N run on a tractable MoE base (Qwen3.6-35B-A3B, ~3B
+      active) vs exp4012's gemma-4-12B 0.2581 ceiling, backgrounded. Your job: COLLECT, VALIDATE, and
+      diagnose latent-vs-absent per "The Invisible Leash" (arXiv:2507.14843). This is the clean
+      replacement for the flagged exp4022 + the 0-task exp4037. An honest negative (absent) is a
+      COMPLETE verdict; a third consecutive NON-measurement (0 tasks) is the retirement trigger.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4036_decentralization_stronger_base_build.json (runner_ready, model, PID)
-        - results/experiment_4037_decentralization_stronger_base_raw.json (the bg run output, when present)
-        - results/experiment_4012_gap4_local_best_of_n.json (the 0.2581 / 0.4516 baselines to beat)
+        - results/experiment_4047_decentralization_moe_base_build.json (runner_ready, model, PID)
+        - results/experiment_4048_decentralization_moe_base_raw.json (the bg run output, when present)
+        - results/experiment_4012_gap4_local_best_of_n.json (the 0.2581 / 0.4516 / 0.6129 baselines)
 
       TASK: poll, validate, diagnose the sovereign-base coverage.
 
       CONCRETE STEPS:
-        0. PRECONDITION: read exp4036 build artifact. If runner_ready not true ->
+        0. PRECONDITION: read exp4047 build artifact. If runner_ready not true ->
            honest_verdict blocked_build_runner_not_ready, STOP.
-        1. POLL for results/experiment_4037_decentralization_stronger_base_raw.json up to a bounded
-           budget (tail logs/decentralization_run.log). If incomplete after budget, report the
-           partial coverage honestly (complete: decentralization_stronger_base_partial_<n>_tasks) --
-           do NOT fabricate.
-        2. VALIDATE: bootstrap CI95 of (stronger-base demo-perfect coverage - 0.2581). Compare gated
-           pass@2 vs exp4012 (0.4516), oracle (0.6129), codex (0.5806). Report local seconds/task vs
-           codex 46s.
+        1. POLL for results/experiment_4048_decentralization_moe_base_raw.json up to a bounded budget
+           (tail logs/decentralization_moe_run.log). If incomplete after budget, report the partial
+           coverage honestly. If <30 tasks scored, that is the SAME-verdict-as-exp4037 retirement
+           trigger -- record it as complete: decentralization_moe_base_partial_<n>_tasks_retire.
+        2. VALIDATE: bootstrap CI95 of (MoE demo-perfect coverage - 0.2581). POSITIVE CONTROL: oracle/
+           best-of-pool coverage; if oracle~=0.2581 the pool is saturated (uninformative). Compare
+           gated pass@2 vs exp4012 (0.4516), oracle (0.6129), codex (0.5806). Report local seconds/task
+           vs codex 46s.
         3. DIAGNOSE: coverage materially up (CI excludes 0.2581) -> latent -> distillation viable;
-           coverage flat -> absent -> leash holds, need a stronger base. Record the missing-verifier
-           gaps (tasks no local k surfaced).
+           coverage flat (CI includes 0.2581) -> absent -> leash holds, need a bigger base. Record the
+           missing-verifier gaps (tasks no local k surfaced) in ops/verifier_gaps.md.
       REQUIRED ARTIFACT FIELDS (principle-annotated):
-        - honest_verdict: terminal prefix (e.g. complete: decentralization_stronger_base_cov_X_latent_distill_viable
-          or complete: decentralization_stronger_base_cov_X_absent_leash_holds)
-        - stronger_base_demo_perfect_coverage: float (principle: the gap-closing datum vs the 0.2581
-          12B ceiling -- is the abstraction in a bigger local model's support?)
+        - honest_verdict: terminal prefix (e.g. complete: decentralization_moe_base_cov_X_latent_distill_viable,
+          complete: decentralization_moe_base_cov_X_absent_leash_holds, or
+          complete: decentralization_moe_base_partial_<n>_tasks_retire)
+        - moe_base_demo_perfect_coverage: float (principle: the gap-closing datum vs the 0.2581 12B ceiling)
         - coverage_delta_vs_12b: float + bootstrap_ci95: [lo,hi] (principle: a CI excluding 0
           distinguishes a real base-size lift from noise)
-        - local_support_diagnosis: str (latent | absent; principle: the Invisible-Leash branch that
-          decides whether the sovereign path is distillation or a bigger base)
-        - local_seconds_per_task: float (principle: sovereignty must be cost-honest -- a viable but
-          10x-slower path is a tradeoff, not a free win)
+        - n_tasks_scored: int (BARE int; principle: <30 is a non-measurement = the retirement trigger,
+          the exp4037 failure mode)
+        - oracle_coverage: float (principle: the positive control -- rules out a saturated-pool null)
+        - local_support_diagnosis: str (latent | absent | uninformative; principle: the Invisible-Leash
+          branch that decides distillation vs a bigger base)
+        - local_seconds_per_task: float (principle: sovereignty must be cost-honest)
         - model_specs, random_seed, reproducibility_checksum; missing_verifier_gaps: list
         - inference_substrate: verifier_ensemble_against_cached_candidates
-      Run: cd {project_root} && python scripts/experiments/exp4037_decentralization_stronger_base_collect.py
+      Run: cd {project_root} && python scripts/experiments/exp4048_decentralization_moe_base_collect.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4038-seventh-game-explore-first
+  - id: exp4049-eighth-game-explore-first
     operator_override: >
       2026-06-11 planning-agent directive (standing 2026-05-29 auto-override class 1+3):
       ARC-AGI-3 incremental-progress continuation (explore-first first-solve); scope-matches prior
-      game-solve tasks (exp4004/exp4024) but is required forward work per the Incremental-Progress
-      rule; forward difference = a NEW 7th game beyond the banked 6.
-    milestone: "2026.06.373"
-    title: "SEVENTH ARC-AGI-3 game first-solve via the PROVEN explore-first method (raises games-solved 6->7; monotonic +1 per the Incremental-Progress rule): exp4024 solved the 6th game (cd82). Apply the proven loop -- (1) active exploration OBSERVES transitions, (2) induce mechanic + goal predicate from OBSERVED transitions, (3) GAP-4 verifier validates the rule, (4) act -- to a NEW non-spatial-planning game from the win-condition survey not yet solved. Honest no-solve is a COMPLETE verdict."
+      game-solve tasks (exp4038/exp4024, both SUCCEEDED -- not retired) but is required forward work
+      per the Incremental-Progress rule; forward difference = a NEW 8th game beyond the banked 7.
+    milestone: "2026.06.374"
+    title: "EIGHTH ARC-AGI-3 game first-solve via the PROVEN explore-first method (raises games-solved 7->8; monotonic +1 per the Incremental-Progress rule): exp4038 solved the 7th game (dc22-fdcac232). Apply the proven loop -- (1) active exploration OBSERVES transitions, (2) induce mechanic + goal predicate from OBSERVED transitions, (3) GAP-4 verifier validates the rule, (4) act -- to a NEW non-spatial-planning game from the win-condition survey not yet solved (AVOID vc33's spatial-planning trap -- that is exp4046's target). Honest no-solve is a COMPLETE verdict. Save the solve trace for exp4050 (ArcMemo v7 cross-game transfer)."
     priority: high
     track: arc-accuracy
     max_turns: 90
     agent_type: codex
     model: gpt-5.5
     inference_substrate: offline_arc_agi3_explore_first_first_solve
-    deliverable: results/experiment_4038_seventh_game_explore_first.json
+    deliverable: results/experiment_4049_eighth_game_explore_first.json
     prompt: |
-      CONTEXT: monotonic ARC-AGI-3 accuracy progress (north-star). 6 games solved so far (r11l, lp85,
-      su15, cd82 + 2 earlier). The Incremental-Progress rule: target +1 game, never "solve all."
+      CONTEXT: monotonic ARC-AGI-3 accuracy progress (north-star). 7 games solved so far (r11l, lp85,
+      su15, cd82, dc22 + 2 earlier). The Incremental-Progress rule: target +1 game, never "solve all."
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4024_fifth_game_explore_first.json + results/experiment_4004_fourth_game_explore_first.json
+        - results/experiment_4038_seventh_game_explore_first.json + results/experiment_4024_fifth_game_explore_first.json
           (the proven explore-first exemplars)
         - results/arc3_win_condition_survey.json (pick an easier-win-condition NON-spatial-planning
           game not yet solved)
         - python/carnot/agentic/ (the explore-first loop + GAP-4 verifier)
 
-      TASK: solve a 7th ARC-AGI-3 game via explore-first.
+      TASK: solve an 8th ARC-AGI-3 game via explore-first.
 
       CONCRETE STEPS:
         0. PRECONDITION: the ARC env is reachable (the SDK auto-issues an anonymous key; 25 live
            envs). On miss -> honest_verdict blocked_arc_env_unreachable, STOP.
         1. Pick a NEW non-spatial-planning game from arc3_win_condition_survey.json (easier win
-           condition, not yet solved; AVOID vc33's spatial-planning trap -- that is exp4035's target).
+           condition, not yet solved; AVOID vc33's spatial-planning trap -- that is exp4046's target).
         2. Run explore-first: observe transitions -> induce mechanic + goal predicate -> GAP-4
-           verifier validates -> act. REAL-ENV-CONFIRM any solve via level_completed.
+           verifier validates -> act. REAL-ENV-CONFIRM any solve via level_completed. Save the full
+           solve trace (actions, induction calls) for exp4050.
       REQUIRED ARTIFACT FIELDS (principle-annotated):
-        - honest_verdict: terminal prefix (e.g. success: seventh_game_solved_<game>_at_action_N or
-          complete: seventh_game_no_solve_<game>_<reason>)
+        - honest_verdict: terminal prefix (e.g. success: eighth_game_solved_<game>_at_action_N or
+          complete: eighth_game_no_solve_<game>_<reason>)
         - game_solved: bool; target_game: str
         - total_games_solved: int (principle: the monotonic ARC accuracy counter -- the north-star metric)
         - real_env_confirmed: bool (principle: a solve is only real if the live env's level_completed
           confirms it -- no simulated solves)
+        - solve_trace: dict (principle: exp4050 reads this to measure cross-game concept-library transfer)
         - inference_substrate: offline_arc_agi3_explore_first_first_solve
-      Run: cd {project_root} && python scripts/experiments/exp4038_seventh_game_explore_first.py
+      Run: cd {project_root} && python scripts/experiments/exp4049_eighth_game_explore_first.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4039-arcmemo-concept-library-v6
+  - id: exp4050-arcmemo-cross-game-transfer-v7
     operator_override: >
       2026-06-11 planning-agent directive (standing 2026-05-29 auto-override class 3):
-      versioned self-learning lineage continuation (ArcMemo v5->v6) with a STATED forward
-      difference -- adds LILO/Stitch-style concept-LIBRARY compression (named abstractions) on top
-      of the v5 concept memory, and tests transfer to .373's NEW solve content.
-    milestone: "2026.06.373"
-    title: "ArcMemo v6: concept-LIBRARY learning (self-learning MANDATE; extends the exp4025 v5 71->21-action transfer): v5 stored raw concepts; v6 COMPRESSES recurring induced-program fragments into NAMED, documented abstractions (LILO/Stitch, arXiv:2310.19791) that seed future induction. Measure whether the compressed library makes THIS milestone's new solves (exp4035 search-layer / exp4038 7th game) cheaper (fewer actions / fewer induction calls) than v5's raw memory and a cold start."
+      versioned self-learning lineage continuation (ArcMemo v6->v7) with a STATED forward difference --
+      v6 measured WITHIN-milestone transfer on .373's new solves; v7 measures CROSS-GAME transfer of
+      the compressed concept library to a GENUINELY NEW game (exp4049's 8th game). Different question,
+      not a rerun of v6.
+    milestone: "2026.06.374"
+    title: "ArcMemo v7: CROSS-GAME concept-library transfer (self-learning MANDATE; extends the exp4039 v6 within-game win): v6 compressed concepts into named abstractions and won WITHIN the milestone (59->18 actions). v7 tests the real self-learning claim -- does the library built from the 7 PRIOR solved games REDUCE the cost of solving a GENUINELY NEW 8th game (exp4049)? Seed exp4049's explore-first solver with the v6 library; measure action-count + induction-call reduction on the 8th game vs (a) a cold start and (b) v6's within-game-only memory. This is TRANSFER (across games), not replay (within one) -- the bar that distinguishes self-learning from caching."
     priority: medium
     track: self-learning
     max_turns: 80
     agent_type: codex
     model: gpt-5.5
-    inference_substrate: offline_arc_agi3_arcmemo_concept_transfer
-    deliverable: results/experiment_4039_arcmemo_concept_library_v6.json
+    inference_substrate: offline_arc_agi3_arcmemo_cross_game_transfer
+    deliverable: results/experiment_4050_arcmemo_cross_game_transfer_v7.json
     prompt: |
       CONTEXT: self-learning mandate (research-program.md Continuous Self-Learning; Tier-2 constraint
-      memory). exp4025 (ArcMemo v5) showed concept-memory transfer (71->21 actions). v6 upgrades the
-      memory from raw concepts to a COMPRESSED LIBRARY of named, documented abstractions per LILO/
-      Stitch (arXiv:2310.19791) -- recurring induced-program fragments become reusable named ops that
-      seed future induction.
+      memory). exp4039 (ArcMemo v6) compressed concepts into named abstractions and won WITHIN the
+      milestone (59->18 actions, 0 induction calls). The unresolved question v6 did NOT answer: does
+      the library TRANSFER ACROSS games? v7 measures cross-game transfer -- the real self-learning
+      bar (transfer, not replay).
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4025_arcmemo_solve_transfer_v5.json (the v5 transfer baseline)
-        - the ArcMemo concept-memory module in python/carnot/agentic/
-        - results/experiment_4035_hierarchical_search_over_vc33_wm.json + results/experiment_4038_seventh_game_explore_first.json
-          (the new .373 solve content to test transfer on, if present)
+        - results/experiment_4039_arcmemo_concept_library_v6.json (the v6 compressed-library baseline)
+        - the ArcMemo concept-library module in python/carnot/agentic/
+        - results/experiment_4049_eighth_game_explore_first.json (the NEW 8th-game solve content to
+          test transfer on, if present)
 
-      TASK: build the v6 compressed concept library and measure transfer on .373's new solves.
+      TASK: measure whether the v6 concept library reduces the cost of solving the NEW 8th game.
 
       CONCRETE STEPS:
-        1. Compress the accumulated ArcMemo concepts into named, documented abstractions (LILO/Stitch
-           lambda-abstraction style): cluster recurring induced-program fragments, name + document them.
-        2. Seed the solver with the v6 library; measure action-count / induction-call reduction on
-           .373's new solve content (exp4035 / exp4038) vs (a) v5 raw memory and (b) a cold start.
-        3. Report honestly whether compression helped, hurt, or was neutral.
+        0. PRECONDITION: read exp4049's solve trace. If exp4049 did not solve (no usable trace),
+           measure transfer on the 8th-game ATTEMPT (induction calls / actions to the same depth) and
+           say so honestly -- do NOT fabricate a solve.
+        1. Build the v7 library from the 7 PRIOR solved games' induced-program fragments (named,
+           documented abstractions per LILO/Stitch, arXiv:2310.19791).
+        2. Seed the 8th-game explore-first solver with the v7 library; measure action-count +
+           induction-call reduction on the 8th game vs (a) a COLD start and (b) v6's within-game-only
+           memory. The library MUST beat BOTH to claim cross-game transfer.
+        3. Report honestly whether the cross-game library helped, hurt, or was neutral.
       REQUIRED ARTIFACT FIELDS (principle-annotated):
-        - honest_verdict: terminal prefix (e.g. success: arcmemo_v6_library_transfer_Nto M_actions or
-          complete: arcmemo_v6_no_transfer_<reason>)
-        - solve_transfer_win: bool (principle: persistent memory must demonstrably REDUCE future cost,
-          not just store -- the self-learning bar)
-        - actions_cold, actions_v5, actions_v6: ints (principle: v6 must beat BOTH cold and v5 to
-          justify the compression step)
-        - n_named_abstractions: int (principle: the library's compression yield -- the LILO mechanism)
-        - inference_substrate: offline_arc_agi3_arcmemo_concept_transfer
-      Run: cd {project_root} && python scripts/experiments/exp4039_arcmemo_concept_library_v6.py
+        - honest_verdict: terminal prefix (e.g. success: arcmemo_v7_cross_game_transfer_Nto M_actions or
+          complete: arcmemo_v7_no_cross_game_transfer_<reason>)
+        - cross_game_transfer_win: bool (principle: persistent memory must demonstrably REDUCE the cost
+          of a NEW game, not just replay a solved one -- the transfer bar that defines self-learning)
+        - actions_cold, actions_within_game_v6, actions_cross_game_v7: ints (principle: v7 must beat
+          BOTH cold and within-game-v6 to justify the cross-game library claim)
+        - n_reused_abstractions: int (principle: how many prior-game abstractions actually fired on the
+          new game -- the transfer mechanism, not just library size)
+        - inference_substrate: offline_arc_agi3_arcmemo_cross_game_transfer
+      Run: cd {project_root} && python scripts/experiments/exp4050_arcmemo_cross_game_transfer_v7.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4040-hardware-continuity-kv260-terminal
+  - id: exp4051-verifier-registry-and-gaps-hygiene
+    operator_override: >
+      2026-06-11 planning-agent directive (standing 2026-05-29 auto-override class 1):
+      infrastructure registry/gaps-hygiene task (reserved infra slot 2) -- scope-matches the prior
+      exp4033/exp4023 registry tasks (both SUCCEEDED, not retired) but is forward registry hygiene,
+      never a doomed rerun. Forward difference = records the .374 G1 off-ARC POWER outcome + the G2
+      closed-loop outcome + bit-exact GAP-4 regression re-eval.
+    milestone: "2026.06.374"
+    title: "VERIFIER-REGISTRY + GAPS HYGIENE (infrastructure; reserved infra slot): bit-exact OFFLINE re-eval that reproduces the canonical GAP-4 ARC-1 (28/30) and ARC-2 numbers from cached candidates (zero codex, zero GGUF -- the regression guard); RECORD the .374 G1 off-ARC power outcome from exp4045 (update the GAP-CODE-EXEC-DEMOFIT ledger entry with the full-N CI -- did a stronger discriminator close it?); RECORD the G2 closed-loop outcome from exp4046 (did closed-loop grounding break the wall, or is there a sim2real ceiling gap to log?). Keeps ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source of truth for what the verifier covers."
+    priority: medium
+    track: infra
+    max_turns: 40
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4051_verifier_registry_and_gaps_hygiene.json
+    prompt: |
+      CONTEXT: the GAP-4 execution verifier is Carnot's live winning verifier line, and ops/
+      verifier_gaps.md is the honest map of what the verifier covers/misses. This reserved infra slot
+      keeps both honest: a bit-exact regression re-eval of the headline GAP-4 numbers + recording the
+      .374 G1 (off-ARC power) and G2 (closed-loop) outcomes into the ledger.
+
+      EXISTING CODE TO READ FIRST:
+        - ops/verifier_registry.yaml (the registry) + ops/verifier_gaps.md (the gaps ledger:
+          GAP-4 positive, GAP-CODE-EXEC-DEMOFIT open)
+        - python/carnot/agentic/arc_gap4_execution_verifier.py (the registered stack)
+        - results/experiment_4045_offarc_transfer_power.json (the G1 off-ARC power outcome to record)
+        - results/experiment_4046_closed_loop_replan_over_vc33_wm.json (the G2 outcome to record)
+        - results/arc3_gap4_*.json (the canonical ARC-1/ARC-2 numbers to reproduce bit-exact)
+
+      TASK: bit-exact GAP-4 re-eval + record the .374 G1/G2 outcomes in the ledger.
+
+      CONCRETE STEPS:
+        1. OFFLINE bit-exact re-eval from cached candidates (NO codex, NO GGUF): reproduce the
+           canonical GAP-4 ARC-1 (vote 0.4516 -> gated 0.5806) and ARC-2 numbers. Assert bit-exact.
+        2. RECORD the exp4045 G1 outcome: update the GAP-CODE-EXEC-DEMOFIT ledger entry with the
+           full-N CI -- did the demo-fit CI exclude 0, or did a stronger discriminator (symbolic-
+           partition/ACES) close it (=> a new code-domain registry entry), or did all arms touch 0
+           (=> the gap stays open with the magnitude bound)?
+        3. RECORD the exp4046 G2 outcome: if closed-loop grounding broke vc33's wall, note the
+           verified-WM+closed-loop planner as a registry capability; if not, log the sim2real-ceiling
+           gap (the per-step WM<->real divergence) as a new ops/verifier_gaps.md entry. If an upstream
+           is absent/incomplete, record "<gap>_pending" honestly.
+      REQUIRED ARTIFACT FIELDS (principle-annotated):
+        - honest_verdict: terminal prefix (e.g. complete: gap4_reeval_bitexact_g1_<outcome>_g2_<outcome>_recorded)
+        - offline_reeval_bitexact: bool (principle: a reusable verifier that does not reproduce its
+          headline numbers is not the same verifier -- regression guard)
+        - g1_off_arc_outcome_recorded: str (principle: the off-ARC power measurement must land in the
+          ledger, not just an artifact)
+        - g2_closed_loop_outcome_recorded: str (principle: the planning outcome -- capability or new gap)
+        - registry_updated: bool; gaps_updated: bool
+        - inference_substrate: aggregation_from_upstream_artifacts
+      Run: cd {project_root} && python scripts/experiments/exp4051_verifier_registry_and_gaps_hygiene.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4052-hardware-continuity-kv260-terminal
     operator_override: >
       2026-06-11 planning-agent directive (standing 2026-05-29 auto-override class 2):
       active hardware-continuity task (KV260/GateMate/PolarFire) mandated by the Hardware-Task
       Continuity Discipline until each board reaches terminal state; scope-matches prior continuity
-      tasks but is required forward work. Forward difference = KV260 drive-toward-terminal (load the
-      overlay exp4027 found absent + a latency-transcript step).
-    milestone: "2026.06.373"
-    title: "Hardware continuity (consolidated; KV260 drive-toward-terminal per north-star §3): per-board SSH/USB reachability + KV260 toward its terminal state. exp4027 found KV260 reachable but the carnot_ising OVERLAY ABSENT -- this task loads it (xmutil loadapp) and takes a board-latency-transcript step (the KV260 terminal-state gate). GateMate (openFPGALoader -c dirtyJtag --detect) + PolarFire (ssh polarfire) opportunistic. Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability is the ONLY valid KV260 precondition. DISTINCT wall-clock timers per board (no shared-timestamp tautology)."
+      tasks (exp4040/exp4027) but is required forward work. Forward difference = KV260 latency-
+      transcript step (exp4040 loaded the overlay but the latency step stayed BLOCKED).
+    milestone: "2026.06.374"
+    title: "Hardware continuity (consolidated; KV260 drive-toward-terminal per north-star §3): exp4040 loaded the carnot_ising overlay on KV260 but the board-latency-transcript step stayed BLOCKED -- this task drives that final terminal step (the overlay is now present; take the latency transcript over SSH). GateMate (openFPGALoader -c dirtyJtag --detect) + PolarFire (ssh polarfire) opportunistic. Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability is the ONLY valid KV260 precondition. DISTINCT wall-clock timers per board (no shared-timestamp tautology)."
     priority: low
     track: hardware
     max_turns: 50
     agent_type: codex
     model: gpt-5.5
     inference_substrate: hardware_smoke
-    deliverable: results/experiment_4040_hardware_continuity.json
+    deliverable: results/experiment_4052_hardware_continuity.json
     prompt: |
       CONTEXT: Hardware-Task Continuity Discipline + north-star §3 (KV260 is THE drive-to-terminal
-      board). exp4027 found KV260 reachable via SSH but the carnot_ising overlay ABSENT. The KV260
-      terminal state = board-level latency transcript landed + overlay loaded. NEVER use a host
-      SD-card block device as a KV260 precondition (KV260 SSH-Not-SD-Card Discipline).
+      board). exp4040 found KV260 reachable and LOADED the carnot_ising overlay, but the board-latency
+      transcript step stayed BLOCKED. The KV260 terminal state = overlay loaded + board-level latency
+      transcript landed. NEVER use a host SD-card block device as a KV260 precondition (KV260
+      SSH-Not-SD-Card Discipline).
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4027_hardware_continuity.json (last per-board state)
+        - results/experiment_4040_hardware_continuity.json (last per-board state: overlay loaded,
+          latency step blocked)
         - ops/hardware-bringup-prep.md (per-board bring-up state)
 
-      TASK: per-board reachability + KV260 drive-toward-terminal.
+      TASK: per-board reachability + KV260 latency-transcript terminal step.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (SSH/USB; distinct timer per board):
-           a. KV260: ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true' (exit 0). NEVER use the host SD-card block device as a KV260 precondition (SSH-reachability is the ONLY valid one).
+           a. KV260: ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true' (exit 0). NEVER use the host
+              SD-card block device as a KV260 precondition (SSH-reachability is the ONLY valid one).
            b. GateMate: openFPGALoader -c dirtyJtag --detect
            c. PolarFire: ssh -o ConnectTimeout=5 polarfire 'true'
            On a board miss, record blocked_<board>_unreachable for THAT board and continue the others.
-        1. KV260 (if reachable): xmutil listapps; if the carnot_ising overlay is absent, load it
-           (xmutil loadapp carnot_ising_v4 or the current canonical name); then take a board-latency
-           transcript step toward the terminal state. Use a DISTINCT wall-clock timer.
+        1. KV260 (if reachable): xmutil listapps; confirm the carnot_ising overlay is loaded (load it
+           if absent); then take the board-level latency-transcript step toward the terminal state
+           (read a UIO register / time an energy-eval round-trip over SSH). Use a DISTINCT wall-clock timer.
         2. GateMate / PolarFire: record reachability + next concrete step (opportunistic).
       REQUIRED ARTIFACT FIELDS (principle-annotated):
-        - honest_verdict: terminal prefix (e.g. complete: hardware_continuity_kv260_overlay_loaded_latency_step_<...>)
+        - honest_verdict: terminal prefix (e.g. complete: hardware_continuity_kv260_latency_transcript_<...>)
         - per_board_reachability: dict (principle: the continuity record that keeps boards visible in retros)
-        - kv260_overlay_loaded: bool (principle: the KV260 terminal-state gate -- overlay present is
-          the precondition for a board-latency claim)
+        - kv260_latency_step_taken: bool (principle: the KV260 terminal-state gate -- the step exp4040
+          left blocked)
+        - kv260_overlay_loaded: bool (principle: the precondition for a board-latency claim)
         - preconditions_checked: list of {{resource, available}} (principle: records which board accesses
           were verified before the smoke, pre-empting the fabricate-when-unreachable failure mode)
         - inference_substrate: hardware_smoke
-      Run: cd {project_root} && python scripts/experiments/exp4040_hardware_continuity.py
+      Run: cd {project_root} && python scripts/experiments/exp4052_hardware_continuity.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4041-capstone-v373
-    milestone: "2026.06.373"
-    title: "Capstone .373 (UNGATED): the milestone's headline question is DID THE VERIFIER MEASURABLY GENERALIZE OFF-ARC, AND DID THE SEARCH LAYER GENERALIZE PAST THE BESPOKE r11l POINT? Aggregate: G1 VERIFIER-GENERALITY = exp4032 (does the GAP-4 execution primitive transfer to MBPP/HumanEval -- CI-excl-0 delta or honest negative or uninformative?) + exp4033 (registry/gap recorded); G2 SEARCH-GENERALIZATION = exp4034 (vc33 goal predicate) + exp4035 (hierarchical search over vc33 WM: search_layer_generalizes + heuristic_was_non_bespoke + nodes_expanded -- did a GENERAL heuristic break a SECOND game's wall?); G3 DECENTRALIZATION = exp4037 (did a stronger local base beat the 0.2581 12B ceiling -- latent vs absent?); ACCURACY = exp4038 (total_games_solved); SELF-LEARNING = exp4039; HARDWARE = exp4040. Honest verdict on whether .373 converted the three open arguments into measurements. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on -- aggregate whatever exists."
+  - id: exp4053-capstone-v374
+    milestone: "2026.06.374"
+    title: "Capstone .374 (UNGATED): the milestone's headline question is DID THE VERIFIER TRANSFER SIGNIFICANTLY OFF-ARC (CI now excludes zero?), AND IS THE SEARCH LAYER SALVAGEABLE WITH CLOSED-LOOP GROUNDING? Aggregate: G1 VERIFIER-POWER = exp4045 (does the off-ARC demo-fit CI EXCLUDE zero at full HumanEval+MBPP, or does a stronger discriminator close it, or is the magnitude honestly small?); G2 ROBUST-PLANNING = exp4046 (did closed-loop per-step grounding break vc33's wall where open-loop exploited the WM and failed -- closed_loop_broke_wall + per_step_wm_real_divergence_rate?); G3 DECENTRALIZATION = exp4048 (did the MoE base beat the 0.2581 12B ceiling -- latent vs absent vs retired-non-measurement?); ACCURACY = exp4049 (total_games_solved); SELF-LEARNING = exp4050 (cross_game_transfer_win); HARDWARE = exp4052 (kv260 terminal?). Honest verdict. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on -- aggregate whatever exists."
     priority: high
     track: capstone
     max_turns: 80
     agent_type: codex
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4041_capstone_v373.json
+    deliverable: results/experiment_4053_capstone_v374.json
     prompt: |
-      CONTEXT: aggregate exp4029-exp4040 into the .373 capstone. The milestone's job was to convert
-      THREE open arguments into measurements: G1 (verifier off-ARC generality), G2 (search-layer
-      generalization past r11l), G3 (sovereign base scaling). Be honest: a clean negative or an
-      "uninformative/ceiling-saturated" outcome is a real result, NOT a failure.
+      CONTEXT: aggregate exp4042-exp4052 into the .374 capstone. The milestone's job was to make THREE
+      .373 measurements decision-grade: G1 (close the off-ARC transfer CI), G2 (salvage the search
+      layer with closed-loop grounding), G3 (a tractable decentralization measurement). Be honest: a
+      clean negative or an "uninformative/ceiling-saturated" outcome is a real result, NOT a failure.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4032_offarc_exec_verifier_transfer.json (G1)
-        - results/experiment_4035_hierarchical_search_over_vc33_wm.json (G2)
-        - results/experiment_4037_decentralization_stronger_base.json (G3)
-        - results/experiment_4038/4039/4040 (accuracy / self-learning / hardware)
+        - results/experiment_4045_offarc_transfer_power.json (G1)
+        - results/experiment_4046_closed_loop_replan_over_vc33_wm.json (G2)
+        - results/experiment_4048_decentralization_moe_base.json (G3)
+        - results/experiment_4049/4050/4052 (accuracy / self-learning / hardware)
         - scripts/summarize_artifact.py + scripts/adversarial_verify.py (read each upstream via these)
 
       TASK: aggregate, skip flagged artifacts, emit the honest headline verdict.
@@ -758,20 +780,20 @@ tasks:
       CONCRETE STEPS:
         1. For each upstream, run summarize_artifact.py; SKIP any artifact with flagged_adversarial:true
            (list them in flagged_artifacts_skipped); cite sha256 of each included artifact.
-        2. Report G1 (off-ARC transfer outcome + CI), G2 (search_layer_generalizes +
-           heuristic_was_non_bespoke + nodes_expanded for vc33), G3 (stronger-base coverage vs 0.2581,
-           latent/absent), and the accuracy/self-learning/hardware deltas.
-        3. Honest verdict on whether the three arguments became measurements.
+        2. Report G1 (off-ARC demo-fit CI + whether it excludes 0 + the best arm), G2
+           (closed_loop_broke_wall + per_step_wm_real_divergence_rate + real_env_confirmed for vc33),
+           G3 (MoE coverage vs 0.2581, latent/absent/retired), and accuracy/self-learning/hardware deltas.
+        3. Honest verdict on whether the three measurements are now decision-grade.
       REQUIRED ARTIFACT FIELDS (principle-annotated):
         - honest_verdict: terminal prefix
-        - verifier_generalized_off_arc: bool (BARE bool; principle: the operator TOP-PRIORITY question
-          -- did the GAP-4 primitive measurably transfer to code?)
-        - search_layer_generalized: bool (BARE bool; principle: the G2 depth question -- did a GENERAL
-          heuristic break a SECOND game's wall, or was the .372 win r11l-specific?)
-        - decentralization_diagnosis: str (latent | absent | partial | flagged_skipped; principle: the
-          sovereign-base branch G3 resolved)
+        - verifier_transferred_off_arc_significantly: bool (BARE bool; principle: the operator TOP-PRIORITY
+          question -- does the off-ARC transfer CI now EXCLUDE zero at full N?)
+        - search_layer_salvageable_closed_loop: bool (BARE bool; principle: the G2 question -- did
+          closed-loop grounding break vc33's wall where open-loop search exploited the WM and failed?)
+        - decentralization_diagnosis: str (latent | absent | uninformative | retired_non_measurement |
+          flagged_skipped; principle: the sovereign-base branch G3 resolved)
         - total_games_solved: int (principle: the monotonic ARC accuracy counter)
         - flagged_artifacts_skipped: list; cited_upstream_artifacts: list of {{experiment_id, sha256}}
         - inference_substrate: aggregation_from_upstream_artifacts
-      Run: cd {project_root} && python scripts/experiments/exp4041_capstone_v373.py
+      Run: cd {project_root} && python scripts/experiments/exp4053_capstone_v374.py
       Do NOT push. Do NOT modify scripts/research_conductor.py.
