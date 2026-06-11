@@ -1,0 +1,56 @@
+{
+  "cited_upstream_artifacts": [
+    "results/arc3_gap4_arc2_chain_ensemble.json",
+    "results/arc3_gap4_induced_programs.json",
+    "results/arc3_gap4_chain_arms_adversarial_verify.json",
+    "results/experiment_4032_offarc_exec_verifier_transfer.json",
+    "results/experiment_4032_offarc_exec_verifier_transfer_raw.json"
+  ],
+  "duration_s": 0.455,
+  "experiment": "experiment_4033_verifier_registry_harness_registration",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix summary of registration, offline replay, and off-ARC routing.",
+    "inference_substrate": "aggregation_from_upstream_artifacts; no Codex, GGUF, or live inference.",
+    "off_arc_outcome_recorded": "One of code_entry_added, gap_logged, off_arc_pending; off-ARC evidence must land in a ledger.",
+    "offline_reeval_bitexact": "Bare bool; a reusable module that misses the headline cached numbers is a regression.",
+    "registry_updated": "Bare bool; the registry is the honest map of verifier coverage."
+  },
+  "gaps_path": "ops/verifier_gaps.md",
+  "honest_verdict": "complete: gap4_stack_registered_offline_reeval_bitexact_offarc_gap_logged",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "off_arc_outcome": {
+    "armA_vote_passrate": 0.85,
+    "armB_demofit_passrate": 0.9,
+    "artifact_path": "results/experiment_4032_offarc_exec_verifier_transfer_raw.json",
+    "bootstrap_ci95": [
+      0.0,
+      12.5
+    ],
+    "delta_pp": 5.0,
+    "k_candidates_per_task": 8,
+    "missing_discriminator": "code_demo_fit_visible_tests_do_not_discriminate_hidden_semantics",
+    "n_tasks": 40,
+    "off_arc_outcome_recorded": "gap_logged",
+    "oracle_passrate": 0.925,
+    "status": "no_transfer"
+  },
+  "off_arc_outcome_recorded": "gap_logged",
+  "offline_reeval_bitexact": true,
+  "offline_replay": {
+    "arc1": {
+      "covered": 28,
+      "demo_perfect_coverage": 0.9032,
+      "n": 31
+    },
+    "arc2": {
+      "gold": 19,
+      "n": 31,
+      "pass_at_1": 0.6129
+    },
+    "offline_reeval_bitexact": true
+  },
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_updated": true,
+  "reusable_module_path": "python/carnot/agentic/gap4_program_induction_stack.py",
+  "schema": "carnot.experiment_4033_verifier_registry_harness_registration.v1"
+}

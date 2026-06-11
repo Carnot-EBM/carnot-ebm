@@ -476,3 +476,12 @@ registry version that closed them when a new verifier captures a previously-open
   `gap4_program_induction_stack`.
 - next work belongs in logged verifier gaps such as GAP-5 demo-underdetermination or in generator /
   execution-safety hardening, not another agreement-as-selector confirmation.
+
+### GAP-CODE-EXEC-DEMOFIT: code hidden-semantic execution discriminator
+- status: open
+- evidence: `results/experiment_4032_offarc_exec_verifier_transfer_raw.json` measured no OFF-ARC demo-fit transfer (delta_pp=5.0, CI95=[0.0, 12.5]).
+- failure mode: candidates can pass visible demo tests while failing hidden semantic tests.
+- missing discriminator: code_demo_fit_visible_tests_do_not_discriminate_hidden_semantics.
+- candidate design: enrich the code verifier with hidden-property synthesis, stronger metamorphic tests, or formal/runtime oracles beyond visible examples.
+- priority: high
+
