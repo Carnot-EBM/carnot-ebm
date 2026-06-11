@@ -259,5 +259,14 @@
     }
   ],
   "target_completed_tasks": 160,
-  "truncation_rate": 0.0
+  "truncation_rate": 0.0,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=16.98 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }
