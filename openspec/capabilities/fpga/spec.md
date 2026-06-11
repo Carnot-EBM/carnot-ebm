@@ -6940,6 +6940,84 @@ SD-card precondition.
 
 ---
 
+### REQ-HW-4064
+
+**Title:** Hardware continuity MUST keep KV260 opportunistic and drive GateMate/PolarFire one concrete step
+
+**Description:**
+Experiment 4064 MUST produce
+`results/experiment_4064_hardware_continuity.json` as a hardware-smoke
+continuity artifact for KV260, GateMate, and PolarFire. The experiment MUST
+check each board independently with separate wall-clock timers, record all
+preconditions before any forward smoke step, and continue the remaining boards
+when one board is unavailable. The required preconditions are:
+
+- KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`.
+- GateMate: `openFPGALoader -c dirtyJtag --detect`.
+- PolarFire: `ssh -o ConnectTimeout=5 polarfire 'true'`.
+
+KV260 MUST NOT use a host SD-card block-device precondition such as
+`/dev/mmcblk`; after Exp 4052, KV260 is terminal and MUST only receive an
+opportunistic SSH confirmation. If GateMate is reachable, the experiment MUST
+take one concrete drive-to-terminal step by either flashing an existing n=16
+Ising tile bitstream and re-running a DirtyJTAG smoke detect, or by running the
+`yosys synth_gatemate -> nextpnr-himbaechel --device CCGM1A1 -> gmpack` build
+path. If PolarFire is reachable, the experiment MUST take one concrete
+drive-to-terminal step by running a CPU-only Ising/Carnot dispatch smoke with a
+hash-match verification. Unreachable boards MUST record
+`blocked_<board>_unreachable` for that board and MUST NOT block the other board
+checks.
+
+The artifact MUST include principle-annotated top-level fields
+`honest_verdict`, `per_board_reachability`, `gatemate_step_taken`,
+`polarfire_step_taken`, `kv260_terminal_confirmed`, `preconditions_checked`,
+and `inference_substrate`. `honest_verdict` MUST use a terminal prefix such as
+`complete: hardware_continuity_gatemate_<...>_polarfire_<...>` and name the
+observed GateMate and PolarFire forward-step states. `inference_substrate` MUST
+be exactly `"hardware_smoke"`, and the artifact MUST avoid fabric speedup,
+model-inference, or KV260 host SD-card claims.
+
+**Acceptance criteria:**
+- `results/experiment_4064_hardware_continuity.json` is generated.
+- `per_board_reachability` is a dict of booleans for KV260, GateMate, and
+  PolarFire and matches scalar reachability fields.
+- `preconditions_checked` records the three board preconditions before any
+  GateMate or PolarFire smoke step, with at least `{resource, available}` per
+  entry.
+- `gatemate_step_taken` is a bare string naming the GateMate drive-to-terminal
+  step or `blocked_gatemate_unreachable`.
+- `polarfire_step_taken` is a bare string naming the PolarFire
+  drive-to-terminal step or `blocked_polarfire_unreachable`.
+- `kv260_terminal_confirmed` is a bare boolean true only for the SSH-only
+  opportunistic confirmation and no KV260 overlay load, latency rerun, or host
+  SD-card precondition appears in the artifact.
+- `honest_verdict` starts with `complete:` or `blocked_`;
+  `inference_substrate` is exactly `"hardware_smoke"`; and no KV260 host
+  SD-card marker such as `/dev/mmcblk` appears in the artifact.
+
+**Implementation status:** Pending (Exp 4064)
+
+---
+
+### SCENARIO-HW-4064
+
+**Scenario:** GateMate and PolarFire advance while KV260 remains opportunistic.
+
+**Given:** Exp 4052 established KV260 terminal state, while GateMate and
+PolarFire may independently be reachable or unreachable through their DirtyJTAG
+or SSH preconditions.
+**When:** Experiment 4064 runs the hardware-smoke continuity check.
+**Then:** It writes `results/experiment_4064_hardware_continuity.json` with a
+terminal-prefix verdict, `inference_substrate="hardware_smoke"`, bare
+`per_board_reachability`, precondition evidence recorded before smoke steps,
+bare string `gatemate_step_taken`, bare string `polarfire_step_taken`, bare
+boolean `kv260_terminal_confirmed`, distinct per-board timers, deterministic
+seed, checksum, and no KV260 host SD-card precondition.
+
+**Implementation status:** Pending (Exp 4064)
+
+---
+
 ### SCENARIO-HW-4017
 
 **Scenario:** ARC continuity records reachable boards and blocked board next steps.
