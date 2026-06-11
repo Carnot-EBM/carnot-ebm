@@ -1,0 +1,31 @@
+{
+  "k_samples_per_task": 1,
+  "local_model_used": "gemma-4-12B",
+  "schema": "carnot.experiment_4012_gap4_local_best_of_n.checkpoint.v1",
+  "tasks": {
+    "50a16a69": [
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    \n    # Identify the \"background\" color (the one that fills the border/empty areas)\n    # In Demo 1, it's 1. In Demo 2, it's 8. In Demo 3, it's 4.\n    # The background color is the one that appears most frequently in the last row/col.\n    last_row = grid[-1, :]\n    last_col = grid[:, -1]\n    \n    # Find the most common color in the boundary\n    boundary = np.concatenate([last_row, last_col])\n    counts = np.bincount(boundary)\n    bg_color = np.argmax(counts)\n    \n    # Find the pattern colors (non-background colors)\n    pattern_colors = []\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r, c] != bg_color:\n                if grid[r, c] not in pattern_colors:\n                    pattern_colors.append(grid[r, c])\n    \n    # The pattern is a repeating sequence. \n    # Let's find the smallest repeating unit from the first row/col that isn't bg_color.\n    # In Demo 1: [5, 2]\n    # In Demo 2: [6, 3, 5, 7] (but output starts with 3, 5, 7, 6)\n    # In Demo 3: [7, 6, 3] (but output starts with 6, 3, 7)\n    \n    # Observation: The output is a checkerboard-like tiling of a specific sequence.\n    # Let's extract the sequence from the input grid by ignoring bg_color.\n    seq = []\n    for c in range(cols):\n        if grid[0, c] != bg_color:\n            seq.append(grid[0, c])\n    \n    # If the first row was all bg_color, try the first column.\n    if not seq:\n        for r in range(rows):\n            if grid[r, 0] != bg_color:\n                seq.append(grid[r, 0])\n    \n    # The output seems to be a shifted version of the input pattern.\n    # Demo 1: [5, 2] -> [2, 5]\n    # Demo 2: [6, 3, 5, 7] -> [3, 5, 7, 6]\n    # Demo 3: [7, 6, 3] -> [6, 3, 7]\n    # Rule: Shift the sequence left by 1.\n    if len(seq) > 0:\n        shifted_seq = seq[1:] + [seq[0]]\n    else:\n        shifted_seq = [0]\n\n    # Create the output grid\n    out = np.zeros_like(grid)\n    seq_len = len(shifted_seq)\n    for r in range(rows):\n        for c in range(cols):\n            # The pattern shifts by 1 every row (checkerboard style)\n            # Row 0: seq[0], seq[1]...\n            # Row 1: seq[1], seq[2]...\n            out[r, c] = shifted_seq[(r + c) % seq_len]\n            \n    return out.tolist()",
+        "code_len": 2309,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 28.97,
+        "status": "graded",
+        "task": "50a16a69"
+      }
+    ],
+    "66e6c45b": [
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    \"\"\"\n    The transformation takes a 2x2 square of non-zero colors located in the center\n    of a 4x4 grid and moves each color to the corresponding corner of the grid.\n    - Top-left of square -> Top-left of grid\n    - Top-right of square -> Top-right of grid\n    - Bottom-left of square -> Bottom-left of grid\n    - Bottom-right of square -> Bottom-right of grid\n    \"\"\"\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    output = np.zeros_like(grid)\n    \n    # Find the coordinates of the non-zero elements\n    coords = np.argwhere(grid != 0)\n    \n    if coords.size == 0:\n        return output\n    \n    # Find the bounding box of the non-zero elements\n    r_min, c_min = coords.min(axis=0)\n    r_max, c_max = coords.max(axis=0)\n    \n    # Map the 2x2 square to the corners\n    # Top-left of square\n    output[0, 0] = grid[r_min, c_min]\n    # Top-right of square\n    output[0, cols-1] = grid[r_min, c_max]\n    # Bottom-left of square\n    output[rows-1, 0] = grid[r_max, c_min]\n    # Bottom-right of square\n    output[rows-1, cols-1] = grid[r_max, c_max]\n    \n    return output",
+        "code_len": 1129,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 0,
+        "local_s": 11.05,
+        "status": "graded",
+        "task": "66e6c45b"
+      }
+    ]
+  }
+}

@@ -1,0 +1,202 @@
+{
+  "best_of_n_coverage": 0.5,
+  "ci95_local_minus_vote": [
+    0.0,
+    0.0
+  ],
+  "cost_codex_seconds_ref": 46.24,
+  "cost_local_seconds": 20.01,
+  "cost_verifier_seconds": 0.0131,
+  "coverage_gain_vs_3attempt": 0.2419,
+  "duration_s": 40.25,
+  "experiment": "experiment_4037_decentralization_stronger_base_raw",
+  "field_principles": {
+    "ci95_local_minus_vote": "Bootstrap 95% CI of (best-of-N local gated - vote) pass@2.",
+    "cost_codex_seconds_ref": "Per-task wall-cost of the codex tier reference.",
+    "cost_local_seconds": "Per-task wall-cost of the best-of-N local inducer.",
+    "cost_verifier_seconds": "Per-task wall-cost of the model-free verifier.",
+    "coverage_gain_vs_3attempt": "BARE FLOAT -- best-of-N coverage minus the <=3-attempt 0.2581 baseline.",
+    "duration_s": "Wall-clock seconds.",
+    "honest_verdict": "Terminal-prefix verdict.",
+    "inference_substrate": "The live local-GGUF substrate.",
+    "k_samples_per_task": "BARE INT -- the best-of-N draw count actually used per task.",
+    "local_beats_vote": "BARE BOOL -- does best-of-N local gated rerank beat vote pass@2 with a CI excluding 0.",
+    "local_demo_perfect_coverage_bestofn": "BARE FLOAT -- fraction of tasks with >=1 demo-perfect program under best-of-N (the gap-closing datum; vs <=3-attempt 0.2581 and codex 0.94).",
+    "local_gated_pass2": "BARE FLOAT -- the best-of-N local gated rerank pass@2 (vs vote 0.4516, oracle 0.6129, codex 0.5806).",
+    "local_model_used": "Which SOTA local GGUF was the inducer.",
+    "missing_verifier_gaps": "Which tasks best-of-N still could not induce.",
+    "preconditions_checked": "list of {resource, available} records GGUF cache + llama_cpp checks.",
+    "random_seed": "Reproducibility seed.",
+    "verifier_side_unchanged": "BARE BOOL -- the model-free verifier primitives were reused unchanged."
+  },
+  "gated_pass_at_2": 1.0,
+  "gates": {
+    "coverage_demo_perfect": 0.5,
+    "headroom_recovered": 0,
+    "selection_beats_union": false,
+    "selection_beats_vote": false,
+    "vote_wins_lost": 0
+  },
+  "headroom_recovered_tasks": [],
+  "honest_verdict": "complete: decentralization_stronger_base_cov0.5_pass21_below_codex",
+  "inference_substrate": "live_llm_inference",
+  "k_samples_per_task": 1,
+  "launched_pid": 0,
+  "local_beats_vote": false,
+  "local_demo_perfect_coverage_bestofn": 0.5,
+  "local_gated_pass2": 1.0,
+  "local_model_used": "gemma-4-12B",
+  "local_seconds": 40.02,
+  "missing_verifier_gaps": [
+    "00576224",
+    "0b17323b",
+    "17cae0c1",
+    "1a2e2828",
+    "1a6449f1",
+    "2072aba6",
+    "25094a63",
+    "2f0c5170",
+    "3ee1011a",
+    "4e469f39",
+    "505fff84",
+    "50a16a69",
+    "5833af48",
+    "712bf12e",
+    "79fb03f4",
+    "81c0276b",
+    "96a8c0cd",
+    "a57f2f04",
+    "a59b95c0",
+    "ac3e2b04",
+    "b9630600",
+    "be03b35f",
+    "c3202e5a",
+    "c7d4e6ad",
+    "f0df5ff0",
+    "f3e62deb",
+    "fafd9572"
+  ],
+  "model_specs": {
+    "comparator_exp4012_model": "gemma-4-12B",
+    "generator_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+    "generator_hf_id": "unsloth/gemma-4-31B-it-GGUF",
+    "generator_model": "Gemma4-31B-it",
+    "selection_note": "preferred cached faster stronger base for ARC code emission",
+    "verifier": "model-free: demo-fit exact-reproduction gate + restricted-namespace execution + min-hamming snap + content-hash candidate match"
+  },
+  "n_entries": 2,
+  "n_local_demo_perfect": 1,
+  "n_unique_tasks": 2,
+  "per_task": [
+    {
+      "best_demo_fit": 0.0,
+      "best_of_n_demo_perfect": false,
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 0,
+      "local_seconds": 28.97,
+      "n_cands": 5,
+      "n_demo_perfect_samples": 0,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "50a16a69",
+      "vote_top2": true
+    },
+    {
+      "best_demo_fit": 1.0,
+      "best_of_n_demo_perfect": true,
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 1,
+      "local_seconds": 11.05,
+      "n_cands": 5,
+      "n_demo_perfect_samples": 1,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "task": "66e6c45b",
+      "vote_top2": true
+    }
+  ],
+  "per_task_sample_summary": [
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 28.97,
+      "n_demo_perfect": 0,
+      "n_samples": 1,
+      "statuses": [
+        "graded"
+      ],
+      "task": "50a16a69"
+    },
+    {
+      "best_demo_fit": 1.0,
+      "local_seconds": 11.05,
+      "n_demo_perfect": 1,
+      "n_samples": 1,
+      "statuses": [
+        "graded"
+      ],
+      "task": "66e6c45b"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "stronger_base_gguf_cached",
+      "selected_model": "Gemma4-31B-it"
+    },
+    {
+      "available": true,
+      "resource": "llama_cpp"
+    },
+    {
+      "available": true,
+      "resource": "exp4012_arc1_pool_and_verifier_primitives"
+    }
+  ],
+  "random_seed": 12345,
+  "rankers": {
+    "EXEC_PURE": {
+      "pass@1": 1.0,
+      "pass@2": 1.0
+    },
+    "GAP4_GATED": {
+      "pass@1": 1.0,
+      "pass@2": 1.0
+    },
+    "GAP4_GRADED": {
+      "pass@1": 1.0,
+      "pass@2": 1.0
+    },
+    "TRM_VOTE": {
+      "pass@1": 1.0,
+      "pass@2": 1.0
+    },
+    "UNION_plus_exec": {
+      "pass@1": 1.0,
+      "pass@2": 1.0
+    },
+    "UNION_votes_qmean_voteshare": {
+      "pass@1": 1.0,
+      "pass@2": 1.0
+    }
+  },
+  "references": {
+    "codex_gated_pass2": 0.5806,
+    "local_3attempt_demo_perfect_coverage": 0.2581,
+    "oracle_pass2": 0.6129,
+    "vote_pass2": 0.4516
+  },
+  "reproducibility_checksum": "ad9e51c5f56b86ee",
+  "runner_ready": true,
+  "schema": "carnot.experiment_4037_decentralization_stronger_base_raw.v1",
+  "selected_programs_checksum": "ece0e7a979d9f605",
+  "stronger_base_model": "Gemma4-31B-it",
+  "title": "Decentralization stronger-base ARC best-of-N raw run",
+  "total_local_samples": 2,
+  "total_local_seconds": 40.02,
+  "verifier_side_unchanged": true,
+  "vote_wins_lost_tasks": []
+}
