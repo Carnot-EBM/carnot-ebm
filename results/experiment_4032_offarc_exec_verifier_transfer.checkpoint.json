@@ -4103,6 +4103,750 @@
           true
         ]
       }
+    ],
+    "MBPP:67": [
+      {
+        "code": "def bell_number(n):\n    \"\"\"\n    Calculates the n-th Bell number, which represents the number of \n    ways to partition a set of n elements.\n    \"\"\"\n    if n == 0:\n        return 1\n    \n    # Using the Bell Triangle (Aitken's array) method\n    # bell_triangle[i][j] will store values\n    bell = [[0 for _ in range(n + 1)] for _ in range(n + 1)]\n    \n    bell[0][0] = 1\n    \n    for i in range(1, n + 1):\n        # The first element of each row is the last element of the previous row\n        bell[i][0] = bell[i-1][i-1]\n        \n        # Fill the rest of the row\n        for j in range(1, i + 1):\n            bell[i][j] = bell[i-1][j-1] + bell[i][j-1]\n            \n    return bell[n][0]",
+        "draw_index": 0,
+        "error": null,
+        "generation_seconds": 3.128,
+        "hidden_outputs": [
+          6775685320645824322581483068371419745979053216268760300
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:67",
+        "truncated": false,
+        "visible_outputs": [
+          2,
+          115975
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def bell_number(n):\n    \"\"\"\n    Calculates the n-th Bell number, which represents the number of \n    ways to partition a set of n elements.\n    \"\"\"\n    if n == 0:\n        return 1\n    \n    # Using the Bell Triangle (Aitken's array) method\n    # triangle[i][j] will store the values\n    triangle = [[0 for _ in range(n + 1)] for _ in range(n + 1)]\n    \n    triangle[0][0] = 1\n    \n    for i in range(1, n + 1):\n        # The first element of each row is the last element of the previous row\n        triangle[i][0] = triangle[i-1][i-1]\n        \n        # Fill the rest of the row\n        for j in range(1, i + 1):\n            triangle[i][j] = triangle[i-1][j-1] + triangle[i][j-1]\n            \n    return triangle[n][0]",
+        "draw_index": 1,
+        "error": null,
+        "generation_seconds": 3.123,
+        "hidden_outputs": [
+          6775685320645824322581483068371419745979053216268760300
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:67",
+        "truncated": false,
+        "visible_outputs": [
+          2,
+          115975
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def bell_number(n):\n    \"\"\"\n    Calculates the nth Bell number, which represents the number of \n    ways to partition a set of n elements.\n    \"\"\"\n    if n == 0:\n        return 1\n    \n    # Using the Bell Triangle (Aitken's array) method\n    # triangle[i][j] will store values\n    triangle = [[0 for _ in range(n + 1)] for _ in range(n + 1)]\n    \n    triangle[0][0] = 1\n    \n    for i in range(1, n + 1):\n        # The first element of each row is the last element of the previous row\n        triangle[i][0] = triangle[i-1][i-1]\n        \n        # Fill the rest of the row\n        for j in range(1, i + 1):\n            triangle[i][j] = triangle[i-1][j-1] + triangle[i][j-1]\n            \n    return triangle[n][0]",
+        "draw_index": 2,
+        "error": null,
+        "generation_seconds": 3.971,
+        "hidden_outputs": [
+          6775685320645824322581483068371419745979053216268760300
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:67",
+        "truncated": false,
+        "visible_outputs": [
+          2,
+          115975
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def bell_number(n):\n    \"\"\"\n    Calculates the n-th Bell number using the Bell Triangle (Aitken's array).\n    The Bell number B(n) is the number of ways to partition a set of n elements.\n    \"\"\"\n    if n == 0:\n        return 1\n    \n    # Create a triangle to store values\n    # triangle[i][j] will store values of the Bell triangle\n    triangle = [[0 for _ in range(n + 1)] for _ in range(n + 1)]\n    \n    # Base case\n    triangle[0][0] = 1\n    \n    for i in range(1, n + 1):\n        # The first element of the current row is the last element of the previous row\n        triangle[i][0] = triangle[i-1][i-1]\n        \n        # Fill the rest of the row\n        for j in range(1, i + 1):\n            triangle[i][j] = triangle[i-1][j-1] + triangle[i][j-1]\n            \n    # The n-th Bell number is the first element of the n-th row\n    # (or the last element of the (n-1)-th row, but we use the triangle logic)\n    # In our construction, B(n) is triangle[n][0]\n    return triangle[n][0]",
+        "draw_index": 3,
+        "error": null,
+        "generation_seconds": 4.171,
+        "hidden_outputs": [
+          6775685320645824322581483068371419745979053216268760300
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:67",
+        "truncated": false,
+        "visible_outputs": [
+          2,
+          115975
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def bell_number(n):\n    \"\"\"\n    Calculates the n-th Bell number using the Bell triangle (Aitken's array).\n    The Bell number B(n) is the number of ways to partition a set of n elements.\n    \"\"\"\n    if n == 0:\n        return 1\n    \n    # The Bell triangle is constructed such that the first element \n    # of a row is the last element of the previous row.\n    # The subsequent elements are the sum of the previous element \n    # and the element to its left in the previous row.\n    triangle = [[0] * (n + 1) for _ in range(n + 1)]\n    \n    triangle[0][0] = 1\n    \n    for i in range(1, n + 1):\n        # The first element of the current row is the last element of the previous row\n        triangle[i][0] = triangle[i-1][i-1]\n        \n        # Fill the rest of the row\n        for j in range(1, i + 1):\n            triangle[i][j] = triangle[i][j-1] + triangle[i-1][j-1]\n            \n    return triangle[n][0]",
+        "draw_index": 4,
+        "error": null,
+        "generation_seconds": 3.8,
+        "hidden_outputs": [
+          6775685320645824322581483068371419745979053216268760300
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:67",
+        "truncated": false,
+        "visible_outputs": [
+          2,
+          115975
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def bell_number(n):\n    if n == 0:\n        return 1\n    \n    # Using the Bell Triangle (Aitken's array) to compute Bell numbers\n    # bell_triangle[i][j] represents the j-th entry in the i-th row\n    bell_triangle = [[0] * (n + 1) for _ in range(n + 1)]\n    \n    bell_triangle[0][0] = 1\n    \n    for i in range(1, n + 1):\n        # The first element of row i is the last element of row i-1\n        bell_triangle[i][0] = bell_triangle[i-1][i-1]\n        \n        # Fill the rest of the row\n        for j in range(1, i + 1):\n            bell_triangle[i][j] = bell_triangle[i][j-1] + bell_triangle[i-1][j-1]\n            \n    return bell_triangle[n][0]",
+        "draw_index": 5,
+        "error": null,
+        "generation_seconds": 3.07,
+        "hidden_outputs": [
+          6775685320645824322581483068371419745979053216268760300
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:67",
+        "truncated": false,
+        "visible_outputs": [
+          2,
+          115975
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def bell_number(n):\n    \"\"\"\n    Calculates the nth Bell number, which represents the number of partitions\n    of a set of n elements.\n    \"\"\"\n    if n == 0:\n        return 1\n    \n    # Bell triangle (Aitken's array / Peirce triangle)\n    # Row 0: [1]\n    # Row 1: [1, 2]\n    # Row 2: [2, 3, 5]\n    # Row 3: [5, 7, 10, 15]\n    \n    bell_triangle = [[0] * (n + 1) for _ in range(n + 1)]\n    bell_triangle[0][0] = 1\n    \n    for i in range(1, n + 1):\n        # The first element of each row is the last element of the previous row\n        bell_triangle[i][0] = bell_triangle[i-1][i-1]\n        \n        # Fill the rest of the row using the recurrence:\n        # B(i, j) = B(i, j-1) + B(i-1, j-1)\n        for j in range(1, i + 1):\n            bell_triangle[i][j] = bell_triangle[i][j-1] + bell_triangle[i-1][j-1]\n            \n    return bell_triangle[n][0]",
+        "draw_index": 6,
+        "error": null,
+        "generation_seconds": 4.298,
+        "hidden_outputs": [
+          6775685320645824322581483068371419745979053216268760300
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:67",
+        "truncated": false,
+        "visible_outputs": [
+          2,
+          115975
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def bell_number(n):\n    \"\"\"\n    Calculates the nth Bell number, which represents the number of \n    ways to partition a set of n elements.\n    \"\"\"\n    if n == 0:\n        return 1\n    \n    # The Bell triangle (Aitken's array) approach\n    # bell[i][j] represents the triangle values\n    bell = [[0 for _ in range(n + 1)] for _ in range(n + 1)]\n    \n    bell[0][0] = 1\n    \n    for i in range(1, n + 1):\n        # The first element of each row is the last element of the previous row\n        bell[i][0] = bell[i-1][i-1]\n        \n        # Fill the rest of the row\n        for j in range(1, i + 1):\n            bell[i][j] = bell[i-1][j-1] + bell[i][j-1]\n            \n    return bell[n][0]",
+        "draw_index": 7,
+        "error": null,
+        "generation_seconds": 3.067,
+        "hidden_outputs": [
+          6775685320645824322581483068371419745979053216268760300
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:67",
+        "truncated": false,
+        "visible_outputs": [
+          2,
+          115975
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "MBPP:68": [
+      {
+        "code": "def is_Monotonic(arr):\n    is_increasing = True\n    is_decreasing = True\n    \n    for i in range(len(arr) - 1):\n        if arr[i] > arr[i+1]:\n            is_increasing = False\n        if arr[i] < arr[i+1]:\n            is_decreasing = False\n            \n    return is_increasing or is_decreasing",
+        "draw_index": 0,
+        "error": null,
+        "generation_seconds": 2.185,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:68",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          true
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def is_Monotonic(arr):\n    is_increasing = True\n    is_decreasing = True\n    \n    for i in range(len(arr) - 1):\n        if arr[i] > arr[i+1]:\n            is_increasing = False\n        if arr[i] < arr[i+1]:\n            is_decreasing = False\n            \n    return is_increasing or is_decreasing",
+        "draw_index": 1,
+        "error": null,
+        "generation_seconds": 1.204,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:68",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          true
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def is_Monotonic(arr):\n    is_increasing = True\n    is_decreasing = True\n\n    for i in range(len(arr) - 1):\n        if arr[i] < arr[i+1]:\n            is_decreasing = False\n        if arr[i] > arr[i+1]:\n            is_increasing = False\n            \n    return is_increasing or is_decreasing",
+        "draw_index": 2,
+        "error": null,
+        "generation_seconds": 1.186,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:68",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          true
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def is_Monotonic(arr):\n    is_increasing = True\n    is_decreasing = True\n    \n    for i in range(len(arr) - 1):\n        if arr[i] < arr[i+1]:\n            is_decreasing = False\n        if arr[i] > arr[i+1]:\n            is_increasing = False\n            \n    return is_increasing or is_decreasing",
+        "draw_index": 3,
+        "error": null,
+        "generation_seconds": 1.203,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:68",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          true
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def is_Monotonic(arr):\n    is_increasing = True\n    is_decreasing = True\n    \n    for i in range(len(arr) - 1):\n        if arr[i] < arr[i+1]:\n            is_decreasing = False\n        if arr[i] > arr[i+1]:\n            is_increasing = False\n            \n    return is_increasing or is_decreasing",
+        "draw_index": 4,
+        "error": null,
+        "generation_seconds": 1.231,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:68",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          true
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def is_Monotonic(nums):\n    is_increasing = True\n    is_decreasing = True\n    \n    for i in range(len(nums) - 1):\n        if nums[i] < nums[i+1]:\n            is_decreasing = False\n        if nums[i] > nums[i+1]:\n            is_increasing = False\n            \n    return is_increasing or is_decreasing",
+        "draw_index": 5,
+        "error": null,
+        "generation_seconds": 1.244,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:68",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          true
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def is_Monotonic(arr):\n    is_increasing = True\n    is_decreasing = True\n\n    for i in range(len(arr) - 1):\n        if arr[i] > arr[i+1]:\n            is_increasing = False\n        if arr[i] < arr[i+1]:\n            is_decreasing = False\n\n    return is_increasing or is_decreasing",
+        "draw_index": 6,
+        "error": null,
+        "generation_seconds": 1.694,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:68",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          true
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def is_Monotonic(arr):\n    is_increasing = True\n    is_decreasing = True\n\n    for i in range(len(arr) - 1):\n        if arr[i] < arr[i + 1]:\n            is_decreasing = False\n        if arr[i] > arr[i + 1]:\n            is_increasing = False\n\n    return is_increasing or is_decreasing",
+        "draw_index": 7,
+        "error": null,
+        "generation_seconds": 1.204,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:68",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          true
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "MBPP:69": [
+      {
+        "code": "def is_sublist(main_list, sublist):\n    \"\"\"\n    Checks whether a list contains the given sublist as a contiguous sequence.\n    \"\"\"\n    n = len(main_list)\n    m = len(sublist)\n    \n    if m == 0:\n        return True\n    if m > n:\n        return False\n        \n    for i in range(n - m + 1):\n        if main_list[i : i + m] == sublist:\n            return True\n            \n    return False",
+        "draw_index": 0,
+        "error": null,
+        "generation_seconds": 1.667,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:69",
+        "truncated": false,
+        "visible_outputs": [
+          false,
+          true
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def is_sublist(main_list, sublist):\n    \"\"\"\n    Checks whether a list contains the given sublist as a contiguous sequence.\n    \"\"\"\n    n = len(main_list)\n    m = len(sublist)\n    \n    if m == 0:\n        return True\n    if m > n:\n        return False\n        \n    for i in range(n - m + 1):\n        if main_list[i : i + m] == sublist:\n            return True\n            \n    return False",
+        "draw_index": 1,
+        "error": null,
+        "generation_seconds": 1.61,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:69",
+        "truncated": false,
+        "visible_outputs": [
+          false,
+          true
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def is_sublist(main_list, sublist):\n    \"\"\"\n    Checks whether a list contains the given sublist as a contiguous sequence.\n    \"\"\"\n    n = len(main_list)\n    m = len(sublist)\n    \n    if m == 0:\n        return True\n    if m > n:\n        return False\n        \n    for i in range(n - m + 1):\n        if main_list[i : i + m] == sublist:\n            return True\n            \n    return False",
+        "draw_index": 2,
+        "error": null,
+        "generation_seconds": 1.607,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:69",
+        "truncated": false,
+        "visible_outputs": [
+          false,
+          true
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def is_sublist(main_list, sublist):\n    \"\"\"\n    Checks whether a list contains the given sublist as a contiguous sequence.\n    \"\"\"\n    n = len(main_list)\n    m = len(sublist)\n    \n    if m == 0:\n        return True\n    if m > n:\n        return False\n    \n    for i in range(n - m + 1):\n        if main_list[i : i + m] == sublist:\n            return True\n            \n    return False",
+        "draw_index": 3,
+        "error": null,
+        "generation_seconds": 1.609,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:69",
+        "truncated": false,
+        "visible_outputs": [
+          false,
+          true
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def is_sublist(main_list, sublist):\n    \"\"\"\n    Checks whether a list contains the given sublist as a contiguous sequence.\n    \"\"\"\n    n = len(main_list)\n    m = len(sublist)\n    \n    if m == 0:\n        return True\n    if m > n:\n        return False\n        \n    for i in range(n - m + 1):\n        if main_list[i : i + m] == sublist:\n            return True\n            \n    return False",
+        "draw_index": 4,
+        "error": null,
+        "generation_seconds": 1.622,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:69",
+        "truncated": false,
+        "visible_outputs": [
+          false,
+          true
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def is_sublist(main_list, sublist):\n    n = len(main_list)\n    m = len(sublist)\n    if m == 0:\n        return True\n    for i in range(n - m + 1):\n        if main_list[i : i + m] == sublist:\n            return True\n    return False",
+        "draw_index": 5,
+        "error": null,
+        "generation_seconds": 1.108,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:69",
+        "truncated": false,
+        "visible_outputs": [
+          false,
+          true
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def is_sublist(main_list, sublist):\n    \"\"\"\n    Checks if sublist exists as a contiguous sequence within main_list.\n    \"\"\"\n    n = len(main_list)\n    m = len(sublist)\n    \n    if m == 0:\n        return True\n    if m > n:\n        return False\n    \n    for i in range(n - m + 1):\n        if main_list[i : i + m] == sublist:\n            return True\n            \n    return False",
+        "draw_index": 6,
+        "error": null,
+        "generation_seconds": 1.604,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:69",
+        "truncated": false,
+        "visible_outputs": [
+          false,
+          true
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def is_sublist(main_list, sublist):\n    \"\"\"\n    Checks whether a list contains a given sublist as a contiguous sequence.\n    \"\"\"\n    n = len(main_list)\n    m = len(sublist)\n    \n    if m == 0:\n        return True\n    if m > n:\n        return False\n        \n    for i in range(n - m + 1):\n        if main_list[i : i + m] == sublist:\n            return True\n            \n    return False",
+        "draw_index": 7,
+        "error": null,
+        "generation_seconds": 1.568,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:69",
+        "truncated": false,
+        "visible_outputs": [
+          false,
+          true
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "MBPP:70": [
+      {
+        "code": "def get_equal(tuples_list):\n    if not tuples_list:\n        return True\n    \n    first_length = len(tuples_list[0])\n    for t in tuples_list:\n        if len(t) != first_length:\n            return False\n    return True",
+        "draw_index": 0,
+        "error": null,
+        "generation_seconds": 0.925,
+        "hidden_outputs": [
+          true
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:70",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def get_equal(tuples_list):\n    if not tuples_list:\n        return True\n    \n    first_length = len(tuples_list[0])\n    for t in tuples_list:\n        if len(t) != first_length:\n            return False\n    return True",
+        "draw_index": 1,
+        "error": null,
+        "generation_seconds": 0.879,
+        "hidden_outputs": [
+          true
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:70",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def get_equal(tuples_list):\n    if not tuples_list:\n        return True\n    \n    first_length = len(tuples_list[0])\n    for t in tuples_list:\n        if len(t) != first_length:\n            return False\n    return True",
+        "draw_index": 2,
+        "error": null,
+        "generation_seconds": 0.905,
+        "hidden_outputs": [
+          true
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:70",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def get_equal(tuples_list):\n    if not tuples_list:\n        return True\n    \n    first_length = len(tuples_list[0])\n    for t in tuples_list:\n        if len(t) != first_length:\n            return False\n    return True",
+        "draw_index": 3,
+        "error": null,
+        "generation_seconds": 0.885,
+        "hidden_outputs": [
+          true
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:70",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def get_equal(tuples_list):\n    if not tuples_list:\n        return True\n    \n    first_length = len(tuples_list[0])\n    for t in tuples_list:\n        if len(t) != first_length:\n            return False\n    return True",
+        "draw_index": 4,
+        "error": null,
+        "generation_seconds": 0.876,
+        "hidden_outputs": [
+          true
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:70",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def get_equal(tuples_list):\n    if not tuples_list:\n        return True\n    first_length = len(tuples_list[0])\n    return all(len(t) == first_length for t in tuples_list)",
+        "draw_index": 5,
+        "error": null,
+        "generation_seconds": 0.762,
+        "hidden_outputs": [
+          true
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:70",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def get_equal(tuples_list):\n    if not tuples_list:\n        return True\n    \n    first_length = len(tuples_list[0])\n    return all(len(t) == first_length for t in tuples_list)",
+        "draw_index": 6,
+        "error": null,
+        "generation_seconds": 0.795,
+        "hidden_outputs": [
+          true
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:70",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def get_equal(tuples_list):\n    if not tuples_list:\n        return True\n    \n    first_length = len(tuples_list[0])\n    return all(len(t) == first_length for t in tuples_list)",
+        "draw_index": 7,
+        "error": null,
+        "generation_seconds": 0.787,
+        "hidden_outputs": [
+          true
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:70",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
     ]
   },
   "k_candidates_per_task": 8,
