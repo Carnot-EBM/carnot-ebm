@@ -12139,3 +12139,50 @@ that sovereign positive, otherwise emits
 `complete: gap4_local_bestofn_cov<val>_pass2<val>_below_codex`, and lists
 remaining codex-demo-perfect tasks without a local best-of-N demo-perfect sample
 in `missing_verifier_gaps`.
+
+### REQ-VERIFY-4013: ARC GAP-4 Verifier-vs-Codex-Judge Efficiency
+
+The repository SHALL provide Exp 4013 at
+`scripts/experiments/experiment_4013_verifier_vs_judge_efficiency.py` to measure
+the apples-to-apples efficiency of the model-free GAP-4 verifier against a
+Codex/GPT-5.5 LLM judge on identical ARC candidate sets. Before judging, the
+runner SHALL verify that `command -v codex` succeeds and that the candidate-set
+artifacts `results/arc3_gap4_rule_exec_verifier.json`,
+`results/arc3_gap4_arc2_chain_ensemble.json`, and
+`results/arc3_gap4_arc2_induced_programs.json` load. Missing Codex SHALL write
+`honest_verdict=blocked_codex_unavailable`; missing or malformed candidate sets
+SHALL write `honest_verdict=blocked_candidate_sets_missing`.
+
+For complete runs, the runner SHALL assemble the same per-task candidate set for
+both arms from the induced demo-perfect programs and their executed test outputs,
+including each candidate's task id, source, demo-fit/demo-perfect status,
+prediction hash/grid summary, and post-hoc gold label. Arm A SHALL select using
+the model-free GAP-4 primitive: demo-perfect outputs that exactly match a
+candidate are preferred, with vote/deterministic ordering only as tie-breakers or
+fallback. Arm B SHALL call Codex/GPT-5.5 as an LLM judge on the identical
+candidate set, showing the demos/test context available in the artifacts plus
+candidate outputs, asking for the most-consistent candidate, and recording judge
+wall seconds and token usage when reported by the CLI.
+
+The terminal artifact SHALL write
+`results/experiment_4013_verifier_vs_judge_efficiency.json` with bare top-level
+fields `selection_accuracy_parity`, `verifier_gold_rate`, `judge_gold_rate`,
+`cost_ratio_judge_over_verifier`, `token_ratio_judge_over_verifier`,
+`cost_verifier_seconds`, `cost_judge_seconds`, `selection_agreement_rate`,
+`n_tasks`, `n_judge_calls`, `random_seed`, `honest_verdict`, `duration_s`, and
+`inference_substrate`. The artifact SHALL state
+`success: verifier_parity_at_<N>x_cheaper_than_judge` only when the verifier and
+judge gold rates are within confidence intervals; otherwise it SHALL state
+`complete: verifier_cheaper_<N>x_but_accuracy_gap_<val>` with the measured gap.
+
+### SCENARIO-VERIFY-4013: Codex Judge Uses The Same Candidate Sets
+
+Given Codex is available and all three ARC GAP-4 candidate artifacts load, when
+Exp 4013 runs, then the model-free verifier and Codex judge each choose exactly
+one candidate from the same per-task candidate set, the artifact records
+`selection_agreement_rate` as the fraction of tasks where the chosen candidate
+IDs match, records `verifier_gold_rate` and `judge_gold_rate` as fractions of
+chosen candidates that are post-hoc gold, computes
+`selection_accuracy_parity` from overlapping confidence intervals, reports
+per-task wall cost for both arms, and sets `n_judge_calls` equal to the number of
+Codex judge attempts represented in the cost and token totals.
