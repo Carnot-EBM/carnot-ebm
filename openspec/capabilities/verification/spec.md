@@ -12233,3 +12233,74 @@ must cite the chain-arms adversarial narrowing, the Exp 3988 poison-skip, Exp
 3999's zero-call pending execution, Exp 4009's zero-call execution-floor miss,
 and the unfeedable-power finding. The registry and gaps text must both state
 that the demo-fit execution safety gate is kept.
+
+### REQ-VERIFY-4031: OFF-ARC Execution-Verifier Transfer Build
+
+The repository SHALL provide Exp 4031 at
+`scripts/experiments/exp4031_offarc_transfer_build.py` and the backgroundable
+runner `scripts/experiments/offarc_exec_verifier_transfer_run.py` to convert the
+GAP-4 execution-verifier transfer claim from argued to measured on a non-ARC code
+synthesis corpus. Before any live inference, the build script SHALL check the
+local `unsloth/gemma-4-12B-it-GGUF` cache, `llama_cpp` importability, MBPP or
+HumanEval corpus loadability, and `carnot.verify.sandbox` importability. If any
+resource is missing, Exp 4031 SHALL write
+`results/experiment_4031_offarc_transfer_build.json` with
+`honest_verdict=blocked_<resource>`, `runner_ready=false`,
+`smoke_passed=false`, `launched_pid=0`, the full `preconditions_checked` list,
+and `inference_substrate=live_llm_inference`, then stop without launching the
+runner.
+
+When preconditions pass, Exp 4031 SHALL smoke the runner on exactly two code
+tasks and require a well-formed raw artifact before launching the full run. The
+full run SHALL be launched in the background with output redirected to
+`logs/offarc_transfer_run.log`; Exp 4031 SHALL record the owning process id in
+`launched_pid` as a bare integer. The build artifact SHALL include bare
+top-level fields `honest_verdict`, `runner_ready`, `smoke_passed`,
+`launched_pid`, `preconditions_checked`, and `inference_substrate`, plus any
+supporting paths needed by the collector.
+
+### SCENARIO-VERIFY-4031: Build Smokes And Launches The OFF-ARC Runner
+
+Given the local GGUF cache, `llama_cpp`, code corpus, and sandbox primitive are
+available, when Exp 4031 runs, then it first writes a valid two-task smoke raw
+artifact, validates it, launches `offarc_exec_verifier_transfer_run.py` in the
+background for at least 40 tasks with at least eight candidates per task, writes
+`results/experiment_4031_offarc_transfer_build.json` with
+`runner_ready=true`, `smoke_passed=true`, a positive integer `launched_pid`, and
+`honest_verdict=success: offarc_transfer_runner_built_smoked_launched`.
+
+### REQ-VERIFY-4032: OFF-ARC Execution-Verifier Transfer Measurement
+
+The OFF-ARC runner SHALL load MBPP or HumanEval tasks with visible example tests
+and held-out hidden tests, generate at least eight candidate programs per task
+from the local Gemma 4 12B GGUF for at least 30 tasks in full mode, and evaluate
+all candidates through `carnot.verify.sandbox.sandboxed_exec_function`. All
+selection arms SHALL use the same candidate pool. Arm A SHALL select by
+majority/self-consistency over candidate visible behavior. Arm A++ SHALL select
+by ACES-style leave-one-out visible test-consistency. Arm B SHALL be the
+model-free GAP-4 verifier transfer: keep candidates that pass every visible
+example test exactly, then select from those demo-perfect candidates without an
+LLM judge. Hidden tests SHALL be used only to score held-out pass@1 and pass@2
+after selection.
+
+The raw artifact SHALL write
+`results/experiment_4032_offarc_exec_verifier_transfer_raw.json` with
+`honest_verdict`, `corpus`, `n_tasks`, `k_candidates_per_task`,
+`armA_vote_passrate`, `armA_vote_pass2`, `armAplusplus_aces_passrate`,
+`armAplusplus_aces_pass2`, `armB_demofit_passrate`, `armB_demofit_pass2`,
+`delta_pp`, `bootstrap_ci95`, `oracle_passrate`, `model_specs`,
+`random_seed`, `reproducibility_checksum`, `truncation_rate`,
+`preconditions_checked`, `missing_verifier_gaps`, and
+`inference_substrate=live_llm_inference`. It SHALL compute a bootstrap 95%
+confidence interval for Arm B minus Arm A and report the oracle/best-of-pool
+hidden pass-rate as a positive control.
+
+### SCENARIO-VERIFY-4032: Demo-Fit Transfer Is Measured Against Vote And ACES
+
+Given a shared pool of local GGUF code candidates over MBPP or HumanEval, when
+the OFF-ARC runner evaluates the pool, then Arm A, Arm A++, and Arm B each
+select candidates from that exact pool, hidden pass@1/pass@2 are computed after
+selection, `delta_pp` equals Arm B pass@1 minus Arm A pass@1 in percentage
+points, `bootstrap_ci95` is a two-element numeric interval for that delta, and
+`oracle_passrate` records whether any candidate in each task's pool passes all
+hidden tests so the collector can distinguish no-transfer from no-headroom.
