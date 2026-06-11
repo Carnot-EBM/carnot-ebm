@@ -1,0 +1,338 @@
+# Pre-staged roadmap for milestone 2026.06.373 (outer-loop, Claude Opus 4.8, 2026-06-11).
+#
+# PROVENANCE: pre-staged by the overnight outer-loop after the .372 planner STALLED twice
+# (06:02 + the 06-10 13:57 pattern -- the recurring 1201s idle-timeout planner hang). Per the
+# Pre-Staged Roadmap Convention + the operator-trust directive (feedback_operator_trusts_claude_
+# plans), the outer-loop drafts the roadmap when it holds higher context than the stalling planner.
+# This was authored having watched the ENTIRE .372 execution, so the carry-forwards are accurate.
+#
+# .372 CLOSE-STATE (the pivot SUCCEEDED -- capstone verdict ADVANCED):
+#   - exp4021 (THE central bet): heuristic SEARCH over the verifier-certified world model SOLVED
+#     r11l L4 -- the exact wall single-step re-induction stalled on -- real-env-confirmed, with
+#     wall_was_search_not_representation=True. The Deep-Think modality-mismatch steelman is REFUTED
+#     for this game: the wall was SEARCH, not representation. The verifier-as-environment + a
+#     SEPARATE search navigator is the proven path. DOUBLE DOWN on it (.373 exp4031).
+#   - exp4020: goal predicate induced for r11l, held-out precision 1.0 (the search target).
+#   - exp4024: 5th ARC-AGI-3 game solved (games 4->5).
+#   - exp4022: decentralization branched to B_distill_feasibility (exp4012 local best-of-8 = 0.27
+#     demo-perfect, NO lift over vote, below codex 0.57 -> leans REPRESENTATIONAL gap). Per the
+#     Invisible Leash (arXiv:2507.14843), distillation closes the gap ONLY if the abstraction is
+#     LATENT. .373 RUNS the actual bounded distillation test (exp4032) to settle it.
+#   - exp4023: agreement-as-selector RETIRED (Deep-Think demote directive); demo-fit safety gate KEPT.
+#   - exp4025: ArcMemo transfer win. exp4026: efficiency parity at 95.3x cheaper WALL-CLOCK
+#     (the outer-loop corrigendum -- the .371 TAUTOLOGY is fixed; cost is now an independent axis).
+#
+# .373 HEADLINE -- two strategic questions, both now ANSWERABLE:
+#   1. DOES THE VERIFIER EARN ITS PLACE IN MORE THAN ONE DOMAIN? The 2026-06-11 verifier-transfer
+#      audit found the execution-consistency primitive is domain-general BY CONSTRUCTION but has
+#      NEVER been measured off-ARC (verifier_gaps.md is 100% ARC). exp4030 (the operator's explicit
+#      2026-06-11 directive: "stop this being an open argument") runs the SAME primitive on a NON-ARC
+#      code-synthesis corpus (MBPP/HumanEval) -> converts argued-general into MEASURED. THE HEADLINE.
+#   2. DOES THE PROVEN SEARCH NAVIGATOR KEEP ADVANCING ARC ACCURACY? exp4031 pushes the exp4021
+#      method to the NEXT wall (incremental-progress: +1 level/game).
+#   And: exp4032 settles the Invisible-Leash decentralization question (does verifier-reward
+#   distillation close the 0.27->0.57 local gap?); exp4033 6th game; exp4034 ArcMemo v6; exp4035
+#   hardware continuity; exp4036 the reserved SOTA-ingestion slot (the .373 forks are bleeding-edge).
+#
+# ROUTING: Codex-Default v2 (gemini BANNED -- 2 global-stall incidents). exp4029 archive =
+# claude + requires_claude_verified (the multi-file archive task hits the codex wall-clock cap).
+# Long-generation tasks (exp4030 off-ARC candidate gen, exp4032 distillation) are BOUNDED +
+# per-task CHECKPOINTED (the exp4012 pattern) and scoped under the cap, per the split-long-
+# experiments planner discipline (2026-06-10). All ARC solve tasks are INCREMENTAL (+1..+n, never
+# "solve all") per the ARC-AGI-3 Incremental-Progress Scoping rule.
+#
+# OPERATOR REVIEW: pre-staged because the planner stalled; auto-executes when .372 close finalizes.
+# The off-ARC transfer (exp4030) is the operator's explicit directive; the rest carries the .372
+# wins forward. Adjust freely in the morning.
+milestone: "2026.06.373"
+milestone_title: "EARN THE VERIFIER ITS PLACE IN A SECOND DOMAIN + DOUBLE DOWN ON THE PROVEN SEARCH NAVIGATOR. .372 proved the central bet (search over the verifier-certified world model SOLVED r11l L4 -- the wall was SEARCH, not representation, real-env-confirmed). .373's headline is the operator-directed OFF-ARC EXECUTION-VERIFIER TRANSFER (exp4030): the 2026-06-11 audit showed the GAP-4 execution-consistency primitive is domain-general by construction but NEVER measured off-ARC -- run it on a non-ARC code-synthesis corpus (MBPP/HumanEval) to convert 'argued domain-general' into a MEASURED datum. Then push the proven search navigator to the next wall (exp4031, incremental +1), settle the Invisible-Leash decentralization question with an actual bounded verifier-reward distillation (exp4032), solve a 6th game (exp4033), compound ArcMemo (exp4034), hold the hardware boards (exp4035), and ingest the program-synthesis-verification + RLVR-distillation SOTA (exp4036). Capstone: does the verifier earn its place in a SECOND domain, and does the search navigator keep advancing ARC accuracy (exp4037)?"
+milestone_doc: "ops/known-issues.md"
+
+tasks:
+  - id: exp4029-archive-v372-activate-v373
+    operator_override: >
+      2026-06-11 operator-outer-loop directive (standing 2026-05-29 auto-override class 1):
+      routine milestone-transition task (archive-vN-activate-vN+1) -- false-positive scope-match
+      vs every prior archive/activate task; structurally never a doomed rerun. Aggregation +
+      infra-hardening only.
+    milestone: "2026.06.373"
+    title: "Archive .372 -> activate .373; KEEP the hardened green-gate + poison-test quarantine (held through .370/.371/.372). Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load and the ARC agentic modules import, run the smart-subset pre-test gate green, then RECORD the .372 close-state truth (the pivot result: exp4021 SOLVED r11l L4 search-not-representation; exp4022 distill-feasibility branch; games 4->5; agreement retired; efficiency 95.3x corrigendum clean)."
+    priority: critical
+    track: infra
+    max_turns: 100
+    agent_type: claude
+    model: opus
+    requires_claude: true
+    requires_claude_verified: true
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4029_archive_v372_activate_v373.json
+    prompt: |
+      Archive milestone .372 and activate .373. Append a .372 record to research-complete.yaml
+      (yaml.safe_load must still parse after). Assert ops/exclusion_manifest.yaml parses and the
+      python/carnot/agentic ARC modules import. Run the smart-subset pre-test gate; quarantine any
+      red test into tests/quarantine/ (git mv) and record which. RECORD the .372 close-state:
+      per-task OK/FAIL/skip/FLAGGED, the pivot outcome (exp4021 r11l L4 solve + search-not-
+      representation; exp4022 branch; total ARC-3 games + levels; exp4026 efficiency corrigendum).
+      REQUIRED ARTIFACT FIELDS: honest_verdict (MUST start complete:/success:/passed:/shipped:),
+      pretest_suite_green (bool; principle: a red gate cascade-skips the whole milestone),
+      milestone_372_closestate (dict), inference_substrate: aggregation_from_upstream_artifacts.
+
+  - id: exp4030-off-arc-execution-verifier-transfer
+    operator_override: >
+      2026-06-11 operator directive (explicit, this session): "queue the off-ARC execution-verifier
+      measurement as a next milestone task so this stops being an open argument." Full task spec in
+      ops/known-issues.md MANDATORY-NEXT-MILESTONE PRIORITIES (2026-06-11 TOP PRIORITY). Genuinely
+      NEW scope (code domain, not ARC) -- any verifier-scope-match is a false positive; this is the
+      first cross-domain transfer measurement, not a rerun.
+    milestone: "2026.06.373"
+    title: "OFF-ARC EXECUTION-VERIFIER TRANSFER (THE HEADLINE -- operator-directed): the 2026-06-11 verifier-transfer audit found the GAP-4 execution-consistency primitive (induce program from demos -> restricted-namespace execute -> exact-output-match demo-fit selection) is domain-general BY CONSTRUCTION but has NEVER been measured off-ARC (verifier_gaps.md is 100% ARC). Run the SAME primitive on a NON-ARC code-synthesis corpus (MBPP and/or HumanEval): visible tests = demos, hidden tests = held-out gold, restricted-exec + exact-match = the content-hash verifier. Two arms on the SAME candidate pool: (A) majority-vote/self-consistency baseline, (B) demo-fit execution-verifier selection. Measure held-out hidden-test pass-rate. This converts 'argued domain-general' into a MEASURED datum -- a positive result is the cleanest 'the verifier earns its place in MORE than one domain' statement; a negative is an honest scope bound + a logged gap."
+    priority: critical
+    track: verifier-transfer
+    max_turns: 110
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: live_llm_inference
+    deliverable: results/experiment_4030_off_arc_execution_verifier_transfer.json
+    prompt: |
+      Reuse the EXISTING domain-general primitives -- python/carnot/verify/sandbox.py (restricted
+      exec) + the demo-fit / content-hash logic in python/carnot/agentic/arc_gap4_execution_
+      verifier.py. Do NOT write an ARC-specific path; the whole point is the primitive is SHARED.
+      PRECONDITIONS (check BEFORE any inference; on any miss -> honest_verdict blocked_<resource>,
+      no fabrication): (a) `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/`
+      non-empty; (b) `python -c "import llama_cpp"` ok; (c) the code corpus loads (HF datasets MBPP
+      or HumanEval, or a cached copy); (d) the restricted-exec sandbox imports.
+      METHOD: for N>=30 tasks (prefer >=100; checkpoint per-task like exp4012 to stay under the
+      80-min cap -- BOUND generation), generate k>=8 candidate programs per task from the LOCAL
+      gemma-4-12B GGUF (decentralization-clean; closed codex only as an optional clearly-labeled
+      upper-bound arm). Arm A: majority-vote over candidate outputs on the visible examples. Arm B:
+      execute each candidate on the VISIBLE tests in the sandbox, keep the demo_perfect ones (pass
+      ALL visible tests), select among them (the model-free execution verifier). Score BOTH arms on
+      HELD-OUT hidden tests (pass@1/pass@2). POSITIVE CONTROL REQUIRED: report the oracle/best-of-
+      pool hidden-test pass-rate; if oracle ~= vote (no selectable headroom), the corpus is ceiling-
+      saturated and the null is UNINFORMATIVE -- say so, escalate to a harder corpus, do NOT report
+      "verifier fails to transfer" (FALSE_NEGATIVE_RISK).
+      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix; e.g. complete: exec_verifier_
+      transfers_to_code_deltaPP_ci_excl0, or complete: exec_verifier_no_transfer_code_vote_near_
+      ceiling, or complete: uninformative_no_headroom_<corpus>), corpus (str) + n_tasks (int;
+      principle: >=30 for a pp-delta claim per Adversarial Artifact Verification), armA_vote_passrate
+      (float), armB_demofit_passrate (float), delta_pp (float) + bootstrap_ci95 (list; principle:
+      the CI excluding 0 is what distinguishes a real lift from noise), oracle_passrate (float;
+      principle: the positive control that rules out the degenerate no-headroom null), model_specs +
+      random_seed + reproducibility_checksum (principle: a third party must be able to re-run),
+      missing_verifier_gaps (list; principle: per the Missing-Verifier rule, characterize any
+      residual unselectable slice), inference_substrate.
+
+  - id: exp4031-search-layer-next-wall
+    operator_override: >
+      2026-06-11 operator-outer-loop directive (standing 2026-05-29 auto-override class 3):
+      versioned continuation of the exp4021 search-over-verified-world-model method that SOLVED
+      r11l L4 in .372. FORWARD DIFFERENCE: applies the SAME proven navigator to a NEW wall not yet
+      attempted (r11l L5 / lp85 L2 / sc25 L2 / vc33) -- incremental ARC progress, not a rerun of a
+      solved level.
+    milestone: "2026.06.373"
+    title: "SEARCH-LAYER EXTENSION to the NEXT wall (double down on the .372 win): exp4021's heuristic search over the verifier-certified world model SOLVED r11l L4. Apply the SAME proven navigator (verifier-as-simulator forward-expansion + the exp4020-style induced goal predicate + a CODED distance-to-goal heuristic + bounded best-first/A*/depth-limited MCTS + per-step MPC replanning) to the NEXT planning wall: r11l L5, or one of the lp85/sc25 L2 walls, or vc33 (pick the one with the cleanest induced world model + observable goal). INCREMENTAL: solve +1..+n NEW levels beyond the banked total, STOP at the first level that fails. Honest no-advance (with WHY the wall held) is a complete verdict."
+    priority: high
+    track: planning
+    max_turns: 120
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: offline_arc_agi3_planning_search_over_verified_world_model
+    deliverable: results/experiment_4031_search_layer_next_wall.json
+    prompt: |
+      Reuse the exp4021 search machinery + exp4020 goal-induction (NO new env-exploration sweep
+      beyond the bounded per-level observation the method needs). Per docs/research-notes/search-
+      layer-literature-2026-06-11.md: PHS*-style policy/heuristic-guided search + SUBGOAL/LANDMARK
+      hierarchical decomposition (the tractability lever for long-horizon Sokoban-class) + per-step
+      MPC replanning. Prefer a CODED heuristic over a learned one (OOD-robust). Pick ONE target wall
+      (r11l L5 / lp85 L2 / sc25 L2 / vc33) by cleanest world model + observable goal. REAL-ENV-
+      CONFIRM any solve via the live env level_completed. INCREMENTAL-PROGRESS rule: target +1..+n
+      levels from the current best for that game; STOP at the first level that fails; do NOT attempt
+      "all levels". Honest no-solve (with the bottleneck diagnosis) is a complete verdict.
+      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix; e.g. complete: search_solved_
+      <game>_L<k>_real_env_confirmed, or complete: search_no_solve_<game>_L<k>_<bottleneck>),
+      new_levels_solved_this_task (int; principle: monotonic ARC progress per the Incremental-
+      Progress rule), total_levels_solved (int; principle: must advance past the banked total),
+      nodes_expanded (int), heuristic_used (str), real_env_confirmed (bool), inference_substrate.
+
+  - id: exp4032-verifier-reward-distillation
+    operator_override: >
+      2026-06-11 operator-outer-loop directive (standing 2026-05-29 auto-override class 3):
+      forward continuation of exp4022's distill-feasibility BRANCH (exp4022 only scoped feasibility;
+      this RUNS the actual bounded distillation + measures the gap-closure). Converges with the
+      standing VERIFIER-AS-SELF-IMPROVEMENT-REWARD priority. FORWARD DIFFERENCE: a real bounded
+      fine-tune + held-out induction measurement, not a feasibility scoping.
+    milestone: "2026.06.373"
+    title: "VERIFIER-AS-REWARD DISTILLATION -- settle the Invisible-Leash decentralization question (exp4022 branched here; now RUN it). exp4012 showed local gemma-4-12B best-of-8 = 0.27 demo-perfect vs codex 0.57 (no lift, leans REPRESENTATIONAL gap). The Invisible Leash (arXiv:2507.14843): distillation closes the gap ONLY if the abstraction is LATENT in the local model. TEST IT: collect N verifier-certified (demo-perfect, execution-validated) codex induction traces as a fine-tune corpus, run a BOUNDED LoRA fine-tune of gemma-4-12B on them, and measure whether the fine-tuned local model's demo-perfect induction rate moves toward codex's 0.57 on a HELD-OUT ARC pool. Closes-the-gap -> sovereign path viable (sharpening); no-movement -> the leash holds (representational), report honestly."
+    priority: high
+    track: decentralization
+    max_turns: 120
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: live_llm_inference
+    deliverable: results/experiment_4032_verifier_reward_distillation.json
+    prompt: |
+      PRIOR ART: The Invisible Leash (arXiv:2507.14843) is the lens; Tulu 3 / RLVR (arXiv:2411.15124)
+      is the recipe. This is the VERIFIER-AS-REWARD path: the execution verifier is the un-
+      hallucinating ground-truth signal that labels the fine-tune corpus.
+      PRECONDITIONS (check FIRST; on miss -> honest_verdict blocked_<resource>, no fabrication):
+      (a) gemma-4-12B GGUF cached; (b) a LoRA/PEFT fine-tune path available for the local model
+      (verify the trainer imports + a GPU is visible: `python -c "import torch; assert
+      torch.cuda.is_available()"`); (c) >= ~40 verifier-certified codex induction traces collectible
+      (or already cached from exp4012/exp4022). If a full fine-tune cannot complete under the cap,
+      SPLIT: a *-build step writes the trainer + corpus, a backgrounded *-run executes it; OR bound
+      to a small LoRA + small held-out pool and report it as a bounded-but-real measurement (NOT a
+      feasibility scoping -- it must produce a held-out induction-rate number).
+      METHOD: (1) collect N>=40 demo-perfect, execution-validated codex induction traces (input ->
+      def transform/solve). (2) bounded LoRA fine-tune gemma-4-12B on them. (3) measure the fine-
+      tuned model's demo-perfect induction rate on a HELD-OUT ARC pool (NOT the training tasks) vs
+      the pre-fine-tune 0.27 baseline and codex's 0.57. POSITIVE CONTROL: confirm the held-out pool
+      has headroom (codex/oracle > local baseline) so a null is informative (FALSE_NEGATIVE_RISK).
+      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix; e.g. complete: distillation_closes_
+      gap_local_0.27_to_X, or complete: distillation_no_movement_leash_holds_representational),
+      pre_finetune_induction_rate (float), post_finetune_induction_rate (float) + heldout_pool_n
+      (int; principle: measured on HELD-OUT tasks so the lift is genuine generalization not recall),
+      codex_reference_rate (float; principle: the target ceiling + the positive control for headroom),
+      n_traces (int), random_seed + reproducibility_checksum, inference_substrate.
+
+  - id: exp4033-sixth-game-explore-first
+    operator_override: >
+      2026-06-11 operator-outer-loop directive (standing 2026-05-29 auto-override class 3):
+      versioned continuation of the proven explore-first first-solve method (exp4004 su15, exp4024
+      5th game). FORWARD DIFFERENCE: targets a NEW non-spatial game not yet solved -- monotonic
+      +1 games-solved per the Incremental-Progress rule, not a rerun.
+    milestone: "2026.06.373"
+    title: "SIXTH ARC-AGI-3 game first-solve via the PROVEN explore-first method (raises games-solved 5->6, monotonic +1 per the Incremental-Progress rule): apply the explore-first ORDER that solved su15 (exp4004) and the 5th game (exp4024) -- (1) bounded active-exploration OBSERVES per-level transitions, (2) induce the mechanic + goal predicate from OBSERVED transitions, (3) GAP-4 verifier validates the rule on held-out transitions, (4) act only if it validates. Pick the next-easiest NON-SPATIAL game from the win-condition survey (smallest L0 baseline_actions + directly-observable goal; AVOID vc33's PSPACE spatial trap). Honest no-solve is a complete verdict."
+    priority: medium
+    track: accuracy
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: offline_arc_agi3_explore_first_first_solve
+    deliverable: results/experiment_4033_sixth_game_explore_first.json
+    prompt: |
+      Apply the proven explore-first first-solve method (exp4004/exp4024) to a NEW non-spatial game
+      from results/arc3_win_condition_survey.json (pick smallest L0 baseline_actions + directly-
+      observable goal; AVOID vc33). Order: bounded active-exploration OBSERVES transitions -> induce
+      mechanic + goal predicate from OBSERVED transitions -> GAP-4 verifier validates on held-out
+      transitions -> act only if validated. REAL-ENV-CONFIRM any solve via the live env. INCREMENTAL:
+      a single 6th distinct solved game raises generalization 5->6; STOP at the first level that
+      fails. Honest no-solve (with WHY) is a complete verdict.
+      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix; e.g. complete: sixth_game_<id>_
+      solved_real_env_confirmed, or complete: no_solve_<id>_<reason>), game_solved (bool),
+      total_games_solved (int; principle: monotonic +1 per the Incremental-Progress rule),
+      first_solve_at_action (int), actions_vs_baseline (float), exploration_actions_used (int),
+      real_env_confirmed (bool), inference_substrate.
+
+  - id: exp4034-arcmemo-solve-transfer-v6
+    operator_override: >
+      2026-06-11 operator-outer-loop directive (standing 2026-05-29 auto-override class 3):
+      versioned continuation (v6) of the ArcMemo concept-transfer line (exp4005 14->10, exp4025 v5).
+      FORWARD DIFFERENCE: tests transfer to .373's NEW solved content (exp4031 level / exp4033 game)
+      with a positive control; not a rerun of prior content.
+    milestone: "2026.06.373"
+    title: "ArcMemo SOLVE-transfer v6 (self-learning MANDATE; extends exp4005 14->10 + exp4025 v5 to .373's NEW content): does the SAME concept memory make THIS milestone's new content cheaper? Two arms at equal perception on the new target (the exp4031 level OR the exp4033 game, or a re-held-out solved level if neither advanced): (A) cold-start (no memory), (B) concept-memory-seeded (retrieve + try banked concepts: 'select-then-place' r11l, 'permute-set' lp85, 'pattern-match-then-navigate' sc25, 'lattice-step-toward-target' su15 + any new). Does retrieving banked concepts reduce ACTIONS/ATTEMPTS to solve genuinely NEW content vs cold-start? Tier-2 constraint memory compounding across the milestone's own progress."
+    priority: medium
+    track: self-learning
+    max_turns: 90
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: offline_arc_agi3_concept_memory_transfer
+    deliverable: results/experiment_4034_arcmemo_solve_transfer_v6.json
+    prompt: |
+      Two arms at EQUAL perception on a NEW target (prefer the exp4031 newly-solved level or the
+      exp4033 newly-solved game; else a re-held-out solved level): (A) cold-start, no memory; (B)
+      concept-memory-seeded -- retrieve + try the banked concepts. Measure ACTIONS/ATTEMPTS to solve
+      vs cold-start. POSITIVE CONTROL: the target MUST share structure with >=2 banked concepts,
+      else transfer is impossible by construction (FALSE_NEGATIVE_RISK) -- verify this and state it.
+      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix; e.g. complete: arcmemo_transfer_
+      win_actions_X_vs_Y, or complete: no_transfer_<reason>), cold_start_actions (int),
+      memory_seeded_actions (int) + transfer_win (bool; principle: fewer actions on NEW content is
+      the self-learning compounding signal), shared_concept_count (int; principle: the positive
+      control -- >=2 or the test is degenerate), inference_substrate.
+
+  - id: exp4035-hardware-continuity
+    operator_override: >
+      2026-06-11 operator-outer-loop directive (standing 2026-05-29 auto-override class 2):
+      active hardware-continuity task (KV260/GateMate/PolarFire) mandated by the Hardware-Task
+      Continuity Discipline until each board reaches terminal state; scope-matches prior continuity
+      tasks but is required forward work.
+    milestone: "2026.06.373"
+    title: "Hardware continuity (consolidated): SSH/USB-reachability + terminal-state check per attached board -- KV260 (ssh kria, xmutil listapps), GateMate (openFPGALoader -c dirtyJtag --detect), PolarFire (ssh polarfire). Record per-board reachability + next forward step; no bitstream redesign. Per the KV260 SSH-Not-SD-Card Discipline: SSH-reachability is the ONLY valid KV260 precondition. Use DISTINCT wall-clock timers per board."
+    priority: low
+    track: hardware
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: hardware_smoke
+    deliverable: results/experiment_4035_hardware_continuity.json
+    prompt: |
+      Per-board SSH/USB reachability + terminal-state check (KV260 via ssh kria + xmutil listapps;
+      GateMate via openFPGALoader -c dirtyJtag --detect; PolarFire via ssh polarfire). NEVER use a
+      host SD-card block device as a KV260 precondition. Record reachability + next concrete step
+      per board. Distinct wall-clock timer per board (no shared-timestamp tautology).
+      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix), per_board_reachability (dict),
+      inference_substrate: hardware_smoke,
+      preconditions_checked (list of {{resource, available}}; principle: records which board accesses
+      were verified before the smoke, pre-empting the fabricate-when-unreachable failure mode).
+
+  - id: exp4036-sota-ingestion-search-and-distillation
+    operator_override: >
+      2026-06-11 operator-outer-loop directive (standing 2026-06-11 SOTA-Ingestion Cycle Discipline):
+      reserved SOTA-ingestion slot for the .373 bleeding-edge forks (off-ARC verifier transfer,
+      search-layer extension, verifier-reward distillation). New task class; any scope-match is a
+      false positive.
+    milestone: "2026.06.373"
+    title: "SOTA-INGESTION SLOT (reserved per the SOTA-Ingestion Cycle Discipline): ingest the program-synthesis-verification + RLVR-distillation + hierarchical-search SOTA mapped onto the .373 bleeding-edge forks. Read research-studying.md / research-references.md filtered to these tracks + run a FOCUSED fresh pass via scripts/sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch (NOT the /deep-research harness -- it rate-limited 4x for zero output, banned from the autonomous loop). Emit a SOTA->experiment mapping note (strongest 3-5 methods per fork, implementation-over-current-stack, pitfalls; template = docs/research-notes/search-layer-literature-2026-06-11.md), update research-studying.md, and FLAG the strongest methods for the .374 roadmap."
+    priority: medium
+    track: sota-ingestion
+    max_turns: 70
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: docs/research-notes/sota-ingestion-2026-06-11.md
+    prompt: |
+      Reserved SOTA-ingestion task (SOTA-Ingestion Cycle Discipline). Target the .373 bleeding-edge
+      forks: (1) program-synthesis with execution-verification / test-based selection (exp4030 off-
+      ARC transfer); (2) heuristic/hierarchical search over learned-or-induced world models (exp4031
+      search extension); (3) verifier-reward RLVR distillation / the Invisible Leash regime (exp4032).
+      Read research-studying.md + research-references.md filtered to these tracks. Run a FOCUSED
+      fresh pass: scripts/sweep_clusters.py + scripts/sweep_semscholar.py for discovery, then low-
+      concurrency WebSearch + WebFetch of the top 5-8 papers. Do NOT invoke the /deep-research
+      Workflow harness (it 429-rate-limited 4x for zero output on 2026-06-11; banned from the loop).
+      EMIT docs/research-notes/sota-ingestion-2026-06-11.md: per-fork, the strongest 3-5 methods,
+      what each would take over the current stack, the pitfalls; a "bottom line for the .374 roadmap"
+      section. Update research-studying.md (mark ingested). Every method claim MUST cite a real arXiv
+      ID/URL (no-fabrication bar; adversarial_verify applies).
+      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix; e.g. complete: sota_ingested_
+      Nmethods_mapped_3forks), methods_mapped (list of {arxiv_id, fork, one_line}; principle: every
+      method cites a REAL arxiv id -- no fabrication), strongest_for_next_roadmap (list; principle:
+      closes the discover->ingest->plan loop), inference_substrate.
+
+  - id: exp4037-capstone-v373
+    operator_override: >
+      2026-06-11 operator-outer-loop directive (standing 2026-05-29 auto-override class 1):
+      routine milestone-capstone task -- false-positive scope-match vs every prior capstone;
+      aggregation only, structurally never a doomed rerun.
+    milestone: "2026.06.373"
+    title: "Capstone .373 (UNGATED): the milestone's headline question is DOES THE VERIFIER EARN ITS PLACE IN A SECOND DOMAIN, AND DOES THE PROVEN SEARCH NAVIGATOR KEEP ADVANCING ARC ACCURACY? Aggregate: OFF-ARC TRANSFER = exp4030 (did the execution-consistency primitive measurably beat vote on a NON-ARC code corpus, CI excluding 0 with a passing oracle positive control -- the argued->measured conversion); SEARCH = exp4031 (new_levels_solved past the banked total); DECENTRALIZATION = exp4032 (did verifier-reward distillation move the local induction rate toward codex, or does the Invisible Leash hold?); ACCURACY = exp4033 (total_games_solved); SELF-LEARNING = exp4034 (transfer_win); HARDWARE = exp4035; SOTA = exp4036. Honest verdict on whether the verifier generalized to a second domain and the search navigator kept advancing the north star. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on -- aggregate whatever exists."
+    milestone: "2026.06.373"
+    priority: high
+    track: synthesis
+    max_turns: 90
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4037_capstone_v373.json
+    prompt: |
+      Aggregate exp4029-exp4036 into the .373 capstone. Headline: did the execution-verifier
+      primitive MEASURABLY transfer off-ARC (exp4030 -- delta_pp CI excludes 0 AND oracle headroom
+      present), and did the proven search navigator advance ARC accuracy (exp4031 new levels +
+      exp4033 new game)? Also: did verifier-reward distillation close the decentralization gap
+      (exp4032), did ArcMemo compound (exp4034). SKIP any artifact with flagged_adversarial=true;
+      cite each upstream artifact's sha256. NO gated_on -- aggregate whatever exists.
+      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix; e.g. success: capstone_v373_
+      verifier_transferred_to_code_AND_search_advanced_<summary>), off_arc_transfer_result (str;
+      principle: the headline -- argued-general is now measured one way or the other),
+      search_levels_advanced (int), games_solved_total (int), distillation_gap_closure (str),
+      cited_upstream_artifacts (list of {experiment_id, sha256}; principle: the audit trail so the
+      capstone's numbers trace to real measurements), inference_substrate.
