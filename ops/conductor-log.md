@@ -8206,3 +8206,4 @@ c |
 | 2026-06-11 02:57 UTC | Archive .371 -> activate .372; KEEP the hardened g | OK | 125 passed in 4.99s |
 | 2026-06-11 03:14 UTC | GOAL-INDUCTION SEPARATION (the planning-layer prer | OK | 93 passed in 4.56s |
 | 2026-06-11 03:38 UTC | HEURISTIC SEARCH OVER THE VERIFIED WORLD MODEL (TH | OK | 90 passed in 4.72s |
+| 2026-06-11 03:54 UTC | DECENTRALIZATION next step, DATA-GATED on exp4012' | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
