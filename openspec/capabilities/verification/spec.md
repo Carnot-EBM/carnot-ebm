@@ -12395,6 +12395,74 @@ points, `bootstrap_ci95` is a two-element numeric interval for that delta, and
 `oracle_passrate` records whether any candidate in each task's pool passes all
 hidden tests so the collector can distinguish no-transfer from no-headroom.
 
+### REQ-VERIFY-4044: OFF-ARC Full-Power Transfer Build Gate
+
+The repository SHALL provide Exp 4044 at
+`scripts/experiments/exp4044_offarc_transfer_power_build.py` and the
+backgroundable runner `scripts/experiments/offarc_transfer_power_run.py` to
+launch a full-power HumanEval plus MBPP OFF-ARC transfer measurement. Before
+any live inference, the build script SHALL check the local
+`unsloth/gemma-4-12B-it-GGUF` cache, `llama_cpp` importability, HumanEval(164)
+and MBPP slice loadability or cached equivalents, and
+`carnot.verify.sandbox` importability. If any resource is missing, Exp 4044
+SHALL write `results/experiment_4044_offarc_transfer_power_build.json` with
+`honest_verdict=blocked_<resource>`, `runner_ready=false`,
+`smoke_passed=false`, `launched_pid=0`, the full `preconditions_checked` list,
+and `inference_substrate=live_llm_inference`, then stop without launching the
+runner.
+
+When preconditions pass, Exp 4044 SHALL smoke the runner on exactly two code
+tasks, validate that the smoke writes a well-formed raw artifact, and then
+launch the full run in the background with output redirected to
+`logs/offarc_power_run.log`. The build artifact SHALL include bare top-level
+fields `honest_verdict`, `runner_ready`, `smoke_passed`, `launched_pid`,
+`arms_implemented`, `preconditions_checked`, and
+`inference_substrate=live_llm_inference`.
+
+### SCENARIO-VERIFY-4044: Full-Power Build Smokes And Launches
+
+Given the local GGUF cache, `llama_cpp`, HumanEval and MBPP code corpora, and
+sandbox primitive are available, when Exp 4044 runs, then it first writes and
+validates a two-task smoke raw artifact, launches
+`offarc_transfer_power_run.py` in the background for at least 160 completed
+tasks with at least eight candidates per task, writes
+`results/experiment_4044_offarc_transfer_power_build.json` with
+`runner_ready=true`, `smoke_passed=true`, a positive integer `launched_pid`,
+all four arms listed in `arms_implemented`, and
+`honest_verdict=success: offarc_power_runner_built_smoked_launched_humaneval_mbpp`.
+
+### REQ-VERIFY-4045: OFF-ARC Full-Power Transfer Measurement With SEP
+
+The OFF-ARC full-power runner SHALL load full HumanEval plus an MBPP slice,
+target at least 160 completed tasks, generate at least eight candidate
+programs per task from the local Gemma 4 12B GGUF, and evaluate every candidate
+through `carnot.verify.sandbox.sandboxed_exec_function`. All selection arms
+SHALL use the same candidate pool. Arm A SHALL select by self-consistency over
+candidate behavior. Arm A++ SHALL select by ACES leave-one-out
+test-consistency. Arm B SHALL reuse the same model-free GAP-4 demo-fit
+primitive by keeping exact visible-test passers and selecting without an LLM
+judge. Arm C SHALL filter by public tests, partition survivors into functional
+equivalence classes using symbolic execution or a bounded behavioral
+fingerprint proxy, and select from the dominant class.
+
+The raw artifact SHALL write
+`results/experiment_4045_offarc_transfer_power_raw.json` with per-arm
+per-task pass@1/pass@2 outcomes including
+`armC_symbolic_partition_passrate`, oracle/best-of-pool hidden pass-rate,
+`model_specs`, `random_seed`, `reproducibility_checksum`, `truncation_rate`,
+checkpoints per task, `preconditions_checked`, and
+`inference_substrate=live_llm_inference`. Hidden tests SHALL be used only after
+selection for held-out scoring.
+
+### SCENARIO-VERIFY-4045: Four Arms Share One Candidate Pool
+
+Given a shared HumanEval plus MBPP candidate pool, when the full-power runner
+scores a task, then Arm A, Arm A++, Arm B, and Arm C select only from that
+task's shared pool, record pass@1 and pass@2 against hidden tests after
+selection, preserve the oracle hidden pass indicator, and expose Arm C's
+equivalence-class metadata so the collector can compare demo-fit against both
+ACES and the symbolic-equivalence proxy.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at

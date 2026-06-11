@@ -1,0 +1,54 @@
+{
+  "arms_implemented": [
+    "armA_vote",
+    "armAplusplus_aces",
+    "armB_demofit",
+    "armC_symbolic_equivalence_partition"
+  ],
+  "duration_s": 18.68,
+  "experiment": "experiment_4044_offarc_transfer_power_build",
+  "field_principles": {
+    "arms_implemented": "List of the four arms required for the stronger-discriminator comparison.",
+    "honest_verdict": "Terminal-prefix build verdict; blocked resources stop before inference.",
+    "inference_substrate": "live_llm_inference because smoke and full launch use the local GGUF.",
+    "launched_pid": "Bare int; Exp 4045 polls the process owning the full run.",
+    "preconditions_checked": "List of resources verified before any inference.",
+    "runner_ready": "Bare bool; the collector gates on this value.",
+    "smoke_passed": "Bare bool; a failed two-task smoke must not launch the full run."
+  },
+  "full_raw_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4045_offarc_transfer_power_raw.json",
+  "honest_verdict": "success: offarc_power_runner_built_smoked_launched_humaneval_mbpp",
+  "inference_substrate": "live_llm_inference",
+  "launched_pid": 2844448,
+  "log_path": "/home/ianblenke/github.com/ianblenke/carnot/logs/offarc_power_run.log",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
+      "resource": "local_gguf_cached"
+    },
+    {
+      "available": true,
+      "resource": "llama_cpp_importable"
+    },
+    {
+      "available": true,
+      "detail": "loaded=155 skipped=9",
+      "resource": "humaneval_corpus_loadable"
+    },
+    {
+      "available": true,
+      "detail": "loaded=3",
+      "resource": "mbpp_corpus_loadable"
+    },
+    {
+      "available": true,
+      "resource": "restricted_exec_importable"
+    }
+  ],
+  "runner_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/offarc_transfer_power_run.py",
+  "runner_ready": true,
+  "schema": "carnot.experiment_4044_offarc_transfer_power_build.v1",
+  "smoke_passed": true,
+  "smoke_raw_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4044_offarc_transfer_power_smoke_raw.json"
+}
