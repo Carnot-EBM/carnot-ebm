@@ -1,0 +1,94 @@
+{
+  "k_samples_per_task": 8,
+  "local_model_used": "Qwen3.6-35B-A3B",
+  "schema": "carnot.experiment_4048_decentralization_moe_base_raw.checkpoint.v1",
+  "tasks": {
+    "50a16a69": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 18.73,
+        "status": "no_code",
+        "task": "50a16a69"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 19.06,
+        "status": "no_code",
+        "task": "50a16a69"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 18.93,
+        "status": "no_code",
+        "task": "50a16a69"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 19.11,
+        "status": "no_code",
+        "task": "50a16a69"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 18.99,
+        "status": "no_code",
+        "task": "50a16a69"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 19.07,
+        "status": "no_code",
+        "task": "50a16a69"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    \n    # Find the noise color\n    # Look at the last row and last column\n    last_row = grid[-1, :]\n    last_col = grid[:, -1]\n    \n    # The noise color is the one that appears most in the last row and last column\n    # (excluding corners if necessary)\n    from collections import Counter\n    counts = Counter()\n    for val in last_row:\n        counts[val] += 1\n    for val in last_col:\n        counts[val] += 1\n    \n    noise_color = max(counts, key=counts.get)\n    \n    # Find the clean part (where the noise color doesn't appear)\n    # Actually, the clean part is the top-left rectangle where the pattern is\n    # We need to find the dimensions of the clean part\n    \n    # Find the last row index that doesn't contain the noise color (or has some non-noise values)\n    clean_rows = 0\n    for r in range(rows):\n        if np.any(grid[r, :] != noise_color):\n            clean_rows = r + 1\n        else:\n            break\n    \n    # Find the last column index that doesn't contain the noise color\n    clean_cols = 0\n    for c in range(cols):\n        if np.any(grid[:, c] != noise_color):\n            clean_cols = c + 1\n        else:\n            break\n    \n    clean_part = grid[:clean_rows, :clean_cols]\n    \n    # Find the horizontal period\n    first_row = clean_part[0, :]\n    for period in range(1, len(first_row) + 1):\n        if len(first_row) % period == 0:\n            pattern = first_row[:period]\n            if np.all(first_row == np.tile(pattern, len(first_row) // period)):\n                h_period = period\n                break\n    \n    # Find the vertical period\n    first_col = clean_part[:, 0]\n    for period in range(1, len(first_col) + 1):\n        if len(first_col) % period == 0:\n            pattern = first_col[:period]\n            if np.all(first_col == np.tile(pattern, len(first_col) // period)):\n                v_period = period\n                break\n    \n    # Extract the tile\n    tile = clean_part[:v_period, :h_period]\n    \n    # Extend the tile to fill the entire grid\n    result = np.zeros((rows, cols), dtype=int)\n    for r in range(rows):\n        for c in range(cols):\n            result[r, c] = tile[r % v_period, c % h_period]\n    \n    return result",
+        "code_len": 2283,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 19.3,
+        "status": "graded",
+        "task": "50a16a69"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 19.15,
+        "status": "no_code",
+        "task": "50a16a69"
+      }
+    ],
+    "66e6c45b": [
+      {
+        "code": "def transform(grid):\n    out = np.zeros_like(grid)\n    coords = np.argwhere(grid != 0)\n    # coords will be [[1,1], [1,2], [2,1], [2,2]]\n    # We can just map them to corners\n    # But simpler: just take the 2x2 block values and place at corners\n    # Let's find the bounding box of non-zeros\n    r_min, c_min = coords.min(axis=0)\n    r_max, c_max = coords.max(axis=0)\n    block = grid[r_min:r_max+1, c_min:c_max+1]\n    out[0, 0] = block[0, 0]\n    out[0, -1] = block[0, -1]\n    out[-1, 0] = block[1, 0]\n    out[-1, -1] = block[1, -1]\n    return out",
+        "code_len": 548,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 0,
+        "local_s": 17.92,
+        "status": "graded",
+        "task": "66e6c45b"
+      }
+    ]
+  }
+}
