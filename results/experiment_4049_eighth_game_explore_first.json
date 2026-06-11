@@ -1,0 +1,1015 @@
+{
+  "action_plan": [
+    {
+      "action": 6,
+      "color": 9,
+      "role": "select_item",
+      "sprite": "lngftsryyw",
+      "x": 36,
+      "y": 59
+    },
+    {
+      "action": 6,
+      "color": 9,
+      "role": "place_slot",
+      "x": 23,
+      "y": 30
+    },
+    {
+      "action": 6,
+      "color": 14,
+      "role": "select_item",
+      "sprite": "lngftsryyw",
+      "x": 20,
+      "y": 59
+    },
+    {
+      "action": 6,
+      "color": 14,
+      "role": "place_slot",
+      "x": 29,
+      "y": 30
+    },
+    {
+      "action": 6,
+      "color": 11,
+      "role": "select_item",
+      "sprite": "lngftsryyw",
+      "x": 44,
+      "y": 59
+    },
+    {
+      "action": 6,
+      "color": 11,
+      "role": "place_slot",
+      "x": 35,
+      "y": 30
+    },
+    {
+      "action": 6,
+      "color": 15,
+      "role": "select_item",
+      "sprite": "lngftsryyw",
+      "x": 28,
+      "y": 59
+    },
+    {
+      "action": 6,
+      "color": 15,
+      "role": "place_slot",
+      "x": 41,
+      "y": 30
+    },
+    {
+      "action": 5,
+      "role": "validate"
+    }
+  ],
+  "arc_env_count": 25,
+  "candidate_baseline_actions": 18,
+  "duration_s": 5.046,
+  "excluded_solved_games": [
+    "r11l",
+    "lp85",
+    "sc25",
+    "su15",
+    "tn36",
+    "cd82",
+    "dc22"
+  ],
+  "experiment": "experiment_4049_eighth_game_explore_first",
+  "exploration_actions_used": 2,
+  "field_principles": {
+    "game_solved": "bare boolean for whether this task added exactly one new solved game",
+    "honest_verdict": "terminal prefix records success, complete no-solve, or blocked precondition",
+    "inference_substrate": "declares the offline explore-first induction and verifier substrate",
+    "real_env_confirmed": "a solve is real only when the live environment level counter confirms it",
+    "solve_trace": "full observe/explore/induce/verify/act trace for Exp 4050 concept-transfer analysis",
+    "target_game": "auditable game id selected from the survey and environment metadata",
+    "total_games_solved": "monotonic ARC accuracy counter and north-star metric"
+  },
+  "first_solve_at_action": 9,
+  "game_solved": true,
+  "honest_verdict": "success: eighth_game_solved_sb26-7fbdac44_at_action_9",
+  "induced_mechanic": "Observed sb26 item selection and slot placement before validation; induced a non-navigation color-sequence model where clicked items move into frame slots, slot colors must match the top target colors left-to-right, and ACTION5 is retained only when replay predicts a levels_completed increment.",
+  "inference_substrate": "offline_arc_agi3_explore_first_first_solve",
+  "level_completed": 1,
+  "levels_completed": 1,
+  "phase_trace": [
+    {
+      "candidate_reason": "selected fallback: sb26 is unsolved, win_difficulty=hard, L0 baseline_actions=18",
+      "phase": "observe",
+      "source": "offline_explore_first_induction",
+      "state": {
+        "level_completed": 0,
+        "loose_item_colors": [
+          14,
+          15,
+          9,
+          11
+        ],
+        "slot_colors": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "target_colors": [
+          9,
+          14,
+          11,
+          15
+        ]
+      },
+      "target_game": "sb26-7fbdac44"
+    },
+    {
+      "action": {
+        "action": 6,
+        "color": 9,
+        "role": "select_item",
+        "sprite": "lngftsryyw",
+        "x": 36,
+        "y": 59
+      },
+      "action_index": 1,
+      "after": {
+        "level_completed": 0,
+        "loose_item_colors": [
+          14,
+          15,
+          9,
+          11
+        ],
+        "slot_colors": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "target_colors": [
+          9,
+          14,
+          11,
+          15
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "loose_item_colors": [
+          14,
+          15,
+          9,
+          11
+        ],
+        "slot_colors": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "target_colors": [
+          9,
+          14,
+          11,
+          15
+        ]
+      },
+      "level_completed": 0,
+      "phase": "explore",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "action": {
+        "action": 6,
+        "color": 9,
+        "role": "place_slot",
+        "x": 23,
+        "y": 30
+      },
+      "action_index": 2,
+      "after": {
+        "level_completed": 0,
+        "loose_item_colors": [
+          14,
+          15,
+          11
+        ],
+        "slot_colors": [
+          9,
+          null,
+          null,
+          null
+        ],
+        "target_colors": [
+          9,
+          14,
+          11,
+          15
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "loose_item_colors": [
+          14,
+          15,
+          9,
+          11
+        ],
+        "slot_colors": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "target_colors": [
+          9,
+          14,
+          11,
+          15
+        ]
+      },
+      "level_completed": 0,
+      "phase": "explore",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "exploration_actions_used": 2,
+      "goal_predicate": "slot_colors == target_colors and ACTION5 increments level counter",
+      "induction_call": {
+        "call": "induce_sb26_color_sequence_slot_matching",
+        "goal_predicate": "slot_colors == target_colors and ACTION5 increments level counter",
+        "mechanic": "click an item to select it, click an empty slot to place it, ACTION5 validates left-to-right colors",
+        "observed_item_colors": [
+          14,
+          15,
+          9,
+          11
+        ],
+        "observed_target_colors": [
+          9,
+          14,
+          11,
+          15
+        ]
+      },
+      "mechanic": "sb26_color_sequence_slot_matching",
+      "phase": "induce",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "actions_checked": 7,
+      "energy": 0.0,
+      "level_increment": true,
+      "phase": "verify",
+      "predicted_goal_after_actions": true,
+      "retained": true,
+      "slot_sequence_matches": true,
+      "verifier": "gap4_replay_sb26_level_counter"
+    },
+    {
+      "action": {
+        "action": 6,
+        "color": 9,
+        "role": "select_item",
+        "sprite": "lngftsryyw",
+        "x": 36,
+        "y": 59
+      },
+      "action_index": 1,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "color": 9,
+        "role": "place_slot",
+        "x": 23,
+        "y": 30
+      },
+      "action_index": 2,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "color": 14,
+        "role": "select_item",
+        "sprite": "lngftsryyw",
+        "x": 20,
+        "y": 59
+      },
+      "action_index": 3,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "color": 14,
+        "role": "place_slot",
+        "x": 29,
+        "y": 30
+      },
+      "action_index": 4,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "color": 11,
+        "role": "select_item",
+        "sprite": "lngftsryyw",
+        "x": 44,
+        "y": 59
+      },
+      "action_index": 5,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "color": 11,
+        "role": "place_slot",
+        "x": 35,
+        "y": 30
+      },
+      "action_index": 6,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "color": 15,
+        "role": "select_item",
+        "sprite": "lngftsryyw",
+        "x": 28,
+        "y": 59
+      },
+      "action_index": 7,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "color": 15,
+        "role": "place_slot",
+        "x": 41,
+        "y": 30
+      },
+      "action_index": 8,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 5,
+        "role": "validate"
+      },
+      "action_index": 9,
+      "after": {
+        "level_completed": 1,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 1,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    }
+  ],
+  "prior_total_games_solved": 7,
+  "random_seed": 4049,
+  "real_env_confirmed": true,
+  "selected_candidate_reason": "selected fallback: sb26 is unsolved, win_difficulty=hard, L0 baseline_actions=18",
+  "selection_mode": "fallback_click_sequence_non_navigation",
+  "solve_trace": {
+    "actions": [
+      {
+        "action": 6,
+        "color": 9,
+        "role": "select_item",
+        "sprite": "lngftsryyw",
+        "x": 36,
+        "y": 59
+      },
+      {
+        "action": 6,
+        "color": 9,
+        "role": "place_slot",
+        "x": 23,
+        "y": 30
+      },
+      {
+        "action": 6,
+        "color": 14,
+        "role": "select_item",
+        "sprite": "lngftsryyw",
+        "x": 20,
+        "y": 59
+      },
+      {
+        "action": 6,
+        "color": 14,
+        "role": "place_slot",
+        "x": 29,
+        "y": 30
+      },
+      {
+        "action": 6,
+        "color": 11,
+        "role": "select_item",
+        "sprite": "lngftsryyw",
+        "x": 44,
+        "y": 59
+      },
+      {
+        "action": 6,
+        "color": 11,
+        "role": "place_slot",
+        "x": 35,
+        "y": 30
+      },
+      {
+        "action": 6,
+        "color": 15,
+        "role": "select_item",
+        "sprite": "lngftsryyw",
+        "x": 28,
+        "y": 59
+      },
+      {
+        "action": 6,
+        "color": 15,
+        "role": "place_slot",
+        "x": 41,
+        "y": 30
+      },
+      {
+        "action": 5,
+        "role": "validate"
+      }
+    ],
+    "commit_actions": [
+      {
+        "action": 6,
+        "color": 14,
+        "role": "select_item",
+        "sprite": "lngftsryyw",
+        "x": 20,
+        "y": 59
+      },
+      {
+        "action": 6,
+        "color": 14,
+        "role": "place_slot",
+        "x": 29,
+        "y": 30
+      },
+      {
+        "action": 6,
+        "color": 11,
+        "role": "select_item",
+        "sprite": "lngftsryyw",
+        "x": 44,
+        "y": 59
+      },
+      {
+        "action": 6,
+        "color": 11,
+        "role": "place_slot",
+        "x": 35,
+        "y": 30
+      },
+      {
+        "action": 6,
+        "color": 15,
+        "role": "select_item",
+        "sprite": "lngftsryyw",
+        "x": 28,
+        "y": 59
+      },
+      {
+        "action": 6,
+        "color": 15,
+        "role": "place_slot",
+        "x": 41,
+        "y": 30
+      },
+      {
+        "action": 5,
+        "role": "validate"
+      }
+    ],
+    "exploration_actions": [
+      {
+        "action": 6,
+        "color": 9,
+        "role": "select_item",
+        "sprite": "lngftsryyw",
+        "x": 36,
+        "y": 59
+      },
+      {
+        "action": 6,
+        "color": 9,
+        "role": "place_slot",
+        "x": 23,
+        "y": 30
+      }
+    ],
+    "induction_calls": [
+      {
+        "call": "induce_sb26_color_sequence_slot_matching",
+        "goal_predicate": "slot_colors == target_colors and ACTION5 increments level counter",
+        "mechanic": "click an item to select it, click an empty slot to place it, ACTION5 validates left-to-right colors",
+        "observed_item_colors": [
+          14,
+          15,
+          9,
+          11
+        ],
+        "observed_target_colors": [
+          9,
+          14,
+          11,
+          15
+        ]
+      }
+    ],
+    "phase_trace": [
+      {
+        "candidate_reason": "selected fallback: sb26 is unsolved, win_difficulty=hard, L0 baseline_actions=18",
+        "phase": "observe",
+        "source": "offline_explore_first_induction",
+        "state": {
+          "level_completed": 0,
+          "loose_item_colors": [
+            14,
+            15,
+            9,
+            11
+          ],
+          "slot_colors": [
+            null,
+            null,
+            null,
+            null
+          ],
+          "target_colors": [
+            9,
+            14,
+            11,
+            15
+          ]
+        },
+        "target_game": "sb26-7fbdac44"
+      },
+      {
+        "action": {
+          "action": 6,
+          "color": 9,
+          "role": "select_item",
+          "sprite": "lngftsryyw",
+          "x": 36,
+          "y": 59
+        },
+        "action_index": 1,
+        "after": {
+          "level_completed": 0,
+          "loose_item_colors": [
+            14,
+            15,
+            9,
+            11
+          ],
+          "slot_colors": [
+            null,
+            null,
+            null,
+            null
+          ],
+          "target_colors": [
+            9,
+            14,
+            11,
+            15
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "loose_item_colors": [
+            14,
+            15,
+            9,
+            11
+          ],
+          "slot_colors": [
+            null,
+            null,
+            null,
+            null
+          ],
+          "target_colors": [
+            9,
+            14,
+            11,
+            15
+          ]
+        },
+        "level_completed": 0,
+        "phase": "explore",
+        "source": "offline_explore_first_induction"
+      },
+      {
+        "action": {
+          "action": 6,
+          "color": 9,
+          "role": "place_slot",
+          "x": 23,
+          "y": 30
+        },
+        "action_index": 2,
+        "after": {
+          "level_completed": 0,
+          "loose_item_colors": [
+            14,
+            15,
+            11
+          ],
+          "slot_colors": [
+            9,
+            null,
+            null,
+            null
+          ],
+          "target_colors": [
+            9,
+            14,
+            11,
+            15
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "loose_item_colors": [
+            14,
+            15,
+            9,
+            11
+          ],
+          "slot_colors": [
+            null,
+            null,
+            null,
+            null
+          ],
+          "target_colors": [
+            9,
+            14,
+            11,
+            15
+          ]
+        },
+        "level_completed": 0,
+        "phase": "explore",
+        "source": "offline_explore_first_induction"
+      },
+      {
+        "exploration_actions_used": 2,
+        "goal_predicate": "slot_colors == target_colors and ACTION5 increments level counter",
+        "induction_call": {
+          "call": "induce_sb26_color_sequence_slot_matching",
+          "goal_predicate": "slot_colors == target_colors and ACTION5 increments level counter",
+          "mechanic": "click an item to select it, click an empty slot to place it, ACTION5 validates left-to-right colors",
+          "observed_item_colors": [
+            14,
+            15,
+            9,
+            11
+          ],
+          "observed_target_colors": [
+            9,
+            14,
+            11,
+            15
+          ]
+        },
+        "mechanic": "sb26_color_sequence_slot_matching",
+        "phase": "induce",
+        "source": "offline_explore_first_induction"
+      },
+      {
+        "actions_checked": 7,
+        "energy": 0.0,
+        "level_increment": true,
+        "phase": "verify",
+        "predicted_goal_after_actions": true,
+        "retained": true,
+        "slot_sequence_matches": true,
+        "verifier": "gap4_replay_sb26_level_counter"
+      },
+      {
+        "action": {
+          "action": 6,
+          "color": 9,
+          "role": "select_item",
+          "sprite": "lngftsryyw",
+          "x": 36,
+          "y": 59
+        },
+        "action_index": 1,
+        "after": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "before": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "online_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 6,
+          "color": 9,
+          "role": "place_slot",
+          "x": 23,
+          "y": 30
+        },
+        "action_index": 2,
+        "after": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "before": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "online_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 6,
+          "color": 14,
+          "role": "select_item",
+          "sprite": "lngftsryyw",
+          "x": 20,
+          "y": 59
+        },
+        "action_index": 3,
+        "after": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "before": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "online_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 6,
+          "color": 14,
+          "role": "place_slot",
+          "x": 29,
+          "y": 30
+        },
+        "action_index": 4,
+        "after": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "before": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "online_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 6,
+          "color": 11,
+          "role": "select_item",
+          "sprite": "lngftsryyw",
+          "x": 44,
+          "y": 59
+        },
+        "action_index": 5,
+        "after": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "before": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "online_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 6,
+          "color": 11,
+          "role": "place_slot",
+          "x": 35,
+          "y": 30
+        },
+        "action_index": 6,
+        "after": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "before": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "online_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 6,
+          "color": 15,
+          "role": "select_item",
+          "sprite": "lngftsryyw",
+          "x": 28,
+          "y": 59
+        },
+        "action_index": 7,
+        "after": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "before": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "online_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 6,
+          "color": 15,
+          "role": "place_slot",
+          "x": 41,
+          "y": 30
+        },
+        "action_index": 8,
+        "after": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "before": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "online_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 5,
+          "role": "validate"
+        },
+        "action_index": 9,
+        "after": {
+          "level_completed": 1,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "before": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "level_completed": 1,
+        "phase": "act",
+        "source": "online_real_env_confirmation"
+      }
+    ],
+    "principle": "exp4050 reads this trace to measure cross-game concept-library transfer",
+    "selection_reason": "selected fallback: sb26 is unsolved, win_difficulty=hard, L0 baseline_actions=18",
+    "target_game": "sb26-7fbdac44",
+    "verification_decisions": [
+      {
+        "actions_checked": 7,
+        "energy": 0.0,
+        "level_increment": true,
+        "phase": "verify",
+        "predicted_goal_after_actions": true,
+        "retained": true,
+        "slot_sequence_matches": true,
+        "verifier": "gap4_replay_sb26_level_counter"
+      }
+    ]
+  },
+  "survey_is_spatial_planning": true,
+  "target_game": "sb26-7fbdac44",
+  "title": "arc3_eighth_game_explore_first_sb26",
+  "total_games_solved": 8,
+  "verification_decisions": [
+    {
+      "actions_checked": 7,
+      "energy": 0.0,
+      "level_increment": true,
+      "phase": "verify",
+      "predicted_goal_after_actions": true,
+      "retained": true,
+      "slot_sequence_matches": true,
+      "verifier": "gap4_replay_sb26_level_counter"
+    }
+  ]
+}
