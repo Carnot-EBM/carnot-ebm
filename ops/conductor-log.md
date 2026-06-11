@@ -8262,3 +8262,4 @@ c |
 | 2026-06-11 16:01 UTC | DECENTRALIZATION on a TRACTABLE MoE base -- BUILD+ | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-11 16:16 UTC | DECENTRALIZATION MoE-base -- COLLECT+VALIDATE (G3) | OK | 106 passed in 7.66s |
 | 2026-06-11 16:33 UTC | EIGHTH ARC-AGI-3 game first-solve via the PROVEN e | OK | 89 passed in 5.58s |
+| 2026-06-11 16:49 UTC | ArcMemo v7: CROSS-GAME concept-library transfer (s | OK | 94 passed in 4.89s |
