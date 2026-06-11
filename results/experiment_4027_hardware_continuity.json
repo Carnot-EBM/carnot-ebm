@@ -1,0 +1,143 @@
+{
+  "duration_s": 7.544929,
+  "experiment": 4027,
+  "fabric_acceleration_claimed": false,
+  "field_principles": {
+    "duration_s": "Total wall-clock for the hardware-smoke continuity run.",
+    "gatemate_reachable": "BARE BOOL -- GateMate USB reachability through DirtyJTAG detect output.",
+    "honest_verdict": "Terminal-prefix verdict plus hardware_smoke substrate.",
+    "inference_substrate": "Must remain hardware_smoke because this artifact is not inference.",
+    "kv260_reachable": "BARE BOOL -- KV260 SSH reachability through kria, not a host SD-card proxy.",
+    "per_board_duration_s": "DISTINCT wall-clock per board -- shared timestamps hide fabricated continuity.",
+    "per_board_next_step": "The next concrete forward step per board after the observed terminal-state check.",
+    "per_board_reachability": "BARE DICT -- per-board SSH/USB reachability so unavailable boards cannot be silently treated as passing.",
+    "per_board_terminal_state": "BARE DICT -- terminal-state check observed for each board or the exact blocked state when the board was unreachable.",
+    "polarfire_reachable": "BARE BOOL -- PolarFire SSH reachability through polarfire.",
+    "preconditions_checked": "list of {resource, available} -- records which board accesses were verified before the smoke, pre-empting the fabricate-when-unreachable failure mode."
+  },
+  "gatemate_command_transcript": {
+    "combined_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n",
+    "command": "openFPGALoader -c dirtyJtag --detect",
+    "duration_s": 0.01957,
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
+  },
+  "gatemate_detect_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+  "gatemate_reachable": false,
+  "gatemate_state": "blocked_gatemate_unreachable",
+  "honest_verdict": "complete: hardware_continuity_4027_kvreachable_overlay_absent_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded",
+  "inference_substrate": "hardware_smoke",
+  "kv260_command_transcripts": {
+    "ssh_true": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.613163,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "uio_list": {
+      "combined_output": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n",
+      "command": "ssh kria 'ls /dev/uio*'",
+      "duration_s": 0.435385,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "/dev/uio0\n/dev/uio1\n/dev/uio2\n/dev/uio3\n"
+    },
+    "xmutil_listapps": {
+      "combined_output": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "command": "ssh kria 'xmutil listapps'",
+      "duration_s": 0.774804,
+      "exit_code": 1,
+      "stderr": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "stdout": ""
+    }
+  },
+  "kv260_loaded_overlay": null,
+  "kv260_reachable": true,
+  "kv260_state": "reachable_overlay_absent",
+  "kv260_uio_devices": [
+    "/dev/uio0",
+    "/dev/uio1",
+    "/dev/uio2",
+    "/dev/uio3"
+  ],
+  "per_board_duration_s": {
+    "gatemate": 0.019656,
+    "kv260": 5.823758,
+    "polarfire": 1.701496
+  },
+  "per_board_next_step": {
+    "gatemate": "blocked_gatemate_unreachable",
+    "kv260": "kv260_forward_step_load_terminal_overlay_per_north_star_section_3",
+    "polarfire": "polarfire_forward_step_run_hash_verified_soft_cpu_dispatch"
+  },
+  "per_board_reachability": {
+    "gatemate": false,
+    "kv260": true,
+    "polarfire": true
+  },
+  "per_board_terminal_state": {
+    "gatemate": "blocked_gatemate_unreachable",
+    "kv260": "reachable_overlay_absent",
+    "polarfire": "reachable_ssh_continuity_recorded"
+  },
+  "polarfire_command_transcripts": {
+    "continuity": {
+      "combined_output": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\n 04:55:20 up 6 days,  6:52,  0 user,  load average: 0.00, 0.00, 0.00\n",
+      "command": "ssh polarfire 'uname -a && uptime'",
+      "duration_s": 0.805381,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\n 04:55:20 up 6 days,  6:52,  0 user,  load average: 0.00, 0.00, 0.00\n"
+    },
+    "ssh_true": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 polarfire true",
+      "duration_s": 0.895961,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    }
+  },
+  "polarfire_continuity_output": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\n 04:55:20 up 6 days,  6:52,  0 user,  load average: 0.00, 0.00, 0.00",
+  "polarfire_reachable": true,
+  "polarfire_state": "reachable_ssh_continuity_recorded",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "checked_before_board_operations": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.613163,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    },
+    {
+      "available": false,
+      "checked_before_board_operations": true,
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.01957,
+      "exit_code": 0,
+      "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "resource": "gatemate_jtag_detect"
+    },
+    {
+      "available": true,
+      "checked_before_board_operations": true,
+      "command": "ssh -o ConnectTimeout=5 polarfire true",
+      "duration_s": 0.895961,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "polarfire_ssh"
+    }
+  ],
+  "random_seed": 4027,
+  "reproducibility_checksum": "03b420f824989e4e704b88437c1c551f057fe8f47193f4a21893e7ea2986d883",
+  "schema": "carnot.hardware_continuity_terminal_state.v1",
+  "spec_refs": [
+    "REQ-HW-4027",
+    "SCENARIO-HW-4027"
+  ]
+}
