@@ -12187,6 +12187,49 @@ starts the full Exp 4037 run under `nohup` with `k=8` and records the launched
 PID. If any precondition fails, it writes the corresponding `blocked_*`
 artifact with `runner_ready=false`, `smoke_passed=false`, and `launched_pid=0`.
 
+### REQ-VERIFY-4037: Stronger-Base Sovereign Coverage Collector
+
+The repository SHALL provide Exp 4037 collection at
+`scripts/experiments/exp4037_decentralization_stronger_base_collect.py` to read
+the Exp 4036 launch receipt, poll for
+`results/experiment_4037_decentralization_stronger_base_raw.json` within a
+bounded budget, and write
+`results/experiment_4037_decentralization_stronger_base.json` without
+fabricating completion from logs or checkpoints alone.
+
+If the Exp 4036 build artifact is missing, malformed, or has
+`runner_ready=false`, the collector SHALL write a blocked artifact with
+`honest_verdict=blocked_build_runner_not_ready`. If the raw artifact is still
+absent or incomplete after the polling budget, it SHALL write a partial
+artifact whose terminal verdict starts with
+`complete: decentralization_stronger_base_partial_<n>_tasks` and records the
+available task count. For complete raw artifacts, the collector SHALL compute
+the stronger-base demo-perfect coverage, coverage delta against the Exp 4012
+12B baseline `0.2581`, a deterministic bootstrap CI95 for that delta, gated
+pass@2 comparisons against Exp 4012 vote `0.4516`, oracle `0.6129`, and codex
+`0.5806`, and local seconds per task against the codex 46-second reference.
+
+The terminal artifact SHALL include `honest_verdict`,
+`stronger_base_demo_perfect_coverage`, `coverage_delta_vs_12b`,
+`bootstrap_ci95`, `local_support_diagnosis`, `local_seconds_per_task`,
+`model_specs`, `random_seed`, `reproducibility_checksum`,
+`missing_verifier_gaps`, and
+`inference_substrate=verifier_ensemble_against_cached_candidates`. The
+collector SHALL set `local_support_diagnosis=latent` only when the coverage
+bootstrap interval excludes the 12B baseline in the positive direction;
+otherwise it SHALL set `local_support_diagnosis=absent`.
+
+### SCENARIO-VERIFY-4037: Stronger-Base Coverage Diagnoses Latent Support
+
+Given Exp 4036 reports `runner_ready=true` and the Exp 4037 raw artifact is
+present with per-task demo-perfect evidence, when the collector runs, then it
+validates the raw fields, computes the coverage delta and deterministic
+bootstrap CI over task-level demo-perfect indicators, records no-local-k
+surfaced tasks in `missing_verifier_gaps`, emits a terminal verdict of either
+`complete: decentralization_stronger_base_cov_<X>_latent_distill_viable` or
+`complete: decentralization_stronger_base_cov_<X>_absent_leash_holds`, and
+does not mutate the Exp 4012 or raw Exp 4037 artifacts.
+
 ### REQ-VERIFY-4013: ARC GAP-4 Verifier-vs-Codex-Judge Efficiency
 
 The repository SHALL provide Exp 4013 at
