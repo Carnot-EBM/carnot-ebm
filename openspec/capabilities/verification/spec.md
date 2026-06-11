@@ -12304,3 +12304,46 @@ selection, `delta_pp` equals Arm B pass@1 minus Arm A pass@1 in percentage
 points, `bootstrap_ci95` is a two-element numeric interval for that delta, and
 `oracle_passrate` records whether any candidate in each task's pool passes all
 hidden tests so the collector can distinguish no-transfer from no-headroom.
+
+### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
+
+The repository SHALL provide Exp 4033 at
+`scripts/experiments/exp4033_verifier_registry_harness_registration.py` to
+register and audit the reusable GAP-4 program-induction stack without fresh
+Codex, GGUF, or other live inference. The harness SHALL read
+`ops/verifier_registry.yaml`, `ops/verifier_gaps.md`,
+`results/arc3_gap4_arc2_chain_ensemble.json`, and
+`results/arc3_gap4_induced_programs.json`, import
+`carnot.agentic.gap4_program_induction_stack`, and assert that the registered
+policy is snap tau<=0.005, then promote-first-fresh raw/demo-perfect output,
+then vote fallback, with agreement recorded only as a confidence label.
+
+The harness SHALL reproduce the canonical offline ARC numbers bit-exact from
+cached artifacts: ARC-2 fresh-chain pass@1 19/31 and ARC-1 demo-perfect coverage
+28/31. A reusable module SHALL NOT be treated as the same verifier unless both
+numbers match exactly.
+
+The harness SHALL also inspect Exp 4032's off-ARC outcome. If the completed
+off-ARC raw artifact shows Arm B beats Arm A and its bootstrap CI excludes zero,
+the registry SHALL contain a code-domain transfer entry. If a completed raw
+artifact shows selectable headroom but no transfer, the gaps ledger SHALL contain
+the missing code-domain discriminator. If the completed raw artifact is absent,
+blocked, or incomplete, the registry SHALL record `off_arc_pending` honestly.
+
+The terminal artifact SHALL write
+`results/experiment_4033_verifier_registry_harness_registration.json` with
+`honest_verdict`, `registry_updated`, `offline_reeval_bitexact`,
+`off_arc_outcome_recorded`, and
+`inference_substrate=aggregation_from_upstream_artifacts`. The
+`honest_verdict` SHALL start with a terminal prefix and include the off-ARC
+outcome suffix.
+
+### SCENARIO-VERIFY-4033: Cached Registration Replays ARC And Records OFF-ARC State
+
+Given the GAP-4 registry entry, gaps ledger, and cached GAP-4 ARC artifacts are
+present, when Exp 4033 runs, then it validates the reusable module registration,
+replays ARC-2 19/31 and ARC-1 28/31 bit-exact without live inference, records
+one of `code_entry_added`, `gap_logged`, or `off_arc_pending` for Exp 4032's
+off-ARC state, and writes the required terminal artifact with
+`registry_updated=true`, `offline_reeval_bitexact=true`, and
+`inference_substrate=aggregation_from_upstream_artifacts`.
