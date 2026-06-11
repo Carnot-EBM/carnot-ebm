@@ -1,0 +1,360 @@
+{
+  "accuracy_self_learning_hardware_deltas": {
+    "accuracy": {
+      "action_savings_vs_candidate_baseline": 9,
+      "candidate_baseline_actions": 18,
+      "exploration_actions_used": 2,
+      "first_solve_at_action": 9,
+      "game_solved": true,
+      "games_solved_delta": 1,
+      "prior_total_games_solved": 7,
+      "real_env_confirmed": true,
+      "target_game": "sb26-7fbdac44",
+      "total_games_solved": 8
+    },
+    "hardware": {
+      "fabric_acceleration_claimed": false,
+      "included": true,
+      "kv260_latency_batch_ms": 0.239723,
+      "kv260_latency_median_ms": 0.002125,
+      "kv260_latency_step_taken": true,
+      "kv260_overlay_loaded": true,
+      "per_board_reachability": {
+        "gatemate": true,
+        "kv260": true,
+        "polarfire": true
+      },
+      "per_board_terminal_state": {
+        "gatemate": "reachable_detected_gatemate_idcode",
+        "kv260": "reachable_overlay_loaded_latency_transcript_recorded",
+        "polarfire": "reachable_ssh_continuity_recorded"
+      },
+      "speedup_claim_made": false
+    },
+    "self_learning": {
+      "action_savings_vs_cold": 9,
+      "actions_cold": 18,
+      "actions_cross_game_v7": 9,
+      "actions_within_game_v6": 7,
+      "cross_game_extra_actions_vs_within_game_v6": 2,
+      "cross_game_transfer_win": false,
+      "induction_call_savings_vs_cold": 1,
+      "induction_calls_cold": 1,
+      "induction_calls_cross_game_v7": 0,
+      "induction_calls_within_game_v6": 0,
+      "n_named_abstractions": 1,
+      "n_prior_fragments": 7,
+      "n_reused_abstractions": 1,
+      "transfer_assessment": "helped_vs_cold_but_lost_to_within_game_v6"
+    }
+  },
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 4042,
+      "sha256": "ba95b60694b72abb385475af360ed78e9d09d2c0689ae8e9f34c28934391f385"
+    },
+    {
+      "experiment_id": 4043,
+      "sha256": "3091f78462077fe79af3d654ac3c7b9fe38b56444ed422bb2009b41a68b998a1"
+    },
+    {
+      "experiment_id": 4045,
+      "sha256": "6cfe273057e29632d7ca032fe71917913f8e2e4ca260b0d92f09dcc9e665a3e7"
+    },
+    {
+      "experiment_id": 4046,
+      "sha256": "5102206c9b1cf502c1b53a0aebdb27a746b469666da9952ae29562893c3b6aed"
+    },
+    {
+      "experiment_id": 4048,
+      "sha256": "b8440f6916edba68d9477f13004b1a7da334ad0f7ddfc7ff7786770de0997ca7"
+    },
+    {
+      "experiment_id": 4049,
+      "sha256": "d258876f92b9e2516091d9eb2c4e95ecc2a5f183708de797cd0702d6c83e8607"
+    },
+    {
+      "experiment_id": 4050,
+      "sha256": "549b4881957663be6b39a7cf8473802fa5c8de9cb6679b276aba5101a2af589c"
+    },
+    {
+      "experiment_id": 4051,
+      "sha256": "0cb66f8cf2e78fa64c890fdb7a6fe7fdde427154eefbac26ed2db235ac383eac"
+    },
+    {
+      "experiment_id": 4052,
+      "sha256": "1ca97d74fad17a1dbb373d91c35828fdc28dd24d074bf01dc1c01df9f548d919"
+    }
+  ],
+  "decentralization_diagnosis": "retired_non_measurement",
+  "decision_grade_measurements": {
+    "G1": false,
+    "G2": true,
+    "G3": false,
+    "all_three": false
+  },
+  "duration_s": 0.3920414650347084,
+  "experiment_id": 4053,
+  "field_principles": {
+    "cited_upstream_artifacts": "Included upstream experiment ids and sha256 provenance only.",
+    "decentralization_diagnosis": "latent | absent | uninformative | retired_non_measurement | flagged_skipped - the G3 branch resolved.",
+    "flagged_artifacts_skipped": "Upstreams excluded before metric import because flagged_adversarial or live critical.",
+    "honest_verdict": "Terminal-prefix verdict naming positive, negative, ceiling, retired, and skipped outcomes.",
+    "inference_substrate": "Declares this capstone as aggregation from upstream artifacts.",
+    "search_layer_salvageable_closed_loop": "BARE BOOL - the G2 question: did closed-loop grounding break vc33's wall in the real env?",
+    "total_games_solved": "BARE INT - the monotonic ARC accuracy counter after clean exp4049 evidence.",
+    "verifier_transferred_off_arc_significantly": "BARE BOOL - the operator TOP-PRIORITY question: does the off-ARC transfer CI exclude zero at full N?"
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "experiment_id": 4044,
+      "path": "results/experiment_4044_offarc_transfer_power_build.json",
+      "reason": "flagged_adversarial:true"
+    },
+    {
+      "experiment_id": 4047,
+      "path": "results/experiment_4047_decentralization_moe_base_build.json",
+      "reason": "flagged_adversarial:true"
+    }
+  ],
+  "g1_off_arc_transfer": {
+    "best_arm": "armC_symbolic",
+    "best_arm_ci95": [
+      0.0,
+      0.0
+    ],
+    "best_arm_ci_excludes_zero": false,
+    "best_arm_delta_pp": 0.0,
+    "demofit_bootstrap_ci95": [
+      0.0,
+      0.0
+    ],
+    "demofit_ci_excludes_zero": false,
+    "demofit_delta_pp": 0.0,
+    "full_power_reached": false,
+    "n_tasks": 22,
+    "oracle_headroom": false,
+    "oracle_passrate": 1.0,
+    "outcome": "partial_or_incomplete",
+    "partial_reason": "offarc_power_run_incomplete_partial_22_tasks",
+    "powered_task_floor": 160,
+    "raw_artifact_present": false
+  },
+  "g2_closed_loop_grounding": {
+    "bottleneck": "wm_real_divergence_gate_fired",
+    "closed_loop_broke_wall": false,
+    "degenerate_plan_refused": false,
+    "divergence_gate_fired_count": 1,
+    "game": "vc33",
+    "levels_completed_after": 0,
+    "new_levels_solved_this_task": 0,
+    "outcome": "closed_loop_ceiling_saturated_sim2real_divergence",
+    "per_step_wm_real_divergence_rate": 0.207031,
+    "real_env_confirmed": false
+  },
+  "g3_decentralization_moe_base": {
+    "baseline_12b_coverage": 0.2581,
+    "bootstrap_ci95": [
+      -0.0914,
+      0.5752
+    ],
+    "codex_seconds_per_task_reference": 46.24,
+    "coverage_delta_vs_12b": 0.2419,
+    "diagnosis": "retired_non_measurement",
+    "gated_pass_at_2": 0.0,
+    "local_seconds_per_task": 101.82,
+    "local_support_diagnosis": "uninformative",
+    "measurement_task_floor": 30,
+    "moe_base_demo_perfect_coverage": 0.5,
+    "n_tasks_scored": 6,
+    "oracle_coverage": 0.6129,
+    "outcome": "retired_non_measurement",
+    "raw_complete": false
+  },
+  "honest_verdict": "complete: capstone_v374_not_decision_grade_G1_partial_or_incomplete_G2_closed_loop_ceiling_saturated_sim2real_divergence_G3_retired_non_measurement_games8_arcmemo_v7_no_win_flagged_skipped2",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "missing_upstream_artifacts": [],
+  "random_seed": 4053,
+  "reproducibility_checksum": "70a1e8ca055b5bbb98b2336498736d54f8a4618fd7c0417d6ba471204353f781",
+  "schema": "carnot.capstone_v374_4053.v1",
+  "search_layer_salvageable_closed_loop": false,
+  "summarize_artifact_status": {
+    "4042": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4042_archive_v373_activate_v374.json\n------------------------------------------------------------------------------\n  verdict          : success: archived_v373_v374_active_G1_offarc_directional_underpowered_ci_touches_zero_G2_no_generalization_vc33_G3_absent_0tasks_games7_arcmemo_v6_win_exp4031_flagged_skipped_pretest_green\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 13.793552   substrate: aggregation_from_upstream_artifacts\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4043": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4043_sota_ingestion_receipt.json\n------------------------------------------------------------------------------\n  verdict          : complete: sota_ingestion_offarc_power_and_closed_loop_mapped\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : None   substrate: aggregation_from_upstream_artifacts\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4044": {
+      "returncode": 2,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4044_offarc_transfer_power_build.json\n------------------------------------------------------------------------------\n  verdict          : success: offarc_power_runner_built_smoked_launched_humaneval_mbpp\n  flagged_adversarial (stamped): True   |   LIVE re-check: CRITICAL\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 18.68   substrate: live_llm_inference\n  adversarial flags:\n      [critical] DURATION_TOO_SHORT: duration_s=18.68 but artifact references compute-bound markers (GGUF / CUDA / live model). Loadi\n      [warn    ] METHODOLOGY_MISSING: Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum.\n==============================================================================\n"
+    },
+    "4045": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4045_offarc_transfer_power.json\n------------------------------------------------------------------------------\n  verdict          : complete: offarc_power_run_incomplete_partial_22_tasks\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : None   substrate: verifier_ensemble_against_cached_candidates\n  headline metrics :\n      armApp_delta_pp = 0.0  <-- flagged\n      armC_delta_pp = 0.0  <-- flagged\n      best_arm_delta_pp = 0.0  <-- flagged\n      demofit_delta_pp = 0.0  <-- flagged\n  adversarial flags:\n      [info    ] IMPLAUSIBLE_PERFECT: armApp_delta_pp=0.0 (exactly zero). Confirm this is not a stub default.\n      [info    ] IMPLAUSIBLE_PERFECT: armC_delta_pp=0.0 (exactly zero). Confirm this is not a stub default.\n      [info    ] IMPLAUSIBLE_PERFECT: best_arm_delta_pp=0.0 (exactly zero). Confirm this is not a stub default.\n      [info    ] IMPLAUSIBLE_PERFECT: demofit_delta_pp=0.0 (exactly zero). Confirm this is not a stub default.\n==============================================================================\n"
+    },
+    "4046": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4046_closed_loop_replan_over_vc33_wm.json\n------------------------------------------------------------------------------\n  verdict          : complete: closed_loop_no_solve_vc33_wm_sim2real_ceiling_divergence_0.207\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.955   substrate: offline_arc_agi3_closed_loop_replanning_with_real_env_grounding\n  headline metrics :\n      goal_predicate_heldout_precision = 1.0\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4047": {
+      "returncode": 2,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4047_decentralization_moe_base_build.json\n------------------------------------------------------------------------------\n  verdict          : success: decentralization_moe_base_runner_launched_qwen35moe\n  flagged_adversarial (stamped): True   |   LIVE re-check: CRITICAL\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 10.37   substrate: live_llm_inference\n  adversarial flags:\n      [critical] DURATION_TOO_SHORT: duration_s=10.37 but artifact references compute-bound markers (GGUF / CUDA / live model). Loadi\n==============================================================================\n"
+    },
+    "4048": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4048_decentralization_moe_base.json\n------------------------------------------------------------------------------\n  verdict          : complete: decentralization_moe_base_partial_6_tasks_retire\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 30.0   substrate: verifier_ensemble_against_cached_candidates\n  headline metrics :\n      coverage_delta_vs_12b = 0.2419\n      n_tasks_scored = 6\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4049": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4049_eighth_game_explore_first.json\n------------------------------------------------------------------------------\n  verdict          : success: eighth_game_solved_sb26-7fbdac44_at_action_9\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 5.046   substrate: offline_arc_agi3_explore_first_first_solve\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4050": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4050_arcmemo_cross_game_transfer_v7.json\n------------------------------------------------------------------------------\n  verdict          : complete: arcmemo_v7_no_cross_game_transfer_v7_not_cheaper_than_within_game_v6\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.001   substrate: offline_arc_agi3_arcmemo_cross_game_transfer\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4051": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4051_verifier_registry_and_gaps_hygiene.json\n------------------------------------------------------------------------------\n  verdict          : complete: gap4_reeval_bitexact_g1_g1_off_arc_power_pending_g2_g2_sim2real_ceiling_gap_logged_recorded\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.028   substrate: aggregation_from_upstream_artifacts\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4052": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4052_hardware_continuity.json\n------------------------------------------------------------------------------\n  verdict          : complete: hardware_continuity_kv260_latency_transcript_landed_4052_gmreachable_detected_gatemate_idcode_pfreachable_ssh_continuity_recorded\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 8.519552   substrate: hardware_smoke\n  adversarial flags: none\n==============================================================================\n"
+    }
+  },
+  "total_games_solved": 8,
+  "upstream_artifact_state": {
+    "4042": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "success: archived_v373_v374_active_G1_offarc_directional_underpowered_ci_touches_zero_G2_no_generalization_vc33_G3_absent_0tasks_games7_arcmemo_v6_win_exp4031_flagged_skipped_pretest_green",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4042_archive_v373_activate_v374.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4043": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: sota_ingestion_offarc_power_and_closed_loop_mapped",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4043_sota_ingestion_receipt.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4044": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "success: offarc_power_runner_built_smoked_launched_humaneval_mbpp",
+      "included": false,
+      "live_critical": true,
+      "path": "results/experiment_4044_offarc_transfer_power_build.json",
+      "skipped": true,
+      "summarize_artifact_returncode": 2
+    },
+    "4045": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: offarc_power_run_incomplete_partial_22_tasks",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4045_offarc_transfer_power.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4046": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: closed_loop_no_solve_vc33_wm_sim2real_ceiling_divergence_0.207",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4046_closed_loop_replan_over_vc33_wm.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4047": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "success: decentralization_moe_base_runner_launched_qwen35moe",
+      "included": false,
+      "live_critical": true,
+      "path": "results/experiment_4047_decentralization_moe_base_build.json",
+      "skipped": true,
+      "summarize_artifact_returncode": 2
+    },
+    "4048": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: decentralization_moe_base_partial_6_tasks_retire",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4048_decentralization_moe_base.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4049": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "success: eighth_game_solved_sb26-7fbdac44_at_action_9",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4049_eighth_game_explore_first.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4050": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: arcmemo_v7_no_cross_game_transfer_v7_not_cheaper_than_within_game_v6",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4050_arcmemo_cross_game_transfer_v7.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4051": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: gap4_reeval_bitexact_g1_g1_off_arc_power_pending_g2_g2_sim2real_ceiling_gap_logged_recorded",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4051_verifier_registry_and_gaps_hygiene.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4052": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: hardware_continuity_kv260_latency_transcript_landed_4052_gmreachable_detected_gatemate_idcode_pfreachable_ssh_continuity_recorded",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4052_hardware_continuity.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    }
+  },
+  "verifier_registry_and_gaps_hygiene": {
+    "g1_off_arc_outcome_recorded": "g1_off_arc_power_pending",
+    "g2_closed_loop_outcome_recorded": "g2_sim2real_ceiling_gap_logged",
+    "gaps_updated": true,
+    "included": true,
+    "offline_reeval_bitexact": true,
+    "registry_updated": true
+  },
+  "verifier_transferred_off_arc_significantly": false
+}
