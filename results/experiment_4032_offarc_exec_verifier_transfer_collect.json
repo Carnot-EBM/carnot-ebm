@@ -1,0 +1,24 @@
+{
+  "experiment": 4032,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-06-11",
+  "started_at": "2026-06-11T08:44:53.743250+00:00",
+  "finished_at": "2026-06-11T08:44:53.743250+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "OFF-ARC EXECUTION-VERIFIER TRANSFER -- COLLECT+VALIDATE (G1; operator TOP PRIORITY): poll for the backgrounded run launched by exp4031; validate the bootstrap CI95 and the POSITIVE CONTROL (if oracle ~= vote, the corpus is ceiling-saturated and the null is UNINFORMATIVE -> escalate, never report 'verifier fails to transfer'); emit the three-outcome verdict: (1) B>A CI excludes 0 + headroom exists -> the execution primitive MEASURABLY generalizes to code; (2) B~=A + headroom exists -> honest negative, log the missing discriminator; (3) no headroom -> uninformative, harder corpus needed. This converts the operator's open argument into a measurement.",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp4031-offarc-transfer-build",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: success: offarc_transfer_runner_built_smoked_launched"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

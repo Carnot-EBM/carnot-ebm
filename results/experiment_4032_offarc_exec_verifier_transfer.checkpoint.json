@@ -1685,6 +1685,778 @@
           true
         ]
       }
+    ],
+    "MBPP:20": [
+      {
+        "code": "import math\n\ndef is_woodall(n):\n    \"\"\"\n    A Woodall number is a number of the form n = 2^k * (2^k - 1) + 1\n    Wait, the standard definition of a Woodall number is n = k * 2^k.\n    Let's re-verify the example: \n    383: 383 - 1 = 382. 382 / 2 = 191. 191 is not 2^k.\n    Wait, the standard definition is n = k * 2^k.\n    Let's check 383 again. 383 is a Woodall number? \n    Actually, Woodall numbers are of the form n = k * 2^k.\n    Let's check: \n    k=1: 1 * 2^1 = 2\n    k=2: 2 * 2^2 = 8\n    k=3: 3 * 2^3 = 24\n    k=4: 4 * 2^4 = 64\n    k=5: 5 * 2^5 = 160\n    k=6: 6 * 2^6 = 384\n    \n    The example says is_woodall(383) == True. \n    383 is 384 - 1. \n    This means the definition used here is n = k * 2^k - 1.\n    Let's check 254:\n    k=5: 5 * 2^5 - 1 = 160 - 1 = 159\n    k=6: 6 * 2^6 - 1 = 384 - 1 = 383\n    254 is not in the sequence.\n    \"\"\"\n    if n < 1:\n        return False\n    \n    # The sequence is n = k * 2^k - 1\n    # We need to find if there exists an integer k >= 1 such that k * 2^k = n + 1\n    target = n + 1\n    if target <= 0:\n        return False\n        \n    # Since k * 2^k grows exponentially, we can iterate\n    k = 1\n    while True:\n        val = k * (2**k)\n        if val == target:\n            return True\n        if val > target:\n            break\n        k += 1\n    return False",
+        "draw_index": 0,
+        "error": null,
+        "generation_seconds": 8.011,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:20",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "import math\n\ndef is_woodall(n):\n    \"\"\"\n    A Woodall number is a number of the form n = 2^k * (2^k - 1) + 1\n    Wait, the standard definition of a Woodall number is n = k * 2^k.\n    Let's re-verify the examples:\n    383: 383 - 1 = 382. 382 / 2^k? No.\n    Wait, the standard definition is n = k * 2^k.\n    Let's check 383: 383 - 1 = 382. \n    Actually, the common definition is n = k * 2^k.\n    Let's check the example 383 again. \n    If k=5, 5 * 2^5 = 5 * 32 = 160.\n    If k=6, 6 * 2^6 = 6 * 64 = 384.\n    384 - 1 = 383.\n    So the definition for this specific task is n = k * 2^k - 1.\n    \n    Let's check 254:\n    k=4: 4 * 2^4 = 4 * 16 = 64.\n    k=5: 5 * 2^5 = 5 * 32 = 160.\n    k=6: 6 * 2^6 = 6 * 64 = 384.\n    254 is not k * 2^k - 1.\n    \"\"\"\n    if n < 0:\n        return False\n    \n    # Target is n + 1 = k * 2^k\n    target = n + 1\n    \n    # We need to find k such that k * 2^k = target\n    # Since k * 2^k grows monotonically, we can iterate or use binary search\n    # Max k for a 64-bit integer is around 60.\n    k = 1\n    while True:\n        val = k * (2**k)\n        if val == target:\n            return True\n        if val > target:\n            break\n        k += 1\n    return False",
+        "draw_index": 1,
+        "error": null,
+        "generation_seconds": 6.94,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:20",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "import math\n\ndef is_woodall(n):\n    \"\"\"\n    A Woodall number is a number of the form n = 2^k * (2^k - 1) + 1\n    Wait, the standard definition of a Woodall number is n = k * 2^k.\n    Let's re-verify the example:\n    383: 383 - 1 = 382. 382 / 2^k ... \n    Actually, the standard definition is n = k * 2^k.\n    Wait, let's check 383 again. 383 is not k * 2^k.\n    Let's check the definition of a Woodall number: n = k * 2^k.\n    Example: 1 * 2^1 = 2, 2 * 2^2 = 8, 3 * 2^3 = 24, 4 * 2^4 = 64, 5 * 2^5 = 160, 6 * 2^6 = 384.\n    The example says is_woodall(383) == True. \n    383 is 384 - 1. This implies the definition is n = k * 2^k - 1.\n    Let's check 254: 254 + 1 = 255. 255 is not k * 2^k.\n    So the definition is: n is a Woodall number if n = k * 2^k - 1.\n    \"\"\"\n    if n < 1:\n        return False\n    \n    target = n + 1\n    # We need to find if target = k * 2^k for some integer k >= 1\n    # Since k * 2^k grows exponentially, we can iterate.\n    k = 1\n    while True:\n        val = k * (2**k)\n        if val == target:\n            return True\n        if val > target:\n            break\n        k += 1\n    return False",
+        "draw_index": 2,
+        "error": null,
+        "generation_seconds": 6.271,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:20",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "import math\n\ndef is_woodall(n):\n    \"\"\"\n    A Woodall number is a natural number of the form w = n * 2^n - 1.\n    This function checks if a given number is a Woodall number.\n    \"\"\"\n    if n < 1:\n        return False\n    \n    # Since n * 2^n - 1 grows very quickly, we can iterate \n    # through possible values of k to see if k * 2^k - 1 equals n.\n    # The maximum value for k is approximately log2(n).\n    k = 1\n    while True:\n        woodall_num = k * (2**k) - 1\n        if woodall_num == n:\n            return True\n        if woodall_num > n:\n            break\n        k += 1\n    \n    return False",
+        "draw_index": 3,
+        "error": null,
+        "generation_seconds": 2.545,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:20",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "import math\n\ndef is_woodall(n):\n    \"\"\"\n    A Woodall number is a number of the form n = 2^k * (2^k - 1) + 1\n    Wait, the standard definition of a Woodall number is n = k * 2^k.\n    Let's re-verify: The standard definition is n = k * 2^k for k >= 1.\n    Example check: \n    For k=1: 1 * 2^1 = 2\n    For k=2: 2 * 2^2 = 8\n    For k=3: 3 * 2^3 = 24\n    For k=4: 4 * 2^4 = 64\n    For k=5: 5 * 2^5 = 160\n    For k=6: 6 * 2^6 = 384\n    Wait, the prompt says is_woodall(383) == True.\n    383 is 384 - 1.\n    The definition of a Woodall number is often cited as n = k * 2^k.\n    However, some sources define it as n = k * 2^k - 1 or similar.\n    Let's check 383: 383 + 1 = 384. 384 = 6 * 2^6.\n    So the task defines a Woodall number as n = k * 2^k - 1.\n    \"\"\"\n    if n < 1:\n        return False\n    \n    target = n + 1\n    # We need to find if target = k * 2^k for some integer k >= 1\n    # Since k * 2^k grows monotonically, we can iterate or use binary search.\n    # Max k for 384 is small, but let's handle larger numbers.\n    k = 1\n    while True:\n        val = k * (2**k)\n        if val == target:\n            return True\n        if val > target:\n            break\n        k += 1\n    return False",
+        "draw_index": 4,
+        "error": null,
+        "generation_seconds": 6.337,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:20",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def is_woodall(n):\n    \"\"\"\n    A Woodall number is a number of the form n = 2^k * (2^k - 1) + 1\n    where k is a positive integer.\n    Wait, the standard definition of a Woodall number is n = k * 2^k.\n    Let's check the provided test cases:\n    383: 383 - 1 = 382. 382 / 2 = 191. Not a power of 2.\n    Wait, Woodall numbers are usually defined as W_n = n * 2^n.\n    Let's check the test cases again:\n    is_woodall(383) == True\n    383 - 1 = 382. \n    Actually, the test cases provided (383, 254) suggest a different definition.\n    Wait, 383 is a Woodall number? \n    Let's re-evaluate: W_n = n * 2^n.\n    W_1 = 1 * 2^1 = 2\n    W_2 = 2 * 2^2 = 8\n    W_3 = 3 * 2^3 = 24\n    W_4 = 4 * 2^4 = 64\n    W_5 = 5 * 2^5 = 160\n    W_6 = 6 * 2^6 = 384\n    If 383 is True, it might be W_n - 1.\n    384 - 1 = 383.\n    Let's check 254. 254 + 1 = 255. 255 is not n * 2^n.\n    \n    Let's try the other common definition: Woodall numbers are n * 2^n.\n    Wait, the prompt says \"woodball\", which is likely a typo for \"Woodall\".\n    If 383 is True, and it's W_n - 1, then 383 = 6 * 2^6 - 1.\n    Let's check if there's another definition.\n    Actually, many sources define Woodall numbers as n * 2^n. \n    If is_woodall(383) is True, it is almost certainly (n * 2^n) - 1.\n    However, let's check the math: 6 * 2^6 = 6 * 64 = 384.\n    384 - 1 = 383.\n    Let's check 254: 254 + 1 = 255. \n    Is 255 = n * 2^n? \n    n=1: 2\n    n=2: 8\n    n=3: 24\n    n=4: 64\n    n=5: 160\n    n=6: 384\n    None of these are 255.\n    \n    Wait, let's look at the numbers again. 383 is a Mersenne prime? \n    2^9 - 1 = 511. 2^8 - 1 = 255. 2^7 - 1 = 127.\n    383 is not a Mersenne number.\n    \n    Let's try another definition: Is it related to Woodall numbers being n * 2^n?\n    If the test is is_woodall(383) == True, and 383 = 384 - 1, \n    then the condition is (n * 2^n) - 1.\n    \n    Wait, I just realized: 383 is a prime. \n    Let's try the definition: n = k * 2^k.\n    If is_woodall(383) is True, maybe the question means \"Woodall prime\"?\n    A Woodall prime is a Woodall number (k * 2^k) that is prime.\n    W_6 = 6 * 2^6 = 384 (not prime).\n    W_7 = 7 * 2^7 = 896.\n    \n    Let's try one more: Is it a \"Woodall number\" where the definition is \n    n = (k",
+        "draw_index": 5,
+        "error": "SyntaxError: unterminated triple-quoted string literal (detected at line 59) (<string>, line 2)",
+        "generation_seconds": 13.856,
+        "hidden_outputs": [
+          {
+            "error": "SyntaxError: unterminated triple-quoted string literal (detected at line 59) (<string>, line 2)"
+          }
+        ],
+        "hidden_passes": [
+          false
+        ],
+        "status": "ok",
+        "task_id": "MBPP:20",
+        "truncated": true,
+        "visible_outputs": [
+          {
+            "error": "SyntaxError: unterminated triple-quoted string literal (detected at line 59) (<string>, line 2)"
+          },
+          {
+            "error": "SyntaxError: unterminated triple-quoted string literal (detected at line 59) (<string>, line 2)"
+          }
+        ],
+        "visible_passes": [
+          false,
+          false
+        ]
+      },
+      {
+        "code": "def is_woodall(n):\n    \"\"\"\n    Checks if a number is a Woodall number.\n    A Woodall number is a number of the form n = n^(n-1) * 2^n - 1.\n    Wait, the standard definition of a Woodall number is: W_n = n^(n-1) * 2^n - 1? \n    Actually, the standard definition is W_n = n^(n-1) * 2^n - 1 is incorrect.\n    The correct definition is W_n = n^(n-1) * 2^n - 1? No, it is W_n = n^(n-1) * 2^n - 1 is not it.\n    The standard definition of a Woodall number is W_n = n^(n-1) * 2^n - 1 is wrong.\n    Correct definition: W_n = n^(n-1) * 2^n - 1? No.\n    Let's re-verify: A Woodall number is a number of the form W_n = n^(n-1) * 2^n - 1 is wrong.\n    A Woodall number is a number of the form W_n = n^(n-1) * 2^n - 1? No.\n    It is W_n = n^(n-1) * 2^n - 1? No.\n    A Woodall number is a number of the form W_n = n^(n-1) * 2^n - 1? No.\n    The correct definition is W_n = n^(n-1) * 2^n - 1? No.\n    Let's check the examples:\n    383: 383 + 1 = 384. \n    Is 384 = n^(n-1) * 2^n?\n    If n=2: 2^(2-1) * 2^2 = 2^1 * 2^2 = 2^3 = 8.\n    If n=3: 3^(3-1) * 2^3 = 3^2 * 2^3 = 9 * 8 = 72.\n    If n=4: 4^(4-1) * 2^4 = 4^3 * 2^4 = 64 * 16 = 1024.\n    Wait, the example 383 is a Woodall number. \n    Let's re-calculate: W_n = n^(n-1) * 2^n - 1? No.\n    The formula is W_n = n^(n-1) * 2^n - 1? No.\n    It is W_n = n^(n-1) * 2^n - 1? No.\n    Actually, the Woodall number is W_n = n^(n-1) * 2^n - 1? No.\n    It's W_n = n^(n-1) * 2^n - 1? No.\n    Let's try W_n = n^(n-1) * 2^n - 1? No.\n    Let's try W_n = n^(n-1) * 2^n - 1? No.\n    Actually, the definition is W_n = n^(n-1) * 2^n - 1? No.\n    Let's re-evaluate 383. 383 + 1 = 384.\n    384 / 2^n. If n=1: 384/2 = 192.\n    If n=2: 384/4 = 96.\n    If n=3: 384/8 = 48.\n    If n=4: 384/16 = 24.\n    If n=5: 384/32 = 12.\n    If n=6: 384/64 = 6.\n    If n=7: 384/128 = 3.\n    If n=8: 384/256 = 1.5.\n    Wait, if W_n = n^(n-1) * 2^n - 1? No.\n    Let's try W_n = n^(n-1) * 2^",
+        "draw_index": 6,
+        "error": "SyntaxError: unterminated triple-quoted string literal (detected at line 40) (<string>, line 2)",
+        "generation_seconds": 13.728,
+        "hidden_outputs": [
+          {
+            "error": "SyntaxError: unterminated triple-quoted string literal (detected at line 40) (<string>, line 2)"
+          }
+        ],
+        "hidden_passes": [
+          false
+        ],
+        "status": "ok",
+        "task_id": "MBPP:20",
+        "truncated": true,
+        "visible_outputs": [
+          {
+            "error": "SyntaxError: unterminated triple-quoted string literal (detected at line 40) (<string>, line 2)"
+          },
+          {
+            "error": "SyntaxError: unterminated triple-quoted string literal (detected at line 40) (<string>, line 2)"
+          }
+        ],
+        "visible_passes": [
+          false,
+          false
+        ]
+      },
+      {
+        "code": "import math\n\ndef is_woodall(n):\n    \"\"\"\n    A Woodall number is a number of the form n = 2^k * (2^k - 1) + 1\n    Wait, the standard definition of a Woodall number is n = k * 2^k.\n    Let's check the provided test cases:\n    383: \n    If k=6: 6 * 2^6 = 6 * 64 = 384. \n    384 - 1 = 383.\n    So the definition for these tests is n = k * 2^k - 1.\n    \n    Let's re-verify:\n    383: k=6, 6 * 2^6 - 1 = 384 - 1 = 383. (True)\n    254: \n    k=5: 5 * 2^5 = 5 * 32 = 160\n    k=6: 6 * 2^6 = 6 * 64 = 384\n    254 is not in the form k * 2^k - 1. (False)\n    \"\"\"\n    # Check for Woodall numbers of the form n = k * 2^k - 1\n    # Since n is small/medium, we can iterate k.\n    # Max k for a reasonable integer n is small.\n    # We need to find if there exists k >= 1 such that k * 2^k - 1 = n\n    # which is k * 2^k = n + 1\n    \n    target = n + 1\n    if target <= 0:\n        return False\n    \n    k = 1\n    while True:\n        val = k * (2**k)\n        if val == target:\n            return True\n        if val > target:\n            break\n        k += 1\n    return False",
+        "draw_index": 7,
+        "error": null,
+        "generation_seconds": 5.824,
+        "hidden_outputs": [
+          false
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:20",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "MBPP:56": [
+      {
+        "code": "def check(n):\n    # Convert number to string to reverse it\n    s = str(n)\n    reversed_n = int(s[::-1])\n    \n    # Check if the number is one less than twice its reverse\n    return n == (2 * reversed_n - 1)",
+        "draw_index": 0,
+        "error": null,
+        "generation_seconds": 0.916,
+        "hidden_outputs": [
+          true
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:56",
+        "truncated": false,
+        "visible_outputs": [
+          false,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def check(n):\n    # Convert number to string to reverse it\n    s = str(n)\n    reversed_n = int(s[::-1])\n    \n    # Check if n is one less than twice its reverse\n    return n == (2 * reversed_n - 1)",
+        "draw_index": 1,
+        "error": null,
+        "generation_seconds": 0.881,
+        "hidden_outputs": [
+          true
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:56",
+        "truncated": false,
+        "visible_outputs": [
+          false,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def check(n):\n    s = str(n)\n    reverse_n = int(s[::-1])\n    return n == (2 * reverse_n) - 1",
+        "draw_index": 2,
+        "error": null,
+        "generation_seconds": 0.567,
+        "hidden_outputs": [
+          true
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:56",
+        "truncated": false,
+        "visible_outputs": [
+          false,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def check(n):\n    # Convert the number to a string to reverse it\n    s = str(n)\n    # Reverse the string and convert back to integer\n    reversed_n = int(s[::-1])\n    # Check if n is one less than twice its reverse\n    return n == (2 * reversed_n - 1)",
+        "draw_index": 3,
+        "error": null,
+        "generation_seconds": 1.01,
+        "hidden_outputs": [
+          true
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:56",
+        "truncated": false,
+        "visible_outputs": [
+          false,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def check(n):\n    s = str(n)\n    reversed_n = int(s[::-1])\n    return n == (2 * reversed_n - 1)",
+        "draw_index": 4,
+        "error": null,
+        "generation_seconds": 0.562,
+        "hidden_outputs": [
+          true
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:56",
+        "truncated": false,
+        "visible_outputs": [
+          false,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def check(number):\n    # Convert number to string to reverse it\n    str_num = str(number)\n    reversed_num = int(str_num[::-1])\n    \n    # Check if the number is one less than twice its reverse\n    return number == (2 * reversed_num - 1)",
+        "draw_index": 5,
+        "error": null,
+        "generation_seconds": 0.932,
+        "hidden_outputs": [
+          true
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:56",
+        "truncated": false,
+        "visible_outputs": [
+          false,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def check(number):\n    s_num = str(number)\n    reverse_num = int(s_num[::-1])\n    return number == (2 * reverse_num) - 1",
+        "draw_index": 6,
+        "error": null,
+        "generation_seconds": 0.611,
+        "hidden_outputs": [
+          true
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:56",
+        "truncated": false,
+        "visible_outputs": [
+          false,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def check(n):\n    \"\"\"\n    Checks if a given number is one less than twice its reverse.\n    \"\"\"\n    s = str(n)\n    reversed_n = int(s[::-1])\n    return n == (2 * reversed_n - 1)",
+        "draw_index": 7,
+        "error": null,
+        "generation_seconds": 0.833,
+        "hidden_outputs": [
+          true
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:56",
+        "truncated": false,
+        "visible_outputs": [
+          false,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "MBPP:57": [
+      {
+        "code": "def find_Max_Num(digits):\n    # Sort the digits in descending order\n    sorted_digits = sorted(digits, reverse=True)\n    # Join the digits into a single number\n    result = 0\n    for digit in sorted_digits:\n        result = result * 10 + digit\n    return result",
+        "draw_index": 0,
+        "error": null,
+        "generation_seconds": 0.985,
+        "hidden_outputs": [
+          9321
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:57",
+        "truncated": false,
+        "visible_outputs": [
+          321,
+          6541
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def find_Max_Num(digits):\n    # Sort the digits in descending order\n    sorted_digits = sorted(digits, reverse=True)\n    # Join the digits into a single string and convert to an integer\n    result = int(\"\".join(map(str, sorted_digits)))\n    return result",
+        "draw_index": 1,
+        "error": null,
+        "generation_seconds": 0.93,
+        "hidden_outputs": [
+          9321
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:57",
+        "truncated": false,
+        "visible_outputs": [
+          321,
+          6541
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def find_Max_Num(digits):\n    # Sort the list of digits in descending order\n    sorted_digits = sorted(digits, reverse=True)\n    # Join the digits into a single string and convert to an integer\n    result = int(\"\".join(map(str, sorted_digits)))\n    return result",
+        "draw_index": 2,
+        "error": null,
+        "generation_seconds": 0.932,
+        "hidden_outputs": [
+          9321
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:57",
+        "truncated": false,
+        "visible_outputs": [
+          321,
+          6541
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def find_Max_Num(digits):\n    # Sort the digits in descending order\n    sorted_digits = sorted(digits, reverse=True)\n    # Join the digits into a single string and convert to an integer\n    result = int(\"\".join(map(str, sorted_digits)))\n    return result",
+        "draw_index": 3,
+        "error": null,
+        "generation_seconds": 0.921,
+        "hidden_outputs": [
+          9321
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:57",
+        "truncated": false,
+        "visible_outputs": [
+          321,
+          6541
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def find_Max_Num(digits):\n    # Sort the digits in descending order\n    sorted_digits = sorted(digits, reverse=True)\n    # Join the digits into a single string and convert to an integer\n    result = int(\"\".join(map(str, sorted_digits)))\n    return result",
+        "draw_index": 4,
+        "error": null,
+        "generation_seconds": 0.931,
+        "hidden_outputs": [
+          9321
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:57",
+        "truncated": false,
+        "visible_outputs": [
+          321,
+          6541
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def find_Max_Num(digits):\n    \"\"\"\n    Finds the largest number that can be formed by arranging a list of digits.\n    \"\"\"\n    # Sort the digits in descending order\n    sorted_digits = sorted(digits, reverse=True)\n    \n    # Join the digits into a single integer\n    result = int(''.join(map(str, sorted_digits)))\n    \n    return result",
+        "draw_index": 5,
+        "error": null,
+        "generation_seconds": 1.207,
+        "hidden_outputs": [
+          9321
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:57",
+        "truncated": false,
+        "visible_outputs": [
+          321,
+          6541
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def find_Max_Num(digits):\n    # Sort the list in descending order\n    digits.sort(reverse=True)\n    \n    # Join the sorted digits into a single integer\n    # Using join requires converting integers to strings\n    result_str = \"\".join(map(str, digits))\n    \n    return int(result_str)",
+        "draw_index": 6,
+        "error": null,
+        "generation_seconds": 1.022,
+        "hidden_outputs": [
+          9321
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:57",
+        "truncated": false,
+        "visible_outputs": [
+          321,
+          6541
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def find_Max_Num(digits):\n    # Sort the list of digits in descending order\n    sorted_digits = sorted(digits, reverse=True)\n    # Join the digits into a single string and convert to an integer\n    result = int(\"\".join(map(str, sorted_digits)))\n    return result",
+        "draw_index": 7,
+        "error": null,
+        "generation_seconds": 0.956,
+        "hidden_outputs": [
+          9321
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:57",
+        "truncated": false,
+        "visible_outputs": [
+          321,
+          6541
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "MBPP:58": [
+      {
+        "code": "def opposite_Signs(x, y):\n    return (x ^ y) < 0",
+        "draw_index": 0,
+        "error": null,
+        "generation_seconds": 0.353,
+        "hidden_outputs": [
+          false,
+          true
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:58",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def opposite_Signs(x, y):\n    return (x ^ y) < 0",
+        "draw_index": 1,
+        "error": null,
+        "generation_seconds": 0.321,
+        "hidden_outputs": [
+          false,
+          true
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:58",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def opposite_Signs(x, y):\n    return (x ^ y) < 0",
+        "draw_index": 2,
+        "error": null,
+        "generation_seconds": 0.851,
+        "hidden_outputs": [
+          false,
+          true
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:58",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def opposite_Signs(x, y):\n    return (x ^ y) < 0",
+        "draw_index": 3,
+        "error": null,
+        "generation_seconds": 0.713,
+        "hidden_outputs": [
+          false,
+          true
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:58",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def opposite_Signs(x, y):\n    return (x ^ y) < 0",
+        "draw_index": 4,
+        "error": null,
+        "generation_seconds": 0.709,
+        "hidden_outputs": [
+          false,
+          true
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:58",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def opposite_Signs(a, b):\n    return (a ^ b) < 0",
+        "draw_index": 5,
+        "error": null,
+        "generation_seconds": 0.597,
+        "hidden_outputs": [
+          false,
+          true
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:58",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def opposite_Signs(x, y):\n    return (x ^ y) < 0",
+        "draw_index": 6,
+        "error": null,
+        "generation_seconds": 0.972,
+        "hidden_outputs": [
+          false,
+          true
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:58",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def opposite_Signs(x, y):\n    return (x ^ y) < 0",
+        "draw_index": 7,
+        "error": null,
+        "generation_seconds": 0.612,
+        "hidden_outputs": [
+          false,
+          true
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:58",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
     ]
   },
   "k_candidates_per_task": 8,

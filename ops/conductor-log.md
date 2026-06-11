@@ -8239,3 +8239,4 @@ c |
 | 2026-06-11 07:35 UTC | Milestone 2026.06.373 activated | OK | 13 tasks queued |
 | 2026-06-11 07:56 UTC | Archive .372 -> activate .373; KEEP the hardened g | OK | 130 passed in 4.07s |
 | 2026-06-11 08:16 UTC | SOTA-INGESTION SLOT (mandatory per the standing 20 | OK | 91 passed in 4.39s |
+| 2026-06-11 08:42 UTC | OFF-ARC EXECUTION-VERIFIER TRANSFER -- BUILD+LAUNC | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
