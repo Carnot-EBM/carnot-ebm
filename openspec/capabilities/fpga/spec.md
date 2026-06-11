@@ -6679,3 +6679,60 @@ The audit is a hardware smoke check only. It MUST NOT claim live model inference
 **Then:** It writes `results/experiment_3842_kv260_opportunistic_continuity_audit.json` with the terminal or blocked verdict, bare required values, field principles, deterministic seed, checksum, duration, and no retired host-storage or live inference checks.
 
 **Implementation status:** Pending (Exp 3842)
+
+---
+
+### REQ-HW-4017
+
+**Title:** ARC hardware continuity reachability check records all attached boards
+
+**Description:**
+Experiment 4017 MUST keep the KV260, GateMate, and PolarFire boards visible
+during ARC-focused work by running only the permitted per-board reachability
+preconditions and recording honest forward steps. The required preconditions are:
+
+- KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+- GateMate: `openFPGALoader -c dirtyJtag --detect`
+- PolarFire: `ssh -o ConnectTimeout=5 polarfire 'true'`
+
+KV260 MUST NOT use a host SD-card block-device precondition such as `/dev/mmcblk`.
+For each reachable board, the artifact MUST include loaded-overlay or detect /
+continuity output and the next concrete forward step. For each unreachable board,
+the next step MUST be `blocked_<board>_unreachable` while the other boards
+continue. KV260 reachable next steps MUST point toward terminal confirmation per
+north-star section 3.
+
+**Acceptance criteria:**
+- `results/experiment_4017_hardware_continuity.json` is generated.
+- The artifact includes bare scalar fields `kv260_reachable`,
+  `gatemate_reachable`, and `polarfire_reachable`.
+- The artifact includes bare `per_board_next_step`, `per_board_duration_s`,
+  `preconditions_checked`, `honest_verdict`, `duration_s`, and
+  `inference_substrate` fields plus matching field principles.
+- `per_board_duration_s` MUST contain distinct wall-clock measurements for
+  KV260, GateMate, and PolarFire.
+- `preconditions_checked` MUST list which preconditions ran and their boolean
+  availability.
+- `honest_verdict` MUST begin with `complete:`, `success:`, or
+  `blocked_<resource>`.
+- `inference_substrate` MUST be exactly `"hardware_smoke"` and the artifact MUST
+  NOT claim fabric acceleration.
+
+**Implementation status:** Pending (Exp 4017)
+
+---
+
+### SCENARIO-HW-4017
+
+**Scenario:** ARC continuity records reachable boards and blocked board next steps.
+
+**Given:** The ARC milestone requires all three attached boards to remain visible.
+**When:** Experiment 4017 runs the KV260 SSH, GateMate DirtyJTAG detect, and
+PolarFire SSH preconditions, then gathers continuity evidence only for reachable
+boards.
+**Then:** It writes `results/experiment_4017_hardware_continuity.json` with
+terminal-prefix verdict, hardware_smoke substrate, bare reachability values,
+per-board next steps, distinct per-board durations, precondition evidence,
+checksum, deterministic seed, and no host SD-card precondition.
+
+**Implementation status:** Pending (Exp 4017)
