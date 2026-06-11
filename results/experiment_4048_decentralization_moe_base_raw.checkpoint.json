@@ -1,0 +1,40 @@
+{
+  "k_samples_per_task": 8,
+  "local_model_used": "Qwen3.6-35B-A3B",
+  "schema": "carnot.experiment_4048_decentralization_moe_base_raw.checkpoint.v1",
+  "tasks": {
+    "00576224": [
+      {
+        "code": "def transform(grid):\n    H, W = grid.shape\n    flipped = grid[:, ::-1]\n    result = np.zeros((3 * H, 3 * W), dtype=int)\n    for bi in range(3):\n        for bj in range(3):\n            if bi % 2 == 0:\n                result[bi * H:(bi + 1) * H, bj * W:(bj + 1) * W] = grid\n            else:\n                result[bi * H:(bi + 1) * H, bj * W:(bj + 1) * W] = flipped\n    return result",
+        "code_len": 382,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 0,
+        "local_s": 14.67,
+        "status": "graded",
+        "task": "00576224"
+      }
+    ],
+    "0b17323b": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 18.91,
+        "status": "no_code",
+        "task": "0b17323b"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # Find coordinates of non-zero pixels\n    rows, cols = np.where(grid != 0)\n    points = list(zip(rows, cols))\n    \n    if len(points) < 2:\n        # Not enough points to determine a direction, or just one point?\n        # Based on demos, we have at least 3 points.\n        # If only 1 point, maybe no extension? Or maybe vector is undefined.\n        # Let's assume valid input based on demos.\n        return grid\n\n    # Sort points by row index (and column index just in case)\n    points.sort()\n    \n    # Determine the step vector\n    # We can take the difference between the first two points\n    # Or average of differences if there are more points to be robust\n    r1, c1 = points[0]\n    r2, c2 = points[1]\n    dr = r2 - r1\n    dc = c2 - c1\n    \n    # It's possible the points are not perfectly aligned or there's noise, \n    # but ARC tasks are usually clean. \n    # Let's verify if the vector is consistent for the first few points.\n    # Actually, just taking the first difference is likely sufficient.\n    \n    # Start extending from the last point\n    current_r, current_c = points[-1]\n    \n    # Create a copy of the grid to modify\n    output_grid = grid.copy()\n    \n    while True:\n        next_r = current_r + dr\n        next_c = current_c + dc\n        \n        if 0 <= next_r < output_grid.shape[0] and 0 <= next_c < output_grid.shape[1]:\n            output_grid[next_r, next_c] = 2\n            current_r, current_c = next_r, next_c\n        else:\n            break\n            \n    return output_grid",
+        "code_len": 1557,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 1,
+        "local_s": 19.12,
+        "status": "graded",
+        "task": "0b17323b"
+      }
+    ]
+  }
+}
