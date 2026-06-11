@@ -395,6 +395,25 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-06-11 (STANDING — recurring): RESERVE A SOTA-INGESTION SLOT PER BLEEDING-EDGE MILESTONE
+
+**Origin:** 2026-06-11 operator directive (institutionalize the deep-research pattern). Codified as
+the SOTA-Ingestion Cycle Discipline in CLAUDE.md. The loop already DISCOVERS papers (study-sweep
+cron + scripts/sweep_*.py -> research-studying.md); this reserves the INGESTION half — turning
+discovered SOTA into actionable methods mapped onto the active bleeding-edge experiments.
+
+**The rule (planner-side, recurring every milestone whose headline is a bleeding-edge track):**
+reserve ONE task that (1) reads research-studying.md / research-references.md filtered to the active
+track + runs a FOCUSED fresh pass via scripts/sweep_clusters.py / sweep_semscholar.py + low-
+concurrency WebSearch/WebFetch (NOT the /deep-research harness — it rate-limited 4× / ~6M tokens for
+zero output on 2026-06-11; banned from the autonomous loop, opt-in for the operator only), (2) emits
+a SOTA→experiment mapping artifact (strongest 3–5 methods, implementation-over-current-stack,
+pitfalls; template = docs/research-notes/search-layer-literature-2026-06-11.md), (3) updates
+research-studying.md + FLAGS the strongest method(s) for the NEXT roadmap. Every method claim MUST
+cite a real arXiv ID/URL (no-fabrication bar, adversarial_verify applies). For .372 the slot is
+ALREADY FILLED by the search-layer literature note (wired into exp4021 + exp4022 prompts); the
+recurring reservation starts .373+ for whatever the next bleeding-edge headline is.
+
 ### NEW 2026-06-10 (PLANNER DISCIPLINE — split long codex experiments): POWERED MULTI-CODEX-CALL EXPERIMENTS MUST BE TASK-SPLIT
 
 **Origin:** 2026-06-10 outer-loop watchdog. The .371 powered GAP-4 experiments (exp4011

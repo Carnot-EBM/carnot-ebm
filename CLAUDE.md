@@ -2887,6 +2887,75 @@ reads CLAUDE.md as required context; a rule that lives only in
 known-issues.md is advisory and routinely ignored. Mandatory rules need
 this file's authority.
 
+## SOTA-Ingestion Cycle Discipline (MANDATORY)
+
+**Origin:** 2026-06-11 operator directive — "how do we add this deep-research
+pattern to our regular loop cycle to encourage ingestion of SOTA ideas in our
+bleeding-edge efforts." Filed after a manual outer-loop literature pass
+(`docs/research-notes/search-layer-literature-2026-06-11.md`) mapped the
+search/planning + RLVR-distillation SOTA directly onto the active `.372
+search-layer pivot tasks — and found the decisive paper for the decentralization
+fork ("The Invisible Leash", arXiv:2507.14843) that no experiment would have
+surfaced.
+
+**The gap this closes.** The loop already does literature *discovery* (the
+`/study-sweep` cron + `scripts/sweep_*.py` arXiv / Semantic-Scholar helpers feed
+`research-studying.md` / `research-references.md`). What was missing is
+*ingestion*: turning discovered SOTA into actionable methods mapped onto the
+milestone's bleeding-edge experiments, fed forward into the next roadmap.
+Discovery without ingestion means the loop re-derives what the literature already
+solved (a "shoulders of giants" violation — see the literature-priority memory).
+
+**The rule.** Every milestone whose headline attacks a bleeding-edge open problem
+(a new research track, not routine continuation) RESERVES one **SOTA-ingestion
+task** scoped to that milestone's headline open problem — analogous to the 2
+reserved infrastructure slots. The task:
+
+1. **Reads the already-discovered corpus** (`research-studying.md` /
+   `research-references.md`) filtered to the active track, PLUS runs a FOCUSED
+   fresh pass via the RELIABLE channel: `scripts/sweep_clusters.py` /
+   `sweep_semscholar.py` (arXiv / Semantic-Scholar APIs, Python-callable) for
+   paper discovery + low-concurrency `WebSearch` + `WebFetch` of the top 5–8
+   papers.
+2. **Synthesizes a SOTA→experiment mapping artifact**: the strongest 3–5 methods,
+   what each would take to implement over the CURRENT stack, and the pitfalls /
+   where each fails. The template is `docs/research-notes/
+   search-layer-literature-2026-06-11.md` (per-track note + a "bottom line for
+   the roadmap" section).
+3. **Closes the loop**: updates `research-studying.md` (mark ingested) and
+   FLAGS the strongest method(s) as candidate inputs for the NEXT milestone's
+   roadmap, so the planner reads the mapping and SOTA flows into experiments.
+   Discover → ingest → plan → experiment.
+
+**Reliable mechanism, NOT the fragile harness (load-bearing).** The autonomous
+loop's SOTA-ingestion task MUST use the low-concurrency channel above. It MUST
+NOT invoke the `/deep-research` skill (the 25–75-agent fan-out): on 2026-06-11
+that harness rate-limited 4× (server-side 429s under its concurrency) and burned
+~6M tokens for ZERO output, while direct sequential `WebSearch`/`WebFetch`
+succeeded cleanly. `/deep-research` remains OPT-IN for the operator / outer-loop
+in an interactive session where a throttle can be waited out — it is banned from
+the autonomous loop.
+
+**Guardrails (no fabrication).** A SOTA-ingestion artifact MUST cite real arXiv
+IDs / URLs for every method claim. An ingestion artifact with no verifiable
+citations, or that names methods without sources, is treated as fabrication by
+`adversarial_verify.py` discipline (the same bar as any results artifact). The
+two-source / pre-claim checklist from the literature-priority discipline applies.
+
+**Cadence.** One ingestion task per milestone when the headline is a bleeding-edge
+track (the current state: the `.372 search-layer pivot). When a milestone is pure
+continuation / consolidation (no new track), the ingestion slot is optional — but
+the broader `/study-sweep` cron keeps discovery running regardless.
+
+**Why this is in CLAUDE.md.** Same defense-in-depth as the reserved-infra-slots
+and Overdue-Priority rules: the planner reads CLAUDE.md as required input. A rule
+here makes the planner reserve the ingestion slot at design time; the known-issues
+MANDATORY-NEXT-MILESTONE entry is the per-milestone trigger; the activation guard
+is the backstop. Cross-refs: `feedback_literature_priority_discipline` (memory),
+`feedback_sweep_dedupe_protocol` (memory, the sweep helpers),
+`docs/research-notes/search-layer-literature-2026-06-11.md` (the exemplar),
+`feedback_sota_ingestion_cycle` (memory).
+
 ## Development Workflow (MANDATORY)
 
 This project uses **spec-anchored development** (BMAD + OpenSpec). Every code change follows:
