@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.375",
+  "generated_at": "2026-06-11T22:45:05Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative timing detector reported 0 experiment commits and 0 wall-clock minutes for 2026.06.375 with 0 compute-bound tasks. This is the 11th CONSECUTIVE false-zero (the prior 10 milestones .363 through .374 each received the same empty timing block while the committed ops/changelog.md showed a full experiment window). The on-disk, git-committed ops/changelog.md again shows a non-empty experiment window for .375 (a capstone plus its upstream arms). The locked numeric fields are kept at 0 because that is exactly what the detector fed this retro, but the real recurring bottleneck is OBSERVABILITY (the timing detector), not execution. Both RTX 3090s idle at the snapshot is CORRECT: the detector feed contained 0 compute-bound tasks, so gpu_idle_on_compute_bound_tasks is null and GPU idle is not a bottleneck.",
+  "bottlenecks_identified": [
+    "TIMING-DETECTOR FALSE-ZERO (detector_gap_suspected=true), now 11 consecutive milestones (.363-.375): the authoritative timing feed reported 0 experiment commits / 0 wall-minutes while the committed ops/changelog.md shows the milestone actually ran a full experiment window. The recurring operational failure is observability (the detector), NOT execution. Every retro since .363 has had to manually reconcile against the changelog.",
+    "GPU idle is explicitly NOT flagged as a bottleneck: gpu_idle_on_compute_bound_tasks is null because the detector feed contained 0 compute-bound (GGUF/CUDA/requires_gpu) tasks. 0% GPU util on an empty compute-bound set is correct per the GPU-idle interpretation rule."
+  ],
+  "improvements_suggested": [
+    "Root-cause and fix the authoritative timing detector that has now false-zeroed 11 consecutive milestones; it is the single recurring operational bottleneck the last 11 retros have spent budget re-discovering.",
+    "Until the detector is fixed, source the retro's experiment window (and the locked numeric fields) from the committed ops/changelog.md window for the milestone, which is correct, instead of from the detector feed, which is empty.",
+    "Add a conductor/CI regression assertion: if the timing detector reports 0 for a milestone whose ops/changelog.md window is non-empty, fail or alert. This is the exact 11-milestone signature and would surface the gap automatically rather than at retro time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the timing detector's false-zero (false on .363-.375 inclusive). Highest-leverage operational fix: it restores every future operational retrospective's signal in one change.",
+    "Wire the retrospective's numeric fields to the committed ops/changelog.md milestone window (correct source) in addition to or instead of the detector feed, so locked numbers reflect reality.",
+    "Add the detector==0 AND changelog-window-non-empty assertion so the 11-milestone observability gap can never silently recur."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "For the 11th consecutive milestone the retrospective's authoritative timing feed reported zero while the committed ops/changelog.md shows a full experiment window (detector_gap_suspected=true). The recurring failure is observability, not execution: the highest-leverage change remains fixing the timing detector (or sourcing the retro window from the committed changelog) so these retros stop spending their analysis budget re-discovering the same detector gap. estimated_time_savings_pct is 0 because there is no measured wall-time baseline in the detector feed this window to estimate against, not because the opportunity is absent."
+}
