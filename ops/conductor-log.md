@@ -8192,3 +8192,4 @@ c |
 | 2026-06-10 23:04 UTC | GAP-4 DECENTRALIZATION via BEST-OF-N local samplin | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ote", "yes", " |
 | 2026-06-11 00:27 UTC | GAP-4 DECENTRALIZATION via BEST-OF-N local samplin | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: total_samples' |
 | 2026-06-11 00:38 UTC | GAP-4 DECENTRALIZATION via BEST-OF-N local samplin | OK | cache hit: 112 passed in 6.25s |
+| 2026-06-11 01:14 UTC | EFFICIENCY axis (north-star §5) -- model-free veri | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |

@@ -568,5 +568,13 @@
   "title": "GAP-4 model-free verifier versus Codex/GPT-5.5 judge efficiency",
   "token_ratio_judge_over_verifier": 95.2566,
   "verifier_gold_rate": 0.2903,
-  "verifier_tokens": 0
+  "verifier_tokens": 0,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "cost_ratio_judge_over_verifier=95.2566 and token_ratio_judge_over_verifier=95.2566 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ]
 }
