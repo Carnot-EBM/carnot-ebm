@@ -1,0 +1,146 @@
+{
+  "activated_milestone": "2026.06.374",
+  "active_milestone_confirmed": "2026.06.374",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "arc_modules_importable": true,
+  "archived_milestone": "2026.06.373",
+  "duration_s": 13.793552,
+  "exclusion_manifest_parses": true,
+  "experiment_id": "exp4042",
+  "field_principles": {
+    "activated_milestone": "Confirms .374 is live so downstream decision-grade tasks resolve.",
+    "active_milestone_confirmed": "STR -- the active milestone string the roadmap reports; the conductor must agree .374 is active before the downstream tasks resolve.",
+    "arc_modules_importable": "BARE BOOL -- the 4 agentic ARC modules import so .374 can execute them.",
+    "archived_milestone": "Provenance -- which milestone was archived (2026.06.373).",
+    "duration_s": "Positive bare wall-clock; aggregation is fast but never zero.",
+    "exclusion_manifest_parses": "BARE BOOL -- the manifest still loads under yaml.safe_load.",
+    "honest_verdict": "Terminal-prefix verdict + aggregation substrate; no live compute markers.",
+    "inference_substrate": "Declares aggregation only, preventing live-inference duration false positives.",
+    "milestone_373_closestate": "DICT -- per-task OK/BLOCKED/MISSING/FLAGGED, the G1 off-ARC directional-underpowered measurement (delta +5pp, CI95 touches 0, n=40), the G2 no-generalization result (vc33 degenerate plan failed real-env confirmation), the G3 absent decentralization (0 tasks scored, throughput failure), total_games_solved=7, the ArcMemo v6 transfer win, and exp4031 flagged-skipped; the next planner reads this as ground truth.",
+    "pretest_suite_green": "BARE BOOL -- the smart-subset gate is GREEN; a red gate cascade-skips the whole milestone (the 4x-recurrence poison-test failure mode held through .370-.373).",
+    "quarantined_tests": "List of quarantined test file paths and failing test ids.",
+    "research_complete_yaml_parses": "BARE BOOL -- the colon-poison guard; the file still loads."
+  },
+  "honest_verdict": "success: archived_v373_v374_active_G1_offarc_directional_underpowered_ci_touches_zero_G2_no_generalization_vc33_G3_absent_0tasks_games7_arcmemo_v6_win_exp4031_flagged_skipped_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone_373_closestate": {
+    "accuracy": {
+      "first_solve_at_action": 20,
+      "monotonic_plus_one": true,
+      "prior_total_games_solved": 6,
+      "real_env_confirmed": true,
+      "target_game": "dc22-fdcac232",
+      "total_games_solved": 7
+    },
+    "capstone_v373_verdict": "complete: capstone_v373_arguments_measured_G1_directional_underpowered_ci_touches_zero_G2_no_generalization_G3_absent_games7_arcmemo_win_flagged_skipped1",
+    "g1_off_arc_transfer": {
+      "bootstrap_ci95_pp": [
+        0.0,
+        12.5
+      ],
+      "ci_excludes_zero": false,
+      "ci_lower_bound": 0.0,
+      "delta_pp": 5.0,
+      "n_tasks": 40,
+      "outcome": "directional_underpowered_ci_touches_zero",
+      "positive_control_passes": true,
+      "verifier_generalized_off_arc": false
+    },
+    "g2_search_layer_generalization": {
+      "degenerate_wm_exploiting_plan": true,
+      "game": "vc33",
+      "goal_predicate_heldout_precision": 1.0,
+      "goal_predicate_heldout_recall": 1.0,
+      "heuristic_was_non_bespoke": true,
+      "levels_completed_after": 0,
+      "new_levels_solved_this_task": 0,
+      "nodes_expanded": 169,
+      "real_env_confirmed": false,
+      "search_found_plan": true,
+      "search_layer_generalizes": false
+    },
+    "g3_decentralization": {
+      "baseline_12b_coverage": 0.2581,
+      "beat_12b_ceiling": false,
+      "coverage_delta_vs_12b": -0.2581,
+      "diagnosis": "absent",
+      "gated_pass_at_2": 0.0,
+      "n_tasks_scored": 0,
+      "stronger_base_demo_perfect_coverage": 0.0,
+      "throughput_failure": true
+    },
+    "hardware": {
+      "included": true,
+      "kv260_latency_step_taken": false,
+      "kv260_overlay_loaded": true,
+      "per_board_reachability": {
+        "gatemate": false,
+        "kv260": true,
+        "polarfire": true
+      },
+      "per_board_terminal_state": {
+        "gatemate": "blocked_gatemate_unreachable",
+        "kv260": "reachable_overlay_loaded_latency_step_blocked",
+        "polarfire": "reachable_ssh_continuity_recorded"
+      },
+      "verdict": "complete: hardware_continuity_kv260_overlay_loaded_latency_step_blocked_4040_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded"
+    },
+    "headline": "Three arguments became measurements, all negative-leaning: G1 off-ARC verifier transfer DIRECTIONAL (delta=5.0pp) but UNDERPOWERED (CI95=[0.0, 12.5] touches 0 at n=40) -- verifier did NOT measurably generalize off-ARC (.374 G1 scales to full MBPP/HumanEval); G2 the search layer did NOT generalize to vc33 (goal predicate induced at precision 1.0 but the plan exploited the world model and FAILED real-env confirmation -- .374 G2 closes the loop with grounding); G3 decentralization ABSENT (exp4037 scored 0 tasks, throughput failure -- .374 G3 a tractable measurement); proven tracks held: ARC-AGI-3 total_games_solved=7 (+1 monotonic), ArcMemo v6 transfer 59->18 actions; exp4031 off-ARC transfer-build was flagged_adversarial and SKIPPED.",
+    "per_task_status": {
+      "exp4029-archive-v372-activate-v373": "OK",
+      "exp4030-sota-ingestion-offarc-and-search": "OK",
+      "exp4031-offarc-exec-verifier-transfer-build": "FLAGGED",
+      "exp4032-offarc-exec-verifier-transfer-collect": "OK",
+      "exp4033-verifier-registry-harness-registration": "OK",
+      "exp4034-vc33-goal-predicate-induction": "OK",
+      "exp4035-hierarchical-search-over-vc33-wm": "OK",
+      "exp4036-decentralization-stronger-base-build": "OK",
+      "exp4037-decentralization-stronger-base-collect": "OK",
+      "exp4038-seventh-game-explore-first": "OK",
+      "exp4039-arcmemo-concept-library-v6": "OK",
+      "exp4040-hardware-continuity-kv260-terminal": "OK",
+      "exp4041-capstone-v373": "OK"
+    },
+    "self_learning": {
+      "action_savings_vs_cold": 41,
+      "actions_cold": 59,
+      "actions_v5": 20,
+      "actions_v6": 18,
+      "induction_calls_v6": 0,
+      "n_named_abstractions": 1,
+      "transfer_win": true
+    },
+    "status_counts": {
+      "BLOCKED": 0,
+      "FAIL": 0,
+      "FLAGGED": 1,
+      "MISSING": 0,
+      "OK": 12
+    },
+    "transfer_build_flagged": {
+      "claimed_verdict": "success: offarc_transfer_runner_built_smoked_launched",
+      "experiment_id": "4031",
+      "flagged_adversarial": true,
+      "skipped": true
+    }
+  },
+  "n_tasks_archived": 13,
+  "preconditions_checked": {
+    "active_milestone": "2026.06.374",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "exclusion_manifest_exists": true,
+    "exclusion_manifest_parsed": true,
+    "research_complete_yaml_exists": true,
+    "research_complete_yaml_parsed_after": true,
+    "research_complete_yaml_parsed_before": true
+  },
+  "pretest_suite_green": true,
+  "quarantined_tests": [],
+  "random_seed": 4042,
+  "reproducibility_checksum": "86b2fe328d4d808af5ea63661dc30a0e078eb1579b28ecfe184562114dd95a52",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "unchanged",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v373_to_v374_4042.v1",
+  "task_id": "exp4042-archive-v373-activate-v374"
+}

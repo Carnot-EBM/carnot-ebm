@@ -19165,3 +19165,92 @@ unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-4029 | Implemented (`python/carnot/reporting/archive_v372_activate_v373_4029.py`, `scripts/experiments/exp4029_archive_v372_activate_v373.py`) | Implemented (`tests/python/test_experiment_4029_archive_v372_activate_v373.py`) |
+
+### REQ-REPORT-4042: Archive .373 And Activate .374 With Off-ARC / Search-Generalization / Decentralization Close-State Truth
+
+The Exp 4042 workflow SHALL archive milestone `2026.06.373`, confirm milestone
+`2026.06.374` is active in the current research roadmap, and write
+`results/experiment_4042_archive_v373_activate_v374.json`. Before editing any
+record it SHALL confirm `research-complete.yaml` safe-loads under
+`yaml.safe_load`; if that precondition fails it SHALL write a blocked artifact
+whose `honest_verdict` starts with `blocked_research_complete_yaml_poison` and
+SHALL NOT edit `research-complete.yaml` or `ops/exclusion_manifest.yaml`.
+
+The workflow SHALL ensure exactly one `.373` milestone record exists in
+`research-complete.yaml`. The conductor's checkpoint-from-interrupted-run commit
+already appended one canonical `.373` record, so the workflow SHALL collapse any
+duplicate `- id: 2026.06.373` records to the first occurrence (fail-forward
+cleanup, never a further append), leave a single existing record unchanged, or
+append one canonical `.373` record when none exists. After this edit it SHALL
+confirm both `research-complete.yaml` and `ops/exclusion_manifest.yaml` still
+safe-load. It SHALL run an import probe for
+`carnot.agentic.arc_agi3_world_model`,
+`carnot.agentic.arc_world_model_synth`, `carnot.agentic.arc_world_model_dsl`,
+and `carnot.agentic.arc_agi3_action_efficiency`, recording the aggregate bare
+boolean `arc_modules_importable`.
+
+The workflow SHALL run the smart-subset pre-test gate — the two core suites
+(`test_pipeline_extract.py`, `test_docs.py`) plus every uncommitted/untracked
+`tests/python/*.py` file, excluding `tests/quarantine/` — via `.venv/bin/pytest
+<files> -q --no-header -n 0 --no-cov -o addopts=`. If the gate is red it SHALL
+record failing test ids by source file, `git mv` each still-red file under
+`tests/quarantine/`, rerun until green, and record the quarantined paths in
+`quarantined_tests`. This preserves the poison-test quarantine that held through
+`.370`/`.371`/`.372`/`.373`.
+
+The workflow SHALL record the `.373` close-state in the bare-dict field
+`milestone_373_closestate`: per-task OK/BLOCKED/MISSING/FLAGGED status for
+Exp 4029–4041; the G1 off-ARC verifier-transfer result as DIRECTIONAL but
+UNDERPOWERED (Exp 4032 delta `+5.0`pp, bootstrap CI95 `[0.0, 12.5]` whose lower
+bound touches zero, `n=40`, positive control passes, so the verifier did NOT
+measurably generalize off-ARC at this power); the G2 search-layer result as NO
+generalization (Exp 4034 induced the vc33 goal predicate at held-out precision
+`1.0`, but Exp 4035's search found a degenerate world-model-exploiting plan that
+FAILED real-env confirmation, so `search_layer_generalizes` is false); the G3
+decentralization result as ABSENT (Exp 4037 scored `0` tasks — a throughput
+failure, `coverage_delta_vs_12b = -0.2581`, no stronger-base coverage measured);
+the ARC-AGI-3 total of `7` games solved (`+1` monotonic via Exp 4038's seventh
+game `dc22-fdcac232` at action 20); and the ArcMemo v6 concept-library transfer
+win (Exp 4039, 59→18 actions, 0 induction calls). Exp 4031's
+`flagged_adversarial` off-ARC transfer-build claim SHALL be recorded as
+flagged-and-skipped, never aggregated as a win.
+
+The terminal artifact SHALL include bare top-level fields `archived_milestone`,
+`activated_milestone`, `research_complete_yaml_parses`,
+`exclusion_manifest_parses`, `arc_modules_importable`, `pretest_suite_green`,
+`quarantined_tests`, `milestone_373_closestate`, `active_milestone_confirmed`
+(the confirmed active milestone string `2026.06.374`), `honest_verdict`,
+`duration_s`, and `inference_substrate` equal to
+`aggregation_from_upstream_artifacts`. On the complete path `honest_verdict`
+SHALL start with `complete:`, `success:`, `passed:`, or `shipped:`. This is a
+record-only aggregation task and SHALL NOT modify `ops/changelog.md`,
+`ops/status.md`, `_bmad/traceability.md`, or `scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-4042: V373 Archive Opens The .374 Decision-Grade Milestone
+
+**Given** `.374` is active, `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` safe-load, the four ARC agentic modules import,
+and the smart-subset gate is green after any required quarantine
+**When** the Exp 4042 workflow runs
+**Then** it ensures exactly one `.373` record, confirms both YAML files still
+parse, records the `.373` close-state truth (G1 off-ARC directional but
+underpowered with the CI touching zero, G2 no search-layer generalization on
+vc33, G3 decentralization absent / 0 tasks scored, 7 games solved, ArcMemo v6
+transfer win, exp4031 flagged-and-skipped), confirms `active_milestone_confirmed`
+equals `2026.06.374`, writes the required terminal artifact, and leaves
+ops/status/traceability/conductor files unchanged.
+
+#### SCENARIO-REPORT-4042-BLOCKED-YAML: Corrupt Research Record Blocks Before Edit
+
+**Given** `research-complete.yaml` does not safe-load
+**When** the Exp 4042 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_research_complete_yaml_poison`, records the failed parse in
+`preconditions_checked`, and leaves both `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` byte-for-byte unchanged.
+
+## Implementation Status (REQ-REPORT-4042)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4042 | Implemented (`python/carnot/reporting/archive_v373_activate_v374_4042.py`, `scripts/experiments/exp4042_archive_v373_activate_v374.py`) | Implemented (`tests/python/test_experiment_4042_archive_v373_activate_v374.py`) |
