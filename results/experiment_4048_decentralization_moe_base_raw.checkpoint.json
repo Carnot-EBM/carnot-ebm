@@ -816,6 +816,18 @@
         "status": "no_code",
         "task": "5833af48"
       }
+    ],
+    "66e6c45b": [
+      {
+        "code": "def transform(grid):\n    out = np.zeros_like(grid)\n    coords = np.argwhere(grid != 0)\n    # coords will be [[1,1], [1,2], [2,1], [2,2]]\n    # We can just map them to corners\n    # But simpler: just take the 2x2 block values and place at corners\n    # Let's find the bounding box of non-zeros\n    r_min, c_min = coords.min(axis=0)\n    r_max, c_max = coords.max(axis=0)\n    block = grid[r_min:r_max+1, c_min:c_max+1]\n    out[0, 0] = block[0, 0]\n    out[0, -1] = block[0, -1]\n    out[-1, 0] = block[1, 0]\n    out[-1, -1] = block[1, -1]\n    return out",
+        "code_len": 548,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 0,
+        "local_s": 29.24,
+        "status": "graded",
+        "task": "66e6c45b"
+      }
     ]
   }
 }
