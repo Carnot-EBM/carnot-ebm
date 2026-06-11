@@ -19358,3 +19358,68 @@ ops/status/traceability/conductor files unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-4054 | Implemented (`python/carnot/reporting/archive_v374_activate_v375_4054.py`, `scripts/experiments/exp4054_archive_v374_activate_v375.py`) | Implemented (`tests/python/test_experiment_4054_archive_v374_activate_v375.py`) |
+
+### REQ-REPORT-4055: SOTA Ingestion Mapping For Unsaturated Execution Verification And Online Verifier Pruning
+
+The Exp 4055 workflow SHALL emit an actionable SOTA-to-experiment mapping note
+for the two `.375` headline tracks: (1) an unsaturated execution-verification
+corpus for off-ARC verifier-transfer measurement, and (2) verifier-guided
+online action pruning for the efficient ARC harness. The markdown note SHALL be
+written to
+`docs/research-notes/sota-ingestion-2026-06-11-unsaturated-execverif-and-verifier-pruner.md`
+and the paired machine-checkable receipt SHALL be written to
+`results/experiment_4055_sota_ingestion_receipt.json`.
+
+Before writing the note, the workflow SHALL read the seed corpus in
+`research-references.md` section "2026-06-11 Post-.374 Planning Sweep
+(Milestone 2026.06.375)", filter `research-studying.md` to the same two
+tracks, run a focused fresh pass through `scripts/sweep_clusters.py` and/or
+`scripts/sweep_semscholar.py` for each track, and verify the strongest papers
+with low-concurrency WebSearch/WebFetch. The workflow SHALL NOT invoke the
+`/deep-research` skill and SHALL NOT modify `scripts/research_conductor.py`.
+
+For each track, the note SHALL map at least three cited methods to concrete
+implementation work over the current Carnot substrate. Track 1 mappings SHALL
+state what each method would require over the demo-fit code verifier, sandbox,
+and EvalPlus-style hidden-test evaluation path. Track 2 mappings SHALL state
+what each method would require over the explore-first ARC solver and GAP-4
+verifier. Each mapped method SHALL include pitfalls or failure modes so the
+roadmap can distinguish implementable experiments from unsupported literature
+claims.
+
+The workflow SHALL update `research-studying.md` to mark the seed candidates as
+ingested for Exp 4055 and SHALL add a "Bottom line for the .376 roadmap"
+section identifying the strongest follow-up methods. It SHALL NOT update
+`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`; those reconciliation files are handled by the
+separate conductor pass.
+
+The receipt SHALL contain exactly the bare top-level fields `honest_verdict`,
+`methods_mapped_count`, `citations`, `flagged_for_v376`, and
+`inference_substrate`. `honest_verdict` SHALL use a terminal prefix and, on the
+complete path, start with
+`complete: sota_ingestion_unsaturated_execverif_and_pruner_mapped`.
+`methods_mapped_count` SHALL be a positive integer no smaller than the number of
+mapped methods in the note. `citations` SHALL be a non-empty list of dicts with
+`arxiv_id_or_url`. `flagged_for_v376` SHALL be a non-empty list of concrete
+roadmap slugs. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`.
+
+#### SCENARIO-REPORT-4055: Mapping Note Closes The Discover-To-Plan Loop
+
+**Given** the `.375` seed corpus names EvalPlus/HumanEval+/MBPP+,
+LiveCodeBench v6, SAGA, DryRUN, online verification, Marco DeepResearch, and
+asymmetric verification as candidate inputs
+**When** the Exp 4055 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON receipt, maps nonzero
+cited methods for both `.375` tracks to Carnot implementation work and failure
+modes, updates `research-studying.md` with the ingested seed candidates, flags
+the strongest `.376` follow-ups, declares
+`aggregation_from_upstream_artifacts`, and leaves the conductor and
+reconciliation files untouched.
+
+## Implementation Status (REQ-REPORT-4055)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4055 | Implemented (`python/carnot/sota_ingestion_4055.py`, `docs/research-notes/sota-ingestion-2026-06-11-unsaturated-execverif-and-verifier-pruner.md`) | Implemented (`tests/python/test_sota_ingestion_receipt_4055.py`) |
