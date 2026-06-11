@@ -8258,3 +8258,4 @@ c |
 | 2026-06-11 13:22 UTC | SOTA-INGESTION SLOT (mandatory per the standing 20 | OK | 94 passed in 3.52s |
 | 2026-06-11 14:27 UTC | OFF-ARC TRANSFER POWER + STRONGER DISCRIMINATOR -- | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-11 14:43 UTC | OFF-ARC TRANSFER POWER -- COLLECT+VALIDATE (operat | OK | 136 passed in 5.54s |
+| 2026-06-11 15:00 UTC | CLOSED-LOOP GROUNDED REPLANNING over the vc33 veri | OK | 89 passed in 5.33s |
