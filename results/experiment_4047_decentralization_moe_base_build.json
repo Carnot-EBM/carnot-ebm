@@ -1,0 +1,47 @@
+{
+  "build_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4047_decentralization_moe_base_build.json",
+  "duration_s": 10.37,
+  "experiment": "experiment_4047_decentralization_moe_base_build",
+  "full_k_samples_per_task": 8,
+  "full_time_budget_s": 4500.0,
+  "honest_verdict": "success: decentralization_moe_base_runner_launched_qwen35moe",
+  "inference_substrate": "live_llm_inference",
+  "launch_command": "nohup /home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_4048_decentralization_moe_base_best_of_n.py --model qwen35moe --k 8 --max-wall-s 4500.0 --n-ctx 16384 --batch-size 4 --output /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4048_decentralization_moe_base_raw.json --checkpoint /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4048_decentralization_moe_base_raw.checkpoint.json > /home/ianblenke/github.com/ianblenke/carnot/logs/decentralization_moe_run.log 2>&1 &",
+  "launched_pid": 3060178,
+  "model_specs": {
+    "comparator_exp4012_model": "gemma-4-12B",
+    "generator_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "generator_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "generator_model": "Qwen3.6-35B-A3B",
+    "selection_note": "MoE throughput base, ~3B active params",
+    "verifier": "model-free: demo-fit exact-reproduction gate + restricted-namespace execution + min-hamming snap + content-hash candidate match"
+  },
+  "moe_base_model": "Qwen3.6-35B-A3B",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "resource": "moe_base_gguf_cached",
+      "selected_model": "Qwen3.6-35B-A3B"
+    },
+    {
+      "available": true,
+      "resource": "llama_cpp"
+    },
+    {
+      "available": true,
+      "resource": "exp4012_arc1_pool_and_verifier_primitives"
+    }
+  ],
+  "random_seed": 12345,
+  "raw_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4048_decentralization_moe_base_raw.json",
+  "reproducibility_checksum": "8b71095aca363958",
+  "runner_ready": true,
+  "schema": "carnot.experiment_4047_decentralization_moe_base_build.v1",
+  "smoke_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4048_decentralization_moe_base_smoke.json",
+  "smoke_best_of_n_coverage": 0.5,
+  "smoke_passed": true,
+  "smoke_per_task_seconds": 85.13,
+  "title": "Decentralization MoE-base runner build and launch gate"
+}
