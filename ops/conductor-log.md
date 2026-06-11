@@ -8208,3 +8208,4 @@ c |
 | 2026-06-11 03:38 UTC | HEURISTIC SEARCH OVER THE VERIFIED WORLD MODEL (TH | OK | 90 passed in 4.72s |
 | 2026-06-11 03:54 UTC | DECENTRALIZATION next step, DATA-GATED on exp4012' | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-11 04:06 UTC | RETIRE the agreement-as-selector claim (the Deep-T | OK | 85 passed in 3.77s |
+| 2026-06-11 04:19 UTC | FIFTH ARC-AGI-3 game first-solve via the PROVEN ex | OK | 89 passed in 5.01s |
