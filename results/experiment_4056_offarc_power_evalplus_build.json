@@ -57,5 +57,18 @@
   "smoke_oracle_headroom_present": false,
   "smoke_passed": false,
   "smoke_raw_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4056_offarc_power_evalplus_smoke_raw.json",
-  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/offarc_power_evalplus_gemma12b_k8.checkpoint.json"
+  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/offarc_power_evalplus_gemma12b_k8.checkpoint.json",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=8.12 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
