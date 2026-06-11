@@ -8249,3 +8249,4 @@ c |
 | 2026-06-11 10:20 UTC | DECENTRALIZATION clean rerun on a STRONGER local b | OK | 107 passed in 5.37s |
 | 2026-06-11 10:33 UTC | DECENTRALIZATION stronger-base -- COLLECT+VALIDATE | OK | 102 passed in 5.88s |
 | 2026-06-11 10:55 UTC | SEVENTH ARC-AGI-3 game first-solve via the PROVEN  | OK | 89 passed in 4.43s |
+| 2026-06-11 11:09 UTC | ArcMemo v6: concept-LIBRARY learning (self-learnin | OK | 91 passed in 4.93s |
