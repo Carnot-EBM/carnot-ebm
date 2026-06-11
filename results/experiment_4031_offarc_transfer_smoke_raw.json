@@ -155,5 +155,14 @@
   "random_seed": 4032,
   "reproducibility_checksum": "a316f79d7a9237e24eb768f702680442a1e1cdd9baf13d6661126df7ab178112",
   "schema": "carnot.experiment_4032_offarc_exec_verifier_transfer_raw.v1",
-  "truncation_rate": 0.0
+  "truncation_rate": 0.0,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=11.03 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }

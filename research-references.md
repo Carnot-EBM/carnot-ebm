@@ -1,3 +1,108 @@
+## 2026-06-11 Post-.373 Planning Sweep (Milestone 2026.06.374)
+
+`.373` converted three open arguments into measurements (capstone exp4041). The honest read,
+straight from the artifacts (not the prose):
+
+- **G1 — verifier off-ARC transfer (operator TOP PRIORITY): DIRECTIONAL but UNDERPOWERED.**
+  exp4032 ran the SAME GAP-4 execution primitive (induce program from demos → restricted exec
+  → exact-output-match) on MBPP code: Arm B (demo-fit) beat Arm A (vote) by **+5.0pp**, SAME
+  SIGN as the ARC-1 +16pp, positive control PASSES (oracle headroom present, informative null).
+  BUT **n=40, bootstrap CI95 [0.0, 12.5] touches zero** → not yet significant. The artifact's own
+  recommendation: scale to full HumanEval (164) / MBPP (~500). A new gap was logged:
+  **GAP-CODE-EXEC-DEMOFIT** — visible example tests under-determine hidden semantics (the code
+  analog of GAP-5 demo-underdetermination).
+- **G2 — search generalization to a SECOND game (vc33): NO generalization, NEW wall identified.**
+  exp4034 induced vc33's `is_goal(state)` at held-out precision/recall **1.0** (solid). exp4035
+  ran a REAL non-bespoke search (169 nodes expanded, general coded heuristic, subgoal decomposition,
+  NOT r11l-style hardcoded macros) and **found a plan in the verified WM** — but the plan was
+  DEGENERATE (the action `[6,38,28]` repeated 70×) that satisfied `is_goal` *inside the 99%-accurate
+  WM* yet **failed real-env confirmation** (`levels_completed=0`). This is textbook
+  **planner-exploits-world-model-error**: the planner searched OUT-OF-DISTRIBUTION and exploited a
+  WM defect. The .372 r11l win was open-loop-lucky; vc33 exposes that open-loop search over a
+  WM validated only on the data-collection distribution does not transfer to the real env.
+- **G3 — decentralization stronger base: INCONCLUSIVE (throughput failure, not a clean answer).**
+  exp4036 launched gemma-4-31B-it best-of-N backgrounded; exp4037 collected **0 scored tasks** in
+  budget (31B dense too slow for 30 tasks × k=8). coverage=0.0 is a non-measurement, not "absent."
+  The latent-vs-absent question is still open and needs a TRACTABLE substrate (MoE ~3B-active for
+  throughput, batched, proper budget).
+- **Accuracy:** 7th game solved (dc22-fdcac232, action 20 vs baseline 59, real-env-confirmed). +1.
+- **Self-learning:** ArcMemo v6 concept-library won (59→18 actions, **0** induction calls). Clean.
+- **Hardware:** KV260 overlay loaded, but the latency-transcript step stayed BLOCKED (not terminal).
+
+**Net-new references for the .374 tracks (verified by WebSearch/WebFetch June 2026 — every arXiv ID
+below was fetched and confirmed to resolve; the few snippet-only items are flagged).**
+
+TRACK 1 — execution-based / test-consistency code selection (G1 full-corpus scale-up):
+- **★ Inference-Time Code Selection via Symbolic Equivalence Partitioning** (arXiv:2604.06485).
+  Filter by public tests → partition survivors into functional-equivalence classes via symbolic
+  execution → pick the dominant class. Concrete deltas at N=10: **HumanEval+ 0.754→0.826**,
+  LiveCodeBench 0.565→0.647. The strong, training-free baseline the Carnot demo-fit verifier must
+  match/beat in .374. Pitfall it names: **consensus ≠ correctness** (correlated wrong solutions) —
+  exactly where the Carnot verifier must earn its edge.
+- **★ Scaling Agentic Verifier for Competitive Coding** (arXiv:2602.04254). An execution-based
+  verifier that actively SEARCHES for discriminating test inputs (targeted counterexamples), not
+  passive test-pass counting; **+10–15% absolute Best@K**. The right *direction* for the Carnot
+  code verifier (generate discriminating evidence) but heavy (trained agentic verifier) — a .375+
+  direction, not a .374 drop-in.
+- **CodeT — dual execution agreement** (arXiv:2207.10397). Canonical execution-reranking baseline
+  with published MBPP/HumanEval deltas (HumanEval 47.0→65.8, MBPP 58.1→67.7 on code-davinci-002).
+  Use as the comparable reference number. (Effect sizes from search snippet; ID resolves, PDF not
+  re-fetched this pass.)
+- **ACES — leave-one-out test consistency** (arXiv:2604.03922, already held): a STRONGER baseline
+  than plain vote; an Arm A++ for the .374 measurement.
+- **Efficient Prediction of Pass@k Scaling** (arXiv:2510.05197). Extrapolates pass@k from few
+  samples with uncertainty — use to PRE-BUDGET how many N×k generations are needed before burning
+  GGUF wall-clock. **Sizing rule (load-bearing): a ~5pp lift will NOT clear a bootstrap CI on n=30;
+  budget n≈164 (full HumanEval) with 10,000-resample task-level bootstrap CIs.**
+
+TRACK 2 — closed-loop planning with verified world models + the model-error/sim2real gap (G2, THE
+important track):
+- **★ What model does MuZero learn?** (arXiv:2306.00840). Names the exact .373/G2 failure: a
+  value/transition model is accurate on the DATA-COLLECTION policy but **cannot evaluate
+  out-of-distribution policies**, prediction error **grows with horizon**, and the **policy prior is
+  what restricts how much model error enters the search**. The vc33 degenerate plan IS this. Implies
+  the fix: constrain the search so it only proposes actions where the WM is trustworthy.
+- **★ World-in-World: World Models in a Closed-Loop World** (arXiv:2510.18135). Scores WMs by
+  CLOSED-LOOP task success (propose→simulate→revise→execute→**replan on new observation**), and
+  finds **high model fidelity ≠ task success**. Licenses the .374 remedy: stop targeting WM
+  "accuracy," target real-env-confirmed closed-loop success with per-step replanning.
+- **★ Latent Geometry Beyond Search (GC-IDM)** (arXiv:2605.08732). Replaces open-loop multi-step
+  planning with **closed-loop single-step replanning + fresh observation re-encoding every step**,
+  bounding error by per-step (not multi-step-integrated) divergence — the minimal-cost remedy for
+  the compounding-error failure. Pitfall: degrades on long forced action chains (may need short
+  multi-step lookahead, not pure single-step).
+- **Bounding Distributional Shifts via Novelty Detection** (arXiv:2508.06096). A novelty detector
+  INSIDE the MPC loop: when the predicted state is OOD, reduce reliance on the WM ("when to trust
+  the model"). The Carnot energy verifier is a natural WM-trust signal source. Single-point-of-
+  failure caveat (the detector itself).
+- **R-WoM: Retrieval-augmented World Model** (arXiv:2510.11892). WM does k-step lookahead per
+  candidate action and PRUNES before execution; retrieval-grounding ↔ Carnot execution-grounding.
+  Errors still compound — keep k short.
+
+TRACK 3 — base-model ceilings for best-of-N + efficient BoN (G3 decisiveness):
+- **The Invisible Leash** (arXiv:2507.14843, already the anchor): RLVR cannot exceed the base
+  model's pass@k in the limit; BoN surfaces only LATENT support.
+- **Does RL Really Incentivize Reasoning Beyond the Base Model?** (arXiv:2504.13837). Independent
+  corroboration: base model wins at large k; reasoning bounded by the base.
+- **★ RL vs. Distillation: Accuracy and Capability** (arXiv:2505.14216). The sharpest fork: RLVR
+  lifts pass@1 (60.6→74.2 on a 1.5B math model) but **pass@256 stays flat (97.2→97.0)**; only
+  knowledge-infusing DISTILLATION (external traces) expands coverage. To raise the CEILING you need
+  new knowledge (a stronger base or external-trace distillation), NOT RLVR self-improvement —
+  corroborates the project's RFT-verifier<SC null. The sovereignty-respecting way to inject new
+  knowledge is a stronger LOCAL base.
+- **RoBoN: Routed Online Best-of-N** (arXiv:2512.05542): routing + early-stopping to cut full
+  generations — efficient BoN so a 35B MoE can score ~30 tasks × k=8 affordably. With an EXECUTION
+  verifier the reward-hacking risk is mitigated (objective energy).
+
+**Bottom line for the .374 roadmap.** G1: scale the off-ARC demo-fit transfer to full HumanEval
+(164) + an MBPP slice, ADD symbolic-equivalence-partition (2604.06485) and ACES leave-one-out
+(2604.03922) as stronger arms, 10k-resample task-level bootstrap → does the CI now EXCLUDE zero?
+G2 (most important): replace open-loop search with **closed-loop per-step replanning + a
+WM-trust/divergence gate** (MuZero 2306.00840 + GC-IDM 2605.08732 + World-in-World 2510.18135 +
+novelty-MPC 2508.06096) — the planner must not be allowed to exploit OOD WM error. G3: rerun on a
+TRACTABLE MoE base (Qwen3.6-35B-A3B, ~3B active) with RoBoN-style early-stop, positive control
+mandatory (FALSE_NEGATIVE_RISK).
+
 ## 2026-06-10 Post-.369 Planning Sweep (Milestone 2026.06.370)
 
 `.369` was DESIGNED to turn the GAP-4 program-induction execution verifier from a
