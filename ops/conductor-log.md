@@ -8191,3 +8191,4 @@ c |
 | 2026-06-10 21:41 UTC | GAP-4 FEEDBACK-VS-REDRAW v2 -- POWERED (the .370 e | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: eedback_iter0. |
 | 2026-06-10 23:04 UTC | GAP-4 DECENTRALIZATION via BEST-OF-N local samplin | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ote", "yes", " |
 | 2026-06-11 00:27 UTC | GAP-4 DECENTRALIZATION via BEST-OF-N local samplin | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: total_samples' |
+| 2026-06-11 00:38 UTC | GAP-4 DECENTRALIZATION via BEST-OF-N local samplin | OK | cache hit: 112 passed in 6.25s |
