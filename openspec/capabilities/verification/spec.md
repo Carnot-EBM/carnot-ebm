@@ -12333,6 +12333,65 @@ terminal verdict of either
 `complete: decentralization_moe_base_partial_<n>_tasks_retire`, and does not
 mutate the Exp 4012 or raw Exp 4048 artifacts.
 
+### REQ-VERIFY-4058: Decentralization MoE Resume-And-Accumulate Build Gate
+
+The repository SHALL provide Exp 4058 at
+`scripts/experiments/exp4058_decentralization_moe_resume_build.py` and Exp
+4059 at
+`scripts/experiments/experiment_4059_decentralization_moe_resume_best_of_n.py`
+to resume, not restart, the Exp 4048 Qwen MoE best-of-N ARC rule-induction
+checkpoint and accumulate evidence toward at least 30 unique ARC-1 tasks. Exp
+4059 SHALL mirror Exp 4012 over the identical 30-unique-task ARC-1 pool, `k=8`
+local samples per unique task, unchanged GAP-4 model-free demo-fit verifier
+primitives, unchanged candidate snap threshold, unchanged vote-primary gated
+pass@2 scorer, batched generation, and RoBoN-style early stop after a
+demo-perfect candidate for a task. The stable checkpoint path SHALL be
+corpus/model/k keyed as
+`results/decentralization_moe_qwen35a3b_arc1_k8.checkpoint.json`, not
+experiment-id keyed, and it SHALL be initialized or merged from
+`results/experiment_4048_decentralization_moe_base_raw.checkpoint.json`.
+
+Before any live inference, Exp 4058 and Exp 4059 SHALL verify that the Qwen MoE
+GGUF cache directory is non-empty and resolves to a concrete `.gguf` path,
+`llama_cpp` imports, and both the Exp 4012 ARC-1 pool and the Exp 4048
+checkpoint load. If the MoE GGUF is unavailable, the build artifact SHALL
+report `honest_verdict=blocked_moe_base_not_cached`; if `llama_cpp` is
+unavailable it SHALL report `blocked_llama_cpp_unavailable`; if the pool fails
+it SHALL report `blocked_exp4012_pool_unreadable`; and if the Exp 4048
+checkpoint fails it SHALL report `blocked_exp4048_checkpoint_unreadable`.
+Blocked runs SHALL NOT launch inference or silently fall back to DSL-only,
+Codex, Gemma-12B, or Gemma-31B.
+
+Exp 4059 SHALL checkpoint after each task to the stable checkpoint and SHALL
+write `results/experiment_4059_decentralization_moe_resume_raw.json` with
+top-level fields for per-task demo-perfect status, best-of-N coverage, gated
+pass@2, local seconds, `model_specs`, `random_seed`,
+`reproducibility_checksum`, and bare integer `ACCUMULATED-N`. Exp 4058 SHALL
+smoke Exp 4059 on two not-yet-scored pool tasks, compute bare-float
+`smoke_per_task_seconds`, launch the full Exp 4059 run under `setsid nohup`
+with `k=8`, and write
+`results/experiment_4058_decentralization_moe_resume_build.json` with bare
+top-level fields `honest_verdict`, `runner_ready`, `moe_base_model`,
+`stable_checkpoint_path`, `resumed_from_n`, `smoke_per_task_seconds`,
+`smoke_passed`, `launched_pid`, `preconditions_checked`, and
+`inference_substrate=live_llm_inference`.
+
+### SCENARIO-VERIFY-4058: MoE Resume Runner Launches From Exp 4048 Checkpoint
+
+Given the cached Qwen MoE GGUF, importable `llama_cpp`, the Exp 4012 ARC-1
+pool, and the 14-task Exp 4048 checkpoint, when Exp 4058 runs, then it
+initializes or preserves the stable corpus/model/k checkpoint, records
+`resumed_from_n=14`, smokes Exp 4059 on two not-yet-scored tasks without
+changing the verifier side, writes the required build artifact with
+`runner_ready=true`, `smoke_passed=true`,
+`inference_substrate=live_llm_inference`, a bare-float
+`smoke_per_task_seconds`, and a terminal-prefix `honest_verdict` of
+`success: decentralization_moe_resume_runner_launched_qwen35moe`, then starts
+the full Exp 4059 run under `setsid nohup` and records the launched PID. If any
+precondition fails, it writes the corresponding `blocked_*` artifact with
+`runner_ready=false`, `smoke_passed=false`, `resumed_from_n=0`,
+`smoke_per_task_seconds=0.0`, and `launched_pid=0`.
+
 ### REQ-VERIFY-4013: ARC GAP-4 Verifier-vs-Codex-Judge Efficiency
 
 The repository SHALL provide Exp 4013 at
