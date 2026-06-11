@@ -19254,3 +19254,107 @@ ops/status/traceability/conductor files unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-4042 | Implemented (`python/carnot/reporting/archive_v373_activate_v374_4042.py`, `scripts/experiments/exp4042_archive_v373_activate_v374.py`) | Implemented (`tests/python/test_experiment_4042_archive_v373_activate_v374.py`) |
+
+### REQ-REPORT-4054: Archive .374 And Activate .375 With Decision-Grade Close-State And The G3 False-Retirement Correction
+
+The Exp 4054 workflow SHALL archive milestone `2026.06.374`, confirm milestone
+`2026.06.375` is active in the current research roadmap, and write
+`results/experiment_4054_archive_v374_activate_v375.json`. Before editing any
+record it SHALL confirm `research-complete.yaml` safe-loads under
+`yaml.safe_load`; if that precondition fails it SHALL write a blocked artifact
+whose `honest_verdict` starts with `blocked_research_complete_yaml_poison` and
+SHALL NOT edit `research-complete.yaml` or `ops/exclusion_manifest.yaml`.
+
+The workflow SHALL ensure exactly one `.374` milestone record exists in
+`research-complete.yaml`. The conductor's checkpoint-from-interrupted-run commit
+already appended one canonical `.374` record, so the workflow SHALL collapse any
+duplicate `- id: 2026.06.374` records to the first occurrence (fail-forward
+cleanup, never a further append), leave a single existing record unchanged, or
+append one canonical `.374` record when none exists. After this edit it SHALL
+confirm both `research-complete.yaml` and `ops/exclusion_manifest.yaml` still
+safe-load. It SHALL run an import probe for
+`carnot.agentic.arc_agi3_world_model`,
+`carnot.agentic.arc_world_model_synth`, `carnot.agentic.arc_world_model_dsl`,
+and `carnot.agentic.arc_agi3_action_efficiency`, recording the aggregate bare
+boolean `arc_modules_importable`.
+
+The workflow SHALL run the smart-subset pre-test gate — the two core suites
+(`test_pipeline_extract.py`, `test_docs.py`) plus every uncommitted/untracked
+`tests/python/*.py` file, excluding `tests/quarantine/` — via `.venv/bin/pytest
+<files> -q --no-header -n 0 --no-cov -o addopts=`. If the gate is red it SHALL
+record failing test ids by source file, `git mv` each still-red file under
+`tests/quarantine/`, rerun until green, and record the quarantined paths in
+`quarantined_tests`. This preserves the poison-test quarantine that held through
+`.371`/`.372`/`.373`/`.374`.
+
+The workflow SHALL record the `.374` close-state in the bare-dict field
+`milestone_374_closestate`: per-task OK/BLOCKED/MISSING/FLAGGED status for
+Exp 4042–4053; the G1 off-ARC verifier-transfer result as a NON-measurement that
+is INCOMPLETE and CEILING-SATURATED (Exp 4045 reached only `22` of the `>=160`
+task floor and every arm and the oracle scored `1.0` with no oracle headroom, so
+the best-arm delta is `0.0` with CI `[0.0, 0.0]` and the verifier did NOT
+transfer off-ARC significantly — but the result is uninformative, not a
+refutation); the G2 closed-loop-planning result as a DECISION-GRADE NEGATIVE
+(Exp 4046's closed-loop per-step replan did NOT solve vc33, no real-env
+confirmation, and the verified world-model diverges `0.207` per step from the
+real environment — a sim2real ceiling, so vc33 WM-planning is RETIRED); and the
+G3 sovereign-base result as UNDERPOWERED, NOT retired — the throughput fix worked
+(the MoE raw checkpoint holds `14` Qwen3.6-35B-A3B tasks vs the 31B-dense run's
+`0`), coverage `0.3571` vs the `0.2581` 12B ceiling with bootstrap95 `[0.143,
+0.643]` spanning the ceiling. The workflow SHALL record the ARC-AGI-3 total of
+`8` games solved (`+1` monotonic via Exp 4049's eighth game `sb26-7fbdac44` at
+action 9), the ArcMemo v7 cross-game datum (helped vs cold `18→9` actions but
+LOST to within-game v6 `7` actions — no transfer win), and KV260 as TERMINAL
+(Exp 4052 loaded the overlay and recorded a board-latency transcript). Exp 4044's
+and Exp 4047's `flagged_adversarial` BUILD-half claims SHALL be recorded as
+flagged-and-skipped, never aggregated as a win.
+
+The workflow SHALL set the bare top-level boolean `g3_false_retirement_corrected`
+to `true`: the capstone (Exp 4053) recorded G3 as `retired_non_measurement` off a
+premature 6-task poll, but the operator directive (known-issues 2026-06-11)
+classifies that as a FALSE retirement and the MoE decentralization line RESUMES.
+The workflow SHALL verify the `14`-task count by reading the MoE raw checkpoint
+(`results/experiment_4048_decentralization_moe_base_raw.checkpoint.json`) rather
+than asserting a hardcoded number, recording it as `moe_checkpoint_n_tasks`.
+
+The terminal artifact SHALL include bare top-level fields `archived_milestone`,
+`activated_milestone`, `research_complete_yaml_parses`,
+`exclusion_manifest_parses`, `arc_modules_importable`, `pretest_suite_green`,
+`quarantined_tests`, `milestone_374_closestate`, `g3_false_retirement_corrected`,
+`active_milestone_confirmed` (the confirmed active milestone string
+`2026.06.375`), `honest_verdict`, `duration_s`, and `inference_substrate` equal
+to `aggregation_from_upstream_artifacts`. On the complete path `honest_verdict`
+SHALL start with `complete:`, `success:`, `passed:`, or `shipped:`. This is a
+record-only aggregation task and SHALL NOT modify `ops/changelog.md`,
+`ops/status.md`, `_bmad/traceability.md`, or `scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-4054: V374 Archive Opens The .375 Resume-Not-Restart Milestone
+
+**Given** `.375` is active, `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` safe-load, the four ARC agentic modules import,
+and the smart-subset gate is green after any required quarantine
+**When** the Exp 4054 workflow runs
+**Then** it ensures exactly one `.374` record, confirms both YAML files still
+parse, records the `.374` close-state truth (G1 off-ARC incomplete and
+ceiling-saturated, G2 decision-grade-negative closed-loop sim2real ceiling on
+vc33 with WM-planning retired, G3 underpowered-not-retired with the 14-task
+checkpoint and the false-retirement correction, 8 games solved, ArcMemo v7 no
+cross-game win, KV260 terminal, exp4044/exp4047 flagged-and-skipped), sets
+`g3_false_retirement_corrected` to `true`, confirms `active_milestone_confirmed`
+equals `2026.06.375`, writes the required terminal artifact, and leaves
+ops/status/traceability/conductor files unchanged.
+
+#### SCENARIO-REPORT-4054-BLOCKED-YAML: Corrupt Research Record Blocks Before Edit
+
+**Given** `research-complete.yaml` does not safe-load
+**When** the Exp 4054 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_research_complete_yaml_poison`, records the failed parse in
+`preconditions_checked`, and leaves both `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` byte-for-byte unchanged.
+
+## Implementation Status (REQ-REPORT-4054)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4054 | Implemented (`python/carnot/reporting/archive_v374_activate_v375_4054.py`, `scripts/experiments/exp4054_archive_v374_activate_v375.py`) | Implemented (`tests/python/test_experiment_4054_archive_v374_activate_v375.py`) |
