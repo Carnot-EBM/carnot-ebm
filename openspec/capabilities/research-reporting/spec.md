@@ -19004,3 +19004,81 @@ ops/status/traceability/conductor files unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-4008 | Implemented (`python/carnot/reporting/archive_v370_activate_v371_4008.py`, `scripts/experiments/experiment_4008_archive_v370_activate_v371.py`) | Implemented (`tests/python/test_experiment_4008_archive_v370_activate_v371.py`) |
+
+### REQ-REPORT-4019: Archive .371 And Activate .372 With Smart-Subset Gate And Close-State Truth
+
+The Exp 4019 workflow SHALL archive milestone `2026.06.371`, confirm milestone
+`2026.06.372` is active in the current research roadmap, and write
+`results/experiment_4019_archive_v371_activate_v372.json`. Before editing any
+record it SHALL confirm `research-complete.yaml` safe-loads under
+`yaml.safe_load`; if that precondition fails it SHALL write a blocked artifact
+whose `honest_verdict` starts with `blocked_research_complete_yaml_poison` and
+SHALL NOT edit `research-complete.yaml` or `ops/exclusion_manifest.yaml`.
+
+The workflow SHALL ensure exactly one `.371` milestone record exists in
+`research-complete.yaml`. Because earlier interrupted activation runs appended
+the `.371` record several times, the workflow SHALL collapse byte-identical
+duplicate `- id: 2026.06.371` records to the first occurrence (fail-forward
+cleanup, never a sixth append), or append one canonical `.371` record when none
+exists. After this edit it SHALL confirm both `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` still safe-load. It SHALL run an import probe for
+`carnot.agentic.arc_agi3_world_model`,
+`carnot.agentic.arc_world_model_synth`, `carnot.agentic.arc_world_model_dsl`,
+and `carnot.agentic.arc_agi3_action_efficiency`, recording the aggregate bare
+boolean `arc_modules_importable`.
+
+The workflow SHALL run the smart-subset pre-test gate — the two core suites
+(`test_pipeline_extract.py`, `test_docs.py`) plus every uncommitted/untracked
+`tests/python/*.py` file, excluding `tests/quarantine/` — via `.venv/bin/pytest
+<files> -q --no-header -n 0 --no-cov -o addopts=`. If the gate is red it SHALL
+record failing test ids by source file, `git mv` each still-red file under
+`tests/quarantine/`, rerun until green, and record the quarantined paths in
+`quarantined_tests`.
+
+The workflow SHALL record the `.371` close-state in the bare-dict field
+`milestone_371_closestate`: per-task OK/BLOCKED/MISSING/FLAGGED status for
+Exp 4008–4018, which GAP-4 follow-ups executed versus hit the 80-minute
+wall-clock cap (Exp 4009 `blocked_execution_floor_unmet` so the precision
+confirmation is still owed a third time; Exp 4011 produced no artifact), the
+Exp 4012 local best-of-N result if it landed (coverage and pass@2 below Codex,
+`local_beats_vote` false), and ARC-AGI-3 totals (5 games solved, 5 levels).
+Exp 4013's `flagged_adversarial` efficiency claim SHALL be recorded as
+flagged-and-skipped, never aggregated as a win.
+
+The terminal artifact SHALL include bare top-level fields `archived_milestone`,
+`activated_milestone`, `research_complete_yaml_parses`,
+`exclusion_manifest_parses`, `arc_modules_importable`, `pretest_suite_green`,
+`quarantined_tests`, `milestone_371_closestate`, `honest_verdict`, `duration_s`,
+and `inference_substrate` equal to `aggregation_from_upstream_artifacts`. On the
+complete path `honest_verdict` SHALL start with `complete:`, `success:`,
+`passed:`, or `shipped:`. This is a record-only aggregation task and SHALL NOT
+modify `ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-4019: V371 Archive Opens The .372 Search-Layer Milestone
+
+**Given** `.372` is active, `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` safe-load, the four ARC agentic modules import,
+and the smart-subset gate is green after any required quarantine
+**When** the Exp 4019 workflow runs
+**Then** it collapses duplicate `.371` records to one, confirms both YAML files
+still parse, records the `.371` close-state truth (GAP-4 unconfirmed, local
+best-of-N below Codex, efficiency claim flagged-and-skipped, 5 games / 5
+levels, ArcMemo transfer win, one missing artifact), writes the required
+terminal artifact, and leaves ops/status/traceability/conductor files
+unchanged.
+
+#### SCENARIO-REPORT-4019-BLOCKED-YAML: Corrupt Research Record Blocks Before Edit
+
+**Given** `research-complete.yaml` does not safe-load
+**When** the Exp 4019 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_research_complete_yaml_poison`, records the failed parse in
+`preconditions_checked`, and leaves both `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` byte-for-byte unchanged.
+
+## Implementation Status (REQ-REPORT-4019)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4019 | Implemented (`python/carnot/reporting/archive_v371_activate_v372_4019.py`, `scripts/experiments/experiment_4019_archive_v371_activate_v372.py`) | Implemented (`tests/python/test_experiment_4019_archive_v371_activate_v372.py`) |
