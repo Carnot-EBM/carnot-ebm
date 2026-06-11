@@ -11422,3 +11422,60 @@ strictly below both baselines
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4039 | Proposed (python/carnot/agentic/arc_arcmemo_concept_library_v6.py; scripts/experiments/exp4039_arcmemo_concept_library_v6.py, Exp 4039) | Proposed (tests/python/test_exp4039_arcmemo_concept_library_v6.py) |
+
+---
+
+## REQ-LEARN-4050: ArcMemo v7 Cross-Game Concept Library Transfer
+
+**Given** the seven prior real-env-confirmed ARC-AGI-3 solved games
+`r11l`, `lp85`, `sc25`, `su15`, `tn36`, `cd82`, and `dc22`
+and the eighth-game artifact
+`results/experiment_4049_eighth_game_explore_first.json`
+**When** Exp 4050 builds the ArcMemo v7 library
+**Then** it SHALL compress only prior-game induced-program fragments into
+named, documented abstractions
+**And** it SHALL seed the eighth-game explore-first accounting from that
+prior-game library without importing the eighth-game induced mechanic into the
+library
+**And** it SHALL write
+`results/experiment_4050_arcmemo_cross_game_transfer_v7.json`.
+
+### REQ-LEARN-4050 Sub-requirements
+
+- REQ-LEARN-4050-1: The v7 library SHALL expose named abstractions with
+  `name`, `signature`, `documentation`, `source_games`, `source_fragments`,
+  and `lambda_abstraction` fields.
+- REQ-LEARN-4050-2: Exp 4050 SHALL report bare top-level fields
+  `honest_verdict`, `cross_game_transfer_win`, `actions_cold`,
+  `actions_within_game_v6`, `actions_cross_game_v7`,
+  `n_reused_abstractions`, and `inference_substrate`.
+- REQ-LEARN-4050-3: `inference_substrate` SHALL equal
+  `offline_arc_agi3_arcmemo_cross_game_transfer`.
+- REQ-LEARN-4050-4: `cross_game_transfer_win` SHALL be true only when
+  `actions_cross_game_v7 < actions_cold` and
+  `actions_cross_game_v7 < actions_within_game_v6`; otherwise the honest
+  verdict SHALL begin with `complete: arcmemo_v7_no_cross_game_transfer_`.
+- REQ-LEARN-4050-5: If Exp 4049 did not solve but exposes a usable attempt
+  trace, Exp 4050 SHALL measure transfer on that attempt depth and SHALL NOT
+  fabricate a solved-game transfer claim.
+
+### SCENARIO-LEARN-4050: v7 Must Beat Cold and Within-Game v6 on a New Game
+
+**Given** an Exp 4049 eighth-game trace and a v7 library built from prior-game
+fragments only
+**When** a prior-game abstraction fires on the new game
+**Then** Exp 4050 records the fired abstraction count and induction-call cost
+**And** it reports `cross_game_transfer_win=true` only if the v7 action count is
+strictly below both the cold baseline and the within-game-v6 baseline.
+
+**Given** Exp 4049 lacks a real-env-confirmed solve but still contains a usable
+attempt trace
+**When** Exp 4050 evaluates transfer
+**Then** it measures the same attempt depth and emits a `complete:` verdict
+rather than claiming a solved-game transfer win.
+
+## Implementation Status (REQ-LEARN-4050)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4050 | Proposed (python/carnot/agentic/arc_arcmemo_cross_game_transfer_v7.py; scripts/experiments/exp4050_arcmemo_cross_game_transfer_v7.py, Exp 4050) | Proposed (tests/python/test_exp4050_arcmemo_cross_game_transfer_v7.py) |
