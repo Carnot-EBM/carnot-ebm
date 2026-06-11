@@ -1,0 +1,160 @@
+{
+  "completed_task_ids": [
+    "HumanEval/0",
+    "HumanEval/1"
+  ],
+  "evaluations_by_task": {
+    "HumanEval/0": [
+      {
+        "code": "from typing import List\n\ndef has_close_elements(numbers: List[float], threshold: float) -> bool:\n    \"\"\" Check if in given list of numbers, are any two numbers closer to each other than\n    given threshold.\n    >>> has_close_elements([1.0, 2.0, 3.0], 0.5)\n    False\n    >>> has_close_elements([1.0, 2.8, 3.0, 4.0, 5.0, 2.0], 0.3)\n    True\n    \"\"\"\n    sorted_numbers = sorted(numbers)\n    for i in range(len(sorted_numbers) - 1):\n        if sorted_numbers[i+1] - sorted_numbers[i] < threshold:\n            return True\n    return False",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          true,
+          true
+        ],
+        "generation_seconds": 2.873,
+        "hidden_outputs": [
+          true,
+          false,
+          true,
+          true,
+          false
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/0",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/1": [
+      {
+        "code": "from typing import List\n\ndef separate_paren_groups(paren_string: str) -> List[str]:\n    \"\"\" Input to this function is a string containing multiple groups of nested parentheses. Your goal is to\n    separate those group into separate strings and return the list of those.\n    Separate groups are balanced (each open brace is properly closed) and not nested within each other\n    Ignore any spaces in the input string.\n    >>> separate_paren_groups('( ) (( )) (( )( ))')\n    ['()', '(())', '(()())']\n    \"\"\"\n    # Remove all spaces from the input string\n    s = paren_string.replace(\" \", \"\")\n    \n    result = []\n    current_group = []\n    depth = 0\n    \n    for char in s:\n        current_group.append(char)\n        if char == '(':\n            depth += 1\n        elif char == ')':\n            depth -= 1\n            \n        # If depth returns to 0, we have closed a complete top-level group\n        if depth == 0 and current_group:\n            result.append(\"\".join(current_group))\n            current_group = []\n            \n    return result",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            "(()())",
+            "((()))",
+            "()",
+            "((())()())",
+            "a"
+          ],
+          [
+            "()",
+            "(())",
+            "((()))",
+            "(((())))",
+            "a"
+          ]
+        ],
+        "generation_seconds": 3.995,
+        "hidden_outputs": [
+          [
+            "(()(())((())))"
+          ],
+          [
+            "()",
+            "(())",
+            "(()())"
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/1",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            "(()())",
+            "((()))",
+            "()",
+            "((())()())"
+          ],
+          [
+            "()",
+            "(())",
+            "((()))",
+            "(((())))"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ]
+  },
+  "experiment": "experiment_4045_offarc_transfer_power_checkpoint",
+  "k_candidates_per_task": 1,
+  "mode": "smoke",
+  "ordered_task_ids": [
+    "HumanEval/0",
+    "HumanEval/1"
+  ],
+  "schema": "carnot.experiment_4045_offarc_transfer_power_checkpoint.v1",
+  "skipped_tasks": [
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/2"
+    },
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/4"
+    },
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/32"
+    },
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/33"
+    },
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/34"
+    },
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/37"
+    },
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/38"
+    },
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/50"
+    },
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/72"
+    }
+  ],
+  "updated_at_unix": 1781187896.7804847
+}

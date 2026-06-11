@@ -1,0 +1,263 @@
+{
+  "armA_vote_pass2": 1.0,
+  "armA_vote_passrate": 1.0,
+  "armAplusplus_aces_pass2": 1.0,
+  "armAplusplus_aces_passrate": 1.0,
+  "armB_demofit_pass2": 1.0,
+  "armB_demofit_passrate": 1.0,
+  "armC_symbolic_partition_pass2": 1.0,
+  "armC_symbolic_partition_passrate": 1.0,
+  "arms_implemented": [
+    "armA_vote",
+    "armAplusplus_aces",
+    "armB_demofit",
+    "armC_symbolic_equivalence_partition"
+  ],
+  "bootstrap_ci95": [
+    0.0,
+    0.0
+  ],
+  "bootstrap_ci95_armC_vs_armA": [
+    0.0,
+    0.0
+  ],
+  "candidate_pool": {
+    "HumanEval/0": [
+      {
+        "code": "from typing import List\n\ndef has_close_elements(numbers: List[float], threshold: float) -> bool:\n    \"\"\" Check if in given list of numbers, are any two numbers closer to each other than\n    given threshold.\n    >>> has_close_elements([1.0, 2.0, 3.0], 0.5)\n    False\n    >>> has_close_elements([1.0, 2.8, 3.0, 4.0, 5.0, 2.0], 0.3)\n    True\n    \"\"\"\n    sorted_numbers = sorted(numbers)\n    for i in range(len(sorted_numbers) - 1):\n        if sorted_numbers[i+1] - sorted_numbers[i] < threshold:\n            return True\n    return False",
+        "code_sha256": "be8cef0e86cf6508",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_signature_sha256": "54a1f1e8fca64c7c",
+        "generation_seconds": 2.873,
+        "hidden_passes": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "truncated": false,
+        "visible_outputs": [
+          true,
+          false
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/1": [
+      {
+        "code": "from typing import List\n\ndef separate_paren_groups(paren_string: str) -> List[str]:\n    \"\"\" Input to this function is a string containing multiple groups of nested parentheses. Your goal is to\n    separate those group into separate strings and return the list of those.\n    Separate groups are balanced (each open brace is properly closed) and not nested within each other\n    Ignore any spaces in the input string.\n    >>> separate_paren_groups('( ) (( )) (( )( ))')\n    ['()', '(())', '(()())']\n    \"\"\"\n    # Remove all spaces from the input string\n    s = paren_string.replace(\" \", \"\")\n    \n    result = []\n    current_group = []\n    depth = 0\n    \n    for char in s:\n        current_group.append(char)\n        if char == '(':\n            depth += 1\n        elif char == ')':\n            depth -= 1\n            \n        # If depth returns to 0, we have closed a complete top-level group\n        if depth == 0 and current_group:\n            result.append(\"\".join(current_group))\n            current_group = []\n            \n    return result",
+        "code_sha256": "e9adb2948c7448c6",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_signature_sha256": "fee659bc0a6ead54",
+        "generation_seconds": 3.995,
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            "(()())",
+            "((()))",
+            "()",
+            "((())()())"
+          ],
+          [
+            "()",
+            "(())",
+            "((()))",
+            "(((())))"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ]
+  },
+  "corpus": "humaneval_plus_mbpp",
+  "delta_armC_vs_armA_pp": 0.0,
+  "delta_pp": 0.0,
+  "duration_s": 16.98,
+  "experiment": "experiment_4045_offarc_transfer_power",
+  "field_principles": {
+    "armB_demofit": "The shared GAP-4 primitive: exact visible-test passers only, no LLM judge.",
+    "armC_symbolic_partition": "SEP proxy: public-test filter plus behavioral equivalence partition.",
+    "honest_verdict": "Terminal-prefix verdict; success only when a powered arm beats vote with CI > 0.",
+    "oracle_passrate": "Positive control: whether any candidate in the same pool passes hidden tests.",
+    "reproducibility_checksum": "SHA-256 over deterministic task, candidate, and metric content.",
+    "runner_pool": "All four arms select from the same generated candidates for each task.",
+    "truncation_rate": "Fraction of local GGUF generations that ended by token limit."
+  },
+  "honest_verdict": "success: offarc_power_smoke_raw_complete",
+  "inference_substrate": "live_llm_inference",
+  "k_candidates_per_task": 1,
+  "missing_verifier_gaps": [],
+  "mode": "smoke",
+  "model_specs": {
+    "candidate_pool_policy": "same generated pool shared by all four arms",
+    "llama_cpp": {
+      "n_batch": 512,
+      "n_ctx": 4096,
+      "n_gpu_layers": -1
+    },
+    "local_generator": "unsloth/gemma-4-12B-it-GGUF",
+    "verifier": "model-free demo-fit + restricted-namespace execution + content-hash/fingerprint SEP proxy"
+  },
+  "n_tasks": 2,
+  "oracle_passrate": 1.0,
+  "per_task": [
+    {
+      "armA_vote_pass1": true,
+      "armA_vote_pass2": true,
+      "armA_vote_selected": [
+        0
+      ],
+      "armAplusplus_aces_pass1": true,
+      "armAplusplus_aces_pass2": true,
+      "armAplusplus_aces_selected": [
+        0
+      ],
+      "armB_demo_perfect_count": 1,
+      "armB_demofit_pass1": true,
+      "armB_demofit_pass2": true,
+      "armB_demofit_selected": [
+        0
+      ],
+      "armC_dominant_partition_size": 1,
+      "armC_partition_count": 1,
+      "armC_partition_signature_sha256": "54a1f1e8fca64c7c",
+      "armC_symbolic_partition_pass1": true,
+      "armC_symbolic_partition_pass2": true,
+      "armC_symbolic_partition_selected": [
+        0
+      ],
+      "corpus": "humaneval",
+      "func_name": "has_close_elements",
+      "n_candidates": 1,
+      "n_hidden_tests": 5,
+      "n_visible_tests": 2,
+      "oracle_hidden_pass": true,
+      "task_id": "HumanEval/0"
+    },
+    {
+      "armA_vote_pass1": true,
+      "armA_vote_pass2": true,
+      "armA_vote_selected": [
+        0
+      ],
+      "armAplusplus_aces_pass1": true,
+      "armAplusplus_aces_pass2": true,
+      "armAplusplus_aces_selected": [
+        0
+      ],
+      "armB_demo_perfect_count": 1,
+      "armB_demofit_pass1": true,
+      "armB_demofit_pass2": true,
+      "armB_demofit_selected": [
+        0
+      ],
+      "armC_dominant_partition_size": 1,
+      "armC_partition_count": 1,
+      "armC_partition_signature_sha256": "fee659bc0a6ead54",
+      "armC_symbolic_partition_pass1": true,
+      "armC_symbolic_partition_pass2": true,
+      "armC_symbolic_partition_selected": [
+        0
+      ],
+      "corpus": "humaneval",
+      "func_name": "separate_paren_groups",
+      "n_candidates": 1,
+      "n_hidden_tests": 2,
+      "n_visible_tests": 2,
+      "oracle_hidden_pass": true,
+      "task_id": "HumanEval/1"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
+      "resource": "local_gguf_cached"
+    },
+    {
+      "available": true,
+      "resource": "llama_cpp_importable"
+    },
+    {
+      "available": true,
+      "detail": "loaded=155 skipped=9",
+      "resource": "humaneval_corpus_loadable"
+    },
+    {
+      "available": true,
+      "detail": "loaded=3",
+      "resource": "mbpp_corpus_loadable"
+    },
+    {
+      "available": true,
+      "resource": "restricted_exec_importable"
+    }
+  ],
+  "random_seed": 4045,
+  "reproducibility_checksum": "7b7ad5c7c146e19a069561fc8e71295aa2127e2adde20f1b5cc9f06c0142b5b0",
+  "schema": "carnot.experiment_4045_offarc_transfer_power_raw.v1",
+  "skipped_tasks": [
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/2"
+    },
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/4"
+    },
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/32"
+    },
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/33"
+    },
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/34"
+    },
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/37"
+    },
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/38"
+    },
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/50"
+    },
+    {
+      "corpus": "humaneval",
+      "reason": "unsupported_non_exact_or_insufficient_tests",
+      "task_id": "HumanEval/72"
+    }
+  ],
+  "target_completed_tasks": 160,
+  "truncation_rate": 0.0
+}
