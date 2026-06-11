@@ -236,6 +236,20 @@ tasks:
       actions_cold vs actions_seeded (ints), inference_substrate.
 
   - id: exp4026-verifier-vs-judge-efficiency
+    prior_failures:
+      - experiment_id: exp4013-verifier-vs-judge-efficiency
+        verdict: "flagged_adversarial TAUTOLOGY (CRITICAL) -- quarantined this session (.371), not a clean success"
+        addressed_by: >
+          exp4013 reported 'verifier parity at 95.3x cheaper' but
+          cost_ratio_judge_over_verifier (95.2566) and token_ratio_judge_over_verifier (95.2566)
+          were bit-identical because cost was computed as proportional to tokens -- the two
+          'independent' cheapness metrics are algebraically the same number, so the artifact
+          reported ONE datum as two (adversarial_verify CRITICAL TAUTOLOGY). THIS rerun fixes the
+          root cause: derive cost from an INDEPENDENT axis -- measured wall-clock SECONDS (verifier
+          ~0.11s/task vs judge LLM latency) -- and report the wall-clock-seconds ratio SEPARATELY
+          from any token ratio so the two cheapness measures are genuinely distinct. Do NOT compute
+          cost as a linear function of tokens.
+        retire_if_same_verdict: true
     milestone: "2026.06.372"
     title: "EFFICIENCY axis confirmation (north-star §5): the model-free GAP-4 verifier (demo-fit + restricted-namespace execution + content-hash match, ~0.11s/task, $0) vs an LLM-judge selecting from the SAME ARC candidate sets -- accuracy parity at what cost ratio? The verifier-as-COMMODITY framing (Deep Think Q1: necessary but zero-margin) makes the efficiency number the honest value statement: the gate is cheap AND lossless, so it earns its place on EFFICIENCY even though it is not a smart selector. Confirm/extend .371's exp4013 if it landed; otherwise run fresh."
     priority: medium
@@ -248,12 +262,20 @@ tasks:
     prompt: |
       Head-to-head on the SAME cached ARC-1/ARC-2 candidate sets: (A) the model-free GAP-4
       verifier selects (demo-fit + execution + content-hash), (B) an LLM-judge selects. Report
-      accuracy parity + the cost ratio (verifier seconds/$ vs judge seconds/$). If .371's exp4013
-      already produced this, confirm + extend it; else run fresh on cached candidates (no new
-      codex induction).
+      accuracy parity + the cost ratio. CORRIGENDUM of exp4013 (see prior_failures): exp4013 was
+      TAUTOLOGY-flagged because it computed cost AS proportional to tokens, so cost_ratio and
+      token_ratio came out bit-identical (one datum reported as two). FIX: measure cost as
+      INDEPENDENT WALL-CLOCK SECONDS (verifier ~0.11s/task vs judge LLM latency) and report the
+      wall-clock-seconds ratio SEPARATELY from the token ratio -- the two must be genuinely distinct
+      measurements, NOT one derived from the other. Do NOT compute cost as a linear function of
+      tokens. If .371's exp4013 already produced numbers, confirm + extend with the corrected cost
+      axis; else run fresh on cached candidates (no new codex induction).
       REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix), accuracy_parity (bool),
-      cost_ratio_verifier_vs_judge (float; principle: the verifier's honest value is EFFICIENCY at
-      lossless parity, per the Deep-Think commodity framing), inference_substrate.
+      wallclock_seconds_ratio_judge_over_verifier (float; principle: measured wall-clock is an
+      INDEPENDENT cheapness axis that does not collapse into the token ratio -- the fix for the
+      exp4013 TAUTOLOGY), token_ratio_judge_over_verifier (float; principle: reported separately so a
+      reviewer can confirm the two cheapness measures are distinct, not algebraically identical),
+      inference_substrate.
 
   - id: exp4027-hardware-continuity
     operator_override: >
