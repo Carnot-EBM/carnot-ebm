@@ -1,0 +1,127 @@
+{
+  "cited_upstream_artifacts": [
+    "results/arc3_gap4_rule_exec_verifier.json",
+    "results/arc3_gap4_arc2_rule_exec_verifier.json",
+    "results/arc3_gap4_arc2_chain_ensemble.json",
+    "results/experiment_4057_offarc_power_evalplus.json",
+    "results/experiment_4059_decentralization_moe_resume.json",
+    "results/experiment_4046_closed_loop_replan_over_vc33_wm.json"
+  ],
+  "duration_s": 0.028,
+  "experiment": "experiment_4063_verifier_registry_and_gaps_hygiene",
+  "field_principles": {
+    "g1_off_arc_outcome_recorded": "The EvalPlus off-ARC power measurement must land in the ledger, not just an artifact.",
+    "g2_vc33_ceiling_logged": "Bare bool; the banked vc33 sim2real ceiling is visible in the gaps ledger.",
+    "g3_decentralization_outcome_recorded": "The MoE-base accumulated coverage result must be recorded as latent, absent, accumulating, or pending.",
+    "gaps_updated": "Bare bool; gaps ledger reflects the missing-verifier state after Exp 4063.",
+    "honest_verdict": "Terminal-prefix summary of GAP-4 replay and .375 G1/G3/G2 ledger routing.",
+    "inference_substrate": "aggregation_from_upstream_artifacts; no Codex, GGUF, or live inference.",
+    "offline_reeval_bitexact": "A reusable verifier that does not reproduce its headline numbers is not the same verifier.",
+    "registry_updated": "Bare bool; registry reflects the replayed GAP-4 line after Exp 4063."
+  },
+  "g1_off_arc_outcome": {
+    "accumulated_n_tasks": 0,
+    "artifact_path": "results/experiment_4057_offarc_power_evalplus.json",
+    "best_arm": "armC_symbolic",
+    "best_arm_ci95": [
+      0.0,
+      0.0
+    ],
+    "best_arm_delta_pp": 0.0,
+    "demofit_bootstrap_ci95": [
+      0.0,
+      0.0
+    ],
+    "demofit_delta_pp": 0.0,
+    "g1_off_arc_outcome_recorded": "g1_evalplus_accumulating",
+    "missing_verifier_gaps": [],
+    "oracle_headroom_present": false,
+    "oracle_passrate": 0.0,
+    "powered_task_floor": 160,
+    "reproducibility_checksum": "a2dfcb616cfdcf05a7231016c141f43a453f5590ee42d150e407044e57bf1b7e",
+    "status": "accumulating"
+  },
+  "g1_off_arc_outcome_recorded": "g1_evalplus_accumulating",
+  "g2_vc33_ceiling_logged": true,
+  "g2_vc33_ceiling_outcome": {
+    "artifact_path": "results/experiment_4046_closed_loop_replan_over_vc33_wm.json",
+    "closed_loop_broke_wall": false,
+    "divergence_gate_fired_count": 1,
+    "g2_vc33_ceiling_logged": true,
+    "g2_vc33_ceiling_outcome_recorded": "g2_vc33_sim2real_ceiling_logged",
+    "goal_predicate_heldout_precision": 1.0,
+    "new_levels_solved_this_task": 0,
+    "per_step_wm_real_divergence_rate": 0.207031,
+    "real_env_confirmed": false,
+    "status": "gap_logged"
+  },
+  "g3_decentralization_outcome": {
+    "accumulated_coverage": 0.0,
+    "accumulated_n": 0,
+    "artifact_path": "results/experiment_4059_decentralization_moe_resume.json",
+    "bootstrap_ci95": [
+      0.0,
+      0.0
+    ],
+    "coverage_delta_vs_12b": 0.0,
+    "g3_decentralization_outcome_recorded": "g3_decentralization_moe_base_4048_pending",
+    "local_support_diagnosis": "pending",
+    "missing_verifier_gaps": [],
+    "n_tasks_scored": 0,
+    "raw_complete": false,
+    "reason": "missing_exp4059_artifact",
+    "status": "pending"
+  },
+  "g3_decentralization_outcome_recorded": "g3_decentralization_moe_base_4048_pending",
+  "gaps_path": "ops/verifier_gaps.md",
+  "gaps_updated": true,
+  "honest_verdict": "complete: gap4_reeval_bitexact_g1_g1_evalplus_accumulating_g3_g3_decentralization_moe_base_4048_pending_g2_ceiling_recorded",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "offline_reeval_bitexact": true,
+  "offline_replay": {
+    "arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "arc2_registered_chain": {
+      "gold": 19,
+      "n": 31,
+      "pass_at_1": 0.6129
+    },
+    "arc2_rule_exec": {
+      "gated_pass2": 0.0645,
+      "headroom_recovered": 0,
+      "n": 31,
+      "vote_pass2": 0.0645,
+      "vote_wins_lost": 0
+    },
+    "expected": {
+      "arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      },
+      "arc2_registered_chain": {
+        "gold": 19,
+        "n": 31,
+        "pass_at_1": 0.6129
+      },
+      "arc2_rule_exec": {
+        "gated_pass2": 0.0645,
+        "headroom_recovered": 0,
+        "n": 31,
+        "vote_pass2": 0.0645,
+        "vote_wins_lost": 0
+      }
+    },
+    "offline_reeval_bitexact": true
+  },
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_updated": true,
+  "schema": "carnot.experiment_4063_verifier_registry_and_gaps_hygiene.v1"
+}
