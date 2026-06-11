@@ -8264,3 +8264,4 @@ c |
 | 2026-06-11 16:33 UTC | EIGHTH ARC-AGI-3 game first-solve via the PROVEN e | OK | 89 passed in 5.58s |
 | 2026-06-11 16:49 UTC | ArcMemo v7: CROSS-GAME concept-library transfer (s | OK | 94 passed in 4.89s |
 | 2026-06-11 17:06 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (infrastructure;  | OK | 91 passed in 5.12s |
+| 2026-06-11 17:23 UTC | Hardware continuity (consolidated; KV260 drive-tow | OK | 88 passed in 5.45s |
