@@ -8260,3 +8260,4 @@ c |
 | 2026-06-11 14:43 UTC | OFF-ARC TRANSFER POWER -- COLLECT+VALIDATE (operat | OK | 136 passed in 5.54s |
 | 2026-06-11 15:00 UTC | CLOSED-LOOP GROUNDED REPLANNING over the vc33 veri | OK | 89 passed in 5.33s |
 | 2026-06-11 16:01 UTC | DECENTRALIZATION on a TRACTABLE MoE base -- BUILD+ | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-11 16:16 UTC | DECENTRALIZATION MoE-base -- COLLECT+VALIDATE (G3) | OK | 106 passed in 7.66s |
