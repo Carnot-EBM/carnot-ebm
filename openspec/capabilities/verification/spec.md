@@ -12186,3 +12186,50 @@ chosen candidates that are post-hoc gold, computes
 `selection_accuracy_parity` from overlapping confidence intervals, reports
 per-task wall cost for both arms, and sets `n_judge_calls` equal to the number of
 Codex judge attempts represented in the cost and token totals.
+
+### REQ-VERIFY-4023: GAP-4 Agreement-Selector Retirement Closure
+
+The repository SHALL provide Exp 4023 at
+`python/carnot/reporting/agreement_selector_retirement_4023.py` to close the
+GAP-4 agreement-as-selector research line by aggregating the landed evidence:
+the chain-arms adversarial report
+`results/arc3_gap4_chain_arms_adversarial_verify.json`, the poison-skipped
+Exp 3988 lineage recorded in roadmap text, the Exp 3999
+`protocol_preregistered_pending_execution` non-execution, the Exp 4009
+execution-floor miss, and the planner finding that monolithic powered
+multi-call confirmations are unfeedable to the conductor without task splitting.
+
+The closure SHALL update `ops/verifier_registry.yaml` so
+`gap4_program_induction_stack` records agreement as a confidence label only,
+not a precision selector, with an explicit retirement rationale and the
+`retire_if_same_verdict` trigger that fired after the same non-execution /
+non-confirmation lineage repeated. The closure SHALL append the corresponding
+entry to `ops/verifier_gaps.md`. It SHALL NOT propose a precision-confirmation
+v4. It SHALL state that the shipped demo-fit execution safety gate is kept:
+retiring selector R&D must not delete the trust product.
+
+The terminal artifact SHALL write
+`results/experiment_4023_retire_agreement_selector.json` with bare top-level
+fields `honest_verdict`, `registry_updated`, `safety_gate_kept`,
+`inference_substrate`, `agreement_is_precision_selector`,
+`agreement_role_after_retirement`, `retired_r_and_d_line`,
+`no_precision_confirmation_v4_proposed`, `retire_if_same_verdict_triggered`,
+`evidence_chain`, `registry_entry`, `gaps_entry`, `field_principles`,
+`duration_s`, and `random_seed`. The `honest_verdict` SHALL start with the
+terminal prefix `complete:` or `complete_` and SHALL contain
+`agreement_selector_retired_confidence_label_only`.
+
+### SCENARIO-VERIFY-4023: Closure Retires Selector R&D But Keeps The Trust Gate
+
+Given the source artifacts and ops files are readable, when Exp 4023 runs, then
+it writes the terminal artifact with `registry_updated=true`,
+`safety_gate_kept=true`, `agreement_is_precision_selector=false`,
+`agreement_role_after_retirement=confidence_label_only`,
+`retired_r_and_d_line=smart_selector_agreement_precision_confirmation`,
+`no_precision_confirmation_v4_proposed=true`,
+`retire_if_same_verdict_triggered=true`, and
+`inference_substrate=aggregation_from_upstream_artifacts`. The evidence chain
+must cite the chain-arms adversarial narrowing, the Exp 3988 poison-skip, Exp
+3999's zero-call pending execution, Exp 4009's zero-call execution-floor miss,
+and the unfeedable-power finding. The registry and gaps text must both state
+that the demo-fit execution safety gate is kept.

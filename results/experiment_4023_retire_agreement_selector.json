@@ -1,0 +1,83 @@
+{
+  "agreement_is_precision_selector": false,
+  "agreement_role_after_retirement": "confidence_label_only",
+  "duration_s": 0.001254,
+  "evidence_chain": [
+    {
+      "evidence_type": "adversarial_report",
+      "finding": "precision_uplift_not_established_agreement_confidence_label_only",
+      "honest_verdict": "complete: gap4_chain_arms_confirmed_prereg_honestly_failed_coverage_lift_real_precision_uplift_not_established",
+      "source": "results/arc3_gap4_chain_arms_adversarial_verify.json"
+    },
+    {
+      "evidence_type": "non_execution",
+      "experiment_id": 3988,
+      "finding": "poison_skipped_precision_confirmation_never_executed",
+      "source": "openspec/change-proposals/research-roadmap-v370.md"
+    },
+    {
+      "evidence_type": "non_execution",
+      "experiment_id": 3999,
+      "finding": "protocol_preregistered_pending_execution_zero_calls_zero_agreement_events",
+      "n_agreement_events": 0,
+      "source": "results/experiment_3999_gap4_precision_confirmation_v2.json",
+      "total_codex_calls": 0
+    },
+    {
+      "evidence_type": "non_execution",
+      "execution_floor_met": false,
+      "experiment_id": 4009,
+      "finding": "execution_floor_unmet_zero_calls_zero_agreement_events",
+      "n_agreement_events": 0,
+      "source": "results/experiment_4009_gap4_precision_confirmation_v3.json",
+      "total_codex_calls": 0
+    },
+    {
+      "evidence_type": "unfeedable_power_finding",
+      "finding": "monolithic_powered_multi_call_confirmation_unfeedable_without_task_split",
+      "source": "ops/known-issues.md"
+    }
+  ],
+  "field_principles": {
+    "agreement_is_precision_selector": "The retired claim is specifically selector precision; keeping this false prevents agreement from being reintroduced as a gate.",
+    "agreement_role_after_retirement": "Agreement can still label confidence for routing, which is weaker than selecting or promoting candidates.",
+    "duration_s": "Measured wall time for this aggregation pass.",
+    "evidence_chain": "Lists the source artifacts and ops notes so the closure can be audited without trusting the summary text.",
+    "field_principles": "Echoes why each required field matters for future audit.",
+    "gaps_entry": "Captures the verifier-gap closure semantics expected in ops/verifier_gaps.md.",
+    "honest_verdict": "Terminal-prefix verdict prevents the conductor from retrying a completed negative scientific closure.",
+    "inference_substrate": "This task aggregates upstream artifacts and ops notes; it does not run fresh LLM or ARC inference.",
+    "no_precision_confirmation_v4_proposed": "The retire_if_same_verdict trigger fired; proposing another confirmation would evade the retirement rule.",
+    "random_seed": "Stable experiment id seed for reproducible artifact identity.",
+    "registry_entry": "Captures the exact registry semantics expected for gap4_program_induction_stack.",
+    "registry_updated": "The registry is the durable verifier source of truth; the selector retirement must be recorded there, not only in a transient result.",
+    "retire_if_same_verdict_triggered": "Records the failed-experiment discipline trigger that converts repeated non-execution into retirement instead of another rerun.",
+    "retired_r_and_d_line": "Names the research line being closed so the shipped demo-fit gate is not confused with the failed selector experiment.",
+    "safety_gate_kept": "Retiring selector R&D must not delete the shipped trust product: demo-fit execution continues to gate generated programs."
+  },
+  "gaps_entry": {
+    "agreement_role": "confidence_label_only",
+    "gap": "GAP-4 Agreement Selector Closure (Exp 4023)",
+    "path": "ops/verifier_gaps.md",
+    "safety_gate_kept": true,
+    "status": "retired_as_selector_r_and_d"
+  },
+  "honest_verdict": "complete: agreement_selector_retired_confidence_label_only",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "no_precision_confirmation_v4_proposed": true,
+  "random_seed": 4023,
+  "registry_entry": {
+    "agreement_precision_selector": false,
+    "agreement_role": "confidence_label_only",
+    "no_precision_confirmation_v4_proposed": true,
+    "path": "ops/verifier_registry.yaml",
+    "retire_if_same_verdict_triggered": true,
+    "retirement_rationale": "Chain-arms narrowed agreement to a confidence label, then exp3988, exp3999, and exp4009 failed to produce the powered confirmation required to promote it.",
+    "safety_gate_kept": true,
+    "verifier_id": "gap4_program_induction_stack"
+  },
+  "registry_updated": true,
+  "retire_if_same_verdict_triggered": true,
+  "retired_r_and_d_line": "smart_selector_agreement_precision_confirmation",
+  "safety_gate_kept": true
+}

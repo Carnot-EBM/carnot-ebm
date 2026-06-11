@@ -461,3 +461,18 @@ registry version that closed them when a new verifier captures a previously-open
 - priority: MEDIUM-HIGH — it is the irreducible failure mode of the entire
   program-induction verifier line; everything else (coverage, arm quality, quorum
   design) is now engineering.
+
+### GAP-4 Agreement Selector Closure (Exp 4023)
+- status: retired as selector R&D; agreement is a CONFIDENCE LABEL ONLY, not a precision selector.
+- evidence aggregated: chain-arms adversarial report narrowed the result to unestablished precision
+  uplift; exp3988 was poison-skipped; exp3999 wrote `protocol_preregistered_pending_execution`
+  with 0 Codex calls and 0 agreement events; exp4009 wrote `blocked_execution_floor_unmet` with
+  0 Codex calls and 0 agreement events; the known-issues unfeedable-power finding says monolithic
+  powered multi-call confirmations must be task-split or they will hit the conductor hard cap.
+- retirement trigger: `retire_if_same_verdict` triggered after the repeated non-execution /
+  non-confirmation lineage; no precision-confirmation v4 is proposed.
+- product boundary: the shipped demo-fit execution safety-gate is KEPT. This retires the
+  smart-selector agreement-precision R&D line; it does not delete the deployed trust gate in
+  `gap4_program_induction_stack`.
+- next work belongs in logged verifier gaps such as GAP-5 demo-underdetermination or in generator /
+  execution-safety hardening, not another agreement-as-selector confirmation.
