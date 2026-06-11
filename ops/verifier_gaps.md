@@ -493,3 +493,23 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: extend GAP-4 execution/program induction or add a larger-base candidate source before distillation.
 - priority: high
 - missing_verifier_gaps: 17cae0c1, 1a2e2828, 1a6449f1
+
+<!-- exp4051-g1:start -->
+#### Exp 4051 G1 off-ARC power update for GAP-CODE-EXEC-DEMOFIT
+- status: g1_off_arc_power_pending
+- evidence: `results/experiment_4045_offarc_transfer_power.json`; n_tasks=22; powered_task_floor=160; demo_fit_CI95=[0.0, 0.0]; best_arm=armC_symbolic; best_arm_CI95=[0.0, 0.0].
+- failure mode: visible/demo-fit code tests are not yet a powered hidden-semantic discriminator.
+- missing discriminator: code_demo_fit_visible_tests_do_not_discriminate_hidden_semantics.
+- candidate design: finish the powered code run or add hidden-property, symbolic, or formal/runtime oracles.
+- priority: high
+<!-- exp4051-g1:end -->
+
+<!-- exp4051-g2:start -->
+### GAP-ARC3-VC33-SIM2REAL-CEILING: vc33 verified-WM closed-loop sim2real ceiling
+- status: g2_sim2real_ceiling_gap_logged
+- evidence: `results/experiment_4046_closed_loop_replan_over_vc33_wm.json`; per_step_wm_real_divergence_rate=0.207031; divergence_gate_fired_count=1.
+- failure mode: bounded WM search produced a plan whose predicted next state diverged from the real environment.
+- missing discriminator: per-step WM-to-real transition trust signal strong enough to plan past vc33's wall.
+- candidate design: improve the verified world model or add a conservative real-env grounding/replan guard.
+- priority: high
+<!-- exp4051-g2:end -->

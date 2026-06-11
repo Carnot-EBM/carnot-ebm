@@ -12583,6 +12583,52 @@ selection, preserve the oracle hidden pass indicator, and expose Arm C's
 equivalence-class metadata so the collector can compare demo-fit against both
 ACES and the symbolic-equivalence proxy.
 
+### REQ-VERIFY-4051: GAP-4 Registry And Gaps Hygiene Re-Eval
+
+The repository SHALL provide Exp 4051 at
+`scripts/experiments/exp4051_verifier_registry_and_gaps_hygiene.py` to replay
+the registered GAP-4 verifier headline from cached artifacts and record the
+.374 G1/G2 outcomes in the registry and gaps ledgers without Codex, GGUF, or
+live inference. The runner SHALL read `ops/verifier_registry.yaml`,
+`ops/verifier_gaps.md`, `results/arc3_gap4_rule_exec_verifier.json`,
+`results/arc3_gap4_arc2_rule_exec_verifier.json`,
+`results/experiment_4045_offarc_transfer_power.json`, and
+`results/experiment_4046_closed_loop_replan_over_vc33_wm.json`.
+
+The offline replay SHALL assert bit-exact ARC-1 vote `0.4516` to gated
+`0.5806` and ARC-2 vote `0.0645` to gated `0.0645`, including the recorded
+task count and recovered/lost counts. If these cached numbers do not match, the
+terminal artifact SHALL set `offline_reeval_bitexact=false` and preserve the
+mismatch details.
+
+The G1 ledger update SHALL record the Exp 4045 full-power off-ARC outcome in
+`GAP-CODE-EXEC-DEMOFIT`: demo-fit transfer if the demo-fit CI excludes zero,
+stronger-arm closure if ACES or symbolic partition excludes zero, open gap with
+the measured bound if all arms touch zero, or `g1_off_arc_power_pending` when
+the upstream artifact is absent, blocked, partial, or below the powered task
+floor. The G2 ledger update SHALL record the Exp 4046 closed-loop outcome as a
+verified-WM closed-loop capability in the registry only when it broke the vc33
+wall, otherwise it SHALL add or update a sim2real-ceiling gap with the measured
+WM-real divergence, or `g2_closed_loop_pending` when the upstream artifact is
+absent or incomplete.
+
+The terminal artifact SHALL write
+`results/experiment_4051_verifier_registry_and_gaps_hygiene.json` with
+`honest_verdict`, bare bool `offline_reeval_bitexact`,
+`g1_off_arc_outcome_recorded`, `g2_closed_loop_outcome_recorded`, bare bools
+`registry_updated` and `gaps_updated`, and
+`inference_substrate=aggregation_from_upstream_artifacts`.
+
+### SCENARIO-VERIFY-4051: Cached Hygiene Records G1 And G2 Outcomes
+
+Given the GAP-4 cached ARC replay artifacts plus Exp 4045 and Exp 4046 outcome
+artifacts are readable, when Exp 4051 runs, then it writes the terminal artifact
+with `offline_reeval_bitexact=true`, records G1 in the code demo-fit gap ledger
+or code-domain registry according to the measured CI outcome, records G2 as a
+closed-loop capability or sim2real-ceiling gap according to the real-env result,
+sets `registry_updated` and `gaps_updated` to reflect the resulting ledgers,
+and uses no inference substrate other than aggregation from upstream artifacts.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
