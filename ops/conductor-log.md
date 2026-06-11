@@ -8265,3 +8265,4 @@ c |
 | 2026-06-11 16:49 UTC | ArcMemo v7: CROSS-GAME concept-library transfer (s | OK | 94 passed in 4.89s |
 | 2026-06-11 17:06 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (infrastructure;  | OK | 91 passed in 5.12s |
 | 2026-06-11 17:23 UTC | Hardware continuity (consolidated; KV260 drive-tow | OK | 88 passed in 5.45s |
+| 2026-06-11 17:38 UTC | Capstone .374 (UNGATED): the milestone's headline  | OK | 87 passed in 5.19s |
