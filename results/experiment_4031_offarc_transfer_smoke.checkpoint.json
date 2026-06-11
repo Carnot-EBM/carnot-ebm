@@ -1,0 +1,104 @@
+{
+  "evaluations_by_task": {
+    "MBPP:11": [
+      {
+        "code": "def remove_Occ(s, char):\n    first_idx = s.find(char)\n    if first_idx == -1:\n        return s\n    \n    # Create a string without the first occurrence\n    temp_s = s[:first_idx] + s[first_idx+1:]\n    \n    # Find the last occurrence in the new string\n    last_idx = temp_s.rfind(char)\n    if last_idx == -1:\n        return temp_s\n    \n    # Return string without the last occurrence\n    return temp_s[:last_idx] + temp_s[last_idx+1:]",
+        "draw_index": 0,
+        "error": null,
+        "generation_seconds": 2.283,
+        "hidden_outputs": [
+          "H"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:11",
+        "truncated": false,
+        "visible_outputs": [
+          "heo",
+          "bcd"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "MBPP:12": [
+      {
+        "code": "def sort_matrix(matrix):\n    \"\"\"\n    Sorts a given matrix in ascending order according to the sum of its rows.\n    \"\"\"\n    return sorted(matrix, key=lambda row: sum(row))",
+        "draw_index": 0,
+        "error": null,
+        "generation_seconds": 0.827,
+        "hidden_outputs": [
+          [
+            [
+              2,
+              1,
+              4
+            ],
+            [
+              6,
+              4,
+              3
+            ],
+            [
+              5,
+              8,
+              9
+            ]
+          ]
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "MBPP:12",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              2,
+              4,
+              5
+            ]
+          ],
+          [
+            [
+              -2,
+              4,
+              -5
+            ],
+            [
+              1,
+              -1,
+              1
+            ],
+            [
+              1,
+              2,
+              3
+            ]
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ]
+  },
+  "k_candidates_per_task": 1,
+  "schema": "carnot.experiment_4032.checkpoint.v1"
+}

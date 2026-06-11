@@ -1,0 +1,42 @@
+{
+  "duration_s": 14.13,
+  "experiment": "experiment_4031_offarc_transfer_build",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix build verdict; blocked resources stop before inference.",
+    "inference_substrate": "live_llm_inference because both smoke and full launch use the local GGUF.",
+    "launched_pid": "Bare int; Exp 4032 polls the process owning the full run.",
+    "preconditions_checked": "List of resources verified before any inference.",
+    "runner_ready": "Bare bool; the collector gates on this value.",
+    "smoke_passed": "Bare bool; full launch is forbidden when the two-task smoke fails."
+  },
+  "full_raw_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4032_offarc_exec_verifier_transfer_raw.json",
+  "honest_verdict": "success: offarc_transfer_runner_built_smoked_launched",
+  "inference_substrate": "live_llm_inference",
+  "launched_pid": 2566095,
+  "log_path": "/home/ianblenke/github.com/ianblenke/carnot/logs/offarc_transfer_run.log",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
+      "resource": "local_gguf_cached"
+    },
+    {
+      "available": true,
+      "resource": "llama_cpp_importable"
+    },
+    {
+      "available": true,
+      "detail": "mbpp_sanitized",
+      "resource": "code_corpus_loadable"
+    },
+    {
+      "available": true,
+      "resource": "restricted_exec_importable"
+    }
+  ],
+  "runner_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/offarc_exec_verifier_transfer_run.py",
+  "runner_ready": true,
+  "schema": "carnot.experiment_4031_offarc_transfer_build.v1",
+  "smoke_passed": true,
+  "smoke_raw_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4031_offarc_transfer_smoke_raw.json"
+}

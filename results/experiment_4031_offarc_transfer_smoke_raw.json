@@ -1,0 +1,159 @@
+{
+  "armA_vote_pass2": 1.0,
+  "armA_vote_passrate": 1.0,
+  "armAplusplus_aces_pass2": 1.0,
+  "armAplusplus_aces_passrate": 1.0,
+  "armB_demofit_pass2": 1.0,
+  "armB_demofit_passrate": 1.0,
+  "bootstrap_ci95": [
+    0.0,
+    0.0
+  ],
+  "bootstrap_ci95_pass2": [
+    0.0,
+    0.0
+  ],
+  "candidate_pool": {
+    "MBPP:11": [
+      {
+        "code": "def remove_Occ(s, char):\n    first_idx = s.find(char)\n    if first_idx == -1:\n        return s\n    \n    # Create a string without the first occurrence\n    temp_s = s[:first_idx] + s[first_idx+1:]\n    \n    # Find the last occurrence in the new string\n    last_idx = temp_s.rfind(char)\n    if last_idx == -1:\n        return temp_s\n    \n    # Return string without the last occurrence\n    return temp_s[:last_idx] + temp_s[last_idx+1:]",
+        "code_sha256": "b64e51e4235d8814",
+        "draw_index": 0,
+        "error": null,
+        "generation_seconds": 2.283,
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "truncated": false,
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "MBPP:12": [
+      {
+        "code": "def sort_matrix(matrix):\n    \"\"\"\n    Sorts a given matrix in ascending order according to the sum of its rows.\n    \"\"\"\n    return sorted(matrix, key=lambda row: sum(row))",
+        "code_sha256": "0195521fb2cf9a67",
+        "draw_index": 0,
+        "error": null,
+        "generation_seconds": 0.827,
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "truncated": false,
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ]
+  },
+  "corpus": "mbpp_sanitized",
+  "delta_pp": 0.0,
+  "duration_s": 11.03,
+  "experiment": "experiment_4032_offarc_exec_verifier_transfer",
+  "field_principles": {
+    "armA_vote_passrate": "Arm A pass@1 from majority/self-consistency over visible behavior.",
+    "armAplusplus_aces_passrate": "Arm A++ pass@1 from leave-one-out visible test-consistency.",
+    "armB_demofit_passrate": "Arm B pass@1 from demo-perfect visible-test filtering.",
+    "bootstrap_ci95": "Bootstrap 95% CI for Arm B minus Arm A, in percentage points.",
+    "corpus": "The non-ARC code corpus used for the transfer measurement.",
+    "delta_pp": "Arm B pass@1 minus Arm A pass@1, in percentage points.",
+    "honest_verdict": "Terminal-prefix verdict; success only when demo-fit beats vote with CI > 0.",
+    "k_candidates_per_task": "Bare int; >=8 in full mode to mirror best-of-N transfer.",
+    "n_tasks": "Bare int; >=30 in full mode for a percentage-point claim.",
+    "oracle_passrate": "Positive-control pass@1: any candidate in the same pool passes hidden tests.",
+    "reproducibility_checksum": "SHA-256 over deterministic task, candidate, and metric content.",
+    "truncation_rate": "Generation truncation guard; fraction of candidates ended by token limit."
+  },
+  "honest_verdict": "success: offarc_transfer_smoke_raw_complete",
+  "inference_substrate": "live_llm_inference",
+  "k_candidates_per_task": 1,
+  "missing_verifier_gaps": [],
+  "mode": "smoke",
+  "model_specs": {
+    "generator_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
+    "generator_hf_id": "unsloth/gemma-4-12B-it-GGUF",
+    "generator_model": "gemma-4-12B-it-GGUF",
+    "verifier": "sandboxed_exec_function visible demo-fit exact-output selector"
+  },
+  "n_tasks": 2,
+  "oracle_passrate": 1.0,
+  "per_task": [
+    {
+      "armA_vote_pass1": true,
+      "armA_vote_pass2": true,
+      "armA_vote_selected": [
+        0
+      ],
+      "armAplusplus_aces_pass1": true,
+      "armAplusplus_aces_pass2": true,
+      "armAplusplus_aces_selected": [
+        0
+      ],
+      "armB_demo_perfect_count": 1,
+      "armB_demofit_pass1": true,
+      "armB_demofit_pass2": true,
+      "armB_demofit_selected": [
+        0
+      ],
+      "func_name": "remove_Occ",
+      "n_candidates": 1,
+      "n_hidden_tests": 1,
+      "n_visible_tests": 2,
+      "oracle_hidden_pass": true,
+      "task_id": "MBPP:11"
+    },
+    {
+      "armA_vote_pass1": true,
+      "armA_vote_pass2": true,
+      "armA_vote_selected": [
+        0
+      ],
+      "armAplusplus_aces_pass1": true,
+      "armAplusplus_aces_pass2": true,
+      "armAplusplus_aces_selected": [
+        0
+      ],
+      "armB_demo_perfect_count": 1,
+      "armB_demofit_pass1": true,
+      "armB_demofit_pass2": true,
+      "armB_demofit_selected": [
+        0
+      ],
+      "func_name": "sort_matrix",
+      "n_candidates": 1,
+      "n_hidden_tests": 1,
+      "n_visible_tests": 2,
+      "oracle_hidden_pass": true,
+      "task_id": "MBPP:12"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
+      "resource": "local_gguf_cached"
+    },
+    {
+      "available": true,
+      "resource": "llama_cpp_importable"
+    },
+    {
+      "available": true,
+      "detail": "mbpp_sanitized",
+      "resource": "code_corpus_loadable"
+    },
+    {
+      "available": true,
+      "resource": "restricted_exec_importable"
+    }
+  ],
+  "random_seed": 4032,
+  "reproducibility_checksum": "a316f79d7a9237e24eb768f702680442a1e1cdd9baf13d6661126df7ab178112",
+  "schema": "carnot.experiment_4032_offarc_exec_verifier_transfer_raw.v1",
+  "truncation_rate": 0.0
+}
