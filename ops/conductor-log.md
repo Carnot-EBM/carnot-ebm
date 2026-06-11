@@ -8272,3 +8272,16 @@ c |
 | 2026-06-11 19:28 UTC | SOTA-INGESTION SLOT (mandatory per the standing 20 | OK | 95 passed in 3.72s |
 | 2026-06-11 20:32 UTC | OFF-ARC TRANSFER POWER on an UN-SATURATED corpus - | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-11 20:48 UTC | OFF-ARC TRANSFER POWER (EvalPlus) -- COLLECT+VALID | OK | 102 passed in 6.02s |
+| 2026-06-11 21:11 UTC | DECENTRALIZATION sovereign-base -- BUILD+LAUNCH (G | FAIL | Codex CLI error: Wall-clock+idle timeout after 1202s (655s silence). Last out |
+| 2026-06-11 21:14 UTC | DECENTRALIZATION sovereign-base -- BUILD+LAUNCH (G | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-11 21:16 UTC | DECENTRALIZATION sovereign-base -- BUILD+LAUNCH (G | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-11 21:18 UTC | DECENTRALIZATION sovereign-base -- COLLECT+VALIDAT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp4058-decentralization-moe-resume-build) |
+| 2026-06-11 21:18 UTC | NINTH ARC-AGI-3 game first-solve via the PROVEN ex | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-11 21:20 UTC | DECENTRALIZATION sovereign-base -- COLLECT+VALIDAT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp4058-decentralization-moe-resume-build) |
+| 2026-06-11 21:20 UTC | NINTH ARC-AGI-3 game first-solve via the PROVEN ex | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-11 21:22 UTC | DECENTRALIZATION sovereign-base -- COLLECT+VALIDAT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp4058-decentralization-moe-resume-build) |
+| 2026-06-11 21:22 UTC | NINTH ARC-AGI-3 game first-solve via the PROVEN ex | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-11 21:25 UTC | VERIFIER-AS-ONLINE-ACTION-PRUNER efficiency (the n | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-11 21:27 UTC | VERIFIER-AS-ONLINE-ACTION-PRUNER efficiency (the n | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-11 21:29 UTC | VERIFIER-AS-ONLINE-ACTION-PRUNER efficiency (the n | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-06-11 21:31 UTC | ArcMemo v8: RICHER cross-game concept-library tran | SKIP | Pre-tests failing, self-heal failed:  |
