@@ -1,0 +1,70 @@
+{
+  "bootstrap_ci95": [
+    -0.0914,
+    0.5752
+  ],
+  "build_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4047_decentralization_moe_base_build.json",
+  "checkpoint_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4048_decentralization_moe_base_raw.checkpoint.json",
+  "codex_seconds_per_task_reference": 46.24,
+  "coverage_delta_vs_12b": 0.2419,
+  "duration_s": 30.0,
+  "experiment": "experiment_4048_decentralization_moe_base",
+  "field_principles": {
+    "bootstrap_ci95": "A CI excluding 0 distinguishes a real base-size lift from noise.",
+    "coverage_delta_vs_12b": "Coverage lift relative to the Exp 4012 12B baseline.",
+    "honest_verdict": "Terminal diagnosis; partial artifacts stay explicit instead of fabricating completion.",
+    "inference_substrate": "Final diagnosis runs over cached verifier artifacts, not fresh inference.",
+    "local_seconds_per_task": "Sovereignty must be cost-honest; a viable but slower path is a tradeoff, not a free win.",
+    "local_support_diagnosis": "Invisible-Leash branch: latent means distillation is viable; absent means a bigger base is needed.",
+    "missing_verifier_gaps": "Tasks where no local best-of-N sample surfaced a demo-perfect verifier candidate.",
+    "moe_base_demo_perfect_coverage": "The gap-closing datum vs the 0.2581 12B ceiling: is the abstraction in the MoE base support?",
+    "n_tasks_scored": "<30 tasks is a non-measurement and triggers retirement.",
+    "oracle_coverage": "Positive control: if the oracle matches 0.2581, the pool is saturated."
+  },
+  "gated_pass_at_2": 0.0,
+  "honest_verdict": "complete: decentralization_moe_base_partial_6_tasks_retire",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "local_seconds_per_task": 101.82,
+  "local_support_diagnosis": "uninformative",
+  "local_vs_codex_seconds_ratio": 2.202,
+  "log_path": "/home/ianblenke/github.com/ianblenke/carnot/logs/decentralization_moe_run.log",
+  "log_tail": [
+    "llama_context: n_ctx_seq (16384) < n_ctx_train (262144) -- the full capacity of the model will not be utilized"
+  ],
+  "missing_verifier_gaps": [
+    "17cae0c1",
+    "1a2e2828",
+    "1a6449f1"
+  ],
+  "model_specs": {
+    "comparator_exp4012_model": "gemma-4-12B",
+    "generator_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "generator_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "generator_model": "Qwen3.6-35B-A3B",
+    "selection_note": "MoE throughput base, ~3B active params",
+    "verifier": "model-free: demo-fit exact-reproduction gate + restricted-namespace execution + min-hamming snap + content-hash candidate match"
+  },
+  "moe_base_demo_perfect_coverage": 0.5,
+  "n_demo_perfect_tasks": 3,
+  "n_tasks_scored": 6,
+  "oracle_coverage": 0.6129,
+  "oracle_positive_control_saturated": false,
+  "output_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4048_decentralization_moe_base.json",
+  "pass2_comparison": {
+    "codex_gated_pass_at_2": 0.5806,
+    "exp4012_12b_gated_pass_at_2": 0.4516,
+    "moe_base_gated_pass_at_2": 0.0,
+    "oracle_gated_pass_at_2": 0.6129,
+    "vs_codex_gated_pass2": -0.5806,
+    "vs_exp4012_12b_gated_pass2": -0.4516,
+    "vs_oracle_gated_pass2": -0.6129
+  },
+  "poll_attempts": 7,
+  "random_seed": 12345,
+  "raw_complete": false,
+  "raw_validation_error": "missing:/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4048_decentralization_moe_base_raw.json",
+  "reproducibility_checksum": "131dcc8fdeffe99d",
+  "retirement_trigger": "n_tasks_scored_lt_30",
+  "schema": "carnot.experiment_4048_decentralization_moe_base.v1",
+  "title": "Decentralization MoE-base coverage diagnosis"
+}
