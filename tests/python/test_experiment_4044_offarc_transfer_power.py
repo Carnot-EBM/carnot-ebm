@@ -11,6 +11,7 @@ from typing import Any
 
 import pytest
 
+import exp4045_offarc_transfer_power_collect as collect
 import exp4044_offarc_transfer_power_build as build
 import offarc_transfer_power_run as runner
 
@@ -122,6 +123,47 @@ def _synthetic_evaluations() -> tuple[
     return tasks, evaluations
 
 
+def _collect_raw(rows: list[dict[str, bool]]) -> dict[str, Any]:
+    per_task = []
+    for index, row in enumerate(rows):
+        per_task.append(
+            {
+                "task_id": f"T{index}",
+                "corpus": "fixture",
+                "func_name": "f",
+                "n_candidates": 8,
+                "n_visible_tests": 2,
+                "n_hidden_tests": 1,
+                "armA_vote_pass1": row["a"],
+                "armAplusplus_aces_pass1": row["app"],
+                "armB_demofit_pass1": row["b"],
+                "armC_symbolic_partition_pass1": row["c"],
+                "oracle_hidden_pass": row["oracle"],
+            }
+        )
+
+    def rate(key: str) -> float:
+        return round(sum(1 for row in rows if row[key]) / max(1, len(rows)), 6)
+
+    return {
+        "experiment": "experiment_4045_offarc_transfer_power",
+        "schema": "carnot.experiment_4045_offarc_transfer_power_raw.v1",
+        "honest_verdict": "success: fixture_raw",
+        "corpus": "humaneval_plus_mbpp",
+        "n_tasks": len(rows),
+        "armA_vote_passrate": rate("a"),
+        "armAplusplus_aces_passrate": rate("app"),
+        "armB_demofit_passrate": rate("b"),
+        "armC_symbolic_partition_passrate": rate("c"),
+        "oracle_passrate": rate("oracle"),
+        "model_specs": {"local_generator": "fixture", "verifier": "fixture-pool"},
+        "random_seed": 4045,
+        "reproducibility_checksum": "raw-fixture",
+        "missing_verifier_gaps": [],
+        "per_task": per_task,
+    }
+
+
 def test_req_4044_4045_spec_declared() -> None:
     # REQ-VERIFY-4044 / REQ-VERIFY-4045: OpenSpec declares build and four-arm run contracts.
     spec = Path("openspec/capabilities/verification/spec.md").read_text(encoding="utf-8")
@@ -131,9 +173,399 @@ def test_req_4044_4045_spec_declared() -> None:
         "REQ-VERIFY-4045",
         "SCENARIO-VERIFY-4045",
         "offarc_transfer_power_run.py",
+        "exp4045_offarc_transfer_power_collect.py",
+        "10,000-resample",
         "armC",
     ):
         assert marker in spec
+
+
+def test_collect_demofit_ci_excluding_zero_answers_headline_gate() -> None:
+    # REQ-VERIFY-4045: the final collector reports the bare demo-fit CI gate.
+    raw = _collect_raw(
+        [
+            {"a": False, "app": False, "b": True, "c": False, "oracle": True},
+            {"a": False, "app": False, "b": True, "c": False, "oracle": True},
+            {"a": False, "app": False, "b": True, "c": False, "oracle": True},
+        ]
+    )
+    artifact = collect.build_final_artifact(
+        raw,
+        raw_artifact_present=True,
+        partial_reason=None,
+        n_bootstrap=400,
+        powered_task_floor=3,
+    )
+    collect.validate_final_artifact(artifact)
+    assert artifact["honest_verdict"] == "complete: offarc_demofit_transfers_to_code_ci_excl0_n3"
+    assert artifact["demofit_delta_pp"] == pytest.approx(100.0)
+    assert artifact["demofit_bootstrap_ci95"][0] > 0.0
+    assert artifact["demofit_ci_excludes_zero"] is True
+    assert artifact["inference_substrate"] == collect.INFERENCE_SUBSTRATE
+
+
+def test_collect_stronger_arm_only_verdict_when_demofit_touches_zero() -> None:
+    # REQ-VERIFY-4045: stronger arms contextualize a shared demo-fit miss.
+    raw = _collect_raw(
+        [
+            {"a": False, "app": True, "b": False, "c": True, "oracle": True},
+            {"a": False, "app": True, "b": False, "c": True, "oracle": True},
+            {"a": False, "app": False, "b": False, "c": True, "oracle": True},
+            {"a": False, "app": False, "b": False, "c": True, "oracle": True},
+        ]
+    )
+    artifact = collect.build_final_artifact(
+        raw,
+        raw_artifact_present=True,
+        partial_reason=None,
+        n_bootstrap=400,
+        powered_task_floor=4,
+    )
+    assert artifact["demofit_ci_excludes_zero"] is False
+    assert artifact["best_arm"] == "armC_symbolic"
+    assert artifact["best_arm_ci_excludes_zero"] is True
+    assert artifact["honest_verdict"] == "complete: offarc_demofit_touches0_symbolic_partition_excl0"
+    assert "GAP-CODE-EXEC-DEMOFIT" in artifact["missing_verifier_gaps"]
+
+
+def test_collect_no_headroom_is_uninformative_not_failure() -> None:
+    # REQ-VERIFY-4045: oracle parity with vote blocks a false negative claim.
+    raw = _collect_raw(
+        [
+            {"a": True, "app": True, "b": True, "c": True, "oracle": True},
+            {"a": True, "app": True, "b": True, "c": True, "oracle": True},
+            {"a": False, "app": False, "b": False, "c": False, "oracle": False},
+        ]
+    )
+    artifact = collect.build_final_artifact(
+        raw,
+        raw_artifact_present=True,
+        partial_reason=None,
+        n_bootstrap=200,
+        powered_task_floor=3,
+    )
+    assert artifact["oracle_headroom"] is False
+    assert artifact["honest_verdict"] == "complete: offarc_transfer_uninformative_no_oracle_headroom"
+
+
+def test_collect_aces_only_and_small_magnitude_verdicts() -> None:
+    # REQ-VERIFY-4045: non-demo stronger-arm and all-touch-zero cases are distinct.
+    aces_raw = _collect_raw(
+        [
+            {"a": False, "app": True, "b": False, "c": False, "oracle": True},
+            {"a": False, "app": True, "b": False, "c": False, "oracle": True},
+            {"a": False, "app": True, "b": False, "c": False, "oracle": True},
+        ]
+    )
+    aces = collect.build_final_artifact(
+        aces_raw,
+        raw_artifact_present=True,
+        partial_reason=None,
+        n_bootstrap=200,
+        powered_task_floor=3,
+    )
+    assert aces["honest_verdict"] == "complete: offarc_demofit_touches0_aces_excl0"
+
+    small_raw = _collect_raw(
+        [
+            {"a": False, "app": False, "b": False, "c": False, "oracle": True},
+            {"a": False, "app": False, "b": False, "c": False, "oracle": True},
+            {"a": False, "app": False, "b": False, "c": False, "oracle": True},
+        ]
+    )
+    small = collect.build_final_artifact(
+        small_raw,
+        raw_artifact_present=True,
+        partial_reason=None,
+        n_bootstrap=200,
+        powered_task_floor=3,
+    )
+    assert small["honest_verdict"] == "complete: offarc_transfer_small_magnitude_all_arms_touch0"
+
+
+def test_collect_negative_ci_is_honest_negative() -> None:
+    # SCENARIO-VERIFY-4045: an excluding-zero CI in the wrong direction is not transfer.
+    raw = _collect_raw(
+        [
+            {"a": True, "app": False, "b": False, "c": False, "oracle": True},
+            {"a": True, "app": False, "b": False, "c": False, "oracle": True},
+            {"a": True, "app": False, "b": False, "c": False, "oracle": True},
+        ]
+    )
+    artifact = collect.build_final_artifact(
+        raw,
+        raw_artifact_present=True,
+        partial_reason=None,
+        n_bootstrap=200,
+        powered_task_floor=3,
+    )
+    assert artifact["demofit_ci_excludes_zero"] is True
+    assert artifact["demofit_bootstrap_ci95"][1] < 0.0
+    assert artifact["honest_verdict"] == "complete: offarc_demofit_negative_ci_excl0_n3"
+
+
+def test_collect_raw_ready_path_validates_raw_and_tails_log(tmp_path: Path) -> None:
+    # REQ-VERIFY-4045: a landed raw artifact is preferred over checkpoint fallback.
+    build_path = tmp_path / "build.json"
+    raw_path = tmp_path / "raw.json"
+    output_path = tmp_path / "final.json"
+    log_path = tmp_path / "offarc.log"
+    tasks, evaluations = _synthetic_evaluations()
+    raw = runner.build_raw_artifact(
+        tasks=tasks,
+        evaluations_by_task=evaluations,
+        preconditions_checked=[_check("all", True)],
+        model_specs={"generator_model": "fixture", "verifier": "fixture"},
+        k=8,
+        started_s=0.0,
+        ended_s=2.0,
+        mode="smoke",
+    )
+    raw_path.write_text(__import__("json").dumps(raw), encoding="utf-8")
+    log_path.write_text("old\nnew\n", encoding="utf-8")
+    build_path.write_text(
+        __import__("json").dumps(
+            {
+                "honest_verdict": "success: launched",
+                "runner_ready": True,
+                "smoke_passed": True,
+                "launched_pid": 123,
+                "preconditions_checked": [_check("all", True)],
+                "full_raw_path": str(raw_path),
+                "log_path": str(log_path),
+            }
+        ),
+        encoding="utf-8",
+    )
+    artifact = collect.run_collect(
+        output_path=output_path,
+        build_path=build_path,
+        raw_path=raw_path,
+        checkpoint_path=tmp_path / "checkpoint.json",
+        poll_budget_s=0.0,
+        n_bootstrap=50,
+    )
+    assert artifact["raw_artifact_present"] is True
+    assert artifact["log_tail"] == "old\nnew"
+
+
+def test_collect_poll_for_raw_reads_log_and_uses_sleeper(tmp_path: Path) -> None:
+    # REQ-VERIFY-4045: bounded polling checks the log while waiting for raw output.
+    raw_path = tmp_path / "raw.json"
+    log_path = tmp_path / "offarc.log"
+    log_path.write_text("boot\nprogress\n", encoding="utf-8")
+    slept: list[float] = []
+
+    def sleeper(seconds: float) -> None:
+        slept.append(seconds)
+        raw_path.write_text("{}", encoding="utf-8")
+
+    assert collect.poll_for_raw(
+        raw_path,
+        log_path=log_path,
+        poll_budget_s=10.0,
+        poll_interval_s=1.0,
+        sleeper=sleeper,
+    )
+    assert slept == [pytest.approx(1.0)]
+
+
+def test_collect_partial_checkpoint_writes_partial_artifact(tmp_path: Path) -> None:
+    # REQ-VERIFY-4045: incomplete background runs are summarized from checkpoint data only.
+    build_path = tmp_path / "build.json"
+    raw_path = tmp_path / "missing_raw.json"
+    checkpoint_path = tmp_path / "checkpoint.json"
+    output_path = tmp_path / "final.json"
+    log_path = tmp_path / "offarc.log"
+    tasks, evaluations = _synthetic_evaluations()
+    runner._write_checkpoint(
+        checkpoint_path,
+        tasks=tasks,
+        evaluations_by_task=evaluations,
+        skipped_tasks=[],
+        k=8,
+        mode="full",
+    )
+    build_path.write_text(
+        __import__("json").dumps(
+            {
+                "honest_verdict": "success: launched",
+                "runner_ready": True,
+                "smoke_passed": True,
+                "launched_pid": 123,
+                "preconditions_checked": [_check("all", True)],
+                "full_raw_path": str(raw_path),
+                "log_path": str(log_path),
+            }
+        ),
+        encoding="utf-8",
+    )
+    artifact = collect.run_collect(
+        output_path=output_path,
+        build_path=build_path,
+        raw_path=raw_path,
+        checkpoint_path=checkpoint_path,
+        log_path=log_path,
+        poll_budget_s=0.0,
+        poll_interval_s=60.0,
+        task_loader=lambda: tasks,
+        n_bootstrap=100,
+    )
+    assert artifact["honest_verdict"] == "complete: offarc_power_run_incomplete_partial_2_tasks"
+    assert artifact["raw_artifact_present"] is False
+    assert artifact["n_tasks"] == 2
+    assert output_path.exists()
+
+
+def test_collect_checkpoint_empty_and_fallback_task_paths(tmp_path: Path) -> None:
+    # REQ-VERIFY-4045: missing or sparse checkpoint state becomes honest partial evidence.
+    missing_raw = collect.raw_from_checkpoint(
+        checkpoint_path=tmp_path / "missing.json",
+        build={"preconditions_checked": [_check("all", True)]},
+        task_loader=lambda: [],
+    )
+    assert missing_raw["n_tasks"] == 0
+    assert missing_raw["per_task"] == []
+
+    empty_checkpoint = tmp_path / "empty.json"
+    empty_checkpoint.write_text(
+        __import__("json").dumps({"evaluations_by_task": {}, "ordered_task_ids": []}),
+        encoding="utf-8",
+    )
+    empty_raw = collect.raw_from_checkpoint(
+        checkpoint_path=empty_checkpoint,
+        build={"preconditions_checked": []},
+        task_loader=lambda: [],
+    )
+    assert empty_raw["n_tasks"] == 0
+
+    fallback_checkpoint = tmp_path / "fallback.json"
+    fallback_checkpoint.write_text(
+        __import__("json").dumps(
+            {
+                "evaluations_by_task": {
+                    "HumanEval/fallback": [
+                        _eval(
+                            "HumanEval/fallback",
+                            0,
+                            visible_passes=[True, True],
+                            hidden_passes=[True],
+                            visible_outputs=[1, 1],
+                        ).__dict__
+                    ]
+                },
+                "ordered_task_ids": ["HumanEval/fallback"],
+            }
+        ),
+        encoding="utf-8",
+    )
+    fallback_raw = collect.raw_from_checkpoint(
+        checkpoint_path=fallback_checkpoint,
+        build={"preconditions_checked": []},
+        task_loader=lambda: [],
+    )
+    assert fallback_raw["n_tasks"] == 1
+    assert fallback_raw["per_task"][0]["corpus"] == "humaneval"
+
+
+def test_collect_blocks_when_build_runner_not_ready(tmp_path: Path) -> None:
+    # REQ-VERIFY-4045: the collector stops if Exp 4044 did not launch a ready runner.
+    build_path = tmp_path / "build.json"
+    output_path = tmp_path / "final.json"
+    build_path.write_text(
+        __import__("json").dumps(
+            {
+                "honest_verdict": "blocked_local_gguf_not_cached",
+                "runner_ready": False,
+                "smoke_passed": False,
+                "launched_pid": 0,
+                "preconditions_checked": [_check("local_gguf_cached", False)],
+            }
+        ),
+        encoding="utf-8",
+    )
+    artifact = collect.run_collect(
+        output_path=output_path,
+        build_path=build_path,
+        raw_path=tmp_path / "raw.json",
+        checkpoint_path=tmp_path / "checkpoint.json",
+        poll_budget_s=0.0,
+    )
+    assert artifact["honest_verdict"] == "blocked_build_runner_not_ready"
+    assert artifact["runner_ready"] is False
+    assert output_path.exists()
+
+
+def test_collect_validation_edge_cases() -> None:
+    # REQ-VERIFY-4045: validation fails closed on malformed final and blocked artifacts.
+    assert collect.bootstrap_delta_ci95([], seed=1) == [0.0, 0.0]
+    with pytest.raises(ValueError, match="runner_ready=false"):
+        collect.validate_final_artifact(
+            {"honest_verdict": "blocked_build_runner_not_ready", "runner_ready": True}
+        )
+
+    artifact = collect.build_final_artifact(
+        _collect_raw(
+            [{"a": False, "app": False, "b": True, "c": False, "oracle": True}]
+        ),
+        raw_artifact_present=True,
+        partial_reason=None,
+        n_bootstrap=50,
+        powered_task_floor=1,
+    )
+    missing = dict(artifact)
+    missing.pop("corpus")
+    with pytest.raises(ValueError, match="missing required final field"):
+        collect.validate_final_artifact(missing)
+
+    bad_verdict = dict(artifact)
+    bad_verdict["honest_verdict"] = "success: not-final"
+    with pytest.raises(ValueError, match="complete: terminal prefix"):
+        collect.validate_final_artifact(bad_verdict)
+
+    bad_float = dict(artifact)
+    bad_float["armA_vote_passrate"] = "0.0"
+    with pytest.raises(ValueError, match="armA_vote_passrate must be a bare float"):
+        collect.validate_final_artifact(bad_float)
+
+    bad_gaps = dict(artifact)
+    bad_gaps["missing_verifier_gaps"] = "gap"
+    with pytest.raises(ValueError, match="missing_verifier_gaps must be a list"):
+        collect.validate_final_artifact(bad_gaps)
+
+    bad_checksum = dict(artifact)
+    bad_checksum["reproducibility_checksum"] = ""
+    with pytest.raises(ValueError, match="reproducibility_checksum must be non-empty"):
+        collect.validate_final_artifact(bad_checksum)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("demofit_ci_excludes_zero", "false", "demofit_ci_excludes_zero must be a bare bool"),
+        ("best_arm_ci_excludes_zero", 1, "best_arm_ci_excludes_zero must be a bare bool"),
+        ("n_tasks", 1.5, "n_tasks must be a bare int"),
+        ("demofit_bootstrap_ci95", [0.0], "demofit_bootstrap_ci95 must be a two-element list"),
+        ("model_specs", [], "model_specs must be an object"),
+        ("inference_substrate", "live_llm_inference", "verifier-scoring substrate"),
+    ],
+)
+def test_validate_final_artifact_rejects_schema_poison(
+    field: str, value: Any, message: str
+) -> None:
+    # REQ-VERIFY-4045: final collector fields stay bare and verifier-scoring only.
+    artifact = collect.build_final_artifact(
+        _collect_raw(
+            [{"a": False, "app": False, "b": True, "c": False, "oracle": True}]
+        ),
+        raw_artifact_present=True,
+        partial_reason=None,
+        n_bootstrap=50,
+        powered_task_floor=1,
+    )
+    artifact[field] = value
+    with pytest.raises(ValueError, match=message):
+        collect.validate_final_artifact(artifact)
 
 
 def test_public_test_parsing_handles_mbpp_and_humaneval_candidate_asserts() -> None:

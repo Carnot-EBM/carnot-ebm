@@ -2,9 +2,27 @@
   "completed_task_ids": [
     "HumanEval/0",
     "HumanEval/1",
+    "HumanEval/10",
+    "HumanEval/11",
+    "HumanEval/12",
+    "HumanEval/13",
+    "HumanEval/14",
+    "HumanEval/15",
+    "HumanEval/16",
+    "HumanEval/17",
+    "HumanEval/18",
+    "HumanEval/19",
+    "HumanEval/20",
+    "HumanEval/21",
+    "HumanEval/22",
+    "HumanEval/23",
+    "HumanEval/24",
     "HumanEval/3",
     "HumanEval/5",
-    "HumanEval/6"
+    "HumanEval/6",
+    "HumanEval/7",
+    "HumanEval/8",
+    "HumanEval/9"
   ],
   "evaluations_by_task": {
     "HumanEval/0": [
@@ -738,6 +756,4444 @@
             "((()))",
             "(((())))"
           ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/10": [
+      {
+        "code": "def make_palindrome(string: str) -> str:\n    \"\"\" Find the shortest palindrome that begins with a supplied string.\n    Algorithm idea is simple:\n    - Find the longest postfix of supplied string that is a palindrome.\n    - Append to the end of the string reverse of a string prefix that comes before the palindromic suffix.\n    >>> make_palindrome('')\n    ''\n    >>> make_palindrome('cat')\n    'catac'\n    >>> make_palindrome('cata')\n    'catac'\n    \"\"\"\n    if not string:\n        return \"\"\n    \n    # Find the longest suffix that is a palindrome\n    # We check from the end of the string backwards\n    for i in range(len(string)):\n        suffix = string[i:]\n        if suffix == suffix[::-1]:\n            # The part before this suffix needs to be reversed and appended\n            prefix_to_reverse = string[:i]\n            return string + prefix_to_reverse[::-1]\n            \n    return string + string[:-1][::-1]",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          "a",
+          "xax"
+        ],
+        "generation_seconds": 3.654,
+        "hidden_outputs": [
+          "xyzyx",
+          "xyx",
+          "jerryrrej"
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/10",
+        "truncated": false,
+        "visible_outputs": [
+          "",
+          "x"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def make_palindrome(string: str) -> str:\n    \"\"\" Find the shortest palindrome that begins with a supplied string.\n    Algorithm idea is simple:\n    - Find the longest postfix of supplied string that is a palindrome.\n    - Append to the end of the string reverse of a string prefix that comes before the palindromic suffix.\n    >>> make_palindrome('')\n    ''\n    >>> make_palindrome('cat')\n    'catac'\n    >>> make_palindrome('cata')\n    'catac'\n    \"\"\"\n    if not string:\n        return \"\"\n    \n    # Find the longest suffix that is a palindrome\n    # We check from the end of the string backwards\n    for i in range(len(string)):\n        suffix = string[i:]\n        if suffix == suffix[::-1]:\n            # The part before this suffix needs to be reversed and appended\n            prefix_to_reverse = string[:i]\n            return string + prefix_to_reverse[::-1]\n            \n    return string + string[:-1][::-1]",
+        "draw_index": 1,
+        "error": null,
+        "fingerprint_outputs": [
+          "a",
+          "xax"
+        ],
+        "generation_seconds": 3.891,
+        "hidden_outputs": [
+          "xyzyx",
+          "xyx",
+          "jerryrrej"
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/10",
+        "truncated": false,
+        "visible_outputs": [
+          "",
+          "x"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def make_palindrome(string: str) -> str:\n    \"\"\" Find the shortest palindrome that begins with a supplied string.\n    Algorithm idea is simple:\n    - Find the longest postfix of supplied string that is a palindrome.\n    - Append to the end of the string reverse of a string prefix that comes before the palindromic suffix.\n    >>> make_palindrome('')\n    ''\n    >>> make_palindrome('cat')\n    'catac'\n    >>> make_palindrome('cata')\n    'catac'\n    \"\"\"\n    if not string:\n        return \"\"\n    \n    # Find the longest suffix that is a palindrome\n    # We check from the longest possible (the whole string) down to length 1\n    for i in range(len(string)):\n        suffix = string[i:]\n        if suffix == suffix[::-1]:\n            # The part before this suffix needs to be reversed and appended\n            prefix_to_reverse = string[:i]\n            return string + prefix_to_reverse[::-1]\n    \n    return string + string[:-1][::-1]",
+        "draw_index": 2,
+        "error": null,
+        "fingerprint_outputs": [
+          "a",
+          "xax"
+        ],
+        "generation_seconds": 4.261,
+        "hidden_outputs": [
+          "xyzyx",
+          "xyx",
+          "jerryrrej"
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/10",
+        "truncated": false,
+        "visible_outputs": [
+          "",
+          "x"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def make_palindrome(string: str) -> str:\n    \"\"\" Find the shortest palindrome that begins with a supplied string.\n    Algorithm idea is simple:\n    - Find the longest postfix of supplied string that is a palindrome.\n    - Append to the end of the string reverse of a string prefix that comes before the palindromic suffix.\n    >>> make_palindrome('')\n    ''\n    >>> make_palindrome('cat')\n    'catac'\n    >>> make_palindrome('cata')\n    'catac'\n    \"\"\"\n    if not string:\n        return \"\"\n    \n    # Find the longest postfix that is a palindrome\n    # We check from the end of the string towards the beginning\n    for i in range(len(string)):\n        suffix = string[i:]\n        if suffix == suffix[::-1]:\n            # The prefix before this suffix is string[:i]\n            # We need to append the reverse of that prefix to the original string\n            return string + string[:i][::-1]\n            \n    return string + string[:-1][::-1]",
+        "draw_index": 3,
+        "error": null,
+        "fingerprint_outputs": [
+          "a",
+          "xax"
+        ],
+        "generation_seconds": 4.134,
+        "hidden_outputs": [
+          "xyzyx",
+          "xyx",
+          "jerryrrej"
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/10",
+        "truncated": false,
+        "visible_outputs": [
+          "",
+          "x"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def make_palindrome(string: str) -> str:\n    \"\"\" Find the shortest palindrome that begins with a supplied string.\n    Algorithm idea is simple:\n    - Find the longest postfix of supplied string that is a palindrome.\n    - Append to the end of the string reverse of a string prefix that comes before the palindromic suffix.\n    >>> make_palindrome('')\n    ''\n    >>> make_palindrome('cat')\n    'catac'\n    >>> make_palindrome('cata')\n    'catac'\n    \"\"\"\n    if not string:\n        return \"\"\n    \n    # Find the longest suffix that is a palindrome\n    # We check from the end of the string backwards\n    for i in range(len(string)):\n        suffix = string[i:]\n        if suffix == suffix[::-1]:\n            # The prefix before this suffix is string[:i]\n            # We need to append the reverse of this prefix to the end\n            return string + string[:i][::-1]\n            \n    return string + string[:-1][::-1]",
+        "draw_index": 4,
+        "error": null,
+        "fingerprint_outputs": [
+          "a",
+          "xax"
+        ],
+        "generation_seconds": 4.126,
+        "hidden_outputs": [
+          "xyzyx",
+          "xyx",
+          "jerryrrej"
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/10",
+        "truncated": false,
+        "visible_outputs": [
+          "",
+          "x"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def make_palindrome(string: str) -> str:\n    \"\"\" Find the shortest palindrome that begins with a supplied string.\n    Algorithm idea is simple:\n    - Find the longest postfix of supplied string that is a palindrome.\n    - Append to the end of the string reverse of a string prefix that comes before the palindromic suffix.\n    >>> make_palindrome('')\n    ''\n    >>> make_palindrome('cat')\n    'catac'\n    >>> make_palindrome('cata')\n    'catac'\n    \"\"\"\n    if not string:\n        return \"\"\n    \n    # Find the longest suffix that is a palindrome\n    # We check from the full length down to 1\n    for i in range(len(string)):\n        suffix = string[i:]\n        if suffix == suffix[::-1]:\n            # The part before this suffix needs to be reversed and appended\n            prefix_to_reverse = string[:i]\n            return string + prefix_to_reverse[::-1]\n            \n    return string + string[:-1][::-1]",
+        "draw_index": 5,
+        "error": null,
+        "fingerprint_outputs": [
+          "a",
+          "xax"
+        ],
+        "generation_seconds": 4.134,
+        "hidden_outputs": [
+          "xyzyx",
+          "xyx",
+          "jerryrrej"
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/10",
+        "truncated": false,
+        "visible_outputs": [
+          "",
+          "x"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def make_palindrome(string: str) -> str:\n    \"\"\" Find the shortest palindrome that begins with a supplied string.\n    Algorithm idea is simple:\n    - Find the longest postfix of supplied string that is a palindrome.\n    - Append to the end of the string reverse of a string prefix that comes before the palindromic suffix.\n    >>> make_palindrome('')\n    ''\n    >>> make_palindrome('cat')\n    'catac'\n    >>> make_palindrome('cata')\n    'catac'\n    \"\"\"\n    if not string:\n        return \"\"\n    \n    # Find the longest suffix that is a palindrome\n    # We iterate through possible lengths of the suffix from the end\n    for i in range(len(string)):\n        suffix = string[i:]\n        if suffix == suffix[::-1]:\n            # The part before the palindromic suffix needs to be \n            # reversed and appended to the end.\n            prefix_to_reverse = string[:i]\n            return string + prefix_to_reverse[::-1]\n    \n    return string + string[:-1][::-1]",
+        "draw_index": 6,
+        "error": null,
+        "fingerprint_outputs": [
+          "a",
+          "xax"
+        ],
+        "generation_seconds": 4.118,
+        "hidden_outputs": [
+          "xyzyx",
+          "xyx",
+          "jerryrrej"
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/10",
+        "truncated": false,
+        "visible_outputs": [
+          "",
+          "x"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def make_palindrome(string: str) -> str:\n    \"\"\" Find the shortest palindrome that begins with a supplied string. \"\"\"\n    if not string:\n        return \"\"\n    \n    # Find the longest postfix that is a palindrome\n    # We check from the end of the string backwards\n    for i in range(len(string)):\n        suffix = string[i:]\n        if suffix == suffix[::-1]:\n            # The part before this suffix needs to be reversed and appended\n            prefix_to_reverse = string[:i]\n            return string + prefix_to_reverse[::-1]\n    \n    return string + string[:-1][::-1]",
+        "draw_index": 7,
+        "error": null,
+        "fingerprint_outputs": [
+          "a",
+          "xax"
+        ],
+        "generation_seconds": 2.981,
+        "hidden_outputs": [
+          "xyzyx",
+          "xyx",
+          "jerryrrej"
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/10",
+        "truncated": false,
+        "visible_outputs": [
+          "",
+          "x"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/11": [
+      {
+        "code": "from typing import List\n\ndef string_xor(a: str, b: str) -> str:\n    \"\"\" Input are two strings a and b consisting only of 1s and 0s.\n    Perform binary XOR on these inputs and return result also as a string.\n    >>> string_xor('010', '110')\n    '100'\n    \"\"\"\n    result = []\n    for char_a, char_b in zip(a, b):\n        if char_a == char_b:\n            result.append('0')\n        else:\n            result.append('1')\n    return \"\".join(result)",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          "0100100",
+          "00"
+        ],
+        "generation_seconds": 2.332,
+        "hidden_outputs": [
+          "0101"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/11",
+        "truncated": false,
+        "visible_outputs": [
+          "010010",
+          "0"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef string_xor(a: str, b: str) -> str:\n    \"\"\" Input are two strings a and b consisting only of 1s and 0s.\n    Perform binary XOR on these inputs and return result also as a string.\n    >>> string_xor('010', '110')\n    '100'\n    \"\"\"\n    result = []\n    for char_a, char_b in zip(a, b):\n        if char_a == char_b:\n            result.append('0')\n        else:\n            result.append('1')\n    return \"\".join(result)",
+        "draw_index": 1,
+        "error": null,
+        "fingerprint_outputs": [
+          "0100100",
+          "00"
+        ],
+        "generation_seconds": 2.657,
+        "hidden_outputs": [
+          "0101"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/11",
+        "truncated": false,
+        "visible_outputs": [
+          "010010",
+          "0"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef string_xor(a: str, b: str) -> str:\n    \"\"\" Input are two strings a and b consisting only of 1s and 0s.\n    Perform binary XOR on these inputs and return result also as a string.\n    >>> string_xor('010', '110')\n    '100'\n    \"\"\"\n    result = []\n    for char_a, char_b in zip(a, b):\n        if char_a == char_b:\n            result.append('0')\n        else:\n            result.append('1')\n    return \"\".join(result)",
+        "draw_index": 2,
+        "error": null,
+        "fingerprint_outputs": [
+          "0100100",
+          "00"
+        ],
+        "generation_seconds": 2.853,
+        "hidden_outputs": [
+          "0101"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/11",
+        "truncated": false,
+        "visible_outputs": [
+          "010010",
+          "0"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef string_xor(a: str, b: str) -> str:\n    \"\"\" Input are two strings a and b consisting only of 1s and 0s.\n    Perform binary XOR on these inputs and return result also as a string.\n    >>> string_xor('010', '110')\n    '100'\n    \"\"\"\n    result = []\n    for char_a, char_b in zip(a, b):\n        if char_a == char_b:\n            result.append('0')\n        else:\n            result.append('1')\n    return \"\".join(result)",
+        "draw_index": 3,
+        "error": null,
+        "fingerprint_outputs": [
+          "0100100",
+          "00"
+        ],
+        "generation_seconds": 2.276,
+        "hidden_outputs": [
+          "0101"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/11",
+        "truncated": false,
+        "visible_outputs": [
+          "010010",
+          "0"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef string_xor(a: str, b: str) -> str:\n    \"\"\" Input are two strings a and b consisting only of 1s and 0s.\n    Perform binary XOR on these inputs and return result also as a string.\n    >>> string_xor('010', '110')\n    '100'\n    \"\"\"\n    result = []\n    for char_a, char_b in zip(a, b):\n        if char_a == char_b:\n            result.append('0')\n        else:\n            result.append('1')\n    return \"\".join(result)",
+        "draw_index": 4,
+        "error": null,
+        "fingerprint_outputs": [
+          "0100100",
+          "00"
+        ],
+        "generation_seconds": 2.172,
+        "hidden_outputs": [
+          "0101"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/11",
+        "truncated": false,
+        "visible_outputs": [
+          "010010",
+          "0"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef string_xor(a: str, b: str) -> str:\n    \"\"\" Input are two strings a and b consisting only of 1s and 0s.\n    Perform binary XOR on these inputs and return result also as a string.\n    >>> string_xor('010', '110')\n    '100'\n    \"\"\"\n    result = []\n    for char_a, char_b in zip(a, b):\n        if char_a == char_b:\n            result.append('0')\n        else:\n            result.append('1')\n    return \"\".join(result)",
+        "draw_index": 5,
+        "error": null,
+        "fingerprint_outputs": [
+          "0100100",
+          "00"
+        ],
+        "generation_seconds": 2.676,
+        "hidden_outputs": [
+          "0101"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/11",
+        "truncated": false,
+        "visible_outputs": [
+          "010010",
+          "0"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef string_xor(a: str, b: str) -> str:\n    \"\"\" Input are two strings a and b consisting only of 1s and 0s.\n    Perform binary XOR on these inputs and return result also as a string.\n    >>> string_xor('010', '110')\n    '100'\n    \"\"\"\n    result = []\n    for char_a, char_b in zip(a, b):\n        if char_a == char_b:\n            result.append('0')\n        else:\n            result.append('1')\n    return \"\".join(result)",
+        "draw_index": 6,
+        "error": null,
+        "fingerprint_outputs": [
+          "0100100",
+          "00"
+        ],
+        "generation_seconds": 2.713,
+        "hidden_outputs": [
+          "0101"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/11",
+        "truncated": false,
+        "visible_outputs": [
+          "010010",
+          "0"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef string_xor(a: str, b: str) -> str:\n    \"\"\" Input are two strings a and b consisting only of 1s and 0s.\n    Perform binary XOR on these inputs and return result also as a string.\n    >>> string_xor('010', '110')\n    '100'\n    \"\"\"\n    result = []\n    for char_a, char_b in zip(a, b):\n        if char_a == char_b:\n            result.append('0')\n        else:\n            result.append('1')\n    return \"\".join(result)",
+        "draw_index": 7,
+        "error": null,
+        "fingerprint_outputs": [
+          "0100100",
+          "00"
+        ],
+        "generation_seconds": 2.787,
+        "hidden_outputs": [
+          "0101"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/11",
+        "truncated": false,
+        "visible_outputs": [
+          "010010",
+          "0"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/12": [
+      {
+        "code": "from typing import List, Optional\n\ndef longest(strings: List[str]) -> Optional[str]:\n    \"\"\" Out of list of strings, return the longest one. Return the first one in case of multiple\n    strings of the same length. Return None in case the input list is empty.\n    >>> longest([])\n\n    >>> longest(['a', 'b', 'c'])\n    'a'\n    >>> longest(['a', 'bb', 'ccc'])\n    'ccc'\n    \"\"\"\n    if not strings:\n        return None\n    \n    return max(strings, key=len)",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          "y"
+        ],
+        "generation_seconds": 2.636,
+        "hidden_outputs": [
+          "zzzz"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/12",
+        "truncated": false,
+        "visible_outputs": [
+          null,
+          "x"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Optional\n\ndef longest(strings: List[str]) -> Optional[str]:\n    \"\"\" Out of list of strings, return the longest one. Return the first one in case of multiple\n    strings of the same length. Return None in case the input list is empty.\n    >>> longest([])\n    None\n    >>> longest(['a', 'b', 'c'])\n    'a'\n    >>> longest(['a', 'bb', 'ccc'])\n    'ccc'\n    \"\"\"\n    if not strings:\n        return None\n    \n    return max(strings, key=len)",
+        "draw_index": 1,
+        "error": null,
+        "fingerprint_outputs": [
+          "y"
+        ],
+        "generation_seconds": 1.755,
+        "hidden_outputs": [
+          "zzzz"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/12",
+        "truncated": false,
+        "visible_outputs": [
+          null,
+          "x"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Optional\n\ndef longest(strings: List[str]) -> Optional[str]:\n    \"\"\" Out of list of strings, return the longest one. Return the first one in case of multiple\n    strings of the same length. Return None in case the input list is empty.\n    >>> longest([])\n\n    >>> longest(['a', 'b', 'c'])\n    'a'\n    >>> longest(['a', 'bb', 'ccc'])\n    'ccc'\n    \"\"\"\n    if not strings:\n        return None\n    \n    return max(strings, key=len)",
+        "draw_index": 2,
+        "error": null,
+        "fingerprint_outputs": [
+          "y"
+        ],
+        "generation_seconds": 2.587,
+        "hidden_outputs": [
+          "zzzz"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/12",
+        "truncated": false,
+        "visible_outputs": [
+          null,
+          "x"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Optional\n\ndef longest(strings: List[str]) -> Optional[str]:\n    \"\"\" Out of list of strings, return the longest one. Return the first one in case of multiple\n    strings of the same length. Return None in case the input list is empty.\n    >>> longest([])\n\n    >>> longest(['a', 'b', 'c'])\n    'a'\n    >>> longest(['a', 'bb', 'ccc'])\n    'ccc'\n    \"\"\"\n    if not strings:\n        return None\n    \n    return max(strings, key=len)",
+        "draw_index": 3,
+        "error": null,
+        "fingerprint_outputs": [
+          "y"
+        ],
+        "generation_seconds": 1.702,
+        "hidden_outputs": [
+          "zzzz"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/12",
+        "truncated": false,
+        "visible_outputs": [
+          null,
+          "x"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Optional\n\ndef longest(strings: List[str]) -> Optional[str]:\n    \"\"\" Out of list of strings, return the longest one. Return the first one in case of multiple\n    strings of the same length. Return None in case the input list is empty.\n    >>> longest([])\n\n    >>> longest(['a', 'b', 'c'])\n    'a'\n    >>> longest(['a', 'bb', 'ccc'])\n    'ccc'\n    \"\"\"\n    if not strings:\n        return None\n    \n    return max(strings, key=len)",
+        "draw_index": 4,
+        "error": null,
+        "fingerprint_outputs": [
+          "y"
+        ],
+        "generation_seconds": 1.675,
+        "hidden_outputs": [
+          "zzzz"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/12",
+        "truncated": false,
+        "visible_outputs": [
+          null,
+          "x"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Optional\n\ndef longest(strings: List[str]) -> Optional[str]:\n    \"\"\" Out of list of strings, return the longest one. Return the first one in case of multiple\n    strings of the same length. Return None in case the input list is empty.\n    >>> longest([])\n\n    >>> longest(['a', 'b', 'c'])\n    'a'\n    >>> longest(['a', 'bb', 'ccc'])\n    'ccc'\n    \"\"\"\n    if not strings:\n        return None\n    \n    return max(strings, key=len)",
+        "draw_index": 5,
+        "error": null,
+        "fingerprint_outputs": [
+          "y"
+        ],
+        "generation_seconds": 1.731,
+        "hidden_outputs": [
+          "zzzz"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/12",
+        "truncated": false,
+        "visible_outputs": [
+          null,
+          "x"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Optional\n\ndef longest(strings: List[str]) -> Optional[str]:\n    \"\"\" Out of list of strings, return the longest one. Return the first one in case of multiple\n    strings of the same length. Return None in case the input list is empty.\n    >>> longest([])\n\n    >>> longest(['a', 'b', 'c'])\n    'a'\n    >>> longest(['a', 'bb', 'ccc'])\n    'ccc'\n    \"\"\"\n    if not strings:\n        return None\n    \n    return max(strings, key=len)",
+        "draw_index": 6,
+        "error": null,
+        "fingerprint_outputs": [
+          "y"
+        ],
+        "generation_seconds": 1.704,
+        "hidden_outputs": [
+          "zzzz"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/12",
+        "truncated": false,
+        "visible_outputs": [
+          null,
+          "x"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Optional\n\ndef longest(strings: List[str]) -> Optional[str]:\n    \"\"\" Out of list of strings, return the longest one. Return the first one in case of multiple\n    strings of the same length. Return None in case the input list is empty.\n    \"\"\"\n    if not strings:\n        return None\n    \n    return max(strings, key=len)",
+        "draw_index": 7,
+        "error": null,
+        "fingerprint_outputs": [
+          "y"
+        ],
+        "generation_seconds": 1.929,
+        "hidden_outputs": [
+          "zzzz"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/12",
+        "truncated": false,
+        "visible_outputs": [
+          null,
+          "x"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/13": [
+      {
+        "code": "def greatest_common_divisor(a: int, b: int) -> int:\n    \"\"\" Return a greatest common divisor of two integers a and b\n    >>> greatest_common_divisor(3, 5)\n    1\n    >>> greatest_common_divisor(25, 15)\n    5\n    \"\"\"\n    while b:\n        a, b = b, a % b\n    return abs(a)",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          4,
+          1
+        ],
+        "generation_seconds": 1.306,
+        "hidden_outputs": [
+          7,
+          12
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/13",
+        "truncated": false,
+        "visible_outputs": [
+          1,
+          5
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def greatest_common_divisor(a: int, b: int) -> int:\n    \"\"\" Return a greatest common divisor of two integers a and b\n    >>> greatest_common_divisor(3, 5)\n    1\n    >>> greatest_common_divisor(25, 15)\n    5\n    \"\"\"\n    while b:\n        a, b = b, a % b\n    return abs(a)",
+        "draw_index": 1,
+        "error": null,
+        "fingerprint_outputs": [
+          4,
+          1
+        ],
+        "generation_seconds": 1.965,
+        "hidden_outputs": [
+          7,
+          12
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/13",
+        "truncated": false,
+        "visible_outputs": [
+          1,
+          5
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def greatest_common_divisor(a: int, b: int) -> int:\n    \"\"\" Return a greatest common divisor of two integers a and b\n    >>> greatest_common_divisor(3, 5)\n    1\n    >>> greatest_common_divisor(25, 15)\n    5\n    \"\"\"\n    while b:\n        a, b = b, a % b\n    return abs(a)",
+        "draw_index": 2,
+        "error": null,
+        "fingerprint_outputs": [
+          4,
+          1
+        ],
+        "generation_seconds": 1.996,
+        "hidden_outputs": [
+          7,
+          12
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/13",
+        "truncated": false,
+        "visible_outputs": [
+          1,
+          5
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def greatest_common_divisor(a: int, b: int) -> int:\n    \"\"\" Return a greatest common divisor of two integers a and b\n    >>> greatest_common_divisor(3, 5)\n    1\n    >>> greatest_common_divisor(25, 15)\n    5\n    \"\"\"\n    while b:\n        a, b = b, a % b\n    return abs(a)",
+        "draw_index": 3,
+        "error": null,
+        "fingerprint_outputs": [
+          4,
+          1
+        ],
+        "generation_seconds": 2.136,
+        "hidden_outputs": [
+          7,
+          12
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/13",
+        "truncated": false,
+        "visible_outputs": [
+          1,
+          5
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def greatest_common_divisor(a: int, b: int) -> int:\n    \"\"\" Return a greatest common divisor of two integers a and b\n    >>> greatest_common_divisor(3, 5)\n    1\n    >>> greatest_common_divisor(25, 15)\n    5\n    \"\"\"\n    while b:\n        a, b = b, a % b\n    return abs(a)",
+        "draw_index": 4,
+        "error": null,
+        "fingerprint_outputs": [
+          4,
+          1
+        ],
+        "generation_seconds": 2.292,
+        "hidden_outputs": [
+          7,
+          12
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/13",
+        "truncated": false,
+        "visible_outputs": [
+          1,
+          5
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def greatest_common_divisor(a: int, b: int) -> int:\n    \"\"\" Return a greatest common divisor of two integers a and b\n    >>> greatest_common_divisor(3, 5)\n    1\n    >>> greatest_common_divisor(25, 15)\n    5\n    \"\"\"\n    while b:\n        a, b = b, a % b\n    return abs(a)",
+        "draw_index": 5,
+        "error": null,
+        "fingerprint_outputs": [
+          4,
+          1
+        ],
+        "generation_seconds": 2.007,
+        "hidden_outputs": [
+          7,
+          12
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/13",
+        "truncated": false,
+        "visible_outputs": [
+          1,
+          5
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def greatest_common_divisor(a: int, b: int) -> int:\n    \"\"\" Return a greatest common divisor of two integers a and b\n    >>> greatest_common_divisor(3, 5)\n    1\n    >>> greatest_common_divisor(25, 15)\n    5\n    \"\"\"\n    while b:\n        a, b = b, a % b\n    return abs(a)",
+        "draw_index": 6,
+        "error": null,
+        "fingerprint_outputs": [
+          4,
+          1
+        ],
+        "generation_seconds": 2.054,
+        "hidden_outputs": [
+          7,
+          12
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/13",
+        "truncated": false,
+        "visible_outputs": [
+          1,
+          5
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def greatest_common_divisor(a: int, b: int) -> int:\n    \"\"\" Return a greatest common divisor of two integers a and b\n    >>> greatest_common_divisor(3, 5)\n    1\n    >>> greatest_common_divisor(25, 15)\n    5\n    \"\"\"\n    while b:\n        a, b = b, a % b\n    return abs(a)",
+        "draw_index": 7,
+        "error": null,
+        "fingerprint_outputs": [
+          4,
+          1
+        ],
+        "generation_seconds": 2.112,
+        "hidden_outputs": [
+          7,
+          12
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/13",
+        "truncated": false,
+        "visible_outputs": [
+          1,
+          5
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/14": [
+      {
+        "code": "from typing import List\n\ndef all_prefixes(string: str) -> List[str]:\n    \"\"\" Return list of all prefixes from shortest to longest of the input string\n    >>> all_prefixes('abc')\n    ['a', 'ab', 'abc']\n    \"\"\"\n    return [string[:i] for i in range(1, len(string) + 1)]",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            "a"
+          ],
+          [
+            "a",
+            "as",
+            "asd",
+            "asdf",
+            "asdfg",
+            "asdfgh",
+            "asdfgha"
+          ]
+        ],
+        "generation_seconds": 1.88,
+        "hidden_outputs": [
+          [
+            "W",
+            "WW",
+            "WWW"
+          ]
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/14",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            "a",
+            "as",
+            "asd",
+            "asdf",
+            "asdfg",
+            "asdfgh"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef all_prefixes(string: str) -> List[str]:\n    \"\"\" Return list of all prefixes from shortest to longest of the input string\n    >>> all_prefixes('abc')\n    ['a', 'ab', 'abc']\n    \"\"\"\n    return [string[:i] for i in range(1, len(string) + 1)]",
+        "draw_index": 1,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            "a"
+          ],
+          [
+            "a",
+            "as",
+            "asd",
+            "asdf",
+            "asdfg",
+            "asdfgh",
+            "asdfgha"
+          ]
+        ],
+        "generation_seconds": 1.871,
+        "hidden_outputs": [
+          [
+            "W",
+            "WW",
+            "WWW"
+          ]
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/14",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            "a",
+            "as",
+            "asd",
+            "asdf",
+            "asdfg",
+            "asdfgh"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef all_prefixes(string: str) -> List[str]:\n    \"\"\" Return list of all prefixes from shortest to longest of the input string\n    >>> all_prefixes('abc')\n    ['a', 'ab', 'abc']\n    \"\"\"\n    return [string[:i] for i in range(1, len(string) + 1)]",
+        "draw_index": 2,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            "a"
+          ],
+          [
+            "a",
+            "as",
+            "asd",
+            "asdf",
+            "asdfg",
+            "asdfgh",
+            "asdfgha"
+          ]
+        ],
+        "generation_seconds": 1.805,
+        "hidden_outputs": [
+          [
+            "W",
+            "WW",
+            "WWW"
+          ]
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/14",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            "a",
+            "as",
+            "asd",
+            "asdf",
+            "asdfg",
+            "asdfgh"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef all_prefixes(string: str) -> List[str]:\n    \"\"\" Return list of all prefixes from shortest to longest of the input string\n    >>> all_prefixes('abc')\n    ['a', 'ab', 'abc']\n    \"\"\"\n    return [string[:i] for i in range(1, len(string) + 1)]",
+        "draw_index": 3,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            "a"
+          ],
+          [
+            "a",
+            "as",
+            "asd",
+            "asdf",
+            "asdfg",
+            "asdfgh",
+            "asdfgha"
+          ]
+        ],
+        "generation_seconds": 1.826,
+        "hidden_outputs": [
+          [
+            "W",
+            "WW",
+            "WWW"
+          ]
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/14",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            "a",
+            "as",
+            "asd",
+            "asdf",
+            "asdfg",
+            "asdfgh"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef all_prefixes(string: str) -> List[str]:\n    \"\"\" Return list of all prefixes from shortest to longest of the input string\n    >>> all_prefixes('abc')\n    ['a', 'ab', 'abc']\n    \"\"\"\n    return [string[:i] for i in range(1, len(string) + 1)]",
+        "draw_index": 4,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            "a"
+          ],
+          [
+            "a",
+            "as",
+            "asd",
+            "asdf",
+            "asdfg",
+            "asdfgh",
+            "asdfgha"
+          ]
+        ],
+        "generation_seconds": 1.77,
+        "hidden_outputs": [
+          [
+            "W",
+            "WW",
+            "WWW"
+          ]
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/14",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            "a",
+            "as",
+            "asd",
+            "asdf",
+            "asdfg",
+            "asdfgh"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef all_prefixes(string: str) -> List[str]:\n    \"\"\" Return list of all prefixes from shortest to longest of the input string\n    >>> all_prefixes('abc')\n    ['a', 'ab', 'abc']\n    \"\"\"\n    return [string[:i] for i in range(1, len(string) + 1)]",
+        "draw_index": 5,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            "a"
+          ],
+          [
+            "a",
+            "as",
+            "asd",
+            "asdf",
+            "asdfg",
+            "asdfgh",
+            "asdfgha"
+          ]
+        ],
+        "generation_seconds": 1.761,
+        "hidden_outputs": [
+          [
+            "W",
+            "WW",
+            "WWW"
+          ]
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/14",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            "a",
+            "as",
+            "asd",
+            "asdf",
+            "asdfg",
+            "asdfgh"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef all_prefixes(string: str) -> List[str]:\n    \"\"\" Return list of all prefixes from shortest to longest of the input string\n    >>> all_prefixes('abc')\n    ['a', 'ab', 'abc']\n    \"\"\"\n    return [string[:i] for i in range(1, len(string) + 1)]",
+        "draw_index": 6,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            "a"
+          ],
+          [
+            "a",
+            "as",
+            "asd",
+            "asdf",
+            "asdfg",
+            "asdfgh",
+            "asdfgha"
+          ]
+        ],
+        "generation_seconds": 1.865,
+        "hidden_outputs": [
+          [
+            "W",
+            "WW",
+            "WWW"
+          ]
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/14",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            "a",
+            "as",
+            "asd",
+            "asdf",
+            "asdfg",
+            "asdfgh"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef all_prefixes(string: str) -> List[str]:\n    \"\"\" Return list of all prefixes from shortest to longest of the input string\n    >>> all_prefixes('abc')\n    ['a', 'ab', 'abc']\n    \"\"\"\n    return [string[:i] for i in range(1, len(string) + 1)]",
+        "draw_index": 7,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            "a"
+          ],
+          [
+            "a",
+            "as",
+            "asd",
+            "asdf",
+            "asdfg",
+            "asdfgh",
+            "asdfgha"
+          ]
+        ],
+        "generation_seconds": 1.86,
+        "hidden_outputs": [
+          [
+            "W",
+            "WW",
+            "WWW"
+          ]
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/14",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            "a",
+            "as",
+            "asd",
+            "asdf",
+            "asdfg",
+            "asdfgh"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/15": [
+      {
+        "code": "def string_sequence(n: int) -> str:\n    \"\"\" Return a string containing space-delimited numbers starting from 0 upto n inclusive.\n    >>> string_sequence(0)\n    '0'\n    >>> string_sequence(5)\n    '0 1 2 3 4 5'\n    \"\"\"\n    return \" \".join(str(i) for i in range(n + 1))",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          "0 1",
+          "0 1 2 3 4"
+        ],
+        "generation_seconds": 2.038,
+        "hidden_outputs": [
+          "0 1 2 3 4 5 6 7 8 9 10"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/15",
+        "truncated": false,
+        "visible_outputs": [
+          "0",
+          "0 1 2 3"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def string_sequence(n: int) -> str:\n    \"\"\" Return a string containing space-delimited numbers starting from 0 upto n inclusive.\n    >>> string_sequence(0)\n    '0'\n    >>> string_sequence(5)\n    '0 1 2 3 4 5'\n    \"\"\"\n    return \" \".join(map(str, range(n + 1)))",
+        "draw_index": 1,
+        "error": null,
+        "fingerprint_outputs": [
+          "0 1",
+          "0 1 2 3 4"
+        ],
+        "generation_seconds": 1.265,
+        "hidden_outputs": [
+          "0 1 2 3 4 5 6 7 8 9 10"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/15",
+        "truncated": false,
+        "visible_outputs": [
+          "0",
+          "0 1 2 3"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def string_sequence(n: int) -> str:\n    \"\"\" Return a string containing space-delimited numbers starting from 0 upto n inclusive.\n    >>> string_sequence(0)\n    '0'\n    >>> string_sequence(5)\n    '0 1 2 3 4 5'\n    \"\"\"\n    return \" \".join(str(i) for i in range(n + 1))",
+        "draw_index": 2,
+        "error": null,
+        "fingerprint_outputs": [
+          "0 1",
+          "0 1 2 3 4"
+        ],
+        "generation_seconds": 1.887,
+        "hidden_outputs": [
+          "0 1 2 3 4 5 6 7 8 9 10"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/15",
+        "truncated": false,
+        "visible_outputs": [
+          "0",
+          "0 1 2 3"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def string_sequence(n: int) -> str:\n    \"\"\" Return a string containing space-delimited numbers starting from 0 upto n inclusive.\n    >>> string_sequence(0)\n    '0'\n    >>> string_sequence(5)\n    '0 1 2 3 4 5'\n    \"\"\"\n    return ' '.join(map(str, range(n + 1)))",
+        "draw_index": 3,
+        "error": null,
+        "fingerprint_outputs": [
+          "0 1",
+          "0 1 2 3 4"
+        ],
+        "generation_seconds": 1.837,
+        "hidden_outputs": [
+          "0 1 2 3 4 5 6 7 8 9 10"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/15",
+        "truncated": false,
+        "visible_outputs": [
+          "0",
+          "0 1 2 3"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def string_sequence(n: int) -> str:\n    \"\"\" Return a string containing space-delimited numbers starting from 0 upto n inclusive.\n    >>> string_sequence(0)\n    '0'\n    >>> string_sequence(5)\n    '0 1 2 3 4 5'\n    \"\"\"\n    return \" \".join(map(str, range(n + 1)))",
+        "draw_index": 4,
+        "error": null,
+        "fingerprint_outputs": [
+          "0 1",
+          "0 1 2 3 4"
+        ],
+        "generation_seconds": 1.906,
+        "hidden_outputs": [
+          "0 1 2 3 4 5 6 7 8 9 10"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/15",
+        "truncated": false,
+        "visible_outputs": [
+          "0",
+          "0 1 2 3"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def string_sequence(n: int) -> str:\n    \"\"\" Return a string containing space-delimited numbers starting from 0 upto n inclusive.\n    >>> string_sequence(0)\n    '0'\n    >>> string_sequence(5)\n    '0 1 2 3 4 5'\n    \"\"\"\n    return \" \".join(map(str, range(n + 1)))",
+        "draw_index": 5,
+        "error": null,
+        "fingerprint_outputs": [
+          "0 1",
+          "0 1 2 3 4"
+        ],
+        "generation_seconds": 1.922,
+        "hidden_outputs": [
+          "0 1 2 3 4 5 6 7 8 9 10"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/15",
+        "truncated": false,
+        "visible_outputs": [
+          "0",
+          "0 1 2 3"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def string_sequence(n: int) -> str:\n    \"\"\" Return a string containing space-delimited numbers starting from 0 upto n inclusive.\n    >>> string_sequence(0)\n    '0'\n    >>> string_sequence(5)\n    '0 1 2 3 4 5'\n    \"\"\"\n    return ' '.join(str(i) for i in range(n + 1))",
+        "draw_index": 6,
+        "error": null,
+        "fingerprint_outputs": [
+          "0 1",
+          "0 1 2 3 4"
+        ],
+        "generation_seconds": 1.896,
+        "hidden_outputs": [
+          "0 1 2 3 4 5 6 7 8 9 10"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/15",
+        "truncated": false,
+        "visible_outputs": [
+          "0",
+          "0 1 2 3"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def string_sequence(n: int) -> str:\n    \"\"\" Return a string containing space-delimited numbers starting from 0 upto n inclusive.\n    >>> string_sequence(0)\n    '0'\n    >>> string_sequence(5)\n    '0 1 2 3 4 5'\n    \"\"\"\n    return ' '.join(str(i) for i in range(n + 1))",
+        "draw_index": 7,
+        "error": null,
+        "fingerprint_outputs": [
+          "0 1",
+          "0 1 2 3 4"
+        ],
+        "generation_seconds": 1.941,
+        "hidden_outputs": [
+          "0 1 2 3 4 5 6 7 8 9 10"
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/15",
+        "truncated": false,
+        "visible_outputs": [
+          "0",
+          "0 1 2 3"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/16": [
+      {
+        "code": "def count_distinct_characters(string: str) -> int:\n    \"\"\" Given a string, find out how many distinct characters (regardless of case) does it consist of\n    >>> count_distinct_characters('xyzXYZ')\n    3\n    >>> count_distinct_characters('Jerry')\n    4\n    \"\"\"\n    return len(set(string.lower()))",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          1,
+          5
+        ],
+        "generation_seconds": 1.66,
+        "hidden_outputs": [
+          1,
+          5
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/16",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          5
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def count_distinct_characters(string: str) -> int:\n    \"\"\" Given a string, find out how many distinct characters (regardless of case) does it consist of\n    >>> count_distinct_characters('xyzXYZ')\n    3\n    >>> count_distinct_characters('Jerry')\n    4\n    \"\"\"\n    return len(set(string.lower()))",
+        "draw_index": 1,
+        "error": null,
+        "fingerprint_outputs": [
+          1,
+          5
+        ],
+        "generation_seconds": 1.943,
+        "hidden_outputs": [
+          1,
+          5
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/16",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          5
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def count_distinct_characters(string: str) -> int:\n    \"\"\" Given a string, find out how many distinct characters (regardless of case) does it consist of\n    >>> count_distinct_characters('xyzXYZ')\n    3\n    >>> count_distinct_characters('Jerry')\n    4\n    \"\"\"\n    return len(set(string.lower()))",
+        "draw_index": 2,
+        "error": null,
+        "fingerprint_outputs": [
+          1,
+          5
+        ],
+        "generation_seconds": 2.027,
+        "hidden_outputs": [
+          1,
+          5
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/16",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          5
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def count_distinct_characters(string: str) -> int:\n    \"\"\" Given a string, find out how many distinct characters (regardless of case) does it consist of\n    >>> count_distinct_characters('xyzXYZ')\n    3\n    >>> count_distinct_characters('Jerry')\n    4\n    \"\"\"\n    return len(set(string.lower()))",
+        "draw_index": 3,
+        "error": null,
+        "fingerprint_outputs": [
+          1,
+          5
+        ],
+        "generation_seconds": 2.114,
+        "hidden_outputs": [
+          1,
+          5
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/16",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          5
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def count_distinct_characters(string: str) -> int:\n    \"\"\" Given a string, find out how many distinct characters (regardless of case) does it consist of\n    >>> count_distinct_characters('xyzXYZ')\n    3\n    >>> count_distinct_characters('Jerry')\n    4\n    \"\"\"\n    return len(set(string.lower()))",
+        "draw_index": 4,
+        "error": null,
+        "fingerprint_outputs": [
+          1,
+          5
+        ],
+        "generation_seconds": 1.922,
+        "hidden_outputs": [
+          1,
+          5
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/16",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          5
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def count_distinct_characters(string: str) -> int:\n    \"\"\" Given a string, find out how many distinct characters (regardless of case) does it consist of\n    >>> count_distinct_characters('xyzXYZ')\n    3\n    >>> count_distinct_characters('Jerry')\n    4\n    \"\"\"\n    return len(set(string.lower()))",
+        "draw_index": 5,
+        "error": null,
+        "fingerprint_outputs": [
+          1,
+          5
+        ],
+        "generation_seconds": 1.849,
+        "hidden_outputs": [
+          1,
+          5
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/16",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          5
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def count_distinct_characters(string: str) -> int:\n    \"\"\" Given a string, find out how many distinct characters (regardless of case) does it consist of\n    >>> count_distinct_characters('xyzXYZ')\n    3\n    >>> count_distinct_characters('Jerry')\n    4\n    \"\"\"\n    return len(set(string.lower()))",
+        "draw_index": 6,
+        "error": null,
+        "fingerprint_outputs": [
+          1,
+          5
+        ],
+        "generation_seconds": 2.036,
+        "hidden_outputs": [
+          1,
+          5
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/16",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          5
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def count_distinct_characters(string: str) -> int:\n    \"\"\" Given a string, find out how many distinct characters (regardless of case) does it consist of\n    >>> count_distinct_characters('xyzXYZ')\n    3\n    >>> count_distinct_characters('Jerry')\n    4\n    \"\"\"\n    return len(set(string.lower()))",
+        "draw_index": 7,
+        "error": null,
+        "fingerprint_outputs": [
+          1,
+          5
+        ],
+        "generation_seconds": 1.901,
+        "hidden_outputs": [
+          1,
+          5
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/16",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          5
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/17": [
+      {
+        "code": "from typing import List\n\ndef parse_music(music_string: str) -> List[int]:\n    \"\"\" Input to this function is a string representing musical notes in a special ASCII format.\n    Your task is to parse this string and return list of integers corresponding to how many beats does each\n    not last.\n\n    Here is a legend:\n    'o' - whole note, lasts four beats\n    'o|' - half note, lasts two beats\n    '.|' - quater note, lasts one beat\n    \"\"\"\n    # Replace the multi-character symbols with a placeholder or handle them by splitting\n    # Since 'o' is a substring of 'o|', we must be careful.\n    # A robust way is to split by spaces and then check the suffix.\n    \n    notes = music_string.split()\n    result = []\n    for note in notes:\n        if note == 'o':\n            result.append(4)\n        elif note == 'o|':\n            result.append(2)\n        elif note == '.|':\n            result.append(1)\n            \n    return result",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          [],
+          [
+            4,
+            4,
+            4
+          ]
+        ],
+        "generation_seconds": 3.689,
+        "hidden_outputs": [
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          [
+            2,
+            1,
+            2,
+            1,
+            4,
+            2,
+            4,
+            2
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/17",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            4,
+            4,
+            4,
+            4
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef parse_music(music_string: str) -> List[int]:\n    \"\"\" Input to this function is a string representing musical notes in a special ASCII format.\n    Your task is to parse this string and return list of integers corresponding to how many beats does each\n    not last.\n\n    Here is a legend:\n    'o' - whole note, lasts four beats\n    'o|' - half note, lasts two beats\n    '.|' - quater note, lasts one beat\n    \"\"\"\n    notes = music_string.split()\n    result = []\n    for note in notes:\n        if note == 'o':\n            result.append(4)\n        elif note == 'o|':\n            result.append(2)\n        elif note == '.|':\n            result.append(1)\n    return result",
+        "draw_index": 1,
+        "error": null,
+        "fingerprint_outputs": [
+          [],
+          [
+            4,
+            4,
+            4
+          ]
+        ],
+        "generation_seconds": 3.702,
+        "hidden_outputs": [
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          [
+            2,
+            1,
+            2,
+            1,
+            4,
+            2,
+            4,
+            2
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/17",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            4,
+            4,
+            4,
+            4
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef parse_music(music_string: str) -> List[int]:\n    \"\"\" Input to this function is a string representing musical notes in a special ASCII format.\n    Your task is to parse this string and return list of integers corresponding to how many beats does each\n    not last.\n\n    Here is a legend:\n    'o' - whole note, lasts four beats\n    'o|' - half note, lasts two beats\n    '.|' - quater note, lasts one beat\n    \"\"\"\n    # Replace the multi-character symbols with a placeholder or handle them by splitting\n    # Since 'o' is a prefix of 'o|', we should handle the longer ones first or \n    # use a strategy that doesn't break 'o|' into 'o' and '|'.\n    \n    # A robust way is to use a regex or a manual scan to identify tokens.\n    # Tokens are separated by spaces.\n    tokens = music_string.split()\n    result = []\n    \n    for token in tokens:\n        if token == 'o':\n            result.append(4)\n        elif token == 'o|':\n            result.append(2)\n        elif token == '.|':\n            result.append(1)\n            \n    return result",
+        "draw_index": 2,
+        "error": null,
+        "fingerprint_outputs": [
+          [],
+          [
+            4,
+            4,
+            4
+          ]
+        ],
+        "generation_seconds": 4.739,
+        "hidden_outputs": [
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          [
+            2,
+            1,
+            2,
+            1,
+            4,
+            2,
+            4,
+            2
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/17",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            4,
+            4,
+            4,
+            4
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef parse_music(music_string: str) -> List[int]:\n    \"\"\" Input to this function is a string representing musical notes in a special ASCII format.\n    Your task is to parse this string and return list of integers corresponding to how many beats does each\n    not last.\n\n    Here is a legend:\n    'o' - whole note, lasts four beats\n    'o|' - half note, lasts two beats\n    '.|' - quater note, lasts one beat\n    \"\"\"\n    notes = music_string.split()\n    result = []\n    for note in notes:\n        if note == 'o':\n            result.append(4)\n        elif note == 'o|':\n            result.append(2)\n        elif note == '.|':\n            result.append(1)\n    return result",
+        "draw_index": 3,
+        "error": null,
+        "fingerprint_outputs": [
+          [],
+          [
+            4,
+            4,
+            4
+          ]
+        ],
+        "generation_seconds": 3.467,
+        "hidden_outputs": [
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          [
+            2,
+            1,
+            2,
+            1,
+            4,
+            2,
+            4,
+            2
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/17",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            4,
+            4,
+            4,
+            4
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef parse_music(music_string: str) -> List[int]:\n    \"\"\" Input to this function is a string representing musical notes in a special ASCII format.\n    Your task is to parse this string and return list of integers corresponding to how many beats does each\n    not last.\n\n    Here is a legend:\n    'o' - whole note, lasts four beats\n    'o|' - half note, lasts two beats\n    '.|' - quater note, lasts one beat\n    \"\"\"\n    # Replace the multi-character tokens with a consistent placeholder or handle via splitting\n    # Since 'o' is a prefix of 'o|', we need to be careful.\n    # A good strategy is to split by whitespace and then check the suffix.\n    \n    notes = music_string.split()\n    result = []\n    \n    for note in notes:\n        if note == 'o':\n            result.append(4)\n        elif note == 'o|':\n            result.append(2)\n        elif note == '.|':\n            result.append(1)\n            \n    return result",
+        "draw_index": 4,
+        "error": null,
+        "fingerprint_outputs": [
+          [],
+          [
+            4,
+            4,
+            4
+          ]
+        ],
+        "generation_seconds": 4.335,
+        "hidden_outputs": [
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          [
+            2,
+            1,
+            2,
+            1,
+            4,
+            2,
+            4,
+            2
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/17",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            4,
+            4,
+            4,
+            4
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef parse_music(music_string: str) -> List[int]:\n    \"\"\" Input to this function is a string representing musical notes in a special ASCII format.\n    Your task is to parse this string and return list of integers corresponding to how many beats does each\n    not last.\n\n    Here is a legend:\n    'o' - whole note, lasts four beats\n    'o|' - half note, lasts two beats\n    '.|' - quater note, lasts one beat\n    \"\"\"\n    notes = music_string.split()\n    result = []\n    for note in notes:\n        if note == 'o':\n            result.append(4)\n        elif note == 'o|':\n            result.append(2)\n        elif note == '.|':\n            result.append(1)\n    return result",
+        "draw_index": 5,
+        "error": null,
+        "fingerprint_outputs": [
+          [],
+          [
+            4,
+            4,
+            4
+          ]
+        ],
+        "generation_seconds": 3.516,
+        "hidden_outputs": [
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          [
+            2,
+            1,
+            2,
+            1,
+            4,
+            2,
+            4,
+            2
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/17",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            4,
+            4,
+            4,
+            4
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef parse_music(music_string: str) -> List[int]:\n    \"\"\" Input to this function is a string representing musical notes in a special ASCII format.\n    Your task is to parse this string and return list of integers corresponding to how many beats does each\n    not last.\n\n    Here is a legend:\n    'o' - whole note, lasts four beats\n    'o|' - half note, lasts two beats\n    '.|' - quater note, lasts one beat\n    \"\"\"\n    # Replace the multi-character symbols with a placeholder that simplifies splitting\n    # We use a unique placeholder to avoid conflicts with the original symbols\n    # or we can just process the string by identifying the tokens.\n    \n    # Tokenize by splitting by spaces and cleaning up\n    raw_tokens = music_string.split()\n    result = []\n    \n    for token in raw_tokens:\n        if token == 'o':\n            result.append(4)\n        elif token == 'o|':\n            result.append(2)\n        elif token == '.|':\n            result.append(1)\n            \n    return result",
+        "draw_index": 6,
+        "error": null,
+        "fingerprint_outputs": [
+          [],
+          [
+            4,
+            4,
+            4
+          ]
+        ],
+        "generation_seconds": 4.525,
+        "hidden_outputs": [
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          [
+            2,
+            1,
+            2,
+            1,
+            4,
+            2,
+            4,
+            2
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/17",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            4,
+            4,
+            4,
+            4
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef parse_music(music_string: str) -> List[int]:\n    \"\"\" Input to this function is a string representing musical notes in a special ASCII format.\n    Your task is to parse this string and return list of integers corresponding to how many beats does each\n    note last.\n\n    Here is a legend:\n    'o' - whole note, lasts four beats\n    'o|' - half note, lasts two beats\n    '.|' - quater note, lasts one beat\n    \"\"\"\n    # Replace the multi-character tokens with a placeholder or handle them carefully\n    # Since 'o' is a prefix of 'o|', we should check for the longer ones first\n    # or simply split by spaces and process each token.\n    \n    tokens = music_string.split()\n    result = []\n    for token in tokens:\n        if token == 'o':\n            result.append(4)\n        elif token == 'o|':\n            result.append(2)\n        elif token == '.|':\n            result.append(1)\n            \n    return result",
+        "draw_index": 7,
+        "error": null,
+        "fingerprint_outputs": [
+          [],
+          [
+            4,
+            4,
+            4
+          ]
+        ],
+        "generation_seconds": 4.112,
+        "hidden_outputs": [
+          [
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            2,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          [
+            2,
+            1,
+            2,
+            1,
+            4,
+            2,
+            4,
+            2
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/17",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            4,
+            4,
+            4,
+            4
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/18": [
+      {
+        "code": "def how_many_times(string: str, substring: str) -> int:\n    \"\"\" Find how many times a given substring can be found in the original string. Count overlaping cases.\n    >>> how_many_times('', 'a')\n    0\n    >>> how_many_times('aaa', 'a')\n    3\n    >>> how_many_times('aaaa', 'aa')\n    3\n    \"\"\"\n    if not substring:\n        return 0\n    \n    count = 0\n    start = 0\n    while True:\n        start = string.find(substring, start)\n        if start == -1:\n            break\n        count += 1\n        start += 1\n    return count",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          0,
+          1
+        ],
+        "generation_seconds": 2.66,
+        "hidden_outputs": [
+          4,
+          1
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/18",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          4
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def how_many_times(string: str, substring: str) -> int:\n    \"\"\" Find how many times a given substring can be found in the original string. Count overlaping cases.\n    >>> how_many_times('', 'a')\n    0\n    >>> how_many_times('aaa', 'a')\n    3\n    >>> how_many_times('aaaa', 'aa')\n    3\n    \"\"\"\n    if not substring:\n        return 0\n    \n    count = 0\n    start = 0\n    while True:\n        start = string.find(substring, start)\n        if start == -1:\n            break\n        count += 1\n        start += 1\n    return count",
+        "draw_index": 1,
+        "error": null,
+        "fingerprint_outputs": [
+          0,
+          1
+        ],
+        "generation_seconds": 2.916,
+        "hidden_outputs": [
+          4,
+          1
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/18",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          4
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def how_many_times(string: str, substring: str) -> int:\n    \"\"\" Find how many times a given substring can be found in the original string. Count overlaping cases.\n    >>> how_many_times('', 'a')\n    0\n    >>> how_many_times('aaa', 'a')\n    3\n    >>> how_many_times('aaaa', 'aa')\n    3\n    \"\"\"\n    if not substring:\n        return 0\n    \n    count = 0\n    start = 0\n    while True:\n        start = string.find(substring, start)\n        if start == -1:\n            break\n        count += 1\n        start += 1\n    return count",
+        "draw_index": 2,
+        "error": null,
+        "fingerprint_outputs": [
+          0,
+          1
+        ],
+        "generation_seconds": 2.996,
+        "hidden_outputs": [
+          4,
+          1
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/18",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          4
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def how_many_times(string: str, substring: str) -> int:\n    \"\"\" Find how many times a given substring can be found in the original string. Count overlaping cases.\n    >>> how_many_times('', 'a')\n    0\n    >>> how_many_times('aaa', 'a')\n    3\n    >>> how_many_times('aaaa', 'aa')\n    3\n    \"\"\"\n    if not substring:\n        return 0\n    count = 0\n    for i in range(len(string) - len(substring) + 1):\n        if string[i:i + len(substring)] == substring:\n            count += 1\n    return count",
+        "draw_index": 3,
+        "error": null,
+        "fingerprint_outputs": [
+          0,
+          1
+        ],
+        "generation_seconds": 2.882,
+        "hidden_outputs": [
+          4,
+          1
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/18",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          4
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def how_many_times(string: str, substring: str) -> int:\n    \"\"\" Find how many times a given substring can be found in the original string. Count overlaping cases.\n    >>> how_many_times('', 'a')\n    0\n    >>> how_many_times('aaa', 'a')\n    3\n    >>> how_many_times('aaaa', 'aa')\n    3\n    \"\"\"\n    if not substring:\n        return 0\n    \n    count = 0\n    start = 0\n    while True:\n        start = string.find(substring, start)\n        if start == -1:\n            break\n        count += 1\n        start += 1\n    return count",
+        "draw_index": 4,
+        "error": null,
+        "fingerprint_outputs": [
+          0,
+          1
+        ],
+        "generation_seconds": 2.993,
+        "hidden_outputs": [
+          4,
+          1
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/18",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          4
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def how_many_times(string: str, substring: str) -> int:\n    \"\"\" Find how many times a given substring can be found in the original string. Count overlaping cases.\n    >>> how_many_times('', 'a')\n    0\n    >>> how_many_times('aaa', 'a')\n    3\n    >>> how_many_times('aaaa', 'aa')\n    3\n    \"\"\"\n    if not substring:\n        return 0\n    \n    count = 0\n    start = 0\n    while True:\n        start = string.find(substring, start)\n        if start == -1:\n            break\n        count += 1\n        start += 1\n    return count",
+        "draw_index": 5,
+        "error": null,
+        "fingerprint_outputs": [
+          0,
+          1
+        ],
+        "generation_seconds": 3.002,
+        "hidden_outputs": [
+          4,
+          1
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/18",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          4
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def how_many_times(string: str, substring: str) -> int:\n    \"\"\" Find how many times a given substring can be found in the original string. Count overlaping cases.\n    >>> how_many_times('', 'a')\n    0\n    >>> how_many_times('aaa', 'a')\n    3\n    >>> how_many_times('aaaa', 'aa')\n    3\n    \"\"\"\n    if not substring:\n        return 0\n    count = 0\n    for i in range(len(string) - len(substring) + 1):\n        if string[i:i + len(substring)] == substring:\n            count += 1\n    return count",
+        "draw_index": 6,
+        "error": null,
+        "fingerprint_outputs": [
+          0,
+          1
+        ],
+        "generation_seconds": 2.857,
+        "hidden_outputs": [
+          4,
+          1
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/18",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          4
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def how_many_times(string: str, substring: str) -> int:\n    \"\"\" Find how many times a given substring can be found in the original string. Count overlaping cases.\n    >>> how_many_times('', 'a')\n    0\n    >>> how_many_times('aaa', 'a')\n    3\n    >>> how_many_times('aaaa', 'aa')\n    3\n    \"\"\"\n    if not substring:\n        return 0\n    count = 0\n    for i in range(len(string) - len(substring) + 1):\n        if string[i:i + len(substring)] == substring:\n            count += 1\n    return count",
+        "draw_index": 7,
+        "error": null,
+        "fingerprint_outputs": [
+          0,
+          1
+        ],
+        "generation_seconds": 3.052,
+        "hidden_outputs": [
+          4,
+          1
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/18",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          4
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/19": [
+      {
+        "code": "from typing import List\n\ndef sort_numbers(numbers: str) -> str:\n    \"\"\" Input is a space-delimited string of numberals from 'zero' to 'nine'.\n    Valid choices are 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' and 'nine'.\n    Return the string with numbers sorted from smallest to largest\n    >>> sort_numbers('three one five')\n    'one three five'\n    \"\"\"\n    if not numbers:\n        return \"\"\n    \n    mapping = {\n        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4,\n        'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9\n    }\n    \n    words = numbers.split()\n    # Sort the words based on their integer value in the mapping\n    sorted_words = sorted(words, key=lambda x: mapping[x])\n    \n    return \" \".join(sorted_words)",
+        "draw_index": 0,
+        "error": "KeyError: \"'a'\"",
+        "fingerprint_outputs": [
+          {
+            "error": "KeyError: \"'a'\""
+          },
+          {
+            "error": "KeyError: \"'threea'\""
+          }
+        ],
+        "generation_seconds": 4.191,
+        "hidden_outputs": [
+          "three five nine",
+          "zero four five seven eight nine",
+          "zero one two three four five six"
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/19",
+        "truncated": false,
+        "visible_outputs": [
+          "",
+          "three"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef sort_numbers(numbers: str) -> str:\n    \"\"\" Input is a space-delimited string of numberals from 'zero' to 'nine'.\n    Valid choices are 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' and 'nine'.\n    Return the string with numbers sorted from smallest to largest\n    >>> sort_numbers('three one five')\n    'one three five'\n    \"\"\"\n    if not numbers:\n        return ''\n    \n    mapping = {\n        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4,\n        'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9\n    }\n    \n    words = numbers.split()\n    # Sort the words based on their integer value in the mapping\n    sorted_words = sorted(words, key=lambda x: mapping[x])\n    \n    return ' '.join(sorted_words)",
+        "draw_index": 1,
+        "error": "KeyError: \"'a'\"",
+        "fingerprint_outputs": [
+          {
+            "error": "KeyError: \"'a'\""
+          },
+          {
+            "error": "KeyError: \"'threea'\""
+          }
+        ],
+        "generation_seconds": 4.257,
+        "hidden_outputs": [
+          "three five nine",
+          "zero four five seven eight nine",
+          "zero one two three four five six"
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/19",
+        "truncated": false,
+        "visible_outputs": [
+          "",
+          "three"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef sort_numbers(numbers: str) -> str:\n    \"\"\" Input is a space-delimited string of numberals from 'zero' to 'nine'.\n    Valid choices are 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' and 'nine'.\n    Return the string with numbers sorted from smallest to largest\n    >>> sort_numbers('three one five')\n    'one three five'\n    \"\"\"\n    if not numbers.strip():\n        return \"\"\n    \n    mapping = {\n        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4,\n        'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9\n    }\n    \n    words = numbers.split()\n    # Sort the list of words based on their integer value in the mapping\n    sorted_words = sorted(words, key=lambda x: mapping[x])\n    \n    return \" \".join(sorted_words)",
+        "draw_index": 2,
+        "error": "KeyError: \"'a'\"",
+        "fingerprint_outputs": [
+          {
+            "error": "KeyError: \"'a'\""
+          },
+          {
+            "error": "KeyError: \"'threea'\""
+          }
+        ],
+        "generation_seconds": 4.422,
+        "hidden_outputs": [
+          "three five nine",
+          "zero four five seven eight nine",
+          "zero one two three four five six"
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/19",
+        "truncated": false,
+        "visible_outputs": [
+          "",
+          "three"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef sort_numbers(numbers: str) -> str:\n    \"\"\" Input is a space-delimited string of numberals from 'zero' to 'nine'.\n    Valid choices are 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' and 'nine'.\n    Return the string with numbers sorted from smallest to largest\n    >>> sort_numbers('three one five')\n    'one three five'\n    \"\"\"\n    if not numbers.strip():\n        return \"\"\n    \n    mapping = {\n        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4,\n        'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9\n    }\n    \n    words = numbers.split()\n    # Sort the list of words based on their integer value in the mapping\n    sorted_words = sorted(words, key=lambda x: mapping[x])\n    \n    return \" \".join(sorted_words)",
+        "draw_index": 3,
+        "error": "KeyError: \"'a'\"",
+        "fingerprint_outputs": [
+          {
+            "error": "KeyError: \"'a'\""
+          },
+          {
+            "error": "KeyError: \"'threea'\""
+          }
+        ],
+        "generation_seconds": 4.544,
+        "hidden_outputs": [
+          "three five nine",
+          "zero four five seven eight nine",
+          "zero one two three four five six"
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/19",
+        "truncated": false,
+        "visible_outputs": [
+          "",
+          "three"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef sort_numbers(numbers: str) -> str:\n    \"\"\" Input is a space-delimited string of numberals from 'zero' to 'nine'.\n    Valid choices are 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' and 'nine'.\n    Return the string with numbers sorted from smallest to largest\n    >>> sort_numbers('three one five')\n    'one three five'\n    \"\"\"\n    if not numbers:\n        return \"\"\n    \n    mapping = {\n        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4,\n        'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9\n    }\n    \n    words = numbers.split()\n    # Sort the words based on their integer value in the mapping\n    sorted_words = sorted(words, key=lambda x: mapping[x])\n    \n    return \" \".join(sorted_words)",
+        "draw_index": 4,
+        "error": "KeyError: \"'a'\"",
+        "fingerprint_outputs": [
+          {
+            "error": "KeyError: \"'a'\""
+          },
+          {
+            "error": "KeyError: \"'threea'\""
+          }
+        ],
+        "generation_seconds": 4.285,
+        "hidden_outputs": [
+          "three five nine",
+          "zero four five seven eight nine",
+          "zero one two three four five six"
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/19",
+        "truncated": false,
+        "visible_outputs": [
+          "",
+          "three"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef sort_numbers(numbers: str) -> str:\n    \"\"\" Input is a space-delimited string of numberals from 'zero' to 'nine'.\n    Valid choices are 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' and 'nine'.\n    Return the string with numbers sorted from smallest to largest\n    >>> sort_numbers('three one five')\n    'one three five'\n    \"\"\"\n    if not numbers:\n        return \"\"\n    \n    mapping = {\n        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4,\n        'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9\n    }\n    \n    words = numbers.split()\n    # Sort the list of words based on their integer value in the mapping\n    sorted_words = sorted(words, key=lambda x: mapping[x])\n    \n    return \" \".join(sorted_words)",
+        "draw_index": 5,
+        "error": "KeyError: \"'a'\"",
+        "fingerprint_outputs": [
+          {
+            "error": "KeyError: \"'a'\""
+          },
+          {
+            "error": "KeyError: \"'threea'\""
+          }
+        ],
+        "generation_seconds": 4.032,
+        "hidden_outputs": [
+          "three five nine",
+          "zero four five seven eight nine",
+          "zero one two three four five six"
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/19",
+        "truncated": false,
+        "visible_outputs": [
+          "",
+          "three"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef sort_numbers(numbers: str) -> str:\n    \"\"\" Input is a space-delimited string of numberals from 'zero' to 'nine'.\n    Valid choices are 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' and 'nine'.\n    Return the string with numbers sorted from smallest to largest\n    >>> sort_numbers('three one five')\n    'one three five'\n    \"\"\"\n    if not numbers.strip():\n        return \"\"\n    \n    mapping = {\n        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4,\n        'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9\n    }\n    \n    words = numbers.split()\n    # Sort the list of words based on their integer value in the mapping\n    sorted_words = sorted(words, key=lambda x: mapping[x])\n    \n    return \" \".join(sorted_words)",
+        "draw_index": 6,
+        "error": "KeyError: \"'a'\"",
+        "fingerprint_outputs": [
+          {
+            "error": "KeyError: \"'a'\""
+          },
+          {
+            "error": "KeyError: \"'threea'\""
+          }
+        ],
+        "generation_seconds": 4.196,
+        "hidden_outputs": [
+          "three five nine",
+          "zero four five seven eight nine",
+          "zero one two three four five six"
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/19",
+        "truncated": false,
+        "visible_outputs": [
+          "",
+          "three"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef sort_numbers(numbers: str) -> str:\n    \"\"\" Input is a space-delimited string of numberals from 'zero' to 'nine'.\n    Valid choices are 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' and 'nine'.\n    Return the string with numbers sorted from smallest to largest\n    >>> sort_numbers('three one five')\n    'one three five'\n    \"\"\"\n    if not numbers.strip():\n        return \"\"\n    \n    mapping = {\n        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4,\n        'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9\n    }\n    \n    words = numbers.split()\n    # Sort the list of words based on their integer value in the mapping\n    sorted_words = sorted(words, key=lambda x: mapping[x])\n    \n    return \" \".join(sorted_words)",
+        "draw_index": 7,
+        "error": "KeyError: \"'a'\"",
+        "fingerprint_outputs": [
+          {
+            "error": "KeyError: \"'a'\""
+          },
+          {
+            "error": "KeyError: \"'threea'\""
+          }
+        ],
+        "generation_seconds": 4.092,
+        "hidden_outputs": [
+          "three five nine",
+          "zero four five seven eight nine",
+          "zero one two three four five six"
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/19",
+        "truncated": false,
+        "visible_outputs": [
+          "",
+          "three"
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/20": [
+      {
+        "code": "from typing import List, Tuple\n\ndef find_closest_elements(numbers: List[float]) -> Tuple[float, float]:\n    \"\"\" From a supplied list of numbers (of length at least two) select and return two that are the closest to each\n    other and return them in order (smaller number, larger number).\n    \"\"\"\n    # Sort the numbers to ensure we only need to check adjacent elements\n    sorted_nums = sorted(numbers)\n    \n    min_diff = float('inf')\n    closest_pair = (0.0, 0.0)\n    \n    # Iterate through the sorted list and find the pair with the smallest difference\n    for i in range(len(sorted_nums) - 1):\n        diff = sorted_nums[i+1] - sorted_nums[i]\n        if diff < min_diff:\n            min_diff = diff\n            closest_pair = (sorted_nums[i], sorted_nums[i+1])\n            \n    return closest_pair",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            3.9,
+            4.0
+          ],
+          [
+            5.0,
+            5.9
+          ]
+        ],
+        "generation_seconds": 3.341,
+        "hidden_outputs": [
+          [
+            2.0,
+            2.2
+          ],
+          [
+            2.0,
+            2.0
+          ],
+          [
+            2.2,
+            3.1
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/20",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            3.9,
+            4.0
+          ],
+          [
+            5.0,
+            5.9
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Tuple\n\ndef find_closest_elements(numbers: List[float]) -> Tuple[float, float]:\n    \"\"\" From a supplied list of numbers (of length at least two) select and return two that are the closest to each\n    other and return them in order (smaller number, larger number).\n    \"\"\"\n    numbers.sort()\n    min_diff = float('inf')\n    closest_pair = (0.0, 0.0)\n    \n    for i in range(len(numbers) - 1):\n        diff = numbers[i+1] - numbers[i]\n        if diff < min_diff:\n            min_diff = diff\n            closest_pair = (numbers[i], numbers[i+1])\n            \n    return closest_pair",
+        "draw_index": 1,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            3.9,
+            4.0
+          ],
+          [
+            5.0,
+            5.9
+          ]
+        ],
+        "generation_seconds": 3.201,
+        "hidden_outputs": [
+          [
+            2.0,
+            2.2
+          ],
+          [
+            2.0,
+            2.0
+          ],
+          [
+            2.2,
+            3.1
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/20",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            3.9,
+            4.0
+          ],
+          [
+            5.0,
+            5.9
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Tuple\n\ndef find_closest_elements(numbers: List[float]) -> Tuple[float, float]:\n    \"\"\" From a supplied list of numbers (of length at least two) select and return two that are the closest to each\n    other and return them in order (smaller number, larger number).\n    \"\"\"\n    sorted_nums = sorted(numbers)\n    min_diff = float('inf')\n    closest_pair = (0.0, 0.0)\n    \n    for i in range(len(sorted_nums) - 1):\n        diff = sorted_nums[i+1] - sorted_nums[i]\n        if diff < min_diff:\n            min_diff = diff\n            closest_pair = (sorted_nums[i], sorted_nums[i+1])\n            \n    return closest_pair",
+        "draw_index": 2,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            3.9,
+            4.0
+          ],
+          [
+            5.0,
+            5.9
+          ]
+        ],
+        "generation_seconds": 3.57,
+        "hidden_outputs": [
+          [
+            2.0,
+            2.2
+          ],
+          [
+            2.0,
+            2.0
+          ],
+          [
+            2.2,
+            3.1
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/20",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            3.9,
+            4.0
+          ],
+          [
+            5.0,
+            5.9
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Tuple\n\ndef find_closest_elements(numbers: List[float]) -> Tuple[float, float]:\n    \"\"\" From a supplied list of numbers (of length at least two) select and return two that are the closest to each\n    other and return them in order (smaller number, larger number).\n    >>> find_closest_elements([1.0, 2.0, 3.0, 4.0, 5.0, 2.2])\n    (2.0, 2.2)\n    >>> find_closest_elements([1.0, 2.0, 3.0, 4.0, 5.0, 2.0])\n    (2.0, 2.0)\n    \"\"\"\n    sorted_nums = sorted(numbers)\n    min_diff = float('inf')\n    closest_pair = (0.0, 0.0)\n    \n    for i in range(len(sorted_nums) - 1):\n        diff = sorted_nums[i+1] - sorted_nums[i]\n        if diff < min_diff:\n            min_diff = diff\n            closest_pair = (sorted_nums[i], sorted_nums[i+1])\n            \n    return closest_pair",
+        "draw_index": 3,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            3.9,
+            4.0
+          ],
+          [
+            5.0,
+            5.9
+          ]
+        ],
+        "generation_seconds": 4.853,
+        "hidden_outputs": [
+          [
+            2.0,
+            2.2
+          ],
+          [
+            2.0,
+            2.0
+          ],
+          [
+            2.2,
+            3.1
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/20",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            3.9,
+            4.0
+          ],
+          [
+            5.0,
+            5.9
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Tuple\n\ndef find_closest_elements(numbers: List[float]) -> Tuple[float, float]:\n    \"\"\" From a supplied list of numbers (of length at least two) select and return two that are the closest to each\n    other and return them in order (smaller number, larger number).\n    \"\"\"\n    numbers_sorted = sorted(numbers)\n    min_diff = float('inf')\n    closest_pair = (0.0, 0.0)\n    \n    for i in range(len(numbers_sorted) - 1):\n        diff = numbers_sorted[i+1] - numbers_sorted[i]\n        if diff < min_diff:\n            min_diff = diff\n            closest_pair = (numbers_sorted[i], numbers_sorted[i+1])\n            \n    return closest_pair",
+        "draw_index": 4,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            3.9,
+            4.0
+          ],
+          [
+            5.0,
+            5.9
+          ]
+        ],
+        "generation_seconds": 3.416,
+        "hidden_outputs": [
+          [
+            2.0,
+            2.2
+          ],
+          [
+            2.0,
+            2.0
+          ],
+          [
+            2.2,
+            3.1
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/20",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            3.9,
+            4.0
+          ],
+          [
+            5.0,
+            5.9
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Tuple\n\ndef find_closest_elements(numbers: List[float]) -> Tuple[float, float]:\n    \"\"\" From a supplied list of numbers (of length at least two) select and return two that are the closest to each\n    other and return them in order (smaller number, larger number).\n    \"\"\"\n    numbers_sorted = sorted(numbers)\n    min_diff = float('inf')\n    closest_pair = (0.0, 0.0)\n    \n    for i in range(len(numbers_sorted) - 1):\n        diff = numbers_sorted[i+1] - numbers_sorted[i]\n        if diff < min_diff:\n            min_diff = diff\n            closest_pair = (numbers_sorted[i], numbers_sorted[i+1])\n            \n    return closest_pair",
+        "draw_index": 5,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            3.9,
+            4.0
+          ],
+          [
+            5.0,
+            5.9
+          ]
+        ],
+        "generation_seconds": 3.605,
+        "hidden_outputs": [
+          [
+            2.0,
+            2.2
+          ],
+          [
+            2.0,
+            2.0
+          ],
+          [
+            2.2,
+            3.1
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/20",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            3.9,
+            4.0
+          ],
+          [
+            5.0,
+            5.9
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Tuple\n\ndef find_closest_elements(numbers: List[float]) -> Tuple[float, float]:\n    \"\"\" From a supplied list of numbers (of length at least two) select and return two that are the closest to each\n    other and return them in order (smaller number, larger number).\n    >>> find_closest_elements([1.0, 2.0, 3.0, 4.0, 5.0, 2.2])\n    (2.0, 2.2)\n    >>> find_closest_elements([1.0, 2.0, 3.0, 4.0, 5.0, 2.0])\n    (2.0, 2.0)\n    \"\"\"\n    sorted_nums = sorted(numbers)\n    min_diff = float('inf')\n    closest_pair = (0.0, 0.0)\n    \n    for i in range(len(sorted_nums) - 1):\n        diff = sorted_nums[i+1] - sorted_nums[i]\n        if diff < min_diff:\n            min_diff = diff\n            closest_pair = (sorted_nums[i], sorted_nums[i+1])\n            \n    return closest_pair",
+        "draw_index": 6,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            3.9,
+            4.0
+          ],
+          [
+            5.0,
+            5.9
+          ]
+        ],
+        "generation_seconds": 4.881,
+        "hidden_outputs": [
+          [
+            2.0,
+            2.2
+          ],
+          [
+            2.0,
+            2.0
+          ],
+          [
+            2.2,
+            3.1
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/20",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            3.9,
+            4.0
+          ],
+          [
+            5.0,
+            5.9
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Tuple\n\ndef find_closest_elements(numbers: List[float]) -> Tuple[float, float]:\n    \"\"\" From a supplied list of numbers (of length at least two) select and return two that are the closest to each\n    other and return them in order (smaller number, larger number).\n    >>> find_closest_elements([1.0, 2.0, 3.0, 4.0, 5.0, 2.2])\n    (2.0, 2.2)\n    >>> find_closest_elements([1.0, 2.0, 3.0, 4.0, 5.0, 2.0])\n    (2.0, 2.0)\n    \"\"\"\n    sorted_nums = sorted(numbers)\n    min_diff = float('inf')\n    closest_pair = (0.0, 0.0)\n    \n    for i in range(len(sorted_nums) - 1):\n        diff = sorted_nums[i+1] - sorted_nums[i]\n        if diff < min_diff:\n            min_diff = diff\n            closest_pair = (sorted_nums[i], sorted_nums[i+1])\n            \n    return closest_pair",
+        "draw_index": 7,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            3.9,
+            4.0
+          ],
+          [
+            5.0,
+            5.9
+          ]
+        ],
+        "generation_seconds": 4.876,
+        "hidden_outputs": [
+          [
+            2.0,
+            2.2
+          ],
+          [
+            2.0,
+            2.0
+          ],
+          [
+            2.2,
+            3.1
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/20",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            3.9,
+            4.0
+          ],
+          [
+            5.0,
+            5.9
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/21": [
+      {
+        "code": "from typing import List\n\ndef rescale_to_unit(numbers: List[float]) -> List[float]:\n    \"\"\" Given list of numbers (of at least two elements), apply a linear transform to that list,\n    such that the smallest number will become 0 and the largest will become 1\n    >>> rescale_to_unit([1.0, 2.0, 3.0, 4.0, 5.0])\n    [0.0, 0.25, 0.5, 0.75, 1.0]\n    \"\"\"\n    min_val = min(numbers)\n    max_val = max(numbers)\n    \n    # Handle the case where all numbers are the same to avoid division by zero\n    if max_val == min_val:\n        return [0.0] * len(numbers)\n        \n    return [(x - min_val) / (max_val - min_val) for x in numbers]",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "generation_seconds": 3.391,
+        "hidden_outputs": [
+          [
+            0.0,
+            0.25,
+            0.5,
+            0.75,
+            1.0
+          ],
+          [
+            0.25,
+            0.0,
+            1.0,
+            0.5,
+            0.75
+          ],
+          [
+            0.25,
+            0.0,
+            1.0,
+            0.5,
+            0.75
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/21",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            0.0,
+            1.0
+          ],
+          [
+            1.0,
+            0.0
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef rescale_to_unit(numbers: List[float]) -> List[float]:\n    \"\"\" Given list of numbers (of at least two elements), apply a linear transform to that list,\n    such that the smallest number will become 0 and the largest will become 1\n    >>> rescale_to_unit([1.0, 2.0, 3.0, 4.0, 5.0])\n    [0.0, 0.25, 0.5, 0.75, 1.0]\n    \"\"\"\n    min_val = min(numbers)\n    max_val = max(numbers)\n    \n    # Handle the case where all numbers are the same to avoid division by zero\n    if max_val == min_val:\n        return [0.0] * len(numbers)\n        \n    return [(x - min_val) / (max_val - min_val) for x in numbers]",
+        "draw_index": 1,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "generation_seconds": 3.826,
+        "hidden_outputs": [
+          [
+            0.0,
+            0.25,
+            0.5,
+            0.75,
+            1.0
+          ],
+          [
+            0.25,
+            0.0,
+            1.0,
+            0.5,
+            0.75
+          ],
+          [
+            0.25,
+            0.0,
+            1.0,
+            0.5,
+            0.75
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/21",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            0.0,
+            1.0
+          ],
+          [
+            1.0,
+            0.0
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef rescale_to_unit(numbers: List[float]) -> List[float]:\n    \"\"\" Given list of numbers (of at least two elements), apply a linear transform to that list,\n    such that the smallest number will become 0 and the largest will become 1\n    >>> rescale_to_unit([1.0, 2.0, 3.0, 4.0, 5.0])\n    [0.0, 0.25, 0.5, 0.75, 1.0]\n    \"\"\"\n    min_val = min(numbers)\n    max_val = max(numbers)\n    \n    # Handle the case where all numbers are the same to avoid division by zero\n    if max_val == min_val:\n        return [0.0] * len(numbers)\n        \n    return [(x - min_val) / (max_val - min_val) for x in numbers]",
+        "draw_index": 2,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "generation_seconds": 4.024,
+        "hidden_outputs": [
+          [
+            0.0,
+            0.25,
+            0.5,
+            0.75,
+            1.0
+          ],
+          [
+            0.25,
+            0.0,
+            1.0,
+            0.5,
+            0.75
+          ],
+          [
+            0.25,
+            0.0,
+            1.0,
+            0.5,
+            0.75
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/21",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            0.0,
+            1.0
+          ],
+          [
+            1.0,
+            0.0
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef rescale_to_unit(numbers: List[float]) -> List[float]:\n    \"\"\" Given list of numbers (of at least two elements), apply a linear transform to that list,\n    such that the smallest number will become 0 and the largest will become 1\n    >>> rescale_to_unit([1.0, 2.0, 3.0, 4.0, 5.0])\n    [0.0, 0.25, 0.5, 0.75, 1.0]\n    \"\"\"\n    min_val = min(numbers)\n    max_val = max(numbers)\n    \n    # Handle the case where all numbers are the same to avoid division by zero\n    if max_val == min_val:\n        return [0.0] * len(numbers)\n    \n    return [(x - min_val) / (max_val - min_val) for x in numbers]",
+        "draw_index": 3,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "generation_seconds": 4.05,
+        "hidden_outputs": [
+          [
+            0.0,
+            0.25,
+            0.5,
+            0.75,
+            1.0
+          ],
+          [
+            0.25,
+            0.0,
+            1.0,
+            0.5,
+            0.75
+          ],
+          [
+            0.25,
+            0.0,
+            1.0,
+            0.5,
+            0.75
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/21",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            0.0,
+            1.0
+          ],
+          [
+            1.0,
+            0.0
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef rescale_to_unit(numbers: List[float]) -> List[float]:\n    \"\"\" Given list of numbers (of at least two elements), apply a linear transform to that list,\n    such that the smallest number will become 0 and the largest will become 1\n    >>> rescale_to_unit([1.0, 2.0, 3.0, 4.0, 5.0])\n    [0.0, 0.25, 0.5, 0.75, 1.0]\n    \"\"\"\n    min_val = min(numbers)\n    max_val = max(numbers)\n    \n    # Handle the case where all numbers are the same to avoid division by zero\n    if max_val == min_val:\n        return [0.0] * len(numbers)\n    \n    return [(x - min_val) / (max_val - min_val) for x in numbers]",
+        "draw_index": 4,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "generation_seconds": 3.936,
+        "hidden_outputs": [
+          [
+            0.0,
+            0.25,
+            0.5,
+            0.75,
+            1.0
+          ],
+          [
+            0.25,
+            0.0,
+            1.0,
+            0.5,
+            0.75
+          ],
+          [
+            0.25,
+            0.0,
+            1.0,
+            0.5,
+            0.75
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/21",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            0.0,
+            1.0
+          ],
+          [
+            1.0,
+            0.0
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef rescale_to_unit(numbers: List[float]) -> List[float]:\n    \"\"\" Given list of numbers (of at least two elements), apply a linear transform to that list,\n    such that the smallest number will become 0 and the largest will become 1\n    >>> rescale_to_unit([1.0, 2.0, 3.0, 4.0, 5.0])\n    [0.0, 0.25, 0.5, 0.75, 1.0]\n    \"\"\"\n    min_val = min(numbers)\n    max_val = max(numbers)\n    \n    # Handle the case where all numbers are the same to avoid division by zero\n    if max_val == min_val:\n        return [0.0 for _ in numbers]\n        \n    return [(x - min_val) / (max_val - min_val) for x in numbers]",
+        "draw_index": 5,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "generation_seconds": 4.071,
+        "hidden_outputs": [
+          [
+            0.0,
+            0.25,
+            0.5,
+            0.75,
+            1.0
+          ],
+          [
+            0.25,
+            0.0,
+            1.0,
+            0.5,
+            0.75
+          ],
+          [
+            0.25,
+            0.0,
+            1.0,
+            0.5,
+            0.75
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/21",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            0.0,
+            1.0
+          ],
+          [
+            1.0,
+            0.0
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef rescale_to_unit(numbers: List[float]) -> List[float]:\n    \"\"\" Given list of numbers (of at least two elements), apply a linear transform to that list,\n    such that the smallest number will become 0 and the largest will become 1\n    >>> rescale_to_unit([1.0, 2.0, 3.0, 4.0, 5.0])\n    [0.0, 0.25, 0.5, 0.75, 1.0]\n    \"\"\"\n    min_val = min(numbers)\n    max_val = max(numbers)\n    \n    # Handle the case where all numbers are the same to avoid division by zero\n    if max_val == min_val:\n        return [0.0] * len(numbers)\n        \n    return [(x - min_val) / (max_val - min_val) for x in numbers]",
+        "draw_index": 6,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "generation_seconds": 3.9,
+        "hidden_outputs": [
+          [
+            0.0,
+            0.25,
+            0.5,
+            0.75,
+            1.0
+          ],
+          [
+            0.25,
+            0.0,
+            1.0,
+            0.5,
+            0.75
+          ],
+          [
+            0.25,
+            0.0,
+            1.0,
+            0.5,
+            0.75
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/21",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            0.0,
+            1.0
+          ],
+          [
+            1.0,
+            0.0
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef rescale_to_unit(numbers: List[float]) -> List[float]:\n    \"\"\" Given list of numbers (of at least two elements), apply a linear transform to that list,\n    such that the smallest number will become 0 and the largest will become 1\n    >>> rescale_to_unit([1.0, 2.0, 3.0, 4.0, 5.0])\n    [0.0, 0.25, 0.5, 0.75, 1.0]\n    \"\"\"\n    min_val = min(numbers)\n    max_val = max(numbers)\n    \n    if max_val == min_val:\n        return [0.0] * len(numbers)\n    \n    range_val = max_val - min_val\n    return [(x - min_val) / range_val for x in numbers]",
+        "draw_index": 7,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "generation_seconds": 3.789,
+        "hidden_outputs": [
+          [
+            0.0,
+            0.25,
+            0.5,
+            0.75,
+            1.0
+          ],
+          [
+            0.25,
+            0.0,
+            1.0,
+            0.5,
+            0.75
+          ],
+          [
+            0.25,
+            0.0,
+            1.0,
+            0.5,
+            0.75
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/21",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            0.0,
+            1.0
+          ],
+          [
+            1.0,
+            0.0
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/22": [
+      {
+        "code": "from typing import List, Any\n\ndef filter_integers(values: List[Any]) -> List[int]:\n    \"\"\" Filter given list of any python values only for integers\n    >>> filter_integers(['a', 3.14, 5])\n    [5]\n    >>> filter_integers([1, 2, 3, 'abc', {}, []])\n    [1, 2, 3]\n    \"\"\"\n    return [x for x in values if type(x) is int]",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            9,
+            4
+          ]
+        ],
+        "generation_seconds": 1.925,
+        "hidden_outputs": [
+          [
+            3,
+            3,
+            3
+          ]
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/22",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            4,
+            9
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Any\n\ndef filter_integers(values: List[Any]) -> List[int]:\n    \"\"\" Filter given list of any python values only for integers\n    >>> filter_integers(['a', 3.14, 5])\n    [5]\n    >>> filter_integers([1, 2, 3, 'abc', {}, []])\n    [1, 2, 3]\n    \"\"\"\n    return [x for x in values if type(x) is int]",
+        "draw_index": 1,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            9,
+            4
+          ]
+        ],
+        "generation_seconds": 1.537,
+        "hidden_outputs": [
+          [
+            3,
+            3,
+            3
+          ]
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/22",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            4,
+            9
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Any\n\ndef filter_integers(values: List[Any]) -> List[int]:\n    \"\"\" Filter given list of any python values only for integers\n    >>> filter_integers(['a', 3.14, 5])\n    [5]\n    >>> filter_integers([1, 2, 3, 'abc', {}, []])\n    [1, 2, 3]\n    \"\"\"\n    return [x for x in values if type(x) is int]",
+        "draw_index": 2,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            9,
+            4
+          ]
+        ],
+        "generation_seconds": 1.52,
+        "hidden_outputs": [
+          [
+            3,
+            3,
+            3
+          ]
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/22",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            4,
+            9
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Any\n\ndef filter_integers(values: List[Any]) -> List[int]:\n    \"\"\" Filter given list of any python values only for integers\n    >>> filter_integers(['a', 3.14, 5])\n    [5]\n    >>> filter_integers([1, 2, 3, 'abc', {}, []])\n    [1, 2, 3]\n    \"\"\"\n    return [x for x in values if type(x) is int]",
+        "draw_index": 3,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            9,
+            4
+          ]
+        ],
+        "generation_seconds": 1.564,
+        "hidden_outputs": [
+          [
+            3,
+            3,
+            3
+          ]
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/22",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            4,
+            9
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Any\n\ndef filter_integers(values: List[Any]) -> List[int]:\n    \"\"\" Filter given list of any python values only for integers\n    >>> filter_integers(['a', 3.14, 5])\n    [5]\n    >>> filter_integers([1, 2, 3, 'abc', {}, []])\n    [1, 2, 3]\n    \"\"\"\n    return [x for x in values if type(x) is int]",
+        "draw_index": 4,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            9,
+            4
+          ]
+        ],
+        "generation_seconds": 1.552,
+        "hidden_outputs": [
+          [
+            3,
+            3,
+            3
+          ]
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/22",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            4,
+            9
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Any\n\ndef filter_integers(values: List[Any]) -> List[int]:\n    \"\"\" Filter given list of any python values only for integers\n    >>> filter_integers(['a', 3.14, 5])\n    [5]\n    >>> filter_integers([1, 2, 3, 'abc', {}, []])\n    [1, 2, 3]\n    \"\"\"\n    return [x for x in values if type(x) is int]",
+        "draw_index": 5,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            9,
+            4
+          ]
+        ],
+        "generation_seconds": 1.527,
+        "hidden_outputs": [
+          [
+            3,
+            3,
+            3
+          ]
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/22",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            4,
+            9
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Any\n\ndef filter_integers(values: List[Any]) -> List[int]:\n    \"\"\" Filter given list of any python values only for integers\n    >>> filter_integers(['a', 3.14, 5])\n    [5]\n    >>> filter_integers([1, 2, 3, 'abc', {}, []])\n    [1, 2, 3]\n    \"\"\"\n    return [x for x in values if type(x) is int]",
+        "draw_index": 6,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            9,
+            4
+          ]
+        ],
+        "generation_seconds": 1.541,
+        "hidden_outputs": [
+          [
+            3,
+            3,
+            3
+          ]
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/22",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            4,
+            9
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Any\n\ndef filter_integers(values: List[Any]) -> List[int]:\n    \"\"\" Filter given list of any python values only for integers\n    >>> filter_integers(['a', 3.14, 5])\n    [5]\n    >>> filter_integers([1, 2, 3, 'abc', {}, []])\n    [1, 2, 3]\n    \"\"\"\n    return [x for x in values if isinstance(x, int) and not isinstance(x, bool)]",
+        "draw_index": 7,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            9,
+            4
+          ]
+        ],
+        "generation_seconds": 1.614,
+        "hidden_outputs": [
+          [
+            3,
+            3,
+            3
+          ]
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/22",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            4,
+            9
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/23": [
+      {
+        "code": "def strlen(string: str) -> int:\n    \"\"\" Return length of given string\n    >>> strlen('')\n    0\n    >>> strlen('abc')\n    3\n    \"\"\"\n    return len(string)",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          1,
+          2
+        ],
+        "generation_seconds": 1.243,
+        "hidden_outputs": [
+          9
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/23",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          1
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def strlen(string: str) -> int:\n    \"\"\" Return length of given string\n    >>> strlen('')\n    0\n    >>> strlen('abc')\n    3\n    \"\"\"\n    return len(string)",
+        "draw_index": 1,
+        "error": null,
+        "fingerprint_outputs": [
+          1,
+          2
+        ],
+        "generation_seconds": 1.413,
+        "hidden_outputs": [
+          9
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/23",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          1
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def strlen(string: str) -> int:\n    \"\"\" Return length of given string\n    >>> strlen('')\n    0\n    >>> strlen('abc')\n    3\n    \"\"\"\n    return len(string)",
+        "draw_index": 2,
+        "error": null,
+        "fingerprint_outputs": [
+          1,
+          2
+        ],
+        "generation_seconds": 1.507,
+        "hidden_outputs": [
+          9
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/23",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          1
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def strlen(string: str) -> int:\n    \"\"\" Return length of given string\n    >>> strlen('')\n    0\n    >>> strlen('abc')\n    3\n    \"\"\"\n    return len(string)",
+        "draw_index": 3,
+        "error": null,
+        "fingerprint_outputs": [
+          1,
+          2
+        ],
+        "generation_seconds": 1.588,
+        "hidden_outputs": [
+          9
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/23",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          1
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def strlen(string: str) -> int:\n    \"\"\" Return length of given string\n    >>> strlen('')\n    0\n    >>> strlen('abc')\n    3\n    \"\"\"\n    return len(string)",
+        "draw_index": 4,
+        "error": null,
+        "fingerprint_outputs": [
+          1,
+          2
+        ],
+        "generation_seconds": 1.297,
+        "hidden_outputs": [
+          9
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/23",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          1
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def strlen(string: str) -> int:\n    \"\"\" Return length of given string\n    >>> strlen('')\n    0\n    >>> strlen('abc')\n    3\n    \"\"\"\n    return len(string)",
+        "draw_index": 5,
+        "error": null,
+        "fingerprint_outputs": [
+          1,
+          2
+        ],
+        "generation_seconds": 1.442,
+        "hidden_outputs": [
+          9
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/23",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          1
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def strlen(string: str) -> int:\n    \"\"\" Return length of given string\n    >>> strlen('')\n    0\n    >>> strlen('abc')\n    3\n    \"\"\"\n    return len(string)",
+        "draw_index": 6,
+        "error": null,
+        "fingerprint_outputs": [
+          1,
+          2
+        ],
+        "generation_seconds": 1.57,
+        "hidden_outputs": [
+          9
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/23",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          1
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def strlen(string: str) -> int:\n    \"\"\" Return length of given string\n    >>> strlen('')\n    0\n    >>> strlen('abc')\n    3\n    \"\"\"\n    return len(string)",
+        "draw_index": 7,
+        "error": null,
+        "fingerprint_outputs": [
+          1,
+          2
+        ],
+        "generation_seconds": 1.546,
+        "hidden_outputs": [
+          9
+        ],
+        "hidden_passes": [
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/23",
+        "truncated": false,
+        "visible_outputs": [
+          0,
+          1
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/24": [
+      {
+        "code": "def largest_divisor(n: int) -> int:\n    \"\"\" For a given number n, find the largest number that divides n evenly, smaller than n\n    >>> largest_divisor(15)\n    5\n    \"\"\"\n    for i in range(n // 2, 0, -1):\n        if n % i == 0:\n            return i\n    return 1",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          2,
+          4
+        ],
+        "generation_seconds": 1.975,
+        "hidden_outputs": [
+          5,
+          50,
+          7
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/24",
+        "truncated": false,
+        "visible_outputs": [
+          1,
+          1
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def largest_divisor(n: int) -> int:\n    \"\"\" For a given number n, find the largest number that divides n evenly, smaller than n\n    >>> largest_divisor(15)\n    5\n    \"\"\"\n    for i in range(n - 1, 0, -1):\n        if n % i == 0:\n            return i",
+        "draw_index": 1,
+        "error": null,
+        "fingerprint_outputs": [
+          2,
+          4
+        ],
+        "generation_seconds": 2.171,
+        "hidden_outputs": [
+          5,
+          50,
+          7
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/24",
+        "truncated": false,
+        "visible_outputs": [
+          1,
+          1
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def largest_divisor(n: int) -> int:\n    \"\"\" For a given number n, find the largest number that divides n evenly, smaller than n\n    >>> largest_divisor(15)\n    5\n    \"\"\"\n    for i in range(n - 1, 0, -1):\n        if n % i == 0:\n            return i",
+        "draw_index": 2,
+        "error": null,
+        "fingerprint_outputs": [
+          2,
+          4
+        ],
+        "generation_seconds": 2.078,
+        "hidden_outputs": [
+          5,
+          50,
+          7
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/24",
+        "truncated": false,
+        "visible_outputs": [
+          1,
+          1
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def largest_divisor(n: int) -> int:\n    \"\"\" For a given number n, find the largest number that divides n evenly, smaller than n\n    >>> largest_divisor(15)\n    5\n    \"\"\"\n    for i in range(n - 1, 0, -1):\n        if n % i == 0:\n            return i",
+        "draw_index": 3,
+        "error": null,
+        "fingerprint_outputs": [
+          2,
+          4
+        ],
+        "generation_seconds": 2.077,
+        "hidden_outputs": [
+          5,
+          50,
+          7
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/24",
+        "truncated": false,
+        "visible_outputs": [
+          1,
+          1
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def largest_divisor(n: int) -> int:\n    \"\"\" For a given number n, find the largest number that divides n evenly, smaller than n\n    >>> largest_divisor(15)\n    5\n    \"\"\"\n    for i in range(n // 2, 0, -1):\n        if n % i == 0:\n            return i",
+        "draw_index": 4,
+        "error": null,
+        "fingerprint_outputs": [
+          2,
+          4
+        ],
+        "generation_seconds": 2.134,
+        "hidden_outputs": [
+          5,
+          50,
+          7
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/24",
+        "truncated": false,
+        "visible_outputs": [
+          1,
+          1
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def largest_divisor(n: int) -> int:\n    \"\"\" For a given number n, find the largest number that divides n evenly, smaller than n\n    >>> largest_divisor(15)\n    5\n    \"\"\"\n    for i in range(n // 2, 0, -1):\n        if n % i == 0:\n            return i",
+        "draw_index": 5,
+        "error": null,
+        "fingerprint_outputs": [
+          2,
+          4
+        ],
+        "generation_seconds": 1.851,
+        "hidden_outputs": [
+          5,
+          50,
+          7
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/24",
+        "truncated": false,
+        "visible_outputs": [
+          1,
+          1
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def largest_divisor(n: int) -> int:\n    \"\"\" For a given number n, find the largest number that divides n evenly, smaller than n\n    >>> largest_divisor(15)\n    5\n    \"\"\"\n    for i in range(n - 1, 0, -1):\n        if n % i == 0:\n            return i",
+        "draw_index": 6,
+        "error": null,
+        "fingerprint_outputs": [
+          2,
+          4
+        ],
+        "generation_seconds": 2.183,
+        "hidden_outputs": [
+          5,
+          50,
+          7
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/24",
+        "truncated": false,
+        "visible_outputs": [
+          1,
+          1
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "def largest_divisor(n: int) -> int:\n    \"\"\" For a given number n, find the largest number that divides n evenly, smaller than n\n    >>> largest_divisor(15)\n    5\n    \"\"\"\n    for i in range(n - 1, 0, -1):\n        if n % i == 0:\n            return i",
+        "draw_index": 7,
+        "error": null,
+        "fingerprint_outputs": [
+          2,
+          4
+        ],
+        "generation_seconds": 2.082,
+        "hidden_outputs": [
+          5,
+          50,
+          7
+        ],
+        "hidden_passes": [
+          true,
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/24",
+        "truncated": false,
+        "visible_outputs": [
+          1,
+          1
         ],
         "visible_passes": [
           true,
@@ -1790,6 +6246,1036 @@
           true
         ]
       }
+    ],
+    "HumanEval/7": [
+      {
+        "code": "from typing import List\n\ndef filter_by_substring(strings: List[str], substring: str) -> List[str]:\n    \"\"\" Filter an input list of strings only for ones that contain given substring\n    >>> filter_by_substring([], 'a')\n    []\n    >>> filter_by_substring(['abc', 'bacd', 'cde', 'array'], 'a')\n    ['abc', 'bacd', 'array']\n    \"\"\"\n    return [s for s in strings if substring in s]",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          [],
+          []
+        ],
+        "generation_seconds": 1.986,
+        "hidden_outputs": [
+          [
+            "xxx",
+            "aaaxxy",
+            "xxxAAA",
+            "xxx"
+          ],
+          [
+            "grunt",
+            "prune"
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/7",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            "xxx",
+            "xxxAAA",
+            "xxx"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef filter_by_substring(strings: List[str], substring: str) -> List[str]:\n    \"\"\" Filter an input list of strings only for ones that contain given substring\n    >>> filter_by_substring([], 'a')\n    []\n    >>> filter_by_substring(['abc', 'bacd', 'cde', 'array'], 'a')\n    ['abc', 'bacd', 'array']\n    \"\"\"\n    return [s for s in strings if substring in s]",
+        "draw_index": 1,
+        "error": null,
+        "fingerprint_outputs": [
+          [],
+          []
+        ],
+        "generation_seconds": 2.409,
+        "hidden_outputs": [
+          [
+            "xxx",
+            "aaaxxy",
+            "xxxAAA",
+            "xxx"
+          ],
+          [
+            "grunt",
+            "prune"
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/7",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            "xxx",
+            "xxxAAA",
+            "xxx"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef filter_by_substring(strings: List[str], substring: str) -> List[str]:\n    \"\"\" Filter an input list of strings only for ones that contain given substring\n    >>> filter_by_substring([], 'a')\n    []\n    >>> filter_by_substring(['abc', 'bacd', 'cde', 'array'], 'a')\n    ['abc', 'bacd', 'array']\n    \"\"\"\n    return [s for s in strings if substring in s]",
+        "draw_index": 2,
+        "error": null,
+        "fingerprint_outputs": [
+          [],
+          []
+        ],
+        "generation_seconds": 2.306,
+        "hidden_outputs": [
+          [
+            "xxx",
+            "aaaxxy",
+            "xxxAAA",
+            "xxx"
+          ],
+          [
+            "grunt",
+            "prune"
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/7",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            "xxx",
+            "xxxAAA",
+            "xxx"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef filter_by_substring(strings: List[str], substring: str) -> List[str]:\n    \"\"\" Filter an input list of strings only for ones that contain given substring\n    >>> filter_by_substring([], 'a')\n    []\n    >>> filter_by_substring(['abc', 'bacd', 'cde', 'array'], 'a')\n    ['abc', 'bacd', 'array']\n    \"\"\"\n    return [s for s in strings if substring in s]",
+        "draw_index": 3,
+        "error": null,
+        "fingerprint_outputs": [
+          [],
+          []
+        ],
+        "generation_seconds": 2.417,
+        "hidden_outputs": [
+          [
+            "xxx",
+            "aaaxxy",
+            "xxxAAA",
+            "xxx"
+          ],
+          [
+            "grunt",
+            "prune"
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/7",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            "xxx",
+            "xxxAAA",
+            "xxx"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef filter_by_substring(strings: List[str], substring: str) -> List[str]:\n    \"\"\" Filter an input list of strings only for ones that contain given substring\n    >>> filter_by_substring([], 'a')\n    []\n    >>> filter_by_substring(['abc', 'bacd', 'cde', 'array'], 'a')\n    ['abc', 'bacd', 'array']\n    \"\"\"\n    return [s for s in strings if substring in s]",
+        "draw_index": 4,
+        "error": null,
+        "fingerprint_outputs": [
+          [],
+          []
+        ],
+        "generation_seconds": 2.307,
+        "hidden_outputs": [
+          [
+            "xxx",
+            "aaaxxy",
+            "xxxAAA",
+            "xxx"
+          ],
+          [
+            "grunt",
+            "prune"
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/7",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            "xxx",
+            "xxxAAA",
+            "xxx"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef filter_by_substring(strings: List[str], substring: str) -> List[str]:\n    \"\"\" Filter an input list of strings only for ones that contain given substring\n    >>> filter_by_substring([], 'a')\n    []\n    >>> filter_by_substring(['abc', 'bacd', 'cde', 'array'], 'a')\n    ['abc', 'bacd', 'array']\n    \"\"\"\n    return [s for s in strings if substring in s]",
+        "draw_index": 5,
+        "error": null,
+        "fingerprint_outputs": [
+          [],
+          []
+        ],
+        "generation_seconds": 2.368,
+        "hidden_outputs": [
+          [
+            "xxx",
+            "aaaxxy",
+            "xxxAAA",
+            "xxx"
+          ],
+          [
+            "grunt",
+            "prune"
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/7",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            "xxx",
+            "xxxAAA",
+            "xxx"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef filter_by_substring(strings: List[str], substring: str) -> List[str]:\n    \"\"\" Filter an input list of strings only for ones that contain given substring\n    >>> filter_by_substring([], 'a')\n    []\n    >>> filter_by_substring(['abc', 'bacd', 'cde', 'array'], 'a')\n    ['abc', 'bacd', 'array']\n    \"\"\"\n    return [s for s in strings if substring in s]",
+        "draw_index": 6,
+        "error": null,
+        "fingerprint_outputs": [
+          [],
+          []
+        ],
+        "generation_seconds": 2.41,
+        "hidden_outputs": [
+          [
+            "xxx",
+            "aaaxxy",
+            "xxxAAA",
+            "xxx"
+          ],
+          [
+            "grunt",
+            "prune"
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/7",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            "xxx",
+            "xxxAAA",
+            "xxx"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef filter_by_substring(strings: List[str], substring: str) -> List[str]:\n    \"\"\" Filter an input list of strings only for ones that contain given substring\n    >>> filter_by_substring([], 'a')\n    []\n    >>> filter_by_substring(['abc', 'bacd', 'cde', 'array'], 'a')\n    ['abc', 'bacd', 'array']\n    \"\"\"\n    return [s for s in strings if substring in s]",
+        "draw_index": 7,
+        "error": null,
+        "fingerprint_outputs": [
+          [],
+          []
+        ],
+        "generation_seconds": 2.42,
+        "hidden_outputs": [
+          [
+            "xxx",
+            "aaaxxy",
+            "xxxAAA",
+            "xxx"
+          ],
+          [
+            "grunt",
+            "prune"
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/7",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            "xxx",
+            "xxxAAA",
+            "xxx"
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/8": [
+      {
+        "code": "from typing import List, Tuple\n\ndef sum_product(numbers: List[int]) -> Tuple[int, int]:\n    \"\"\" For a given list of integers, return a tuple consisting of a sum and a product of all the integers in a list.\n    Empty sum should be equal to 0 and empty product should be equal to 1.\n    >>> sum_product([])\n    (0, 1)\n    >>> sum_product([1, 2, 3, 4])\n    (10, 24)\n    \"\"\"\n    total_sum = 0\n    total_product = 1\n    \n    for num in numbers:\n        total_sum += num\n        total_product *= num\n        \n    return (total_sum, total_product)",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [],
+        "generation_seconds": 3.251,
+        "hidden_outputs": [
+          [
+            100,
+            0
+          ],
+          [
+            10,
+            10
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/8",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Tuple\n\ndef sum_product(numbers: List[int]) -> Tuple[int, int]:\n    \"\"\" For a given list of integers, return a tuple consisting of a sum and a product of all the integers in a list.\n    Empty sum should be equal to 0 and empty product should be equal to 1.\n    >>> sum_product([])\n    (0, 1)\n    >>> sum_product([1, 2, 3, 4])\n    (10, 24)\n    \"\"\"\n    s = 0\n    p = 1\n    for n in numbers:\n        s += n\n        p *= n\n    return (s, p)",
+        "draw_index": 1,
+        "error": null,
+        "fingerprint_outputs": [],
+        "generation_seconds": 2.073,
+        "hidden_outputs": [
+          [
+            100,
+            0
+          ],
+          [
+            10,
+            10
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/8",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Tuple\n\ndef sum_product(numbers: List[int]) -> Tuple[int, int]:\n    \"\"\" For a given list of integers, return a tuple consisting of a sum and a product of all the integers in a list.\n    Empty sum should be equal to 0 and empty product should be equal to 1.\n    >>> sum_product([])\n    (0, 1)\n    >>> sum_product([1, 2, 3, 4])\n    (10, 24)\n    \"\"\"\n    total_sum = 0\n    total_product = 1\n    for num in numbers:\n        total_sum += num\n        total_product *= num\n    return (total_sum, total_product)",
+        "draw_index": 2,
+        "error": null,
+        "fingerprint_outputs": [],
+        "generation_seconds": 2.272,
+        "hidden_outputs": [
+          [
+            100,
+            0
+          ],
+          [
+            10,
+            10
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/8",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Tuple\n\ndef sum_product(numbers: List[int]) -> Tuple[int, int]:\n    \"\"\" For a given list of integers, return a tuple consisting of a sum and a product of all the integers in a list.\n    Empty sum should be equal to 0 and empty product should be equal to 1.\n    >>> sum_product([])\n    (0, 1)\n    >>> sum_product([1, 2, 3, 4])\n    (10, 24)\n    \"\"\"\n    total_sum = 0\n    total_product = 1\n    \n    for num in numbers:\n        total_sum += num\n        total_product *= num\n        \n    return (total_sum, total_product)",
+        "draw_index": 3,
+        "error": null,
+        "fingerprint_outputs": [],
+        "generation_seconds": 2.833,
+        "hidden_outputs": [
+          [
+            100,
+            0
+          ],
+          [
+            10,
+            10
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/8",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Tuple\n\ndef sum_product(numbers: List[int]) -> Tuple[int, int]:\n    \"\"\" For a given list of integers, return a tuple consisting of a sum and a product of all the integers in a list.\n    Empty sum should be equal to 0 and empty product should be equal to 1.\n    >>> sum_product([])\n    (0, 1)\n    >>> sum_product([1, 2, 3, 4])\n    (10, 24)\n    \"\"\"\n    total_sum = 0\n    total_product = 1\n    for num in numbers:\n        total_sum += num\n        total_product *= num\n    return (total_sum, total_product)",
+        "draw_index": 4,
+        "error": null,
+        "fingerprint_outputs": [],
+        "generation_seconds": 2.223,
+        "hidden_outputs": [
+          [
+            100,
+            0
+          ],
+          [
+            10,
+            10
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/8",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Tuple\n\ndef sum_product(numbers: List[int]) -> Tuple[int, int]:\n    \"\"\" For a given list of integers, return a tuple consisting of a sum and a product of all the integers in a list.\n    Empty sum should be equal to 0 and empty product should be equal to 1.\n    >>> sum_product([])\n    (0, 1)\n    >>> sum_product([1, 2, 3, 4])\n    (10, 24)\n    \"\"\"\n    total_sum = 0\n    total_product = 1\n    for num in numbers:\n        total_sum += num\n        total_product *= num\n    return (total_sum, total_product)",
+        "draw_index": 5,
+        "error": null,
+        "fingerprint_outputs": [],
+        "generation_seconds": 2.393,
+        "hidden_outputs": [
+          [
+            100,
+            0
+          ],
+          [
+            10,
+            10
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/8",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Tuple\n\ndef sum_product(numbers: List[int]) -> Tuple[int, int]:\n    \"\"\" For a given list of integers, return a tuple consisting of a sum and a product of all the integers in a list.\n    Empty sum should be equal to 0 and empty product should be equal to 1.\n    >>> sum_product([])\n    (0, 1)\n    >>> sum_product([1, 2, 3, 4])\n    (10, 24)\n    \"\"\"\n    total_sum = 0\n    total_product = 1\n    for num in numbers:\n        total_sum += num\n        total_product *= num\n    return (total_sum, total_product)",
+        "draw_index": 6,
+        "error": null,
+        "fingerprint_outputs": [],
+        "generation_seconds": 2.463,
+        "hidden_outputs": [
+          [
+            100,
+            0
+          ],
+          [
+            10,
+            10
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/8",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List, Tuple\n\n\ndef sum_product(numbers: List[int]) -> Tuple[int, int]:\n    \"\"\" For a given list of integers, return a tuple consisting of a sum and a product of all the integers in a list.\n    Empty sum should be equal to 0 and empty product should be equal to 1.\n    >>> sum_product([])\n    (0, 1)\n    >>> sum_product([1, 2, 3, 4])\n    (10, 24)\n    \"\"\"\n    total_sum = 0\n    total_product = 1\n    \n    for num in numbers:\n        total_sum += num\n        total_product *= num\n        \n    return (total_sum, total_product)",
+        "draw_index": 7,
+        "error": null,
+        "fingerprint_outputs": [],
+        "generation_seconds": 2.318,
+        "hidden_outputs": [
+          [
+            100,
+            0
+          ],
+          [
+            10,
+            10
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/8",
+        "truncated": false,
+        "visible_outputs": [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            1
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
+    ],
+    "HumanEval/9": [
+      {
+        "code": "from typing import List\n\ndef rolling_max(numbers: List[int]) -> List[int]:\n    \"\"\" From a given list of integers, generate a list of rolling maximum element found until given moment\n    in the sequence.\n    >>> rolling_max([1, 2, 3, 2, 3, 4, 2])\n    [1, 2, 3, 3, 3, 4, 4]\n    \"\"\"\n    result = []\n    current_max = float('-inf')\n    for num in numbers:\n        if num > current_max:\n            current_max = num\n        result.append(int(current_max))\n    return result",
+        "draw_index": 0,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            2,
+            3,
+            4,
+            4
+          ]
+        ],
+        "generation_seconds": 2.776,
+        "hidden_outputs": [
+          [
+            4,
+            4,
+            4,
+            4
+          ],
+          [
+            3,
+            3,
+            3,
+            100,
+            100
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/9",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef rolling_max(numbers: List[int]) -> List[int]:\n    \"\"\" From a given list of integers, generate a list of rolling maximum element found until given moment\n    in the sequence.\n    >>> rolling_max([1, 2, 3, 2, 3, 4, 2])\n    [1, 2, 3, 3, 3, 4, 4]\n    \"\"\"\n    result = []\n    current_max = float('-inf')\n    for num in numbers:\n        if num > current_max:\n            current_max = num\n        result.append(int(current_max))\n    return result",
+        "draw_index": 1,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            2,
+            3,
+            4,
+            4
+          ]
+        ],
+        "generation_seconds": 3.118,
+        "hidden_outputs": [
+          [
+            4,
+            4,
+            4,
+            4
+          ],
+          [
+            3,
+            3,
+            3,
+            100,
+            100
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/9",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef rolling_max(numbers: List[int]) -> List[int]:\n    \"\"\" From a given list of integers, generate a list of rolling maximum element found until given moment\n    in the sequence.\n    >>> rolling_max([1, 2, 3, 2, 3, 4, 2])\n    [1, 2, 3, 3, 3, 4, 4]\n    \"\"\"\n    result = []\n    current_max = float('-inf')\n    for num in numbers:\n        if num > current_max:\n            current_max = num\n        result.append(int(current_max))\n    return result",
+        "draw_index": 2,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            2,
+            3,
+            4,
+            4
+          ]
+        ],
+        "generation_seconds": 2.866,
+        "hidden_outputs": [
+          [
+            4,
+            4,
+            4,
+            4
+          ],
+          [
+            3,
+            3,
+            3,
+            100,
+            100
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/9",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef rolling_max(numbers: List[int]) -> List[int]:\n    \"\"\" From a given list of integers, generate a list of rolling maximum element found until given moment\n    in the sequence.\n    >>> rolling_max([1, 2, 3, 2, 3, 4, 2])\n    [1, 2, 3, 3, 3, 4, 4]\n    \"\"\"\n    result = []\n    current_max = float('-inf')\n    for num in numbers:\n        if num > current_max:\n            current_max = num\n        result.append(int(current_max))\n    return result",
+        "draw_index": 3,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            2,
+            3,
+            4,
+            4
+          ]
+        ],
+        "generation_seconds": 2.807,
+        "hidden_outputs": [
+          [
+            4,
+            4,
+            4,
+            4
+          ],
+          [
+            3,
+            3,
+            3,
+            100,
+            100
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/9",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef rolling_max(numbers: List[int]) -> List[int]:\n    \"\"\" From a given list of integers, generate a list of rolling maximum element found until given moment\n    in the sequence.\n    >>> rolling_max([1, 2, 3, 2, 3, 4, 2])\n    [1, 2, 3, 3, 3, 4, 4]\n    \"\"\"\n    result = []\n    current_max = float('-inf')\n    for num in numbers:\n        if num > current_max:\n            current_max = num\n        result.append(int(current_max))\n    return result",
+        "draw_index": 4,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            2,
+            3,
+            4,
+            4
+          ]
+        ],
+        "generation_seconds": 2.958,
+        "hidden_outputs": [
+          [
+            4,
+            4,
+            4,
+            4
+          ],
+          [
+            3,
+            3,
+            3,
+            100,
+            100
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/9",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef rolling_max(numbers: List[int]) -> List[int]:\n    \"\"\" From a given list of integers, generate a list of rolling maximum element found until given moment\n    in the sequence.\n    >>> rolling_max([1, 2, 3, 2, 3, 4, 2])\n    [1, 2, 3, 3, 3, 4, 4]\n    \"\"\"\n    if not numbers:\n        return []\n    \n    result = []\n    current_max = float('-inf')\n    \n    for num in numbers:\n        if num > current_max:\n            current_max = num\n        result.append(current_max)\n        \n    return result",
+        "draw_index": 5,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            2,
+            3,
+            4,
+            4
+          ]
+        ],
+        "generation_seconds": 3.187,
+        "hidden_outputs": [
+          [
+            4,
+            4,
+            4,
+            4
+          ],
+          [
+            3,
+            3,
+            3,
+            100,
+            100
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/9",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef rolling_max(numbers: List[int]) -> List[int]:\n    \"\"\" From a given list of integers, generate a list of rolling maximum element found until given moment\n    in the sequence.\n    >>> rolling_max([1, 2, 3, 2, 3, 4, 2])\n    [1, 2, 3, 3, 3, 4, 4]\n    \"\"\"\n    result = []\n    current_max = float('-inf')\n    for num in numbers:\n        if num > current_max:\n            current_max = num\n        result.append(int(current_max))\n    return result",
+        "draw_index": 6,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            2,
+            3,
+            4,
+            4
+          ]
+        ],
+        "generation_seconds": 2.943,
+        "hidden_outputs": [
+          [
+            4,
+            4,
+            4,
+            4
+          ],
+          [
+            3,
+            3,
+            3,
+            100,
+            100
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/9",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      },
+      {
+        "code": "from typing import List\n\ndef rolling_max(numbers: List[int]) -> List[int]:\n    \"\"\" From a given list of integers, generate a list of rolling maximum element found until given moment\n    in the sequence.\n    >>> rolling_max([1, 2, 3, 2, 3, 4, 2])\n    [1, 2, 3, 3, 3, 4, 4]\n    \"\"\"\n    result = []\n    current_max = float('-inf')\n    for num in numbers:\n        if num > current_max:\n            current_max = num\n        result.append(int(current_max))\n    return result",
+        "draw_index": 7,
+        "error": null,
+        "fingerprint_outputs": [
+          [
+            2,
+            3,
+            4,
+            4
+          ]
+        ],
+        "generation_seconds": 2.909,
+        "hidden_outputs": [
+          [
+            4,
+            4,
+            4,
+            4
+          ],
+          [
+            3,
+            3,
+            3,
+            100,
+            100
+          ]
+        ],
+        "hidden_passes": [
+          true,
+          true
+        ],
+        "status": "ok",
+        "task_id": "HumanEval/9",
+        "truncated": false,
+        "visible_outputs": [
+          [],
+          [
+            1,
+            2,
+            3,
+            4
+          ]
+        ],
+        "visible_passes": [
+          true,
+          true
+        ]
+      }
     ]
   },
   "experiment": "experiment_4045_offarc_transfer_power_checkpoint",
@@ -2037,5 +7523,5 @@
       "task_id": "HumanEval/72"
     }
   ],
-  "updated_at_unix": 1781188145.4280005
+  "updated_at_unix": 1781188841.5819242
 }

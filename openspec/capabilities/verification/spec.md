@@ -12454,6 +12454,23 @@ checkpoints per task, `preconditions_checked`, and
 `inference_substrate=live_llm_inference`. Hidden tests SHALL be used only after
 selection for held-out scoring.
 
+The collector at
+`scripts/experiments/exp4045_offarc_transfer_power_collect.py` SHALL read the
+Exp 4044 build artifact before any claim, stop with
+`blocked_build_runner_not_ready` when `runner_ready` is false, poll the raw Exp
+4045 artifact within a bounded budget, and otherwise build a final partial
+artifact from the checkpoint without fabricating unfinished tasks. The final
+artifact SHALL write `results/experiment_4045_offarc_transfer_power.json` with
+10,000-resample task-level bootstrap CI95 intervals for Arm B demo-fit minus
+Arm A vote, Arm A++ ACES minus Arm A vote, and Arm C symbolic partition minus
+Arm A vote. It SHALL expose the bare fields `demofit_ci_excludes_zero`,
+`best_arm_ci_excludes_zero`, `oracle_passrate`, `missing_verifier_gaps`,
+`model_specs`, `random_seed`, `reproducibility_checksum`, and
+`inference_substrate=verifier_ensemble_against_cached_candidates`, and SHALL
+use a terminal `complete:` verdict that distinguishes demo-fit transfer,
+stronger-arm-only transfer, small-magnitude transfer with oracle headroom,
+uninformative no-headroom, and bounded partial-run outcomes.
+
 ### SCENARIO-VERIFY-4045: Four Arms Share One Candidate Pool
 
 Given a shared HumanEval plus MBPP candidate pool, when the full-power runner
