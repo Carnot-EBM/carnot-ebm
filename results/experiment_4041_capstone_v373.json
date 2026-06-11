@@ -1,0 +1,341 @@
+{
+  "accuracy_self_learning_hardware_deltas": {
+    "accuracy": {
+      "candidate_baseline_actions": 59,
+      "first_solve_at_action": 20,
+      "game_solved": true,
+      "games_solved_delta": 1,
+      "prior_total_games_solved": 6,
+      "real_env_confirmed": true,
+      "target_game": "dc22-fdcac232",
+      "total_games_solved": 7
+    },
+    "hardware": {
+      "fabric_acceleration_claimed": false,
+      "included": true,
+      "kv260_latency_step_taken": false,
+      "kv260_overlay_loaded": true,
+      "per_board_reachability": {
+        "gatemate": false,
+        "kv260": true,
+        "polarfire": true
+      },
+      "per_board_terminal_state": {
+        "gatemate": "blocked_gatemate_unreachable",
+        "kv260": "reachable_overlay_loaded_latency_step_blocked",
+        "polarfire": "reachable_ssh_continuity_recorded"
+      },
+      "speedup_claim_made": false
+    },
+    "self_learning": {
+      "action_savings_vs_cold": 41,
+      "actions_cold": 59,
+      "actions_v5": 20,
+      "actions_v6": 18,
+      "induction_call_savings_vs_cold": 1,
+      "induction_calls_cold": 1,
+      "induction_calls_v5": 1,
+      "induction_calls_v6": 0,
+      "n_named_abstractions": 1,
+      "solve_transfer_win": true,
+      "v6_action_savings_vs_v5": 2
+    }
+  },
+  "arguments_became_measurements": {
+    "G1": true,
+    "G2": true,
+    "G3": true
+  },
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 4029,
+      "sha256": "84bb97e6413c20acb6e14ee2a66e4cf116e2afc9a1fe574a991dec1f771b1b7a"
+    },
+    {
+      "experiment_id": 4030,
+      "sha256": "9d405f9aae3e506cc0362af13f007224b744b357620b2a4972921f0f2222dd6e"
+    },
+    {
+      "experiment_id": 4032,
+      "sha256": "0fb955a5d8a7baac2ea460ecd29c78c3ea7d90eacad6da25c5f285eea881804a"
+    },
+    {
+      "experiment_id": 4033,
+      "sha256": "7d695c777ac63decb7946ecae09b501167e896ee810ace5dc4df9bb07f9a55d2"
+    },
+    {
+      "experiment_id": 4034,
+      "sha256": "96e5df792ecc0118c8de6005fa59c22338bee62615538b56897a191bb9b971ab"
+    },
+    {
+      "experiment_id": 4035,
+      "sha256": "0ab40ab4759bd75fb65dac561c16e3da99a58222eb16a6e26f3dacca8b31983b"
+    },
+    {
+      "experiment_id": 4036,
+      "sha256": "52efbb8607f229dace0e0fa2b8a2c2c525796f067742ddebce903e3247d15abc"
+    },
+    {
+      "experiment_id": 4037,
+      "sha256": "1517f503f4f42aa8677d0e74a5c53eeba79ce0a57dba16916e56537e7c88d0d8"
+    },
+    {
+      "experiment_id": 4038,
+      "sha256": "df2605027d6474311a06a1ef5204fbcce9f1a795b120238faaa47f6a553ec9dd"
+    },
+    {
+      "experiment_id": 4039,
+      "sha256": "2bad1d2be3655364dbdc3768e2ccba97f1d812eeff5aa726099e3d25fdb030f8"
+    },
+    {
+      "experiment_id": 4040,
+      "sha256": "4af62a5a0779f9cc44d7e65d04c5d98b042a2a9cd1ff16f082354c8c2d237d93"
+    }
+  ],
+  "decentralization_diagnosis": "absent",
+  "duration_s": 0.4791499609127641,
+  "experiment_id": 4041,
+  "field_principles": {
+    "cited_upstream_artifacts": "Included upstream experiment ids and sha256 provenance only.",
+    "decentralization_diagnosis": "latent | absent | partial | flagged_skipped - the sovereign-base branch G3 resolved.",
+    "flagged_artifacts_skipped": "Upstreams excluded before metric import because flagged_adversarial or live critical.",
+    "honest_verdict": "Terminal-prefix verdict naming measured, negative, underpowered, and skipped outcomes.",
+    "inference_substrate": "Declares this capstone as aggregation from upstream artifacts.",
+    "search_layer_generalized": "BARE BOOL - the G2 depth question: did a general heuristic break a second game's wall?",
+    "total_games_solved": "BARE INT - the monotonic ARC accuracy counter after clean exp4038 evidence.",
+    "verifier_generalized_off_arc": "BARE BOOL - the operator TOP-PRIORITY question: did the GAP-4 primitive measurably transfer to code?"
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "experiment_id": 4031,
+      "path": "results/experiment_4031_offarc_transfer_build.json",
+      "reason": "flagged_adversarial:true"
+    }
+  ],
+  "g1_off_arc_transfer": {
+    "bootstrap_ci95_pp": [
+      0.0,
+      12.5
+    ],
+    "ci_excludes_zero": false,
+    "delta_pp": 5.0,
+    "n_tasks": 40,
+    "outcome": "directional_underpowered_ci_touches_zero",
+    "positive_control_passes": true,
+    "three_outcome_verdict": "OUTCOME_1.5: directional transfer (B>A, same sign as ARC-1 +16pp) WITH oracle headroom present (informative, not a degenerate null), BUT n=40 underpowered -- bootstrap CI lower bound touches 0. Scale to full MBPP (~500)/HumanEval (164) for the CI-excludes-0 gate."
+  },
+  "g2_search_layer_generalization": {
+    "game": "vc33",
+    "goal_predicate_heldout_precision": 1.0,
+    "heuristic_was_non_bespoke": true,
+    "levels_completed_after": 0,
+    "new_levels_solved_this_task": 0,
+    "nodes_expanded": 169,
+    "outcome": "included",
+    "real_env_confirmed": false,
+    "search_found_plan": true,
+    "search_layer_generalizes": false
+  },
+  "g3_decentralization_scaling": {
+    "baseline_12b_coverage": 0.2581,
+    "coverage_delta_vs_12b": -0.2581,
+    "diagnosis": "absent",
+    "gated_pass_at_2": 0.0,
+    "local_seconds_per_task": 0.0,
+    "n_tasks_scored": 0,
+    "stronger_base_demo_perfect_coverage": 0.0
+  },
+  "honest_verdict": "complete: capstone_v373_arguments_measured_G1_directional_underpowered_ci_touches_zero_G2_no_generalization_G3_absent_games7_arcmemo_win_flagged_skipped1",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "missing_upstream_artifacts": [],
+  "random_seed": 4041,
+  "reproducibility_checksum": "35c63a89d9983cda986892630693c6853b65639490577a4e1dc0f52a74bc5799",
+  "schema": "carnot.capstone_v373_4041.v1",
+  "search_layer_generalized": false,
+  "summarize_artifact_status": {
+    "4029": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4029_archive_v372_activate_v373.json\n------------------------------------------------------------------------------\n  verdict          : success: archived_v372_v373_active_searchlayer_thin_r11l_only_games6_decentralization_flagged_skipped_efficiency_clean_95x_arcmemo_win_pretest_green\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 13.675867   substrate: aggregation_from_upstream_artifacts\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4030": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4030_sota_ingestion_receipt.json\n------------------------------------------------------------------------------\n  verdict          : complete: sota_ingestion_offarc_and_search_mapped\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : None   substrate: aggregation_from_upstream_artifacts\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4031": {
+      "returncode": 2,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4031_offarc_transfer_build.json\n------------------------------------------------------------------------------\n  verdict          : success: offarc_transfer_runner_built_smoked_launched\n  flagged_adversarial (stamped): True   |   LIVE re-check: CRITICAL\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 14.13   substrate: live_llm_inference\n  adversarial flags:\n      [critical] DURATION_TOO_SHORT: duration_s=14.13 but artifact references compute-bound markers (GGUF / CUDA / live model). Loadi\n      [warn    ] METHODOLOGY_MISSING: Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum.\n==============================================================================\n"
+    },
+    "4032": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4032_offarc_exec_verifier_transfer_collect.json\n------------------------------------------------------------------------------\n  verdict          : complete: offarc_exec_verifier_directional_transfer_plus5pp_n40_oracle_headroom_present_ci_touches_zero_underpowered\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 2.0   substrate: verifier_ensemble_against_cached_candidates\n  headline metrics :\n      delta_pp = 5.0\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4033": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4033_verifier_registry_harness_registration.json\n------------------------------------------------------------------------------\n  verdict          : complete: gap4_stack_registered_offline_reeval_bitexact_offarc_gap_logged\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.455   substrate: aggregation_from_upstream_artifacts\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4034": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4034_vc33_goal_predicate_induction.json\n------------------------------------------------------------------------------\n  verdict          : complete: vc33_goal_predicate_induced_heldout_precision_1.000\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.571   substrate: offline_arc_agi3_goal_predicate_induction_no_oracle\n  headline metrics :\n      goal_predicate_heldout_precision = 1.0\n      goal_predicate_heldout_recall = 1.0\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4035": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4035_hierarchical_search_over_vc33_wm.json\n------------------------------------------------------------------------------\n  verdict          : complete: search_layer_no_solve_vc33_real_env_confirmation_failed\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 8.293   substrate: offline_arc_agi3_planning_search_over_verified_world_model\n  headline metrics :\n      goal_predicate_heldout_precision = 1.0\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4036": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4036_decentralization_stronger_base_build.json\n------------------------------------------------------------------------------\n  verdict          : success: decentralization_stronger_base_runner_launched_Gemma4-31B-it\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 60.21   substrate: live_llm_inference\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4037": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4037_decentralization_stronger_base.json\n------------------------------------------------------------------------------\n  verdict          : complete: decentralization_stronger_base_partial_0_tasks\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 30.0   substrate: verifier_ensemble_against_cached_candidates\n  headline metrics :\n      coverage_delta_vs_12b = -0.2581\n      n_tasks_scored = 0\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4038": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4038_seventh_game_explore_first.json\n------------------------------------------------------------------------------\n  verdict          : success: seventh_game_solved_dc22-fdcac232_at_action_20\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 11.362   substrate: offline_arc_agi3_explore_first_first_solve\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4039": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4039_arcmemo_concept_library_v6.json\n------------------------------------------------------------------------------\n  verdict          : success: arcmemo_v6_library_transfer_59to18_actions\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.004   substrate: offline_arc_agi3_arcmemo_concept_transfer\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4040": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4040_hardware_continuity.json\n------------------------------------------------------------------------------\n  verdict          : complete: hardware_continuity_kv260_overlay_loaded_latency_step_blocked_4040_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 9.39267   substrate: hardware_smoke\n  adversarial flags: none\n==============================================================================\n"
+    }
+  },
+  "total_games_solved": 7,
+  "upstream_artifact_state": {
+    "4029": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "success: archived_v372_v373_active_searchlayer_thin_r11l_only_games6_decentralization_flagged_skipped_efficiency_clean_95x_arcmemo_win_pretest_green",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4029_archive_v372_activate_v373.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4030": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: sota_ingestion_offarc_and_search_mapped",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4030_sota_ingestion_receipt.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4031": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "success: offarc_transfer_runner_built_smoked_launched",
+      "included": false,
+      "live_critical": true,
+      "path": "results/experiment_4031_offarc_transfer_build.json",
+      "skipped": true,
+      "summarize_artifact_returncode": 2
+    },
+    "4032": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: offarc_exec_verifier_directional_transfer_plus5pp_n40_oracle_headroom_present_ci_touches_zero_underpowered",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4032_offarc_exec_verifier_transfer_collect.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4033": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: gap4_stack_registered_offline_reeval_bitexact_offarc_gap_logged",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4033_verifier_registry_harness_registration.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4034": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: vc33_goal_predicate_induced_heldout_precision_1.000",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4034_vc33_goal_predicate_induction.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4035": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: search_layer_no_solve_vc33_real_env_confirmation_failed",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4035_hierarchical_search_over_vc33_wm.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4036": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "success: decentralization_stronger_base_runner_launched_Gemma4-31B-it",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4036_decentralization_stronger_base_build.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4037": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: decentralization_stronger_base_partial_0_tasks",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4037_decentralization_stronger_base.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4038": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "success: seventh_game_solved_dc22-fdcac232_at_action_20",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4038_seventh_game_explore_first.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4039": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "success: arcmemo_v6_library_transfer_59to18_actions",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4039_arcmemo_concept_library_v6.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4040": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: hardware_continuity_kv260_overlay_loaded_latency_step_blocked_4040_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4040_hardware_continuity.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    }
+  },
+  "verifier_generalized_off_arc": false
+}
