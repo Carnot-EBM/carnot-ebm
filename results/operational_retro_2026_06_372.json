@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.372",
+  "generated_at": "2026-06-11T05:18:23Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative timing detector again returned zero experiment commits for 2026.06.372, so the locked numeric fields are all 0 and there is no per-experiment timing to rank. But the on-disk ops/changelog.md window for this milestone (read this turn) records real committed experiment work, so the operational finding is a recurring milestone-scoped commit-detection gap, not an idle milestone. Both GPUs reading 0% at the retro snapshot is correct post-milestone idle with 0 compute-bound tasks in the authoritative block, and is NOT flagged as a bottleneck.",
+  "bottlenecks_identified": [
+    "Milestone-scoped commit detector returned zero experiments for 2026.06.372 while ops/changelog.md for this window records committed experiment work (the goal-induction/search-layer planning chain and the .372 capstone, per the on-disk changelog read this turn). This is the 8th such false-zero across .363/.365/.366/.367/.368/.369/.370/.372. The bottleneck is observability/attribution, not execution or wall-clock.",
+    "The standing 'detector fixed' claim (logged in an earlier changelog entry) is still not verified end-to-end: this .372 retro again received a zero timing block, so the fix has not taken effect on the live retro-timing feed.",
+    "GPU idle is NOT a bottleneck here: gpu_idle_on_compute_bound_tasks is null because the authoritative block records 0 compute-bound tasks, and the 0% reading is a single post-milestone snapshot, not utilization during the run."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone->commit windowing in the timing-data collector so the retro receives the milestone's actual experiment commits, and prove it end-to-end on a live retro (it must report the real .372 experiment range, not 0).",
+    "Add a detector-independent fallback: glob results/experiment_*.json (or git log) for commits since the activation SHA, plus a loud self-check that FAILS when the count is 0 but on-disk artifacts/changelog entries for the milestone exist, so a future retro cannot silently run on empty input.",
+    "Verify-or-revert the standing 'detector fixed' claim; it has now gone multiple milestones without taking effect on the live feed and should not be carried forward as resolved."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the milestone-scoped commit detector and validate it end-to-end on a live retro (report the real exp range, not 0) — this is the recurring root cause across 8 milestones.",
+    "Ship a detector-independent glob/git fallback plus a zero-but-artifacts-present self-check that fails loudly, so retros never again run on a false-zero.",
+    "Verify-or-revert the prior 'detector fixed' claim rather than carrying it forward unverified for another milestone."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "For the 8th time the operational retro received a false-zero timing block while the milestone actually shipped real work (per the on-disk changelog), so the recurring lesson is observability, not efficiency: there is no experiment wall-clock to reclaim (the experiments ran fine), only an attribution gap that makes the retro honest-but-empty. The highest-leverage fix is making the detector either correct or loudly self-failing on zero-with-artifacts. Per the anti-hallucination guard the locked numeric fields stay 0 (the authoritative block) and no durations/metrics are invented; the experiment range is sourced with provenance from ops/changelog.md read this turn and recorded only in the research-log narrative."
+}
