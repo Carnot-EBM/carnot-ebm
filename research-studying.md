@@ -5,8 +5,34 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-06-11 (Exp 4030 SOTA ingestion mapped .373 OFF-ARC verifier transfer and hierarchical search).
+**Updated:** 2026-06-11 (Exp 4043 SOTA ingestion mapped .374 OFF-ARC power and closed-loop planning).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
+
+## 2026-06-11 Exp 4043 - .374 SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-2026-06-11-offarc-power-and-closed-loop-planning.md`.
+
+**Filtered tracks:** OFF-ARC statistical power + stronger discriminator for exp4044/4045, and
+CLOSED-LOOP planning over the verified vc33 world model under model error for exp4046.
+
+**Seed candidates marked ingested:**
+- Inference-Time Code Selection via Symbolic Equivalence Partitioning, arXiv:2604.06485 - mapped as the SEP semantic-partition tie-break/diagnostic for the full-power off-ARC panel.
+- Scaling Agentic Verifier for Competitive Coding, arXiv:2602.04254 - mapped as the expensive targeted-counterexample comparator for hard ties.
+- Efficient Prediction of Pass@k Scaling, arXiv:2510.05197 - mapped as the pilot sizing and budget discipline for HumanEval+MBPP power.
+- What model does MuZero learn?, arXiv:2306.00840 - mapped as the policy-support / WM-trust constraint for vc33 search.
+- World-in-World, arXiv:2510.18135 - mapped as the closed-loop task-success evaluation rule.
+- Latent Geometry Beyond Search / GC-IDM, arXiv:2605.08732 - mapped as per-step replanning and action-prior guidance.
+- Bounding Distributional Shifts through Novelty Detection, arXiv:2508.06096 - mapped as the novelty-MPC trust gate against WM exploitation.
+
+**Fresh-pass confirmations marked ingested:**
+- DOCE, arXiv:2408.13745 - retained as the execution-based code-selection protocol anchor for the powered measurement.
+- CodeT, arXiv:2207.10397 - retained as the dual execution-agreement baseline alongside ACES.
+- ACES, arXiv:2604.03922 - promoted as the strongest same-pass-matrix Arm A++ baseline.
+- R-WoM, arXiv:2510.11892 - mapped as retrieval grounding over verified transition traces for short-lookahead vc33 planning.
+
+**Bottom line for the .375 roadmap:** prioritize `offarc_full_power_sep_aces_agentic_counterexample_panel`
+and `closed_loop_vc33_replan_with_wm_trust_gate`; add `novelty_mpc_gate_for_verified_wm_search`
+as the required guardrail so the planner cannot claim model-only goal satisfaction as a solve.
 
 ## 2026-06-11 Exp 4030 - .373 SOTA ingestion ingested
 
