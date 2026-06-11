@@ -395,6 +395,57 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-06-11 (TOP PRIORITY — operator-directed): POWERING RUNS MUST ACCUMULATE ACROSS MILESTONES (resume-not-restart)
+
+**Origin:** 2026-06-11 operator directive ("Let's address that") after the recurring failure
+mode: every large-N local-GGUF powering run gets **cut short before reaching its statistical
+gate**, so the three frontier questions stay perpetually "directional-but-underpowered." Evidence:
+- **G1 off-ARC POWER** (exp4044/4045): target N>=160, **completed 22** -> ceiling-saturated subset,
+  uninformative. The n=40 directional +5pp (exp4032) is still the best datum.
+- **G3 decentralization 31B** (exp4036/4037): target N>=30, **completed 0** (31B dense too slow).
+- **G3 decentralization MoE** (exp4047/4048): Qwen3.6-35B-A3B (the throughput fix — it WORKED,
+  ~14 tasks/window vs 31B's 0), but **killed mid-generation at 14** (partial candidate counts in
+  the checkpoint confirm a mid-stream kill), coverage 0.3571 vs the 12B 0.2581 ceiling but
+  **bootstrap95 [0.143, 0.643] spans the ceiling** -> underpowered; a premature 6-task poll even
+  fired a spurious `retire`.
+
+**Root cause (diagnosed):** `DEFAULT_FULL_TIME_BUDGET_S = 4500` (75 min, just under the 80-min
+conductor cap) is correct as a per-window bound — but at local-GGUF throughput, 75 min completes
+only ~14 MoE / ~22 HumanEval tasks, far short of N>=30 / N>=160. AND each milestone launches a
+**fresh** run with an **exp-id-keyed checkpoint** (`experiment_40NN_..._raw.checkpoint.json`), so
+progress **resets every milestone instead of accumulating**. The runners ALREADY support per-task
+resume (model+k-keyed `_load_checkpoint`, the exp4012 pattern) — the only missing piece is pointing
+successive runs at the SAME checkpoint.
+
+**The rule (planner-side, MANDATORY for any large-N statistically-gated powering run):**
+1. **RESUME, don't restart.** The runner MUST load the PRIOR milestone's checkpoint for the same
+   (corpus, model, k) and extend it. Use a STABLE checkpoint path (corpus+model+k keyed, NOT
+   exp-id keyed) so each window appends. Concretely for .375:
+   - **off-ARC POWER**: resume `results/experiment_4045_offarc_transfer_power*.checkpoint.json`
+     (22 tasks) -> extend toward N>=160.
+   - **G3 decentralization (MoE)**: resume
+     `results/experiment_4048_decentralization_moe_base_raw.checkpoint.json` (14 tasks, Qwen3.6-35B-A3B,
+     k=8) -> extend toward N>=30. Do NOT relaunch the 31B dense (retired: too slow).
+2. **Report ACCUMULATED-N, not per-window-N.** The collect step reads the cumulative checkpoint and
+   reports the running total + the bootstrap CI on the accumulated sample. A single window adding
+   ~14 tasks is PROGRESS, not a failure.
+3. **No premature retire.** Do NOT poll-then-retire on a partial single-window count. The
+   `retire_if_same_verdict` trigger fires ONLY when **accumulated-N >= target AND the gate still
+   fails** — never on a throughput-truncated window. (The exp4048 `partial_6_tasks_retire` was a
+   false retirement on a 6-task poll; the line is NOT retired.)
+4. **Protect the background run from premature reaping.** The detached generation subprocess must
+   survive the build agent's exit and the conductor's iteration boundary (proper `setsid`
+   detachment); the per-task checkpoint is the safety net if it is reaped, but it should be allowed
+   to run its full 75-min window.
+
+**Why this fixes it:** N accumulates 14 -> 28 -> 42 across windows and clears N>=30 in ~2 milestones;
+off-ARC 22 -> 44 -> ... clears N>=160 in ~7 windows (or fewer with a lighter model / lower k). The
+frontier answers (does the verifier transfer off-ARC at significance? is the sovereign-base
+abstraction latent or absent?) become reachable WITHOUT a single heroic run that the 80-min cap can
+never fit. Cross-refs: the exp4012 model+k-keyed `_load_checkpoint` resume pattern; CLAUDE.md
+"Failed-Experiment Rerun Discipline" (retire only on real same-verdict failure, not throughput
+truncation); the off-ARC TOP PRIORITY entry below.
+
 ### NEW 2026-06-11 (TOP PRIORITY — operator-directed): OFF-ARC EXECUTION-VERIFIER TRANSFER — convert "argued domain-general" → "measured"
 
 **Origin:** 2026-06-11 operator directive ("queue the off-ARC execution-verifier
