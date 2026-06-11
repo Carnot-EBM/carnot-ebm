@@ -11479,3 +11479,71 @@ rather than claiming a solved-game transfer win.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4050 | Proposed (python/carnot/agentic/arc_arcmemo_cross_game_transfer_v7.py; scripts/experiments/exp4050_arcmemo_cross_game_transfer_v7.py, Exp 4050) | Proposed (tests/python/test_exp4050_arcmemo_cross_game_transfer_v7.py) |
+
+---
+
+## REQ-LEARN-4062: ArcMemo v8 Richer Cross-Game Concept Library Transfer
+
+**Given** the eight prior real-env-confirmed ARC-AGI-3 solved games
+`r11l`, `lp85`, `sc25`, `su15`, `tn36`, `cd82`, `dc22`, and `sb26`
+and the ninth-game artifact
+`results/experiment_4060_ninth_game_explore_first.json`
+**When** Exp 4062 builds the ArcMemo v8 library
+**Then** it SHALL compress only prior-game induced-program fragments from all
+eight solves into named, documented abstractions
+**And** it SHALL seed the ninth-game explore-first accounting from that richer
+prior-game library without importing any ninth-game induced mechanic into the
+library
+**And** it SHALL measure the ninth game against both cold start and
+within-game-only memory before claiming cross-game transfer
+**And** it SHALL write
+`results/experiment_4062_arcmemo_cross_game_transfer_v8.json`.
+
+### REQ-LEARN-4062 Sub-requirements
+
+- REQ-LEARN-4062-1: The v8 library SHALL expose named abstractions with
+  `name`, `signature`, `documentation`, `source_games`, `source_fragments`,
+  and `lambda_abstraction` fields, and SHALL include the eighth prior solve
+  when it is real-env-confirmed.
+- REQ-LEARN-4062-2: Exp 4062 SHALL report bare top-level fields
+  `honest_verdict`, `cross_game_transfer_win`, `actions_cold`,
+  `actions_within_game`, `actions_cross_game_v8`, `n_reused_abstractions`,
+  and `inference_substrate`.
+- REQ-LEARN-4062-3: `inference_substrate` SHALL equal
+  `offline_arc_agi3_arcmemo_cross_game_transfer`.
+- REQ-LEARN-4062-4: `cross_game_transfer_win` SHALL be true only when
+  `actions_cross_game_v8 < actions_cold` and
+  `actions_cross_game_v8 < actions_within_game`; otherwise the honest verdict
+  SHALL begin with `complete: arcmemo_v8_no_cross_game_transfer_`.
+- REQ-LEARN-4062-5: If Exp 4060 did not solve but exposes a usable attempt
+  trace, Exp 4062 SHALL measure transfer on that same attempt depth and SHALL
+  NOT fabricate a solved-game transfer claim.
+- REQ-LEARN-4062-6: If Exp 4060 is absent or lacks any usable trace, Exp 4062
+  SHALL emit a complete no-transfer artifact with zero action counts and
+  explicit target evidence rather than substituting another game.
+
+### SCENARIO-LEARN-4062: v8 Must Beat Cold and Within-Game Memory on a New Ninth Game
+
+**Given** an Exp 4060 ninth-game trace and a v8 library built from all eight
+prior solved-game fragments
+**When** one or more prior-game abstractions fire on the new game
+**Then** Exp 4062 records the fired abstraction count and induction-call cost
+**And** it reports `cross_game_transfer_win=true` only if the v8 action count
+is strictly below both the cold baseline and the within-game-only baseline.
+
+**Given** Exp 4060 lacks a real-env-confirmed solve but still contains a usable
+attempt trace
+**When** Exp 4062 evaluates transfer
+**Then** it measures the same attempt depth and emits a `complete:` verdict
+rather than claiming a solved-game transfer win.
+
+**Given** Exp 4060 is missing or exposes no usable trace
+**When** Exp 4062 evaluates transfer
+**Then** it writes a valid `complete:` artifact that preserves the eight-game
+library evidence and reports no ninth-game transfer measurement.
+
+## Implementation Status (REQ-LEARN-4062)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4062 | Proposed (python/carnot/agentic/arc_arcmemo_cross_game_transfer_v8.py; scripts/experiments/exp4062_arcmemo_cross_game_transfer_v8.py, Exp 4062) | Proposed (tests/python/test_exp4062_arcmemo_cross_game_transfer_v8.py) |
