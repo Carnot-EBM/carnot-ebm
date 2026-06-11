@@ -1,0 +1,191 @@
+{
+  "activated_milestone": "2026.06.375",
+  "active_milestone_confirmed": "2026.06.375",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "arc_modules_importable": true,
+  "archived_milestone": "2026.06.374",
+  "duration_s": 13.790742,
+  "exclusion_manifest_parses": true,
+  "experiment_id": "exp4054",
+  "field_principles": {
+    "activated_milestone": "Confirms .375 is live so downstream decision-grade tasks resolve.",
+    "active_milestone_confirmed": "STR -- the active milestone string the roadmap reports; the conductor must agree .375 is active before the downstream tasks resolve.",
+    "arc_modules_importable": "BARE BOOL -- the 4 agentic ARC modules import so .375 can execute them.",
+    "archived_milestone": "Provenance -- which milestone was archived (2026.06.374).",
+    "duration_s": "Positive bare wall-clock; aggregation is fast but never zero.",
+    "exclusion_manifest_parses": "BARE BOOL -- the manifest still loads under yaml.safe_load.",
+    "g3_false_retirement_corrected": "BARE BOOL -- the capstone (exp4053) said G3 retired_non_measurement; the operator (known-issues 2026-06-11) says the 6-task poll was a FALSE retirement and the MoE line RESUMES. True makes the correction auditable so the next planner continues, not retires.",
+    "honest_verdict": "Terminal-prefix verdict + aggregation substrate; no live compute markers.",
+    "inference_substrate": "Declares aggregation only, preventing live-inference duration false positives.",
+    "milestone_374_closestate": "DICT -- per-task OK/BLOCKED/MISSING/FLAGGED, the G1 off-ARC incomplete-and-saturated non-measurement (22/160 tasks, all arms+oracle=1.0, no headroom), the G2 decision-grade negative (closed-loop no-solve vc33, per-step WM-real divergence 0.207, WM-planning retired), the G3 UNDERPOWERED-not-retired correction (14-task checkpoint, 0.3571 vs 0.2581, CI [0.143,0.643] spans the ceiling), total_games_solved=8, ArcMemo v7 no cross-game win, KV260 terminal, exp4044/exp4047 flagged-skipped; the next planner reads this as ground truth.",
+    "pretest_suite_green": "BARE BOOL -- the smart-subset gate is GREEN; a red gate cascade-skips the whole milestone (the recurring poison-test failure mode held through .371-.374).",
+    "quarantined_tests": "List of quarantined test file paths and failing test ids.",
+    "research_complete_yaml_parses": "BARE BOOL -- the colon-poison guard; the file still loads."
+  },
+  "g3_false_retirement_corrected": true,
+  "honest_verdict": "success: archived_v374_v375_active_G1_offarc_incomplete_and_ceiling_saturated_G2_decision_grade_negative_vc33_sim2real_ceiling_G3_underpowered_not_retired_false_retirement_corrected_games8_arcmemo_v7_no_win_kv260_terminal_exp4044_exp4047_flagged_skipped_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone_374_closestate": {
+    "accuracy": {
+      "first_solve_at_action": 9,
+      "monotonic_plus_one": true,
+      "prior_total_games_solved": 7,
+      "real_env_confirmed": true,
+      "target_game": "sb26-7fbdac44",
+      "total_games_solved": 8
+    },
+    "capstone_v374_verdict": "complete: capstone_v374_not_decision_grade_G1_partial_or_incomplete_G2_closed_loop_ceiling_saturated_sim2real_divergence_G3_retired_non_measurement_games8_arcmemo_v7_no_win_flagged_skipped2",
+    "flagged_skipped": [
+      {
+        "claimed_verdict": "success: offarc_power_runner_built_smoked_launched_humaneval_mbpp",
+        "experiment_id": "4044",
+        "flagged_adversarial": true,
+        "skipped": true
+      },
+      {
+        "claimed_verdict": "success: decentralization_moe_base_runner_launched_qwen35moe",
+        "experiment_id": "4047",
+        "flagged_adversarial": true,
+        "skipped": true
+      }
+    ],
+    "g1_off_arc_transfer": {
+      "best_arm": "armC_symbolic",
+      "best_arm_ci95": [
+        0.0,
+        0.0
+      ],
+      "best_arm_ci_excludes_zero": false,
+      "best_arm_delta_pp": 0.0,
+      "ceiling_saturated": true,
+      "demofit_bootstrap_ci95": [
+        0.0,
+        0.0
+      ],
+      "demofit_delta_pp": 0.0,
+      "full_power_reached": false,
+      "is_measurement": false,
+      "n_tasks": 22,
+      "oracle_headroom": false,
+      "oracle_passrate": 1.0,
+      "outcome": "incomplete_and_ceiling_saturated",
+      "powered_task_floor": 160,
+      "root_causes": [
+        "throughput_truncated",
+        "corpus_saturation_no_oracle_headroom"
+      ],
+      "verifier_transferred_off_arc_significantly": false
+    },
+    "g2_closed_loop_grounding": {
+      "bottleneck": "wm_real_divergence_gate_fired",
+      "closed_loop_broke_wall": false,
+      "decision_grade_negative": true,
+      "divergence_gate_fired_count": 1,
+      "game": "vc33",
+      "goal_predicate_heldout_precision": 1.0,
+      "levels_completed_after": 0,
+      "new_levels_solved_this_task": 0,
+      "outcome": "decision_grade_negative_sim2real_ceiling",
+      "per_step_wm_real_divergence_rate": 0.207031,
+      "real_env_confirmed": false,
+      "wm_planning_retired": true
+    },
+    "g3_decentralization_moe_base": {
+      "baseline_12b_coverage": 0.2581,
+      "beat_12b_ceiling": "underpowered_unresolved",
+      "bootstrap_ci95": [
+        0.143,
+        0.643
+      ],
+      "capstone_diagnosis": "retired_non_measurement",
+      "checkpoint_n_tasks": 14,
+      "ci_spans_ceiling": true,
+      "false_retirement_corrected": true,
+      "moe_base_coverage": 0.3571,
+      "numbers_source": "operator_known_issues_2026-06-11_plus_14task_checkpoint_count",
+      "operator_corrected_diagnosis": "underpowered_not_retired",
+      "outcome": "underpowered_not_retired_resume_toward_n30",
+      "poll_artifact_bootstrap_ci95": [
+        -0.0914,
+        0.5752
+      ],
+      "poll_artifact_coverage_delta_vs_12b": 0.2419,
+      "poll_artifact_diagnosis": "",
+      "poll_artifact_n_tasks_scored": 6,
+      "premature_poll_n_tasks": 6,
+      "resume_checkpoint": "results/experiment_4048_decentralization_moe_base_raw.checkpoint.json",
+      "retired": false,
+      "target_task_floor": 30,
+      "throughput_fix_worked": true
+    },
+    "hardware": {
+      "included": true,
+      "kv260_latency_step_taken": true,
+      "kv260_overlay_loaded": true,
+      "kv260_terminal": true,
+      "per_board_reachability": {
+        "gatemate": true,
+        "kv260": true,
+        "polarfire": true
+      },
+      "per_board_terminal_state": {
+        "gatemate": "reachable_detected_gatemate_idcode",
+        "kv260": "reachable_overlay_loaded_latency_transcript_recorded",
+        "polarfire": "reachable_ssh_continuity_recorded"
+      },
+      "verdict": "complete: hardware_continuity_kv260_latency_transcript_landed_4052_gmreachable_detected_gatemate_idcode_pfreachable_ssh_continuity_recorded"
+    },
+    "headline": "Three .373 measurements made decision-grade: G1 off-ARC verifier transfer is a NON-measurement -- INCOMPLETE (22 of 160 tasks) AND CEILING-SATURATED (oracle passrate 1.0, no headroom; best-arm delta 0.0pp CI [0.0, 0.0]) -- the verifier did NOT transfer off-ARC significantly here, but the result is uninformative (.375 fixes the corpus to EvalPlus + resumes); G2 closed-loop grounding did NOT break vc33's wall (no real-env solve; WM-real divergence 0.207031/step) -- a DECISION-GRADE NEGATIVE, vc33 WM-planning RETIRED; G3 the MoE sovereign base is UNDERPOWERED, NOT retired -- the throughput fix worked (checkpoint holds 14 tasks vs 31B's 0), coverage 0.3571 vs the 0.2581 ceiling, bootstrap95 [0.143, 0.643] spans it; the capstone's 6-task-poll retired_non_measurement was a FALSE retirement (corrected, line resumes); proven tracks held: ARC-AGI-3 total_games_solved=8 (+1 monotonic), ArcMemo v7 cross-game helped vs cold (18->9) but LOST to within-game v6 (7); KV260 TERMINAL; exp4044 and exp4047 were flagged_adversarial and SKIPPED.",
+    "per_task_status": {
+      "exp4042-archive-v373-activate-v374": "OK",
+      "exp4043-sota-ingestion-offarc-power-and-closed-loop-planning": "OK",
+      "exp4044-offarc-transfer-power-build": "FLAGGED",
+      "exp4045-offarc-transfer-power-collect": "OK",
+      "exp4046-closed-loop-replan-over-vc33-wm": "OK",
+      "exp4047-decentralization-moe-base-build": "FLAGGED",
+      "exp4048-decentralization-moe-base-collect": "OK",
+      "exp4049-eighth-game-explore-first": "OK",
+      "exp4050-arcmemo-cross-game-transfer-v7": "OK",
+      "exp4051-verifier-registry-and-gaps-hygiene": "OK",
+      "exp4052-hardware-continuity-kv260-terminal": "OK",
+      "exp4053-capstone-v374": "OK"
+    },
+    "self_learning": {
+      "action_savings_vs_cold": 9,
+      "actions_cold": 18,
+      "actions_cross_game_v7": 9,
+      "actions_within_game_v6": 7,
+      "cross_game_transfer_win": false,
+      "induction_calls_cross_game_v7": 0,
+      "n_reused_abstractions": 1,
+      "transfer_assessment": "helped_vs_cold_but_lost_to_within_game_v6"
+    },
+    "status_counts": {
+      "BLOCKED": 0,
+      "FAIL": 0,
+      "FLAGGED": 2,
+      "MISSING": 0,
+      "OK": 10
+    }
+  },
+  "moe_checkpoint_n_tasks": 14,
+  "n_tasks_archived": 12,
+  "preconditions_checked": {
+    "active_milestone": "2026.06.375",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "exclusion_manifest_exists": true,
+    "exclusion_manifest_parsed": true,
+    "research_complete_yaml_exists": true,
+    "research_complete_yaml_parsed_after": true,
+    "research_complete_yaml_parsed_before": true
+  },
+  "pretest_suite_green": true,
+  "quarantined_tests": [],
+  "random_seed": 4054,
+  "reproducibility_checksum": "262675688b2b5f536e35940820682cb43c454cd2bf2ab12b73806c54e71a1e87",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "unchanged",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v374_to_v375_4054.v1",
+  "task_id": "exp4054-archive-v374-activate-v375"
+}
