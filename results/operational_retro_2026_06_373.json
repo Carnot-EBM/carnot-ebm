@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.373",
+  "generated_at": "2026-06-11T11:49:11Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative timing block reported 0 experiment commits since activation of 2026.06.373, so total_wall_time_minutes, experiments_completed, and compute_bound_experiments_count are all 0 and slowest_experiments is empty. With 0 compute-bound tasks in the block and both RTX 3090s reading 0% at the snapshot, the idle GPU is correct post-milestone behaviour, so gpu_idle_on_compute_bound_tasks is null and GPU idle is NOT flagged as a bottleneck. This is the 9th consecutive false-zero: the on-disk ops/changelog.md records real .373 work (exp4029-exp4041), so the zero is a milestone-scoped commit-detection gap, not an idle milestone.",
+  "bottlenecks_identified": [
+    "Milestone-scoped commit detector returned 0 experiments for the 9th consecutive milestone (.363/.365/.366/.367/.368/.369/.370/.372/.373) despite on-disk ops/changelog.md recording the full exp4029-exp4041 chain for .373 — the operational retrospective is structurally running on empty input and cannot measure execution efficiency.",
+    "The standing 'detector fixed' claim (made same-milestone in a prior task) remains unverified on the live retro-timing feed: this retro received another zero block, so the fix is absent, regressed, or was never exercised end-to-end.",
+    "No GPU bottleneck: both RTX 3090s read 0% at the snapshot with 0 compute-bound tasks in the block, which is correct post-milestone idle — not a bug, and explicitly NOT flagged per the GPU idle interpretation rule."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone-scoped commit-detection/windowing so the retro receives the real exp range (must report exp4029-exp4041 for .373, not 0), and prove it end-to-end on a live .374 retro before claiming fixed.",
+    "Add a detector-independent fallback: glob results/experiment_*.json (or git log --since the activation SHA/timestamp) and cross-check against the timing block; emit a loud self-check that FAILS when count==0 but on-disk milestone artifacts exist.",
+    "Stamp each milestone's first/last experiment_id into the activation manifest so the retro has an authoritative range independent of commit-message parsing.",
+    "Verify-or-revert the standing 'detector fixed' claim — treat an unverified infra claim as a regression until a live retro reports a non-zero count, and record the verification artifact."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the commit detector/windowing and demonstrate it on a live .374 retro that reports the real range (exp4029-exp4041 for .373), not 0 — this single recurring failure has now persisted across 9 milestones and blocks every operational retro from doing its job.",
+    "Ship a detector-independent on-disk glob/git fallback plus a fail-loud assert (count==0 while on-disk milestone artifacts are present == hard error), so a future false-zero cannot silently pass as a real retrospective.",
+    "Verify-or-revert the prior 'detector fixed' claim and commit the verification artifact, closing the trust gap on unverified infrastructure fixes."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "For the 9th consecutive milestone the retrospective's authoritative input was a false zero while the milestone actually shipped a full experiment chain (exp4029-exp4041 per on-disk changelog: the off-ARC verifier-transfer probe, vc33 goal-induction plus hierarchical search, the decentralization stronger-base rerun, the 7th ARC game, ArcMemo v6, and the capstone). The recurring failure is observability, not execution — the experiments are running; the detector that feeds this retro is not seeing them. Until the detector is fixed and verified on a live feed, every operational retro is structurally unable to measure execution efficiency because it never receives the timing data it exists to analyze."
+}
