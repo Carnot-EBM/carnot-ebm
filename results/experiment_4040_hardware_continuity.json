@@ -1,0 +1,159 @@
+{
+  "duration_s": 9.39267,
+  "experiment": 4040,
+  "fabric_acceleration_claimed": false,
+  "field_principles": {
+    "duration_s": "Total wall-clock for the hardware-smoke continuity run.",
+    "gatemate_reachable": "Bare bool for GateMate reachability through DirtyJTAG detect.",
+    "honest_verdict": "Terminal prefix naming the observed KV260 overlay/latency gate plus per-board blockers.",
+    "inference_substrate": "Must remain hardware_smoke because this artifact records board smoke, not model inference.",
+    "kv260_overlay_loaded": "principle: the KV260 terminal-state gate -- overlay present is the precondition for a board-latency claim",
+    "kv260_reachable": "Bare bool for KV260 SSH reachability through kria.",
+    "per_board_duration_s": "Distinct positive wall-clock timer per board.",
+    "per_board_next_step": "Bare dict of the next concrete step for each board.",
+    "per_board_reachability": "principle: the continuity record that keeps boards visible in retros",
+    "per_board_terminal_state": "Bare dict of observed terminal-state progress or exact per-board blocker.",
+    "polarfire_reachable": "Bare bool for PolarFire SSH reachability.",
+    "preconditions_checked": "principle: records which board accesses were verified before the smoke, pre-empting the fabricate-when-unreachable failure mode"
+  },
+  "gatemate_command_transcript": {
+    "combined_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n",
+    "command": "openFPGALoader -c dirtyJtag --detect",
+    "duration_s": 0.01959445094689727,
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
+  },
+  "gatemate_detect_output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+  "gatemate_reachable": false,
+  "gatemate_state": "blocked_gatemate_unreachable",
+  "honest_verdict": "complete: hardware_continuity_kv260_overlay_loaded_latency_step_blocked_4040_gmblocked_gatemate_unreachable_pfreachable_ssh_continuity_recorded",
+  "inference_substrate": "hardware_smoke",
+  "kv260_command_transcripts": {
+    "latency_harness": {
+      "combined_output": "BOARD_HARNESS_START exp4040\nTraceback (most recent call last):\n  File \"<stdin>\", line 183, in <module>\n  File \"<stdin>\", line 145, in main\n  File \"<stdin>\", line 81, in _open_map\nOSError: [Errno 22] Invalid argument\n",
+      "command": "ssh kria 'sudo python3 -'",
+      "duration_s": 1.2871630870504305,
+      "exit_code": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"<stdin>\", line 183, in <module>\n  File \"<stdin>\", line 145, in main\n  File \"<stdin>\", line 81, in _open_map\nOSError: [Errno 22] Invalid argument\n",
+      "stdout": "BOARD_HARNESS_START exp4040\n"
+    },
+    "ssh_true": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.6149934630375355,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    "xmutil_listapps_after_load": null,
+    "xmutil_listapps_after_load_sudo": null,
+    "xmutil_listapps_initial": {
+      "combined_output": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "command": "ssh kria 'xmutil listapps'",
+      "duration_s": 0.7667406050022691,
+      "exit_code": 1,
+      "stderr": "xmutil should be called with root privileges. Please try again using 'sudo'.\n",
+      "stdout": ""
+    },
+    "xmutil_listapps_initial_sudo": {
+      "combined_output": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)           0->0,\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)              -1\n",
+      "command": "ssh kria 'sudo xmutil listapps'",
+      "duration_s": 1.0277314450358972,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)           0->0,\n           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)              -1\n"
+    },
+    "xmutil_loadapp": null,
+    "xmutil_loadapp_sudo": null
+  },
+  "kv260_latency_batch_ms": null,
+  "kv260_latency_median_ms": null,
+  "kv260_latency_samples_ms": [],
+  "kv260_latency_step_summary": {
+    "exit_code": 1
+  },
+  "kv260_latency_step_taken": false,
+  "kv260_loaded_overlay_name": "carnot_ising_v2_n64",
+  "kv260_overlay_loaded": true,
+  "kv260_reachable": true,
+  "kv260_state": "reachable_overlay_loaded_latency_step_blocked",
+  "per_board_duration_s": {
+    "gatemate": 0.019683,
+    "kv260": 7.697275,
+    "polarfire": 1.675466
+  },
+  "per_board_next_step": {
+    "gatemate": "blocked_gatemate_unreachable",
+    "kv260": "kv260_forward_step_rerun_terminal_latency_transcript",
+    "polarfire": "polarfire_forward_step_run_hash_verified_soft_cpu_dispatch"
+  },
+  "per_board_reachability": {
+    "gatemate": false,
+    "kv260": true,
+    "polarfire": true
+  },
+  "per_board_terminal_state": {
+    "gatemate": "blocked_gatemate_unreachable",
+    "kv260": "reachable_overlay_loaded_latency_step_blocked",
+    "polarfire": "reachable_ssh_continuity_recorded"
+  },
+  "polarfire_command_transcripts": {
+    "continuity": {
+      "combined_output": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\n 11:22:25 up 6 days, 13:19,  0 user,  load average: 0.08, 0.02, 0.01\n",
+      "command": "ssh polarfire 'uname -a && uptime'",
+      "duration_s": 0.803751424071379,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\n 11:22:25 up 6 days, 13:19,  0 user,  load average: 0.08, 0.02, 0.01\n"
+    },
+    "ssh_true": {
+      "combined_output": "",
+      "command": "ssh -o ConnectTimeout=5 polarfire true",
+      "duration_s": 0.8716120109893382,
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    }
+  },
+  "polarfire_continuity_output": "Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d #1 SMP Wed Apr 29 16:43:56 UTC 2026 riscv64 GNU/Linux\n 11:22:25 up 6 days, 13:19,  0 user,  load average: 0.08, 0.02, 0.01",
+  "polarfire_reachable": true,
+  "polarfire_state": "reachable_ssh_continuity_recorded",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "checked_before_board_operations": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.614993,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    },
+    {
+      "available": false,
+      "checked_before_board_operations": true,
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.019594,
+      "exit_code": 0,
+      "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "resource": "gatemate_jtag_detect"
+    },
+    {
+      "available": true,
+      "checked_before_board_operations": true,
+      "command": "ssh -o ConnectTimeout=5 polarfire true",
+      "duration_s": 0.871612,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "polarfire_ssh"
+    }
+  ],
+  "random_seed": 4040,
+  "reproducibility_checksum": "9d04509efbc4047921435d433f5cfbfeeb6a844a47521f46b1ab958bc386aa27",
+  "schema": "carnot.hardware_continuity_kv260_terminal_drive.v1",
+  "spec_refs": [
+    "REQ-HW-4040",
+    "SCENARIO-HW-4040"
+  ],
+  "speedup_claim_made": false
+}

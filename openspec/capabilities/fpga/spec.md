@@ -6789,6 +6789,82 @@ and no KV260 host SD-card precondition.
 
 ---
 
+### REQ-HW-4040
+
+**Title:** Hardware continuity MUST drive KV260 toward terminal overlay and latency evidence
+
+**Description:**
+Experiment 4040 MUST produce
+`results/experiment_4040_hardware_continuity.json` as a hardware-smoke
+continuity artifact for KV260, GateMate, and PolarFire. The experiment MUST
+check each board independently and continue the remaining boards when one board
+is unavailable. The required preconditions are:
+
+- KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`.
+- GateMate: `openFPGALoader -c dirtyJtag --detect`.
+- PolarFire: `ssh -o ConnectTimeout=5 polarfire 'true'`.
+
+KV260 MUST NOT use a host SD-card block-device precondition such as
+`/dev/mmcblk`. If KV260 SSH is reachable, the experiment MUST run
+`ssh kria 'xmutil listapps'` and may fall back to `ssh kria 'sudo xmutil listapps'`
+when xmutil requires root. If no `carnot_ising` overlay is active in the
+transcript, it MUST attempt to load the canonical Carnot overlay with
+`ssh kria 'xmutil loadapp carnot_ising_v2_n64'`, falling back to
+`ssh kria 'sudo xmutil loadapp carnot_ising_v2_n64'` only when xmutil asks for
+root privileges, then re-check listapps. If a Carnot overlay is confirmed, the
+experiment MUST take a board-latency transcript step using the KV260 board path
+and record the command transcript, sample summary, and whether the step landed.
+
+The artifact MUST include bare `honest_verdict`, `per_board_reachability`,
+`kv260_overlay_loaded`, `preconditions_checked`, and `inference_substrate`
+fields with separate principle annotations. `kv260_overlay_loaded` MUST be a
+boolean terminal-state gate: true only when an active Carnot overlay is
+confirmed through the KV260 SSH/xmutil path. `per_board_duration_s` MUST use a
+distinct positive wall-clock timer for each board. Unreachable boards MUST use
+`blocked_<board>_unreachable` for their next step and terminal state while the
+other boards continue. `inference_substrate` MUST be exactly `"hardware_smoke"`,
+and the artifact MUST avoid fabric speedup or live inference claims.
+
+**Acceptance criteria:**
+- `results/experiment_4040_hardware_continuity.json` is generated.
+- `per_board_reachability` is a dict of booleans for KV260, GateMate, and
+  PolarFire and matches the scalar reachability fields.
+- `kv260_overlay_loaded` is a bare boolean and is true only after a confirmed
+  active Carnot overlay appears in a KV260 `xmutil listapps` transcript.
+- `preconditions_checked` records the three board preconditions before any
+  board smoke step, with at least `{resource, available}` per entry.
+- If KV260 is reachable and the overlay is absent initially, a Carnot overlay
+  load command is preserved in the KV260 command transcripts before any latency
+  transcript step is claimed.
+- If KV260 overlay confirmation succeeds, the artifact records a board-latency
+  transcript step with positive on-board latency samples or records an honest
+  blocked latency state without claiming terminal completion.
+- `honest_verdict` starts with `complete:`, `success:`, or `blocked_`;
+  `inference_substrate` is exactly `"hardware_smoke"`; and no KV260 host
+  SD-card marker such as `/dev/mmcblk` appears in the artifact.
+
+**Implementation status:** Pending (Exp 4040)
+
+---
+
+### SCENARIO-HW-4040
+
+**Scenario:** KV260 continuity loads the Carnot overlay when absent and records a latency transcript step.
+
+**Given:** KV260, GateMate, and PolarFire may independently be reachable or
+unreachable through their SSH or DirtyJTAG preconditions.
+**When:** Experiment 4040 runs the hardware-smoke continuity check.
+**Then:** It writes `results/experiment_4040_hardware_continuity.json` with a
+terminal-prefix verdict, `inference_substrate="hardware_smoke"`, bare
+`per_board_reachability`, precondition evidence, bare boolean
+`kv260_overlay_loaded`, KV260 xmutil/loadapp/latency transcripts when reachable,
+per-board next steps, distinct per-board timers, deterministic seed, checksum,
+and no KV260 host SD-card precondition.
+
+**Implementation status:** Pending (Exp 4040)
+
+---
+
 ### SCENARIO-HW-4017
 
 **Scenario:** ARC continuity records reachable boards and blocked board next steps.
