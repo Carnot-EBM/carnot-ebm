@@ -12282,6 +12282,57 @@ any precondition fails, it writes the corresponding `blocked_*` artifact with
 `runner_ready=false`, `smoke_passed=false`, `smoke_per_task_seconds=0.0`, and
 `launched_pid=0`.
 
+### REQ-VERIFY-4048: MoE-Base Sovereign Coverage Collector
+
+The repository SHALL provide Exp 4048 collection at
+`scripts/experiments/exp4048_decentralization_moe_base_collect.py` to read the
+Exp 4047 MoE launch receipt, poll
+`results/experiment_4048_decentralization_moe_base_raw.json` within a bounded
+budget while retaining the tail of `logs/decentralization_moe_run.log`, and
+write `results/experiment_4048_decentralization_moe_base.json` without
+fabricating completion from logs or checkpoints alone.
+
+If the Exp 4047 build artifact is missing, malformed, or has
+`runner_ready=false`, the collector SHALL write a blocked artifact with
+`honest_verdict=blocked_build_runner_not_ready`. If the raw artifact is still
+absent or incomplete after the polling budget, or if fewer than 30 tasks are
+scored, it SHALL write a complete partial-retirement artifact whose terminal
+verdict is
+`complete: decentralization_moe_base_partial_<n>_tasks_retire`. For complete
+raw artifacts with at least 30 scored tasks, the collector SHALL compute the
+MoE demo-perfect coverage, coverage delta against the Exp 4012 12B baseline
+`0.2581`, a deterministic bootstrap CI95 for that delta, oracle/best-of-pool
+coverage as a positive control, gated pass@2 comparisons against Exp 4012 vote
+`0.4516`, oracle `0.6129`, and codex `0.5806`, and local seconds per task
+against the codex 46-second reference.
+
+The terminal artifact SHALL include `honest_verdict`,
+`moe_base_demo_perfect_coverage`, `coverage_delta_vs_12b`, `bootstrap_ci95`,
+bare integer `n_tasks_scored`, `oracle_coverage`, `local_support_diagnosis`,
+`local_seconds_per_task`, `model_specs`, `random_seed`,
+`reproducibility_checksum`, `missing_verifier_gaps`, and
+`inference_substrate=verifier_ensemble_against_cached_candidates`. The
+collector SHALL set `local_support_diagnosis=latent` only when the coverage
+bootstrap interval excludes the 12B baseline in the positive direction. It
+SHALL set `local_support_diagnosis=absent` when the CI includes zero on a
+non-saturated positive-control pool, and `uninformative` when fewer than 30
+tasks are scored or the oracle coverage is indistinguishable from the 12B
+baseline. Any tasks where no local `k` sample surfaced a demo-perfect verifier
+candidate SHALL be recorded in `ops/verifier_gaps.md`.
+
+### SCENARIO-VERIFY-4048: MoE Coverage Diagnoses Latent Or Absent Support
+
+Given Exp 4047 reports `runner_ready=true` and the Exp 4048 raw artifact is
+present with per-task demo-perfect evidence, when the collector runs, then it
+validates the raw fields, computes the coverage delta and deterministic
+bootstrap CI over task-level demo-perfect indicators, records no-local-k
+surfaced tasks in `missing_verifier_gaps` and `ops/verifier_gaps.md`, emits a
+terminal verdict of either
+`complete: decentralization_moe_base_cov_<X>_latent_distill_viable`,
+`complete: decentralization_moe_base_cov_<X>_absent_leash_holds`, or
+`complete: decentralization_moe_base_partial_<n>_tasks_retire`, and does not
+mutate the Exp 4012 or raw Exp 4048 artifacts.
+
 ### REQ-VERIFY-4013: ARC GAP-4 Verifier-vs-Codex-Judge Efficiency
 
 The repository SHALL provide Exp 4013 at

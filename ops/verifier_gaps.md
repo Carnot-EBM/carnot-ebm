@@ -485,3 +485,11 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: enrich the code verifier with hidden-property synthesis, stronger metamorphic tests, or formal/runtime oracles beyond visible examples.
 - priority: high
 
+### GAP-DECENTRALIZATION-MOE-BASE-4048: MoE-base local support gaps
+- status: open
+- evidence: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4048_decentralization_moe_base.json; n_tasks_scored=6; coverage=0.5; diagnosis=uninformative
+- failure mode: Qwen3.6-35B-A3B best-of-N did not surface a demo-perfect local program for the listed ARC tasks under the cached verifier ensemble.
+- missing discriminator: a verifier-side signal that can recognize the demonstrated rule when the local generator has not already produced a demo-perfect candidate.
+- candidate design: extend GAP-4 execution/program induction or add a larger-base candidate source before distillation.
+- priority: high
+- missing_verifier_gaps: 17cae0c1, 1a2e2828, 1a6449f1
