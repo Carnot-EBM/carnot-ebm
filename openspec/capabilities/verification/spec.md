@@ -12622,6 +12622,27 @@ only when the smoke oracle hidden pass-rate is below 1.0; a false value SHALL
 be recorded honestly with `needs_harder_corpus_livecodebench=true` but SHALL
 not by itself block launching when the runner smoke is otherwise valid.
 
+The collector at
+`scripts/experiments/exp4057_offarc_power_evalplus_collect.py` SHALL read the
+Exp 4056 build artifact before any claim, stop with
+`blocked_build_runner_not_ready` when `runner_ready` is false, poll the raw Exp
+4057 artifact within a bounded budget, and otherwise build a final
+accumulating artifact from the stable checkpoint without fabricating unfinished
+tasks or retiring a throughput-truncated window. The final artifact SHALL write
+`results/experiment_4057_offarc_power_evalplus.json` with accumulated-N task
+counting, oracle EvalPlus-hidden pass-rate headroom, 10,000-resample
+task-level bootstrap CI95 intervals for Arm B demo-fit minus Arm A vote,
+Arm A++ ACES minus Arm A vote, and Arm C symbolic partition minus Arm A vote.
+It SHALL expose bare `accumulated_n_tasks`, `oracle_headroom_present`,
+`demofit_ci_excludes_zero`, and `best_arm_ci_excludes_zero` fields, retain
+`missing_verifier_gaps`, `model_specs`, `random_seed`,
+`reproducibility_checksum`, and
+`inference_substrate=verifier_ensemble_against_cached_candidates`, and SHALL
+use a terminal `complete:` verdict that distinguishes demo-fit EvalPlus
+transfer, stronger-arm-only transfer, small-magnitude transfer with oracle
+headroom, uninformative saturated no-headroom, and bounded accumulating
+outcomes.
+
 ### SCENARIO-VERIFY-4056: EvalPlus Build Smokes, Checks Headroom, And Launches
 
 Given the local GGUF cache, `llama_cpp`, EvalPlus HumanEval+/MBPP+ hidden-test
