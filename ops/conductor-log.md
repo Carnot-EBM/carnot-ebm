@@ -8288,3 +8288,4 @@ c |
 | 2026-06-11 21:46 UTC | ArcMemo v8: RICHER cross-game concept-library tran | OK | 94 passed in 4.86s |
 | 2026-06-11 22:03 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (infrastructure;  | OK | 88 passed in 5.11s |
 | 2026-06-11 22:21 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 86 passed in 4.83s |
+| 2026-06-11 22:39 UTC | Capstone .375 (UNGATED): the milestone's headline  | OK | 87 passed in 4.91s |
