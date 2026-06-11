@@ -12583,6 +12583,60 @@ selection, preserve the oracle hidden pass indicator, and expose Arm C's
 equivalence-class metadata so the collector can compare demo-fit against both
 ACES and the symbolic-equivalence proxy.
 
+### REQ-VERIFY-4056: EvalPlus Hidden-Test OFF-ARC Build And Resume Runner
+
+The repository SHALL provide Exp 4056 at
+`scripts/experiments/exp4056_offarc_power_evalplus_build.py` and the
+backgroundable runner `scripts/experiments/offarc_power_evalplus_run.py` to
+replace the saturated base HumanEval/MBPP measurement with EvalPlus
+HumanEval+/MBPP+ hidden-test scoring. Before inference, the build script SHALL
+check the local `unsloth/gemma-4-12B-it-GGUF` cache, `llama_cpp`
+importability, EvalPlus HumanEval+ and MBPP+ loadability or cached copies, and
+`carnot.verify.sandbox` importability. If any resource is missing, Exp 4056
+SHALL write `results/experiment_4056_offarc_power_evalplus_build.json` with
+`honest_verdict=blocked_<resource>`, bare `runner_ready=false`,
+`smoke_passed=false`, `smoke_oracle_headroom_present=false`,
+`stable_checkpoint_path`, `resumed_from_n`, `launched_pid=0`,
+`preconditions_checked`, and `inference_substrate=live_llm_inference`, then
+stop without launching the runner.
+
+The runner SHALL use a stable corpus/model/k-keyed checkpoint path such as
+`results/offarc_power_evalplus_gemma12b_k8.checkpoint.json`, resume candidate
+programs from the Exp 4045 checkpoint when present, store candidate programs in
+that stable checkpoint for future accumulation windows, and accumulate toward
+at least 160 completed tasks with at least eight candidates per task from the
+local Gemma 4 12B GGUF. All four arms SHALL select from the same candidate pool:
+Arm A self-consistency over candidate behavior, Arm A++ ACES leave-one-out
+test-consistency, Arm B GAP-4 demo-fit on visible examples only, and Arm C
+symbolic-equivalence partition over visible-test survivors. All selected
+candidates and the oracle/best-of-pool positive control SHALL be scored on
+EvalPlus hidden tests, while visible examples remain only the selection signal.
+
+The raw runner SHALL write
+`results/experiment_4057_offarc_power_evalplus_raw.json` with per-arm per-task
+results, `model_specs`, `random_seed`, `reproducibility_checksum`,
+`truncation_rate`, `accumulated_n`, `candidate_pool`, and
+`inference_substrate=live_llm_inference`. The build script SHALL smoke the
+runner on two tasks and record bare `smoke_oracle_headroom_present` as true
+only when the smoke oracle hidden pass-rate is below 1.0; a false value SHALL
+be recorded honestly with `needs_harder_corpus_livecodebench=true` but SHALL
+not by itself block launching when the runner smoke is otherwise valid.
+
+### SCENARIO-VERIFY-4056: EvalPlus Build Smokes, Checks Headroom, And Launches
+
+Given the local GGUF cache, `llama_cpp`, EvalPlus HumanEval+/MBPP+ hidden-test
+corpus, and sandbox primitive are available, when Exp 4056 runs, then it first
+validates a two-task EvalPlus smoke raw artifact, records
+`smoke_oracle_headroom_present` from the smoke oracle pass-rate, launches
+`offarc_power_evalplus_run.py` in the background for at least 160 accumulated
+tasks with at least eight candidates per task, and writes
+`results/experiment_4056_offarc_power_evalplus_build.json` with
+`honest_verdict=success: offarc_power_evalplus_runner_resumed_launched`,
+`runner_ready=true`, `smoke_passed=true`, a positive integer `launched_pid`,
+`evaluation_corpus="EvalPlus HumanEval+/MBPP+ hidden tests"`,
+`stable_checkpoint_path`, `resumed_from_n`, all four arms listed in
+`arms_implemented`, and `inference_substrate=live_llm_inference`.
+
 ### REQ-VERIFY-4051: GAP-4 Registry And Gaps Hygiene Re-Eval
 
 The repository SHALL provide Exp 4051 at
