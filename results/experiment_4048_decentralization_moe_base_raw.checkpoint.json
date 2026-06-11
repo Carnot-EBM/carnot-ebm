@@ -388,6 +388,434 @@
         "status": "no_code",
         "task": "25094a63"
       }
+    ],
+    "2f0c5170": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 20.45,
+        "status": "no_code",
+        "task": "2f0c5170"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 20.0,
+        "status": "no_code",
+        "task": "2f0c5170"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 20.05,
+        "status": "no_code",
+        "task": "2f0c5170"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 19.76,
+        "status": "no_code",
+        "task": "2f0c5170"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 19.62,
+        "status": "no_code",
+        "task": "2f0c5170"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 19.53,
+        "status": "no_code",
+        "task": "2f0c5170"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 19.45,
+        "status": "no_code",
+        "task": "2f0c5170"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 19.57,
+        "status": "no_code",
+        "task": "2f0c5170"
+      }
+    ],
+    "3ee1011a": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 19.91,
+        "status": "no_code",
+        "task": "3ee1011a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 20.22,
+        "status": "no_code",
+        "task": "3ee1011a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 20.06,
+        "status": "no_code",
+        "task": "3ee1011a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 19.74,
+        "status": "no_code",
+        "task": "3ee1011a"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 20.4,
+        "status": "no_code",
+        "task": "3ee1011a"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    # Find all non-zero objects\n    # For each color, find the longest horizontal or vertical segment\n    \n    rows, cols = grid.shape\n    colors = set()\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] != 0:\n                colors.add(grid[r][c])\n    \n    # For each color, find the longest segment\n    color_lengths = {}\n    for color in colors:\n        max_len = 0\n        # Check horizontal segments\n        for r in range(rows):\n            seg_len = 0\n            for c in range(cols):\n                if grid[r][c] == color:\n                    seg_len += 1\n                    max_len = max(max_len, seg_len)\n                else:\n                    seg_len = 0\n        # Check vertical segments\n        for c in range(cols):\n            seg_len = 0\n            for r in range(rows):\n                if grid[r][c] == color:\n                    seg_len += 1\n                    max_len = max(max_len, seg_len)\n                else:\n                    seg_len = 0\n        color_lengths[color] = max_len\n    \n    # Sort by length descending\n    sorted_colors = sorted(color_lengths.keys(), key=lambda c: color_lengths[c], reverse=True)\n    \n    # Output size\n    output_size = color_lengths[sorted_colors[0]]\n    \n    # Create output grid\n    output = np.zeros((output_size, output_size), dtype=int)\n    \n    for r in range(output_size):\n        for c in range(output_size):\n            layer = min(r, c, output_size - 1 - r, output_size - 1 - c)\n            output[r][c] = sorted_colors[layer]\n    \n    return output",
+        "code_len": 1598,
+        "demo_fit": 1.0,
+        "demo_perfect": true,
+        "draw_index": 5,
+        "local_s": 20.34,
+        "status": "graded",
+        "task": "3ee1011a"
+      }
+    ],
+    "4e469f39": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 18.74,
+        "status": "no_code",
+        "task": "4e469f39"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 18.71,
+        "status": "no_code",
+        "task": "4e469f39"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 18.84,
+        "status": "no_code",
+        "task": "4e469f39"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 18.82,
+        "status": "no_code",
+        "task": "4e469f39"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 18.72,
+        "status": "no_code",
+        "task": "4e469f39"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 18.59,
+        "status": "no_code",
+        "task": "4e469f39"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 18.79,
+        "status": "no_code",
+        "task": "4e469f39"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 18.68,
+        "status": "no_code",
+        "task": "4e469f39"
+      }
+    ],
+    "505fff84": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 18.6,
+        "status": "no_code",
+        "task": "505fff84"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 18.92,
+        "status": "no_code",
+        "task": "505fff84"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 18.62,
+        "status": "no_code",
+        "task": "505fff84"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 18.8,
+        "status": "no_code",
+        "task": "505fff84"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 18.49,
+        "status": "no_code",
+        "task": "505fff84"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 18.49,
+        "status": "no_code",
+        "task": "505fff84"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 18.76,
+        "status": "no_code",
+        "task": "505fff84"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 18.45,
+        "status": "no_code",
+        "task": "505fff84"
+      }
+    ],
+    "50a16a69": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 19.49,
+        "status": "no_code",
+        "task": "50a16a69"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 19.11,
+        "status": "no_code",
+        "task": "50a16a69"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 19.18,
+        "status": "no_code",
+        "task": "50a16a69"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 19.38,
+        "status": "no_code",
+        "task": "50a16a69"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 19.19,
+        "status": "no_code",
+        "task": "50a16a69"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 19.09,
+        "status": "no_code",
+        "task": "50a16a69"
+      },
+      {
+        "code": "import numpy as np\n\ndef transform(grid):\n    grid = np.array(grid)\n    rows, cols = grid.shape\n    \n    # Find the noise color\n    # Look at the last row and last column\n    last_row = grid[-1, :]\n    last_col = grid[:, -1]\n    \n    # The noise color is the one that appears most in the last row and last column\n    # (excluding corners if necessary)\n    from collections import Counter\n    counts = Counter()\n    for val in last_row:\n        counts[val] += 1\n    for val in last_col:\n        counts[val] += 1\n    \n    noise_color = max(counts, key=counts.get)\n    \n    # Find the clean part (where the noise color doesn't appear)\n    # Actually, the clean part is the top-left rectangle where the pattern is\n    # We need to find the dimensions of the clean part\n    \n    # Find the last row index that doesn't contain the noise color (or has some non-noise values)\n    clean_rows = 0\n    for r in range(rows):\n        if np.any(grid[r, :] != noise_color):\n            clean_rows = r + 1\n        else:\n            break\n    \n    # Find the last column index that doesn't contain the noise color\n    clean_cols = 0\n    for c in range(cols):\n        if np.any(grid[:, c] != noise_color):\n            clean_cols = c + 1\n        else:\n            break\n    \n    clean_part = grid[:clean_rows, :clean_cols]\n    \n    # Find the horizontal period\n    first_row = clean_part[0, :]\n    for period in range(1, len(first_row) + 1):\n        if len(first_row) % period == 0:\n            pattern = first_row[:period]\n            if np.all(first_row == np.tile(pattern, len(first_row) // period)):\n                h_period = period\n                break\n    \n    # Find the vertical period\n    first_col = clean_part[:, 0]\n    for period in range(1, len(first_col) + 1):\n        if len(first_col) % period == 0:\n            pattern = first_col[:period]\n            if np.all(first_col == np.tile(pattern, len(first_col) // period)):\n                v_period = period\n                break\n    \n    # Extract the tile\n    tile = clean_part[:v_period, :h_period]\n    \n    # Extend the tile to fill the entire grid\n    result = np.zeros((rows, cols), dtype=int)\n    for r in range(rows):\n        for c in range(cols):\n            result[r, c] = tile[r % v_period, c % h_period]\n    \n    return result",
+        "code_len": 2283,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 19.62,
+        "status": "graded",
+        "task": "50a16a69"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 19.61,
+        "status": "no_code",
+        "task": "50a16a69"
+      }
+    ],
+    "5833af48": [
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 0,
+        "local_s": 18.95,
+        "status": "no_code",
+        "task": "5833af48"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 1,
+        "local_s": 19.09,
+        "status": "no_code",
+        "task": "5833af48"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 2,
+        "local_s": 19.2,
+        "status": "no_code",
+        "task": "5833af48"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 3,
+        "local_s": 19.28,
+        "status": "no_code",
+        "task": "5833af48"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 4,
+        "local_s": 19.16,
+        "status": "no_code",
+        "task": "5833af48"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 5,
+        "local_s": 20.03,
+        "status": "no_code",
+        "task": "5833af48"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 6,
+        "local_s": 20.35,
+        "status": "no_code",
+        "task": "5833af48"
+      },
+      {
+        "code": null,
+        "demo_fit": 0.0,
+        "demo_perfect": false,
+        "draw_index": 7,
+        "local_s": 21.48,
+        "status": "no_code",
+        "task": "5833af48"
+      }
     ]
   }
 }
