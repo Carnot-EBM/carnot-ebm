@@ -1,3 +1,46 @@
+## 2026-06-11 Operator-requested read — Self-Harness (META layer: conductor self-improvement)
+
+**"Self-Harness: Harnesses That Improve Themselves"** (arXiv:2606.09498v1; Shanghai AI Lab —
+Zhang, Zhang, Li, Zhang, Chen, Zhang, Bai, Hu). WebFetch-verified 2026-06-11.
+
+**Thesis (verified):** an LLM agent autonomously improves its own NON-parametric scaffolding
+(prompts, tools, runtime mechanisms) via a 3-stage loop — (1) **weakness mining**: cluster
+execution failures by *verifier-grounded signatures*; (2) **harness proposal**: K diverse minimal
+edits targeting specific mechanisms; (3) **regression-gated validation**: accept only if held-in
+improves AND held-out does not regress — with NO stronger external agent. Results on
+Terminal-Bench-2.0 (64 tasks, 3 models): up to **+21.4pp absolute / +138% relative**, held-out
+gains on all three; models retained DISTINCT (model-specific) harness edits.
+
+**Relevance to Carnot — it is a peer to the CONDUCTOR / outer-loop, NOT to the verifier core.**
+It makes ZERO claims about EBMs, program induction, world models, planning/search, reranking, or
+ARC — so do NOT cite it for the verifier-as-selector / search / off-ARC thesis. Its value is one
+layer up:
+- **It formalizes + empirically validates the self-improving research harness Carnot already runs.**
+  The 2026-06-11 overnight self-healing (build->flag->collect cascade fixes, planner-stall
+  pre-staging, activation-block overrides) IS this loop done by hand; the conductor's planner
+  *learning to protect collect tasks* (.374) is weakness-mining->proposal->validation happening
+  organically. Borrow: systematize it — mine `ops/conductor-log.md` failure signatures
+  (DOOMED_RERUN_BLOCK cascades, 1201s planner idle-timeouts, exclusion-manifest HARD blocks),
+  propose regression-gated harness edits, reduce dependence on a human/outer-loop watch.
+- **Verifier-grounded self-improvement = the 2026-06-10 Deep-Think reframe, independently** (verifier
+  as the un-hallucinating signal that GROUNDS a self-improvement loop, not a smart inference filter)
+  — converges with the standing VERIFIER-AS-SELF-IMPROVEMENT-REWARD priority.
+- **Regression-gate = the green-gate, sharpened** (held-in up AND held-out not down). Their own
+  limitation — "higher-stakes changes need stronger gates than pass-rate non-regression" — is why
+  Carnot layers adversarial-verify + the G1-G4 gates on top.
+- **Model-specific harnesses -> the decentralization/distillation track** (corroborates the
+  `model_harness_fit` memo): when building a sovereign local generator (G3), evolve a model-specific
+  harness for it, not just fine-tune weights — the codex-tuned harness likely handicaps gemma-4-12B
+  independent of the representational gap.
+
+**Scope limit (honest):** harness/runtime-level, coding-agent tasks (Terminal-Bench), bounded edits
+under fixed benchmarks — not reasoning/ARC, not weight- or verifier-level. Candidate follow-up: a
+small conductor change-proposal for a weakness-mining loop. Confidence: HIGH (paper fetched +
+numbers confirmed). Cross-ref: `reference_self_harness` (memory), `feedback_outer_loop_role`,
+`reference_model_harness_fit`, `project_continuous_improvement`.
+
+---
+
 ## 2026-06-11 Post-.373 Planning Sweep (Milestone 2026.06.374)
 
 `.373` converted three open arguments into measurements (capstone exp4041). The honest read,
