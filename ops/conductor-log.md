@@ -8213,3 +8213,4 @@ c |
 | 2026-06-11 04:45 UTC | EFFICIENCY axis confirmation (north-star §5): the  | OK | 89 passed in 4.94s |
 | 2026-06-11 04:57 UTC | Hardware continuity (consolidated): SSH/USB-reacha | OK | 87 passed in 4.44s |
 | 2026-06-11 05:12 UTC | Capstone .372 (UNGATED): the milestone's headline  | OK | 88 passed in 4.99s |
+| 2026-06-11 06:02 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
