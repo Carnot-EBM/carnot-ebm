@@ -43,5 +43,13 @@
   "smoke_best_of_n_coverage": 0.5,
   "smoke_passed": true,
   "smoke_per_task_seconds": 85.13,
-  "title": "Decentralization MoE-base runner build and launch gate"
+  "title": "Decentralization MoE-base runner build and launch gate",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=10.37 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
