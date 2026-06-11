@@ -395,6 +395,86 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-06-11 (TOP PRIORITY — operator-directed): OFF-ARC EXECUTION-VERIFIER TRANSFER — convert "argued domain-general" → "measured"
+
+**Origin:** 2026-06-11 operator directive ("queue the off-ARC execution-verifier
+measurement as a next milestone task so this stops being an open argument"), after the
+verifier-transfer audit (4-agent adversarial sweep, 2026-06-11). The audit's verdict: the
+GAP-4 execution-consistency primitive (induce a program from demos → execute in a
+restricted namespace → accept iff exact-output-match = demo-fit) IS the single transferable
+primitive and is domain-general *by construction* — BUT it has **never been run off-ARC**.
+`ops/verifier_gaps.md` is 100% ARC-grid; there is ZERO measured cross-domain transfer. So
+"the verifier generalizes" is currently ARGUED, not MEASURED. This task settles it.
+
+**The experiment (.373 MANDATORY).** Run the SAME induce→restricted-exec→content-hash-match
+selection primitive on a NON-ARC program-synthesis corpus and measure whether demo-fit
+selection earns held-out headroom over a vote/self-consistency baseline — exactly as GAP-4
+did on ARC-1 (vote 0.4516 → gated 0.5806, +16pp).
+
+- **Corpus:** a standard code-synthesis benchmark with VISIBLE example tests + HELD-OUT
+  hidden tests — **MBPP** (≈500 tasks) and/or **HumanEval** (164). Visible tests = the
+  "demos"; hidden tests = the held-out "gold"; restricted-namespace execution + exact
+  output match = the content-hash verifier. This is the 1:1 off-ARC analog. (Reuse the
+  EXISTING domain-general primitives: `python/carnot/verify/sandbox.py` restricted exec +
+  the GAP-4 demo-fit/content-hash logic in `python/carnot/agentic/arc_gap4_execution_verifier.py`
+  — do NOT write an ARC-specific path; the whole point is that the primitive is shared.)
+- **Two arms, SAME candidate pool** (generate N≥8 candidate programs per task):
+  - **Arm A (baseline):** majority-vote / self-consistency over candidate outputs (the
+    TRM-vote analog).
+  - **Arm B (the verifier):** demo-fit selection — execute each candidate on the VISIBLE
+    tests in the restricted namespace, keep the demo_perfect ones (pass ALL visible tests),
+    rerank/select among them (the model-free execution-consistency verifier).
+  - Measure **held-out hidden-test pass@1/pass@2 for A vs B**.
+- **Decentralization-clean:** generate candidates from a LOCAL SOTA GGUF (gemma-4-12B
+  preferred for throughput; the exp4012 pattern), model-free verifier for selection. Closed
+  codex only as an optional upper-bound arm, clearly labeled.
+
+**Falsifiable gate (+ positive control — FALSE_NEGATIVE_RISK guard).** Arm B beats Arm A on
+held-out hidden-test pass-rate by a margin whose **bootstrap 95% CI excludes 0** over N≥30
+tasks (CLT minimum; prefer full MBPP/HumanEval). **POSITIVE CONTROL REQUIRED:** report the
+oracle/best-of-pool hidden-test pass-rate; if oracle ≈ vote (no selectable headroom), the
+corpus is ceiling-saturated and the null is UNINFORMATIVE — escalate to a harder corpus,
+do NOT report "verifier fails to transfer." Three outcomes, all citable:
+  1. **B > A, CI excludes 0, headroom exists** → the execution primitive MEASURABLY
+     generalizes to code → add a code-domain entry to `ops/verifier_registry.yaml`; the
+     "domain-general" claim becomes measured, not argued.
+  2. **B ≈ A, headroom exists** → primitive does NOT transfer here (vote already near-ceiling
+     on code) → honest negative; log the missing discriminator to `ops/verifier_gaps.md`.
+  3. **No headroom (oracle ≈ vote)** → uninformative; harder corpus needed.
+
+**PRECONDITIONS (check BEFORE any inference):** (a) local GGUF cached (`ls
+~/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/` non-empty); (b) `llama_cpp`
+importable; (c) the code corpus loadable (HF `datasets` MBPP/HumanEval, or a cached copy);
+(d) restricted-exec sandbox importable. Any missing → `honest_verdict:
+blocked_<resource>`, no fabrication.
+
+**REQUIRED ARTIFACT FIELDS (principle-annotated):** `honest_verdict` (terminal prefix
+`complete:`/`success:` — e.g. `complete: exec_verifier_transfers_to_code_deltaPP_ci_excl0`
+or `complete: exec_verifier_no_transfer_code_vote_near_ceiling`); `corpus` + `n_tasks`
+(principle: ≥30 for a pp-delta claim, per Adversarial Artifact Verification); `armA_vote_passrate`,
+`armB_demofit_passrate`, `delta_pp` + `bootstrap_ci95` (principle: the CI excluding 0 is what
+distinguishes a real lift from noise); `oracle_passrate` (principle: the positive control that
+rules out the degenerate no-headroom null — FALSE_NEGATIVE_RISK); `inference_substrate`
+(live_llm_inference or verifier_ensemble_against_cached_candidates); `model_specs` + `random_seed`
++ `reproducibility_checksum` (principle: a third party must be able to re-run); `missing_verifier_gaps`
+(principle: per the Missing-Verifier rule, characterize any residual unselectable slice).
+
+**agent_type:** codex / gpt-5.5 (Codex-Default v2). Generation may use the local GGUF; the
+verifier/selection is model-free. **Split if needed** per the 2026-06-10 long-codex-split rule
+(a `*-build` script-writer + a backgrounded `*-run`) so it does not hit the 80-min wall-clock cap.
+
+**Why this matters (north-star).** The verifier IS the project's value-add. The audit showed the
+ARC path is *sharpening* the verifier on ARC but not *broadening* it — and the only thing blocking
+the broadening is that nobody has measured the primitive off-ARC. A positive result here is the
+cleanest possible "the verifier earns its place in MORE than one domain" datum; a negative is an
+honest scope bound + a logged gap. Either way it converts an open argument into a measurement.
+
+**Cross-refs:** the 2026-06-11 verifier-transfer audit (4-agent sweep); `ops/verifier_gaps.md`
+(currently 100% ARC — this is the first cross-domain entry); `ops/verifier_registry.yaml`;
+`python/carnot/agentic/arc_gap4_execution_verifier.py` + `python/carnot/verify/sandbox.py` (the
+domain-general primitives to reuse); exp4012 (the local-GGUF best-of-N decentralization pattern to
+mirror); CLAUDE.md "Missing-Verifier Gap Logging" + "Adversarial Artifact Verification".
+
 ### NEW 2026-06-11 (STANDING — recurring): RESERVE A SOTA-INGESTION SLOT PER BLEEDING-EDGE MILESTONE
 
 **Origin:** 2026-06-11 operator directive (institutionalize the deep-research pattern). Codified as
