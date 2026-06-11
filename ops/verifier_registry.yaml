@@ -199,6 +199,20 @@ verifiers:
            arc1_demo_perfect_coverage: 0.9032, arc1_n: 31, arc1_gold: 28, arc1_eval_artifact: "results/arc3_gap4_induced_programs.json",
            arc2_offline_reproduced: true, arc1_offline_reproduced: true,
            eval_exp: "results/experiment_4001_gap4_registration_offline_eval.json"}
+    agreement_role: confidence_label_only
+    agreement_precision_selector: false
+    selector_retirement:
+      experiment: 4023
+      retired_line: smart_selector_agreement_precision_confirmation
+      retire_if_same_verdict: true
+      retire_if_same_verdict_triggered: true
+      safety_gate_kept: true
+      no_precision_confirmation_v4_proposed: true
+      retirement_rationale: "agreement is a CONFIDENCE LABEL ONLY, not a precision selector;
+        chain-arms narrowed precision uplift to unestablished, then exp3988 poison-skipped,
+        exp3999 pending-execution, and exp4009 execution-floor-unmet repeated the
+        non-confirmation/non-execution verdict. Retiring the selector R&D does not remove
+        the shipped demo-fit execution safety gate."
     lineage: {from: arc_grid_combined_verifier (v2),
               change: "ARC-2 domain; program-induction stack replaces invariant-family pruner;
                        tiered policy: T1 snap tau<=0.005 > T2 promote-first-FRESH-demo-perfect >
