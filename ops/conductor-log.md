@@ -8286,3 +8286,4 @@ c |
 | 2026-06-11 21:29 UTC | VERIFIER-AS-ONLINE-ACTION-PRUNER efficiency (the n | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-06-11 21:31 UTC | ArcMemo v8: RICHER cross-game concept-library tran | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-06-11 21:46 UTC | ArcMemo v8: RICHER cross-game concept-library tran | OK | 94 passed in 4.86s |
+| 2026-06-11 22:03 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (infrastructure;  | OK | 88 passed in 5.11s |
