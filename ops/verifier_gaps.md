@@ -513,3 +513,33 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: improve the verified world model or add a conservative real-env grounding/replan guard.
 - priority: high
 <!-- exp4051-g2:end -->
+
+<!-- exp4063-g1:start -->
+#### Exp 4063 G1 EvalPlus update for GAP-CODE-EXEC-DEMOFIT
+- status: g1_evalplus_accumulating
+- evidence: `results/experiment_4057_offarc_power_evalplus.json`; accumulated_n_tasks=0; powered_task_floor=160; oracle_headroom_present=False; demo_fit_CI95=[0.0, 0.0]; best_arm=armC_symbolic; best_arm_CI95=[0.0, 0.0].
+- failure mode: visible/demo-fit code tests are not yet a powered EvalPlus hidden-semantic discriminator.
+- missing discriminator: code_demo_fit_visible_tests_do_not_discriminate_hidden_semantics.
+- candidate design: continue accumulation or add hidden-property, symbolic, formal, or runtime oracles.
+- priority: high
+<!-- exp4063-g1:end -->
+
+<!-- exp4063-g3:start -->
+#### Exp 4063 G3 accumulated update for GAP-DECENTRALIZATION-MOE-BASE-4048
+- status: g3_decentralization_moe_base_4048_pending
+- evidence: `results/experiment_4059_decentralization_moe_resume.json`; accumulated_coverage=0.0; n_tasks_scored=0; ACCUMULATED-N=0; diagnosis=pending; bootstrap_CI95=[0.0, 0.0].
+- failure mode: local MoE best-of-N support has not established a sovereign GAP-4 replacement.
+- missing discriminator: verifier-side signal or stronger local base that surfaces demo-perfect programs without Codex.
+- candidate design: continue accumulation, use a stronger local base, or add verifier-guided generation before distillation.
+- priority: high
+<!-- exp4063-g3:end -->
+
+<!-- exp4063-g2:start -->
+### GAP-ARC3-VC33-SIM2REAL-CEILING: vc33 verified-WM closed-loop sim2real ceiling
+- status: g2_vc33_sim2real_ceiling_logged
+- evidence: `results/experiment_4046_closed_loop_replan_over_vc33_wm.json`; per_step_wm_real_divergence_rate=0.207031; divergence_gate_fired_count=1.
+- failure mode: bounded WM search produced a plan whose predicted next state diverged from the real environment.
+- missing discriminator: per-step WM-to-real transition trust signal strong enough to plan past vc33's wall.
+- candidate design: improve the verified world model or add a conservative real-env grounding/replan guard.
+- priority: high
+<!-- exp4063-g2:end -->
