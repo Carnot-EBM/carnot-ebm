@@ -6722,6 +6722,73 @@ north-star section 3.
 
 ---
 
+### REQ-HW-4027
+
+**Title:** Hardware continuity MUST record per-board reachability and terminal-state checks
+
+**Description:**
+Experiment 4027 MUST produce
+`results/experiment_4027_hardware_continuity.json` as a hardware-smoke
+continuity artifact for the KV260, GateMate, and PolarFire boards. The
+experiment MUST check each board through its board-specific access path before
+recording any terminal-state evidence:
+
+- KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`, followed only
+  when reachable by `ssh kria 'xmutil listapps'` and `ssh kria 'ls /dev/uio*'`.
+- GateMate: `openFPGALoader -c dirtyJtag --detect`.
+- PolarFire: `ssh -o ConnectTimeout=5 polarfire 'true'`, followed only when
+  reachable by `ssh polarfire 'uname -a && uptime'`.
+
+KV260 MUST NOT use a host SD-card block-device precondition such as
+`/dev/mmcblk`. The artifact MUST record a bare `per_board_reachability` dict
+with keys `kv260`, `gatemate`, and `polarfire`; a bare
+`preconditions_checked` list whose entries include at least `{resource,
+available}`; a bare `per_board_next_step` dict; a bare
+`per_board_duration_s` dict with a distinct positive wall-clock timer per
+board; `inference_substrate="hardware_smoke"`; and a terminal-prefix
+`honest_verdict`.
+
+For every board, the artifact MUST record the terminal-state check result that
+was actually observed or mark it skipped when the board access precondition was
+unavailable. Reachable KV260 next steps MUST point toward terminal
+confirmation; unreachable boards MUST use the exact
+`blocked_<board>_unreachable` next step. Field principles MUST annotate the
+required fields separately while those required fields remain bare values.
+
+**Acceptance criteria:**
+- `results/experiment_4027_hardware_continuity.json` is generated.
+- `per_board_reachability` is a dict of booleans for KV260, GateMate, and
+  PolarFire and matches the scalar reachability fields.
+- `preconditions_checked` records which board accesses were verified before the
+  smoke, with at least `{resource, available}` per board, pre-empting the
+  fabricate-when-unreachable failure mode.
+- `per_board_duration_s` contains distinct positive wall-clock measurements for
+  the three boards.
+- `honest_verdict` starts with `complete:`, `success:`, or `blocked_`.
+- `inference_substrate` is exactly `"hardware_smoke"` and no fabric
+  acceleration or host SD-card precondition is claimed.
+
+**Implementation status:** Pending (Exp 4027)
+
+---
+
+### SCENARIO-HW-4027
+
+**Scenario:** Hardware continuity records reachability, terminal-state checks, and next steps per board.
+
+**Given:** KV260, GateMate, and PolarFire may independently be reachable or
+unreachable through their SSH or DirtyJTAG preconditions.
+**When:** Experiment 4027 runs the hardware-smoke continuity check.
+**Then:** It writes `results/experiment_4027_hardware_continuity.json` with
+terminal-prefix verdict, `inference_substrate="hardware_smoke"`, bare
+`per_board_reachability`, precondition evidence, terminal-state check evidence,
+per-board next steps, distinct per-board timers, deterministic seed, checksum,
+and no KV260 host SD-card precondition.
+
+**Implementation status:** Pending (Exp 4027)
+
+---
+
 ### SCENARIO-HW-4017
 
 **Scenario:** ARC continuity records reachable boards and blocked board next steps.
