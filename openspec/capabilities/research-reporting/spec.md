@@ -19423,3 +19423,110 @@ reconciliation files untouched.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-4055 | Implemented (`python/carnot/sota_ingestion_4055.py`, `docs/research-notes/sota-ingestion-2026-06-11-unsaturated-execverif-and-verifier-pruner.md`) | Implemented (`tests/python/test_sota_ingestion_receipt_4055.py`) |
+
+### REQ-REPORT-4066: Archive .375 And Activate .376 With The Mechanism-Failure Close-State And Intact-Checkpoint Preservation
+
+The Exp 4066 workflow SHALL archive milestone `2026.06.375`, confirm milestone
+`2026.06.376` is active in the current research roadmap, and write
+`results/experiment_4066_archive_v375_activate_v376.json`. Before editing any
+record it SHALL confirm `research-complete.yaml` safe-loads under
+`yaml.safe_load`; if that precondition fails it SHALL write a blocked artifact
+whose `honest_verdict` starts with `blocked_research_complete_yaml_poison` and
+SHALL NOT edit `research-complete.yaml` or `ops/exclusion_manifest.yaml`.
+
+The workflow SHALL ensure exactly one `.375` milestone record exists in
+`research-complete.yaml`. The conductor's checkpoint-from-interrupted-run commit
+already appended one canonical `.375` record, so the workflow SHALL collapse any
+duplicate `- id: 2026.06.375` records to the first occurrence (fail-forward
+cleanup, never a further append), leave a single existing record unchanged, or
+append one canonical `.375` record when none exists, single-quoting any scalar
+that contains a bare `: ` so the file still parses (the `.355` poison-test
+lesson). After this edit it SHALL confirm both `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` still safe-load. It SHALL run an import probe for
+`carnot.agentic.arc_agi3_world_model`,
+`carnot.agentic.arc_world_model_synth`, `carnot.agentic.arc_world_model_dsl`,
+and `carnot.agentic.arc_agi3_action_efficiency`, recording the aggregate bare
+boolean `arc_modules_importable`.
+
+The workflow SHALL confirm the two `.376` resume pools are intact on disk,
+reading each one's task count rather than asserting a hardcoded number: the
+off-ARC candidate pool
+(`results/experiment_4045_offarc_transfer_power.checkpoint.json`, recorded as
+`offarc_checkpoint_n_tasks`, the bare boolean `offarc_checkpoint_intact`) and
+the MoE base pool
+(`results/experiment_4048_decentralization_moe_base_raw.checkpoint.json`,
+recorded as `moe_checkpoint_n_tasks`, the bare boolean `moe_checkpoint_intact`).
+If either pool is absent or empty the workflow SHALL write a blocked artifact
+prefixed by `blocked_offarc_checkpoint_missing` or
+`blocked_moe_checkpoint_missing` and SHALL still record the close-state.
+
+The workflow SHALL run the smart-subset pre-test gate — the two core suites
+(`test_pipeline_extract.py`, `test_docs.py`) plus every uncommitted/untracked
+`tests/python/*.py` file, excluding `tests/quarantine/` — via `.venv/bin/pytest
+<files> -q --no-header -n 0 --no-cov -o addopts=`. If the gate is red it SHALL
+record failing test ids by source file, `git mv` each still-red file under
+`tests/quarantine/`, rerun until green, and record the quarantined paths in
+`quarantined_tests`. This preserves the poison-test quarantine that held through
+`.371`/`.372`/`.373`/`.374` and needed one more move in `.375` after Exp 4058's
+codex idle-timeout shipped a failing test.
+
+The workflow SHALL record the `.375` close-state in the bare-dict field
+`milestone_375_closestate` with `mechanism_failure` set to `true` and
+`science_negative` set to `false`: per-task OK/BLOCKED/MISSING/FLAGGED/FAIL
+status for Exp 4054–4065 plus a `per_task_conductor_result` annotation that
+preserves the SKIP / GATE_BLOCK / cascade reason the disk artifact cannot show.
+It SHALL record the G1 off-ARC verifier-transfer result as `accumulated_n` `0`
+caused by a MECHANISM failure (Exp 4056's BUILD half reported `launched_pid` `0`
+and `blocked_smoke_failed` — FLAGGED — so Exp 4057's COLLECT polled an empty
+checkpoint), NOT a science negative, with the 238 KB off-ARC pool intact and
+resuming in `.376` Exp 4068; the G3 sovereign-base result as `cascade_blocked`
+`true`, `retired` `false` (Exp 4058's long BUILD prompt hung codex with a
+1202 s idle-timeout and shipped a failing pre-test that poison-cascaded
+Exp 4059/4060/4061), with the 14-task MoE pool intact and resuming in `.376`
+Exp 4069; the EFFICIENCY action-pruner (Exp 4061) and the ninth game (Exp 4060)
+as cascade-skipped with `total_games_solved` staying `8`; ArcMemo v8 (Exp 4062)
+as no cross-game transfer; and KV260 as TERMINAL.
+
+The terminal artifact SHALL include bare top-level fields `archived_milestone`,
+`activated_milestone`, `research_complete_yaml_parses`,
+`exclusion_manifest_parses`, `arc_modules_importable`, `pretest_suite_green`,
+`quarantined_tests`, `milestone_375_closestate`, `offarc_checkpoint_intact`,
+`moe_checkpoint_intact`, `active_milestone_confirmed` (the confirmed active
+milestone string `2026.06.376`), `honest_verdict`, `duration_s`, and
+`inference_substrate` equal to `aggregation_from_upstream_artifacts`. On the
+complete path `honest_verdict` SHALL start with `complete:`, `success:`,
+`passed:`, or `shipped:`. This is a record-only aggregation task and SHALL NOT
+modify `ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-4066: V375 Archive Opens The .376 Mechanism-Fix Milestone
+
+**Given** `.376` is active, `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` safe-load, the four ARC agentic modules import,
+both the off-ARC and MoE candidate checkpoints are intact, and the smart-subset
+gate is green after any required quarantine
+**When** the Exp 4066 workflow runs
+**Then** it ensures exactly one `.375` record, confirms both YAML files still
+parse, records the `.375` close-state truth (mechanism failure not science
+negative, G1 off-ARC accumulated N=0 because the runner never launched with the
+off-ARC checkpoint intact, G3 MoE cascade-blocked and not retired with the MoE
+checkpoint intact, efficiency and the ninth game cascade-skipped with 8 games
+solved, ArcMemo v8 no transfer, KV260 terminal), confirms
+`active_milestone_confirmed` equals `2026.06.376`, sets `offarc_checkpoint_intact`
+and `moe_checkpoint_intact` to `true`, writes the required terminal artifact, and
+leaves ops/status/traceability/conductor files unchanged.
+
+#### SCENARIO-REPORT-4066-BLOCKED-YAML: Corrupt Research Record Blocks Before Edit
+
+**Given** `research-complete.yaml` does not safe-load
+**When** the Exp 4066 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_research_complete_yaml_poison`, records the failed parse in
+`preconditions_checked`, and leaves both `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` byte-for-byte unchanged.
+
+## Implementation Status (REQ-REPORT-4066)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4066 | Implemented (`python/carnot/reporting/archive_v375_activate_v376_4066.py`, `scripts/experiments/exp4066_archive_v375_activate_v376.py`) | Implemented (`tests/python/test_experiment_4066_archive_v375_activate_v376.py`) |

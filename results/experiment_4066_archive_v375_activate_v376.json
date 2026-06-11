@@ -1,0 +1,162 @@
+{
+  "activated_milestone": "2026.06.376",
+  "active_milestone_confirmed": "2026.06.376",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "arc_modules_importable": true,
+  "archived_milestone": "2026.06.375",
+  "duration_s": 13.102989,
+  "exclusion_manifest_parses": true,
+  "experiment_id": "exp4066",
+  "field_principles": {
+    "activated_milestone": "Confirms .376 is live so downstream resume-accumulate tasks resolve.",
+    "active_milestone_confirmed": "STR -- the active milestone string the roadmap reports; the conductor must agree .376 is active before the downstream tasks resolve.",
+    "arc_modules_importable": "BARE BOOL -- the 4 agentic ARC modules import so .376 can execute them.",
+    "archived_milestone": "Provenance -- which milestone was archived (2026.06.375).",
+    "duration_s": "Positive bare wall-clock; aggregation is fast but never zero.",
+    "exclusion_manifest_parses": "BARE BOOL -- the manifest still loads under yaml.safe_load.",
+    "honest_verdict": "Terminal-prefix verdict + aggregation substrate; no live compute markers.",
+    "inference_substrate": "Declares aggregation only, preventing live-inference duration false positives.",
+    "milestone_375_closestate": "DICT -- the next planner reads this as ground truth. It MUST record that .375 failed on the MECHANISM (the split-BUILD-background-COLLECT powering run never launched), NOT the science: G1 off-ARC accumulated N=0 (runner died, launched_pid=0), G3 MoE cascade-blocked (exp4058 codex-1202s timeout shipped a poison test), efficiency + 9th game cascade-SKIPPED, ArcMemo v8 no-transfer, total_games_solved=8, KV260 terminal -- and that BOTH candidate checkpoints are INTACT and ready to resume.",
+    "moe_checkpoint_intact": "BARE BOOL -- .376 exp4069 resumes the 14-task MoE pool; True confirms it exists on disk with >0 scored tasks so the sovereign-base line resumes, not restarts.",
+    "offarc_checkpoint_intact": "BARE BOOL -- .376 exp4068 resumes the 238 KB off-ARC candidate pool; True confirms it exists on disk with >0 evaluated tasks (the data .375 lost the LAUNCH for, not the data).",
+    "pretest_suite_green": "BARE BOOL -- a red pre-test gate cascade-SKIPs the whole milestone; this is the recurring poison-test failure mode that hit .375 (exp4058 shipped a failing test).",
+    "quarantined_tests": "List of quarantined test file paths and failing test ids.",
+    "research_complete_yaml_parses": "BARE BOOL -- the colon-poison guard; the file still loads."
+  },
+  "honest_verdict": "success: archived_v375_v376_active_mechanism_failure_not_science_G1_offarc_accumulated_n0_runner_never_launched_offarc_checkpoint_intact_G3_moe_cascade_blocked_moe_checkpoint_intact_efficiency_and_ninth_game_cascade_skipped_games8_arcmemo_v8_no_transfer_kv260_terminal_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone_375_closestate": {
+    "accuracy": {
+      "monotonic_no_regression": true,
+      "ninth_game_cascade_skipped": true,
+      "ninth_game_measured": false,
+      "outcome": "stayed_8_ninth_game_cascade_skipped",
+      "total_games_solved": 8
+    },
+    "capstone_v375_verdict": "complete: capstone_v375_offarc_accumulating_n0_g3_accumulating_efficiency_null_games8_flagged_skipped1",
+    "checkpoints_intact": {
+      "moe": true,
+      "off_arc": true
+    },
+    "efficiency_action_pruner": {
+      "cascade_skipped": true,
+      "efficiency_gain": false,
+      "measured": false,
+      "outcome": "cascade_skipped_unmeasured",
+      "root_cause": "poison_test_cascade_from_exp4058"
+    },
+    "g1_off_arc_transfer": {
+      "accumulated_n": 0,
+      "build_flagged_adversarial": true,
+      "build_launched_pid": 0,
+      "build_verdict": "blocked_smoke_failed",
+      "collect_best_arm": "armC_symbolic",
+      "collect_oracle_headroom_present": false,
+      "collect_verdict": "complete: offarc_power_evalplus_accumulating_n_0",
+      "mechanism_failure": true,
+      "offarc_checkpoint_intact": true,
+      "offarc_checkpoint_n_tasks": 23,
+      "outcome": "mechanism_failure_runner_never_launched_n0_checkpoint_intact",
+      "question": "did the demo-fit verifier transfer off-ARC on an un-saturated corpus?",
+      "resumes_in_v376": "exp4068",
+      "runner_launched": false,
+      "science_negative": false
+    },
+    "g3_decentralization_moe_base": {
+      "accumulated_n": 14,
+      "build_present": false,
+      "cascade_blocked": true,
+      "collect_present": false,
+      "moe_checkpoint_intact": true,
+      "moe_checkpoint_n_tasks": 14,
+      "outcome": "cascade_blocked_no_new_scoring_checkpoint_intact_resume_toward_n30",
+      "question": "does the local MoE Qwen3.6-35B-A3B base raise the 0.2581 induction ceiling?",
+      "resumes_in_v376": "exp4069",
+      "retired": false,
+      "root_cause": "exp4058_codex_1202s_idle_timeout_shipped_failing_pretest_poison_cascade"
+    },
+    "hardware": {
+      "included": true,
+      "kv260_terminal": true,
+      "per_board_reachability": {
+        "gatemate": true,
+        "kv260": true,
+        "polarfire": true
+      },
+      "per_board_terminal_state": {
+        "gatemate": "reachable_n16_bitstream_post_flash_detect_blocked",
+        "kv260": "opportunistic_terminal_confirmed_ssh_only",
+        "polarfire": "reachable_hash_verified_cpu_dispatch_recorded"
+      },
+      "verdict": "complete: hardware_continuity_gatemate_gatemate_existing_n16_bitstream_post_flash_detect_blocked_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only"
+    },
+    "headline": ".375 LARGELY FAILED ON THE MECHANISM, not the science. G1 off-ARC verifier transfer (operator TOP PRIORITY) accumulated N=0 -- the runner NEVER LAUNCHED (exp4056 launched_pid=0, blocked_smoke_failed, FLAGGED), so exp4057 polled an empty checkpoint; the off-ARC candidate pool (23 tasks) is INTACT and resumes in .376 exp4068. G3 MoE sovereign base CASCADE-BLOCKED -- exp4058's long BUILD prompt hung codex (1202s idle-timeout -> SKIP) and shipped a FAILING pre-test that poison-cascaded exp4059 (GATE_BLOCK), exp4060 (9th game) and exp4061 (efficiency); the MoE pool (14 tasks) is INTACT and resumes in .376 exp4069. EFFICIENCY and the 9th game were cascade-SKIPPED so total_games_solved stays 8; ArcMemo v8 found no cross-game transfer (no usable 9th-game trace); KV260 TERMINAL. .375 lost the LAUNCH, not the data.",
+    "mechanism_failure": true,
+    "per_task_conductor_result": {
+      "exp4054-archive-v374-activate-v375": "OK",
+      "exp4055-sota-ingestion-unsaturated-execverif-and-verifier-pruner": "OK",
+      "exp4056-offarc-power-evalplus-build": "FLAGGED_blocked_smoke_failed_launched_pid_0",
+      "exp4057-offarc-power-evalplus-collect": "OK_accumulating_n0_empty_checkpoint",
+      "exp4058-decentralization-moe-resume-build": "SKIP_codex_idle_timeout_1202s_shipped_failing_pretest",
+      "exp4059-decentralization-moe-resume-collect": "GATE_BLOCK_upstream_retired_poison_cascade",
+      "exp4060-ninth-game-explore-first": "CASCADE_SKIP_poison_test_from_exp4058",
+      "exp4061-verifier-action-pruner-efficiency": "CASCADE_SKIP_poison_test_from_exp4058",
+      "exp4062-arcmemo-cross-game-transfer-v8": "OK",
+      "exp4063-verifier-registry-and-gaps-hygiene": "OK",
+      "exp4064-hardware-continuity-gatemate-polarfire": "OK",
+      "exp4065-capstone-v375": "OK"
+    },
+    "per_task_status": {
+      "exp4054-archive-v374-activate-v375": "OK",
+      "exp4055-sota-ingestion-unsaturated-execverif-and-verifier-pruner": "OK",
+      "exp4056-offarc-power-evalplus-build": "FLAGGED",
+      "exp4057-offarc-power-evalplus-collect": "OK",
+      "exp4058-decentralization-moe-resume-build": "MISSING",
+      "exp4059-decentralization-moe-resume-collect": "MISSING",
+      "exp4060-ninth-game-explore-first": "MISSING",
+      "exp4061-verifier-action-pruner-efficiency": "MISSING",
+      "exp4062-arcmemo-cross-game-transfer-v8": "OK",
+      "exp4063-verifier-registry-and-gaps-hygiene": "OK",
+      "exp4064-hardware-continuity-gatemate-polarfire": "OK",
+      "exp4065-capstone-v375": "OK"
+    },
+    "science_negative": false,
+    "self_learning": {
+      "cross_game_transfer_win": false,
+      "n_reused_abstractions": 0,
+      "outcome": "no_cross_game_transfer_no_usable_9th_game_trace",
+      "transfer_assessment": "unmeasured_no_usable_trace",
+      "verdict": "complete: arcmemo_v8_no_cross_game_transfer_no_usable_4060_trace"
+    },
+    "status_counts": {
+      "BLOCKED": 0,
+      "FAIL": 0,
+      "FLAGGED": 1,
+      "MISSING": 4,
+      "OK": 7
+    }
+  },
+  "moe_checkpoint_intact": true,
+  "moe_checkpoint_n_tasks": 14,
+  "n_tasks_archived": 12,
+  "offarc_checkpoint_intact": true,
+  "offarc_checkpoint_n_tasks": 23,
+  "preconditions_checked": {
+    "active_milestone": "2026.06.376",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "exclusion_manifest_exists": true,
+    "exclusion_manifest_parsed": true,
+    "research_complete_yaml_exists": true,
+    "research_complete_yaml_parsed_after": true,
+    "research_complete_yaml_parsed_before": true
+  },
+  "pretest_suite_green": true,
+  "quarantined_tests": [],
+  "random_seed": 4066,
+  "reproducibility_checksum": "6dd99bebaa6d3ba3f19dae98e345abbb2ad16fc1c6b9d1653ea65d097be504bb",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "unchanged",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v375_to_v376_4066.v1",
+  "task_id": "exp4066-archive-v375-activate-v376"
+}
