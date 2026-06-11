@@ -21924,3 +21924,85 @@ solved. The literature says the fix is method, not model.
 
 Sources (this sweep): github.com/xu3kev/BARC; featherless.ai/models/barc0/Llama-3.1-ARC-Potpourri-Induction-8B;
 arxiv.org/abs/2411.07279 (TTT); arxiv.org/abs/2507.14172 (SOAR); lewish.io/posts/arc-agi-2025-research-review.
+
+## 2026-06-11 (.373 planning sweep — GENERALIZE the search layer + MEASURE the verifier off-ARC)
+
+`.372` (the Deep-Think pivot) ADVANCED its central bet but THINLY: exp4021 solved r11l L4 via
+heuristic search over the verifier-certified world model, BUT `nodes_expanded=3` with
+r11l-specific hardcoded macros (`r11l_safe_composite_path_macro`) — one bespoke data point, not a
+general planner. exp4020 goal-predicate separation worked (heldout precision 1.0, reusable).
+Decentralization (exp4022) was FLAGGED (DURATION_TOO_SHORT, fabrication-class) → UNRESOLVED;
+exp4012 showed gemma-4-12B best-of-N (k=8) = 0.2581 coverage = NO lift over the 3-attempt
+baseline (representational-gap-likely, 5× slower than codex). Efficiency (exp4026) is the CLEAN
+win: verifier vs LLM-judge accuracy parity at 95.3× cheaper wall-clock / 236× cheaper tokens.
+The operator's TOP PRIORITY (2026-06-11) is the OFF-ARC execution-verifier transfer — convert
+"argued domain-general" → "measured" on MBPP/HumanEval.
+
+### Tier A — off-ARC execution-based candidate selection (the operator TOP-PRIORITY verifier-transfer)
+
+- **DOCE — "Finding the Sweet Spot for Execution-Based Code Generation", arXiv:2408.13745.** The
+  canonical execution-based reranking framework for code gen (best-of-N over candidates, execute
+  on tests, MBR/agreement select). The EXACT off-ARC analog of GAP-4: visible example tests = the
+  "demos", restricted-namespace execution + output-match = the verifier. Use its protocol +
+  baselines (log-likelihood, Coder-Reviewer, CodeScore, execution-MBR) as the must-beat controls
+  for the .373 transfer experiment. Confidence: HIGH.
+- **ACES — "Who Tests the Tests? Leave-One-Out AUC Consistency for Code Generation",
+  arXiv:2604.03922 (2026).** Leave-one-out consistency scoring for code-gen candidate selection —
+  a self-consistency-over-tests selector. Directly relevant as Arm-A++ (a stronger consistency
+  baseline than plain majority vote) for the off-ARC transfer; if the demo-fit verifier (Arm B)
+  only beats plain vote but ties ACES, that is the honest scope bound. Confidence: HIGH.
+- **"Inference-Time Code Selection via Symbolic Equivalence Partitioning", arXiv:2604.06485
+  (2026).** Partitions candidates into symbolic-equivalence classes before selection (catches
+  behaviorally-identical programs that differ syntactically). An orthogonal selection axis to
+  pure execution-match; candidate enrichment for the verifier if exact-output-match over-splits.
+  Confidence: MEDIUM.
+- **"Scaling Agentic Verifier for Competitive Coding", arXiv:2602.04254 (2026)** + **"Iterative
+  Self-Training for Code Generation via Reinforced Re-Ranking", arXiv:2504.09643.** The agentic /
+  learned-reranker end of the spectrum (expensive). Carnot's pitch is the OPPOSITE: a model-free
+  execution verifier at ~$0 — so these are the "expensive comparator" framing for the efficiency
+  story, not the method to adopt. Confidence: MEDIUM.
+
+### Tier B — generalize the planning/search layer past flat nodes_expanded=3 (the central-bet hardening)
+
+- **"Hierarchical Planning with Latent World Models" (HWM), arXiv:2604.03208 (April 2026).** FRESH
+  and most on-point: a high-level planner emits a SEQUENCE OF SUBGOALS; "the flat planner often
+  struggles due to the increased search complexity of long-horizon prediction." This is exactly
+  exp4021's weakness — a flat 3-node search will not generalize to a genuine long-horizon wall.
+  The .373 generalization should add subgoal/landmark decomposition over the verified world model.
+  Confidence: HIGH.
+- **"Subgoal-Guided Policy Heuristic Search with Learned Subgoals", arXiv:2506.07255 (June 2025).**
+  Extends PHS* (already cited in the .372 note) with automatic subgoal DISCOVERY from search data —
+  reduces a hard problem into easier sub-problems. The concrete algorithm for the hierarchical
+  layer above the verifier-simulator; pairs with a CODED heuristic (OOD-robust) over the exp4020
+  goal predicate. Confidence: HIGH.
+- **"Solving Sokoban using Hierarchical RL with Landmarks", arXiv:2504.04366** (already in the
+  .372 search-layer note) — 6-level learned subgoal hierarchy, scales to hard Sokoban, "improved
+  when combined with search." The landmark-decomposition precedent the .373 search layer should
+  borrow to escape the bespoke-macro regime. Confidence: HIGH.
+
+### Cross-cutting notes for the .373 plan
+- **Off-ARC transfer (Gap 1 / TOP PRIORITY):** reuse the EXISTING domain-general primitives
+  (`python/carnot/verify/sandbox.py` restricted exec + the GAP-4 demo-fit/content-hash logic in
+  `python/carnot/agentic/arc_gap4_execution_verifier.py`) on MBPP/HumanEval; visible tests = demos,
+  hidden tests = gold. Two arms SAME pool: Arm A = vote/self-consistency (and ACES as Arm A++),
+  Arm B = demo-fit execution selection. Gate: Arm B − Arm A bootstrap CI95 excludes 0, N≥30, +
+  POSITIVE CONTROL (oracle/best-of-pool ≈ vote ⇒ ceiling-saturated, escalate; never report
+  "fails to transfer"). DOCE is the protocol; no published work reports the GAP-4 primitive's
+  ARC↔code transfer specifically — still an ownable measurement.
+- **Search generalization (Gap 2):** exp4021's `nodes_expanded=3` + r11l macros is not a planner.
+  The honest depth test is the SECOND game's wall (vc33 — the canonical 99%-WM-fails-to-solve case
+  the .372 doc named but exp4021 substituted r11l for) with (a) a subgoal/landmark decomposition
+  (HWM / 2506.07255), (b) a non-bespoke coded heuristic, (c) a real bounded search (report
+  nodes_expanded, branching). If it only works with hand-coded r11l macros, the central bet is
+  game-specific — say so.
+- **Sovereign generator (Gap 3):** exp4012's representational-gap was measured on gemma-4-12B
+  ONLY. Per "The Invisible Leash" (arXiv:2507.14843), test whether a STRONGER local base
+  (gemma-4-31B dense / Qwen3.6-35B-A3B MoE) has the abstraction in-support — does best-of-N
+  demo-perfect coverage rise above 0.2581? This distinguishes "absent" (leash holds, sovereignty
+  needs a bigger base) from "latent" (distillation viable). Clean replacement for the flagged
+  exp4022.
+
+Sources (this sweep): arxiv.org/abs/2408.13745 (DOCE); arxiv.org/abs/2604.03922 (ACES);
+arxiv.org/abs/2604.06485 (symbolic equivalence partitioning); arxiv.org/abs/2602.04254 (agentic
+verifier coding); arxiv.org/abs/2504.09643 (reinforced re-ranking); arxiv.org/abs/2604.03208 (HWM);
+arxiv.org/abs/2506.07255 (subgoal-guided PHS); arxiv.org/abs/2504.04366 (Sokoban HRL landmarks).
