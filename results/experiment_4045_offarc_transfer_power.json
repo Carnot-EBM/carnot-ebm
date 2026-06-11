@@ -1,0 +1,63 @@
+{
+  "armA_vote_passrate": 1.0,
+  "armApp_aces_passrate": 1.0,
+  "armApp_bootstrap_ci95": [
+    0.0,
+    0.0
+  ],
+  "armApp_ci_excludes_zero": false,
+  "armApp_delta_pp": 0.0,
+  "armB_demofit_passrate": 1.0,
+  "armC_bootstrap_ci95": [
+    0.0,
+    0.0
+  ],
+  "armC_ci_excludes_zero": false,
+  "armC_delta_pp": 0.0,
+  "armC_symbolic_passrate": 1.0,
+  "best_arm": "armC_symbolic",
+  "best_arm_ci95": [
+    0.0,
+    0.0
+  ],
+  "best_arm_ci_excludes_zero": false,
+  "best_arm_delta_pp": 0.0,
+  "bootstrap_resamples": 10000,
+  "corpus": "humaneval_plus_mbpp_partial_checkpoint",
+  "demofit_bootstrap_ci95": [
+    0.0,
+    0.0
+  ],
+  "demofit_ci_excludes_zero": false,
+  "demofit_delta_pp": 0.0,
+  "experiment": "experiment_4045_offarc_transfer_power",
+  "field_principles": {
+    "best_arm_ci_excludes_zero": "Bare bool for whether a stronger verifier arm clears the bar.",
+    "demofit_ci_excludes_zero": "Bare bool for the operator's headline Arm B minus Arm A gate.",
+    "honest_verdict": "Terminal-prefix verdict; partial, no-headroom, and honest negative outcomes are complete.",
+    "inference_substrate": "Collector scores cached candidates and never invokes live LLM inference.",
+    "missing_verifier_gaps": "Residual selectable slices become future verifier-build specs.",
+    "n_tasks": "N controls whether a CI-excludes-zero transfer claim is statistically powered.",
+    "oracle_passrate": "Positive control for selectable headroom and false-negative risk."
+  },
+  "honest_verdict": "complete: offarc_power_run_incomplete_partial_22_tasks",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "log_tail": "llama_context: n_ctx_seq (4096) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048",
+  "missing_verifier_gaps": [],
+  "model_specs": {
+    "candidate_pool_policy": "same generated pool shared by all four arms",
+    "local_generator": "unsloth/gemma-4-12B-it-GGUF",
+    "source_checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4045_offarc_transfer_power.checkpoint.json",
+    "verifier": "cached candidate verifier ensemble replay"
+  },
+  "n_tasks": 22,
+  "oracle_headroom": false,
+  "oracle_passrate": 1.0,
+  "partial_reason": "offarc_power_run_incomplete_partial_22_tasks",
+  "powered_task_floor": 160,
+  "random_seed": 4045,
+  "raw_artifact_present": false,
+  "reproducibility_checksum": "d84c50ee9e3be21fdb4500cec1aae44bd9f9863aa645b5e5402a2d8bcdf8e487",
+  "schema": "carnot.experiment_4045_offarc_transfer_power_collect.v1",
+  "source_reproducibility_checksum": "35a5f42c70da5c9a20eb23a45893edbb57458f5a10576b2beaf9557af2f97324"
+}
