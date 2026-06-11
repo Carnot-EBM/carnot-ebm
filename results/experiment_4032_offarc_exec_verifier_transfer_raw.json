@@ -6351,5 +6351,34 @@
   "random_seed": 4032,
   "reproducibility_checksum": "91b6c279bf19b873c0dc5b417a8a1d8744420b7159de86d81e36788525e35fd4",
   "schema": "carnot.experiment_4032_offarc_exec_verifier_transfer_raw.v1",
-  "truncation_rate": 0.034375
+  "truncation_rate": 0.034375,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "armA_vote_pass2=0.85 and armA_vote_passrate=0.85 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "armAplusplus_aces_pass2=0.925 and armB_demofit_pass2=0.925 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "armAplusplus_aces_pass2=0.925 and oracle_passrate=0.925 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "armAplusplus_aces_passrate=0.9 and armB_demofit_passrate=0.9 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "armB_demofit_pass2=0.925 and oracle_passrate=0.925 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }

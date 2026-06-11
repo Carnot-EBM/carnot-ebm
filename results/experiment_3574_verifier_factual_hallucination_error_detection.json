@@ -22,5 +22,14 @@
   "constraint_verifiers_inert_on_facts": true,
   "random_seed": 42,
   "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-  "duration_s": 0.009923934936523438
+  "duration_s": 0.009923934936523438,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "ensemble_factual_error_detection_auroc=0.5 and best_single_verifier_auroc=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }
