@@ -12140,6 +12140,53 @@ that sovereign positive, otherwise emits
 remaining codex-demo-perfect tasks without a local best-of-N demo-perfect sample
 in `missing_verifier_gaps`.
 
+### REQ-VERIFY-4036: Decentralization Stronger-Base Best-of-N Build Gate
+
+The repository SHALL provide Exp 4036 at
+`scripts/experiments/exp4036_decentralization_stronger_base_build.py` and Exp
+4037 at `scripts/experiments/experiment_4037_decentralization_stronger_base_best_of_n.py`
+to test whether a stronger local open-weight GGUF has latent support for ARC
+rule induction before any distillation attempt. Exp 4037 SHALL mirror Exp 4012
+over the identical 31-entry / 30-unique-task ARC-1 pool, `k=8` best-of-N local
+samples, unchanged model-free GAP-4 demo-fit verifier primitives, unchanged
+candidate snap threshold, unchanged vote-primary gated pass@2 scorer, and
+per-task checkpointing. The only experimental variable SHALL be the inducer
+base, preferring cached `unsloth/gemma-4-31B-it-GGUF` as the faster stronger
+base and falling back only to cached `unsloth/Qwen3.6-35B-A3B-GGUF`.
+
+Before any live inference, Exp 4036 and Exp 4037 SHALL verify that a stronger
+base GGUF is cached, `llama_cpp` imports, and the Exp 4012 ARC-1 pool plus
+verifier primitives load. If no stronger base is available, the build artifact
+SHALL report `honest_verdict=blocked_stronger_base_not_cached`; if `llama_cpp`
+is unavailable it SHALL report `blocked_llama_cpp_unavailable`; and if the
+pool/verifier load fails it SHALL report `blocked_exp4012_pool_unreadable`.
+Blocked runs SHALL NOT launch inference or silently fall back to DSL-only,
+Codex, or the weaker Exp 4012 base.
+
+Exp 4037 SHALL write
+`results/experiment_4037_decentralization_stronger_base_raw.json` with
+top-level fields for per-task demo-perfect status, best-of-N demo-perfect
+coverage, gated pass@2, local seconds, `model_specs`, `random_seed`, and
+`reproducibility_checksum`. Exp 4036 SHALL smoke the runner on two entries,
+launch the full Exp 4037 run in the background with a bounded wall-clock budget
+and checkpointing, and write
+`results/experiment_4036_decentralization_stronger_base_build.json` with bare
+top-level fields `honest_verdict`, `runner_ready`, `stronger_base_model`,
+`smoke_passed`, `launched_pid`, `preconditions_checked`, and
+`inference_substrate`.
+
+### SCENARIO-VERIFY-4036: Stronger Local Base Runner Launches Cleanly
+
+Given a cached stronger local GGUF, importable `llama_cpp`, and the Exp 4012
+ARC-1 pool, when Exp 4036 runs, then it chooses the cached faster stronger base,
+smokes Exp 4037 on two pool entries without changing the verifier side, writes
+the required build artifact with `runner_ready=true`, `smoke_passed=true`,
+`inference_substrate=live_llm_inference`, and a terminal-prefix `honest_verdict`
+of `success: decentralization_stronger_base_runner_launched_<model>`, then
+starts the full Exp 4037 run under `nohup` with `k=8` and records the launched
+PID. If any precondition fails, it writes the corresponding `blocked_*`
+artifact with `runner_ready=false`, `smoke_passed=false`, and `launched_pid=0`.
+
 ### REQ-VERIFY-4013: ARC GAP-4 Verifier-vs-Codex-Judge Efficiency
 
 The repository SHALL provide Exp 4013 at
