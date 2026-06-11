@@ -1,0 +1,45 @@
+{
+  "branch_taken": "B_distill_feasibility",
+  "decentralization_next_step": "Treat the current local model as representational-gap likely: do not run a full distillation pass on it; evaluate a stronger local base or second SOTA GGUF, and reuse this corpus only when a later high-k run shows latent support.",
+  "distillation_corpus": {
+    "corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4022_distill_corpus.jsonl",
+    "generic_trace_ratio": 0.925,
+    "hardcoded_grid_suspect_count": 3,
+    "median_code_chars": 1428,
+    "n_clean_traces": 40,
+    "n_execution_validated": 45,
+    "n_programs_scanned": 62,
+    "rejection_reasons": {
+      "duplicate_trace": 5,
+      "missing_pool_entry": 0,
+      "not_demo_perfect_or_not_executed": 17,
+      "unsafe_code": 0
+    },
+    "verifier_certification_rule": "demo_perfect==true, demo_fit>=1.0, executed pred_grid/pred_hash present"
+  },
+  "duration_s": 0.746,
+  "exp4012_result_cited": {
+    "coverage_gain_vs_3attempt": 0.0,
+    "k_samples_per_task": 8,
+    "local_beats_vote": false,
+    "local_demo_perfect_coverage_bestofn": 0.2581,
+    "local_gated_pass2": 0.4516
+  },
+  "experiment": "experiment_4022_decentralization_gated",
+  "honest_verdict": "complete: B_distill_feasibility_exp4012_no_lift_clean_traces40_sanity_delta1.097",
+  "inference_substrate": "cached_codex_gap4_traces_model_free_verifier_tiny_unigram_adapter_no_live_llm",
+  "local_support_diagnostic": "representational_gap_likely",
+  "prior_art_decider": "Invisible Leash: RLVR/distillation can sharpen behavior already in the base model support, but Exp 4012 showed no material local best-of-N lift here.",
+  "sanity_finetune": {
+    "claim_scope": "tiny subset token adapter only; no full GGUF fine-tune was run",
+    "full_llm_finetune": false,
+    "loss_after": 4.128507,
+    "loss_before": 5.225747,
+    "loss_delta": 1.09724,
+    "method": "add_one_unigram_code_token_adapter",
+    "ran": true,
+    "subset_size": 8,
+    "tokens_trained": 3266
+  },
+  "tulu3_rlvr_recipe_scope": "Applicable only as a sharpening recipe after local best-of-N shows latent support."
+}
