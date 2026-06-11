@@ -8194,3 +8194,4 @@ c |
 | 2026-06-11 00:38 UTC | GAP-4 DECENTRALIZATION via BEST-OF-N local samplin | OK | cache hit: 112 passed in 6.25s |
 | 2026-06-11 01:14 UTC | EFFICIENCY axis (north-star §5) -- model-free veri | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-06-11 01:27 UTC | ARC-AGI-3 BREAK A LEVEL WALL via EXPLORE-FIRST per | OK | 88 passed in 4.93s |
+| 2026-06-11 01:45 UTC | FIFTH ARC-AGI-3 game first-solve via the PROVEN ex | OK | 87 passed in 5.08s |
