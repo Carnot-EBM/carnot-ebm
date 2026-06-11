@@ -8251,3 +8251,4 @@ c |
 | 2026-06-11 10:55 UTC | SEVENTH ARC-AGI-3 game first-solve via the PROVEN  | OK | 89 passed in 4.43s |
 | 2026-06-11 11:09 UTC | ArcMemo v6: concept-LIBRARY learning (self-learnin | OK | 91 passed in 4.93s |
 | 2026-06-11 11:25 UTC | Hardware continuity (consolidated; KV260 drive-tow | OK | 89 passed in 4.34s |
+| 2026-06-11 11:42 UTC | Capstone .373 (UNGATED): the milestone's headline  | OK | 87 passed in 5.06s |
