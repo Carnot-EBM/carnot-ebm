@@ -5,8 +5,32 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-05-24 (16 sweeps; infrastructure recovered).
+**Updated:** 2026-06-11 (Exp 4030 SOTA ingestion mapped .373 OFF-ARC verifier transfer and hierarchical search).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
+
+## 2026-06-11 Exp 4030 - .373 SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-2026-06-11-offarc-and-search.md`.
+
+**Filtered tracks:** OFF-ARC execution-consistency verifier transfer for exp4031/4032, and
+hierarchical/subgoal search over a verified world model for exp4034/4035.
+
+**Seed candidates marked ingested:**
+- DOCE, arXiv:2408.13745 - mapped as the exp4031/4032 protocol anchor.
+- ACES, arXiv:2604.03922 - mapped as the stronger same-pass-matrix consistency baseline.
+- Symbolic Equivalence Partitioning, arXiv:2604.06485 - mapped as a bounded diagnostic/enrichment layer.
+- Scaling Agentic Verifier, arXiv:2602.04254 - mapped as an expensive comparator/escalation path.
+- Iterative Self-Training via Reinforced Re-Ranking, arXiv:2504.09643 - mapped as a future distillation target only.
+- Hierarchical Planning with Latent World Models, arXiv:2604.03208 - mapped as symbolic hierarchical MPC over vc33.
+- Subgoal-Guided PHS, arXiv:2506.07255 - mapped as failed-tree subgoal mining/logging for exp4035.
+- Sokoban HRL with Landmarks, arXiv:2504.04366 - mapped as feature-level landmark decomposition precedent.
+
+**Fresh-pass additions marked ingested:**
+- Policy-Guided Heuristic Search with Guarantees, arXiv:2103.11505 - mapped as policy+heuristic priority extension for current best-first search.
+- Structure-Induced Information for Rerooting Levin Tree Search, arXiv:2605.30664 - mapped as the .374 fallback if explicit subgoals are too costly.
+
+**Bottom line for next roadmap:** prioritize `off_arc_demo_fit_vs_aces_and_doce_protocol` and
+`vc33_hierarchical_subgoal_search_with_rerooting_fallback`; keep SEP as a diagnostic, not a gate.
 
 ## Sweep 2026-05-24T15:20Z (Claude outer-loop, infrastructure recovery)
 
