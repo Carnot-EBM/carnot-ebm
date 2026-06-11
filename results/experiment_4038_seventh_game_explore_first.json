@@ -1,0 +1,897 @@
+{
+  "action_plan": [
+    {
+      "action": 1
+    },
+    {
+      "action": 6,
+      "grid": [
+        48,
+        26
+      ],
+      "sprite": "buezna-blrmbx",
+      "x": 48,
+      "y": 36
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 6,
+      "grid": [
+        48,
+        26
+      ],
+      "sprite": "buezna-blrmbx",
+      "x": 48,
+      "y": 36
+    },
+    {
+      "action": 6,
+      "grid": [
+        48,
+        9
+      ],
+      "sprite": "buezna-refgps",
+      "x": 48,
+      "y": 19
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 1
+    },
+    {
+      "action": 4
+    },
+    {
+      "action": 4
+    }
+  ],
+  "arc_env_count": 25,
+  "candidate_baseline_actions": 59,
+  "duration_s": 11.362,
+  "excluded_solved_games": [
+    "r11l",
+    "lp85",
+    "sc25",
+    "su15",
+    "tn36",
+    "cd82"
+  ],
+  "experiment": "experiment_4038_seventh_game_explore_first",
+  "exploration_actions_used": 2,
+  "field_principles": {
+    "game_solved": "bare boolean for whether this task added exactly one new solved game",
+    "honest_verdict": "terminal prefix records success, complete no-solve, or blocked precondition",
+    "inference_substrate": "declares the offline explore-first induction and verifier substrate",
+    "real_env_confirmed": "a solve is real only when the environment level counter confirms it",
+    "target_game": "auditable game id selected from the survey and environment metadata",
+    "total_games_solved": "monotonic ARC accuracy counter and north-star metric"
+  },
+  "first_solve_at_action": 20,
+  "game_solved": true,
+  "honest_verdict": "success: seventh_game_solved_dc22-fdcac232_at_action_20",
+  "induced_mechanic": "Observed dc22 movement and buezna toggle transitions before planning; induced a grid-navigation model where keyboard actions move jfva by two pixels, visible buezna clicks toggle same-letter blockers, and the goal predicate is confirmed only by a levels_completed increment when jfva reaches goknoi.",
+  "inference_substrate": "offline_arc_agi3_explore_first_first_solve",
+  "level_completed": 1,
+  "levels_completed": 1,
+  "phase_trace": [
+    {
+      "candidate_reason": "selected: dc22 is unsolved, survey non-spatial, win_difficulty=medium, L0 baseline_actions=59",
+      "phase": "observe",
+      "source": "offline_explore_first_induction",
+      "state": {
+        "blocker_signature": [
+          [
+            "buezna-blrmbx",
+            42,
+            24,
+            true,
+            "InteractionMode.TANGIBLE"
+          ],
+          [
+            "buezna-refgps",
+            42,
+            7,
+            true,
+            "InteractionMode.TANGIBLE"
+          ],
+          [
+            "refgps-plelvb1",
+            12,
+            14,
+            true,
+            "InteractionMode.INTANGIBLE"
+          ],
+          [
+            "refgps-plelvb2",
+            12,
+            14,
+            false,
+            "InteractionMode.REMOVED"
+          ],
+          [
+            "tovemc-plelvb1",
+            8,
+            24,
+            true,
+            "InteractionMode.TANGIBLE"
+          ],
+          [
+            "tovemc-plelvb1",
+            18,
+            10,
+            false,
+            "InteractionMode.REMOVED"
+          ],
+          [
+            "tovemc-plelvb2",
+            8,
+            24,
+            false,
+            "InteractionMode.REMOVED"
+          ],
+          [
+            "tovemc-plelvb2",
+            18,
+            10,
+            true,
+            "InteractionMode.INTANGIBLE"
+          ]
+        ],
+        "distance_to_goal": 34,
+        "goal": [
+          24,
+          10
+        ],
+        "level_completed": 0,
+        "player": [
+          10,
+          30
+        ]
+      },
+      "target_game": "dc22-fdcac232"
+    },
+    {
+      "action": {
+        "action": 1
+      },
+      "action_index": 1,
+      "after": {
+        "blocker_signature": [
+          [
+            "buezna-blrmbx",
+            42,
+            24,
+            true,
+            "InteractionMode.TANGIBLE"
+          ],
+          [
+            "buezna-refgps",
+            42,
+            7,
+            true,
+            "InteractionMode.TANGIBLE"
+          ],
+          [
+            "refgps-plelvb1",
+            12,
+            14,
+            true,
+            "InteractionMode.INTANGIBLE"
+          ],
+          [
+            "refgps-plelvb2",
+            12,
+            14,
+            false,
+            "InteractionMode.REMOVED"
+          ],
+          [
+            "tovemc-plelvb1",
+            8,
+            24,
+            true,
+            "InteractionMode.TANGIBLE"
+          ],
+          [
+            "tovemc-plelvb1",
+            18,
+            10,
+            false,
+            "InteractionMode.REMOVED"
+          ],
+          [
+            "tovemc-plelvb2",
+            8,
+            24,
+            false,
+            "InteractionMode.REMOVED"
+          ],
+          [
+            "tovemc-plelvb2",
+            18,
+            10,
+            true,
+            "InteractionMode.INTANGIBLE"
+          ]
+        ],
+        "distance_to_goal": 32,
+        "goal": [
+          24,
+          10
+        ],
+        "level_completed": 0,
+        "player": [
+          10,
+          28
+        ]
+      },
+      "before": {
+        "blocker_signature": [
+          [
+            "buezna-blrmbx",
+            42,
+            24,
+            true,
+            "InteractionMode.TANGIBLE"
+          ],
+          [
+            "buezna-refgps",
+            42,
+            7,
+            true,
+            "InteractionMode.TANGIBLE"
+          ],
+          [
+            "refgps-plelvb1",
+            12,
+            14,
+            true,
+            "InteractionMode.INTANGIBLE"
+          ],
+          [
+            "refgps-plelvb2",
+            12,
+            14,
+            false,
+            "InteractionMode.REMOVED"
+          ],
+          [
+            "tovemc-plelvb1",
+            8,
+            24,
+            true,
+            "InteractionMode.TANGIBLE"
+          ],
+          [
+            "tovemc-plelvb1",
+            18,
+            10,
+            false,
+            "InteractionMode.REMOVED"
+          ],
+          [
+            "tovemc-plelvb2",
+            8,
+            24,
+            false,
+            "InteractionMode.REMOVED"
+          ],
+          [
+            "tovemc-plelvb2",
+            18,
+            10,
+            true,
+            "InteractionMode.INTANGIBLE"
+          ]
+        ],
+        "distance_to_goal": 34,
+        "goal": [
+          24,
+          10
+        ],
+        "level_completed": 0,
+        "player": [
+          10,
+          30
+        ]
+      },
+      "level_completed": 0,
+      "phase": "explore",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "action": {
+        "action": 6,
+        "grid": [
+          48,
+          26
+        ],
+        "sprite": "buezna-blrmbx",
+        "x": 48,
+        "y": 36
+      },
+      "action_index": 2,
+      "after": {
+        "blocker_signature": [
+          [
+            "buezna-blrmbx",
+            42,
+            24,
+            true,
+            "InteractionMode.TANGIBLE"
+          ],
+          [
+            "buezna-refgps",
+            42,
+            7,
+            true,
+            "InteractionMode.TANGIBLE"
+          ],
+          [
+            "refgps-plelvb1",
+            12,
+            14,
+            true,
+            "InteractionMode.INTANGIBLE"
+          ],
+          [
+            "refgps-plelvb2",
+            12,
+            14,
+            false,
+            "InteractionMode.REMOVED"
+          ],
+          [
+            "tovemc-plelvb1",
+            8,
+            24,
+            false,
+            "InteractionMode.REMOVED"
+          ],
+          [
+            "tovemc-plelvb1",
+            18,
+            10,
+            true,
+            "InteractionMode.INTANGIBLE"
+          ],
+          [
+            "tovemc-plelvb2",
+            8,
+            24,
+            true,
+            "InteractionMode.INTANGIBLE"
+          ],
+          [
+            "tovemc-plelvb2",
+            18,
+            10,
+            false,
+            "InteractionMode.REMOVED"
+          ]
+        ],
+        "distance_to_goal": 32,
+        "goal": [
+          24,
+          10
+        ],
+        "level_completed": 0,
+        "player": [
+          10,
+          28
+        ]
+      },
+      "before": {
+        "blocker_signature": [
+          [
+            "buezna-blrmbx",
+            42,
+            24,
+            true,
+            "InteractionMode.TANGIBLE"
+          ],
+          [
+            "buezna-refgps",
+            42,
+            7,
+            true,
+            "InteractionMode.TANGIBLE"
+          ],
+          [
+            "refgps-plelvb1",
+            12,
+            14,
+            true,
+            "InteractionMode.INTANGIBLE"
+          ],
+          [
+            "refgps-plelvb2",
+            12,
+            14,
+            false,
+            "InteractionMode.REMOVED"
+          ],
+          [
+            "tovemc-plelvb1",
+            8,
+            24,
+            true,
+            "InteractionMode.TANGIBLE"
+          ],
+          [
+            "tovemc-plelvb1",
+            18,
+            10,
+            false,
+            "InteractionMode.REMOVED"
+          ],
+          [
+            "tovemc-plelvb2",
+            8,
+            24,
+            false,
+            "InteractionMode.REMOVED"
+          ],
+          [
+            "tovemc-plelvb2",
+            18,
+            10,
+            true,
+            "InteractionMode.INTANGIBLE"
+          ]
+        ],
+        "distance_to_goal": 32,
+        "goal": [
+          24,
+          10
+        ],
+        "level_completed": 0,
+        "player": [
+          10,
+          28
+        ]
+      },
+      "level_completed": 0,
+      "phase": "explore",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "exploration_actions_used": 2,
+      "goal_predicate": "level counter increments when jfva reaches goknoi",
+      "mechanic": "dc22_navigation_toggle_goal",
+      "observed_movement": "ACTION1 moved jfva from y=30 to y=28",
+      "observed_toggle": "buezna-blrmbx click changed tag-b blocker interactions",
+      "phase": "induce",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "actions_checked": 18,
+      "energy": 0.0,
+      "final_distance": 34,
+      "level_increment": true,
+      "phase": "verify",
+      "predicted_goal_after_actions": true,
+      "retained": true,
+      "start_distance": 32,
+      "verifier": "gap4_replay_level_counter"
+    },
+    {
+      "action": {
+        "action": 1
+      },
+      "action_index": 1,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "grid": [
+          48,
+          26
+        ],
+        "sprite": "buezna-blrmbx",
+        "x": 48,
+        "y": 36
+      },
+      "action_index": 2,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 1
+      },
+      "action_index": 3,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 1
+      },
+      "action_index": 4,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 1
+      },
+      "action_index": 5,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 1
+      },
+      "action_index": 6,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4
+      },
+      "action_index": 7,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4
+      },
+      "action_index": 8,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4
+      },
+      "action_index": 9,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4
+      },
+      "action_index": 10,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4
+      },
+      "action_index": 11,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "grid": [
+          48,
+          26
+        ],
+        "sprite": "buezna-blrmbx",
+        "x": 48,
+        "y": 36
+      },
+      "action_index": 12,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "grid": [
+          48,
+          9
+        ],
+        "sprite": "buezna-refgps",
+        "x": 48,
+        "y": 19
+      },
+      "action_index": 13,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 1
+      },
+      "action_index": 14,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 1
+      },
+      "action_index": 15,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 1
+      },
+      "action_index": 16,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 1
+      },
+      "action_index": 17,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 1
+      },
+      "action_index": 18,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4
+      },
+      "action_index": 19,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4
+      },
+      "action_index": 20,
+      "after": {
+        "level_completed": 1,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 1,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    }
+  ],
+  "prior_total_games_solved": 6,
+  "random_seed": 4038,
+  "real_env_confirmed": true,
+  "selected_candidate_reason": "selected: dc22 is unsolved, survey non-spatial, win_difficulty=medium, L0 baseline_actions=59",
+  "target_game": "dc22-fdcac232",
+  "title": "arc3_seventh_game_explore_first_dc22",
+  "total_games_solved": 7,
+  "verification_decisions": [
+    {
+      "actions_checked": 18,
+      "energy": 0.0,
+      "final_distance": 34,
+      "level_increment": true,
+      "phase": "verify",
+      "predicted_goal_after_actions": true,
+      "retained": true,
+      "start_distance": 32,
+      "verifier": "gap4_replay_level_counter"
+    }
+  ]
+}
