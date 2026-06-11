@@ -8289,3 +8289,5 @@ c |
 | 2026-06-11 22:03 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (infrastructure;  | OK | 88 passed in 5.11s |
 | 2026-06-11 22:21 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 86 passed in 4.83s |
 | 2026-06-11 22:39 UTC | Capstone .375 (UNGATED): the milestone's headline  | OK | 87 passed in 4.91s |
+| 2026-06-11 23:22 UTC | Plan milestone 2026.06.376 | OK | 10 tasks proposed |
+| 2026-06-11 23:25 UTC | Milestone 2026.06.376 activated | OK | 10 tasks queued |
