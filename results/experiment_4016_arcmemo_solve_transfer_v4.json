@@ -1,0 +1,367 @@
+{
+  "actions_cold_start": 11,
+  "actions_with_memory": 7,
+  "attempts_cold_start": 2,
+  "attempts_with_memory": 1,
+  "cold_graph": {
+    "deadly": [],
+    "edges": {
+      "2df0af812d26f37c|6,24,44": {
+        "akey": [
+          6,
+          24,
+          44
+        ],
+        "count": 2,
+        "from": "2df0af812d26f37c",
+        "game_over": false,
+        "level_delta": 0,
+        "n_changed": 4,
+        "to": "6287c190139d382c"
+      },
+      "39a033e4d334310d|6,39,44": {
+        "akey": [
+          6,
+          39,
+          44
+        ],
+        "count": 1,
+        "from": "39a033e4d334310d",
+        "game_over": false,
+        "level_delta": 0,
+        "n_changed": 4,
+        "to": "a59c744d035182ec"
+      },
+      "6287c190139d382c|6,34,41": {
+        "akey": [
+          6,
+          34,
+          41
+        ],
+        "count": 2,
+        "from": "6287c190139d382c",
+        "game_over": false,
+        "level_delta": 0,
+        "n_changed": 4,
+        "to": "dd8f4a774702dcee"
+      },
+      "6d27b4e377447c45|6,39,41": {
+        "akey": [
+          6,
+          39,
+          41
+        ],
+        "count": 1,
+        "from": "6d27b4e377447c45",
+        "game_over": false,
+        "level_delta": 0,
+        "n_changed": 4,
+        "to": "39a033e4d334310d"
+      },
+      "a59c744d035182ec|6,36,55": {
+        "akey": [
+          6,
+          36,
+          55
+        ],
+        "count": 1,
+        "from": "a59c744d035182ec",
+        "game_over": false,
+        "level_delta": 1,
+        "n_changed": 2612,
+        "to": "aa3802211bbea727"
+      },
+      "b97556e0003b8665|6,24,41": {
+        "akey": [
+          6,
+          24,
+          41
+        ],
+        "count": 2,
+        "from": "b97556e0003b8665",
+        "game_over": false,
+        "level_delta": 0,
+        "n_changed": 4,
+        "to": "2df0af812d26f37c"
+      },
+      "dd8f4a774702dcee|6,34,44": {
+        "akey": [
+          6,
+          34,
+          44
+        ],
+        "count": 2,
+        "from": "dd8f4a774702dcee",
+        "game_over": false,
+        "level_delta": 0,
+        "n_changed": 4,
+        "to": "6d27b4e377447c45"
+      }
+    },
+    "game_id": "tn36_cold_v4",
+    "max_levels": 0,
+    "n_transitions": 11,
+    "nodes": {
+      "2df0af812d26f37c": {
+        "available_actions": [
+          6
+        ],
+        "levels": 0,
+        "visits": 4
+      },
+      "39a033e4d334310d": {
+        "available_actions": [
+          6
+        ],
+        "levels": 0,
+        "visits": 2
+      },
+      "6287c190139d382c": {
+        "available_actions": [
+          6
+        ],
+        "levels": 0,
+        "visits": 4
+      },
+      "6d27b4e377447c45": {
+        "available_actions": [
+          6
+        ],
+        "levels": 0,
+        "visits": 3
+      },
+      "a59c744d035182ec": {
+        "available_actions": [
+          6
+        ],
+        "levels": 0,
+        "visits": 2
+      },
+      "aa3802211bbea727": {
+        "available_actions": [
+          6
+        ],
+        "levels": 1,
+        "visits": 1
+      },
+      "b97556e0003b8665": {
+        "available_actions": [
+          6
+        ],
+        "levels": 0,
+        "visits": 2
+      },
+      "dd8f4a774702dcee": {
+        "available_actions": [
+          6
+        ],
+        "levels": 0,
+        "visits": 4
+      }
+    }
+  },
+  "concept_memory": [
+    {
+      "effect": "Click selects a piece, 2nd click places it. Pieces must be placed around the target's centroid so their average position aligns perfectly. Placing pieces exactly on top of each other selects the existing piece instead of placing.",
+      "family": "click_state_transform",
+      "name": "select_then_place",
+      "source": "results/experiment_3946_r11l_first_solve.json",
+      "source_game": "r11l",
+      "target_games": [
+        "r11l"
+      ],
+      "when_it_applies": "A click selects or activates an object and a later action applies that latent selection."
+    },
+    {
+      "effect": "Clicking buttons applies a deterministic permutation to the positions of the pieces. The buttons can be discovered by active probing, and the goal is implicitly defined by the game's level_completed increment. The mechanic differs from r11l because it is a discrete group permutation rather than a direct spatial drag-and-drop.",
+      "family": "discrete_set_permutation",
+      "name": "permute_set_by_button",
+      "source": "results/experiment_3954_second_game_solve.json",
+      "source_game": "lp85",
+      "target_games": [
+        "lp85"
+      ],
+      "when_it_applies": "Button clicks deterministically permute a set of pieces or latent slots."
+    },
+    {
+      "effect": "Clicking a specific subset of the 3x3 grid cells toggles their state to match a target pattern, then navigating the player sprite to an exit sprite triggers level completion. The goal predicate is pattern_matched AND player_at_exit. This differs from r11l/lp85 as it involves both a hidden boolean pattern matching phase and a spatial navigation phase.",
+      "family": "click_state_transform",
+      "name": "pattern_match_then_navigate",
+      "source": "results/experiment_3966_third_game_first_solve.json",
+      "source_game": "sc25",
+      "target_games": [
+        "sc25"
+      ],
+      "when_it_applies": "A clicked subset changes a visible or latent pattern before navigation completes the level."
+    }
+  ],
+  "concept_reused": "pattern_match_then_navigate",
+  "duration_s": 0.6,
+  "experiment": "experiment_4016_arcmemo_solve_transfer_v4",
+  "honest_verdict": "success: arcmemo_solve_transfer_v4_11to7_actions",
+  "inference_substrate": "offline_arc_agi3_real_env_steps_plus_gamegraph_arcmemo_concept_memory_v4",
+  "memory_graph": {
+    "deadly": [],
+    "edges": {
+      "2df0af812d26f37c|6,24,44": {
+        "akey": [
+          6,
+          24,
+          44
+        ],
+        "count": 1,
+        "from": "2df0af812d26f37c",
+        "game_over": false,
+        "level_delta": 0,
+        "n_changed": 4,
+        "to": "6287c190139d382c"
+      },
+      "39a033e4d334310d|6,39,44": {
+        "akey": [
+          6,
+          39,
+          44
+        ],
+        "count": 1,
+        "from": "39a033e4d334310d",
+        "game_over": false,
+        "level_delta": 0,
+        "n_changed": 4,
+        "to": "a59c744d035182ec"
+      },
+      "6287c190139d382c|6,34,41": {
+        "akey": [
+          6,
+          34,
+          41
+        ],
+        "count": 1,
+        "from": "6287c190139d382c",
+        "game_over": false,
+        "level_delta": 0,
+        "n_changed": 4,
+        "to": "dd8f4a774702dcee"
+      },
+      "6d27b4e377447c45|6,39,41": {
+        "akey": [
+          6,
+          39,
+          41
+        ],
+        "count": 1,
+        "from": "6d27b4e377447c45",
+        "game_over": false,
+        "level_delta": 0,
+        "n_changed": 4,
+        "to": "39a033e4d334310d"
+      },
+      "a59c744d035182ec|6,36,55": {
+        "akey": [
+          6,
+          36,
+          55
+        ],
+        "count": 1,
+        "from": "a59c744d035182ec",
+        "game_over": false,
+        "level_delta": 1,
+        "n_changed": 2612,
+        "to": "aa3802211bbea727"
+      },
+      "b97556e0003b8665|6,24,41": {
+        "akey": [
+          6,
+          24,
+          41
+        ],
+        "count": 1,
+        "from": "b97556e0003b8665",
+        "game_over": false,
+        "level_delta": 0,
+        "n_changed": 4,
+        "to": "2df0af812d26f37c"
+      },
+      "dd8f4a774702dcee|6,34,44": {
+        "akey": [
+          6,
+          34,
+          44
+        ],
+        "count": 1,
+        "from": "dd8f4a774702dcee",
+        "game_over": false,
+        "level_delta": 0,
+        "n_changed": 4,
+        "to": "6d27b4e377447c45"
+      }
+    },
+    "game_id": "tn36_memory_v4",
+    "max_levels": 0,
+    "n_transitions": 7,
+    "nodes": {
+      "2df0af812d26f37c": {
+        "available_actions": [
+          6
+        ],
+        "levels": 0,
+        "visits": 2
+      },
+      "39a033e4d334310d": {
+        "available_actions": [
+          6
+        ],
+        "levels": 0,
+        "visits": 2
+      },
+      "6287c190139d382c": {
+        "available_actions": [
+          6
+        ],
+        "levels": 0,
+        "visits": 2
+      },
+      "6d27b4e377447c45": {
+        "available_actions": [
+          6
+        ],
+        "levels": 0,
+        "visits": 2
+      },
+      "a59c744d035182ec": {
+        "available_actions": [
+          6
+        ],
+        "levels": 0,
+        "visits": 2
+      },
+      "aa3802211bbea727": {
+        "available_actions": [
+          6
+        ],
+        "levels": 1,
+        "visits": 1
+      },
+      "b97556e0003b8665": {
+        "available_actions": [
+          6
+        ],
+        "levels": 0,
+        "visits": 1
+      },
+      "dd8f4a774702dcee": {
+        "available_actions": [
+          6
+        ],
+        "levels": 0,
+        "visits": 2
+      }
+    }
+  },
+  "positive_control_shared_structure": true,
+  "random_seed": 4016,
+  "real_env_confirmed": true,
+  "solve_transfer_win": true,
+  "target_game": "tn36-ef4dde99",
+  "target_source": "experiment_4015_fifth_game_explore_first.json",
+  "title": "arcmemo_solve_loop_transfer_v4"
+}
