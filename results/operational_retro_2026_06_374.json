@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.374",
+  "generated_at": "2026-06-11T17:43:32Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative retro timing feed reported 0 experiment commits, 0 compute-bound tasks, and 0 wall-time minutes for this milestone -- the 10th consecutive such false-zero (.363/.365/.366/.367/.368/.369/.370/.372/.373/.374). Both RTX 3090s were idle at the 17:43Z snapshot, which is CORRECT behaviour given 0 compute-bound tasks in the feed, so gpu_idle_on_compute_bound_tasks is null (not a bottleneck). The on-disk ops/changelog.md, however, shows the milestone actually committed exp4042-exp4053 (capstone exp4053, 'not decision-grade'), so the zero is an observability artifact of the timing detector, not an execution stall or GPU-efficiency failure.",
+  "bottlenecks_identified": [
+    "TIMING-DETECTOR FALSE-ZERO (10th consecutive: .363/.365/.366/.367/.368/.369/.370/.372/.373/.374). The authoritative retro timing feed reported 0 experiment commits while on-disk ops/changelog.md shows exp4042-exp4053 committed this milestone. The 'detector fixed' claim from .368 (exp3984) remains unverified on the live retro-timing feed -- it has now emitted a zero block on every milestone since that claim.",
+    "OBSERVABILITY DEBT COMPOUNDS: because the timing feed is empty, this retro (and the prior 9) cannot perform its core function -- ranking the slowest compute-bound experiments. Per-experiment wall-time bottleneck analysis has been impossible for 10 straight milestones, so any real throughput regression in this window would be invisible.",
+    "NOT a bottleneck (recorded for clarity): GPU idle. Both GPUs at 0% is the correct, expected state when the authoritative feed lists 0 compute-bound tasks; per the GPU-idle interpretation rule the idle-GPU claim is gated on at least one compute-bound task, of which there are none here."
+  ],
+  "improvements_suggested": [
+    "Escalate the timing-detector fix above retro-note severity. It has been recommended in 9 prior retros without a verified fix, so a 10th soft note is predictably low-yield. Either (a) make a zero-experiment timing block a HARD activation-gate failure that blocks the next milestone until the detector is repaired, or (b) surface it to the operator as a standing known-issue, since soft retro recommendations have not moved it in 10 milestones.",
+    "Wire the retro generator to fall back to the on-disk ops/changelog.md window (filtered to the active milestone) when the authoritative commit detector returns 0. The changelog already carries per-task verdicts and the experiment range; the retro could auto-recover exp_range and task count instead of every retro reconstructing it by hand.",
+    "Record per-experiment duration in ops/changelog.md task entries (or a sidecar timing JSON keyed by experiment_id) so wall-time-per-experiment is recoverable even when the commit-based detector misfires -- this is the data the slowest-experiment analysis structurally needs.",
+    "Verify the exp3984 (.368) detector fix against the LIVE retro-timing feed specifically. The claimed fix has never been confirmed on the path that actually feeds this retro, which is why the false-zero persists across 6 milestones since the fix landed."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix or hard-gate the retro timing detector. 10 consecutive false-zeros means the operational-efficiency program has been blind for ~10 milestones; this is the single highest-leverage observability fix and should no longer be a soft note.",
+    "Add a changelog-window fallback to the retro generator so exp_range and task count are auto-recovered (and a detector_gap_suspected flag auto-set) whenever the commit detector returns 0.",
+    "Capture per-experiment duration (changelog field or sidecar JSON) so slowest-experiment ranking becomes possible regardless of detector health."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "For the 10th consecutive milestone the operational retro received a zero-experiment timing block while the milestone in fact executed a full task slate (exp4042-exp4053 per ops/changelog.md; capstone exp4053 came back 'not decision-grade' -- G1 partial, G2 closed-loop hit a sim2real ceiling, G3 retired-non-measurement, offset by an 8th ARC game solved and the KV260 terminal latency transcript). The recurring failure is observability, not execution or GPU efficiency, so the wall-time-saving lever is small (~5%) while the analytical-value lever is large. The real meta-lesson: a soft recommendation repeated 9 times that yields no fix is itself a process failure -- the detector needs a hard gate or operator escalation, not a 10th polite note."
+}
