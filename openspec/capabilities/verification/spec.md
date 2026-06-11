@@ -12230,6 +12230,58 @@ surfaced tasks in `missing_verifier_gaps`, emits a terminal verdict of either
 `complete: decentralization_stronger_base_cov_<X>_absent_leash_holds`, and
 does not mutate the Exp 4012 or raw Exp 4037 artifacts.
 
+### REQ-VERIFY-4047: Decentralization MoE-Base Best-of-N Build Gate
+
+The repository SHALL provide Exp 4047 at
+`scripts/experiments/exp4047_decentralization_moe_base_build.py` and Exp 4048 at
+`scripts/experiments/experiment_4048_decentralization_moe_base_best_of_n.py` to
+repeat the Exp 4012 local best-of-N ARC rule-induction run with the
+throughput-oriented MoE base `unsloth/Qwen3.6-35B-A3B-GGUF` only. Exp 4048
+SHALL mirror Exp 4012 over the identical 31-entry / 30-unique-task ARC-1 pool,
+`k=8` local samples per unique task, unchanged GAP-4 model-free demo-fit
+verifier primitives, unchanged candidate snap threshold, unchanged vote-primary
+gated pass@2 scorer, and per-task checkpointing. It SHALL not select or fall
+back to the dense `unsloth/gemma-4-31B-it-GGUF` path.
+
+Before any live inference, Exp 4047 and Exp 4048 SHALL verify that the Qwen MoE
+GGUF cache directory is non-empty and resolves to a concrete `.gguf` path,
+`llama_cpp` imports, and the Exp 4012 ARC-1 pool plus verifier primitives load.
+If the MoE GGUF is unavailable, the build artifact SHALL report
+`honest_verdict=blocked_moe_base_not_cached`; if `llama_cpp` is unavailable it
+SHALL report `blocked_llama_cpp_unavailable`; and if the pool/verifier load
+fails it SHALL report `blocked_exp4012_pool_unreadable`. Blocked runs SHALL NOT
+launch inference or silently fall back to DSL-only, Codex, Gemma-12B, or
+Gemma-31B.
+
+Exp 4048 SHALL batch requested generations by prompt while keeping independent
+draw seeds and temperatures, and SHALL stop sampling a task once the first
+demo-perfect candidate is found. It SHALL checkpoint after each task so the
+throughput-failure mode can still be collected as a partial run. It SHALL write
+`results/experiment_4048_decentralization_moe_base_raw.json` with top-level
+fields for per-task demo-perfect status, best-of-N coverage, gated pass@2,
+local seconds, `model_specs`, `random_seed`, and `reproducibility_checksum`.
+Exp 4047 SHALL smoke Exp 4048 on two tasks, compute bare-float
+`smoke_per_task_seconds`, launch the full Exp 4048 run under `nohup` with
+`k=8`, and write
+`results/experiment_4047_decentralization_moe_base_build.json` with bare
+top-level fields `honest_verdict`, `runner_ready`, `moe_base_model`,
+`smoke_per_task_seconds`, `smoke_passed`, `launched_pid`,
+`preconditions_checked`, and `inference_substrate=live_llm_inference`.
+
+### SCENARIO-VERIFY-4047: MoE Base Runner Launches With Throughput Evidence
+
+Given the cached Qwen MoE GGUF, importable `llama_cpp`, and the Exp 4012 ARC-1
+pool, when Exp 4047 runs, then it smokes Exp 4048 on two pool tasks without
+changing the verifier side, writes the required build artifact with
+`runner_ready=true`, `smoke_passed=true`,
+`inference_substrate=live_llm_inference`, a bare-float
+`smoke_per_task_seconds`, and a terminal-prefix `honest_verdict` of
+`success: decentralization_moe_base_runner_launched_qwen35moe`, then starts
+the full Exp 4048 run under `nohup` with `k=8` and records the launched PID. If
+any precondition fails, it writes the corresponding `blocked_*` artifact with
+`runner_ready=false`, `smoke_passed=false`, `smoke_per_task_seconds=0.0`, and
+`launched_pid=0`.
+
 ### REQ-VERIFY-4013: ARC GAP-4 Verifier-vs-Codex-Judge Efficiency
 
 The repository SHALL provide Exp 4013 at
