@@ -1,0 +1,987 @@
+{
+  "ci95_local_minus_vote": [
+    0.0,
+    0.0
+  ],
+  "cost_codex_seconds_ref": 46.24,
+  "cost_local_seconds": 231.06,
+  "cost_verifier_seconds": 0.1049,
+  "coverage_gain_vs_3attempt": 0.0,
+  "duration_s": 210.98,
+  "experiment": "experiment_4012_gap4_local_best_of_n",
+  "field_principles": {
+    "ci95_local_minus_vote": "Bootstrap 95% CI of (best-of-N local gated - vote) pass@2.",
+    "cost_codex_seconds_ref": "Per-task wall-cost of the codex tier reference.",
+    "cost_local_seconds": "Per-task wall-cost of the best-of-N local inducer.",
+    "cost_verifier_seconds": "Per-task wall-cost of the model-free verifier.",
+    "coverage_gain_vs_3attempt": "BARE FLOAT -- best-of-N coverage minus the <=3-attempt 0.2581 baseline.",
+    "duration_s": "Wall-clock seconds.",
+    "honest_verdict": "Terminal-prefix verdict.",
+    "inference_substrate": "The live local-GGUF substrate.",
+    "k_samples_per_task": "BARE INT -- the best-of-N draw count actually used per task.",
+    "local_beats_vote": "BARE BOOL -- does best-of-N local gated rerank beat vote pass@2 with a CI excluding 0.",
+    "local_demo_perfect_coverage_bestofn": "BARE FLOAT -- fraction of tasks with >=1 demo-perfect program under best-of-N (the gap-closing datum; vs <=3-attempt 0.2581 and codex 0.94).",
+    "local_gated_pass2": "BARE FLOAT -- the best-of-N local gated rerank pass@2 (vs vote 0.4516, oracle 0.6129, codex 0.5806).",
+    "local_model_used": "Which SOTA local GGUF was the inducer.",
+    "missing_verifier_gaps": "Which tasks best-of-N still could not induce.",
+    "preconditions_checked": "list of {resource, available} records GGUF cache + llama_cpp checks.",
+    "random_seed": "Reproducibility seed.",
+    "verifier_side_unchanged": "BARE BOOL -- the model-free verifier primitives were reused unchanged."
+  },
+  "gates": {
+    "coverage_demo_perfect": 0.2581,
+    "headroom_recovered": 0,
+    "selection_beats_union": false,
+    "selection_beats_vote": false,
+    "vote_wins_lost": 0
+  },
+  "headroom_recovered_tasks": [],
+  "honest_verdict": "complete: gap4_local_bestofn_cov0.2581_pass20.4516_below_codex",
+  "inference_substrate": "live_local_gguf_llama_cpp_best_of_n",
+  "k_samples_per_task": 8,
+  "local_beats_vote": false,
+  "local_demo_perfect_coverage_bestofn": 0.2581,
+  "local_gated_pass2": 0.4516,
+  "local_model_used": "gemma-4-12B",
+  "missing_verifier_gaps": [
+    "17cae0c1",
+    "25094a63",
+    "2f0c5170",
+    "3ee1011a",
+    "4e469f39",
+    "505fff84",
+    "50a16a69",
+    "5833af48",
+    "712bf12e",
+    "79fb03f4",
+    "81c0276b",
+    "96a8c0cd",
+    "a57f2f04",
+    "ac3e2b04",
+    "b9630600",
+    "be03b35f",
+    "c3202e5a",
+    "f0df5ff0",
+    "f3e62deb",
+    "fafd9572"
+  ],
+  "model_specs": {
+    "generator_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-12B-it-GGUF/snapshots/3f09de26549e6d7ea54f1b83755149f840fcd333/gemma-4-12b-it-Q4_K_M.gguf",
+    "generator_hf_id": "unsloth/gemma-4-12B-it-GGUF",
+    "generator_model": "gemma-4-12B",
+    "verifier": "model-free: demo-fit exact-reproduction gate + restricted-namespace execution + min-hamming snap + content-hash candidate match"
+  },
+  "n_entries": 31,
+  "n_local_demo_perfect": 8,
+  "n_unique_tasks": 30,
+  "per_task": [
+    {
+      "demo_fit": 0.3333,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 0,
+      "n_cands": 5,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "50a16a69",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 1,
+      "n_cands": 5,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "task": "66e6c45b",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 2,
+      "n_cands": 599,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "17cae0c1",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 3,
+      "n_cands": 656,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "fafd9572",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 4,
+      "n_cands": 7,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "task": "a59b95c0",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 5,
+      "n_cands": 108,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "4e469f39",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 6,
+      "n_cands": 605,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "a57f2f04",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 7,
+      "n_cands": 633,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "96a8c0cd",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 8,
+      "n_cands": 5,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "8719f442",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 9,
+      "n_cands": 4,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "task": "1a2e2828",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.5,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 10,
+      "n_cands": 11,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "25094a63",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 11,
+      "n_cands": 361,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "2f0c5170",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 12,
+      "n_cands": 213,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "3ee1011a",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 13,
+      "n_cands": 42,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "task": "2072aba6",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 14,
+      "n_cands": 195,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "712bf12e",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 15,
+      "n_cands": 577,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "505fff84",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 16,
+      "n_cands": 8,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "be03b35f",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 17,
+      "n_cands": 4,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "task": "c7d4e6ad",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 18,
+      "n_cands": 942,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "1a6449f1",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 19,
+      "n_cands": 212,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "f0df5ff0",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 20,
+      "n_cands": 305,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "81c0276b",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 21,
+      "n_cands": 56,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "692cd3b6",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 22,
+      "n_cands": 754,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "c3202e5a",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 23,
+      "n_cands": 13,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "ac3e2b04",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": false,
+      "i": 24,
+      "n_cands": 50,
+      "oracle_hit": false,
+      "pred_in_pool": true,
+      "task": "0b17323b",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 25,
+      "n_cands": 995,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "5833af48",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 26,
+      "n_cands": 600,
+      "oracle_hit": false,
+      "pred_in_pool": false,
+      "task": "79fb03f4",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": true,
+      "i": 27,
+      "n_cands": 24,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "b9630600",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "gated_top2": true,
+      "i": 28,
+      "n_cands": 1,
+      "oracle_hit": true,
+      "pred_in_pool": true,
+      "task": "00576224",
+      "vote_top2": true
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 29,
+      "n_cands": 19,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "f3e62deb",
+      "vote_top2": false
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "gated_top2": false,
+      "i": 30,
+      "n_cands": 32,
+      "oracle_hit": true,
+      "pred_in_pool": false,
+      "task": "f3e62deb",
+      "vote_top2": false
+    }
+  ],
+  "per_task_sample_summary": [
+    {
+      "best_demo_fit": 1.0,
+      "local_seconds": 160.24,
+      "n_demo_perfect": 7,
+      "n_samples": 8,
+      "statuses": [
+        "graded",
+        "graded",
+        "no_code",
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded"
+      ],
+      "task": "00576224"
+    },
+    {
+      "best_demo_fit": 1.0,
+      "local_seconds": 136.84,
+      "n_demo_perfect": 7,
+      "n_samples": 8,
+      "statuses": [
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded"
+      ],
+      "task": "0b17323b"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 245.76,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code"
+      ],
+      "task": "17cae0c1"
+    },
+    {
+      "best_demo_fit": 1.0,
+      "local_seconds": 133.34,
+      "n_demo_perfect": 7,
+      "n_samples": 8,
+      "statuses": [
+        "graded",
+        "graded",
+        "no_code",
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded"
+      ],
+      "task": "1a2e2828"
+    },
+    {
+      "best_demo_fit": 1.0,
+      "local_seconds": 283.88,
+      "n_demo_perfect": 1,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "graded",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "graded",
+        "no_code"
+      ],
+      "task": "1a6449f1"
+    },
+    {
+      "best_demo_fit": 1.0,
+      "local_seconds": 110.39,
+      "n_demo_perfect": 7,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded"
+      ],
+      "task": "2072aba6"
+    },
+    {
+      "best_demo_fit": 0.5,
+      "local_seconds": 363.91,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "graded",
+        "graded",
+        "no_code",
+        "no_code",
+        "graded",
+        "graded",
+        "graded"
+      ],
+      "task": "25094a63"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 269.9,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "graded",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code"
+      ],
+      "task": "2f0c5170"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 299.69,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "graded",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code"
+      ],
+      "task": "3ee1011a"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 243.0,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "graded",
+        "no_code",
+        "no_code",
+        "no_code",
+        "graded",
+        "no_code",
+        "no_code",
+        "no_code"
+      ],
+      "task": "4e469f39"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 224.95,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "no_code",
+        "no_code",
+        "graded",
+        "no_code",
+        "no_code",
+        "no_code",
+        "graded"
+      ],
+      "task": "505fff84"
+    },
+    {
+      "best_demo_fit": 0.3333,
+      "local_seconds": 259.84,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "graded",
+        "graded",
+        "no_code"
+      ],
+      "task": "50a16a69"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 280.52,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code"
+      ],
+      "task": "5833af48"
+    },
+    {
+      "best_demo_fit": 1.0,
+      "local_seconds": 90.03,
+      "n_demo_perfect": 7,
+      "n_samples": 8,
+      "statuses": [
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "no_code",
+        "graded",
+        "graded",
+        "graded"
+      ],
+      "task": "66e6c45b"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 290.57,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code"
+      ],
+      "task": "692cd3b6"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 253.23,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "graded",
+        "graded",
+        "no_code",
+        "graded"
+      ],
+      "task": "712bf12e"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 250.53,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "no_code",
+        "no_code",
+        "graded",
+        "graded",
+        "no_code",
+        "graded",
+        "graded"
+      ],
+      "task": "79fb03f4"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 269.52,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code"
+      ],
+      "task": "81c0276b"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 263.83,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code"
+      ],
+      "task": "8719f442"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 328.38,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code"
+      ],
+      "task": "96a8c0cd"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 341.26,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "graded"
+      ],
+      "task": "a57f2f04"
+    },
+    {
+      "best_demo_fit": 1.0,
+      "local_seconds": 135.3,
+      "n_demo_perfect": 8,
+      "n_samples": 8,
+      "statuses": [
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded"
+      ],
+      "task": "a59b95c0"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 277.5,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "graded",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code"
+      ],
+      "task": "ac3e2b04"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 0.0,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code"
+      ],
+      "task": "b9630600"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 240.12,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code"
+      ],
+      "task": "be03b35f"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 303.74,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code"
+      ],
+      "task": "c3202e5a"
+    },
+    {
+      "best_demo_fit": 1.0,
+      "local_seconds": 119.24,
+      "n_demo_perfect": 7,
+      "n_samples": 8,
+      "statuses": [
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded"
+      ],
+      "task": "c7d4e6ad"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 269.64,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "graded",
+        "no_code",
+        "no_code",
+        "no_code",
+        "graded",
+        "no_code",
+        "no_code",
+        "no_code"
+      ],
+      "task": "f0df5ff0"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 284.21,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code",
+        "no_code"
+      ],
+      "task": "f3e62deb"
+    },
+    {
+      "best_demo_fit": 0.0,
+      "local_seconds": 202.41,
+      "n_demo_perfect": 0,
+      "n_samples": 8,
+      "statuses": [
+        "graded",
+        "no_code",
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded",
+        "graded"
+      ],
+      "task": "fafd9572"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "resource": "local_gguf_cached",
+      "selected_model": "gemma-4-12B"
+    },
+    {
+      "available": true,
+      "resource": "llama_cpp"
+    },
+    {
+      "available": true,
+      "resource": "arc1_pool_and_verifier_primitives"
+    }
+  ],
+  "random_seed": 12345,
+  "rankers": {
+    "EXEC_PURE": {
+      "pass@1": 0.4194,
+      "pass@2": 0.4839
+    },
+    "GAP4_GATED": {
+      "pass@1": 0.4516,
+      "pass@2": 0.4516
+    },
+    "GAP4_GRADED": {
+      "pass@1": 0.4516,
+      "pass@2": 0.4516
+    },
+    "TRM_VOTE": {
+      "pass@1": 0.4194,
+      "pass@2": 0.4516
+    },
+    "UNION_plus_exec": {
+      "pass@1": 0.4839,
+      "pass@2": 0.4839
+    },
+    "UNION_votes_qmean_voteshare": {
+      "pass@1": 0.4516,
+      "pass@2": 0.4839
+    }
+  },
+  "references": {
+    "codex_gated_pass2": 0.5806,
+    "local_3attempt_demo_perfect_coverage": 0.2581,
+    "oracle_pass2": 0.6129,
+    "vote_pass2": 0.4516
+  },
+  "schema": "carnot.experiment_4012_gap4_local_best_of_n.v1",
+  "selected_programs_checksum": "e693c602361a31d7",
+  "title": "GAP-4 local best-of-N open-weight generator arm",
+  "total_local_samples": 240,
+  "total_local_seconds": 6931.77,
+  "verifier_side_unchanged": true,
+  "vote_wins_lost_tasks": []
+}
