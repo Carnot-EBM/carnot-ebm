@@ -8295,3 +8295,4 @@ c |
 | 2026-06-12 00:39 UTC | SOTA-INGESTION SLOT (mandatory per the standing 20 | OK | 96 passed in 3.71s |
 | 2026-06-12 02:03 UTC | OFF-ARC TRANSFER POWER -- SINGLE SYNCHRONOUS resum | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: n(
 +    tmp_pa |
+| 2026-06-12 02:32 UTC | OFF-ARC TRANSFER POWER -- SINGLE SYNCHRONOUS resum | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLO |
