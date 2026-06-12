@@ -7170,6 +7170,91 @@ checksum, and no KV260 host SD-card precondition.
 
 ---
 
+### REQ-HW-4096
+
+**Title:** Hardware continuity MUST confirm per-board reachability and record the GateMate n=16 flash blocker
+
+**Description:**
+Experiment 4096 MUST produce
+`results/experiment_4096_hardware_continuity.json` as a hardware-smoke
+continuity artifact for KV260, GateMate, and PolarFire. The experiment MUST
+read `results/experiment_4084_hardware_continuity.json` as the prior .377 state,
+check each board independently with separate wall-clock timers, and record all
+preconditions before any forward smoke step. The required preconditions are:
+
+- KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`.
+- GateMate: `openFPGALoader -c dirtyJtag --detect`, confirming the GM1Ax
+  IDCODE (`0x20000001`) before treating the GateMate board as reachable.
+- PolarFire: `ssh -o ConnectTimeout=5 polarfire 'true'`.
+
+KV260 MUST NOT use a host SD-card block-device precondition such as
+`/dev/mmcblk`; KV260 is terminal and MUST only receive an opportunistic SSH
+confirmation. If GateMate is reachable, the experiment MUST investigate the
+prior .377 n=16 flash return-code-1 blocker by re-running or reading the
+`openFPGALoader -c dirtyJtag -b olimex_gatemateevb <n16 bitstream>` flash
+transcript, extracting the concrete flash error, and recording the next concrete
+GateMate forward step. If the current GateMate detect does not expose the GM1Ax
+IDCODE, the artifact MUST still carry the prior .377 flash error and the next
+concrete GateMate step inside `gatemate_step` while leaving
+`per_board_next_step["gatemate"]` as `blocked_gatemate_unreachable`. If
+PolarFire is reachable, the experiment MUST take the next SSH-backed step toward
+end-to-end Carnot dispatch by running the existing hash-verified CPU dispatch
+smoke. Unreachable boards MUST record `blocked_<board>_unreachable` for that
+board and MUST NOT block the other board checks.
+
+The artifact MUST include principle-annotated top-level fields
+`honest_verdict`, `per_board_reachability`, `preconditions_checked`, and
+`inference_substrate`, plus concrete per-board next steps. `preconditions_checked`
+MUST be a list of entries containing at least `{resource, available}` and its
+principle MUST state that it records which board accesses were verified before
+the smoke. `honest_verdict` MUST use a terminal prefix such as `complete:` or
+`blocked_`. `inference_substrate` MUST be exactly `"hardware_smoke"`, and the
+artifact MUST avoid fabric speedup, model-inference, or KV260 host SD-card claims.
+
+**Acceptance criteria:**
+- `results/experiment_4096_hardware_continuity.json` is generated.
+- `per_board_reachability` is a dict of booleans for KV260, GateMate, and
+  PolarFire and matches scalar reachability fields.
+- `preconditions_checked` records the three board preconditions before any
+  GateMate or PolarFire smoke step, with at least `{resource, available}` per
+  entry and the required principle text.
+- GateMate reachability requires a GM1Ax/`0x20000001` IDCODE signal from
+  `openFPGALoader -c dirtyJtag --detect`.
+- A blocked GateMate n=16 flash records `flash_error` and
+  `next_concrete_step` inside the GateMate step details; if current GateMate
+  reachability is blocked before flash, `gatemate_step` still records
+  `previous_377_flash_error` and `next_concrete_step`.
+- `per_board_next_step` is a dict keyed by KV260, GateMate, and PolarFire that
+  records each board's next concrete forward step or
+  `blocked_<board>_unreachable`.
+- `honest_verdict` starts with `complete:` or `blocked_`;
+  `inference_substrate` is exactly `"hardware_smoke"`; and no KV260 host
+  SD-card marker such as `/dev/mmcblk` appears in the artifact.
+
+**Implementation status:** Pending (Exp 4096)
+
+---
+
+### SCENARIO-HW-4096
+
+**Scenario:** Per-board hardware continuity records reachability, flash error,
+and next concrete steps.
+
+**Given:** The .377 hardware-continuity artifact recorded a GateMate n=16 flash
+return-code-1 blocker, PolarFire may be reachable over SSH, and KV260 remains
+terminal with opportunistic SSH confirmation only.
+**When:** Experiment 4096 runs the hardware-smoke continuity check.
+**Then:** It writes `results/experiment_4096_hardware_continuity.json` with a
+terminal-prefix verdict, `inference_substrate="hardware_smoke"`, bare
+`per_board_reachability`, precondition evidence recorded before smoke steps,
+bare `per_board_next_step`, distinct per-board timers, a GateMate flash error
+and next concrete step when flash is blocked, deterministic seed, checksum, and
+no KV260 host SD-card precondition.
+
+**Implementation status:** Pending (Exp 4096)
+
+---
+
 ### SCENARIO-HW-4017
 
 **Scenario:** ARC continuity records reachable boards and blocked board next steps.
