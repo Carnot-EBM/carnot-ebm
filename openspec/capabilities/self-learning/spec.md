@@ -11898,6 +11898,63 @@ precision and recall thresholds simultaneously
 
 ---
 
+## REQ-LEARN-4099: TRM Pool Verifier Discrimination Probe
+
+**Given** cached TRM ARC pass@K candidate-grid outputs, Exp 4099 SHALL run as
+a deterministic offline rerank over saved TRM candidate grids with zero Codex
+generation during selection. It SHALL first check that
+`results/trm_verifier_rerank_opportunity.json` and
+`results/arc3_trm_verifier_rerank_gap1.json` are present. If no saved
+candidate-grid pool can be loaded or regenerated, it SHALL write an honest
+blocked verdict beginning with `blocked_trm_pool_missing`.
+
+**When** Exp 4099 scores each TRM candidate grid, it SHALL compute model-free
+signals derived from the Exp 4087 precision-rescue primitives: demo-fit or
+demo-consensus consistency, deterministic color-permutation plus D4
+augmentation-invariance, k-of-n agreement among TRM samples producing the same
+grid, and graded min-Hamming energy to the task consensus grid. It SHALL build
+single-signal and stacked rerankers, compare them to `TRM_VOTE`, and include an
+oracle pass@2 ceiling from whether any candidate in the task pool is gold.
+
+**Then** the terminal artifact SHALL write
+`results/experiment_4099_trm_pool_verifier_discrimination_probe.json` with
+bare top-level fields `honest_verdict`, `verifier_beats_trm_vote`,
+`captured_pp_directional`, `pool_n_tasks`, `underpowered`, `per_reranker`,
+`oracle_ceiling`, `n_tasks_scored`, `random_seed`, and
+`reproducibility_checksum`. The strict `verifier_beats_trm_vote` gate SHALL be
+`true` only when the best non-TRM reranker's pass@2 exceeds `TRM_VOTE` and the
+bootstrap 95% confidence interval for `(reranker_pass@2 - TRM_VOTE_pass@2)`
+excludes zero. If the reranked pool contains fewer than 100 tasks, the artifact
+SHALL set `underpowered=true` while still reporting the directional
+`captured_pp_directional` point estimate.
+
+### SCENARIO-LEARN-4099: Strict Reranker Win Requires Bootstrap Separation
+
+**Given** a deterministic TRM candidate pool where a verifier reranker selects
+more pass@2-correct candidates than `TRM_VOTE`
+**When** the paired bootstrap confidence interval for captured pass@2 excludes
+zero
+**Then** Exp 4099 reports `verifier_beats_trm_vote=true`, records the winning
+reranker under `per_reranker`, and emits an `honest_verdict` beginning with a
+terminal complete/success/passed/shipped prefix.
+
+### SCENARIO-LEARN-4099-UNDERPOWERED: Directional Signal Without Power
+
+**Given** fewer than 100 TRM-pool tasks can be reranked offline
+**When** no reranker has a bootstrap CI95 excluding zero
+**Then** Exp 4099 reports `verifier_beats_trm_vote=false`,
+`underpowered=true`, preserves the best point estimate in
+`captured_pp_directional`, and keeps `honest_verdict` terminal-prefixed rather
+than treating an honest no-win verdict as a harness failure.
+
+## Implementation Status (REQ-LEARN-4099)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4099 | Implemented (python/carnot/agentic/arc_exp4099_trm_pool_verifier_discrimination_probe.py; scripts/experiments/exp4099_trm_pool_verifier_discrimination_probe.py, Exp 4099) | Implemented (tests/python/test_experiment_4099_trm_pool_verifier_discrimination_probe.py) |
+
+---
+
 ## REQ-LEARN-4088: Trustworthy ARC Verifier-Reward RFT Corpus Build
 
 **Given** Exp 4087 has already produced
