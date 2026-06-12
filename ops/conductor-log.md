@@ -8368,3 +8368,4 @@ c |
 | 2026-06-12 15:23 UTC | TRM-POOL VERIFIER-DISCRIMINATION PROBE (THE HEADLI | OK | 90 passed in 4.34s |
 | 2026-06-12 15:44 UTC | CONDITIONAL TRM VERIFIER-RFT via the NATIVE nano-t | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-12 16:09 UTC | ELEVENTH ARC-AGI-3 game first-solve via the PROVEN | OK | 91 passed in 5.55s |
+| 2026-06-12 16:23 UTC | SOTA-INGESTION SLOT (reserved; headline is a bleed | OK | 99 passed in 5.78s |
