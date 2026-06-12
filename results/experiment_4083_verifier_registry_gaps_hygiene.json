@@ -53,5 +53,18 @@
   "registry_path": "ops/verifier_registry.yaml",
   "registry_updated": true,
   "safety_gate_regression_passed": true,
-  "schema": "carnot.experiment_4083_verifier_registry_gaps_hygiene.v1"
+  "schema": "carnot.experiment_4083_verifier_registry_gaps_hygiene.v1",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.027 but artifact declares verifier-scoring substrate. Even verifier scoring of a few hundred candidates takes >=1.0s; this completed too fast to have scored anything."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
