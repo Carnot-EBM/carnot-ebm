@@ -8365,3 +8365,4 @@ c |
 | 2026-06-12 14:35 UTC | Activation REFUSED: milestone 2026.06.379 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: WRONG_MECHANISM_PRECONDITION on  |
 | 2026-06-12 14:38 UTC | Milestone 2026.06.379 activated | OK | 8 tasks queued |
 | 2026-06-12 14:59 UTC | Archive .378 -> activate .379; KEEP the hardened g | OK | 144 passed in 4.39s |
+| 2026-06-12 15:23 UTC | TRM-POOL VERIFIER-DISCRIMINATION PROBE (THE HEADLI | OK | 90 passed in 4.34s |
