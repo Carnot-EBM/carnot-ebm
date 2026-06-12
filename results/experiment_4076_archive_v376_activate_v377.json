@@ -1,0 +1,209 @@
+{
+  "activated_milestone": "2026.06.377",
+  "active_milestone_confirmed": "2026.06.377",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "arc_modules_importable": true,
+  "archived_milestone": "2026.06.376",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4066_archive_v375_activate_v376.json",
+      "experiment_id": "4066",
+      "sha256": "9f21e6955877570014a624de6a46e36ffaaeba25e1266c997a1e8e2dc25f0486"
+    },
+    {
+      "deliverable": "docs/research-notes/sota-ingestion-2026-06-11-v376-unsaturated-corpora-and-online-pruning.md",
+      "experiment_id": "4067",
+      "sha256": "b205d2f8dcb38ad3045b48bc453f8e39dd83549948a508734151fe31ced58d8d"
+    },
+    {
+      "deliverable": "results/experiment_4068_offarc_transfer_power_sync.json",
+      "experiment_id": "4068",
+      "sha256": "9a2ef3c01631d57b22c962d1a49acd04732a628502a856ed864f94293ab64834"
+    },
+    {
+      "deliverable": "results/experiment_4069_decentralization_moe_sync.json",
+      "experiment_id": "4069",
+      "sha256": "9559a60c9e11b3a15328066bb1cccab744252a13b7c17e54d0771c972e242ff9"
+    },
+    {
+      "deliverable": "results/experiment_4070_ninth_game_explore_first.json",
+      "experiment_id": "4070",
+      "sha256": "bec05d39baa773e3a72431143a34577dbba691390bf502d79fd334992d4bb91f"
+    },
+    {
+      "deliverable": "results/experiment_4071_verifier_action_pruner_efficiency.json",
+      "experiment_id": "4071",
+      "sha256": "574350121a6572b8d4f40df6e9abb2e2fba08f3a38883786fde5772a59bff72b"
+    },
+    {
+      "deliverable": "results/experiment_4072_arcmemo_cross_game_transfer_v9.json",
+      "experiment_id": "4072",
+      "sha256": "298c5d34927084005af624c25bebd7ccea69744a9f637fc704b233a925615238"
+    },
+    {
+      "deliverable": "results/experiment_4073_verifier_registry_and_gaps_hygiene.json",
+      "experiment_id": "4073",
+      "sha256": "b0954715636169c83002942b3011adee4cada9d64d465560df9d08dc811e33d8"
+    },
+    {
+      "deliverable": "results/experiment_4074_hardware_continuity.json",
+      "experiment_id": "4074",
+      "sha256": "eb8836ebf718b77c5e03bf4f031209f19e446cdb990ff1f8a66a565a7e4df38b"
+    },
+    {
+      "deliverable": "results/experiment_4075_capstone_v376.json",
+      "experiment_id": "4075",
+      "sha256": "351da58f00ad9d8f600f072ff3deb9a9fe89b4689bdeeb0fda6b42e72f7618ae"
+    }
+  ],
+  "duration_s": 14.232962,
+  "exclusion_manifest_parses": true,
+  "experiment_id": "exp4076",
+  "field_principles": {
+    "activated_milestone": "Confirms .377 is live so the verifier-as-reward pivot tasks resolve.",
+    "active_milestone_confirmed": "STR -- the active milestone string the roadmap reports; the conductor must agree .377 is active before the pivot tasks resolve.",
+    "arc_modules_importable": "BARE BOOL -- the 4 agentic ARC modules import so .377 can execute them.",
+    "archived_milestone": "Provenance -- which milestone was archived (2026.06.376).",
+    "duration_s": "Positive bare wall-clock; aggregation is fast but never zero.",
+    "exclusion_manifest_parses": "BARE BOOL -- the manifest still loads under yaml.safe_load.",
+    "flagged_count": "BARE INT -- number of .376 artifacts carrying flagged_adversarial (exp4068 -> 1).",
+    "honest_verdict": "Terminal-prefix verdict + aggregation substrate; no live compute markers.",
+    "inference_substrate": "Declares aggregation only, preventing live-inference duration false positives.",
+    "milestone_376_closestate": "DICT -- the next (.377 pivot) planner reads this as ground truth. It MUST record that .376 PROVED THE MECHANISM FIX (both powering runs finally accumulated N>0 vs .375's N=0): G1 off-ARC produced a measurement (accumulated_n=160) but the corpus SATURATED (no oracle headroom, flagged_adversarial -> skipped from aggregation, transfer still uninformative); G3 sovereign MoE base reached its N=30 floor and is ABSENT (coverage 0.2333, -0.0248 vs 12B, leash holds -- a MEASURED negative, not cascade-blocked); ACCURACY advanced 8->9 (ninth game solved); EFFICIENCY action-pruner cut 66.7% actions at equal solve-rate (wallclock worse); ArcMemo v9 no transfer; GateMate blocked, PolarFire ok, KV260 terminal.",
+    "pretest_suite_green": "BARE BOOL -- a red OR ModuleNotFoundError-collection-error pre-test gate cascade-SKIPs the whole milestone; this is the 2026-06-11 orphaned-test poison pattern we quarantine.",
+    "quarantined_tests": "List of quarantined test file paths and failing/collection-error test ids.",
+    "research_complete_yaml_parses": "BARE BOOL -- the colon-poison guard; the file still loads.",
+    "total_games_solved": "BARE INT -- the monotonic ARC-AGI-3 solved-game count; 9 after the ninth-game solve."
+  },
+  "flagged_count": 1,
+  "honest_verdict": "success: archived_v376_v377_active_mechanism_fix_worked_G1_offarc_n160_corpus_saturated_no_headroom_flagged_skipped_uninformative_G3_moe_n30_sovereign_base_absent_leash_holds_efficiency_action_pruner_66pct_equal_solverate_games9_ninth_solved_arcmemo_v9_no_transfer_kv260_terminal_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone_376_closestate": {
+    "accuracy": {
+      "advanced_this_milestone": true,
+      "monotonic_no_regression": true,
+      "ninth_game_measured": true,
+      "ninth_game_solved": true,
+      "outcome": "advanced_8_to_9_ninth_game_solved",
+      "total_games_solved": 9
+    },
+    "capstone_v376_verdict": "complete: capstone_v376_offarc_flagged_skipped_g3_absent_efficiency_gain_games9_flagged_skipped1",
+    "efficiency_action_pruner": {
+      "action_axis_win": true,
+      "action_reduction_pct": 66.6667,
+      "efficiency_gain": true,
+      "measured": true,
+      "outcome": "action_pruner_cuts_actions_66pct_equal_solverate_wallclock_worse",
+      "solverate_parity_held": true,
+      "verdict": "success: verifier_pruner_cuts_actions_66.7pct_equal_solverate",
+      "wallclock_axis_win": false,
+      "wallclock_reduction_pct": -199.0331
+    },
+    "flagged_count": 1,
+    "g1_off_arc_transfer": {
+      "accumulated_n": 160,
+      "best_arm": "armC_symbolic",
+      "demofit_ci_excludes_zero": false,
+      "flagged_adversarial": true,
+      "informative": false,
+      "mechanism_produced_measurement": true,
+      "oracle_headroom_present": false,
+      "outcome": "mechanism_fixed_n160_but_corpus_saturated_no_headroom_flagged_uninformative",
+      "question": "did the demo-fit verifier transfer off-ARC on an un-saturated corpus?",
+      "skipped_from_aggregation": true,
+      "verdict": "complete: offarc_transfer_no_oracle_headroom_evalplus_n160"
+    },
+    "g3_decentralization_moe_base": {
+      "accumulated_n": 30,
+      "cascade_blocked": false,
+      "coverage_delta_vs_12b": -0.0248,
+      "leash_holds": true,
+      "moe_coverage": 0.2333,
+      "oracle_coverage": 0.6129,
+      "outcome": "measured_n30_sovereign_base_absent_leash_holds",
+      "question": "does the local MoE Qwen3.6-35B-A3B base raise the induction ceiling?",
+      "reached_floor": true,
+      "retired": false,
+      "sovereign_base_status": "absent",
+      "target_n": 30,
+      "verdict": "complete: decentralization_moe_cov_0.2333_absent_leash_holds_n30"
+    },
+    "hardware": {
+      "included": true,
+      "kv260_terminal": true,
+      "per_board_reachability": {
+        "gatemate": false,
+        "kv260": true,
+        "polarfire": true
+      },
+      "per_board_terminal_state": {
+        "gatemate": "blocked_gatemate_unreachable",
+        "kv260": "opportunistic_terminal_confirmed_ssh_only",
+        "polarfire": "reachable_hash_verified_cpu_dispatch_recorded"
+      },
+      "verdict": "complete: hardware_continuity_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only"
+    },
+    "headline": ".376 PROVED THE MECHANISM FIX (inverting `.375's launch failure): both powering runs finally accumulated data. G1 off-ARC produced a measurement (accumulated_n=160 vs .375's 0) but the corpus SATURATED -- no oracle headroom, flagged_adversarial -> skipped from aggregation, so the transfer question stays UNINFORMATIVE, not a clean win and not a science negative. G3 sovereign MoE base reached its N=30 floor (coverage 0.2333, delta -0.0248 vs the 12B) and is ABSENT -- the Invisible Leash holds (a MEASURED negative, not cascade-blocked). ACCURACY advanced 8->9 (ninth game solved). EFFICIENCY: the verifier-as-action-pruner cut 66.6667% of actions at equal solve-rate (wallclock regressed). ArcMemo v9 no transfer; GateMate blocked, PolarFire ok, KV260 terminal. .376 closes the selection question enough that .377 pivots to verifier-as-REWARD.",
+    "mechanism_fix_worked": true,
+    "per_task_conductor_result": {
+      "exp4066-archive-v375-activate-v376": "OK",
+      "exp4067-sota-ingestion-unsaturated-corpora-and-online-pruning": "OK",
+      "exp4068-offarc-transfer-power-sync-accumulate": "FLAGGED_offarc_n160_corpus_saturated_no_headroom_tautology",
+      "exp4069-decentralization-moe-sync-accumulate": "OK_moe_n30_sovereign_base_absent_leash_holds",
+      "exp4070-ninth-game-explore-first": "OK_ninth_game_solved_games9",
+      "exp4071-verifier-action-pruner-efficiency": "OK_action_pruner_66.7pct_equal_solverate",
+      "exp4072-arcmemo-cross-game-transfer-v9": "OK_arcmemo_v9_no_cross_game_transfer",
+      "exp4073-verifier-registry-and-gaps-hygiene": "OK",
+      "exp4074-hardware-continuity-gatemate-polarfire": "OK_gatemate_blocked_polarfire_ok_kv260_terminal",
+      "exp4075-capstone-v376": "OK"
+    },
+    "per_task_status": {
+      "exp4066-archive-v375-activate-v376": "OK",
+      "exp4067-sota-ingestion-unsaturated-corpora-and-online-pruning": "OK",
+      "exp4068-offarc-transfer-power-sync-accumulate": "FLAGGED",
+      "exp4069-decentralization-moe-sync-accumulate": "OK",
+      "exp4070-ninth-game-explore-first": "OK",
+      "exp4071-verifier-action-pruner-efficiency": "OK",
+      "exp4072-arcmemo-cross-game-transfer-v9": "OK",
+      "exp4073-verifier-registry-and-gaps-hygiene": "OK",
+      "exp4074-hardware-continuity-gatemate-polarfire": "OK",
+      "exp4075-capstone-v376": "OK"
+    },
+    "science_decisive": false,
+    "self_learning": {
+      "cross_game_transfer_win": false,
+      "n_reused_abstractions": 3,
+      "outcome": "no_cross_game_transfer_v9_not_cheaper_than_within_game",
+      "transfer_assessment": "helped_vs_cold_but_lost_to_within_game",
+      "verdict": "complete: arcmemo_v9_no_cross_game_transfer_v9_not_cheaper_than_within_game"
+    },
+    "status_counts": {
+      "BLOCKED": 0,
+      "FAIL": 0,
+      "FLAGGED": 1,
+      "MISSING": 0,
+      "OK": 9
+    },
+    "total_games_solved": 9
+  },
+  "n_tasks_archived": 10,
+  "preconditions_checked": {
+    "active_milestone": "2026.06.377",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "exclusion_manifest_exists": true,
+    "exclusion_manifest_parsed": true,
+    "research_complete_yaml_exists": true,
+    "research_complete_yaml_parsed_after": true,
+    "research_complete_yaml_parsed_before": true
+  },
+  "pretest_suite_green": true,
+  "quarantined_tests": [],
+  "random_seed": 4076,
+  "reproducibility_checksum": "640e3ac27f73fd26f6b715a94f29414b8dde8f55d80353514255e92987ce7b2e",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "unchanged",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v376_to_v377_4076.v1",
+  "task_id": "exp4076-archive-v376-activate-v377",
+  "total_games_solved": 9
+}
