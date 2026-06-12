@@ -12717,6 +12717,71 @@ tasks with at least eight candidates per task, and writes
 `stable_checkpoint_path`, `resumed_from_n`, all four arms listed in
 `arms_implemented`, and `inference_substrate=live_llm_inference`.
 
+### REQ-VERIFY-4068: Synchronous OFF-ARC Resume-Accumulate Headroom Runner
+
+The repository SHALL provide Exp 4068 at
+`scripts/experiments/exp4068_offarc_transfer_power_sync.py` as a
+single synchronous resume-accumulate runner for the GAP-4 OFF-ARC code-transfer
+measurement. It SHALL NOT split build and collect phases. It SHALL NOT launch a background process,
+SHALL NOT use `setsid` or polling, and SHALL NOT block the
+measurement on a failed or saturated pre-launch smoke gate. Before inference or
+candidate rescoring, it SHALL check the local
+`unsloth/gemma-4-12B-it-GGUF` cache, `llama_cpp` importability, EvalPlus
+HumanEval+/MBPP+ or LiveCodeBench v6 loadability, and
+`carnot.verify.sandbox` importability. If any mandatory resource is missing,
+it SHALL write `results/experiment_4068_offarc_transfer_power_sync.json` with
+`honest_verdict=blocked_<resource>`, `preconditions_checked`, and
+`inference_substrate=live_llm_inference`, then stop without fabricating
+candidate outcomes.
+
+The runner SHALL headroom-route the evaluation corpus by probing the
+oracle/best-of-pool hidden-test pass-rate on roughly eight EvalPlus tasks from
+the local Gemma 4 12B candidate pool. If EvalPlus oracle pass-rate is below
+0.95, it SHALL use EvalPlus; if EvalPlus is saturated or the probe errors, it
+SHALL probe and use LiveCodeBench v6 when available. The terminal artifact
+SHALL record `evaluation_corpus`, `corpus_routed_reason`, `oracle_passrate`,
+and bare bool `oracle_headroom_present` so saturated-corpus false negatives are
+distinguished from verifier-transfer failures.
+
+The runner SHALL resume a stable corpus/model/k-keyed checkpoint such as
+`results/offarc_power_sync_gemma12b_<corpus>_k5.checkpoint.json`, seed it from
+the intact Exp 4045 candidate checkpoint, rescore already-generated candidates
+against the selected corpus hidden tests without regenerating them, then extend
+new tasks synchronously until a bounded self-budget is reached. It SHALL
+checkpoint after each task and print a one-line progress message per task. All
+four arms SHALL select from the same candidate pool: Arm A self-consistency
+over hidden behavior, Arm A++ ACES leave-one-out test-consistency, Arm B
+GAP-4 demo-fit using only visible examples, and Arm C symbolic-equivalence
+partition over visible-test survivors. Scoring SHALL use hidden tests only
+after selection and SHALL include the oracle/best-of-pool positive control.
+
+The terminal artifact SHALL write
+`results/experiment_4068_offarc_transfer_power_sync.json` with bare
+`accumulated_n_tasks`, `armA_vote_passrate`, `armApp_aces_passrate`,
+`armB_demofit_passrate`, `armC_symbolic_passrate`, `demofit_delta_pp`,
+10,000-resample task-level `demofit_bootstrap_ci95`,
+`demofit_ci_excludes_zero`, `best_arm`, `best_arm_delta_pp`,
+`best_arm_ci_excludes_zero`, `missing_verifier_gaps`, `model_specs`,
+`random_seed`, `reproducibility_checksum`, `preconditions_checked`,
+`mechanism=single_synchronous_resume_accumulate_no_background`, and
+`inference_substrate=live_llm_inference`. Honest negatives and accumulating
+partial windows SHALL be terminal `complete:` verdicts, and
+`accumulated_n_tasks` SHALL be greater than zero whenever any resumed or newly
+scored task is available.
+
+### SCENARIO-VERIFY-4068: Synchronous Route Writes Accumulated Terminal Artifact
+
+Given the local GGUF cache, `llama_cpp`, at least one supported code corpus
+with hidden tests, the Exp 4045 candidate checkpoint, and the sandbox primitive
+are available, when Exp 4068 runs, then it synchronously selects a corpus with
+oracle headroom, resumes or seeds
+`offarc_power_sync_gemma12b_<corpus>_k5.checkpoint.json`, checkpoints after
+each task, writes one progress line per task, and writes
+`results/experiment_4068_offarc_transfer_power_sync.json` with
+`accumulated_n_tasks > 0`, all required arm pass-rates and bootstrap CIs, the
+corpus routing reason, the positive-control oracle fields, and
+`mechanism=single_synchronous_resume_accumulate_no_background`.
+
 ### REQ-VERIFY-4051: GAP-4 Registry And Gaps Hygiene Re-Eval
 
 The repository SHALL provide Exp 4051 at

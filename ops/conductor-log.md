@@ -8293,3 +8293,5 @@ c |
 | 2026-06-11 23:25 UTC | Milestone 2026.06.376 activated | OK | 10 tasks queued |
 | 2026-06-11 23:42 UTC | Archive .375 -> activate .376; KEEP the hardened g | OK | 155 passed in 4.17s |
 | 2026-06-12 00:39 UTC | SOTA-INGESTION SLOT (mandatory per the standing 20 | OK | 96 passed in 3.71s |
+| 2026-06-12 02:03 UTC | OFF-ARC TRANSFER POWER -- SINGLE SYNCHRONOUS resum | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: n(
++    tmp_pa |

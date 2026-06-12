@@ -4,15 +4,20 @@ Forward-looking research and product roadmap. For the chronological development 
 
 ## Current Milestone
 
-**`2026.05.265` — Multi-Corpus Verifier Generalization (in flight)**
+**`2026.06.376` — Verifier-as-Reward pivot (in flight); FoVer headline paper publication-ready**
 
-Operator-authorized 2026-05-21 to expand evaluation beyond FoVer, the single corpus that produced the headline AUROC=0.9857. Three independent corpora measured under a dual-condition protocol that isolates the contribution of accumulated self-learning state from the architecture-only baseline:
+The project's north star is now **solving ARC-AGI-3, accurately and efficiently** (operator directive 2026-06-08); everything below is in service of it. Two current facts:
+
+- **The FoVer verification headline is publication-ready.** The production verifier ensemble reaches **AUROC 0.9131** on the FoVer step-error corpus under a 5-seed dual-condition protocol (this repins the earlier 0.9857 figure downward after a 2026-05 adversarial audit). All four publication gates (G1–G4) now pass and the headline was **independently re-computed from a clean continuous-integration checkout in a non-operator environment** (2026-05-31) — `paper_ready: True`, pending the operator's submission decision.
+- **The 2026-06-11 strategic pivot: verifier-as-reward.** The evidence across recent milestones established that the verifier-as-inference-*selector* role is a commodity (it does not beat self-consistency voting on real candidate pools), so the program pivoted to the verifier as a *training-time* reward signal — using the un-hallucinating execution verifier to certify training traces and fine-tune a generator. This is an **open bet under test** (milestone `.377`), not a proven result.
+
+Earlier (2026-05) multi-corpus generalization work expanded evaluation beyond FoVer to verify the headline is not single-corpus overfit:
 
 | ID | Corpus | Conditions | What it measures |
 |---|---|---|---|
 | `exp2802` | **MBPP** (500 problems) | architecture-only + production | Code-generation correctness verification on a new domain. Code execution gives clean ground-truth. |
 | `exp2803` | **TruthfulQA** (817 questions) | architecture-only + production | Factual truthfulness verification. Different shape entirely from FoVer step pairs; will surface FoVer-shape overfit if present. BLEURT-based labels (no closed-weight judge per the decentralization rule). |
-| `exp2804` | **HumanEval full** (164 problems) | architecture-only + production | Code-generation, full benchmark not the 50-problem subset. Extends prior +3.0pp / 0 → 36% pass@1 work to ensemble AUROC. |
+| `exp2804` | **HumanEval full** (164 problems) | architecture-only + production | Code-generation, full benchmark not the 50-problem subset. Extends the defensible code-repair results (Ising-guided fuzzing +18pp, CRANE +15pp) to ensemble AUROC. |
 | `exp2807a` | **FoVer** (1000-subset) | architecture-only + production | Explicit memory-leakage control. Quantifies how much the production AUROC depends on accumulated NEXUS rules / constraint templates vs the verifier architecture itself. |
 | `exp2805` | Cross-corpus matrix | derived | Classifies each verifier in the ensemble: `ARCHITECTURE_TRANSFER` (works without memory across all corpora), `MEMORY_AUGMENTED` (production high but architecture-only low), `CORPUS_SPECIFIC` (one-corpus-only — e.g. Tier 0s on arithmetic), `LOW_SIGNAL` (retirement candidates). |
 | `exp2807` | Paper-v6 §5 integration | derived | Four-column dual-condition results table: Architecture-only AUROC / Production AUROC / Learning Δ / Peer baseline. Includes a §5.1 self-learning contribution disclosure. |
@@ -39,8 +44,8 @@ Results are labeled with provenance: **LIVE** (real model inference on GPU), **D
 | Result | Value | Source | Provenance | Significance |
 |---|---|---|---|---|
 | HumanEval code verification | +3.0pp [+0.6, +6.1] CI | Exp 226 | LIVE | Statistically significant on 164 official problems (gemma-4-E4B-it, 1574s runtime) |
-| HumanEval pass@1 lift on SOTA 35B | 0% → 36% after Carnot correction | Live SOTA benchmark | LIVE | Qwen3.6-35B-A3B on dual RTX 3090 |
-| IterativeSelfRepair (HumanEval 50) | 8% → 80% pass rate (+72pp) | Code repair benchmark | LIVE | Execute-feedback-retry pipeline |
+| Ising-guided fuzzing (HumanEval 50) | 0.66 → 0.84 pass rate (+18pp) | Exp 1999 | LIVE | Execution-grounded repair |
+| CRANE constrained decoding (HumanEval 50) | 0.70 → 0.85 pass rate (+15pp) | Exp 2090 | LIVE | vs a rigid grammar |
 | PBT bug detection rate | 99.3% (144/145) | Exp 220 | LIVE | Property-based testing catches nearly all wrong code (Qwen+Gemma, 816s) |
 | Typed IR constraints | +4.9pp (Gemma4) | Exp 221 | LIVE | Prompt-side constraint extraction works (81 cases, 459s) |
 | EstimationVerifier on SVAMP | 0.90 AUC (vs 0.125 FoVer baseline) | Exp 908 | LIVE | Math reasoning verification |
