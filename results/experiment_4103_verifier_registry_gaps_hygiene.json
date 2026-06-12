@@ -1,0 +1,85 @@
+{
+  "cited_upstream_artifacts": [
+    "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "results/arc3_gap4_induced_programs.json",
+    "results/experiment_4099_trm_pool_verifier_discrimination_probe.json",
+    "results/experiment_4100_trm_verifier_rft_conditional.json"
+  ],
+  "duration_s": 0.233,
+  "exp4099_gap": {
+    "artifact_path": "results/experiment_4099_trm_pool_verifier_discrimination_probe.json",
+    "best_reranker": "K_OF_N_AGREEMENT",
+    "captured_pp": 0.0,
+    "captured_pp_ci95": [
+      0.0,
+      0.0
+    ],
+    "gap_id": "GAP-TRM-GRID-DISCRIMINATION",
+    "honest_verdict": "complete: no_verifier_beats_trm_vote_best_K_OF_N_AGREEMENT_captured_0.0000_ci95_0.0000_0.0000_n62_underpowered_true",
+    "missing_discriminator": "signal_separating_correct_trm_grid_from_confident_wrong_trm_grid_on_pool",
+    "pool_n_tasks": 62,
+    "reproducibility_checksum": "7f84aa1e2b8ecade24d00ebef7841df86062c8f362e5da721db5f49aaf869ea8",
+    "status": "open_captured_pp_0.0000",
+    "trm_vote_pass2": 0.2742,
+    "verifier_beats_trm_vote": false
+  },
+  "exp4100_outcome": {
+    "artifact_path": "results/experiment_4100_trm_verifier_rft_conditional.json",
+    "bottleneck": "verifier_discrimination_on_trm_grids",
+    "branch_taken": "smoke",
+    "honest_verdict": "complete: trm_native_trainer_checkpoint_ok_smoke_only_no_verifier_grid_discrimination_best_K_OF_N_AGREEMENT_gap_0.0000",
+    "reproducibility_checksum": "9c86753fc8ba6b7255c1247d1a0de960e9417f584359603f950d770ae128d2c8",
+    "rft_vs_ablation_delta": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "delta": 0.0,
+      "metric": "heldout_pass@2",
+      "status": "not_run_no_verifier_signal"
+    },
+    "status": "smoke_checkpoint_ok",
+    "trm_native_trainer_checkpoint_ok": true
+  },
+  "experiment": "experiment_4103_verifier_registry_gaps_hygiene",
+  "field_principles": {
+    "gaps_updated": "Lists the verifier_gaps entries touched (GAP-TRM-GRID-DISCRIMINATION et al.) so the gap backlog stays the honest complement of the registry.",
+    "honest_verdict": "Terminal-prefixed. Records the registry/gaps were reconciled to the .379 truth.",
+    "regression_guard_passed": "Bare bool: the canonical GAP-4 numbers still reproduce bit-exact from cached candidates; catches a silent verifier regression independent of the new work."
+  },
+  "gaps_path": "ops/verifier_gaps.md",
+  "gaps_updated": [
+    "GAP-TRM-GRID-DISCRIMINATION",
+    "GAP-TRM-VERIFIER-RFT-4100"
+  ],
+  "honest_verdict": "complete: registry_gaps_reconciled_to_v379_truth_regression_guard_passed_True_trm_grid_gap_open_captured_pp_0.0000_exp4100_smoke_checkpoint_ok",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "offline_replay": {
+    "arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+    "expected": {
+      "arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      }
+    },
+    "gap4_arc1_reproduced": true,
+    "no_codex_calls": true,
+    "no_gguf_inference": true,
+    "regression_guard_passed": true
+  },
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_updated": true,
+  "regression_guard_passed": true,
+  "schema": "carnot.experiment_4103_verifier_registry_gaps_hygiene.v1"
+}
