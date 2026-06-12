@@ -8315,3 +8315,4 @@ c |
 | 2026-06-12 07:18 UTC | NINTH ARC-AGI-3 game first-solve via the PROVEN ex | OK | 87 passed in 4.72s |
 | 2026-06-12 07:29 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (infra slot; regr | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-12 07:41 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 85 passed in 4.80s |
+| 2026-06-12 07:55 UTC | Capstone .377 (UNGATED): the milestone's headline  | OK | 86 passed in 4.50s |
