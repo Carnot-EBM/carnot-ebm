@@ -1,0 +1,84 @@
+{
+  "cited_upstream_artifacts": [
+    "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "results/arc3_gap4_induced_programs.json",
+    "results/experiment_4087_certification_precision_rescue.json",
+    "results/experiment_4090*.json"
+  ],
+  "duration_s": 0.197,
+  "experiment": "experiment_4095_verifier_registry_gaps_hygiene",
+  "field_principles": {
+    "gap4_arc1_reproduced": "Regression guard: the shipped GAP-4 ARC-1 gate must rederive vote 0.4516 to gated 0.5806 from cached candidates and saved program outputs.",
+    "gaps_updated": "Bare bool; gaps ledger carries the Exp 4095 precision and RFT blocks.",
+    "honest_verdict": "Terminal-prefix summary of the cached ARC-1 replay and ledger updates.",
+    "inference_substrate": "Cached verifier candidates only; no Codex, GGUF, or live inference.",
+    "precision_rescue_recorded": "Bare bool; Exp 4087's certification-precision operating point is represented in ledgers.",
+    "registry_updated": "Bare bool; registry carries the Exp 4095 replay and precision point.",
+    "rft_outcome_recorded": "Bare bool; Exp 4090 A-vs-B state is represented, including absent/pending state."
+  },
+  "gap4_arc1_reproduced": true,
+  "gaps_path": "ops/verifier_gaps.md",
+  "gaps_updated": true,
+  "honest_verdict": "complete: gap4_arc1_reproduced_True_precision_precision_rescue_succeeded_rft_rft_a_vs_b_pending_absent",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "offline_replay": {
+    "arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+    "expected": {
+      "arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      }
+    },
+    "gap4_arc1_reproduced": true,
+    "no_codex_calls": true,
+    "no_gguf_inference": true
+  },
+  "precision_rescue": {
+    "any_stack_reached_0_85": true,
+    "artifact_path": "results/experiment_4087_certification_precision_rescue.json",
+    "best_certified_precision": 0.8824,
+    "best_op_point_recall": 0.7143,
+    "best_operating_point": {
+      "filter_stack": "k_of_n_agreement",
+      "n_certified": 17,
+      "precision": 0.8824,
+      "recall": 0.7143,
+      "threshold": "k=1"
+    },
+    "honest_verdict": "complete: precision_rescue_succeeded_best_0.8824_at_recall_0.7143",
+    "inference_substrate": "offline_saved_gap4_program_replay_precision_rescue",
+    "n_codex_calls": 0,
+    "n_tasks_scored": 21,
+    "precision_floor": 0.85,
+    "precision_floor_reached": true,
+    "precision_rescue_recorded": "precision_rescue_succeeded",
+    "status": "complete"
+  },
+  "precision_rescue_recorded": true,
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_updated": true,
+  "rft_outcome": {
+    "arm_a_score": null,
+    "arm_a_vs_b_delta": null,
+    "arm_b_score": null,
+    "artifact_path": "results/experiment_4090*.json",
+    "honest_verdict": "",
+    "present": false,
+    "reason": "missing_exp4090_artifact",
+    "rft_outcome_recorded": "rft_a_vs_b_pending_absent",
+    "status": "pending"
+  },
+  "rft_outcome_recorded": true,
+  "schema": "carnot.experiment_4095_verifier_registry_gaps_hygiene.v1"
+}

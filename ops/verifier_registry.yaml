@@ -212,6 +212,12 @@ verifiers:
     eval_exp_4083: results/experiment_4083_verifier_registry_gaps_hygiene.json
     exp4083_gap4_arc1_reproduced: true
     exp4083_arc1_safety_gate_regression_passed: true
+    eval_exp_4095: results/experiment_4095_verifier_registry_gaps_hygiene.json
+    exp4095_gap4_arc1_reproduced: true
+    exp4095_arc1_rule_exec_vote_pass2: 0.4516
+    exp4095_arc1_rule_exec_gated_pass2: 0.5806
+    exp4095_arc1_headroom_recovered: 4
+    exp4095_arc1_vote_wins_lost: 0
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -275,3 +281,14 @@ verifiers:
     status: blocked
     outcome: verifier_as_reward_rft_blocked
     honest_verdict: blocked_gate_check_failed
+  certification_precision_operating_point:
+    experiment: results/experiment_4087_certification_precision_rescue.json
+    status: precision_rescue_succeeded
+    best_certified_precision: 0.8824
+    best_op_point_recall: 0.7143
+    filter_stack: k_of_n_agreement
+    threshold: k=1
+    n_certified: 17
+    precision_floor: 0.85
+    precision_floor_reached: true
+    eval_exp_4095: results/experiment_4095_verifier_registry_gaps_hygiene.json
