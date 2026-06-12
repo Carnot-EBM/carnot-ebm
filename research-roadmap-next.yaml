@@ -13,8 +13,19 @@
 # un-hallucinating ground-truth signal that GENERATES training data (Deep-Think Q3 + the standing
 # Sudoku RFT-beats-SFT beachhead, 3/3 seeds). This unifies three threads in ONE experiment:
 # (a) verifier-as-reward (the pivot), (b) decentralization-AS-distillation (the Invisible-Leash
-# question answered as a TRAINING outcome -- does training on verifier-certified traces close the
-# local 0.26->0.57 induction gap?), (c) ARC-induction progress (the north star).
+# question answered as a TRAINING outcome), (c) ARC-induction progress (the north star).
+#
+# SUBSTRATE (operator decision 2026-06-11 -- corrects the outer-loop's initial gemma-4-12B default):
+# the mechanism test (does RFT >= SFT from the verifier's LABEL-FREE signal?) trains a SMALL
+# TRAINABLE base -- openbmb/MiniCPM5-1B (HF safetensors, cached; NOT a GGUF, which is inference-only).
+# Why small: (1) THROUGHPUT -- a 1B LoRA finetune+eval fits ONE window, dissolving the accumulate-
+# across-windows pain that wrecked the .374-.376 frontier runs; (2) HEADROOM -- the beachhead
+# explicitly prescribes a "0.5-1B headroom base" (a worse-to-start model shows a CLEANER RFT gain);
+# (3) FORMAT -- LoRA trains HF weights, not GGUF; (4) SOVEREIGNTY -- a 1B runs anywhere. The
+# gemma-4-12B 0.26->0.57 decentralization-MAGNITUDE arm (does RFT close the SOVEREIGN-generator gap)
+# is DECOUPLED as a .378 FOLLOW-ON, run ONLY after the mechanism validates on the small base.
+# Capacity-floor guard: if the 1B floors at 0 on ARC-induction, the mechanism test falls back to the
+# headroom domain (Sudoku control + a tractable ARC subset) -- a floored null is uninformative.
 #
 # HEADLINE EXPERIMENT (.377): verifier-certified RFT vs gold-SFT, held-out, on ARC-induction +
 # a Sudoku positive control. RFT trains on DEMO-certified traces (the verifier's label-free signal,
@@ -39,7 +50,7 @@
 # headline revision (verifier "selects" -> verifier "trains") is drafted separately as a proposal
 # (ops/north-star-pivot-revision-proposal.md) for operator merge. Adjust freely.
 milestone: "2026.06.377"
-milestone_title: "TAKE THE PIVOT: verifier-as-REWARD, not verifier-as-SELECTOR. The .371-.375 evidence closed the selection question (the moat is a commodity; directional-not-significant off-ARC; the frontier-as-selector grind was spinning). The verifier's durable value is as an un-hallucinating REWARD that GENERATES training data (Deep-Think Q3 + the Sudoku RFT-beats-SFT beachhead). HEADLINE: verifier-certified RFT vs gold-SFT, held-out, on ARC-induction + a Sudoku positive control -- does training on the verifier's LABEL-FREE demo-certified signal do as well as / beat training on ORACLE labels (gold-SFT), and does it close the local 0.26->0.57 induction gap (decentralization-as-distillation, the Invisible-Leash question answered as a TRAINING outcome)? Keep the shipped demo-fit safety-gate; keep ARC-accuracy (9th game) + memory; DROP the off-ARC-selector grind and the vc33 search. Capstone: did verifier-as-reward RFT beat gold-SFT held-out -- the pivot's first decision-grade result?"
+milestone_title: "TAKE THE PIVOT: verifier-as-REWARD, not verifier-as-SELECTOR. The .371-.375 evidence closed the selection question (the moat is a commodity; directional-not-significant off-ARC; the frontier-as-selector grind was spinning). The verifier's durable value is as an un-hallucinating REWARD that GENERATES training data (Deep-Think Q3 + the Sudoku RFT-beats-SFT beachhead). HEADLINE: verifier-certified RFT vs gold-SFT, held-out, on ARC-induction + a Sudoku positive control -- does training on the verifier's LABEL-FREE demo-certified signal do as well as / beat training on ORACLE labels (gold-SFT) on a small trainable base (MiniCPM5-1B -- fast, headroom-rich; the gemma-12B sovereign-magnitude arm is a .378 follow-on)? Keep the shipped demo-fit safety-gate; keep ARC-accuracy (9th game) + memory; DROP the off-ARC-selector grind and the vc33 search. Capstone: did verifier-as-reward RFT beat gold-SFT held-out -- the pivot's first decision-grade result?"
 milestone_doc: "docs/research-notes/verifier-as-self-improvement-reward-scoping.md"
 
 tasks:
@@ -79,7 +90,7 @@ tasks:
       verifier, NOT inference selection) -- any selector-scope-match is a false positive; this is
       the pivot, not a rerun of the frontier-selector grind.
     milestone: "2026.06.377"
-    title: "VERIFIER-AS-REWARD RFT -- CORPUS BUILD (THE PIVOT, part 1): build the verifier-certified RFT corpus for ARC-induction. For each ARC-1/ARC-2 task in a held-IN split, codex generates k candidate `def transform(grid)` programs from the demos; the model-free execution verifier (demo-fit + restricted-namespace exec, python/carnot/agentic/arc_gap4_execution_verifier.py) certifies the DEMO-PERFECT ones (pass ALL demos) as the LABEL-FREE positive traces (RFT corpus). SEPARATELY assemble the gold-SFT corpus: the TEST-gold-passing programs (oracle labels). The contrast is the experiment: RFT learns from the verifier's cheap demo signal (no test labels), SFT learns from oracle labels. Write the LoRA trainer (gemma-4-12B target) + the held-OUT eval harness. Smoke on 2 tasks; commit the runner."
+    title: "VERIFIER-AS-REWARD RFT -- CORPUS BUILD (THE PIVOT, part 1): build the verifier-certified RFT corpus for ARC-induction. For each ARC-1/ARC-2 task in a held-IN split, codex generates k candidate `def transform(grid)` programs from the demos; the model-free execution verifier (demo-fit + restricted-namespace exec, python/carnot/agentic/arc_gap4_execution_verifier.py) certifies the DEMO-PERFECT ones (pass ALL demos) as the LABEL-FREE positive traces (RFT corpus). SEPARATELY assemble the gold-SFT corpus: the TEST-gold-passing programs (oracle labels). The contrast is the experiment: RFT learns from the verifier's cheap demo signal (no test labels), SFT learns from oracle labels. Write the LoRA trainer (small TRAINABLE base -- openbmb/MiniCPM5-1B HF safetensors, the operator-chosen substrate; NOT a GGUF since LoRA trains HF weights; the beachhead prescribes a 0.5-1B headroom base) + the held-OUT eval harness. Smoke on 2 tasks; commit the runner."
     priority: critical
     track: verifier-as-reward
     max_turns: 90
@@ -92,7 +103,8 @@ tasks:
       RFT-beats-SFT beachhead design) FIRST. Reuse the execution verifier
       (python/carnot/agentic/arc_gap4_execution_verifier.py + python/carnot/verify/sandbox.py).
       PRECONDITIONS (check BEFORE any inference; miss -> honest_verdict blocked_<resource>, no
-      fabrication): (a) gemma-4-12B GGUF cached; (b) a LoRA/PEFT trainer importable (peft/trl/
+      fabrication): (a) the TRAINABLE base loads -- openbmb/MiniCPM5-1B HF safetensors (cached;
+      NOT the GGUF -- LoRA needs trainable weights); (b) a LoRA/PEFT trainer importable (peft/trl/
       transformers) + GPU visible (python -c "import torch; assert torch.cuda.is_available()");
       (c) the ARC-1/ARC-2 task pools loadable.
       BUILD: (1) held-IN split of ARC tasks; codex generates k>=8 transform programs per task;
@@ -121,7 +133,7 @@ tasks:
         op: '=='
         value: true
     milestone_title_note: "GPU LoRA train; gated on the corpus+trainer being ready; resumes per the accumulate rule."
-    title: "VERIFIER-AS-REWARD RFT -- TRAIN (THE PIVOT, part 2): LoRA-finetune gemma-4-12B on TWO arms from exp4077's corpora -- Arm RFT (verifier-certified demo-perfect traces, label-free) and Arm SFT (test-gold traces, oracle labels) -- with IDENTICAL hyperparameters/seed so the only difference is the LABEL SOURCE. Launch the train BACKGROUNDED (setsid-detached so it survives the iteration boundary; checkpoint per epoch). Per the accumulate rule: if the train does not finish in the ~75-min window, the checkpoint persists and the next milestone resumes it -- report progress, NOT a failure."
+    title: "VERIFIER-AS-REWARD RFT -- TRAIN (THE PIVOT, part 2): LoRA-finetune the small trainable base (openbmb/MiniCPM5-1B HF) on TWO arms from exp4077's corpora -- Arm RFT (verifier-certified demo-perfect traces, label-free) and Arm SFT (test-gold traces, oracle labels) -- with IDENTICAL hyperparameters/seed so the only difference is the LABEL SOURCE. Launch the train BACKGROUNDED (setsid-detached so it survives the iteration boundary; checkpoint per epoch). Per the accumulate rule: if the train does not finish in the ~75-min window, the checkpoint persists and the next milestone resumes it -- report progress, NOT a failure."
     priority: critical
     track: verifier-as-reward
     max_turns: 70
@@ -130,7 +142,9 @@ tasks:
     inference_substrate: live_llm_inference
     deliverable: results/experiment_4078_verifier_reward_rft_train_launch.json
     prompt: |
-      PRECONDITIONS: gemma-4-12B GGUF + LoRA trainer + GPU (as exp4077); exp4077's corpora present.
+      PRECONDITIONS: the MiniCPM5-1B trainable HF base + LoRA trainer + GPU (as exp4077); exp4077's
+      corpora present. (A 1B LoRA finetune should fit in ONE ~75-min window -- the accumulate-resume
+      is a safety net, not the expected path; the throughput win over a 12B is the point.)
       On miss -> honest_verdict blocked_<resource>, no fabrication.
       TRAIN both arms (RFT, SFT) with identical config (same base, same LoRA rank/lr/steps/seed --
       the ONLY difference is which corpus). setsid-detach the training subprocess (it must survive
@@ -154,7 +168,7 @@ tasks:
         artifact_field: train_launched
         op: '=='
         value: true
-    title: "VERIFIER-AS-REWARD RFT -- EVAL + GATE (THE PIVOT, part 3): poll exp4078's training; once both arms have a usable checkpoint, EVAL each finetuned model on the HELD-OUT ARC-induction split (disjoint from train) and report demo-perfect + true-gold induction rate vs (a) the COLD base (gemma-4-12B ~0.26) and (b) CODEX (~0.57 ceiling). THE GATE: does Arm RFT (verifier-certified, label-free) improve held-out induction over the cold base with bootstrap CI95 excluding 0, AND is it >= Arm SFT (oracle labels)? This is BOTH the pivot test (can you self-improve from the verifier's label-free signal?) AND the decentralization/Invisible-Leash answer as a TRAINING outcome (does training on verifier-certified traces move the local model toward codex -> is the abstraction latent?). POSITIVE CONTROL: held-out headroom exists (codex > cold base). Honest small/null gain is a COMPLETE verdict; if training is still accumulating, report accumulated progress (NOT a retirement)."
+    title: "VERIFIER-AS-REWARD RFT -- EVAL + GATE (THE PIVOT, part 3): poll exp4078's training; once both arms have a usable checkpoint, EVAL each finetuned model on the HELD-OUT ARC-induction split (disjoint from train) and report demo-perfect + true-gold induction rate vs (a) the COLD base (MiniCPM5-1B, rate MEASURED here, not assumed) and (b) CODEX (~0.57 ceiling). THE GATE (the mechanism test): does Arm RFT (verifier-certified, label-free) improve held-out induction over the cold base with bootstrap CI95 excluding 0, AND is it >= Arm SFT (oracle labels)? CAPACITY-FLOOR GUARD: the cold base must induce SOME held-out tasks (rate > 0) for the contrast to be measurable -- if the 1B floors at 0 on ARC-induction, the null is UNINFORMATIVE; fall back to the headroom domain (the Sudoku control + a tractable ARC subset) and report the floor honestly (NOT 'RFT fails'). NOTE: the decentralization-MAGNITUDE arm (does RFT close the gemma-4-12B 0.26->0.57 sovereign-generator gap -- the Invisible-Leash latent-vs-absent question) is a FOLLOW-ON (.378) once the MECHANISM validates on the small base; do NOT conflate the small-base mechanism test with the 12B magnitude claim. POSITIVE CONTROL: held-out headroom exists (codex > cold base). Honest small/null gain is a COMPLETE verdict; if training is still accumulating, report accumulated progress (NOT a retirement)."
     priority: critical
     track: verifier-as-reward
     max_turns: 80
