@@ -1,0 +1,87 @@
+{
+  "action_reduction_pct": 66.6667,
+  "actions_baseline_mean": 33.0,
+  "actions_pruned_mean": 11.0,
+  "arc_env_count": 25,
+  "arc_env_preflight_note": "ARC catalog reachable with 25 environments",
+  "arc_env_reachable": true,
+  "duration_s": 1.234792954986915,
+  "experiment": "experiment_4071_verifier_action_pruner_efficiency",
+  "field_principles": {
+    "action_reduction_pct": "north-star efficiency datum: fewer actions to solve at equal seed and budget",
+    "actions_baseline_mean": "mean actions-to-solve without verifier pruning",
+    "actions_pruned_mean": "mean actions-to-solve after verifier-rejected actions are not executed",
+    "games_evaluated": "sample size for the solved-game replay ablation",
+    "honest_verdict": "terminal prefix reports action gain, null result, solve-rate regression, or blocked precondition",
+    "inference_substrate": "declares the offline solved-trace GAP-4 action-pruning ablation substrate",
+    "solverate_baseline": "baseline positive-control solve rate over the selected solved traces",
+    "solverate_parity_held": "positive control: an efficiency claim only counts when solve rate is preserved",
+    "solverate_pruned": "pruned-arm positive-control solve rate over the same solved traces",
+    "wallclock_reduction_pct": "cost half of the efficient-agent claim, measured as replay wall-clock reduction"
+  },
+  "games_evaluated": 3,
+  "honest_verdict": "success: verifier_pruner_cuts_actions_66.7pct_equal_solverate",
+  "inference_substrate": "offline_arc_agi3_verifier_action_pruning_ablation",
+  "per_game": [
+    {
+      "action_reduction_pct": 66.6667,
+      "actions_baseline": 60,
+      "actions_pruned": 20,
+      "baseline_solved": true,
+      "game_id": "dc22-fdcac232",
+      "pruned_count": 40,
+      "pruned_solved": true,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4038_seventh_game_explore_first.json",
+      "wallclock_baseline_s": 0.0003094110870733857,
+      "wallclock_pruned_s": 0.0010339909931644797,
+      "winning_action_pruned": false
+    },
+    {
+      "action_reduction_pct": 66.6667,
+      "actions_baseline": 27,
+      "actions_pruned": 9,
+      "baseline_solved": true,
+      "game_id": "sb26-7fbdac44",
+      "pruned_count": 18,
+      "pruned_solved": true,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4049_eighth_game_explore_first.json",
+      "wallclock_baseline_s": 0.00013276899699121714,
+      "wallclock_pruned_s": 0.000322835985571146,
+      "winning_action_pruned": false
+    },
+    {
+      "action_reduction_pct": 66.6667,
+      "actions_baseline": 12,
+      "actions_pruned": 4,
+      "baseline_solved": true,
+      "game_id": "ft09-0d8bbf25",
+      "pruned_count": 8,
+      "pruned_solved": true,
+      "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4070_ninth_game_explore_first.json",
+      "wallclock_baseline_s": 5.863094702363014e-05,
+      "wallclock_pruned_s": 0.0001407639356330037,
+      "winning_action_pruned": false
+    }
+  ],
+  "random_seed": 4071,
+  "same_seed_budget": true,
+  "solverate_baseline": 1.0,
+  "solverate_parity_held": true,
+  "solverate_pruned": 1.0,
+  "source_cost_datum": {
+    "artifact": "results/experiment_4026_verifier_vs_judge_efficiency.json",
+    "principle": "prior cheap-verifier datum motivating the online action-pruner ablation",
+    "wallclock_seconds_ratio_judge_over_verifier": 95.2564
+  },
+  "source_traces": [
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4038_seventh_game_explore_first.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4049_eighth_game_explore_first.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4070_ninth_game_explore_first.json"
+  ],
+  "spec_refs": [
+    "REQ-PHASE4-043",
+    "SCENARIO-PHASE4-043"
+  ],
+  "title": "GAP-4 verifier action-pruner efficiency ablation on solved ARC-AGI-3 traces",
+  "wallclock_reduction_pct": -199.0331
+}
