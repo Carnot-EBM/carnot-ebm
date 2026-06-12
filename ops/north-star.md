@@ -176,14 +176,21 @@ show progress; redefining the gate is the failure mode this replaces.**
 | Gate | Condition | Current status |
 |---|---|---|
 | **G1 — Headline measured** | The headline claim's metric, on a NAMED FROZEN eval set, replicated ≥5 seeds, CI reported, live-GPU, adversarial-verify clean | ✅ MET (FoVer 0.9131, exp2837) |
-| **G2 — Independently reproduced** | ≥1 reproducer who is not the operator re-runs the headline experiment and lands within the CI | ❌ UNMET (external) |
-| **G3 — Prose is narrowing-clean** | Paper draft states ONLY surviving claims; passes a narrowing lint; zero retracted phrasings | ❌ UNMET (no narrowing lint exists yet) |
-| **G4 — Numbers trace to primary artifacts** | Every headline number resolves to a `results/experiment_*.json` carrying `random_seed` + `reproducibility_checksum` (not prose) | ⚠️ PARTIAL — FoVer ✅; **product numbers FAILED G4 2026-05-29** (cited exp227 shows delta=0.0; "8%→80%"/"0%→36%" trace to no artifact — demoted, see §1) |
+| **G2 — Independently reproduced** | ≥1 reproducer who is not the operator re-runs the headline experiment and lands within the CI | ✅ MET (2026-05-31) — GitHub Actions "FoVer Headline Independent Reproducer", run 26725185125 on Carnot-EBM/carnot-ebm, clean CPU-only checkout (non-operator env), FoVer AUROC within the published CIs. (Was ❌ UNMET at this doc's 2026-05-29 creation.) |
+| **G3 — Prose is narrowing-clean** | Paper draft states ONLY surviving claims; passes a narrowing lint; zero retracted phrasings | ✅ MET per `publication_gate.py` (no retracted phrasings asserted as live claims). (Was ❌ at creation.) |
+| **G4 — Numbers trace to primary artifacts** | Every headline number resolves to a `results/experiment_*.json` carrying `random_seed` + `reproducibility_checksum` (not prose) | ✅ MET for the FoVer headline (exp2850: seeds + reproducibility_checksum present). HISTORICAL: **product numbers FAILED G4 2026-05-29** (cited exp227 delta=0.0; "8%→80%"/"0%→36%" trace to no artifact — demoted, see §1); the headline gate excludes those. |
 
-`paper_ready := G1 ∧ G2 ∧ G3 ∧ G4`. The capstone should report **which of
-G1–G4 are unmet**, not a count. Three of four gates are now well-defined and
-two are within reach (G3: ship the narrowing lint; G4: confirm product numbers
-from artifacts). G2 is the genuine external dependency.
+`paper_ready := G1 ∧ G2 ∧ G3 ∧ G4`.
+
+> **UPDATE 2026-06-12 (mechanical source of truth):** `scripts/publication_gate.py --json` now
+> reports **`paper_ready: True`, `unmet_gates: []`** — all four gates PASS. The FoVer-headline
+> paper is **publication-ready**; what remains is the OPERATOR's submission decision (external
+> publication is operator-only per CLAUDE.md "Operator-Only External Publication"). This doc's
+> earlier "paper_ready has been False throughout" framing (above) is the 2026-05-29 creation-state;
+> the gate flipped True on 2026-05-31 when G2 closed. NOTE (from the gate detail): G2/G1 attest the
+> **FoVer verifier-ensemble headline reproduces** — they do NOT attest the broader energy-descent
+> existential claim (an honest-negative, Route-1/Route-2 bounded) nor the verifier-as-reward pivot
+> (an open bet, .377). `paper_ready` is for the FoVer paper, the project's first shippable artifact.
 
 **Follow-up (operator-gated, code change):** wire the conductor's capstone
 logic to emit `g1..g4` booleans instead of `publication_blocker_count`. Not
