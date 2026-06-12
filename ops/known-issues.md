@@ -395,6 +395,77 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-06-11 (TOP PRIORITY — OPERATOR-ENDORSED STRATEGIC PIVOT; preempts carry-forward): TAKE THE PIVOT — verifier-as-REWARD (training/search-time ENVIRONMENT), not verifier-as-SELECTOR (inference filter)
+
+**Origin:** 2026-06-11 operator decision ("it sounds like we should take the pivot seriously")
+after the overnight .371–.375 synthesis (4-agent evidence sweep). This is a priority-shifting
+directive of the same class as the 2026-06-10 Deep-Think round that produced the .372 search
+pivot, and it PREEMPTS carry-forward (treat it like a SCOPE-REDUCTION directive per CLAUDE.md
+"Scope-Reduction-When-Flagged").
+
+**What the evidence forced (decision-grade, not opinion):**
+- The **selection moat is dead** — 5×-adversarially confirmed across the whole GAP-3 lineage
+  (q_halt scalar, 512-d TRM latent, two trained content-EBMs all = vote-shadow/chance; retired
+  to the exclusion manifest). The one verifier positive (GAP-4) is **generator-attributable +
+  contamination-confounded**, not an independent selector.
+- The three frontier-as-SELECTOR questions are **perpetually deferred, never converging**: off-ARC
+  significance (directional +5pp n=40 CI-touches-0, then 22/160 saturated, then n=0); search
+  generalization (vc33 = a 20.7%/step world-model sim2real wall, a separate hard problem); MoE
+  decentralization-as-base-selection (n=6–14, CI spans the ceiling). ArcMemo cross-game transfer
+  is **caching, not transfer** (refuted). The honest meta-read: the loop is spinning on these.
+- The ONE direction the evidence actively points toward (Deep-Think Q3, weighted per the project's
+  trust-direction rule) is **verifier-as-reward**: the un-hallucinating execution verifier is an
+  *automated ground-truth engine* → use it to GENERATE training data, not to filter at inference.
+  This converges with the standing **VERIFIER-AS-SELF-IMPROVEMENT-REWARD** priority (the Sudoku-#4
+  result: verifier-certified RFT beat gold-SFT, 3/3 seeds — the beachhead).
+
+**THE PIVOT (the .377+ headline).** The metric FLIPS from "does the verifier SELECT better at
+inference" (answered: directional, not significant — DONE, do not re-grind) to **"does the
+verifier-as-reward TRAIN a better model."** Concretely, the headline experiment:
+1. Use the execution verifier (GAP-4 demo-fit / restricted-exec, or FoVer step-verifier) as an
+   automated ground-truth reward to build a **verifier-certified RFT corpus** (label = passes
+   execution / hidden tests).
+2. **RFT / LoRA-finetune a local open-weight model** on that corpus.
+3. Measure **held-out** improvement vs (a) the cold base and (b) gold-SFT, on N≥30, with a
+   POSITIVE CONTROL (headroom exists) and a bootstrap CI excluding 0.
+4. **Falsifiable gate:** verifier-certified RFT **beats gold-SFT held-out** — i.e. replicate the
+   Sudoku RFT-beats-SFT result and EXTEND it to a SECOND domain (code / ARC-induction / math).
+   The accumulate-across-milestones rule (below) applies to the training runs too.
+
+**DE-PRIORITIZE (preempt the carry-forward churn the synthesis flagged):**
+- **STOP re-running off-ARC-significance as a SELECTOR headline.** The selection question is
+  answered (commodity; directional-not-significant; saturated corpus). The off-ARC execution
+  primitive's role now is to LABEL training data, not to be powered as an inference selector.
+- **PARK search-generalization (vc33).** It's a world-model-FIDELITY problem (the 0.207 sim2real
+  wall), not the pivot. Re-open only with a concrete WM-fidelity idea, not as routine carry-forward.
+- **REFRAME decentralization AS the distillation problem.** The sovereign model gets stronger by
+  TRAINING on verifier-certified traces — that IS the pivot. Stop the MoE-vs-12B base-selection
+  grind (the Invisible-Leash "latent vs absent" question is answered by whether distillation moves
+  held-out, not by best-of-N base comparisons).
+
+**KEEP (do NOT delete the trust layer):** the model-free demo-fit execution **safety-gate** is the
+shipped Phase-1 product (zero-loss abstention wrapper = the "second pair of eyes" value prop). Stop
+R&D trying to make it a *smart* selector; keep it as the commodity trust gate.
+
+**Why this is the right move, not capitulation.** The verifier remains Carnot's existential
+value-add — its role just moved one layer, from inference-filter (a commodity, now proven) to
+training-environment (where an un-hallucinating reward signal is genuinely scarce + hack-resistant,
+the Anthropic-W2S bottleneck). The Sudoku beachhead already shows it works; the pivot is to make
+that the program's spine and prove it generalizes.
+
+**Operator follow-up flagged (NOT auto-applied):** this pivot likely warrants a `ops/north-star.md`
+headline update (the north star shifts from "verifier selects" toward "verifier trains") — that's
+operator-curated, left for review. A pre-staged .377 roadmap committing to the pivot can be authored
+on request (per the Pre-Staged Roadmap Convention).
+
+**Cross-refs:** the standing VERIFIER-AS-SELF-IMPROVEMENT-REWARD priority (2026-06-08, Sudoku
+RFT-beats-SFT, 3/3 seeds — the beachhead to build on); Deep-Think Q3
+(`docs/research-notes/deep-think-results-2026-06-10.md`); "The Invisible Leash" (arXiv:2507.14843,
+distillation closes the gap iff the abstraction is latent — verifier-certified traces are the data
+to find out); the 2026-06-11 overnight synthesis (4-agent sweep); `reference_anthropic_automated_w2s_researcher`
+(hack-resistant evals = the bottleneck the verifier-as-reward uniquely addresses); CLAUDE.md
+research-program self-learning + "Scope-Reduction-When-Flagged".
+
 ### NEW 2026-06-11 (TOP PRIORITY — operator-directed): POWERING RUNS MUST ACCUMULATE ACROSS MILESTONES (resume-not-restart)
 
 **Origin:** 2026-06-11 operator directive ("Let's address that") after the recurring failure
@@ -7773,6 +7844,10 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated 
 **Recurrence prevention TODO:** pin llama-cpp-python build flags in pyproject.toml under `[tool.uv.sources]` or document the CUDA build recipe in CONTRIBUTING.md. The pre-built wheel from `https://abetlen.github.io/llama-cpp-python/whl/cu128/` only covers stable Python 3.x — Python 3.14 wheels not available there, hence the source build.
 
 **Recurrence pattern (cumulative):** 4 missing-or-CPU-only Python packages in 5 days — `pytest-xdist`, `python-sat`, `datasets`, llama-cpp-python (CPU wheel). The venv has drifted from declared deps; recommend `.venv/bin/pip install -e ".[dev,llm,mcp,rust,dwave]"` to re-sync. Or move to `uv sync` workflow which respects the `[tool.uv.sources]` index pins.
+
+
+### NEW Phase 4 Canonical Metric MANDATORY
+Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
 
 
 ### NEW Phase 4 Canonical Metric MANDATORY
