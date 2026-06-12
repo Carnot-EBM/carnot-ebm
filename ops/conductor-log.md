@@ -8381,3 +8381,4 @@ c |
 | 2026-06-12 20:48 UTC | TWELFTH ARC-AGI-3 game first-solve via the PROVEN  | OK | 89 passed in 4.61s |
 | 2026-06-12 21:09 UTC | SOTA-INGESTION SLOT (reserved; headline is a bleed | OK | 100 passed in 5.06s |
 | 2026-06-12 21:31 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra s | OK | 87 passed in 6.22s |
+| 2026-06-12 21:51 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 86 passed in 5.23s |
