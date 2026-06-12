@@ -8,6 +8,35 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-12 Exp 4102 - .379 TRM self-training SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-trm-self-training-2026-06-12.md`.
+
+**Filtered track:** verifier-certified RFT over a recursive `nano-trm`/TRM
+substrate, with Carnot verifier labels selecting, correcting, or densifying the
+training signal.
+
+**Seed and fresh-pass candidates marked ingested:**
+- V-STaR, arXiv:2402.06457 - mapped as accepted/rejected TRM trace selector
+  training before any second RFT corpus gate.
+- STaR, arXiv:2203.14465, and ReST, arXiv:2308.08998 - mapped as the cached
+  generate-filter-improve cadence for recursive traces.
+- TTA-TRM, arXiv:2511.02886 - mapped as the full-fine-tune substrate and a
+  control against attributing adaptation-only gains to the verifier.
+- RLVR with imperfect verifiers, arXiv:2510.00915 - mapped as FP/FN-calibrated
+  weighting and abstention before verifier-certified RFT.
+- VPRM/VPR, arXiv:2601.17223 and arXiv:2605.10325 - mapped as dense
+  per-recursion step rewards only after outcome calibration.
+- Self-Trained Verification, arXiv:2605.30290 - marked as fresh adjacent
+  verifier-training evidence, but deferred behind the cheaper V-STaR trace
+  selector because `.379` already emits accepted/rejected TRM traces.
+
+Flagged for .380: `vstar_rejected_trace_selector_for_trm_rft`.
+
+**Bottom line for the .380 roadmap:** build a V-STaR-style selector over the
+saved nano-trm candidate pool, require a rerank win against the current Carnot
+verifier ordering, and only then let the selector gate a second full-fine-tune
+RFT corpus.
 ## 2026-06-12 Exp 4094 - .378 precision-calibration SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-precision-calibration-2026-06-12.md`.
