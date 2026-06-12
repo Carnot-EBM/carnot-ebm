@@ -5,8 +5,40 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-06-11 (Exp 4067 SOTA ingestion mapped .376 unsaturated corpora and online-pruning tracks).
+**Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
+
+## 2026-06-11 Exp 4081 - .377 verifier-as-reward SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-verifier-as-reward-2026-06-11.md`.
+
+**Filtered track:** the `.377` verifier-as-reward pivot: verifier-certified RFT,
+Tulu-3-style RLVR, Invisible Leash latent-vs-absent support gating, dense
+process-reward distillation, and RFT/STaR/ReST self-training over the current
+three-arm RFT pipeline.
+
+**Seed and fresh-pass candidates marked ingested:**
+- Tulu 3, arXiv:2411.15124 - mapped as the open SFT/DPO/RLVR recipe, but gated
+  behind a clean verifier-certification label.
+- The Invisible Leash, arXiv:2507.14843 - mapped as the latent-vs-absent support
+  diagnostic before any RFT/RLVR spend.
+- RL vs. Distillation, arXiv:2505.14216 - mapped as the accuracy-vs-capability
+  fork and the reason to track pass@k/oracle support, not only pass@1.
+- Self-Distilled RLVR, arXiv:2604.03128 - mapped as a later credit-assignment
+  upgrade only after external verifier reward direction is clean.
+- STaR, arXiv:2203.14465 - mapped as the minimal generate-filter-finetune loop.
+- ReST, arXiv:2308.08998 - mapped as the offline generate-filter-improve cadence
+  for reusable cached trace pools.
+- Verifiable Process Reward Models, arXiv:2601.17223 - mapped as deterministic
+  rule-verifier step rewards rather than opaque neural step judges.
+- Verifiable Process Rewards for Agentic Reasoning, arXiv:2605.10325 - mapped as
+  dense turn/action rewards for long-horizon ARC agent trajectories.
+
+**Bottom line for the .378 roadmap:** prioritize
+`latent_vs_absent_precision_gate_before_rft` and
+`process_reward_weighted_sft_over_trace_certification`; keep the deconfounded
+RFT-correct vs RFT-ablation contrast; only add self-distilled RLVR after the
+external verifier reward direction is measured clean.
 
 ## 2026-06-11 Exp 4067 - .376 SOTA ingestion ingested
 
