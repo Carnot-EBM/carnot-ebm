@@ -1,0 +1,76 @@
+{
+  "checkpoint_paths": {
+    "minicpm5_1b:gold_sft": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_4078_verifier_reward_rft_train/minicpm5_1b/gold_sft",
+    "minicpm5_1b:rft_ablation": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_4078_verifier_reward_rft_train/minicpm5_1b/rft_ablation",
+    "minicpm5_1b:rft_correct": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_4078_verifier_reward_rft_train/minicpm5_1b/rft_correct",
+    "qwen35_08b:gold_sft": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_4078_verifier_reward_rft_train/qwen35_08b/gold_sft",
+    "qwen35_08b:rft_ablation": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_4078_verifier_reward_rft_train/qwen35_08b/rft_ablation",
+    "qwen35_08b:rft_correct": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_4078_verifier_reward_rft_train/qwen35_08b/rft_correct"
+  },
+  "duration_s": 5.117831268929876,
+  "epochs_completed": {
+    "minicpm5_1b:gold_sft": 0,
+    "minicpm5_1b:rft_ablation": 0,
+    "minicpm5_1b:rft_correct": 0,
+    "qwen35_08b:gold_sft": 0,
+    "qwen35_08b:rft_ablation": 0,
+    "qwen35_08b:rft_correct": 0
+  },
+  "experiment": "experiment_4078_verifier_reward_rft_train_launch",
+  "field_principles": {
+    "checkpoint_paths": "Stable base+arm paths let future windows resume accumulated LoRA progress.",
+    "epochs_completed": "Progress is credit even when a later window must resume before final eval.",
+    "honest_verdict": "Terminal state prevents a missing resource from becoming a fabricated training claim.",
+    "inference_substrate": "Declares that this is HF TRL/PEFT GPU training, not an offline proxy.",
+    "train_launched": "Separates an actual detached launch from a precondition-only or blocked artifact."
+  },
+  "honest_verdict": "blocked_exp4077_corpora_missing",
+  "inference_substrate": "gpu_hf_trl_peft_lora_sfttrainer_detached",
+  "launched_workers": [],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "1 safetensors shard(s); trust_remote_code=False",
+      "resource": "hf_safetensors_qwen_qwen3_5_0_8b"
+    },
+    {
+      "available": true,
+      "detail": "1 safetensors shard(s); trust_remote_code=True",
+      "resource": "hf_safetensors_openbmb_minicpm5_1b"
+    },
+    {
+      "available": true,
+      "detail": "trl, peft, SFTTrainer, GRPOTrainer import",
+      "resource": "trl_peft_trainers"
+    },
+    {
+      "available": true,
+      "detail": "torch.cuda.is_available() is true",
+      "resource": "cuda_visible"
+    },
+    {
+      "available": false,
+      "detail": "Exp 4077 not complete: blocked_precision_gate_unmet_0.6818_1.0000",
+      "resource": "exp4077_corpora_missing"
+    }
+  ],
+  "schema": "carnot.experiment_4078_verifier_reward_rft_train_launch.v1",
+  "spec_refs": [
+    "REQ-LEARN-4078",
+    "SCENARIO-LEARN-4078-BLOCKED",
+    "SCENARIO-LEARN-4078-LAUNCH"
+  ],
+  "train_launched": false,
+  "training_config": {
+    "gradient_accumulation_steps": 4,
+    "learning_rate": 2e-05,
+    "lora_alpha": 16,
+    "lora_rank": 8,
+    "max_length": 1024,
+    "max_steps": -1,
+    "num_train_epochs": 1,
+    "per_device_train_batch_size": 1,
+    "random_seed": 4078,
+    "save_strategy": "epoch"
+  }
+}

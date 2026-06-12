@@ -11690,3 +11690,74 @@ manifest contains only disjoint task ids.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4077 | Proposed (python/carnot/agentic/arc_exp4077_verifier_reward_rft_corpus_build.py; scripts/experiments/exp4077_verifier_reward_rft_corpus_build.py, Exp 4077) | Proposed (tests/python/test_experiment_4077_verifier_reward_rft_corpus_build.py) |
+
+---
+
+## REQ-LEARN-4078: Verifier-Reward RFT Detached LoRA Train Launch
+
+**Given** the Exp 4077 three-arm corpora are present and non-empty, HF
+safetensors ladder bases `Qwen/Qwen3.5-0.8B` and `openbmb/MiniCPM5-1B`
+are cached, `trl`/`peft` expose `SFTTrainer` and `GRPOTrainer`, and CUDA is
+available
+**When** the Exp 4078 launcher runs
+**Then** it SHALL launch detached LoRA training workers for the three arms
+`rft_correct`, `rft_ablation`, and `gold_sft` with the same rank, learning
+rate, epoch/step budget, and random seed for each base, differing only by the
+arm corpus and label.
+
+The launcher SHALL write stable checkpoint paths keyed by base and arm under
+`results/checkpoints/experiment_4078_verifier_reward_rft_train/<base>/<arm>`
+so later conductor windows resume accumulated progress rather than restart from
+scratch. It SHALL record `epochs_completed` for every base+arm key from any
+existing trainer checkpoints before launch.
+
+The terminal artifact SHALL write
+`results/experiment_4078_verifier_reward_rft_train_launch.json` with bare
+top-level fields `honest_verdict`, `train_launched`, `checkpoint_paths`,
+`epochs_completed`, and `inference_substrate`. It SHALL also include
+`preconditions_checked`, `launched_workers`, `training_config`, and
+`field_principles` so auditors can distinguish a real detached launch from a
+fabricated training claim.
+
+### REQ-LEARN-4078 Sub-requirements
+
+- REQ-LEARN-4078-1: The launcher SHALL fail closed with
+  `honest_verdict="blocked_<resource>"` and `train_launched=false` when any
+  required base, trainer import, CUDA, or Exp 4077 corpus precondition is
+  missing.
+- REQ-LEARN-4078-2: The launcher SHALL use POSIX session-detached subprocess
+  launch semantics for training workers so training can survive agent exit and
+  conductor iteration boundaries.
+- REQ-LEARN-4078-3: The checkpoint path map SHALL contain one stable
+  base+arm-keyed path per planned training arm, whether this run is blocked,
+  newly launched, or resumed.
+- REQ-LEARN-4078-4: The worker SHALL configure TRL/PEFT LoRA training with
+  `save_strategy="epoch"` and `resume_from_checkpoint` when a stable checkpoint
+  already exists for the base+arm path.
+- REQ-LEARN-4078-5: Arm launch order SHALL prioritize `rft_correct` and
+  `rft_ablation` before `gold_sft`, preserving the ablation contrast when a
+  future launch window cannot fit all arms.
+
+### SCENARIO-LEARN-4078-BLOCKED: Missing Exp 4077 Corpora Block Training
+
+**Given** the Exp 4077 terminal artifact is blocked or any of the three corpus
+JSONL sidecars is absent or empty
+**When** Exp 4078 runs
+**Then** it writes `train_launched=false`, zero launch workers, stable
+checkpoint paths for the planned arms, and
+`honest_verdict="blocked_exp4077_corpora_missing"`.
+
+### SCENARIO-LEARN-4078-LAUNCH: Detached Workers Preserve Stable Checkpoints
+
+**Given** all preconditions pass
+**When** Exp 4078 launches training
+**Then** every launched worker command targets exactly one base+arm stable
+checkpoint path, the launch uses session-detached semantics, and the artifact
+reports `honest_verdict` starting with
+`complete: rft_3arm_train_launched_detached`.
+
+## Implementation Status (REQ-LEARN-4078)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4078 | Proposed (python/carnot/agentic/arc_exp4078_verifier_reward_rft_train_launch.py; scripts/experiments/exp4078_verifier_reward_rft_train_launch.py, Exp 4078) | Proposed (tests/python/test_experiment_4078_verifier_reward_rft_train_launch.py) |
