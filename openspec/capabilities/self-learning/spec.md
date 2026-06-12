@@ -12143,6 +12143,67 @@ the published 0.87 baseline was reproduced.
 
 ---
 
+## REQ-LEARN-4109: Sudoku Verifier Graft Over nano-trm
+
+**Given** Exp 4108 has written a nano-trm Sudoku baseline artifact, Exp 4109
+SHALL first load the Exp 4108 checkpoint path. If no Exp 4108 checkpoint is
+present, it SHALL fall back to the Exp 4107 smoke checkpoint and record that
+limitation honestly instead of hard-blocking. It SHALL also record CUDA
+availability, the chosen checkpoint, random seed, and whether the chosen
+checkpoint came from the partial Exp 4108 baseline or the Exp 4107 smoke
+fallback.
+
+**When** Exp 4109 scores Sudoku candidates, it SHALL use an executable Sudoku
+verifier over decoded nano-trm grids: every candidate gets a constraint
+satisfaction count, a normalized verifier score, and an exact-validity boolean
+based on range, row, column, box, and clue constraints. The rerank arm SHALL
+compare verifier-reranked pass@1 against TRM-vote pass@1 on paired held-out
+puzzles, report the oracle ceiling from any exact candidate in each pool, and
+include a paired bootstrap confidence interval for the verifier rerank lift.
+
+**When** Exp 4109 builds the de-confounded self-training comparison, it SHALL
+form A from verifier-certified candidate labels and B from TRM-vote-majority
+candidate labels from the same TRM candidate pools, keep A and B N-matched, and
+report the held-out exact-accuracy delta A minus B with a paired bootstrap
+CI95. When native nano-trm full fine-tuning is not launched, the artifact SHALL
+state that limitation explicitly while still preserving the verifier-label
+versus vote-label measurement. `verifier_value_added` SHALL be a bare bool that
+is true only when A beats B and the lower CI bound is greater than zero.
+
+**Then** the terminal artifact SHALL be written to
+`results/experiment_4109_carnot_verifier_graft_sudoku.json` and SHALL contain
+the required top-level fields `honest_verdict`, `rerank_lift_vs_vote`,
+`rft_vs_ablation_delta`, `verifier_value_added`, `preconditions_checked`,
+`random_seed`, and `reproducibility_checksum`. Each required field SHALL carry
+the Exp 4109 field-principle text, and the checksum SHALL hash the corpus and
+held-out split so silent drift is visible.
+
+### SCENARIO-LEARN-4109-RERANK: Executable Verifier Discriminates Sudoku Candidates
+
+**Given** paired TRM candidate pools contain at least one invalid TRM-vote
+winner and one verifier-valid alternative
+**When** Exp 4109 reranks by executable Sudoku constraint satisfaction
+**Then** `rerank_lift_vs_vote.delta` is positive, its CI is reported, and
+`oracle_ceiling_pass_at_1` records the best possible pass@1 from the same
+candidate pools.
+
+### SCENARIO-LEARN-4109-RFT: Verifier Label Beats Vote Label Only With CI Separation
+
+**Given** N-matched A and B corpora are built from the same TRM candidates
+**When** A's held-out exact accuracy beats B's held-out exact accuracy and the
+paired bootstrap CI95 excludes zero
+**Then** Exp 4109 reports `verifier_value_added=true` and records the A-vs-B
+delta under `rft_vs_ablation_delta`; otherwise it reports a complete honest
+null with `verifier_value_added=false`.
+
+## Implementation Status (REQ-LEARN-4109)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4109 | Proposed (python/carnot/experiment_4109_carnot_verifier_graft_sudoku.py, Exp 4109) | Proposed (tests/python/test_experiment_4109_carnot_verifier_graft_sudoku.py) |
+
+---
+
 ## REQ-LEARN-4088: Trustworthy ARC Verifier-Reward RFT Corpus Build
 
 **Given** Exp 4087 has already produced
