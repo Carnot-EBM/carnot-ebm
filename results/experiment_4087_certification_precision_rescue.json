@@ -1,0 +1,361 @@
+{
+  "best_certified_precision": 0.8824,
+  "best_op_point_recall": 0.7143,
+  "best_operating_point": {
+    "filter_stack": "k_of_n_agreement",
+    "n_certified": 17,
+    "precision": 0.8824,
+    "recall": 0.7143,
+    "threshold": "k=1"
+  },
+  "experiment": "experiment_4087_certification_precision_rescue",
+  "field_principles": {
+    "best_certified_precision": "Headline certified precision reached by the selected operating point.",
+    "best_op_point_recall": "Recall paired with the headline precision point.",
+    "frontier": "Full deterministic precision-recall curve for independent threshold selection.",
+    "honest_verdict": "Terminal-prefix outcome for the offline precision rescue gate.",
+    "inference_substrate": "Declares offline replay rather than live generation or GPU inference.",
+    "n_codex_calls": "Must be 0 because this is offline saved-program replay.",
+    "n_tasks_scored": "Number of held-out ARC tasks replayed from cached pools.",
+    "precision_rescue_succeeded": "Bare bool gate for whether Phase B RFT may proceed.",
+    "random_seed": "Fixed seed recorded for reproducible ordering and checksums.",
+    "reproducibility_checksum": "SHA-256 over the stable required artifact fields."
+  },
+  "frontier": [
+    {
+      "filter_stack": "demo_perfect",
+      "n_certified": 17,
+      "precision": 0.8824,
+      "recall": 0.7143,
+      "threshold": "k=1"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance",
+      "n_certified": 7,
+      "precision": 0.8571,
+      "recall": 0.2857,
+      "threshold": "required"
+    },
+    {
+      "filter_stack": "k_of_n_agreement",
+      "n_certified": 17,
+      "precision": 0.8824,
+      "recall": 0.7143,
+      "threshold": "k=1"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement",
+      "n_certified": 7,
+      "precision": 0.8571,
+      "recall": 0.2857,
+      "threshold": "k=1"
+    },
+    {
+      "filter_stack": "k_of_n_agreement",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=2"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=2"
+    },
+    {
+      "filter_stack": "k_of_n_agreement",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=3"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=3"
+    },
+    {
+      "filter_stack": "k_of_n_agreement",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=4"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=4"
+    },
+    {
+      "filter_stack": "k_of_n_agreement",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=5"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=5"
+    },
+    {
+      "filter_stack": "graded_min_hamming",
+      "n_certified": 20,
+      "precision": 0.75,
+      "recall": 0.7143,
+      "threshold": "tau=0.0000"
+    },
+    {
+      "filter_stack": "graded_min_hamming",
+      "n_certified": 20,
+      "precision": 0.75,
+      "recall": 0.7143,
+      "threshold": "tau=0.0193"
+    },
+    {
+      "filter_stack": "graded_min_hamming",
+      "n_certified": 20,
+      "precision": 0.75,
+      "recall": 0.7143,
+      "threshold": "tau=0.1235"
+    },
+    {
+      "filter_stack": "graded_min_hamming",
+      "n_certified": 19,
+      "precision": 0.7368,
+      "recall": 0.6667,
+      "threshold": "tau=0.3425"
+    },
+    {
+      "filter_stack": "graded_min_hamming",
+      "n_certified": 19,
+      "precision": 0.7368,
+      "recall": 0.6667,
+      "threshold": "tau=1.0000"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 7,
+      "precision": 0.8571,
+      "recall": 0.2857,
+      "threshold": "k=1,tau=0.0000"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 7,
+      "precision": 0.8571,
+      "recall": 0.2857,
+      "threshold": "k=1,tau=0.0193"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 7,
+      "precision": 0.8571,
+      "recall": 0.2857,
+      "threshold": "k=1,tau=0.1235"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 7,
+      "precision": 0.8571,
+      "recall": 0.2857,
+      "threshold": "k=1,tau=0.3425"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 7,
+      "precision": 0.8571,
+      "recall": 0.2857,
+      "threshold": "k=1,tau=1.0000"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=2,tau=0.0000"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=2,tau=0.0193"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=2,tau=0.1235"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=2,tau=0.3425"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=2,tau=1.0000"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=3,tau=0.0000"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=3,tau=0.0193"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=3,tau=0.1235"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=3,tau=0.3425"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=3,tau=1.0000"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=4,tau=0.0000"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=4,tau=0.0193"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=4,tau=0.1235"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=4,tau=0.3425"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=4,tau=1.0000"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=5,tau=0.0000"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=5,tau=0.0193"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=5,tau=0.1235"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=5,tau=0.3425"
+    },
+    {
+      "filter_stack": "demo_perfect+invariance+agreement+min_hamming",
+      "n_certified": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "threshold": "k=5,tau=1.0000"
+    }
+  ],
+  "honest_verdict": "complete: precision_rescue_succeeded_best_0.8824_at_recall_0.7143",
+  "inference_substrate": "offline_saved_gap4_program_replay_precision_rescue",
+  "n_codex_calls": 0,
+  "n_programs_replayed": 29,
+  "n_tasks_scored": 21,
+  "precision_rescue_succeeded": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "loaded /home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_induced_programs.json",
+      "resource": "arc1_induced_programs"
+    },
+    {
+      "available": true,
+      "detail": "loaded /home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_arc2_induced_programs.json",
+      "resource": "arc2_induced_programs"
+    },
+    {
+      "available": true,
+      "detail": "loaded /home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz",
+      "resource": "arc1_eval_pool"
+    },
+    {
+      "available": true,
+      "detail": "loaded /home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_arc2_eval_pool.json.gz",
+      "resource": "arc2_eval_pool"
+    },
+    {
+      "available": true,
+      "detail": "importable via gap5_cross_example_selector",
+      "resource": "safe_transform_from_code"
+    }
+  ],
+  "random_seed": 4087,
+  "reproducibility_checksum": "2aa9a93d5e2f4bd3d096cc6e2104266159402291ec45d556b9509e69e7dc0753",
+  "schema": "carnot.experiment_4087_certification_precision_rescue.v1",
+  "spec_refs": [
+    "REQ-LEARN-4087",
+    "SCENARIO-LEARN-4087",
+    "SCENARIO-LEARN-4087-FAIL"
+  ]
+}

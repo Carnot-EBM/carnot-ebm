@@ -11822,3 +11822,76 @@ gold-SFT
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4080 | Proposed (python/carnot/agentic/sudoku_exp4080_rft_positive_control.py; scripts/experiments/exp4080_sudoku_rft_positive_control.py, Exp 4080) | Proposed (tests/python/test_experiment_4080_sudoku_rft_positive_control.py) |
+
+---
+
+## REQ-LEARN-4087: GAP-5 Certification Precision Rescue Sweep
+
+**Given** cached GAP-4 ARC program pools
+`results/arc3_gap4_induced_programs.json`,
+`results/arc3_gap4_arc2_induced_programs.json`, and any cached ARC-2
+consistency/chain ensemble arms, with no live Codex generation and no GPU
+dependency
+**When** Exp 4087 evaluates cheap deterministic certification filters over the
+saved `def transform(grid)` programs
+**Then** it SHALL replay each candidate against the public demo pairs and
+held-out gold labels, sweep the precision-recall frontier for demo-perfect,
+augmentation-invariance, k-of-n agreement, graded min-Hamming, and stacked
+filter variants, and set `precision_rescue_succeeded=true` only when some
+operating point reaches `precision >= 0.85` and `recall >= 0.20`.
+
+The terminal artifact SHALL write
+`results/experiment_4087_certification_precision_rescue.json` with bare
+top-level fields `honest_verdict`, `precision_rescue_succeeded`,
+`best_certified_precision`, `best_op_point_recall`, `frontier`,
+`n_tasks_scored`, `n_codex_calls`, `random_seed`,
+`reproducibility_checksum`, and `inference_substrate`. The
+`inference_substrate` SHALL equal
+`offline_saved_gap4_program_replay_precision_rescue`, and `n_codex_calls`
+SHALL remain `0`.
+
+### REQ-LEARN-4087 Sub-requirements
+
+- REQ-LEARN-4087-1: Preconditions SHALL verify the cached ARC-1 and ARC-2
+  induced-program pools are readable and non-empty and that
+  `gap5_cross_example_selector.safe_transform_from_code` is importable before
+  replaying any candidate.
+- REQ-LEARN-4087-2: Demo-perfect certification SHALL execute saved programs
+  only against public demo inputs and SHALL score held-out gold only after
+  certification decisions are made.
+- REQ-LEARN-4087-3: Augmentation-invariance certification SHALL apply
+  deterministic color-permutation and D4 grid symmetries to demo pairs and
+  require the program to stay demo-perfect on every augmented demo.
+- REQ-LEARN-4087-4: Agreement certification SHALL certify a task prediction
+  only when at least `k` distinct demo-perfect programs for that task produce
+  the same held-out prediction.
+- REQ-LEARN-4087-5: Graded min-Hamming certification SHALL sweep `tau`
+  thresholds over the minimum demo-set cell-disagreement energy observed for
+  each candidate.
+- REQ-LEARN-4087-6: The frontier SHALL include entries of the form
+  `{filter_stack, threshold, precision, recall, n_certified}` for every
+  deterministic operating point considered.
+
+### SCENARIO-LEARN-4087: Precision Rescue Gate Succeeds
+
+**Given** an offline replay pool where a stacked filter operating point reaches
+at least 85% certified precision while retaining at least 20% recall
+**When** Exp 4087 builds the frontier
+**Then** the artifact reports `precision_rescue_succeeded=true` and an
+`honest_verdict` beginning with
+`complete: precision_rescue_succeeded_best_`.
+
+### SCENARIO-LEARN-4087-FAIL: Precision Rescue Gate Fails Closed
+
+**Given** an offline replay pool where no filter operating point reaches the
+precision and recall thresholds simultaneously
+**When** Exp 4087 builds the frontier
+**Then** the artifact reports `precision_rescue_succeeded=false`,
+`n_codex_calls=0`, and an `honest_verdict` beginning with
+`complete: precision_rescue_FAILED_`.
+
+## Implementation Status (REQ-LEARN-4087)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4087 | Proposed (python/carnot/agentic/arc_exp4087_certification_precision_rescue.py; scripts/experiments/exp4087_certification_precision_rescue.py, Exp 4087) | Proposed (tests/python/test_experiment_4087_certification_precision_rescue.py) |

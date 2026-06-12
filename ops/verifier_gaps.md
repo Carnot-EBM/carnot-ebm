@@ -591,3 +591,11 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: unblock the train launch, rerun Exp 4079 on the held-out ladder, and keep the RFT-correct vs RFT-ablation contrast load-bearing.
 - priority: high
 <!-- exp4083-pivot:end -->
+
+<!-- exp4087-gap5:start -->
+#### Exp 4087 certification precision-rescue update for GAP-5
+- status: precision_rescue_succeeded
+- evidence: `results/experiment_4087_certification_precision_rescue.json`; best_certified_precision=0.8824; best_op_point_recall=0.7143; n_tasks_scored=21; n_codex_calls=0.
+- outcome: complete: precision_rescue_succeeded_best_0.8824_at_recall_0.7143.
+- implication: GAP-5 demo-underdetermination remains the Phase B RFT gate unless the recorded frontier contains a qualifying precision/recall operating point.
+<!-- exp4087-gap5:end -->
