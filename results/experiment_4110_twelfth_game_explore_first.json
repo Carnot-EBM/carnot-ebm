@@ -1,0 +1,3344 @@
+{
+  "action_plan": [
+    {
+      "action": 4,
+      "direction": "right",
+      "role": "move_player"
+    },
+    {
+      "action": 2,
+      "direction": "down",
+      "role": "move_player"
+    },
+    {
+      "action": 2,
+      "direction": "down",
+      "role": "move_player"
+    },
+    {
+      "action": 4,
+      "direction": "right",
+      "role": "move_player"
+    },
+    {
+      "action": 1,
+      "direction": "up",
+      "role": "move_player"
+    },
+    {
+      "action": 4,
+      "direction": "right",
+      "role": "move_player"
+    },
+    {
+      "action": 2,
+      "direction": "down",
+      "role": "move_player"
+    },
+    {
+      "action": 2,
+      "direction": "down",
+      "role": "move_player"
+    },
+    {
+      "action": 3,
+      "direction": "left",
+      "role": "move_player"
+    },
+    {
+      "action": 3,
+      "direction": "left",
+      "role": "move_player"
+    },
+    {
+      "action": 2,
+      "direction": "down",
+      "role": "move_player"
+    },
+    {
+      "action": 4,
+      "direction": "right",
+      "role": "move_player"
+    },
+    {
+      "action": 4,
+      "direction": "right",
+      "role": "move_player"
+    },
+    {
+      "action": 2,
+      "direction": "down",
+      "role": "move_player"
+    },
+    {
+      "action": 4,
+      "direction": "right",
+      "role": "move_player"
+    },
+    {
+      "action": 1,
+      "direction": "up",
+      "role": "move_player"
+    },
+    {
+      "action": 4,
+      "direction": "right",
+      "role": "move_player"
+    },
+    {
+      "action": 2,
+      "direction": "down",
+      "role": "move_player"
+    }
+  ],
+  "actions_vs_baseline": 0.9474,
+  "arc_env_count": 25,
+  "candidate_baseline_actions": 19,
+  "duration_s": 0.555,
+  "excluded_solved_games": [
+    "r11l",
+    "lp85",
+    "sc25",
+    "su15",
+    "tn36",
+    "cd82",
+    "dc22",
+    "sb26",
+    "ft09",
+    "s5i5"
+  ],
+  "experiment": "experiment_4110_twelfth_game_explore_first",
+  "exploration_actions_used": 2,
+  "field_principles": {
+    "actions_vs_baseline": "Confirmed solve actions divided by the selected game's L0 baseline action count.",
+    "first_solve_at_action": "Real confirmed action index where the first level counter increment occurred.",
+    "honest_verdict": "Terminal-prefixed. An honest no-solve is a COMPLETE verdict.",
+    "inference_substrate": "Declares the offline explore-first induction and verifier substrate.",
+    "levels_completed": "Real-env-confirmed level count; the falsifiable evidence of an actual solve.",
+    "real_env_confirmed": "Only real-env solves raise the headline count.",
+    "requirements": "OpenSpec requirement and scenario anchors for the Exp 4110 run.",
+    "total_games_solved": "The monotonic progress metric; must be >= the prior milestone's count."
+  },
+  "first_solve_at_action": 18,
+  "game_solved": true,
+  "honest_verdict": "success: twelfth_game_solved_tu93-0768757b_at_action_18",
+  "induced_mechanic": "Observed TU93 keyboard transitions on a 6-pixel lattice; induced that each accepted direction advances the player one visible path-node toward the 0015msvpvzxhqf target, with a real level counter increment required before claiming success.",
+  "inference_substrate": "offline_arc_agi3_explore_first_first_solve",
+  "level_completed": 1,
+  "levels_completed": 1,
+  "phase_trace": [
+    {
+      "candidate_reason": "selected fallback: tu93 is the lowest-baseline remaining grid-Markov offline fixture, L0 baseline_actions=19",
+      "phase": "observe",
+      "source": "offline_explore_first_induction",
+      "state": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          3,
+          3
+        ],
+        "relative_player": [
+          0,
+          0
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 50,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "target_game": "tu93-0768757b"
+    },
+    {
+      "action": {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      "action_index": 1,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          9,
+          3
+        ],
+        "relative_player": [
+          6,
+          0
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 49,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          3,
+          3
+        ],
+        "relative_player": [
+          0,
+          0
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 50,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "explore",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "action": {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      "action_index": 2,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          9,
+          9
+        ],
+        "relative_player": [
+          6,
+          6
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 48,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          9,
+          3
+        ],
+        "relative_player": [
+          6,
+          0
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 49,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "explore",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "exploration_actions_used": 2,
+      "goal_predicate": "player sprite top-left equals the visible target top-left",
+      "induction_call": {
+        "action_count": 18,
+        "call": "induce_tu93_lattice_navigation_to_visible_target",
+        "goal_predicate": "player sprite top-left equals the visible target top-left",
+        "mechanic": "an accepted direction moves the player one 6-pixel lattice node through a visible path gate",
+        "observed_state": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            3,
+            3
+          ],
+          "relative_player": [
+            0,
+            0
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 50,
+          "target_position": [
+            33,
+            33
+          ]
+        }
+      },
+      "mechanic": "tu93_lattice_navigation_to_target",
+      "phase": "induce",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "actions_checked": 16,
+      "energy": 0.0,
+      "final_level_completed": 1,
+      "final_player_at_target": true,
+      "heldout_transition_count": 16,
+      "level_increment": true,
+      "phase": "verify",
+      "predicted_goal_after_actions": true,
+      "retained": true,
+      "start_level_completed": 0,
+      "verifier": "gap4_replay_tu93_lattice_navigation_level_counter"
+    },
+    {
+      "action": {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      "action_index": 1,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          9,
+          3
+        ],
+        "relative_player": [
+          6,
+          0
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 49,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          3,
+          3
+        ],
+        "relative_player": [
+          0,
+          0
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 50,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      "action_index": 2,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          9,
+          9
+        ],
+        "relative_player": [
+          6,
+          6
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 48,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          9,
+          3
+        ],
+        "relative_player": [
+          6,
+          0
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 49,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      "action_index": 3,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          9,
+          15
+        ],
+        "relative_player": [
+          6,
+          12
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 47,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          9,
+          9
+        ],
+        "relative_player": [
+          6,
+          6
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 48,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      "action_index": 4,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          15,
+          15
+        ],
+        "relative_player": [
+          12,
+          12
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 46,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          9,
+          15
+        ],
+        "relative_player": [
+          6,
+          12
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 47,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 1,
+        "direction": "up",
+        "role": "move_player"
+      },
+      "action_index": 5,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          15,
+          9
+        ],
+        "relative_player": [
+          12,
+          6
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 45,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          15,
+          15
+        ],
+        "relative_player": [
+          12,
+          12
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 46,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      "action_index": 6,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          21,
+          9
+        ],
+        "relative_player": [
+          18,
+          6
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 44,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          15,
+          9
+        ],
+        "relative_player": [
+          12,
+          6
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 45,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      "action_index": 7,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          21,
+          15
+        ],
+        "relative_player": [
+          18,
+          12
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 43,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          21,
+          9
+        ],
+        "relative_player": [
+          18,
+          6
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 44,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      "action_index": 8,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          21,
+          21
+        ],
+        "relative_player": [
+          18,
+          18
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 42,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          21,
+          15
+        ],
+        "relative_player": [
+          18,
+          12
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 43,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 3,
+        "direction": "left",
+        "role": "move_player"
+      },
+      "action_index": 9,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          15,
+          21
+        ],
+        "relative_player": [
+          12,
+          18
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 41,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          21,
+          21
+        ],
+        "relative_player": [
+          18,
+          18
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 42,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 3,
+        "direction": "left",
+        "role": "move_player"
+      },
+      "action_index": 10,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          9,
+          21
+        ],
+        "relative_player": [
+          6,
+          18
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 40,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          15,
+          21
+        ],
+        "relative_player": [
+          12,
+          18
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 41,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      "action_index": 11,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          9,
+          27
+        ],
+        "relative_player": [
+          6,
+          24
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 39,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          9,
+          21
+        ],
+        "relative_player": [
+          6,
+          18
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 40,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      "action_index": 12,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          15,
+          27
+        ],
+        "relative_player": [
+          12,
+          24
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 38,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          9,
+          27
+        ],
+        "relative_player": [
+          6,
+          24
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 39,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      "action_index": 13,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          21,
+          27
+        ],
+        "relative_player": [
+          18,
+          24
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 37,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          15,
+          27
+        ],
+        "relative_player": [
+          12,
+          24
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 38,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      "action_index": 14,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          21,
+          33
+        ],
+        "relative_player": [
+          18,
+          30
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 36,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          21,
+          27
+        ],
+        "relative_player": [
+          18,
+          24
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 37,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      "action_index": 15,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          27,
+          33
+        ],
+        "relative_player": [
+          24,
+          30
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 35,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          21,
+          33
+        ],
+        "relative_player": [
+          18,
+          30
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 36,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 1,
+        "direction": "up",
+        "role": "move_player"
+      },
+      "action_index": 16,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          27,
+          27
+        ],
+        "relative_player": [
+          24,
+          24
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 34,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          27,
+          33
+        ],
+        "relative_player": [
+          24,
+          30
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 35,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      "action_index": 17,
+      "after": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          33,
+          27
+        ],
+        "relative_player": [
+          30,
+          24
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 33,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          27,
+          27
+        ],
+        "relative_player": [
+          24,
+          24
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 34,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      "action_index": 18,
+      "after": {
+        "level_completed": 1,
+        "map_origin": [
+          3,
+          12
+        ],
+        "map_size": [
+          15,
+          39
+        ],
+        "player_at_target": false,
+        "player_position": [
+          3,
+          24
+        ],
+        "relative_player": [
+          0,
+          12
+        ],
+        "relative_target": [
+          36,
+          0
+        ],
+        "remaining_steps": 50,
+        "target_position": [
+          39,
+          12
+        ]
+      },
+      "before": {
+        "level_completed": 0,
+        "map_origin": [
+          3,
+          3
+        ],
+        "map_size": [
+          33,
+          33
+        ],
+        "player_at_target": false,
+        "player_position": [
+          33,
+          27
+        ],
+        "relative_player": [
+          30,
+          24
+        ],
+        "relative_target": [
+          30,
+          30
+        ],
+        "remaining_steps": 33,
+        "target_position": [
+          33,
+          33
+        ]
+      },
+      "level_completed": 1,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    }
+  ],
+  "prior_total_games_solved": 11,
+  "random_seed": 4110,
+  "real_env_confirmed": true,
+  "requirements": [
+    "REQ-PHASE4-047",
+    "SCENARIO-PHASE4-047"
+  ],
+  "selected_candidate_reason": "selected fallback: tu93 is the lowest-baseline remaining grid-Markov offline fixture, L0 baseline_actions=19",
+  "selection_mode": "fallback_lowest_baseline_grid_markov_after_strict_nonspatial_exhausted",
+  "solve_trace": {
+    "actions": [
+      {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      {
+        "action": 1,
+        "direction": "up",
+        "role": "move_player"
+      },
+      {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      {
+        "action": 3,
+        "direction": "left",
+        "role": "move_player"
+      },
+      {
+        "action": 3,
+        "direction": "left",
+        "role": "move_player"
+      },
+      {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      {
+        "action": 1,
+        "direction": "up",
+        "role": "move_player"
+      },
+      {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      }
+    ],
+    "commit_actions": [
+      {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      {
+        "action": 1,
+        "direction": "up",
+        "role": "move_player"
+      },
+      {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      {
+        "action": 3,
+        "direction": "left",
+        "role": "move_player"
+      },
+      {
+        "action": 3,
+        "direction": "left",
+        "role": "move_player"
+      },
+      {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      },
+      {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      {
+        "action": 1,
+        "direction": "up",
+        "role": "move_player"
+      },
+      {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      }
+    ],
+    "exploration_actions": [
+      {
+        "action": 4,
+        "direction": "right",
+        "role": "move_player"
+      },
+      {
+        "action": 2,
+        "direction": "down",
+        "role": "move_player"
+      }
+    ],
+    "induction_calls": [
+      {
+        "action_count": 18,
+        "call": "induce_tu93_lattice_navigation_to_visible_target",
+        "goal_predicate": "player sprite top-left equals the visible target top-left",
+        "mechanic": "an accepted direction moves the player one 6-pixel lattice node through a visible path gate",
+        "observed_state": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            3,
+            3
+          ],
+          "relative_player": [
+            0,
+            0
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 50,
+          "target_position": [
+            33,
+            33
+          ]
+        }
+      }
+    ],
+    "phase_trace": [
+      {
+        "candidate_reason": "selected fallback: tu93 is the lowest-baseline remaining grid-Markov offline fixture, L0 baseline_actions=19",
+        "phase": "observe",
+        "source": "offline_explore_first_induction",
+        "state": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            3,
+            3
+          ],
+          "relative_player": [
+            0,
+            0
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 50,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "target_game": "tu93-0768757b"
+      },
+      {
+        "action": {
+          "action": 4,
+          "direction": "right",
+          "role": "move_player"
+        },
+        "action_index": 1,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            9,
+            3
+          ],
+          "relative_player": [
+            6,
+            0
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 49,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            3,
+            3
+          ],
+          "relative_player": [
+            0,
+            0
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 50,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "explore",
+        "source": "offline_explore_first_induction"
+      },
+      {
+        "action": {
+          "action": 2,
+          "direction": "down",
+          "role": "move_player"
+        },
+        "action_index": 2,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            9,
+            9
+          ],
+          "relative_player": [
+            6,
+            6
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 48,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            9,
+            3
+          ],
+          "relative_player": [
+            6,
+            0
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 49,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "explore",
+        "source": "offline_explore_first_induction"
+      },
+      {
+        "exploration_actions_used": 2,
+        "goal_predicate": "player sprite top-left equals the visible target top-left",
+        "induction_call": {
+          "action_count": 18,
+          "call": "induce_tu93_lattice_navigation_to_visible_target",
+          "goal_predicate": "player sprite top-left equals the visible target top-left",
+          "mechanic": "an accepted direction moves the player one 6-pixel lattice node through a visible path gate",
+          "observed_state": {
+            "level_completed": 0,
+            "map_origin": [
+              3,
+              3
+            ],
+            "map_size": [
+              33,
+              33
+            ],
+            "player_at_target": false,
+            "player_position": [
+              3,
+              3
+            ],
+            "relative_player": [
+              0,
+              0
+            ],
+            "relative_target": [
+              30,
+              30
+            ],
+            "remaining_steps": 50,
+            "target_position": [
+              33,
+              33
+            ]
+          }
+        },
+        "mechanic": "tu93_lattice_navigation_to_target",
+        "phase": "induce",
+        "source": "offline_explore_first_induction"
+      },
+      {
+        "actions_checked": 16,
+        "energy": 0.0,
+        "final_level_completed": 1,
+        "final_player_at_target": true,
+        "heldout_transition_count": 16,
+        "level_increment": true,
+        "phase": "verify",
+        "predicted_goal_after_actions": true,
+        "retained": true,
+        "start_level_completed": 0,
+        "verifier": "gap4_replay_tu93_lattice_navigation_level_counter"
+      },
+      {
+        "action": {
+          "action": 4,
+          "direction": "right",
+          "role": "move_player"
+        },
+        "action_index": 1,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            9,
+            3
+          ],
+          "relative_player": [
+            6,
+            0
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 49,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            3,
+            3
+          ],
+          "relative_player": [
+            0,
+            0
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 50,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 2,
+          "direction": "down",
+          "role": "move_player"
+        },
+        "action_index": 2,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            9,
+            9
+          ],
+          "relative_player": [
+            6,
+            6
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 48,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            9,
+            3
+          ],
+          "relative_player": [
+            6,
+            0
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 49,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 2,
+          "direction": "down",
+          "role": "move_player"
+        },
+        "action_index": 3,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            9,
+            15
+          ],
+          "relative_player": [
+            6,
+            12
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 47,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            9,
+            9
+          ],
+          "relative_player": [
+            6,
+            6
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 48,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 4,
+          "direction": "right",
+          "role": "move_player"
+        },
+        "action_index": 4,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            15,
+            15
+          ],
+          "relative_player": [
+            12,
+            12
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 46,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            9,
+            15
+          ],
+          "relative_player": [
+            6,
+            12
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 47,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 1,
+          "direction": "up",
+          "role": "move_player"
+        },
+        "action_index": 5,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            15,
+            9
+          ],
+          "relative_player": [
+            12,
+            6
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 45,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            15,
+            15
+          ],
+          "relative_player": [
+            12,
+            12
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 46,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 4,
+          "direction": "right",
+          "role": "move_player"
+        },
+        "action_index": 6,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            21,
+            9
+          ],
+          "relative_player": [
+            18,
+            6
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 44,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            15,
+            9
+          ],
+          "relative_player": [
+            12,
+            6
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 45,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 2,
+          "direction": "down",
+          "role": "move_player"
+        },
+        "action_index": 7,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            21,
+            15
+          ],
+          "relative_player": [
+            18,
+            12
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 43,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            21,
+            9
+          ],
+          "relative_player": [
+            18,
+            6
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 44,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 2,
+          "direction": "down",
+          "role": "move_player"
+        },
+        "action_index": 8,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            21,
+            21
+          ],
+          "relative_player": [
+            18,
+            18
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 42,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            21,
+            15
+          ],
+          "relative_player": [
+            18,
+            12
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 43,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 3,
+          "direction": "left",
+          "role": "move_player"
+        },
+        "action_index": 9,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            15,
+            21
+          ],
+          "relative_player": [
+            12,
+            18
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 41,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            21,
+            21
+          ],
+          "relative_player": [
+            18,
+            18
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 42,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 3,
+          "direction": "left",
+          "role": "move_player"
+        },
+        "action_index": 10,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            9,
+            21
+          ],
+          "relative_player": [
+            6,
+            18
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 40,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            15,
+            21
+          ],
+          "relative_player": [
+            12,
+            18
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 41,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 2,
+          "direction": "down",
+          "role": "move_player"
+        },
+        "action_index": 11,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            9,
+            27
+          ],
+          "relative_player": [
+            6,
+            24
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 39,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            9,
+            21
+          ],
+          "relative_player": [
+            6,
+            18
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 40,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 4,
+          "direction": "right",
+          "role": "move_player"
+        },
+        "action_index": 12,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            15,
+            27
+          ],
+          "relative_player": [
+            12,
+            24
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 38,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            9,
+            27
+          ],
+          "relative_player": [
+            6,
+            24
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 39,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 4,
+          "direction": "right",
+          "role": "move_player"
+        },
+        "action_index": 13,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            21,
+            27
+          ],
+          "relative_player": [
+            18,
+            24
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 37,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            15,
+            27
+          ],
+          "relative_player": [
+            12,
+            24
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 38,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 2,
+          "direction": "down",
+          "role": "move_player"
+        },
+        "action_index": 14,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            21,
+            33
+          ],
+          "relative_player": [
+            18,
+            30
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 36,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            21,
+            27
+          ],
+          "relative_player": [
+            18,
+            24
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 37,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 4,
+          "direction": "right",
+          "role": "move_player"
+        },
+        "action_index": 15,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            27,
+            33
+          ],
+          "relative_player": [
+            24,
+            30
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 35,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            21,
+            33
+          ],
+          "relative_player": [
+            18,
+            30
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 36,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 1,
+          "direction": "up",
+          "role": "move_player"
+        },
+        "action_index": 16,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            27,
+            27
+          ],
+          "relative_player": [
+            24,
+            24
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 34,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            27,
+            33
+          ],
+          "relative_player": [
+            24,
+            30
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 35,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 4,
+          "direction": "right",
+          "role": "move_player"
+        },
+        "action_index": 17,
+        "after": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            33,
+            27
+          ],
+          "relative_player": [
+            30,
+            24
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 33,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            27,
+            27
+          ],
+          "relative_player": [
+            24,
+            24
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 34,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 2,
+          "direction": "down",
+          "role": "move_player"
+        },
+        "action_index": 18,
+        "after": {
+          "level_completed": 1,
+          "map_origin": [
+            3,
+            12
+          ],
+          "map_size": [
+            15,
+            39
+          ],
+          "player_at_target": false,
+          "player_position": [
+            3,
+            24
+          ],
+          "relative_player": [
+            0,
+            12
+          ],
+          "relative_target": [
+            36,
+            0
+          ],
+          "remaining_steps": 50,
+          "target_position": [
+            39,
+            12
+          ]
+        },
+        "before": {
+          "level_completed": 0,
+          "map_origin": [
+            3,
+            3
+          ],
+          "map_size": [
+            33,
+            33
+          ],
+          "player_at_target": false,
+          "player_position": [
+            33,
+            27
+          ],
+          "relative_player": [
+            30,
+            24
+          ],
+          "relative_target": [
+            30,
+            30
+          ],
+          "remaining_steps": 33,
+          "target_position": [
+            33,
+            33
+          ]
+        },
+        "level_completed": 1,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      }
+    ],
+    "selection_reason": "selected fallback: tu93 is the lowest-baseline remaining grid-Markov offline fixture, L0 baseline_actions=19",
+    "target_game": "tu93-0768757b",
+    "verification_decisions": [
+      {
+        "actions_checked": 16,
+        "energy": 0.0,
+        "final_level_completed": 1,
+        "final_player_at_target": true,
+        "heldout_transition_count": 16,
+        "level_increment": true,
+        "phase": "verify",
+        "predicted_goal_after_actions": true,
+        "retained": true,
+        "start_level_completed": 0,
+        "verifier": "gap4_replay_tu93_lattice_navigation_level_counter"
+      }
+    ]
+  },
+  "strict_nonspatial_exhausted": true,
+  "survey_is_spatial_planning": true,
+  "target_game": "tu93-0768757b",
+  "title": "arc3_twelfth_game_explore_first_tu93",
+  "total_games_solved": 12,
+  "verification_decisions": [
+    {
+      "actions_checked": 16,
+      "energy": 0.0,
+      "final_level_completed": 1,
+      "final_player_at_target": true,
+      "heldout_transition_count": 16,
+      "level_increment": true,
+      "phase": "verify",
+      "predicted_goal_after_actions": true,
+      "retained": true,
+      "start_level_completed": 0,
+      "verifier": "gap4_replay_tu93_lattice_navigation_level_counter"
+    }
+  ]
+}
