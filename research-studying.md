@@ -8,6 +8,34 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-12 Exp 4111 - .380 TRM verifier-training SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-trm-verifier-training-2026-06-12.md`.
+
+**Filtered track:** TRM baseline reproduction plus verifier-guided training and
+search over the `nano-trm` Sudoku substrate after Exp 4108 produced an honest
+partial baseline and Exp 4109 produced an honest post-hoc verifier null.
+
+**Seed and fresh-pass candidates marked ingested:**
+- TRM, arXiv:2510.04871 - mapped as the faithful Sudoku Extreme baseline
+  reproduction gate before any verifier-lift claim.
+- TTA-TRM, arXiv:2511.02886 - mapped as the full-fine-tuning adaptation control
+  that must be isolated from verifier-admission effects.
+- V-STaR, arXiv:2402.06457 - mapped as accepted/rejected Sudoku trace selector
+  training once candidate diversity exists.
+- STaR, arXiv:2203.14465, and ReST, arXiv:2308.08998 - mapped as the cached
+  generate-filter-improve cadence, with rejected rows retained for selector data.
+- Adaptive verifier-guided search, arXiv:2602.01070, with VPRM/VPR support from
+  arXiv:2601.17223 and arXiv:2605.10325 - mapped as the next in-loop verifier
+  use because Exp 4109 post-hoc reranking tied vote.
+
+Flagged for .381: `verifier_guided_adaptive_sudoku_search_before_training`.
+
+**Bottom line for the .381 roadmap:** move the executable Sudoku verifier into
+candidate expansion before spending on another full fine-tune. Require pass@1
+or oracle-support lift over fixed-K vote and Exp 4109 post-hoc verifier rerank;
+otherwise keep V-STaR and RFT routes blocked.
+
 ## 2026-06-12 Exp 4102 - .379 TRM self-training SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-trm-self-training-2026-06-12.md`.
