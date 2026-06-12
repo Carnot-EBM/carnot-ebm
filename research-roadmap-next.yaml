@@ -359,7 +359,7 @@ tasks:
       CONCRETE STEPS:
         1. Read exp4116/4117/4118/4119/4120/4121/4122/4123. SKIP any flagged_adversarial=true. Cite each upstream sha256.
         2. Answer: (a) did the val trajectory climb across the resume passes and did the bounded runs stay under the cap (mechanism)? (b) did exp4118 reproduce ~0.87 (matches_published_087)? (c) did exp4119 graft (verifier_value_added) or defer? (d) total ARC games solved.
-        3. Honest headline: one of {baseline_reproduced_graft_validated, baseline_reproduced_graft_null, baseline_reproduced_graft_deferred, baseline_still_accumulating_v382_continues, resume_mechanism_stalled}.
+        3. Honest headline: one of {{baseline_reproduced_graft_validated, baseline_reproduced_graft_null, baseline_reproduced_graft_deferred, baseline_still_accumulating_v382_continues, resume_mechanism_stalled}}.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. An honest 'still accumulating, .382 continues' is COMPLETE and valuable."
@@ -368,5 +368,5 @@ tasks:
         baseline_val_trajectory:
           principle: "The val exact-accuracy across the resume passes (0.0232 -> ...); shows whether resumable training is converging and at what rate."
         upstream_provenance:
-          principle: "{experiment_id, fields_imported, sha256} per cited upstream -- the audit trail proving the capstone synthesizes real measurements."
+          principle: "{{experiment_id, fields_imported, sha256}} per cited upstream -- the audit trail proving the capstone synthesizes real measurements."
       ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited.
