@@ -7097,6 +7097,79 @@ seed, checksum, and no KV260 host SD-card precondition.
 
 ---
 
+### REQ-HW-4084
+
+**Title:** Hardware continuity MUST record per-board reachability and next steps after the GateMate re-plug
+
+**Description:**
+Experiment 4084 MUST produce
+`results/experiment_4084_hardware_continuity.json` as a hardware-smoke
+continuity artifact for KV260, GateMate, and PolarFire. The experiment MUST
+read the previous hardware-continuity state, check each board independently
+with separate wall-clock timers, record all preconditions before any forward
+smoke step, and continue the remaining boards when one board is unavailable.
+The required preconditions are:
+
+- KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`.
+- GateMate: `openFPGALoader -c dirtyJtag --detect`, with the result recorded as
+  the post-2026-06-11 re-plug continuity check.
+- PolarFire: `ssh -o ConnectTimeout=5 polarfire 'true'`.
+
+KV260 MUST NOT use a host SD-card block-device precondition such as
+`/dev/mmcblk`; KV260 is terminal and MUST only receive an opportunistic SSH
+confirmation. If GateMate is reachable, the experiment MUST record a concrete
+GateMate forward step from the DirtyJTAG detect result and any available
+existing n=16 bitstream flash smoke. If PolarFire is reachable, the experiment
+MUST record a concrete PolarFire forward step from an SSH-backed CPU dispatch
+smoke with hash-match verification. Unreachable boards MUST record
+`blocked_<board>_unreachable` for that board and MUST NOT block the other board
+checks.
+
+The artifact MUST include principle-annotated top-level fields
+`honest_verdict`, `per_board_reachability`, `preconditions_checked`, and
+`inference_substrate`, plus the concrete per-board next step for KV260,
+GateMate, and PolarFire. `preconditions_checked` MUST be a list of entries
+containing at least `{resource, available}` and its principle MUST state that
+it records which board accesses were verified before the smoke. `honest_verdict`
+MUST use a terminal prefix such as `complete:` or `blocked_`.
+`inference_substrate` MUST be exactly `"hardware_smoke"`, and the artifact MUST
+avoid fabric speedup, model-inference, or KV260 host SD-card claims.
+
+**Acceptance criteria:**
+- `results/experiment_4084_hardware_continuity.json` is generated.
+- `per_board_reachability` is a dict of booleans for KV260, GateMate, and
+  PolarFire and matches scalar reachability fields.
+- `preconditions_checked` records the three board preconditions before any
+  GateMate or PolarFire smoke step, with at least `{resource, available}` per
+  entry and the required principle text.
+- `per_board_next_step` is a dict keyed by KV260, GateMate, and PolarFire that
+  records each board's next concrete forward step or
+  `blocked_<board>_unreachable`.
+- `honest_verdict` starts with `complete:` or `blocked_`;
+  `inference_substrate` is exactly `"hardware_smoke"`; and no KV260 host
+  SD-card marker such as `/dev/mmcblk` appears in the artifact.
+
+**Implementation status:** Pending (Exp 4084)
+
+---
+
+### SCENARIO-HW-4084
+
+**Scenario:** Per-board hardware continuity records reachability and next steps.
+
+**Given:** GateMate was re-plugged on 2026-06-11, PolarFire may be reachable
+over SSH, and KV260 remains terminal with opportunistic SSH confirmation only.
+**When:** Experiment 4084 runs the hardware-smoke continuity check.
+**Then:** It writes `results/experiment_4084_hardware_continuity.json` with a
+terminal-prefix verdict, `inference_substrate="hardware_smoke"`, bare
+`per_board_reachability`, precondition evidence recorded before smoke steps,
+bare `per_board_next_step`, distinct per-board timers, deterministic seed,
+checksum, and no KV260 host SD-card precondition.
+
+**Implementation status:** Pending (Exp 4084)
+
+---
+
 ### SCENARIO-HW-4017
 
 **Scenario:** ARC continuity records reachable boards and blocked board next steps.
