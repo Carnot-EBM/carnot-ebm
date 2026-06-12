@@ -8316,3 +8316,5 @@ c |
 | 2026-06-12 07:29 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (infra slot; regr | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-12 07:41 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 85 passed in 4.80s |
 | 2026-06-12 07:55 UTC | Capstone .377 (UNGATED): the milestone's headline  | OK | 86 passed in 4.50s |
+| 2026-06-12 08:43 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-06-12 08:46 UTC | Milestone 2026.06.378 activated | OK | 12 tasks queued |
