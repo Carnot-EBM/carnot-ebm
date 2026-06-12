@@ -1,0 +1,106 @@
+{
+  "acceptance_gate_passed": true,
+  "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4107_nanotrm_mechanism_smoke_hydra/checkpoints/last.ckpt",
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "src/nn/train.py",
+    "experiment=trm_sudoku_4x4",
+    "logger=csv",
+    "hydra.run.dir=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4107_nanotrm_mechanism_smoke_hydra",
+    "save_dir=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4107_nanotrm_mechanism_smoke",
+    "append_wandb_name_to_save_dir=false",
+    "seed=4107",
+    "+callbacks.exp4107_progress._target_=carnot.experiment_4107_nanotrm_mechanism_smoke.NanoTrmProgressPrinter",
+    "+callbacks.exp4107_progress.every_n_steps=25"
+  ],
+  "duration_s": 741.76,
+  "exact_accuracy": 1.0,
+  "exact_accuracy_metric": "val/exact_accuracy",
+  "exact_accuracy_metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4107_nanotrm_mechanism_smoke_hydra/csv/version_0/metrics.csv",
+  "experiment": "experiment_4107_nanotrm_mechanism_smoke",
+  "field_principles": {
+    "checkpoint_path": "Persistent path to the saved checkpoint under results/trm_runs.",
+    "duration_s": "Wall-clock native training plus checkpoint/metric verification seconds.",
+    "exact_accuracy": "The real solve metric from exact_accuracy, never q_halt_accuracy.",
+    "honest_verdict": "Terminal-prefixed. An honest blocked_<resource> or a real failure-to-train is a COMPLETE verdict; do not fabricate a checkpoint.",
+    "nanotrm_trainer_checkpoint_ok": "Bare bool: did nano-trm's native trainer produce and reload a checkpoint.",
+    "preconditions_checked": "Records uv, CUDA, native trainer, and persistent save parent checks.",
+    "random_seed": "Determinism precondition for reproducing the run."
+  },
+  "honest_verdict": "complete: nanotrm_trainer_checkpoint_ok_exact_accuracy_1.0000",
+  "nanotrm_trainer_checkpoint_ok": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/usr/bin/uv",
+      "resource": "uv"
+    },
+    {
+      "available": true,
+      "detail": "found: /home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/train.py",
+      "resource": "nanotrm_trainer"
+    },
+    {
+      "available": true,
+      "detail": "torch.cuda.is_available()=True; device=NVIDIA GeForce RTX 3090",
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "detail": "writable persistent dir: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs",
+      "resource": "persistent_save_parent"
+    }
+  ],
+  "random_seed": 4107,
+  "return_code": 0,
+  "save_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4107_nanotrm_mechanism_smoke_hydra",
+  "schema": "carnot.experiment_4107_nanotrm_mechanism_smoke.v1",
+  "spec_refs": [
+    "REQ-LEARN-4107",
+    "SCENARIO-LEARN-4107"
+  ],
+  "stdout_tail": [
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=285",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=286",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=287",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=288",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=289",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=290",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=291",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=292",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=293",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=294",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=295",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=296",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=297",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=298",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=299",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=300",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=301",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=302",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=303",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=304",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=305",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=306",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=307",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=308",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=309",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=310",
+    "[exp4107:nano-trm-progress] step=0 epoch=99 batch_idx=311",
+    "[exp4107:nano-trm-progress] validation_end epoch=99 step=0",
+    "`Trainer.fit` stopped: `max_epochs=100` reached.",
+    "[2026-06-12 14:08:23,250][__main__][INFO] - [rank: 0] Training finished!",
+    "[2026-06-12 14:08:23,258][src.nn.utils.utils][INFO] - [rank: 0] Output dir: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4107_nanotrm_mechanism_smoke_hydra",
+    "return_code=0",
+    "checkpoint=None",
+    "checkpoint_reload=checkpoint missing under persistent save_dir",
+    "exact_accuracy=exact_accuracy metrics.csv not found under /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4107_nanotrm_mechanism_smoke",
+    "return_code=0",
+    "artifact_root=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4107_nanotrm_mechanism_smoke_hydra",
+    "checkpoint=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4107_nanotrm_mechanism_smoke_hydra/checkpoints/last.ckpt",
+    "checkpoint_reload=torch.load ok",
+    "exact_accuracy=val/exact_accuracy=1.0"
+  ]
+}
