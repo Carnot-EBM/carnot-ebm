@@ -7255,6 +7255,81 @@ no KV260 host SD-card precondition.
 
 ---
 
+### REQ-HW-4104
+
+**Title:** Hardware continuity MUST record per-board status with SSH/USB-detect preconditions only
+
+**Description:**
+Experiment 4104 MUST produce
+`results/experiment_4104_hardware_continuity.json` as the next hardware-smoke
+continuity artifact for KV260, GateMate, and PolarFire. The experiment MUST keep
+one explicit reachability plus next-step record for every board in
+`per_board_status`, use distinct wall-clock timers per board, and continue
+checking the remaining boards when any one board is unreachable. KV260 is
+terminal, so it receives only opportunistic SSH confirmation. GateMate and
+PolarFire are non-terminal and MUST each name the next concrete forward step.
+
+The only valid preconditions are:
+
+- GateMate: `openFPGALoader -c dirtyJtag --detect`, accepted only when it
+  reports the GM1Ax IDCODE (`0x20000001`).
+- PolarFire: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'`.
+- KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`.
+
+KV260 MUST NOT use a host SD-card block-device precondition such as
+`/dev/mmcblk`; the SSH-Not-SD-Card discipline is mandatory. GateMate's step
+MUST be the next concrete step toward the n=16 Ising tile flash from the most
+recent GateMate artifact. PolarFire's step MUST be the next concrete step toward
+end-to-end Carnot dispatch with a hash match. For any unreachable board, the
+board's status MUST be `blocked_<board>_unreachable`, and that blocked status is
+an honest complete per-board verdict rather than a reason to skip other boards.
+
+The artifact MUST include `field_principles` entries for the required fields:
+
+- `honest_verdict`: `Terminal-prefixed. Per-board honest status; an honest blocked_<board> is a COMPLETE verdict for that board.`
+- `per_board_status`: `One reachability + next-step record per board so a board is never silently forgotten (the failure mode this discipline exists to prevent).`
+- `preconditions_checked`: `Records the SSH/USB-detect preconditions actually run; enforces SSH-Not-SD-Card and pre-empts fabricated hardware results.`
+
+**Acceptance criteria:**
+- `results/experiment_4104_hardware_continuity.json` is generated.
+- `per_board_status` is a dict keyed by `kv260`, `gatemate`, and `polarfire`;
+  each entry records `reachable`, `status`, `next_concrete_step`,
+  `precondition_resource`, `precondition_command`, and `duration_s`.
+- `preconditions_checked` records exactly the GateMate DirtyJTAG detect,
+  PolarFire SSH BatchMode, and KV260 SSH BatchMode preconditions; no host
+  SD-card marker such as `/dev/mmcblk` appears in the artifact.
+- GateMate reachability requires the GM1Ax/`0x20000001` IDCODE from
+  `openFPGALoader -c dirtyJtag --detect`.
+- PolarFire reachable runs or records the hash-match Carnot dispatch step; if
+  unreachable, `per_board_status["polarfire"]["status"]` is
+  `blocked_polarfire_unreachable`.
+- KV260 terminal state is confirmed via SSH when reachable; if unreachable,
+  `per_board_status["kv260"]["status"]` is `blocked_kv260_unreachable`.
+- `honest_verdict` starts with `complete:` or `blocked_`.
+
+**Implementation status:** Pending (Exp 4104)
+
+---
+
+### SCENARIO-HW-4104
+
+**Scenario:** Hardware continuity records one honest status and next step per board.
+
+**Given:** GateMate and PolarFire remain non-terminal, KV260 is terminal, and
+the milestone requires board continuity to be recorded without host SD-card
+preconditions.
+**When:** Experiment 4104 runs the GateMate DirtyJTAG detect, PolarFire SSH
+BatchMode, and KV260 SSH BatchMode preconditions.
+**Then:** It writes `results/experiment_4104_hardware_continuity.json` with a
+terminal-prefixed verdict, `inference_substrate="hardware_smoke"`, required
+field principles, `per_board_status`, precondition evidence for the three
+allowed board checks, distinct per-board timers, deterministic seed, checksum,
+and no KV260 host SD-card precondition.
+
+**Implementation status:** Pending (Exp 4104)
+
+---
+
 ### SCENARIO-HW-4017
 
 **Scenario:** ARC continuity records reachable boards and blocked board next steps.
