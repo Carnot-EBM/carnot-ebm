@@ -13004,6 +13004,50 @@ with the measured divergence, sets `registry_updated` and `gaps_updated` to
 reflect the resulting ledgers, and uses no inference substrate other than
 aggregation from upstream artifacts.
 
+### REQ-VERIFY-4083: GAP-4 ARC-1 Safety-Gate Regression And Pivot Hygiene
+
+The repository SHALL provide Exp 4083 at
+`scripts/experiments/exp4083_verifier_registry_gaps_hygiene.py` to replay the
+shipped GAP-4 ARC-1 demo-fit safety-gate headline from cached artifacts and
+record the .377 verifier-as-reward pivot outcome in the verifier ledgers
+without Codex, GGUF, or live inference. The runner SHALL read
+`ops/verifier_registry.yaml`, `ops/verifier_gaps.md`,
+`results/arc3_gap4_rule_exec_verifier.json`, and
+`results/experiment_4079_verifier_reward_rft_eval_collect.json` when present.
+
+The offline replay SHALL assert bit-exact ARC-1 vote `0.4516` to gated
+`0.5806` from `results/arc3_gap4_rule_exec_verifier.json`, including `n=31`,
+`headroom_recovered=4`, and `vote_wins_lost=0`. `gap4_arc1_reproduced` and
+`safety_gate_regression_passed` SHALL be true only when all of those cached
+values match exactly. If any cached value drifts, the terminal artifact SHALL
+preserve the observed and expected values and mark the safety-gate regression
+as failed.
+
+The pivot ledger update SHALL append or replace an idempotent Exp 4083 block in
+`ops/verifier_gaps.md` recording the Exp 4079 verifier-as-reward RFT outcome as
+a training-time verifier role. If Exp 4079 is blocked, absent, or incomplete,
+the ledger SHALL say so plainly instead of treating the verifier-as-reward
+thesis as a win. The registry update SHALL annotate the
+`gap4_program_induction_stack` verifier with an Exp 4083 replay marker and a
+training-time role record that points to Exp 4079.
+
+The terminal artifact SHALL write
+`results/experiment_4083_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `gap4_arc1_reproduced`, bare bool
+`pivot_outcome_recorded`, bare bool `safety_gate_regression_passed`, bare bools
+`registry_updated` and `gaps_updated`, and
+`inference_substrate=verifier_ensemble_against_cached_candidates`.
+
+### SCENARIO-VERIFY-4083: Cached ARC-1 Replay Records Blocked Pivot Outcome
+
+Given the GAP-4 ARC-1 cached replay artifact and the Exp 4079 pivot artifact
+are readable, when Exp 4083 runs, then it writes the terminal artifact with
+`gap4_arc1_reproduced=true`, `safety_gate_regression_passed=true`, records vote
+`0.4516` to gated `0.5806`, records the Exp 4079 blocked training-time pivot
+outcome in `ops/verifier_gaps.md`, annotates the GAP-4 registry entry with the
+Exp 4083 replay and training-time role, sets `pivot_outcome_recorded=true`, and
+uses no inference substrate other than cached verifier candidates.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
