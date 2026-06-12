@@ -8323,3 +8323,6 @@ c |
 | 2026-06-12 10:42 UTC | RFT CORPUS BUILD (Phase B part 1; gated on precisi | OK | 89 passed in 4.89s |
 | 2026-06-12 10:44 UTC | RFT TRAIN (Phase B part 2; gated on the corpus bei | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4088-verifier-reward-rft-corpus-build.r |
 | 2026-06-12 10:46 UTC | RFT TRAIN (Phase B part 2; gated on the corpus bei | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4088-verifier-reward-rft-corpus-build.r |
+| 2026-06-12 10:48 UTC | RFT TRAIN (Phase B part 2; gated on the corpus bei | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4088-verifier-reward-rft-corpus-build.r |
+| 2026-06-12 10:50 UTC | RFT EVAL + GATE (Phase B part 3; the de-confounded | GATE_BLOCK | Pre-emptive skip: upstream retired (exp4089-verifier-reward-rft-train) |
+| 2026-06-12 10:50 UTC | SUDOKU RFT PIPELINE-SANITY (gated on a real train; | GATE_BLOCK | Pre-emptive skip: upstream retired (exp4089-verifier-reward-rft-train) |
