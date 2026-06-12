@@ -20,5 +20,25 @@ jobs:
       - name: Install Carnot-EBM
         run: pip install -e .
 
-      - name: Run verify
-        run: carnot verify --code 'def add(a, b): return a - b' --func add --test "(2,3):5"
+      # End-to-end reproducer of the Phase 1 ship-gate claim ("at least one
+      # independent CI reproducer"): the published package's `carnot verify`
+      # CLI must (a) catch a planted bug and (b) pass correct code. The block
+      # scalar (|) is required because the commands contain colons, which a
+      # plain YAML scalar would parse as mapping separators.
+      - name: Reproduce — verifier discriminates buggy vs correct code
+        run: |
+          set -u
+          # Planted bug: add() that subtracts. add(2,3) == -1, not 5, so the
+          # verifier must FAIL (non-zero exit). If it PASSES the bug, the
+          # reproducer fails the workflow.
+          printf 'def add(a, b):\n    return a - b\n' > /tmp/buggy.py
+          if carnot verify /tmp/buggy.py --func add --test '(2,3):5'; then
+            echo "REPRODUCER FAILED: verifier did not catch the planted bug"
+            exit 1
+          fi
+          echo "OK: verifier flagged the buggy add()"
+          # Control: a correct add() must PASS (zero exit). A false positive
+          # here also fails the workflow.
+          printf 'def add(a, b):\n    return a + b\n' > /tmp/correct.py
+          carnot verify /tmp/correct.py --func add --test '(2,3):5'
+          echo "OK: verifier passed the correct add()"
