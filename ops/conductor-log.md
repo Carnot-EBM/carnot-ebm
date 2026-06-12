@@ -8329,3 +8329,6 @@ c |
 | 2026-06-12 11:06 UTC | TENTH ARC-AGI-3 game first-solve via the PROVEN ex | OK | 89 passed in 4.84s |
 | 2026-06-12 11:08 UTC | RFT EVAL + GATE (Phase B part 3; the de-confounded | GATE_BLOCK | Pre-emptive skip: upstream retired (exp4089-verifier-reward-rft-train) |
 | 2026-06-12 11:08 UTC | SUDOKU RFT PIPELINE-SANITY (gated on a real train; | GATE_BLOCK | Pre-emptive skip: upstream retired (exp4089-verifier-reward-rft-train) |
+| 2026-06-12 11:24 UTC | OFF-ARC DEMO-FIT PRECISION TRANSFER (operator TOP  | OK | 91 passed in 4.43s |
+| 2026-06-12 11:26 UTC | RFT EVAL + GATE (Phase B part 3; the de-confounded | GATE_BLOCK | Pre-emptive skip: upstream retired (exp4089-verifier-reward-rft-train) |
+| 2026-06-12 11:26 UTC | SUDOKU RFT PIPELINE-SANITY (gated on a real train; | GATE_BLOCK | Pre-emptive skip: upstream retired (exp4089-verifier-reward-rft-train) |
