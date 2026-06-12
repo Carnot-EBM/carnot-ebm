@@ -1,0 +1,63 @@
+{
+  "certification_precision": 0.6818,
+  "certification_recall": 1.0,
+  "duration_s": 5.6321884479839355,
+  "experiment": "experiment_4077_verifier_reward_rft_corpus_build",
+  "field_principles": {
+    "certification_precision": "Phase-0 gate: demo-perfect labels must predict test-gold at high precision.",
+    "certification_recall": "Usability gate: certification must retain a non-trivial share of gold programs.",
+    "n_gold_sft": "Oracle-label upper-bound corpus size matched where possible.",
+    "n_heldout_tasks": "Disjoint tasks reserved for precision/eval accounting.",
+    "n_rft_ablation": "Verifier-label ablation size matched to RFT-correct.",
+    "n_rft_correct": "RFT-correct corpus size after N matching; zero when the label is poisoned.",
+    "runner_ready": "Whether the corpus/trainer harness can be invoked after preconditions.",
+    "trainer_smoke_passed": "True only after the two-task LoRA smoke train runs."
+  },
+  "honest_verdict": "blocked_precision_gate_unmet_0.6818_1.0000",
+  "inference_substrate": "offline_arc_k8_execution_verifier_reward_lora_runner",
+  "n_gold_sft": 0,
+  "n_heldout_tasks": 3,
+  "n_rft_ablation": 0,
+  "n_rft_correct": 0,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "1 safetensors shard(s); trust_remote_code=False",
+      "resource": "hf_safetensors_qwen_qwen3_5_0_8b"
+    },
+    {
+      "available": true,
+      "detail": "1 safetensors shard(s); trust_remote_code=True",
+      "resource": "hf_safetensors_openbmb_minicpm5_1b"
+    },
+    {
+      "available": true,
+      "detail": "trl, peft, SFTTrainer, GRPOTrainer import",
+      "resource": "trl_peft_trainers"
+    },
+    {
+      "available": true,
+      "detail": "torch.cuda.is_available() is true",
+      "resource": "cuda_visible"
+    },
+    {
+      "available": true,
+      "detail": "31 entries at /home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz",
+      "resource": "arc1_pool"
+    },
+    {
+      "available": true,
+      "detail": "31 entries at /home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_arc2_eval_pool.json.gz",
+      "resource": "arc2_pool"
+    }
+  ],
+  "random_seed": 4077,
+  "runner_ready": true,
+  "schema": "carnot.experiment_4077_verifier_reward_rft_corpus_build.v1",
+  "spec_refs": [
+    "REQ-LEARN-4077",
+    "SCENARIO-LEARN-4077",
+    "SCENARIO-LEARN-4077-NMATCH"
+  ],
+  "trainer_smoke_passed": false
+}
