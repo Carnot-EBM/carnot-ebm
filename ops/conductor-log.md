@@ -8309,3 +8309,4 @@ c |
 | 2026-06-12 06:01 UTC | VERIFIER-AS-REWARD RFT -- TRAIN (THE PIVOT, part 2 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-12 06:03 UTC | VERIFIER-AS-REWARD RFT -- EVAL + GATE (THE PIVOT,  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4078-verifier-reward-rft-train-launch.t |
 | 2026-06-12 06:05 UTC | VERIFIER-AS-REWARD RFT -- EVAL + GATE (THE PIVOT,  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4078-verifier-reward-rft-train-launch.t |
+| 2026-06-12 06:07 UTC | VERIFIER-AS-REWARD RFT -- EVAL + GATE (THE PIVOT,  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4078-verifier-reward-rft-train-launch.t |
