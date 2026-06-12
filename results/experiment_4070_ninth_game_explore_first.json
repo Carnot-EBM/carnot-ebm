@@ -1,0 +1,1270 @@
+{
+  "action_plan": [
+    {
+      "action": 6,
+      "grid": [
+        18,
+        18
+      ],
+      "role": "cycle_cell",
+      "target_color": 8,
+      "x": 36,
+      "y": 36
+    },
+    {
+      "action": 6,
+      "grid": [
+        18,
+        22
+      ],
+      "role": "cycle_cell",
+      "target_color": 8,
+      "x": 36,
+      "y": 44
+    },
+    {
+      "action": 6,
+      "grid": [
+        26,
+        22
+      ],
+      "role": "cycle_cell",
+      "target_color": 8,
+      "x": 52,
+      "y": 44
+    },
+    {
+      "action": 6,
+      "grid": [
+        18,
+        26
+      ],
+      "role": "cycle_cell",
+      "target_color": 8,
+      "x": 36,
+      "y": 52
+    }
+  ],
+  "arc_env_count": 25,
+  "candidate_baseline_actions": 43,
+  "duration_s": 2.999,
+  "excluded_solved_games": [
+    "r11l",
+    "lp85",
+    "sc25",
+    "su15",
+    "tn36",
+    "cd82",
+    "dc22",
+    "sb26"
+  ],
+  "experiment": "experiment_4070_ninth_game_explore_first",
+  "exploration_actions_used": 1,
+  "field_principles": {
+    "game_solved": "bare boolean for whether this task added exactly one new solved game",
+    "honest_verdict": "terminal prefix records success, complete no-solve, or blocked precondition",
+    "inference_substrate": "declares the offline explore-first induction and verifier substrate",
+    "real_env_confirmed": "a solve is real only when the live environment level counter confirms it",
+    "solve_trace": "full observe/explore/induce/verify/act trace for Exp 4072 concept-transfer analysis",
+    "target_game": "auditable game id selected from the survey and environment metadata",
+    "total_games_solved": "monotonic ARC accuracy counter and north-star metric"
+  },
+  "first_solve_at_action": 4,
+  "game_solved": true,
+  "honest_verdict": "success: ninth_game_solved_ft09-0d8bbf25_at_action_4",
+  "induced_mechanic": "Observed ft09 Hkx cells cycle colors on click; induced a local non-navigation constraint model where bsT zero pixels require neighboring cells to equal the constraint center color, non-zero pixels require inequality, and a real level counter increment is required before the plan is retained.",
+  "inference_substrate": "offline_arc_agi3_explore_first_first_solve",
+  "level_completed": 1,
+  "levels_completed": 1,
+  "phase_trace": [
+    {
+      "candidate_reason": "selected fallback: ft09 is unsolved, win_difficulty=hard, L0 baseline_actions=43",
+      "phase": "observe",
+      "source": "offline_explore_first_induction",
+      "state": {
+        "cell_colors": {
+          "18,18": 9,
+          "18,22": 9,
+          "18,26": 9,
+          "22,18": 9,
+          "22,26": 9,
+          "26,18": 9,
+          "26,22": 9,
+          "26,26": 9
+        },
+        "cells": [
+          {
+            "color": 9,
+            "grid": [
+              18,
+              18
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              22,
+              18
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              26,
+              18
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              18,
+              22
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              26,
+              22
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              18,
+              26
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              22,
+              26
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              26,
+              26
+            ],
+            "kind": "Hkx"
+          }
+        ],
+        "color_cycle": [
+          9,
+          8
+        ],
+        "constraints": [
+          {
+            "center_color": 8,
+            "grid": [
+              22,
+              22
+            ],
+            "pattern": [
+              [
+                0,
+                2,
+                2
+              ],
+              [
+                0,
+                8,
+                0
+              ],
+              [
+                0,
+                2,
+                2
+              ]
+            ]
+          }
+        ],
+        "level_completed": 0,
+        "violation_count": 4
+      },
+      "target_game": "ft09-0d8bbf25"
+    },
+    {
+      "action": {
+        "action": 6,
+        "grid": [
+          18,
+          18
+        ],
+        "role": "cycle_cell",
+        "target_color": 8,
+        "x": 36,
+        "y": 36
+      },
+      "action_index": 1,
+      "after": {
+        "cell_colors": {
+          "18,18": 8,
+          "18,22": 9,
+          "18,26": 9,
+          "22,18": 9,
+          "22,26": 9,
+          "26,18": 9,
+          "26,22": 9,
+          "26,26": 9
+        },
+        "cells": [
+          {
+            "color": 8,
+            "grid": [
+              18,
+              18
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              22,
+              18
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              26,
+              18
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              18,
+              22
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              26,
+              22
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              18,
+              26
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              22,
+              26
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              26,
+              26
+            ],
+            "kind": "Hkx"
+          }
+        ],
+        "color_cycle": [
+          9,
+          8
+        ],
+        "constraints": [
+          {
+            "center_color": 8,
+            "grid": [
+              22,
+              22
+            ],
+            "pattern": [
+              [
+                0,
+                2,
+                2
+              ],
+              [
+                0,
+                8,
+                0
+              ],
+              [
+                0,
+                2,
+                2
+              ]
+            ]
+          }
+        ],
+        "level_completed": 0,
+        "violation_count": 3
+      },
+      "before": {
+        "cell_colors": {
+          "18,18": 9,
+          "18,22": 9,
+          "18,26": 9,
+          "22,18": 9,
+          "22,26": 9,
+          "26,18": 9,
+          "26,22": 9,
+          "26,26": 9
+        },
+        "cells": [
+          {
+            "color": 9,
+            "grid": [
+              18,
+              18
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              22,
+              18
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              26,
+              18
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              18,
+              22
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              26,
+              22
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              18,
+              26
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              22,
+              26
+            ],
+            "kind": "Hkx"
+          },
+          {
+            "color": 9,
+            "grid": [
+              26,
+              26
+            ],
+            "kind": "Hkx"
+          }
+        ],
+        "color_cycle": [
+          9,
+          8
+        ],
+        "constraints": [
+          {
+            "center_color": 8,
+            "grid": [
+              22,
+              22
+            ],
+            "pattern": [
+              [
+                0,
+                2,
+                2
+              ],
+              [
+                0,
+                8,
+                0
+              ],
+              [
+                0,
+                2,
+                2
+              ]
+            ]
+          }
+        ],
+        "level_completed": 0,
+        "violation_count": 4
+      },
+      "level_completed": 0,
+      "phase": "explore",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "exploration_actions_used": 1,
+      "goal_predicate": "all bsT neighbor equality/inequality constraints hold",
+      "induction_call": {
+        "call": "induce_ft09_local_constraint_color_cycle",
+        "goal_predicate": "all bsT neighbor equality/inequality constraints hold",
+        "mechanic": "clicking a visible Hkx cell cycles its center color through the level color cycle",
+        "observed_color_cycle": [
+          9,
+          8
+        ],
+        "observed_constraints": [
+          {
+            "center_color": 8,
+            "grid": [
+              22,
+              22
+            ],
+            "pattern": [
+              [
+                0,
+                2,
+                2
+              ],
+              [
+                0,
+                8,
+                0
+              ],
+              [
+                0,
+                2,
+                2
+              ]
+            ]
+          }
+        ]
+      },
+      "mechanic": "ft09_local_constraint_color_cycle",
+      "phase": "induce",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "actions_checked": 3,
+      "energy": 0.0,
+      "final_violation_count": 0,
+      "level_increment": true,
+      "phase": "verify",
+      "predicted_cell_colors_match": true,
+      "predicted_goal_after_actions": true,
+      "retained": true,
+      "start_violation_count": 3,
+      "verifier": "gap4_replay_ft09_local_constraint_level_counter"
+    },
+    {
+      "action": {
+        "action": 6,
+        "grid": [
+          18,
+          18
+        ],
+        "role": "cycle_cell",
+        "target_color": 8,
+        "x": 36,
+        "y": 36
+      },
+      "action_index": 1,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "grid": [
+          18,
+          22
+        ],
+        "role": "cycle_cell",
+        "target_color": 8,
+        "x": 36,
+        "y": 44
+      },
+      "action_index": 2,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "grid": [
+          26,
+          22
+        ],
+        "role": "cycle_cell",
+        "target_color": 8,
+        "x": 52,
+        "y": 44
+      },
+      "action_index": 3,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "grid": [
+          18,
+          26
+        ],
+        "role": "cycle_cell",
+        "target_color": 8,
+        "x": 36,
+        "y": 52
+      },
+      "action_index": 4,
+      "after": {
+        "level_completed": 1,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 1,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    }
+  ],
+  "prior_total_games_solved": 8,
+  "random_seed": 4070,
+  "real_env_confirmed": true,
+  "selected_candidate_reason": "selected fallback: ft09 is unsolved, win_difficulty=hard, L0 baseline_actions=43",
+  "selection_mode": "fallback_click_local_constraint_non_navigation",
+  "solve_trace": {
+    "actions": [
+      {
+        "action": 6,
+        "grid": [
+          18,
+          18
+        ],
+        "role": "cycle_cell",
+        "target_color": 8,
+        "x": 36,
+        "y": 36
+      },
+      {
+        "action": 6,
+        "grid": [
+          18,
+          22
+        ],
+        "role": "cycle_cell",
+        "target_color": 8,
+        "x": 36,
+        "y": 44
+      },
+      {
+        "action": 6,
+        "grid": [
+          26,
+          22
+        ],
+        "role": "cycle_cell",
+        "target_color": 8,
+        "x": 52,
+        "y": 44
+      },
+      {
+        "action": 6,
+        "grid": [
+          18,
+          26
+        ],
+        "role": "cycle_cell",
+        "target_color": 8,
+        "x": 36,
+        "y": 52
+      }
+    ],
+    "commit_actions": [
+      {
+        "action": 6,
+        "grid": [
+          18,
+          22
+        ],
+        "role": "cycle_cell",
+        "target_color": 8,
+        "x": 36,
+        "y": 44
+      },
+      {
+        "action": 6,
+        "grid": [
+          26,
+          22
+        ],
+        "role": "cycle_cell",
+        "target_color": 8,
+        "x": 52,
+        "y": 44
+      },
+      {
+        "action": 6,
+        "grid": [
+          18,
+          26
+        ],
+        "role": "cycle_cell",
+        "target_color": 8,
+        "x": 36,
+        "y": 52
+      }
+    ],
+    "exploration_actions": [
+      {
+        "action": 6,
+        "grid": [
+          18,
+          18
+        ],
+        "role": "cycle_cell",
+        "target_color": 8,
+        "x": 36,
+        "y": 36
+      }
+    ],
+    "induction_calls": [
+      {
+        "call": "induce_ft09_local_constraint_color_cycle",
+        "goal_predicate": "all bsT neighbor equality/inequality constraints hold",
+        "mechanic": "clicking a visible Hkx cell cycles its center color through the level color cycle",
+        "observed_color_cycle": [
+          9,
+          8
+        ],
+        "observed_constraints": [
+          {
+            "center_color": 8,
+            "grid": [
+              22,
+              22
+            ],
+            "pattern": [
+              [
+                0,
+                2,
+                2
+              ],
+              [
+                0,
+                8,
+                0
+              ],
+              [
+                0,
+                2,
+                2
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "phase_trace": [
+      {
+        "candidate_reason": "selected fallback: ft09 is unsolved, win_difficulty=hard, L0 baseline_actions=43",
+        "phase": "observe",
+        "source": "offline_explore_first_induction",
+        "state": {
+          "cell_colors": {
+            "18,18": 9,
+            "18,22": 9,
+            "18,26": 9,
+            "22,18": 9,
+            "22,26": 9,
+            "26,18": 9,
+            "26,22": 9,
+            "26,26": 9
+          },
+          "cells": [
+            {
+              "color": 9,
+              "grid": [
+                18,
+                18
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                22,
+                18
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                26,
+                18
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                18,
+                22
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                26,
+                22
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                18,
+                26
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                22,
+                26
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                26,
+                26
+              ],
+              "kind": "Hkx"
+            }
+          ],
+          "color_cycle": [
+            9,
+            8
+          ],
+          "constraints": [
+            {
+              "center_color": 8,
+              "grid": [
+                22,
+                22
+              ],
+              "pattern": [
+                [
+                  0,
+                  2,
+                  2
+                ],
+                [
+                  0,
+                  8,
+                  0
+                ],
+                [
+                  0,
+                  2,
+                  2
+                ]
+              ]
+            }
+          ],
+          "level_completed": 0,
+          "violation_count": 4
+        },
+        "target_game": "ft09-0d8bbf25"
+      },
+      {
+        "action": {
+          "action": 6,
+          "grid": [
+            18,
+            18
+          ],
+          "role": "cycle_cell",
+          "target_color": 8,
+          "x": 36,
+          "y": 36
+        },
+        "action_index": 1,
+        "after": {
+          "cell_colors": {
+            "18,18": 8,
+            "18,22": 9,
+            "18,26": 9,
+            "22,18": 9,
+            "22,26": 9,
+            "26,18": 9,
+            "26,22": 9,
+            "26,26": 9
+          },
+          "cells": [
+            {
+              "color": 8,
+              "grid": [
+                18,
+                18
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                22,
+                18
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                26,
+                18
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                18,
+                22
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                26,
+                22
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                18,
+                26
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                22,
+                26
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                26,
+                26
+              ],
+              "kind": "Hkx"
+            }
+          ],
+          "color_cycle": [
+            9,
+            8
+          ],
+          "constraints": [
+            {
+              "center_color": 8,
+              "grid": [
+                22,
+                22
+              ],
+              "pattern": [
+                [
+                  0,
+                  2,
+                  2
+                ],
+                [
+                  0,
+                  8,
+                  0
+                ],
+                [
+                  0,
+                  2,
+                  2
+                ]
+              ]
+            }
+          ],
+          "level_completed": 0,
+          "violation_count": 3
+        },
+        "before": {
+          "cell_colors": {
+            "18,18": 9,
+            "18,22": 9,
+            "18,26": 9,
+            "22,18": 9,
+            "22,26": 9,
+            "26,18": 9,
+            "26,22": 9,
+            "26,26": 9
+          },
+          "cells": [
+            {
+              "color": 9,
+              "grid": [
+                18,
+                18
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                22,
+                18
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                26,
+                18
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                18,
+                22
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                26,
+                22
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                18,
+                26
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                22,
+                26
+              ],
+              "kind": "Hkx"
+            },
+            {
+              "color": 9,
+              "grid": [
+                26,
+                26
+              ],
+              "kind": "Hkx"
+            }
+          ],
+          "color_cycle": [
+            9,
+            8
+          ],
+          "constraints": [
+            {
+              "center_color": 8,
+              "grid": [
+                22,
+                22
+              ],
+              "pattern": [
+                [
+                  0,
+                  2,
+                  2
+                ],
+                [
+                  0,
+                  8,
+                  0
+                ],
+                [
+                  0,
+                  2,
+                  2
+                ]
+              ]
+            }
+          ],
+          "level_completed": 0,
+          "violation_count": 4
+        },
+        "level_completed": 0,
+        "phase": "explore",
+        "source": "offline_explore_first_induction"
+      },
+      {
+        "exploration_actions_used": 1,
+        "goal_predicate": "all bsT neighbor equality/inequality constraints hold",
+        "induction_call": {
+          "call": "induce_ft09_local_constraint_color_cycle",
+          "goal_predicate": "all bsT neighbor equality/inequality constraints hold",
+          "mechanic": "clicking a visible Hkx cell cycles its center color through the level color cycle",
+          "observed_color_cycle": [
+            9,
+            8
+          ],
+          "observed_constraints": [
+            {
+              "center_color": 8,
+              "grid": [
+                22,
+                22
+              ],
+              "pattern": [
+                [
+                  0,
+                  2,
+                  2
+                ],
+                [
+                  0,
+                  8,
+                  0
+                ],
+                [
+                  0,
+                  2,
+                  2
+                ]
+              ]
+            }
+          ]
+        },
+        "mechanic": "ft09_local_constraint_color_cycle",
+        "phase": "induce",
+        "source": "offline_explore_first_induction"
+      },
+      {
+        "actions_checked": 3,
+        "energy": 0.0,
+        "final_violation_count": 0,
+        "level_increment": true,
+        "phase": "verify",
+        "predicted_cell_colors_match": true,
+        "predicted_goal_after_actions": true,
+        "retained": true,
+        "start_violation_count": 3,
+        "verifier": "gap4_replay_ft09_local_constraint_level_counter"
+      },
+      {
+        "action": {
+          "action": 6,
+          "grid": [
+            18,
+            18
+          ],
+          "role": "cycle_cell",
+          "target_color": 8,
+          "x": 36,
+          "y": 36
+        },
+        "action_index": 1,
+        "after": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "before": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "online_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 6,
+          "grid": [
+            18,
+            22
+          ],
+          "role": "cycle_cell",
+          "target_color": 8,
+          "x": 36,
+          "y": 44
+        },
+        "action_index": 2,
+        "after": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "before": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "online_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 6,
+          "grid": [
+            26,
+            22
+          ],
+          "role": "cycle_cell",
+          "target_color": 8,
+          "x": 52,
+          "y": 44
+        },
+        "action_index": 3,
+        "after": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "before": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "online_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 6,
+          "grid": [
+            18,
+            26
+          ],
+          "role": "cycle_cell",
+          "target_color": 8,
+          "x": 36,
+          "y": 52
+        },
+        "action_index": 4,
+        "after": {
+          "level_completed": 1,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "before": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "level_completed": 1,
+        "phase": "act",
+        "source": "online_real_env_confirmation"
+      }
+    ],
+    "principle": "exp4072 reads this trace to measure cross-game concept-library transfer",
+    "selection_reason": "selected fallback: ft09 is unsolved, win_difficulty=hard, L0 baseline_actions=43",
+    "target_game": "ft09-0d8bbf25",
+    "verification_decisions": [
+      {
+        "actions_checked": 3,
+        "energy": 0.0,
+        "final_violation_count": 0,
+        "level_increment": true,
+        "phase": "verify",
+        "predicted_cell_colors_match": true,
+        "predicted_goal_after_actions": true,
+        "retained": true,
+        "start_violation_count": 3,
+        "verifier": "gap4_replay_ft09_local_constraint_level_counter"
+      }
+    ]
+  },
+  "survey_is_spatial_planning": true,
+  "target_game": "ft09-0d8bbf25",
+  "title": "arc3_ninth_game_explore_first_ft09",
+  "total_games_solved": 9,
+  "verification_decisions": [
+    {
+      "actions_checked": 3,
+      "energy": 0.0,
+      "final_violation_count": 0,
+      "level_increment": true,
+      "phase": "verify",
+      "predicted_cell_colors_match": true,
+      "predicted_goal_after_actions": true,
+      "retained": true,
+      "start_violation_count": 3,
+      "verifier": "gap4_replay_ft09_local_constraint_level_counter"
+    }
+  ]
+}
