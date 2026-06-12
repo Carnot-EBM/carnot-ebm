@@ -154,8 +154,8 @@ tasks:
                 demo set is <= tau; sweep tau.
         3. SWEEP the precision-recall frontier for each filter and each stack (demo-perfect;
            +invariance; +invariance+agreement; +all). Precision = P(test-gold | certified); recall =
-           fraction of test-gold tasks certified. Report the frontier (list of {filter_stack, threshold,
-           precision, recall, n_certified}).
+           fraction of test-gold tasks certified. Report the frontier (list of {{filter_stack, threshold,
+           precision, recall, n_certified}}).
         4. Emit precision_rescue_succeeded = True iff some stack achieves precision >=0.85 AND recall
            >=0.20 simultaneously; record the best operating point.
         5. Append a GAP-5 entry to ops/verifier_gaps.md (the precision-rescue outcome).
