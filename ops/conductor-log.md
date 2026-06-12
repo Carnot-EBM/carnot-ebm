@@ -8321,3 +8321,4 @@ c |
 | 2026-06-12 09:04 UTC | Archive .377 -> activate .378; KEEP the hardened g | OK | 162 passed in 4.32s |
 | 2026-06-12 09:23 UTC | PRECISION RESCUE (THE de-risk; OFFLINE, fabricatio | OK | 89 passed in 5.31s |
 | 2026-06-12 10:42 UTC | RFT CORPUS BUILD (Phase B part 1; gated on precisi | OK | 89 passed in 4.89s |
+| 2026-06-12 10:44 UTC | RFT TRAIN (Phase B part 2; gated on the corpus bei | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4088-verifier-reward-rft-corpus-build.r |
