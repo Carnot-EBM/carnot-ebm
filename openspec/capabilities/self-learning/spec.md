@@ -11761,3 +11761,64 @@ reports `honest_verdict` starting with
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4078 | Proposed (python/carnot/agentic/arc_exp4078_verifier_reward_rft_train_launch.py; scripts/experiments/exp4078_verifier_reward_rft_train_launch.py, Exp 4078) | Proposed (tests/python/test_experiment_4078_verifier_reward_rft_train_launch.py) |
+
+---
+
+## REQ-LEARN-4080: Sudoku Verifier-RFT Positive Control For Pipeline Sanity
+
+**Given** the original Sudoku verifier-as-teacher beachhead artifact with
+held-out per-seed rates for verifier-certified RFT
+(`energy_distilled_greedy`) and gold-SFT (`gold_distilled_greedy`), visible
+CUDA, and importable TRL/PEFT trainers matching the Exp 4078 precondition
+surface
+**When** Exp 4080 checks the verifier-as-reward pipeline sanity before trusting
+the ARC RFT headline
+**Then** it SHALL aggregate at least three held-out seeds, emit
+`results/experiment_4080_sudoku_rft_positive_control.json`, and set
+`reproduces_beachhead=true` only when verifier-certified RFT is at least
+gold-SFT on the aggregate rate and on every included seed.
+
+The terminal artifact SHALL include bare top-level fields `honest_verdict`,
+`rft_rate`, `sft_rate`, `n_seeds`, `reproduces_beachhead`, and
+`inference_substrate`. When the positive control reproduces, the verdict SHALL
+be `complete: sudoku_positive_control_rft_ge_sft_reproduced`. When RFT falls
+below SFT, the verdict SHALL be
+`complete: sudoku_positive_control_FAILED_pipeline_suspect` because the ARC
+result is not interpretable until the pipeline is fixed.
+
+### REQ-LEARN-4080 Sub-requirements
+
+- REQ-LEARN-4080-1: The runner SHALL reuse the Exp 4078 GPU and trainer
+  precondition checks before issuing a positive-control verdict.
+- REQ-LEARN-4080-2: `rft_rate` SHALL be the float mean of
+  `energy_distilled_greedy` over the included Sudoku seeds.
+- REQ-LEARN-4080-3: `sft_rate` SHALL be the float mean of
+  `gold_distilled_greedy` over the same included Sudoku seeds.
+- REQ-LEARN-4080-4: `n_seeds` SHALL be a bare int and SHALL be at least `3`
+  for any completed positive-control verdict.
+- REQ-LEARN-4080-5: `reproduces_beachhead` SHALL be a bare bool whose field
+  principle records that this is the pipeline sanity check that makes the ARC
+  headline interpretable.
+
+### SCENARIO-LEARN-4080: Sudoku Positive Control Reproduces RFT >= SFT
+
+**Given** three held-out Sudoku seeds where verifier-certified RFT is at least
+gold-SFT for every seed
+**When** Exp 4080 aggregates the positive control
+**Then** the artifact reports the reproduced verdict, `rft_rate >= sft_rate`,
+`n_seeds >= 3`, and `reproduces_beachhead=true`.
+
+### SCENARIO-LEARN-4080-FAIL: Sudoku Positive Control Flags A Suspect Pipeline
+
+**Given** held-out Sudoku seeds where verifier-certified RFT falls below
+gold-SFT
+**When** Exp 4080 aggregates the positive control
+**Then** the artifact reports
+`complete: sudoku_positive_control_FAILED_pipeline_suspect` and
+`reproduces_beachhead=false`.
+
+## Implementation Status (REQ-LEARN-4080)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4080 | Proposed (python/carnot/agentic/sudoku_exp4080_rft_positive_control.py; scripts/experiments/exp4080_sudoku_rft_positive_control.py, Exp 4080) | Proposed (tests/python/test_experiment_4080_sudoku_rft_positive_control.py) |

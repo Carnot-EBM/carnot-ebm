@@ -1,0 +1,57 @@
+{
+  "comparison": "verifier_certified_rft_energy_distilled_greedy_vs_gold_sft_gold_distilled_greedy",
+  "duration_s": 4.437719120993279,
+  "experiment": "experiment_4080_sudoku_rft_positive_control",
+  "field_principles": {
+    "honest_verdict": "Terminal state makes a failed positive control block ARC interpretation instead of silently passing.",
+    "inference_substrate": "Declares the live-GPU Sudoku source run plus Exp 4078-style preflight.",
+    "n_seeds": "Replication count; the beachhead requires at least three seeds.",
+    "reproduces_beachhead": "pipeline sanity that makes the ARC headline interpretable.",
+    "rft_rate": "Mean held-out Sudoku solve rate for verifier-certified RFT over the included seeds.",
+    "sft_rate": "Mean held-out Sudoku solve rate for gold-SFT over the same seeds."
+  },
+  "honest_verdict": "complete: sudoku_positive_control_rft_ge_sft_reproduced",
+  "inference_substrate": "live_gpu_sudoku_verifier_certified_rft_with_exp4078_preflight",
+  "n_seeds": 3,
+  "per_seed": [
+    {
+      "rft_rate": 0.0615,
+      "seed": 0,
+      "sft_rate": 0.0475
+    },
+    {
+      "rft_rate": 0.0625,
+      "seed": 1,
+      "sft_rate": 0.0475
+    },
+    {
+      "rft_rate": 0.0735,
+      "seed": 2,
+      "sft_rate": 0.0565
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "torch.cuda.is_available() is true",
+      "resource": "cuda_visible"
+    },
+    {
+      "available": true,
+      "detail": "trl, peft, SFTTrainer, GRPOTrainer import",
+      "resource": "trl_peft_trainers"
+    }
+  ],
+  "reproduces_beachhead": true,
+  "rft_rate": 0.065833,
+  "schema": "carnot.experiment_4080_sudoku_rft_positive_control.v1",
+  "sft_rate": 0.0505,
+  "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/sudoku_energy_teacher_v6_v4_decisive.json",
+  "source_honest_verdict": "complete: energy_teacher_no_lift_dteacher+0.0112_gate_dead+0.0217_goldfrac16.00",
+  "source_inference_substrate": "live_gpu_training_energy_self_distillation_plus_gate_retest",
+  "spec_refs": [
+    "REQ-LEARN-4080",
+    "SCENARIO-LEARN-4080",
+    "SCENARIO-LEARN-4080-FAIL"
+  ]
+}
