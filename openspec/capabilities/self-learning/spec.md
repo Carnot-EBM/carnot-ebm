@@ -11955,6 +11955,76 @@ than treating an honest no-win verdict as a harness failure.
 
 ---
 
+## REQ-LEARN-4100: Conditional TRM Verifier-RFT or Native-Trainer Smoke
+
+**Given** Exp 4099 has written
+`results/experiment_4099_trm_pool_verifier_discrimination_probe.json`, Exp
+4100 SHALL first check all required training resources before branching:
+cached Hugging Face TRM weights under
+`~/.cache/huggingface/hub/models--arcprize--trm_arc_prize_verification/`,
+the native `nano-trm` substrate files `nano-trm/src/arc_evaluator.py` and
+`nano-trm/src/baseline.py`, CUDA availability through torch, and the Exp 4099
+probe artifact. If any precondition is missing, Exp 4100 SHALL write an honest
+blocked artifact with `branch_taken="blocked"` and a corresponding
+`blocked_trm_weights_not_cached`, `blocked_trm_substrate_missing`,
+`blocked_cuda_unavailable`, or `blocked_exp4099_probe_missing` verdict.
+
+**When** Exp 4099 reports `verifier_beats_trm_vote=true`, Exp 4100 SHALL take
+`branch_taken="rft"`, build a verifier-certified training corpus from the TRM
+candidate pool, build an N-matched vote-certified self-SFT ablation corpus from
+the same TRM samples, reserve a disjoint held-out split, and fine-tune the TRM
+with the native `nano-trm` trainer rather than trl, peft, or LoRA. It SHALL
+measure held-out ARC pass@1 and pass@2 for the verifier-certified arm, the
+vote-certified ablation arm, and the unmodified cold TRM. The load-bearing
+contrast SHALL be the A-vs-B `rft_vs_ablation_delta` with a bootstrap 95%
+confidence interval.
+
+**When** Exp 4099 reports `verifier_beats_trm_vote=false`, Exp 4100 SHALL take
+`branch_taken="smoke"` and SHALL NOT run a full RFT. Instead it SHALL execute a
+minimal real native `nano-trm` training run synchronously, print progress from
+that training process, require that a checkpoint is saved and torch-reloaded,
+and report the verifier-grid-discrimination bottleneck from Exp 4099. The
+measured `duration_s` SHALL be wall-clock train plus checkpoint reload time; if
+that real smoke finishes in under 60 seconds, the artifact SHALL omit live-model
+success markers while still honestly reporting the checkpoint result.
+
+**Then** the terminal artifact SHALL write
+`results/experiment_4100_trm_verifier_rft_conditional.json` with bare
+top-level fields `honest_verdict`, `branch_taken`,
+`rft_vs_ablation_delta`, `trm_native_trainer_checkpoint_ok`,
+`preconditions_checked`, `random_seed`, and `reproducibility_checksum`.
+Complete verdicts SHALL begin with `complete:`, `success:`, `passed:`, or
+`shipped:`; honest null outcomes such as A~=B or smoke-only because Exp 4099
+found no grid discrimination SHALL still be complete decision-grade outcomes.
+The `reproducibility_checksum` SHALL hash the train/held-out split plus the
+certified corpus or smoke substrate inputs, so corpus drift is visible.
+
+### SCENARIO-LEARN-4100-SMOKE: No Grid Discrimination Runs Native Checkpoint Smoke
+
+**Given** Exp 4099 reports `verifier_beats_trm_vote=false`
+**When** the native nano-trm trainer produces a checkpoint and torch reloads it
+**Then** Exp 4100 reports `branch_taken="smoke"`,
+`trm_native_trainer_checkpoint_ok=true`, keeps
+`rft_vs_ablation_delta.status="not_run_no_verifier_signal"`, and writes an
+`honest_verdict` beginning with `complete:`.
+
+### SCENARIO-LEARN-4100-RFT: Verifier Label Must Beat Vote Ablation
+
+**Given** Exp 4099 reports `verifier_beats_trm_vote=true`
+**When** the verifier-certified arm beats the vote-certified self-SFT ablation
+on held-out pass@2 and the bootstrap CI95 excludes zero
+**Then** Exp 4100 reports `branch_taken="rft"`, records the A-vs-B delta under
+`rft_vs_ablation_delta`, and uses a terminal complete/success/passed/shipped
+verdict rather than a gate wrapper.
+
+## Implementation Status (REQ-LEARN-4100)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4100 | Proposed (python/carnot/agentic/arc_exp4100_trm_verifier_rft_conditional.py; scripts/experiments/exp4100_trm_verifier_rft_conditional.py, Exp 4100) | Proposed (tests/python/test_experiment_4100_trm_verifier_rft_conditional.py) |
+
+---
+
 ## REQ-LEARN-4088: Trustworthy ARC Verifier-Reward RFT Corpus Build
 
 **Given** Exp 4087 has already produced
