@@ -1,0 +1,250 @@
+{
+  "activated_milestone": "2026.06.379",
+  "active_milestone_confirmed": "2026.06.379",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.378",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4086_archive_v377_activate_v378.json",
+      "experiment_id": "4086",
+      "sha256": "e3b5311c5773603e1c59cef17c615186633cf0df2e36d86c91ed4ea35cef7d90"
+    },
+    {
+      "deliverable": "results/experiment_4087_certification_precision_rescue.json",
+      "experiment_id": "4087",
+      "sha256": "5c8ed0ae5a5429910b760124b6d0b00425818a80be296214e21ee1d97bd07646"
+    },
+    {
+      "deliverable": "results/experiment_4088_verifier_reward_rft_corpus_build.json",
+      "experiment_id": "4088",
+      "sha256": "5274ac4a1196a56b9e303cd095db7aee0021c101291159b3cad0d5ab304ff4b9"
+    },
+    {
+      "deliverable": "results/experiment_4089_verifier_reward_rft_train.json",
+      "experiment_id": "4089",
+      "sha256": "2fa0ce32cd2c0b278341177d84703ee677af8f831f1a22adb67ae58c13cfe63a"
+    },
+    {
+      "deliverable": "results/experiment_4090_verifier_reward_rft_eval.json",
+      "experiment_id": "4090",
+      "sha256": null
+    },
+    {
+      "deliverable": "results/experiment_4091_sudoku_rft_pipeline_sanity.json",
+      "experiment_id": "4091",
+      "sha256": null
+    },
+    {
+      "deliverable": "results/experiment_4092_tenth_game_explore_first.json",
+      "experiment_id": "4092",
+      "sha256": "5c73ec10fa6a462ebe1677ab0002570323cc32fe799089b7ea53fd0f9fda60ee"
+    },
+    {
+      "deliverable": "results/experiment_4093_offarc_demofit_precision_transfer.json",
+      "experiment_id": "4093",
+      "sha256": "040cedde692448e6a5dd2e0e42536ba12ba21ba0f4d80015be861d4c4d2a30c8"
+    },
+    {
+      "deliverable": "docs/research-notes/sota-ingestion-precision-calibration-2026-06-12.md",
+      "experiment_id": "4094",
+      "sha256": "8cba882d5bbca3f8874584c88dd1201885aa2c771105571cf7da1357b84e2edd"
+    },
+    {
+      "deliverable": "results/experiment_4095_verifier_registry_gaps_hygiene.json",
+      "experiment_id": "4095",
+      "sha256": "bd40aeb21e289e1e3e864db0eb3128c2e93ab63cb0ff522a574a8904ebb569c8"
+    },
+    {
+      "deliverable": "results/experiment_4096_hardware_continuity.json",
+      "experiment_id": "4096",
+      "sha256": "64dd97c4c2e2bb0f353087fa8ed0586c2485cef50231ee280d5d9b1d5f0d536b"
+    },
+    {
+      "deliverable": "results/experiment_4097_capstone_v378.json",
+      "experiment_id": "4097",
+      "sha256": "1d38515d1f630c50abce80851d583eb7b42fc6a32dd0bb5ecba4888630f869f3"
+    }
+  ],
+  "duration_s": 11.58498,
+  "exclusion_manifest_parses": true,
+  "experiment_id": "exp4098",
+  "field_principles": {
+    "activated_milestone": "Confirms .379 is live so the TRM-substrate pivot tasks resolve.",
+    "active_milestone_confirmed": "STR -- the active milestone the roadmap reports; the conductor must agree .379 is active.",
+    "archived_milestone": "Provenance -- which milestone was archived (2026.06.378).",
+    "duration_s": "Positive bare wall-clock; aggregation is fast but never zero.",
+    "exclusion_manifest_parses": "BARE BOOL -- the manifest still loads under yaml.safe_load.",
+    "flagged_count": "BARE INT -- number of .378 artifacts carrying flagged_adversarial (exp4095 -> 1).",
+    "honest_verdict": "Terminal-prefix verdict + aggregation substrate; no live compute markers.",
+    "inference_substrate": "Declares aggregation only, preventing live-inference duration false positives.",
+    "preconditions_checked": "Records which resources were verified before proceeding; pre-empts the silent-missing-resource fabrication mode.",
+    "pretest_suite_green": "BARE BOOL -- a red OR collection-error pre-test gate cascade-SKIPs the whole next milestone (the poison-test incidents of .325/.326/.332); we confirm it is green.",
+    "research_complete_yaml_parses": "BARE BOOL -- the colon-poison guard; the history file still loads.",
+    "total_games_solved": "BARE INT -- the monotonic ARC-AGI-3 solved-game count; 10 (tenth game solved).",
+    "trm_substrate_present": "BARE BOOL -- nano-trm arc_evaluator + the TRM eval harness are on disk so the .379 native-trainer pivot can execute (the binding precondition for the new substrate).",
+    "v378_close_state": "DICT -- the .379 planner reads this as ground truth. It MUST record the honest mixed result: (1) the LLM-LoRA verifier-as-reward TRAINING route is RETIRED (exp4088 blocked_lora_smoke_checkpoints -> exp4089 blocked_gate_check_failed; no checkpoint over three milestones; exp4090/4091 missing -> training signal unmeasured); (2) the precision rescue (exp4087) PASSED but the winning stack was DEMO-PERFECT ALONE (k_of_n_agreement at k=1 == no filter; invariance cratered recall to 0.286; agreement k>=2 certified 0; min_hamming worse) so ensemble_added_value=false -- NOT 'the ensemble rescued precision'; (3) the off-ARC demo-fit primitive transfers (exp4093, 0.96) with marginal filter lift; (4) ACCURACY advances to 10 games (exp4092 tenth game solved). 1 artifact (exp4095) flagged-and-skipped."
+  },
+  "flagged_count": 1,
+  "honest_verdict": "success: archived_v378_v379_active_lora_verifier_as_reward_retired_precision_gate_passed_on_demo_perfect_alone_ensemble_added_no_value_tenth_game_solved_games10_1_flagged_skipped_kv260_terminal_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "n_tasks_archived": 12,
+  "preconditions_checked": {
+    "active_milestone": "2026.06.379",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "exclusion_manifest_exists": true,
+    "exclusion_manifest_parsed": true,
+    "pretest_suite_green": true,
+    "research_complete_yaml_exists": true,
+    "research_complete_yaml_parsed_after": true,
+    "research_complete_yaml_parsed_before": true,
+    "trm_substrate_files": [
+      "nano-trm/src/arc_evaluator.py",
+      "scripts/experiments/trm_arc_eval_harness.py"
+    ],
+    "trm_substrate_present": true
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4098,
+  "reproducibility_checksum": "c85bb780a30b6a8d80fb010f6cd20c8b9362906bce5b16bcb86512f73552e34e",
+  "research_complete_duplicates_removed": 27,
+  "research_complete_record_action": "deduped",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v378_to_v379_4098.v1",
+  "task_id": "exp4098-archive-v378-activate-v379",
+  "total_games_solved": 10,
+  "trm_substrate_present": true,
+  "v378_close_state": {
+    "accuracy": {
+      "first_solve_at_action": 4,
+      "monotonic_no_regression": true,
+      "outcome": "tenth_game_solved_games10_clean",
+      "prior_total_games_solved": 9,
+      "real_env_confirmed": true,
+      "tenth_game": "r11l-495a7899",
+      "tenth_game_measured": true,
+      "tenth_game_solved": true,
+      "total_games_solved": 10
+    },
+    "capstone_v378_verdict": "complete: capstone_v378_precision_rescued_0.8824_phaseB_no_clean_A_vs_B_games10_offarc_transfer_flagged_skipped1",
+    "flagged_count": 1,
+    "flagged_skipped": {
+      "count": 1,
+      "experiment_ids": [
+        "4095"
+      ],
+      "reason": "flagged_adversarial (DURATION_TOO_SHORT fabrication) -> skipped from aggregation",
+      "skipped": [
+        {
+          "experiment_id": "4095",
+          "flagged_adversarial": true,
+          "verdict": "complete: gap4_arc1_reproduced_True_precision_precision_rescue_succeeded_rft_rft_a_vs_b_pending_absent"
+        }
+      ]
+    },
+    "hardware": {
+      "gatemate_step": "blocked_gatemate_unreachable",
+      "included": true,
+      "kv260_terminal": true,
+      "per_board_reachability": {
+        "gatemate": false,
+        "kv260": true,
+        "polarfire": true
+      },
+      "per_board_terminal_state": {
+        "gatemate": "blocked_gatemate_unreachable",
+        "kv260": "opportunistic_terminal_confirmed_ssh_only",
+        "polarfire": "reachable_hash_verified_cpu_dispatch_recorded"
+      },
+      "polarfire_step": "polarfire_hash_verified_cpu_dispatch_succeeded",
+      "verdict": "complete: hardware_continuity_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only"
+    },
+    "headline": ".378 mixed result. The LLM-LoRA verifier-as-reward TRAINING route is RETIRED: blocked_lora_smoke_checkpoints -> blocked_gate_check_failed; no trl/peft checkpoint over three milestones; exp4090/exp4091 missing so the verifier-label training signal was never measured (.379 pivots to the native nano-TRM trainer). The precision rescue (exp4087) recorded succeeded=True at 0.8824/recall0.7143 BUT the winning stack was DEMO-PERFECT ALONE (k_of_n_agreement at k=1 == no filter; invariance cratered recall to 0.2857; agreement k>=2 certified 0; min_hamming worse 0.75) -> ensemble_added_value=False -- NOT 'the ensemble rescued precision'. The off-ARC demo-fit primitive transfers (exp4093, raw 0.956186 / filtered 0.96049, marginal filter lift). ACCURACY advances to 10 games (exp4092 solved the tenth, r11l-495a7899 at action 4). 1 artifact flagged-and-skipped; KV260 terminal, PolarFire ok, GateMate unreachable.",
+    "lora_training": {
+      "blocked_milestones": [
+        "2026.06.377 (exp4077/exp4078)",
+        "2026.06.378 (exp4088/exp4089)"
+      ],
+      "corpus_verdict": "blocked_lora_smoke_checkpoints",
+      "outcome": "lora_on_llm_rft_training_retired_no_checkpoint_over_three_milestones",
+      "pivot_attempted": "verifier_as_reward_lora_on_1b_llm_rft",
+      "retired": true,
+      "rft_eval_measured": false,
+      "sudoku_sanity_measured": false,
+      "train_verdict": "blocked_gate_check_failed",
+      "trainer_produced_checkpoint": false,
+      "v379_pivot": "retire LoRA-on-1B-LLM; train the native nano-TRM full-FT loop (~7M params, cheap on a 3090, full-FT > LoRA for OOD) which sidesteps the broken trl/peft trainer",
+      "verifier_label_training_signal_measured": false
+    },
+    "lora_training_retired": true,
+    "offarc_transfer": {
+      "clears_floor": true,
+      "demofit_precision_filtered": 0.96049,
+      "demofit_precision_raw": 0.956186,
+      "domain_general_precision_floor": 0.68,
+      "filter_lift": 0.004304,
+      "honest_note": "the demo-fit precision primitive transfers off-ARC; the mutation-probe filter lift is marginal -- the primitive generalizes, the ensemble adds little (consistent with the precision-rescue finding)",
+      "measured": true,
+      "outcome": "demo_fit_primitive_transfers_offarc_marginal_filter_lift",
+      "primitive_is_domain_general": true,
+      "verdict": "complete: offarc_demofit_precision_0.96_filter_raises_to_0.96"
+    },
+    "per_task_conductor_result": {
+      "exp4086-archive-v377-activate-v378": "OK_archived_v377",
+      "exp4087-certification-precision-rescue": "OK_precision_gate_passed_but_demo_perfect_alone",
+      "exp4088-verifier-reward-rft-corpus-build": "BLOCKED_lora_smoke_checkpoints",
+      "exp4089-verifier-reward-rft-train": "BLOCKED_gate_check_failed_exp4088_runner_not_ready",
+      "exp4090-verifier-reward-rft-eval": "MISSING_no_arc_rft_eval",
+      "exp4091-sudoku-rft-pipeline-sanity": "MISSING_sudoku_sanity_not_reproduced",
+      "exp4092-tenth-game-explore-first": "OK_tenth_game_solved_games10",
+      "exp4093-offarc-demofit-precision-transfer": "OK_demofit_primitive_transfers_offarc",
+      "exp4094-sota-ingestion-precision-calibration": "OK_sota_precision_calibration_mapped",
+      "exp4095-verifier-registry-gaps-hygiene": "FLAGGED_duration_too_short_skipped",
+      "exp4096-hardware-continuity": "OK_kv260_terminal_polarfire_ok_gatemate_unreachable",
+      "exp4097-capstone-v378": "OK_capstone_precision_rescued_demo_perfect_games10"
+    },
+    "per_task_status": {
+      "exp4086-archive-v377-activate-v378": "OK",
+      "exp4087-certification-precision-rescue": "OK",
+      "exp4088-verifier-reward-rft-corpus-build": "BLOCKED",
+      "exp4089-verifier-reward-rft-train": "BLOCKED",
+      "exp4090-verifier-reward-rft-eval": "MISSING",
+      "exp4091-sudoku-rft-pipeline-sanity": "MISSING",
+      "exp4092-tenth-game-explore-first": "OK",
+      "exp4093-offarc-demofit-precision-transfer": "OK",
+      "exp4094-sota-ingestion-precision-calibration": "OK",
+      "exp4095-verifier-registry-gaps-hygiene": "FLAGGED",
+      "exp4096-hardware-continuity": "OK",
+      "exp4097-capstone-v378": "OK"
+    },
+    "precision_rescue": {
+      "agreement_k_ge_2_certified": 0,
+      "best_certified_precision": 0.8824,
+      "best_op_point_recall": 0.7143,
+      "best_operating_point_stack": "k_of_n_agreement",
+      "best_operating_point_threshold": "k=1",
+      "ensemble_added_value_over_demo_perfect_alone": false,
+      "gate_cleared_floor": true,
+      "honest_framing": "the certification-precision gate passed (0.8824 >= 0.85) but on the DEMO-FIT primitive ALONE: the recorded best operating point is k_of_n_agreement at k=1, which is a no-op identical to demo-perfect alone. Every real ensemble member made it worse -- invariance cratered recall to 0.286, agreement at k>=2 certified 0, and graded_min_hamming was worse (0.75). Do NOT record this as 'the ensemble rescued precision'.",
+      "invariance_cratered_recall": true,
+      "invariance_precision": 0.8571,
+      "invariance_recall": 0.2857,
+      "k_of_n_agreement_k1_is_no_filter": true,
+      "min_hamming_best_precision_at_winning_recall": 0.75,
+      "min_hamming_worse_than_demo_perfect": true,
+      "outcome": "precision_gate_passed_0.8824_carried_by_demo_perfect_alone_not_ensemble",
+      "precision_gate_threshold": 0.85,
+      "succeeded_flag_recorded": true,
+      "winning_stack_is_demo_perfect_alone": true
+    },
+    "precision_rescue_carried_by_demo_perfect_alone": true,
+    "status_counts": {
+      "BLOCKED": 2,
+      "FAIL": 0,
+      "FLAGGED": 1,
+      "MISSING": 2,
+      "OK": 7
+    },
+    "summary": "lora_training_retired_precision_gate_passed_on_demo_perfect_alone_tenth_game_solved",
+    "total_games_solved": 10
+  }
+}

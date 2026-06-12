@@ -137,7 +137,7 @@ tasks:
         honest_verdict:
           principle: "Terminal-prefixed verdict. MUST start with complete:/success:/passed:/shipped:. An honest 'no verifier beats TRM-vote' is a COMPLETE verdict, NOT a failure to dress up."
         verifier_beats_trm_vote:
-          principle: "THE load-bearing bare bool: True iff some reranker's pass@2 exceeds TRM_VOTE's with bootstrap CI95 excluding 0. Emit it BARE (not a {value,principle} dict) so the conductor gate can read it. This is the strict gate exp4100 reads."
+          principle: "THE load-bearing bare bool: True iff some reranker's pass@2 exceeds TRM_VOTE's with bootstrap CI95 excluding 0. Emit it BARE (not a {{value,principle}} dict) so the conductor gate can read it. This is the strict gate exp4100 reads."
         captured_pp_directional:
           principle: "The best reranker's captured_pp POINT estimate (vs TRM_VOTE), reported even when the CI95 includes 0; preserves a real-but-underpowered signal at n=31 for the .380 expand-and-retry decision, separate from the strict bool."
         pool_n_tasks:
@@ -403,7 +403,7 @@ tasks:
         honest_verdict:
           principle: "Terminal-prefixed. The milestone's decision-grade summary; an honest negative ('verifier does not discriminate on TRM grids') is a COMPLETE, valuable verdict."
         headline_outcome:
-          principle: "One of {verifier_rft_on_trm_validated, honest_negative_no_grid_discrimination, trainer_derisked_science_open} — forces a single unambiguous read of the pivot's first decision-grade result."
+          principle: "One of {{verifier_rft_on_trm_validated, honest_negative_no_grid_discrimination, trainer_derisked_science_open}} — forces a single unambiguous read of the pivot's first decision-grade result."
         upstream_provenance:
-          principle: "{experiment_id, fields_imported, sha256} per cited upstream — the audit trail that proves the capstone synthesizes real measurements, not invented numbers."
+          principle: "{{experiment_id, fields_imported, sha256}} per cited upstream — the audit trail that proves the capstone synthesizes real measurements, not invented numbers."
       ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited.

@@ -19802,3 +19802,85 @@ reconciliation files untouched.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-4094 | Implemented (`python/carnot/sota_ingestion_precision_calibration_4094.py`, `docs/research-notes/sota-ingestion-precision-calibration-2026-06-12.md`) | Implemented (`tests/python/test_sota_ingestion_precision_calibration_4094.py`) |
+
+### REQ-REPORT-4098: Archive .378, Activate .379, Record The Honest Close-State
+
+The Exp 4098 workflow SHALL archive milestone `2026.06.378`, confirm milestone
+`2026.06.379` is the active milestone, and write a single record-only
+aggregation artifact to
+`results/experiment_4098_archive_v378_activate_v379.json`. It SHALL run NO live
+model: its `inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`.
+
+The workflow SHALL keep `research-complete.yaml` parseable under
+`yaml.safe_load` before and after any edit (the colon-poison guard), and SHALL
+collapse any duplicate top-level `- id: 2026.06.378` records down to the FIRST
+occurrence (interrupted-run cruft produced 28 copies), recording the number
+removed in `research_complete_duplicates_removed`. The TRM substrate precondition
+(`nano-trm/src/arc_evaluator.py` and
+`scripts/experiments/trm_arc_eval_harness.py`) SHALL be confirmed present, since
+the `.379` pivot trains on that substrate.
+
+The artifact's `v378_close_state` dict SHALL record the HONEST `.378` truth so the
+next planner cannot re-narrate a null as a win:
+
+1. The LLM-LoRA verifier-as-reward TRAINING route is RETIRED: the corpus build
+   (Exp 4088) returned `blocked_lora_smoke_checkpoints` and the train (Exp 4089)
+   returned `blocked_gate_check_failed`; the trl/peft trainer produced no
+   checkpoint across `.377` (Exp 4077/4078) and `.378` (Exp 4088/4089); the
+   held-out RFT eval (Exp 4090) and sudoku sanity (Exp 4091) are MISSING, so the
+   verifier-label training signal is UNMEASURED. The `.379` pivot trains the
+   native nano-TRM substrate instead.
+2. The precision rescue (Exp 4087) recorded `precision_rescue_succeeded=true`
+   with `best_certified_precision=0.8824` at recall `0.7143`, BUT at the best
+   operating point the winning stack was DEMO-PERFECT ALONE: `k_of_n_agreement`
+   at `k=1` is a no-op identical to demo-perfect alone; the `invariance` filter
+   cratered recall to `0.2857` and lowered precision; `agreement` at `k>=2`
+   certified zero; `graded_min_hamming` was worse (`0.75`). The close-state SHALL
+   record `ensemble_added_value_over_demo_perfect_alone=false` and SHALL NOT
+   claim the ensemble rescued precision.
+3. The OFF-ARC demo-fit precision primitive transfers (Exp 4093): raw `0.9562`,
+   filtered `0.9605`, clearing the `0.68` domain-general floor with only a
+   marginal mutation-probe filter lift — consistent with the demo-fit primitive,
+   not the ensemble, carrying the signal.
+4. ACCURACY holds at `total_games_solved=10` (Exp 4092 solved the tenth game
+   `r11l-495a7899` at action 4, real-env-confirmed; prior 9, monotonic).
+5. One artifact (Exp 4095) is `flagged_adversarial` and SHALL be skipped from
+   aggregation; hardware: KV260 terminal confirmed, PolarFire CPU dispatch
+   hash-verified, GateMate unreachable.
+
+The artifact SHALL carry the required principle-annotated fields
+`honest_verdict` (terminal prefix; complete path starts with `success:`),
+`v378_close_state`, `preconditions_checked`, `archived_milestone`,
+`activated_milestone`, `active_milestone_confirmed`, `total_games_solved`,
+`flagged_count`, `duration_s`, `inference_substrate`, `random_seed`, and
+`reproducibility_checksum`.
+
+#### SCENARIO-REPORT-4098: The Archive Records The Honest .378 Close-State
+
+**Given** `.378` has the Exp 4087 precision-rescue result whose best operating
+point is demo-perfect alone, the Exp 4088/4089 LoRA-RFT training blockage with
+Exp 4090/4091 missing, the Exp 4093 OFF-ARC demo-fit transfer, the Exp 4092
+tenth-game solve, and one flagged artifact (Exp 4095)
+**When** the Exp 4098 archive workflow runs with `.379` active
+**Then** it confirms `research-complete.yaml` parses, collapses the duplicate
+`.378` records, confirms the TRM substrate present, derives the close-state from
+the on-disk artifacts, records the LoRA route retired, records the precision
+rescue as carried by demo-perfect alone (`ensemble_added_value=false`), records
+the OFF-ARC transfer and the tenth game (`total_games_solved=10`), skips the
+flagged artifact, declares `aggregation_from_upstream_artifacts`, and emits a
+`success:`-prefixed terminal verdict.
+
+#### SCENARIO-REPORT-4098-BLOCKED-YAML: A Poisoned History File Blocks Without Fabrication
+
+**Given** `research-complete.yaml` is missing or does not parse under
+`yaml.safe_load`
+**When** the Exp 4098 archive workflow runs
+**Then** it writes a `blocked_research_complete_yaml_poison*` artifact with
+`research_complete_yaml_parses=false`, fabricates no green gates, and does not
+claim the milestone archived.
+
+## Implementation Status (REQ-REPORT-4098)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4098 | Implemented (`python/carnot/reporting/archive_v378_activate_v379_4098.py`, `scripts/experiments/exp4098_archive_v378_activate_v379.py`) | Implemented (`tests/python/test_experiment_4098_archive_v378_activate_v379.py`) |
