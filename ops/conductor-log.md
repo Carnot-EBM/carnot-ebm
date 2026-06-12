@@ -8320,3 +8320,4 @@ c |
 | 2026-06-12 08:46 UTC | Milestone 2026.06.378 activated | OK | 12 tasks queued |
 | 2026-06-12 09:04 UTC | Archive .377 -> activate .378; KEEP the hardened g | OK | 162 passed in 4.32s |
 | 2026-06-12 09:23 UTC | PRECISION RESCUE (THE de-risk; OFFLINE, fabricatio | OK | 89 passed in 5.31s |
+| 2026-06-12 10:42 UTC | RFT CORPUS BUILD (Phase B part 1; gated on precisi | OK | 89 passed in 4.89s |
