@@ -12392,6 +12392,70 @@ precondition fails, it writes the corresponding `blocked_*` artifact with
 `runner_ready=false`, `smoke_passed=false`, `resumed_from_n=0`,
 `smoke_per_task_seconds=0.0`, and `launched_pid=0`.
 
+### REQ-VERIFY-4069: Synchronous MoE Resume-Accumulate Terminal Runner
+
+The repository SHALL provide Exp 4069 at
+`scripts/experiments/exp4069_decentralization_moe_sync.py` as a single
+synchronous replacement for the split-background Exp 4058/4059 mechanism. The
+runner SHALL resume the stable corpus/model/k checkpoint
+`results/decentralization_moe_qwen35a3b_arc1_k8.checkpoint.json`, seeding it
+from `results/experiment_4048_decentralization_moe_base_raw.checkpoint.json`
+without regenerating already-scored tasks, and SHALL mirror Exp 4012 over the
+same ARC-1 pool with `k=8`, batched Qwen3.6-35B-A3B GGUF generation,
+RoBoN-style early stop after the first demo-perfect candidate for a task, and
+the unchanged GAP-4 model-free demo-fit verifier and gated pass@2 scorer.
+
+Before any live inference, Exp 4069 SHALL verify that the Qwen MoE GGUF cache
+directory is non-empty and resolves to a concrete `.gguf` path, `llama_cpp`
+imports, the Exp 4012 ARC-1 pool loads as the expected 30-unique-task pool, and
+the Exp 4048 checkpoint loads with matching corpus/model/k metadata. If a
+precondition fails, it SHALL write
+`results/experiment_4069_decentralization_moe_sync.json` with
+`honest_verdict` equal to `blocked_moe_base_not_cached`,
+`blocked_llama_cpp_unavailable`, `blocked_exp4012_pool_unreadable`, or
+`blocked_exp4048_checkpoint_unreadable`, SHALL record all checked resources,
+and SHALL NOT launch inference or fall back to DSL-only, Codex, Gemma-12B,
+Gemma-31B, background `setsid`, or polling.
+
+During a complete or partial run, Exp 4069 SHALL execute in the foreground under
+a bounded self-budget of about 3000 seconds, checkpoint after each task, and
+print one flushed progress line per processed task in the form
+`[moe] task i/30 demo_perfect=<bool> cov=<x> elapsed=<s>s`. It SHALL stop
+cleanly at the self-budget and SHALL always write the terminal artifact even
+when fewer than 30 tasks have accumulated.
+
+The terminal artifact SHALL include bare top-level fields `honest_verdict`,
+`moe_base_demo_perfect_coverage`, bare integer `accumulated_n_tasks`,
+`coverage_delta_vs_12b`, `bootstrap_ci95`, `oracle_coverage`,
+`local_support_diagnosis`, `local_seconds_per_task`, `mechanism`, `model_specs`,
+`random_seed`, `reproducibility_checksum`, `missing_verifier_gaps`,
+`preconditions_checked`, and `inference_substrate=live_llm_inference`.
+`mechanism` SHALL equal `single_synchronous_resume_accumulate_no_background`.
+The runner SHALL compare gated pass@2 against Exp 4012 12B, oracle, and Codex
+references, record no-local-k-surfaced tasks in `ops/verifier_gaps.md`, and run
+`scripts/summarize_artifact.py` after the terminal artifact is written.
+
+### SCENARIO-VERIFY-4069: Foreground Resume Produces A Terminal Diagnosis
+
+Given the Qwen MoE GGUF is cached, `llama_cpp` imports, the Exp 4012 ARC-1 pool
+loads, and the 14-task Exp 4048 checkpoint is intact, when Exp 4069 runs, then
+it seeds or preserves the stable checkpoint, does not regenerate already-scored
+tasks, samples only unfinished tasks in the foreground with no build/collect
+split, no `setsid` backgrounding, and no polling, checkpoints and prints
+progress after each processed task, computes MoE accumulated demo-perfect
+coverage against the 0.2581 Exp 4012 baseline with a deterministic bootstrap
+CI95, reports oracle/best-of-pool coverage as the positive control, and writes
+a terminal artifact. If accumulated N is below 30, it emits
+`complete: decentralization_moe_accumulating_n_<N>` with
+`local_support_diagnosis=accumulating`; if accumulated N is at least 30 and the
+coverage CI lower bound excludes zero on a non-saturated oracle pool, it emits
+`complete: decentralization_moe_cov_<X>_latent_distill_viable` with
+`local_support_diagnosis=latent`; if accumulated N is at least 30, the oracle
+pool has headroom, and the CI includes zero, it emits
+`complete: decentralization_moe_cov_<X>_absent_leash_holds_n30` with
+`local_support_diagnosis=absent`; and if the oracle positive control is
+saturated at the 12B ceiling, it emits an uninformative complete verdict.
+
 ### REQ-VERIFY-4013: ARC GAP-4 Verifier-vs-Codex-Judge Efficiency
 
 The repository SHALL provide Exp 4013 at
