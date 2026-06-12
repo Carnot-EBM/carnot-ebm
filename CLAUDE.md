@@ -905,6 +905,19 @@ scope-match vs <exp ids>; <one-line forward rationale>."`
 The 6 overrides applied to the `.310 roadmap (commit `2cf7940f5`) are
 the canonical examples.
 
+**Agent routing for the archive/activate transition task: codex, NOT
+Opus (MANDATORY — 2026-06-12 operator quota-conserve directive).** The
+routine `archive-vN-activate-vN+1` task is mechanical (YAML archive +
+next-milestone activation; the activation guard is a SCRIPT, not the
+agent) and MUST run on `agent_type: codex`. Do NOT set
+`requires_claude_verified: true` on it — that flag exempts the task from
+the `CODEX_FORCE_EXPERIMENTS=1` coercion and needlessly burns ~1 Claude
+Opus call per milestone (× ~10–30 milestones/day). Planner + outer-loop
+pre-staging both emit the archive task as `agent_type: codex` with NO
+`requires_claude_verified`. (Capstones already default to codex.
+Planner/retro themselves STAY on Opus per the operator's deliberate
+quality choice — this rule is ONLY about the mechanical transition task.)
+
 **A single `operator_override:` clears BOTH guards (2026-05-29).** It
 satisfies the milestone-activation exclusion-manifest guard AND the
 per-task doomed-rerun pre-launch guard
