@@ -8335,3 +8335,4 @@ c |
 | 2026-06-12 12:14 UTC | SOTA-INGESTION SLOT (reserved): ingest the certifi | OK | 99 passed in 3.64s |
 | 2026-06-12 12:37 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (infra slot; regr | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-12 12:52 UTC | Hardware continuity (GateMate + PolarFire drive-to | OK | 89 passed in 4.31s |
+| 2026-06-12 13:09 UTC | Capstone .378 (UNGATED): the headline question is  | OK | 87 passed in 5.34s |
