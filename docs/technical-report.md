@@ -15,7 +15,7 @@ Large language models generate fluent text by predicting one token at a time. Th
 
 The framework is built in Rust plus Python/JAX and installs via `pip install carnot-ebm`, with model weights mirrored on HuggingFace. Four energy-model tiers (KAN, Ising, Gibbs, Boltzmann) can be selected by task; the production verify-repair API is a handful of lines of Python. Headline benchmark numbers come from live GPU inference on real public models (Qwen 3.5, Gemma 4, Qwen3.6-35B-A3B), never simulated runs; hardware, ensemble, and adversarial-audit results are labeled by artifact provenance.
 
-This report describes the framework architecture, the verify-repair pipeline, and the production results. On HumanEval an IterativeSelfRepair loop lifts an 8% baseline to 80% (+72pp) on gemma-4-E4B-it (n=50, Exp 906), and verify-and-repair adds +3.0pp on the full 164-problem set (11.6% → 14.6%, Exp 226); EstimationVerifier reaches 0.90 AUC on SVAMP versus a 0.125 FoVer baseline; and the production verifier ensemble reaches AUROC 0.9131 on the FoVer step-error corpus, measured under a 5-seed dual-condition protocol (production AUROC 0.9131, architecture-only AUROC 0.8947, delta +0.0185). This number repins the earlier v2 headline of 0.9857 downward after a pre-submission adversarial audit; the dual-condition methodology is what produces the defensible figure (see `docs/blog/why-two-aurocs.html` and `docs/blog/two-retractions-and-a-rescue.html`). A KV260 FPGA prototype runs an Ising sampler on real silicon as a POC functional simulator (same-schedule apples-to-apples speedup at n=64 is 0.98x; the prior 12,788x speedup framing was retracted in the same audit). The full per-milestone development record lives in `docs/research-log.md` so this report can stay focused on the framework.
+This report describes the framework architecture, the verify-repair pipeline, and the production results. On HumanEval, Ising-guided fuzzing lifts a 0.66 baseline to 0.84 (+18pp, n=50, Exp 1999) and CRANE constrained decoding lifts a 0.70 rigid-grammar baseline to 0.85 (+15pp, n=50, Exp 2090); EstimationVerifier reaches 0.90 AUC on SVAMP versus a 0.125 FoVer baseline; and the production verifier ensemble reaches AUROC 0.9131 on the FoVer step-error corpus, measured under a 5-seed dual-condition protocol (production AUROC 0.9131, architecture-only AUROC 0.8947, delta +0.0185). This number repins the earlier v2 headline of 0.9857 downward after a pre-submission adversarial audit; the dual-condition methodology is what produces the defensible figure (see `docs/blog/why-two-aurocs.html` and `docs/blog/two-retractions-and-a-rescue.html`). A KV260 FPGA prototype runs an Ising sampler on real silicon as a POC functional simulator (same-schedule apples-to-apples speedup at n=64 is 0.98x; the prior 12,788x speedup framing was retracted in the same audit). The full per-milestone development record lives in `docs/research-log.md` so this report can stay focused on the framework.
 
 ## What this report is (and isn't)
 
@@ -38,8 +38,8 @@ Each number below is backed by a checked-in experiment artifact. Model-generatio
 
 ### Code generation
 
-- **IterativeSelfRepair on HumanEval-50** (execute-feedback-retry pipeline): 8% → 80% pass rate (+72pp) on gemma-4-E4B-it, n=50, live GPU (Exp 906).
-- **Verify-and-repair on full 164-problem HumanEval: +3.0 points on pass-rate** (11.6% → 14.6%, 5 of 164 repaired) on Gemma4-E4B-it, live GPU (Exp 226).
+- **Ising-guided fuzzing on HumanEval-50**: 0.66 → 0.84 pass rate (+18pp), live GPU (Exp 1999).
+- **CRANE constrained decoding on HumanEval-50**: 0.70 → 0.85 pass rate (+15pp) versus a rigid grammar, live GPU (Exp 2090).
 - A live Qwen3.6-35B-A3B HumanEval repair run is pending — prior 35B attempts (Exp 2830/2838) were CUDA/GGUF-cache blocked and produced no result; do not cite a 35B HumanEval number until a completed artifact exists.
 
 ### Math reasoning

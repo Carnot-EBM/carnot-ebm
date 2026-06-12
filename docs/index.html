@@ -541,9 +541,9 @@
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Code repair &mdash; IterativeSelfRepair (HumanEval-50, execute-feedback-retry)</span>
-        <h3 class="r-title">8% &rarr; 80% pass rate (+72pp)</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 80%; background: #22c55e;"></div></div>
+        <span class="r-tag">Code repair &mdash; Ising-guided fuzzing on HumanEval-50</span>
+        <h3 class="r-title">66% &rarr; 84% pass rate (+18pp)</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 84%; background: #22c55e;"></div></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Math reasoning &mdash; EstimationVerifier SVAMP AUC</span>
@@ -551,9 +551,9 @@
         <div class="r-meter"><div class="r-bar" style="width: 90%; background: #a855f7;"></div></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Live benchmark &mdash; SOTA 35B (Qwen3.6-35B-A3B, dual RTX 3090)</span>
-        <h3 class="r-title">HumanEval pass@1: 0% &rarr; 36% after Carnot correction</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 36%; background: #22c55e;"></div></div>
+        <span class="r-tag">Constrained decoding &mdash; CRANE vs rigid grammar, HumanEval-50</span>
+        <h3 class="r-title">70% &rarr; 85% pass rate (+15pp)</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 85%; background: #22c55e;"></div></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Math extraction &mdash; VeriCoT equation-style CoT fix</span>
@@ -586,8 +586,12 @@
       An architectural framework for energy-based verification of LLM
       output. The current draft anchors its claims to checked-in
       experiment artifacts and labels every benchmark number with
-      provenance. The arXiv submission is prepared but pending
-      operator-initiated upload.
+      provenance. The headline FoVer verification AUROC (0.9131) has been
+      independently re-computed from a clean continuous-integration
+      checkout in a non-operator environment and landed within the
+      published confidence interval &mdash; the central result is
+      externally reproducible. The arXiv submission is prepared but
+      pending operator-initiated upload.
     </p>
     <div class="hero-actions" style="justify-content: flex-start;">
       <a href="arxiv-paper/main.pdf" class="btn btn-primary">Read paper (PDF)</a>
