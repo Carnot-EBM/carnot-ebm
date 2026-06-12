@@ -8304,3 +8304,4 @@ c |
 | 2026-06-12 04:44 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 84 passed in 4.76s |
 | 2026-06-12 05:02 UTC | Capstone .376 (UNGATED): the milestone's headline  | OK | 87 passed in 4.93s |
 | 2026-06-12 05:05 UTC | Milestone 2026.06.377 activated | OK | 10 tasks queued |
+| 2026-06-12 05:23 UTC | Archive .376 -> activate .377; KEEP the hardened g | OK | 157 passed in 4.53s |
