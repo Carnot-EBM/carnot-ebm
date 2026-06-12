@@ -8318,3 +8318,4 @@ c |
 | 2026-06-12 07:55 UTC | Capstone .377 (UNGATED): the milestone's headline  | OK | 86 passed in 4.50s |
 | 2026-06-12 08:43 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-06-12 08:46 UTC | Milestone 2026.06.378 activated | OK | 12 tasks queued |
+| 2026-06-12 09:04 UTC | Archive .377 -> activate .378; KEEP the hardened g | OK | 162 passed in 4.32s |
