@@ -8367,3 +8367,4 @@ c |
 | 2026-06-12 14:59 UTC | Archive .378 -> activate .379; KEEP the hardened g | OK | 144 passed in 4.39s |
 | 2026-06-12 15:23 UTC | TRM-POOL VERIFIER-DISCRIMINATION PROBE (THE HEADLI | OK | 90 passed in 4.34s |
 | 2026-06-12 15:44 UTC | CONDITIONAL TRM VERIFIER-RFT via the NATIVE nano-t | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-12 16:09 UTC | ELEVENTH ARC-AGI-3 game first-solve via the PROVEN | OK | 91 passed in 5.55s |
