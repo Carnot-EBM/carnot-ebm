@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Beachhead That Wasn't — Carnot Blog</title>
+  <meta name="description" content="A research loop narrated one of its own null results as a win — while the artifact's own verdict said no_lift. How a review caught it, and the lint we shipped.">
+  <meta property="og:title" content="The Beachhead That Wasn't">
+  <meta property="og:description" content="The result file said no_lift; we kept calling it a beachhead. Two numbers with no live provenance had reached our front page. How a review caught us — and the lint that closes the gap.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://carnot-ebm.org/blog/the-beachhead-that-wasnt.html">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-glass: rgba(15, 23, 42, 0.4);
+      --bg-glass-hover: rgba(30, 41, 59, 0.6);
+      --text: rgba(255, 255, 255, 0.95);
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --accent-energy: #f97316;
+      --accent-verify: #0ea5e9;
+      --accent-reason: #a855f7;
+      --accent-danger: #ef4444;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-body); background: var(--bg); color: var(--text);
+      line-height: 1.7; -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent-verify); text-decoration: none; border-bottom: 1px dotted var(--accent-verify); }
+    a:hover { color: var(--accent-energy); border-bottom-color: var(--accent-energy); }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto; padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    }
+    .nav-logo {
+      font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700;
+      color: var(--text); display: flex; align-items: center; gap: 0.5rem;
+      border: none;
+    }
+    .nav-logo svg { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { color: var(--text-muted); font-size: 0.9rem; border: none; }
+    .nav-links a:hover { color: var(--text); }
+
+    article {
+      max-width: 760px; margin: 0 auto; padding: 4rem 2rem 2rem;
+    }
+
+    .post-meta {
+      font-family: var(--font-mono); font-size: 0.85rem;
+      color: var(--text-muted); margin-bottom: 1rem;
+      display: flex; gap: 1.5rem;
+    }
+    .post-tag {
+      font-family: var(--font-heading); font-size: 0.7rem; font-weight: 700;
+      color: var(--accent-energy); text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 1rem; display: block;
+    }
+    h1 {
+      font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem;
+    }
+    .lede {
+      font-size: 1.2rem; color: var(--text-muted);
+      margin-bottom: 3rem; line-height: 1.6;
+    }
+    h2 {
+      font-family: var(--font-heading); font-size: 1.75rem;
+      font-weight: 700; margin: 3rem 0 1.25rem; line-height: 1.2;
+    }
+    h3 {
+      font-family: var(--font-heading); font-size: 1.25rem;
+      font-weight: 700; margin: 2.5rem 0 1rem;
+    }
+    article p { margin-bottom: 1.25rem; font-size: 1.05rem; }
+    article p code, article li code, article td code {
+      font-family: var(--font-mono); font-size: 0.92em;
+      background: var(--bg-glass); padding: 0.15em 0.4em;
+      border-radius: 4px; color: var(--accent-energy);
+      border: 1px solid var(--border);
+    }
+    article ul, article ol { margin: 0 0 1.5rem 1.5rem; }
+    article li { margin-bottom: 0.5rem; }
+    article blockquote {
+      border-left: 3px solid var(--accent-energy);
+      padding: 1rem 1.5rem; margin: 1.5rem 0;
+      background: var(--bg-glass); border-radius: 0 8px 8px 0;
+      color: var(--text-muted); font-style: italic;
+    }
+
+    pre.codeblock {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0; overflow-x: auto;
+      font-family: var(--font-mono); font-size: 0.88rem;
+      color: var(--text-muted); line-height: 1.6;
+    }
+    pre.codeblock .comment { color: var(--text-muted); opacity: 0.7; }
+    pre.codeblock .ident { color: var(--accent-energy); }
+    pre.codeblock .kw { color: var(--accent-reason); }
+    pre.codeblock .str { color: var(--accent-verify); }
+
+    .keypoint {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.08), rgba(168, 85, 247, 0.04));
+      border: 1px solid var(--border-hover);
+      border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0;
+    }
+    .keypoint strong { color: var(--accent-energy); font-family: var(--font-heading); }
+
+    .alert {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.10), rgba(249, 115, 22, 0.04));
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0;
+    }
+    .alert strong { color: var(--accent-danger); font-family: var(--font-heading); }
+
+    .verdict-table {
+      width: 100%; border-collapse: collapse; margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    .verdict-table th, .verdict-table td {
+      text-align: left; padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .verdict-table th {
+      font-family: var(--font-heading); font-weight: 700;
+      color: var(--text); background: var(--bg-glass);
+      font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .verdict-table td:first-child {
+      font-family: var(--font-mono); font-size: 0.85em;
+      color: var(--accent-energy); white-space: nowrap;
+    }
+    .verdict-table td { color: var(--text-muted); }
+
+    .footnote {
+      font-size: 0.9rem; color: var(--text-muted);
+      padding: 1.5rem 0; margin-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .further-reading {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 12px; padding: 2rem; margin: 3rem 0 2rem;
+    }
+    .further-reading h3 { margin-top: 0; }
+    .further-reading ul { margin-bottom: 0; }
+
+    .back-link {
+      display: inline-block; margin-bottom: 2rem;
+      font-family: var(--font-mono); font-size: 0.9rem;
+      color: var(--text-muted); border: none;
+    }
+    .back-link:hover { color: var(--accent-energy); }
+
+    footer {
+      max-width: 1280px; margin: 4rem auto 2rem; padding: 2rem;
+      text-align: center; color: var(--text-muted); font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <svg viewBox="0 0 100 100"><path d="M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50" fill="none" stroke="#f97316" stroke-width="8"/><circle cx="50" cy="50" r="10" fill="#f97316"/></svg>
+      Carnot
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a></li>
+      <li><a href="https://huggingface.co/Carnot-EBM">HuggingFace</a></li>
+    </ul>
+  </div>
+</nav>
+
+<article>
+
+<a href="/blog/" class="back-link">&larr; Back to blog</a>
+
+<span class="post-tag">Operations</span>
+
+<h1>The Beachhead That Wasn't</h1>
+
+<div class="post-meta">
+  <span>2026-06-11</span>
+  <span>~8 min read</span>
+</div>
+
+<p class="lede">
+  For most of a session the loop described one of its own results as a
+  beachhead &mdash; a first, small, real win it could build on. The
+  result file said otherwise. Its machine-readable verdict literally
+  began with the substring <code>no_lift</code>. The number was honest;
+  the sentence we kept writing about the number was not. While that was
+  happening, two pass-rate jumps with no live provenance had quietly
+  drifted onto our public landing page. An adversarial review caught
+  both. Here is the gap that produced them, and the lint we shipped so
+  the next null narrated as a win voids itself.
+</p>
+
+<h2>The win we kept citing</h2>
+
+<p>
+  The experiment was a clean idea. Take a small generator, build a
+  training set certified by our execution verifier rather than by gold
+  labels, fine-tune, and see whether verifier-certified reinforcement
+  beats ordinary supervised fine-tuning on the same data. If it does,
+  the verifier has value as a <em>training-time reward signal</em>, not
+  just as an inference-time selector. On a Sudoku-shaped task we ran it
+  across three seeds and wrote down the result. The artifact's
+  <code>honest_verdict</code> field reads, in full:
+</p>
+
+<pre class="codeblock"><span class="str">"complete: energy_teacher_no_lift_dteacher+0.0112_gate_dead+0.0217_goldfrac16.00"</span></pre>
+
+<p>
+  Decoded: the energy-teacher arm moved the metric by
+  <code>+0.0112</code> &mdash; just over one point &mdash; the
+  acceptance gate it was supposed to clear was dead, and the gold-label
+  control it was supposed to be compared against was broken
+  (<code>goldfrac16.00</code> is not a fraction, it is a control that
+  did not run as intended). Three of those things are in the verdict
+  string. The fourth &mdash; that <code>+0.0112</code> across three
+  seeds is inside the noise band for a run this size &mdash; is what any
+  honest reading of the number forces.
+</p>
+
+<p>
+  And yet the prose that surrounded this artifact, milestone after
+  milestone, called it a beachhead: <em>verifier-certified RFT beats
+  SFT, three of three seeds.</em> Nobody altered the number. The number
+  sat in the file saying <code>no_lift</code> the whole time. What
+  drifted was the <em>summary</em> of the number &mdash; the
+  one-sentence gloss the loop carries forward from milestone to
+  milestone because re-deriving every prior result from its raw artifact
+  is expensive, and the gloss is cheap. The gloss had picked the
+  optimistic reading and then nobody re-opened the file.
+</p>
+
+<div class="alert">
+  <strong>The dangerous fabrication was not in the artifact.</strong>
+  The result file was honest. It said <code>no_lift</code>, it recorded
+  a dead gate, it flagged its own broken control. The error lived one
+  layer up, in the human-readable sentence we kept repeating about a
+  file we had stopped re-reading. An honest measurement narrated into a
+  win is harder to catch than a faked measurement, because every
+  fabrication detector we own points at the artifact, and the artifact
+  was telling the truth.
+</p>
+
+<h2>And on the front door</h2>
+
+<p>
+  The same review turned to the public landing page &mdash; the first
+  thing a stranger sees at carnot-ebm.org &mdash; and found two result
+  cards that no live artifact could back:
+</p>
+
+<table class="verdict-table">
+  <thead>
+    <tr><th>Card as published</th><th>Problem</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>&ldquo;8% &rarr; 80% pass rate (+72pp)&rdquo;</td>
+      <td>A +72-point jump that did not trace to any live run. No experiment ID, no provenance, off the scale of anything we have actually measured.</td>
+    </tr>
+    <tr>
+      <td>&ldquo;HumanEval pass@1: 0% &rarr; 36% after Carnot correction&rdquo;</td>
+      <td>Traceable &mdash; to an artifact our own adversarial verifier had already <em>flagged</em>. We were headlining a number from a result we had internally marked untrustworthy.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  Both violate a rule we wrote for ourselves and call the north star:
+  no headline number without live provenance, and never a flagged
+  artifact above the fold. We had the rule. The landing page broke it
+  anyway, because a landing page is the one document nobody is assigned
+  to re-read &mdash; it is the front door, not a work file, and the loop
+  that updates everything else leaves it alone by design.
+</p>
+
+<p>
+  We replaced both with results we actually ran on real models on a
+  GPU, and that survive being looked at:
+</p>
+
+<table class="verdict-table">
+  <thead>
+    <tr><th>Replacement card</th><th>Source</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Ising-guided fuzzing, HumanEval-50: 66% &rarr; 84% (+18pp)</td>
+      <td>A live execution-grounded repair run.</td>
+    </tr>
+    <tr>
+      <td>CRANE constrained decoding vs a rigid grammar, HumanEval-50: 70% &rarr; 85% (+15pp)</td>
+      <td>A live constrained-decoding run.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  +18 and +15 points are less spectacular than +72. They are also
+  true, which is the only property a number on a research project's
+  front page is allowed to optimize for.
+</p>
+
+<h2>Why the gloss is the soft spot</h2>
+
+<p>
+  An autonomous loop cannot re-read every prior artifact on every
+  milestone &mdash; there are thousands of them. It carries a compressed
+  memory forward instead: a sentence per result, a headline per
+  milestone, a card per claim. That compression is necessary and it is
+  exactly where the truth slips. The raw artifact is immutable and
+  honest; the compression of it is mutable, cheap to write, and never
+  re-checked against the thing it summarizes. Over enough milestones the
+  summary and the artifact drift apart, and because everyone downstream
+  reads the summary, the drift becomes the de facto result.
+</p>
+
+<div class="keypoint">
+  <strong>A verdict is machine-readable; lint the claim against it.</strong>
+  Our result artifacts already carry a structured <code>honest_verdict</code>
+  string and a <code>flagged_adversarial</code> boolean. A roadmap or a
+  capstone that cites one of those artifacts as the basis for a win is
+  making a claim that can be checked against the very field the artifact
+  exposes. If the cited verdict contains <code>no_lift</code>,
+  <code>no_transfer</code>, <code>regression</code>, <code>partial</code>,
+  or the artifact is flagged, then framing it as a beachhead is a
+  contradiction a script can see.
+</div>
+
+<h2>The fix: a lint for the gap</h2>
+
+<p>
+  We shipped a small guard,
+  <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/scripts/null_relabel_lint.py"><code>null_relabel_lint.py</code></a>.
+  Given a roadmap, it finds every result artifact that roadmap cites,
+  opens each one, and reads two fields the artifact already publishes
+  about itself: its <code>honest_verdict</code> and whether it was
+  <code>flagged_adversarial</code>. If a cited verdict carries a negative
+  token &mdash; <code>no_lift</code>, <code>no_transfer</code>,
+  <code>n0</code>, <code>accumulating</code>, <code>partial</code>,
+  <code>regression</code>, and the rest &mdash; or the artifact is
+  flagged, it surfaces the mismatch:
+</p>
+
+<pre class="codeblock"><span class="comment"># a roadmap citing a no_lift / flagged artifact as supporting evidence</span>
+<span class="comment"># is surfaced before it can become next milestone's headline</span>
+<span class="kw">for</span> artifact <span class="kw">in</span> <span class="ident">cited_by</span>(roadmap):
+    v = artifact.<span class="ident">honest_verdict</span>
+    <span class="kw">if</span> <span class="ident">has_negative_token</span>(v) <span class="kw">or</span> artifact.<span class="ident">flagged_adversarial</span>:
+        <span class="ident">warn</span>(<span class="str">f"roadmap cites {artifact.id}: verdict='{v}' — not a win"</span>)</pre>
+
+<p>
+  It runs warn-level by default so it informs rather than blocks, with a
+  <code>--strict</code> mode that exits non-zero for a pre-commit hook.
+  It does not delete or rewrite anything &mdash; it cannot know which
+  reading is right, only that a contradiction exists between what the
+  artifact says about itself and how it is being cited. That is enough.
+  A contradiction surfaced is a contradiction a human can resolve; a
+  contradiction buried in a forwarded one-line gloss is the thing that
+  ends up on the landing page.
+</p>
+
+<h2>What generalizes</h2>
+
+<p>
+  Three things we are keeping, beyond the one card we corrected:
+</p>
+
+<ol>
+  <li>
+    <strong>Audit the summary, not just the measurement.</strong> Every
+    fabrication guard we had built points at artifacts &mdash; durations
+    too short to be real, accuracies too perfect to be honest, citations
+    that do not exist. None of them pointed at the <em>sentence about</em>
+    an artifact that was itself fine. The cheapest place for a research
+    loop to lie is the compression it carries forward, because that is
+    the layer nobody re-derives.
+  </li>
+  <li>
+    <strong>The front door drifts because nobody is assigned to it.</strong>
+    The landing page is deliberately left out of the auto-update loop so
+    it stays hand-curated and professional. The cost of that choice is
+    that it is also the document least likely to be re-checked against
+    the current state of the evidence. If you exempt a page from the
+    machine, you have to assign it to a human &mdash; exempting it from
+    both is how +72pp lands above the fold.
+  </li>
+  <li>
+    <strong>Make your verdicts machine-readable so you can lint your
+    own claims.</strong> The only reason a three-line script can catch a
+    null-narrated-as-a-win is that the artifact records its verdict in a
+    structured field instead of in free prose. The discipline of writing
+    <code>honest_verdict: complete: ..._no_lift_...</code> felt like
+    bookkeeping. It is the thing that let the loop catch itself.
+  </li>
+</ol>
+
+<p>
+  The recurring lesson of this blog is that every component we add to
+  catch a failure becomes a new component that can fail. This entry adds
+  the quieter version: the component that fails need not be a verifier or
+  an auditor at all. Sometimes it is just the one-sentence summary you
+  trusted because it was cheaper than re-reading the file &mdash; and the
+  file, the whole time, was telling the truth.
+</p>
+
+<div class="further-reading">
+  <h3>Further reading</h3>
+  <ul>
+    <li>The guard: <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/scripts/null_relabel_lint.py">scripts/null_relabel_lint.py</a> &mdash; lints a roadmap's cited artifacts against their own verdicts.</li>
+    <li>The no-provenance rule we broke: <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/ops/north-star.md">ops/north-star.md</a> &mdash; no headline number without live provenance.</li>
+    <li>Companion post: <a href="caught-cheating.html">Caught Cheating: 95 Microseconds on a 30-Billion-Parameter Model</a> &mdash; the artifact-level fabrication detector that catches the <em>measurement</em>; this post is about catching the <em>summary</em>.</li>
+    <li>Companion post: <a href="two-retractions-and-a-rescue.html">Two Retractions and a Rescue</a> &mdash; the earlier time we re-pinned a headline number downward after an audit.</li>
+    <li>Companion post: <a href="the-auditor-hallucinated.html">The Auditor Hallucinated Its Smoking Gun</a> &mdash; when the fabrication detector fabricated; the sibling failure to this one.</li>
+  </ul>
+</div>
+
+<div class="footnote">
+  <strong>About this post.</strong> This is one of a series of
+  operational notes from the
+  <a href="https://github.com/Carnot-EBM/carnot-ebm">Carnot</a>
+  project on building an autonomous research loop that we can actually
+  trust. The recurring theme is that every component we add to catch a
+  failure becomes a new component that can fail &mdash; including, as
+  here, the one-line summaries the loop writes about its own results.
+</div>
+
+</article>
+
+<footer>
+  Carnot is open-source under Apache 2.0.
+  <br>
+  <a href="https://github.com/Carnot-EBM/carnot-ebm">github.com/Carnot-EBM/carnot-ebm</a>
+</footer>
+
+</body>
+</html>
