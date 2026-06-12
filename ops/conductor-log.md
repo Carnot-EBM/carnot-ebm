@@ -8378,3 +8378,4 @@ c |
 | 2026-06-12 19:36 UTC | REPRODUCE the PUBLISHED Sudoku-Extreme TRM baselin | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output:  _exp4107_arti |
 | 2026-06-12 19:54 UTC | REPRODUCE the PUBLISHED Sudoku-Extreme TRM baselin | OK | 92 passed, 2 warnings in 9.22s |
 | 2026-06-12 20:24 UTC | GRAFT the Carnot Sudoku verifier onto the reproduc | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-12 20:48 UTC | TWELFTH ARC-AGI-3 game first-solve via the PROVEN  | OK | 89 passed in 4.61s |
