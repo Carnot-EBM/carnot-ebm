@@ -1,0 +1,46 @@
+{
+  "field_principles": {
+    "flagged_for_v381": "Closes the discover->ingest->plan loop: names the strongest method for the next planner.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication."
+  },
+  "flagged_for_v381": "verifier_guided_adaptive_sudoku_search_before_training",
+  "honest_verdict": "complete: sota_ingestion_trm_verifier_training_mapped",
+  "methods_mapped": [
+    {
+      "arxiv_id": "2510.04871",
+      "failure_mode": "A partial checkpoint can validate the mechanism while still failing to match the published accuracy target.",
+      "implementation_over_stack": "Reproduce the native nano-trm Sudoku Extreme baseline before claiming any Carnot verifier lift.",
+      "name": "TRM Sudoku baseline reproduction",
+      "url": "https://arxiv.org/abs/2510.04871"
+    },
+    {
+      "arxiv_id": "2511.02886",
+      "failure_mode": "Compute leakage or public-task memorization can look like verifier value unless full-finetune and no-verifier arms are isolated.",
+      "implementation_over_stack": "Use bounded full fine-tuning as the adaptation control so verifier admission is separated from generic task adaptation.",
+      "name": "TTA-TRM full fine-tuning control",
+      "url": "https://arxiv.org/abs/2511.02886"
+    },
+    {
+      "arxiv_id": "2402.06457",
+      "failure_mode": "If candidate pools are near-duplicates or already vote-saturated, the selector learns surface artifacts without pass@1 lift.",
+      "implementation_over_stack": "Train a selector from verifier-valid and verifier-invalid Sudoku candidate traces sampled from the same TRM checkpoint.",
+      "name": "V-STaR accepted/rejected trace selector",
+      "url": "https://arxiv.org/abs/2402.06457"
+    },
+    {
+      "arxiv_id": "2203.14465",
+      "failure_mode": "Filtering cannot teach solutions the TRM never samples, and sparse positives can collapse the improve step.",
+      "implementation_over_stack": "Generate Sudoku traces, filter with the executable Carnot verifier, fine-tune on unique positives, and repeat from cached batches.",
+      "name": "STaR / ReST generate-filter-improve loop",
+      "url": "https://arxiv.org/abs/2203.14465"
+    },
+    {
+      "arxiv_id": "2602.01070",
+      "failure_mode": "Local row, column, and box satisfaction can still prefer near-valid dead ends unless final exact validity remains authoritative.",
+      "implementation_over_stack": "Move the Sudoku verifier into candidate expansion so compute is spent on promising partial completions before post-hoc reranking or RFT.",
+      "name": "Verifier-guided adaptive Sudoku search",
+      "url": "https://arxiv.org/abs/2602.01070"
+    }
+  ]
+}
