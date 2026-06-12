@@ -8300,3 +8300,4 @@ c |
 | 2026-06-12 03:44 UTC | NINTH ARC-AGI-3 game first-solve via the PROVEN ex | OK | 89 passed in 5.49s |
 | 2026-06-12 04:00 UTC | VERIFIER-AS-ONLINE-ACTION-PRUNER efficiency (the n | OK | 89 passed in 4.46s |
 | 2026-06-12 04:15 UTC | ArcMemo v9: RICHER cross-game concept-library tran | OK | 92 passed in 4.64s |
+| 2026-06-12 04:29 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (infrastructure;  | OK | 90 passed in 4.81s |
