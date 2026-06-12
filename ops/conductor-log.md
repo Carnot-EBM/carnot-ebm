@@ -8370,3 +8370,4 @@ c |
 | 2026-06-12 16:09 UTC | ELEVENTH ARC-AGI-3 game first-solve via the PROVEN | OK | 91 passed in 5.55s |
 | 2026-06-12 16:23 UTC | SOTA-INGESTION SLOT (reserved; headline is a bleed | OK | 99 passed in 5.78s |
 | 2026-06-12 16:55 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra s | OK | cache hit: 81 passed in 3.81s |
+| 2026-06-12 17:09 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 90 passed in 5.13s |
