@@ -1,0 +1,113 @@
+{
+  "activated_milestone": "2026.06.381",
+  "active_milestone_confirmed": "2026.06.381",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.380",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4107_nanotrm_mechanism_smoke.json",
+      "experiment_id": "4107",
+      "sha256": "d6a95fe7320f3f75bf4a9ba8a3160c558ff84e5d972c09d46414fda0bb098d25"
+    },
+    {
+      "deliverable": "results/experiment_4108_nanotrm_sudoku_extreme_baseline.json",
+      "experiment_id": "4108",
+      "sha256": "f708c69d6e1fdb0dd74a0e05435a5afb9504168477d93456302cbfc2e1dfaf27"
+    },
+    {
+      "deliverable": "results/experiment_4114_capstone_v380.json",
+      "experiment_id": "4114",
+      "sha256": "774ff5ed581d8038dd4901863e23564348a16e1ec64604b80fed45fcd934e7dc"
+    }
+  ],
+  "duration_s": 9.823154,
+  "exclusion_manifest_parses": true,
+  "experiment_id": "exp4115",
+  "field_principles": {
+    "activated_milestone": "Confirms .381 is live for the resumable-training repair path.",
+    "archived_milestone": "Provenance: the milestone being closed, 2026.06.380.",
+    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
+    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
+    "honest_verdict": "Self-declared terminal state. Complete path must start with complete:/success:/passed:/shipped:.",
+    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
+    "nano_trm_train_present": "Bare bool: nano-trm/src/nn/train.py exists before activation.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
+    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
+    "v380_close_state": "Honest record: Exp 4107 proved the nano-TRM trainer mechanism; Exp 4108 did not reproduce the 0.87 Sudoku-Extreme baseline and stopped at 0.0232."
+  },
+  "honest_verdict": "success: archived_v380_v381_active_exp4107_mechanism_proven_exp4108_baseline_not_reproduced_0.0232_resumable_training_next_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "nano_trm_train_present": true,
+  "preconditions_checked": {
+    "active_milestone": "2026.06.381",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "exclusion_manifest_exists": true,
+    "exclusion_manifest_parses": true,
+    "nano_trm_train_path": "nano-trm/src/nn/train.py",
+    "nano_trm_train_present": true,
+    "pretest_command": [
+      ".venv/bin/pytest",
+      "tests/python/test_pipeline_extract.py",
+      "tests/python/test_docs.py",
+      "-q",
+      "--no-header",
+      "-n",
+      "0",
+      "--no-cov",
+      "-o",
+      "addopts="
+    ],
+    "pretest_exit_code": 0,
+    "pretest_suite_green": true,
+    "research_complete_duplicates_removed": 0,
+    "research_complete_record_action": "unchanged",
+    "research_complete_yaml_exists": true,
+    "research_complete_yaml_parses": true,
+    "research_complete_yaml_parses_after_edit": true
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4115,
+  "reproducibility_checksum": "e6ea6f8a7f34079231e8b1fabdf560445f7eb182d2a405defd2bb89aee8000ef",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "unchanged",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v380_to_v381_4115.v1",
+  "task_id": "exp4115-archive-v380-activate-v381",
+  "v380_close_state": {
+    "baseline_reproduced": false,
+    "capstone_v380": {
+      "artifact_present": true,
+      "honest_verdict": "complete: capstone_v380_honest_null_verifier_no_added_value_mechanism_derisked1_baseline0870_graft_skipped_flagged_adversarial_games12_flagged_skipped1",
+      "published_baseline_status": "baseline_not_reproduced"
+    },
+    "exp4107": {
+      "artifact_present": true,
+      "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4107_nanotrm_mechanism_smoke_hydra/checkpoints/last.ckpt",
+      "duration_s": 741.76,
+      "exact_accuracy": 1.0,
+      "honest_verdict": "complete: nanotrm_trainer_checkpoint_ok_exact_accuracy_1.0000",
+      "nanotrm_trainer_checkpoint_ok": true
+    },
+    "exp4108": {
+      "artifact_present": true,
+      "baseline_not_reproduced_reason": "single-shot training stopped before convergence at 0.0232; .381 must resume from a stable checkpoint",
+      "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4108_nanotrm_sudoku_extreme_baseline_002_hydra/checkpoints/last.ckpt",
+      "checkpoint_reload_ok": true,
+      "honest_verdict": "complete: interrupted_return_code_1_reproduced_0.0232",
+      "interrupted_by_80_min_cap": true,
+      "matches_published_087": false,
+      "published_exact_accuracy_target": 0.87,
+      "reproduced_exact_accuracy": 0.02317708358168602,
+      "reproduced_exact_accuracy_rounded": 0.0232,
+      "return_code": 1
+    },
+    "mechanism_proven": true,
+    "summary": "exp4107_mechanism_proven_exp4108_baseline_not_reproduced_v381_requires_resume",
+    "v381_forward_fix": {
+      "reason": "per-run Hydra directories break accumulation across conductor time caps",
+      "resume_path": "results/trm_runs/sudoku_extreme_baseline/",
+      "stable_checkpoint_lineage_required": true
+    }
+  }
+}
