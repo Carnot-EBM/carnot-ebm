@@ -19530,3 +19530,66 @@ leaves ops/status/traceability/conductor files unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-4066 | Implemented (`python/carnot/reporting/archive_v375_activate_v376_4066.py`, `scripts/experiments/exp4066_archive_v375_activate_v376.py`) | Implemented (`tests/python/test_experiment_4066_archive_v375_activate_v376.py`) |
+
+### REQ-REPORT-4067: SOTA Ingestion Mapping For V376 Unsaturated Corpora And Online Pruning
+
+The Exp 4067 workflow SHALL emit an updated SOTA-to-experiment mapping note for
+the two `.376` headline tracks: (1) measuring off-ARC verifier transfer on a
+code corpus with measurable local-12B oracle headroom, and (2)
+verifier-guided online action pruning for the efficient ARC harness. The
+markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-2026-06-11-v376-unsaturated-corpora-and-online-pruning.md`
+and the paired machine-checkable receipt SHALL be written to
+`results/experiment_4067_sota_ingestion_receipt.json`.
+
+Before writing the note, the workflow SHALL read the Exp 4055 mapping note and
+confirm which `flagged_for_v376` methods are actionable for `.376`. It SHALL
+run a focused fresh pass through `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py`, then verify the top papers with low-concurrency
+WebSearch/WebFetch. It SHALL NOT invoke the `/deep-research` skill and SHALL NOT
+modify `scripts/research_conductor.py`.
+
+For each track, the note SHALL map at least three cited methods to concrete
+implementation work over the current Carnot substrate. Track 1 mappings SHALL
+state what each method would require over the demo-fit code verifier, sandbox,
+and EvalPlus/LiveCodeBench evaluation route. Track 2 mappings SHALL state what
+each method would require over the explore-first ARC solver and GAP-4 verifier
+used as an online action pruner. Each mapped method SHALL include pitfalls or
+failure modes.
+
+The workflow SHALL update `research-studying.md` to mark Exp 4067 ingested and
+SHALL add a "Bottom line for the .377 roadmap" section identifying the strongest
+follow-up methods. It SHALL NOT update `ops/changelog.md`, `ops/status.md`,
+`_bmad/traceability.md`, or `scripts/research_conductor.py`; those reconciliation
+files are handled by the separate conductor pass.
+
+The receipt SHALL contain exactly the bare top-level fields `honest_verdict`,
+`methods_mapped_count`, `citations`, `flagged_for_v377`, and
+`inference_substrate`. `honest_verdict` SHALL use a terminal prefix and, on the
+complete path, start with
+`complete: sota_ingestion_v376_unsaturated_corpora_and_online_pruning_mapped`.
+`methods_mapped_count` SHALL be a positive integer of at least six. `citations`
+SHALL be a non-empty list of dicts with `arxiv_id_or_url` and SHALL contain at
+least as many entries as mapped methods. `flagged_for_v377` SHALL be a
+non-empty list of concrete roadmap slugs. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`.
+
+#### SCENARIO-REPORT-4067: Mapping Note Closes The V376 Discover-To-Plan Loop
+
+**Given** the Exp 4055 seed corpus flags
+`evalplus_hidden_rescore_fixed_pool`, `saga_generated_tests_as_discriminator_arm`,
+`gap4_online_pruner_for_explore_first_arc`, and
+`equivpruner_state_action_cache_for_arc`
+**When** the Exp 4067 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON receipt, maps nonzero
+cited methods for both `.376` tracks to Carnot implementation work and failure
+modes, updates `research-studying.md` with the ingested Exp 4067 candidates,
+flags the strongest `.377` follow-ups, declares
+`aggregation_from_upstream_artifacts`, and leaves the conductor and reconciliation
+files untouched.
+
+## Implementation Status (REQ-REPORT-4067)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4067 | Implemented (`python/carnot/sota_ingestion_4067.py`, `docs/research-notes/sota-ingestion-2026-06-11-v376-unsaturated-corpora-and-online-pruning.md`) | Implemented (`tests/python/test_sota_ingestion_receipt_4067.py`) |

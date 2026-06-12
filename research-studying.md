@@ -5,8 +5,46 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-06-11 (Exp 4055 SOTA ingestion mapped .375 unsaturated execution verification and verifier-pruner tracks).
+**Updated:** 2026-06-11 (Exp 4067 SOTA ingestion mapped .376 unsaturated corpora and online-pruning tracks).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
+
+## 2026-06-11 Exp 4067 - .376 SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-2026-06-11-v376-unsaturated-corpora-and-online-pruning.md`.
+
+**Filtered tracks:** LOCAL-12B oracle-headroom code corpus for the off-ARC
+demo-fit verifier transfer measurement, and VERIFIER-GUIDED ONLINE ACTION-PRUNING
+for the efficient ARC harness over explore-first + GAP-4.
+
+**Exp 4055 seed flags confirmed actionable for .376:**
+- `evalplus_hidden_rescore_fixed_pool` - actionable as the cheap first hidden-test
+  gate, but must route upward when oracle headroom is absent.
+- `saga_generated_tests_as_discriminator_arm` - actionable after the official
+  hidden-score path is stable; use only as generated-test tie-break/explanation.
+- `gap4_online_pruner_for_explore_first_arc` - actionable now as soft pruning
+  with replay-disabled-on-failure.
+- `equivpruner_state_action_cache_for_arc` - actionable now for exact state hashes
+  and GAP-4-confirmed equivalence only.
+
+**Seed and fresh-pass candidates marked ingested:**
+- LiveCodeBench v6, arXiv:2403.07974, plus current public leaderboard mirror - mapped as the local-12B headroom route after EvalPlus.
+- EvalPlus / HumanEval+ / MBPP+, arXiv:2305.01210 - retained as the first fixed-pool hidden rescore gate.
+- SAGA / Rethinking Verification for LLM Code Generation, arXiv:2507.06920 - retained as the generated-test discriminator arm.
+- Inference-Time Code Selection via Symbolic Equivalence Partitioning, arXiv:2604.06485 - mapped as the bounded functional-equivalence diagnostic.
+- ACES, arXiv:2604.03922 - mapped as the same-pass-matrix Arm A++ baseline.
+- What If We Allocate Test-Time Compute Adaptively?, arXiv:2602.01070 - mapped as the online PRM-style prune/expand control precedent.
+- Update-Free On-Policy Steering via Verifiers, arXiv:2603.10282 - newly mapped as the no-weight-update verifier-steering precedent for GAP-4 action priors.
+- Adaptive Test-Time Compute Allocation via Learned Heuristics over Categorical Structure, arXiv:2602.03975 - retained as selective verifier-call allocation over intermediate states.
+- EquivPruner, arXiv:2505.16312 - retained as exact state/action equivalence caching before approximate pruning.
+- CoT2-Meta, arXiv:2603.28135 - retained as the explicit expand/prune/repair/stop/fallback controller shape.
+- DIRECT, arXiv:2606.12402 - marked as a fresh adjacent compute-router citation, useful for budget framing but not a first implementation target.
+
+**Bottom line for the .377 roadmap:** prioritize
+`livecodebench_v6_local12b_headroom_route` and
+`gap4_soft_prune_replay_for_arc_efficiency`; add
+`gap4_equivpruner_exact_state_action_cache` before learned/approximate pruning,
+and add `saga_generated_tests_hidden_score_tiebreak` only after official hidden
+scores are frozen.
 
 ## 2026-06-11 Exp 4055 - .375 SOTA ingestion ingested
 
