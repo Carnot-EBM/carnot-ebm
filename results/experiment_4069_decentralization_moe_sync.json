@@ -1,0 +1,118 @@
+{
+  "accumulated_n_tasks": 30,
+  "bootstrap_ci95": [
+    -0.1581,
+    0.1419
+  ],
+  "codex_seconds_per_task_reference": 46.24,
+  "coverage_delta_vs_12b": -0.0248,
+  "duration_s": 2270.21,
+  "experiment": "experiment_4069_decentralization_moe_sync",
+  "field_principles": {
+    "accumulated_n_tasks": "Resume metric: seeded checkpoint plus this foreground window.",
+    "bootstrap_ci95": "CI excluding zero separates real base-size lift from noise.",
+    "coverage_delta_vs_12b": "Point lift over the Exp 4012 12B local baseline.",
+    "honest_verdict": "Terminal prefix and branch for the Invisible-Leash decision.",
+    "local_seconds_per_task": "Sovereign local inference must report wall cost honestly.",
+    "local_support_diagnosis": "latent, absent, uninformative, or still accumulating.",
+    "mechanism": "Records the no-background fix for the Exp 4058 timeout failure.",
+    "moe_base_demo_perfect_coverage": "Gap-closing datum vs the 0.2581 12B ceiling.",
+    "oracle_coverage": "Positive control: saturated oracle makes the pool uninformative."
+  },
+  "gated_pass_at_2": 0.4839,
+  "honest_verdict": "complete: decentralization_moe_cov_0.2333_absent_leash_holds_n30",
+  "inference_substrate": "live_llm_inference",
+  "k_samples_per_task": 8,
+  "local_seconds_per_task": 129.18,
+  "local_support_diagnosis": "absent",
+  "local_vs_codex_seconds_ratio": 2.7937,
+  "mechanism": "single_synchronous_resume_accumulate_no_background",
+  "missing_verifier_gaps": [
+    "17cae0c1",
+    "1a2e2828",
+    "1a6449f1",
+    "25094a63",
+    "2f0c5170",
+    "4e469f39",
+    "505fff84",
+    "50a16a69",
+    "5833af48",
+    "692cd3b6",
+    "712bf12e",
+    "79fb03f4",
+    "81c0276b",
+    "8719f442",
+    "96a8c0cd",
+    "a57f2f04",
+    "ac3e2b04",
+    "b9630600",
+    "c3202e5a",
+    "c7d4e6ad",
+    "f0df5ff0",
+    "f3e62deb",
+    "fafd9572"
+  ],
+  "model_specs": {
+    "generator_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "generator_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "generator_model": "Qwen3.6-35B-A3B",
+    "mechanism": "single_synchronous_resume_accumulate_no_background",
+    "verifier": "model-free GAP-4 verifier primitives reused unchanged"
+  },
+  "moe_base_demo_perfect_coverage": 0.2333,
+  "n_demo_perfect_tasks": 7,
+  "new_tasks_processed": 16,
+  "oracle_coverage": 0.6129,
+  "oracle_positive_control_saturated": false,
+  "output_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4069_decentralization_moe_sync.json",
+  "pass2_comparison": {
+    "codex_gated_pass_at_2": 0.5806,
+    "exp4012_12b_gated_pass_at_2": 0.4516,
+    "moe_base_gated_pass_at_2": 0.4839,
+    "oracle_gated_pass_at_2": 0.6129,
+    "vs_codex_gated_pass2": -0.0967,
+    "vs_exp4012_12b_gated_pass2": 0.0323,
+    "vs_oracle_gated_pass2": -0.129
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "resource": "moe_base_gguf_cached",
+      "selected_model": "Qwen3.6-35B-A3B"
+    },
+    {
+      "available": true,
+      "resource": "llama_cpp"
+    },
+    {
+      "available": true,
+      "resource": "exp4012_arc1_pool_and_verifier_primitives"
+    },
+    {
+      "available": true,
+      "expected_unique_tasks": 30,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz",
+      "resource": "exp4012_arc1_30_task_pool",
+      "unique_tasks": 30
+    },
+    {
+      "available": true,
+      "n_tasks": 14,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4048_decentralization_moe_base_raw.checkpoint.json",
+      "resource": "exp4048_checkpoint"
+    }
+  ],
+  "random_seed": 12345,
+  "reproducibility_checksum": "cabcbc73ecd6210f",
+  "resumed_from_n": 14,
+  "schema": "carnot.experiment_4069_decentralization_moe_sync.v1",
+  "source_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4048_decentralization_moe_base_raw.checkpoint.json",
+  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/decentralization_moe_qwen35a3b_arc1_k8.checkpoint.json",
+  "summarize_artifact": {
+    "returncode": 0
+  },
+  "target_n_tasks": 30,
+  "title": "Synchronous MoE resume-accumulate ARC best-of-N diagnosis"
+}
