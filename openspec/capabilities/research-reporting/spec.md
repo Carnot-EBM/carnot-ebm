@@ -19593,3 +19593,99 @@ files untouched.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-4067 | Implemented (`python/carnot/sota_ingestion_4067.py`, `docs/research-notes/sota-ingestion-2026-06-11-v376-unsaturated-corpora-and-online-pruning.md`) | Implemented (`tests/python/test_sota_ingestion_receipt_4067.py`) |
+
+### REQ-REPORT-4076: Archive .376 And Activate .377 With The Mechanism-Fix-Worked Close-State
+
+The Exp 4076 workflow SHALL archive milestone `2026.06.376`, confirm milestone
+`2026.06.377` is active in the current research roadmap, and write
+`results/experiment_4076_archive_v376_activate_v377.json`. Before editing any
+record it SHALL confirm `research-complete.yaml` safe-loads under
+`yaml.safe_load`; if that precondition fails it SHALL write a blocked artifact
+whose `honest_verdict` starts with `blocked_research_complete_yaml_poison` and
+SHALL NOT edit `research-complete.yaml` or `ops/exclusion_manifest.yaml`.
+
+The workflow SHALL ensure exactly one `.376` milestone record exists in
+`research-complete.yaml`. The conductor's activation commit already appended one
+canonical `.376` record, so the workflow SHALL collapse any duplicate
+`- id: 2026.06.376` records to the first occurrence (fail-forward cleanup, never
+a further append), leave a single existing record unchanged, or append one
+canonical `.376` record when none exists, single-quoting any scalar that contains
+a bare `: ` so the file still parses (the `.355` poison-test lesson). After this
+edit it SHALL confirm both `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` still safe-load. It SHALL run an import probe for
+`carnot.agentic.arc_agi3_world_model`,
+`carnot.agentic.arc_world_model_synth`, `carnot.agentic.arc_world_model_dsl`,
+and `carnot.agentic.arc_agi3_action_efficiency`, recording the aggregate bare
+boolean `arc_modules_importable`.
+
+The workflow SHALL run the smart-subset pre-test gate — the two core suites
+(`test_pipeline_extract.py`, `test_docs.py`) plus every uncommitted/untracked
+`tests/python/*.py` file, excluding `tests/quarantine/` — via `.venv/bin/pytest
+<files> -q --no-header -n 0 --no-cov -o addopts=`. If the gate is red OR a test
+is a ModuleNotFoundError collection error (the 2026-06-11 orphaned-test poison
+pattern, surfaced as an `ERROR` line) it SHALL record failing/erroring test ids
+by source file, `git mv` each still-red file under `tests/quarantine/`, rerun
+until green, and record the quarantined paths in `quarantined_tests`.
+
+The workflow SHALL record the `.376` close-state in the bare-dict field
+`milestone_376_closestate` with `mechanism_fix_worked` set to `true` and
+`science_decisive` set to `false`: per-task OK/BLOCKED/MISSING/FLAGGED/FAIL
+status for Exp 4066–4075 plus a `per_task_conductor_result` annotation. It SHALL
+record the G1 off-ARC verifier-transfer result as a fixed mechanism that finally
+produced a measurement (`accumulated_n` `160` vs `.375`'s `0`,
+`mechanism_produced_measurement` `true`) but UNINFORMATIVE this window because
+the EvalPlus corpus saturated (`oracle_headroom_present` `false`), so the
+artifact is `flagged_adversarial` and `skipped_from_aggregation` `true` (the
+fabrication-gate / skip-flagged rule) — neither a clean win nor a science
+negative; the G3 sovereign-base result as a MEASURED ABSENT (`reached_floor`
+`true` at N=30, `sovereign_base_status` `absent`, `coverage_delta_vs_12b`
+negative, `leash_holds` `true`, `retired` `false`, `cascade_blocked` `false`);
+ACCURACY advancing 8 -> 9 with the ninth game solved (`total_games_solved` `9`,
+monotonic); EFFICIENCY as a verifier-as-action-pruner ACTION-axis win (66.7%
+fewer actions at equal solve-rate, wallclock regressed); ArcMemo v9 as no
+cross-game transfer; and KV260 TERMINAL with GateMate blocked and PolarFire ok.
+It SHALL record `cited_upstream_artifacts` with a SHA-256 per cited `.376`
+deliverable so the close-state numbers trace to the source bytes.
+
+The terminal artifact SHALL include bare top-level fields `archived_milestone`,
+`activated_milestone`, `research_complete_yaml_parses`,
+`exclusion_manifest_parses`, `arc_modules_importable`, `pretest_suite_green`,
+`quarantined_tests`, `milestone_376_closestate`, `total_games_solved`,
+`flagged_count`, `active_milestone_confirmed` (the confirmed active milestone
+string `2026.06.377`), `honest_verdict`, `duration_s`, and `inference_substrate`
+equal to `aggregation_from_upstream_artifacts`. On the complete path
+`honest_verdict` SHALL start with `complete:`, `success:`, `passed:`, or
+`shipped:`. This is a record-only aggregation task and SHALL NOT modify
+`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-4076: V376 Archive Opens The .377 Verifier-As-Reward Pivot
+
+**Given** `.377` is active, `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` safe-load, the four ARC agentic modules import, and
+the smart-subset gate is green after any required quarantine
+**When** the Exp 4076 workflow runs
+**Then** it ensures exactly one `.376` record, confirms both YAML files still
+parse, records the `.376` close-state truth (mechanism fix worked — G1 off-ARC
+produced a measurement N=160 but is flagged + uninformative and skipped from
+aggregation, G3 sovereign base measured ABSENT at N=30 with the leash holding,
+ACCURACY advanced to 9 games with the ninth solved, the action-pruner efficiency
+win, ArcMemo v9 no transfer, KV260 terminal), confirms `active_milestone_confirmed`
+equals `2026.06.377`, sets `total_games_solved` to `9` and `flagged_count` to
+`1`, writes the required terminal artifact, and leaves
+ops/status/traceability/conductor files unchanged.
+
+#### SCENARIO-REPORT-4076-BLOCKED-YAML: Corrupt Research Record Blocks Before Edit
+
+**Given** `research-complete.yaml` does not safe-load
+**When** the Exp 4076 workflow runs
+**Then** it writes a blocked artifact prefixed by
+`blocked_research_complete_yaml_poison`, records the failed parse in
+`preconditions_checked`, and leaves both `research-complete.yaml` and
+`ops/exclusion_manifest.yaml` byte-for-byte unchanged.
+
+## Implementation Status (REQ-REPORT-4076)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4076 | Implemented (`python/carnot/reporting/archive_v376_activate_v377_4076.py`, `scripts/experiments/exp4076_archive_v376_activate_v377.py`) | Implemented (`tests/python/test_experiment_4076_archive_v376_activate_v377.py`) |
