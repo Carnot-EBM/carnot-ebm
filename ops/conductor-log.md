@@ -8384,3 +8384,4 @@ c |
 | 2026-06-12 21:51 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 86 passed in 5.23s |
 | 2026-06-12 22:11 UTC | Capstone .380 (UNGATED): headline question is DID  | OK | 88 passed in 4.69s |
 | 2026-06-12 22:21 UTC | Milestone 2026.06.381 activated | OK | 10 tasks queued |
+| 2026-06-12 22:44 UTC | Archive .380 -> activate .381; KEEP the hardened g | OK | 94 passed in 4.84s |
