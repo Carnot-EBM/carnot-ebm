@@ -119,7 +119,7 @@ tasks:
       the RFT corpus is the verifier's label-free signal, SFT is oracle labels -- the contrast IS
       the experiment), n_heldout_tasks (int; principle: held-out is disjoint from train, the only
       honest generalization measure), runner_ready (bool), trainer_smoke_passed (bool),
-      preconditions_checked (list of {resource, available}), inference_substrate.
+      preconditions_checked (list of {{resource, available}}), inference_substrate.
 
   - id: exp4078-verifier-reward-rft-train-launch
     operator_override: >
@@ -246,7 +246,7 @@ tasks:
       what it would take over the current RFT pipeline + pitfalls; a "bottom line for the .378
       roadmap" section. Update research-studying.md. Every method claim cites a real arXiv ID/URL.
       REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix), methods_mapped (list of
-      {arxiv_id, one_line}; principle: real ids, no fabrication), strongest_for_next_roadmap (list),
+      {{arxiv_id, one_line}}; principle: real ids, no fabrication), strongest_for_next_roadmap (list),
       inference_substrate.
 
   - id: exp4082-ninth-game-explore-first
@@ -348,4 +348,4 @@ tasks:
       accumulating_<summary>), pivot_result (str; principle: the headline -- the verifier's
       training-time value is now measured one way or the other), sudoku_control_reproduced (bool),
       decentralization_distillation_outcome (str), games_solved_total (int), cited_upstream_artifacts
-      (list of {experiment_id, sha256}), inference_substrate.
+      (list of {{experiment_id, sha256}}), inference_substrate.
