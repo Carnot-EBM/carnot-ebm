@@ -621,12 +621,12 @@ registry version that closed them when a new verifier captures a previously-open
 <!-- exp4095-rft-a-vs-b:end -->
 
 <!-- exp4103-trm-grid-discrimination:start -->
-### GAP-TRM-GRID-DISCRIMINATION: TRM-grid rerank discrimination
-- status: open_captured_pp_0.0000
-- evidence: `results/experiment_4099_trm_pool_verifier_discrimination_probe.json`; best_reranker=K_OF_N_AGREEMENT; captured_pp=0.0; captured_pp_ci95=[0.0, 0.0]; verifier_beats_trm_vote=false; pool_n_tasks=62.
-- failure mode: a correct grid can be present in the TRM candidate pool but remain unselectable because every recorded reranker ties TRM vote or ranks confident-wrong grids ahead of it.
+### GAP-TRM-GRID-DISCRIMINATION: Exp 4112 .379 TRM-grid anti-discrimination update
+- status: open_anti_discrimination_captured_pp_-0.2258
+- evidence: `results/experiment_4099_trm_pool_verifier_discrimination_probe.json`; best_reranker=K_OF_N_AGREEMENT; best_captured_pp=0.0; captured_pp=-0.2258; captured_pp_rounded=-0.23; captured_pp_ci95=[-0.3387, -0.1129]; anti_discriminating_rerankers=['AUG_INVARIANCE', 'DEMO_FIT', 'STACK_DEMO_AUG']; verifier_beats_trm_vote=false; pool_n_tasks=62.
+- failure mode: the correct TRM grid can be present in the candidate pool but remain unselectable; the measured verifier rerankers either tie vote or actively anti-rank against it.
 - missing discriminator: signal separating a correct TRM grid from a confident-wrong TRM grid on the candidate pool.
-- candidate design: train or mine a TRM-grid discriminator only after a held-out pool shows it beats TRM vote; until then keep the gap open and treat Exp 4100 as smoke.
+- candidate design: treat the anti-discrimination as a missing-verifier spec until a held-out discriminator beats TRM vote without relying on neutral vote fallback.
 - priority: high
 <!-- exp4103-trm-grid-discrimination:end -->
 
@@ -639,3 +639,13 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: rerun full RFT only after a non-TRM grid reranker clears the Exp 4099 discrimination gate.
 - priority: high
 <!-- exp4103-trm-rft-outcome:end -->
+
+<!-- exp4112-sudoku-executable-verifier:start -->
+### GAP-SUDOKU-EXECUTABLE-VERIFIER-4109: Exp 4112 .380 Sudoku executable-verifier update
+- status: open_honest_null_no_value_added
+- evidence: `results/experiment_4109_carnot_verifier_graft_sudoku.json`; verifier_value_added=false; native_training_launched=false; rft_vs_ablation_delta={'a_exact_accuracy': 1.0, 'b_exact_accuracy': 1.0, 'ci95': [0.0, 0.0], 'delta': 0.0, 'metric': 'heldout_exact_accuracy', 'n_matched': 15, 'status': 'honest_null_ci95_includes_zero'}; rerank_delta=0.0; n_matched=15.
+- failure mode: executable Sudoku constraints can score candidate validity, but Exp 4109 did not show value over the vote-label ablation on the matched executable-domain corpus.
+- missing discriminator: decision-grade evidence that executable verifier labels add training-time value beyond vote labels on held-out TRM Sudoku induction.
+- candidate design: rerun only with native training launched or a corpus where the vote baseline leaves measurable headroom; keep the .380 result as an honest null meanwhile.
+- priority: high
+<!-- exp4112-sudoku-executable-verifier:end -->
