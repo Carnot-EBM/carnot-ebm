@@ -8306,3 +8306,4 @@ c |
 | 2026-06-12 05:05 UTC | Milestone 2026.06.377 activated | OK | 10 tasks queued |
 | 2026-06-12 05:23 UTC | Archive .376 -> activate .377; KEEP the hardened g | OK | 157 passed in 4.53s |
 | 2026-06-12 05:45 UTC | VERIFIER-AS-REWARD RFT -- CORPUS BUILD (THE PIVOT, | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-12 06:01 UTC | VERIFIER-AS-REWARD RFT -- TRAIN (THE PIVOT, part 2 | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
