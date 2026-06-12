@@ -8297,3 +8297,4 @@ c |
 +    tmp_pa |
 | 2026-06-12 02:32 UTC | OFF-ARC TRANSFER POWER -- SINGLE SYNCHRONOUS resum | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLOGY, TAUTOLO |
 | 2026-06-12 03:28 UTC | DECENTRALIZATION sovereign-base -- SINGLE SYNCHRON | OK | 81 passed in 5.89s |
+| 2026-06-12 03:44 UTC | NINTH ARC-AGI-3 game first-solve via the PROVEN ex | OK | 89 passed in 5.49s |
