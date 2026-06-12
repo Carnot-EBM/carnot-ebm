@@ -11,7 +11,10 @@
 # directional-not-significant, the selection moat is a commodity -- DONE, do not re-grind) to
 # "does the verifier-as-REWARD TRAIN a better model." The verifier's durable value is as an
 # un-hallucinating ground-truth signal that GENERATES training data (Deep-Think Q3 + the standing
-# Sudoku RFT-beats-SFT beachhead, 3/3 seeds). This unifies three threads in ONE experiment:
+# Sudoku +1.1% RFT signal -- HONEST: verdict `no_lift`, +1.12% on a ~5% base, "beat gold-SFT" only
+# because the gold control was negative/broken; SUGGESTIVE, not a decision-grade beachhead -- this
+# is a BET on the direction, gated on the .377 de-confound below). This unifies three threads in ONE
+# experiment:
 # (a) verifier-as-reward (the pivot), (b) decentralization-AS-distillation (the Invisible-Leash
 # question answered as a TRAINING outcome), (c) ARC-induction progress (the north star).
 #
@@ -60,7 +63,7 @@
 # headline revision (verifier "selects" -> verifier "trains") is drafted separately as a proposal
 # (ops/north-star-pivot-revision-proposal.md) for operator merge. Adjust freely.
 milestone: "2026.06.377"
-milestone_title: "TAKE THE PIVOT: verifier-as-REWARD, not verifier-as-SELECTOR. The .371-.375 evidence closed the selection question (the moat is a commodity; directional-not-significant off-ARC; the frontier-as-selector grind was spinning). The verifier's durable value is as an un-hallucinating REWARD that GENERATES training data (Deep-Think Q3 + the Sudoku RFT-beats-SFT beachhead). HEADLINE: verifier-certified RFT vs gold-SFT, held-out, on ARC-induction + a Sudoku positive control -- does training on the verifier's LABEL-FREE demo-certified signal do as well as / beat training on ORACLE labels (gold-SFT) across a small-model LADDER (Qwen3.5-0.8B headroom rung + MiniCPM5-1B strong/SOTA rung, optional Qwen2.5-0.5B/3.5-2B -- run the contrast across bases so the claim is robust, not a single-model artifact; the gemma-12B sovereign-magnitude arm is a .378 follow-on)? Keep the shipped demo-fit safety-gate; keep ARC-accuracy (9th game) + memory; DROP the off-ARC-selector grind and the vc33 search. Capstone: did verifier-as-reward RFT beat gold-SFT held-out -- the pivot's first decision-grade result?"
+milestone_title: "TAKE THE PIVOT: verifier-as-REWARD, not verifier-as-SELECTOR. The .371-.375 evidence closed the selection question (the moat is a commodity; directional-not-significant off-ARC; the frontier-as-selector grind was spinning). The verifier's durable value is HYPOTHESIZED to be as an un-hallucinating REWARD that GENERATES training data (Deep-Think Q3; the Sudoku +1.1% signal is SUGGESTIVE-not-decision-grade, so .377 is a BET being tested, not a confirmed beachhead extended). HEADLINE (DE-CONFOUNDED per the 2026-06-12 review): a 3-arm test -- RFT-CORRECT (verifier-certified demo-perfect) vs RFT-ABLATION (verifier-label ablation: NOT-demo-perfect, same codex generator, N-matched) vs gold-SFT (oracle labels), held-out, on ARC-induction across a small-model LADDER. The LOAD-BEARING contrast is RFT-CORRECT vs RFT-ABLATION: does the VERIFIER'S LABEL carry training signal, or is 'RFT helps' just codex-distillation? (a Sudoku pipeline-sanity + a Phase-0 verifier-precision gate guard it) across a small-model LADDER (Qwen3.5-0.8B headroom rung + MiniCPM5-1B strong/SOTA rung, optional Qwen2.5-0.5B/3.5-2B -- run the contrast across bases so the claim is robust, not a single-model artifact; the gemma-12B sovereign-magnitude arm is a .378 follow-on)? Keep the shipped demo-fit safety-gate; keep ARC-accuracy (9th game) + memory; DROP the off-ARC-selector grind and the vc33 search. Capstone: did verifier-as-reward RFT beat gold-SFT held-out -- the pivot's first decision-grade result?"
 milestone_doc: "docs/research-notes/verifier-as-self-improvement-reward-scoping.md"
 
 tasks:
@@ -100,7 +103,7 @@ tasks:
       verifier, NOT inference selection) -- any selector-scope-match is a false positive; this is
       the pivot, not a rerun of the frontier-selector grind.
     milestone: "2026.06.377"
-    title: "VERIFIER-AS-REWARD RFT -- CORPUS BUILD (THE PIVOT, part 1): build the verifier-certified RFT corpus for ARC-induction. For each ARC-1/ARC-2 task in a held-IN split, codex generates k candidate `def transform(grid)` programs from the demos; the model-free execution verifier (demo-fit + restricted-namespace exec, python/carnot/agentic/arc_gap4_execution_verifier.py) certifies the DEMO-PERFECT ones (pass ALL demos) as the LABEL-FREE positive traces (RFT corpus). SEPARATELY assemble the gold-SFT corpus: the TEST-gold-passing programs (oracle labels). The contrast is the experiment: RFT learns from the verifier's cheap demo signal (no test labels), SFT learns from oracle labels. Write the LoRA trainer for the small-model LADDER (cached HF safetensors bases, NOT GGUFs: Qwen/Qwen3.5-0.8B = headroom rung [primary], openbmb/MiniCPM5-1B = strong/SOTA rung; optional Qwen/Qwen2.5-0.5B or Qwen/Qwen3.5-2B). Use trl 1.6.0 (SFTTrainer for the gold-SFT arm, GRPOTrainer for the verifier-reward RFT arm) + peft LoRA. Write the held-OUT eval harness. Smoke-train on 2 tasks for ONE base to verify the pipeline; commit the runner."
+    title: "VERIFIER-AS-REWARD RFT -- CORPUS BUILD (THE PIVOT, part 1; DE-CONFOUNDED per the 2026-06-12 adversarial review): build THREE N-matched corpora from the SAME codex generator so the experiment isolates the VERIFIER'S LABEL, not codex-distillation. For each ARC-1/ARC-2 task in a held-IN split, codex generates k candidate `def transform(grid)` programs; the model-free execution verifier (python/carnot/agentic/arc_gap4_execution_verifier.py) labels each. (A) RFT-CORRECT corpus = verifier-certified DEMO-PERFECT programs (the verifier's label-free positive signal). (B) RFT-ABLATION corpus = the verifier-LABEL ablation: programs the verifier certifies as NOT demo-perfect (demo-failing / randomly-filtered), SAME generator, N-MATCHED and composition-matched to (A). (C) gold-SFT corpus = TEST-gold-passing programs (oracle labels), N-matched. THE LOAD-BEARING CONTRAST is (A) vs (B): same codex intelligence, the ONLY difference is whether the verifier's label is CORRECT -- if A>B the verifier's LABEL carries training signal (verifier-as-reward), if A~=B then 'RFT helps' is just codex-distillation and the verifier adds nothing (the honest null the review warned of). (A) vs (C) asks whether the label-free verifier signal matches oracle labels. PRECISION GATE (scoping-doc Phase-0, MANDATORY before trusting any train): measure the verifier's certification precision -- P(test-gold | demo-perfect) -- on a labeled held-out; if < 0.85 at recall >= 0.20 the RFT-CORRECT corpus is POISONED and the result is uninterpretable -> report blocked_precision_gate_unmet and STOP. Write the LoRA trainer for the small-model LADDER (cached HF safetensors, NOT GGUF: Qwen/Qwen3.5-0.8B headroom rung [primary], openbmb/MiniCPM5-1B strong rung; optional Qwen/Qwen2.5-0.5B or Qwen/Qwen3.5-2B) using trl 1.6.0 (SFTTrainer + GRPOTrainer) + peft LoRA, + the held-OUT eval harness. Smoke-train 2 tasks for ONE base; commit the runner."
     priority: critical
     track: verifier-as-reward
     max_turns: 90
@@ -120,19 +123,26 @@ tasks:
       they import, do NOT silently skip the train like the off-ARC runner did); other deps (peft/trl/
       transformers) + GPU visible (python -c "import torch; assert torch.cuda.is_available()");
       (c) the ARC-1/ARC-2 task pools loadable.
-      BUILD: (1) held-IN split of ARC tasks; codex generates k>=8 transform programs per task;
-      (2) the execution verifier certifies DEMO-PERFECT programs -> RFT corpus (input=demos,
-      target=program; LABEL-FREE -- uses only the demo signal); (3) the TEST-gold-passing programs
-      -> gold-SFT corpus (oracle labels); (4) hold OUT a disjoint task split for eval (NEVER trained
-      on). Write the LoRA trainer (two arms: RFT-corpus, SFT-corpus) + the held-out induction-rate
-      eval harness. Smoke-train on 2 tasks to verify the pipeline runs end-to-end; commit the runner
-      script. Do NOT run the full train here (that is exp4078, backgrounded).
-      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix; e.g. complete: rft_corpus_built_
-      n_rft_X_n_sft_Y_heldout_Z_smoke_passed), n_rft_traces (int) + n_sft_traces (int; principle:
-      the RFT corpus is the verifier's label-free signal, SFT is oracle labels -- the contrast IS
-      the experiment), n_heldout_tasks (int; principle: held-out is disjoint from train, the only
-      honest generalization measure), runner_ready (bool), trainer_smoke_passed (bool),
-      preconditions_checked (list of {{resource, available}}), inference_substrate.
+      BUILD: (1) held-IN split of ARC tasks; codex generates k>=8 transform programs per task.
+      (2) PRECISION GATE FIRST (scoping-doc Phase-0): on a labeled held-out, compute the verifier's
+      certification precision P(test-gold | demo-perfect) and recall; if precision < 0.85 at recall
+      >= 0.20, the demo-perfect label is too noisy -> the RFT-CORRECT corpus is poisoned ->
+      honest_verdict blocked_precision_gate_unmet_<p>_<r> and STOP (do NOT build a corpus on a
+      poisoned label). (3) build THREE N-MATCHED corpora from the SAME generator: (A) RFT-CORRECT =
+      demo-perfect programs; (B) RFT-ABLATION = NOT-demo-perfect / random-filtered programs (same
+      generator, |B| == |A|, matched task distribution -- the verifier-LABEL ablation); (C) gold-SFT =
+      test-gold-passing programs (oracle labels), |C| matched to |A| where possible. (4) hold OUT a
+      disjoint task split for eval (NEVER trained on). Write the LoRA trainer (THREE arms: RFT-correct,
+      RFT-ablation, gold-SFT) + the held-out eval harness. Smoke-train 2 tasks; commit the runner.
+      Do NOT run the full train here (that is exp4078, backgrounded).
+      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix; e.g. complete: rft_corpus_built_3arms_
+      nA_X_nB_Y_nC_Z_precgate_PASS or blocked_precision_gate_unmet), certification_precision (float) +
+      certification_recall (float; principle: the Phase-0 gate -- demo-perfect must imply test-gold
+      >=85% or the RFT-correct label is poisoned and the whole experiment is uninterpretable),
+      n_rft_correct + n_rft_ablation + n_gold_sft (ints; principle: N-MATCHED across arms so a delta
+      is attributable to the LABEL, not corpus size/composition), n_heldout_tasks (int), runner_ready
+      (bool), trainer_smoke_passed (bool), preconditions_checked (list of {{resource, available}}),
+      inference_substrate.
 
   - id: exp4078-verifier-reward-rft-train-launch
     operator_override: >
@@ -146,7 +156,7 @@ tasks:
         op: '=='
         value: true
     milestone_title_note: "GPU LoRA train; gated on the corpus+trainer being ready; resumes per the accumulate rule."
-    title: "VERIFIER-AS-REWARD RFT -- TRAIN (THE PIVOT, part 2): LoRA-finetune EACH ladder base (Qwen3.5-0.8B headroom rung first, then MiniCPM5-1B strong rung; optional 3rd) on TWO arms from exp4077's corpora -- Arm RFT (verifier-certified demo-perfect traces via GRPOTrainer, label-free) and Arm SFT (test-gold traces via SFTTrainer, oracle labels) -- with IDENTICAL hyperparameters/seed PER BASE so the only difference within a base is the LABEL SOURCE. Launch the trains BACKGROUNDED (setsid-detached; checkpoint per epoch to STABLE per-base+arm paths). Per the accumulate rule: if a window does not finish all bases, the checkpoints persist and the next milestone resumes -- report progress, NOT a failure. Do the headroom rung (Qwen3.5-0.8B) FIRST -- it is the primary clean-signal datum; the strong rung is the robustness check."
+    title: "VERIFIER-AS-REWARD RFT -- TRAIN (THE PIVOT, part 2): LoRA-finetune EACH ladder base (Qwen3.5-0.8B headroom rung first, then MiniCPM5-1B strong rung; optional 3rd) on the THREE arms from exp4077 -- Arm A RFT-CORRECT (verifier-certified demo-perfect), Arm B RFT-ABLATION (verifier-label ablation: NOT-demo-perfect, same generator, N-matched), Arm C gold-SFT (oracle labels) -- with IDENTICAL hyperparameters/seed PER BASE so the ONLY difference within a base is the corpus LABEL. Launch the trains BACKGROUNDED (setsid-detached; checkpoint per epoch to STABLE per-base+arm paths). Per the accumulate rule: if a window does not finish all bases/arms, the checkpoints persist and the next milestone resumes -- report progress, NOT a failure. Do the headroom rung (Qwen3.5-0.8B) FIRST; within a base train Arm A and Arm B FIRST (the load-bearing ablation contrast), Arm C if the window allows."
     priority: critical
     track: verifier-as-reward
     max_turns: 70
@@ -161,17 +171,18 @@ tasks:
       safety net, not the expected path; the throughput win over a 12B is the point. If the window
       only fits ONE base, do the headroom rung Qwen3.5-0.8B and resume the strong rung next window.)
       On miss -> honest_verdict blocked_<resource>, no fabrication.
-      TRAIN both arms (RFT, SFT) with identical config (same base, same LoRA rank/lr/steps/seed --
-      the ONLY difference is which corpus). setsid-detach the training subprocess (it must survive
-      the agent exit + the conductor iteration boundary); checkpoint per epoch to a STABLE path
-      (model+arm+corpus-keyed) so the next milestone RESUMES per the accumulate-across-milestones
-      rule. Launch, smoke that both arms started + are writing checkpoints, then exit (do NOT hold
-      the agent open for the full multi-hour train). exp4079 collects + evals.
-      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix; e.g. complete: rft_sft_train_
-      launched_both_arms_detached or complete: rft_train_resumed_epoch_X), train_launched (bool),
-      rft_checkpoint_path (str) + sft_checkpoint_path (str; principle: stable paths so training
-      ACCUMULATES across windows, not restarts), epochs_completed (dict per arm; principle: progress
-      is progress -- partial epochs accumulate), inference_substrate.
+      TRAIN the THREE arms (RFT-correct, RFT-ablation, gold-SFT) with identical config per base
+      (same LoRA rank/lr/steps/seed -- the ONLY difference is which corpus/label). setsid-detach the
+      training subprocesses (they must survive the agent exit + the conductor iteration boundary);
+      checkpoint per epoch to STABLE paths (model+arm-keyed) so the next milestone RESUMES per the
+      accumulate-across-milestones rule. Launch, smoke that the arms started + are writing checkpoints,
+      then exit (do NOT hold the agent open for the full multi-hour train). Prioritize Arm A + Arm B
+      (the ablation contrast) over Arm C if the window is tight. exp4079 collects + evals.
+      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix; e.g. complete: rft_3arm_train_
+      launched_detached or complete: rft_train_resumed_epoch_X), train_launched (bool),
+      checkpoint_paths (dict arm -> path; principle: stable paths so training ACCUMULATES across
+      windows, not restarts), epochs_completed (dict per base+arm; principle: progress is progress),
+      inference_substrate.
 
   - id: exp4079-verifier-reward-rft-eval-collect
     operator_override: >
@@ -183,7 +194,7 @@ tasks:
         artifact_field: train_launched
         op: '=='
         value: true
-    title: "VERIFIER-AS-REWARD RFT -- EVAL + GATE (THE PIVOT, part 3): poll exp4078's training; PER LADDER BASE, once its two arms have a usable checkpoint, EVAL each finetuned model on the HELD-OUT ARC-induction split (disjoint from train) and report demo-perfect + true-gold induction rate vs (a) THAT BASE's OWN cold rate (MEASURED here, not assumed) and (b) CODEX (~0.57 ceiling). THE GATE (the mechanism test, per base): does Arm RFT (verifier-certified, label-free) improve held-out induction over the cold base with bootstrap CI95 excluding 0, AND is it >= Arm SFT (oracle labels)? ROBUSTNESS: report the gate for EACH ladder base -- the headroom rung (Qwen3.5-0.8B) is the PRIMARY clean-signal datum; if RFT>=SFT holds ACROSS the ladder the mechanism claim is robust, if only on the headroom rung that is itself the finding (the gain needs headroom). CAPACITY-FLOOR GUARD: a base's cold rate must be > 0 for its contrast to be measurable -- a base that floors at 0 is dropped as uninformative (NOT 'RFT fails'); if ALL ladder bases floor on ARC-induction, fall back to the headroom domain (the Sudoku control + a tractable ARC subset). NOTE: the decentralization-MAGNITUDE arm (does RFT close the gemma-4-12B 0.26->0.57 sovereign-generator gap -- the Invisible-Leash latent-vs-absent question) is a FOLLOW-ON (.378) once the MECHANISM validates on the small base; do NOT conflate the small-base mechanism test with the 12B magnitude claim. POSITIVE CONTROL: held-out headroom exists (codex > cold base). Honest small/null gain is a COMPLETE verdict; if training is still accumulating, report accumulated progress (NOT a retirement)."
+    title: "VERIFIER-AS-REWARD RFT -- EVAL + GATE (THE PIVOT, part 3; the DE-CONFOUNDED gate): poll exp4078's training; PER LADDER BASE, once its arms have usable checkpoints, EVAL each on the HELD-OUT ARC-induction split (disjoint from train) and report demo-perfect + true-gold induction rate for Arm A (RFT-correct), Arm B (RFT-ablation), Arm C (gold-SFT), the BASE's OWN cold rate (measured), and CODEX (~0.57 ceiling). THE LOAD-BEARING GATE is A vs B (the verifier-LABEL test): does RFT-CORRECT beat RFT-ABLATION on held-out induction with bootstrap CI95 excluding 0? If YES -> the verifier's LABEL carries training signal (verifier-as-reward is REAL, not codex-distillation). If A~=B -> 'RFT helps' is just codex-distillation; the verifier adds nothing (the honest null -- report it plainly, do NOT dress it as a win). SECONDARY: A vs C (does the label-free verifier signal match oracle labels -- A>=C?) and A vs cold base (any lift at all). ROBUSTNESS: report all three contrasts PER base; the headroom rung (Qwen3.5-0.8B) is PRIMARY; A>B holding ACROSS the ladder = robust. CAPACITY-FLOOR GUARD: a base whose cold rate is 0 is dropped as uninformative (NOT 'verifier fails'); if all bases floor, fall back to the Sudoku control + a tractable ARC subset. NOTE: decentralization-MAGNITUDE (close the gemma-4-12B 0.26->0.57 gap) is a .378 FOLLOW-ON. Honest null/small gain is a COMPLETE verdict; if still accumulating, report progress (NOT a retirement)."
     priority: critical
     track: verifier-as-reward
     max_turns: 80
@@ -196,33 +207,41 @@ tasks:
       eval each on the HELD-OUT split (NEVER trained on). PRECONDITION: if no usable checkpoint yet
       (train still accumulating), honest_verdict complete: rft_eval_pending_train_accumulating_epoch_X
       and stop -- NOT a retirement.
-      Report per arm (RFT, SFT) + the cold base + codex: held-out demo-perfect rate, true-gold rate,
-      and the bootstrap CI95 of (arm - cold_base) and (RFT - SFT) over the held-out tasks (N>=30).
-      THE GATE outcomes (four, all citable; evaluate PER LADDER BASE): (1) RFT held-out gain CI
-      excludes 0 AND RFT >= SFT -> verifier-as-reward WORKS on that base (self-improve from label-free
-      signal; the pivot validated; if it holds on the headroom rung AND the strong rung the claim is
-      robust; if the gain also moves toward codex, decentralization-by-distillation is VIABLE);
-      (2) RFT improves but < SFT -> the verifier signal helps but oracle labels are still better
-      (honest, partial); (3) RFT ~ cold base (no gain) -> verifier-certified traces do not train a
-      better model on that base (honest negative; log the gap); (4) train still accumulating -> report
-      accumulated progress, next window resumes. The PRIMARY verdict is the headroom rung (Qwen3.5-0.8B);
-      report the strong rung (MiniCPM5-1B) as the robustness check.
-      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix), per_base (dict keyed by base name ->
-      {cold_rate, rft_heldout_rate, sft_heldout_rate, rft_minus_base_ci95, rft_minus_sft_ci95,
-      floored:bool}; principle: the ladder is reported per-base so the claim's robustness is auditable,
-      not a single-model artifact), codex_rate (float; the ceiling), primary_base + robustness_holds
-      (str/bool; principle: names the headroom-rung primary datum + whether RFT>=SFT held across the
-      ladder), heldout_n (int), random_seed + reproducibility_checksum + model_specs, inference_substrate.
+      Report per arm (A RFT-correct, B RFT-ablation, C gold-SFT) + cold base + codex: held-out
+      demo-perfect rate, true-gold rate, and the bootstrap CI95 of (A - B), (A - C), (A - cold)
+      over held-out tasks (N>=30).
+      THE GATE outcomes (evaluate PER LADDER BASE; the A-vs-B contrast is load-bearing):
+      (1) A > B with CI excluding 0 -> the VERIFIER's LABEL carries training signal -> verifier-as-
+          reward is REAL (not codex-distillation); the pivot's first decision-grade POSITIVE. If A>=C
+          too, the label-free signal matches oracle labels; if A also moves toward codex,
+          decentralization-by-distillation is viable.
+      (2) A ~= B (CI includes 0) but both > cold base -> 'RFT helps' is CODEX-DISTILLATION; the
+          verifier's label adds nothing. This is an HONEST NULL on the verifier-as-reward thesis ->
+          report it plainly (do NOT relabel it as a partial win); log the gap.
+      (3) A ~= cold base (no lift) -> verifier-certified traces do not train a better model on that
+          base (capacity floor or no signal); honest negative.
+      (4) still accumulating -> report progress, next window resumes (per the accumulate floor: 3
+          consecutive no-usable-data windows -> auto-retire/re-scope, NOT infinite accumulate).
+      PRIMARY verdict = headroom rung (Qwen3.5-0.8B); MiniCPM5-1B = robustness check.
+      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix), per_base (dict base ->
+      {cold_rate, A_rft_correct_rate, B_rft_ablation_rate, C_gold_sft_rate, A_minus_B_ci95,
+      A_minus_C_ci95, A_minus_cold_ci95, floored:bool}; principle: the A-vs-B CI is the de-confound
+      -- it isolates the verifier's LABEL from codex's intelligence), verifier_label_carries_signal
+      (bool; principle: THE headline -- A>B with CI-excl-0 on the primary base), codex_rate (float),
+      primary_base + robustness_holds (str/bool), heldout_n (int), random_seed +
+      reproducibility_checksum + model_specs, inference_substrate.
 
   - id: exp4080-sudoku-rft-beachhead-positive-control
     operator_override: >
-      2026-06-11 operator-ENDORSED PIVOT: positive-control re-confirmation of the standing
-      VERIFIER-AS-SELF-IMPROVEMENT-REWARD Sudoku beachhead (verifier-certified RFT beat gold-SFT,
-      3/3 seeds). Versioned continuation that de-risks the ARC headline. Forward difference =
-      same-pipeline sanity that the RFT machinery reproduces the known-positive before trusting the
-      novel ARC extension.
+      2026-06-11 operator-ENDORSED PIVOT: methodological pipeline-sanity on Sudoku. HONEST framing
+      (corrected 2026-06-12 per the adversarial review): the Sudoku "beachhead"
+      (results/sudoku_energy_teacher_v6_v4_decisive.json) is a WEAK signal -- verdict `no_lift`,
+      energy-teacher delta +1.12%, on a ~5% base, and "beat gold-SFT" only because the gold-SFT
+      control was NEGATIVE/broken (naive SFT degraded the recurrent model). It is SUGGESTIVE, not
+      decision-grade. This task is a pipeline sanity (does the RFT machinery reproduce the +1.1%
+      direction with a WORKING gold control?), NOT a strong positive control.
     milestone: "2026.06.377"
-    title: "SUDOKU RFT-beats-SFT POSITIVE CONTROL (the beachhead sanity): re-confirm the standing result (verifier-certified RFT beat gold-SFT, 3/3 seeds) on the SAME RFT pipeline used for the ARC headline -- if the pipeline reproduces the known Sudoku positive, the ARC-induction result (exp4079) is trustworthy; if it does NOT, the pipeline has a bug and the ARC null would be uninterpretable. This is the methodological positive control for the whole pivot."
+    title: "SUDOKU RFT PIPELINE-SANITY (honest beachhead restatement): the Sudoku result is +1.12% (verdict `no_lift`) where gold-SFT was negative/broken -- SUGGESTIVE not decision-grade. Re-run it through the SAME 3-arm RFT pipeline used for the ARC headline (RFT-correct vs RFT-ablation vs gold-SFT) WITH A FIXED gold-SFT control (the broken one is why 'RFT beat gold' was misleading). Purpose: (a) confirm the pipeline reproduces the +1.1% direction (machinery works); (b) check whether the A-vs-B verifier-label contrast is even detectable at Sudoku's tiny effect size. If the pipeline cannot reproduce +1.1% with a working control, the ARC null is uninterpretable (pipeline bug). This is methodological sanity, NOT evidence the pivot works."
     priority: high
     track: verifier-as-reward
     max_turns: 70

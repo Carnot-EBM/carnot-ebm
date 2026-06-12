@@ -416,21 +416,36 @@ pivot, and it PREEMPTS carry-forward (treat it like a SCOPE-REDUCTION directive 
 - The ONE direction the evidence actively points toward (Deep-Think Q3, weighted per the project's
   trust-direction rule) is **verifier-as-reward**: the un-hallucinating execution verifier is an
   *automated ground-truth engine* → use it to GENERATE training data, not to filter at inference.
-  This converges with the standing **VERIFIER-AS-SELF-IMPROVEMENT-REWARD** priority (the Sudoku-#4
-  result: verifier-certified RFT beat gold-SFT, 3/3 seeds — the beachhead).
+  This converges with the standing **VERIFIER-AS-SELF-IMPROVEMENT-REWARD** priority. **HONEST
+  CORRECTION (2026-06-12, adversarial review):** the cited Sudoku "beachhead"
+  (`results/sudoku_energy_teacher_v6_v4_decisive.json`) is WEAK, not decision-grade — its own
+  verdict is **`energy_teacher_no_lift`**, the RFT lift is **+1.12%** on a ~5% base, consistent
+  across 3 seeds, and "beat gold-SFT" is true ONLY because the gold-SFT control came out
+  **negative/broken** (naive SFT degraded the recurrent model); `goldfrac=16.0` is a
+  divide-by-near-zero artifact, not a result. So the pivot is a **BET on the direction** (the
+  *diagnosis* — selection moat dead — is solid; the *evidence that verifier-as-reward works* is
+  not), and **.377 must be a clean test, not a beachhead-extension.** The .377 design is
+  de-confounded accordingly (the verifier-LABEL ablation arm + the Phase-0 precision gate below).
 
 **THE PIVOT (the .377+ headline).** The metric FLIPS from "does the verifier SELECT better at
 inference" (answered: directional, not significant — DONE, do not re-grind) to **"does the
-verifier-as-reward TRAIN a better model."** Concretely, the headline experiment:
-1. Use the execution verifier (GAP-4 demo-fit / restricted-exec, or FoVer step-verifier) as an
-   automated ground-truth reward to build a **verifier-certified RFT corpus** (label = passes
-   execution / hidden tests).
-2. **RFT / LoRA-finetune a local open-weight model** on that corpus.
-3. Measure **held-out** improvement vs (a) the cold base and (b) gold-SFT, on N≥30, with a
-   POSITIVE CONTROL (headroom exists) and a bootstrap CI excluding 0.
-4. **Falsifiable gate:** verifier-certified RFT **beats gold-SFT held-out** — i.e. replicate the
-   Sudoku RFT-beats-SFT result and EXTEND it to a SECOND domain (code / ARC-induction / math).
-   The accumulate-across-milestones rule (below) applies to the training runs too.
+verifier-as-reward TRAIN a better model."** The headline experiment is **DE-CONFOUNDED**
+(2026-06-12 review) so it isolates the *verifier's label* from *codex's intelligence*:
+1. **Phase-0 precision gate FIRST.** Measure the verifier's certification precision
+   P(test-gold | demo-perfect) on a labeled held-out. If < 0.85 at recall ≥ 0.20 the certified
+   label is too noisy → the RFT corpus is poisoned → **block, do not train** (the scoping doc's
+   mandatory pre-train gate).
+2. **Build THREE N-matched corpora from the SAME generator:** (A) RFT-CORRECT = verifier-certified
+   demo-perfect; (B) **RFT-ABLATION = the verifier-LABEL ablation** — NOT-demo-perfect / random
+   traces, same generator, |B|=|A|; (C) gold-SFT = test-gold (oracle labels).
+3. **LoRA-finetune a small open base** on each arm (identical config; the small-model ladder).
+4. **THE LOAD-BEARING GATE: A vs B.** Does RFT-CORRECT beat RFT-ABLATION held-out (CI excl 0)?
+   - YES → the verifier's *label* carries training signal → verifier-as-reward is REAL.
+   - A≈B → "RFT helps" is just **codex-distillation**; the verifier adds nothing (honest null —
+     do NOT relabel it a partial win). This is the confound a naive A-vs-cold-base gate would miss.
+   Secondary: A vs C (label-free signal ≥ oracle labels?) and A vs cold base (any lift?).
+   The accumulate-across-milestones rule (below) applies to the training runs, BOUNDED by the
+   accumulate FLOOR (3 consecutive no-usable-data windows → auto-retire/re-scope).
 
 **DE-PRIORITIZE (preempt the carry-forward churn the synthesis flagged):**
 - **STOP re-running off-ARC-significance as a SELECTOR headline.** The selection question is
@@ -450,7 +465,8 @@ R&D trying to make it a *smart* selector; keep it as the commodity trust gate.
 **Why this is the right move, not capitulation.** The verifier remains Carnot's existential
 value-add — its role just moved one layer, from inference-filter (a commodity, now proven) to
 training-environment (where an un-hallucinating reward signal is genuinely scarce + hack-resistant,
-the Anthropic-W2S bottleneck). The Sudoku beachhead already shows it works; the pivot is to make
+the Anthropic-W2S bottleneck). The Sudoku +1.1% signal is suggestive (NOT a proof it works — see the
+honest correction above); the pivot is the bet, and .377's de-confounded A-vs-B test is what makes
 that the program's spine and prove it generalizes.
 
 **Operator follow-up flagged (NOT auto-applied):** this pivot likely warrants a `ops/north-star.md`
@@ -500,10 +516,17 @@ successive runs at the SAME checkpoint.
 2. **Report ACCUMULATED-N, not per-window-N.** The collect step reads the cumulative checkpoint and
    reports the running total + the bootstrap CI on the accumulated sample. A single window adding
    ~14 tasks is PROGRESS, not a failure.
-3. **No premature retire.** Do NOT poll-then-retire on a partial single-window count. The
-   `retire_if_same_verdict` trigger fires ONLY when **accumulated-N >= target AND the gate still
-   fails** — never on a throughput-truncated window. (The exp4048 `partial_6_tasks_retire` was a
-   false retirement on a 6-task poll; the line is NOT retired.)
+3. **No premature retire — BUT a hard ACCUMULATE FLOOR (added 2026-06-12 per the adversarial
+   review).** Do NOT poll-then-retire on a partial single-window count: the `retire_if_same_verdict`
+   trigger fires when **accumulated-N >= target AND the gate still fails**. HOWEVER, "still
+   accumulating" is NOT an infinite escape hatch from declaring a question failed. **If a run adds
+   < X usable tasks for K=3 CONSECUTIVE windows** (e.g. the off-ARC `n0` for three milestones), the
+   question is AUTO-RETIRED with verdict `substrate_cannot_power_this` and MUST be re-scoped (lighter
+   model / different corpus / dropped) — NOT relaunched. The "accumulate" rule fixes throughput
+   truncation; it must not become a way for a dead question to never be declared dead (the
+   slow-5-carryover pattern the Failed-Experiment-Rerun Discipline exists to stop). (The exp4048
+   `partial_6_tasks_retire` was a false retirement on a 6-task poll; that line is NOT retired — but a
+   run stuck at n0 for 3 windows IS.)
 4. **Protect the background run from premature reaping.** The detached generation subprocess must
    survive the build agent's exit and the conductor's iteration boundary (proper `setsid`
    detachment); the per-task checkpoint is the safety net if it is reaped, but it should be allowed
@@ -7844,6 +7867,10 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated 
 **Recurrence prevention TODO:** pin llama-cpp-python build flags in pyproject.toml under `[tool.uv.sources]` or document the CUDA build recipe in CONTRIBUTING.md. The pre-built wheel from `https://abetlen.github.io/llama-cpp-python/whl/cu128/` only covers stable Python 3.x — Python 3.14 wheels not available there, hence the source build.
 
 **Recurrence pattern (cumulative):** 4 missing-or-CPU-only Python packages in 5 days — `pytest-xdist`, `python-sat`, `datasets`, llama-cpp-python (CPU wheel). The venv has drifted from declared deps; recommend `.venv/bin/pip install -e ".[dev,llm,mcp,rust,dwave]"` to re-sync. Or move to `uv sync` workflow which respects the `[tool.uv.sources]` index pins.
+
+
+### NEW Phase 4 Canonical Metric MANDATORY
+Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
 
 
 ### NEW Phase 4 Canonical Metric MANDATORY
