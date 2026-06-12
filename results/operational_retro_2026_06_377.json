@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.377",
+  "generated_at": "2026-06-12T08:00:40Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The milestone-scoped timing detector reported 0 experiment commits since .377 activation, so the locked numeric fields are 0/0 and both RTX 3090s were idle (0% util, 4MB) at the 2026-06-12T08:00:40Z snapshot -- correct behaviour with no compute-bound task present, hence gpu_idle_on_compute_bound_tasks stays null. However, the on-disk ops/changelog.md read this turn shows .377 actually shipped exp4077-exp4085 (all dated 2026-06-12), so the zero is a FALSE-ZERO detector artifact -- the same observability gap the research-log documents for 11 consecutive milestones through .375. The real .377 story (per capstone exp4085) is a verifier-as-reward RFT pivot that honestly BLOCKED at its precision gate, not an idle milestone.",
+  "bottlenecks_identified": [
+    "FALSE-ZERO timing detector (PRIMARY, recurring): the milestone-scoped query found 0 commits, but ops/changelog.md (read this turn) shows exp4077-exp4085 committed under .377 on 2026-06-12. This is the same detector gap recorded for 11 consecutive milestones through .375 (.363/.365/.366/.367/.368/.369/.370/.372/.373/.374/.375), with .376 having no retro on file. The recurring operational failure is OBSERVABILITY, not execution -- every retro since .363 has had to reconstruct the exp range from the changelog by hand.",
+    "No per-experiment timing or duration data exists in any authoritative source this milestone, so the retro's core function (rank compute-bound tasks by wall time) has zero input -- a direct downstream consequence of the false-zero detector, not of the experiments themselves.",
+    "NOT a bottleneck (stated explicitly per the GPU-idle interpretation rule): GPU idle at 0%. With 0 compute-bound tasks in the timing block, idle GPUs are correct; gpu_idle_on_compute_bound_tasks stays null and GPU idle is NOT flagged."
+  ],
+  "improvements_suggested": [
+    "Fix the milestone-scoped timing detector so it attributes exp4077-exp4085 to .377 using the same signal the changelog/capstone use (parse ops/changelog.md dated entries or the capstone's cited upstream range) instead of a git-log-since-activation-marker query that has now missed 12+ milestones. This single fix restores slowest-experiment analysis for every future retro.",
+    "Until the detector is fixed, have the retro task auto-reconstruct the exp range from ops/changelog.md (the documented manual workaround) and emit a self-flag so a false-zero is never silently reported as an idle milestone.",
+    "Emit per-task duration_s into a machine-readable timing ledger at commit time (not only inside the per-experiment JSON artifacts), so wall-time ranking survives even when the git-range detector misses the milestone."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Repair the false-zero milestone-scoped timing detector -- it has produced empty timing data for 12+ consecutive milestones (11 documented through .375, plus .376 with no retro, now .377), which is the single recurring operational defect blocking every efficiency retro.",
+    "Add a commit-time per-task timing ledger so duration and GPU-utilisation data is captured independently of the broken git-range query.",
+    "Auto-reconstruct the exp range from ops/changelog.md inside the retro task and self-flag the detector gap, so a false-zero self-reports instead of producing a misleading idle-milestone retro."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "A retro whose authoritative timing block reads 0/0 while the changelog shows nine shipped tasks (exp4077-exp4085) is itself the finding: the recurring failure is the observability detector, not the milestone. The honest move is to keep the locked 0/0 (the detector's reading) while reconstructing the real exp range from on-disk evidence and naming the gap -- exactly what the last 11 retros did. Fixing the detector once would convert a dozen hand-reconstructed retros back into real wall-time analysis."
+}
