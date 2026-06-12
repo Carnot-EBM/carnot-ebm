@@ -543,3 +543,11 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: improve the verified world model or add a conservative real-env grounding/replan guard.
 - priority: high
 <!-- exp4063-g2:end -->
+
+### GAP-DECENTRALIZATION-MOE-SYNC-4069: Synchronous MoE local support gaps
+- status: open
+- evidence: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4069_decentralization_moe_sync.json; accumulated_n=30; coverage=0.2333; diagnosis=absent
+- failure mode: Qwen3.6-35B-A3B best-of-N did not surface a demo-perfect local program for the listed ARC tasks under the unchanged GAP-4 verifier.
+- missing discriminator: a local candidate source or verifier-side signal that recovers the demonstrated rule before distillation.
+- priority: high
+- missing_verifier_gaps: 17cae0c1, 1a2e2828, 1a6449f1, 25094a63, 2f0c5170, 4e469f39, 505fff84, 50a16a69, 5833af48, 692cd3b6, 712bf12e, 79fb03f4, 81c0276b, 8719f442, 96a8c0cd, a57f2f04, ac3e2b04, b9630600, c3202e5a, c7d4e6ad, f0df5ff0, f3e62deb, fafd9572
