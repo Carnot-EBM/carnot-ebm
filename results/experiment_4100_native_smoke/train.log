@@ -1,0 +1,247 @@
+[2026-06-12 11:41:02,758][src.nn.utils.utils][INFO] - [rank: 0] Enforcing tags! <cfg.extras.enforce_tags=True>
+[2026-06-12 11:41:02,762][src.nn.utils.utils][INFO] - [rank: 0] Printing config tree with Rich! <cfg.extras.print_config=True>
+[2026-06-12 11:41:02,789][__main__][INFO] - [rank: 0] Instantiating datamodule <src.nn.data.SudokuDataModule>
+[2026-06-12 11:41:02,803][__main__][INFO] - [rank: 0] Setting model config from data module:  num_puzzles = 1 batch_size = 4 vocab_size = 7
+[2026-06-12 11:41:02,803][__main__][INFO] - [rank: 0] Instantiating model <src.nn.models.trm.TRMModule>
+[2026-06-12 11:41:03,799][src.nn.models.trm][INFO] - [rank: 0] Creating TRM with vocab size=7, seq_len=36, puzzle_emb_len=0 pos_emb_type=None puzzle_emb_dim=0
+[2026-06-12 11:41:03,799][src.nn.models.trm][INFO] - [rank: 0] use_mlp_t=True, use_conv_swiglu=False, use_board_swiglu=False
+[2026-06-12 11:41:03,827][src.nn.models.trm][INFO] - [rank: 0] Not using Rotary Embeddings
+[2026-06-12 11:41:03,833][src.nn.models.trm][INFO] - [rank: 0] puzzle_emb_dim <= 0, not creating puzzle embeddings
+[2026-06-12 11:41:03,834][__main__][INFO] - [rank: 0] Instantiating callbacks...
+[2026-06-12 11:41:03,834][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <lightning.pytorch.callbacks.ModelCheckpoint>
+[2026-06-12 11:41:03,838][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <src.nn.callbacks.ema.EMACallback>
+[2026-06-12 11:41:03,840][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <carnot.agentic.arc_exp4100_trm_verifier_rft_conditional.NanoTrmProgressPrinter>
+[2026-06-12 11:41:03,861][__main__][INFO] - [rank: 0] Instantiating loggers...
+[2026-06-12 11:41:03,862][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating logger <lightning.pytorch.loggers.csv_logs.CSVLogger>
+[2026-06-12 11:41:03,863][__main__][INFO] - [rank: 0] Instantiating trainer <lightning.pytorch.trainer.Trainer>
+[2026-06-12 11:41:03,871][__main__][INFO] - [rank: 0] Logging hyperparameters!
+[2026-06-12 11:41:03,882][__main__][INFO] - [rank: 0] Starting training!
+[2026-06-12 11:41:03,882][__main__][INFO] - [rank: 0] Val check interval: default (1.0)
+[2026-06-12 11:41:03,882][__main__][INFO] - [rank: 0] Check val every n epoch: 10
+[2026-06-12 11:41:03,882][__main__][INFO] - [rank: 0] Steps per epoch: 8
+[2026-06-12 11:41:03,882][__main__][INFO] - [rank: 0] Max epochs: 26
+[2026-06-12 11:41:03,882][__main__][INFO] - [rank: 0] Batch size: 4
+[2026-06-12 11:41:04,144][src.nn.models.trm][INFO] - [rank: 0] Training configuration:
+[2026-06-12 11:41:04,144][src.nn.models.trm][INFO] - [rank: 0]   Groups (unique puzzles): N/A
+[2026-06-12 11:41:04,144][src.nn.models.trm][INFO] - [rank: 0]   Total puzzles (with aug): 32
+[2026-06-12 11:41:04,144][src.nn.models.trm][INFO] - [rank: 0]   Steps per epoch: 8
+[2026-06-12 11:41:04,144][src.nn.models.trm][INFO] - [rank: 0]   Total steps: 208
+[2026-06-12 11:41:04,144][src.nn.models.trm][INFO] - [rank: 0] Compiling inner_forward with torch.compile...
+[2026-06-12 11:41:04,145][src.nn.models.trm][INFO] - [rank: 0] Compilation successful
+[2026-06-12 11:41:04,169][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] Creating train dataloader with batch size 4 and num_workers 0 and prefetch_factor None
+[2026-06-12 11:41:08,257][src.nn.utils.utils][ERROR] - [rank: 0] 
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 49, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 630, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path, weights_only=weights_only)
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1079, in _run
+    results = self._run_stage()
+              ^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1123, in _run_stage
+    self.fit_loop.run()
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/fit_loop.py", line 217, in run
+    self.advance()
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/fit_loop.py", line 469, in advance
+    self.epoch_loop.run(self._data_fetcher)
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/training_epoch_loop.py", line 153, in run
+    self.advance(data_fetcher)
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/training_epoch_loop.py", line 354, in advance
+    batch_output = self.manual_optimization.run(kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/optimization/manual.py", line 95, in run
+    self.advance(kwargs)
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/optimization/manual.py", line 115, in advance
+    training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 329, in _call_strategy_hook
+    output = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/strategies/strategy.py", line 391, in training_step
+    return self.lightning_module.training_step(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/models/trm.py", line 480, in training_step
+    self.carry, loss, metrics, _ = self.compute_loss_and_metrics(self.carry, batch)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/models/trm.py", line 403, in compute_loss_and_metrics
+    new_carry, outputs = self.forward(carry, batch)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/models/trm.py", line 365, in forward
+    new_inner_carry, logits, q_halt_logits = self.inner_forward(
+                                             ^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py", line 1047, in compile_wrapper
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/models/trm.py", line 319, in inner_forward
+    def inner_forward(
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py", line 1298, in _fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_functorch/aot_autograd.py", line 1273, in forward
+    return compiled_fn(full_args)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_functorch/_aot_autograd/runtime_wrappers.py", line 777, in runtime_wrapper
+    all_outs = compiled_invoker.run(args, on_before_call=exit_prologue)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_functorch/_aot_autograd/runtime_wrappers.py", line 506, in run
+    return call_func_at_runtime_with_args(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_functorch/_aot_autograd/utils.py", line 126, in call_func_at_runtime_with_args
+    out = normalize_as_list(f(args))
+                            ^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_functorch/_aot_autograd/utils.py", line 93, in g
+    return f(*args)
+           ^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/autograd/function.py", line 596, in apply
+    return super().apply(*args, **kwargs)  # type: ignore[misc]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_functorch/_aot_autograd/runtime_wrappers.py", line 2844, in forward
+    fw_outs = call_func_at_runtime_with_args(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_functorch/_aot_autograd/utils.py", line 126, in call_func_at_runtime_with_args
+    out = normalize_as_list(f(args))
+                            ^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_functorch/_aot_autograd/runtime_wrappers.py", line 850, in wrapper
+    return compiled_fn(runtime_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_functorch/_aot_autograd/runtime_wrappers.py", line 1055, in inner_fn
+    outs = compiled_fn(args)
+           ^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/output_code.py", line 725, in __call__
+    return self.current_callable(inputs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/torchinductor_ianblenke/rb/crbkgf7fssik4mhvliudb7v47zvy3mlcudc3cpbun73chbjaevi6.py", line 1186, in call
+    (buf0, buf1, buf2, buf3, buf4, buf5, buf7, buf9, buf10, buf12, buf13, buf14, buf15, buf17, buf19, buf20, buf21, buf22, buf23, buf25, buf27, buf29, buf30, buf31, buf33, buf35, buf36, buf37, buf38, buf43, primals_10) = self.partitions[0](partition0_args)
+                                                                                                                                                                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/compile_fx.py", line 1913, in run
+    return compiled_fn(new_inputs)  # type: ignore[arg-type]
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/cudagraph_trees.py", line 446, in deferred_cudagraphify
+    fn, out = cudagraphify(model, inputs, new_static_input_idxs, *args, **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/cudagraph_trees.py", line 506, in cudagraphify
+    return manager.add_function(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/cudagraph_trees.py", line 2490, in add_function
+    return fn, fn(inputs)
+               ^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/cudagraph_trees.py", line 2158, in run
+    out = self._run(new_inputs, function_id)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/cudagraph_trees.py", line 2256, in _run
+    return self.run_eager(new_inputs, function_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/cudagraph_trees.py", line 2448, in run_eager
+    return node.run(new_inputs)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/cudagraph_trees.py", line 750, in run
+    out = self.wrapped_function.model(new_inputs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/torchinductor_ianblenke/rb/crbkgf7fssik4mhvliudb7v47zvy3mlcudc3cpbun73chbjaevi6.py", line 1041, in partition_0
+    triton_poi_fused__to_copy_add_clone_embedding_mul_transpose_2.run(primals_4, primals_3, buf0, primals_2, buf2, 144, 64, stream=raw_stream0)
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/runtime/triton_heuristics.py", line 1691, in run
+    self.autotune_to_one_config(*args, **kwargs)
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/runtime/triton_heuristics.py", line 1230, in autotune_to_one_config
+    timings = self.benchmark_all_configs(*args, **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/runtime/triton_heuristics.py", line 1193, in benchmark_all_configs
+    launcher: self.bench(launcher, *args, **kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/runtime/triton_heuristics.py", line 1036, in bench
+    result = benchmarker.benchmark(
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/runtime/benchmarking.py", line 129, in wrapper
+    return fn(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/runtime/benchmarking.py", line 246, in benchmark
+    return benchmark_fn(self, _callable, warmup=warmup, rep=rep, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/runtime/benchmarking.py", line 325, in _default_cuda_bench
+    return self.benchmark_gpu(f, warmup=warmup, rep=rep, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/runtime/benchmarking.py", line 129, in wrapper
+    return fn(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/_inductor/runtime/benchmarking.py", line 481, in benchmark_gpu
+    torch.cuda.synchronize()
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py", line 1181, in synchronize
+    return torch._C._cuda_synchronize()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: device-side assert triggered
+Search for `cudaErrorAssert' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/utils/utils.py", line 75, in wrap
+    return_value = task_func(cfg=cfg)
+                   ^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/train.py", line 124, in train
+    trainer.fit(model=model, datamodule=datamodule, ckpt_path=cfg.get("ckpt_path"))
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 584, in fit
+    call._call_and_handle_interrupt(
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 70, in _call_and_handle_interrupt
+    trainer._teardown()
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1102, in _teardown
+    self.strategy.teardown()
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/strategies/strategy.py", line 536, in teardown
+    self.lightning_module.cpu()
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/fabric/utilities/device_dtype_mixin.py", line 86, in cpu
+    return super().cpu()
+           ^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1164, in cpu
+    return self._apply(lambda t: t.cpu())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 933, in _apply
+    module._apply(fn)
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 964, in _apply
+    param_applied = fn(param)
+                    ^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1164, in <lambda>
+    return self._apply(lambda t: t.cpu())
+                                 ^^^^^^^
+torch.AcceleratorError: CUDA error: device-side assert triggered
+Search for `cudaErrorAssert' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+[2026-06-12 11:41:08,262][src.nn.utils.utils][INFO] - [rank: 0] Output dir: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4100_native_smoke
+[2026-06-12 11:41:38,508][src.nn.utils.utils][INFO] - [rank: 0] Enforcing tags! <cfg.extras.enforce_tags=True>
+[2026-06-12 11:41:38,512][src.nn.utils.utils][INFO] - [rank: 0] Printing config tree with Rich! <cfg.extras.print_config=True>
+[2026-06-12 11:41:38,534][__main__][INFO] - [rank: 0] Instantiating datamodule <src.nn.data.SudokuDataModule>
+[2026-06-12 11:41:38,545][__main__][INFO] - [rank: 0] Setting model config from data module:  num_puzzles = 1 batch_size = 4 vocab_size = 7
+[2026-06-12 11:41:38,545][__main__][INFO] - [rank: 0] Instantiating model <src.nn.models.trm.TRMModule>
+[2026-06-12 11:41:39,228][src.nn.models.trm][INFO] - [rank: 0] Creating TRM with vocab size=7, seq_len=16, puzzle_emb_len=0 pos_emb_type=None puzzle_emb_dim=0
+[2026-06-12 11:41:39,228][src.nn.models.trm][INFO] - [rank: 0] use_mlp_t=True, use_conv_swiglu=False, use_board_swiglu=False
+[2026-06-12 11:41:39,228][src.nn.models.trm][INFO] - [rank: 0] Not using Rotary Embeddings
+[2026-06-12 11:41:39,230][src.nn.models.trm][INFO] - [rank: 0] puzzle_emb_dim <= 0, not creating puzzle embeddings
+[2026-06-12 11:41:39,230][__main__][INFO] - [rank: 0] Instantiating callbacks...
+[2026-06-12 11:41:39,230][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <lightning.pytorch.callbacks.ModelCheckpoint>
+[2026-06-12 11:41:39,231][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <src.nn.callbacks.ema.EMACallback>
+[2026-06-12 11:41:39,232][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <carnot.agentic.arc_exp4100_trm_verifier_rft_conditional.NanoTrmProgressPrinter>
+[2026-06-12 11:41:39,238][__main__][INFO] - [rank: 0] Instantiating loggers...
+[2026-06-12 11:41:39,238][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating logger <lightning.pytorch.loggers.csv_logs.CSVLogger>
+[2026-06-12 11:41:39,239][__main__][INFO] - [rank: 0] Instantiating trainer <lightning.pytorch.trainer.Trainer>
+[2026-06-12 11:41:39,245][__main__][INFO] - [rank: 0] Logging hyperparameters!
+[2026-06-12 11:41:39,252][__main__][INFO] - [rank: 0] Starting training!
+[2026-06-12 11:41:39,253][__main__][INFO] - [rank: 0] Val check interval: default (1.0)
+[2026-06-12 11:41:39,253][__main__][INFO] - [rank: 0] Check val every n epoch: 10
+[2026-06-12 11:41:39,253][__main__][INFO] - [rank: 0] Steps per epoch: 8
+[2026-06-12 11:41:39,253][__main__][INFO] - [rank: 0] Max epochs: 26
+[2026-06-12 11:41:39,253][__main__][INFO] - [rank: 0] Batch size: 4
+[2026-06-12 11:41:39,512][src.nn.models.trm][INFO] - [rank: 0] Training configuration:
+[2026-06-12 11:41:39,512][src.nn.models.trm][INFO] - [rank: 0]   Groups (unique puzzles): N/A
+[2026-06-12 11:41:39,512][src.nn.models.trm][INFO] - [rank: 0]   Total puzzles (with aug): 32
+[2026-06-12 11:41:39,512][src.nn.models.trm][INFO] - [rank: 0]   Steps per epoch: 8
+[2026-06-12 11:41:39,513][src.nn.models.trm][INFO] - [rank: 0]   Total steps: 208
+[2026-06-12 11:41:39,513][src.nn.models.trm][INFO] - [rank: 0] Compiling inner_forward with torch.compile...
+[2026-06-12 11:41:39,514][src.nn.models.trm][INFO] - [rank: 0] Compilation successful
+[2026-06-12 11:41:39,533][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] Creating train dataloader with batch size 4 and num_workers 0 and prefetch_factor None
+[2026-06-12 11:41:47,525][__main__][INFO] - [rank: 0] Training finished!
+[2026-06-12 11:41:47,530][src.nn.utils.utils][INFO] - [rank: 0] Output dir: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4100_native_smoke

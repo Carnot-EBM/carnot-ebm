@@ -1,0 +1,152 @@
+{
+  "branch_taken": "smoke",
+  "duration_s": 15.682,
+  "exp4099_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4099_trm_pool_verifier_discrimination_probe.json",
+  "experiment": "experiment_4100_trm_verifier_rft_conditional",
+  "field_principles": {
+    "branch_taken": "Records rft, smoke, or blocked so a reader knows whether full RFT actually happened.",
+    "honest_verdict": "Terminal-prefixed complete/success/passed/shipped verdict; blocked_* only for precondition stops.",
+    "preconditions_checked": "Resource checks for TRM weights, nano-trm substrate, CUDA, and Exp 4099.",
+    "random_seed": "Determinism precondition for the training run.",
+    "reproducibility_checksum": "Content hash of split/corpus or smoke substrate inputs.",
+    "rft_vs_ablation_delta": "De-confounded verifier-label A-vs-vote-label B held-out delta with bootstrap CI.",
+    "trm_native_trainer_checkpoint_ok": "Bare bool for native nano-trm checkpoint save plus reload."
+  },
+  "honest_verdict": "complete: trm_native_trainer_checkpoint_ok_smoke_only_no_verifier_grid_discrimination_best_K_OF_N_AGREEMENT_gap_0.0000",
+  "inference_substrate": "native_nano_trm_trainer_checkpoint_smoke",
+  "n_codex_calls": 0,
+  "native_smoke": {
+    "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4100_native_smoke/checkpoints/last.ckpt",
+    "checkpoint_reload_ok": true,
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/bin/python",
+      "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/train.py",
+      "experiment=trm_sudoku_4x4",
+      "logger=csv",
+      "hydra.run.dir=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4100_native_smoke",
+      "save_dir=null",
+      "append_wandb_name_to_save_dir=false",
+      "seed=4100",
+      "data.data_dir=null",
+      "data.num_train_puzzles=32",
+      "data.num_val_puzzles=8",
+      "data.num_test_puzzles=0",
+      "data.max_grid_size=4",
+      "timekeeping.max_epochs=26",
+      "timekeeping.batch_size=4",
+      "timekeeping.num_workers=0",
+      "trainer.max_epochs=26",
+      "+trainer.max_steps=200",
+      "+trainer.num_sanity_val_steps=0",
+      "+trainer.limit_val_batches=1",
+      "+trainer.log_every_n_steps=1",
+      "trainer.precision=32",
+      "callbacks.model_checkpoint.monitor=null",
+      "callbacks.model_checkpoint.save_last=true",
+      "callbacks.model_checkpoint.save_top_k=-1",
+      "callbacks.model_checkpoint.every_n_train_steps=50",
+      "callbacks.model_checkpoint.dirpath=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4100_native_smoke/checkpoints",
+      "callbacks.model_checkpoint.filename=smoke_step",
+      "+callbacks.exp4100_progress._target_=carnot.agentic.arc_exp4100_trm_verifier_rft_conditional.NanoTrmProgressPrinter",
+      "+callbacks.exp4100_progress.every_n_steps=1",
+      "model_tuning.hidden_size=64",
+      "model_tuning.num_heads=4",
+      "model_tuning.num_layers=1",
+      "model_tuning.N_supervision=1",
+      "model_tuning.N_supervision_val=1",
+      "model_tuning.H_cycles=1",
+      "model_tuning.L_cycles=1",
+      "model_tuning.ffn_expansion=2",
+      "model_tuning.puzzle_emb_dim=0",
+      "model_tuning.puzzle_emb_len=0",
+      "model_tuning.pos_emb_type=null",
+      "model_tuning.use_mlp_t=true",
+      "model_tuning.use_conv_swiglu=false",
+      "model_tuning.use_board_swiglu=false",
+      "model_tuning.use_muon=false"
+    ],
+    "plan": {
+      "batch_size": 4,
+      "hidden_size": 64,
+      "max_steps": 200,
+      "native_trainer": "nano-trm/src/nn/train.py",
+      "num_heads": 4,
+      "random_seed": 4100,
+      "task": "generated_sudoku_4x4_mechanism_smoke",
+      "train_puzzles": 32,
+      "val_puzzles": 8
+    },
+    "stdout_tail": [
+      "[exp4100:native-train] step=0 epoch=24 batch_idx=4",
+      "[exp4100:native-train] step=0 epoch=24 batch_idx=5",
+      "[exp4100:native-train] step=0 epoch=24 batch_idx=6",
+      "[exp4100:native-train] step=0 epoch=24 batch_idx=7",
+      "[exp4100:native-train] epoch_end=24 step=0",
+      "[exp4100:native-train] step=0 epoch=25 batch_idx=0",
+      "[exp4100:native-train] step=0 epoch=25 batch_idx=1",
+      "[exp4100:native-train] step=0 epoch=25 batch_idx=2",
+      "[exp4100:native-train] step=0 epoch=25 batch_idx=3",
+      "[exp4100:native-train] step=0 epoch=25 batch_idx=4",
+      "[exp4100:native-train] step=0 epoch=25 batch_idx=5",
+      "[exp4100:native-train] step=0 epoch=25 batch_idx=6",
+      "[exp4100:native-train] step=0 epoch=25 batch_idx=7",
+      "[exp4100:native-train] epoch_end=25 step=0",
+      "`Trainer.fit` stopped: `max_epochs=26` reached.",
+      "[2026-06-12 11:41:47,525][__main__][INFO] - [rank: 0] Training finished!",
+      "[2026-06-12 11:41:47,530][src.nn.utils.utils][INFO] - [rank: 0] Output dir: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4100_native_smoke",
+      "return_code=0",
+      "checkpoint=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4100_native_smoke/checkpoints/last.ckpt",
+      "checkpoint_reload=torch.load ok"
+    ]
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "non-empty: /home/ianblenke/.cache/huggingface/hub/models--arcprize--trm_arc_prize_verification",
+      "resource": "trm_weights_cached"
+    },
+    {
+      "available": true,
+      "detail": "found arc_evaluator.py and baseline.py",
+      "resource": "nano_trm_substrate"
+    },
+    {
+      "available": true,
+      "detail": "torch.cuda.is_available()=True",
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "detail": "loaded /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4099_trm_pool_verifier_discrimination_probe.json",
+      "resource": "exp4099_probe"
+    }
+  ],
+  "random_seed": 4100,
+  "reproducibility_checksum": "9c86753fc8ba6b7255c1247d1a0de960e9417f584359603f950d770ae128d2c8",
+  "rft_vs_ablation_delta": {
+    "ci95": [
+      0.0,
+      0.0
+    ],
+    "delta": 0.0,
+    "metric": "heldout_pass@2",
+    "status": "not_run_no_verifier_signal"
+  },
+  "schema": "carnot.experiment_4100_trm_verifier_rft_conditional.v1",
+  "spec_refs": [
+    "REQ-LEARN-4100",
+    "SCENARIO-LEARN-4100-SMOKE"
+  ],
+  "trm_native_trainer_checkpoint_ok": true,
+  "verifier_gap": {
+    "best_captured_pp": 0.0,
+    "best_captured_pp_ci95": [
+      0.0,
+      0.0
+    ],
+    "best_reranker": "K_OF_N_AGREEMENT",
+    "bottleneck": "verifier_discrimination_on_trm_grids",
+    "captured_pp_directional": 0.0,
+    "verifier_beats_trm_vote": false
+  }
+}
