@@ -11895,3 +11895,96 @@ precision and recall thresholds simultaneously
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4087 | Proposed (python/carnot/agentic/arc_exp4087_certification_precision_rescue.py; scripts/experiments/exp4087_certification_precision_rescue.py, Exp 4087) | Proposed (tests/python/test_experiment_4087_certification_precision_rescue.py) |
+
+---
+
+## REQ-LEARN-4088: Trustworthy ARC Verifier-Reward RFT Corpus Build
+
+**Given** Exp 4087 has already produced
+`precision_rescue_succeeded=true` with an operating point whose certification
+precision is at least `0.85`, the local `Qwen/Qwen3.5-0.8B` HF safetensors
+base loads as trainable Transformers weights, `trl`/`peft` trainers import,
+CUDA is visible, and ARC task pools are readable
+**When** Exp 4088 prepares the verifier-as-self-improvement RFT corpus
+**Then** it SHALL fail closed with `honest_verdict="blocked_<resource>"`
+before live generation whenever any mandatory resource is missing, and it SHALL
+record every checked resource in `preconditions_checked`.
+
+When preconditions pass, Exp 4088 SHALL reserve a disjoint held-out ARC eval
+split, run live Codex generation for at least `k=8` transform programs per
+held-in task, and certify each generated program with the Exp 4087 selected
+operating point instead of the raw demo-perfect rule. The corpus build SHALL
+produce three N-matched training arms from the same generator distribution:
+`RFT-CORRECT` for certified-correct programs, `RFT-ABLATION` for
+certified-not-correct or demo-failing programs matched to the RFT-correct task
+distribution, and `gold-SFT` for test-gold programs matched to the
+RFT-correct size where possible. The held-out eval task ids SHALL be recorded
+and SHALL NOT appear in any training corpus.
+
+The terminal artifact SHALL write
+`results/experiment_4088_verifier_reward_rft_corpus_build.json` with bare
+top-level fields `honest_verdict`, `operating_point_used`,
+`n_rft_correct`, `n_rft_ablation`, `n_gold_sft`, `n_heldout_tasks`,
+`runner_ready`, `trainer_smoke_passed`, `preconditions_checked`,
+`model_specs`, `random_seed`, `reproducibility_checksum`, and
+`inference_substrate`. Complete artifacts SHALL use
+`inference_substrate="live_llm_inference"` and SHALL include methodology
+metadata proving live Codex generation and two-task LoRA smoke checkpoint
+creation rather than cached replay or fabricated timing.
+
+### REQ-LEARN-4088 Sub-requirements
+
+- REQ-LEARN-4088-1: The precondition checker SHALL verify the actual
+  trainable Qwen HF model load, `trl`/`peft` trainer imports, CUDA visibility,
+  and the Exp 4087 precision-rescue operating point before live generation.
+- REQ-LEARN-4088-2: The runner SHALL invoke Codex live for at least `k=8`
+  transform programs per held-in ARC task, print progress per task, and record
+  per-task generation latency and call counts in methodology fields.
+- REQ-LEARN-4088-3: Certification SHALL inherit Exp 4087's selected operating
+  point. For `k_of_n_agreement` with `threshold="k=1"`, a program is
+  certified-correct only when it is demo-perfect and belongs to a prediction
+  agreement bucket whose size is at least one.
+- REQ-LEARN-4088-4: The three corpora SHALL be N-matched across arms and
+  matched by held-in task distribution, so a downstream delta is attributable
+  to the label rather than corpus size or task composition.
+- REQ-LEARN-4088-5: The LoRA runner SHALL expose the same three arms with
+  identical training configuration per arm, smoke-train two tasks on
+  `Qwen/Qwen3.5-0.8B`, and assert checkpoint directories are written to disk.
+- REQ-LEARN-4088-6: The held-out eval harness SHALL write a manifest containing
+  only disjoint held-out task ids and enough model/checkpoint metadata for Exp
+  4089 to evaluate the three arms without rebuilding the corpus.
+
+### SCENARIO-LEARN-4088-BLOCKED: Missing Resource Prevents Fabrication
+
+**Given** any mandatory precondition is unavailable
+**When** Exp 4088 runs
+**Then** the artifact reports `honest_verdict="blocked_<resource>"`,
+`runner_ready=false`, zero corpus counts, `trainer_smoke_passed=false`, and a
+`preconditions_checked` entry for the missing resource.
+
+### SCENARIO-LEARN-4088-NMATCH: Rescue Operating Point Builds Three Matched Arms
+
+**Given** Exp 4087's operating point passes the precision rescue gate and the
+held-in live Codex pool contains certified-correct, certified-not-correct, and
+gold programs for the same task distribution
+**When** Exp 4088 builds corpora
+**Then** `n_rft_correct == n_rft_ablation == n_gold_sft`, every RFT-correct
+item is certified by the Exp 4087 operating point, every ablation item is not
+certified-correct, and held-out task ids are absent from all three training
+arms.
+
+### SCENARIO-LEARN-4088-SMOKE: Two-Task LoRA Smoke Writes Checkpoints
+
+**Given** non-empty N-matched corpora and available GPU/trainer/model
+preconditions
+**When** the Exp 4088 LoRA smoke path runs
+**Then** each arm uses the same training config, writes a checkpoint directory
+under `results/checkpoints/experiment_4088_verifier_reward_rft_corpus_build`,
+and reports `trainer_smoke_passed=true` only when the checkpoint assertion
+passes.
+
+## Implementation Status (REQ-LEARN-4088)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4088 | Proposed (python/carnot/agentic/arc_exp4088_verifier_reward_rft_corpus_build.py; scripts/experiments/exp4088_verifier_reward_rft_corpus_build.py, Exp 4088) | Proposed (tests/python/test_experiment_4088_verifier_reward_rft_corpus_build.py) |
