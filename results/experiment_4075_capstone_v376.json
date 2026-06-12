@@ -1,0 +1,335 @@
+{
+  "accuracy_self_learning_hardware_deltas": {
+    "accuracy": {
+      "action_savings_vs_candidate_baseline": 39,
+      "candidate_baseline_actions": 43,
+      "exploration_actions_used": 1,
+      "first_solve_at_action": 4,
+      "game_solved": true,
+      "games_solved_delta": 1,
+      "prior_total_games_solved": 8,
+      "real_env_confirmed": true,
+      "status": "new_game_solved",
+      "target_game": "ft09-0d8bbf25",
+      "total_games_solved": 9
+    },
+    "hardware": {
+      "fabric_acceleration_claimed": false,
+      "gatemate_step_taken": "blocked_gatemate_unreachable",
+      "included": true,
+      "kv260_step_taken": "kv260_opportunistic_ssh_confirm_only",
+      "kv260_terminal_confirmed": true,
+      "per_board_reachability": {
+        "gatemate": false,
+        "kv260": true,
+        "polarfire": true
+      },
+      "per_board_terminal_state": {
+        "gatemate": "blocked_gatemate_unreachable",
+        "kv260": "opportunistic_terminal_confirmed_ssh_only",
+        "polarfire": "reachable_hash_verified_cpu_dispatch_recorded"
+      },
+      "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded",
+      "speedup_claim_made": false
+    },
+    "self_learning": {
+      "action_savings_vs_cold": 39,
+      "actions_cold": 43,
+      "actions_cross_game_v9": 4,
+      "actions_within_game": 3,
+      "cross_game_extra_actions_vs_within_game": 1,
+      "cross_game_transfer_win": false,
+      "induction_call_savings_vs_cold": 1,
+      "induction_calls_cold": 1,
+      "induction_calls_cross_game_v9": 0,
+      "induction_calls_within_game": 0,
+      "n_named_abstractions": 6,
+      "n_prior_fragments": 8,
+      "n_reused_abstractions": 3,
+      "status": "measured",
+      "transfer_assessment": "helped_vs_cold_but_lost_to_within_game"
+    }
+  },
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 4066,
+      "sha256": "9f21e6955877570014a624de6a46e36ffaaeba25e1266c997a1e8e2dc25f0486"
+    },
+    {
+      "experiment_id": 4067,
+      "sha256": "66fbfeeec39099d1a37125d97441cb5e06ee50a937050b438c7b81f2d76cc645"
+    },
+    {
+      "experiment_id": 4069,
+      "sha256": "9559a60c9e11b3a15328066bb1cccab744252a13b7c17e54d0771c972e242ff9"
+    },
+    {
+      "experiment_id": 4070,
+      "sha256": "bec05d39baa773e3a72431143a34577dbba691390bf502d79fd334992d4bb91f"
+    },
+    {
+      "experiment_id": 4071,
+      "sha256": "574350121a6572b8d4f40df6e9abb2e2fba08f3a38883786fde5772a59bff72b"
+    },
+    {
+      "experiment_id": 4072,
+      "sha256": "298c5d34927084005af624c25bebd7ccea69744a9f637fc704b233a925615238"
+    },
+    {
+      "experiment_id": 4073,
+      "sha256": "b0954715636169c83002942b3011adee4cada9d64d465560df9d08dc811e33d8"
+    },
+    {
+      "experiment_id": 4074,
+      "sha256": "eb8836ebf718b77c5e03bf4f031209f19e446cdb990ff1f8a66a565a7e4df38b"
+    }
+  ],
+  "decentralization_diagnosis": "absent",
+  "decision_grade_measurements": {
+    "G1": false,
+    "G1_and_G3": false,
+    "G3": true
+  },
+  "duration_s": 0.4731336170807481,
+  "efficiency_action_pruner": {
+    "action_reduction_pct": 66.6667,
+    "actions_baseline_mean": 33.0,
+    "actions_pruned_mean": 11.0,
+    "efficiency_gain": true,
+    "games_evaluated": 3,
+    "solverate_baseline": 1.0,
+    "solverate_parity_held": true,
+    "solverate_pruned": 1.0,
+    "status": "gain"
+  },
+  "experiment_id": 4075,
+  "field_principles": {
+    "cited_upstream_artifacts": "Included upstream experiment ids and sha256 provenance only.",
+    "decentralization_diagnosis": "latent | absent | accumulating | uninformative | flagged_skipped - the sovereign-base branch state.",
+    "flagged_artifacts_skipped": "Upstreams excluded before metric import because they are stamped flagged_adversarial:true.",
+    "honest_verdict": "Terminal-prefix verdict preserving measured, negative, uninformative, skipped, and accumulating outcomes.",
+    "inference_substrate": "Declares this capstone as aggregation from upstream artifacts.",
+    "mechanism_fix_produced_measurement": "BARE BOOL - whether a clean single-synchronous resume-accumulate upstream produced accumulated_n > 0.",
+    "off_arc_accumulated_n": "BARE INT - clean off-ARC resume-not-restart progress, compared to the .375 value of 0.",
+    "total_games_solved": "BARE INT - the monotonic ARC accuracy counter after clean .376 evidence.",
+    "verifier_pruner_efficiency_gain": "BARE BOOL - the north-star efficient-axis datum: action reduction is positive and solverate parity held.",
+    "verifier_transferred_off_arc_significantly": "BARE BOOL - the operator TOP-PRIORITY question: does the off-ARC best-arm CI exclude zero with oracle headroom at accumulated N?"
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "experiment_id": 4068,
+      "path": "results/experiment_4068_offarc_transfer_power_sync.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "9a2ef3c01631d57b22c962d1a49acd04732a628502a856ed864f94293ab64834"
+    }
+  ],
+  "g1_off_arc_transfer": {
+    "accumulated_n_tasks": 0,
+    "best_arm": "",
+    "best_arm_ci95": [],
+    "best_arm_ci_excludes_zero": false,
+    "best_arm_delta_pp": 0.0,
+    "corpus_routed": "",
+    "corpus_routed_reason": "",
+    "decision_grade": false,
+    "demofit_bootstrap_ci95": [],
+    "demofit_ci_excludes_zero": false,
+    "demofit_delta_pp": 0.0,
+    "excludes_zero_with_headroom": false,
+    "measurement_delta_vs_v375": 0,
+    "mechanism_produced_measurement": false,
+    "oracle_headroom_present": false,
+    "oracle_passrate": 0.0,
+    "powered_task_floor": 0,
+    "previous_v375_accumulated_n": 0,
+    "status": "skipped_flagged"
+  },
+  "g3_decentralization_moe_sync": {
+    "accumulated_coverage": 0.2333,
+    "accumulated_n": 30,
+    "baseline_12b_coverage": 0.2581,
+    "bootstrap_ci95": [
+      -0.1581,
+      0.1419
+    ],
+    "coverage_delta_vs_12b": -0.0248,
+    "decision_grade": true,
+    "diagnosis": "absent",
+    "local_support_diagnosis": "absent",
+    "mechanism_produced_measurement": true,
+    "new_tasks_processed": 16,
+    "oracle_coverage": 0.6129,
+    "status": "absent",
+    "target_n_tasks": 30
+  },
+  "honest_verdict": "complete: capstone_v376_offarc_flagged_skipped_g3_absent_efficiency_gain_games9_flagged_skipped1",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "mechanism_fix_measurement_evidence": {
+    "clean_g3_accumulated_n": 30,
+    "clean_off_arc_accumulated_n": 0,
+    "previous_v375_g3_accumulated_n": 14,
+    "previous_v375_off_arc_accumulated_n": 0,
+    "single_synchronous_mechanism": "single_synchronous_resume_accumulate_no_background"
+  },
+  "mechanism_fix_produced_measurement": true,
+  "missing_upstream_artifacts": [],
+  "off_arc_accumulated_n": 0,
+  "random_seed": 4075,
+  "reproducibility_checksum": "35f313473bdb07f12909623a2065af731d060e807281cea9ec316e76cb97e607",
+  "schema": "carnot.capstone_v376_4075.v1",
+  "sota_ingestion_receipt": {
+    "honest_verdict": "complete: sota_ingestion_v376_unsaturated_corpora_and_online_pruning_mapped",
+    "included": true,
+    "methods_mapped_count": 10
+  },
+  "summarize_artifact_status": {
+    "4066": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4066_archive_v375_activate_v376.json\n------------------------------------------------------------------------------\n  verdict          : success: archived_v375_v376_active_mechanism_failure_not_science_G1_offarc_accumulated_n0_runner_never_launched_offarc_checkpoint_intact_G3_moe_cascade_blocked_moe_checkpoint_intact_efficiency_and_ninth_game_cascade_skipped_games8_arcmemo_v8_no_transfer_kv260_terminal_pretest_green\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 13.102989   substrate: aggregation_from_upstream_artifacts\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4067": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4067_sota_ingestion_receipt.json\n------------------------------------------------------------------------------\n  verdict          : complete: sota_ingestion_v376_unsaturated_corpora_and_online_pruning_mapped\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : None   substrate: aggregation_from_upstream_artifacts\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4068": {
+      "returncode": 2,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4068_offarc_transfer_power_sync.json\n------------------------------------------------------------------------------\n  verdict          : complete: offarc_transfer_no_oracle_headroom_evalplus_n160\n  flagged_adversarial (stamped): True   |   LIVE re-check: CRITICAL\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 1271.07   substrate: live_llm_inference\n  headline metrics :\n      accumulated_n_tasks = 160  <-- flagged\n      armApp_delta_pp = 1.25  <-- flagged\n      armC_delta_pp = 1.25  <-- flagged\n      best_arm_delta_pp = 1.25  <-- flagged\n      demofit_delta_pp = 1.25  <-- flagged\n  adversarial flags:\n      [critical] TAUTOLOGY: accumulated_n_tasks=160.0 and powered_task_floor=160.0 agree to >5 sig figs. Two distinct metric\n      [critical] TAUTOLOGY: armApp_aces_passrate=0.9625 and armB_demofit_passrate=0.9625 agree to >5 sig figs. Two distinct \n      [critical] TAUTOLOGY: armApp_aces_passrate=0.9625 and armC_symbolic_passrate=0.9625 agree to >5 sig figs. Two distinct\n      [critical] TAUTOLOGY: armApp_aces_passrate=0.9625 and oracle_passrate=0.9625 agree to >5 sig figs. Two distinct metric\n      [critical] TAUTOLOGY: armApp_delta_pp=1.25 and armC_delta_pp=1.25 agree to >5 sig figs. Two distinct metrics matching \n      [critical] TAUTOLOGY: armApp_delta_pp=1.25 and best_arm_delta_pp=1.25 agree to >5 sig figs. Two distinct metrics match\n      [critical] TAUTOLOGY: armApp_delta_pp=1.25 and demofit_delta_pp=1.25 agree to >5 sig figs. Two distinct metrics matchi\n      [critical] TAUTOLOGY: armB_demofit_passrate=0.9625 and armC_symbolic_passrate=0.9625 agree to >5 sig figs. Two distinc\n      [critical] TAUTOLOGY: armB_demofit_passrate=0.9625 and oracle_passrate=0.9625 agree to >5 sig figs. Two distinct metri\n      [critical] TAUTOLOGY: armC_delta_pp=1.25 and best_arm_delta_pp=1.25 agree to >5 sig figs. Two distinct metrics matchin\n      [critical] TAUTOLOGY: armC_delta_pp=1.25 and demofit_delta_pp=1.25 agree to >5 sig figs. Two distinct metrics matching\n      [critical] TAUTOLOGY: armC_symbolic_passrate=0.9625 and oracle_passrate=0.9625 agree to >5 sig figs. Two distinct metr\n      [critical] TAUTOLOGY: best_arm_delta_pp=1.25 and demofit_delta_pp=1.25 agree to >5 sig figs. Two distinct metrics matc\n==============================================================================\n"
+    },
+    "4069": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4069_decentralization_moe_sync.json\n------------------------------------------------------------------------------\n  verdict          : complete: decentralization_moe_cov_0.2333_absent_leash_holds_n30\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 2270.21   substrate: live_llm_inference\n  headline metrics :\n      accumulated_n_tasks = 30\n      coverage_delta_vs_12b = -0.0248\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4070": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4070_ninth_game_explore_first.json\n------------------------------------------------------------------------------\n  verdict          : success: ninth_game_solved_ft09-0d8bbf25_at_action_4\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 2.999   substrate: offline_arc_agi3_explore_first_first_solve\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4071": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4071_verifier_action_pruner_efficiency.json\n------------------------------------------------------------------------------\n  verdict          : success: verifier_pruner_cuts_actions_66.7pct_equal_solverate\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 1.234792954986915   substrate: offline_arc_agi3_verifier_action_pruning_ablation\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4072": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4072_arcmemo_cross_game_transfer_v9.json\n------------------------------------------------------------------------------\n  verdict          : complete: arcmemo_v9_no_cross_game_transfer_v9_not_cheaper_than_within_game\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.001   substrate: offline_arc_agi3_arcmemo_cross_game_transfer\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4073": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4073_verifier_registry_and_gaps_hygiene.json\n------------------------------------------------------------------------------\n  verdict          : complete: gap4_reeval_bitexact_g1_g1_evalplus_accumulating_g3_g3_decentralization_absent_coverage_0.2333_g2_ceiling_recorded\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.034   substrate: aggregation_from_upstream_artifacts\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4074": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4074_hardware_continuity.json\n------------------------------------------------------------------------------\n  verdict          : complete: hardware_continuity_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 11.713169   substrate: hardware_smoke\n  adversarial flags: none\n==============================================================================\n"
+    }
+  },
+  "total_games_solved": 9,
+  "upstream_artifact_state": {
+    "4066": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "success: archived_v375_v376_active_mechanism_failure_not_science_G1_offarc_accumulated_n0_runner_never_launched_offarc_checkpoint_intact_G3_moe_cascade_blocked_moe_checkpoint_intact_efficiency_and_ninth_game_cascade_skipped_games8_arcmemo_v8_no_transfer_kv260_terminal_pretest_green",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4066_archive_v375_activate_v376.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4067": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: sota_ingestion_v376_unsaturated_corpora_and_online_pruning_mapped",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4067_sota_ingestion_receipt.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4068": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: offarc_transfer_no_oracle_headroom_evalplus_n160",
+      "included": false,
+      "live_critical": true,
+      "path": "results/experiment_4068_offarc_transfer_power_sync.json",
+      "skipped": true,
+      "summarize_artifact_returncode": 2
+    },
+    "4069": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: decentralization_moe_cov_0.2333_absent_leash_holds_n30",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4069_decentralization_moe_sync.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4070": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "success: ninth_game_solved_ft09-0d8bbf25_at_action_4",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4070_ninth_game_explore_first.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4071": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "success: verifier_pruner_cuts_actions_66.7pct_equal_solverate",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4071_verifier_action_pruner_efficiency.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4072": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: arcmemo_v9_no_cross_game_transfer_v9_not_cheaper_than_within_game",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4072_arcmemo_cross_game_transfer_v9.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4073": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: gap4_reeval_bitexact_g1_g1_evalplus_accumulating_g3_g3_decentralization_absent_coverage_0.2333_g2_ceiling_recorded",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4073_verifier_registry_and_gaps_hygiene.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4074": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: hardware_continuity_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4074_hardware_continuity.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    }
+  },
+  "verifier_pruner_efficiency_gain": true,
+  "verifier_registry_and_gaps_hygiene": {
+    "g1_off_arc_outcome_recorded": "g1_evalplus_accumulating",
+    "g3_decentralization_outcome_recorded": "g3_decentralization_absent_coverage_0.2333",
+    "gaps_updated": true,
+    "included": true,
+    "offline_reeval_bitexact": true,
+    "registry_updated": true
+  },
+  "verifier_transferred_off_arc_significantly": false
+}
