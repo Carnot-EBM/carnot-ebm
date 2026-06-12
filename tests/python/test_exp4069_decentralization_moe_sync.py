@@ -274,6 +274,70 @@ def test_terminal_diagnosis_branches_latent_absent_and_uninformative(tmp_path: P
     )
 
 
+def test_helper_edges_cover_blockers_budget_and_idempotent_gaps(tmp_path: Path) -> None:
+    # REQ-VERIFY-4069: edge conditions remain terminal and do not launch inference.
+    bad_pool = tmp_path / "bad_pool.json.gz"
+    with gzip.open(bad_pool, "wt", encoding="utf-8") as handle:
+        json.dump({"items": []}, handle)
+    assert exp._read_pool_entries(bad_pool) is None
+    assert exp._unique_task_count(None) == 0
+    assert exp._percentile([], 0.5) == 0.0
+    assert exp._rows_from_samples({"A": [_sample("A", perfect=False)]}, k=2) == []
+
+    base = {
+        "moe_base_gguf_cached": True,
+        "llama_cpp": True,
+        "exp4012_arc1_pool_and_verifier_primitives": True,
+        "exp4012_arc1_30_task_pool": True,
+        "exp4048_checkpoint": True,
+    }
+
+    def rows(overrides: dict[str, bool]) -> list[dict[str, Any]]:
+        merged = {**base, **overrides}
+        return [{"resource": resource, "available": available} for resource, available in merged.items()]
+
+    assert exp.blocker_from_preconditions(rows({"llama_cpp": False})) == "blocked_llama_cpp_unavailable"
+    assert exp.blocker_from_preconditions(
+        rows({"exp4012_arc1_pool_and_verifier_primitives": False})
+    ) == "blocked_exp4012_pool_unreadable"
+    assert exp.blocker_from_preconditions(
+        rows({"exp4012_arc1_30_task_pool": False})
+    ) == "blocked_exp4012_pool_unreadable"
+    assert exp.blocker_from_preconditions(
+        rows({"exp4048_checkpoint": False})
+    ) == "blocked_exp4048_checkpoint_unreadable"
+
+    gaps_path = tmp_path / "gaps.md"
+    artifact = {
+        "missing_verifier_gaps": ["B"],
+        "output_artifact_path": str(tmp_path / "result.json"),
+        "accumulated_n_tasks": 1,
+        "moe_base_demo_perfect_coverage": 0.0,
+        "local_support_diagnosis": "accumulating",
+    }
+    assert exp.record_verifier_gaps(gaps_path, artifact) is True
+    assert exp.record_verifier_gaps(gaps_path, artifact) is False
+
+    sampler = _BatchSampler([PLUS_ONE])
+    samples, processed = exp.accumulate_synchronously(
+        _synthetic_pool(),
+        sampler,
+        samples_by_task={},
+        stable_checkpoint_path=tmp_path / "stable.json",
+        k=2,
+        model_name=exp.MOE_MODEL_NAME,
+        started_s=0.0,
+        max_wall_s=-1.0,
+        max_new_tasks=0,
+        batch_size=1,
+        progress_fn=lambda _line: None,
+    )
+    assert samples == {}
+    assert processed == []
+    assert sampler.calls == []
+    assert exp._score_pass2(_synthetic_pool(), {}, k=2) == 0.0
+
+
 @pytest.mark.parametrize(
     ("field", "value", "message"),
     [
