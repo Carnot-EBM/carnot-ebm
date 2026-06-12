@@ -1,0 +1,10 @@
+- experiment=trm_sudoku_extreme_1k_aug_1k
+- logger=csv
+- save_dir=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4108_nanotrm_sudoku_extreme_baseline_001
+- append_wandb_name_to_save_dir=false
+- seed=4108
+- data.data_dir=./data/sudoku_extreme_1k_aug_1k
+- callbacks.model_checkpoint.monitor=val/exact_accuracy
+- callbacks.model_checkpoint.mode=max
+- +callbacks.exp4108_progress._target_=carnot.experiment_4108_nanotrm_sudoku_extreme_baseline.NanoTrmExtremeProgressPrinter
+- +callbacks.exp4108_progress.every_n_steps=100

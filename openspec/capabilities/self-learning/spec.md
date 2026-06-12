@@ -12085,6 +12085,64 @@ exact-accuracy metric.
 
 ---
 
+## REQ-LEARN-4108: nano-trm Sudoku Extreme Published Baseline
+
+**Given** Exp 4107 has written
+`results/experiment_4107_nanotrm_mechanism_smoke.json`, Exp 4108 SHALL first
+read that artifact. If `nanotrm_trainer_checkpoint_ok` is not true, the native
+trainer mechanism is unproven and Exp 4108 SHALL run only a shorter honest
+Sudoku Extreme reproduction attempt, not hard-blocking and not claiming the
+published baseline was reproduced.
+
+**When** the Sudoku Extreme dataset is absent, Exp 4108 SHALL invoke the native
+nano-trm builder from `nano-trm/` with
+`uv run python scripts/data/build_sudoku_extreme_dataset.py --output-dir
+./data/sudoku_extreme_1k_aug_1k --subsample-size 1000 --num-aug 1000
+--eval-ratio 0.01`. It SHALL then run the native nano-trm trainer from
+`nano-trm/` with Hydra experiment `trm_sudoku_extreme_1k_aug_1k`, CUDA, CSV
+logging, progress printed at validation intervals, and a persistent save
+directory under `results/trm_runs/`. Progress printing SHALL be best-effort:
+terminal pipe closure MUST NOT abort training or prevent the checkpoint from
+being written.
+
+**Then** the terminal artifact SHALL be written to
+`results/experiment_4108_nanotrm_sudoku_extreme_baseline.json` and SHALL
+contain top-level required fields `honest_verdict`,
+`reproduced_exact_accuracy`, `matches_published_087`, `checkpoint_path`,
+`duration_s`, `random_seed`, and `reproducibility_checksum`.
+`reproduced_exact_accuracy` SHALL be the measured `val/exact_accuracy` when
+available, never `val/q_halt_accuracy`. `matches_published_087` SHALL be a bare
+bool indicating whether the measured exact accuracy is within tolerance of the
+published approximate 0.87 target. The acceptance gate is complete when a
+persisted reloadable checkpoint exists and `reproduced_exact_accuracy` is
+reported; a below-target exact accuracy is still a complete honest verdict.
+
+### SCENARIO-LEARN-4108: Reloadable Extreme Baseline Reports Real Accuracy
+
+**Given** the native nano-trm Sudoku Extreme trainer writes a checkpoint and CSV
+metrics containing `val/exact_accuracy`
+**When** Exp 4108 builds the baseline artifact
+**Then** it reports the real validation exact accuracy, a bare
+`matches_published_087` boolean, the persistent checkpoint path, wall-clock
+duration, random seed, and a reproducibility checksum over the dataset and
+native configuration inputs.
+
+### SCENARIO-LEARN-4108-SHORT: Unproven Mechanism Uses Short Honest Attempt
+
+**Given** Exp 4107 does not report `nanotrm_trainer_checkpoint_ok=true`
+**When** Exp 4108 runs
+**Then** it uses the shorter reproduction mode, preserves the measured exact
+accuracy if one exists, and writes a complete honest verdict without claiming
+the published 0.87 baseline was reproduced.
+
+## Implementation Status (REQ-LEARN-4108)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4108 | Implemented (python/carnot/experiment_4108_nanotrm_sudoku_extreme_baseline.py, Exp 4108) | Implemented (tests/python/test_experiment_4108_nanotrm_sudoku_extreme_baseline.py) |
+
+---
+
 ## REQ-LEARN-4088: Trustworthy ARC Verifier-Reward RFT Corpus Build
 
 **Given** Exp 4087 has already produced
