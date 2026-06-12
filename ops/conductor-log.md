@@ -8376,3 +8376,4 @@ c |
 | 2026-06-12 17:42 UTC | Archive .379 -> activate .380; KEEP the hardened g | OK | 149 passed in 4.30s |
 | 2026-06-12 18:13 UTC | NANO-TRM TRAINER MECHANISM SMOKE (THE de-risk; min | OK | 88 passed, 2 warnings in 7.41s |
 | 2026-06-12 19:36 UTC | REPRODUCE the PUBLISHED Sudoku-Extreme TRM baselin | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output:  _exp4107_arti |
+| 2026-06-12 19:54 UTC | REPRODUCE the PUBLISHED Sudoku-Extreme TRM baselin | OK | 92 passed, 2 warnings in 9.22s |
