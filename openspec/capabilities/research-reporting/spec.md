@@ -19803,6 +19803,63 @@ reconciliation files untouched.
 |---|---|---|
 | REQ-REPORT-4094 | Implemented (`python/carnot/sota_ingestion_precision_calibration_4094.py`, `docs/research-notes/sota-ingestion-precision-calibration-2026-06-12.md`) | Implemented (`tests/python/test_sota_ingestion_precision_calibration_4094.py`) |
 
+### REQ-REPORT-4102: SOTA Ingestion Mapping For TRM Self-Training With Verifiers
+
+The Exp 4102 workflow SHALL emit a dated SOTA-to-experiment mapping note for
+the `.379` TRM verifier-RFT headline, focused on self-training methods that use
+verifiers to select, weight, correct, or densify training data for recursive
+reasoners. The markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-trm-self-training-2026-06-12.md` and the
+machine-checkable mapping artifact SHALL be written to
+`results/experiment_4102_sota_ingestion_trm_self_training.json`.
+
+Before writing the note, the workflow SHALL read the verifier-RFT and
+self-training entries in `research-studying.md` and `research-references.md`,
+run `scripts/sweep_clusters.py` and `scripts/sweep_semscholar.py`, and verify
+the top five to eight method papers with low-concurrency WebSearch/WebFetch.
+The workflow SHALL NOT invoke `/deep-research`.
+
+For each mapped method, the note SHALL state what would have to change over the
+`nano-trm` plus Carnot-verifier stack and SHALL include the main pitfall or
+failure mode. The mapped method set SHALL include at least three verified
+primary-paper anchors from `arXiv:2402.06457`, `arXiv:2203.14465`,
+`arXiv:2308.08998`, `arXiv:2511.02886`, `arXiv:2510.00915`,
+`arXiv:2601.17223`, `arXiv:2605.10325`, and `arXiv:2605.30290`. Every method
+claim SHALL carry a real arXiv ID and URL. The note SHALL include a `Flagged
+for the .380 roadmap` section naming the single strongest follow-on method and
+SHALL update `research-studying.md` to mark the `.379` TRM self-training
+candidate set as ingested. The workflow SHALL NOT update `ops/changelog.md`,
+`ops/status.md`, `_bmad/traceability.md`, or `scripts/research_conductor.py`.
+
+The JSON artifact SHALL contain exactly the bare top-level fields
+`honest_verdict`, `methods_mapped`, and `flagged_for_v380`. `honest_verdict`
+SHALL use a terminal prefix and, on the complete path, start with
+`complete: sota_ingestion_trm_self_training_mapped`. `methods_mapped` SHALL be
+a list of three to five dicts with exactly `name`, `arxiv_id`, `url`,
+`implementation_over_stack`, and `failure_mode`; each `arxiv_id` SHALL be one
+of the WebFetch-verified primary-paper IDs, preventing fabricated or uncited
+method rows. `flagged_for_v380` SHALL be a non-empty concrete roadmap slug
+identifying the strongest candidate input for `.380`.
+
+#### SCENARIO-REPORT-4102: TRM Self-Training Mapping Closes The Discover-To-Plan Loop
+
+**Given** `.379` targets verifier-certified RFT over a recursive TRM substrate
+and the prior `.377`/`.378` SOTA ingestions already mapped verifier-as-reward,
+precision calibration, V-STaR, STaR/ReST, imperfect-verifier correction, and
+process rewards at a general RFT level
+**When** the Exp 4102 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON mapping artifact, maps
+verified method papers to implementation work and failure modes over the
+`nano-trm` plus Carnot-verifier stack, updates `research-studying.md` with the
+ingested `.379` candidate set, flags the single strongest `.380` follow-up, and
+leaves conductor and reconciliation files untouched.
+
+## Implementation Status (REQ-REPORT-4102)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4102 | Implemented (`python/carnot/sota_ingestion_trm_self_training_4102.py`, `docs/research-notes/sota-ingestion-trm-self-training-2026-06-12.md`) | Implemented (`tests/python/test_sota_ingestion_trm_self_training_4102.py`) |
+
 ### REQ-REPORT-4098: Archive .378, Activate .379, Record The Honest Close-State
 
 The Exp 4098 workflow SHALL archive milestone `2026.06.378`, confirm milestone

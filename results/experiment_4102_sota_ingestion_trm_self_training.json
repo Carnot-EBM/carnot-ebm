@@ -1,0 +1,41 @@
+{
+  "flagged_for_v380": "vstar_rejected_trace_selector_for_trm_rft",
+  "honest_verdict": "complete: sota_ingestion_trm_self_training_mapped",
+  "methods_mapped": [
+    {
+      "arxiv_id": "2402.06457",
+      "failure_mode": "False-positive verifier labels turn rejected-trace learning into reward hacking unless calibration gates hold first.",
+      "implementation_over_stack": "Label nano-trm candidate traces with Carnot verifier outcomes and train a contrastive selector on accepted and rejected traces.",
+      "name": "V-STaR keep-rejected verifier training",
+      "url": "https://arxiv.org/abs/2402.06457"
+    },
+    {
+      "arxiv_id": "2203.14465",
+      "failure_mode": "The loop only amplifies traces already in the model support and discards hard negative structure.",
+      "implementation_over_stack": "Iterate nano-trm sampling, verifier filtering, and full fine-tuning from the reusable cached ARC trace pool.",
+      "name": "STaR / ReST generate-filter-improve loop",
+      "url": "https://arxiv.org/abs/2203.14465"
+    },
+    {
+      "arxiv_id": "2511.02886",
+      "failure_mode": "It can become task memorization or leakage if public/private splits and full-finetune budgets are not isolated.",
+      "implementation_over_stack": "Use public-task pretraining plus bounded full fine-tuning, with Carnot verifier precision gates controlling which task traces enter adaptation.",
+      "name": "TTA-TRM full fine-tuning with verifier admission",
+      "url": "https://arxiv.org/abs/2511.02886"
+    },
+    {
+      "arxiv_id": "2510.00915",
+      "failure_mode": "Noise-rate estimates drift after the TRM policy changes, so stale correction can bias the next RFT round.",
+      "implementation_over_stack": "Attach FP/FN calibration metadata to verifier-certified TRM rewards and weight updates instead of treating the verifier as noiseless.",
+      "name": "Imperfect-verifier forward correction",
+      "url": "https://arxiv.org/abs/2510.00915"
+    },
+    {
+      "arxiv_id": "2605.10325",
+      "failure_mode": "Locally valid recursive edits can still fail the final ARC transformation unless dense rewards are outcome-calibrated.",
+      "implementation_over_stack": "Score each recursive grid-edit step with deterministic Carnot verifier checks before outcome-level hidden-test selection.",
+      "name": "Verifiable process rewards for recursive steps",
+      "url": "https://arxiv.org/abs/2605.10325"
+    }
+  ]
+}

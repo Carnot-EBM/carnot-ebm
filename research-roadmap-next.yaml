@@ -343,12 +343,12 @@ tasks:
       CONCRETE STEPS:
         1. Read exp4107/4108/4109/4110/4111/4112/4113 artifacts. SKIP any flagged_adversarial=true. Cite each upstream sha256.
         2. Answer: (a) is the nano-trm trainer mechanism de-risked (exp4107 checkpoint_ok + real exact_accuracy)? (b) was the published ~0.87 baseline reproduced (exp4108)? (c) did the Carnot verifier graft beat the vote ablation on Sudoku (exp4109 verifier_value_added, A-vs-B CI)? (d) total ARC games solved.
-        3. Honest headline: choose one of {verifier_as_reward_validated_on_executable_domain, honest_null_verifier_no_added_value, baseline_reproduced_graft_inconclusive, mechanism_still_blocked}.
+        3. Honest headline: choose one of {{verifier_as_reward_validated_on_executable_domain, honest_null_verifier_no_added_value, baseline_reproduced_graft_inconclusive, mechanism_still_blocked}}.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. The milestone's decision-grade summary; an honest null is COMPLETE and valuable."
         headline_outcome:
           principle: "One of the enumerated set — forces a single unambiguous read of the .380 result."
         upstream_provenance:
-          principle: "{experiment_id, fields_imported, sha256} per cited upstream — the audit trail proving the capstone synthesizes real measurements."
+          principle: "{{experiment_id, fields_imported, sha256}} per cited upstream — the audit trail proving the capstone synthesizes real measurements."
       ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited.
