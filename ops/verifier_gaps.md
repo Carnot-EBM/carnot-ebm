@@ -599,3 +599,23 @@ registry version that closed them when a new verifier captures a previously-open
 - outcome: complete: precision_rescue_succeeded_best_0.8824_at_recall_0.7143.
 - implication: GAP-5 demo-underdetermination remains the Phase B RFT gate unless the recorded frontier contains a qualifying precision/recall operating point.
 <!-- exp4087-gap5:end -->
+
+<!-- exp4095-precision-rescue:start -->
+### GAP-5-CERTIFICATION-PRECISION-RESCUE-4087: Exp 4095 precision-rescue registry update
+- status: precision_rescue_succeeded
+- evidence: `results/experiment_4087_certification_precision_rescue.json`; best_certified_precision=0.8824; best_op_point_recall=0.7143; filter_stack=k_of_n_agreement; threshold=k=1; n_certified=17; any_stack_reached_0_85=true.
+- failure mode: raw demo-perfect certification can carry false positives when visible demos underdetermine the hidden test transformation.
+- missing discriminator: certification-precision calibration strong enough for reward-data use.
+- candidate design: retain the Exp 4087 operating point until a stronger calibrated filter beats its precision/recall tradeoff on held-out tasks.
+- priority: high
+<!-- exp4095-precision-rescue:end -->
+
+<!-- exp4095-rft-a-vs-b:start -->
+### GAP-RFT-A-VS-B-4090: Exp 4095 RFT A-vs-B outcome update
+- status: rft_a_vs_b_pending_absent
+- evidence: `results/experiment_4090*.json`; present=false; status=pending; honest_verdict=; arm_a_vs_b_delta=None.
+- failure mode: verifier-as-reward RFT has not produced a decision-grade A-vs-B win unless the held-out Exp 4090 artifact exists and reports it.
+- missing discriminator: measured evidence that the verifier-certified arm beats the ablation arm under the same training/eval pipeline.
+- candidate design: run or consume Exp 4090 only after the precision-calibrated corpus and training artifacts exist; keep absent/pending state out of headline claims.
+- priority: high
+<!-- exp4095-rft-a-vs-b:end -->

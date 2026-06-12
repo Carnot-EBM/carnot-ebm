@@ -13090,6 +13090,63 @@ outcome in `ops/verifier_gaps.md`, annotates the GAP-4 registry entry with the
 Exp 4083 replay and training-time role, sets `pivot_outcome_recorded=true`, and
 uses no inference substrate other than cached verifier candidates.
 
+### REQ-VERIFY-4095: GAP-4 Offline Regression Guard And Ledger Hygiene
+
+The repository SHALL provide Exp 4095 at
+`scripts/experiments/exp4095_verifier_registry_gaps_hygiene.py` to replay the
+canonical GAP-4 ARC-1 gate from cached candidates and saved induced-program
+outputs, then record the .378 precision-rescue and any present Exp 4090 RFT
+A-vs-B outcome in the verifier registry and gaps ledger without Codex, GGUF, or
+live inference. The runner SHALL read `ops/verifier_registry.yaml`,
+`ops/verifier_gaps.md`, `results/arc3_gap4_induced_programs.json`,
+`results/arc3_gap3_stage2_eval_pool.json.gz`,
+`results/experiment_4087_certification_precision_rescue.json`, and any readable
+`results/experiment_4090*.json` artifact when present.
+
+The offline replay SHALL rederive ARC-1 vote `0.4516` to gated `0.5806` from
+the cached TRM candidate pool and `arc3_gap4_induced_programs.json`, including
+`n=31`, `headroom_recovered=4`, and `vote_wins_lost=0`. The runner SHALL not
+compile or execute induced code, call Codex, load GGUF weights, or use any
+substrate beyond cached verifier candidates. `gap4_arc1_reproduced` SHALL be
+true only when all expected replay values match exactly, and a drift result
+SHALL preserve both observed and expected values.
+
+The precision-rescue update SHALL record Exp 4087's best certified precision,
+paired recall, selected filter stack, threshold, certification count, and
+whether the best point cleared the `0.85` precision floor. The registry SHALL
+annotate the `gap4_program_induction_stack` verifier with this certification
+precision operating point and an Exp 4095 replay marker. The gaps ledger SHALL
+append or replace an idempotent Exp 4095 block summarizing the precision rescue
+and explicitly stating whether any stack reached the `0.85` operating point.
+
+The RFT update SHALL append or replace an idempotent Exp 4095 block in
+`ops/verifier_gaps.md` recording the Exp 4090 RFT A-vs-B outcome when an
+`experiment_4090*.json` artifact is present. If no Exp 4090 artifact is
+present, the block SHALL record the outcome as pending/absent and SHALL NOT
+invent a win. The registry SHALL preserve existing Exp 4079 training-time role
+records and may add an Exp 4090 role record only when a corresponding artifact
+is present.
+
+The terminal artifact SHALL write
+`results/experiment_4095_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `gap4_arc1_reproduced`, bare bool
+`precision_rescue_recorded`, bare bool `rft_outcome_recorded`, bare bools
+`registry_updated` and `gaps_updated`, and
+`inference_substrate=verifier_ensemble_against_cached_candidates`.
+
+### SCENARIO-VERIFY-4095: Cached Replay Records Precision Rescue And Pending RFT
+
+Given the GAP-4 cached ARC-1 pool, saved induced-program artifact, Exp 4087
+precision-rescue artifact, and no Exp 4090 artifact are readable, when Exp 4095
+runs, then it writes the terminal artifact with `gap4_arc1_reproduced=true`,
+records vote `0.4516` to gated `0.5806`, records Exp 4087 best precision
+`0.8824` at recall `0.7143` and notes that a stack reached the `0.85` floor,
+records the Exp 4090 A-vs-B state as pending/absent rather than a win,
+annotates the GAP-4 registry entry with the Exp 4095 replay and certification
+operating point, sets `precision_rescue_recorded=true` and
+`rft_outcome_recorded=true` for the ledger bookkeeping state, and uses no
+inference substrate other than cached verifier candidates.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
