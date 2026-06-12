@@ -38900,3 +38900,91 @@ milestones:
       NO gated_on -- aggregate whatever exists.'
     deliverable: results/experiment_4097_capstone_v378.json
     result: OK (conductor)
+- id: 2026.06.379
+  title: "Verifier-as-reward on the TRM substrate \u2014 discrimination probe FIRST, conditional native-trainer RFT SECOND"
+  doc: "Operator directive 2026-06-12 (this session): the LoRA-on-1B-LLM generator route is too\nexpensive AND has been blocked\
+    \ at the trl/peft training mechanism for three milestones\n(.377: exp4077 blocked_precision_gate + exp4078 blocked_corpora_missing;\
+    \ .378: corpus-build\nexp4088 blocked_lora_smoke_checkpoints + train exp4089 RETIRED). Pivot the verifier-as-reward\n\
+    TRAINING substrate to the cached ArcPrize TRM (models--arcprize--trm_arc_prize_verification,\nnano-trm installed, baseline\
+    \ already run). Rationale: (1) ~7M params -> full-FT is cheap on a\n3090 and full-FT > LoRA for OOD (TTA-TRM 2511.02886);\
+    \ (2) the TRM has a MEASURED present-but-\nmisvoted gap (pass@2 ~0.52, pass@1000 ~0.62; oracle 0.61 vs vote 0.48) -> real\
+    \ headroom the\nverifier could capture; (3) it sidesteps the broken trl/peft trainer via nano-trm's native\nloop.\n\n\
+    CAVEAT THAT SETS THE MILESTONE ORDER: the binding constraint is NOT the generator, it is the\nverifier's DISCRIMINATION\
+    \ on the outputs. We already have a warning sign: arc3_trm_verifier_\nrerank_gap1 shows the OLD verifier reranking TRM\
+    \ outputs captured 0.0pp of the ~13pp gap\n(best ranker = TRM_VOTE; oracle 0.6129 vs achieved 0.4839). RFT trains on the\
+    \ verifier's\nlabels, so if the verifier carries no signal on TRM outputs at rerank, RFT will not help\neither. THEREFORE:\
+    \ prove discrimination FIRST (cheap, offline, fabrication-immune), and only\nRFT the TRM if a verifier beats TRM-vote.\
+    \ The .378 precision-rescue primitives (augmentation-\ninvariance, k-of-n induction agreement, graded min-Hamming) were\
+    \ NEVER applied to the TRM\npool \u2014 that is the new lever this milestone tests.\n\nPOWER CAVEAT (sets the realistic\
+    \ headline): the cached TRM rerank pool is n=31 with ~13pp\nheadroom \u2014 too small for a CI95-excludes-0 discrimination\
+    \ verdict (a real small signal would\nnot clear it). exp4099 therefore EXPANDS the pool to n>=100 via the TRM eval harness\
+    \ BEFORE\nreranking, and reports BOTH the strict CI95-excludes-0 gate (which feeds exp4100's RFT branch)\nAND the directional\
+    \ captured_pp point-estimate (which informs the .380 decision even if the\nstrict gate does not fire). The achievable\
+    \ decision-grade outcomes are: (a) a POWERED\ndiscrimination verdict -> conditional RFT; (b) an honest no-discrimination\
+    \ null with the\ndirectional estimate + a logged verifier_gap; (c) the native TRM trainer de-risked (a checkpoint\nproduced)\
+    \ independent of the science. We do NOT promise \"verifier-as-reward validated\" \u2014 that\nrequires (a) to land AND\
+    \ exp4100's A>B.\n"
+  completed: '2026-06-12'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4098-archive-v378-activate-v379
+    title: Archive .378 -> activate .379; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
+      + ops/exclusion_manifest.yaml parse under yaml.safe_load and the python/carnot/agentic + nano-trm modules import; run
+      the smart-subset pre-test gate green; RECORD the .378 close-state truth (verifier-as-reward LLM-LoRA path RETIRED on
+      blocked_lora_smoke_checkpoints; precision-rescue succeeded on PROGRAMS but carried by demo-perfect alone; off-ARC demo-fit
+      transfer outcome; Nth ARC game count).
+    deliverable: results/experiment_4098_archive_v378_activate_v379.json
+    result: OK (conductor)
+  - id: exp4099-trm-pool-verifier-discrimination-probe
+    title: TRM-POOL VERIFIER-DISCRIMINATION PROBE (THE HEADLINE; THE GATE for TRM-RFT; OFFLINE, ZERO-GPU, fabrication-immune).
+      Apply the .378 precision-rescue primitives (augmentation-invariance, k-of-n independent-induction agreement, graded
+      min-Hamming, demo-fit consistency) as RERANKERS on the cached TRM pass@K pool. Does ANY verifier beat TRM-vote at selecting
+      from the pool, capturing part of the ~13pp present-but-misvoted gap (oracle 0.61 vs vote 0.48)? This decides whether
+      RFT-ing the TRM with the verifier can possibly help.
+    deliverable: results/experiment_4099_trm_pool_verifier_discrimination_probe.json
+    result: OK (conductor)
+  - id: exp4100-trm-verifier-rft-conditional
+    title: "CONDITIONAL TRM VERIFIER-RFT via the NATIVE nano-trm trainer (NOT LoRA-on-LLM). DEFENSIVE READ of exp4099: IF\
+      \ a verifier beats TRM-vote, full-FT/RFT the TRM on verifier-certified samples and measure held-out pass@1/pass@2 vs\
+      \ (A) cold TRM and (B) vote-certified self-SFT (the de-confound: verifier-LABEL vs vote-LABEL, same TRM, same pool).\
+      \ IF NOT, run the TRM full-FT MECHANISM SMOKE (does the native trainer produce a checkpoint? \u2014 de-risk the trainer\
+      \ that LoRA-on-LLM never cleared) and report the verifier-grid-discrimination bottleneck honestly."
+    deliverable: results/experiment_4100_trm_verifier_rft_conditional.json
+    result: OK (conductor)
+  - id: exp4101-eleventh-game-explore-first
+    title: ELEVENTH ARC-AGI-3 game first-solve via the PROVEN explore-first method (raises games-solved 10->11, monotonic
+      +1). Bounded active-exploration OBSERVES transitions -> induce mechanic + goal predicate from OBSERVED transitions ->
+      GAP-4 verifier validates on held-out transitions -> act only if validated. Next-easiest non-spatial game from the win-condition
+      survey not yet solved. REAL-ENV-CONFIRM any solve; STOP at the first level that fails.
+    deliverable: results/experiment_4101_eleventh_game_explore_first.json
+    result: OK (conductor)
+  - id: exp4102-sota-ingestion-trm-self-training
+    title: 'SOTA-INGESTION SLOT (reserved; headline is a bleeding-edge track): ingest the SELF-TRAINING-WITH-VERIFIER literature
+      mapped onto the .379 TRM verifier-RFT headline. V-STaR keep-rejected (2402.06457), STaR/ReST, RFT-on-recursive-reasoners,
+      TTA-TRM full-FT>LoRA (2511.02886), reward-from-imperfect-verifier (2510.00915). Emit a SOTA->experiment mapping note;
+      flag the strongest method for the .380 roadmap. Cite real arXiv IDs.'
+    deliverable: results/experiment_4102_sota_ingestion_trm_self_training.json
+    result: OK (conductor)
+  - id: exp4103-verifier-registry-gaps-hygiene
+    title: 'VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval reproducing
+      the canonical GAP-4 ARC-1 numbers from cached candidates (zero codex/GGUF). RECORD the .379 outcomes: the NEW GAP-TRM-GRID-DISCRIMINATION
+      entry (did any verifier beat TRM-vote at rerank, exp4099?) and the TRM-RFT outcome (exp4100). Keep ops/verifier_registry.yaml
+      + ops/verifier_gaps.md the honest source of truth.'
+    deliverable: results/experiment_4103_verifier_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4104-hardware-continuity
+    title: 'Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 DONE). Per-board reachability
+      + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile flash). PolarFire (ssh
+      polarfire; toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card
+      Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board.'
+    deliverable: results/experiment_4104_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4105-capstone-v379
+    title: "Capstone .379 (UNGATED): the milestone's headline question is DID THE VERIFIER DISCRIMINATE ON TRM OUTPUTS, AND\
+      \ IF SO DID VERIFIER-RFT-ON-TRM BEAT THE VOTE-SFT ABLATION? Aggregate: DISCRIMINATION = exp4099 (verifier_beats_trm_vote\
+      \ + captured_pp vs the prior 0.0); TRM-RFT = exp4100 (branch_taken; rft_vs_ablation_delta OR trm_native_trainer_checkpoint_ok);\
+      \ ACCURACY = exp4101 (total_games_solved); SOTA = exp4102 (flagged_for_v380); HYGIENE = exp4103; HARDWARE = exp4104.\
+      \ Honest verdict on whether the TRM substrate validated verifier-as-reward (or produced an honest negative + a logged\
+      \ gap). SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on \u2014 aggregate whatever exists."
+    deliverable: results/experiment_4105_capstone_v379.json
+    result: OK (conductor)
