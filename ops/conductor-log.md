@@ -8312,3 +8312,4 @@ c |
 | 2026-06-12 06:07 UTC | VERIFIER-AS-REWARD RFT -- EVAL + GATE (THE PIVOT,  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4078-verifier-reward-rft-train-launch.t |
 | 2026-06-12 06:20 UTC | SUDOKU RFT PIPELINE-SANITY (honest beachhead resta | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-12 07:04 UTC | SOTA-INGESTION SLOT (reserved): ingest the verifie | OK | 97 passed in 4.67s |
+| 2026-06-12 07:18 UTC | NINTH ARC-AGI-3 game first-solve via the PROVEN ex | OK | 87 passed in 4.72s |
