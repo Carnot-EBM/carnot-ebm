@@ -19860,6 +19860,98 @@ leaves conductor and reconciliation files untouched.
 |---|---|---|
 | REQ-REPORT-4102 | Implemented (`python/carnot/sota_ingestion_trm_self_training_4102.py`, `docs/research-notes/sota-ingestion-trm-self-training-2026-06-12.md`) | Implemented (`tests/python/test_sota_ingestion_trm_self_training_4102.py`) |
 
+### REQ-REPORT-4106: Archive .379, Activate .380, Record The Honest Anti-Discrimination Close-State
+
+The Exp 4106 workflow SHALL archive milestone `2026.06.379`, confirm milestone
+`2026.06.380` is the active milestone, and write a single record-only
+aggregation artifact to
+`results/experiment_4106_archive_v379_activate_v380.json`. It SHALL run NO live
+model: its `inference_substrate` SHALL equal `aggregation_from_upstream_artifacts`.
+
+The workflow SHALL keep `research-complete.yaml` parseable under
+`yaml.safe_load` before and after any edit (the colon-poison guard), and SHALL
+collapse any duplicate top-level `- id: 2026.06.379` records down to the FIRST
+occurrence, recording the number removed in `research_complete_duplicates_removed`.
+The `ops/exclusion_manifest.yaml` SHALL parse under `yaml.safe_load`. The
+`.380`-substrate precondition (`nano-trm/src/nn/train.py` and
+`nano-trm/scripts/data/build_sudoku_extreme_dataset.py`) SHALL be confirmed
+present, since the `.380` pivot reproduces a published nano-TRM Sudoku baseline
+on that native trainer.
+
+The artifact's `v379_close_state` dict SHALL record the HONEST `.379` truth so the
+next planner cannot re-narrate a null as a win and does not re-attempt RFT on raw
+ARC grids:
+
+1. The Carnot verifier ANTI-DISCRIMINATES on TRM ARC grids (Exp 4099): no
+   reranker beats TRM majority vote (`verifier_beats_trm_vote=false`); the only
+   reranker that ties vote is `K_OF_N_AGREEMENT` at `k=1`, a no-op
+   (`captured_pp=0.0`); every real verifier proxy is strictly WORSE than vote —
+   `AUG_INVARIANCE` and `DEMO_FIT` capture `-0.2258` pp (≈ −23pp), `MIN_HAMMING`
+   `-0.0323`, the stacks `-0.21`/`-0.2258`. TRM majority vote pass@2 is `0.2742`
+   against an oracle ceiling of `0.371`; `n=62`, `underpowered=true`. The
+   close-state SHALL record `verifier_beats_trm_vote=false`,
+   `real_verifiers_anti_discriminate=true`, and
+   `trm_rft_on_arc_grids_bounded=true` — RFT on ARC grids cannot help while the
+   verifier provides no positive discrimination signal.
+2. The TRM-RFT-conditional task (Exp 4100) took the SMOKE branch: the native
+   nano-TRM trainer MECHANISM is confirmed (`trm_native_trainer_checkpoint_ok=true`,
+   checkpoint written and reloaded), but the verifier-as-reward RFT did NOT run
+   (`rft_vs_ablation_delta.status=not_run_no_verifier_signal`) because Exp 4099
+   found no discrimination signal. The artifact is `flagged_adversarial`
+   (DURATION_TOO_SHORT) and SHALL be SKIPPED from aggregation; only the
+   trainer-mechanism fact is carried forward.
+3. ACCURACY advances to `total_games_solved=11` (Exp 4101 solved the eleventh
+   game `s5i5-18d95033` at action 13, real-env-confirmed; prior 10, monotonic).
+4. SOTA-ingestion (Exp 4102) flagged `vstar_rejected_trace_selector_for_trm_rft`
+   for `.380` with five methods mapped; registry/gaps hygiene (Exp 4103) passed
+   its regression guard with the TRM-grid discrimination gap recorded OPEN;
+   hardware (Exp 4104): KV260 terminal confirmed over SSH, PolarFire CPU dispatch
+   hash-verified, GateMate reachable but the post-flash n=16 detect is blocked.
+5. The pivot rationale SHALL be recorded: the verifier discriminates only where it
+   can EXECUTE; raw ARC grids have nothing to execute, so `.380` reproduces a
+   published TRM baseline on Sudoku (row/col/box uniqueness is an exact executable
+   check) where the verifier provably has teeth.
+
+The artifact SHALL carry the required principle-annotated fields
+`honest_verdict` (terminal prefix; complete path starts with `success:`),
+`v379_close_state`, `preconditions_checked`, `archived_milestone`,
+`activated_milestone`, `active_milestone_confirmed`, `total_games_solved`,
+`flagged_count`, `duration_s`, `inference_substrate`, `random_seed`, and
+`reproducibility_checksum`.
+
+#### SCENARIO-REPORT-4106: The Archive Records The Honest .379 Anti-Discrimination Close-State
+
+**Given** `.379` has the Exp 4099 probe (no reranker beats TRM vote; real verifier
+proxies at −0.2258 pp), the Exp 4100 smoke-branch TRM-RFT-conditional
+(`trm_native_trainer_checkpoint_ok=true`, RFT not run, `flagged_adversarial`), the
+Exp 4101 eleventh-game solve, the Exp 4102 SOTA flag, the Exp 4103 hygiene pass,
+and the Exp 4104 hardware continuity
+**When** the Exp 4106 archive workflow runs with `.380` active
+**Then** it confirms `research-complete.yaml` and `ops/exclusion_manifest.yaml`
+parse, collapses any duplicate `.379` records, confirms the `.380` nano-TRM
+trainer substrate present, derives the close-state from the on-disk artifacts,
+records the verifier ANTI-discrimination (`verifier_beats_trm_vote=false`,
+`real_verifiers_anti_discriminate=true`), records the trainer mechanism confirmed
+but RFT not run, skips the flagged Exp 4100 artifact, records the eleventh game
+(`total_games_solved=11`), records the executable-Sudoku pivot rationale, declares
+`aggregation_from_upstream_artifacts`, and emits a `success:`-prefixed terminal
+verdict.
+
+#### SCENARIO-REPORT-4106-BLOCKED-YAML: A Poisoned History File Blocks Without Fabrication
+
+**Given** `research-complete.yaml` is missing or does not parse under
+`yaml.safe_load`
+**When** the Exp 4106 archive workflow runs
+**Then** it writes a `blocked_research_complete_yaml_poison*` artifact with
+`research_complete_yaml_parses=false`, fabricates no green gates, and does not
+claim the milestone archived.
+
+## Implementation Status (REQ-REPORT-4106)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4106 | Implemented (`python/carnot/reporting/archive_v379_activate_v380_4106.py`, `scripts/experiments/exp4106_archive_v379_activate_v380.py`) | Implemented (`tests/python/test_experiment_4106_archive_v379_activate_v380.py`) |
+
 ### REQ-REPORT-4098: Archive .378, Activate .379, Record The Honest Close-State
 
 The Exp 4098 workflow SHALL archive milestone `2026.06.378`, confirm milestone
