@@ -8,6 +8,40 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-12 Exp 4094 - .378 precision-calibration SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-precision-calibration-2026-06-12.md`.
+
+**Filtered track:** the `.378` verifier-precision / verifier-as-reward headline:
+the 0.32 false-positive channel behind ARC certification precision 0.6818, the
+Exp 4087 precision rescue to 0.8824 at 0.7143 recall, the blocked Exp 4088/4089
+RFT path, and the Exp 4093 OFF-ARC demo-fit precision replay.
+
+**Seed and fresh-pass candidates marked ingested:**
+- BARC / Combining Induction and Transduction, arXiv:2411.02272 - mapped as an
+  augmentation-consistency filter before RFT corpus admission.
+- Noisy Data is Destructive to RLVR, arXiv:2603.16140 - mapped as the stop-rule
+  against training through the 0.32 false-positive channel.
+- RLVR with imperfect verifiers, arXiv:2510.00915 - mapped as explicit FP/FN
+  noise correction and calibration metadata for future RLVR hooks.
+- V-STaR, arXiv:2402.06457 - mapped as rejected-trace retention and verifier
+  training over accepted/rejected pairs.
+- RFT scaling, arXiv:2308.01825 - retained as the simple fine-tuning baseline
+  only after clean, diverse positives exist.
+- Invisible Leash, arXiv:2507.14843 - retained as the same-pool latent-support
+  gate before RFT/RLVR spend.
+- Process Supervision-Guided Policy Optimization for Code Generation,
+  arXiv:2410.17621, plus CodePRM ACL 2025 - mapped as step-level process reward
+  records before sparse reward RL.
+
+**Bottom line for the .379 roadmap:** prioritize
+`calibrated_forward_noise_correction_before_rlvr`,
+`augmentation_consistency_filter_before_rft_corpus`,
+`vstar_rejected_trace_verifier_training`, and
+`step_level_process_reward_weighted_sft`; keep
+`latent_support_gate_before_rft_spend` as the launch gate so RFT is only used
+when correct transforms are already present in the generated pool.
+
 ## 2026-06-11 Exp 4081 - .377 verifier-as-reward SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-verifier-as-reward-2026-06-11.md`.

@@ -19742,3 +19742,63 @@ files untouched.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-4081 | Implemented (`python/carnot/sota_ingestion_verifier_as_reward_4081.py`, `docs/research-notes/sota-ingestion-verifier-as-reward-2026-06-11.md`) | Implemented (`tests/python/test_sota_ingestion_verifier_as_reward_4081.py`) |
+
+### REQ-REPORT-4094: SOTA Ingestion Mapping For Verifier Precision Calibration
+
+The Exp 4094 workflow SHALL emit a dated mapping note for the `.378`
+verifier-precision / verifier-as-reward headline, focused on the execution
+verifier false-positive rate behind the 0.68 precision gate and how to raise or
+handle that noise before the next RFT attempt. The markdown note SHALL be
+written to
+`docs/research-notes/sota-ingestion-precision-calibration-2026-06-12.md`
+and the paired machine-checkable receipt SHALL be written to
+`results/experiment_4094_sota_ingestion_precision_calibration_receipt.json`.
+
+Before writing the note, the workflow SHALL read the verifier-precision,
+reward, and distillation entries in `research-studying.md` and
+`research-references.md`, run `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py`, and verify the top five to eight method papers
+with low-concurrency WebSearch/WebFetch. The workflow SHALL NOT invoke
+`/deep-research`.
+
+For each mapped method, the note SHALL state what would have to change over the
+current precision-rescue plus RFT pipeline and SHALL include pitfalls or failure
+modes. The mapped methods SHALL cover the primary-paper anchors
+`arXiv:2411.02272`, `arXiv:2603.16140`, `arXiv:2510.00915`,
+`arXiv:2402.06457`, `arXiv:2308.01825`, `arXiv:2507.14843`, and
+`arXiv:2410.17621`. Every method claim SHALL cite a real arXiv ID or URL. The
+note SHALL include a `Bottom line for the .379 roadmap` section identifying the
+strongest follow-on methods and SHALL update `research-studying.md` to mark the
+`.378` precision-calibration candidates as ingested. The workflow SHALL NOT
+update `ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`.
+
+The receipt SHALL contain exactly the bare top-level fields `honest_verdict`,
+`methods_mapped`, `strongest_for_next_roadmap`, and `inference_substrate`.
+`honest_verdict` SHALL use a terminal prefix and, on the complete path, start
+with `complete: sota_ingestion_precision_calibration_mapped`.
+`methods_mapped` SHALL be a non-empty list of dicts with exactly `arxiv_id` and
+`one_line`; each `arxiv_id` SHALL be one of the WebFetch-verified primary-paper
+IDs, preventing fabricated or uncited method rows.
+`strongest_for_next_roadmap` SHALL be a non-empty list of concrete `.379`
+roadmap slugs. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`.
+
+#### SCENARIO-REPORT-4094: Precision Calibration Mapping Closes The Discover-To-Plan Loop
+
+**Given** `.378` has the Exp 4087 precision-rescue result, the Exp 4088/4089
+RFT gate blockage, the Exp 4093 OFF-ARC demo-fit precision replay, and local
+notes showing the verifier false-positive bottleneck
+**When** the Exp 4094 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON receipt, maps the
+verified method papers to implementation work and failure modes over the
+current precision-rescue plus RFT pipeline, updates `research-studying.md` with
+the ingested `.378` candidate set, flags the strongest `.379` follow-ups,
+declares `aggregation_from_upstream_artifacts`, and leaves conductor and
+reconciliation files untouched.
+
+## Implementation Status (REQ-REPORT-4094)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4094 | Implemented (`python/carnot/sota_ingestion_precision_calibration_4094.py`, `docs/research-notes/sota-ingestion-precision-calibration-2026-06-12.md`) | Implemented (`tests/python/test_sota_ingestion_precision_calibration_4094.py`) |
