@@ -1,0 +1,300 @@
+{
+  "arc_accuracy": {
+    "game_solved": true,
+    "games_solved_total": 10,
+    "honest_verdict": "success: tenth_game_solved_r11l-495a7899_at_action_4",
+    "prior_total_games_solved": 9,
+    "real_env_confirmed": true,
+    "status": "new_game_solved",
+    "target_game": "r11l-495a7899"
+  },
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 4086,
+      "sha256": "e3b5311c5773603e1c59cef17c615186633cf0df2e36d86c91ed4ea35cef7d90"
+    },
+    {
+      "experiment_id": 4087,
+      "sha256": "5c8ed0ae5a5429910b760124b6d0b00425818a80be296214e21ee1d97bd07646"
+    },
+    {
+      "experiment_id": 4088,
+      "sha256": "5274ac4a1196a56b9e303cd095db7aee0021c101291159b3cad0d5ab304ff4b9"
+    },
+    {
+      "experiment_id": 4089,
+      "sha256": "2fa0ce32cd2c0b278341177d84703ee677af8f831f1a22adb67ae58c13cfe63a"
+    },
+    {
+      "experiment_id": 4092,
+      "sha256": "5c73ec10fa6a462ebe1677ab0002570323cc32fe799089b7ea53fd0f9fda60ee"
+    },
+    {
+      "experiment_id": 4093,
+      "sha256": "040cedde692448e6a5dd2e0e42536ba12ba21ba0f4d80015be861d4c4d2a30c8"
+    },
+    {
+      "experiment_id": 4094,
+      "sha256": "5e5b6ec2da6ae2eeb793a05e9cbd0a3aadfdd7f65e9328217d16883a05b0d9f4"
+    },
+    {
+      "experiment_id": 4096,
+      "sha256": "64dd97c4c2e2bb0f353087fa8ed0586c2485cef50231ee280d5d9b1d5f0d536b"
+    }
+  ],
+  "duration_s": 0.3627484410535544,
+  "experiment_id": 4097,
+  "field_principles": {
+    "cited_upstream_artifacts": "Included non-flagged upstream experiment ids and sha256 provenance.",
+    "games_solved_total": "BARE INT - monotonic ARC-AGI-3 solved-game count.",
+    "honest_verdict": "Terminal-prefix verdict that distinguishes precision rescue, bounded rescue, clean RFT A-vs-B signal, and absent/blocked Phase B state.",
+    "inference_substrate": "Declares this capstone as aggregation from upstream artifacts.",
+    "offarc_precision_transfer": "principle: whether the precision primitive transfers off-ARC.",
+    "pivot_result": "principle: the A-vs-B verifier-label result when clean exp4090 exists, or the honest skipped/bounded Phase B state.",
+    "precision_rescue_outcome": "principle: THE gate -- whether certification precision moved from the 0.68 baseline to at least 0.85 at recall at least 0.20.",
+    "sudoku_sanity_reproduced": "BARE BOOL - true only from a clean Sudoku sanity artifact."
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "experiment_id": 4095,
+      "path": "results/experiment_4095_verifier_registry_gaps_hygiene.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "bd40aeb21e289e1e3e864db0eb3128c2e93ab63cb0ff522a574a8904ebb569c8"
+    }
+  ],
+  "games_solved_total": 10,
+  "hardware_continuity": {
+    "gatemate_step_taken": "blocked_gatemate_unreachable",
+    "included": true,
+    "kv260_terminal_confirmed": true,
+    "per_board_reachability": {
+      "gatemate": false,
+      "kv260": true,
+      "polarfire": true
+    },
+    "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded"
+  },
+  "honest_verdict": "complete: capstone_v378_precision_rescued_0.8824_phaseB_no_clean_A_vs_B_games10_offarc_transfer_flagged_skipped1",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "missing_upstream_artifacts": [
+    {
+      "experiment_id": 4090
+    },
+    {
+      "experiment_id": 4091
+    }
+  ],
+  "offarc_precision": {
+    "demofit_precision_filtered": 0.96049,
+    "demofit_precision_raw": 0.956186,
+    "domain_general_precision_floor": 0.68,
+    "filter_recall": 0.945876,
+    "honest_verdict": "complete: offarc_demofit_precision_0.96_filter_raises_to_0.96",
+    "n_tasks_scored": 160,
+    "primitive_is_domain_general": true,
+    "status": "transfers"
+  },
+  "offarc_precision_transfer": "principle: precision primitive transfers off-ARC; raw demo-fit precision 0.9562 and filtered precision 0.9605 clear the 0.6800 floor.",
+  "pivot_comparison": {
+    "a_vs_b_ci95": [],
+    "a_vs_b_ci_excludes_zero": false,
+    "a_vs_b_delta": 0.0,
+    "honest_verdict": "",
+    "n_heldout_tasks": 0,
+    "rft_ablation_pass_at_1": 0.0,
+    "rft_correct_pass_at_1": 0.0,
+    "status": "missing"
+  },
+  "pivot_result": "principle: precision rescue passed, but no clean exp4090 A-vs-B artifact exists; exp4088/exp4089 stopped before a decision-grade held-out RFT eval, so verifier-label training signal is unmeasured.",
+  "precision_rescue": {
+    "baseline_precision": 0.68,
+    "best_certified_precision": 0.8824,
+    "best_op_point_recall": 0.7143,
+    "honest_verdict": "complete: precision_rescue_succeeded_best_0.8824_at_recall_0.7143",
+    "precision_floor": 0.85,
+    "recall_floor": 0.2,
+    "rescued": true,
+    "status": "rescued"
+  },
+  "precision_rescue_outcome": "principle: THE gate passed; certification precision moved from the 0.68 baseline to 0.8824 at recall 0.7143.",
+  "random_seed": 4097,
+  "reproducibility_checksum": "cb5bc97b1ddd2e44260f541c8e75e56c80ae779819f894ee8ec0d8c460c115d4",
+  "rft_pipeline_state": {
+    "corpus_honest_verdict": "blocked_lora_smoke_checkpoints",
+    "corpus_status": "blocked_or_missing",
+    "train_honest_verdict": "blocked_gate_check_failed",
+    "train_status": "blocked_or_missing",
+    "trainer_smoke_passed": false
+  },
+  "schema": "carnot.capstone_v378_4097.v1",
+  "sota_ingestion": {
+    "honest_verdict": "complete: sota_ingestion_precision_calibration_mapped",
+    "included": true
+  },
+  "sudoku_sanity": {
+    "honest_verdict": "",
+    "previous_v377_reproduced": false,
+    "status": "missing",
+    "sudoku_sanity_reproduced": false
+  },
+  "sudoku_sanity_reproduced": false,
+  "summarize_artifact_status": {
+    "4086": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4086_archive_v377_activate_v378.json\n------------------------------------------------------------------------------\n  verdict          : success: archived_v377_v378_active_pivot_blocked_precision_gate_unmet_0.6818_lt_0.85_4_flagged_skipped_no_arc_rft_eval_ninth_game_solved_games9_sudoku_control_flagged_skipped_kv260_terminal_pretest_green\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 13.994049   substrate: aggregation_from_upstream_artifacts\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4087": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4087_certification_precision_rescue.json\n------------------------------------------------------------------------------\n  verdict          : complete: precision_rescue_succeeded_best_0.8824_at_recall_0.7143\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : None   substrate: offline_saved_gap4_program_replay_precision_rescue\n  headline metrics :\n      best_certified_precision = 0.8824\n      best_op_point_recall = 0.7143\n      n_tasks_scored = 21\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4088": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4088_verifier_reward_rft_corpus_build.json\n------------------------------------------------------------------------------\n  verdict          : blocked_lora_smoke_checkpoints\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 147.149   substrate: live_llm_inference\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4089": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4089_verifier_reward_rft_train.json\n------------------------------------------------------------------------------\n  verdict          : blocked_gate_check_failed\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates :\n      [?   ] gate_check_summary = '1 of 1 gate(s) failed; first failure: exp4088-verifier-reward-rft-corpus-build.runner_ready (actual=False == expected=True)'\n  duration_s       : 0.0   substrate: None\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4092": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4092_tenth_game_explore_first.json\n------------------------------------------------------------------------------\n  verdict          : success: tenth_game_solved_r11l-495a7899_at_action_4\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 3.982   substrate: offline_arc_agi3_explore_first_first_solve\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4093": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4093_offarc_demofit_precision_transfer.json\n------------------------------------------------------------------------------\n  verdict          : complete: offarc_demofit_precision_0.96_filter_raises_to_0.96\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 19.78   substrate: verifier_ensemble_against_cached_candidates\n  headline metrics :\n      demofit_precision_filtered = 0.96049\n      demofit_precision_raw = 0.956186\n      domain_general_precision_floor = 0.68\n      filter_recall = 0.945876\n      n_tasks_scored = 160\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4094": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4094_sota_ingestion_precision_calibration_receipt.json\n------------------------------------------------------------------------------\n  verdict          : complete: sota_ingestion_precision_calibration_mapped\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : None   substrate: aggregation_from_upstream_artifacts\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4095": {
+      "returncode": 2,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4095_verifier_registry_gaps_hygiene.json\n------------------------------------------------------------------------------\n  verdict          : complete: gap4_arc1_reproduced_True_precision_precision_rescue_succeeded_rft_rft_a_vs_b_pending_absent\n  flagged_adversarial (stamped): True   |   LIVE re-check: CRITICAL\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.197   substrate: verifier_ensemble_against_cached_candidates\n  adversarial flags:\n      [critical] DURATION_TOO_SHORT: duration_s=0.197 but artifact declares verifier-scoring substrate. Even verifier scoring of a fe\n      [warn    ] METHODOLOGY_MISSING: Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum.\n==============================================================================\n"
+    },
+    "4096": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4096_hardware_continuity.json\n------------------------------------------------------------------------------\n  verdict          : complete: hardware_continuity_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 11.452377   substrate: hardware_smoke\n  adversarial flags: none\n==============================================================================\n"
+    }
+  },
+  "upstream_artifact_state": {
+    "4086": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "success: archived_v377_v378_active_pivot_blocked_precision_gate_unmet_0.6818_lt_0.85_4_flagged_skipped_no_arc_rft_eval_ninth_game_solved_games9_sudoku_control_flagged_skipped_kv260_terminal_pretest_green",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4086_archive_v377_activate_v378.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4087": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: precision_rescue_succeeded_best_0.8824_at_recall_0.7143",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4087_certification_precision_rescue.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4088": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_lora_smoke_checkpoints",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4088_verifier_reward_rft_corpus_build.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4089": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "blocked_gate_check_failed",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4089_verifier_reward_rft_train.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4090": {
+      "exists": false,
+      "flagged_adversarial": false,
+      "honest_verdict": "missing",
+      "included": false,
+      "live_critical": false,
+      "path": "",
+      "skipped": false,
+      "summarize_artifact_returncode": null
+    },
+    "4091": {
+      "exists": false,
+      "flagged_adversarial": false,
+      "honest_verdict": "missing",
+      "included": false,
+      "live_critical": false,
+      "path": "",
+      "skipped": false,
+      "summarize_artifact_returncode": null
+    },
+    "4092": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "success: tenth_game_solved_r11l-495a7899_at_action_4",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4092_tenth_game_explore_first.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4093": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: offarc_demofit_precision_0.96_filter_raises_to_0.96",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4093_offarc_demofit_precision_transfer.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4094": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: sota_ingestion_precision_calibration_mapped",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4094_sota_ingestion_precision_calibration_receipt.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4095": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: gap4_arc1_reproduced_True_precision_precision_rescue_succeeded_rft_rft_a_vs_b_pending_absent",
+      "included": false,
+      "live_critical": true,
+      "path": "results/experiment_4095_verifier_registry_gaps_hygiene.json",
+      "skipped": true,
+      "summarize_artifact_returncode": 2
+    },
+    "4096": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: hardware_continuity_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only",
+      "included": true,
+      "live_critical": false,
+      "path": "results/experiment_4096_hardware_continuity.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    }
+  }
+}
