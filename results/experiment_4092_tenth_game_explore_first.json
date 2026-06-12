@@ -1,0 +1,951 @@
+{
+  "action_plan": [
+    {
+      "action": 6,
+      "group_id": "pumlzd",
+      "piece_index": 0,
+      "point": [
+        36,
+        7
+      ],
+      "role": "select_piece",
+      "x": 7,
+      "y": 36
+    },
+    {
+      "action": 6,
+      "group_id": "pumlzd",
+      "piece_index": 0,
+      "point": [
+        20,
+        34
+      ],
+      "role": "place_piece",
+      "x": 34,
+      "y": 20
+    },
+    {
+      "action": 6,
+      "group_id": "pumlzd",
+      "piece_index": 1,
+      "point": [
+        59,
+        27
+      ],
+      "role": "select_piece",
+      "x": 27,
+      "y": 59
+    },
+    {
+      "action": 6,
+      "group_id": "pumlzd",
+      "piece_index": 1,
+      "point": [
+        20,
+        42
+      ],
+      "role": "place_piece",
+      "x": 42,
+      "y": 20
+    }
+  ],
+  "actions_vs_baseline": 0.1818,
+  "arc_env_count": 25,
+  "candidate_baseline_actions": 22,
+  "duration_s": 3.982,
+  "excluded_solved_games": [
+    "lp85",
+    "sc25",
+    "su15",
+    "tn36",
+    "cd82",
+    "dc22",
+    "sb26",
+    "ft09"
+  ],
+  "experiment": "experiment_4092_tenth_game_explore_first",
+  "exploration_actions_used": 2,
+  "field_principles": {
+    "actions_vs_baseline": "confirmed solve actions divided by the selected game's L0 baseline action count",
+    "first_solve_at_action": "real confirmed action index where the first level counter increment occurred",
+    "game_solved": "bare boolean for whether this task added exactly one new solved game",
+    "honest_verdict": "terminal prefix records success, complete no-solve, or blocked precondition",
+    "inference_substrate": "declares the offline explore-first induction and verifier substrate",
+    "real_env_confirmed": "a solve is real only when the live environment level counter confirms it",
+    "requirements": "OpenSpec requirement and scenario anchors for the Exp 4092 tenth-game run",
+    "total_games_solved": "monotonic ARC accuracy counter, incrementing from 9 to 10 only on a real solve"
+  },
+  "first_solve_at_action": 4,
+  "game_solved": true,
+  "honest_verdict": "success: tenth_game_solved_r11l-495a7899_at_action_4",
+  "induced_mechanic": "Observed r11l click-only select/place transitions; induced that each visible roefwulewcui piece is selected by click and placed by a second click so its group composite overlaps the matching flkdtg target, with a live level counter increment required before claiming success.",
+  "inference_substrate": "offline_arc_agi3_explore_first_first_solve",
+  "level_completed": 1,
+  "levels_completed": 1,
+  "phase_trace": [
+    {
+      "candidate_reason": "selected preferred: r11l is the consensus top pick, directly observable, L0 baseline_actions=22",
+      "phase": "observe",
+      "source": "offline_explore_first_induction",
+      "state": {
+        "groups": [
+          {
+            "group_id": "pumlzd",
+            "pieces": [
+              {
+                "center": [
+                  36,
+                  7
+                ],
+                "piece_index": 0
+              },
+              {
+                "center": [
+                  59,
+                  27
+                ],
+                "piece_index": 1
+              }
+            ],
+            "target_center": [
+              20,
+              38
+            ],
+            "target_satisfied": false
+          }
+        ],
+        "level_completed": 0
+      },
+      "target_game": "r11l-495a7899"
+    },
+    {
+      "action": {
+        "action": 6,
+        "group_id": "pumlzd",
+        "piece_index": 0,
+        "point": [
+          36,
+          7
+        ],
+        "role": "select_piece",
+        "x": 7,
+        "y": 36
+      },
+      "action_index": 1,
+      "after": {
+        "groups": [
+          {
+            "group_id": "pumlzd",
+            "pieces": [
+              {
+                "center": [
+                  36,
+                  7
+                ],
+                "piece_index": 0
+              },
+              {
+                "center": [
+                  59,
+                  27
+                ],
+                "piece_index": 1
+              }
+            ],
+            "target_center": [
+              20,
+              38
+            ],
+            "target_satisfied": false
+          }
+        ],
+        "level_completed": 0
+      },
+      "before": {
+        "groups": [
+          {
+            "group_id": "pumlzd",
+            "pieces": [
+              {
+                "center": [
+                  36,
+                  7
+                ],
+                "piece_index": 0
+              },
+              {
+                "center": [
+                  59,
+                  27
+                ],
+                "piece_index": 1
+              }
+            ],
+            "target_center": [
+              20,
+              38
+            ],
+            "target_satisfied": false
+          }
+        ],
+        "level_completed": 0
+      },
+      "level_completed": 0,
+      "phase": "explore",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "action": {
+        "action": 6,
+        "group_id": "pumlzd",
+        "piece_index": 0,
+        "point": [
+          20,
+          34
+        ],
+        "role": "place_piece",
+        "x": 34,
+        "y": 20
+      },
+      "action_index": 2,
+      "after": {
+        "groups": [
+          {
+            "group_id": "pumlzd",
+            "pieces": [
+              {
+                "center": [
+                  20,
+                  34
+                ],
+                "piece_index": 0
+              },
+              {
+                "center": [
+                  59,
+                  27
+                ],
+                "piece_index": 1
+              }
+            ],
+            "target_center": [
+              20,
+              38
+            ],
+            "target_satisfied": false
+          }
+        ],
+        "level_completed": 0
+      },
+      "before": {
+        "groups": [
+          {
+            "group_id": "pumlzd",
+            "pieces": [
+              {
+                "center": [
+                  36,
+                  7
+                ],
+                "piece_index": 0
+              },
+              {
+                "center": [
+                  59,
+                  27
+                ],
+                "piece_index": 1
+              }
+            ],
+            "target_center": [
+              20,
+              38
+            ],
+            "target_satisfied": false
+          }
+        ],
+        "level_completed": 0
+      },
+      "level_completed": 0,
+      "phase": "explore",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "exploration_actions_used": 2,
+      "goal_predicate": "each movable piece group composite overlaps its matching flkdtg target",
+      "induction_call": {
+        "call": "induce_r11l_click_select_place",
+        "goal_predicate": "each movable piece group composite overlaps its matching flkdtg target",
+        "mechanic": "clicking a visible piece selects it; clicking an empty target-relative point places it",
+        "observed_groups": [
+          {
+            "group_id": "pumlzd",
+            "pieces": [
+              {
+                "center": [
+                  36,
+                  7
+                ],
+                "piece_index": 0
+              },
+              {
+                "center": [
+                  59,
+                  27
+                ],
+                "piece_index": 1
+              }
+            ],
+            "target_center": [
+              20,
+              38
+            ],
+            "target_satisfied": false
+          }
+        ]
+      },
+      "mechanic": "r11l_click_select_place",
+      "phase": "induce",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "actions_checked": 2,
+      "energy": 0.0,
+      "final_level_completed": 1,
+      "heldout_transition_count": 2,
+      "level_increment": true,
+      "phase": "verify",
+      "predicted_goal_after_actions": true,
+      "retained": true,
+      "start_level_completed": 0,
+      "verifier": "gap4_replay_r11l_click_select_place_level_counter"
+    },
+    {
+      "action": {
+        "action": 6,
+        "group_id": "pumlzd",
+        "piece_index": 0,
+        "point": [
+          36,
+          7
+        ],
+        "role": "select_piece",
+        "x": 7,
+        "y": 36
+      },
+      "action_index": 1,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "group_id": "pumlzd",
+        "piece_index": 0,
+        "point": [
+          20,
+          34
+        ],
+        "role": "place_piece",
+        "x": 34,
+        "y": 20
+      },
+      "action_index": 2,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "group_id": "pumlzd",
+        "piece_index": 1,
+        "point": [
+          59,
+          27
+        ],
+        "role": "select_piece",
+        "x": 27,
+        "y": 59
+      },
+      "action_index": 3,
+      "after": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "group_id": "pumlzd",
+        "piece_index": 1,
+        "point": [
+          20,
+          42
+        ],
+        "role": "place_piece",
+        "x": 42,
+        "y": 20
+      },
+      "action_index": 4,
+      "after": {
+        "level_completed": 1,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "before": {
+        "level_completed": 0,
+        "state": "GameState.NOT_FINISHED"
+      },
+      "level_completed": 1,
+      "phase": "act",
+      "source": "online_real_env_confirmation"
+    }
+  ],
+  "prior_total_games_solved": 9,
+  "random_seed": 4092,
+  "real_env_confirmed": true,
+  "requirements": [
+    "REQ-PHASE4-045",
+    "SCENARIO-PHASE4-045"
+  ],
+  "selected_candidate_reason": "selected preferred: r11l is the consensus top pick, directly observable, L0 baseline_actions=22",
+  "selection_mode": "preferred_consensus_top_pick",
+  "solve_trace": {
+    "actions": [
+      {
+        "action": 6,
+        "group_id": "pumlzd",
+        "piece_index": 0,
+        "point": [
+          36,
+          7
+        ],
+        "role": "select_piece",
+        "x": 7,
+        "y": 36
+      },
+      {
+        "action": 6,
+        "group_id": "pumlzd",
+        "piece_index": 0,
+        "point": [
+          20,
+          34
+        ],
+        "role": "place_piece",
+        "x": 34,
+        "y": 20
+      },
+      {
+        "action": 6,
+        "group_id": "pumlzd",
+        "piece_index": 1,
+        "point": [
+          59,
+          27
+        ],
+        "role": "select_piece",
+        "x": 27,
+        "y": 59
+      },
+      {
+        "action": 6,
+        "group_id": "pumlzd",
+        "piece_index": 1,
+        "point": [
+          20,
+          42
+        ],
+        "role": "place_piece",
+        "x": 42,
+        "y": 20
+      }
+    ],
+    "commit_actions": [
+      {
+        "action": 6,
+        "group_id": "pumlzd",
+        "piece_index": 1,
+        "point": [
+          59,
+          27
+        ],
+        "role": "select_piece",
+        "x": 27,
+        "y": 59
+      },
+      {
+        "action": 6,
+        "group_id": "pumlzd",
+        "piece_index": 1,
+        "point": [
+          20,
+          42
+        ],
+        "role": "place_piece",
+        "x": 42,
+        "y": 20
+      }
+    ],
+    "exploration_actions": [
+      {
+        "action": 6,
+        "group_id": "pumlzd",
+        "piece_index": 0,
+        "point": [
+          36,
+          7
+        ],
+        "role": "select_piece",
+        "x": 7,
+        "y": 36
+      },
+      {
+        "action": 6,
+        "group_id": "pumlzd",
+        "piece_index": 0,
+        "point": [
+          20,
+          34
+        ],
+        "role": "place_piece",
+        "x": 34,
+        "y": 20
+      }
+    ],
+    "induction_calls": [
+      {
+        "call": "induce_r11l_click_select_place",
+        "goal_predicate": "each movable piece group composite overlaps its matching flkdtg target",
+        "mechanic": "clicking a visible piece selects it; clicking an empty target-relative point places it",
+        "observed_groups": [
+          {
+            "group_id": "pumlzd",
+            "pieces": [
+              {
+                "center": [
+                  36,
+                  7
+                ],
+                "piece_index": 0
+              },
+              {
+                "center": [
+                  59,
+                  27
+                ],
+                "piece_index": 1
+              }
+            ],
+            "target_center": [
+              20,
+              38
+            ],
+            "target_satisfied": false
+          }
+        ]
+      }
+    ],
+    "phase_trace": [
+      {
+        "candidate_reason": "selected preferred: r11l is the consensus top pick, directly observable, L0 baseline_actions=22",
+        "phase": "observe",
+        "source": "offline_explore_first_induction",
+        "state": {
+          "groups": [
+            {
+              "group_id": "pumlzd",
+              "pieces": [
+                {
+                  "center": [
+                    36,
+                    7
+                  ],
+                  "piece_index": 0
+                },
+                {
+                  "center": [
+                    59,
+                    27
+                  ],
+                  "piece_index": 1
+                }
+              ],
+              "target_center": [
+                20,
+                38
+              ],
+              "target_satisfied": false
+            }
+          ],
+          "level_completed": 0
+        },
+        "target_game": "r11l-495a7899"
+      },
+      {
+        "action": {
+          "action": 6,
+          "group_id": "pumlzd",
+          "piece_index": 0,
+          "point": [
+            36,
+            7
+          ],
+          "role": "select_piece",
+          "x": 7,
+          "y": 36
+        },
+        "action_index": 1,
+        "after": {
+          "groups": [
+            {
+              "group_id": "pumlzd",
+              "pieces": [
+                {
+                  "center": [
+                    36,
+                    7
+                  ],
+                  "piece_index": 0
+                },
+                {
+                  "center": [
+                    59,
+                    27
+                  ],
+                  "piece_index": 1
+                }
+              ],
+              "target_center": [
+                20,
+                38
+              ],
+              "target_satisfied": false
+            }
+          ],
+          "level_completed": 0
+        },
+        "before": {
+          "groups": [
+            {
+              "group_id": "pumlzd",
+              "pieces": [
+                {
+                  "center": [
+                    36,
+                    7
+                  ],
+                  "piece_index": 0
+                },
+                {
+                  "center": [
+                    59,
+                    27
+                  ],
+                  "piece_index": 1
+                }
+              ],
+              "target_center": [
+                20,
+                38
+              ],
+              "target_satisfied": false
+            }
+          ],
+          "level_completed": 0
+        },
+        "level_completed": 0,
+        "phase": "explore",
+        "source": "offline_explore_first_induction"
+      },
+      {
+        "action": {
+          "action": 6,
+          "group_id": "pumlzd",
+          "piece_index": 0,
+          "point": [
+            20,
+            34
+          ],
+          "role": "place_piece",
+          "x": 34,
+          "y": 20
+        },
+        "action_index": 2,
+        "after": {
+          "groups": [
+            {
+              "group_id": "pumlzd",
+              "pieces": [
+                {
+                  "center": [
+                    20,
+                    34
+                  ],
+                  "piece_index": 0
+                },
+                {
+                  "center": [
+                    59,
+                    27
+                  ],
+                  "piece_index": 1
+                }
+              ],
+              "target_center": [
+                20,
+                38
+              ],
+              "target_satisfied": false
+            }
+          ],
+          "level_completed": 0
+        },
+        "before": {
+          "groups": [
+            {
+              "group_id": "pumlzd",
+              "pieces": [
+                {
+                  "center": [
+                    36,
+                    7
+                  ],
+                  "piece_index": 0
+                },
+                {
+                  "center": [
+                    59,
+                    27
+                  ],
+                  "piece_index": 1
+                }
+              ],
+              "target_center": [
+                20,
+                38
+              ],
+              "target_satisfied": false
+            }
+          ],
+          "level_completed": 0
+        },
+        "level_completed": 0,
+        "phase": "explore",
+        "source": "offline_explore_first_induction"
+      },
+      {
+        "exploration_actions_used": 2,
+        "goal_predicate": "each movable piece group composite overlaps its matching flkdtg target",
+        "induction_call": {
+          "call": "induce_r11l_click_select_place",
+          "goal_predicate": "each movable piece group composite overlaps its matching flkdtg target",
+          "mechanic": "clicking a visible piece selects it; clicking an empty target-relative point places it",
+          "observed_groups": [
+            {
+              "group_id": "pumlzd",
+              "pieces": [
+                {
+                  "center": [
+                    36,
+                    7
+                  ],
+                  "piece_index": 0
+                },
+                {
+                  "center": [
+                    59,
+                    27
+                  ],
+                  "piece_index": 1
+                }
+              ],
+              "target_center": [
+                20,
+                38
+              ],
+              "target_satisfied": false
+            }
+          ]
+        },
+        "mechanic": "r11l_click_select_place",
+        "phase": "induce",
+        "source": "offline_explore_first_induction"
+      },
+      {
+        "actions_checked": 2,
+        "energy": 0.0,
+        "final_level_completed": 1,
+        "heldout_transition_count": 2,
+        "level_increment": true,
+        "phase": "verify",
+        "predicted_goal_after_actions": true,
+        "retained": true,
+        "start_level_completed": 0,
+        "verifier": "gap4_replay_r11l_click_select_place_level_counter"
+      },
+      {
+        "action": {
+          "action": 6,
+          "group_id": "pumlzd",
+          "piece_index": 0,
+          "point": [
+            36,
+            7
+          ],
+          "role": "select_piece",
+          "x": 7,
+          "y": 36
+        },
+        "action_index": 1,
+        "after": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "before": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "online_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 6,
+          "group_id": "pumlzd",
+          "piece_index": 0,
+          "point": [
+            20,
+            34
+          ],
+          "role": "place_piece",
+          "x": 34,
+          "y": 20
+        },
+        "action_index": 2,
+        "after": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "before": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "online_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 6,
+          "group_id": "pumlzd",
+          "piece_index": 1,
+          "point": [
+            59,
+            27
+          ],
+          "role": "select_piece",
+          "x": 27,
+          "y": 59
+        },
+        "action_index": 3,
+        "after": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "before": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "online_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 6,
+          "group_id": "pumlzd",
+          "piece_index": 1,
+          "point": [
+            20,
+            42
+          ],
+          "role": "place_piece",
+          "x": 42,
+          "y": 20
+        },
+        "action_index": 4,
+        "after": {
+          "level_completed": 1,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "before": {
+          "level_completed": 0,
+          "state": "GameState.NOT_FINISHED"
+        },
+        "level_completed": 1,
+        "phase": "act",
+        "source": "online_real_env_confirmation"
+      }
+    ],
+    "selection_reason": "selected preferred: r11l is the consensus top pick, directly observable, L0 baseline_actions=22",
+    "target_game": "r11l-495a7899",
+    "verification_decisions": [
+      {
+        "actions_checked": 2,
+        "energy": 0.0,
+        "final_level_completed": 1,
+        "heldout_transition_count": 2,
+        "level_increment": true,
+        "phase": "verify",
+        "predicted_goal_after_actions": true,
+        "retained": true,
+        "start_level_completed": 0,
+        "verifier": "gap4_replay_r11l_click_select_place_level_counter"
+      }
+    ]
+  },
+  "survey_is_spatial_planning": false,
+  "target_game": "r11l-495a7899",
+  "title": "arc3_tenth_game_explore_first_r11l",
+  "total_games_solved": 10,
+  "verification_decisions": [
+    {
+      "actions_checked": 2,
+      "energy": 0.0,
+      "final_level_completed": 1,
+      "heldout_transition_count": 2,
+      "level_increment": true,
+      "phase": "verify",
+      "predicted_goal_after_actions": true,
+      "retained": true,
+      "start_level_completed": 0,
+      "verifier": "gap4_replay_r11l_click_select_place_level_counter"
+    }
+  ]
+}
