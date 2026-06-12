@@ -11547,3 +11547,75 @@ library evidence and reports no ninth-game transfer measurement.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4062 | Proposed (python/carnot/agentic/arc_arcmemo_cross_game_transfer_v8.py; scripts/experiments/exp4062_arcmemo_cross_game_transfer_v8.py, Exp 4062) | Proposed (tests/python/test_exp4062_arcmemo_cross_game_transfer_v8.py) |
+
+---
+
+## REQ-LEARN-4072: ArcMemo v9 Cross-Game Transfer on Fresh Ninth-Game Work
+
+**Given** the eight prior real-env-confirmed ARC-AGI-3 solved games
+`r11l`, `lp85`, `sc25`, `su15`, `tn36`, `cd82`, `dc22`, and `sb26`
+and the fresh ninth-game artifact
+`results/experiment_4070_ninth_game_explore_first.json`
+**When** Exp 4072 builds the ArcMemo v9 library
+**Then** it SHALL compress only prior solved-game induced-program fragments into
+named, documented abstractions richer than the v8 library
+**And** it SHALL evaluate the Exp 4070 ninth-game trace honestly as either a
+confirmed solve or a bounded attempt trace
+**And** it SHALL measure the ninth game against cold start and within-game-only
+memory before claiming cross-game transfer
+**And** it SHALL write
+`results/experiment_4072_arcmemo_cross_game_transfer_v9.json`.
+
+### REQ-LEARN-4072 Sub-requirements
+
+- REQ-LEARN-4072-1: The v9 library SHALL expose named abstractions with
+  `name`, `signature`, `documentation`, `source_games`, `source_fragments`,
+  `lambda_abstraction`, and `match_tokens` fields, and SHALL include all eight
+  prior solved-game fragments when they are real-env-confirmed.
+- REQ-LEARN-4072-2: Exp 4072 SHALL report bare top-level fields
+  `honest_verdict`, `cross_game_transfer_win`, `actions_cold`,
+  `actions_within_game`, `actions_cross_game_v9`, `n_reused_abstractions`,
+  and `inference_substrate`.
+- REQ-LEARN-4072-3: `inference_substrate` SHALL equal
+  `offline_arc_agi3_arcmemo_cross_game_transfer`.
+- REQ-LEARN-4072-4: `cross_game_transfer_win` SHALL be true only when
+  `actions_cross_game_v9 < actions_cold` and
+  `actions_cross_game_v9 < actions_within_game`; otherwise the honest verdict
+  SHALL begin with `complete: arcmemo_v9_no_cross_game_transfer_`.
+- REQ-LEARN-4072-5: If Exp 4070 did not solve but exposes a usable attempt
+  trace, Exp 4072 SHALL measure transfer on that same attempt depth and SHALL
+  NOT fabricate a solved-game transfer claim.
+- REQ-LEARN-4072-6: If Exp 4070 is absent or lacks any usable trace, Exp 4072
+  SHALL emit a complete no-transfer artifact with zero action counts and
+  explicit target evidence rather than substituting another game.
+- REQ-LEARN-4072-7: If Exp 4070 is solved, Exp 4072 SHALL preserve the
+  ninth-game induced fragment as future-library evidence, but that held-out
+  target fragment SHALL NOT be counted as a prior-game reused abstraction for
+  the Exp 4072 cross-game win claim.
+
+### SCENARIO-LEARN-4072: v9 Must Beat Cold and Within-Game Memory on Exp 4070
+
+**Given** the Exp 4070 ninth-game trace and a v9 library built from all eight
+prior solved-game fragments
+**When** prior-game abstractions fire on the new game
+**Then** Exp 4072 records the fired abstraction count and induction-call cost
+**And** it reports `cross_game_transfer_win=true` only if the v9 action count
+is strictly below both the cold baseline and the within-game-only baseline.
+
+**Given** Exp 4070 lacks a real-env-confirmed solve but still contains a usable
+attempt trace
+**When** Exp 4072 evaluates transfer
+**Then** it measures the same attempt depth and emits a `complete:` verdict
+rather than claiming a solved-game transfer win.
+
+**Given** Exp 4070 is solved
+**When** Exp 4072 builds its audit payload
+**Then** it records the ninth-game fragment as target-derived future-library
+evidence without letting that target-derived fragment satisfy
+`n_reused_abstractions`.
+
+## Implementation Status (REQ-LEARN-4072)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4072 | Proposed (python/carnot/agentic/arc_arcmemo_cross_game_transfer_v9.py; scripts/experiments/exp4072_arcmemo_cross_game_transfer_v9.py, Exp 4072) | Proposed (tests/python/test_exp4072_arcmemo_cross_game_transfer_v9.py) |
