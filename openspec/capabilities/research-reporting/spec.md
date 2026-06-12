@@ -19919,6 +19919,68 @@ leaves conductor and reconciliation files untouched.
 |---|---|---|
 | REQ-REPORT-4111 | Implemented (`python/carnot/sota_ingestion_trm_verifier_training_4111.py`, `docs/research-notes/sota-ingestion-trm-verifier-training-2026-06-12.md`) | Implemented (`tests/python/test_sota_ingestion_trm_verifier_training_4111.py`) |
 
+### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
+
+The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
+`2026.06.381` is active, and write the record-only artifact
+`results/experiment_4115_archive_v380_activate_v381.json`. It SHALL run NO live
+model training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`.
+
+Before writing the complete artifact, the workflow SHALL verify these
+preconditions and stop with a `blocked_<resource>` honest verdict if any fail:
+
+- `research-complete.yaml` parses under `yaml.safe_load`.
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`.
+- `nano-trm/src/nn/train.py` exists.
+- The smart-subset pre-test gate is green.
+
+The workflow SHALL ensure `research-complete.yaml` contains exactly one top-level
+`- id: 2026.06.380` record, preserving the first record and removing duplicate
+top-level `.380` records if interrupted conductor appends created any. The
+workflow SHALL keep `research-complete.yaml` parseable after the edit.
+
+The artifact SHALL carry the required principle-annotated fields
+`honest_verdict`, `v380_close_state`, and `preconditions_checked`. Complete-path
+`honest_verdict` SHALL start with one of `complete:`, `success:`, `passed:`, or
+`shipped:`. `v380_close_state` SHALL truthfully record that Exp 4107 proved the
+nano-TRM trainer mechanism (`nanotrm_trainer_checkpoint_ok=true`,
+`exact_accuracy=1.0`, checkpoint written and reloadable), while Exp 4108 did NOT
+reproduce the published ~87% Sudoku-Extreme baseline
+(`matches_published_087=false`, `reproduced_exact_accuracy` approximately
+`0.0232`, checkpoint reloadable, interrupted before convergence by the 80-minute
+cap). The close-state SHALL name the `.381` forward fix as resumable training via
+a stable checkpoint lineage rather than a per-run Hydra directory.
+
+#### SCENARIO-REPORT-4115: The Archive Preserves The Honest .380 Baseline Failure
+
+**Given** Exp 4107 has a reloadable checkpoint and exact accuracy `1.0`, Exp 4108
+has `matches_published_087=false` and `reproduced_exact_accuracy≈0.0232`, the
+history and exclusion-manifest YAML files parse, `nano-trm/src/nn/train.py`
+exists, the smart-subset pre-test gate is green, and `.381` is active
+**When** the Exp 4115 archive workflow runs
+**Then** it archives `.380`, confirms `.381`, keeps the YAML history parseable
+with exactly one `.380` record, writes
+`results/experiment_4115_archive_v380_activate_v381.json`, records the Exp 4107
+mechanism proof and Exp 4108 baseline non-reproduction in `v380_close_state`,
+records the checked resources in `preconditions_checked`, declares
+`aggregation_from_upstream_artifacts`, and emits a terminal-prefixed honest
+verdict.
+
+#### SCENARIO-REPORT-4115-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4115 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does not
+claim `.380` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4115)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4115 | Implemented (`python/carnot/reporting/archive_v380_activate_v381_4115.py`, `scripts/experiments/exp4115_archive_v380_activate_v381.py`) | Implemented (`tests/python/test_experiment_4115_archive_v380_activate_v381.py`) |
+
 ### REQ-REPORT-4106: Archive .379, Activate .380, Record The Honest Anti-Discrimination Close-State
 
 The Exp 4106 workflow SHALL archive milestone `2026.06.379`, confirm milestone
