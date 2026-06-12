@@ -12204,6 +12204,64 @@ fabricate a validation exact-accuracy metric or checkpoint.
 
 ---
 
+## REQ-LEARN-4117: Resumable nano-trm Sudoku Extreme Pass 2 Accumulation Floor
+
+**Given** Exp 4116 established the shared Sudoku Extreme resume lineage, Exp
+4117 SHALL read `results/experiment_4116_*.json` for the pass1
+`stable_checkpoint_path` and `val_exact_accuracy`. If the pass1 JSON lacks the
+validation exact-accuracy but names a Hydra run directory with
+`val/exact_accuracy` CSV metrics, Exp 4117 MAY recover the pass1 baseline from
+those metrics while recording that source. Before launch it SHALL check `uv`,
+the native nano-trm trainer, CUDA, the Sudoku Extreme dataset, and that the
+shared stable checkpoint exists and reloads with trusted full-checkpoint
+loading. A missing or unloadable stable checkpoint SHALL write
+`honest_verdict="blocked_stable_checkpoint_missing"` and stop without
+fabricating validation metrics.
+
+**When** the stable checkpoint is loadable, Exp 4117 SHALL resume from
+`<stable>/last.ckpt` using Hydra experiment `trm_sudoku_extreme_1k_aug_1k`, CSV
+logging, `trainer.max_time="00:01:00:00"`, and model-checkpoint overrides that
+save `last.ckpt` back into the same stable directory. The run SHALL print
+progress during training and checkpointing.
+
+**Then** the terminal artifact SHALL be written to
+`results/experiment_4117_sudoku_extreme_resume_pass2.json` and SHALL include
+top-level fields `honest_verdict`, `val_exact_accuracy`,
+`val_delta_vs_pass1`, `accumulation_stalled`, `stable_checkpoint_path`,
+`duration_s`, and `cumulative_epochs`. `val_delta_vs_pass1` SHALL be computed
+as pass2 `val_exact_accuracy` minus pass1 `val_exact_accuracy`.
+`accumulation_stalled` SHALL be the bare bool `true` exactly when the delta is
+less than or equal to zero. The acceptance gate passes when
+`val_exact_accuracy` is reported and either `val_delta_vs_pass1 > 0` or
+`accumulation_stalled` is flagged, making both improvement and honest stall
+decision-grade outcomes.
+
+### SCENARIO-LEARN-4117: Pass2 Reports Improvement Or Stalled Accumulation
+
+**Given** a loadable Exp 4116 stable checkpoint and a pass1 validation exact
+accuracy
+**When** Exp 4117 runs the bounded native trainer with `ckpt_path` pointed at
+the stable shared checkpoint
+**Then** it reports pass2 validation exact accuracy, cumulative epochs, delta
+versus pass1, a bare accumulation-stalled bool, the same stable checkpoint
+path, bounded duration, and a terminal honest verdict.
+
+### SCENARIO-LEARN-4117-BLOCKED: Broken Stable Checkpoint Stops The Lineage
+
+**Given** the Exp 4116 stable checkpoint path is missing or unloadable
+**When** Exp 4117 starts
+**Then** it writes `honest_verdict="blocked_stable_checkpoint_missing"`,
+records checkpoint-load evidence, leaves `val_exact_accuracy` and
+`val_delta_vs_pass1` null, and does not run blind training.
+
+## Implementation Status (REQ-LEARN-4117)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4117 | Implemented (python/carnot/experiment_4117_sudoku_extreme_resume_pass2.py, Exp 4117) | Implemented (tests/python/test_experiment_4117_sudoku_extreme_resume_pass2.py) |
+
+---
+
 ## REQ-LEARN-4109: Sudoku Verifier Graft Over nano-trm
 
 **Given** Exp 4108 has written a nano-trm Sudoku baseline artifact, Exp 4109
