@@ -218,6 +218,12 @@ verifiers:
     exp4095_arc1_rule_exec_gated_pass2: 0.5806
     exp4095_arc1_headroom_recovered: 4
     exp4095_arc1_vote_wins_lost: 0
+    eval_exp_4103: results/experiment_4103_verifier_registry_gaps_hygiene.json
+    exp4103_regression_guard_passed: true
+    exp4103_arc1_rule_exec_vote_pass2: 0.4516
+    exp4103_arc1_rule_exec_gated_pass2: 0.5806
+    exp4103_arc1_headroom_recovered: 4
+    exp4103_arc1_vote_wins_lost: 0
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -281,6 +287,22 @@ verifiers:
     status: blocked
     outcome: verifier_as_reward_rft_blocked
     honest_verdict: blocked_gate_check_failed
+  - role_id: trm_grid_discriminator_training_time_4100
+    experiment: results/experiment_4100_trm_verifier_rft_conditional.json
+    role: candidate_trm_training_time_reward_signal
+    status: smoke
+    outcome: smoke_checkpoint_ok
+    honest_verdict: 'complete: trm_native_trainer_checkpoint_ok_smoke_only_no_verifier_grid_discrimination_best_K_OF_N_AGREEMENT_gap_0.0000'
+    rft_vs_ablation_delta:
+      ci95:
+      - 0.0
+      - 0.0
+      delta: 0.0
+      metric: heldout_pass@2
+      status: not_run_no_verifier_signal
+    bottleneck: verifier_discrimination_on_trm_grids
+    exp4099_captured_pp: 0.0
+    eval_exp_4103: results/experiment_4103_verifier_registry_gaps_hygiene.json
   certification_precision_operating_point:
     experiment: results/experiment_4087_certification_precision_rescue.json
     status: precision_rescue_succeeded

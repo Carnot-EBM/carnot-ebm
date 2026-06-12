@@ -619,3 +619,23 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: run or consume Exp 4090 only after the precision-calibrated corpus and training artifacts exist; keep absent/pending state out of headline claims.
 - priority: high
 <!-- exp4095-rft-a-vs-b:end -->
+
+<!-- exp4103-trm-grid-discrimination:start -->
+### GAP-TRM-GRID-DISCRIMINATION: TRM-grid rerank discrimination
+- status: open_captured_pp_0.0000
+- evidence: `results/experiment_4099_trm_pool_verifier_discrimination_probe.json`; best_reranker=K_OF_N_AGREEMENT; captured_pp=0.0; captured_pp_ci95=[0.0, 0.0]; verifier_beats_trm_vote=false; pool_n_tasks=62.
+- failure mode: a correct grid can be present in the TRM candidate pool but remain unselectable because every recorded reranker ties TRM vote or ranks confident-wrong grids ahead of it.
+- missing discriminator: signal separating a correct TRM grid from a confident-wrong TRM grid on the candidate pool.
+- candidate design: train or mine a TRM-grid discriminator only after a held-out pool shows it beats TRM vote; until then keep the gap open and treat Exp 4100 as smoke.
+- priority: high
+<!-- exp4103-trm-grid-discrimination:end -->
+
+<!-- exp4103-trm-rft-outcome:start -->
+### GAP-TRM-VERIFIER-RFT-4100: Exp 4100 TRM verifier-RFT outcome
+- status: smoke_checkpoint_ok
+- evidence: `results/experiment_4100_trm_verifier_rft_conditional.json`; branch_taken=smoke; trm_native_trainer_checkpoint_ok=true; rft_vs_ablation_delta={'ci95': [0.0, 0.0], 'delta': 0.0, 'metric': 'heldout_pass@2', 'status': 'not_run_no_verifier_signal'}; bottleneck=verifier_discrimination_on_trm_grids.
+- failure mode: verifier-as-reward RFT cannot be promoted when the upstream grid reranker captured 0.0pp; the mechanism smoke proves checkpoint plumbing, not a reward win.
+- missing discriminator: decision-grade evidence that verifier-certified TRM training beats the vote-label ablation on held-out grid induction.
+- candidate design: rerun full RFT only after a non-TRM grid reranker clears the Exp 4099 discrimination gate.
+- priority: high
+<!-- exp4103-trm-rft-outcome:end -->
