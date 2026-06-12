@@ -8379,3 +8379,4 @@ c |
 | 2026-06-12 19:54 UTC | REPRODUCE the PUBLISHED Sudoku-Extreme TRM baselin | OK | 92 passed, 2 warnings in 9.22s |
 | 2026-06-12 20:24 UTC | GRAFT the Carnot Sudoku verifier onto the reproduc | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-12 20:48 UTC | TWELFTH ARC-AGI-3 game first-solve via the PROVEN  | OK | 89 passed in 4.61s |
+| 2026-06-12 21:09 UTC | SOTA-INGESTION SLOT (reserved; headline is a bleed | OK | 100 passed in 5.06s |
