@@ -11619,3 +11619,74 @@ evidence without letting that target-derived fragment satisfy
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4072 | Proposed (python/carnot/agentic/arc_arcmemo_cross_game_transfer_v9.py; scripts/experiments/exp4072_arcmemo_cross_game_transfer_v9.py, Exp 4072) | Proposed (tests/python/test_exp4072_arcmemo_cross_game_transfer_v9.py) |
+
+---
+
+## REQ-LEARN-4077: ARC Execution-Verifier Reward RFT Corpus Build Gate
+
+**Given** cached ARC program-generation outputs with at least `k=8` generated
+transform programs per task, HF safetensors LADDER bases
+`Qwen/Qwen3.5-0.8B` and `openbmb/MiniCPM5-1B`, importable `trl`/`peft`
+trainers, visible CUDA, and loadable ARC-1 plus ARC-2 task pools
+**When** Exp 4077 prepares the verifier-as-self-improvement reward beachhead
+**Then** it SHALL check every precondition before corpus construction or
+training, compute the Phase-0 certification precision and recall of
+`demo-perfect => test-gold` on a labeled held-out split, and stop with
+`honest_verdict=blocked_precision_gate_unmet_<p>_<r>` when precision is below
+`0.85` or recall is below `0.20`.
+
+If and only if the precision gate passes, the experiment SHALL build three
+N-matched corpora from the same generated program pool: `RFT-CORRECT`
+containing demo-perfect programs, `RFT-ABLATION` containing not-demo-perfect
+programs matched to the RFT-correct task distribution, and `gold-SFT`
+containing test-gold-passing programs matched to the RFT-correct size where
+possible. The disjoint held-out eval split SHALL never be included in any
+training corpus.
+
+The terminal artifact SHALL write
+`results/experiment_4077_verifier_reward_rft_corpus_build.json` with bare
+top-level fields `honest_verdict`, `certification_precision`,
+`certification_recall`, `n_rft_correct`, `n_rft_ablation`, `n_gold_sft`,
+`n_heldout_tasks`, `runner_ready`, `trainer_smoke_passed`,
+`preconditions_checked`, and `inference_substrate`.
+
+### REQ-LEARN-4077 Sub-requirements
+
+- REQ-LEARN-4077-1: The runner SHALL reuse
+  `carnot.agentic.arc_gap4_execution_verifier` and
+  `carnot.verify.sandbox.sandboxed_exec_function` to score generated transform
+  programs against public demos and held-out candidate gold labels.
+- REQ-LEARN-4077-2: The precision gate SHALL pass only when
+  `certification_precision >= 0.85` and `certification_recall >= 0.20`.
+- REQ-LEARN-4077-3: When the precision gate fails, corpus counts SHALL be zero
+  and the runner SHALL NOT build RFT/SFT corpora or run a smoke train.
+- REQ-LEARN-4077-4: When the precision gate passes, the three corpora SHALL be
+  generated from the same held-in program pool and SHALL have equal item counts.
+- REQ-LEARN-4077-5: The LoRA runner SHALL expose three arms
+  `rft_correct`, `rft_ablation`, and `gold_sft`, plus a held-out eval manifest,
+  and SHALL support a two-task smoke train without launching the full Exp 4078
+  training run.
+
+### SCENARIO-LEARN-4077: Precision Gate Blocks Poisoned Demo-Perfect Labels
+
+**Given** a labeled held-out ARC program pool where demo-perfect programs are
+gold-correct below 85% precision
+**When** Exp 4077 computes the certification gate
+**Then** the artifact reports `blocked_precision_gate_unmet_<p>_<r>`, leaves
+all three corpus counts at zero, and records `trainer_smoke_passed=false`.
+
+### SCENARIO-LEARN-4077-NMATCH: Passing Gate Builds Three Matched Arms
+
+**Given** a generated held-in program pool whose demo-perfect certification
+passes the precision gate and contains enough not-demo-perfect and test-gold
+programs
+**When** Exp 4077 builds the training corpora
+**Then** `n_rft_correct == n_rft_ablation == n_gold_sft`, every ablation item
+comes from the same generator but is not demo-perfect, and the held-out eval
+manifest contains only disjoint task ids.
+
+## Implementation Status (REQ-LEARN-4077)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4077 | Proposed (python/carnot/agentic/arc_exp4077_verifier_reward_rft_corpus_build.py; scripts/experiments/exp4077_verifier_reward_rft_corpus_build.py, Exp 4077) | Proposed (tests/python/test_experiment_4077_verifier_reward_rft_corpus_build.py) |
