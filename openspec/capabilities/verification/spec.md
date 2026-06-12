@@ -12846,6 +12846,48 @@ each task, writes one progress line per task, and writes
 corpus routing reason, the positive-control oracle fields, and
 `mechanism=single_synchronous_resume_accumulate_no_background`.
 
+### REQ-VERIFY-4093: OFF-ARC Demo-Fit Precision Transfer Replay
+
+The repository SHALL provide Exp 4093 at
+`scripts/experiments/exp4093_offarc_demofit_precision_transfer.py` to replay
+the cached Exp 4068/4045 OFF-ARC code-candidate pool without live inference and
+measure the precision question directly: candidate-level
+`P(hidden-pass | visible-pass)` for demo-fit code completions. The runner SHALL
+first verify that a cached candidate pool with visible and hidden pass vectors
+is loadable and that `carnot.verify.sandbox` imports. If either resource is
+missing, it SHALL write a terminal `blocked_<resource>` artifact without
+fabricating candidates and with `n_codex_calls=0`.
+
+For every cached task and candidate, the runner SHALL treat all-visible-tests
+passing as `visible-pass` and all hidden tests passing as `hidden-pass`, then
+compute bare floats `demofit_precision_raw`, `demofit_precision_filtered`, and
+`filter_recall`. The consistency filter SHALL use deterministic public-derived
+input-mutation probes generated from visible examples, score candidate outputs
+against reference outputs for those probes, and only then score the accepted
+candidate set against hidden tests. Hidden-test labels SHALL NOT be used to
+construct the filter. If the visible-pass candidate pool has no hidden-failing
+headroom, the runner SHALL report `complete: offarc_no_headroom_<reason>`.
+
+The terminal artifact SHALL write
+`results/experiment_4093_offarc_demofit_precision_transfer.json` with
+`honest_verdict`, `demofit_precision_raw`, `demofit_precision_filtered`,
+`filter_recall`, bare bool `primitive_is_domain_general`, `n_tasks_scored`,
+`n_codex_calls`, `random_seed`, `reproducibility_checksum`,
+`inference_substrate=verifier_ensemble_against_cached_candidates`, the checked
+preconditions, and enough count/source metadata to reproduce the conditional
+precision denominators.
+
+### SCENARIO-VERIFY-4093: Cached Demo-Fit Precision And Mutation Filter Are Measured
+
+Given the Exp 4068 candidate pool or its stable checkpoint is readable and the
+sandbox primitive imports, when Exp 4093 runs, then it writes
+`results/experiment_4093_offarc_demofit_precision_transfer.json` with
+`n_codex_calls=0`, candidate-level raw demo-fit precision over visible-pass
+rows, mutation-agreement filtered precision and recall over the same cached
+pool, `primitive_is_domain_general` derived from the measured values, and an
+honest terminal verdict that states whether the filter raises precision or
+whether the cached pool lacks visible-pass/hidden-fail headroom.
+
 ### REQ-VERIFY-4051: GAP-4 Registry And Gaps Hygiene Re-Eval
 
 The repository SHALL provide Exp 4051 at
