@@ -1,0 +1,233 @@
+{
+  "activated_milestone": "2026.06.378",
+  "active_milestone_confirmed": "2026.06.378",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "arc_modules_importable": true,
+  "archived_milestone": "2026.06.377",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4076_archive_v376_activate_v377.json",
+      "experiment_id": "4076",
+      "sha256": "724201476883c2f6eb5df03a91cde06c4ac31ca77f376631ed5a84f2c2a0553d"
+    },
+    {
+      "deliverable": "results/experiment_4077_verifier_reward_rft_corpus_build.json",
+      "experiment_id": "4077",
+      "sha256": "d21c303b782ec745841702577e239c6b6cd2a13c0534bfe2af8321581ab9d330"
+    },
+    {
+      "deliverable": "results/experiment_4078_verifier_reward_rft_train_launch.json",
+      "experiment_id": "4078",
+      "sha256": "92536ed5194005e61892d8a09af0cf886a5e95df8a9140a3500f9cfd86e9a607"
+    },
+    {
+      "deliverable": "results/experiment_4079_verifier_reward_rft_eval_collect.json",
+      "experiment_id": "4079",
+      "sha256": "d0fca58e1f5ccec597d5e19e2bc2eabbd43bdd7b04f9fce5dc6824a6099b2567"
+    },
+    {
+      "deliverable": "results/experiment_4080_sudoku_rft_positive_control.json",
+      "experiment_id": "4080",
+      "sha256": "eac16d6a3addd37acde2fae79ca5b4e5030938f6eaaa1b4a23ea0b9a6856aaa8"
+    },
+    {
+      "deliverable": "results/experiment_4081_sota_ingestion_verifier_as_reward_receipt.json",
+      "experiment_id": "4081",
+      "sha256": "4acc0de7ccf53d1f6af88f61a7b85d006f7c0057415ad073fed11d425bdd834e"
+    },
+    {
+      "deliverable": "results/experiment_4082_ninth_game_explore_first.json",
+      "experiment_id": "4082",
+      "sha256": "34872fecc73570dbd2b3008d8db83b9a2a9296504e029e11373f650a0a52bd44"
+    },
+    {
+      "deliverable": "results/experiment_4083_verifier_registry_gaps_hygiene.json",
+      "experiment_id": "4083",
+      "sha256": "2442f8a36eedd8670defadb99f8636e3846369d849a30623cf3c71aad1c88f8d"
+    },
+    {
+      "deliverable": "results/experiment_4084_hardware_continuity.json",
+      "experiment_id": "4084",
+      "sha256": "db50b941fa585a749de87e453afedd1420a6a08eb0316339b29c65d90d014c42"
+    },
+    {
+      "deliverable": "results/experiment_4085_capstone_v377.json",
+      "experiment_id": "4085",
+      "sha256": "b0fc2e6ec3a3a79c7a8eeeb093f8a2a5ca4e45f2523ab189929a04acb496fc7a"
+    }
+  ],
+  "duration_s": 13.994049,
+  "exclusion_manifest_parses": true,
+  "experiment_id": "exp4086",
+  "field_principles": {
+    "activated_milestone": "Confirms .378 is live so the precision-attack pivot tasks resolve.",
+    "active_milestone_confirmed": "STR -- the active milestone string the roadmap reports; the conductor must agree .378 is active before the precision-attack tasks resolve.",
+    "arc_modules_importable": "BARE BOOL -- the 4 agentic ARC modules import so .378 can execute them.",
+    "archived_milestone": "Provenance -- which milestone was archived (2026.06.377).",
+    "duration_s": "Positive bare wall-clock; aggregation is fast but never zero.",
+    "exclusion_manifest_parses": "BARE BOOL -- the manifest still loads under yaml.safe_load.",
+    "flagged_count": "BARE INT -- number of .377 artifacts carrying flagged_adversarial (4077/4078/4080/4083 -> 4).",
+    "honest_verdict": "Terminal-prefix verdict + aggregation substrate; no live compute markers.",
+    "inference_substrate": "Declares aggregation only, preventing live-inference duration false positives.",
+    "milestone_377_closestate": "DICT -- the next (.378) planner reads this as ground truth. It MUST record that .377's verifier-as-reward PIVOT is BLOCKED at the Phase-0 verifier-precision gate (certification precision 0.6818 < 0.85 floor at recall 1.0 -> the RFT-CORRECT corpus is poisoned, so the train never ran on a clean corpus): exp4077 blocked_precision_gate_unmet -> exp4078 corpora_missing -> exp4079 gate_check_failed (NO held-out ARC RFT eval). The Sudoku positive control (exp4080) is flagged_adversarial -> skipped, so the pipeline-sanity check is untrustworthy. 4 of 10 artifacts (4077/4078/4080/4083) are flagged-and-skipped. ACCURACY holds at 9 games (exp4082 ninth game solved clean); SOTA map banked (exp4081); GateMate flash blocked, PolarFire CPU dispatch ok, KV260 terminal. An honest BLOCKED is a complete milestone, not a failure -- .378 attacks the precision constraint offline-first.",
+    "pretest_suite_green": "BARE BOOL -- a red OR ModuleNotFoundError-collection-error pre-test gate cascade-SKIPs the whole milestone; this is the 2026-06-11 orphaned-test poison pattern we quarantine.",
+    "quarantined_tests": "List of quarantined test file paths and failing/collection-error test ids.",
+    "research_complete_yaml_parses": "BARE BOOL -- the colon-poison guard; the file still loads.",
+    "total_games_solved": "BARE INT -- the monotonic ARC-AGI-3 solved-game count; 9 (ninth game solved)."
+  },
+  "flagged_count": 4,
+  "honest_verdict": "success: archived_v377_v378_active_pivot_blocked_precision_gate_unmet_0.6818_lt_0.85_4_flagged_skipped_no_arc_rft_eval_ninth_game_solved_games9_sudoku_control_flagged_skipped_kv260_terminal_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone_377_closestate": {
+    "accuracy": {
+      "first_solve_at_action": 4,
+      "monotonic_no_regression": true,
+      "ninth_game": "ft09-0d8bbf25",
+      "ninth_game_measured": true,
+      "ninth_game_solved": true,
+      "outcome": "ninth_game_solved_games9_clean",
+      "real_env_confirmed": true,
+      "total_games_solved": 9
+    },
+    "capstone_v377_verdict": "complete: capstone_v377_pivot_blocked_no_arc_rft_eval_sudoku_flagged_skipped_games9_flagged_skipped4",
+    "flagged_count": 4,
+    "flagged_skipped": {
+      "count": 4,
+      "experiment_ids": [
+        "4077",
+        "4078",
+        "4080",
+        "4083"
+      ],
+      "reason": "flagged_adversarial (DURATION_TOO_SHORT fabrication) -> skipped from aggregation",
+      "skipped": [
+        {
+          "experiment_id": "4077",
+          "flagged_adversarial": true,
+          "verdict": "blocked_precision_gate_unmet_0.6818_1.0000"
+        },
+        {
+          "experiment_id": "4078",
+          "flagged_adversarial": true,
+          "verdict": "blocked_exp4077_corpora_missing"
+        },
+        {
+          "experiment_id": "4080",
+          "flagged_adversarial": true,
+          "verdict": "complete: sudoku_positive_control_rft_ge_sft_reproduced"
+        },
+        {
+          "experiment_id": "4083",
+          "flagged_adversarial": true,
+          "verdict": "complete: gap4_arc1_reproduced_True_safety_gate_regression_True_pivot_verifier_as_reward_rft_blocked"
+        }
+      ]
+    },
+    "hardware": {
+      "gatemate_step": "gatemate_existing_n16_bitstream_flash_blocked_returncode_1",
+      "included": true,
+      "kv260_terminal": true,
+      "per_board_reachability": {
+        "gatemate": true,
+        "kv260": true,
+        "polarfire": true
+      },
+      "per_board_terminal_state": {
+        "gatemate": "reachable_n16_bitstream_flash_blocked",
+        "kv260": "opportunistic_terminal_confirmed_ssh_only",
+        "polarfire": "reachable_hash_verified_cpu_dispatch_recorded"
+      },
+      "polarfire_step": "polarfire_hash_verified_cpu_dispatch_succeeded",
+      "verdict": "complete: hardware_continuity_gatemate_gatemate_existing_n16_bitstream_flash_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only"
+    },
+    "headline": ".377's verifier-as-reward PIVOT is BLOCKED at the Phase-0 verifier-precision gate, NOT refuted: exp4077 measured certification precision 0.6818 (recall 1.0) below the 0.85 floor, so the RFT-CORRECT corpus is poisoned and the train never ran on a clean corpus (exp4078 corpora_missing -> exp4079 gate_check_failed: no held-out ARC RFT eval). The Sudoku positive control (exp4080) is flagged_adversarial -> skipped, so the pipeline-sanity check is untrustworthy. 4 of 10 artifacts are flagged-and-skipped. ACCURACY holds at 9 games (exp4082 solved the ninth, ft09-0d8bbf25 at action 4). SOTA map banked (exp4081, 8 methods). GateMate flash blocked, PolarFire CPU dispatch ok, KV260 terminal. An honest BLOCKED is a complete milestone -- .378 attacks the precision constraint offline-first before re-attempting any RFT train.",
+    "per_task_conductor_result": {
+      "exp4076-archive-v376-activate-v377": "OK",
+      "exp4077-verifier-reward-rft-corpus-build": "FLAGGED_precision_gate_unmet_0.6818_corpus_poisoned",
+      "exp4078-verifier-reward-rft-train-launch": "FLAGGED_blocked_exp4077_corpora_missing",
+      "exp4079-verifier-reward-rft-eval-collect": "BLOCKED_gate_check_failed_no_arc_rft_eval",
+      "exp4080-sudoku-rft-beachhead-positive-control": "FLAGGED_sudoku_control_duration_too_short_skipped",
+      "exp4081-sota-ingestion-verifier-as-reward": "OK_sota_verifier_as_reward_mapped",
+      "exp4082-ninth-game-explore-first": "OK_ninth_game_solved_games9",
+      "exp4083-verifier-registry-and-gaps-hygiene": "FLAGGED_gap4_reproduced_but_duration_too_short_skipped",
+      "exp4084-hardware-continuity-gatemate-polarfire": "OK_gatemate_flash_blocked_polarfire_ok_kv260_terminal",
+      "exp4085-capstone-v377": "OK_pivot_blocked"
+    },
+    "per_task_status": {
+      "exp4076-archive-v376-activate-v377": "OK",
+      "exp4077-verifier-reward-rft-corpus-build": "FLAGGED",
+      "exp4078-verifier-reward-rft-train-launch": "FLAGGED",
+      "exp4079-verifier-reward-rft-eval-collect": "BLOCKED",
+      "exp4080-sudoku-rft-beachhead-positive-control": "FLAGGED",
+      "exp4081-sota-ingestion-verifier-as-reward": "OK",
+      "exp4082-ninth-game-explore-first": "OK",
+      "exp4083-verifier-registry-and-gaps-hygiene": "FLAGGED",
+      "exp4084-hardware-continuity-gatemate-polarfire": "OK",
+      "exp4085-capstone-v377": "OK"
+    },
+    "pivot": {
+      "blocked": true,
+      "blocked_at_layer": "phase0_verifier_precision_gate",
+      "cascade": "exp4077 blocked_precision_gate_unmet -> exp4078 blocked_exp4077_corpora_missing -> exp4079 blocked_gate_check_failed (no held-out ARC RFT eval)",
+      "certification_precision": 0.6818,
+      "certification_recall": 1.0,
+      "corpus_poisoned": true,
+      "corpus_verdict": "blocked_precision_gate_unmet_0.6818_1.0000",
+      "eval_verdict": "blocked_gate_check_failed",
+      "outcome": "pivot_blocked_precision_gate_unmet_0.6818_lt_0.85",
+      "precision_gate_passed": false,
+      "precision_gate_recall_floor": 0.2,
+      "precision_gate_threshold": 0.85,
+      "question": "did verifier-certified RFT beat gold-SFT held-out (the verifier-as-reward gate)?",
+      "rft_beats_cold_ci_excludes_zero": false,
+      "rft_beats_gold_sft": false,
+      "rft_eval_measured": false
+    },
+    "pivot_attempted": "verifier_as_reward_rft",
+    "pivot_blocked": true,
+    "pivot_decisive": false,
+    "sota_ingestion": {
+      "included": true,
+      "methods_mapped_count": 8,
+      "outcome": "verifier_as_reward_sota_mapped_for_v378_roadmap",
+      "verdict": "complete: sota_ingestion_verifier_as_reward_mapped"
+    },
+    "status_counts": {
+      "BLOCKED": 1,
+      "FAIL": 0,
+      "FLAGGED": 4,
+      "MISSING": 0,
+      "OK": 5
+    },
+    "sudoku_control": {
+      "flagged_adversarial": true,
+      "measured": true,
+      "outcome": "sudoku_control_flagged_skipped_pipeline_sanity_untrustworthy",
+      "reproduces_beachhead": false,
+      "skipped_from_aggregation": true,
+      "trustworthy": false,
+      "verdict": "complete: sudoku_positive_control_rft_ge_sft_reproduced"
+    },
+    "total_games_solved": 9
+  },
+  "n_tasks_archived": 10,
+  "preconditions_checked": {
+    "active_milestone": "2026.06.378",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "exclusion_manifest_exists": true,
+    "exclusion_manifest_parsed": true,
+    "research_complete_yaml_exists": true,
+    "research_complete_yaml_parsed_after": true,
+    "research_complete_yaml_parsed_before": true
+  },
+  "pretest_suite_green": true,
+  "quarantined_tests": [],
+  "random_seed": 4086,
+  "reproducibility_checksum": "b6fc7ad4888b857b210d0f5b0d72e43e81c6841537cd86a63c1cc418f9a0c384",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "unchanged",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v377_to_v378_4086.v1",
+  "task_id": "exp4086-archive-v377-activate-v378",
+  "total_games_solved": 9
+}
