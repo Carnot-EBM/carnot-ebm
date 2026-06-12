@@ -12025,6 +12025,66 @@ verdict rather than a gate wrapper.
 
 ---
 
+## REQ-LEARN-4107: Native nano-trm Sudoku Mechanism Smoke
+
+**Given** the `.380` verifier-as-reward pivot depends on the native
+`olivkoch/nano-trm` training mechanism rather than LoRA, trl, or a synthetic
+checkpoint, Exp 4107 SHALL first check that `uv` is on PATH, that
+`nano-trm/src/nn/train.py` exists, that `torch.cuda.is_available()` is true,
+and that `results/trm_runs/` exists as a persistent writable save parent under
+the repository. If `uv` or the native trainer is missing, it SHALL stop with
+`honest_verdict="blocked_nanotrm_or_uv_missing"`. If CUDA is unavailable, it
+SHALL stop with `honest_verdict="blocked_cuda_unavailable"`. A missing
+transient `/tmp` save path SHALL NOT be accepted as a mechanism smoke.
+
+**When** preconditions pass, Exp 4107 SHALL run the native command from the
+`nano-trm/` directory using Hydra experiment `trm_sudoku_4x4` and a persistent
+`save_dir` under `results/trm_runs/`. If the configured
+`nano-trm/data/sudoku_4x4_small` dataset is absent, the documented Sudoku data
+builder SHALL be used before training. The trainer run SHALL print progress
+while it runs and SHALL produce a real `.ckpt` checkpoint that can be reloaded
+with torch.
+
+**Then** the terminal artifact SHALL be written to
+`results/experiment_4107_nanotrm_mechanism_smoke.json` and SHALL contain the
+required fields `honest_verdict`, `nanotrm_trainer_checkpoint_ok`,
+`exact_accuracy`, `checkpoint_path`, `duration_s`, `preconditions_checked`,
+and `random_seed`. `nanotrm_trainer_checkpoint_ok` SHALL be a bare bool that is
+true only when nano-trm produced a checkpoint and torch reloaded it.
+`exact_accuracy` SHALL come from a real solve metric such as
+`val/exact_accuracy` or `train/exact_accuracy`; `val/q_halt_accuracy alone SHALL NOT satisfy`
+the contract. The acceptance gate is passed only when
+`nanotrm_trainer_checkpoint_ok == true`, a real exact accuracy is reported, and
+`duration_s > 60`.
+
+### SCENARIO-LEARN-4107: Reloadable Checkpoint And Real Exact Metric Clear The Gate
+
+**Given** the native nano-trm Sudoku trainer writes `checkpoints/last.ckpt` and
+CSV metrics containing `val/exact_accuracy`
+**When** Exp 4107 reloads the checkpoint and builds the artifact
+**Then** it reports `nanotrm_trainer_checkpoint_ok=true`, records the real
+exact accuracy rather than `q_halt_accuracy`, preserves the persistent
+checkpoint path, and marks the acceptance gate as passed only if the wall-clock
+duration is greater than 60 seconds.
+
+### SCENARIO-LEARN-4107-BLOCKED: Missing Runtime Resources Stop Honestly
+
+**Given** `uv`, `nano-trm/src/nn/train.py`, CUDA, or the persistent save parent
+is unavailable
+**When** Exp 4107 starts
+**Then** it writes the corresponding `blocked_<resource>` honest verdict,
+records every precondition already checked, leaves
+`nanotrm_trainer_checkpoint_ok=false`, and does not fabricate a checkpoint or
+exact-accuracy metric.
+
+## Implementation Status (REQ-LEARN-4107)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4107 | Implemented (python/carnot/experiment_4107_nanotrm_mechanism_smoke.py, Exp 4107) | Implemented (tests/python/test_experiment_4107_nanotrm_mechanism_smoke.py) |
+
+---
+
 ## REQ-LEARN-4088: Trustworthy ARC Verifier-Reward RFT Corpus Build
 
 **Given** Exp 4087 has already produced
