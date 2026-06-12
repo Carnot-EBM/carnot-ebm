@@ -19689,3 +19689,56 @@ ops/status/traceability/conductor files unchanged.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-4076 | Implemented (`python/carnot/reporting/archive_v376_activate_v377_4076.py`, `scripts/experiments/exp4076_archive_v376_activate_v377.py`) | Implemented (`tests/python/test_experiment_4076_archive_v376_activate_v377.py`) |
+
+### REQ-REPORT-4081: SOTA Ingestion Mapping For The Verifier-As-Reward Pivot
+
+The Exp 4081 workflow SHALL emit a dated mapping note for the `.377`
+verifier-as-reward pivot, covering verifier-certified RFT, Tulu-3-style RLVR,
+the Invisible Leash latent-vs-absent diagnostic, process-reward distillation,
+and RFT/STaR/ReST self-training. The markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-verifier-as-reward-2026-06-11.md`
+and the paired machine-checkable receipt SHALL be written to
+`results/experiment_4081_sota_ingestion_verifier_as_reward_receipt.json`.
+
+Before writing the note, the workflow SHALL read the reward/distillation entries
+in `research-studying.md` and `research-references.md`, run
+`scripts/sweep_clusters.py` and `scripts/sweep_semscholar.py`, and verify the
+top five to eight method papers with low-concurrency WebSearch/WebFetch. The
+workflow SHALL NOT invoke `/deep-research`.
+
+For each mapped method, the note SHALL state what would have to change over the
+current `.377` RFT pipeline and SHALL include pitfalls or failure modes. Every
+method claim SHALL cite a real arXiv ID or URL. The note SHALL include a
+`Bottom line for the .378 roadmap` section identifying the strongest follow-on
+methods and SHALL update `research-studying.md` to mark the `.377` candidates as
+ingested. The workflow SHALL NOT update `ops/changelog.md`, `ops/status.md`,
+`_bmad/traceability.md`, or `scripts/research_conductor.py`.
+
+The receipt SHALL contain exactly the bare top-level fields `honest_verdict`,
+`methods_mapped`, `strongest_for_next_roadmap`, and `inference_substrate`.
+`honest_verdict` SHALL use a terminal prefix and, on the complete path, start
+with `complete: sota_ingestion_verifier_as_reward_mapped`. `methods_mapped`
+SHALL be a non-empty list of dicts with exactly `arxiv_id` and `one_line`; each
+`arxiv_id` SHALL be one of the WebFetch-verified primary-paper IDs, preventing
+fabricated or uncited method rows. `strongest_for_next_roadmap` SHALL be a
+non-empty list of concrete `.378` roadmap slugs. `inference_substrate` SHALL
+equal `aggregation_from_upstream_artifacts`.
+
+#### SCENARIO-REPORT-4081: Mapping Note Closes The Verifier-As-Reward Discover-To-Plan Loop
+
+**Given** the `.377` pivot has existing artifacts for the RFT corpus gate, RFT
+train launch, and Sudoku positive control, plus local scoping notes showing the
+process-vs-outcome risk
+**When** the Exp 4081 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON receipt, maps the
+verified method papers to implementation work and failure modes over the
+current RFT pipeline, updates `research-studying.md` with the ingested `.377`
+candidate set, flags the strongest `.378` follow-ups, declares
+`aggregation_from_upstream_artifacts`, and leaves conductor and reconciliation
+files untouched.
+
+## Implementation Status (REQ-REPORT-4081)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4081 | Implemented (`python/carnot/sota_ingestion_verifier_as_reward_4081.py`, `docs/research-notes/sota-ingestion-verifier-as-reward-2026-06-11.md`) | Implemented (`tests/python/test_sota_ingestion_verifier_as_reward_4081.py`) |
