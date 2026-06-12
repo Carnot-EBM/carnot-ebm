@@ -348,6 +348,8 @@ closed via retirement (PIMI sparse adjacency final no-improvement, retire
 verdict). RETRO-MANIFEST-FULL-SCOPE formally escalated to human intervention
 required (11th consecutive milestone unapplied). Three retros open entering .71.
 
+> *Retraction (2026-06-12): the **8% → 80% (+72pp)** IterativeSelfRepair figure (Exps 905/906) is retracted — no clean artifact supports it and it is forbidden by `ops/north-star.md` §1. The defensible code-repair results are exp1999 (Ising-guided fuzzing, 0.66 → 0.84, +18pp) and exp2090 (CRANE, 0.70 → 0.85, +15pp).*
+
 Milestone 2026.04.71 (the 77th) extended the record to **928 experiments**,
 but met only 2 of 12 success criteria in 0.82 wall minutes. The dominant
 failure mode was the conductor's rerun-discipline gate rejecting 9 of 11
@@ -1514,7 +1516,11 @@ Milestone 2026.04.84 was designed to confirm Carnot's value on SOTA instruction-
 - **HumanEval:** pass@1 **0% → 36%** after Carnot correction. This is the first measured positive delta on HumanEval with a SOTA instruction-tuned model in the project's history. The cascade and verifier pipeline are adding genuine value on code generation tasks.
 - **GSM8K:** baseline 34%, corrected 34% (net 0.0). VeriCoT extraction TP=0 on math reasoning — the extraction pipeline cannot yet reliably pull arithmetic claims from 35B model chain-of-thought. Code tasks are the current signal.
 
+> *Retraction (2026-06-12): the **0% → 36%** HumanEval figure (Exp 1079) is retracted — the source artifact is flagged CRITICAL by `adversarial_verify.py` (TAUTOLOGY; missing `model_specs`), a 35B scoring 0% baseline reads as a broken harness not a result, and `ops/north-star.md` §1 forbids citing it. No clean artifact supports a 35B HumanEval delta.*
+
 This result closes a long-standing gap: prior HumanEval improvements (+3.0pp with Gemma 4 4B on 164 problems, Exp 227; +72pp IterativeSelfRepair with execute-feedback-retry, Exp 905) used smaller or different models. The 35B result is the first confirmation that the Carnot pipeline adds value at SOTA model scale, not just on smaller checkpoints.
+
+> *Retraction (2026-06-12): the **+72pp** (Exp 905) and the **35B 0% → 36%** framing in this paragraph are retracted (see the two notes above); `ops/north-star.md` §1 also demotes the +3.0pp (Exp 227) framing. The surviving defensible code results are exp1999 (+18pp) and exp2090 (CRANE, +15pp).*
 
 **Step-level PRM dataset (Exp 1084):** 7,349 MCTS-labeled step examples generated from the full 6,548-pair FoVer corpus. Target was 2,000; the generation ran to completion at 3.7x the target. ThinkPRM retrained on a 300-sample subset (AUROC 0.99 → 0.79) — the AUROC drop indicates the 300-sample retrain slice was too small; the full 7,349-example dataset needs a properly sized retrain. PRM data volume is confirmed; retrain quality is the open item.
 
