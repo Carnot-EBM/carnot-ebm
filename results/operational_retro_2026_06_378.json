@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.378",
+  "generated_at": "2026-06-12T13:16:27Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.06.378 recorded NO experiment commits since activation: the authoritative TIMING DATA is empty, so total_wall_time_minutes=0, experiments_completed=0, and compute_bound_experiments_count=0. This is consistent with an UNGATED capstone/aggregation milestone, which reads upstream artifacts rather than producing new experiment commits. With zero compute-bound tasks, both RTX 3090s correctly sit idle at 0% (gpu_idle_on_compute_bound_tasks=null, i.e. N/A) — per the GPU IDLE INTERPRETATION RULE that is expected behaviour, not a bottleneck. No per-experiment wall-time or GPU-efficiency analysis is possible from this milestone's data.",
+  "bottlenecks_identified": [
+    "No operational timing signal: zero experiment commits since activation of 2026.06.378, so per-experiment wall-time and slowest-experiment analysis cannot be performed from commit data this milestone.",
+    "Observability gap for aggregation milestones: capstone/aggregation work (reading upstream artifacts, inference_substrate=aggregation_from_upstream_artifacts) emits no experiment-commit timing data, making such milestones invisible (total_wall_time_minutes=0) to the operational retrospective's per-experiment analysis.",
+    "Ambiguity at 0 commits: an empty timing block cannot, on its own, distinguish an aggregation milestone (expected to produce 0 experiment commits) from an interrupted or stalled run (a Checkpoint commit preserving interrupted work was present in recent history). Both look identical to the retro."
+  ],
+  "improvements_suggested": [
+    "Wire aggregation-artifact wall-time into the timing harness: detect results/*capstone*.json and results/operational_retro_*.json writes and record their elapsed time, so capstone milestones report a non-zero total_wall_time_minutes instead of looking empty.",
+    "Classify each milestone by inference_substrate at activation (aggregation_from_upstream_artifacts vs live_llm_inference vs verifier_ensemble_against_cached_candidates). The retro can then skip GPU-efficiency analysis for aggregation milestones and stop emitting an ambiguous null.",
+    "Emit a 0-experiment-commit disambiguation signal at retro time: have the generator label whether 0 commits is aggregation-expected or interrupted-run (cross-check for a 'Checkpoint: preserve uncommitted work' commit), so an interrupted run is not silently read as a clean capstone.",
+    "GPU idle is NOT flagged as a bottleneck: gpu_idle_on_compute_bound_tasks is null because there are no compute-bound tasks; DualGPURunner enforcement is inapplicable when no model is loaded."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Record aggregation/capstone artifact write-time in the timing harness so capstone milestones report non-zero total_wall_time_minutes and become legible to the operational retro.",
+    "Tag milestones by inference_substrate at activation so the retro selects the correct analysis (GPU efficiency for live-inference milestones vs upstream-provenance for aggregation milestones) instead of reporting an ambiguous null.",
+    "Add an aggregation-expected vs interrupted-run disambiguation to the retro generator (key off the presence of a Checkpoint/interrupted commit) so a stalled milestone is never mistaken for a clean capstone with 0 commits."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "With no per-experiment timing data, the honest operational lesson is about observability, not speed: there is no measured wall-time to optimize this milestone, so estimated_time_savings_pct is 0. The real gap is that an aggregation/capstone milestone and an interrupted run are currently indistinguishable when both yield an empty timing block — making aggregation milestones legible to the retro is the actionable improvement, not any compute speedup."
+}
