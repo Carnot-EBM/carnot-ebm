@@ -224,8 +224,8 @@ tasks:
           consecutive no-usable-data windows -> auto-retire/re-scope, NOT infinite accumulate).
       PRIMARY verdict = headroom rung (Qwen3.5-0.8B); MiniCPM5-1B = robustness check.
       REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix), per_base (dict base ->
-      {cold_rate, A_rft_correct_rate, B_rft_ablation_rate, C_gold_sft_rate, A_minus_B_ci95,
-      A_minus_C_ci95, A_minus_cold_ci95, floored:bool}; principle: the A-vs-B CI is the de-confound
+      {{cold_rate, A_rft_correct_rate, B_rft_ablation_rate, C_gold_sft_rate, A_minus_B_ci95,
+      A_minus_C_ci95, A_minus_cold_ci95, floored:bool}}; principle: the A-vs-B CI is the de-confound
       -- it isolates the verifier's LABEL from codex's intelligence), verifier_label_carries_signal
       (bool; principle: THE headline -- A>B with CI-excl-0 on the primary base), codex_rate (float),
       primary_base + robustness_holds (str/bool), heldout_n (int), random_seed +
