@@ -1,80 +1,58 @@
-# Pre-staged roadmap for milestone 2026.06.377 (outer-loop, Claude Opus 4.8, 2026-06-11).
+# Pre-staged roadmap for milestone 2026.06.378 (planning agent, Claude Opus 4.8, 2026-06-12).
 #
-# PROVENANCE: THE PIVOT. Operator decision 2026-06-11 ("it sounds like we should take the pivot
-# seriously") after the overnight .371-.375 synthesis (4-agent evidence sweep). Priority-shifting,
-# same class as the 2026-06-10 Deep-Think round that produced .372. Per the Pre-Staged Roadmap
-# Convention + operator-trust directive, the outer-loop authors it to guarantee the pivot lands
-# clean rather than be diluted by the planner's documented carry-forward bias (which re-ran the
-# frontier-three .373->.376). Full directive: ops/known-issues.md TOP PRIORITY 2026-06-11.
+# PROVENANCE: the .377 verifier-as-reward pivot BLOCKED on one number and then FABRICATED its
+# compute arms. Capstone exp4085: `pivot_blocked_no_arc_rft_eval_sudoku_flagged_skipped_games9`.
+# Two distinct problems, only one scientific:
+#   (1) REAL binding constraint: the execution verifier's outcome-certification precision
+#       P(test-gold | demo-perfect) = 0.6818 < the 0.85 corpus-trust gate (process-verifier !=
+#       outcome-certifier; the FoVer 0.9131 AUROC is per-STEP validity, ~56% trace-level outcome).
+#       Noisy RLVR labels measurably degrade training (arXiv:2603.16140) -> the gate was RIGHT.
+#       The unanswered question: CAN 0.68 be raised to >=0.85?
+#   (2) RECURRING execution failure: exp4077/4078/4080 ran in 4-6s while declaring live codex/GPU
+#       LoRA -> fabrication (incident_powering_run_background_mechanism_fails: background-detach does
+#       not survive the iteration boundary). Fix = single-synchronous-resume-accumulate + per-epoch
+#       progress prints + a real duration floor.
 #
-# THE METRIC FLIPS: from "does the verifier SELECT better at inference" (answered across .371-.375:
-# directional-not-significant, the selection moat is a commodity -- DONE, do not re-grind) to
-# "does the verifier-as-REWARD TRAIN a better model." The verifier's durable value is as an
-# un-hallucinating ground-truth signal that GENERATES training data (Deep-Think Q3 + the standing
-# Sudoku +1.1% RFT signal -- HONEST: verdict `no_lift`, +1.12% on a ~5% base, "beat gold-SFT" only
-# because the gold control was negative/broken; SUGGESTIVE, not a decision-grade beachhead -- this
-# is a BET on the direction, gated on the .377 de-confound below). This unifies three threads in ONE
-# experiment:
-# (a) verifier-as-reward (the pivot), (b) decentralization-AS-distillation (the Invisible-Leash
-# question answered as a TRAINING outcome), (c) ARC-induction progress (the north star).
+# THE INVERSION (.378's core move): answer the precision question with the CHEAP, GPU-FREE,
+# FABRICATION-IMMUNE offline experiment FIRST (Phase A), and GATE the expensive LoRA training chain
+# on it (Phase B). The precision rescue extends python/carnot/agentic/gap5_cross_example_selector.py
+# (exp4010, which already computes P(gold|consistency-selected) by offline-replaying the cached
+# GAP-4 program pools) with a STACK of cheap model-free filters: cross-example consistency +
+# augmentation-invariance (BARC/ARChitects SOTA, arXiv:2411.02272 -- a correct ARC rule is invariant
+# under color-permutation/D4 symmetry of the demos; an overfit one is not) + k-of-n independent-
+# induction agreement + graded min-Hamming. Sweep the precision-recall frontier; the gate is whether
+# any stack reaches precision >=0.85 at recall >=0.20.
+#   - If YES: the clean 3-arm RFT (RFT-CORRECT vs RFT-ABLATION vs gold-SFT) runs on a TRUSTWORTHY
+#     corpus with the fabrication fixes baked in (synchronous, progress prints, methodology, pass@1
+#     AND pass@k per the Invisible Leash arXiv:2507.14843). First decision-grade verifier-as-reward.
+#   - If NO: Phase B SKIPS (gated_on), and the milestone reports the HONEST decision-grade bound the
+#     .377 fabrications obscured (verifier-as-reward is precision-bounded on ARC; forward path =
+#     step-level process-reward or outcome-verifier pairing). Either branch is decision-grade.
 #
-# SUBSTRATE (operator decision 2026-06-11 -- corrects the outer-loop's initial gemma-4-12B default):
-# the mechanism test (does RFT >= SFT from the verifier's LABEL-FREE signal?) trains a SMALL
-# TRAINABLE-base LADDER (operator decision 2026-06-11; 2-3 cached HF safetensors bases, NOT GGUFs):
-#   - HEADROOM rung (PRIMARY clean-signal): Qwen/Qwen3.5-0.8B -- current-gen, above the capacity
-#     floor, but less aggressively post-trained -> the MOST room to show a clean RFT-beats-SFT gain.
-#   - STRONG rung (robustness): openbmb/MiniCPM5-1B -- the current 1B-class SOTA (Llama-arch, so
-#     peft-friendly); tests whether the mechanism holds even on an ALREADY-strong base. NB its
-#     SOTA-ness comes from aggressive On-Policy-Distillation post-training, which LIMITS its headroom
-#     -- which is exactly WHY "SOTA on leaderboards" is the wrong sole criterion for a headroom test.
-#   - optional 3rd: Qwen/Qwen2.5-0.5B (max-headroom) or Qwen/Qwen3.5-2B (size-trend).
-# Running the RFT-vs-SFT contrast ACROSS the ladder makes the mechanism claim robust (not a single-
-# model artifact); a 1B LoRA finetune is cheap, so the ladder adds little wall-clock. trl 1.6.0 is
-# installed (SFTTrainer for the SFT arm, GRPOTrainer for the verifier-reward RFT arm) + peft 0.19.1.
-# Why small (vs the initial gemma-4-12B default): (1) THROUGHPUT -- a sub-1B LoRA finetune+eval fits
-# ONE window, dissolving the accumulate-across-windows pain that wrecked the .374-.376 runs;
-# (2) HEADROOM -- the beachhead prescribes a "0.5-1B headroom base"; (3) FORMAT -- LoRA trains HF
-# weights, not GGUF; (4) SOVEREIGNTY -- runs anywhere. The gemma-4-12B 0.26->0.57 decentralization-
-# MAGNITUDE arm is DECOUPLED as a .378 FOLLOW-ON, after the mechanism validates on the ladder.
-# Capacity-floor guard: if the headroom rung floors at 0 on ARC-induction, the strong rung
-# (MiniCPM5-1B) is the fallback, and/or the test falls back to the headroom domain (Sudoku control +
-# a tractable ARC subset) -- a floored null is uninformative.
+# KEPT (north-star + operator standing priorities): 10th ARC game (monotonic accuracy, exp4092);
+# off-ARC demo-fit PRECISION transfer (operator TOP PRIORITY, reframed from the saturated
+# selection-vs-vote to the precision question, fabrication-immune, exp4093); SOTA ingestion;
+# hardware continuity; registry hygiene; capstone.
 #
-# HEADLINE EXPERIMENT (.377): verifier-certified RFT vs gold-SFT, held-out, on ARC-induction +
-# a Sudoku positive control. RFT trains on DEMO-certified traces (the verifier's label-free signal,
-# available at train time without test labels); SFT trains on TEST-gold traces (oracle labels).
-# The claim under test: training on the verifier's cheap label-free signal does as well as / beats
-# training on oracle labels -> you can self-improve WITHOUT oracle labels. Gate: RFT held-out gain
-# over cold base with CI excl 0, AND RFT >= gold-SFT.
+# ROUTING: Codex-Default v2 (gemini BANNED). Phase A + off-ARC precision are OFFLINE (no GPU/codex
+# generation -> fabrication-immune). Phase B is live (real codex gen + real LoRA train, synchronous-
+# accumulate per the resume-not-restart rule). exp4086 archive = claude + opus + requires_claude_verified.
 #
-# DE-PRIORITIZED (preempt carry-forward churn): NO off-ARC-as-selector power grind (the execution
-# primitive's role is now to LABEL training data); NO vc33 search (a WM-fidelity wall, parked);
-# decentralization IS the distillation experiment, not a base-selection grind. KEPT: the demo-fit
-# safety-gate as the shipped Phase-1 trust product; the ARC-accuracy + persistent-memory tracks
-# (Deep-Think: move capital to distillation + search + memory).
-#
-# ROUTING: Codex-Default v2 (gemini BANNED). The RFT pipeline (corpus-build + GPU LoRA train + eval)
-# is SPLIT per the long-codex-split rule and RESUMES per the accumulate-across-milestones rule
-# (033e224d2): setsid-detached training survives the iteration boundary; checkpoint; report
-# accumulated progress; retire only when the full corpus/train completes AND the gate fails.
-# exp4076 archive = claude + opus + requires_claude_verified.
-#
-# OPERATOR REVIEW: the pivot is operator-endorsed; this roadmap operationalizes it. A north-star
-# headline revision (verifier "selects" -> verifier "trains") is drafted separately as a proposal
-# (ops/north-star-pivot-revision-proposal.md) for operator merge. Adjust freely.
-milestone: "2026.06.377"
-milestone_title: "TAKE THE PIVOT: verifier-as-REWARD, not verifier-as-SELECTOR. The .371-.375 evidence closed the selection question (the moat is a commodity; directional-not-significant off-ARC; the frontier-as-selector grind was spinning). The verifier's durable value is HYPOTHESIZED to be as an un-hallucinating REWARD that GENERATES training data (Deep-Think Q3; the Sudoku +1.1% signal is SUGGESTIVE-not-decision-grade, so .377 is a BET being tested, not a confirmed beachhead extended). HEADLINE (DE-CONFOUNDED per the 2026-06-12 review): a 3-arm test -- RFT-CORRECT (verifier-certified demo-perfect) vs RFT-ABLATION (verifier-label ablation: NOT-demo-perfect, same codex generator, N-matched) vs gold-SFT (oracle labels), held-out, on ARC-induction across a small-model LADDER. The LOAD-BEARING contrast is RFT-CORRECT vs RFT-ABLATION: does the VERIFIER'S LABEL carry training signal, or is 'RFT helps' just codex-distillation? (a Sudoku pipeline-sanity + a Phase-0 verifier-precision gate guard it) across a small-model LADDER (Qwen3.5-0.8B headroom rung + MiniCPM5-1B strong/SOTA rung, optional Qwen2.5-0.5B/3.5-2B -- run the contrast across bases so the claim is robust, not a single-model artifact; the gemma-12B sovereign-magnitude arm is a .378 follow-on)? Keep the shipped demo-fit safety-gate; keep ARC-accuracy (9th game) + memory; DROP the off-ARC-selector grind and the vc33 search. Capstone: did verifier-as-reward RFT beat gold-SFT held-out -- the pivot's first decision-grade result?"
-milestone_doc: "docs/research-notes/verifier-as-self-improvement-reward-scoping.md"
+# OPERATOR REVIEW: ops/north-star.md headline revision (verifier "selects" -> "trains") stays
+# operator-curated (draft: ops/north-star-pivot-revision-proposal.md). This roadmap operationalizes
+# the pivot; it does not edit the north star. Adjust freely.
+milestone: "2026.06.378"
+milestone_title: "ATTACK THE .377 BINDING CONSTRAINT, FABRICATION-IMMUNE-FIRST. The verifier-as-reward pivot blocked because the execution verifier certifies ARC OUTCOMES at only 0.68 precision (demo-perfect -> test-gold), below the 0.85 corpus-trust gate (process-verifier != outcome-certifier), AND the train/eval/sudoku arms FABRICATED (4-6s claiming live GPU). HEADLINE: invert .377's order -- (Phase A, exp4087) RAISE certification precision OFFLINE on cached GAP-4 pools via stacked cheap model-free filters (cross-example consistency [gap5 exists] + augmentation-invariance [BARC arXiv:2411.02272] + k-of-n induction agreement + graded min-Hamming), sweeping the precision-recall frontier for an operating point >=0.85 @ recall>=0.20 (fabrication-immune: zero GPU/codex); then (Phase B, GATED on Phase A success) the clean 3-arm RFT (RFT-CORRECT vs RFT-ABLATION vs gold-SFT) on Qwen3.5-0.8B with the fabrication fixes (SYNCHRONOUS single-window accumulate, per-epoch progress prints, methodology, pass@1 AND pass@k per the Invisible Leash). The load-bearing gate is A-vs-B: does the verifier's LABEL carry training signal, or is 'RFT helps' just codex-distillation? If precision can't be raised, Phase B skips and we report the HONEST decision-grade bound (.377 fabricated; this won't). KEEP: 10th game (monotonic accuracy), off-ARC demo-fit PRECISION transfer (operator MANDATORY), SOTA, hardware, registry, capstone. Capstone: did precision rescue reach 0.85, and did the clean RFT measure A>B -- or did we honestly bound the thesis?"
+milestone_doc: "openspec/change-proposals/research-roadmap-v378.md"
 
 tasks:
-  - id: exp4076-archive-v376-activate-v377
+  - id: exp4086-archive-v377-activate-v378
     operator_override: >
-      2026-06-11 operator-outer-loop directive (standing 2026-05-29 auto-override class 1):
-      routine milestone-transition task (archive-vN-activate-vN+1) -- false-positive scope-match
-      vs every prior archive/activate task; structurally never a doomed rerun. Aggregation +
-      infra-hardening only.
-    milestone: "2026.06.377"
-    title: "Archive .376 -> activate .377; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load and the python/carnot/agentic ARC modules import, run the smart-subset pre-test gate green, then RECORD the .376 close-state truth (did the sync-accumulate off-ARC/G3 runs finally accumulate data, or n0 again? -- this is the LAST frontier-as-selector milestone before the pivot)."
+      2026-06-12 planning-agent directive (standing 2026-05-29 auto-override class 1): routine
+      milestone-transition task (archive-vN-activate-vN+1) -- false-positive scope-match vs every
+      prior archive/activate task; structurally never a doomed rerun. Aggregation + infra-hardening only.
+    milestone: "2026.06.378"
+    title: "Archive .377 -> activate .378; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load and the python/carnot/agentic ARC modules import, run the smart-subset pre-test gate green, then RECORD the .377 close-state truth: the verifier-as-reward pivot BLOCKED at the precision gate (0.6818<0.85) and the train/eval/sudoku arms FABRICATED (flagged); the 9th game (ft09) solved clean; hardware (PolarFire dispatch OK, GateMate n16 flash blocked rc=1, KV260 terminal)."
     priority: critical
     track: infra
     max_turns: 100
@@ -83,306 +61,656 @@ tasks:
     requires_claude: true
     requires_claude_verified: true
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4076_archive_v376_activate_v377.json
+    deliverable: results/experiment_4086_archive_v377_activate_v378.json
     prompt: |
-      Archive milestone .376 and activate .377. Append a .376 record to research-complete.yaml
-      (yaml.safe_load must still parse after). Assert ops/exclusion_manifest.yaml parses and the
-      python/carnot/agentic ARC modules import. Run the smart-subset pre-test gate; if ANY test is a
-      COLLECTION ERROR (ModuleNotFoundError on a missing experiment module) OR a red failure, git mv
-      it to tests/quarantine/ and record which (the 2026-06-11 orphaned-test poison pattern). RECORD
-      the .376 close-state: per-task OK/FAIL/skip/FLAGGED; whether off-ARC (exp4068) + G3 (exp4069)
-      sync-accumulate finally reached their floors or stayed n0/underpowered; total ARC games.
-      REQUIRED ARTIFACT FIELDS: honest_verdict (MUST start complete:/success:/passed:/shipped:),
-      pretest_suite_green (bool; principle: a red/collection-error gate cascade-skips the whole
-      milestone), milestone_376_closestate (dict), inference_substrate: aggregation_from_upstream_artifacts.
+      CONTEXT: Milestone .377 (verifier-as-reward pivot) closed BLOCKED (capstone exp4085:
+      `pivot_blocked_no_arc_rft_eval_sudoku_flagged_skipped_games9_flagged_skipped4`). The precision
+      gate (exp4077) measured 0.6818<0.85 and the compute arms (exp4078 train, exp4080 sudoku)
+      fabricated. The 9th game (exp4082 ft09) solved clean. You are activating .378, which attacks the
+      precision constraint offline-first.
 
-  - id: exp4077-verifier-reward-rft-corpus-build
-    operator_override: >
-      2026-06-11 operator-ENDORSED PIVOT (ops/known-issues.md TOP PRIORITY 2026-06-11): the
-      verifier-as-reward headline. Genuinely NEW scope (training-data generation via the execution
-      verifier, NOT inference selection) -- any selector-scope-match is a false positive; this is
-      the pivot, not a rerun of the frontier-selector grind.
-    milestone: "2026.06.377"
-    title: "VERIFIER-AS-REWARD RFT -- CORPUS BUILD (THE PIVOT, part 1; DE-CONFOUNDED per the 2026-06-12 adversarial review): build THREE N-matched corpora from the SAME codex generator so the experiment isolates the VERIFIER'S LABEL, not codex-distillation. For each ARC-1/ARC-2 task in a held-IN split, codex generates k candidate `def transform(grid)` programs; the model-free execution verifier (python/carnot/agentic/arc_gap4_execution_verifier.py) labels each. (A) RFT-CORRECT corpus = verifier-certified DEMO-PERFECT programs (the verifier's label-free positive signal). (B) RFT-ABLATION corpus = the verifier-LABEL ablation: programs the verifier certifies as NOT demo-perfect (demo-failing / randomly-filtered), SAME generator, N-MATCHED and composition-matched to (A). (C) gold-SFT corpus = TEST-gold-passing programs (oracle labels), N-matched. THE LOAD-BEARING CONTRAST is (A) vs (B): same codex intelligence, the ONLY difference is whether the verifier's label is CORRECT -- if A>B the verifier's LABEL carries training signal (verifier-as-reward), if A~=B then 'RFT helps' is just codex-distillation and the verifier adds nothing (the honest null the review warned of). (A) vs (C) asks whether the label-free verifier signal matches oracle labels. PRECISION GATE (scoping-doc Phase-0, MANDATORY before trusting any train): measure the verifier's certification precision -- P(test-gold | demo-perfect) -- on a labeled held-out; if < 0.85 at recall >= 0.20 the RFT-CORRECT corpus is POISONED and the result is uninterpretable -> report blocked_precision_gate_unmet and STOP. Write the LoRA trainer for the small-model LADDER (cached HF safetensors, NOT GGUF: Qwen/Qwen3.5-0.8B headroom rung [primary], openbmb/MiniCPM5-1B strong rung; optional Qwen/Qwen2.5-0.5B or Qwen/Qwen3.5-2B) using trl 1.6.0 (SFTTrainer + GRPOTrainer) + peft LoRA, + the held-OUT eval harness. Smoke-train 2 tasks for ONE base; commit the runner."
+      EXISTING CODE TO READ FIRST: research-complete.yaml (tail), ops/exclusion_manifest.yaml,
+      results/experiment_4085_capstone_v377.json, scripts/research_conductor.py (DO NOT MODIFY -- read
+      the archive/pretest helpers only).
+
+      TASK: Archive milestone .377 and activate .378.
+
+      CONCRETE STEPS:
+        1. Append a .377 record to research-complete.yaml (assert yaml.safe_load still parses after).
+        2. Assert ops/exclusion_manifest.yaml parses and the python/carnot/agentic ARC modules import.
+        3. Run the smart-subset pre-test gate. If ANY test is a COLLECTION ERROR (ModuleNotFoundError
+           on a missing experiment module) OR a red failure, git mv it to tests/quarantine/ and record
+           which (the 2026-06-11 orphaned-test poison pattern).
+        4. RECORD the .377 close-state: per-task OK/FAIL/skip/FLAGGED; the pivot-blocked precision number
+           (0.6818); total ARC games solved (9); hardware per-board state.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict (str; MUST start complete:/success:/passed:/shipped:; principle: terminal
+          prefix lets the reconciler classify without re-running)
+        - pretest_suite_green (bare bool; principle: a red/collection-error gate cascade-skips the whole
+          milestone)
+        - milestone_377_closestate (dict; principle: the auditable truth of what .377 produced)
+        - inference_substrate: aggregation_from_upstream_artifacts (principle: declares aggregation, not
+          live compute, so the duration floor is 0)
+
+      Run: cd {project_root} && python3 scripts/experiments/exp4086_archive_v377_activate_v378.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4087-certification-precision-rescue
+    milestone: "2026.06.378"
+    prior_failures:
+      - experiment_id: exp4077-verifier-reward-rft-corpus-build
+        verdict: blocked_precision_gate_unmet_0.6818_1.0000
+        addressed_by: "exp4077 measured RAW demo-perfect precision (0.68) and stopped at the gate (and
+          fabricated, 5.6s). exp4087 STACKS cheap model-free filters (cross-example consistency [exp4010
+          gap5_cross_example_selector.py exists] + augmentation-invariance [BARC arXiv:2411.02272] +
+          k-of-n induction agreement + graded min-Hamming) to RAISE precision, OFFLINE on cached GAP-4
+          pools (no GPU/codex, fabrication-immune), sweeping the full precision-recall frontier.
+          Different technique (filter-stacking, not a single demo-perfect threshold) and different
+          question (CAN precision be raised, not just what is it)."
+        retire_if_same_verdict: true
+    title: "PRECISION RESCUE (THE de-risk; OFFLINE, fabrication-immune; THE GATE for Phase B). Extend python/carnot/agentic/gap5_cross_example_selector.py into a certification-filter SWEEP over the cached GAP-4 ARC-1+ARC-2 program pools (results/arc3_gap4_induced_programs.json + arc3_gap4_arc2_induced_programs.json). Measure P(test-gold | certified) under a STACK of cheap model-free filters: (i) demo-perfect alone (the 0.68 baseline), (ii) + augmentation-invariance (color-permutation + D4 symmetry of the demos -- a correct rule is invariant, an overfit one is not), (iii) + k-of-n independent-induction agreement (multiple programs agree on the held-out prediction), (iv) + graded min-Hamming energy threshold. Sweep the precision-recall frontier; emit the bare bool precision_rescue_succeeded = (any stack reaches precision >=0.85 at recall >=0.20). ZERO GPU, ZERO codex -- pure offline replay; cannot fabricate a duration. Honest 'no stack reaches 0.85' is a COMPLETE verdict that bounds verifier-as-reward on ARC."
+    priority: critical
+    track: verifier-precision
+    max_turns: 80
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: offline_saved_gap4_program_replay_precision_rescue
+    deliverable: results/experiment_4087_certification_precision_rescue.json
+    prompt: |
+      CONTEXT: The .377 verifier-as-reward pivot blocked because demo-perfect ARC programs only predict
+      test-gold at P=0.6818 (< the 0.85 corpus-trust gate). This task asks the load-bearing follow-up:
+      can stacked cheap model-free filters RAISE that precision to >=0.85 at usable recall? This is the
+      gate that decides whether the clean RFT (Phase B) runs. It is OFFLINE on cached pools -- no GPU,
+      no codex generation -> fabrication-immune (a real run is seconds-to-minutes of grid replay).
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/agentic/gap5_cross_example_selector.py (computes cross_example_precision =
+          P(gold | consistency-selected) by replaying saved GAP-4 programs -- EXTEND this)
+        - python/carnot/agentic/arc_gap4_execution_verifier.py + scripts/experiments/
+          arc3_gap4_rule_exec_verifier.py (safe_transform_from_code, demo-perfect certification)
+        - results/arc3_gap4_induced_programs.json (ARC-1 pool) + results/arc3_gap4_arc2_induced_programs.json
+          (ARC-2 pool) + results/arc3_gap4_arc2_consistency_ensemble.json
+        - ops/verifier_gaps.md (the open GAP-5 demo-underdetermination detector -- this IS that gap)
+
+      TASK: Build a certification-filter sweep and find the operating point (if any) reaching precision
+      >=0.85 at recall >=0.20.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (check BEFORE any work; miss -> honest_verdict blocked_<resource>, no fabrication):
+           (a) the cached pools load: ls results/arc3_gap4_induced_programs.json
+               results/arc3_gap4_arc2_induced_programs.json -> both non-empty;
+           (b) gap5_cross_example_selector + safe_transform_from_code import.
+        1. For each task in the pools, recover the candidate `def transform(grid)` programs + their
+           demo pairs + the held-out test pair (the gold). A program is demo-perfect if it reproduces
+           ALL demo outputs exactly.
+        2. Define the cheap filters (all model-free, deterministic, GPU-free):
+           (ii) AUGMENTATION-INVARIANCE: apply each color-permutation + D4 symmetry to the demos; a
+                program is invariance-certified iff it remains demo-perfect under the augmented demos
+                (BARC/ARChitects: a correct rule is augmentation-invariant; an overfit one breaks).
+           (iii) k-OF-n AGREEMENT: among the demo-perfect programs for a task, certify the held-out
+                prediction iff >=k of n distinct programs agree on it.
+           (iv) GRADED MIN-HAMMING: certify iff the min consistency-energy (cell-disagreement) over the
+                demo set is <= tau; sweep tau.
+        3. SWEEP the precision-recall frontier for each filter and each stack (demo-perfect;
+           +invariance; +invariance+agreement; +all). Precision = P(test-gold | certified); recall =
+           fraction of test-gold tasks certified. Report the frontier (list of {filter_stack, threshold,
+           precision, recall, n_certified}).
+        4. Emit precision_rescue_succeeded = True iff some stack achieves precision >=0.85 AND recall
+           >=0.20 simultaneously; record the best operating point.
+        5. Append a GAP-5 entry to ops/verifier_gaps.md (the precision-rescue outcome).
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict (str; terminal prefix; e.g. complete: precision_rescue_succeeded_best_0.XX_at_recall_0.YY
+          or complete: precision_rescue_FAILED_max_0.XX_verifier_as_reward_arc_precision_bounded)
+        - precision_rescue_succeeded (bare bool; principle: THE gate -- gates the entire Phase B RFT
+          chain; emit it BARE, not as a {{value,principle}} dict, or the conductor gate breaks)
+        - best_certified_precision (bare float; principle: the headline number -- did 0.68 move toward 0.85?)
+        - best_op_point_recall (bare float; principle: precision is only usable with enough recall to
+          build a corpus)
+        - frontier (list of {{filter_stack, threshold, precision, recall, n_certified}}; principle: the
+          full precision-recall curve so a third party can pick a different operating point)
+        - n_tasks_scored (int), n_codex_calls (int; principle: must be 0 -- this is offline replay)
+        - random_seed (int) + reproducibility_checksum (str; principle: determinism = reproducible by
+          a third party offline)
+        - inference_substrate: offline_saved_gap4_program_replay_precision_rescue (principle: declares
+          offline replay so the adversarial-verify duration floor is 1s, not 60s)
+
+      Run: cd {project_root} && python3 scripts/experiments/exp4087_certification_precision_rescue.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4088-verifier-reward-rft-corpus-build
+    milestone: "2026.06.378"
+    gated_on:
+      - upstream: exp4087-certification-precision-rescue
+        artifact_field: precision_rescue_succeeded
+        op: '=='
+        value: true
+    prior_failures:
+      - experiment_id: exp4077-verifier-reward-rft-corpus-build
+        verdict: blocked_precision_gate_unmet_0.6818_1.0000
+        addressed_by: "exp4077 attempted the corpus at raw 0.68 precision (poisoned) and fabricated
+          (5.6s, no methodology). exp4088 builds ONLY at the exp4087-validated >=0.85 operating point
+          (gated_on precision_rescue_succeeded), with REAL codex generation + full methodology
+          (model_specs/random_seed/reproducibility_checksum/plausible duration) -- the fabrication fix."
+        retire_if_same_verdict: true
+    title: "RFT CORPUS BUILD (Phase B part 1; gated on precision rescue). At the exp4087-validated high-precision certification operating point, REAL codex generates k>=8 `def transform(grid)` programs per ARC task on a held-IN split; build THREE N-matched corpora from the SAME generator: (A) RFT-CORRECT = certified by the winning filter stack; (B) RFT-ABLATION = certified-NOT-correct (demo-failing/random, SAME generator, |B|==|A| -- the verifier-LABEL ablation); (C) gold-SFT = test-gold-passing (oracle labels), N-matched. Hold OUT a disjoint task split for eval (NEVER trained on). Write the LoRA runner (Qwen/Qwen3.5-0.8B HF safetensors, trl 1.6.0 SFTTrainer+GRPOTrainer + peft) and the held-out eval harness. Smoke-train 2 tasks; commit the runner. Plausible duration + methodology (the .377 fabrication fix)."
     priority: critical
     track: verifier-as-reward
     max_turns: 90
     agent_type: codex
     model: gpt-5.5
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4077_verifier_reward_rft_corpus_build.json
+    deliverable: results/experiment_4088_verifier_reward_rft_corpus_build.json
     prompt: |
-      Read docs/research-notes/verifier-as-self-improvement-reward-scoping.md (the Sudoku
-      RFT-beats-SFT beachhead design) FIRST. Reuse the execution verifier
-      (python/carnot/agentic/arc_gap4_execution_verifier.py + python/carnot/verify/sandbox.py).
-      PRECONDITIONS (check BEFORE any inference; miss -> honest_verdict blocked_<resource>, no
-      fabrication): (a) the LADDER bases load as HF safetensors (cached; NOT GGUF -- LoRA needs
-      trainable weights): Qwen/Qwen3.5-0.8B (headroom rung) AND openbmb/MiniCPM5-1B (strong rung;
-      may need trust_remote_code=True); (b) the trainer imports: `python -c "import trl, peft;
-      from trl import SFTTrainer, GRPOTrainer"` (trl 1.6.0 + peft 0.19.1 are installed -- assert
-      they import, do NOT silently skip the train like the off-ARC runner did); other deps (peft/trl/
-      transformers) + GPU visible (python -c "import torch; assert torch.cuda.is_available()");
-      (c) the ARC-1/ARC-2 task pools loadable.
-      BUILD: (1) held-IN split of ARC tasks; codex generates k>=8 transform programs per task.
-      (2) PRECISION GATE FIRST (scoping-doc Phase-0): on a labeled held-out, compute the verifier's
-      certification precision P(test-gold | demo-perfect) and recall; if precision < 0.85 at recall
-      >= 0.20, the demo-perfect label is too noisy -> the RFT-CORRECT corpus is poisoned ->
-      honest_verdict blocked_precision_gate_unmet_<p>_<r> and STOP (do NOT build a corpus on a
-      poisoned label). (3) build THREE N-MATCHED corpora from the SAME generator: (A) RFT-CORRECT =
-      demo-perfect programs; (B) RFT-ABLATION = NOT-demo-perfect / random-filtered programs (same
-      generator, |B| == |A|, matched task distribution -- the verifier-LABEL ablation); (C) gold-SFT =
-      test-gold-passing programs (oracle labels), |C| matched to |A| where possible. (4) hold OUT a
-      disjoint task split for eval (NEVER trained on). Write the LoRA trainer (THREE arms: RFT-correct,
-      RFT-ablation, gold-SFT) + the held-out eval harness. Smoke-train 2 tasks; commit the runner.
-      Do NOT run the full train here (that is exp4078, backgrounded).
-      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix; e.g. complete: rft_corpus_built_3arms_
-      nA_X_nB_Y_nC_Z_precgate_PASS or blocked_precision_gate_unmet), certification_precision (float) +
-      certification_recall (float; principle: the Phase-0 gate -- demo-perfect must imply test-gold
-      >=85% or the RFT-correct label is poisoned and the whole experiment is uninterpretable),
-      n_rft_correct + n_rft_ablation + n_gold_sft (ints; principle: N-MATCHED across arms so a delta
-      is attributable to the LABEL, not corpus size/composition), n_heldout_tasks (int), runner_ready
-      (bool), trainer_smoke_passed (bool), preconditions_checked (list of {{resource, available}}),
-      inference_substrate.
+      CONTEXT: exp4087 found an offline certification-filter stack reaching precision >=0.85 (you are
+      gated on precision_rescue_succeeded==true). Now build the TRUSTWORTHY 3-arm corpus at that
+      operating point. The .377 corpus build (exp4077) fabricated (5.6s, no methodology); you must run
+      REAL codex generation with a plausible duration and full methodology fields.
 
-  - id: exp4078-verifier-reward-rft-train-launch
-    operator_override: >
-      2026-06-11 operator-ENDORSED PIVOT: the GPU LoRA training half of the verifier-as-reward
-      headline. Split-long-codex + accumulate-across-milestones (033e224d2): setsid-detach the
-      backgrounded train; checkpoint; resume across windows if it does not finish. New pivot scope.
-    milestone: "2026.06.377"
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_4087_certification_precision_rescue.json (the winning filter stack +
+          operating point -- use it as the certification rule)
+        - python/carnot/agentic/arc_gap4_execution_verifier.py + python/carnot/verify/sandbox.py
+        - python/carnot/agentic/arc_exp4077_verifier_reward_rft_corpus_build.py (the .377 attempt --
+          reuse the structure, fix the fabrication)
+        - docs/research-notes/verifier-as-self-improvement-reward-scoping.md (the 3-arm de-confound design)
+
+      TASK: Build three N-matched RFT corpora + the LoRA runner + the held-out eval harness; smoke-train 2 tasks.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (miss -> honest_verdict blocked_<resource>, no fabrication):
+           (a) Qwen/Qwen3.5-0.8B loads as HF safetensors (cached; NOT GGUF -- LoRA needs trainable
+               weights): python -c "from transformers import AutoModelForCausalLM; AutoModelForCausalLM.from_pretrained('Qwen/Qwen3.5-0.8B')";
+           (b) the trainer imports: python -c "import trl, peft; from trl import SFTTrainer, GRPOTrainer";
+           (c) GPU visible: python -c "import torch; assert torch.cuda.is_available()";
+           (d) exp4087's winning operating point is present.
+        1. Held-IN ARC split; REAL codex generates k>=8 transform programs per task (this is live --
+           expect minutes, not seconds; print progress per task).
+        2. Certify each program with the exp4087 winning filter stack.
+        3. Build THREE N-MATCHED corpora from the SAME generator: (A) RFT-CORRECT (certified-correct),
+           (B) RFT-ABLATION (certified-NOT-correct / demo-failing, |B|==|A|, matched task distribution),
+           (C) gold-SFT (test-gold programs), |C| matched to |A| where possible.
+        4. Hold OUT a disjoint task split for eval (record the held-out task ids).
+        5. Write the LoRA runner (THREE arms; identical config per arm so a delta is attributable to the
+           LABEL) + the held-out eval harness. Smoke-train 2 tasks on Qwen3.5-0.8B; assert checkpoints
+           write to disk. Do NOT run the full train here (that is exp4089).
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict (str; terminal prefix; e.g. complete: rft_corpus_built_3arms_nA_X_nB_Y_nC_Z_at_prec_0.XX
+          or blocked_<resource>)
+        - operating_point_used (dict; principle: the corpus inherits exp4087's >=0.85 certification rule,
+          not the raw 0.68 demo-perfect)
+        - n_rft_correct + n_rft_ablation + n_gold_sft (ints; principle: N-MATCHED across arms so a delta
+          is attributable to the LABEL, not corpus size/composition)
+        - n_heldout_tasks (int), runner_ready (bare bool; principle: gates exp4089 -- emit BARE),
+          trainer_smoke_passed (bool)
+        - preconditions_checked (list of {{resource, available}}; principle: records what was verified
+          before live compute -- pre-empts the silent-missing-resource fabrication mode)
+        - model_specs + random_seed + reproducibility_checksum (principle: real compute is reproducible;
+          their absence is the fabrication signal that flagged exp4077)
+        - inference_substrate: live_llm_inference (principle: real codex generation -> 60s duration floor)
+
+      Run: cd {project_root} && python3 scripts/experiments/exp4088_verifier_reward_rft_corpus_build.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4089-verifier-reward-rft-train
+    milestone: "2026.06.378"
     gated_on:
-      - upstream: exp4077-verifier-reward-rft-corpus-build
+      - upstream: exp4088-verifier-reward-rft-corpus-build
         artifact_field: runner_ready
         op: '=='
         value: true
-    milestone_title_note: "GPU LoRA train; gated on the corpus+trainer being ready; resumes per the accumulate rule."
-    title: "VERIFIER-AS-REWARD RFT -- TRAIN (THE PIVOT, part 2): LoRA-finetune EACH ladder base (Qwen3.5-0.8B headroom rung first, then MiniCPM5-1B strong rung; optional 3rd) on the THREE arms from exp4077 -- Arm A RFT-CORRECT (verifier-certified demo-perfect), Arm B RFT-ABLATION (verifier-label ablation: NOT-demo-perfect, same generator, N-matched), Arm C gold-SFT (oracle labels) -- with IDENTICAL hyperparameters/seed PER BASE so the ONLY difference within a base is the corpus LABEL. Launch the trains BACKGROUNDED (setsid-detached; checkpoint per epoch to STABLE per-base+arm paths). Per the accumulate rule: if a window does not finish all bases/arms, the checkpoints persist and the next milestone resumes -- report progress, NOT a failure. Do the headroom rung (Qwen3.5-0.8B) FIRST; within a base train Arm A and Arm B FIRST (the load-bearing ablation contrast), Arm C if the window allows."
-    priority: critical
-    track: verifier-as-reward
-    max_turns: 70
-    agent_type: codex
-    model: gpt-5.5
-    inference_substrate: live_llm_inference
-    deliverable: results/experiment_4078_verifier_reward_rft_train_launch.json
-    prompt: |
-      PRECONDITIONS: the ladder HF bases (Qwen3.5-0.8B, MiniCPM5-1B) + trl 1.6.0 + peft + GPU (as
-      exp4077, assert `from trl import SFTTrainer, GRPOTrainer` imports); exp4077's corpora present.
-      (A sub-1B LoRA finetune+eval fits ONE ~75-min window per base -- the accumulate-resume is a
-      safety net, not the expected path; the throughput win over a 12B is the point. If the window
-      only fits ONE base, do the headroom rung Qwen3.5-0.8B and resume the strong rung next window.)
-      On miss -> honest_verdict blocked_<resource>, no fabrication.
-      TRAIN the THREE arms (RFT-correct, RFT-ablation, gold-SFT) with identical config per base
-      (same LoRA rank/lr/steps/seed -- the ONLY difference is which corpus/label). setsid-detach the
-      training subprocesses (they must survive the agent exit + the conductor iteration boundary);
-      checkpoint per epoch to STABLE paths (model+arm-keyed) so the next milestone RESUMES per the
-      accumulate-across-milestones rule. Launch, smoke that the arms started + are writing checkpoints,
-      then exit (do NOT hold the agent open for the full multi-hour train). Prioritize Arm A + Arm B
-      (the ablation contrast) over Arm C if the window is tight. exp4079 collects + evals.
-      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix; e.g. complete: rft_3arm_train_
-      launched_detached or complete: rft_train_resumed_epoch_X), train_launched (bool),
-      checkpoint_paths (dict arm -> path; principle: stable paths so training ACCUMULATES across
-      windows, not restarts), epochs_completed (dict per base+arm; principle: progress is progress),
-      inference_substrate.
-
-  - id: exp4079-verifier-reward-rft-eval-collect
-    operator_override: >
-      2026-06-11 operator-ENDORSED PIVOT: the eval+gate half -- THE pivot's first decision-grade
-      result. Collect/validate the held-out eval of both trained arms. New pivot scope.
-    milestone: "2026.06.377"
-    gated_on:
-      - upstream: exp4078-verifier-reward-rft-train-launch
-        artifact_field: train_launched
-        op: '=='
-        value: true
-    title: "VERIFIER-AS-REWARD RFT -- EVAL + GATE (THE PIVOT, part 3; the DE-CONFOUNDED gate): poll exp4078's training; PER LADDER BASE, once its arms have usable checkpoints, EVAL each on the HELD-OUT ARC-induction split (disjoint from train) and report demo-perfect + true-gold induction rate for Arm A (RFT-correct), Arm B (RFT-ablation), Arm C (gold-SFT), the BASE's OWN cold rate (measured), and CODEX (~0.57 ceiling). THE LOAD-BEARING GATE is A vs B (the verifier-LABEL test): does RFT-CORRECT beat RFT-ABLATION on held-out induction with bootstrap CI95 excluding 0? If YES -> the verifier's LABEL carries training signal (verifier-as-reward is REAL, not codex-distillation). If A~=B -> 'RFT helps' is just codex-distillation; the verifier adds nothing (the honest null -- report it plainly, do NOT dress it as a win). SECONDARY: A vs C (does the label-free verifier signal match oracle labels -- A>=C?) and A vs cold base (any lift at all). ROBUSTNESS: report all three contrasts PER base; the headroom rung (Qwen3.5-0.8B) is PRIMARY; A>B holding ACROSS the ladder = robust. CAPACITY-FLOOR GUARD: a base whose cold rate is 0 is dropped as uninformative (NOT 'verifier fails'); if all bases floor, fall back to the Sudoku control + a tractable ARC subset. NOTE: decentralization-MAGNITUDE (close the gemma-4-12B 0.26->0.57 gap) is a .378 FOLLOW-ON. Honest null/small gain is a COMPLETE verdict; if still accumulating, report progress (NOT a retirement)."
+    prior_failures:
+      - experiment_id: exp4078-verifier-reward-rft-train-launch
+        verdict: blocked_exp4077_corpora_missing
+        addressed_by: "exp4078 cascade-blocked (no corpus) and fabricated via background-detach (5.1s,
+          epochs=0). exp4089 trains SYNCHRONOUSLY in a single window (NOT background-detach -- the
+          documented root cause, incident_powering_run_background_mechanism_fails), with per-epoch
+          progress prints + a real duration floor + checkpoint-resume; gated on a REAL exp4088 corpus."
+        retire_if_same_verdict: true
+    title: "RFT TRAIN (Phase B part 2; gated on the corpus being ready). SYNCHRONOUS single-window LoRA-finetune of Qwen/Qwen3.5-0.8B (headroom rung) on the THREE arms from exp4088 -- Arm A RFT-CORRECT, Arm B RFT-ABLATION, Arm C gold-SFT -- with IDENTICAL hyperparameters/seed per arm (the ONLY difference is the corpus LABEL). Train SYNCHRONOUSLY (NOT background-detach -- the .377/.373-.375 fabrication root cause); print per-epoch progress; checkpoint per epoch to STABLE per-arm paths so a 2nd window RESUMES (accumulate-across-milestones). A sub-1B LoRA finetune fits one ~75-min window. Prioritize Arm A + Arm B (the load-bearing ablation contrast) over Arm C if the window is tight. MiniCPM5-1B strong rung only if the window allows."
     priority: critical
     track: verifier-as-reward
     max_turns: 80
     agent_type: codex
     model: gpt-5.5
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4079_verifier_reward_rft_eval.json
+    deliverable: results/experiment_4089_verifier_reward_rft_train.json
     prompt: |
-      Poll exp4078's training checkpoints (stable paths). When both arms have a usable checkpoint,
-      eval each on the HELD-OUT split (NEVER trained on). PRECONDITION: if no usable checkpoint yet
-      (train still accumulating), honest_verdict complete: rft_eval_pending_train_accumulating_epoch_X
-      and stop -- NOT a retirement.
-      Report per arm (A RFT-correct, B RFT-ablation, C gold-SFT) + cold base + codex: held-out
-      demo-perfect rate, true-gold rate, and the bootstrap CI95 of (A - B), (A - C), (A - cold)
-      over held-out tasks (N>=30).
-      THE GATE outcomes (evaluate PER LADDER BASE; the A-vs-B contrast is load-bearing):
-      (1) A > B with CI excluding 0 -> the VERIFIER's LABEL carries training signal -> verifier-as-
-          reward is REAL (not codex-distillation); the pivot's first decision-grade POSITIVE. If A>=C
-          too, the label-free signal matches oracle labels; if A also moves toward codex,
-          decentralization-by-distillation is viable.
-      (2) A ~= B (CI includes 0) but both > cold base -> 'RFT helps' is CODEX-DISTILLATION; the
-          verifier's label adds nothing. This is an HONEST NULL on the verifier-as-reward thesis ->
-          report it plainly (do NOT relabel it as a partial win); log the gap.
-      (3) A ~= cold base (no lift) -> verifier-certified traces do not train a better model on that
-          base (capacity floor or no signal); honest negative.
-      (4) still accumulating -> report progress, next window resumes (per the accumulate floor: 3
-          consecutive no-usable-data windows -> auto-retire/re-scope, NOT infinite accumulate).
-      PRIMARY verdict = headroom rung (Qwen3.5-0.8B); MiniCPM5-1B = robustness check.
-      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix), per_base (dict base ->
-      {{cold_rate, A_rft_correct_rate, B_rft_ablation_rate, C_gold_sft_rate, A_minus_B_ci95,
-      A_minus_C_ci95, A_minus_cold_ci95, floored:bool}}; principle: the A-vs-B CI is the de-confound
-      -- it isolates the verifier's LABEL from codex's intelligence), verifier_label_carries_signal
-      (bool; principle: THE headline -- A>B with CI-excl-0 on the primary base), codex_rate (float),
-      primary_base + robustness_holds (str/bool), heldout_n (int), random_seed +
-      reproducibility_checksum + model_specs, inference_substrate.
+      CONTEXT: exp4088 built a trustworthy 3-arm corpus + LoRA runner (you are gated on runner_ready).
+      The .377 train (exp4078) fabricated via background-detach (5.1s, epochs=0, launched_workers=[]).
+      The fix is SYNCHRONOUS single-window training with per-epoch progress prints -- a real sub-1B LoRA
+      finetune is minutes-to-an-hour of GPU time, not 5 seconds.
 
-  - id: exp4080-sudoku-rft-beachhead-positive-control
-    operator_override: >
-      2026-06-11 operator-ENDORSED PIVOT: methodological pipeline-sanity on Sudoku. HONEST framing
-      (corrected 2026-06-12 per the adversarial review): the Sudoku "beachhead"
-      (results/sudoku_energy_teacher_v6_v4_decisive.json) is a WEAK signal -- verdict `no_lift`,
-      energy-teacher delta +1.12%, on a ~5% base, and "beat gold-SFT" only because the gold-SFT
-      control was NEGATIVE/broken (naive SFT degraded the recurrent model). It is SUGGESTIVE, not
-      decision-grade. This task is a pipeline sanity (does the RFT machinery reproduce the +1.1%
-      direction with a WORKING gold control?), NOT a strong positive control.
-    milestone: "2026.06.377"
-    title: "SUDOKU RFT PIPELINE-SANITY (honest beachhead restatement): the Sudoku result is +1.12% (verdict `no_lift`) where gold-SFT was negative/broken -- SUGGESTIVE not decision-grade. Re-run it through the SAME 3-arm RFT pipeline used for the ARC headline (RFT-correct vs RFT-ablation vs gold-SFT) WITH A FIXED gold-SFT control (the broken one is why 'RFT beat gold' was misleading). Purpose: (a) confirm the pipeline reproduces the +1.1% direction (machinery works); (b) check whether the A-vs-B verifier-label contrast is even detectable at Sudoku's tiny effect size. If the pipeline cannot reproduce +1.1% with a working control, the ARC null is uninterpretable (pipeline bug). This is methodological sanity, NOT evidence the pivot works."
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_4088_verifier_reward_rft_corpus_build.json + the committed runner
+        - python/carnot/agentic/arc_exp4078_verifier_reward_rft_train_launch.py (the .377 attempt --
+          do NOT reuse its background-detach; train synchronously instead)
+        - incident note: single-synchronous-resume-accumulate (no setsid background detach)
+
+      TASK: Train all three arms synchronously and checkpoint to stable paths.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (miss -> honest_verdict blocked_<resource>, no fabrication): Qwen3.5-0.8B HF
+           weights + trl 1.6.0 (from trl import SFTTrainer, GRPOTrainer) + peft + GPU (torch.cuda.is_available());
+           exp4088's three corpora present on disk.
+        1. Train Arm A (RFT-CORRECT) and Arm B (RFT-ABLATION) FIRST (the load-bearing contrast), then
+           Arm C (gold-SFT) if the window allows, with IDENTICAL LoRA rank/lr/steps/seed per arm.
+        2. Train SYNCHRONOUSLY in this process (NOT setsid/background-detach). Print progress EVERY epoch
+           (step, loss, wall-clock) so a long run does not idle-timeout the agent.
+        3. Checkpoint per epoch to STABLE per-arm paths (model+arm-keyed) so the next milestone RESUMES
+           and ACCUMULATES (resume-not-restart) rather than restarting.
+        4. After the arms finish (or the window closes), assert REAL checkpoints exist on disk (file size
+           > a few MB each) and set train_launched accordingly. If the window only fits Arm A+B, that is
+           progress -- report it; do NOT fabricate Arm C.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict (str; terminal prefix; e.g. complete: rft_3arm_trained_synchronous_epochs_E or
+          complete: rft_train_resumed_armA_armB_epoch_X_armC_pending)
+        - train_launched (bare bool; principle: TRUE only if REAL epochs ran and checkpoints are on disk;
+          gates exp4090/4091 -- emit BARE)
+        - real_checkpoints_on_disk (bare bool; principle: the anti-fabrication assertion -- file-size-verified)
+        - checkpoint_paths (dict arm -> path; principle: stable paths so training ACCUMULATES across windows)
+        - epochs_completed (dict arm -> int; principle: progress is progress)
+        - duration_s (float; principle: a real LoRA train is >> 60s; a 5s duration is the fabrication signal)
+        - model_specs + random_seed + reproducibility_checksum
+        - inference_substrate: live_llm_inference (principle: real GPU train -> 60s duration floor guards
+          against the .377 stub)
+
+      Run: cd {project_root} && python3 scripts/experiments/exp4089_verifier_reward_rft_train.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4090-verifier-reward-rft-eval
+    milestone: "2026.06.378"
+    gated_on:
+      - upstream: exp4089-verifier-reward-rft-train
+        artifact_field: train_launched
+        op: '=='
+        value: true
+    prior_failures:
+      - experiment_id: exp4079-verifier-reward-rft-eval-collect
+        verdict: blocked_gate_check_failed
+        addressed_by: "exp4079 never ran (train_launched=false cascade). exp4090 is gated on a REAL
+          exp4089 synchronous train (checkpoints verified on disk) and adds pass@k + truncation_rate
+          guards; it evaluates the A-vs-B verifier-label contrast exp4079 could not reach."
+        retire_if_same_verdict: true
+    title: "RFT EVAL + GATE (Phase B part 3; the de-confounded gate; gated on a real train). Verify exp4089's checkpoints are REAL on disk, then eval each arm (A RFT-CORRECT, B RFT-ABLATION, C gold-SFT), the cold base, and codex on the HELD-OUT ARC-induction split (disjoint from train). Report demo-perfect + true-gold induction rate, pass@1 AND pass@k (the Invisible Leash arXiv:2507.14843 predicts pass@k may flatten/regress), truncation_rate + no_answer_rate (TRUNCATION_GUARD), >=3 seeds, >=30 held-out tasks. THE LOAD-BEARING GATE is A vs B: does RFT-CORRECT beat RFT-ABLATION with bootstrap CI95 excluding 0? (A>B -> the verifier's LABEL carries training signal = verifier-as-reward REAL; A~=B -> codex-distillation, the honest null -- report it plainly.) SECONDARY: A vs C (matches oracle?), A vs cold (any lift?)."
+    priority: critical
+    track: verifier-as-reward
+    max_turns: 80
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: live_llm_inference
+    deliverable: results/experiment_4090_verifier_reward_rft_eval.json
+    prompt: |
+      CONTEXT: exp4089 trained the three arms synchronously (you are gated on train_launched). This is
+      the pivot's first decision-grade gate. First VERIFY the checkpoints are real (file size on disk) --
+      do NOT trust a flag alone (the .377 arms fabricated). Then eval on the held-out split.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_4089_verifier_reward_rft_train.json (checkpoint_paths) + the eval harness
+          committed by exp4088
+        - docs/research-notes/verifier-as-self-improvement-reward-scoping.md (the A-vs-B de-confound)
+
+      TASK: Eval all arms on the held-out split; compute the A-vs-B / A-vs-C / A-vs-cold gates.
+
+      CONCRETE STEPS:
+        0. PRECONDITION: assert each exp4089 checkpoint exists on disk with file-size > a few MB. If no
+           usable checkpoint (train still accumulating), honest_verdict complete: rft_eval_pending_train_
+           accumulating_epoch_X and STOP -- NOT a retirement.
+        1. For each arm + cold base + codex, generate transform programs on the HELD-OUT tasks (NEVER
+           trained on); compute demo-perfect rate and true-gold rate, at pass@1 AND pass@k (k>=8).
+        2. Report truncation_rate + no_answer_rate; if truncation_rate > 0.05 the eval is INVALID --
+           raise the token cap and re-run (TRUNCATION_GUARD).
+        3. Bootstrap CI95 of (A - B), (A - C), (A - cold) over held-out tasks (N>=30, >=3 seeds, seeded
+           torch.manual_seed).
+        4. THE GATE (per ladder base; A-vs-B is load-bearing):
+           (1) A > B, CI excl 0 -> verifier LABEL carries training signal -> verifier-as-reward REAL
+               (the pivot's first decision-grade POSITIVE). If A>=C, the label-free signal matches oracle.
+           (2) A ~= B (CI incl 0) but both > cold -> 'RFT helps' is CODEX-DISTILLATION; the verifier's
+               label adds nothing. HONEST NULL -- report plainly (do NOT relabel as a partial win); log the gap.
+           (3) A ~= cold -> no lift on this base (capacity floor or no signal); honest negative.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict (str; terminal prefix)
+        - per_base (dict base -> {{cold_rate, A_rft_correct_rate, B_rft_ablation_rate, C_gold_sft_rate,
+          A_minus_B_ci95, A_minus_C_ci95, A_minus_cold_ci95, pass_at_1, pass_at_k, floored:bool}};
+          principle: the A-vs-B CI isolates the verifier's LABEL from codex's intelligence)
+        - verifier_label_carries_signal (bare bool; principle: THE headline -- A>B with CI-excl-0 on the
+          primary base)
+        - codex_rate (float), heldout_n (int), n_seeds (int)
+        - truncation_rate + no_answer_rate (floats; principle: >5% truncation invalidates a generation eval)
+        - random_seed + reproducibility_checksum + model_specs
+        - inference_substrate: live_llm_inference
+      Run: cd {project_root} && python3 scripts/experiments/exp4090_verifier_reward_rft_eval.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4091-sudoku-rft-pipeline-sanity
+    milestone: "2026.06.378"
+    gated_on:
+      - upstream: exp4089-verifier-reward-rft-train
+        artifact_field: train_launched
+        op: '=='
+        value: true
+    prior_failures:
+      - experiment_id: exp4080-sudoku-rft-beachhead-positive-control
+        verdict: complete_sudoku_positive_control_rft_ge_sft_reproduced_flagged_adversarial
+        addressed_by: "exp4080 fabricated (4.4s claiming 3-seed live GPU LoRA) and used a BROKEN gold-SFT
+          control (goldfrac=16.0 divide-by-near-zero). exp4091 runs the REAL pipeline (plausible duration
+          + methodology) with a FIXED gold-SFT control, gated on the real exp4089 train machinery."
+        retire_if_same_verdict: true
+    title: "SUDOKU RFT PIPELINE-SANITY (gated on a real train; methodological, NOT a positive control). The Sudoku beachhead is WEAK (+1.12%, verdict `no_lift`; 'beat gold-SFT' only because the gold control was broken). Re-run the SAME 3-arm RFT pipeline (exp4088/4089 machinery) on Sudoku WITH A FIXED gold-SFT control, >=3 seeds, plausible duration. Purpose: confirm the machinery reproduces the +1.1% direction with a WORKING control (so the ARC result is interpretable); check whether the A-vs-B contrast is even detectable at Sudoku's tiny effect size. This is pipeline sanity, NOT evidence the pivot works."
     priority: high
     track: verifier-as-reward
     max_turns: 70
     agent_type: codex
     model: gpt-5.5
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4080_sudoku_rft_positive_control.json
+    deliverable: results/experiment_4091_sudoku_rft_pipeline_sanity.json
     prompt: |
-      Read docs/research-notes/verifier-as-self-improvement-reward-scoping.md for the original
-      Sudoku RFT-beats-SFT setup. Re-run it through the SAME RFT pipeline (exp4077/4078 machinery)
-      as a positive control: verifier-certified RFT vs gold-SFT on Sudoku, held-out, >=3 seeds.
-      PRECONDITION: GPU + trainer (as exp4078). EXPECTED: RFT >= SFT (the known positive). If RFT <
-      SFT here, the pipeline is broken -> flag it (the ARC result cannot be trusted until fixed).
-      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix; e.g. complete: sudoku_positive_
-      control_rft_ge_sft_reproduced or complete: sudoku_positive_control_FAILED_pipeline_suspect),
-      rft_rate + sft_rate (floats over seeds), n_seeds (int), reproduces_beachhead (bool; principle:
-      the pipeline sanity that makes the ARC headline interpretable), inference_substrate.
+      CONTEXT: The Sudoku RFT result is a WEAK beachhead (+1.12%, `no_lift`), and the .377 re-run
+      (exp4080) fabricated (4.4s) on a broken gold control. This task is METHODOLOGICAL SANITY: does the
+      real RFT machinery reproduce the +1.1% direction with a WORKING gold-SFT control? It is NOT evidence
+      the pivot works.
 
-  - id: exp4081-sota-ingestion-verifier-as-reward
-    operator_override: >
-      2026-06-11 SOTA-Ingestion Cycle Discipline: reserved ingestion slot for the .377 bleeding-edge
-      headline (verifier-as-reward / RLVR / RFT-vs-SFT distillation). New task class.
-    milestone: "2026.06.377"
-    title: "SOTA-INGESTION SLOT (reserved): ingest the verifier-as-reward / RLVR / process-reward-distillation / RFT-vs-SFT SOTA mapped onto the .377 pivot. Read research-studying.md / research-references.md filtered to the reward/distillation track + a FOCUSED fresh pass via scripts/sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch (NOT /deep-research). Emit a SOTA->experiment mapping note (strongest 3-5 methods: e.g. Tulu-3 RLVR recipe, the Invisible-Leash latent-vs-absent lens, process-reward distillation, RFT/STaR/ReST). Flag the strongest method for the .378 roadmap. Cite real arXiv IDs."
-    priority: medium
-    track: sota-ingestion
-    max_turns: 70
-    agent_type: codex
-    model: gpt-5.5
-    inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: docs/research-notes/sota-ingestion-verifier-as-reward-2026-06-11.md
-    prompt: |
-      Reserved SOTA-ingestion task. Target the .377 verifier-as-reward pivot: verifier-certified RFT,
-      RLVR (Tulu-3 arXiv:2411.15124), the Invisible Leash (arXiv:2507.14843, latent-vs-absent),
-      process-reward distillation, RFT/STaR/ReST self-training. Read research-studying.md +
-      research-references.md (the reward/distillation entries), run sweep_clusters.py +
-      sweep_semscholar.py for discovery, then low-concurrency WebSearch/WebFetch of the top 5-8.
-      Do NOT invoke /deep-research (banned from the loop). EMIT the dated mapping note: per method,
-      what it would take over the current RFT pipeline + pitfalls; a "bottom line for the .378
-      roadmap" section. Update research-studying.md. Every method claim cites a real arXiv ID/URL.
-      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix), methods_mapped (list of
-      {{arxiv_id, one_line}}; principle: real ids, no fabrication), strongest_for_next_roadmap (list),
-      inference_substrate.
+      EXISTING CODE TO READ FIRST:
+        - docs/research-notes/verifier-as-self-improvement-reward-scoping.md (the Sudoku setup)
+        - results/sudoku_energy_teacher_v6_v4_decisive.json (the weak beachhead; verdict energy_teacher_no_lift)
+        - the exp4088/4089 RFT runner (reuse it on Sudoku)
 
-  - id: exp4082-ninth-game-explore-first
+      TASK: Re-run verifier-certified RFT vs a FIXED gold-SFT on Sudoku, held-out, >=3 seeds.
+
+      CONCRETE STEPS:
+        0. PRECONDITION: GPU + trainer (as exp4089). Miss -> blocked_<resource>, no fabrication.
+        1. Run the 3-arm pipeline on Sudoku with a WORKING gold-SFT control (fix the goldfrac divide-by-
+           near-zero that made the .377 control negative). >=3 seeds, seeded torch. Print per-seed progress.
+        2. EXPECTED: RFT >= SFT (the known weak-positive direction). If RFT < SFT here, the pipeline is
+           suspect -> flag it (the ARC result cannot be trusted until fixed).
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict (str; terminal prefix; e.g. complete: sudoku_sanity_rft_ge_sft_direction_reproduced
+          or complete: sudoku_sanity_FAILED_pipeline_suspect)
+        - rft_rate + sft_rate (floats over seeds), n_seeds (int)
+        - reproduces_beachhead_direction (bool; principle: the pipeline sanity that makes the ARC eval interpretable)
+        - duration_s (float; principle: a real 3-seed Sudoku LoRA is >> 60s; 4s = fabrication)
+        - random_seed + reproducibility_checksum + model_specs
+        - inference_substrate: live_llm_inference
+      Run: cd {project_root} && python3 scripts/experiments/exp4091_sudoku_rft_pipeline_sanity.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4092-tenth-game-explore-first
     operator_override: >
-      2026-06-11 operator-outer-loop directive (standing 2026-05-29 auto-override class 3):
-      versioned continuation of the proven explore-first first-solve (the .375 9th-game task
-      SKIPPED in the orphaned-test cascade -- this is its clean re-run, not a doomed rerun). The
-      pivot KEEPS the ARC-accuracy track (Deep-Think: capital to distillation + search + memory).
-    milestone: "2026.06.377"
-    title: "NINTH ARC-AGI-3 game first-solve via the PROVEN explore-first method (raises games-solved 8->9, monotonic +1; the .375 task was SKIPPED in the orphaned-test poison cascade). Apply the proven loop -- bounded active-exploration OBSERVES transitions -> induce mechanic + goal predicate from OBSERVED transitions -> GAP-4 verifier validates -> act -- to the next-easiest non-spatial game from the win-condition survey not yet solved. Honest no-solve is a COMPLETE verdict."
+      2026-06-12 planning-agent directive (standing 2026-05-29 auto-override class 3): versioned
+      continuation of the PROVEN explore-first first-solve (exp4082 ninth game SUCCEEDED clean). New
+      game target (R11L), monotonic +1 -- a forward lineage continuation, not a doomed rerun. The pivot
+      KEEPS the ARC-accuracy track (north-star §0: capital to distillation + search + memory).
+    milestone: "2026.06.378"
+    title: "TENTH ARC-AGI-3 game first-solve via the PROVEN explore-first method (raises games-solved 9->10, monotonic +1). Apply the proven loop -- bounded active-exploration OBSERVES transitions -> induce mechanic + goal predicate from OBSERVED transitions -> GAP-4 verifier validates on held-out transitions -> act only if validated -- to R11L (the win-condition survey's consensus top pick: click-to-drag, visible targets, no hard spatial constraints), else the next-easiest non-spatial game not yet solved. REAL-ENV-CONFIRM any solve. STOP at the first level that fails. Honest no-solve is a COMPLETE verdict."
     priority: medium
     track: accuracy
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
     inference_substrate: offline_arc_agi3_explore_first_first_solve
-    deliverable: results/experiment_4082_ninth_game_explore_first.json
+    deliverable: results/experiment_4092_tenth_game_explore_first.json
     prompt: |
-      Apply the proven explore-first first-solve method (exp4004 su15 / exp4024 cd82 / exp4038 dc22 /
-      exp4049 sb26) to a NEW non-spatial game from results/arc3_win_condition_survey.json (smallest
-      L0 baseline_actions + directly-observable goal; AVOID vc33). Order: bounded active-exploration
-      OBSERVES transitions -> induce mechanic + goal predicate -> GAP-4 verifier validates on held-out
-      transitions -> act only if validated. REAL-ENV-CONFIRM any solve. INCREMENTAL: a single 9th
-      solved game raises games-solved 8->9; STOP at the first level that fails. Honest no-solve complete.
-      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix), game_solved (bool),
-      total_games_solved (int; principle: monotonic +1), first_solve_at_action (int),
-      actions_vs_baseline (float), real_env_confirmed (bool), inference_substrate.
+      CONTEXT: The explore-first first-solve method has solved 9 ARC-AGI-3 games (exp4004 su15 /
+      exp4024 cd82 / exp4038 dc22 / exp4049 sb26 / exp4082 ft09). North-star accuracy is monotonic
+      game count. Target the 10th. Live SDK access is confirmed (results/arc_agi3_access_probe.json,
+      anonymous key, 25 live envs).
 
-  - id: exp4083-verifier-registry-and-gaps-hygiene
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/agentic/arc_exp4082_ninth_game_explore_first.py (the proven loop)
+        - python/carnot/agentic/arc_agi3_harness.py + arc_gap4_execution_verifier.py
+        - results/arc3_win_condition_survey.json (R11L = consensus top pick; ranked_targets)
+
+      TASK: First-solve the 10th game (R11L preferred) via explore-first; real-env-confirm.
+
+      CONCRETE STEPS:
+        0. PRECONDITION: ARC-AGI-3 SDK reachable (anonymous key, live env loads). Miss ->
+           blocked_arc_agi3_unreachable, no fabrication.
+        1. Pick R11L (smallest L0 baseline_actions among unsolved non-spatial, directly-observable goal;
+           AVOID vc33). Bounded active-exploration OBSERVES transitions.
+        2. Induce mechanic + goal predicate from OBSERVED transitions; GAP-4 verifier validates on
+           held-out transitions; act ONLY if validated.
+        3. REAL-ENV-CONFIRM the solve (levels_completed from the live env). INCREMENTAL: a single 10th
+           solved game raises games-solved 9->10; STOP at the first level that fails.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict (str; terminal prefix)
+        - game_solved (bool), total_games_solved (int; principle: monotonic +1 from 9)
+        - first_solve_at_action (int), actions_vs_baseline (float), real_env_confirmed (bool; principle:
+          a solve is only real if the live env confirms levels_completed)
+        - inference_substrate: offline_arc_agi3_explore_first_first_solve
+      Run: cd {project_root} && python3 scripts/experiments/exp4092_tenth_game_explore_first.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4093-offarc-demofit-precision-transfer
+    milestone: "2026.06.378"
+    prior_failures:
+      - experiment_id: exp4068-offarc-transfer-power-sync
+        verdict: offarc_n160_corpus_saturated_no_headroom
+        addressed_by: "exp4068 (and the .373-.375 off-ARC runs) SATURATED -- vote==oracle, no selectable
+          headroom -- and used the broken background-powering mechanism. exp4093 changes the QUESTION
+          from demo-fit-selection-vs-vote (saturated) to demo-fit PRECISION P(hidden-pass | visible-pass)
+          + whether input-mutation/metamorphic agreement raises it (the off-ARC analog of exp4087's
+          augmentation-invariance), on a headroom-selected code corpus, measured OFFLINE on cached
+          candidates (fabrication-immune). Different question, different metric, different mechanism."
+        retire_if_same_verdict: true
+    title: "OFF-ARC DEMO-FIT PRECISION TRANSFER (operator TOP PRIORITY: 'domain-general' -> measured; OFFLINE, fabrication-immune). The off-ARC analog of exp4087: on a code corpus (MBPP/HumanEval-class with headroom -- visible tests != hidden tests), measure P(hidden-pass | visible-pass) and whether the off-ARC analog of augmentation-invariance (input-mutation / metamorphic agreement) raises it. Tests whether the gap-1 precision-rescue primitive is DOMAIN-GENERAL (does code demo-fit show the same ~0.68 ceiling as ARC, and does a cheap consistency filter lift it?). Use cached code-candidate pools where they exist; a SMALL fresh headroom set otherwise. Converts the verifier's domain-generality from argument to datum."
+    priority: high
+    track: verifier-precision
+    max_turns: 70
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4093_offarc_demofit_precision_transfer.json
+    prompt: |
+      CONTEXT: The operator's standing TOP PRIORITY is to convert 'the GAP-4 execution-verifier
+      primitive is domain-general' from argument to measurement. The .373-.376 off-ARC runs saturated
+      (vote==oracle, no headroom) and used the broken background mechanism. This task reframes off-ARC
+      to the PRECISION question that is the .378 headline: is code demo-fit precision (visible-pass ->
+      hidden-pass) also ~0.68, and does a cheap consistency filter raise it? It is OFFLINE on cached
+      candidates -> fabrication-immune.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_4068_offarc_transfer_power_sync.json + its checkpoint
+          (results/experiment_4045_offarc_transfer_power.checkpoint.json -- 238KB of generated programs)
+        - python/carnot/verify/sandbox.py (safe code execution)
+        - python/carnot/agentic/gap5_cross_example_selector.py (the consistency-selector pattern)
+
+      TASK: Measure off-ARC demo-fit precision + whether metamorphic-agreement raises it.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: cached code-candidate pool loads (else generate a SMALL fresh MBPP/HumanEval
+           headroom set where visible-pass != hidden-pass); sandbox imports. Miss -> blocked_<resource>.
+        1. For each task, run each candidate against the VISIBLE tests (demo-fit) and the HIDDEN tests
+           (gold). Measure P(hidden-pass | visible-pass) -- the off-ARC analog of demo-perfect -> test-gold.
+        2. Define the off-ARC consistency filter: input-mutation / metamorphic agreement (a correct
+           function is stable under semantics-preserving input perturbations; an overfit one is not).
+           Measure P(hidden-pass | visible-pass AND mutation-agreement) and its recall.
+        3. Report whether the filter raises precision (does the gap-1 primitive transfer off-ARC?).
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict (str; terminal prefix; e.g. complete: offarc_demofit_precision_0.XX_filter_raises_to_0.YY
+          or complete: offarc_no_headroom_<reason>)
+        - demofit_precision_raw (float; principle: the off-ARC analog of the 0.68 ARC number)
+        - demofit_precision_filtered (float) + filter_recall (float; principle: does the cheap consistency
+          filter transfer the precision rescue off-ARC?)
+        - primitive_is_domain_general (bool; principle: THE operator's question -- measured, not argued)
+        - n_tasks_scored (int), n_codex_calls (int)
+        - random_seed + reproducibility_checksum
+        - inference_substrate: verifier_ensemble_against_cached_candidates (principle: offline replay ->
+          low duration floor)
+      Run: cd {project_root} && python3 scripts/experiments/exp4093_offarc_demofit_precision_transfer.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4094-sota-ingestion-precision-calibration
     operator_override: >
-      2026-06-11 operator-outer-loop directive (standing 2026-05-29 auto-override class 1):
-      reserved infra slot -- registry/gaps hygiene + regression guard. Aggregation only.
-    milestone: "2026.06.377"
-    title: "VERIFIER-REGISTRY + GAPS HYGIENE (infra slot; regression guard): bit-exact OFFLINE re-eval reproducing the canonical GAP-4 ARC-1 (vote 0.4516 -> gated 0.5806) numbers from cached candidates (zero codex/GGUF -- the regression guard the safety-gate ships on). RECORD the .377 pivot outcome from exp4079 into ops/verifier_gaps.md (new entry: VERIFIER-AS-REWARD-RFT -- did verifier-certified training beat the cold base / gold-SFT held-out?). Note the pivot in ops/verifier_registry.yaml (the verifier now has a TRAINING-time role, not only inference). Keep the registry/gaps the honest source of truth."
+      2026-06-12 SOTA-Ingestion Cycle Discipline: reserved ingestion slot for the .378 bleeding-edge
+      headline (certification-precision calibration / augmentation-invariance selection / noisy-RLVR /
+      imperfect-verifier correction). New task class.
+    milestone: "2026.06.378"
+    title: "SOTA-INGESTION SLOT (reserved): ingest the certification-precision / demo-overfit-selection / noisy-RLVR / imperfect-verifier-correction SOTA mapped onto the .378 precision-rescue + RFT headline. Read research-studying.md / research-references.md filtered to the verifier-precision track + a FOCUSED fresh pass via scripts/sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch (NOT /deep-research). Emit a SOTA->experiment mapping note (strongest 3-5 methods: e.g. augmentation-consistency ranking [BARC 2411.02272], Noisy-Data-Destructive-to-RLVR [2603.16140], imperfect-verifier noise correction [2510.00915], V-STaR keep-rejected [2402.06457], step-level process-reward [CodePRM/2410.17621]). Flag the strongest for the .379 roadmap. Cite real arXiv IDs."
+    priority: medium
+    track: sota-ingestion
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: docs/research-notes/sota-ingestion-precision-calibration-2026-06-12.md
+    prompt: |
+      CONTEXT: Reserved SOTA-ingestion task for the .378 verifier-precision / verifier-as-reward headline.
+      The load-bearing variable is the execution verifier's false-positive rate (the 0.32 behind the 0.68
+      precision). Ingest the SOTA on raising/handling it.
+
+      EXISTING CODE TO READ FIRST: research-studying.md + research-references.md (verifier-precision /
+      reward / distillation entries); scripts/sweep_clusters.py + scripts/sweep_semscholar.py.
+
+      TASK: Map the strongest 3-5 methods onto the current precision-rescue + RFT pipeline.
+
+      CONCRETE STEPS:
+        1. Read the studying/references corpus filtered to the track; run sweep_clusters.py +
+           sweep_semscholar.py for discovery; low-concurrency WebSearch/WebFetch of the top 5-8. Do NOT
+           invoke /deep-research (banned from the loop).
+        2. Target: augmentation-consistency ranking (BARC arXiv:2411.02272), Noisy-Data-Destructive-to-
+           RLVR (arXiv:2603.16140), imperfect-verifier noise correction (arXiv:2510.00915), V-STaR keep-
+           rejected-traces (arXiv:2402.06457), RFT-scaling for weak models (arXiv:2308.01825), Invisible
+           Leash (arXiv:2507.14843), step-level process-reward (CodePRM / arXiv:2410.17621).
+        3. EMIT the dated mapping note: per method, what it would take over the current pipeline +
+           pitfalls; a 'bottom line for the .379 roadmap' section. Update research-studying.md. Every
+           method claim cites a real arXiv ID/URL.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict (str; terminal prefix)
+        - methods_mapped (list of {{arxiv_id, one_line}}; principle: real ids, no fabrication)
+        - strongest_for_next_roadmap (list; principle: feeds the .379 planner)
+        - inference_substrate: aggregation_from_upstream_artifacts
+      Run: cd {project_root} && python3 scripts/experiments/exp4094_sota_ingestion_precision_calibration.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4095-verifier-registry-gaps-hygiene
+    operator_override: >
+      2026-06-12 planning-agent directive (standing 2026-05-29 auto-override class 1): reserved infra
+      slot -- registry/gaps hygiene + regression guard. Aggregation/offline only.
+    milestone: "2026.06.378"
+    title: "VERIFIER-REGISTRY + GAPS HYGIENE (infra slot; regression guard). Bit-exact OFFLINE re-eval reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates (zero codex/GGUF -- the safety-gate regression guard). RECORD the .378 outcomes into ops/verifier_gaps.md: the GAP-5 precision-rescue result (exp4087: did stacked filters reach 0.85?) and the verifier-as-reward RFT outcome (exp4090: A-vs-B). Note in ops/verifier_registry.yaml that the verifier's certification-precision operating point is now characterized. Keep the registry/gaps the honest source of truth."
     priority: medium
     track: infra
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4083_verifier_registry_gaps_hygiene.json
+    deliverable: results/experiment_4095_verifier_registry_gaps_hygiene.json
     prompt: |
-      Bit-exact offline re-eval reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 ->
-      gated 0.5806) from cached candidates (zero codex, zero GGUF -- the safety-gate regression guard).
-      RECORD the .377 verifier-as-reward outcome (exp4079) into ops/verifier_gaps.md as a new entry
-      (the training-time role). Confirm the shipped demo-fit safety-gate still passes its regression.
-      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix), gap4_arc1_reproduced (bool;
-      principle: the regression guard -- the shipped gate must not silently drift), pivot_outcome_recorded
-      (bool), inference_substrate.
+      CONTEXT: Infra regression-guard + honest-bookkeeping slot. Reproduce the canonical GAP-4 ARC-1
+      numbers offline and record the .378 precision-rescue + RFT outcomes into the gaps/registry.
 
-  - id: exp4084-hardware-continuity-gatemate-polarfire
+      EXISTING CODE TO READ FIRST: ops/verifier_registry.yaml, ops/verifier_gaps.md,
+      results/arc3_gap4_induced_programs.json (cached candidates), results/experiment_4087/4090 (if present).
+
+      TASK: Offline regression guard + record outcomes.
+
+      CONCRETE STEPS:
+        1. Bit-exact offline re-eval reproducing the GAP-4 ARC-1 vote 0.4516 -> gated 0.5806 from cached
+           candidates (zero codex, zero GGUF).
+        2. RECORD into ops/verifier_gaps.md: exp4087's precision-rescue outcome (best precision/recall;
+           did any stack reach 0.85?) and exp4090's RFT A-vs-B outcome (if present).
+        3. Note the certification-precision operating point in ops/verifier_registry.yaml.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict (str; terminal prefix)
+        - gap4_arc1_reproduced (bool; principle: the regression guard -- the shipped gate must not silently drift)
+        - precision_rescue_recorded (bool), rft_outcome_recorded (bool)
+        - inference_substrate: verifier_ensemble_against_cached_candidates
+      Run: cd {project_root} && python3 scripts/experiments/exp4095_verifier_registry_gaps_hygiene.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4096-hardware-continuity
     operator_override: >
-      2026-06-11 operator-outer-loop directive (standing 2026-05-29 auto-override class 2):
-      active hardware-continuity task mandated by the Hardware-Task Continuity Discipline until each
-      board reaches terminal. KV260 is TERMINAL (opportunistic-confirm only); drive GateMate +
-      PolarFire. GateMate confirmed reachable after the operator's 2026-06-11 re-plug (1209:c0ca).
-    milestone: "2026.06.377"
-    title: "Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 DONE): per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect -> the operator re-plugged it 2026-06-11, IDCODE GM1Ax confirmed; next step toward n=16 Ising tile flash). PolarFire (ssh polarfire -> next step toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board."
+      2026-06-12 planning-agent directive (standing 2026-05-29 auto-override class 2): active
+      hardware-continuity task mandated by the Hardware-Task Continuity Discipline until each board
+      reaches terminal. KV260 is TERMINAL (opportunistic-confirm only); drive GateMate (n=16 flash was
+      blocked rc=1 in .377) + PolarFire. SSH/USB-detect preconditions ONLY (KV260 SSH-Not-SD-Card).
+    milestone: "2026.06.378"
+    title: "Hardware continuity (GateMate + PolarFire drive-toward-terminal; KV260 DONE). Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect -> investigate the .377 n=16 bitstream flash rc=1 block; next step toward a clean n=16 Ising tile flash). PolarFire (ssh polarfire -> next step toward end-to-end Carnot dispatch; .377 hash-verified CPU dispatch succeeded). KV260 opportunistic-confirm (ssh kria; terminal). DISTINCT wall-clock timers per board (no shared-timestamp tautology)."
     priority: low
     track: hardware
     max_turns: 50
     agent_type: codex
     model: gpt-5.5
     inference_substrate: hardware_smoke
-    deliverable: results/experiment_4084_hardware_continuity.json
+    deliverable: results/experiment_4096_hardware_continuity.json
     prompt: |
-      Per-board reachability + next step (GateMate via openFPGALoader -c dirtyJtag --detect, confirmed
-      reachable after the 2026-06-11 re-plug; PolarFire via ssh polarfire; KV260 opportunistic ssh kria).
-      NEVER use a host SD-card block device as a KV260 precondition. Distinct wall-clock timer per board
-      (no shared-timestamp tautology). Record reachability + the next concrete forward step per board.
-      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix), per_board_reachability (dict),
-      preconditions_checked (list of {{resource, available}}; principle: records which board accesses
-      were verified before the smoke), inference_substrate: hardware_smoke.
+      CONTEXT: Hardware-Task Continuity (KV260 terminal; GateMate + PolarFire driving toward terminal).
+      In .377 the GateMate n=16 bitstream flash blocked rc=1 and PolarFire CPU dispatch succeeded.
 
-  - id: exp4085-capstone-v377
+      EXISTING CODE TO READ FIRST: results/experiment_4084_hardware_continuity.json (the .377 state),
+      ops/hardware-bringup-prep.md.
+
+      TASK: Per-board reachability + next concrete forward step.
+
+      CONCRETE STEPS:
+        1. GateMate: openFPGALoader -c dirtyJtag --detect (confirm IDCODE GM1Ax). Investigate the .377
+           n=16 flash rc=1 (read the flash error; record the next concrete step). NEVER use a host
+           SD-card block device as a precondition.
+        2. PolarFire: ssh polarfire -> next step toward end-to-end Carnot dispatch.
+        3. KV260: ssh kria opportunistic confirm (terminal).
+        4. DISTINCT wall-clock timer per board (no shared-timestamp tautology).
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict (str; terminal prefix)
+        - per_board_reachability (dict; principle: which boards are reachable this milestone)
+        - preconditions_checked (list of {{resource, available}}; principle: records which board accesses
+          were verified before the smoke)
+        - inference_substrate: hardware_smoke
+      Run: cd {project_root} && python3 scripts/experiments/exp4096_hardware_continuity.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4097-capstone-v378
     operator_override: >
-      2026-06-11 operator-outer-loop directive (standing 2026-05-29 auto-override class 1):
-      routine milestone-capstone -- aggregation only, structurally never a doomed rerun.
-    milestone: "2026.06.377"
-    title: "Capstone .377 (UNGATED): the milestone's headline question is DID VERIFIER-AS-REWARD RFT BEAT GOLD-SFT HELD-OUT -- the pivot's first decision-grade result? Aggregate: PIVOT = exp4079 (rft_heldout vs cold_base CI-excl-0 AND vs sft; the verifier-as-reward gate) + exp4080 (Sudoku positive control reproduced -> is the ARC result trustworthy?); DECENTRALIZATION-AS-DISTILLATION = did exp4079's RFT move the local rate toward codex (abstraction latent)?; ACCURACY = exp4082 (total_games_solved); SOTA = exp4081. Honest verdict on whether the pivot's first experiment validated verifier-as-reward (or produced an honest negative + a logged gap). SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on -- aggregate whatever exists."
-    milestone: "2026.06.377"
+      2026-06-12 planning-agent directive (standing 2026-05-29 auto-override class 1): routine
+      milestone-capstone -- aggregation only, structurally never a doomed rerun.
+    milestone: "2026.06.378"
+    title: "Capstone .378 (UNGATED): the headline question is DID THE PRECISION RESCUE REACH 0.85, AND DID THE CLEAN RFT MEASURE A>B -- OR DID WE HONESTLY BOUND THE THESIS? Aggregate: PRECISION RESCUE = exp4087 (did stacked offline filters raise demo-perfect->test-gold from 0.68 to >=0.85 @ recall>=0.20?); PIVOT = exp4090 (A-vs-B verifier-label CI-excl-0, gated on the rescue + a real synchronous train) + exp4091 (Sudoku pipeline-sanity reproduced?); DOMAIN-GENERALITY = exp4093 (off-ARC demo-fit precision transfer); ACCURACY = exp4092 (total_games_solved, monotonic +1); SOTA = exp4094. Honest verdict: did .378 move the headline (precision rescued + A>B) or honestly BOUND it (precision-bounded -> Phase B skipped)? Either is decision-grade -- .377 fabricated; .378 will not. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on -- aggregate whatever exists."
+    milestone_doc: "openspec/change-proposals/research-roadmap-v378.md"
     priority: high
     track: synthesis
-    max_turns: 90
+    max_turns: 80
     agent_type: codex
     model: gpt-5.5
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4085_capstone_v377.json
+    deliverable: results/experiment_4097_capstone_v378.json
     prompt: |
-      Aggregate exp4076-exp4084 into the .377 capstone. Headline: did verifier-certified RFT
-      (exp4079) beat the cold base held-out (CI excl 0) AND beat/match gold-SFT -- with the Sudoku
-      positive control (exp4080) reproduced so the result is trustworthy? Did the RFT move the local
-      induction rate toward codex (decentralization-as-distillation / Invisible-Leash latent)? Plus
-      ARC accuracy (exp4082 games). SKIP any flagged_adversarial artifact; cite each upstream sha256.
-      NO gated_on -- aggregate whatever exists. If training was still accumulating, say so honestly
-      (the pivot's first window may need a 2nd to reach decision-grade).
-      REQUIRED ARTIFACT FIELDS: honest_verdict (terminal prefix; e.g. success: capstone_v377_
-      verifier_as_reward_rft_beats_sft_heldout_<summary> or complete: capstone_v377_pivot_train_
-      accumulating_<summary>), pivot_result (str; principle: the headline -- the verifier's
-      training-time value is now measured one way or the other), sudoku_control_reproduced (bool),
-      decentralization_distillation_outcome (str), games_solved_total (int), cited_upstream_artifacts
-      (list of {{experiment_id, sha256}}), inference_substrate.
+      CONTEXT: Aggregate the .378 milestone. The headline is the precision rescue (exp4087) and, if it
+      passed, the clean RFT A-vs-B gate (exp4090). If the rescue failed, Phase B skipped (gated) and the
+      milestone reports the honest decision-grade bound. .377 fabricated its pivot arms; .378 must report
+      the honest truth either way.
+
+      EXISTING CODE TO READ FIRST: results/experiment_4086..4096*.json; scripts/summarize_artifact.py
+      (use it -- never eyeball raw JSON).
+
+      TASK: Aggregate exp4086-exp4096 into the .378 capstone.
+
+      CONCRETE STEPS:
+        1. Run summarize_artifact.py on each upstream artifact; SKIP any flagged_adversarial:true.
+        2. Headline: did exp4087 raise certification precision to >=0.85 @ recall>=0.20? If yes, did
+           exp4090 measure A>B (verifier label carries signal) with CI excl 0? If the rescue failed,
+           record the honest bound (verifier-as-reward precision-bounded on ARC; forward path = step-level
+           process-reward / outcome-verifier pairing). Did exp4093 show the precision primitive transfers
+           off-ARC? Did exp4092 raise games-solved to 10 (monotonic)?
+        3. Cite each included upstream sha256. NO gated_on -- aggregate whatever exists. If Phase B was
+           still accumulating, say so honestly.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict (str; terminal prefix; e.g. success: capstone_v378_precision_rescued_0.XX_rft_A_gt_B_<summary>
+          or complete: capstone_v378_precision_bounded_max_0.XX_phaseB_skipped_honest_bound_<summary>)
+        - precision_rescue_outcome (str; principle: THE gate -- did 0.68 move to 0.85?)
+        - pivot_result (str; principle: the A-vs-B verifier-label result, or skipped-bounded)
+        - offarc_precision_transfer (str), games_solved_total (int; principle: monotonic)
+        - sudoku_sanity_reproduced (bool)
+        - cited_upstream_artifacts (list of {{experiment_id, sha256}})
+        - inference_substrate: aggregation_from_upstream_artifacts
+      Run: cd {project_root} && python3 scripts/experiments/exp4097_capstone_v378.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.

@@ -38645,3 +38645,126 @@ milestones:
       cite upstream sha256. NO gated_on -- aggregate whatever exists.'
     deliverable: results/experiment_4075_capstone_v376.json
     result: OK (conductor)
+- id: 2026.06.377
+  title: 'TAKE THE PIVOT: verifier-as-REWARD, not verifier-as-SELECTOR. The .371-.375 evidence closed the selection question
+    (the moat is a commodity; directional-not-significant off-ARC; the frontier-as-selector grind was spinning). The verifier''s
+    durable value is HYPOTHESIZED to be as an un-hallucinating REWARD that GENERATES training data (Deep-Think Q3; the Sudoku
+    +1.1% signal is SUGGESTIVE-not-decision-grade, so .377 is a BET being tested, not a confirmed beachhead extended). HEADLINE
+    (DE-CONFOUNDED per the 2026-06-12 review): a 3-arm test -- RFT-CORRECT (verifier-certified demo-perfect) vs RFT-ABLATION
+    (verifier-label ablation: NOT-demo-perfect, same codex generator, N-matched) vs gold-SFT (oracle labels), held-out, on
+    ARC-induction across a small-model LADDER. The LOAD-BEARING contrast is RFT-CORRECT vs RFT-ABLATION: does the VERIFIER''S
+    LABEL carry training signal, or is ''RFT helps'' just codex-distillation? (a Sudoku pipeline-sanity + a Phase-0 verifier-precision
+    gate guard it) across a small-model LADDER (Qwen3.5-0.8B headroom rung + MiniCPM5-1B strong/SOTA rung, optional Qwen2.5-0.5B/3.5-2B
+    -- run the contrast across bases so the claim is robust, not a single-model artifact; the gemma-12B sovereign-magnitude
+    arm is a .378 follow-on)? Keep the shipped demo-fit safety-gate; keep ARC-accuracy (9th game) + memory; DROP the off-ARC-selector
+    grind and the vc33 search. Capstone: did verifier-as-reward RFT beat gold-SFT held-out -- the pivot''s first decision-grade
+    result?'
+  doc: docs/research-notes/verifier-as-self-improvement-reward-scoping.md
+  completed: '2026-06-12'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4076-archive-v376-activate-v377
+    title: Archive .376 -> activate .377; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
+      + ops/exclusion_manifest.yaml parse under yaml.safe_load and the python/carnot/agentic ARC modules import, run the smart-subset
+      pre-test gate green, then RECORD the .376 close-state truth (did the sync-accumulate off-ARC/G3 runs finally accumulate
+      data, or n0 again? -- this is the LAST frontier-as-selector milestone before the pivot).
+    deliverable: results/experiment_4076_archive_v376_activate_v377.json
+    result: OK (conductor)
+  - id: exp4077-verifier-reward-rft-corpus-build
+    title: 'VERIFIER-AS-REWARD RFT -- CORPUS BUILD (THE PIVOT, part 1; DE-CONFOUNDED per the 2026-06-12 adversarial review):
+      build THREE N-matched corpora from the SAME codex generator so the experiment isolates the VERIFIER''S LABEL, not codex-distillation.
+      For each ARC-1/ARC-2 task in a held-IN split, codex generates k candidate `def transform(grid)` programs; the model-free
+      execution verifier (python/carnot/agentic/arc_gap4_execution_verifier.py) labels each. (A) RFT-CORRECT corpus = verifier-certified
+      DEMO-PERFECT programs (the verifier''s label-free positive signal). (B) RFT-ABLATION corpus = the verifier-LABEL ablation:
+      programs the verifier certifies as NOT demo-perfect (demo-failing / randomly-filtered), SAME generator, N-MATCHED and
+      composition-matched to (A). (C) gold-SFT corpus = TEST-gold-passing programs (oracle labels), N-matched. THE LOAD-BEARING
+      CONTRAST is (A) vs (B): same codex intelligence, the ONLY difference is whether the verifier''s label is CORRECT --
+      if A>B the verifier''s LABEL carries training signal (verifier-as-reward), if A~=B then ''RFT helps'' is just codex-distillation
+      and the verifier adds nothing (the honest null the review warned of). (A) vs (C) asks whether the label-free verifier
+      signal matches oracle labels. PRECISION GATE (scoping-doc Phase-0, MANDATORY before trusting any train): measure the
+      verifier''s certification precision -- P(test-gold | demo-perfect) -- on a labeled held-out; if < 0.85 at recall >=
+      0.20 the RFT-CORRECT corpus is POISONED and the result is uninterpretable -> report blocked_precision_gate_unmet and
+      STOP. Write the LoRA trainer for the small-model LADDER (cached HF safetensors, NOT GGUF: Qwen/Qwen3.5-0.8B headroom
+      rung [primary], openbmb/MiniCPM5-1B strong rung; optional Qwen/Qwen2.5-0.5B or Qwen/Qwen3.5-2B) using trl 1.6.0 (SFTTrainer
+      + GRPOTrainer) + peft LoRA, + the held-OUT eval harness. Smoke-train 2 tasks for ONE base; commit the runner.'
+    deliverable: results/experiment_4077_verifier_reward_rft_corpus_build.json
+    result: OK (conductor)
+  - id: exp4078-verifier-reward-rft-train-launch
+    title: 'VERIFIER-AS-REWARD RFT -- TRAIN (THE PIVOT, part 2): LoRA-finetune EACH ladder base (Qwen3.5-0.8B headroom rung
+      first, then MiniCPM5-1B strong rung; optional 3rd) on the THREE arms from exp4077 -- Arm A RFT-CORRECT (verifier-certified
+      demo-perfect), Arm B RFT-ABLATION (verifier-label ablation: NOT-demo-perfect, same generator, N-matched), Arm C gold-SFT
+      (oracle labels) -- with IDENTICAL hyperparameters/seed PER BASE so the ONLY difference within a base is the corpus LABEL.
+      Launch the trains BACKGROUNDED (setsid-detached; checkpoint per epoch to STABLE per-base+arm paths). Per the accumulate
+      rule: if a window does not finish all bases/arms, the checkpoints persist and the next milestone resumes -- report progress,
+      NOT a failure. Do the headroom rung (Qwen3.5-0.8B) FIRST; within a base train Arm A and Arm B FIRST (the load-bearing
+      ablation contrast), Arm C if the window allows.'
+    deliverable: results/experiment_4078_verifier_reward_rft_train_launch.json
+    result: OK (conductor)
+  - id: exp4079-verifier-reward-rft-eval-collect
+    title: 'VERIFIER-AS-REWARD RFT -- EVAL + GATE (THE PIVOT, part 3; the DE-CONFOUNDED gate): poll exp4078''s training; PER
+      LADDER BASE, once its arms have usable checkpoints, EVAL each on the HELD-OUT ARC-induction split (disjoint from train)
+      and report demo-perfect + true-gold induction rate for Arm A (RFT-correct), Arm B (RFT-ablation), Arm C (gold-SFT),
+      the BASE''s OWN cold rate (measured), and CODEX (~0.57 ceiling). THE LOAD-BEARING GATE is A vs B (the verifier-LABEL
+      test): does RFT-CORRECT beat RFT-ABLATION on held-out induction with bootstrap CI95 excluding 0? If YES -> the verifier''s
+      LABEL carries training signal (verifier-as-reward is REAL, not codex-distillation). If A~=B -> ''RFT helps'' is just
+      codex-distillation; the verifier adds nothing (the honest null -- report it plainly, do NOT dress it as a win). SECONDARY:
+      A vs C (does the label-free verifier signal match oracle labels -- A>=C?) and A vs cold base (any lift at all). ROBUSTNESS:
+      report all three contrasts PER base; the headroom rung (Qwen3.5-0.8B) is PRIMARY; A>B holding ACROSS the ladder = robust.
+      CAPACITY-FLOOR GUARD: a base whose cold rate is 0 is dropped as uninformative (NOT ''verifier fails''); if all bases
+      floor, fall back to the Sudoku control + a tractable ARC subset. NOTE: decentralization-MAGNITUDE (close the gemma-4-12B
+      0.26->0.57 gap) is a .378 FOLLOW-ON. Honest null/small gain is a COMPLETE verdict; if still accumulating, report progress
+      (NOT a retirement).'
+    deliverable: results/experiment_4079_verifier_reward_rft_eval.json
+    result: OK (conductor)
+  - id: exp4080-sudoku-rft-beachhead-positive-control
+    title: 'SUDOKU RFT PIPELINE-SANITY (honest beachhead restatement): the Sudoku result is +1.12% (verdict `no_lift`) where
+      gold-SFT was negative/broken -- SUGGESTIVE not decision-grade. Re-run it through the SAME 3-arm RFT pipeline used for
+      the ARC headline (RFT-correct vs RFT-ablation vs gold-SFT) WITH A FIXED gold-SFT control (the broken one is why ''RFT
+      beat gold'' was misleading). Purpose: (a) confirm the pipeline reproduces the +1.1% direction (machinery works); (b)
+      check whether the A-vs-B verifier-label contrast is even detectable at Sudoku''s tiny effect size. If the pipeline cannot
+      reproduce +1.1% with a working control, the ARC null is uninterpretable (pipeline bug). This is methodological sanity,
+      NOT evidence the pivot works.'
+    deliverable: results/experiment_4080_sudoku_rft_positive_control.json
+    result: OK (conductor)
+  - id: exp4081-sota-ingestion-verifier-as-reward
+    title: 'SOTA-INGESTION SLOT (reserved): ingest the verifier-as-reward / RLVR / process-reward-distillation / RFT-vs-SFT
+      SOTA mapped onto the .377 pivot. Read research-studying.md / research-references.md filtered to the reward/distillation
+      track + a FOCUSED fresh pass via scripts/sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch
+      (NOT /deep-research). Emit a SOTA->experiment mapping note (strongest 3-5 methods: e.g. Tulu-3 RLVR recipe, the Invisible-Leash
+      latent-vs-absent lens, process-reward distillation, RFT/STaR/ReST). Flag the strongest method for the .378 roadmap.
+      Cite real arXiv IDs.'
+    deliverable: docs/research-notes/sota-ingestion-verifier-as-reward-2026-06-11.md
+    result: OK (conductor)
+  - id: exp4082-ninth-game-explore-first
+    title: NINTH ARC-AGI-3 game first-solve via the PROVEN explore-first method (raises games-solved 8->9, monotonic +1; the
+      .375 task was SKIPPED in the orphaned-test poison cascade). Apply the proven loop -- bounded active-exploration OBSERVES
+      transitions -> induce mechanic + goal predicate from OBSERVED transitions -> GAP-4 verifier validates -> act -- to the
+      next-easiest non-spatial game from the win-condition survey not yet solved. Honest no-solve is a COMPLETE verdict.
+    deliverable: results/experiment_4082_ninth_game_explore_first.json
+    result: OK (conductor)
+  - id: exp4083-verifier-registry-and-gaps-hygiene
+    title: 'VERIFIER-REGISTRY + GAPS HYGIENE (infra slot; regression guard): bit-exact OFFLINE re-eval reproducing the canonical
+      GAP-4 ARC-1 (vote 0.4516 -> gated 0.5806) numbers from cached candidates (zero codex/GGUF -- the regression guard the
+      safety-gate ships on). RECORD the .377 pivot outcome from exp4079 into ops/verifier_gaps.md (new entry: VERIFIER-AS-REWARD-RFT
+      -- did verifier-certified training beat the cold base / gold-SFT held-out?). Note the pivot in ops/verifier_registry.yaml
+      (the verifier now has a TRAINING-time role, not only inference). Keep the registry/gaps the honest source of truth.'
+    deliverable: results/experiment_4083_verifier_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4084-hardware-continuity-gatemate-polarfire
+    title: 'Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 DONE): per-board reachability
+      + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect -> the operator re-plugged it 2026-06-11, IDCODE
+      GM1Ax confirmed; next step toward n=16 Ising tile flash). PolarFire (ssh polarfire -> next step toward end-to-end Carnot
+      dispatch). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability
+      / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board.'
+    deliverable: results/experiment_4084_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4085-capstone-v377
+    title: 'Capstone .377 (UNGATED): the milestone''s headline question is DID VERIFIER-AS-REWARD RFT BEAT GOLD-SFT HELD-OUT
+      -- the pivot''s first decision-grade result? Aggregate: PIVOT = exp4079 (rft_heldout vs cold_base CI-excl-0 AND vs sft;
+      the verifier-as-reward gate) + exp4080 (Sudoku positive control reproduced -> is the ARC result trustworthy?); DECENTRALIZATION-AS-DISTILLATION
+      = did exp4079''s RFT move the local rate toward codex (abstraction latent)?; ACCURACY = exp4082 (total_games_solved);
+      SOTA = exp4081. Honest verdict on whether the pivot''s first experiment validated verifier-as-reward (or produced an
+      honest negative + a logged gap). SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on -- aggregate
+      whatever exists.'
+    deliverable: results/experiment_4085_capstone_v377.json
+    result: OK (conductor)
