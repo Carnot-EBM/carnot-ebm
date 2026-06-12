@@ -551,3 +551,33 @@ registry version that closed them when a new verifier captures a previously-open
 - missing discriminator: a local candidate source or verifier-side signal that recovers the demonstrated rule before distillation.
 - priority: high
 - missing_verifier_gaps: 17cae0c1, 1a2e2828, 1a6449f1, 25094a63, 2f0c5170, 4e469f39, 505fff84, 50a16a69, 5833af48, 692cd3b6, 712bf12e, 79fb03f4, 81c0276b, 8719f442, 96a8c0cd, a57f2f04, ac3e2b04, b9630600, c3202e5a, c7d4e6ad, f0df5ff0, f3e62deb, fafd9572
+
+<!-- exp4073-g1:start -->
+#### Exp 4073 G1 corpus-routed update for GAP-CODE-EXEC-DEMOFIT
+- status: g1_evalplus_accumulating
+- evidence: `results/experiment_4068_offarc_transfer_power_sync.json`; corpus=evalplus; accumulated_n_tasks=160; powered_task_floor=160; oracle_headroom_present=False; oracle_passrate=0.9625; demo_fit_CI95=[0.0, 3.125]; best_arm=armC_symbolic; best_arm_CI95=[0.0, 3.125]; route=12B oracle headroom present on EvalPlus (0.7500 < 0.95); route stays on cheap hidden tests..
+- failure mode: visible/demo-fit code tests are not yet a powered hidden-semantic discriminator.
+- missing discriminator: code_demo_fit_visible_tests_do_not_discriminate_hidden_semantics.
+- candidate design: continue accumulation on a corpus with oracle headroom or add hidden-property, symbolic, formal, or runtime oracles.
+- priority: high
+<!-- exp4073-g1:end -->
+
+<!-- exp4073-g3:start -->
+#### Exp 4073 G3 synchronous update for GAP-DECENTRALIZATION-MOE-BASE-4048
+- status: g3_decentralization_absent_coverage_0.2333
+- evidence: `results/experiment_4069_decentralization_moe_sync.json`; accumulated_coverage=0.2333; ACCUMULATED-N=30; n_demo_perfect_tasks=7; diagnosis=absent; bootstrap_CI95=[-0.1581, 0.1419]; missing_verifier_gaps=['17cae0c1', '1a2e2828', '1a6449f1', '25094a63', '2f0c5170', '4e469f39', '505fff84', '50a16a69', '5833af48', '692cd3b6', '712bf12e', '79fb03f4', '81c0276b', '8719f442', '96a8c0cd', 'a57f2f04', 'ac3e2b04', 'b9630600', 'c3202e5a', 'c7d4e6ad', 'f0df5ff0', 'f3e62deb', 'fafd9572'].
+- failure mode: local MoE best-of-N support has not established a sovereign GAP-4 replacement.
+- missing discriminator: verifier-side signal or stronger local base that surfaces demo-perfect programs without Codex.
+- candidate design: continue accumulation, use a stronger local base, or add verifier-guided generation before distillation.
+- priority: high
+<!-- exp4073-g3:end -->
+
+<!-- exp4073-g2:start -->
+### GAP-ARC3-VC33-SIM2REAL-CEILING: vc33 verified-WM closed-loop sim2real ceiling
+- status: g2_vc33_sim2real_ceiling_logged
+- evidence: `results/experiment_4046_closed_loop_replan_over_vc33_wm.json`; per_step_wm_real_divergence_rate=0.207031; divergence_gate_fired_count=1.
+- failure mode: bounded WM search produced a plan whose predicted next state diverged from the real environment.
+- missing discriminator: per-step WM-to-real transition trust signal strong enough to plan past vc33's wall.
+- candidate design: improve the verified world model or add a conservative real-env grounding/replan guard.
+- priority: high
+<!-- exp4073-g2:end -->

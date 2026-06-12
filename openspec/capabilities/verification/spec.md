@@ -12948,6 +12948,62 @@ divergence, sets `registry_updated` and `gaps_updated` to reflect the resulting
 ledgers, and uses no inference substrate other than aggregation from upstream
 artifacts.
 
+### REQ-VERIFY-4073: GAP-4 Registry And Gaps Hygiene Re-Eval For .376
+
+The repository SHALL provide Exp 4073 at
+`scripts/experiments/exp4073_verifier_registry_and_gaps_hygiene.py` to replay
+the registered GAP-4 verifier headline from cached artifacts and record the
+.376 G1/G3 outcomes plus the banked G2 vc33 ceiling in the registry and gaps
+ledgers without Codex, GGUF, or live inference. The runner SHALL read
+`ops/verifier_registry.yaml`, `ops/verifier_gaps.md`,
+`results/arc3_gap4_rule_exec_verifier.json`,
+`results/arc3_gap4_arc2_rule_exec_verifier.json`,
+`results/arc3_gap4_arc2_chain_ensemble.json`,
+`results/experiment_4068_offarc_transfer_power_sync.json`,
+`results/experiment_4069_decentralization_moe_sync.json`, and
+`results/experiment_4046_closed_loop_replan_over_vc33_wm.json`.
+
+The offline replay SHALL assert bit-exact ARC-1 vote `0.4516` to gated
+`0.5806`, ARC-2 rule-exec vote `0.0645` to gated `0.0645`, and the registered
+ARC-2 chain pass@1 `0.6129`. If these cached numbers do not match, the terminal
+artifact SHALL set `offline_reeval_bitexact=false` and preserve mismatch
+details.
+
+The G1 ledger update SHALL record the Exp 4068 corpus-routed accumulated-N
+outcome in `GAP-CODE-EXEC-DEMOFIT`: demo-fit transfer if the demo-fit CI
+excludes zero, stronger-discriminator closure if ACES or symbolic partition
+excludes zero, an open gap if all arms touch zero on a powered unsaturated
+corpus, `g1_<corpus>_accumulating` when a present upstream artifact is partial,
+blocked, saturated, or below the powered task floor, or
+`g1_corpus_routed_pending` when the upstream is absent or incomplete. The G3
+ledger update SHALL record the Exp 4069 MoE-base accumulated coverage in
+`GAP-DECENTRALIZATION-MOE-BASE-4048` as latent, absent, accumulating, or
+`g3_decentralization_moe_sync_4069_pending` when the upstream is absent or
+incomplete. The G2 ledger update SHALL ensure
+`GAP-ARC3-VC33-SIM2REAL-CEILING` remains logged with the banked Exp 4046
+per-step divergence, including `0.207031` when that upstream is present.
+
+The terminal artifact SHALL write
+`results/experiment_4073_verifier_registry_and_gaps_hygiene.json` with
+`honest_verdict`, bare bool `offline_reeval_bitexact`, string
+`g1_off_arc_outcome_recorded`, string
+`g3_decentralization_outcome_recorded`, bare bool `g2_vc33_ceiling_logged`,
+bare bools `registry_updated` and `gaps_updated`, and
+`inference_substrate=aggregation_from_upstream_artifacts`.
+
+### SCENARIO-VERIFY-4073: Cached Hygiene Records .376 G1/G3 And G2 Ceiling
+
+Given the GAP-4 cached ARC replay artifacts plus .376 G1/G3 upstream artifacts
+and the banked Exp 4046 G2 artifact are readable or honestly absent, when Exp
+4073 runs, then it writes the terminal artifact with
+`offline_reeval_bitexact=true`, records the corpus-routed G1 outcome in the
+code demo-fit gap ledger or code-domain registry according to the measured CI
+outcome, records the Exp 4069 MoE-base accumulated coverage in the
+decentralization gap ledger, ensures the vc33 sim2real ceiling gap is logged
+with the measured divergence, sets `registry_updated` and `gaps_updated` to
+reflect the resulting ledgers, and uses no inference substrate other than
+aggregation from upstream artifacts.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
