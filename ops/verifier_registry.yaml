@@ -209,6 +209,9 @@ verifiers:
     exp4063_offline_reeval_bitexact: true
     eval_exp_4073: results/experiment_4073_verifier_registry_and_gaps_hygiene.json
     exp4073_offline_reeval_bitexact: true
+    eval_exp_4083: results/experiment_4083_verifier_registry_gaps_hygiene.json
+    exp4083_gap4_arc1_reproduced: true
+    exp4083_arc1_safety_gate_regression_passed: true
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -265,3 +268,10 @@ verifiers:
     \ / 1156.5s wall (the earlier summary '40 calls/4747.6s' was wrong; the artifact\
     \ and all reviewers independently re-derived 45/3780.0 \u2014 see ops/changelog.md\
     \ 2026-06-10 entry)."
+  training_time_roles:
+  - role_id: verifier_as_reward_rft_4079
+    experiment: results/experiment_4079_verifier_reward_rft_eval_collect.json
+    role: training_time_reward_signal
+    status: blocked
+    outcome: verifier_as_reward_rft_blocked
+    honest_verdict: blocked_gate_check_failed

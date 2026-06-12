@@ -581,3 +581,13 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: improve the verified world model or add a conservative real-env grounding/replan guard.
 - priority: high
 <!-- exp4073-g2:end -->
+
+<!-- exp4083-pivot:start -->
+### GAP-TRAINING-VERIFIER-AS-REWARD-RFT-4079: training-time verifier role for verifier-as-reward RFT
+- status: verifier_as_reward_rft_blocked
+- evidence: `results/experiment_4079_verifier_reward_rft_eval_collect.json`; status=blocked; honest_verdict=blocked_gate_check_failed; blocked_at_layer=conductor_pre_gate; gate_check_summary=1 of 1 gate(s) failed; first failure: exp4078-verifier-reward-rft-train-launch.train_launched (actual=False == expected=True).
+- failure mode: the verifier-as-reward training-time role is not yet a decision-grade win; Exp 4079 must beat the cold base and the label ablation on held-out induction before promotion.
+- missing discriminator: decision-grade evidence that verifier-certified training carries signal beyond codex-distillation and gold-SFT controls.
+- candidate design: unblock the train launch, rerun Exp 4079 on the held-out ladder, and keep the RFT-correct vs RFT-ablation contrast load-bearing.
+- priority: high
+<!-- exp4083-pivot:end -->
