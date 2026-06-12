@@ -8332,3 +8332,4 @@ c |
 | 2026-06-12 11:24 UTC | OFF-ARC DEMO-FIT PRECISION TRANSFER (operator TOP  | OK | 91 passed in 4.43s |
 | 2026-06-12 11:26 UTC | RFT EVAL + GATE (Phase B part 3; the de-confounded | GATE_BLOCK | Pre-emptive skip: upstream retired (exp4089-verifier-reward-rft-train) |
 | 2026-06-12 11:26 UTC | SUDOKU RFT PIPELINE-SANITY (gated on a real train; | GATE_BLOCK | Pre-emptive skip: upstream retired (exp4089-verifier-reward-rft-train) |
+| 2026-06-12 12:14 UTC | SOTA-INGESTION SLOT (reserved): ingest the certifi | OK | 99 passed in 3.64s |
