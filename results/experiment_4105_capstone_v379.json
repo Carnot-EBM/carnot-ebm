@@ -1,0 +1,308 @@
+{
+  "arc_games": {
+    "first_solve_at_action": 13,
+    "game_solved": true,
+    "honest_verdict": "success: eleventh_game_solved_s5i5-18d95033_at_action_13",
+    "prior_total_games_solved": 10,
+    "real_env_confirmed": true,
+    "status": "new_game_solved",
+    "target_game": "s5i5-18d95033",
+    "total_games_solved": 11
+  },
+  "candidate_v380_directions": [
+    "GAP-TRM-GRID-DISCRIMINATION: build a discriminator that separates correct TRM grids from confident wrong TRM grids before another verifier-RFT run.",
+    "vstar_rejected_trace_selector_for_trm_rft: test rejected-trace selection only after grid discrimination improves.",
+    "Imperfect-verifier forward correction: carry FP/FN correction into any TRM reward labels.",
+    "Verifiable process rewards for recursive steps: score recursive grid-edit steps instead of only final grids.",
+    "Keep hardware continuity separate from TRM science claims until a clean trainer run exists."
+  ],
+  "duration_s": 0.21992630799968538,
+  "experiment_id": 4105,
+  "field_principles": {
+    "headline_outcome": "One of {verifier_rft_on_trm_validated, honest_negative_no_grid_discrimination, trainer_derisked_science_open} -- forces a single unambiguous read of the pivot's first decision-grade result.",
+    "honest_verdict": "Terminal-prefixed. The milestone's decision-grade summary; an honest negative ('verifier does not discriminate on TRM grids') is a COMPLETE, valuable verdict.",
+    "upstream_provenance": "{experiment_id, fields_imported, sha256} per cited upstream -- the audit trail that proves the capstone synthesizes real measurements, not invented numbers."
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "experiment_id": 4100,
+      "path": "results/experiment_4100_trm_verifier_rft_conditional.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "d9af9534fb47b4dd868b6be29efb61ee9593d29244fe06283b6cac468bb1e467"
+    }
+  ],
+  "hardware_continuity": {
+    "gatemate_step_taken": "gatemate_existing_n16_bitstream_post_flash_detect_blocked",
+    "honest_verdict": "complete: hardware_continuity_4104_gatemate_gatemate_existing_n16_bitstream_post_flash_detect_blocked_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+    "included": true,
+    "kv260_terminal_confirmed": true,
+    "per_board_reachability": {
+      "gatemate": true,
+      "kv260": true,
+      "polarfire": true
+    },
+    "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded"
+  },
+  "headline_answer": {
+    "best_reranker": "K_OF_N_AGREEMENT",
+    "best_reranker_pass2": 0.2742,
+    "captured_pp_vs_prior": {
+      "captured_pp": 0.0,
+      "delta_vs_prior_pp": 0.0,
+      "prior_captured_pp": 0.0
+    },
+    "native_trm_trainer_checkpoint_produced": false,
+    "total_arc_games_solved": 11,
+    "trm_vote_pass2": 0.2742,
+    "verifier_beats_trm_vote": false,
+    "verifier_rft_beat_vote_sft_ablation": false
+  },
+  "headline_outcome": "honest_negative_no_grid_discrimination",
+  "honest_verdict": "complete: capstone_v379_honest_negative_no_grid_discrimination_best_K_OF_N_AGREEMENT_captured_0.0000_games11_flagged_skipped1",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "missing_upstream_artifacts": [],
+  "random_seed": 4105,
+  "registry_gap_hygiene": {
+    "gaps_updated": [
+      "GAP-TRM-GRID-DISCRIMINATION",
+      "GAP-TRM-VERIFIER-RFT-4100"
+    ],
+    "honest_verdict": "complete: registry_gaps_reconciled_to_v379_truth_regression_guard_passed_True_trm_grid_gap_open_captured_pp_0.0000_exp4100_smoke_checkpoint_ok",
+    "included": true,
+    "missing_discriminator": "signal_separating_correct_trm_grid_from_confident_wrong_trm_grid_on_pool",
+    "regression_guard_passed": true,
+    "trm_grid_gap_status": "open_captured_pp_0.0000"
+  },
+  "reproducibility_checksum": "404596cd7bf872a188f07c107ac296676ef7f91cd7d706fe18df7bf27039e759",
+  "schema": "carnot.capstone_v379_4105.v1",
+  "sota_ingestion": {
+    "flagged_for_v380": "vstar_rejected_trace_selector_for_trm_rft",
+    "honest_verdict": "complete: sota_ingestion_trm_self_training_mapped",
+    "included": true,
+    "methods_mapped": [
+      {
+        "arxiv_id": "2402.06457",
+        "name": "V-STaR keep-rejected verifier training"
+      },
+      {
+        "arxiv_id": "2203.14465",
+        "name": "STaR / ReST generate-filter-improve loop"
+      },
+      {
+        "arxiv_id": "2511.02886",
+        "name": "TTA-TRM full fine-tuning with verifier admission"
+      },
+      {
+        "arxiv_id": "2510.00915",
+        "name": "Imperfect-verifier forward correction"
+      },
+      {
+        "arxiv_id": "2605.10325",
+        "name": "Verifiable process rewards for recursive steps"
+      }
+    ]
+  },
+  "summarize_artifact_status": {
+    "4099": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4099_trm_pool_verifier_discrimination_probe.json\n------------------------------------------------------------------------------\n  verdict          : complete: no_verifier_beats_trm_vote_best_K_OF_N_AGREEMENT_captured_0.0000_ci95_0.0000_0.0000_n62_underpowered_true\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 3.779   substrate: offline_saved_trm_candidate_grid_rerank_zero_codex\n  headline metrics :\n      n_tasks_scored = 62\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4100": {
+      "returncode": 2,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4100_trm_verifier_rft_conditional.json\n------------------------------------------------------------------------------\n  verdict          : complete: trm_native_trainer_checkpoint_ok_smoke_only_no_verifier_grid_discrimination_best_K_OF_N_AGREEMENT_gap_0.0000\n  flagged_adversarial (stamped): True   |   LIVE re-check: CRITICAL\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 15.682   substrate: native_nano_trm_trainer_checkpoint_smoke\n  adversarial flags:\n      [critical] DURATION_TOO_SHORT: duration_s=15.682 but artifact references compute-bound markers (GGUF / CUDA / live model). Load\n      [warn    ] METHODOLOGY_MISSING: Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.\n==============================================================================\n"
+    },
+    "4101": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4101_eleventh_game_explore_first.json\n------------------------------------------------------------------------------\n  verdict          : success: eleventh_game_solved_s5i5-18d95033_at_action_13\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.442   substrate: offline_arc_agi3_explore_first_first_solve\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4102": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4102_sota_ingestion_trm_self_training.json\n------------------------------------------------------------------------------\n  verdict          : complete: sota_ingestion_trm_self_training_mapped\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : None   substrate: None\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4103": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4103_verifier_registry_gaps_hygiene.json\n------------------------------------------------------------------------------\n  verdict          : complete: registry_gaps_reconciled_to_v379_truth_regression_guard_passed_True_trm_grid_gap_open_captured_pp_0.0000_exp4100_smoke_checkpoint_ok\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 0.233   substrate: verifier_ensemble_against_cached_candidates\n  adversarial flags: none\n==============================================================================\n"
+    },
+    "4104": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "==============================================================================\nARTIFACT  experiment_4104_hardware_continuity.json\n------------------------------------------------------------------------------\n  verdict          : complete: hardware_continuity_4104_gatemate_gatemate_existing_n16_bitstream_post_flash_detect_blocked_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only\n  flagged_adversarial (stamped): None   |   LIVE re-check: clean\n  acceptance gates : (none found \u2014 claim has no self-reported gate)\n  duration_s       : 12.197299   substrate: hardware_smoke\n  adversarial flags: none\n==============================================================================\n"
+    }
+  },
+  "total_arc_games_solved": 11,
+  "trm_grid_discrimination": {
+    "best_reranker": "K_OF_N_AGREEMENT",
+    "best_reranker_pass2": 0.2742,
+    "bottleneck": "signal_separating_correct_trm_grid_from_confident_wrong_trm_grid_on_pool",
+    "captured_pp": 0.0,
+    "captured_pp_ci95": [
+      0.0,
+      0.0
+    ],
+    "delta_vs_prior_pp": 0.0,
+    "honest_verdict": "complete: no_verifier_beats_trm_vote_best_K_OF_N_AGREEMENT_captured_0.0000_ci95_0.0000_0.0000_n62_underpowered_true",
+    "pool_n_tasks": 62,
+    "prior_captured_pp": 0.0,
+    "status": "no_grid_discrimination",
+    "trm_vote_pass2": 0.2742,
+    "underpowered": true,
+    "verifier_beats_trm_vote": false
+  },
+  "upstream_artifact_state": {
+    "4099": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: no_verifier_beats_trm_vote_best_K_OF_N_AGREEMENT_captured_0.0000_ci95_0.0000_0.0000_n62_underpowered_true",
+      "included": true,
+      "path": "results/experiment_4099_trm_pool_verifier_discrimination_probe.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4100": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: trm_native_trainer_checkpoint_ok_smoke_only_no_verifier_grid_discrimination_best_K_OF_N_AGREEMENT_gap_0.0000",
+      "included": false,
+      "path": "results/experiment_4100_trm_verifier_rft_conditional.json",
+      "skipped": true,
+      "summarize_artifact_returncode": 2
+    },
+    "4101": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "success: eleventh_game_solved_s5i5-18d95033_at_action_13",
+      "included": true,
+      "path": "results/experiment_4101_eleventh_game_explore_first.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4102": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: sota_ingestion_trm_self_training_mapped",
+      "included": true,
+      "path": "results/experiment_4102_sota_ingestion_trm_self_training.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4103": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v379_truth_regression_guard_passed_True_trm_grid_gap_open_captured_pp_0.0000_exp4100_smoke_checkpoint_ok",
+      "included": true,
+      "path": "results/experiment_4103_verifier_registry_gaps_hygiene.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    "4104": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: hardware_continuity_4104_gatemate_gatemate_existing_n16_bitstream_post_flash_detect_blocked_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+      "included": true,
+      "path": "results/experiment_4104_hardware_continuity.json",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    }
+  },
+  "upstream_provenance": [
+    {
+      "experiment_id": 4099,
+      "fields_imported": [
+        "verifier_beats_trm_vote",
+        "captured_pp_directional",
+        "best_reranker",
+        "pool_n_tasks",
+        "per_reranker.TRM_VOTE.pass@2",
+        "per_reranker.K_OF_N_AGREEMENT.pass@2"
+      ],
+      "honest_verdict": "complete: no_verifier_beats_trm_vote_best_K_OF_N_AGREEMENT_captured_0.0000_ci95_0.0000_0.0000_n62_underpowered_true",
+      "path": "results/experiment_4099_trm_pool_verifier_discrimination_probe.json",
+      "sha256": "2e40df2e99d4238dca8dc82e2d6f53715b134d63ecc04d1a2b4a318cfe59bd0b",
+      "skip_reason": "",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    {
+      "experiment_id": 4100,
+      "fields_imported": [],
+      "honest_verdict": "complete: trm_native_trainer_checkpoint_ok_smoke_only_no_verifier_grid_discrimination_best_K_OF_N_AGREEMENT_gap_0.0000",
+      "path": "results/experiment_4100_trm_verifier_rft_conditional.json",
+      "sha256": "d9af9534fb47b4dd868b6be29efb61ee9593d29244fe06283b6cac468bb1e467",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true,
+      "summarize_artifact_returncode": 2
+    },
+    {
+      "experiment_id": 4101,
+      "fields_imported": [
+        "game_solved",
+        "real_env_confirmed",
+        "prior_total_games_solved",
+        "total_games_solved",
+        "target_game",
+        "first_solve_at_action"
+      ],
+      "honest_verdict": "success: eleventh_game_solved_s5i5-18d95033_at_action_13",
+      "path": "results/experiment_4101_eleventh_game_explore_first.json",
+      "sha256": "063cff537f328d374112cceec9e6eaaf03d6789f458f2f1ecbbd97ff63146067",
+      "skip_reason": "",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    {
+      "experiment_id": 4102,
+      "fields_imported": [
+        "flagged_for_v380",
+        "methods_mapped"
+      ],
+      "honest_verdict": "complete: sota_ingestion_trm_self_training_mapped",
+      "path": "results/experiment_4102_sota_ingestion_trm_self_training.json",
+      "sha256": "572154b13ed2776348778062e6ab466d95464877c91c317de42e3263c95dab45",
+      "skip_reason": "",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    {
+      "experiment_id": 4103,
+      "fields_imported": [
+        "gaps_updated",
+        "regression_guard_passed",
+        "exp4099_gap.missing_discriminator"
+      ],
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v379_truth_regression_guard_passed_True_trm_grid_gap_open_captured_pp_0.0000_exp4100_smoke_checkpoint_ok",
+      "path": "results/experiment_4103_verifier_registry_gaps_hygiene.json",
+      "sha256": "a45072a7bfd14d47df2c8e277fb1f25253deafb82718787da26a98556b4c36bf",
+      "skip_reason": "",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    },
+    {
+      "experiment_id": 4104,
+      "fields_imported": [
+        "kv260_terminal_confirmed",
+        "per_board_reachability",
+        "gatemate_step_taken",
+        "polarfire_step_taken"
+      ],
+      "honest_verdict": "complete: hardware_continuity_4104_gatemate_gatemate_existing_n16_bitstream_post_flash_detect_blocked_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+      "path": "results/experiment_4104_hardware_continuity.json",
+      "sha256": "b50534ed52c348ef13daa78c2b146bc0acdbb2f8da10be1d0cd69882350475e3",
+      "skip_reason": "",
+      "skipped": false,
+      "summarize_artifact_returncode": 0
+    }
+  ],
+  "verifier_rft_followthrough": {
+    "branch_taken": "",
+    "honest_verdict": "",
+    "native_trainer_checkpoint": "skipped_flagged",
+    "rft_vs_ablation_delta": null,
+    "status": "skipped_flagged",
+    "trm_native_trainer_checkpoint_ok": false
+  }
+}
