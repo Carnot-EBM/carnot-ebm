@@ -13147,6 +13147,60 @@ operating point, sets `precision_rescue_recorded=true` and
 `rft_outcome_recorded=true` for the ledger bookkeeping state, and uses no
 inference substrate other than cached verifier candidates.
 
+### REQ-VERIFY-4103: Verifier Registry And Gaps Hygiene For TRM Grid Discrimination
+
+The repository SHALL provide Exp 4103 at
+`scripts/experiments/exp4103_verifier_registry_gaps_hygiene.py` to replay the
+canonical GAP-4 ARC-1 gate from cached candidates and saved induced-program
+outputs, then reconcile `ops/verifier_registry.yaml` and `ops/verifier_gaps.md`
+with Exp 4099 TRM-grid rerank discrimination and Exp 4100 conditional
+TRM-verifier-RFT outcomes. The runner SHALL read
+`results/arc3_gap4_induced_programs.json`,
+`results/arc3_gap3_stage2_eval_pool.json.gz`,
+`results/experiment_4099_trm_pool_verifier_discrimination_probe.json`,
+`results/experiment_4100_trm_verifier_rft_conditional.json`,
+`ops/verifier_registry.yaml`, and `ops/verifier_gaps.md`.
+
+The offline regression guard SHALL rederive ARC-1 vote `0.4516` to gated
+`0.5806` from cached TRM candidate rows and saved GAP-4 program outputs,
+including `n=31`, `headroom_recovered=4`, and `vote_wins_lost=0`, without
+Codex calls, GGUF loading, live TRM inference, or induced-code execution.
+`regression_guard_passed` SHALL be true only when those canonical GAP-4 numbers
+match exactly, and a drift result SHALL preserve both observed and expected
+values.
+
+The gaps ledger SHALL append or replace an idempotent
+`GAP-TRM-GRID-DISCRIMINATION` block. If Exp 4099 reports
+`verifier_beats_trm_vote=true`, the gap status SHALL be `filled` with the best
+reranker and captured point estimate; otherwise the status SHALL remain `open`
+and include Exp 4099's captured point estimate as `captured_pp`. The missing
+discriminator SHALL be recorded as the signal that separates a correct TRM grid
+from a confident-wrong TRM grid on the candidate pool.
+
+The registry SHALL annotate the `gap4_program_induction_stack` entry with an
+Exp 4103 replay marker and a candidate TRM training-time role derived from Exp
+4100. If Exp 4100 ran full RFT, the role SHALL record the A-vs-B delta and CI;
+if Exp 4100 ran only the mechanism smoke, the role SHALL record the smoke branch
+and the Exp 4099 bottleneck instead of claiming a training win.
+
+The terminal artifact SHALL write
+`results/experiment_4103_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_updated`,
+bare bool `registry_updated`, `exp4099_gap`, `exp4100_outcome`, and
+`inference_substrate=verifier_ensemble_against_cached_candidates`.
+
+### SCENARIO-VERIFY-4103: Cached Replay Records Open TRM Grid Gap And Smoke Outcome
+
+Given the GAP-4 cached ARC-1 pool, saved induced-program artifact, Exp 4099
+TRM-grid discrimination artifact, and Exp 4100 conditional RFT artifact are
+readable, when Exp 4103 runs, then it writes the terminal artifact with
+`regression_guard_passed=true`, records vote `0.4516` to gated `0.5806`, writes
+`GAP-TRM-GRID-DISCRIMINATION` to the gaps ledger with Exp 4099
+`captured_pp=0.0` when no reranker beat TRM vote, records the Exp 4100
+mechanism-smoke outcome and bottleneck, annotates the GAP-4 registry entry with
+the Exp 4103 replay and candidate TRM training-time role, and uses no inference
+substrate other than cached verifier candidates.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
