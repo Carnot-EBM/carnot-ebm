@@ -143,5 +143,18 @@
     "val_exact_accuracy=val/exact_accuracy metric missing under /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4116_sudoku_extreme_resume_pass1_hydra; q_halt_accuracy is not a solve metric",
     "cumulative_epochs=None"
   ],
-  "val_exact_accuracy": null
+  "val_exact_accuracy": null,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=5.992 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }

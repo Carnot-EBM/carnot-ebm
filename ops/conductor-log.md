@@ -8385,3 +8385,4 @@ c |
 | 2026-06-12 22:11 UTC | Capstone .380 (UNGATED): headline question is DID  | OK | 88 passed in 4.69s |
 | 2026-06-12 22:21 UTC | Milestone 2026.06.381 activated | OK | 10 tasks queued |
 | 2026-06-12 22:44 UTC | Archive .380 -> activate .381; KEEP the hardened g | OK | 94 passed in 4.84s |
+| 2026-06-12 23:13 UTC | RESUMABLE Sudoku-Extreme baseline -- PASS 1 (estab | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
