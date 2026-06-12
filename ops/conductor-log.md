@@ -8374,3 +8374,4 @@ c |
 | 2026-06-12 17:25 UTC | Capstone .379 (UNGATED): the milestone's headline  | OK | 87 passed in 5.89s |
 | 2026-06-12 17:27 UTC | Milestone 2026.06.380 activated | OK | 9 tasks queued |
 | 2026-06-12 17:42 UTC | Archive .379 -> activate .380; KEEP the hardened g | OK | 149 passed in 4.30s |
+| 2026-06-12 18:13 UTC | NANO-TRM TRAINER MECHANISM SMOKE (THE de-risk; min | OK | 88 passed, 2 warnings in 7.41s |
