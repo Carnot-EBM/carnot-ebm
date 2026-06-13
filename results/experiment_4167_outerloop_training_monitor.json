@@ -1,0 +1,678 @@
+{
+  "baseline_faithful": false,
+  "checkpoint_epoch": 6399,
+  "checkpoint_mtime": "2026-06-13T04:41:29.093138Z",
+  "checkpoint_mtime_epoch_s": 1781325689.093138,
+  "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+  "checkpoint_read": {
+    "detail": "loaded checkpoint scalar view",
+    "epoch": 6399,
+    "exists": true,
+    "load_ok": true,
+    "mtime_epoch_s": 1781325689.093138,
+    "mtime_iso": "2026-06-13T04:41:29.093138Z",
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt"
+  },
+  "current_val_exact_accuracy": 0.504166662693,
+  "experiment": "experiment_4167_outerloop_training_monitor",
+  "experiment_id": 4167,
+  "faithful_threshold": 0.85,
+  "field_principles": {
+    "baseline_faithful": "Bare bool: val >= 0.85 AND train process NOT running -> the checkpoint is faithful + stable -> the graft may run.",
+    "checkpoint_mtime": "Stable-checkpoint mtime; advancing past Jun-13-00:41 confirms the outer-loop run is saving real progress.",
+    "current_val_exact_accuracy": "Latest val from the outer-loop run; the convergence signal toward 0.87.",
+    "honest_verdict": "Terminal-prefixed. A status report is COMPLETE; this task never fails on the science (it does not run any).",
+    "outerloop_train_alive": "Bare bool: is the outer-loop training process running? Lets the graft know whether the checkpoint is stable (safe to read) or being written."
+  },
+  "honest_verdict": "complete: outerloop_training_alive_val_0.5042_below_0.85",
+  "inference_substrate": "read_only_outerloop_status_report",
+  "latest_metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+  "metrics_files_read": [
+    "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_0/metrics.csv",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_2/metrics.csv",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_3/metrics.csv",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_7/metrics.csv",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_8/metrics.csv",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_9/metrics.csv",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv"
+  ],
+  "outerloop_pid": 505313,
+  "outerloop_pid_etime": "32:54",
+  "outerloop_process": {
+    "alive": true,
+    "detail": "32:54",
+    "etime": "32:54",
+    "pid": 505313
+  },
+  "outerloop_train_alive": true,
+  "read_only_actions": {
+    "ps_etime_probe": true,
+    "stable_checkpoint_written": false,
+    "torch_load_cpu_only": true,
+    "train_process_stop_attempted": false,
+    "training_launched": false
+  },
+  "reproducibility_checksum": "b40aa9325cdb197556c5994974e4e5c36bf05b4d858a2ab61923d495e0eb9ab7",
+  "schema": "carnot.experiment_4167_outerloop_training_monitor.v1",
+  "spec_refs": [
+    "REQ-LEARN-4167",
+    "SCENARIO-LEARN-4167-READONLY-MONITOR",
+    "SCENARIO-LEARN-4167-FAITHFUL-STABLE"
+  ],
+  "val_crossed_085": false,
+  "val_trajectory": [
+    {
+      "csv_version": 0,
+      "delta_vs_previous": null,
+      "epoch": 6499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_0/metrics.csv",
+      "row_number": 4,
+      "step": 19104,
+      "val_exact_accuracy": 0.200520828366
+    },
+    {
+      "csv_version": 2,
+      "delta_vs_previous": -0.001302078366,
+      "epoch": 6499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_2/metrics.csv",
+      "row_number": 4,
+      "step": 19104,
+      "val_exact_accuracy": 0.19921875
+    },
+    {
+      "csv_version": 3,
+      "delta_vs_previous": 0.000260412693,
+      "epoch": 6499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_3/metrics.csv",
+      "row_number": 4,
+      "step": 19104,
+      "val_exact_accuracy": 0.199479162693
+    },
+    {
+      "csv_version": 3,
+      "delta_vs_previous": 0.022135421634,
+      "epoch": 6599,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_3/metrics.csv",
+      "row_number": 7,
+      "step": 19204,
+      "val_exact_accuracy": 0.221614584327
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": -0.017447918653,
+      "epoch": 6499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 4,
+      "step": 19104,
+      "val_exact_accuracy": 0.204166665673
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.016927078366,
+      "epoch": 6599,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 7,
+      "step": 19204,
+      "val_exact_accuracy": 0.22109374404
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.023177087307,
+      "epoch": 6699,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 10,
+      "step": 19304,
+      "val_exact_accuracy": 0.244270831347
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.012760430574,
+      "epoch": 6799,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 13,
+      "step": 19404,
+      "val_exact_accuracy": 0.257031261921
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.025260418653,
+      "epoch": 6899,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 16,
+      "step": 19504,
+      "val_exact_accuracy": 0.282291680574
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.018489569426,
+      "epoch": 6999,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 19,
+      "step": 19604,
+      "val_exact_accuracy": 0.30078125
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.019010424614,
+      "epoch": 7099,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 22,
+      "step": 19704,
+      "val_exact_accuracy": 0.319791674614
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.018749982119,
+      "epoch": 7199,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 25,
+      "step": 19804,
+      "val_exact_accuracy": 0.338541656733
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.016927093267,
+      "epoch": 7299,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 28,
+      "step": 19904,
+      "val_exact_accuracy": 0.35546875
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.016666680574,
+      "epoch": 7399,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 31,
+      "step": 20004,
+      "val_exact_accuracy": 0.372135430574
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.01406249404,
+      "epoch": 7499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 34,
+      "step": 20104,
+      "val_exact_accuracy": 0.386197924614
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.013802081347,
+      "epoch": 7599,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 37,
+      "step": 20204,
+      "val_exact_accuracy": 0.40000000596
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.011979162693,
+      "epoch": 7699,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 40,
+      "step": 20304,
+      "val_exact_accuracy": 0.411979168653
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.014322906733,
+      "epoch": 7799,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 43,
+      "step": 20404,
+      "val_exact_accuracy": 0.426302075386
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.009114593267,
+      "epoch": 7899,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 46,
+      "step": 20504,
+      "val_exact_accuracy": 0.435416668653
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.007291674614,
+      "epoch": 7999,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 49,
+      "step": 20604,
+      "val_exact_accuracy": 0.442708343267
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.009374976158,
+      "epoch": 8099,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 52,
+      "step": 20704,
+      "val_exact_accuracy": 0.452083319426
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.012760430574,
+      "epoch": 8199,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 55,
+      "step": 20804,
+      "val_exact_accuracy": 0.46484375
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.012760430574,
+      "epoch": 8299,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 58,
+      "step": 20904,
+      "val_exact_accuracy": 0.477604180574
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.008072912693,
+      "epoch": 8399,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 61,
+      "step": 21004,
+      "val_exact_accuracy": 0.485677093267
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.004947900772,
+      "epoch": 8499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 64,
+      "step": 21104,
+      "val_exact_accuracy": 0.49062499404
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.003125011921,
+      "epoch": 8599,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 67,
+      "step": 21204,
+      "val_exact_accuracy": 0.49375000596
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.007291644812,
+      "epoch": 8699,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 70,
+      "step": 21304,
+      "val_exact_accuracy": 0.501041650772
+    },
+    {
+      "csv_version": 7,
+      "delta_vs_previous": -0.300520822406,
+      "epoch": 6499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_7/metrics.csv",
+      "row_number": 4,
+      "step": 19104,
+      "val_exact_accuracy": 0.200520828366
+    },
+    {
+      "csv_version": 7,
+      "delta_vs_previous": 0.018750011921,
+      "epoch": 6599,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_7/metrics.csv",
+      "row_number": 7,
+      "step": 19204,
+      "val_exact_accuracy": 0.219270840287
+    },
+    {
+      "csv_version": 7,
+      "delta_vs_previous": 0.01953125,
+      "epoch": 6699,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_7/metrics.csv",
+      "row_number": 10,
+      "step": 19304,
+      "val_exact_accuracy": 0.238802090287
+    },
+    {
+      "csv_version": 7,
+      "delta_vs_previous": 0.019791647792,
+      "epoch": 6799,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_7/metrics.csv",
+      "row_number": 13,
+      "step": 19404,
+      "val_exact_accuracy": 0.258593738079
+    },
+    {
+      "csv_version": 7,
+      "delta_vs_previous": 0.019010424614,
+      "epoch": 6899,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_7/metrics.csv",
+      "row_number": 16,
+      "step": 19504,
+      "val_exact_accuracy": 0.277604162693
+    },
+    {
+      "csv_version": 7,
+      "delta_vs_previous": 0.021614581347,
+      "epoch": 6999,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_7/metrics.csv",
+      "row_number": 19,
+      "step": 19604,
+      "val_exact_accuracy": 0.29921874404
+    },
+    {
+      "csv_version": 8,
+      "delta_vs_previous": -0.100260406733,
+      "epoch": 6499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_8/metrics.csv",
+      "row_number": 4,
+      "step": 19104,
+      "val_exact_accuracy": 0.198958337307
+    },
+    {
+      "csv_version": 8,
+      "delta_vs_previous": 0.019270822406,
+      "epoch": 6599,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_8/metrics.csv",
+      "row_number": 7,
+      "step": 19204,
+      "val_exact_accuracy": 0.218229159713
+    },
+    {
+      "csv_version": 8,
+      "delta_vs_previous": 0.02421875298,
+      "epoch": 6699,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_8/metrics.csv",
+      "row_number": 10,
+      "step": 19304,
+      "val_exact_accuracy": 0.242447912693
+    },
+    {
+      "csv_version": 8,
+      "delta_vs_previous": 0.02109375596,
+      "epoch": 6799,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_8/metrics.csv",
+      "row_number": 13,
+      "step": 19404,
+      "val_exact_accuracy": 0.263541668653
+    },
+    {
+      "csv_version": 8,
+      "delta_vs_previous": 0.015885412693,
+      "epoch": 6899,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_8/metrics.csv",
+      "row_number": 16,
+      "step": 19504,
+      "val_exact_accuracy": 0.279427081347
+    },
+    {
+      "csv_version": 8,
+      "delta_vs_previous": 0.024218738079,
+      "epoch": 6999,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_8/metrics.csv",
+      "row_number": 19,
+      "step": 19604,
+      "val_exact_accuracy": 0.303645819426
+    },
+    {
+      "csv_version": 8,
+      "delta_vs_previous": 0.020312517881,
+      "epoch": 7099,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_8/metrics.csv",
+      "row_number": 22,
+      "step": 19704,
+      "val_exact_accuracy": 0.323958337307
+    },
+    {
+      "csv_version": 8,
+      "delta_vs_previous": 0.014322906733,
+      "epoch": 7199,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_8/metrics.csv",
+      "row_number": 25,
+      "step": 19804,
+      "val_exact_accuracy": 0.33828124404
+    },
+    {
+      "csv_version": 8,
+      "delta_vs_previous": 0.01718750596,
+      "epoch": 7299,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_8/metrics.csv",
+      "row_number": 28,
+      "step": 19904,
+      "val_exact_accuracy": 0.35546875
+    },
+    {
+      "csv_version": 9,
+      "delta_vs_previous": -0.153385415673,
+      "epoch": 6499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_9/metrics.csv",
+      "row_number": 4,
+      "step": 19104,
+      "val_exact_accuracy": 0.202083334327
+    },
+    {
+      "csv_version": 9,
+      "delta_vs_previous": 0.02187499404,
+      "epoch": 6599,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_9/metrics.csv",
+      "row_number": 7,
+      "step": 19204,
+      "val_exact_accuracy": 0.223958328366
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": -0.024739578366,
+      "epoch": 6499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 4,
+      "step": 19104,
+      "val_exact_accuracy": 0.19921875
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.02265624702,
+      "epoch": 6599,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 7,
+      "step": 19204,
+      "val_exact_accuracy": 0.22187499702
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.021354168653,
+      "epoch": 6699,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 10,
+      "step": 19304,
+      "val_exact_accuracy": 0.243229165673
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.017187491059,
+      "epoch": 6799,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 13,
+      "step": 19404,
+      "val_exact_accuracy": 0.260416656733
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.017968773842,
+      "epoch": 6899,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 16,
+      "step": 19504,
+      "val_exact_accuracy": 0.278385430574
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.028906226158,
+      "epoch": 6999,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 19,
+      "step": 19604,
+      "val_exact_accuracy": 0.307291656733
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.014062523842,
+      "epoch": 7099,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 22,
+      "step": 19704,
+      "val_exact_accuracy": 0.321354180574
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.012760400772,
+      "epoch": 7199,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 25,
+      "step": 19804,
+      "val_exact_accuracy": 0.334114581347
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.01796874404,
+      "epoch": 7299,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 28,
+      "step": 19904,
+      "val_exact_accuracy": 0.352083325386
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.020572930574,
+      "epoch": 7399,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 31,
+      "step": 20004,
+      "val_exact_accuracy": 0.37265625596
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.012499988079,
+      "epoch": 7499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 34,
+      "step": 20104,
+      "val_exact_accuracy": 0.38515624404
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.015364587307,
+      "epoch": 7599,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 37,
+      "step": 20204,
+      "val_exact_accuracy": 0.400520831347
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.010416656733,
+      "epoch": 7699,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 40,
+      "step": 20304,
+      "val_exact_accuracy": 0.410937488079
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.014322936535,
+      "epoch": 7799,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 43,
+      "step": 20404,
+      "val_exact_accuracy": 0.425260424614
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.009895831347,
+      "epoch": 7899,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 46,
+      "step": 20504,
+      "val_exact_accuracy": 0.43515625596
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.010677069426,
+      "epoch": 7999,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 49,
+      "step": 20604,
+      "val_exact_accuracy": 0.445833325386
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.006510436535,
+      "epoch": 8099,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 52,
+      "step": 20704,
+      "val_exact_accuracy": 0.452343761921
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.008072912693,
+      "epoch": 8199,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 55,
+      "step": 20804,
+      "val_exact_accuracy": 0.460416674614
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.008072912693,
+      "epoch": 8299,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 58,
+      "step": 20904,
+      "val_exact_accuracy": 0.468489587307
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.006770819426,
+      "epoch": 8399,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 61,
+      "step": 21004,
+      "val_exact_accuracy": 0.475260406733
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.006250023842,
+      "epoch": 8499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 64,
+      "step": 21104,
+      "val_exact_accuracy": 0.481510430574
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.011458307505,
+      "epoch": 8599,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 67,
+      "step": 21204,
+      "val_exact_accuracy": 0.492968738079
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.003645837307,
+      "epoch": 8699,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 70,
+      "step": 21304,
+      "val_exact_accuracy": 0.496614575386
+    },
+    {
+      "csv_version": 10,
+      "delta_vs_previous": 0.007552087307,
+      "epoch": 8799,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+      "row_number": 73,
+      "step": 21404,
+      "val_exact_accuracy": 0.504166662693
+    }
+  ]
+}

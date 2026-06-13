@@ -13112,6 +13112,63 @@ otherwise it reports `blocked_noop_step_unchanged` instead of a fake pass.
 
 ---
 
+## REQ-LEARN-4167: Outer-Loop TRM Training Monitor Is Read-Only
+
+**Given** the conductor ceded contiguous nano-TRM Sudoku Extreme training to the
+outer loop after `.385` collisions, Exp 4167 SHALL only report status for the
+outer-loop-owned run. It SHALL NOT launch native training, SHALL NOT terminate a
+`train.py` process, and SHALL NOT write anything under
+`results/trm_runs/sudoku_extreme_baseline/`.
+
+**When** Exp 4167 reads the stable checkpoint
+`results/trm_runs/sudoku_extreme_baseline/last.ckpt`, it SHALL record the
+checkpoint mtime and use `torch.load(..., map_location="cpu",
+weights_only=False)` only to extract the top-level `epoch` scalar.
+
+**When** Exp 4167 reads `results/trm_runs/contiguous_run.pid`, it SHALL check
+that PID with `ps -o etime= -p <pid>` and report the result as the bare bool
+`outerloop_train_alive`.
+
+**When** Exp 4167 reads contiguous-run metrics, it SHALL find
+`results/trm_runs/contiguous_run_hydra/**/metrics.csv`, parse
+`val/exact_accuracy` or `val_exact_accuracy` rows, report the latest value as
+`current_val_exact_accuracy`, preserve the parsed `val_trajectory`, and report
+whether the latest value crossed the `0.85` faithful threshold.
+
+**Then** the Exp 4167 artifact SHALL be written to
+`results/experiment_4167_outerloop_training_monitor.json` with required
+top-level fields `honest_verdict`, `outerloop_train_alive`,
+`current_val_exact_accuracy`, `baseline_faithful`, and `checkpoint_mtime`.
+`baseline_faithful` SHALL be a bare bool that is true only when
+`current_val_exact_accuracy >= 0.85` and `outerloop_train_alive == false`, so
+the graft only runs against a faithful and stable checkpoint.
+
+### SCENARIO-LEARN-4167-READONLY-MONITOR: Live Outer-Loop Run Blocks Graft Stability
+
+**Given** the PID file resolves to a live process and the latest contiguous CSV
+validation row is below `0.85`
+**When** Exp 4167 runs
+**Then** it writes a complete status report with `outerloop_train_alive=true`,
+the latest validation value, checkpoint mtime, checkpoint epoch, full
+trajectory, and `baseline_faithful=false`, without launching or stopping any
+training.
+
+### SCENARIO-LEARN-4167-FAITHFUL-STABLE: Stopped Run Above Threshold Unlocks Graft
+
+**Given** the PID file is stale or absent and the latest contiguous CSV
+validation exact accuracy is at least `0.85`
+**When** Exp 4167 runs
+**Then** it writes a complete status report with `outerloop_train_alive=false`,
+`current_val_exact_accuracy >= 0.85`, and `baseline_faithful=true`.
+
+## Implementation Status (REQ-LEARN-4167)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4167 | Planned (python/carnot/experiment_4167_outerloop_training_monitor.py, Exp 4167) | Planned (tests/python/test_experiment_4167_outerloop_training_monitor.py) |
+
+---
+
 ## REQ-LEARN-4158: Decision-Grade Sudoku Verifier Rerank Recovery Moat
 
 **Given** Exp 4157 has written
