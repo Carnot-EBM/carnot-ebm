@@ -8,6 +8,36 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-13 Exp 4162 - .386 verifier-moat guidance SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md`.
+
+**Filtered track:** verifier-vs-self-consistency, reward-guided generation,
+and ARC-AGI-3 action efficiency for the `.386` handoff. This ingestion extends
+the `.385` verifier moat and queued DiffusionGemma gate without duplicating the
+prior TRM/TTA-TRM/V-STaR/SEDD/CFG milestone ingestion.
+
+**Seed and fresh-pass candidates marked ingested:**
+- ARBITER, arXiv:2605.26172 - mapped as the wrong-majority/rerank-recovery
+  moat anchor and the reason to aggregate an external verifier with vote.
+- ThinkPRM, arXiv:2504.16828 - mapped as the data-efficient process-verifier
+  existence proof and LLM-judge comparison bar.
+- Optimal LLM+PRM Aggregation, arXiv:2510.13918 - mapped as the calibrated
+  vote-plus-verifier aggregation recipe.
+- RLV, arXiv:2505.04842 - mapped as the cheap verifier/value-head efficiency
+  head-to-head template.
+- EntRGi, arXiv:2602.05000 - mapped as the discrete diffusion reward-guidance
+  template for DiffusionGemma after a positive discrimination gate.
+- Executable World Models for ARC-AGI-3, arXiv:2605.05138, and ARC-AGI-3 tech
+  report, arXiv:2603.24621 - mapped as executable transition verification and
+  action-efficiency anchors.
+
+Flagged for .386: `entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386`.
+
+**Bottom line for the .386 roadmap:** run the EntRGi-style DiffusionGemma
+energy-guidance template only after the verifier-discrimination gate is
+positive. If the gate is not positive, run the RLV-style cheap
+energy-verifier-vs-LLM-judge efficiency head-to-head first.
 ## 2026-06-13 Exp 4152 - .385 recursive-reasoner/verifier energy-guidance SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-recursive-reasoner-verifier-energy-guidance-2026-06-13.md`.

@@ -1,3 +1,35 @@
+## 2026-06-13 Exp 4162 - verifier-moat guidance ingestion note
+
+**Status:** INGESTED. Full note:
+`docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md`.
+Artifact: `results/experiment_4162_sota_ingestion_verifier_moat_guidance.json`.
+
+**Scope:** .385 verifier moat plus .386 DiffusionGemma guidance gate. This
+section intentionally does not duplicate the prior TRM/TTA-TRM/V-STaR/SEDD/CFG
+ingestion; those remain banked in Exp 4152.
+
+**Verified sources and mapping summary:**
+- ARBITER, arXiv:2605.26172, https://arxiv.org/abs/2605.26172 - wrong-majority
+  basins justify an external verifier that aggregates with vote rather than
+  replacing it.
+- ThinkPRM, arXiv:2504.16828, https://arxiv.org/abs/2504.16828 - process
+  verification is the data-efficient alternative to LLM-judge rescoring.
+- Optimal LLM+PRM Aggregation, arXiv:2510.13918,
+  https://arxiv.org/abs/2510.13918 - calibrate verifier scores with vote
+  evidence instead of selecting by raw PRM score alone.
+- RLV, arXiv:2505.04842, https://arxiv.org/abs/2505.04842 - use a cheap
+  verifier/value head as the efficiency head-to-head against LLM judges.
+- EntRGi, arXiv:2602.05000, https://arxiv.org/abs/2602.05000 - strongest
+  DiffusionGemma guidance template after positive verifier discrimination.
+- Executable World Models for ARC-AGI-3, arXiv:2605.05138,
+  https://arxiv.org/abs/2605.05138 - executable transition verification maps
+  the moat to action recovery.
+- ARC-AGI-3 technical report, arXiv:2603.24621,
+  https://arxiv.org/abs/2603.24621 - action efficiency and RHAE-style scoring
+  define the ARC-AGI-3 north-star metric.
+
+flagged_for_v386:
+`entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386`.
 ## 2026-06-13 Planner (.385) — the verifier-moat literature, framed for the rerank-recovery design
 
 Re-confirmed during .385 planning (all WebFetch-verified, IDs real). Most are already filed below;
