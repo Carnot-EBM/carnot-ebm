@@ -1,0 +1,191 @@
+{
+  "duration_s": 11.649078,
+  "experiment": 4143,
+  "fabric_acceleration_claimed": false,
+  "field_principles": {
+    "gatemate_step_taken": "principle: the drive-to-terminal progress for the non-terminal GateMate board",
+    "honest_verdict": "Terminal-prefixed. Per-board honest status; an honest blocked_<board> is a COMPLETE verdict for that board.",
+    "inference_substrate": "declares this artifact as hardware_smoke rather than model inference",
+    "kv260_terminal_confirmed": "principle: KV260 is done -- opportunistic confirm only",
+    "per_board_reachability": "principle: the continuity record that keeps boards visible in retros",
+    "per_board_status": "One reachability + next-step record per board so a board is never silently forgotten.",
+    "polarfire_step_taken": "principle: the drive-to-terminal progress for the non-terminal PolarFire board",
+    "preconditions_checked": "Records the SSH/USB-detect preconditions run; enforces SSH-Not-SD-Card and pre-empts fabricated hardware results."
+  },
+  "gatemate_reachable": false,
+  "gatemate_step": {
+    "blocker": "blocked_gatemate_unreachable",
+    "next_concrete_step": "Recover GM1Ax IDCODE visibility with `openFPGALoader -c dirtyJtag --detect`, then rerun the n=16 GateMate flash from the most recent GateMate artifact.",
+    "previous_4096_flash_error": "Error: no device found",
+    "previous_4096_gatemate_step_taken": "blocked_gatemate_unreachable",
+    "step": "blocked_gatemate_unreachable"
+  },
+  "gatemate_step_taken": "blocked_gatemate_unreachable",
+  "honest_verdict": "complete: hardware_continuity_4143_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+  "inference_substrate": "hardware_smoke",
+  "kv260_reachable": true,
+  "kv260_step_taken": "kv260_opportunistic_ssh_confirm_only",
+  "kv260_terminal_confirmed": true,
+  "per_board_duration_s": {
+    "gatemate": 0.018694,
+    "kv260": 4.597903,
+    "polarfire": 7.030466
+  },
+  "per_board_next_step": {
+    "gatemate": "blocked_gatemate_unreachable",
+    "kv260": "kv260_terminal_opportunistic_confirm_only",
+    "polarfire": "polarfire_hash_verified_cpu_dispatch_succeeded"
+  },
+  "per_board_reachability": {
+    "gatemate": false,
+    "kv260": true,
+    "polarfire": true
+  },
+  "per_board_status": {
+    "gatemate": {
+      "duration_s": 0.018694,
+      "next_concrete_step": "Recover GM1Ax IDCODE visibility with `openFPGALoader -c dirtyJtag --detect`, then rerun the n=16 GateMate flash from the most recent GateMate artifact.",
+      "precondition_available": false,
+      "precondition_command": "openFPGALoader -c dirtyJtag --detect",
+      "precondition_exit_code": 0,
+      "precondition_resource": "gatemate_jtag_detect",
+      "reachable": false,
+      "status": "blocked_gatemate_unreachable",
+      "terminal_state": "blocked_gatemate_unreachable",
+      "timer_id": "gatemate_precondition_plus_forward_step_wall_clock",
+      "timer_scope": "precondition_plus_forward_step_wall_clock"
+    },
+    "kv260": {
+      "duration_s": 4.597903,
+      "next_concrete_step": "kv260_terminal_state_confirmed_via_ssh",
+      "precondition_available": true,
+      "precondition_command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "precondition_exit_code": 0,
+      "precondition_resource": "kv260_ssh",
+      "reachable": true,
+      "status": "kv260_terminal_confirmed_ssh_only",
+      "terminal_state": "opportunistic_terminal_confirmed_ssh_only",
+      "timer_id": "kv260_precondition_plus_forward_step_wall_clock",
+      "timer_scope": "precondition_plus_forward_step_wall_clock"
+    },
+    "polarfire": {
+      "duration_s": 7.030466,
+      "hash_match": true,
+      "next_concrete_step": "polarfire_hash_verified_cpu_dispatch_succeeded",
+      "precondition_available": true,
+      "precondition_command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "precondition_exit_code": 0,
+      "precondition_resource": "polarfire_ssh",
+      "reachable": true,
+      "status": "polarfire_hash_verified_cpu_dispatch_succeeded",
+      "terminal_state": "reachable_hash_verified_cpu_dispatch_recorded",
+      "timer_id": "polarfire_precondition_plus_forward_step_wall_clock",
+      "timer_scope": "precondition_plus_forward_step_wall_clock"
+    }
+  },
+  "per_board_terminal_state": {
+    "gatemate": "blocked_gatemate_unreachable",
+    "kv260": "opportunistic_terminal_confirmed_ssh_only",
+    "polarfire": "reachable_hash_verified_cpu_dispatch_recorded"
+  },
+  "polarfire_reachable": true,
+  "polarfire_step": {
+    "board_result_sha256": "92ededd8f0b26f89472edb61e42c36e4c6643cab2540bf5c80c2adc522e203ad",
+    "command_transcript": [
+      {
+        "command": "ssh polarfire 'mkdir -p /tmp/carnot_exp4064_330168_1781349639'",
+        "output_excerpt": "",
+        "returncode": 0,
+        "stage": "remote_mkdir"
+      },
+      {
+        "command": "scp -q /tmp/carnot_exp4064_d5y_jv1t/runner.py /tmp/carnot_exp4064_d5y_jv1t/workload.json polarfire:/tmp/carnot_exp4064_330168_1781349639/",
+        "output_excerpt": "",
+        "returncode": 0,
+        "stage": "scp_push"
+      },
+      {
+        "command": "ssh polarfire 'cd /tmp/carnot_exp4064_330168_1781349639 && python3 runner.py workload.json --min-runtime-s 0.000 # local_workload_path=/tmp/carnot_exp4064_d5y_jv1t/workload.json'",
+        "output_excerpt": "{\"energies\":[-3,1,-3,1,-3,1],\"energy_max\":1,\"energy_min\":-3,\"energy_sum\":-6,\"n_configs\":6,\"n_spins\":8,\"random_seed\":4104,\"schema\":\"carnot.ising_energy_result.v1\",\"spec_refs\":[\"REQ-HW-3867\",\"SCENARIO-HW-3867\"],\"workload_sha256\":\"9fb45356f9fb5f5254b175ac3b5e2bda59fc851eec3840ffec9444576a5377b1\"}\ncycles=1",
+        "returncode": 0,
+        "stage": "remote_ising_eval"
+      },
+      {
+        "command": "ssh polarfire 'rm -rf /tmp/carnot_exp4064_330168_1781349639'",
+        "output_excerpt": "",
+        "returncode": 0,
+        "stage": "remote_cleanup"
+      },
+      {
+        "command": "ssh polarfire 'python3 - <<'\"'\"'PY'\"'\"'\nfrom pathlib import Path\nfor path in sorted(Path('\"'\"'/sys/class/thermal'\"'\"').glob('\"'\"'thermal_zone*/temp'\"'\"')):\n    try:\n        print(path.read_text().strip())\n    except OSError:\n        pass\nPY'",
+        "output_excerpt": "",
+        "returncode": 0,
+        "stage": "thermal_probe"
+      }
+    ],
+    "cpu_reference_sha256": "92ededd8f0b26f89472edb61e42c36e4c6643cab2540bf5c80c2adc522e203ad",
+    "preconditions_checked": [
+      {
+        "available": true,
+        "command": "ssh polarfire 'python3 --version'",
+        "duration_s": 0.836609,
+        "exit_code": 0,
+        "observed": "Python 3.12.12",
+        "resource": "polarfire_python"
+      }
+    ],
+    "result_hash_match": true,
+    "soc_temp_max_c": null,
+    "step": "hash_verified_cpu_dispatch_smoke",
+    "workload_sha256": "9fb45356f9fb5f5254b175ac3b5e2bda59fc851eec3840ffec9444576a5377b1"
+  },
+  "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.597903,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    },
+    {
+      "available": false,
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.018694,
+      "exit_code": 0,
+      "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "resource": "gatemate_jtag_detect"
+    },
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "duration_s": 0.894106,
+      "exit_code": 0,
+      "observed": "returncode=0",
+      "resource": "polarfire_ssh"
+    }
+  ],
+  "random_seed": 4143,
+  "reproducibility_checksum": "0864fdd8f3258053a15c88631608d14e080681617728e4cefb59757cfc028428",
+  "schema": "carnot.hardware_continuity_per_board_status.v5",
+  "source_context": {
+    "most_recent_hardware_continuity_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4132_hardware_continuity.json",
+    "previous_artifact_read": true,
+    "previous_experiment": 4132,
+    "previous_gatemate_next_concrete_step": "Recover GM1Ax IDCODE visibility with `openFPGALoader -c dirtyJtag --detect`, then rerun the n=16 GateMate flash from the most recent GateMate artifact.",
+    "previous_gatemate_step_taken": "blocked_gatemate_unreachable",
+    "previous_honest_verdict": "complete: hardware_continuity_4132_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+    "previous_per_board_reachability": {
+      "gatemate": false,
+      "kv260": true,
+      "polarfire": true
+    },
+    "previous_polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded"
+  },
+  "spec_refs": [
+    "REQ-HW-4143",
+    "SCENARIO-HW-4143"
+  ],
+  "speedup_claim_made": false
+}
