@@ -20229,6 +20229,75 @@ claim `.381` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4125 | Implemented (`python/carnot/reporting/archive_v381_activate_v382_4125.py`, `scripts/experiments/exp4125_archive_v381_activate_v382.py`) | Implemented (`tests/python/test_experiment_4125_archive_v381_activate_v382.py`) |
 
+### REQ-REPORT-4145: Archive .383, Activate .384, And Preserve The Max-Epochs No-Op Close-State
+
+The Exp 4145 workflow SHALL archive milestone `2026.06.383`, confirm milestone
+`2026.06.384` is the active milestone, and write the record-only aggregation
+artifact `results/experiment_4145_archive_v383_activate_v384.json`. It SHALL run
+no live model training: its `inference_substrate` SHALL be
+`aggregation_from_upstream_artifacts`.
+
+Before claiming completion the workflow SHALL confirm:
+
+- `research-complete.yaml` parses under `yaml.safe_load`
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`
+- `nano-trm/src/nn/train.py` exists
+- the smart-subset pre-test gate is green
+
+If any precondition is absent or red, the workflow SHALL write a blocked
+artifact whose `honest_verdict` starts with `blocked_`, record the failed
+resource in `preconditions_checked`, and stop without fabricating a terminal
+archive.
+
+The complete artifact SHALL include the principle-annotated fields
+`honest_verdict`, `v383_close_state`, and `preconditions_checked` with these
+exact principles:
+
+- `honest_verdict`: `Self-declared terminal state. MUST start with complete:/success:/passed:/shipped:.`
+- `v383_close_state`: `Honest record (accumulation no-op'd at the max_epochs cap; baseline still 0.278) so the next planner builds on the truth.`
+- `preconditions_checked`: `Records resources verified; pre-empts the silent-missing-resource fabrication mode.`
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v383_close_state` SHALL truthfully record
+that `.383` accumulation no-op'd at the resumed-checkpoint `max_epochs` cap,
+that Exp 4135 ran for about `6.99` seconds, did not train, wrote no real
+`val_exact_accuracy`, and left the stable checkpoint untouched, that the
+baseline remained `0.278172343969` (rounded to `0.278`), and that the decisive
+graft was deferred uninformatively with `FALSE_NEGATIVE_RISK`. The artifact
+SHALL also record that `.384` continues from the intact `0.278` checkpoint with
+the max-epochs cap fix.
+
+#### SCENARIO-REPORT-4145: The Archive Preserves The Honest .383 No-Op Diagnosis
+
+**Given** `.383` has Exp 4135-4138 accumulation artifacts that did not advance
+the baseline, Exp 4139 deferred the graft uninformatively with false-negative
+risk, the `.383` capstone records the baseline as stuck at `0.278`, the history
+and exclusion-manifest YAML files parse, `nano-trm/src/nn/train.py` exists, the
+smart-subset pre-test gate is green, and `.384` is active
+**When** the Exp 4145 archive workflow runs
+**Then** it archives `.383`, confirms `.384`, keeps the YAML history parseable
+with one `.383` record, writes
+`results/experiment_4145_archive_v383_activate_v384.json`, records the
+max-epochs no-op, unchanged `0.278` baseline, intact checkpoint, false-negative
+risk, and `.384` epoch-cap fix in `v383_close_state`, records the checked
+resources in `preconditions_checked`, declares
+`aggregation_from_upstream_artifacts`, and emits a terminal-prefixed honest
+verdict.
+
+#### SCENARIO-REPORT-4145-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4145 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does not
+claim `.383` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4145)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4145 | Implemented (`python/carnot/reporting/archive_v383_activate_v384_4145.py`, `python/carnot/experiment_4145_archive_v383_activate_v384.py`) | Implemented (`tests/python/test_experiment_4145_archive_v383_activate_v384.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone

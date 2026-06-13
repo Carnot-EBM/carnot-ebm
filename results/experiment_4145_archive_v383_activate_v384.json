@@ -1,0 +1,117 @@
+{
+  "activated_milestone": "2026.06.384",
+  "active_milestone_confirmed": "2026.06.384",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.383",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4135_sudoku_accumulate_pass1_fixed_lr.json",
+      "experiment_id": "4135",
+      "sha256": "36f2e5c10188832811dca929fa9f49876fe78eaf2c738114fa7d8686144b69b0"
+    },
+    {
+      "deliverable": "results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json",
+      "experiment_id": "4138",
+      "sha256": "85a6d185671bfbf75a891a2245a4fa113adf34c4e8f27a3cab6988403ad8ce06"
+    },
+    {
+      "deliverable": "results/experiment_4139_decisive_verifier_graft_sudoku.json",
+      "experiment_id": "4139",
+      "sha256": "9f47d372a96728ef65a836011dfc015ab018fdbfe82cd2c5d2835f1619c2f4a6"
+    },
+    {
+      "deliverable": "results/experiment_4144_capstone_v383.json",
+      "experiment_id": "4144",
+      "sha256": "32ae7879e0dfc533cf1c5c5b1939501d35818eecffe19e2a6cd299d978c8356a"
+    }
+  ],
+  "duration_s": 12.100527,
+  "exclusion_manifest_parses": true,
+  "experiment_id": "exp4145",
+  "field_principles": {
+    "activated_milestone": "Confirms .384 is live for the epoch-cap repair path.",
+    "active_milestone_confirmed": "Records the active roadmap milestone actually observed.",
+    "archived_milestone": "Provenance: the milestone being closed, 2026.06.383.",
+    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
+    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
+    "honest_verdict": "Self-declared terminal state. MUST start with complete:/success:/passed:/shipped:.",
+    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
+    "nano_trm_train_present": "Bare bool: nano-trm/src/nn/train.py exists before activation.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
+    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
+    "v383_close_state": "Honest record (accumulation no-op'd at the max_epochs cap; baseline still 0.278) so the next planner builds on the truth."
+  },
+  "honest_verdict": "success: archived_v383_v384_active_max_epochs_noop_recorded_baseline_0.278_graft_false_negative_risk_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "nano_trm_train_present": true,
+  "preconditions_checked": {
+    "active_milestone": "2026.06.384",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "exclusion_manifest_exists": true,
+    "exclusion_manifest_parses": true,
+    "nano_trm_train_path": "nano-trm/src/nn/train.py",
+    "nano_trm_train_present": true,
+    "pretest_command": [
+      ".venv/bin/pytest",
+      "tests/python/test_pipeline_extract.py",
+      "tests/python/test_docs.py",
+      "-q",
+      "--no-header",
+      "-n",
+      "0",
+      "--no-cov",
+      "-o",
+      "addopts="
+    ],
+    "pretest_exit_code": 0,
+    "pretest_suite_green": true,
+    "research_complete_duplicates_removed": 0,
+    "research_complete_record_action": "updated",
+    "research_complete_yaml_exists": true,
+    "research_complete_yaml_parses": true,
+    "research_complete_yaml_parses_after_edit": true
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4145,
+  "reproducibility_checksum": "c97d83784c682a7666d62d7bb89cf5a01cf3d2aacaa81511dd8780fec7f334cc",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "updated",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v383_to_v384_4145.v1",
+  "task_id": "exp4145-archive-v383-activate-v384",
+  "v383_close_state": {
+    "accumulation_noop": true,
+    "baseline_status": "baseline_config_blocked",
+    "baseline_val_exact_accuracy": 0.278172343969,
+    "baseline_val_exact_accuracy_rounded": 0.278,
+    "capstone_v383": {
+      "artifact_present": true,
+      "headline_outcome": "baseline_config_blocked",
+      "honest_verdict": "blocked: capstone_v383_baseline_config_blocked_baseline_converged0_near_faithful0_headroom0_verifier_deferred_diffusiongemma0_levels13_flagged_skipped6"
+    },
+    "checkpoint_untouched": true,
+    "checkpoint_val_exact_accuracy": 0.278172343969,
+    "exp4135_duration_s": 6.99,
+    "exp4135_metrics_missing": true,
+    "exp4135_trained": false,
+    "exp4135_val_exact_accuracy": null,
+    "false_negative_risk": true,
+    "graft_deferred": true,
+    "graft_honest_verdict": "complete: uninformative_no_headroom_false_negative_risk",
+    "matches_published_087": false,
+    "near_faithful_080": false,
+    "noop_evidence": "exp4135 returned in 6.99s with no real val_exact_accuracy, which is too short for a resumed bounded training pass and matches the max_epochs cap diagnosis.",
+    "noop_reason": "max_epochs_cap",
+    "published_exact_accuracy_target": 0.87,
+    "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+    "summary": "accumulation_noop_at_max_epochs_cap_baseline_0.278_graft_false_negative_risk_v384_fixes_cap",
+    "v384_forward_plan": {
+      "anti_noop_guard": "duration_s > 120 and checkpoint epoch advanced and real val_exact_accuracy read",
+      "fixes_max_epochs_cap": true,
+      "required_resume_fix": "set +trainer.max_epochs above the checkpoint epoch before Trainer.fit",
+      "resume_from_intact_checkpoint": true
+    },
+    "verifier_value_added": false
+  }
+}
