@@ -8420,3 +8420,4 @@ c |
 | 2026-06-13 12:16 UTC | Milestone 2026.06.384 activated | OK | 11 tasks queued |
 | 2026-06-13 12:33 UTC | Archive .383 -> activate .384; KEEP the hardened g | OK | 91 passed, 1 warning in 5.32s |
 | 2026-06-13 12:48 UTC | ACCUMULATE pass 1 — DIAGNOSE + FIX the max_epochs  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
+| 2026-06-13 13:03 UTC | ACCUMULATE pass 2 (DEFENSIVE read of pass1). If pa | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT, GATE_PASSED_WITHOUT_ |
