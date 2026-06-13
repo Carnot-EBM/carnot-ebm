@@ -132,6 +132,33 @@ from carnot.pipeline.dual_gpu_assigner import DualGPUAssigner
 _log = logging.getLogger(__name__)
 
 
+# Training entrypoints that the GPU-zombie reaper must NEVER kill. A model-training
+# process legitimately holds large VRAM for hours. The nvidia-smi fallback path of
+# kill_gpu_zombies() (used when pynvml is absent) gates the kill on the MINIMUM GPU
+# utilisation across ALL GPUs — so an idle GPU 0 (0%) drags the gate to 0% and the
+# reaper kills a fully-busy training run on GPU 1 (100% util, >1GB VRAM).
+#
+# Origin: 2026-06-13. The outer-loop's contiguous TRM Sudoku-Extreme training
+# (decision "A": training is OWNED BY THE OUTER-LOOP; the conductor stands down on TRM —
+# research-roadmap-next.yaml .386 HARD COORDINATION RULE) was SIGTERM'd repeatedly by
+# conductor experiment tasks calling kill_gpu_zombies() in their GPU setup. This is the
+# MECHANICAL backstop for that prose rule (the sibling fix in gpu_monitor.detect_zombies
+# covers the conductor's per-task zombie reaper). Matched against /proc/<pid>/cmdline
+# because nvidia-smi reports only the bare process name.
+_TRAINING_ENTRYPOINT_MARKERS = ("train.py", "/nn/train", "src/nn/train")
+
+
+def _pid_is_protected_training_proc(pid: int) -> bool:
+    """True if PID is a model-training process that must be exempt from zombie-kill."""
+    try:
+        cmdline = Path(f"/proc/{pid}/cmdline").read_bytes().replace(b"\x00", b" ").decode(
+            "utf-8", "replace"
+        )
+    except (FileNotFoundError, PermissionError, ProcessLookupError, OSError):
+        return False
+    return any(marker in cmdline for marker in _TRAINING_ENTRYPOINT_MARKERS)
+
+
 def _cuda_is_available() -> bool:
     """Return True only when at least one CUDA GPU is accessible.
 
@@ -725,6 +752,15 @@ class ExperimentTemplate:
                         continue
                     vram_mb = (proc.usedGpuMemory or 0) // (1024 * 1024)
                     if vram_mb >= vram_threshold_mb and gpu_util_pct < util_threshold_pct:
+                        if _pid_is_protected_training_proc(pid):
+                            _log.info(
+                                "kill_gpu_zombies: SKIP protected training PID %d (gpu=%d, vram_mb=%d)",
+                                pid,
+                                gpu_idx,
+                                vram_mb,
+                            )
+                            seen_pids.add(pid)
+                            continue
                         try:
                             os.kill(pid, signal.SIGTERM)
                             killed_pids.append(pid)
@@ -830,6 +866,14 @@ class ExperimentTemplate:
             if pid in seen_pids:
                 continue
             if vram_mb >= vram_threshold_mb and gpu_util_pct < util_threshold_pct:
+                if _pid_is_protected_training_proc(pid):
+                    _log.info(
+                        "kill_gpu_zombies (nvidia-smi): SKIP protected training PID %d (vram_mb=%d)",
+                        pid,
+                        vram_mb,
+                    )
+                    seen_pids.add(pid)
+                    continue
                 try:
                     os.kill(pid, signal.SIGTERM)
                     killed_pids.append(pid)
