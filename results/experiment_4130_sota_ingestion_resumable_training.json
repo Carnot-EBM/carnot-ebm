@@ -1,0 +1,46 @@
+{
+  "field_principles": {
+    "flagged_for_v383": "Closes the discover->ingest->plan loop: names the strongest method for the next planner.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method/source MUST carry a real arXiv ID or canonical doc URL; an ingestion note without verifiable citations is treated as fabrication."
+  },
+  "flagged_for_v383": "lightning_full_state_lr_scheduler_resume_gate_for_nano_trm_v383",
+  "honest_verdict": "complete: sota_ingestion_resumable_training_mapped",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "https://lightning.ai/docs/pytorch/stable/common/checkpointing_basic.html",
+      "failure_mode": "Loading weights only or restarting the trainer silently rewinds the warmup/cosine schedule and fabricates long-horizon progress.",
+      "implementation_over_stack": "Resume nano-trm bounded passes with Trainer.fit(..., ckpt_path=...) so global_step, optimizer state, and LR scheduler state continue.",
+      "name": "PyTorch Lightning full-state checkpoint resume",
+      "url": "https://lightning.ai/docs/pytorch/stable/common/checkpointing_basic.html"
+    },
+    {
+      "arxiv_id_or_url": "https://docs.pytorch.org/tutorials/beginner/saving_loading_models.html",
+      "failure_mode": "A model-only checkpoint loses momentum buffers and parameter-group learning rates, causing an unreported resume discontinuity.",
+      "implementation_over_stack": "If a run bypasses Lightning, persist model state, optimizer state, epoch or step, LR scheduler state, data cursor, and RNG receipt.",
+      "name": "PyTorch optimizer-state checkpoint contract",
+      "url": "https://docs.pytorch.org/tutorials/beginner/saving_loading_models.html"
+    },
+    {
+      "arxiv_id_or_url": "https://lightning.ai/docs/pytorch/stable/advanced/training_tricks.html",
+      "failure_mode": "Counting microbatches as optimizer steps overstates the training horizon and moves the LR schedule at the wrong rate.",
+      "implementation_over_stack": "Use accumulate_grad_batches or GradientAccumulationScheduler to keep effective batch size explicit across microbatches and bounded passes.",
+      "name": "Lightning gradient-accumulation schedule",
+      "url": "https://lightning.ai/docs/pytorch/stable/advanced/training_tricks.html"
+    },
+    {
+      "arxiv_id_or_url": "2510.04871",
+      "failure_mode": "A checkpoint can reload correctly while still being an undertrained partial baseline, especially if LR state was reset.",
+      "implementation_over_stack": "Accumulate resumed nano-trm Sudoku evidence by global optimizer step and held-out exact accuracy before any verifier-lift claim.",
+      "name": "TRM long-horizon baseline gate",
+      "url": "https://arxiv.org/abs/2510.04871"
+    },
+    {
+      "arxiv_id_or_url": "2511.02886",
+      "failure_mode": "Full fine-tuning can win through adaptation compute alone, and a per-pass LR reset confounds the verifier comparison.",
+      "implementation_over_stack": "Keep a no-verifier full-fine-tune control with the same accumulated optimizer-step budget and the same resumed LR schedule receipts.",
+      "name": "TTA-TRM bounded full-fine-tune control",
+      "url": "https://arxiv.org/abs/2511.02886"
+    }
+  ]
+}
