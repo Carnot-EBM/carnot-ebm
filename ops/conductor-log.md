@@ -8403,3 +8403,4 @@ c |
 | 2026-06-13 05:30 UTC | SOTA-INGESTION SLOT (reserved; bleeding-edge track | OK | 100 passed, 1 warning in 4.79s |
 | 2026-06-13 05:42 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra s | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-13 06:32 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 86 passed, 1 warning in 5.79s |
+| 2026-06-13 06:50 UTC | Capstone .382 (UNGATED): headline question is DID  | OK | 87 passed, 1 warning in 5.04s |
