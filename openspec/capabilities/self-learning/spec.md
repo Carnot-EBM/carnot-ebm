@@ -13023,6 +13023,95 @@ uninformative non-faithful graft.
 
 ---
 
+## REQ-LEARN-4157: Contiguous Sudoku Baseline Harvest And Continue
+
+**Given** `.384` bounded passes no-op'd on stale Timer state and the `.385`
+baseline decision depends on the operator's single contiguous nano-trm Sudoku
+Extreme run, Exp 4157 SHALL read
+`results/trm_runs/contiguous_run_hydra/csv/version_*/metrics.csv` directly
+without loading a model or touching CUDA. It SHALL parse `val/exact_accuracy`
+rows across all CSV versions, report the latest validation exact accuracy as
+`current_val`, report the best validation exact accuracy as `max_val`, and
+preserve the full `val_trajectory`.
+
+**When** Exp 4157 reads the shared stable checkpoint
+`results/trm_runs/sudoku_extreme_baseline/last.ckpt`, it SHALL use
+`torch.load(..., map_location="cpu", weights_only=False)` only to extract the
+top-level `epoch` and `nano_trm_manual_lr_step` scalars. It SHALL never
+instantiate the nano-trm model, move tensors to GPU, or use epoch advance as
+the launch/no-op guard for this milestone.
+
+**When** `results/trm_runs/contiguous_run.pid` names a live process and the
+newest contiguous-run CSV validation epoch is advancing, Exp 4157 SHALL record
+only. It SHALL write
+`results/experiment_4157_baseline_harvest_contiguous_continue.json` with
+`run_alive=true`, `baseline_faithful` set from `current_val >= 0.85`, the
+checkpoint `manual_lr_step`, and an honest terminal verdict such as
+`complete: baseline_advancing_contiguous_run_live_val_0.NN`. It SHALL NOT
+launch a competing trainer while the live contiguous run owns the GPU and
+checkpoint write-back.
+
+**When** the contiguous run is dead and `current_val >= 0.85`, Exp 4157 SHALL
+confirm the faithful baseline without training and write a terminal verdict
+`complete: baseline_faithful_val_0.NN`.
+
+**When** the contiguous run is dead and `current_val < 0.85`, Exp 4157 SHALL
+resume one contiguous native nano-trm run from
+`results/trm_runs/sudoku_extreme_baseline/last.ckpt` using the same environment
+mechanics as Exp 4127 (`DISABLE_COMPILE=1`,
+`PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`, and W&B disabled) and the
+single long Hydra command rooted at
+`results/trm_runs/contiguous_run_hydra` with `+trainer.max_time=00:11:30:00`.
+After a launch by this task, Exp 4157 SHALL use a step-based anti-no-op guard:
+`nano_trm_manual_lr_step` must advance and a new contiguous-run CSV validation
+row must be written. A stalled manual LR step SHALL produce the honest verdict
+`blocked_noop_step_unchanged` with the diagnosed cause.
+
+**Then** the Exp 4157 artifact SHALL include top-level fields
+`honest_verdict`, `current_val`, `max_val`, `baseline_faithful`, `run_alive`,
+`manual_lr_step`, `val_trajectory`, `stable_checkpoint_path`, and
+`estimated_passes_to_085`, each carrying the required operator principle text
+where applicable. The acceptance gate passes when `current_val` is read,
+`run_alive` is recorded as a bare bool, `baseline_faithful` is recorded as a
+bare bool, and either the run is record-only/live, the baseline is already
+faithful, or a task-launched run proves both manual-step advance and a real new
+validation row.
+
+### SCENARIO-LEARN-4157-LIVE: Live Contiguous Run Is Record-Only
+
+**Given** the PID file resolves to a live process and the newest contiguous CSV
+validation epoch advances
+**When** Exp 4157 starts
+**Then** it writes the harvest artifact with `run_alive=true`, records latest
+and max validation accuracy from the CSV, records the CPU-only checkpoint
+manual LR step, sets `baseline_faithful` from the `0.85` threshold, and never
+launches a native trainer.
+
+### SCENARIO-LEARN-4157-FAITHFUL: Dead Run Already Reached The Gate
+
+**Given** the PID file is stale or absent and the latest contiguous CSV
+validation exact accuracy is at least `0.85`
+**When** Exp 4157 starts
+**Then** it writes a faithful complete verdict, sets `baseline_faithful=true`,
+and skips native training.
+
+### SCENARIO-LEARN-4157-CONTINUE: Dead Run Below Gate Relaunches Once
+
+**Given** the PID file is stale or absent and the latest contiguous CSV
+validation exact accuracy is below `0.85`
+**When** Exp 4157 launches the native contiguous resume
+**Then** the artifact is acceptance-grade only if `nano_trm_manual_lr_step`
+advances and a new `val/exact_accuracy` row appears in the contiguous CSV;
+otherwise it reports `blocked_noop_step_unchanged` instead of a fake pass.
+
+## Implementation Status (REQ-LEARN-4157)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4157 | Implemented (python/carnot/experiment_4157_baseline_harvest_contiguous_continue.py, Exp 4157) | Implemented (tests/python/test_experiment_4157_baseline_harvest_contiguous_continue.py) |
+
+---
+
 ## REQ-LEARN-4139: Decisive Sudoku Verifier Graft With Oracle Separation
 
 **Given** Exp 4138 has written

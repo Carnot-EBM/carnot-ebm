@@ -1,0 +1,394 @@
+{
+  "acceptance_gate_passed": true,
+  "baseline_faithful": false,
+  "blocked_cause": "manual_lr_step did not advance: before=19006 after=19006; trainer_return_code=1; log_tail=  File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py\", line 1789, in _call_impl |     return forward_call(*args, **kwargs) |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ |   File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/modules/trm_block.py\", line 190, in forward |     return self.down_proj(F.silu(gate) * up) |                           ~~~~~~~~~~~~~^~~~ | torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 192.00 MiB. GPU 0 has a total capacity of 23.56 GiB of which 86.31 MiB is free. Including non-PyTorch memory, this process has 23.46 GiB memory in use. Of the allocated memory 23.07 GiB is allocated by PyTorch, and 89.57 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf) | return_code=1",
+  "checkpoint_scalars": {
+    "detail": "loaded scalar checkpoint view: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+    "epoch": 6399,
+    "load_ok": true,
+    "manual_lr_step": 19006
+  },
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "src/nn/train.py",
+    "experiment=trm_sudoku_extreme_1k_aug_1k",
+    "logger=csv",
+    "hydra.run.dir=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra",
+    "save_dir=null",
+    "append_wandb_name_to_save_dir=false",
+    "seed=4108",
+    "data.data_dir=./data/sudoku_extreme_1k_aug_1k",
+    "ckpt_path=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+    "+trainer.max_time=00:11:30:00",
+    "callbacks.model_checkpoint.monitor=val/exact_accuracy",
+    "callbacks.model_checkpoint.mode=max",
+    "callbacks.model_checkpoint.dirpath=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline",
+    "callbacks.model_checkpoint.save_last=true",
+    "callbacks.model_checkpoint.save_top_k=1",
+    "callbacks.model_checkpoint.auto_insert_metric_name=false"
+  ],
+  "current_val": 0.501041650772,
+  "duration_s": 10.2,
+  "estimated_passes_to_085": {
+    "basis": "latest_positive_val_delta",
+    "estimated_additional_val_intervals": 48,
+    "latest_positive_delta": 0.007291644812,
+    "target_val": 0.85
+  },
+  "experiment": "experiment_4157_baseline_harvest_contiguous_continue",
+  "field_principles": {
+    "baseline_faithful": "Bare bool: val>=0.85. Tells exp4159 whether the full de-confounded RFT graft can run or must defer.",
+    "current_val": "Latest val_exact_accuracy from the contiguous-run CSV; the load-bearing baseline-readiness number.",
+    "estimated_passes_to_085": "Estimated additional contiguous validation intervals needed to reach val>=0.85.",
+    "honest_verdict": "Terminal-prefixed. An honest 'baseline advancing via the live contiguous run, val=0.NN, .385 rerank carries the moat signal' is COMPLETE and valuable.",
+    "manual_lr_step": "The persisted manual LR step; STEP-based progress evidence that does not misfire on the stale-Timer state that broke .384.",
+    "max_val": "Best val ever recorded; the checkpoint the rerank/graft tasks should snapshot.",
+    "run_alive": "Bare bool: is the operator's contiguous run still training? If true this task RECORDS ONLY (no competing launch).",
+    "stable_checkpoint_path": "The shared checkpoint the rerank (exp4158) + graft (exp4159) snapshot and build on.",
+    "val_trajectory": "Val across the contiguous run; shows the convergence rate toward 0.87."
+  },
+  "honest_verdict": "blocked_noop_step_unchanged",
+  "liveness": {
+    "csv_advancing": false,
+    "detail": "task-launched contiguous run",
+    "pid": 447577,
+    "process_alive": false,
+    "run_alive": false
+  },
+  "manual_lr_step": 19006,
+  "max_val": 0.501041650772,
+  "native_trainer_launched": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/usr/bin/uv",
+      "resource": "uv"
+    },
+    {
+      "available": true,
+      "detail": "found: /home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/train.py",
+      "resource": "nanotrm_trainer"
+    },
+    {
+      "available": true,
+      "detail": "torch.cuda.is_available()=True; device=NVIDIA GeForce RTX 3090",
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "detail": "exists: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+      "resource": "stable_checkpoint"
+    }
+  ],
+  "random_seed": 4108,
+  "run_alive": false,
+  "schema": "carnot.experiment_4157_baseline_harvest_contiguous_continue.v1",
+  "spec_refs": [
+    "REQ-LEARN-4157",
+    "SCENARIO-LEARN-4157-LIVE",
+    "SCENARIO-LEARN-4157-CONTINUE"
+  ],
+  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+  "task_launched_run": {
+    "manual_lr_step_advanced": false,
+    "manual_lr_step_after": 19006,
+    "manual_lr_step_before": 19006,
+    "new_val_row_written": false,
+    "process_pid": 447577,
+    "return_code": 1,
+    "stdout_tail": [
+      "log_path=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/exp4157_contiguous_resume.log",
+      "pid=447577",
+      "  File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/models/trm.py\", line 502, in training_step",
+      "    self.carry, loss, metrics, _ = self.compute_loss_and_metrics(self.carry, batch)",
+      "                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/models/trm.py\", line 425, in compute_loss_and_metrics",
+      "    new_carry, outputs = self.forward(carry, batch)",
+      "                         ^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/models/trm.py\", line 387, in forward",
+      "    new_inner_carry, logits, q_halt_logits = self.inner_forward(",
+      "                                             ^^^^^^^^^^^^^^^^^^^",
+      "  File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/models/trm.py\", line 362, in inner_forward",
+      "    z_H = self.lenet(z_H, z_L, **seq_info)",
+      "          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py\", line 1778, in _wrapped_call_impl",
+      "    return self._call_impl(*args, **kwargs)",
+      "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py\", line 1789, in _call_impl",
+      "    return forward_call(*args, **kwargs)",
+      "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/modules/trm_block.py\", line 485, in forward",
+      "    hidden_states = layer(hidden_states=hidden_states, **kwargs)",
+      "                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py\", line 1778, in _wrapped_call_impl",
+      "    return self._call_impl(*args, **kwargs)",
+      "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py\", line 1789, in _call_impl",
+      "    return forward_call(*args, **kwargs)",
+      "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/modules/trm_block.py\", line 463, in forward",
+      "    out = self.mlp_t(hidden_states)",
+      "          ^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py\", line 1778, in _wrapped_call_impl",
+      "    return self._call_impl(*args, **kwargs)",
+      "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py\", line 1789, in _call_impl",
+      "    return forward_call(*args, **kwargs)",
+      "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/modules/trm_block.py\", line 190, in forward",
+      "    return self.down_proj(F.silu(gate) * up)",
+      "                          ~~~~~~~~~~~~~^~~~",
+      "torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 192.00 MiB. GPU 0 has a total capacity of 23.56 GiB of which 86.31 MiB is free. Including non-PyTorch memory, this process has 23.46 GiB memory in use. Of the allocated memory 23.07 GiB is allocated by PyTorch, and 89.57 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)",
+      "return_code=1"
+    ],
+    "val_rows_after": 27,
+    "val_rows_before": 27
+  },
+  "val_trajectory": [
+    {
+      "csv_version": 0,
+      "delta_vs_previous": null,
+      "epoch": 6499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_0/metrics.csv",
+      "row_number": 4,
+      "step": 19104,
+      "val_exact_accuracy": 0.200520828366
+    },
+    {
+      "csv_version": 2,
+      "delta_vs_previous": -0.001302078366,
+      "epoch": 6499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_2/metrics.csv",
+      "row_number": 4,
+      "step": 19104,
+      "val_exact_accuracy": 0.19921875
+    },
+    {
+      "csv_version": 3,
+      "delta_vs_previous": 0.000260412693,
+      "epoch": 6499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_3/metrics.csv",
+      "row_number": 4,
+      "step": 19104,
+      "val_exact_accuracy": 0.199479162693
+    },
+    {
+      "csv_version": 3,
+      "delta_vs_previous": 0.022135421634,
+      "epoch": 6599,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_3/metrics.csv",
+      "row_number": 7,
+      "step": 19204,
+      "val_exact_accuracy": 0.221614584327
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": -0.017447918653,
+      "epoch": 6499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 4,
+      "step": 19104,
+      "val_exact_accuracy": 0.204166665673
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.016927078366,
+      "epoch": 6599,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 7,
+      "step": 19204,
+      "val_exact_accuracy": 0.22109374404
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.023177087307,
+      "epoch": 6699,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 10,
+      "step": 19304,
+      "val_exact_accuracy": 0.244270831347
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.012760430574,
+      "epoch": 6799,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 13,
+      "step": 19404,
+      "val_exact_accuracy": 0.257031261921
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.025260418653,
+      "epoch": 6899,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 16,
+      "step": 19504,
+      "val_exact_accuracy": 0.282291680574
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.018489569426,
+      "epoch": 6999,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 19,
+      "step": 19604,
+      "val_exact_accuracy": 0.30078125
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.019010424614,
+      "epoch": 7099,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 22,
+      "step": 19704,
+      "val_exact_accuracy": 0.319791674614
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.018749982119,
+      "epoch": 7199,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 25,
+      "step": 19804,
+      "val_exact_accuracy": 0.338541656733
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.016927093267,
+      "epoch": 7299,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 28,
+      "step": 19904,
+      "val_exact_accuracy": 0.35546875
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.016666680574,
+      "epoch": 7399,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 31,
+      "step": 20004,
+      "val_exact_accuracy": 0.372135430574
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.01406249404,
+      "epoch": 7499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 34,
+      "step": 20104,
+      "val_exact_accuracy": 0.386197924614
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.013802081347,
+      "epoch": 7599,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 37,
+      "step": 20204,
+      "val_exact_accuracy": 0.40000000596
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.011979162693,
+      "epoch": 7699,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 40,
+      "step": 20304,
+      "val_exact_accuracy": 0.411979168653
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.014322906733,
+      "epoch": 7799,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 43,
+      "step": 20404,
+      "val_exact_accuracy": 0.426302075386
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.009114593267,
+      "epoch": 7899,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 46,
+      "step": 20504,
+      "val_exact_accuracy": 0.435416668653
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.007291674614,
+      "epoch": 7999,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 49,
+      "step": 20604,
+      "val_exact_accuracy": 0.442708343267
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.009374976158,
+      "epoch": 8099,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 52,
+      "step": 20704,
+      "val_exact_accuracy": 0.452083319426
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.012760430574,
+      "epoch": 8199,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 55,
+      "step": 20804,
+      "val_exact_accuracy": 0.46484375
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.012760430574,
+      "epoch": 8299,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 58,
+      "step": 20904,
+      "val_exact_accuracy": 0.477604180574
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.008072912693,
+      "epoch": 8399,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 61,
+      "step": 21004,
+      "val_exact_accuracy": 0.485677093267
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.004947900772,
+      "epoch": 8499,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 64,
+      "step": 21104,
+      "val_exact_accuracy": 0.49062499404
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.003125011921,
+      "epoch": 8599,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 67,
+      "step": 21204,
+      "val_exact_accuracy": 0.49375000596
+    },
+    {
+      "csv_version": 4,
+      "delta_vs_previous": 0.007291644812,
+      "epoch": 8699,
+      "metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "row_number": 70,
+      "step": 21304,
+      "val_exact_accuracy": 0.501041650772
+    }
+  ]
+}
