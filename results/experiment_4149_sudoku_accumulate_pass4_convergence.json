@@ -1,0 +1,107 @@
+{
+  "acceptance_gate_passed": true,
+  "blocked_cause": "pass3 verdict=blocked_pass2_noop_unresolved; post_epoch=6399; duration_s=0.115; val_exact_accuracy=None; blocked_cause=pass2 verdict=blocked_pass1_noop_unresolved; pass1_honest_verdict=blocked_noop_cap_not_confirmed_timer_elapsed; post_epoch=6399; duration_s=0.125; val_exact_accuracy=None; blocked_cause=pass1 verdict=blocked_noop_cap_not_confirmed_timer_elapsed; checkpoint_epoch=6399; config_max_epochs=50000; max_epochs_cap_confirmed=False; timer_train_elapsed_s=3641.9931271109963; max_time_s=3600.0. The pass1 artifact did not prove epoch advance plus validation, so pass2 is stopped before retraining.; The pass2 artifact did not prove real pass2 training, so pass3 is stopped before retraining.; The pass3 artifact did not prove real pass3 training, so pass4 is stopped before retraining.",
+  "command": [],
+  "duration_s": 0.112,
+  "experiment": "experiment_4149_sudoku_accumulate_pass4_convergence",
+  "field_principles": {
+    "duration_s": "Real bounded pass; <120s = no-op.",
+    "honest_verdict": "Terminal-prefixed. An honest 'val=0.NN, .385 continues' is COMPLETE.",
+    "matches_published_087": "Bare bool: within 0.02 of 0.87. Tells exp4150 whether a faithful baseline exists to graft onto.",
+    "stable_checkpoint_path": "The persisted baseline checkpoint exp4150 + .385 build on.",
+    "val_exact_accuracy": "Final accumulated solve metric for .384.",
+    "val_trajectory_v384": "Val across the .384 passes (from 0.278); shows the convergence rate post-fix."
+  },
+  "honest_verdict": "blocked_pass3_noop_unresolved",
+  "matches_published_087": false,
+  "native_trainer_launched": false,
+  "pass3_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4148_sudoku_accumulate_pass3.json",
+  "pass3_duration_s": 0.115,
+  "pass3_honest_verdict": "blocked_pass2_noop_unresolved",
+  "pass3_post_epoch": 6399,
+  "pass3_val_exact_accuracy": null,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/usr/bin/uv",
+      "resource": "uv"
+    },
+    {
+      "available": true,
+      "detail": "found: /home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/train.py",
+      "resource": "nanotrm_trainer"
+    },
+    {
+      "available": true,
+      "detail": "torch.cuda.is_available()=True; device=NVIDIA GeForce RTX 3090",
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "detail": "torch.load ok",
+      "resource": "stable_checkpoint"
+    }
+  ],
+  "published_exact_accuracy_target": 0.87,
+  "published_match_tolerance": 0.02,
+  "random_seed": 4108,
+  "schema": "carnot.experiment_4149_sudoku_accumulate_pass4_convergence.v1",
+  "spec_refs": [
+    "REQ-LEARN-4149",
+    "SCENARIO-LEARN-4149-BLOCKED-PASS3"
+  ],
+  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+  "val_exact_accuracy": 0.278172343969,
+  "val_trajectory_v384": [
+    {
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4145_archive_v383_activate_v384.json",
+      "duration_s": 12.101,
+      "effective_val_exact_accuracy": 0.278172343969,
+      "experiment": "experiment_4145_archive_v383_activate_v384",
+      "honest_verdict": "success: archived_v383_v384_active_max_epochs_noop_recorded_baseline_0.278_graft_false_negative_risk_pretest_green",
+      "pass_label": "v384_start",
+      "post_epoch": null,
+      "val_exact_accuracy": 0.278172343969
+    },
+    {
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4146_sudoku_accumulate_pass1_epochfix.json",
+      "duration_s": 0.121,
+      "effective_val_exact_accuracy": 0.278172343969,
+      "experiment": "experiment_4146_sudoku_accumulate_pass1_epochfix",
+      "honest_verdict": "blocked_noop_cap_not_confirmed_timer_elapsed",
+      "pass_label": "pass1",
+      "post_epoch": 6399,
+      "val_exact_accuracy": null
+    },
+    {
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4147_sudoku_accumulate_pass2.json",
+      "duration_s": 0.125,
+      "effective_val_exact_accuracy": 0.278172343969,
+      "experiment": "experiment_4147_sudoku_accumulate_pass2",
+      "honest_verdict": "blocked_pass1_noop_unresolved",
+      "pass_label": "pass2",
+      "post_epoch": 6399,
+      "val_exact_accuracy": null
+    },
+    {
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4148_sudoku_accumulate_pass3.json",
+      "duration_s": 0.115,
+      "effective_val_exact_accuracy": 0.278172343969,
+      "experiment": "experiment_4148_sudoku_accumulate_pass3",
+      "honest_verdict": "blocked_pass2_noop_unresolved",
+      "pass_label": "pass3",
+      "post_epoch": 6399,
+      "val_exact_accuracy": null
+    },
+    {
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4149_sudoku_accumulate_pass4_convergence.json",
+      "duration_s": 0.112,
+      "effective_val_exact_accuracy": 0.278172343969,
+      "experiment": "experiment_4149_sudoku_accumulate_pass4_convergence",
+      "honest_verdict": "blocked_pass3_noop_unresolved",
+      "pass_label": "pass4",
+      "post_epoch": null,
+      "val_exact_accuracy": 0.278172343969
+    }
+  ]
+}

@@ -12887,6 +12887,85 @@ pass2's epoch, and either positive improvement or an honest plateau flag.
 
 ---
 
+## REQ-LEARN-4149: Sudoku Extreme Pass 4 Final Accumulation Decision
+
+**Given** Exp 4149 is the final `.384` accumulation pass before Exp 4150 and
+`.385` decide whether a faithful Sudoku Extreme baseline exists, it SHALL read
+`results/experiment_4148_sudoku_accumulate_pass3.json` before any native
+trainer launch. It SHALL also recover the `.384` validation trajectory from
+the activated `0.278` baseline plus Exp 4146, Exp 4147, and Exp 4148, preserving
+null pass metrics when an upstream pass stopped as a no-op.
+
+**When** Exp 4148 already reports `val_exact_accuracy >= 0.87`, Exp 4149
+SHALL skip native training and write
+`results/experiment_4149_sudoku_accumulate_pass4_convergence.json` as an
+early-converged confirmation. The artifact SHALL report the final validation
+exact accuracy, set `matches_published_087` as a bare bool using the
+`abs(val_exact_accuracy - 0.87) <= 0.02` rule, keep the stable checkpoint path,
+and include the full `.384` validation trajectory from `0.278`.
+
+**When** Exp 4148 reports an upstream `blocked_*` or `blocked_noop_*` verdict,
+or otherwise lacks proof of real pass3 training, Exp 4149 SHALL surface the
+upstream blocker and STOP before training. The blocked artifact SHALL still
+report the effective final accumulated validation accuracy inherited from the
+stable `0.278` baseline when no later pass reports a real validation metric,
+set `matches_published_087=false`, preserve the stable checkpoint path, and
+include the `.384` trajectory showing the blocked passes.
+
+**When** Exp 4148 is decision-grade, below the early-convergence threshold, and
+runtime preconditions pass, Exp 4149 SHALL launch one bounded native resume pass
+using `ckpt_path=<repo>/results/trm_runs/sudoku_extreme_baseline/last.ckpt`,
+`+trainer.max_epochs=<current_epoch+3000>`, `+trainer.max_time="00:01:00:00"`,
+CSV logging, progress printing, and ModelCheckpoint writing `last.ckpt` back to
+`results/trm_runs/sudoku_extreme_baseline`.
+
+**Then** Exp 4149 SHALL write the terminal artifact
+`results/experiment_4149_sudoku_accumulate_pass4_convergence.json` with
+top-level fields `honest_verdict`, `val_exact_accuracy`,
+`matches_published_087`, `val_trajectory_v384`, `stable_checkpoint_path`, and
+`duration_s`, each carrying the required operator principle text. A complete
+trained verdict is valid only when `duration_s > 120`, the checkpoint epoch
+advances beyond Exp 4148, and a real validation exact accuracy is reported. An
+early-converged confirmation or honest upstream no-op is also acceptance-grade
+when the final validation value and `matches_published_087` bool are present.
+
+### SCENARIO-LEARN-4149-BLOCKED-PASS3: Upstream No-Op Stops Pass 4
+
+**Given** Exp 4148 reports `blocked_pass2_noop_unresolved`,
+`val_exact_accuracy=null`, and a stable checkpoint path
+**When** Exp 4149 starts
+**Then** it writes `blocked_pass3_noop_unresolved`, never calls the native
+trainer, reports the effective final validation accuracy from the `.384`
+baseline, sets `matches_published_087=false`, and includes a trajectory from
+`0.278` through the blocked pass1, pass2, and pass3 artifacts.
+
+### SCENARIO-LEARN-4149-EARLY-CONVERGED: Pass 3 Already Meets Target
+
+**Given** Exp 4148 reports `val_exact_accuracy >= 0.87`
+**When** Exp 4149 starts
+**Then** it writes a terminal early-converged confirmation, reports the pass3
+validation exact accuracy as the final accumulated value, sets
+`matches_published_087` from the `0.02` tolerance rule, preserves the stable
+checkpoint path, and skips native training.
+
+### SCENARIO-LEARN-4149: Bounded Pass 4 Reports Final Accumulated Metric
+
+**Given** Exp 4148 reports a decision-grade numeric validation accuracy below
+`0.87` and the stable checkpoint loads
+**When** Exp 4149 runs one bounded native pass4 resume
+**Then** the artifact reports a terminal-prefixed honest verdict, the final
+pass4 validation exact accuracy, a bare `matches_published_087` bool, the full
+`.384` validation trajectory, and anti-no-op proof through runtime and epoch
+advance.
+
+## Implementation Status (REQ-LEARN-4149)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4149 | Proposed (python/carnot/experiment_4149_sudoku_accumulate_pass4_convergence.py, Exp 4149) | Proposed (tests/python/test_experiment_4149_sudoku_accumulate_pass4_convergence.py) |
+
+---
+
 ## REQ-LEARN-4139: Decisive Sudoku Verifier Graft With Oracle Separation
 
 **Given** Exp 4138 has written
