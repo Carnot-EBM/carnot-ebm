@@ -8417,3 +8417,4 @@ c |
 | 2026-06-13 10:36 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra s | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-13 11:21 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 86 passed, 1 warning in 4.61s |
 | 2026-06-13 11:41 UTC | Capstone .383 (UNGATED): headline question is DID  | OK | 87 passed, 1 warning in 5.46s |
+| 2026-06-13 12:16 UTC | Milestone 2026.06.384 activated | OK | 11 tasks queued |
