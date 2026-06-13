@@ -1,0 +1,382 @@
+{
+  "arc_levels": {
+    "honest_verdict": "complete: incremental_progress_no_solve_r11l-495a7899_L5_no_verifier_validated_level_up_candidate",
+    "new_levels_solved_this_task": 0,
+    "prior_total_levels_solved": 13,
+    "real_env_confirmed": false,
+    "status": "measured_no_new_level",
+    "target_game": "r11l-495a7899",
+    "target_level": 5,
+    "total_games_solved": 13,
+    "total_levels_solved": 13,
+    "verifier_validated": false
+  },
+  "baseline_val_trajectory": {
+    "attempted_passes": [
+      {
+        "experiment_id": 4135,
+        "included": false,
+        "pass_index": 1,
+        "status": "skipped_flagged_adversarial"
+      },
+      {
+        "experiment_id": 4136,
+        "included": false,
+        "pass_index": 2,
+        "status": "skipped_flagged_adversarial"
+      },
+      {
+        "experiment_id": 4137,
+        "included": false,
+        "pass_index": 3,
+        "status": "skipped_flagged_adversarial"
+      },
+      {
+        "experiment_id": 4138,
+        "included": false,
+        "pass_index": 4,
+        "status": "skipped_flagged_adversarial"
+      }
+    ],
+    "converged_toward_087": false,
+    "deltas": [],
+    "final_to_target_gap": 0.5918276560310001,
+    "final_val_exact_accuracy": 0.278172343969,
+    "matches_published_087": null,
+    "near_faithful_080": null,
+    "points": [
+      {
+        "delta_vs_previous": null,
+        "experiment_id": 4133,
+        "label": ".382_capstone_anchor",
+        "pass_index": 0,
+        "path": "results/experiment_4133_capstone_v382.json",
+        "sha256": "99e096c7b3fe180276775f2f29fc6de81b41f1ba0c7933d91bc123500572eb89",
+        "source_field": "baseline_val_trajectory.final_val_exact_accuracy",
+        "val_exact_accuracy": 0.278172343969,
+        "val_exact_accuracy_rounded": 0.2782
+      }
+    ],
+    "published_exact_accuracy_target": 0.87,
+    "published_match_tolerance": 0.02,
+    "rounded_deltas": [],
+    "rounded_values": [
+      0.2782
+    ],
+    "status": "baseline_config_blocked",
+    "values": [
+      0.278172343969
+    ]
+  },
+  "diffusiongemma_gate_state": {
+    "basis": "transferable_ensemble_rerank_plus_rft_label_deconfound_not_oracle",
+    "reason": "baseline_not_faithful_or_near_faithful",
+    "state": "kept_gated",
+    "uses_executable_oracle_upper_bound": false,
+    "verifier_value_added": false
+  },
+  "diffusiongemma_unlocks": false,
+  "duration_s": 0.002947631001006812,
+  "experiment_id": 4144,
+  "field_principles": {
+    "baseline_val_trajectory": "Val across .382+.383 (0.278 -> ... across 4 passes); shows whether the fixed schedule converged.",
+    "diffusiongemma_unlocks": "Bare bool: verifier_value_added==true (transferable ensemble + RFT) on the executable Sudoku domain -> the queued scale-up unlocks for .384.",
+    "headline_outcome": "One of the enumerated set -- forces a single unambiguous read of the .383 result.",
+    "honest_verdict": "Terminal-prefixed. An honest 'baseline converging, graft deferred, .384 continues' OR 'verifier null with headroom present' is COMPLETE and valuable.",
+    "upstream_provenance": "{experiment_id, fields_imported, sha256} per cited upstream -- the audit trail proving the capstone synthesizes real measurements.",
+    "verifier_value_added_verdict": "The decisive answer (true / false-with-headroom / deferred), defined on the transferable ensemble + RFT (NOT the oracle); the DiffusionGemma gate signal."
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "experiment_id": 4135,
+      "path": "results/experiment_4135_sudoku_accumulate_pass1_fixed_lr.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "36f2e5c10188832811dca929fa9f49876fe78eaf2c738114fa7d8686144b69b0"
+    },
+    {
+      "experiment_id": 4136,
+      "path": "results/experiment_4136_sudoku_accumulate_pass2_fixed_lr.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "347da70c50979ba4263cb7a61bcca94950c63021fa392f67438869073e830f31"
+    },
+    {
+      "experiment_id": 4137,
+      "path": "results/experiment_4137_sudoku_accumulate_pass3_fixed_lr.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "86527969408d23954995cb00dbb395bb9b8cec49c3bbc7ec1923cbdfd89cf184"
+    },
+    {
+      "experiment_id": 4138,
+      "path": "results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "85a6d185671bfbf75a891a2245a4fa113adf34c4e8f27a3cab6988403ad8ce06"
+    },
+    {
+      "experiment_id": 4139,
+      "path": "results/experiment_4139_decisive_verifier_graft_sudoku.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "9f47d372a96728ef65a836011dfc015ab018fdbfe82cd2c5d2835f1619c2f4a6"
+    },
+    {
+      "experiment_id": 4142,
+      "path": "results/experiment_4142_verifier_registry_gaps_hygiene.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "296bdb0e30fe1fcfeb3f350d008b8d2d4de348569aa7c733ec757ad959ce616a"
+    }
+  ],
+  "hardware_continuity": {
+    "gatemate_step_taken": "blocked_gatemate_unreachable",
+    "honest_verdict": "complete: hardware_continuity_4143_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+    "included": true,
+    "kv260_terminal_confirmed": true,
+    "per_board_reachability": {
+      "gatemate": false,
+      "kv260": true,
+      "polarfire": true
+    },
+    "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded"
+  },
+  "headline_answers": {
+    "diffusiongemma_unlocks": false,
+    "exp4138_fixed_lr_baseline_converged": false,
+    "exp4138_matches_published_087": null,
+    "exp4138_near_faithful_080": null,
+    "exp4139_headroom_present": null,
+    "exp4139_transferable_verifier_value_added": false,
+    "total_arc_levels_solved": 13
+  },
+  "headline_outcome": "baseline_config_blocked",
+  "honest_verdict": "blocked: capstone_v383_baseline_config_blocked_baseline_converged0_near_faithful0_headroom0_verifier_deferred_diffusiongemma0_levels13_flagged_skipped6",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "missing_upstream_artifacts": [],
+  "random_seed": 4144,
+  "registry_gap_hygiene": {
+    "diffusiongemma_gate_state": {},
+    "honest_verdict": "",
+    "included": false,
+    "regression_guard_passed": false,
+    "status": "skipped_flagged_adversarial",
+    "sudoku_baseline_status": "",
+    "sudoku_decisive_graft_status": ""
+  },
+  "reproducibility_checksum": "39c32836bb815c304e6198efc862d9d61e7ccce24e1a5b2eb9cc576a6dad94f0",
+  "schema": "carnot.capstone_v383_4144.v1",
+  "sota_ingestion": {
+    "flagged_for_v384": "gram_as_generator_if_verifier_value_added_and_headroom_present_v384",
+    "honest_verdict": "complete: sota_ingestion_recursive_reasoner_verifier_mapped",
+    "included": true,
+    "methods_mapped": [
+      {
+        "arxiv_id_or_url": "2605.19376",
+        "failure_mode": "A stronger generator can erase rerank headroom; without verifier_value_added the graft would only benchmark GRAM rather than Carnot verifier value.",
+        "implementation_over_stack": "Treat GRAM as the .384 generator candidate only after the TRM graft shows non-oracle verifier value and best-of-K headroom.",
+        "name": "GRAM stochastic-latent generator",
+        "url": "https://arxiv.org/abs/2605.19376"
+      },
+      {
+        "arxiv_id_or_url": "2602.08498",
+        "failure_mode": "If correctness filtering is mixed with label-source effects, the run cannot distinguish verifier reward from generic adaptation compute.",
+        "implementation_over_stack": "Use verified-correct trace filtering as the precedent for the .383 RFT A-vs-B de-confound: verifier-certified labels versus vote labels.",
+        "name": "TRM thinking reward for RLVR/GRPO",
+        "url": "https://arxiv.org/abs/2602.08498"
+      },
+      {
+        "arxiv_id_or_url": "2506.18203",
+        "failure_mode": "Weak-verifier weights can overfit correlated errors; oracle(best-of-K) must beat vote before any null rerank is interpreted.",
+        "implementation_over_stack": "Make the .383 non-oracle ensemble-rerank headline a weighted weak-verifier baseline rather than a single executable-oracle rerank.",
+        "name": "Weaver weak-verifier weighted ensemble",
+        "url": "https://arxiv.org/abs/2506.18203"
+      }
+    ]
+  },
+  "total_arc_games_solved": 13,
+  "total_arc_levels_solved": 13,
+  "upstream_artifact_state": {
+    "4135": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: missing_real_val_exact_accuracy",
+      "included": false,
+      "path": "results/experiment_4135_sudoku_accumulate_pass1_fixed_lr.json",
+      "skipped": true
+    },
+    "4136": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: plateau -> config audit: pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written",
+      "included": false,
+      "path": "results/experiment_4136_sudoku_accumulate_pass2_fixed_lr.json",
+      "skipped": true
+    },
+    "4137": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: baseline config-blocked before pass3 -> config audit: pass2 already ran config audit; baseline is config-blocked before pass3: pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written",
+      "included": false,
+      "path": "results/experiment_4137_sudoku_accumulate_pass3_fixed_lr.json",
+      "skipped": true
+    },
+    "4138": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: baseline config-blocked before pass4 -> pass3 did not report positive accumulation: pass2 already ran config audit; baseline is config-blocked before pass3: pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written",
+      "included": false,
+      "path": "results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json",
+      "skipped": true
+    },
+    "4139": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: uninformative_no_headroom_false_negative_risk",
+      "included": false,
+      "path": "results/experiment_4139_decisive_verifier_graft_sudoku.json",
+      "skipped": true
+    },
+    "4140": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: incremental_progress_no_solve_r11l-495a7899_L5_no_verifier_validated_level_up_candidate",
+      "included": true,
+      "path": "results/experiment_4140_arc_incremental_progress.json",
+      "skipped": false
+    },
+    "4141": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: sota_ingestion_recursive_reasoner_verifier_mapped",
+      "included": true,
+      "path": "results/experiment_4141_sota_ingestion_recursive_reasoner_verifier.json",
+      "skipped": false
+    },
+    "4142": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v383_truth_regression_guard_passed_True_baseline_open_baseline_config_blocked_val_0.2782_graft_open_graft_deferred_no_transferable_value_added_diffusiongemma_kept_gated",
+      "included": false,
+      "path": "results/experiment_4142_verifier_registry_gaps_hygiene.json",
+      "skipped": true
+    },
+    "4143": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: hardware_continuity_4143_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+      "included": true,
+      "path": "results/experiment_4143_hardware_continuity.json",
+      "skipped": false
+    }
+  },
+  "upstream_provenance": [
+    {
+      "experiment_id": 4135,
+      "fields_imported": [],
+      "honest_verdict": "complete: missing_real_val_exact_accuracy",
+      "path": "results/experiment_4135_sudoku_accumulate_pass1_fixed_lr.json",
+      "sha256": "36f2e5c10188832811dca929fa9f49876fe78eaf2c738114fa7d8686144b69b0",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4136,
+      "fields_imported": [],
+      "honest_verdict": "complete: plateau -> config audit: pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written",
+      "path": "results/experiment_4136_sudoku_accumulate_pass2_fixed_lr.json",
+      "sha256": "347da70c50979ba4263cb7a61bcca94950c63021fa392f67438869073e830f31",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4137,
+      "fields_imported": [],
+      "honest_verdict": "complete: baseline config-blocked before pass3 -> config audit: pass2 already ran config audit; baseline is config-blocked before pass3: pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written",
+      "path": "results/experiment_4137_sudoku_accumulate_pass3_fixed_lr.json",
+      "sha256": "86527969408d23954995cb00dbb395bb9b8cec49c3bbc7ec1923cbdfd89cf184",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4138,
+      "fields_imported": [],
+      "honest_verdict": "complete: baseline config-blocked before pass4 -> pass3 did not report positive accumulation: pass2 already ran config audit; baseline is config-blocked before pass3: pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written",
+      "path": "results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json",
+      "sha256": "85a6d185671bfbf75a891a2245a4fa113adf34c4e8f27a3cab6988403ad8ce06",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4139,
+      "fields_imported": [],
+      "honest_verdict": "complete: uninformative_no_headroom_false_negative_risk",
+      "path": "results/experiment_4139_decisive_verifier_graft_sudoku.json",
+      "sha256": "9f47d372a96728ef65a836011dfc015ab018fdbfe82cd2c5d2835f1619c2f4a6",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4140,
+      "fields_imported": [
+        "prior_total_levels_solved",
+        "total_levels_solved",
+        "total_games_solved",
+        "new_levels_solved_this_task",
+        "real_env_confirmed",
+        "verifier_validated",
+        "target_game",
+        "target_level"
+      ],
+      "honest_verdict": "complete: incremental_progress_no_solve_r11l-495a7899_L5_no_verifier_validated_level_up_candidate",
+      "path": "results/experiment_4140_arc_incremental_progress.json",
+      "sha256": "7c6621e62705be6729948b19e0f8287243574a0413d82ea8c7bfbb9cbf922ca0",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4141,
+      "fields_imported": [
+        "methods_mapped",
+        "flagged_for_v384"
+      ],
+      "honest_verdict": "complete: sota_ingestion_recursive_reasoner_verifier_mapped",
+      "path": "results/experiment_4141_sota_ingestion_recursive_reasoner_verifier.json",
+      "sha256": "9edab01a337bfee270b9031f0becd135cb8ed503c507074aa677f8f258b2d782",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4142,
+      "fields_imported": [],
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v383_truth_regression_guard_passed_True_baseline_open_baseline_config_blocked_val_0.2782_graft_open_graft_deferred_no_transferable_value_added_diffusiongemma_kept_gated",
+      "path": "results/experiment_4142_verifier_registry_gaps_hygiene.json",
+      "sha256": "296bdb0e30fe1fcfeb3f350d008b8d2d4de348569aa7c733ec757ad959ce616a",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4143,
+      "fields_imported": [
+        "kv260_terminal_confirmed",
+        "per_board_reachability",
+        "gatemate_step_taken",
+        "polarfire_step_taken"
+      ],
+      "honest_verdict": "complete: hardware_continuity_4143_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+      "path": "results/experiment_4143_hardware_continuity.json",
+      "sha256": "a7de2bacb29fc73ed0a535812b09fb98eee98722371d78194d4f7b9b34d0dc70",
+      "skip_reason": "",
+      "skipped": false
+    }
+  ],
+  "verifier_value_added_verdict": {
+    "artifact_status": "skipped_flagged_adversarial",
+    "ensemble_rerank_lift_vs_vote": {},
+    "headroom_present": null,
+    "honest_verdict": "",
+    "oracle_context": {},
+    "reason": "baseline_not_faithful_or_near_faithful",
+    "rft_label_deconfound_value_added": false,
+    "rft_vs_ablation_delta": {},
+    "status": "deferred",
+    "transferable_ensemble_value_added": false,
+    "uses_executable_oracle_upper_bound_for_gate": false,
+    "verifier_value_added": false
+  }
+}
