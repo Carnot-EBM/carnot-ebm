@@ -8410,3 +8410,4 @@ c |
 | 2026-06-13 08:47 UTC | ACCUMULATE pass 1 of 4 toward 0.87 with the FIXED  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-13 09:05 UTC | ACCUMULATE pass 2 of 4 toward 0.87 (DEFENSIVE read | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT, GATE_PASSED_WITHOUT_DATA — resu |
 | 2026-06-13 09:19 UTC | ACCUMULATE pass 3 of 4 toward 0.87 (DEFENSIVE read | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT, GATE_PASSED_WITHOUT_DATA — resu |
+| 2026-06-13 09:34 UTC | ACCUMULATE pass 4 of 4 + CONVERGENCE CHECK (DEFENS | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
