@@ -1,0 +1,9119 @@
+{
+  "acceptance_gate_passed": true,
+  "action_plan": [
+    {
+      "action": 4,
+      "role": "move_right"
+    },
+    {
+      "action": 4,
+      "role": "move_right"
+    },
+    {
+      "action": 4,
+      "role": "move_right"
+    },
+    {
+      "action": 4,
+      "role": "move_right_and_fall"
+    },
+    {
+      "action": 6,
+      "grid": [
+        7,
+        19
+      ],
+      "role": "remove_overhead_block_and_fall"
+    },
+    {
+      "action": 3,
+      "role": "move_left"
+    },
+    {
+      "action": 3,
+      "role": "move_left"
+    },
+    {
+      "action": 6,
+      "grid": [
+        4,
+        16
+      ],
+      "role": "remove_lateral_block"
+    },
+    {
+      "action": 3,
+      "role": "move_left_into_cleared_cell"
+    },
+    {
+      "action": 6,
+      "grid": [
+        4,
+        15
+      ],
+      "role": "remove_overhead_block_and_fall"
+    },
+    {
+      "action": 3,
+      "role": "move_left_and_fall"
+    },
+    {
+      "action": 4,
+      "role": "move_right"
+    },
+    {
+      "action": 4,
+      "role": "move_right"
+    },
+    {
+      "action": 6,
+      "grid": [
+        5,
+        9
+      ],
+      "role": "remove_overhead_block_and_fall"
+    },
+    {
+      "action": 3,
+      "role": "move_left"
+    },
+    {
+      "action": 3,
+      "role": "move_left_onto_gem"
+    }
+  ],
+  "actions_vs_baseline": 0.7619,
+  "arc_env_count": 25,
+  "candidate_baseline_actions": 21,
+  "duration_s": 0.454,
+  "excluded_solved_games": [
+    "r11l",
+    "lp85",
+    "sc25",
+    "su15",
+    "tn36",
+    "cd82",
+    "dc22",
+    "sb26",
+    "ft09",
+    "s5i5",
+    "tu93"
+  ],
+  "experiment": "experiment_4129_fourteenth_game_explore_first",
+  "exploration_actions_used": 5,
+  "field_principles": {
+    "actions_vs_baseline": "Confirmed solve actions divided by the selected game's L0 baseline action count.",
+    "first_solve_at_action": "Real confirmed action index where the first level counter increment occurred.",
+    "honest_verdict": "Terminal-prefixed. An honest no-solve is a COMPLETE verdict.",
+    "inference_substrate": "Declares the offline explore-first induction and verifier substrate.",
+    "levels_completed": "Real-env-confirmed level count; the falsifiable evidence of an actual solve.",
+    "real_env_confirmed": "Only real-env solves raise the headline count.",
+    "requirements": "OpenSpec requirement and scenario anchors for the Exp 4129 run.",
+    "total_games_solved": "The monotonic progress metric; must be >= the prior milestone's count."
+  },
+  "first_solve_at_action": 16,
+  "game_solved": true,
+  "honest_verdict": "success: fourteenth_game_solved_bp35-0a0ad940_at_action_16",
+  "induced_mechanic": "Observed BP35 transitions: horizontal keyboard movement, upward falling through unsupported cells, qclfkhjnaac block removal by click, and a required real level counter increment when the player reaches fjlzdjxhant.",
+  "inference_substrate": "offline_arc_agi3_explore_first_first_solve",
+  "level_completed": 1,
+  "levels_completed": 1,
+  "phase_trace": [
+    {
+      "candidate_reason": "selected fallback: bp35 is the lowest-baseline remaining directly observable offline fixture, L0 baseline_actions=21",
+      "phase": "observe",
+      "source": "offline_explore_first_induction",
+      "state": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          3,
+          23
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "target_game": "bp35-0a0ad940"
+    },
+    {
+      "action": {
+        "action": 4,
+        "role": "move_right"
+      },
+      "action_index": 1,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          4,
+          23
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          3,
+          23
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "explore",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "action": {
+        "action": 4,
+        "role": "move_right"
+      },
+      "action_index": 2,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          5,
+          23
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          4,
+          23
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "explore",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "action": {
+        "action": 4,
+        "role": "move_right"
+      },
+      "action_index": 3,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          6,
+          23
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          5,
+          23
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "explore",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "action": {
+        "action": 4,
+        "role": "move_right_and_fall"
+      },
+      "action_index": 4,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          7,
+          20
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          6,
+          23
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "explore",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "action": {
+        "action": 6,
+        "grid": [
+          7,
+          19
+        ],
+        "role": "remove_overhead_block_and_fall"
+      },
+      "action_index": 5,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          7,
+          16
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          7,
+          20
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "explore",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "exploration_actions_used": 5,
+      "goal_predicate": "player reaches the fjlzdjxhant gem and level counter increments",
+      "induction_call": {
+        "action_count": 16,
+        "call": "induce_bp35_upward_gravity_gem_route",
+        "goal_predicate": "player reaches the fjlzdjxhant gem and level counter increments",
+        "mechanic": "left/right moves shift the player by one grid cell; unsupported cells fall upward; clicking a removable block clears it; reaching fjlzdjxhant advances the level",
+        "observed_state": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            3,
+            23
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "removable_blocks_used": [
+          [
+            7,
+            19
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            5,
+            9
+          ]
+        ]
+      },
+      "mechanic": "bp35_upward_gravity_gem_route",
+      "phase": "induce",
+      "source": "offline_explore_first_induction"
+    },
+    {
+      "actions_checked": 11,
+      "energy": 0.0,
+      "final_level_completed": 1,
+      "final_player_position": [
+        3,
+        37
+      ],
+      "heldout_transition_count": 11,
+      "level_increment": true,
+      "phase": "verify",
+      "predicted_goal_after_actions": true,
+      "retained": true,
+      "start_level_completed": 0,
+      "verifier": "gap4_replay_bp35_upward_gravity_gem_level_counter"
+    },
+    {
+      "action": {
+        "action": 4,
+        "role": "move_right"
+      },
+      "action_index": 1,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          4,
+          23
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          3,
+          23
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4,
+        "role": "move_right"
+      },
+      "action_index": 2,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          5,
+          23
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          4,
+          23
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4,
+        "role": "move_right"
+      },
+      "action_index": 3,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          6,
+          23
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          5,
+          23
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4,
+        "role": "move_right_and_fall"
+      },
+      "action_index": 4,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          7,
+          20
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          6,
+          23
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "grid": [
+          7,
+          19
+        ],
+        "role": "remove_overhead_block_and_fall"
+      },
+      "action_index": 5,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          7,
+          16
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          7,
+          20
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            19
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 3,
+        "role": "move_left"
+      },
+      "action_index": 6,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          6,
+          16
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          7,
+          16
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 3,
+        "role": "move_left"
+      },
+      "action_index": 7,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          5,
+          16
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          6,
+          16
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "grid": [
+          4,
+          16
+        ],
+        "role": "remove_lateral_block"
+      },
+      "action_index": 8,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          5,
+          16
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          5,
+          16
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 3,
+        "role": "move_left_into_cleared_cell"
+      },
+      "action_index": 9,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          4,
+          16
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          5,
+          16
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "grid": [
+          4,
+          15
+        ],
+        "role": "remove_overhead_block_and_fall"
+      },
+      "action_index": 10,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          4,
+          13
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          4,
+          16
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 3,
+        "role": "move_left_and_fall"
+      },
+      "action_index": 11,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          3,
+          10
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          4,
+          13
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4,
+        "role": "move_right"
+      },
+      "action_index": 12,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          4,
+          10
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          3,
+          10
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 4,
+        "role": "move_right"
+      },
+      "action_index": 13,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          5,
+          10
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          4,
+          10
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 6,
+        "grid": [
+          5,
+          9
+        ],
+        "role": "remove_overhead_block_and_fall"
+      },
+      "action_index": 14,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          5,
+          7
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          5,
+          10
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 3,
+        "role": "move_left"
+      },
+      "action_index": 15,
+      "after": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          4,
+          7
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          5,
+          7
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 0,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    },
+    {
+      "action": {
+        "action": 3,
+        "role": "move_left_onto_gem"
+      },
+      "action_index": 16,
+      "after": {
+        "gem_position": [
+          5,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          50
+        ],
+        "level_completed": 1,
+        "player_position": [
+          3,
+          37
+        ],
+        "removable_blocks": [
+          [
+            2,
+            9
+          ],
+          [
+            2,
+            20
+          ],
+          [
+            2,
+            28
+          ],
+          [
+            2,
+            29
+          ],
+          [
+            2,
+            30
+          ],
+          [
+            2,
+            35
+          ],
+          [
+            2,
+            36
+          ],
+          [
+            3,
+            9
+          ],
+          [
+            3,
+            14
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            3,
+            20
+          ],
+          [
+            3,
+            29
+          ],
+          [
+            3,
+            30
+          ],
+          [
+            3,
+            35
+          ],
+          [
+            3,
+            36
+          ],
+          [
+            4,
+            9
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            20
+          ],
+          [
+            4,
+            29
+          ],
+          [
+            4,
+            30
+          ],
+          [
+            4,
+            35
+          ],
+          [
+            4,
+            36
+          ],
+          [
+            5,
+            9
+          ],
+          [
+            5,
+            16
+          ],
+          [
+            5,
+            23
+          ],
+          [
+            5,
+            24
+          ],
+          [
+            5,
+            29
+          ],
+          [
+            5,
+            30
+          ],
+          [
+            5,
+            35
+          ],
+          [
+            5,
+            36
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            16
+          ],
+          [
+            6,
+            28
+          ],
+          [
+            6,
+            35
+          ],
+          [
+            6,
+            36
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            10
+          ],
+          [
+            7,
+            16
+          ],
+          [
+            7,
+            28
+          ],
+          [
+            7,
+            35
+          ],
+          [
+            7,
+            36
+          ],
+          [
+            8,
+            9
+          ],
+          [
+            8,
+            10
+          ],
+          [
+            8,
+            14
+          ],
+          [
+            8,
+            15
+          ],
+          [
+            8,
+            16
+          ],
+          [
+            8,
+            28
+          ],
+          [
+            8,
+            35
+          ],
+          [
+            8,
+            36
+          ]
+        ]
+      },
+      "before": {
+        "gem_position": [
+          3,
+          7
+        ],
+        "gravity_direction": "up",
+        "grid_size": [
+          11,
+          36
+        ],
+        "level_completed": 0,
+        "player_position": [
+          4,
+          7
+        ],
+        "removable_blocks": [
+          [
+            2,
+            15
+          ],
+          [
+            2,
+            16
+          ],
+          [
+            2,
+            17
+          ],
+          [
+            3,
+            15
+          ],
+          [
+            3,
+            16
+          ],
+          [
+            3,
+            17
+          ],
+          [
+            4,
+            12
+          ],
+          [
+            4,
+            17
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            19
+          ],
+          [
+            6,
+            9
+          ],
+          [
+            6,
+            12
+          ],
+          [
+            6,
+            19
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            8,
+            19
+          ]
+        ]
+      },
+      "level_completed": 1,
+      "phase": "act",
+      "source": "offline_real_env_confirmation"
+    }
+  ],
+  "prior_total_games_solved": 12,
+  "random_seed": 4129,
+  "real_env_confirmed": true,
+  "requirements": [
+    "REQ-PHASE4-049",
+    "SCENARIO-PHASE4-049"
+  ],
+  "selected_candidate_reason": "selected fallback: bp35 is the lowest-baseline remaining directly observable offline fixture, L0 baseline_actions=21",
+  "selection_mode": "fallback_lowest_baseline_direct_observable_after_strict_nonspatial_exhausted",
+  "solve_trace": {
+    "actions": [
+      {
+        "action": 4,
+        "role": "move_right"
+      },
+      {
+        "action": 4,
+        "role": "move_right"
+      },
+      {
+        "action": 4,
+        "role": "move_right"
+      },
+      {
+        "action": 4,
+        "role": "move_right_and_fall"
+      },
+      {
+        "action": 6,
+        "grid": [
+          7,
+          19
+        ],
+        "role": "remove_overhead_block_and_fall"
+      },
+      {
+        "action": 3,
+        "role": "move_left"
+      },
+      {
+        "action": 3,
+        "role": "move_left"
+      },
+      {
+        "action": 6,
+        "grid": [
+          4,
+          16
+        ],
+        "role": "remove_lateral_block"
+      },
+      {
+        "action": 3,
+        "role": "move_left_into_cleared_cell"
+      },
+      {
+        "action": 6,
+        "grid": [
+          4,
+          15
+        ],
+        "role": "remove_overhead_block_and_fall"
+      },
+      {
+        "action": 3,
+        "role": "move_left_and_fall"
+      },
+      {
+        "action": 4,
+        "role": "move_right"
+      },
+      {
+        "action": 4,
+        "role": "move_right"
+      },
+      {
+        "action": 6,
+        "grid": [
+          5,
+          9
+        ],
+        "role": "remove_overhead_block_and_fall"
+      },
+      {
+        "action": 3,
+        "role": "move_left"
+      },
+      {
+        "action": 3,
+        "role": "move_left_onto_gem"
+      }
+    ],
+    "commit_actions": [
+      {
+        "action": 3,
+        "role": "move_left"
+      },
+      {
+        "action": 3,
+        "role": "move_left"
+      },
+      {
+        "action": 6,
+        "grid": [
+          4,
+          16
+        ],
+        "role": "remove_lateral_block"
+      },
+      {
+        "action": 3,
+        "role": "move_left_into_cleared_cell"
+      },
+      {
+        "action": 6,
+        "grid": [
+          4,
+          15
+        ],
+        "role": "remove_overhead_block_and_fall"
+      },
+      {
+        "action": 3,
+        "role": "move_left_and_fall"
+      },
+      {
+        "action": 4,
+        "role": "move_right"
+      },
+      {
+        "action": 4,
+        "role": "move_right"
+      },
+      {
+        "action": 6,
+        "grid": [
+          5,
+          9
+        ],
+        "role": "remove_overhead_block_and_fall"
+      },
+      {
+        "action": 3,
+        "role": "move_left"
+      },
+      {
+        "action": 3,
+        "role": "move_left_onto_gem"
+      }
+    ],
+    "exploration_actions": [
+      {
+        "action": 4,
+        "role": "move_right"
+      },
+      {
+        "action": 4,
+        "role": "move_right"
+      },
+      {
+        "action": 4,
+        "role": "move_right"
+      },
+      {
+        "action": 4,
+        "role": "move_right_and_fall"
+      },
+      {
+        "action": 6,
+        "grid": [
+          7,
+          19
+        ],
+        "role": "remove_overhead_block_and_fall"
+      }
+    ],
+    "induction_calls": [
+      {
+        "action_count": 16,
+        "call": "induce_bp35_upward_gravity_gem_route",
+        "goal_predicate": "player reaches the fjlzdjxhant gem and level counter increments",
+        "mechanic": "left/right moves shift the player by one grid cell; unsupported cells fall upward; clicking a removable block clears it; reaching fjlzdjxhant advances the level",
+        "observed_state": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            3,
+            23
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "removable_blocks_used": [
+          [
+            7,
+            19
+          ],
+          [
+            4,
+            16
+          ],
+          [
+            4,
+            15
+          ],
+          [
+            5,
+            9
+          ]
+        ]
+      }
+    ],
+    "phase_trace": [
+      {
+        "candidate_reason": "selected fallback: bp35 is the lowest-baseline remaining directly observable offline fixture, L0 baseline_actions=21",
+        "phase": "observe",
+        "source": "offline_explore_first_induction",
+        "state": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            3,
+            23
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "target_game": "bp35-0a0ad940"
+      },
+      {
+        "action": {
+          "action": 4,
+          "role": "move_right"
+        },
+        "action_index": 1,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            4,
+            23
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            3,
+            23
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "explore",
+        "source": "offline_explore_first_induction"
+      },
+      {
+        "action": {
+          "action": 4,
+          "role": "move_right"
+        },
+        "action_index": 2,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            5,
+            23
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            4,
+            23
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "explore",
+        "source": "offline_explore_first_induction"
+      },
+      {
+        "action": {
+          "action": 4,
+          "role": "move_right"
+        },
+        "action_index": 3,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            6,
+            23
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            5,
+            23
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "explore",
+        "source": "offline_explore_first_induction"
+      },
+      {
+        "action": {
+          "action": 4,
+          "role": "move_right_and_fall"
+        },
+        "action_index": 4,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            7,
+            20
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            6,
+            23
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "explore",
+        "source": "offline_explore_first_induction"
+      },
+      {
+        "action": {
+          "action": 6,
+          "grid": [
+            7,
+            19
+          ],
+          "role": "remove_overhead_block_and_fall"
+        },
+        "action_index": 5,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            7,
+            16
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            7,
+            20
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "explore",
+        "source": "offline_explore_first_induction"
+      },
+      {
+        "exploration_actions_used": 5,
+        "goal_predicate": "player reaches the fjlzdjxhant gem and level counter increments",
+        "induction_call": {
+          "action_count": 16,
+          "call": "induce_bp35_upward_gravity_gem_route",
+          "goal_predicate": "player reaches the fjlzdjxhant gem and level counter increments",
+          "mechanic": "left/right moves shift the player by one grid cell; unsupported cells fall upward; clicking a removable block clears it; reaching fjlzdjxhant advances the level",
+          "observed_state": {
+            "gem_position": [
+              3,
+              7
+            ],
+            "gravity_direction": "up",
+            "grid_size": [
+              11,
+              36
+            ],
+            "level_completed": 0,
+            "player_position": [
+              3,
+              23
+            ],
+            "removable_blocks": [
+              [
+                2,
+                15
+              ],
+              [
+                2,
+                16
+              ],
+              [
+                2,
+                17
+              ],
+              [
+                3,
+                15
+              ],
+              [
+                3,
+                16
+              ],
+              [
+                3,
+                17
+              ],
+              [
+                4,
+                12
+              ],
+              [
+                4,
+                15
+              ],
+              [
+                4,
+                16
+              ],
+              [
+                4,
+                17
+              ],
+              [
+                5,
+                9
+              ],
+              [
+                5,
+                12
+              ],
+              [
+                5,
+                19
+              ],
+              [
+                6,
+                9
+              ],
+              [
+                6,
+                12
+              ],
+              [
+                6,
+                19
+              ],
+              [
+                7,
+                9
+              ],
+              [
+                7,
+                19
+              ],
+              [
+                8,
+                19
+              ]
+            ]
+          },
+          "removable_blocks_used": [
+            [
+              7,
+              19
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              5,
+              9
+            ]
+          ]
+        },
+        "mechanic": "bp35_upward_gravity_gem_route",
+        "phase": "induce",
+        "source": "offline_explore_first_induction"
+      },
+      {
+        "actions_checked": 11,
+        "energy": 0.0,
+        "final_level_completed": 1,
+        "final_player_position": [
+          3,
+          37
+        ],
+        "heldout_transition_count": 11,
+        "level_increment": true,
+        "phase": "verify",
+        "predicted_goal_after_actions": true,
+        "retained": true,
+        "start_level_completed": 0,
+        "verifier": "gap4_replay_bp35_upward_gravity_gem_level_counter"
+      },
+      {
+        "action": {
+          "action": 4,
+          "role": "move_right"
+        },
+        "action_index": 1,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            4,
+            23
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            3,
+            23
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 4,
+          "role": "move_right"
+        },
+        "action_index": 2,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            5,
+            23
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            4,
+            23
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 4,
+          "role": "move_right"
+        },
+        "action_index": 3,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            6,
+            23
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            5,
+            23
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 4,
+          "role": "move_right_and_fall"
+        },
+        "action_index": 4,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            7,
+            20
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            6,
+            23
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 6,
+          "grid": [
+            7,
+            19
+          ],
+          "role": "remove_overhead_block_and_fall"
+        },
+        "action_index": 5,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            7,
+            16
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            7,
+            20
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              19
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 3,
+          "role": "move_left"
+        },
+        "action_index": 6,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            6,
+            16
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            7,
+            16
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 3,
+          "role": "move_left"
+        },
+        "action_index": 7,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            5,
+            16
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            6,
+            16
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 6,
+          "grid": [
+            4,
+            16
+          ],
+          "role": "remove_lateral_block"
+        },
+        "action_index": 8,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            5,
+            16
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            5,
+            16
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 3,
+          "role": "move_left_into_cleared_cell"
+        },
+        "action_index": 9,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            4,
+            16
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            5,
+            16
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 6,
+          "grid": [
+            4,
+            15
+          ],
+          "role": "remove_overhead_block_and_fall"
+        },
+        "action_index": 10,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            4,
+            13
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            4,
+            16
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              15
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 3,
+          "role": "move_left_and_fall"
+        },
+        "action_index": 11,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            3,
+            10
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            4,
+            13
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 4,
+          "role": "move_right"
+        },
+        "action_index": 12,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            4,
+            10
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            3,
+            10
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 4,
+          "role": "move_right"
+        },
+        "action_index": 13,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            5,
+            10
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            4,
+            10
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 6,
+          "grid": [
+            5,
+            9
+          ],
+          "role": "remove_overhead_block_and_fall"
+        },
+        "action_index": 14,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            5,
+            7
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            5,
+            10
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 3,
+          "role": "move_left"
+        },
+        "action_index": 15,
+        "after": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            4,
+            7
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            5,
+            7
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 0,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      },
+      {
+        "action": {
+          "action": 3,
+          "role": "move_left_onto_gem"
+        },
+        "action_index": 16,
+        "after": {
+          "gem_position": [
+            5,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            50
+          ],
+          "level_completed": 1,
+          "player_position": [
+            3,
+            37
+          ],
+          "removable_blocks": [
+            [
+              2,
+              9
+            ],
+            [
+              2,
+              20
+            ],
+            [
+              2,
+              28
+            ],
+            [
+              2,
+              29
+            ],
+            [
+              2,
+              30
+            ],
+            [
+              2,
+              35
+            ],
+            [
+              2,
+              36
+            ],
+            [
+              3,
+              9
+            ],
+            [
+              3,
+              14
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              3,
+              20
+            ],
+            [
+              3,
+              29
+            ],
+            [
+              3,
+              30
+            ],
+            [
+              3,
+              35
+            ],
+            [
+              3,
+              36
+            ],
+            [
+              4,
+              9
+            ],
+            [
+              4,
+              16
+            ],
+            [
+              4,
+              20
+            ],
+            [
+              4,
+              29
+            ],
+            [
+              4,
+              30
+            ],
+            [
+              4,
+              35
+            ],
+            [
+              4,
+              36
+            ],
+            [
+              5,
+              9
+            ],
+            [
+              5,
+              16
+            ],
+            [
+              5,
+              23
+            ],
+            [
+              5,
+              24
+            ],
+            [
+              5,
+              29
+            ],
+            [
+              5,
+              30
+            ],
+            [
+              5,
+              35
+            ],
+            [
+              5,
+              36
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              16
+            ],
+            [
+              6,
+              28
+            ],
+            [
+              6,
+              35
+            ],
+            [
+              6,
+              36
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              7,
+              10
+            ],
+            [
+              7,
+              16
+            ],
+            [
+              7,
+              28
+            ],
+            [
+              7,
+              35
+            ],
+            [
+              7,
+              36
+            ],
+            [
+              8,
+              9
+            ],
+            [
+              8,
+              10
+            ],
+            [
+              8,
+              14
+            ],
+            [
+              8,
+              15
+            ],
+            [
+              8,
+              16
+            ],
+            [
+              8,
+              28
+            ],
+            [
+              8,
+              35
+            ],
+            [
+              8,
+              36
+            ]
+          ]
+        },
+        "before": {
+          "gem_position": [
+            3,
+            7
+          ],
+          "gravity_direction": "up",
+          "grid_size": [
+            11,
+            36
+          ],
+          "level_completed": 0,
+          "player_position": [
+            4,
+            7
+          ],
+          "removable_blocks": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              16
+            ],
+            [
+              2,
+              17
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              16
+            ],
+            [
+              3,
+              17
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              4,
+              17
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              5,
+              19
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              6,
+              12
+            ],
+            [
+              6,
+              19
+            ],
+            [
+              7,
+              9
+            ],
+            [
+              8,
+              19
+            ]
+          ]
+        },
+        "level_completed": 1,
+        "phase": "act",
+        "source": "offline_real_env_confirmation"
+      }
+    ],
+    "selection_reason": "selected fallback: bp35 is the lowest-baseline remaining directly observable offline fixture, L0 baseline_actions=21",
+    "target_game": "bp35-0a0ad940",
+    "verification_decisions": [
+      {
+        "actions_checked": 11,
+        "energy": 0.0,
+        "final_level_completed": 1,
+        "final_player_position": [
+          3,
+          37
+        ],
+        "heldout_transition_count": 11,
+        "level_increment": true,
+        "phase": "verify",
+        "predicted_goal_after_actions": true,
+        "retained": true,
+        "start_level_completed": 0,
+        "verifier": "gap4_replay_bp35_upward_gravity_gem_level_counter"
+      }
+    ]
+  },
+  "strict_nonspatial_exhausted": true,
+  "survey_is_spatial_planning": true,
+  "target_game": "bp35-0a0ad940",
+  "title": "arc3_fourteenth_game_explore_first_bp35",
+  "total_games_solved": 13,
+  "verification_decisions": [
+    {
+      "actions_checked": 11,
+      "energy": 0.0,
+      "final_level_completed": 1,
+      "final_player_position": [
+        3,
+        37
+      ],
+      "heldout_transition_count": 11,
+      "level_increment": true,
+      "phase": "verify",
+      "predicted_goal_after_actions": true,
+      "retained": true,
+      "start_level_completed": 0,
+      "verifier": "gap4_replay_bp35_upward_gravity_gem_level_counter"
+    }
+  ]
+}
