@@ -8415,3 +8415,4 @@ c |
 | 2026-06-13 10:07 UTC | ARC-AGI-3 INCREMENTAL +1 (monotonic) via the PROVE | OK | 88 passed, 1 warning in 4.28s |
 | 2026-06-13 10:19 UTC | SOTA-INGESTION SLOT (reserved; bleeding-edge track | OK | 100 passed, 1 warning in 5.19s |
 | 2026-06-13 10:36 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra s | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-13 11:21 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 86 passed, 1 warning in 4.61s |
