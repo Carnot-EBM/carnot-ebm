@@ -1,0 +1,323 @@
+{
+  "arc_action_efficiency": {
+    "action_efficiency_ratio": 1.3125,
+    "actions_saved_vs_baseline": 5,
+    "baseline_actions": 21,
+    "fields_imported": [
+      "action_efficiency_ratio",
+      "baseline_actions",
+      "verifier_actions",
+      "actions_saved_vs_baseline",
+      "total_games_solved",
+      "new_levels_solved_this_task",
+      "real_env_confirmed"
+    ],
+    "honest_verdict": "complete: verifier_pruner_1.31x_action_efficient_no_new_level_solved_offline",
+    "new_levels_solved_this_task": 0,
+    "real_env_confirmed": false,
+    "status": "included",
+    "total_games_solved": 13,
+    "verifier_actions": 16
+  },
+  "baseline_val_trajectory": {
+    "advanced_vs_seed": null,
+    "baseline_faithful": false,
+    "current_val": null,
+    "honest_verdict": "",
+    "max_val": null,
+    "rounded_values": [
+      0.106,
+      0.278,
+      0.42
+    ],
+    "run_alive": null,
+    "seed_val": 0.278172343969,
+    "source_experiment_id": 4157,
+    "source_status": "skipped_flagged_adversarial",
+    "status": "skipped_flagged_adversarial",
+    "values": [
+      0.105989582837,
+      0.278172343969,
+      0.42
+    ]
+  },
+  "diffusiongemma_gate": {
+    "basis": "clean_exp4158_rerank_or_clean_exp4159_graft",
+    "positive_verifier_discrimination": false,
+    "resolved": false,
+    "status": "STILL-PENDING"
+  },
+  "diffusiongemma_gate_status": "STILL-PENDING",
+  "duration_s": 0.0014574070082744583,
+  "experiment_id": 4165,
+  "field_principles": {
+    "baseline_val_trajectory": "Val across .382-.385 (0.106 -> 0.278 -> 0.42+ -> ?); shows the contiguous run restored convergence after the bounded-pass chain failed.",
+    "diffusiongemma_gate_status": "RESOLVED-positive / RESOLVED-null / STILL-PENDING -- the explicit status after the rerank + graft work.",
+    "headline_outcome": "One of the enumerated set -- forces a single unambiguous read of the .385 result, and (unlike .382-.384) is NOT all-or-nothing on the faithful baseline.",
+    "honest_verdict": "Terminal-prefixed. An honest 'baseline advancing via contiguous run; moat confirmed/null at the rerank level; .386 continues to 0.85 then grafts' is COMPLETE and valuable.",
+    "moat_rerank_verdict": "The decision-grade rerank-recovery result (CI95 excl 0 / null / no-headroom) -- the .385 moat signal that does NOT depend on reaching 0.85.",
+    "upstream_provenance": "{experiment_id, fields_imported, sha256} per cited upstream -- the audit trail."
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "experiment_id": 4157,
+      "path": "results/experiment_4157_baseline_harvest_contiguous_continue.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "74b8a87af41d8084cf18942f6ce0deb014776dbd529213aac684a5504e7d4a06"
+    },
+    {
+      "experiment_id": 4158,
+      "path": "results/experiment_4158_verifier_rerank_recovery_moat.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "7ce3937e1ececd2d782d32291d730b001d12c4c7de49cfbe7111e282987ef661"
+    },
+    {
+      "experiment_id": 4159,
+      "path": "results/experiment_4159_decisive_verifier_reward_graft.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "4a0776aac992c0b332ac848c941060b19006ca7c49f82966d82bd39c6dc28231"
+    },
+    {
+      "experiment_id": 4163,
+      "path": "results/experiment_4163_verifier_registry_gaps_hygiene.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "e7f08e2ef41e56051a38ff5188cff6d22cc7f06b3ebcfece69e1cd780c3a60db"
+    }
+  ],
+  "graft_verdict": {
+    "graft_deferred": false,
+    "honest_verdict": "",
+    "rft_vs_ablation_delta": {},
+    "source_experiment_id": 4159,
+    "status": "skipped_flagged_adversarial",
+    "verifier_value_added": false
+  },
+  "hardware_continuity": {
+    "gatemate_step_taken": "blocked_gatemate_unreachable",
+    "honest_verdict": "complete: hardware_continuity_4164_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+    "kv260_terminal_confirmed": true,
+    "per_board_reachability": {
+      "gatemate": false,
+      "kv260": true,
+      "polarfire": true
+    },
+    "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded",
+    "status": "included"
+  },
+  "headline_answers": {
+    "arc_action_efficiency_ratio": 1.3125,
+    "contiguous_run_advanced_baseline": null,
+    "current_val_vs_seed": {
+      "current_val": null,
+      "run_alive": null,
+      "seed_val": 0.278172343969
+    },
+    "diffusiongemma_gate_status": "STILL-PENDING",
+    "full_graft_status": "skipped_flagged_adversarial",
+    "observability_fixed": true,
+    "rerank_moat_status": "skipped_flagged_adversarial",
+    "total_games_solved": 13
+  },
+  "headline_outcome": "accumulation_still_blocked",
+  "honest_verdict": "blocked: capstone_v385_accumulation_still_blocked_baseline_skipped_flagged_adversarial_rerank_skipped_flagged_adversarial_graft_skipped_flagged_adversarial_diffusiongemma_STILL-PENDING_games13_flagged_skipped4",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "missing_upstream_artifacts": [],
+  "moat_rerank_verdict": {
+    "ci95": [],
+    "decision": "uninformative",
+    "delta": null,
+    "headroom_present": null,
+    "honest_verdict": "",
+    "n_puzzles": 0,
+    "oracle_at_k": null,
+    "source_experiment_id": 4158,
+    "status": "skipped_flagged_adversarial",
+    "verifier_recovers_outvoted": 0,
+    "vote_at_1": null
+  },
+  "observability_status": {
+    "fallback_added": true,
+    "fixed": true,
+    "honest_verdict": "complete: observability_timing_detector_fallback_landed",
+    "research_conductor_touched": false,
+    "status": "fixed"
+  },
+  "random_seed": 4165,
+  "registry_gap_hygiene": {
+    "regression_guard_passed": false,
+    "status": "skipped_flagged_adversarial"
+  },
+  "reproducibility_checksum": "84a98445c50fb5c480c0d718ec7faae1ddcbaac3ca9f66fbde5120f23381b1a3",
+  "schema": "carnot.capstone_v385_4165.v1",
+  "sota_guidance": {
+    "flagged_for_v386": "entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386",
+    "honest_verdict": "complete: sota_ingestion_verifier_moat_guidance_mapped",
+    "methods_mapped_count": 7,
+    "status": "included"
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4165",
+    "SCENARIO-CAPSTONE-4165"
+  ],
+  "total_games_solved": 13,
+  "upstream_artifact_state": {
+    "4157": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "blocked_noop_step_unchanged",
+      "included": false,
+      "path": "results/experiment_4157_baseline_harvest_contiguous_continue.json",
+      "skipped": true
+    },
+    "4158": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: no_headroom_rerank_uninformative_at_val_0.50",
+      "included": false,
+      "path": "results/experiment_4158_verifier_rerank_recovery_moat.json",
+      "skipped": true
+    },
+    "4159": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: graft_deferred_baseline_below_0.85",
+      "included": false,
+      "path": "results/experiment_4159_decisive_verifier_reward_graft.json",
+      "skipped": true
+    },
+    "4160": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: verifier_pruner_1.31x_action_efficient_no_new_level_solved_offline",
+      "included": true,
+      "path": "results/experiment_4160_arc_action_efficiency_harness.json",
+      "skipped": false
+    },
+    "4161": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: observability_timing_detector_fallback_landed",
+      "included": true,
+      "path": "results/experiment_4161_observability_timing_detector_fix.json",
+      "skipped": false
+    },
+    "4162": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: sota_ingestion_verifier_moat_guidance_mapped",
+      "included": true,
+      "path": "results/experiment_4162_sota_ingestion_verifier_moat_guidance.json",
+      "skipped": false
+    },
+    "4163": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v385_truth_regression_guard_passed_True_baseline_open_baseline_blocked_noop_step_unchanged_val_0.5010_flagged_rerank_open_rerank_uninformative_no_headroom_flagged_graft_open_graft_deferred_baseline_below_0.85_flagged_diffusiongemma_kept_gated",
+      "included": false,
+      "path": "results/experiment_4163_verifier_registry_gaps_hygiene.json",
+      "skipped": true
+    },
+    "4164": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: hardware_continuity_4164_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+      "included": true,
+      "path": "results/experiment_4164_hardware_continuity.json",
+      "skipped": false
+    }
+  },
+  "upstream_provenance": [
+    {
+      "experiment_id": 4157,
+      "fields_imported": [],
+      "honest_verdict": "blocked_noop_step_unchanged",
+      "path": "results/experiment_4157_baseline_harvest_contiguous_continue.json",
+      "sha256": "74b8a87af41d8084cf18942f6ce0deb014776dbd529213aac684a5504e7d4a06",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4158,
+      "fields_imported": [],
+      "honest_verdict": "complete: no_headroom_rerank_uninformative_at_val_0.50",
+      "path": "results/experiment_4158_verifier_rerank_recovery_moat.json",
+      "sha256": "7ce3937e1ececd2d782d32291d730b001d12c4c7de49cfbe7111e282987ef661",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4159,
+      "fields_imported": [],
+      "honest_verdict": "complete: graft_deferred_baseline_below_0.85",
+      "path": "results/experiment_4159_decisive_verifier_reward_graft.json",
+      "sha256": "4a0776aac992c0b332ac848c941060b19006ca7c49f82966d82bd39c6dc28231",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4160,
+      "fields_imported": [
+        "action_efficiency_ratio",
+        "baseline_actions",
+        "verifier_actions",
+        "actions_saved_vs_baseline",
+        "total_games_solved",
+        "new_levels_solved_this_task",
+        "real_env_confirmed"
+      ],
+      "honest_verdict": "complete: verifier_pruner_1.31x_action_efficient_no_new_level_solved_offline",
+      "path": "results/experiment_4160_arc_action_efficiency_harness.json",
+      "sha256": "4f51f5b525c336b99e79c30f85d0cbdb21770ae8cefc6ef3e7270084a99e3d65",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4161,
+      "fields_imported": [
+        "fix_applied",
+        "fallback_added",
+        "research_conductor_touched"
+      ],
+      "honest_verdict": "complete: observability_timing_detector_fallback_landed",
+      "path": "results/experiment_4161_observability_timing_detector_fix.json",
+      "sha256": "bdbfce17b9dc9494a9547a0d11cd95883237e00d57a70141ee6911b1ebd1c484",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4162,
+      "fields_imported": [
+        "methods_mapped",
+        "flagged_for_v386"
+      ],
+      "honest_verdict": "complete: sota_ingestion_verifier_moat_guidance_mapped",
+      "path": "results/experiment_4162_sota_ingestion_verifier_moat_guidance.json",
+      "sha256": "8aa132702c30cd8e05d3584001eaa98cfad80e6ecedc7cc4f043fbd760b6d36c",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4163,
+      "fields_imported": [],
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v385_truth_regression_guard_passed_True_baseline_open_baseline_blocked_noop_step_unchanged_val_0.5010_flagged_rerank_open_rerank_uninformative_no_headroom_flagged_graft_open_graft_deferred_baseline_below_0.85_flagged_diffusiongemma_kept_gated",
+      "path": "results/experiment_4163_verifier_registry_gaps_hygiene.json",
+      "sha256": "e7f08e2ef41e56051a38ff5188cff6d22cc7f06b3ebcfece69e1cd780c3a60db",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4164,
+      "fields_imported": [
+        "kv260_terminal_confirmed",
+        "per_board_reachability",
+        "gatemate_step_taken",
+        "polarfire_step_taken"
+      ],
+      "honest_verdict": "complete: hardware_continuity_4164_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+      "path": "results/experiment_4164_hardware_continuity.json",
+      "sha256": "cb047392202e56c813ce1712872c39424b9d377767aa96bb98346ae8dd922c28",
+      "skip_reason": "",
+      "skipped": false
+    }
+  ]
+}
