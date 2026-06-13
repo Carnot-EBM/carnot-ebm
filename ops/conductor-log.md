@@ -8387,3 +8387,4 @@ c |
 | 2026-06-12 22:44 UTC | Archive .380 -> activate .381; KEEP the hardened g | OK | 94 passed in 4.84s |
 | 2026-06-12 23:13 UTC | RESUMABLE Sudoku-Extreme baseline -- PASS 1 (estab | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-12 23:41 UTC | RESUMABLE Sudoku-Extreme baseline -- PASS 2. DEFEN | OK | 87 passed, 2 warnings in 8.77s |
+| 2026-06-13 00:08 UTC | RESUMABLE Sudoku-Extreme baseline -- PASS 3 (targe | OK | 88 passed, 2 warnings in 8.83s |
