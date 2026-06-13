@@ -1,0 +1,60 @@
+{
+  "acceptance_gate_passed": true,
+  "action_efficiency_ratio": 1.3125,
+  "actions_saved_vs_baseline": 5,
+  "baseline_actions": 21,
+  "baseline_runs": [
+    {
+      "actions_to_solve_or_timeout": 21,
+      "game_id": "bp35-0a0ad940",
+      "level_index": 1,
+      "policy": "random_greedy",
+      "source": "results/arc_agi3_access_probe.json"
+    }
+  ],
+  "duration_s": 0.002,
+  "experiment": "experiment_4160_arc_action_efficiency_harness",
+  "field_principles": {
+    "action_efficiency_ratio": "baseline_actions / verifier_actions; the EFFICIENCY axis of the north star (the action-pruner's load-bearing value).",
+    "baseline_actions": "Actions-to-solve under random/greedy; the reference the offline-beats-baseline gate compares against.",
+    "honest_verdict": "Terminal-prefixed. An honest 'verifier pruner is N x more action-efficient, no new level solved offline' is a COMPLETE and north-star-advancing verdict.",
+    "real_env_confirmed": "Bare bool: false here (offline/air-gapped); only real-env solves raise the official headline count.",
+    "total_games_solved": "Monotonic progress metric; must be >= the prior milestone's 13 (offline).",
+    "verifier_actions": "Actions-to-solve under verifier-grounded pruning; the measured efficiency numerator's counterpart."
+  },
+  "honest_verdict": "complete: verifier_pruner_1.31x_action_efficient_no_new_level_solved_offline",
+  "inference_substrate": "offline_arc_explore_induce_verify",
+  "new_levels_solved_this_task": 0,
+  "next_incremental_attempt": {
+    "actions_executed": 40,
+    "honest_verdict": "complete: incremental_progress_no_solve_r11l-495a7899_L5_no_verifier_validated_level_up_candidate",
+    "new_level_solved": false,
+    "new_levels_solved": 0,
+    "reason": "incremental_progress_no_solve_r11l-495a7899_L5_no_verifier_validated_level_up_candidate",
+    "target_game": "r11l-495a7899",
+    "target_level": 5
+  },
+  "offline_air_gapped": true,
+  "random_seed": 4160,
+  "real_env_confirmed": false,
+  "requirements": [
+    "REQ-PHASE4-052",
+    "SCENARIO-PHASE4-052"
+  ],
+  "submitted_to_leaderboard": false,
+  "title": "arc3_offline_action_efficiency_harness",
+  "total_games_solved": 13,
+  "verifier_actions": 16,
+  "verifier_runs": [
+    {
+      "actions_to_solve": 16,
+      "game_id": "bp35-0a0ad940",
+      "heldout_transition_count": 11,
+      "level_index": 1,
+      "observed_transition_count": 5,
+      "pruned_action_count": 5,
+      "source_artifact": "results/experiment_4129_fourteenth_game_explore_first.json",
+      "validated": true
+    }
+  ]
+}
