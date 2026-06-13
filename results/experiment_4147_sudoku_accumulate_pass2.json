@@ -50,5 +50,28 @@
     "SCENARIO-LEARN-4147-BLOCKED-PASS1"
   ],
   "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
-  "val_exact_accuracy": null
+  "val_exact_accuracy": null,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "pass1_post_epoch=6399.0 and post_epoch=6399.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.125 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "GATE_PASSED_WITHOUT_DATA",
+      "severity": "critical",
+      "detail": "acceptance_gate_passed=true but these fields are null/zero: delta_vs_pass1=null"
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
