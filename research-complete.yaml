@@ -39552,7 +39552,8 @@ milestones:
     verifier-as-reward graft if val crosses 0.85
   doc: openspec/change-proposals/research-roadmap-v385.md
   completed: '2026-06-13'
-  finding: See conductor log for per-experiment results.
+  finding: '.385 close-state: bounded accumulation no-op''d again and the conductor continuation collided with the detached outer-loop run on shared GPU/checkpoint paths. The baseline seed remains 0.278172343969; Exp4157 reported blocked_noop_step_unchanged with no manual_lr_step advance and no new validation row. Per operator decision A (2026-06-13), the conductor STANDS DOWN on TRM training: the outer-loop owns the contiguous training. .386 tasks must not launch TRM training, kill train.py, or write results/trm_runs/sudoku_extreme_baseline/.'
+  activation_recorded: exp4166-archive-v385-activate-v386
   tasks:
   - id: exp4156-archive-v384-activate-v385
     title: 'Archive .384 -> activate .385; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml

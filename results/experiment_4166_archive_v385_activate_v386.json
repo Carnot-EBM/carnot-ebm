@@ -1,0 +1,171 @@
+{
+  "activated_milestone": "2026.06.386",
+  "active_milestone_confirmed": "2026.06.386",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.385",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4157_baseline_harvest_contiguous_continue.json",
+      "experiment_id": "4157",
+      "kind": "artifact",
+      "sha256": "74b8a87af41d8084cf18942f6ce0deb014776dbd529213aac684a5504e7d4a06"
+    },
+    {
+      "deliverable": "results/experiment_4158_verifier_rerank_recovery_moat.json",
+      "experiment_id": "4158",
+      "kind": "artifact",
+      "sha256": "7ce3937e1ececd2d782d32291d730b001d12c4c7de49cfbe7111e282987ef661"
+    },
+    {
+      "deliverable": "results/experiment_4159_decisive_verifier_reward_graft.json",
+      "experiment_id": "4159",
+      "kind": "artifact",
+      "sha256": "4a0776aac992c0b332ac848c941060b19006ca7c49f82966d82bd39c6dc28231"
+    },
+    {
+      "deliverable": "results/experiment_4160_arc_action_efficiency_harness.json",
+      "experiment_id": "4160",
+      "kind": "artifact",
+      "sha256": "4f51f5b525c336b99e79c30f85d0cbdb21770ae8cefc6ef3e7270084a99e3d65"
+    },
+    {
+      "deliverable": "results/experiment_4161_observability_timing_detector_fix.json",
+      "experiment_id": "4161",
+      "kind": "artifact",
+      "sha256": "bdbfce17b9dc9494a9547a0d11cd95883237e00d57a70141ee6911b1ebd1c484"
+    },
+    {
+      "deliverable": "results/experiment_4162_sota_ingestion_verifier_moat_guidance.json",
+      "experiment_id": "4162",
+      "kind": "artifact",
+      "sha256": "8aa132702c30cd8e05d3584001eaa98cfad80e6ecedc7cc4f043fbd760b6d36c"
+    },
+    {
+      "deliverable": "results/experiment_4163_verifier_registry_gaps_hygiene.json",
+      "experiment_id": "4163",
+      "kind": "artifact",
+      "sha256": "e7f08e2ef41e56051a38ff5188cff6d22cc7f06b3ebcfece69e1cd780c3a60db"
+    },
+    {
+      "deliverable": "results/experiment_4164_hardware_continuity.json",
+      "experiment_id": "4164",
+      "kind": "artifact",
+      "sha256": "cb047392202e56c813ce1712872c39424b9d377767aa96bb98346ae8dd922c28"
+    },
+    {
+      "deliverable": "results/experiment_4165_capstone_v385.json",
+      "experiment_id": "4165",
+      "kind": "artifact",
+      "sha256": "d170cf4de5e22ac104071c98ea19dc17b1d822314c923d8a7e02237a490081e6"
+    }
+  ],
+  "duration_s": 13.84744,
+  "exclusion_manifest_parses": true,
+  "experiment_id": "exp4166",
+  "field_principles": {
+    "activated_milestone": "Confirms .386 is live for outer-loop-owned TRM training.",
+    "active_milestone_confirmed": "Records the active roadmap milestone actually observed.",
+    "archived_milestone": "Provenance: the milestone being closed, 2026.06.385.",
+    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
+    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
+    "honest_verdict": "Self-declared terminal state. MUST start with complete:/success:/passed:/shipped:.",
+    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
+    "nano_trm_train_present": "Bare bool: nano-trm/src/nn/train.py exists before activation.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
+    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
+    "v385_close_state": "Honest record (conductor ceded TRM training to the outer-loop after collisions) so the next planner does not re-generate competing training tasks."
+  },
+  "honest_verdict": "success: archived_v385_v386_active_conductor_stands_down_outer_loop_owns_trm_training_seed_0.278172343969_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "nano_trm_train_present": true,
+  "preconditions_checked": {
+    "active_milestone": "2026.06.386",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "exclusion_manifest_exists": true,
+    "exclusion_manifest_parses": true,
+    "nano_trm_train_path": "nano-trm/src/nn/train.py",
+    "nano_trm_train_present": true,
+    "outerloop_pid": 505313,
+    "outerloop_pid_file": "results/trm_runs/contiguous_run.pid",
+    "outerloop_train_alive_at_archive": true,
+    "pretest_command": [
+      ".venv/bin/pytest",
+      "tests/python/test_pipeline_extract.py",
+      "tests/python/test_docs.py",
+      "-q",
+      "--no-header",
+      "-n",
+      "0",
+      "--no-cov",
+      "-o",
+      "addopts="
+    ],
+    "pretest_exit_code": 0,
+    "pretest_suite_green": true,
+    "research_complete_duplicates_removed": 0,
+    "research_complete_record_action": "updated",
+    "research_complete_yaml_exists": true,
+    "research_complete_yaml_parses": true,
+    "research_complete_yaml_parses_after_edit": true,
+    "v385_capstone_path": "results/experiment_4165_capstone_v385.json",
+    "v385_capstone_present": true
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4166,
+  "reproducibility_checksum": "67c6c93703284a5587231d864ab1c9c92ca2c3c9f766c40bbf3229c5b5b7a29d",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "updated",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v385_to_v386_4166.v1",
+  "task_id": "exp4166-archive-v385-activate-v386",
+  "v385_close_state": {
+    "baseline_seed_val_exact_accuracy": 0.278172343969,
+    "baseline_val_trajectory_status": "skipped_flagged_adversarial",
+    "bounded_accumulation_noop_again": true,
+    "capstone_honest_verdict": "blocked: capstone_v385_accumulation_still_blocked_baseline_skipped_flagged_adversarial_rerank_skipped_flagged_adversarial_graft_skipped_flagged_adversarial_diffusiongemma_STILL-PENDING_games13_flagged_skipped4",
+    "collision_evidence": "manual_lr_step did not advance: before=19006 after=19006; trainer_return_code=1; log_tail=  File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py\", line 1789, in _call_impl |     return forward_call(*args, **kwargs) |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ |   File \"/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/modules/trm_block.py\", line 190, in forward |     return self.down_proj(F.silu(gate) * up) |                           ~~~~~~~~~~~~~^~~~ | torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 192.00 MiB. GPU 0 has a total capacity of 23.56 GiB of which 86.31 MiB is free. Including non-PyTorch memory, this process has 23.46 GiB memory in use. Of the allocated memory 23.07 GiB is allocated by PyTorch, and 89.57 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf) | return_code=1",
+    "conductor_ceded_trm_training_to_outer_loop": true,
+    "conductor_continuation_collided_with_outer_loop": true,
+    "conductor_stands_down_on_trm_training": true,
+    "diffusiongemma_gate_status": "STILL-PENDING",
+    "exp4157_flagged_adversarial": true,
+    "exp4157_honest_verdict": "blocked_noop_step_unchanged",
+    "flagged_artifact_ids": [
+      4157,
+      4158,
+      4159,
+      4163
+    ],
+    "flagged_artifacts_skipped_count": 4,
+    "flagged_current_val_ignored_for_close_state": 0.501041650772,
+    "forbidden_conductor_actions": [
+      "launch_trm_training",
+      "pkill_or_kill_train_py",
+      "write_stable_checkpoint_dir"
+    ],
+    "graft_deferred": true,
+    "headline_outcome": "accumulation_still_blocked",
+    "manual_lr_step_advanced": false,
+    "manual_lr_step_after": 19006,
+    "manual_lr_step_before": 19006,
+    "new_val_row_written": false,
+    "no_conductor_training_rule": true,
+    "operator_decision": "A",
+    "operator_decision_date": "2026-06-13",
+    "outer_loop_owns_contiguous_training": true,
+    "outerloop_pid": 505313,
+    "outerloop_train_alive_at_archive": true,
+    "registry_regression_guard_passed": true,
+    "rerank_status": "skipped_flagged_adversarial",
+    "summary": "bounded_accumulation_noop_collision_outer_loop_owns_training",
+    "task_launched_native_trainer": true,
+    "task_launched_pid": 447577,
+    "task_launched_return_code": 1,
+    "total_games_solved": 13,
+    "v386_coordination_rule": "Training-related conductor tasks are read-only monitors until the outer-loop run stops.",
+    "val_rows_after": 27,
+    "val_rows_before": 27,
+    "verifier_value_added": false
+  }
+}

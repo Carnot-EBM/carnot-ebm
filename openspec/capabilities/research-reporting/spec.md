@@ -20569,6 +20569,78 @@ claim `.384` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4156 | Implemented (`python/carnot/reporting/archive_v384_activate_v385_4156.py`, `python/carnot/experiment_4156_archive_v384_activate_v385.py`) | Implemented (`tests/python/test_experiment_4156_archive_v384_activate_v385.py`) |
 
+### REQ-REPORT-4166: Archive .385, Activate .386, And Preserve The Outer-Loop Training Handoff
+
+The Exp 4166 workflow SHALL archive milestone `2026.06.385`, confirm milestone
+`2026.06.386` is active, and write the record-only aggregation artifact
+`results/experiment_4166_archive_v385_activate_v386.json`. It SHALL run no live
+model training and SHALL declare `inference_substrate` as
+`aggregation_from_upstream_artifacts`.
+
+Before claiming completion the workflow SHALL confirm:
+
+- `research-complete.yaml` parses under `yaml.safe_load`
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`
+- `nano-trm/src/nn/train.py` exists
+- the smart-subset pre-test gate is green
+- `results/experiment_4165_capstone_v385.json` exists
+- milestone `2026.06.386` is the active roadmap milestone
+
+If any precondition is absent or red, the workflow SHALL write a blocked
+artifact whose `honest_verdict` starts with `blocked_`, record the failed
+resource in `preconditions_checked`, and stop without fabricating a terminal
+archive.
+
+The complete artifact SHALL include the principle-annotated fields
+`honest_verdict`, `v385_close_state`, and `preconditions_checked` with these
+exact principles:
+
+- `honest_verdict`: `Self-declared terminal state. MUST start with complete:/success:/passed:/shipped:.`
+- `v385_close_state`: `Honest record (conductor ceded TRM training to the outer-loop after collisions) so the next planner does not re-generate competing training tasks.`
+- `preconditions_checked`: `Records resources verified; pre-empts the silent-missing-resource fabrication mode.`
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v385_close_state` SHALL truthfully record
+that `.385` closed with bounded accumulation still blocked: the conductor
+continuation task no-op'd (`blocked_noop_step_unchanged`), attempted a
+competing native train, collided with the outer-loop run on shared GPU/checkpoint
+paths, and did not advance the manual LR step or write a new validation row. It
+SHALL record the baseline seed as `0.278172343969`, the `.385` capstone outcome
+as `accumulation_still_blocked`, the skipped flagged artifacts, total games
+solved `13`, and the operator decision that `.386` cedes TRM training to the
+outer-loop detached contiguous run. The workflow SHALL preserve the hard
+coordination rule that conductor tasks must not launch TRM training, kill
+`train.py`, or write the stable checkpoint directory.
+
+#### SCENARIO-REPORT-4166: The Archive Preserves The .385 Stand-Down Decision
+
+**Given** `.385` has Exp 4157 evidence of a no-op continuation collision, the
+Exp 4165 capstone records `accumulation_still_blocked`, the history and
+exclusion-manifest YAML files parse, `nano-trm/src/nn/train.py` exists, the
+smart-subset pre-test gate is green, and `.386` is active
+**When** the Exp 4166 archive workflow runs
+**Then** it archives `.385`, confirms `.386`, keeps the YAML history parseable
+with one `.385` record, writes
+`results/experiment_4166_archive_v385_activate_v386.json`, records the
+no-op/collision close-state and outer-loop ownership decision in
+`v385_close_state`, records the checked resources in `preconditions_checked`,
+declares `aggregation_from_upstream_artifacts`, and emits a
+terminal-prefixed honest verdict.
+
+#### SCENARIO-REPORT-4166-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4166 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does not
+claim `.385` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4166)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4166 | Implemented (`python/carnot/reporting/archive_v385_activate_v386_4166.py`, `python/carnot/experiment_4166_archive_v385_activate_v386.py`) | Implemented (`tests/python/test_experiment_4166_archive_v385_activate_v386.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
