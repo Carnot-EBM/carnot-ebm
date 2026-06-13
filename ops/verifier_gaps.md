@@ -649,3 +649,23 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: rerun only with native training launched or a corpus where the vote baseline leaves measurable headroom; keep the .380 result as an honest null meanwhile.
 - priority: high
 <!-- exp4112-sudoku-executable-verifier:end -->
+
+<!-- exp4122-sudoku-baseline-reproduction:start -->
+### GAP-SUDOKU-BASELINE-REPRODUCTION-4118: Exp 4122 .381 Sudoku baseline reproduction status
+- status: open_baseline_not_reproduced_val_0.1060
+- evidence: `results/experiment_4116_sudoku_extreme_resume_pass1.json`, `results/experiment_4117_sudoku_extreme_resume_pass2.json`, `results/experiment_4118_sudoku_extreme_resume_pass3.json`; val_trajectory=[0.0854, 0.0966, 0.106]; final_val=0.106; matches_published_087=false; published_target=0.87; total_cumulative_epochs=4300.
+- failure mode: the nano-TRM Sudoku checkpoint resumed and improved, but the validation exact accuracy remains far below the published baseline, so verifier training-time claims over this pool are underpowered.
+- missing discriminator: faithful resumed TRM Sudoku candidate source before training-time verifier claims.
+- candidate design: continue the stable baseline reproduction or move the executable verifier into adaptive candidate expansion before treating it as a reward-training signal.
+- priority: high
+<!-- exp4122-sudoku-baseline-reproduction:end -->
+
+<!-- exp4122-sudoku-verifier-graft:start -->
+### GAP-SUDOKU-EXECUTABLE-VERIFIER-4119: Exp 4122 .381 Sudoku executable-verifier graft status
+- status: open_graft_deferred_verifier_value_added_false
+- evidence: `results/experiment_4119_carnot_verifier_graft_sudoku.json`; graft_deferred=true; verifier_value_added=false; flagged_adversarial=true; baseline_final_val=0.106; baseline_trajectory=[0.0854, 0.0966, 0.106].
+- failure mode: Exp 4119 did not run a meaningful graft because the .381 baseline was not reproduced; the executable verifier therefore has no decision-grade training-time TRM value-added result.
+- missing discriminator: decision-grade training-time value from executable verifier labels beyond vote labels on held-out TRM Sudoku induction.
+- candidate design: rerun the graft only after baseline reproduction or after verifier-guided candidate expansion creates a candidate pool with measurable oracle headroom.
+- priority: high
+<!-- exp4122-sudoku-verifier-graft:end -->

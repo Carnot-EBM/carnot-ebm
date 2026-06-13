@@ -13262,6 +13262,65 @@ updates `GAP-TRM-GRID-DISCRIMINATION` with the `.379`
 and Exp 4109 training-time TRM role status, and uses no inference substrate
 other than cached verifier candidates.
 
+### REQ-VERIFY-4122: Verifier Registry And Gaps Hygiene For .381 Outcomes
+
+The repository SHALL provide Exp 4122 at
+`scripts/experiments/exp4122_verifier_registry_gaps_hygiene.py` to replay the
+canonical GAP-4 ARC-1 regression guard from cached candidates and saved
+induced-program outputs, then reconcile `ops/verifier_registry.yaml` and
+`ops/verifier_gaps.md` with the `.381` Sudoku baseline-reproduction and
+verifier-graft truth. The runner SHALL read
+`results/arc3_gap4_induced_programs.json`,
+`results/arc3_gap3_stage2_eval_pool.json.gz`,
+`results/experiment_4116_sudoku_extreme_resume_pass1.json`,
+`results/experiment_4117_sudoku_extreme_resume_pass2.json`,
+`results/experiment_4118_sudoku_extreme_resume_pass3.json`,
+`results/experiment_4119_carnot_verifier_graft_sudoku.json`,
+`ops/verifier_registry.yaml`, and `ops/verifier_gaps.md`.
+
+The offline regression guard SHALL rederive ARC-1 vote `0.4516` to gated
+`0.5806` from cached TRM candidate rows and saved GAP-4 program outputs,
+including `n=31`, `headroom_recovered=4`, and `vote_wins_lost=0`, without
+Codex calls, GGUF loading, live TRM inference, or induced-code execution.
+`regression_guard_passed` SHALL be a bare bool and SHALL be true only when
+those canonical GAP-4 numbers match exactly.
+
+The gaps ledger SHALL record a Sudoku-baseline reproduction entry with the
+resume-pass validation trajectory `0.0854 -> 0.0966 -> 0.1060`, SHALL mark
+`matches_published_087=false`, and SHALL record that the baseline remains far
+below the published approximately `0.87` target. The executable-verifier graft
+entry SHALL record Exp 4119's `graft_deferred=true` and
+`verifier_value_added=false` instead of converting the deferred graft into a
+training-time win.
+
+The registry SHALL annotate the `gap4_program_induction_stack` entry with an
+Exp 4122 replay marker and a training-time TRM role derived from Exp 4119. The
+role SHALL record the baseline validation trajectory, `matches_published_087`,
+`graft_deferred`, and `verifier_value_added`; when Exp 4119 defers the graft,
+the role status SHALL be deferred/open rather than a verifier-as-reward win.
+
+The terminal artifact SHALL write
+`results/experiment_4122_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_updated`,
+bare bool `registry_updated`, `sudoku_baseline`, `sudoku_graft`, and
+`inference_substrate=verifier_ensemble_against_cached_candidates`. Its
+`field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled to the .381 truth.`;
+`regression_guard_passed` = `Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression.`;
+`gaps_updated` = `Lists the verifier_gaps entries touched so the gap backlog stays the honest complement of the registry.`
+
+### SCENARIO-VERIFY-4122: Cached Replay Records .381 Sudoku Baseline And Graft Deferral
+
+Given the GAP-4 cached ARC-1 pool, saved induced-program artifact, Exp 4116,
+Exp 4117, Exp 4118, and Exp 4119 Sudoku artifacts are readable, when Exp 4122
+runs, then it writes the terminal artifact with `regression_guard_passed=true`,
+records vote `0.4516` to gated `0.5806`, records the Sudoku validation
+trajectory `0.0854 -> 0.0966 -> 0.1060` with
+`matches_published_087=false`, records Exp 4119
+`graft_deferred=true` and `verifier_value_added=false`, annotates the registry
+with the Exp 4122 replay and Exp 4119 training-time TRM role status, and uses
+no inference substrate other than cached verifier candidates.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at

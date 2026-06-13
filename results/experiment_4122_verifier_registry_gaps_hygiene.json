@@ -1,0 +1,155 @@
+{
+  "cited_upstream_artifacts": [
+    "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "results/arc3_gap4_induced_programs.json",
+    "results/experiment_4116_sudoku_extreme_resume_pass1.json",
+    "results/experiment_4117_sudoku_extreme_resume_pass2.json",
+    "results/experiment_4118_sudoku_extreme_resume_pass3.json",
+    "results/experiment_4119_carnot_verifier_graft_sudoku.json"
+  ],
+  "duration_s": 0.309,
+  "experiment": "experiment_4122_verifier_registry_gaps_hygiene",
+  "field_principles": {
+    "gaps_updated": "Lists the verifier_gaps entries touched so the gap backlog stays the honest complement of the registry.",
+    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled to the .381 truth.",
+    "regression_guard_passed": "Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression."
+  },
+  "gaps_path": "ops/verifier_gaps.md",
+  "gaps_updated": [
+    "GAP-SUDOKU-BASELINE-REPRODUCTION-4118",
+    "GAP-SUDOKU-EXECUTABLE-VERIFIER-4119"
+  ],
+  "honest_verdict": "complete: registry_gaps_reconciled_to_v381_truth_regression_guard_passed_True_sudoku_baseline_open_baseline_not_reproduced_val_0.1060_graft_deferred_True_verifier_value_added_False",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "offline_replay": {
+    "arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+    "expected": {
+      "arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      }
+    },
+    "gap4_arc1_reproduced": true,
+    "no_codex_calls": true,
+    "no_gguf_inference": true,
+    "regression_guard_passed": true
+  },
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_updated": true,
+  "regression_guard_passed": true,
+  "schema": "carnot.experiment_4122_verifier_registry_gaps_hygiene.v1",
+  "sudoku_baseline": {
+    "acceptance_gate_passed": true,
+    "artifact_path": "results/experiment_4118_sudoku_extreme_resume_pass3.json",
+    "baseline_reproduction_status": "not_reproduced",
+    "final_val_exact_accuracy": 0.10598958283662796,
+    "final_val_exact_accuracy_rounded": 0.106,
+    "gap_id": "GAP-SUDOKU-BASELINE-REPRODUCTION-4118",
+    "honest_verdict": "complete: val=0.1060 still_below_0.87 -> .382 continues",
+    "matches_published_087": false,
+    "missing_discriminator": "faithful_resumed_trm_sudoku_candidate_source_before_training_time_verifier_claims",
+    "passes": [
+      {
+        "artifact_acceptance_gate_passed": false,
+        "artifact_flagged_adversarial": true,
+        "artifact_path": "results/experiment_4116_sudoku_extreme_resume_pass1.json",
+        "honest_verdict": "complete: nanotrm_resume_failed_return_code_1",
+        "pass_id": "pass1",
+        "run_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4116_sudoku_extreme_resume_pass1_hydra",
+        "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+        "val_exact_accuracy": 0.08541666716337204,
+        "val_exact_accuracy_rounded": 0.0854,
+        "val_source": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4116_sudoku_extreme_resume_pass1_hydra/csv/version_1/metrics.csv"
+      },
+      {
+        "artifact_acceptance_gate_passed": true,
+        "artifact_flagged_adversarial": false,
+        "artifact_path": "results/experiment_4117_sudoku_extreme_resume_pass2.json",
+        "honest_verdict": "complete: val=0.0966 delta=0.0112 improved",
+        "pass_id": "pass2",
+        "run_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4117_sudoku_extreme_resume_pass2_hydra",
+        "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+        "val_exact_accuracy": 0.09661458432674408,
+        "val_exact_accuracy_rounded": 0.0966,
+        "val_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4117_sudoku_extreme_resume_pass2.json"
+      },
+      {
+        "artifact_acceptance_gate_passed": true,
+        "artifact_flagged_adversarial": false,
+        "artifact_path": "results/experiment_4118_sudoku_extreme_resume_pass3.json",
+        "honest_verdict": "complete: val=0.1060 still_below_0.87 -> .382 continues",
+        "pass_id": "pass3",
+        "run_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4118_sudoku_extreme_resume_pass3_hydra",
+        "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+        "val_exact_accuracy": 0.10598958283662796,
+        "val_exact_accuracy_rounded": 0.106,
+        "val_source": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4118_sudoku_extreme_resume_pass3_hydra/csv/version_0/metrics.csv"
+      }
+    ],
+    "published_target_val_exact_accuracy": 0.87,
+    "source_artifacts": [
+      "results/experiment_4116_sudoku_extreme_resume_pass1.json",
+      "results/experiment_4117_sudoku_extreme_resume_pass2.json",
+      "results/experiment_4118_sudoku_extreme_resume_pass3.json"
+    ],
+    "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+    "status": "open_baseline_not_reproduced_val_0.1060",
+    "total_cumulative_epochs": 4300,
+    "val_trajectory": [
+      0.08541666716337204,
+      0.09661458432674408,
+      0.10598958283662796
+    ],
+    "val_trajectory_rounded": [
+      0.0854,
+      0.0966,
+      0.106
+    ]
+  },
+  "sudoku_graft": {
+    "acceptance_gate_passed": true,
+    "artifact_path": "results/experiment_4119_carnot_verifier_graft_sudoku.json",
+    "flagged_adversarial": true,
+    "gap_id": "GAP-SUDOKU-EXECUTABLE-VERIFIER-4119",
+    "graft_deferred": true,
+    "honest_verdict": "complete: graft_deferred -- baseline at val=0.1060",
+    "missing_discriminator": "decision_grade_training_time_value_from_executable_verifier_labels_over_vote_labels",
+    "preconditions_checked": [
+      {
+        "available": true,
+        "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4118_sudoku_extreme_resume_pass3.json",
+        "resource": "baseline_artifact"
+      },
+      {
+        "available": true,
+        "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+        "resource": "stable_checkpoint_path"
+      },
+      {
+        "available": true,
+        "detail": "torch.load ok",
+        "resource": "stable_checkpoint"
+      },
+      {
+        "available": true,
+        "detail": "torch.cuda.is_available()=True; device=NVIDIA GeForce RTX 3090",
+        "resource": "cuda_available"
+      }
+    ],
+    "rerank_lift_vs_vote": null,
+    "rft_vs_ablation_delta": null,
+    "status": "open_graft_deferred_verifier_value_added_false",
+    "verifier_value_added": false
+  }
+}
