@@ -19978,6 +19978,67 @@ leaves conductor and reconciliation files untouched.
 |---|---|---|
 | REQ-REPORT-4121 | Implemented (`python/carnot/sota_ingestion_trm_baseline_graft_4121.py`, `docs/research-notes/sota-ingestion-trm-baseline-graft-2026-06-13.md`) | Implemented (`tests/python/test_sota_ingestion_trm_baseline_graft_4121.py`) |
 
+### REQ-REPORT-4130: SOTA Ingestion Mapping For Resumable Training And LR-Schedule Continuity
+
+The Exp 4130 workflow SHALL emit a dated SOTA-to-experiment mapping note for
+the `.382` resumable-training headline: correct LR-schedule resume across
+bounded passes plus long-horizon accumulation for the `nano-trm` and Carnot
+stack. The markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-resumable-training-2026-06-13.md` and the
+machine-checkable mapping artifact SHALL be written to
+`results/experiment_4130_sota_ingestion_resumable_training.json`.
+
+Before writing the note, the workflow SHALL read the checkpoint-resume,
+LR-schedule, and long-horizon-training entries in `research-studying.md` and
+`research-references.md`, run `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py`, verify the PyTorch Lightning resume docs, and
+verify the top method anchors with low-concurrency WebSearch/WebFetch. The
+workflow SHALL use the reliable search/fetch path and SHALL NOT invoke
+`/deep-research`.
+
+For each mapped method or source, the note SHALL state what would have to
+change over the `nano-trm` plus Carnot stack and SHALL include the main pitfall
+or failure mode. The mapped method set SHALL include at least three verified
+anchors drawn from real arXiv IDs or canonical documentation URLs, including
+`arXiv:2510.04871`, `arXiv:2511.02886`, and PyTorch Lightning checkpoint-resume
+documentation. Every method claim SHALL carry either a real arXiv ID or a
+canonical documentation URL. The note SHALL include a `Flagged for the .383
+roadmap` section naming the single strongest follow-on method and SHALL update
+`research-studying.md` to mark the `.382` candidate set as ingested. The
+workflow SHALL NOT update `ops/changelog.md`, `ops/status.md`,
+`_bmad/traceability.md`, or `scripts/research_conductor.py`.
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v383`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, and `flagged_for_v383`.
+`honest_verdict` SHALL use a terminal prefix and, on the complete path, start
+with `complete: sota_ingestion_resumable_training_mapped`. `methods_mapped`
+SHALL be a list of three to five dicts with exactly `name`,
+`arxiv_id_or_url`, `url`, `implementation_over_stack`, and `failure_mode`;
+each `arxiv_id_or_url` SHALL be either one of the WebFetch-verified arXiv IDs
+or one of the verified canonical documentation URLs, preventing fabricated or
+uncited method rows. `flagged_for_v383` SHALL be a non-empty concrete roadmap
+slug identifying the strongest candidate input for `.383`.
+
+#### SCENARIO-REPORT-4130: Resumable-Training Mapping Closes The Discover-To-Plan Loop
+
+**Given** `.382` targets correct LR-schedule resume across bounded training
+passes and accumulated long-horizon evidence after `.381` preserved the TRM
+baseline-graft gate
+**When** the Exp 4130 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON mapping artifact, maps
+verified method papers and canonical docs to implementation work and failure
+modes over the `nano-trm` plus Carnot stack, updates `research-studying.md`
+with the ingested `.382` candidate set, flags the single strongest `.383`
+follow-up, and leaves conductor and reconciliation files untouched.
+
+## Implementation Status (REQ-REPORT-4130)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4130 | Implemented (`python/carnot/sota_ingestion_resumable_training_4130.py`, `docs/research-notes/sota-ingestion-resumable-training-2026-06-13.md`) | Implemented (`tests/python/test_sota_ingestion_resumable_training_4130.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone

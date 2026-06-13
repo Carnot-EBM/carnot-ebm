@@ -8,6 +8,35 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-13 Exp 4130 - .382 resumable-training SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-resumable-training-2026-06-13.md`.
+
+**Filtered track:** checkpoint resume, LR-schedule continuity, and
+long-horizon accumulation over the `nano-trm` plus Carnot stack. This follows
+the Exp 4121 `.381` baseline-graft ingestion and narrows `.382` to the runner
+discipline needed before another verifier-search or training claim.
+
+**Seed and fresh-pass candidates marked ingested:**
+- PyTorch Lightning checkpoint resume docs - mapped as the full-state
+  `ckpt_path` gate because Lightning checkpoints carry optimizer and LR
+  scheduler state as well as global step.
+- PyTorch saving/loading docs - mapped as the fallback optimizer-state
+  checkpoint contract for any non-Lightning runner.
+- Lightning gradient-accumulation docs - mapped as the long-horizon accounting
+  rule: count optimizer steps and effective batch size, not microbatches.
+- TRM, arXiv:2510.04871 - mapped as the resumed long-horizon baseline whose
+  Sudoku evidence must be accumulated by checkpoint lineage and optimizer step.
+- TTA-TRM, arXiv:2511.02886 - mapped as the bounded full-fine-tune control that
+  must share the same resumed scheduler receipts as any verifier-admitted arm.
+
+Flagged for .383: `lightning_full_state_lr_scheduler_resume_gate_for_nano_trm_v383`.
+
+**Bottom line for the .383 roadmap:** first ship a Lightning full-state resume
+gate for nano-trm that proves optimizer, LR scheduler, global-step, data
+checksum, and gradient-accumulation continuity across two bounded passes. If
+that gate fails, do not spend the next run on per-step verifier work.
+
 ## 2026-06-13 Exp 4121 - .381 TRM baseline-graft SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-trm-baseline-graft-2026-06-13.md`.
