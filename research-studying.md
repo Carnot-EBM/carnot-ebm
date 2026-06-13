@@ -8,6 +8,32 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-13 Exp 4141 - .383 recursive-reasoner/verifier SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-recursive-reasoner-verifier-2026-06-13.md`.
+
+**Filtered track:** recursive reasoner generator choice plus verifier-as-reward
+mapping for the `.383` decisive graft. This follows the Exp 4130 resumable
+training ingestion and the Exp 4139 graft receipt, which currently reports
+`verifier_value_added=false`, `headroom_present=false`, and
+`complete: uninformative_no_headroom_false_negative_risk`.
+
+**Seed and fresh-pass candidates marked ingested:**
+- GRAM, arXiv:2605.19376 - mapped as the stochastic-latent generator to graft
+  onto in `.384` only if a verifier-value/headroom gate is met.
+- Thinking Reward Model for complex reasoning, arXiv:2602.08498 - mapped as
+  the RLVR/GRPO precedent for isolating verified-correct trace quality from
+  outcome correctness, directly informing the `.383` RFT de-confound.
+- Weaver, arXiv:2506.18203 - mapped as the weighted weak-verifier ensemble
+  precedent for the `.383` non-oracle ensemble-rerank headline.
+
+Flagged for .384: `gram_as_generator_if_verifier_value_added_and_headroom_present_v384`.
+
+**Bottom line for the .384 roadmap:** use GRAM as the next generator only if
+the verifier side first demonstrates transferable value with measurable
+oracle(best-of-K) headroom; otherwise continue fixing headroom/candidate
+diversity, not as an unconditional rerank claim.
+
 ## 2026-06-13 Exp 4130 - .382 resumable-training SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-resumable-training-2026-06-13.md`.

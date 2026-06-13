@@ -20039,6 +20039,71 @@ follow-up, and leaves conductor and reconciliation files untouched.
 |---|---|---|
 | REQ-REPORT-4130 | Implemented (`python/carnot/sota_ingestion_resumable_training_4130.py`, `docs/research-notes/sota-ingestion-resumable-training-2026-06-13.md`) | Implemented (`tests/python/test_sota_ingestion_resumable_training_4130.py`) |
 
+### REQ-REPORT-4141: SOTA Ingestion Mapping For Recursive Reasoners And Verifier-As-Reward
+
+The Exp 4141 workflow SHALL emit a dated SOTA-to-experiment mapping note for
+the `.383` recursive-reasoner plus verifier-as-reward headline: GRAM as the
+stochastic-latent generator candidate, TRM-as-thinking-reward under RLVR/GRPO
+as the verifier-label de-confound precedent, and Weaver as the weighted
+weak-verifier-ensemble baseline for the non-oracle ensemble-rerank path. The
+markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-recursive-reasoner-verifier-2026-06-13.md`
+and the machine-checkable mapping artifact SHALL be written to
+`results/experiment_4141_sota_ingestion_recursive_reasoner_verifier.json`.
+
+Before writing the note, the workflow SHALL read the 2026-06-13 Post-.382
+Planning Sweep in `research-references.md` plus the recursive-reasoner and
+verifier-as-reward entries in `research-studying.md`, run
+`scripts/sweep_clusters.py` and `scripts/sweep_semscholar.py`, and verify the
+top anchors with low-concurrency WebSearch/WebFetch. The workflow SHALL use the
+reliable discovery path and SHALL NOT invoke `/deep-research`.
+
+For each mapped method or source, the note SHALL state what changes over the
+`nano-trm` plus Carnot verifier stack and SHALL include the main pitfall or
+failure mode. The mapped method set SHALL include at least three verified
+anchors drawn from real arXiv IDs or canonical documentation URLs, including
+GRAM (`arXiv:2605.19376`), Thinking Reward Model with RLVR/GRPO
+(`arXiv:2602.08498`), and Weaver (`arXiv:2506.18203`). Every method claim
+SHALL carry either a real arXiv ID or a canonical URL. The note SHALL include a
+`Flagged for the .384 roadmap` section naming the single strongest follow-on
+method and SHALL update `research-studying.md` to mark the `.383` candidate set
+as ingested. The workflow SHALL NOT update `ops/changelog.md`,
+`ops/status.md`, `_bmad/traceability.md`, or `scripts/research_conductor.py`.
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v384`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, and `flagged_for_v384`. `honest_verdict`
+SHALL use a terminal prefix and, on the complete path, start with
+`complete: sota_ingestion_recursive_reasoner_verifier_mapped`.
+`methods_mapped` SHALL be a list of at least three dicts with exactly `name`,
+`arxiv_id_or_url`, `url`, `implementation_over_stack`, and `failure_mode`;
+each `arxiv_id_or_url` SHALL be either one of the WebFetch-verified arXiv IDs
+or one of the verified canonical URLs, preventing fabricated or uncited method
+rows. `flagged_for_v384` SHALL be a non-empty concrete roadmap slug identifying
+the strongest candidate input for `.384`, with GRAM-as-generator conditional on
+measured verifier value and rerank headroom.
+
+#### SCENARIO-REPORT-4141: Recursive-Reasoner Mapping Closes The Discover-To-Plan Loop
+
+**Given** `.383` converged the recursive Sudoku baseline enough to run the
+decisive verifier graft, Exp 4139 records the non-oracle ensemble-rerank result
+and the RFT de-confound state, and the Post-.382 Planning Sweep already
+surfaced GRAM, TRM-as-thinking-reward, and Weaver
+**When** the Exp 4141 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON mapping artifact, maps
+verified method papers or canonical pages to implementation work and failure
+modes over the `nano-trm` plus Carnot-verifier stack, updates
+`research-studying.md` with the ingested `.383` candidate set, flags the single
+strongest `.384` follow-up, and leaves conductor and reconciliation files
+untouched.
+
+## Implementation Status (REQ-REPORT-4141)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4141 | Planned (`python/carnot/experiment_4141_sota_ingestion_recursive_reasoner_verifier.py`, `docs/research-notes/sota-ingestion-recursive-reasoner-verifier-2026-06-13.md`) | Planned (`tests/python/test_experiment_4141_sota_ingestion_recursive_reasoner_verifier.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
