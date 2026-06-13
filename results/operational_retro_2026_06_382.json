@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.382",
+  "generated_at": "2026-06-13T06:55:03Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative timing block reports 0 experiment commits since activation of 2026.06.382, 0 wall-time minutes, and 0 compute-bound tasks; both RTX 3090s are idle (0% util, 4MB allocated), which is CORRECT given no compute-bound task is attributed to the milestone, so gpu_idle_on_compute_bound_tasks is null. This is the KNOWN recurring false-zero of the milestone-scoped timing detector: the on-disk ops/changelog.md window read this turn shows .382 actually shipped exp4126-exp4133 (LR-resume-correctness fix + Sudoku-Extreme baseline accumulation + verifier-graft deferral + 14th ARC game + SOTA/registry/hardware), capstoned by exp4133. The operational problem this milestone is observability, not execution or GPU idle.",
+  "bottlenecks_identified": [
+    "OBSERVABILITY (the real bottleneck): the milestone-scoped timing detector false-zeroed again — it reported 0 experiment commits for 2026.06.382 while the on-disk ops/changelog.md window read this turn lists exp4126-exp4133. This is the recurring false-zero documented for ~12 consecutive milestones (.363-.378), so this retro has no per-experiment durations to rank or critical-path.",
+    "GPU idle is NOT flagged as a bottleneck: gpu_idle_on_compute_bound_tasks is null because the authoritative block attributes 0 compute-bound tasks to the milestone. The 0% reading is the snapshot; the actual .382 Sudoku-Extreme resume training (per the changelog) was compute work the detector simply did not time.",
+    "With zero authoritative durations, the timing data that would let us optimize execution is exactly what the detector dropped — there is no slow-experiment list to act on from the authoritative block."
+  ],
+  "improvements_suggested": [
+    "Fix the milestone-scoped timing detector's commit-attribution scan so it attributes experiment commits to the active milestone. This false-zero has now recurred for ~12 consecutive milestones and is the single highest-value operational-tooling fix; without it every retro is data-blind.",
+    "Until the detector is fixed, give the retro a changelog-window fallback timing source for the active milestone so per-experiment narrative is grounded on-disk rather than reported as empty.",
+    "Gate the operational-retro on a non-empty authoritative timing block OR a changelog fallback, so a detector false-zero does not silently produce a data-free retro that reads as 'nothing ran'.",
+    "When the resumable Sudoku-Extreme training continues into .383 (per the changelog the baseline is still climbing toward 0.87), keep both 3090s engaged — the snapshot shows the full 48GB free, so a single training run is leaving one GPU idle."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Root-cause and fix the milestone-scoped timing detector false-zero (commit-attribution scan) — it has dropped per-experiment timing for ~12 consecutive milestones and is why this retro has no execution data to optimize.",
+    "Add a changelog-window fallback timing source to the operational-retro path so the narrative is grounded on-disk when the detector returns zero, and gate the retro so an empty timing block cannot pass silently.",
+    "Parallelize the continuing resumable Sudoku-Extreme training across both idle 3090s (48GB free per the snapshot) to cut the per-pass wall time that is now the .382/.383 baseline-convergence bottleneck."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "The honest operational signal this milestone is not a speed number but a detector defect: an authoritative timing block that false-zeros while the milestone demonstrably ran (exp4126-exp4133 per the on-disk changelog) makes the operational retro data-blind. Fixing the commit-attribution scan is worth more than any single experiment's speedup because it restores the per-experiment timing the retro exists to analyze; the estimated_time_savings_pct is a conservative estimate predicated on that fix surfacing the real bottlenecks plus dual-GPU use on the continuing training."
+}
