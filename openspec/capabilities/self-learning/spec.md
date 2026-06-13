@@ -12327,6 +12327,55 @@ preserves the shared stable checkpoint path, and computes
 
 ---
 
+## REQ-LEARN-4126: nano-trm LR Resume Correctness Fix
+
+**Given** the `.381` Sudoku Extreme resume lineage restored checkpoint epoch
+and optimizer state but restarted the nano-trm manual learning-rate warmup each
+bounded pass, Exp 4126 SHALL diagnose the trainer and model LR path before
+running more resume passes. The diagnosis SHALL read
+`nano-trm/src/nn/train.py`, `nano-trm/src/nn/models/trm.py`,
+`nano-trm/src/nn/configs/model/trm.yaml`, and
+`nano-trm/src/nn/configs/experiment/trm_sudoku_extreme_1k_aug_1k.yaml`, and
+SHALL report whether the reset came from scheduler-not-restored,
+local-step-warmup, missing manual scheduler checkpoint state, or another
+identified cause.
+
+**When** a resume checkpoint is loaded, nano-trm SHALL continue its manual LR
+schedule from a persisted manual LR step. For legacy checkpoints without that
+field, it SHALL infer the step from Lightning loop batch progress, then
+`global_step`, then restored epoch evidence. The training step SHALL compute
+the configured warmup/cosine LR from this resumed step for every optimizer
+step, including post-warmup decay, rather than restarting warmup from zero or
+pinning LR to a constant base rate after warmup.
+
+**Then** Exp 4126 SHALL run one bounded native resume validation pass from
+`results/trm_runs/sudoku_extreme_baseline/last.ckpt`, inspect the new CSV
+metrics, and write `results/experiment_4126_lr_resume_correctness_fix.json`
+with required fields `honest_verdict`, `lr_rewarm_root_cause`,
+`lr_continuous_across_resume`, `validation_first_lr`, `val_exact_accuracy`,
+`stable_checkpoint_path`, and `duration_s`. The acceptance gate passes only
+when `lr_continuous_across_resume=true` and the validation pass start LR is not
+the fresh-warmup `2.45e-6` reset value, or when the artifact honestly reports a
+diagnosed bounded-resume blocker and recommends a contiguous run alternative.
+
+### SCENARIO-LEARN-4126: Resume Starts From Restored LR Step
+
+**Given** a legacy Sudoku Extreme checkpoint whose Lightning `global_step` is
+zero but whose fit-loop batch progress records completed training batches
+**When** nano-trm loads that checkpoint and runs another bounded pass
+**Then** the manual LR step is initialized from the completed batch progress,
+the first logged `train/lr` is not the fresh-warmup `2.45e-6` value, and the
+artifact records `lr_continuous_across_resume=true` with the observed first LR
+and validation exact accuracy.
+
+## Implementation Status (REQ-LEARN-4126)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4126 | Implemented (nano-trm/src/nn/models/trm.py, python/carnot/experiment_4126_lr_resume_correctness_fix.py, Exp 4126) | Implemented (tests/python/test_experiment_4126_lr_resume_correctness_fix.py) |
+
+---
+
 ## REQ-LEARN-4119: Conditional Sudoku Verifier Graft After Faithful TRM Baseline
 
 **Given** Exp 4118 has written `results/experiment_4118_*.json`, Exp 4119

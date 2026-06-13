@@ -1,0 +1,299 @@
+[2026-06-12 23:15:02,352][src.nn.utils.utils][INFO] - [rank: 0] Enforcing tags! <cfg.extras.enforce_tags=True>
+[2026-06-12 23:15:02,359][src.nn.utils.utils][INFO] - [rank: 0] Printing config tree with Rich! <cfg.extras.print_config=True>
+[2026-06-12 23:15:02,405][__main__][INFO] - [rank: 0] Instantiating datamodule <src.nn.data.SudokuDataModule>
+[2026-06-12 23:15:02,411][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] ✓ Loaded metadata from ./data/sudoku_extreme_1k_aug_1k/metadata.json
+[2026-06-12 23:15:02,411][src.nn.data.sudoku_datamodule][INFO] - [rank: 0]   Train: 1000 groups, 1001000 total puzzles
+[2026-06-12 23:15:02,415][__main__][INFO] - [rank: 0] Setting model config from data module:  num_puzzles = 1 batch_size = 768 vocab_size = 12
+[2026-06-12 23:15:02,416][__main__][INFO] - [rank: 0] Instantiating model <src.nn.models.trm.TRMModule>
+[2026-06-12 23:15:03,135][src.nn.models.trm][INFO] - [rank: 0] Creating TRM with vocab size=12, seq_len=81, puzzle_emb_len=0 pos_emb_type='null' puzzle_emb_dim=0
+[2026-06-12 23:15:03,135][src.nn.models.trm][INFO] - [rank: 0] use_mlp_t=True, use_conv_swiglu=False, use_board_swiglu=False
+[2026-06-12 23:15:03,136][src.nn.models.trm][INFO] - [rank: 0] Not using Rotary Embeddings
+[2026-06-12 23:15:03,155][src.nn.models.trm][INFO] - [rank: 0] puzzle_emb_dim <= 0, not creating puzzle embeddings
+[2026-06-12 23:15:03,155][__main__][INFO] - [rank: 0] Instantiating callbacks...
+[2026-06-12 23:15:03,156][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <lightning.pytorch.callbacks.ModelCheckpoint>
+[2026-06-12 23:15:03,157][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <src.nn.callbacks.ema.EMACallback>
+[2026-06-12 23:15:03,158][__main__][INFO] - [rank: 0] Instantiating loggers...
+[2026-06-12 23:15:03,158][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating logger <lightning.pytorch.loggers.csv_logs.CSVLogger>
+[2026-06-12 23:15:03,159][__main__][INFO] - [rank: 0] Instantiating trainer <lightning.pytorch.trainer.Trainer>
+[2026-06-12 23:15:03,167][__main__][INFO] - [rank: 0] Logging hyperparameters!
+[2026-06-12 23:15:03,177][__main__][INFO] - [rank: 0] Starting training!
+[2026-06-12 23:15:03,179][__main__][INFO] - [rank: 0] Val check interval: default (1.0)
+[2026-06-12 23:15:03,179][__main__][INFO] - [rank: 0] Check val every n epoch: 100
+[2026-06-12 23:15:03,180][__main__][INFO] - [rank: 0] Steps per epoch: 1303
+[2026-06-12 23:15:03,180][__main__][INFO] - [rank: 0] Max epochs: 4400
+[2026-06-12 23:15:03,180][__main__][INFO] - [rank: 0] Batch size: 768
+[2026-06-12 23:15:03,428][src.nn.models.trm][INFO] - [rank: 0] Training configuration:
+[2026-06-12 23:15:03,428][src.nn.models.trm][INFO] - [rank: 0]   Groups (unique puzzles): 1000
+[2026-06-12 23:15:03,428][src.nn.models.trm][INFO] - [rank: 0]   Total puzzles (with aug): 1001000
+[2026-06-12 23:15:03,428][src.nn.models.trm][INFO] - [rank: 0]   Steps per epoch: 1
+[2026-06-12 23:15:03,428][src.nn.models.trm][INFO] - [rank: 0]   Total steps: 4400
+[2026-06-12 23:15:03,428][src.nn.models.trm][INFO] - [rank: 0] ************************************************************
+[2026-06-12 23:15:03,428][src.nn.models.trm][INFO] - [rank: 0] torch.compile not available or disabled, running uncompiled
+[2026-06-12 23:15:03,442][src.nn.models.trm][INFO] - [rank: 0] Restored manual LR step: 4300
+[2026-06-12 23:15:03,510][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] Creating train dataloader with batch size 768 and num_workers 0 and prefetch_factor None
+[2026-06-12 23:15:04,327][src.nn.utils.utils][ERROR] - [rank: 0] 
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/utils/utils.py", line 75, in wrap
+    return_value = task_func(cfg=cfg)
+                   ^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/train.py", line 124, in train
+    trainer.fit(model=model, datamodule=datamodule, ckpt_path=cfg.get("ckpt_path"), weights_only=False)
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 584, in fit
+    call._call_and_handle_interrupt(
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 49, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 630, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path, weights_only=weights_only)
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1079, in _run
+    results = self._run_stage()
+              ^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1123, in _run_stage
+    self.fit_loop.run()
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/fit_loop.py", line 217, in run
+    self.advance()
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/fit_loop.py", line 469, in advance
+    self.epoch_loop.run(self._data_fetcher)
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/training_epoch_loop.py", line 153, in run
+    self.advance(data_fetcher)
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/training_epoch_loop.py", line 354, in advance
+    batch_output = self.manual_optimization.run(kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/optimization/manual.py", line 95, in run
+    self.advance(kwargs)
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/optimization/manual.py", line 115, in advance
+    training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 329, in _call_strategy_hook
+    output = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/strategies/strategy.py", line 391, in training_step
+    return self.lightning_module.training_step(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/models/trm.py", line 502, in training_step
+    self.carry, loss, metrics, _ = self.compute_loss_and_metrics(self.carry, batch)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/models/trm.py", line 425, in compute_loss_and_metrics
+    new_carry, outputs = self.forward(carry, batch)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/models/trm.py", line 387, in forward
+    new_inner_carry, logits, q_halt_logits = self.inner_forward(
+                                             ^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/models/trm.py", line 362, in inner_forward
+    z_H = self.lenet(z_H, z_L, **seq_info)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/modules/trm_block.py", line 485, in forward
+    hidden_states = layer(hidden_states=hidden_states, **kwargs)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/modules/trm_block.py", line 463, in forward
+    out = self.mlp_t(hidden_states)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/modules/trm_block.py", line 190, in forward
+    return self.down_proj(F.silu(gate) * up)
+                          ^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/functional.py", line 2397, in silu
+    return torch._C._nn.silu(input)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 192.00 MiB. GPU 0 has a total capacity of 23.56 GiB of which 74.31 MiB is free. Including non-PyTorch memory, this process has 23.48 GiB memory in use. Of the allocated memory 22.90 GiB is allocated by PyTorch, and 274.07 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+[2026-06-12 23:15:04,330][src.nn.utils.utils][INFO] - [rank: 0] Output dir: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra
+[2026-06-12 23:15:39,351][src.nn.utils.utils][INFO] - [rank: 0] Enforcing tags! <cfg.extras.enforce_tags=True>
+[2026-06-12 23:15:39,358][src.nn.utils.utils][INFO] - [rank: 0] Printing config tree with Rich! <cfg.extras.print_config=True>
+[2026-06-12 23:15:39,407][__main__][INFO] - [rank: 0] Instantiating datamodule <src.nn.data.SudokuDataModule>
+[2026-06-12 23:15:39,410][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] ✓ Loaded metadata from ./data/sudoku_extreme_1k_aug_1k/metadata.json
+[2026-06-12 23:15:39,410][src.nn.data.sudoku_datamodule][INFO] - [rank: 0]   Train: 1000 groups, 1001000 total puzzles
+[2026-06-12 23:15:39,415][__main__][INFO] - [rank: 0] Setting model config from data module:  num_puzzles = 1 batch_size = 768 vocab_size = 12
+[2026-06-12 23:15:39,415][__main__][INFO] - [rank: 0] Instantiating model <src.nn.models.trm.TRMModule>
+[2026-06-12 23:15:40,378][src.nn.models.trm][INFO] - [rank: 0] Creating TRM with vocab size=12, seq_len=81, puzzle_emb_len=0 pos_emb_type='null' puzzle_emb_dim=0
+[2026-06-12 23:15:40,378][src.nn.models.trm][INFO] - [rank: 0] use_mlp_t=True, use_conv_swiglu=False, use_board_swiglu=False
+[2026-06-12 23:15:40,379][src.nn.models.trm][INFO] - [rank: 0] Not using Rotary Embeddings
+[2026-06-12 23:15:40,396][src.nn.models.trm][INFO] - [rank: 0] puzzle_emb_dim <= 0, not creating puzzle embeddings
+[2026-06-12 23:15:40,396][__main__][INFO] - [rank: 0] Instantiating callbacks...
+[2026-06-12 23:15:40,396][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <lightning.pytorch.callbacks.ModelCheckpoint>
+[2026-06-12 23:15:40,398][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <src.nn.callbacks.ema.EMACallback>
+[2026-06-12 23:15:40,398][__main__][INFO] - [rank: 0] Instantiating loggers...
+[2026-06-12 23:15:40,398][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating logger <lightning.pytorch.loggers.csv_logs.CSVLogger>
+[2026-06-12 23:15:40,399][__main__][INFO] - [rank: 0] Instantiating trainer <lightning.pytorch.trainer.Trainer>
+[2026-06-12 23:15:40,407][__main__][INFO] - [rank: 0] Logging hyperparameters!
+[2026-06-12 23:15:40,417][__main__][INFO] - [rank: 0] Starting training!
+[2026-06-12 23:15:40,420][__main__][INFO] - [rank: 0] Val check interval: default (1.0)
+[2026-06-12 23:15:40,420][__main__][INFO] - [rank: 0] Check val every n epoch: 100
+[2026-06-12 23:15:40,421][__main__][INFO] - [rank: 0] Steps per epoch: 1303
+[2026-06-12 23:15:40,421][__main__][INFO] - [rank: 0] Max epochs: 50000
+[2026-06-12 23:15:40,421][__main__][INFO] - [rank: 0] Batch size: 768
+[2026-06-12 23:15:40,661][src.nn.models.trm][INFO] - [rank: 0] Training configuration:
+[2026-06-12 23:15:40,661][src.nn.models.trm][INFO] - [rank: 0]   Groups (unique puzzles): 1000
+[2026-06-12 23:15:40,661][src.nn.models.trm][INFO] - [rank: 0]   Total puzzles (with aug): 1001000
+[2026-06-12 23:15:40,661][src.nn.models.trm][INFO] - [rank: 0]   Steps per epoch: 1
+[2026-06-12 23:15:40,661][src.nn.models.trm][INFO] - [rank: 0]   Total steps: 50000
+[2026-06-12 23:15:40,661][src.nn.models.trm][INFO] - [rank: 0] ************************************************************
+[2026-06-12 23:15:40,661][src.nn.models.trm][INFO] - [rank: 0] torch.compile not available or disabled, running uncompiled
+[2026-06-12 23:15:40,675][src.nn.models.trm][INFO] - [rank: 0] Restored manual LR step: 4300
+[2026-06-12 23:15:40,743][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] Creating train dataloader with batch size 768 and num_workers 0 and prefetch_factor None
+[2026-06-12 23:15:41,520][src.nn.utils.utils][ERROR] - [rank: 0] 
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/utils/utils.py", line 75, in wrap
+    return_value = task_func(cfg=cfg)
+                   ^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/train.py", line 124, in train
+    trainer.fit(model=model, datamodule=datamodule, ckpt_path=cfg.get("ckpt_path"), weights_only=False)
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 584, in fit
+    call._call_and_handle_interrupt(
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 49, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 630, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path, weights_only=weights_only)
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1079, in _run
+    results = self._run_stage()
+              ^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/trainer.py", line 1123, in _run_stage
+    self.fit_loop.run()
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/fit_loop.py", line 217, in run
+    self.advance()
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/fit_loop.py", line 469, in advance
+    self.epoch_loop.run(self._data_fetcher)
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/training_epoch_loop.py", line 153, in run
+    self.advance(data_fetcher)
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/training_epoch_loop.py", line 354, in advance
+    batch_output = self.manual_optimization.run(kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/optimization/manual.py", line 95, in run
+    self.advance(kwargs)
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/loops/optimization/manual.py", line 115, in advance
+    training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/trainer/call.py", line 329, in _call_strategy_hook
+    output = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/lightning/pytorch/strategies/strategy.py", line 391, in training_step
+    return self.lightning_module.training_step(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/models/trm.py", line 502, in training_step
+    self.carry, loss, metrics, _ = self.compute_loss_and_metrics(self.carry, batch)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/models/trm.py", line 425, in compute_loss_and_metrics
+    new_carry, outputs = self.forward(carry, batch)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/models/trm.py", line 387, in forward
+    new_inner_carry, logits, q_halt_logits = self.inner_forward(
+                                             ^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/models/trm.py", line 362, in inner_forward
+    z_H = self.lenet(z_H, z_L, **seq_info)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/modules/trm_block.py", line 485, in forward
+    hidden_states = layer(hidden_states=hidden_states, **kwargs)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/modules/trm_block.py", line 463, in forward
+    out = self.mlp_t(hidden_states)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/modules/trm_block.py", line 190, in forward
+    return self.down_proj(F.silu(gate) * up)
+                          ~~~~~~~~~~~~~^~~~
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 192.00 MiB. GPU 0 has a total capacity of 23.56 GiB of which 86.31 MiB is free. Including non-PyTorch memory, this process has 23.46 GiB memory in use. Of the allocated memory 23.07 GiB is allocated by PyTorch, and 89.57 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+[2026-06-12 23:15:41,524][src.nn.utils.utils][INFO] - [rank: 0] Output dir: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra
+[2026-06-12 23:16:20,047][src.nn.utils.utils][INFO] - [rank: 0] Enforcing tags! <cfg.extras.enforce_tags=True>
+[2026-06-12 23:16:20,050][src.nn.utils.utils][INFO] - [rank: 0] Printing config tree with Rich! <cfg.extras.print_config=True>
+[2026-06-12 23:16:20,072][__main__][INFO] - [rank: 0] Instantiating datamodule <src.nn.data.SudokuDataModule>
+[2026-06-12 23:16:20,074][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] ✓ Loaded metadata from ./data/sudoku_extreme_1k_aug_1k/metadata.json
+[2026-06-12 23:16:20,074][src.nn.data.sudoku_datamodule][INFO] - [rank: 0]   Train: 1000 groups, 1001000 total puzzles
+[2026-06-12 23:16:20,076][__main__][INFO] - [rank: 0] Setting model config from data module:  num_puzzles = 1 batch_size = 128 vocab_size = 12
+[2026-06-12 23:16:20,076][__main__][INFO] - [rank: 0] Instantiating model <src.nn.models.trm.TRMModule>
+[2026-06-12 23:16:20,935][src.nn.models.trm][INFO] - [rank: 0] Creating TRM with vocab size=12, seq_len=81, puzzle_emb_len=0 pos_emb_type='null' puzzle_emb_dim=0
+[2026-06-12 23:16:20,936][src.nn.models.trm][INFO] - [rank: 0] use_mlp_t=True, use_conv_swiglu=False, use_board_swiglu=False
+[2026-06-12 23:16:20,937][src.nn.models.trm][INFO] - [rank: 0] Not using Rotary Embeddings
+[2026-06-12 23:16:20,954][src.nn.models.trm][INFO] - [rank: 0] puzzle_emb_dim <= 0, not creating puzzle embeddings
+[2026-06-12 23:16:20,954][__main__][INFO] - [rank: 0] Instantiating callbacks...
+[2026-06-12 23:16:20,954][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <lightning.pytorch.callbacks.ModelCheckpoint>
+[2026-06-12 23:16:20,957][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <src.nn.callbacks.ema.EMACallback>
+[2026-06-12 23:16:20,957][__main__][INFO] - [rank: 0] Instantiating loggers...
+[2026-06-12 23:16:20,957][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating logger <lightning.pytorch.loggers.csv_logs.CSVLogger>
+[2026-06-12 23:16:20,958][__main__][INFO] - [rank: 0] Instantiating trainer <lightning.pytorch.trainer.Trainer>
+[2026-06-12 23:16:20,964][__main__][INFO] - [rank: 0] Logging hyperparameters!
+[2026-06-12 23:16:20,971][__main__][INFO] - [rank: 0] Starting training!
+[2026-06-12 23:16:20,973][__main__][INFO] - [rank: 0] Val check interval: default (1.0)
+[2026-06-12 23:16:20,973][__main__][INFO] - [rank: 0] Check val every n epoch: 1
+[2026-06-12 23:16:20,974][__main__][INFO] - [rank: 0] Steps per epoch: 7820
+[2026-06-12 23:16:20,974][__main__][INFO] - [rank: 0] Max epochs: 50000
+[2026-06-12 23:16:20,974][__main__][INFO] - [rank: 0] Batch size: 128
+[2026-06-12 23:16:21,224][src.nn.models.trm][INFO] - [rank: 0] Training configuration:
+[2026-06-12 23:16:21,224][src.nn.models.trm][INFO] - [rank: 0]   Groups (unique puzzles): 1000
+[2026-06-12 23:16:21,224][src.nn.models.trm][INFO] - [rank: 0]   Total puzzles (with aug): 1001000
+[2026-06-12 23:16:21,224][src.nn.models.trm][INFO] - [rank: 0]   Steps per epoch: 7
+[2026-06-12 23:16:21,224][src.nn.models.trm][INFO] - [rank: 0]   Total steps: 350000
+[2026-06-12 23:16:21,224][src.nn.models.trm][INFO] - [rank: 0] ************************************************************
+[2026-06-12 23:16:21,224][src.nn.models.trm][INFO] - [rank: 0] torch.compile not available or disabled, running uncompiled
+[2026-06-12 23:16:21,236][src.nn.models.trm][INFO] - [rank: 0] Restored manual LR step: 4300
+[2026-06-12 23:16:21,300][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] Creating train dataloader with batch size 128 and num_workers 0 and prefetch_factor None
+[2026-06-12 23:16:21,353][__main__][INFO] - [rank: 0] Training finished!
+[2026-06-12 23:16:21,358][src.nn.utils.utils][INFO] - [rank: 0] Output dir: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra
+[2026-06-12 23:16:38,426][src.nn.utils.utils][INFO] - [rank: 0] Enforcing tags! <cfg.extras.enforce_tags=True>
+[2026-06-12 23:16:38,429][src.nn.utils.utils][INFO] - [rank: 0] Printing config tree with Rich! <cfg.extras.print_config=True>
+[2026-06-12 23:16:38,452][__main__][INFO] - [rank: 0] Instantiating datamodule <src.nn.data.SudokuDataModule>
+[2026-06-12 23:16:38,453][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] ✓ Loaded metadata from ./data/sudoku_extreme_1k_aug_1k/metadata.json
+[2026-06-12 23:16:38,453][src.nn.data.sudoku_datamodule][INFO] - [rank: 0]   Train: 1000 groups, 1001000 total puzzles
+[2026-06-12 23:16:38,455][__main__][INFO] - [rank: 0] Setting model config from data module:  num_puzzles = 1 batch_size = 128 vocab_size = 12
+[2026-06-12 23:16:38,455][__main__][INFO] - [rank: 0] Instantiating model <src.nn.models.trm.TRMModule>
+[2026-06-12 23:16:39,038][src.nn.models.trm][INFO] - [rank: 0] Creating TRM with vocab size=12, seq_len=81, puzzle_emb_len=0 pos_emb_type='null' puzzle_emb_dim=0
+[2026-06-12 23:16:39,038][src.nn.models.trm][INFO] - [rank: 0] use_mlp_t=True, use_conv_swiglu=False, use_board_swiglu=False
+[2026-06-12 23:16:39,040][src.nn.models.trm][INFO] - [rank: 0] Not using Rotary Embeddings
+[2026-06-12 23:16:39,052][src.nn.models.trm][INFO] - [rank: 0] puzzle_emb_dim <= 0, not creating puzzle embeddings
+[2026-06-12 23:16:39,052][__main__][INFO] - [rank: 0] Instantiating callbacks...
+[2026-06-12 23:16:39,053][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <lightning.pytorch.callbacks.ModelCheckpoint>
+[2026-06-12 23:16:39,054][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <src.nn.callbacks.ema.EMACallback>
+[2026-06-12 23:16:39,054][__main__][INFO] - [rank: 0] Instantiating loggers...
+[2026-06-12 23:16:39,055][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating logger <lightning.pytorch.loggers.csv_logs.CSVLogger>
+[2026-06-12 23:16:39,055][__main__][INFO] - [rank: 0] Instantiating trainer <lightning.pytorch.trainer.Trainer>
+[2026-06-12 23:16:39,061][__main__][INFO] - [rank: 0] Logging hyperparameters!
+[2026-06-12 23:16:39,069][__main__][INFO] - [rank: 0] Starting training!
+[2026-06-12 23:16:39,071][__main__][INFO] - [rank: 0] Val check interval: default (1.0)
+[2026-06-12 23:16:39,071][__main__][INFO] - [rank: 0] Check val every n epoch: 1
+[2026-06-12 23:16:39,071][__main__][INFO] - [rank: 0] Steps per epoch: 7820
+[2026-06-12 23:16:39,071][__main__][INFO] - [rank: 0] Max epochs: 50000
+[2026-06-12 23:16:39,072][__main__][INFO] - [rank: 0] Batch size: 128
+[2026-06-12 23:16:39,313][src.nn.models.trm][INFO] - [rank: 0] Training configuration:
+[2026-06-12 23:16:39,313][src.nn.models.trm][INFO] - [rank: 0]   Groups (unique puzzles): 1000
+[2026-06-12 23:16:39,313][src.nn.models.trm][INFO] - [rank: 0]   Total puzzles (with aug): 1001000
+[2026-06-12 23:16:39,313][src.nn.models.trm][INFO] - [rank: 0]   Steps per epoch: 7
+[2026-06-12 23:16:39,313][src.nn.models.trm][INFO] - [rank: 0]   Total steps: 350000
+[2026-06-12 23:16:39,313][src.nn.models.trm][INFO] - [rank: 0] ************************************************************
+[2026-06-12 23:16:39,313][src.nn.models.trm][INFO] - [rank: 0] torch.compile not available or disabled, running uncompiled
+[2026-06-12 23:16:39,325][src.nn.models.trm][INFO] - [rank: 0] Restored manual LR step: 4300
+[2026-06-12 23:16:39,435][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] Creating train dataloader with batch size 128 and num_workers 0 and prefetch_factor None
+[2026-06-12 23:22:28,356][__main__][INFO] - [rank: 0] Training finished!
+[2026-06-12 23:22:28,368][src.nn.utils.utils][INFO] - [rank: 0] Output dir: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra
