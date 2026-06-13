@@ -8439,3 +8439,4 @@ c |
 | 2026-06-13 17:26 UTC | OBSERVABILITY FIX (reserved infra slot; OVERDUE ~2 | OK | 91 passed, 1 warning in 5.85s |
 | 2026-06-13 17:41 UTC | SOTA-INGESTION SLOT (reserved; bleeding-edge track | OK | 100 passed, 1 warning in 6.00s |
 | 2026-06-13 18:14 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra s | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-13 18:26 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 86 passed, 1 warning in 5.98s |
