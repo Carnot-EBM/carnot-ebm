@@ -12814,6 +12814,79 @@ pass1's epoch, and either positive improvement or an honest plateau flag.
 
 ---
 
+## REQ-LEARN-4148: Sudoku Extreme Pass 3 From Pass 2 Stable Checkpoint
+
+**Given** Exp 4148 is asked to continue the Exp 4147 Sudoku Extreme
+epoch-fixed lineage from
+`results/trm_runs/sudoku_extreme_baseline/last.ckpt`, it SHALL first verify
+`uv`, `nano-trm/src/nn/train.py`, CUDA availability, and that the stable
+checkpoint exists and is loadable. It SHALL then read
+`results/experiment_4147_sudoku_accumulate_pass2.json` before any native
+trainer launch.
+
+**When** the Exp 4147 pass2 artifact reports `val_exact_accuracy >= 0.87`,
+Exp 4148 SHALL skip native training and write
+`results/experiment_4148_sudoku_accumulate_pass3.json` as an early-converged
+confirmation with the pass2 validation accuracy, `delta_vs_pass2=0.0`,
+`post_epoch` copied from pass2, and `native_trainer_launched=false`.
+
+**When** the Exp 4147 pass2 artifact reports an honest `blocked_*` or
+`blocked_noop_*` verdict or otherwise lacks proof of real pass2 training, Exp
+4148 SHALL NOT blind-retrain. It SHALL write
+`results/experiment_4148_sudoku_accumulate_pass3.json` with an honest upstream
+blocked verdict, `val_exact_accuracy=null`, `delta_vs_pass2=null`,
+`post_epoch` copied from pass2 when available, a bounded `duration_s`, and a
+cause summary that restates the pass2 no-op lineage.
+
+**When** pass2 is decision-grade, below the early-convergence threshold, and
+runtime preconditions pass, Exp 4148 SHALL launch a single bounded resume pass
+using `ckpt_path=<repo>/results/trm_runs/sudoku_extreme_baseline/last.ckpt`,
+`+trainer.max_epochs=<current_epoch+3000>`, `+trainer.max_time="00:01:00:00"`,
+CSV logging, progress printing, and ModelCheckpoint writing `last.ckpt` back
+to `results/trm_runs/sudoku_extreme_baseline`.
+
+**Then** the Exp 4148 artifact SHALL include top-level fields
+`honest_verdict`, `val_exact_accuracy`, `delta_vs_pass2`, `post_epoch`, and
+`duration_s`, with field principles stating terminal-prefixed honesty, solve
+metric after pass3, per-pass convergence delta, epoch-advance anti-no-op, and
+real bounded runtime. The acceptance gate SHALL pass only for a real trained
+pass with `duration_s > 120`, epoch advance, and a real validation accuracy; an
+early-converged confirmation; or an honest plateau/upstream no-op.
+
+### SCENARIO-LEARN-4148-BLOCKED-PASS2: Upstream No-Op Stops Pass 3
+
+**Given** Exp 4147 reports `blocked_pass1_noop_unresolved`, `duration_s < 120`,
+and `val_exact_accuracy=null`
+**When** Exp 4148 starts
+**Then** it writes an upstream blocked artifact, preserves null solve metrics,
+copies the pass2 epoch, records the pass2 blocker, and never calls the native
+trainer.
+
+### SCENARIO-LEARN-4148-EARLY-CONVERGED: Pass 2 Already Meets Target
+
+**Given** Exp 4147 reports `val_exact_accuracy >= 0.87`
+**When** Exp 4148 starts
+**Then** it writes a terminal early-converged confirmation, reports
+`delta_vs_pass2=0.0`, preserves the pass2 checkpoint epoch, and skips native
+training.
+
+### SCENARIO-LEARN-4148: Bounded Pass 3 Reports Delta Or Plateau
+
+**Given** Exp 4147 reports a decision-grade numeric validation accuracy below
+`0.87` and the stable checkpoint loads
+**When** Exp 4148 runs one bounded native pass3 resume
+**Then** the artifact reports a terminal-prefixed honest verdict, the pass3
+validation exact accuracy, `delta_vs_pass2`, a post-pass epoch greater than
+pass2's epoch, and either positive improvement or an honest plateau flag.
+
+## Implementation Status (REQ-LEARN-4148)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4148 | Implemented (python/carnot/experiment_4148_sudoku_accumulate_pass3.py, Exp 4148) | Implemented (tests/python/test_experiment_4148_sudoku_accumulate_pass3.py) |
+
+---
+
 ## REQ-LEARN-4139: Decisive Sudoku Verifier Graft With Oracle Separation
 
 **Given** Exp 4138 has written

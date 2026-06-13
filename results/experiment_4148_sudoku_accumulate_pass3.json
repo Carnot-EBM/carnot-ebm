@@ -1,0 +1,55 @@
+{
+  "acceptance_gate_passed": true,
+  "blocked_cause": "pass2 verdict=blocked_pass1_noop_unresolved; pass1_honest_verdict=blocked_noop_cap_not_confirmed_timer_elapsed; post_epoch=6399; duration_s=0.125; val_exact_accuracy=None; blocked_cause=pass1 verdict=blocked_noop_cap_not_confirmed_timer_elapsed; checkpoint_epoch=6399; config_max_epochs=50000; max_epochs_cap_confirmed=False; timer_train_elapsed_s=3641.9931271109963; max_time_s=3600.0. The pass1 artifact did not prove epoch advance plus validation, so pass2 is stopped before retraining.; The pass2 artifact did not prove real pass2 training, so pass3 is stopped before retraining.",
+  "command": [],
+  "delta_vs_pass2": null,
+  "duration_s": 0.115,
+  "experiment": "experiment_4148_sudoku_accumulate_pass3",
+  "field_principles": {
+    "delta_vs_pass2": "Per-pass improvement; convergence signal.",
+    "duration_s": "Real bounded pass; <120s = no-op.",
+    "honest_verdict": "Terminal-prefixed; honest val/no-op.",
+    "post_epoch": "Anti-no-op: must advance.",
+    "val_exact_accuracy": "Solve metric after pass 3."
+  },
+  "honest_plateau": false,
+  "honest_verdict": "blocked_pass2_noop_unresolved",
+  "native_trainer_launched": false,
+  "pass2_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4147_sudoku_accumulate_pass2.json",
+  "pass2_delta_vs_pass1": null,
+  "pass2_duration_s": 0.125,
+  "pass2_honest_verdict": "blocked_pass1_noop_unresolved",
+  "pass2_post_epoch": 6399,
+  "pass2_val_exact_accuracy": null,
+  "post_epoch": 6399,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/usr/bin/uv",
+      "resource": "uv"
+    },
+    {
+      "available": true,
+      "detail": "found: /home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/train.py",
+      "resource": "nanotrm_trainer"
+    },
+    {
+      "available": true,
+      "detail": "torch.cuda.is_available()=True; device=NVIDIA GeForce RTX 3090",
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "detail": "torch.load ok",
+      "resource": "stable_checkpoint"
+    }
+  ],
+  "random_seed": 4108,
+  "schema": "carnot.experiment_4148_sudoku_accumulate_pass3.v1",
+  "spec_refs": [
+    "REQ-LEARN-4148",
+    "SCENARIO-LEARN-4148-BLOCKED-PASS2"
+  ],
+  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+  "val_exact_accuracy": null
+}
