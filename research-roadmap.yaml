@@ -1,506 +1,375 @@
-milestone: 2026.06.383
-milestone_title: "Converge the Sudoku-Extreme TRM baseline to ~0.87 with the FIXED LR schedule (4 bounded passes), THEN run the decisive verifier-as-reward graft (the LABEL de-confound never yet tested on a faithful baseline)"
-milestone_doc: openspec/change-proposals/research-roadmap-v383.md
-milestone_doc_summary: |
-  Operator directive lineage 2026-06-12/13: the LR-resume-correctness fix LANDED in .382
-  (exp4126). The nano-trm Sudoku-Extreme baseline finally ACCUMULATES: val 0.106 -> 0.278 in
-  ONE corrected-schedule pass (+0.172 vs .381's +0.01/pass = ~17x). The bottleneck is now PURELY
-  convergence wall-clock. exp4128's OWN estimate is ~4 bounded passes from 0.278 to the published
-  ~0.87, so .383 schedules FOUR accumulate passes (not 3 -- 3 would land ~0.79 and the decisive RFT
-  arm would defer a 4th time).
+milestone: 2026.06.384
+milestone_title: "Un-stall the Sudoku-Extreme accumulation (fix the max_epochs cap that no-op'd .383) -> converge ~0.87 -> the DECISIVE verifier graft"
+milestone_doc: |
+  Operator directive 2026-06-13: pre-stage .384 with the corrected accumulation config; letting
+  the planner author .383 cost a milestone. ROOT CAUSE (outer-loop diagnostic 2026-06-13):
+  .383's accumulation passes (exp4135-4138) NO-OP'd. exp4135 ran 6.99s, return_code 0, stdout
+  stopped at "Creating TRM ...", val=null, and the stable checkpoint
+  (results/trm_runs/sudoku_extreme_baseline/last.ckpt) was NEVER updated (still the .382 exp4127
+  checkpoint, ~0.278 val, mtime 00:41). A 7s CLEAN exit on a RESUMED checkpoint = the checkpoint
+  reached the config's `max_epochs` cap, so `trainer.fit()` returned immediately. The planner's
+  command was also missing `ckpt_path=` + `+trainer.max_time=`. The accumulate-floor + config-audit
+  correctly halted the chain (no fake progress), and the graft (exp4139) deferred uninformatively
+  (FALSE_NEGATIVE_RISK) on the non-faithful 0.278 baseline. So the TRM-verifier question AND the
+  queued DiffusionGemma gate are BOTH still open.
 
-  The Carnot verifier-as-reward graft has NEVER been tested on a FAITHFUL baseline: exp4109 (.380)
-  grafted on the interrupted 0.0232 checkpoint (not a real test); exp4119 (.381, val=0.106) and
-  exp4128 (.382, val=0.278) both honestly DEFERRED. So the central post-reframe question -- does the
-  Carnot verifier add value over the vote on a domain where it provably discriminates? -- is OPEN.
+  THE GOOD NEWS: the 0.278 checkpoint is INTACT. .384 resumes from it and just needs the CORRECT
+  command + the max_epochs fix to push 0.278 -> ~0.87.
 
-  TWO design corrections from the .383 adversarial review (baked into exp4139):
-  (1) For unique-solution Sudoku the EXECUTABLE validity checker IS the oracle (passes iff candidate
-      == the unique solution). So executable-verifier rerank == oracle-vs-vote gap BY CONSTRUCTION --
-      a tautology, uninformative about the GENERAL/learned energy verifier (the product that
-      anti-discriminated on ARC grids, exp4099) and the thing DiffusionGemma's guidance actually uses.
-      Therefore the HEADLINE verifier-value signal is the NON-oracle Carnot energy/text-stat ENSEMBLE
-      rerank (the transferable verifier); the executable gap is reported SEPARATELY as a labeled
-      UPPER BOUND, never as the verifier result.
-  (2) The load-bearing, non-tautological contrast is the RFT LABEL de-confound: A=verifier-certified
-      (execution-validated-correct) vs B=vote-certified corpus, N-matched, same TRM, same pool, train
-      each, held-out exact-accuracy, CI95 excl 0. "Does verifier-certification beat vote-certification
-      as a TRAINING signal" is a real training-dynamics question even when the certifier is exact.
+  THE FIX (exp4146, then 4147-4149): every accumulation pass MUST
+  (1) RESUME: `ckpt_path=results/trm_runs/sudoku_extreme_baseline/last.ckpt`;
+  (2) RAISE THE EPOCH CEILING: read the checkpoint's current epoch (torch.load -> ['epoch'] or the
+      trainer state) and set `+trainer.max_epochs=<current_epoch + a generous budget>` so training
+      CONTINUES instead of instantly returning (THE bug);
+  (3) BOUND THE PASS: `+trainer.max_time="00:01:00:00"` (<=60 min, stops + saves before the 80-min cap);
+  (4) WRITE BACK to the SAME stable dir (so the next pass resumes);
+  (5) ANTI-NO-OP GUARD: assert the pass ACTUALLY trained -- duration_s > 120 AND the checkpoint
+      epoch ADVANCED AND a real val_exact_accuracy was read from the metrics CSV. A <120s run or an
+      unchanged epoch = `blocked_noop_<reason>`, NOT `complete`.
 
-  The graft's verifier_value_added (defined on the NON-oracle ensemble rerank AND the RFT de-confound,
-  NOT the oracle rerank) gates the queued DiffusionGemma energy-guided-diffusion scale-up
-  (docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md; GATED per 2026-06-13
-  "queued but not competing"). Mandatory oracle-vs-vote headroom positive control FIRST (oracle==vote
-  -> NO headroom -> FALSE_NEGATIVE_RISK, never "verifier fails").
+  Mirror the WORKING exp4116/exp4127 mechanics (those reached 0.278); the only additions are the
+  max_epochs-ceiling raise + the anti-no-op guard. ACCUMULATE FLOOR still applies: if val does not
+  advance across a real (non-no-op) pass, flag a deeper config audit. If .384 ends < 0.87, .385
+  continues from the stable checkpoint.
 
-  ACHIEVABLE OUTCOMES (no over-promise): (a) 4 corrected-schedule passes carry val materially toward
-  0.87; (b) on a faithful (>=0.85) or near-faithful (>=0.80) baseline, the RFT LABEL de-confound +
-  the non-oracle ensemble rerank are MEASURED with CI and a headroom control -- a real verifier-value
-  verdict (positive OR honest null) rather than a 4th deferral; (c) +1 ARC level, SOTA ingested,
-  registry/hardware recorded. Any is decision-grade.
+  THEN exp4150 (THE DECISIVE GRAFT, defensive): only if val >= 0.85 (faithful) run the Carnot Sudoku
+  verifier graft (rerank + A=verifier-cert vs B=vote-cert de-confound) -- THE result that resolves
+  both the moat question and the DiffusionGemma gate. Else defer honestly; .385 continues.
 
 tasks:
-  - id: exp4134-archive-v382-activate-v383
-    milestone: 2026.06.383
-    title: "Archive .382 -> activate .383; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load and nano-trm/src/nn/train.py is present; run the smart-subset pre-test gate green; RECORD the .382 close-state truth (LR-resume fix LANDED -- lr_continuous_across_resume=true; val accumulated 0.106->0.278 in one corrected pass, ~17x faster than .381; baseline still <0.87 so the verifier graft DEFERRED; 14th-game solve recorded, total_games_solved=13)."
+  - id: exp4145-archive-v383-activate-v384
+    milestone: 2026.06.384
+    title: "Archive .383 -> activate .384; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load and nano-trm/src/nn/train.py is present; run the smart-subset pre-test gate green; RECORD the .383 close-state truth (accumulation NO-OP'd at the max_epochs cap, baseline stuck at 0.278, decisive graft deferred uninformatively -> .384 fixes the cap)."
     priority: critical
     track: infra
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): archive-vN-activate-vN+1 -- false-positive scope-match vs all prior archive-v* tasks; structurally never a doomed rerun. 2026-06-12 quota-conserve: archive on codex (mechanical), NOT Opus."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): archive-vN-activate-vN+1 — false-positive scope-match vs all prior archive-v* tasks; structurally never a doomed rerun. 2026-06-12 quota-conserve: archive on codex (mechanical), NOT Opus."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4134_archive_v382_activate_v383.json
+    deliverable: results/experiment_4145_archive_v383_activate_v384.json
     prompt: |
-      CONTEXT: Close .382, activate .383. .382 LANDED the LR-resume-correctness fix (exp4126): the
-      nano-trm scheduler now CONTINUES across resume (start-LR 9.999e-05, not the 2.45e-6 fresh-warmup
-      reset), and val ACCUMULATED 0.106 -> 0.278 in one corrected pass (+0.172 vs .381's +0.01/pass).
-      The baseline is still <0.87, so the verifier graft DEFERRED (exp4128). .383 converges the baseline
-      (4 passes) then runs the decisive graft. This archive task runs on CODEX (mechanical).
-
-      EXISTING CODE TO READ FIRST:
-        - research-complete.yaml (the milestone-history file to append .382 into)
-        - ops/exclusion_manifest.yaml (retired exp_ids -- must still parse)
-        - results/experiment_4133_capstone_v382.json (the .382 close-state to record)
+      CONTEXT: Close .383, activate .384. .383's accumulation no-op'd (exp4135 ran 6.99s, never
+      trained, checkpoint untouched) because the resumed checkpoint hit the config's max_epochs cap;
+      the baseline is stuck at 0.278 and the decisive graft deferred uninformatively. .384 fixes the
+      cap and resumes from the intact 0.278 checkpoint. This archive runs on CODEX (mechanical).
 
       CONCRETE STEPS:
-        0. PRECONDITIONS (check BEFORE any subsequent step): `python3 -c "import yaml; yaml.safe_load(open('research-complete.yaml')); yaml.safe_load(open('ops/exclusion_manifest.yaml'))"` exits 0; `ls nano-trm/src/nn/train.py` exists; smart-subset pre-test gate green. If ANY fails -> honest_verdict `blocked_<resource>` and STOP.
-        1. Archive .382 into research-complete.yaml; activate .383.
-        2. Record the .382 close-state (LR-resume fix landed; val 0.106->0.278; baseline <0.87 so graft deferred; total_games_solved=13).
+        0. PRECONDITIONS: `python3 -c "import yaml; yaml.safe_load(open('research-complete.yaml')); yaml.safe_load(open('ops/exclusion_manifest.yaml'))"` exits 0; `ls nano-trm/src/nn/train.py` exists; smart-subset pre-test gate green. Else -> honest_verdict `blocked_<resource>` and STOP.
+        1. Archive .383 into research-complete.yaml; activate .384.
+        2. Record the .383 close-state (accumulation no-op at max_epochs cap; baseline 0.278; graft deferred FALSE_NEGATIVE_RISK).
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Self-declared terminal state. MUST start with complete:/success:/passed:/shipped:."
-        v382_close_state:
-          principle: "Honest record (LR fix landed, accumulation accelerated ~17x, baseline still <0.87, graft deferred) so the next planner builds on the truth."
+        v383_close_state:
+          principle: "Honest record (accumulation no-op'd at the max_epochs cap; baseline still 0.278) so the next planner builds on the truth."
         preconditions_checked:
           principle: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
-      ACCEPTANCE: honest_verdict terminal-prefixed; .383 activated; close-state recorded truthfully.
+      ACCEPTANCE: honest_verdict terminal-prefixed; .384 activated; close-state recorded truthfully.
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4134_archive_v382_activate_v383.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4135-sudoku-accumulate-pass1-fixed-lr
-    milestone: 2026.06.383
-    title: "ACCUMULATE pass 1 of 4 toward 0.87 with the FIXED LR schedule. Resume from the stable checkpoint (val=0.278, results/trm_runs/sudoku_extreme_baseline/last.ckpt) with the corrected continuing schedule; train ONE bounded (<=60min, trainer.max_time) synchronous pass; save back to the stable path; report val_exact_accuracy + delta_vs_previous + matches_published_087. Single-synchronous-resume-accumulate with per-task progress prints (NOT split-background -- that mechanism failed 3 milestones)."
+  - id: exp4146-sudoku-accumulate-pass1-epochfix
+    milestone: 2026.06.384
+    title: "ACCUMULATE pass 1 — DIAGNOSE + FIX the max_epochs cap, then resume-train from the intact 0.278 checkpoint. Raise max_epochs above the checkpoint's current epoch so trainer.fit() continues (instead of the 7s instant-return that no-op'd .383); resume via ckpt_path; bound <=60 min via max_time; ANTI-NO-OP guard (duration>120s AND epoch advanced AND real val read)."
     priority: critical
     track: trm-baseline
-    max_turns: 110
+    max_turns: 90
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13: continue Sudoku-Extreme accumulation with the corrected LR schedule -- false-positive scope-match vs exp4108/exp4116/exp4117/exp4118/exp4127; forward difference = resumes from the HIGHER faithful-trajectory baseline (val=0.278) with the FIXED (continuing) schedule landed in exp4126, not the re-warming one."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13 operator directive: fix the max_epochs-cap no-op that stalled .383's accumulation — false-positive scope-match vs exp4127/.383 passes; forward difference = raises the epoch ceiling so resumed training actually CONTINUES (the .383 passes instant-returned at the cap) + anti-no-op guard."
     inference_substrate: gpu_nanotrm_native_training
-    deliverable: results/experiment_4135_sudoku_accumulate_pass1_fixed_lr.json
+    deliverable: results/experiment_4146_sudoku_accumulate_pass1_epochfix.json
     prompt: |
-      CONTEXT: The LR-resume fix (exp4126) made bounded passes accumulate like contiguous training
-      (proven +0.172 in one pass). Push toward the published ~0.87 across 4 passes (exp4135-4138). The
-      stable checkpoint is at results/trm_runs/sudoku_extreme_baseline/last.ckpt (val=0.278 per exp4127).
-
-      EXISTING CODE TO READ FIRST:
-        - python/carnot/experiment_4127_sudoku_extreme_accumulate_fixed.py (the proven accumulate runner -- REUSE its pattern: synchronous resume, per-pass progress print, save-back to the stable path)
-        - python/carnot/experiment_4126_lr_resume_correctness_fix.py (confirms the FIXED schedule is in nano-trm; do NOT re-warm)
-        - results/experiment_4127_sudoku_extreme_accumulate_fixed.json (stable_checkpoint_path + the proven train command)
-        - nano-trm/src/nn/train.py + nano-trm/src/nn/configs (experiment=trm_sudoku_extreme_1k_aug_1k; data.data_dir=./data/sudoku_extreme_1k_aug_1k; seed=4108; batch_size=128; ckpt_path=<stable>/last.ckpt)
+      CONTEXT: .383 exp4135 ran 6.99s, return_code 0, stdout stopped at "Creating TRM ...", val=null,
+      and the stable checkpoint was never updated. Diagnosis: a 7s CLEAN exit on a resumed checkpoint
+      means the checkpoint reached the config's `max_epochs` cap so `trainer.fit()` returned at once.
+      The intact checkpoint (results/trm_runs/sudoku_extreme_baseline/last.ckpt, ~0.278 val) is the
+      seed. exp4116/exp4127 mechanics WORKED (reached 0.278) — mirror them + add the epoch-ceiling raise.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS (check BEFORE training): `command -v uv`; `ls nano-trm/src/nn/train.py`; CUDA available (`python -c "import torch; assert torch.cuda.is_available()"`); the stable checkpoint `results/trm_runs/sudoku_extreme_baseline/last.ckpt` exists and loads. If ANY fails -> honest_verdict `blocked_<resource>` and STOP (no fabrication).
-        1. Resume from the stable checkpoint with the corrected (continuing) schedule; run ONE bounded pass (<=60 min via trainer.max_time). PRINT PROGRESS periodically (so codex's idle-timeout never fires). Save back to the stable path.
-        2. READ the new pass's metrics CSV; report val_exact_accuracy, delta_vs_previous (vs 0.278), and whether train/lr CONTINUED (did NOT reset to the 2.45e-6 fresh-warmup value -- a regression check on the fix).
+        0. PRECONDITIONS: `command -v uv`; `ls nano-trm/src/nn/train.py`; CUDA available; the stable
+           checkpoint exists and torch.load()s. Else -> `blocked_<resource>`.
+        1. DIAGNOSE the cap: torch.load the stable checkpoint, read its current `epoch` (or
+           global_step / trainer state). Read the trm_sudoku_extreme config's `max_epochs`. Confirm
+           current_epoch >= (or ~=) max_epochs (the instant-return cause).
+        2. TRAIN bounded + UNCAPPED-enough: from the nano-trm dir, run
+           `uv run python src/nn/train.py experiment=trm_sudoku_extreme_1k_aug_1k logger=csv
+            ckpt_path=<repo>/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+            +trainer.max_epochs=<current_epoch + ~3000>
+            +trainer.max_time="00:01:00:00"
+            <hydra overrides so the ModelCheckpoint writes last.ckpt back into the SAME stable dir>`.
+           CHECKPOINT + PRINT-PROGRESS per val interval so codex's 1201s idle-timeout never fires.
+        3. ANTI-NO-OP GUARD (the .383 failure mode): assert ALL of — duration_s > 120; the saved
+           checkpoint's epoch is GREATER than the seed epoch; a real `val_exact_accuracy` was read
+           from the metrics CSV. If any fails -> honest_verdict `blocked_noop_<reason>` (NOT complete)
+           with the diagnosed cause; do not claim a pass that did not train.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. An honest 'val=0.NN improved, still <0.87 -> pass2 continues' is COMPLETE."
+          principle: "Terminal-prefixed. A `blocked_noop_*` (real training did not happen) is honest; a fake `complete` on a 7s no-op is the .383 anti-pattern."
+        max_epochs_cap_confirmed:
+          principle: "Bare bool: was the .383 no-op caused by the checkpoint hitting max_epochs? Confirms the root cause + that the ceiling-raise addresses it."
+        seed_epoch:
+          principle: "The checkpoint's epoch BEFORE this pass; paired with the post-pass epoch it proves training actually advanced (the anti-no-op evidence)."
+        post_epoch:
+          principle: "The checkpoint's epoch AFTER this pass; must exceed seed_epoch or the pass no-op'd."
         val_exact_accuracy:
-          principle: "Val after this pass; the load-bearing accumulation evidence."
-        delta_vs_previous:
-          principle: "Improvement vs the 0.278 start; confirms the fixed schedule is still accumulating (vs a stall)."
-        lr_continued_not_rewarmed:
-          principle: "Bare bool: train/lr at pass start CONTINUED the schedule (not a 2.45e-6 reset) -- a regression guard on the exp4126 fix."
-        matches_published_087:
-          principle: "Bare bool: within 0.02 of 0.87. Tells the next pass / graft whether a faithful baseline exists."
+          principle: "Real val after the pass (should climb from 0.278); a null val = the pass did not eval = no-op."
         stable_checkpoint_path:
-          principle: "The persisted baseline path pass2 (exp4136) resumes from."
-        random_seed:
-          principle: "Determinism precondition for reproducibility; the nano-trm seed (4108) recorded as a first-class field, not buried in the prompt (silences METHODOLOGY_MISSING)."
-        reproducibility_checksum:
-          principle: "Content hash of (config + resumed checkpoint + data dir); catches silent corpus/model drift between this pass and any replication."
-        model_specs:
-          principle: "Names nano-trm + the trm_sudoku_extreme_1k_aug_1k config so the artifact declares what was actually trained."
+          principle: "The shared path pass 2 resumes from."
         duration_s:
-          principle: "Bounded GPU run < 4800s (stopped before the cap); a single float (not a list) so the duration floor is honored."
+          principle: "A real bounded pass is minutes of GPU; <120s = the no-op signal that stalled .383."
+        random_seed:
+          principle: "Determinism precondition."
       ACCEPTANCE GATE:
-        - condition: "val_exact_accuracy reported AND lr_continued_not_rewarmed == True AND (delta_vs_previous > 0 OR an honest stall-flagged verdict)"
-          principle: "Either the corrected schedule accumulates further or we flag a stall honestly; blind re-warming is the anti-pattern this lineage ended."
+        - condition: "duration_s > 120 AND post_epoch > seed_epoch AND val_exact_accuracy is a real number (the pass ACTUALLY trained), OR an honest blocked_noop_* with the diagnosed cause"
+          principle: "Pass 1 succeeds only if it provably trained (epoch advanced, real val) — the anti-no-op guard that the .383 passes lacked. A 7s instant-return is caught and reported, never dressed as progress."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4135_sudoku_accumulate_pass1_fixed_lr.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4136-sudoku-accumulate-pass2-fixed-lr
-    milestone: 2026.06.383
-    title: "ACCUMULATE pass 2 of 4 toward 0.87 (DEFENSIVE read of pass1). Resume from the stable checkpoint pass1 saved; train another bounded (<=60min) synchronous pass; report val + delta. PLATEAU FLOOR: if pass1's val did NOT improve vs its start, run a SHORT config audit instead of blind-training (Failed-Experiment Rerun Discipline -- no plateau-burning)."
+  - id: exp4147-sudoku-accumulate-pass2
+    milestone: 2026.06.384
+    title: "ACCUMULATE pass 2 (DEFENSIVE read of pass1). If pass1 trained (epoch advanced, real val), resume from the stable checkpoint with the SAME epoch-ceiling-raise + max_time + anti-no-op guard and train another <=60 min; report val + delta. If pass1 was blocked_noop, do NOT blind-retry — surface the unresolved config cause."
     priority: high
     track: trm-baseline
-    max_turns: 110
+    max_turns: 90
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13: second corrected-schedule accumulation pass -- false-positive scope-match vs exp4116/exp4117/exp4118/exp4127/exp4135; forward difference = resumes pass1's checkpoint with the FIXED schedule and a plateau-audit floor (no blind re-train)."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13: resumable Sudoku-Extreme accumulation pass 2 with the epoch-fix — false-positive scope-match vs exp4127/.383 passes; forward difference = continues the SAME stable-checkpoint lineage with the max_epochs ceiling raised + anti-no-op guard."
     inference_substrate: gpu_nanotrm_native_training
-    deliverable: results/experiment_4136_sudoku_accumulate_pass2_fixed_lr.json
+    deliverable: results/experiment_4147_sudoku_accumulate_pass2.json
     prompt: |
-      CONTEXT: Continue accumulation from pass1 (exp4135). Each bounded pass should add real exact-accuracy
-      now that the schedule continues. Guard against blind plateau-burning.
-
-      EXISTING CODE TO READ FIRST:
-        - python/carnot/experiment_4135_sudoku_accumulate_pass1_fixed_lr.py (the pass1 runner to mirror)
-        - results/experiment_4135_sudoku_accumulate_pass1_fixed_lr.json (pass1 val + stable_checkpoint_path + delta -- the DEFENSIVE read)
+      CONTEXT: Continue the lineage from exp4146's stable checkpoint, with the same epoch-fix.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: uv + nano-trm + CUDA + the stable checkpoint exists/loads. Read results/experiment_4135_*.json. If pass1 FLAGGED a stall (delta_vs_previous <= 0), do NOT blind-train -> run a SHORT config audit (scheduler horizon, peak-LR, data path, batch size vs the published recipe) and report the suspected cause + a corrected config recommendation, then STOP. Else proceed.
-        1. Resume from the stable checkpoint; run ONE bounded pass (<=60 min). PRINT PROGRESS. Save back to the stable path.
-        2. Report val_exact_accuracy, delta_vs_previous, matches_published_087.
+        0. PRECONDITIONS: uv + nano-trm + CUDA. Read results/experiment_4146_*.json: if it
+           blocked_noop (pass1 did not train), do NOT blind-retrain -> honest_verdict
+           `blocked_pass1_noop_unresolved` + restate the config cause and STOP.
+        1. Resume from the stable checkpoint with `ckpt_path=`, `+trainer.max_epochs=<current+3000>`,
+           `+trainer.max_time="00:01:00:00"`, writing back to the stable dir. CHECKPOINT + PRINT-PROGRESS.
+        2. ANTI-NO-OP guard (duration>120s, epoch advanced, real val). Report val + delta_vs_pass1.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. An honest 'val=0.NN improving' OR 'plateau -> config audit: <cause>' is COMPLETE."
+          principle: "Terminal-prefixed. Honest val/no-op report."
         val_exact_accuracy:
-          principle: "Val after pass2; the accumulation trajectory."
-        delta_vs_previous:
-          principle: "Improvement vs pass1; <=0 triggers the config-audit branch, not another blind pass."
-        plateau_audit_done:
-          principle: "Bare bool: True if pass1 stalled and this task audited config instead of blind-training (the Failed-Rerun-Discipline floor)."
-        matches_published_087:
-          principle: "Bare bool: within 0.02 of 0.87."
-        stable_checkpoint_path:
-          principle: "The persisted baseline path pass3 (exp4137) resumes from."
-        random_seed:
-          principle: "Determinism precondition recorded as a first-class field (silences METHODOLOGY_MISSING)."
-        reproducibility_checksum:
-          principle: "Content hash of (config + resumed checkpoint + data dir); catches silent drift."
+          principle: "Solve metric after pass 2; tracks convergence."
+        delta_vs_pass1:
+          principle: "Per-pass improvement; the signal for whether continued training converges."
+        post_epoch:
+          principle: "Must exceed pass1's epoch (anti-no-op)."
         duration_s:
-          principle: "Bounded GPU run < 4800s (single float), or a short audit (< 600s) if the plateau branch fired."
+          principle: "Real bounded GPU pass; <120s = no-op."
       ACCEPTANCE GATE:
-        - condition: "val_exact_accuracy reported with delta_vs_previous, OR plateau_audit_done == True with a suspected-cause + corrected-config recommendation"
-          principle: "Either accumulation continues or a real stall is diagnosed; burning a second blind pass on a plateau is the anti-pattern."
+        - condition: "duration_s>120 AND post_epoch advanced AND val reported AND (delta_vs_pass1>0 OR honest plateau flag), OR honest blocked_pass1_noop_unresolved"
+          principle: "Real training that advances, an honest plateau, or an honest upstream-no-op — all decision-grade; a faked pass is not."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4136_sudoku_accumulate_pass2_fixed_lr.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4137-sudoku-accumulate-pass3-fixed-lr
-    milestone: 2026.06.383
-    title: "ACCUMULATE pass 3 of 4 toward 0.87 (DEFENSIVE read of pass2). Resume from the stable checkpoint; train another bounded (<=60min) pass; report val + delta + matches_published_087. Same plateau floor. One more pass (exp4138) follows before the graft."
+  - id: exp4148-sudoku-accumulate-pass3
+    milestone: 2026.06.384
+    title: "ACCUMULATE pass 3 (DEFENSIVE read of pass2). Resume + train <=60 min with the epoch-fix + anti-no-op guard; report val + delta. Early-exit if val>=0.87 already; honest plateau flag if no improvement."
     priority: high
     track: trm-baseline
-    max_turns: 110
+    max_turns: 90
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13: third corrected-schedule accumulation pass -- false-positive scope-match vs exp4118/exp4127/exp4135/exp4136; forward difference = resumes pass2's checkpoint with the FIXED schedule and the plateau-audit floor."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13: Sudoku-Extreme accumulation pass 3 — false-positive scope-match vs prior passes; forward difference = same epoch-fixed stable-checkpoint lineage toward 0.87."
     inference_substrate: gpu_nanotrm_native_training
-    deliverable: results/experiment_4137_sudoku_accumulate_pass3_fixed_lr.json
+    deliverable: results/experiment_4148_sudoku_accumulate_pass3.json
     prompt: |
-      CONTEXT: Pass 3 of 4 toward the published ~0.87. exp4128's estimate is ~4 passes from 0.278, so a
-      4th pass (exp4138) follows before the decisive graft.
-
-      EXISTING CODE TO READ FIRST:
-        - python/carnot/experiment_4136_sudoku_accumulate_pass2_fixed_lr.py (the pass2 runner)
-        - results/experiment_4136_sudoku_accumulate_pass2_fixed_lr.json (pass2 val + stable_checkpoint_path)
-
+      CONTEXT: Continue the lineage from exp4147's stable checkpoint.
       CONCRETE STEPS:
-        0. PRECONDITIONS: uv + nano-trm + CUDA + the stable checkpoint exists/loads. Read results/experiment_4136_*.json. If pass2 stalled/audited (no improvement), do NOT blind-train -> report the baseline is config-blocked + the corrected-config recommendation for .384, and STOP. Else proceed.
-        1. Resume from the stable checkpoint; run ONE bounded pass (<=60 min). PRINT PROGRESS. Save back to the stable path.
-        2. Report val_exact_accuracy, delta_vs_previous, matches_published_087.
+        0. PRECONDITIONS: uv + nano-trm + CUDA. Read results/experiment_4147_*.json. If val>=0.87 already, skip training + confirm. If upstream blocked_noop, surface it + STOP.
+        1. Resume with ckpt_path + max_epochs-raise + max_time, write back to stable dir, CHECKPOINT + PRINT-PROGRESS. Anti-no-op guard (duration>120s, epoch advanced, real val).
+        2. Report val + delta.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. An honest 'val=0.NN improving -> pass4 continues' is COMPLETE."
+          principle: "Terminal-prefixed; honest val/no-op."
         val_exact_accuracy:
-          principle: "Val after pass3; the accumulation trajectory toward the pass4 + graft."
-        delta_vs_previous:
-          principle: "Improvement vs pass2; <=0 triggers the config-audit branch, not another blind pass."
-        plateau_audit_done:
-          principle: "Bare bool: True if pass2 stalled and this task audited config instead of blind-training."
-        matches_published_087:
-          principle: "Bare bool: within 0.02 of 0.87."
-        stable_checkpoint_path:
-          principle: "The persisted baseline path pass4 (exp4138) resumes from."
-        random_seed:
-          principle: "Determinism precondition recorded as a first-class field (silences METHODOLOGY_MISSING)."
-        reproducibility_checksum:
-          principle: "Content hash of (config + resumed checkpoint + data dir); catches silent drift."
+          principle: "Solve metric after pass 3."
+        delta_vs_pass2:
+          principle: "Per-pass improvement; convergence signal."
+        post_epoch:
+          principle: "Anti-no-op: must advance."
         duration_s:
-          principle: "Bounded GPU run < 4800s (single float)."
+          principle: "Real bounded pass; <120s = no-op."
       ACCEPTANCE GATE:
-        - condition: "val_exact_accuracy reported with delta_vs_previous, OR plateau_audit_done == True with a corrected-config recommendation"
-          principle: "Either accumulation continues toward pass4 or a real stall is diagnosed; blind plateau-burning is the anti-pattern."
+        - condition: "real trained pass (duration>120s, epoch advanced, val) OR early-converged confirm OR honest plateau/upstream-no-op"
+          principle: "Decision-grade either way; no faked passes."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4137_sudoku_accumulate_pass3_fixed_lr.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4138-sudoku-accumulate-pass4-convergence-check
-    milestone: 2026.06.383
-    title: "ACCUMULATE pass 4 of 4 + CONVERGENCE CHECK (DEFENSIVE read of pass3). Resume from the stable checkpoint; train another bounded (<=60min) pass; report the full .382+.383 val trajectory and whether the accumulated val reaches the published 0.87 +/- 0.02 (matches_published_087) OR clears the >=0.80 near-faithful bar the graft's RFT arm needs. Same plateau floor. This pass sets whether exp4139's decisive graft runs full / RFT-on-near-faithful / defers."
+  - id: exp4149-sudoku-accumulate-pass4-convergence
+    milestone: 2026.06.384
+    title: "ACCUMULATE pass 4 + CONVERGENCE CHECK (DEFENSIVE read of pass3). Final resume pass toward 0.87 with the epoch-fix + anti-no-op guard; report the accumulated val and whether it is within 0.02 of 0.87 (faithful). If plateaued below, report the trajectory + recommend .385 (more passes / config audit)."
     priority: high
     track: trm-baseline
-    max_turns: 110
+    max_turns: 90
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13: fourth corrected-schedule accumulation pass + convergence check (exp4128 estimated 4 passes from 0.278) -- false-positive scope-match vs exp4118/exp4127/exp4135/exp4136/exp4137; forward difference = the convergence-decision pass that gates the decisive graft, with the FIXED schedule and the plateau-audit floor."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13: Sudoku-Extreme accumulation pass 4 + convergence check — false-positive scope-match vs prior passes; forward difference = same epoch-fixed lineage to the 0.87 convergence gate."
     inference_substrate: gpu_nanotrm_native_training
-    deliverable: results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json
+    deliverable: results/experiment_4149_sudoku_accumulate_pass4_convergence.json
     prompt: |
-      CONTEXT: Pass 4 of 4 toward the published ~0.87. The accumulated val from this pass sets whether the
-      verifier graft (exp4139) tests a faithful (>=0.85), near-faithful (>=0.80, enough for the RFT LABEL
-      de-confound), or not-yet-ready baseline.
-
-      EXISTING CODE TO READ FIRST:
-        - python/carnot/experiment_4137_sudoku_accumulate_pass3_fixed_lr.py (the pass3 runner)
-        - results/experiment_4137_sudoku_accumulate_pass3_fixed_lr.json (pass3 val + stable_checkpoint_path)
-
+      CONTEXT: Final accumulation pass of .384. Aim to reach the published ~0.87.
       CONCRETE STEPS:
-        0. PRECONDITIONS: uv + nano-trm + CUDA + the stable checkpoint exists/loads. Read results/experiment_4137_*.json. If pass3 stalled/audited (no improvement), do NOT blind-train -> report the baseline is config-blocked + the corrected-config recommendation for .384, and STOP. Else proceed.
-        1. Resume from the stable checkpoint; run ONE bounded pass (<=60 min). PRINT PROGRESS. Save back to the stable path.
-        2. Report val_exact_accuracy, the full per-pass val trajectory across .382+.383 (0.278 -> ...), matches_published_087, near_faithful_080 (val>=0.80), and an estimated passes-to-0.87 for .384 if still short.
+        0. PRECONDITIONS: uv + nano-trm + CUDA. Read results/experiment_4148_*.json. If val>=0.87 already, skip + confirm. If upstream blocked_noop, surface + STOP.
+        1. Resume with ckpt_path + max_epochs-raise + max_time, write back to stable dir, CHECKPOINT + PRINT-PROGRESS. Anti-no-op guard.
+        2. Report final accumulated val_exact_accuracy + matches_published_087 + the full .384 val trajectory (from 0.278).
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. An honest 'val=0.NN faithful, graft runs full' OR 'val=0.NN near-faithful, RFT de-confound runs' OR 'val=0.NN, .384 finishes convergence' is COMPLETE."
+          principle: "Terminal-prefixed. An honest 'val=0.NN, .385 continues' is COMPLETE."
         val_exact_accuracy:
-          principle: "Val after pass4; the baseline the graft (exp4139) reads."
-        val_trajectory_383:
-          principle: "Per-pass val across .382+.383; the load-bearing evidence the fixed schedule converges across 4 passes."
+          principle: "Final accumulated solve metric for .384."
         matches_published_087:
-          principle: "Bare bool: within 0.02 of 0.87. THE gate exp4139 reads for the FULL graft (rerank + RFT)."
-        near_faithful_080:
-          principle: "Bare bool: val>=0.80. The gate exp4139 reads to run the RFT LABEL de-confound on a near-faithful baseline (the de-confound is valid below 0.87 as long as there is headroom)."
-        estimated_passes_to_converge:
-          principle: "If still <0.80, the passes-to-0.87 estimate for .384 (so the next planner sizes the remaining work)."
+          principle: "Bare bool: within 0.02 of 0.87. Tells exp4150 whether a faithful baseline exists to graft onto."
+        val_trajectory_v384:
+          principle: "Val across the .384 passes (from 0.278); shows the convergence rate post-fix."
         stable_checkpoint_path:
-          principle: "The faithful/near-faithful baseline checkpoint exp4139 grafts onto."
-        random_seed:
-          principle: "Determinism precondition recorded as a first-class field (silences METHODOLOGY_MISSING)."
-        reproducibility_checksum:
-          principle: "Content hash of (config + resumed checkpoint + data dir); catches silent drift."
+          principle: "The persisted baseline checkpoint exp4150 + .385 build on."
         duration_s:
-          principle: "Bounded GPU run < 4800s (single float)."
+          principle: "Real bounded pass; <120s = no-op."
       ACCEPTANCE GATE:
-        - condition: "val_trajectory_383 reported AND matches_published_087 set AND near_faithful_080 set, OR an honest config-blocked verdict with the .384 recommendation"
-          principle: "Either we have a faithful/near-faithful baseline for the decisive graft, or a diagnosed reason we don't and a concrete next step -- both decision-grade."
+        - condition: "final val reported AND matches_published_087 set (True=faithful; False=honest partial, .385 continues)"
+          principle: "Reaching 0.87 is the target; an honest partial with the trajectory is equally decision-grade."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4138_sudoku_accumulate_pass4_convergence_check.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4139-decisive-verifier-graft-sudoku
-    milestone: 2026.06.383
-    title: "THE DECISIVE verifier-as-reward GRAFT on the faithful/near-faithful Sudoku baseline (the LABEL de-confound never yet run faithfully). MANDATORY headroom positive-control FIRST (oracle best-of-K vs vote; oracle==vote -> NO HEADROOM -> FALSE_NEGATIVE_RISK). HEADLINE verifier-value = the NON-oracle Carnot energy/text-stat ENSEMBLE rerank (the transferable verifier) + the RFT LABEL de-confound (A=verifier-cert vs B=vote-cert, CI95 excl 0). The executable-validity rerank == oracle is reported SEPARATELY as a labeled UPPER BOUND (tautological on unique-solution Sudoku, NOT the verifier result). DEFENSIVE on exp4138: matches_087 -> full (rerank + RFT); near_faithful_080 -> RFT + ensemble-rerank; <0.80 -> defer."
+  - id: exp4150-decisive-verifier-graft-sudoku
+    milestone: 2026.06.384
+    title: "THE DECISIVE verifier-as-reward GRAFT on the faithful baseline (DEFERRED if val<0.85). The result that resolves BOTH the moat question AND the queued DiffusionGemma gate. DEFENSIVE read of exp4149: IF val>=0.85, run the EXECUTABLE Sudoku verifier as (A) reranker over TRM candidates + (B) reward for verifier-cert vs vote-cert RFT (A-vs-B de-confound, CI95 excl 0); report verifier_value_added. IF val<0.85, DEFER honestly (the .383 FALSE_NEGATIVE_RISK trap) and report baseline status for .385."
     priority: high
     track: verifier-as-reward
     max_turns: 110
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13: graft the Carnot verifier on a FAITHFUL reproducing baseline -- false-positive scope-match vs exp4109/exp4119/exp4128 (all DEFERRED or grafted on a non-faithful checkpoint); forward difference = FIRST graft on a faithful/near-faithful baseline (val from exp4138, not the 0.0232/0.106/0.278 deferrals), with the NON-oracle ensemble rerank as the transferable-verifier headline (not the tautological executable-oracle rerank) + the RFT LABEL de-confound + a mandatory oracle-vs-vote headroom positive control."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13: THE decisive verifier graft on a faithful nano-trm baseline — false-positive scope-match vs retired exp4089/exp4100 + .380-.383 graft attempts; forward difference = built on a CONVERGED reproducing baseline + on SUDOKU (executable verifier, per .379 exp4099); defensive-deferred until faithful to avoid the .383 uninformative FALSE_NEGATIVE."
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4139_decisive_verifier_graft_sudoku.json
+    deliverable: results/experiment_4150_decisive_verifier_graft_sudoku.json
     prompt: |
-      CONTEXT: Test verifier-as-reward on a faithful/near-faithful reproducing TRM baseline. CRITICAL
-      design point (from the .383 adversarial review): for unique-solution Sudoku the EXECUTABLE validity
-      checker IS the oracle (a candidate passes iff it equals the unique solution), so an executable-
-      verifier rerank trivially captures all headroom -- `executable_rerank_lift == oracle_vs_vote_gap`
-      BY CONSTRUCTION (a TAUTOLOGY adversarial_verify.py would flag, and uninformative about the GENERAL
-      energy verifier that anti-discriminated on ARC grids in exp4099 and that DiffusionGemma's guidance
-      actually uses). Therefore: report the executable gap SEPARATELY as a labeled UPPER BOUND; the
-      HEADLINE verifier-value is (1) the NON-oracle Carnot energy/text-stat ENSEMBLE rerank (the
-      transferable verifier) and (2) the RFT LABEL de-confound (non-tautological even when the certifier
-      is exact). verifier_value_added is defined on (1)+(2), NEVER the executable-oracle rerank, and it
-      gates the queued DiffusionGemma scale-up.
-
-      EXISTING CODE TO READ FIRST:
-        - python/carnot/experiment_4128_carnot_verifier_graft_sudoku.py (the graft scaffold -- REUSE: candidate sampling, the executable Sudoku verifier, the A-vs-B de-confound)
-        - python/carnot/experiment_4109_carnot_verifier_graft_sudoku.py (the .380 graft on a non-faithful baseline -- the honest_null this supersedes)
-        - results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json (matches_published_087 + near_faithful_080 + stable_checkpoint_path -- the DEFENSIVE read)
-        - python/carnot/verify/ (the energy/text-stat ENSEMBLE verifiers for the NON-oracle headline rerank + the executable validity checker)
+      CONTEXT: This is THE decision-grade test of verifier-as-reward where the verifier has
+      executable teeth (Sudoku validity is exact), on a FAITHFUL reproducing baseline. Its result
+      resolves the moat question and the DiffusionGemma gate
+      (docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md).
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: CUDA available; read results/experiment_4138_*.json for matches_published_087 + near_faithful_080 + stable_checkpoint_path + val_exact_accuracy. If the checkpoint is missing/unloadable -> honest_verdict `blocked_baseline_checkpoint_missing` and STOP.
-        1. Sample K (e.g. 8-16) candidate solutions per held-out puzzle from the faithful TRM checkpoint.
-        2. HEADROOM POSITIVE CONTROL (MANDATORY, FIRST): compute oracle pass@K (does ANY candidate pass the executable validity check = is the unique solution) vs vote pass@1. If oracle <= vote (no headroom), report `headroom_present: false` + `false_negative_risk: true` and DO NOT conclude the verifier fails -- the test is uninformative; report the baseline is too converged on its pool to test rerank and SKIP the rerank verdict (still run the RFT arm if branched).
-        3. RERANK measurements (always report BOTH, clearly distinguished):
-           - `executable_oracle_upper_bound`: executable-validity rerank pass@1 vs vote -- LABEL it the oracle upper bound (== oracle_vs_vote_gap by construction; set executable_verifier_is_oracle=true). NOT the verifier result.
-           - `ensemble_rerank_lift_vs_vote`: the NON-oracle Carnot energy/text-stat ENSEMBLE rerank pass@1 vs vote, bootstrap CI. THIS is the transferable-verifier headline (Weaver-style weighted ensemble of the energy + text-stat verifiers, NO exact validity check in the score).
-        4. BRANCH on exp4138 val for the RFT arm:
-           IF matches_published_087 (val>=0.85, faithful) OR near_faithful_080 (val>=0.80):
-             - RFT arm (de-confound, the LOAD-BEARING contrast): A=verifier-certified (execution-validated-correct) vs B=vote-certified corpus, N-matched, same TRM, same pool; resume-train each (bounded, FIXED schedule); held-out exact-accuracy, CI95 excl 0. This is non-tautological even though the certifier is exact -- it asks whether verifier-LABEL beats vote-LABEL as a TRAINING signal.
-           ELSE (val < 0.80): DEFER the RFT arm. Report `graft_deferred: true` + current val + estimated passes-to-converge for .384. Still report the headroom control + ensemble rerank.
+        0. PRECONDITIONS: read results/experiment_4149_*.json for val + stable_checkpoint_path. CUDA available.
+        1. BRANCH:
+           IF val>=0.85 (faithful):
+             - RERANK arm: sample K candidate solutions per held-out puzzle; rerank by the executable Sudoku verifier; pass@1 lift vs TRM-vote + vs oracle, bootstrap CI.
+             - RFT arm (de-confound): A=verifier-certified vs B=vote-certified corpus, N-matched, same TRM; resume-train each (bounded, epoch-fixed); held-out exact-accuracy. LOAD-BEARING contrast A vs B, CI95 excl 0.
+           ELSE: DEFER. `graft_deferred: true` + current val + estimated passes-to-converge for .385. Do NOT graft on a non-faithful baseline (the .383 FALSE_NEGATIVE_RISK mistake).
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. An honest deferral, an A~=B null WITH headroom present, OR an uninformative no-headroom result are all COMPLETE."
-        headroom_present:
-          principle: "Bare bool: oracle(best-of-K) > vote pass@1. The positive control -- a verifier verdict is only meaningful when this is True (else FALSE_NEGATIVE_RISK)."
-        oracle_vs_vote_gap:
-          principle: "pass@K oracle minus vote pass@1; the size of the selectable headroom any reranker could capture."
-        executable_verifier_is_oracle:
-          principle: "Bare bool (true on unique-solution Sudoku): flags that the executable-validity rerank == oracle by construction, so the capstone NEVER reads executable_oracle_upper_bound as a generalization claim."
-        executable_oracle_upper_bound:
-          principle: "The executable-validity rerank lift -- the UPPER BOUND (tautological == oracle gap), reported for context, explicitly NOT the verifier-value result."
-        ensemble_rerank_lift_vs_vote:
-          principle: "The NON-oracle Carnot energy/text-stat ensemble rerank lift vs vote, with CI -- the TRANSFERABLE-verifier headline (the .382 finding was no single verifier beat vote; this tests the weighted ensemble). Only meaningful when headroom_present."
-        rft_vs_ablation_delta:
-          principle: "The de-confounded A-vs-B held-out delta with CI95 (RFT branch only): isolates the verifier LABEL's training contribution from the vote LABEL's -- the load-bearing, non-tautological contrast."
+          principle: "Terminal-prefixed. An honest deferral, an A>B win, or an A~=B null are all COMPLETE; an uninformative graft on a non-faithful baseline is the .383 anti-pattern."
         graft_deferred:
-          principle: "Bare bool: True if val<0.80 (RFT arm not run). Prevents a meaningless graft dressed as a result."
+          principle: "Bare bool: True if val<0.85 -> deferred. Prevents the uninformative no-headroom false-negative .383 produced."
+        rerank_lift_vs_vote:
+          principle: "pass@1 lift from verifier-reranking (if grafted); confirms the executable Sudoku verifier discriminates (contrast to .379 ARC-grid anti-discrimination)."
+        rft_vs_ablation_delta:
+          principle: "The de-confounded A-vs-B held-out delta with CI (if grafted): isolates the verifier LABEL's training contribution -- THE moat measurement."
         verifier_value_added:
-          principle: "Bare bool: did the NON-oracle ensemble rerank OR the RFT de-confound beat the vote WITH headroom present? THE headline answer + the DiffusionGemma gate. Defined on the transferable verifier + the LABEL contrast, NEVER on the executable-oracle rerank."
+          principle: "Bare bool: did the graft beat the vote ablation? The headline answer, ONLY meaningful when graft_deferred is False. Also resolves the DiffusionGemma gate."
         preconditions_checked:
-          principle: "Records the baseline checkpoint + CUDA verified; pre-empts silent-missing-resource fabrication."
+          principle: "Records the baseline checkpoint + CUDA verified."
       ACCEPTANCE GATE:
-        - condition: "headroom_present reported AND executable_verifier_is_oracle set AND ensemble_rerank_lift_vs_vote reported, AND (graft_deferred True with .384 estimate) OR (rft_vs_ablation_delta reported with CI95)"
-          principle: "Either an honest deferral, or a real verifier-value measurement that separates the tautological oracle upper-bound from the transferable-ensemble headline + the non-tautological LABEL de-confound; reading the executable-oracle rerank as the verifier result is the anti-pattern."
+        - condition: "graft_deferred True with baseline status (if val<0.85), OR a real graft with rerank_lift + rft_vs_ablation_delta + verifier_value_added (CI95)"
+          principle: "Either an honest deferral or a real, headroom-backed graft measurement; an uninformative graft on a non-faithful baseline is forbidden (the .383 mistake)."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4139_decisive_verifier_graft_sudoku.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4140-arc-incremental-progress
-    milestone: 2026.06.383
-    title: "ARC-AGI-3 INCREMENTAL +1 (monotonic) via the PROVEN explore-first method. Advance the solved-level count by >=1: target the next-unsolved non-spatial game's L1, OR (the strict non-spatial pool is thinning per exp4120) advance an already-started game (e.g. r11l, the survey top-pick) to its NEXT level. Bounded active-exploration OBSERVES transitions -> induce mechanic + goal predicate -> GAP-4 verifier validates on held-out transitions -> act only if validated. REAL-ENV-CONFIRM any solve; STOP at the first level that fails. NO FULL/all-levels solve."
+  - id: exp4151-arc-incremental-progress
+    milestone: 2026.06.384
+    title: "ARC-AGI-3 INCREMENTAL +1 (monotonic) via the PROVEN explore-first method. Bounded active-exploration OBSERVES transitions -> induce mechanic + goal predicate -> GAP-4 verifier validates on held-out transitions -> act only if validated. Next-easiest non-spatial game not yet solved. REAL-ENV-CONFIRM any solve; STOP at the first level that fails."
     priority: medium
     track: arc
     max_turns: 90
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): ARC-AGI-3 incremental +1 mandated by the ARC-AGI-3 Incremental-Progress Scoping discipline -- false-positive scope-match vs prior Nth-game/level-solve attempts; forward difference = targets the next-unsolved game's L1 OR the next level of an already-started game (monotonic +1), honest no-solve is a COMPLETE verdict."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): ARC-AGI-3 incremental +1 game-solve mandated by the ARC-AGI-3 Incremental-Progress Scoping discipline — false-positive scope-match vs prior Nth-game-solve attempts; forward difference = targets the next-unsolved game, monotonic +1, honest no-solve is a COMPLETE verdict."
     inference_substrate: offline_arc_explore_induce_verify
-    deliverable: results/experiment_4140_arc_incremental_progress.json
+    deliverable: results/experiment_4151_arc_incremental_progress.json
     prompt: |
       CONTEXT: Per the ARC-AGI-3 Incremental-Progress Scoping discipline, each milestone advances the
-      solved-LEVEL count MONOTONICALLY by >=1. .382 recorded total_games_solved=13. The strict non-spatial
-      pool is thinning (exp4120 reported "no unsolved strict non-spatial candidates"), so a NEXT-LEVEL
-      advance on an already-started game counts as valid +1 progress.
-
-      EXISTING CODE TO READ FIRST:
-        - python/carnot/experiment_4129_fourteenth_game_explore_first.py (the proven offline explore-induce-verify driver)
-        - results/arc3_win_condition_survey.json (ranked_targets, top_pick=r11l, n_nonspatial=6 -- pick the next target)
-        - results/experiment_4129_fourteenth_game_explore_first.json (the prior solve + total_games_solved baseline)
-
+      solved-game count MONOTONICALLY by >=1. Target the next unsolved non-spatial game from
+      results/arc3_win_condition_survey.json and solve its first level.
       CONCRETE STEPS:
-        0. PRECONDITIONS: `ls results/arc3_win_condition_survey.json`; use the OFFLINE/air-gapped driver. If fixtures unavailable -> honest_verdict `blocked_arc_offline_fixtures_missing` and STOP.
-        1. Choose the target: the next-unsolved non-spatial game's L1 if one exists; ELSE the next level of an already-started game (r11l or the next ranked target). Do NOT attempt a FULL/all-levels solve.
-        2. Bounded active-exploration -> induce mechanic + goal predicate from OBSERVED transitions.
-        3. GAP-4 verifier validates on HELD-OUT transitions before acting; act only on validated steps; STOP at the first level that fails.
+        0. PRECONDITIONS: `ls results/arc3_win_condition_survey.json`; use the OFFLINE/air-gapped driver. If fixtures unavailable -> `blocked_arc_offline_fixtures_missing` and STOP.
+        1. Bounded active-exploration -> induce mechanic + goal predicate from OBSERVED transitions.
+        2. GAP-4 verifier validates on HELD-OUT transitions before acting; act only on validated steps; STOP at the first level that fails.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. An honest no-solve is a COMPLETE verdict."
-        total_levels_solved:
-          principle: "The monotonic progress metric; must be >= the prior milestone's count (game-first-solves AND next-level advances both count)."
+        total_games_solved:
+          principle: "The monotonic progress metric; must be >= the prior milestone's count."
         levels_completed:
-          principle: "Real-env-confirmed level count for the targeted game; the falsifiable evidence of an actual solve."
+          principle: "Real-env-confirmed level count; the falsifiable evidence of an actual solve."
         real_env_confirmed:
           principle: "Only real-env solves raise the headline count."
-        target_game:
-          principle: "Which game/level was targeted; the audit trail for the incremental-progress claim."
       ACCEPTANCE GATE:
-        - condition: ">=1 NEW level real_env_confirmed (total_levels_solved > prior) OR an honest no-solve verdict"
-          principle: "Progress-not-perfection: banking +1 real level is the win; a fabricated all-levels claim is the anti-pattern."
+        - condition: ">=1 NEW level real_env_confirmed OR an honest no-solve verdict"
+          principle: "Progress-not-perfection: banking +1 real level is the win."
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4140_arc_incremental_progress.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4141-sota-ingestion-recursive-reasoner-verifier
-    milestone: 2026.06.383
-    title: "SOTA-INGESTION SLOT (reserved; bleeding-edge track): ingest stronger-recursive-reasoner + verifier-as-reward literature mapped onto the .383 converge-then-graft headline. GRAM (97% Sudoku-Extreme, 10M params, stochastic-latent), the RLVR+GRPO TRM-as-thinking-reward precedent, Weaver weak-verifier-ensemble (Stanford), TRM 2510.04871, TTA-TRM 2511.02886, Symbol-Equivariant RRM 2603.02193. Emit a SOTA->experiment mapping note; flag the strongest for .384 (candidate: GRAM-as-generator -- a stochastic-latent generator emits a candidate DISTRIBUTION = more reranker headroom -- IF verifier_value_added). Cite real arXiv IDs / URLs."
+  - id: exp4152-sota-ingestion-recursive-reasoner-verifier
+    milestone: 2026.06.384
+    title: "SOTA-INGESTION SLOT (reserved; bleeding-edge track): ingest verifier-guided / self-training for recursive reasoners + energy-guided generation literature mapped onto the .384 verifier-graft headline (and the queued DiffusionGemma energy-guidance use). TRM 2510.04871, TTA-TRM 2511.02886, V-STaR 2402.06457, SEDD discrete-diffusion 2310.16834, classifier/energy-guided diffusion. Emit a SOTA->experiment mapping note; flag the strongest for .385. Cite real arXiv IDs."
     priority: medium
     track: research
     max_turns: 70
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved-slot task): SOTA-ingestion slot mandated by the SOTA-Ingestion Cycle Discipline -- false-positive scope-match vs prior ingestion tasks; structurally never a doomed rerun (fresh corpus each milestone)."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved-slot task): SOTA-ingestion slot mandated by the SOTA-Ingestion Cycle Discipline — false-positive scope-match vs prior ingestion tasks; structurally never a doomed rerun (fresh corpus each milestone)."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4141_sota_ingestion_recursive_reasoner_verifier.json
+    deliverable: results/experiment_4152_sota_ingestion_recursive_reasoner_verifier.json
     prompt: |
-      CONTEXT: Per the SOTA-Ingestion Cycle Discipline, a bleeding-edge headline reserves one ingestion
-      task. The .383 headline is converge-the-recursive-reasoner-baseline + the decisive verifier-as-reward
-      graft. The 2026-06-13 planning sweep (research-references.md) already surfaced GRAM / RLVR-TRM /
-      Weaver -- deepen and map them.
-
-      EXISTING CODE TO READ FIRST:
-        - research-references.md (the 2026-06-13 Post-.382 Planning Sweep section -- GRAM, RLVR-TRM-thinking-reward, Weaver)
-        - research-studying.md (mark ingested)
-        - scripts/sweep_clusters.py / scripts/sweep_semscholar.py (the reliable discovery channel)
-
+      CONTEXT: Per the SOTA-Ingestion Cycle Discipline, a bleeding-edge headline reserves one ingestion task.
       CONCRETE STEPS (use the RELIABLE channel, NOT /deep-research):
-        0. Read research-references.md (this sweep) + research-studying.md filtered to recursive-reasoners / verifier-as-reward, then a FOCUSED fresh pass via scripts/sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch.
-        1. Synthesize a SOTA->experiment mapping note: (a) GRAM (97% Sudoku-Extreme, stochastic-latent) -- is it the stronger generator to graft onto in .384 IF the TRM graft shows verifier_value_added (a stochastic-latent generator emits a distribution = more reranker headroom)? (b) the RLVR+GRPO TRM-as-thinking-reward precedent -- how it informs the .383 RFT de-confound; (c) Weaver -- the weighted weak-verifier-ensemble that is the .383 non-oracle ensemble-rerank headline.
-        2. Update research-studying.md (mark ingested) and FLAG the strongest method for .384.
+        0. Read research-studying.md / research-references.md filtered to verifier-guided-training / energy-guided-generation, then a FOCUSED fresh pass via scripts/sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch of the top 5-8 papers.
+        1. Synthesize a SOTA->experiment mapping note (TRM 2510.04871, TTA-TRM 2511.02886, V-STaR 2402.06457, SEDD 2310.16834, energy/classifier-guided diffusion): what each implies for the nano-trm + Carnot-verifier stack (and the queued DiffusionGemma energy-guidance use).
+        2. Update research-studying.md (mark ingested) and FLAG the strongest method for .385.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. Records ingestion completed with verifiable citations."
         methods_mapped:
-          principle: "Each method/source MUST carry a real arXiv ID or canonical doc URL; an ingestion note without verifiable citations is treated as fabrication."
-        flagged_for_v384:
-          principle: "Closes the discover->ingest->plan loop: names the strongest method for the next planner (candidate: GRAM-as-generator IF verifier_value_added)."
-      ACCEPTANCE: a mapping note with >=3 sources, each with a real arXiv ID/URL, and one flagged for .384.
+          principle: "Each method/source MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication."
+        flagged_for_v385:
+          principle: "Closes the discover->ingest->plan loop: names the strongest method for the next planner."
+      ACCEPTANCE: a mapping note with >=3 sources, each with a real arXiv ID/URL, and one flagged for .385.
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4141_sota_ingestion_recursive_reasoner_verifier.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4142-verifier-registry-gaps-hygiene
-    milestone: 2026.06.383
-    title: "VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval reproducing the canonical GAP-4 ARC-1 numbers from cached candidates (vote 0.4516 -> gated 0.5806; zero codex/GGUF). RECORD the .383 outcomes: the Sudoku-baseline val trajectory (toward 0.87 across 4 passes), and -- THE headline -- the decisive verifier graft result (headroom_present + ensemble_rerank_lift + rft_vs_ablation_delta + verifier_value_added, or honest deferral). Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source of truth."
+  - id: exp4153-verifier-registry-gaps-hygiene
+    milestone: 2026.06.384
+    title: "VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval reproducing the canonical GAP-4 ARC-1 numbers from cached candidates (zero codex/GGUF). RECORD the .384 outcomes: the accumulation val trajectory + the DECISIVE graft result/deferral (exp4150). Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source of truth."
     priority: medium
     track: infra
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved infra slot): verifier-registry + gaps hygiene regression guard -- false-positive scope-match vs prior hygiene tasks; structurally never a doomed rerun (bit-exact GAP-4 regression replay each milestone)."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved infra slot): verifier-registry + gaps hygiene regression guard — false-positive scope-match vs prior hygiene tasks; structurally never a doomed rerun (bit-exact GAP-4 regression replay each milestone)."
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4142_verifier_registry_gaps_hygiene.json
+    deliverable: results/experiment_4153_verifier_registry_gaps_hygiene.json
     prompt: |
-      CONTEXT: Record the .383 verifier-relevant outcomes honestly -- especially the DECISIVE graft result
-      (the first faithful-baseline test of verifier-as-reward, with the oracle-vs-transferable distinction).
-
-      EXISTING CODE TO READ FIRST:
-        - ops/verifier_registry.yaml + ops/verifier_gaps.md (the source-of-truth files to reconcile)
-        - results/experiment_4139_decisive_verifier_graft_sudoku.json (the headline graft result)
-        - results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json (the baseline val trajectory)
-        - python/carnot/experiment_4131_verifier_registry_gaps_hygiene.py (the prior hygiene runner to mirror)
-
+      CONTEXT: Record the .384 verifier-relevant outcomes honestly.
       CONCRETE STEPS:
-        0. PRECONDITIONS (check BEFORE the re-eval): the cached GAP-4 ARC-1 candidate fixtures exist and parse; ops/verifier_registry.yaml + ops/verifier_gaps.md parse. If ANY fails -> honest_verdict `blocked_<resource>` and STOP (no fabrication).
         1. Bit-exact offline re-eval reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates -- the regression guard. Zero codex/GGUF.
-        2. RECORD into ops/verifier_gaps.md: the Sudoku-baseline val trajectory toward 0.87, and the decisive graft outcome (headroom_present, executable_oracle_upper_bound vs ensemble_rerank_lift_vs_vote, rft_vs_ablation_delta, verifier_value_added OR graft_deferred).
-        3. Note the executable-Sudoku-verifier-as-reward status + the DiffusionGemma-gate state in ops/verifier_registry.yaml.
+        2. RECORD into ops/verifier_gaps.md: the Sudoku-baseline val trajectory + the DECISIVE graft result OR deferral (exp4150 verifier_value_added / graft_deferred), and whether it resolves the DiffusionGemma gate.
+        3. Note the verifier's training-time TRM role status in ops/verifier_registry.yaml.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. Records the registry/gaps reconciled to the .383 truth."
+          principle: "Terminal-prefixed. Records the registry/gaps reconciled to the .384 truth."
         regression_guard_passed:
           principle: "Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression."
         gaps_updated:
           principle: "Lists the verifier_gaps entries touched so the gap backlog stays the honest complement of the registry."
-        diffusiongemma_gate_state:
-          principle: "Records whether the .383 graft's verifier_value_added (on the transferable ensemble + RFT, NOT the oracle) unlocked or kept-gated the DiffusionGemma scale-up -- the forward-planning signal."
-      ACCEPTANCE: regression_guard_passed True; the baseline trajectory + decisive graft outcome + DiffusionGemma gate state recorded.
+      ACCEPTANCE: regression_guard_passed True; the baseline + decisive-graft status recorded.
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4142_verifier_registry_gaps_hygiene.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4143-hardware-continuity
-    milestone: 2026.06.383
-    title: "Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 DONE). Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile flash -- investigate the recurring post-flash detect block). PolarFire (ssh polarfire; toward end-to-end Carnot dispatch; CPU dispatch already hash-verified). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board."
+  - id: exp4154-hardware-continuity
+    milestone: 2026.06.384
+    title: "Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 DONE). Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile flash). PolarFire (ssh polarfire; toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board."
     priority: medium
     track: hardware
     max_turns: 70
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 2 (active hardware-continuity task): GateMate/PolarFire drive-to-terminal mandated by the Hardware-Task Continuity Discipline until terminal -- false-positive scope-match vs retired hardware exps; required forward work."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 2 (active hardware-continuity task): GateMate/PolarFire drive-to-terminal mandated by the Hardware-Task Continuity Discipline until terminal — false-positive scope-match vs retired hardware exps; required forward work."
     inference_substrate: hardware_smoke
-    deliverable: results/experiment_4143_hardware_continuity.json
+    deliverable: results/experiment_4154_hardware_continuity.json
     prompt: |
-      CONTEXT: As long as boards are attached, every milestone reserves one task per non-terminal board.
-      KV260 is terminal; GateMate + PolarFire are not.
-
-      EXISTING CODE TO READ FIRST:
-        - python/carnot/experiment_4132_hardware_continuity.py (the prior continuity runner to mirror)
-        - results/experiment_4132_hardware_continuity.json (per-board prior status: GateMate unreachable post-flash-detect, PolarFire CPU dispatch hash-verified, KV260 terminal)
-
+      CONTEXT: As long as boards are attached, every milestone reserves one task per non-terminal board. KV260 is terminal; GateMate + PolarFire are not.
       CONCRETE STEPS (DISTINCT wall-clock timers per board):
         0. PRECONDITIONS per board (SSH / USB-detect ONLY -- host SD-card-device preconditions are retired per the KV260 SSH-Not-SD-Card Discipline):
            - GateMate: `openFPGALoader -c dirtyJtag --detect` returns the GM1Ax IDCODE.
            - PolarFire: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'` exits 0.
            - KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` exits 0 (opportunistic).
            For any unreachable board, write `blocked_<board>_unreachable` for that board and CONTINUE with the others.
-        1. GateMate: next concrete step toward the n=16 Ising tile flash (investigate the recurring post-flash detect block).
+        1. GateMate: next concrete step toward the n=16 Ising tile flash.
         2. PolarFire: next concrete step toward end-to-end Carnot dispatch with hash-match.
         3. KV260: confirm terminal state via SSH.
       REQUIRED ARTIFACT FIELDS:
@@ -512,50 +381,32 @@ tasks:
           principle: "Records the SSH/USB-detect preconditions run; enforces SSH-Not-SD-Card and pre-empts fabricated hardware results."
       ACCEPTANCE: per-board reachability recorded via SSH/USB-detect (never a host SD-card device); next concrete step named per non-terminal board.
 
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4143_hardware_continuity.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4144-capstone-v383
-    milestone: 2026.06.383
-    title: "Capstone .383 (UNGATED): headline question is DID THE FIXED-LR BASELINE CONVERGE TOWARD 0.87 (4 passes), AND -- ON A FAITHFUL/NEAR-FAITHFUL BASELINE -- DID THE CARNOT VERIFIER ADD VALUE OVER THE VOTE (verifier_value_added, defined on the NON-oracle ensemble rerank + the RFT LABEL de-confound, NOT the tautological executable-oracle rerank)? Aggregate: CONVERGENCE = exp4135/4136/4137/4138 (val_trajectory_383, matches_published_087, near_faithful_080); DECISIVE GRAFT = exp4139 (headroom_present, executable_verifier_is_oracle, ensemble_rerank_lift_vs_vote, rft_vs_ablation_delta, verifier_value_added OR graft_deferred); ACCURACY = exp4140 (total_levels_solved); SOTA = exp4141 (flagged_for_v384). Honest verdict + whether DiffusionGemma unlocks + whether .384 continues. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on -- aggregate whatever exists."
+  - id: exp4155-capstone-v384
+    milestone: 2026.06.384
+    title: "Capstone .384 (UNGATED): headline question is DID THE EPOCH-FIX UN-STALL THE ACCUMULATION, DID THE BASELINE CONVERGE TO ~0.87, AND DID THE DECISIVE GRAFT RESOLVE THE MOAT + DIFFUSIONGEMMA GATE? Aggregate: EPOCH-FIX = exp4146 (max_epochs_cap_confirmed + a real trained pass); ACCUMULATION = exp4146-4149 (val 0.278 -> ?; matches_published_087); DECISIVE GRAFT = exp4150 (graft_deferred OR verifier_value_added + A-vs-B CI); ACCURACY = exp4151; SOTA = exp4152. Honest verdict + whether .385 continues + whether the DiffusionGemma gate is now resolved. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on."
     priority: high
     track: infra
     max_turns: 90
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): capstone-vN aggregation -- false-positive scope-match vs prior capstone-v* tasks; structurally never a doomed rerun."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): capstone-vN aggregation — false-positive scope-match vs prior capstone-v* tasks; structurally never a doomed rerun."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4144_capstone_v383.json
+    deliverable: results/experiment_4155_capstone_v384.json
     prompt: |
-      CONTEXT: Aggregate the .383 results into one honest decision-grade verdict. The headline is the
-      first FAITHFUL-baseline test of verifier-as-reward. CRITICAL: verifier_value_added is defined on the
-      NON-oracle ensemble rerank + the RFT LABEL de-confound, NEVER on the executable-oracle rerank
-      (which is tautological on unique-solution Sudoku, executable_verifier_is_oracle=true). Do NOT read
-      executable_oracle_upper_bound as a verifier-generalization claim or let it unlock DiffusionGemma.
-
-      EXISTING CODE TO READ FIRST:
-        - python/carnot/experiment_4133_capstone_v382.py (the prior capstone aggregator to mirror)
-        - results/experiment_4135..4143_*.json (the .383 upstream artifacts to aggregate)
-
+      CONTEXT: Aggregate the .384 results into one honest decision-grade verdict.
       CONCRETE STEPS:
-        1. Read exp4135/4136/4137/4138/4139/4140/4141/4142/4143. SKIP any flagged_adversarial=true. Cite each upstream sha256.
-        2. Answer: (a) did the fixed-LR baseline converge toward 0.87 across 4 passes (exp4138 val_trajectory_383 + matches_published_087/near_faithful_080)? (b) on the faithful/near-faithful baseline, was there HEADROOM (exp4139 headroom_present), and did the TRANSFERABLE verifier add value (ensemble_rerank_lift_vs_vote) and/or did verifier-LABEL beat vote-LABEL (rft_vs_ablation_delta CI95) -- or honestly defer/null? Treat executable_oracle_upper_bound as context only. (c) total ARC levels solved.
-        3. Honest headline: one of {{baseline_converged_verifier_value_added, baseline_converged_verifier_null_honest, baseline_near_faithful_rft_measured, baseline_accumulating_graft_deferred_v384_continues, baseline_config_blocked}}.
-        4. Record the DiffusionGemma gate state: verifier_value_added==true (on the transferable ensemble + RFT) -> the scale-up unlocks; null/deferred -> stays gated.
+        1. Read exp4146/4147/4148/4149/4150/4151/4152/4153/4154. SKIP any flagged_adversarial=true. Cite each upstream sha256.
+        2. Answer: (a) did the epoch-fix un-stall accumulation (exp4146 trained a real pass, epoch advanced)? (b) did the baseline converge to ~0.87 (exp4149 matches_published_087)? (c) did the DECISIVE graft run (exp4150 verifier_value_added + A-vs-B CI) or defer? (d) is the DiffusionGemma gate now resolved? (e) total ARC games solved.
+        3. Honest headline: one of {baseline_converged_graft_validated, baseline_converged_graft_null, baseline_converged_graft_deferred, accumulation_unstalled_still_climbing_v385, accumulation_still_blocked}.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. An honest 'baseline converging, graft deferred, .384 continues' OR 'verifier null with headroom present' is COMPLETE and valuable."
+          principle: "Terminal-prefixed. An honest 'unstalled, still climbing, .385 continues' is COMPLETE and valuable."
         headline_outcome:
-          principle: "One of the enumerated set -- forces a single unambiguous read of the .383 result."
+          principle: "One of the enumerated set -- forces a single unambiguous read of the .384 result."
         baseline_val_trajectory:
-          principle: "Val across .382+.383 (0.278 -> ... across 4 passes); shows whether the fixed schedule converged."
-        verifier_value_added_verdict:
-          principle: "The decisive answer (true / false-with-headroom / deferred), defined on the transferable ensemble + RFT (NOT the oracle); the DiffusionGemma gate signal."
-        diffusiongemma_unlocks:
-          principle: "Bare bool: verifier_value_added==true (transferable ensemble + RFT) on the executable Sudoku domain -> the queued scale-up unlocks for .384."
+          principle: "Val across .382-.384 (0.106 -> 0.278 -> ...); shows whether the epoch-fix restored convergence."
+        diffusiongemma_gate_status:
+          principle: "RESOLVED-positive / RESOLVED-null / STILL-PENDING -- the explicit status of the queued DiffusionGemma gate after the decisive graft."
         upstream_provenance:
-          principle: "{{experiment_id, fields_imported, sha256}} per cited upstream -- the audit trail proving the capstone synthesizes real measurements."
-      ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited; DiffusionGemma gate state recorded (on the transferable verifier, not the oracle).
-
-      Run: cd {project_root} && .venv/bin/python python/carnot/experiment_4144_capstone_v383.py
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
+          principle: "{experiment_id, fields_imported, sha256} per cited upstream -- the audit trail."
+      ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited.

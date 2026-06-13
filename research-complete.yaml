@@ -39341,3 +39341,98 @@ milestones:
       SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on -- aggregate whatever exists.'
     deliverable: results/experiment_4133_capstone_v382.json
     result: OK (conductor)
+- id: 2026.06.383
+  title: Converge the Sudoku-Extreme TRM baseline to ~0.87 with the FIXED LR schedule (4 bounded passes), THEN run the decisive
+    verifier-as-reward graft (the LABEL de-confound never yet tested on a faithful baseline)
+  doc: openspec/change-proposals/research-roadmap-v383.md
+  completed: '2026-06-13'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4134-archive-v382-activate-v383
+    title: Archive .382 -> activate .383; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
+      + ops/exclusion_manifest.yaml parse under yaml.safe_load and nano-trm/src/nn/train.py is present; run the smart-subset
+      pre-test gate green; RECORD the .382 close-state truth (LR-resume fix LANDED -- lr_continuous_across_resume=true; val
+      accumulated 0.106->0.278 in one corrected pass, ~17x faster than .381; baseline still <0.87 so the verifier graft DEFERRED;
+      14th-game solve recorded, total_games_solved=13).
+    deliverable: results/experiment_4134_archive_v382_activate_v383.json
+    result: OK (conductor)
+  - id: exp4135-sudoku-accumulate-pass1-fixed-lr
+    title: ACCUMULATE pass 1 of 4 toward 0.87 with the FIXED LR schedule. Resume from the stable checkpoint (val=0.278, results/trm_runs/sudoku_extreme_baseline/last.ckpt)
+      with the corrected continuing schedule; train ONE bounded (<=60min, trainer.max_time) synchronous pass; save back to
+      the stable path; report val_exact_accuracy + delta_vs_previous + matches_published_087. Single-synchronous-resume-accumulate
+      with per-task progress prints (NOT split-background -- that mechanism failed 3 milestones).
+    deliverable: results/experiment_4135_sudoku_accumulate_pass1_fixed_lr.json
+    result: OK (conductor)
+  - id: exp4136-sudoku-accumulate-pass2-fixed-lr
+    title: 'ACCUMULATE pass 2 of 4 toward 0.87 (DEFENSIVE read of pass1). Resume from the stable checkpoint pass1 saved; train
+      another bounded (<=60min) synchronous pass; report val + delta. PLATEAU FLOOR: if pass1''s val did NOT improve vs its
+      start, run a SHORT config audit instead of blind-training (Failed-Experiment Rerun Discipline -- no plateau-burning).'
+    deliverable: results/experiment_4136_sudoku_accumulate_pass2_fixed_lr.json
+    result: OK (conductor)
+  - id: exp4137-sudoku-accumulate-pass3-fixed-lr
+    title: ACCUMULATE pass 3 of 4 toward 0.87 (DEFENSIVE read of pass2). Resume from the stable checkpoint; train another
+      bounded (<=60min) pass; report val + delta + matches_published_087. Same plateau floor. One more pass (exp4138) follows
+      before the graft.
+    deliverable: results/experiment_4137_sudoku_accumulate_pass3_fixed_lr.json
+    result: OK (conductor)
+  - id: exp4138-sudoku-accumulate-pass4-convergence-check
+    title: ACCUMULATE pass 4 of 4 + CONVERGENCE CHECK (DEFENSIVE read of pass3). Resume from the stable checkpoint; train
+      another bounded (<=60min) pass; report the full .382+.383 val trajectory and whether the accumulated val reaches the
+      published 0.87 +/- 0.02 (matches_published_087) OR clears the >=0.80 near-faithful bar the graft's RFT arm needs. Same
+      plateau floor. This pass sets whether exp4139's decisive graft runs full / RFT-on-near-faithful / defers.
+    deliverable: results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json
+    result: OK (conductor)
+  - id: exp4139-decisive-verifier-graft-sudoku
+    title: 'THE DECISIVE verifier-as-reward GRAFT on the faithful/near-faithful Sudoku baseline (the LABEL de-confound never
+      yet run faithfully). MANDATORY headroom positive-control FIRST (oracle best-of-K vs vote; oracle==vote -> NO HEADROOM
+      -> FALSE_NEGATIVE_RISK). HEADLINE verifier-value = the NON-oracle Carnot energy/text-stat ENSEMBLE rerank (the transferable
+      verifier) + the RFT LABEL de-confound (A=verifier-cert vs B=vote-cert, CI95 excl 0). The executable-validity rerank
+      == oracle is reported SEPARATELY as a labeled UPPER BOUND (tautological on unique-solution Sudoku, NOT the verifier
+      result). DEFENSIVE on exp4138: matches_087 -> full (rerank + RFT); near_faithful_080 -> RFT + ensemble-rerank; <0.80
+      -> defer.'
+    deliverable: results/experiment_4139_decisive_verifier_graft_sudoku.json
+    result: OK (conductor)
+  - id: exp4140-arc-incremental-progress
+    title: 'ARC-AGI-3 INCREMENTAL +1 (monotonic) via the PROVEN explore-first method. Advance the solved-level count by >=1:
+      target the next-unsolved non-spatial game''s L1, OR (the strict non-spatial pool is thinning per exp4120) advance an
+      already-started game (e.g. r11l, the survey top-pick) to its NEXT level. Bounded active-exploration OBSERVES transitions
+      -> induce mechanic + goal predicate -> GAP-4 verifier validates on held-out transitions -> act only if validated. REAL-ENV-CONFIRM
+      any solve; STOP at the first level that fails. NO FULL/all-levels solve.'
+    deliverable: results/experiment_4140_arc_incremental_progress.json
+    result: OK (conductor)
+  - id: exp4141-sota-ingestion-recursive-reasoner-verifier
+    title: 'SOTA-INGESTION SLOT (reserved; bleeding-edge track): ingest stronger-recursive-reasoner + verifier-as-reward literature
+      mapped onto the .383 converge-then-graft headline. GRAM (97% Sudoku-Extreme, 10M params, stochastic-latent), the RLVR+GRPO
+      TRM-as-thinking-reward precedent, Weaver weak-verifier-ensemble (Stanford), TRM 2510.04871, TTA-TRM 2511.02886, Symbol-Equivariant
+      RRM 2603.02193. Emit a SOTA->experiment mapping note; flag the strongest for .384 (candidate: GRAM-as-generator -- a
+      stochastic-latent generator emits a candidate DISTRIBUTION = more reranker headroom -- IF verifier_value_added). Cite
+      real arXiv IDs / URLs.'
+    deliverable: results/experiment_4141_sota_ingestion_recursive_reasoner_verifier.json
+    result: OK (conductor)
+  - id: exp4142-verifier-registry-gaps-hygiene
+    title: 'VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval reproducing
+      the canonical GAP-4 ARC-1 numbers from cached candidates (vote 0.4516 -> gated 0.5806; zero codex/GGUF). RECORD the
+      .383 outcomes: the Sudoku-baseline val trajectory (toward 0.87 across 4 passes), and -- THE headline -- the decisive
+      verifier graft result (headroom_present + ensemble_rerank_lift + rft_vs_ablation_delta + verifier_value_added, or honest
+      deferral). Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source of truth.'
+    deliverable: results/experiment_4142_verifier_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4143-hardware-continuity
+    title: 'Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 DONE). Per-board reachability
+      + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile flash -- investigate the
+      recurring post-flash detect block). PolarFire (ssh polarfire; toward end-to-end Carnot dispatch; CPU dispatch already
+      hash-verified). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability
+      / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board.'
+    deliverable: results/experiment_4143_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4144-capstone-v383
+    title: 'Capstone .383 (UNGATED): headline question is DID THE FIXED-LR BASELINE CONVERGE TOWARD 0.87 (4 passes), AND --
+      ON A FAITHFUL/NEAR-FAITHFUL BASELINE -- DID THE CARNOT VERIFIER ADD VALUE OVER THE VOTE (verifier_value_added, defined
+      on the NON-oracle ensemble rerank + the RFT LABEL de-confound, NOT the tautological executable-oracle rerank)? Aggregate:
+      CONVERGENCE = exp4135/4136/4137/4138 (val_trajectory_383, matches_published_087, near_faithful_080); DECISIVE GRAFT
+      = exp4139 (headroom_present, executable_verifier_is_oracle, ensemble_rerank_lift_vs_vote, rft_vs_ablation_delta, verifier_value_added
+      OR graft_deferred); ACCURACY = exp4140 (total_levels_solved); SOTA = exp4141 (flagged_for_v384). Honest verdict + whether
+      DiffusionGemma unlocks + whether .384 continues. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on
+      -- aggregate whatever exists.'
+    deliverable: results/experiment_4144_capstone_v383.json
+    result: OK (conductor)
