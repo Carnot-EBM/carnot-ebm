@@ -1,0 +1,67 @@
+{
+  "field_principles": {
+    "flagged_for_v386": "Closes the discover->ingest->plan loop: names the strongest method for the next planner.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method/source MUST carry a real arXiv ID/URL (verified); an ingestion note without verifiable citations is treated as fabrication."
+  },
+  "flagged_for_v386": "entrgi_diffusiongemma_energy_guidance_after_positive_discrimination_gate_v386",
+  "honest_verdict": "complete: sota_ingestion_verifier_moat_guidance_mapped",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2605.26172",
+      "carnot_moat_implication": "Majority vote can choose the largest wrong basin, so Carnot should measure external verifier recovery as an additive vote-orthogonal rerank signal, not as a vote replacement.",
+      "diffusiongemma_guidance_implication": "Only guide DiffusionGemma after the verifier distinguishes correct minority basins from stable wrong basins on the current stack.",
+      "efficiency_implication": "Keep the cheap verifier between fixed vote and LLM-judge: recover oracle headroom only when it improves accuracy per unit compute.",
+      "name": "ARBITER reasoning-basin verifier-moat anchor",
+      "url": "https://arxiv.org/abs/2605.26172"
+    },
+    {
+      "arxiv_id_or_url": "2504.16828",
+      "carnot_moat_implication": "Process verification can beat self-consistency when it checks the reasoning path; Carnot should compare verifier-plus-vote selection against vote and judge baselines.",
+      "diffusiongemma_guidance_implication": "Use process-style scores as intermediate guidance signals rather than waiting until the denoised candidate is complete.",
+      "efficiency_implication": "ThinkPRM sets the LLM-judge comparison bar: verifier compute must scale better than asking a large judge to rescore every candidate.",
+      "name": "ThinkPRM data-efficient process verifier",
+      "url": "https://arxiv.org/abs/2504.16828"
+    },
+    {
+      "arxiv_id_or_url": "2510.13918",
+      "carnot_moat_implication": "The verifier should be calibrated as a weighted aggregation term with vote evidence; replacing the vote can throw away useful LLM prior information.",
+      "diffusiongemma_guidance_implication": "Expose guidance weights as an ablation knob for mixing base denoising confidence with Carnot verifier energy.",
+      "efficiency_implication": "Precompute aggregation weights so the verifier improves test-time scaling without multiplying candidate-generation cost.",
+      "name": "Optimal LLM+PRM aggregation",
+      "url": "https://arxiv.org/abs/2510.13918"
+    },
+    {
+      "arxiv_id_or_url": "2505.04842",
+      "carnot_moat_implication": "Training a verifier/value capability alongside reasoning supports an external-value rerank arm, but the moat claim still requires a vote-plus-verifier head-to-head.",
+      "diffusiongemma_guidance_implication": "A learned value head is a plausible reward source for guidance, but it must be checked against executable verifier labels before use.",
+      "efficiency_implication": "The next efficiency gate should compare a cheap verifier/value head against LLM-judge rescoring under matched parallel sampling.",
+      "name": "RLV unified reasoner-verifier value head",
+      "url": "https://arxiv.org/abs/2505.04842"
+    },
+    {
+      "arxiv_id_or_url": "2602.05000",
+      "carnot_moat_implication": "EntRGi is not moat evidence by itself; it becomes relevant only after Carnot proves the external reward/verifier is discriminative.",
+      "diffusiongemma_guidance_implication": "Use entropy-aware interpolation between soft token relaxations and hard tokens as the template for Carnot energy over DiffusionGemma.",
+      "efficiency_implication": "Guidance can spend verifier calls during denoising, so the .386 gate must report reward-call cost versus post-hoc judge rescoring.",
+      "name": "EntRGi entropy-aware reward guidance",
+      "url": "https://arxiv.org/abs/2602.05000"
+    },
+    {
+      "arxiv_id_or_url": "2605.05138",
+      "carnot_moat_implication": "Executable world models make verifier-grounded transitions the selection primitive; the moat is action recovery, not just answer selection.",
+      "diffusiongemma_guidance_implication": "Treat generated world-model edits as candidates that can be guided or pruned by executable transition energy before acting.",
+      "efficiency_implication": "Use RHAE/action efficiency as the cost axis when verifier-pruned planning replaces brute-force exploration.",
+      "name": "Executable World Models for ARC-AGI-3",
+      "url": "https://arxiv.org/abs/2605.05138"
+    },
+    {
+      "arxiv_id_or_url": "2603.24621",
+      "carnot_moat_implication": "ARC-AGI-3 makes adaptive efficiency the benchmark target, so the verifier moat must improve actions-to-progress under real rules.",
+      "diffusiongemma_guidance_implication": "Guided generation should target compact executable hypotheses and plans, not only fluent natural-language reasoning traces.",
+      "efficiency_implication": "Report human-action-normalized efficiency and avoid claims that only improve raw solve count by spending more actions.",
+      "name": "ARC-AGI-3 technical report",
+      "url": "https://arxiv.org/abs/2603.24621"
+    }
+  ]
+}

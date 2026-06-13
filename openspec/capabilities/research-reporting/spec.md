@@ -20227,6 +20227,79 @@ untouched.
 |---|---|---|
 | REQ-REPORT-4152 | Implemented (`python/carnot/experiment_4152_sota_ingestion_recursive_reasoner_verifier.py`, `docs/research-notes/sota-ingestion-recursive-reasoner-verifier-energy-guidance-2026-06-13.md`) | Implemented (`tests/python/test_experiment_4152_sota_ingestion_recursive_reasoner_verifier.py`) |
 
+### REQ-REPORT-4162: SOTA Ingestion Mapping For Verifier Moat And Diffusion Guidance
+
+The Exp 4162 workflow SHALL emit a dated SOTA-to-experiment mapping note for
+the `.385` verifier-moat and queued `.386` DiffusionGemma energy-guidance
+handoff. The note SHALL map ARBITER as the verifier-moat/rerank-recovery
+anchor, ThinkPRM and Optimal LLM+PRM Aggregation as process-verifier and
+vote-aggregation anchors, RL^V as the verifier-efficiency and learned-value
+anchor, EntRGi as the discrete diffusion reward-guidance anchor, and the
+ARC-AGI-3 papers as the executable-world-model/action-efficiency anchors. The
+markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md` and
+the machine-checkable mapping artifact SHALL be written to
+`results/experiment_4162_sota_ingestion_verifier_moat_guidance.json`.
+
+Before writing the note, the workflow SHALL read the verifier-vs-self-
+consistency, reward-guided-generation, and ARC-AGI-3 sections of
+`research-studying.md` and `research-references.md`, plus the prior
+DiffusionGemma gate provenance in
+`results/experiment_4152_sota_ingestion_recursive_reasoner_verifier.json`.
+The workflow SHALL run `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py` with focused reliable-channel queries, verify the
+seven supplied arXiv anchors with low-concurrency WebSearch/WebFetch, and SHALL
+NOT invoke `/deep-research`.
+
+For each mapped method or source, the note SHALL state the implication for
+three experiment axes: (a) the Carnot moat, including whether an external
+verifier should beat self-consistency and how it aggregates with the vote
+rather than replacing it; (b) the efficiency axis, including cheap verifier
+versus LLM-judge consequences; and (c) the DiffusionGemma energy-guidance
+design. The mapped method set SHALL include at least five verified anchors
+from real arXiv IDs, including ARBITER (`arXiv:2605.26172`), ThinkPRM
+(`arXiv:2504.16828`), Optimal LLM+PRM Aggregation (`arXiv:2510.13918`),
+RL^V (`arXiv:2505.04842`), EntRGi (`arXiv:2602.05000`), Executable World
+Models for ARC-AGI-3 (`arXiv:2605.05138`), and the ARC-AGI-3 tech report
+(`arXiv:2603.24621`). Every method claim SHALL carry a real arXiv ID and URL.
+The workflow SHALL update `research-studying.md` to mark the `.386` candidate
+set as ingested, SHALL update `research-references.md` idempotently without
+duplicating the prior TRM/TTA-TRM/V-STaR/SEDD/CFG milestone ingestion, SHALL
+include `flagged_for_v386`, and SHALL NOT update `ops/changelog.md`,
+`ops/status.md`, `_bmad/traceability.md`, or `scripts/research_conductor.py`.
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v386`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, and `flagged_for_v386`. `honest_verdict`
+SHALL use a terminal prefix and, on the complete path, start with
+`complete: sota_ingestion_verifier_moat_guidance_mapped`.
+`methods_mapped` SHALL be a list of at least five dicts with exactly `name`,
+`arxiv_id_or_url`, `url`, `carnot_moat_implication`, `efficiency_implication`,
+and `diffusiongemma_guidance_implication`; each `arxiv_id_or_url` SHALL be one
+of the WebFetch-verified arXiv IDs, preventing fabricated or uncited method
+rows. `flagged_for_v386` SHALL be a non-empty concrete roadmap slug naming the
+strongest method for the next planner, with the EntRGi-style
+DiffusionGemma guidance template gated on positive verifier discrimination.
+
+#### SCENARIO-REPORT-4162: Verifier-Moat Mapping Closes The Discover-To-Plan Loop
+
+**Given** `.385` is testing rerank recovery and reward grafts while the
+DiffusionGemma energy-guidance gate remains queued behind positive verifier
+discrimination
+**When** the Exp 4162 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON mapping artifact, maps
+verified method papers to Carnot-moat, efficiency, and DiffusionGemma-guidance
+implications, updates `research-studying.md` and `research-references.md`
+idempotently, flags the single strongest `.386` follow-up, and leaves conductor
+and reconciliation files untouched.
+
+## Implementation Status (REQ-REPORT-4162)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4162 | Implemented (`python/carnot/experiment_4162_sota_ingestion_verifier_moat_guidance.py`, `docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md`) | Implemented (`tests/python/test_experiment_4162_sota_ingestion_verifier_moat_guidance.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
