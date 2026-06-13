@@ -8389,3 +8389,4 @@ c |
 | 2026-06-12 23:41 UTC | RESUMABLE Sudoku-Extreme baseline -- PASS 2. DEFEN | OK | 87 passed, 2 warnings in 8.77s |
 | 2026-06-13 00:08 UTC | RESUMABLE Sudoku-Extreme baseline -- PASS 3 (targe | OK | 88 passed, 2 warnings in 8.83s |
 | 2026-06-13 01:00 UTC | GRAFT the Carnot Sudoku verifier on the reproducin | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT, GATE_PASSED_WITHOUT_DATA — resu |
+| 2026-06-13 01:17 UTC | THIRTEENTH ARC-AGI-3 game first-solve via the PROV | FLAGGED | adversarial_verify CRITICAL: GATE_PASSED_WITHOUT_DATA — result quarantined, not  |
