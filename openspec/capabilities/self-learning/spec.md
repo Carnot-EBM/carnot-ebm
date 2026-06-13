@@ -12262,6 +12262,71 @@ records checkpoint-load evidence, leaves `val_exact_accuracy` and
 
 ---
 
+## REQ-LEARN-4118: Resumable nano-trm Sudoku Extreme Pass 3 Convergence Verdict
+
+**Given** Exp 4117 has written
+`results/experiment_4117_sudoku_extreme_resume_pass2.json`, Exp 4118 SHALL
+read that pass2 artifact before deciding whether to train. If pass2 reports
+`val_exact_accuracy >= 0.85`, Exp 4118 SHALL take the
+`early-converged-confirm` branch and write the convergence verdict without
+launching another native trainer. If pass2 reports `accumulation_stalled=true`,
+Exp 4118 SHALL take the `config-audit` branch, inspect the lr schedule, batch
+size, nano-trm `trm_sudoku_extreme` configuration, and README recipe evidence,
+and report a likely root cause rather than burning another blind GPU pass.
+Otherwise Exp 4118 SHALL verify `uv`, the native nano-trm trainer, CUDA, the
+Sudoku Extreme dataset, and the shared stable checkpoint before launching the
+training branch.
+
+**When** the training branch runs, Exp 4118 SHALL resume from the same shared
+`results/trm_runs/sudoku_extreme_baseline/last.ckpt` checkpoint, use Hydra
+experiment `trm_sudoku_extreme_1k_aug_1k`, CSV logging,
+`trainer.max_time="00:01:00:00"`, and model-checkpoint overrides that save
+`last.ckpt` back into the same stable directory. The run SHALL print progress
+during training and checkpointing.
+
+**Then** the terminal artifact SHALL be written to
+`results/experiment_4118_sudoku_extreme_resume_pass3.json` and SHALL include
+top-level fields `honest_verdict`, `val_exact_accuracy`,
+`matches_published_087`, `total_cumulative_epochs`,
+`stable_checkpoint_path`, and `branch_taken`. `matches_published_087` SHALL be
+a bare bool computed as `abs(val_exact_accuracy - 0.87) <= 0.02` when a final
+validation exact accuracy is known. The acceptance gate passes when a final
+validation exact accuracy and `matches_published_087` are reported, or when a
+config-audit branch reports a likely root cause for a stalled pass2 lineage.
+
+### SCENARIO-LEARN-4118: Pass3 Trains Or Confirms Published Baseline
+
+**Given** pass2 did not reach 0.85 and did not flag stalled accumulation
+**When** Exp 4118 runs the bounded native trainer with `ckpt_path` pointed at
+the shared stable checkpoint
+**Then** it reports final validation exact accuracy, total cumulative epochs,
+the same stable checkpoint path, branch_taken=`train`, and whether the result
+matches published 0.87 within 0.02.
+
+### SCENARIO-LEARN-4118-AUDIT: Stalled Pass2 Triggers Config Audit
+
+**Given** Exp 4117 reports `accumulation_stalled=true`
+**When** Exp 4118 starts
+**Then** it does not launch training, records branch_taken=`config-audit`,
+preserves the latest pass2 validation exact accuracy, and reports a likely
+root cause using configuration evidence.
+
+### SCENARIO-LEARN-4118-CONFIRM: Early Convergence Skips More Training
+
+**Given** Exp 4117 already reports `val_exact_accuracy >= 0.85`
+**When** Exp 4118 starts
+**Then** it does not launch training, records branch_taken=`early-converged-confirm`,
+preserves the shared stable checkpoint path, and computes
+`matches_published_087` from the pass2 validation exact accuracy.
+
+## Implementation Status (REQ-LEARN-4118)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4118 | Implemented (python/carnot/experiment_4118_sudoku_extreme_resume_pass3.py, Exp 4118) | Implemented (tests/python/test_experiment_4118_sudoku_extreme_resume_pass3.py) |
+
+---
+
 ## REQ-LEARN-4109: Sudoku Verifier Graft Over nano-trm
 
 **Given** Exp 4108 has written a nano-trm Sudoku baseline artifact, Exp 4109
