@@ -1,0 +1,84 @@
+{
+  "acceptance_gate_passed": true,
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "src/nn/train.py",
+    "experiment=trm_sudoku_extreme_1k_aug_1k",
+    "logger=csv",
+    "hydra.run.dir=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4146_sudoku_accumulate_pass1_epochfix/pass_1_epochfix_hydra",
+    "save_dir=null",
+    "append_wandb_name_to_save_dir=false",
+    "seed=4108",
+    "data.data_dir=./data/sudoku_extreme_1k_aug_1k",
+    "timekeeping.batch_size=128",
+    "ckpt_path=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+    "trainer.max_epochs=9399",
+    "+trainer.max_time=00:01:00:00",
+    "callbacks.model_checkpoint.monitor=val/exact_accuracy",
+    "callbacks.model_checkpoint.mode=max",
+    "callbacks.model_checkpoint.dirpath=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline",
+    "callbacks.model_checkpoint.save_last=true",
+    "callbacks.model_checkpoint.save_top_k=1",
+    "callbacks.model_checkpoint.auto_insert_metric_name=false",
+    "+callbacks.exp4146_progress._target_=carnot.experiment_4127_sudoku_extreme_accumulate_fixed.NanoTrmAccumulateFixedProgressPrinter",
+    "+callbacks.exp4146_progress.every_n_steps=100",
+    "+callbacks.exp4146_progress.checkpoint_dir=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline"
+  ],
+  "diagnosis": {
+    "checkpoint_epoch": 6399,
+    "checkpoint_global_step": 0,
+    "config_max_epochs": 50000,
+    "max_epochs_cap_confirmed": false,
+    "max_time_s": 3600.0,
+    "target_max_epochs": 9399,
+    "timer_train_elapsed_s": 3641.9931271109963
+  },
+  "duration_s": 0.121,
+  "experiment": "experiment_4146_sudoku_accumulate_pass1_epochfix",
+  "field_principles": {
+    "duration_s": "A real bounded pass is minutes of GPU; <120s = the no-op signal that stalled .383.",
+    "honest_verdict": "Terminal-prefixed. A `blocked_noop_*` (real training did not happen) is honest; a fake `complete` on a 7s no-op is the .383 anti-pattern.",
+    "max_epochs_cap_confirmed": "Bare bool: was the .383 no-op caused by the checkpoint hitting max_epochs? Confirms the root cause + that the ceiling-raise addresses it.",
+    "post_epoch": "The checkpoint's epoch AFTER this pass; must exceed seed_epoch or the pass no-op'd.",
+    "random_seed": "Determinism precondition.",
+    "seed_epoch": "The checkpoint's epoch BEFORE this pass; paired with the post-pass epoch it proves training actually advanced (the anti-no-op evidence).",
+    "stable_checkpoint_path": "The shared path pass 2 resumes from.",
+    "val_exact_accuracy": "Real val after the pass (should climb from 0.278); a null val = the pass did not eval = no-op."
+  },
+  "honest_verdict": "blocked_noop_cap_not_confirmed_timer_elapsed",
+  "max_epochs_cap_confirmed": false,
+  "post_epoch": 6399,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/usr/bin/uv",
+      "resource": "uv"
+    },
+    {
+      "available": true,
+      "detail": "found: /home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/train.py",
+      "resource": "nanotrm_trainer"
+    },
+    {
+      "available": true,
+      "detail": "torch.cuda.is_available()=True; device=NVIDIA GeForce RTX 3090",
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "detail": "torch.load ok",
+      "resource": "stable_checkpoint"
+    }
+  ],
+  "random_seed": 4108,
+  "schema": "carnot.experiment_4146_sudoku_accumulate_pass1_epochfix.v1",
+  "seed_epoch": 6399,
+  "spec_refs": [
+    "REQ-LEARN-4146",
+    "SCENARIO-LEARN-4146"
+  ],
+  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+  "val_exact_accuracy": null
+}
