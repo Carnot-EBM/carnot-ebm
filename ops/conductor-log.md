@@ -8406,3 +8406,4 @@ c |
 | 2026-06-13 06:50 UTC | Capstone .382 (UNGATED): headline question is DID  | OK | 87 passed, 1 warning in 5.04s |
 | 2026-06-13 07:37 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-06-13 07:40 UTC | Milestone 2026.06.383 activated | OK | 11 tasks queued |
+| 2026-06-13 07:53 UTC | Archive .382 -> activate .383; KEEP the hardened g | OK | 91 passed, 1 warning in 5.36s |
