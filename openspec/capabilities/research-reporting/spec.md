@@ -18842,6 +18842,61 @@ fabricating wall-time or estimated savings.
 |---|---|---|
 | REQ-REPORT-3984 | Implemented (`python/carnot/reporting/retro_commit_detector_3984.py`, `scripts/experiments/experiment_3984_retro_commit_detector_fix.py`) | Implemented (`tests/python/test_experiment_3984_retro_commit_detector_fix.py`) |
 
+### REQ-REPORT-4161: Operational Retro Timing Detector Changelog Fallback
+
+The Exp 4161 workflow SHALL diagnose the current operational-retro false-zero
+condition without modifying `scripts/research_conductor.py`. It SHALL report
+the exact predicate, boundary, or commit-message mismatch that caused
+`results/operational_retro_2026_06_38*.json` artifacts to record
+`experiments_completed=0` and `total_wall_time_minutes=0` despite terminal
+experiment artifacts being present in the milestone record.
+
+The standalone detector SHALL count terminal experiment artifacts from a
+milestone-scoped git attribution scan when that scan is non-empty. If that scan
+returns zero terminal experiments, it SHALL fall back to the dated
+`ops/changelog.md` milestone window, extracting terminal
+`results/experiment_<digits>_*.json` artifacts and excluding auxiliary state
+files. The fallback SHALL be auditable: the output SHALL expose whether the git
+scan or changelog fallback supplied the count, the artifact paths used as
+evidence, and whether `scripts/research_conductor.py` was left untouched.
+
+The Exp 4161 artifact SHALL write
+`results/experiment_4161_observability_timing_detector_fix.json` with bare
+boolean `fix_applied` and `fallback_added` fields, a terminal-prefix
+`honest_verdict`, and a `false_zero_root_cause` field that states the exact
+reason the attribution scan returned zero. If the only production fix requires
+editing `scripts/research_conductor.py`, the workflow SHALL instead write a
+precise patch proposal under `openspec/change-proposals/` and set
+`fix_applied=false`.
+
+#### SCENARIO-REPORT-4161-FALLBACK: Changelog Window Recovers A Known-Good Milestone
+
+**Given** the git attribution scan for a milestone returns zero terminal
+experiment artifacts
+**And** the corresponding `ops/changelog.md` window contains terminal artifact
+paths such as `results/experiment_4146_sudoku_accumulate_pass1_epochfix.json`
+through `results/experiment_4155_capstone_v384.json`
+**When** the standalone detector evaluates milestone `2026.06.384`
+**Then** the detector SHALL return a non-zero experiment count from the
+changelog fallback
+**And** it SHALL mark `fallback_used=true`.
+
+#### SCENARIO-REPORT-4161-ROOT-CAUSE: Literal Subject Predicate Misses Conductor Commits
+
+**Given** recent conductor commits use milestone task titles such as
+`[conductor] ACCUMULATE pass 1 ...` and record experiment identity through the
+added `results/experiment_<digits>_*.json` artifact path
+**When** the legacy operational-retro timing predicate requires literal
+`Exp ` in the commit subject
+**Then** the predicate SHALL skip those per-experiment commits and produce the
+observed false-zero timing data.
+
+## Implementation Status (REQ-REPORT-4161)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4161 | Implemented (`python/carnot/reporting/observability_timing_detector_4161.py`, `python/carnot/experiment_4161_observability_timing_detector_fix.py`) | Implemented (`tests/python/test_experiment_4161_observability_timing_detector_fix.py`) |
+
 ### REQ-REPORT-3986: Archive .368 And Activate .369 GAP-4 Follow-Up Milestone
 
 The Exp 3986 workflow SHALL archive milestone `2026.06.368`, confirm
