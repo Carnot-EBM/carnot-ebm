@@ -1793,5 +1793,18 @@
   ],
   "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
   "suspected_cause": "pass2 already ran config audit; baseline is config-blocked before pass3: pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written",
-  "val_exact_accuracy": null
+  "val_exact_accuracy": null,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.002 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "GATE_PASSED_WITHOUT_DATA",
+      "severity": "critical",
+      "detail": "acceptance_gate_passed=true but these fields are null/zero: delta_vs_previous=null"
+    }
+  ]
 }
