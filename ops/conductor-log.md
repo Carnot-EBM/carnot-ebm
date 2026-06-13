@@ -8398,3 +8398,4 @@ c |
 | 2026-06-13 02:46 UTC | Archive .381 -> activate .382; KEEP the hardened g | OK | 91 passed in 5.06s |
 | 2026-06-13 03:26 UTC | RESUME-CORRECTNESS FIX (THE headline; the prerequi | OK | 87 passed, 15 warnings in 8.54s |
 | 2026-06-13 04:43 UTC | ACCUMULATE the Sudoku-Extreme baseline with the FI | OK | 89 passed, 1 warning in 6.85s |
+| 2026-06-13 04:58 UTC | GRAFT the Carnot Sudoku verifier on the reproducin | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT, GATE_PASSED_WITHOUT_DATA — resu |
