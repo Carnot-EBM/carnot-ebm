@@ -12624,6 +12624,72 @@ reproducibility checksum, and scalar runtime below 4800 seconds.
 
 ---
 
+## REQ-LEARN-4138: Sudoku Extreme Fixed-LR Accumulation Pass 4
+
+**Given** Exp 4137 wrote
+`results/experiment_4137_sudoku_accumulate_pass3_fixed_lr.json`, Exp 4138 SHALL
+defensively read that pass3 artifact before any native training. If pass3 did
+not report a numeric `val_exact_accuracy`, a positive numeric
+`delta_vs_previous`, or if pass3 already set `plateau_audit_done=true` or
+`baseline_status=config-blocked`, Exp 4138 SHALL NOT launch another bounded
+resume pass. Instead, it SHALL write
+`results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json` with
+an honest config-blocked verdict and preserve the corrected configuration
+recommendation for the `.384` baseline.
+
+**When** pass3 did report positive accumulation, Exp 4138 SHALL check `uv`,
+`nano-trm/src/nn/train.py`, CUDA availability, and that
+`results/trm_runs/sudoku_extreme_baseline/last.ckpt` exists and is loadable.
+It SHALL then run exactly one bounded native resume pass from that checkpoint
+using `experiment=trm_sudoku_extreme_1k_aug_1k`,
+`data.data_dir=./data/sudoku_extreme_1k_aug_1k`, `seed=4108`,
+`timekeeping.batch_size=128`, `ckpt_path=<stable>/last.ckpt`, and
+`trainer.max_time` of no more than one hour, saving back to the same stable
+checkpoint.
+
+**Then** Exp 4138 SHALL write top-level scalar fields `honest_verdict`,
+`val_exact_accuracy`, `val_trajectory_383`, `matches_published_087`,
+`near_faithful_080`, `estimated_passes_to_converge`,
+`stable_checkpoint_path`, `random_seed`, `reproducibility_checksum`, and
+`duration_s`. `val_trajectory_383` SHALL report the `.382` anchor and each
+`.383` accumulation pass through pass4. `matches_published_087` SHALL be a bare
+bool that is true only when validation exact accuracy is within `0.02` of
+`0.87`. `near_faithful_080` SHALL be a bare bool that is true only when
+validation exact accuracy is at least `0.80`. If the pass4 validation exact
+accuracy is still below `0.80`, `estimated_passes_to_converge` SHALL estimate
+the remaining passes to `0.87` from the observed positive per-pass validation
+deltas when such an estimate is possible.
+
+### SCENARIO-LEARN-4138-AUDIT: Pass3 Config-Blocked Stops Training
+
+**Given** pass3 has missing, zero, or negative accumulation evidence, already
+performed a plateau audit, or reports `baseline_status=config-blocked`
+**When** Exp 4138 starts
+**Then** it writes a config-blocked artifact, does not call the native trainer,
+reports `matches_published_087=false` and `near_faithful_080=false`, preserves
+the `.384` corrected config recommendation, reports the `.382+.383`
+trajectory available so far, and keeps runtime below 600 seconds.
+
+### SCENARIO-LEARN-4138: Pass4 Gates Faithful and Near-Faithful Baselines
+
+**Given** pass3 reported a numeric validation exact accuracy and positive
+delta, all runtime preconditions pass, and Exp 4126 reports
+`lr_continuous_across_resume=true`
+**When** Exp 4138 runs one bounded native resume pass
+**Then** the artifact reports pass4 validation exact accuracy, the full
+`.382+.383` validation trajectory through pass4, whether the result matches
+the published `0.87` target within `0.02`, whether it is near-faithful at
+`>=0.80`, the stable checkpoint path that Exp 4139 grafts onto, seed `4108`, a
+reproducibility checksum, and scalar runtime below 4800 seconds.
+
+## Implementation Status (REQ-LEARN-4138)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4138 | Planned (python/carnot/experiment_4138_sudoku_accumulate_pass4_convergence_check.py, Exp 4138) | Planned (tests/python/test_experiment_4138_sudoku_accumulate_pass4_convergence_check.py) |
+
+---
+
 ## REQ-LEARN-4128: Conditional Sudoku Verifier Graft After Fixed-LR Baseline
 
 **Given** Exp 4127 has written
