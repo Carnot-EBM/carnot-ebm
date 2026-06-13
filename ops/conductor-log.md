@@ -8402,3 +8402,4 @@ c |
 | 2026-06-13 05:17 UTC | FOURTEENTH ARC-AGI-3 game first-solve via the PROV | OK | 87 passed, 1 warning in 4.06s |
 | 2026-06-13 05:30 UTC | SOTA-INGESTION SLOT (reserved; bleeding-edge track | OK | 100 passed, 1 warning in 4.79s |
 | 2026-06-13 05:42 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra s | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-13 06:32 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 86 passed, 1 warning in 5.79s |
