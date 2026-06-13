@@ -1,0 +1,100 @@
+# Energy-Guided Discrete Diffusion (DiffusionGemma) — Spec + GATE
+
+**Status: QUEUED, GATED — DO NOT ACTIVATE until the TRM verifier-graft verdict lands.**
+**Origin:** 2026-06-13 operator directive ("spec it into the pipeline after the TRM
+baseline closes out; queued but not competing"). This is the SCALE-UP of the current
+TRM verifier-guidance bet, NOT a new research direction. It tests the SAME thesis
+(does Carnot's verifier add value as GUIDANCE rather than post-hoc SELECTION, on a
+domain where the verifier executes?) on a billions-param non-autoregressive substrate.
+
+## What DiffusionGemma is (verified 2026-06-13)
+
+- Google, **Apache-2.0, open weights**, **26B / 4B-active MoE** on the Gemma 4 architecture
+  (early June 2026). Sources: blog.google/innovation-and-ai/technology/developers-tools/
+  diffusion-gemma-faster-text-generation/ ; ai.google.dev/gemma/docs/diffusiongemma ;
+  ai.google.dev/gemma/docs/core/model_card_4 .
+- **Discrete token diffusion** ("block-autoregressive multi-canvas sampling"): denoises a
+  "canvas" of tokens in parallel with bidirectional attention over **12-48 steps** (adaptive
+  stopping ~12-16), committing the **lowest-entropy (most-confident) tokens first**. ~4x
+  faster than autoregressive decoding. Exposes **per-token entropy** + inference-time knobs
+  (temperature schedule, entropy threshold, adaptive stopping, "thinking mode").
+
+## The energy mapping (why this is on Carnot's thesis, not a metaphor)
+
+Discrete diffusion models ARE score/energy models by construction. The denoiser learns the
+**concrete score** = the gradient of log-probability in discrete space (the SEDD formalism,
+Lou et al. arXiv:2310.16834), so it implicitly parameterizes an energy `E(x) = -log p(x)`
+over token sequences, and each denoising step is a **descent on that energy**.
+DiffusionGemma's "commit the lowest-entropy tokens first" is literally a greedy
+energy-descent heuristic. The energy is the model's LEARNED LIKELIHOOD energy — computed by
+running the denoiser, not read off the weights in closed form.
+
+## The experiment (energy-guided discrete diffusion)
+
+Compose two energies during denoising:
+- **likelihood energy** (DiffusionGemma's native score / per-token entropy), AND
+- **constraint energy** (Carnot's executable verifier ensemble: code execution, SAT, Z3,
+  AST, Sudoku validity, etc.).
+
+At each of the 12-48 denoising steps, reweight the candidate tokens by
+`exp(-lambda * verifier_energy)` BEFORE the low-entropy commit, so the verifier **steers
+generation as it forms** rather than reranking finished samples. This is the integration the
+post-hoc-reranking route structurally cannot do.
+
+**Why this is the right test (and the contrast to GAP-3/.379):** GAP-3 / .379 showed the
+verifier-as-post-hoc-SELECTOR is weak — it anti-discriminates on grid outputs and does not
+beat self-consistency. Energy GUIDANCE is a different mechanism: it shapes the trajectory at
+each step and can prevent bad tokens from being committed, and it acts where the verifier is
+strongest (executable checks, partial-constraint satisfaction mid-generation).
+
+**Measurement / de-confound:** guided vs unguided DiffusionGemma on the SAME prompts, on an
+executable domain (HumanEval/MBPP code, or Sudoku, or math) where the verifier executes:
+pass-rate / constraint-satisfaction lift, bootstrap CI95 excluding 0. The load-bearing
+question is whether guidance beats the unguided sampler (and beats best-of-N selection,
+the commodity baseline).
+
+## THE GATE (do not activate until this is met)
+
+Activate this experiment ONLY after the TRM verifier-graft (the .383+ Sudoku graft,
+exp4128-lineage) reports **verifier_value_added == true** (or rerank/RFT lift CI95 excluding
+0) on the executable Sudoku domain.
+
+- **TRM graft POSITIVE** -> the verifier adds value as guidance where it executes ->
+  DiffusionGemma is the depth scale-up (LLM-scale realization of the Phase-3 non-AR
+  energy-descent endgame). ACTIVATE.
+- **TRM graft NULL** -> the bottleneck is the verifier's discrimination, NOT the substrate;
+  a bigger generator does not fix that. DO NOT ACTIVATE. Re-derive only if a different
+  verifier-discrimination result changes the picture.
+
+Rationale: the TRM-Sudoku test is the cheapest DECISIVE version of the same question (a
+verifier that executes exactly, on a domain with real headroom). If guidance can't help
+there, it won't help on a harder/noisier substrate. The TRM answer comes first and cheaply;
+DiffusionGemma cannot tell us anything the TRM can't, faster.
+
+## Preconditions for the eventual experiment
+
+- DiffusionGemma open weights cached locally (HuggingFace; verify the repo id + cache in a
+  PRECONDITIONS step before first use).
+- Confirm the open release exposes per-step token logits / the candidate distribution at each
+  denoising step (the injection point for guidance). If it only exposes final text, the
+  guidance hook may require a custom sampling loop over the released weights.
+- CUDA (RTX 3090 rig). 26B/4B-active MoE fits a 3090 at 4-bit; confirm VRAM.
+
+## Why this is DEPTH, not breadth
+
+It does NOT open a new research question — it is the same verifier-as-guidance question the
+TRM graft is testing, on a more powerful substrate. It is the natural next rung of the
+existing depth bet, sequenced behind (gated on) the cheap TRM test so it never competes with
+the unfinished core question. Decentralization fit: Apache-2.0, open weights, local-first
+(unlike closed diffusion LLMs) — aligns with the sovereignty rules.
+
+## Cross-references
+
+- GAP-3 / .379 exp4099 — verifier-as-post-hoc-selector is weak / anti-discriminates on grids
+  (the finding energy-guidance is meant to address)
+- The TRM verifier-graft (.382/.383, exp4119/exp4128 lineage) — the cheap pilot + THE GATE
+- Phase 3 vision (CLAUDE.md) — non-AR reasoning via energy minimization; DiffusionGemma is
+  the open-weight real-scale instance
+- feedback_hybrid_pragmatic_architecture (memory) — open LLM generator + energy verifier;
+  DiffusionGemma is a fast open generator to pair the verifier with
+- SEDD discrete-diffusion score formalism — Lou et al. arXiv:2310.16834
