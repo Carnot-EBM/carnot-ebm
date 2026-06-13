@@ -8,6 +8,41 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-13 Exp 4170 - .387 verifier-moat guidance SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-verifier-moat-guidance-v387-2026-06-13.md`.
+
+**Filtered track:** verifier-as-reward, accepted/rejected trace selection, and
+energy-guided generation for the `.387` handoff. This ingestion keeps
+DiffusionGemma guidance queued because Exp 4168 recorded
+`verifier_value_added=false` from a deferred, unfaithful/still-training
+baseline rather than from a tested positive or negative guidance result.
+
+**Seed and fresh-pass candidates marked ingested:**
+- TRM, arXiv:2510.04871 - mapped as the faithful baseline and oracle-headroom
+  gate before any verifier or diffusion-guidance claim.
+- TTA-TRM, arXiv:2511.02886 - mapped as the same-budget no-verifier adaptation
+  control.
+- V-STaR, arXiv:2402.06457 - mapped as the accepted/rejected trace selector and
+  strongest `.387` next step.
+- SEDD, arXiv:2310.16834 - mapped as the discrete score/energy scaffold for
+  generation-time verifier guidance.
+- Classifier-guided diffusion, arXiv:2105.05233, and classifier-free guidance,
+  arXiv:2207.12598 - mapped as the external-energy precedent and internal-score
+  control.
+- EntRGi, arXiv:2602.05000 - mapped as the queued DiffusionGemma reward-guidance
+  template after a positive verifier-discrimination gate.
+- EDLM, arXiv:2410.21357 - mapped as the internal sequence-energy comparator
+  for any future guidance claim.
+
+flagged_for_v387:
+`vstar_rejected_trace_selector_headroom_gate_before_diffusiongemma_v387`.
+
+Flagged for .387: `vstar_rejected_trace_selector_headroom_gate_before_diffusiongemma_v387`.
+
+**Bottom line for the .387 roadmap:** build the V-STaR-style rejected-trace
+selector and headroom gate first. Keep EntRGi/DiffusionGemma guidance queued
+unless the verifier discrimination gate flips positive.
 ## 2026-06-13 Exp 4162 - .386 verifier-moat guidance SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md`.

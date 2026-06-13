@@ -1,0 +1,75 @@
+{
+  "field_principles": {
+    "flagged_for_v387": "Closes the discover->ingest->plan loop: names the strongest method for the next planner.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method/source MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication."
+  },
+  "flagged_for_v387": "vstar_rejected_trace_selector_headroom_gate_before_diffusiongemma_v387",
+  "honest_verdict": "complete: sota_ingestion_verifier_moat_guidance_mapped_v387",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2510.04871",
+      "carnot_verifier_implication": "Use nano-trm as the candidate generator only after the baseline is faithful and has oracle headroom; a verifier cannot add value when the pool has no selectable correct alternatives.",
+      "experiment_mapping": "For .387, keep the stable checkpoint and candidate-diversity receipts as preconditions before any verifier graft or diffusion guidance run.",
+      "name": "TRM nano-trm baseline and headroom gate",
+      "queued_diffusiongemma_implication": "DiffusionGemma should inherit the same headroom gate: do not spend on denoising-time verifier energy until the TRM stack emits diverse candidates the verifier can rank.",
+      "url": "https://arxiv.org/abs/2510.04871"
+    },
+    {
+      "arxiv_id_or_url": "2511.02886",
+      "carnot_verifier_implication": "Any verifier-labeled improvement must beat a same-budget full fine-tuning control, because tiny recursive models can improve from adaptation compute alone.",
+      "experiment_mapping": "Carry a matched no-verifier arm with identical checkpoint, candidate pool, optimizer-step accounting, and wall-clock budget.",
+      "name": "TTA-TRM adaptation-control arm",
+      "queued_diffusiongemma_implication": "A DiffusionGemma guidance arm needs a no-verifier adaptation or conditioning control so ordinary generator adaptation is not counted as external verifier value.",
+      "url": "https://arxiv.org/abs/2511.02886"
+    },
+    {
+      "arxiv_id_or_url": "2402.06457",
+      "carnot_verifier_implication": "Keep both accepted and rejected traces so the selector learns a correctness boundary rather than only imitating successful outputs.",
+      "experiment_mapping": "Flag this as .387: build the rejected-trace selector and headroom gate first, then unlock EntRGi-style guidance only if discrimination turns positive.",
+      "name": "V-STaR accepted/rejected trace selector",
+      "queued_diffusiongemma_implication": "The same paired traces can calibrate verifier energy before it is attached to DiffusionGemma; without rejected evidence, guidance can optimize style artifacts.",
+      "url": "https://arxiv.org/abs/2402.06457"
+    },
+    {
+      "arxiv_id_or_url": "2310.16834",
+      "carnot_verifier_implication": "SEDD is not verifier evidence; it is the discrete score and energy language needed to place Carnot scores inside a token denoising loop.",
+      "experiment_mapping": "When the verifier gate is positive, sweep small energy weights and report exact validity, diversity, and reward-call cost.",
+      "name": "SEDD discrete diffusion score-energy formalism",
+      "queued_diffusiongemma_implication": "Use SEDD as the formal bridge for applying verifier energy while the DiffusionGemma canvas is still mutable, with exact checks after the candidate is committed.",
+      "url": "https://arxiv.org/abs/2310.16834"
+    },
+    {
+      "arxiv_id_or_url": "2105.05233",
+      "carnot_verifier_implication": "Treat Carnot verifier scores as an external guidance signal, but audit for proxy over-optimization because guidance trades diversity against fidelity.",
+      "experiment_mapping": "Include no-guidance, weak-guidance, and strong-guidance arms with matched denoising steps and exact downstream validation.",
+      "name": "Classifier-guided diffusion external-energy precedent",
+      "queued_diffusiongemma_implication": "A DiffusionGemma probe should expose guidance strength as an ablation knob and refuse a win that only makes samples verifier-shaped.",
+      "url": "https://arxiv.org/abs/2105.05233"
+    },
+    {
+      "arxiv_id_or_url": "2207.12598",
+      "carnot_verifier_implication": "A generic model-score guidance control is required so external verifier value is not confused with ordinary score mixing.",
+      "experiment_mapping": "Make the control arm mandatory in the future guidance experiment, not an optional appendix.",
+      "name": "Classifier-free guidance control",
+      "queued_diffusiongemma_implication": "DiffusionGemma should compare Carnot-verifier energy against a classifier-free-style internal guidance control before claiming a moat.",
+      "url": "https://arxiv.org/abs/2207.12598"
+    },
+    {
+      "arxiv_id_or_url": "2602.05000",
+      "carnot_verifier_implication": "EntRGi is the best concrete guidance mechanism once the verifier is known to be discriminative, but it does not itself prove the verifier has value.",
+      "experiment_mapping": "Keep EntRGi queued behind the .387 V-STaR/headroom gate rather than launching it from the current deferred graft state.",
+      "name": "EntRGi entropy-aware reward guidance",
+      "queued_diffusiongemma_implication": "Use entropy-aware interpolation between soft token relaxations and hard tokens as the DiffusionGemma implementation template after the gate flips positive.",
+      "url": "https://arxiv.org/abs/2602.05000"
+    },
+    {
+      "arxiv_id_or_url": "2410.21357",
+      "carnot_verifier_implication": "EDLM supplies an internal sequence-energy comparator; Carnot should measure whether an external executable verifier adds information beyond diffusion-model energy.",
+      "experiment_mapping": "Use EDLM as the future internal-energy control once the external verifier discrimination gate is satisfied.",
+      "name": "EDLM sequence-level diffusion energy comparator",
+      "queued_diffusiongemma_implication": "For DiffusionGemma, compare external Carnot energy with an internal sequence-level energy baseline so guidance is not just an EBM approximation claim.",
+      "url": "https://arxiv.org/abs/2410.21357"
+    }
+  ]
+}
