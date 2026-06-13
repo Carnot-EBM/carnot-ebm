@@ -13316,6 +13316,86 @@ artifact reports `rft_vs_ablation_delta` with CI95, and
 
 ---
 
+## REQ-LEARN-4168: Defensive Decisive Verifier Graft Uses Only A Faithful Stable Copy
+
+**Given** Exp 4167 reports the outer-loop-owned Sudoku Extreme baseline status,
+Exp 4168 SHALL read or recompute the Exp 4167 monitor before attempting any
+verifier-graft work. The baseline is eligible only when
+`baseline_faithful=true`, `current_val_exact_accuracy >= 0.85`, and
+`outerloop_train_alive=false`.
+
+**When** the baseline is not faithful and stable, Exp 4168 SHALL write
+`results/experiment_4168_decisive_verifier_graft_defensive.json` with
+`graft_deferred=true`, an honest terminal-prefixed verdict containing
+`graft_deferred_outerloop_training` and the current validation accuracy, and
+deferred metric objects for `rerank_lift_vs_vote` and
+`rft_vs_ablation_delta`. This branch SHALL NOT train, SHALL NOT terminate any
+outer-loop process, SHALL NOT copy over or write under the stable checkpoint
+directory, and SHALL NOT sample held-out candidates.
+
+**When** the baseline is faithful and stable, Exp 4168 SHALL copy the stable
+checkpoint to a task-local checkpoint path before any model load or training.
+All candidate sampling, verifier reranking, and reward fine-tuning SHALL use
+that copy, never `results/trm_runs/sudoku_extreme_baseline/last.ckpt`.
+
+**When** the copied-checkpoint branch runs, Exp 4168 SHALL sample `K` candidate
+solutions per held-out Sudoku puzzle, compare TRM majority vote, executable
+Sudoku verifier rerank, and oracle best-of-K, and report
+`rerank_lift_vs_vote` as verifier pass@1 minus vote pass@1 with CI95 plus the
+verifier-vs-oracle gap.
+
+**When** the reward fine-tuning arm runs, Exp 4168 SHALL build N-matched
+verifier-certified and vote-certified corpora from the copied-checkpoint
+candidates, train arm A from verifier-certified labels and arm B from
+vote-certified labels from the same copied initial checkpoint with cumulative
+time plus budget, and report `rft_vs_ablation_delta` as held-out exact accuracy
+`A - B` with CI95. `verifier_value_added` SHALL be a bare bool true only when
+the A-vs-B delta is positive and the CI95 lower bound excludes zero.
+
+**Then** the Exp 4168 artifact SHALL include top-level fields
+`honest_verdict`, `graft_deferred`, `rerank_lift_vs_vote`,
+`rft_vs_ablation_delta`, and `verifier_value_added`, each carrying these exact
+principles:
+
+- `honest_verdict`: "Terminal-prefixed. An honest deferral, an A>B win, or an A~=B null are all COMPLETE."
+- `graft_deferred`: "Bare bool: True if the baseline was not faithful+stable -> deferred. Prevents an uninformative graft + a collision with the outer-loop run."
+- `rerank_lift_vs_vote`: "pass@1 lift from verifier-reranking (if grafted); the executable-verifier discrimination signal."
+- `rft_vs_ablation_delta`: "The de-confounded A-vs-B held-out delta with CI -- THE moat measurement."
+- `verifier_value_added`: "Bare bool: did the graft beat the vote ablation? Resolves the moat question + the DiffusionGemma gate."
+
+The acceptance gate passes when either `graft_deferred=true` because the
+baseline was not faithful and stable, or a copied-checkpoint graft reports
+rerank lift, RFT A-vs-B CI95, and the bare `verifier_value_added` bool.
+
+### SCENARIO-LEARN-4168-DEFER: Baseline Not Faithful Stable Stops Before Copy Or Training
+
+**Given** Exp 4167 reports `baseline_faithful=false`, validation below `0.85`,
+or a live outer-loop training PID
+**When** Exp 4168 starts
+**Then** it writes a terminal-prefixed `graft_deferred_outerloop_training`
+artifact with the current validation accuracy, sets `graft_deferred=true`,
+does not copy the stable checkpoint, does not sample candidates, does not train,
+and does not terminate any outer-loop process.
+
+### SCENARIO-LEARN-4168-COPY-GRAFT: Faithful Stable Baseline Uses Only The Task-Local Copy
+
+**Given** Exp 4167 reports `baseline_faithful=true`,
+`current_val_exact_accuracy >= 0.85`, and `outerloop_train_alive=false`
+**When** Exp 4168 runs the rerank and reward fine-tuning arms
+**Then** it copies the stable checkpoint to a task-local path, samples
+candidates from that copy, trains both RFT arms from that copy, reports
+`rerank_lift_vs_vote` with CI95 and verifier-vs-oracle gap, reports
+`rft_vs_ablation_delta` with CI95, and sets `verifier_value_added` from the
+positive CI95-separated A-vs-B delta.
+
+## Implementation Status (REQ-LEARN-4168)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4168 | Planned (python/carnot/experiment_4168_decisive_verifier_graft_defensive.py, Exp 4168) | Planned (tests/python/test_experiment_4168_decisive_verifier_graft_defensive.py) |
+
+---
+
 ## REQ-LEARN-4139: Decisive Sudoku Verifier Graft With Oracle Separation
 
 **Given** Exp 4138 has written
