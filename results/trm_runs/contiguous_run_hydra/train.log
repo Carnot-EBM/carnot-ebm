@@ -615,3 +615,71 @@ torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 192.00 MiB. GPU 0 
 [2026-06-13 12:26:42,840][src.nn.models.trm][INFO] - [rank: 0] Restored manual LR step: 19006
 [2026-06-13 12:26:42,882][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] Creating train dataloader with batch size 768 and num_workers 0 and prefetch_factor None
 [2026-06-13 12:35:57,200][src.nn.utils.utils][INFO] - [rank: 0] Output dir: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra
+[2026-06-13 13:45:57,301][src.nn.utils.utils][INFO] - [rank: 0] Enforcing tags! <cfg.extras.enforce_tags=True>
+[2026-06-13 13:45:57,304][src.nn.utils.utils][INFO] - [rank: 0] Printing config tree with Rich! <cfg.extras.print_config=True>
+[2026-06-13 13:45:57,326][__main__][INFO] - [rank: 0] Instantiating datamodule <src.nn.data.SudokuDataModule>
+[2026-06-13 13:45:57,327][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] ✓ Loaded metadata from ./data/sudoku_extreme_1k_aug_1k/metadata.json
+[2026-06-13 13:45:57,327][src.nn.data.sudoku_datamodule][INFO] - [rank: 0]   Train: 1000 groups, 1001000 total puzzles
+[2026-06-13 13:45:57,330][__main__][INFO] - [rank: 0] Setting model config from data module:  num_puzzles = 1 batch_size = 768 vocab_size = 12
+[2026-06-13 13:45:57,330][__main__][INFO] - [rank: 0] Instantiating model <src.nn.models.trm.TRMModule>
+[2026-06-13 13:45:57,881][src.nn.models.trm][INFO] - [rank: 0] Creating TRM with vocab size=12, seq_len=81, puzzle_emb_len=0 pos_emb_type='null' puzzle_emb_dim=0
+[2026-06-13 13:45:57,881][src.nn.models.trm][INFO] - [rank: 0] use_mlp_t=True, use_conv_swiglu=False, use_board_swiglu=False
+[2026-06-13 13:45:57,882][src.nn.models.trm][INFO] - [rank: 0] Not using Rotary Embeddings
+[2026-06-13 13:45:57,898][src.nn.models.trm][INFO] - [rank: 0] puzzle_emb_dim <= 0, not creating puzzle embeddings
+[2026-06-13 13:45:57,898][__main__][INFO] - [rank: 0] Instantiating callbacks...
+[2026-06-13 13:45:57,899][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <lightning.pytorch.callbacks.ModelCheckpoint>
+[2026-06-13 13:45:57,900][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <src.nn.callbacks.ema.EMACallback>
+[2026-06-13 13:45:57,900][__main__][INFO] - [rank: 0] Instantiating loggers...
+[2026-06-13 13:45:57,900][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating logger <lightning.pytorch.loggers.csv_logs.CSVLogger>
+[2026-06-13 13:45:57,901][__main__][INFO] - [rank: 0] Instantiating trainer <lightning.pytorch.trainer.Trainer>
+[2026-06-13 13:45:57,907][__main__][INFO] - [rank: 0] Logging hyperparameters!
+[2026-06-13 13:45:57,915][__main__][INFO] - [rank: 0] Starting training!
+[2026-06-13 13:45:57,917][__main__][INFO] - [rank: 0] Val check interval: default (1.0)
+[2026-06-13 13:45:57,917][__main__][INFO] - [rank: 0] Check val every n epoch: 100
+[2026-06-13 13:45:57,917][__main__][INFO] - [rank: 0] Steps per epoch: 1303
+[2026-06-13 13:45:57,917][__main__][INFO] - [rank: 0] Max epochs: 50000
+[2026-06-13 13:45:57,918][__main__][INFO] - [rank: 0] Batch size: 768
+[2026-06-13 13:45:58,102][src.nn.models.trm][INFO] - [rank: 0] Training configuration:
+[2026-06-13 13:45:58,102][src.nn.models.trm][INFO] - [rank: 0]   Groups (unique puzzles): 1000
+[2026-06-13 13:45:58,102][src.nn.models.trm][INFO] - [rank: 0]   Total puzzles (with aug): 1001000
+[2026-06-13 13:45:58,102][src.nn.models.trm][INFO] - [rank: 0]   Steps per epoch: 1
+[2026-06-13 13:45:58,102][src.nn.models.trm][INFO] - [rank: 0]   Total steps: 50000
+[2026-06-13 13:45:58,102][src.nn.models.trm][INFO] - [rank: 0] Compiling inner_forward with torch.compile...
+[2026-06-13 13:45:58,103][src.nn.models.trm][INFO] - [rank: 0] Compilation successful
+[2026-06-13 13:45:58,118][src.nn.models.trm][INFO] - [rank: 0] Restored manual LR step: 19006
+[2026-06-13 13:45:58,158][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] Creating train dataloader with batch size 768 and num_workers 0 and prefetch_factor None
+[2026-06-13 13:58:17,936][src.nn.utils.utils][INFO] - [rank: 0] Output dir: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra
+[2026-06-13 14:10:27,992][src.nn.utils.utils][INFO] - [rank: 0] Enforcing tags! <cfg.extras.enforce_tags=True>
+[2026-06-13 14:10:27,997][src.nn.utils.utils][INFO] - [rank: 0] Printing config tree with Rich! <cfg.extras.print_config=True>
+[2026-06-13 14:10:28,022][__main__][INFO] - [rank: 0] Instantiating datamodule <src.nn.data.SudokuDataModule>
+[2026-06-13 14:10:28,023][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] ✓ Loaded metadata from ./data/sudoku_extreme_1k_aug_1k/metadata.json
+[2026-06-13 14:10:28,024][src.nn.data.sudoku_datamodule][INFO] - [rank: 0]   Train: 1000 groups, 1001000 total puzzles
+[2026-06-13 14:10:28,026][__main__][INFO] - [rank: 0] Setting model config from data module:  num_puzzles = 1 batch_size = 768 vocab_size = 12
+[2026-06-13 14:10:28,026][__main__][INFO] - [rank: 0] Instantiating model <src.nn.models.trm.TRMModule>
+[2026-06-13 14:10:28,620][src.nn.models.trm][INFO] - [rank: 0] Creating TRM with vocab size=12, seq_len=81, puzzle_emb_len=0 pos_emb_type='null' puzzle_emb_dim=0
+[2026-06-13 14:10:28,621][src.nn.models.trm][INFO] - [rank: 0] use_mlp_t=True, use_conv_swiglu=False, use_board_swiglu=False
+[2026-06-13 14:10:28,622][src.nn.models.trm][INFO] - [rank: 0] Not using Rotary Embeddings
+[2026-06-13 14:10:28,643][src.nn.models.trm][INFO] - [rank: 0] puzzle_emb_dim <= 0, not creating puzzle embeddings
+[2026-06-13 14:10:28,643][__main__][INFO] - [rank: 0] Instantiating callbacks...
+[2026-06-13 14:10:28,643][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <lightning.pytorch.callbacks.ModelCheckpoint>
+[2026-06-13 14:10:28,644][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <src.nn.callbacks.ema.EMACallback>
+[2026-06-13 14:10:28,645][__main__][INFO] - [rank: 0] Instantiating loggers...
+[2026-06-13 14:10:28,645][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating logger <lightning.pytorch.loggers.csv_logs.CSVLogger>
+[2026-06-13 14:10:28,646][__main__][INFO] - [rank: 0] Instantiating trainer <lightning.pytorch.trainer.Trainer>
+[2026-06-13 14:10:28,653][__main__][INFO] - [rank: 0] Logging hyperparameters!
+[2026-06-13 14:10:28,663][__main__][INFO] - [rank: 0] Starting training!
+[2026-06-13 14:10:28,665][__main__][INFO] - [rank: 0] Val check interval: default (1.0)
+[2026-06-13 14:10:28,665][__main__][INFO] - [rank: 0] Check val every n epoch: 100
+[2026-06-13 14:10:28,666][__main__][INFO] - [rank: 0] Steps per epoch: 1303
+[2026-06-13 14:10:28,666][__main__][INFO] - [rank: 0] Max epochs: 50000
+[2026-06-13 14:10:28,666][__main__][INFO] - [rank: 0] Batch size: 768
+[2026-06-13 14:10:28,834][src.nn.models.trm][INFO] - [rank: 0] Training configuration:
+[2026-06-13 14:10:28,834][src.nn.models.trm][INFO] - [rank: 0]   Groups (unique puzzles): 1000
+[2026-06-13 14:10:28,834][src.nn.models.trm][INFO] - [rank: 0]   Total puzzles (with aug): 1001000
+[2026-06-13 14:10:28,834][src.nn.models.trm][INFO] - [rank: 0]   Steps per epoch: 1
+[2026-06-13 14:10:28,835][src.nn.models.trm][INFO] - [rank: 0]   Total steps: 50000
+[2026-06-13 14:10:28,835][src.nn.models.trm][INFO] - [rank: 0] Compiling inner_forward with torch.compile...
+[2026-06-13 14:10:28,835][src.nn.models.trm][INFO] - [rank: 0] Compilation successful
+[2026-06-13 14:10:28,852][src.nn.models.trm][INFO] - [rank: 0] Restored manual LR step: 19006
+[2026-06-13 14:10:28,894][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] Creating train dataloader with batch size 768 and num_workers 0 and prefetch_factor None
+[2026-06-13 14:14:02,521][src.nn.utils.utils][INFO] - [rank: 0] Output dir: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra

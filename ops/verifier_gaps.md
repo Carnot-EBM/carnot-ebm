@@ -739,3 +739,33 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: keep DiffusionGemma gated until rerank or RFT A-vs-B label contrast shows value on a faithful baseline.
 - priority: high
 <!-- exp4153-sudoku-decisive-graft:end -->
+
+<!-- exp4163-sudoku-baseline-reproduction:start -->
+### GAP-SUDOKU-BASELINE-REPRODUCTION-4157: Exp 4163 .385 Sudoku baseline trajectory status
+- status: open_baseline_blocked_noop_step_unchanged_val_0.5010_flagged
+- evidence: `results/experiment_4157_baseline_harvest_contiguous_continue.json`; honest_verdict=blocked_noop_step_unchanged; current_val=0.501; max_val=0.501; baseline_faithful=false; val_trajectory_385=[0.2005, 0.1992, 0.1995, 0.2216, 0.2042, 0.2211, 0.2443, 0.257, 0.2823, 0.3008, 0.3198, 0.3385, 0.3555, 0.3721, 0.3862, 0.4, 0.412, 0.4263, 0.4354, 0.4427, 0.4521, 0.4648, 0.4776, 0.4857, 0.4906, 0.4938, 0.501]; native_trainer_launched=true; flagged_adversarial=true.
+- failure mode: the .385 continuation advanced the visible validation trajectory to about 0.5010 but still did not reach the faithful 0.85 gate, and the source artifact carries flagged caveats plus a blocked/no-op/OOM verdict.
+- missing discriminator: faithful Sudoku baseline candidate source before DiffusionGemma scale-up or verifier-as-reward claims.
+- candidate design: continue or relaunch the baseline under a clean resource envelope, then rerun rerank/graft only after the candidate source has faithful accuracy and selectable headroom.
+- priority: high
+<!-- exp4163-sudoku-baseline-reproduction:end -->
+
+<!-- exp4163-sudoku-rerank-moat:start -->
+### GAP-SUDOKU-RERANK-RECOVERY-MOAT-4158: Exp 4163 .385 Sudoku executable-verifier rerank moat status
+- status: open_rerank_uninformative_no_headroom_flagged
+- evidence: `results/experiment_4158_verifier_rerank_recovery_moat.json`; headroom_present=false; oracle_at_k=0.140625; vote_at_1=0.140625; verifier_recovers_outvoted=0; rerank_lift_vs_vote_delta=0.0; rerank_lift_vs_vote_ci95=[0.0, 0.0]; ci_excludes_zero_positive=false; flagged_adversarial=true; diffusiongemma_gate_state=kept_gated.
+- failure mode: Exp 4158 reported no selectable rerank headroom and zero outvoted recoveries, so the executable checker did not produce a decision-grade rerank moat signal.
+- missing discriminator: decision-grade executable Sudoku rerank signal with selectable headroom and a positive CI excluding zero.
+- candidate design: rerun on a faithful checkpoint/pool where oracle@K exceeds vote@1, then promote only if rerank lift has a positive confidence interval.
+- priority: high
+<!-- exp4163-sudoku-rerank-moat:end -->
+
+<!-- exp4163-sudoku-decisive-graft:start -->
+### GAP-SUDOKU-EXECUTABLE-VERIFIER-4159: Exp 4163 .385 Sudoku decisive executable-verifier graft status
+- status: open_graft_deferred_baseline_below_0.85_flagged
+- evidence: `results/experiment_4159_decisive_verifier_reward_graft.json` with baseline `results/experiment_4157_baseline_harvest_contiguous_continue.json`; baseline_current_val=0.501; baseline_faithful=false; graft_deferred=true; candidate_source=none_baseline_below_0.85; n_candidate_pools=0; rft_vs_ablation_delta=0.0; rft_vs_ablation_delta_status=deferred_baseline_below_0.85; verifier_value_added=false; flagged_adversarial=true; diffusiongemma_gate_state=kept_gated.
+- failure mode: Exp 4159 deferred the training-time graft because the baseline remained below the faithful 0.85 threshold; no verifier-as-reward value-added claim is available.
+- missing discriminator: transferable training-time value from non-oracle Sudoku verifier labels beyond vote labels.
+- candidate design: keep DiffusionGemma gated until rerank or RFT A-vs-B label contrast shows value on a faithful baseline.
+- priority: high
+<!-- exp4163-sudoku-decisive-graft:end -->
