@@ -12563,6 +12563,67 @@ reproducibility checksum, and scalar runtime below 4800 seconds.
 
 ---
 
+## REQ-LEARN-4137: Sudoku Extreme Fixed-LR Accumulation Pass 3
+
+**Given** Exp 4136 wrote
+`results/experiment_4136_sudoku_accumulate_pass2_fixed_lr.json`, Exp 4137 SHALL
+defensively read that pass2 artifact before any native training. If pass2 did
+not report a numeric `val_exact_accuracy`, a positive numeric
+`delta_vs_previous`, or if pass2 already set `plateau_audit_done=true`, Exp
+4137 SHALL NOT launch another bounded resume pass. Instead, it SHALL report
+that the baseline is config-blocked before the `.384` pass, preserve the
+corrected configuration recommendation, and write
+`results/experiment_4137_sudoku_accumulate_pass3_fixed_lr.json` with
+`plateau_audit_done=true`.
+
+**When** pass2 did report positive accumulation, Exp 4137 SHALL check `uv`,
+`nano-trm/src/nn/train.py`, CUDA availability, and that
+`results/trm_runs/sudoku_extreme_baseline/last.ckpt` exists and is loadable.
+It SHALL then run exactly one bounded native resume pass from that checkpoint
+using `experiment=trm_sudoku_extreme_1k_aug_1k`,
+`data.data_dir=./data/sudoku_extreme_1k_aug_1k`, `seed=4108`,
+`timekeeping.batch_size=128`, `ckpt_path=<stable>/last.ckpt`, and
+`trainer.max_time` of no more than one hour, saving back to the same stable
+checkpoint.
+
+**Then** Exp 4137 SHALL write top-level scalar fields `honest_verdict`,
+`val_exact_accuracy`, `delta_vs_previous`, `plateau_audit_done`,
+`matches_published_087`, `stable_checkpoint_path`, `random_seed`,
+`reproducibility_checksum`, and `duration_s`. `delta_vs_previous` SHALL compare
+the pass3 validation exact accuracy against pass2's measured
+`val_exact_accuracy` when training runs. `matches_published_087` SHALL be true
+only when the pass3 validation exact accuracy is within `0.02` of `0.87`.
+`reproducibility_checksum` SHALL hash the native config inputs, the resumed
+stable checkpoint, and the Sudoku Extreme dataset directory.
+
+### SCENARIO-LEARN-4137-AUDIT: Pass2 Without Positive Delta Stops Training
+
+**Given** pass2 has missing, zero, or negative accumulation evidence, or pass2
+already performed a plateau audit
+**When** Exp 4137 starts
+**Then** it writes a short audit artifact with `plateau_audit_done=true`, does
+not call the native trainer, reports the baseline as config-blocked, preserves
+the corrected config recommendation, and keeps runtime below 600 seconds.
+
+### SCENARIO-LEARN-4137: One Pass Reports Accuracy Delta From Pass2
+
+**Given** pass2 reported a numeric validation exact accuracy and positive
+delta, all runtime preconditions pass, and Exp 4126 reports
+`lr_continuous_across_resume=true`
+**When** Exp 4137 runs one bounded native resume pass
+**Then** the artifact reports pass3 validation exact accuracy, the delta versus
+pass2, whether the result matches the published `0.87` target within `0.02`,
+the stable checkpoint path that Exp 4138 resumes from, seed `4108`, a
+reproducibility checksum, and scalar runtime below 4800 seconds.
+
+## Implementation Status (REQ-LEARN-4137)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4137 | Planned (python/carnot/experiment_4137_sudoku_accumulate_pass3_fixed_lr.py, Exp 4137) | Planned (tests/python/test_experiment_4137_sudoku_accumulate_pass3_fixed_lr.py) |
+
+---
+
 ## REQ-LEARN-4128: Conditional Sudoku Verifier Graft After Fixed-LR Baseline
 
 **Given** Exp 4127 has written
