@@ -65,5 +65,23 @@
   ],
   "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
   "verifier_value_added": false,
-  "verifier_value_added_meaningful": false
+  "verifier_value_added_meaningful": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.122 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "GATE_PASSED_WITHOUT_DATA",
+      "severity": "critical",
+      "detail": "acceptance_gate_passed=true but these fields are null/zero: rerank_lift_vs_vote=null, rft_vs_ablation_delta=null"
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
