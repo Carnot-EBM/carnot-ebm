@@ -12752,6 +12752,68 @@ duration above 120 seconds.
 
 ---
 
+## REQ-LEARN-4147: Sudoku Extreme Pass 2 Epoch-Fixed No-Op Continuation
+
+**Given** Exp 4147 is asked to continue the Exp 4146 Sudoku Extreme
+epoch-fixed lineage from
+`results/trm_runs/sudoku_extreme_baseline/last.ckpt`, it SHALL first verify
+`uv`, `nano-trm/src/nn/train.py`, CUDA availability, and that the stable
+checkpoint exists and is loadable. It SHALL then read
+`results/experiment_4146_sudoku_accumulate_pass1_epochfix.json` before any
+native trainer launch.
+
+**When** the Exp 4146 pass1 artifact reports an honest `blocked_noop_*`
+verdict or otherwise lacks proof of real pass1 training, Exp 4147 SHALL NOT
+blind-retrain. It SHALL write
+`results/experiment_4147_sudoku_accumulate_pass2.json` with
+`honest_verdict="blocked_pass1_noop_unresolved"`, `val_exact_accuracy=null`,
+`delta_vs_pass1=null`, `post_epoch` copied from the pass1 artifact when
+available, a bounded `duration_s`, and a cause summary that restates the pass1
+configuration diagnosis.
+
+**When** pass1 is decision-grade and runtime preconditions pass, Exp 4147 SHALL
+launch a single bounded resume pass using
+`ckpt_path=<repo>/results/trm_runs/sudoku_extreme_baseline/last.ckpt`,
+`+trainer.max_epochs=<current_epoch+3000>`, `+trainer.max_time="00:01:00:00"`,
+CSV logging, progress printing, and ModelCheckpoint writing `last.ckpt` back
+to `results/trm_runs/sudoku_extreme_baseline`.
+
+**Then** a non-blocked Exp 4147 artifact SHALL report `honest_verdict`,
+`val_exact_accuracy`, `delta_vs_pass1`, `post_epoch`, and `duration_s` with
+field principles matching the operator schema. A successful or plateau verdict
+is valid only when `duration_s > 120`, `post_epoch` exceeds pass1's epoch, and
+`val_exact_accuracy` is numeric. Positive `delta_vs_pass1` reports continued
+convergence; non-positive delta is valid only with an explicit honest plateau
+flag. The blocked pass1 verdict is also decision-grade because it stops before
+a fake pass2 claim.
+
+### SCENARIO-LEARN-4147-BLOCKED-PASS1: Upstream No-Op Stops Pass 2
+
+**Given** Exp 4146 reports `blocked_noop_cap_not_confirmed_timer_elapsed`,
+`post_epoch` equals the seed epoch, `duration_s < 120`, and
+`val_exact_accuracy=null`
+**When** Exp 4147 starts
+**Then** it writes `blocked_pass1_noop_unresolved`, records the pass1
+configuration cause, preserves null solve metrics, and never calls the native
+trainer.
+
+### SCENARIO-LEARN-4147: Bounded Pass 2 Reports Delta Or Plateau
+
+**Given** Exp 4146 reports a decision-grade numeric validation accuracy and
+the stable checkpoint loads
+**When** Exp 4147 runs one bounded native pass2 resume
+**Then** the artifact reports a terminal-prefixed honest verdict, the pass2
+validation exact accuracy, `delta_vs_pass1`, a post-pass epoch greater than
+pass1's epoch, and either positive improvement or an honest plateau flag.
+
+## Implementation Status (REQ-LEARN-4147)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4147 | Implemented (python/carnot/experiment_4147_sudoku_accumulate_pass2.py, Exp 4147) | Implemented (tests/python/test_experiment_4147_sudoku_accumulate_pass2.py) |
+
+---
+
 ## REQ-LEARN-4139: Decisive Sudoku Verifier Graft With Oracle Separation
 
 **Given** Exp 4138 has written

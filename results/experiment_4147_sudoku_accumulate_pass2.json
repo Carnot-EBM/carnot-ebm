@@ -1,0 +1,54 @@
+{
+  "acceptance_gate_passed": true,
+  "blocked_cause": "pass1 verdict=blocked_noop_cap_not_confirmed_timer_elapsed; checkpoint_epoch=6399; config_max_epochs=50000; max_epochs_cap_confirmed=False; timer_train_elapsed_s=3641.9931271109963; max_time_s=3600.0. The pass1 artifact did not prove epoch advance plus validation, so pass2 is stopped before retraining.",
+  "command": [],
+  "delta_vs_pass1": null,
+  "duration_s": 0.125,
+  "experiment": "experiment_4147_sudoku_accumulate_pass2",
+  "field_principles": {
+    "delta_vs_pass1": "Per-pass improvement; the signal for whether continued training converges.",
+    "duration_s": "Real bounded GPU pass; <120s = no-op.",
+    "honest_verdict": "Terminal-prefixed. Honest val/no-op report.",
+    "post_epoch": "Must exceed pass1's epoch (anti-no-op).",
+    "val_exact_accuracy": "Solve metric after pass 2; tracks convergence."
+  },
+  "honest_plateau": false,
+  "honest_verdict": "blocked_pass1_noop_unresolved",
+  "native_trainer_launched": false,
+  "pass1_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4146_sudoku_accumulate_pass1_epochfix.json",
+  "pass1_duration_s": 0.121,
+  "pass1_honest_verdict": "blocked_noop_cap_not_confirmed_timer_elapsed",
+  "pass1_post_epoch": 6399,
+  "pass1_val_exact_accuracy": null,
+  "post_epoch": 6399,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/usr/bin/uv",
+      "resource": "uv"
+    },
+    {
+      "available": true,
+      "detail": "found: /home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/train.py",
+      "resource": "nanotrm_trainer"
+    },
+    {
+      "available": true,
+      "detail": "torch.cuda.is_available()=True; device=NVIDIA GeForce RTX 3090",
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "detail": "torch.load ok",
+      "resource": "stable_checkpoint"
+    }
+  ],
+  "random_seed": 4108,
+  "schema": "carnot.experiment_4147_sudoku_accumulate_pass2.v1",
+  "spec_refs": [
+    "REQ-LEARN-4147",
+    "SCENARIO-LEARN-4147-BLOCKED-PASS1"
+  ],
+  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+  "val_exact_accuracy": null
+}
