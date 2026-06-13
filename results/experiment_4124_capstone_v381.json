@@ -1,0 +1,366 @@
+{
+  "arc_games": {
+    "failure_reason": "",
+    "game_solved": false,
+    "honest_verdict": "",
+    "levels_completed": 0,
+    "prior_total_games_solved": 12,
+    "real_env_confirmed": false,
+    "status": "skipped_flagged_adversarial",
+    "total_games_solved": 12
+  },
+  "baseline_reproduction": {
+    "branch_taken": "train",
+    "honest_verdict": "complete: val=0.1060 still_below_0.87 -> .382 continues",
+    "matches_published_087": false,
+    "published_exact_accuracy_target": 0.87,
+    "published_match_tolerance": 0.02,
+    "status": "still_accumulating",
+    "total_cumulative_epochs": 4300,
+    "val_exact_accuracy": 0.10598958283662796
+  },
+  "baseline_val_trajectory": {
+    "bounded_run_cap_s": 4800.0,
+    "bounded_runs": [
+      {
+        "duration_s": 92.038,
+        "experiment_id": 4117,
+        "under_cap": true
+      },
+      {
+        "duration_s": 92.089,
+        "experiment_id": 4118,
+        "under_cap": true
+      }
+    ],
+    "bounded_runs_under_cap": true,
+    "climbed": true,
+    "deltas": [
+      0.01119791716337204,
+      0.00937499850988388
+    ],
+    "points": [
+      {
+        "experiment_id": 4117,
+        "pass_id": "pass1",
+        "source_field": "pass1_val_exact_accuracy",
+        "val_exact_accuracy": 0.08541666716337204,
+        "val_exact_accuracy_rounded": 0.0854
+      },
+      {
+        "experiment_id": 4117,
+        "pass_id": "pass2",
+        "source_field": "val_exact_accuracy",
+        "val_exact_accuracy": 0.09661458432674408,
+        "val_exact_accuracy_rounded": 0.0966
+      },
+      {
+        "experiment_id": 4118,
+        "pass_id": "pass3",
+        "source_field": "val_exact_accuracy",
+        "val_exact_accuracy": 0.10598958283662796,
+        "val_exact_accuracy_rounded": 0.106
+      }
+    ],
+    "rounded_deltas": [
+      0.0112,
+      0.0094
+    ],
+    "rounded_values": [
+      0.0854,
+      0.0966,
+      0.106
+    ],
+    "status": "climbed_and_bounded",
+    "values": [
+      0.08541666716337204,
+      0.09661458432674408,
+      0.10598958283662796
+    ]
+  },
+  "duration_s": 0.0009273119940189645,
+  "experiment_id": 4124,
+  "field_principles": {
+    "baseline_val_trajectory": "The val exact-accuracy across the resume passes (0.0232 -> ...); shows whether resumable training is converging and at what rate.",
+    "headline_outcome": "One of the enumerated set -- forces a single unambiguous read of the .381 result.",
+    "honest_verdict": "Terminal-prefixed. An honest 'still accumulating, .382 continues' is COMPLETE and valuable.",
+    "upstream_provenance": "{experiment_id, fields_imported, sha256} per cited upstream -- the audit trail proving the capstone synthesizes real measurements."
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "experiment_id": 4116,
+      "path": "results/experiment_4116_sudoku_extreme_resume_pass1.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "ed6682e5fb0b5467fd40aef2c3cf0033c8345dc61aaaddc64a3adb0a3377d2c1"
+    },
+    {
+      "experiment_id": 4119,
+      "path": "results/experiment_4119_carnot_verifier_graft_sudoku.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "bf0b60a3d73191af0fa03e6f0cb3ca02d6a0a807efb23684325cf4c8f265c2b1"
+    },
+    {
+      "experiment_id": 4120,
+      "path": "results/experiment_4120_thirteenth_game_explore_first.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "dbb5fe690f0e8295c0ede0ade77c574d6d7813d7cfe188258f0afc8af764c204"
+    },
+    {
+      "experiment_id": 4122,
+      "path": "results/experiment_4122_verifier_registry_gaps_hygiene.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "3a17eaa057dfd024b2a52ebd1b25e61939f1f6057c8aee3813707d6ef6c6e412"
+    }
+  ],
+  "hardware_continuity": {
+    "gatemate_step_taken": "blocked_gatemate_unreachable",
+    "honest_verdict": "complete: hardware_continuity_4123_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+    "included": true,
+    "kv260_terminal_confirmed": true,
+    "per_board_reachability": {
+      "gatemate": false,
+      "kv260": true,
+      "polarfire": true
+    },
+    "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded"
+  },
+  "headline_answers": {
+    "bounded_runs_under_cap": true,
+    "exp4118_matches_published_087": false,
+    "exp4119_graft_or_defer": "deferred_by_baseline_not_reproduced",
+    "exp4119_verifier_value_added": false,
+    "resume_mechanism_status": "climbed_and_bounded",
+    "resume_val_climbed": true,
+    "total_arc_games_solved": 12
+  },
+  "headline_outcome": "baseline_still_accumulating_v382_continues",
+  "honest_verdict": "complete: capstone_v381_baseline_still_accumulating_v382_continues_val_climbed1_bounded1_baseline0870_graft_deferred_by_baseline_not_reproduced_games12_flagged_skipped4",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "missing_upstream_artifacts": [],
+  "random_seed": 4124,
+  "registry_gap_hygiene": {
+    "gaps_updated": [],
+    "honest_verdict": "",
+    "included": false,
+    "regression_guard_passed": false,
+    "status": "skipped_flagged_adversarial"
+  },
+  "reproducibility_checksum": "8c17b566c2d2c3bb180f63e2c97dfd1f675de0fe889200beb66f53f45803c2d1",
+  "schema": "carnot.capstone_v381_4124.v1",
+  "sota_ingestion": {
+    "flagged_for_v382": "verifier_guided_adaptive_candidate_expansion_over_resumed_trm",
+    "honest_verdict": "complete: sota_ingestion_trm_baseline_graft_mapped",
+    "included": true,
+    "methods_mapped": [
+      {
+        "arxiv_id": "2510.04871",
+        "failure_mode": "A checkpoint can reload and still remain far below the published TRM target, making any verifier-graft conclusion underpowered.",
+        "implementation_over_stack": "Resume the nano-trm Sudoku Extreme checkpoint until the baseline reproduction is trustworthy before treating verifier lift as meaningful.",
+        "name": "TRM resumable Sudoku baseline gate",
+        "url": "https://arxiv.org/abs/2510.04871"
+      },
+      {
+        "arxiv_id": "2511.02886",
+        "failure_mode": "Full fine-tuning can win by public-task adaptation or leakage unless checkpoint source, split, and optimizer budget are isolated.",
+        "implementation_over_stack": "Keep a no-verifier full-fine-tune arm beside verifier-admitted training so adaptation compute is not confused with verifier value.",
+        "name": "TTA-TRM full-fine-tune control",
+        "url": "https://arxiv.org/abs/2511.02886"
+      },
+      {
+        "arxiv_id": "2602.01070",
+        "failure_mode": "Local verifier scores can prefer near-valid dead ends, so final exact validity and prune-error rate must remain authoritative.",
+        "implementation_over_stack": "Move exact Sudoku checks into candidate expansion so resumed TRM compute is spent on recoverable partial boards before post-hoc reranking.",
+        "name": "Verifier-guided adaptive candidate expansion",
+        "url": "https://arxiv.org/abs/2602.01070"
+      },
+      {
+        "arxiv_id": "2402.06457",
+        "failure_mode": "Near-duplicate invalid boards can teach shallow artifacts unless the pool has real within-puzzle diversity.",
+        "implementation_over_stack": "Train a selector from exact-valid and verifier-rejected Sudoku traces sampled from the same resumed checkpoint.",
+        "name": "V-STaR accepted/rejected Sudoku selector",
+        "url": "https://arxiv.org/abs/2402.06457"
+      },
+      {
+        "arxiv_id": "2308.08998",
+        "failure_mode": "If the baseline checkpoint rarely samples valid completions, the cached curriculum collapses into memorization or too few positives.",
+        "implementation_over_stack": "Cache generated Sudoku batches, filter them with the Carnot verifier, resume improvement from unique positives, and retain rejects for selectors.",
+        "name": "ReST resumable generate-filter-improve curriculum",
+        "url": "https://arxiv.org/abs/2308.08998"
+      }
+    ]
+  },
+  "sudoku_verifier_graft": {
+    "exp4119_artifact_status": "skipped_flagged_adversarial",
+    "graft_deferred": true,
+    "honest_verdict": "",
+    "rerank_lift_vs_vote": null,
+    "rft_vs_ablation_ci95": null,
+    "rft_vs_ablation_delta": null,
+    "status": "deferred_by_baseline_not_reproduced",
+    "verifier_value_added": false
+  },
+  "total_arc_games_solved": 12,
+  "upstream_artifact_state": {
+    "4116": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: nanotrm_resume_failed_return_code_1",
+      "included": false,
+      "path": "results/experiment_4116_sudoku_extreme_resume_pass1.json",
+      "skipped": true
+    },
+    "4117": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: val=0.0966 delta=0.0112 improved",
+      "included": true,
+      "path": "results/experiment_4117_sudoku_extreme_resume_pass2.json",
+      "skipped": false
+    },
+    "4118": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: val=0.1060 still_below_0.87 -> .382 continues",
+      "included": true,
+      "path": "results/experiment_4118_sudoku_extreme_resume_pass3.json",
+      "skipped": false
+    },
+    "4119": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: graft_deferred -- baseline at val=0.1060",
+      "included": false,
+      "path": "results/experiment_4119_carnot_verifier_graft_sudoku.json",
+      "skipped": true
+    },
+    "4120": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: thirteenth_game_no_solve_no_unsolved_strict_nonspatial_candidates",
+      "included": false,
+      "path": "results/experiment_4120_thirteenth_game_explore_first.json",
+      "skipped": true
+    },
+    "4121": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: sota_ingestion_trm_baseline_graft_mapped",
+      "included": true,
+      "path": "results/experiment_4121_sota_ingestion_trm_baseline_graft.json",
+      "skipped": false
+    },
+    "4122": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v381_truth_regression_guard_passed_True_sudoku_baseline_open_baseline_not_reproduced_val_0.1060_graft_deferred_True_verifier_value_added_False",
+      "included": false,
+      "path": "results/experiment_4122_verifier_registry_gaps_hygiene.json",
+      "skipped": true
+    },
+    "4123": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: hardware_continuity_4123_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+      "included": true,
+      "path": "results/experiment_4123_hardware_continuity.json",
+      "skipped": false
+    }
+  },
+  "upstream_provenance": [
+    {
+      "experiment_id": 4116,
+      "fields_imported": [],
+      "honest_verdict": "complete: nanotrm_resume_failed_return_code_1",
+      "path": "results/experiment_4116_sudoku_extreme_resume_pass1.json",
+      "sha256": "ed6682e5fb0b5467fd40aef2c3cf0033c8345dc61aaaddc64a3adb0a3377d2c1",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4117,
+      "fields_imported": [
+        "pass1_val_exact_accuracy",
+        "pass1.val_exact_accuracy",
+        "val_exact_accuracy",
+        "val_delta_vs_pass1",
+        "accumulation_stalled",
+        "cumulative_epochs",
+        "duration_s"
+      ],
+      "honest_verdict": "complete: val=0.0966 delta=0.0112 improved",
+      "path": "results/experiment_4117_sudoku_extreme_resume_pass2.json",
+      "sha256": "6ad7039e9e5ff0040d10c2c42abe59720f9276a4076205fa7f05b1093107b3a6",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4118,
+      "fields_imported": [
+        "pass2.val_exact_accuracy",
+        "val_exact_accuracy",
+        "matches_published_087",
+        "total_cumulative_epochs",
+        "duration_s",
+        "branch_taken"
+      ],
+      "honest_verdict": "complete: val=0.1060 still_below_0.87 -> .382 continues",
+      "path": "results/experiment_4118_sudoku_extreme_resume_pass3.json",
+      "sha256": "b174940156e73895dfaf8e8b061be5332e6b620359dd9fc46eee37a75697f61d",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4119,
+      "fields_imported": [],
+      "honest_verdict": "complete: graft_deferred -- baseline at val=0.1060",
+      "path": "results/experiment_4119_carnot_verifier_graft_sudoku.json",
+      "sha256": "bf0b60a3d73191af0fa03e6f0cb3ca02d6a0a807efb23684325cf4c8f265c2b1",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4120,
+      "fields_imported": [],
+      "honest_verdict": "complete: thirteenth_game_no_solve_no_unsolved_strict_nonspatial_candidates",
+      "path": "results/experiment_4120_thirteenth_game_explore_first.json",
+      "sha256": "dbb5fe690f0e8295c0ede0ade77c574d6d7813d7cfe188258f0afc8af764c204",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4121,
+      "fields_imported": [
+        "flagged_for_v382",
+        "methods_mapped"
+      ],
+      "honest_verdict": "complete: sota_ingestion_trm_baseline_graft_mapped",
+      "path": "results/experiment_4121_sota_ingestion_trm_baseline_graft.json",
+      "sha256": "f7e4ff63bf6672981e5cfec360bec4f16bc0b935cd81f6c0e6cb4c9688aeabb7",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4122,
+      "fields_imported": [],
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v381_truth_regression_guard_passed_True_sudoku_baseline_open_baseline_not_reproduced_val_0.1060_graft_deferred_True_verifier_value_added_False",
+      "path": "results/experiment_4122_verifier_registry_gaps_hygiene.json",
+      "sha256": "3a17eaa057dfd024b2a52ebd1b25e61939f1f6057c8aee3813707d6ef6c6e412",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4123,
+      "fields_imported": [
+        "kv260_terminal_confirmed",
+        "per_board_reachability",
+        "gatemate_step_taken",
+        "polarfire_step_taken"
+      ],
+      "honest_verdict": "complete: hardware_continuity_4123_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+      "path": "results/experiment_4123_hardware_continuity.json",
+      "sha256": "3ee514839f2d606ff50f0c721e2b7f15726979961b0756414cc6301043078dd2",
+      "skip_reason": "",
+      "skipped": false
+    }
+  ]
+}
