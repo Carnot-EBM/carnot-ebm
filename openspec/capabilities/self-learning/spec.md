@@ -13112,6 +13112,77 @@ otherwise it reports `blocked_noop_step_unchanged` instead of a fake pass.
 
 ---
 
+## REQ-LEARN-4158: Decision-Grade Sudoku Verifier Rerank Recovery Moat
+
+**Given** Exp 4157 has written
+`results/experiment_4157_baseline_harvest_contiguous_continue.json`, Exp 4158
+SHALL read `current_val`, `max_val`, and `stable_checkpoint_path`, verify CUDA
+visibility, and verify that the stable checkpoint exists before any model load.
+It SHALL copy `last.ckpt` to a frozen sibling snapshot path such as
+`last-rerank-snapshot.ckpt` before sampling so a live checkpoint writer cannot
+produce a half-read verifier-rerank result. Missing CUDA, missing Exp 4157
+evidence, or missing/un-snapshot-able checkpoint SHALL produce a terminal
+`blocked_<resource>` artifact rather than fabricated rerank metrics.
+
+**When** runtime preconditions pass, Exp 4158 SHALL sample at least `K=8`
+candidate Sudoku solutions for at least `64` held-out puzzles from the frozen
+checkpoint snapshot using `sample_checkpoint_candidate_pools()`. It SHALL
+compute `vote_at_1` from the TRM majority-vote selector and `oracle_at_k` as
+the fraction of puzzles with at least one exact-valid candidate in the sampled
+pool.
+
+**When** `oracle_at_k <= vote_at_1`, Exp 4158 SHALL set
+`headroom_present=false`, report the honest verdict
+`complete: no_headroom_rerank_uninformative_at_val_0.NN`, and SHALL NOT claim a
+verifier moat. This is the false-negative-risk guard: a null is informative only
+when oracle best-of-K proves recoverable headroom beyond the self-consistency
+vote.
+
+**When** `oracle_at_k > vote_at_1`, Exp 4158 SHALL rerank each candidate pool
+with the executable Sudoku verifier, report `rerank_lift_vs_vote` as
+`pass@1(verifier_rerank) - vote_at_1` with a paired bootstrap CI95, and count
+`verifier_recovers_outvoted` as puzzles where an exact-valid candidate was
+present, the majority vote missed it, and the executable verifier selected it.
+It SHALL also report `cost_ratio_vs_llm_judge` from the measured local verifier
+mean per-candidate wall cost in microseconds and an explicit one-line LLM judge
+cost estimate.
+
+**Then** Exp 4158 SHALL write
+`results/experiment_4158_verifier_rerank_recovery_moat.json` with top-level
+fields `honest_verdict`, `headroom_present`, `oracle_at_k`, `vote_at_1`,
+`rerank_lift_vs_vote`, `verifier_recovers_outvoted`,
+`cost_ratio_vs_llm_judge`, and `random_seed`, each carrying the required
+principle text. The acceptance gate passes when `headroom_present` is reported;
+if true, the artifact includes rerank CI95, outvoted recovery count, and cost
+ratio, and if false, the artifact includes the no-headroom verdict with
+`oracle_at_k` and `vote_at_1`.
+
+### SCENARIO-LEARN-4158-NO-HEADROOM: Oracle Does Not Beat Vote
+
+**Given** sampled candidate pools where oracle best-of-K exact accuracy is less
+than or equal to majority-vote exact accuracy
+**When** Exp 4158 evaluates the rerank moat gate
+**Then** it reports `headroom_present=false`, preserves `oracle_at_k` and
+`vote_at_1`, writes a terminal no-headroom verdict, and does not claim a
+verifier moat.
+
+### SCENARIO-LEARN-4158-RERANK-RECOVERY: Verifier Recovers Present-But-Out-Voted Answers
+
+**Given** sampled candidate pools where at least one exact-valid candidate is
+present but out-voted by duplicate invalid candidates
+**When** Exp 4158 reranks with the executable Sudoku verifier
+**Then** it reports `headroom_present=true`, positive
+`rerank_lift_vs_vote.delta` with CI95, and increments
+`verifier_recovers_outvoted` for the recovered puzzles.
+
+## Implementation Status (REQ-LEARN-4158)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4158 | Planned (python/carnot/experiment_4158_verifier_rerank_recovery_moat.py, Exp 4158) | Planned (tests/python/test_experiment_4158_verifier_rerank_recovery_moat.py) |
+
+---
+
 ## REQ-LEARN-4139: Decisive Sudoku Verifier Graft With Oracle Separation
 
 **Given** Exp 4138 has written
