@@ -12376,6 +12376,66 @@ and validation exact accuracy.
 
 ---
 
+## REQ-LEARN-4127: Sudoku Extreme Accumulation With Fixed LR Resume
+
+**Given** Exp 4126 has written
+`results/experiment_4126_lr_resume_correctness_fix.json`, Exp 4127 SHALL read
+that artifact before launching native training. If
+`lr_continuous_across_resume` is not the bare bool `true`, Exp 4127 SHALL write
+`results/experiment_4127_sudoku_extreme_accumulate_fixed.json` with
+`honest_verdict="blocked_lr_fix_not_landed"`, SHALL restate the contiguous-run
+recommendation, and SHALL NOT launch any more bounded resume passes that would
+restart LR warmup.
+
+**When** the LR-fix precondition passes and `uv`, nano-trm, CUDA, the Sudoku
+Extreme dataset, and the shared stable checkpoint are available, Exp 4127
+SHALL run up to two native bounded resume passes from
+`results/trm_runs/sudoku_extreme_baseline/last.ckpt`. Each pass SHALL use the
+corrected manual LR schedule, a Lightning `trainer.max_time` bound of one hour
+or less, CSV logging, terminal progress printing, and checkpoint saving back to
+the same stable checkpoint path.
+
+**Then** the terminal artifact SHALL contain top-level required fields
+`honest_verdict`, `val_trajectory`, `matches_published_087`,
+`per_pass_delta_vs_v381`, `stable_checkpoint_path`, and `duration_s`.
+`val_trajectory` SHALL record the starting baseline and each measured pass
+validation exact accuracy with deltas versus the previous known value.
+`matches_published_087` SHALL be a bare bool computed as
+`abs(final_val_exact_accuracy - 0.87) <= 0.02` when a final validation exact
+accuracy is available. `per_pass_delta_vs_v381` SHALL compare the measured
+delta(s) against the `.381` reference of roughly +0.01 validation exact
+accuracy per pass. The acceptance gate passes when the trajectory is reported
+and `matches_published_087` is set, or when the LR-fix precondition blocks
+training with the contiguous-run recommendation.
+
+### SCENARIO-LEARN-4127-BLOCKED: Missing LR Fix Stops Resume Training
+
+**Given** the latest Exp 4126 artifact does not report
+`lr_continuous_across_resume=true`
+**When** Exp 4127 starts
+**Then** it writes `honest_verdict="blocked_lr_fix_not_landed"`, preserves the
+stable checkpoint path, includes the contiguous-run recommendation, and does
+not call the native trainer.
+
+### SCENARIO-LEARN-4127: Fixed Resume Reports Accumulation Trajectory
+
+**Given** Exp 4126 reports `lr_continuous_across_resume=true` and the stable
+checkpoint is loadable
+**When** Exp 4127 runs one or two bounded native resume passes
+**Then** it saves checkpoints back to
+`results/trm_runs/sudoku_extreme_baseline/last.ckpt`, reports a validation
+trajectory for the measured passes, computes `matches_published_087`, and
+reports whether the mean per-pass validation delta beats the `.381` +0.01/pass
+reference.
+
+## Implementation Status (REQ-LEARN-4127)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4127 | Implemented (python/carnot/experiment_4127_sudoku_extreme_accumulate_fixed.py, Exp 4127) | Implemented (tests/python/test_experiment_4127_sudoku_extreme_accumulate_fixed.py) |
+
+---
+
 ## REQ-LEARN-4119: Conditional Sudoku Verifier Graft After Faithful TRM Baseline
 
 **Given** Exp 4118 has written `results/experiment_4118_*.json`, Exp 4119
