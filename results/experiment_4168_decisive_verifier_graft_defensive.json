@@ -1,0 +1,97 @@
+{
+  "acceptance_gate_passed": true,
+  "baseline_status": {
+    "baseline_faithful": false,
+    "checkpoint_mtime": "2026-06-13T04:41:29.093138Z",
+    "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+    "current_val_exact_accuracy": 0.514843761921,
+    "faithful_stable": false,
+    "faithful_threshold": 0.85,
+    "latest_metrics_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv",
+    "outerloop_pid": 505313,
+    "outerloop_train_alive": false
+  },
+  "candidate_source": "none_deferred_outerloop_training",
+  "checkpoint_copy_path": null,
+  "checkpoint_copy_performed": false,
+  "corpus_summary": {
+    "arm_a": "verifier_certified",
+    "arm_b": "vote_certified",
+    "n_matched": 0
+  },
+  "duration_s": 1.024,
+  "experiment": "experiment_4168_decisive_verifier_graft_defensive",
+  "experiment_id": 4168,
+  "field_principles": {
+    "graft_deferred": "Bare bool: True if the baseline was not faithful+stable -> deferred. Prevents an uninformative graft + a collision with the outer-loop run.",
+    "honest_verdict": "Terminal-prefixed. An honest deferral, an A>B win, or an A~=B null are all COMPLETE.",
+    "rerank_lift_vs_vote": "pass@1 lift from verifier-reranking (if grafted); the executable-verifier discrimination signal.",
+    "rft_vs_ablation_delta": "The de-confounded A-vs-B held-out delta with CI -- THE moat measurement.",
+    "verifier_value_added": "Bare bool: did the graft beat the vote ablation? Resolves the moat question + the DiffusionGemma gate."
+  },
+  "graft_deferred": true,
+  "honest_verdict": "complete: graft_deferred_outerloop_training_val_0.5148",
+  "n_candidate_pools": 0,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "carnot.experiment_4167_outerloop_training_monitor.v1",
+      "resource": "exp4167_monitor"
+    },
+    {
+      "available": false,
+      "detail": "{\"baseline_faithful\": false, \"checkpoint_mtime\": \"2026-06-13T04:41:29.093138Z\", \"checkpoint_path\": \"/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt\", \"current_val_exact_accuracy\": 0.514843761921, \"latest_metrics_path\": \"/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra/csv/version_10/metrics.csv\", \"outerloop_pid\": 505313, \"outerloop_train_alive\": false}",
+      "resource": "baseline_faithful_stable"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+      "resource": "stable_checkpoint_path"
+    }
+  ],
+  "random_seed": 4168,
+  "read_only_actions": {
+    "candidate_sampling_launched": false,
+    "stable_checkpoint_written": false,
+    "train_process_stop_attempted": false,
+    "training_launched": false
+  },
+  "reproducibility_checksum": "sha256:8e093ecfabc25138932600584f6b7f5194ab777464cb4a8d18d123c0dd9d0b4d",
+  "rerank_lift_vs_vote": {
+    "ci95": [
+      0.0,
+      0.0
+    ],
+    "current_val_exact_accuracy": 0.514843761921,
+    "delta": 0.0,
+    "delta_vs_oracle": 0.0,
+    "metric": "pass@1_exact_accuracy",
+    "n_puzzles": 0,
+    "oracle_at_k": 0.0,
+    "status": "deferred_outerloop_training",
+    "verifier_pass_at_1": 0.0,
+    "vote_at_1": 0.0
+  },
+  "rft_vs_ablation_delta": {
+    "a_exact_accuracy": 0.0,
+    "b_exact_accuracy": 0.0,
+    "ci95": [
+      0.0,
+      0.0
+    ],
+    "current_val_exact_accuracy": 0.514843761921,
+    "delta": 0.0,
+    "metric": "heldout_exact_accuracy",
+    "n_matched": 0,
+    "status": "deferred_outerloop_training",
+    "training_mode": "not_run"
+  },
+  "schema": "carnot.experiment_4168_decisive_verifier_graft_defensive.v1",
+  "spec_refs": [
+    "REQ-LEARN-4168",
+    "SCENARIO-LEARN-4168-DEFER",
+    "SCENARIO-LEARN-4168-COPY-GRAFT"
+  ],
+  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+  "verifier_value_added": false
+}
