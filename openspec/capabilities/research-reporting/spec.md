@@ -20104,6 +20104,74 @@ untouched.
 |---|---|---|
 | REQ-REPORT-4141 | Planned (`python/carnot/experiment_4141_sota_ingestion_recursive_reasoner_verifier.py`, `docs/research-notes/sota-ingestion-recursive-reasoner-verifier-2026-06-13.md`) | Planned (`tests/python/test_experiment_4141_sota_ingestion_recursive_reasoner_verifier.py`) |
 
+### REQ-REPORT-4152: SOTA Ingestion Mapping For Recursive Reasoners And Energy-Guided Generation
+
+The Exp 4152 workflow SHALL emit a dated SOTA-to-experiment mapping note for
+the `.385` recursive-reasoner plus energy-guided-generation headline: TRM as
+the `nano-trm` baseline substrate, TTA-TRM as the adaptation-control precedent,
+V-STaR as the accepted/rejected verifier-training selector, SEDD as the
+discrete diffusion score/energy formalism, and classifier-guided diffusion as
+the guidance precedent for moving Carnot verifier energy into generation rather
+than only post-hoc reranking. The markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-recursive-reasoner-verifier-energy-guidance-2026-06-13.md`
+and the machine-checkable mapping artifact SHALL be written to
+`results/experiment_4152_sota_ingestion_recursive_reasoner_verifier.json`.
+
+Before writing the note, the workflow SHALL read the verifier-guided-training
+and energy-guided-generation entries in `research-studying.md` and
+`research-references.md`, run `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py`, and verify the top five to eight anchors with
+low-concurrency WebSearch/WebFetch. The workflow SHALL use the reliable
+discovery path and SHALL NOT invoke `/deep-research`.
+
+For each mapped method or source, the note SHALL state what changes over the
+`nano-trm` plus Carnot verifier stack and SHALL include the main pitfall or
+failure mode. The mapped method set SHALL include verified anchors from real
+arXiv IDs or canonical URLs, including TRM (`arXiv:2510.04871`), TTA-TRM
+(`arXiv:2511.02886`), V-STaR (`arXiv:2402.06457`), SEDD
+(`arXiv:2310.16834`), classifier-guided diffusion (`arXiv:2105.05233`),
+classifier-free diffusion guidance (`arXiv:2207.12598`), and the official
+DiffusionGemma documentation
+(`https://ai.google.dev/gemma/docs/diffusiongemma`). Every method claim SHALL
+carry either a real arXiv ID or a canonical URL. The note SHALL include a
+`Flagged for the .385 roadmap` section naming the single strongest follow-on
+method and SHALL update `research-studying.md` to mark the `.385` candidate set
+as ingested. The workflow SHALL NOT update `ops/changelog.md`,
+`ops/status.md`, `_bmad/traceability.md`, or `scripts/research_conductor.py`.
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v385`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, and `flagged_for_v385`. `honest_verdict`
+SHALL use a terminal prefix and, on the complete path, start with
+`complete: sota_ingestion_recursive_reasoner_verifier_energy_guidance_mapped`.
+`methods_mapped` SHALL be a list of at least five dicts with exactly `name`,
+`arxiv_id_or_url`, `url`, `implementation_over_stack`, and `failure_mode`;
+each `arxiv_id_or_url` SHALL be either one of the WebFetch-verified arXiv IDs
+or one of the verified canonical URLs, preventing fabricated or uncited method
+rows. `flagged_for_v385` SHALL be a non-empty concrete roadmap slug identifying
+the strongest candidate input for `.385`, with DiffusionGemma/SEDD
+energy-guidance gated on measured Carnot-verifier discrimination.
+
+#### SCENARIO-REPORT-4152: Energy-Guidance Mapping Closes The Discover-To-Plan Loop
+
+**Given** the current recursive-reasoner work has already mapped the TRM/TTA
+substrate and the DiffusionGemma notes identify discrete token diffusion as a
+queued generator substrate, but the verifier-value gate must stay explicit
+**When** the Exp 4152 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON mapping artifact, maps
+verified method papers or canonical pages to implementation work and failure
+modes over the `nano-trm` plus Carnot-verifier stack, updates
+`research-studying.md` with the ingested `.385` candidate set, flags the single
+strongest `.385` follow-up, and leaves conductor and reconciliation files
+untouched.
+
+## Implementation Status (REQ-REPORT-4152)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4152 | Implemented (`python/carnot/experiment_4152_sota_ingestion_recursive_reasoner_verifier.py`, `docs/research-notes/sota-ingestion-recursive-reasoner-verifier-energy-guidance-2026-06-13.md`) | Implemented (`tests/python/test_experiment_4152_sota_ingestion_recursive_reasoner_verifier.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
