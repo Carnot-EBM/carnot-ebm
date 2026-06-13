@@ -8444,3 +8444,4 @@ c |
 | 2026-06-13 18:42 UTC | Milestone 2026.06.386 activated | OK | 8 tasks queued |
 | 2026-06-13 19:01 UTC | Archive .385 -> activate .386; KEEP the hardened g | OK | 91 passed, 1 warning in 6.64s |
 | 2026-06-13 19:13 UTC | OUTER-LOOP TRAINING MONITOR (READ-ONLY; the conduc | OK | 88 passed, 1 warning in 9.53s |
+| 2026-06-13 19:29 UTC | THE DECISIVE verifier graft — DEFENSIVE, gated on  | OK | 85 passed, 1 warning in 6.62s |
