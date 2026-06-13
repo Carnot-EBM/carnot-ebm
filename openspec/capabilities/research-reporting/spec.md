@@ -20040,6 +20040,69 @@ claim `.380` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4115 | Implemented (`python/carnot/reporting/archive_v380_activate_v381_4115.py`, `scripts/experiments/exp4115_archive_v380_activate_v381.py`) | Implemented (`tests/python/test_experiment_4115_archive_v380_activate_v381.py`) |
 
+### REQ-REPORT-4125: Archive .381, Activate .382, And Preserve The LR-Rewarm Close-State
+
+The Exp 4125 workflow SHALL archive milestone `2026.06.381`, confirm milestone
+`2026.06.382` is active, and write the record-only artifact
+`results/experiment_4125_archive_v381_activate_v382.json`. It SHALL run NO live
+model training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`.
+
+Before writing the complete artifact, the workflow SHALL verify these
+preconditions and stop with a `blocked_<resource>` honest verdict if any fail:
+
+- `research-complete.yaml` parses under `yaml.safe_load`.
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`.
+- `nano-trm/src/nn/train.py` exists.
+- The smart-subset pre-test gate is green.
+
+The workflow SHALL ensure `research-complete.yaml` contains a single `.381`
+archive record, appending the canonical `.381` record only when absent and
+removing duplicate top-level `.381` records if interrupted conductor appends
+created any. The workflow SHALL keep `research-complete.yaml` parseable after
+any edit.
+
+The artifact SHALL carry the required principle-annotated fields
+`honest_verdict`, `v381_close_state`, and `preconditions_checked`.
+Complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v381_close_state` SHALL truthfully record
+that the resumable nano-TRM mechanism runs and checkpoint resume works, while
+the Sudoku-Extreme validation trajectory only reached roughly `0.106` rather
+than the published `0.87` target. It SHALL preserve the close-state sequence
+`2.3% -> 9.7% -> 10.6%`, identify the 2026-06-13 LR-scheduler rewarm diagnosis
+as the blocker to real accumulation, and record that the Carnot verifier graft
+was deferred because the baseline was not faithful.
+
+#### SCENARIO-REPORT-4125: The Archive Preserves The Honest .381 LR-Rewarm Diagnosis
+
+**Given** the `.381` source artifacts show the resumable mechanism runs, the
+validation trajectory remains far below `0.87`, the LR scheduler rewarms each
+resume pass, the verifier graft is deferred, the history and exclusion-manifest
+YAML files parse, `nano-trm/src/nn/train.py` exists, the smart-subset pre-test
+gate is green, and `.382` is active
+**When** the Exp 4125 archive workflow runs
+**Then** it archives `.381`, confirms `.382`, keeps the YAML history parseable
+with one `.381` record, writes
+`results/experiment_4125_archive_v381_activate_v382.json`, records the mechanism
+proof, `2.3% -> 9.7% -> 10.6%` close-state, LR-rewarm root cause, and graft
+deferral in `v381_close_state`, records the checked resources in
+`preconditions_checked`, declares `aggregation_from_upstream_artifacts`, and
+emits a terminal-prefixed honest verdict.
+
+#### SCENARIO-REPORT-4125-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4125 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does not
+claim `.381` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4125)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4125 | Implemented (`python/carnot/reporting/archive_v381_activate_v382_4125.py`, `scripts/experiments/exp4125_archive_v381_activate_v382.py`) | Implemented (`tests/python/test_experiment_4125_archive_v381_activate_v382.py`) |
+
 ### REQ-REPORT-4106: Archive .379, Activate .380, Record The Honest Anti-Discrimination Close-State
 
 The Exp 4106 workflow SHALL archive milestone `2026.06.379`, confirm milestone
