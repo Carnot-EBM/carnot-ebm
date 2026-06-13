@@ -256,3 +256,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - CRITICAL adversarial flag ['DURATION_TOO_SHORT', 'GATE_PASSED_WITHOUT_DATA'] on a non-negative verdict
 - artifact: results/experiment_4119_carnot_verifier_graft_sudoku.json
+
+## experiment_4120_thirteenth_game_explore_first.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['GATE_PASSED_WITHOUT_DATA'] on a non-negative verdict
+- artifact: results/experiment_4120_thirteenth_game_explore_first.json
