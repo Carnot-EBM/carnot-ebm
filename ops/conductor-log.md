@@ -8408,3 +8408,4 @@ c |
 | 2026-06-13 07:40 UTC | Milestone 2026.06.383 activated | OK | 11 tasks queued |
 | 2026-06-13 07:53 UTC | Archive .382 -> activate .383; KEEP the hardened g | OK | 91 passed, 1 warning in 5.36s |
 | 2026-06-13 08:47 UTC | ACCUMULATE pass 1 of 4 toward 0.87 with the FIXED  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-13 09:05 UTC | ACCUMULATE pass 2 of 4 toward 0.87 (DEFENSIVE read | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT, GATE_PASSED_WITHOUT_DATA — resu |
