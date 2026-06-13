@@ -1818,5 +1818,28 @@
   "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
   "verifier_value_added": false,
   "verifier_value_added_basis": [],
-  "vote_pass_at_1": 0.140625
+  "vote_pass_at_1": 0.140625,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "oracle_pass_at_k=0.140625 and vote_pass_at_1=0.140625 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=2.451 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+    },
+    {
+      "kind": "FALSE_NEGATIVE_RISK",
+      "severity": "warn",
+      "detail": "Null claim and the experiment's own gate headroom_present=False: it self-reports the test was degenerate. Do not propagate this null to a forward-facing claim."
+    }
+  ]
 }
