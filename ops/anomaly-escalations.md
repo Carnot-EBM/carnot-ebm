@@ -286,3 +286,13 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT', 'GATE_PASSED_WITHOUT_DATA'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
 - artifact: results/experiment_4136_sudoku_accumulate_pass2_fixed_lr.json
+
+## experiment_4137_sudoku_accumulate_pass3_fixed_lr.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT', 'GATE_PASSED_WITHOUT_DATA'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+- artifact: results/experiment_4137_sudoku_accumulate_pass3_fixed_lr.json
+
+## experiment_4138_sudoku_accumulate_pass4_convergence_check.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag(s) ['DURATION_TOO_SHORT'] on a negative verdict (possible infra/fabrication artifact masquerading as a finding)
+- artifact: results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json

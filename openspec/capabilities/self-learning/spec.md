@@ -12690,6 +12690,93 @@ reproducibility checksum, and scalar runtime below 4800 seconds.
 
 ---
 
+## REQ-LEARN-4139: Decisive Sudoku Verifier Graft With Oracle Separation
+
+**Given** Exp 4138 has written
+`results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json`, Exp
+4139 SHALL defensively read `matches_published_087`, `near_faithful_080`,
+`val_exact_accuracy`, `stable_checkpoint_path`, and the `.384` convergence
+estimate before attempting any verifier graft. It SHALL verify CUDA visibility
+and that the stable checkpoint exists and is loadable. If the checkpoint is
+missing or unloadable, it SHALL write an artifact with
+`honest_verdict="blocked_baseline_checkpoint_missing"` and stop without
+sampling candidates or inventing verifier measurements.
+
+**When** runtime preconditions pass, Exp 4139 SHALL sample K held-out candidate
+Sudoku solutions from the stable TRM checkpoint and first compute the positive
+control `headroom_present` as oracle best-of-K exact accuracy greater than TRM
+vote pass@1. If the oracle best-of-K does not exceed vote pass@1, Exp 4139
+SHALL report `headroom_present=false`, `false_negative_risk=true`, and SHALL
+not conclude that the transferable verifier failed.
+
+**When** rerank metrics are reported, Exp 4139 SHALL always keep two measures
+separate. `executable_oracle_upper_bound` SHALL be the executable Sudoku
+validity rerank lift versus vote, explicitly labeled with
+`executable_verifier_is_oracle=true` because unique-solution Sudoku makes this
+lift equal to `oracle_vs_vote_gap` by construction. It SHALL NOT contribute to
+`verifier_value_added`. `ensemble_rerank_lift_vs_vote` SHALL be the headline
+non-oracle Carnot energy/text-stat ensemble rerank lift versus vote, with a
+paired bootstrap CI and no exact-validity check in the ensemble score.
+
+**When** Exp 4138 reports `matches_published_087=true` or
+`near_faithful_080=true`, Exp 4139 SHALL run the de-confounded RFT label arm:
+A is verifier-certified execution-valid labels, B is vote-certified labels,
+both N-matched from the same TRM candidate pool and evaluated as held-out exact
+accuracy with a CI95 A-B delta. When Exp 4138 reports validation accuracy below
+`0.80`, Exp 4139 SHALL set `graft_deferred=true`, report the current
+validation accuracy and `.384` estimate, and still preserve the headroom
+control plus ensemble rerank measurement when candidate sampling was possible.
+
+**Then** the terminal artifact SHALL be written to
+`results/experiment_4139_decisive_verifier_graft_sudoku.json` and SHALL
+contain top-level fields `honest_verdict`, `headroom_present`,
+`oracle_vs_vote_gap`, `executable_verifier_is_oracle`,
+`executable_oracle_upper_bound`, `ensemble_rerank_lift_vs_vote`,
+`rft_vs_ablation_delta`, `graft_deferred`, `verifier_value_added`, and
+`preconditions_checked`, each with principle text. `verifier_value_added` SHALL
+be true only when headroom is present and either the non-oracle ensemble rerank
+or the RFT A-vs-B label contrast beats vote with CI support; it SHALL never be
+computed from the executable-oracle rerank.
+
+### SCENARIO-LEARN-4139-NO-HEADROOM: Positive Control Is Uninformative
+
+**Given** the sampled candidate pools have oracle best-of-K exact accuracy less
+than or equal to TRM vote pass@1
+**When** Exp 4139 evaluates the rerank arms
+**Then** it reports `headroom_present=false`, `false_negative_risk=true`,
+keeps `executable_verifier_is_oracle=true`, preserves the oracle upper bound
+and ensemble metrics for context, and sets `verifier_value_added=false`
+without claiming that the transferable verifier failed.
+
+### SCENARIO-LEARN-4139-RERANK: Transferable Ensemble Is Headline Rerank
+
+**Given** candidate pools with positive oracle headroom
+**When** Exp 4139 reranks candidates
+**Then** `executable_oracle_upper_bound.delta` equals `oracle_vs_vote_gap`,
+`ensemble_rerank_lift_vs_vote` reports the non-oracle weighted
+energy/text-stat ensemble lift with CI95, and only the ensemble result can
+contribute to the rerank side of `verifier_value_added`.
+
+### SCENARIO-LEARN-4139-RFT-OR-DEFER: Label Contrast Runs Only On Near-Faithful Baselines
+
+**Given** Exp 4138 reports a faithful or near-faithful baseline
+**When** Exp 4139 has candidate pools with verifier-certified labels
+**Then** it reports `rft_vs_ablation_delta` with CI95 from the N-matched A-vs-B
+label contrast.
+
+**Given** Exp 4138 reports validation accuracy below `0.80`
+**When** Exp 4139 completes the rerank measurements
+**Then** it reports `graft_deferred=true`, current validation accuracy, and the
+`.384` estimate instead of dressing the missing RFT arm as a result.
+
+## Implementation Status (REQ-LEARN-4139)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4139 | Planned (python/carnot/experiment_4139_decisive_verifier_graft_sudoku.py, Exp 4139) | Planned (tests/python/test_experiment_4139_decisive_verifier_graft_sudoku.py) |
+
+---
+
 ## REQ-LEARN-4128: Conditional Sudoku Verifier Graft After Fixed-LR Baseline
 
 **Given** Exp 4127 has written
