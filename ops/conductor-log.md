@@ -8435,3 +8435,4 @@ c |
 | 2026-06-13 16:22 UTC | BASELINE HARVEST + DEFENSIVE contiguous continuati | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
 | 2026-06-13 16:37 UTC | THE DECISION-GRADE MOAT TEST (decidable at the INT | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
 | 2026-06-13 16:52 UTC | THE decisive verifier-as-REWARD GRAFT (DEFENSIVE o | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-13 17:10 UTC | NORTH STAR (ARC-AGI-3 EFFICIENCY axis, OFFLINE/air | OK | 89 passed, 1 warning in 5.62s |
