@@ -8426,3 +8426,4 @@ c |
 | 2026-06-13 13:49 UTC | THE DECISIVE verifier-as-reward GRAFT on the faith | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-13 14:03 UTC | ARC-AGI-3 INCREMENTAL +1 (monotonic) via the PROVE | FLAGGED | adversarial_verify CRITICAL: GATE_PASSED_WITHOUT_DATA — result quarantined, not  |
 | 2026-06-13 14:16 UTC | SOTA-INGESTION SLOT (reserved; bleeding-edge track | OK | 101 passed, 1 warning in 5.24s |
+| 2026-06-13 14:31 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra s | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
