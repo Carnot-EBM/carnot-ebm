@@ -8432,3 +8432,4 @@ c |
 | 2026-06-13 15:44 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-06-13 15:46 UTC | Milestone 2026.06.385 activated | OK | 10 tasks queued |
 | 2026-06-13 16:01 UTC | Archive .384 -> activate .385; KEEP the hardened g | OK | 91 passed, 1 warning in 6.83s |
+| 2026-06-13 16:22 UTC | BASELINE HARVEST + DEFENSIVE contiguous continuati | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY, DURATION_TOO_SHORT — result quarantined, |
