@@ -1,0 +1,372 @@
+{
+  "arc_games": {
+    "game_solved": true,
+    "honest_verdict": "success: fourteenth_game_solved_bp35-0a0ad940_at_action_16",
+    "levels_completed": 1,
+    "prior_total_games_solved": 12,
+    "real_env_confirmed": true,
+    "status": "new_game_solved",
+    "target_game": "bp35-0a0ad940",
+    "total_games_solved": 13
+  },
+  "baseline_reproduction": {
+    "accelerated_vs_v381": true,
+    "acceptance_gate_passed": true,
+    "contiguous_run_recommendation": null,
+    "honest_verdict": "complete: val=0.2782 faster_than_.381_but_not_yet_0.87 -> .383 continues",
+    "matches_published_087": false,
+    "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+    "status": "still_accumulating",
+    "val_exact_accuracy": 0.278172343969
+  },
+  "baseline_val_trajectory": {
+    "accelerated_vs_v381": true,
+    "deltas": [
+      0.08281249925531398,
+      0.17218276113199998
+    ],
+    "final_to_target_gap": 0.5918276560310001,
+    "final_val_exact_accuracy": 0.278172343969,
+    "moved_toward_087": true,
+    "per_pass_delta_vs_v381": {
+      "beats_v381": true,
+      "comparison": "faster_than_v381",
+      "deltas": [
+        0.172182761133
+      ],
+      "mean_delta": 0.172182761133,
+      "reference_delta": 0.01
+    },
+    "points": [
+      {
+        "experiment_id": 4108,
+        "pass_id": "pre_v381_reference",
+        "path": "results/experiment_4108_nanotrm_sudoku_extreme_baseline.json",
+        "sha256": "f708c69d6e1fdb0dd74a0e05435a5afb9504168477d93456302cbfc2e1dfaf27",
+        "source_field": "reproduced_exact_accuracy",
+        "val_exact_accuracy": 0.02317708358168602,
+        "val_exact_accuracy_rounded": 0.0232
+      },
+      {
+        "checkpoint_reload_ok": null,
+        "delta_vs_previous": null,
+        "experiment_id": 4127,
+        "kind": "starting_baseline",
+        "pass_id": "v381_starting_baseline",
+        "pass_index": 0,
+        "source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4118_sudoku_extreme_resume_pass3.json",
+        "source_field": "val_trajectory[].val_exact_accuracy",
+        "val_exact_accuracy": 0.105989582837,
+        "val_exact_accuracy_rounded": 0.106
+      },
+      {
+        "checkpoint_reload_ok": true,
+        "delta_vs_previous": 0.172182761133,
+        "experiment_id": 4127,
+        "kind": "fixed_lr_resume_pass",
+        "pass_id": "v382_fixed_lr_pass_1",
+        "pass_index": 1,
+        "source": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4127_sudoku_extreme_accumulate_fixed/pass_1_hydra/csv/version_0/metrics.csv",
+        "source_field": "val_trajectory[].val_exact_accuracy",
+        "val_exact_accuracy": 0.278172343969,
+        "val_exact_accuracy_rounded": 0.2782
+      }
+    ],
+    "published_exact_accuracy_target": 0.87,
+    "published_match_tolerance": 0.02,
+    "rounded_deltas": [
+      0.0828,
+      0.1722
+    ],
+    "rounded_values": [
+      0.0232,
+      0.106,
+      0.2782
+    ],
+    "status": "accelerated_but_still_accumulating",
+    "upstream_deltas": [
+      0.17218276113199998
+    ],
+    "upstream_values": [
+      0.105989582837,
+      0.278172343969
+    ],
+    "values": [
+      0.02317708358168602,
+      0.105989582837,
+      0.278172343969
+    ]
+  },
+  "duration_s": 0.002056992001598701,
+  "experiment_id": 4133,
+  "field_principles": {
+    "baseline_val_trajectory": "Val across .381+.382 (0.0232 -> 0.106 -> ...); shows whether the LR fix changed the convergence rate.",
+    "headline_outcome": "One of the enumerated set -- forces a single unambiguous read of the .382 result.",
+    "honest_verdict": "Terminal-prefixed. An honest 'lr fixed, still accumulating, .383 continues' is COMPLETE and valuable.",
+    "upstream_provenance": "{experiment_id, fields_imported, sha256} per cited upstream -- the audit trail proving the capstone synthesizes real measurements."
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "experiment_id": 4128,
+      "path": "results/experiment_4128_carnot_verifier_graft_sudoku.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "847c410417d12808dd391ad77f3ccafb8e16ac25cc68e8bcd7425e75bb0c8cf7"
+    },
+    {
+      "experiment_id": 4131,
+      "path": "results/experiment_4131_verifier_registry_gaps_hygiene.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "afc2b67a4babe8ff9455325712657a378e8881e9844e64405dbcc57945300aef"
+    }
+  ],
+  "hardware_continuity": {
+    "gatemate_step_taken": "blocked_gatemate_unreachable",
+    "honest_verdict": "complete: hardware_continuity_4132_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+    "included": true,
+    "kv260_terminal_confirmed": true,
+    "per_board_reachability": {
+      "gatemate": false,
+      "kv260": true,
+      "polarfire": true
+    },
+    "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded"
+  },
+  "headline_answers": {
+    "exp4126_lr_resume_fix_landed": true,
+    "exp4127_corrected_schedule_accelerated": true,
+    "exp4127_matches_published_087": false,
+    "exp4128_graft_or_defer": "deferred_by_baseline_not_reproduced",
+    "exp4128_verifier_value_added": false,
+    "total_arc_games_solved": 13
+  },
+  "headline_outcome": "lr_fixed_accumulating_v383_continues",
+  "honest_verdict": "complete: capstone_v382_lr_fixed_accumulating_v383_continues_lr_fixed1_accelerated1_baseline0870_graft_deferred_by_baseline_not_reproduced_games13_flagged_skipped2",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "lr_resume_fix": {
+    "fresh_warmup_lr": 2.4500000108673703e-06,
+    "honest_verdict": "complete: lr_resume_continuous_first_lr=9.9989331e-05",
+    "lr_continuous_across_resume": true,
+    "manual_lr_step_restored": 4300,
+    "prior_pass_last_lr": 4.949999947712058e-06,
+    "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+    "status": "fixed_lr_resume_continuous",
+    "validation_first_lr": 9.998933091992512e-05
+  },
+  "missing_upstream_artifacts": [],
+  "random_seed": 4133,
+  "registry_gap_hygiene": {
+    "honest_verdict": "",
+    "included": false,
+    "lr_resume_fix_status": "",
+    "regression_guard_passed": false,
+    "status": "skipped_flagged_adversarial",
+    "sudoku_baseline_status": "",
+    "sudoku_graft_status": ""
+  },
+  "reproducibility_checksum": "9f4e97394584ec962ba0ddd98fc845420ed07a2bcc27808855029cda53a8e51b",
+  "schema": "carnot.capstone_v382_4133.v1",
+  "sota_ingestion": {
+    "honest_verdict": "complete: sota_ingestion_resumable_training_mapped",
+    "included": true,
+    "methods_mapped": [
+      {
+        "arxiv_id_or_url": "https://lightning.ai/docs/pytorch/stable/common/checkpointing_basic.html",
+        "failure_mode": "Loading weights only or restarting the trainer silently rewinds the warmup/cosine schedule and fabricates long-horizon progress.",
+        "implementation_over_stack": "Resume nano-trm bounded passes with Trainer.fit(..., ckpt_path=...) so global_step, optimizer state, and LR scheduler state continue.",
+        "name": "PyTorch Lightning full-state checkpoint resume",
+        "url": "https://lightning.ai/docs/pytorch/stable/common/checkpointing_basic.html"
+      },
+      {
+        "arxiv_id_or_url": "https://docs.pytorch.org/tutorials/beginner/saving_loading_models.html",
+        "failure_mode": "A model-only checkpoint loses momentum buffers and parameter-group learning rates, causing an unreported resume discontinuity.",
+        "implementation_over_stack": "If a run bypasses Lightning, persist model state, optimizer state, epoch or step, LR scheduler state, data cursor, and RNG receipt.",
+        "name": "PyTorch optimizer-state checkpoint contract",
+        "url": "https://docs.pytorch.org/tutorials/beginner/saving_loading_models.html"
+      },
+      {
+        "arxiv_id_or_url": "https://lightning.ai/docs/pytorch/stable/advanced/training_tricks.html",
+        "failure_mode": "Counting microbatches as optimizer steps overstates the training horizon and moves the LR schedule at the wrong rate.",
+        "implementation_over_stack": "Use accumulate_grad_batches or GradientAccumulationScheduler to keep effective batch size explicit across microbatches and bounded passes.",
+        "name": "Lightning gradient-accumulation schedule",
+        "url": "https://lightning.ai/docs/pytorch/stable/advanced/training_tricks.html"
+      },
+      {
+        "arxiv_id_or_url": "2510.04871",
+        "failure_mode": "A checkpoint can reload correctly while still being an undertrained partial baseline, especially if LR state was reset.",
+        "implementation_over_stack": "Accumulate resumed nano-trm Sudoku evidence by global optimizer step and held-out exact accuracy before any verifier-lift claim.",
+        "name": "TRM long-horizon baseline gate",
+        "url": "https://arxiv.org/abs/2510.04871"
+      },
+      {
+        "arxiv_id_or_url": "2511.02886",
+        "failure_mode": "Full fine-tuning can win through adaptation compute alone, and a per-pass LR reset confounds the verifier comparison.",
+        "implementation_over_stack": "Keep a no-verifier full-fine-tune control with the same accumulated optimizer-step budget and the same resumed LR schedule receipts.",
+        "name": "TTA-TRM bounded full-fine-tune control",
+        "url": "https://arxiv.org/abs/2511.02886"
+      }
+    ]
+  },
+  "sudoku_verifier_graft": {
+    "estimated_passes_to_converge_for_383": null,
+    "exp4128_artifact_status": "skipped_flagged_adversarial",
+    "graft_deferred": true,
+    "honest_verdict": "",
+    "rerank_lift_vs_vote": null,
+    "rft_vs_ablation_ci95": null,
+    "rft_vs_ablation_delta": null,
+    "status": "deferred_by_baseline_not_reproduced",
+    "verifier_value_added": false
+  },
+  "total_arc_games_solved": 13,
+  "upstream_artifact_state": {
+    "4126": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: lr_resume_continuous_first_lr=9.9989331e-05",
+      "included": true,
+      "path": "results/experiment_4126_lr_resume_correctness_fix.json",
+      "skipped": false
+    },
+    "4127": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: val=0.2782 faster_than_.381_but_not_yet_0.87 -> .383 continues",
+      "included": true,
+      "path": "results/experiment_4127_sudoku_extreme_accumulate_fixed.json",
+      "skipped": false
+    },
+    "4128": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: graft_deferred baseline_val=0.2782 estimated_passes_to_.383=4",
+      "included": false,
+      "path": "results/experiment_4128_carnot_verifier_graft_sudoku.json",
+      "skipped": true
+    },
+    "4129": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "success: fourteenth_game_solved_bp35-0a0ad940_at_action_16",
+      "included": true,
+      "path": "results/experiment_4129_fourteenth_game_explore_first.json",
+      "skipped": false
+    },
+    "4130": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: sota_ingestion_resumable_training_mapped",
+      "included": true,
+      "path": "results/experiment_4130_sota_ingestion_resumable_training.json",
+      "skipped": false
+    },
+    "4131": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v382_truth_regression_guard_passed_True_lr_resume_fixed_lr_resume_continuous_sudoku_baseline_open_baseline_not_reproduced_val_0.2782_graft_deferred_True_verifier_value_added_False",
+      "included": false,
+      "path": "results/experiment_4131_verifier_registry_gaps_hygiene.json",
+      "skipped": true
+    },
+    "4132": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: hardware_continuity_4132_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+      "included": true,
+      "path": "results/experiment_4132_hardware_continuity.json",
+      "skipped": false
+    }
+  },
+  "upstream_provenance": [
+    {
+      "experiment_id": 4126,
+      "fields_imported": [
+        "lr_continuous_across_resume",
+        "validation_first_lr",
+        "fresh_warmup_lr",
+        "prior_pass_last_lr",
+        "stable_checkpoint_path",
+        "manual_lr_step_restored"
+      ],
+      "honest_verdict": "complete: lr_resume_continuous_first_lr=9.9989331e-05",
+      "path": "results/experiment_4126_lr_resume_correctness_fix.json",
+      "sha256": "7ca534abb9af384f518af8e1704789f167777ba528985eb73a2abbd01f890e6a",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4127,
+      "fields_imported": [
+        "val_trajectory",
+        "per_pass_delta_vs_v381",
+        "matches_published_087",
+        "stable_checkpoint_path",
+        "acceptance_gate_passed",
+        "contiguous_run_recommendation"
+      ],
+      "honest_verdict": "complete: val=0.2782 faster_than_.381_but_not_yet_0.87 -> .383 continues",
+      "path": "results/experiment_4127_sudoku_extreme_accumulate_fixed.json",
+      "sha256": "860011429c37e3392085d1209e8d8ee915d3663df64cbd3dbfa70b82086fc158",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4128,
+      "fields_imported": [],
+      "honest_verdict": "complete: graft_deferred baseline_val=0.2782 estimated_passes_to_.383=4",
+      "path": "results/experiment_4128_carnot_verifier_graft_sudoku.json",
+      "sha256": "847c410417d12808dd391ad77f3ccafb8e16ac25cc68e8bcd7425e75bb0c8cf7",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4129,
+      "fields_imported": [
+        "prior_total_games_solved",
+        "total_games_solved",
+        "game_solved",
+        "real_env_confirmed",
+        "levels_completed",
+        "target_game"
+      ],
+      "honest_verdict": "success: fourteenth_game_solved_bp35-0a0ad940_at_action_16",
+      "path": "results/experiment_4129_fourteenth_game_explore_first.json",
+      "sha256": "0fa28ce1a137343bf9f11a082374cbc36bdec093cb9c15e8c514fa4422e3443b",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4130,
+      "fields_imported": [
+        "methods_mapped"
+      ],
+      "honest_verdict": "complete: sota_ingestion_resumable_training_mapped",
+      "path": "results/experiment_4130_sota_ingestion_resumable_training.json",
+      "sha256": "27954fc3be7f37eb382e5e6c3b5356177556fe8e6c04ef971ace4dd31b69ce5b",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4131,
+      "fields_imported": [],
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v382_truth_regression_guard_passed_True_lr_resume_fixed_lr_resume_continuous_sudoku_baseline_open_baseline_not_reproduced_val_0.2782_graft_deferred_True_verifier_value_added_False",
+      "path": "results/experiment_4131_verifier_registry_gaps_hygiene.json",
+      "sha256": "afc2b67a4babe8ff9455325712657a378e8881e9844e64405dbcc57945300aef",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4132,
+      "fields_imported": [
+        "kv260_terminal_confirmed",
+        "per_board_reachability",
+        "gatemate_step_taken",
+        "polarfire_step_taken"
+      ],
+      "honest_verdict": "complete: hardware_continuity_4132_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+      "path": "results/experiment_4132_hardware_continuity.json",
+      "sha256": "5c188bf4e3724639d65e33e443815613b017679bdabe98d180cf13f24d3e00cf",
+      "skip_reason": "",
+      "skipped": false
+    }
+  ]
+}
