@@ -12690,6 +12690,68 @@ reproducibility checksum, and scalar runtime below 4800 seconds.
 
 ---
 
+## REQ-LEARN-4146: Sudoku Extreme Pass 1 Epoch-Ceiling No-Op Guard
+
+**Given** the `.384` pass resumes from
+`results/trm_runs/sudoku_extreme_baseline/last.ckpt`, Exp 4146 SHALL verify
+`uv`, `nano-trm/src/nn/train.py`, CUDA availability, and that the stable
+checkpoint exists and is loadable before deciding whether native training is
+allowed. It SHALL read the checkpoint seed epoch, global step, and Lightning
+timer elapsed state from that same checkpoint. It SHALL also read the
+`trm_sudoku_extreme_1k_aug_1k` experiment config and resolve the current
+`trainer.max_epochs` ceiling from `timekeeping.max_epochs`.
+
+**When** the checkpoint seed epoch is greater than or equal to the resolved
+max-epochs ceiling, Exp 4146 SHALL set `max_epochs_cap_confirmed=true` and may
+launch the native trainer only with an epoch ceiling raised above the checkpoint
+epoch by approximately 3000 epochs, a one-day `trainer.max_time` bound, CSV
+logging, progress printing, and ModelCheckpoint writing `last.ckpt` back into
+`results/trm_runs/sudoku_extreme_baseline`. The command SHALL resume
+`ckpt_path=<repo>/results/trm_runs/sudoku_extreme_baseline/last.ckpt`, use
+`experiment=trm_sudoku_extreme_1k_aug_1k`, `data.data_dir=./data/sudoku_extreme_1k_aug_1k`,
+`seed=4108`, and preserve the fixed-LR resume environment from Exp 4127.
+
+**Then** Exp 4146 SHALL write
+`results/experiment_4146_sudoku_accumulate_pass1_epochfix.json` with the
+top-level fields `honest_verdict`, `max_epochs_cap_confirmed`, `seed_epoch`,
+`post_epoch`, `val_exact_accuracy`, `stable_checkpoint_path`, `duration_s`, and
+`random_seed`. A `complete:` verdict is valid only when `duration_s > 120`,
+`post_epoch > seed_epoch`, and `val_exact_accuracy` is a real numeric
+validation exact accuracy parsed from the CSV metrics. If any anti-no-op proof
+fails, the artifact SHALL use an honest `blocked_noop_*` verdict that names the
+diagnosed cause instead of claiming progress. If runtime preconditions fail,
+the artifact SHALL use the relevant `blocked_<resource>` verdict and SHALL NOT
+launch training.
+
+### SCENARIO-LEARN-4146-BLOCKED-NOOP: Diagnosis Blocks A False Epoch-Cap Fix
+
+**Given** the stable checkpoint loads but its seed epoch is below the resolved
+max-epochs ceiling, or another checkpointed stop state already explains an
+instant return
+**When** Exp 4146 starts
+**Then** it writes a `blocked_noop_*` artifact, reports
+`max_epochs_cap_confirmed=false`, preserves the measured seed epoch, keeps
+`post_epoch` equal to the seed epoch, reports `val_exact_accuracy=null`, records
+the diagnosed cause, and does not call the native trainer.
+
+### SCENARIO-LEARN-4146: Bounded Epoch-Fixed Pass Proves Real Training
+
+**Given** the checkpoint seed epoch is at the resolved max-epochs ceiling and
+all runtime preconditions pass
+**When** Exp 4146 runs the bounded native epoch-fixed resume pass
+**Then** the artifact reports `max_epochs_cap_confirmed=true`, the original
+seed epoch, a post-pass epoch greater than that seed epoch, a real
+`val_exact_accuracy`, the shared stable checkpoint path, seed `4108`, and a
+duration above 120 seconds.
+
+## Implementation Status (REQ-LEARN-4146)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4146 | Implemented (python/carnot/experiment_4146_sudoku_accumulate_pass1_epochfix.py, Exp 4146) | Implemented (tests/python/test_experiment_4146_sudoku_accumulate_pass1_epochfix.py) |
+
+---
+
 ## REQ-LEARN-4139: Decisive Sudoku Verifier Graft With Oracle Separation
 
 **Given** Exp 4138 has written
