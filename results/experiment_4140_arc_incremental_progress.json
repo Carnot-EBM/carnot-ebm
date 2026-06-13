@@ -1,0 +1,421 @@
+{
+  "acceptance_gate_passed": true,
+  "action_plan": [],
+  "candidate_baseline_actions": 22,
+  "duration_s": 6.463,
+  "executed_real_env_actions": 40,
+  "experiment": "experiment_4140_arc_incremental_progress",
+  "exploration_actions_used": 40,
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed. An honest no-solve is a COMPLETE verdict.",
+    "levels_completed": "Real-env-confirmed level count for the targeted game; the falsifiable evidence of an actual solve.",
+    "real_env_confirmed": "Only real-env solves raise the headline count.",
+    "target_game": "Which game/level was targeted; the audit trail for the incremental-progress claim.",
+    "total_levels_solved": "The monotonic progress metric; must be >= the prior milestone's count (game-first-solves AND next-level advances both count)."
+  },
+  "honest_verdict": "complete: incremental_progress_no_solve_r11l-495a7899_L5_no_verifier_validated_level_up_candidate",
+  "induced_mechanic": "r11l safe-composite path through collision-forbidden mask",
+  "inference_substrate": "offline_arc_agi3_gap4_scoped_incremental_progress",
+  "levels_completed": 4,
+  "new_levels_solved_this_task": 0,
+  "phase_trace": [
+    {
+      "levels_completed": 4,
+      "phase": "observe",
+      "source": "offline_r11l_frontier_reestablishment",
+      "target_game": "r11l-495a7899",
+      "target_level": 5
+    },
+    {
+      "actions": 24,
+      "phase": "explore",
+      "source": "banked_r11l_L1_to_L3_replay"
+    },
+    {
+      "actions": 14,
+      "levels_completed": 3,
+      "macro": {
+        "heuristic_after": 1008.0,
+        "kind": "r11l_safe_composite_path_macro",
+        "moves": [
+          {
+            "expected_composite_after": [
+              50,
+              21
+            ],
+            "group_id": "blxuubrengnt",
+            "level": 4,
+            "piece_index": 1,
+            "rule": "safe-composite path through collision-forbidden mask",
+            "top_left": [
+              -1,
+              50
+            ]
+          },
+          {
+            "expected_composite_after": [
+              49,
+              11
+            ],
+            "group_id": "blxuubrengnt",
+            "level": 4,
+            "piece_index": 0,
+            "rule": "safe-composite path through collision-forbidden mask",
+            "top_left": [
+              23,
+              48
+            ]
+          },
+          {
+            "expected_composite_after": [
+              38,
+              35
+            ],
+            "group_id": "orrqljliwocqblxuubpumlzd",
+            "level": 4,
+            "piece_index": 1,
+            "rule": "safe-composite path through collision-forbidden mask",
+            "top_left": [
+              50,
+              58
+            ]
+          },
+          {
+            "expected_composite_after": [
+              45,
+              29
+            ],
+            "group_id": "orrqljliwocqblxuubpumlzd",
+            "level": 4,
+            "piece_index": 0,
+            "rule": "safe-composite path through collision-forbidden mask",
+            "top_left": [
+              8,
+              32
+            ]
+          },
+          {
+            "expected_composite_after": [
+              25,
+              21
+            ],
+            "group_id": "yeogyfgrhcew",
+            "level": 4,
+            "piece_index": 1,
+            "rule": "safe-composite path through collision-forbidden mask",
+            "top_left": [
+              40,
+              -2
+            ]
+          },
+          {
+            "expected_composite_after": [
+              12,
+              37
+            ],
+            "group_id": "yeogyfgrhcew",
+            "level": 4,
+            "piece_index": 2,
+            "rule": "safe-composite path through collision-forbidden mask",
+            "top_left": [
+              56,
+              4
+            ]
+          },
+          {
+            "expected_composite_after": [
+              8,
+              43
+            ],
+            "group_id": "yeogyfgrhcew",
+            "level": 4,
+            "piece_index": 0,
+            "rule": "safe-composite path through collision-forbidden mask",
+            "top_left": [
+              33,
+              22
+            ]
+          }
+        ],
+        "predicted_levels_after": 3,
+        "simulated_click_actions": 14,
+        "simulated_levels_after": 3
+      },
+      "phase": "act",
+      "source": "prior_validated_r11l_L4_replay"
+    },
+    {
+      "actions": 2,
+      "levels_completed": 4,
+      "macro": {
+        "heuristic_after": 0.0,
+        "kind": "r11l_safe_composite_path_macro",
+        "moves": [
+          {
+            "expected_composite_after": [
+              49,
+              11
+            ],
+            "group_id": "blxuubrengnt",
+            "level": 4,
+            "piece_index": 0,
+            "rule": "safe-composite path through collision-forbidden mask",
+            "top_left": [
+              23,
+              48
+            ]
+          }
+        ],
+        "predicted_levels_after": 4,
+        "simulated_click_actions": 2,
+        "simulated_levels_after": 4
+      },
+      "phase": "act",
+      "source": "prior_validated_r11l_L4_replay"
+    },
+    {
+      "candidate_moves": 0,
+      "mechanic": "r11l safe-composite path through collision-forbidden mask",
+      "phase": "induce",
+      "predicted_level_after_actions": 4,
+      "source": "observed_r11l_frontier_state"
+    },
+    {
+      "energy": 1.0,
+      "final_level_completed": 4,
+      "heldout_transition_count": 0,
+      "level_increment": false,
+      "phase": "verify",
+      "predicted_level_after_actions": 5,
+      "retained": false,
+      "start_level_completed": 4,
+      "verifier": "gap4_heldout_executed_consistency_frontier_replay"
+    }
+  ],
+  "prior_level": 4,
+  "prior_total_levels_solved": 13,
+  "random_seed": 4140,
+  "real_env_confirmed": false,
+  "requirements": [
+    "REQ-PHASE4-050",
+    "SCENARIO-PHASE4-050"
+  ],
+  "selected_candidate_reason": "selected r11l L5 after strict non-spatial L1 pool was exhausted",
+  "selection_mode": "next_level_after_strict_nonspatial_exhaustion",
+  "solve_trace": {
+    "actions": [],
+    "phase_trace": [
+      {
+        "levels_completed": 4,
+        "phase": "observe",
+        "source": "offline_r11l_frontier_reestablishment",
+        "target_game": "r11l-495a7899",
+        "target_level": 5
+      },
+      {
+        "actions": 24,
+        "phase": "explore",
+        "source": "banked_r11l_L1_to_L3_replay"
+      },
+      {
+        "actions": 14,
+        "levels_completed": 3,
+        "macro": {
+          "heuristic_after": 1008.0,
+          "kind": "r11l_safe_composite_path_macro",
+          "moves": [
+            {
+              "expected_composite_after": [
+                50,
+                21
+              ],
+              "group_id": "blxuubrengnt",
+              "level": 4,
+              "piece_index": 1,
+              "rule": "safe-composite path through collision-forbidden mask",
+              "top_left": [
+                -1,
+                50
+              ]
+            },
+            {
+              "expected_composite_after": [
+                49,
+                11
+              ],
+              "group_id": "blxuubrengnt",
+              "level": 4,
+              "piece_index": 0,
+              "rule": "safe-composite path through collision-forbidden mask",
+              "top_left": [
+                23,
+                48
+              ]
+            },
+            {
+              "expected_composite_after": [
+                38,
+                35
+              ],
+              "group_id": "orrqljliwocqblxuubpumlzd",
+              "level": 4,
+              "piece_index": 1,
+              "rule": "safe-composite path through collision-forbidden mask",
+              "top_left": [
+                50,
+                58
+              ]
+            },
+            {
+              "expected_composite_after": [
+                45,
+                29
+              ],
+              "group_id": "orrqljliwocqblxuubpumlzd",
+              "level": 4,
+              "piece_index": 0,
+              "rule": "safe-composite path through collision-forbidden mask",
+              "top_left": [
+                8,
+                32
+              ]
+            },
+            {
+              "expected_composite_after": [
+                25,
+                21
+              ],
+              "group_id": "yeogyfgrhcew",
+              "level": 4,
+              "piece_index": 1,
+              "rule": "safe-composite path through collision-forbidden mask",
+              "top_left": [
+                40,
+                -2
+              ]
+            },
+            {
+              "expected_composite_after": [
+                12,
+                37
+              ],
+              "group_id": "yeogyfgrhcew",
+              "level": 4,
+              "piece_index": 2,
+              "rule": "safe-composite path through collision-forbidden mask",
+              "top_left": [
+                56,
+                4
+              ]
+            },
+            {
+              "expected_composite_after": [
+                8,
+                43
+              ],
+              "group_id": "yeogyfgrhcew",
+              "level": 4,
+              "piece_index": 0,
+              "rule": "safe-composite path through collision-forbidden mask",
+              "top_left": [
+                33,
+                22
+              ]
+            }
+          ],
+          "predicted_levels_after": 3,
+          "simulated_click_actions": 14,
+          "simulated_levels_after": 3
+        },
+        "phase": "act",
+        "source": "prior_validated_r11l_L4_replay"
+      },
+      {
+        "actions": 2,
+        "levels_completed": 4,
+        "macro": {
+          "heuristic_after": 0.0,
+          "kind": "r11l_safe_composite_path_macro",
+          "moves": [
+            {
+              "expected_composite_after": [
+                49,
+                11
+              ],
+              "group_id": "blxuubrengnt",
+              "level": 4,
+              "piece_index": 0,
+              "rule": "safe-composite path through collision-forbidden mask",
+              "top_left": [
+                23,
+                48
+              ]
+            }
+          ],
+          "predicted_levels_after": 4,
+          "simulated_click_actions": 2,
+          "simulated_levels_after": 4
+        },
+        "phase": "act",
+        "source": "prior_validated_r11l_L4_replay"
+      },
+      {
+        "candidate_moves": 0,
+        "mechanic": "r11l safe-composite path through collision-forbidden mask",
+        "phase": "induce",
+        "predicted_level_after_actions": 4,
+        "source": "observed_r11l_frontier_state"
+      },
+      {
+        "energy": 1.0,
+        "final_level_completed": 4,
+        "heldout_transition_count": 0,
+        "level_increment": false,
+        "phase": "verify",
+        "predicted_level_after_actions": 5,
+        "retained": false,
+        "start_level_completed": 4,
+        "verifier": "gap4_heldout_executed_consistency_frontier_replay"
+      }
+    ],
+    "prior_level": 4,
+    "selection_mode": "next_level_after_strict_nonspatial_exhaustion",
+    "selection_reason": "selected r11l L5 after strict non-spatial L1 pool was exhausted",
+    "target_game": "r11l-495a7899",
+    "target_level": 5,
+    "verification_decisions": [
+      {
+        "energy": 1.0,
+        "final_level_completed": 4,
+        "heldout_transition_count": 0,
+        "level_increment": false,
+        "phase": "verify",
+        "predicted_level_after_actions": 5,
+        "retained": false,
+        "start_level_completed": 4,
+        "verifier": "gap4_heldout_executed_consistency_frontier_replay"
+      }
+    ]
+  },
+  "strict_nonspatial_exhausted": true,
+  "submitted_to_leaderboard": false,
+  "target_game": "r11l-495a7899",
+  "target_level": 5,
+  "title": "arc3_incremental_progress_scoped_frontier",
+  "total_games_solved": 13,
+  "total_levels_solved": 13,
+  "verification_decisions": [
+    {
+      "energy": 1.0,
+      "final_level_completed": 4,
+      "heldout_transition_count": 0,
+      "level_increment": false,
+      "phase": "verify",
+      "predicted_level_after_actions": 5,
+      "retained": false,
+      "start_level_completed": 4,
+      "verifier": "gap4_heldout_executed_consistency_frontier_replay"
+    }
+  ],
+  "verifier_validated": false
+}
