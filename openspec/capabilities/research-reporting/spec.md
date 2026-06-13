@@ -20300,6 +20300,70 @@ and reconciliation files untouched.
 |---|---|---|
 | REQ-REPORT-4162 | Implemented (`python/carnot/experiment_4162_sota_ingestion_verifier_moat_guidance.py`, `docs/research-notes/sota-ingestion-verifier-moat-guidance-2026-06-13.md`) | Implemented (`tests/python/test_experiment_4162_sota_ingestion_verifier_moat_guidance.py`) |
 
+### REQ-REPORT-4170: SOTA Ingestion Mapping For Verifier-Moat Guidance Into .387
+
+The Exp 4170 workflow SHALL emit a dated SOTA-to-experiment mapping note for
+the `.387` verifier-moat guidance handoff. The note SHALL map TRM
+(`arXiv:2510.04871`), TTA-TRM (`arXiv:2511.02886`), V-STaR
+(`arXiv:2402.06457`), SEDD (`arXiv:2310.16834`), classifier-guided diffusion
+(`arXiv:2105.05233`), classifier-free diffusion guidance
+(`arXiv:2207.12598`), EntRGi (`arXiv:2602.05000`), and EDLM
+(`arXiv:2410.21357`) to concrete consequences for the Carnot-verifier plus
+queued DiffusionGemma stack. The markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-verifier-moat-guidance-v387-2026-06-13.md`
+and the machine-checkable mapping artifact SHALL be written to
+`results/experiment_4170_sota_ingestion_verifier_moat_guidance.json`.
+
+Before writing the note, the workflow SHALL read `research-studying.md` and
+`research-references.md` filtered to verifier-as-reward and
+energy-guided-generation, SHALL run `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py` with focused reliable-channel queries, SHALL
+verify the top mapped papers with low-concurrency WebSearch/WebFetch, and
+SHALL NOT invoke `/deep-research`. The note SHALL record that Exp 4168 left
+DiffusionGemma guidance gated because `verifier_value_added=false` came from a
+deferred, unfaithful/still-training baseline rather than from a tested positive
+or negative guidance result.
+
+For each mapped method, the note SHALL state (a) the Carnot-verifier
+implication, (b) the queued DiffusionGemma-stack implication, and (c) the
+concrete experiment mapping for the next planner. The mapped method set SHALL
+include at least three verified anchors with real arXiv IDs and URLs, and every
+method claim SHALL carry a real arXiv ID and URL. The workflow SHALL update
+`research-studying.md` to mark the `.387` candidate set as ingested, SHALL
+include `flagged_for_v387`, and SHALL NOT update `ops/changelog.md`,
+`ops/status.md`, `_bmad/traceability.md`, or `scripts/research_conductor.py`.
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v387`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, and `flagged_for_v387`. `honest_verdict`
+SHALL use a terminal prefix and, on the complete path, start with
+`complete: sota_ingestion_verifier_moat_guidance_mapped_v387`.
+`methods_mapped` SHALL be a list of at least three dicts with exactly `name`,
+`arxiv_id_or_url`, `url`, `carnot_verifier_implication`,
+`queued_diffusiongemma_implication`, and `experiment_mapping`; each
+`arxiv_id_or_url` SHALL be one of the WebFetch-verified arXiv IDs, preventing
+fabricated or uncited method rows. `flagged_for_v387` SHALL be a non-empty
+concrete roadmap slug naming the strongest method for the next planner.
+
+#### SCENARIO-REPORT-4170: Verifier-Moat Guidance Ingestion Closes The .387 Loop
+
+**Given** the verifier graft remains deferred by an unfaithful/still-training
+baseline and the DiffusionGemma guidance route remains queued behind positive
+verifier discrimination
+**When** the Exp 4170 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON mapping artifact, maps
+verified method papers to Carnot-verifier, queued DiffusionGemma, and concrete
+experiment implications, updates `research-studying.md` idempotently, flags the
+single strongest `.387` follow-up, and leaves conductor and reconciliation
+files untouched.
+
+## Implementation Status (REQ-REPORT-4170)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4170 | Implemented (`python/carnot/experiment_4170_sota_ingestion_verifier_moat_guidance.py`, `docs/research-notes/sota-ingestion-verifier-moat-guidance-v387-2026-06-13.md`) | Implemented (`tests/python/test_experiment_4170_sota_ingestion_verifier_moat_guidance.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
