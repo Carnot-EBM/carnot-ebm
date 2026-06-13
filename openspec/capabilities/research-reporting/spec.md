@@ -20164,6 +20164,71 @@ claim `.381` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4125 | Implemented (`python/carnot/reporting/archive_v381_activate_v382_4125.py`, `scripts/experiments/exp4125_archive_v381_activate_v382.py`) | Implemented (`tests/python/test_experiment_4125_archive_v381_activate_v382.py`) |
 
+### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
+
+The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
+`2026.06.383` is active, and write the record-only artifact
+`results/experiment_4134_archive_v382_activate_v383.json`. It SHALL run NO live
+model training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`.
+
+Before writing the complete artifact, the workflow SHALL verify these
+preconditions and stop with a `blocked_<resource>` honest verdict if any fail:
+
+- `research-complete.yaml` parses under `yaml.safe_load`.
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`.
+- `nano-trm/src/nn/train.py` exists.
+- The smart-subset pre-test gate is green.
+
+The workflow SHALL ensure `research-complete.yaml` contains a single `.382`
+archive record, appending the canonical `.382` record only when absent and
+removing duplicate top-level `.382` records if interrupted conductor appends
+created any. The workflow SHALL keep `research-complete.yaml` parseable after
+any edit.
+
+The artifact SHALL carry the required principle-annotated fields
+`honest_verdict`, `v382_close_state`, and `preconditions_checked`.
+Complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v382_close_state` SHALL truthfully record
+that Exp 4126 landed the LR-resume-correctness fix
+(`lr_continuous_across_resume=true`) with the resumed start learning rate near
+`9.999e-05` rather than the fresh warmup reset near `2.45e-06`, that validation
+accumulated from roughly `0.106` to `0.278` in one corrected pass, that the pass
+delta was about `0.172` and faster than `.381`'s roughly `0.01` per-pass delta,
+that the baseline was still below the published `0.87` gate, that the verifier
+graft was therefore deferred, and that the close-state total games solved is
+`13`.
+
+#### SCENARIO-REPORT-4134: The Archive Preserves The Honest .382 Fixed-LR Diagnosis
+
+**Given** the `.382` capstone records the LR-resume fix as landed, the
+corrected schedule's validation trajectory as `0.106 -> 0.278`, the baseline as
+still below `0.87`, the verifier graft as deferred, total games solved as `13`,
+the history and exclusion-manifest YAML files parse, `nano-trm/src/nn/train.py`
+exists, the smart-subset pre-test gate is green, and `.383` is active
+**When** the Exp 4134 archive workflow runs
+**Then** it archives `.382`, confirms `.383`, keeps the YAML history parseable
+with one `.382` record, writes
+`results/experiment_4134_archive_v382_activate_v383.json`, records the LR
+continuity, accelerated accumulation, unfaithful baseline, graft deferral, and
+total games solved in `v382_close_state`, records the checked resources in
+`preconditions_checked`, declares `aggregation_from_upstream_artifacts`, and
+emits a terminal-prefixed honest verdict.
+
+#### SCENARIO-REPORT-4134-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4134 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does not
+claim `.382` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4134)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4134 | Implemented (`python/carnot/reporting/archive_v382_activate_v383_4134.py`, `python/carnot/experiment_4134_archive_v382_activate_v383.py`) | Implemented (`tests/python/test_experiment_4134_archive_v382_activate_v383.py`) |
+
 ### REQ-REPORT-4106: Archive .379, Activate .380, Record The Honest Anti-Discrimination Close-State
 
 The Exp 4106 workflow SHALL archive milestone `2026.06.379`, confirm milestone

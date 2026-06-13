@@ -1,0 +1,117 @@
+{
+  "activated_milestone": "2026.06.383",
+  "active_milestone_confirmed": "2026.06.383",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.382",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4133_capstone_v382.json",
+      "experiment_id": "4133",
+      "sha256": "99e096c7b3fe180276775f2f29fc6de81b41f1ba0c7933d91bc123500572eb89"
+    }
+  ],
+  "duration_s": 12.538742,
+  "exclusion_manifest_parses": true,
+  "experiment_id": "exp4134",
+  "field_principles": {
+    "activated_milestone": "Confirms .383 is live for convergence and the decisive graft.",
+    "archived_milestone": "Provenance: the milestone being closed, 2026.06.382.",
+    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
+    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
+    "honest_verdict": "Self-declared terminal state. MUST start with complete:/success:/passed:/shipped:.",
+    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
+    "nano_trm_train_present": "Bare bool: nano-trm/src/nn/train.py exists before activation.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
+    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
+    "v382_close_state": "Honest record (LR fix landed, accumulation accelerated ~17x, baseline still <0.87, graft deferred) so the next planner builds on the truth."
+  },
+  "honest_verdict": "success: archived_v382_v383_active_lr_fixed_accumulating_val_0.278_baseline_below_087_graft_deferred_games13_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "nano_trm_train_present": true,
+  "preconditions_checked": {
+    "active_milestone": "2026.06.383",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "exclusion_manifest_exists": true,
+    "exclusion_manifest_parses": true,
+    "nano_trm_train_path": "nano-trm/src/nn/train.py",
+    "nano_trm_train_present": true,
+    "pretest_command": [
+      ".venv/bin/pytest",
+      "tests/python/test_pipeline_extract.py",
+      "tests/python/test_docs.py",
+      "-q",
+      "--no-header",
+      "-n",
+      "0",
+      "--no-cov",
+      "-o",
+      "addopts="
+    ],
+    "pretest_exit_code": 0,
+    "pretest_suite_green": true,
+    "research_complete_duplicates_removed": 0,
+    "research_complete_record_action": "unchanged",
+    "research_complete_yaml_exists": true,
+    "research_complete_yaml_parses": true,
+    "research_complete_yaml_parses_after_edit": true
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4134,
+  "reproducibility_checksum": "f06520d3b558c24f28b28a97dc56dd4064dda407dd0437f8b2fb7159d45fe5ec",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "unchanged",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v382_to_v383_4134.v1",
+  "task_id": "exp4134-archive-v382-activate-v383",
+  "v382_close_state": {
+    "accelerated_vs_v381": true,
+    "baseline_reproduced": false,
+    "baseline_status": "still_accumulating",
+    "capstone_v382": {
+      "artifact_present": true,
+      "headline_outcome": "lr_fixed_accumulating_v383_continues",
+      "honest_verdict": "complete: capstone_v382_lr_fixed_accumulating_v383_continues_lr_fixed1_accelerated1_baseline0870_graft_deferred_by_baseline_not_reproduced_games13_flagged_skipped2"
+    },
+    "delta_vs_previous": 0.17218276113199998,
+    "delta_vs_previous_rounded": 0.172,
+    "final_val_exact_accuracy": 0.278172343969,
+    "final_val_exact_accuracy_rounded": 0.278,
+    "fresh_warmup_lr": 2.4500000108673703e-06,
+    "fresh_warmup_lr_rounded": 2.45e-06,
+    "graft_deferred": true,
+    "graft_deferred_reason": "deferred_by_baseline_not_reproduced",
+    "lr_continuous_across_resume": true,
+    "lr_resume_fix_landed": true,
+    "manual_lr_step_restored": 4300,
+    "per_pass_delta_vs_v381": {
+      "beats_v381": true,
+      "comparison": "faster_than_v381",
+      "mean_delta": 0.172182761133,
+      "reference_delta": 0.01,
+      "speedup_factor_vs_v381": 17.2
+    },
+    "published_exact_accuracy_target": 0.87,
+    "reported_close_state_sequence": {
+      "basis": "results/experiment_4133_capstone_v382.json",
+      "val_exact_accuracy": [
+        0.105989582837,
+        0.278172343969
+      ],
+      "val_exact_accuracy_rounded": [
+        0.106,
+        0.278
+      ]
+    },
+    "start_val_exact_accuracy": 0.105989582837,
+    "summary": "lr_resume_fix_landed_accumulation_accelerated_baseline_still_below_087_graft_deferred",
+    "total_games_solved": 13,
+    "v383_forward_plan": {
+      "baseline_accumulation_passes": 4,
+      "graft_policy": "converge the fixed-LR baseline first, then run the decisive verifier graft"
+    },
+    "validation_start_lr": 9.998933091992512e-05,
+    "validation_start_lr_rounded": 9.999e-05,
+    "verifier_value_added": false
+  }
+}
