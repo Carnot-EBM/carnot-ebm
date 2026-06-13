@@ -1,0 +1,415 @@
+{
+  "arc_games": {
+    "carry_forward_provenance": {
+      "experiment_id": 4144,
+      "fields_imported": [
+        "total_arc_games_solved"
+      ],
+      "path": "results/experiment_4144_capstone_v383.json",
+      "sha256": "32ae7879e0dfc533cf1c5c5b1939501d35818eecffe19e2a6cd299d978c8356a",
+      "total_arc_games_solved": 13,
+      "total_arc_levels_solved": 13
+    },
+    "honest_verdict": "",
+    "real_env_confirmed": false,
+    "status": "prior_clean_carry_forward",
+    "total_arc_games_solved": 13,
+    "verifier_validated": false
+  },
+  "baseline_val_trajectory": {
+    "attempted_passes": [
+      {
+        "experiment_id": 4146,
+        "included": false,
+        "pass_index": 1,
+        "status": "skipped_flagged_adversarial"
+      },
+      {
+        "experiment_id": 4147,
+        "included": false,
+        "pass_index": 2,
+        "status": "skipped_flagged_adversarial"
+      },
+      {
+        "experiment_id": 4148,
+        "included": false,
+        "pass_index": 3,
+        "status": "skipped_flagged_adversarial"
+      },
+      {
+        "experiment_id": 4149,
+        "included": false,
+        "pass_index": 4,
+        "status": "skipped_flagged_adversarial"
+      }
+    ],
+    "deltas": [
+      0.17218276113199998
+    ],
+    "exp4146_epoch_fix_unstalled": false,
+    "final_to_target_gap": 0.5918276560310001,
+    "final_val_exact_accuracy": 0.278172343969,
+    "matches_published_087": null,
+    "points": [
+      {
+        "experiment_id": 4133,
+        "label": ".382_reference",
+        "source_field": "baseline_val_trajectory.upstream_values",
+        "val_exact_accuracy": 0.105989582837,
+        "val_exact_accuracy_rounded": 0.106
+      },
+      {
+        "experiment_id": 4133,
+        "label": ".382_reference",
+        "source_field": "baseline_val_trajectory.upstream_values",
+        "val_exact_accuracy": 0.278172343969,
+        "val_exact_accuracy_rounded": 0.2782
+      }
+    ],
+    "prior_reference": {
+      "fields_imported": [
+        "baseline_val_trajectory.upstream_values"
+      ],
+      "path": "results/experiment_4133_capstone_v382.json",
+      "sha256": "99e096c7b3fe180276775f2f29fc6de81b41f1ba0c7933d91bc123500572eb89"
+    },
+    "published_exact_accuracy_target": 0.87,
+    "published_match_tolerance": 0.02,
+    "rounded_deltas": [
+      0.1722
+    ],
+    "rounded_values": [
+      0.106,
+      0.2782
+    ],
+    "status": "accumulation_still_blocked",
+    "values": [
+      0.105989582837,
+      0.278172343969
+    ]
+  },
+  "diffusiongemma_gate": {
+    "basis": "clean_exp4150_verifier_value_added",
+    "resolved": false,
+    "status": "STILL-PENDING",
+    "verifier_value_added": false
+  },
+  "diffusiongemma_gate_status": "STILL-PENDING",
+  "duration_s": 0.0015164479991653934,
+  "experiment_id": 4155,
+  "field_principles": {
+    "baseline_val_trajectory": "Val across .382-.384 (0.106 -> 0.278 -> ...); shows whether the epoch-fix restored convergence.",
+    "diffusiongemma_gate_status": "RESOLVED-positive / RESOLVED-null / STILL-PENDING -- the explicit status of the queued DiffusionGemma gate after the decisive graft.",
+    "headline_outcome": "One of the enumerated set -- forces a single unambiguous read of the .384 result.",
+    "honest_verdict": "Terminal-prefixed. An honest 'unstalled, still climbing, .385 continues' is COMPLETE and valuable.",
+    "upstream_provenance": "{experiment_id, fields_imported, sha256} per cited upstream -- the audit trail."
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "experiment_id": 4146,
+      "path": "results/experiment_4146_sudoku_accumulate_pass1_epochfix.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "2ae2baf360c309dd789e44874b71eef258ee57e9eb45946650bf7ff6af7a7e5c"
+    },
+    {
+      "experiment_id": 4147,
+      "path": "results/experiment_4147_sudoku_accumulate_pass2.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "2375a05dad54cbc09318ac89076feaad1f695d2e58591145571713a7b45f537f"
+    },
+    {
+      "experiment_id": 4148,
+      "path": "results/experiment_4148_sudoku_accumulate_pass3.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "2ad93d49a0cbd38cd67812365120df33f78ef27661e81e428bdae04b86dcf4ae"
+    },
+    {
+      "experiment_id": 4149,
+      "path": "results/experiment_4149_sudoku_accumulate_pass4_convergence.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "ff7a3aa18a4a8982ed99e16d5abbf80293520fbead839cdcc5cd925dfaa8b95f"
+    },
+    {
+      "experiment_id": 4150,
+      "path": "results/experiment_4150_decisive_verifier_graft_sudoku.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "0ed45d941b99f69f8f32a7999438249c130287a4727441f3891d86b747467c8b"
+    },
+    {
+      "experiment_id": 4151,
+      "path": "results/experiment_4151_arc_incremental_progress.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "445622d7eb6183393217ab086b33bf8ea0af07810dc5388b994768a3b8bdad48"
+    },
+    {
+      "experiment_id": 4153,
+      "path": "results/experiment_4153_verifier_registry_gaps_hygiene.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "86c2f43cccfb59bc7aa2b71430895c1dfc123f3399115022c135b5e35fbb80bc"
+    }
+  ],
+  "graft_verdict": {
+    "artifact_status": "skipped_flagged_adversarial",
+    "graft_deferred": false,
+    "honest_verdict": "",
+    "rerank_lift_vs_vote": {},
+    "rft_vs_ablation_delta": {},
+    "status": "skipped_flagged_adversarial",
+    "verifier_value_added": false
+  },
+  "hardware_continuity": {
+    "gatemate_step_taken": "blocked_gatemate_unreachable",
+    "honest_verdict": "complete: hardware_continuity_4154_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+    "included": true,
+    "kv260_terminal_confirmed": true,
+    "per_board_reachability": {
+      "gatemate": false,
+      "kv260": true,
+      "polarfire": true
+    },
+    "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded"
+  },
+  "headline_answers": {
+    "diffusiongemma_gate_status": "STILL-PENDING",
+    "exp4146_epoch_fix_unstalled": false,
+    "exp4149_matches_published_087": null,
+    "exp4150_decisive_graft_status": "skipped_flagged_adversarial",
+    "total_arc_games_solved": 13
+  },
+  "headline_outcome": "accumulation_still_blocked",
+  "honest_verdict": "blocked: capstone_v384_accumulation_still_blocked_epochfix0_baseline0870_graft_skipped_flagged_adversarial_diffusiongemma_STILL-PENDING_games13_flagged_skipped7",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "missing_upstream_artifacts": [],
+  "random_seed": 4155,
+  "registry_gap_hygiene": {
+    "diffusiongemma_gate_state": {},
+    "honest_verdict": "",
+    "included": false,
+    "regression_guard_passed": false,
+    "status": "skipped_flagged_adversarial"
+  },
+  "reproducibility_checksum": "8880d91ee30551ae0ec85a892144d6a8c58f33080f11b95b2d6eddded4f78cd2",
+  "schema": "carnot.capstone_v384_4155.v1",
+  "sota_ingestion": {
+    "flagged_for_v385": "diffusiongemma_sedd_verifier_energy_guidance_probe_v385",
+    "honest_verdict": "complete: sota_ingestion_recursive_reasoner_verifier_energy_guidance_mapped",
+    "included": true,
+    "methods_mapped": [
+      {
+        "arxiv_id_or_url": "2510.04871",
+        "failure_mode": "An undertrained or no-headroom baseline makes verifier-guided training and energy guidance uninformative.",
+        "implementation_over_stack": "Keep nano-trm as the recursive Sudoku substrate and measure oracle headroom before attributing gains to the Carnot verifier.",
+        "name": "TRM nano-trm recursive baseline gate",
+        "url": "https://arxiv.org/abs/2510.04871"
+      },
+      {
+        "arxiv_id_or_url": "2511.02886",
+        "failure_mode": "Full fine-tuning can improve the tiny model by itself, so a verifier-labeled arm without this control overclaims causality.",
+        "implementation_over_stack": "Run the same bounded fine-tuning budget without Carnot verifier labels so adaptation compute is isolated from verifier value.",
+        "name": "TTA-TRM adaptation-control arm",
+        "url": "https://arxiv.org/abs/2511.02886"
+      },
+      {
+        "arxiv_id_or_url": "2402.06457",
+        "failure_mode": "If the candidate pool has correlated errors or false-positive labels, the selector learns artifacts rather than correctness.",
+        "implementation_over_stack": "Retain accepted and rejected nano-trm traces and train a selector or pairwise verifier before spending on another generator pass.",
+        "name": "V-STaR accepted/rejected trace selector",
+        "url": "https://arxiv.org/abs/2402.06457"
+      },
+      {
+        "arxiv_id_or_url": "2310.16834",
+        "failure_mode": "SEDD is a generator objective, not a verifier; an uncalibrated external energy can damage fluency or collapse diversity.",
+        "implementation_over_stack": "Use score-entropy discrete diffusion as the formal bridge for adding Carnot verifier energy during denoising instead of after it.",
+        "name": "SEDD discrete diffusion score-energy formalism",
+        "url": "https://arxiv.org/abs/2310.16834"
+      },
+      {
+        "arxiv_id_or_url": "2105.05233",
+        "failure_mode": "Over-guidance can trade away diversity and create verifier-shaped but invalid samples unless guidance weights are ablated.",
+        "implementation_over_stack": "Treat Carnot verifier scores as the discrete-token analogue of a guidance energy that reshapes the denoising choice distribution.",
+        "name": "Classifier-guided diffusion energy precedent",
+        "url": "https://arxiv.org/abs/2105.05233"
+      },
+      {
+        "arxiv_id_or_url": "2207.12598",
+        "failure_mode": "A guidance win can come from generic conditioning strength rather than the Carnot verifier unless this control is included.",
+        "implementation_over_stack": "Keep a no-external-verifier guidance control so Carnot energy is compared against ordinary conditional/unconditional score mixing.",
+        "name": "Classifier-free diffusion guidance control",
+        "url": "https://arxiv.org/abs/2207.12598"
+      },
+      {
+        "arxiv_id_or_url": "https://ai.google.dev/gemma/docs/diffusiongemma",
+        "failure_mode": "DiffusionGemma is a generator substrate, not evidence that Carnot verifier guidance works; base-task quality and the gate must be measured.",
+        "implementation_over_stack": "Queue DiffusionGemma as the open-weight block-diffusion generator for verifier-energy guidance after the verifier discrimination gate.",
+        "name": "DiffusionGemma queued discrete-text substrate",
+        "url": "https://ai.google.dev/gemma/docs/diffusiongemma"
+      }
+    ]
+  },
+  "total_arc_games_solved": 13,
+  "upstream_artifact_state": {
+    "4146": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "blocked_noop_cap_not_confirmed_timer_elapsed",
+      "included": false,
+      "path": "results/experiment_4146_sudoku_accumulate_pass1_epochfix.json",
+      "skipped": true
+    },
+    "4147": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "blocked_pass1_noop_unresolved",
+      "included": false,
+      "path": "results/experiment_4147_sudoku_accumulate_pass2.json",
+      "skipped": true
+    },
+    "4148": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "blocked_pass2_noop_unresolved",
+      "included": false,
+      "path": "results/experiment_4148_sudoku_accumulate_pass3.json",
+      "skipped": true
+    },
+    "4149": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "blocked_pass3_noop_unresolved",
+      "included": false,
+      "path": "results/experiment_4149_sudoku_accumulate_pass4_convergence.json",
+      "skipped": true
+    },
+    "4150": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: graft_deferred_baseline_below_0.85",
+      "included": false,
+      "path": "results/experiment_4150_decisive_verifier_graft_sudoku.json",
+      "skipped": true
+    },
+    "4151": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: fifteenth_game_no_solve_no_unsolved_strict_nonspatial_candidates",
+      "included": false,
+      "path": "results/experiment_4151_arc_incremental_progress.json",
+      "skipped": true
+    },
+    "4152": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: sota_ingestion_recursive_reasoner_verifier_energy_guidance_mapped",
+      "included": true,
+      "path": "results/experiment_4152_sota_ingestion_recursive_reasoner_verifier.json",
+      "skipped": false
+    },
+    "4153": {
+      "exists": true,
+      "flagged_adversarial": true,
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v384_truth_regression_guard_passed_True_baseline_open_baseline_blocked_pass3_noop_val_0.2782_graft_open_graft_deferred_baseline_below_0.85_diffusiongemma_kept_gated",
+      "included": false,
+      "path": "results/experiment_4153_verifier_registry_gaps_hygiene.json",
+      "skipped": true
+    },
+    "4154": {
+      "exists": true,
+      "flagged_adversarial": false,
+      "honest_verdict": "complete: hardware_continuity_4154_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+      "included": true,
+      "path": "results/experiment_4154_hardware_continuity.json",
+      "skipped": false
+    }
+  },
+  "upstream_provenance": [
+    {
+      "experiment_id": 4146,
+      "fields_imported": [],
+      "honest_verdict": "blocked_noop_cap_not_confirmed_timer_elapsed",
+      "path": "results/experiment_4146_sudoku_accumulate_pass1_epochfix.json",
+      "sha256": "2ae2baf360c309dd789e44874b71eef258ee57e9eb45946650bf7ff6af7a7e5c",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4147,
+      "fields_imported": [],
+      "honest_verdict": "blocked_pass1_noop_unresolved",
+      "path": "results/experiment_4147_sudoku_accumulate_pass2.json",
+      "sha256": "2375a05dad54cbc09318ac89076feaad1f695d2e58591145571713a7b45f537f",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4148,
+      "fields_imported": [],
+      "honest_verdict": "blocked_pass2_noop_unresolved",
+      "path": "results/experiment_4148_sudoku_accumulate_pass3.json",
+      "sha256": "2ad93d49a0cbd38cd67812365120df33f78ef27661e81e428bdae04b86dcf4ae",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4149,
+      "fields_imported": [],
+      "honest_verdict": "blocked_pass3_noop_unresolved",
+      "path": "results/experiment_4149_sudoku_accumulate_pass4_convergence.json",
+      "sha256": "ff7a3aa18a4a8982ed99e16d5abbf80293520fbead839cdcc5cd925dfaa8b95f",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4150,
+      "fields_imported": [],
+      "honest_verdict": "complete: graft_deferred_baseline_below_0.85",
+      "path": "results/experiment_4150_decisive_verifier_graft_sudoku.json",
+      "sha256": "0ed45d941b99f69f8f32a7999438249c130287a4727441f3891d86b747467c8b",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4151,
+      "fields_imported": [],
+      "honest_verdict": "complete: fifteenth_game_no_solve_no_unsolved_strict_nonspatial_candidates",
+      "path": "results/experiment_4151_arc_incremental_progress.json",
+      "sha256": "445622d7eb6183393217ab086b33bf8ea0af07810dc5388b994768a3b8bdad48",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4152,
+      "fields_imported": [
+        "methods_mapped",
+        "flagged_for_v385"
+      ],
+      "honest_verdict": "complete: sota_ingestion_recursive_reasoner_verifier_energy_guidance_mapped",
+      "path": "results/experiment_4152_sota_ingestion_recursive_reasoner_verifier.json",
+      "sha256": "34ab2ca6ce03deedda25751cd1ed5ef8c2fad711eb4058458298d481a3600e26",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4153,
+      "fields_imported": [],
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v384_truth_regression_guard_passed_True_baseline_open_baseline_blocked_pass3_noop_val_0.2782_graft_open_graft_deferred_baseline_below_0.85_diffusiongemma_kept_gated",
+      "path": "results/experiment_4153_verifier_registry_gaps_hygiene.json",
+      "sha256": "86c2f43cccfb59bc7aa2b71430895c1dfc123f3399115022c135b5e35fbb80bc",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4154,
+      "fields_imported": [
+        "kv260_terminal_confirmed",
+        "per_board_reachability",
+        "gatemate_step_taken",
+        "polarfire_step_taken"
+      ],
+      "honest_verdict": "complete: hardware_continuity_4154_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+      "path": "results/experiment_4154_hardware_continuity.json",
+      "sha256": "9cc421e09f12e22701ab4e007c664ff008f866c7b3167bd9ac1760b3d957e538",
+      "skip_reason": "",
+      "skipped": false
+    }
+  ]
+}
