@@ -669,3 +669,33 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: rerun the graft only after baseline reproduction or after verifier-guided candidate expansion creates a candidate pool with measurable oracle headroom.
 - priority: high
 <!-- exp4122-sudoku-verifier-graft:end -->
+
+<!-- exp4131-lr-resume-fix:start -->
+### GAP-SUDOKU-LR-RESUME-FIX-4126: Exp 4131 .382 LR resume correctness status
+- status: fixed_lr_resume_continuous
+- evidence: `results/experiment_4126_lr_resume_correctness_fix.json`; lr_continuous_across_resume=true; validation_first_lr=9.998933091992512e-05; fresh_warmup_lr=2.4500000108673703e-06; manual_lr_step_restored=4300; full_batch_validation_attempt=blocked_cuda_oom_before_metrics.
+- failure mode: previous bounded Sudoku resumes rewarmed the manual LR schedule, making verifier training-time claims underpowered and hard to interpret.
+- missing discriminator: faithful LR-schedule continuity before treating resumed TRM candidate pools as reward-training evidence.
+- candidate design: build on the fixed stable checkpoint lineage and keep measuring validation until the baseline is faithful enough for grafting.
+- priority: high
+<!-- exp4131-lr-resume-fix:end -->
+
+<!-- exp4131-sudoku-baseline-reproduction:start -->
+### GAP-SUDOKU-BASELINE-REPRODUCTION-4127: Exp 4131 .382 Sudoku fixed-LR baseline status
+- status: open_baseline_not_reproduced_val_0.2782
+- evidence: `results/experiment_4127_sudoku_extreme_accumulate_fixed.json` with LR fix `results/experiment_4126_lr_resume_correctness_fix.json`; val_trajectory=[0.106, 0.2782]; final_val=0.2782; matches_published_087=false; published_target=0.87; lr_continuous_across_resume=true; per_pass_delta_vs_v381={'beats_v381': True, 'comparison': 'faster_than_v381', 'deltas': [0.172182761133], 'mean_delta': 0.172182761133, 'reference_delta': 0.01}.
+- failure mode: the fixed-LR nano-TRM Sudoku checkpoint improved much faster than the .381 rewarm runs but remains far below the published baseline, so verifier training-time claims over this pool are still underpowered.
+- missing discriminator: faithful fixed-LR TRM Sudoku candidate source before training-time verifier claims.
+- candidate design: continue the fixed checkpoint lineage or use verifier-guided candidate expansion before treating executable constraints as a reward-training win.
+- priority: high
+<!-- exp4131-sudoku-baseline-reproduction:end -->
+
+<!-- exp4131-sudoku-verifier-graft:start -->
+### GAP-SUDOKU-EXECUTABLE-VERIFIER-4128: Exp 4131 .382 Sudoku executable-verifier graft status
+- status: open_graft_deferred_verifier_value_added_false
+- evidence: `results/experiment_4128_carnot_verifier_graft_sudoku.json`; graft_deferred=true; verifier_value_added=false; verifier_value_added_meaningful=false; flagged_adversarial=true; baseline_final_val=0.2782; baseline_trajectory=[0.106, 0.2782]; estimated_passes_to_converge_for_383={'basis': 'latest_fixed_lr_pass_delta', 'current_val_exact_accuracy': 0.278172343969, 'destination': '.383', 'estimated_additional_passes': 4, 'observed_delta_per_pass': 0.172183, 'previous_val_exact_accuracy': 0.105989582837, 'target_val_exact_accuracy': 0.85}.
+- failure mode: Exp 4128 did not run a meaningful graft because the .382 baseline was still not reproduced; the executable verifier therefore has no decision-grade training-time TRM value-added result.
+- missing discriminator: decision-grade training-time value from executable verifier labels beyond vote labels on held-out TRM Sudoku induction.
+- candidate design: rerun the graft only after baseline reproduction or after verifier-guided candidate expansion creates a candidate pool with measurable oracle headroom.
+- priority: high
+<!-- exp4131-sudoku-verifier-graft:end -->

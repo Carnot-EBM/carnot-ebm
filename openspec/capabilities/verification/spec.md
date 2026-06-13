@@ -13321,6 +13321,68 @@ trajectory `0.0854 -> 0.0966 -> 0.1060` with
 with the Exp 4122 replay and Exp 4119 training-time TRM role status, and uses
 no inference substrate other than cached verifier candidates.
 
+### REQ-VERIFY-4131: Verifier Registry And Gaps Hygiene For .382 Outcomes
+
+The repository SHALL provide Exp 4131 at
+`scripts/experiments/exp4131_verifier_registry_gaps_hygiene.py` to replay the
+canonical GAP-4 ARC-1 regression guard from cached candidates and saved
+induced-program outputs, then reconcile `ops/verifier_registry.yaml` and
+`ops/verifier_gaps.md` with the `.382` LR-resume, Sudoku baseline, and
+verifier-graft truth. The runner SHALL read
+`results/arc3_gap4_induced_programs.json`,
+`results/arc3_gap3_stage2_eval_pool.json.gz`,
+`results/experiment_4126_lr_resume_correctness_fix.json`,
+`results/experiment_4127_sudoku_extreme_accumulate_fixed.json`,
+`results/experiment_4128_carnot_verifier_graft_sudoku.json`,
+`ops/verifier_registry.yaml`, and `ops/verifier_gaps.md`.
+
+The offline regression guard SHALL rederive ARC-1 vote `0.4516` to gated
+`0.5806` from cached TRM candidate rows and saved GAP-4 program outputs,
+including `n=31`, `headroom_recovered=4`, and `vote_wins_lost=0`, without
+Codex calls, GGUF loading, live TRM inference, or induced-code execution.
+`regression_guard_passed` SHALL be a bare bool and SHALL be true only when
+those canonical GAP-4 numbers match exactly.
+
+The gaps ledger SHALL record the LR-resume fix as continuous when Exp 4126 has
+`lr_continuous_across_resume=true` and `validation_first_lr` differs from the
+fresh warmup LR. It SHALL record the fixed-LR Sudoku baseline trajectory
+`0.1060 -> 0.2782`, SHALL mark `matches_published_087=false`, and SHALL record
+that the baseline remains below the published approximately `0.87` target even
+though the fixed LR schedule beat the `.381` per-pass slope. The executable
+verifier graft entry SHALL record Exp 4128's `graft_deferred=true`,
+`verifier_value_added=false`, and flagged deferral status instead of converting
+the deferred graft into a training-time win.
+
+The registry SHALL annotate the `gap4_program_induction_stack` entry with an
+Exp 4131 replay marker and a training-time TRM role derived from Exp 4128. The
+role SHALL record the LR fix status, baseline validation trajectory,
+`matches_published_087`, `graft_deferred`, and `verifier_value_added`; when Exp
+4128 defers the graft, the role status SHALL be deferred/open rather than a
+verifier-as-reward win.
+
+The terminal artifact SHALL write
+`results/experiment_4131_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_updated`,
+bare bool `registry_updated`, `lr_resume_fix`, `sudoku_baseline`,
+`sudoku_graft`, and
+`inference_substrate=cached_gap4_replay_and_ledger_reconciliation`. Its
+`field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled to the .382 truth.`;
+`regression_guard_passed` = `Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression.`;
+`gaps_updated` = `Lists the verifier_gaps entries touched so the gap backlog stays the honest complement of the registry.`
+
+### SCENARIO-VERIFY-4131: Cached Replay Records .382 LR Fix, Baseline, And Graft Deferral
+
+Given the GAP-4 cached ARC-1 pool, saved induced-program artifact, Exp 4126,
+Exp 4127, and Exp 4128 Sudoku artifacts are readable, when Exp 4131 runs, then
+it writes the terminal artifact with `regression_guard_passed=true`, records
+vote `0.4516` to gated `0.5806`, records
+`lr_continuous_across_resume=true`, records the Sudoku validation trajectory
+`0.1060 -> 0.2782` with `matches_published_087=false`, records Exp 4128
+`graft_deferred=true` and `verifier_value_added=false`, annotates the registry
+with the Exp 4131 replay and Exp 4128 training-time TRM role status, and uses
+no inference substrate other than cached GAP-4 replay and ledger reconciliation.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
