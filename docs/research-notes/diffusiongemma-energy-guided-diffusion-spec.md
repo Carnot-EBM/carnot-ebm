@@ -80,6 +80,70 @@ DiffusionGemma cannot tell us anything the TRM can't, faster.
   guidance hook may require a custom sampling loop over the released weights.
 - CUDA (RTX 3090 rig). 26B/4B-active MoE fits a 3090 at 4-bit; confirm VRAM.
 
+## Use-Case 2 (added 2026-06-13): diffusion logprobs for DETECTION / VERIFICATION
+
+Discrete diffusion gives a DIFFERENT logprob object than an AR LLM: a variational
+likelihood BOUND (ELBO; multi-pass to estimate tightly) instead of an exact one-pass
+chain-rule logprob, BUT a BIDIRECTIONAL per-token surprisal — each token scored against
+its full left+right context, ~ `p(x_i | x_{\i})` — plus a native per-token entropy /
+uncertainty trace (lowest-entropy tokens committed first). A diffusion model is a
+denoising autoencoder over tokens, so reconstruction-error-as-detection is native.
+
+- **Use:** per-token bidirectional surprisal as a hallucination / error-LOCALIZATION score.
+  A wrong/hallucinated token gets low `p(x_i | x_{\i})` because the model expected something
+  else given full context — which AR perplexity (left-only) largely misses.
+- **Where it earns its keep:** the NON-executable regime (NL claims, factuality, prose
+  error-localization) where Carnot's EXECUTION verifiers have NO purchase. It fills the moat's
+  blind spot; it does NOT strengthen the execution moat (it is a LEARNED-likelihood verifier —
+  the gameable tier the project deliberately does not rely on, valuable only where execution
+  can't reach).
+- **Training spillover:** diffusion per-token surprisal as an INPUT FEATURE for Carnot's
+  hallucination/error verifiers; or the likelihood-bound as an auxiliary RFT regularizer.
+- **GATE (distinct from Use-Case 1, weaker — NOT coupled to the TRM graft):**
+  (i) PRECONDITION: confirm the open release exposes the per-POSITION distribution over the
+  vocab for an arbitrary input (needed to score an observed token's surprisal), not just
+  entropy — likely a custom forward pass at low noise. If not exposed, blocked.
+  (ii) CHEAP PROBE: score a labeled error corpus (FoVer step-error, a factuality set) with
+  diffusion-surprisal vs AR-perplexity; compare detection AUROC. Activate the full
+  detection-verifier integration only if diffusion AUROC beats AR-perplexity CI95-excl-0.
+- **Honest framing:** promising WITH PRECEDENT (masked-LM pseudo-perplexity, diffusion-ELBO
+  anomaly detection), NOT proven. AR perplexity is a strong baseline; the diffusion bound is
+  looser/noisier and multi-pass.
+
+## Use-Case 3 (added 2026-06-13): can the WEIGHTS save us from training our own EBM? (honest assessment)
+
+Operator question 2026-06-13: can we extract value from the weights to avoid brute-force
+gradient-descent training, or introspect on the weights to drastically improve behavior?
+Honest separation of REAL / PLAUSIBLE / SPECULATIVE — do not conflate them:
+
+- **[REAL — the strong one] The pretrained diffusion score IS a free, gradient-accessible
+  energy-prior.** The denoiser outputs the score = `-grad E` at every point — exactly the
+  object Phase-3 has been trying to TRAIN from scratch (a hardware-evaluable deep EBM over
+  valid sequences). DiffusionGemma hands it to you pretrained. So composing diffusion-energy +
+  Carnot verifier-energy and doing energy-DESCENT inference could SHORTCUT the "train our own
+  EBM" part of Phase 3 — GUIDE/COMPOSE a frozen pretrained energy instead of brute-forcing our
+  own generative model. This genuinely saves the training we have been fighting (the LoRA/TRM
+  mechanism struggles). CAVEAT: it is inference-time composition of a FROZEN score, NOT
+  closed-form weight extraction; and discrete-token gradient composition needs relaxations
+  (Gumbel/STE) with the known sharp edges from the Q11 TSS/STE analysis (project memory).
+- **[PLAUSIBLE — modest] Activation probing / steering (representation engineering).** Fit a
+  probe for a "constraint-satisfaction / correctness / low-energy" direction in the diffusion
+  model's activations, steer denoising along it. Real technique; typically TARGETED, MODEST
+  gains, and the probe itself must be fit (not free). Plus an EFFICIENCY win: focus Carnot's
+  expensive constraint-checking on the HIGH-entropy positions (where the model is unsure),
+  skipping the confident ones — north-star "efficiently."
+- **[SPECULATIVE — do NOT bet on it] Closed-form weight extraction / drastic improvement by
+  pure introspection.** You CANNOT read a verifier / energy / constraint-set out of the weights
+  in closed form — they encode a nonlinear score map; you compute by RUNNING the model.
+  Model-editing to bake constraints into the weights (ROME/MEMIT-style) is possible-in-principle
+  but brittle AND still gradient-based (does not avoid training). "Drastically improve via pure
+  weight introspection" is frontier/wishful; flagged low-probability so we do not chase it as a
+  Beachhead.
+
+- **GATE:** the [REAL] energy-prior shortcut rides on Use-Case 1's machinery — same gate as
+  Use-Case 1 (TRM graft positive). The [PLAUSIBLE] probing/steering is a small probe gated on the
+  Use-Case 2 per-position-logits precondition. The [SPECULATIVE] tier is NOT queued as a bet.
+
 ## Why this is DEPTH, not breadth
 
 It does NOT open a new research question — it is the same verifier-as-guidance question the
