@@ -1,0 +1,243 @@
+{
+  "cited_upstream_artifacts": [
+    "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "results/arc3_gap4_induced_programs.json",
+    "results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json",
+    "results/experiment_4139_decisive_verifier_graft_sudoku.json"
+  ],
+  "diffusiongemma_gate_state": {
+    "basis": "ensemble_rerank_lift_vs_vote_or_rft_vs_ablation_delta_not_oracle",
+    "headroom_present": false,
+    "reason": "no_transferable_verifier_value_added",
+    "state": "kept_gated",
+    "uses_executable_oracle_upper_bound": false,
+    "verifier_value_added": false
+  },
+  "duration_s": 0.539,
+  "experiment": "experiment_4142_verifier_registry_gaps_hygiene",
+  "field_principles": {
+    "diffusiongemma_gate_state": "Records whether the .383 graft's verifier_value_added (on the transferable ensemble + RFT, NOT the oracle) unlocked or kept-gated the DiffusionGemma scale-up -- the forward-planning signal.",
+    "gaps_updated": "Lists the verifier_gaps entries touched so the gap backlog stays the honest complement of the registry.",
+    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled to the .383 truth.",
+    "regression_guard_passed": "Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression."
+  },
+  "gaps_path": "ops/verifier_gaps.md",
+  "gaps_updated": [
+    "GAP-SUDOKU-BASELINE-REPRODUCTION-4138",
+    "GAP-SUDOKU-EXECUTABLE-VERIFIER-4139"
+  ],
+  "honest_verdict": "complete: registry_gaps_reconciled_to_v383_truth_regression_guard_passed_True_baseline_open_baseline_config_blocked_val_0.2782_graft_open_graft_deferred_no_transferable_value_added_diffusiongemma_kept_gated",
+  "inference_substrate": "cached_gap4_replay_and_ledger_reconciliation",
+  "offline_replay": {
+    "arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+    "expected": {
+      "arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      }
+    },
+    "gap4_arc1_reproduced": true,
+    "no_codex_calls": true,
+    "no_gguf_inference": true,
+    "regression_guard_passed": true
+  },
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_updated": true,
+  "regression_guard_passed": true,
+  "schema": "carnot.experiment_4142_verifier_registry_gaps_hygiene.v1",
+  "sudoku_baseline": {
+    "artifact_path": "results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json",
+    "baseline_status": "config-blocked",
+    "config_blocked": true,
+    "corrected_config_recommendation": "for the .384 baseline: rerun Exp 4135 from the stable checkpoint after resetting or removing the Lightning Timer elapsed callback state before Trainer.fit; keep scheduler horizon max_epochs=50000, peak_lr=1e-4, data.data_dir=./data/sudoku_extreme_1k_aug_1k, and local safe timekeeping.batch_size=128 unless memory allows the published batch 768",
+    "estimated_passes_to_converge": null,
+    "final_val_exact_accuracy": 0.278172343969,
+    "final_val_exact_accuracy_rounded": 0.2782,
+    "flagged_adversarial": true,
+    "gap_id": "GAP-SUDOKU-BASELINE-REPRODUCTION-4138",
+    "honest_verdict": "complete: baseline config-blocked before pass4 -> pass3 did not report positive accumulation: pass2 already ran config audit; baseline is config-blocked before pass3: pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written",
+    "matches_published_087": false,
+    "measured_val_trajectory": [
+      0.278172343969
+    ],
+    "measured_val_trajectory_rounded": [
+      0.2782
+    ],
+    "missing_discriminator": "faithful_sudoku_baseline_candidate_source_before_diffusiongemma_scaleup",
+    "near_faithful_080": false,
+    "published_target_val_exact_accuracy": 0.87,
+    "source_artifacts": [
+      "results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json"
+    ],
+    "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+    "status": "open_baseline_config_blocked_val_0.2782",
+    "suspected_cause": "pass3 did not report positive accumulation: pass2 already ran config audit; baseline is config-blocked before pass3: pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written",
+    "val_trajectory_383": [
+      {
+        "delta_vs_previous": null,
+        "experiment": "experiment_4127_sudoku_extreme_accumulate_fixed",
+        "label": ".382_anchor",
+        "pass_index": 0,
+        "status": "measured",
+        "val_exact_accuracy": 0.278172343969,
+        "val_exact_accuracy_rounded": 0.2782
+      },
+      {
+        "delta_vs_previous": null,
+        "experiment": "experiment_4135_sudoku_accumulate_pass1_fixed_lr",
+        "label": ".383_pass1",
+        "pass_index": 1,
+        "status": "missing",
+        "val_exact_accuracy": null,
+        "val_exact_accuracy_rounded": null
+      },
+      {
+        "delta_vs_previous": null,
+        "experiment": "experiment_4136_sudoku_accumulate_pass2_fixed_lr",
+        "label": ".383_pass2",
+        "pass_index": 2,
+        "status": "config-blocked",
+        "val_exact_accuracy": null,
+        "val_exact_accuracy_rounded": null
+      },
+      {
+        "delta_vs_previous": null,
+        "experiment": "experiment_4137_sudoku_accumulate_pass3_fixed_lr",
+        "label": ".383_pass3",
+        "pass_index": 3,
+        "status": "config-blocked",
+        "val_exact_accuracy": null,
+        "val_exact_accuracy_rounded": null
+      },
+      {
+        "delta_vs_previous": null,
+        "experiment": "experiment_4138_sudoku_accumulate_pass4_convergence_check",
+        "label": ".383_pass4",
+        "pass_index": 4,
+        "status": "config-blocked",
+        "val_exact_accuracy": null,
+        "val_exact_accuracy_rounded": null
+      }
+    ],
+    "val_trajectory_383_rounded": [
+      0.2782,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "sudoku_decisive_graft": {
+    "artifact_path": "results/experiment_4139_decisive_verifier_graft_sudoku.json",
+    "baseline_artifact_path": "results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json",
+    "baseline_matches_published_087": false,
+    "baseline_near_faithful_080": false,
+    "baseline_val_exact_accuracy": 0.278172343969,
+    "candidate_source": "trm_checkpoint_final_logits_k_sampling",
+    "ensemble_rerank_lift_vs_vote": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "delta": 0.0,
+      "ensemble_pass_at_1": 0.140625,
+      "meaningful": false,
+      "metric": "pass@1_exact_accuracy",
+      "score_components": [
+        "continuous_sudoku_energy",
+        "digit_text_statistics"
+      ],
+      "status": "uninterpretable_no_headroom",
+      "uses_exact_validity_check": false,
+      "vote_pass_at_1": 0.140625
+    },
+    "estimated_passes_to_converge_for_384": {
+      "basis": "exp4138_missing_or_config_blocked_estimate",
+      "current_val_exact_accuracy": 0.278172343969,
+      "destination": ".384",
+      "estimated_additional_passes": null,
+      "target_val_exact_accuracy": 0.87
+    },
+    "executable_oracle_upper_bound": {
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "delta": 0.0,
+      "executable_oracle_pass_at_1": 0.140625,
+      "executable_verifier_is_oracle": true,
+      "interpretation": "oracle_upper_bound_not_verifier_value",
+      "metric": "pass@1_exact_accuracy",
+      "tautological_equals_oracle_gap": true,
+      "vote_pass_at_1": 0.140625
+    },
+    "executable_verifier_is_oracle": true,
+    "false_negative_risk": true,
+    "flagged_adversarial": true,
+    "gap_id": "GAP-SUDOKU-EXECUTABLE-VERIFIER-4139",
+    "graft_deferred": true,
+    "headroom_present": false,
+    "honest_verdict": "complete: uninformative_no_headroom_false_negative_risk",
+    "missing_discriminator": "transferable_training_time_value_from_non_oracle_sudoku_verifier_labels",
+    "n_candidate_pools": 64,
+    "oracle_pass_at_k": 0.140625,
+    "oracle_vs_vote_gap": 0.0,
+    "preconditions_checked": [
+      {
+        "available": true,
+        "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json",
+        "resource": "exp4138_artifact"
+      },
+      {
+        "available": true,
+        "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+        "resource": "stable_checkpoint_path"
+      },
+      {
+        "available": true,
+        "detail": "torch.load ok",
+        "resource": "baseline_checkpoint"
+      },
+      {
+        "available": true,
+        "detail": "torch.cuda.is_available()=True; device=NVIDIA GeForce RTX 3090",
+        "resource": "cuda_available"
+      }
+    ],
+    "rft_vs_ablation_delta": {
+      "a_exact_accuracy": 0.0,
+      "b_exact_accuracy": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "current_val_exact_accuracy": 0.278172343969,
+      "delta": 0.0,
+      "estimated_passes_to_converge_for_384": {
+        "basis": "exp4138_missing_or_config_blocked_estimate",
+        "current_val_exact_accuracy": 0.278172343969,
+        "destination": ".384",
+        "estimated_additional_passes": null,
+        "target_val_exact_accuracy": 0.87
+      },
+      "metric": "heldout_exact_accuracy",
+      "n_matched": 0,
+      "status": "deferred_baseline_below_0.80"
+    },
+    "status": "open_graft_deferred_no_transferable_value_added",
+    "verifier_value_added": false,
+    "verifier_value_added_basis": [],
+    "vote_pass_at_1": 0.140625
+  }
+}

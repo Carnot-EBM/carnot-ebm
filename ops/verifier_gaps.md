@@ -699,3 +699,23 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: rerun the graft only after baseline reproduction or after verifier-guided candidate expansion creates a candidate pool with measurable oracle headroom.
 - priority: high
 <!-- exp4131-sudoku-verifier-graft:end -->
+
+<!-- exp4142-sudoku-baseline-reproduction:start -->
+### GAP-SUDOKU-BASELINE-REPRODUCTION-4138: Exp 4142 .383 Sudoku baseline trajectory status
+- status: open_baseline_config_blocked_val_0.2782
+- evidence: `results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json`; baseline_status=config-blocked; val_trajectory_383=[0.2782, None, None, None, None]; measured_val_trajectory=[0.2782]; final_val=0.2782; matches_published_087=false; near_faithful_080=false; published_target=0.87; estimated_passes_to_converge=None.
+- failure mode: the .383 continuation did not produce new validation progress because the baseline lineage was config-blocked before pass4, so the Sudoku candidate source remains far below the published 0.87 target.
+- missing discriminator: faithful Sudoku baseline candidate source before DiffusionGemma scale-up or verifier-as-reward claims.
+- candidate design: fix the Timer/config-blocked resume path or run a clean contiguous baseline before rerunning the graft.
+- priority: high
+<!-- exp4142-sudoku-baseline-reproduction:end -->
+
+<!-- exp4142-sudoku-decisive-graft:start -->
+### GAP-SUDOKU-EXECUTABLE-VERIFIER-4139: Exp 4142 .383 Sudoku decisive executable-verifier graft status
+- status: open_graft_deferred_no_transferable_value_added
+- evidence: `results/experiment_4139_decisive_verifier_graft_sudoku.json` with baseline `results/experiment_4138_sudoku_accumulate_pass4_convergence_check.json`; baseline_final_val=0.2782; headroom_present=false; graft_deferred=true; executable_verifier_is_oracle=true; executable_oracle_upper_bound_delta=0.0; ensemble_rerank_lift_vs_vote_delta=0.0; ensemble_rerank_lift_vs_vote_status=uninterpretable_no_headroom; rft_vs_ablation_delta=0.0; rft_vs_ablation_delta_status=deferred_baseline_below_0.80; verifier_value_added=false; diffusiongemma_gate_state=kept_gated.
+- failure mode: executable Sudoku validity is an oracle upper bound on unique-solution Sudoku, not a transferable verifier reward. The non-oracle ensemble rerank added no measured lift, and the RFT label contrast was deferred because the baseline was below the near-faithful gate.
+- missing discriminator: transferable training-time value from non-oracle Sudoku verifier labels beyond vote labels.
+- candidate design: keep DiffusionGemma gated until the transferable ensemble rerank or RFT A-vs-B label contrast shows value with selectable headroom.
+- priority: high
+<!-- exp4142-sudoku-decisive-graft:end -->
