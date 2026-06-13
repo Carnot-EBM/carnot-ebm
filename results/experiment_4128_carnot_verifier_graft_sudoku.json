@@ -1,0 +1,98 @@
+{
+  "acceptance_gate_passed": true,
+  "baseline": {
+    "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4127_sudoku_extreme_accumulate_fixed.json",
+    "matches_published_087": false,
+    "previous_val_exact_accuracy": 0.105989582837,
+    "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+    "val_exact_accuracy": 0.278172343969,
+    "val_trajectory": [
+      {
+        "delta_vs_previous": null,
+        "kind": "starting_baseline",
+        "pass_index": 0,
+        "source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4118_sudoku_extreme_resume_pass3.json",
+        "val_exact_accuracy": 0.105989582837
+      },
+      {
+        "checkpoint_reload_ok": true,
+        "delta_vs_previous": 0.172182761133,
+        "duration_s": 3395.668,
+        "kind": "fixed_lr_resume_pass",
+        "pass_index": 1,
+        "return_code": 0,
+        "source": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4127_sudoku_extreme_accumulate_fixed/pass_1_hydra/csv/version_0/metrics.csv",
+        "val_exact_accuracy": 0.278172343969
+      },
+      {
+        "checkpoint_reload_ok": true,
+        "delta_vs_previous": null,
+        "duration_s": 7.083,
+        "kind": "fixed_lr_resume_pass",
+        "pass_index": 2,
+        "return_code": 0,
+        "source": null,
+        "val_exact_accuracy": null
+      }
+    ]
+  },
+  "baseline_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4127_sudoku_extreme_accumulate_fixed.json",
+  "baseline_matches_published_087": false,
+  "baseline_status_reported": true,
+  "baseline_val_exact_accuracy": 0.278172343969,
+  "duration_s": 0.109,
+  "estimated_passes_to_converge_for_383": {
+    "basis": "latest_fixed_lr_pass_delta",
+    "current_val_exact_accuracy": 0.278172343969,
+    "destination": ".383",
+    "estimated_additional_passes": 4,
+    "observed_delta_per_pass": 0.172183,
+    "previous_val_exact_accuracy": 0.105989582837,
+    "target_val_exact_accuracy": 0.85
+  },
+  "experiment": "experiment_4128_carnot_verifier_graft_sudoku",
+  "field_principles": {
+    "graft_deferred": "Bare bool: True if the baseline was not faithful enough to graft. Prevents a meaningless graft being dressed as a result.",
+    "honest_verdict": "Terminal-prefixed. An honest deferral or an A~=B null is COMPLETE.",
+    "preconditions_checked": "Records the baseline checkpoint + CUDA verified; pre-empts silent-missing-resource fabrication.",
+    "rerank_lift_vs_vote": "pass@1 lift from verifier-reranking (if grafted); confirms the executable Sudoku verifier discriminates (the contrast to .379's ARC-grid anti-discrimination).",
+    "rft_vs_ablation_delta": "The de-confounded A-vs-B held-out delta with CI (if grafted): isolates the verifier LABEL's training contribution.",
+    "verifier_value_added": "Bare bool: did the verifier graft beat the vote ablation? The headline answer, ONLY meaningful when graft_deferred is False."
+  },
+  "graft_deferred": true,
+  "honest_verdict": "complete: graft_deferred baseline_val=0.2782 estimated_passes_to_.383=4",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4127_sudoku_extreme_accumulate_fixed.json",
+      "resource": "baseline_artifact"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+      "resource": "stable_checkpoint_path"
+    },
+    {
+      "available": true,
+      "detail": "torch.load ok",
+      "resource": "stable_checkpoint"
+    },
+    {
+      "available": true,
+      "detail": "torch.cuda.is_available()=True; device=NVIDIA GeForce RTX 3090",
+      "resource": "cuda_available"
+    }
+  ],
+  "random_seed": 4128,
+  "rerank_lift_vs_vote": null,
+  "rft_vs_ablation_delta": null,
+  "schema": "carnot.experiment_4128_carnot_verifier_graft_sudoku.v1",
+  "spec_refs": [
+    "REQ-LEARN-4128",
+    "SCENARIO-LEARN-4128-DEFER",
+    "SCENARIO-LEARN-4128-GRAFT"
+  ],
+  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+  "verifier_value_added": false,
+  "verifier_value_added_meaningful": false
+}
