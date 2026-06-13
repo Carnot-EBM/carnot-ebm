@@ -8401,3 +8401,4 @@ c |
 | 2026-06-13 04:58 UTC | GRAFT the Carnot Sudoku verifier on the reproducin | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT, GATE_PASSED_WITHOUT_DATA — resu |
 | 2026-06-13 05:17 UTC | FOURTEENTH ARC-AGI-3 game first-solve via the PROV | OK | 87 passed, 1 warning in 4.06s |
 | 2026-06-13 05:30 UTC | SOTA-INGESTION SLOT (reserved; bleeding-edge track | OK | 100 passed, 1 warning in 4.79s |
+| 2026-06-13 05:42 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra s | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
