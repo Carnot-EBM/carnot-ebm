@@ -13183,6 +13183,82 @@ present but out-voted by duplicate invalid candidates
 
 ---
 
+## REQ-LEARN-4159: Decisive Verifier-As-Reward Graft With Phase-0 Precision
+
+**Given** Exp 4157 has written
+`results/experiment_4157_baseline_harvest_contiguous_continue.json`, Exp 4159
+SHALL read `current_val`, `stable_checkpoint_path`, and the recorded runtime
+evidence before attempting any verifier-as-reward training graft. It SHALL
+verify CUDA visibility and the stable checkpoint path, and SHALL snapshot the
+checkpoint before any faithful-branch model load so a live writer cannot taint
+the reward-graft comparison.
+
+**When** Exp 4157 reports `current_val < 0.85`, Exp 4159 SHALL stop before
+candidate sampling, phase-0 certification, or RFT training. It SHALL write
+`graft_deferred=true`, report `current_val`, and estimate additional `.386`
+validation intervals needed to reach `0.85`. This deferral is complete because
+training a verifier reward on a non-faithful baseline would repeat the
+`.383/.384` uninformative false-negative pattern.
+
+**When** Exp 4157 reports `current_val >= 0.85`, Exp 4159 SHALL build
+N-matched verifier-certified and vote-certified label corpora from the same TRM
+checkpoint. Before any RFT delta is attributed, it SHALL estimate
+`phase0_precision = P(test-gold | demo-perfect)` on the verifier-certified
+corpus and require precision at least `0.85`; if the precision gate fails, it
+SHALL defer the graft with the measured `phase0_precision` instead of
+attributing label-noise effects to a reward-training delta.
+
+**When** the phase-0 precision gate passes, Exp 4159 SHALL run the
+de-confounded reward-training contrast: arm A is verifier-certified labels, arm
+B is vote-certified labels, both are N-matched, both resume from the same TRM
+initial checkpoint, both use bounded contiguous-style training rather than the
+bounded-pass chain, and both report held-out exact accuracy. The load-bearing
+`rft_vs_ablation_delta` SHALL be `A - B` with CI95, and
+`verifier_value_added` SHALL be true only when the delta is positive and the
+CI95 lower bound excludes zero.
+
+**Then** Exp 4159 SHALL write
+`results/experiment_4159_decisive_verifier_reward_graft.json` with top-level
+fields `honest_verdict`, `graft_deferred`, `phase0_precision`,
+`rft_vs_ablation_delta`, `verifier_value_added`, and `preconditions_checked`,
+each with principle text. The acceptance gate passes when either
+`graft_deferred=true` with `current_val < 0.85`, or a faithful real graft
+reports phase-0 precision, RFT CI95, and the bare `verifier_value_added` bool.
+
+### SCENARIO-LEARN-4159-DEFER: Non-Faithful Baseline Stops The Reward Graft
+
+**Given** Exp 4157 reports `current_val` below `0.85`
+**When** Exp 4159 starts
+**Then** it writes a terminal-prefixed honest deferral, sets
+`graft_deferred=true`, records the baseline checkpoint and CUDA preconditions,
+reports current validation accuracy, estimates `.386` convergence intervals,
+and does not snapshot, sample candidates, or launch RFT.
+
+### SCENARIO-LEARN-4159-PHASE0: Demo-Perfect Labels Must Be Test-Gold
+
+**Given** Exp 4157 reports a faithful baseline and candidate pools produce a
+verifier-certified corpus
+**When** Exp 4159 estimates `P(test-gold | demo-perfect)`
+**Then** it reports `phase0_precision` with numerator, denominator, threshold,
+and status; precision below `0.85` defers the graft before RFT attribution.
+
+### SCENARIO-LEARN-4159-RFT: Verifier Reward Beats Vote Reward Only With CI Separation
+
+**Given** Exp 4157 reports a faithful baseline and phase-0 precision is at
+least `0.85`
+**When** Exp 4159 runs the A-vs-B reward-training contrast
+**Then** both arms use the same TRM initialization and N-matched corpora, the
+artifact reports `rft_vs_ablation_delta` with CI95, and
+`verifier_value_added` is true only when the positive CI95 excludes zero.
+
+## Implementation Status (REQ-LEARN-4159)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4159 | Planned (python/carnot/experiment_4159_decisive_verifier_reward_graft.py, Exp 4159) | Planned (tests/python/test_experiment_4159_decisive_verifier_reward_graft.py) |
+
+---
+
 ## REQ-LEARN-4139: Decisive Sudoku Verifier Graft With Oracle Separation
 
 **Given** Exp 4138 has written
