@@ -719,3 +719,23 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: keep DiffusionGemma gated until the transferable ensemble rerank or RFT A-vs-B label contrast shows value with selectable headroom.
 - priority: high
 <!-- exp4142-sudoku-decisive-graft:end -->
+
+<!-- exp4153-sudoku-baseline-reproduction:start -->
+### GAP-SUDOKU-BASELINE-REPRODUCTION-4149: Exp 4153 .384 Sudoku baseline trajectory status
+- status: open_baseline_blocked_pass3_noop_val_0.2782
+- evidence: `results/experiment_4149_sudoku_accumulate_pass4_convergence.json`; baseline_status=blocked_pass3_noop_unresolved; raw_val_trajectory_v384=[0.2782, None, None, None, 0.2782]; effective_val_trajectory_v384=[0.2782, 0.2782, 0.2782, 0.2782, 0.2782]; final_val=0.2782; matches_published_087=false; faithful_for_graft_085=false; published_target=0.87.
+- failure mode: the .384 continuation did not produce real training progress; the pass1/pass2/pass3 no-op lineage carried forward and pass4 preserved the 0.2782 baseline rather than approaching the published target.
+- missing discriminator: faithful Sudoku baseline candidate source before DiffusionGemma scale-up or verifier-as-reward claims.
+- candidate design: resolve the timer/no-op checkpoint lineage or create a clean contiguous baseline before rerunning the graft.
+- priority: high
+<!-- exp4153-sudoku-baseline-reproduction:end -->
+
+<!-- exp4153-sudoku-decisive-graft:start -->
+### GAP-SUDOKU-EXECUTABLE-VERIFIER-4150: Exp 4153 .384 Sudoku decisive executable-verifier graft status
+- status: open_graft_deferred_baseline_below_0.85
+- evidence: `results/experiment_4150_decisive_verifier_graft_sudoku.json` with baseline `results/experiment_4149_sudoku_accumulate_pass4_convergence.json`; baseline_final_val=0.2782; baseline_faithful_085=false; graft_deferred=true; candidate_source=none_baseline_below_0.85; n_candidate_pools=0; rerank_lift_vs_vote_delta=0.0; rerank_lift_vs_vote_status=deferred_baseline_below_0.85; rft_vs_ablation_delta=0.0; rft_vs_ablation_delta_status=deferred_baseline_below_0.85; verifier_value_added=false; diffusiongemma_gate_state=kept_gated.
+- failure mode: Exp 4150 correctly deferred the graft because the baseline was below the faithful 0.85 gate; no rerank or RFT candidate source was created, so there is no transferable verifier-value-added evidence.
+- missing discriminator: transferable training-time value from non-oracle Sudoku verifier labels beyond vote labels.
+- candidate design: keep DiffusionGemma gated until rerank or RFT A-vs-B label contrast shows value on a faithful baseline.
+- priority: high
+<!-- exp4153-sudoku-decisive-graft:end -->
