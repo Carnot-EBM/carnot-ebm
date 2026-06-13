@@ -8404,3 +8404,5 @@ c |
 | 2026-06-13 05:42 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra s | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-13 06:32 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | 86 passed, 1 warning in 5.79s |
 | 2026-06-13 06:50 UTC | Capstone .382 (UNGATED): headline question is DID  | OK | 87 passed, 1 warning in 5.04s |
+| 2026-06-13 07:37 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-06-13 07:40 UTC | Milestone 2026.06.383 activated | OK | 11 tasks queued |

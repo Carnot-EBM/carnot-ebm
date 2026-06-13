@@ -22294,3 +22294,55 @@ openspec/change-proposals/research-roadmap-v376.md §3.
 Sources (this sweep): arxiv.org/abs/2403.07974 (LiveCodeBench v6); arxiv.org/abs/2305.01210
 (EvalPlus); arxiv.org/abs/2603.10282 (update-free on-policy steering via verifiers);
 arxiv.org/abs/2602.01070 (online verification); arxiv.org/abs/2507.14843 (The Invisible Leash).
+
+## 2026-06-13 Post-.382 Planning Sweep (Milestone 2026.06.383)
+
+**Planning agent (Claude Opus 4.8). Theme: .382 LANDED the LR-resume-correctness fix —
+the nano-trm Sudoku-Extreme baseline finally ACCUMULATES (val 0.106 -> 0.278 in one
+corrected-schedule pass, +0.172 vs .381's +0.01/pass = ~17x). The baseline is now
+genuinely climbing toward the published ~0.87; the Carnot verifier-as-reward graft has
+NEVER been tested on a FAITHFUL baseline (deferred .380/.381/.382). .383 converges the
+baseline (~3 bounded passes) THEN runs the decisive graft. Three findings directly shape
+that headline:**
+
+- **GRAM (Generative Recursive reAsoning Models) — NEW SOTA on the EXACT benchmark we
+  reproduce.** Junyeob Baek et al. report **97.0% exact-accuracy on Sudoku-Extreme with
+  ~10M params**, beating TRM (87.4%) and HRM (55.0%). GRAM "turns recursion itself into a
+  stochastic latent trajectory" (deterministic recursive refinement -> stochastic latent
+  trajectories). **Strategic significance for Carnot:** (a) our ~0.87 TRM-baseline target
+  is now mid-table — GRAM is the stronger generator to consider grafting onto AFTER the
+  TRM graft answers the verifier-value question; (b) a stochastic-latent generator emits a
+  *distribution* of candidate trajectories per puzzle — the natural input to an
+  energy-VERIFIER reranker (the north-star §5 hybrid: GRAM/TRM generates, Carnot energy
+  verifies), which is more headroom for a reranker than a near-deterministic TRM. Candidate
+  .384+ follow-on IF the TRM graft shows verifier_value_added. (digg.com/ai/kl9f5x93;
+  learnopencv.com/trm-tiny-ai-models-outsmarting-giants-on-complex-puzzles)
+- **RLVR + GRPO with TRM-as-thinking-reward — published precedent for the EXACT graft
+  shape Carnot tests.** Recent work integrates a TRM as an auxiliary reward inside GRPO:
+  "TRM provides a thinking reward that evaluates the quality of the underlying reasoning
+  trace, and since it is trained exclusively on verified-correct traces, it is used to
+  rank and shape alternative correct reasoning paths." This is verbatim the Carnot
+  verifier-as-reward thesis (a verifier trained on correct-only/cert-only traces used to
+  rank+shape). Corroborates the .383 RFT arm (A=verifier-certified vs B=vote-certified)
+  and warns the de-confound matters: "trained on verified-correct traces" is exactly the
+  arm we must isolate from the vote-label arm. (learnopencv.com TRM writeup)
+- **Weaver — "Shrinking the Generation-Verification Gap with Weak Verifiers" (Stanford
+  Scaling Intelligence).** A weighted ENSEMBLE of weak/noisy verifiers beats majority vote
+  by a wide margin where any SINGLE weak verifier does not. **Direct relevance to the
+  .380/.382 finding that NO single verifier beat TRM-vote (exp4099/4109/4128 captured
+  ~0.0pp):** the Sudoku executable verifier is a STRONG (exact) checker, not weak, so the
+  single-verifier rerank should capture the oracle headroom IF headroom exists — but
+  Weaver is the fallback design if the executable rerank is headroom-limited: combine the
+  executable validity check with the cheap text-stat verifiers as a weighted ensemble.
+  Mandatory positive control inherited: measure oracle(best-of-K) vs vote FIRST — if
+  oracle == vote there is NO headroom and any rerank null is uninformative
+  (FALSE_NEGATIVE_RISK). (scalingintelligence.stanford.edu/pubs/weaver.pdf)
+- **Symbol-Equivariant Recurrent Reasoning Models (arXiv:2603.02193)** and **HRM-Agent
+  (arXiv:2510.22832, recurrent reasoner trained with RL)** — adjacent recurrent-reasoning
+  advances; filed for the SOTA-ingestion slot, not load-bearing for .383.
+
+Sources (this sweep): digg.com/ai/kl9f5x93 (GRAM 97% Sudoku-Extreme);
+learnopencv.com/trm-tiny-ai-models-outsmarting-giants-on-complex-puzzles (TRM + RLVR/GRPO
+thinking-reward); scalingintelligence.stanford.edu/pubs/weaver.pdf (Weaver weak-verifier
+ensemble); arxiv.org/abs/2603.02193 (Symbol-Equivariant RRM); arxiv.org/abs/2510.22832
+(HRM-Agent); arxiv.org/abs/2510.04871 (TRM foundational); arxiv.org/abs/2511.02886 (TTA-TRM).
