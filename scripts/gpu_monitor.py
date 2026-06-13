@@ -186,6 +186,40 @@ def get_gpu_processes() -> list[GPUProcess]:
 # ── Analysis ─────────────────────────────────────────────────────────────────
 
 
+# Training entrypoints that must NEVER be classified as zombies. A model-training
+# process legitimately holds large VRAM for many hours, and — critically — a GPU-bound
+# run compiled with torch.compile spends almost all of its wall time waiting on CUDA
+# kernels, so its CPU-time/wall-time ratio is near zero EVEN AT 100% GPU UTILISATION.
+# The zombie heuristic below uses low CPU ratio as an "idle" proxy; that proxy is wrong
+# for compiled GPU-bound training and would kill a fully-productive run.
+#
+# Origin: 2026-06-13. The conductor calls kill_zombies(dry_run=False) in its per-task
+# pre-check to free GPU memory. The outer-loop's contiguous TRM Sudoku-Extreme training
+# (decision "A": training is OWNED BY THE OUTER-LOOP; the conductor stands down on TRM,
+# see research-roadmap-next.yaml .386 HARD COORDINATION RULE) was SIGTERM'd twice at
+# ~12 min — right after crossing the 10-min wall-time threshold — because it matched the
+# zombie pattern (>1GB VRAM, >10min, <1% CPU). This exemption is the MECHANICAL backstop
+# for that prose coordination rule; it also protects the conductor's OWN training runs
+# from being killed by a subsequent task's pre-check. Matched against the full
+# /proc/<pid>/cmdline because nvidia-smi only reports the bare process name ("python").
+_TRAINING_ENTRYPOINT_MARKERS = ("train.py", "/nn/train", "src/nn/train")
+
+
+def _proc_cmdline(pid: int) -> str:
+    """Best-effort full command line for a PID (NUL-separated in /proc); '' on failure."""
+    try:
+        raw = Path(f"/proc/{pid}/cmdline").read_bytes()
+        return raw.replace(b"\x00", b" ").decode("utf-8", "replace")
+    except (FileNotFoundError, PermissionError, ProcessLookupError, OSError):
+        return ""
+
+
+def _is_protected_training_proc(pid: int) -> bool:
+    """True if the PID is a model-training process that must not be killed as a zombie."""
+    cmdline = _proc_cmdline(pid)
+    return any(marker in cmdline for marker in _TRAINING_ENTRYPOINT_MARKERS)
+
+
 def detect_zombies(
     processes: list[GPUProcess], idle_threshold_min: float = 10.0, min_vram_mb: int = 1024
 ) -> list[GPUProcess]:
@@ -195,12 +229,20 @@ def detect_zombies(
     - It uses >= min_vram_mb of GPU memory
     - Its CPU time / wall time ratio is < 1% (barely using CPU)
     - It has been running for > idle_threshold_min minutes
+
+    Training entrypoints (see _TRAINING_ENTRYPOINT_MARKERS) are exempt: a long-running,
+    high-VRAM, GPU-bound (low-CPU-ratio) training process is doing exactly what it should,
+    not leaking — the CPU-ratio idle proxy misfires on compiled GPU-bound training.
     """
     zombies = []
     for proc in processes:
         if proc.used_mb < min_vram_mb:
             continue
         if proc.wall_time_seconds < idle_threshold_min * 60:
+            continue
+        # Never flag an active training run as a zombie (it holds VRAM by design and is
+        # GPU-bound, so its CPU ratio is naturally < 1% even while fully productive).
+        if _is_protected_training_proc(proc.pid):
             continue
         # Check CPU/wall ratio — zombie if barely using CPU
         if proc.wall_time_seconds > 0:
