@@ -8,6 +8,35 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-13 Exp 4121 - .381 TRM baseline-graft SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-trm-baseline-graft-2026-06-13.md`.
+
+**Filtered track:** resumable TRM Sudoku baseline reproduction plus Carnot
+verifier graft, after Exp 4108 produced a checkpointed but partial baseline,
+Exp 4109 found no post-hoc verifier lift over vote, and Exp 4111 flagged
+in-loop verifier-guided search as the next candidate.
+
+**Seed and fresh-pass candidates marked ingested:**
+- TRM, arXiv:2510.04871 - mapped as the resumed Sudoku Extreme baseline gate
+  before any verifier-lift claim.
+- TTA-TRM, arXiv:2511.02886 - mapped as the full-fine-tuning adaptation control
+  that must be isolated from verifier-admission effects.
+- Adaptive verifier-guided candidate expansion, arXiv:2602.01070, with VPRM/VPR
+  support from arXiv:2601.17223 and arXiv:2605.10325 - mapped as the strongest
+  .382 follow-on because post-hoc verifier reranking already tied vote.
+- V-STaR, arXiv:2402.06457 - mapped as accepted/rejected Sudoku trace selector
+  training once candidate diversity and oracle support exist.
+- ReST, arXiv:2308.08998, and STaR, arXiv:2203.14465 - mapped as the resumable
+  generate-filter-improve curriculum, with rejected rows retained for selector
+  data.
+
+Flagged for .382: `verifier_guided_adaptive_candidate_expansion_over_resumed_trm`.
+
+**Bottom line for the .382 roadmap:** put the executable Sudoku verifier inside
+candidate expansion over the resumed TRM checkpoint before spending on selector
+or RFT work. Require pass@1 or oracle-support lift over fixed-K vote and Exp
+4109 post-hoc verifier rerank; otherwise selector/RFT work should stay blocked.
 ## 2026-06-12 Exp 4111 - .380 TRM verifier-training SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-trm-verifier-training-2026-06-12.md`.

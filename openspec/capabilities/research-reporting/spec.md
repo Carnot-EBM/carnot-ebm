@@ -19919,6 +19919,65 @@ leaves conductor and reconciliation files untouched.
 |---|---|---|
 | REQ-REPORT-4111 | Implemented (`python/carnot/sota_ingestion_trm_verifier_training_4111.py`, `docs/research-notes/sota-ingestion-trm-verifier-training-2026-06-12.md`) | Implemented (`tests/python/test_sota_ingestion_trm_verifier_training_4111.py`) |
 
+### REQ-REPORT-4121: SOTA Ingestion Mapping For Resumable TRM Baseline Reproduction Plus Verifier Graft
+
+The Exp 4121 workflow SHALL emit a dated SOTA-to-experiment mapping note for
+the `.381` resumable TRM baseline reproduction plus Carnot verifier graft
+headline. The markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-trm-baseline-graft-2026-06-13.md` and the
+machine-checkable mapping artifact SHALL be written to
+`results/experiment_4121_sota_ingestion_trm_baseline_graft.json`.
+
+Before writing the note, the workflow SHALL read the TRM,
+verifier-guided-training, and long-horizon-training entries in
+`research-studying.md` and `research-references.md`, run
+`scripts/sweep_clusters.py` and `scripts/sweep_semscholar.py`, and verify the
+top five to eight method papers with low-concurrency WebSearch/WebFetch. The
+workflow SHALL use the reliable search/fetch path and SHALL NOT invoke
+`/deep-research`.
+
+For each mapped method, the note SHALL state what would have to change over the
+`nano-trm` plus Carnot-verifier stack and SHALL include the main pitfall or
+failure mode. The mapped method set SHALL include at least three verified
+primary-paper anchors from `arXiv:2510.04871`, `arXiv:2511.02886`,
+`arXiv:2402.06457`, `arXiv:2203.14465`, `arXiv:2308.08998`,
+`arXiv:2602.01070`, `arXiv:2601.17223`, and `arXiv:2605.10325`. Every method
+claim SHALL carry a real arXiv ID and URL. The note SHALL include a `Flagged
+for the .382 roadmap` section naming the single strongest follow-on method and
+SHALL update `research-studying.md` to mark the `.381` TRM baseline-graft
+candidate set as ingested. The workflow SHALL NOT update `ops/changelog.md`,
+`ops/status.md`, `_bmad/traceability.md`, or `scripts/research_conductor.py`.
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v382`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, and `flagged_for_v382`.
+`honest_verdict` SHALL use a terminal prefix and, on the complete path, start
+with `complete: sota_ingestion_trm_baseline_graft_mapped`.
+`methods_mapped` SHALL be a list of three to five dicts with exactly `name`,
+`arxiv_id`, `url`, `implementation_over_stack`, and `failure_mode`; each
+`arxiv_id` SHALL be one of the WebFetch-verified primary-paper IDs, preventing
+fabricated or uncited method rows. `flagged_for_v382` SHALL be a non-empty
+concrete roadmap slug identifying the strongest candidate input for `.382`.
+
+#### SCENARIO-REPORT-4121: Resumable TRM Baseline-Graft Mapping Closes The Discover-To-Plan Loop
+
+**Given** `.381` targets a resumed TRM Sudoku baseline reproduction and verifier
+graft after Exp 4108 produced a partial baseline, Exp 4109 found no post-hoc
+verifier lift, and Exp 4111 flagged in-loop verifier-guided search
+**When** the Exp 4121 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON mapping artifact, maps
+verified method papers to implementation work and failure modes over the
+`nano-trm` plus Carnot-verifier stack, updates `research-studying.md` with the
+ingested `.381` candidate set, flags the single strongest `.382` follow-up, and
+leaves conductor and reconciliation files untouched.
+
+## Implementation Status (REQ-REPORT-4121)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4121 | Implemented (`python/carnot/sota_ingestion_trm_baseline_graft_4121.py`, `docs/research-notes/sota-ingestion-trm-baseline-graft-2026-06-13.md`) | Implemented (`tests/python/test_sota_ingestion_trm_baseline_graft_4121.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone

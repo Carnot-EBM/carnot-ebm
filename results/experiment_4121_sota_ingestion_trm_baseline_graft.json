@@ -1,0 +1,46 @@
+{
+  "field_principles": {
+    "flagged_for_v382": "Closes the discover->ingest->plan loop: names the strongest method for the next planner.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication."
+  },
+  "flagged_for_v382": "verifier_guided_adaptive_candidate_expansion_over_resumed_trm",
+  "honest_verdict": "complete: sota_ingestion_trm_baseline_graft_mapped",
+  "methods_mapped": [
+    {
+      "arxiv_id": "2510.04871",
+      "failure_mode": "A checkpoint can reload and still remain far below the published TRM target, making any verifier-graft conclusion underpowered.",
+      "implementation_over_stack": "Resume the nano-trm Sudoku Extreme checkpoint until the baseline reproduction is trustworthy before treating verifier lift as meaningful.",
+      "name": "TRM resumable Sudoku baseline gate",
+      "url": "https://arxiv.org/abs/2510.04871"
+    },
+    {
+      "arxiv_id": "2511.02886",
+      "failure_mode": "Full fine-tuning can win by public-task adaptation or leakage unless checkpoint source, split, and optimizer budget are isolated.",
+      "implementation_over_stack": "Keep a no-verifier full-fine-tune arm beside verifier-admitted training so adaptation compute is not confused with verifier value.",
+      "name": "TTA-TRM full-fine-tune control",
+      "url": "https://arxiv.org/abs/2511.02886"
+    },
+    {
+      "arxiv_id": "2602.01070",
+      "failure_mode": "Local verifier scores can prefer near-valid dead ends, so final exact validity and prune-error rate must remain authoritative.",
+      "implementation_over_stack": "Move exact Sudoku checks into candidate expansion so resumed TRM compute is spent on recoverable partial boards before post-hoc reranking.",
+      "name": "Verifier-guided adaptive candidate expansion",
+      "url": "https://arxiv.org/abs/2602.01070"
+    },
+    {
+      "arxiv_id": "2402.06457",
+      "failure_mode": "Near-duplicate invalid boards can teach shallow artifacts unless the pool has real within-puzzle diversity.",
+      "implementation_over_stack": "Train a selector from exact-valid and verifier-rejected Sudoku traces sampled from the same resumed checkpoint.",
+      "name": "V-STaR accepted/rejected Sudoku selector",
+      "url": "https://arxiv.org/abs/2402.06457"
+    },
+    {
+      "arxiv_id": "2308.08998",
+      "failure_mode": "If the baseline checkpoint rarely samples valid completions, the cached curriculum collapses into memorization or too few positives.",
+      "implementation_over_stack": "Cache generated Sudoku batches, filter them with the Carnot verifier, resume improvement from unique positives, and retain rejects for selectors.",
+      "name": "ReST resumable generate-filter-improve curriculum",
+      "url": "https://arxiv.org/abs/2308.08998"
+    }
+  ]
+}
