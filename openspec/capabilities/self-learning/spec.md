@@ -12966,6 +12966,63 @@ advance.
 
 ---
 
+## REQ-LEARN-4150: Decision-Grade Sudoku Verifier Graft Gate
+
+**Given** Exp 4149 has written
+`results/experiment_4149_sudoku_accumulate_pass4_convergence.json`, Exp 4150
+SHALL read `val_exact_accuracy`, `stable_checkpoint_path`, and the recorded
+runtime preconditions before attempting any verifier-as-reward graft. It SHALL
+also verify CUDA visibility and that the stable checkpoint path is present and
+loadable, recording all checks in `preconditions_checked`.
+
+**When** Exp 4149 reports `val_exact_accuracy < 0.85`, Exp 4150 SHALL stop
+before reranking or RFT training, set `graft_deferred=true`, report the current
+baseline validation accuracy, and estimate additional `.385` passes needed to
+reach `0.85`. This honest deferral is acceptance-grade because a graft on an
+unfaithful baseline repeats the `.383` false-negative anti-pattern.
+
+**When** Exp 4149 reports `val_exact_accuracy >= 0.85` and preconditions pass,
+Exp 4150 SHALL run the real graft branch: sample K candidate Sudoku solutions
+per held-out puzzle, rerank with the executable Sudoku verifier, report
+`rerank_lift_vs_vote` against TRM-vote and oracle with bootstrap CI, and run an
+N-matched RFT label contrast where A is verifier-certified labels and B is
+vote-certified labels from the same TRM.
+
+**Then** Exp 4150 SHALL write
+`results/experiment_4150_decisive_verifier_graft_sudoku.json` with top-level
+fields `honest_verdict`, `graft_deferred`, `rerank_lift_vs_vote`,
+`rft_vs_ablation_delta`, `verifier_value_added`, and `preconditions_checked`,
+each with principle text. The acceptance gate passes when either
+`graft_deferred=true` with baseline status for `val<0.85`, or
+`graft_deferred=false` with `rerank_lift_vs_vote`,
+`rft_vs_ablation_delta`, and `verifier_value_added` reported with CI95.
+
+### SCENARIO-LEARN-4150-DEFER: Non-Faithful Baseline Stops The Graft
+
+**Given** Exp 4149 reports validation accuracy below `0.85`
+**When** Exp 4150 starts
+**Then** it writes a terminal-prefixed honest deferral, sets
+`graft_deferred=true`, records the baseline checkpoint and CUDA preconditions,
+reports current validation accuracy, estimates `.385` passes to converge, and
+does not sample candidates or launch RFT.
+
+### SCENARIO-LEARN-4150-GRAFT: Faithful Baseline Runs The Measurement
+
+**Given** Exp 4149 reports validation accuracy at least `0.85`
+**When** Exp 4150 has candidate pools from the same TRM
+**Then** it reports `rerank_lift_vs_vote` with CI95 and an oracle comparison,
+reports `rft_vs_ablation_delta` with CI95 from the N-matched label contrast,
+and sets `verifier_value_added` from the A-vs-B delta rather than from an
+uninformative non-faithful graft.
+
+## Implementation Status (REQ-LEARN-4150)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4150 | Planned (python/carnot/experiment_4150_decisive_verifier_graft_sudoku.py, Exp 4150) | Planned (tests/python/test_experiment_4150_decisive_verifier_graft_sudoku.py) |
+
+---
+
 ## REQ-LEARN-4139: Decisive Sudoku Verifier Graft With Oracle Separation
 
 **Given** Exp 4138 has written

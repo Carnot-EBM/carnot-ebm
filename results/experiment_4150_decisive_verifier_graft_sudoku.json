@@ -1,0 +1,92 @@
+{
+  "acceptance_gate_passed": true,
+  "baseline_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4149_sudoku_accumulate_pass4_convergence.json",
+  "baseline_status": {
+    "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4149_sudoku_accumulate_pass4_convergence.json",
+    "faithful": false,
+    "faithful_threshold": 0.85,
+    "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+    "val_exact_accuracy": 0.278172343969
+  },
+  "candidate_source": "none_baseline_below_0.85",
+  "corpus_summary": {},
+  "duration_s": 0.115,
+  "estimated_passes_to_converge_for_385": {
+    "basis": "no_positive_v384_convergence_rate",
+    "current_val_exact_accuracy": 0.278172343969,
+    "destination": ".385",
+    "estimated_additional_passes": null,
+    "target_val_exact_accuracy": 0.85
+  },
+  "experiment": "experiment_4150_decisive_verifier_graft_sudoku",
+  "field_principles": {
+    "graft_deferred": "Bare bool: True if val<0.85 -> deferred. Prevents the uninformative no-headroom false-negative .383 produced.",
+    "honest_verdict": "Terminal-prefixed. An honest deferral, an A>B win, or an A~=B null are all COMPLETE; an uninformative graft on a non-faithful baseline is the .383 anti-pattern.",
+    "preconditions_checked": "Records the baseline checkpoint + CUDA verified.",
+    "rerank_lift_vs_vote": "pass@1 lift from verifier-reranking (if grafted); confirms the executable Sudoku verifier discriminates (contrast to .379 ARC-grid anti-discrimination).",
+    "rft_vs_ablation_delta": "The de-confounded A-vs-B held-out delta with CI (if grafted): isolates the verifier LABEL's training contribution -- THE moat measurement.",
+    "verifier_value_added": "Bare bool: did the graft beat the vote ablation? The headline answer, ONLY meaningful when graft_deferred is False. Also resolves the DiffusionGemma gate."
+  },
+  "graft_deferred": true,
+  "honest_verdict": "complete: graft_deferred_baseline_below_0.85",
+  "k_candidates_per_puzzle": 0,
+  "n_candidate_pools": 0,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4149_sudoku_accumulate_pass4_convergence.json",
+      "resource": "exp4149_artifact"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+      "resource": "stable_checkpoint_path"
+    },
+    {
+      "available": true,
+      "detail": "torch.load ok",
+      "resource": "baseline_checkpoint"
+    },
+    {
+      "available": true,
+      "detail": "torch.cuda.is_available()=True; device=NVIDIA GeForce RTX 3090",
+      "resource": "cuda_available"
+    }
+  ],
+  "random_seed": 4150,
+  "reproducibility_checksum": "sha256:e849f4e849a0fcdb37cac7d0a5a19cd3fa68250d9463f513c9031ee9befc91f0",
+  "rerank_lift_vs_vote": {
+    "ci95": [
+      0.0,
+      0.0
+    ],
+    "delta": 0.0,
+    "metric": "pass@1_exact_accuracy",
+    "n_puzzles": 0,
+    "oracle_pass_at_k": 0.0,
+    "status": "deferred_baseline_below_0.85",
+    "verifier_pass_at_1": 0.0,
+    "vote_pass_at_1": 0.0
+  },
+  "rft_vs_ablation_delta": {
+    "a_exact_accuracy": 0.0,
+    "b_exact_accuracy": 0.0,
+    "ci95": [
+      0.0,
+      0.0
+    ],
+    "current_val_exact_accuracy": 0.278172343969,
+    "delta": 0.0,
+    "metric": "heldout_exact_accuracy",
+    "n_matched": 0,
+    "status": "deferred_baseline_below_0.85"
+  },
+  "schema": "carnot.experiment_4150_decisive_verifier_graft_sudoku.v1",
+  "spec_refs": [
+    "REQ-LEARN-4150",
+    "SCENARIO-LEARN-4150-DEFER",
+    "SCENARIO-LEARN-4150-GRAFT"
+  ],
+  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+  "verifier_value_added": false
+}
