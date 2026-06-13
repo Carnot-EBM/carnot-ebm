@@ -1,0 +1,1797 @@
+{
+  "acceptance_gate_passed": true,
+  "baseline_status": "config-blocked",
+  "command": [
+    "uv",
+    "run",
+    "python",
+    "src/nn/train.py",
+    "experiment=trm_sudoku_extreme_1k_aug_1k",
+    "logger=csv",
+    "hydra.run.dir=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4137_sudoku_accumulate_pass3_fixed_lr/pass_3_hydra",
+    "save_dir=null",
+    "append_wandb_name_to_save_dir=false",
+    "seed=4108",
+    "data.data_dir=./data/sudoku_extreme_1k_aug_1k",
+    "timekeeping.batch_size=128",
+    "ckpt_path=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+    "+trainer.max_time=00:01:00:00",
+    "callbacks.model_checkpoint.monitor=val/exact_accuracy",
+    "callbacks.model_checkpoint.mode=max",
+    "callbacks.model_checkpoint.dirpath=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline",
+    "callbacks.model_checkpoint.save_last=true",
+    "callbacks.model_checkpoint.save_top_k=1",
+    "callbacks.model_checkpoint.auto_insert_metric_name=false",
+    "+callbacks.exp4127_progress._target_=carnot.experiment_4127_sudoku_extreme_accumulate_fixed.NanoTrmAccumulateFixedProgressPrinter",
+    "+callbacks.exp4127_progress.every_n_steps=100",
+    "+callbacks.exp4127_progress.checkpoint_dir=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline"
+  ],
+  "config_audit": {
+    "batch_size_vs_published_recipe": {
+      "actual": 128,
+      "expected_local_safe": 128,
+      "matches_local_safe": true,
+      "published_config": 768
+    },
+    "corrected_config_recommendation": "for the .384 baseline: rerun Exp 4135 from the stable checkpoint after resetting or removing the Lightning Timer elapsed callback state before Trainer.fit; keep scheduler horizon max_epochs=50000, peak_lr=1e-4, data.data_dir=./data/sudoku_extreme_1k_aug_1k, and local safe timekeeping.batch_size=128 unless memory allows the published batch 768",
+    "data_path_vs_published_recipe": {
+      "actual": "./data/sudoku_extreme_1k_aug_1k",
+      "config_default": "./data/sudoku_extreme_1k_aug_1k",
+      "expected": "./data/sudoku_extreme_1k_aug_1k",
+      "matches_expected": true
+    },
+    "pass2_evidence": {
+      "delta_vs_previous": null,
+      "duration_s": 0.002,
+      "exact_accuracy_metrics_path": null,
+      "honest_verdict": "complete: plateau -> config audit: pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written",
+      "plateau_audit_done": true,
+      "train_lr_point_count": null,
+      "val_exact_accuracy": null
+    },
+    "peak_lr_vs_published_recipe": {
+      "actual": 0.0001,
+      "expected": 0.0001,
+      "matches_expected": true
+    },
+    "scheduler_horizon_vs_published_recipe": {
+      "actual_max_epochs": 50000,
+      "expected_max_epochs": 50000,
+      "matches_expected": true,
+      "trainer_max_time": "00:01:00:00",
+      "warmup_steps": 2000
+    },
+    "suspected_cause": "pass2 already ran config audit; baseline is config-blocked before pass3: pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written"
+  },
+  "corrected_config_recommendation": "for the .384 baseline: rerun Exp 4135 from the stable checkpoint after resetting or removing the Lightning Timer elapsed callback state before Trainer.fit; keep scheduler horizon max_epochs=50000, peak_lr=1e-4, data.data_dir=./data/sudoku_extreme_1k_aug_1k, and local safe timekeeping.batch_size=128 unless memory allows the published batch 768",
+  "delta_vs_previous": null,
+  "duration_s": 0.002,
+  "experiment": "experiment_4137_sudoku_accumulate_pass3_fixed_lr",
+  "field_principles": {
+    "delta_vs_previous": "Improvement vs pass2; <=0 triggers the config-audit branch, not another blind pass.",
+    "duration_s": "Bounded GPU run < 4800s (single float).",
+    "honest_verdict": "Terminal-prefixed. An honest 'val=0.NN improving -> pass4 continues' is COMPLETE.",
+    "matches_published_087": "Bare bool: within 0.02 of 0.87.",
+    "plateau_audit_done": "Bare bool: True if pass2 stalled and this task audited config instead of blind-training.",
+    "random_seed": "Determinism precondition recorded as a first-class field (silences METHODOLOGY_MISSING).",
+    "reproducibility_checksum": "Content hash of (config + resumed checkpoint + data dir); catches silent drift.",
+    "stable_checkpoint_path": "The persisted baseline path pass4 (exp4138) resumes from.",
+    "val_exact_accuracy": "Val after pass3; the accumulation trajectory toward the pass4 + graft."
+  },
+  "honest_verdict": "complete: baseline config-blocked before pass3 -> config audit: pass2 already ran config audit; baseline is config-blocked before pass3: pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written",
+  "matches_published_087": false,
+  "model_specs": {
+    "batch_size": 128,
+    "data_config": "sudoku_extreme_1k_aug1k",
+    "data_config_path": "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/configs/data/sudoku_extreme_1k_aug1k.yaml",
+    "data_dir": "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/data/sudoku_extreme_1k_aug_1k",
+    "experiment_config": "trm_sudoku_extreme_1k_aug_1k",
+    "experiment_config_path": "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/configs/experiment/trm_sudoku_extreme_1k_aug_1k.yaml",
+    "max_time": "00:01:00:00",
+    "model": "nano-trm",
+    "pass_index": 3,
+    "seed": 4108,
+    "trainer_path": "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/train.py"
+  },
+  "pass2_artifact": {
+    "acceptance_gate_passed": true,
+    "command": [
+      "uv",
+      "run",
+      "python",
+      "src/nn/train.py",
+      "experiment=trm_sudoku_extreme_1k_aug_1k",
+      "logger=csv",
+      "hydra.run.dir=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4136_sudoku_accumulate_pass2_fixed_lr/pass_2_hydra",
+      "save_dir=null",
+      "append_wandb_name_to_save_dir=false",
+      "seed=4108",
+      "data.data_dir=./data/sudoku_extreme_1k_aug_1k",
+      "timekeeping.batch_size=128",
+      "ckpt_path=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+      "+trainer.max_time=00:01:00:00",
+      "callbacks.model_checkpoint.monitor=val/exact_accuracy",
+      "callbacks.model_checkpoint.mode=max",
+      "callbacks.model_checkpoint.dirpath=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline",
+      "callbacks.model_checkpoint.save_last=true",
+      "callbacks.model_checkpoint.save_top_k=1",
+      "callbacks.model_checkpoint.auto_insert_metric_name=false",
+      "+callbacks.exp4127_progress._target_=carnot.experiment_4127_sudoku_extreme_accumulate_fixed.NanoTrmAccumulateFixedProgressPrinter",
+      "+callbacks.exp4127_progress.every_n_steps=100",
+      "+callbacks.exp4127_progress.checkpoint_dir=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline"
+    ],
+    "config_audit": {
+      "batch_size_vs_published_recipe": {
+        "actual": 128,
+        "expected_local_safe": 128,
+        "matches_local_safe": true,
+        "published_config": 768
+      },
+      "corrected_config_recommendation": "rerun Exp 4135 from the stable checkpoint after resetting or removing the Lightning Timer elapsed callback state before Trainer.fit; keep scheduler horizon max_epochs=50000, peak_lr=1e-4, data.data_dir=./data/sudoku_extreme_1k_aug_1k, and local safe timekeeping.batch_size=128 unless memory allows the published batch 768",
+      "data_path_vs_published_recipe": {
+        "actual": "./data/sudoku_extreme_1k_aug_1k",
+        "config_default": "./data/sudoku_extreme_1k_aug_1k",
+        "expected": "./data/sudoku_extreme_1k_aug_1k",
+        "matches_expected": true
+      },
+      "pass1_evidence": {
+        "delta_vs_previous": null,
+        "duration_s": 6.99,
+        "exact_accuracy_metrics_path": null,
+        "honest_verdict": "complete: missing_real_val_exact_accuracy",
+        "train_lr_point_count": 0,
+        "val_exact_accuracy": null
+      },
+      "peak_lr_vs_published_recipe": {
+        "actual": 0.0001,
+        "expected": 0.0001,
+        "matches_expected": true
+      },
+      "scheduler_horizon_vs_published_recipe": {
+        "actual_max_epochs": 50000,
+        "expected_max_epochs": 50000,
+        "matches_expected": true,
+        "trainer_max_time": "00:01:00:00",
+        "warmup_steps": 2000
+      },
+      "suspected_cause": "pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written"
+    },
+    "corrected_config_recommendation": "rerun Exp 4135 from the stable checkpoint after resetting or removing the Lightning Timer elapsed callback state before Trainer.fit; keep scheduler horizon max_epochs=50000, peak_lr=1e-4, data.data_dir=./data/sudoku_extreme_1k_aug_1k, and local safe timekeeping.batch_size=128 unless memory allows the published batch 768",
+    "corrigendum_pending": [
+      {
+        "detail": "duration_s=0.002 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+        "kind": "DURATION_TOO_SHORT",
+        "severity": "critical"
+      },
+      {
+        "detail": "acceptance_gate_passed=true but these fields are null/zero: delta_vs_previous=null",
+        "kind": "GATE_PASSED_WITHOUT_DATA",
+        "severity": "critical"
+      }
+    ],
+    "delta_vs_previous": null,
+    "duration_s": 0.002,
+    "experiment": "experiment_4136_sudoku_accumulate_pass2_fixed_lr",
+    "field_principles": {
+      "delta_vs_previous": "Improvement vs pass1; <=0 triggers the config-audit branch, not another blind pass.",
+      "duration_s": "Bounded GPU run < 4800s (single float), or a short audit (< 600s) if the plateau branch fired.",
+      "honest_verdict": "Terminal-prefixed. An honest 'val=0.NN improving' OR 'plateau -> config audit: <cause>' is COMPLETE.",
+      "matches_published_087": "Bare bool: within 0.02 of 0.87.",
+      "plateau_audit_done": "Bare bool: True if pass1 stalled and this task audited config instead of blind-training (the Failed-Rerun-Discipline floor).",
+      "random_seed": "Determinism precondition recorded as a first-class field (silences METHODOLOGY_MISSING).",
+      "reproducibility_checksum": "Content hash of (config + resumed checkpoint + data dir); catches silent drift.",
+      "stable_checkpoint_path": "The persisted baseline path pass3 (exp4137) resumes from.",
+      "val_exact_accuracy": "Val after pass2; the accumulation trajectory."
+    },
+    "flagged_adversarial": true,
+    "honest_verdict": "complete: plateau -> config audit: pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written",
+    "matches_published_087": false,
+    "model_specs": {
+      "batch_size": 128,
+      "data_config": "sudoku_extreme_1k_aug1k",
+      "data_config_path": "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/configs/data/sudoku_extreme_1k_aug1k.yaml",
+      "data_dir": "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/data/sudoku_extreme_1k_aug_1k",
+      "experiment_config": "trm_sudoku_extreme_1k_aug_1k",
+      "experiment_config_path": "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/configs/experiment/trm_sudoku_extreme_1k_aug_1k.yaml",
+      "max_time": "00:01:00:00",
+      "model": "nano-trm",
+      "pass_index": 2,
+      "seed": 4108,
+      "trainer_path": "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/train.py"
+    },
+    "pass1_artifact": {
+      "acceptance_gate_passed": false,
+      "checkpoint_reload_detail": "torch.load ok",
+      "checkpoint_reload_ok": true,
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "src/nn/train.py",
+        "experiment=trm_sudoku_extreme_1k_aug_1k",
+        "logger=csv",
+        "hydra.run.dir=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4135_sudoku_accumulate_pass1_fixed_lr/pass_1_hydra",
+        "save_dir=null",
+        "append_wandb_name_to_save_dir=false",
+        "seed=4108",
+        "data.data_dir=./data/sudoku_extreme_1k_aug_1k",
+        "timekeeping.batch_size=128",
+        "ckpt_path=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+        "+trainer.max_time=00:01:00:00",
+        "callbacks.model_checkpoint.monitor=val/exact_accuracy",
+        "callbacks.model_checkpoint.mode=max",
+        "callbacks.model_checkpoint.dirpath=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline",
+        "callbacks.model_checkpoint.save_last=true",
+        "callbacks.model_checkpoint.save_top_k=1",
+        "callbacks.model_checkpoint.auto_insert_metric_name=false",
+        "+callbacks.exp4127_progress._target_=carnot.experiment_4127_sudoku_extreme_accumulate_fixed.NanoTrmAccumulateFixedProgressPrinter",
+        "+callbacks.exp4127_progress.every_n_steps=100",
+        "+callbacks.exp4127_progress.checkpoint_dir=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline"
+      ],
+      "corrigendum_pending": [
+        {
+          "detail": "duration_s=6.99 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "dataset_dir": "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/data/sudoku_extreme_1k_aug_1k",
+      "dataset_generated": false,
+      "delta_vs_previous": null,
+      "duration_s": 6.99,
+      "exact_accuracy_metric": null,
+      "exact_accuracy_metrics_path": null,
+      "experiment": "experiment_4135_sudoku_accumulate_pass1_fixed_lr",
+      "field_principles": {
+        "delta_vs_previous": "Improvement vs the 0.278 start; confirms the fixed schedule is still accumulating (vs a stall).",
+        "duration_s": "Bounded GPU run < 4800s; a single scalar duration.",
+        "honest_verdict": "Terminal-prefixed. An honest 'val=0.NN improved, still <0.87 -> pass2 continues' is COMPLETE.",
+        "lr_continued_not_rewarmed": "Bare bool: train/lr at pass start CONTINUED the schedule (not a 2.45e-6 reset) -- a regression guard on the exp4126 fix.",
+        "matches_published_087": "Bare bool: within 0.02 of 0.87. Tells the next pass / graft whether a faithful baseline exists.",
+        "model_specs": "Names nano-trm plus the trm_sudoku_extreme_1k_aug_1k config so the artifact declares what was actually trained.",
+        "random_seed": "Determinism precondition for reproducibility; the nano-trm seed (4108) recorded as a first-class field.",
+        "reproducibility_checksum": "Content hash of config, stable checkpoint, and data dir; catches silent corpus/model drift between this pass and any replication.",
+        "stable_checkpoint_path": "The persisted baseline path pass2 (exp4136) resumes from.",
+        "val_exact_accuracy": "Val after this pass; the load-bearing accumulation evidence."
+      },
+      "first_train_lr_metrics_path": null,
+      "flagged_adversarial": true,
+      "fresh_warmup_lr": 2.4500000108673703e-06,
+      "honest_verdict": "complete: missing_real_val_exact_accuracy",
+      "lr_continued_not_rewarmed": false,
+      "lr_fix_artifact": {
+        "command": [
+          "CUDA_VISIBLE_DEVICES=0",
+          "PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True",
+          "DISABLE_COMPILE=1",
+          "WANDB_MODE=disabled",
+          "HYDRA_FULL_ERROR=1",
+          ".venv/bin/python",
+          "src/nn/train.py",
+          "experiment=trm_sudoku_extreme_1k_aug_1k",
+          "logger=csv",
+          "hydra.run.dir=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra",
+          "save_dir=null",
+          "append_wandb_name_to_save_dir=false",
+          "seed=4108",
+          "data.data_dir=./data/sudoku_extreme_1k_aug_1k",
+          "timekeeping.batch_size=128",
+          "ckpt_path=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+          "+trainer.max_time=00:00:10:00",
+          "+trainer.limit_train_batches=1",
+          "+trainer.limit_val_batches=1",
+          "+trainer.log_every_n_steps=1",
+          "trainer.check_val_every_n_epoch=1",
+          "callbacks.model_checkpoint.save_top_k=0",
+          "callbacks.model_checkpoint.save_last=false"
+        ],
+        "duration_s": 350.0,
+        "field_principles": {
+          "duration_s": "Bounded GPU run < 4800s (stopped before the cap).",
+          "honest_verdict": "Terminal-prefixed. An honest 'cannot fix bounded-resume -> contiguous run needed' is a COMPLETE verdict.",
+          "lr_continuous_across_resume": "Bare bool: after the fix, does a resumed pass CONTINUE the schedule (start-LR != fresh-warmup value)? THE gate -- the prerequisite for exp4127's accumulation to work.",
+          "lr_rewarm_root_cause": "The diagnosed reason the LR resets on resume (scheduler-not-restored / local-step-warmup / etc.); the audit trail for the fix.",
+          "stable_checkpoint_path": "The path exp4127 resumes from with the corrected schedule.",
+          "val_exact_accuracy": "Val after the validation pass; should improve faster than .381's +1pp/pass if the schedule now continues.",
+          "validation_first_lr": "The observed train/lr at the start of the validation pass; compared to the prior pass's last-LR proves continuation (not re-warm)."
+        },
+        "fresh_warmup_lr": 2.4500000108673703e-06,
+        "full_batch_validation_attempt": "blocked_cuda_oom_before_metrics",
+        "honest_verdict": "complete: lr_resume_continuous_first_lr=9.9989331e-05",
+        "lr_continuous_across_resume": true,
+        "lr_rewarm_root_cause": "manual LR schedule used TRMModule.manual_step, which was initialized to 0 on every new process; legacy checkpoints did not contain that field, Lightning global_step was 0 for this raw manual-optimization loop, and only fit_loop batch_progress/epoch preserved the resume position. The same training_step also pinned LR to base_lr after warmup instead of calling the configured cosine schedule.",
+        "manual_lr_step_restored": 4300,
+        "prior_pass_last_lr": 4.949999947712058e-06,
+        "schema": "carnot.experiment_4126_lr_resume_correctness_fix.v1",
+        "spec_refs": [
+          "REQ-LEARN-4126",
+          "SCENARIO-LEARN-4126"
+        ],
+        "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+        "stdout_tail": [
+          "full batch_size=768 validation attempts OOMed before metrics on the current nano-trm torch runtime",
+          "smoke validation used batch_size=128, limit_train_batches=1, limit_val_batches=1 to exercise ckpt_path LR resume",
+          "checkpoint load log: Restored manual LR step: 4300"
+        ],
+        "train_lr_points": [
+          {
+            "epoch": 4300,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4300,
+            "value": 9.998933091992512e-05
+          },
+          {
+            "epoch": 4301,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4301,
+            "value": 9.998932364396751e-05
+          },
+          {
+            "epoch": 4302,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4302,
+            "value": 9.998930909205228e-05
+          },
+          {
+            "epoch": 4303,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4303,
+            "value": 9.998930181609467e-05
+          },
+          {
+            "epoch": 4304,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4304,
+            "value": 9.998929454013705e-05
+          },
+          {
+            "epoch": 4305,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4305,
+            "value": 9.998928726417944e-05
+          },
+          {
+            "epoch": 4306,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4306,
+            "value": 9.998927271226421e-05
+          },
+          {
+            "epoch": 4307,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4307,
+            "value": 9.99892654363066e-05
+          },
+          {
+            "epoch": 4308,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4308,
+            "value": 9.998925816034898e-05
+          },
+          {
+            "epoch": 4309,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4309,
+            "value": 9.998924360843375e-05
+          },
+          {
+            "epoch": 4310,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4310,
+            "value": 9.998923633247614e-05
+          },
+          {
+            "epoch": 4311,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4311,
+            "value": 9.998922905651852e-05
+          },
+          {
+            "epoch": 4312,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4312,
+            "value": 9.998922178056091e-05
+          },
+          {
+            "epoch": 4313,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4313,
+            "value": 9.998920722864568e-05
+          },
+          {
+            "epoch": 4314,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4314,
+            "value": 9.998919995268807e-05
+          },
+          {
+            "epoch": 4315,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4315,
+            "value": 9.998919267673045e-05
+          },
+          {
+            "epoch": 4316,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4316,
+            "value": 9.998917812481523e-05
+          },
+          {
+            "epoch": 4317,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4317,
+            "value": 9.998917084885761e-05
+          },
+          {
+            "epoch": 4318,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4318,
+            "value": 9.99891635729e-05
+          },
+          {
+            "epoch": 4319,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4319,
+            "value": 9.998915629694238e-05
+          },
+          {
+            "epoch": 4320,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4320,
+            "value": 9.998914174502715e-05
+          },
+          {
+            "epoch": 4321,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4321,
+            "value": 9.998913446906954e-05
+          },
+          {
+            "epoch": 4322,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4322,
+            "value": 9.998912719311193e-05
+          },
+          {
+            "epoch": 4323,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4323,
+            "value": 9.99891126411967e-05
+          },
+          {
+            "epoch": 4324,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4324,
+            "value": 9.998910536523908e-05
+          },
+          {
+            "epoch": 4325,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4325,
+            "value": 9.998909808928147e-05
+          },
+          {
+            "epoch": 4326,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4326,
+            "value": 9.998909081332386e-05
+          },
+          {
+            "epoch": 4327,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4327,
+            "value": 9.998907626140863e-05
+          },
+          {
+            "epoch": 4328,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4328,
+            "value": 9.998906898545101e-05
+          },
+          {
+            "epoch": 4329,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4329,
+            "value": 9.99890617094934e-05
+          },
+          {
+            "epoch": 4330,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4330,
+            "value": 9.998904715757817e-05
+          },
+          {
+            "epoch": 4331,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4331,
+            "value": 9.998903988162056e-05
+          },
+          {
+            "epoch": 4332,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4332,
+            "value": 9.998903260566294e-05
+          },
+          {
+            "epoch": 4333,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4333,
+            "value": 9.998902532970533e-05
+          },
+          {
+            "epoch": 4334,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4334,
+            "value": 9.99890107777901e-05
+          },
+          {
+            "epoch": 4335,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4335,
+            "value": 9.998900350183249e-05
+          },
+          {
+            "epoch": 4336,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4336,
+            "value": 9.998899622587487e-05
+          },
+          {
+            "epoch": 4337,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4337,
+            "value": 9.998898167395964e-05
+          },
+          {
+            "epoch": 4338,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4338,
+            "value": 9.998897439800203e-05
+          },
+          {
+            "epoch": 4339,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4339,
+            "value": 9.998896712204441e-05
+          },
+          {
+            "epoch": 4340,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4340,
+            "value": 9.998895257012919e-05
+          },
+          {
+            "epoch": 4341,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4341,
+            "value": 9.998894529417157e-05
+          },
+          {
+            "epoch": 4342,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4342,
+            "value": 9.998893801821396e-05
+          },
+          {
+            "epoch": 4343,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4343,
+            "value": 9.998893074225634e-05
+          },
+          {
+            "epoch": 4344,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4344,
+            "value": 9.998891619034111e-05
+          },
+          {
+            "epoch": 4345,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4345,
+            "value": 9.99889089143835e-05
+          },
+          {
+            "epoch": 4346,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4346,
+            "value": 9.998890163842589e-05
+          },
+          {
+            "epoch": 4347,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4347,
+            "value": 9.998888708651066e-05
+          },
+          {
+            "epoch": 4348,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4348,
+            "value": 9.998887981055304e-05
+          },
+          {
+            "epoch": 4349,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4349,
+            "value": 9.998887253459543e-05
+          },
+          {
+            "epoch": 4350,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4350,
+            "value": 9.99888579826802e-05
+          },
+          {
+            "epoch": 4351,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4351,
+            "value": 9.998885070672259e-05
+          },
+          {
+            "epoch": 4352,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4352,
+            "value": 9.998884343076497e-05
+          },
+          {
+            "epoch": 4353,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4353,
+            "value": 9.998883615480736e-05
+          },
+          {
+            "epoch": 4354,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4354,
+            "value": 9.998882160289213e-05
+          },
+          {
+            "epoch": 4355,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4355,
+            "value": 9.998881432693452e-05
+          },
+          {
+            "epoch": 4356,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4356,
+            "value": 9.99888070509769e-05
+          },
+          {
+            "epoch": 4357,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4357,
+            "value": 9.998879249906167e-05
+          },
+          {
+            "epoch": 4358,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4358,
+            "value": 9.998878522310406e-05
+          },
+          {
+            "epoch": 4359,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4359,
+            "value": 9.998877794714645e-05
+          },
+          {
+            "epoch": 4360,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4360,
+            "value": 9.998876339523122e-05
+          },
+          {
+            "epoch": 4361,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4361,
+            "value": 9.99887561192736e-05
+          },
+          {
+            "epoch": 4362,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4362,
+            "value": 9.998874884331599e-05
+          },
+          {
+            "epoch": 4363,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4363,
+            "value": 9.998873429140076e-05
+          },
+          {
+            "epoch": 4364,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4364,
+            "value": 9.998872701544315e-05
+          },
+          {
+            "epoch": 4365,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4365,
+            "value": 9.998871973948553e-05
+          },
+          {
+            "epoch": 4366,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4366,
+            "value": 9.998871246352792e-05
+          },
+          {
+            "epoch": 4367,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4367,
+            "value": 9.998869791161269e-05
+          },
+          {
+            "epoch": 4368,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4368,
+            "value": 9.998869063565508e-05
+          },
+          {
+            "epoch": 4369,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4369,
+            "value": 9.998868335969746e-05
+          },
+          {
+            "epoch": 4370,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4370,
+            "value": 9.998866880778223e-05
+          },
+          {
+            "epoch": 4371,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4371,
+            "value": 9.998866153182462e-05
+          },
+          {
+            "epoch": 4372,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4372,
+            "value": 9.9988654255867e-05
+          },
+          {
+            "epoch": 4373,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4373,
+            "value": 9.998863970395178e-05
+          },
+          {
+            "epoch": 4374,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4374,
+            "value": 9.998863242799416e-05
+          },
+          {
+            "epoch": 4375,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4375,
+            "value": 9.998862515203655e-05
+          },
+          {
+            "epoch": 4376,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4376,
+            "value": 9.998861060012132e-05
+          },
+          {
+            "epoch": 4377,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4377,
+            "value": 9.99886033241637e-05
+          },
+          {
+            "epoch": 4378,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4378,
+            "value": 9.998859604820609e-05
+          },
+          {
+            "epoch": 4379,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4379,
+            "value": 9.998858149629086e-05
+          },
+          {
+            "epoch": 4380,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4380,
+            "value": 9.998857422033325e-05
+          },
+          {
+            "epoch": 4381,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4381,
+            "value": 9.998856694437563e-05
+          },
+          {
+            "epoch": 4382,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4382,
+            "value": 9.99885523924604e-05
+          },
+          {
+            "epoch": 4383,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4383,
+            "value": 9.998854511650279e-05
+          },
+          {
+            "epoch": 4384,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4384,
+            "value": 9.998853784054518e-05
+          },
+          {
+            "epoch": 4385,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4385,
+            "value": 9.998853056458756e-05
+          },
+          {
+            "epoch": 4386,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4386,
+            "value": 9.998851601267233e-05
+          },
+          {
+            "epoch": 4387,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4387,
+            "value": 9.998850873671472e-05
+          },
+          {
+            "epoch": 4388,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4388,
+            "value": 9.99885014607571e-05
+          },
+          {
+            "epoch": 4389,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4389,
+            "value": 9.998848690884188e-05
+          },
+          {
+            "epoch": 4390,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4390,
+            "value": 9.998847963288426e-05
+          },
+          {
+            "epoch": 4391,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4391,
+            "value": 9.998847235692665e-05
+          },
+          {
+            "epoch": 4392,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4392,
+            "value": 9.998845780501142e-05
+          },
+          {
+            "epoch": 4393,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4393,
+            "value": 9.998845052905381e-05
+          },
+          {
+            "epoch": 4394,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4394,
+            "value": 9.998844325309619e-05
+          },
+          {
+            "epoch": 4395,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4395,
+            "value": 9.998842870118096e-05
+          },
+          {
+            "epoch": 4396,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4396,
+            "value": 9.998842142522335e-05
+          },
+          {
+            "epoch": 4397,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4397,
+            "value": 9.998841414926574e-05
+          },
+          {
+            "epoch": 4398,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4398,
+            "value": 9.998839959735051e-05
+          },
+          {
+            "epoch": 4399,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4399,
+            "value": 9.99883923213929e-05
+          },
+          {
+            "epoch": 4400,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4400,
+            "value": 9.998838504543528e-05
+          },
+          {
+            "epoch": 4401,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4401,
+            "value": 9.998837049352005e-05
+          },
+          {
+            "epoch": 4402,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4402,
+            "value": 9.998836321756244e-05
+          },
+          {
+            "epoch": 4403,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4403,
+            "value": 9.998835594160482e-05
+          },
+          {
+            "epoch": 4404,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4404,
+            "value": 9.99883413896896e-05
+          },
+          {
+            "epoch": 4405,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4405,
+            "value": 9.998833411373198e-05
+          },
+          {
+            "epoch": 4406,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4406,
+            "value": 9.998832683777437e-05
+          },
+          {
+            "epoch": 4407,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4407,
+            "value": 9.998831228585914e-05
+          },
+          {
+            "epoch": 4408,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4408,
+            "value": 9.998830500990152e-05
+          },
+          {
+            "epoch": 4409,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4409,
+            "value": 9.998829773394391e-05
+          },
+          {
+            "epoch": 4410,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4410,
+            "value": 9.998828318202868e-05
+          },
+          {
+            "epoch": 4411,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4411,
+            "value": 9.998827590607107e-05
+          },
+          {
+            "epoch": 4412,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4412,
+            "value": 9.998826863011345e-05
+          },
+          {
+            "epoch": 4413,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4413,
+            "value": 9.998825407819822e-05
+          },
+          {
+            "epoch": 4414,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4414,
+            "value": 9.998824680224061e-05
+          },
+          {
+            "epoch": 4415,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4415,
+            "value": 9.9988239526283e-05
+          },
+          {
+            "epoch": 4416,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4416,
+            "value": 9.998822497436777e-05
+          },
+          {
+            "epoch": 4417,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4417,
+            "value": 9.998821769841015e-05
+          },
+          {
+            "epoch": 4418,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4418,
+            "value": 9.998821042245254e-05
+          },
+          {
+            "epoch": 4419,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4419,
+            "value": 9.998819587053731e-05
+          },
+          {
+            "epoch": 4420,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4420,
+            "value": 9.99881885945797e-05
+          },
+          {
+            "epoch": 4421,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4421,
+            "value": 9.998818131862208e-05
+          },
+          {
+            "epoch": 4422,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4422,
+            "value": 9.998816676670685e-05
+          },
+          {
+            "epoch": 4423,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4423,
+            "value": 9.998815949074924e-05
+          },
+          {
+            "epoch": 4424,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4424,
+            "value": 9.998815221479163e-05
+          },
+          {
+            "epoch": 4425,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4425,
+            "value": 9.99881376628764e-05
+          },
+          {
+            "epoch": 4426,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4426,
+            "value": 9.998813038691878e-05
+          },
+          {
+            "epoch": 4427,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4427,
+            "value": 9.998811583500355e-05
+          },
+          {
+            "epoch": 4428,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4428,
+            "value": 9.998810855904594e-05
+          },
+          {
+            "epoch": 4429,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4429,
+            "value": 9.998810128308833e-05
+          },
+          {
+            "epoch": 4430,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4430,
+            "value": 9.99880867311731e-05
+          },
+          {
+            "epoch": 4431,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4431,
+            "value": 9.998807945521548e-05
+          },
+          {
+            "epoch": 4432,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4432,
+            "value": 9.998807217925787e-05
+          },
+          {
+            "epoch": 4433,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4433,
+            "value": 9.998805762734264e-05
+          },
+          {
+            "epoch": 4434,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4434,
+            "value": 9.998805035138503e-05
+          },
+          {
+            "epoch": 4435,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4435,
+            "value": 9.998804307542741e-05
+          },
+          {
+            "epoch": 4436,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4436,
+            "value": 9.998802852351218e-05
+          },
+          {
+            "epoch": 4437,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4437,
+            "value": 9.998802124755457e-05
+          },
+          {
+            "epoch": 4438,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4438,
+            "value": 9.998801397159696e-05
+          },
+          {
+            "epoch": 4439,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4439,
+            "value": 9.998799941968173e-05
+          },
+          {
+            "epoch": 4440,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4440,
+            "value": 9.998799214372411e-05
+          },
+          {
+            "epoch": 4441,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4441,
+            "value": 9.99879848677665e-05
+          },
+          {
+            "epoch": 4442,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4442,
+            "value": 9.998797031585127e-05
+          },
+          {
+            "epoch": 4443,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4443,
+            "value": 9.998796303989366e-05
+          },
+          {
+            "epoch": 4444,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4444,
+            "value": 9.998795576393604e-05
+          },
+          {
+            "epoch": 4445,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4445,
+            "value": 9.998794121202081e-05
+          },
+          {
+            "epoch": 4446,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4446,
+            "value": 9.99879339360632e-05
+          },
+          {
+            "epoch": 4447,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4447,
+            "value": 9.998791938414797e-05
+          },
+          {
+            "epoch": 4448,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4448,
+            "value": 9.998791210819036e-05
+          },
+          {
+            "epoch": 4449,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4449,
+            "value": 9.998790483223274e-05
+          },
+          {
+            "epoch": 4450,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4450,
+            "value": 9.998789028031752e-05
+          },
+          {
+            "epoch": 4451,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4451,
+            "value": 9.99878830043599e-05
+          },
+          {
+            "epoch": 4452,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4452,
+            "value": 9.998787572840229e-05
+          },
+          {
+            "epoch": 4453,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4453,
+            "value": 9.998786117648706e-05
+          },
+          {
+            "epoch": 4454,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4454,
+            "value": 9.998785390052944e-05
+          },
+          {
+            "epoch": 4455,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4455,
+            "value": 9.998784662457183e-05
+          },
+          {
+            "epoch": 4456,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4456,
+            "value": 9.99878320726566e-05
+          },
+          {
+            "epoch": 4457,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4457,
+            "value": 9.998782479669899e-05
+          },
+          {
+            "epoch": 4458,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4458,
+            "value": 9.998781752074137e-05
+          },
+          {
+            "epoch": 4459,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4459,
+            "value": 9.998780296882614e-05
+          },
+          {
+            "epoch": 4460,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4460,
+            "value": 9.998779569286853e-05
+          },
+          {
+            "epoch": 4461,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4461,
+            "value": 9.99877811409533e-05
+          },
+          {
+            "epoch": 4462,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4462,
+            "value": 9.998777386499569e-05
+          },
+          {
+            "epoch": 4463,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4463,
+            "value": 9.998776658903807e-05
+          },
+          {
+            "epoch": 4464,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4464,
+            "value": 9.998775203712285e-05
+          },
+          {
+            "epoch": 4465,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4465,
+            "value": 9.998774476116523e-05
+          },
+          {
+            "epoch": 4466,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4466,
+            "value": 9.998773748520762e-05
+          },
+          {
+            "epoch": 4467,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4467,
+            "value": 9.998772293329239e-05
+          },
+          {
+            "epoch": 4468,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4468,
+            "value": 9.998771565733477e-05
+          },
+          {
+            "epoch": 4469,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4469,
+            "value": 9.998770110541955e-05
+          },
+          {
+            "epoch": 4470,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4470,
+            "value": 9.998769382946193e-05
+          },
+          {
+            "epoch": 4471,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4471,
+            "value": 9.998768655350432e-05
+          },
+          {
+            "epoch": 4472,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4472,
+            "value": 9.998767200158909e-05
+          },
+          {
+            "epoch": 4473,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4473,
+            "value": 9.998766472563148e-05
+          },
+          {
+            "epoch": 4474,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4474,
+            "value": 9.998765744967386e-05
+          },
+          {
+            "epoch": 4475,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4475,
+            "value": 9.998764289775863e-05
+          },
+          {
+            "epoch": 4476,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4476,
+            "value": 9.998763562180102e-05
+          },
+          {
+            "epoch": 4477,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4477,
+            "value": 9.99876283458434e-05
+          },
+          {
+            "epoch": 4478,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4478,
+            "value": 9.998761379392818e-05
+          },
+          {
+            "epoch": 4479,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4479,
+            "value": 9.998760651797056e-05
+          },
+          {
+            "epoch": 4480,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4480,
+            "value": 9.998759196605533e-05
+          },
+          {
+            "epoch": 4481,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4481,
+            "value": 9.998758469009772e-05
+          },
+          {
+            "epoch": 4482,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4482,
+            "value": 9.99875774141401e-05
+          },
+          {
+            "epoch": 4483,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4483,
+            "value": 9.998756286222488e-05
+          },
+          {
+            "epoch": 4484,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4484,
+            "value": 9.998755558626726e-05
+          },
+          {
+            "epoch": 4485,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4485,
+            "value": 9.998754831030965e-05
+          },
+          {
+            "epoch": 4486,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4486,
+            "value": 9.998753375839442e-05
+          },
+          {
+            "epoch": 4487,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4487,
+            "value": 9.99875264824368e-05
+          },
+          {
+            "epoch": 4488,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4488,
+            "value": 9.998751193052158e-05
+          },
+          {
+            "epoch": 4489,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4489,
+            "value": 9.998750465456396e-05
+          },
+          {
+            "epoch": 4490,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4490,
+            "value": 9.998749737860635e-05
+          },
+          {
+            "epoch": 4491,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4491,
+            "value": 9.998748282669112e-05
+          },
+          {
+            "epoch": 4492,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4492,
+            "value": 9.99874755507335e-05
+          },
+          {
+            "epoch": 4493,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4493,
+            "value": 9.998746099881828e-05
+          },
+          {
+            "epoch": 4494,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4494,
+            "value": 9.998745372286066e-05
+          },
+          {
+            "epoch": 4495,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4495,
+            "value": 9.998744644690305e-05
+          },
+          {
+            "epoch": 4496,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4496,
+            "value": 9.998743189498782e-05
+          },
+          {
+            "epoch": 4497,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4497,
+            "value": 9.998742461903021e-05
+          },
+          {
+            "epoch": 4498,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4498,
+            "value": 9.998741734307259e-05
+          },
+          {
+            "epoch": 4499,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4499,
+            "value": 9.998740279115736e-05
+          },
+          {
+            "epoch": 4500,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4500,
+            "value": 9.998739551519975e-05
+          },
+          {
+            "epoch": 4501,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4501,
+            "value": 9.998738096328452e-05
+          },
+          {
+            "epoch": 4502,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4502,
+            "value": 9.998737368732691e-05
+          },
+          {
+            "epoch": 4503,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4503,
+            "value": 9.99873664113693e-05
+          },
+          {
+            "epoch": 4504,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4504,
+            "value": 9.998735185945407e-05
+          },
+          {
+            "epoch": 4505,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4505,
+            "value": 9.998734458349645e-05
+          },
+          {
+            "epoch": 4506,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4506,
+            "value": 9.998733003158122e-05
+          },
+          {
+            "epoch": 4507,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4507,
+            "value": 9.998732275562361e-05
+          },
+          {
+            "epoch": 4508,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4508,
+            "value": 9.9987315479666e-05
+          },
+          {
+            "epoch": 4509,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4509,
+            "value": 9.998730092775077e-05
+          },
+          {
+            "epoch": 4510,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4510,
+            "value": 9.998729365179315e-05
+          },
+          {
+            "epoch": 4511,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4511,
+            "value": 9.998728637583554e-05
+          },
+          {
+            "epoch": 4512,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4512,
+            "value": 9.998727182392031e-05
+          },
+          {
+            "epoch": 4513,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4513,
+            "value": 9.99872645479627e-05
+          },
+          {
+            "epoch": 4514,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4514,
+            "value": 9.998724999604747e-05
+          },
+          {
+            "epoch": 4515,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4515,
+            "value": 9.998724272008985e-05
+          },
+          {
+            "epoch": 4516,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4516,
+            "value": 9.998723544413224e-05
+          },
+          {
+            "epoch": 4517,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4517,
+            "value": 9.998722089221701e-05
+          },
+          {
+            "epoch": 4518,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4518,
+            "value": 9.99872136162594e-05
+          },
+          {
+            "epoch": 4519,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4519,
+            "value": 9.998719906434417e-05
+          },
+          {
+            "epoch": 4520,
+            "metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+            "step": 4520,
+            "value": 9.998719178838655e-05
+          }
+        ],
+        "val_exact_accuracy": 0.078125,
+        "validation_first_lr": 9.998933091992512e-05,
+        "validation_metrics_path": "results/trm_runs/experiment_4126_lr_resume_correctness_fix_hydra/csv/version_3/metrics.csv",
+        "validation_scope": "bounded_smoke_resume_batch_size_128_limit_train_batches_1_limit_val_batches_1"
+      },
+      "matches_published_087": false,
+      "model_specs": {
+        "batch_size": 128,
+        "data_config": "sudoku_extreme_1k_aug1k",
+        "data_config_path": "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/configs/data/sudoku_extreme_1k_aug1k.yaml",
+        "data_dir": "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/data/sudoku_extreme_1k_aug_1k",
+        "experiment_config": "trm_sudoku_extreme_1k_aug_1k",
+        "experiment_config_path": "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/configs/experiment/trm_sudoku_extreme_1k_aug_1k.yaml",
+        "max_time": "00:01:00:00",
+        "model": "nano-trm",
+        "seed": 4108,
+        "trainer_path": "/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/train.py"
+      },
+      "pass_index": 1,
+      "pass_metrics": {
+        "first_train_lr": null,
+        "first_train_lr_metrics_path": null,
+        "lr_continued_not_rewarmed": false,
+        "train_lr_point_count": 0,
+        "val_exact_accuracy": null,
+        "val_metrics_path": null
+      },
+      "preconditions_checked": [
+        {
+          "available": true,
+          "detail": "/usr/bin/uv",
+          "resource": "uv"
+        },
+        {
+          "available": true,
+          "detail": "found: /home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/train.py",
+          "resource": "nanotrm_trainer"
+        },
+        {
+          "available": true,
+          "detail": "torch.cuda.is_available()=True; device=NVIDIA GeForce RTX 3090",
+          "resource": "cuda_available"
+        },
+        {
+          "available": true,
+          "detail": "torch.load ok",
+          "resource": "stable_checkpoint"
+        }
+      ],
+      "random_seed": 4108,
+      "reproducibility_checksum": "sha256:5ab50b15207d4dcbb8d1cbb15ca2f095db9d557031b268a3dd62cb2844207fb7",
+      "return_code": 0,
+      "run_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4135_sudoku_accumulate_pass1_fixed_lr/pass_1_hydra",
+      "schema": "carnot.experiment_4135_sudoku_accumulate_pass1_fixed_lr.v1",
+      "spec_refs": [
+        "REQ-LEARN-4135",
+        "SCENARIO-LEARN-4135"
+      ],
+      "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+      "starting_val_exact_accuracy": 0.278,
+      "stdout_tail": [
+        "[2026-06-13 04:45:19,632][src.nn.models.trm][INFO] - [rank: 0] Creating TRM with vocab size=12, seq_len=81, puzzle_emb_len=0 pos_emb_type='null' puzzle_emb_dim=0",
+        "[2026-06-13 04:45:19,632][src.nn.models.trm][INFO] - [rank: 0] use_mlp_t=True, use_conv_swiglu=False, use_board_swiglu=False",
+        "[2026-06-13 04:45:19,634][src.nn.models.trm][INFO] - [rank: 0] Not using Rotary Embeddings",
+        "[2026-06-13 04:45:19,650][src.nn.models.trm][INFO] - [rank: 0] puzzle_emb_dim <= 0, not creating puzzle embeddings",
+        "[2026-06-13 04:45:19,650][__main__][INFO] - [rank: 0] Instantiating callbacks...",
+        "[2026-06-13 04:45:19,650][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <lightning.pytorch.callbacks.ModelCheckpoint>",
+        "[2026-06-13 04:45:19,652][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <src.nn.callbacks.ema.EMACallback>",
+        "[2026-06-13 04:45:19,652][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <carnot.experiment_4127_sudoku_extreme_accumulate_fixed.NanoTrmAccumulateFixedProgressPrinter>",
+        "[2026-06-13 04:45:19,661][__main__][INFO] - [rank: 0] Instantiating loggers...",
+        "[2026-06-13 04:45:19,661][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating logger <lightning.pytorch.loggers.csv_logs.CSVLogger>",
+        "[2026-06-13 04:45:19,662][__main__][INFO] - [rank: 0] Instantiating trainer <lightning.pytorch.trainer.Trainer>",
+        "Using bfloat16 Automatic Mixed Precision (AMP)",
+        "GPU available: True (cuda), used: True",
+        "TPU available: False, using: 0 TPU cores",
+        "\ud83d\udca1 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.",
+        "[2026-06-13 04:45:19,670][__main__][INFO] - [rank: 0] Logging hyperparameters!",
+        "[2026-06-13 04:45:19,681][__main__][INFO] - [rank: 0] Starting training!",
+        "[2026-06-13 04:45:19,683][__main__][INFO] - [rank: 0] Val check interval: default (1.0)",
+        "[2026-06-13 04:45:19,684][__main__][INFO] - [rank: 0] Check val every n epoch: 100",
+        "[2026-06-13 04:45:19,684][__main__][INFO] - [rank: 0] Steps per epoch: 7820",
+        "[2026-06-13 04:45:19,684][__main__][INFO] - [rank: 0] Max epochs: 50000",
+        "[2026-06-13 04:45:19,684][__main__][INFO] - [rank: 0] Batch size: 128",
+        "You are using a CUDA device ('NVIDIA GeForce RTX 3090') that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision('medium' | 'high')` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision",
+        "[2026-06-13 04:45:19,929][src.nn.models.trm][INFO] - [rank: 0] Training configuration:",
+        "[2026-06-13 04:45:19,929][src.nn.models.trm][INFO] - [rank: 0]   Groups (unique puzzles): 1000",
+        "[2026-06-13 04:45:19,929][src.nn.models.trm][INFO] - [rank: 0]   Total puzzles (with aug): 1001000",
+        "[2026-06-13 04:45:19,929][src.nn.models.trm][INFO] - [rank: 0]   Steps per epoch: 7",
+        "[2026-06-13 04:45:19,930][src.nn.models.trm][INFO] - [rank: 0]   Total steps: 350000",
+        "[2026-06-13 04:45:19,930][src.nn.models.trm][INFO] - [rank: 0] ************************************************************",
+        "[2026-06-13 04:45:19,930][src.nn.models.trm][INFO] - [rank: 0] torch.compile not available or disabled, running uncompiled",
+        "Restoring states from the checkpoint path at /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+        "[2026-06-13 04:45:19,944][src.nn.models.trm][INFO] - [rank: 0] Restored manual LR step: 19006",
+        "LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]",
+        "Time limit reached. Elapsed time is 1:00:41. Signaling Trainer to stop.",
+        "\u250f\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2533\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2513",
+        "\u2503   \u2503 Name            \u2503 Type            \u2503 Params \u2503 Mode  \u2503 FLOPs \u2503",
+        "\u2521\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2547\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2529",
+        "\u2502 0 \u2502 input_embedding \u2502 CastedEmbedding \u2502  6.1 K \u2502 train \u2502     0 \u2502",
+        "\u2502 1 \u2502 lenet           \u2502 ReasoningModule \u2502  4.8 M \u2502 train \u2502     0 \u2502",
+        "\u2502 2 \u2502 lm_head         \u2502 CastedLinear    \u2502  6.1 K \u2502 train \u2502     0 \u2502",
+        "\u2502 3 \u2502 q_head          \u2502 CastedLinear    \u2502    513 \u2502 train \u2502     0 \u2502",
+        "\u2514\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518",
+        "Trainable params: 4.9 M",
+        "Non-trainable params: 0",
+        "Total params: 4.9 M",
+        "Total estimated model params size (MB): 19.423",
+        "Modules in train mode: 19",
+        "Modules in eval mode: 0",
+        "Total FLOPs: 0",
+        "Restored all states from the checkpoint at /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+        "[2026-06-13 04:45:20,021][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] Creating train dataloader with batch size 128 and num_workers 0 and prefetch_factor None",
+        "[2026-06-13 04:45:20,079][__main__][INFO] - [rank: 0] Training finished!",
+        "[2026-06-13 04:45:20,086][src.nn.utils.utils][INFO] - [rank: 0] Output dir: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4135_sudoku_accumulate_pass1_fixed_lr/pass_1_hydra",
+        "return_code=0",
+        "pass_index=1",
+        "run_dir=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4135_sudoku_accumulate_pass1_fixed_lr/pass_1_hydra",
+        "stable_checkpoint=/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+        "checkpoint_reload=torch.load ok",
+        "val_exact_accuracy=val/exact_accuracy metric missing under /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/experiment_4135_sudoku_accumulate_pass1_fixed_lr/pass_1_hydra; q_halt_accuracy is not a solve metric",
+        "cumulative_epochs=None"
+      ],
+      "train_lr_point_count": 0,
+      "val_exact_accuracy": null,
+      "validation_first_lr": null
+    },
+    "pass1_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4135_sudoku_accumulate_pass1_fixed_lr.json",
+    "pass_index": 2,
+    "plateau_audit_done": true,
+    "random_seed": 4108,
+    "reproducibility_checksum": "sha256:f17bec96fd229a12064493a59644f7e56d0d07606c0d46cb2ebf373a57ad0465",
+    "schema": "carnot.experiment_4136_sudoku_accumulate_pass2_fixed_lr.v1",
+    "spec_refs": [
+      "REQ-LEARN-4136",
+      "SCENARIO-LEARN-4136-AUDIT"
+    ],
+    "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+    "suspected_cause": "pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written",
+    "val_exact_accuracy": null
+  },
+  "pass2_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4136_sudoku_accumulate_pass2_fixed_lr.json",
+  "pass_index": 3,
+  "plateau_audit_done": true,
+  "random_seed": 4108,
+  "reproducibility_checksum": "sha256:3321ec466eb76ea83f431fa542666c31dae7f119e2178edf767e655d230ebb6d",
+  "schema": "carnot.experiment_4137_sudoku_accumulate_pass3_fixed_lr.v1",
+  "spec_refs": [
+    "REQ-LEARN-4137",
+    "SCENARIO-LEARN-4137-AUDIT"
+  ],
+  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+  "suspected_cause": "pass2 already ran config audit; baseline is config-blocked before pass3: pass1 did not report positive accumulation; its stdout shows Lightning stopped immediately on an already-elapsed Timer before train/lr or val/exact_accuracy metrics were written",
+  "val_exact_accuracy": null
+}
