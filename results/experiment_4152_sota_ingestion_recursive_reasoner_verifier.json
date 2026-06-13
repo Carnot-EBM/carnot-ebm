@@ -1,0 +1,60 @@
+{
+  "field_principles": {
+    "flagged_for_v385": "Closes the discover->ingest->plan loop: names the strongest method for the next planner.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method/source MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication."
+  },
+  "flagged_for_v385": "diffusiongemma_sedd_verifier_energy_guidance_probe_v385",
+  "honest_verdict": "complete: sota_ingestion_recursive_reasoner_verifier_energy_guidance_mapped",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2510.04871",
+      "failure_mode": "An undertrained or no-headroom baseline makes verifier-guided training and energy guidance uninformative.",
+      "implementation_over_stack": "Keep nano-trm as the recursive Sudoku substrate and measure oracle headroom before attributing gains to the Carnot verifier.",
+      "name": "TRM nano-trm recursive baseline gate",
+      "url": "https://arxiv.org/abs/2510.04871"
+    },
+    {
+      "arxiv_id_or_url": "2511.02886",
+      "failure_mode": "Full fine-tuning can improve the tiny model by itself, so a verifier-labeled arm without this control overclaims causality.",
+      "implementation_over_stack": "Run the same bounded fine-tuning budget without Carnot verifier labels so adaptation compute is isolated from verifier value.",
+      "name": "TTA-TRM adaptation-control arm",
+      "url": "https://arxiv.org/abs/2511.02886"
+    },
+    {
+      "arxiv_id_or_url": "2402.06457",
+      "failure_mode": "If the candidate pool has correlated errors or false-positive labels, the selector learns artifacts rather than correctness.",
+      "implementation_over_stack": "Retain accepted and rejected nano-trm traces and train a selector or pairwise verifier before spending on another generator pass.",
+      "name": "V-STaR accepted/rejected trace selector",
+      "url": "https://arxiv.org/abs/2402.06457"
+    },
+    {
+      "arxiv_id_or_url": "2310.16834",
+      "failure_mode": "SEDD is a generator objective, not a verifier; an uncalibrated external energy can damage fluency or collapse diversity.",
+      "implementation_over_stack": "Use score-entropy discrete diffusion as the formal bridge for adding Carnot verifier energy during denoising instead of after it.",
+      "name": "SEDD discrete diffusion score-energy formalism",
+      "url": "https://arxiv.org/abs/2310.16834"
+    },
+    {
+      "arxiv_id_or_url": "2105.05233",
+      "failure_mode": "Over-guidance can trade away diversity and create verifier-shaped but invalid samples unless guidance weights are ablated.",
+      "implementation_over_stack": "Treat Carnot verifier scores as the discrete-token analogue of a guidance energy that reshapes the denoising choice distribution.",
+      "name": "Classifier-guided diffusion energy precedent",
+      "url": "https://arxiv.org/abs/2105.05233"
+    },
+    {
+      "arxiv_id_or_url": "2207.12598",
+      "failure_mode": "A guidance win can come from generic conditioning strength rather than the Carnot verifier unless this control is included.",
+      "implementation_over_stack": "Keep a no-external-verifier guidance control so Carnot energy is compared against ordinary conditional/unconditional score mixing.",
+      "name": "Classifier-free diffusion guidance control",
+      "url": "https://arxiv.org/abs/2207.12598"
+    },
+    {
+      "arxiv_id_or_url": "https://ai.google.dev/gemma/docs/diffusiongemma",
+      "failure_mode": "DiffusionGemma is a generator substrate, not evidence that Carnot verifier guidance works; base-task quality and the gate must be measured.",
+      "implementation_over_stack": "Queue DiffusionGemma as the open-weight block-diffusion generator for verifier-energy guidance after the verifier discrimination gate.",
+      "name": "DiffusionGemma queued discrete-text substrate",
+      "url": "https://ai.google.dev/gemma/docs/diffusiongemma"
+    }
+  ]
+}

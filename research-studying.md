@@ -8,6 +8,38 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-13 Exp 4152 - .385 recursive-reasoner/verifier energy-guidance SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-recursive-reasoner-verifier-energy-guidance-2026-06-13.md`.
+
+**Filtered track:** verifier-guided training plus energy-guided generation for
+the `.385` handoff. This connects the TRM/TTA/V-STaR recursive verifier stack
+to the queued DiffusionGemma energy-guidance use without treating a generator
+substrate as verifier evidence.
+
+**Seed and fresh-pass candidates marked ingested:**
+- TRM, arXiv:2510.04871 - mapped as the `nano-trm` baseline and oracle-headroom
+  gate before any verifier-guided or diffusion-guided claim.
+- TTA-TRM, arXiv:2511.02886 - mapped as the same-budget adaptation-control arm
+  that prevents full fine-tuning from masquerading as verifier reward.
+- V-STaR, arXiv:2402.06457 - mapped as the accepted/rejected trace selector for
+  saved `nano-trm` candidates before another generator pass.
+- SEDD, arXiv:2310.16834 - mapped as the discrete diffusion score/energy
+  formalism for generation-time verifier guidance.
+- Classifier-guided diffusion, arXiv:2105.05233, and classifier-free diffusion
+  guidance, arXiv:2207.12598 - mapped as the external-guidance precedent and
+  no-external-verifier control.
+- DiffusionGemma official docs, https://ai.google.dev/gemma/docs/diffusiongemma
+  - mapped as the queued open-weight block-diffusion substrate, gated on
+  measured Carnot-verifier discrimination.
+
+Flagged for .385: `diffusiongemma_sedd_verifier_energy_guidance_probe_v385`.
+
+**Bottom line for the .385 roadmap:** run the DiffusionGemma/SEDD
+verifier-energy-guidance probe only if the verifier discrimination gate is
+positive; otherwise keep improving the V-STaR-style trace selector and
+candidate diversity before spending on guided-generation probe.
+
 ## 2026-06-13 Exp 4141 - .383 recursive-reasoner/verifier SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-recursive-reasoner-verifier-2026-06-13.md`.
