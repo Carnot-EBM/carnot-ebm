@@ -236,6 +236,12 @@ verifiers:
     exp4122_arc1_rule_exec_gated_pass2: 0.5806
     exp4122_arc1_headroom_recovered: 4
     exp4122_arc1_vote_wins_lost: 0
+    eval_exp_4131: results/experiment_4131_verifier_registry_gaps_hygiene.json
+    exp4131_regression_guard_passed: true
+    exp4131_arc1_rule_exec_vote_pass2: 0.4516
+    exp4131_arc1_rule_exec_gated_pass2: 0.5806
+    exp4131_arc1_headroom_recovered: 4
+    exp4131_arc1_vote_wins_lost: 0
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -3345,6 +3351,37 @@ verifiers:
     rerank_lift_vs_vote: null
     rft_vs_ablation_delta: null
     eval_exp_4122: results/experiment_4122_verifier_registry_gaps_hygiene.json
+  - role_id: sudoku_executable_verifier_training_time_4128
+    experiment: results/experiment_4128_carnot_verifier_graft_sudoku.json
+    role: candidate_trm_training_time_reward_signal_executable_domain
+    status: graft_deferred_baseline_not_reproduced
+    outcome: open_graft_deferred_verifier_value_added_false
+    honest_verdict: 'complete: graft_deferred baseline_val=0.2782 estimated_passes_to_.383=4'
+    lr_fix_artifact: results/experiment_4126_lr_resume_correctness_fix.json
+    lr_continuous_across_resume: true
+    validation_first_lr: 9.998933091992512e-05
+    baseline_artifact: results/experiment_4127_sudoku_extreme_accumulate_fixed.json
+    baseline_reproduction_status: not_reproduced
+    baseline_final_val_exact_accuracy: 0.278172343969
+    baseline_val_trajectory_rounded:
+    - 0.106
+    - 0.2782
+    matches_published_087: false
+    graft_deferred: true
+    verifier_value_added: false
+    verifier_value_added_meaningful: false
+    flagged_adversarial: true
+    estimated_passes_to_converge_for_383:
+      basis: latest_fixed_lr_pass_delta
+      current_val_exact_accuracy: 0.278172343969
+      destination: '.383'
+      estimated_additional_passes: 4
+      observed_delta_per_pass: 0.172183
+      previous_val_exact_accuracy: 0.105989582837
+      target_val_exact_accuracy: 0.85
+    rerank_lift_vs_vote: null
+    rft_vs_ablation_delta: null
+    eval_exp_4131: results/experiment_4131_verifier_registry_gaps_hygiene.json
   certification_precision_operating_point:
     experiment: results/experiment_4087_certification_precision_rescue.json
     status: precision_rescue_succeeded
