@@ -320,7 +320,7 @@ tasks:
       CONCRETE STEPS:
         1. Read exp4126/4127/4128/4129/4130/4131/4132. SKIP any flagged_adversarial=true. Cite each upstream sha256.
         2. Answer: (a) did the LR-resume fix land (exp4126 lr_continuous_across_resume)? (b) did the corrected schedule accelerate val toward 0.87 (exp4127 val_trajectory + per_pass_delta_vs_v381)? (c) did exp4128 graft (verifier_value_added) or defer? (d) total ARC games solved.
-        3. Honest headline: one of {lr_fixed_baseline_reproduced_graft_validated, lr_fixed_baseline_reproduced_graft_null, lr_fixed_accumulating_v383_continues, lr_fix_failed_contiguous_run_recommended, baseline_still_blocked}.
+        3. Honest headline: one of {{lr_fixed_baseline_reproduced_graft_validated, lr_fixed_baseline_reproduced_graft_null, lr_fixed_accumulating_v383_continues, lr_fix_failed_contiguous_run_recommended, baseline_still_blocked}}.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. An honest 'lr fixed, still accumulating, .383 continues' is COMPLETE and valuable."
@@ -329,5 +329,5 @@ tasks:
         baseline_val_trajectory:
           principle: "Val across .381+.382 (0.0232 -> 0.106 -> ...); shows whether the LR fix changed the convergence rate."
         upstream_provenance:
-          principle: "{experiment_id, fields_imported, sha256} per cited upstream -- the audit trail proving the capstone synthesizes real measurements."
+          principle: "{{experiment_id, fields_imported, sha256}} per cited upstream -- the audit trail proving the capstone synthesizes real measurements."
       ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited.

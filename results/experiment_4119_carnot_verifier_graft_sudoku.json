@@ -1,0 +1,69 @@
+{
+  "acceptance_gate_passed": true,
+  "baseline": {
+    "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4118_sudoku_extreme_resume_pass3.json",
+    "matches_published_087": false,
+    "previous_val_exact_accuracy": 0.09661458432674408,
+    "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+    "total_cumulative_epochs": 4300,
+    "val_exact_accuracy": 0.10598958283662796
+  },
+  "baseline_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4118_sudoku_extreme_resume_pass3.json",
+  "baseline_matches_published_087": false,
+  "baseline_status_reported": true,
+  "baseline_val_exact_accuracy": 0.10598958283662796,
+  "duration_s": 0.122,
+  "estimated_passes_to_converge": {
+    "basis": "pass2_to_pass3_delta",
+    "current_val_exact_accuracy": 0.10598958283662796,
+    "estimated_additional_passes": 80,
+    "observed_delta_per_pass": 0.009375,
+    "previous_val_exact_accuracy": 0.09661458432674408,
+    "target_val_exact_accuracy": 0.85
+  },
+  "experiment": "experiment_4119_carnot_verifier_graft_sudoku",
+  "field_principles": {
+    "graft_deferred": "Bare bool: True if the baseline was not faithful enough to graft. Prevents a meaningless graft on a 0.02 baseline being dressed as a result.",
+    "honest_verdict": "Terminal-prefixed. An honest 'graft_deferred -- baseline at val=0.NN' is a COMPLETE verdict; so is an A~=B null.",
+    "preconditions_checked": "Records the baseline checkpoint + CUDA verified; pre-empts silent-missing-resource fabrication.",
+    "rerank_lift_vs_vote": "pass@1 lift from verifier-reranking (if grafted); confirms the executable Sudoku verifier discriminates.",
+    "rft_vs_ablation_delta": "The de-confounded A-vs-B held-out delta with CI (if grafted): isolates the verifier LABEL's training contribution.",
+    "verifier_value_added": "Bare bool: did the verifier graft beat the vote ablation? Meaningful only when graft_deferred is false."
+  },
+  "graft_deferred": true,
+  "honest_verdict": "complete: graft_deferred -- baseline at val=0.1060",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4118_sudoku_extreme_resume_pass3.json",
+      "resource": "baseline_artifact"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+      "resource": "stable_checkpoint_path"
+    },
+    {
+      "available": true,
+      "detail": "torch.load ok",
+      "resource": "stable_checkpoint"
+    },
+    {
+      "available": true,
+      "detail": "torch.cuda.is_available()=True; device=NVIDIA GeForce RTX 3090",
+      "resource": "cuda_available"
+    }
+  ],
+  "random_seed": 4119,
+  "rerank_lift_vs_vote": null,
+  "rft_vs_ablation_delta": null,
+  "schema": "carnot.experiment_4119_carnot_verifier_graft_sudoku.v1",
+  "spec_refs": [
+    "REQ-LEARN-4119",
+    "SCENARIO-LEARN-4119-DEFER",
+    "SCENARIO-LEARN-4119-GRAFT"
+  ],
+  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+  "verifier_value_added": false,
+  "verifier_value_added_meaningful": false
+}

@@ -12327,6 +12327,64 @@ preserves the shared stable checkpoint path, and computes
 
 ---
 
+## REQ-LEARN-4119: Conditional Sudoku Verifier Graft After Faithful TRM Baseline
+
+**Given** Exp 4118 has written `results/experiment_4118_*.json`, Exp 4119
+SHALL read the latest Exp 4118 artifact and extract `matches_published_087`,
+`val_exact_accuracy`, `stable_checkpoint_path`, and cumulative training status
+before deciding whether a verifier graft is meaningful. Exp 4119 SHALL verify
+CUDA visibility and the stable checkpoint path before writing a verdict.
+
+**When** the Exp 4118 baseline is not faithful enough
+(`matches_published_087` is not true and `val_exact_accuracy < 0.85`), Exp
+4119 SHALL defer the graft instead of manufacturing a verifier-as-reward
+measurement. The deferral artifact SHALL set `graft_deferred=true`, report the
+current baseline validation exact accuracy, preserve the stable checkpoint
+path, and include an estimated additional pass count to reach the faithful
+baseline threshold when a positive pass-to-pass improvement can be inferred.
+
+**When** the Exp 4118 baseline is faithful
+(`matches_published_087=true` or `val_exact_accuracy >= 0.85`), Exp 4119 SHALL
+run the graft branch: sample K TRM candidate solutions per held-out Sudoku
+puzzle, rerank by the executable Sudoku verifier, compare pass@1 lift against
+TRM-vote and oracle with bootstrap CI, and run the de-confounded verifier-label
+RFT arm A versus vote-label ablation B with N-matched corpora, the same TRM,
+bounded native resume training, held-out exact accuracy, and CI95 on A-B.
+
+**Then** the terminal artifact SHALL be written to
+`results/experiment_4119_carnot_verifier_graft_sudoku.json` and SHALL contain
+top-level fields `honest_verdict`, `graft_deferred`,
+`rerank_lift_vs_vote`, `rft_vs_ablation_delta`,
+`verifier_value_added`, and `preconditions_checked` with principle text. The
+acceptance gate passes when either `graft_deferred=true` with baseline status
+reported, or `graft_deferred=false` with both rerank lift and RFT-vs-ablation
+delta reported with CI.
+
+### SCENARIO-LEARN-4119-DEFER: Non-Faithful Baseline Defers The Graft
+
+**Given** Exp 4118 reports `matches_published_087=false` and validation exact
+accuracy below 0.85
+**When** Exp 4119 runs
+**Then** it writes an honest `graft_deferred=true` verdict with the current
+baseline validation accuracy, stable checkpoint path, precondition evidence,
+and estimated additional passes rather than running rerank or RFT arms.
+
+### SCENARIO-LEARN-4119-GRAFT: Faithful Baseline Reports Rerank And RFT CIs
+
+**Given** Exp 4118 reports a faithful Sudoku Extreme baseline
+**When** Exp 4119 runs the graft branch
+**Then** it writes `graft_deferred=false`, reports `rerank_lift_vs_vote` and
+`rft_vs_ablation_delta` with CI95, and sets the bare
+`verifier_value_added` bool only from the A-vs-B CI separation.
+
+## Implementation Status (REQ-LEARN-4119)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4119 | Proposed (python/carnot/experiment_4119_carnot_verifier_graft_sudoku.py, Exp 4119) | Proposed (tests/python/test_experiment_4119_carnot_verifier_graft_sudoku.py) |
+
+---
+
 ## REQ-LEARN-4109: Sudoku Verifier Graft Over nano-trm
 
 **Given** Exp 4108 has written a nano-trm Sudoku baseline artifact, Exp 4109
