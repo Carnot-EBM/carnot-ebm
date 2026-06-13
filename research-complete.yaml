@@ -39464,7 +39464,8 @@ milestones:
     \ 0.85 (faithful) run the Carnot Sudoku\nverifier graft (rerank + A=verifier-cert vs B=vote-cert de-confound) -- THE result\
     \ that resolves\nboth the moat question and the DiffusionGemma gate. Else defer honestly; .385 continues.\n"
   completed: '2026-06-13'
-  finding: See conductor log for per-experiment results.
+  finding: '.384 close-state correction: the epoch-fix was a MISDIAGNOSIS. Exp4146 did not fail after training; it never started because diagnose_epoch_cap produced a stale-Timer guard misfire by reading Lightning Timer state from the checkpoint (timer_train_elapsed_s=3641.99 >= max_time 3600), with duration_s=0.121, post_epoch==seed_epoch==6399, and val=null. config_max_epochs was 50000, so the max_epochs cap was never the cause. The bounded-pass chain is RETIRED. The single contiguous run is the working fix and advanced validation from 0.278 to 0.501 (0.42+ climbing). The decisive graft remains deferred until val>=0.85.'
+  activation_recorded: exp4156-archive-v384-activate-v385
   tasks:
   - id: exp4145-archive-v383-activate-v384
     title: Archive .383 -> activate .384; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml

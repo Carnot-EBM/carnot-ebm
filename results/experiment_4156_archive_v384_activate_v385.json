@@ -1,0 +1,407 @@
+{
+  "activated_milestone": "2026.06.385",
+  "active_milestone_confirmed": "2026.06.385",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.384",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4146_sudoku_accumulate_pass1_epochfix.json",
+      "experiment_id": "4146",
+      "kind": "artifact",
+      "sha256": "2ae2baf360c309dd789e44874b71eef258ee57e9eb45946650bf7ff6af7a7e5c"
+    },
+    {
+      "deliverable": "results/experiment_4149_sudoku_accumulate_pass4_convergence.json",
+      "experiment_id": "4149",
+      "kind": "artifact",
+      "sha256": "ff7a3aa18a4a8982ed99e16d5abbf80293520fbead839cdcc5cd925dfaa8b95f"
+    },
+    {
+      "deliverable": "results/experiment_4150_decisive_verifier_graft_sudoku.json",
+      "experiment_id": "4150",
+      "kind": "artifact",
+      "sha256": "0ed45d941b99f69f8f32a7999438249c130287a4727441f3891d86b747467c8b"
+    },
+    {
+      "deliverable": "results/experiment_4155_capstone_v384.json",
+      "experiment_id": "4155",
+      "kind": "artifact",
+      "sha256": "1984e05c2c449edf7a565c5aadd7e944b5d2a357363a1913bc73750d13216fd9"
+    },
+    {
+      "deliverable": "results/trm_runs/contiguous_run_hydra/csv/version_0/metrics.csv",
+      "kind": "contiguous_metric_csv",
+      "sha256": "9e4408de4596c6bb7dde606f92b79fe766c17afbe65390642196d53c9fb39526"
+    },
+    {
+      "deliverable": "results/trm_runs/contiguous_run_hydra/csv/version_2/metrics.csv",
+      "kind": "contiguous_metric_csv",
+      "sha256": "dce0ce12a553ae3c5c5166c7162e049a82142d6d8e13c7e68801ec2974097db4"
+    },
+    {
+      "deliverable": "results/trm_runs/contiguous_run_hydra/csv/version_3/metrics.csv",
+      "kind": "contiguous_metric_csv",
+      "sha256": "9393c44c7ea6a62eebc467e0bfec9e0ec181ab4a663f6fffdec7df3ddc4a9c3b"
+    },
+    {
+      "deliverable": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+      "kind": "contiguous_metric_csv",
+      "sha256": "cf48c270755769fb451ece1d64b6ac17118b1f1df9da3df25248bc0c0a894aeb"
+    }
+  ],
+  "duration_s": 13.301394,
+  "exclusion_manifest_parses": true,
+  "experiment_id": "exp4156",
+  "field_principles": {
+    "activated_milestone": "Confirms .385 is live for the contiguous-run continuation path.",
+    "active_milestone_confirmed": "Records the active roadmap milestone actually observed.",
+    "archived_milestone": "Provenance: the milestone being closed, 2026.06.384.",
+    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
+    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
+    "honest_verdict": "Self-declared terminal state. MUST start with complete:/success:/passed:/shipped:.",
+    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
+    "nano_trm_train_present": "Bare bool: nano-trm/src/nn/train.py exists before activation.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
+    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
+    "v384_close_state": "Honest record (epoch-fix was a misdiagnosis / stale-Timer guard misfire; bounded-pass retired; contiguous run is the working fix; baseline 0.42+ climbing) so the next planner builds on the truth."
+  },
+  "honest_verdict": "success: archived_v384_v385_active_epochfix_misdiagnosis_stale_timer_bounded_pass_retired_contiguous_val_0.501_graft_deferred_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "nano_trm_train_present": true,
+  "preconditions_checked": {
+    "active_milestone": "2026.06.385",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "contiguous_metrics_glob": "results/trm_runs/contiguous_run_hydra/csv/version_*/metrics.csv",
+    "contiguous_metrics_present": true,
+    "contiguous_pid": 432538,
+    "contiguous_run_alive": false,
+    "exclusion_manifest_exists": true,
+    "exclusion_manifest_parses": true,
+    "nano_trm_train_path": "nano-trm/src/nn/train.py",
+    "nano_trm_train_present": true,
+    "pretest_command": [
+      ".venv/bin/pytest",
+      "tests/python/test_pipeline_extract.py",
+      "tests/python/test_docs.py",
+      "-q",
+      "--no-header",
+      "-n",
+      "0",
+      "--no-cov",
+      "-o",
+      "addopts="
+    ],
+    "pretest_exit_code": 0,
+    "pretest_suite_green": true,
+    "research_complete_duplicates_removed": 0,
+    "research_complete_record_action": "updated",
+    "research_complete_yaml_exists": true,
+    "research_complete_yaml_parses": true,
+    "research_complete_yaml_parses_after_edit": true,
+    "v384_capstone_path": "results/experiment_4155_capstone_v384.json",
+    "v384_capstone_present": true
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4156,
+  "reproducibility_checksum": "17fac3354652947722ed92b904ac25bb18e34fcceaa21661a6ec33d837f7177a",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "updated",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v384_to_v385_4156.v1",
+  "task_id": "exp4156-archive-v384-activate-v385",
+  "v384_close_state": {
+    "baseline_faithful": false,
+    "baseline_seed_val_exact_accuracy": 0.278172343969,
+    "bounded_pass_chain_failure_mode": "resume_60min_pass_writeback repeats stale Timer guard and never launches cleanly",
+    "bounded_pass_chain_retired": true,
+    "checkpoint_epoch_unchanged": true,
+    "config_max_epochs": 50000,
+    "contiguous_baseline_above_042": true,
+    "contiguous_latest_epoch": 8699,
+    "contiguous_latest_step": 21304,
+    "contiguous_run_alive": false,
+    "contiguous_run_is_working_fix": true,
+    "contiguous_val_gain_vs_seed": 0.222869,
+    "contiguous_val_trajectory": [
+      {
+        "label": "v384_seed",
+        "source": "experiment_4149_sudoku_accumulate_pass4_convergence",
+        "val_exact_accuracy": 0.278172343969,
+        "val_exact_accuracy_rounded": 0.2782
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_0/metrics.csv",
+        "epoch": 6499,
+        "row_index": 2,
+        "step": 19104,
+        "val_exact_accuracy": 0.2005208283662796,
+        "val_exact_accuracy_rounded": 0.2005,
+        "version": 0
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_2/metrics.csv",
+        "epoch": 6499,
+        "row_index": 2,
+        "step": 19104,
+        "val_exact_accuracy": 0.19921875,
+        "val_exact_accuracy_rounded": 0.1992,
+        "version": 2
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_3/metrics.csv",
+        "epoch": 6499,
+        "row_index": 2,
+        "step": 19104,
+        "val_exact_accuracy": 0.19947916269302368,
+        "val_exact_accuracy_rounded": 0.1995,
+        "version": 3
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 6499,
+        "row_index": 2,
+        "step": 19104,
+        "val_exact_accuracy": 0.20416666567325592,
+        "val_exact_accuracy_rounded": 0.2042,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_3/metrics.csv",
+        "epoch": 6599,
+        "row_index": 5,
+        "step": 19204,
+        "val_exact_accuracy": 0.22161458432674408,
+        "val_exact_accuracy_rounded": 0.2216,
+        "version": 3
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 6599,
+        "row_index": 5,
+        "step": 19204,
+        "val_exact_accuracy": 0.22109374403953552,
+        "val_exact_accuracy_rounded": 0.2211,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 6699,
+        "row_index": 8,
+        "step": 19304,
+        "val_exact_accuracy": 0.24427083134651184,
+        "val_exact_accuracy_rounded": 0.2443,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 6799,
+        "row_index": 11,
+        "step": 19404,
+        "val_exact_accuracy": 0.25703126192092896,
+        "val_exact_accuracy_rounded": 0.257,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 6899,
+        "row_index": 14,
+        "step": 19504,
+        "val_exact_accuracy": 0.2822916805744171,
+        "val_exact_accuracy_rounded": 0.2823,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 6999,
+        "row_index": 17,
+        "step": 19604,
+        "val_exact_accuracy": 0.30078125,
+        "val_exact_accuracy_rounded": 0.3008,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 7099,
+        "row_index": 20,
+        "step": 19704,
+        "val_exact_accuracy": 0.31979167461395264,
+        "val_exact_accuracy_rounded": 0.3198,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 7199,
+        "row_index": 23,
+        "step": 19804,
+        "val_exact_accuracy": 0.3385416567325592,
+        "val_exact_accuracy_rounded": 0.3385,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 7299,
+        "row_index": 26,
+        "step": 19904,
+        "val_exact_accuracy": 0.35546875,
+        "val_exact_accuracy_rounded": 0.3555,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 7399,
+        "row_index": 29,
+        "step": 20004,
+        "val_exact_accuracy": 0.3721354305744171,
+        "val_exact_accuracy_rounded": 0.3721,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 7499,
+        "row_index": 32,
+        "step": 20104,
+        "val_exact_accuracy": 0.38619792461395264,
+        "val_exact_accuracy_rounded": 0.3862,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 7599,
+        "row_index": 35,
+        "step": 20204,
+        "val_exact_accuracy": 0.4000000059604645,
+        "val_exact_accuracy_rounded": 0.4,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 7699,
+        "row_index": 38,
+        "step": 20304,
+        "val_exact_accuracy": 0.41197916865348816,
+        "val_exact_accuracy_rounded": 0.412,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 7799,
+        "row_index": 41,
+        "step": 20404,
+        "val_exact_accuracy": 0.42630207538604736,
+        "val_exact_accuracy_rounded": 0.4263,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 7899,
+        "row_index": 44,
+        "step": 20504,
+        "val_exact_accuracy": 0.43541666865348816,
+        "val_exact_accuracy_rounded": 0.4354,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 7999,
+        "row_index": 47,
+        "step": 20604,
+        "val_exact_accuracy": 0.4427083432674408,
+        "val_exact_accuracy_rounded": 0.4427,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 8099,
+        "row_index": 50,
+        "step": 20704,
+        "val_exact_accuracy": 0.4520833194255829,
+        "val_exact_accuracy_rounded": 0.4521,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 8199,
+        "row_index": 53,
+        "step": 20804,
+        "val_exact_accuracy": 0.46484375,
+        "val_exact_accuracy_rounded": 0.4648,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 8299,
+        "row_index": 56,
+        "step": 20904,
+        "val_exact_accuracy": 0.4776041805744171,
+        "val_exact_accuracy_rounded": 0.4776,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 8399,
+        "row_index": 59,
+        "step": 21004,
+        "val_exact_accuracy": 0.4856770932674408,
+        "val_exact_accuracy_rounded": 0.4857,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 8499,
+        "row_index": 62,
+        "step": 21104,
+        "val_exact_accuracy": 0.4906249940395355,
+        "val_exact_accuracy_rounded": 0.4906,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 8599,
+        "row_index": 65,
+        "step": 21204,
+        "val_exact_accuracy": 0.4937500059604645,
+        "val_exact_accuracy_rounded": 0.4938,
+        "version": 4
+      },
+      {
+        "csv_path": "results/trm_runs/contiguous_run_hydra/csv/version_4/metrics.csv",
+        "epoch": 8699,
+        "row_index": 68,
+        "step": 21304,
+        "val_exact_accuracy": 0.5010416507720947,
+        "val_exact_accuracy_rounded": 0.501,
+        "version": 4
+      }
+    ],
+    "contiguous_validation_points": 27,
+    "decisive_graft_deferred": true,
+    "decisive_graft_deferred_reason": "baseline_val_below_0.85",
+    "epoch_fix_was_misdiagnosis": true,
+    "exp4146_duration_s": 0.121,
+    "exp4146_honest_verdict": "blocked_noop_cap_not_confirmed_timer_elapsed",
+    "exp4146_val_exact_accuracy": null,
+    "faithful_threshold": 0.85,
+    "latest_contiguous_val_exact_accuracy": 0.5010416507720947,
+    "latest_contiguous_val_exact_accuracy_rounded": 0.501,
+    "max_contiguous_val_epoch": 8699,
+    "max_contiguous_val_exact_accuracy": 0.5010416507720947,
+    "max_contiguous_val_exact_accuracy_rounded": 0.501,
+    "max_contiguous_val_step": 21304,
+    "max_epochs_cap_confirmed": false,
+    "max_time_s": 3600.0,
+    "post_epoch": 6399,
+    "seed_epoch": 6399,
+    "stale_timer_guard_misfire": true,
+    "summary": "epochfix_misdiagnosis_stale_timer_guard_bounded_pass_retired_contiguous_run_working",
+    "timer_train_elapsed_s": 3641.99,
+    "v384_bounded_pass_val_exact_accuracy": 0.278172343969,
+    "v384_capstone": {
+      "artifact_present": true,
+      "corrected_reason": "epochfix_misdiagnosis_stale_timer_guard_not_max_epochs_cap",
+      "headline_outcome": "accumulation_still_blocked",
+      "honest_verdict": "blocked: capstone_v384_accumulation_still_blocked_epochfix0_baseline0870_graft_skipped_flagged_adversarial_diffusiongemma_STILL-PENDING_games13_flagged_skipped7"
+    },
+    "verifier_value_added": false
+  }
+}
