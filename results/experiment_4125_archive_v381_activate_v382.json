@@ -1,0 +1,160 @@
+{
+  "activated_milestone": "2026.06.382",
+  "active_milestone_confirmed": "2026.06.382",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.381",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4108_nanotrm_sudoku_extreme_baseline.json",
+      "experiment_id": "4108",
+      "sha256": "f708c69d6e1fdb0dd74a0e05435a5afb9504168477d93456302cbfc2e1dfaf27"
+    },
+    {
+      "deliverable": "results/experiment_4117_sudoku_extreme_resume_pass2.json",
+      "experiment_id": "4117",
+      "sha256": "6ad7039e9e5ff0040d10c2c42abe59720f9276a4076205fa7f05b1093107b3a6"
+    },
+    {
+      "deliverable": "results/experiment_4118_sudoku_extreme_resume_pass3.json",
+      "experiment_id": "4118",
+      "sha256": "b174940156e73895dfaf8e8b061be5332e6b620359dd9fc46eee37a75697f61d"
+    },
+    {
+      "deliverable": "results/experiment_4119_carnot_verifier_graft_sudoku.json",
+      "experiment_id": "4119",
+      "sha256": "bf0b60a3d73191af0fa03e6f0cb3ca02d6a0a807efb23684325cf4c8f265c2b1"
+    },
+    {
+      "deliverable": "results/experiment_4124_capstone_v381.json",
+      "experiment_id": "4124",
+      "sha256": "7e1498b57cb9589c07fda59c35d3e1c766a33276ece67f0fee6669cec87731a9"
+    }
+  ],
+  "duration_s": 11.134248,
+  "exclusion_manifest_parses": true,
+  "experiment_id": "exp4125",
+  "field_principles": {
+    "activated_milestone": "Confirms .382 is live for the LR-resume repair path.",
+    "archived_milestone": "Provenance: the milestone being closed, 2026.06.381.",
+    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
+    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
+    "honest_verdict": "Self-declared terminal state. MUST start with complete:/success:/passed:/shipped:.",
+    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
+    "nano_trm_train_present": "Bare bool: nano-trm/src/nn/train.py exists before activation.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
+    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
+    "v381_close_state": "Honest record (mechanism works, LR-rewarm blocks convergence) so the next planner builds on the truth."
+  },
+  "honest_verdict": "success: archived_v381_v382_active_resumable_mechanism_runs_val_0.106_lr_rewarm_fix_next_graft_deferred_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "nano_trm_train_present": true,
+  "preconditions_checked": {
+    "active_milestone": "2026.06.382",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "exclusion_manifest_exists": true,
+    "exclusion_manifest_parses": true,
+    "nano_trm_train_path": "nano-trm/src/nn/train.py",
+    "nano_trm_train_present": true,
+    "pretest_command": [
+      ".venv/bin/pytest",
+      "tests/python/test_pipeline_extract.py",
+      "tests/python/test_docs.py",
+      "-q",
+      "--no-header",
+      "-n",
+      "0",
+      "--no-cov",
+      "-o",
+      "addopts="
+    ],
+    "pretest_exit_code": 0,
+    "pretest_suite_green": true,
+    "research_complete_duplicates_removed": 0,
+    "research_complete_record_action": "unchanged",
+    "research_complete_yaml_exists": true,
+    "research_complete_yaml_parses": true,
+    "research_complete_yaml_parses_after_edit": true
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4125,
+  "reproducibility_checksum": "9dfa8de390036f8de82808aa452b9fdfd45ad3475421ad015d494bfa26436823",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "unchanged",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v381_to_v382_4125.v1",
+  "task_id": "exp4125-archive-v381-activate-v382",
+  "v381_close_state": {
+    "baseline_reproduced": false,
+    "capstone_v381": {
+      "artifact_present": true,
+      "headline_outcome": "baseline_still_accumulating_v382_continues",
+      "honest_verdict": "complete: capstone_v381_baseline_still_accumulating_v382_continues_val_climbed1_bounded1_baseline0870_graft_deferred_by_baseline_not_reproduced_games12_flagged_skipped4"
+    },
+    "checkpoint_resume_clean": true,
+    "exp4118": {
+      "artifact_present": true,
+      "honest_verdict": "complete: val=0.1060 still_below_0.87 -> .382 continues",
+      "matches_published_087": false,
+      "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt"
+    },
+    "exp4119": {
+      "artifact_present": true,
+      "graft_deferred": true,
+      "honest_verdict": "complete: graft_deferred -- baseline at val=0.1060"
+    },
+    "final_val_exact_accuracy": 0.10598958283662796,
+    "final_val_exact_accuracy_rounded": 0.106,
+    "graft_deferred": true,
+    "graft_deferred_reason": "baseline_not_reproduced",
+    "initial_val_exact_accuracy": 0.02317708358168602,
+    "lr_rewarm_blocks_convergence": true,
+    "lr_rewarm_root_cause": {
+      "description": "The LR scheduler re-warms on each ckpt_path resume, resetting train/lr to the fresh warmup value instead of continuing the global schedule.",
+      "diagnosed_on": "2026-06-13",
+      "diagnosis_source": "research-roadmap.yaml .382 operator directive and .381 metrics CSV diagnosis",
+      "fresh_warmup_lr": 2.45e-06,
+      "prior_pass_last_lr": 4.95e-06
+    },
+    "measured_resume_points": {
+      "bounded_runs_under_cap": true,
+      "capstone_status": "climbed_and_bounded",
+      "resume_val_climbed": true,
+      "rounded_values": [
+        0.0232,
+        0.0854,
+        0.0966,
+        0.106
+      ],
+      "values": [
+        0.02317708358168602,
+        0.08541666716337204,
+        0.09661458432674408,
+        0.10598958283662796
+      ]
+    },
+    "pass1_val_exact_accuracy": 0.08541666716337204,
+    "pass2_val_exact_accuracy": 0.09661458432674408,
+    "published_exact_accuracy_target": 0.87,
+    "reported_close_state_sequence": {
+      "basis": "operator close-state directive plus exp4108/4117/4118 artifacts",
+      "val_exact_accuracy": [
+        0.0232,
+        0.0966,
+        0.106
+      ],
+      "val_percent": [
+        2.3,
+        9.7,
+        10.6
+      ]
+    },
+    "resumable_mechanism_works": true,
+    "summary": "resumable_mechanism_runs_but_lr_rewarm_blocks_convergence_v382_fixes_lr_resume",
+    "v382_forward_fix": {
+      "fix_lr_resume": true,
+      "graft_policy": "run Carnot verifier graft only after the Sudoku-Extreme baseline is faithful",
+      "target": "make the LR schedule continue across resumed bounded passes before more accumulation"
+    }
+  }
+}
