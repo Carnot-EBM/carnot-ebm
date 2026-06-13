@@ -12436,6 +12436,72 @@ reference.
 
 ---
 
+## REQ-LEARN-4135: Sudoku Extreme Fixed-LR Accumulation Pass 1
+
+**Given** Exp 4126 has proven the nano-trm resume schedule continues rather
+than restarting fresh warmup, and Exp 4127 has established
+`results/trm_runs/sudoku_extreme_baseline/last.ckpt` as the stable checkpoint
+with validation exact accuracy `0.278`, Exp 4135 SHALL run one bounded native
+resume pass from that stable checkpoint using
+`experiment=trm_sudoku_extreme_1k_aug_1k`,
+`data.data_dir=./data/sudoku_extreme_1k_aug_1k`, `seed=4108`,
+`timekeeping.batch_size=128`, `ckpt_path=<stable>/last.ckpt`, and
+`trainer.max_time` of no more than one hour.
+If the stable checkpoint carries an exhausted Lightning `Timer` callback from a
+prior bounded pass, Exp 4135 SHALL reset only that timer elapsed-state before
+resume; it SHALL preserve model weights, optimizer state, and the
+`nano_trm_manual_lr_step` schedule state so this timer cleanup cannot re-warm
+the LR schedule.
+
+**When** Exp 4135 starts, it SHALL check `uv`, `nano-trm/src/nn/train.py`,
+CUDA availability, and that the stable checkpoint exists and is loadable before
+launching training. If any precondition fails, Exp 4135 SHALL write
+`results/experiment_4135_sudoku_accumulate_pass1_fixed_lr.json` with a
+`blocked_<resource>` verdict, SHALL NOT launch the native trainer, and SHALL
+still emit the required scalar artifact fields.
+
+**Then** Exp 4135 SHALL save the resumed model back to
+`results/trm_runs/sudoku_extreme_baseline/last.ckpt`, read the new pass
+Lightning CSV metrics, and write
+`results/experiment_4135_sudoku_accumulate_pass1_fixed_lr.json` with top-level
+fields `honest_verdict`, `val_exact_accuracy`, `delta_vs_previous`,
+`lr_continued_not_rewarmed`, `matches_published_087`,
+`stable_checkpoint_path`, `random_seed`, `reproducibility_checksum`,
+`model_specs`, and scalar `duration_s`. `delta_vs_previous` SHALL compare the
+measured validation exact accuracy against `0.278`.
+`lr_continued_not_rewarmed` SHALL be a bare bool computed from the first
+non-empty `train/lr` metric and SHALL be false when that first LR equals the
+fresh warmup value `2.4500000108673703e-06`.
+`reproducibility_checksum` SHALL hash the actual native config inputs, the
+stable checkpoint, and the Sudoku Extreme dataset directory.
+
+### SCENARIO-LEARN-4135-BLOCKED: Runtime Preconditions Stop Training
+
+**Given** any of `uv`, the native nano-trm trainer, CUDA, or the loadable stable
+checkpoint is missing
+**When** Exp 4135 starts
+**Then** it writes a blocked artifact with all required fields, preserves the
+stable checkpoint path, and does not call the native trainer.
+
+### SCENARIO-LEARN-4135: One Pass Reports Accuracy, Delta, and LR Continuity
+
+**Given** all runtime preconditions pass and Exp 4126 reports
+`lr_continuous_across_resume=true`
+**When** Exp 4135 runs one bounded native resume pass
+**Then** the artifact reports the pass validation exact accuracy, the delta
+versus `0.278`, whether the LR continued instead of rewarmed, whether the pass
+matches the published `0.87` target within `0.02`, the stable checkpoint path
+that the next pass resumes from, seed `4108`, model specs naming nano-trm and
+`trm_sudoku_extreme_1k_aug_1k`, and a scalar runtime below 4800 seconds.
+
+## Implementation Status (REQ-LEARN-4135)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4135 | Planned (python/carnot/experiment_4135_sudoku_accumulate_pass1_fixed_lr.py, Exp 4135) | Planned (tests/python/test_experiment_4135_sudoku_accumulate_pass1_fixed_lr.py) |
+
+---
+
 ## REQ-LEARN-4128: Conditional Sudoku Verifier Graft After Fixed-LR Baseline
 
 **Given** Exp 4127 has written
