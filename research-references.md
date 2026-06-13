@@ -1,3 +1,28 @@
+## 2026-06-13 Operator-requested read — DiffusionGemma (energy-guided diffusion; DEPTH scale-up, GATED)
+
+**DiffusionGemma** (Google, early June 2026; Apache-2.0 open weights; 26B/4B-active MoE on the
+Gemma 4 architecture). WebFetch-verified 2026-06-13. **Discrete token diffusion**: denoises a
+"canvas" of tokens in parallel with bidirectional attention over 12-48 steps (adaptive ~12-16),
+committing the lowest-entropy tokens first; ~4x faster than autoregressive; exposes per-token
+entropy + inference-time guidance knobs. Sources:
+blog.google/innovation-and-ai/technology/developers-tools/diffusion-gemma-faster-text-generation/ ;
+ai.google.dev/gemma/docs/diffusiongemma ; ai.google.dev/gemma/docs/core/model_card_4 .
+
+**Relevance to Carnot — DEPTH scale-up of the verifier-as-guidance bet, NOT a new direction.**
+Discrete diffusion IS a score/energy model (denoiser = concrete score = -grad E; SEDD formalism,
+arXiv:2310.16834); committing lowest-entropy tokens = greedy energy descent. Actionable benefit:
+compose Carnot's executable verifier ensemble as a GUIDANCE energy that reweights per-step token
+selection during denoising (the verifier shapes generation, not post-hoc selection) — the
+integration the post-hoc-reranking route (GAP-3 / .379 exp4099, shown weak) structurally cannot do.
+It is the open-weight LLM-scale instance of the Phase-3 non-AR energy-descent endgame, and a fast
+open generator for the hybrid (decentralization fit: Apache-2.0, local-first). FULL SPEC + GATE:
+`docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md` — QUEUED but GATED on the TRM
+verifier-graft (.383+ Sudoku graft) reporting `verifier_value_added == true` on the executable
+domain; if the TRM graft is NULL, the bottleneck is verifier discrimination (not the substrate) ->
+do NOT activate. Do NOT cite DiffusionGemma as a verifier result; it is a GENERATOR substrate.
+
+---
+
 ## 2026-06-11 Operator-requested read — Self-Harness (META layer: conductor self-improvement)
 
 **"Self-Harness: Harnesses That Improve Themselves"** (arXiv:2606.09498v1; Shanghai AI Lab —

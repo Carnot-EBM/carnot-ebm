@@ -11,6 +11,30 @@
 - Active index: `ops/active-priorities.md`
 - Historical entries below are preserved for audit trail; superseded, parked, consolidated, and retired statuses live in the audit table.
 
+## GATED FORWARD-QUEUE (queued; explicitly NOT a MANDATORY-NEXT-MILESTONE priority; do NOT force-pick-up)
+
+Entries here are SPECCED and QUEUED but GATED on a condition. The planner MUST NOT
+activate them until the gate is met, and the Overdue-Priority Forcing Function does
+NOT apply (these are intentionally deferred, not overdue).
+
+### GATED 2026-06-13: Energy-guided discrete diffusion (DiffusionGemma) — scale-up of the TRM verifier-guidance bet
+
+- **Spec:** `docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md`
+- **What:** use Carnot's executable verifier ensemble as a GUIDANCE energy that
+  reweights DiffusionGemma's per-step token selection during denoising (the verifier
+  shapes generation, not post-hoc selection), on an executable domain (code / Sudoku /
+  math). DiffusionGemma = Google's open-weight Apache-2.0 26B/4B-active discrete-token-
+  diffusion model (June 2026). This is the LLM-scale realization of the SAME thesis the
+  TRM verifier-graft tests — DEPTH, not a new direction.
+- **GATE (operator directive 2026-06-13 "queued but not competing"):** activate ONLY
+  after the TRM verifier-graft (.383+ Sudoku graft, exp4128-lineage) reports
+  `verifier_value_added == true` (or rerank/RFT lift with CI95 excluding 0) on the
+  executable Sudoku domain. If the TRM graft is NULL, the bottleneck is verifier
+  discrimination (not the substrate) → do NOT activate.
+- **Why gated, not next-milestone:** the TRM-Sudoku test is the cheapest DECISIVE
+  version of the same question; DiffusionGemma cannot answer it faster. Queuing it here
+  keeps it from competing with the unfinished TRM core question.
+
 ## OPERATOR CONSTRAINTS (planner: do NOT propose tasks that violate these)
 
 ### 2026-06-05: Blog drafts NEVER on main — publish is operator-allowlist-gated (mechanically enforced)
