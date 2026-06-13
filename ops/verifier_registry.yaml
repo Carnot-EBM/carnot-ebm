@@ -230,6 +230,12 @@ verifiers:
     exp4112_arc1_rule_exec_gated_pass2: 0.5806
     exp4112_arc1_headroom_recovered: 4
     exp4112_arc1_vote_wins_lost: 0
+    eval_exp_4122: results/experiment_4122_verifier_registry_gaps_hygiene.json
+    exp4122_regression_guard_passed: true
+    exp4122_arc1_rule_exec_vote_pass2: 0.4516
+    exp4122_arc1_rule_exec_gated_pass2: 0.5806
+    exp4122_arc1_headroom_recovered: 4
+    exp4122_arc1_vote_wins_lost: 0
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -3318,6 +3324,27 @@ verifiers:
       verifier_pass_at_1: 0.117188
       vote_pass_at_1: 0.117188
     eval_exp_4112: results/experiment_4112_verifier_registry_gaps_hygiene.json
+  - role_id: sudoku_executable_verifier_training_time_4119
+    experiment: results/experiment_4119_carnot_verifier_graft_sudoku.json
+    role: candidate_trm_training_time_reward_signal_executable_domain
+    status: graft_deferred_baseline_not_reproduced
+    outcome: open_graft_deferred_verifier_value_added_false
+    honest_verdict: 'complete: graft_deferred -- baseline at val=0.1060'
+    baseline_artifact: results/experiment_4118_sudoku_extreme_resume_pass3.json
+    baseline_reproduction_status: not_reproduced
+    baseline_final_val_exact_accuracy: 0.10598958283662796
+    baseline_val_trajectory_rounded:
+    - 0.0854
+    - 0.0966
+    - 0.106
+    matches_published_087: false
+    total_cumulative_epochs: 4300
+    graft_deferred: true
+    verifier_value_added: false
+    flagged_adversarial: true
+    rerank_lift_vs_vote: null
+    rft_vs_ablation_delta: null
+    eval_exp_4122: results/experiment_4122_verifier_registry_gaps_hygiene.json
   certification_precision_operating_point:
     experiment: results/experiment_4087_certification_precision_rescue.json
     status: precision_rescue_succeeded
