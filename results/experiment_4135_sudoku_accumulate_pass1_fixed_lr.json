@@ -1556,5 +1556,13 @@
   ],
   "train_lr_point_count": 0,
   "val_exact_accuracy": null,
-  "validation_first_lr": null
+  "validation_first_lr": null,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=6.99 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
