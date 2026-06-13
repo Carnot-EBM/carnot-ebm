@@ -13454,6 +13454,72 @@ annotates the registry with the Exp 4142 replay and Exp 4139 training-time TRM
 role status, and uses no inference substrate other than cached GAP-4 replay and
 ledger reconciliation.
 
+### REQ-VERIFY-4153: Verifier Registry And Gaps Hygiene For .384 Outcomes
+
+The repository SHALL provide Exp 4153 at
+`python/carnot/experiment_4153_verifier_registry_gaps_hygiene.py` to replay the
+canonical GAP-4 ARC-1 regression guard from cached candidates and saved
+induced-program outputs, then reconcile `ops/verifier_registry.yaml` and
+`ops/verifier_gaps.md` with the `.384` Sudoku baseline and decisive graft truth.
+Before running the replay, the runner SHALL verify that
+`results/arc3_gap3_stage2_eval_pool.json.gz`,
+`results/arc3_gap4_induced_programs.json`, `ops/verifier_registry.yaml`, and
+`ops/verifier_gaps.md` exist and parse. If any precondition fails, the runner
+SHALL write a terminal artifact with `honest_verdict=blocked_<resource>` and
+SHALL NOT fabricate replay, registry, or gaps updates.
+
+The offline regression guard SHALL rederive ARC-1 vote `0.4516` to gated
+`0.5806` from cached TRM candidate rows and saved GAP-4 program outputs,
+including `n=31`, `headroom_recovered=4`, and `vote_wins_lost=0`, without
+Codex calls, GGUF loading, live TRM inference, or induced-code execution.
+`regression_guard_passed` SHALL be a bare bool and SHALL be true only when
+those canonical GAP-4 numbers match exactly.
+
+The gaps ledger SHALL record the Exp 4149 Sudoku baseline trajectory from
+`results/experiment_4149_sudoku_accumulate_pass4_convergence.json` for `.384`
+toward the published approximately `0.87` target. It SHALL preserve the measured
+state honestly: `honest_verdict=blocked_pass3_noop_unresolved`, validation
+trajectory `val_trajectory_v384` anchored at `0.2782`, blocked pass1/pass2/pass3
+entries, final `val_exact_accuracy=0.2782`, and
+`matches_published_087=false`. The decisive Exp 4150 graft entry from
+`results/experiment_4150_decisive_verifier_graft_sudoku.json` SHALL record
+`graft_deferred=true`, `verifier_value_added=false`, `rerank_lift_vs_vote`,
+`rft_vs_ablation_delta`, and that no candidate pools or RFT were run because
+the baseline was below the faithful `0.85` gate.
+
+The registry SHALL annotate the `gap4_program_induction_stack` entry with an
+Exp 4153 replay marker and a training-time TRM role derived from Exp 4150. The
+role SHALL record the executable-Sudoku-verifier-as-reward status, baseline
+trajectory, `graft_deferred`, `rerank_lift_vs_vote`, `rft_vs_ablation_delta`,
+`verifier_value_added`, and the DiffusionGemma gate state. The DiffusionGemma
+scale-up SHALL remain kept-gated unless Exp 4150's `verifier_value_added` is
+true on the transferable rerank or RFT label contrast.
+
+The terminal artifact SHALL write
+`results/experiment_4153_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_updated`,
+bare bool `registry_updated`, `sudoku_baseline`, `sudoku_decisive_graft`,
+`diffusiongemma_gate_state`, and
+`inference_substrate=cached_gap4_replay_and_ledger_reconciliation`. Its
+`field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled to the .384 truth.`;
+`regression_guard_passed` = `Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression.`;
+`gaps_updated` = `Lists the verifier_gaps entries touched so the gap backlog stays the honest complement of the registry.`;
+`diffusiongemma_gate_state` = `Records whether the .384 graft's verifier_value_added (on the transferable rerank + RFT, NOT the oracle) unlocked or kept-gated the DiffusionGemma scale-up -- the forward-planning signal.`
+
+### SCENARIO-VERIFY-4153: Cached Replay Records .384 Baseline Deferral And DiffusionGemma Gate
+
+Given the GAP-4 cached ARC-1 pool, saved induced-program artifact, Exp 4149,
+Exp 4150, `ops/verifier_registry.yaml`, and `ops/verifier_gaps.md` are readable,
+when Exp 4153 runs, then it writes the terminal artifact with
+`regression_guard_passed=true`, records vote `0.4516` to gated `0.5806`,
+records the `.384` Sudoku baseline trajectory as blocked at the `0.2782`
+anchor with `matches_published_087=false`, records the decisive graft outcome
+with `graft_deferred=true`, records `verifier_value_added=false`, keeps
+`diffusiongemma_gate_state=kept_gated`, annotates the registry with the Exp
+4153 replay and Exp 4150 training-time TRM role status, and uses no inference
+substrate other than cached GAP-4 replay and ledger reconciliation.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at

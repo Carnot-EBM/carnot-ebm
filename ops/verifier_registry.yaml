@@ -248,6 +248,12 @@ verifiers:
     exp4142_arc1_rule_exec_gated_pass2: 0.5806
     exp4142_arc1_headroom_recovered: 4
     exp4142_arc1_vote_wins_lost: 0
+    eval_exp_4153: results/experiment_4153_verifier_registry_gaps_hygiene.json
+    exp4153_regression_guard_passed: true
+    exp4153_arc1_rule_exec_vote_pass2: 0.4516
+    exp4153_arc1_rule_exec_gated_pass2: 0.5806
+    exp4153_arc1_headroom_recovered: 4
+    exp4153_arc1_vote_wins_lost: 0
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -3459,6 +3465,62 @@ verifiers:
       uses_executable_oracle_upper_bound: false
       basis: ensemble_rerank_lift_vs_vote_or_rft_vs_ablation_delta_not_oracle
     eval_exp_4142: results/experiment_4142_verifier_registry_gaps_hygiene.json
+  - role_id: sudoku_executable_verifier_training_time_4150
+    experiment: results/experiment_4150_decisive_verifier_graft_sudoku.json
+    role: candidate_trm_training_time_reward_signal_executable_domain
+    status: graft_deferred_baseline_below_0.85
+    outcome: open_graft_deferred_baseline_below_0.85
+    honest_verdict: 'complete: graft_deferred_baseline_below_0.85'
+    baseline_artifact: results/experiment_4149_sudoku_accumulate_pass4_convergence.json
+    baseline_status: blocked_pass3_noop_unresolved
+    baseline_final_val_exact_accuracy: 0.278172343969
+    baseline_raw_val_trajectory_v384_rounded:
+    - 0.2782
+    - null
+    - null
+    - null
+    - 0.2782
+    baseline_effective_val_trajectory_v384_rounded:
+    - 0.2782
+    - 0.2782
+    - 0.2782
+    - 0.2782
+    - 0.2782
+    matches_published_087: false
+    faithful_for_graft_085: false
+    graft_deferred: true
+    verifier_value_added: false
+    executable_sudoku_verifier_as_reward_status: deferred_baseline_below_0.85_no_transferable_value_added
+    rerank_lift_vs_vote:
+      ci95:
+      - 0.0
+      - 0.0
+      delta: 0.0
+      metric: pass@1_exact_accuracy
+      n_puzzles: 0
+      oracle_pass_at_k: 0.0
+      status: deferred_baseline_below_0.85
+      verifier_pass_at_1: 0.0
+      vote_pass_at_1: 0.0
+    rft_vs_ablation_delta:
+      a_exact_accuracy: 0.0
+      b_exact_accuracy: 0.0
+      ci95:
+      - 0.0
+      - 0.0
+      current_val_exact_accuracy: 0.278172343969
+      delta: 0.0
+      metric: heldout_exact_accuracy
+      n_matched: 0
+      status: deferred_baseline_below_0.85
+    diffusiongemma_gate_state:
+      state: kept_gated
+      reason: no_transferable_verifier_value_added
+      verifier_value_added: false
+      graft_deferred: true
+      uses_executable_oracle_upper_bound: false
+      basis: rerank_lift_vs_vote_or_rft_vs_ablation_delta
+    eval_exp_4153: results/experiment_4153_verifier_registry_gaps_hygiene.json
   certification_precision_operating_point:
     experiment: results/experiment_4087_certification_precision_rescue.json
     status: precision_rescue_succeeded
