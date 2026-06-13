@@ -254,6 +254,12 @@ verifiers:
     exp4153_arc1_rule_exec_gated_pass2: 0.5806
     exp4153_arc1_headroom_recovered: 4
     exp4153_arc1_vote_wins_lost: 0
+    eval_exp_4163: results/experiment_4163_verifier_registry_gaps_hygiene.json
+    exp4163_regression_guard_passed: true
+    exp4163_arc1_rule_exec_vote_pass2: 0.4516
+    exp4163_arc1_rule_exec_gated_pass2: 0.5806
+    exp4163_arc1_headroom_recovered: 4
+    exp4163_arc1_vote_wins_lost: 0
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -3521,6 +3527,77 @@ verifiers:
       uses_executable_oracle_upper_bound: false
       basis: rerank_lift_vs_vote_or_rft_vs_ablation_delta
     eval_exp_4153: results/experiment_4153_verifier_registry_gaps_hygiene.json
+  - role_id: sudoku_executable_verifier_training_time_4159
+    experiment: results/experiment_4159_decisive_verifier_reward_graft.json
+    role: candidate_trm_training_time_reward_signal_executable_domain
+    status: graft_deferred_baseline_below_0.85_flagged
+    outcome: open_graft_deferred_baseline_below_0.85_flagged
+    honest_verdict: 'complete: graft_deferred_baseline_below_0.85'
+    baseline_artifact: results/experiment_4157_baseline_harvest_contiguous_continue.json
+    baseline_current_val: 0.501041650772
+    baseline_current_val_rounded: 0.501
+    baseline_faithful: false
+    baseline_val_trajectory_385_rounded:
+    - 0.2005
+    - 0.1992
+    - 0.1995
+    - 0.2216
+    - 0.2042
+    - 0.2211
+    - 0.2443
+    - 0.257
+    - 0.2823
+    - 0.3008
+    - 0.3198
+    - 0.3385
+    - 0.3555
+    - 0.3721
+    - 0.3862
+    - 0.4
+    - 0.412
+    - 0.4263
+    - 0.4354
+    - 0.4427
+    - 0.4521
+    - 0.4648
+    - 0.4776
+    - 0.4857
+    - 0.4906
+    - 0.4938
+    - 0.501
+    graft_deferred: true
+    verifier_value_added: false
+    phase0_precision:
+      current_val_exact_accuracy: 0.501041650772
+      denominator_demo_perfect: 0
+      metric: P(test-gold|demo-perfect)
+      numerator_test_gold: 0
+      passes: false
+      precision: 0.0
+      status: deferred_baseline_below_0.85
+      threshold: 0.85
+    rft_vs_ablation_delta:
+      a_exact_accuracy: 0.0
+      b_exact_accuracy: 0.0
+      ci95:
+      - 0.0
+      - 0.0
+      current_val_exact_accuracy: 0.501041650772
+      delta: 0.0
+      metric: heldout_exact_accuracy
+      n_matched: 0
+      status: deferred_baseline_below_0.85
+    diffusiongemma_gate_state: &id001
+      state: kept_gated
+      reason: no_positive_rerank_signal_and_no_training_time_value_added
+      moved_by_rerank_signal: false
+      rerank_ci_excludes_zero_positive: false
+      verifier_value_added: false
+      graft_deferred: true
+      uses_executable_oracle_upper_bound: false
+      basis: exp4158_rerank_lift_vs_vote_or_exp4159_verifier_value_added
+    flagged_adversarial: true
+    eval_exp_4163: results/experiment_4163_verifier_registry_gaps_hygiene.json
   certification_precision_operating_point:
     experiment: results/experiment_4087_certification_precision_rescue.json
     status: precision_rescue_succeeded
@@ -3532,3 +3609,44 @@ verifiers:
     precision_floor: 0.85
     precision_floor_reached: true
     eval_exp_4095: results/experiment_4095_verifier_registry_gaps_hygiene.json
+  role_sudoku_executable:
+    status: uninformative_no_headroom_flagged
+    training_time_status: graft_deferred_baseline_below_0.85_flagged
+    rerank_time_status: uninformative_no_headroom_flagged
+    promoted_toward_candidate: false
+    eval_exp_4163: results/experiment_4163_verifier_registry_gaps_hygiene.json
+    diffusiongemma_gate_state: *id001
+  rerank_time_roles:
+  - role_id: sudoku_executable_verifier_rerank_time_4158
+    experiment: results/experiment_4158_verifier_rerank_recovery_moat.json
+    role: candidate_trm_rerank_time_executable_sudoku_verifier
+    status: uninformative_no_headroom_flagged
+    outcome: open_rerank_uninformative_no_headroom_flagged
+    honest_verdict: 'complete: no_headroom_rerank_uninformative_at_val_0.50'
+    baseline_artifact: results/experiment_4157_baseline_harvest_contiguous_continue.json
+    headroom_present: false
+    ci_excludes_zero_positive: false
+    verifier_recovers_outvoted: 0
+    vote_at_1: 0.140625
+    oracle_at_k: 0.140625
+    rerank_lift_vs_vote:
+      ci95:
+      - 0.0
+      - 0.0
+      delta: 0.0
+      metric: pass@1_exact_accuracy
+      n_puzzles: 64
+      oracle_at_k: 0.140625
+      per_puzzle_count: 64
+      status: no_headroom_oracle_at_k_lte_vote_at_1
+      verifier_pass_at_1: 0.140625
+      vote_at_1: 0.140625
+    cost_ratio_vs_llm_judge:
+      estimate: Assumes 1.0s per remote LLM judge call.
+      llm_judge_estimate_per_candidate_us: 1000000.0
+      ratio: 23158.363
+      status: measured_local_constraint_check
+      verifier_mean_per_candidate_us: 43.181
+    diffusiongemma_gate_state: *id001
+    flagged_adversarial: true
+    eval_exp_4163: results/experiment_4163_verifier_registry_gaps_hygiene.json
