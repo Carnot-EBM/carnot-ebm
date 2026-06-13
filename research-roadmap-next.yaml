@@ -1,0 +1,273 @@
+milestone: 2026.06.386
+milestone_title: "Conductor STANDS DOWN on TRM training (outer-loop owns the contiguous run); MONITOR + DEFENSIVE graft only"
+milestone_doc: |
+  Operator directive 2026-06-13 (decision "A"): the TRM Sudoku-Extreme baseline training is OWNED
+  BY THE OUTER-LOOP, which runs ONE detached contiguous job (results/trm_runs/contiguous_run.log,
+  PID in results/trm_runs/contiguous_run.pid) resuming from the stable checkpoint
+  (results/trm_runs/sudoku_extreme_baseline/last.ckpt) toward ~0.87. The conductor's bounded-task
+  model structurally CANNOT do this (80-min wall-cap; the .383/.384/.385 bounded passes all no-op'd
+  on the cumulative-max_time bug) AND the conductor's own continuation tasks COLLIDED with the
+  outer-loop run (.385 exp4157 shared the checkpoint/GPU/paths and killed net progress). So .386
+  CEDES TRM training to the outer-loop.
+
+  HARD COORDINATION RULE (every .386 task MUST obey): NO conductor task may launch TRM training,
+  run `pkill`/`kill` against `train.py`, or WRITE the stable checkpoint dir
+  (results/trm_runs/sudoku_extreme_baseline/). Training-related tasks are READ-ONLY: they read the
+  checkpoint val + the contiguous_run.log + the train PID, and report. This prevents the .385
+  collision from recurring.
+
+  The decisive verifier graft is DEFENSIVE and gated on BOTH (val >= 0.85) AND (the outer-loop train
+  process is NO LONGER running) — so it never reads a checkpoint that is being written. The
+  outer-loop will stop its run when val converges (~0.87), making the checkpoint stable for the graft.
+
+  NOTE: nano-trm/src/nn/models/trm.py was locally edited (mode="default" not "reduce-overhead") to
+  fix the CUDAGraphs-overwrite crash; this is a local fix to the gitignored vendored clone.
+
+tasks:
+  - id: exp4166-archive-v385-activate-v386
+    milestone: 2026.06.386
+    title: "Archive .385 -> activate .386; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .385 close-state (bounded accumulation no-op'd again + collided with the outer-loop run; baseline 0.278; outer-loop now OWNS the contiguous training)."
+    priority: critical
+    track: infra
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): archive-vN-activate-vN+1 — false-positive scope-match vs all prior archive-v* tasks; structurally never a doomed rerun. 2026-06-12 quota-conserve: archive on codex."
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4166_archive_v385_activate_v386.json
+    prompt: |
+      CONTEXT: Close .385, activate .386. Per operator decision A (2026-06-13), the TRM training is
+      now owned by the OUTER-LOOP (a detached contiguous run); the conductor STANDS DOWN on TRM
+      training to stop the .385-style collision. This archive runs on CODEX (mechanical).
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `python3 -c "import yaml; yaml.safe_load(open('research-complete.yaml')); yaml.safe_load(open('ops/exclusion_manifest.yaml'))"` exits 0; smart-subset pre-test gate green. Else -> honest_verdict `blocked_<resource>` and STOP.
+        1. Archive .385 into research-complete.yaml; activate .386.
+        2. Record the .385 close-state (bounded accumulation no-op'd + collided with the outer-loop run; baseline 0.278; outer-loop now owns the contiguous training).
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Self-declared terminal state. MUST start with complete:/success:/passed:/shipped:."
+        v385_close_state:
+          principle: "Honest record (conductor ceded TRM training to the outer-loop after collisions) so the next planner does not re-generate competing training tasks."
+        preconditions_checked:
+          principle: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
+      ACCEPTANCE: honest_verdict terminal-prefixed; .386 activated; close-state recorded truthfully.
+
+  - id: exp4167-outerloop-training-monitor
+    milestone: 2026.06.386
+    title: "OUTER-LOOP TRAINING MONITOR (READ-ONLY; the conductor's replacement for its retired continuation-training slot). Report the outer-loop contiguous run's status: stable-checkpoint val_exact_accuracy + mtime, train PID alive?, latest val from the contiguous_run metrics CSV, and whether val has crossed 0.85. LAUNCH NO TRAINING, run NO pkill/kill, WRITE NOTHING under the stable checkpoint dir."
+    priority: high
+    track: trm-baseline
+    max_turns: 40
+    agent_type: codex
+    model: gpt-5.5
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13 operator decision A: READ-ONLY monitor of the outer-loop-owned training — false-positive scope-match vs prior training tasks; forward difference = it does NOT train (the outer-loop owns training); it only reports status, preventing the .385 collision."
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4167_outerloop_training_monitor.json
+    prompt: |
+      CONTEXT: The OUTER-LOOP owns the TRM contiguous training. This task ONLY reports its status.
+      It MUST NOT launch any training (no `uv run python src/nn/train.py`), MUST NOT run pkill/kill
+      against train.py, and MUST NOT write anything under results/trm_runs/sudoku_extreme_baseline/.
+
+      CONCRETE STEPS (all READ-ONLY):
+        1. Read results/trm_runs/sudoku_extreme_baseline/last.ckpt mtime (torch.load -> epoch; do NOT modify).
+        2. Read results/trm_runs/contiguous_run.pid; check if that PID is alive (`ps -o etime= -p <pid>`).
+        3. Read the latest val_exact_accuracy from the contiguous_run metrics CSV (find results/trm_runs/contiguous_run_hydra -name metrics.csv).
+        4. Report the trajectory + whether val has crossed 0.85 (faithful threshold for the graft).
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Terminal-prefixed. A status report is COMPLETE; this task never fails on the science (it does not run any)."
+        outerloop_train_alive:
+          principle: "Bare bool: is the outer-loop training process running? Lets the graft know whether the checkpoint is stable (safe to read) or being written."
+        current_val_exact_accuracy:
+          principle: "Latest val from the outer-loop run; the convergence signal toward 0.87."
+        baseline_faithful:
+          principle: "Bare bool: val >= 0.85 AND train process NOT running -> the checkpoint is faithful + stable -> the graft may run."
+        checkpoint_mtime:
+          principle: "Stable-checkpoint mtime; advancing past Jun-13-00:41 confirms the outer-loop run is saving real progress."
+      ACCEPTANCE: a read-only status report; NO training launched, NO pkill, NO checkpoint write.
+
+  - id: exp4168-decisive-verifier-graft-defensive
+    milestone: 2026.06.386
+    title: "THE DECISIVE verifier graft — DEFENSIVE, gated on (val>=0.85 AND outer-loop train STOPPED). Reads (never writes/trains) the stable checkpoint. IF faithful+stable: rerank (verifier vs TRM-vote, pass@1 lift CI) + verifier-cert-vs-vote-cert RFT de-confound on a COPY of the checkpoint. IF not: DEFER honestly (outer-loop still training / not yet 0.85). Resolves the moat question + the DiffusionGemma gate when it fires."
+    priority: high
+    track: verifier-as-reward
+    max_turns: 110
+    agent_type: codex
+    model: gpt-5.5
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13: decisive verifier graft on the outer-loop-trained faithful baseline — false-positive scope-match vs prior graft attempts; forward difference = gated on (val>=0.85 AND train STOPPED) so it never collides with or reads-during-write the outer-loop run; operates on a COPY."
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4168_decisive_verifier_graft_defensive.json
+    prompt: |
+      CONTEXT: The decisive verifier-as-reward test on the OUTER-LOOP-trained baseline. To avoid the
+      .385 collision and read-during-write races, this task is DEFENSIVE and NON-DESTRUCTIVE.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: read results/experiment_4167_*.json (or recompute): require baseline_faithful
+           == True, i.e. val>=0.85 AND the outer-loop train PID is NOT alive. If NOT -> honest_verdict
+           `graft_deferred_outerloop_training` + current val, and STOP (do NOT train, do NOT pkill the
+           outer-loop run).
+        1. COPY the stable checkpoint to a task-local path (never train/write the stable dir).
+        2. RERANK arm: sample K candidate solutions per held-out puzzle from the copied checkpoint;
+           rerank by the executable Sudoku verifier; pass@1 lift vs TRM-vote + vs oracle, bootstrap CI.
+        3. RFT arm (de-confound): A=verifier-cert vs B=vote-cert corpus, N-matched; train each from the
+           COPY (mode=default, max_time=cumulative+budget) -- NOT the stable checkpoint. Held-out
+           exact-accuracy; load-bearing A vs B, CI95 excl 0.
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Terminal-prefixed. An honest deferral, an A>B win, or an A~=B null are all COMPLETE."
+        graft_deferred:
+          principle: "Bare bool: True if the baseline was not faithful+stable -> deferred. Prevents an uninformative graft + a collision with the outer-loop run."
+        rerank_lift_vs_vote:
+          principle: "pass@1 lift from verifier-reranking (if grafted); the executable-verifier discrimination signal."
+        rft_vs_ablation_delta:
+          principle: "The de-confounded A-vs-B held-out delta with CI -- THE moat measurement."
+        verifier_value_added:
+          principle: "Bare bool: did the graft beat the vote ablation? Resolves the moat question + the DiffusionGemma gate."
+      ACCEPTANCE GATE:
+        - condition: "graft_deferred True (baseline not faithful/stable), OR a real graft on a COPY with rerank_lift + rft_vs_ablation_delta + verifier_value_added (CI95)"
+          principle: "Either an honest deferral or a real graft on a copy; NEVER train/pkill the outer-loop-owned run (the .385 collision is forbidden)."
+
+  - id: exp4169-arc-incremental-progress
+    milestone: 2026.06.386
+    title: "ARC-AGI-3 INCREMENTAL +1 (monotonic) via the PROVEN explore-first method. Bounded active-exploration OBSERVES transitions -> induce mechanic + goal predicate -> GAP-4 verifier validates on held-out transitions -> act only if validated. Next-easiest non-spatial game not yet solved. REAL-ENV-CONFIRM any solve; STOP at the first level that fails."
+    priority: medium
+    track: arc
+    max_turns: 90
+    agent_type: codex
+    model: gpt-5.5
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): ARC-AGI-3 incremental +1 game-solve mandated by the ARC-AGI-3 Incremental-Progress Scoping discipline — false-positive scope-match vs prior Nth-game-solve attempts; forward difference = next-unsolved game, monotonic +1, honest no-solve is a COMPLETE verdict."
+    inference_substrate: offline_arc_explore_induce_verify
+    deliverable: results/experiment_4169_arc_incremental_progress.json
+    prompt: |
+      CONTEXT: Per the ARC-AGI-3 Incremental-Progress Scoping discipline, each milestone advances the
+      solved-game count MONOTONICALLY by >=1. Target the next unsolved non-spatial game from
+      results/arc3_win_condition_survey.json and solve its first level.
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `ls results/arc3_win_condition_survey.json`; use the OFFLINE/air-gapped driver. If fixtures unavailable -> `blocked_arc_offline_fixtures_missing` and STOP.
+        1. Bounded active-exploration -> induce mechanic + goal predicate from OBSERVED transitions.
+        2. GAP-4 verifier validates on HELD-OUT transitions before acting; act only on validated steps; STOP at the first level that fails.
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Terminal-prefixed. An honest no-solve is a COMPLETE verdict."
+        total_games_solved:
+          principle: "The monotonic progress metric; must be >= the prior milestone's count."
+        levels_completed:
+          principle: "Real-env-confirmed level count; falsifiable evidence of an actual solve."
+        real_env_confirmed:
+          principle: "Only real-env solves raise the headline count."
+      ACCEPTANCE GATE:
+        - condition: ">=1 NEW level real_env_confirmed OR an honest no-solve verdict"
+          principle: "Progress-not-perfection: banking +1 real level is the win."
+
+  - id: exp4170-sota-ingestion-verifier-moat-guidance
+    milestone: 2026.06.386
+    title: "SOTA-INGESTION SLOT (reserved; bleeding-edge track): ingest verifier-as-reward / energy-guided-generation literature mapped onto the (outer-loop) Sudoku baseline -> graft headline + the queued DiffusionGemma energy-guidance use. TRM 2510.04871, TTA-TRM 2511.02886, V-STaR 2402.06457, SEDD 2310.16834, classifier/energy-guided diffusion. SOTA->experiment mapping note; flag strongest for .387. Cite real arXiv IDs."
+    priority: medium
+    track: research
+    max_turns: 70
+    agent_type: codex
+    model: gpt-5.5
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved-slot task): SOTA-ingestion slot mandated by the SOTA-Ingestion Cycle Discipline — false-positive scope-match vs prior ingestion tasks; structurally never a doomed rerun (fresh corpus each milestone)."
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4170_sota_ingestion_verifier_moat_guidance.json
+    prompt: |
+      CONTEXT: Per the SOTA-Ingestion Cycle Discipline, a bleeding-edge headline reserves one ingestion task.
+      CONCRETE STEPS (use the RELIABLE channel, NOT /deep-research):
+        0. Read research-studying.md / research-references.md filtered to verifier-as-reward / energy-guided-generation, then a FOCUSED fresh pass via scripts/sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch of the top 5-8 papers.
+        1. Synthesize a SOTA->experiment mapping note (TRM 2510.04871, TTA-TRM 2511.02886, V-STaR 2402.06457, SEDD 2310.16834, energy/classifier-guided diffusion); what each implies for the Carnot-verifier + (queued) DiffusionGemma stack.
+        2. Update research-studying.md (mark ingested) and FLAG the strongest method for .387.
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Terminal-prefixed. Records ingestion completed with verifiable citations."
+        methods_mapped:
+          principle: "Each method/source MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication."
+        flagged_for_v387:
+          principle: "Closes the discover->ingest->plan loop: names the strongest method for the next planner."
+      ACCEPTANCE: a mapping note with >=3 sources, each with a real arXiv ID/URL, and one flagged for .387.
+
+  - id: exp4171-verifier-registry-gaps-hygiene
+    milestone: 2026.06.386
+    title: "VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval reproducing the canonical GAP-4 ARC-1 numbers from cached candidates (zero codex/GGUF). RECORD the .386 state: the outer-loop training val trajectory + the graft result/deferral. Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source of truth."
+    priority: medium
+    track: infra
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved infra slot): verifier-registry + gaps hygiene regression guard — false-positive scope-match vs prior hygiene tasks; structurally never a doomed rerun (bit-exact GAP-4 regression replay each milestone)."
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4171_verifier_registry_gaps_hygiene.json
+    prompt: |
+      CONTEXT: Record the .386 verifier-relevant outcomes honestly.
+      CONCRETE STEPS:
+        1. Bit-exact offline re-eval reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates -- the regression guard. Zero codex/GGUF. READ-ONLY w.r.t. the TRM training (do not touch the stable checkpoint).
+        2. RECORD into ops/verifier_gaps.md: the outer-loop training val trajectory + the graft result OR deferral (exp4168).
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Terminal-prefixed. Records the registry/gaps reconciled to the .386 truth."
+        regression_guard_passed:
+          principle: "Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression."
+        gaps_updated:
+          principle: "Lists the verifier_gaps entries touched."
+      ACCEPTANCE: regression_guard_passed True; the baseline + graft status recorded.
+
+  - id: exp4172-hardware-continuity
+    milestone: 2026.06.386
+    title: "Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 DONE). Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile flash). PolarFire (ssh polarfire; toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board."
+    priority: medium
+    track: hardware
+    max_turns: 70
+    agent_type: codex
+    model: gpt-5.5
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 2 (active hardware-continuity task): GateMate/PolarFire drive-to-terminal mandated by the Hardware-Task Continuity Discipline until terminal — false-positive scope-match vs retired hardware exps; required forward work."
+    inference_substrate: hardware_smoke
+    deliverable: results/experiment_4172_hardware_continuity.json
+    prompt: |
+      CONTEXT: As long as boards are attached, every milestone reserves one task per non-terminal board. KV260 is terminal; GateMate + PolarFire are not.
+      CONCRETE STEPS (DISTINCT wall-clock timers per board):
+        0. PRECONDITIONS per board (SSH / USB-detect ONLY -- host SD-card-device preconditions are retired per the KV260 SSH-Not-SD-Card Discipline):
+           - GateMate: `openFPGALoader -c dirtyJtag --detect` returns the GM1Ax IDCODE.
+           - PolarFire: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'` exits 0.
+           - KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` exits 0 (opportunistic).
+           For any unreachable board, write `blocked_<board>_unreachable` for that board and CONTINUE with the others.
+        1. GateMate: next concrete step toward the n=16 Ising tile flash.
+        2. PolarFire: next concrete step toward end-to-end Carnot dispatch with hash-match.
+        3. KV260: confirm terminal state via SSH.
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Terminal-prefixed. Per-board honest status; an honest blocked_<board> is a COMPLETE verdict for that board."
+        per_board_status:
+          principle: "One reachability + next-step record per board so a board is never silently forgotten."
+        preconditions_checked:
+          principle: "Records the SSH/USB-detect preconditions run; enforces SSH-Not-SD-Card."
+      ACCEPTANCE: per-board reachability recorded via SSH/USB-detect (never a host SD-card device); next concrete step named per non-terminal board.
+
+  - id: exp4173-capstone-v386
+    milestone: 2026.06.386
+    title: "Capstone .386 (UNGATED): headline question is HAS THE OUTER-LOOP CONTIGUOUS RUN CONVERGED THE BASELINE TOWARD 0.87, AND DID THE DEFENSIVE GRAFT FIRE OR DEFER? Aggregate: TRAINING = exp4167 (current_val + checkpoint_mtime advancing + baseline_faithful); GRAFT = exp4168 (graft_deferred OR verifier_value_added + A-vs-B CI); ACCURACY = exp4169; SOTA = exp4170. Honest verdict + whether the DiffusionGemma gate is now resolved. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on."
+    priority: high
+    track: infra
+    max_turns: 90
+    agent_type: codex
+    model: gpt-5.5
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): capstone-vN aggregation — false-positive scope-match vs prior capstone-v* tasks; structurally never a doomed rerun."
+    inference_substrate: aggregation_from_upstream_artifacts
+    deliverable: results/experiment_4173_capstone_v386.json
+    prompt: |
+      CONTEXT: Aggregate the .386 results into one honest decision-grade verdict.
+      CONCRETE STEPS:
+        1. Read exp4167/4168/4169/4170/4171/4172. SKIP any flagged_adversarial=true. Cite each upstream sha256.
+        2. Answer: (a) has the outer-loop run advanced val past 0.278 toward 0.87 (exp4167 current_val + checkpoint_mtime)? (b) did the defensive graft fire (exp4168 verifier_value_added) or defer? (c) is the DiffusionGemma gate resolved? (d) total ARC games solved.
+        3. Honest headline: one of {baseline_converged_graft_validated, baseline_converged_graft_null, outerloop_training_in_progress, baseline_stalled}.
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Terminal-prefixed. An honest 'outer-loop training in progress' is COMPLETE and valuable."
+        headline_outcome:
+          principle: "One of the enumerated set -- forces a single unambiguous read."
+        baseline_val_trajectory:
+          principle: "Val from the outer-loop run; shows convergence toward 0.87."
+        diffusiongemma_gate_status:
+          principle: "RESOLVED-positive / RESOLVED-null / STILL-PENDING."
+        upstream_provenance:
+          principle: "{experiment_id, fields_imported, sha256} per cited upstream."
+      ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited.
