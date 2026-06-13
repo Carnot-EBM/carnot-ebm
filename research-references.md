@@ -1,3 +1,37 @@
+## 2026-06-13 Planner (.385) — the verifier-moat literature, framed for the rerank-recovery design
+
+Re-confirmed during .385 planning (all WebFetch-verified, IDs real). Most are already filed below;
+this section records the .385 *use* of each and adds the one genuinely-new finding (EntRGi).
+
+- **★ ARBITER (arXiv:2605.26172) — the .385 moat-design anchor (already filed, line ~930).** Samples
+  cluster into "reasoning basins"; majority vote picks the largest basin, not the correct one — the
+  correct answer is frequently **present-but-out-voted** (Qwen3-4B GSM8K K=24: consensus ~94.5% vs
+  top-2 oracle ~97.3%). Crucially: **internal-signal verifiers "measure self-consistency rather than
+  correctness" and DEGRADE the vote.** → .385 exp4158 is built directly on this: a verifier-RERANK
+  RECOVERY test with a mandatory headroom positive-control (oracle@K > vote@1), decision-grade at the
+  *intermediate* baseline. Carnot's executable Sudoku verifier is the EXTERNAL, vote-orthogonal signal
+  ARBITER says is required to beat self-consistency.
+- **ThinkPRM (2504.16828)** + **Optimal LLM+PRM Aggregation (2510.13918)** + **RLV (2505.04842)** —
+  already filed. Positive existence proof (external process verifier > SC at matched compute, data-cheap),
+  the recipe (AGGREGATE the verifier score WITH the vote, do not replace it), and the efficiency bar
+  (verification head, ~32× test-time efficiency; beats LLM-as-judge). → frame exp4158's `cost_ratio_vs_llm_judge`
+  and the .386 efficiency head-to-head against these.
+- **NEW — EntRGi: Entropy Aware Reward Guidance for Diffusion LM Alignment (arXiv:2602.05000;
+  Tejaswi, Rout, Caramanis, Shakkottai, Sanghavi).** Solves the core SEDD/discrete-diffusion gradient
+  problem via **entropy-weighted per-token interpolation between continuous relaxations and hard
+  tokens**, letting a **frozen external reward model reshape a frozen generator's distribution** —
+  both at test-time (7B dLLM) and as an RL recipe (RGRL). **Relevance:** this is the concrete template
+  for the queued DiffusionGemma energy-guidance gate (Carnot verifier energy = the frozen external RM
+  reshaping the discrete generator). Its frozen-RM / frozen-generator setup IS the "external verifier
+  as reward at generation time" testbed. URL: https://arxiv.org/abs/2602.05000 . Flag for .386 once the
+  verifier-discrimination gate (exp4158/4159) is positive.
+- **Executable World Models for ARC-AGI-3 (2605.05138)** + **ARC-AGI-3 tech report (2603.24621)** —
+  already filed; the SOTA instantiation of Carnot's thesis (generator induces an executable world
+  model; verifier routes/prunes/verifies transitions) and the RHAE efficiency metric → frame exp4160's
+  `action_efficiency_ratio`.
+
+---
+
 ## 2026-06-13 Operator-requested read — DiffusionGemma (energy-guided diffusion; DEPTH scale-up, GATED)
 
 **DiffusionGemma** (Google, early June 2026; Apache-2.0 open weights; 26B/4B-active MoE on the

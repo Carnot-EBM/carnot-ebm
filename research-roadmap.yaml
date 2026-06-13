@@ -487,7 +487,7 @@ tasks:
       CONCRETE STEPS:
         1. Read exp4157/4158/4159/4160/4161/4162/4163/4164. SKIP any flagged_adversarial=true. Cite each upstream sha256.
         2. Answer: (a) did the contiguous run advance the baseline (exp4157 current_val vs the 0.278 seed; run_alive)? (b) did the rerank-recovery test DECIDE the moat at the intermediate baseline (exp4158 headroom_present AND rerank_lift_vs_vote CI95 -- excl 0 = moat real at rerank; includes 0 = moat absent; no-headroom = uninformative)? (c) did the full graft run or defer (exp4159)? (d) did the DiffusionGemma gate move (any positive verifier-discrimination signal)? (e) ARC action-efficiency ratio + total games solved. (f) observability fixed?
-        3. Honest headline: one of {baseline_advancing_moat_rerank_confirmed, baseline_advancing_moat_rerank_null, baseline_advancing_moat_rerank_no_headroom, baseline_faithful_graft_validated, baseline_faithful_graft_null, accumulation_still_blocked}.
+        3. Honest headline: one of {{baseline_advancing_moat_rerank_confirmed, baseline_advancing_moat_rerank_null, baseline_advancing_moat_rerank_no_headroom, baseline_faithful_graft_validated, baseline_faithful_graft_null, accumulation_still_blocked}}.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. An honest 'baseline advancing via contiguous run; moat confirmed/null at the rerank level; .386 continues to 0.85 then grafts' is COMPLETE and valuable."
@@ -500,7 +500,7 @@ tasks:
         diffusiongemma_gate_status:
           principle: "RESOLVED-positive / RESOLVED-null / STILL-PENDING -- the explicit status after the rerank + graft work."
         upstream_provenance:
-          principle: "{experiment_id, fields_imported, sha256} per cited upstream -- the audit trail."
+          principle: "{{experiment_id, fields_imported, sha256}} per cited upstream -- the audit trail."
       ACCEPTANCE: a single headline_outcome chosen from the enumerated set; the rerank moat verdict reported; flagged artifacts excluded; upstream sha256 cited.
 
       Run command: `python3 python/carnot/experiment_4165_capstone_v385.py`

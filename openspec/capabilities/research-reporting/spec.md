@@ -20366,6 +20366,81 @@ claim `.383` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4145 | Implemented (`python/carnot/reporting/archive_v383_activate_v384_4145.py`, `python/carnot/experiment_4145_archive_v383_activate_v384.py`) | Implemented (`tests/python/test_experiment_4145_archive_v383_activate_v384.py`) |
 
+### REQ-REPORT-4156: Archive .384, Activate .385, And Preserve The Stale-Timer Correction
+
+The Exp 4156 workflow SHALL archive milestone `2026.06.384`, confirm milestone
+`2026.06.385` is active, and write the record-only aggregation artifact
+`results/experiment_4156_archive_v384_activate_v385.json`. It SHALL run no live
+model training and SHALL declare `inference_substrate` as
+`aggregation_from_upstream_artifacts`.
+
+Before claiming completion the workflow SHALL confirm:
+
+- `research-complete.yaml` parses under `yaml.safe_load`
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`
+- `nano-trm/src/nn/train.py` exists
+- the smart-subset pre-test gate is green
+- `results/experiment_4155_capstone_v384.json` and the contiguous-run
+  validation CSV evidence exist
+
+If any precondition is absent or red, the workflow SHALL write a blocked
+artifact whose `honest_verdict` starts with `blocked_`, record the failed
+resource in `preconditions_checked`, and stop without fabricating a terminal
+archive.
+
+The complete artifact SHALL include the principle-annotated fields
+`honest_verdict`, `v384_close_state`, and `preconditions_checked` with these
+exact principles:
+
+- `honest_verdict`: `Self-declared terminal state. MUST start with complete:/success:/passed:/shipped:.`
+- `v384_close_state`: `Honest record (epoch-fix was a misdiagnosis / stale-Timer guard misfire; bounded-pass retired; contiguous run is the working fix; baseline 0.42+ climbing) so the next planner builds on the truth.`
+- `preconditions_checked`: `Records resources verified; pre-empts the silent-missing-resource fabrication mode.`
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v384_close_state` SHALL truthfully record
+that the `.384` epoch-fix diagnosis was a misdiagnosis: Exp 4146 did not fail
+after training but never started because a pre-launch guard read stale
+Lightning Timer state from the checkpoint
+(`timer_train_elapsed_s=3641.99 >= max_time_s=3600`), while
+`config_max_epochs=50000`, `seed_epoch=post_epoch=6399`, `duration_s=0.121`,
+and `val_exact_accuracy=null`. It SHALL record that the bounded-pass chain is retired,
+that the single contiguous run is the working fix, citing
+`results/trm_runs/contiguous_run_hydra/csv/version_*/metrics.csv` validation
+trajectory with `val_exact_accuracy` improving past `0.42`, and that the
+decisive graft remains deferred while the baseline is below `0.85`.
+
+#### SCENARIO-REPORT-4156: The Archive Preserves The Corrected .384 Diagnosis
+
+**Given** `.384` has Exp 4146 evidence for stale Timer state, Exp 4149 records
+the bounded-pass chain as blocked, Exp 4150 deferred the graft below `0.85`,
+the Exp 4155 capstone exists, contiguous-run CSV validation rows show
+`val_exact_accuracy` improving from the `0.278` seed to at least `0.42`, the
+history and exclusion-manifest YAML files parse, `nano-trm/src/nn/train.py`
+exists, the smart-subset pre-test gate is green, and `.385` is active
+**When** the Exp 4156 archive workflow runs
+**Then** it archives `.384`, confirms `.385`, keeps the YAML history parseable
+with one `.384` record, writes
+`results/experiment_4156_archive_v384_activate_v385.json`, records the
+epoch-fix misdiagnosis, stale-Timer guard misfire, retired bounded-pass chain,
+contiguous-run working fix, live validation trajectory, and graft deferral in
+`v384_close_state`, records the checked resources in `preconditions_checked`,
+declares `aggregation_from_upstream_artifacts`, and emits a
+terminal-prefixed honest verdict.
+
+#### SCENARIO-REPORT-4156-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4156 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does not
+claim `.384` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4156)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4156 | Implemented (`python/carnot/reporting/archive_v384_activate_v385_4156.py`, `python/carnot/experiment_4156_archive_v384_activate_v385.py`) | Implemented (`tests/python/test_experiment_4156_archive_v384_activate_v385.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
