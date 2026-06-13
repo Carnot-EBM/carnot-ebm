@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.383",
+  "generated_at": "2026-06-13T11:52:24Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Operational retro for 2026.06.383. Per the authoritative milestone-scoped timing detector, 0 experiment commits were found since activation and both RTX 3090s were idle at the snapshot with 0 compute-bound tasks (so the idle GPU is correct behaviour, gpu_idle_on_compute_bound_tasks=null). However, the on-disk ops/changelog.md shows .383 actually shipped a full slate (exp4135-exp4144), so the zero is the recurring timing-detector false-zero documented across .363-.382, not idle execution. Execution was fine; observability is the only operational defect.",
+  "bottlenecks_identified": [
+    "Authoritative milestone-scoped timing detector false-zeroed AGAIN: 0 experiment commits attributed to 2026.06.383 despite ops/changelog.md showing exp4135-exp4144 shipped this milestone. This is the recurring commit-attribution observability gap across .363-.382, now extending to .383.",
+    "Consequence of the false-zero: no per-experiment durations are available from the authoritative blocks, so slowest-experiment ranking, total wall-time, and compute-bound GPU-efficiency analysis cannot be computed (all locked to 0/empty this milestone).",
+    "GPU idle is explicitly NOT flagged as a bottleneck: the authoritative data shows 0 compute-bound tasks, so both 3090s sitting at 0% is correct behaviour (gpu_idle_on_compute_bound_tasks=null), not a wasted-GPU bug."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone-scoped timing detector's commit-attribution scan (the recurring root cause across .363-.383): it is not matching the conductor's per-experiment commits to the active milestone, so every retro is starved of real durations. One fix restores authoritative timing to all future retros.",
+    "Wire the ops/changelog.md dated-window fallback into the retro generator: when the authoritative detector returns 0 but capstone/experiment commits exist on disk, parse the milestone's exp range + verdicts automatically instead of by hand (the manual step performed this and the prior ~20 retros).",
+    "Add a conductor self-check that warns at milestone close when capstone activity exists but the timing detector reports 0 experiments -- a structural-mismatch alarm that surfaces the false-zero immediately rather than one retro later."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the timing-detector commit-attribution scan -- the single highest-leverage action; one repair unblocks accurate observability for every future milestone retro.",
+    "Add the changelog-window fallback to the retro generator so a detector false-zero degrades gracefully into a real exp-range narrative instead of a 0/0 retro.",
+    "Add the capstone-activity-vs-zero-experiments mismatch alarm to the conductor so the false-zero is caught at milestone close."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "HOW the milestone ran is good (a full slate shipped per the changelog); how we MEASURE it is the standing gap -- the timing detector's false-zero now spans ~20 milestones (.363-.383). The saving from fixing it is observability and retro-authoring overhead, not experiment wall-clock (execution was never the bottleneck), which is why estimated_time_savings_pct is modest. The highest-leverage operational fix is unchanged across these milestones: repair the commit-attribution scan so retros stop being reconstructed by hand from ops/changelog.md."
+}
