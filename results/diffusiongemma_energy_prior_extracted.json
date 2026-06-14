@@ -1,0 +1,44 @@
+{
+  "experiment": "diffusiongemma_energy_prior_extract",
+  "repo": "google/diffusiongemma-26B-A4B-it",
+  "inference_substrate": "live_llm_inference",
+  "runtime": "llama.cpp PR#24423 (diffusion-gemma) CUDA, Q4_K_M GGUF on 1x RTX 3090",
+  "verifier_is_oracle": null,
+  "prompt": "def add(a, b):\n    return a + b\n# add(2,3) ==",
+  "eval_rc": 0,
+  "score_shape": [
+    256,
+    262144
+  ],
+  "score_finite": true,
+  "score_absmax": 24.399,
+  "pos0_top_tokens": [
+    [
+      " corrected",
+      21.84
+    ],
+    [
+      "\n",
+      21.73
+    ],
+    [
+      " is",
+      21.14
+    ],
+    [
+      ")",
+      21.04
+    ],
+    [
+      " (",
+      20.94
+    ],
+    [
+      "        ",
+      20.93
+    ]
+  ],
+  "score_extracted": true,
+  "honest_verdict": "complete: energy_prior_score_extracted_from_frozen_diffusiongemma",
+  "duration_s": 9.3
+}
