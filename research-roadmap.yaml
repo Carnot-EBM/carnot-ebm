@@ -104,7 +104,7 @@ tasks:
 
   - id: exp4208-verifier-as-detector-auroc
     milestone: 2026.06.390
-    title: "PHASE A1 (HEADLINE-COMPLEMENTARY; cheap, cached) -- verifier-as-DETECTOR measurement. The 2026-06-14 P0 item 2: where SELECTION headroom is ~0, can the verifier still FLAG/REJECT a wrong output? Compute detection AUROC (verifier_score ranking is_correct) + precision@recall=0.9 + the accuracy-vs-coverage abstention curve across cached pools {Sudoku TRM snapshots, code HumanEval/MBPP, ARC GAP-4 pool, GSM8K}, and report it AGAINST each domain's SELECTION headroom (.387/.388). The headline is the DIVERGENCE: detection value where selection had none. Positive/negative controls (base rate + random-AUROC~0.5); sanity-check decoding before trusting any number; declare verifier_is_oracle per domain. NO new generation, NO training."
+    title: "PHASE A1 (HEADLINE-COMPLEMENTARY; cheap, cached) -- verifier-as-DETECTOR measurement. The 2026-06-14 P0 item 2: where SELECTION headroom is ~0, can the verifier still FLAG/REJECT a wrong output? Compute detection AUROC (verifier_score ranking is_correct) + precision@recall=0.9 + the accuracy-vs-coverage abstention curve across cached pools {{Sudoku TRM snapshots, code HumanEval/MBPP, ARC GAP-4 pool, GSM8K}}, and report it AGAINST each domain's SELECTION headroom (.387/.388). The headline is the DIVERGENCE: detection value where selection had none. Positive/negative controls (base rate + random-AUROC~0.5); sanity-check decoding before trusting any number; declare verifier_is_oracle per domain. NO new generation, NO training."
     priority: high
     track: verifier-oracle-distinct
     max_turns: 60
@@ -143,19 +143,19 @@ tasks:
            base rate (fraction correct) AND a random-score AUROC~0.5 baseline; AUROC must beat 0.5
            CI95-excl to count. On Sudoku ALSO report AUROC restricted to VALID-BUT-WRONG outputs (the
            hard detection case -- avoid over-claiming on the trivial invalid-grid split).
-        3. Report per-domain {detection_auroc, selector_headroom (from .387/.388), n, verifier_is_oracle}.
+        3. Report per-domain {{detection_auroc, selector_headroom (from .387/.388), n, verifier_is_oracle}}.
            The headline is the DIVERGENCE: a high detection AUROC where selection headroom ~0.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. A clean per-domain detector measurement (high AUROC where selection had none, OR AUROC~0.5 everywhere) is a COMPLETE, decision-grade result either way."
         detection_auroc_by_domain:
-          principle: "BARE per-domain {domain: auroc} -- the detection axis the selector metric cannot see; value for abstention/precision even at zero selection headroom."
+          principle: "BARE per-domain {{domain: auroc}} -- the detection axis the selector metric cannot see; value for abstention/precision even at zero selection headroom."
         selector_headroom_by_domain:
-          principle: "BARE per-domain {domain: oracle@K - vote} from .387/.388 -- the contrast axis; the headline is detection >> 0.5 WHERE selector_headroom ~0."
+          principle: "BARE per-domain {{domain: oracle@K - vote}} from .387/.388 -- the contrast axis; the headline is detection >> 0.5 WHERE selector_headroom ~0."
         verifier_is_oracle_by_domain:
           principle: "Per-domain bool -- on code/Sudoku the executable check IS the oracle (circular/execution-grounded detector); declares honestly which domains' detection is oracle-distinct (Circularity Discipline)."
         controls:
-          principle: "{base_rate, random_auroc, valid_but_wrong_auroc(Sudoku)} -- the positive/negative controls + the degenerate-detector guard that rule out a trivially-high AUROC (FALSE_NEGATIVE_RISK / the invalid-grid trap)."
+          principle: "{{base_rate, random_auroc, valid_but_wrong_auroc(Sudoku)}} -- the positive/negative controls + the degenerate-detector guard that rule out a trivially-high AUROC (FALSE_NEGATIVE_RISK / the invalid-grid trap)."
         random_seed:
           principle: "Determinism precondition; the bootstrap AUROC must be reproducible."
         reproducibility_checksum:
@@ -286,8 +286,8 @@ tasks:
         3. THE GATE: verifier_minus_vote = verifier@1 - vote@1, task-level bootstrap CI95 (>=2000
            resamples). Emit oracle_distinct_beats_vote BARE bool := (CI95 excludes 0 AND delta>0 AND
            headroom exists). Run adversarial_verify.py (it must NOT raise CIRCULAR_MOAT_OVERCLAIM since
-           verifier_is_oracle=false). Honest headline: one of {oracle_distinct_verifier_beats_vote,
-           oracle_distinct_verifier_ties_vote_with_headroom, oracle_distinct_arc_no_headroom_uninformative}.
+           verifier_is_oracle=false). Honest headline: one of {{oracle_distinct_verifier_beats_vote,
+           oracle_distinct_verifier_ties_vote_with_headroom, oracle_distinct_arc_no_headroom_uninformative}}.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. A clean beats-vote win, a clean ties-vote-with-headroom null, and an honest no-headroom-uninformative are ALL COMPLETE, decision-grade -- the first clean read on the oracle-distinct frontier either way."
@@ -577,16 +577,16 @@ tasks:
            baseline_actions for level 1). Read EnvironmentScore.score / levels_completed (ACCURACY) and
            actions-taken vs baseline_actions (EFFICIENCY).
         3. Compare to exp4202's floor on the SAME env. Submit NO scorecard. Report solver_completes_level
-           (BARE bool) + solver_beats_floor {accuracy, efficiency} + no_leaderboard_submission=true.
+           (BARE bool) + solver_beats_floor {{accuracy, efficiency}} + no_leaderboard_submission=true.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. An honest 'solver completes 0 levels but is efficient' or 'blocked_arc_live_unreachable' is a COMPLETE grounding verdict."
         solver_completes_level:
           principle: "BARE bool: levels_completed>=1 on the live env -- the ACCURACY win exp4202 lacked; the north-star's primary axis."
         solver_beats_floor:
-          principle: "{accuracy: solver_score vs floor_score, efficiency: solver_actions vs floor_actions} -- the real-env read on the two north-star axes vs the random floor."
+          principle: "{{accuracy: solver_score vs floor_score, efficiency: solver_actions vs floor_actions}} -- the real-env read on the two north-star axes vs the random floor."
         live_env_metrics:
-          principle: "{score, levels_completed, actions_taken, baseline_actions} from the live EnvironmentScore -- falsifiable real-env evidence, not synthetic-scaffold."
+          principle: "{{score, levels_completed, actions_taken, baseline_actions}} from the live EnvironmentScore -- falsifiable real-env evidence, not synthetic-scaffold."
         no_leaderboard_submission:
           principle: "BARE bool: zero scorecards submitted (Operator-Only External Publication; the online quota gate)."
         preconditions_checked:
@@ -773,9 +773,9 @@ tasks:
            exp4211 show verifier_label_carries_signal (A-vs-B CI excl 0) with positive_control_confirmed?
            (e) certified-corpus latent-or-absent (exp4212)? (f) total ARC levels (exp4213) + did the live
            solver complete a level (exp4214)? (g) strongest SOTA flagged for .391 (exp4215).
-        3. Honest headline: one of {oracle_distinct_verifier_beats_vote_first_moat,
+        3. Honest headline: one of {{oracle_distinct_verifier_beats_vote_first_moat,
            oracle_distinct_verifier_ties_vote_with_headroom_null, oracle_distinct_no_headroom_or_no_learnable_signal,
-           verifier_reward_real_label_carries_signal, verifier_reward_null_distillation}. Whether the
+           verifier_reward_real_label_carries_signal, verifier_reward_null_distillation}}. Whether the
            DiffusionGemma gate is now resolvable (ONLY on an oracle-distinct win with a matched control).
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
@@ -791,7 +791,7 @@ tasks:
         total_arc_levels_solved:
           principle: "The monotonic ARC progress metric after .390 (must be >= 15)."
         upstream_provenance:
-          principle: "{experiment_id, fields_imported, sha256} per cited upstream; the audit trail that a capstone synthesizes nothing from nothing."
+          principle: "{{experiment_id, fields_imported, sha256}} per cited upstream; the audit trail that a capstone synthesizes nothing from nothing."
       ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited; verifier_is_oracle honored (no circular moat headline); the oracle-distinct + verifier-as-reward statuses explicitly decided.
 
       Run: `python3 {project_root}/results/experiment_4218_capstone_v390.py`
