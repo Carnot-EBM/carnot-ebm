@@ -1,0 +1,112 @@
+{
+  "experiment": "oracle_distinct_diffusion_surprisal_detector",
+  "verifier_is_oracle": false,
+  "ar_gpu_offload_evidence": {
+    "nvidia_smi_after_load": "0, 2 MiB\n1, 16988 MiB"
+  },
+  "ar_n_gpu_layers_requested": -1,
+  "n_scored": 157,
+  "n_incorrect_scored": 78,
+  "ar_mean_correct": 7.058,
+  "ar_mean_incorrect": 4.606,
+  "dg_mean_correct": 8.8493,
+  "dg_mean_incorrect": 3.1132,
+  "ar_auroc": 0.1902,
+  "ar_auroc_ci95": [
+    0.1265,
+    0.263
+  ],
+  "diffusion_auroc": 0.0824,
+  "diffusion_auroc_ci95": [
+    0.0417,
+    0.1329
+  ],
+  "diff_minus_ar_auroc": -0.1078,
+  "diff_minus_ar_ci95": [
+    -0.1747,
+    -0.0461
+  ],
+  "neg_control_random_auroc": 0.5328,
+  "neg_control_random_ci95": [
+    0.4463,
+    0.6272
+  ],
+  "ar_status": "complete_gpu",
+  "ar_engine": "llama-cpp-python CUDA (GGML_CUDA=on), n_gpu_layers=-1",
+  "acceptance_gate": {
+    "neg_control_ok": true,
+    "G_detect_raw_two_directional": true,
+    "G_detect_length_controlled": true,
+    "G_length_confounded": true
+  },
+  "reproducibility_checksum": "8ecb6a3430f9c1fd",
+  "honest_verdict": "complete: oracle_distinct_diffusion_surprisal_detects_errors_after_length_control_PRELIMINARY",
+  "duration_s_ar_gpu_leg": 40.4,
+  "length_confound": {
+    "len_mean_correct": 38.3,
+    "len_mean_incorrect": 99.4,
+    "auroc_length_alone": {
+      "auroc": 0.8833,
+      "ci95": [
+        0.8171,
+        0.9425
+      ],
+      "abs_lift": 0.3833,
+      "excludes_0.5": true,
+      "direction": "errors_higher_score"
+    },
+    "corr_diffusion_length": -0.649,
+    "corr_ar_length": -0.594,
+    "diffusion_auroc_length_controlled": {
+      "auroc": 0.3199,
+      "ci95": [
+        0.2395,
+        0.4073
+      ],
+      "abs_lift": 0.1801,
+      "excludes_0.5": true,
+      "direction": "errors_lower_score"
+    },
+    "ar_auroc_length_controlled": {
+      "auroc": 0.3947,
+      "ci95": [
+        0.2997,
+        0.4832
+      ],
+      "abs_lift": 0.1053,
+      "excludes_0.5": true,
+      "direction": "errors_lower_score"
+    },
+    "note": "FoVer incorrect steps are ~2.6x longer; per-token surprisal anti-correlates with length, so the raw AUROC is largely a length artifact. The length-controlled residual is the honest oracle-distinct estimate; a length-matched corpus rerun is required before any headline claim."
+  },
+  "diffusion_detection_two_directional": {
+    "auroc": 0.0824,
+    "ci95": [
+      0.0417,
+      0.1329
+    ],
+    "abs_lift": 0.4176,
+    "excludes_0.5": true,
+    "direction": "errors_lower_score"
+  },
+  "ar_detection_two_directional": {
+    "auroc": 0.1902,
+    "ci95": [
+      0.1265,
+      0.263
+    ],
+    "abs_lift": 0.3098,
+    "excludes_0.5": true,
+    "direction": "errors_lower_score"
+  },
+  "surprising_result_acknowledgment": "Raw diffusion AUROC is extreme (~0.92 inverted); the length-confound analysis shows it is mostly explained by the corpus length imbalance (incorrect steps ~2.6x longer). A headline-eligible oracle-distinct claim requires a length-matched corpus rerun; this artifact reports the length-controlled residual as the honest preliminary estimate.",
+  "inference_substrate": "live_llm_inference",
+  "random_seed": 4211,
+  "duration_s": 40.4,
+  "models": {
+    "diffusion": "google/diffusiongemma-26B-A4B-it Q4_K_M (llama.cpp PR#24423 eval, CPU)",
+    "ar_baseline": "unsloth/gemma-4-26B-A4B-it-GGUF UD-Q4_K_M (CUDA llama-cpp-python, GPU)"
+  },
+  "corpus": "data/fover_corpus.jsonl (balanced 80/80 subset, seed 4211)",
+  "summary": "Oracle-distinct (verifier_is_oracle=False) error-DETECTION on labeled FoVer steps. Raw diffusion-surprisal AUROC=0.082 (inverted 0.918) is LARGELY a length artifact (incorrect steps 2.6x longer; length-alone AUROC=0.883). Length-controlled residual: diffusion 0.320 (inverted 0.68, abs_lift 0.18) > AR 0.395 (inverted 0.605, abs_lift 0.11) -- a weak PRELIMINARY oracle-distinct signal (errors are MORE fluent/lower-surprisal). Headline claim needs a length-matched corpus rerun."
+}
