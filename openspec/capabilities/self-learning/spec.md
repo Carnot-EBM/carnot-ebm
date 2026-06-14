@@ -13396,6 +13396,87 @@ positive CI95-separated A-vs-B delta.
 
 ---
 
+## REQ-LEARN-4168-V2: Gate-082 Defensive Verifier Graft Recomputes Preconditions From Stable Files
+
+**Given** the operator lowered the faithful-baseline gate from `0.85` to
+`0.82` on 2026-06-13, Exp 4168 v2 SHALL ignore stale Exp 4167 monitor
+artifacts and recompute preconditions from the stable training files before
+any copy, candidate sampling, verifier rerank, or reward-graft work. The
+baseline is eligible only when
+`results/trm_runs/sudoku_extreme_baseline/last.ckpt.bestval` parses to a
+finite value greater than or equal to `0.82`, the PID in
+`results/trm_runs/contiguous_run.pid` is not alive according to `ps -p`, and
+`nvidia-smi --query-compute-apps=pid` has no associated `train.py` process.
+
+**When** any gate-082 precondition fails, Exp 4168 v2 SHALL write
+`results/experiment_4168_decisive_verifier_graft_v2_gate082.json` with
+`graft_deferred=true`, an honest terminal-prefixed verdict containing
+`graft_deferred_outerloop_training` and the current `bestval`, deferred
+metric objects for `rerank_lift_vs_vote` and `rft_vs_ablation_delta`, and
+read-only action flags proving it did not train, did not terminate any
+process, did not copy the stable checkpoint, and did not sample candidates.
+
+**When** all gate-082 preconditions pass, Exp 4168 v2 SHALL copy
+`results/trm_runs/sudoku_extreme_baseline/last.ckpt` into a task-local path
+under `results/trm_runs/experiment_4168_decisive_verifier_graft_v2_gate082/`
+before any model load or candidate sampling. All rerank and A-vs-B
+deconfounding work SHALL use that copy and SHALL NOT write to the stable
+checkpoint directory.
+
+**When** the copied-checkpoint branch runs, Exp 4168 v2 SHALL sample `K`
+candidate solutions per held-out Sudoku puzzle, compare TRM vote, executable
+Sudoku verifier rerank, and oracle best-of-K, and report
+`rerank_lift_vs_vote` as verifier pass@1 minus vote pass@1 with CI95 plus the
+verifier-vs-oracle gap. The A-vs-B arm SHALL use N-matched verifier-certified
+and vote-certified corpora from the copied-checkpoint candidates. A supplied
+native RFT runner SHALL train both arms from the copied checkpoint; the
+bounded default path SHALL report the matched-label deconfound with
+`rft_native_training_launched=false` rather than claiming native training ran.
+
+**Then** the Exp 4168 v2 artifact SHALL include top-level fields
+`honest_verdict`, `graft_deferred`, `rerank_lift_vs_vote`,
+`rft_vs_ablation_delta`, and `verifier_value_added`, each carrying these exact
+principles:
+
+- `honest_verdict`: "Terminal-prefixed. An honest deferral, an A>B win, or an A~=B null are all COMPLETE."
+- `graft_deferred`: "Bare bool: True if the baseline was not faithful+stable -> deferred. Prevents an uninformative graft + a collision with the outer-loop run."
+- `rerank_lift_vs_vote`: "pass@1 lift from verifier-reranking (if grafted); the executable-verifier discrimination signal."
+- `rft_vs_ablation_delta`: "The de-confounded A-vs-B held-out delta with CI -- THE moat measurement."
+- `verifier_value_added`: "Bare bool: did the graft beat the vote ablation? Resolves the moat question + the DiffusionGemma gate."
+
+The acceptance gate passes when either `graft_deferred=true` because the
+fresh gate-082 baseline was not faithful and stable, or a copied-checkpoint
+graft reports rerank lift, A-vs-B CI95, and the bare `verifier_value_added`
+bool.
+
+### SCENARIO-LEARN-4168-V2-DEFER: Fresh Gate-082 Failure Stops Before Copy Or Training
+
+**Given** `last.ckpt.bestval` is missing, unparsable, or below `0.82`, the PID
+file still names a live process, or a GPU compute PID resolves to a `train.py`
+process
+**When** Exp 4168 v2 starts
+**Then** it writes the gate-082 artifact with `graft_deferred=true`, the
+current bestval evidence, deferred metric objects, no checkpoint copy, no
+candidate sampling, no training, and no process termination attempt.
+
+### SCENARIO-LEARN-4168-V2-COPY-GRAFT: Fresh Gate-082 Pass Uses Only The Task-Local Copy
+
+**Given** `last.ckpt.bestval >= 0.82`, the recorded contiguous-run PID is not
+alive, and no GPU compute PID resolves to `train.py`
+**When** Exp 4168 v2 runs the rerank and A-vs-B arms
+**Then** it copies the stable checkpoint to the task-local v2 path, samples
+candidates from that copy, reports `rerank_lift_vs_vote` with CI95 and
+verifier-vs-oracle gap, reports `rft_vs_ablation_delta` with CI95, and sets
+`verifier_value_added` from the positive CI95-separated A-vs-B delta.
+
+## Implementation Status (REQ-LEARN-4168-V2)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4168-V2 | Implemented (python/carnot/experiment_4168_decisive_verifier_graft_v2_gate082.py, Exp 4168 v2) | Implemented (tests/python/test_experiment_4168_decisive_verifier_graft_v2_gate082.py) |
+
+---
+
 ## REQ-LEARN-4139: Decisive Sudoku Verifier Graft With Oracle Separation
 
 **Given** Exp 4138 has written
