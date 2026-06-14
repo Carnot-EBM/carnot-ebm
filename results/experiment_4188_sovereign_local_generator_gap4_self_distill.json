@@ -281,5 +281,13 @@
     },
     "recovered": 1
   },
-  "title": "Sovereign local GAP-4 generator with hardened execution gate"
+  "title": "Sovereign local GAP-4 generator with hardened execution gate",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=1.168103 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
