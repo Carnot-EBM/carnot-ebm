@@ -8459,3 +8459,4 @@ c |
 | 2026-06-14 06:38 UTC | PHASE A3 (DECISIVE, gated_on A1 headroom>=0.10) —  | OK | 85 passed, 1 warning in 5.59s |
 | 2026-06-14 06:53 UTC | PHASE B — GAP-3 Stage-1 model-native ARC energy (C | OK | 88 passed, 1 warning in 4.52s |
 | 2026-06-14 07:16 UTC | PHASE C — ARC-AGI-3 INCREMENTAL +1 (monotonic). No | OK | 88 passed, 1 warning in 4.84s |
+| 2026-06-14 07:31 UTC | PHASE D1 — SOTA-INGESTION SLOT (reserved; bleeding | OK | 101 passed, 1 warning in 5.83s |
