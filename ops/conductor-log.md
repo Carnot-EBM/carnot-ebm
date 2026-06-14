@@ -8460,3 +8460,4 @@ c |
 | 2026-06-14 06:53 UTC | PHASE B — GAP-3 Stage-1 model-native ARC energy (C | OK | 88 passed, 1 warning in 4.52s |
 | 2026-06-14 07:16 UTC | PHASE C — ARC-AGI-3 INCREMENTAL +1 (monotonic). No | OK | 88 passed, 1 warning in 4.84s |
 | 2026-06-14 07:31 UTC | PHASE D1 — SOTA-INGESTION SLOT (reserved; bleeding | OK | 101 passed, 1 warning in 5.83s |
+| 2026-06-14 08:24 UTC | PHASE D2 — VERIFIER-REGISTRY + GAPS HYGIENE (reser | OK | 89 passed, 1 warning in 5.12s |
