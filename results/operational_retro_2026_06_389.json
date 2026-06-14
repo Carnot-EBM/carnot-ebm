@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.389",
+  "generated_at": "2026-06-14T19:12:34Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The milestone-scoped timing detector again reported a FALSE-ZERO (0 experiment commits, 0 wall-time minutes, 0 compute-bound tasks). This is not idle compute: verified on-disk artifacts (results/experiment_4197..4206_*.json, mtimes 2026-06-14 10:36-15:05 UTC) show the milestone actually ran ~10 tasks ending in the UNGATED capstone exp4206 (verifier-as-reward headline = NO-OPERATING-POINT, ARC held at 15 levels / 13 games, 4 flagged-adversarial artifacts correctly skipped). The locked numeric fields are kept at what the broken detector saw; the only operational bottleneck this milestone is observability, not execution.",
+  "bottlenecks_identified": [
+    "OBSERVABILITY (primary, recurring): the conductor's milestone->commit association reported zero experiment commits since activation of 2026.06.389, the same false-zero documented continuously from .363 through .389. Ground truth on disk contradicts it (exp4197-exp4206 committed across ~4.5h of wall time on 2026-06-14), so total_wall_time_minutes / experiments_completed / compute_bound_experiments_count are detector-blindness artifacts, not real zeros. Every retro since .363 has had to be reconstructed by hand from git diff + ops/changelog.md + results/ mtimes.",
+    "PROCESS (headline-collection): the decisive measurement of the milestone -- the de-confounded verifier-as-reward A-vs-B delta on code -- was never collected because the 3-arm RFT training arm was built but not launched, and the Phase-0 operating point was skipped as flagged_adversarial. Setup compute was spent on a harness whose training arm never ran, so the milestone's headline question resolved to NO-OPERATING-POINT rather than a measured positive or honest null."
+  ],
+  "improvements_suggested": [
+    "Repair the timing detector's milestone<->commit association in the conductor so milestone-scoped retros stop emitting false-zeros (root cause of the .363-.389 streak).",
+    "Add a results-scan fallback: when the commit-based detector returns zero, scan results/experiment_*.json with mtime later than milestone-activation time plus the milestone's changelog exp-range, and auto-populate total_wall_time_minutes / experiments_completed / compute_bound_experiments_count / slowest_experiments from those on-disk artifacts. This converts the retro from hand-reconstructed to self-populating.",
+    "For multi-phase headline experiments (build -> launch -> collect), gate the capstone headline field on the decisive arm having actually LAUNCHED (require a non-null training_run_id / a_vs_b_delta / CI); otherwise emit blocked_training_not_launched at the phase. Surfaces a 'harness built but training not launched' state at the phase boundary instead of only at capstone aggregation.",
+    "Keep the fabrication-gate SKIP discipline as-is: the capstone correctly skipped 4 of 10 upstream artifacts flagged_adversarial (exp4197, exp4198, exp4200, exp4204). Working as intended -- no change needed; cite as evidence the gate is load-bearing."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the milestone->commit detector AND add the results/*.json mtime + changelog scan fallback. Highest leverage by far: it ends ~27 consecutive false-zero retros (.363-.389) and removes the manual git/changelog/mtime reconstruction the outer-loop now performs every single milestone.",
+    "Add a phase-launch precondition to multi-arm headline experiments so the capstone headline must trace to a launched training arm (non-null delta/CI), else blocked_training_not_launched. Prevents a whole milestone resolving to NO-OPERATING-POINT after build-only work.",
+    "Preserve the flagged_adversarial SKIP discipline in capstones (4/10 upstream skipped this milestone). Low-cost, already correct -- retain rather than relax."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "For roughly the 27th consecutive milestone the operational story is unchanged: execution was healthy (~10 tasks ran, the capstone aggregated upstream at sub-second cost via inference_substrate=aggregation_from_upstream_artifacts, and the fabrication gate correctly quarantined 4 flagged artifacts), yet the timing detector saw none of it. The durable lever is no longer speed -- it is fixing observability so the retro reflects reality, because the hand reconstruction the author repeats each milestone is itself the proof the detector fix is overdue."
+}

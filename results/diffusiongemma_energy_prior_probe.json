@@ -3,10 +3,12 @@
   "repo": "google/diffusiongemma-26B-A4B-it",
   "inference_substrate": "live_llm_inference",
   "verifier_is_oracle": null,
-  "bnb_fallback_reason": "OutOfMemoryError('CUDA out of memory. Tried to allocate 968.00 MiB. GPU 0 has a total capacity of 23.56 GiB of which 948.31 MiB is free. Including non-PyTorch memory, this process has 22.62 GiB memory",
-  "model_loaded": false,
-  "error": "IndexError('list index out of range')",
-  "traceback": "on3.12/site-packages/transformers/models/auto/auto_factory.py\", line 406, in from_pretrained\n    return model_class.from_pretrained(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py\", line 4307, in from_pretrained\n    device_map = _get_device_map(model, device_map, max_memory, hf_quantizer)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/transformers/integrations/accelerate.py\", line 365, in _get_device_map\n    device_map = infer_auto_device_map(\n                 ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/transformers/integrations/accelerate.py\", line 724, in infer_auto_device_map\n    module_size_with_ties, tied_module_names, tied_modules = get_module_size_with_ties(\n                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/transformers/integrations/accelerate.py\", line 82, in get_module_size_with_ties\n    tied_module_index = [i for i, (n, _) in enumerate(modules_to_treat) if tied_param.startswith(n + \".\")][0]\n                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^\nIndexError: list index out of range\n",
-  "honest_verdict": "blocked_diffusiongemma_load_failed",
-  "duration_s": 96.8
+  "load_mode": "4bit_nf4_devmap_auto_2gpu",
+  "model_class": "DiffusionGemmaModel",
+  "model_loaded": true,
+  "forward_error": "RuntimeError('Tensor.item() cannot be called on meta tensors')",
+  "forward_signature": "(input_ids: torch.LongTensor | None = None, attention_mask: torch.Tensor | dict | None = None, past_key_values: transformers.cache_utils.Cache | None = None, position_ids: torch.LongTensor | None = None, decoder_input_ids: torch.LongTensor | None = None, self_conditioning_logits: torch.FloatTensor | None = None, self_conditioning_mask: torch.BoolTensor | None = None, decoder_attention_mask: torch.Tensor | dict | None = None, decoder_position_ids: torch.LongTensor | None = None, **kwargs: Unpack[transformers.utils.generic.TransformersKwargs]) -> transformers.models.diffusion_gemma.modeling_diffusion_gemma.DiffusionGemmaModelOutputWithPast",
+  "score_extracted": false,
+  "honest_verdict": "complete: model_loaded_score_extraction_needs_diffusion_api",
+  "duration_s": 96.0
 }
