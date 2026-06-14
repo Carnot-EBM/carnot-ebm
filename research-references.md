@@ -22415,6 +22415,56 @@ ensemble); arxiv.org/abs/2603.02193 (Symbol-Equivariant RRM); arxiv.org/abs/2510
 
 ---
 
+## .388 planning sweep (2026-06-14) — the EFFICIENCY moat (verifier vs LLM-judge cost) / sovereign generation / now-unlocked verifier-guided diffusion
+
+Filed by the .388 planner before designing the milestone (research-program.md "Do arxiv research
+first"). The .387 capstone (exp4183) PROVED the verifier moat on an executable domain (code: ARM-A
+0.84 vs SC-vote 0.66, +0.18 CI95[0.08,0.30], matched no-verifier control also +0.18) — BUT
+`efficiency_parity=false`: the test compared the verifier vs *self-consistency vote* (nearly free),
+not vs an *LLM-as-judge* (the north-star §5 win condition: "equally effective as the LM at lower
+cost", target "parity at 10-100x cheaper"). So .388's central NEW question: **is Carnot's
+executable/energy verifier within-CI of an LLM-as-judge on accuracy while being >=10x cheaper in
+wall-clock/tokens?** Plus: the GAP-4 execution verifier (the only ARC positive) needs a SOVEREIGN
+local generator + a production-safe graded gate; and the DiffusionGemma gate is now MET.
+
+DECISION-RELEVANT NEW (surfaced by the .388 web sweep; verified via WebSearch 2026-06-14):
+
+- **arXiv:2602.22871** — "Test-Time Scaling with Diffusion Language Models via Reward-Guided
+  Stitching" (2026). Reward-guided assembly of diffusion-LM partial generations at test time —
+  the freshest verifier-as-guidance-for-diffusion method → directly relevant to the now-unlocked
+  DiffusionGemma verifier-guided decoding (.388 Phase C1). https://arxiv.org/abs/2602.22871
+- **arXiv:2604.06260** — "S^3: Stratified Scaling Search for Test-Time in Diffusion Language Models"
+  (2026). Structured test-time search over diffusion-LM denoising → the search-budget framing for
+  energy-guided diffusion. https://arxiv.org/abs/2604.06260
+- **OpenReview `cve4NOiyVp`** — "Tuning LLM Judge Design Decisions for 1/1000 of the Cost" (2026).
+  A multi-fidelity search over judge configs finds judges that Pareto-dominate on accuracy AND cost
+  with open-weight models → the LLM-judge comparator design + cost-normalization protocol for the
+  .388 efficiency moat (A2). https://openreview.net/forum?id=cve4NOiyVp
+- **2026 cascade-verification trend (corroboration, not a single paper)** — lightweight model judges
+  (DeBERTa-440M, sub-200ms; DeepSeek-class 60-1000x cheaper than frontier verifiers) fronted by
+  deterministic checks, with the frontier LLM-judge reserved for nuanced cases. This is EXACTLY
+  Carnot's Meta-EBM Cascade Router thesis (cheap executable energy first, escalate to the LLM only
+  on failure). The efficiency moat (A2) measures the cheap-layer-beats-expensive-judge claim head-on.
+
+Carried forward from the .387 sweep (still the load-bearing references for .388, verified IDs):
+**arXiv:2504.01005** (SC is compute-cheaper than a generative verifier until ~8x — the efficiency
+bar A2 must beat), **arXiv:2504.16828** (ThinkPRM — the high-quality process-verifier cost
+comparator), **arXiv:2605.07395** (apparent headroom is often an evaluation artifact — keep the
+executable-oracle headroom gate), **arXiv:2602.01849** + **arXiv:2509.13866** (self-rewarding SMC /
+masked-diffusion-as-energy-minimization — DiffusionGemma theory), **arXiv:2605.05138** (executable
+world models for ARC-AGI-3 — the GAP-4 execution-verifier-as-pruner thesis), **arXiv:2510.20607**
+(CEM compositional ARC energy — re-flagged for OPERATOR authorization: the GAP-3 trained-content-
+energy SELECTOR lineage is RETIRED on `ops/exclusion_manifest.yaml` pending operator sign-off +
+gate-1R, so .388 does NOT auto-activate it), **arXiv:2402.06457** (V-STaR — the .387 learned
+selector, .388 cross-domain-transfer candidate).
+
+Sources (this sweep): arxiv.org/abs/{2602.22871, 2604.06260, 2602.01849, 2509.13866, 2504.01005,
+2504.16828, 2605.07395, 2605.05138, 2510.20607, 2402.06457} ; openreview.net/forum?id=cve4NOiyVp .
+Fresh per-milestone discovery is delegated to the .388 SOTA-ingestion slot (exp4192) per the
+SOTA-Ingestion Cycle Discipline.
+
+---
+
 ## .387 planning sweep (2026-06-14) — verifier-as-reward / headroom / learned ARC energy / energy-guided diffusion
 
 Filed by the .387 planner before designing the milestone (research-program.md "Do arxiv
