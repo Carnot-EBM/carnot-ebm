@@ -1,0 +1,11 @@
+{
+  "experiment": "diffusiongemma_energy_prior_transformers",
+  "repo": "google/diffusiongemma-26B-A4B-it",
+  "inference_substrate": "live_llm_inference",
+  "verifier_is_oracle": null,
+  "model_loaded": false,
+  "error": "OutOfMemoryError('CUDA out of memory. Tried to allocate 968.00 MiB. GPU 0 has a total capacity of 23.56 GiB of which 166.31 MiB is free. Including non-PyTorch memory, this process has 23.39 GiB memory in use. Of the allocated memory 23.13 GiB is allocated by PyTorch, and 6.31 MiB is reserved by PyTo",
+  "traceback": "rmers/core_model_loading.py\", line 830, in convert\n    collected_tensors = self.materialize_tensors()\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/transformers/core_model_loading.py\", line 797, in materialize_tensors\n    tensors = [func() for func in tensors]\n               ^^^^^^\n  File \"/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/transformers/core_model_loading.py\", line 1005, in _job\n    return _materialize_copy(tensor, device, dtype)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/transformers/core_model_loading.py\", line 991, in _materialize_copy\n    tensor = tensor.to(device=device, dtype=dtype)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntorch.OutOfMemoryError: CUDA out of memory. Tried to allocate 968.00 MiB. GPU 0 has a total capacity of 23.56 GiB of which 166.31 MiB is free. Including non-PyTorch memory, this process has 23.39 GiB memory in use. Of the allocated memory 23.13 GiB is allocated by PyTorch, and 6.31 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)\n",
+  "honest_verdict": "blocked_diffusiongemma_load_failed",
+  "duration_s": 106.6
+}

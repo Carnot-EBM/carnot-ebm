@@ -1,3 +1,67 @@
+## 2026-06-14 .390 planning sweep — the ORACLE-DISTINCT frontier (does a LEARNED verifier capture the WRONG-MAJORITY headroom where execution is NOT the oracle)
+
+Added by the `.390 planning sweep (Claude Opus 4.8, outer-loop). The `.390 headline takes the
+operator's **2026-06-14 P0 directive ("2+3+1"): re-aim the verifier program at the ORACLE-DISTINCT
+frontier.** `.389 proved (again) that Carnot's verifier wins everywhere it can EXECUTE (code, ARC
+GAP-4) — but those wins are CIRCULAR (verifier == executable oracle), valid but not a moat. The
+deep, defensible, still-UNPROVEN claim is an **oracle-DISTINCT** (learned/energy) verifier that
+captures headroom where execution is NOT trivially the oracle — concretely, closing the
+GAP-3-energy-ties-vote-on-ARC gap. The `.386 V-STaR learned selector (exp4176, arXiv:2402.06457,
+AUROC 0.9792 on code) is the oracle-distinct verifier CLASS that already exists in-repo; `.390
+applies it to ARC and asks whether it beats vote OFF-ORACLE with a matched no-verifier control
+(CI95-excl-0). The two load-bearing finds below frame the headroom precisely: vote loses to the
+LARGEST basin, not the most ACCURATE one (ARBITER), and a fine-grained learned signal recovers the
+minority-vote-correct answers vote discards (SCOPE).
+
+**The strongest methods mapped onto the `.390 oracle-distinct headline (each verified; real arXiv IDs):**
+
+- **ARBITER — "Reasoning Trajectory Basins and Majority Vote Failures in Test-Time Sampling"
+  (arXiv:2605.26172).** Identifies "wrong-majority failures": sampled trajectories cluster into
+  reasoning BASINS and majority vote picks the LARGEST basin, not the most accurate — the correct
+  answer is present in the pool but loses to a bigger wrong basin. This is EXACTLY the oracle-distinct
+  headroom Carnot's learned ARC verifier targets (recover the correct-but-outvoted answer). Their
+  Arbiter treats consensus as a PRIOR and overrides only on accumulated same-model evidence — a
+  conservative-override pattern worth mirroring in the `.390 ARC reranker (override vote only when the
+  learned verifier's margin is high). MAP: the A3 ARC-rerank gate IS the test of whether a learned
+  verifier recovers wrong-majority failures.
+- **SCOPE — "Beyond Majority Voting: Towards Fine-grained and More Reliable Reward Signal for
+  Test-Time RL" (arXiv:2512.15146).** Step-wise confidence weighting + Pareto-partitioned subgroups
+  recover minority-vote-correct answers that flat majority vote discards (fixes confirmation bias +
+  sparse reward). MAP: the fine-grained learned signal is the oracle-distinct discriminator; informs
+  the A2 V-STaR-on-ARC feature design (per-step / per-region confidence, not a single global vote).
+- **ThinkPRM — "Process Reward Models That Think" (arXiv:2504.16828).** A learned process verifier
+  (oracle-distinct) that beats baselines under best-of-N + reward-guided search on ProcessBench /
+  MATH-500 / AIME. Already in project memory (`reference_mai_thinking_1_hill_climbing`). MAP: the
+  learned-verifier-beats-vote precedent the A3 gate must match on ARC.
+- **V-STaR (arXiv:2402.06457).** Train the selector on ACCEPTED **and** REJECTED traces (learn a
+  correctness boundary, not imitate winners). Already implemented in-repo (exp4176). MAP: the A2 ARC
+  verifier reuses this class; the off-fold AUROC is the build deliverable.
+- **Calibrated Reasoning — "An Explanatory Verifier for Dynamic and Efficient Problem-Solving"
+  (arXiv:2509.19681).** A calibrated/explanatory learned verifier for abstention + efficiency. MAP:
+  the verifier-as-DETECTOR axis (A1) — detection AUROC + the accuracy-vs-coverage abstention curve.
+- **A Survey of Process Reward Models (arXiv:2510.08049).** Outcome→process supervision taxonomy.
+  MAP: situates the oracle-distinct learned-verifier program in the PRM landscape.
+- **ExecVerify — "White-Box RL with Verifiable Stepwise Rewards for Code Execution Reasoning"
+  (arXiv:2603.11226)** and **EVOM — "Execution-Verified RL for Optimization Modeling"
+  (arXiv:2604.00442).** Execution-feedback-as-reward, closed-loop, off-reference. MAP: the
+  verifier-as-REWARD-on-code finish (B1) — the RLVR/RLEF baselines a positive B1 must be framed
+  against (execution label as the reward channel; cf. the `.389 sweep's RLEF arXiv:2410.02089).
+- **"Knowing When Not to Answer: Evaluating Abstention in Multimodal Reasoning" (arXiv:2604.14799).**
+  Abstention evaluation beyond coarse unanswerable splits. MAP: the detector-axis (A1) abstention
+  framing — detection has value even where selection headroom is ~0.
+
+**Bottom line for the `.390 roadmap.** HEADLINE (Phase A) = does a LEARNED (oracle-distinct) verifier
+beat majority vote on ARC where execution is NOT the oracle, with a matched control (close
+GAP-3-ties-vote) — framed by ARBITER's wrong-majority-failures + SCOPE's minority-recovery, built on
+the in-repo V-STaR class, complemented by the cheap detector-AUROC measurement. OWED (Phase B) =
+finish the de-confounded verifier-as-reward A-vs-B on code (the `.389 operating point CLEARED:
+Phase-0 0.956, Youden-J 0.414, headroom 0.600, corpora N-matched A=776/B=776/C=742 — only the
+BACKGROUND training infra died; resume synchronous-accumulate). Flagged for `.391: whichever of
+{oracle-distinct-verifier-confirmation, learned-ARC-energy-distill, abstention-deployment} the `.390
+A3 result points toward.
+
+---
+
 ## 2026-06-14 .389 planning sweep — verifier-as-REWARD (the de-confounded A-vs-B; the confound IS the ballgame)
 
 Added by the `.389 planning sweep (Claude Opus 4.8, outer-loop). The `.389 headline

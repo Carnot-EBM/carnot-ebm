@@ -1,0 +1,12 @@
+{
+  "experiment": "diffusiongemma_energy_prior_gguf",
+  "inference_substrate": "live_llm_inference",
+  "quant": "Q4_K_M_gguf",
+  "verifier_is_oracle": null,
+  "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+  "model_loaded": false,
+  "error": "ValueError('Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf')",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/scripts/exp_diffusiongemma_energy_prior_gguf.py\", line 51, in main\n    llm = Llama(\n          ^^^^^^\n  File \"/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/llama_cpp/llama.py\", line 381, in __init__\n    internals.LlamaModel(\n  File \"/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/llama_cpp/_internals.py\", line 62, in __init__\n    raise ValueError(f\"Failed to load model from file: {path_model}\")\nValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf\n",
+  "honest_verdict": "blocked_gguf_load_failed",
+  "duration_s": 0.3
+}
