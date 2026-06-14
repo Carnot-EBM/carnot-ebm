@@ -658,6 +658,28 @@ def run_agent(
                             # Mid-write race or non-JSON artifact —
                             # treat as not-yet-finished to be safe.
                             bootstrap_only = True
+                            # 2026-06-14 (outer-loop): YAML deliverables (the
+                            # planner's research-roadmap-next.yaml) are not JSON,
+                            # so json.load always fails here and the planner used
+                            # to idle-hang ~20 min after writing the roadmap until
+                            # the wall-clock+idle timeout killed it. A YAML file
+                            # that parses to a dict with milestone+tasks IS a
+                            # finished roadmap -> allow the stable-deliverable
+                            # early-kill. JSON deliverables are unaffected.
+                            if str(deliverable_file).endswith((".yaml", ".yml")):
+                                try:
+                                    with deliverable_file.open(
+                                        "r", encoding="utf-8"
+                                    ) as _yfh:
+                                        _ydoc = yaml.safe_load(_yfh)
+                                    if (
+                                        isinstance(_ydoc, dict)
+                                        and _ydoc.get("milestone")
+                                        and _ydoc.get("tasks")
+                                    ):
+                                        bootstrap_only = False
+                                except (OSError, yaml.YAMLError):
+                                    bootstrap_only = True
                         if bootstrap_only:
                             # Don't reset the stability tracker — keep
                             # tracking so we eventually fall through to
@@ -3327,6 +3349,12 @@ continuations", 2026-05-29):
         timeout=1200,
         model_override=AGENT_MODEL_PLANNER,
         agent_type_override=AGENT_TYPE_PLANNER,
+        # 2026-06-14 (outer-loop): wire the roadmap as the deliverable so the
+        # stable-deliverable early-kill fires ~2 min after the planner finishes
+        # writing it, instead of idle-hanging ~20 min until the wall-clock
+        # timeout. The YAML-aware bootstrap check (see run_agent) only early-exits
+        # once the roadmap parses with milestone+tasks and is stable 120s.
+        deliverable_path="research-roadmap-next.yaml",
     )
 
     if not success:
@@ -3981,6 +4009,12 @@ def _plan_next_milestone(push: bool = True) -> bool:
         timeout=1200,
         model_override=AGENT_MODEL_PLANNER,
         agent_type_override=AGENT_TYPE_PLANNER,
+        # 2026-06-14 (outer-loop): wire the roadmap as the deliverable so the
+        # stable-deliverable early-kill fires ~2 min after the planner finishes
+        # writing it, instead of idle-hanging ~20 min until the wall-clock
+        # timeout. The YAML-aware bootstrap check (see run_agent) only early-exits
+        # once the roadmap parses with milestone+tasks and is stable 120s.
+        deliverable_path="research-roadmap-next.yaml",
     )
 
     if not success:
