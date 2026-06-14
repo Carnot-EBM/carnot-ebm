@@ -8468,3 +8468,4 @@ c |
 | 2026-06-14 09:58 UTC | Archive .387 -> activate .388; KEEP the hardened g | OK | 91 passed, 1 warning in 5.04s |
 | 2026-06-14 10:19 UTC | PHASE A1 — Headroom re-census + LLM-as-judge basel | OK | 87 passed, 1 warning in 5.36s |
 | 2026-06-14 10:37 UTC | PHASE A2 (DECISIVE, gated_on A1 headroom>=0.10) —  | OK | 85 passed, 1 warning in 7.39s |
+| 2026-06-14 10:50 UTC | PHASE B1 — GAP-4 graded execution-energy gate (pro | OK | 91 passed, 1 warning in 5.22s |
