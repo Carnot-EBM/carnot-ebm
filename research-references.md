@@ -22412,3 +22412,52 @@ learnopencv.com/trm-tiny-ai-models-outsmarting-giants-on-complex-puzzles (TRM + 
 thinking-reward); scalingintelligence.stanford.edu/pubs/weaver.pdf (Weaver weak-verifier
 ensemble); arxiv.org/abs/2603.02193 (Symbol-Equivariant RRM); arxiv.org/abs/2510.22832
 (HRM-Agent); arxiv.org/abs/2510.04871 (TRM foundational); arxiv.org/abs/2511.02886 (TTA-TRM).
+
+---
+
+## .387 planning sweep (2026-06-14) — verifier-as-reward / headroom / learned ARC energy / energy-guided diffusion
+
+Filed by the .387 planner before designing the milestone (research-program.md "Do arxiv
+research first"). Central .387 question: does an external energy/executable VERIFIER add value
+over a generator's self-consistency vote, and ONLY where selectable headroom exists
+(oracle@k >> baseline pass@1)? Plus the GAP-3 learned ARC energy + the gated DiffusionGemma scale-up.
+
+DECISION-RELEVANT NEW (not previously filed):
+
+- **arXiv:2605.07395** — "Unsolvability Ceiling in Multi-LLM Routing: An Empirical Study of
+  Evaluation Artifacts" (2026). MOST decision-relevant: a large fraction of apparent reranking
+  "headroom" (oracle−baseline gap) is an EVALUATION ARTIFACT (judge bias, truncation, format
+  mismatch); naive routers collapse to majority-class. → the .387 headroom gate MUST use an
+  OBJECTIVE/EXECUTABLE oracle (run code/tests, not an LLM judge) and sanitize the measurement,
+  else a positive verifier result could be measuring artifact and a null could hide real value.
+- **arXiv:2504.01005** — "When To Solve, When To Verify: Compute-Optimal Problem Solving and
+  Generative Verification" (2025). Self-Consistency is more compute-efficient than a generative
+  verifier until ~8× compute. Sets the EFFICIENCY bar the energy verifier must beat (report
+  accuracy AND cost in the moat test — north-star §5 efficiency-parity).
+- **arXiv:2504.16828** — "Process Reward Models That Think" (ThinkPRM, 2025). Verifier advantage
+  is budget-conditional (beats SC at high budget, ties at low). Confirms the moat is conditional.
+- **arXiv:2510.20607** — "Generalizable Reasoning through Compositional Energy Minimization"
+  (2025). Learns energy landscapes over sub-problem solution spaces and composes them at test
+  time, solving larger-than-trained instances. Closest published learned compositional content/
+  rule-aware energy for puzzles → directly relevant to GAP-3 / the ARC transition-EBM (Stage 2).
+- **arXiv:2512.11847** — "Tiny Recursive Models on ARC-AGI-1: Inductive Biases, Identity
+  Conditioning, and Test-Time Compute" (Jan 2026). 1000-sample majority-vote adds ~11pp over
+  single-pass; puzzle-ID ablation → 0% without the identifier. The headroom-vs-selection
+  decomposition for the TRM substrate (corroborates GAP-3's "headroom is real, vote leaves it").
+- **arXiv:2602.01849** — "Self-Rewarding Sequential Monte Carlo for Masked Diffusion Language
+  Models" (2026). Trajectory-confidence self-reward weights SMC particles to steer masked-diffusion
+  sampling — newest training-free energy/verifier-as-guidance for discrete diffusion → DiffusionGemma.
+- **arXiv:2602.21189** — "Why Pass@k Optimization Can Degrade Pass@1" (2026). Raising the oracle@k
+  ceiling can hurt pass@1; "increase coverage" ≠ "improve selection" — a caution for the moat metric.
+- **arXiv:2509.13866** — "Masked Diffusion Models as Energy Minimization" (2025). Theory bridge:
+  masked-diffusion sampling = energy minimization (underwrites the DiffusionGemma energy mapping).
+- **arXiv:2605.05138** — "Executable World Models for ARC-AGI-3 in the Era of Coding Agents" (2026,
+  SOTA). Coding agent induces a Python transition model and RUNS verifiers to prune inconsistent
+  candidates — the executable-verifier-as-pruner instantiation of Carnot's thesis (ARC harness).
+
+Already filed (no new successor found): V-STaR arXiv:2402.06457 (accepted+rejected trace selector —
+the .387 A2 method), SEDD 2310.16834, EDLM 2410.21357, EntRGi 2602.05000, classifier-guided
+2105.05233, CFG 2207.12598, TRM 2510.04871, TTA-TRM 2511.02886, model-native skills 2604.17614.
+
+Sources (this sweep): arxiv.org/abs/{2605.07395, 2504.01005, 2504.16828, 2510.20607, 2512.11847,
+2602.01849, 2602.21189, 2509.13866, 2605.05138}.
