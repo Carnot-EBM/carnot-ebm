@@ -41,10 +41,11 @@ def main() -> None:
         llm = None
         # fp8 TP=2 fits 26B on 2x3090 (~13GB/GPU) with room for a tiny KV cache.
         for kw, tag in [
+            # 4-bit single-GPU (operator question 2026-06-14): 26B bnb-4bit ~13GB fits one 3090.
+            (dict(tensor_parallel_size=1, quantization="bitsandbytes", max_model_len=1024,
+                  gpu_memory_utilization=0.92, enforce_eager=True), "bnb4bit_tp1"),
             (dict(tensor_parallel_size=2, quantization="fp8", max_model_len=1024,
                   gpu_memory_utilization=0.88, enforce_eager=True), "fp8_tp2"),
-            (dict(tensor_parallel_size=2, max_model_len=512, gpu_memory_utilization=0.92,
-                  enforce_eager=True), "bf16_tp2"),
         ]:
             try:
                 llm = LLM(model=REPO, dtype="auto", trust_remote_code=False, **kw)
