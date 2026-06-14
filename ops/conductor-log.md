@@ -8482,3 +8482,4 @@ c |
 | 2026-06-14 14:23 UTC | Archive .388 -> activate .389; KEEP the hardened g | OK | 91 passed, 1 warning in 7.01s |
 | 2026-06-14 14:45 UTC | PHASE A1 (BUILD) -- Verifier-as-reward Phase-0 gat | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-14 15:05 UTC | PHASE A2 (LAUNCH, gated_on A1 phase0_precision>=0. | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-14 15:07 UTC | PHASE A3 (COLLECT, gated_on A2 training_launched)  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4198-verifier-reward-3arm-rft-launch.tr |
