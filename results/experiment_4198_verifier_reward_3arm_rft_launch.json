@@ -134,5 +134,13 @@
     "a1_truncation_rate": 0.0,
     "max_allowed_truncation_rate": 0.05,
     "status": "instrumented_in_runner_artifact"
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=31.151062 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
