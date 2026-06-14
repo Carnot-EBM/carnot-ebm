@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.386",
+  "generated_at": "2026-06-14T04:54:16Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "honest_verdict": "complete: operational_retro_v386_false_zero_detector_gap_gpu_idle_correct",
+  "summary": "On the retrospective's own authoritative timing data, milestone 2026.06.386 shows 0 experiment commits since activation (total_wall_time_minutes=0, experiments_completed=0, compute_bound_experiments_count=0). Both RTX 3090 GPUs were idle at the 2026-06-14T04:54:16Z snapshot (0% util, 4MB allocated); with 0 compute-bound tasks present this idle is CORRECT, so gpu_idle_on_compute_bound_tasks=null and no GPU bottleneck is flagged. The on-disk ops/changelog.md window read this turn shows the milestone did in fact execute (exp4167-exp4173), so the milestone-scoped zero is the recurring false-zero detector gap documented across ~.363-.385 - an observability failure, not an execution failure.",
+  "bottlenecks_identified": [
+    "Milestone-scoped timing detector false-zero: the conductor-injected TIMING DATA block reports 0 experiment commits since activation, but the on-disk ops/changelog.md window shows exp4167-exp4173 ran this milestone. This is the same recurring detector gap documented across ~.363-.385; it leaves every operational retro data-blind on execution metrics (per-experiment durations, slowest-task ranking).",
+    "The .385 observability slot (exp4161) shipped a dated-changelog-window fallback, yet this .386 retro still received a milestone-scoped zero - indicating that fallback is not wired into the conductor-injected retro timing feed (that path lives in scripts/research_conductor.py, which this retro task is forbidden to modify).",
+    "No GPU bottleneck: both RTX 3090s idle is correct for a window with 0 compute-bound tasks; per the GPU-idle interpretation rule this is NOT flagged."
+  ],
+  "improvements_suggested": [
+    "Wire the dated-changelog-window fallback into the conductor's retro timing-data injection path so the TIMING DATA block reflects the real on-disk experiment window (exp4167-exp4173) instead of false-zeroing. Requires a patch to scripts/research_conductor.py - out of scope for this retro task; file as a precise patch proposal for the operator/outer-loop.",
+    "Add a commit-to-milestone attribution check so per-experiment conductor commits are correctly counted toward the active milestone window (the false-zero is an attribution miss, not a missing-commits condition).",
+    "Until the detector is fixed, retros should treat the dated changelog window as the authoritative execution source and label the injected zero as a known false-positive (the established research-log convention), never inferring durations from the training distribution."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the milestone-scoped timing detector / wire the changelog-window fallback into the conductor's retro timing feed so future retros are not data-blind (this observability fix is ~20 milestones overdue).",
+    "Add a commit-to-milestone attribution check so the experiment count and slowest-experiment ranking populate correctly each milestone.",
+    "Keep reporting the false-zero honestly in the research-log (retro-data 0/0 + the on-disk exp range) so the gap stays visible until it is mechanically fixed."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The recurring operational finding is observability, not throughput: the milestone executed (exp4167-exp4173 per the on-disk changelog) but the retro's injected timing block false-zeroed yet again, so there is no per-experiment wall-time to optimize this milestone - hence estimated_time_savings_pct=0 (the fix restores data fidelity, it does not compress compute). The honest move, followed here per the multi-milestone research-log convention, is to report the authoritative zero faithfully in the locked fields while documenting the real execution window and the detector gap, rather than inferring numbers from the training distribution. The GPU idle is correct behaviour (0 compute-bound tasks), not a bug."
+}
