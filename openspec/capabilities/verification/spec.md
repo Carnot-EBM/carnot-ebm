@@ -12140,6 +12140,50 @@ that sovereign positive, otherwise emits
 remaining codex-demo-perfect tasks without a local best-of-N demo-perfect sample
 in `missing_verifier_gaps`.
 
+### REQ-VERIFY-4187: GAP-4 Production-Safe Graded Execution Gate
+
+The repository SHALL provide Exp 4187 at
+`results/experiment_4187_gap4_graded_execution_gate_hardening.py` to replay the
+cached ARC-1 GAP-4 induced programs and candidate pool without Codex, GGUF, GPU,
+or retraining. Before scoring, the runner SHALL verify that
+`results/arc3_gap4_induced_programs.json` and
+`results/arc3_gap4_rule_exec_verifier.json` exist. If either precondition is
+missing, it SHALL write
+`results/experiment_4187_gap4_graded_execution_gate_hardening.json` with
+`honest_verdict=blocked_gap4_arc1_pool_missing` and stop.
+
+For a complete replay, the implementation SHALL promote a candidate only when
+the saved program is demo-perfect (`demo_fit == 1.0`), the candidate has minimum
+normalized Hamming distance from the executed prediction, and that distance is
+at most `tau=0.005`. The gate SHALL apply a vote-aware guard that refuses a
+promotion when it would demote an otherwise pass@1 high-vote gold candidate,
+including the recorded ARC-1 `25094a63` mis-promotion. Agreement signals from
+program outputs SHALL be recorded only as confidence labels and SHALL NOT select
+or promote candidates.
+
+The terminal artifact SHALL include bare top-level fields `honest_verdict`,
+`graded_gate_pass2_vs_vote`, `vote_aware_guard_blocked_mispromotion`,
+`gross_recovery_ledger`, `band_precision_at_tau`, `random_seed`,
+`reproducibility_checksum`, `gate_fire_count`, `pass_at_1`, `pass_at_2`,
+`pass2_vote_wins_lost`, `agreement_confidence_label_only`, `duration_s`, and
+`inference_substrate`.
+
+### SCENARIO-VERIFY-4187: Guarded Graded Gate Holds ARC-1 Safety
+
+Given the cached ARC-1 GAP-4 induced programs and rule-execution verifier
+artifact are present, when Exp 4187 replays the ARC-1 pool, then it uses only
+offline deterministic evidence (`inference_substrate=deterministic_verifier`),
+computes TRM vote and guarded graded pass@1/pass@2 on the same candidate pool,
+reports `graded_gate_pass2_vs_vote` as `pass@2(guarded_graded_gate) -
+pass@2(vote)`, reports `gross_recovery_ledger` as recovered and lost candidate
+counts, reports `band_precision_at_tau` for the `tau<=0.02` graded band, sets
+`vote_aware_guard_blocked_mispromotion=true` only if the `25094a63` high-vote
+gold promotion was blocked, confirms `pass2_vote_wins_lost=0`, and emits either
+`complete: gap4_graded_gate_holds_exact_baseline...` when the guarded graded
+gate matches or exceeds the exact-match `+4/-0` pass@2 baseline, or
+`complete: gap4_graded_relaxation_adds_nothing_on_arc1...` when the relaxation
+adds no ARC-1 recovery beyond the exact baseline.
+
 ### REQ-VERIFY-4036: Decentralization Stronger-Base Best-of-N Build Gate
 
 The repository SHALL provide Exp 4036 at
