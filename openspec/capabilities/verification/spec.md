@@ -14249,6 +14249,83 @@ registry with the Exp 4181 replay plus `.387` moat/GAP-3 role, writes
 `gaps_updated` containing the moat and GAP-3 gap entries touched, and uses no
 inference substrate other than cached GAP-4 replay and ledger reconciliation.
 
+### REQ-VERIFY-4193: Verifier Registry And Gaps Hygiene For .388 Outcomes
+
+The repository SHALL provide Exp 4193 at
+`python/carnot/experiment_4193_verifier_registry_gaps_hygiene.py` and
+`results/experiment_4193_verifier_registry_gaps_hygiene.py` to replay the
+canonical GAP-4 ARC-1 regression guard from cached candidates and saved
+induced-program outputs, then reconcile `ops/verifier_registry.yaml` and
+`ops/verifier_gaps.md` with the `.388` verifier outcomes from
+`results/experiment_4186_efficiency_moat_verifier_vs_llm_judge.json`,
+`results/experiment_4187_gap4_graded_execution_gate_hardening.json`, and
+`results/experiment_4188_sovereign_local_generator_gap4_self_distill.json`.
+Before running the replay, the runner SHALL verify that the cached GAP-4
+fixtures, those three upstream artifacts, `ops/verifier_registry.yaml`, and
+`ops/verifier_gaps.md` exist and parse. If any precondition fails, the runner
+SHALL write a terminal artifact with `honest_verdict=blocked_<resource>` and
+SHALL NOT fabricate replay, registry, or gaps updates.
+
+The offline regression guard SHALL rederive ARC-1 vote `0.4516` to gated
+`0.5806` from cached TRM candidate rows and saved GAP-4 program outputs,
+including `n=31`, `headroom_recovered=4`, and `vote_wins_lost=0`, without
+Codex calls, GGUF loading, GPU use, live TRM inference, stable-checkpoint
+writes, or TRM training changes. `regression_guard_passed` SHALL be a bare bool
+and SHALL be true only when those canonical GAP-4 numbers match exactly.
+
+The gaps ledger SHALL append or refresh marked entries for the `.388`
+efficiency-moat verdict, GAP-4 graded gate, and sovereign local generator
+outcome without pruning prior history. The efficiency moat entry SHALL record
+`verifier_efficiency_win=true`, `accuracy_parity_vs_judge.delta=0.18`,
+`accuracy_parity_vs_judge.ci95=[0.08, 0.3]`,
+`cost_ratio_vs_judge.ten_x_cheaper_on_both_axes=true`, and
+`cost_ratio_vs_judge.strictly_pareto_dominant=true`; `GAP-MOAT` SHALL advance
+toward `filled` only when `verifier_efficiency_win` is true. The GAP-4 graded
+gate entry SHALL record `graded_gate_pass2_vs_vote=0.129`,
+`gross_recovery_ledger.recovered=4`, `gross_recovery_ledger.lost=0`,
+`vote_aware_guard_blocked_mispromotion=true`, and
+`pass2_vote_wins_lost=0`. The sovereign-generator entry SHALL record
+`local_induction_rate.rate=0.2258`, `sovereign_pool_pass2.LOCAL_HARDENED_GATE=0.4839`,
+`sovereign_pool_pass2.delta_vs_vote=0.0323`, and
+`self_distillation_corpus_size=7`, while preserving any adversarial flags from
+Exp 4188.
+
+The registry SHALL annotate the `gap4_program_induction_stack` entry with an
+Exp 4193 replay marker and a `.388` efficiency/GAP-4/sovereign hygiene role.
+The role SHALL record that the efficiency moat filled only when
+`verifier_efficiency_win=true`, that the graded gate preserved the `+4/-0`
+pass@2 baseline with the vote-aware guard, and that the local sovereign
+generator produced a smaller but positive guarded pass@2 lift with a
+self-distillation corpus.
+
+The terminal artifact SHALL write
+`results/experiment_4193_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_updated`,
+bare bool `registry_updated`, `efficiency_moat`, `gap4_graded_gate`,
+`sovereign_generator`, and
+`inference_substrate=cached_gap4_replay_and_ledger_reconciliation`. Its
+`field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled to the .388 truth.`;
+`regression_guard_passed` = `Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression.`;
+`gaps_updated` = `Lists the verifier_gaps entries touched (efficiency moat + GAP-4 graded gate + sovereign generator).`
+
+### SCENARIO-VERIFY-4193: Cached Replay Records .388 Efficiency And Sovereign Truth
+
+Given the GAP-4 cached ARC-1 pool, saved induced-program artifact, Exp 4186,
+Exp 4187, Exp 4188, `ops/verifier_registry.yaml`, and `ops/verifier_gaps.md`
+are readable, when Exp 4193 runs, then it writes the terminal artifact with
+`regression_guard_passed=true`, records vote `0.4516` to gated `0.5806`,
+records the efficiency moat as filled only when
+`verifier_efficiency_win=true`, records the guarded GAP-4 graded gate as
+`graded_gate_pass2_vs_vote=0.129` with `recovered=4`, `lost=0`, and
+`vote_aware_guard_blocked_mispromotion=true`, records the sovereign local
+generator as `local_induction_rate.rate=0.2258`,
+`sovereign_pool_pass2.LOCAL_HARDENED_GATE=0.4839`, and
+`self_distillation_corpus_size=7`, annotates the registry with the Exp 4193
+replay plus `.388` role, writes `gaps_updated` containing the efficiency moat,
+GAP-4 graded gate, and sovereign generator entries touched, and uses no
+inference substrate other than cached GAP-4 replay and ledger reconciliation.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
