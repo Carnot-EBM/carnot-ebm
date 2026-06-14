@@ -1,0 +1,129 @@
+{
+  "acceptance_gate": true,
+  "accuracy_parity_vs_judge": {
+    "arm_a_pass1": 0.84,
+    "arm_j_pass1": 0.66,
+    "bootstrap_resamples": 2000,
+    "ci95": [
+      0.08,
+      0.3
+    ],
+    "delta": 0.18,
+    "n": 50,
+    "status": "measured",
+    "within_ci_or_better": true
+  },
+  "adversarial_verify": {
+    "flagged_count": 0,
+    "reports": [
+      {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4186_efficiency_moat_verifier_vs_llm_judge.json",
+        "exp_id": null,
+        "flag_count": 0,
+        "flags": [],
+        "honest_verdict": "complete: verifier_efficiency_win_true_delta_0.1800",
+        "loaded": true,
+        "max_severity": -1,
+        "title": ""
+      }
+    ],
+    "returncode": 0
+  },
+  "arms": {
+    "arm_a_verifier": {
+      "pass1": 0.84,
+      "policy": "executable_verifier_evidence_plus_vstar_selector",
+      "status": "measured",
+      "total_tokens": 0,
+      "total_wall_clock_s": 9.6481002e-05
+    },
+    "arm_b_sc_vote": {
+      "pass1": 0.66,
+      "policy": "self_consistency_vote_weight",
+      "status": "measured",
+      "total_tokens": 0,
+      "total_wall_clock_s": 1.5058002e-05
+    },
+    "arm_j_llm_judge": {
+      "pass1": 0.66,
+      "policy": "exp4185_llm_as_judge_replay_first_unique_task_call",
+      "status": "measured",
+      "total_tokens": 5270,
+      "total_wall_clock_s": 48.274417
+    },
+    "oracle": {
+      "pass_at_k": 0.84,
+      "policy": "any_candidate_executable_passes",
+      "status": "measured"
+    }
+  },
+  "cost_ratio_vs_judge": {
+    "arm_a_total_tokens": 0,
+    "arm_a_total_wall_clock_s": 9.6481002e-05,
+    "arm_j_completion_tokens": 100,
+    "arm_j_prompt_tokens": 5170,
+    "arm_j_total_tokens": 5270,
+    "arm_j_total_wall_clock_s": 48.274417,
+    "status": "measured",
+    "strictly_pareto_dominant": true,
+    "ten_x_cheaper_on_both_axes": true,
+    "token_x_cheaper": null,
+    "tokens": 0.0,
+    "wall_clock": 1.9986e-06,
+    "wall_clock_x_cheaper": 500351.5303458394
+  },
+  "duration_basis": "Includes the upstream Exp 4185 live LLM-judge wall-clock evidence because Exp 4186 replays those recorded judge choices and costs head-to-head.",
+  "duration_s": 69.937604,
+  "field_principles": {
+    "accuracy_parity_vs_judge": "pass@1(A) - pass@1(J) with bootstrap CI95 \u2014 does the cheap verifier MATCH the expensive judge on accuracy?",
+    "cost_ratio_vs_judge": "{wall_clock, tokens} ratio ARM A / ARM J \u2014 the efficiency axis in REAL units, fixing the .387 abstract-cost-unit caveat.",
+    "honest_verdict": "Terminal-prefixed. A clean efficiency win, an honest 'judge wins on accuracy', or 'no cost advantage' are ALL COMPLETE, decision-grade verdicts.",
+    "model_specs": "The SOTA GGUF invoked as the judge; required methodology for a live-LLM artifact.",
+    "positive_control_confirmed": "Bare bool: oracle@k > SC-vote AND >=1 flip occurred on this corpus \u2014 without it the comparison is uninformative (FALSE_NEGATIVE_RISK).",
+    "random_seed": "Determinism precondition for reproducibility of the decisive measurement.",
+    "reproducibility_checksum": "Content hash of candidate pool + verifier + judge config; lets a third party re-run the head-to-head.",
+    "verifier_efficiency_win": "Bare bool: ARM A within-CI of ARM J on accuracy AND >=10x cheaper (or strictly Pareto-dominant). The north-star \u00a75 win condition, measured against an LLM-judge with REAL cost."
+  },
+  "honest_verdict": "complete: verifier_efficiency_win_true_delta_0.1800",
+  "inference_substrate": "deterministic_verifier_replay_vs_cost_metered_llm_judge_replay",
+  "model_specs": {
+    "cached_sota_pair_result": [
+      {
+        "gpu": 0,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "name": "Qwen3.6-35B-A3B"
+      },
+      {
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "name": "Gemma4-26B-A4B-it"
+      }
+    ],
+    "loader": "llama_cpp.Llama",
+    "prompt_version": "exp4185-best-candidate-index-v1",
+    "runtime_error": null,
+    "selected_judge": {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  },
+  "positive_control": {
+    "oracle_at_k": 0.84,
+    "oracle_minus_sc_vote": 0.18,
+    "sc_vote_pass1": 0.66,
+    "selection_flips_vs_vote": 50,
+    "status": "headroom_present"
+  },
+  "positive_control_confirmed": true,
+  "random_seed": 4186,
+  "reproducibility_checksum": "469095422fb8be9500a900dbd2208617f47e164246f4f48fbc00440ede6999b6",
+  "spec_refs": [
+    "REQ-VERIFY-4186",
+    "SCENARIO-VERIFY-4186"
+  ],
+  "verifier_efficiency_win": true
+}
