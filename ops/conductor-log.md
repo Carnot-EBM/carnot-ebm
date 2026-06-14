@@ -8451,3 +8451,5 @@ c |
 | 2026-06-14 02:14 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra s | OK | Deliverable already exists in repo |
 | 2026-06-14 04:35 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | cache hit: 86 passed, 1 warning in 5.04s |
 | 2026-06-14 04:49 UTC | Capstone .386 (UNGATED): headline question is HAS  | OK | 85 passed, 1 warning in 4.24s |
+| 2026-06-14 05:35 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-06-14 05:38 UTC | Milestone 2026.06.387 activated | OK | 10 tasks queued |
