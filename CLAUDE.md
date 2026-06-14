@@ -1734,6 +1734,62 @@ by fabricating numbers if no methodology check is in place.
 
 ---
 
+## Circularity / Oracle-Distinctness Discipline (MANDATORY)
+
+**Origin:** 2026-06-14 operator-directed ("fix the MET", then "2+3+1"), after the
+`.387/`.388 capstones over-claimed the code/efficiency verifier win as "moat proven" and
+flipped the DiffusionGemma gate to MET on a CIRCULAR result — the verifier WAS the
+executable oracle (run the unit tests on HumanEval / `check_sudoku_validity`). The operator
+caught it twice. The loop's fabrication gate (`adversarial_verify`) catches fake/too-fast
+results but did NOT catch this over-INTERPRETATION (a circular win inflated into a moat).
+This rule turns that manual catch into a mechanical guard.
+
+**The rule.** A verifier "moat" / efficiency / value-added claim is NON-CIRCULAR ONLY when
+the verifier is INDEPENDENT of the executable oracle that defines correctness. Where the
+verifier IS the oracle (running the tests, checking validity), beating self-consistency or
+an LLM-judge is true-but-circular: it does NOT show a learned/energy verifier adds value,
+and it MUST NOT headline "moat proven" or flip a gate.
+
+Every artifact making a verifier-value / moat / efficiency claim MUST declare
+`verifier_is_oracle: bool` — true if the verifier is the same executable oracle that defines
+correctness (circular); false if it is oracle-distinct (learned / energy / probe).
+
+- **Circular (`verifier_is_oracle: true`):** a VALID result (label `execution_grounded`).
+  NOT headline-eligible as a moat; may NOT flip a gate (e.g. DiffusionGemma). Honest
+  framing: "execution-grounded verification is cheap/automatic/decentralized and beats an
+  LLM-judge on cost" — NOT "we proved the verifier moat."
+- **Oracle-distinct (`verifier_is_oracle: false`):** headline / gate-eligible. This is the
+  deep, OPEN claim — a learned/energy verifier capturing headroom where NO cheap oracle
+  exists (the GAP-3-energy-ties-vote-on-ARC frontier).
+
+**Mechanical enforcement (shipped 2026-06-14):**
+`scripts/adversarial_verify.py:check_circular_moat_overclaim` emits
+`CIRCULAR_MOAT_OVERCLAIM` — CRITICAL when an artifact flips a gate / headlines a moat while
+`verifier_is_oracle` is true or undeclared (quarantines the over-claim); WARN when a
+moat/efficiency claim omits `verifier_is_oracle` or sets it true (surfaces the circularity
+without quarantining the underlying result).
+
+**How to apply (planner-side).** Every verifier-experiment task's REQUIRED ARTIFACT FIELDS
+must include `verifier_is_oracle: bool` (with a `principle:` note). Capstone / headline /
+gate tasks must honor it: a circular win is reported as `execution_grounded` (not a moat),
+and the DiffusionGemma gate stays STILL-PENDING until an oracle-distinct win lands.
+
+**How to apply (agent-side).** When you claim `verifier_value_added` / a moat / an
+efficiency win, set `verifier_is_oracle` honestly. If the verifier runs the same check that
+defines correctness, it is True (circular) — say so; do not headline it.
+
+**Cross-references:**
+- 2026-06-14 operator directive ("fix the MET" + "2+3+1") — origin
+- `scripts/adversarial_verify.py:check_circular_moat_overclaim` — the lint
+- `docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md` THE GATE — the gate
+  this protects (STILL-PENDING; requires an oracle-distinct win)
+- `docs/research-notes/verifier-graft-v3-design.md`,
+  `docs/research-notes/verifier-as-detector-measurement-spec.md`
+- CLAUDE.md "Adversarial Artifact Verification + Sample-Size Rigor" — sibling rule (catches
+  fabrication; this one catches over-interpretation)
+
+---
+
 ## Inference-Substrate Declaration Discipline (MANDATORY)
 
 **Origin:** 2026-05-22 operator-authorized fix after exp2842 / exp2837
