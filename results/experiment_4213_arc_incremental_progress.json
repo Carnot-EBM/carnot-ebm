@@ -1,0 +1,680 @@
+{
+  "acceptance_gate_passed": true,
+  "action_plan": [
+    {
+      "action": 6,
+      "col": 0,
+      "kind": "pattern_click",
+      "row": 0,
+      "x": 25,
+      "y": 50
+    },
+    {
+      "action": 6,
+      "col": 1,
+      "kind": "pattern_click",
+      "row": 0,
+      "x": 30,
+      "y": 50
+    },
+    {
+      "action": 6,
+      "col": 1,
+      "kind": "pattern_click",
+      "row": 1,
+      "x": 30,
+      "y": 55
+    },
+    {
+      "action": 1,
+      "kind": "move"
+    },
+    {
+      "action": 1,
+      "kind": "move"
+    }
+  ],
+  "candidate_baseline_actions": 6,
+  "duration_s": 6.552,
+  "executed_real_env_actions": 5,
+  "experiment": "experiment_4213_arc_incremental_progress",
+  "exploration_actions_used": 8,
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed. An honest no-solve is a COMPLETE verdict (progress-not-perfection).",
+    "levels_completed": "Real-env-confirmed level count this run; falsifiable evidence of an actual solve.",
+    "real_env_confirmed": "Only real-env solves raise the headline count; a synthetic-scaffold solve does not.",
+    "total_levels_solved": "The monotonic progress metric; must be >= the prior milestone's count (15)."
+  },
+  "honest_verdict": "success: incremental_progress_sc25-635fd71a_advanced_to_L2_total16",
+  "induced_mechanic": "sc25 3x3 pattern-toggle unlock followed by exit-touch movement",
+  "inference_substrate": "offline_arc_agi3_hardened_gap4_sc25_l2_incremental_progress",
+  "levels_completed": 2,
+  "new_levels_solved_this_task": 1,
+  "phase_trace": [
+    {
+      "levels_completed": 0,
+      "phase": "observe",
+      "source": "offline_sc25_reset",
+      "target_game": "sc25-635fd71a",
+      "target_level": 2
+    },
+    {
+      "phase": "replay",
+      "planner_trace": {
+        "expanded_states": 162,
+        "found": true,
+        "max_depth": 48,
+        "max_expansions": 512,
+        "observed_transition_count": 652,
+        "pattern_click_count": 5,
+        "planned_depth": 17,
+        "predicted_level": 1,
+        "stopped_reason": "level_increment_found",
+        "target_pattern_cells": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ]
+        ]
+      },
+      "source": "sc25_L1_reestablishment_planning"
+    },
+    {
+      "action": 6,
+      "action_index": 1,
+      "kind": "pattern_click",
+      "levels_completed": 0,
+      "phase": "replay",
+      "x": 30,
+      "y": 50
+    },
+    {
+      "action": 6,
+      "action_index": 2,
+      "kind": "pattern_click",
+      "levels_completed": 0,
+      "phase": "replay",
+      "x": 25,
+      "y": 55
+    },
+    {
+      "action": 6,
+      "action_index": 3,
+      "kind": "pattern_click",
+      "levels_completed": 0,
+      "phase": "replay",
+      "x": 35,
+      "y": 55
+    },
+    {
+      "action": 6,
+      "action_index": 4,
+      "kind": "pattern_click",
+      "levels_completed": 0,
+      "phase": "replay",
+      "x": 30,
+      "y": 60
+    },
+    {
+      "action": 6,
+      "action_index": 5,
+      "kind": "pattern_click",
+      "levels_completed": 0,
+      "phase": "replay",
+      "x": 30,
+      "y": 50
+    },
+    {
+      "action": 3,
+      "action_index": 6,
+      "kind": "move",
+      "levels_completed": 0,
+      "phase": "replay"
+    },
+    {
+      "action": 3,
+      "action_index": 7,
+      "kind": "move",
+      "levels_completed": 0,
+      "phase": "replay"
+    },
+    {
+      "action": 3,
+      "action_index": 8,
+      "kind": "move",
+      "levels_completed": 0,
+      "phase": "replay"
+    },
+    {
+      "action": 3,
+      "action_index": 9,
+      "kind": "move",
+      "levels_completed": 0,
+      "phase": "replay"
+    },
+    {
+      "action": 3,
+      "action_index": 10,
+      "kind": "move",
+      "levels_completed": 0,
+      "phase": "replay"
+    },
+    {
+      "action": 3,
+      "action_index": 11,
+      "kind": "move",
+      "levels_completed": 0,
+      "phase": "replay"
+    },
+    {
+      "action": 3,
+      "action_index": 12,
+      "kind": "move",
+      "levels_completed": 0,
+      "phase": "replay"
+    },
+    {
+      "action": 3,
+      "action_index": 13,
+      "kind": "move",
+      "levels_completed": 0,
+      "phase": "replay"
+    },
+    {
+      "action": 3,
+      "action_index": 14,
+      "kind": "move",
+      "levels_completed": 0,
+      "phase": "replay"
+    },
+    {
+      "action": 3,
+      "action_index": 15,
+      "kind": "move",
+      "levels_completed": 0,
+      "phase": "replay"
+    },
+    {
+      "action": 3,
+      "action_index": 16,
+      "kind": "move",
+      "levels_completed": 0,
+      "phase": "replay"
+    },
+    {
+      "action": 3,
+      "action_index": 17,
+      "kind": "move",
+      "levels_completed": 1,
+      "phase": "replay"
+    },
+    {
+      "observed_transition_count": 8,
+      "phase": "explore",
+      "planner_trace": {
+        "expanded_states": 2,
+        "found": true,
+        "max_depth": 8,
+        "max_expansions": 512,
+        "observed_transition_count": 8,
+        "pattern_click_count": 3,
+        "planned_depth": 5,
+        "predicted_level": 2,
+        "stopped_reason": "level_increment_found",
+        "target_pattern_cells": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      },
+      "source": "copied_env_sc25_L2_pattern_and_exit_transitions"
+    },
+    {
+      "candidate_action_count": 5,
+      "goal_predicate": "levels_completed increases after copied-env suffix reaches the exit",
+      "mechanic": "sc25 target-pattern grid toggles unlock movement, then touching the exit increments level",
+      "phase": "induce"
+    },
+    {
+      "energy": 0.0,
+      "final_level_completed": 2,
+      "hardened_gap4_lost": 0,
+      "hardened_gap4_ready": true,
+      "hardened_gap4_recovered": 4,
+      "hardened_gap4_source": "results/experiment_4187_gap4_graded_execution_gate_hardening.json",
+      "heldout_transition_count": 2,
+      "level_increment": true,
+      "phase": "hardened-gap4-verify",
+      "predicted_level_after_actions": 2,
+      "retained": true,
+      "start_level_completed": 1,
+      "validated_prefix_transition_count": 3,
+      "validated_total_transition_count": 5,
+      "verifier": "hardened_gap4_heldout_executed_consistency_sc25_l2_replay"
+    },
+    {
+      "action": 6,
+      "action_index": 1,
+      "kind": "pattern_click",
+      "levels_completed": 1,
+      "phase": "act",
+      "x": 25,
+      "y": 50
+    },
+    {
+      "action": 6,
+      "action_index": 2,
+      "kind": "pattern_click",
+      "levels_completed": 1,
+      "phase": "act",
+      "x": 30,
+      "y": 50
+    },
+    {
+      "action": 6,
+      "action_index": 3,
+      "kind": "pattern_click",
+      "levels_completed": 1,
+      "phase": "act",
+      "x": 30,
+      "y": 55
+    },
+    {
+      "action": 1,
+      "action_index": 4,
+      "kind": "move",
+      "levels_completed": 1,
+      "phase": "act"
+    },
+    {
+      "action": 1,
+      "action_index": 5,
+      "kind": "move",
+      "levels_completed": 2,
+      "phase": "act"
+    }
+  ],
+  "prior_level": 1,
+  "prior_total_levels_solved": 15,
+  "random_seed": 4213,
+  "real_env_confirmed": true,
+  "replay_actions_used": 17,
+  "requirements": [
+    "REQ-PHASE4-059",
+    "SCENARIO-PHASE4-059"
+  ],
+  "selected_candidate_reason": "selected sc25 L2 after Exp 4201 structurally blocked on lp85 L4; sc25 has a local L2 baseline and already-solved L1 prefix",
+  "selection_mode": "fallback_deeper_level_after_lp85_L4_structural_block",
+  "solve_trace": {
+    "actions": [
+      {
+        "action": 6,
+        "col": 0,
+        "kind": "pattern_click",
+        "row": 0,
+        "x": 25,
+        "y": 50
+      },
+      {
+        "action": 6,
+        "col": 1,
+        "kind": "pattern_click",
+        "row": 0,
+        "x": 30,
+        "y": 50
+      },
+      {
+        "action": 6,
+        "col": 1,
+        "kind": "pattern_click",
+        "row": 1,
+        "x": 30,
+        "y": 55
+      },
+      {
+        "action": 1,
+        "kind": "move"
+      },
+      {
+        "action": 1,
+        "kind": "move"
+      }
+    ],
+    "phase_trace": [
+      {
+        "levels_completed": 0,
+        "phase": "observe",
+        "source": "offline_sc25_reset",
+        "target_game": "sc25-635fd71a",
+        "target_level": 2
+      },
+      {
+        "phase": "replay",
+        "planner_trace": {
+          "expanded_states": 162,
+          "found": true,
+          "max_depth": 48,
+          "max_expansions": 512,
+          "observed_transition_count": 652,
+          "pattern_click_count": 5,
+          "planned_depth": 17,
+          "predicted_level": 1,
+          "stopped_reason": "level_increment_found",
+          "target_pattern_cells": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              1
+            ]
+          ]
+        },
+        "source": "sc25_L1_reestablishment_planning"
+      },
+      {
+        "action": 6,
+        "action_index": 1,
+        "kind": "pattern_click",
+        "levels_completed": 0,
+        "phase": "replay",
+        "x": 30,
+        "y": 50
+      },
+      {
+        "action": 6,
+        "action_index": 2,
+        "kind": "pattern_click",
+        "levels_completed": 0,
+        "phase": "replay",
+        "x": 25,
+        "y": 55
+      },
+      {
+        "action": 6,
+        "action_index": 3,
+        "kind": "pattern_click",
+        "levels_completed": 0,
+        "phase": "replay",
+        "x": 35,
+        "y": 55
+      },
+      {
+        "action": 6,
+        "action_index": 4,
+        "kind": "pattern_click",
+        "levels_completed": 0,
+        "phase": "replay",
+        "x": 30,
+        "y": 60
+      },
+      {
+        "action": 6,
+        "action_index": 5,
+        "kind": "pattern_click",
+        "levels_completed": 0,
+        "phase": "replay",
+        "x": 30,
+        "y": 50
+      },
+      {
+        "action": 3,
+        "action_index": 6,
+        "kind": "move",
+        "levels_completed": 0,
+        "phase": "replay"
+      },
+      {
+        "action": 3,
+        "action_index": 7,
+        "kind": "move",
+        "levels_completed": 0,
+        "phase": "replay"
+      },
+      {
+        "action": 3,
+        "action_index": 8,
+        "kind": "move",
+        "levels_completed": 0,
+        "phase": "replay"
+      },
+      {
+        "action": 3,
+        "action_index": 9,
+        "kind": "move",
+        "levels_completed": 0,
+        "phase": "replay"
+      },
+      {
+        "action": 3,
+        "action_index": 10,
+        "kind": "move",
+        "levels_completed": 0,
+        "phase": "replay"
+      },
+      {
+        "action": 3,
+        "action_index": 11,
+        "kind": "move",
+        "levels_completed": 0,
+        "phase": "replay"
+      },
+      {
+        "action": 3,
+        "action_index": 12,
+        "kind": "move",
+        "levels_completed": 0,
+        "phase": "replay"
+      },
+      {
+        "action": 3,
+        "action_index": 13,
+        "kind": "move",
+        "levels_completed": 0,
+        "phase": "replay"
+      },
+      {
+        "action": 3,
+        "action_index": 14,
+        "kind": "move",
+        "levels_completed": 0,
+        "phase": "replay"
+      },
+      {
+        "action": 3,
+        "action_index": 15,
+        "kind": "move",
+        "levels_completed": 0,
+        "phase": "replay"
+      },
+      {
+        "action": 3,
+        "action_index": 16,
+        "kind": "move",
+        "levels_completed": 0,
+        "phase": "replay"
+      },
+      {
+        "action": 3,
+        "action_index": 17,
+        "kind": "move",
+        "levels_completed": 1,
+        "phase": "replay"
+      },
+      {
+        "observed_transition_count": 8,
+        "phase": "explore",
+        "planner_trace": {
+          "expanded_states": 2,
+          "found": true,
+          "max_depth": 8,
+          "max_expansions": 512,
+          "observed_transition_count": 8,
+          "pattern_click_count": 3,
+          "planned_depth": 5,
+          "predicted_level": 2,
+          "stopped_reason": "level_increment_found",
+          "target_pattern_cells": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ]
+        },
+        "source": "copied_env_sc25_L2_pattern_and_exit_transitions"
+      },
+      {
+        "candidate_action_count": 5,
+        "goal_predicate": "levels_completed increases after copied-env suffix reaches the exit",
+        "mechanic": "sc25 target-pattern grid toggles unlock movement, then touching the exit increments level",
+        "phase": "induce"
+      },
+      {
+        "energy": 0.0,
+        "final_level_completed": 2,
+        "hardened_gap4_lost": 0,
+        "hardened_gap4_ready": true,
+        "hardened_gap4_recovered": 4,
+        "hardened_gap4_source": "results/experiment_4187_gap4_graded_execution_gate_hardening.json",
+        "heldout_transition_count": 2,
+        "level_increment": true,
+        "phase": "hardened-gap4-verify",
+        "predicted_level_after_actions": 2,
+        "retained": true,
+        "start_level_completed": 1,
+        "validated_prefix_transition_count": 3,
+        "validated_total_transition_count": 5,
+        "verifier": "hardened_gap4_heldout_executed_consistency_sc25_l2_replay"
+      },
+      {
+        "action": 6,
+        "action_index": 1,
+        "kind": "pattern_click",
+        "levels_completed": 1,
+        "phase": "act",
+        "x": 25,
+        "y": 50
+      },
+      {
+        "action": 6,
+        "action_index": 2,
+        "kind": "pattern_click",
+        "levels_completed": 1,
+        "phase": "act",
+        "x": 30,
+        "y": 50
+      },
+      {
+        "action": 6,
+        "action_index": 3,
+        "kind": "pattern_click",
+        "levels_completed": 1,
+        "phase": "act",
+        "x": 30,
+        "y": 55
+      },
+      {
+        "action": 1,
+        "action_index": 4,
+        "kind": "move",
+        "levels_completed": 1,
+        "phase": "act"
+      },
+      {
+        "action": 1,
+        "action_index": 5,
+        "kind": "move",
+        "levels_completed": 2,
+        "phase": "act"
+      }
+    ],
+    "prior_level": 1,
+    "selection_mode": "fallback_deeper_level_after_lp85_L4_structural_block",
+    "selection_reason": "selected sc25 L2 after Exp 4201 structurally blocked on lp85 L4; sc25 has a local L2 baseline and already-solved L1 prefix",
+    "target_game": "sc25-635fd71a",
+    "target_level": 2,
+    "verification_decisions": [
+      {
+        "energy": 0.0,
+        "final_level_completed": 2,
+        "hardened_gap4_lost": 0,
+        "hardened_gap4_ready": true,
+        "hardened_gap4_recovered": 4,
+        "hardened_gap4_source": "results/experiment_4187_gap4_graded_execution_gate_hardening.json",
+        "heldout_transition_count": 2,
+        "level_increment": true,
+        "phase": "hardened-gap4-verify",
+        "predicted_level_after_actions": 2,
+        "retained": true,
+        "start_level_completed": 1,
+        "validated_prefix_transition_count": 3,
+        "validated_total_transition_count": 5,
+        "verifier": "hardened_gap4_heldout_executed_consistency_sc25_l2_replay"
+      }
+    ]
+  },
+  "submitted_to_leaderboard": false,
+  "target_game": "sc25-635fd71a",
+  "target_level": 2,
+  "title": "arc3_incremental_progress_hardened_gap4_sc25_L2",
+  "total_games_solved": 13,
+  "total_levels_solved": 16,
+  "verification_decisions": [
+    {
+      "energy": 0.0,
+      "final_level_completed": 2,
+      "hardened_gap4_lost": 0,
+      "hardened_gap4_ready": true,
+      "hardened_gap4_recovered": 4,
+      "hardened_gap4_source": "results/experiment_4187_gap4_graded_execution_gate_hardening.json",
+      "heldout_transition_count": 2,
+      "level_increment": true,
+      "phase": "hardened-gap4-verify",
+      "predicted_level_after_actions": 2,
+      "retained": true,
+      "start_level_completed": 1,
+      "validated_prefix_transition_count": 3,
+      "validated_total_transition_count": 5,
+      "verifier": "hardened_gap4_heldout_executed_consistency_sc25_l2_replay"
+    }
+  ],
+  "verifier_validated": true
+}
