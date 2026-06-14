@@ -1,0 +1,425 @@
+{
+  "arc_progress": {
+    "honest_verdict": "success: incremental_progress_lp85-305b61c3_advanced_to_L2_total14",
+    "new_levels_solved_this_task": 1,
+    "real_env_confirmed": true,
+    "status": "included",
+    "total_arc_games_solved": 13,
+    "total_arc_levels_solved": 14
+  },
+  "diffusiongemma_gate": {
+    "basis": "clean_exp4177_positive_controlled_executable_headroom_moat",
+    "met": true,
+    "status": "MET"
+  },
+  "diffusiongemma_gate_status": "MET",
+  "duration_s": 0.0012091699754819274,
+  "experiment_id": 4183,
+  "field_principles": {
+    "diffusiongemma_gate_status": "MET / STILL-PENDING-headroom-present-null / STILL-PENDING-no-headroom; MET only on a positive-controlled executable win.",
+    "gap3_stage1_status": "Whether GAP-3 Stage-1 reached the ~13pp headroom (advances toward `filled`) or is bounded.",
+    "headline_outcome": "One of the enumerated set -- forces a single unambiguous read.",
+    "honest_verdict": "Terminal-prefixed. An honest bounded-null is COMPLETE and decision-grade -- it tells .388 the bottleneck is verifier discrimination (GAP-3), not the substrate.",
+    "upstream_provenance": "{experiment_id, fields_imported, sha256} per cited upstream; the audit trail that a capstone synthesizes nothing from nothing.",
+    "verifier_moat_status": "PROVEN-headroom-present / BOUNDED-clean-null / DEFERRED-no-headroom -- the existential question's standing after .387."
+  },
+  "flagged_artifacts_skipped": [],
+  "gap3_stage1": {
+    "all_four_gates_pass": false,
+    "candidate_auroc": 0.893651,
+    "gates": {
+      "candidate_auroc_gt_0p70": true,
+      "coverage_ge_0p80": true,
+      "headroom_capture_ge_0p30": false,
+      "selection_pass2_beats_vote": false
+    },
+    "headroom_capture_fraction": 0.0,
+    "honest_verdict": "complete: gap3_stage1_model_native_latent_honest_negative_model_native_basis_pca_gold_mahalanobis_delta_0.0000_energy_0.4516_vote_0.4516",
+    "pass2_energy_vs_vote": 0.0,
+    "reaches_proven_arc_headroom": false,
+    "status": "BOUNDED"
+  },
+  "gap3_stage1_status": "BOUNDED",
+  "hardware_continuity": {
+    "gatemate_step_taken": "blocked_gatemate_unreachable",
+    "honest_verdict": "complete: hardware_continuity_4182_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+    "kv260_terminal_confirmed": true,
+    "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded",
+    "status": "included"
+  },
+  "headline_answers": {
+    "gap3_all_four_gates_pass": false,
+    "gap3_pass2_energy_vs_vote": 0.0,
+    "gap3_stage1_reaches_13pp_headroom": false,
+    "headroom_controlled_moat_domain": "code",
+    "headroom_controlled_moat_positive_control_confirmed": true,
+    "headroom_controlled_moat_verifier_value_added": true,
+    "strongest_sota_method_flagged_for_v388": "cem_gap3_stage2_compositional_arc_energy_v388",
+    "total_arc_levels_solved": 14
+  },
+  "headline_outcome": "moat_proven_headroom_present",
+  "honest_verdict": "complete: capstone_v387_moat_proven_headroom_present_moat_PROVEN-headroom-present_gap3_BOUNDED_diffusiongemma_MET_arc_levels14_sota_cem_gap3_stage2_compositional_arc_energy_v388_flagged_skipped0",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "missing_upstream_artifacts": [],
+  "random_seed": 4183,
+  "registry_gap_hygiene": {
+    "gap3_stage1_result": {
+      "advances_toward_filled": false,
+      "adversarial_checks": {
+        "A1_permutation_control": {
+          "augmentation_strata_note": "The exported NPZ is already candidate-pooled and has no augmentation-id column; this preserves one shuffled label within each task that originally contains gold.",
+          "candidate_auroc_collapsed_to_chance": false,
+          "chance_pass2_against_true_labels": 0.143218,
+          "label_shuffle": "within_task_candidate_permutation",
+          "mean_candidate_auroc_against_true_labels": 0.826984,
+          "mean_pass2_against_true_labels": 0.193548,
+          "pass2_collapsed_to_chance": false,
+          "passed": false,
+          "resamples": 8
+        },
+        "A2_strict_oof": {
+          "disjoint_fit_eval_task_sets": true,
+          "folding": "leave_one_task_out",
+          "in_fold_candidate_auroc": 0.909524,
+          "in_fold_pass2": 0.483871,
+          "in_minus_oof_candidate_auroc": 0.015873,
+          "in_minus_oof_pass2": 0.032258,
+          "oof_candidate_auroc": 0.893651,
+          "oof_pass2": 0.451613,
+          "passed": true,
+          "selected_energy": "model_native_basis_pca_gold_mahalanobis"
+        },
+        "A3_oracle_leak_audit": {
+          "audit": "For each LOTO fold, held-out correctness labels were scrubbed before scoring; energies stayed identical.",
+          "external_gold_file_opened": false,
+          "held_out_label_scrub_max_abs_diff": 0.0,
+          "passed": true
+        },
+        "A4_bootstrap_ci95": {
+          "ci95": [
+            -0.096774,
+            0.096774
+          ],
+          "full_400_task_reconfirm_owed": true,
+          "n_tasks": 31,
+          "passed": true,
+          "point": 0.0,
+          "resamples": 2000
+        }
+      },
+      "all_four_gates_pass": false,
+      "artifact_path": "results/experiment_4178_gap3_stage1_model_native_arc_energy.json",
+      "candidate_auroc": 0.893651,
+      "candidate_auroc_detail": {
+        "gate_threshold": 0.7,
+        "hand_feature_always_on_floor": 0.67,
+        "pooled": 0.94563,
+        "selected_energy": "model_native_basis_pca_gold_mahalanobis",
+        "within_task_macro": 0.861209,
+        "within_task_pair_weighted": 0.893651
+      },
+      "coverage_fraction": 1.0,
+      "gap_id": "GAP-3-STAGE1-MODEL-NATIVE-LATENT-4178",
+      "gates": {
+        "candidate_auroc_gt_0p70": true,
+        "coverage_ge_0p80": true,
+        "headroom_capture_ge_0p30": false,
+        "selection_pass2_beats_vote": false
+      },
+      "headroom_capture_detail": {
+        "capture_fraction": 0.0,
+        "energy_pass2": 0.451613,
+        "oracle_minus_vote": 0.16129,
+        "oracle_pass2": 0.612903,
+        "vote_pass2": 0.451613
+      },
+      "headroom_capture_fraction": 0.0,
+      "honest_verdict": "complete: gap3_stage1_model_native_latent_honest_negative_model_native_basis_pca_gold_mahalanobis_delta_0.0000_energy_0.4516_vote_0.4516",
+      "inference_substrate": "offline_gap3_stage1_latent_npz_cpu",
+      "missing_discriminator": "gap3_model_native_energy_beyond_vote",
+      "n_candidates": 8041,
+      "n_tasks": 31,
+      "pass2_energy_vs_vote": 0.0,
+      "pass2_energy_vs_vote_detail": {
+        "bootstrap_ci95": [
+          -0.096774,
+          0.096774
+        ],
+        "bootstrap_resamples": 2000,
+        "delta": 0.0,
+        "energy_pass2": 0.451613,
+        "oracle_pass2": 0.612903,
+        "vote_pass2": 0.451613
+      },
+      "reproducibility_checksum": "ffc5b5b47ce44eb771780fb7eb08cf5d962c62e63e7325d0ae4730d8e34f259a",
+      "selected_energy": "model_native_basis_pca_gold_mahalanobis",
+      "source_artifacts": [
+        "results/experiment_4178_gap3_stage1_model_native_arc_energy.json"
+      ],
+      "status": "open_stage1_honest_negative_does_not_advance"
+    },
+    "honest_verdict": "complete: registry_gaps_reconciled_to_v387_truth_regression_guard_passed_True_moat_filled_headroom_controlled_verifier_value_added_gap3_open_stage1_honest_negative_does_not_advance",
+    "moat_verdict": {
+      "accuracy_cost_pareto": {
+        "arm_a_over_arm_b_selection_cost_ratio": 2.0,
+        "arm_a_over_arm_c_selection_cost_ratio": 4.0,
+        "arm_a_total_selection_cost_units": 200,
+        "arm_a_total_selector_evals": 100,
+        "arm_a_total_verifier_evals": 100,
+        "arm_b_total_vote_weight_reads": 100,
+        "arm_c_total_first_candidate_reads": 50,
+        "cost_unit": "candidate_level_selection_operation_generation_budget_held_constant",
+        "efficiency_parity": false,
+        "latency_s": {
+          "arm_a_verifier_selector_selection": 0.000210074,
+          "arm_b_sc_vote_selection": 2.3615e-05,
+          "arm_c_no_verifier_selection": 1.904e-06
+        },
+        "parity_at_n_times_cheaper": null,
+        "same_candidate_budget": true,
+        "status": "measured",
+        "value_added_basis": "accuracy_lift_ci95_excludes_zero"
+      },
+      "artifact_path": "results/experiment_4177_decisive_headroom_controlled_moat_test.json",
+      "candidate_pool_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json",
+      "domain": "code",
+      "domain_headroom": {
+        "artifact_flags": {
+          "artifact_inflation_flagged": 0,
+          "candidate_pool_detected": true,
+          "census_incomplete": false,
+          "domain": "code",
+          "excluded_reasons": {},
+          "incomplete_reason": null,
+          "llm_judge_used": false,
+          "n_multicandidate_tasks": 50,
+          "n_tasks_evaluated": 50,
+          "n_tasks_raw": 50,
+          "objective_oracle": "unit_test_pass_flags",
+          "source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json"
+        },
+        "baseline_pass1": 0.66,
+        "n": 50,
+        "oracle_at_k": 0.84,
+        "sc_vote_pass1": 0.66,
+        "selectable_headroom": 0.18
+      },
+      "gap_id": "GAP-MOAT-HEADROOM-CONTROLLED-4177",
+      "headroom_census_path": "results/experiment_4175_headroom_gate_executable_census.json",
+      "headroom_present_domain": "code",
+      "honest_verdict": "complete: verifier_value_added_true_delta_0.1800_ci95_0.0800_0.3000",
+      "inference_substrate": "deterministic_verifier_plus_replay",
+      "max_selectable_headroom": 0.18,
+      "max_selectable_headroom_rounded": 0.18,
+      "missing_discriminator": "headroom_controlled_verifier_value_added_moat",
+      "moat_delta_vs_vote": {
+        "arm_a_pass1": 0.84,
+        "arm_b_sc_vote_pass1": 0.66,
+        "bootstrap_resamples": 2000,
+        "ci95": [
+          0.08,
+          0.3
+        ],
+        "delta": 0.18,
+        "n": 50,
+        "status": "measured"
+      },
+      "moat_vs_matched_control": {
+        "arm_a_pass1": 0.84,
+        "arm_c_no_verifier_pass1": 0.66,
+        "control_policy": "deterministic_first_of_k_no_verifier",
+        "delta": 0.18,
+        "n": 50,
+        "status": "measured"
+      },
+      "positive_control": {
+        "oracle_at_k": 0.84,
+        "oracle_minus_sc_vote": 0.18,
+        "sc_vote_pass1": 0.66,
+        "selection_flips_vs_vote": 50,
+        "status": "headroom_present",
+        "verifier_recovers_outvoted": 9
+      },
+      "positive_control_confirmed": true,
+      "reproducibility_checksum": "e3b3f38b88a1daa95505f5ee2d7de86d7440a3d91a8cc3acaf1738e032ed7c2f",
+      "source_artifacts": [
+        "results/experiment_4175_headroom_gate_executable_census.json",
+        "results/experiment_4177_decisive_headroom_controlled_moat_test.json"
+      ],
+      "status": "filled_headroom_controlled_verifier_value_added",
+      "verifier_value_added": true
+    },
+    "regression_guard_passed": true,
+    "status": "included"
+  },
+  "reproducibility_checksum": "c275cceea9e8ce215b2dc4ef5d5b7580bdf4e6fddbeb256a512cd9c960cef37c",
+  "schema": "carnot.capstone_v387_4183.v1",
+  "sota_v388": {
+    "flagged_for_v388": "cem_gap3_stage2_compositional_arc_energy_v388",
+    "honest_verdict": "complete: sota_ingestion_moat_gap3_diffusion_mapped_v388",
+    "status": "included"
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4183",
+    "SCENARIO-CAPSTONE-4183"
+  ],
+  "strongest_sota_method_flagged_for_v388": "cem_gap3_stage2_compositional_arc_energy_v388",
+  "total_arc_levels_solved": 14,
+  "upstream_provenance": [
+    {
+      "experiment_id": 4175,
+      "fields_imported": [
+        "headroom_present_domain",
+        "max_selectable_headroom",
+        "per_domain_headroom"
+      ],
+      "honest_verdict": "complete: headroom_present_domain_code_max_selectable_headroom_0.1800",
+      "path": "results/experiment_4175_headroom_gate_executable_census.json",
+      "sha256": "61766072b6920638bfffbfef8771de0e4f6189387136fc8d486ee32b1ae5ff04",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4177,
+      "fields_imported": [
+        "domain",
+        "verifier_value_added",
+        "positive_control_confirmed",
+        "moat_delta_vs_vote",
+        "moat_vs_matched_control",
+        "accuracy_cost_pareto"
+      ],
+      "honest_verdict": "complete: verifier_value_added_true_delta_0.1800_ci95_0.0800_0.3000",
+      "path": "results/experiment_4177_decisive_headroom_controlled_moat_test.json",
+      "sha256": "a0fe4cc2e9cefbcd0d4a7834c9b6f73da51780ef0cfa6051bca9a3b901d411c5",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4178,
+      "fields_imported": [
+        "pass2_energy_vs_vote",
+        "all_four_gates_pass",
+        "gates",
+        "headroom_capture_fraction",
+        "candidate_auroc"
+      ],
+      "honest_verdict": "complete: gap3_stage1_model_native_latent_honest_negative_model_native_basis_pca_gold_mahalanobis_delta_0.0000_energy_0.4516_vote_0.4516",
+      "path": "results/experiment_4178_gap3_stage1_model_native_arc_energy.json",
+      "sha256": "ce7bc844e3d22a64bb938f2be63bb7ac2891d4bb9113cc8e8e1f84390da487c1",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4179,
+      "fields_imported": [
+        "total_levels_solved",
+        "total_games_solved",
+        "new_levels_solved_this_task",
+        "real_env_confirmed"
+      ],
+      "honest_verdict": "success: incremental_progress_lp85-305b61c3_advanced_to_L2_total14",
+      "path": "results/experiment_4179_arc_incremental_progress.json",
+      "sha256": "109640efb0a345347c2651a0c745d53dbac1daaf9d48016b7bb53f7380404dfe",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4180,
+      "fields_imported": [
+        "flagged_for_v388"
+      ],
+      "honest_verdict": "complete: sota_ingestion_moat_gap3_diffusion_mapped_v388",
+      "path": "results/experiment_4180_sota_ingestion_moat_gap3_diffusion.json",
+      "sha256": "b4f8dbb280ff599a512988a5891c4aec62b1048ba45fcf9621cc0bc368560711",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4181,
+      "fields_imported": [
+        "regression_guard_passed",
+        "moat_verdict",
+        "gap3_stage1_result"
+      ],
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v387_truth_regression_guard_passed_True_moat_filled_headroom_controlled_verifier_value_added_gap3_open_stage1_honest_negative_does_not_advance",
+      "path": "results/experiment_4181_verifier_registry_gaps_hygiene.json",
+      "sha256": "a8bcc7e9f412bf8734d2b7fb0ebe618a9a15e144b98e4701dce9008148577a72",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4182,
+      "fields_imported": [
+        "kv260_terminal_confirmed",
+        "gatemate_step_taken",
+        "polarfire_step_taken"
+      ],
+      "honest_verdict": "complete: hardware_continuity_4182_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+      "path": "results/experiment_4182_hardware_continuity.json",
+      "sha256": "b24961880e994d61e23428ea1561e7c0c782938b475a9508c45f0a7dc4c91531",
+      "skip_reason": "",
+      "skipped": false
+    }
+  ],
+  "verifier_moat": {
+    "accuracy_cost_pareto": {
+      "arm_a_over_arm_b_selection_cost_ratio": 2.0,
+      "arm_a_over_arm_c_selection_cost_ratio": 4.0,
+      "arm_a_total_selection_cost_units": 200,
+      "arm_a_total_selector_evals": 100,
+      "arm_a_total_verifier_evals": 100,
+      "arm_b_total_vote_weight_reads": 100,
+      "arm_c_total_first_candidate_reads": 50,
+      "cost_unit": "candidate_level_selection_operation_generation_budget_held_constant",
+      "efficiency_parity": false,
+      "latency_s": {
+        "arm_a_verifier_selector_selection": 0.000210074,
+        "arm_b_sc_vote_selection": 2.3615e-05,
+        "arm_c_no_verifier_selection": 1.904e-06
+      },
+      "parity_at_n_times_cheaper": null,
+      "same_candidate_budget": true,
+      "status": "measured",
+      "value_added_basis": "accuracy_lift_ci95_excludes_zero"
+    },
+    "domain": "code",
+    "executable_domain": true,
+    "headroom_present": true,
+    "headroom_present_domain": "code",
+    "honest_verdict": "complete: verifier_value_added_true_delta_0.1800_ci95_0.0800_0.3000",
+    "max_selectable_headroom": 0.18,
+    "moat_delta_vs_vote": {
+      "arm_a_pass1": 0.84,
+      "arm_b_sc_vote_pass1": 0.66,
+      "bootstrap_resamples": 2000,
+      "ci95": [
+        0.08,
+        0.3
+      ],
+      "delta": 0.18,
+      "n": 50,
+      "status": "measured"
+    },
+    "moat_vs_matched_control": {
+      "arm_a_pass1": 0.84,
+      "arm_c_no_verifier_pass1": 0.66,
+      "control_policy": "deterministic_first_of_k_no_verifier",
+      "delta": 0.18,
+      "n": 50,
+      "status": "measured"
+    },
+    "positive_control": {
+      "oracle_at_k": 0.84,
+      "oracle_minus_sc_vote": 0.18,
+      "sc_vote_pass1": 0.66,
+      "selection_flips_vs_vote": 50,
+      "status": "headroom_present",
+      "verifier_recovers_outvoted": 9
+    },
+    "positive_control_confirmed": true,
+    "status": "PROVEN-headroom-present",
+    "verifier_value_added": true
+  },
+  "verifier_moat_status": "PROVEN-headroom-present"
+}
