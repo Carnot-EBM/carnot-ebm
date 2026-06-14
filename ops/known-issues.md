@@ -11,6 +11,32 @@
 - Active index: `ops/active-priorities.md`
 - Historical entries below are preserved for audit trail; superseded, parked, consolidated, and retired statuses live in the audit table.
 
+### 2026-06-14 (P0 MANDATORY-NEXT-MILESTONE, operator "2+3+1"): Re-aim the verifier program at the ORACLE-DISTINCT frontier
+
+**Insight (the `.386–`.388 arc, see `docs/research-notes/verifier-graft-v3-design.md`):**
+Carnot's verifier wins everywhere it can EXECUTE (code +18pp; efficiency vs LLM-judge;
+ARC GAP-4 execution 0.45→0.58) and TIES vote everywhere it must rely on a LEARNED/ENERGY
+signal (Sudoku-at-convergence; GAP-3 ARC energy). The execution wins are CIRCULAR
+(verifier == the executable oracle) — valid results, but NOT a proven moat and NOT
+headline/gate-eligible (see CLAUDE.md "Circularity / Oracle-Distinctness Discipline";
+enforced by `adversarial_verify.py:check_circular_moat_overclaim`). The deep, defensible,
+still-UNPROVEN claim is an oracle-DISTINCT verifier.
+
+**Planner direction (mandatory until an oracle-distinct win lands):**
+1. **HEADLINE = an ORACLE-DISTINCT (learned/energy) verifier** that captures ARC-class
+   headroom where execution is NOT trivially the oracle — i.e. close the
+   GAP-3-energy-ties-vote-on-ARC gap (e.g. distill the GAP-4 execution signal into a
+   learned verifier that generalizes off-oracle; or a learned ARC energy that beats vote).
+   Every such task sets `verifier_is_oracle: false` and reports a MATCHED no-verifier
+   control with CI95-excl-0.
+2. **COMPLEMENTARY = the verifier-as-DETECTOR measurement** (cheap; cached data) —
+   detection AUROC where SELECTION headroom is ~0 (spec:
+   `docs/research-notes/verifier-as-detector-measurement-spec.md`).
+3. **STOP re-running CIRCULAR confirmations** — code/HumanEval test-pass selection,
+   efficiency-vs-LLM-judge on code, Sudoku-at-convergence. They are `execution_grounded`
+   results, already known, and NOT headline-eligible (the lint WARNs them). Re-measuring
+   them is churn (Depth-Over-Breadth / north-star §1).
+
 ## GATED FORWARD-QUEUE (queued; explicitly NOT a MANDATORY-NEXT-MILESTONE priority; do NOT force-pick-up)
 
 Entries here are SPECCED and QUEUED but GATED on a condition. The planner MUST NOT
@@ -26,11 +52,15 @@ NOT apply (these are intentionally deferred, not overdue).
   math). DiffusionGemma = Google's open-weight Apache-2.0 26B/4B-active discrete-token-
   diffusion model (June 2026). This is the LLM-scale realization of the SAME thesis the
   TRM verifier-graft tests — DEPTH, not a new direction.
-- **GATE (operator directive 2026-06-13 "queued but not competing"):** activate ONLY
-  after the TRM verifier-graft (.383+ Sudoku graft, exp4128-lineage) reports
-  `verifier_value_added == true` (or rerank/RFT lift with CI95 excluding 0) on the
-  executable Sudoku domain. If the TRM graft is NULL, the bottleneck is verifier
-  discrimination (not the substrate) → do NOT activate.
+- **GATE (CORRECTED 2026-06-14 — STILL-PENDING):** the original gate (TRM-Sudoku graft
+  `verifier_value_added==true`) is SUPERSEDED. The TRM-Sudoku test was structurally void
+  (deterministic generator → no headroom), and the later code/efficiency wins are CIRCULAR
+  (verifier == executable oracle) → NOT gate-eligible. Per the corrected spec gate
+  (`diffusiongemma-energy-guided-diffusion-spec.md` THE GATE) + CLAUDE.md "Circularity /
+  Oracle-Distinctness Discipline", activate ONLY when an **oracle-DISTINCT** (learned/
+  energy) verifier captures real headroom on an oracle-distinct domain with a matched
+  control (`verifier_is_oracle: false`, CI95-excl-0). Status: **STILL-PENDING** — the
+  open frontier (P0 priority above). Do NOT activate on a circular execution win.
 - **Why gated, not next-milestone:** the TRM-Sudoku test is the cheapest DECISIVE
   version of the same question; DiffusionGemma cannot answer it faster. Queuing it here
   keeps it from competing with the unfinished TRM core question.
