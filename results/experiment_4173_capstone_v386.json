@@ -1,0 +1,202 @@
+{
+  "arc_games_solved": {
+    "current_arc_experiment_id": 4169,
+    "current_arc_status": "skipped_flagged_adversarial",
+    "source": "prior_clean_carry_forward",
+    "source_experiment_id": 4165,
+    "status": "included_carry_forward",
+    "total_arc_games_solved": 13
+  },
+  "baseline_val_trajectory": {
+    "advanced_past_seed": true,
+    "baseline_faithful": false,
+    "checkpoint_mtime": "2026-06-13T04:41:29.093138Z",
+    "current_val_exact_accuracy": 0.504166662693,
+    "faithful_threshold": 0.85,
+    "honest_verdict": "complete: outerloop_training_alive_val_0.5042_below_0.85",
+    "outerloop_train_alive": true,
+    "rounded_values": [
+      0.278,
+      0.504
+    ],
+    "seed_val": 0.278172343969,
+    "source_experiment_id": 4167,
+    "status": "outerloop_training_in_progress",
+    "target_val": 0.87,
+    "val_crossed_085": false,
+    "val_crossed_087": false,
+    "values": [
+      0.278172343969,
+      0.504166662693
+    ]
+  },
+  "defensive_graft_verdict": {
+    "baseline_current_val_exact_accuracy": 0.514843761921,
+    "graft_deferred": true,
+    "honest_verdict": "complete: graft_deferred_outerloop_training_val_0.5148",
+    "source_experiment_id": 4168,
+    "status": "deferred",
+    "verifier_value_added": false
+  },
+  "diffusiongemma_gate": {
+    "basis": "clean_exp4168_defensive_graft_verifier_value_added",
+    "resolved": false,
+    "status": "STILL-PENDING"
+  },
+  "diffusiongemma_gate_status": "STILL-PENDING",
+  "duration_s": 0.0015832219942240044,
+  "experiment_id": 4173,
+  "field_principles": {
+    "baseline_val_trajectory": "Val from the outer-loop run; shows convergence toward 0.87.",
+    "diffusiongemma_gate_status": "RESOLVED-positive / RESOLVED-null / STILL-PENDING.",
+    "headline_outcome": "One of the enumerated set -- forces a single unambiguous read.",
+    "honest_verdict": "Terminal-prefixed. An honest 'outer-loop training in progress' is COMPLETE and valuable.",
+    "upstream_provenance": "{experiment_id, fields_imported, sha256} per cited upstream."
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "experiment_id": 4169,
+      "path": "results/experiment_4169_arc_incremental_progress.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "218d4e5169f884dfce6234881a92f47b4b8df63ce1ef10969c647215c5f27375"
+    }
+  ],
+  "hardware_continuity": {
+    "gatemate_step_taken": "blocked_gatemate_unreachable",
+    "honest_verdict": "complete: hardware_continuity_4172_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+    "kv260_terminal_confirmed": true,
+    "per_board_reachability": {
+      "gatemate": false,
+      "kv260": true,
+      "polarfire": true
+    },
+    "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded",
+    "status": "included"
+  },
+  "headline_answers": {
+    "defensive_graft_result": "deferred",
+    "diffusiongemma_gate_status": "STILL-PENDING",
+    "outerloop_advanced_past_0278_toward_087": true,
+    "total_arc_games_solved": 13
+  },
+  "headline_outcome": "outerloop_training_in_progress",
+  "honest_verdict": "complete: capstone_v386_outerloop_training_in_progress_val_0.504166662693_checkpoint_2026-06-13T04:41:29.093138Z_graft_deferred_diffusiongemma_STILL-PENDING_arc_games13_flagged_skipped1",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "missing_upstream_artifacts": [],
+  "random_seed": 4173,
+  "registry_gap_hygiene": {
+    "diffusiongemma_gate_state": {
+      "basis": "exp4168_rerank_lift_vs_vote_or_verifier_value_added",
+      "graft_deferred": true,
+      "reason": "no_positive_rerank_signal_and_no_training_time_value_added",
+      "rerank_ci_excludes_zero_positive": false,
+      "state": "kept_gated",
+      "uses_executable_oracle_upper_bound": false,
+      "verifier_value_added": false
+    },
+    "honest_verdict": "complete: registry_gaps_reconciled_to_v386_truth_regression_guard_passed_True_baseline_open_outerloop_training_alive_val_0.5042_graft_open_graft_deferred_outerloop_training_val_0.5148_diffusiongemma_kept_gated",
+    "regression_guard_passed": true,
+    "status": "included"
+  },
+  "reproducibility_checksum": "7c9499c23b3584d6c7abda129c8190059bb5eca01676cab1143499ed5ac26369",
+  "schema": "carnot.capstone_v386_4173.v1",
+  "sota_guidance": {
+    "flagged_for_v387": "vstar_rejected_trace_selector_headroom_gate_before_diffusiongemma_v387",
+    "honest_verdict": "complete: sota_ingestion_verifier_moat_guidance_mapped_v387",
+    "methods_mapped_count": 8,
+    "status": "included"
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4173",
+    "SCENARIO-CAPSTONE-4173"
+  ],
+  "total_arc_games_solved": 13,
+  "upstream_provenance": [
+    {
+      "experiment_id": 4165,
+      "fields_imported": [
+        "total_games_solved"
+      ],
+      "honest_verdict": "blocked: capstone_v385_accumulation_still_blocked_baseline_skipped_flagged_adversarial_rerank_skipped_flagged_adversarial_graft_skipped_flagged_adversarial_diffusiongemma_STILL-PENDING_games13_flagged_skipped4",
+      "path": "results/experiment_4165_capstone_v385.json",
+      "sha256": "d170cf4de5e22ac104071c98ea19dc17b1d822314c923d8a7e02237a490081e6",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4167,
+      "fields_imported": [
+        "current_val_exact_accuracy",
+        "checkpoint_mtime",
+        "outerloop_train_alive",
+        "baseline_faithful",
+        "val_crossed_085"
+      ],
+      "honest_verdict": "complete: outerloop_training_alive_val_0.5042_below_0.85",
+      "path": "results/experiment_4167_outerloop_training_monitor.json",
+      "sha256": "4fa130b47320474de92c933654aa48fb59dc1c69f670b9439d7b1e430cd9fd10",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4168,
+      "fields_imported": [
+        "graft_deferred",
+        "verifier_value_added",
+        "baseline_status"
+      ],
+      "honest_verdict": "complete: graft_deferred_outerloop_training_val_0.5148",
+      "path": "results/experiment_4168_decisive_verifier_graft_defensive.json",
+      "sha256": "6b2902842905ec080470471e5f3f0b33bd737c61fabfbff00c27f9446b1f8bb4",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4169,
+      "fields_imported": [],
+      "honest_verdict": "complete: incremental_progress_no_solve_no_unsolved_nonspatial_candidates",
+      "path": "results/experiment_4169_arc_incremental_progress.json",
+      "sha256": "218d4e5169f884dfce6234881a92f47b4b8df63ce1ef10969c647215c5f27375",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4170,
+      "fields_imported": [
+        "methods_mapped",
+        "flagged_for_v387"
+      ],
+      "honest_verdict": "complete: sota_ingestion_verifier_moat_guidance_mapped_v387",
+      "path": "results/experiment_4170_sota_ingestion_verifier_moat_guidance.json",
+      "sha256": "a8ec3cff1690e10e0d47f841c86a71778c5dc7f85389c0be850ccd18afcd1fea",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4171,
+      "fields_imported": [
+        "regression_guard_passed",
+        "diffusiongemma_gate_state"
+      ],
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v386_truth_regression_guard_passed_True_baseline_open_outerloop_training_alive_val_0.5042_graft_open_graft_deferred_outerloop_training_val_0.5148_diffusiongemma_kept_gated",
+      "path": "results/experiment_4171_verifier_registry_gaps_hygiene.json",
+      "sha256": "7553ee293554d755dff35be98268fa42aaed3cc492267378fefe5f3cf1d08ad1",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4172,
+      "fields_imported": [
+        "kv260_terminal_confirmed",
+        "per_board_reachability",
+        "gatemate_step_taken",
+        "polarfire_step_taken"
+      ],
+      "honest_verdict": "complete: hardware_continuity_4172_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+      "path": "results/experiment_4172_hardware_continuity.json",
+      "sha256": "2640e44a63fd1945e90c79f7dc2b303b39937b995f0e9a64c3dc5c16c384fb9d",
+      "skip_reason": "",
+      "skipped": false
+    }
+  ]
+}
