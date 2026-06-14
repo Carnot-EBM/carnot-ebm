@@ -14379,6 +14379,67 @@ replay plus `.388` role, writes `gaps_updated` containing the efficiency moat,
 GAP-4 graded gate, and sovereign generator entries touched, and uses no
 inference substrate other than cached GAP-4 replay and ledger reconciliation.
 
+### REQ-VERIFY-4204: Verifier Registry And Gaps Hygiene For .389 Reward Outcomes
+
+The repository SHALL provide Exp 4204 at
+`python/carnot/experiment_4204_verifier_registry_gaps_hygiene.py` and
+`results/experiment_4204_verifier_registry_gaps_hygiene.py` to keep the
+verifier registry and gap ledger honest for the `.389` verifier-as-reward
+pivot. The runner SHALL replay the canonical GAP-4 ARC-1 cached candidate set
+offline from `results/arc3_gap3_stage2_eval_pool.json.gz` and
+`results/arc3_gap4_induced_programs.json`, SHALL reproduce vote pass@2
+`0.4516` and gated pass@2 `0.5806` bit-exact, and SHALL NOT run Codex, GGUF
+inference, GPU inference, or TRM training.
+
+The runner SHALL read
+`results/experiment_4197_verifier_reward_phase0_headroom_harness_build.json`,
+`results/experiment_4199_verifier_reward_decisive_a_vs_b_collect.json`, and
+`results/experiment_4200_certified_arc_corpus_distill_lift.json`. It SHALL
+record the Exp 4197 Phase-0 operating point with
+`phase0_precision=0.9561855670103093` and
+`youden_j=0.4137931034482759`; it SHALL record the Exp 4199 A-vs-B state as
+blocked when `honest_verdict=blocked_gate_check_failed` and
+`training_launched=false`, with `verifier_label_carries_signal=false`,
+`a_vs_b_delta=null`, and `a_vs_b_ci95=null` rather than fabricating a positive
+reward verdict. It SHALL record the Exp 4200 certified ARC corpus status with
+`certified_corpus_size=16`, `certification_precision.rate=0.9375`,
+`distill_lift_ci95=[0.0, 0.0]`, and
+`invisible_leash_diagnosis=uninformative` when the seeded checkpoint is missing.
+
+The registry SHALL annotate the `gap4_program_induction_stack` entry with an
+Exp 4204 replay marker and a `.389` verifier-as-reward hygiene role. The gaps
+ledger SHALL contain an append-only/replaced-by-marker `GAP-REWARD` entry for
+the verifier-as-reward A-vs-B axis and a
+`GAP-REWARD-CERTIFIED-CORPUS-4200` note for the certified ARC corpus and
+distill-lift read.
+
+The terminal artifact SHALL write
+`results/experiment_4204_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_updated`,
+bare bool `registry_updated`, `verifier_reward_outcome`,
+`certified_arc_corpus`, and
+`inference_substrate=cached_gap4_replay_and_ledger_reconciliation`. Its
+`field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled to the .389 truth.`;
+`regression_guard_passed` = `BARE bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression.`;
+`gaps_updated` = `Lists the verifier_gaps entries touched (the GAP-REWARD verifier-as-reward axis + the certified-corpus note).`
+
+### SCENARIO-VERIFY-4204: Cached Replay Records .389 Reward Truth
+
+Given the GAP-4 cached ARC-1 pool, saved induced-program artifact, Exp 4197,
+Exp 4199, Exp 4200, `ops/verifier_registry.yaml`, and `ops/verifier_gaps.md`
+are readable, when Exp 4204 runs, then it writes the terminal artifact with
+`regression_guard_passed=true`, records vote `0.4516` to gated `0.5806`,
+records Phase-0 precision `0.9561855670103093` and Youden-J
+`0.4137931034482759`, records the Exp 4199 verifier-as-reward A-vs-B verdict
+as blocked with `verifier_label_carries_signal=false`, `a_vs_b_delta=null`,
+and `a_vs_b_ci95=null`, records the Exp 4200 certified corpus as
+`certified_corpus_size=16` with no measured distill lift, annotates the
+registry with the Exp 4204 replay plus `.389` reward role, writes
+`gaps_updated` containing `GAP-REWARD` and
+`GAP-REWARD-CERTIFIED-CORPUS-4200`, and uses no inference substrate other than
+cached GAP-4 replay and ledger reconciliation.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
