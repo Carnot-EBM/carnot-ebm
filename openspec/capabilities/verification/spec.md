@@ -12184,6 +12184,50 @@ gate matches or exceeds the exact-match `+4/-0` pass@2 baseline, or
 `complete: gap4_graded_relaxation_adds_nothing_on_arc1...` when the relaxation
 adds no ARC-1 recovery beyond the exact baseline.
 
+### REQ-VERIFY-4188: Sovereign Local GAP-4 Generator Self-Distillation Corpus
+
+The repository SHALL provide Exp 4188 at
+`results/experiment_4188_sovereign_local_generator_gap4_self_distill.py` to
+measure whether a cached local SOTA GGUF generator plus the hardened GAP-4
+graded execution gate recovers ARC-1 pool headroom without any closed-weight
+call. Before any induction or replay, the runner SHALL call
+`cached_sota_pair()` and SHALL stop with
+`honest_verdict=blocked_model_not_cached_sota_gguf` if fewer than two mandated
+SOTA GGUFs resolve to `.gguf` paths. It SHALL load or reference the selected
+generator by `.gguf` path only and SHALL NOT use `AutoTokenizer` for the GGUF
+precondition.
+
+For a complete run, the implementation SHALL induce or replay local GGUF
+best-of-N `def transform(grid)` samples using demo pairs only, re-verify each
+candidate program mechanically against all demos, execute verified
+demo-perfect programs on test inputs, and rerank the ARC-1 candidate pool with
+the Exp 4187 hardened guarded graded gate. The generator prompt surface SHALL
+exclude task ids, candidate pools, and gold test outputs. The runner SHALL
+bank verifier-labeled demo-perfect `(demo_pairs -> program)` pairs into a
+JSONL self-distillation corpus and SHALL NOT fine-tune the GGUF in this
+milestone.
+
+The terminal artifact SHALL write
+`results/experiment_4188_sovereign_local_generator_gap4_self_distill.json`
+with top-level fields `honest_verdict`, `local_induction_rate`,
+`sovereign_pool_pass2`, `self_distillation_corpus_size`,
+`no_closed_weight_call`, `model_specs`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`, `field_principles`,
+`duration_s`, and `inference_substrate`. `no_closed_weight_call` SHALL be a
+bare bool and SHALL be true for every completed or model-blocked run.
+
+### SCENARIO-VERIFY-4188: Local GGUF Replay Banks Demo-Perfect Programs
+
+Given a cached SOTA GGUF pair, a readable ARC-1 candidate pool, and local GGUF
+samples for that pool, when Exp 4188 runs, then it re-verifies demo-perfect
+programs without closed-weight calls, reports `local_induction_rate` as
+`demo-perfect / total` with the Codex `29/31` reference, reports
+`sovereign_pool_pass2` for the local hardened-gate rerank against TRM vote and
+the Codex hardened-gate reference, reports
+`self_distillation_corpus_size` as the number of verifier-labeled demo-perfect
+programs banked, emits a terminal-prefix complete or success verdict, and
+writes the self-distillation corpus without gold labels.
+
 ### REQ-VERIFY-4036: Decentralization Stronger-Base Best-of-N Build Gate
 
 The repository SHALL provide Exp 4036 at

@@ -1,0 +1,285 @@
+{
+  "duration_s": 1.168103,
+  "experiment": "experiment_4188_sovereign_local_generator_gap4_self_distill",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed. An honest 'local generator under-induces vs codex' is a COMPLETE, decision-grade verdict (it bounds the sovereignty claim).",
+    "local_induction_rate": "demo-perfect / total with a LOCAL generator vs the codex 29/31 -- the decentralization-rule-1 measurement.",
+    "model_specs": "The local GGUF generator invoked; required methodology for a live-LLM artifact.",
+    "no_closed_weight_call": "Bare bool: zero codex/closed-weight calls were made (decentralization rule 1 -- Carnot works end-to-end on local open models).",
+    "random_seed": "Determinism precondition; the induction + verification must be reproducible.",
+    "reproducibility_checksum": "Hash of the task subset + generator config; catches silent drift.",
+    "self_distillation_corpus_size": "Count of verifier-labeled demo-perfect programs banked for distillation -- the FR-11 self-learning loop where the energy function is the ground-truth reward.",
+    "sovereign_pool_pass2": "pool-rerank pass@2 with the local generator + hardened gate vs TRM vote -- does a fully-sovereign stack recover ARC headroom?"
+  },
+  "honest_verdict": "success: sovereign_local_gap4_recovers_headroom_pass20.4839_cov0.2258_corpus7",
+  "inference_substrate": "local_gguf_checkpoint_replay_plus_deterministic_hardened_gate",
+  "local_induction_rate": {
+    "codex_reference": {
+      "demo_perfect": 29,
+      "rate": 0.9355,
+      "total": 31
+    },
+    "demo_perfect": 7,
+    "rate": 0.2258,
+    "total": 31
+  },
+  "model_specs": {
+    "generator_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "generator_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "generator_model": "Qwen3.6-35B-A3B",
+    "generator_source": "local_gguf_checkpoint_replay",
+    "hardened_gate": "experiment_4187_gap4_graded_execution_gate_hardening",
+    "source_checkpoint_k_samples_per_task": 8,
+    "source_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/decentralization_moe_qwen35a3b_arc1_k8.checkpoint.json",
+    "source_checkpoint_schema": "carnot.experiment_4059_decentralization_moe_resume.checkpoint.v1"
+  },
+  "n_tasks": 31,
+  "n_unique_tasks": 30,
+  "no_closed_weight_call": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "models": [
+        {
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "name": "Qwen3.6-35B-A3B"
+        },
+        {
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "resource": "sota_gguf_pair_cached"
+    },
+    {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz",
+      "resource": "arc1_candidate_pool"
+    },
+    {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/decentralization_moe_qwen35a3b_arc1_k8.checkpoint.json",
+      "resource": "local_gguf_samples_checkpoint"
+    },
+    {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4187_gap4_graded_execution_gate_hardening.json",
+      "resource": "hardened_gap4_gate_artifact"
+    }
+  ],
+  "prior_local_moe_null": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4069_decentralization_moe_sync.json",
+  "programs_reverified": [
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "50a16a69"
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "has_prediction": true,
+      "task": "66e6c45b"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "17cae0c1"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "fafd9572"
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "has_prediction": true,
+      "task": "a59b95c0"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "4e469f39"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "a57f2f04"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "96a8c0cd"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "8719f442"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "1a2e2828"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "25094a63"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "2f0c5170"
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "has_prediction": true,
+      "task": "3ee1011a"
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "has_prediction": true,
+      "task": "2072aba6"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "712bf12e"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "505fff84"
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "has_prediction": true,
+      "task": "be03b35f"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "c7d4e6ad"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "1a6449f1"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "f0df5ff0"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "81c0276b"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "692cd3b6"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "c3202e5a"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "ac3e2b04"
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "has_prediction": true,
+      "task": "0b17323b"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "5833af48"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "79fb03f4"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "b9630600"
+    },
+    {
+      "demo_fit": 1.0,
+      "demo_perfect": true,
+      "has_prediction": true,
+      "task": "00576224"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "f3e62deb"
+    },
+    {
+      "demo_fit": 0.0,
+      "demo_perfect": false,
+      "has_prediction": false,
+      "task": "f3e62deb"
+    }
+  ],
+  "random_seed": 12345,
+  "reproducibility_checksum": "81a4a43ecabd833a",
+  "reproducibility_checksum_sources": [
+    "/home/ianblenke/github.com/ianblenke/carnot/results/decentralization_moe_qwen35a3b_arc1_k8.checkpoint.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz"
+  ],
+  "schema": "carnot.experiment_4188_sovereign_local_generator_gap4_self_distill.v1",
+  "self_distillation_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4188_sovereign_local_generator_gap4_self_distill_corpus.jsonl",
+  "self_distillation_corpus_size": 7,
+  "sovereign_pool_pass2": {
+    "LOCAL_HARDENED_GATE": 0.4839,
+    "TRM_VOTE": 0.4516,
+    "codex_hardened_reference": 0.5806,
+    "delta_vs_vote": 0.0323,
+    "gate_fire_count": 6,
+    "guard_block_count": 0,
+    "lost": 0,
+    "pass_at_1": {
+      "LOCAL_HARDENED_GATE": 0.4839,
+      "TRM_VOTE": 0.4194
+    },
+    "recovered": 1
+  },
+  "title": "Sovereign local GAP-4 generator with hardened execution gate"
+}
