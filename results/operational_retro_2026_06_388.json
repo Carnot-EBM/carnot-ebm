@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.388",
+  "generated_at": "2026-06-14T13:24:03Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.06.388's authoritative timing data reports 0 experiment commits since activation (0 completed, 0 compute-bound, 0 wall-time minutes). This matches a recurring milestone-scoped false-zero detector gap that immediately-prior retros (notably .386, and the ~.363-.385 window) documented: the conductor-injected timing feed reports zero even though experiments ran and are visible in the on-disk changelog window. Both RTX 3090s were idle, which is correct — with no compute-bound task in the authoritative feed, gpu_idle_on_compute_bound_tasks is null and is not a bottleneck.",
+  "bottlenecks_identified": [
+    "Recurring milestone-scoped false-zero detector gap: the conductor-injected timing feed reports 0 experiment commits since activation — the same symptom prior retros (.386 and the ~.363-.385 window) attributed to the detector not seeing commits that did land in the on-disk changelog window, not to a true absence of work. Because of this gap, per-experiment wall-time, throughput, and GPU efficiency cannot be analyzed from the authoritative data this milestone.",
+    "The changelog-window observability fallback flagged in the .386 retro still has not been wired into the conductor's retro timing path, so the false zero persists into .388."
+  ],
+  "improvements_suggested": [
+    "Wire the changelog-window fallback (flagged in the .386 retro) into the conductor's retro timing path so the milestone-scoped detector stops reporting false zeros — the single fix that would make .389+ retros analyzable again.",
+    "Add commit-to-milestone attribution: tag each experiment commit with the active milestone id at commit time, so the detector counts by attribution rather than by an activation-time window that misses commits.",
+    "Housekeeping (not a milestone bottleneck): both GPUs show 4MB allocated at 0% util — sweep for leftover idle processes so the next compute-bound milestone starts from a clean 0MB baseline."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Wire the changelog-window fallback into the conductor retro timing path so the recurring false-zero detector gap (~.363-.388) stops blinding operational retros.",
+    "Tag experiment commits with the active milestone id at commit time, enabling commit-to-milestone attribution that survives activation-window edge cases.",
+    "Free the 4MB-but-0%-util GPU allocations on both 3090s as routine housekeeping before the next compute-bound milestone."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The recurring theme — now spanning ~.363 through .388 — is not slow experiments but a blind retro: a false-zero detector that hides the milestone's real work and prevents any efficiency analysis. The highest-leverage move is fixing instrumentation, not compute; these fixes save no experiment wall-time (hence 0%) but restore the retro's ability to find real bottlenecks. As with .386, no GPU bottleneck exists because no compute-bound task reached the authoritative feed — flagging GPU idle would be the false positive the interpretation rule guards against."
+}
