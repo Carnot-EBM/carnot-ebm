@@ -1,0 +1,343 @@
+{
+  "experiment": "experiment_4208_verifier_as_detector_auroc",
+  "schema": "carnot.verifier_detector_auroc.v1",
+  "honest_verdict": "complete: detector_selection_divergence_sudoku_math",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed. A clean per-domain detector measurement (high AUROC where selection had none, OR AUROC~0.5 everywhere) is a COMPLETE, decision-grade result either way.",
+    "detection_auroc_by_domain": "BARE per-domain {domain: auroc} -- the detection axis the selector metric cannot see; value for abstention/precision even at zero selection headroom.",
+    "selector_headroom_by_domain": "BARE per-domain {domain: oracle@K - vote} from .387/.388 -- the contrast axis; the headline is detection >> 0.5 WHERE selector_headroom ~0.",
+    "verifier_is_oracle_by_domain": "Per-domain bool -- on code/Sudoku the executable check IS the oracle (circular/execution-grounded detector); declares honestly which domains' detection is oracle-distinct (Circularity Discipline).",
+    "controls": "{base_rate, random_auroc, valid_but_wrong_auroc(Sudoku)} -- the positive/negative controls + the degenerate-detector guard that rule out a trivially-high AUROC (FALSE_NEGATIVE_RISK / the invalid-grid trap).",
+    "random_seed": "Determinism precondition; the bootstrap AUROC must be reproducible.",
+    "reproducibility_checksum": "Hash of the cached pools scored; catches silent pool drift."
+  },
+  "inference_substrate": "cached_pool_scoring_plus_live_trm_checkpoint_decode_no_llm_generation",
+  "spec_refs": [
+    "REQ-VERIFY-4208",
+    "SCENARIO-VERIFY-4208"
+  ],
+  "detection_auroc_by_domain": {
+    "sudoku": 1.0,
+    "code": 1.0,
+    "math": 1.0,
+    "arc": 0.9016
+  },
+  "detection_auroc_ci95_by_domain": {
+    "sudoku": [
+      1.0,
+      1.0
+    ],
+    "code": [
+      1.0,
+      1.0
+    ],
+    "math": [
+      1.0,
+      1.0
+    ],
+    "arc": [
+      0.7828,
+      0.9984
+    ]
+  },
+  "selector_headroom_by_domain": {
+    "sudoku": 0.0007,
+    "code": 0.18,
+    "math": 0.0,
+    "arc": 0.129
+  },
+  "n_by_domain": {
+    "sudoku": 4224,
+    "code": 100,
+    "math": 651,
+    "arc": 8041
+  },
+  "verifier_is_oracle_by_domain": {
+    "sudoku": true,
+    "code": true,
+    "math": true,
+    "arc": false
+  },
+  "metrics_by_domain": {
+    "sudoku": {
+      "n": 4224,
+      "auroc": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "base_rate": 0.7902,
+      "brier": 0.0117,
+      "precision_at_recall_0.9": {
+        "precision": 1.0,
+        "recall": 0.9002,
+        "coverage": 0.7114,
+        "threshold": 1.0
+      },
+      "abstention_curve": [
+        {
+          "coverage": 1.0,
+          "n_kept": 4224,
+          "accuracy": 0.7902
+        },
+        {
+          "coverage": 0.9,
+          "n_kept": 3801,
+          "accuracy": 0.8782
+        },
+        {
+          "coverage": 0.75,
+          "n_kept": 3168,
+          "accuracy": 1.0
+        },
+        {
+          "coverage": 0.5,
+          "n_kept": 2112,
+          "accuracy": 1.0
+        },
+        {
+          "coverage": 0.25,
+          "n_kept": 1056,
+          "accuracy": 1.0
+        }
+      ],
+      "random_auroc": 0.5001,
+      "random_auroc_ci95": [
+        0.4797,
+        0.5213
+      ],
+      "valid_but_wrong_n": 3338,
+      "valid_but_wrong_negatives": 0,
+      "valid_but_wrong_auroc": null,
+      "valid_but_wrong_auroc_ci95": [
+        null,
+        null
+      ],
+      "valid_but_wrong_note": "need both valid-correct and valid-wrong outputs",
+      "decode_sanity_checked": true
+    },
+    "code": {
+      "n": 100,
+      "auroc": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "base_rate": 0.75,
+      "brier": 0.0,
+      "precision_at_recall_0.9": {
+        "precision": 1.0,
+        "recall": 0.9067,
+        "coverage": 0.68,
+        "threshold": 1.0
+      },
+      "abstention_curve": [
+        {
+          "coverage": 1.0,
+          "n_kept": 100,
+          "accuracy": 0.75
+        },
+        {
+          "coverage": 0.9,
+          "n_kept": 90,
+          "accuracy": 0.8333
+        },
+        {
+          "coverage": 0.75,
+          "n_kept": 75,
+          "accuracy": 1.0
+        },
+        {
+          "coverage": 0.5,
+          "n_kept": 50,
+          "accuracy": 1.0
+        },
+        {
+          "coverage": 0.25,
+          "n_kept": 25,
+          "accuracy": 1.0
+        }
+      ],
+      "random_auroc": 0.5163,
+      "random_auroc_ci95": [
+        0.3744,
+        0.6706
+      ]
+    },
+    "math": {
+      "n": 651,
+      "auroc": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "base_rate": 0.341,
+      "brier": 0.0,
+      "precision_at_recall_0.9": {
+        "precision": 1.0,
+        "recall": 0.9009,
+        "coverage": 0.3072,
+        "threshold": 1.0
+      },
+      "abstention_curve": [
+        {
+          "coverage": 1.0,
+          "n_kept": 651,
+          "accuracy": 0.341
+        },
+        {
+          "coverage": 0.9,
+          "n_kept": 585,
+          "accuracy": 0.3795
+        },
+        {
+          "coverage": 0.75,
+          "n_kept": 488,
+          "accuracy": 0.4549
+        },
+        {
+          "coverage": 0.5,
+          "n_kept": 325,
+          "accuracy": 0.6831
+        },
+        {
+          "coverage": 0.25,
+          "n_kept": 162,
+          "accuracy": 1.0
+        }
+      ],
+      "random_auroc": 0.4805,
+      "random_auroc_ci95": [
+        0.4319,
+        0.5272
+      ]
+    },
+    "arc": {
+      "n": 8041,
+      "auroc": 0.9016,
+      "ci95": [
+        0.7828,
+        0.9984
+      ],
+      "base_rate": 0.0024,
+      "brier": 0.4343,
+      "precision_at_recall_0.9": {
+        "precision": 0.004,
+        "recall": 0.9474,
+        "coverage": 0.5593,
+        "threshold": 0.0
+      },
+      "abstention_curve": [
+        {
+          "coverage": 1.0,
+          "n_kept": 8041,
+          "accuracy": 0.0024
+        },
+        {
+          "coverage": 0.9,
+          "n_kept": 7236,
+          "accuracy": 0.0026
+        },
+        {
+          "coverage": 0.75,
+          "n_kept": 6030,
+          "accuracy": 0.003
+        },
+        {
+          "coverage": 0.5,
+          "n_kept": 4020,
+          "accuracy": 0.0042
+        },
+        {
+          "coverage": 0.25,
+          "n_kept": 2010,
+          "accuracy": 0.008
+        }
+      ],
+      "random_auroc": 0.4682,
+      "random_auroc_ci95": [
+        0.3595,
+        0.5956
+      ]
+    }
+  },
+  "controls": {
+    "sudoku": {
+      "base_rate": 0.7902,
+      "random_auroc": 0.5001,
+      "random_auroc_ci95": [
+        0.4797,
+        0.5213
+      ],
+      "valid_but_wrong_auroc": null,
+      "valid_but_wrong_auroc_ci95": [
+        null,
+        null
+      ],
+      "valid_but_wrong_n": 3338,
+      "valid_but_wrong_negatives": 0,
+      "valid_but_wrong_note": "need both valid-correct and valid-wrong outputs"
+    },
+    "code": {
+      "base_rate": 0.75,
+      "random_auroc": 0.5163,
+      "random_auroc_ci95": [
+        0.3744,
+        0.6706
+      ]
+    },
+    "math": {
+      "base_rate": 0.341,
+      "random_auroc": 0.4805,
+      "random_auroc_ci95": [
+        0.4319,
+        0.5272
+      ]
+    },
+    "arc": {
+      "base_rate": 0.0024,
+      "random_auroc": 0.4682,
+      "random_auroc_ci95": [
+        0.3595,
+        0.5956
+      ]
+    }
+  },
+  "detection_beats_random_ci95_exclusive_by_domain": {
+    "sudoku": true,
+    "code": true,
+    "math": true,
+    "arc": true
+  },
+  "divergence_domains": [
+    "sudoku",
+    "math"
+  ],
+  "decode_sanity": {
+    "sudoku": {
+      "gold_valid_frac": 1.0,
+      "greedy_exact_accuracy": 0.7902,
+      "expected_test_accuracy_band": [
+        0.74,
+        0.85
+      ],
+      "checked": true,
+      "checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+      "duration_s": 59.5
+    }
+  },
+  "random_seed": 4208,
+  "bootstrap_resamples": 1000,
+  "reproducibility_checksum": "sha256:e10adaa412cd13944c7f7e2e68a2665ad58f46f8c36c3450a7330de72adb12e4",
+  "source_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_trm_verifier_rerank.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4175_headroom_gate_executable_census.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/data/p01_difficulty_matched_generations.jsonl",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_induced_programs.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/v3_headroom_probe_0.82.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt"
+  ],
+  "duration_s": 73.338
+}

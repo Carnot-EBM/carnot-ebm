@@ -20010,3 +20010,39 @@ margin, records `ensemble_vs_score_matched_margin` with a CI95 from at least
 ldt_margin_LATTICE_REAL_scorematched_margin...` only when the CI lower bound is
 above zero, and otherwise sets `complete:
 ldt_margin_LATTICE_MARGINAL_scorematched_margin..._ci_includes_zero_edge_is_score_dist_not_deductive`.
+
+### REQ-VERIFY-4208: Verifier-As-Detector AUROC Complementarity
+
+The repository shall extend `scripts/exp_verifier_detector_auroc.py` and provide
+`results/experiment_4208_verifier_as_detector_auroc.py` to measure verifier
+DETECTION separately from verifier SELECTION headroom using cached pools only.
+- The workflow SHALL first confirm
+  `results/arc3_trm_verifier_rerank.json`,
+  `results/experiment_4175_headroom_gate_executable_census.json`, and the
+  detector probe import are available; otherwise it SHALL write a terminal
+  `blocked_detector_cached_pools_missing` artifact and stop without live LLM
+  generation.
+- The workflow SHALL compute per-domain detector rows `(verifier_score,
+  is_correct)` for Sudoku, code, math, and ARC when cached rows are available:
+  Sudoku from the TRM checkpoint outputs with token-decode sanity checked
+  against greedy exact test accuracy, code/math from cached executable or exact
+  checks, and ARC from GAP-4 demo-fit/execution-consistency cached rows.
+- The artifact SHALL report bare `detection_auroc_by_domain` and
+  `selector_headroom_by_domain` dictionaries, AUROC bootstrap CI95, Brier,
+  precision at recall 0.9, accuracy-vs-coverage abstention curves, base-rate and
+  random-score controls, and Sudoku valid-but-wrong AUROC.
+- The artifact SHALL declare `verifier_is_oracle_by_domain`, `random_seed`,
+  `reproducibility_checksum`, `inference_substrate`, decode sanity fields, and
+  field principles that preserve the Circularity / Oracle-Distinctness and
+  FALSE_NEGATIVE_RISK disciplines.
+
+### SCENARIO-VERIFY-4208: Detection Divergence Is Reported With Controls
+
+**Given** the cached selector-headroom artifacts and detector row sources are
+available
+**When** Exp 4208 scores verifier confidence against correctness labels
+**Then** the artifact records detector AUROC with bootstrap CI95 per available
+domain, contrasts those AUROCs against selector headroom, includes random-score
+and base-rate controls plus the Sudoku valid-but-wrong split, and emits a
+terminal honest verdict that is complete whether AUROC is high where headroom is
+near zero or AUROC remains random everywhere.
