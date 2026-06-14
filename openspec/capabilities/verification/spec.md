@@ -13769,6 +13769,69 @@ persists a JSON selector model at `selector_path`, emits the required field
 principles, and uses `cached_artifact_oof_vstar_selector` as its inference
 substrate.
 
+### REQ-VERIFY-4177: Decisive Headroom-Controlled Verifier Moat Test
+
+The repository SHALL provide
+`python/carnot/reporting/decisive_headroom_controlled_moat_4177.py` and
+`results/experiment_4177_decisive_headroom_controlled_moat_test.py` to run the
+headroom-controlled verifier moat measurement only on the executable domain
+selected by Exp 4175. The runner SHALL first read
+`results/experiment_4175_headroom_gate_executable_census.json`; if
+`max_selectable_headroom < 0.10`, if `headroom_present_domain` is empty, or if
+the executable-oracle smoke check fails, it SHALL write an honest gated
+terminal artifact and SHALL NOT fabricate an uninformative null.
+
+When the gate passes for the code domain, the runner SHALL use the same cached
+K-candidate pool as Exp 4176. Arm A SHALL rank candidates by cached executable
+verifier evidence and the persisted V-STaR selector, Arm B SHALL rank by
+self-consistency vote weight, and Arm C SHALL use the same candidate budget
+with no verifier via deterministic first-of-K selection. The runner SHALL
+measure pass@1 for all three arms, oracle pass@k, total verifier/selector/vote
+selection cost and latency, Arm A minus Arm B with bootstrap CI95, and Arm A
+minus Arm C. It SHALL run `scripts/adversarial_verify.py` against the written
+artifact.
+
+The terminal artifact SHALL write
+`results/experiment_4177_decisive_headroom_controlled_moat_test.json` with
+required fields `honest_verdict`, bare bool `verifier_value_added`,
+`moat_delta_vs_vote`, `moat_vs_matched_control`, `accuracy_cost_pareto`, bare
+bool `positive_control_confirmed`, bare int `random_seed`, string
+`reproducibility_checksum`, `field_principles`, `spec_refs`,
+`inference_substrate=deterministic_verifier_plus_replay`, and `duration_s`.
+`verifier_value_added` SHALL be true only when Arm A beats SC-vote with CI95
+excluding zero, or matches SC-vote while costing less at equal accuracy.
+`positive_control_confirmed` SHALL be true only when oracle pass@k exceeds
+SC-vote pass@1 and at least one Arm A selection differs from SC-vote on the
+corpus.
+
+The required field principles are:
+`honest_verdict` = `Terminal-prefixed. A clean positive, a clean (headroom-present) null, or a gated deferral are ALL COMPLETE.`;
+`verifier_value_added` = `Bare bool: did ARM A beat SC-vote (CI95 excl 0) OR match it at lower cost? Resolves the moat question and the DiffusionGemma gate when headroom is present.`;
+`moat_delta_vs_vote` = `pass@1(A) - pass@1(B) with CI95 -- the accuracy axis of the moat, now measured WHERE headroom exists.`;
+`moat_vs_matched_control` = `pass@1(A) - pass@1(C) -- proves a win is the verifier, not extra adaptation compute (arXiv:2511.02886).`;
+`accuracy_cost_pareto` = `Compute/latency ratio at equal accuracy -- the efficiency-parity win condition (north-star §5; arXiv:2504.01005).`;
+`positive_control_confirmed` = `Bare bool: oracle@k > SC-vote AND >=1 flip occurred on this corpus -- without it the null is uninformative (FALSE_NEGATIVE_RISK).`;
+`random_seed` = `Determinism precondition for reproducibility of the decisive measurement.`;
+`reproducibility_checksum` = `Content hash of candidate pool + verifier config; lets a third party re-run the decisive test.`
+
+### SCENARIO-VERIFY-4177: Headroom-Present Code Pool Compares Verifier Vote And Control
+
+Given Exp 4175 names `code` with selectable headroom at least `0.10`, Exp 4176
+has persisted a selector for the same pool, and the executable-oracle smoke
+check passes, when Exp 4177 runs, then it scores the code candidates without
+fresh LLM inference, writes pass@1 for verifier+selector, SC-vote, and matched
+first-of-K control, reports Arm A minus Arm B with bootstrap CI95 and Arm A
+minus Arm C, records oracle pass@k and flip counts, sets
+`positive_control_confirmed=true`, sets `verifier_value_added` according to the
+CI-or-cost rule, emits the required field principles, and records the
+adversarial-verifier report.
+
+If Exp 4175 reports no domain clearing `0.10`, then Exp 4177 SHALL write
+`honest_verdict=complete_moat_test_deferred_no_headroom_present`, set
+`positive_control_confirmed=false`, keep `verifier_value_added=false`, include
+the same required fields with empty measured-arm metrics, and stop before
+scoring Arm A, B, or C.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at

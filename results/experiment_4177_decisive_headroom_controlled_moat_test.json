@@ -1,0 +1,94 @@
+{
+  "acceptance_gate": true,
+  "accuracy_cost_pareto": {
+    "arm_a_over_arm_b_selection_cost_ratio": 2.0,
+    "arm_a_over_arm_c_selection_cost_ratio": 4.0,
+    "arm_a_total_selection_cost_units": 200,
+    "arm_a_total_selector_evals": 100,
+    "arm_a_total_verifier_evals": 100,
+    "arm_b_total_vote_weight_reads": 100,
+    "arm_c_total_first_candidate_reads": 50,
+    "cost_unit": "candidate_level_selection_operation_generation_budget_held_constant",
+    "efficiency_parity": false,
+    "latency_s": {
+      "arm_a_verifier_selector_selection": 0.000210074,
+      "arm_b_sc_vote_selection": 2.3615e-05,
+      "arm_c_no_verifier_selection": 1.904e-06
+    },
+    "parity_at_n_times_cheaper": null,
+    "same_candidate_budget": true,
+    "status": "measured",
+    "value_added_basis": "accuracy_lift_ci95_excludes_zero"
+  },
+  "adversarial_verify": {
+    "flagged_count": 0,
+    "reports": [
+      {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4177_decisive_headroom_controlled_moat_test.json",
+        "exp_id": null,
+        "flag_count": 0,
+        "flags": [],
+        "honest_verdict": "complete: verifier_value_added_true_delta_0.1800_ci95_0.0800_0.3000",
+        "loaded": true,
+        "max_severity": -1,
+        "title": ""
+      }
+    ],
+    "returncode": 0
+  },
+  "candidate_pool_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json",
+  "domain": "code",
+  "duration_s": 0.062057,
+  "executable_oracle_check": {
+    "available": true,
+    "detail": "subprocess import ok"
+  },
+  "field_principles": {
+    "accuracy_cost_pareto": "Compute/latency ratio at equal accuracy -- the efficiency-parity win condition (north-star \u00a75; arXiv:2504.01005).",
+    "honest_verdict": "Terminal-prefixed. A clean positive, a clean (headroom-present) null, or a gated deferral are ALL COMPLETE.",
+    "moat_delta_vs_vote": "pass@1(A) - pass@1(B) with CI95 -- the accuracy axis of the moat, now measured WHERE headroom exists.",
+    "moat_vs_matched_control": "pass@1(A) - pass@1(C) -- proves a win is the verifier, not extra adaptation compute (arXiv:2511.02886).",
+    "positive_control_confirmed": "Bare bool: oracle@k > SC-vote AND >=1 flip occurred on this corpus -- without it the null is uninformative (FALSE_NEGATIVE_RISK).",
+    "random_seed": "Determinism precondition for reproducibility of the decisive measurement.",
+    "reproducibility_checksum": "Content hash of candidate pool + verifier config; lets a third party re-run the decisive test.",
+    "verifier_value_added": "Bare bool: did ARM A beat SC-vote (CI95 excl 0) OR match it at lower cost? Resolves the moat question and the DiffusionGemma gate when headroom is present."
+  },
+  "honest_verdict": "complete: verifier_value_added_true_delta_0.1800_ci95_0.0800_0.3000",
+  "inference_substrate": "deterministic_verifier_plus_replay",
+  "moat_delta_vs_vote": {
+    "arm_a_pass1": 0.84,
+    "arm_b_sc_vote_pass1": 0.66,
+    "bootstrap_resamples": 2000,
+    "ci95": [
+      0.08,
+      0.3
+    ],
+    "delta": 0.18,
+    "n": 50,
+    "status": "measured"
+  },
+  "moat_vs_matched_control": {
+    "arm_a_pass1": 0.84,
+    "arm_c_no_verifier_pass1": 0.66,
+    "control_policy": "deterministic_first_of_k_no_verifier",
+    "delta": 0.18,
+    "n": 50,
+    "status": "measured"
+  },
+  "positive_control": {
+    "oracle_at_k": 0.84,
+    "oracle_minus_sc_vote": 0.18,
+    "sc_vote_pass1": 0.66,
+    "selection_flips_vs_vote": 50,
+    "status": "headroom_present",
+    "verifier_recovers_outvoted": 9
+  },
+  "positive_control_confirmed": true,
+  "random_seed": 4177,
+  "reproducibility_checksum": "e3b3f38b88a1daa95505f5ee2d7de86d7440a3d91a8cc3acaf1738e032ed7c2f",
+  "spec_refs": [
+    "REQ-VERIFY-4177",
+    "SCENARIO-VERIFY-4177"
+  ],
+  "verifier_value_added": true
+}
