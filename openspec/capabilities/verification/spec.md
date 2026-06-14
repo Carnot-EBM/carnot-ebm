@@ -13655,6 +13655,58 @@ Exp 4171 replay plus Exp 4168 training-time executable-Sudoku role, writes
 no inference substrate other than cached GAP-4 replay and ledger
 reconciliation.
 
+### REQ-VERIFY-4175: Executable Headroom Gate Census
+
+The repository SHALL provide `scripts/headroom_gate.py` and
+`results/experiment_4175_headroom_gate_executable_census.py` to census cached
+candidate pools for selectable headroom before any verifier-value rerun. The
+census SHALL use only objective executable oracles: unit-test pass flags for
+code pools, exact-match answers for math pools, and exact correctness flags for
+Sudoku/ARC pools. It SHALL NOT use an LLM judge.
+
+For every domain, the headroom function SHALL report bare numeric
+`oracle_at_k`, `baseline_pass1`, `sc_vote_pass1`,
+`selectable_headroom=oracle_at_k - sc_vote_pass1`, `n`, and
+`artifact_flags`. Candidate pools that contain only a single greedy completion
+or no stored K-candidate rows SHALL be marked `census_incomplete` for that
+domain and excluded from the positive-control pick. Candidate outputs that are
+truncated, mis-formatted, unparseable, or otherwise missing the objective
+oracle fields SHALL be counted in `artifact_inflation_flagged` and SHALL NOT be
+counted as oracle hits.
+
+The terminal artifact SHALL write
+`results/experiment_4175_headroom_gate_executable_census.json` with
+`honest_verdict`, bare float `max_selectable_headroom`, string
+`headroom_present_domain`, `per_domain_headroom`,
+`artifact_inflation_flagged`, `field_principles`, `spec_refs`, and
+`inference_substrate=cached_artifact_objective_oracle_census`. If no cached
+multi-candidate executable pool exists, the artifact SHALL set
+`honest_verdict=blocked_no_multicandidate_pool`, keep
+`max_selectable_headroom=0.0`, and leave `headroom_present_domain` empty. If
+cached executable pools exist but none clears selectable headroom `0.10`, the
+artifact SHALL emit an honest no-domain-clears verdict rather than fabricating a
+positive control.
+
+The required field principles are:
+`honest_verdict` = `Terminal-prefixed. A clean census (even 'no domain clears 0.10') is a COMPLETE verdict.`;
+`max_selectable_headroom` = `BARE float (oracle@k - SC-vote, sanitized) -- the downstream gate for A3 compares this raw value; a principle-dict would break the gate (gated-fields-must-be-bare).`;
+`headroom_present_domain` = `Names the executable domain A3 must run on; the positive control that makes a null informative.`;
+`per_domain_headroom` = `oracle@k/baseline/vote/headroom/artifact_flags per domain so a reviewer can audit the pick and the sanitization.`;
+`artifact_inflation_flagged` = `Count of candidates excluded as truncated/mis-formatted; proves the headroom is real, not an evaluation artifact (arXiv:2605.07395).`.
+
+### SCENARIO-VERIFY-4175: Cached Pools Produce Sanitized Positive-Control Pick
+
+Given the cached HumanEval code artifact, cached GSM8K/adversarial math
+artifacts, and cached Sudoku/ARC candidate-table artifacts are readable, when
+Exp 4175 runs, then it writes the terminal census artifact, reports incomplete
+math pools without treating gold-only rows as candidate completions, computes
+code headroom from objective baseline/repair pass flags, computes Sudoku/ARC
+headroom from objective candidate correctness and vote counts, excludes
+unparseable candidates from oracle hits, emits bare
+`max_selectable_headroom`, and either names the executable domain with the
+largest sanitized selectable headroom or records that no executable domain
+clears `0.10`.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
