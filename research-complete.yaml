@@ -39552,7 +39552,11 @@ milestones:
     verifier-as-reward graft if val crosses 0.85
   doc: openspec/change-proposals/research-roadmap-v385.md
   completed: '2026-06-13'
-  finding: '.385 close-state: bounded accumulation no-op''d again and the conductor continuation collided with the detached outer-loop run on shared GPU/checkpoint paths. The baseline seed remains 0.278172343969; Exp4157 reported blocked_noop_step_unchanged with no manual_lr_step advance and no new validation row. Per operator decision A (2026-06-13), the conductor STANDS DOWN on TRM training: the outer-loop owns the contiguous training. .386 tasks must not launch TRM training, kill train.py, or write results/trm_runs/sudoku_extreme_baseline/.'
+  finding: '.385 close-state: bounded accumulation no-op''d again and the conductor continuation collided with the detached
+    outer-loop run on shared GPU/checkpoint paths. The baseline seed remains 0.278172343969; Exp4157 reported blocked_noop_step_unchanged
+    with no manual_lr_step advance and no new validation row. Per operator decision A (2026-06-13), the conductor STANDS DOWN
+    on TRM training: the outer-loop owns the contiguous training. .386 tasks must not launch TRM training, kill train.py,
+    or write results/trm_runs/sudoku_extreme_baseline/.'
   activation_recorded: exp4166-archive-v385-activate-v386
   tasks:
   - id: exp4156-archive-v384-activate-v385
@@ -39638,4 +39642,79 @@ milestones:
       = exp4161; SOTA = exp4162. Honest verdict + whether .386 continues the contiguous run + whether the DiffusionGemma gate
       moved. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on.'
     deliverable: results/experiment_4165_capstone_v385.json
+    result: OK (conductor)
+- id: 2026.06.386
+  title: Conductor STANDS DOWN on TRM training (outer-loop owns the contiguous run); MONITOR + DEFENSIVE graft only
+  doc: "Operator directive 2026-06-13 (decision \"A\"): the TRM Sudoku-Extreme baseline training is OWNED\nBY THE OUTER-LOOP,\
+    \ which runs ONE detached contiguous job (results/trm_runs/contiguous_run.log,\nPID in results/trm_runs/contiguous_run.pid)\
+    \ resuming from the stable checkpoint\n(results/trm_runs/sudoku_extreme_baseline/last.ckpt) toward ~0.87. The conductor's\
+    \ bounded-task\nmodel structurally CANNOT do this (80-min wall-cap; the .383/.384/.385 bounded passes all no-op'd\non\
+    \ the cumulative-max_time bug) AND the conductor's own continuation tasks COLLIDED with the\nouter-loop run (.385 exp4157\
+    \ shared the checkpoint/GPU/paths and killed net progress). So .386\nCEDES TRM training to the outer-loop.\n\nHARD COORDINATION\
+    \ RULE (every .386 task MUST obey): NO conductor task may launch TRM training,\nrun `pkill`/`kill` against `train.py`,\
+    \ or WRITE the stable checkpoint dir\n(results/trm_runs/sudoku_extreme_baseline/). Training-related tasks are READ-ONLY:\
+    \ they read the\ncheckpoint val + the contiguous_run.log + the train PID, and report. This prevents the .385\ncollision\
+    \ from recurring.\n\nThe decisive verifier graft is DEFENSIVE and gated on BOTH (val >= 0.85) AND (the outer-loop train\n\
+    process is NO LONGER running) \u2014 so it never reads a checkpoint that is being written. The\nouter-loop will stop its\
+    \ run when val converges (~0.87), making the checkpoint stable for the graft.\n\nNOTE: nano-trm/src/nn/models/trm.py was\
+    \ locally edited (mode=\"default\" not \"reduce-overhead\") to\nfix the CUDAGraphs-overwrite crash; this is a local fix\
+    \ to the gitignored vendored clone.\n"
+  completed: '2026-06-14'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4166-archive-v385-activate-v386
+    title: Archive .385 -> activate .386; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
+      + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .385
+      close-state (bounded accumulation no-op'd again + collided with the outer-loop run; baseline 0.278; outer-loop now OWNS
+      the contiguous training).
+    deliverable: results/experiment_4166_archive_v385_activate_v386.json
+    result: OK (conductor)
+  - id: exp4167-outerloop-training-monitor
+    title: 'OUTER-LOOP TRAINING MONITOR (READ-ONLY; the conductor''s replacement for its retired continuation-training slot).
+      Report the outer-loop contiguous run''s status: stable-checkpoint val_exact_accuracy + mtime, train PID alive?, latest
+      val from the contiguous_run metrics CSV, and whether val has crossed 0.85. LAUNCH NO TRAINING, run NO pkill/kill, WRITE
+      NOTHING under the stable checkpoint dir.'
+    deliverable: results/experiment_4167_outerloop_training_monitor.json
+    result: OK (conductor)
+  - id: exp4168-decisive-verifier-graft-defensive
+    title: "THE DECISIVE verifier graft v2 (gate lowered to 0.82 per 2026-06-13 operator directive) \u2014 DEFENSIVE, gated\
+      \ on (val>=0.82 AND outer-loop train STOPPED). Reads (never writes/trains) the stable checkpoint. IF faithful+stable:\
+      \ rerank (verifier vs TRM-vote, pass@1 lift CI) + verifier-cert-vs-vote-cert RFT de-confound on a COPY of the checkpoint.\
+      \ IF not: DEFER honestly. Resolves the moat question + the DiffusionGemma gate when it fires."
+    deliverable: results/experiment_4168_decisive_verifier_graft_v2_gate082.json
+    result: OK (conductor)
+  - id: exp4169-arc-incremental-progress
+    title: ARC-AGI-3 INCREMENTAL +1 (monotonic) via the PROVEN explore-first method. Bounded active-exploration OBSERVES transitions
+      -> induce mechanic + goal predicate -> GAP-4 verifier validates on held-out transitions -> act only if validated. Next-easiest
+      non-spatial game not yet solved. REAL-ENV-CONFIRM any solve; STOP at the first level that fails.
+    deliverable: results/experiment_4169_arc_incremental_progress.json
+    result: OK (conductor)
+  - id: exp4170-sota-ingestion-verifier-moat-guidance
+    title: 'SOTA-INGESTION SLOT (reserved; bleeding-edge track): ingest verifier-as-reward / energy-guided-generation literature
+      mapped onto the (outer-loop) Sudoku baseline -> graft headline + the queued DiffusionGemma energy-guidance use. TRM
+      2510.04871, TTA-TRM 2511.02886, V-STaR 2402.06457, SEDD 2310.16834, classifier/energy-guided diffusion. SOTA->experiment
+      mapping note; flag strongest for .387. Cite real arXiv IDs.'
+    deliverable: results/experiment_4170_sota_ingestion_verifier_moat_guidance.json
+    result: OK (conductor)
+  - id: exp4171-verifier-registry-gaps-hygiene
+    title: 'VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval reproducing
+      the canonical GAP-4 ARC-1 numbers from cached candidates (zero codex/GGUF). RECORD the .386 state: the outer-loop training
+      val trajectory + the graft result/deferral. Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source
+      of truth.'
+    deliverable: results/experiment_4171_verifier_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4172-hardware-continuity
+    title: 'Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 DONE). Per-board reachability
+      + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile flash). PolarFire (ssh
+      polarfire; toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card
+      Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board.'
+    deliverable: results/experiment_4172_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4173-capstone-v386
+    title: 'Capstone .386 (UNGATED): headline question is HAS THE OUTER-LOOP CONTIGUOUS RUN CONVERGED THE BASELINE TOWARD
+      0.87, AND DID THE DEFENSIVE GRAFT FIRE OR DEFER? Aggregate: TRAINING = exp4167 (current_val + checkpoint_mtime advancing
+      + baseline_faithful); GRAFT = exp4168 (graft_deferred OR verifier_value_added + A-vs-B CI); ACCURACY = exp4169; SOTA
+      = exp4170. Honest verdict + whether the DiffusionGemma gate is now resolved. SKIP any flagged_adversarial artifact;
+      cite upstream sha256. NO gated_on.'
+    deliverable: results/experiment_4173_capstone_v386.json
     result: OK (conductor)
