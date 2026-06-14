@@ -1,0 +1,226 @@
+{
+  "certified_arc_corpus": {
+    "artifact_path": "results/experiment_4212_certified_arc_corpus_distill_lift.json",
+    "certification_precision": {
+      "certified": 16,
+      "correct": 15,
+      "rate": 0.9375
+    },
+    "certified_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4212_certified_arc_corpus_distill_lift_corpus.jsonl",
+    "certified_corpus_size": 16,
+    "corrigendum_pending": [
+      {
+        "detail": "distill_lift_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+        "kind": "IMPLAUSIBLE_PERFECT",
+        "severity": "info"
+      },
+      {
+        "detail": "duration_s=1.905772 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+        "kind": "DURATION_TOO_SHORT",
+        "severity": "critical"
+      }
+    ],
+    "distill_lift_ci95": [
+      0.0,
+      0.0
+    ],
+    "distill_lift_delta": 0.0,
+    "distill_lift_latent_vs_absent": "absent",
+    "flagged_adversarial": true,
+    "gap_id": "GAP-REWARD-CERTIFIED-CORPUS-4212",
+    "honest_verdict": "complete: certified_arc_corpus_absent_lift_ci_touches_zero_corpus16_precision0.9375_ci0.0_0.0",
+    "inference_substrate": "cached_codex_programs_plus_local_checkpoint_replay",
+    "local_induction_cold": {
+      "baseline_reference_rate": 0.2258,
+      "demo_perfect": 7,
+      "rate": 0.2258,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4188_sovereign_local_generator_gap4_self_distill.json",
+      "total": 31
+    },
+    "local_induction_with_certified_exemplars": {
+      "condition": "certified_exemplars_in_context_checkpoint_replay",
+      "demo_perfect": 7,
+      "rate": 0.2258,
+      "seeded_exemplar_count": 16,
+      "total": 31
+    },
+    "missing_discriminator": "seeded_local_generation_or_lora_distillation_lift_from_certified_arc_corpus",
+    "reproducibility_checksum": "dccbe9632edc347a",
+    "seeded_generation_status": "missing_seeded_checkpoint_conservative_flat",
+    "source_artifacts": [
+      "results/experiment_4212_certified_arc_corpus_distill_lift.json"
+    ],
+    "status": "certified_corpus_built_distill_lift_absent",
+    "verifier_is_oracle": true
+  },
+  "cited_upstream_artifacts": [
+    "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "results/arc3_gap4_induced_programs.json",
+    "results/experiment_4208_verifier_as_detector_auroc.json",
+    "results/experiment_4209_oracle_distinct_arc_verifier_build.json",
+    "results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json",
+    "results/experiment_4211_verifier_as_reward_finish_synchronous.json",
+    "results/experiment_4212_certified_arc_corpus_distill_lift.json"
+  ],
+  "detector_aurocs": {
+    "artifact_path": "results/experiment_4208_verifier_as_detector_auroc.json",
+    "detection_auroc_by_domain": {
+      "arc": 0.9016,
+      "code": 1.0,
+      "math": 1.0,
+      "sudoku": 1.0
+    },
+    "detection_auroc_ci95_by_domain": {
+      "arc": [
+        0.7828,
+        0.9984
+      ],
+      "code": [
+        1.0,
+        1.0
+      ],
+      "math": [
+        1.0,
+        1.0
+      ],
+      "sudoku": [
+        1.0,
+        1.0
+      ]
+    },
+    "detection_beats_random_ci95_exclusive_by_domain": {
+      "arc": true,
+      "code": true,
+      "math": true,
+      "sudoku": true
+    },
+    "gap_id": "GAP-DETECTOR-AUROC-4208",
+    "honest_verdict": "complete: detector_selection_divergence_sudoku_math",
+    "missing_discriminator": "selection_policy_that_converts_detector_signal_into_vote_beating_ranker",
+    "n_by_domain": {
+      "arc": 8041,
+      "code": 100,
+      "math": 651,
+      "sudoku": 4224
+    },
+    "selector_headroom_by_domain": {
+      "arc": 0.129,
+      "code": 0.18,
+      "math": 0.0,
+      "sudoku": 0.0007
+    },
+    "source_artifacts": [
+      "results/experiment_4208_verifier_as_detector_auroc.json"
+    ],
+    "status": "detector_auroc_recorded_all_domains_ci_exclusive",
+    "verifier_is_oracle_by_domain": {
+      "arc": false,
+      "code": true,
+      "math": true,
+      "sudoku": true
+    }
+  },
+  "duration_s": 0.809,
+  "experiment": "experiment_4216_verifier_registry_gaps_hygiene",
+  "field_principles": {
+    "gaps_updated": "Lists the verifier_gaps entries touched (the GAP-ORACLE-DISTINCT frontier entry + the detector + verifier-as-reward + certified-corpus notes).",
+    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled to the .390 truth.",
+    "regression_guard_passed": "BARE bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression."
+  },
+  "gaps_path": "ops/verifier_gaps.md",
+  "gaps_updated": [
+    "GAP-ORACLE-DISTINCT",
+    "GAP-DETECTOR-AUROC-4208",
+    "GAP-REWARD",
+    "GAP-REWARD-CERTIFIED-CORPUS-4212"
+  ],
+  "honest_verdict": "complete: registry_gaps_reconciled_to_v390_truth_regression_guard_passed_True_oracle_distinct_open_a3_blocked_selector_not_trained_reward_open_accumulating_reward_no_eval_yet_certified_corpus_certified_corpus_built_distill_lift_absent",
+  "inference_substrate": "cached_gap4_replay_and_ledger_reconciliation",
+  "offline_replay": {
+    "arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+    "expected": {
+      "arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      }
+    },
+    "gap4_arc1_reproduced": true,
+    "no_codex_calls": true,
+    "no_gguf_inference": true,
+    "regression_guard_passed": true
+  },
+  "oracle_distinct_outcome": {
+    "artifact_path": "results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json",
+    "blocked_at_layer": "conductor_pre_gate",
+    "build_artifact_path": "results/experiment_4209_oracle_distinct_arc_verifier_build.json",
+    "build_honest_verdict": "blocked_arc_pool_no_candidate_labels",
+    "gap_id": "GAP-ORACLE-DISTINCT",
+    "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp4209-oracle-distinct-arc-verifier-build.selector_trained (actual=False == expected=True)",
+    "honest_verdict": "blocked_gate_check_failed",
+    "learned_verifier_path": "",
+    "missing_discriminator": "learned_verifier_that_beats_vote_where_execution_is_not_the_oracle",
+    "oracle_distinct_auroc": 0.0,
+    "oracle_distinct_auroc_ci95": [
+      0.0,
+      0.0
+    ],
+    "oracle_distinct_beats_vote": false,
+    "oracle_distinct_ci95": null,
+    "oracle_distinct_delta": null,
+    "selector_trained": false,
+    "source_artifacts": [
+      "results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json",
+      "results/experiment_4209_oracle_distinct_arc_verifier_build.json"
+    ],
+    "status": "open_a3_blocked_selector_not_trained",
+    "status_from_artifact": "blocked",
+    "verifier_is_oracle": false
+  },
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_updated": true,
+  "regression_guard_passed": true,
+  "schema": "carnot.experiment_4216_verifier_registry_gaps_hygiene.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4216",
+    "SCENARIO-VERIFY-4216"
+  ],
+  "verifier_reward_outcome": {
+    "a_vs_b_ci95": null,
+    "a_vs_b_delta": null,
+    "accumulated_n": {
+      "eval": 0,
+      "train_A": 0,
+      "train_B": 0,
+      "train_C": 0,
+      "train_D": 0
+    },
+    "artifact_path": "results/experiment_4211_verifier_as_reward_finish_synchronous.json",
+    "gap_id": "GAP-REWARD",
+    "honest_verdict": "progress: accumulating_verifier_reward_training_no_eval_yet",
+    "missing_discriminator": "decision_grade_a_vs_b_training_signal_beyond_random_label_control",
+    "pass_at_1": {},
+    "positive_control_confirmed": false,
+    "source_artifacts": [
+      "results/experiment_4211_verifier_as_reward_finish_synchronous.json"
+    ],
+    "status": "open_accumulating_reward_no_eval_yet",
+    "truncation_guard": {
+      "max_allowed_truncation_rate": 0.05,
+      "max_observed_truncation_rate": null
+    },
+    "verifier_is_oracle": true,
+    "verifier_label_carries_signal": false,
+    "youden_j": 0.4137931034482759
+  }
+}

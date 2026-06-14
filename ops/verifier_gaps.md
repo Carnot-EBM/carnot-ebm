@@ -859,3 +859,43 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: materialize the seeded checkpoint or run the bounded LoRA-distill follow-up before claiming the certified labels train a better local generator.
 - priority: high
 <!-- exp4204-certified-corpus:end -->
+
+<!-- exp4216-oracle-distinct:start -->
+### GAP-ORACLE-DISTINCT: Exp 4216 .390 oracle-distinct A3 frontier
+- status: open_a3_blocked_selector_not_trained
+- evidence: `results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json` with build `results/experiment_4209_oracle_distinct_arc_verifier_build.json`; oracle_distinct_beats_vote=false; oracle_distinct_delta=None; oracle_distinct_ci95=None; verifier_is_oracle=false; selector_trained=false; oracle_distinct_auroc=0.0; oracle_distinct_auroc_ci95=[0.0, 0.0]; honest_verdict=blocked_gate_check_failed. GAP-MOAT unchanged.
+- failure mode: A3 did not execute because the learned oracle-distinct ARC selector was not trained from labeled candidates; no vote-beating off-oracle verifier result is claimable.
+- missing discriminator: a learned verifier that beats vote where execution is not the oracle.
+- candidate design: materialize labeled per-candidate ARC rows, train the oracle-distinct selector out of fold, then rerun A3 only if selector_trained=true.
+- priority: high
+<!-- exp4216-oracle-distinct:end -->
+
+<!-- exp4216-detector-auroc:start -->
+### GAP-DETECTOR-AUROC-4208: Exp 4216 detector AUROC status note
+- status: detector_auroc_recorded_all_domains_ci_exclusive
+- evidence: `results/experiment_4208_verifier_as_detector_auroc.json`; sudoku=1.0; code=1.0; math=1.0; arc=0.9016; ci95_by_domain={'sudoku': [1.0, 1.0], 'code': [1.0, 1.0], 'math': [1.0, 1.0], 'arc': [0.7828, 0.9984]}; verifier_is_oracle_by_domain={'sudoku': True, 'code': True, 'math': True, 'arc': False}.
+- failure mode: detector AUROC says the verifier can separate good from bad candidates, but it does not by itself prove a selector beats vote.
+- missing discriminator: a selection policy that converts detector signal into a vote-beating ranker on a headroom-present pool.
+- candidate design: use the detector as a training or calibration source for the oracle-distinct selector, then measure selection lift with bootstrap CI.
+- priority: medium
+<!-- exp4216-detector-auroc:end -->
+
+<!-- exp4216-gap-reward:start -->
+### GAP-REWARD: Exp 4216 .390 verifier-as-reward A-vs-B axis
+- status: open_accumulating_reward_no_eval_yet
+- evidence: `results/experiment_4211_verifier_as_reward_finish_synchronous.json`; verifier_label_carries_signal=false; a_vs_b_delta=None; a_vs_b_ci95=None; youden_j=0.4137931034482759; positive_control_confirmed=false; accumulated_n={'eval': 0, 'train_A': 0, 'train_B': 0, 'train_C': 0, 'train_D': 0}; verifier_is_oracle=true; honest_verdict=progress: accumulating_verifier_reward_training_no_eval_yet.
+- failure mode: the synchronous reward run has not produced held-out A-vs-B eval rows yet, so the verifier-label reward signal remains unproven.
+- missing discriminator: decision-grade evidence that verifier-certified labels beat same-generator random-label controls on held-out hidden tests.
+- candidate design: continue the accumulate/resume path until eval rows exist, then promote only if the A-vs-B CI excludes zero with a valid positive control.
+- priority: high
+<!-- exp4216-gap-reward:end -->
+
+<!-- exp4216-certified-corpus:start -->
+### GAP-REWARD-CERTIFIED-CORPUS-4212: Exp 4216 certified ARC corpus distill-lift note
+- status: certified_corpus_built_distill_lift_absent
+- evidence: `results/experiment_4212_certified_arc_corpus_distill_lift.json`; certified_corpus_size=16; certification_precision.rate=0.9375; distill_lift_delta=0.0; distill_lift_ci95=[0.0, 0.0]; invisible_leash_diagnosis=absent; seeded_generation_status=missing_seeded_checkpoint_conservative_flat; verifier_is_oracle=true; flagged_adversarial=true.
+- failure mode: the certified corpus is high precision, but the seeded-vs-cold read is flat and flagged, so no local distillation lift is established.
+- missing discriminator: measured seeded local generation or LoRA distillation lift from verifier-certified ARC programs.
+- candidate design: materialize a real seeded checkpoint or LoRA-distill follow-up before claiming certified labels improve a local generator.
+- priority: high
+<!-- exp4216-certified-corpus:end -->
