@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.387",
+  "generated_at": "2026-06-14T08:56:01Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative milestone-scoped timing detector reported 0 experiment commits, 0 wall-time minutes, and 0 compute-bound tasks for 2026.06.387 — but this is the RECURRING FALSE-ZERO detector gap (documented across .363–.375 in docs/research-log.md, 11 consecutive through .375), not a genuinely idle milestone. On-disk primary sources contradict the detector: git diff since .387 activation (ffea13829) committed experiment_4175–experiment_4180 artifacts + scripts, ops/changelog.md shows phases A1–D4 all complete, and results/ holds experiment_4175 through experiment_4183 (capstone exp4183, honest_verdict=complete). The single operational finding this milestone is therefore observability, not execution: the timing detector cannot associate the conductor's commits with the active milestone window, so per-experiment wall-time and slowest-experiment ranking are impossible to compute from the detector alone.",
+  "bottlenecks_identified": [
+    "RECURRING timing-detector false-zero (PRIMARY, non-GPU): the milestone-scoped detector reported 0 experiment commits since .387 activation while git, ops/changelog.md, and results/ independently confirm exp4175–exp4183 landed (phases A1–D4 + capstone). This is the same observability gap the research-log flagged as 11 consecutive milestones through .375; .387 is another instance. While the detector is blind, no wall-time or slowest-experiment bottleneck analysis is possible — the locked 0/0/0 fields record what the broken detector saw, not reality.",
+    "Retro-generation depends on a single fragile signal: because the timing detector is the only authoritative numeric input, a detector miss forces every retro to be hand-recovered by reading ops/changelog.md. That manual recovery is itself an operator-time cost incurred every milestone."
+  ],
+  "improvements_suggested": [
+    "Root-cause and fix the milestone-scoped timing detector's commit-association bug. It has under-reported 0 for 11+ consecutive milestones; the likely cause is that '[conductor] PHASE X' / experiment-artifact commits are not being matched to the active milestone tag or commit-range window. This is the highest-leverage operational fix — it restores bottleneck analysis for every future retro at once.",
+    "Until the detector is fixed, wire a changelog fallback into the retro generator: parse ops/changelog.md for the active milestone's '✅ Complete' / honest_verdict lines and results/experiment_*.json run_date+duration_s, so slowest_experiments and total_wall_time_minutes auto-populate instead of defaulting to 0. This is exactly the manual recovery step done by hand this milestone.",
+    "Emit a milestone-scoped duration index built by scanning results/experiment_*.json (run_date, duration_s, inference_substrate) rather than parsing git commits, decoupling timing analysis from the commit-association path that keeps failing."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the timing detector's milestone-association bug (11+ consecutive false-zeros) — the standing observability debt that has degraded every retro since .363.",
+    "Add the ops/changelog.md + results/-scan fallback to the retro generator so a detector miss self-heals into a populated retro instead of a 0/0/0 skeleton.",
+    "Build a results/-directory duration index (run_date/duration_s/inference_substrate) so future wall-time and GPU-efficiency analysis no longer depends on commit parsing."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "For the recurring case documented through .375, the operational story is not that experiments ran slowly — they ran fine, and .387's phases were CPU/offline by design (zero GGUF/GPU), so the idle GPUs are correct behaviour, not a bottleneck. The standing debt is observability: the retro tooling is blind to work that demonstrably landed (exp4175–exp4183). Estimated experiment-wall-time savings are 0 because there is no measured slow experiment to remove; the real win is fixing the detector so future retros can find bottlenecks at all instead of being hand-recovered from the changelog."
+}
