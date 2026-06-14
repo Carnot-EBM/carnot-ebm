@@ -8455,3 +8455,4 @@ c |
 | 2026-06-14 05:38 UTC | Milestone 2026.06.387 activated | OK | 10 tasks queued |
 | 2026-06-14 05:51 UTC | Archive .386 -> activate .387; KEEP the hardened g | OK | 91 passed, 1 warning in 4.92s |
 | 2026-06-14 06:05 UTC | PHASE A1 — Headroom gate + executable-oracle corpu | OK | 87 passed, 1 warning in 5.80s |
+| 2026-06-14 06:21 UTC | PHASE A2 — V-STaR learned selector (arXiv:2402.064 | OK | 87 passed, 1 warning in 5.88s |
