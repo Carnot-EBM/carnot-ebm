@@ -8453,3 +8453,4 @@ c |
 | 2026-06-14 04:49 UTC | Capstone .386 (UNGATED): headline question is HAS  | OK | 85 passed, 1 warning in 4.24s |
 | 2026-06-14 05:35 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-06-14 05:38 UTC | Milestone 2026.06.387 activated | OK | 10 tasks queued |
+| 2026-06-14 05:51 UTC | Archive .386 -> activate .387; KEEP the hardened g | OK | 91 passed, 1 warning in 4.92s |
