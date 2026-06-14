@@ -1,32 +1,36 @@
-milestone: 2026.06.386
-milestone_title: "Conductor STANDS DOWN on TRM training (outer-loop owns the contiguous run); MONITOR + DEFENSIVE graft only"
-milestone_doc: |
-  Operator directive 2026-06-13 (decision "A"): the TRM Sudoku-Extreme baseline training is OWNED
-  BY THE OUTER-LOOP, which runs ONE detached contiguous job (results/trm_runs/contiguous_run.log,
-  PID in results/trm_runs/contiguous_run.pid) resuming from the stable checkpoint
-  (results/trm_runs/sudoku_extreme_baseline/last.ckpt) toward ~0.87. The conductor's bounded-task
-  model structurally CANNOT do this (80-min wall-cap; the .383/.384/.385 bounded passes all no-op'd
-  on the cumulative-max_time bug) AND the conductor's own continuation tasks COLLIDED with the
-  outer-loop run (.385 exp4157 shared the checkpoint/GPU/paths and killed net progress). So .386
-  CEDES TRM training to the outer-loop.
+milestone: 2026.06.387
+milestone_title: "PROVE-OR-BOUND THE VERIFIER MOAT WITH HEADROOM CONTROLS — headroom-gated executable moat test (positive-control) + V-STaR learned selector + GAP-3 Stage-1 model-native ARC energy (CPU; dump exists); DiffusionGemma stays GATED"
+milestone_doc: openspec/change-proposals/research-roadmap-v387.md
+milestone_overview: |
+  The verifier is Carnot's existential value-add (north-star §5). Milestone .386 ran the decisive
+  verifier-as-reward graft on the outer-loop-trained TRM Sudoku baseline (val 0.8227) and got a NULL
+  (exp4168 verifier_value_added=false) — BUT the null is uninformative because oracle@k 0.8125 ≈ the
+  0.82 baseline: Sudoku-Extreme at this checkpoint has almost no selectable headroom, so the test
+  cannot distinguish "verifier fails" from "nothing to select" (FALSE_NEGATIVE_RISK). The two corpora
+  show the two failure modes: Sudoku (verifier perfect, zero headroom) and ARC (real ~13pp headroom,
+  hand-invariant verifier ANTI-ranks — GAP-3). Fresh lit (arXiv:2605.07395) adds that apparent
+  headroom can itself be an evaluation artifact. So .387 answers the moat question PROPERLY:
+    PHASE A — headroom-controlled moat test (positive-control): A1 build a headroom gate with an
+      OBJECTIVE/EXECUTABLE oracle + census cached pools to FIND a headroom-present executable domain;
+      A2 build the V-STaR learned selector (accepted+rejected traces); A3 the decisive moat test on
+      that domain with a MATCHED no-verifier control, reporting accuracy AND cost.
+    PHASE B — GAP-3 Stage-1 model-native ARC energy: the activation dump ALREADY EXISTS
+      (results/arc3_gap3_stage1_candidate_table.npz, z_mean (8041,512)), so this is CPU-only — score
+      with model-native basis + learned probe, run all gates + adversarial checks; does it reach the
+      proven ~13pp headroom?
+    PHASE C — ARC incremental +1 (monotonic; non-spatial exhausted → deeper level / spatial game).
+    PHASE D — reserved slots: SOTA-ingestion, registry+gaps hygiene, hardware continuity, capstone.
+  DiffusionGemma stays GATED: it activates only when a headroom-present executable domain shows
+  verifier_value_added==true. .387 does NOT launch DiffusionGemma; the capstone resolves the gate.
 
-  HARD COORDINATION RULE (every .386 task MUST obey): NO conductor task may launch TRM training,
-  run `pkill`/`kill` against `train.py`, or WRITE the stable checkpoint dir
-  (results/trm_runs/sudoku_extreme_baseline/). Training-related tasks are READ-ONLY: they read the
-  checkpoint val + the contiguous_run.log + the train PID, and report. This prevents the .385
-  collision from recurring.
-
-  The decisive verifier graft is DEFENSIVE and gated on BOTH (val >= 0.85) AND (the outer-loop train
-  process is NO LONGER running) — so it never reads a checkpoint that is being written. The
-  outer-loop will stop its run when val converges (~0.87), making the checkpoint stable for the graft.
-
-  NOTE: nano-trm/src/nn/models/trm.py was locally edited (mode="default" not "reduce-overhead") to
-  fix the CUDAGraphs-overwrite crash; this is a local fix to the gitignored vendored clone.
+  HARD RULE (every task): NO task may launch TRM training, run pkill/kill against train.py, or WRITE
+  results/trm_runs/sudoku_extreme_baseline/. Training is DONE (SIGTERM'd at val 0.8227); the conductor
+  stays stood-down. TRM-touching tasks are READ-ONLY.
 
 tasks:
-  - id: exp4166-archive-v385-activate-v386
-    milestone: 2026.06.386
-    title: "Archive .385 -> activate .386; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .385 close-state (bounded accumulation no-op'd again + collided with the outer-loop run; baseline 0.278; outer-loop now OWNS the contiguous training)."
+  - id: exp4174-archive-v386-activate-v387
+    milestone: 2026.06.387
+    title: "Archive .386 -> activate .387; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .386 close-state (outer-loop TRM converged to val 0.8227; decisive graft FIRED but returned a HEADROOM-LIMITED null, verifier_value_added=false, oracle@k 0.8125 ≈ baseline; DiffusionGemma gate STILL-PENDING; ARC total_games_solved=13)."
     priority: critical
     track: infra
     max_turns: 100
@@ -34,141 +38,336 @@ tasks:
     model: gpt-5.5
     operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): archive-vN-activate-vN+1 — false-positive scope-match vs all prior archive-v* tasks; structurally never a doomed rerun. 2026-06-12 quota-conserve: archive on codex."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4166_archive_v385_activate_v386.json
+    deliverable: results/experiment_4174_archive_v386_activate_v387.json
     prompt: |
-      CONTEXT: Close .385, activate .386. Per operator decision A (2026-06-13), the TRM training is
-      now owned by the OUTER-LOOP (a detached contiguous run); the conductor STANDS DOWN on TRM
-      training to stop the .385-style collision. This archive runs on CODEX (mechanical).
+      CONTEXT: Close .386, activate .387. Per the .386 outcome, the outer-loop owns TRM training
+      (now DONE: val 0.8227, SIGTERM'd) and the conductor stays stood-down on TRM training. This
+      archive runs on CODEX (mechanical).
+
+      EXISTING CODE TO READ FIRST:
+        - research-complete.yaml (the archive target), ops/exclusion_manifest.yaml (parse check)
+        - results/experiment_4173_capstone_v386.json (the .386 close-state to record)
+
+      TASK: archive .386, activate .387, record the .386 close-state truthfully.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: `python3 -c "import yaml; yaml.safe_load(open('research-complete.yaml')); yaml.safe_load(open('ops/exclusion_manifest.yaml'))"` exits 0; smart-subset pre-test gate green. Else -> honest_verdict `blocked_<resource>` and STOP.
-        1. Archive .385 into research-complete.yaml; activate .386.
-        2. Record the .385 close-state (bounded accumulation no-op'd + collided with the outer-loop run; baseline 0.278; outer-loop now owns the contiguous training).
+        0. PRECONDITIONS (check BEFORE any subsequent step):
+           a. `python3 -c "import yaml; yaml.safe_load(open('research-complete.yaml')); yaml.safe_load(open('ops/exclusion_manifest.yaml'))"` exits 0.
+           b. The smart-subset pre-test gate is green.
+           If ANY fails -> honest_verdict `blocked_<resource>` and STOP.
+        1. Archive .386 into research-complete.yaml; activate .387.
+        2. Record the .386 close-state: outer-loop TRM converged to val 0.8227; the decisive graft
+           FIRED but returned a HEADROOM-LIMITED null (verifier_value_added=false, oracle@k 0.8125
+           ≈ baseline 0.82); DiffusionGemma gate STILL-PENDING; ARC total_games_solved=13.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Self-declared terminal state. MUST start with complete:/success:/passed:/shipped:."
-        v385_close_state:
-          principle: "Honest record (conductor ceded TRM training to the outer-loop after collisions) so the next planner does not re-generate competing training tasks."
+          principle: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
+        v386_close_state:
+          principle: "Honest record (graft null was headroom-limited, not a true verifier failure) so the .387 planner frames the moat test as a positive-control problem, not a redo."
         preconditions_checked:
           principle: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
-      ACCEPTANCE: honest_verdict terminal-prefixed; .386 activated; close-state recorded truthfully.
+      ACCEPTANCE: honest_verdict terminal-prefixed; .387 activated; close-state recorded truthfully.
 
-  - id: exp4167-outerloop-training-monitor
-    milestone: 2026.06.386
-    title: "OUTER-LOOP TRAINING MONITOR (READ-ONLY; the conductor's replacement for its retired continuation-training slot). Report the outer-loop contiguous run's status: stable-checkpoint val_exact_accuracy + mtime, train PID alive?, latest val from the contiguous_run metrics CSV, and whether val has crossed 0.85. LAUNCH NO TRAINING, run NO pkill/kill, WRITE NOTHING under the stable checkpoint dir."
+      Run: `python3 results/experiment_4174_archive_v386_activate_v387.py` (or your archive script).
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4175-headroom-gate-executable-census
+    milestone: 2026.06.387
+    title: "PHASE A1 — Headroom gate + executable-oracle corpus census. Build reusable scripts/headroom_gate.py: for each cached candidate pool compute oracle@k vs baseline pass@1 vs SC-vote with an OBJECTIVE/EXECUTABLE oracle (run code/tests, parse math — NO LLM judge, per arXiv:2605.07395), and flag artifact inflation (truncation/format mismatch). Census {code HumanEval/MBPP (exp1999/2090/1607), math GSM8K, Sudoku held-out}. Emit max_selectable_headroom (BARE) + headroom_present_domain. This is the POSITIVE CONTROL the moat test requires."
     priority: high
-    track: trm-baseline
-    max_turns: 40
+    track: verifier-moat
+    max_turns: 60
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13 operator decision A: READ-ONLY monitor of the outer-loop-owned training — false-positive scope-match vs prior training tasks; forward difference = it does NOT train (the outer-loop owns training); it only reports status, preventing the .385 collision."
-    inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4167_outerloop_training_monitor.json
-    prompt: |
-      CONTEXT: The OUTER-LOOP owns the TRM contiguous training. This task ONLY reports its status.
-      It MUST NOT launch any training (no `uv run python src/nn/train.py`), MUST NOT run pkill/kill
-      against train.py, and MUST NOT write anything under results/trm_runs/sudoku_extreme_baseline/.
-
-      CONCRETE STEPS (all READ-ONLY):
-        1. Read results/trm_runs/sudoku_extreme_baseline/last.ckpt mtime (torch.load -> epoch; do NOT modify).
-        2. Read results/trm_runs/contiguous_run.pid; check if that PID is alive (`ps -o etime= -p <pid>`).
-        3. Read the latest val_exact_accuracy from the contiguous_run metrics CSV (find results/trm_runs/contiguous_run_hydra -name metrics.csv).
-        4. Report the trajectory + whether val has crossed 0.85 (faithful threshold for the graft).
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal-prefixed. A status report is COMPLETE; this task never fails on the science (it does not run any)."
-        outerloop_train_alive:
-          principle: "Bare bool: is the outer-loop training process running? Lets the graft know whether the checkpoint is stable (safe to read) or being written."
-        current_val_exact_accuracy:
-          principle: "Latest val from the outer-loop run; the convergence signal toward 0.87."
-        baseline_faithful:
-          principle: "Bare bool: val >= 0.85 AND train process NOT running -> the checkpoint is faithful + stable -> the graft may run."
-        checkpoint_mtime:
-          principle: "Stable-checkpoint mtime; advancing past Jun-13-00:41 confirms the outer-loop run is saving real progress."
-      ACCEPTANCE: a read-only status report; NO training launched, NO pkill, NO checkpoint write.
-
-  - id: exp4168-decisive-verifier-graft-defensive
-    milestone: 2026.06.386
-    title: "THE DECISIVE verifier graft v2 (gate lowered to 0.82 per 2026-06-13 operator directive) — DEFENSIVE, gated on (val>=0.82 AND outer-loop train STOPPED). Reads (never writes/trains) the stable checkpoint. IF faithful+stable: rerank (verifier vs TRM-vote, pass@1 lift CI) + verifier-cert-vs-vote-cert RFT de-confound on a COPY of the checkpoint. IF not: DEFER honestly. Resolves the moat question + the DiffusionGemma gate when it fires."
-    priority: high
-    track: verifier-as-reward
-    max_turns: 110
-    agent_type: codex
-    model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13: decisive verifier graft v2 on the outer-loop-trained faithful baseline, gate LOWERED 0.85->0.82 per explicit 2026-06-13 operator directive (contiguous run plateaued at ~0.82, converged within ~5pp of published 0.87) — false-positive scope-match vs the deferred v1 attempt; forward difference = gate 0.82 + fresh-recompute preconditions; operates on a COPY, never collides with the (now stopped) outer-loop run."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the headroom-gate infra is the forward difference addressing the exp4168 headroom-limited null — false-positive scope-match vs prior verifier-moat tasks; new infra = objective/executable-oracle headroom measurement + artifact sanitization (arXiv:2605.07395), never tested before."
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4168_decisive_verifier_graft_v2_gate082.json
+    deliverable: results/experiment_4175_headroom_gate_executable_census.json
     prompt: |
-      CONTEXT: The decisive verifier-as-reward test on the OUTER-LOOP-trained baseline. To avoid the
-      .385 collision and read-during-write races, this task is DEFENSIVE and NON-DESTRUCTIVE.
+      CONTEXT: The .386 moat graft was a NULL only because Sudoku had no selectable headroom (oracle@k
+      ≈ baseline). Before re-asking "does the verifier add value?", we must FIND a domain that actually
+      HAS selectable headroom, measured with an OBJECTIVE oracle. arXiv:2605.07395 warns that apparent
+      headroom is often an evaluation artifact (LLM-judge bias, truncation, format mismatch) — so the
+      oracle MUST be executable/objective, and the measurement MUST be sanitized.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1999_code_verification_humaneval.json (baseline 0.66 -> repair 0.84)
+        - results/experiment_2090_crane_humaneval.json, results/experiment_1607_dsl_humaneval.json
+        - results/experiment_1816_gsm8k_baseline.json, results/adversarial_gsm8k_data_400.json
+        - results/arc3_trm_verifier_rerank.json (Sudoku/ARC pool, KNOWN low/no headroom — the negative anchor)
+        - scripts/summarize_artifact.py (read artifacts via this, not raw JSON)
+
+      TASK: build scripts/headroom_gate.py and census the cached candidate pools for selectable headroom.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS (RECOMPUTE FRESH — do NOT trust the stale exp4167 v1 monitor artifact, which
-           recorded val~0.50 mid-training):
-           a. BASELINE FAITHFUL: read results/trm_runs/sudoku_extreme_baseline/last.ckpt.bestval and
-              require value >= 0.82 (gate lowered 0.85->0.82 per the 2026-06-13 operator directive: the
-              contiguous run plateaued at ~0.82, a converged faithful baseline within ~5pp of the
-              published ~0.87).
-           b. TRAIN STOPPED: the PID in results/trm_runs/contiguous_run.pid is NOT alive (ps -p) AND
-              `nvidia-smi --query-compute-apps=pid` shows no train.py process.
-           If EITHER fails -> honest_verdict `graft_deferred_outerloop_training` + current val, and STOP
-           (do NOT train, do NOT pkill anything).
-        1. COPY the stable checkpoint to a task-local path (never train/write the stable dir).
-        2. RERANK arm: sample K candidate solutions per held-out puzzle from the copied checkpoint;
-           rerank by the executable Sudoku verifier; pass@1 lift vs TRM-vote + vs oracle, bootstrap CI.
-        3. RFT arm (de-confound): A=verifier-cert vs B=vote-cert corpus, N-matched; train each from the
-           COPY (mode=default, max_time=cumulative+budget) -- NOT the stable checkpoint. Held-out
-           exact-accuracy; load-bearing A vs B, CI95 excl 0.
+        0. PRECONDITIONS: confirm at least 2 cached candidate pools with stored multi-candidate sets
+           exist (`ls results/experiment_1999_* results/experiment_2090_* results/experiment_1816_*`).
+           If a pool stores only a single greedy completion (no K candidates), mark it
+           census_incomplete for that domain and continue. If NO multi-candidate pool exists -> honest_verdict
+           `blocked_no_multicandidate_pool` and STOP.
+        1. Implement scripts/headroom_gate.py with a function headroom(pool) -> {oracle_at_k,
+           baseline_pass1, sc_vote_pass1, selectable_headroom = oracle_at_k - sc_vote_pass1, n,
+           artifact_flags}. Oracle MUST be executable/objective: run unit tests for code; exact-match
+           for math/Sudoku. NO LLM judge.
+        2. Sanitize per arXiv:2605.07395: flag candidates that are truncated, mis-formatted, or
+           unparseable as artifact_inflation rather than counting them as oracle hits.
+        3. Census {code, math, Sudoku} pools; pick headroom_present_domain = the executable domain with
+           the largest sanitized selectable_headroom; emit max_selectable_headroom BARE (a plain float,
+           NOT a {value,principle} dict — gated fields must be bare).
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. An honest deferral, an A>B win, or an A~=B null are all COMPLETE."
-        graft_deferred:
-          principle: "Bare bool: True if the baseline was not faithful+stable -> deferred. Prevents an uninformative graft + a collision with the outer-loop run."
-        rerank_lift_vs_vote:
-          principle: "pass@1 lift from verifier-reranking (if grafted); the executable-verifier discrimination signal."
-        rft_vs_ablation_delta:
-          principle: "The de-confounded A-vs-B held-out delta with CI -- THE moat measurement."
-        verifier_value_added:
-          principle: "Bare bool: did the graft beat the vote ablation? Resolves the moat question + the DiffusionGemma gate."
+          principle: "Terminal-prefixed. A clean census (even 'no domain clears 0.10') is a COMPLETE verdict."
+        max_selectable_headroom:
+          principle: "BARE float (oracle@k - SC-vote, sanitized) — the downstream gate for A3 compares this raw value; a principle-dict would break the gate (gated-fields-must-be-bare)."
+        headroom_present_domain:
+          principle: "Names the executable domain A3 must run on; the positive control that makes a null informative."
+        per_domain_headroom:
+          principle: "oracle@k/baseline/vote/headroom/artifact_flags per domain so a reviewer can audit the pick and the sanitization."
+        artifact_inflation_flagged:
+          principle: "Count of candidates excluded as truncated/mis-formatted; proves the headroom is real, not an evaluation artifact (arXiv:2605.07395)."
       ACCEPTANCE GATE:
-        - condition: "graft_deferred True (baseline not faithful/stable), OR a real graft on a COPY with rerank_lift + rft_vs_ablation_delta + verifier_value_added (CI95)"
-          principle: "Either an honest deferral or a real graft on a copy; NEVER train/pkill the outer-loop-owned run (the .385 collision is forbidden)."
+        - condition: "headroom_present_domain named with executable oracle AND max_selectable_headroom emitted BARE, OR an honest 'no domain clears 0.10' verdict"
+          principle: "Either a positive control is established for A3, or we honestly record that no cached executable pool has selectable headroom (which itself bounds the moat claim)."
 
-  - id: exp4169-arc-incremental-progress
-    milestone: 2026.06.386
-    title: "ARC-AGI-3 INCREMENTAL +1 (monotonic) via the PROVEN explore-first method. Bounded active-exploration OBSERVES transitions -> induce mechanic + goal predicate -> GAP-4 verifier validates on held-out transitions -> act only if validated. Next-easiest non-spatial game not yet solved. REAL-ENV-CONFIRM any solve; STOP at the first level that fails."
+      Run: `python3 results/experiment_4175_headroom_gate_executable_census.py`
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4176-vstar-learned-selector
+    milestone: 2026.06.387
+    title: "PHASE A2 — V-STaR learned selector (arXiv:2402.06457). Train an oracle-free selector on ACCEPTED + REJECTED candidate traces (so it learns a correctness boundary, not just imitates winners), out-of-fold. The missing learned-selector verifier class. Deployable ranker consumed by A3. Prefer cached traces; if fresh traces needed, generate from a SOTA GGUF behind a PRECONDITIONS cache check."
+    priority: high
+    track: verifier-moat
+    max_turns: 70
+    agent_type: codex
+    model: gpt-5.5
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the V-STaR accepted+rejected learned selector is the forward difference — false-positive scope-match vs prior verifier tasks; no prior experiment trained a selector on rejected traces; flagged by the .386 SOTA ingestion (exp4170) as the .387 prerequisite for DiffusionGemma."
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4176_vstar_learned_selector.json
+    prompt: |
+      CONTEXT: Every Carnot verifier to date is a hand-built invariant or an outcome checker. V-STaR
+      (arXiv:2402.06457) is the missing LEARNED-selector class: train on BOTH accepted and rejected
+      traces so the model learns where the correctness boundary is. The .386 SOTA ingestion (exp4170)
+      flagged this as the .387 prerequisite to unlock DiffusionGemma guidance.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_4175_headroom_gate_executable_census.json (the chosen domain + pool)
+        - scripts/experiment_template.py (cached_sota_pair() for any fresh generation)
+        - research-references.md ".387 planning sweep" (V-STaR 2402.06457; arXiv:2504.16828 ThinkPRM)
+
+      TASK: build an oracle-free, out-of-fold V-STaR-style selector on accepted+rejected traces.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS:
+           a. A cached candidate pool with per-candidate correctness labels exists for an executable
+              domain (reuse exp4175's headroom_present_domain pool).
+           b. IF fresh trace generation is required, verify a SOTA GGUF is cached:
+              `python3 -c "from scripts.experiment_template import cached_sota_pair; print(cached_sota_pair())"`
+              (expects unsloth/Qwen3.6-35B-A3B-GGUF or unsloth/gemma-4-26B-A4B-it-GGUF). Load via the
+              .gguf path, NOT AutoTokenizer (GGUF tokenizer rule). If neither cached and traces are
+              needed -> honest_verdict `blocked_model_not_cached_sota_gguf` and STOP.
+        1. Build the selector: featurize each (input, candidate) and train an OOF classifier/ranker on
+           ACCEPTED (correct) vs REJECTED (incorrect) traces. Oracle-free: never read held-out gold.
+        2. Report selector AUROC (gold vs non-gold) + pass@1 when used as a ranker vs SC-vote, OOF.
+        3. Persist the selector so A3 can load it as a deployable ranker.
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Terminal-prefixed. A trained selector (even one that ties vote) is a COMPLETE verdict."
+        selector_auroc_oof:
+          principle: "Out-of-fold gold-vs-non-gold AUROC; the learned selector's discrimination, measured without oracle leakage."
+        selector_pass1_vs_vote:
+          principle: "pass@1 as a ranker minus SC-vote pass@1 (OOF) — the learned-selector's standalone lift, input to A3."
+        accepted_rejected_n:
+          principle: "Counts of accepted and rejected traces trained on; V-STaR's value is using BOTH (rejected traces define the boundary)."
+        random_seed:
+          principle: "Determinism is the precondition for reproducibility; the selector must be re-trainable to the same result."
+        reproducibility_checksum:
+          principle: "Content hash of the trace corpus + features; catches silent corpus drift between this run and any replication."
+      ACCEPTANCE: an OOF selector with reported AUROC + pass@1-vs-vote, trained on both accepted and rejected traces, persisted for A3.
+
+      Run: `python3 results/experiment_4176_vstar_learned_selector.py`
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4177-decisive-headroom-controlled-moat-test
+    milestone: 2026.06.387
+    title: "PHASE A3 (DECISIVE, gated_on A1 headroom>=0.10) — the headroom-controlled verifier moat test. On the headroom_present_domain: executable verifier ensemble + V-STaR selector (A2) vs SC-vote vs oracle, with a MATCHED no-verifier control (same budget/candidates/steps, arXiv:2511.02886) and accuracy AND cost (arXiv:2504.01005 SC-crossover). Decisive: does the verifier add value (CI95 excl 0) WHERE headroom exists? Resolves the moat question + informs the DiffusionGemma gate."
+    priority: high
+    track: verifier-moat
+    max_turns: 90
+    agent_type: codex
+    model: gpt-5.5
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + addresses the exp4168 headroom-limited null: the forward difference is a HEADROOM-PRESENT executable domain + matched no-verifier control + V-STaR selector + accuracy-and-cost reporting — false-positive scope-match vs the .386 graft; the .386 root cause (no selectable headroom) is now controlled-for via the A1 positive control."
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4177_decisive_headroom_controlled_moat_test.json
+    gated_on:
+      - upstream: exp4175-headroom-gate-executable-census
+        artifact_field: max_selectable_headroom
+        op: '>='
+        value: 0.10
+    prompt: |
+      CONTEXT: THE decisive verifier-moat test, done with the positive control the .386 null lacked.
+      Only run on a domain A1 proved has selectable headroom (oracle@k - SC-vote >= 0.10) with an
+      executable oracle. The win condition (north-star §5) is efficiency-parity: the verifier earns its
+      place if it is at least as accurate as SC-vote at lower cost — accuracy gains are a bonus.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_4175_headroom_gate_executable_census.json (headroom_present_domain + pool)
+        - results/experiment_4176_vstar_learned_selector.json (the deployable selector)
+        - scripts/headroom_gate.py (oracle@k / SC-vote helpers), scripts/adversarial_verify.py
+        - research-references.md ".387 sweep": arXiv:2504.01005 (SC compute-crossover), 2511.02886 (matched control), 2602.21189 (pass@k can hurt pass@1)
+
+      TASK: run the headroom-controlled moat test with a matched no-verifier control, accuracy + cost.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: A1 reported headroom_present_domain with max_selectable_headroom >= 0.10 AND
+           the executable oracle for that domain runs (e.g. `python3 -c "import subprocess"` for code
+           execution sandbox). If the gate field is missing/below 0.10 -> honest_verdict
+           `complete_moat_test_deferred_no_headroom_present` (the gate prevents an uninformative null)
+           and STOP. (The conductor gate should skip this task automatically; this is the in-script backstop.)
+        1. ARM A (verifier): rerank the K candidates per problem by the executable verifier ensemble +
+           V-STaR selector; measure pass@1 + total verifier compute/latency.
+        2. ARM B (SC-vote): self-consistency majority vote; pass@1 + compute.
+        3. ARM C (matched no-verifier control): SAME candidate budget, NO verifier (e.g. random or
+           first-of-K), to prove any A-lift is the verifier, not the extra compute (arXiv:2511.02886).
+        4. ORACLE: pass@k ceiling. Report A-vs-B delta with bootstrap CI95, A-vs-C delta, and the
+           accuracy/cost Pareto point ("parity at N× cheaper" if applicable). Run adversarial_verify.py.
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Terminal-prefixed. A clean positive, a clean (headroom-present) null, or a gated deferral are ALL COMPLETE."
+        verifier_value_added:
+          principle: "Bare bool: did ARM A beat SC-vote (CI95 excl 0) OR match it at lower cost? Resolves the moat question and the DiffusionGemma gate when headroom is present."
+        moat_delta_vs_vote:
+          principle: "pass@1(A) - pass@1(B) with CI95 — the accuracy axis of the moat, now measured WHERE headroom exists."
+        moat_vs_matched_control:
+          principle: "pass@1(A) - pass@1(C) — proves a win is the verifier, not extra adaptation compute (arXiv:2511.02886)."
+        accuracy_cost_pareto:
+          principle: "Compute/latency ratio at equal accuracy — the efficiency-parity win condition (north-star §5; arXiv:2504.01005)."
+        positive_control_confirmed:
+          principle: "Bare bool: oracle@k > SC-vote AND >=1 flip occurred on this corpus — without it the null is uninformative (FALSE_NEGATIVE_RISK)."
+        random_seed:
+          principle: "Determinism precondition for reproducibility of the decisive measurement."
+        reproducibility_checksum:
+          principle: "Content hash of candidate pool + verifier config; lets a third party re-run the decisive test."
+      ACCEPTANCE GATE:
+        - condition: "positive_control_confirmed True AND (verifier_value_added with CI95 reported), OR an honest gated deferral when headroom < 0.10"
+          principle: "Decisive only with the positive control in place; otherwise honestly defer rather than emit another uninformative null."
+
+      Run: `python3 results/experiment_4177_decisive_headroom_controlled_moat_test.py`
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4178-gap3-stage1-model-native-arc-energy
+    milestone: 2026.06.387
+    title: "PHASE B — GAP-3 Stage-1 model-native ARC energy (CPU; the activation dump ALREADY EXISTS). On results/arc3_gap3_stage1_candidate_table.npz (z_mean (8041,512), votes, q_mean, probe, correct, task_idx): score with (1a) a model-native ORTHOGONAL basis (arXiv:2604.17614) + (1b) the learned OOF probe. Run ALL gates (selection>vote, AUROC>0.70, coverage>=80%, headroom-capture>=30%) + ALL adversarial checks (permutation, strict OOF, oracle-leak, bootstrap CI). Does it reach the proven ~13pp ARC headroom? READ-ONLY w.r.t. TRM training."
+    priority: high
+    track: verifier-gap3
+    max_turns: 70
+    agent_type: codex
+    model: gpt-5.5
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): GAP-3 Stage-1 is the forward step after Stage-0 (q_halt scalar) was adversarially-confirmed NEGATIVE — false-positive scope-match vs Stage-0; forward difference = the full 512-d latent (not the 1-D scalar) per the gap3 design doc; the 0.86 within-task soft-AUROC says the signal is in the latent the scalar projected away."
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4178_gap3_stage1_model_native_arc_energy.json
+    prompt: |
+      CONTEXT: ops/verifier_gaps.md GAP-3 is the PRIMARY verifier-build path: ~13pp of selectable
+      headroom is proven in TRM's ARC pool (oracle 0.61 > vote 0.45) but cheap hand-invariants are
+      exhausted (anti-rank). Stage-0 (q_halt scalar) was NEGATIVE; Stage-1 uses the full latent. The
+      GPU activation dump ALREADY EXISTS as results/arc3_gap3_stage1_candidate_table.npz, so this is a
+      CPU-only scoring task — NO GPU, NO TRM retrain, NO write to the stable checkpoint dir.
+
+      EXISTING CODE TO READ FIRST:
+        - docs/research-notes/gap3-learned-arc-energy-design.md (REQ-GAP3-1/2/3, §3 gates, §4 adversarial)
+        - ops/verifier_gaps.md (the gap ledger; the corrected anti-rank evidence; the oracle ceiling 0.613)
+        - results/arc3_gap3_stage1_candidate_table.npz (z_mean,(8041,512); task_idx; votes; q_mean; probe; correct)
+        - results/arc3_gap3_stage0_qhalt_energy.json + ..._adversarial_verify.json (the Stage-0 negative)
+
+      TASK: score the existing latent dump with a model-native basis + learned probe; run all gates + adversarial.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `python3 -c "import numpy as np; d=np.load('results/arc3_gap3_stage1_candidate_table.npz'); assert d['z_mean'].shape[1]==512 and d['correct'].sum()>0"` exits 0. If the npz is
+           missing -> honest_verdict `blocked_stage1_latent_dump_missing` and STOP (do NOT launch a GPU dump — that risks the wall-cap + a training collision; queue the dump as a separate task instead).
+        1. (1a) model-native basis: recover an orthogonal basis (SVD/PCA-class) from z_mean on held-out
+           tasks; score candidate consistency along it. (1b) learned probe: a tiny OOF (leave-one-task-out)
+           logistic/MLP z_mean -> correctness. Rank candidates per task by each energy.
+        2. Gates (vs TRM frequency vote on held-out tasks): selection pass@2(energy) > pass@2(vote);
+           per-candidate AUROC(gold vs non-gold) > 0.70; coverage (energy defined) >= 80%;
+           headroom-capture >= 30% of (oracle - vote).
+        3. Adversarial (gap3 design §4): A1 permutation control (shuffle correctness labels within
+           augmentation strata -> must collapse to chance); A2 strict OOF (disjoint fit/eval task sets,
+           report in-fold vs OOF gap); A3 oracle-leak audit (energy identical with/without the gold file);
+           A4 bootstrap CI95 on the pass@2 delta vs vote (n=31 is directional; flag if the full 400-task
+           re-confirm is still owed).
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Terminal-prefixed. An honest negative (latent also does not beat vote) is a COMPLETE, decision-grade verdict."
+        pass2_energy_vs_vote:
+          principle: "Selection gate: pass@2(energy) - pass@2(vote) on held-out tasks; the single number GAP-3 lives or dies on."
+        candidate_auroc:
+          principle: "Per-candidate gold-vs-non-gold AUROC; must beat the hand-features' best always-on family (object_count 0.67) to justify the latent."
+        coverage_fraction:
+          principle: "Fraction of candidates the energy is defined on; the structural failure of hand-features was <20% coverage."
+        headroom_capture_fraction:
+          principle: "Fraction of (oracle - vote) captured; partial credit toward the 0.61 ceiling and the metric that says whether the latent reaches the proven ~13pp."
+        adversarial_checks:
+          principle: "Permutation/OOF/oracle-leak/bootstrap results; a passing gate without these is gameable (gap3 §4 + sample-size rigor)."
+        random_seed:
+          principle: "Determinism precondition; the OOF split + probe must be reproducible."
+        reproducibility_checksum:
+          principle: "Hash of the npz + fold assignment; catches silent dump drift."
+      ACCEPTANCE GATE:
+        - condition: "all four gates reported with bootstrap CI AND the adversarial checks run (a passing OR an honest-negative verdict both qualify)"
+          principle: "GAP-3 Stage-1 is decided on the merits with the adversarial guards; never a bare celebratory number."
+
+      Run: `python3 results/experiment_4178_gap3_stage1_model_native_arc_energy.py`
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4179-arc-incremental-progress
+    milestone: 2026.06.387
+    title: "PHASE C — ARC-AGI-3 INCREMENTAL +1 (monotonic). Non-spatial first-levels are EXHAUSTED (.386 exp4169 no_unsolved_nonspatial_candidates), so target the NEXT DEEPER LEVEL of an already-solved game (incremental +1 per the ARC discipline) via the PROVEN explore-first method: bounded active-exploration OBSERVES transitions -> induce mechanic + goal predicate -> GAP-4 verifier validates on HELD-OUT transitions -> act only if validated. REAL-ENV-CONFIRM any solve; STOP at the first level that fails. Honest no-solve is COMPLETE."
     priority: medium
     track: arc
     max_turns: 90
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): ARC-AGI-3 incremental +1 game-solve mandated by the ARC-AGI-3 Incremental-Progress Scoping discipline — false-positive scope-match vs prior Nth-game-solve attempts; forward difference = next-unsolved game, monotonic +1, honest no-solve is a COMPLETE verdict."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): ARC-AGI-3 incremental +1 mandated by the ARC-AGI-3 Incremental-Progress Scoping discipline — false-positive scope-match vs prior Nth-game-solve attempts; forward difference = non-spatial exhausted so target the next deeper level of an already-solved game; monotonic +1; honest no-solve is COMPLETE."
     inference_substrate: offline_arc_explore_induce_verify
-    deliverable: results/experiment_4169_arc_incremental_progress.json
+    deliverable: results/experiment_4179_arc_incremental_progress.json
     prompt: |
-      CONTEXT: Per the ARC-AGI-3 Incremental-Progress Scoping discipline, each milestone advances the
-      solved-game count MONOTONICALLY by >=1. Target the next unsolved non-spatial game from
-      results/arc3_win_condition_survey.json and solve its first level.
+      CONTEXT: Each milestone advances the solved-LEVEL count MONOTONICALLY by >=1 (ARC-AGI-3
+      Incremental-Progress Scoping). The non-spatial first-levels are exhausted, so the target shifts
+      to the next deeper level of an already-solved non-spatial game (e.g. r11l / lp85 L2), or a
+      spatial game's L1 if a deeper level is structurally blocked.
+
+      EXISTING CODE TO READ FIRST:
+        - results/arc3_win_condition_survey.json (the 25-game survey; per-game level structure)
+        - results/experiment_4169_arc_incremental_progress.json (.386: total_games_solved=13, no solve)
+        - results/arc3_gap4_chain_arms_adversarial_verify.json (GAP-4 verifier; GAP-5 demo-underdetermination)
+        - the OFFLINE/air-gapped ARC driver used by exp4169 (do NOT play online/scored — operator gate)
+
+      TASK: bank +1 real level via explore -> induce -> GAP-4-verify -> act.
+
       CONCRETE STEPS:
-        0. PRECONDITIONS: `ls results/arc3_win_condition_survey.json`; use the OFFLINE/air-gapped driver. If fixtures unavailable -> `blocked_arc_offline_fixtures_missing` and STOP.
-        1. Bounded active-exploration -> induce mechanic + goal predicate from OBSERVED transitions.
-        2. GAP-4 verifier validates on HELD-OUT transitions before acting; act only on validated steps; STOP at the first level that fails.
+        0. PRECONDITIONS: `ls results/arc3_win_condition_survey.json` and the OFFLINE fixtures for the
+           target game exist. If fixtures unavailable -> honest_verdict `blocked_arc_offline_fixtures_missing` and STOP.
+        1. Pick the next-easiest unsolved LEVEL (prefer a deeper level of an already-solved game).
+        2. Bounded active-exploration -> induce mechanic + goal predicate from OBSERVED transitions.
+        3. GAP-4 verifier validates the induced rule on HELD-OUT transitions BEFORE acting; act only on
+           validated steps; STOP at the first level that fails.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. An honest no-solve is a COMPLETE verdict."
-        total_games_solved:
+          principle: "Terminal-prefixed. An honest no-solve is a COMPLETE verdict (progress-not-perfection)."
+        total_levels_solved:
           principle: "The monotonic progress metric; must be >= the prior milestone's count."
         levels_completed:
-          principle: "Real-env-confirmed level count; falsifiable evidence of an actual solve."
+          principle: "Real-env-confirmed level count this run; falsifiable evidence of an actual solve."
         real_env_confirmed:
-          principle: "Only real-env solves raise the headline count."
+          principle: "Only real-env solves raise the headline count; a synthetic-scaffold solve does not."
       ACCEPTANCE GATE:
         - condition: ">=1 NEW level real_env_confirmed OR an honest no-solve verdict"
-          principle: "Progress-not-perfection: banking +1 real level is the win."
+          principle: "Progress-not-perfection: banking +1 real level is the win; an honest no-solve is still COMPLETE."
 
-  - id: exp4170-sota-ingestion-verifier-moat-guidance
-    milestone: 2026.06.386
-    title: "SOTA-INGESTION SLOT (reserved; bleeding-edge track): ingest verifier-as-reward / energy-guided-generation literature mapped onto the (outer-loop) Sudoku baseline -> graft headline + the queued DiffusionGemma energy-guidance use. TRM 2510.04871, TTA-TRM 2511.02886, V-STaR 2402.06457, SEDD 2310.16834, classifier/energy-guided diffusion. SOTA->experiment mapping note; flag strongest for .387. Cite real arXiv IDs."
+      Run: `python3 results/experiment_4179_arc_incremental_progress.py`
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4180-sota-ingestion-moat-gap3-diffusion
+    milestone: 2026.06.387
+    title: "PHASE D1 — SOTA-INGESTION SLOT (reserved; bleeding-edge track). Ingest the .387 sweep mapped onto the moat / GAP-3 / DiffusionGemma stack: arXiv 2605.07395 (headroom-is-artifact), 2504.01005 (SC compute-crossover), 2504.16828 (ThinkPRM budget-conditional), 2510.20607 (compositional energy minimization), 2602.01849 (self-rewarding SMC for masked diffusion), 2512.11847 (TRM-ARC headroom/vote decomposition). SOTA->experiment mapping note; flag the strongest for .388. Cite real arXiv IDs."
     priority: medium
     track: research
     max_turns: 70
@@ -176,25 +375,42 @@ tasks:
     model: gpt-5.5
     operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved-slot task): SOTA-ingestion slot mandated by the SOTA-Ingestion Cycle Discipline — false-positive scope-match vs prior ingestion tasks; structurally never a doomed rerun (fresh corpus each milestone)."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4170_sota_ingestion_verifier_moat_guidance.json
+    deliverable: results/experiment_4180_sota_ingestion_moat_gap3_diffusion.json
     prompt: |
-      CONTEXT: Per the SOTA-Ingestion Cycle Discipline, a bleeding-edge headline reserves one ingestion task.
+      CONTEXT: Per the SOTA-Ingestion Cycle Discipline, a bleeding-edge headline reserves one ingestion
+      task. The .387 planner already filed the sweep in research-references.md (".387 planning sweep");
+      this task ingests it into an actionable SOTA->experiment mapping and flags the strongest for .388.
+
+      EXISTING CODE TO READ FIRST:
+        - research-references.md (".387 planning sweep" section — the candidate papers + IDs)
+        - research-studying.md / research-references.md filtered to verifier-as-reward / headroom / energy-guided diffusion
+        - scripts/sweep_clusters.py / scripts/sweep_semscholar.py (the RELIABLE discovery channel)
+
+      TASK: synthesize a SOTA->experiment mapping note; close the discover->ingest->plan loop.
+
       CONCRETE STEPS (use the RELIABLE channel, NOT /deep-research):
-        0. Read research-studying.md / research-references.md filtered to verifier-as-reward / energy-guided-generation, then a FOCUSED fresh pass via scripts/sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch of the top 5-8 papers.
-        1. Synthesize a SOTA->experiment mapping note (TRM 2510.04871, TTA-TRM 2511.02886, V-STaR 2402.06457, SEDD 2310.16834, energy/classifier-guided diffusion); what each implies for the Carnot-verifier + (queued) DiffusionGemma stack.
-        2. Update research-studying.md (mark ingested) and FLAG the strongest method for .387.
+        0. Read the .387 sweep refs, then a FOCUSED fresh pass via scripts/sweep_clusters.py /
+           sweep_semscholar.py + low-concurrency WebSearch/WebFetch of the top 5-8 papers.
+        1. Map each method onto the Carnot stack: 2605.07395 -> the headroom-gate sanitization (already
+           applied in A1); 2504.01005/2504.16828 -> the accuracy-AND-cost moat framing (A3);
+           2510.20607 -> GAP-3 Stage-2 compositional ARC energy; 2602.01849 -> DiffusionGemma guidance;
+           2512.11847 -> the TRM headroom/vote decomposition. What each implies + where each fails.
+        2. Update research-studying.md (mark ingested) and FLAG the single strongest method for .388.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. Records ingestion completed with verifiable citations."
         methods_mapped:
-          principle: "Each method/source MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication."
-        flagged_for_v387:
-          principle: "Closes the discover->ingest->plan loop: names the strongest method for the next planner."
-      ACCEPTANCE: a mapping note with >=3 sources, each with a real arXiv ID/URL, and one flagged for .387.
+          principle: "Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication (adversarial_verify discipline)."
+        flagged_for_v388:
+          principle: "Closes discover->ingest->plan: names the strongest method for the next planner."
+      ACCEPTANCE: a mapping note with >=3 sources, each with a real arXiv ID/URL, and one flagged for .388.
 
-  - id: exp4171-verifier-registry-gaps-hygiene
-    milestone: 2026.06.386
-    title: "VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval reproducing the canonical GAP-4 ARC-1 numbers from cached candidates (zero codex/GGUF). RECORD the .386 state: the outer-loop training val trajectory + the graft result/deferral. Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source of truth."
+      Run: `python3 results/experiment_4180_sota_ingestion_moat_gap3_diffusion.py`
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4181-verifier-registry-gaps-hygiene
+    milestone: 2026.06.387
+    title: "PHASE D2 — VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates (zero codex/GGUF/GPU). RECORD the .387 state into ops/verifier_gaps.md: the headroom-controlled moat verdict (exp4177) + the GAP-3 Stage-1 result (exp4178). Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source of truth (never-prune)."
     priority: medium
     track: infra
     max_turns: 60
@@ -202,24 +418,39 @@ tasks:
     model: gpt-5.5
     operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved infra slot): verifier-registry + gaps hygiene regression guard — false-positive scope-match vs prior hygiene tasks; structurally never a doomed rerun (bit-exact GAP-4 regression replay each milestone)."
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4171_verifier_registry_gaps_hygiene.json
+    deliverable: results/experiment_4181_verifier_registry_gaps_hygiene.json
     prompt: |
-      CONTEXT: Record the .386 verifier-relevant outcomes honestly.
+      CONTEXT: Keep the verifier registry + gap ledger honest, and catch a silent verifier regression
+      via a bit-exact GAP-4 replay. Then record the .387 moat + GAP-3 outcomes.
+
+      EXISTING CODE TO READ FIRST:
+        - ops/verifier_registry.yaml, ops/verifier_gaps.md (GAP-1..GAP-5; the schema)
+        - the canonical GAP-4 ARC-1 cached candidate set + its prior numbers (vote 0.4516 -> gated 0.5806)
+        - results/experiment_4177_*.json (moat verdict), results/experiment_4178_*.json (GAP-3 Stage-1)
+
+      TASK: regression-guard the GAP-4 numbers; record the .387 verifier outcomes into the gap ledger.
+
       CONCRETE STEPS:
-        1. Bit-exact offline re-eval reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates -- the regression guard. Zero codex/GGUF. READ-ONLY w.r.t. the TRM training (do not touch the stable checkpoint).
-        2. RECORD into ops/verifier_gaps.md: the outer-loop training val trajectory + the graft result OR deferral (exp4168).
+        1. Bit-exact offline re-eval reproducing the canonical GAP-4 ARC-1 numbers from cached
+           candidates (zero codex/GGUF/GPU). READ-ONLY w.r.t. the TRM training (do not touch the stable checkpoint).
+        2. RECORD into ops/verifier_gaps.md (append, never-prune): the headroom-controlled moat verdict
+           (exp4177 verifier_value_added + the headroom_present_domain) and the GAP-3 Stage-1 result
+           (exp4178 pass2_energy_vs_vote + whether GAP-3 advances toward `filled`).
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. Records the registry/gaps reconciled to the .386 truth."
+          principle: "Terminal-prefixed. Records the registry/gaps reconciled to the .387 truth."
         regression_guard_passed:
           principle: "Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression."
         gaps_updated:
-          principle: "Lists the verifier_gaps entries touched."
-      ACCEPTANCE: regression_guard_passed True; the baseline + graft status recorded.
+          principle: "Lists the verifier_gaps entries touched (moat verdict + GAP-3 Stage-1)."
+      ACCEPTANCE: regression_guard_passed True; the moat + GAP-3 status recorded in the ledger.
 
-  - id: exp4172-hardware-continuity
-    milestone: 2026.06.386
-    title: "Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 DONE). Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile flash). PolarFire (ssh polarfire; toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board."
+      Run: `python3 results/experiment_4181_verifier_registry_gaps_hygiene.py`
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4182-hardware-continuity
+    milestone: 2026.06.387
+    title: "PHASE D3 — Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 terminal/opportunistic). Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile flash). PolarFire (ssh polarfire; toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board."
     priority: medium
     track: hardware
     max_turns: 70
@@ -227,30 +458,42 @@ tasks:
     model: gpt-5.5
     operator_override: "2026-05-29 operator directive (standing) auto-override class 2 (active hardware-continuity task): GateMate/PolarFire drive-to-terminal mandated by the Hardware-Task Continuity Discipline until terminal — false-positive scope-match vs retired hardware exps; required forward work."
     inference_substrate: hardware_smoke
-    deliverable: results/experiment_4172_hardware_continuity.json
+    deliverable: results/experiment_4182_hardware_continuity.json
     prompt: |
-      CONTEXT: As long as boards are attached, every milestone reserves one task per non-terminal board. KV260 is terminal; GateMate + PolarFire are not.
+      CONTEXT: As long as boards are attached, every milestone reserves one task per non-terminal board.
+      KV260 is terminal; GateMate + PolarFire are not.
+
+      EXISTING CODE TO READ FIRST:
+        - ops/hardware-bringup-prep.md (per-board state), results/experiment_4172_hardware_continuity.json (.386)
+        - CLAUDE.md "KV260 SSH-Not-SD-Card Discipline" + "Pre-Launch Preconditions" hardware rows
+
+      TASK: per-board reachability + next concrete step, distinct timers, SSH/USB-detect preconditions only.
+
       CONCRETE STEPS (DISTINCT wall-clock timers per board):
-        0. PRECONDITIONS per board (SSH / USB-detect ONLY -- host SD-card-device preconditions are retired per the KV260 SSH-Not-SD-Card Discipline):
+        0. PRECONDITIONS per board (SSH / USB-detect ONLY -- host SD-card-device preconditions are
+           retired per the KV260 SSH-Not-SD-Card Discipline):
            - GateMate: `openFPGALoader -c dirtyJtag --detect` returns the GM1Ax IDCODE.
            - PolarFire: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'` exits 0.
            - KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` exits 0 (opportunistic).
-           For any unreachable board, write `blocked_<board>_unreachable` for that board and CONTINUE with the others.
+           For any unreachable board, write `blocked_<board>_unreachable` for that board and CONTINUE.
         1. GateMate: next concrete step toward the n=16 Ising tile flash.
         2. PolarFire: next concrete step toward end-to-end Carnot dispatch with hash-match.
         3. KV260: confirm terminal state via SSH.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. Per-board honest status; an honest blocked_<board> is a COMPLETE verdict for that board."
+          principle: "Terminal-prefixed. An honest blocked_<board> for an unreachable board is a COMPLETE verdict for that board."
         per_board_status:
           principle: "One reachability + next-step record per board so a board is never silently forgotten."
         preconditions_checked:
           principle: "Records the SSH/USB-detect preconditions run; enforces SSH-Not-SD-Card."
       ACCEPTANCE: per-board reachability recorded via SSH/USB-detect (never a host SD-card device); next concrete step named per non-terminal board.
 
-  - id: exp4173-capstone-v386
-    milestone: 2026.06.386
-    title: "Capstone .386 (UNGATED): headline question is HAS THE OUTER-LOOP CONTIGUOUS RUN CONVERGED THE BASELINE TOWARD 0.87, AND DID THE DEFENSIVE GRAFT FIRE OR DEFER? Aggregate: TRAINING = exp4167 (current_val + checkpoint_mtime advancing + baseline_faithful); GRAFT = exp4168 (graft_deferred OR verifier_value_added + A-vs-B CI); ACCURACY = exp4169; SOTA = exp4170. Honest verdict + whether the DiffusionGemma gate is now resolved. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on."
+      Run: `python3 results/experiment_4182_hardware_continuity.py`
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4183-capstone-v387
+    milestone: 2026.06.387
+    title: "PHASE D4 — Capstone .387 (UNGATED): headline question is DID THE HEADROOM-CONTROLLED MOAT TEST RESOLVE THE VERIFIER-VALUE QUESTION (positive where headroom exists, or honestly bounded), AND DID GAP-3 STAGE-1 REACH THE ~13pp ARC HEADROOM? Aggregate: HEADROOM = exp4175; MOAT = exp4177 (verifier_value_added + CI); GAP-3 = exp4178 (pass2_energy_vs_vote + gates); ARC = exp4179; SOTA = exp4180. Resolve whether the DiffusionGemma gate is NOW MET. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on."
     priority: high
     track: infra
     max_turns: 90
@@ -258,22 +501,44 @@ tasks:
     model: gpt-5.5
     operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): capstone-vN aggregation — false-positive scope-match vs prior capstone-v* tasks; structurally never a doomed rerun."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4173_capstone_v386.json
+    deliverable: results/experiment_4183_capstone_v387.json
     prompt: |
-      CONTEXT: Aggregate the .386 results into one honest decision-grade verdict.
+      CONTEXT: Aggregate the .387 results into one honest decision-grade verdict, and resolve the
+      DiffusionGemma gate.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_4175_*.json (headroom), 4177_*.json (moat), 4178_*.json (GAP-3 Stage-1),
+          4179_*.json (ARC), 4180_*.json (SOTA), 4181_*.json (registry), 4182_*.json (hardware)
+        - scripts/summarize_artifact.py (read each via this), scripts/adversarial_verify.py
+        - docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md (the gate condition)
+
+      TASK: one honest headline + the DiffusionGemma gate decision.
+
       CONCRETE STEPS:
-        1. Read exp4167/4168/4169/4170/4171/4172. SKIP any flagged_adversarial=true. Cite each upstream sha256.
-        2. Answer: (a) has the outer-loop run advanced val past 0.278 toward 0.87 (exp4167 current_val + checkpoint_mtime)? (b) did the defensive graft fire (exp4168 verifier_value_added) or defer? (c) is the DiffusionGemma gate resolved? (d) total ARC games solved.
-        3. Honest headline: one of {{baseline_converged_graft_validated, baseline_converged_graft_null, outerloop_training_in_progress, baseline_stalled}}.
+        1. Read exp4175/4177/4178/4179/4180/4181/4182. SKIP any flagged_adversarial=true. Cite each upstream sha256.
+        2. Answer: (a) does the headroom-controlled moat test (exp4177) show verifier_value_added on a
+           headroom-present executable domain — with positive_control_confirmed? (b) does GAP-3 Stage-1
+           (exp4178) reach the proven ~13pp ARC headroom (pass2_energy_vs_vote > 0, gates passed)?
+           (c) total ARC levels solved. (d) the strongest SOTA method flagged for .388.
+        3. DiffusionGemma gate decision: MET only if exp4177 verifier_value_added==true AND
+           positive_control_confirmed==true on an executable domain (a headroom-dead Sudoku null does
+           NOT block forever; a headroom-present null keeps it closed and points at GAP-3).
+        4. Honest headline: one of {moat_proven_headroom_present, moat_bounded_clean_null,
+           moat_deferred_no_headroom, gap3_reaches_headroom, gap3_bounded}.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. An honest 'outer-loop training in progress' is COMPLETE and valuable."
+          principle: "Terminal-prefixed. An honest bounded-null is COMPLETE and decision-grade — it tells .388 the bottleneck is verifier discrimination (GAP-3), not the substrate."
         headline_outcome:
           principle: "One of the enumerated set -- forces a single unambiguous read."
-        baseline_val_trajectory:
-          principle: "Val from the outer-loop run; shows convergence toward 0.87."
+        verifier_moat_status:
+          principle: "PROVEN-headroom-present / BOUNDED-clean-null / DEFERRED-no-headroom — the existential question's standing after .387."
+        gap3_stage1_status:
+          principle: "Whether GAP-3 Stage-1 reached the ~13pp headroom (advances toward `filled`) or is bounded."
         diffusiongemma_gate_status:
-          principle: "RESOLVED-positive / RESOLVED-null / STILL-PENDING."
+          principle: "MET / STILL-PENDING-headroom-present-null / STILL-PENDING-no-headroom; MET only on a positive-controlled executable win."
         upstream_provenance:
-          principle: "{{experiment_id, fields_imported, sha256}} per cited upstream."
-      ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited.
+          principle: "{experiment_id, fields_imported, sha256} per cited upstream; the audit trail that a capstone synthesizes nothing from nothing."
+      ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited; DiffusionGemma gate explicitly decided.
+
+      Run: `python3 results/experiment_4183_capstone_v387.py`
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
