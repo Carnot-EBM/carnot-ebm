@@ -1,0 +1,35 @@
+--- fetching PR 24423 ---
+From https://github.com/ggml-org/llama.cpp
+ * branch                refs/pull/24423/head -> FETCH_HEAD
+
+HEAD is now at 9b4dae81f diffusion-gemma-visual-server: size context by RAM when the model spills off the GPU
+--- diffusion-gemma now present? ---
+2
+--- cmake configure (CUDA) ---
+-- Configuring done (0.2s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/ianblenke/.cache/llama.cpp-master/build
+--- build (this is the long part) ---
+[ 98%] Building CXX object tools/cli/CMakeFiles/llama-cli-impl.dir/cli.cpp.o
+[ 98%] Building CXX object tests/CMakeFiles/test-chat.dir/test-chat.cpp.o
+[ 98%] Linking CXX executable ../bin/test-backend-ops
+[ 98%] Built target test-backend-ops
+[ 99%] Linking CXX shared library ../../bin/libllama-cli-impl.so
+[ 99%] Built target llama-cli-impl
+[ 99%] Building CXX object tools/cli/CMakeFiles/llama-cli.dir/main.cpp.o
+[ 99%] Linking CXX executable ../../bin/llama-cli
+[ 99%] Built target llama-cli
+[ 99%] Linking CXX shared library ../../bin/libllama-server-impl.so
+[ 99%] Built target llama-server-impl
+[ 99%] Building CXX object tools/server/CMakeFiles/llama-server.dir/main.cpp.o
+[ 99%] Building CXX object app/CMakeFiles/llama-app.dir/llama.cpp.o
+[ 99%] Building CXX object app/CMakeFiles/llama-app.dir/__/license.cpp.o
+[ 99%] Linking CXX executable ../../bin/llama-server
+[ 99%] Built target llama-server
+[100%] Linking CXX executable ../bin/llama
+[100%] Built target llama-app
+[100%] Linking CXX executable ../bin/test-chat
+[100%] Built target test-chat
+BUILD_DONE
+-rwxr-xr-x 1 ianblenke ianblenke  15968 Jun 14 16:06 build/bin/llama-cli
+-rwxr-xr-x 1 ianblenke ianblenke 160128 Jun 14 16:06 build/bin/llama-diffusion-cli

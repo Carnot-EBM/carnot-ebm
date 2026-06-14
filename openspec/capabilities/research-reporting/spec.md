@@ -21149,6 +21149,86 @@ claim `.388` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4196 | Implemented (`python/carnot/reporting/archive_v388_activate_v389_4196.py`, `python/carnot/experiment_4196_archive_v388_activate_v389.py`) | Implemented (`tests/python/test_experiment_4196_archive_v388_activate_v389.py`) |
 
+### REQ-REPORT-4207: Archive .389, Activate .390, And Correct The Verifier-As-Reward Close-State
+
+The Exp 4207 workflow SHALL archive milestone `2026.06.389`, confirm milestone
+`2026.06.390` is active, and write the record-only aggregation artifact
+`results/experiment_4207_archive_v389_activate_v390.json`. It SHALL run no live
+training and SHALL declare `inference_substrate` as
+`aggregation_from_upstream_artifacts`.
+
+Before claiming completion the workflow SHALL confirm:
+
+- `research-complete.yaml` parses under `yaml.safe_load`
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`
+- the smart-subset pre-test gate is green
+- `results/experiment_4206_capstone_v389.json` exists
+- `results/experiment_4197_verifier_reward_phase0_headroom_harness_build.json` exists
+- `results/experiment_4198_verifier_reward_3arm_rft_launch.json` exists
+- milestone `2026.06.390` is the active roadmap milestone
+
+If any precondition is absent or red, the workflow SHALL write a blocked
+artifact whose `honest_verdict` starts with `blocked_`, record the failed
+resource in `preconditions_checked`, and stop without claiming a terminal
+archive or editing `research-complete.yaml`.
+
+The complete artifact SHALL include the principle-annotated fields
+`honest_verdict`, `v389_close_state`, and `preconditions_checked` with these
+exact principles:
+
+- `honest_verdict`: `Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.`
+- `v389_close_state`: `Honest record (operating point CLEARED; infra killed the background train; ARC 15; live efficiency-only) so the .390 planner/agents frame the milestone as oracle-distinct headline + verifier-as-reward FINISH, not a NO-OPERATING-POINT redo.`
+- `preconditions_checked`: `Records resources verified; pre-empts the silent-missing-resource fabrication mode.`
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v389_close_state` SHALL truthfully record
+that `.389` closed with the verifier-as-reward code operating point CLEARED:
+Exp 4197 reported `phase0_precision=0.956`, Youden `J=0.414`,
+`training_headroom=0.600`, and `harness_ready=true`. It SHALL record that
+Exp 4198 built N-matched corpora with `A=776`, `B=776`, `C=742`, and
+`base_passrate=0.6`, but that the background LoRA process exited before its first checkpoint.
+It SHALL record that the decisive A-vs-B signal was never collected because Exp 4199 was gate-blocked downstream of
+`training_launched=false`. It SHALL frame this as an infra failure to fix in
+`.390` by resuming the stable checkpoint
+`code_verifier_reward_lora_rft_a83b52882c198954` synchronously, not as a `NO-OPERATING-POINT` redo.
+It SHALL also record ARC progress as
+`total_levels_solved=15` and `total_games_solved=13`, the live solver result as
+efficiency-only with no level completed, and the SOTA flag family as
+`non_qwen_random_label_ablation` from the exact `.390` slug
+`non_qwen_same_generator_random_label_ablation_v390`. It SHALL frame `.390` as
+the oracle-distinct frontier headline plus the owed verifier-as-reward A-vs-B
+finish.
+
+#### SCENARIO-REPORT-4207: The Archive Corrects The .389 Infra Artifact
+
+**Given** `.389` has the Exp 4206 capstone, Exp 4197 phase-0 operating point,
+and Exp 4198 3-arm launch artifact, the history and exclusion-manifest YAML
+files parse, the smart-subset pre-test gate is green, and `.390` is active
+**When** the Exp 4207 archive workflow runs
+**Then** it archives `.389`, confirms `.390`, keeps the YAML history parseable
+with one `.389` record, writes
+`results/experiment_4207_archive_v389_activate_v390.json`, records the cleared
+phase-0 operating point, N-matched corpora, background-training infra failure,
+uncollected A-vs-B, ARC `15` levels / `13` games, live efficiency-only/no-level
+result, and `.390` oracle-distinct-plus-finish framing in `v389_close_state`,
+records the checked resources in `preconditions_checked`, declares
+`aggregation_from_upstream_artifacts`, and emits a terminal-prefixed honest
+verdict.
+
+#### SCENARIO-REPORT-4207-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4207 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does not
+claim `.389` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4207)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4207 | Implemented (`python/carnot/reporting/archive_v389_activate_v390_4207.py`, `python/carnot/experiment_4207_archive_v389_activate_v390.py`) | Implemented (`tests/python/test_experiment_4207_archive_v389_activate_v390.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
