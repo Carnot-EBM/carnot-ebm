@@ -1,0 +1,240 @@
+{
+  "cited_upstream_artifacts": [
+    "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "results/arc3_gap4_induced_programs.json",
+    "results/experiment_4175_headroom_gate_executable_census.json",
+    "results/experiment_4177_decisive_headroom_controlled_moat_test.json",
+    "results/experiment_4178_gap3_stage1_model_native_arc_energy.json"
+  ],
+  "duration_s": 0.483,
+  "experiment": "experiment_4181_verifier_registry_gaps_hygiene",
+  "field_principles": {
+    "gaps_updated": "Lists the verifier_gaps entries touched (moat verdict + GAP-3 Stage-1).",
+    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled to the .387 truth.",
+    "regression_guard_passed": "Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression."
+  },
+  "gap3_stage1_result": {
+    "advances_toward_filled": false,
+    "adversarial_checks": {
+      "A1_permutation_control": {
+        "augmentation_strata_note": "The exported NPZ is already candidate-pooled and has no augmentation-id column; this preserves one shuffled label within each task that originally contains gold.",
+        "candidate_auroc_collapsed_to_chance": false,
+        "chance_pass2_against_true_labels": 0.143218,
+        "label_shuffle": "within_task_candidate_permutation",
+        "mean_candidate_auroc_against_true_labels": 0.826984,
+        "mean_pass2_against_true_labels": 0.193548,
+        "pass2_collapsed_to_chance": false,
+        "passed": false,
+        "resamples": 8
+      },
+      "A2_strict_oof": {
+        "disjoint_fit_eval_task_sets": true,
+        "folding": "leave_one_task_out",
+        "in_fold_candidate_auroc": 0.909524,
+        "in_fold_pass2": 0.483871,
+        "in_minus_oof_candidate_auroc": 0.015873,
+        "in_minus_oof_pass2": 0.032258,
+        "oof_candidate_auroc": 0.893651,
+        "oof_pass2": 0.451613,
+        "passed": true,
+        "selected_energy": "model_native_basis_pca_gold_mahalanobis"
+      },
+      "A3_oracle_leak_audit": {
+        "audit": "For each LOTO fold, held-out correctness labels were scrubbed before scoring; energies stayed identical.",
+        "external_gold_file_opened": false,
+        "held_out_label_scrub_max_abs_diff": 0.0,
+        "passed": true
+      },
+      "A4_bootstrap_ci95": {
+        "ci95": [
+          -0.096774,
+          0.096774
+        ],
+        "full_400_task_reconfirm_owed": true,
+        "n_tasks": 31,
+        "passed": true,
+        "point": 0.0,
+        "resamples": 2000
+      }
+    },
+    "all_four_gates_pass": false,
+    "artifact_path": "results/experiment_4178_gap3_stage1_model_native_arc_energy.json",
+    "candidate_auroc": 0.893651,
+    "candidate_auroc_detail": {
+      "gate_threshold": 0.7,
+      "hand_feature_always_on_floor": 0.67,
+      "pooled": 0.94563,
+      "selected_energy": "model_native_basis_pca_gold_mahalanobis",
+      "within_task_macro": 0.861209,
+      "within_task_pair_weighted": 0.893651
+    },
+    "coverage_fraction": 1.0,
+    "gap_id": "GAP-3-STAGE1-MODEL-NATIVE-LATENT-4178",
+    "gates": {
+      "candidate_auroc_gt_0p70": true,
+      "coverage_ge_0p80": true,
+      "headroom_capture_ge_0p30": false,
+      "selection_pass2_beats_vote": false
+    },
+    "headroom_capture_detail": {
+      "capture_fraction": 0.0,
+      "energy_pass2": 0.451613,
+      "oracle_minus_vote": 0.16129,
+      "oracle_pass2": 0.612903,
+      "vote_pass2": 0.451613
+    },
+    "headroom_capture_fraction": 0.0,
+    "honest_verdict": "complete: gap3_stage1_model_native_latent_honest_negative_model_native_basis_pca_gold_mahalanobis_delta_0.0000_energy_0.4516_vote_0.4516",
+    "inference_substrate": "offline_gap3_stage1_latent_npz_cpu",
+    "missing_discriminator": "gap3_model_native_energy_beyond_vote",
+    "n_candidates": 8041,
+    "n_tasks": 31,
+    "pass2_energy_vs_vote": 0.0,
+    "pass2_energy_vs_vote_detail": {
+      "bootstrap_ci95": [
+        -0.096774,
+        0.096774
+      ],
+      "bootstrap_resamples": 2000,
+      "delta": 0.0,
+      "energy_pass2": 0.451613,
+      "oracle_pass2": 0.612903,
+      "vote_pass2": 0.451613
+    },
+    "reproducibility_checksum": "ffc5b5b47ce44eb771780fb7eb08cf5d962c62e63e7325d0ae4730d8e34f259a",
+    "selected_energy": "model_native_basis_pca_gold_mahalanobis",
+    "source_artifacts": [
+      "results/experiment_4178_gap3_stage1_model_native_arc_energy.json"
+    ],
+    "status": "open_stage1_honest_negative_does_not_advance"
+  },
+  "gaps_path": "ops/verifier_gaps.md",
+  "gaps_updated": [
+    "GAP-MOAT-HEADROOM-CONTROLLED-4177",
+    "GAP-3-STAGE1-MODEL-NATIVE-LATENT-4178"
+  ],
+  "honest_verdict": "complete: registry_gaps_reconciled_to_v387_truth_regression_guard_passed_True_moat_filled_headroom_controlled_verifier_value_added_gap3_open_stage1_honest_negative_does_not_advance",
+  "inference_substrate": "cached_gap4_replay_and_ledger_reconciliation",
+  "moat_verdict": {
+    "accuracy_cost_pareto": {
+      "arm_a_over_arm_b_selection_cost_ratio": 2.0,
+      "arm_a_over_arm_c_selection_cost_ratio": 4.0,
+      "arm_a_total_selection_cost_units": 200,
+      "arm_a_total_selector_evals": 100,
+      "arm_a_total_verifier_evals": 100,
+      "arm_b_total_vote_weight_reads": 100,
+      "arm_c_total_first_candidate_reads": 50,
+      "cost_unit": "candidate_level_selection_operation_generation_budget_held_constant",
+      "efficiency_parity": false,
+      "latency_s": {
+        "arm_a_verifier_selector_selection": 0.000210074,
+        "arm_b_sc_vote_selection": 2.3615e-05,
+        "arm_c_no_verifier_selection": 1.904e-06
+      },
+      "parity_at_n_times_cheaper": null,
+      "same_candidate_budget": true,
+      "status": "measured",
+      "value_added_basis": "accuracy_lift_ci95_excludes_zero"
+    },
+    "artifact_path": "results/experiment_4177_decisive_headroom_controlled_moat_test.json",
+    "candidate_pool_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json",
+    "domain": "code",
+    "domain_headroom": {
+      "artifact_flags": {
+        "artifact_inflation_flagged": 0,
+        "candidate_pool_detected": true,
+        "census_incomplete": false,
+        "domain": "code",
+        "excluded_reasons": {},
+        "incomplete_reason": null,
+        "llm_judge_used": false,
+        "n_multicandidate_tasks": 50,
+        "n_tasks_evaluated": 50,
+        "n_tasks_raw": 50,
+        "objective_oracle": "unit_test_pass_flags",
+        "source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json"
+      },
+      "baseline_pass1": 0.66,
+      "n": 50,
+      "oracle_at_k": 0.84,
+      "sc_vote_pass1": 0.66,
+      "selectable_headroom": 0.18
+    },
+    "gap_id": "GAP-MOAT-HEADROOM-CONTROLLED-4177",
+    "headroom_census_path": "results/experiment_4175_headroom_gate_executable_census.json",
+    "headroom_present_domain": "code",
+    "honest_verdict": "complete: verifier_value_added_true_delta_0.1800_ci95_0.0800_0.3000",
+    "inference_substrate": "deterministic_verifier_plus_replay",
+    "max_selectable_headroom": 0.18,
+    "max_selectable_headroom_rounded": 0.18,
+    "missing_discriminator": "headroom_controlled_verifier_value_added_moat",
+    "moat_delta_vs_vote": {
+      "arm_a_pass1": 0.84,
+      "arm_b_sc_vote_pass1": 0.66,
+      "bootstrap_resamples": 2000,
+      "ci95": [
+        0.08,
+        0.3
+      ],
+      "delta": 0.18,
+      "n": 50,
+      "status": "measured"
+    },
+    "moat_vs_matched_control": {
+      "arm_a_pass1": 0.84,
+      "arm_c_no_verifier_pass1": 0.66,
+      "control_policy": "deterministic_first_of_k_no_verifier",
+      "delta": 0.18,
+      "n": 50,
+      "status": "measured"
+    },
+    "positive_control": {
+      "oracle_at_k": 0.84,
+      "oracle_minus_sc_vote": 0.18,
+      "sc_vote_pass1": 0.66,
+      "selection_flips_vs_vote": 50,
+      "status": "headroom_present",
+      "verifier_recovers_outvoted": 9
+    },
+    "positive_control_confirmed": true,
+    "reproducibility_checksum": "e3b3f38b88a1daa95505f5ee2d7de86d7440a3d91a8cc3acaf1738e032ed7c2f",
+    "source_artifacts": [
+      "results/experiment_4175_headroom_gate_executable_census.json",
+      "results/experiment_4177_decisive_headroom_controlled_moat_test.json"
+    ],
+    "status": "filled_headroom_controlled_verifier_value_added",
+    "verifier_value_added": true
+  },
+  "offline_replay": {
+    "arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+    "expected": {
+      "arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      }
+    },
+    "gap4_arc1_reproduced": true,
+    "no_codex_calls": true,
+    "no_gguf_inference": true,
+    "regression_guard_passed": true
+  },
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_updated": true,
+  "regression_guard_passed": true,
+  "schema": "carnot.experiment_4181_verifier_registry_gaps_hygiene.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4181",
+    "SCENARIO-VERIFY-4181"
+  ]
+}

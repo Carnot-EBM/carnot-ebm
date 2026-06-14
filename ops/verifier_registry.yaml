@@ -266,6 +266,12 @@ verifiers:
     exp4171_arc1_rule_exec_gated_pass2: 0.5806
     exp4171_arc1_headroom_recovered: 4
     exp4171_arc1_vote_wins_lost: 0
+    eval_exp_4181: results/experiment_4181_verifier_registry_gaps_hygiene.json
+    exp4181_regression_guard_passed: true
+    exp4181_arc1_rule_exec_vote_pass2: 0.4516
+    exp4181_arc1_rule_exec_gated_pass2: 0.5806
+    exp4181_arc1_headroom_recovered: 4
+    exp4181_arc1_vote_wins_lost: 0
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -3705,3 +3711,30 @@ verifiers:
     diffusiongemma_gate_state: *id002
     flagged_adversarial: true
     eval_exp_4163: results/experiment_4163_verifier_registry_gaps_hygiene.json
+  registry_roles:
+  - role_id: verifier_moat_gap3_hygiene_4181
+    experiment: results/experiment_4181_verifier_registry_gaps_hygiene.json
+    role: registry_gap_ledger_hygiene_v387
+    status: moat_positive_gap3_stage1_nonadvancing
+    moat_gap_id: GAP-MOAT-HEADROOM-CONTROLLED-4177
+    moat_status: filled_headroom_controlled_verifier_value_added
+    moat_artifact: results/experiment_4177_decisive_headroom_controlled_moat_test.json
+    moat_verifier_value_added: true
+    headroom_present_domain: code
+    moat_delta_vs_vote:
+      arm_a_pass1: 0.84
+      arm_b_sc_vote_pass1: 0.66
+      bootstrap_resamples: 2000
+      ci95:
+      - 0.08
+      - 0.3
+      delta: 0.18
+      n: 50
+      status: measured
+    gap3_gap_id: GAP-3-STAGE1-MODEL-NATIVE-LATENT-4178
+    gap3_stage1_status: open_stage1_honest_negative_does_not_advance
+    gap3_stage1_artifact: results/experiment_4178_gap3_stage1_model_native_arc_energy.json
+    gap3_stage1_pass2_energy_vs_vote: 0.0
+    gap3_stage1_headroom_capture_fraction: 0.0
+    gap3_stage1_advances_toward_filled: false
+    eval_exp_4181: results/experiment_4181_verifier_registry_gaps_hygiene.json

@@ -789,3 +789,23 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: keep DiffusionGemma gated until rerank or RFT A-vs-B label contrast shows value on a faithful stable baseline copy.
 - priority: high
 <!-- exp4171-sudoku-decisive-graft:end -->
+
+<!-- exp4181-headroom-controlled-moat:start -->
+### GAP-MOAT-HEADROOM-CONTROLLED-4177: Exp 4181 .387 headroom-controlled moat verdict
+- status: filled_headroom_controlled_verifier_value_added
+- evidence: `results/experiment_4177_decisive_headroom_controlled_moat_test.json` with headroom census `results/experiment_4175_headroom_gate_executable_census.json`; headroom_present_domain=code; verifier_value_added=true; positive_control_confirmed=true; moat_delta_vs_vote_delta=0.18; moat_delta_vs_vote_ci95=[0.08, 0.3]; moat_vs_matched_control_delta=0.18; max_selectable_headroom=0.18; inference_substrate=deterministic_verifier_plus_replay.
+- failure mode: closed for this headroom-controlled code-domain moat test; the verifier-plus-selector arm beats self-consistency vote with a positive CI.
+- missing discriminator: none for the measured .387 code-domain moat verdict; continue to require headroom-positive domains before interpreting moat nulls.
+- candidate design: preserve the objective headroom gate and matched-control arm for future verifier-value tests.
+- priority: medium
+<!-- exp4181-headroom-controlled-moat:end -->
+
+<!-- exp4181-gap3-stage1:start -->
+### GAP-3-STAGE1-MODEL-NATIVE-LATENT-4178: Exp 4181 .387 GAP-3 Stage-1 latent-energy result
+- status: open_stage1_honest_negative_does_not_advance
+- evidence: `results/experiment_4178_gap3_stage1_model_native_arc_energy.json`; selected_energy=model_native_basis_pca_gold_mahalanobis; pass2_energy_vs_vote=0.0; energy_pass2=0.451613; vote_pass2=0.451613; oracle_pass2=0.612903; bootstrap_ci95=[-0.096774, 0.096774]; headroom_capture_fraction=0.0; oracle_minus_vote=0.16129; candidate_auroc=0.893651; coverage_fraction=1.0; all_four_gates_pass=false; advances_toward_filled=false.
+- failure mode: the model-native latent energy ties vote at pass@2 and captures none of the oracle-minus-vote headroom, so Stage 1 is an honest negative rather than a filled GAP-3 discriminator.
+- missing discriminator: a model-native ARC energy that improves pass@2 over vote and captures real headroom without oracle leakage.
+- candidate design: keep GAP-3 open for a stronger generator-independent content energy; do not promote Stage 1 toward filled from this result.
+- priority: high
+<!-- exp4181-gap3-stage1:end -->

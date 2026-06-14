@@ -13894,6 +13894,71 @@ write path.
 If the Stage-1 latent dump is absent, then Exp 4178 SHALL write the blocked
 artifact and stop without attempting to regenerate activations.
 
+### REQ-VERIFY-4181: Verifier Registry And Gaps Hygiene For .387 Outcomes
+
+The repository SHALL provide Exp 4181 at
+`python/carnot/experiment_4181_verifier_registry_gaps_hygiene.py` and
+`results/experiment_4181_verifier_registry_gaps_hygiene.py` to replay the
+canonical GAP-4 ARC-1 regression guard from cached candidates and saved
+induced-program outputs, then reconcile `ops/verifier_registry.yaml` and
+`ops/verifier_gaps.md` with the `.387` verifier-relevant truth from
+`results/experiment_4177_decisive_headroom_controlled_moat_test.json`,
+`results/experiment_4178_gap3_stage1_model_native_arc_energy.json`, and the
+headroom-domain source
+`results/experiment_4175_headroom_gate_executable_census.json`. Before running
+the replay, the runner SHALL verify that the cached GAP-4 fixtures, those three
+upstream artifacts, `ops/verifier_registry.yaml`, and `ops/verifier_gaps.md`
+exist and parse. If any precondition fails, the runner SHALL write a terminal
+artifact with `honest_verdict=blocked_<resource>` and SHALL NOT fabricate
+replay, registry, or gaps updates.
+
+The offline regression guard SHALL rederive ARC-1 vote `0.4516` to gated
+`0.5806` from cached TRM candidate rows and saved GAP-4 program outputs,
+including `n=31`, `headroom_recovered=4`, and `vote_wins_lost=0`, without
+Codex calls, GGUF loading, GPU use, live TRM inference, stable-checkpoint
+writes, or TRM training changes. `regression_guard_passed` SHALL be a bare bool
+and SHALL be true only when those canonical GAP-4 numbers match exactly.
+
+The gaps ledger SHALL append or refresh marked entries for the `.387`
+headroom-controlled moat verdict and GAP-3 Stage-1 result without pruning prior
+history. The moat entry SHALL record `verifier_value_added=true`,
+`headroom_present_domain=code`, `moat_delta_vs_vote.delta=0.18`,
+`moat_delta_vs_vote.ci95=[0.08, 0.3]`, `positive_control_confirmed=true`, and
+that Exp 4177 used deterministic verifier plus replay. The GAP-3 entry SHALL
+record Exp 4178's `pass2_energy_vs_vote=0.0`,
+`headroom_capture_fraction=0.0`, `candidate_auroc=0.893651`,
+`coverage_fraction=1.0`, `all_four_gates_pass=false`, and SHALL state that
+GAP-3 does not advance toward `filled` from Stage 1.
+
+The registry SHALL annotate the `gap4_program_induction_stack` entry with an
+Exp 4181 replay marker and a `.387` moat/GAP-3 hygiene role. The role SHALL
+record that the code-domain headroom-controlled moat was positive while GAP-3
+Stage 1 remained an honest non-advancing negative; it SHALL NOT promote GAP-3
+toward filled.
+
+The terminal artifact SHALL write
+`results/experiment_4181_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_updated`,
+bare bool `registry_updated`, `moat_verdict`, `gap3_stage1_result`, and
+`inference_substrate=cached_gap4_replay_and_ledger_reconciliation`. Its
+`field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled to the .387 truth.`;
+`regression_guard_passed` = `Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression.`;
+`gaps_updated` = `Lists the verifier_gaps entries touched (moat verdict + GAP-3 Stage-1).`
+
+### SCENARIO-VERIFY-4181: Cached Replay Records .387 Moat And GAP-3 Truth
+
+Given the GAP-4 cached ARC-1 pool, saved induced-program artifact, Exp 4175,
+Exp 4177, Exp 4178, `ops/verifier_registry.yaml`, and `ops/verifier_gaps.md`
+are readable, when Exp 4181 runs, then it writes the terminal artifact with
+`regression_guard_passed=true`, records vote `0.4516` to gated `0.5806`,
+records the moat verdict as `verifier_value_added=true` on
+`headroom_present_domain=code`, records the GAP-3 Stage-1 result as
+`pass2_energy_vs_vote=0.0` with no advance toward `filled`, annotates the
+registry with the Exp 4181 replay plus `.387` moat/GAP-3 role, writes
+`gaps_updated` containing the moat and GAP-3 gap entries touched, and uses no
+inference substrate other than cached GAP-4 replay and ledger reconciliation.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
