@@ -14,6 +14,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import gc
 import json
 import sys
 import time
@@ -31,6 +32,8 @@ from carnot.verify.sandbox import sandboxed_exec_function  # noqa: E402
 
 
 OUT = REPO_ROOT / "results" / "experiment_4197_verifier_reward_code_lora_rft_3arm_smoke.json"
+LORA_TARGET_MODULES = r".*language_model.*(q_proj|k_proj|v_proj|o_proj|gate_proj|up_proj|down_proj)$"
+LORA_CHECKPOINT_EVERY_STEPS = 25
 
 
 def _jsonable(value: Any) -> Any:
@@ -93,6 +96,7 @@ def _train_lora_sft(
     output_dir: Path,
     smoke: bool,
     seed: int,
+    progress_interval_s: float = 30.0,
 ) -> dict[str, Any]:
     """Train one LoRA arm when explicitly requested.
 
@@ -110,9 +114,10 @@ def _train_lora_sft(
             "random_seed": seed,
         }
 
+    progress_events: list[dict[str, Any]] = []
     try:
         import torch
-        from peft import LoraConfig, get_peft_model
+        from peft import LoraConfig, PeftModel, get_peft_model
         from transformers import AutoModelForCausalLM, AutoTokenizer
     except Exception as exc:
         return {"arm": arm_name, "status": "blocked_training_import", "error": f"{type(exc).__name__}: {exc}"}
@@ -124,22 +129,59 @@ def _train_lora_sft(
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
     output_dir.mkdir(parents=True, exist_ok=True)
+    progress_path = output_dir / "training_progress.json"
+    completed_steps = 0
+    if progress_path.is_file():
+        try:
+            progress = json.loads(progress_path.read_text(encoding="utf-8"))
+            completed_steps = max(0, min(int(progress.get("completed_steps") or 0), len(examples)))
+        except Exception:
+            completed_steps = 0
+    adapter_config = output_dir / "adapter_config.json"
+    if adapter_config.is_file() and completed_steps >= len(examples):
+        return {
+            "arm": arm_name,
+            "status": "trained_resume_complete",
+            "n_examples": len(examples),
+            "completed_steps": completed_steps,
+            "output_dir": str(output_dir),
+            "random_seed": seed,
+            "progress_events": [],
+        }
+
+    print(
+        f"[{time.strftime('%H:%M:%S')}] arm={arm_name} resume_start={completed_steps}/{len(examples)}",
+        flush=True,
+    )
     tokenizer = AutoTokenizer.from_pretrained(model_id)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
     model = AutoModelForCausalLM.from_pretrained(model_id, dtype=torch.bfloat16).to("cuda")
-    lora = LoraConfig(
-        r=16,
-        lora_alpha=32,
-        lora_dropout=0.05,
-        task_type="CAUSAL_LM",
-        target_modules=["linear"],
-    )
-    model = get_peft_model(model, lora)
+    if adapter_config.is_file():
+        model = PeftModel.from_pretrained(model, output_dir, is_trainable=True)
+    else:
+        lora = LoraConfig(
+            r=16,
+            lora_alpha=32,
+            lora_dropout=0.05,
+            task_type="CAUSAL_LM",
+            target_modules=LORA_TARGET_MODULES,
+            exclude_modules=["vision_tower"],
+        )
+        model = get_peft_model(model, lora)
+    trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    if trainable_params <= 0:
+        return {
+            "arm": arm_name,
+            "status": "blocked_no_trainable_lora_parameters",
+            "n_examples": len(examples),
+            "target_modules": LORA_TARGET_MODULES,
+        }
     optimizer = torch.optim.AdamW((p for p in model.parameters() if p.requires_grad), lr=2e-4)
     model.train()
-    steps = 0
-    for example in examples:
+    steps = completed_steps
+    last_print = 0.0
+    for example in examples[completed_steps:]:
         prompt = example.prompt
         full = prompt + "\n" + example.completion + (tokenizer.eos_token or "")
         enc = tokenizer(full, return_tensors="pt", truncation=True, max_length=1024).to("cuda")
@@ -147,13 +189,76 @@ def _train_lora_sft(
         labels = enc["input_ids"].clone()
         labels[0, :prompt_len] = -100
         loss = model(**enc, labels=labels).loss
+        if not bool(getattr(loss, "requires_grad", False)):
+            return {
+                "arm": arm_name,
+                "status": "blocked_loss_without_grad",
+                "n_examples": len(examples),
+                "completed_steps": steps,
+                "trainable_params": trainable_params,
+            }
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         optimizer.step()
         optimizer.zero_grad(set_to_none=True)
         steps += 1
+        loss_value = float(loss.detach().cpu())
+        now = time.time()
+        if now - last_print >= progress_interval_s or steps == len(examples):
+            event = {"arm": arm_name, "step": steps, "total": len(examples), "loss": round(loss_value, 6)}
+            progress_events.append(event)
+            print(
+                f"[{time.strftime('%H:%M:%S')}] arm={arm_name} step={steps}/{len(examples)} loss={loss_value:.6f}",
+                flush=True,
+            )
+            last_print = now
+        progress_path.write_text(
+            json.dumps(
+                {
+                    "arm": arm_name,
+                    "status": "training",
+                    "completed_steps": steps,
+                    "total_steps": len(examples),
+                    "last_loss": loss_value,
+                    "updated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        if steps % LORA_CHECKPOINT_EVERY_STEPS == 0:
+            model.save_pretrained(output_dir)
     model.save_pretrained(output_dir)
-    return {"arm": arm_name, "status": "trained", "n_examples": len(examples), "steps": steps, "output_dir": str(output_dir)}
+    progress_path.write_text(
+        json.dumps(
+            {
+                "arm": arm_name,
+                "status": "trained",
+                "completed_steps": steps,
+                "total_steps": len(examples),
+                "updated_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    del model
+    gc.collect()
+    torch.cuda.empty_cache()
+    return {
+        "arm": arm_name,
+        "status": "trained",
+        "n_examples": len(examples),
+        "steps": steps,
+        "completed_steps": steps,
+        "trainable_params": trainable_params,
+        "output_dir": str(output_dir),
+        "progress_events": progress_events,
+    }
 
 
 def run(
@@ -164,6 +269,7 @@ def run(
     train: bool = False,
     output_path: Path = OUT,
     train_root: Path | None = None,
+    progress_interval_s: float = 30.0,
 ) -> dict[str, Any]:
     started = time.time()
     selected_tasks, corpora = build_corpora_from_checkpoint(checkpoint, seed=seed, smoke=smoke)
@@ -177,6 +283,7 @@ def run(
             output_dir=train_root / "arm_a_certified",
             smoke=not train_mode,
             seed=seed,
+            progress_interval_s=progress_interval_s,
         ),
         "arm_b": _train_lora_sft(
             "B_random_same_generator",
@@ -185,6 +292,7 @@ def run(
             output_dir=train_root / "arm_b_random_same_generator",
             smoke=not train_mode,
             seed=seed,
+            progress_interval_s=progress_interval_s,
         ),
         "arm_c": _train_lora_sft(
             "C_hidden_gold",
@@ -193,6 +301,7 @@ def run(
             output_dir=train_root / "arm_c_hidden_gold",
             smoke=not train_mode,
             seed=seed,
+            progress_interval_s=progress_interval_s,
         ),
         "arm_d": {"arm": "D_cold_base", "status": "cold_base_eval_only", "n_examples": 0},
     }
@@ -215,6 +324,11 @@ def run(
         "n_tasks": len(selected_tasks),
         "arm_sizes": sizes,
         "training": training,
+        "progress_events": [
+            event
+            for arm in ("arm_a", "arm_b", "arm_c")
+            for event in training.get(arm, {}).get("progress_events", [])
+        ],
         "truncation_guard": {"max_allowed_truncation_rate": exp4197.MAX_ALLOWED_TRUNCATION},
         "duration_s": round(time.time() - started, 6),
     }
@@ -231,6 +345,7 @@ def main() -> int:
     parser.add_argument("--train", action="store_true", help="Launch full LoRA training for A/B/C arms.")
     parser.add_argument("--out", type=Path, default=OUT)
     parser.add_argument("--train-root", type=Path, default=None, help="Per-arm LoRA checkpoint root.")
+    parser.add_argument("--progress-interval-s", type=float, default=30.0)
     args = parser.parse_args()
     smoke = args.smoke or not args.train
     artifact = run(
@@ -240,6 +355,7 @@ def main() -> int:
         train=args.train,
         output_path=args.out,
         train_root=args.train_root,
+        progress_interval_s=args.progress_interval_s,
     )
     print(f"-> {artifact['honest_verdict']}")
     print(f"   arm_sizes={artifact['arm_sizes']}")
