@@ -481,5 +481,13 @@
       "task": "f3e62deb"
     }
   ],
-  "title": "GAP-4 certified ARC corpus plus local in-context lift read"
+  "title": "GAP-4 certified ARC corpus plus local in-context lift read",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=2.026194 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
