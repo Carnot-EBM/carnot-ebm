@@ -1,0 +1,19 @@
+/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/data/sudoku_datamodule.py:298: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /pytorch/torch/csrc/utils/tensor_numpy.cpp:213.)
+  input_tensor = torch.from_numpy(input_flat).long()
+Failed to import adam2
+Using device: cuda
+Loading model from /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+Auto-casting TRM to torch.bfloat16
+Model loaded: TRMModule
+Model configuration:
+  hidden_size: 512
+  num_layers: 2
+  H_cycles: 3
+  L_cycles: 6
+  N_supervision: 16
+  vocab_size: 12
+  seq_len: 81
+Grid size: 9x9
+Max grid size: 9x9
+Vocab size: 12
+[detector] DONE auroc=0.5000 greedy=0.7902 gold_sanity=0.0 -> /home/ianblenke/github.com/ianblenke/carnot/results/verifier_detector_auroc.json
