@@ -8,6 +8,39 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-14 Exp 4203 - .389 planning sweep SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-verifier-as-reward-v390-2026-06-14.md`.
+
+**Filtered track:** verifier-as-reward de-confounding, code-RLVR baselines,
+process/self-distill math rewards, and cost-normalized verifier plus
+self-consistency framing.
+
+**Seed and fresh-pass candidates marked ingested:**
+- Spurious Rewards, arXiv:2506.10947 - mapped to the mandatory non-Qwen base
+  and same-generator random-label A-vs-B control.
+- Spurious Rewards Paradox, arXiv:2601.11061 - mapped to the
+  memorization-shortcut diagnostic.
+- RLV-epsilon-R, arXiv:2601.04411 - mapped to TPR/FPR/Youden-J reporting.
+- RLEF, arXiv:2410.02089; Aletheia, arXiv:2601.12186; and CodeScaler,
+  arXiv:2602.17684 - mapped to code-RLVR baselines a positive result must beat.
+- Self-Distilled RLVR, arXiv:2604.03128; CEPO, arXiv:2605.19436; and
+  ThinkPRM, arXiv:2504.16828 - mapped to the math-process-reward fork after
+  the de-confounding gate.
+- Budget-aware discriminative verification, arXiv:2510.14913, and
+  When To Solve/Verify, arXiv:2504.01005 - mapped to the hybrid verifier plus
+  self-consistency cost-crossover framing.
+
+Exp 4199 status mapped honestly: `blocked_gate_check_failed`; the A-vs-B
+collection did not run because the upstream training-launched gate was false.
+
+flagged_for_v390:
+`non_qwen_same_generator_random_label_ablation_v390`.
+
+Flagged for .390: `non_qwen_same_generator_random_label_ablation_v390`.
+
+**Bottom line for the .390 roadmap:** run the non-Qwen same-generator
+random-label A-vs-B replication before any math-process-reward fork.
 ## 2026-06-14 Exp 4192 - .388 planning sweep SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-efficiency-gap4-diffusion-v389-2026-06-14.md`.
