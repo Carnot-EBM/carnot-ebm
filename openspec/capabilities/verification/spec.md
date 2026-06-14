@@ -13776,6 +13776,78 @@ write the terminal blocked artifact with
 `max_selectable_headroom` as a bare float, and an acceptance gate that permits
 the honest precondition stop.
 
+### REQ-VERIFY-4186: Efficiency Moat Verifier Versus LLM-As-Judge
+
+The repository SHALL provide
+`python/carnot/reporting/efficiency_moat_verifier_vs_llm_judge_4186.py` and
+`results/experiment_4186_efficiency_moat_verifier_vs_llm_judge.py` to run the
+four-arm efficiency moat on the Exp 4185 headroom-present executable domain.
+The runner SHALL first read
+`results/experiment_4185_headroom_recensus_llm_judge_harness.json`; if
+`max_selectable_headroom` is missing, is below `0.10`, if
+`headroom_present_domain` is empty, or if `llm_judge_ready` is not the bare
+boolean `true`, it SHALL write
+`results/experiment_4186_efficiency_moat_verifier_vs_llm_judge.json` with
+`honest_verdict=complete_efficiency_moat_deferred_no_headroom_or_no_judge` and
+SHALL stop before scoring arms.
+
+When the precondition passes for the code domain, Arm A SHALL rank the same
+K-candidate pool by Carnot executable verifier evidence plus the persisted
+Exp 4176 V-STaR selector, Arm J SHALL replay the Exp 4185 LLM-as-judge choices
+on the same unique problem set, Arm B SHALL use self-consistency majority vote,
+and the oracle arm SHALL report pass@k. Arm A SHALL record pass@1, total
+verifier/selector wall-clock seconds, and total tokens equal to zero for the
+executable verifier. Arm J SHALL record pass@1 plus the summed real wall-clock
+seconds and prompt/completion token counts from the Exp 4185 judge cost meter
+records used in the comparison. Arm B SHALL record pass@1 with near-zero
+selection cost. The runner SHALL compute bootstrap CI95 for
+`pass@1(A) - pass@1(J)`, SHALL compute
+`cost_ratio_vs_judge={wall_clock,tokens}` as Arm A cost divided by Arm J cost
+in real units, and SHALL run `scripts/adversarial_verify.py` on the written
+artifact.
+
+The terminal artifact SHALL write
+`results/experiment_4186_efficiency_moat_verifier_vs_llm_judge.json` with
+required fields `honest_verdict`, bare bool `verifier_efficiency_win`,
+`accuracy_parity_vs_judge`, `cost_ratio_vs_judge`, bare bool
+`positive_control_confirmed`, `model_specs`, bare int `random_seed`, string
+`reproducibility_checksum`, `arms`, `field_principles`, `spec_refs`,
+`inference_substrate`, `duration_s`, and `adversarial_verify`.
+`positive_control_confirmed` SHALL be true only when oracle pass@k exceeds
+SC-vote and at least one Arm A selection differs from vote. The acceptance
+gate SHALL pass only when the positive control is confirmed and both accuracy
+and cost axes are reported with `verifier_efficiency_win` resolved, or when the
+artifact is the honest gated deferral.
+
+The required field principles are:
+`honest_verdict` = `Terminal-prefixed. A clean efficiency win, an honest 'judge wins on accuracy', or 'no cost advantage' are ALL COMPLETE, decision-grade verdicts.`;
+`verifier_efficiency_win` = `Bare bool: ARM A within-CI of ARM J on accuracy AND >=10x cheaper (or strictly Pareto-dominant). The north-star §5 win condition, measured against an LLM-judge with REAL cost.`;
+`accuracy_parity_vs_judge` = `pass@1(A) - pass@1(J) with bootstrap CI95 — does the cheap verifier MATCH the expensive judge on accuracy?`;
+`cost_ratio_vs_judge` = `{wall_clock, tokens} ratio ARM A / ARM J — the efficiency axis in REAL units, fixing the .387 abstract-cost-unit caveat.`;
+`positive_control_confirmed` = `Bare bool: oracle@k > SC-vote AND >=1 flip occurred on this corpus — without it the comparison is uninformative (FALSE_NEGATIVE_RISK).`;
+`model_specs` = `The SOTA GGUF invoked as the judge; required methodology for a live-LLM artifact.`;
+`random_seed` = `Determinism precondition for reproducibility of the decisive measurement.`;
+`reproducibility_checksum` = `Content hash of candidate pool + verifier + judge config; lets a third party re-run the head-to-head.`
+
+### SCENARIO-VERIFY-4186: Headroom-Present Four-Arm Efficiency Moat Reports Real Cost
+
+Given Exp 4185 reports `max_selectable_headroom >= 0.10`,
+`headroom_present_domain=code`, and `llm_judge_ready=true`, and Exp 4176 has
+persisted the V-STaR selector for the same candidate pool, when Exp 4186 runs,
+then it measures Arm A verifier+selector, Arm J LLM-as-judge, Arm B SC-vote,
+and oracle pass@k on the same unique problem set, reports Arm A minus Arm J
+with bootstrap CI95, reports Arm A divided by Arm J for both real wall-clock
+seconds and tokens, records the selected SOTA GGUF in `model_specs`, confirms
+the positive control, resolves `verifier_efficiency_win` either true or false,
+writes the required field principles and reproducibility checksum, and runs
+the adversarial verifier against the delivered JSON.
+
+If Exp 4185 does not clear the headroom/judge-ready gate, then Exp 4186 SHALL
+write `honest_verdict=complete_efficiency_moat_deferred_no_headroom_or_no_judge`,
+set `positive_control_confirmed=false`, keep `verifier_efficiency_win=false`,
+include empty measured-arm metrics with deferred status, and stop before
+loading the selector or scoring candidates.
+
 ### REQ-VERIFY-4176: OOF V-STaR Learned Selector From Accepted And Rejected Traces
 
 The repository SHALL provide
