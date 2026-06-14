@@ -2012,6 +2012,44 @@ The verifier ensemble MUST be evaluated for generalization on code domains (corr
 - Compare AUROC to model-confidence and best single verifier.
 - Produce `results/experiment_3573_verifier_code_bug_error_detection.json`.
 
+### REQ-CODE-4197: Code Verifier-Reward Phase-0 And 3-Arm LoRA-RFT Harness
+
+The repository shall provide an Exp 4197 workflow that establishes whether the
+execution verifier is clean enough to become a code-training reward and builds
+the on-policy 3-arm LoRA-RFT runner for the decisive A2 training run:
+- Preconditions must check for a cached non-Qwen trainable base, CUDA, a
+  loadable code corpus, and the restricted execution sandbox before any
+  measurement or harness launch.
+- Phase-0 measurement must compute `phase0_precision` as a bare float
+  P(hidden-pass | visible-perfect) and `youden_j` as a bare float TPR-FPR from
+  visible-test verifier labels against hidden-test ground truth.
+- Training suitability must report a bare boolean
+  `training_headroom_present`, own-sample visible-perfect rate, truncation rate,
+  and no-answer rate for the selected code operating point.
+- The result artifact must include bare top-level fields
+  `phase0_precision`, `youden_j`, `training_headroom_present`, and
+  `harness_ready`, plus `operating_point`, `model_specs`, `random_seed`, and a
+  reproducibility checksum.
+- The on-policy runner must construct N-matched Arm A verifier-certified
+  traces, Arm B same-generator random-label controls, Arm C hidden-test-gold
+  traces, and Arm D cold-base evaluation with identical LoRA configuration for
+  trained arms.
+
+### SCENARIO-CODE-4197-PHASE0: Visible-Perfect Labels Produce Bare Metrics
+
+Given cached code candidates with visible and hidden execution outcomes, when
+the Exp 4197 Phase-0 scorer runs, then it computes certification precision,
+TPR, FPR, and Youden-J from the raw labels and exposes `phase0_precision` and
+`youden_j` as bare JSON numbers.
+
+### SCENARIO-CODE-4197-HARNESS: 3-Arm Runner Builds Matched Corpora
+
+Given code tasks with same-generator candidate traces, when the Exp 4197 runner
+builds training corpora, then Arm A contains visible-perfect traces, Arm B
+contains an equal number of non-certified same-generator traces selected with a
+deterministic seed, Arm C contains hidden-pass gold traces, and the smoke path
+validates two tasks without launching a full training run.
+
 
 ### REQ-CODE-VERIFY-3602: FoVer Math-Trained PRM Transfer to Code Benchmark
 

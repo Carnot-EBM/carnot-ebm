@@ -1,0 +1,46 @@
+{
+  "arm_sizes": {
+    "arm_a_certified": 7,
+    "arm_b_random_control": 7,
+    "arm_c_hidden_gold": 4,
+    "arm_d_cold_base": 0
+  },
+  "checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/results/offarc_power_sync_gemma12b_evalplus_k5.checkpoint.json",
+  "duration_s": 0.024235,
+  "experiment": "experiment_4197_verifier_reward_code_lora_rft_3arm",
+  "harness_ready": true,
+  "honest_verdict": "complete: smoke_3arm_runner_ready",
+  "n_tasks": 2,
+  "random_seed": 4197,
+  "smoke": true,
+  "train_mode_executed": false,
+  "train_requested": false,
+  "training": {
+    "arm_a": {
+      "arm": "A_certified",
+      "n_examples": 7,
+      "output_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4197_lora_rft_arms/arm_a_certified",
+      "status": "smoke_no_train"
+    },
+    "arm_b": {
+      "arm": "B_random_same_generator",
+      "n_examples": 7,
+      "output_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4197_lora_rft_arms/arm_b_random_same_generator",
+      "status": "smoke_no_train"
+    },
+    "arm_c": {
+      "arm": "C_hidden_gold",
+      "n_examples": 4,
+      "output_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4197_lora_rft_arms/arm_c_hidden_gold",
+      "status": "smoke_no_train"
+    },
+    "arm_d": {
+      "arm": "D_cold_base",
+      "n_examples": 0,
+      "status": "cold_base_eval_only"
+    }
+  },
+  "truncation_guard": {
+    "max_allowed_truncation_rate": 0.05
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "duration_s": 2.904767,
+  "experiment": "experiment_4197_verifier_reward_phase0_headroom_harness_build",
+  "field_principles": {
+    "harness_ready": "BARE bool: the 3-arm runner is present and the two-task smoke path built matched corpora without full training.",
+    "honest_verdict": "Terminal-prefixed. A clean operating point + a built harness is COMPLETE; an honest no code point clears Phase-0/headroom is also complete and decision-grade.",
+    "model_specs": "The NON-Qwen trainable base plus any SOTA GGUF certification reference used for execution-label evidence.",
+    "operating_point": "{base, corpus, K, max_new_tokens, base_passrate, own_visible_perfect_rate, truncation_rate}; truncation_rate<5% required.",
+    "phase0_precision": "BARE float P(hidden-pass|visible-perfect). >=0.85 means the verifier label is clean enough to train on.",
+    "random_seed": "Determinism precondition; generation and random-label control selection are seeded.",
+    "reproducibility_checksum": "Content hash of corpus + base + config to catch silent drift before A2.",
+    "training_headroom_present": "BARE bool: trainable-base hidden-pass is non-trivial and not saturated against the selected code eval slice.",
+    "youden_j": "BARE float TPR-FPR of the execution verifier vs hidden-pass. J>0 means label noise does not reverse the training signal."
+  },
+  "generation_suitability": {
+    "base_passrate": 0.6,
+    "gen_suitable": true,
+    "n_eval": 10,
+    "no_answer_rate": 0.0,
+    "own_visible_perfect_rate": 0.6,
+    "training_headroom_present": true,
+    "truncation_rate": 0.0
+  },
+  "harness_ready": true,
+  "honest_verdict": "complete: code_verifier_reward_operating_point_ready_phase0_0.956_j0.414_headroom0.600_harness_ready",
+  "measurement_sources": {
+    "headroom_eval_rows": 10,
+    "headroom_labels": "results/experiment_1999_code_verification_humaneval.json",
+    "phase0_candidates": 800,
+    "phase0_labels": "results/offarc_power_sync_gemma12b_evalplus_k5.checkpoint.json"
+  },
+  "model_specs": {
+    "certification_reference": "unsloth/gemma-4-12B-it-GGUF",
+    "qwen_train_base_forbidden": true,
+    "runner": "scripts/experiments/verifier_reward_code_lora_rft_3arm.py",
+    "sota_gguf_cached_pair": [
+      {
+        "gpu": 0,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "name": "Qwen3.6-35B-A3B"
+      },
+      {
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "name": "Gemma4-26B-A4B-it"
+      }
+    ],
+    "trainable_base": "google/gemma-4-E4B-it",
+    "trainable_base_cache_path": "/home/ianblenke/.cache/huggingface/hub/models--google--gemma-4-E4B-it",
+    "trainable_base_is_non_qwen": true
+  },
+  "operating_point": {
+    "K": 5,
+    "base": "google/gemma-4-E4B-it",
+    "base_passrate": 0.6,
+    "corpus": "HumanEval Exp1999 deterministic 10-task headroom slice + EvalPlus visible/hidden label checkpoint",
+    "max_new_tokens": 512,
+    "no_answer_rate": 0.0,
+    "own_visible_perfect_rate": 0.6,
+    "truncation_rate": 0.0
+  },
+  "phase0_detail": {
+    "phase0_clears": true,
+    "phase0_fn": 0,
+    "phase0_fp": 34,
+    "phase0_fpr": 0.5862068965517241,
+    "phase0_precision": 0.9561855670103093,
+    "phase0_tn": 24,
+    "phase0_tp": 742,
+    "phase0_tpr": 1.0,
+    "youden_j": 0.4137931034482759
+  },
+  "phase0_precision": 0.9561855670103093,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--google--gemma-4-E4B-it",
+      "resource": "nonqwen_trainable_base_cached"
+    },
+    {
+      "available": true,
+      "detail": "torch.cuda.is_available() true",
+      "resource": "cuda_available"
+    },
+    {
+      "available": true,
+      "detail": "openai/openai_humaneval cached rows=164",
+      "resource": "code_corpus_loadable"
+    },
+    {
+      "available": true,
+      "detail": "{\"available\": true, \"container_timeout_seconds\": 10, \"docker\": true, \"fallback\": \"in-process exec (UNSAFE for untrusted code)\", \"image\": \"python:3.11-slim\", \"max_code_size_bytes\": 100000, \"runtime\": \"runsc\"}",
+      "resource": "restricted_exec_sandbox_importable"
+    }
+  ],
+  "random_seed": 4197,
+  "reproducibility_checksum": "sha256:39f0ea0f4b6f47f2847305be2f740570a7aa0029107b6435c1974224e7fd15f0",
+  "schema": "carnot.experiment_4197_verifier_reward_phase0_headroom.v1",
+  "spec_refs": [
+    "REQ-CODE-4197",
+    "SCENARIO-CODE-4197-PHASE0",
+    "SCENARIO-CODE-4197-HARNESS"
+  ],
+  "three_arm_smoke": {
+    "arm_sizes": {
+      "arm_a_certified": 7,
+      "arm_b_random_control": 7,
+      "arm_c_hidden_gold": 4,
+      "arm_d_cold_base": 0
+    },
+    "detail": "matched arm smoke passed",
+    "harness_ready": true,
+    "n_tasks": 2,
+    "runner_path": "scripts/experiments/verifier_reward_code_lora_rft_3arm.py"
+  },
+  "training_headroom_present": true,
+  "youden_j": 0.4137931034482759
+}
