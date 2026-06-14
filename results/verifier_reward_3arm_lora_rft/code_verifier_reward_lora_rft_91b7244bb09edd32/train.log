@@ -1,0 +1,36 @@
+-> complete: smoke_3arm_runner_ready
+   arm_sizes={'arm_a_certified': 776, 'arm_b_random_control': 776, 'arm_c_hidden_gold': 742, 'arm_d_cold_base': 0}
+Loading weights:   0%|          | 0/2076 [00:00<?, ?it/s]Loading weights:  14%|█▍        | 289/2076 [00:00<00:00, 2828.59it/s]Loading weights:  28%|██▊       | 572/2076 [00:00<00:00, 2687.11it/s]Loading weights:  41%|████      | 842/2076 [00:00<00:00, 1940.92it/s]Loading weights:  51%|█████     | 1054/2076 [00:00<00:00, 1505.14it/s]Loading weights:  59%|█████▉    | 1224/2076 [00:00<00:00, 1245.51it/s]Loading weights:  66%|██████▌   | 1364/2076 [00:00<00:00, 1128.09it/s]Loading weights:  74%|███████▍  | 1535/2076 [00:01<00:00, 1255.34it/s]Loading weights:  85%|████████▌ | 1767/2076 [00:01<00:00, 1503.77it/s]Loading weights:  98%|█████████▊| 2026/2076 [00:01<00:00, 1778.42it/s]Loading weights: 100%|██████████| 2076/2076 [00:01<00:00, 1622.17it/s]
+Traceback (most recent call last):
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/verifier_reward_code_lora_rft_3arm.py", line 250, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/verifier_reward_code_lora_rft_3arm.py", line 236, in main
+    artifact = run(
+               ^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/verifier_reward_code_lora_rft_3arm.py", line 173, in run
+    "arm_a": _train_lora_sft(
+             ^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/verifier_reward_code_lora_rft_3arm.py", line 138, in _train_lora_sft
+    model = get_peft_model(model, lora)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/peft/mapping_func.py", line 122, in get_peft_model
+    return MODEL_TYPE_TO_PEFT_MODEL_MAPPING[peft_config.task_type](
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/peft/peft_model.py", line 1955, in __init__
+    super().__init__(model, peft_config, adapter_name, **kwargs)
+  File "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/peft/peft_model.py", line 129, in __init__
+    self.base_model = cls(model, {adapter_name: peft_config}, adapter_name)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/peft/tuners/tuners_utils.py", line 315, in __init__
+    self.inject_adapter(self.model, adapter_name, low_cpu_mem_usage=low_cpu_mem_usage, state_dict=state_dict)
+  File "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/peft/tuners/tuners_utils.py", line 913, in inject_adapter
+    self._create_and_replace(
+  File "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/peft/tuners/lora/model.py", line 269, in _create_and_replace
+    new_module = self._create_new_module(lora_config, adapter_name, target, device_map=device_map, **kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/lib/python3.12/site-packages/peft/tuners/lora/model.py", line 424, in _create_new_module
+    raise ValueError(
+ValueError: Target module Gemma4ClippableLinear(
+  (linear): Linear(in_features=768, out_features=768, bias=False)
+) is not supported. Currently, only the following modules are supported: `torch.nn.Linear`, `torch.nn.Embedding`, `torch.nn.Conv1d`, `torch.nn.Conv2d`, `torch.nn.Conv3d`, `transformers.pytorch_utils.Conv1D`, `torch.nn.MultiheadAttention.`.

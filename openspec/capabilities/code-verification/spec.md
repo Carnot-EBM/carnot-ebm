@@ -2006,6 +2006,8 @@ not reliable enough to skip execution tests at this accuracy level.
 | REQ-RANK-001 | Implemented (Exp 787) |
 | REQ-RANK-002 | Implemented (Exp 787) |
 | REQ-CODE-3573 | Implemented |
+| REQ-CODE-4197 | Implemented |
+| REQ-CODE-4198 | Implemented (`python/carnot/experiment_4198_verifier_reward_3arm_rft_launch.py`) |
 
 ### REQ-CODE-3573: Verifier Ensemble Generalization to Code
 The verifier ensemble MUST be evaluated for generalization on code domains (correct vs buggy execution-labeled completions).
@@ -2049,6 +2051,45 @@ builds training corpora, then Arm A contains visible-perfect traces, Arm B
 contains an equal number of non-certified same-generator traces selected with a
 deterministic seed, Arm C contains hidden-pass gold traces, and the smoke path
 validates two tasks without launching a full training run.
+
+### REQ-CODE-4198: Detached 3-Arm LoRA-RFT Launch With Stable Resume Key
+
+The repository shall provide an Exp 4198 workflow that launches the decisive
+code verifier-as-reward 3-arm LoRA-RFT run only after the Exp 4197 operating
+point gate clears:
+- Preconditions must read the Exp 4197 artifact and require
+  `phase0_precision >= 0.85`, `youden_j > 0`, `harness_ready=true`, and CUDA
+  availability before launching training.
+- If the gate is missing or below threshold, the result must honestly defer with
+  `honest_verdict` equal to
+  `complete_verifier_reward_train_deferred_no_clean_operating_point`; if CUDA is
+  unavailable, the verdict must be `blocked_cuda_unavailable`.
+- The workflow must build Arm A verifier-certified traces, Arm B same-generator
+  non-certified/random-label controls with `|B|=|A|`, Arm C hidden-test-gold
+  traces, and Arm D cold-base metadata from the same code-generation checkpoint
+  and deterministic seed.
+- The workflow must derive a stable checkpoint path from the corpus, trainable
+  base, LoRA config, and seed rather than from a transient experiment id, so
+  future windows resume the same run instead of restarting it.
+- When no prior live run is present, the workflow must launch the existing
+  3-arm LoRA-SFT runner detached with per-arm checkpoint directories and write a
+  launch artifact containing `training_launched`, `stable_checkpoint_path`,
+  `arm_corpus_sizes`, `gold_control_early_read`, `model_specs`, `random_seed`,
+  and `reproducibility_checksum`.
+
+### SCENARIO-CODE-4198-GATED-LAUNCH: Clean Gate Produces Detached Live Artifact
+
+Given a clean Exp 4197 operating point and CUDA availability, when Exp 4198
+runs, then it writes a result artifact whose `training_launched` field is a bare
+boolean true, whose stable checkpoint path is corpus/base/config keyed, whose
+Arm A and Arm B corpus sizes match, and whose recorded process is alive or
+already checkpointing.
+
+### SCENARIO-CODE-4198-HONEST-DEFERRAL: Missing Gate Does Not Launch Training
+
+Given a missing or sub-threshold Exp 4197 gate, when Exp 4198 runs, then it
+writes the terminal honest deferral verdict and leaves `training_launched` false
+without spawning any training process.
 
 
 ### REQ-CODE-VERIFY-3602: FoVer Math-Trained PRM Transfer to Code Benchmark

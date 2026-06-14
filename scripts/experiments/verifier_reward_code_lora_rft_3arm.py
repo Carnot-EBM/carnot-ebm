@@ -92,6 +92,7 @@ def _train_lora_sft(
     model_id: str,
     output_dir: Path,
     smoke: bool,
+    seed: int,
 ) -> dict[str, Any]:
     """Train one LoRA arm when explicitly requested.
 
@@ -106,6 +107,7 @@ def _train_lora_sft(
             "status": "smoke_no_train",
             "n_examples": len(examples),
             "output_dir": str(output_dir),
+            "random_seed": seed,
         }
 
     try:
@@ -118,6 +120,9 @@ def _train_lora_sft(
     if not torch.cuda.is_available():
         return {"arm": arm_name, "status": "blocked_cuda_unavailable", "n_examples": len(examples)}
 
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
     output_dir.mkdir(parents=True, exist_ok=True)
     tokenizer = AutoTokenizer.from_pretrained(model_id)
     if tokenizer.pad_token is None:
@@ -128,7 +133,7 @@ def _train_lora_sft(
         lora_alpha=32,
         lora_dropout=0.05,
         task_type="CAUSAL_LM",
-        target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
+        target_modules=["linear"],
     )
     model = get_peft_model(model, lora)
     optimizer = torch.optim.AdamW((p for p in model.parameters() if p.requires_grad), lr=2e-4)
@@ -158,11 +163,12 @@ def run(
     smoke: bool = True,
     train: bool = False,
     output_path: Path = OUT,
+    train_root: Path | None = None,
 ) -> dict[str, Any]:
     started = time.time()
     selected_tasks, corpora = build_corpora_from_checkpoint(checkpoint, seed=seed, smoke=smoke)
     train_mode = bool(train and not smoke)
-    train_root = REPO_ROOT / "results" / "experiment_4197_lora_rft_arms"
+    train_root = train_root or REPO_ROOT / "results" / "experiment_4197_lora_rft_arms"
     training = {
         "arm_a": _train_lora_sft(
             "A_certified",
@@ -170,6 +176,7 @@ def run(
             model_id=exp4197.TRAINABLE_BASE,
             output_dir=train_root / "arm_a_certified",
             smoke=not train_mode,
+            seed=seed,
         ),
         "arm_b": _train_lora_sft(
             "B_random_same_generator",
@@ -177,6 +184,7 @@ def run(
             model_id=exp4197.TRAINABLE_BASE,
             output_dir=train_root / "arm_b_random_same_generator",
             smoke=not train_mode,
+            seed=seed,
         ),
         "arm_c": _train_lora_sft(
             "C_hidden_gold",
@@ -184,6 +192,7 @@ def run(
             model_id=exp4197.TRAINABLE_BASE,
             output_dir=train_root / "arm_c_hidden_gold",
             smoke=not train_mode,
+            seed=seed,
         ),
         "arm_d": {"arm": "D_cold_base", "status": "cold_base_eval_only", "n_examples": 0},
     }
@@ -221,9 +230,17 @@ def main() -> int:
     parser.add_argument("--smoke", action="store_true", help="Build two-task arms without training.")
     parser.add_argument("--train", action="store_true", help="Launch full LoRA training for A/B/C arms.")
     parser.add_argument("--out", type=Path, default=OUT)
+    parser.add_argument("--train-root", type=Path, default=None, help="Per-arm LoRA checkpoint root.")
     args = parser.parse_args()
     smoke = args.smoke or not args.train
-    artifact = run(checkpoint=args.checkpoint, seed=args.seed, smoke=smoke, train=args.train, output_path=args.out)
+    artifact = run(
+        checkpoint=args.checkpoint,
+        seed=args.seed,
+        smoke=smoke,
+        train=args.train,
+        output_path=args.out,
+        train_root=args.train_root,
+    )
     print(f"-> {artifact['honest_verdict']}")
     print(f"   arm_sizes={artifact['arm_sizes']}")
     return 0 if artifact["harness_ready"] else 1
