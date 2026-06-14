@@ -8457,3 +8457,4 @@ c |
 | 2026-06-14 06:05 UTC | PHASE A1 — Headroom gate + executable-oracle corpu | OK | 87 passed, 1 warning in 5.80s |
 | 2026-06-14 06:21 UTC | PHASE A2 — V-STaR learned selector (arXiv:2402.064 | OK | 87 passed, 1 warning in 5.88s |
 | 2026-06-14 06:38 UTC | PHASE A3 (DECISIVE, gated_on A1 headroom>=0.10) —  | OK | 85 passed, 1 warning in 5.59s |
+| 2026-06-14 06:53 UTC | PHASE B — GAP-3 Stage-1 model-native ARC energy (C | OK | 88 passed, 1 warning in 4.52s |
