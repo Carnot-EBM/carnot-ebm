@@ -39817,7 +39817,12 @@ milestones:
     \ decoding"
   doc: openspec/change-proposals/research-roadmap-v388.md
   completed: '2026-06-14'
-  finding: '.388 close-state: efficiency moat WON-but-SEMI-CIRCULAR. Exp 4186 measured +0.18 vs LLM-judge with real cost dominance, but the verifier is still the unit-test oracle rather than an independent learned reward. GAP-4 production-safe: HOLDS-plus4-minus0, recovered 4, lost 0, vote-aware guard blocked 25094a63. Sovereign LOCAL generator UNDER-induces: local induction 0.2258 vs codex 0.9355, self-distill corpus 7. DiffusionGemma blocked-no-weights. ARC total_levels_solved=15, total_games_solved=13; LIVE env reachable. .389 must run the verifier-as-reward A-vs-B test on CODE where Phase-0 finally clears, not redo the selection/efficiency line.'
+  finding: '.388 close-state: efficiency moat WON-but-SEMI-CIRCULAR. Exp 4186 measured +0.18 vs LLM-judge with real cost dominance,
+    but the verifier is still the unit-test oracle rather than an independent learned reward. GAP-4 production-safe: HOLDS-plus4-minus0,
+    recovered 4, lost 0, vote-aware guard blocked 25094a63. Sovereign LOCAL generator UNDER-induces: local induction 0.2258
+    vs codex 0.9355, self-distill corpus 7. DiffusionGemma blocked-no-weights. ARC total_levels_solved=15, total_games_solved=13;
+    LIVE env reachable. .389 must run the verifier-as-reward A-vs-B test on CODE where Phase-0 finally clears, not redo the
+    selection/efficiency line.'
   activation_recorded: exp4196-archive-v388-activate-v389
   tasks:
   - id: exp4184-archive-v387-activate-v388
@@ -39918,4 +39923,109 @@ milestones:
       \ GRADED GATE = exp4187; SOVEREIGN GEN = exp4188; DIFFUSIONGEMMA = exp4189; ARC = exp4190; LIVE-ENV = exp4191; SOTA\
       \ = exp4192. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on."
     deliverable: results/experiment_4195_capstone_v388.json
+    result: OK (conductor)
+- id: 2026.06.389
+  title: "RUN THE VERIFIER-AS-REWARD TEST THE LITERATURE LEAVES OPEN \u2014 the de-confounded A-vs-B on CODE, where the execution\
+    \ verifier's Youden J=TPR-FPR>>0 clears the training-reward precondition the grid/noisy content-EBMs failed"
+  doc: openspec/change-proposals/research-roadmap-v389.md
+  completed: '2026-06-14'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4196-archive-v388-activate-v389
+    title: Archive .388 -> activate .389; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
+      + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .388
+      close-state truthfully (efficiency moat WON-but-SEMI-CIRCULAR exp4186 verifier==oracle; GAP-4 graded gate production-safe
+      exp4187 +4/-0; sovereign generator UNDER-induces exp4188 0.2258 vs 0.9355 corpus7; DiffusionGemma blocked-no-weights
+      exp4189; ARC total_levels_solved=15/total_games_solved=13; LIVE env reachable exp4191).
+    deliverable: results/experiment_4196_archive_v388_activate_v389.json
+    result: OK (conductor)
+  - id: exp4197-verifier-reward-phase0-headroom-harness-build
+    title: 'PHASE A1 (BUILD) -- Verifier-as-reward Phase-0 gate + Youden-J + training-headroom + gen-suitability precheck
+      on CODE, and BUILD the on-policy 3-corpus LoRA-RFT harness. On a code corpus (MBPP/HumanEval/EvalPlus/LiveCodeBench-lite,
+      all cached) with a NON-Qwen trainable base (gemma-4-12B-it or gemma-4-E4B-it; MiniCPM5-1B fallback -- Qwen is FORBIDDEN
+      as the trained base per the Spurious-Rewards confound arXiv:2506.10947), MEASURE: (a) Phase-0 certification precision
+      P(hidden-pass|visible-perfect) BARE (>=0.85); (b) Youden J=TPR-FPR BARE (>0, arXiv:2601.04411); (c) training_headroom_present
+      BARE bool (base hidden-pass < ~0.6); (d) gen-suitability (base emits enough visible-perfect own-traces + truncation<5%).
+      Pick the (base,corpus) operating point where ALL hold (or honest decision-grade block). WRITE + smoke + commit the on-policy
+      3-arm runner. NO TRM.'
+    deliverable: results/experiment_4197_verifier_reward_phase0_headroom_harness_build.json
+    result: OK (conductor)
+  - id: exp4198-verifier-reward-3arm-rft-launch
+    title: PHASE A2 (LAUNCH, gated_on A1 phase0_precision>=0.85 AND harness_ready) -- launch the de-confounded 3-arm on-policy
+      LoRA-RFT on the A1 operating point, BACKGROUNDED (resume-not-restart, setsid-detach, per-arm checkpoint, ~75-min window).
+      Arm A = verifier-certified (visible-test-perfect own-traces); Arm B = SAME-generator random-label / non-certified traces
+      |B|=|A| (the Spurious-Rewards arXiv:2506.10947 control); Arm C = hidden-test-gold (oracle SFT); Arm D = cold base. Identical
+      LoRA config; held-out hidden-test eval with the truncation guard (<5%). Do NOT hold the agent past the 80-min cap --
+      launch + checkpoint, A3 collects. NO TRM.
+    deliverable: results/experiment_4198_verifier_reward_3arm_rft_launch.json
+    result: OK (conductor)
+  - id: exp4199-verifier-reward-decisive-a-vs-b-collect
+    title: 'PHASE A3 (COLLECT, gated_on A2 training_launched) -- the DECISIVE A-vs-B verdict. Poll the backgrounded 3-arm
+      run; the LOAD-BEARING GATE is A (verifier-certified) vs B (same-generator random-label, the spurious control) on held-out
+      hidden-test pass@1: bootstrap CI95 excludes 0? YES -> the verifier''s LABEL carries training signal beyond distillation/spurious-reward
+      -> verifier-as-reward is REAL (the project''s first clean positive). A~=B -> ''RFT helps'' is just distillation/spurious-reward;
+      the verifier adds nothing (honest NULL, NOT a partial win). Secondary: A-vs-C (label-free >= oracle?), A-vs-D (any lift?).
+      Gold-control gate (C>=base) + truncation guard (<5%) MUST pass or the result is INVALID. Apply the accumulate-floor
+      (3 no-usable-data windows -> auto-retire).'
+    deliverable: results/experiment_4199_verifier_reward_decisive_a_vs_b_collect.json
+    result: OK (conductor)
+  - id: exp4200-certified-arc-corpus-distill-lift
+    title: 'PHASE B (verifier-as-reward FOR THE NORTH STAR + self-learning) -- scale the GAP-4-CERTIFIED ARC program corpus
+      + the cheap Invisible-Leash in-context-distillation lift test. exp4188''s LOCAL generator under-induced (7 demo-perfect).
+      Use codex (induces 0.94) to generate a LARGER ARC induced-program pool, GAP-4-certify demo-perfect programs -> a bigger
+      VERIFIER-CERTIFIED corpus (the automated ground-truth engine). Then the cheap test (arXiv:2507.14843 Invisible Leash):
+      does seeding the LOCAL base with verifier-certified exemplars (in-context) raise its induction rate above the 0.23 ceiling
+      (exp4188)? LATENT -> full LoRA-distill viable (.390); ABSENT -> need a stronger base. NO full fine-tune this milestone.'
+    deliverable: results/experiment_4200_certified_arc_corpus_distill_lift.json
+    result: OK (conductor)
+  - id: exp4201-arc-incremental-progress
+    title: 'PHASE C1 -- ARC-AGI-3 INCREMENTAL +1 (monotonic). Advance the solved-LEVEL count by >=1 via the PROVEN explore-first
+      method, using the HARDENED GAP-4 stack (exp4187): bounded active-exploration OBSERVES transitions -> induce mechanic
+      + goal predicate -> GAP-4 verifier validates on HELD-OUT transitions -> act only if validated. Target the next deeper
+      level of an already-solved game or a spatial L1. REAL-ENV-CONFIRM any solve; STOP at the first level that fails. Honest
+      no-solve is COMPLETE. total_levels_solved must be >= 16.'
+    deliverable: results/experiment_4201_arc_incremental_progress.json
+    result: OK (conductor)
+  - id: exp4202-arc-live-env-solver-vs-floor
+    title: "PHASE C2 -- ARC-AGI-3 LIVE-env: run the PROVEN Carnot explore-induce-verify solver against the LIVE env on ONE\
+      \ easy game and compare to the random/greedy FLOOR (exp4191). exp4191 connected the live SDK (anonymous key) + established\
+      \ the random/greedy baseline; the \xA70 next step is whether Carnot's verifier-routed solver BEATS that floor on the\
+      \ REAL env -- ACCURACY (EnvironmentScore.score / levels_completed) AND EFFICIENCY (actions vs baseline_actions). NO\
+      \ leaderboard submission (operator-only); bounded action budget; honest blocked_arc_live_* if access fails."
+    deliverable: results/experiment_4202_arc_live_env_solver_vs_floor.json
+    result: OK (conductor)
+  - id: exp4203-sota-ingestion-verifier-as-reward
+    title: 'PHASE D1 -- SOTA-INGESTION SLOT (reserved; bleeding-edge verifier-as-reward track). Ingest the .389 sweep mapped
+      onto the verifier-as-reward headline: the CONFOUND (arXiv:2506.10947 Spurious-Rewards, 2601.11061 memorization-shortcuts,
+      2509.20837 verification-ceiling), the PRECONDITION (2601.04411 RLVeR Youden-J), the RLVR-for-code baselines (2410.02089
+      RLEF, 2601.12186 Aletheia, 2602.04254, 2602.17684), process/self-distill (2604.03128 RLSD, 2605.19436 CEPO, 2504.16828
+      ThinkPRM), cost-crossover (2504.01005, 2510.14913). SOTA->experiment mapping note; flag the strongest for .390. Cite
+      real arXiv IDs.'
+    deliverable: results/experiment_4203_sota_ingestion_verifier_as_reward.json
+    result: OK (conductor)
+  - id: exp4204-verifier-registry-gaps-hygiene
+    title: 'PHASE D2 -- VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval
+      reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates (zero codex/GGUF/GPU).
+      RECORD the .389 state into ops/verifier_gaps.md: the verifier-as-reward A-vs-B verdict (exp4199 verifier_label_carries_signal
+      + a_vs_b_delta/CI), the certified-ARC-corpus result (exp4200 certified_corpus_size + distill_lift), and the Phase-0/Youden-J
+      operating point (exp4197). Open a GAP-REWARD ledger entry tracking the verifier-as-reward axis. Keep ops/verifier_registry.yaml
+      + ops/verifier_gaps.md the honest source of truth (never-prune).'
+    deliverable: results/experiment_4204_verifier_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4205-hardware-continuity
+    title: 'PHASE D3 -- Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 terminal/opportunistic).
+      Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile
+      flash). PolarFire (ssh polarfire; toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal).
+      Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock
+      timers per board.'
+    deliverable: results/experiment_4205_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4206-capstone-v389
+    title: 'PHASE D4 -- Capstone .389 (UNGATED): headline question is DID THE VERIFIER''S LABEL CARRY TRAINING SIGNAL -- the
+      de-confounded A-vs-B on code (exp4199): is verifier-as-reward REAL (A>>B, CI excl 0, the project''s first clean positive)
+      or just distillation/spurious-reward (A~=B, honest null)? Aggregate: VERIFIER-AS-REWARD = exp4199 (verifier_label_carries_signal
+      + a_vs_b_delta/CI + positive_control) + exp4197 (Phase-0/Youden-J operating point); NORTH-STAR DISTILL = exp4200 (certified
+      corpus + latent-vs-absent); ARC = exp4201 (total_levels) + exp4202 (live solver-vs-floor); SOTA = exp4203; registry
+      = exp4204; hardware = exp4205. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on.'
+    deliverable: results/experiment_4206_capstone_v389.json
     result: OK (conductor)
