@@ -13707,6 +13707,68 @@ unparseable candidates from oracle hits, emits bare
 largest sanitized selectable headroom or records that no executable domain
 clears `0.10`.
 
+### REQ-VERIFY-4176: OOF V-STaR Learned Selector From Accepted And Rejected Traces
+
+The repository SHALL provide
+`python/carnot/reporting/vstar_learned_selector_4176.py` and
+`results/experiment_4176_vstar_learned_selector.py` to train an oracle-free,
+out-of-fold V-STaR-style selector on the executable cached candidate pool
+selected by Exp 4175. The selector SHALL train on BOTH accepted/correct and
+rejected/incorrect candidate traces from the chosen domain so rejected traces
+define the correctness boundary rather than being discarded.
+
+The runner SHALL first read
+`results/experiment_4175_headroom_gate_executable_census.json`. If the
+headroom artifact does not name a usable `headroom_present_domain`, or if the
+named domain's source candidate pool is missing or lacks both accepted and
+rejected labeled traces, the runner SHALL write a terminal blocked artifact and
+SHALL NOT fabricate live traces. The runner SHALL NOT use an LLM judge and
+SHALL NOT load held-out correctness labels into a fold's training data. Fresh
+trace generation is out of scope for the cached-pool path; if future use
+requires fresh traces, the SOTA GGUF cache gate from
+`scripts.experiment_template.cached_sota_pair()` SHALL be checked before any
+generation.
+
+For every candidate trace, the selector SHALL build deterministic non-label
+features from the input/candidate metadata, split folds by task id, train a
+classifier/ranker on training-fold labels only, and score held-out candidates
+out of fold. It SHALL report OOF gold-vs-non-gold AUROC and OOF pass@1 as a
+ranker compared with SC-vote. The SC-vote baseline SHALL select by stored vote
+weight with deterministic candidate-index tie-breaking; the selector SHALL
+rank by held-out selector score with the same deterministic vote/index
+fallback for ties.
+
+The runner SHALL persist a deployable selector model that A3 can load without
+retraining. The persisted selector SHALL include feature names, learned
+coefficients/intercept, random seed, training trace counts, and the same
+reproducibility checksum as the terminal artifact.
+
+The terminal artifact SHALL write
+`results/experiment_4176_vstar_learned_selector.json` with required fields
+`honest_verdict`, `selector_auroc_oof`, `selector_pass1_vs_vote`,
+`accepted_rejected_n`, `random_seed`, `reproducibility_checksum`,
+`selector_path`, `field_principles`, `spec_refs`, and
+`inference_substrate=cached_artifact_oof_vstar_selector`. Its field principles
+SHALL include:
+`honest_verdict` = `Terminal-prefixed. A trained selector (even one that ties vote) is a COMPLETE verdict.`;
+`selector_auroc_oof` = `Out-of-fold gold-vs-non-gold AUROC; the learned selector's discrimination, measured without oracle leakage.`;
+`selector_pass1_vs_vote` = `pass@1 as a ranker minus SC-vote pass@1 (OOF) -- the learned-selector's standalone lift, input to A3.`;
+`accepted_rejected_n` = `Counts of accepted and rejected traces trained on; V-STaR's value is using BOTH (rejected traces define the boundary).`;
+`random_seed` = `Determinism is the precondition for reproducibility; the selector must be re-trainable to the same result.`;
+`reproducibility_checksum` = `Content hash of the trace corpus + features; catches silent corpus drift between this run and any replication.`
+
+### SCENARIO-VERIFY-4176: Cached Code Pool Trains OOF Selector And Persists Ranker
+
+Given Exp 4175 names `code` as `headroom_present_domain` and the cached
+HumanEval candidate pool contains baseline and repair pass flags, when Exp 4176
+runs, then it loads those candidate traces without live inference, builds
+accepted and rejected labeled rows, splits folds by task id, trains only on
+non-held-out labels for each fold, reports OOF AUROC and OOF
+`selector_pass1_vs_vote`, writes accepted/rejected counts greater than zero,
+persists a JSON selector model at `selector_path`, emits the required field
+principles, and uses `cached_artifact_oof_vstar_selector` as its inference
+substrate.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at

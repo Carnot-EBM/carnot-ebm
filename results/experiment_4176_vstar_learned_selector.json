@@ -1,0 +1,39 @@
+{
+  "acceptance_gate": true,
+  "accepted_rejected_n": {
+    "accepted": 75,
+    "rejected": 25,
+    "total": 100
+  },
+  "candidate_pool_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json",
+  "domain": "code",
+  "duration_s": 0.006193,
+  "feature_names": [
+    "role_repair",
+    "vote_weight",
+    "candidate_index",
+    "extracted_constraints"
+  ],
+  "field_principles": {
+    "accepted_rejected_n": "Counts of accepted and rejected traces trained on; V-STaR's value is using BOTH (rejected traces define the boundary).",
+    "honest_verdict": "Terminal-prefixed. A trained selector (even one that ties vote) is a COMPLETE verdict.",
+    "random_seed": "Determinism is the precondition for reproducibility; the selector must be re-trainable to the same result.",
+    "reproducibility_checksum": "Content hash of the trace corpus + features; catches silent corpus drift between this run and any replication.",
+    "selector_auroc_oof": "Out-of-fold gold-vs-non-gold AUROC; the learned selector's discrimination, measured without oracle leakage.",
+    "selector_pass1_vs_vote": "pass@1 as a ranker minus SC-vote pass@1 (OOF) -- the learned-selector's standalone lift, input to A3."
+  },
+  "honest_verdict": "complete: vstar_selector_trained_delta_0.1800_auroc_0.9792",
+  "inference_substrate": "cached_artifact_oof_vstar_selector",
+  "oof_folds": 5,
+  "random_seed": 4176,
+  "reproducibility_checksum": "973c4d9ecd18ceee7a2cd2c95c28d54d646f06285ecfdb5fd9f49ea52900e9ef",
+  "sc_vote_pass1_oof": 0.66,
+  "selector_auroc_oof": 0.9792,
+  "selector_pass1_oof": 0.84,
+  "selector_pass1_vs_vote": 0.18,
+  "selector_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4176_vstar_selector_model.json",
+  "spec_refs": [
+    "REQ-VERIFY-4176",
+    "SCENARIO-VERIFY-4176"
+  ]
+}
