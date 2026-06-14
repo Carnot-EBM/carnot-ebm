@@ -1,0 +1,27 @@
+Failed to import adam2
+[probe] device=cuda K=16 temps=[1.0, 3.0, 8.0] bs=128
+/home/ianblenke/github.com/ianblenke/carnot/nano-trm/src/nn/data/sudoku_datamodule.py:298: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /pytorch/torch/csrc/utils/tensor_numpy.cpp:213.)
+  input_tensor = torch.from_numpy(input_flat).long()
+Using device: cuda
+Loading model from /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+Auto-casting TRM to torch.bfloat16
+Model loaded: TRMModule
+Model configuration:
+  hidden_size: 512
+  num_layers: 2
+  H_cycles: 3
+  L_cycles: 6
+  N_supervision: 16
+  vocab_size: 12
+  seq_len: 81
+Grid size: 9x9
+Max grid size: 9x9
+Vocab size: 12
+[probe] batch 0 n=128 T1.0:o=0.758/v=0.758 T3.0:o=0.758/v=0.758 T8.0:o=0.758/v=0.758
+[probe] batch 5 n=768 T1.0:o=0.794/v=0.793 T3.0:o=0.794/v=0.793 T8.0:o=0.794/v=0.793
+[probe] batch 10 n=1408 T1.0:o=0.790/v=0.789 T3.0:o=0.790/v=0.789 T8.0:o=0.790/v=0.789
+[probe] batch 15 n=2048 T1.0:o=0.797/v=0.796 T3.0:o=0.797/v=0.796 T8.0:o=0.797/v=0.796
+[probe] batch 20 n=2688 T1.0:o=0.792/v=0.792 T3.0:o=0.792/v=0.792 T8.0:o=0.792/v=0.792
+[probe] batch 25 n=3328 T1.0:o=0.792/v=0.791 T3.0:o=0.792/v=0.792 T8.0:o=0.792/v=0.792
+[probe] batch 30 n=3968 T1.0:o=0.790/v=0.789 T3.0:o=0.790/v=0.790 T8.0:o=0.790/v=0.790
+[probe] DONE best_headroom=0.0007 greenlit=False -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/v3_headroom_probe.json

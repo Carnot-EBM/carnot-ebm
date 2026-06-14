@@ -1,0 +1,41 @@
+{
+  "K": 16,
+  "temps": [
+    1.0,
+    2.0,
+    4.0
+  ],
+  "batch_size": 128,
+  "n_batches": 33,
+  "duration_s": 48.0,
+  "checkpoint": "results/trm_runs/snapshots/ckpt_val0.326_ep7099.ckpt",
+  "per_temperature": {
+    "1.0": {
+      "n": 4224,
+      "n_candidates_per_puzzle": 32,
+      "greedy_at_1": 0.3338,
+      "vote_at_1": 0.3487,
+      "oracle_at_k": 0.3743,
+      "headroom_oracle_minus_vote": 0.0256
+    },
+    "2.0": {
+      "n": 4224,
+      "n_candidates_per_puzzle": 32,
+      "greedy_at_1": 0.3338,
+      "vote_at_1": 0.3598,
+      "oracle_at_k": 0.3741,
+      "headroom_oracle_minus_vote": 0.0142
+    },
+    "4.0": {
+      "n": 4224,
+      "n_candidates_per_puzzle": 32,
+      "greedy_at_1": 0.3338,
+      "vote_at_1": 0.366,
+      "oracle_at_k": 0.3741,
+      "headroom_oracle_minus_vote": 0.008
+    }
+  },
+  "best_headroom": 0.0256,
+  "stage_b_greenlit": false,
+  "honest_verdict": "complete: no_recoverable_headroom_on_this_baseline"
+}
