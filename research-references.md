@@ -1,3 +1,72 @@
+## 2026-06-14 .389 planning sweep — verifier-as-REWARD (the de-confounded A-vs-B; the confound IS the ballgame)
+
+Added by the `.389 planning sweep (Claude Opus 4.8, outer-loop). The `.389 headline
+takes the operator's 2026-06-11 PIVOT (verifier-as-REWARD, not -as-SELECTOR) and runs the
+de-confounded A-vs-B test the literature leaves open — on CODE, where the execution
+verifier's Youden J = TPR-FPR >> 0 (exact, un-hallucinating) clears the training-reward
+precondition that the grid/noisy content-EBMs failed (exp4159 Phase-0 base 0.501 / 0
+demo-perfect coverage; exp4100 no grid discrimination). All IDs below WebFetch-verified to
+resolve to a real abstract page (arXiv API gives false-negatives — verify via the abstract
+page per the literature-priority discipline).
+
+**THE CONFOUND (load-bearing — the literature leans SKEPTICAL, which makes the clean test valuable):**
+- **Spurious Rewards: Rethinking Training Signals in RLVR — arXiv:2506.10947.** On
+  Qwen2.5-Math-7B, RANDOM rewards = +21.4pp on MATH-500 vs +29.1pp for ground-truth — an
+  uninformative label recovers ~74% of the gain (a clipping bias amplifies pretrained
+  behaviors). ESCAPE HATCH: model-family-specific — FAILS on Llama3 / OLMo2. ⇒ Carnot's
+  A-vs-B MUST (a) use a NON-Qwen base (gemma / MiniCPM-Llama-arch, both cached) and (b) run
+  certified-vs-random-from-the-SAME-generator. This IS the operator-pivot Arm-A-vs-Arm-B.
+- **Spurious Rewards Paradox / memorization shortcuts — arXiv:2601.11061.** Spurious gains
+  come from a mid-layer memorized-solution retrieval circuit, not reasoning; a diagnostic to
+  PROVE a verifier signal is real reasoning, not shortcut activation.
+- **Rate or Fate? RLVεR: RL with Verifiable Noisy Rewards — arXiv:2601.04411.** Phase
+  transition at Youden's J = TPR-FPR: J>0 → noise only rescales convergence (rate, not fate);
+  J<=0 → anti-learning + collapse. ⇒ report the verifier's (TPR, FPR), show J>0 as the
+  PRECONDITION. An EXACT execution verifier (output-match) has J>>0 — the property the noisy
+  trained content-EBMs lacked; this is why CODE is the substrate the reward bet can clear.
+- **Verification Limits Code LLM Training — arXiv:2509.20837.** A "verification ceiling":
+  over-rigid verification filters valuable diversity and can go net-NEGATIVE; the
+  certified-vs-uncertified-same-generator ablation is the gap they leave open. Carnot fills it.
+
+**RLVR-for-code SOTA + recipe (the baselines a verifier-as-reward result must beat):**
+- **RLEF: Grounding Code LLMs in Execution Feedback with RL — arXiv:2410.02089.** Canonical
+  execution-feedback-as-reward; SOTA competitive-programming at ~10x fewer samples; its
+  random-feedback ablation is the design to replicate.
+- **Aletheia: What Makes RLVR For Code Verifiers Tick? — arXiv:2601.12186.** The 2026 recipe
+  (thinking traces / negatives / on-policy); on-policy dominates at small scale — confirms the
+  operator's "GO STRAIGHT TO ON-POLICY" discipline. Leaves the does-the-label-add-signal
+  confound open.
+- **Scaling Agentic Verifier for Competitive Coding — arXiv:2602.04254** (active
+  discriminative-test synthesis; +10-15% Best@K, test-time-compute-bound).
+- **CodeScaler: execution-free reward models for code — arXiv:2602.17684** (motivates a cheap
+  energy/execution verifier where unit tests are unavailable; +14.64 over base).
+
+**Process-reward / self-distillation as TRAINING reward (the .390 fork):**
+- **Self-Distilled RLVR (RLSD) — arXiv:2604.03128** (verifier = direction, self-distill =
+  magnitude; pure self-distill is unstable — verifier grounding load-bearing).
+- **CEPO: contrastive-evidence RLVR self-distillation — arXiv:2605.19436** (+2.3/+3.1pp over
+  GRPO; competing self-distill methods fall BELOW baseline — grounding prevents collapse).
+- **ThinkPRM: Process Reward Models That Think — arXiv:2504.16828** (data-efficient PRM via
+  rejection-FT; the math-process-reward path for .390).
+
+**Cost-crossover / hybrid (the efficiency-moat framing, already "won" semi-circularly in .388):**
+- **When To Solve, When To Verify — arXiv:2504.01005** (GenRM matches SC only after ~8x
+  compute — the bar a cheap verifier must clear).
+- **Budget-aware Test-time Scaling via Discriminative Verification — arXiv:2510.14913** (cheap
+  discriminative verifier + SC beats SOTA generative verification +15.3% at fixed budget — the
+  strongest support for Carnot's cheap-verifier-as-HYBRID, not judge-replacement).
+
+**Reward-guided diffusion (DiffusionGemma — stays GATED, weights not cached):**
+- **Reward-Guided Stitching for Diffusion LMs — arXiv:2602.22871** (+23.8% math+code, 1.8x
+  lower latency; the final AR solver is critical — verifier-guided diffusion is not
+  self-sufficient). **Self-Rewarding SMC for masked diffusion — arXiv:2602.01849** (the
+  ungrounded confidence-as-reward baseline Carnot's external verifier must beat).
+
+**Bottom line for .389:** the de-confounded A-vs-B is precisely the open question (2506.10947 /
+2509.20837 leave it open); the execution verifier's J>>0 (2601.04411) is what makes CODE the
+substrate that clears the precondition; a NON-Qwen base + same-generator random-label ablation
+is mandatory to isolate the verifier's label from the spurious-reward confound.
+
 ## 2026-06-13 Exp 4162 - verifier-moat guidance ingestion note
 
 **Status:** INGESTED. Full note:
