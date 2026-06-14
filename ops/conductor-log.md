@@ -8462,3 +8462,4 @@ c |
 | 2026-06-14 07:31 UTC | PHASE D1 — SOTA-INGESTION SLOT (reserved; bleeding | OK | 101 passed, 1 warning in 5.83s |
 | 2026-06-14 08:24 UTC | PHASE D2 — VERIFIER-REGISTRY + GAPS HYGIENE (reser | OK | 89 passed, 1 warning in 5.12s |
 | 2026-06-14 08:34 UTC | PHASE D3 — Hardware continuity (consolidated; Gate | OK | 87 passed, 1 warning in 4.27s |
+| 2026-06-14 08:51 UTC | PHASE D4 — Capstone .387 (UNGATED): headline quest | OK | 85 passed, 1 warning in 5.57s |
