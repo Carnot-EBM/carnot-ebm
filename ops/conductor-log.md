@@ -8463,3 +8463,5 @@ c |
 | 2026-06-14 08:24 UTC | PHASE D2 — VERIFIER-REGISTRY + GAPS HYGIENE (reser | OK | 89 passed, 1 warning in 5.12s |
 | 2026-06-14 08:34 UTC | PHASE D3 — Hardware continuity (consolidated; Gate | OK | 87 passed, 1 warning in 4.27s |
 | 2026-06-14 08:51 UTC | PHASE D4 — Capstone .387 (UNGATED): headline quest | OK | 85 passed, 1 warning in 5.57s |
+| 2026-06-14 09:40 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-06-14 09:43 UTC | Milestone 2026.06.388 activated | OK | 12 tasks queued |
