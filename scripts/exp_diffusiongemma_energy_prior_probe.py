@@ -48,11 +48,21 @@ def main() -> None:
                 load_in_4bit=True,
                 bnb_4bit_compute_dtype=torch.bfloat16,
                 bnb_4bit_quant_type="nf4",
+                llm_int8_enable_fp32_cpu_offload=True,
             )
+            # 4-bit of this 26B MoE is ~22GB -> spread across BOTH visible GPUs (+CPU
+            # overflow) via explicit max_memory, which also sidesteps the single-GPU OOM.
+            n_gpu = torch.cuda.device_count()
+            max_mem = {i: "20GiB" for i in range(n_gpu)}
+            max_mem["cpu"] = "80GiB"
             model = AutoModel.from_pretrained(
-                REPO, quantization_config=bnb, device_map={"": 0}, trust_remote_code=False
+                REPO,
+                quantization_config=bnb,
+                device_map="auto",
+                max_memory=max_mem,
+                trust_remote_code=False,
             )
-            load_mode = "4bit_nf4_gpu0"
+            load_mode = f"4bit_nf4_devmap_auto_{n_gpu}gpu"
         except Exception as e_bnb:
             rep["bnb_fallback_reason"] = repr(e_bnb)[:200]
             model = AutoModel.from_pretrained(
