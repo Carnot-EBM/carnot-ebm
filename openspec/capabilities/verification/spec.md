@@ -12228,6 +12228,59 @@ the Codex hardened-gate reference, reports
 programs banked, emits a terminal-prefix complete or success verdict, and
 writes the self-distillation corpus without gold labels.
 
+### REQ-VERIFY-4200: GAP-4 Certified ARC Corpus And In-Context Distill-Lift Read
+
+The repository SHALL provide Exp 4200 at
+`results/experiment_4200_certified_arc_corpus_distill_lift.py` to materialize a
+larger GAP-4-certified ARC program corpus from the cached Codex ARC-1 induced
+programs and to compute the cheap Invisible-Leash in-context lift read for a
+local SOTA GGUF base. Before building the corpus, the runner SHALL check that
+`results/arc3_gap4_induced_programs.json` exists and SHALL stop with
+`honest_verdict=blocked_gap4_arc1_pool_missing` if it does not. Before any
+local-base lift read, the runner SHALL call `cached_sota_pair()` and SHALL stop
+with `honest_verdict=blocked_model_not_cached_sota_gguf` if fewer than two
+SOTA `.gguf` model paths are cached.
+
+For a complete run, the implementation SHALL load the ARC-1 pool demo pairs,
+replay Codex-generated `def transform(grid)` programs through the restricted
+GAP-4 execution verifier, and bank only programs that reproduce every demo,
+execute on the test input, and fire the Exp 4187 guarded graded gate. The
+corpus JSONL SHALL contain `demo_pairs -> program` records without gold
+labels. The artifact SHALL compute `certified_corpus_size` and
+`certification_precision` as the fraction of gate-certified programs whose
+selected held-out candidate is marked correct by the replay pool.
+
+The same runner SHALL compare the local base cold induction rate from the
+Exp 4188 checkpoint/artifact with a seeded in-context condition loaded from a
+seeded local-samples checkpoint when present. If no seeded checkpoint is
+present, the artifact SHALL report a conservative flat no-lift replay over the
+cold checkpoint and explicitly mark that no fresh in-context generations were
+available; it SHALL NOT fine-tune the GGUF. The artifact SHALL compute
+`local_induction_cold`, `local_induction_with_certified_exemplars`,
+`distill_lift_ci95`, and an Invisible-Leash diagnosis of `latent`, `absent`,
+or `uninformative`.
+
+The terminal artifact SHALL write
+`results/experiment_4200_certified_arc_corpus_distill_lift.json` with top-level
+fields `honest_verdict`, `certified_corpus_size`,
+`certification_precision`, `local_induction_cold`,
+`local_induction_with_certified_exemplars`, `distill_lift_ci95`,
+`model_specs`, `random_seed`, `reproducibility_checksum`,
+`preconditions_checked`, `field_principles`, `duration_s`, and
+`inference_substrate`.
+
+### SCENARIO-VERIFY-4200: Certified Corpus Determines Latent Or Absent Branch
+
+Given the cached ARC-1 Codex induced programs, the ARC-1 replay pool, the
+hardened GAP-4 gate, a cached SOTA GGUF pair, and local cold/seeded sample
+checkpoints, when Exp 4200 runs, then it writes a JSONL corpus containing only
+gate-certified demo-perfect `(demo_pairs -> program)` records, reports the
+corpus size and held-out candidate precision, computes the paired bootstrap
+CI95 of `seeded - cold` local demo-perfect induction, emits a terminal-prefix
+verdict, and diagnoses the local abstraction as latent only when the lower CI
+bound is strictly above zero, absent when the interval touches zero, or
+uninformative when no seeded checkpoint was available.
+
 ### REQ-VERIFY-4189: Verifier-Guided DiffusionGemma Decoding Feasibility
 
 The repository SHALL provide Exp 4189 at
