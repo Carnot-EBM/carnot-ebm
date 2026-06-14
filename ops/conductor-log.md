@@ -8486,3 +8486,4 @@ c |
 | 2026-06-14 15:09 UTC | PHASE A3 (COLLECT, gated_on A2 training_launched)  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4198-verifier-reward-3arm-rft-launch.tr |
 | 2026-06-14 15:11 UTC | PHASE A3 (COLLECT, gated_on A2 training_launched)  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4198-verifier-reward-3arm-rft-launch.tr |
 | 2026-06-14 15:30 UTC | PHASE B (verifier-as-reward FOR THE NORTH STAR + s | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-14 15:55 UTC | PHASE C1 -- ARC-AGI-3 INCREMENTAL +1 (monotonic).  | OK | 90 passed, 1 warning in 5.89s |
