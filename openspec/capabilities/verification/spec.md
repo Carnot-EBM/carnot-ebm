@@ -12281,6 +12281,62 @@ verdict, and diagnoses the local abstraction as latent only when the lower CI
 bound is strictly above zero, absent when the interval touches zero, or
 uninformative when no seeded checkpoint was available.
 
+### REQ-VERIFY-4212: Certified ARC Corpus V2 And Sovereignty Distill-Lift Read
+
+The repository SHALL provide Exp 4212 at
+`python/carnot/experiment_4212_certified_arc_corpus_distill_lift.py` and
+`results/experiment_4212_certified_arc_corpus_distill_lift.py` to resume the
+Exp 4200 GAP-4-certified ARC corpus and report the `.390` sovereignty
+distillation read. Before any certification work, the runner SHALL verify that
+`results/arc3_gap4_induced_programs.json` and the ARC-1 replay pool exist; if
+either is missing, it SHALL write a terminal artifact with
+`honest_verdict=blocked_gap4_arc1_pool_missing`. Before any local-base lift
+read, the runner SHALL call `cached_sota_pair()` and SHALL write
+`honest_verdict=blocked_model_not_cached_sota_gguf` if fewer than two cached
+SOTA `.gguf` model paths are available.
+
+For a complete run, the implementation SHALL load the Exp 4200 JSONL corpus
+for resume provenance, replay the cached Codex `def transform(grid)` programs
+through the restricted GAP-4 execution verifier, and bank only programs that
+reproduce every demo, execute on the test input, and fire the Exp 4187 guarded
+graded gate. The new JSONL corpus SHALL contain `demo_pairs -> program`
+records without gold labels or test outputs, SHALL report
+`certified_corpus_size >= 16` when the checked-in ARC-1 pool is unchanged, and
+SHALL report `certification_precision` as the fraction of certified rows whose
+selected held-out candidate is correct in the replay pool.
+
+The same runner SHALL compare the local GGUF cold induction rate against a
+certified-exemplar-seeded local condition when a seeded checkpoint is present.
+When no seeded checkpoint or live seeded-generation substrate is available, the
+runner SHALL report a conservative flat seeded condition with
+`distill_lift_delta=0.0`, `distill_lift_ci95=[0.0, 0.0]`, and an `absent`
+diagnosis rather than fabricating a latent lift. It SHALL NOT fine-tune the
+GGUF and SHALL record `verifier_is_oracle=true` because the GAP-4 execution
+certifier is the ground-truth reward/data-generation oracle for this ARC
+training corpus, not an oracle-distinct moat claim.
+
+The terminal artifact SHALL write
+`results/experiment_4212_certified_arc_corpus_distill_lift.json` with
+top-level fields `honest_verdict`, `certified_corpus_size`,
+`certification_precision`, `local_induction_cold`,
+`local_induction_with_certified_exemplars`, `distill_lift_delta`,
+`distill_lift_ci95`, `verifier_is_oracle`, `model_specs`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`, `field_principles`,
+`duration_s`, and `inference_substrate`.
+
+### SCENARIO-VERIFY-4212: Certified Corpus And Seeded Lift Decide Latent Or Absent
+
+Given the cached ARC-1 Codex induced programs, the Exp 4200 corpus, the ARC-1
+replay pool, the hardened GAP-4 gate, a cached SOTA GGUF pair, and local
+cold/seeded sample checkpoints, when Exp 4212 runs, then it writes a JSONL
+corpus containing only GAP-4-certified demo-perfect `(demo_pairs -> program)`
+records, reports corpus size and held-out precision, computes the paired
+bootstrap CI95 of `seeded - cold` local demo-perfect induction, sets
+`verifier_is_oracle=true`, emits a terminal-prefix verdict, and diagnoses the
+local abstraction as `latent` only when the lower CI bound is strictly above
+zero and as `absent` when the interval touches zero or the seeded condition is
+a conservative flat no-lift read.
+
 ### REQ-VERIFY-4189: Verifier-Guided DiffusionGemma Decoding Feasibility
 
 The repository SHALL provide Exp 4189 at

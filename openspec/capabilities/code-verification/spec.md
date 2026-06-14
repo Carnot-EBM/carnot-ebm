@@ -2008,6 +2008,7 @@ not reliable enough to skip execution tests at this accuracy level.
 | REQ-CODE-3573 | Implemented |
 | REQ-CODE-4197 | Implemented |
 | REQ-CODE-4198 | Implemented (`python/carnot/experiment_4198_verifier_reward_3arm_rft_launch.py`) |
+| REQ-CODE-4211 | Planned (`python/carnot/experiment_4211_verifier_as_reward_finish_synchronous.py`) |
 
 ### REQ-CODE-3573: Verifier Ensemble Generalization to Code
 The verifier ensemble MUST be evaluated for generalization on code domains (correct vs buggy execution-labeled completions).
@@ -2090,6 +2091,74 @@ already checkpointing.
 Given a missing or sub-threshold Exp 4197 gate, when Exp 4198 runs, then it
 writes the terminal honest deferral verdict and leaves `training_launched` false
 without spawning any training process.
+
+### REQ-CODE-4211: Synchronous Resume Of Verifier-As-Reward A-vs-B
+
+The repository shall provide Exp 4211 at
+`python/carnot/experiment_4211_verifier_as_reward_finish_synchronous.py` and
+`results/experiment_4211_verifier_as_reward_finish_synchronous.py` to finish
+the `.389` verifier-as-reward A-vs-B contrast from the stable Exp 4198
+checkpoint. The runner MUST:
+
+- check a cached non-Qwen trainable base before training and block with
+  `honest_verdict="blocked_no_nonqwen_base_cached"` when none of
+  `google/gemma-4-E4B-it`, `google/gemma-4-12B-it`, or
+  `openbmb/MiniCPM5-1B` is readable;
+- require CUDA before training and block with
+  `honest_verdict="blocked_cuda_unavailable"` when `torch.cuda.is_available()`
+  is false;
+- read the stable checkpoint
+  `code_verifier_reward_lora_rft_a83b52882c198954`, its manifest, and the
+  Arm A/B/C corpora, preserving the Exp 4198 N-matching guarantee `|A|=|B|`;
+- resume and accumulate per-arm progress synchronously in the current process,
+  not by `setsid`, `Popen`, or detached background launch, and print
+  per-arm/step/loss progress at least every approximately 30 seconds while
+  training is active;
+- write a terminal artifact containing `honest_verdict`,
+  `verifier_label_carries_signal`, `a_vs_b_delta`, `a_vs_b_ci95`,
+  `positive_control_confirmed`, `youden_j`, `accumulated_n`,
+  `verifier_is_oracle`, `model_specs`, `random_seed`, and
+  `reproducibility_checksum`, with principles for each required field; and
+- treat a clean label-carries-signal result, a clean A~=B distillation null, an
+  honest blocked precondition, or an honest accumulating/invalid/retired result
+  as terminal rather than fabricating a headline.
+
+The A-vs-B decision SHALL be based on held-out hidden-test pass@1 for Arm A
+minus Arm B and a task-level bootstrap CI95 using at least 2000 resamples when
+held-out evaluation exists. `verifier_label_carries_signal` SHALL be the bare
+boolean `true` only when the CI excludes zero and the delta is positive. The
+positive control SHALL be the bare boolean `true` only when Arm C is at least
+the cold base and every arm's truncation rate is below 5%; a failed positive
+control invalidates A-vs-B and must produce an honest invalid verdict.
+`verifier_is_oracle` SHALL be the bare boolean `true` because the reward label
+is the executable correctness oracle.
+
+### SCENARIO-CODE-4211-BLOCKED-PRECONDITION: Missing Live Resource Writes Terminal Block
+
+Given the stable Exp 4198 artifact and corpora are present but either no
+approved non-Qwen trainable base is cached or CUDA is unavailable, when Exp
+4211 runs, then it writes
+`results/experiment_4211_verifier_as_reward_finish_synchronous.json` with the
+corresponding blocked `honest_verdict`, leaves the A-vs-B metrics null, sets
+`verifier_label_carries_signal=false`, and records the failed precondition
+without launching any training process.
+
+### SCENARIO-CODE-4211-SYNC-ACCUMULATE: Checkpoint Resumes In Process
+
+Given CUDA, an approved non-Qwen base, the stable Exp 4198 checkpoint, and
+N-matched Arm A/B corpora, when Exp 4211 starts training, then it calls the
+3-arm LoRA-SFT runner in-process, records synchronous progress for each arm,
+updates accumulated per-arm checkpoints, and does not use detached process
+launching.
+
+### SCENARIO-CODE-4211-VERDICT-GATES: A-vs-B Is Reported Only After Controls
+
+Given held-out hidden-test pass@1 measurements for Arms A, B, C, and cold base,
+when Exp 4211 builds the final artifact, then it first applies the gold-control
+and truncation gates, reports `a_vs_b_delta`, `a_vs_b_ci95`,
+`positive_control_confirmed`, and `verifier_label_carries_signal` as bare
+fields, marks failed controls as invalid rather than headline findings, and
+includes Youden-J plus the memorization-shortcut diagnostic.
 
 
 ### REQ-CODE-VERIFY-3602: FoVer Math-Trained PRM Transfer to Code Benchmark
