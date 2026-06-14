@@ -13707,6 +13707,75 @@ unparseable candidates from oracle hits, emits bare
 largest sanitized selectable headroom or records that no executable domain
 clears `0.10`.
 
+### REQ-VERIFY-4185: Headroom Re-Census And LLM-As-Judge Comparator Harness
+
+The repository SHALL provide
+`python/carnot/reporting/headroom_recensus_llm_judge_harness_4185.py` and
+`results/experiment_4185_headroom_recensus_llm_judge_harness.py` to re-census
+executable selectable headroom and build the LLM-as-judge comparator required
+before measuring verifier efficiency parity. The runner SHALL first verify that
+`results/experiment_1999_code_verification_humaneval.json` exists and SHALL
+resolve a cached SOTA GGUF judge through `cached_sota_pair()` with concrete
+`.gguf` `model_path` values. If no cached SOTA GGUF model path is available,
+the runner SHALL write a terminal blocked artifact with
+`honest_verdict=blocked_model_not_cached_sota_gguf` and SHALL stop before
+loading a judge.
+
+When the model precondition passes, the runner SHALL reuse the objective
+executable headroom census from `scripts/headroom_gate.py`, SHALL emit
+`max_selectable_headroom` as a bare float equal to the largest sanitized
+`oracle@k - SC-vote` value across complete executable pools, and SHALL name the
+domain with headroom in `headroom_present_domain`. The runner SHALL attempt a
+second executable pool from available Sudoku/ARC or MBPP/EvalPlus artifacts and
+record its census status in `per_domain_headroom` without fabricating candidate
+rows when the second pool is summary-only or absent.
+
+The LLM-as-judge arm SHALL expose `judge(problem, candidates) -> chosen_index`,
+load the selected SOTA model by `.gguf` path through `llama_cpp.Llama`, and
+prompt for best-candidate selection. It SHALL instrument every judge call with
+wall-clock seconds, prompt token count, completion token count, total token
+count, and chosen index. The smoke run SHALL evaluate at least three real
+candidate sets from the selected executable pool and SHALL set
+`llm_judge_ready=true` only when the judge ran end-to-end.
+
+The terminal artifact SHALL write
+`results/experiment_4185_headroom_recensus_llm_judge_harness.json` with
+`honest_verdict`, bare float `max_selectable_headroom`, string
+`headroom_present_domain`, bare bool `llm_judge_ready`, `judge_cost_meter`,
+`model_specs`, integer `random_seed`, `reproducibility_checksum`,
+`judge_pass1_smoke`, `per_domain_headroom`, `field_principles`, `spec_refs`,
+and `inference_substrate`. The artifact SHALL pass acceptance when
+`max_selectable_headroom` is bare and `llm_judge_ready=true`, or when it is an
+honest `blocked_model_not_cached_sota_gguf` precondition artifact.
+
+The required field principles are:
+`honest_verdict` = `Terminal-prefixed. A clean census + a working judge harness is a COMPLETE verdict even if only code clears 0.10.`;
+`max_selectable_headroom` = `BARE float (oracle@k - SC-vote, sanitized) -- A2's gate compares this raw value; a principle-dict would break the gate (gated-fields-must-be-bare).`;
+`headroom_present_domain` = `Names the executable domain A2 runs the efficiency moat on; the positive control that makes a null informative.`;
+`llm_judge_ready` = `Bare bool: the LLM-as-judge arm built AND smoke-ran end-to-end; A2 needs a working comparator to measure efficiency-parity against.`;
+`judge_cost_meter` = `{mean_judge_latency_s, mean_judge_tokens} from the smoke -- the cost baseline the A2 verifier-vs-judge ratio is computed against.`;
+`model_specs` = `The actual SOTA GGUF invoked as the judge; required methodology for a live-LLM artifact.`;
+`random_seed` = `Determinism precondition; the judge's selections + the census must be reproducible.`;
+`reproducibility_checksum` = `Content hash of the candidate pool + judge config; catches silent pool/model drift before A2.`
+
+### SCENARIO-VERIFY-4185: Cached GGUF Judge Smoke Produces Costed Comparator
+
+Given the Exp 1999 code pool exists and `cached_sota_pair()` returns at least
+one SOTA GGUF spec with an existing `.gguf` `model_path`, when Exp 4185 runs,
+then it reuses the objective executable census, records the code-domain
+selectable headroom as a bare float, attempts a second executable pool census,
+loads the judge through `llama_cpp.Llama(model_path=...)`, runs at least three
+real candidate sets through `judge(problem, candidates)`, records latency and
+token counts for every call, sets `llm_judge_ready=true`, writes the required
+cost meter and model specs, and computes a reproducibility checksum over the
+candidate pool and judge configuration.
+
+If no cached SOTA GGUF model path is available, then the same runner SHALL
+write the terminal blocked artifact with
+`honest_verdict=blocked_model_not_cached_sota_gguf`, `llm_judge_ready=false`,
+`max_selectable_headroom` as a bare float, and an acceptance gate that permits
+the honest precondition stop.
+
 ### REQ-VERIFY-4176: OOF V-STaR Learned Selector From Accepted And Rejected Traces
 
 The repository SHALL provide

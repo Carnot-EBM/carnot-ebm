@@ -1,0 +1,1125 @@
+{
+  "acceptance_gate": true,
+  "duration_s": 69.937604,
+  "field_principles": {
+    "headroom_present_domain": "Names the executable domain A2 runs the efficiency moat on; the positive control that makes a null informative.",
+    "honest_verdict": "Terminal-prefixed. A clean census + a working judge harness is a COMPLETE verdict even if only code clears 0.10.",
+    "judge_cost_meter": "{mean_judge_latency_s, mean_judge_tokens} from the smoke -- the cost baseline the A2 verifier-vs-judge ratio is computed against.",
+    "llm_judge_ready": "Bare bool: the LLM-as-judge arm built AND smoke-ran end-to-end; A2 needs a working comparator to measure efficiency-parity against.",
+    "max_selectable_headroom": "BARE float (oracle@k - SC-vote, sanitized) -- A2's gate compares this raw value; a principle-dict would break the gate (gated-fields-must-be-bare).",
+    "model_specs": "The actual SOTA GGUF invoked as the judge; required methodology for a live-LLM artifact.",
+    "random_seed": "Determinism precondition; the judge's selections + the census must be reproducible.",
+    "reproducibility_checksum": "Content hash of the candidate pool + judge config; catches silent pool/model drift before A2."
+  },
+  "headroom_present_domain": "code",
+  "honest_verdict": "complete: headroom_recensus_llm_judge_ready_domain_code_max_selectable_headroom_0.1800",
+  "inference_substrate": "live_llm_judge_llama_cpp_plus_cached_artifact_objective_oracle_census",
+  "judge_cost_meter": {
+    "mean_completion_tokens": 2.0,
+    "mean_judge_latency_s": 0.969085,
+    "mean_judge_tokens": 105.142857,
+    "mean_prompt_tokens": 103.142857,
+    "n_calls": 70
+  },
+  "judge_pass1_smoke": {
+    "n_candidate_sets": 70,
+    "pass1_accuracy": 0.6571428571,
+    "selections": [
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 1.313198,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/0"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.861149,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/1"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.86829,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/2"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.836118,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/3"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.875084,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/4"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.881901,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/5"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.873552,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/6"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.873302,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/7"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.88392,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/8"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.890442,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/9"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.949919,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/10"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.94065,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/11"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.948955,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/12"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.960372,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/13"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.976723,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/14"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.962098,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/15"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.97556,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/16"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.966447,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/17"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.954701,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/18"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.97122,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/19"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.987667,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/20"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.974617,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/21"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.974209,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/22"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.975016,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/23"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.974448,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/24"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.978113,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/25"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.982533,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/26"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.984717,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/27"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 1.011475,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/28"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.988853,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/29"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.974292,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/30"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.978503,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/31"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.978849,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/32"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.976661,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/33"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.978765,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/34"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.980277,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/35"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.977917,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/36"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.984659,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/37"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 1.00587,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/38"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.977235,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/39"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.984939,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/40"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 1.022694,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/41"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.979491,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/42"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.987291,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/43"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.996673,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/44"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.988425,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/45"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.960504,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/46"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.983129,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/47"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.982893,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/48"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.980101,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/49"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.947274,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/0#repeat1"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.970379,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/1#repeat2"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.948631,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/2#repeat3"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.952655,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/3#repeat4"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.953097,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/4#repeat5"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.948187,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/5#repeat6"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.953643,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/6#repeat7"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.950688,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/7#repeat8"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.956519,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/8#repeat9"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.957761,
+          "prompt_tokens": 101,
+          "raw_output": "0",
+          "total_tokens": 103
+        },
+        "task_id": "HumanEval/9#repeat10"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 1.010012,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/10#repeat11"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.999125,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/11#repeat12"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 1.025033,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/12#repeat13"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 1.002115,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/13#repeat14"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 1.051388,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/14#repeat15"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.981688,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/15#repeat16"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.988305,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/16#repeat17"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.980477,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/17#repeat18"
+      },
+      {
+        "chosen_correct": false,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.985391,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/18#repeat19"
+      },
+      {
+        "chosen_correct": true,
+        "chosen_index": 0,
+        "chosen_role": "baseline",
+        "cost": {
+          "chosen_index": 0,
+          "completion_tokens": 2,
+          "latency_s": 0.999181,
+          "prompt_tokens": 104,
+          "raw_output": "0",
+          "total_tokens": 106
+        },
+        "task_id": "HumanEval/19#repeat20"
+      }
+    ],
+    "unique_task_count": 50
+  },
+  "llm_judge_ready": true,
+  "max_selectable_headroom": 0.18,
+  "model_specs": {
+    "cached_sota_pair_result": [
+      {
+        "gpu": 0,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "name": "Qwen3.6-35B-A3B"
+      },
+      {
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "name": "Gemma4-26B-A4B-it"
+      }
+    ],
+    "loader": "llama_cpp.Llama",
+    "prompt_version": "exp4185-best-candidate-index-v1",
+    "runtime_error": null,
+    "selected_judge": {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  },
+  "per_domain_headroom": {
+    "code": {
+      "artifact_flags": {
+        "artifact_inflation_flagged": 0,
+        "candidate_pool_detected": true,
+        "census_incomplete": false,
+        "domain": "code",
+        "excluded_reasons": {},
+        "incomplete_reason": null,
+        "llm_judge_used": false,
+        "n_multicandidate_tasks": 50,
+        "n_tasks_evaluated": 50,
+        "n_tasks_raw": 50,
+        "objective_oracle": "unit_test_pass_flags",
+        "source": "results/experiment_1999_code_verification_humaneval.json"
+      },
+      "baseline_pass1": 0.66,
+      "n": 50,
+      "oracle_at_k": 0.84,
+      "sc_vote_pass1": 0.66,
+      "selectable_headroom": 0.18
+    },
+    "math": {
+      "artifact_flags": {
+        "artifact_inflation_flagged": 0,
+        "candidate_pool_detected": false,
+        "census_incomplete": true,
+        "domain": "math",
+        "excluded_reasons": {},
+        "incomplete_reason": "no_candidate_tasks",
+        "llm_judge_used": false,
+        "n_multicandidate_tasks": 0,
+        "n_tasks_evaluated": 0,
+        "n_tasks_raw": 0,
+        "objective_oracle": "exact_match",
+        "source": [
+          "results/experiment_1816_gsm8k_baseline.json",
+          "results/adversarial_gsm8k_data_400.json"
+        ]
+      },
+      "baseline_pass1": 0.0,
+      "n": 0,
+      "oracle_at_k": 0.0,
+      "sc_vote_pass1": 0.0,
+      "selectable_headroom": 0.0
+    },
+    "sudoku": {
+      "artifact_flags": {
+        "artifact_inflation_flagged": 0,
+        "candidate_pool_detected": true,
+        "census_incomplete": true,
+        "domain": "sudoku",
+        "excluded_reasons": {},
+        "incomplete_reason": "some_tasks_lack_k_candidates",
+        "llm_judge_used": false,
+        "n_multicandidate_tasks": 30,
+        "n_tasks_evaluated": 31,
+        "n_tasks_raw": 31,
+        "objective_oracle": "exact_candidate_correctness",
+        "source": "results/arc3_trm_verifier_rerank.json",
+        "summary_only_candidate_rows": true
+      },
+      "baseline_pass1": 0.4194,
+      "n": 31,
+      "oracle_at_k": 0.6129,
+      "sc_vote_pass1": 0.4839,
+      "selectable_headroom": 0.129
+    }
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "results/experiment_1999_code_verification_humaneval.json",
+      "resource": "experiment_1999_code_pool"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "resource": "cached_sota_gguf_judge"
+    }
+  ],
+  "random_seed": 4185,
+  "reproducibility_checksum": "b4a4abc4b52cb6d86b7a58762cac61590599d78456194964c820dfb478c3ca6a",
+  "spec_refs": [
+    "REQ-VERIFY-4185",
+    "SCENARIO-VERIFY-4185"
+  ]
+}

@@ -126,6 +126,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable
 
+from carnot.inference.sota_models import cached_sota_pair
 from carnot.pipeline.deliverable_guard import DeliverableGuard
 from carnot.pipeline.dual_gpu_assigner import DualGPUAssigner
 
