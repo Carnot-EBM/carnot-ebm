@@ -104,5 +104,14 @@
     "v388_planner_frame": "win the efficiency axis against an LLM-as-judge and harden the proven execution path; do not redo the code-domain accuracy moat proof",
     "verifier_moat_status": "PROVEN-headroom-present",
     "verifier_value_added": true
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "CIRCULAR_MOAT_OVERCLAIM",
+      "severity": "critical",
+      "detail": "Artifact flips a gate/headlines a moat but verifier_is_oracle=None (not False). A circular or oracle-undeclared verifier cannot flip a gate or headline 'moat proven' -- only an oracle-DISTINCT (learned/energy) win is headline/gate-eligible. Declare verifier_is_oracle=False and use an oracle-distinct verifier, or do not flip the gate."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }

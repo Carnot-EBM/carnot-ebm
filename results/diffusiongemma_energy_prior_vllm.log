@@ -1,0 +1,141 @@
+INFO 06-14 15:46:08 [api_utils.py:273] non-default args: {'max_model_len': 1024, 'disable_log_stats': True, 'quantization': 'bitsandbytes', 'enforce_eager': True, 'model': 'google/diffusiongemma-26B-A4B-it'}
+INFO 06-14 15:46:13 [model.py:611] Resolved architecture: TransformersMultiModalMoEForCausalLM
+INFO 06-14 15:46:13 [model.py:1745] Using max model len 1024
+INFO 06-14 15:46:13 [scheduler.py:239] Chunked prefill is enabled with max_num_batched_tokens=8192.
+INFO 06-14 15:46:13 [vllm.py:999] Asynchronous scheduling is enabled.
+WARNING 06-14 15:46:13 [vllm.py:1055] Enforce eager set, disabling torch.compile and CUDAGraphs. This is equivalent to setting -cc.mode=none -cc.cudagraph_mode=none
+WARNING 06-14 15:46:13 [vllm.py:1097] Inductor compilation was disabled by user settings, optimizations settings that are only active during inductor compilation will be ignored.
+INFO 06-14 15:46:13 [kernel.py:270] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native'])
+INFO 06-14 15:46:13 [vllm.py:1273] Cudagraph is disabled under eager mode
+INFO 06-14 15:46:13 [compilation.py:321] Enabled custom fusions: norm_quant, act_quant
+WARNING 06-14 15:46:15 [utils.py:192] TransformersMultiModalMoEForCausalLM has no vLLM implementation, falling back to Transformers implementation. Some features may not be supported and performance may not be optimal.
+(EngineCore pid=886410) INFO 06-14 15:46:31 [core.py:113] Initializing a V1 LLM engine (v0.23.0) with config: model='google/diffusiongemma-26B-A4B-it', speculative_config=None, tokenizer='google/diffusiongemma-26B-A4B-it', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=1024, download_dir=None, load_format=bitsandbytes, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=bitsandbytes, quantization_config=None, enforce_eager=True, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False), seed=0, served_model_name=google/diffusiongemma-26B-A4B-it, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['all'], 'ir_enable_torch_wrap': False, 'splitting_ops': [], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False}, 'max_cudagraph_capture_size': 0, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['vllm_c', 'native'], fused_add_rms_norm=['vllm_c', 'native']), enable_flashinfer_autotune=True, moe_backend='auto', linear_backend='auto')
+(EngineCore pid=886410) INFO 06-14 15:46:31 [parallel_state.py:1568] world_size=1 rank=0 local_rank=0 distributed_init_method=tcp://192.168.51.32:46661 backend=nccl
+(EngineCore pid=886410) INFO 06-14 15:46:31 [parallel_state.py:1903] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank 0, EPLB rank N/A
+(EngineCore pid=886410) INFO 06-14 15:46:32 [topk_topp_sampler.py:55] Using FlashInfer for top-p & top-k sampling.
+(EngineCore pid=886410) INFO 06-14 15:46:32 [gpu_model_runner.py:5092] Starting to load model google/diffusiongemma-26B-A4B-it...
+(EngineCore pid=886410) INFO 06-14 15:46:32 [base.py:117] Using Transformers modeling backend.
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195] EngineCore failed to start.
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195] Traceback (most recent call last):
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1164, in run_engine_core
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     return func(*args, **kwargs)
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 930, in __init__
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     super().__init__(
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 122, in __init__
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     self.model_executor = executor_class(vllm_config)
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     return func(*args, **kwargs)
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/executor/abstract.py", line 109, in __init__
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     self._init_executor()
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/executor/uniproc_executor.py", line 68, in _init_executor
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     self.driver_worker.load_model()
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 356, in load_model
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     self.model_runner.load_model(load_dummy_weights=load_dummy_weights)
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     return func(*args, **kwargs)
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/worker/gpu_model_runner.py", line 5108, in load_model
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     self.model = model_loader.load_model(
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]                  ^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     return func(*args, **kwargs)
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/model_loader/base_loader.py", line 55, in load_model
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     model = initialize_model(
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]             ^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     return func(*args, **kwargs)
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/model_loader/utils.py", line 61, in initialize_model
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     model = model_class(vllm_config=vllm_config, prefix=prefix)
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/moe.py", line 128, in __init__
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     super(MixtureOfExperts, self).__init__(vllm_config=vllm_config, prefix=prefix)
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/multimodal.py", line 271, in __init__
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     super(SupportsMRoPE, self).__init__(vllm_config=vllm_config, prefix=prefix)
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/causal.py", line 35, in __init__
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     super(VllmModelForTextGeneration, self).__init__(
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/base.py", line 167, in __init__
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     self._decorate_for_torch_compile(**from_config_kwargs)
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/multimodal.py", line 310, in _decorate_for_torch_compile
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     super()._decorate_for_torch_compile(**kwargs)
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/base.py", line 285, in _decorate_for_torch_compile
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     self._decorate_cls_for_torch_compile(
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/base.py", line 270, in _decorate_cls_for_torch_compile
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     support_torch_compile(
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/compilation/decorators.py", line 235, in cls_decorator_helper
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195]     raise ValueError(
+(EngineCore pid=886410) ERROR 06-14 15:46:33 [core.py:1195] ValueError: Argument input_ids not found in the forward method of <class 'transformers.models.diffusion_gemma.modeling_diffusion_gemma.DiffusionGemmaDecoderModel'>
+(EngineCore pid=886410) Process EngineCore:
+(EngineCore pid=886410) Traceback (most recent call last):
+(EngineCore pid=886410)   File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+(EngineCore pid=886410)     self.run()
+(EngineCore pid=886410)   File "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/multiprocessing/process.py", line 108, in run
+(EngineCore pid=886410)     self._target(*self._args, **self._kwargs)
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1199, in run_engine_core
+(EngineCore pid=886410)     raise e
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1164, in run_engine_core
+(EngineCore pid=886410)     engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)
+(EngineCore pid=886410)                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(EngineCore pid=886410)     return func(*args, **kwargs)
+(EngineCore pid=886410)            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 930, in __init__
+(EngineCore pid=886410)     super().__init__(
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 122, in __init__
+(EngineCore pid=886410)     self.model_executor = executor_class(vllm_config)
+(EngineCore pid=886410)                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(EngineCore pid=886410)     return func(*args, **kwargs)
+(EngineCore pid=886410)            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/executor/abstract.py", line 109, in __init__
+(EngineCore pid=886410)     self._init_executor()
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/executor/uniproc_executor.py", line 68, in _init_executor
+(EngineCore pid=886410)     self.driver_worker.load_model()
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 356, in load_model
+(EngineCore pid=886410)     self.model_runner.load_model(load_dummy_weights=load_dummy_weights)
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(EngineCore pid=886410)     return func(*args, **kwargs)
+(EngineCore pid=886410)            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/v1/worker/gpu_model_runner.py", line 5108, in load_model
+(EngineCore pid=886410)     self.model = model_loader.load_model(
+(EngineCore pid=886410)                  ^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(EngineCore pid=886410)     return func(*args, **kwargs)
+(EngineCore pid=886410)            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/model_loader/base_loader.py", line 55, in load_model
+(EngineCore pid=886410)     model = initialize_model(
+(EngineCore pid=886410)             ^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(EngineCore pid=886410)     return func(*args, **kwargs)
+(EngineCore pid=886410)            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/model_loader/utils.py", line 61, in initialize_model
+(EngineCore pid=886410)     model = model_class(vllm_config=vllm_config, prefix=prefix)
+(EngineCore pid=886410)             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/moe.py", line 128, in __init__
+(EngineCore pid=886410)     super(MixtureOfExperts, self).__init__(vllm_config=vllm_config, prefix=prefix)
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/multimodal.py", line 271, in __init__
+(EngineCore pid=886410)     super(SupportsMRoPE, self).__init__(vllm_config=vllm_config, prefix=prefix)
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/causal.py", line 35, in __init__
+(EngineCore pid=886410)     super(VllmModelForTextGeneration, self).__init__(
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/base.py", line 167, in __init__
+(EngineCore pid=886410)     self._decorate_for_torch_compile(**from_config_kwargs)
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/multimodal.py", line 310, in _decorate_for_torch_compile
+(EngineCore pid=886410)     super()._decorate_for_torch_compile(**kwargs)
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/base.py", line 285, in _decorate_for_torch_compile
+(EngineCore pid=886410)     self._decorate_cls_for_torch_compile(
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/model_executor/models/transformers/base.py", line 270, in _decorate_cls_for_torch_compile
+(EngineCore pid=886410)     support_torch_compile(
+(EngineCore pid=886410)   File "/home/ianblenke/.cache/vllm-venv/lib/python3.12/site-packages/vllm/compilation/decorators.py", line 235, in cls_decorator_helper
+(EngineCore pid=886410)     raise ValueError(
+(EngineCore pid=886410) ValueError: Argument input_ids not found in the forward method of <class 'transformers.models.diffusion_gemma.modeling_diffusion_gemma.DiffusionGemmaDecoderModel'>
+INFO 06-14 15:46:33 [api_utils.py:273] non-default args: {'max_model_len': 1024, 'tensor_parallel_size': 2, 'gpu_memory_utilization': 0.88, 'disable_log_stats': True, 'quantization': 'fp8', 'enforce_eager': True, 'model': 'google/diffusiongemma-26B-A4B-it'}
+INFO 06-14 15:46:33 [model.py:611] Resolved architecture: TransformersMultiModalMoEForCausalLM
+INFO 06-14 15:46:33 [model.py:1745] Using max model len 1024
+[vllm probe] DONE verdict=blocked_vllm_load_failed
