@@ -12228,6 +12228,67 @@ the Codex hardened-gate reference, reports
 programs banked, emits a terminal-prefix complete or success verdict, and
 writes the self-distillation corpus without gold labels.
 
+### REQ-VERIFY-4189: Verifier-Guided DiffusionGemma Decoding Feasibility
+
+The repository SHALL provide Exp 4189 at
+`results/experiment_4189_diffusiongemma_verifier_guided_decoding.py` to test
+whether DiffusionGemma can accept Carnot executable verifier energy inside the
+per-step denoising loop. The runner SHALL verify, before any model load or
+smoke scoring, that the official Hugging Face repo id
+`google/diffusiongemma-26B-A4B-it` resolves, that the full weight shards are
+cached locally or otherwise available for a bounded load, that CUDA is
+available, and that the installed DiffusionGemma release exposes a
+`LogitsProcessor` hook applied to per-step logits before the sampler accepts
+low-entropy tokens. If the full weights are not cached/loadable, it SHALL write
+`honest_verdict=blocked_diffusiongemma_not_cached`; if CUDA is unavailable, it
+SHALL write `honest_verdict=blocked_cuda_unavailable`; if the per-step hook is
+absent, it SHALL write
+`honest_verdict=blocked_diffusiongemma_no_perstep_logit_hook`.
+
+When all preconditions pass, the runner SHALL attach a verifier-energy logits
+processor that subtracts `lambda * carnot_verifier_energy` from candidate token
+logits, which is equivalent to reweighting the candidate distribution by
+`exp(-lambda * verifier_energy)`, before DiffusionGemma's entropy-bound sampler
+commits low-entropy tokens. The smoke domain SHALL be executable code
+generation with at least 20 prompts, and generated candidates SHALL be checked
+by executing the task tests rather than by text matching. The smoke artifact
+SHALL compare guided DiffusionGemma, unguided DiffusionGemma, and an
+autoregressive baseline when the run is feasible.
+
+The terminal artifact SHALL write
+`results/experiment_4189_diffusiongemma_verifier_guided_decoding.json` with
+top-level fields `honest_verdict`, bare bool `diffusiongemma_feasible`,
+`guided_vs_unguided_delta`, `model_specs`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`, `field_principles`,
+`spec_refs`, `duration_s`, and `inference_substrate`. The required field
+principles are:
+`honest_verdict` = `Terminal-prefixed. A clean blocked_diffusiongemma_* (model/hook/CUDA unavailable) is a COMPLETE feasibility verdict that de-risks the .389 scale-up.`;
+`diffusiongemma_feasible` = `Bare bool: the model loaded AND the per-step guidance hook fired end-to-end; the precondition for any .389 headline benchmark.`;
+`guided_vs_unguided_delta` = `guided - unguided pass-rate with bootstrap CI95 on the smoke n; the first directional read on whether verifier guidance helps at LLM scale.`;
+`model_specs` = `DiffusionGemma + the verifier ensemble invoked; required methodology for a live-LLM artifact.`;
+`random_seed` = `Determinism precondition; the denoising + guidance must be reproducible.`;
+`reproducibility_checksum` = `Hash of the prompt set + guidance config; catches silent drift.`;
+`preconditions_checked` = `Records the cache / per-step-logit / CUDA checks; pre-empts the silent-missing-resource fabrication mode.`
+
+### SCENARIO-VERIFY-4189: Missing DiffusionGemma Weights Block Without Fabrication
+
+Given the official DiffusionGemma repo metadata resolves but the local Hugging
+Face cache lacks one or more required `model-*.safetensors` shards, when Exp
+4189 runs, then it writes the terminal artifact with
+`diffusiongemma_feasible=false`,
+`honest_verdict=blocked_diffusiongemma_not_cached`, records the repo id,
+missing shard count, CUDA result, and per-step hook inspection under
+`preconditions_checked`, sets `guided_vs_unguided_delta.status` to the blocked
+verdict, and does not fabricate guided, unguided, or autoregressive pass-rate
+metrics.
+
+If all weights are cached, CUDA is available, and the hook exists, then Exp
+4189 SHALL run the executable-code smoke with at least 20 prompts, fire the
+guidance processor during denoising, report guided and unguided pass rates plus
+bootstrap CI95 for guided minus unguided, record the AR baseline result, and set
+`diffusiongemma_feasible=true` only after the model loads and the hook fires
+end-to-end.
+
 ### REQ-VERIFY-4036: Decentralization Stronger-Base Best-of-N Build Gate
 
 The repository SHALL provide Exp 4036 at
