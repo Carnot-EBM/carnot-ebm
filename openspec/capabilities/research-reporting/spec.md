@@ -20434,6 +20434,84 @@ files untouched.
 |---|---|---|
 | REQ-REPORT-4180 | Implemented (`python/carnot/experiment_4180_sota_ingestion_moat_gap3_diffusion.py`, `docs/research-notes/sota-ingestion-moat-gap3-diffusion-v388-2026-06-14.md`) | Implemented (`tests/python/test_experiment_4180_sota_ingestion_moat_gap3_diffusion.py`) |
 
+### REQ-REPORT-4192: Ingest The .388 Efficiency/GAP-4/Diffusion Sweep Into A .389 Plan
+
+The Exp 4192 SOTA-ingestion workflow SHALL ingest the `.388 planning sweep`
+from `research-references.md` into an actionable SOTA-to-experiment mapping
+for the `.389` planner. The workflow SHALL read `research-references.md`,
+`research-studying.md`, and the GAP-3 trained-content-energy selector
+retirement entry in `ops/exclusion_manifest.yaml`; SHALL run the reliable
+discovery helpers `scripts/sweep_clusters.py` and `scripts/sweep_semscholar.py`
+with focused low-concurrency queries; SHALL verify the top mapped sources with
+low-concurrency WebSearch/WebFetch; and SHALL NOT invoke `/deep-research` or
+modify `scripts/research_conductor.py`.
+
+The markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-efficiency-gap4-diffusion-v389-2026-06-14.md`
+and the machine-checkable mapping artifact SHALL be written to
+`results/experiment_4192_sota_ingestion_efficiency_gap4_diffusion.json`. The
+required runner SHALL be
+`results/experiment_4192_sota_ingestion_efficiency_gap4_diffusion.py` and SHALL
+delegate to `python/carnot/experiment_4192_sota_ingestion_efficiency_gap4_diffusion.py`.
+
+The note SHALL map Test-Time Scaling with Diffusion Language Models via
+Reward-Guided Stitching (`arXiv:2602.22871`), S^3 Stratified Scaling Search
+(`arXiv:2604.06260`), and Self-Rewarding SMC (`arXiv:2602.01849`) to the
+DiffusionGemma verifier-guided scale-up track for `.389`; SHALL map Tuning LLM
+Judge Design Decisions for 1/1000 of the Cost (`OpenReview:cve4NOiyVp` and
+`arXiv:2501.17178`), When To Solve/Verify (`arXiv:2504.01005`), and ThinkPRM
+(`arXiv:2504.16828`) to the efficiency-moat judge comparator and cost
+normalization track; and SHALL re-flag CEM (`arXiv:2510.20607`) to the
+operator because the GAP-3 trained-content-energy selector lineage is retired
+in `ops/exclusion_manifest.yaml`.
+
+For each mapped method, the note SHALL state the Carnot stack mapping, what the
+method implies for the next experiment, where the method fails or does not by
+itself prove Carnot's claim, and the concrete experiment target. The CEM row
+SHALL NOT recommend auto-activation; it SHALL explicitly require operator
+authorization and gate-1R before any activation of the retired
+trained-content-energy selector lineage.
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `cem_operator_authorization_flag`, `flagged_for_v389`, and
+`field_principles`. `field_principles` SHALL contain exactly the principle
+annotations for `honest_verdict`, `methods_mapped`,
+`cem_operator_authorization_flag`, and `flagged_for_v389`. `honest_verdict`
+SHALL use a terminal prefix and, on the complete path, start with
+`complete: sota_ingestion_efficiency_gap4_diffusion_mapped_v389`.
+`methods_mapped` SHALL contain at least three dicts with verifiable source IDs
+or URLs, including real arXiv IDs or the real OpenReview URL, preventing
+fabricated or uncited method rows. `cem_operator_authorization_flag` SHALL be a
+dict recording `source_id == "2510.20607"`,
+`operator_authorization_required == true`,
+`auto_activation_recommended == false`, and the retirement marker
+`gap3_trained_content_energy_selector_retired_stage2v2_2026_06_09`.
+`flagged_for_v389` SHALL be a non-empty concrete roadmap slug naming the single
+strongest `.389` method and SHALL NOT be the CEM retired selector path.
+
+The workflow SHALL update `research-studying.md` idempotently to mark the
+`.388 planning sweep` as ingested, SHALL include `flagged_for_v389`, and SHALL
+NOT update `ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-4192: The .388 Sweep Closes Into A .389 Diffusion Plan And CEM Operator Flag
+
+**Given** the `.388 planning sweep` filed diffusion guidance, judge-cost
+normalization, and CEM candidates
+**When** the Exp 4192 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON mapping artifact, maps
+verified sources to Carnot stack implications, failure modes, and concrete
+experiment targets, updates `research-studying.md` idempotently, re-flags CEM
+as requiring operator authorization instead of auto-activation, flags the
+single strongest `.389` follow-up, and leaves conductor and reconciliation
+files untouched.
+
+## Implementation Status (REQ-REPORT-4192)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4192 | Implemented (`python/carnot/experiment_4192_sota_ingestion_efficiency_gap4_diffusion.py`, `docs/research-notes/sota-ingestion-efficiency-gap4-diffusion-v389-2026-06-14.md`) | Implemented (`tests/python/test_experiment_4192_sota_ingestion_efficiency_gap4_diffusion.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone

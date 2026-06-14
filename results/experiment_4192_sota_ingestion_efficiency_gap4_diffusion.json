@@ -1,0 +1,85 @@
+{
+  "cem_operator_authorization_flag": {
+    "auto_activation_recommended": false,
+    "operator_authorization_required": true,
+    "reason": "ops/exclusion_manifest.yaml retires the trained-content-energy lineage after Stage-2 v1/v2 selection landed statistically at random; CEM may be surfaced to the operator but must not be auto-activated.",
+    "required_gate": "operator authorization plus gate-1R: gold-vs-REAL-mined-near-miss AUROC >= 0.70 on tasks held out from training and checkpoint selection",
+    "retired_lineage": "GAP-3 trained-content-energy ARC candidate selector",
+    "retirement_marker": "gap3_trained_content_energy_selector_retired_stage2v2_2026_06_09",
+    "source_id": "2510.20607",
+    "url": "https://arxiv.org/abs/2510.20607"
+  },
+  "field_principles": {
+    "cem_operator_authorization_flag": "Explicitly records that CEM (2510.20607) needs operator authorization before activation (the retired trained-content-energy selector lineage) - closes the loop honestly instead of silently dropping or auto-running it.",
+    "flagged_for_v389": "Closes discover->ingest->plan: names the strongest method for the next planner.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication (adversarial_verify discipline)."
+  },
+  "flagged_for_v389": "s3_diffusiongemma_verifier_guided_search_scaleup_v389",
+  "honest_verdict": "complete: sota_ingestion_efficiency_gap4_diffusion_mapped_v389",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2602.22871",
+      "carnot_stack_mapping": "DiffusionGemma guidance scale-up: sample many low-cost masked diffusion trajectories, score intermediate steps with the Carnot verifier, then stitch reusable high-score steps before final solving.",
+      "experiment_mapping": "Use as a .389 ablation: compare final-output rerank, step-level stitching, and no-guidance DiffusionGemma under matched verifier calls and wall-clock budgets.",
+      "failure_mode": "The paper relies on PRM-style step scoring and an autoregressive solver to repair stitched rationales; it does not prove Carnot's executable energy can score useful intermediate ARC states.",
+      "implication": "The next DiffusionGemma experiment can exploit parallel partial reasoning rather than only final-answer reranking, which matches Carnot's verifier-as-guidance thesis.",
+      "name": "Reward-Guided Stitching DiffusionGemma scale-up",
+      "url": "https://arxiv.org/abs/2602.22871"
+    },
+    {
+      "arxiv_id_or_url": "2604.06260",
+      "carnot_stack_mapping": "DiffusionGemma guidance scale-up: expand multiple denoising frontier candidates, score them with a lightweight verifier, and resample promising trajectories while preserving diversity.",
+      "experiment_mapping": "Flag .389 for S^3-style verifier-guided denoising: no-guidance, best-of-K, self-rewarding SMC, and Carnot-verifier frontier search arms with normalized verifier-call and latency accounting.",
+      "failure_mode": "S^3 uses a reference-free verifier on language benchmarks; Carnot must show that executable ARC or code validators can score partial denoising states without collapsing diversity.",
+      "implication": "This is the strongest .389 method because it puts verifier guidance inside the denoising loop, exactly where DiffusionGemma exposes test-time search budget.",
+      "name": "S^3 verifier-guided denoising search",
+      "url": "https://arxiv.org/abs/2604.06260"
+    },
+    {
+      "arxiv_id_or_url": "2602.01849",
+      "carnot_stack_mapping": "DiffusionGemma guidance scale-up: maintain interacting masked diffusion particles and use trajectory confidence for weighting and resampling when an external verifier is unavailable.",
+      "experiment_mapping": "Use as the self-guided SMC comparator against S^3/Carnot-guided denoising under identical particle counts and denoising steps.",
+      "failure_mode": "The reward is model confidence, not task correctness; it can improve fluent or globally confident samples while still missing executable validity.",
+      "implication": "This provides the no-external-verifier particle-search control for the .389 DiffusionGemma scale-up, keeping the Carnot-verifier gain from being confused with generic parallel search.",
+      "name": "Self-Rewarding SMC particle guidance",
+      "url": "https://arxiv.org/abs/2602.01849"
+    },
+    {
+      "arxiv_id_or_url": "2501.17178",
+      "carnot_stack_mapping": "Efficiency-moat judge comparator: use multi-objective, multi-fidelity judge tuning to normalize LLM-judge accuracy against dollar, token, and latency cost.",
+      "experiment_mapping": "In the .389 efficiency table, include tuned open-weight judge arms from OpenReview:cve4NOiyVp / arXiv:2501.17178 and compare cost per accepted correct candidate.",
+      "failure_mode": "It optimizes LLM judges for evaluation, not executable validators; a cheaper judge can still be an opaque comparator rather than an ARC/action verifier.",
+      "implication": "Carnot's efficiency claim must beat a tuned open-weight judge frontier, not a single expensive frontier-judge configuration.",
+      "name": "OpenReview cve4NOiyVp judge-cost tuning",
+      "url": "https://arxiv.org/abs/2501.17178"
+    },
+    {
+      "arxiv_id_or_url": "2504.01005",
+      "carnot_stack_mapping": "Efficiency-moat cost normalization: compare verifier compute against spending the same budget on more solution samples and self-consistency.",
+      "experiment_mapping": "Carry fixed-budget vote@K, judge@K, Carnot-rerank@K, verifier-call count, wall-clock, and token-cost columns in the .389 comparator.",
+      "failure_mode": "The paper studies generative reward-model verification, not Carnot's cheap executable energy, so it sets the bar rather than the implementation.",
+      "implication": "Any Carnot verifier win must be reported as an accuracy-cost Pareto point; a raw accuracy lift is insufficient when extra sampling may be cheaper.",
+      "name": "When To Solve/Verify compute-normalized verifier bar",
+      "url": "https://arxiv.org/abs/2504.01005"
+    },
+    {
+      "arxiv_id_or_url": "2504.16828",
+      "carnot_stack_mapping": "Efficiency-moat comparator: use ThinkPRM as the expensive, high-quality process verifier reference when evaluating whether Carnot's cheap verifier has a real moat.",
+      "experiment_mapping": "Report ThinkPRM-style judging as the quality ceiling and tuned open-weight judge as the cost frontier around the Carnot verifier.",
+      "failure_mode": "ThinkPRM is a long-CoT generative verifier with process supervision; it is too costly to be treated as Carnot's efficiency mechanism.",
+      "implication": "The moat should separate quality from cost: Carnot can lose quality to a strong PRM only if it clearly wins the cost-normalized frontier.",
+      "name": "ThinkPRM process-verifier comparator",
+      "url": "https://arxiv.org/abs/2504.16828"
+    },
+    {
+      "arxiv_id_or_url": "2510.20607",
+      "carnot_stack_mapping": "CEM maps conceptually to learned compositional ARC energies, but the adjacent GAP-3 trained-content-energy selector lineage is retired and cannot be activated by the ingestion workflow.",
+      "experiment_mapping": "Record CEM only in cem_operator_authorization_flag: operator authorization and gate-1R are required before any activation, and auto-activation is explicitly not recommended.",
+      "failure_mode": "The retired lineage fit synthetic curricula yet landed at random on real candidate selection; CEM also does not by itself solve the real-mined near-miss gate that the manifest requires.",
+      "implication": "The operator should see CEM as a possible future reopened line, not as a recommended automatic .389 experiment.",
+      "name": "CEM operator authorization flag",
+      "url": "https://arxiv.org/abs/2510.20607"
+    }
+  ]
+}
