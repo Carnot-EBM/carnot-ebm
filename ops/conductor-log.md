@@ -8480,3 +8480,4 @@ c |
 | 2026-06-14 14:06 UTC | Plan milestone 2026.06.389 | OK | 11 tasks proposed |
 | 2026-06-14 14:08 UTC | Milestone 2026.06.389 activated | OK | 11 tasks queued |
 | 2026-06-14 14:23 UTC | Archive .388 -> activate .389; KEEP the hardened g | OK | 91 passed, 1 warning in 7.01s |
+| 2026-06-14 14:45 UTC | PHASE A1 (BUILD) -- Verifier-as-reward Phase-0 gat | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
