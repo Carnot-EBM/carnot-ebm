@@ -33,6 +33,10 @@ sys.path.insert(0, NANO_TRM)
 from src.nn.sudoku_evaluator import SudokuEvaluator  # noqa: E402
 from src.nn.utils.constants import IGNORE_LABEL_ID  # noqa: E402
 
+# Sudoku-Extreme token encoding: token = digit + 2 (labels are {3..11} for digits 1..9;
+# input token 2 = blank). Decode digit = token - TOKEN_OFFSET before constraint checks.
+TOKEN_OFFSET = 2
+
 STABLE = "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt"
 DATA_DIR = f"{NANO_TRM}/data/sudoku_extreme_1k_aug_1k"
 OUT = Path("/home/ianblenke/github.com/ianblenke/carnot/results/verifier_detector_auroc.json")
@@ -97,7 +101,7 @@ def main() -> None:
     lab0 = first["output"][:16]
     gv = 0
     for i in range(lab0.shape[0]):
-        g = lab0[i].reshape(n, n)
+        g = lab0[i].reshape(n, n).long() - TOKEN_OFFSET
         if constraint_sat_fraction(g, n) == 1.0:
             gv += 1
     sanity["gold_valid_frac"] = gv / lab0.shape[0]
@@ -125,7 +129,7 @@ def main() -> None:
             lab = label[i]
             mk = mask[i]
             is_corr = bool(((p == lab) | (~mk)).all().item())
-            grid = p.reshape(n, n).clamp(0, n)  # decode tokens->digits (identity per sanity)
+            grid = p.reshape(n, n).long() - TOKEN_OFFSET  # decode tokens->digits (token=digit+2)
             vscore = constraint_sat_fraction(grid, n)
             scores.append(vscore)
             labels.append(1 if is_corr else 0)
