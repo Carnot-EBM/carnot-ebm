@@ -8,6 +8,47 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-14 Exp 4192 - .388 planning sweep SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-efficiency-gap4-diffusion-v389-2026-06-14.md`.
+
+**Filtered track:** DiffusionGemma verifier-guided test-time scale-up,
+efficiency-moat LLM-judge comparator and cost normalization, plus the CEM
+operator-authorization closure for the retired GAP-3 trained-content-energy
+selector lineage.
+
+**Seed and fresh-pass candidates marked ingested:**
+- Test-Time Scaling with Diffusion Language Models via Reward-Guided Stitching,
+  arXiv:2602.22871 - mapped to step-level DiffusionGemma guidance and stitching
+  ablations.
+- S^3 Stratified Scaling Search, arXiv:2604.06260 - mapped to the strongest
+  `.389` DiffusionGemma verifier-guided denoising-search target.
+- Self-Rewarding SMC, arXiv:2602.01849 - mapped as the self-guided particle
+  control for the DiffusionGemma scale-up.
+- Tuning LLM Judge Design Decisions for 1/1000 of the Cost,
+  OpenReview:cve4NOiyVp / arXiv:2501.17178 - mapped to tuned LLM-judge
+  comparator and cost-normalized moat accounting.
+- When To Solve/Verify, arXiv:2504.01005 - mapped to the fixed-budget
+  solve-versus-verify normalization bar.
+- ThinkPRM, arXiv:2504.16828 - mapped as the high-quality but expensive
+  process-verifier comparator.
+- CEM, arXiv:2510.20607 - re-flagged to the operator only:
+  `operator_authorization_required=true`, `auto_activation_recommended=false`,
+  retirement marker `gap3_trained_content_energy_selector_retired_stage2v2_2026_06_09`.
+
+cem_operator_authorization_flag:
+`source_id=2510.20607; operator_authorization_required=true; auto_activation_recommended=false; retirement_marker=gap3_trained_content_energy_selector_retired_stage2v2_2026_06_09`.
+
+flagged_for_v389:
+`s3_diffusiongemma_verifier_guided_search_scaleup_v389`.
+
+Flagged for .389: `s3_diffusiongemma_verifier_guided_search_scaleup_v389`.
+
+**Bottom line for the .389 roadmap:** run the S^3-style DiffusionGemma
+verifier-guided denoising search first, with Reward-Guided Stitching and
+Self-Rewarding SMC as ablation/control arms and judge-cost normalization around
+the efficiency moat. Keep CEM on the operator surface only; do not activate it
+until operator authorization is granted and gate-1R is passed.
 ## 2026-06-14 Exp 4180 - .387 planning sweep SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-moat-gap3-diffusion-v388-2026-06-14.md`.
