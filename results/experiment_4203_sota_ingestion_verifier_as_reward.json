@@ -1,0 +1,83 @@
+{
+  "field_principles": {
+    "flagged_for_v390": "Closes discover->ingest->plan: names the strongest method for the next planner (e.g. the non-Qwen replication or the math-process-reward fork).",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication (adversarial_verify discipline)."
+  },
+  "flagged_for_v390": "non_qwen_same_generator_random_label_ablation_v390",
+  "honest_verdict": "complete: sota_ingestion_verifier_as_reward_mapped_v390",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2506.10947",
+      "carnot_stack_mapping": "Hardens the verifier-as-reward stack by requiring a non-Qwen base and a same-generator random-label arm before any verifier-label gain is treated as real.",
+      "experiment_mapping": "Run Arm A verifier-certified RFT versus Arm B same-generator random-label RFT on a cached non-Qwen base, and treat A ~= B as a null verifier-as-reward result.",
+      "failure_mode": "The paper's spurious-reward gain is model-family specific; it does not prove the Carnot execution verifier is useless, but it makes a Qwen-only A-vs-B result insufficient.",
+      "implication": "A positive .390 result must separate certified labels from the structural GRPO gain that random rewards can elicit on Qwen-family models.",
+      "name": "Spurious Rewards de-confounding control",
+      "url": "https://arxiv.org/abs/2506.10947"
+    },
+    {
+      "arxiv_id_or_url": "2601.11061",
+      "carnot_stack_mapping": "Adds a diagnostic layer for shortcut activation: inspect whether reward training lowers answer-token uncertainty while degrading prompt-side coherence or activating memorized-solution circuits.",
+      "experiment_mapping": "Log a memorization-shortcut diagnostic beside held-out pass@1: answer-token perplexity, prompt coherence, and wrong-label shortcut probes for Arms A and B.",
+      "failure_mode": "The mechanism is reported for Qwen-style RLVR behavior; it is a diagnostic template, not a guaranteed detector for every non-Qwen base.",
+      "implication": "The A-vs-B result needs an internal shortcut check so a lift cannot be mistaken for new reasoning when it is contaminated retrieval.",
+      "name": "Memorization-shortcut diagnostic",
+      "url": "https://arxiv.org/abs/2601.11061"
+    },
+    {
+      "arxiv_id_or_url": "2601.04411",
+      "carnot_stack_mapping": "Converts verifier quality into an explicit training precondition: report TPR, FPR, and Youden-J before reward training is interpreted.",
+      "experiment_mapping": "Add Youden-J reporting to .390: exact execution labels should show J >> 0, while noisy learned verifiers must be rejected if J <= 0.",
+      "failure_mode": "A positive J rescales the convergence argument but does not remove the spurious-reward confound or the need for random-label control.",
+      "implication": "Execution-verifier RFT can be meaningful only if J = TPR - FPR is positive on the held-out label distribution.",
+      "name": "Youden-J reward-noise gate",
+      "url": "https://arxiv.org/abs/2601.04411"
+    },
+    {
+      "arxiv_id_or_url": "2410.02089",
+      "carnot_stack_mapping": "Sets the code-RLVR baseline where execution feedback is the reward channel and iterative code repair is part of the learned behavior.",
+      "experiment_mapping": "Report .390 against an RLEF-style execution-feedback baseline: samples, wall time, verifier calls, and pass@1 must be comparable.",
+      "failure_mode": "RLEF validates execution feedback as useful, but does not isolate verifier labels from generator distillation or random-reward gains.",
+      "implication": "A verifier-as-reward win must beat execution-feedback RL or show a cleaner de-confounded label contribution under the same budget.",
+      "name": "RLEF execution-feedback baseline",
+      "url": "https://arxiv.org/abs/2410.02089"
+    },
+    {
+      "arxiv_id_or_url": "2601.12186",
+      "carnot_stack_mapping": "Supplies the verifier-training recipe knobs: thinking traces, negative samples, and on-policy training across model scale.",
+      "experiment_mapping": "Use Aletheia as the implementation baseline for code-verifier recipe choices, not as evidence that Arm A beats Arm B.",
+      "failure_mode": "It optimizes verifier training and selection accuracy; it does not answer whether the verifier label adds reward signal beyond the same-generator random-label arm.",
+      "implication": "The non-Qwen A-vs-B replication should keep the operator's on-policy discipline and record whether negative traces stabilize the verifier reward.",
+      "name": "Aletheia code-verifier recipe",
+      "url": "https://arxiv.org/abs/2601.12186"
+    },
+    {
+      "arxiv_id_or_url": "2602.17684",
+      "carnot_stack_mapping": "Defines the execution-free reward-model baseline for code when unit tests are unavailable or too costly.",
+      "experiment_mapping": "Add CodeScaler-style reward-model rows to the .390 comparison table where test availability and latency are the bottlenecks.",
+      "failure_mode": "CodeScaler is trained on curated preference data and can inherit model-specific reward-model bias; it is a baseline frontier, not the de-confounding control.",
+      "implication": "If Carnot's execution verifier is framed as cheap reward signal, it still needs to beat a trained code reward model on accuracy, latency, and data requirements.",
+      "name": "CodeScaler reward-model baseline",
+      "url": "https://arxiv.org/abs/2602.17684"
+    },
+    {
+      "arxiv_id_or_url": "2604.03128",
+      "carnot_stack_mapping": "Maps to the math-process-reward fork: verifier feedback supplies update direction while self-distillation supplies token-level magnitude.",
+      "experiment_mapping": "Queue a math-process-reward fork after the non-Qwen A-vs-B gate: compare sparse verifier reward, RLSD modulation, and CEPO-style contrastive evidence.",
+      "failure_mode": "Pure privileged self-distillation can leak answers or destabilize training; RLSD helps only if the verifier direction remains clean.",
+      "implication": "After the A-vs-B confound is cleared, .390 can fork into dense math-process rewards without abandoning verifier grounding.",
+      "name": "Self-distilled process-reward fork",
+      "url": "https://arxiv.org/abs/2604.03128"
+    },
+    {
+      "arxiv_id_or_url": "2510.14913",
+      "carnot_stack_mapping": "Frames Carnot's cheap verifier as a hybrid with self-consistency, not as a standalone replacement for all judge or verifier compute.",
+      "experiment_mapping": "Carry the hybrid-verifier plus SC framing into the .390 table: same candidate budget, same verifier-call budget, and cost per accepted correct solution.",
+      "failure_mode": "A hybrid can win cost-normalized inference while saying nothing about whether verifier labels are a clean training reward.",
+      "implication": "The .390 report needs fixed-budget SC, verifier-only, and verifier-plus-SC rows so accuracy gains are cost-normalized.",
+      "name": "Budget-aware verifier plus self-consistency hybrid",
+      "url": "https://arxiv.org/abs/2510.14913"
+    }
+  ]
+}

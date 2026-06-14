@@ -20512,6 +20512,89 @@ files untouched.
 |---|---|---|
 | REQ-REPORT-4192 | Implemented (`python/carnot/experiment_4192_sota_ingestion_efficiency_gap4_diffusion.py`, `docs/research-notes/sota-ingestion-efficiency-gap4-diffusion-v389-2026-06-14.md`) | Implemented (`tests/python/test_experiment_4192_sota_ingestion_efficiency_gap4_diffusion.py`) |
 
+### REQ-REPORT-4203: Ingest The .389 Verifier-As-Reward Sweep Into A .390 Plan
+
+The Exp 4203 SOTA-ingestion workflow SHALL ingest the `.389 planning sweep`
+from `research-references.md` into an actionable SOTA-to-experiment mapping
+for the `.390` planner. The workflow SHALL read the `.389 planning sweep`,
+`research-studying.md`, and
+`results/experiment_4199_verifier_reward_decisive_a_vs_b_collect.json`; SHALL
+run the reliable discovery helpers `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py` with focused low-concurrency queries; SHALL
+verify the top mapped sources with low-concurrency WebSearch/WebFetch; and
+SHALL NOT invoke `/deep-research` or modify `scripts/research_conductor.py`.
+
+The markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-verifier-as-reward-v390-2026-06-14.md` and
+the machine-checkable mapping artifact SHALL be written to
+`results/experiment_4203_sota_ingestion_verifier_as_reward.json`. The required
+runner SHALL be
+`results/experiment_4203_sota_ingestion_verifier_as_reward.py` and SHALL
+delegate to `python/carnot/experiment_4203_sota_ingestion_verifier_as_reward.py`.
+
+The note SHALL map the confound papers, including Spurious Rewards
+(`arXiv:2506.10947`), the memorization-shortcut diagnostic
+(`arXiv:2601.11061`), and RLV-epsilon-R / Youden-J reward-noise reporting
+(`arXiv:2601.04411`), to hardening the `.389` A-vs-B design with a non-Qwen
+base, same-generator random-label ablation, Youden-J reporting, and a
+memorization-shortcut diagnostic; it SHALL map Verification Limits Code LLM
+Training (`arXiv:2509.20837`) to calibrated verifier filtering rather than
+over-rigid acceptance. It SHALL map code-RLVR baselines such as RLEF
+(`arXiv:2410.02089`), Aletheia (`arXiv:2601.12186`), and CodeScaler
+(`arXiv:2602.17684`) to the baseline frontier that any positive `.389` result
+must beat. It SHALL map process/self-distillation sources such as Self-Distilled
+RLVR (`arXiv:2604.03128`) and CEPO (`arXiv:2605.19436`) to the `.390`
+math-process-reward fork, with ThinkPRM (`arXiv:2504.16828`) as the expensive
+process-verifier comparator. It SHALL map budget-aware discriminative
+verification (`arXiv:2510.14913`) and the solve-versus-verify compute trade-off
+(`arXiv:2504.01005`) to the hybrid verifier plus self-consistency framing.
+
+For each mapped method, the note SHALL state the Carnot stack mapping, what the
+method implies for the next experiment, where the method fails or does not by
+itself prove Carnot's claim, and the concrete experiment target. The note SHALL
+record that Exp 4199 was blocked by its upstream training-launched gate and
+SHALL NOT present the A-vs-B result as complete.
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v390`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, and `flagged_for_v390`. `honest_verdict`
+SHALL use a terminal prefix and, on the complete path, start with
+`complete: sota_ingestion_verifier_as_reward_mapped_v390`. `methods_mapped`
+SHALL contain five to eight dicts with exactly `name`, `arxiv_id_or_url`,
+`url`, `carnot_stack_mapping`, `implication`, `failure_mode`, and
+`experiment_mapping`; each `arxiv_id_or_url` SHALL be one of the
+WebFetch-verified arXiv IDs, preventing fabricated or uncited method rows.
+`flagged_for_v390` SHALL be a non-empty concrete roadmap slug naming the single
+strongest `.390` method, and for this ingestion SHALL name the non-Qwen
+same-generator random-label A-vs-B replication because Spurious Rewards makes
+that the load-bearing de-confounding gate.
+
+The workflow SHALL update `research-studying.md` idempotently to mark the
+`.389 planning sweep` as ingested, SHALL include `flagged_for_v390`, and SHALL
+NOT update `ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-4203: The .389 Sweep Closes Into A .390 De-Confounded Reward Plan
+
+**Given** the `.389 planning sweep` filed verifier-as-reward confounds,
+code-RLVR baselines, process/self-distillation candidates, and cost-crossover
+hybrid framing
+**And** Exp 4199 reports a blocked A-vs-B collection gate rather than a
+completed result
+**When** the Exp 4203 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON mapping artifact, maps
+verified sources to Carnot stack implications, failure modes, and concrete
+experiment targets, updates `research-studying.md` idempotently, flags the
+single strongest `.390` follow-up, and leaves conductor and reconciliation
+files untouched.
+
+## Implementation Status (REQ-REPORT-4203)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4203 | Implemented (`python/carnot/experiment_4203_sota_ingestion_verifier_as_reward.py`, `docs/research-notes/sota-ingestion-verifier-as-reward-v390-2026-06-14.md`) | Implemented (`tests/python/test_experiment_4203_sota_ingestion_verifier_as_reward.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone

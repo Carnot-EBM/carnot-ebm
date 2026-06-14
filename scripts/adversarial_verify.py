@@ -1006,6 +1006,109 @@ def _flatten_metrics(d: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
+_MOAT_HEADLINE_MARKERS = (
+    "moat_won",
+    "moat_proven",
+    "moat proven",
+    "moat-proven",
+    "efficiency_moat_won",
+    "verifier_value_added_true",
+    "verifier_efficiency_win",
+)
+
+
+def _claims_moat(d: dict[str, Any]) -> bool:
+    """True if the artifact headlines a verifier moat / superiority win."""
+    if d.get("verifier_value_added") is True or d.get("verifier_efficiency_win") is True:
+        return True
+    for key in ("honest_verdict", "headline_outcome", "headline"):
+        v = d.get(key)
+        if isinstance(v, str) and any(m in v.lower() for m in _MOAT_HEADLINE_MARKERS):
+            return True
+    return False
+
+
+def _flips_gate(d: dict[str, Any]) -> bool:
+    """True if the artifact asserts a (DiffusionGemma) gate is MET / flipped."""
+    v = d.get("diffusiongemma_gate_status")
+    if isinstance(v, str) and v.strip().upper() == "MET":
+        return True
+    g = d.get("diffusiongemma_gate")
+    if isinstance(g, dict) and (
+        g.get("met") is True or str(g.get("status", "")).strip().upper() == "MET"
+    ):
+        return True
+    hv = d.get("honest_verdict")
+    if isinstance(hv, str) and ("gate_met" in hv.lower() or "diffusiongemma_met" in hv.lower()):
+        return True
+    return False
+
+
+def check_circular_moat_overclaim(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Circularity / oracle-distinctness guard (2026-06-14, operator-directed).
+
+    A verifier "moat" / efficiency win is a NON-CIRCULAR claim only when the
+    verifier is INDEPENDENT of the executable oracle that defines correctness.
+    Where the verifier IS the oracle (run the unit tests on HumanEval,
+    check_sudoku_validity, etc.), beating self-consistency or an LLM-judge is
+    true-but-circular: it does NOT show a learned/energy verifier adds value, and
+    it must NOT headline a moat or flip a gate. Every moat/gate claim must declare
+    ``verifier_is_oracle: bool``.
+
+    Origin: the .387/.388 capstones over-claimed the code/efficiency win as
+    "moat proven" and flipped the DiffusionGemma gate to MET on a circular
+    (verifier==oracle) result; only the operator caught it, twice. This turns that
+    manual catch into a mechanical guard. See CLAUDE.md "Circularity /
+    Oracle-Distinctness Discipline".
+    """
+    if not (_claims_moat(d) or _flips_gate(d)):
+        return
+    vio = d.get("verifier_is_oracle")
+    if _flips_gate(d) and vio is not False:
+        # The precise over-claim: headlining a gate-flip while the verifier is
+        # the oracle (or undeclared). CRITICAL -> the artifact may not flip the
+        # gate; a circular result is not gate-eligible.
+        flags.append(
+            Flag(
+                kind="CIRCULAR_MOAT_OVERCLAIM",
+                severity="critical",
+                detail=(
+                    f"Artifact flips a gate/headlines a moat but verifier_is_oracle={vio!r} "
+                    "(not False). A circular or oracle-undeclared verifier cannot flip a gate "
+                    "or headline 'moat proven' -- only an oracle-DISTINCT (learned/energy) win "
+                    "is headline/gate-eligible. Declare verifier_is_oracle=False and use an "
+                    "oracle-distinct verifier, or do not flip the gate."
+                ),
+            )
+        )
+    elif vio is None:
+        flags.append(
+            Flag(
+                kind="CIRCULAR_MOAT_OVERCLAIM",
+                severity="warn",
+                detail=(
+                    "Verifier-value/moat claim does not declare verifier_is_oracle. Is the "
+                    "verifier the SAME executable oracle that defines correctness (circular, "
+                    "NOT headline-eligible) or oracle-distinct (learned/energy, headline-"
+                    "eligible)? Declare verifier_is_oracle: bool."
+                ),
+            )
+        )
+    elif vio is True:
+        flags.append(
+            Flag(
+                kind="CIRCULAR_MOAT_OVERCLAIM",
+                severity="warn",
+                detail=(
+                    "verifier_is_oracle=True: EXECUTION-GROUNDED CIRCULAR win (the verifier IS "
+                    "the oracle). Valid as a result, but NOT headline-eligible as 'moat proven' "
+                    "and may not flip a gate -- the non-circular claim (oracle-distinct "
+                    "learned/energy verifier) remains the open frontier."
+                ),
+            )
+        )
+
+
 def verify_artifact(path: Path) -> dict[str, Any]:
     """Run all checks on a single artifact. Return a report dict."""
     try:
@@ -1085,6 +1188,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_implausible_tight_ci(d, flags)
     check_false_negative_risk(d, flags)
     check_ceiling_saturation(d, flags)
+    check_circular_moat_overclaim(d, flags)
 
     verdict_raw = d_raw.get("honest_verdict") or ""
     verdict = verdict_raw if isinstance(verdict_raw, str) else ""
