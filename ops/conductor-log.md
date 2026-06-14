@@ -8489,3 +8489,4 @@ c |
 | 2026-06-14 15:55 UTC | PHASE C1 -- ARC-AGI-3 INCREMENTAL +1 (monotonic).  | OK | 90 passed, 1 warning in 5.89s |
 | 2026-06-14 16:12 UTC | PHASE C2 -- ARC-AGI-3 LIVE-env: run the PROVEN Car | OK | 88 passed, 1 warning in 6.98s |
 | 2026-06-14 16:28 UTC | PHASE D1 -- SOTA-INGESTION SLOT (reserved; bleedin | OK | 102 passed, 1 warning in 6.48s |
+| 2026-06-14 16:46 UTC | PHASE D2 -- VERIFIER-REGISTRY + GAPS HYGIENE (rese | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
