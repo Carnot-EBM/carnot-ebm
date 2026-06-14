@@ -39728,7 +39728,11 @@ milestones:
     \ + V-STaR learned selector + GAP-3 Stage-1 model-native ARC energy (CPU; dump exists); DiffusionGemma stays GATED"
   doc: openspec/change-proposals/research-roadmap-v387.md
   completed: '2026-06-14'
-  finding: '.387 close-state: verifier moat PROVEN-headroom-present on the code executable domain with verifier_value_added=true, delta +0.18, CI95[0.08,0.30], and matched control delta +0.18. The accuracy moat is proven, but efficiency_parity=false because the verifier was compared against vote rather than an LLM-as-judge. GAP-3 Stage-1 is BOUNDED (latent AUROC 0.89, selection delta 0.0); DiffusionGemma gate MET; ARC total_levels_solved=14, total_games_solved=13. .388 must win the efficiency axis and harden the proven execution path while the conductor stays stood down on TRM training.'
+  finding: '.387 close-state: verifier moat PROVEN-headroom-present on the code executable domain with verifier_value_added=true,
+    delta +0.18, CI95[0.08,0.30], and matched control delta +0.18. The accuracy moat is proven, but efficiency_parity=false
+    because the verifier was compared against vote rather than an LLM-as-judge. GAP-3 Stage-1 is BOUNDED (latent AUROC 0.89,
+    selection delta 0.0); DiffusionGemma gate MET; ARC total_levels_solved=14, total_games_solved=13. .388 must win the efficiency
+    axis and harden the proven execution path while the conductor stays stood down on TRM training.'
   activation_recorded: exp4184-archive-v387-activate-v388
   tasks:
   - id: exp4174-archive-v386-activate-v387
@@ -39806,4 +39810,111 @@ milestones:
       \ + gates); ARC = exp4179; SOTA = exp4180. Resolve whether the DiffusionGemma gate is NOW MET. SKIP any flagged_adversarial\
       \ artifact; cite upstream sha256. NO gated_on."
     deliverable: results/experiment_4183_capstone_v387.json
+    result: OK (conductor)
+- id: 2026.06.388
+  title: "HARDEN THE VERIFIER MOAT WHERE IT MATTERS \u2014 efficiency vs LLM-as-judge (the owed north-star \xA75 win) + GAP-4\
+    \ execution-verifier production-safety + a SOVEREIGN local generator + the now-unlocked DiffusionGemma verifier-guided\
+    \ decoding"
+  doc: openspec/change-proposals/research-roadmap-v388.md
+  completed: '2026-06-14'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4184-archive-v387-activate-v388
+    title: Archive .387 -> activate .388; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
+      + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .387
+      close-state (verifier moat PROVEN-headroom-present on code, exp4177 verifier_value_added=true delta +0.18 CI95[0.08,0.30]
+      but efficiency_parity=false; GAP-3 Stage-1 BOUNDED exp4178; DiffusionGemma gate MET; ARC total_levels_solved=14/total_games_solved=13).
+    deliverable: results/experiment_4184_archive_v387_activate_v388.json
+    result: OK (conductor)
+  - id: exp4185-headroom-recensus-llm-judge-harness
+    title: "PHASE A1 \u2014 Headroom re-census + LLM-as-judge baseline harness + REAL cost meter. Reuse scripts/headroom_gate.py\
+      \ to re-establish the executable-headroom domain(s) (code proven 0.18; attempt a 2nd executable pool \u2014 MBPP/EvalPlus\
+      \ or held-out Sudoku \u2014 generating candidates from a SOTA GGUF behind a PRECONDITIONS cache check if none cached).\
+      \ BUILD the LLM-as-judge arm (a SOTA GGUF prompts a best-candidate selection) with per-call wall-clock + token instrumentation;\
+      \ SMOKE it on >=3 real candidates. Emit max_selectable_headroom (BARE) + llm_judge_ready + the cost meter. The comparator\
+      \ + positive control A2 requires."
+    deliverable: results/experiment_4185_headroom_recensus_llm_judge_harness.json
+    result: OK (conductor)
+  - id: exp4186-efficiency-moat-verifier-vs-llm-judge
+    title: "PHASE A2 (DECISIVE, gated_on A1 headroom>=0.10) \u2014 the EFFICIENCY moat: Carnot executable/energy verifier\
+      \ + V-STaR selector (ARM A) vs LLM-as-judge (ARM J) vs SC-vote (ARM B) vs oracle, on the headroom-present executable\
+      \ domain. Report accuracy parity (bootstrap CI95 on pass@1(A)-pass@1(J)) AND the REAL cost ratio (verifier wall-clock/tokens\
+      \ / judge wall-clock/tokens). verifier_efficiency_win := A within-CI of J on accuracy AND >=10x cheaper (or strict Pareto-dominance).\
+      \ Resolves the north-star \xA75 efficiency-parity question with REAL cost (fixes the .387 abstract-cost-unit caveat)."
+    deliverable: results/experiment_4186_efficiency_moat_verifier_vs_llm_judge.json
+    result: OK (conductor)
+  - id: exp4187-gap4-graded-execution-gate-hardening
+    title: "PHASE B1 \u2014 GAP-4 graded execution-energy gate (production-safe). Implement+validate the graded min-hamming\
+      \ gate (tau=0.005 ONLY + a vote-aware guard blocking the measured exact-match mis-promotion over high-vote gold, the\
+      \ 25094a63 case) on the non-degenerate ARC-1 venue. The agreement signal STAYS a confidence label only (exp4023 retired\
+      \ agreement-as-selector). Report pass@1/pass@2 vs vote, the gross +/- ledger, and band precision at tau<=0.02. Makes\
+      \ the proven +4/-0 GAP-4 verifier safe for a richer candidate pool. READ-ONLY w.r.t. TRM training."
+    deliverable: results/experiment_4187_gap4_graded_execution_gate_hardening.json
+    result: OK (conductor)
+  - id: exp4188-sovereign-local-generator-gap4-self-distill
+    title: "PHASE B2 (SELF-LEARNING + decentralization) \u2014 Sovereign local generator + GAP-4-verified self-distillation.\
+      \ Replace codex with a LOCAL open-weight generator (gemma-4-26B-A4B-it-GGUF / Qwen3.6-35B-A3B-GGUF) for ARC program\
+      \ induction: does a fully-sovereign generator + the hardened GAP-4 execution verifier recover ARC headroom with NO closed-weight\
+      \ call (decentralization rule 1)? The verifier labels demo-perfect induced programs; those verified programs form a\
+      \ self-distillation corpus (Tier-2/Tier-3 \u2014 the verifier TEACHES the local generator). Report local induction rate\
+      \ vs codex, pool-rerank pass@2, distillation-corpus size."
+    deliverable: results/experiment_4188_sovereign_local_generator_gap4_self_distill.json
+    result: OK (conductor)
+  - id: exp4189-diffusiongemma-verifier-guided-decoding
+    title: "PHASE C1 \u2014 DiffusionGemma verifier-guided decoding (gate MET; feasibility + smoke). The DiffusionGemma gate\
+      \ flipped MET (exp4177). HARD PRECONDITION: DiffusionGemma cached/downloadable AND exposes per-step token logits (NOT\
+      \ cached as of 2026-06-14 \u2014 else honest blocked verdict). Use Carnot's EXECUTABLE verifier ensemble as the GUIDANCE\
+      \ energy reweighting per-step token selection during denoising on an executable domain (code/Sudoku); guided vs unguided\
+      \ vs AR-baseline, small n, bootstrap CI. Feasibility+smoke (NOT a headline benchmark); a clean blocked verdict is COMPLETE\
+      \ and de-risks the .389 scale-up."
+    deliverable: results/experiment_4189_diffusiongemma_verifier_guided_decoding.json
+    result: OK (conductor)
+  - id: exp4190-arc-incremental-progress
+    title: "PHASE C2 \u2014 ARC-AGI-3 INCREMENTAL +1 (monotonic). Advance the solved-LEVEL count by >=1 via the PROVEN explore-first\
+      \ method, using the HARDENED GAP-4 stack (B1): bounded active-exploration OBSERVES transitions -> induce mechanic +\
+      \ goal predicate -> GAP-4 verifier validates on HELD-OUT transitions -> act only if validated. Target the next deeper\
+      \ level of an already-solved game (non-spatial first-levels exhausted) or a spatial L1. REAL-ENV-CONFIRM any solve;\
+      \ STOP at the first level that fails. Honest no-solve is COMPLETE."
+    deliverable: results/experiment_4190_arc_incremental_progress.json
+    result: OK (conductor)
+  - id: exp4191-arc-live-env-grounding-probe
+    title: "PHASE C3 \u2014 ARC-AGI-3 LIVE-env grounding probe (the \xA70 unblocked north-star step). Connect the EXISTING\
+      \ offline harness (python/carnot/agentic/arc_agi3_world_model.py) to the live SDK (arc_agi, anonymous key), enumerate\
+      \ the 25 live environments, and run a random/greedy baseline to establish the REAL-env metric pipeline (EnvironmentScore.score\
+      \ / levels_completed = ACCURACY; actions vs baseline_actions = EFFICIENCY). NO leaderboard submission (operator-only);\
+      \ NO scored online play beyond a reachability/baseline probe (online quota gate stays). Honest blocked_arc_live_* if\
+      \ access fails."
+    deliverable: results/experiment_4191_arc_live_env_grounding_probe.json
+    result: OK (conductor)
+  - id: exp4192-sota-ingestion-efficiency-gap4-diffusion
+    title: "PHASE D1 \u2014 SOTA-INGESTION SLOT (reserved; bleeding-edge track). Ingest the .388 sweep mapped onto the efficiency-moat\
+      \ / GAP-4-sovereignty / DiffusionGemma stack: arXiv 2602.22871 (reward-guided diffusion stitching), 2604.06260 (S^3\
+      \ stratified scaling search), openreview cve4NOiyVp (1/1000-cost LLM judge), 2504.01005 (SC cost crossover), 2504.16828\
+      \ (ThinkPRM). RE-FLAG CEM 2510.20607 as needing OPERATOR authorization (trained-content-energy SELECTOR lineage is retired).\
+      \ SOTA->experiment mapping note; flag the strongest for .389. Cite real arXiv IDs."
+    deliverable: results/experiment_4192_sota_ingestion_efficiency_gap4_diffusion.json
+    result: OK (conductor)
+  - id: exp4193-verifier-registry-gaps-hygiene
+    title: "PHASE D2 \u2014 VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval\
+      \ reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates (zero codex/GGUF/GPU).\
+      \ RECORD the .388 state into ops/verifier_gaps.md: the efficiency-moat verdict (exp4186 verifier_efficiency_win + cost\
+      \ ratio), the GAP-4 graded-gate (exp4187), and the sovereign-generator result (exp4188). Keep ops/verifier_registry.yaml\
+      \ + ops/verifier_gaps.md the honest source of truth (never-prune)."
+    deliverable: results/experiment_4193_verifier_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4194-hardware-continuity
+    title: "PHASE D3 \u2014 Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 terminal/opportunistic).\
+      \ Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile\
+      \ flash). PolarFire (ssh polarfire; toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal).\
+      \ Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock\
+      \ timers per board."
+    deliverable: results/experiment_4194_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4195-capstone-v388
+    title: "PHASE D4 \u2014 Capstone .388 (UNGATED): headline question is IS THE VERIFIER MOAT WON ON THE AXIS THE NORTH STAR\
+      \ NEEDS \u2014 EFFICIENCY-PARITY vs an LLM-as-judge (exp4186), AND IS THE ARC EXECUTION VERIFIER NOW PRODUCTION-SAFE\
+      \ (exp4187) AND SOVEREIGN (exp4188)? Aggregate: EFFICIENCY = exp4186 (verifier_efficiency_win + cost ratio + CI); GAP-4\
+      \ GRADED GATE = exp4187; SOVEREIGN GEN = exp4188; DIFFUSIONGEMMA = exp4189; ARC = exp4190; LIVE-ENV = exp4191; SOTA\
+      \ = exp4192. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on."
+    deliverable: results/experiment_4195_capstone_v388.json
     result: OK (conductor)
