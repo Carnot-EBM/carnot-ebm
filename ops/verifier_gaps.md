@@ -839,3 +839,23 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: continue sovereign generator improvement and self-distill from verifier-labeled demo-perfect programs before any clean filled claim.
 - priority: high
 <!-- exp4193-sovereign-generator:end -->
+
+<!-- exp4204-gap-reward:start -->
+### GAP-REWARD: Exp 4204 .389 verifier-as-reward A-vs-B axis
+- status: blocked_a_vs_b_not_collected_training_not_launched
+- evidence: `results/experiment_4199_verifier_reward_decisive_a_vs_b_collect.json` with Phase-0 `results/experiment_4197_verifier_reward_phase0_headroom_harness_build.json`; phase0_precision=0.9561855670103093; youden_j=0.4137931034482759; phase0_gate_clean=true; training_launched=false; verifier_label_carries_signal=false; a_vs_b_delta=None; a_vs_b_ci95=None; honest_verdict=blocked_gate_check_failed.
+- failure mode: the clean Phase-0 operating point exists, but the decisive A-vs-B collection is blocked because the 3-arm training launch did not produce a live checkpoint; no reward-signal win is claimable.
+- missing discriminator: decision-grade evidence that verifier-certified labels beat same-generator random-label controls on held-out hidden tests.
+- candidate design: relaunch/resume the stable 3-arm training run, require gold-control and truncation guards, and promote only if the A-vs-B CI excludes zero.
+- priority: high
+<!-- exp4204-gap-reward:end -->
+
+<!-- exp4204-certified-corpus:start -->
+### GAP-REWARD-CERTIFIED-CORPUS-4200: Exp 4204 certified ARC corpus distill-lift note
+- status: certified_corpus_built_distill_lift_uninformative
+- evidence: `results/experiment_4200_certified_arc_corpus_distill_lift.json`; certified_corpus_size=16; certification_precision.rate=0.9375; distill_lift_ci95=[0.0, 0.0]; invisible_leash_diagnosis=uninformative; seeded_generation_status=missing_seeded_checkpoint_conservative_flat; flagged_adversarial=true.
+- failure mode: the GAP-4 certified corpus exists and is high precision, but the cheap seeded-vs-cold local induction read is uninformative because the seeded checkpoint is missing; no latent distillation lift is established.
+- missing discriminator: measured seeded local generation or LoRA distillation lift from verifier-certified ARC programs.
+- candidate design: materialize the seeded checkpoint or run the bounded LoRA-distill follow-up before claiming the certified labels train a better local generator.
+- priority: high
+<!-- exp4204-certified-corpus:end -->

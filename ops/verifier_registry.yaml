@@ -282,6 +282,17 @@ verifiers:
     exp4193_gap4_graded_gate_pass2_vs_vote: 0.129
     exp4193_sovereign_local_hardened_gate_pass2: 0.4839
     exp4193_sovereign_self_distillation_corpus_size: 7
+    eval_exp_4204: results/experiment_4204_verifier_registry_gaps_hygiene.json
+    exp4204_regression_guard_passed: true
+    exp4204_arc1_rule_exec_vote_pass2: 0.4516
+    exp4204_arc1_rule_exec_gated_pass2: 0.5806
+    exp4204_arc1_headroom_recovered: 4
+    exp4204_arc1_vote_wins_lost: 0
+    exp4204_verifier_label_carries_signal: false
+    exp4204_phase0_precision: 0.9561855670103093
+    exp4204_youden_j: 0.4137931034482759
+    exp4204_certified_corpus_size: 16
+    exp4204_distill_lift_latent_vs_absent: uninformative
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -3812,3 +3823,29 @@ verifiers:
     self_distillation_corpus_size: 7
     flagged_adversarial: true
     eval_exp_4193: results/experiment_4193_verifier_registry_gaps_hygiene.json
+  - role_id: verifier_reward_gap4_corpus_hygiene_4204
+    experiment: results/experiment_4204_verifier_registry_gaps_hygiene.json
+    role: registry_gap_ledger_hygiene_v389
+    status: verifier_reward_and_certified_corpus_recorded
+    verifier_reward_gap_id: GAP-REWARD
+    verifier_reward_status: blocked_a_vs_b_not_collected_training_not_launched
+    verifier_reward_artifact: results/experiment_4199_verifier_reward_decisive_a_vs_b_collect.json
+    phase0_precision: 0.9561855670103093
+    youden_j: 0.4137931034482759
+    training_launched: false
+    verifier_label_carries_signal: false
+    a_vs_b_delta: null
+    a_vs_b_ci95: null
+    certified_corpus_gap_id: GAP-REWARD-CERTIFIED-CORPUS-4200
+    certified_corpus_status: certified_corpus_built_distill_lift_uninformative
+    certified_corpus_artifact: results/experiment_4200_certified_arc_corpus_distill_lift.json
+    certified_corpus_size: 16
+    certification_precision:
+      certified: 16
+      correct: 15
+      rate: 0.9375
+    distill_lift_ci95:
+    - 0.0
+    - 0.0
+    distill_lift_latent_vs_absent: uninformative
+    eval_exp_4204: results/experiment_4204_verifier_registry_gaps_hygiene.json
