@@ -142,10 +142,12 @@ def run_batch(model, batch, device, K, temps):
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--checkpoint", type=str, default=STABLE)
     ap.add_argument("--K", type=int, default=16)
     ap.add_argument("--temps", type=str, default="0.7,1.0,1.3")
     ap.add_argument("--batch-size", type=int, default=128)
     ap.add_argument("--limit-batches", type=int, default=0, help="0 = full test set (smoke: 2)")
+    ap.add_argument("--out", type=str, default=OUT)
     args = ap.parse_args()
     temps = [float(t) for t in args.temps.split(",")]
 
@@ -154,7 +156,7 @@ def main():
     print(f"[probe] device={device} K={args.K} temps={temps} bs={args.batch_size}", flush=True)
 
     ev = SudokuEvaluator(
-        checkpoint_path=STABLE, data_dir=DATA_DIR, batch_size=args.batch_size,
+        checkpoint_path=args.checkpoint, data_dir=DATA_DIR, batch_size=args.batch_size,
         device="auto", eval_split="test",
     )
     ev.datamodule.setup("test")
@@ -185,7 +187,7 @@ def main():
 
     results = {"K": args.K, "temps": temps, "batch_size": args.batch_size,
                "n_batches": nb, "duration_s": round(time.time() - t0, 1),
-               "checkpoint": STABLE, "per_temperature": {}}
+               "checkpoint": args.checkpoint, "per_temperature": {}}
     best_headroom = -1.0
     for T in temps:
         n = max(1, acc[T]["n"])
@@ -203,9 +205,9 @@ def main():
         "complete: headroom_present_stage_b_greenlit" if best_headroom >= 0.05
         else "complete: no_recoverable_headroom_on_this_baseline"
     )
-    with open(OUT, "w") as f:
+    with open(args.out, "w") as f:
         json.dump(results, f, indent=2)
-    print(f"[probe] DONE best_headroom={best_headroom:.4f} greenlit={results['stage_b_greenlit']} -> {OUT}", flush=True)
+    print(f"[probe] DONE best_headroom={best_headroom:.4f} greenlit={results['stage_b_greenlit']} -> {args.out}", flush=True)
 
 
 if __name__ == "__main__":
