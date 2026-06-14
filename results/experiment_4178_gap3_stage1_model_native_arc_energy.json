@@ -1,0 +1,187 @@
+{
+  "acceptance_gate": true,
+  "adversarial_checks": {
+    "A1_permutation_control": {
+      "augmentation_strata_note": "The exported NPZ is already candidate-pooled and has no augmentation-id column; this preserves one shuffled label within each task that originally contains gold.",
+      "candidate_auroc_collapsed_to_chance": false,
+      "chance_pass2_against_true_labels": 0.143218,
+      "label_shuffle": "within_task_candidate_permutation",
+      "mean_candidate_auroc_against_true_labels": 0.826984,
+      "mean_pass2_against_true_labels": 0.193548,
+      "pass2_collapsed_to_chance": false,
+      "passed": false,
+      "resamples": 8
+    },
+    "A2_strict_oof": {
+      "disjoint_fit_eval_task_sets": true,
+      "folding": "leave_one_task_out",
+      "in_fold_candidate_auroc": 0.909524,
+      "in_fold_pass2": 0.483871,
+      "in_minus_oof_candidate_auroc": 0.015873,
+      "in_minus_oof_pass2": 0.032258,
+      "oof_candidate_auroc": 0.893651,
+      "oof_pass2": 0.451613,
+      "passed": true,
+      "selected_energy": "model_native_basis_pca_gold_mahalanobis"
+    },
+    "A3_oracle_leak_audit": {
+      "audit": "For each LOTO fold, held-out correctness labels were scrubbed before scoring; energies stayed identical.",
+      "external_gold_file_opened": false,
+      "held_out_label_scrub_max_abs_diff": 0.0,
+      "passed": true
+    },
+    "A4_bootstrap_ci95": {
+      "ci95": [
+        -0.096774,
+        0.096774
+      ],
+      "full_400_task_reconfirm_owed": true,
+      "n_tasks": 31,
+      "passed": true,
+      "point": 0.0,
+      "resamples": 2000
+    }
+  },
+  "all_four_gates_pass": false,
+  "candidate_auroc": 0.893651,
+  "candidate_auroc_detail": {
+    "gate_threshold": 0.7,
+    "hand_feature_always_on_floor": 0.67,
+    "pooled": 0.94563,
+    "selected_energy": "model_native_basis_pca_gold_mahalanobis",
+    "within_task_macro": 0.861209,
+    "within_task_pair_weighted": 0.893651
+  },
+  "coverage_detail": {
+    "defined_on_all_tasks": true,
+    "finite_candidates": 8041,
+    "total_candidates": 8041
+  },
+  "coverage_fraction": 1.0,
+  "duration_s": 19.96421,
+  "experiment_id": "4178",
+  "field_principles": {
+    "adversarial_checks": "Permutation/OOF/oracle-leak/bootstrap results; a passing gate without these is gameable (gap3 Section 4 + sample-size rigor).",
+    "candidate_auroc": "Per-candidate gold-vs-non-gold AUROC; must beat the hand-features' best always-on family (object_count 0.67) to justify the latent.",
+    "coverage_fraction": "Fraction of candidates the energy is defined on; the structural failure of hand-features was <20% coverage.",
+    "headroom_capture_fraction": "Fraction of (oracle - vote) captured; partial credit toward the 0.61 ceiling and the metric that says whether the latent reaches the proven ~13pp.",
+    "honest_verdict": "Terminal-prefixed. An honest negative (latent also does not beat vote) is a COMPLETE, decision-grade verdict.",
+    "pass2_energy_vs_vote": "Selection gate: pass@2(energy) - pass@2(vote) on held-out tasks; the single number GAP-3 lives or dies on.",
+    "random_seed": "Determinism precondition; the OOF split + probe must be reproducible.",
+    "reproducibility_checksum": "Hash of the npz + fold assignment; catches silent dump drift."
+  },
+  "fold_assignment": {
+    "0": 0,
+    "1": 1,
+    "10": 10,
+    "11": 11,
+    "12": 12,
+    "13": 13,
+    "14": 14,
+    "15": 15,
+    "16": 16,
+    "17": 17,
+    "18": 18,
+    "19": 19,
+    "2": 2,
+    "20": 20,
+    "21": 21,
+    "22": 22,
+    "23": 23,
+    "24": 24,
+    "25": 25,
+    "26": 26,
+    "27": 27,
+    "28": 28,
+    "29": 29,
+    "3": 3,
+    "30": 30,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8,
+    "9": 9
+  },
+  "gates": {
+    "candidate_auroc_gt_0p70": true,
+    "coverage_ge_0p80": true,
+    "headroom_capture_ge_0p30": false,
+    "selection_pass2_beats_vote": false
+  },
+  "headroom_capture_detail": {
+    "capture_fraction": 0.0,
+    "energy_pass2": 0.451613,
+    "oracle_minus_vote": 0.16129,
+    "oracle_pass2": 0.612903,
+    "vote_pass2": 0.451613
+  },
+  "headroom_capture_fraction": 0.0,
+  "honest_verdict": "complete: gap3_stage1_model_native_latent_honest_negative_model_native_basis_pca_gold_mahalanobis_delta_0.0000_energy_0.4516_vote_0.4516",
+  "inference_substrate": "offline_gap3_stage1_latent_npz_cpu",
+  "n_candidates": 8041,
+  "n_oracle_hit_tasks": 19,
+  "n_tasks": 31,
+  "pass2_energy_vs_vote": 0.0,
+  "pass2_energy_vs_vote_detail": {
+    "bootstrap_ci95": [
+      -0.096774,
+      0.096774
+    ],
+    "bootstrap_resamples": 2000,
+    "delta": 0.0,
+    "energy_pass2": 0.451613,
+    "oracle_pass2": 0.612903,
+    "vote_pass2": 0.451613
+  },
+  "per_energy": {
+    "learned_probe_oof_logistic": {
+      "coverage_fraction": 1.0,
+      "pass1": 0.225806,
+      "pass2": 0.354839,
+      "pooled_auroc": 0.960904,
+      "within_task_macro_auroc": 0.837685,
+      "within_task_pair_weighted_auroc": 0.78254
+    },
+    "model_native_basis_pca_gold_mahalanobis": {
+      "coverage_fraction": 1.0,
+      "pass1": 0.354839,
+      "pass2": 0.451613,
+      "pooled_auroc": 0.94563,
+      "within_task_macro_auroc": 0.861209,
+      "within_task_pair_weighted_auroc": 0.893651
+    },
+    "trm_frequency_vote": {
+      "coverage_fraction": 1.0,
+      "pass1": 0.419355,
+      "pass2": 0.451613,
+      "pooled_auroc": 0.986649,
+      "within_task_macro_auroc": 0.923492,
+      "within_task_pair_weighted_auroc": 0.957143
+    }
+  },
+  "preconditions_checked": {
+    "correct_sum": 19,
+    "no_gpu_used": true,
+    "no_trm_retrain": true,
+    "npz_exists": true,
+    "npz_path": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage1_candidate_table.npz",
+    "stable_checkpoint_dir_write": false,
+    "z_mean_shape": [
+      8041,
+      512
+    ]
+  },
+  "random_seed": 4178,
+  "reproducibility_checksum": "ffc5b5b47ce44eb771780fb7eb08cf5d962c62e63e7325d0ae4730d8e34f259a",
+  "selected_energy": "model_native_basis_pca_gold_mahalanobis",
+  "spec_refs": [
+    "REQ-VERIFY-4178",
+    "SCENARIO-VERIFY-4178",
+    "REQ-GAP3-1",
+    "REQ-GAP3-2",
+    "REQ-GAP3-3"
+  ],
+  "task_id": "gap3-stage1-model-native-arc-energy",
+  "title": "GAP-3 Stage-1 model-native latent energy rescore"
+}

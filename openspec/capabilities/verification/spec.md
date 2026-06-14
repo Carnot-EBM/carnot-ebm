@@ -13832,6 +13832,68 @@ If Exp 4175 reports no domain clearing `0.10`, then Exp 4177 SHALL write
 the same required fields with empty measured-arm metrics, and stop before
 scoring Arm A, B, or C.
 
+### REQ-VERIFY-4178: GAP-3 Stage-1 Model-Native ARC Energy Rescore
+
+The repository SHALL provide
+`python/carnot/research/gap3_stage1_model_native_arc_energy_4178.py` and
+`results/experiment_4178_gap3_stage1_model_native_arc_energy.py` to score the
+existing GAP-3 Stage-1 latent dump
+`results/arc3_gap3_stage1_candidate_table.npz` on CPU only. The runner SHALL
+first verify the precondition that `z_mean` has latent width `512` and that the
+candidate table contains at least one `correct` row. If the dump is missing or
+invalid, it SHALL write
+`results/experiment_4178_gap3_stage1_model_native_arc_energy.json` with
+`honest_verdict=blocked_stage1_latent_dump_missing` or an equivalent terminal
+blocked precondition verdict and SHALL NOT launch a GPU dump, retrain TRM, or
+write to any stable checkpoint directory.
+
+For a valid dump, the runner SHALL evaluate two task-held-out latent energies:
+(1) an orthogonal PCA/SVD-class model-native basis over `z_mean` with a
+train-task gold-consistency score, and (2) a tiny out-of-fold learned probe from
+`z_mean` to correctness. All label use SHALL be restricted to training tasks
+for each held-out task, and the held-out task's correctness labels SHALL be used
+only for scoring after energies are computed. Candidate rankings SHALL be
+computed per task with lower energy ranked first and compared against the TRM
+frequency-vote baseline from the same table.
+
+The terminal artifact SHALL include top-level fields `honest_verdict`,
+`pass2_energy_vs_vote`, `candidate_auroc`, `coverage_fraction`,
+`headroom_capture_fraction`, `adversarial_checks`, `random_seed`,
+`reproducibility_checksum`, `field_principles`, `spec_refs`,
+`inference_substrate=offline_gap3_stage1_latent_npz_cpu`, and `duration_s`.
+It SHALL report the four GAP-3 design gates: pass@2 energy minus vote,
+per-candidate gold-vs-non-gold AUROC, finite-energy coverage, and fraction of
+`oracle - vote` headroom captured. The artifact SHALL also report adversarial
+checks for label permutation control, strict out-of-fold versus in-fold gap,
+held-out oracle-label scrub/leak audit, and bootstrap CI95 on the pass@2 delta.
+An honest negative where the latent does not beat vote SHALL be a complete
+terminal verdict.
+
+The required field principles are:
+`honest_verdict` = `Terminal-prefixed. An honest negative (latent also does not beat vote) is a COMPLETE, decision-grade verdict.`;
+`pass2_energy_vs_vote` = `Selection gate: pass@2(energy) - pass@2(vote) on held-out tasks; the single number GAP-3 lives or dies on.`;
+`candidate_auroc` = `Per-candidate gold-vs-non-gold AUROC; must beat the hand-features' best always-on family (object_count 0.67) to justify the latent.`;
+`coverage_fraction` = `Fraction of candidates the energy is defined on; the structural failure of hand-features was <20% coverage.`;
+`headroom_capture_fraction` = `Fraction of (oracle - vote) captured; partial credit toward the 0.61 ceiling and the metric that says whether the latent reaches the proven ~13pp.`;
+`adversarial_checks` = `Permutation/OOF/oracle-leak/bootstrap results; a passing gate without these is gameable (gap3 §4 + sample-size rigor).`;
+`random_seed` = `Determinism precondition; the OOF split + probe must be reproducible.`;
+`reproducibility_checksum` = `Hash of the npz + fold assignment; catches silent dump drift.`
+
+### SCENARIO-VERIFY-4178: Latent Dump Produces Gated Honest Verdict
+
+Given `results/arc3_gap3_stage1_candidate_table.npz` is present with
+`z_mean.shape[1] == 512` and at least one correct candidate, when Exp 4178
+runs, then it fits the model-native basis and learned probe with disjoint
+fit/eval task folds, ranks candidates by each energy and by frequency vote,
+writes the terminal JSON artifact with all four GAP-3 gates, writes bootstrap
+CI95 for the selected energy's pass@2 delta against vote, records permutation,
+OOF, held-out-label scrub, and sample-size checks, records a reproducibility
+checksum over the dump and fold assignment, and uses no GPU or TRM checkpoint
+write path.
+
+If the Stage-1 latent dump is absent, then Exp 4178 SHALL write the blocked
+artifact and stop without attempting to regenerate activations.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
