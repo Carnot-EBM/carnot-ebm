@@ -1,0 +1,138 @@
+{
+  "accumulated_N": {
+    "A": 776,
+    "B": 776,
+    "C": 742,
+    "D": 0
+  },
+  "arm_corpus_sizes": {
+    "A": 776,
+    "B": 776,
+    "C": 742,
+    "D": 0
+  },
+  "duration_s": 31.151062,
+  "experiment": "experiment_4198_verifier_reward_3arm_rft_launch",
+  "field_principles": {
+    "arm_corpus_sizes": "{A,B,C} N-matched counts -- |A|=|B| is the de-confound precondition (the spurious-reward control must be size-matched to the certified arm).",
+    "gold_control_early_read": "Arm C vs base early signal -- if gold-SFT degrades below base the HARNESS is broken (over-fit/forgetting); A3 must NOT report A-vs-B until the gold control passes.",
+    "honest_verdict": "Terminal-prefixed. A clean launch + live checkpointing is COMPLETE for this split half; an honest gated deferral when A1 found no clean operating point is also COMPLETE.",
+    "model_specs": "The NON-Qwen base + the on-policy generator; required methodology for a live-LLM training artifact.",
+    "random_seed": "Determinism precondition; torch generation + LoRA init seeded so the run is reproducible across windows.",
+    "reproducibility_checksum": "Hash of the corpora + LoRA config; lets A3 / a third party confirm the same training inputs.",
+    "stable_checkpoint_path": "The corpus+base+config-keyed checkpoint A3 reads + future windows resume (resume-not-restart, NOT exp-id-keyed).",
+    "training_launched": "BARE bool: the 3-arm LoRA-RFT is running detached and checkpointing; A3's collect gate depends on it."
+  },
+  "gold_control_early_read": {
+    "arm_c_minus_base": null,
+    "arm_c_passrate": null,
+    "available": false,
+    "base_passrate": 0.6,
+    "gold_control_gate": "pending; A3 must not report A-vs-B until Arm C >= base",
+    "status": "pending_training_checkpoint"
+  },
+  "honest_verdict": "blocked_training_process_exited_before_checkpoint",
+  "launch_status": {
+    "command": [
+      "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python3",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/verifier_reward_code_lora_rft_3arm.py",
+      "--train",
+      "--checkpoint",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/offarc_power_sync_gemma12b_evalplus_k5.checkpoint.json",
+      "--seed",
+      "4198",
+      "--out",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/runner_artifact.json",
+      "--train-root",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/arms"
+    ],
+    "detached": true,
+    "detached_method": "setsid_start_new_session",
+    "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/train.log",
+    "pid": 792374,
+    "returncode": 1,
+    "status": "process_exited_early"
+  },
+  "lora_config": {
+    "learning_rate": 0.0002,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "max_length": 1024,
+    "method": "LoRA-SFT",
+    "r": 16,
+    "target_modules": [
+      "linear"
+    ]
+  },
+  "model_specs": {
+    "a1_artifact_checksum": "sha256:39f0ea0f4b6f47f2847305be2f740570a7aa0029107b6435c1974224e7fd15f0",
+    "a1_operating_point": {
+      "K": 5,
+      "base": "google/gemma-4-E4B-it",
+      "base_passrate": 0.6,
+      "corpus": "HumanEval Exp1999 deterministic 10-task headroom slice + EvalPlus visible/hidden label checkpoint",
+      "max_new_tokens": 512,
+      "no_answer_rate": 0.0,
+      "own_visible_perfect_rate": 0.6,
+      "truncation_rate": 0.0
+    },
+    "generation_checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/results/offarc_power_sync_gemma12b_evalplus_k5.checkpoint.json",
+    "lora_config": {
+      "learning_rate": 0.0002,
+      "lora_alpha": 32,
+      "lora_dropout": 0.05,
+      "max_length": 1024,
+      "method": "LoRA-SFT",
+      "r": 16,
+      "target_modules": [
+        "linear"
+      ]
+    },
+    "on_policy_generator": "google/gemma-4-E4B-it",
+    "qwen_train_base_forbidden": true,
+    "runner": "scripts/experiments/verifier_reward_code_lora_rft_3arm.py",
+    "trainable_base": "google/gemma-4-E4B-it",
+    "trainable_base_is_non_qwen": true
+  },
+  "operating_point": {
+    "K": 5,
+    "base": "google/gemma-4-E4B-it",
+    "base_passrate": 0.6,
+    "corpus": "HumanEval Exp1999 deterministic 10-task headroom slice + EvalPlus visible/hidden label checkpoint",
+    "max_new_tokens": 512,
+    "no_answer_rate": 0.0,
+    "own_visible_perfect_rate": 0.6,
+    "truncation_rate": 0.0
+  },
+  "preconditions": {
+    "a1_gate_clears": true,
+    "arm_corpus_sizes": {
+      "A": 776,
+      "B": 776,
+      "C": 742,
+      "D": 0
+    },
+    "arms_n_matched": true,
+    "cuda_available": true,
+    "gold_control_present": true,
+    "harness_ready": true,
+    "phase0_precision": 0.9561855670103093,
+    "youden_j": 0.4137931034482759
+  },
+  "random_seed": 4198,
+  "reproducibility_checksum": "sha256:a83b52882c1989541a3c30526fb82a29efa0637c9280201bcc3775c8b6565ac2",
+  "runner_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/runner_artifact.json",
+  "schema": "carnot.experiment_4198_verifier_reward_3arm_rft_launch.v1",
+  "spec_refs": [
+    "REQ-CODE-4198",
+    "SCENARIO-CODE-4198-GATED-LAUNCH",
+    "SCENARIO-CODE-4198-HONEST-DEFERRAL"
+  ],
+  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954",
+  "training_launched": false,
+  "truncation_guard": {
+    "a1_truncation_rate": 0.0,
+    "max_allowed_truncation_rate": 0.05,
+    "status": "instrumented_in_runner_artifact"
+  }
+}

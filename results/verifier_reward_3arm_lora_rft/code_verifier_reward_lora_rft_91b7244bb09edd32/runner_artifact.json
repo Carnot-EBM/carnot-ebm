@@ -1,0 +1,43 @@
+{
+  "arm_sizes": {
+    "arm_a_certified": 776,
+    "arm_b_random_control": 776,
+    "arm_c_hidden_gold": 742,
+    "arm_d_cold_base": 0
+  },
+  "checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/results/offarc_power_sync_gemma12b_evalplus_k5.checkpoint.json",
+  "duration_s": 0.717783,
+  "experiment": "experiment_4197_verifier_reward_code_lora_rft_3arm",
+  "harness_ready": true,
+  "honest_verdict": "complete: smoke_3arm_runner_ready",
+  "n_tasks": 160,
+  "random_seed": 4198,
+  "smoke": false,
+  "train_mode_executed": true,
+  "train_requested": true,
+  "training": {
+    "arm_a": {
+      "arm": "A_certified",
+      "error": "ModuleNotFoundError: No module named 'peft'",
+      "status": "blocked_training_import"
+    },
+    "arm_b": {
+      "arm": "B_random_same_generator",
+      "error": "ModuleNotFoundError: No module named 'peft'",
+      "status": "blocked_training_import"
+    },
+    "arm_c": {
+      "arm": "C_hidden_gold",
+      "error": "ModuleNotFoundError: No module named 'peft'",
+      "status": "blocked_training_import"
+    },
+    "arm_d": {
+      "arm": "D_cold_base",
+      "n_examples": 0,
+      "status": "cold_base_eval_only"
+    }
+  },
+  "truncation_guard": {
+    "max_allowed_truncation_rate": 0.05
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "arm_corpus_sizes": {
+    "A": 776,
+    "B": 776,
+    "C": 742,
+    "D": 0
+  },
+  "log_path": "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/train.log",
+  "lora_config": {
+    "learning_rate": 0.0002,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "max_length": 1024,
+    "method": "LoRA-SFT",
+    "r": 16,
+    "target_modules": [
+      "linear"
+    ]
+  },
+  "model_specs": {
+    "a1_artifact_checksum": "sha256:39f0ea0f4b6f47f2847305be2f740570a7aa0029107b6435c1974224e7fd15f0",
+    "a1_operating_point": {
+      "K": 5,
+      "base": "google/gemma-4-E4B-it",
+      "base_passrate": 0.6,
+      "corpus": "HumanEval Exp1999 deterministic 10-task headroom slice + EvalPlus visible/hidden label checkpoint",
+      "max_new_tokens": 512,
+      "no_answer_rate": 0.0,
+      "own_visible_perfect_rate": 0.6,
+      "truncation_rate": 0.0
+    },
+    "generation_checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/results/offarc_power_sync_gemma12b_evalplus_k5.checkpoint.json",
+    "lora_config": {
+      "learning_rate": 0.0002,
+      "lora_alpha": 32,
+      "lora_dropout": 0.05,
+      "max_length": 1024,
+      "method": "LoRA-SFT",
+      "r": 16,
+      "target_modules": [
+        "linear"
+      ]
+    },
+    "on_policy_generator": "google/gemma-4-E4B-it",
+    "qwen_train_base_forbidden": true,
+    "runner": "scripts/experiments/verifier_reward_code_lora_rft_3arm.py",
+    "trainable_base": "google/gemma-4-E4B-it",
+    "trainable_base_is_non_qwen": true
+  },
+  "operating_point": {
+    "K": 5,
+    "base": "google/gemma-4-E4B-it",
+    "base_passrate": 0.6,
+    "corpus": "HumanEval Exp1999 deterministic 10-task headroom slice + EvalPlus visible/hidden label checkpoint",
+    "max_new_tokens": 512,
+    "no_answer_rate": 0.0,
+    "own_visible_perfect_rate": 0.6,
+    "truncation_rate": 0.0
+  },
+  "reproducibility_checksum": "sha256:a83b52882c1989541a3c30526fb82a29efa0637c9280201bcc3775c8b6565ac2",
+  "runner_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/runner_artifact.json",
+  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954"
+}
