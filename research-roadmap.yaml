@@ -73,7 +73,7 @@ tasks:
 
   - id: exp4175-headroom-gate-executable-census
     milestone: 2026.06.387
-    title: "PHASE A1 — Headroom gate + executable-oracle corpus census. Build reusable scripts/headroom_gate.py: for each cached candidate pool compute oracle@k vs baseline pass@1 vs SC-vote with an OBJECTIVE/EXECUTABLE oracle (run code/tests, parse math — NO LLM judge, per arXiv:2605.07395), and flag artifact inflation (truncation/format mismatch). Census {code HumanEval/MBPP (exp1999/2090/1607), math GSM8K, Sudoku held-out}. Emit max_selectable_headroom (BARE) + headroom_present_domain. This is the POSITIVE CONTROL the moat test requires."
+    title: "PHASE A1 — Headroom gate + executable-oracle corpus census. Build reusable scripts/headroom_gate.py: for each cached candidate pool compute oracle@k vs baseline pass@1 vs SC-vote with an OBJECTIVE/EXECUTABLE oracle (run code/tests, parse math — NO LLM judge, per arXiv:2605.07395), and flag artifact inflation (truncation/format mismatch). Census {{code HumanEval/MBPP (exp1999/2090/1607), math GSM8K, Sudoku held-out}}. Emit max_selectable_headroom (BARE) + headroom_present_domain. This is the POSITIVE CONTROL the moat test requires."
     priority: high
     track: verifier-moat
     max_turns: 60
@@ -104,15 +104,15 @@ tasks:
            If a pool stores only a single greedy completion (no K candidates), mark it
            census_incomplete for that domain and continue. If NO multi-candidate pool exists -> honest_verdict
            `blocked_no_multicandidate_pool` and STOP.
-        1. Implement scripts/headroom_gate.py with a function headroom(pool) -> {oracle_at_k,
+        1. Implement scripts/headroom_gate.py with a function headroom(pool) -> {{oracle_at_k,
            baseline_pass1, sc_vote_pass1, selectable_headroom = oracle_at_k - sc_vote_pass1, n,
-           artifact_flags}. Oracle MUST be executable/objective: run unit tests for code; exact-match
+           artifact_flags}}. Oracle MUST be executable/objective: run unit tests for code; exact-match
            for math/Sudoku. NO LLM judge.
         2. Sanitize per arXiv:2605.07395: flag candidates that are truncated, mis-formatted, or
            unparseable as artifact_inflation rather than counting them as oracle hits.
-        3. Census {code, math, Sudoku} pools; pick headroom_present_domain = the executable domain with
+        3. Census {{code, math, Sudoku}} pools; pick headroom_present_domain = the executable domain with
            the largest sanitized selectable_headroom; emit max_selectable_headroom BARE (a plain float,
-           NOT a {value,principle} dict — gated fields must be bare).
+           NOT a {{value,principle}} dict — gated fields must be bare).
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. A clean census (even 'no domain clears 0.10') is a COMPLETE verdict."
@@ -523,8 +523,8 @@ tasks:
         3. DiffusionGemma gate decision: MET only if exp4177 verifier_value_added==true AND
            positive_control_confirmed==true on an executable domain (a headroom-dead Sudoku null does
            NOT block forever; a headroom-present null keeps it closed and points at GAP-3).
-        4. Honest headline: one of {moat_proven_headroom_present, moat_bounded_clean_null,
-           moat_deferred_no_headroom, gap3_reaches_headroom, gap3_bounded}.
+        4. Honest headline: one of {{moat_proven_headroom_present, moat_bounded_clean_null,
+           moat_deferred_no_headroom, gap3_reaches_headroom, gap3_bounded}}.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. An honest bounded-null is COMPLETE and decision-grade — it tells .388 the bottleneck is verifier discrimination (GAP-3), not the substrate."
@@ -537,7 +537,7 @@ tasks:
         diffusiongemma_gate_status:
           principle: "MET / STILL-PENDING-headroom-present-null / STILL-PENDING-no-headroom; MET only on a positive-controlled executable win."
         upstream_provenance:
-          principle: "{experiment_id, fields_imported, sha256} per cited upstream; the audit trail that a capstone synthesizes nothing from nothing."
+          principle: "{{experiment_id, fields_imported, sha256}} per cited upstream; the audit trail that a capstone synthesizes nothing from nothing."
       ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited; DiffusionGemma gate explicitly decided.
 
       Run: `python3 results/experiment_4183_capstone_v387.py`

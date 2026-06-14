@@ -20705,6 +20705,78 @@ claim `.385` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4166 | Implemented (`python/carnot/reporting/archive_v385_activate_v386_4166.py`, `python/carnot/experiment_4166_archive_v385_activate_v386.py`) | Implemented (`tests/python/test_experiment_4166_archive_v385_activate_v386.py`) |
 
+### REQ-REPORT-4174: Archive .386, Activate .387, And Preserve The Headroom-Limited Graft Null
+
+The Exp 4174 workflow SHALL archive milestone `2026.06.386`, confirm milestone
+`2026.06.387` is active, and write the record-only aggregation artifact
+`results/experiment_4174_archive_v386_activate_v387.json`. It SHALL run no live
+model training and SHALL declare `inference_substrate` as
+`aggregation_from_upstream_artifacts`.
+
+Before claiming completion the workflow SHALL confirm:
+
+- `research-complete.yaml` parses under `yaml.safe_load`
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`
+- the smart-subset pre-test gate is green
+- `results/experiment_4173_capstone_v386.json` exists
+- milestone `2026.06.387` is the active roadmap milestone
+
+If any precondition is absent or red, the workflow SHALL write a blocked
+artifact whose `honest_verdict` starts with `blocked_`, record the failed
+resource in `preconditions_checked`, and stop without claiming a terminal
+archive or editing `research-complete.yaml`.
+
+The complete artifact SHALL include the principle-annotated fields
+`honest_verdict`, `v386_close_state`, and `preconditions_checked` with these
+exact principles:
+
+- `honest_verdict`: `Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.`
+- `v386_close_state`: `Honest record (graft null was headroom-limited, not a true verifier failure) so the .387 planner frames the moat test as a positive-control problem, not a redo.`
+- `preconditions_checked`: `Records resources verified; pre-empts the silent-missing-resource fabrication mode.`
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v386_close_state` SHALL truthfully record
+that `.386` closed with the outer-loop TRM training done at approximately
+`0.8227` (`bestval_exact_accuracy=0.822656`) and SIGTERM'd/stopped before the
+defensive graft read the checkpoint. It SHALL record that the decisive graft
+fired (`graft_deferred=false`) but returned a headroom-limited null rather than a
+true verifier failure: `verifier_value_added=false`, `oracle_at_k=0.8125`
+approximately matched the `0.82` baseline gate, verifier rerank pass@1 was
+`0.8125`, vote@1 was `0.796875`, and the RFT deconfound CI included zero. It
+SHALL record the DiffusionGemma gate as `STILL-PENDING`, total ARC games solved
+as `13`, and the `.387` planning consequence that the next verifier-moat test
+must use a headroom-present positive-control domain while the conductor remains
+stood down on TRM training.
+
+#### SCENARIO-REPORT-4174: The Archive Preserves The .386 Headroom-Limited Null
+
+**Given** `.386` has the Exp 4173 capstone, the Exp 4168 gate-0.82 graft artifact
+records `graft_deferred=false`, `verifier_value_added=false`, `oracle_at_k=0.8125`,
+and `bestval_exact_accuracy=0.822656`, the history and exclusion-manifest YAML
+files parse, the smart-subset pre-test gate is green, and `.387` is active
+**When** the Exp 4174 archive workflow runs
+**Then** it archives `.386`, confirms `.387`, keeps the YAML history parseable
+with one `.386` record, writes
+`results/experiment_4174_archive_v386_activate_v387.json`, records the stopped
+outer-loop training, headroom-limited graft null, DiffusionGemma `STILL-PENDING`,
+and `total_games_solved=13` in `v386_close_state`, records the checked resources
+in `preconditions_checked`, declares `aggregation_from_upstream_artifacts`, and
+emits a terminal-prefixed honest verdict.
+
+#### SCENARIO-REPORT-4174-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4174 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does not
+claim `.386` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4174)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4174 | Implemented (`python/carnot/reporting/archive_v386_activate_v387_4174.py`, `python/carnot/experiment_4174_archive_v386_activate_v387.py`) | Implemented (`tests/python/test_experiment_4174_archive_v386_activate_v387.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone

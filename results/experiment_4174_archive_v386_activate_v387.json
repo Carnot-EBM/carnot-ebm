@@ -1,0 +1,118 @@
+{
+  "activated_milestone": "2026.06.387",
+  "active_milestone_confirmed": "2026.06.387",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.386",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4173_capstone_v386.json",
+      "experiment_id": "4173",
+      "kind": "artifact",
+      "sha256": "f87113b813acad3bda51012d0d04dc22f095d8cc12078ac2c4b7723c13f3211e"
+    },
+    {
+      "deliverable": "results/experiment_4168_decisive_verifier_graft_v2_gate082.json",
+      "experiment_id": "4168-v2",
+      "kind": "artifact",
+      "sha256": "09eac944fce853bcb19daa80bf05bd5b8cbc95228a5222271c08c30654aa7039"
+    }
+  ],
+  "duration_s": 11.911803,
+  "exclusion_manifest_parses": true,
+  "experiment_id": "exp4174",
+  "field_principles": {
+    "activated_milestone": "Confirms .387 is live for the headroom-controlled moat test.",
+    "active_milestone_confirmed": "Records the active roadmap milestone actually observed.",
+    "archived_milestone": "Provenance: the milestone being closed, 2026.06.386.",
+    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
+    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
+    "honest_verdict": "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.",
+    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
+    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
+    "v386_close_state": "Honest record (graft null was headroom-limited, not a true verifier failure) so the .387 planner frames the moat test as a positive-control problem, not a redo."
+  },
+  "honest_verdict": "success: archived_v386_v387_active_outerloop_done_val_0.8227_graft_fired_headroom_limited_null_diffusiongemma_STILL_PENDING",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "active_milestone": "2026.06.387",
+    "active_roadmap_path": "research-roadmap.yaml",
+    "exclusion_manifest_exists": true,
+    "exclusion_manifest_parses": true,
+    "gate082_graft_artifact_present": true,
+    "gate082_graft_path": "results/experiment_4168_decisive_verifier_graft_v2_gate082.json",
+    "pretest_command": [
+      ".venv/bin/pytest",
+      "tests/python/test_pipeline_extract.py",
+      "tests/python/test_docs.py",
+      "-q",
+      "--no-header",
+      "-n",
+      "0",
+      "--no-cov",
+      "-o",
+      "addopts="
+    ],
+    "pretest_exit_code": 0,
+    "pretest_suite_green": true,
+    "research_complete_duplicates_removed": 0,
+    "research_complete_record_action": "updated",
+    "research_complete_yaml_exists": true,
+    "research_complete_yaml_parses": true,
+    "research_complete_yaml_parses_after_edit": true,
+    "v386_capstone_path": "results/experiment_4173_capstone_v386.json",
+    "v386_capstone_present": true
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4174,
+  "reproducibility_checksum": "f1a6113a650afff60c67c1b9266f16424a01ac9f22c1ea354990dc61475a3b23",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "updated",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v386_to_v387_4174.v1",
+  "task_id": "exp4174-archive-v386-activate-v387",
+  "v386_close_state": {
+    "baseline_bestval_exact_accuracy": 0.822656,
+    "baseline_gate": 0.82,
+    "baseline_val_rounded": 0.8227,
+    "capstone_honest_verdict": "complete: capstone_v386_outerloop_training_in_progress_val_0.504166662693_checkpoint_2026-06-13T04:41:29.093138Z_graft_deferred_diffusiongemma_STILL-PENDING_arc_games13_flagged_skipped1",
+    "capstone_recorded_val": 0.504166662693,
+    "capstone_was_stale_before_final_graft": true,
+    "conductor_stands_down_on_trm_training": true,
+    "decisive_graft_fired": true,
+    "diffusiongemma_gate_status": "STILL-PENDING",
+    "forbidden_conductor_actions": [
+      "launch_trm_training",
+      "pkill_or_kill_train_py",
+      "write_stable_checkpoint_dir"
+    ],
+    "graft_deferred": false,
+    "headroom_limited_null": true,
+    "no_conductor_training_rule": true,
+    "oracle_approximately_baseline": true,
+    "oracle_at_k": 0.8125,
+    "outer_loop_sigterm_reported": true,
+    "outer_loop_trm_training_done": true,
+    "rerank_ci95": [
+      0.0,
+      0.046875
+    ],
+    "rerank_delta": 0.015625,
+    "rerank_status": "headroom_backed_null_ci95_includes_zero",
+    "rft_ci95": [
+      0.0,
+      0.057692
+    ],
+    "rft_ci_includes_zero": true,
+    "rft_delta": 0.019231,
+    "rft_status": "honest_null_ci95_includes_zero",
+    "summary": "outerloop_done_graft_fired_headroom_limited_null",
+    "total_games_solved": 13,
+    "true_verifier_failure": false,
+    "v387_planner_frame": "positive-control headroom-present executable moat test; do not treat the Sudoku null as a true verifier failure or redo the same no-headroom setup",
+    "verifier_pass_at_1": 0.8125,
+    "verifier_value_added": false,
+    "vote_at_1": 0.796875
+  }
+}
