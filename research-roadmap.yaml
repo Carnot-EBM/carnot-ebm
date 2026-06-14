@@ -4,7 +4,10 @@ milestone_doc: openspec/change-proposals/research-roadmap-v388.md
 milestone_overview: |
   .387 PROVED the verifier moat on an executable domain (exp4177 code: verifier+V-STaR pass@1 0.84 vs
   SC-vote 0.66, +0.18 CI95[0.08,0.30], matched no-verifier control also 0.66, positive_control_confirmed),
-  which flipped the DiffusionGemma gate to MET. But the proof has three honest caveats, each load-bearing
+  which the capstone OVER-CLAIMED as flipping the DiffusionGemma gate to MET -- CORRECTED 2026-06-14
+  ("fix the MET") to STILL-PENDING: the code win is circular (the verifier == the unit-test oracle), so it
+  does NOT show a non-trivial verifier adds value; the gate requires a NON-trivial/energy/learned verifier
+  beating a matched control on an oracle-DISTINCT headroom domain (ARC), which is UNMET. The proof has three honest caveats, each load-bearing
   for the north star (solve ARC-AGI-3 accurately AND efficiently): (1) the EFFICIENCY axis was NOT won
   (efficiency_parity=false; the verifier was compared vs ~free self-consistency vote, never vs an
   LLM-as-judge — the actual north-star §5 win condition "parity at 10-100x cheaper"); (2) the code verifier
@@ -20,7 +23,7 @@ milestone_overview: |
       (production-safe; tau=0.005 + vote-aware guard; NOT the retired agreement-selector); B2 a SOVEREIGN
       local open-weight generator + GAP-4-verified self-distillation (decentralization rule 1 + self-learning).
     PHASE C — UNLOCKED GENERATION + ARC PROGRESS + LIVE-ENV GROUNDING: C1 DiffusionGemma verifier-guided
-      decoding (gate MET; feasibility+smoke behind a HARD cache/per-step-logit precondition); C2 ARC
+      decoding (gate STILL-PENDING per the .387 correction; this C1 ran as a precondition-probe and BLOCKED on absent weights, exp4189); C2 ARC
       incremental +1 (monotonic, via the hardened GAP-4 stack); C3 a real ARC-AGI-3 LIVE-env grounding probe.
     PHASE D — reserved slots: D1 SOTA-ingestion, D2 registry+gaps hygiene, D3 hardware continuity, D4 capstone.
   GAP-3 trained ARC content energies stay RETIRED (operator-authorization required per

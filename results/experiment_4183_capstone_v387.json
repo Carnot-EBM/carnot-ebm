@@ -9,10 +9,12 @@
   },
   "diffusiongemma_gate": {
     "basis": "clean_exp4177_positive_controlled_executable_headroom_moat",
-    "met": true,
-    "status": "MET"
+    "met": false,
+    "status": "STILL-PENDING",
+    "corrigendum_2026_06_14": "Operator-directed correction ('fix the MET'). Original claim was met=true/MET on exp4177 (+0.18 on code/HumanEval). That is the TRIVIAL case: there the verifier IS the executable oracle (run the tests), so the win is circular and does NOT demonstrate a non-trivial/energy/learned verifier adding guidance value. On the domain that matters (ARC, ~13pp real headroom) the verifier TIES vote (exp4178 GAP-3 BOUNDED, delta 0.0). Gate requires a NON-TRIVIAL verifier beating a matched control on a headroom-present, oracle-DISTINCT domain -- unmet. See docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md THE GATE section. Original value preserved: original_met=true, original_status=MET."
   },
-  "diffusiongemma_gate_status": "MET",
+  "diffusiongemma_gate_status": "STILL-PENDING",
+  "diffusiongemma_gate_status_original_overclaim": "MET",
   "duration_s": 0.0012091699754819274,
   "experiment_id": 4183,
   "field_principles": {

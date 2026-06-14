@@ -53,23 +53,43 @@ pass-rate / constraint-satisfaction lift, bootstrap CI95 excluding 0. The load-b
 question is whether guidance beats the unguided sampler (and beats best-of-N selection,
 the commodity baseline).
 
-## THE GATE (do not activate until this is met)
+## THE GATE — STATUS: STILL-PENDING (NOT MET) as of 2026-06-14
 
-Activate this experiment ONLY after the TRM verifier-graft (the .383+ Sudoku graft,
-exp4128-lineage) reports **verifier_value_added == true** (or rerank/RFT lift CI95 excluding
-0) on the executable Sudoku domain.
+> **CORRECTION (2026-06-14, operator-directed "fix the MET").** The `.387` capstone
+> (exp4183) flipped `diffusiongemma_gate_status` to **MET** on the strength of exp4177
+> (`verifier_value_added=true`, +0.18) on the **code/HumanEval** domain. That was an
+> **over-claim** and is hereby corrected to **STILL-PENDING**. Code is the *trivial* case:
+> there the "verifier" IS the executable oracle (run the tests), so best-of-N picking the
+> test-passing candidate is true-but-circular — it does not show that an *energy/learned*
+> verifier adds guidance value. On the domain that actually matters, **ARC (real ~13pp
+> headroom), the verifier TIES vote** (GAP-3 BOUNDED, exp4178 selection delta 0.0). And the
+> `.388` C1 DiffusionGemma run (exp4189) blocked on absent weights anyway
+> (`blocked_diffusiongemma_not_cached`). So nothing was actually activated — but the gate
+> label must read the honest state.
 
-- **TRM graft POSITIVE** -> the verifier adds value as guidance where it executes ->
-  DiffusionGemma is the depth scale-up (LLM-scale realization of the Phase-3 non-AR
-  energy-descent endgame). ACTIVATE.
-- **TRM graft NULL** -> the bottleneck is the verifier's discrimination, NOT the substrate;
-  a bigger generator does not fix that. DO NOT ACTIVATE. Re-derive only if a different
-  verifier-discrimination result changes the picture.
+**The gate is MET only when ALL of the following hold (none satisfied by the code result):**
 
-Rationale: the TRM-Sudoku test is the cheapest DECISIVE version of the same question (a
-verifier that executes exactly, on a domain with real headroom). If guidance can't help
-there, it won't help on a harder/noisier substrate. The TRM answer comes first and cheaply;
-DiffusionGemma cannot tell us anything the TRM can't, faster.
+1. **Headroom is real and present** on the test domain (oracle@K − tuned-SC-vote ≥ ~0.10,
+   measured with an objective/executable oracle, artifact-inflation sanitized).
+2. **The verifier is NON-TRIVIAL** — it is NOT identical to the executable oracle that
+   defines correctness. Running the unit tests on HumanEval, or `check_sudoku_validity`,
+   does NOT count: the verifier must be a learned / energy / partial-constraint signal that
+   could plausibly transfer to a domain WITHOUT a cheap executable oracle. (This is the
+   whole point — if a free executable oracle exists, you don't need Carnot's verifier.)
+3. **That non-trivial verifier captures the headroom with a MATCHED no-verifier control**,
+   `verifier_value_added=true`, CI95 excluding 0 — on a domain where the verifier ≠ the
+   oracle. The canonical target is **ARC** (~13pp headroom, currently UNCAPTURED).
+
+- **Gate MET (all three)** -> the verifier adds value as guidance where execution can't
+  trivially reach -> DiffusionGemma is the depth scale-up. ACTIVATE (operator-gated launch).
+- **Gate STILL-PENDING (current state)** -> a non-trivial verifier has NOT yet beaten a
+  matched control on a headroom-present, oracle-distinct domain. DO NOT ACTIVATE. The open
+  research problem is exactly: capture ARC's ~13pp headroom with an energy/learned verifier.
+
+Rationale: the moat's value lives in the GAP between "headroom exists" and "a NON-trivial
+verifier can capture it." Code (verifier == executable test) collapses that gap circularly;
+ARC is where the gap is real and currently unbridged. The gate guards against scaling to a
+26B substrate on the strength of a circular existence proof.
 
 ## Preconditions for the eventual experiment
 
