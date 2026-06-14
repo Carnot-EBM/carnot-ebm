@@ -1,0 +1,630 @@
+{
+  "acceptance_gate_passed": true,
+  "action_plan": [
+    {
+      "button": "button_A_R",
+      "levels_completed_after": 1,
+      "world_x": 27,
+      "world_y": 5,
+      "x": 38,
+      "y": 16
+    },
+    {
+      "button": "button_C_R",
+      "levels_completed_after": 1,
+      "world_x": 36,
+      "world_y": 23,
+      "x": 47,
+      "y": 34
+    },
+    {
+      "button": "button_C_R",
+      "levels_completed_after": 1,
+      "world_x": 36,
+      "world_y": 23,
+      "x": 47,
+      "y": 34
+    },
+    {
+      "button": "button_C_R",
+      "levels_completed_after": 1,
+      "world_x": 36,
+      "world_y": 23,
+      "x": 47,
+      "y": 34
+    },
+    {
+      "button": "button_A_R",
+      "levels_completed_after": 1,
+      "world_x": 27,
+      "world_y": 5,
+      "x": 38,
+      "y": 16
+    },
+    {
+      "button": "button_A_R",
+      "levels_completed_after": 1,
+      "world_x": 27,
+      "world_y": 5,
+      "x": 38,
+      "y": 16
+    },
+    {
+      "button": "button_A_R",
+      "levels_completed_after": 1,
+      "world_x": 27,
+      "world_y": 5,
+      "x": 38,
+      "y": 16
+    },
+    {
+      "button": "button_C_R",
+      "levels_completed_after": 2,
+      "world_x": 36,
+      "world_y": 23,
+      "x": 47,
+      "y": 34
+    }
+  ],
+  "candidate_baseline_actions": 38,
+  "duration_s": 10.389,
+  "executed_real_env_actions": 8,
+  "experiment": "experiment_4179_arc_incremental_progress",
+  "exploration_actions_used": 5,
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed. An honest no-solve is a COMPLETE verdict (progress-not-perfection).",
+    "levels_completed": "Real-env-confirmed level count this run; falsifiable evidence of an actual solve.",
+    "real_env_confirmed": "Only real-env solves raise the headline count; a synthetic-scaffold solve does not.",
+    "total_levels_solved": "The monotonic progress metric; must be >= the prior milestone's count."
+  },
+  "honest_verdict": "success: incremental_progress_lp85-305b61c3_advanced_to_L2_total14",
+  "induced_mechanic": "lp85 observed button-permutation mechanic with visible goal-overlap predicate",
+  "inference_substrate": "offline_arc_agi3_gap4_deeper_level_incremental_progress",
+  "levels_completed": 2,
+  "new_levels_solved_this_task": 1,
+  "phase_trace": [
+    {
+      "levels_completed": 0,
+      "phase": "observe",
+      "source": "offline_lp85_reset",
+      "target_game": "lp85-305b61c3",
+      "target_level": 2
+    },
+    {
+      "action_index": 1,
+      "levels_completed": 0,
+      "phase": "replay",
+      "source": "banked_lp85_L1_replay",
+      "x": 4,
+      "y": 32
+    },
+    {
+      "action_index": 2,
+      "levels_completed": 0,
+      "phase": "replay",
+      "source": "banked_lp85_L1_replay",
+      "x": 4,
+      "y": 32
+    },
+    {
+      "action_index": 3,
+      "levels_completed": 0,
+      "phase": "replay",
+      "source": "banked_lp85_L1_replay",
+      "x": 4,
+      "y": 32
+    },
+    {
+      "action_index": 4,
+      "levels_completed": 0,
+      "phase": "replay",
+      "source": "banked_lp85_L1_replay",
+      "x": 4,
+      "y": 32
+    },
+    {
+      "action_index": 5,
+      "levels_completed": 1,
+      "phase": "replay",
+      "source": "banked_lp85_L1_replay",
+      "x": 4,
+      "y": 32
+    },
+    {
+      "buttons_observed": 6,
+      "phase": "explore",
+      "planner_trace": {
+        "expanded_states": 114,
+        "found": true,
+        "max_depth": 38,
+        "observed_buttons": [
+          {
+            "button": "button_A_L",
+            "world_x": 8,
+            "world_y": 5,
+            "x": 19,
+            "y": 16
+          },
+          {
+            "button": "button_B_R",
+            "world_x": 36,
+            "world_y": 14,
+            "x": 47,
+            "y": 25
+          },
+          {
+            "button": "button_B_L",
+            "world_x": 2,
+            "world_y": 14,
+            "x": 13,
+            "y": 25
+          },
+          {
+            "button": "button_C_R",
+            "world_x": 36,
+            "world_y": 23,
+            "x": 47,
+            "y": 34
+          },
+          {
+            "button": "button_C_L",
+            "world_x": 2,
+            "world_y": 23,
+            "x": 13,
+            "y": 34
+          },
+          {
+            "button": "button_A_R",
+            "world_x": 27,
+            "world_y": 5,
+            "x": 38,
+            "y": 16
+          }
+        ],
+        "observed_transition_count": 682,
+        "planned_depth": 8,
+        "start_goal_key": [
+          [
+            "goal",
+            12,
+            27
+          ],
+          [
+            "goal",
+            21,
+            6
+          ]
+        ],
+        "target_goal_key": [
+          [
+            "goal",
+            24,
+            15
+          ],
+          [
+            "goal",
+            24,
+            24
+          ]
+        ]
+      },
+      "source": "copied_env_visible_button_observations"
+    },
+    {
+      "candidate_action_count": 8,
+      "goal_predicate": "every bghvgbtwcb frame has a goal sprite at x+1,y+1",
+      "mechanic": "lp85 visible goals are permuted by observed left/right button clicks",
+      "phase": "induce"
+    },
+    {
+      "energy": 0.0,
+      "final_level_completed": 2,
+      "heldout_transition_count": 4,
+      "level_increment": true,
+      "phase": "verify",
+      "predicted_level_after_actions": 2,
+      "retained": true,
+      "start_level_completed": 1,
+      "validated_prefix_transition_count": 4,
+      "validated_total_transition_count": 8,
+      "verifier": "gap4_heldout_executed_consistency_deeper_level_replay"
+    },
+    {
+      "action_index": 1,
+      "button": "button_A_R",
+      "levels_completed": 1,
+      "phase": "act",
+      "x": 38,
+      "y": 16
+    },
+    {
+      "action_index": 2,
+      "button": "button_C_R",
+      "levels_completed": 1,
+      "phase": "act",
+      "x": 47,
+      "y": 34
+    },
+    {
+      "action_index": 3,
+      "button": "button_C_R",
+      "levels_completed": 1,
+      "phase": "act",
+      "x": 47,
+      "y": 34
+    },
+    {
+      "action_index": 4,
+      "button": "button_C_R",
+      "levels_completed": 1,
+      "phase": "act",
+      "x": 47,
+      "y": 34
+    },
+    {
+      "action_index": 5,
+      "button": "button_A_R",
+      "levels_completed": 1,
+      "phase": "act",
+      "x": 38,
+      "y": 16
+    },
+    {
+      "action_index": 6,
+      "button": "button_A_R",
+      "levels_completed": 1,
+      "phase": "act",
+      "x": 38,
+      "y": 16
+    },
+    {
+      "action_index": 7,
+      "button": "button_A_R",
+      "levels_completed": 1,
+      "phase": "act",
+      "x": 38,
+      "y": 16
+    },
+    {
+      "action_index": 8,
+      "button": "button_C_R",
+      "levels_completed": 2,
+      "phase": "act",
+      "x": 47,
+      "y": 34
+    }
+  ],
+  "prior_level": 1,
+  "prior_total_levels_solved": 13,
+  "random_seed": 4179,
+  "real_env_confirmed": true,
+  "replay_actions_used": 5,
+  "requirements": [
+    "REQ-PHASE4-054",
+    "SCENARIO-PHASE4-054"
+  ],
+  "selected_candidate_reason": "selected lp85 L2 as the next deeper level after prior r11l L5 and lp85 L2 stalls",
+  "selection_mode": "deeper_level_after_strict_nonspatial_exhaustion",
+  "solve_trace": {
+    "actions": [
+      {
+        "button": "button_A_R",
+        "levels_completed_after": 1,
+        "world_x": 27,
+        "world_y": 5,
+        "x": 38,
+        "y": 16
+      },
+      {
+        "button": "button_C_R",
+        "levels_completed_after": 1,
+        "world_x": 36,
+        "world_y": 23,
+        "x": 47,
+        "y": 34
+      },
+      {
+        "button": "button_C_R",
+        "levels_completed_after": 1,
+        "world_x": 36,
+        "world_y": 23,
+        "x": 47,
+        "y": 34
+      },
+      {
+        "button": "button_C_R",
+        "levels_completed_after": 1,
+        "world_x": 36,
+        "world_y": 23,
+        "x": 47,
+        "y": 34
+      },
+      {
+        "button": "button_A_R",
+        "levels_completed_after": 1,
+        "world_x": 27,
+        "world_y": 5,
+        "x": 38,
+        "y": 16
+      },
+      {
+        "button": "button_A_R",
+        "levels_completed_after": 1,
+        "world_x": 27,
+        "world_y": 5,
+        "x": 38,
+        "y": 16
+      },
+      {
+        "button": "button_A_R",
+        "levels_completed_after": 1,
+        "world_x": 27,
+        "world_y": 5,
+        "x": 38,
+        "y": 16
+      },
+      {
+        "button": "button_C_R",
+        "levels_completed_after": 2,
+        "world_x": 36,
+        "world_y": 23,
+        "x": 47,
+        "y": 34
+      }
+    ],
+    "phase_trace": [
+      {
+        "levels_completed": 0,
+        "phase": "observe",
+        "source": "offline_lp85_reset",
+        "target_game": "lp85-305b61c3",
+        "target_level": 2
+      },
+      {
+        "action_index": 1,
+        "levels_completed": 0,
+        "phase": "replay",
+        "source": "banked_lp85_L1_replay",
+        "x": 4,
+        "y": 32
+      },
+      {
+        "action_index": 2,
+        "levels_completed": 0,
+        "phase": "replay",
+        "source": "banked_lp85_L1_replay",
+        "x": 4,
+        "y": 32
+      },
+      {
+        "action_index": 3,
+        "levels_completed": 0,
+        "phase": "replay",
+        "source": "banked_lp85_L1_replay",
+        "x": 4,
+        "y": 32
+      },
+      {
+        "action_index": 4,
+        "levels_completed": 0,
+        "phase": "replay",
+        "source": "banked_lp85_L1_replay",
+        "x": 4,
+        "y": 32
+      },
+      {
+        "action_index": 5,
+        "levels_completed": 1,
+        "phase": "replay",
+        "source": "banked_lp85_L1_replay",
+        "x": 4,
+        "y": 32
+      },
+      {
+        "buttons_observed": 6,
+        "phase": "explore",
+        "planner_trace": {
+          "expanded_states": 114,
+          "found": true,
+          "max_depth": 38,
+          "observed_buttons": [
+            {
+              "button": "button_A_L",
+              "world_x": 8,
+              "world_y": 5,
+              "x": 19,
+              "y": 16
+            },
+            {
+              "button": "button_B_R",
+              "world_x": 36,
+              "world_y": 14,
+              "x": 47,
+              "y": 25
+            },
+            {
+              "button": "button_B_L",
+              "world_x": 2,
+              "world_y": 14,
+              "x": 13,
+              "y": 25
+            },
+            {
+              "button": "button_C_R",
+              "world_x": 36,
+              "world_y": 23,
+              "x": 47,
+              "y": 34
+            },
+            {
+              "button": "button_C_L",
+              "world_x": 2,
+              "world_y": 23,
+              "x": 13,
+              "y": 34
+            },
+            {
+              "button": "button_A_R",
+              "world_x": 27,
+              "world_y": 5,
+              "x": 38,
+              "y": 16
+            }
+          ],
+          "observed_transition_count": 682,
+          "planned_depth": 8,
+          "start_goal_key": [
+            [
+              "goal",
+              12,
+              27
+            ],
+            [
+              "goal",
+              21,
+              6
+            ]
+          ],
+          "target_goal_key": [
+            [
+              "goal",
+              24,
+              15
+            ],
+            [
+              "goal",
+              24,
+              24
+            ]
+          ]
+        },
+        "source": "copied_env_visible_button_observations"
+      },
+      {
+        "candidate_action_count": 8,
+        "goal_predicate": "every bghvgbtwcb frame has a goal sprite at x+1,y+1",
+        "mechanic": "lp85 visible goals are permuted by observed left/right button clicks",
+        "phase": "induce"
+      },
+      {
+        "energy": 0.0,
+        "final_level_completed": 2,
+        "heldout_transition_count": 4,
+        "level_increment": true,
+        "phase": "verify",
+        "predicted_level_after_actions": 2,
+        "retained": true,
+        "start_level_completed": 1,
+        "validated_prefix_transition_count": 4,
+        "validated_total_transition_count": 8,
+        "verifier": "gap4_heldout_executed_consistency_deeper_level_replay"
+      },
+      {
+        "action_index": 1,
+        "button": "button_A_R",
+        "levels_completed": 1,
+        "phase": "act",
+        "x": 38,
+        "y": 16
+      },
+      {
+        "action_index": 2,
+        "button": "button_C_R",
+        "levels_completed": 1,
+        "phase": "act",
+        "x": 47,
+        "y": 34
+      },
+      {
+        "action_index": 3,
+        "button": "button_C_R",
+        "levels_completed": 1,
+        "phase": "act",
+        "x": 47,
+        "y": 34
+      },
+      {
+        "action_index": 4,
+        "button": "button_C_R",
+        "levels_completed": 1,
+        "phase": "act",
+        "x": 47,
+        "y": 34
+      },
+      {
+        "action_index": 5,
+        "button": "button_A_R",
+        "levels_completed": 1,
+        "phase": "act",
+        "x": 38,
+        "y": 16
+      },
+      {
+        "action_index": 6,
+        "button": "button_A_R",
+        "levels_completed": 1,
+        "phase": "act",
+        "x": 38,
+        "y": 16
+      },
+      {
+        "action_index": 7,
+        "button": "button_A_R",
+        "levels_completed": 1,
+        "phase": "act",
+        "x": 38,
+        "y": 16
+      },
+      {
+        "action_index": 8,
+        "button": "button_C_R",
+        "levels_completed": 2,
+        "phase": "act",
+        "x": 47,
+        "y": 34
+      }
+    ],
+    "prior_level": 1,
+    "selection_mode": "deeper_level_after_strict_nonspatial_exhaustion",
+    "selection_reason": "selected lp85 L2 as the next deeper level after prior r11l L5 and lp85 L2 stalls",
+    "target_game": "lp85-305b61c3",
+    "target_level": 2,
+    "verification_decisions": [
+      {
+        "energy": 0.0,
+        "final_level_completed": 2,
+        "heldout_transition_count": 4,
+        "level_increment": true,
+        "phase": "verify",
+        "predicted_level_after_actions": 2,
+        "retained": true,
+        "start_level_completed": 1,
+        "validated_prefix_transition_count": 4,
+        "validated_total_transition_count": 8,
+        "verifier": "gap4_heldout_executed_consistency_deeper_level_replay"
+      }
+    ]
+  },
+  "submitted_to_leaderboard": false,
+  "target_game": "lp85-305b61c3",
+  "target_level": 2,
+  "title": "arc3_incremental_progress_deeper_level_lp85",
+  "total_games_solved": 13,
+  "total_levels_solved": 14,
+  "verification_decisions": [
+    {
+      "energy": 0.0,
+      "final_level_completed": 2,
+      "heldout_transition_count": 4,
+      "level_increment": true,
+      "phase": "verify",
+      "predicted_level_after_actions": 2,
+      "retained": true,
+      "start_level_completed": 1,
+      "validated_prefix_transition_count": 4,
+      "validated_total_transition_count": 8,
+      "verifier": "gap4_heldout_executed_consistency_deeper_level_replay"
+    }
+  ],
+  "verifier_validated": true
+}
