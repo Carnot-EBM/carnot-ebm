@@ -1,0 +1,93 @@
+[2026-06-13 23:13:52,479][src.nn.utils.utils][INFO] - [rank: 0] Enforcing tags! <cfg.extras.enforce_tags=True>
+[2026-06-13 23:13:52,482][src.nn.utils.utils][INFO] - [rank: 0] Printing config tree with Rich! <cfg.extras.print_config=True>
+[2026-06-13 23:13:52,504][__main__][INFO] - [rank: 0] Instantiating datamodule <src.nn.data.SudokuDataModule>
+[2026-06-13 23:13:52,505][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] ✓ Loaded metadata from ./data/sudoku_extreme_1k_aug_1k/metadata.json
+[2026-06-13 23:13:52,505][src.nn.data.sudoku_datamodule][INFO] - [rank: 0]   Train: 1000 groups, 1001000 total puzzles
+[2026-06-13 23:13:52,508][__main__][INFO] - [rank: 0] Setting model config from data module:  num_puzzles = 1 batch_size = 768 vocab_size = 12
+[2026-06-13 23:13:52,508][__main__][INFO] - [rank: 0] Instantiating model <src.nn.models.trm.TRMModule>
+[2026-06-13 23:13:53,067][src.nn.models.trm][INFO] - [rank: 0] Creating TRM with vocab size=12, seq_len=81, puzzle_emb_len=0 pos_emb_type='null' puzzle_emb_dim=0
+[2026-06-13 23:13:53,067][src.nn.models.trm][INFO] - [rank: 0] use_mlp_t=True, use_conv_swiglu=False, use_board_swiglu=False
+[2026-06-13 23:13:53,068][src.nn.models.trm][INFO] - [rank: 0] Not using Rotary Embeddings
+[2026-06-13 23:13:53,090][src.nn.models.trm][INFO] - [rank: 0] puzzle_emb_dim <= 0, not creating puzzle embeddings
+[2026-06-13 23:13:53,090][__main__][INFO] - [rank: 0] Instantiating callbacks...
+[2026-06-13 23:13:53,090][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <lightning.pytorch.callbacks.ModelCheckpoint>
+[2026-06-13 23:13:53,092][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <src.nn.callbacks.ema.EMACallback>
+[2026-06-13 23:13:53,092][__main__][INFO] - [rank: 0] Instantiating loggers...
+[2026-06-13 23:13:53,092][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating logger <lightning.pytorch.loggers.csv_logs.CSVLogger>
+[2026-06-13 23:13:53,093][__main__][INFO] - [rank: 0] Instantiating trainer <lightning.pytorch.trainer.Trainer>
+[2026-06-13 23:13:53,099][__main__][INFO] - [rank: 0] Logging hyperparameters!
+[2026-06-13 23:13:53,106][__main__][INFO] - [rank: 0] Starting training!
+[2026-06-13 23:13:53,109][__main__][INFO] - [rank: 0] Val check interval: default (1.0)
+[2026-06-13 23:13:53,109][__main__][INFO] - [rank: 0] Check val every n epoch: 100
+[2026-06-13 23:13:53,109][__main__][INFO] - [rank: 0] Steps per epoch: 1303
+[2026-06-13 23:13:53,109][__main__][INFO] - [rank: 0] Max epochs: 50000
+[2026-06-13 23:13:53,110][__main__][INFO] - [rank: 0] Batch size: 768
+[2026-06-13 23:13:53,358][src.nn.models.trm][INFO] - [rank: 0] Training configuration:
+[2026-06-13 23:13:53,358][src.nn.models.trm][INFO] - [rank: 0]   Groups (unique puzzles): 1000
+[2026-06-13 23:13:53,358][src.nn.models.trm][INFO] - [rank: 0]   Total puzzles (with aug): 1001000
+[2026-06-13 23:13:53,358][src.nn.models.trm][INFO] - [rank: 0]   Steps per epoch: 1
+[2026-06-13 23:13:53,358][src.nn.models.trm][INFO] - [rank: 0]   Total steps: 50000
+[2026-06-13 23:13:53,358][src.nn.models.trm][INFO] - [rank: 0] Compiling inner_forward with torch.compile...
+[2026-06-13 23:13:53,359][src.nn.models.trm][INFO] - [rank: 0] Compilation successful
+[2026-06-13 23:13:53,376][src.nn.models.trm][INFO] - [rank: 0] Restored manual LR step: 19007
+[2026-06-13 23:14:05,344][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved curve snapshot val=0.1725 ep=6401 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/snapshots
+[2026-06-13 23:14:05,345][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] Creating train dataloader with batch size 768 and num_workers 0 and prefetch_factor None
+[2026-06-13 23:15:27,177][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved curve snapshot val=0.2021 ep=6499 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/snapshots
+[2026-06-13 23:15:27,260][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.2021 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:16:49,009][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.2216 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:18:10,867][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved curve snapshot val=0.2508 ep=6699 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/snapshots
+[2026-06-13 23:18:10,944][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.2508 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:19:32,879][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.2661 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:20:54,818][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved curve snapshot val=0.2878 ep=6899 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/snapshots
+[2026-06-13 23:20:54,895][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.2878 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:22:16,857][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.3109 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:23:38,791][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved curve snapshot val=0.3255 ep=7099 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/snapshots
+[2026-06-13 23:23:38,869][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.3255 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:25:00,852][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.3427 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:26:22,821][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.3536 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:27:44,860][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.3727 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:29:06,931][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved curve snapshot val=0.3914 ep=7499 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/snapshots
+[2026-06-13 23:29:07,008][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.3914 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:30:29,140][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4031 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:31:51,311][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4182 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:33:13,413][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved curve snapshot val=0.4297 ep=7799 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/snapshots
+[2026-06-13 23:33:13,493][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4297 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:34:35,583][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4411 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:35:57,610][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4521 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:37:19,656][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4615 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:38:41,678][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4724 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:40:03,711][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved curve snapshot val=0.4779 ep=8299 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/snapshots
+[2026-06-13 23:40:03,790][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4779 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:41:25,865][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4828 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:42:47,902][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4930 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:44:09,977][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4995 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:45:32,038][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5057 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:46:54,097][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5133 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:48:16,163][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5159 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:49:38,244][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved curve snapshot val=0.5258 ep=8999 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/snapshots
+[2026-06-13 23:49:38,325][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5258 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:51:00,361][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5331 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:53:44,359][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5362 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:55:06,413][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5424 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:56:28,479][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5513 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:57:50,504][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5570 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-13 23:59:12,558][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5576 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-14 00:00:34,558][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5638 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-14 00:03:18,569][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5664 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-14 00:04:40,671][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5693 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-14 00:06:02,705][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5747 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-14 00:07:24,756][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved curve snapshot val=0.5805 ep=10299 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/snapshots
+[2026-06-14 00:07:24,836][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5805 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-14 00:08:46,927][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5826 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-14 00:10:09,013][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5914 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-14 00:11:31,130][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5956 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-14 00:12:53,232][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5982 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-14 00:15:37,540][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6047 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-14 00:16:59,749][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6099 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-14 00:18:21,806][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6107 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-14 00:19:44,019][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6125 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-14 00:21:06,157][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6138 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-14 00:22:28,273][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6195 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-14 00:25:12,577][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved curve snapshot val=0.6263 ep=11599 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/snapshots
+[2026-06-14 00:25:12,659][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6263 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run/last.ckpt
+[2026-06-14 00:26:29,979][src.nn.utils.utils][INFO] - [rank: 0] Output dir: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/curve_run_hydra

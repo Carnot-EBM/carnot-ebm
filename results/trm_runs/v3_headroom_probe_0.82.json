@@ -1,0 +1,41 @@
+{
+  "K": 16,
+  "temps": [
+    1.0,
+    3.0,
+    8.0
+  ],
+  "batch_size": 128,
+  "n_batches": 33,
+  "duration_s": 47.2,
+  "checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt",
+  "per_temperature": {
+    "1.0": {
+      "n": 4224,
+      "n_candidates_per_puzzle": 32,
+      "greedy_at_1": 0.7902,
+      "vote_at_1": 0.7902,
+      "oracle_at_k": 0.791,
+      "headroom_oracle_minus_vote": 0.0007
+    },
+    "3.0": {
+      "n": 4224,
+      "n_candidates_per_puzzle": 32,
+      "greedy_at_1": 0.7902,
+      "vote_at_1": 0.7905,
+      "oracle_at_k": 0.791,
+      "headroom_oracle_minus_vote": 0.0005
+    },
+    "8.0": {
+      "n": 4224,
+      "n_candidates_per_puzzle": 32,
+      "greedy_at_1": 0.7902,
+      "vote_at_1": 0.7905,
+      "oracle_at_k": 0.791,
+      "headroom_oracle_minus_vote": 0.0005
+    }
+  },
+  "best_headroom": 0.0007,
+  "stage_b_greenlit": false,
+  "honest_verdict": "complete: no_recoverable_headroom_on_this_baseline"
+}

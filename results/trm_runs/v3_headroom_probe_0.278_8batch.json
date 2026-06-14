@@ -1,0 +1,41 @@
+{
+  "K": 16,
+  "temps": [
+    1.0,
+    2.0,
+    4.0
+  ],
+  "batch_size": 64,
+  "n_batches": 8,
+  "duration_s": 6.3,
+  "checkpoint": "results/trm_runs/sudoku_extreme_baseline/last-v1.ckpt",
+  "per_temperature": {
+    "1.0": {
+      "n": 512,
+      "n_candidates_per_puzzle": 32,
+      "greedy_at_1": 0.1699,
+      "vote_at_1": 0.1816,
+      "oracle_at_k": 0.2246,
+      "headroom_oracle_minus_vote": 0.043
+    },
+    "2.0": {
+      "n": 512,
+      "n_candidates_per_puzzle": 32,
+      "greedy_at_1": 0.1699,
+      "vote_at_1": 0.1953,
+      "oracle_at_k": 0.2246,
+      "headroom_oracle_minus_vote": 0.0293
+    },
+    "4.0": {
+      "n": 512,
+      "n_candidates_per_puzzle": 32,
+      "greedy_at_1": 0.1699,
+      "vote_at_1": 0.209,
+      "oracle_at_k": 0.2246,
+      "headroom_oracle_minus_vote": 0.0156
+    }
+  },
+  "best_headroom": 0.043,
+  "stage_b_greenlit": false,
+  "honest_verdict": "complete: no_recoverable_headroom_on_this_baseline"
+}
