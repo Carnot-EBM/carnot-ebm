@@ -14565,6 +14565,80 @@ registry with the Exp 4204 replay plus `.389` reward role, writes
 `GAP-REWARD-CERTIFIED-CORPUS-4200`, and uses no inference substrate other than
 cached GAP-4 replay and ledger reconciliation.
 
+### REQ-VERIFY-4216: Verifier Registry And Gaps Hygiene For .390 Oracle-Distinct Outcomes
+
+The repository SHALL provide Exp 4216 at
+`python/carnot/experiment_4216_verifier_registry_gaps_hygiene.py` and
+`results/experiment_4216_verifier_registry_gaps_hygiene.py` to keep the
+verifier registry and gap ledger honest for the `.390` oracle-distinct read.
+The runner SHALL replay the canonical GAP-4 ARC-1 cached candidate set offline
+from `results/arc3_gap3_stage2_eval_pool.json.gz` and
+`results/arc3_gap4_induced_programs.json`, SHALL reproduce vote pass@2
+`0.4516` and gated pass@2 `0.5806` bit-exact, and SHALL NOT run Codex, GGUF
+inference, GPU inference, or TRM training.
+
+The runner SHALL read
+`results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json`,
+`results/experiment_4209_oracle_distinct_arc_verifier_build.json`,
+`results/experiment_4208_verifier_as_detector_auroc.json`,
+`results/experiment_4211_verifier_as_reward_finish_synchronous.json`, and
+`results/experiment_4212_certified_arc_corpus_distill_lift.json`. It SHALL
+record the Exp 4210 A3 oracle-distinct verdict as blocked when
+`honest_verdict=blocked_gate_check_failed`, with
+`oracle_distinct_beats_vote=false`, `oracle_distinct_delta=null`,
+`oracle_distinct_ci95=null`, and `verifier_is_oracle=false`; it SHALL record
+the paired Exp 4209 `oracle_distinct_auroc=0.0`,
+`oracle_distinct_auroc_ci95=[0.0, 0.0]`, and `selector_trained=false` as the
+reason the A3 gate did not open. It SHALL record Exp 4208 detector AUROCs per
+domain: sudoku `1.0`, code `1.0`, math `1.0`, and ARC `0.9016`, including
+the CI95 values and `verifier_is_oracle_by_domain`. It SHALL record Exp 4211
+verifier-as-reward A-vs-B status with
+`verifier_label_carries_signal=false`, `a_vs_b_delta=null`,
+`a_vs_b_ci95=null`, `youden_j=0.4137931034482759`,
+`positive_control_confirmed=false`, `accumulated_n.eval=0`, and
+`verifier_is_oracle=true`. It SHALL record Exp 4212 certified ARC corpus status
+with `certified_corpus_size=16`, `certification_precision.rate=0.9375`,
+`distill_lift_delta=0.0`, `distill_lift_ci95=[0.0, 0.0]`,
+`invisible_leash_diagnosis=absent`, and `verifier_is_oracle=true`.
+
+The registry SHALL annotate the `gap4_program_induction_stack` entry with an
+Exp 4216 replay marker and a `.390` oracle-distinct/reward/corpus hygiene role.
+The gaps ledger SHALL contain append-only/replaced-by-marker entries for
+`GAP-ORACLE-DISTINCT`, the detector AUROC status, the verifier-as-reward A-vs-B
+status, and the certified ARC corpus distill-lift note. `GAP-ORACLE-DISTINCT`
+SHALL remain open until a learned verifier beats vote where execution is not
+the oracle. GAP-MOAT status SHALL NOT be upgraded by Exp 4216 because the A3
+oracle-distinct gate is blocked.
+
+The terminal artifact SHALL write
+`results/experiment_4216_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_updated`,
+bare bool `registry_updated`, `oracle_distinct_outcome`,
+`detector_aurocs`, `verifier_reward_outcome`, `certified_arc_corpus`, and
+`inference_substrate=cached_gap4_replay_and_ledger_reconciliation`. Its
+`field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled to the .390 truth.`;
+`regression_guard_passed` = `BARE bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression.`;
+`gaps_updated` = `Lists the verifier_gaps entries touched (the GAP-ORACLE-DISTINCT frontier entry + the detector + verifier-as-reward + certified-corpus notes).`
+
+### SCENARIO-VERIFY-4216: Cached Replay Records .390 Oracle-Distinct Truth
+
+Given the GAP-4 cached ARC-1 pool, saved induced-program artifact, Exp 4208,
+Exp 4209, Exp 4210, Exp 4211, Exp 4212, `ops/verifier_registry.yaml`, and
+`ops/verifier_gaps.md` are readable, when Exp 4216 runs, then it writes the
+terminal artifact with `regression_guard_passed=true`, records vote `0.4516`
+to gated `0.5806`, records the oracle-distinct A3 verdict as blocked with
+`oracle_distinct_beats_vote=false`, `oracle_distinct_delta=null`,
+`oracle_distinct_ci95=null`, `verifier_is_oracle=false`, and
+`oracle_distinct_auroc=0.0`, records the detector AUROCs per domain, records
+the Exp 4211 verifier-as-reward A-vs-B status without fabricating a reward
+signal, records the Exp 4212 certified corpus as absent lift with corpus size
+16, annotates the registry with the Exp 4216 replay plus `.390` hygiene role,
+writes `gaps_updated` containing `GAP-ORACLE-DISTINCT`,
+`GAP-DETECTOR-AUROC-4208`, `GAP-REWARD`, and
+`GAP-REWARD-CERTIFIED-CORPUS-4212`, and uses no inference substrate other than
+cached GAP-4 replay and ledger reconciliation.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
