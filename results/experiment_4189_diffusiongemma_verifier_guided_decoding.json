@@ -1,0 +1,102 @@
+{
+  "acceptance_gate": true,
+  "diffusiongemma_feasible": false,
+  "duration_s": 0.433437,
+  "field_principles": {
+    "diffusiongemma_feasible": "Bare bool: the model loaded AND the per-step guidance hook fired end-to-end; the precondition for any .389 headline benchmark.",
+    "guided_vs_unguided_delta": "guided - unguided pass-rate with bootstrap CI95 on the smoke n; the first directional read on whether verifier guidance helps at LLM scale.",
+    "honest_verdict": "Terminal-prefixed. A clean blocked_diffusiongemma_* (model/hook/CUDA unavailable) is a COMPLETE feasibility verdict that de-risks the .389 scale-up.",
+    "model_specs": "DiffusionGemma + the verifier ensemble invoked; required methodology for a live-LLM artifact.",
+    "preconditions_checked": "Records the cache / per-step-logit / CUDA checks; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition; the denoising + guidance must be reproducible.",
+    "reproducibility_checksum": "Hash of the prompt set + guidance config; catches silent drift."
+  },
+  "guided_vs_unguided_delta": {
+    "ci95": null,
+    "delta": null,
+    "guided_pass_rate": null,
+    "n": 0,
+    "status": "blocked_diffusiongemma_not_cached",
+    "unguided_pass_rate": null
+  },
+  "honest_verdict": "blocked_diffusiongemma_not_cached",
+  "inference_substrate": "precondition_probe_only",
+  "model_specs": {
+    "diffusiongemma": {
+      "expected_weight_shards": 11,
+      "guidance_hook_fired": false,
+      "per_step_logit_hook": true,
+      "present_weight_shards": 0,
+      "repo_id": "google/diffusiongemma-26B-A4B-it",
+      "repo_sha": "0f28bc42f588fbd8f71e08102b1c3960298a1358",
+      "weights_cached": false
+    },
+    "verifier_ensemble": {
+      "guidance_config": {
+        "domain": "executable_python_smoke",
+        "guidance_lambda": 0.7,
+        "max_denoising_steps": 24,
+        "max_new_tokens": 128,
+        "smoke_n": 20,
+        "top_k": 4
+      },
+      "guidance_equation": "logit' = logit - lambda * verifier_energy",
+      "name": "carnot_executable_code_verifier_energy",
+      "source": "python execution smoke over HumanEval-style micro tasks"
+    }
+  },
+  "preconditions_checked": [
+    {
+      "bounded_metadata_download_ok": true,
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub",
+      "cache_grep_diffusion_matches": [
+        "models--google--diffusiongemma-26B-A4B-it"
+      ],
+      "expected_weight_shards": 11,
+      "full_weights_cached": false,
+      "gated": false,
+      "missing_weight_shards": [
+        "model-00001-of-00011.safetensors",
+        "model-00002-of-00011.safetensors",
+        "model-00003-of-00011.safetensors",
+        "model-00004-of-00011.safetensors",
+        "model-00005-of-00011.safetensors",
+        "model-00006-of-00011.safetensors",
+        "model-00007-of-00011.safetensors",
+        "model-00008-of-00011.safetensors",
+        "model-00009-of-00011.safetensors",
+        "model-00010-of-00011.safetensors",
+        "model-00011-of-00011.safetensors"
+      ],
+      "present_weight_shards": 0,
+      "private": false,
+      "repo_accessible": true,
+      "repo_cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--google--diffusiongemma-26B-A4B-it",
+      "repo_error": null,
+      "repo_id": "google/diffusiongemma-26B-A4B-it",
+      "repo_sha": "0f28bc42f588fbd8f71e08102b1c3960298a1358",
+      "resource": "diffusiongemma_cache"
+    },
+    {
+      "available": true,
+      "evidence": "logits_processor(input_ids, raw_logits, cur_step=cur_step) before sampler.accept_canvas",
+      "resource": "per_step_logit_hook",
+      "surface": "DiffusionGemmaGenerationMixin._denoising_step"
+    },
+    {
+      "available": true,
+      "device_count": 2,
+      "devices": [
+        "NVIDIA GeForce RTX 3090",
+        "NVIDIA GeForce RTX 3090"
+      ],
+      "resource": "cuda"
+    }
+  ],
+  "random_seed": 4189,
+  "reproducibility_checksum": "7dd898501b4ad953afbaebddf6a9a0425ffbbd4ae08f6d7dc9fe72838e0e33fc",
+  "spec_refs": [
+    "REQ-VERIFY-4189",
+    "SCENARIO-VERIFY-4189"
+  ]
+}
