@@ -8494,3 +8494,4 @@ c |
 | 2026-06-14 19:07 UTC | PHASE D4 -- Capstone .389 (UNGATED): headline ques | OK | 85 passed, 1 warning in 4.90s |
 | 2026-06-14 19:55 UTC | Plan milestone 2026.06.390 | OK | 12 tasks proposed |
 | 2026-06-14 19:57 UTC | Milestone 2026.06.390 activated | OK | 12 tasks queued |
+| 2026-06-14 20:16 UTC | Archive .389 -> activate .390; KEEP the hardened g | OK | 91 passed, 1 warning in 5.74s |
