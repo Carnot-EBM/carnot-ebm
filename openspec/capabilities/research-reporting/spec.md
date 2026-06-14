@@ -20364,6 +20364,76 @@ files untouched.
 |---|---|---|
 | REQ-REPORT-4170 | Implemented (`python/carnot/experiment_4170_sota_ingestion_verifier_moat_guidance.py`, `docs/research-notes/sota-ingestion-verifier-moat-guidance-v387-2026-06-13.md`) | Implemented (`tests/python/test_experiment_4170_sota_ingestion_verifier_moat_guidance.py`) |
 
+### REQ-REPORT-4180: SOTA Ingestion Mapping For Moat, GAP-3, And Diffusion Guidance Into .388
+
+The Exp 4180 workflow SHALL emit a dated SOTA-to-experiment mapping note that
+ingests the `.387 planning sweep` from `research-references.md` into actionable
+Carnot experiment mappings for the `.388` planner. The note SHALL map
+Unsolvability Ceiling (`arXiv:2605.07395`) to the headroom-gate sanitization
+already applied in A1, When To Solve/Verify (`arXiv:2504.01005`) and ThinkPRM
+(`arXiv:2504.16828`) to the accuracy-and-cost moat framing in A3, CEM
+(`arXiv:2510.20607`) to GAP-3 Stage-2 compositional ARC energy, Self-Rewarding
+SMC (`arXiv:2602.01849`) to DiffusionGemma guidance, and TRM ARC-AGI-1
+ablation (`arXiv:2512.11847`) to the TRM headroom/vote decomposition. The
+markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-moat-gap3-diffusion-v388-2026-06-14.md`
+and the machine-checkable mapping artifact SHALL be written to
+`results/experiment_4180_sota_ingestion_moat_gap3_diffusion.json`. The
+required runner SHALL be
+`results/experiment_4180_sota_ingestion_moat_gap3_diffusion.py` and SHALL
+delegate to the implementation module without modifying
+`scripts/research_conductor.py`.
+
+Before writing the note, the workflow SHALL read the `.387 planning sweep`
+section in `research-references.md`, read `research-studying.md` and
+`research-references.md` filtered to verifier-as-reward, headroom, and
+energy-guided diffusion, run `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py` with focused reliable-channel queries, verify the
+top mapped papers with low-concurrency WebSearch/WebFetch, and SHALL NOT invoke
+`/deep-research`. The note SHALL record any reliable-channel rate limits or
+non-results honestly rather than fabricating fresh discoveries.
+
+For each mapped method, the note SHALL state (a) the Carnot stack mapping, (b)
+what the method implies for the next experiment, (c) where the method fails or
+does not by itself prove Carnot's claim, and (d) the concrete experiment target.
+The mapped method set SHALL include at least three verified anchors with real
+arXiv IDs and URLs, and every method claim SHALL carry a real arXiv ID and URL.
+The workflow SHALL update `research-studying.md` to mark the `.387 planning
+sweep` as ingested, SHALL include `flagged_for_v388`, and SHALL NOT update
+`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`.
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v388`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, and `flagged_for_v388`. `honest_verdict`
+SHALL use a terminal prefix and, on the complete path, start with
+`complete: sota_ingestion_moat_gap3_diffusion_mapped_v388`. `methods_mapped`
+SHALL be a list of at least three dicts with exactly `name`,
+`arxiv_id_or_url`, `url`, `carnot_stack_mapping`, `implication`,
+`failure_mode`, and `experiment_mapping`; each `arxiv_id_or_url` SHALL be one
+of the WebFetch-verified arXiv IDs, preventing fabricated or uncited method
+rows. `flagged_for_v388` SHALL be a non-empty concrete roadmap slug naming the
+single strongest method for the next planner.
+
+#### SCENARIO-REPORT-4180: Moat, GAP-3, And Diffusion Ingestion Closes The .388 Loop
+
+**Given** the `.387 planning sweep` has already filed verifier-headroom,
+accuracy-cost, GAP-3 learned energy, DiffusionGemma guidance, and TRM
+headroom/vote candidates
+**When** the Exp 4180 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON mapping artifact, maps
+verified arXiv papers to Carnot stack implications, failure modes, and concrete
+experiment targets, updates `research-studying.md` idempotently, flags the
+single strongest `.388` follow-up, and leaves conductor and reconciliation
+files untouched.
+
+## Implementation Status (REQ-REPORT-4180)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4180 | Implemented (`python/carnot/experiment_4180_sota_ingestion_moat_gap3_diffusion.py`, `docs/research-notes/sota-ingestion-moat-gap3-diffusion-v388-2026-06-14.md`) | Implemented (`tests/python/test_experiment_4180_sota_ingestion_moat_gap3_diffusion.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone

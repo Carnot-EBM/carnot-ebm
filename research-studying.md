@@ -8,6 +8,37 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-14 Exp 4180 - .387 planning sweep SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-moat-gap3-diffusion-v388-2026-06-14.md`.
+
+**Filtered track:** verifier-as-reward, sanitized headroom, accuracy-and-cost
+moat framing, GAP-3 learned ARC energy, TRM vote/headroom decomposition, and
+DiffusionGemma guidance for the `.388` handoff.
+
+**Seed and fresh-pass candidates marked ingested:**
+- Unsolvability Ceiling, arXiv:2605.07395 - mapped to the A1 headroom-gate
+  sanitization already applied; it is a measurement guard, not a verifier.
+- When To Solve/Verify, arXiv:2504.01005 - mapped to A3 accuracy-and-cost
+  reporting against self-consistency.
+- ThinkPRM, arXiv:2504.16828 - mapped to A3 as the high-quality but expensive
+  process-verifier comparator.
+- Generalizable Reasoning through Compositional Energy Minimization,
+  arXiv:2510.20607 - mapped to GAP-3 Stage-2 compositional ARC energy and
+  flagged as the strongest `.388` follow-on.
+- Self-Rewarding SMC, arXiv:2602.01849 - mapped to the queued DiffusionGemma
+  particle-guidance template after a positive energy gate.
+- TRM ARC-AGI-1 ablation, arXiv:2512.11847 - mapped to the TRM headroom/vote
+  decomposition and identity-conditioning control.
+
+flagged_for_v388:
+`cem_gap3_stage2_compositional_arc_energy_v388`.
+
+Flagged for .388: `cem_gap3_stage2_compositional_arc_energy_v388`.
+
+**Bottom line for the .388 roadmap:** run the CEM-style GAP-3 Stage-2
+compositional ARC energy prototype first. Keep A1/A3 as mandatory gates and use
+Self-Rewarding SMC only for DiffusionGemma guidance once the energy gate is positive.
 ## 2026-06-13 Exp 4170 - .387 verifier-moat guidance SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-verifier-moat-guidance-v387-2026-06-13.md`.
