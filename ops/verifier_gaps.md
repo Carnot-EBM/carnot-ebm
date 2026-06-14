@@ -809,3 +809,33 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: keep GAP-3 open for a stronger generator-independent content energy; do not promote Stage 1 toward filled from this result.
 - priority: high
 <!-- exp4181-gap3-stage1:end -->
+
+<!-- exp4193-efficiency-moat:start -->
+### GAP-MOAT-EFFICIENCY-JUDGE-4186: Exp 4193 .388 efficiency moat versus LLM judge
+- status: filled_verifier_efficiency_win
+- evidence: `results/experiment_4186_efficiency_moat_verifier_vs_llm_judge.json`; verifier_efficiency_win=true; accuracy_parity_vs_judge_delta=0.18; accuracy_parity_vs_judge_ci95=[0.08, 0.3]; cost_ratio_wall_clock=1.9986e-06; wall_clock_x_cheaper=500351.5303458394; ten_x_cheaper_on_both_axes=true; strictly_pareto_dominant=true; positive_control_confirmed=true.
+- failure mode: closed for the measured .388 efficiency moat only when the cheap verifier matches or beats the judge on accuracy while dominating real cost; otherwise GAP-MOAT remains open.
+- missing discriminator: none for this measured code-domain efficiency moat because verifier_efficiency_win=true.
+- candidate design: preserve the real-cost LLM-judge comparator and the objective headroom-positive pool for future moat checks.
+- priority: medium
+<!-- exp4193-efficiency-moat:end -->
+
+<!-- exp4193-gap4-graded-gate:start -->
+### GAP-4-GRADED-GATE-4187: Exp 4193 .388 GAP-4 guarded graded gate
+- status: filled_guarded_graded_gate_holds_plus4_minus0
+- evidence: `results/experiment_4187_gap4_graded_execution_gate_hardening.json`; graded_gate_pass2_vs_vote=0.129; gross_recovery_ledger.recovered=4; gross_recovery_ledger.lost=0; pass2_vote_wins_lost=0; vote_aware_guard_blocked_mispromotion=true; agreement_confidence_label_only=true.
+- failure mode: the graded relaxation adds no ARC-1 recovery beyond the exact baseline, but the guarded policy preserves the +4/-0 pass@2 safety record and blocks the recorded high-vote-gold mispromotion.
+- missing discriminator: none for the guarded ARC-1 pass@2 baseline; keep vote-aware guarding load-bearing for future graded relaxations.
+- candidate design: use the guarded tau=0.005 graded execution gate while recording agreement only as a confidence label.
+- priority: high
+<!-- exp4193-gap4-graded-gate:end -->
+
+<!-- exp4193-sovereign-generator:start -->
+### GAP-SOVEREIGN-LOCAL-GAP4-GENERATOR-4188: Exp 4193 .388 sovereign local GAP-4 generator
+- status: building_sovereign_local_generator_positive_flagged
+- evidence: `results/experiment_4188_sovereign_local_generator_gap4_self_distill.json`; local_induction_rate=0.2258; local_demo_perfect=7; local_total=31; sovereign_pool_pass2.LOCAL_HARDENED_GATE=0.4839; sovereign_pool_pass2.TRM_VOTE=0.4516; sovereign_pool_pass2.delta_vs_vote=0.0323; self_distillation_corpus_size=7; no_closed_weight_call=true; flagged_adversarial=true.
+- failure mode: the local generator recovers a positive guarded pass@2 lift and banks a verifier-labeled corpus, but its induction rate remains far below the Codex reference and the source artifact carries adversarial caveats.
+- missing discriminator: stronger local program induction or verifier-guided generation that surfaces demo-perfect programs without closed-weight calls.
+- candidate design: continue sovereign generator improvement and self-distill from verifier-labeled demo-perfect programs before any clean filled claim.
+- priority: high
+<!-- exp4193-sovereign-generator:end -->

@@ -1,0 +1,254 @@
+{
+  "cited_upstream_artifacts": [
+    "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "results/arc3_gap4_induced_programs.json",
+    "results/experiment_4186_efficiency_moat_verifier_vs_llm_judge.json",
+    "results/experiment_4187_gap4_graded_execution_gate_hardening.json",
+    "results/experiment_4188_sovereign_local_generator_gap4_self_distill.json"
+  ],
+  "duration_s": 0.768,
+  "efficiency_moat": {
+    "accuracy_parity_vs_judge": {
+      "arm_a_pass1": 0.84,
+      "arm_j_pass1": 0.66,
+      "bootstrap_resamples": 2000,
+      "ci95": [
+        0.08,
+        0.3
+      ],
+      "delta": 0.18,
+      "n": 50,
+      "status": "measured",
+      "within_ci_or_better": true
+    },
+    "arms": {
+      "arm_a_verifier": {
+        "pass1": 0.84,
+        "policy": "executable_verifier_evidence_plus_vstar_selector",
+        "status": "measured",
+        "total_tokens": 0,
+        "total_wall_clock_s": 9.6481002e-05
+      },
+      "arm_b_sc_vote": {
+        "pass1": 0.66,
+        "policy": "self_consistency_vote_weight",
+        "status": "measured",
+        "total_tokens": 0,
+        "total_wall_clock_s": 1.5058002e-05
+      },
+      "arm_j_llm_judge": {
+        "pass1": 0.66,
+        "policy": "exp4185_llm_as_judge_replay_first_unique_task_call",
+        "status": "measured",
+        "total_tokens": 5270,
+        "total_wall_clock_s": 48.274417
+      },
+      "oracle": {
+        "pass_at_k": 0.84,
+        "policy": "any_candidate_executable_passes",
+        "status": "measured"
+      }
+    },
+    "artifact_path": "results/experiment_4186_efficiency_moat_verifier_vs_llm_judge.json",
+    "cost_ratio_vs_judge": {
+      "arm_a_total_tokens": 0,
+      "arm_a_total_wall_clock_s": 9.6481002e-05,
+      "arm_j_completion_tokens": 100,
+      "arm_j_prompt_tokens": 5170,
+      "arm_j_total_tokens": 5270,
+      "arm_j_total_wall_clock_s": 48.274417,
+      "status": "measured",
+      "strictly_pareto_dominant": true,
+      "ten_x_cheaper_on_both_axes": true,
+      "token_x_cheaper": null,
+      "tokens": 0.0,
+      "wall_clock": 1.9986e-06,
+      "wall_clock_x_cheaper": 500351.5303458394
+    },
+    "gap_id": "GAP-MOAT-EFFICIENCY-JUDGE-4186",
+    "honest_verdict": "complete: verifier_efficiency_win_true_delta_0.1800",
+    "inference_substrate": "deterministic_verifier_replay_vs_cost_metered_llm_judge_replay",
+    "missing_discriminator": "none_when_efficiency_win_true",
+    "model_specs": {
+      "cached_sota_pair_result": [
+        {
+          "gpu": 0,
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "name": "Qwen3.6-35B-A3B"
+        },
+        {
+          "gpu": 1,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "loader": "llama_cpp.Llama",
+      "prompt_version": "exp4185-best-candidate-index-v1",
+      "runtime_error": null,
+      "selected_judge": {
+        "gpu": 1,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "name": "Gemma4-26B-A4B-it"
+      }
+    },
+    "positive_control_confirmed": true,
+    "reproducibility_checksum": "469095422fb8be9500a900dbd2208617f47e164246f4f48fbc00440ede6999b6",
+    "source_artifacts": [
+      "results/experiment_4186_efficiency_moat_verifier_vs_llm_judge.json"
+    ],
+    "status": "filled_verifier_efficiency_win",
+    "verifier_efficiency_win": true
+  },
+  "experiment": "experiment_4193_verifier_registry_gaps_hygiene",
+  "field_principles": {
+    "gaps_updated": "Lists the verifier_gaps entries touched (efficiency moat + GAP-4 graded gate + sovereign generator).",
+    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled to the .388 truth.",
+    "regression_guard_passed": "Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression."
+  },
+  "gap4_graded_gate": {
+    "agreement_confidence_label_only": true,
+    "artifact_path": "results/experiment_4187_gap4_graded_execution_gate_hardening.json",
+    "band_precision_at_tau": {
+      "correct": 0,
+      "definition": "demo-perfect entries whose closest candidate has 0 < min_hamming <= tau",
+      "precision": 0.0,
+      "tau": 0.02,
+      "total": 4
+    },
+    "gap_id": "GAP-4-GRADED-GATE-4187",
+    "gate_fire_count": 16,
+    "graded_gate_pass2_vs_vote": 0.129,
+    "gross_recovery_ledger": {
+      "lost": 0,
+      "recovered": 4
+    },
+    "guard_block_count": 1,
+    "honest_verdict": "complete: gap4_graded_relaxation_adds_nothing_on_arc1_holds_exact_baseline_n31_vote_0.4516_graded_0.5806_recovered_4_lost_0_guarded_25094a63",
+    "inference_substrate": "deterministic_verifier",
+    "missing_discriminator": "none_for_guarded_arc1_pass2_baseline",
+    "pass2_vote_wins_lost": 0,
+    "pass_at_1": {
+      "GRADED_GATE": 0.5806,
+      "TRM_VOTE": 0.4194
+    },
+    "pass_at_2": {
+      "EXACT_MATCH_GUARDED": 0.5806,
+      "GRADED_GATE": 0.5806,
+      "TRM_VOTE": 0.4516
+    },
+    "reproducibility_checksum": "9fe0c769508feadd3e94964f2dadb76a99ff0065dad295ddf0a739707b5c2f74",
+    "source_artifacts": [
+      "results/experiment_4187_gap4_graded_execution_gate_hardening.json"
+    ],
+    "status": "filled_guarded_graded_gate_holds_plus4_minus0",
+    "vote_aware_guard": {
+      "blocked_tasks": [
+        "25094a63"
+      ],
+      "rule": "block a non-top-vote promotion when the vote leader has at least threshold_votes",
+      "threshold_votes": 900
+    },
+    "vote_aware_guard_blocked_mispromotion": true
+  },
+  "gaps_path": "ops/verifier_gaps.md",
+  "gaps_updated": [
+    "GAP-MOAT-EFFICIENCY-JUDGE-4186",
+    "GAP-4-GRADED-GATE-4187",
+    "GAP-SOVEREIGN-LOCAL-GAP4-GENERATOR-4188"
+  ],
+  "honest_verdict": "complete: registry_gaps_reconciled_to_v388_truth_regression_guard_passed_True_efficiency_filled_verifier_efficiency_win_gap4_filled_guarded_graded_gate_holds_plus4_minus0_sovereign_building_sovereign_local_generator_positive_flagged",
+  "inference_substrate": "cached_gap4_replay_and_ledger_reconciliation",
+  "offline_replay": {
+    "arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+    "expected": {
+      "arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      }
+    },
+    "gap4_arc1_reproduced": true,
+    "no_codex_calls": true,
+    "no_gguf_inference": true,
+    "regression_guard_passed": true
+  },
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_updated": true,
+  "regression_guard_passed": true,
+  "schema": "carnot.experiment_4193_verifier_registry_gaps_hygiene.v1",
+  "sovereign_generator": {
+    "artifact_path": "results/experiment_4188_sovereign_local_generator_gap4_self_distill.json",
+    "corrigendum_pending": [
+      {
+        "detail": "duration_s=1.168103 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+        "kind": "DURATION_TOO_SHORT",
+        "severity": "critical"
+      }
+    ],
+    "flagged_adversarial": true,
+    "gap_id": "GAP-SOVEREIGN-LOCAL-GAP4-GENERATOR-4188",
+    "honest_verdict": "success: sovereign_local_gap4_recovers_headroom_pass20.4839_cov0.2258_corpus7",
+    "inference_substrate": "local_gguf_checkpoint_replay_plus_deterministic_hardened_gate",
+    "local_induction_rate": {
+      "codex_reference": {
+        "demo_perfect": 29,
+        "rate": 0.9355,
+        "total": 31
+      },
+      "demo_perfect": 7,
+      "rate": 0.2258,
+      "total": 31
+    },
+    "missing_discriminator": "stronger_local_generator_or_verifier_guided_induction",
+    "model_specs": {
+      "generator_gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "generator_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "generator_model": "Qwen3.6-35B-A3B",
+      "generator_source": "local_gguf_checkpoint_replay",
+      "hardened_gate": "experiment_4187_gap4_graded_execution_gate_hardening",
+      "source_checkpoint_k_samples_per_task": 8,
+      "source_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/decentralization_moe_qwen35a3b_arc1_k8.checkpoint.json",
+      "source_checkpoint_schema": "carnot.experiment_4059_decentralization_moe_resume.checkpoint.v1"
+    },
+    "no_closed_weight_call": true,
+    "prior_local_moe_null": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4069_decentralization_moe_sync.json",
+    "reproducibility_checksum": "81a4a43ecabd833a",
+    "self_distillation_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4188_sovereign_local_generator_gap4_self_distill_corpus.jsonl",
+    "self_distillation_corpus_size": 7,
+    "source_artifacts": [
+      "results/experiment_4188_sovereign_local_generator_gap4_self_distill.json"
+    ],
+    "sovereign_pool_pass2": {
+      "LOCAL_HARDENED_GATE": 0.4839,
+      "TRM_VOTE": 0.4516,
+      "codex_hardened_reference": 0.5806,
+      "delta_vs_vote": 0.0323,
+      "gate_fire_count": 6,
+      "guard_block_count": 0,
+      "lost": 0,
+      "pass_at_1": {
+        "LOCAL_HARDENED_GATE": 0.4839,
+        "TRM_VOTE": 0.4194
+      },
+      "recovered": 1
+    },
+    "status": "building_sovereign_local_generator_positive_flagged"
+  },
+  "spec_refs": [
+    "REQ-VERIFY-4193",
+    "SCENARIO-VERIFY-4193"
+  ]
+}
