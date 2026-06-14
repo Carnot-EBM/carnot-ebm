@@ -8501,3 +8501,4 @@ c |
 | 2026-06-14 20:56 UTC | PHASE A3 (THE HEADLINE GATE, gated_on A2 selector_ | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4209-oracle-distinct-arc-verifier-build |
 | 2026-06-14 20:58 UTC | PHASE A3 (THE HEADLINE GATE, gated_on A2 selector_ | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4209-oracle-distinct-arc-verifier-build |
 | 2026-06-14 22:18 UTC | PHASE B1 (OWED; self-learning/FR-11) -- FINISH the | OK | Deliverable already exists in repo |
+| 2026-06-14 22:36 UTC | PHASE B2 (self-learning / sovereignty; north-star) | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
