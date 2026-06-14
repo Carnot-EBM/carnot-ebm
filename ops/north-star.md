@@ -47,6 +47,21 @@ commodity/third-party, energy = verification layer. The north star is the
 *system's* solve-rate; the verifier is Carnot's specific, load-bearing,
 existential contribution to it.
 
+**Execution moat (proven, but circular) vs oracle-distinct moat (the open claim) —
+2026-06-14.** The `.386–`.388 arc located the verifier's value precisely. What is
+*proven*: Carnot's verifier adds value wherever it can **execute** — selection where
+headroom exists (code +18pp), cost (beats an LLM-judge ~10–100× cheaper), ARC recovery via
+GAP-4 execution (0.45→0.58). But these are **circular** (the verifier *is* the executable
+oracle), so the honest claim is **"a cheap, automatic, decentralized execution-grounded
+verification layer,"** NOT "we proved a general verifier moat." What is **open** (the actual
+frontier): an **oracle-distinct** verifier — learned/energy — that captures headroom where
+**no cheap executable oracle exists** (today the GAP-3 energy verifier *ties* vote on ARC;
+the converged-TRM Sudoku selection moat is ~0-headroom). The north-star bet is closing that
+gap; until an oracle-distinct win lands with a matched control (CI95-excl-0), the moat is
+"execution-grounded, circular" and the DiffusionGemma gate stays STILL-PENDING. Enforced by
+CLAUDE.md "Circularity / Oracle-Distinctness Discipline" (every moat claim declares
+`verifier_is_oracle`) + `adversarial_verify.py:check_circular_moat_overclaim`.
+
 **Access is OPEN — the blocker is the BUILD, not access (corrected 2026-06-08).**
 Earlier framing called real-benchmark access the binding blocker (exp1166
 "leaderboard_unavailable_email_drafted"). That is now disproven: the official SDK
