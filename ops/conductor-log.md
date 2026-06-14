@@ -8470,3 +8470,4 @@ c |
 | 2026-06-14 10:37 UTC | PHASE A2 (DECISIVE, gated_on A1 headroom>=0.10) —  | OK | 85 passed, 1 warning in 7.39s |
 | 2026-06-14 10:50 UTC | PHASE B1 — GAP-4 graded execution-energy gate (pro | OK | 91 passed, 1 warning in 5.22s |
 | 2026-06-14 11:08 UTC | PHASE B2 (SELF-LEARNING + decentralization) — Sove | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-14 11:26 UTC | PHASE C1 — DiffusionGemma verifier-guided decoding | OK | 91 passed, 1 warning in 8.61s |
