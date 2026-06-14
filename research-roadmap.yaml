@@ -1,36 +1,39 @@
-milestone: 2026.06.387
-milestone_title: "PROVE-OR-BOUND THE VERIFIER MOAT WITH HEADROOM CONTROLS — headroom-gated executable moat test (positive-control) + V-STaR learned selector + GAP-3 Stage-1 model-native ARC energy (CPU; dump exists); DiffusionGemma stays GATED"
-milestone_doc: openspec/change-proposals/research-roadmap-v387.md
+milestone: 2026.06.388
+milestone_title: "HARDEN THE VERIFIER MOAT WHERE IT MATTERS — efficiency vs LLM-as-judge (the owed north-star §5 win) + GAP-4 execution-verifier production-safety + a SOVEREIGN local generator + the now-unlocked DiffusionGemma verifier-guided decoding"
+milestone_doc: openspec/change-proposals/research-roadmap-v388.md
 milestone_overview: |
-  The verifier is Carnot's existential value-add (north-star §5). Milestone .386 ran the decisive
-  verifier-as-reward graft on the outer-loop-trained TRM Sudoku baseline (val 0.8227) and got a NULL
-  (exp4168 verifier_value_added=false) — BUT the null is uninformative because oracle@k 0.8125 ≈ the
-  0.82 baseline: Sudoku-Extreme at this checkpoint has almost no selectable headroom, so the test
-  cannot distinguish "verifier fails" from "nothing to select" (FALSE_NEGATIVE_RISK). The two corpora
-  show the two failure modes: Sudoku (verifier perfect, zero headroom) and ARC (real ~13pp headroom,
-  hand-invariant verifier ANTI-ranks — GAP-3). Fresh lit (arXiv:2605.07395) adds that apparent
-  headroom can itself be an evaluation artifact. So .387 answers the moat question PROPERLY:
-    PHASE A — headroom-controlled moat test (positive-control): A1 build a headroom gate with an
-      OBJECTIVE/EXECUTABLE oracle + census cached pools to FIND a headroom-present executable domain;
-      A2 build the V-STaR learned selector (accepted+rejected traces); A3 the decisive moat test on
-      that domain with a MATCHED no-verifier control, reporting accuracy AND cost.
-    PHASE B — GAP-3 Stage-1 model-native ARC energy: the activation dump ALREADY EXISTS
-      (results/arc3_gap3_stage1_candidate_table.npz, z_mean (8041,512)), so this is CPU-only — score
-      with model-native basis + learned probe, run all gates + adversarial checks; does it reach the
-      proven ~13pp headroom?
-    PHASE C — ARC incremental +1 (monotonic; non-spatial exhausted → deeper level / spatial game).
-    PHASE D — reserved slots: SOTA-ingestion, registry+gaps hygiene, hardware continuity, capstone.
-  DiffusionGemma stays GATED: it activates only when a headroom-present executable domain shows
-  verifier_value_added==true. .387 does NOT launch DiffusionGemma; the capstone resolves the gate.
+  .387 PROVED the verifier moat on an executable domain (exp4177 code: verifier+V-STaR pass@1 0.84 vs
+  SC-vote 0.66, +0.18 CI95[0.08,0.30], matched no-verifier control also 0.66, positive_control_confirmed),
+  which flipped the DiffusionGemma gate to MET. But the proof has three honest caveats, each load-bearing
+  for the north star (solve ARC-AGI-3 accurately AND efficiently): (1) the EFFICIENCY axis was NOT won
+  (efficiency_parity=false; the verifier was compared vs ~free self-consistency vote, never vs an
+  LLM-as-judge — the actual north-star §5 win condition "parity at 10-100x cheaper"); (2) the code verifier
+  is semi-circular (verifier ≈ unit-test oracle), and the harder claim — a verifier beats vote where it is
+  NOT the oracle — is the ARC GAP-3 question, which came back BOUNDED (exp4178); (3) the only ARC verifier
+  that reaches headroom is GAP-4 EXECUTION (vote 0.45 -> gated 0.58), unhardened and NOT sovereign (codex
+  generator). So .388 converts "proven on the easy case" into the moat the north star needs:
+    PHASE A — THE EFFICIENCY MOAT (decisive owed §5 win): A1 headroom re-census + LLM-as-judge baseline
+      harness + REAL wall-clock/token cost meter; A2 (gated_on A1 headroom>=0.10) the head-to-head —
+      Carnot executable/energy verifier vs LLM-as-judge: accuracy parity (CI95) AND cost ratio ->
+      verifier_efficiency_win.
+    PHASE B — THE ARC VERIFIER VIA THE PROVEN PATH (execution): B1 GAP-4 graded execution-energy gate
+      (production-safe; tau=0.005 + vote-aware guard; NOT the retired agreement-selector); B2 a SOVEREIGN
+      local open-weight generator + GAP-4-verified self-distillation (decentralization rule 1 + self-learning).
+    PHASE C — UNLOCKED GENERATION + ARC PROGRESS + LIVE-ENV GROUNDING: C1 DiffusionGemma verifier-guided
+      decoding (gate MET; feasibility+smoke behind a HARD cache/per-step-logit precondition); C2 ARC
+      incremental +1 (monotonic, via the hardened GAP-4 stack); C3 a real ARC-AGI-3 LIVE-env grounding probe.
+    PHASE D — reserved slots: D1 SOTA-ingestion, D2 registry+gaps hygiene, D3 hardware continuity, D4 capstone.
+  GAP-3 trained ARC content energies stay RETIRED (operator-authorization required per
+  ops/exclusion_manifest.yaml); .388 does NOT auto-run CEM (arXiv:2510.20607) — it re-flags it to the operator.
 
   HARD RULE (every task): NO task may launch TRM training, run pkill/kill against train.py, or WRITE
-  results/trm_runs/sudoku_extreme_baseline/. Training is DONE (SIGTERM'd at val 0.8227); the conductor
-  stays stood-down. TRM-touching tasks are READ-ONLY.
+  results/trm_runs/sudoku_extreme_baseline/. Training is DONE (SIGTERM'd at val 0.8227); the conductor stays
+  stood-down. TRM-touching tasks are READ-ONLY.
 
 tasks:
-  - id: exp4174-archive-v386-activate-v387
-    milestone: 2026.06.387
-    title: "Archive .386 -> activate .387; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .386 close-state (outer-loop TRM converged to val 0.8227; decisive graft FIRED but returned a HEADROOM-LIMITED null, verifier_value_added=false, oracle@k 0.8125 ≈ baseline; DiffusionGemma gate STILL-PENDING; ARC total_games_solved=13)."
+  - id: exp4184-archive-v387-activate-v388
+    milestone: 2026.06.388
+    title: "Archive .387 -> activate .388; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .387 close-state (verifier moat PROVEN-headroom-present on code, exp4177 verifier_value_added=true delta +0.18 CI95[0.08,0.30] but efficiency_parity=false; GAP-3 Stage-1 BOUNDED exp4178; DiffusionGemma gate MET; ARC total_levels_solved=14/total_games_solved=13)."
     priority: critical
     track: infra
     max_turns: 100
@@ -38,322 +41,415 @@ tasks:
     model: gpt-5.5
     operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): archive-vN-activate-vN+1 — false-positive scope-match vs all prior archive-v* tasks; structurally never a doomed rerun. 2026-06-12 quota-conserve: archive on codex."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4174_archive_v386_activate_v387.json
+    deliverable: results/experiment_4184_archive_v387_activate_v388.json
     prompt: |
-      CONTEXT: Close .386, activate .387. Per the .386 outcome, the outer-loop owns TRM training
-      (now DONE: val 0.8227, SIGTERM'd) and the conductor stays stood-down on TRM training. This
-      archive runs on CODEX (mechanical).
+      CONTEXT: Close .387, activate .388. The outer-loop owns TRM training (DONE: val 0.8227, SIGTERM'd)
+      and the conductor stays stood-down on TRM training. This archive runs on CODEX (mechanical).
 
       EXISTING CODE TO READ FIRST:
         - research-complete.yaml (the archive target), ops/exclusion_manifest.yaml (parse check)
-        - results/experiment_4173_capstone_v386.json (the .386 close-state to record)
+        - results/experiment_4183_capstone_v387.json (the .387 close-state to record)
 
-      TASK: archive .386, activate .387, record the .386 close-state truthfully.
+      TASK: archive .387, activate .388, record the .387 close-state truthfully.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (check BEFORE any subsequent step):
            a. `python3 -c "import yaml; yaml.safe_load(open('research-complete.yaml')); yaml.safe_load(open('ops/exclusion_manifest.yaml'))"` exits 0.
            b. The smart-subset pre-test gate is green.
            If ANY fails -> honest_verdict `blocked_<resource>` and STOP.
-        1. Archive .386 into research-complete.yaml; activate .387.
-        2. Record the .386 close-state: outer-loop TRM converged to val 0.8227; the decisive graft
-           FIRED but returned a HEADROOM-LIMITED null (verifier_value_added=false, oracle@k 0.8125
-           ≈ baseline 0.82); DiffusionGemma gate STILL-PENDING; ARC total_games_solved=13.
+        1. Archive .387 into research-complete.yaml; activate .388.
+        2. Record the .387 close-state: verifier moat PROVEN-headroom-present on the code executable domain
+           (exp4177 verifier_value_added=true, +0.18 CI95[0.08,0.30], matched control also +0.18) BUT
+           efficiency_parity=false (verifier compared vs vote, not vs an LLM-judge — the .388 owed work);
+           GAP-3 Stage-1 BOUNDED (exp4178 latent AUROC 0.89, selection delta 0.0); DiffusionGemma gate MET;
+           ARC total_levels_solved=14, total_games_solved=13.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
-        v386_close_state:
-          principle: "Honest record (graft null was headroom-limited, not a true verifier failure) so the .387 planner frames the moat test as a positive-control problem, not a redo."
+        v387_close_state:
+          principle: "Honest record (moat proven on accuracy but efficiency unwon; GAP-3 bounded) so the .388 planner frames the milestone as 'win the efficiency axis + harden the proven execution path', not a redo."
         preconditions_checked:
           principle: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
-      ACCEPTANCE: honest_verdict terminal-prefixed; .387 activated; close-state recorded truthfully.
+      ACCEPTANCE: honest_verdict terminal-prefixed; .388 activated; close-state recorded truthfully.
 
-      Run: `python3 results/experiment_4174_archive_v386_activate_v387.py` (or your archive script).
+      Run: `python3 results/experiment_4184_archive_v387_activate_v388.py` (or your archive script).
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4175-headroom-gate-executable-census
-    milestone: 2026.06.387
-    title: "PHASE A1 — Headroom gate + executable-oracle corpus census. Build reusable scripts/headroom_gate.py: for each cached candidate pool compute oracle@k vs baseline pass@1 vs SC-vote with an OBJECTIVE/EXECUTABLE oracle (run code/tests, parse math — NO LLM judge, per arXiv:2605.07395), and flag artifact inflation (truncation/format mismatch). Census {{code HumanEval/MBPP (exp1999/2090/1607), math GSM8K, Sudoku held-out}}. Emit max_selectable_headroom (BARE) + headroom_present_domain. This is the POSITIVE CONTROL the moat test requires."
-    priority: high
-    track: verifier-moat
-    max_turns: 60
-    agent_type: codex
-    model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the headroom-gate infra is the forward difference addressing the exp4168 headroom-limited null — false-positive scope-match vs prior verifier-moat tasks; new infra = objective/executable-oracle headroom measurement + artifact sanitization (arXiv:2605.07395), never tested before."
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4175_headroom_gate_executable_census.json
-    prompt: |
-      CONTEXT: The .386 moat graft was a NULL only because Sudoku had no selectable headroom (oracle@k
-      ≈ baseline). Before re-asking "does the verifier add value?", we must FIND a domain that actually
-      HAS selectable headroom, measured with an OBJECTIVE oracle. arXiv:2605.07395 warns that apparent
-      headroom is often an evaluation artifact (LLM-judge bias, truncation, format mismatch) — so the
-      oracle MUST be executable/objective, and the measurement MUST be sanitized.
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_1999_code_verification_humaneval.json (baseline 0.66 -> repair 0.84)
-        - results/experiment_2090_crane_humaneval.json, results/experiment_1607_dsl_humaneval.json
-        - results/experiment_1816_gsm8k_baseline.json, results/adversarial_gsm8k_data_400.json
-        - results/arc3_trm_verifier_rerank.json (Sudoku/ARC pool, KNOWN low/no headroom — the negative anchor)
-        - scripts/summarize_artifact.py (read artifacts via this, not raw JSON)
-
-      TASK: build scripts/headroom_gate.py and census the cached candidate pools for selectable headroom.
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS: confirm at least 2 cached candidate pools with stored multi-candidate sets
-           exist (`ls results/experiment_1999_* results/experiment_2090_* results/experiment_1816_*`).
-           If a pool stores only a single greedy completion (no K candidates), mark it
-           census_incomplete for that domain and continue. If NO multi-candidate pool exists -> honest_verdict
-           `blocked_no_multicandidate_pool` and STOP.
-        1. Implement scripts/headroom_gate.py with a function headroom(pool) -> {{oracle_at_k,
-           baseline_pass1, sc_vote_pass1, selectable_headroom = oracle_at_k - sc_vote_pass1, n,
-           artifact_flags}}. Oracle MUST be executable/objective: run unit tests for code; exact-match
-           for math/Sudoku. NO LLM judge.
-        2. Sanitize per arXiv:2605.07395: flag candidates that are truncated, mis-formatted, or
-           unparseable as artifact_inflation rather than counting them as oracle hits.
-        3. Census {{code, math, Sudoku}} pools; pick headroom_present_domain = the executable domain with
-           the largest sanitized selectable_headroom; emit max_selectable_headroom BARE (a plain float,
-           NOT a {{value,principle}} dict — gated fields must be bare).
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal-prefixed. A clean census (even 'no domain clears 0.10') is a COMPLETE verdict."
-        max_selectable_headroom:
-          principle: "BARE float (oracle@k - SC-vote, sanitized) — the downstream gate for A3 compares this raw value; a principle-dict would break the gate (gated-fields-must-be-bare)."
-        headroom_present_domain:
-          principle: "Names the executable domain A3 must run on; the positive control that makes a null informative."
-        per_domain_headroom:
-          principle: "oracle@k/baseline/vote/headroom/artifact_flags per domain so a reviewer can audit the pick and the sanitization."
-        artifact_inflation_flagged:
-          principle: "Count of candidates excluded as truncated/mis-formatted; proves the headroom is real, not an evaluation artifact (arXiv:2605.07395)."
-      ACCEPTANCE GATE:
-        - condition: "headroom_present_domain named with executable oracle AND max_selectable_headroom emitted BARE, OR an honest 'no domain clears 0.10' verdict"
-          principle: "Either a positive control is established for A3, or we honestly record that no cached executable pool has selectable headroom (which itself bounds the moat claim)."
-
-      Run: `python3 results/experiment_4175_headroom_gate_executable_census.py`
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4176-vstar-learned-selector
-    milestone: 2026.06.387
-    title: "PHASE A2 — V-STaR learned selector (arXiv:2402.06457). Train an oracle-free selector on ACCEPTED + REJECTED candidate traces (so it learns a correctness boundary, not just imitates winners), out-of-fold. The missing learned-selector verifier class. Deployable ranker consumed by A3. Prefer cached traces; if fresh traces needed, generate from a SOTA GGUF behind a PRECONDITIONS cache check."
+  - id: exp4185-headroom-recensus-llm-judge-harness
+    milestone: 2026.06.388
+    title: "PHASE A1 — Headroom re-census + LLM-as-judge baseline harness + REAL cost meter. Reuse scripts/headroom_gate.py to re-establish the executable-headroom domain(s) (code proven 0.18; attempt a 2nd executable pool — MBPP/EvalPlus or held-out Sudoku — generating candidates from a SOTA GGUF behind a PRECONDITIONS cache check if none cached). BUILD the LLM-as-judge arm (a SOTA GGUF prompts a best-candidate selection) with per-call wall-clock + token instrumentation; SMOKE it on >=3 real candidates. Emit max_selectable_headroom (BARE) + llm_judge_ready + the cost meter. The comparator + positive control A2 requires."
     priority: high
     track: verifier-moat
     max_turns: 70
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the V-STaR accepted+rejected learned selector is the forward difference — false-positive scope-match vs prior verifier tasks; no prior experiment trained a selector on rejected traces; flagged by the .386 SOTA ingestion (exp4170) as the .387 prerequisite for DiffusionGemma."
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4176_vstar_learned_selector.json
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the LLM-as-judge harness + real-cost meter is the forward difference addressing the exp4177 efficiency_parity=false caveat — false-positive scope-match vs the .387 headroom-gate task (exp4175); new infra = an LLM-as-judge comparator arm + wall-clock/token cost instrumentation, never built before."
+    inference_substrate: live_llm_inference
+    deliverable: results/experiment_4185_headroom_recensus_llm_judge_harness.json
     prompt: |
-      CONTEXT: Every Carnot verifier to date is a hand-built invariant or an outcome checker. V-STaR
-      (arXiv:2402.06457) is the missing LEARNED-selector class: train on BOTH accepted and rejected
-      traces so the model learns where the correctness boundary is. The .386 SOTA ingestion (exp4170)
-      flagged this as the .387 prerequisite to unlock DiffusionGemma guidance.
+      CONTEXT: .387 proved the verifier adds +18pp accuracy on code (exp4177) BUT efficiency_parity=false
+      because it compared the verifier vs self-consistency VOTE (nearly free), never vs an LLM-as-judge. The
+      north-star §5 win condition is "equally effective as the LM at lower cost" (target parity at 10-100x
+      cheaper; arXiv:2504.01005: SC beats a generative verifier on cost until ~8x). A2 runs the decisive
+      head-to-head; A1 builds the comparator (LLM-as-judge arm + real cost meter) and re-establishes the
+      headroom positive control with an OBJECTIVE/EXECUTABLE oracle (arXiv:2605.07395: apparent headroom is
+      often an evaluation artifact).
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4175_headroom_gate_executable_census.json (the chosen domain + pool)
-        - scripts/experiment_template.py (cached_sota_pair() for any fresh generation)
-        - research-references.md ".387 planning sweep" (V-STaR 2402.06457; arXiv:2504.16828 ThinkPRM)
+        - scripts/headroom_gate.py (the .387 oracle@k / SC-vote / selectable_headroom helpers)
+        - results/experiment_4175_headroom_gate_executable_census.json (.387 census: code 0.18, math n=0, sudoku 0.129)
+        - results/experiment_1999_code_verification_humaneval.json (the proven code pool; baseline 0.66 -> repair 0.84)
+        - scripts/experiment_template.py (cached_sota_pair() — returns each model's .gguf model_path)
+        - scripts/summarize_artifact.py (read artifacts via this, not raw JSON)
+        - CLAUDE.md "GGUF tokenizer rule" (load via the .gguf path, NOT AutoTokenizer)
 
-      TASK: build an oracle-free, out-of-fold V-STaR-style selector on accepted+rejected traces.
+      TASK: re-census executable headroom + build & smoke the LLM-as-judge arm with a real cost meter.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS:
-           a. A cached candidate pool with per-candidate correctness labels exists for an executable
-              domain (reuse exp4175's headroom_present_domain pool).
-           b. IF fresh trace generation is required, verify a SOTA GGUF is cached:
-              `python3 -c "from scripts.experiment_template import cached_sota_pair; print(cached_sota_pair())"`
-              (expects unsloth/Qwen3.6-35B-A3B-GGUF or unsloth/gemma-4-26B-A4B-it-GGUF). Load via the
-              .gguf path, NOT AutoTokenizer (GGUF tokenizer rule). If neither cached and traces are
-              needed -> honest_verdict `blocked_model_not_cached_sota_gguf` and STOP.
-        1. Build the selector: featurize each (input, candidate) and train an OOF classifier/ranker on
-           ACCEPTED (correct) vs REJECTED (incorrect) traces. Oracle-free: never read held-out gold.
-        2. Report selector AUROC (gold vs non-gold) + pass@1 when used as a ranker vs SC-vote, OOF.
-        3. Persist the selector so A3 can load it as a deployable ranker.
+        0. PRECONDITIONS (check BEFORE any subsequent step):
+           a. `ls results/experiment_1999_code_verification_humaneval.json` exists (the proven code pool).
+           b. A SOTA GGUF judge is cached: `python3 -c "from scripts.experiment_template import cached_sota_pair; print(cached_sota_pair())"`
+              (expects unsloth/gemma-4-26B-A4B-it-GGUF or unsloth/Qwen3.6-35B-A3B-GGUF). If NEITHER cached
+              -> honest_verdict `blocked_model_not_cached_sota_gguf` and STOP.
+        1. Re-census selectable headroom via scripts/headroom_gate.py with the EXECUTABLE oracle: confirm code
+           (oracle@k - SC-vote, sanitized) and ATTEMPT a 2nd executable pool (MBPP/EvalPlus, or held-out
+           Sudoku from arc3_trm_verifier_rerank.json). Emit max_selectable_headroom BARE (a plain float, NOT
+           a {{value,principle}} dict — gated fields must be bare) = the largest sanitized selectable headroom.
+        2. BUILD the LLM-as-judge arm: a function judge(problem, candidates) -> chosen_index that loads the
+           SOTA GGUF via the .gguf path and prompts a best-candidate selection. Instrument EVERY judge call
+           with wall-clock seconds + prompt/completion token counts.
+        3. SMOKE the judge on >=3 real candidate sets from the chosen pool; record judge_pass1_smoke +
+           mean_judge_latency_s + mean_judge_tokens. Set llm_judge_ready=true only if the smoke ran end-to-end.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. A trained selector (even one that ties vote) is a COMPLETE verdict."
-        selector_auroc_oof:
-          principle: "Out-of-fold gold-vs-non-gold AUROC; the learned selector's discrimination, measured without oracle leakage."
-        selector_pass1_vs_vote:
-          principle: "pass@1 as a ranker minus SC-vote pass@1 (OOF) — the learned-selector's standalone lift, input to A3."
-        accepted_rejected_n:
-          principle: "Counts of accepted and rejected traces trained on; V-STaR's value is using BOTH (rejected traces define the boundary)."
+          principle: "Terminal-prefixed. A clean census + a working judge harness is a COMPLETE verdict even if only code clears 0.10."
+        max_selectable_headroom:
+          principle: "BARE float (oracle@k - SC-vote, sanitized) — A2's gate compares this raw value; a principle-dict would break the gate (gated-fields-must-be-bare)."
+        headroom_present_domain:
+          principle: "Names the executable domain A2 runs the efficiency moat on; the positive control that makes a null informative."
+        llm_judge_ready:
+          principle: "Bare bool: the LLM-as-judge arm built AND smoke-ran end-to-end; A2 needs a working comparator to measure efficiency-parity against."
+        judge_cost_meter:
+          principle: "{{mean_judge_latency_s, mean_judge_tokens}} from the smoke — the cost baseline the A2 verifier-vs-judge ratio is computed against."
+        model_specs:
+          principle: "The actual SOTA GGUF invoked as the judge; required methodology for a live-LLM artifact."
         random_seed:
-          principle: "Determinism is the precondition for reproducibility; the selector must be re-trainable to the same result."
+          principle: "Determinism precondition; the judge's selections + the census must be reproducible."
         reproducibility_checksum:
-          principle: "Content hash of the trace corpus + features; catches silent corpus drift between this run and any replication."
-      ACCEPTANCE: an OOF selector with reported AUROC + pass@1-vs-vote, trained on both accepted and rejected traces, persisted for A3.
+          principle: "Content hash of the candidate pool + judge config; catches silent pool/model drift before A2."
+      ACCEPTANCE GATE:
+        - condition: "max_selectable_headroom emitted BARE AND llm_judge_ready true (a working LLM-judge arm), OR an honest blocked_model_not_cached_sota_gguf verdict"
+          principle: "A2 cannot measure efficiency-parity without both a headroom-present domain and a working LLM-judge comparator."
 
-      Run: `python3 results/experiment_4176_vstar_learned_selector.py`
+      Run: `python3 results/experiment_4185_headroom_recensus_llm_judge_harness.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4177-decisive-headroom-controlled-moat-test
-    milestone: 2026.06.387
-    title: "PHASE A3 (DECISIVE, gated_on A1 headroom>=0.10) — the headroom-controlled verifier moat test. On the headroom_present_domain: executable verifier ensemble + V-STaR selector (A2) vs SC-vote vs oracle, with a MATCHED no-verifier control (same budget/candidates/steps, arXiv:2511.02886) and accuracy AND cost (arXiv:2504.01005 SC-crossover). Decisive: does the verifier add value (CI95 excl 0) WHERE headroom exists? Resolves the moat question + informs the DiffusionGemma gate."
+  - id: exp4186-efficiency-moat-verifier-vs-llm-judge
+    milestone: 2026.06.388
+    title: "PHASE A2 (DECISIVE, gated_on A1 headroom>=0.10) — the EFFICIENCY moat: Carnot executable/energy verifier + V-STaR selector (ARM A) vs LLM-as-judge (ARM J) vs SC-vote (ARM B) vs oracle, on the headroom-present executable domain. Report accuracy parity (bootstrap CI95 on pass@1(A)-pass@1(J)) AND the REAL cost ratio (verifier wall-clock/tokens / judge wall-clock/tokens). verifier_efficiency_win := A within-CI of J on accuracy AND >=10x cheaper (or strict Pareto-dominance). Resolves the north-star §5 efficiency-parity question with REAL cost (fixes the .387 abstract-cost-unit caveat)."
     priority: high
     track: verifier-moat
     max_turns: 90
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + addresses the exp4168 headroom-limited null: the forward difference is a HEADROOM-PRESENT executable domain + matched no-verifier control + V-STaR selector + accuracy-and-cost reporting — false-positive scope-match vs the .386 graft; the .386 root cause (no selectable headroom) is now controlled-for via the A1 positive control."
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4177_decisive_headroom_controlled_moat_test.json
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + addresses the exp4177 efficiency_parity=false caveat: the forward difference is the LLM-as-judge comparator arm + REAL wall-clock/token cost reporting (not abstract selection-operation units) — false-positive scope-match vs the .387 moat test (exp4177); the .387 root cause (compared vs ~free vote, not vs an LLM-judge) is now controlled-for via ARM J."
+    inference_substrate: live_llm_inference
+    deliverable: results/experiment_4186_efficiency_moat_verifier_vs_llm_judge.json
     gated_on:
-      - upstream: exp4175-headroom-gate-executable-census
+      - upstream: exp4185-headroom-recensus-llm-judge-harness
         artifact_field: max_selectable_headroom
         op: '>='
         value: 0.10
     prompt: |
-      CONTEXT: THE decisive verifier-moat test, done with the positive control the .386 null lacked.
-      Only run on a domain A1 proved has selectable headroom (oracle@k - SC-vote >= 0.10) with an
-      executable oracle. The win condition (north-star §5) is efficiency-parity: the verifier earns its
-      place if it is at least as accurate as SC-vote at lower cost — accuracy gains are a bonus.
+      CONTEXT: THE decisive EFFICIENCY moat. .387 proved the verifier beats free vote on accuracy but costs
+      MORE than vote; the north-star §5 win is "matches an LLM-as-judge on accuracy at a fraction of the cost"
+      (target parity at 10-100x cheaper). 2026 practice corroborates the thesis: lightweight verifiers run
+      60-1000x cheaper than a frontier LLM-judge (the Meta-EBM Cascade Router). Run it head-to-head with REAL
+      wall-clock/token cost (NOT the .387 abstract selection-operation units).
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4175_headroom_gate_executable_census.json (headroom_present_domain + pool)
-        - results/experiment_4176_vstar_learned_selector.json (the deployable selector)
-        - scripts/headroom_gate.py (oracle@k / SC-vote helpers), scripts/adversarial_verify.py
-        - research-references.md ".387 sweep": arXiv:2504.01005 (SC compute-crossover), 2511.02886 (matched control), 2602.21189 (pass@k can hurt pass@1)
+        - results/experiment_4185_headroom_recensus_llm_judge_harness.json (headroom_present_domain, the judge arm, judge_cost_meter)
+        - results/experiment_4176_vstar_selector_model.json (the .387 V-STaR deployable selector)
+        - results/experiment_4177_decisive_headroom_controlled_moat_test.json (the .387 accuracy moat to extend with cost)
+        - scripts/headroom_gate.py, scripts/adversarial_verify.py, scripts/summarize_artifact.py
+        - research-references.md ".388 planning sweep": arXiv:2504.01005 (SC cost crossover), 2504.16828 (ThinkPRM comparator), openreview cve4NOiyVp (cost-tuned judge)
 
-      TASK: run the headroom-controlled moat test with a matched no-verifier control, accuracy + cost.
+      TASK: run the 4-arm efficiency moat (verifier vs LLM-judge vs vote vs oracle) with accuracy + REAL cost.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: A1 reported headroom_present_domain with max_selectable_headroom >= 0.10 AND
-           the executable oracle for that domain runs (e.g. `python3 -c "import subprocess"` for code
-           execution sandbox). If the gate field is missing/below 0.10 -> honest_verdict
-           `complete_moat_test_deferred_no_headroom_present` (the gate prevents an uninformative null)
-           and STOP. (The conductor gate should skip this task automatically; this is the in-script backstop.)
-        1. ARM A (verifier): rerank the K candidates per problem by the executable verifier ensemble +
-           V-STaR selector; measure pass@1 + total verifier compute/latency.
-        2. ARM B (SC-vote): self-consistency majority vote; pass@1 + compute.
-        3. ARM C (matched no-verifier control): SAME candidate budget, NO verifier (e.g. random or
-           first-of-K), to prove any A-lift is the verifier, not the extra compute (arXiv:2511.02886).
-        4. ORACLE: pass@k ceiling. Report A-vs-B delta with bootstrap CI95, A-vs-C delta, and the
-           accuracy/cost Pareto point ("parity at N× cheaper" if applicable). Run adversarial_verify.py.
+        0. PRECONDITIONS: A1 reported max_selectable_headroom >= 0.10 AND llm_judge_ready=true. If the gate
+           field is missing/below 0.10 OR the judge arm is not ready -> honest_verdict
+           `complete_efficiency_moat_deferred_no_headroom_or_no_judge` and STOP. (The conductor gate should
+           skip this automatically; this is the in-script backstop.)
+        1. ARM A (verifier): rerank K candidates per problem by the Carnot executable/energy verifier + V-STaR
+           selector; record pass@1 + total verifier wall-clock seconds + total tokens (0 for the executable
+           verifier; selector featurization time counted).
+        2. ARM J (LLM-as-judge): the A1 judge arm picks the best candidate per problem; record pass@1 + total
+           judge wall-clock seconds + total prompt/completion tokens.
+        3. ARM B (SC-vote): self-consistency majority vote; pass@1 + (near-zero) cost. ORACLE: pass@k ceiling.
+        4. Report: accuracy parity = bootstrap CI95 on pass@1(A) - pass@1(J); cost_ratio_wall_clock and
+           cost_ratio_tokens = ARM A cost / ARM J cost; the Pareto point. Run adversarial_verify.py.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. A clean positive, a clean (headroom-present) null, or a gated deferral are ALL COMPLETE."
-        verifier_value_added:
-          principle: "Bare bool: did ARM A beat SC-vote (CI95 excl 0) OR match it at lower cost? Resolves the moat question and the DiffusionGemma gate when headroom is present."
-        moat_delta_vs_vote:
-          principle: "pass@1(A) - pass@1(B) with CI95 — the accuracy axis of the moat, now measured WHERE headroom exists."
-        moat_vs_matched_control:
-          principle: "pass@1(A) - pass@1(C) — proves a win is the verifier, not extra adaptation compute (arXiv:2511.02886)."
-        accuracy_cost_pareto:
-          principle: "Compute/latency ratio at equal accuracy — the efficiency-parity win condition (north-star §5; arXiv:2504.01005)."
+          principle: "Terminal-prefixed. A clean efficiency win, an honest 'judge wins on accuracy', or 'no cost advantage' are ALL COMPLETE, decision-grade verdicts."
+        verifier_efficiency_win:
+          principle: "Bare bool: ARM A within-CI of ARM J on accuracy AND >=10x cheaper (or strictly Pareto-dominant). The north-star §5 win condition, measured against an LLM-judge with REAL cost."
+        accuracy_parity_vs_judge:
+          principle: "pass@1(A) - pass@1(J) with bootstrap CI95 — does the cheap verifier MATCH the expensive judge on accuracy?"
+        cost_ratio_vs_judge:
+          principle: "{{wall_clock, tokens}} ratio ARM A / ARM J — the efficiency axis in REAL units, fixing the .387 abstract-cost-unit caveat."
         positive_control_confirmed:
-          principle: "Bare bool: oracle@k > SC-vote AND >=1 flip occurred on this corpus — without it the null is uninformative (FALSE_NEGATIVE_RISK)."
+          principle: "Bare bool: oracle@k > SC-vote AND >=1 flip occurred on this corpus — without it the comparison is uninformative (FALSE_NEGATIVE_RISK)."
+        model_specs:
+          principle: "The SOTA GGUF invoked as the judge; required methodology for a live-LLM artifact."
         random_seed:
           principle: "Determinism precondition for reproducibility of the decisive measurement."
         reproducibility_checksum:
-          principle: "Content hash of candidate pool + verifier config; lets a third party re-run the decisive test."
+          principle: "Content hash of candidate pool + verifier + judge config; lets a third party re-run the head-to-head."
       ACCEPTANCE GATE:
-        - condition: "positive_control_confirmed True AND (verifier_value_added with CI95 reported), OR an honest gated deferral when headroom < 0.10"
-          principle: "Decisive only with the positive control in place; otherwise honestly defer rather than emit another uninformative null."
+        - condition: "positive_control_confirmed True AND accuracy_parity_vs_judge + cost_ratio_vs_judge both reported (verifier_efficiency_win resolved either way), OR an honest gated deferral when headroom < 0.10"
+          principle: "Decisive only with the positive control + both axes (accuracy AND cost) reported; otherwise honestly defer rather than emit an uninformative result."
 
-      Run: `python3 results/experiment_4177_decisive_headroom_controlled_moat_test.py`
+      Run: `python3 results/experiment_4186_efficiency_moat_verifier_vs_llm_judge.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4178-gap3-stage1-model-native-arc-energy
-    milestone: 2026.06.387
-    title: "PHASE B — GAP-3 Stage-1 model-native ARC energy (CPU; the activation dump ALREADY EXISTS). On results/arc3_gap3_stage1_candidate_table.npz (z_mean (8041,512), votes, q_mean, probe, correct, task_idx): score with (1a) a model-native ORTHOGONAL basis (arXiv:2604.17614) + (1b) the learned OOF probe. Run ALL gates (selection>vote, AUROC>0.70, coverage>=80%, headroom-capture>=30%) + ALL adversarial checks (permutation, strict OOF, oracle-leak, bootstrap CI). Does it reach the proven ~13pp ARC headroom? READ-ONLY w.r.t. TRM training."
+  - id: exp4187-gap4-graded-execution-gate-hardening
+    milestone: 2026.06.388
+    title: "PHASE B1 — GAP-4 graded execution-energy gate (production-safe). Implement+validate the graded min-hamming gate (tau=0.005 ONLY + a vote-aware guard blocking the measured exact-match mis-promotion over high-vote gold, the 25094a63 case) on the non-degenerate ARC-1 venue. The agreement signal STAYS a confidence label only (exp4023 retired agreement-as-selector). Report pass@1/pass@2 vs vote, the gross +/- ledger, and band precision at tau<=0.02. Makes the proven +4/-0 GAP-4 verifier safe for a richer candidate pool. READ-ONLY w.r.t. TRM training."
     priority: high
-    track: verifier-gap3
-    max_turns: 70
+    track: verifier-gap4
+    max_turns: 60
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): GAP-3 Stage-1 is the forward step after Stage-0 (q_halt scalar) was adversarially-confirmed NEGATIVE — false-positive scope-match vs Stage-0; forward difference = the full 512-d latent (not the 1-D scalar) per the gap3 design doc; the 0.86 within-task soft-AUROC says the signal is in the latent the scalar projected away."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the graded min-hamming gate + vote-aware guard is the ledger's banked-successor production-safety work, NOT the retired agreement-as-selector R&D — false-positive scope-match vs exp4023; agreement stays a confidence label only."
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4178_gap3_stage1_model_native_arc_energy.json
+    deliverable: results/experiment_4187_gap4_graded_execution_gate_hardening.json
+    prior_failures:
+      - experiment_id: exp4023-gap4-agreement-selector-closure
+        verdict: retired_agreement_is_confidence_label_not_precision_selector
+        addressed_by: "This is NOT agreement-as-selector. It implements the graded min-hamming gate (tau=0.005) + a vote-aware guard — the ledger's explicitly-banked-successor production-safety work; agreement remains a CONFIDENCE LABEL only, never a precision selector."
+        retire_if_same_verdict: true
     prompt: |
-      CONTEXT: ops/verifier_gaps.md GAP-3 is the PRIMARY verifier-build path: ~13pp of selectable
-      headroom is proven in TRM's ARC pool (oracle 0.61 > vote 0.45) but cheap hand-invariants are
-      exhausted (anti-rank). Stage-0 (q_halt scalar) was NEGATIVE; Stage-1 uses the full latent. The
-      GPU activation dump ALREADY EXISTS as results/arc3_gap3_stage1_candidate_table.npz, so this is a
-      CPU-only scoring task — NO GPU, NO TRM retrain, NO write to the stable checkpoint dir.
+      CONTEXT: ops/verifier_gaps.md: GAP-4 execution/program-synthesis verification is the ONLY ARC positive
+      (vote 0.4516 -> gated 0.5806, +4/-0 on ARC-1). Its precision decays on uncontaminated tasks (~0.47),
+      so on a richer pool near-misses must NOT be exact-match-promoted. The ledger's banked-successor forward
+      work is the GRADED min-hamming gate (tau=0.005 + a vote-aware guard for the 25094a63 high-vote-gold
+      mis-promotion). The agreement-as-SELECTOR line is RETIRED (exp4023, confidence-label-only) — do NOT
+      re-run it. This is a cached-pool replay: NO codex, NO GGUF, NO GPU, NO TRM retrain.
 
       EXISTING CODE TO READ FIRST:
-        - docs/research-notes/gap3-learned-arc-energy-design.md (REQ-GAP3-1/2/3, §3 gates, §4 adversarial)
-        - ops/verifier_gaps.md (the gap ledger; the corrected anti-rank evidence; the oracle ceiling 0.613)
-        - results/arc3_gap3_stage1_candidate_table.npz (z_mean,(8041,512); task_idx; votes; q_mean; probe; correct)
-        - results/arc3_gap3_stage0_qhalt_energy.json + ..._adversarial_verify.json (the Stage-0 negative)
+        - ops/verifier_gaps.md (GAP-4 build log; the graded-gate + vote-aware-guard banked successor; exp4023 retirement)
+        - scripts/gap4_program_induction_stack.py (tiered_select(); the deployed demo-fit execution safety gate)
+        - results/arc3_gap4_induced_programs.json + results/arc3_gap4_rule_exec_verifier.json (the ARC-1 pool + the +4/-0 numbers)
+        - results/arc3_gap4_arc2_consistency_ensemble.json (the precision-fix round: tau sweep, the 25094a63 case)
+        - scripts/summarize_artifact.py, scripts/adversarial_verify.py
 
-      TASK: score the existing latent dump with a model-native basis + learned probe; run all gates + adversarial.
+      TASK: implement+validate the production-safe graded execution-energy gate on the non-degenerate ARC-1 venue.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: `python3 -c "import numpy as np; d=np.load('results/arc3_gap3_stage1_candidate_table.npz'); assert d['z_mean'].shape[1]==512 and d['correct'].sum()>0"` exits 0. If the npz is
-           missing -> honest_verdict `blocked_stage1_latent_dump_missing` and STOP (do NOT launch a GPU dump — that risks the wall-cap + a training collision; queue the dump as a separate task instead).
-        1. (1a) model-native basis: recover an orthogonal basis (SVD/PCA-class) from z_mean on held-out
-           tasks; score candidate consistency along it. (1b) learned probe: a tiny OOF (leave-one-task-out)
-           logistic/MLP z_mean -> correctness. Rank candidates per task by each energy.
-        2. Gates (vs TRM frequency vote on held-out tasks): selection pass@2(energy) > pass@2(vote);
-           per-candidate AUROC(gold vs non-gold) > 0.70; coverage (energy defined) >= 80%;
-           headroom-capture >= 30% of (oracle - vote).
-        3. Adversarial (gap3 design §4): A1 permutation control (shuffle correctness labels within
-           augmentation strata -> must collapse to chance); A2 strict OOF (disjoint fit/eval task sets,
-           report in-fold vs OOF gap); A3 oracle-leak audit (energy identical with/without the gold file);
-           A4 bootstrap CI95 on the pass@2 delta vs vote (n=31 is directional; flag if the full 400-task
-           re-confirm is still owed).
+        0. PRECONDITIONS: `ls results/arc3_gap4_induced_programs.json results/arc3_gap4_rule_exec_verifier.json`
+           exist (the cached ARC-1 induced programs + pool). If missing -> honest_verdict `blocked_gap4_arc1_pool_missing` and STOP.
+        1. Implement the graded gate in (or alongside) gap4_program_induction_stack.py: promote a candidate when
+           demo_fit==1 AND min-hamming(prediction, candidate) <= tau (tau=0.005), GUARDED by a vote-aware rule
+           that refuses promotion over a high-vote gold (the 25094a63 mis-promotion). Agreement is recorded as a
+           confidence LABEL only (not a selector).
+        2. Replay ARC-1: report pass@1 / pass@2 vs TRM vote, the gross +/- recovery ledger, gate fire count, and
+           band precision at tau<=0.02. Confirm zero pass@2 vote-wins lost (the +4/-0 safety property).
+        3. Run adversarial_verify.py on the artifact.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. An honest negative (latent also does not beat vote) is a COMPLETE, decision-grade verdict."
-        pass2_energy_vs_vote:
-          principle: "Selection gate: pass@2(energy) - pass@2(vote) on held-out tasks; the single number GAP-3 lives or dies on."
-        candidate_auroc:
-          principle: "Per-candidate gold-vs-non-gold AUROC; must beat the hand-features' best always-on family (object_count 0.67) to justify the latent."
-        coverage_fraction:
-          principle: "Fraction of candidates the energy is defined on; the structural failure of hand-features was <20% coverage."
-        headroom_capture_fraction:
-          principle: "Fraction of (oracle - vote) captured; partial credit toward the 0.61 ceiling and the metric that says whether the latent reaches the proven ~13pp."
-        adversarial_checks:
-          principle: "Permutation/OOF/oracle-leak/bootstrap results; a passing gate without these is gameable (gap3 §4 + sample-size rigor)."
+          principle: "Terminal-prefixed. A production-safe gate that holds +4/-0 (or an honest 'graded relaxation adds nothing here') is a COMPLETE verdict."
+        graded_gate_pass2_vs_vote:
+          principle: "pass@2(graded gate) - pass@2(vote) on ARC-1; the production-safety result — must not regress below the +4/-0 exact-match baseline."
+        vote_aware_guard_blocked_mispromotion:
+          principle: "Bare bool: the guard blocked the 25094a63 high-vote-gold exact-match mis-promotion (the one measured pass@1 loss); proves the gate is safe on a richer pool."
+        gross_recovery_ledger:
+          principle: "{{recovered, lost}} candidate counts — the honest +/- accounting behind the headline delta (zero-loss is a pass@2 property)."
+        band_precision_at_tau:
+          principle: "Precision of the tau<=0.02 graded band; documents that 'safety' is measured, not assumed (the .387 round found band precision ~14% at tau<=0.02)."
         random_seed:
-          principle: "Determinism precondition; the OOF split + probe must be reproducible."
+          principle: "Determinism precondition; the replay must be bit-reproducible."
         reproducibility_checksum:
-          principle: "Hash of the npz + fold assignment; catches silent dump drift."
+          principle: "Hash of the induced-program set + pool; catches silent pool drift."
       ACCEPTANCE GATE:
-        - condition: "all four gates reported with bootstrap CI AND the adversarial checks run (a passing OR an honest-negative verdict both qualify)"
-          principle: "GAP-3 Stage-1 is decided on the merits with the adversarial guards; never a bare celebratory number."
+        - condition: "graded_gate_pass2_vs_vote >= the exact-match +4/-0 baseline (no regression) AND vote_aware_guard_blocked_mispromotion reported, OR an honest 'graded relaxation adds nothing on ARC-1' verdict"
+          principle: "The gate ships only if it is at least as safe as the proven exact-match gate; an honest no-improvement is still a COMPLETE production-safety result."
 
-      Run: `python3 results/experiment_4178_gap3_stage1_model_native_arc_energy.py`
+      Run: `python3 results/experiment_4187_gap4_graded_execution_gate_hardening.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4179-arc-incremental-progress
-    milestone: 2026.06.387
-    title: "PHASE C — ARC-AGI-3 INCREMENTAL +1 (monotonic). Non-spatial first-levels are EXHAUSTED (.386 exp4169 no_unsolved_nonspatial_candidates), so target the NEXT DEEPER LEVEL of an already-solved game (incremental +1 per the ARC discipline) via the PROVEN explore-first method: bounded active-exploration OBSERVES transitions -> induce mechanic + goal predicate -> GAP-4 verifier validates on HELD-OUT transitions -> act only if validated. REAL-ENV-CONFIRM any solve; STOP at the first level that fails. Honest no-solve is COMPLETE."
+  - id: exp4188-sovereign-local-generator-gap4-self-distill
+    milestone: 2026.06.388
+    title: "PHASE B2 (SELF-LEARNING + decentralization) — Sovereign local generator + GAP-4-verified self-distillation. Replace codex with a LOCAL open-weight generator (gemma-4-26B-A4B-it-GGUF / Qwen3.6-35B-A3B-GGUF) for ARC program induction: does a fully-sovereign generator + the hardened GAP-4 execution verifier recover ARC headroom with NO closed-weight call (decentralization rule 1)? The verifier labels demo-perfect induced programs; those verified programs form a self-distillation corpus (Tier-2/Tier-3 — the verifier TEACHES the local generator). Report local induction rate vs codex, pool-rerank pass@2, distillation-corpus size."
+    priority: high
+    track: verifier-gap4
+    max_turns: 90
+    agent_type: codex
+    model: gpt-5.5
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the forward difference is the hardened B1 graded gate + active-data prompting + GAP-4-verified self-distillation onto a LOCAL open-weight generator — false-positive scope-match vs the open GAP-DECENTRALIZATION-MOE-SYNC-4069 null; addresses decentralization rule 1 (no closed-weight dependency) and the continuous-self-learning requirement."
+    inference_substrate: live_llm_inference
+    deliverable: results/experiment_4188_sovereign_local_generator_gap4_self_distill.json
+    prior_failures:
+      - experiment_id: exp4069-decentralization-moe-sync
+        verdict: complete_local_moe_bestofn_demo_perfect_absent_coverage_0p23
+        addressed_by: "Forward difference: this run uses the hardened B1 graded execution gate + active/coverage-driven prompting (not passive best-of-N) AND closes the loop with GAP-4-verified self-distillation (verified demo-perfect programs become a training corpus); exp4069 was passive best-of-N with no distillation and no graded gate."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: GAP-4's only ARC positive used a CODEX (closed-weight, contaminated) generator. Decentralization
+      rule 1 requires Carnot to work end-to-end with LOCAL open-weight models. The open MoE best-of-N null
+      (GAP-DECENTRALIZATION-MOE-SYNC-4069, coverage 0.23) means a naive local generator under-induces. This
+      task asks: does a LOCAL generator + the hardened GAP-4 execution verifier recover ARC headroom with NO
+      closed-weight call, and can the verifier TEACH the local generator (self-distillation)? The energy
+      function (execution consistency) is the ground-truth reward — the FR-11 self-learning loop, made sovereign.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_4187_gap4_graded_execution_gate_hardening.json (the hardened graded gate to reuse)
+        - results/experiment_4069_decentralization_moe_sync.json (the prior local-MoE null; coverage 0.23)
+        - scripts/gap4_program_induction_stack.py (induction + execution verification)
+        - scripts/experiment_template.py (cached_sota_pair() -> local GGUF model_path; GGUF tokenizer rule)
+        - ops/verifier_gaps.md (GAP-DECENTRALIZATION-MOE-BASE/SYNC; the missing-discriminator notes)
+
+      TASK: induce ARC programs with a LOCAL GGUF generator, verify+rerank via the hardened GAP-4 gate, and
+      self-distill the verified demo-perfect programs.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: a SOTA GGUF generator is cached:
+           `python3 -c "from scripts.experiment_template import cached_sota_pair; print(cached_sota_pair())"`
+           (gemma-4-26B-A4B-it-GGUF / Qwen3.6-35B-A3B-GGUF). Load via the .gguf path, NOT AutoTokenizer. If
+           neither cached -> honest_verdict `blocked_model_not_cached_sota_gguf` and STOP. NO codex calls.
+        1. Local induction: for the ARC-1 task subset, prompt the LOCAL GGUF to induce `def transform(grid)`
+           from demo pairs only (no task id, no candidates, no gold) with active/coverage-driven prompting.
+        2. Verify+rerank with the hardened GAP-4 graded gate (B1): a model-free verifier requires exact
+           reproduction of ALL demos; the demo-perfect program executes on the test input; the graded gate
+           promotes. Report local induction rate (demo-perfect / total) vs the codex 29/31, pool-rerank pass@2.
+        3. Self-distillation corpus: collect the verified demo-perfect (demo_pairs -> program) pairs into a
+           corpus (Tier-2 memory / Tier-3 distillation seed). Report corpus size. (Do NOT fine-tune the GGUF
+           this milestone — building the verified corpus is the deliverable; distillation training is .389.)
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Terminal-prefixed. An honest 'local generator under-induces vs codex' is a COMPLETE, decision-grade verdict (it bounds the sovereignty claim)."
+        local_induction_rate:
+          principle: "demo-perfect / total with a LOCAL generator vs the codex 29/31 — the decentralization-rule-1 measurement."
+        sovereign_pool_pass2:
+          principle: "pool-rerank pass@2 with the local generator + hardened gate vs TRM vote — does a fully-sovereign stack recover ARC headroom?"
+        self_distillation_corpus_size:
+          principle: "Count of verifier-labeled demo-perfect programs banked for distillation — the FR-11 self-learning loop where the energy function is the ground-truth reward."
+        no_closed_weight_call:
+          principle: "Bare bool: zero codex/closed-weight calls were made (decentralization rule 1 — Carnot works end-to-end on local open models)."
+        model_specs:
+          principle: "The local GGUF generator invoked; required methodology for a live-LLM artifact."
+        random_seed:
+          principle: "Determinism precondition; the induction + verification must be reproducible."
+        reproducibility_checksum:
+          principle: "Hash of the task subset + generator config; catches silent drift."
+      ACCEPTANCE GATE:
+        - condition: "local_induction_rate + sovereign_pool_pass2 + self_distillation_corpus_size all reported with no_closed_weight_call=true, OR an honest blocked_model_not_cached_sota_gguf verdict"
+          principle: "The sovereignty + self-learning claim is decided on the merits with zero closed-weight calls; an honest under-induction bounds the claim and is COMPLETE."
+
+      Run: `python3 results/experiment_4188_sovereign_local_generator_gap4_self_distill.py`
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4189-diffusiongemma-verifier-guided-decoding
+    milestone: 2026.06.388
+    title: "PHASE C1 — DiffusionGemma verifier-guided decoding (gate MET; feasibility + smoke). The DiffusionGemma gate flipped MET (exp4177). HARD PRECONDITION: DiffusionGemma cached/downloadable AND exposes per-step token logits (NOT cached as of 2026-06-14 — else honest blocked verdict). Use Carnot's EXECUTABLE verifier ensemble as the GUIDANCE energy reweighting per-step token selection during denoising on an executable domain (code/Sudoku); guided vs unguided vs AR-baseline, small n, bootstrap CI. Feasibility+smoke (NOT a headline benchmark); a clean blocked verdict is COMPLETE and de-risks the .389 scale-up."
+    priority: medium
+    track: verifier-guidance
+    max_turns: 90
+    agent_type: codex
+    model: gpt-5.5
+    operator_override: "2026-06-13 operator gate (now satisfied) auto-override class 3 (gated-lineage activation): the DiffusionGemma gate condition (verifier_value_added==true on an executable headroom domain) is MET per exp4177/exp4183 — false-positive scope-match vs the prior gated DiffusionGemma queue entry; first activation, conservatively scoped to feasibility+smoke behind a hard cache/per-step-logit precondition."
+    inference_substrate: live_llm_inference
+    deliverable: results/experiment_4189_diffusiongemma_verifier_guided_decoding.json
+    prompt: |
+      CONTEXT: The DiffusionGemma gate is MET (exp4177: verifier_value_added=true on the code executable
+      domain). The spec (docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md) is the
+      LLM-scale realization of the verifier-as-GUIDANCE thesis: at each denoising step, reweight candidate
+      tokens by exp(-lambda * verifier_energy) BEFORE the low-entropy commit, so the verifier STEERS
+      generation as it forms (the integration post-hoc reranking cannot do). DiffusionGemma is NOT yet
+      cached (verified 2026-06-14) and the open release's per-step-logit exposure is UNVERIFIED — so this is
+      a feasibility+smoke task; a clean blocked verdict is COMPLETE and de-risks the .389 scale-up.
+
+      EXISTING CODE TO READ FIRST:
+        - docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md (the spec, the gate, the preconditions)
+        - scripts/gap4_program_induction_stack.py / the carnot verifier ensemble (the executable guidance energy)
+        - scripts/experiment_template.py (setup_gpu / cached-model checks; CUDA on the RTX 3090 rig)
+        - research-references.md ".388 planning sweep": arXiv:2602.22871 (reward-guided stitching), 2602.01849 (self-rewarding SMC), 2509.13866 (masked-diffusion-as-energy theory)
+
+      TASK: stand up verifier-guided DiffusionGemma decoding on an executable domain (feasibility + smoke).
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (check BEFORE any subsequent step):
+           a. DiffusionGemma open weights cached OR downloadable: verify the repo id and
+              `ls ~/.cache/huggingface/hub/ | grep -i diffusion` (or attempt a bounded download). If
+              unavailable/undownloadable -> honest_verdict `blocked_diffusiongemma_not_cached` and STOP.
+           b. The release exposes per-step token logits / the candidate distribution at each denoising step
+              (the guidance injection point). If it exposes only final text and no custom-loop hook is
+              feasible within budget -> honest_verdict `blocked_diffusiongemma_no_perstep_logit_hook` and STOP.
+           c. CUDA available: `python3 -c "import torch; assert torch.cuda.is_available()"`. Else -> honest_verdict `blocked_cuda_unavailable` and STOP.
+        1. Implement the guidance hook: at each denoising step, reweight candidate tokens by
+           exp(-lambda * carnot_verifier_energy) before the low-entropy commit, on an executable domain
+           (HumanEval/MBPP code or Sudoku) where the verifier executes.
+        2. SMOKE: guided vs unguided DiffusionGemma vs an AR baseline on a small n (>=20), report
+           pass-rate / constraint-satisfaction with bootstrap CI95. This is feasibility, not a headline.
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Terminal-prefixed. A clean blocked_diffusiongemma_* (model/hook/CUDA unavailable) is a COMPLETE feasibility verdict that de-risks the .389 scale-up."
+        diffusiongemma_feasible:
+          principle: "Bare bool: the model loaded AND the per-step guidance hook fired end-to-end; the precondition for any .389 headline benchmark."
+        guided_vs_unguided_delta:
+          principle: "guided - unguided pass-rate with bootstrap CI95 on the smoke n; the first directional read on whether verifier guidance helps at LLM scale."
+        model_specs:
+          principle: "DiffusionGemma + the verifier ensemble invoked; required methodology for a live-LLM artifact."
+        random_seed:
+          principle: "Determinism precondition; the denoising + guidance must be reproducible."
+        reproducibility_checksum:
+          principle: "Hash of the prompt set + guidance config; catches silent drift."
+        preconditions_checked:
+          principle: "Records the cache / per-step-logit / CUDA checks; pre-empts the silent-missing-resource fabrication mode."
+      ACCEPTANCE GATE:
+        - condition: "diffusiongemma_feasible reported (true with a guided-vs-unguided smoke delta + CI, OR false via an honest blocked_diffusiongemma_* verdict)"
+          principle: "Feasibility is the deliverable; an honest block is as valuable as a smoke result for planning the .389 scale-up."
+
+      Run: `python3 results/experiment_4189_diffusiongemma_verifier_guided_decoding.py`
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4190-arc-incremental-progress
+    milestone: 2026.06.388
+    title: "PHASE C2 — ARC-AGI-3 INCREMENTAL +1 (monotonic). Advance the solved-LEVEL count by >=1 via the PROVEN explore-first method, using the HARDENED GAP-4 stack (B1): bounded active-exploration OBSERVES transitions -> induce mechanic + goal predicate -> GAP-4 verifier validates on HELD-OUT transitions -> act only if validated. Target the next deeper level of an already-solved game (non-spatial first-levels exhausted) or a spatial L1. REAL-ENV-CONFIRM any solve; STOP at the first level that fails. Honest no-solve is COMPLETE."
     priority: medium
     track: arc
     max_turns: 90
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): ARC-AGI-3 incremental +1 mandated by the ARC-AGI-3 Incremental-Progress Scoping discipline — false-positive scope-match vs prior Nth-game-solve attempts; forward difference = non-spatial exhausted so target the next deeper level of an already-solved game; monotonic +1; honest no-solve is COMPLETE."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): ARC-AGI-3 incremental +1 mandated by the ARC-AGI-3 Incremental-Progress Scoping discipline — false-positive scope-match vs prior incremental-progress tasks (exp4179); forward difference = uses the hardened B1 graded GAP-4 gate; monotonic +1; honest no-solve is COMPLETE."
     inference_substrate: offline_arc_explore_induce_verify
-    deliverable: results/experiment_4179_arc_incremental_progress.json
+    deliverable: results/experiment_4190_arc_incremental_progress.json
     prompt: |
       CONTEXT: Each milestone advances the solved-LEVEL count MONOTONICALLY by >=1 (ARC-AGI-3
-      Incremental-Progress Scoping). The non-spatial first-levels are exhausted, so the target shifts
-      to the next deeper level of an already-solved non-spatial game (e.g. r11l / lp85 L2), or a
-      spatial game's L1 if a deeper level is structurally blocked.
+      Incremental-Progress Scoping). .387 reached total_levels_solved=14 (lp85 -> L2). Target the next deeper
+      level of an already-solved game, or a spatial game's L1 if a deeper level is structurally blocked. Use
+      the HARDENED GAP-4 stack from B1 as the act-validation verifier. OFFLINE/air-gapped only (online play
+      stays operator-gated).
 
       EXISTING CODE TO READ FIRST:
-        - results/arc3_win_condition_survey.json (the 25-game survey; per-game level structure)
-        - results/experiment_4169_arc_incremental_progress.json (.386: total_games_solved=13, no solve)
-        - results/arc3_gap4_chain_arms_adversarial_verify.json (GAP-4 verifier; GAP-5 demo-underdetermination)
-        - the OFFLINE/air-gapped ARC driver used by exp4169 (do NOT play online/scored — operator gate)
-
-      TASK: bank +1 real level via explore -> induce -> GAP-4-verify -> act.
+        - results/arc3_win_condition_survey.json (the 25-game survey; per-game level structure; non-spatial targets)
+        - results/experiment_4179_arc_incremental_progress.json (.387: lp85->L2, total_levels=14, total_games=13)
+        - results/experiment_4187_gap4_graded_execution_gate_hardening.json (the hardened verifier to validate acts)
+        - python/carnot/agentic/arc_agi3_world_model.py + the OFFLINE/air-gapped ARC driver used by exp4179
+      TASK: bank +1 real level via explore -> induce -> hardened-GAP-4-verify -> act.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: `ls results/arc3_win_condition_survey.json` and the OFFLINE fixtures for the
-           target game exist. If fixtures unavailable -> honest_verdict `blocked_arc_offline_fixtures_missing` and STOP.
+        0. PRECONDITIONS: `ls results/arc3_win_condition_survey.json` and the OFFLINE fixtures for the target
+           game exist. If fixtures unavailable -> honest_verdict `blocked_arc_offline_fixtures_missing` and STOP.
         1. Pick the next-easiest unsolved LEVEL (prefer a deeper level of an already-solved game).
         2. Bounded active-exploration -> induce mechanic + goal predicate from OBSERVED transitions.
-        3. GAP-4 verifier validates the induced rule on HELD-OUT transitions BEFORE acting; act only on
-           validated steps; STOP at the first level that fails.
+        3. Hardened GAP-4 verifier (B1) validates the induced rule on HELD-OUT transitions BEFORE acting; act
+           only on validated steps; STOP at the first level that fails.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. An honest no-solve is a COMPLETE verdict (progress-not-perfection)."
         total_levels_solved:
-          principle: "The monotonic progress metric; must be >= the prior milestone's count."
+          principle: "The monotonic progress metric; must be >= the prior milestone's count (14)."
         levels_completed:
           principle: "Real-env-confirmed level count this run; falsifiable evidence of an actual solve."
         real_env_confirmed:
@@ -362,116 +458,181 @@ tasks:
         - condition: ">=1 NEW level real_env_confirmed OR an honest no-solve verdict"
           principle: "Progress-not-perfection: banking +1 real level is the win; an honest no-solve is still COMPLETE."
 
-      Run: `python3 results/experiment_4179_arc_incremental_progress.py`
+      Run: `python3 results/experiment_4190_arc_incremental_progress.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4180-sota-ingestion-moat-gap3-diffusion
-    milestone: 2026.06.387
-    title: "PHASE D1 — SOTA-INGESTION SLOT (reserved; bleeding-edge track). Ingest the .387 sweep mapped onto the moat / GAP-3 / DiffusionGemma stack: arXiv 2605.07395 (headroom-is-artifact), 2504.01005 (SC compute-crossover), 2504.16828 (ThinkPRM budget-conditional), 2510.20607 (compositional energy minimization), 2602.01849 (self-rewarding SMC for masked diffusion), 2512.11847 (TRM-ARC headroom/vote decomposition). SOTA->experiment mapping note; flag the strongest for .388. Cite real arXiv IDs."
+  - id: exp4191-arc-live-env-grounding-probe
+    milestone: 2026.06.388
+    title: "PHASE C3 — ARC-AGI-3 LIVE-env grounding probe (the §0 unblocked north-star step). Connect the EXISTING offline harness (python/carnot/agentic/arc_agi3_world_model.py) to the live SDK (arc_agi, anonymous key), enumerate the 25 live environments, and run a random/greedy baseline to establish the REAL-env metric pipeline (EnvironmentScore.score / levels_completed = ACCURACY; actions vs baseline_actions = EFFICIENCY). NO leaderboard submission (operator-only); NO scored online play beyond a reachability/baseline probe (online quota gate stays). Honest blocked_arc_live_* if access fails."
+    priority: medium
+    track: arc
+    max_turns: 90
+    agent_type: codex
+    model: gpt-5.5
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the live-env grounding probe is the north-star §0 unblocked step (real-env random/greedy baseline) — false-positive scope-match vs prior offline ARC harness tasks; forward difference = the FIRST live-SDK connection (everything to date is offline/synthetic), NO leaderboard submission, anonymous-key reachability + baseline only."
+    inference_substrate: arc_live_env_grounding_probe
+    deliverable: results/experiment_4191_arc_live_env_grounding_probe.json
+    prompt: |
+      CONTEXT: north-star §0 — the official SDK auto-issues an ANONYMOUS key and exposes 25 live ARC-AGI-3
+      environments today; the real blocker is that the harness has never been connected to the LIVE env
+      (everything to date is offline/synthetic). A real-env random/greedy baseline is a cheap, unblocked
+      grounding step that establishes the REAL metric pipeline. CRITICAL GATE: do NOT submit to the official
+      leaderboard (operator-only external publication) and do NOT do scored online play beyond a
+      reachability/baseline probe — the online quota gate stays (only submit a Carnot run when an OFFLINE
+      result beats the TRM baseline + best prior Carnot submission; memory arc3_online_gated_on_offline_beating_baselines).
+
+      EXISTING CODE TO READ FIRST:
+        - ops/north-star.md §0 (access is OPEN; the metric mapping; the sequence discipline)
+        - python/carnot/agentic/arc_agi3_world_model.py (the offline harness to connect)
+        - results/arc_agi3_access_probe.json (the prior access probe; SDK v0.9.8, anonymous key, 25 envs)
+        - the offline ARC driver (OperationMode.OFFLINE) used by exp4179/exp4190
+
+      TASK: build+offline-validate the live-env adapter; run an anonymous-key reachability + random/greedy baseline probe.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `python3 -c "import arc_agi"` succeeds AND network reachable
+           (`curl -sf -o /dev/null https://three.arcprize.org` or the SDK's health endpoint). If the SDK is
+           missing or the endpoint is unreachable -> honest_verdict `blocked_arc_live_unreachable` and STOP.
+        1. Build a live-env adapter that drives the EXISTING offline harness against the SDK with an anonymous
+           key (OperationMode online but NO scorecard submission). Offline-validate the adapter against a
+           recorded fixture first (it must reproduce the offline behavior).
+        2. Reachability probe: enumerate the live environments; for ONE easy env (e.g. a non-spatial game),
+           run a bounded random/greedy baseline (small action budget) and read EnvironmentScore.score /
+           levels_completed + actions-taken vs baseline_actions. Record the REAL metric mapping.
+        3. Do NOT submit any scorecard to the leaderboard. Record live_env_reachable + the per-env baseline.
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Terminal-prefixed. An honest blocked_arc_live_unreachable is a COMPLETE grounding verdict; so is a successful reachability + baseline probe."
+        live_env_reachable:
+          principle: "Bare bool: the live SDK connected with an anonymous key and returned a real EnvironmentScore; the §0 grounding the whole north-star harness needs."
+        real_metric_mapping:
+          principle: "{{accuracy: EnvironmentScore.score/levels_completed, efficiency: actions_vs_baseline_actions}} — the REAL-env metric pipeline the offline proof feeds into."
+        random_greedy_baseline:
+          principle: "The reference numbers (score + actions) for the probed env; the floor any Carnot run must beat before operator-gated online submission."
+        no_leaderboard_submission:
+          principle: "Bare bool: zero scorecards were submitted (Operator-Only External Publication; the online quota gate)."
+        preconditions_checked:
+          principle: "Records the SDK + network reachability checks; pre-empts the silent-missing-resource fabrication mode."
+      ACCEPTANCE GATE:
+        - condition: "live_env_reachable reported (true with a real_metric_mapping + random_greedy_baseline, OR false via an honest blocked_arc_live_unreachable) AND no_leaderboard_submission=true"
+          principle: "Grounding the real-env metric pipeline (or honestly recording it is unreachable) is the deliverable; submission stays operator-only."
+
+      Run: `python3 results/experiment_4191_arc_live_env_grounding_probe.py`
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4192-sota-ingestion-efficiency-gap4-diffusion
+    milestone: 2026.06.388
+    title: "PHASE D1 — SOTA-INGESTION SLOT (reserved; bleeding-edge track). Ingest the .388 sweep mapped onto the efficiency-moat / GAP-4-sovereignty / DiffusionGemma stack: arXiv 2602.22871 (reward-guided diffusion stitching), 2604.06260 (S^3 stratified scaling search), openreview cve4NOiyVp (1/1000-cost LLM judge), 2504.01005 (SC cost crossover), 2504.16828 (ThinkPRM). RE-FLAG CEM 2510.20607 as needing OPERATOR authorization (trained-content-energy SELECTOR lineage is retired). SOTA->experiment mapping note; flag the strongest for .389. Cite real arXiv IDs."
     priority: medium
     track: research
     max_turns: 70
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved-slot task): SOTA-ingestion slot mandated by the SOTA-Ingestion Cycle Discipline — false-positive scope-match vs prior ingestion tasks; structurally never a doomed rerun (fresh corpus each milestone)."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved-slot task): SOTA-ingestion slot mandated by the SOTA-Ingestion Cycle Discipline — false-positive scope-match vs prior ingestion tasks (exp4180); structurally never a doomed rerun (fresh corpus each milestone)."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4180_sota_ingestion_moat_gap3_diffusion.json
+    deliverable: results/experiment_4192_sota_ingestion_efficiency_gap4_diffusion.json
     prompt: |
-      CONTEXT: Per the SOTA-Ingestion Cycle Discipline, a bleeding-edge headline reserves one ingestion
-      task. The .387 planner already filed the sweep in research-references.md (".387 planning sweep");
-      this task ingests it into an actionable SOTA->experiment mapping and flags the strongest for .388.
+      CONTEXT: Per the SOTA-Ingestion Cycle Discipline, a bleeding-edge headline reserves one ingestion task.
+      The .388 planner filed the sweep in research-references.md (".388 planning sweep"); this task ingests it
+      into an actionable SOTA->experiment mapping and flags the strongest for .389. CRITICAL: re-flag CEM
+      (2510.20607) as needing OPERATOR authorization — the GAP-3 trained-content-energy SELECTOR lineage is
+      RETIRED on ops/exclusion_manifest.yaml; surface it to the operator, do NOT recommend auto-activation.
 
       EXISTING CODE TO READ FIRST:
-        - research-references.md (".387 planning sweep" section — the candidate papers + IDs)
-        - research-studying.md / research-references.md filtered to verifier-as-reward / headroom / energy-guided diffusion
+        - research-references.md (".388 planning sweep" section — the candidate papers + IDs)
+        - ops/exclusion_manifest.yaml (the gap3_trained_content_energy_selector retirement — why CEM needs operator sign-off)
         - scripts/sweep_clusters.py / scripts/sweep_semscholar.py (the RELIABLE discovery channel)
 
-      TASK: synthesize a SOTA->experiment mapping note; close the discover->ingest->plan loop.
+      TASK: synthesize a SOTA->experiment mapping note; close the discover->ingest->plan loop; re-flag CEM to operator.
 
       CONCRETE STEPS (use the RELIABLE channel, NOT /deep-research):
-        0. Read the .387 sweep refs, then a FOCUSED fresh pass via scripts/sweep_clusters.py /
+        0. Read the .388 sweep refs, then a FOCUSED fresh pass via scripts/sweep_clusters.py /
            sweep_semscholar.py + low-concurrency WebSearch/WebFetch of the top 5-8 papers.
-        1. Map each method onto the Carnot stack: 2605.07395 -> the headroom-gate sanitization (already
-           applied in A1); 2504.01005/2504.16828 -> the accuracy-AND-cost moat framing (A3);
-           2510.20607 -> GAP-3 Stage-2 compositional ARC energy; 2602.01849 -> DiffusionGemma guidance;
-           2512.11847 -> the TRM headroom/vote decomposition. What each implies + where each fails.
-        2. Update research-studying.md (mark ingested) and FLAG the single strongest method for .388.
+        1. Map each method onto the Carnot stack: 2602.22871/2604.06260/2602.01849 -> DiffusionGemma guidance
+           scale-up (.389); cve4NOiyVp/2504.01005/2504.16828 -> the efficiency-moat judge comparator + cost
+           normalization; 2510.20607 (CEM) -> RE-FLAG to operator (retired selector lineage, needs authorization).
+           What each implies + where each fails.
+        2. Update research-studying.md (mark ingested) and FLAG the single strongest method for .389.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. Records ingestion completed with verifiable citations."
         methods_mapped:
           principle: "Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication (adversarial_verify discipline)."
-        flagged_for_v388:
+        cem_operator_authorization_flag:
+          principle: "Explicitly records that CEM (2510.20607) needs operator authorization before activation (the retired trained-content-energy selector lineage) — closes the loop honestly instead of silently dropping or auto-running it."
+        flagged_for_v389:
           principle: "Closes discover->ingest->plan: names the strongest method for the next planner."
-      ACCEPTANCE: a mapping note with >=3 sources, each with a real arXiv ID/URL, and one flagged for .388.
+      ACCEPTANCE: a mapping note with >=3 sources each with a real arXiv ID/URL, CEM re-flagged to operator, one method flagged for .389.
 
-      Run: `python3 results/experiment_4180_sota_ingestion_moat_gap3_diffusion.py`
+      Run: `python3 results/experiment_4192_sota_ingestion_efficiency_gap4_diffusion.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4181-verifier-registry-gaps-hygiene
-    milestone: 2026.06.387
-    title: "PHASE D2 — VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates (zero codex/GGUF/GPU). RECORD the .387 state into ops/verifier_gaps.md: the headroom-controlled moat verdict (exp4177) + the GAP-3 Stage-1 result (exp4178). Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source of truth (never-prune)."
+  - id: exp4193-verifier-registry-gaps-hygiene
+    milestone: 2026.06.388
+    title: "PHASE D2 — VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates (zero codex/GGUF/GPU). RECORD the .388 state into ops/verifier_gaps.md: the efficiency-moat verdict (exp4186 verifier_efficiency_win + cost ratio), the GAP-4 graded-gate (exp4187), and the sovereign-generator result (exp4188). Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source of truth (never-prune)."
     priority: medium
     track: infra
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved infra slot): verifier-registry + gaps hygiene regression guard — false-positive scope-match vs prior hygiene tasks; structurally never a doomed rerun (bit-exact GAP-4 regression replay each milestone)."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved infra slot): verifier-registry + gaps hygiene regression guard — false-positive scope-match vs prior hygiene tasks (exp4181); structurally never a doomed rerun (bit-exact GAP-4 regression replay each milestone)."
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4181_verifier_registry_gaps_hygiene.json
+    deliverable: results/experiment_4193_verifier_registry_gaps_hygiene.json
     prompt: |
-      CONTEXT: Keep the verifier registry + gap ledger honest, and catch a silent verifier regression
-      via a bit-exact GAP-4 replay. Then record the .387 moat + GAP-3 outcomes.
+      CONTEXT: Keep the verifier registry + gap ledger honest, and catch a silent verifier regression via a
+      bit-exact GAP-4 replay. Then record the .388 efficiency-moat + GAP-4 + sovereign-generator outcomes.
 
       EXISTING CODE TO READ FIRST:
-        - ops/verifier_registry.yaml, ops/verifier_gaps.md (GAP-1..GAP-5; the schema)
+        - ops/verifier_registry.yaml, ops/verifier_gaps.md (GAP-1..GAP-5; GAP-MOAT; the schema)
         - the canonical GAP-4 ARC-1 cached candidate set + its prior numbers (vote 0.4516 -> gated 0.5806)
-        - results/experiment_4177_*.json (moat verdict), results/experiment_4178_*.json (GAP-3 Stage-1)
+        - results/experiment_4186_*.json (efficiency moat), 4187_*.json (graded gate), 4188_*.json (sovereign generator)
 
-      TASK: regression-guard the GAP-4 numbers; record the .387 verifier outcomes into the gap ledger.
+      TASK: regression-guard the GAP-4 numbers; record the .388 verifier outcomes into the gap ledger.
 
       CONCRETE STEPS:
-        1. Bit-exact offline re-eval reproducing the canonical GAP-4 ARC-1 numbers from cached
-           candidates (zero codex/GGUF/GPU). READ-ONLY w.r.t. the TRM training (do not touch the stable checkpoint).
-        2. RECORD into ops/verifier_gaps.md (append, never-prune): the headroom-controlled moat verdict
-           (exp4177 verifier_value_added + the headroom_present_domain) and the GAP-3 Stage-1 result
-           (exp4178 pass2_energy_vs_vote + whether GAP-3 advances toward `filled`).
+        1. Bit-exact offline re-eval reproducing the canonical GAP-4 ARC-1 numbers from cached candidates
+           (zero codex/GGUF/GPU). READ-ONLY w.r.t. TRM training (do not touch the stable checkpoint).
+        2. RECORD into ops/verifier_gaps.md (append, never-prune): the efficiency-moat verdict (exp4186
+           verifier_efficiency_win + accuracy_parity_vs_judge + cost_ratio_vs_judge), the GAP-4 graded gate
+           (exp4187 graded_gate_pass2_vs_vote + vote-aware guard), and the sovereign generator (exp4188
+           local_induction_rate + sovereign_pool_pass2 + self_distillation_corpus_size). Update GAP-MOAT
+           status toward `filled` only if exp4186 verifier_efficiency_win is true.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. Records the registry/gaps reconciled to the .387 truth."
+          principle: "Terminal-prefixed. Records the registry/gaps reconciled to the .388 truth."
         regression_guard_passed:
           principle: "Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression."
         gaps_updated:
-          principle: "Lists the verifier_gaps entries touched (moat verdict + GAP-3 Stage-1)."
-      ACCEPTANCE: regression_guard_passed True; the moat + GAP-3 status recorded in the ledger.
+          principle: "Lists the verifier_gaps entries touched (efficiency moat + GAP-4 graded gate + sovereign generator)."
+      ACCEPTANCE: regression_guard_passed True; the efficiency-moat + GAP-4 + sovereign-generator status recorded in the ledger.
 
-      Run: `python3 results/experiment_4181_verifier_registry_gaps_hygiene.py`
+      Run: `python3 results/experiment_4193_verifier_registry_gaps_hygiene.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4182-hardware-continuity
-    milestone: 2026.06.387
+  - id: exp4194-hardware-continuity
+    milestone: 2026.06.388
     title: "PHASE D3 — Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 terminal/opportunistic). Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile flash). PolarFire (ssh polarfire; toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board."
     priority: medium
     track: hardware
     max_turns: 70
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 2 (active hardware-continuity task): GateMate/PolarFire drive-to-terminal mandated by the Hardware-Task Continuity Discipline until terminal — false-positive scope-match vs retired hardware exps; required forward work."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 2 (active hardware-continuity task): GateMate/PolarFire drive-to-terminal mandated by the Hardware-Task Continuity Discipline until terminal — false-positive scope-match vs retired hardware exps (exp4182); required forward work."
     inference_substrate: hardware_smoke
-    deliverable: results/experiment_4182_hardware_continuity.json
+    deliverable: results/experiment_4194_hardware_continuity.json
     prompt: |
       CONTEXT: As long as boards are attached, every milestone reserves one task per non-terminal board.
       KV260 is terminal; GateMate + PolarFire are not.
 
       EXISTING CODE TO READ FIRST:
-        - ops/hardware-bringup-prep.md (per-board state), results/experiment_4172_hardware_continuity.json (.386)
+        - ops/hardware-bringup-prep.md (per-board state), results/experiment_4182_hardware_continuity.json (.387)
         - CLAUDE.md "KV260 SSH-Not-SD-Card Discipline" + "Pre-Launch Preconditions" hardware rows
 
       TASK: per-board reachability + next concrete step, distinct timers, SSH/USB-detect preconditions only.
 
       CONCRETE STEPS (DISTINCT wall-clock timers per board):
-        0. PRECONDITIONS per board (SSH / USB-detect ONLY -- host SD-card-device preconditions are
-           retired per the KV260 SSH-Not-SD-Card Discipline):
+        0. PRECONDITIONS per board (SSH / USB-detect ONLY -- host SD-card-device preconditions are retired per
+           the KV260 SSH-Not-SD-Card Discipline):
            - GateMate: `openFPGALoader -c dirtyJtag --detect` returns the GM1Ax IDCODE.
            - PolarFire: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'` exits 0.
            - KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` exits 0 (opportunistic).
@@ -488,57 +649,62 @@ tasks:
           principle: "Records the SSH/USB-detect preconditions run; enforces SSH-Not-SD-Card."
       ACCEPTANCE: per-board reachability recorded via SSH/USB-detect (never a host SD-card device); next concrete step named per non-terminal board.
 
-      Run: `python3 results/experiment_4182_hardware_continuity.py`
+      Run: `python3 results/experiment_4194_hardware_continuity.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4183-capstone-v387
-    milestone: 2026.06.387
-    title: "PHASE D4 — Capstone .387 (UNGATED): headline question is DID THE HEADROOM-CONTROLLED MOAT TEST RESOLVE THE VERIFIER-VALUE QUESTION (positive where headroom exists, or honestly bounded), AND DID GAP-3 STAGE-1 REACH THE ~13pp ARC HEADROOM? Aggregate: HEADROOM = exp4175; MOAT = exp4177 (verifier_value_added + CI); GAP-3 = exp4178 (pass2_energy_vs_vote + gates); ARC = exp4179; SOTA = exp4180. Resolve whether the DiffusionGemma gate is NOW MET. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on."
+  - id: exp4195-capstone-v388
+    milestone: 2026.06.388
+    title: "PHASE D4 — Capstone .388 (UNGATED): headline question is IS THE VERIFIER MOAT WON ON THE AXIS THE NORTH STAR NEEDS — EFFICIENCY-PARITY vs an LLM-as-judge (exp4186), AND IS THE ARC EXECUTION VERIFIER NOW PRODUCTION-SAFE (exp4187) AND SOVEREIGN (exp4188)? Aggregate: EFFICIENCY = exp4186 (verifier_efficiency_win + cost ratio + CI); GAP-4 GRADED GATE = exp4187; SOVEREIGN GEN = exp4188; DIFFUSIONGEMMA = exp4189; ARC = exp4190; LIVE-ENV = exp4191; SOTA = exp4192. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on."
     priority: high
     track: infra
     max_turns: 90
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): capstone-vN aggregation — false-positive scope-match vs prior capstone-v* tasks; structurally never a doomed rerun."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): capstone-vN aggregation — false-positive scope-match vs prior capstone-v* tasks (exp4183); structurally never a doomed rerun."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4183_capstone_v387.json
+    deliverable: results/experiment_4195_capstone_v388.json
     prompt: |
-      CONTEXT: Aggregate the .387 results into one honest decision-grade verdict, and resolve the
-      DiffusionGemma gate.
+      CONTEXT: Aggregate the .388 results into one honest decision-grade verdict on whether the verifier moat
+      is won on the EFFICIENCY axis (the owed north-star §5 win), and whether the ARC execution verifier is now
+      production-safe + sovereign.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4175_*.json (headroom), 4177_*.json (moat), 4178_*.json (GAP-3 Stage-1),
-          4179_*.json (ARC), 4180_*.json (SOTA), 4181_*.json (registry), 4182_*.json (hardware)
+        - results/experiment_4185_*.json (headroom+judge harness), 4186_*.json (efficiency moat),
+          4187_*.json (GAP-4 graded gate), 4188_*.json (sovereign generator), 4189_*.json (DiffusionGemma),
+          4190_*.json (ARC +1), 4191_*.json (live-env), 4192_*.json (SOTA), 4193_*.json (registry), 4194_*.json (hardware)
         - scripts/summarize_artifact.py (read each via this), scripts/adversarial_verify.py
-        - docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md (the gate condition)
+        - ops/north-star.md §5 (the efficiency-parity win condition)
 
-      TASK: one honest headline + the DiffusionGemma gate decision.
+      TASK: one honest headline + the standing of the verifier moat after .388.
 
       CONCRETE STEPS:
-        1. Read exp4175/4177/4178/4179/4180/4181/4182. SKIP any flagged_adversarial=true. Cite each upstream sha256.
-        2. Answer: (a) does the headroom-controlled moat test (exp4177) show verifier_value_added on a
-           headroom-present executable domain — with positive_control_confirmed? (b) does GAP-3 Stage-1
-           (exp4178) reach the proven ~13pp ARC headroom (pass2_energy_vs_vote > 0, gates passed)?
-           (c) total ARC levels solved. (d) the strongest SOTA method flagged for .388.
-        3. DiffusionGemma gate decision: MET only if exp4177 verifier_value_added==true AND
-           positive_control_confirmed==true on an executable domain (a headroom-dead Sudoku null does
-           NOT block forever; a headroom-present null keeps it closed and points at GAP-3).
-        4. Honest headline: one of {{moat_proven_headroom_present, moat_bounded_clean_null,
-           moat_deferred_no_headroom, gap3_reaches_headroom, gap3_bounded}}.
+        1. Read exp4185..4194. SKIP any flagged_adversarial=true. Cite each upstream sha256.
+        2. Answer: (a) does exp4186 show verifier_efficiency_win (A within-CI of the LLM-judge on accuracy AND
+           >=10x cheaper / Pareto-dominant), with positive_control_confirmed? (b) did exp4187's graded gate hold
+           >= the +4/-0 baseline with the vote-aware guard? (c) did exp4188's sovereign local generator recover
+           ARC headroom with no closed-weight call, and how big is the self-distillation corpus? (d) did
+           DiffusionGemma fire (exp4189 diffusiongemma_feasible) or block? (e) total ARC levels (exp4190). (f)
+           live-env reachable (exp4191). (g) strongest SOTA flagged for .389.
+        3. Honest headline: one of {{efficiency_moat_won, efficiency_moat_bounded_no_cost_advantage,
+           efficiency_moat_judge_more_accurate, gap4_production_safe_and_sovereign, gap4_sovereign_under_induces}}.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. An honest bounded-null is COMPLETE and decision-grade — it tells .388 the bottleneck is verifier discrimination (GAP-3), not the substrate."
+          principle: "Terminal-prefixed. An honest 'efficiency unwon / sovereign under-induces' is COMPLETE and decision-grade — it tells .389 exactly which moat axis remains."
         headline_outcome:
           principle: "One of the enumerated set -- forces a single unambiguous read."
-        verifier_moat_status:
-          principle: "PROVEN-headroom-present / BOUNDED-clean-null / DEFERRED-no-headroom — the existential question's standing after .387."
-        gap3_stage1_status:
-          principle: "Whether GAP-3 Stage-1 reached the ~13pp headroom (advances toward `filled`) or is bounded."
-        diffusiongemma_gate_status:
-          principle: "MET / STILL-PENDING-headroom-present-null / STILL-PENDING-no-headroom; MET only on a positive-controlled executable win."
+        efficiency_moat_status:
+          principle: "WON / BOUNDED-no-cost-advantage / JUDGE-MORE-ACCURATE — the north-star §5 efficiency-parity question's standing after .388."
+        gap4_production_safe:
+          principle: "Whether the graded gate (exp4187) holds the +4/-0 safety property with the vote-aware guard."
+        gap4_sovereign:
+          principle: "Whether a fully-local generator + GAP-4 verifier (exp4188) recovers ARC headroom with no closed-weight call (decentralization rule 1)."
+        diffusiongemma_feasible:
+          principle: "Whether verifier-guided DiffusionGemma fired (exp4189) or honestly blocked — the .389 scale-up readiness."
+        total_arc_levels_solved:
+          principle: "The monotonic ARC progress metric after .388 (must be >= 14)."
         upstream_provenance:
           principle: "{{experiment_id, fields_imported, sha256}} per cited upstream; the audit trail that a capstone synthesizes nothing from nothing."
-      ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited; DiffusionGemma gate explicitly decided.
+      ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited; the efficiency-moat status explicitly decided.
 
-      Run: `python3 results/experiment_4183_capstone_v387.py`
+      Run: `python3 results/experiment_4195_capstone_v388.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.

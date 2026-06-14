@@ -39660,7 +39660,11 @@ milestones:
     \ locally edited (mode=\"default\" not \"reduce-overhead\") to\nfix the CUDAGraphs-overwrite crash; this is a local fix\
     \ to the gitignored vendored clone.\n"
   completed: '2026-06-14'
-  finding: '.386 close-state: outer-loop TRM training is DONE and stopped after reaching val 0.822656 (rounded 0.8227). The decisive gate-0.82 graft FIRED (graft_deferred=false) but returned a headroom-limited null, not a true verifier failure: verifier_value_added=false, oracle@k=0.8125 is approximately the 0.82 baseline gate, verifier pass@1=0.8125, vote@1=0.796875, and the RFT deconfound CI includes zero. DiffusionGemma remains STILL-PENDING; ARC total_games_solved=13. .387 must frame the moat test as a headroom-present positive-control problem while the conductor stays stood down on TRM training.'
+  finding: '.386 close-state: outer-loop TRM training is DONE and stopped after reaching val 0.822656 (rounded 0.8227). The
+    decisive gate-0.82 graft FIRED (graft_deferred=false) but returned a headroom-limited null, not a true verifier failure:
+    verifier_value_added=false, oracle@k=0.8125 is approximately the 0.82 baseline gate, verifier pass@1=0.8125, vote@1=0.796875,
+    and the RFT deconfound CI includes zero. DiffusionGemma remains STILL-PENDING; ARC total_games_solved=13. .387 must frame
+    the moat test as a headroom-present positive-control problem while the conductor stays stood down on TRM training.'
   activation_recorded: exp4174-archive-v386-activate-v387
   tasks:
   - id: exp4166-archive-v385-activate-v386
@@ -39718,4 +39722,87 @@ milestones:
       = exp4170. Honest verdict + whether the DiffusionGemma gate is now resolved. SKIP any flagged_adversarial artifact;
       cite upstream sha256. NO gated_on.'
     deliverable: results/experiment_4173_capstone_v386.json
+    result: OK (conductor)
+- id: 2026.06.387
+  title: "PROVE-OR-BOUND THE VERIFIER MOAT WITH HEADROOM CONTROLS \u2014 headroom-gated executable moat test (positive-control)\
+    \ + V-STaR learned selector + GAP-3 Stage-1 model-native ARC energy (CPU; dump exists); DiffusionGemma stays GATED"
+  doc: openspec/change-proposals/research-roadmap-v387.md
+  completed: '2026-06-14'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4174-archive-v386-activate-v387
+    title: "Archive .386 -> activate .387; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml\
+      \ + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .386\
+      \ close-state (outer-loop TRM converged to val 0.8227; decisive graft FIRED but returned a HEADROOM-LIMITED null, verifier_value_added=false,\
+      \ oracle@k 0.8125 \u2248 baseline; DiffusionGemma gate STILL-PENDING; ARC total_games_solved=13)."
+    deliverable: results/experiment_4174_archive_v386_activate_v387.json
+    result: OK (conductor)
+  - id: exp4175-headroom-gate-executable-census
+    title: "PHASE A1 \u2014 Headroom gate + executable-oracle corpus census. Build reusable scripts/headroom_gate.py: for\
+      \ each cached candidate pool compute oracle@k vs baseline pass@1 vs SC-vote with an OBJECTIVE/EXECUTABLE oracle (run\
+      \ code/tests, parse math \u2014 NO LLM judge, per arXiv:2605.07395), and flag artifact inflation (truncation/format\
+      \ mismatch). Census {{code HumanEval/MBPP (exp1999/2090/1607), math GSM8K, Sudoku held-out}}. Emit max_selectable_headroom\
+      \ (BARE) + headroom_present_domain. This is the POSITIVE CONTROL the moat test requires."
+    deliverable: results/experiment_4175_headroom_gate_executable_census.json
+    result: OK (conductor)
+  - id: exp4176-vstar-learned-selector
+    title: "PHASE A2 \u2014 V-STaR learned selector (arXiv:2402.06457). Train an oracle-free selector on ACCEPTED + REJECTED\
+      \ candidate traces (so it learns a correctness boundary, not just imitates winners), out-of-fold. The missing learned-selector\
+      \ verifier class. Deployable ranker consumed by A3. Prefer cached traces; if fresh traces needed, generate from a SOTA\
+      \ GGUF behind a PRECONDITIONS cache check."
+    deliverable: results/experiment_4176_vstar_learned_selector.json
+    result: OK (conductor)
+  - id: exp4177-decisive-headroom-controlled-moat-test
+    title: "PHASE A3 (DECISIVE, gated_on A1 headroom>=0.10) \u2014 the headroom-controlled verifier moat test. On the headroom_present_domain:\
+      \ executable verifier ensemble + V-STaR selector (A2) vs SC-vote vs oracle, with a MATCHED no-verifier control (same\
+      \ budget/candidates/steps, arXiv:2511.02886) and accuracy AND cost (arXiv:2504.01005 SC-crossover). Decisive: does the\
+      \ verifier add value (CI95 excl 0) WHERE headroom exists? Resolves the moat question + informs the DiffusionGemma gate."
+    deliverable: results/experiment_4177_decisive_headroom_controlled_moat_test.json
+    result: OK (conductor)
+  - id: exp4178-gap3-stage1-model-native-arc-energy
+    title: "PHASE B \u2014 GAP-3 Stage-1 model-native ARC energy (CPU; the activation dump ALREADY EXISTS). On results/arc3_gap3_stage1_candidate_table.npz\
+      \ (z_mean (8041,512), votes, q_mean, probe, correct, task_idx): score with (1a) a model-native ORTHOGONAL basis (arXiv:2604.17614)\
+      \ + (1b) the learned OOF probe. Run ALL gates (selection>vote, AUROC>0.70, coverage>=80%, headroom-capture>=30%) + ALL\
+      \ adversarial checks (permutation, strict OOF, oracle-leak, bootstrap CI). Does it reach the proven ~13pp ARC headroom?\
+      \ READ-ONLY w.r.t. TRM training."
+    deliverable: results/experiment_4178_gap3_stage1_model_native_arc_energy.json
+    result: OK (conductor)
+  - id: exp4179-arc-incremental-progress
+    title: "PHASE C \u2014 ARC-AGI-3 INCREMENTAL +1 (monotonic). Non-spatial first-levels are EXHAUSTED (.386 exp4169 no_unsolved_nonspatial_candidates),\
+      \ so target the NEXT DEEPER LEVEL of an already-solved game (incremental +1 per the ARC discipline) via the PROVEN explore-first\
+      \ method: bounded active-exploration OBSERVES transitions -> induce mechanic + goal predicate -> GAP-4 verifier validates\
+      \ on HELD-OUT transitions -> act only if validated. REAL-ENV-CONFIRM any solve; STOP at the first level that fails.\
+      \ Honest no-solve is COMPLETE."
+    deliverable: results/experiment_4179_arc_incremental_progress.json
+    result: OK (conductor)
+  - id: exp4180-sota-ingestion-moat-gap3-diffusion
+    title: "PHASE D1 \u2014 SOTA-INGESTION SLOT (reserved; bleeding-edge track). Ingest the .387 sweep mapped onto the moat\
+      \ / GAP-3 / DiffusionGemma stack: arXiv 2605.07395 (headroom-is-artifact), 2504.01005 (SC compute-crossover), 2504.16828\
+      \ (ThinkPRM budget-conditional), 2510.20607 (compositional energy minimization), 2602.01849 (self-rewarding SMC for\
+      \ masked diffusion), 2512.11847 (TRM-ARC headroom/vote decomposition). SOTA->experiment mapping note; flag the strongest\
+      \ for .388. Cite real arXiv IDs."
+    deliverable: results/experiment_4180_sota_ingestion_moat_gap3_diffusion.json
+    result: OK (conductor)
+  - id: exp4181-verifier-registry-gaps-hygiene
+    title: "PHASE D2 \u2014 VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval\
+      \ reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates (zero codex/GGUF/GPU).\
+      \ RECORD the .387 state into ops/verifier_gaps.md: the headroom-controlled moat verdict (exp4177) + the GAP-3 Stage-1\
+      \ result (exp4178). Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source of truth (never-prune)."
+    deliverable: results/experiment_4181_verifier_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4182-hardware-continuity
+    title: "PHASE D3 \u2014 Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 terminal/opportunistic).\
+      \ Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile\
+      \ flash). PolarFire (ssh polarfire; toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal).\
+      \ Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock\
+      \ timers per board."
+    deliverable: results/experiment_4182_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4183-capstone-v387
+    title: "PHASE D4 \u2014 Capstone .387 (UNGATED): headline question is DID THE HEADROOM-CONTROLLED MOAT TEST RESOLVE THE\
+      \ VERIFIER-VALUE QUESTION (positive where headroom exists, or honestly bounded), AND DID GAP-3 STAGE-1 REACH THE ~13pp\
+      \ ARC HEADROOM? Aggregate: HEADROOM = exp4175; MOAT = exp4177 (verifier_value_added + CI); GAP-3 = exp4178 (pass2_energy_vs_vote\
+      \ + gates); ARC = exp4179; SOTA = exp4180. Resolve whether the DiffusionGemma gate is NOW MET. SKIP any flagged_adversarial\
+      \ artifact; cite upstream sha256. NO gated_on."
+    deliverable: results/experiment_4183_capstone_v387.json
     result: OK (conductor)
