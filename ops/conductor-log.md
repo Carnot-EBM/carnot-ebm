@@ -8474,3 +8474,4 @@ c |
 | 2026-06-14 11:43 UTC | PHASE C2 — ARC-AGI-3 INCREMENTAL +1 (monotonic). A | OK | 89 passed, 1 warning in 5.68s |
 | 2026-06-14 12:22 UTC | PHASE C3 — ARC-AGI-3 LIVE-env grounding probe (the | OK | cache hit: 112 passed, 1 warning in 5.86s |
 | 2026-06-14 12:39 UTC | PHASE D1 — SOTA-INGESTION SLOT (reserved; bleeding | OK | 107 passed, 1 warning in 6.66s |
+| 2026-06-14 12:53 UTC | PHASE D2 — VERIFIER-REGISTRY + GAPS HYGIENE (reser | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
