@@ -233,21 +233,7 @@ def main() -> None:
             return hashlib.md5(text.encode()).hexdigest()
 
         # ---- AR scorer (resident; GPU 1 to keep GPU 0 free for conductor) ----
-        os.environ.setdefault("CUDA_VISIBLE_DEVICES", "1")
-        log("loading AR gemma-4-26B-A4B (GPU 1)...")
-        ar = Llama(model_path=ar_gguf, n_gpu_layers=-1, logits_all=True, n_ctx=512, verbose=False)
-        prompt_tok_n = len(ar.tokenize(PROMPT.encode(), add_bos=True))
-
-        def ar_score(text):
-            full = PROMPT + text
-            out = ar.create_completion(full, max_tokens=0, echo=True, logprobs=1, temperature=0.0)
-            tlp = out["choices"][0]["logprobs"]["token_logprobs"]
-            step_lp = [x for x in tlp[prompt_tok_n:] if x is not None]
-            if not step_lp:
-                return None
-            return float(-np.mean(step_lp))
-
-        # ---- Diffusion scorer (per-call CLI) ----
+        # ---- Diffusion scorer (per-call CLI; the HEADLINE oracle-distinct signal) ----
         p_ids = np.array(tok(PROMPT, add_special_tokens=True).input_ids, dtype=np.int32)
         p_ids.tofile(WD / "p.i32")
 
@@ -264,7 +250,7 @@ def main() -> None:
             canvas.tofile(WD / "c.i32")
             outb = WD / "o.bin"
             outb.unlink(missing_ok=True)
-            r = subprocess.run(
+            subprocess.run(
                 [str(DG_EVAL), dg_gguf, str(WD / "p.i32"), str(WD / "c.i32"), str(outb)],
                 capture_output=True, text=True, timeout=600,
                 env={"CUDA_VISIBLE_DEVICES": "0", "PATH": "/usr/bin:/bin"},
@@ -280,54 +266,104 @@ def main() -> None:
                 su.append(float(lse - row[ids[i]]))
             return float(np.mean(su))
 
-        # ---- score loop (checkpointed) ----
+        def persist(rec):
+            done[rec["key"]] = rec
+            cache_fh.write(json.dumps(rec) + "\n")
+            cache_fh.flush()
+
+        def collect(require_ar):
+            ys, ars, dgs = [], [], []
+            for text, y in items:
+                rec = done.get(itemkey(text), {})
+                if rec.get("dg") is None:
+                    continue
+                if require_ar and rec.get("ar") is None:
+                    continue
+                ys.append(y)
+                dgs.append(rec["dg"])
+                ars.append(rec.get("ar"))
+            return np.array(ys), ars, np.array(dgs)
+
+        # ===== PHASE 1: diffusion scores (the headline oracle-distinct result) =====
         for idx, (text, y) in enumerate(items):
             key = itemkey(text)
-            if key in done and done[key].get("ar") is not None and done[key].get("dg") is not None:
-                continue
+            rec = done.get(key, {"key": key, "y": y})
+            if rec.get("dg") is None:
+                rec["dg"] = dg_score(text)
+                persist(rec)
+            if (idx + 1) % 10 == 0 or idx == len(items) - 1:
+                log(f"[phase1 dg] {idx + 1}/{len(items)} ({time.time() - t0:.0f}s)")
+
+        y, _, dg_s = collect(require_ar=False)
+        rep["n_scored_diffusion"] = int(len(y))
+        rep["n_incorrect_scored"] = int(y.sum())
+        rep["dg_mean_correct"] = round(float(dg_s[y == 0].mean()), 4)
+        rep["dg_mean_incorrect"] = round(float(dg_s[y == 1].mean()), 4)
+        brng = np.random.default_rng(SEED + 1)
+        d_auc, d_lo, d_hi = boot_ci(dg_s, y, brng)
+        rand_s = np.random.default_rng(SEED + 7).standard_normal(len(y))
+        r_auc, r_lo, r_hi = boot_ci(rand_s, y, brng)
+        rep["diffusion_auroc"] = round(d_auc, 4)
+        rep["diffusion_auroc_ci95"] = [round(d_lo, 4), round(d_hi, 4)]
+        rep["neg_control_random_auroc"] = round(r_auc, 4)
+        rep["neg_control_random_ci95"] = [round(r_lo, 4), round(r_hi, 4)]
+        g_detect = d_lo > 0.5
+        neg_ok = r_lo <= 0.5 <= r_hi
+        rep["acceptance_gate"] = {
+            "G_detect_diffusion_excludes_0.5": bool(g_detect),
+            "neg_control_ok": bool(neg_ok),
+            "G_beats_ar_diff_excludes_0": "pending_ar",
+        }
+        rep["ar_status"] = "pending"
+        rep["duration_s"] = round(time.time() - t0, 1)
+        rep["honest_verdict"] = (
+            "blocked_neg_control_failed_metric_bug" if not neg_ok
+            else "complete: oracle_distinct_diffusion_surprisal_detects_errors_ar_comparison_pending"
+            if g_detect
+            else "complete: oracle_distinct_diffusion_surprisal_no_detection_signal_honest_null"
+        )
+        OUT.write_text(json.dumps(rep, indent=2))
+        log(f"[phase1] DG AUROC={d_auc:.3f}{rep['diffusion_auroc_ci95']} "
+            f"neg={r_auc:.3f}{rep['neg_control_random_ci95']} verdict={rep['honest_verdict']}")
+
+        # ===== PHASE 2: matched AR baseline (CPU; the comparison) =====
+        os.environ.setdefault("CUDA_VISIBLE_DEVICES", "1")
+        log("loading AR gemma-4-26B-A4B...")
+        ar = Llama(model_path=ar_gguf, n_gpu_layers=-1, logits_all=True, n_ctx=512, verbose=False)
+        prompt_tok_n = len(ar.tokenize(PROMPT.encode(), add_bos=True))
+
+        def ar_score(text):
+            out = ar.create_completion(PROMPT + text, max_tokens=0, echo=True,
+                                       logprobs=1, temperature=0.0)
+            tlp = out["choices"][0]["logprobs"]["token_logprobs"]
+            step_lp = [x for x in tlp[prompt_tok_n:] if x is not None]
+            return float(-np.mean(step_lp)) if step_lp else None
+
+        for idx, (text, y) in enumerate(items):
+            key = itemkey(text)
             rec = done.get(key, {"key": key, "y": y})
             if rec.get("ar") is None:
                 rec["ar"] = ar_score(text)
-            if rec.get("dg") is None:
-                rec["dg"] = dg_score(text)
-            done[key] = rec
-            cache_fh.write(json.dumps(rec) + "\n")
-            cache_fh.flush()
+                persist(rec)
             if (idx + 1) % 10 == 0 or idx == len(items) - 1:
-                log(f"scored {idx + 1}/{len(items)}  ({time.time() - t0:.0f}s elapsed)")
-
+                log(f"[phase2 ar] {idx + 1}/{len(items)} ({time.time() - t0:.0f}s)")
         cache_fh.close()
 
-        # ---- assemble arrays ----
-        ys, ars, dgs = [], [], []
-        for text, y in items:
-            rec = done[itemkey(text)]
-            if rec.get("ar") is None or rec.get("dg") is None:
-                continue
-            ys.append(y)
-            ars.append(rec["ar"])
-            dgs.append(rec["dg"])
-        y = np.array(ys)
-        ar_s = np.array(ars)
-        dg_s = np.array(dgs)
+        # ===== FINAL: full matched comparison =====
+        y, ar_list, dg_s = collect(require_ar=True)
+        ar_s = np.array([float(x) for x in ar_list])
         rep["n_scored"] = int(len(y))
         rep["n_incorrect_scored"] = int(y.sum())
-
-        # ---- sanity: per-class means (incorrect should be higher) ----
         rep["ar_mean_correct"] = round(float(ar_s[y == 0].mean()), 4)
         rep["ar_mean_incorrect"] = round(float(ar_s[y == 1].mean()), 4)
         rep["dg_mean_correct"] = round(float(dg_s[y == 0].mean()), 4)
         rep["dg_mean_incorrect"] = round(float(dg_s[y == 1].mean()), 4)
-
-        # ---- AUROC + bootstrap CIs ----
         brng = np.random.default_rng(SEED + 1)
         a_auc, a_lo, a_hi = boot_ci(ar_s, y, brng)
         d_auc, d_lo, d_hi = boot_ci(dg_s, y, brng)
         diff, dl, dh = boot_ci_diff(dg_s, ar_s, y, brng)
-        rng_neg = np.random.default_rng(SEED + 7)
-        rand_s = rng_neg.standard_normal(len(y))
+        rand_s = np.random.default_rng(SEED + 7).standard_normal(len(y))
         r_auc, r_lo, r_hi = boot_ci(rand_s, y, brng)
-
         rep["ar_auroc"] = round(a_auc, 4)
         rep["ar_auroc_ci95"] = [round(a_lo, 4), round(a_hi, 4)]
         rep["diffusion_auroc"] = round(d_auc, 4)
@@ -336,8 +372,7 @@ def main() -> None:
         rep["diff_minus_ar_ci95"] = [round(dl, 4), round(dh, 4)]
         rep["neg_control_random_auroc"] = round(r_auc, 4)
         rep["neg_control_random_ci95"] = [round(r_lo, 4), round(r_hi, 4)]
-
-        # ---- gate evaluation ----
+        rep["ar_status"] = "complete"
         g_detect = d_lo > 0.5
         g_beats = dl > 0.0
         neg_ok = r_lo <= 0.5 <= r_hi
@@ -346,11 +381,9 @@ def main() -> None:
             "G_beats_ar_diff_excludes_0": bool(g_beats),
             "neg_control_ok": bool(neg_ok),
         }
-        rep["duration_s"] = round(time.time() - t0, 1)
         rep["reproducibility_checksum"] = hashlib.sha256(
             (str(sorted(itemkey(t) for t, _ in items)) + str(SEED)).encode()
         ).hexdigest()[:16]
-
         if not neg_ok:
             rep["honest_verdict"] = "blocked_neg_control_failed_metric_bug"
         elif g_detect and g_beats:
@@ -365,6 +398,7 @@ def main() -> None:
             rep["honest_verdict"] = (
                 "complete: oracle_distinct_diffusion_surprisal_no_detection_signal_honest_null"
             )
+        rep["duration_s"] = round(time.time() - t0, 1)
         log(f"AR AUROC={a_auc:.3f}{rep['ar_auroc_ci95']}  "
             f"DG AUROC={d_auc:.3f}{rep['diffusion_auroc_ci95']}  "
             f"diff={diff:.3f}{rep['diff_minus_ar_ci95']}")
