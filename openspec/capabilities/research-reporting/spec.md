@@ -20847,6 +20847,75 @@ claim `.386` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4174 | Implemented (`python/carnot/reporting/archive_v386_activate_v387_4174.py`, `python/carnot/experiment_4174_archive_v386_activate_v387.py`) | Implemented (`tests/python/test_experiment_4174_archive_v386_activate_v387.py`) |
 
+### REQ-REPORT-4184: Archive .387, Activate .388, And Preserve The Moat-Proven Efficiency-Unwon Close-State
+
+The Exp 4184 workflow SHALL archive milestone `2026.06.387`, confirm milestone
+`2026.06.388` is active, and write the record-only aggregation artifact
+`results/experiment_4184_archive_v387_activate_v388.json`. It SHALL run no live
+model training and SHALL declare `inference_substrate` as
+`aggregation_from_upstream_artifacts`.
+
+Before claiming completion the workflow SHALL confirm:
+
+- `research-complete.yaml` parses under `yaml.safe_load`
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`
+- the smart-subset pre-test gate is green
+- `results/experiment_4183_capstone_v387.json` exists
+- milestone `2026.06.388` is the active roadmap milestone
+
+If any precondition is absent or red, the workflow SHALL write a blocked
+artifact whose `honest_verdict` starts with `blocked_`, record the failed
+resource in `preconditions_checked`, and stop without claiming a terminal
+archive or editing `research-complete.yaml`.
+
+The complete artifact SHALL include the principle-annotated fields
+`honest_verdict`, `v387_close_state`, and `preconditions_checked` with these
+exact principles:
+
+- `honest_verdict`: `Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.`
+- `v387_close_state`: `Honest record (moat proven on accuracy but efficiency unwon; GAP-3 bounded) so the .388 planner frames the milestone as 'win the efficiency axis + harden the proven execution path', not a redo.`
+- `preconditions_checked`: `Records resources verified; pre-empts the silent-missing-resource fabrication mode.`
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v387_close_state` SHALL truthfully record
+that `.387` closed with the verifier moat `PROVEN-headroom-present` on the
+code executable domain: Exp 4177 recorded `verifier_value_added=true`,
+`delta=0.18`, CI95 `[0.08, 0.30]`, and matched no-verifier control delta
+`0.18`. It SHALL also record the caveat that `efficiency_parity=false` because
+the verifier was compared against vote and not against an LLM-as-judge, leaving
+the .388 efficiency axis owed. It SHALL record GAP-3 Stage-1 as `BOUNDED` with
+latent `candidate_auroc=0.893651`, `pass2_energy_vs_vote=0.0`, and
+`all_four_gates_pass=false`; it SHALL record the DiffusionGemma gate as `MET`
+and ARC progress as `total_levels_solved=14`, `total_games_solved=13`.
+
+#### SCENARIO-REPORT-4184: The Archive Preserves The .387 Moat-Proven Efficiency-Unwon State
+
+**Given** `.387` has the Exp 4183 capstone, the history and exclusion-manifest
+YAML files parse, the smart-subset pre-test gate is green, and `.388` is active
+**When** the Exp 4184 archive workflow runs
+**Then** it archives `.387`, confirms `.388`, keeps the YAML history parseable
+with one `.387` record, writes
+`results/experiment_4184_archive_v387_activate_v388.json`, records the proven
+code-domain verifier accuracy moat, `efficiency_parity=false`, GAP-3 Stage-1
+`BOUNDED`, DiffusionGemma `MET`, and ARC `14` levels / `13` games in
+`v387_close_state`, records the checked resources in `preconditions_checked`,
+declares `aggregation_from_upstream_artifacts`, and emits a terminal-prefixed
+honest verdict.
+
+#### SCENARIO-REPORT-4184-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4184 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does not
+claim `.387` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4184)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4184 | Implemented (`python/carnot/reporting/archive_v387_activate_v388_4184.py`, `python/carnot/experiment_4184_archive_v387_activate_v388.py`) | Implemented (`tests/python/test_experiment_4184_archive_v387_activate_v388.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
