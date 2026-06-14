@@ -13589,6 +13589,72 @@ annotates the registry with the Exp 4163 replay plus rerank-time and
 training-time executable-Sudoku roles, and uses no inference substrate other
 than cached GAP-4 replay and ledger reconciliation.
 
+### REQ-VERIFY-4171: Verifier Registry And Gaps Hygiene For .386 Outcomes
+
+The repository SHALL provide Exp 4171 at
+`python/carnot/experiment_4171_verifier_registry_gaps_hygiene.py` to replay the
+canonical GAP-4 ARC-1 regression guard from cached candidates and saved
+induced-program outputs, then reconcile `ops/verifier_registry.yaml` and
+`ops/verifier_gaps.md` with the `.386` verifier-relevant truth from
+`results/experiment_4167_outerloop_training_monitor.json` and
+`results/experiment_4168_decisive_verifier_graft_defensive.json`. Before
+running the replay, the runner SHALL verify that the cached GAP-4 fixtures,
+those two upstream artifacts, `ops/verifier_registry.yaml`, and
+`ops/verifier_gaps.md` exist and parse. If any precondition fails, the runner
+SHALL write a terminal artifact with `honest_verdict=blocked_<resource>` and
+SHALL NOT fabricate replay, registry, or gaps updates.
+
+The offline regression guard SHALL rederive ARC-1 vote `0.4516` to gated
+`0.5806` from cached TRM candidate rows and saved GAP-4 program outputs,
+including `n=31`, `headroom_recovered=4`, and `vote_wins_lost=0`, without
+Codex calls, GGUF loading, live TRM inference, stable-checkpoint writes, or
+TRM training changes. `regression_guard_passed` SHALL be a bare bool and SHALL
+be true only when those canonical GAP-4 numbers match exactly.
+
+The gaps ledger SHALL record the Exp 4167 outer-loop Sudoku validation
+trajectory, including `current_val_exact_accuracy=0.5042` rounded,
+`baseline_faithful=false`, `outerloop_train_alive=true`, checkpoint mtime, and
+the read-only actions showing no training launch, no process stop, and no
+stable-checkpoint write. It SHALL record the Exp 4168 defensive graft outcome
+with `graft_deferred=true`, `verifier_value_added=false`,
+`rft_vs_ablation_delta.status=deferred_outerloop_training`,
+`rerank_lift_vs_vote.status=deferred_outerloop_training`,
+`checkpoint_copy_performed=false`, and the graft monitor's
+`baseline_status.current_val_exact_accuracy=0.5148` rounded. The
+DiffusionGemma scale-up gate SHALL remain kept-gated unless Exp 4168 reports a
+positive rerank lift CI excluding zero or `verifier_value_added=true`.
+
+The registry SHALL annotate the `gap4_program_induction_stack` entry with an
+Exp 4171 replay marker, a `.386` `role_sudoku_executable` summary, and an Exp
+4168 training-time role. The training-time role SHALL remain deferred unless
+Exp 4168 reports `verifier_value_added=true`, and it SHALL record that the
+stable checkpoint was not copied or trained when the graft was deferred.
+
+The terminal artifact SHALL write
+`results/experiment_4171_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_updated`,
+bare bool `registry_updated`, `sudoku_baseline`, `sudoku_decisive_graft`,
+`diffusiongemma_gate_state`, and
+`inference_substrate=cached_gap4_replay_and_ledger_reconciliation`. Its
+`field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled to the .386 truth.`;
+`regression_guard_passed` = `Bare bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression.`;
+`gaps_updated` = `Lists the verifier_gaps entries touched.`
+
+### SCENARIO-VERIFY-4171: Cached Replay Records .386 Baseline And Graft Deferral
+
+Given the GAP-4 cached ARC-1 pool, saved induced-program artifact, Exp 4167,
+Exp 4168, `ops/verifier_registry.yaml`, and `ops/verifier_gaps.md` are
+readable, when Exp 4171 runs, then it writes the terminal artifact with
+`regression_guard_passed=true`, records vote `0.4516` to gated `0.5806`,
+records the `.386` outer-loop validation trajectory through `0.5042`, records
+the defensive graft as deferred at `0.5148` with `verifier_value_added=false`,
+keeps `diffusiongemma_gate_state=kept_gated`, annotates the registry with the
+Exp 4171 replay plus Exp 4168 training-time executable-Sudoku role, writes
+`gaps_updated` containing the baseline and graft gap entries touched, and uses
+no inference substrate other than cached GAP-4 replay and ledger
+reconciliation.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at

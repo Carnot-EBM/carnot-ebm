@@ -765,3 +765,117 @@ torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 192.00 MiB. GPU 0 
 [2026-06-13 15:57:23,781][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4711 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
 [2026-06-13 15:58:46,881][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4810 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
 [2026-06-13 16:00:09,082][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4867 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:01:31,195][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4932 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:14:39,803][src.nn.utils.utils][INFO] - [rank: 0] Enforcing tags! <cfg.extras.enforce_tags=True>
+[2026-06-13 16:14:39,807][src.nn.utils.utils][INFO] - [rank: 0] Printing config tree with Rich! <cfg.extras.print_config=True>
+[2026-06-13 16:14:39,830][__main__][INFO] - [rank: 0] Instantiating datamodule <src.nn.data.SudokuDataModule>
+[2026-06-13 16:14:39,832][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] ✓ Loaded metadata from ./data/sudoku_extreme_1k_aug_1k/metadata.json
+[2026-06-13 16:14:39,832][src.nn.data.sudoku_datamodule][INFO] - [rank: 0]   Train: 1000 groups, 1001000 total puzzles
+[2026-06-13 16:14:39,834][__main__][INFO] - [rank: 0] Setting model config from data module:  num_puzzles = 1 batch_size = 768 vocab_size = 12
+[2026-06-13 16:14:39,834][__main__][INFO] - [rank: 0] Instantiating model <src.nn.models.trm.TRMModule>
+[2026-06-13 16:14:40,396][src.nn.models.trm][INFO] - [rank: 0] Creating TRM with vocab size=12, seq_len=81, puzzle_emb_len=0 pos_emb_type='null' puzzle_emb_dim=0
+[2026-06-13 16:14:40,396][src.nn.models.trm][INFO] - [rank: 0] use_mlp_t=True, use_conv_swiglu=False, use_board_swiglu=False
+[2026-06-13 16:14:40,397][src.nn.models.trm][INFO] - [rank: 0] Not using Rotary Embeddings
+[2026-06-13 16:14:40,412][src.nn.models.trm][INFO] - [rank: 0] puzzle_emb_dim <= 0, not creating puzzle embeddings
+[2026-06-13 16:14:40,412][__main__][INFO] - [rank: 0] Instantiating callbacks...
+[2026-06-13 16:14:40,412][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <lightning.pytorch.callbacks.ModelCheckpoint>
+[2026-06-13 16:14:40,413][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating callback <src.nn.callbacks.ema.EMACallback>
+[2026-06-13 16:14:40,414][__main__][INFO] - [rank: 0] Instantiating loggers...
+[2026-06-13 16:14:40,414][src.nn.utils.instantiators][INFO] - [rank: 0] Instantiating logger <lightning.pytorch.loggers.csv_logs.CSVLogger>
+[2026-06-13 16:14:40,414][__main__][INFO] - [rank: 0] Instantiating trainer <lightning.pytorch.trainer.Trainer>
+[2026-06-13 16:14:40,421][__main__][INFO] - [rank: 0] Logging hyperparameters!
+[2026-06-13 16:14:40,428][__main__][INFO] - [rank: 0] Starting training!
+[2026-06-13 16:14:40,431][__main__][INFO] - [rank: 0] Val check interval: default (1.0)
+[2026-06-13 16:14:40,431][__main__][INFO] - [rank: 0] Check val every n epoch: 100
+[2026-06-13 16:14:40,431][__main__][INFO] - [rank: 0] Steps per epoch: 1303
+[2026-06-13 16:14:40,432][__main__][INFO] - [rank: 0] Max epochs: 50000
+[2026-06-13 16:14:40,432][__main__][INFO] - [rank: 0] Batch size: 768
+[2026-06-13 16:14:40,681][src.nn.models.trm][INFO] - [rank: 0] Training configuration:
+[2026-06-13 16:14:40,681][src.nn.models.trm][INFO] - [rank: 0]   Groups (unique puzzles): 1000
+[2026-06-13 16:14:40,681][src.nn.models.trm][INFO] - [rank: 0]   Total puzzles (with aug): 1001000
+[2026-06-13 16:14:40,681][src.nn.models.trm][INFO] - [rank: 0]   Steps per epoch: 1
+[2026-06-13 16:14:40,681][src.nn.models.trm][INFO] - [rank: 0]   Total steps: 50000
+[2026-06-13 16:14:40,681][src.nn.models.trm][INFO] - [rank: 0] Compiling inner_forward with torch.compile...
+[2026-06-13 16:14:40,682][src.nn.models.trm][INFO] - [rank: 0] Compilation successful
+[2026-06-13 16:14:40,698][src.nn.models.trm][INFO] - [rank: 0] Restored manual LR step: 21206
+[2026-06-13 16:14:40,738][src.nn.data.sudoku_datamodule][INFO] - [rank: 0] Creating train dataloader with batch size 768 and num_workers 0 and prefetch_factor None
+[2026-06-13 16:21:32,121][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.4971 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:22:54,191][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5102 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:24:16,250][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5143 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:25:38,263][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5227 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:27:00,345][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5292 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:28:22,494][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5396 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:31:06,536][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5435 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:32:28,628][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5495 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:33:50,743][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5539 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:35:12,840][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5612 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:36:34,920][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5646 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:37:57,002][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5651 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:39:19,098][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5708 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:40:41,156][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5779 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:42:03,343][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5852 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:43:25,535][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5878 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:44:47,635][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5885 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:46:09,807][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5943 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:47:31,992][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.5992 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:48:54,200][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6026 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:50:16,399][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6148 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:51:38,575][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6151 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:54:22,756][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6195 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:55:44,870][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6198 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:57:07,029][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6221 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:58:29,242][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6276 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 16:59:51,477][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6398 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:01:13,664][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6414 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:03:58,017][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6422 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:05:20,181][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6466 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:06:42,376][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6482 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:08:04,611][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6526 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:10:49,066][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6641 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:17:39,864][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6664 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:19:02,234][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6721 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:23:09,048][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6742 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:25:53,839][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6807 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:30:00,824][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6878 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:38:14,812][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6922 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:39:37,183][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6951 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:43:44,533][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6977 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:45:06,961][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.6990 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:47:51,656][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7008 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:49:14,033][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7039 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:50:36,468][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7047 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:51:58,890][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7089 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:56:05,887][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7112 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 17:58:50,563][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7120 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 18:00:12,960][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7125 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 18:01:35,383][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7180 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 18:05:42,097][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7188 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 18:08:26,706][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7195 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 18:09:49,059][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7214 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 18:11:11,371][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7297 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 18:12:33,670][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7312 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 18:18:02,779][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7362 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 18:22:09,433][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7401 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 18:24:53,839][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7430 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 18:30:22,917][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7474 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 18:34:29,764][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7513 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 18:35:52,102][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7552 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 18:39:58,711][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7591 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 18:46:49,817][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7604 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 18:48:12,058][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7688 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 18:53:41,129][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7727 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 19:01:54,523][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7750 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 19:03:16,885][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7807 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 19:15:37,034][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7852 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 19:18:21,677][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7862 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 19:19:43,962][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7909 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 19:29:19,812][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7919 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 19:30:42,132][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7924 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 19:40:17,855][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.7992 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 19:47:08,927][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.8057 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 20:15:55,635][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.8068 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 20:20:02,457][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.8081 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 20:21:24,790][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.8159 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 20:43:20,824][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.8203 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 20:44:43,170][src.nn.models.trm][INFO] - [rank: 0] [outer-loop] saved new-best checkpoint val/exact_accuracy=0.8227 -> /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[2026-06-13 21:57:47,622][src.nn.utils.utils][INFO] - [rank: 0] Output dir: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/contiguous_run_hydra

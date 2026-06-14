@@ -769,3 +769,23 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: keep DiffusionGemma gated until rerank or RFT A-vs-B label contrast shows value on a faithful baseline.
 - priority: high
 <!-- exp4163-sudoku-decisive-graft:end -->
+
+<!-- exp4171-sudoku-baseline-reproduction:start -->
+### GAP-SUDOKU-BASELINE-REPRODUCTION-4167: Exp 4171 .386 outer-loop Sudoku baseline trajectory status
+- status: open_outerloop_training_alive_val_0.5042
+- evidence: `results/experiment_4167_outerloop_training_monitor.json`; honest_verdict=complete: outerloop_training_alive_val_0.5042_below_0.85; current_val=0.5042; max_val=0.5042; baseline_faithful=false; outerloop_train_alive=true; checkpoint_mtime=2026-06-13T04:41:29.093138Z; val_trajectory_386_rounded=[0.2005, 0.1992, 0.1995, 0.2216, 0.2042, 0.2211, 0.2443, 0.257, 0.2823, 0.3008, 0.3198, 0.3385, 0.3555, 0.3721, 0.3862, 0.4, 0.412, 0.4263, 0.4354, 0.4427, 0.4521, 0.4648, 0.4776, 0.4857, 0.4906, 0.4938, 0.501, 0.2005, 0.2193, 0.2388, 0.2586, 0.2776, 0.2992, 0.199, 0.2182, 0.2424, 0.2635, 0.2794, 0.3036, 0.324, 0.3383, 0.3555, 0.2021, 0.224, 0.1992, 0.2219, 0.2432, 0.2604, 0.2784, 0.3073, 0.3214, 0.3341, 0.3521, 0.3727, 0.3852, 0.4005, 0.4109, 0.4253, 0.4352, 0.4458, 0.4523, 0.4604, 0.4685, 0.4753, 0.4815, 0.493, 0.4966, 0.5042]; training_launched=false; train_process_stop_attempted=false; stable_checkpoint_written=false.
+- failure mode: the outer-loop baseline is still below the faithful 0.85 gate, so verifier-graft claims remain deferred even though validation progress continued into the .386 window.
+- missing discriminator: faithful outer-loop Sudoku baseline candidate source before DiffusionGemma scale-up or verifier-as-reward claims.
+- candidate design: keep the outer-loop run owner authoritative, continue monitoring read-only status, and rerun graft only after the checkpoint is faithful and stable.
+- priority: high
+<!-- exp4171-sudoku-baseline-reproduction:end -->
+
+<!-- exp4171-sudoku-decisive-graft:start -->
+### GAP-SUDOKU-EXECUTABLE-VERIFIER-4168: Exp 4171 .386 defensive executable-verifier graft status
+- status: open_graft_deferred_outerloop_training_val_0.5148
+- evidence: `results/experiment_4168_decisive_verifier_graft_defensive.json` with monitor `results/experiment_4167_outerloop_training_monitor.json`; outerloop_monitor_current_val=0.5042; baseline_current_val=0.5148; baseline_faithful=false; faithful_stable=false; graft_deferred=true; checkpoint_copy_performed=false; candidate_source=none_deferred_outerloop_training; n_candidate_pools=0; rerank_lift_vs_vote_status=deferred_outerloop_training; rft_vs_ablation_delta=0.0; rft_vs_ablation_delta_status=deferred_outerloop_training; verifier_value_added=false; diffusiongemma_gate_state=kept_gated.
+- failure mode: Exp 4168 deferred before checkpoint copy, candidate sampling, or training because the baseline was not faithful and stable; no verifier-as-reward value-added claim is available.
+- missing discriminator: transferable training-time value from non-oracle Sudoku verifier labels beyond vote labels.
+- candidate design: keep DiffusionGemma gated until rerank or RFT A-vs-B label contrast shows value on a faithful stable baseline copy.
+- priority: high
+<!-- exp4171-sudoku-decisive-graft:end -->
