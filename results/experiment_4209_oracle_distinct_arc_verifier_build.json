@@ -1,0 +1,57 @@
+{
+  "acceptance_gate": true,
+  "accepted_rejected_n": {
+    "accepted": 0,
+    "rejected": 0,
+    "total": 0
+  },
+  "candidate_pool_source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_trm_verifier_rerank.json",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed. A trained off-fold verifier OR an honest 'no learnable oracle-distinct signal (AUROC~0.5)' is COMPLETE -- both feed A3.",
+    "learned_verifier_path": "The persisted artifact A3 loads to rerank held-out ARC candidates; the build deliverable.",
+    "model_specs": "The V-STaR probe architecture + feature set + any base used; required methodology.",
+    "oracle_distinct_auroc": "BARE float: off-fold detection AUROC of the LEARNED verifier vs is_correct -- the oracle-distinct discrimination the GAP-3 content energies lacked; >0.5 CI95-excl is the precondition for an A3 beats-vote win.",
+    "random_seed": "Determinism precondition; the fold split + probe init seeded so the AUROC is reproducible.",
+    "reproducibility_checksum": "Hash of the ARC pool + fold split + features; catches silent pool/feature drift before A3 measures.",
+    "selector_trained": "BARE bool: A3's gate compares this raw value (gated-fields-must-be-bare); true iff a learned ARC verifier artifact was persisted out-of-fold.",
+    "verifier_is_oracle": "BARE bool=false -- the learned verifier scores WITHOUT executing the demos (Circularity Discipline); this is what makes an A3 win headline/gate-eligible, unlike the circular execution verifier."
+  },
+  "honest_verdict": "blocked_arc_pool_no_candidate_labels",
+  "learned_verifier_path": "",
+  "model_specs": {
+    "architecture": "logistic_regression_binary_selector",
+    "base": "Exp4176 V-STaR logistic selector",
+    "feature_set": [
+      "candidate_index",
+      "vote_weight",
+      "self_consistency_margin",
+      "output_height",
+      "output_width",
+      "output_cells",
+      "output_color_count",
+      "output_nonzero_fraction",
+      "output_mean",
+      "output_entropy",
+      "program_length",
+      "program_digit_fraction",
+      "region_confidence_mean",
+      "region_confidence_min"
+    ],
+    "status": "blocked_no_candidate_labels",
+    "training_recipe": "accepted_and_rejected_arc_candidates_task_held_out"
+  },
+  "oracle_distinct_auroc": 0.0,
+  "oracle_distinct_auroc_ci95": [
+    0.0,
+    0.0
+  ],
+  "random_seed": 4209,
+  "reproducibility_checksum": "224ebb9fa2926d564d41384980b0cd0b41cf5f224f1ab4a9e58663812c8f787d",
+  "selector_trained": false,
+  "spec_refs": [
+    "REQ-VERIFY-4209",
+    "SCENARIO-VERIFY-4209",
+    "SCENARIO-VERIFY-4209-LABELED"
+  ],
+  "verifier_is_oracle": false
+}
