@@ -89,24 +89,30 @@ tasks:
 
   - id: exp4168-decisive-verifier-graft-defensive
     milestone: 2026.06.386
-    title: "THE DECISIVE verifier graft — DEFENSIVE, gated on (val>=0.85 AND outer-loop train STOPPED). Reads (never writes/trains) the stable checkpoint. IF faithful+stable: rerank (verifier vs TRM-vote, pass@1 lift CI) + verifier-cert-vs-vote-cert RFT de-confound on a COPY of the checkpoint. IF not: DEFER honestly (outer-loop still training / not yet 0.85). Resolves the moat question + the DiffusionGemma gate when it fires."
+    title: "THE DECISIVE verifier graft v2 (gate lowered to 0.82 per 2026-06-13 operator directive) — DEFENSIVE, gated on (val>=0.82 AND outer-loop train STOPPED). Reads (never writes/trains) the stable checkpoint. IF faithful+stable: rerank (verifier vs TRM-vote, pass@1 lift CI) + verifier-cert-vs-vote-cert RFT de-confound on a COPY of the checkpoint. IF not: DEFER honestly. Resolves the moat question + the DiffusionGemma gate when it fires."
     priority: high
     track: verifier-as-reward
     max_turns: 110
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13: decisive verifier graft on the outer-loop-trained faithful baseline — false-positive scope-match vs prior graft attempts; forward difference = gated on (val>=0.85 AND train STOPPED) so it never collides with or reads-during-write the outer-loop run; operates on a COPY."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation) + 2026-06-13: decisive verifier graft v2 on the outer-loop-trained faithful baseline, gate LOWERED 0.85->0.82 per explicit 2026-06-13 operator directive (contiguous run plateaued at ~0.82, converged within ~5pp of published 0.87) — false-positive scope-match vs the deferred v1 attempt; forward difference = gate 0.82 + fresh-recompute preconditions; operates on a COPY, never collides with the (now stopped) outer-loop run."
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4168_decisive_verifier_graft_defensive.json
+    deliverable: results/experiment_4168_decisive_verifier_graft_v2_gate082.json
     prompt: |
       CONTEXT: The decisive verifier-as-reward test on the OUTER-LOOP-trained baseline. To avoid the
       .385 collision and read-during-write races, this task is DEFENSIVE and NON-DESTRUCTIVE.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: read results/experiment_4167_*.json (or recompute): require baseline_faithful
-           == True, i.e. val>=0.85 AND the outer-loop train PID is NOT alive. If NOT -> honest_verdict
-           `graft_deferred_outerloop_training` + current val, and STOP (do NOT train, do NOT pkill the
-           outer-loop run).
+        0. PRECONDITIONS (RECOMPUTE FRESH — do NOT trust the stale exp4167 v1 monitor artifact, which
+           recorded val~0.50 mid-training):
+           a. BASELINE FAITHFUL: read results/trm_runs/sudoku_extreme_baseline/last.ckpt.bestval and
+              require value >= 0.82 (gate lowered 0.85->0.82 per the 2026-06-13 operator directive: the
+              contiguous run plateaued at ~0.82, a converged faithful baseline within ~5pp of the
+              published ~0.87).
+           b. TRAIN STOPPED: the PID in results/trm_runs/contiguous_run.pid is NOT alive (ps -p) AND
+              `nvidia-smi --query-compute-apps=pid` shows no train.py process.
+           If EITHER fails -> honest_verdict `graft_deferred_outerloop_training` + current val, and STOP
+           (do NOT train, do NOT pkill anything).
         1. COPY the stable checkpoint to a task-local path (never train/write the stable dir).
         2. RERANK arm: sample K candidate solutions per held-out puzzle from the copied checkpoint;
            rerank by the executable Sudoku verifier; pass@1 lift vs TRM-vote + vs oracle, bootstrap CI.
