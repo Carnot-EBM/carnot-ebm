@@ -8,6 +8,38 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-14 Exp 4215 - .390 planning sweep SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-oracle-distinct-v391-2026-06-14.md`.
+
+**Filtered track:** oracle-distinct learned ARC verifier, wrong-majority
+recovery, detector-axis abstention, and execution-reward baselines kept separate
+from moat claims.
+
+**Seed and fresh-pass candidates marked ingested:**
+- ARBITER, arXiv:2605.26172 - mapped to the wrong-majority headroom target and
+  a conservative override that only beats vote when learned margin is high.
+- SCOPE, arXiv:2512.15146 - mapped to per-region confidence and subgroup
+  features for the A2/A3 ARC verifier.
+- ThinkPRM, arXiv:2504.16828, and the PRM survey, arXiv:2510.08049 - mapped to
+  the learned process-verifier recipe and the selector/detector/reward taxonomy.
+- V-STaR, arXiv:2402.06457 - mapped to the accepted/rejected correctness
+  boundary already used in-repo.
+- Calibrated Reasoning, arXiv:2509.19681 - mapped to Exp 4208's detector and
+  abstention axis.
+- ExecVerify, arXiv:2603.11226, and EVOM, arXiv:2604.00442 - mapped to the B1
+  execution-reward baselines, explicitly not oracle-distinct moat evidence.
+
+Exp 4210 status mapped honestly: `blocked_gate_check_failed`; A3 did not run
+because A2 did not produce `selector_trained=true`. Exp 4208 remains detector
+evidence, not a vote-beating selector result.
+
+flagged_for_v391:
+`arbiter_conservative_override_arc_wrong_majority_v391`.
+
+Flagged for .391: `arbiter_conservative_override_arc_wrong_majority_v391`.
+
+**Bottom line for the .391 roadmap:** run the ARBITER conservative override over ARC wrong-majority cases first.
 ## 2026-06-14 Exp 4203 - .389 planning sweep SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-verifier-as-reward-v390-2026-06-14.md`.

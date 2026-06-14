@@ -20595,6 +20595,90 @@ files untouched.
 |---|---|---|
 | REQ-REPORT-4203 | Implemented (`python/carnot/experiment_4203_sota_ingestion_verifier_as_reward.py`, `docs/research-notes/sota-ingestion-verifier-as-reward-v390-2026-06-14.md`) | Implemented (`tests/python/test_experiment_4203_sota_ingestion_verifier_as_reward.py`) |
 
+### REQ-REPORT-4215: Ingest The .390 Oracle-Distinct Sweep Into A .391 Plan
+
+The Exp 4215 SOTA-ingestion workflow SHALL ingest the `.390 planning sweep`
+from `research-references.md` into an actionable SOTA-to-experiment mapping
+for the `.391` planner. The workflow SHALL read the `.390 planning sweep`,
+`research-studying.md`,
+`results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json`, and
+`results/experiment_4208_verifier_as_detector_auroc.json`; SHALL run the
+reliable discovery helpers `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py` with focused low-concurrency queries; SHALL
+verify the top mapped sources with low-concurrency WebSearch/WebFetch; and
+SHALL NOT invoke `/deep-research` or modify `scripts/research_conductor.py`.
+
+The markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-oracle-distinct-v391-2026-06-14.md` and
+the machine-checkable mapping artifact SHALL be written to
+`results/experiment_4215_sota_ingestion_oracle_distinct.json`. The required
+runner SHALL be
+`results/experiment_4215_sota_ingestion_oracle_distinct.py` and SHALL delegate
+to `python/carnot/experiment_4215_sota_ingestion_oracle_distinct.py`.
+
+The note SHALL map ARBITER (`arXiv:2605.26172`) and SCOPE
+(`arXiv:2512.15146`) to strengthening the A2/A3 oracle-distinct ARC verifier:
+ARBITER supplies the wrong-majority-failure target and a conservative override
+pattern where vote is overridden only under high learned margin; SCOPE supplies
+per-step, per-region, or subgroup confidence features so minority-correct
+answers are not discarded by flat vote. It SHALL map ThinkPRM
+(`arXiv:2504.16828`) and A Survey of Process Reward Models
+(`arXiv:2510.08049`) to the learned-process-verifier recipe and its cost and
+labeling limits. It SHALL map V-STaR (`arXiv:2402.06457`) to the
+accepted-plus-rejected correctness boundary already used in-repo. It SHALL map
+Calibrated Reasoning (`arXiv:2509.19681`) to the detector and abstention axis,
+including Exp 4208's ARC detector result. It SHALL map ExecVerify
+(`arXiv:2603.11226`) and EVOM (`arXiv:2604.00442`) to the execution-reward
+baselines that frame the B1 verifier-as-reward result without treating those
+execution-grounded rewards as oracle-distinct moat evidence.
+
+For each mapped method, the note SHALL state the Carnot stack mapping, what the
+method implies for the next experiment, where the method fails or does not by
+itself prove Carnot's claim, and the concrete experiment target. The note SHALL
+record that Exp 4210 was blocked because the A2 selector was not trained, and
+SHALL NOT present the A3 oracle-distinct learned-verifier gate as complete.
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v391`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, and `flagged_for_v391`. `honest_verdict`
+SHALL use a terminal prefix and, on the complete path, start with
+`complete: sota_ingestion_oracle_distinct_mapped_v391`. `methods_mapped` SHALL
+contain five to eight dicts with exactly `name`, `arxiv_id_or_url`, `url`,
+`carnot_stack_mapping`, `implication`, `failure_mode`, and
+`experiment_mapping`; each `arxiv_id_or_url` SHALL be one of the
+WebFetch-verified arXiv IDs, preventing fabricated or uncited method rows.
+`flagged_for_v391` SHALL be a non-empty concrete roadmap slug naming the
+single strongest `.391` method, and for this ingestion SHALL name the
+ARBITER conservative-override ARC wrong-majority recovery follow-up.
+
+The workflow SHALL update `research-studying.md` idempotently to mark the
+`.390 planning sweep` as ingested, SHALL include `flagged_for_v391`, and SHALL
+NOT update `ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-4215: The .390 Sweep Closes Into A .391 Oracle-Distinct Plan
+
+**Given** the `.390 planning sweep` filed wrong-majority recovery,
+fine-grained learned signals, learned process verifiers, accepted/rejected
+selector training, calibrated abstention, and execution-reward baselines
+**And** Exp 4210 reports a blocked A3 gate rather than a completed
+oracle-distinct ARC verifier result
+**And** Exp 4208 reports detector-axis evidence that is not by itself a
+selection win
+**When** the Exp 4215 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON mapping artifact, maps
+verified sources to Carnot stack implications, failure modes, and concrete
+experiment targets, updates `research-studying.md` idempotently, flags the
+single strongest `.391` follow-up, and leaves conductor and reconciliation
+files untouched.
+
+## Implementation Status (REQ-REPORT-4215)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4215 | Implemented (`python/carnot/experiment_4215_sota_ingestion_oracle_distinct.py`, `docs/research-notes/sota-ingestion-oracle-distinct-v391-2026-06-14.md`) | Implemented (`tests/python/test_experiment_4215_sota_ingestion_oracle_distinct.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
