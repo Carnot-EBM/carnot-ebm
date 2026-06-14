@@ -1,0 +1,83 @@
+{
+  "field_principles": {
+    "flagged_for_v391": "Closes discover->ingest->plan: names the strongest method for the next planner (e.g. ARBITER conservative-override, or a learned-ARC-energy distill).",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication (adversarial_verify discipline)."
+  },
+  "flagged_for_v391": "arbiter_conservative_override_arc_wrong_majority_v391",
+  "honest_verdict": "complete: sota_ingestion_oracle_distinct_mapped_v391",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2605.26172",
+      "carnot_stack_mapping": "Maps directly to the A2/A3 oracle-distinct ARC verifier: majority vote is treated as a prior over basins, and the learned verifier overrides only when its margin is high.",
+      "experiment_mapping": "Run an ARBITER-style conservative override over ARC candidate basins: keep vote unless learned ARC energy margin clears a fixed threshold, then report verifier@1 - vote@1 with bootstrap CI.",
+      "failure_mode": "ARBITER uses same-pool evidence and does not by itself train an ARC energy verifier; without an A2 selector and a held-out ARC split, it is a design pattern rather than a Carnot result.",
+      "implication": "The next A3-style measurement should stratify wrong-majority cases where oracle@K exceeds vote@1 and ask whether a conservative learned-margin override recovers the outvoted correct answer.",
+      "name": "ARBITER conservative override for wrong-majority recovery",
+      "url": "https://arxiv.org/abs/2605.26172"
+    },
+    {
+      "arxiv_id_or_url": "2512.15146",
+      "carnot_stack_mapping": "Strengthens A2 feature design by replacing one global vote signal with per-step, per-region, and subgroup confidence features over ARC transformations.",
+      "experiment_mapping": "Add per-region confidence summaries and subgroup diversity fields to the A2 accepted/rejected ARC candidate table, then compare high-margin override against flat learned rerank.",
+      "failure_mode": "SCOPE is a test-time RL pseudo-labeling method; it can reduce vote confirmation bias but does not guarantee calibrated correctness on ARC grids without task-specific verifier labels.",
+      "implication": "The learned ARC verifier should be trained to recognize local high-quality evidence inside minority candidate groups instead of using flat frequency as the reward target.",
+      "name": "SCOPE fine-grained confidence features",
+      "url": "https://arxiv.org/abs/2512.15146"
+    },
+    {
+      "arxiv_id_or_url": "2504.16828",
+      "carnot_stack_mapping": "Provides the learned-process-verifier recipe for a high-quality oracle-distinct comparator: generate verification reasoning and score candidate steps rather than only final answers.",
+      "experiment_mapping": "Use a ThinkPRM-style teacher only for the difficult ARC subset to label region-level violations, then distill those labels into a cheap learned ARC energy head.",
+      "failure_mode": "ThinkPRM is expensive at inference, depends on process labels or synthetic verification traces, and can still be locally persuasive while missing global ARC transformation consistency.",
+      "implication": "A .391 learned ARC energy distill can use ThinkPRM as the quality ceiling: rich process explanations should beat cheap global scores on hard wrong-majority cases if the signal is real.",
+      "name": "ThinkPRM generative process verifier",
+      "url": "https://arxiv.org/abs/2504.16828"
+    },
+    {
+      "arxiv_id_or_url": "2510.08049",
+      "carnot_stack_mapping": "Places Carnot's selector, detector, and reward uses of verifiers inside the PRM loop: data generation, model building, test-time selection, and reinforcement learning.",
+      "experiment_mapping": "Use the survey as the reporting frame: every .391 verifier row declares selector, detector, or reward axis and whether the verifier is oracle-distinct.",
+      "failure_mode": "A taxonomy is not an algorithm; it does not solve the ARC feature learning problem or remove the need for real held-out controls.",
+      "implication": "The .391 plan should keep A3 selection, A1 abstention, and B1 reward as separate axes so a detector AUROC or execution reward result is not over-claimed as an oracle-distinct selector win.",
+      "name": "PRM survey outcome-to-process taxonomy",
+      "url": "https://arxiv.org/abs/2510.08049"
+    },
+    {
+      "arxiv_id_or_url": "2402.06457",
+      "carnot_stack_mapping": "Supplies the in-repo selector class: train on accepted and rejected traces so the verifier learns a correctness boundary instead of imitating only winners.",
+      "experiment_mapping": "Rebuild the A2 ARC verifier with accepted/rejected candidates, off-fold AUROC, and explicit wrong-majority support counts before rerunning A3.",
+      "failure_mode": "If the ARC candidate pool has too few positives, no wrong-majority strata, or weak features, V-STaR can report an honest build null rather than a selector win.",
+      "implication": "A2 remains the right build gate for ARC, but Exp 4210 shows it must actually produce selector_trained=true before A3 can be interpreted.",
+      "name": "V-STaR accepted and rejected boundary",
+      "url": "https://arxiv.org/abs/2402.06457"
+    },
+    {
+      "arxiv_id_or_url": "2509.19681",
+      "carnot_stack_mapping": "Maps to Exp 4208's detector axis: calibrated confidence and abstention can be useful even when selector headroom is sparse or a selection gate is blocked.",
+      "experiment_mapping": "Turn Exp 4208 into an abstention deployment gate: pre-register coverage targets and only then ask whether the conservative override improves accepted-case accuracy.",
+      "failure_mode": "Calibration can reject low-confidence cases or identify failures, but it does not prove the verifier can choose the correct ARC candidate when vote is wrong.",
+      "implication": "For .391, report ARC detector AUROC and accuracy-vs-coverage beside selector deltas so the abstention value is visible but separate from vote-beating claims.",
+      "name": "Calibrated Reasoning detector and abstention axis",
+      "url": "https://arxiv.org/abs/2509.19681"
+    },
+    {
+      "arxiv_id_or_url": "2603.11226",
+      "carnot_stack_mapping": "Frames B1 verifier-as-reward on code: execution traces provide verifiable stepwise rewards for training, honestly labeled as execution-grounded rather than oracle-distinct.",
+      "experiment_mapping": "Frame the synchronous B1 run against ExecVerify-style step rewards: pass@1, verifier calls, execution reward density, and random-label control.",
+      "failure_mode": "Execution is the oracle on code, so it can be a strong reward signal while remaining circular for selection-moat claims.",
+      "implication": "A positive B1 result should compare against stepwise execution reward baselines and report where the reward came from, not use code execution wins as evidence for the ARC moat.",
+      "name": "ExecVerify execution-reward baseline",
+      "url": "https://arxiv.org/abs/2603.11226"
+    },
+    {
+      "arxiv_id_or_url": "2604.00442",
+      "carnot_stack_mapping": "Adds a second execution-reward baseline where a solver backend is the deterministic verifier and the model learns from closed-loop generate-execute-feedback updates.",
+      "experiment_mapping": "Use EVOM as language for execution-reward baselines and keep the .391 ARBITER/SCOPE ARC override isolated from solver-oracle reward claims.",
+      "failure_mode": "Solver-backed reward generalizes across solver environments, but it still depends on an executable verifier and therefore does not settle the non-executable ARC verifier question.",
+      "implication": "B1 should be described as part of the execution-verified RL family, while A3 remains the separate oracle-distinct learned-verifier frontier.",
+      "name": "EVOM execution-verified optimization modeling",
+      "url": "https://arxiv.org/abs/2604.00442"
+    }
+  ]
+}
