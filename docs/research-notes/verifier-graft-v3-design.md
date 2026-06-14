@@ -101,6 +101,42 @@ non-training work. The reaper exemptions (`gpu_monitor`, `experiment_template`, 
 - **Stage A fails (no headroom):** inconclusive on Sudoku; move to a higher-headroom domain
   before judging the thesis. NOT a refutation.
 
+## STAGE A RESULT (2026-06-14) — the experiment is STRUCTURALLY VOID on this generator
+
+The headroom probe (`scripts/exp_verifier_headroom_probe.py`) was built and run on the test
+set. Diagnostic (32-puzzle batch, then full run):
+
+- **The TRM is effectively DETERMINISTIC.** Final-step logits are saturated: max |logit| = 185,
+  **top1−top2 gap ≈ 61**. Temperature sampling does almost nothing — at T=8, only ~2 of 81
+  cells change; oracle@K = vote@1 = greedy@1 across T ∈ {0.7 … 8.0}.
+- **The recursion trajectory has diversity, but it is WORSE-answer diversity.** Earlier
+  supervision steps differ from the final (31→17→…→9→0 of 32 puzzles across the 16 steps), but
+  those are the model's less-converged, *wrong* intermediate guesses. The converged final IS its
+  best answer.
+- **Therefore `oracle@K ≈ greedy@1` (≈0.73 on test); headroom ≈ 0.** When the TRM is wrong, it is
+  wrong in *every* candidate — no recoverable correct answer exists in the pool.
+
+**Implication — both stages are structurally inapplicable here, NOT a verifier failure:**
+- Rerank: nothing to select among (one effective candidate) → verifier can't beat vote.
+- Native RFT de-confound: the verifier-cert corpus and the vote-cert corpus would be the SAME
+  set (one candidate → verifier and vote never disagree) → A≈B by construction. Building Stage B
+  on this baseline would manufacture a guaranteed null.
+- This is the rigorous explanation of v2's null: the verifier-vs-self-consistency question is
+  **undefined on a deterministic generator**. It says nothing about the verifier.
+
+**What a VALID test of the verifier-as-reward moat actually requires:** a generator that emits a
+genuine *distribution* of candidates with **recoverable correct answers when it errs** — i.e. a
+regime with real epistemic uncertainty, not a near-solved task with saturated logits. Concretely:
+1. A **harder / under-trained corpus** where the model is genuinely uncertain (logit gaps small,
+   oracle@K ≫ greedy), or
+2. An **LLM-class generator** with natural sampling diversity — which is exactly the hybrid
+   open-LLM-generator + energy-verifier architecture, and the DiffusionGemma direction.
+
+**Net:** TRM-on-near-solved-Sudoku is the worst possible testbed for the selection/reward moat
+(deterministic + saturated). The moat question is not answerable here at all — it must move to a
+diversity-bearing generator. This redirects the program away from "graft on the TRM baseline"
+and toward measuring the moat where candidates actually vary.
+
 ## Cross-references
 - `results/experiment_4168_decisive_verifier_graft_v2_gate082.json` — the invalid v2 null
 - CLAUDE.md "FALSE_NEGATIVE_RISK" / "Adversarial Artifact Verification + Sample-Size Rigor"
