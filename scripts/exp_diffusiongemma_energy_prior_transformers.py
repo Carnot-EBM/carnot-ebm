@@ -45,14 +45,13 @@ def main() -> None:
             bnb_4bit_compute_dtype=torch.bfloat16,
             bnb_4bit_quant_type="nf4",
         )
-        n_gpu = torch.cuda.device_count()
-        # GPUs ONLY -- no 'cpu' key -> no CPU/meta offload (the prior failure mode).
-        max_mem = {i: "22GiB" for i in range(n_gpu)}
+        # Single-GPU 4-bit: ~23GB fits one 3090 (prior attempt was 20MB short -> run with
+        # PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to defragment). device_map={"":0}
+        # = everything on the one visible GPU, NO offload -> no meta tensors, no bf16 planning.
         model = DiffusionGemmaForBlockDiffusion.from_pretrained(
             REPO,
             quantization_config=bnb,
-            device_map="auto",
-            max_memory=max_mem,
+            device_map={"": 0},
             trust_remote_code=False,
         )
         model.eval()
