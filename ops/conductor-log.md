@@ -8450,3 +8450,4 @@ c |
 | 2026-06-14 02:12 UTC | THE DECISIVE verifier graft v2 (gate lowered to 0. | OK | 92 passed, 1 warning in 8.13s |
 | 2026-06-14 02:14 UTC | VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra s | OK | Deliverable already exists in repo |
 | 2026-06-14 04:35 UTC | Hardware continuity (consolidated; GateMate + Pola | OK | cache hit: 86 passed, 1 warning in 5.04s |
+| 2026-06-14 04:49 UTC | Capstone .386 (UNGATED): headline question is HAS  | OK | 85 passed, 1 warning in 4.24s |
