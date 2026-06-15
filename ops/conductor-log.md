@@ -8528,3 +8528,4 @@ c |
 | 2026-06-15 07:58 UTC | PHASE A1 (HEADLINE BUILD; STRENGTHEN) -- BUILD a C | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-06-15 08:18 UTC | PHASE A2 (THE HEADLINE GATE, gated_on A1 aggregato | OK | 87 passed, 1 warning in 6.84s |
 | 2026-06-15 08:36 UTC | PHASE A3 (HEADLINE DISAMBIGUATION; independent) -- | OK | 85 passed, 1 warning in 4.55s |
+| 2026-06-15 08:55 UTC | PHASE B1 (HARNESS-FIRST + REAL-TRAINING ASSERTION) | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
