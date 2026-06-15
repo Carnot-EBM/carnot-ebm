@@ -1,0 +1,420 @@
+{
+  "arc_progress": {
+    "acceptance_gate_passed": true,
+    "honest_verdict": "success: incremental_progress_sc25-635fd71a_advanced_to_L3_total17",
+    "levels_completed": 3,
+    "new_levels_solved_this_task": 1,
+    "prior_total_levels_solved": 16,
+    "real_env_confirmed": true,
+    "status": "included",
+    "target_game": "sc25-635fd71a",
+    "target_level": 3,
+    "total_arc_games_solved": 13,
+    "total_arc_levels_solved": 17
+  },
+  "detector_selection_divergence": {
+    "detection_auroc_by_domain": {
+      "arc": 0.9016,
+      "code": 1.0,
+      "math": 1.0,
+      "sudoku": 1.0
+    },
+    "detection_auroc_ci95_by_domain": {
+      "arc": [
+        0.7828,
+        0.9984
+      ],
+      "code": [
+        1.0,
+        1.0
+      ],
+      "math": [
+        1.0,
+        1.0
+      ],
+      "sudoku": [
+        1.0,
+        1.0
+      ]
+    },
+    "divergence_domains": [
+      "sudoku",
+      "math"
+    ],
+    "honest_verdict": "complete: detector_selection_divergence_sudoku_math",
+    "n_by_domain": {
+      "arc": 8041,
+      "code": 100,
+      "math": 651,
+      "sudoku": 4224
+    },
+    "selector_headroom_by_domain": {
+      "arc": 0.129,
+      "code": 0.18,
+      "math": 0.0,
+      "sudoku": 0.0007
+    },
+    "status": "included",
+    "verifier_is_oracle_by_domain": {
+      "arc": false,
+      "code": true,
+      "math": true,
+      "sudoku": true
+    }
+  },
+  "diffusiongemma_gate_resolvable": false,
+  "duration_s": 0.006616184982703999,
+  "experiment_id": 4229,
+  "field_principles": {
+    "diffusiongemma_gate_resolvable": "BARE bool: true ONLY if an oracle-distinct win landed with a matched control (verifier_is_oracle=false, CI95-excl-0); a circular execution win keeps it STILL-PENDING.",
+    "headline_outcome": "One of the enumerated set -- forces a single unambiguous read of the oracle-distinct frontier + the verifier-as-reward pivot.",
+    "honest_verdict": "Terminal-prefixed. An honest 'ties-vote null' or 'no learnable oracle-distinct signal' is COMPLETE and decision-grade -- it tells .392 whether the oracle-distinct frontier is reachable on ARC (and this time the gate RAN).",
+    "oracle_distinct_status": "MOAT-WON (learned verifier beats vote off-oracle, CI excl 0) / TIES-VOTE-NULL / NO-HEADROOM-OR-NO-SIGNAL -- the 2026-06-14 P0 directive's standing after .391; a circular result does NOT count here.",
+    "total_arc_levels_solved": "The monotonic ARC progress metric after .391 (must be >= 16).",
+    "upstream_provenance": "{experiment_id, fields_imported, sha256} per cited upstream; the audit trail that a capstone synthesizes nothing from nothing.",
+    "verifier_as_reward_status": "REAL (A-vs-B label carries signal) / NULL (distillation/spurious) / INVALID-or-UNDERPOWERED / ACCUMULATING / HARNESS-DEFERRED -- the owed 2026-06-11 pivot's standing after .391."
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "artifact_key": "4220_build_labeled",
+      "experiment_id": 4220,
+      "honest_verdict": "complete: oracle_distinct_arc_verifier_trained_auroc_0.7790",
+      "path": "results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "3e7f85f97d4794c4ad531680298aedb56ab1611bfc95bc0d7468c5b34ee6f0cc"
+    },
+    {
+      "artifact_key": "4222_harness",
+      "experiment_id": 4222,
+      "honest_verdict": "complete: verifier_reward_lora_harness_smoke_passed",
+      "path": "results/experiment_4222_verifier_reward_lora_harness_fix_smoke.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "27c7c7ce479ac23c22a0f8d871c5a334d4e74101ce61164814bcd1386b687f47"
+    },
+    {
+      "artifact_key": "4223_reward",
+      "experiment_id": 4223,
+      "honest_verdict": "progress: accumulating_verifier_reward_training_no_eval_yet",
+      "path": "results/experiment_4223_verifier_as_reward_3arm_synchronous.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "06d97c78ba272fcd28845f8a13adfeda214435aa833a78c2a3bbdadc02416090"
+    }
+  ],
+  "hardware_continuity": {
+    "fabric_acceleration_claimed": false,
+    "gatemate_step_taken": "blocked_gatemate_unreachable",
+    "honest_verdict": "complete: hardware_continuity_4228_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+    "kv260_terminal_confirmed": true,
+    "per_board_reachability": {
+      "gatemate": false,
+      "kv260": true,
+      "polarfire": true
+    },
+    "per_board_status": {
+      "gatemate": {
+        "duration_s": 0.021772,
+        "next_concrete_step": "Recover GM1Ax IDCODE visibility with `openFPGALoader -c dirtyJtag --detect`, then rerun the n=16 GateMate flash from the most recent GateMate artifact.",
+        "precondition_available": false,
+        "precondition_command": "openFPGALoader -c dirtyJtag --detect",
+        "precondition_exit_code": 0,
+        "precondition_resource": "gatemate_jtag_detect",
+        "reachable": false,
+        "status": "blocked_gatemate_unreachable",
+        "terminal_state": "blocked_gatemate_unreachable",
+        "timer_id": "gatemate_precondition_plus_forward_step_wall_clock",
+        "timer_scope": "precondition_plus_forward_step_wall_clock"
+      },
+      "kv260": {
+        "duration_s": 4.609392,
+        "next_concrete_step": "kv260_terminal_state_confirmed_via_ssh",
+        "precondition_available": true,
+        "precondition_command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+        "precondition_exit_code": 0,
+        "precondition_resource": "kv260_ssh",
+        "reachable": true,
+        "status": "kv260_terminal_confirmed_ssh_only",
+        "terminal_state": "opportunistic_terminal_confirmed_ssh_only",
+        "timer_id": "kv260_precondition_plus_forward_step_wall_clock",
+        "timer_scope": "precondition_plus_forward_step_wall_clock"
+      },
+      "polarfire": {
+        "duration_s": 7.006817,
+        "hash_match": true,
+        "next_concrete_step": "polarfire_hash_verified_cpu_dispatch_succeeded",
+        "precondition_available": true,
+        "precondition_command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+        "precondition_exit_code": 0,
+        "precondition_resource": "polarfire_ssh",
+        "reachable": true,
+        "status": "polarfire_hash_verified_cpu_dispatch_succeeded",
+        "terminal_state": "reachable_hash_verified_cpu_dispatch_recorded",
+        "timer_id": "polarfire_precondition_plus_forward_step_wall_clock",
+        "timer_scope": "precondition_plus_forward_step_wall_clock"
+      }
+    },
+    "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded",
+    "speedup_claim_made": false,
+    "status": "included"
+  },
+  "headline_outcome": "oracle_distinct_verifier_ties_vote_with_headroom_null",
+  "honest_verdict": "complete: capstone_v391_oracle_distinct_verifier_ties_vote_with_headroom_null_oracle_TIES-VOTE-NULL_reward_HARNESS-DEFERRED_arc_levels17_flagged_skipped3_diffusiongemma_still_pending",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "learned_arc_verifier": {
+    "accepted_rejected_n": {
+      "accepted": 14,
+      "rejected": 1782,
+      "total": 1796
+    },
+    "metric_source": "computed_from_clean_model_oof_rows_and_clean_gate_task_rows",
+    "model_type": "standardized_logistic_regression",
+    "off_fold_auroc": 0.7790203623536957,
+    "oof_row_n": 1796,
+    "status": "included",
+    "summary_artifact_status": "skipped_flagged_adversarial",
+    "verifier_is_oracle": false,
+    "wrong_majority_n": 5
+  },
+  "live_solver_accuracy": {
+    "honest_verdict": "complete: solver_completes_0_levels_live_lp85-305b61c3_efficiency_only",
+    "levels_completed": 0,
+    "live_env_reachable": true,
+    "observed_frame_levels_completed": 1,
+    "score": 0.0,
+    "scorecard_closed": false,
+    "scorecard_levels_completed": 0,
+    "solver_beats_floor_accuracy": false,
+    "solver_beats_floor_efficiency": true,
+    "solver_beats_floor_overall": true,
+    "solver_completes_level": false,
+    "status": "included"
+  },
+  "missing_upstream_artifacts": [],
+  "oracle_distinct_frontier": {
+    "arbiter_override_minus_vote": 0.0,
+    "ci95_excludes_zero": false,
+    "gate_ran": true,
+    "headroom_present": true,
+    "honest_verdict": "complete: oracle_distinct_verifier_ties_vote_with_headroom",
+    "matched_control_delta": 0.0,
+    "matched_control_present": true,
+    "n_tasks": 14,
+    "oracle_at_k": 1.0,
+    "oracle_distinct_beats_vote": false,
+    "oracle_distinct_status": "TIES-VOTE-NULL",
+    "pass_rates": {
+      "arbiter_override_at_1": 0.6428571429,
+      "matched_control_at_1": 0.5714285714,
+      "verifier_at_1": 0.5714285714,
+      "vote_at_1": 0.6428571429
+    },
+    "status": "included",
+    "verifier_is_oracle": false,
+    "verifier_minus_vote_ci95": [
+      -0.2142857143,
+      0.0
+    ],
+    "verifier_minus_vote_delta": -0.0714285714
+  },
+  "oracle_distinct_status": "TIES-VOTE-NULL",
+  "random_seed": 4229,
+  "registry_hygiene": {
+    "honest_verdict": "complete: registry_gaps_reconciled_to_v391_truth_regression_guard_passed_True_oracle_distinct_open_a2_ties_vote_with_headroom_reward_open_accumulating_reward_no_eval_yet",
+    "oracle_distinct_status": "open_a2_ties_vote_with_headroom",
+    "regression_guard_passed": true,
+    "status": "included",
+    "verifier_reward_status": "open_accumulating_reward_no_eval_yet"
+  },
+  "reproducibility_checksum": "d9b4bede4224946645850d5bff2c6576b58ed7ca4aaf4a2bb08e3ed47fe2b137",
+  "schema": "carnot.capstone_v391_4229.v1",
+  "sota_v392": {
+    "flagged_for_v392": "agglm_style_arc_review_reconcile_aggregator_v392",
+    "honest_verdict": "complete: sota_ingestion_learned_aggregator_mapped_v392",
+    "methods_mapped_count": 5,
+    "status": "included",
+    "strongest_method_name": "AggLM review-and-reconcile solution aggregation"
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4229",
+    "SCENARIO-CAPSTONE-4229"
+  ],
+  "strongest_sota_flagged_for_v392": "agglm_style_arc_review_reconcile_aggregator_v392",
+  "total_arc_levels_solved": 17,
+  "upstream_provenance": [
+    {
+      "artifact_key": "4208_detector",
+      "experiment_id": 4208,
+      "fields_imported": [
+        "detection_auroc_by_domain",
+        "detection_auroc_ci95_by_domain",
+        "selector_headroom_by_domain",
+        "verifier_is_oracle_by_domain",
+        "n_by_domain",
+        "divergence_domains"
+      ],
+      "honest_verdict": "complete: detector_selection_divergence_sudoku_math",
+      "path": "results/experiment_4208_verifier_as_detector_auroc.json",
+      "sha256": "74067e5d0f73c2ed5990b7177475831b6a73774eb35298e7ac349db91aad0753",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "artifact_key": "4220_build_labeled",
+      "experiment_id": 4220,
+      "fields_imported": [],
+      "honest_verdict": "complete: oracle_distinct_arc_verifier_trained_auroc_0.7790",
+      "path": "results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json",
+      "sha256": "3e7f85f97d4794c4ad531680298aedb56ab1611bfc95bc0d7468c5b34ee6f0cc",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "artifact_key": "4220_model",
+      "experiment_id": 4220,
+      "fields_imported": [
+        "oof_rows",
+        "accepted_rejected_n",
+        "model_type",
+        "verifier_is_oracle"
+      ],
+      "honest_verdict": "",
+      "path": "results/experiment_4220_oracle_distinct_arc_verifier_model.json",
+      "sha256": "6d678f136f7e0df22052a81d13b5ac128fae3cd3b4c32c9f495cc209a8192765",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "artifact_key": "4221_gate",
+      "experiment_id": 4221,
+      "fields_imported": [
+        "verifier_is_oracle",
+        "oracle_distinct_beats_vote",
+        "verifier_minus_vote_delta",
+        "verifier_minus_vote_ci95",
+        "matched_control_delta",
+        "matched_control_policy",
+        "headroom_exists",
+        "arbiter_override_minus_vote",
+        "pass_rates",
+        "task_rows"
+      ],
+      "honest_verdict": "complete: oracle_distinct_verifier_ties_vote_with_headroom",
+      "path": "results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json",
+      "sha256": "f3a226d55cf050340e10d4bfe671e92dc45a6b03c5c83b99bacc1ed597244c0c",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "artifact_key": "4222_harness",
+      "experiment_id": 4222,
+      "fields_imported": [],
+      "honest_verdict": "complete: verifier_reward_lora_harness_smoke_passed",
+      "path": "results/experiment_4222_verifier_reward_lora_harness_fix_smoke.json",
+      "sha256": "27c7c7ce479ac23c22a0f8d871c5a334d4e74101ce61164814bcd1386b687f47",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "artifact_key": "4223_reward",
+      "experiment_id": 4223,
+      "fields_imported": [],
+      "honest_verdict": "progress: accumulating_verifier_reward_training_no_eval_yet",
+      "path": "results/experiment_4223_verifier_as_reward_3arm_synchronous.json",
+      "sha256": "06d97c78ba272fcd28845f8a13adfeda214435aa833a78c2a3bbdadc02416090",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "artifact_key": "4224_arc_progress",
+      "experiment_id": 4224,
+      "fields_imported": [
+        "total_levels_solved",
+        "total_games_solved",
+        "new_levels_solved_this_task",
+        "levels_completed",
+        "real_env_confirmed"
+      ],
+      "honest_verdict": "success: incremental_progress_sc25-635fd71a_advanced_to_L3_total17",
+      "path": "results/experiment_4224_arc_incremental_progress.json",
+      "sha256": "c340814c2d62d74164bea73a2f80035e4708997b8d86f90369730d40f7434ac1",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "artifact_key": "4225_live_solver",
+      "experiment_id": 4225,
+      "fields_imported": [
+        "solver_completes_level",
+        "live_env_metrics",
+        "solver_beats_floor",
+        "live_env_reachable"
+      ],
+      "honest_verdict": "complete: solver_completes_0_levels_live_lp85-305b61c3_efficiency_only",
+      "path": "results/experiment_4225_arc_live_env_solver_accuracy.json",
+      "sha256": "b836e55131ed90dc73b398cf658d94270600cec263e1e6f3af3bc4ad8fa106cb",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "artifact_key": "4226_sota",
+      "experiment_id": 4226,
+      "fields_imported": [
+        "flagged_for_v392",
+        "methods_mapped"
+      ],
+      "honest_verdict": "complete: sota_ingestion_learned_aggregator_mapped_v392",
+      "path": "results/experiment_4226_sota_ingestion_learned_aggregator.json",
+      "sha256": "1171f884780daa5b5988254ea79af86aad7e4d0031c2d59213233d7d4b2c48ec",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "artifact_key": "4227_registry",
+      "experiment_id": 4227,
+      "fields_imported": [
+        "regression_guard_passed",
+        "oracle_distinct_outcome.status",
+        "verifier_reward_outcome.status"
+      ],
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v391_truth_regression_guard_passed_True_oracle_distinct_open_a2_ties_vote_with_headroom_reward_open_accumulating_reward_no_eval_yet",
+      "path": "results/experiment_4227_verifier_registry_gaps_hygiene.json",
+      "sha256": "c530a0350531d437635ecd1c93c3515fc04709ab95039fee8bf58f6992d6b64b",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "artifact_key": "4228_hardware",
+      "experiment_id": 4228,
+      "fields_imported": [
+        "per_board_reachability",
+        "per_board_status",
+        "gatemate_step_taken",
+        "polarfire_step_taken",
+        "kv260_terminal_confirmed"
+      ],
+      "honest_verdict": "complete: hardware_continuity_4228_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+      "path": "results/experiment_4228_hardware_continuity.json",
+      "sha256": "fb8353107ae34aa76875173c88172db8203608f411278584360ad903e457275b",
+      "skip_reason": "",
+      "skipped": false
+    }
+  ],
+  "verifier_as_reward": {
+    "a_vs_b_ci95": null,
+    "a_vs_b_ci_excludes_zero": false,
+    "a_vs_b_delta": null,
+    "accumulated_n": {},
+    "b1_harness_smoke": {
+      "harness_smoke_passed": false,
+      "status": "skipped_flagged_adversarial"
+    },
+    "evaluation": {},
+    "honest_verdict": "",
+    "positive_control_confirmed": null,
+    "status": "skipped_flagged_adversarial",
+    "training": {},
+    "truncation_guard": {},
+    "verifier_as_reward_status": "HARNESS-DEFERRED",
+    "verifier_label_carries_signal": null
+  },
+  "verifier_as_reward_status": "HARNESS-DEFERRED"
+}
