@@ -2010,6 +2010,7 @@ not reliable enough to skip execution tests at this accuracy level.
 | REQ-CODE-4198 | Implemented (`python/carnot/experiment_4198_verifier_reward_3arm_rft_launch.py`) |
 | REQ-CODE-4211 | Planned (`python/carnot/experiment_4211_verifier_as_reward_finish_synchronous.py`) |
 | REQ-CODE-4222 | Planned (`python/carnot/experiment_4222_verifier_reward_lora_harness_fix_smoke.py`) |
+| REQ-CODE-4223 | Implemented (`python/carnot/experiment_4223_verifier_as_reward_3arm_synchronous.py`) |
 
 ### REQ-CODE-3573: Verifier Ensemble Generalization to Code
 The verifier ensemble MUST be evaluated for generalization on code domains (correct vs buggy execution-labeled completions).
@@ -2209,6 +2210,73 @@ inner `.linear` children, records `lora_attach_path`, records
 `trainable_param_count > 0`, executes one training step with finite loss, sets
 `harness_smoke_passed=true`, and includes a checksum over the fixture plus
 working LoRA configuration.
+
+### REQ-CODE-4223: B1-Gated Synchronous Verifier-As-Reward 3-Arm Finish
+
+The repository shall provide Exp 4223 at
+`python/carnot/experiment_4223_verifier_as_reward_3arm_synchronous.py` and
+`results/experiment_4223_verifier_as_reward_3arm_synchronous.py` to finish the
+operator's 2026-06-11 verifier-as-reward pivot using the B1-proven LoRA harness
+configuration from Exp 4222. The runner MUST:
+
+- read `results/experiment_4222_verifier_reward_lora_harness_fix_smoke.json`
+  first and stop with
+  `honest_verdict="complete_verifier_reward_deferred_harness_not_smoked"` when
+  `harness_smoke_passed` is not the bare boolean true or when
+  `lora_attach_path`/`model_specs.lora_config` are missing;
+- require CUDA before live training and stop with
+  `honest_verdict="blocked_cuda_unavailable"` when `torch.cuda.is_available()`
+  is false;
+- read the stable
+  `code_verifier_reward_lora_rft_a83b52882c198954` checkpoint and the .389/.390
+  Arm A/B/C corpora, preserving the size-matched same-generator random-label
+  control guarantee `|B|=|A|`;
+- resume and accumulate per-arm LoRA-SFT synchronously in the current process,
+  not by `setsid`, `Popen`, or detached background launch, while recording the
+  B1-proven LoRA config in `model_specs` and in the reproducibility checksum;
+- write `results/experiment_4223_verifier_as_reward_3arm_synchronous.json`
+  with `honest_verdict`, `verifier_label_carries_signal`, `a_vs_b_delta`,
+  `a_vs_b_ci95`, `positive_control_confirmed`, `youden_j`, `accumulated_n`,
+  `verifier_is_oracle`, `model_specs`, `random_seed`, and
+  `reproducibility_checksum`, with principles for each required field; and
+- treat a clean label-carries-signal result, a clean A~=B distillation null, an
+  honest blocked/deferred precondition, or an honest accumulating/invalid/retired
+  result as complete rather than fabricating a headline.
+
+The A-vs-B decision SHALL use held-out hidden-test pass@1 for Arm A minus Arm B
+and a task-level bootstrap CI95 with at least 2000 resamples when held-out
+evaluation exists. `verifier_label_carries_signal` SHALL be the bare boolean
+`true` only when the CI excludes zero and the delta is positive. The positive
+control SHALL be the bare boolean `true` only when Arm C is at least the cold base
+and every arm's truncation rate is below 5%; a failed positive control invalidates
+A-vs-B and must produce an honest invalid verdict. `verifier_is_oracle` SHALL be
+the bare boolean `true` because the reward label is the executable correctness
+oracle.
+
+### SCENARIO-CODE-4223-DEFERRED-HARNESS: Missing B1 Smoke Stops The Finish
+
+Given the Exp 4222 smoke artifact is absent, unreadable, false, or missing its
+working LoRA attach path/config, when Exp 4223 runs, then it writes the terminal
+deferred verdict, leaves A-vs-B metrics null, sets
+`verifier_label_carries_signal=false`, and does not launch training.
+
+### SCENARIO-CODE-4223-SYNC-ACCUMULATE: B1 Config Resumes In Process
+
+Given B1 passed, CUDA is available, an approved non-Qwen base is cached, and the
+stable checkpoint has N-matched Arm A/B corpora, when Exp 4223 starts training,
+then it delegates to the existing 3-arm LoRA-SFT runner in-process, records
+synchronous progress and accumulated per-arm checkpoints, records
+`used_detached_process=false`, and carries the B1-proven LoRA config into the
+artifact and checksum.
+
+### SCENARIO-CODE-4223-VERDICT-GATES: De-Confounded A-vs-B Is Reported Only After Controls
+
+Given held-out hidden-test pass@1 measurements for Arms A, B, C, and cold base,
+when Exp 4223 builds the final artifact, then it applies the gold-control and
+truncation gates before headline interpretation, reports `a_vs_b_delta`,
+`a_vs_b_ci95`, `positive_control_confirmed`, and
+`verifier_label_carries_signal` as bare fields, marks failed controls as invalid,
+and includes Youden-J plus the memorization-shortcut diagnostic.
 
 
 ### REQ-CODE-VERIFY-3602: FoVer Math-Trained PRM Transfer to Code Benchmark

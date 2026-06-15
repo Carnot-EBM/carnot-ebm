@@ -1,0 +1,50 @@
+{
+  "arm_sizes": {
+    "arm_a_certified": 776,
+    "arm_b_random_control": 776,
+    "arm_c_hidden_gold": 742,
+    "arm_d_cold_base": 0
+  },
+  "checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/results/offarc_power_sync_gemma12b_evalplus_k5.checkpoint.json",
+  "duration_s": 33.864535,
+  "experiment": "experiment_4197_verifier_reward_code_lora_rft_3arm",
+  "harness_ready": true,
+  "honest_verdict": "complete: smoke_3arm_runner_ready",
+  "n_tasks": 160,
+  "progress_events": [],
+  "random_seed": 4198,
+  "smoke": false,
+  "train_mode_executed": true,
+  "train_requested": true,
+  "training": {
+    "arm_a": {
+      "arm": "A_certified",
+      "completed_steps": 0,
+      "n_examples": 776,
+      "status": "blocked_loss_without_grad",
+      "trainable_params": 5701632
+    },
+    "arm_b": {
+      "arm": "B_random_same_generator",
+      "completed_steps": 0,
+      "n_examples": 776,
+      "status": "blocked_loss_without_grad",
+      "trainable_params": 5701632
+    },
+    "arm_c": {
+      "arm": "C_hidden_gold",
+      "completed_steps": 0,
+      "n_examples": 742,
+      "status": "blocked_loss_without_grad",
+      "trainable_params": 5701632
+    },
+    "arm_d": {
+      "arm": "D_cold_base",
+      "n_examples": 0,
+      "status": "cold_base_eval_only"
+    }
+  },
+  "truncation_guard": {
+    "max_allowed_truncation_rate": 0.05
+  }
+}
