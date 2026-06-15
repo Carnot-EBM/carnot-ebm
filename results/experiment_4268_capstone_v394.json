@@ -1,0 +1,497 @@
+{
+  "arc_progress": {
+    "game_advanced": "none",
+    "game_levels_completed": 5,
+    "honest_verdict": "complete: incremental_progress_no_advance_sc25-635fd71a_L6_no_verifier_validated_level_up_candidate",
+    "levels_completed": 0,
+    "new_levels_solved_this_task": 0,
+    "prior_total_levels_solved": 19,
+    "status": "included",
+    "total_levels": 19,
+    "total_levels_solved": 19
+  },
+  "code_read": {
+    "ci95_excludes_zero": false,
+    "code_predictor_minus_vote_ci95": [
+      -0.01875,
+      0.0
+    ],
+    "code_predictor_minus_vote_delta": -0.00625,
+    "code_replication_beats_vote": false,
+    "code_replication_retired": false,
+    "headroom_exists": true,
+    "held_out_task_n": 160,
+    "honest_verdict": "complete: code_oracle_distinct_replication_corpus_specific",
+    "off_fold_auroc": 0.6967654987,
+    "oracle_at_k": 0.9625,
+    "oracle_minus_vote": 0.01875,
+    "replication_read": "corpus_specific",
+    "reported_code_replication_beats_vote": false,
+    "status": "code_corpus_specific",
+    "verifier_is_oracle": false
+  },
+  "diffusiongemma_full_run_gate": false,
+  "duration_s": 0.495579,
+  "experiment": 4268,
+  "extend_synthesis": {
+    "status": "excluded_flagged_adversarial",
+    "synthesis_breaks_oracle_ceiling": false
+  },
+  "field_principles": {
+    "diffusiongemma_full_run_gate": "BARE bool: resolvable iff hardened_win AND preflight_go -- whether .395 may activate the DiffusionGemma full run (gates the expensive scale-up on a survived win).",
+    "flagged_artifacts_excluded": "List of .394 artifacts excluded for flagged_adversarial -- the fabrication gate (their numbers are NOT aggregated).",
+    "hardened_win": "BARE bool: the +44pp win is real (survived provenance-blind), robust (replicated multi-seed), and general (cross-game delta>0) -- the headline-eligibility verdict.",
+    "headline_outcome": "One honest string aggregating the hardened-win + extend + scale-up + ARC + reward + code reads; the single line the .395 planner frames from.",
+    "honest_verdict": "Terminal-prefixed. The .394 close-state -- whether the first ARC oracle-distinct win hardened and whether synthesis broke the ceiling.",
+    "paper_ready": "From publication_gate.py --json -- the G1-G4 status (FoVer headline stays the publication target; the ARC win is a new supporting result).",
+    "reproducibility_checksum": "Hash of the aggregated upstream sha256 set; lets a third party re-derive the capstone.",
+    "upstream_provenance": "{experiment_id, fields_imported, sha256} per cited upstream; skipped upstreams import no numbers.",
+    "verifier_is_oracle_honored": "BARE bool=true -- confirms every cited moat/headline result carried verifier_is_oracle=false (no circular result headlines a moat)."
+  },
+  "flagged_artifacts_excluded": [
+    {
+      "artifact_key": "4259_synthesis",
+      "experiment_id": 4259,
+      "live_critical": false,
+      "live_critical_flags": [],
+      "path": "results/experiment_4259_arc_agglm_grid_synthesis.json",
+      "reason": "flagged_adversarial_or_live_critical",
+      "sha256": "6d4f9b86f8d75bca874c53c72ce031e8072c0ddb822717a2276d2c0c708e0151",
+      "stamped_flagged_adversarial": true
+    },
+    {
+      "artifact_key": "4260_preflight",
+      "experiment_id": 4260,
+      "live_critical": true,
+      "live_critical_flags": [
+        {
+          "detail": "duration_s=0.336149 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "path": "results/experiment_4260_diffusiongemma_energy_guided_preflight.json",
+      "reason": "flagged_adversarial_or_live_critical",
+      "sha256": "4b88e97ccd9d1fefe50d1ec15ec61c2e43e9293e451c70a2afc92e3e825ca7e4",
+      "stamped_flagged_adversarial": true
+    },
+    {
+      "artifact_key": "4266_registry",
+      "experiment_id": 4266,
+      "live_critical": true,
+      "live_critical_flags": [
+        {
+          "detail": "duration_s=0.459496 but artifact declares verifier-scoring substrate. Even verifier scoring of a few hundred candidates takes >=1.0s; this completed too fast to have scored anything.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "path": "results/experiment_4266_verifier_registry_gaps_hygiene.json",
+      "reason": "flagged_adversarial_or_live_critical",
+      "sha256": "8923fb8767ae7b6ce7cd1b281bc81e177e3da0de7bb5ec696ced5872d97907df",
+      "stamped_flagged_adversarial": true
+    }
+  ],
+  "hardened_win": false,
+  "hardening": {
+    "cross_game": {
+      "ci95_excludes_zero": false,
+      "cross_game_ci95": null,
+      "cross_game_delta": null,
+      "headroom_exists": null,
+      "held_out_game_n": 0,
+      "held_out_task_n": 0,
+      "honest_verdict": "blocked_arc_game_ids_unrecoverable",
+      "status": "blocked_or_no_positive_delta",
+      "used_as_oracle_distinct": true,
+      "verifier_is_oracle": false
+    },
+    "hardened_win": false,
+    "multiseed": {
+      "cross_seed_ci95": [
+        0.4377176136,
+        0.4776670017
+      ],
+      "cross_seed_ci95_excludes_zero": true,
+      "honest_verdict": "complete: arc_oracle_distinct_win_replicates_multiseed",
+      "independent_rescore_delta": 0.4423076923,
+      "mean_delta": 0.4576923077,
+      "n_seeds": 5,
+      "oracle_distinct_win_replicates": true,
+      "reported_oracle_distinct_win_replicates": true,
+      "status": "included",
+      "used_as_oracle_distinct": true,
+      "verifier_is_oracle": false
+    },
+    "provenance_blind": {
+      "held_out_task_n": 52,
+      "honest_verdict": "complete: arc_set_encoder_win_survives_provenance_blind_audit",
+      "oracle_at_k": 0.8269230769,
+      "origin_correctness_corr": 0.9012450021,
+      "origin_probe_auroc": 0.9481745077,
+      "provenance_blind_ci95": [
+        0.25,
+        0.5192307692
+      ],
+      "provenance_blind_delta": 0.3846153846,
+      "reported_win_survives_provenance_blind": true,
+      "status": "included",
+      "used_as_oracle_distinct": true,
+      "verifier_is_oracle": false,
+      "win_survives_provenance_blind": true
+    }
+  },
+  "hardware_read": {
+    "fabric_acceleration_claimed": false,
+    "gatemate_step_taken": "blocked_gatemate_unreachable",
+    "honest_verdict": "complete: hardware_continuity_4267_kv260_kv260_terminal_xmutil_listapps_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_gatemate_blocked_gatemate_unreachable_ssh_usb_reachability_only",
+    "kv260_step_taken": "kv260_terminal_xmutil_listapps_blocked_returncode_1",
+    "kv260_terminal_confirmed": false,
+    "per_board_reachability": {
+      "gatemate": false,
+      "kv260": true,
+      "polarfire": true
+    },
+    "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded",
+    "speedup_claim_made": false,
+    "status": "included"
+  },
+  "headline_outcome": "within_pool_win_survived_but_cross_game_blocked_synthesis_excluded_preflight_excluded_arc19_live0_reward_out_of_band_code_corpus_specific_paper_ready",
+  "honest_verdict": "complete: capstone_v394_within_pool_win_survived_but_cross_game_blocked_synthesis_excluded_preflight_excluded_arc19_live0_reward_out_of_band_code_corpus_specific_paper_ready_hardened_win_False_diffusiongemma_full_run_gate_False_excluded_3",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "live_adversarial_recheck": "scripts/adversarial_verify.py verify_artifact per upstream",
+  "live_arc_probe": {
+    "actions_taken": 5,
+    "actions_vs_baseline_ratio": 0.29411764705882354,
+    "baseline_actions": 17,
+    "environment_score": {
+      "actions": 0,
+      "completed": false,
+      "guid": "0c44ed3e-d50b-4d11-9ea5-d1605327fb63",
+      "level_actions": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "level_baseline_actions": [
+        17,
+        38,
+        31,
+        16,
+        41,
+        60,
+        26,
+        159
+      ],
+      "levels_completed": 0,
+      "message": "",
+      "resets": 0,
+      "score": 0.0
+    },
+    "game_probed": "lp85-305b61c3",
+    "honest_verdict": "complete: live_env_accuracy_probe_0_levels_efficiency_only_lp85-305b61c3",
+    "levels_completed": 0,
+    "scorecard_closed": false,
+    "status": "included"
+  },
+  "missing_upstream_artifacts": [],
+  "paper_ready": true,
+  "publication_gate": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "publication_gate_command": "python3 scripts/publication_gate.py --json",
+  "random_seed": 4268,
+  "registry_read": {
+    "regression_guard_passed": false,
+    "status": "excluded_flagged_adversarial"
+  },
+  "reproducibility_checksum": "299f8f6510c81b3d010ac4c9e5c81ea6d0dc3bd52240df770b00ee7f5a40a10f",
+  "reward_decision": {
+    "honest_verdict": "complete: ready_for_out_of_band_verifier_reward_training",
+    "out_of_band_runner_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/run_out_of_band_reward_weighted_lora.py",
+    "ready_for_out_of_band": true,
+    "status": "reward_out_of_band",
+    "verifier_as_reward_retired": false,
+    "verifier_is_oracle": true,
+    "weighted_corpus": {
+      "avsb_diagnostic": "clean_a_vs_b_supported_by_verifier_certified_vs_random_label_control",
+      "corpus_sizes": {
+        "A": 776,
+        "B": 776,
+        "C": 742
+      },
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/reward_weighted_corpus.jsonl",
+      "reward_weight_counts": {
+        "0.25": 776,
+        "1.0": 1518
+      },
+      "rows": 2294,
+      "supports_clean_avsb": true
+    }
+  },
+  "scale_up_readiness": {
+    "preflight_go": false,
+    "status": "excluded_flagged_adversarial"
+  },
+  "schema": "carnot.capstone_v394_4268.v1",
+  "spec_refs": [
+    "REQ-CAPSTONE-4268",
+    "SCENARIO-CAPSTONE-4268"
+  ],
+  "summarize_command": "python3 scripts/summarize_artifact.py <artifact>",
+  "unmet_gates": [],
+  "upstream_provenance": [
+    {
+      "artifact_key": "4256_leak_audit",
+      "experiment_id": 4256,
+      "fields_imported": [
+        "verifier_is_oracle",
+        "win_survives_provenance_blind",
+        "provenance_blind_delta",
+        "provenance_blind_ci95",
+        "origin_probe_auroc",
+        "origin_correctness_corr",
+        "held_out_task_n",
+        "oracle_at_k"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4256_arc_oracle_distinct_leak_audit.json",
+      "payload_reproducibility_checksum": "60effeade145e54a3a4147a7e783ffbc9afb2ca4c3e6cfa48dfc266bcbeb695e",
+      "sha256": "b94c485520ddb0718b45900a980cb6e513033fa5af0338eebb01e6d72ec73576",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4257_multiseed",
+      "experiment_id": 4257,
+      "fields_imported": [
+        "verifier_is_oracle",
+        "oracle_distinct_win_replicates",
+        "mean_delta",
+        "cross_seed_ci95",
+        "cross_seed_ci95_excludes_zero",
+        "n_seeds",
+        "independent_rescore_delta"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4257_arc_oracle_distinct_multiseed_replication.json",
+      "payload_reproducibility_checksum": "f922898c0e72e1d6bec3a8e21cc330bd3074d9ff2779028969f7b1c3545defd6",
+      "sha256": "54b954d94e45f4fbfab13d50c78520e62782c7c043303f3758cf4590be089168",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4258_cross_game",
+      "experiment_id": 4258,
+      "fields_imported": [
+        "verifier_is_oracle",
+        "cross_game_delta",
+        "cross_game_ci95",
+        "ci95_excludes_zero",
+        "held_out_game_n",
+        "held_out_task_n",
+        "headroom_exists"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4258_arc_oracle_distinct_cross_game_transfer.json",
+      "payload_reproducibility_checksum": "98dcfd47931b8fbdb773f77215bf656f223940faef92b0b380298b9b5e9390a0",
+      "sha256": "a97ef571d5e8b7ac4bbe2fe4aaf7d4b56a311a9a5b60a9e4bdd2eadae2d52779",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4259_synthesis",
+      "experiment_id": 4259,
+      "fields_imported": [],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4259_arc_agglm_grid_synthesis.json",
+      "payload_reproducibility_checksum": "f89b5467a370ecff0d7fbb657a08fea65bdb29544ed47b05e8acdd718e72088a",
+      "sha256": "6d4f9b86f8d75bca874c53c72ce031e8072c0ddb822717a2276d2c0c708e0151",
+      "skipped": true,
+      "stamped_flagged_adversarial": true,
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4260_preflight",
+      "experiment_id": 4260,
+      "fields_imported": [],
+      "live_adversarial_flags": [
+        {
+          "detail": "duration_s=0.336149 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "live_critical": true,
+      "path": "results/experiment_4260_diffusiongemma_energy_guided_preflight.json",
+      "payload_reproducibility_checksum": "90bee2dfcb658679ca0507b434e15036d61cb4e4945b0b0f98bd4d11963b3046",
+      "sha256": "4b88e97ccd9d1fefe50d1ec15ec61c2e43e9293e451c70a2afc92e3e825ca7e4",
+      "skipped": true,
+      "stamped_flagged_adversarial": true,
+      "summarize_exit_code": 2
+    },
+    {
+      "artifact_key": "4261_arc_progress",
+      "experiment_id": 4261,
+      "fields_imported": [
+        "total_levels",
+        "total_levels_solved",
+        "levels_completed",
+        "new_levels_solved_this_task",
+        "prior_total_levels_solved",
+        "game_advanced",
+        "game_levels_completed"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4261_arc_incremental_progress.json",
+      "payload_reproducibility_checksum": "8834bf610f56bb6e8dab0a323a480969e1861a4100f19f39af0911b1dae5192c",
+      "sha256": "fdce3b3adfec96f1a2b268ab1e03199c57026f3a0340f304c7ccc1575c95f528",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4262_live_probe",
+      "experiment_id": 4262,
+      "fields_imported": [
+        "levels_completed",
+        "actions_taken",
+        "baseline_actions",
+        "actions_vs_baseline_ratio",
+        "environment_score",
+        "game_probed",
+        "scorecard_closed"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4262_arc_live_env_accuracy_probe.json",
+      "payload_reproducibility_checksum": "ec5efc74d43d4dd2f158b5b69aa14ed894f12056e33b7729d3239db1acefceaf",
+      "sha256": "c0c5299e6801aa3219b4851abd2dbda8df89b286a854954bb0ad1106fd4450f9",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4263_reward",
+      "experiment_id": 4263,
+      "fields_imported": [
+        "verifier_is_oracle",
+        "ready_for_out_of_band",
+        "verifier_as_reward_retired",
+        "out_of_band_runner_path",
+        "weighted_corpus"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json",
+      "payload_reproducibility_checksum": "3ff41cbf5966dc0232161f2caa09c02ad252813060e384400651e5e8db83ebf3",
+      "sha256": "1c2f5f2591c8427e5f51fdca15af29883bb660c4ccf80bf2040c246601cf829c",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4264_code",
+      "experiment_id": 4264,
+      "fields_imported": [
+        "verifier_is_oracle",
+        "code_replication_beats_vote",
+        "code_replication_retired",
+        "replication_read",
+        "code_predictor_minus_vote_delta",
+        "code_predictor_minus_vote_ci95",
+        "ci95_excludes_zero",
+        "held_out_task_n",
+        "headroom_exists",
+        "oracle_at_k",
+        "oracle_minus_vote",
+        "off_fold_auroc"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4264_code_oracle_distinct_replication_retry.json",
+      "payload_reproducibility_checksum": "914eee5fbd394ae0c650d25ed09a89f86b853d893abfed8a7e10cc17355e5695",
+      "sha256": "e022bfcecdb53af091ca74cf59d67d0a5f700650669aa9481bbcc75291bcab7a",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4266_registry",
+      "experiment_id": 4266,
+      "fields_imported": [],
+      "live_adversarial_flags": [
+        {
+          "detail": "duration_s=0.459496 but artifact declares verifier-scoring substrate. Even verifier scoring of a few hundred candidates takes >=1.0s; this completed too fast to have scored anything.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "live_critical": true,
+      "path": "results/experiment_4266_verifier_registry_gaps_hygiene.json",
+      "payload_reproducibility_checksum": "a0daa7785567cab6366761146edadd653e569d0f4ff154421cb295bde9669a41",
+      "sha256": "8923fb8767ae7b6ce7cd1b281bc81e177e3da0de7bb5ec696ced5872d97907df",
+      "skipped": true,
+      "stamped_flagged_adversarial": true,
+      "summarize_exit_code": 2
+    },
+    {
+      "artifact_key": "4267_hardware",
+      "experiment_id": 4267,
+      "fields_imported": [
+        "kv260_terminal_confirmed",
+        "kv260_step_taken",
+        "polarfire_step_taken",
+        "gatemate_step_taken",
+        "per_board_reachability",
+        "fabric_acceleration_claimed",
+        "speedup_claim_made"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4267_hardware_continuity.json",
+      "payload_reproducibility_checksum": "232db3dfc81d168bb8fdbe85ca0728a7a9ce8e57b005b5670cdb415d7bf08018",
+      "sha256": "a760f2e446d35f3e6562c8f72302a9207e0f675f619c943fad4ef36327ea0fb9",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    }
+  ],
+  "verifier_is_oracle_honored": true
+}
