@@ -8516,3 +8516,4 @@ c |
 | 2026-06-15 02:29 UTC | PHASE B1 (HARNESS-FIRST, the .360 discipline) -- F | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_4222_verifie |
 | 2026-06-15 02:39 UTC | PHASE B1 (HARNESS-FIRST, the .360 discipline) -- F | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-15 03:49 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-15 04:10 UTC | PHASE C1 -- ARC-AGI-3 INCREMENTAL +1 (monotonic).  | OK | 88 passed, 1 warning in 5.44s |
