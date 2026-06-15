@@ -8563,3 +8563,4 @@ c |
 | 2026-06-15 18:19 UTC | PHASE A3 (HEADLINE; the real OOD test) -- CROSS-GA | OK | 88 passed, 1 warning in 8.02s |
 | 2026-06-15 19:37 UTC | PHASE A4 (EXTEND the win; gated_on A1 win_survives | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-15 19:52 UTC | PHASE B1 (STAGE the scale-up; gated_on A1 win_surv | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-15 20:19 UTC | PHASE B2 (ARC north star) -- monotonic ARC +1: adv | OK | 95 passed, 1 warning in 4.70s |
