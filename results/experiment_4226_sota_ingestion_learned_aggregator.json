@@ -1,0 +1,56 @@
+{
+  "field_principles": {
+    "flagged_for_v392": "Closes discover->ingest->plan: names the strongest method for the next planner (e.g. AggLM-style aggregator for ARC, or an AgentAuditor localized-evidence verifier).",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication (adversarial_verify discipline)."
+  },
+  "flagged_for_v392": "agglm_style_arc_review_reconcile_aggregator_v392",
+  "honest_verdict": "complete: sota_ingestion_learned_aggregator_mapped_v392",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2509.06870",
+      "carnot_stack_mapping": "Maps the A2 ARC verifier from a flat reranker into an aggregator: review the candidate set, reconcile conflicting evidence, and synthesize or select the final grid only after comparing minority and majority evidence.",
+      "experiment_mapping": "Build `agglm_style_arc_review_reconcile_aggregator_v392`: feed the whole ARC candidate set, vote prior, verifier scores, and local grid evidence into a review/reconcile aggregator; compare aggregator@1, flat verifier@1, and vote@1 on wrong-majority tasks.",
+      "failure_mode": "AggLM is demonstrated on reasoning benchmarks, not ARC grids; its success does not prove Carnot has enough localized ARC evidence or a generator that can safely synthesize corrected grids.",
+      "implication": "Exp 4221 had oracle headroom but the learned selector did not beat vote, so .392 should train an ARC aggregator that can recover minority-correct answers instead of only assigning independent candidate scores.",
+      "name": "AggLM review-and-reconcile solution aggregation",
+      "url": "https://arxiv.org/abs/2509.06870"
+    },
+    {
+      "arxiv_id_or_url": "2602.09341",
+      "carnot_stack_mapping": "Maps to an evidence audit layer over ARC candidates: localize where candidate transformations diverge, compare the disputed regions, and reward evidence-based minority selections over popular but unsupported answers.",
+      "experiment_mapping": "Add a localized-evidence verifier row: identify critical grid disagreements, score evidence around those regions, and report accuracy and cost against majority vote and LLM-as-judge.",
+      "failure_mode": "Reasoning trees from multi-agent text traces are richer than the cached ARC candidate rows; without explicit region-level evidence, an auditor can collapse back into an expensive judge.",
+      "implication": "AgentAuditor gives the efficiency frame for .392: localized evidence should be compared against both vote and an LLM-judge audit, not only against flat self-consistency.",
+      "name": "AgentAuditor localized-evidence reasoning-tree audit",
+      "url": "https://arxiv.org/abs/2602.09341"
+    },
+    {
+      "arxiv_id_or_url": "2602.02143",
+      "carnot_stack_mapping": "Maps to the policy-training recipe for selecting among ARC candidates: synthesize verified correct/incorrect selection tasks and train the selector with reinforcement learning rather than prompt-only ranking.",
+      "experiment_mapping": "Create ARC Best-of-N selection episodes from the Exp 4220 labeled pool, train a small generative selector with correctness reward, and measure whether it adds lift beyond the logistic verifier.",
+      "failure_mode": "GenSelect remains a selector. It can choose the best existing candidate but does not by itself reconcile partial correctness or repair a grid when all high-frequency candidates are wrong.",
+      "implication": "A .392 selector can be trained from ARC candidate sets with both correct and incorrect rows, then evaluated against vote, flat verifier, and AggLM-style aggregation.",
+      "name": "GenSelect-BoN RL-trained generative selection",
+      "url": "https://arxiv.org/abs/2602.02143"
+    },
+    {
+      "arxiv_id_or_url": "2603.03417",
+      "carnot_stack_mapping": "Maps to cross-candidate verifier features: score each ARC answer with awareness of the full candidate set, vote basin, confidence margin, and competing transformation families.",
+      "experiment_mapping": "Add a candidate-set encoder or explicit cross-candidate summaries to the ARC verifier, then ablate isolated scoring versus whole-set scoring on the `wrong_majority_n=5` support slice.",
+      "failure_mode": "Better calibration across candidates does not create an external correctness signal by itself; if all cross-candidate features track frequency, MSV-style scoring can still preserve wrong majorities.",
+      "implication": "The A2 feature set should stop treating rows as isolated examples. Cross-candidate attention or summary features are necessary for minority-correct recovery.",
+      "name": "MSV cross-candidate multi-sequence verification",
+      "url": "https://arxiv.org/abs/2603.03417"
+    },
+    {
+      "arxiv_id_or_url": "2603.03538",
+      "carnot_stack_mapping": "Maps to the Phase-B verifier-as-reward loop: use a verifier to produce higher-fidelity pseudo-labels than majority vote, while tracking the soundness/completeness trade-off of online verifier feedback.",
+      "experiment_mapping": "Gate a verifier-as-reward self-learning run behind a positive aggregator result, then compare verifier labels, majority labels, and random-label controls with explicit soundness and completeness accounting.",
+      "failure_mode": "Self-learning can amplify false verifier positives. The CoT theory paper studies proof-like traces, and SR-TTRL is an ICML track item, so neither source removes the need for ARC-specific controls.",
+      "implication": "Only after the .392 aggregator shows positive selection value should Carnot let the verifier supervise self-learning; the reward loop needs abstention and asymmetric error budgets.",
+      "name": "SR-TTRL and online CoT-verifier self-learning loop",
+      "url": "https://arxiv.org/abs/2603.03538"
+    }
+  ]
+}

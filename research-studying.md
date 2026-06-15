@@ -8,6 +8,39 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-15 Exp 4226 - .391 planning sweep SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-learned-aggregator-v392-2026-06-15.md`.
+
+**Filtered track:** learned aggregation after Exp 4220 trained the ARC verifier
+and Exp 4221 found oracle headroom but `oracle_distinct_beats_vote=false`.
+
+**Seed and fresh-pass candidates marked ingested:**
+- AggLM, arXiv:2509.06870 - mapped as the strongest .392 follow-up: convert
+  the A2 ARC verifier from flat rerank into review/reconcile/synthesize
+  aggregation for minority-correct recovery.
+- AgentAuditor, arXiv:2602.09341 - mapped to localized evidence auditing and
+  the LLM-as-judge efficiency head-to-head.
+- GenSelect-BoN, arXiv:2602.02143 - mapped as the RL-trained selection-only
+  baseline and recipe.
+- MSV, arXiv:2603.03417 - mapped to cross-candidate features and whole-set
+  verifier calibration.
+- Online CoT-verifier learnability, arXiv:2603.03538, plus SR-TTRL ICML 2026 -
+  mapped to the verifier-as-reward self-learning loop after a positive
+  aggregator gate.
+
+Exp 4220 status mapped honestly: `selector_trained=true`,
+`oracle_distinct_auroc=0.778980279`, and `wrong_majority_n=5`. Exp 4221 status
+mapped honestly: `oracle_minus_vote=0.3571428571`,
+`verifier_minus_vote_delta=-0.0714285714`, and
+`oracle_distinct_beats_vote=false`.
+
+flagged_for_v392:
+`agglm_style_arc_review_reconcile_aggregator_v392`.
+
+Flagged for .392: `agglm_style_arc_review_reconcile_aggregator_v392`.
+
+**Bottom line for the .392 roadmap:** run the AggLM-style ARC aggregator before another flat rerank.
 ## 2026-06-14 Exp 4215 - .390 planning sweep SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-oracle-distinct-v391-2026-06-14.md`.
