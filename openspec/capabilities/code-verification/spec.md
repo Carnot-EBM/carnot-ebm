@@ -2011,6 +2011,7 @@ not reliable enough to skip execution tests at this accuracy level.
 | REQ-CODE-4211 | Planned (`python/carnot/experiment_4211_verifier_as_reward_finish_synchronous.py`) |
 | REQ-CODE-4222 | Planned (`python/carnot/experiment_4222_verifier_reward_lora_harness_fix_smoke.py`) |
 | REQ-CODE-4223 | Implemented (`python/carnot/experiment_4223_verifier_as_reward_3arm_synchronous.py`) |
+| REQ-CODE-4234 | Planned (`python/carnot/experiment_4234_verifier_reward_lora_harness_real_training_smoke.py`) |
 
 ### REQ-CODE-3573: Verifier Ensemble Generalization to Code
 The verifier ensemble MUST be evaluated for generalization on code domains (correct vs buggy execution-labeled completions).
@@ -2277,6 +2278,67 @@ truncation gates before headline interpretation, reports `a_vs_b_delta`,
 `a_vs_b_ci95`, `positive_control_confirmed`, and
 `verifier_label_carries_signal` as bare fields, marks failed controls as invalid,
 and includes Youden-J plus the memorization-shortcut diagnostic.
+
+### REQ-CODE-4234: Verifier-Reward LoRA Harness Real-Training Smoke
+
+The repository shall provide Exp 4234 at
+`python/carnot/experiment_4234_verifier_reward_lora_harness_real_training_smoke.py`
+and `results/experiment_4234_verifier_reward_lora_harness_real_training_smoke.py`
+to prove the verifier-as-reward LoRA harness performs real optimizer work before
+B2 can launch another 3-arm A/B/C/D run. The smoke MUST:
+
+- check CUDA first and write `honest_verdict="blocked_cuda_unavailable"` without
+  attempting model load or attachment when CUDA is unavailable;
+- select a cached non-Qwen standard HuggingFace trainable base, preferring
+  `unsloth/gemma-4-12B-it` and falling back only to `google/gemma-4-E4B-it`,
+  and write `honest_verdict="blocked_no_nonqwen_base_cached"` when neither base
+  is cached or fetchable in-window;
+- build a 16-32 example fixture from the stable
+  `code_verifier_reward_lora_rft_a83b52882c198954` A/B/C corpora when readable,
+  or from the same operating-point prompt shape when the stable corpora are
+  absent;
+- load the selected base with
+  `transformers.AutoModelForCausalLM.from_pretrained(...)`, never through the
+  custom Gemma4 quantized wrapper or a GGUF tokenizer path, and attach PEFT LoRA
+  to standard projection module names `q_proj`, `k_proj`, `v_proj`, `o_proj`,
+  `gate_proj`, `up_proj`, and `down_proj`, retrying those modules' inner
+  `.linear` children only if the standard path exposes unsupported
+  `Gemma4ClippableLinear` wrappers;
+- set bare `harness_smoke_passed=true` only when LoRA exposes
+  `trainable_param_count > 0`, at least 20 real optimizer steps run, the final
+  step loss is lower than the first step loss by a non-trivial margin, and the
+  wall clock exceeds the configured plausibility floor; and
+- write
+  `results/experiment_4234_verifier_reward_lora_harness_real_training_smoke.json`
+  with bare fields `honest_verdict`, `harness_smoke_passed`, `steps_run`,
+  `loss_initial`, `loss_final`, `lora_attach_path`, `trainable_param_count`,
+  `verifier_is_oracle`, `model_specs`, `random_seed`, and
+  `reproducibility_checksum`, plus field principles and the per-step loss trace.
+
+`verifier_is_oracle` SHALL be the bare boolean `true` because the reward label is
+the executable correctness oracle. A smoke that cannot perform real training in
+the current window SHALL write
+`honest_verdict="blocked_lora_training_cannot_run_in_window"` rather than a
+`progress_*` verdict.
+
+### SCENARIO-CODE-4234-BLOCKED-PRECONDITION: Missing Live Resource Stops Real Smoke
+
+Given the stable verifier-reward corpora may or may not be present, when Exp
+4234 runs without CUDA or without an approved cached non-Qwen base, then it
+writes the corresponding blocked artifact, leaves `harness_smoke_passed=false`,
+sets `steps_run=0`, sets `trainable_param_count=0`, and does not attempt LoRA
+attachment.
+
+### SCENARIO-CODE-4234-REAL-TRAINING: Positive Control Requires Sustained Optimizer Work
+
+Given CUDA, an approved cached non-Qwen base, and a 16-32 example fixture, when
+Exp 4234 runs, then PEFT attaches LoRA through the standard
+`AutoModelForCausalLM` path with either the projection target modules or their
+inner `.linear` children, prints and records a positive trainable parameter
+count, prints every optimizer step and loss, records at least 20 step/loss
+events, requires `loss_final < loss_initial`, requires wall-clock duration at or
+above the plausibility floor, and sets `harness_smoke_passed=true` only when all
+of those checks pass.
 
 
 ### REQ-CODE-VERIFY-3602: FoVer Math-Trained PRM Transfer to Code Benchmark

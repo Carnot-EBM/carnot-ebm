@@ -1,0 +1,100 @@
+{
+  "acceptance_gate": {
+    "condition": "harness_smoke_passed true with steps_run>=20 AND loss_final<loss_initial AND trainable_param_count>0 AND lora_attach_path recorded, OR an honest blocked_* verdict",
+    "satisfied": true
+  },
+  "created_at": "2026-06-15T08:53:08Z",
+  "duration_floor_s": 10.0,
+  "duration_s": 17.71837,
+  "experiment": "experiment_4234_verifier_reward_lora_harness_real_training_smoke",
+  "field_principles": {
+    "harness_smoke_passed": "BARE bool: B2's gate compares this raw value (gated-fields-must-be-bare); true iff LoRA attached with >0 trainable params AND >=20 real optimizer steps ran AND loss moved (final<initial) AND wall-clock exceeded the plausibility floor.",
+    "honest_verdict": "Terminal-prefixed. A passing REAL-training smoke OR an honest blocked_* is COMPLETE -- B2 gates on the smoke so a non-training harness surfaces HERE, loudly, not as another fake-short progress artifact.",
+    "lora_attach_path": "Which fix worked (standard AutoModelForCausalLM target_modules, or wrapper .linear patch) -- the diagnostic so B2 does not re-hit Gemma4ClippableLinear.",
+    "loss_final": "Final-step training loss; loss_final < loss_initial by a margin is the real-training signal the .391 smoke lacked.",
+    "loss_initial": "First-step training loss -- paired with loss_final to prove the loss actually MOVED.",
+    "model_specs": "The NON-Qwen SOTA base + the working LoRA config; required methodology + the recipe B2 reuses.",
+    "random_seed": "Determinism precondition; torch + LoRA init seeded so the smoke is reproducible.",
+    "reproducibility_checksum": "Hash of the fixture + LoRA config; lets a third party confirm the same harness inputs.",
+    "steps_run": "BARE int >=20 -- proves real optimizer steps ran (the .391 failure short-circuited before training); a low value means the harness still does not train.",
+    "trainable_param_count": "BARE int >0 -- proves LoRA actually attached.",
+    "verifier_is_oracle": "BARE bool=true -- HONEST: the eventual reward is the execution oracle (RLVR/RLEF reward axis), NOT a moat claim (Circularity Discipline)."
+  },
+  "fixture": {
+    "corpus_sizes": {
+      "A": 776,
+      "B": 776,
+      "C": 742
+    },
+    "size": 24,
+    "source": "stable_checkpoint_corpora"
+  },
+  "harness_smoke_passed": false,
+  "honest_verdict": "blocked_lora_training_cannot_run_in_window",
+  "lora_attach_path": "standard_auto_model_for_causal_lm_target_modules",
+  "loss_final": null,
+  "loss_initial": null,
+  "loss_trace": [],
+  "model_specs": {
+    "load_method": "transformers.AutoModelForCausalLM.from_pretrained(\"google/gemma-4-12B-it\")",
+    "lora_attach_path": "standard_auto_model_for_causal_lm_target_modules",
+    "lora_config": {
+      "exclude_modules": [
+        "vision_tower"
+      ],
+      "learning_rate": 0.0002,
+      "lora_alpha": 32,
+      "lora_dropout": 0.05,
+      "max_length": 1024,
+      "method": "LoRA-SFT",
+      "r": 16,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ],
+      "task_type": "CAUSAL_LM"
+    },
+    "on_policy_generator": "google/gemma-4-12B-it",
+    "qwen_train_base_forbidden": true,
+    "runner": "scripts/experiments/verifier_reward_code_lora_rft_3arm.py",
+    "trainable_base": "google/gemma-4-12B-it",
+    "trainable_base_cache_path": "/home/ianblenke/.cache/huggingface/hub/models--google--gemma-4-12B-it",
+    "trainable_base_is_non_qwen": true
+  },
+  "preconditions": {
+    "cached_base": {
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--google--gemma-4-12B-it",
+      "model_id": "google/gemma-4-12B-it"
+    },
+    "corpus_sizes": {
+      "A": 776,
+      "B": 776,
+      "C": 742
+    },
+    "cuda_available": true,
+    "fixture_size": 24,
+    "fixture_source": "stable_checkpoint_corpora",
+    "nonqwen_base_cached": true,
+    "qwen_train_base_forbidden": true,
+    "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954",
+    "stable_checkpoint_readable": true
+  },
+  "random_seed": 4198,
+  "reproducibility_checksum": "sha256:b258f26c8104b89783b60397736e52fd971fdbad0df644c5054cc5866f769c63",
+  "schema": "carnot.experiment_4234_verifier_reward_lora_harness_real_training_smoke.v1",
+  "smoke_failure_reason": "OutOfMemoryError: CUDA out of memory. Tried to allocate 198.00 MiB. GPU 0 has a total capacity of 23.56 GiB of which 14.31 MiB is free. Including non-PyTorch memory, this process has 23.54 GiB memory in use. Of the allocated memory 23.07 GiB is allocated by PyTorch, and 163.80 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)",
+  "spec_refs": [
+    "REQ-CODE-4234",
+    "SCENARIO-CODE-4234-BLOCKED-PRECONDITION",
+    "SCENARIO-CODE-4234-REAL-TRAINING"
+  ],
+  "steps_run": 0,
+  "trainable_param_count": 65568768,
+  "training_duration_s": 0.296474,
+  "verifier_is_oracle": true
+}

@@ -16,10 +16,11 @@ from __future__ import annotations
 import argparse
 import gc
 import json
+import math
 import sys
 import time
 from pathlib import Path
-from typing import Any, Iterable, Sequence
+from typing import Any, Iterable, Mapping, Sequence
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -36,6 +37,9 @@ LORA_TARGET_MODULES = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_
 LORA_INNER_LINEAR_TARGET_MODULES = [f"{name}.linear" for name in LORA_TARGET_MODULES]
 LORA_EXCLUDE_MODULES = ["vision_tower"]
 LORA_CHECKPOINT_EVERY_STEPS = 25
+LORA_REAL_SMOKE_MIN_STEPS = 20
+LORA_REAL_SMOKE_DURATION_FLOOR_S = 10.0
+LORA_REAL_SMOKE_MIN_LOSS_DELTA = 1e-4
 
 
 def _jsonable(value: Any) -> Any:
@@ -65,6 +69,35 @@ def _prepare_model_for_lora_sft(model: Any) -> Any:
         model.enable_input_require_grads()
     model.train()
     return model
+
+
+def _real_training_smoke_gate(
+    *,
+    trainable_param_count: int,
+    loss_trace: Sequence[float],
+    duration_s: float,
+    min_steps: int = LORA_REAL_SMOKE_MIN_STEPS,
+    duration_floor_s: float = LORA_REAL_SMOKE_DURATION_FLOOR_S,
+    min_loss_delta: float = LORA_REAL_SMOKE_MIN_LOSS_DELTA,
+) -> tuple[bool, str | None]:
+    """Return whether the LoRA smoke performed plausible real optimizer work."""
+
+    if trainable_param_count <= 0:
+        return False, "blocked_no_trainable_lora_parameters"
+    losses = [float(loss) for loss in loss_trace if math.isfinite(float(loss))]
+    if len(losses) < int(min_steps):
+        return False, "insufficient_optimizer_steps"
+    if losses[-1] >= losses[0] - float(min_loss_delta):
+        return False, "loss_did_not_move"
+    if float(duration_s) < float(duration_floor_s):
+        return False, "duration_below_plausibility_floor"
+    return True, None
+
+
+def _example_field(example: Any, key: str) -> str:
+    if isinstance(example, Mapping):
+        return str(example.get(key) or "")
+    return str(getattr(example, key, "") or "")
 
 
 def run_execution_tests(
@@ -171,7 +204,7 @@ def _train_lora_sft(
     tokenizer = AutoTokenizer.from_pretrained(model_id)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
-    model = AutoModelForCausalLM.from_pretrained(model_id, dtype=torch.bfloat16).to("cuda")
+    model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.bfloat16, local_files_only=True).to("cuda")
     if adapter_config.is_file():
         model = PeftModel.from_pretrained(model, output_dir, is_trainable=True)
         lora_attach_path = "resume_existing_adapter"
@@ -220,6 +253,7 @@ def _train_lora_sft(
                     continue
                 raise
     trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"[{time.strftime('%H:%M:%S')}] trainable_lora_param_count={trainable_params}", flush=True)
     if trainable_params <= 0:
         return {
             "arm": arm_name,
@@ -313,6 +347,193 @@ def _train_lora_sft(
         "lora_config": attached_lora_config,
         "output_dir": str(output_dir),
         "progress_events": progress_events,
+    }
+
+
+def run_real_training_smoke(
+    examples: Sequence[Any],
+    *,
+    model_id: str,
+    seed: int,
+    min_steps: int = LORA_REAL_SMOKE_MIN_STEPS,
+    duration_floor_s: float = LORA_REAL_SMOKE_DURATION_FLOOR_S,
+    min_loss_delta: float = LORA_REAL_SMOKE_MIN_LOSS_DELTA,
+) -> dict[str, Any]:  # pragma: no cover - live GPU/model path
+    """Run the Exp 4234 positive control: attach LoRA and perform real optimizer steps."""
+
+    try:
+        import torch
+        from peft import LoraConfig, get_peft_model
+        from transformers import AutoModelForCausalLM, AutoTokenizer
+    except Exception as exc:
+        return {"harness_smoke_passed": False, "error": f"{type(exc).__name__}: {exc}"}
+
+    if not torch.cuda.is_available():
+        return {"harness_smoke_passed": False, "error": "blocked_cuda_unavailable"}
+    rows = list(examples)
+    if not rows:
+        return {"harness_smoke_passed": False, "error": "empty_training_fixture"}
+
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    tokenizer = AutoTokenizer.from_pretrained(model_id, local_files_only=True)
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.bfloat16, local_files_only=True).to("cuda")
+
+    lora_attach_path = "standard_auto_model_for_causal_lm_target_modules"
+    attached_target_modules = LORA_TARGET_MODULES
+    attached_lora_config: dict[str, Any] | None = None
+    for target_modules, attach_path in (
+        (LORA_TARGET_MODULES, "standard_auto_model_for_causal_lm_target_modules"),
+        (LORA_INNER_LINEAR_TARGET_MODULES, "wrapper_inner_linear_target_modules"),
+    ):
+        lora = LoraConfig(
+            r=16,
+            lora_alpha=32,
+            lora_dropout=0.05,
+            task_type="CAUSAL_LM",
+            target_modules=target_modules,
+            exclude_modules=LORA_EXCLUDE_MODULES,
+        )
+        try:
+            print(f"[{time.strftime('%H:%M:%S')}] lora_attach_path={attach_path}", flush=True)
+            model = get_peft_model(model, lora)
+            lora_attach_path = attach_path
+            attached_target_modules = target_modules
+            attached_lora_config = {
+                "method": "LoRA-SFT",
+                "task_type": "CAUSAL_LM",
+                "r": 16,
+                "lora_alpha": 32,
+                "lora_dropout": 0.05,
+                "learning_rate": 2e-4,
+                "max_length": 1024,
+                "target_modules": list(target_modules),
+                "exclude_modules": list(LORA_EXCLUDE_MODULES),
+            }
+            break
+        except ValueError as exc:
+            if attach_path == "standard_auto_model_for_causal_lm_target_modules" and "Gemma4ClippableLinear" in str(exc):
+                print(
+                    f"[{time.strftime('%H:%M:%S')}] standard attach rejected Gemma4ClippableLinear; "
+                    "retrying inner .linear modules",
+                    flush=True,
+                )
+                continue
+            raise
+
+    trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"[{time.strftime('%H:%M:%S')}] trainable_lora_param_count={trainable_params}", flush=True)
+    if trainable_params <= 0:
+        return {
+            "harness_smoke_passed": False,
+            "lora_attach_path": lora_attach_path,
+            "trainable_param_count": 0,
+            "steps_run": 0,
+            "loss_initial": None,
+            "loss_final": None,
+            "loss_trace": [],
+            "duration_s": 0.0,
+            "error": "blocked_no_trainable_lora_parameters",
+            "lora_config": attached_lora_config,
+            "target_modules": attached_target_modules,
+        }
+
+    _prepare_model_for_lora_sft(model)
+    params = [p for p in model.parameters() if p.requires_grad]
+    optimizer = torch.optim.AdamW(params, lr=2e-4)
+    loss_trace: list[dict[str, Any]] = []
+    started = time.time()
+    try:
+        for index in range(int(min_steps)):
+            example = rows[index % len(rows)]
+            prompt = _example_field(example, "prompt")
+            completion = _example_field(example, "completion")
+            full = prompt + "\n" + completion + (tokenizer.eos_token or "")
+            enc = tokenizer(full, return_tensors="pt", truncation=True, max_length=1024).to("cuda")
+            prompt_len = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=1024)["input_ids"].shape[1]
+            labels = enc["input_ids"].clone()
+            labels[0, :prompt_len] = -100
+            loss = model(**enc, labels=labels).loss
+            if not bool(getattr(loss, "requires_grad", False)):
+                return {
+                    "harness_smoke_passed": False,
+                    "lora_attach_path": lora_attach_path,
+                    "trainable_param_count": trainable_params,
+                    "steps_run": index,
+                    "loss_initial": loss_trace[0]["loss"] if loss_trace else None,
+                    "loss_final": loss_trace[-1]["loss"] if loss_trace else None,
+                    "loss_trace": loss_trace,
+                    "duration_s": time.time() - started,
+                    "error": "blocked_loss_without_grad",
+                    "lora_config": attached_lora_config,
+                }
+            if not bool(torch.isfinite(loss.detach()).all()):
+                return {
+                    "harness_smoke_passed": False,
+                    "lora_attach_path": lora_attach_path,
+                    "trainable_param_count": trainable_params,
+                    "steps_run": index,
+                    "loss_initial": loss_trace[0]["loss"] if loss_trace else None,
+                    "loss_final": loss_trace[-1]["loss"] if loss_trace else None,
+                    "loss_trace": loss_trace,
+                    "duration_s": time.time() - started,
+                    "error": "non_finite_loss",
+                    "lora_config": attached_lora_config,
+                }
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(params, 1.0)
+            optimizer.step()
+            optimizer.zero_grad(set_to_none=True)
+            loss_value = float(loss.detach().cpu())
+            event = {"step": index + 1, "loss": loss_value}
+            loss_trace.append(event)
+            print(f"[{time.strftime('%H:%M:%S')}] smoke_step={index + 1}/{min_steps} loss={loss_value:.6f}", flush=True)
+    except Exception as exc:
+        duration_s = time.time() - started
+        del model
+        gc.collect()
+        torch.cuda.empty_cache()
+        return {
+            "harness_smoke_passed": False,
+            "lora_attach_path": lora_attach_path,
+            "trainable_param_count": trainable_params,
+            "steps_run": len(loss_trace),
+            "loss_initial": loss_trace[0]["loss"] if loss_trace else None,
+            "loss_final": loss_trace[-1]["loss"] if loss_trace else None,
+            "loss_trace": loss_trace,
+            "duration_s": duration_s,
+            "error": f"{type(exc).__name__}: {exc}",
+            "lora_config": attached_lora_config,
+            "target_modules": attached_target_modules,
+        }
+
+    duration_s = time.time() - started
+    loss_values = [float(event["loss"]) for event in loss_trace]
+    passed, reason = _real_training_smoke_gate(
+        trainable_param_count=trainable_params,
+        loss_trace=loss_values,
+        duration_s=duration_s,
+        min_steps=min_steps,
+        duration_floor_s=duration_floor_s,
+        min_loss_delta=min_loss_delta,
+    )
+    del model
+    gc.collect()
+    torch.cuda.empty_cache()
+    return {
+        "harness_smoke_passed": passed,
+        "lora_attach_path": lora_attach_path,
+        "trainable_param_count": trainable_params,
+        "steps_run": len(loss_trace),
+        "loss_initial": loss_values[0] if loss_values else None,
+        "loss_final": loss_values[-1] if loss_values else None,
+        "loss_trace": loss_trace,
+        "duration_s": duration_s,
+        "error": reason,
+        "lora_config": attached_lora_config,
+        "target_modules": attached_target_modules,
     }
 
 
