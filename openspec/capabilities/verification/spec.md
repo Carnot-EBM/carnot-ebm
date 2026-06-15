@@ -15633,6 +15633,72 @@ the exclusion manifest, annotates the registry with the Exp 4252 replay plus
 `random_seed`, `reproducibility_checksum`, and `model_specs`, and runs
 adversarial verification without a `METHODOLOGY_MISSING` flag.
 
+### REQ-VERIFY-4256: ARC Set-Encoder Provenance Leak Audit
+
+The repository SHALL provide Exp 4256 at
+`python/carnot/reporting/arc_oracle_distinct_leak_audit_4256.py` and
+`results/experiment_4256_arc_oracle_distinct_leak_audit.py` to adversarially
+audit the `.393` Exp 4245 ARC set-encoder win before it can headline or justify
+scale-up. The runner SHALL load
+`results/experiment_4243_arc_candidate_pool_grow_pool.json.gz`, verify that the
+per-candidate provenance/source field is present or reconstructable, and SHALL
+write an honest blocked artifact with
+`honest_verdict=blocked_arc_provenance_unrecoverable` if induced-vs-sampled
+origin cannot be recovered. It SHALL NOT run Codex, GGUF inference, GPU
+inference, stable checkpoint writes, or TRM training.
+
+When provenance is recoverable, the runner SHALL train an out-of-fold origin
+probe on the same feature set used by Exp 4244/4245 to predict induced origin
+(`induced_pred_grid`) versus sampled/gold-pool origin, SHALL report bare float
+`origin_probe_auroc`, bare float `origin_correctness_corr`, and the fraction of
+positive candidates that have induced origin. It SHALL then re-run the held-out
+beats-vote selector on the same task folds using provenance-blind set-encoder
+features only: keep vote priors, self-consistency, cross-candidate agreement,
+and per-cell modal agreement, while stripping program metadata, grid
+shape/palette/content-family indicators, duplicate-count features, and any
+origin-probe high-weight feature. The provenance-blind gate SHALL report bare
+float `provenance_blind_delta`, two-float `provenance_blind_ci95` from at least
+2000 task-level bootstrap resamples, and bare bool
+`win_survives_provenance_blind`, true iff the delta is positive and the CI95
+excludes zero. The artifact SHALL declare `verifier_is_oracle=false`, include
+`random_seed`, `reproducibility_checksum`, and `model_specs` describing the
+origin probe and the stripped/retained feature partition, and SHALL run
+`scripts/adversarial_verify.py` with `CIRCULAR_MOAT_OVERCLAIM` clean.
+
+The terminal artifact SHALL write
+`results/experiment_4256_arc_oracle_distinct_leak_audit.json` with
+`honest_verdict`, bare bool `win_survives_provenance_blind`, bare float
+`origin_probe_auroc`, bare float `origin_correctness_corr`, bare float
+`provenance_blind_delta`, `provenance_blind_ci95`, bare bool
+`verifier_is_oracle=false`, bare int `random_seed`, `reproducibility_checksum`,
+`model_specs`, `field_principles`, `spec_refs`, `acceptance_gate`, and
+`adversarial_verify`. Its `field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. A surviving provenance-blind win AND a collapse (the win was leak) are BOTH COMPLETE and decision-grade.`;
+`win_survives_provenance_blind` = `BARE bool: A4/B1 gate on this raw value (gated-fields-must-be-bare); true iff the beats-vote delta>0 AND CI95-excl-0 on provenance-BLIND features -- the de-leaked headline.`;
+`origin_probe_auroc` = `BARE float: AUROC of a classifier predicting candidate ORIGIN (induced-vs-sampled) from the .393 features -- high value flags that origin is encoded in the features.`;
+`origin_correctness_corr` = `BARE float: correlation between candidate origin and is_correct -- the leak signature is high origin_probe_auroc AND high origin_correctness_corr (the verifier could win by detecting provenance).`;
+`provenance_blind_delta` = `set_encoder@1 - vote@1 with origin-encoding features removed -- the de-leaked oracle-distinct lift; compare to the .393 +0.4423.`;
+`provenance_blind_ci95` = `Task-level bootstrap CI95 of the provenance-blind delta -- excluding 0 is what makes the de-leaked win real.`;
+`verifier_is_oracle` = `BARE bool=false -- the de-leaked verifier scores content WITHOUT executing demos; only this keeps an A4/B1 build headline/gate-eligible.`;
+`random_seed` = `Determinism precondition; the held-out split + bootstrap must be reproducible.`;
+`reproducibility_checksum` = `Hash of the pool + provenance join + feature set; lets a third party re-run the audit.`;
+`model_specs` = `The origin-probe + provenance-blind feature partition (which features were stripped and why); required methodology.`
+
+### SCENARIO-VERIFY-4256: Provenance Audit Detects Or Clears .393 Leak Risk
+
+Given the Exp 4243 grown pool, Exp 4244 set-encoder build/model artifacts, and
+Exp 4245 beats-vote artifact are readable, when Exp 4256 runs, then it writes
+the terminal audit artifact with provenance recovered from `source_kinds`,
+reports `origin_probe_auroc`, `origin_correctness_corr`,
+`provenance_blind_delta`, `provenance_blind_ci95`, and
+`win_survives_provenance_blind`, keeps `verifier_is_oracle=false`, includes
+`model_specs` with stripped and retained feature sets, includes a
+`reproducibility_checksum`, and runs adversarial verification without a live
+`CIRCULAR_MOAT_OVERCLAIM` flag. If candidate provenance is absent and cannot be
+reconstructed, then the artifact is still terminal with
+`honest_verdict=blocked_arc_provenance_unrecoverable` and does not claim the
+`.393` win survived.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
