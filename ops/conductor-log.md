@@ -8571,3 +8571,5 @@ c |
 | 2026-06-15 21:45 UTC | PHASE D2 (hygiene) -- reconcile the verifier regis | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-15 22:00 UTC | PHASE D3 (hardware continuity; opportunistic per n | OK | 86 passed, 1 warning in 6.12s |
 | 2026-06-15 22:20 UTC | PHASE D4 (capstone .394, UNGATED) -- headline ques | OK | 87 passed, 1 warning in 6.70s |
+| 2026-06-15 23:05 UTC | Plan milestone 2026.06.395 | OK | 11 tasks proposed |
+| 2026-06-15 23:08 UTC | Milestone 2026.06.395 activated | OK | 11 tasks queued |
