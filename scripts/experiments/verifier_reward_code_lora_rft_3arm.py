@@ -34,6 +34,7 @@ from carnot.verify.sandbox import sandboxed_exec_function  # noqa: E402
 OUT = REPO_ROOT / "results" / "experiment_4197_verifier_reward_code_lora_rft_3arm_smoke.json"
 LORA_TARGET_MODULES = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
 LORA_INNER_LINEAR_TARGET_MODULES = [f"{name}.linear" for name in LORA_TARGET_MODULES]
+LORA_EXCLUDE_MODULES = ["vision_tower"]
 LORA_CHECKPOINT_EVERY_STEPS = 25
 
 
@@ -162,9 +163,11 @@ def _train_lora_sft(
         model = PeftModel.from_pretrained(model, output_dir, is_trainable=True)
         lora_attach_path = "resume_existing_adapter"
         attached_target_modules = None
+        attached_lora_config = None
     else:
         lora_attach_path = "standard_auto_model_for_causal_lm_target_modules"
         attached_target_modules = LORA_TARGET_MODULES
+        attached_lora_config = None
         for target_modules, attach_path in (
             (LORA_TARGET_MODULES, "standard_auto_model_for_causal_lm_target_modules"),
             (LORA_INNER_LINEAR_TARGET_MODULES, "wrapper_inner_linear_target_modules"),
@@ -175,13 +178,24 @@ def _train_lora_sft(
                 lora_dropout=0.05,
                 task_type="CAUSAL_LM",
                 target_modules=target_modules,
-                exclude_modules=["vision_tower"],
+                exclude_modules=LORA_EXCLUDE_MODULES,
             )
             try:
                 print(f"[{time.strftime('%H:%M:%S')}] lora_attach_path={attach_path}", flush=True)
                 model = get_peft_model(model, lora)
                 lora_attach_path = attach_path
                 attached_target_modules = target_modules
+                attached_lora_config = {
+                    "method": "LoRA-SFT",
+                    "task_type": "CAUSAL_LM",
+                    "r": 16,
+                    "lora_alpha": 32,
+                    "lora_dropout": 0.05,
+                    "learning_rate": 2e-4,
+                    "max_length": 1024,
+                    "target_modules": list(target_modules),
+                    "exclude_modules": list(LORA_EXCLUDE_MODULES),
+                }
                 break
             except ValueError as exc:
                 if attach_path == "standard_auto_model_for_causal_lm_target_modules" and "Gemma4ClippableLinear" in str(exc):
@@ -197,10 +211,11 @@ def _train_lora_sft(
         return {
             "arm": arm_name,
             "status": "blocked_no_trainable_lora_parameters",
-                "n_examples": len(examples),
-                "target_modules": attached_target_modules,
-                "lora_attach_path": lora_attach_path,
-            }
+            "n_examples": len(examples),
+            "target_modules": attached_target_modules,
+            "lora_attach_path": lora_attach_path,
+            "lora_config": attached_lora_config,
+        }
     optimizer = torch.optim.AdamW((p for p in model.parameters() if p.requires_grad), lr=2e-4)
     model.train()
     steps = completed_steps
@@ -282,6 +297,7 @@ def _train_lora_sft(
         "trainable_params": trainable_params,
         "lora_attach_path": lora_attach_path,
         "target_modules": attached_target_modules,
+        "lora_config": attached_lora_config,
         "output_dir": str(output_dir),
         "progress_events": progress_events,
     }
