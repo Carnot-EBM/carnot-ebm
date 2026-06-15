@@ -14605,6 +14605,110 @@ Exp 4232 runs, then it writes
 sets `oracle_distinct_beats_vote=false`, keeps `verifier_is_oracle=false`, and
 stops before measuring ARC candidates.
 
+### REQ-VERIFY-4233: Oracle-Distinct Code Pass-Predictor Beats-Vote Gate
+
+The repository SHALL provide
+`python/carnot/reporting/oracle_distinct_code_beats_vote_4233.py` and
+`results/experiment_4233_oracle_distinct_code_beats_vote.py` to train and run a
+no-execution learned code pass-predictor over cached code candidates with
+per-candidate hidden-test pass labels. The runner SHALL first try the cached
+code candidate sources in the operator-specified order, including
+`results/experiment_2830_humaneval_full_ensemble_eval.json`,
+`results/experiment_2837_mbpp_ensemble_eval.json`,
+`results/experiment_2838_humaneval_full_ensemble_eval.json`,
+`results/experiment_1607_dsl_humaneval.json`, and the
+`results/verifier_reward_3arm_lora_rft/*/corpora/arm_*.jsonl` checkpoint
+corpora. A usable pool SHALL contain at least two candidates for a task and a
+bare per-candidate hidden-test pass label. If no usable cached pool exists, the
+runner SHALL write `honest_verdict=blocked_code_candidate_pool_missing`, set
+`code_oracle_distinct_beats_vote=false`, keep `verifier_is_oracle=false`, and
+stop before training or fabricating candidate rows.
+
+When a usable code candidate pool exists, the runner SHALL build one row per
+candidate with `{task_id, code_features, passes_hidden_tests}`. The hidden-test
+pass label SHALL be the supervised training target only. The feature set SHALL
+be oracle-distinct and computable without running candidate code or tests at
+inference: code text embedding buckets, lexical and AST/statistical code
+features, non-executing duplicate code-signature agreement, and
+cross-candidate self-consistency margins over the task candidate set. The
+runner SHALL NOT call `exec`, `eval`, `safe_exec_function`, HumanEval `check()`,
+EvalPlus, PyTest, or any hidden/visible test harness while extracting features
+or scoring held-out candidates. If no runtime output signature is present in
+the cached rows, the vote baseline SHALL use a normalized code-text answer
+signature and record that proxy in the artifact rather than executing code to
+create an output signature.
+
+The pass-predictor SHALL train out-of-fold with held-out task splits, using a
+calibrated imbalance-aware objective such as class-weighted logistic loss plus
+train-fold isotonic calibration. It SHALL report bare float
+`off_fold_auroc`, a held-out task count, and the selected candidate-pool source.
+Held-out scores SHALL be produced only by models whose training task set did
+not include the scored task.
+
+For the powered gate, the runner SHALL compute `predictor@1` as the held-out
+candidate with maximum learned pass score, `vote@1` as the majority
+non-executing answer signature, a deterministic first-of-K matched control, and
+`oracle@K` as whether any cached candidate label for the task passes hidden
+tests. It SHALL compute bare float `code_predictor_minus_vote_delta` and a
+task-level bootstrap CI95 with at least 2000 resamples. The bare bool
+`code_oracle_distinct_beats_vote` SHALL be true only when headroom exists
+(`oracle@K > vote@1`), the predictor lift is positive, and the CI95 excludes
+zero. If headroom is absent, `disambiguation_read` SHALL be `code_no_headroom`.
+If headroom exists and the predictor does not beat vote at power,
+`disambiguation_read` SHALL be `selection_thesis_bounded`; if the predictor
+does beat vote, `disambiguation_read` SHALL be `ARC_null_is_data_sparsity`.
+The runner SHALL run `scripts/adversarial_verify.py` on the written artifact
+and SHALL keep `verifier_is_oracle=false` so `CIRCULAR_MOAT_OVERCLAIM` remains
+clean.
+
+The terminal artifact SHALL write
+`results/experiment_4233_oracle_distinct_code_beats_vote.json` with required
+fields `honest_verdict`, bare bool `code_oracle_distinct_beats_vote`, bare
+float `code_predictor_minus_vote_delta`, `code_predictor_minus_vote_ci95`, bare
+float `oracle_at_k`, bare int `held_out_task_n`, `disambiguation_read`, bare
+bool `verifier_is_oracle=false`, `model_specs`, bare int `random_seed`,
+`reproducibility_checksum`, `field_principles`, `spec_refs`, and
+`acceptance_gate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. A code beats-vote win, a code ties-at-power null, or an honest no-pool/no-headroom is COMPLETE -- each disambiguates the ARC null.`;
+`code_oracle_distinct_beats_vote` = `BARE bool: predictor@1 - vote@1 CI95 excludes 0 AND delta>0 AND headroom -- a LEARNED (non-executing) code verifier beating vote; NOT the circular execution result.`;
+`code_predictor_minus_vote_delta` = `predictor@1 - vote@1 on held-out code -- the oracle-distinct lift on a balanced, high-power domain.`;
+`code_predictor_minus_vote_ci95` = `Task-level bootstrap CI95 of the code delta -- excluding 0 distinguishes a real win from noise at power code provides.`;
+`oracle_at_k` = `code positive-control ceiling (any candidate passes) -- if ~=vote the null is uninformative.`;
+`held_out_task_n` = `BARE int: the code gate's N -- expected >> the .391 ARC n=14, so a code null is high-power.`;
+`disambiguation_read` = `ARC_null_is_data_sparsity (code wins -> build a bigger ARC pool) / selection_thesis_bounded (code also ties -> the oracle-distinct selection thesis is bounded) / code_no_headroom -- the load-bearing cross-domain read on the .391 ARC null.`;
+`verifier_is_oracle` = `BARE bool=false -- the predictor scores code WITHOUT executing tests at inference (the hidden-test label is the training target only); this keeps the result oracle-distinct, not circular.`;
+`model_specs` = `The pass-predictor architecture + oracle-distinct code feature set + calibrated loss; required methodology.`;
+`random_seed` = `Determinism precondition; fold split + init seeded.`;
+`reproducibility_checksum` = `Hash of the code candidate pool + fold split; lets a third party re-run.`
+
+### SCENARIO-VERIFY-4233: Code Predictor Beats Vote Without Execution
+
+Given a cached code candidate pool has multiple candidates per task, hidden-test
+pass labels, and `oracle@K > vote@1`, when Exp 4233 runs, then it trains
+task-held-out calibrated class-balanced code pass scores using only
+oracle-distinct code text and cross-candidate features, reports off-fold AUROC,
+computes predictor, vote, matched-control, and oracle task pass rates, sets
+`code_oracle_distinct_beats_vote` to true only for a positive CI-exclusive lift
+with headroom, records `held_out_task_n`, keeps `verifier_is_oracle=false`,
+writes the required field principles and checksum, and runs adversarial
+verification without a `CIRCULAR_MOAT_OVERCLAIM` flag.
+
+### SCENARIO-VERIFY-4233-NO-HEADROOM: Code Positive Control Blocks False Null
+
+Given the usable code candidate pool has `oracle@K` equal to `vote@1`, when Exp
+4233 runs, then it still reports the measured predictor-vote delta, CI95, and
+controls, but writes `disambiguation_read=code_no_headroom`, sets
+`code_oracle_distinct_beats_vote=false`, and does not claim the learned
+pass-predictor failed.
+
+### SCENARIO-VERIFY-4233-BLOCKED: Missing Code Candidate Pool Blocks Honestly
+
+Given none of the cached code candidate sources has at least two candidates for
+a task plus per-candidate hidden-test pass labels, when Exp 4233 runs, then it
+writes `honest_verdict=blocked_code_candidate_pool_missing`, keeps
+`verifier_is_oracle=false`, sets `held_out_task_n=0`, reports zero-valued gate
+metrics, records the attempted source paths, and stops before training.
+
 ### REQ-VERIFY-4177: Decisive Headroom-Controlled Verifier Moat Test
 
 The repository SHALL provide
