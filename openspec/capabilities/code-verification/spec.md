@@ -2009,6 +2009,7 @@ not reliable enough to skip execution tests at this accuracy level.
 | REQ-CODE-4197 | Implemented |
 | REQ-CODE-4198 | Implemented (`python/carnot/experiment_4198_verifier_reward_3arm_rft_launch.py`) |
 | REQ-CODE-4211 | Planned (`python/carnot/experiment_4211_verifier_as_reward_finish_synchronous.py`) |
+| REQ-CODE-4222 | Planned (`python/carnot/experiment_4222_verifier_reward_lora_harness_fix_smoke.py`) |
 
 ### REQ-CODE-3573: Verifier Ensemble Generalization to Code
 The verifier ensemble MUST be evaluated for generalization on code domains (correct vs buggy execution-labeled completions).
@@ -2159,6 +2160,55 @@ and truncation gates, reports `a_vs_b_delta`, `a_vs_b_ci95`,
 `positive_control_confirmed`, and `verifier_label_carries_signal` as bare
 fields, marks failed controls as invalid rather than headline findings, and
 includes Youden-J plus the memorization-shortcut diagnostic.
+
+### REQ-CODE-4222: Verifier-Reward LoRA Attach Harness Smoke
+
+The repository shall provide Exp 4222 at
+`python/carnot/experiment_4222_verifier_reward_lora_harness_fix_smoke.py` and
+`results/experiment_4222_verifier_reward_lora_harness_fix_smoke.py` to prove
+the verifier-as-reward LoRA harness attaches before another live A-vs-B
+measurement. The smoke MUST:
+
+- block with `honest_verdict="blocked_cuda_unavailable"` before model loading
+  when CUDA is unavailable;
+- block with `honest_verdict="blocked_no_nonqwen_base_cached"` when the cached
+  standard HuggingFace base `google/gemma-4-E4B-it` is absent, and must never
+  substitute Qwen as the trained base;
+- build an 8-16 example fixture from the stable
+  `code_verifier_reward_lora_rft_a83b52882c198954` A/B/C corpora when readable,
+  or from the same operating-point prompt shape when those corpora are absent;
+- load the base through standard
+  `transformers.AutoModelForCausalLM.from_pretrained("google/gemma-4-E4B-it")`,
+  not the custom Gemma4 quantized wrapper, and attach PEFT LoRA to standard
+  projection module names `q_proj`, `k_proj`, `v_proj`, `o_proj`, `gate_proj`,
+  `up_proj`, and `down_proj`, or retry the same projection modules' inner
+  `.linear` children when the standard HF class exposes `Gemma4ClippableLinear`
+  wrappers;
+- assert the attached model exposes a bare positive `trainable_param_count`,
+  executes one optimizer step on the fixture, and reports a finite loss before
+  setting the bare `harness_smoke_passed` field to true; and
+- write `results/experiment_4222_verifier_reward_lora_harness_fix_smoke.json`
+  with `honest_verdict`, `harness_smoke_passed`, `lora_attach_path`,
+  `trainable_param_count`, `verifier_is_oracle`, `model_specs`, `random_seed`,
+  and `reproducibility_checksum` plus principles for each required field.
+
+### SCENARIO-CODE-4222-BLOCKED-PRECONDITION: Missing Live Resource Stops Smoke
+
+Given the stable verifier-reward corpora may or may not be present, when Exp
+4222 runs without CUDA or without the cached `google/gemma-4-E4B-it` base, then
+it writes the corresponding blocked artifact, leaves
+`harness_smoke_passed=false`, leaves `trainable_param_count=0`, and does not
+attempt LoRA attachment.
+
+### SCENARIO-CODE-4222-STANDARD-LORA-ATTACH: Positive Control Attaches And Steps
+
+Given CUDA, the cached non-Qwen Gemma base, and an 8-16 example fixture, when
+Exp 4222 runs, then PEFT attaches LoRA through the standard
+`AutoModelForCausalLM` path with either the projection target modules or their
+inner `.linear` children, records `lora_attach_path`, records
+`trainable_param_count > 0`, executes one training step with finite loss, sets
+`harness_smoke_passed=true`, and includes a checksum over the fixture plus
+working LoRA configuration.
 
 
 ### REQ-CODE-VERIFY-3602: FoVer Math-Trained PRM Transfer to Code Benchmark
