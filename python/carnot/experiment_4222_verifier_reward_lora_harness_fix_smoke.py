@@ -34,6 +34,7 @@ STANDARD_ATTACH_PATH = "standard_auto_model_for_causal_lm_target_modules"
 WRAPPER_INNER_LINEAR_ATTACH_PATH = "wrapper_inner_linear_target_modules"
 STANDARD_LORA_TARGET_MODULES = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
 INNER_LINEAR_LORA_TARGET_MODULES = [f"{name}.linear" for name in STANDARD_LORA_TARGET_MODULES]
+LORA_EXCLUDE_MODULES = ["vision_tower"]
 SPEC_REFS = [
     "REQ-CODE-4222",
     "SCENARIO-CODE-4222-BLOCKED-PRECONDITION",
@@ -152,6 +153,7 @@ def working_lora_config(target_modules: Sequence[str] | None = None) -> dict[str
         "learning_rate": 2e-4,
         "max_length": 1024,
         "target_modules": list(target_modules or STANDARD_LORA_TARGET_MODULES),
+        "exclude_modules": list(LORA_EXCLUDE_MODULES),
     }
 
 
@@ -232,6 +234,7 @@ def _lora_config_kwargs(lora_config: Mapping[str, Any]) -> dict[str, Any]:
         "lora_dropout": float(lora_config["lora_dropout"]),
         "task_type": str(lora_config["task_type"]),
         "target_modules": list(lora_config["target_modules"]),
+        "exclude_modules": list(lora_config.get("exclude_modules") or []),
     }
 
 
@@ -306,7 +309,6 @@ def run_lora_attach_and_step(
     (seed_fn or _seed_torch)(random_seed)
     model = load_model(model_id)
     tokenizer = load_tokenizer(model_id)
-    attach_error: Exception | None = None
     attached_path = STANDARD_ATTACH_PATH
     attached_lora_config = working_lora_config()
     for target_modules, attach_path in (
@@ -320,16 +322,12 @@ def run_lora_attach_and_step(
             model = get_peft_model_fn(model, peft_config)
             attached_path = attach_path
             attached_lora_config = lora_config
-            attach_error = None
             break
         except ValueError as exc:
-            attach_error = exc
             if attach_path == STANDARD_ATTACH_PATH and "Gemma4ClippableLinear" in str(exc):
                 print("standard attach rejected Gemma4ClippableLinear; retrying inner .linear modules", flush=True)
                 continue
             raise
-    if attach_error is not None:
-        raise attach_error
     trainable = trainable_param_count(model)
     print(f"trainable_param_count={trainable}", flush=True)
     if trainable <= 0:
@@ -365,7 +363,7 @@ def run_lora_attach_and_step(
     )
 
 
-def _model_specs(cache_path: Path, lora_config: Mapping[str, Any]) -> dict[str, Any]:
+def _model_specs(cache_path: Path, lora_config: Mapping[str, Any], *, lora_attach_path: str) -> dict[str, Any]:
     return {
         "trainable_base": MODEL_ID,
         "trainable_base_cache_path": str(cache_path),
@@ -373,7 +371,7 @@ def _model_specs(cache_path: Path, lora_config: Mapping[str, Any]) -> dict[str, 
         "on_policy_generator": MODEL_ID,
         "qwen_train_base_forbidden": True,
         "load_method": 'transformers.AutoModelForCausalLM.from_pretrained("google/gemma-4-E4B-it")',
-        "lora_attach_path": STANDARD_ATTACH_PATH,
+        "lora_attach_path": lora_attach_path,
         "lora_config": _jsonable(lora_config),
         "runner": "scripts/experiments/verifier_reward_code_lora_rft_3arm.py",
     }
@@ -411,7 +409,7 @@ def build_artifact(
         "lora_attach_path": str(smoke.lora_attach_path),
         "trainable_param_count": int(smoke.trainable_param_count),
         "verifier_is_oracle": True,
-        "model_specs": _model_specs(cache_path, attached_lora_config),
+        "model_specs": _model_specs(cache_path, attached_lora_config, lora_attach_path=smoke.lora_attach_path),
         "random_seed": int(random_seed),
         "reproducibility_checksum": checksum,
         "field_principles": FIELD_PRINCIPLES,

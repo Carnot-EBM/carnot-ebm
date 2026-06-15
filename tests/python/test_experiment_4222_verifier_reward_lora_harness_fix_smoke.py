@@ -131,6 +131,17 @@ def test_req_code_4222_fixture_and_checksum_are_deterministic(tmp_path: Path) ->
     assert lora_config["target_modules"] == exp4222.STANDARD_LORA_TARGET_MODULES
 
 
+def test_scenario_code_4222_lora_config_excludes_vision_tower_wrappers() -> None:
+    """SCENARIO-CODE-4222-STANDARD-LORA-ATTACH: PEFT skips Gemma4ClippableLinear vision modules."""
+
+    lora_config = exp4222.working_lora_config()
+    kwargs = exp4222._lora_config_kwargs(lora_config)
+
+    assert lora_config["target_modules"] == exp4222.STANDARD_LORA_TARGET_MODULES
+    assert lora_config["exclude_modules"] == ["vision_tower"]
+    assert kwargs["exclude_modules"] == ["vision_tower"]
+
+
 def test_req_code_4222_fixture_fallback_and_jsonable_edges(tmp_path: Path) -> None:
     """REQ-CODE-4222: fallback fixtures and serialization helpers are deterministic."""
 
@@ -244,6 +255,32 @@ def test_scenario_code_4222_wrapper_inner_linear_fallback_attaches() -> None:
     assert result.lora_config["target_modules"] == exp4222.INNER_LINEAR_LORA_TARGET_MODULES
 
 
+def test_scenario_code_4222_non_wrapper_peft_error_is_not_hidden() -> None:
+    """SCENARIO-CODE-4222-STANDARD-LORA-ATTACH: unrelated PEFT errors stay visible."""
+
+    class FakeModel:
+        def parameters(self):
+            return []
+
+    class FakeLoraConfig:
+        def __init__(self, **_kwargs) -> None:
+            pass
+
+    with pytest.raises(ValueError, match="different PEFT failure"):
+        exp4222.run_lora_attach_and_step(
+            [{"prompt": "Complete f.", "completion": "def f(x):\n    return x\n"}],
+            model_id=exp4222.MODEL_ID,
+            random_seed=4198,
+            load_model=lambda _model_id: FakeModel(),
+            load_tokenizer=lambda _model_id: object(),
+            lora_config_cls=FakeLoraConfig,
+            get_peft_model_fn=lambda _model, _config: (_ for _ in ()).throw(
+                ValueError("different PEFT failure")
+            ),
+            seed_fn=lambda _seed: None,
+        )
+
+
 def test_scenario_code_4222_zero_trainable_lora_is_failed_attach() -> None:
     """SCENARIO-CODE-4222-STANDARD-LORA-ATTACH: zero LoRA params cannot pass."""
 
@@ -312,6 +349,37 @@ def test_scenario_code_4222_success_artifact_records_bare_gate_fields(tmp_path: 
     assert artifact["verifier_is_oracle"] is True
     assert artifact["acceptance_gate"]["satisfied"] is True
     assert artifact["model_specs"]["lora_config"]["target_modules"] == exp4222.STANDARD_LORA_TARGET_MODULES
+    assert artifact["model_specs"]["lora_attach_path"] == exp4222.STANDARD_ATTACH_PATH
+
+
+def test_scenario_code_4222_artifact_records_fallback_attach_path(tmp_path: Path) -> None:
+    """SCENARIO-CODE-4222-STANDARD-LORA-ATTACH: model specs preserve the working attach path."""
+
+    stable = _stable_checkpoint(tmp_path)
+    cache = tmp_path / "models--google--gemma-4-E4B-it"
+    cache.mkdir()
+    inner_config = exp4222.working_lora_config(exp4222.INNER_LINEAR_LORA_TARGET_MODULES)
+
+    artifact = exp4222.build_artifact(
+        preconditions={"cuda_available": True, "nonqwen_base_cached": True},
+        fixture=exp4222.load_or_build_fixture(stable),
+        smoke=exp4222.SmokeResult(
+            True,
+            exp4222.WRAPPER_INNER_LINEAR_ATTACH_PATH,
+            123,
+            0.25,
+            [{"step": 1, "loss": 0.25}],
+            lora_config=inner_config,
+        ),
+        cache_path=cache,
+        lora_config=exp4222.working_lora_config(),
+        random_seed=4198,
+        duration_s=0.1,
+    )
+
+    assert artifact["lora_attach_path"] == exp4222.WRAPPER_INNER_LINEAR_ATTACH_PATH
+    assert artifact["model_specs"]["lora_attach_path"] == exp4222.WRAPPER_INNER_LINEAR_ATTACH_PATH
+    assert artifact["model_specs"]["lora_config"]["target_modules"] == exp4222.INNER_LINEAR_LORA_TARGET_MODULES
 
 
 def test_scenario_code_4222_failed_and_default_smoke_paths(

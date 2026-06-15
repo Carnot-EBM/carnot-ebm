@@ -1,10 +1,10 @@
 {
   "acceptance_gate": {
     "condition": "harness_smoke_passed true with trainable_param_count>0 and lora_attach_path recorded, OR an honest blocked_* verdict",
-    "satisfied": false
+    "satisfied": true
   },
-  "created_at": "2026-06-15T02:26:55Z",
-  "duration_s": 26.528906,
+  "created_at": "2026-06-15T02:36:58Z",
+  "duration_s": 14.064674,
   "experiment": "experiment_4222_verifier_reward_lora_harness_fix_smoke",
   "field_principles": {
     "harness_smoke_passed": "BARE bool: B2's gate compares this raw value (gated-fields-must-be-bare); true iff LoRA attached with >0 trainable params AND 1 training step ran AND loss was finite on the fixture.",
@@ -25,14 +25,17 @@
     "size": 8,
     "source": "stable_checkpoint_corpora"
   },
-  "harness_smoke_passed": false,
-  "honest_verdict": "failed: verifier_reward_lora_harness_smoke_failed",
+  "harness_smoke_passed": true,
+  "honest_verdict": "complete: verifier_reward_lora_harness_smoke_passed",
   "honest_verdict_principle": "Terminal-prefixed. A passing harness smoke OR an honest blocked_* is COMPLETE -- B2 gates on the smoke so a broken harness surfaces HERE, not as another failed training run.",
-  "lora_attach_path": "standard_auto_model_for_causal_lm_target_modules",
+  "lora_attach_path": "wrapper_inner_linear_target_modules",
   "model_specs": {
     "load_method": "transformers.AutoModelForCausalLM.from_pretrained(\"google/gemma-4-E4B-it\")",
-    "lora_attach_path": "standard_auto_model_for_causal_lm_target_modules",
+    "lora_attach_path": "wrapper_inner_linear_target_modules",
     "lora_config": {
+      "exclude_modules": [
+        "vision_tower"
+      ],
       "learning_rate": 0.0002,
       "lora_alpha": 32,
       "lora_dropout": 0.05,
@@ -40,13 +43,13 @@
       "method": "LoRA-SFT",
       "r": 16,
       "target_modules": [
-        "q_proj",
-        "k_proj",
-        "v_proj",
-        "o_proj",
-        "gate_proj",
-        "up_proj",
-        "down_proj"
+        "q_proj.linear",
+        "k_proj.linear",
+        "v_proj.linear",
+        "o_proj.linear",
+        "gate_proj.linear",
+        "up_proj.linear",
+        "down_proj.linear"
       ],
       "task_type": "CAUSAL_LM"
     },
@@ -71,19 +74,25 @@
     "stable_checkpoint_readable": true
   },
   "random_seed": 4198,
-  "reproducibility_checksum": "sha256:bec941a849bab7de44103835d5334d47ddb4d75353391fad4f5f318045269603",
+  "reproducibility_checksum": "sha256:0eaa917b379feeaa63f34f11f6190bf6496f2eff3767fb41b502a0fdd883331c",
   "schema": "carnot.experiment_4222_verifier_reward_lora_harness_fix_smoke.v1",
   "spec_refs": [
     "REQ-CODE-4222",
     "SCENARIO-CODE-4222-BLOCKED-PRECONDITION",
     "SCENARIO-CODE-4222-STANDARD-LORA-ATTACH"
   ],
-  "trainable_param_count": 0,
+  "trainable_param_count": 5701632,
   "training_step": {
-    "error": "ValueError: Target module Gemma4ClippableLinear(\n  (linear): Linear(in_features=768, out_features=768, bias=False)\n) is not supported. Currently, only the following modules are supported: `torch.nn.Linear`, `torch.nn.Embedding`, `torch.nn.Conv1d`, `torch.nn.Conv2d`, `torch.nn.Conv3d`, `transformers.pytorch_utils.Conv1D`, `torch.nn.MultiheadAttention.`.",
-    "finite_loss": false,
-    "loss": null,
-    "progress_events": []
+    "error": null,
+    "finite_loss": true,
+    "loss": 2.2497692108154297,
+    "progress_events": [
+      {
+        "finite_loss": true,
+        "loss": 2.2497692108154297,
+        "step": 1
+      }
+    ]
   },
   "verifier_is_oracle": true
 }
