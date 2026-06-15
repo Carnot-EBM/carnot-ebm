@@ -14902,6 +14902,99 @@ writes `honest_verdict=blocked_code_candidate_pool_missing`, keeps
 `verifier_is_oracle=false`, sets `held_out_task_n=0`, reports zero-valued gate
 metrics, records the attempted source paths, and stops before training.
 
+### REQ-VERIFY-4246: Second-Corpus Code Oracle-Distinct Replication Gate
+
+The repository SHALL provide
+`python/carnot/reporting/code_oracle_distinct_replication_4246.py` and
+`results/experiment_4246_code_oracle_distinct_replication.py` to replicate the
+Exp 4233 oracle-distinct code pass-predictor beats-vote result on a second
+cached code corpus. The runner SHALL read
+`results/experiment_4233_oracle_distinct_code_beats_vote.json` first and SHALL
+exclude any candidate source whose cached file hashes match the Exp 4233 source
+corpus, even if that source appears under a different run directory.
+
+Before training, the runner SHALL try second-corpus cached pools in the
+operator-specified order: `results/experiment_2837_mbpp_ensemble_eval.json`,
+`results/experiment_2838_humaneval_full_ensemble_eval.json` plus
+`results/experiment_2830_humaneval_full_ensemble_eval.json`, and
+`results/experiment_1607_dsl_humaneval.json`; it MAY also inspect additional
+cached code candidate corpora only to determine whether any readable
+multi-candidate, per-candidate hidden-test labeled pool is both viable and
+distinct from Exp 4233. A usable second corpus SHALL have at least two
+candidates for a task, bare per-candidate hidden-test pass labels, both label
+classes, and source hashes distinct from Exp 4233. If no such corpus exists,
+the runner SHALL write `honest_verdict=blocked_code_second_corpus_missing`,
+keep `verifier_is_oracle=false`, set `held_out_task_n=0`, record all attempted
+candidate-source diagnostics, and stop before training.
+
+When a distinct second corpus exists, the runner SHALL reuse the Exp 4233
+oracle-distinct pass-predictor contract: one row per candidate with
+`{task_id, code_features, passes_hidden_tests}`, hidden-test pass labels as the
+training target only, and features computable without executing candidate code
+or tests at inference. The feature set SHALL include code text hash buckets,
+lexical/AST/statistical code features, non-executing duplicate code-signature
+agreement, and cross-candidate self-consistency margins. The runner SHALL NOT
+call `exec`, `eval`, `safe_exec_function`, HumanEval `check()`, EvalPlus,
+PyTest, or any hidden/visible test harness while extracting features or scoring
+held-out candidates.
+
+The pass-predictor SHALL train out-of-fold with held-out task splits using a
+calibrated imbalance-aware objective such as class-weighted logistic loss plus
+train-fold isotonic calibration. It SHALL report off-fold AUROC. The powered
+gate SHALL compare predictor@1, majority-signature vote@1, deterministic
+first-of-K matched control, and oracle@K. It SHALL compute bare float
+`code_predictor_minus_vote_delta` and a task-level bootstrap CI95 with at least
+2000 resamples. The bare bool `code_replication_beats_vote` SHALL be true only
+when headroom exists (`oracle@K > vote@1`), the predictor lift is positive,
+and the CI95 excludes zero. `replication_read` SHALL be `replicates` when the
+second corpus also beats vote, `corpus_specific` when headroom exists but the
+CI95 includes zero or the lift is non-positive, and `no_headroom` when
+oracle@K does not exceed vote@1. Blocked artifacts MAY set
+`replication_read=blocked_code_second_corpus_missing`.
+
+The terminal artifact SHALL write
+`results/experiment_4246_code_oracle_distinct_replication.json` with required
+fields `honest_verdict`, bare bool `code_replication_beats_vote`, bare float
+`code_predictor_minus_vote_delta`, `code_predictor_minus_vote_ci95`, bare float
+`oracle_at_k`, bare int `held_out_task_n`, `replication_read`, bare bool
+`verifier_is_oracle=false`, `model_specs`, bare int `random_seed`,
+`reproducibility_checksum`, `field_principles`, `spec_refs`, and
+`acceptance_gate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. A replication win, a corpus-specific tie, or an honest no-pool/no-headroom is COMPLETE -- each calibrates how robust the .392 code win is.`;
+`code_replication_beats_vote` = `BARE bool: predictor@1 - vote@1 CI95 excludes 0 AND delta>0 AND headroom on the SECOND corpus -- robustness of the oracle-distinct code win; NOT the circular execution result.`;
+`code_predictor_minus_vote_delta` = `predictor@1 - vote@1 on the 2nd held-out code corpus -- the oracle-distinct lift; compare to .392's +0.03125.`;
+`code_predictor_minus_vote_ci95` = `Task-level bootstrap CI95 of the 2nd-corpus delta -- excluding 0 confirms the win is not corpus-specific noise.`;
+`oracle_at_k` = `2nd-corpus positive-control ceiling (any candidate passes) -- if ~=vote the null is uninformative.`;
+`held_out_task_n` = `BARE int: the 2nd-corpus gate's N.`;
+`replication_read` = `replicates / corpus_specific / no_headroom -- the robustness read on the .392 code oracle-distinct win, anchoring the .393 headline alongside the ARC A3 result.`;
+`verifier_is_oracle` = `BARE bool=false -- the predictor scores code WITHOUT executing tests at inference (hidden-test label is the training target only); keeps the result oracle-distinct, not circular.`;
+`model_specs` = `The pass-predictor architecture + oracle-distinct code feature set + calibrated loss + the 2nd corpus id; required methodology.`;
+`random_seed` = `Determinism precondition; fold split + init seeded.`;
+`reproducibility_checksum` = `Hash of the 2nd code candidate pool + fold split; lets a third party re-run.`
+
+### SCENARIO-VERIFY-4246: Distinct Second Corpus Replicates Code Win
+
+Given Exp 4233 has a recorded source corpus and a different cached code pool
+has multiple candidates per task, hidden-test pass labels, both label classes,
+and `oracle@K > vote@1`, when Exp 4246 runs, then it trains task-held-out
+calibrated class-balanced code pass scores using only oracle-distinct code text
+and cross-candidate features, reports off-fold AUROC, computes predictor, vote,
+matched-control, and oracle task pass rates, sets
+`code_replication_beats_vote` to true only for a positive CI-exclusive lift
+with headroom, records `held_out_task_n`, keeps `verifier_is_oracle=false`,
+writes the required field principles and checksum, and runs adversarial
+verification without a `CIRCULAR_MOAT_OVERCLAIM` flag.
+
+### SCENARIO-VERIFY-4246-BLOCKED: Missing Distinct Second Corpus Blocks Honestly
+
+Given every cached code source is missing labels, lacks two candidates per
+task, lacks both label classes, or has byte-identical source hashes to the Exp
+4233 source corpus, when Exp 4246 runs, then it writes
+`honest_verdict=blocked_code_second_corpus_missing`, keeps
+`verifier_is_oracle=false`, sets `held_out_task_n=0`, reports zero-valued gate
+metrics, records attempted source paths and non-distinct skip reasons, and
+stops before training.
+
 ### REQ-VERIFY-4177: Decisive Headroom-Controlled Verifier Moat Test
 
 The repository SHALL provide
