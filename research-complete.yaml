@@ -40309,7 +40309,8 @@ milestones:
     ARC +1 (->18), and the live-env accuracy probe.'
   doc: openspec/change-proposals/research-roadmap-v392.md
   completed: '2026-06-15'
-  finding: See conductor log for per-experiment results.
+  finding: '.392 close-state: FIRST oracle-distinct CODE win, plus ARC data-sparsity tie. CODE-WON: predictor@1-vote@1=+0.03125, CI95 [0.00625, 0.0625], oracle@K=0.9625, off-fold AUROC=0.974, n=160, verifier_is_oracle=false, adversarial-clean. ARC TIED at power: aggregator@1-vote@1=0.0, CI95 [0.0, 0.0], n=52, oracle@K=0.3654, headroom present; diagnosis DATA-SPARSITY with 20 positives / 28419 candidates (base-rate=0.0007), not a thesis bound. Verifier-as-reward HARNESS-DEFERRED: exp4234 blocked_lora_training_cannot_run_in_window, exp4235 blocked at conductor pre-gate, live_lora_retired=false because B2 never ran. ARC total_levels_solved=18, total_games_solved=13; live solver completed 0 levels efficiency-only; flagged-skipped artifacts were 4231 and 4234; DiffusionGemma is resolvable on CODE but ARC still ties. .393 frame: LAND the ARC oracle-distinct win (fix the diagnosed data-sparsity with the flagged full Set-Encoder, re-test at power) + RETIRE live-LoRA and PIVOT verifier-as-reward to the OFFLINE form that fits the window.'
+  activation_recorded: exp4242-archive-v392-activate-v393
   tasks:
   - id: exp4230-archive-v391-activate-v392
     title: Archive .391 -> activate .392; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
