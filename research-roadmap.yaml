@@ -1,471 +1,584 @@
-milestone: 2026.06.391
-milestone_title: "FINISH WHAT .390 STARTED — the oracle-distinct headline gate was blocked on a FIXABLE DATA bug (the build looked for ARC candidate labels in the wrong file; the WORKING label path that yielded 8,041 labeled candidates + an oracle-distinct ARC detection AUROC of 0.90 is in-repo), and the verifier-as-reward run died on a FIXABLE HARNESS bug (PEFT refused the custom Gemma4ClippableLinear). .391 reuses the working label path to BUILD the oracle-distinct ARC verifier and RUN the beats-vote gate (matched control + ARBITER conservative-override, CI95-excl-0), and applies the .360 HARNESS-FIRST discipline to the recurring reward-training failure (fix the LoRA attach, smoke-test it, THEN run the 3-arm A-vs-B). ARC continues monotonic +1 (->17) + the live-env accuracy probe."
-milestone_doc: openspec/change-proposals/research-roadmap-v391.md
+milestone: 2026.06.392
+milestone_title: "STRENGTHEN THE ORACLE-DISTINCT VERIFIER -- the .391 beats-vote gate RAN and TIED vote (verifier@1-vote@1 = -0.0714, CI95 [-0.214, 0.0], CLEAN/un-flagged), but on n=14 held-out tasks with a per-candidate LOGISTIC REGRESSION trained on only 14 ACCEPTED / 1782 REJECTED rows (base-rate 0.008, off-fold AUROC 0.779). The null is diagnosably under-powered + isolated-scoring + imbalance-collapsed -- NOT a settled refutation. .392 attacks all three causes with the .391-flagged SOTA: a CROSS-CANDIDATE SET-ENCODER AGGREGATOR (Set-Encoder 2404.06912 / MSV 2603.03417 / AggLM 2509.06870) + a CALIBRATED imbalance-aware loss (2509.19681) on a GROWN labeled pool (>=30 held-out) + a MARGIN-TRIGGERED ARBITER override (2606.04323), on ARC AND a higher-power, less-imbalanced CODE replication (learned pass-predictor, NO execution -> still oracle-distinct). Plus the OWED verifier-as-reward (re-scoped to FIT THE WINDOW with a real-training assertion + auto-retire), monotonic ARC +1 (->18), and the live-env accuracy probe."
+milestone_doc: openspec/change-proposals/research-roadmap-v392.md
 milestone_overview: |
-  .390 asked the right two questions and was blocked by INFRA on both load-bearing ones.
-  HEADLINE (does a LEARNED, oracle-distinct verifier beat majority vote on ARC where execution is NOT
-  the oracle?): the A2 build (exp4209) returned blocked_arc_pool_no_candidate_labels because it looked
-  for per-candidate is_correct labels in results/arc3_trm_verifier_rerank.json (which holds rerank
-  SUMMARIES, not training rows), so A3 (exp4210) gate-blocked on selector_trained=False -- the gate
-  NEVER RAN. But the SAME milestone's detector probe (exp4208) labeled 8,041 ARC candidates and measured
-  an oracle-distinct ARC detection AUROC of 0.9016 (CI95 [0.78, 0.998], verifier_is_oracle=false) via
-  scripts/exp_verifier_detector_auroc.py:load_arc_rows() over arc3_gap3_stage2_eval_pool.json.gz +
-  arc3_gap4_induced_programs.json (label = candidate grid == GAP-4 induced pred_grid). The oracle-distinct
-  signal demonstrably EXISTS; only the selector's labeled pool was missing, and the working label path is
-  in-repo. OWED verifier-as-reward A-vs-B (exp4211): failed a 3rd straight time on a NEW fixable harness
-  bug -- ValueError: Target module Gemma4ClippableLinear is not supported (PEFT matched the custom Carnot
-  Gemma4 wrapper instead of a standard nn.Linear); the operating point (Phase-0 0.956, Youden-J 0.4138) +
-  N-matched corpora (A=776/B=776/C=742) + the checkpoint dir are intact on disk. .390 also: ARC advanced
-  +1 to total_levels=16 (exp4213 sc25 L2); the live solver still completes 0 levels (efficiency-only,
-  exp4214); the certified-corpus distill-lift came back ABSENT a 2nd time (exp4212, DROPPED here per
-  Depth-Over-Breadth); 2 flagged artifacts (exp4212, exp4216). New literature confirms the headline
-  mechanism is real and beatable: AggLM (arXiv:2509.06870) trains an aggregator that recovers
-  minority-correct answers and beats reward-model baselines; AgentAuditor (2602.09341) beats BOTH vote and
-  LLM-judge; GenSelect-BoN (2602.02143) beats vote on math+code.
+  .391 did the right thing: it finally RAN the oracle-distinct beats-vote gate (the 2026-06-14 P0
+  directive), with the .390 infra blockers fixed. The honest read is a clean TIES-VOTE-NULL (exp4221,
+  un-flagged): on a held-out ARC split a LEARNED oracle-distinct verifier (verifier_is_oracle=false)
+  scored verifier@1 - vote@1 = -0.0714, bootstrap CI95 [-0.214, 0.0] -- it did not beat vote. But this is
+  NOT a settled refutation; it is an under-powered, weakly-built first read with THREE separable causes:
+  (1) the verifier was a per-candidate LOGISTIC REGRESSION that scored each candidate in ISOLATION (blind
+  to the competing candidate set / vote basin / cross-candidate agreement); (2) it trained on 14 ACCEPTED
+  / 1782 REJECTED rows (base-rate 0.008) -- an extreme imbalance that collapses a binary discriminator
+  (off-fold AUROC 0.779); (3) the held-out gate was n=14 tasks (below the CLT floor). The detector-vs-
+  selector divergence (exp4208, carried) shows detection AUROC ~1.0 on math/sudoku/code but SELECTION
+  headroom only on ARC (0.129) and code (0.18) -- the two domains where a beats-vote win is even possible.
+  The verifier-as-reward (Phase B) failed a 4th/5th time on infra (exp4222 smoke 14s / exp4223 3-arm 36.7s,
+  both DURATION_TOO_SHORT-flagged -- the live LoRA training short-circuited to a fake-short "progress"
+  artifact instead of training), reaching the operator's own accumulate-floor.
 
-  .391 is NOT a new direction -- it is the disciplined COLLECTION of the two reads .390 set up:
-    PHASE A -- THE ORACLE-DISTINCT HEADLINE (the de-risked retry): A1 (exp4220) BUILD the labeled ARC
-      candidate pool (OWN label construction -- reuse load_arc_rows() over the GAP-4 pools; the .390 block
-      cannot recur) + train the V-STaR/AggLM-style oracle-distinct ARC verifier on ACCEPTED+REJECTED,
-      stratified to wrong-majority tasks (oracle@K > vote), out-of-fold, verifier_is_oracle=false. A2
-      (exp4221, gated_on A1 selector_trained) MEASURE does it BEAT vote off-oracle vs a MATCHED no-verifier
-      control + an ARBITER conservative-override arm + oracle@K positive control, CI95-excl-0 -- THE
-      HEADLINE GATE.
-    PHASE B -- OWED verifier-as-reward + self-learning (FR-11), HARNESS-FIRST: B1 (exp4222) FIX + SMOKE the
-      LoRA harness (load the NON-Qwen base via standard AutoModelForCausalLM with standard nn.Linear
-      target_modules, NOT the custom Gemma4 wrapper) -- deliverable = a PASSING smoke asserting LoRA
-      attaches + 1 finite training step on a fixture. B2 (exp4223, gated_on B1 harness_smoke_passed) RESUME
-      the intact checkpoint + run the 3-arm A/B/C/D SYNCHRONOUSLY; A(certified) vs B(same-generator
-      random-label = Spurious-Rewards control); gold-control + truncation guards; verifier_is_oracle=true
-      (HONEST reward axis).
-    PHASE C -- ARC NORTH STAR: C1 (exp4224) monotonic ARC +1 (total_levels>=17); C2 (exp4225) the LIVE
-      solver ACCURACY probe with the ARBITER conservative-override applied to goal-predicate induction, NO
-      leaderboard submission.
-    PHASE D -- reserved: D1 (exp4226) SOTA-ingestion (learned-aggregator track), D2 (exp4227) registry+gaps
-      hygiene (flag-fixed: declare inference_substrate + methodology fields), D3 (exp4228) hardware
-      continuity, D4 (exp4229) capstone .391.
+  .392 is DEPTH, not churn: it STRENGTHENS the oracle-distinct verifier to the strongest build the
+  literature offers, at power, then RE-TESTS the same decisive gate. Every Phase-A task changes the
+  TECHNIQUE / LOSS / CORPUS / OVERRIDE that caused the .391 null.
+    PHASE A -- THE ORACLE-DISTINCT HEADLINE (STRENGTHEN + re-test at power): A1 (exp4231) BUILD a
+      CROSS-CANDIDATE set-encoder aggregator (Set-Encoder 2404.06912 / MSV 2603.03417 / AggLM 2509.06870)
+      with a CALIBRATED imbalance-aware loss (2509.19681) on a GROWN labeled ARC pool (target >=30 held-out
+      tasks), out-of-fold, verifier_is_oracle=false. A2 (exp4232, gated_on A1 aggregator_trained) MEASURE
+      does the aggregator BEAT vote off-oracle vs a MATCHED control + a MARGIN-TRIGGERED override
+      (2606.04323) + oracle@K positive control, CI95-excl-0 -- THE HEADLINE. A3 (exp4233) the SAME
+      cross-candidate aggregator on CODE candidates (learned pass-predictor, NO execution at inference) --
+      a higher-power, less-imbalanced replication that disambiguates "the .391 ARC null was data-sparsity"
+      from "the oracle-distinct selection thesis is bounded."
+    PHASE B -- OWED verifier-as-reward + self-learning (FR-11), HARNESS-FIRST + WINDOW-BOXED: B1 (exp4234)
+      a harness smoke that asserts REAL training (duration floor + loss-moved) so it CANNOT short-circuit to
+      a fake-short progress artifact. B2 (exp4235, gated_on B1 harness_smoke_passed) the de-confounded
+      3-arm A-vs-B, window-boxed to a bounded deterministic step budget, retire_if_same_verdict (5th
+      no-usable window -> auto-retire the live-LoRA path); verifier_is_oracle=true (HONEST reward axis).
+    PHASE C -- ARC NORTH STAR: C1 (exp4236) monotonic ARC +1 (total_levels>=18); C2 (exp4237) the live-env
+      ACCURACY probe with the MARGIN-TRIGGERED override applied to goal-predicate induction, NO leaderboard
+      submission.
+    PHASE D -- reserved: D1 (exp4238) SOTA-ingestion (cross-candidate aggregator track), D2 (exp4239)
+      registry+gaps hygiene (GAP-4 regression guard + record .392 outcomes; declare methodology fields),
+      D3 (exp4240) hardware continuity, D4 (exp4241) capstone .392.
 
-  HARD RULE (every task): the TRM Sudoku checkpoint is DONE (val 0.8227, SIGTERM'd) and the conductor
-  stays stood-down. NO task may launch TRM training, run pkill/kill against train.py, or WRITE
-  results/trm_runs/sudoku_extreme_baseline/. Phase B trains a SEPARATE small NON-Qwen code base via LoRA
-  on the RTX 3090 -- it does NOT touch the TRM checkpoint. Qwen is FORBIDDEN as the TRAINED base
+  HARD RULE (every task): the TRM Sudoku checkpoint is DONE (val 0.8227, SIGTERM'd) and the conductor stays
+  stood-down. NO task may launch TRM training, run pkill/kill against train.py, or WRITE
+  results/trm_runs/sudoku_extreme_baseline/. Phase B trains a SEPARATE small NON-Qwen SOTA base via LoRA on
+  the RTX 3090 -- it does NOT touch the TRM checkpoint. Qwen is FORBIDDEN as the TRAINED base
   (Spurious-Rewards confound); Qwen GGUF as an off-policy teacher / certifier reference is fine.
   DiffusionGemma stays GATED (STILL-PENDING; activate ONLY on an oracle-distinct win with a matched
   control). Every verifier-value task MUST declare verifier_is_oracle honestly (Circularity Discipline).
 
 tasks:
-  - id: exp4219-archive-v390-activate-v391
-    milestone: 2026.06.391
-    title: "Archive .390 -> activate .391; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .390 close-state truthfully (oracle-distinct A2/A3 blocked on DATA not science -- exp4209 looked for candidate labels in the wrong file, exp4210 gate-blocked; the oracle-distinct ARC detection signal EXISTS at AUROC 0.90 via exp4208's load_arc_rows path; verifier-as-reward 3rd infra failure = PEFT refused Gemma4ClippableLinear exp4211 with operating point + corpora intact; ARC total_levels=16/games=13 exp4213; live solver efficiency-only exp4214; 2 flagged-skipped)."
+  - id: exp4230-archive-v391-activate-v392
+    milestone: 2026.06.392
+    title: "Archive .391 -> activate .392; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .391 close-state truthfully (the oracle-distinct beats-vote gate RAN this time and TIED vote -- exp4221 verifier@1-vote@1=-0.0714 CI95 [-0.214,0.0], CLEAN/un-flagged, on n=14 held-out tasks with a logistic regression trained on 14 accepted/1782 rejected rows AUROC 0.779; oracle@K=1.0 so headroom EXISTS; verifier-as-reward 4th/5th infra short-circuit exp4222/exp4223 DURATION-flagged; ARC total_levels=17/games=13 exp4224; live solver 0 levels efficiency-only exp4225; 3 flagged-skipped exp4220/4222/4223; DiffusionGemma STILL-PENDING)."
     priority: critical
     track: infra
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): archive-vN-activate-vN+1 -- false-positive scope-match vs all prior archive-v* tasks (exp4207); structurally never a doomed rerun. 2026-06-12 quota-conserve: archive on codex."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): archive-vN-activate-vN+1 -- false-positive scope-match vs all prior archive-v* tasks (exp4219); structurally never a doomed rerun. 2026-06-12 quota-conserve: archive on codex."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4219_archive_v390_activate_v391.json
+    deliverable: results/experiment_4230_archive_v391_activate_v392.json
     prompt: |
-      CONTEXT: Close .390, activate .391. The outer-loop owns TRM training (DONE: val 0.8227, SIGTERM'd)
-      and the conductor stays stood-down on TRM training. This archive runs on CODEX (mechanical). CRITICAL
-      framing to record: .390's "NO-HEADROOM-OR-NO-SIGNAL" headline is an INFRA artifact -- the
-      oracle-distinct beats-vote gate NEVER RAN (the build blocked on a wrong-file label lookup; the
-      oracle-distinct ARC detection signal EXISTS at AUROC 0.90). .391 reuses the WORKING label path and
-      actually runs the gate.
+      CONTEXT: Close .391, activate .392. The outer-loop owns TRM training (DONE: val 0.8227, SIGTERM'd) and
+      the conductor stays stood-down on TRM training. This archive runs on CODEX (mechanical). CRITICAL
+      framing to record: .391's TIES-VOTE-NULL is the FIRST CLEAN read on the oracle-distinct frontier (the
+      gate RAN), but it is UNDER-POWERED + WEAKLY-BUILT (isolated logistic regression on 14 positives, n=14
+      held-out) -- so .392 STRENGTHENS the build (cross-candidate aggregator + imbalance-aware loss, at
+      power) and re-tests, rather than redoing from scratch or concluding the thesis is refuted.
 
       EXISTING CODE TO READ FIRST:
         - research-complete.yaml (the archive target), ops/exclusion_manifest.yaml (parse check)
-        - results/experiment_4218_capstone_v390.json (the .390 close-state to record)
-        - results/experiment_4209_oracle_distinct_arc_verifier_build.json (blocked_arc_pool_no_candidate_labels -- wrong file)
-        - results/experiment_4208_verifier_as_detector_auroc.json (the WORKING label path; ARC oracle-distinct AUROC 0.9016)
-        - results/experiment_4211_verifier_as_reward_finish_synchronous.json (PEFT Gemma4ClippableLinear error; operating point intact)
+        - results/experiment_4229_capstone_v391.json (the .391 close-state to record)
+        - results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json (the CLEAN TIES gate: verifier_minus_vote_delta -0.0714, CI95 [-0.214,0.0], oracle@K 1.0, n=14)
+        - results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json (the weak/imbalanced build: 14 accepted/1782 rejected, AUROC 0.779; flagged TAUTOLOGY)
+        - results/experiment_4223_verifier_as_reward_3arm_synchronous.json (the DURATION-flagged 36.7s short-circuit)
 
-      TASK: archive .390, activate .391, record the .390 close-state truthfully.
+      TASK: archive .391, activate .392, record the .391 close-state truthfully.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (check BEFORE any subsequent step):
            a. `python3 -c "import yaml; yaml.safe_load(open('research-complete.yaml')); yaml.safe_load(open('ops/exclusion_manifest.yaml'))"` exits 0.
            b. The smart-subset pre-test gate is green.
            If ANY fails -> honest_verdict `blocked_<resource>` and STOP.
-        1. Archive .390 into research-complete.yaml; activate .391.
-        2. Record the .390 close-state: oracle-distinct A2/A3 BLOCKED on DATA not science (exp4209 read the
-           wrong file for per-candidate labels; exp4210 gate-blocked on selector_trained=False; the
-           WORKING label path -- scripts/exp_verifier_detector_auroc.py:load_arc_rows() over
-           arc3_gap3_stage2_eval_pool.json.gz + arc3_gap4_induced_programs.json -- yielded 8,041 labeled
-           ARC candidates + an oracle-distinct ARC detection AUROC of 0.9016 exp4208). Verifier-as-reward
-           3rd infra failure = PEFT refused Gemma4ClippableLinear (exp4211; operating point Phase-0 0.956 /
-           Youden-J 0.4138 + corpora A=776/B=776/C=742 + checkpoint dir intact). ARC total_levels=16/games=13
-           (exp4213 sc25 L2); live solver efficiency-only-no-level (exp4214); 2 flagged-skipped (exp4212,
-           exp4216). Frame .391 as "the de-risked oracle-distinct retry + the harness-first verifier-as-reward FINISH".
+        1. Archive .391 into research-complete.yaml; activate .392.
+        2. Record the .391 close-state: the oracle-distinct beats-vote gate RAN (exp4221, CLEAN) and the
+           learned verifier TIED vote (verifier@1-vote@1 = -0.0714, CI95 [-0.214,0.0]) on n=14 held-out
+           tasks; oracle@K=1.0 (headroom EXISTS); the verifier was a per-candidate logistic regression
+           trained on 14 accepted/1782 rejected rows (off-fold AUROC 0.779, base-rate 0.008). Verifier-as-
+           reward failed a 4th/5th time on infra (exp4222 smoke 14s / exp4223 3-arm 36.7s, both DURATION-
+           flagged short-circuits; operating point + corpora intact). ARC total_levels=17/games=13 (exp4224);
+           live solver 0 levels efficiency-only (exp4225); 3 flagged-skipped (exp4220/4222/4223);
+           DiffusionGemma STILL-PENDING. Frame .392 as "STRENGTHEN the oracle-distinct verifier (fix the
+           three named causes, re-test at power) + the harness-first window-boxed verifier-as-reward FINISH".
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
-        v390_close_state:
-          principle: "Honest record (oracle-distinct gate blocked on a wrong-file DATA bug not a null; the signal exists at AUROC 0.90; reward died on a PEFT attach with operating point intact; ARC 16) so the .391 agents frame the milestone as a de-risked retry + collection, not a redo from scratch."
+        v391_close_state:
+          principle: "Honest record (the oracle-distinct gate RAN and TIED vote on a weak/under-powered build, NOT a settled refutation; reward 4th/5th infra short-circuit; ARC 17) so the .392 agents frame the milestone as STRENGTHEN-and-re-test, not a redo."
         preconditions_checked:
           principle: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
-      ACCEPTANCE: honest_verdict terminal-prefixed; .391 activated; close-state recorded truthfully.
+      ACCEPTANCE: honest_verdict terminal-prefixed; .392 activated; close-state recorded truthfully.
 
-      Run: `python3 {project_root}/results/experiment_4219_archive_v390_activate_v391.py` (or your archive script).
+      Run: `python3 {project_root}/results/experiment_4230_archive_v391_activate_v392.py` (or your archive script).
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4220-oracle-distinct-arc-verifier-build-labeled
-    milestone: 2026.06.391
-    title: "PHASE A1 (HEADLINE BUILD; the de-risked retry) -- BUILD the labeled ARC candidate pool + train the ORACLE-DISTINCT learned ARC verifier. The .390 build (exp4209) blocked because it read per-candidate is_correct labels from the WRONG file (arc3_trm_verifier_rerank.json = rerank summaries). FIX: this task OWNS label construction -- reuse scripts/exp_verifier_detector_auroc.py:load_arc_rows() over arc3_gap3_stage2_eval_pool.json.gz + arc3_gap4_induced_programs.json (label = candidate grid == GAP-4 induced pred_grid; the SAME path that yielded 8,041 labeled candidates + AUROC 0.90 in exp4208). Stratify to WRONG-MAJORITY tasks (oracle@K > vote -- the ARBITER 2605.26172 / AggLM 2509.06870 headroom). Train the V-STaR class (exp4176, accepted+rejected -> correctness boundary) / an AggLM-style aggregator on ORACLE-DISTINCT features (NO demo execution at inference) OUT-OF-FOLD. Report off-fold AUROC + selector_trained + learned_verifier_path + wrong_majority_n. verifier_is_oracle=false. Honest build-null (AUROC~0.5 or too-few-positives) is COMPLETE and still persists the artifact for A2."
+  - id: exp4231-oracle-distinct-arc-aggregator-build
+    milestone: 2026.06.392
+    title: "PHASE A1 (HEADLINE BUILD; STRENGTHEN) -- BUILD a CROSS-CANDIDATE SET-ENCODER AGGREGATOR for the oracle-distinct ARC verifier, fixing the .391 null's three causes. .391's build (exp4220) was a per-candidate LOGISTIC REGRESSION (scored each candidate in ISOLATION) trained on 14 ACCEPTED / 1782 REJECTED rows (base-rate 0.008, off-fold AUROC 0.779). FIX: (1) CROSS-CANDIDATE features/architecture -- a permutation-invariant set-encoder over the per-task candidate set (Set-Encoder 2404.06912; MSV 2603.03417 cross-sequence; AggLM 2509.06870 review/reconcile) so each candidate is scored CONDITIONED on its competitors (vote basin, cross-candidate agreement, competing transformation families); (2) CALIBRATED imbalance-aware loss (2509.19681: class-weighted/focal + temperature/isotonic calibration + stratified-balanced minibatches) so the 14-positive slice does not wash out; (3) GROW the labeled pool toward >=30 held-out wrong-majority tasks (reuse scripts/exp_verifier_detector_auroc.py:load_arc_rows over the GAP-4 pools; add games if available). Out-of-fold; verifier_is_oracle=false. Report off-fold AUROC + aggregator_trained + learned_verifier_path + wrong_majority_n + held_out_task_n. Honest no-learnable-signal is COMPLETE and still persists for A2."
     priority: high
     track: verifier-oracle-distinct
-    max_turns: 70
+    max_turns: 80
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the oracle-distinct learned ARC verifier is MANDATED by the 2026-06-14 P0 directive (HEADLINE = an oracle-distinct learned verifier closing GAP-3-ties-vote-on-ARC) -- false-positive scope-match vs retired GAP-3 content-EBMs / prior V-STaR (exp4176); forward difference = this attempt OWNS label construction via the proven load_arc_rows path (the .390 wrong-file block cannot recur), stratifies to wrong-majority tasks, verifier_is_oracle=false."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the oracle-distinct learned ARC verifier is MANDATED by the 2026-06-14 P0 directive (HEADLINE = an oracle-distinct learned verifier closing GAP-3-ties-vote-on-ARC) -- false-positive scope-match vs retired GAP-3 content-EBMs / prior selector (exp4220); forward difference = a CROSS-CANDIDATE set-encoder AGGREGATOR (not isolated logistic regression) + a CALIBRATED imbalance-aware loss + a GROWN >=30-held-out pool, verifier_is_oracle=false."
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json
+    deliverable: results/experiment_4231_oracle_distinct_arc_aggregator_build.json
     prior_failures:
-      - experiment_id: exp4209-oracle-distinct-arc-verifier-build
-        verdict: blocked_arc_pool_no_candidate_labels
-        addressed_by: "exp4209 read per-candidate is_correct labels from results/arc3_trm_verifier_rerank.json (rerank summaries, no training rows) -> accepted=0/rejected=0/total=0. This attempt OWNS label construction by reusing scripts/exp_verifier_detector_auroc.py:load_arc_rows() over arc3_gap3_stage2_eval_pool.json.gz + arc3_gap4_induced_programs.json -- the SAME path that produced 8,041 labeled ARC candidates + an oracle-distinct detection AUROC of 0.9016 in exp4208. The 'no labels' block is structurally impossible because the task builds the labels."
+      - experiment_id: exp4220-oracle-distinct-arc-verifier-build-labeled
+        verdict: complete_oracle_distinct_arc_verifier_trained_auroc_0.7790
+        addressed_by: "exp4220 trained a per-candidate LOGISTIC REGRESSION that scored each candidate in ISOLATION on 14 accepted/1782 rejected rows (base-rate 0.008), off-fold AUROC 0.779 -- too weak/imbalanced to recover wrong-majority answers, and the downstream A2 gate (exp4221) consequently TIED vote on n=14. This attempt changes the ARCHITECTURE (a permutation-invariant CROSS-CANDIDATE set-encoder aggregator over the full per-task candidate set, per Set-Encoder 2404.06912 / MSV 2603.03417 / AggLM 2509.06870), the LOSS (calibrated imbalance-aware: class-weighted/focal + calibration + stratified-balanced minibatches, per 2509.19681), and GROWS the labeled pool toward >=30 held-out wrong-majority tasks -- the three named causes of the .391 null."
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT: The 2026-06-14 P0 HEADLINE, de-risked. Carnot's verifier wins everywhere it can EXECUTE but
-      those are CIRCULAR (verifier == executable oracle). The deep, defensible, UNPROVEN claim is an
-      ORACLE-DISTINCT verifier: a LEARNED scorer that captures the discriminating signal WITHOUT executing.
-      .390 PROVED the signal exists (exp4208 oracle-distinct ARC detection AUROC 0.9016) but the SELECTOR
-      build blocked on a wrong-file label lookup. This task builds the labels the proven way, then trains
-      the learned ARC verifier; A2 measures whether it beats vote.
+      CONTEXT: The 2026-06-14 P0 HEADLINE, STRENGTHENED. .391 RAN the oracle-distinct beats-vote gate and the
+      learned verifier TIED vote (exp4221, CLEAN), but the verifier was the WEAKEST possible build (a
+      per-candidate logistic regression scoring each candidate in isolation, trained on 14 positives,
+      off-fold AUROC 0.779) tested at the LOWEST power (n=14). Before concluding "oracle-distinct selection
+      can't beat vote on ARC," it is owed the STRONGEST build at power. The .391 SOTA ingestion (exp4226)
+      flagged exactly this: "train an ARC aggregator that recovers minority-correct answers instead of only
+      assigning independent candidate scores."
 
       EXISTING CODE TO READ FIRST:
-        - scripts/exp_verifier_detector_auroc.py (load_arc_rows + arc_rows_from_entries -- the WORKING ARC label path; reuse it)
-        - results/arc3_gap3_stage2_eval_pool.json.gz (entries[].candidates[]) + results/arc3_gap4_induced_programs.json (programs[] with demo_fit + pred_grid)
-        - results/experiment_4176_vstar_learned_selector.json + results/experiment_4176_vstar_selector_model.json (the V-STaR accepted+rejected class + trainer to reuse)
-        - results/experiment_4208_verifier_as_detector_auroc.json (the ARC detector: AUROC 0.9016, base_rate 0.0024 -- the imbalance to handle by stratifying to wrong-majority tasks)
-        - research-references.md ".391 planning sweep" (AggLM 2509.06870 aggregator-beats-vote, AgentAuditor 2602.09341, ARBITER 2605.26172 wrong-majority, SCOPE 2512.15146 per-region features, MSV 2603.03417 cross-candidate features)
-        - CLAUDE.md "Circularity / Oracle-Distinctness Discipline" (verifier_is_oracle), "Principle-Annotated Artifact Fields"
+        - scripts/exp_verifier_detector_auroc.py (load_arc_rows + arc_rows_from_entries -- the WORKING ARC label path; reuse it; GROW the pool by including more games if available)
+        - results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json + results/experiment_4220_oracle_distinct_arc_verifier_model.json (the .391 isolated logistic build to REPLACE: 14 accepted/1782 rejected, AUROC 0.779, wrong_majority_n 5)
+        - results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json (the TIES gate the new build must improve on: delta -0.0714, n=14)
+        - results/arc3_gap3_stage2_eval_pool.json.gz (entries[].candidates[]) + results/arc3_gap4_induced_programs.json (programs[] demo_fit + pred_grid)
+        - research-references.md ".392 planning sweep" (Set-Encoder 2404.06912 cross-candidate attention; Calibrated Reasoning 2509.19681 imbalance-aware calibrated loss; MSV 2603.03417; AggLM 2509.06870; margin-trigger 2606.04323)
+        - CLAUDE.md "Circularity / Oracle-Distinctness Discipline" (verifier_is_oracle), "Principle-Annotated Artifact Fields", "Adversarial Artifact Verification + Sample-Size Rigor"
 
-      TASK: build the labeled ARC pool + train the oracle-distinct verifier out-of-fold; report off-fold AUROC + artifact path.
+      TASK: build the GROWN labeled ARC pool + train the CROSS-CANDIDATE aggregator with a calibrated imbalance-aware loss, out-of-fold; report off-fold AUROC + artifact path.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (check BEFORE training): the GAP-4 pools load
            (`python3 -c "import json,gzip; json.load(gzip.open('results/arc3_gap3_stage2_eval_pool.json.gz')); json.load(open('results/arc3_gap4_induced_programs.json'))"`)
            AND scripts/exp_verifier_detector_auroc.py imports. If either missing -> honest_verdict
-           `blocked_arc_gap4_pools_missing` and STOP. CPU is sufficient (small selector); no GGUF/GPU needed.
-        1. BUILD the labeled pool: reuse load_arc_rows() / arc_rows_from_entries() to construct per-candidate
-           rows {{task_id, features, is_correct}}. is_correct = candidate grid matches the GAP-4 induced
-           pred_grid (the same execution-grounded label exp4208 used -- it is the TRAINING TARGET only; the
-           learned verifier must NOT call the execution verifier at inference). Features are ORACLE-DISTINCT
-           (computable without executing demos): vote_weight, self_consistency margin across the task's
-           candidate set (MSV 2603.03417), per-region/per-cell confidence (SCOPE 2512.15146), grid stats
-           (height/width/cells/color_count/nonzero_frac/entropy), program_length/digit_fraction.
-        2. STRATIFY to WRONG-MAJORITY tasks: keep tasks with >=2 candidates AND >=1 correct candidate (the
-           ARBITER/AggLM headroom -- where the correct answer is present but vote may miss it). Report
-           wrong_majority_n (tasks where oracle@K > vote@1). If after stratification fewer than ~30 positive
-           candidates remain, that is an honest sparsity finding -- proceed but flag it.
-        3. Train the V-STaR selector (accepted+rejected) / an AggLM-style aggregator OUT-OF-FOLD (k-fold or
-           held-out-TASK split so no task leaks train->test). Report off-fold detection AUROC + bootstrap
-           CI95. Persist the learned verifier (weights/artifact path) for A2. Set selector_trained=true and
-           verifier_is_oracle=false. If off-fold AUROC is ~0.5 (no learnable oracle-distinct signal beyond
-           the detector) OR positives are too few to train, report
-           honest_verdict `complete_oracle_distinct_arc_verifier_no_learnable_signal_auroc<x>` and STILL set
-           the artifact path (A2 reads the null).
+           `blocked_arc_gap4_pools_missing` and STOP. CPU is sufficient (small set-encoder); no GGUF/GPU needed.
+        1. BUILD + GROW the labeled pool: reuse load_arc_rows() / arc_rows_from_entries() to construct
+           per-candidate rows {{task_id, candidate_features, is_correct}}. is_correct = candidate grid matches
+           the GAP-4 induced pred_grid (the TRAINING TARGET only; the learned aggregator must NOT call the
+           execution verifier at inference). Add more games to the pool if the GAP-4 stage2 pool supports it;
+           GROUP rows by task_id so the model sees the FULL candidate set per task. Target >=30 held-out
+           wrong-majority tasks (oracle@K > vote@1). Report held_out_task_n + wrong_majority_n.
+        2. CROSS-CANDIDATE architecture: train a permutation-invariant set-encoder / aggregator that scores
+           each candidate CONDITIONED on the per-task candidate set -- features include vote_weight, self-
+           consistency margin across the set (MSV), per-region/per-cell agreement vs the modal grid (SCOPE
+           2512.15146 localized evidence), competing-transformation-family indicators, plus the per-candidate
+           grid stats from .391 (height/width/cells/color_count/nonzero_frac/entropy/program_length). A simple
+           sufficient form: per-task DeepSets/attention pooling -> per-candidate logits; OR augment the
+           existing logistic features with explicit cross-candidate summary features (set-mean, set-max,
+           rank-within-set, agreement-count) if a full set-encoder is too heavy for the window.
+        3. CALIBRATED imbalance-aware training: use class-weighted or focal loss + stratified-balanced
+           minibatches (each batch carries positives) + post-hoc calibration (temperature/isotonic), per
+           2509.19681, so the ~0.8%-positive ratio does not collapse the discriminator. Train OUT-OF-FOLD
+           (held-out-TASK split so no task leaks train->test). Report off-fold detection AUROC + bootstrap
+           CI95. Persist the learned aggregator (weights/artifact path) for A2. Set aggregator_trained=true
+           and verifier_is_oracle=false. If off-fold AUROC <= the .391 0.779 +/- noise (no improvement from
+           cross-candidate + calibration) OR positives are too few even after growing, report honest_verdict
+           `complete_oracle_distinct_arc_aggregator_no_learnable_gain_auroc<x>` and STILL persist the path
+           (A2 reads it). NOTE methodology fields (random_seed, reproducibility_checksum, model_specs) to
+           avoid the .391 TAUTOLOGY/METHODOLOGY flags: do NOT emit two identical raw counts as distinct
+           metrics (the .391 detector_row_n==raw_candidate_n TAUTOLOGY false-positive) -- name set sizes once.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed (complete:/success:/passed:/shipped:). A trained off-fold verifier OR an honest 'no learnable oracle-distinct signal / too-few-positives' is COMPLETE -- both feed A2."
-        selector_trained:
-          principle: "BARE bool: A2's gate compares this raw value (gated-fields-must-be-bare); true iff a learned ARC verifier artifact was persisted out-of-fold."
+          principle: "Terminal-prefixed (complete:/success:/passed:/shipped:). A trained off-fold aggregator OR an honest 'no learnable gain over the .391 logistic baseline' is COMPLETE -- both feed A2."
+        aggregator_trained:
+          principle: "BARE bool: A2's gate compares this raw value (gated-fields-must-be-bare); true iff a learned cross-candidate ARC aggregator artifact was persisted out-of-fold."
         oracle_distinct_auroc:
-          principle: "BARE float: off-fold detection AUROC of the LEARNED verifier vs is_correct -- the oracle-distinct discrimination the GAP-3 content energies lacked; >0.5 CI95-excl is the precondition for an A2 beats-vote win."
+          principle: "BARE float: off-fold detection AUROC of the AGGREGATOR vs is_correct -- the oracle-distinct discrimination; must improve on the .391 logistic 0.779 for a stronger A2 read, and >0.5 CI95-excl is the precondition for a beats-vote win."
+        held_out_task_n:
+          principle: "BARE int: number of held-out tasks the A2 gate will score on -- target >=30 (CLT floor) so the A2 null/win is not under-powered like the .391 n=14."
         wrong_majority_n:
-          principle: "BARE int: count of stratified tasks where oracle@K > vote@1 -- the ARBITER/AggLM headroom the learned verifier targets; A2 measures vote-beating ON these."
+          principle: "BARE int: count of stratified tasks where oracle@K > vote@1 -- the ARBITER/AggLM headroom the aggregator targets; A2 measures vote-beating ON these."
         learned_verifier_path:
-          principle: "The persisted artifact A2 loads to rerank held-out ARC candidates; the build deliverable."
+          principle: "The persisted aggregator artifact A2 loads to rerank held-out ARC candidates; the build deliverable."
         verifier_is_oracle:
-          principle: "BARE bool=false -- the learned verifier scores WITHOUT executing the demos (Circularity Discipline); this is what makes an A2 win headline/gate-eligible, unlike the circular execution verifier."
+          principle: "BARE bool=false -- the aggregator scores WITHOUT executing the demos (Circularity Discipline); this is what makes an A2 win headline/gate-eligible, unlike the circular execution verifier."
         model_specs:
-          principle: "The V-STaR/aggregator probe architecture + the oracle-distinct feature set; required methodology."
+          principle: "The set-encoder/aggregator architecture + the cross-candidate feature set + the calibrated imbalance-aware loss; required methodology."
         random_seed:
-          principle: "Determinism precondition; the fold split + probe init seeded so the AUROC is reproducible."
+          principle: "Determinism precondition; the fold split + model init seeded so the AUROC is reproducible."
         reproducibility_checksum:
           principle: "Hash of the ARC pools + fold split + features; catches silent pool/feature drift before A2 measures."
       ACCEPTANCE GATE:
-        - condition: "selector_trained true with oracle_distinct_auroc + learned_verifier_path + wrong_majority_n reported AND verifier_is_oracle=false, OR an honest no-learnable-signal / blocked_* verdict"
-          principle: "A2 needs a persisted oracle-distinct verifier (or an honest null); a learned off-fold AUROC>0.5 on wrong-majority strata is the precondition for testing whether it beats vote."
+        - condition: "aggregator_trained true with oracle_distinct_auroc + learned_verifier_path + wrong_majority_n + held_out_task_n reported AND verifier_is_oracle=false, OR an honest no-learnable-gain / blocked_* verdict"
+          principle: "A2 needs a persisted cross-candidate aggregator (or an honest null) at >=30 held-out tasks; a learned off-fold AUROC improving on 0.779 on wrong-majority strata is the precondition for testing whether it beats vote at power."
 
-      Run: `python3 {project_root}/results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.py`
+      Run: `python3 {project_root}/results/experiment_4231_oracle_distinct_arc_aggregator_build.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4221-oracle-distinct-arc-verifier-beats-vote
-    milestone: 2026.06.391
-    title: "PHASE A2 (THE HEADLINE GATE, gated_on A1 selector_trained) -- does the ORACLE-DISTINCT learned ARC verifier BEAT majority vote OFF-ORACLE? On a HELD-OUT ARC split (disjoint from A1 folds), rerank with the A1 learned verifier (verifier_is_oracle=false; does NOT execute demos) vs majority-vote vs a MATCHED no-verifier control (same candidates/budget) vs oracle@K (the positive-control ceiling) vs an ARBITER conservative-override arm (keep vote unless the learned margin clears a fixed threshold, arXiv:2605.26172 / AggLM 2509.06870). The LOAD-BEARING gate: verifier@1 - vote@1, bootstrap CI95 EXCLUDES 0 AND headroom exists. YES -> the first oracle-distinct verifier win (closes GAP-3-ties-vote; informs the DiffusionGemma gate). TIE-with-headroom -> honest null. No-headroom -> uninformative (FALSE_NEGATIVE_RISK, not a verifier failure)."
+  - id: exp4232-oracle-distinct-arc-aggregator-beats-vote
+    milestone: 2026.06.392
+    title: "PHASE A2 (THE HEADLINE GATE, gated_on A1 aggregator_trained) -- does the STRONGER cross-candidate AGGREGATOR BEAT majority vote OFF-ORACLE at power? On a HELD-OUT ARC split (disjoint from A1 folds, target N>=30), rerank with the A1 aggregator (verifier_is_oracle=false; does NOT execute demos) vs majority-vote vs a MATCHED no-verifier control (same candidates/budget) vs oracle@K (the positive-control ceiling) vs a MARGIN-TRIGGERED override (2606.04323 / ARBITER 2605.26172: override vote ONLY when the aggregator margin clears a pre-registered threshold tuned on the A1 fold). The LOAD-BEARING gate: aggregator@1 - vote@1, bootstrap CI95 EXCLUDES 0 AND headroom exists. YES -> the first oracle-distinct verifier win (closes GAP-3-ties-vote; informs the DiffusionGemma gate). TIES-at-power -> a STRONGER null than .391's n=14. No-headroom -> uninformative (FALSE_NEGATIVE_RISK)."
     priority: high
     track: verifier-oracle-distinct
     max_turns: 70
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the oracle-distinct beats-vote measurement is MANDATED by the 2026-06-14 P0 directive (HEADLINE; verifier_is_oracle=false + MATCHED control + CI95-excl-0) -- false-positive scope-match vs retired GAP-3 rerank/selector exps; forward difference = a LEARNED oracle-distinct verifier (A1, built on the now-fixed label path) + an ARBITER conservative-override arm, the matched-control de-confound the prior circular wins lacked."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the oracle-distinct beats-vote measurement is MANDATED by the 2026-06-14 P0 directive (HEADLINE; verifier_is_oracle=false + MATCHED control + CI95-excl-0) -- false-positive scope-match vs prior selector/rerank exps; forward difference = the STRONGER cross-candidate AGGREGATOR (A1) + a MARGIN-TRIGGERED override (2606.04323, fixing the .391 keep-vote degeneracy) at N>=30 (fixing the .391 n=14 under-power)."
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json
+    deliverable: results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json
     gated_on:
-      - upstream: exp4220-oracle-distinct-arc-verifier-build-labeled
-        artifact_field: selector_trained
+      - upstream: exp4231-oracle-distinct-arc-aggregator-build
+        artifact_field: aggregator_trained
         op: '=='
         value: true
     prior_failures:
-      - experiment_id: exp4210-oracle-distinct-arc-verifier-beats-vote
-        verdict: blocked_gate_check_failed
-        addressed_by: "exp4210 gate-blocked because exp4209.selector_trained was False (the upstream build blocked on a wrong-file label lookup). This attempt is gated on exp4220, which OWNS label construction via the proven load_arc_rows path so selector_trained=true is achievable; the gate therefore actually runs on a built oracle-distinct verifier with a matched control + ARBITER conservative-override arm."
+      - experiment_id: exp4221-oracle-distinct-arc-verifier-beats-vote
+        verdict: complete_oracle_distinct_verifier_ties_vote_with_headroom
+        addressed_by: "exp4221 TIED vote (verifier@1-vote@1 -0.0714, CI95 [-0.214,0.0]) but on n=14 held-out tasks, with an isolated logistic-regression verifier, and the ARBITER override degenerated to keep-vote (never fired). This attempt is gated on exp4231 (the STRONGER cross-candidate aggregator + calibrated loss at >=30 held-out tasks) and uses a MARGIN-TRIGGERED override with a pre-registered threshold tuned on the A1 fold (2606.04323) -- so the gate tests a strong build at adequate power, and the override can actually fire on confident wrong-majority cases."
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT: THE .391 headline gate. A1 (exp4220) built an oracle-distinct learned ARC verifier
-      (verifier_is_oracle=false) on the now-fixed label path. Now measure whether it BEATS majority vote on
-      a HELD-OUT ARC pool -- the deep, defensible claim the circular execution wins cannot make. ARBITER
-      (arXiv:2605.26172) names the headroom: "wrong-majority failures" -- sampled trajectories cluster into
-      basins and vote picks the LARGEST basin, not the most accurate, so the correct answer is in the pool
-      but loses. AggLM (2509.06870) shows a LEARNED aggregator recovers exactly those. The MATCHED
-      no-verifier control (same candidates/budget) is the de-confound the prior circular wins lacked.
+      CONTEXT: THE .392 headline gate. A1 (exp4231) built a STRONGER oracle-distinct aggregator
+      (cross-candidate set-encoder + calibrated imbalance-aware loss, verifier_is_oracle=false) on a grown
+      labeled pool. Now measure whether it BEATS majority vote on a HELD-OUT ARC pool at power. ARBITER
+      (2605.26172) names the headroom -- "wrong-majority failures": sampled candidates cluster into basins
+      and vote picks the LARGEST basin, not the most accurate, so the correct answer is present but loses.
+      AggLM (2509.06870) shows a learned aggregator recovers exactly those. The .391 ARBITER override never
+      fired (kept vote on every task); 2606.04323's MARGIN-TRIGGERED re-arbitration fixes that with a
+      pre-registered margin threshold. The MATCHED no-verifier control (same candidates/budget) is the
+      de-confound.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json (learned_verifier_path, oracle_distinct_auroc, wrong_majority_n, verifier_is_oracle=false)
+        - results/experiment_4231_oracle_distinct_arc_aggregator_build.json (learned_verifier_path, oracle_distinct_auroc, wrong_majority_n, held_out_task_n, verifier_is_oracle=false)
+        - results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json (the .391 TIES read to beat: delta -0.0714, CI95 [-0.214,0.0], oracle@K 1.0, n=14)
         - scripts/exp_verifier_detector_auroc.py:load_arc_rows (build the HELD-OUT split the SAME way, disjoint from A1's folds)
-        - scripts/adversarial_verify.py (run it on the artifact -- check_circular_moat_overclaim must stay clean since verifier_is_oracle=false), scripts/summarize_artifact.py
-        - research-references.md ".391 sweep" (AggLM 2509.06870 aggregator beats vote; ARBITER 2605.26172 conservative-override; AgentAuditor 2602.09341 beats vote AND LLM-judge)
+        - scripts/adversarial_verify.py (run it -- check_circular_moat_overclaim must stay clean since verifier_is_oracle=false), scripts/summarize_artifact.py
+        - research-references.md ".392 sweep" (margin-trigger 2606.04323; AggLM 2509.06870; ARBITER 2605.26172; AgentAuditor 2602.09341 beats vote AND LLM-judge)
         - CLAUDE.md "Circularity / Oracle-Distinctness Discipline" + "Adversarial Artifact Verification" (FALSE_NEGATIVE_RISK positive control)
 
-      TASK: held-out ARC rerank -- learned verifier vs vote vs matched control vs ARBITER-override vs oracle@K; the decisive CI95 gate.
+      TASK: held-out ARC rerank at power -- aggregator vs vote vs matched control vs margin-triggered override vs oracle@K; the decisive CI95 gate.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: A1 reported selector_trained=true with a readable learned_verifier_path. If
-           missing/false -> honest_verdict `complete_oracle_distinct_arc_gate_deferred_no_built_verifier`
+        0. PRECONDITIONS: A1 reported aggregator_trained=true with a readable learned_verifier_path. If
+           missing/false -> honest_verdict `complete_oracle_distinct_arc_gate_deferred_no_built_aggregator`
            and STOP.
-        1. On a HELD-OUT ARC split (disjoint from A1 folds; N as large as the pool allows; if N<30 note the
-           CLT-floor caveat), compute per-task: vote@1 (majority candidate), verifier@1 (candidate maximizing
-           the A1 LEARNED score -- NO demo execution at inference), oracle@K (any candidate exactly correct =
-           the POSITIVE CONTROL), a MATCHED no-verifier control (same budget, random/first selection), and an
-           ARBITER conservative-override arm (keep the vote candidate unless the learned-score margin between
-           top-1 and the vote candidate clears a fixed pre-registered threshold).
+        1. On a HELD-OUT ARC split (disjoint from A1 folds; N as large as the grown pool allows; report N and
+           if N<30 note the CLT-floor caveat), compute per-task: vote@1 (majority candidate), aggregator@1
+           (candidate maximizing the A1 LEARNED score -- NO demo execution at inference), oracle@K (any
+           candidate exactly correct = the POSITIVE CONTROL), a MATCHED no-verifier control (same budget,
+           random/first selection), and a MARGIN-TRIGGERED override (keep the vote candidate UNLESS the
+           aggregator margin between top-1 and the vote candidate clears a threshold PRE-REGISTERED on the A1
+           fold -- 2606.04323).
         2. POSITIVE CONTROL FIRST: if oracle@K ~= vote@1 (no recoverable headroom) the corpus is
            ceiling-saturated -> the null is UNINFORMATIVE (FALSE_NEGATIVE_RISK) -> report
            `complete_oracle_distinct_arc_no_headroom_uninformative`, do NOT claim the verifier fails.
-        3. THE GATE: verifier_minus_vote = verifier@1 - vote@1, task-level bootstrap CI95 (>=2000 resamples).
-           Also report arbiter_override_minus_vote. Emit oracle_distinct_beats_vote BARE bool := (CI95
-           excludes 0 AND delta>0 AND headroom exists). Run adversarial_verify.py (it must NOT raise
-           CIRCULAR_MOAT_OVERCLAIM). Honest headline: one of
-           {{oracle_distinct_verifier_beats_vote, oracle_distinct_verifier_ties_vote_with_headroom,
+        3. THE GATE: aggregator_minus_vote = aggregator@1 - vote@1, task-level bootstrap CI95 (>=2000
+           resamples). Also report margin_override_minus_vote. Emit oracle_distinct_beats_vote BARE bool :=
+           (CI95 excludes 0 AND delta>0 AND headroom exists). Run adversarial_verify.py (it must NOT raise
+           CIRCULAR_MOAT_OVERCLAIM). Honest headline: one of {{oracle_distinct_aggregator_beats_vote,
+           oracle_distinct_aggregator_ties_vote_with_headroom_at_power,
            oracle_distinct_arc_no_headroom_uninformative}}.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. A clean beats-vote win, a clean ties-vote-with-headroom null, and an honest no-headroom-uninformative are ALL COMPLETE -- the first clean read on the oracle-distinct frontier either way (this time the gate RAN)."
+          principle: "Terminal-prefixed. A clean beats-vote win, a clean ties-at-power null, and an honest no-headroom-uninformative are ALL COMPLETE -- a stronger read on the oracle-distinct frontier than .391's under-powered n=14."
         oracle_distinct_beats_vote:
-          principle: "BARE bool: verifier@1 - vote@1 CI95 excludes 0 AND delta>0 AND headroom exists -- the de-confounded oracle-distinct win (GAP-3-ties-vote closed); NOT a circular execution result."
-        verifier_minus_vote_delta:
-          principle: "verifier@1 - vote@1 on held-out ARC -- the oracle-distinct lift; recovers the wrong-majority-failure answers (ARBITER/AggLM) a flat vote discards."
-        verifier_minus_vote_ci95:
+          principle: "BARE bool: aggregator@1 - vote@1 CI95 excludes 0 AND delta>0 AND headroom exists -- the de-confounded oracle-distinct win (GAP-3-ties-vote closed); NOT a circular execution result."
+        aggregator_minus_vote_delta:
+          principle: "aggregator@1 - vote@1 on held-out ARC -- the oracle-distinct lift; recovers the wrong-majority-failure answers (ARBITER/AggLM) a flat vote discards."
+        aggregator_minus_vote_ci95:
           principle: "Task-level bootstrap CI95 of the delta -- excluding 0 is what distinguishes a real oracle-distinct win from noise."
-        arbiter_override_minus_vote:
-          principle: "Conservative-override (keep vote unless high learned margin) minus vote -- the ARBITER 2605.26172 deployment pattern; can win where a flat rerank loses by overriding only on confident cases."
+        margin_override_minus_vote:
+          principle: "Margin-triggered override (keep vote unless high aggregator margin, threshold pre-registered on the A1 fold) minus vote -- the 2606.04323 deployment pattern; can win where a flat rerank loses by overriding only on confident wrong-majority cases (the .391 ARBITER override never fired)."
         oracle_at_k:
           principle: "The positive-control ceiling (any candidate exactly correct) -- if oracle@K ~= vote the null is uninformative (FALSE_NEGATIVE_RISK), not a verifier failure."
         matched_control_delta:
-          principle: "verifier@1 minus the budget-matched no-verifier control -- isolates the verifier's contribution from the candidate budget (arXiv:2511.02886)."
+          principle: "aggregator@1 minus the budget-matched no-verifier control -- isolates the aggregator's contribution from the candidate budget."
+        held_out_task_n:
+          principle: "BARE int: the gate's actual N -- target >=30 so the win/null is not under-powered like the .391 n=14."
         verifier_is_oracle:
-          principle: "BARE bool=false -- this measurement uses the LEARNED verifier (no demo execution); only this makes the result headline/gate-eligible (Circularity Discipline; adversarial_verify CIRCULAR_MOAT_OVERCLAIM must stay clean)."
+          principle: "BARE bool=false -- this measurement uses the LEARNED aggregator (no demo execution); only this makes the result headline/gate-eligible (adversarial_verify CIRCULAR_MOAT_OVERCLAIM must stay clean)."
         random_seed:
           principle: "Determinism precondition; the held-out split + bootstrap must be reproducible."
         reproducibility_checksum:
-          principle: "Hash of the held-out pool + the learned verifier; lets a third party re-run the decisive gate."
+          principle: "Hash of the held-out pool + the learned aggregator; lets a third party re-run the decisive gate."
       ACCEPTANCE GATE:
-        - condition: "oracle_at_k reported (positive control) AND verifier_minus_vote_delta + verifier_minus_vote_ci95 + matched_control_delta + arbiter_override_minus_vote reported with verifier_is_oracle=false, OR an honest no-headroom/deferred verdict"
-          principle: "Decisive only with the positive control (real headroom) + the matched control + the oracle-distinct (non-circular) verifier; otherwise honestly defer rather than emit an uninformative or circular result."
+        - condition: "oracle_at_k reported (positive control) AND aggregator_minus_vote_delta + aggregator_minus_vote_ci95 + matched_control_delta + margin_override_minus_vote + held_out_task_n reported with verifier_is_oracle=false, OR an honest no-headroom/deferred verdict"
+          principle: "Decisive only with the positive control (real headroom) + the matched control + the oracle-distinct (non-circular) aggregator at adequate N; otherwise honestly defer rather than emit an uninformative or under-powered result."
 
-      Run: `python3 {project_root}/results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.py`
+      Run: `python3 {project_root}/results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4222-verifier-reward-lora-harness-fix-smoke
-    milestone: 2026.06.391
-    title: "PHASE B1 (HARNESS-FIRST, the .360 discipline) -- FIX + SMOKE the LoRA training harness that died 3x. .390's exp4211 failed with `ValueError: Target module Gemma4ClippableLinear(...) is not supported` -- PEFT/LoRA matched the custom Carnot Gemma4 wrapper (whose .linear submodule is the real nn.Linear) instead of a standard module. FIX: load the NON-Qwen base via standard transformers.AutoModelForCausalLM.from_pretrained('google/gemma-4-E4B-it') (NOT the custom Gemma4 wrapper) so PEFT sees standard nn.Linear, with explicit target_modules (q_proj/k_proj/v_proj/o_proj/gate_proj/up_proj/down_proj) -- OR unwrap/patch the wrapper to expose its inner .linear. DELIVERABLE = a PASSING SMOKE (a positive control ON THE HARNESS): assert LoRA attaches, 1 training step runs, loss is finite, on a 8-16-example fixture from the intact corpora. NO full 3-arm run here (that is B2). harness_smoke_passed BARE bool. NO TRM."
+  - id: exp4233-oracle-distinct-code-beats-vote
+    milestone: 2026.06.392
+    title: "PHASE A3 (HEADLINE DISAMBIGUATION; independent) -- the SAME oracle-distinct beats-vote test on CODE, where data is BALANCED and power is HIGH. Train a LEARNED pass/fail predictor over sampled code candidates from CACHED corpora (HumanEval/MBPP/EvalPlus rerank pools) using ONLY oracle-distinct features (the candidate code text + cross-candidate agreement -- NO test execution at inference; the hidden-test label is the TRAINING TARGET only, so verifier_is_oracle=false). Then the beats-vote gate: predictor@1 vs vote@1 vs matched control vs oracle@K, task-level bootstrap CI95-excl-0, N as large as the cached pool allows (code has ~0.6 pass-rate vs ARC's 0.008 base-rate -> far less imbalance + far more positives). PURPOSE: disambiguate whether the .391 ARC null was DATA-SPARSITY (code wins) or a real selection-thesis bound (code also ties). Honest null is COMPLETE. STOP re-running CIRCULAR code-execution selection -- this is the oracle-DISTINCT (no-execution) learned predictor."
+    priority: high
+    track: verifier-oracle-distinct
+    max_turns: 70
+    agent_type: codex
+    model: gpt-5.5
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the oracle-distinct CODE replication is the disambiguation arm of the 2026-06-14 P0 oracle-distinct headline -- false-positive scope-match vs retired CIRCULAR code-execution selection exps; forward difference = a LEARNED pass-predictor that does NOT execute tests at inference (verifier_is_oracle=false, the hidden-test label is the training target only), on balanced high-power code candidate pools, to disambiguate the .391 ARC data-sparsity null. NOT a circular execution-grounded re-run."
+    inference_substrate: verifier_ensemble_against_cached_candidates
+    deliverable: results/experiment_4233_oracle_distinct_code_beats_vote.json
+    prompt: |
+      CONTEXT: the .391 ARC oracle-distinct null (TIES vote on n=14) has two explanations: (i) ARC
+      DATA-SPARSITY (14 positives / 1782, n=14 held-out -- too weak/under-powered to learn or test), or (ii)
+      a real bound on oracle-distinct selection (a learned, non-executing verifier simply cannot recover
+      wrong-majority answers). CODE disambiguates: it has SELECTION headroom (exp4208 selector_headroom 0.18,
+      the highest of any domain) AND balanced data (pass-rate ~0.6 -> far more positives, far less imbalance)
+      AND large cached candidate pools. If a LEARNED pass-predictor (no execution) beats vote on code but the
+      ARC aggregator ties, the ARC null is data-sparsity (build a bigger ARC pool next). If code ALSO ties,
+      the oracle-distinct selection thesis is bounded -- a decision-grade finding. CRITICAL: this is the
+      oracle-DISTINCT (no-execution) predictor; do NOT re-run the CIRCULAR code-execution test-pass selection
+      (that is execution_grounded, already known, and the lint WARNs it).
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_4208_verifier_as_detector_auroc.json (code detection AUROC 1.0, selector_headroom 0.18 -- the headroom this gate targets)
+        - the cached code candidate pools with per-candidate hidden-test pass labels -- CONCRETE CANDIDATES to try in order: results/experiment_2830_humaneval_full_ensemble_eval.json + results/experiment_2837_mbpp_ensemble_eval.json + results/experiment_2838_humaneval_full_ensemble_eval.json (multi-candidate ensemble evals), results/experiment_1607_dsl_humaneval.json (353KB candidate set), the verifier-as-reward A/B/C corpora under the checkpoint dir (per-candidate code traces with execution labels). Reuse whichever has >=2 candidates/task + a per-candidate pass label; if NONE has multi-candidate-per-task structure -> honest blocked_code_candidate_pool_missing
+        - scripts/exp_verifier_detector_auroc.py (the detector label/feature pattern to reuse for code rows)
+        - research-references.md ".392 sweep" (GenSelect-BoN 2602.02143 learned code selection beats vote; MSV 2603.03417 cross-candidate; Calibrated Reasoning 2509.19681)
+        - CLAUDE.md "Circularity / Oracle-Distinctness Discipline" (verifier_is_oracle=false -- the predictor does NOT execute tests at inference), "Adversarial Artifact Verification"
+
+      TASK: train a no-execution learned code pass-predictor on cached candidates; run the beats-vote gate at power; report whether code beats vote (disambiguating the ARC null).
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (check BEFORE training): a cached code best-of-N candidate pool with per-candidate
+           hidden-test pass labels is readable. If none exists in results/ -> honest_verdict
+           `blocked_code_candidate_pool_missing` and STOP (do NOT fabricate; do NOT run live GGUF generation
+           here -- this task scores CACHED candidates). CPU is sufficient.
+        1. Build per-candidate rows {{task_id, code_features, passes_hidden_tests}}. passes_hidden_tests is
+           the TRAINING TARGET only; features are ORACLE-DISTINCT (computable WITHOUT running tests): candidate
+           code text embeddings/statistics, cross-candidate agreement (how many candidates share this output
+           signature), self-consistency margin across the task's candidate set (MSV). NO test execution at
+           inference.
+        2. Train the learned pass-predictor OUT-OF-FOLD (held-out-TASK split) with a calibrated imbalance-aware
+           loss (2509.19681). Report off-fold AUROC.
+        3. THE GATE at power: on a held-out split, predictor@1 (max learned score) vs vote@1 (majority output)
+           vs matched control vs oracle@K (any candidate passes). Task-level bootstrap CI95 (>=2000 resamples).
+           Emit code_oracle_distinct_beats_vote BARE bool := (CI95 excludes 0 AND delta>0 AND oracle@K>vote@1).
+           Run adversarial_verify.py (CIRCULAR_MOAT_OVERCLAIM must stay clean -- verifier_is_oracle=false).
+           Report disambiguation_read: "ARC_null_is_data_sparsity" if code beats vote, "selection_thesis_bounded"
+           if code also ties, "code_no_headroom" if oracle@K~=vote.
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Terminal-prefixed. A code beats-vote win, a code ties-at-power null, or an honest no-pool/no-headroom is COMPLETE -- each disambiguates the ARC null."
+        code_oracle_distinct_beats_vote:
+          principle: "BARE bool: predictor@1 - vote@1 CI95 excludes 0 AND delta>0 AND headroom -- a LEARNED (non-executing) code verifier beating vote; NOT the circular execution result."
+        code_predictor_minus_vote_delta:
+          principle: "predictor@1 - vote@1 on held-out code -- the oracle-distinct lift on a balanced, high-power domain."
+        code_predictor_minus_vote_ci95:
+          principle: "Task-level bootstrap CI95 of the code delta -- excluding 0 distinguishes a real win from noise at power code provides."
+        oracle_at_k:
+          principle: "code positive-control ceiling (any candidate passes) -- if ~=vote the null is uninformative."
+        held_out_task_n:
+          principle: "BARE int: the code gate's N -- expected >> the .391 ARC n=14, so a code null is high-power."
+        disambiguation_read:
+          principle: "ARC_null_is_data_sparsity (code wins -> build a bigger ARC pool) / selection_thesis_bounded (code also ties -> the oracle-distinct selection thesis is bounded) / code_no_headroom -- the load-bearing cross-domain read on the .391 ARC null."
+        verifier_is_oracle:
+          principle: "BARE bool=false -- the predictor scores code WITHOUT executing tests at inference (the hidden-test label is the training target only); this keeps the result oracle-distinct, not circular."
+        model_specs:
+          principle: "The pass-predictor architecture + oracle-distinct code feature set + calibrated loss; required methodology."
+        random_seed:
+          principle: "Determinism precondition; fold split + init seeded."
+        reproducibility_checksum:
+          principle: "Hash of the code candidate pool + fold split; lets a third party re-run."
+      ACCEPTANCE GATE:
+        - condition: "code_oracle_distinct_beats_vote resolved with code_predictor_minus_vote_delta + ci95 + oracle_at_k + held_out_task_n + disambiguation_read reported AND verifier_is_oracle=false, OR an honest blocked_code_candidate_pool_missing / no-headroom verdict"
+          principle: "A high-power, balanced code read disambiguates whether the .391 ARC null was data-sparsity or a thesis bound -- decision-grade either way; the no-execution constraint keeps it oracle-distinct (non-circular)."
+
+      Run: `python3 {project_root}/results/experiment_4233_oracle_distinct_code_beats_vote.py`
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp4234-verifier-reward-lora-harness-real-training-smoke
+    milestone: 2026.06.392
+    title: "PHASE B1 (HARNESS-FIRST + REAL-TRAINING ASSERTION) -- FIX + SMOKE the LoRA harness so it CANNOT short-circuit. The .391 attempts (exp4222 smoke 14s, exp4223 3-arm 36.7s) were both DURATION_TOO_SHORT-flagged: the live LoRA training short-circuited to a fake-short 'progress' artifact instead of training. FIX: a harness smoke whose deliverable is a POSITIVE CONTROL that asserts REAL training -- (a) LoRA attaches with >0 trainable params on a NON-Qwen SOTA base loaded via standard AutoModelForCausalLM (NOT the custom Gemma4 wrapper that produced Gemma4ClippableLinear), (b) >=20 REAL optimizer steps run on a fixture, (c) the loss MOVES (final < initial by a margin), (d) wall-clock duration > a plausibility floor for >=20 steps on a 12B LoRA. If training cannot run for real in-window, emit blocked_* (NOT progress_*) -- the harness FAILS LOUDLY. harness_smoke_passed BARE bool. NO full 3-arm here (that is B2). NO TRM."
     priority: high
     track: verifier-reward
-    max_turns: 80
+    max_turns: 90
     agent_type: codex
     model: gpt-5.5
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4222_verifier_reward_lora_harness_fix_smoke.json
+    deliverable: results/experiment_4234_verifier_reward_lora_harness_real_training_smoke.json
     prior_failures:
-      - experiment_id: exp4211-verifier-as-reward-finish-synchronous
-        verdict: progress_accumulating_verifier_reward_training_no_eval_yet
-        addressed_by: "exp4211's training status was 'failed' with `ValueError: Target module Gemma4ClippableLinear is not supported` -- PEFT could not attach LoRA to the custom Carnot Gemma4 wrapper. This task ISOLATES the harness fix (load via standard AutoModelForCausalLM with standard nn.Linear target_modules, or patch the wrapper) and its deliverable is a PASSING smoke asserting LoRA attaches + 1 finite training step on a fixture -- a positive control ON THE HARNESS (the .360 harness-first discipline), BEFORE any full training run. The PEFT-attach failure is the explicit fix target."
+      - experiment_id: exp4222-verifier-reward-lora-harness-fix-smoke
+        verdict: complete_verifier_reward_lora_harness_smoke_passed
+        addressed_by: "exp4222 reported harness_smoke_passed=true but in 14s wall-clock and was DURATION_TOO_SHORT-flagged (adversarial) -- the smoke 'passed' without real training. This attempt makes the smoke assert REAL training: >=20 actual optimizer steps + loss MOVED (final<initial) + a wall-clock plausibility floor; if real training cannot run in-window it emits blocked_* (not progress_*), failing loudly. The fake-short short-circuit is the explicit fix target."
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT: The verifier-as-reward A-vs-B on code has now died 3x on INFRA, never science (exp4198
-      background-process death -> exp4199 gate-block -> exp4211 PEFT attach failure). The project ALREADY
-      solved this class once: the .360 HARNESS-FIRST discipline -- for each live-model bet, a SEPARATE
-      build+unit-test task whose deliverable is a PASSING positive-control test on a fixture, THEN the
-      measurement. This task is that harness fix+smoke. The operating point (Phase-0 0.956, Youden-J 0.4138,
-      base gemma-4-E4B-it, K=5) + the N-matched corpora (A=776/B=776/C=742) + the checkpoint dir
-      code_verifier_reward_lora_rft_a83b52882c198954 are intact on disk.
+      CONTEXT: The verifier-as-reward A-vs-B on code has now died 4-5x on INFRA, never science (exp4198
+      background death -> exp4199 gate-block -> exp4211 PEFT attach -> exp4222/exp4223 DURATION-flagged
+      short-circuits). The recurring failure is that the live LoRA training writes a fake-short 'progress'
+      artifact instead of training. This task ends that pattern by making the harness PROVE real training or
+      fail loudly. The operating point (Phase-0 0.956, Youden-J 0.4138) + the N-matched corpora
+      (A=776/B=776/C=742) + the checkpoint dir are intact on disk.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4211_verifier_as_reward_finish_synchronous.json (the exact PEFT error + model_specs.lora_config: target_modules was ["linear"] -- that matched the wrapper)
-        - scripts/experiments/verifier_reward_code_lora_rft_3arm.py (the runner that failed -- fix the model load + target_modules here)
-        - scripts/experiments/process_reward_weighted_sft_onpolicy_powered.py (the on-policy runner -- reference)
-        - CLAUDE.md "GGUF tokenizer rule" (gemma-4-E4B-it is a standard HF repo -> AutoModelForCausalLM + AutoTokenizer work; do NOT load it as a GGUF) + the .360 harness-first lesson in ops/status.md
+        - results/experiment_4222_verifier_reward_lora_harness_fix_smoke.json (the 14s 'passed' smoke -- note the DURATION flag; the lora_attach_path it recorded)
+        - results/experiment_4223_verifier_as_reward_3arm_synchronous.json (the 36.7s short-circuit -- note it wrote progress_*, not blocked_*)
+        - results/experiment_4211_verifier_as_reward_finish_synchronous.json (the PEFT Gemma4ClippableLinear error + model_specs.lora_config)
+        - scripts/experiments/verifier_reward_code_lora_rft_3arm.py (the runner -- fix the model load + add the real-training assertion here)
+        - CLAUDE.md "GGUF tokenizer rule" + "SOTA Local Models" (gemma-4-12B-it is the lightweight SOTA, fast on one 3090; a standard HF repo -> AutoModelForCausalLM works; do NOT load it as a GGUF) + the .360 harness-first lesson in ops/status.md
         - CLAUDE.md "Circularity / Oracle-Distinctness Discipline" (verifier_is_oracle=true here -- honest reward axis)
 
-      TASK: fix the LoRA attach so PEFT sees standard nn.Linear; smoke-test attach + 1 finite step on a fixture.
+      TASK: fix the LoRA attach; smoke-test REAL training (>=20 steps + loss moved + duration floor) on a fixture, or fail loudly.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (check BEFORE the smoke):
            a. CUDA available: `python3 -c "import torch; assert torch.cuda.is_available()"`. Else -> `blocked_cuda_unavailable`, STOP.
-           b. The NON-Qwen base is cached: `ls ~/.cache/huggingface/hub/models--google--gemma-4-E4B-it/`. Qwen is FORBIDDEN as the trained base. If absent -> `blocked_no_nonqwen_base_cached`, STOP.
-           c. The intact corpora are readable (the A/B/C jsonl under the checkpoint dir). If absent, rebuild a TINY 8-16-example fixture from the same operating point.
-        1. FIX the model load: load the base via standard `transformers.AutoModelForCausalLM.from_pretrained("google/gemma-4-E4B-it")` (NOT the custom Gemma4 wrapper/Gemma4QuantizedLoader that produces Gemma4ClippableLinear). Set LoRA target_modules to the standard projection names (q_proj/k_proj/v_proj/o_proj/gate_proj/up_proj/down_proj) -- OR, if the custom wrapper is required, patch get_peft_model to target the inner `.linear` (a real nn.Linear). Print which path was taken.
-        2. SMOKE (the positive control ON THE HARNESS): on an 8-16-example fixture, assert (a) get_peft_model attaches with >0 trainable LoRA params (print the count), (b) ONE training step runs without raising, (c) the loss is finite (not NaN/inf). Set harness_smoke_passed = (all three hold). Print per-step progress.
-        3. Do NOT run the full 3-arm A/B/C/D here (that is B2). Persist the fixed runner + the LoRA config that attached, so B2 resumes from a known-good harness.
+           b. A NON-Qwen SOTA base is cached. PREFER `unsloth/gemma-4-12B-it` (lightweight SOTA, fast on one 3090);
+              fall back to `google/gemma-4-E4B-it` if 12B is not cached. Check `ls ~/.cache/huggingface/hub/models--*gemma-4-12B-it*/` then `*gemma-4-E4B-it*`. Qwen is FORBIDDEN as the trained base. If NEITHER is cached AND it cannot be fetched in-window -> `blocked_no_nonqwen_base_cached`, STOP.
+           c. The intact corpora are readable (the A/B/C jsonl under the checkpoint dir). If absent, rebuild a TINY 16-32-example fixture from the same operating point.
+        1. FIX the model load: load the base via standard `transformers.AutoModelForCausalLM.from_pretrained(...)` (NOT the custom Gemma4 wrapper/Gemma4QuantizedLoader that produces Gemma4ClippableLinear). Set LoRA target_modules to the standard projection names (q_proj/k_proj/v_proj/o_proj/gate_proj/up_proj/down_proj) -- OR patch get_peft_model to target the inner `.linear`. Print which path was taken + the trainable LoRA param count.
+        2. SMOKE = a REAL-TRAINING positive control (the load-bearing fix): on a 16-32-example fixture, assert
+           (a) get_peft_model attaches with >0 trainable LoRA params (print the count), (b) at least 20 REAL
+           optimizer steps run without raising, PRINTING step/loss every step, (c) the loss MOVED -- final-step
+           loss < first-step loss by a non-trivial margin (record loss_initial, loss_final), (d) wall-clock for
+           the 20 steps EXCEEDS a plausibility floor (a 12B LoRA forward+backward is not free -- set a floor of
+           a few seconds/step; if all 20 steps finished in <~10s total, treat as a SHORT-CIRCUIT, set
+           harness_smoke_passed=false). Set harness_smoke_passed = (all four hold). If real training cannot run
+           in-window for any reason, emit honest_verdict `blocked_lora_training_cannot_run_in_window` (NOT a
+           progress_* verdict) -- fail LOUDLY.
+        3. Do NOT run the full 3-arm A/B/C/D here (that is B2). Persist the fixed runner + the LoRA config + the
+           per-step loss trace, so B2 resumes from a known-good, proven-to-really-train harness.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. A passing harness smoke OR an honest blocked_* is COMPLETE -- B2 gates on the smoke so a broken harness surfaces HERE, not as another failed training run."
+          principle: "Terminal-prefixed. A passing REAL-training smoke OR an honest blocked_* is COMPLETE -- B2 gates on the smoke so a non-training harness surfaces HERE, loudly, not as another fake-short progress artifact."
         harness_smoke_passed:
-          principle: "BARE bool: B2's gate compares this raw value (gated-fields-must-be-bare); true iff LoRA attached with >0 trainable params AND 1 training step ran AND loss was finite on the fixture."
+          principle: "BARE bool: B2's gate compares this raw value (gated-fields-must-be-bare); true iff LoRA attached with >0 trainable params AND >=20 real optimizer steps ran AND loss moved (final<initial) AND wall-clock exceeded the plausibility floor."
+        steps_run:
+          principle: "BARE int >=20 -- proves real optimizer steps ran (the .391 failure short-circuited before training); a low value means the harness still does not train."
+        loss_initial:
+          principle: "First-step training loss -- paired with loss_final to prove the loss actually MOVED (not a frozen/short-circuited run)."
+        loss_final:
+          principle: "Final-step training loss; loss_final < loss_initial by a margin is the real-training signal the .391 smoke lacked."
         lora_attach_path:
-          principle: "Which fix worked (standard AutoModelForCausalLM target_modules, or wrapper .linear patch) -- the load-bearing diagnostic so B2 and future runs do not re-hit the Gemma4ClippableLinear rejection."
+          principle: "Which fix worked (standard AutoModelForCausalLM target_modules, or wrapper .linear patch) -- the diagnostic so B2 does not re-hit Gemma4ClippableLinear."
         trainable_param_count:
-          principle: "BARE int >0 -- proves LoRA actually attached (the .390 failure was 0 attach); a zero here means the fix did not take."
+          principle: "BARE int >0 -- proves LoRA actually attached."
         verifier_is_oracle:
           principle: "BARE bool=true -- HONEST: the eventual reward is the execution oracle (RLVR/RLEF reward axis), NOT a moat claim (Circularity Discipline)."
         model_specs:
-          principle: "The NON-Qwen base + the working LoRA config (target_modules that attached); required methodology + the recipe B2 reuses."
+          principle: "The NON-Qwen SOTA base + the working LoRA config; required methodology + the recipe B2 reuses."
         random_seed:
           principle: "Determinism precondition; torch + LoRA init seeded so the smoke is reproducible."
         reproducibility_checksum:
           principle: "Hash of the fixture + LoRA config; lets a third party confirm the same harness inputs."
       ACCEPTANCE GATE:
-        - condition: "harness_smoke_passed true with trainable_param_count>0 and lora_attach_path recorded, OR an honest blocked_* verdict"
-          principle: "B2 must not launch a multi-hour 3-arm run until the harness is proven to attach LoRA and step without raising -- the .360 harness-first discipline applied to the recurring infra failure."
+        - condition: "harness_smoke_passed true with steps_run>=20 AND loss_final<loss_initial AND trainable_param_count>0 AND lora_attach_path recorded, OR an honest blocked_* verdict"
+          principle: "B2 must not launch the 3-arm run until the harness is proven to REALLY train (attach + >=20 steps + loss moved + plausible wall-clock) -- the fix for the .391 fake-short short-circuit."
 
-      Run: `python3 {project_root}/results/experiment_4222_verifier_reward_lora_harness_fix_smoke.py`
+      Run: `python3 {project_root}/results/experiment_4234_verifier_reward_lora_harness_real_training_smoke.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4223-verifier-as-reward-3arm-synchronous
-    milestone: 2026.06.391
-    title: "PHASE B2 (OWED; self-learning/FR-11, gated_on B1 harness_smoke_passed) -- run the de-confounded verifier-as-reward 3-arm A-vs-B on CODE with the FIXED harness. RESUME the stable checkpoint code_verifier_reward_lora_rft_a83b52882c198954 and run A/B/C/D SYNCHRONOUSLY in-process / resume-accumulate / per-step progress prints (NO background launch). The LOAD-BEARING gate is A(verifier-certified) vs B(same-generator random-label = the Spurious-Rewards control arXiv:2506.10947): held-out hidden-test pass@1 bootstrap CI95 excludes 0? gold-control (Arm C >= base) + truncation guard (<5%) MUST pass or INVALID. Youden-J reporting (arXiv:2601.04411) + the memorization-shortcut diagnostic (arXiv:2601.11061). verifier_is_oracle=true (HONEST -- reward axis, not a moat). Accumulate-floor: 3rd consecutive no-usable window -> auto-retire. NO TRM."
+  - id: exp4235-verifier-as-reward-3arm-window-boxed
+    milestone: 2026.06.392
+    title: "PHASE B2 (OWED; self-learning/FR-11, gated_on B1 harness_smoke_passed) -- the de-confounded verifier-as-reward 3-arm A-vs-B on CODE with the PROVEN-TO-TRAIN harness, WINDOW-BOXED. Run A/B/C/D with a BOUNDED DETERMINISTIC step budget sized to COMPLETE eval in-window (NOT 'train until done then eval'), SYNCHRONOUSLY in-process with per-step progress prints. The LOAD-BEARING gate is A(verifier-certified) vs B(same-generator random-label = the Spurious-Rewards control 2506.10947): held-out hidden-test pass@1 bootstrap CI95 excludes 0? gold-control (Arm C >= base) + truncation guard (<5%) MUST pass or INVALID. Youden-J (2601.04411) + memorization-shortcut diagnostic (2601.11061). verifier_is_oracle=true (HONEST -- reward axis). RETIRE MECHANIC: this is attempt 5+; if it produces no usable eval window AGAIN, emit complete_verifier_reward_retired_live_lora_cannot_power and re-scope to an OFFLINE reward-weighted form for .393. NO TRM."
     priority: high
     track: verifier-reward
-    max_turns: 80
+    max_turns: 90
     agent_type: codex
     model: gpt-5.5
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4223_verifier_as_reward_3arm_synchronous.json
+    deliverable: results/experiment_4235_verifier_as_reward_3arm_window_boxed.json
     gated_on:
-      - upstream: exp4222-verifier-reward-lora-harness-fix-smoke
+      - upstream: exp4234-verifier-reward-lora-harness-real-training-smoke
         artifact_field: harness_smoke_passed
         op: '=='
         value: true
     prior_failures:
+      - experiment_id: exp4223-verifier-as-reward-3arm-synchronous
+        verdict: progress_accumulating_verifier_reward_training_no_eval_yet
+        addressed_by: "exp4223 ran in 36.7s (DURATION-flagged short-circuit) and wrote progress_*, never reaching eval -- a 'train until done then eval' design that does not fit the window. This run is GATED on exp4234 proving the harness REALLY trains (>=20 steps, loss moved), uses a BOUNDED DETERMINISTIC step budget sized to COMPLETE A/B/C eval in-window, and carries a HARD retire mechanic (5th no-usable window -> retire the live-LoRA path, re-scope to offline reward-weighting for .393)."
+        retire_if_same_verdict: true
       - experiment_id: exp4211-verifier-as-reward-finish-synchronous
         verdict: progress_accumulating_verifier_reward_training_no_eval_yet
-        addressed_by: "exp4211's LoRA attach failed (Gemma4ClippableLinear). This run is GATED on exp4222 proving the harness attaches + steps on a fixture (harness-first), then RESUMES the same checkpoint and runs A/B/C/D synchronously with the fixed runner -- so a PEFT-attach failure surfaces at B1, not as another zero-eval training run here."
-        retire_if_same_verdict: true
-      - experiment_id: exp4198-verifier-reward-3arm-rft-launch
-        verdict: blocked_training_process_exited_before_checkpoint
-        addressed_by: "exp4198's BACKGROUND-launched LoRA process exited before its first checkpoint. This run is SYNCHRONOUS in-process (NOT setsid-detached) with per-step progress prints (codex idle-timeout safe) -- single-synchronous-resume-accumulate, not background-launch-then-collect."
+        addressed_by: "exp4211's LoRA attach failed (Gemma4ClippableLinear) and it never trained. This run is gated on exp4234's proven-to-attach-and-train harness, runs synchronously in-process with a bounded step budget, and retires the live-LoRA path if a 5th window produces no usable eval -- ending the perpetual 'accumulating, no eval' loop."
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT: FINISH the operator's 2026-06-11 verifier-as-reward pivot, with the harness proven by B1.
-      The de-confounded A-vs-B on code is otherwise 90% done: the operating point CLEARED (Phase-0 0.956,
-      Youden-J 0.4138, headroom 0.600), the corpora are N-matched (A=776 certified, B=776 same-generator
-      random-label, C=742 gold, base_passrate 0.6), and the checkpoint dir is intact. The LOAD-BEARING
-      contrast is A vs B: B is the SAME generator's random-label traces (|B|=|A|) -- the Spurious-Rewards
-      control (arXiv:2506.10947: random labels recover ~74% of RLVR gains on Qwen). A>>B -> the verifier's
-      LABEL carries training signal; A~=B -> just distillation/spurious-reward.
+      CONTEXT: FINISH the operator's 2026-06-11 verifier-as-reward pivot (a TOP-PRIORITY directive), with the
+      harness proven to REALLY train by B1, and WINDOW-BOXED so it actually reaches eval this time. The
+      de-confounded A-vs-B on code is otherwise ready: operating point CLEARED (Phase-0 0.956, Youden-J
+      0.4138), corpora N-matched (A=776 certified, B=776 same-generator random-label, C=742 gold,
+      base_passrate 0.6), checkpoint intact. The LOAD-BEARING contrast is A vs B: B is the SAME generator's
+      random-label traces (|B|=|A|) -- the Spurious-Rewards control (2506.10947: random labels recover ~74%
+      of RLVR gains on Qwen). A>>B -> the verifier's LABEL carries training signal; A~=B -> just
+      distillation/spurious-reward. ACCUMULATE-FLOOR: this is attempt 5+; the operator's rule retires after 3
+      no-usable windows. If THIS window also produces no usable eval, RETIRE the live-LoRA path (do not
+      propose a 6th identical run).
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4222_verifier_reward_lora_harness_fix_smoke.json (lora_attach_path + the working model_specs.lora_config to reuse -- the harness is proven)
-        - results/experiment_4211_verifier_as_reward_finish_synchronous.json (stable_checkpoint_path, arm_corpus_sizes A=776/B=776/C=742, operating point)
-        - scripts/experiments/verifier_reward_code_lora_rft_3arm.py (the runner -- now harness-fixed by B1; run SYNCHRONOUS, NOT setsid-detached)
+        - results/experiment_4234_verifier_reward_lora_harness_real_training_smoke.json (lora_attach_path + the PROVEN-TO-TRAIN model_specs.lora_config + per-step loss trace -- reuse exactly)
+        - results/experiment_4223_verifier_as_reward_3arm_synchronous.json (the 36.7s short-circuit to NOT repeat; stable_checkpoint_path, arm_corpus_sizes A=776/B=776/C=742)
+        - scripts/experiments/verifier_reward_code_lora_rft_3arm.py (the runner -- harness-fixed by B1; run SYNCHRONOUS, NOT setsid-detached; BOUNDED step budget)
         - ops/known-issues.md: "POWERING RUNS MUST ACCUMULATE" (resume-not-restart, accumulate-floor 3 windows), GOLD-CONTROL GATE (Arm C >= base), TRUNCATION GUARD (<5%), STATISTICAL-POWER (>=100 eval Q, >=3 seeds)
-        - research-references.md ".389/.390/.391 sweep": Spurious-Rewards 2506.10947, Youden-J 2601.04411, memorization-shortcut 2601.11061, SR-TTRL (self-reflective TTRL)
+        - research-references.md ".392/.391/.389 sweeps": Spurious-Rewards 2506.10947, Youden-J 2601.04411, memorization-shortcut 2601.11061, SR-TTRL
         - CLAUDE.md "Circularity / Oracle-Distinctness Discipline" (verifier_is_oracle=true -- honest reward axis)
 
-      TASK: resume the checkpoint with the fixed harness, run the 3-arm LoRA-RFT SYNCHRONOUSLY, collect the de-confounded A-vs-B verdict.
+      TASK: with the proven harness, run a WINDOW-BOXED 3-arm LoRA-RFT that REACHES eval; collect the de-confounded A-vs-B verdict OR retire the live-LoRA path.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (check BEFORE training):
-           a. B1 reported harness_smoke_passed=true with a readable lora_attach_path. If false/missing ->
-              honest_verdict `complete_verifier_reward_deferred_harness_not_smoked` and STOP.
+           a. B1 reported harness_smoke_passed=true with a readable lora_attach_path + a real loss trace. If
+              false/missing -> honest_verdict `complete_verifier_reward_deferred_harness_not_smoked` and STOP.
            b. CUDA available (`python3 -c "import torch; assert torch.cuda.is_available()"`) -> else `blocked_cuda_unavailable`, STOP.
-           c. The stable checkpoint dir + the .389/.390 corpora are readable; |B|=|A| (size-matched random-label control).
-        1. RESUME the stable (corpus+base+config-keyed) checkpoint using the B1-proven LoRA config ->
-           accumulate, do NOT restart. Seed torch generation.
-        2. Run identical-config LoRA-SFT for arms A/B/C SYNCHRONOUSLY IN-PROCESS (NOT setsid-detached) + Arm
-           D cold base. PRINT per-step progress (step/loss/arm) at least every ~30s so codex does not
-           idle-timeout. Per-arm checkpoints. Held-out hidden-test eval (>=100 Q, >=3 seeds) with the
-           truncation guard. If the window ends before eval completes, checkpoint + report accumulated-N
-           (PROGRESS) -- UNLESS this is the 3rd consecutive no-usable-data window ->
-           `complete_verifier_reward_retired_substrate_cannot_power` and re-scope.
+           c. The stable checkpoint dir + the corpora are readable; |B|=|A| (size-matched random-label control).
+        1. Set a BOUNDED DETERMINISTIC step budget per arm sized so A+B+C training AND a held-out eval
+           (>=100 Q if affordable, else as many as the budget allows -- report the actual N) COMPLETE within
+           the task window. Resume the stable checkpoint with the B1-proven LoRA config (accumulate, do NOT
+           restart). Seed torch generation. PRINT per-step progress (step/loss/arm) every step.
+        2. Run identical-config LoRA-SFT for arms A/B/C SYNCHRONOUSLY IN-PROCESS (NOT setsid-detached) + Arm D
+           cold base, each to its bounded step budget. Held-out hidden-test eval with the truncation guard.
         3. VALIDITY GATES FIRST (a FAILED gate INVALIDATES the headline): (a) gold-control: Arm C >= base --
-           else TRAINING_INVALID, STOP; (b) truncation_rate < 5% on every arm -- else raise max_new_tokens
-           and re-run. THEN the A-vs-B gate: pass@1(A) - pass@1(B), task-level bootstrap CI95 (>=2000
-           resamples) over seeds. Emit a_vs_b_delta + a_vs_b_ci95 + verifier_label_carries_signal BARE bool
-           (CI excludes 0 AND delta>0). Secondary: a_vs_c (label-free vs oracle), a_vs_d (vs cold base).
-           Report youden_j (exact execution label -> J>>0) + a memorization-shortcut diagnostic for A vs B.
-           Run adversarial_verify.py.
+           else TRAINING_INVALID, STOP; (b) truncation_rate < 5% on every arm -- else raise max_new_tokens.
+           THEN the A-vs-B gate: pass@1(A) - pass@1(B), task-level bootstrap CI95 (>=2000 resamples) over
+           seeds. Emit a_vs_b_delta + a_vs_b_ci95 + verifier_label_carries_signal BARE bool (CI excludes 0 AND
+           delta>0). Secondary: a_vs_c, a_vs_d. Report youden_j + a memorization-shortcut diagnostic. Run
+           adversarial_verify.py. RETIRE MECHANIC: if the window still ends before a usable eval (the 5th
+           no-usable window), emit honest_verdict `complete_verifier_reward_retired_live_lora_cannot_power`
+           and recommend the OFFLINE reward-weighted form for .393 -- do NOT write progress_* and do NOT
+           propose a 6th identical live-LoRA run.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. A clean 'label carries signal', a clean 'A~=B distillation null', and an honest 'accumulating/underpowered' are ALL COMPLETE -- the project's first clean verifier-as-reward read either way."
+          principle: "Terminal-prefixed. A clean 'label carries signal', a clean 'A~=B distillation null', an honest 'underpowered-this-window', and the 'retired live-LoRA' verdict are ALL COMPLETE -- the project's first clean verifier-as-reward read, OR a clean retirement decision."
         verifier_label_carries_signal:
           principle: "BARE bool: a_vs_b_ci95 excludes 0 AND delta>0 -- the de-confounded answer to the operator's pivot. NOT a_vs_cold_base (that conflates the verifier's label with the spurious-reward confound)."
         a_vs_b_delta:
-          principle: "pass@1(certified A) - pass@1(random-label B) on held-out hidden tests -- isolates the verifier's LABEL from the generator's intelligence (arXiv:2506.10947 / 2509.20837 open question)."
+          principle: "pass@1(certified A) - pass@1(random-label B) on held-out hidden tests -- isolates the verifier's LABEL from the generator's intelligence (2506.10947)."
         a_vs_b_ci95:
           principle: "Task-level bootstrap CI95 of the A-vs-B delta -- excluding 0 distinguishes a real lift from the spurious-reward floor."
         positive_control_confirmed:
           principle: "BARE bool: gold-control (Arm C >= base) AND truncation_rate<5% on all arms -- without these the A-vs-B number is INVALID, not a finding."
+        eval_n:
+          principle: "BARE int: held-out eval questions this window -- the window-boxed budget must REACH a usable eval N (the .391 runs reached 0); report it honestly."
         youden_j:
-          principle: "BARE float TPR-FPR of the execution certifier vs hidden-pass -- the arXiv:2601.04411 precondition; an exact execution label should show J>>0."
-        accumulated_n:
-          principle: "Running total eval N across windows (resume-accumulate) -- a single window adding tasks is PROGRESS; the accumulate-floor auto-retires only after 3 no-usable windows."
+          principle: "BARE float TPR-FPR of the execution certifier vs hidden-pass -- the 2601.04411 precondition; an exact execution label should show J>>0."
+        live_lora_retired:
+          principle: "BARE bool: true iff this 5th window also produced no usable eval -> the live-LoRA path is retired and .393 re-scopes to offline reward-weighting; ends the perpetual accumulating loop."
         verifier_is_oracle:
-          principle: "BARE bool=true -- HONEST: the reward is the execution oracle (RLVR/RLEF reward axis), NOT a moat claim; declaring it true keeps the result out of the oracle-distinct headline lane (Circularity Discipline)."
+          principle: "BARE bool=true -- HONEST: the reward is the execution oracle (RLVR/RLEF reward axis), NOT a moat claim; keeps the result out of the oracle-distinct headline lane (Circularity Discipline)."
         model_specs:
-          principle: "The NON-Qwen base + the B1-proven LoRA config + the on-policy generator; required methodology for a live-LLM training artifact."
+          principle: "The NON-Qwen SOTA base + the B1-proven LoRA config + the on-policy generator; required methodology for a live-LLM training artifact."
         random_seed:
-          principle: "Determinism precondition; torch generation + LoRA init seeded so the run is reproducible across windows."
+          principle: "Determinism precondition; torch generation + LoRA init seeded."
         reproducibility_checksum:
           principle: "Hash of the corpora + LoRA config; lets a third party confirm the same training inputs."
       ACCEPTANCE GATE:
-        - condition: "positive_control_confirmed true AND a_vs_b_delta + a_vs_b_ci95 reported (verifier_label_carries_signal resolved), OR an honest accumulating/invalid/retired verdict"
-          principle: "Decisive only with the gold control + truncation guard passing and the de-confounded A-vs-B reported; otherwise honestly defer rather than emit an uninformative or invalid result."
+        - condition: "positive_control_confirmed true AND a_vs_b_delta + a_vs_b_ci95 + eval_n reported (verifier_label_carries_signal resolved), OR an honest deferred/invalid/retired (live_lora_retired=true) verdict"
+          principle: "Decisive only with the gold control + truncation guard passing and the de-confounded A-vs-B reaching a usable eval N; otherwise honestly RETIRE the live-LoRA path rather than emit another fake-short progress artifact."
 
-      Run: `python3 {project_root}/results/experiment_4223_verifier_as_reward_3arm_synchronous.py`
+      Run: `python3 {project_root}/results/experiment_4235_verifier_as_reward_3arm_window_boxed.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4224-arc-incremental-progress
-    milestone: 2026.06.391
-    title: "PHASE C1 -- ARC-AGI-3 INCREMENTAL +1 (monotonic). Advance the solved-LEVEL count by >=1 via the PROVEN explore-first method, using the HARDENED GAP-4 stack (exp4187): bounded active-exploration OBSERVES transitions -> induce mechanic + goal predicate -> GAP-4 verifier validates on HELD-OUT transitions -> act only if validated. Target the next deeper level of an already-solved game (e.g. sc25 L3 after the .390 L2 solve) or a spatial L1. REAL-ENV-CONFIRM any solve; STOP at the first level that fails. Honest no-solve is COMPLETE. total_levels_solved must be >= 17."
+  - id: exp4236-arc-incremental-progress
+    milestone: 2026.06.392
+    title: "PHASE C1 -- ARC-AGI-3 INCREMENTAL +1 (monotonic). Advance the solved-LEVEL count by >=1 via the PROVEN explore-first method, using the HARDENED GAP-4 stack (exp4187): bounded active-exploration OBSERVES transitions -> induce mechanic + goal predicate -> GAP-4 verifier validates on HELD-OUT transitions -> act only if validated. Target the next deeper level of an already-solved game (e.g. sc25 L4 after the .391 L3 solve) or a spatial L1. REAL-ENV-CONFIRM any solve; STOP at the first level that fails. Honest no-solve is COMPLETE. total_levels_solved must be >= 18."
     priority: medium
     track: arc
     max_turns: 90
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): ARC-AGI-3 incremental +1 mandated by the ARC-AGI-3 Incremental-Progress Scoping discipline -- false-positive scope-match vs prior incremental-progress tasks (exp4213); forward difference = monotonic +1 from 16 to >=17 (target sc25 L3 after the .390 L2 solve); honest no-solve is COMPLETE."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): ARC-AGI-3 incremental +1 mandated by the ARC-AGI-3 Incremental-Progress Scoping discipline -- false-positive scope-match vs prior incremental-progress tasks (exp4224); forward difference = monotonic +1 from 17 to >=18 (target sc25 L4 after the .391 L3 solve); honest no-solve is COMPLETE."
     inference_substrate: offline_arc_explore_induce_verify
-    deliverable: results/experiment_4224_arc_incremental_progress.json
+    deliverable: results/experiment_4236_arc_incremental_progress.json
     prompt: |
       CONTEXT: Each milestone advances the solved-LEVEL count MONOTONICALLY by >=1 (ARC-AGI-3
-      Incremental-Progress Scoping). .390 advanced sc25 to L2 (exp4213, total_levels_solved=16). Target the
-      next deeper level of an already-solved game (sc25 L3), or a spatial game's L1 if a deeper level is
+      Incremental-Progress Scoping). .391 advanced sc25 to L3 (exp4224, total_levels_solved=17). Target the
+      next deeper level of an already-solved game (sc25 L4), or a spatial game's L1 if a deeper level is
       structurally blocked. Use the HARDENED GAP-4 stack (exp4187) as the act-validation verifier.
       OFFLINE/air-gapped only (online play stays operator-gated).
 
       EXISTING CODE TO READ FIRST:
         - results/arc3_win_condition_survey.json (the 25-game survey; per-game level structure)
-        - results/experiment_4213_arc_incremental_progress.json (.390: sc25 advanced to L2, total_levels=16, total_games=13)
+        - results/experiment_4224_arc_incremental_progress.json (.391: sc25 advanced to L3, total_levels=17, total_games=13)
         - results/experiment_4187_gap4_graded_execution_gate_hardening.json (the hardened verifier to validate acts)
-        - python/carnot/agentic/arc_agi3_world_model.py + the OFFLINE/air-gapped ARC driver used by exp4213
+        - python/carnot/agentic/arc_agi3_world_model.py + the OFFLINE/air-gapped ARC driver used by exp4224
       TASK: bank +1 real level via explore -> induce -> hardened-GAP-4-verify -> act.
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `ls results/arc3_win_condition_survey.json` and the OFFLINE fixtures for the target
            game exist. If fixtures unavailable -> honest_verdict `blocked_arc_offline_fixtures_missing` and STOP.
-        1. Pick the next-easiest unsolved LEVEL (prefer sc25 L3 after the .390 L2 solve; if structurally
+        1. Pick the next-easiest unsolved LEVEL (prefer sc25 L4 after the .391 L3 solve; if structurally
            blocked, switch to a different already-solved game's next level or a new spatial L1).
         2. Bounded active-exploration -> induce mechanic + goal predicate from OBSERVED transitions.
         3. Hardened GAP-4 verifier (exp4187) validates the induced rule on HELD-OUT transitions BEFORE
@@ -474,7 +587,7 @@ tasks:
         honest_verdict:
           principle: "Terminal-prefixed. An honest no-solve is a COMPLETE verdict (progress-not-perfection)."
         total_levels_solved:
-          principle: "The monotonic progress metric; must be >= the prior milestone's count (16)."
+          principle: "The monotonic progress metric; must be >= the prior milestone's count (17)."
         levels_completed:
           principle: "Real-env-confirmed level count this run; falsifiable evidence of an actual solve."
         real_env_confirmed:
@@ -483,61 +596,62 @@ tasks:
         - condition: ">=1 NEW level real_env_confirmed OR an honest no-solve verdict"
           principle: "Progress-not-perfection: banking +1 real level is the win; an honest no-solve is still COMPLETE."
 
-      Run: `python3 {project_root}/results/experiment_4224_arc_incremental_progress.py`
+      Run: `python3 {project_root}/results/experiment_4236_arc_incremental_progress.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4225-arc-live-env-solver-accuracy
-    milestone: 2026.06.391
-    title: "PHASE C2 -- ARC-AGI-3 LIVE-env, ACCURACY-seeking with the ARBITER conservative-override. .390's live solver beat the random/greedy floor on EFFICIENCY only (exp4214) but completed 0 levels. Now run the PROVEN explore-induce-verify solver against the LIVE env on ONE easy game with the goal of COMPLETING a level (levels_completed >= 1), applying the ARBITER (arXiv:2605.26172) conservative-override to goal-predicate induction / action selection (commit to a high-confidence induced rule, fall back to exploration otherwise) + a larger bounded budget. Report accuracy (EnvironmentScore.score / levels_completed) AND efficiency (actions vs baseline_actions) vs the floor (exp4214). NO leaderboard submission (operator-only); honest blocked_arc_live_* if access fails."
+  - id: exp4237-arc-live-env-solver-accuracy
+    milestone: 2026.06.392
+    title: "PHASE C2 -- ARC-AGI-3 LIVE-env, ACCURACY-seeking with the MARGIN-TRIGGERED override. .391's live solver beat the random/greedy floor on EFFICIENCY only (exp4225) but completed 0 levels. Now run the PROVEN explore-induce-verify solver against the LIVE env on ONE easy game with the goal of COMPLETING a level (levels_completed >= 1), applying the MARGIN-TRIGGERED re-arbitration (2606.04323) / ARBITER (2605.26172) conservative-override to goal-predicate induction / action selection (commit to a high-MARGIN induced rule, fall back to exploration otherwise) + a larger bounded budget. Report accuracy (EnvironmentScore.score / levels_completed) AND efficiency (actions vs baseline_actions) vs the floor (exp4225). NO leaderboard submission (operator-only); honest blocked_arc_live_* if access fails."
     priority: medium
     track: arc
     max_turns: 90
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the live-env ACCURACY-seeking solver is the north-star §0 next step after exp4214's efficiency-only-no-level read -- false-positive scope-match vs exp4214; forward difference = applies the ARBITER conservative-override (the .390-flagged-for-.391 method) to goal-predicate induction + a larger budget targeting COMPLETING a level, NO leaderboard submission, anonymous-key. Online play stays gated per arc3_online_gated_on_offline_beating_baselines (a solver-vs-floor probe is not a leaderboard submission)."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the live-env ACCURACY-seeking solver is the north-star §0 next step after exp4225's efficiency-only-no-level read -- false-positive scope-match vs exp4225; forward difference = applies the MARGIN-TRIGGERED re-arbitration (2606.04323, the .392-flagged method that fixes the .391 keep-vote override degeneracy) to goal-predicate induction + a larger budget targeting COMPLETING a level, NO leaderboard submission, anonymous-key. Online play stays gated per arc3_online_gated_on_offline_beating_baselines (a solver-vs-floor probe is not a leaderboard submission)."
     inference_substrate: arc_live_env_grounding_probe
-    deliverable: results/experiment_4225_arc_live_env_solver_accuracy.json
+    deliverable: results/experiment_4237_arc_live_env_solver_accuracy.json
     prior_failures:
-      - experiment_id: exp4214-arc-live-env-solver-accuracy
+      - experiment_id: exp4225-arc-live-env-solver-accuracy
         verdict: complete_solver_completes_0_levels_live_lp85-305b61c3_efficiency_only
-        addressed_by: "exp4214 beat the floor on EFFICIENCY but completed 0 levels (no ACCURACY win). This attempt applies the ARBITER conservative-override (arXiv:2605.26172, the .390-flagged-for-.391 method) to goal-predicate induction / action selection -- commit to a high-margin induced rule, fall back to exploration otherwise -- with a larger bounded budget sized to allow a level completion, targeting levels_completed>=1. Still NO leaderboard submission."
+        addressed_by: "exp4225 beat the floor on EFFICIENCY but completed 0 levels (no ACCURACY win), and its ARBITER override degenerated to keep-vote. This attempt applies the MARGIN-TRIGGERED re-arbitration (2606.04323) to goal-predicate induction / action selection -- commit to an induced rule only when its learned/verifier margin clears a pre-registered threshold, fall back to exploration otherwise -- with a larger bounded budget sized to allow a level completion, targeting levels_completed>=1. Still NO leaderboard submission."
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT: north-star §0 -- the official SDK auto-issues an ANONYMOUS key and exposes 25 live
-      ARC-AGI-3 environments; exp4214 connected it and beat the random/greedy floor on EFFICIENCY but
-      completed 0 levels. The next grounding step is whether a verifier-routed explore-induce-verify solver
-      with an ARBITER-style conservative-override can COMPLETE a level on the REAL env (the accuracy axis).
-      CRITICAL GATE: do NOT submit to the official leaderboard (operator-only external publication); a
-      solver-vs-floor probe under an anonymous key is NOT a leaderboard submission, but keep the bounded
-      budget and submit nothing (memory arc3_online_gated_on_offline_beating_baselines).
+      CONTEXT: north-star §0 -- the official SDK auto-issues an ANONYMOUS key and exposes live ARC-AGI-3
+      environments; exp4225 connected it and beat the random/greedy floor on EFFICIENCY but completed 0
+      levels. The next grounding step is whether a verifier-routed explore-induce-verify solver with a
+      MARGIN-TRIGGERED override (2606.04323; the .391 ARBITER override never fired) can COMPLETE a level on
+      the REAL env (the accuracy axis). CRITICAL GATE: do NOT submit to the official leaderboard
+      (operator-only external publication); a solver-vs-floor probe under an anonymous key is NOT a
+      leaderboard submission, but keep the bounded budget and submit nothing (memory
+      arc3_online_gated_on_offline_beating_baselines).
 
       EXISTING CODE TO READ FIRST:
         - ops/north-star.md §0 (access is OPEN; the metric mapping; the sequence discipline)
-        - results/experiment_4214_arc_live_env_solver_accuracy.json (the live adapter + the floor + real_metric_mapping; efficiency-only-no-level)
-        - python/carnot/agentic/arc_agi3_world_model.py + the offline explore-induce-verify solver (exp4224/exp4213)
-        - results/arc_agi3_access_probe.json (SDK v0.9.8, anonymous key, 25 envs)
-        - research-references.md ".391 sweep" (ARBITER 2605.26172 conservative-override; AggLM 2509.06870 minority-recovery)
-      TASK: run the Carnot solver targeting a LEVEL COMPLETION on ONE live game with the ARBITER override; report accuracy + efficiency vs the floor; submit nothing.
+        - results/experiment_4225_arc_live_env_solver_accuracy.json (the live adapter + the floor + real_metric_mapping; efficiency-only-no-level)
+        - python/carnot/agentic/arc_agi3_world_model.py + the offline explore-induce-verify solver (exp4236/exp4224)
+        - results/arc_agi3_access_probe.json (SDK v0.9.8, anonymous key, live envs)
+        - research-references.md ".392 sweep" (margin-trigger 2606.04323; ARBITER 2605.26172; AggLM 2509.06870 minority-recovery)
+      TASK: run the Carnot solver targeting a LEVEL COMPLETION on ONE live game with the margin-triggered override; report accuracy + efficiency vs the floor; submit nothing.
 
       CONCRETE STEPS:
         0. PRECONDITIONS: `python3 -c "import arc_agi"` succeeds AND network reachable (`curl -sf -o /dev/null
            https://three.arcprize.org` or the SDK health endpoint). If missing/unreachable -> honest_verdict
            `blocked_arc_live_unreachable` and STOP.
-        1. Reuse exp4214's live adapter (offline-validate against a recorded fixture first -- it must
-           reproduce offline behavior). Pick ONE easy live env (a non-spatial game; prefer one where the
-           offline solver completes a level).
-        2. Run the PROVEN explore-induce-verify solver with an ARBITER conservative-override on the induced
-           goal predicate / action policy (commit to the induced rule only when its learned/verifier margin
-           is high; otherwise keep exploring), against the LIVE env with a bounded action budget SIZED to
-           allow a level completion (do not cap below baseline_actions for level 1). Read
+        1. Reuse exp4225's live adapter (offline-validate against a recorded fixture first -- it must reproduce
+           offline behavior). Pick ONE easy live env (a non-spatial game; prefer one where the offline solver
+           completes a level).
+        2. Run the PROVEN explore-induce-verify solver with a MARGIN-TRIGGERED override on the induced goal
+           predicate / action policy (commit to the induced rule only when its learned/verifier margin clears
+           a pre-registered threshold; otherwise keep exploring), against the LIVE env with a bounded action
+           budget SIZED to allow a level completion (do not cap below baseline_actions for level 1). Read
            EnvironmentScore.score / levels_completed (ACCURACY) and actions-taken vs baseline_actions (EFFICIENCY).
-        3. Compare to exp4214's floor on the SAME env. Submit NO scorecard. Report solver_completes_level
+        3. Compare to exp4225's floor on the SAME env. Submit NO scorecard. Report solver_completes_level
            (BARE bool) + solver_beats_floor {{accuracy, efficiency}} + no_leaderboard_submission=true.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. An honest 'solver completes 0 levels but is efficient' or 'blocked_arc_live_unreachable' is a COMPLETE grounding verdict."
         solver_completes_level:
-          principle: "BARE bool: levels_completed>=1 on the live env -- the ACCURACY win exp4214 lacked; the north-star's primary axis."
+          principle: "BARE bool: levels_completed>=1 on the live env -- the ACCURACY win exp4225 lacked; the north-star's primary axis."
         solver_beats_floor:
           principle: "{{accuracy: solver_score vs floor_score, efficiency: solver_actions vs floor_actions}} -- the real-env read on the two north-star axes vs the random floor."
         live_env_metrics:
@@ -550,138 +664,140 @@ tasks:
         - condition: "live_env_metrics + solver_completes_level + solver_beats_floor reported (or an honest blocked_arc_live_unreachable) AND no_leaderboard_submission=true"
           principle: "Grounding the solver's accuracy against the real floor (or honestly recording unreachable) is the deliverable; submission stays operator-only."
 
-      Run: `python3 {project_root}/results/experiment_4225_arc_live_env_solver_accuracy.py`
+      Run: `python3 {project_root}/results/experiment_4237_arc_live_env_solver_accuracy.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4226-sota-ingestion-learned-aggregator
-    milestone: 2026.06.391
-    title: "PHASE D1 -- SOTA-INGESTION SLOT (reserved; bleeding-edge ORACLE-DISTINCT / learned-aggregator track). Ingest the .391 sweep mapped onto the oracle-distinct headline: AggLM (arXiv:2509.06870, RL-trained aggregator recovers minority-correct answers + beats reward-model baselines -- the closest beats-vote precedent), AgentAuditor (2602.09341, beats vote AND LLM-judge), GenSelect-BoN (2602.02143, RL-trained selection beats vote), MSV (2603.03417, cross-sequence verifier calibration grows with N), SR-TTRL (self-reflective TTRL minority-pseudo-labels), CoT-verifier online learnability (2603.03538). SOTA->experiment mapping note; flag the strongest for .392. Cite real arXiv IDs."
+  - id: exp4238-sota-ingestion-cross-candidate-aggregator
+    milestone: 2026.06.392
+    title: "PHASE D1 -- SOTA-INGESTION SLOT (reserved; bleeding-edge ORACLE-DISTINCT / cross-candidate aggregator track). Ingest the .392 sweep mapped onto the strengthened oracle-distinct headline: Set-Encoder (arXiv:2404.06912, permutation-invariant cross-candidate attention -- the architecture the .391 isolated logistic reranker lacked), Calibrated Reasoning (2509.19681, imbalance-aware calibrated verifier), margin-triggered re-arbitration (2606.04323), SCOPE fine-grained reward (2512.15146), Adaptive Test-Time Compute (2602.03975 set-aware aggregation), plus a fresh focused pass. SOTA->experiment mapping note; flag the strongest for .393. Cite real arXiv IDs."
     priority: medium
     track: research
     max_turns: 70
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved-slot task): SOTA-ingestion slot mandated by the SOTA-Ingestion Cycle Discipline -- false-positive scope-match vs prior ingestion tasks (exp4215); structurally never a doomed rerun (fresh corpus each milestone)."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved-slot task): SOTA-ingestion slot mandated by the SOTA-Ingestion Cycle Discipline -- false-positive scope-match vs prior ingestion tasks (exp4226); structurally never a doomed rerun (fresh corpus each milestone)."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4226_sota_ingestion_learned_aggregator.json
+    deliverable: results/experiment_4238_sota_ingestion_cross_candidate_aggregator.json
     prompt: |
       CONTEXT: Per the SOTA-Ingestion Cycle Discipline, the bleeding-edge ORACLE-DISTINCT verifier headline
-      reserves one ingestion task. The .391 planner filed the sweep in research-references.md (".391 planning
+      reserves one ingestion task. The .392 planner filed the sweep in research-references.md (".392 planning
       sweep"); this task ingests it into an actionable SOTA->experiment mapping and flags the strongest for
-      .392. The load-bearing finding to map: AggLM (2509.06870) trains an aggregator that recovers
-      minority-correct answers and beats reward-model baselines -- the closest precedent for the .391 A2
-      oracle-distinct-beats-vote gate; AgentAuditor (2602.09341) additionally beats the LLM-judge (the
-      efficiency frame).
+      .393. The load-bearing finding to map: the .391 oracle-distinct null had THREE named causes (isolated
+      scoring, class imbalance, under-power) and the .392 sweep maps a fix to each (Set-Encoder 2404.06912
+      cross-candidate attention; Calibrated Reasoning 2509.19681 imbalance-aware loss; margin-trigger
+      2606.04323). Map them onto the A2/A3 results and propose the .393 next step (e.g. a full set-encoder
+      vs the augmented-feature aggregator, or a bigger ARC pool if A3 code wins).
 
       EXISTING CODE TO READ FIRST:
-        - research-references.md (".391 planning sweep" section -- the candidate papers + IDs)
-        - results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json (the .391 A2 result to map against)
-        - results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json (the learned ARC verifier build)
+        - research-references.md (".392 planning sweep" section -- the candidate papers + IDs)
+        - results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json (the .392 A2 result to map against)
+        - results/experiment_4233_oracle_distinct_code_beats_vote.json (the code disambiguation read)
+        - results/experiment_4231_oracle_distinct_arc_aggregator_build.json (the aggregator build)
         - scripts/sweep_clusters.py / scripts/sweep_semscholar.py (the RELIABLE discovery channel)
 
-      TASK: synthesize a SOTA->experiment mapping note; close the discover->ingest->plan loop; flag the strongest for .392.
+      TASK: synthesize a SOTA->experiment mapping note; close the discover->ingest->plan loop; flag the strongest for .393.
 
       CONCRETE STEPS (use the RELIABLE channel, NOT /deep-research -- it rate-limited 4x/6M-tokens/zero-output):
-        0. Read the .391 sweep refs, then a FOCUSED fresh pass via scripts/sweep_clusters.py /
+        0. Read the .392 sweep refs, then a FOCUSED fresh pass via scripts/sweep_clusters.py /
            sweep_semscholar.py + low-concurrency WebSearch/WebFetch of the top 5-8 papers.
-        1. Map each method onto the Carnot stack: AggLM/AgentAuditor -> how to strengthen the A2 ARC verifier
-           into an AGGREGATOR (review+reconcile, not just rerank) that recovers wrong-majority answers;
-           GenSelect-BoN -> RL-trained selection recipe; MSV -> cross-candidate features; SR-TTRL/CoT-verifier
-           -> the verifier-as-reward (B) self-learning loop. What each implies + where each fails.
-        2. Update research-studying.md (mark ingested) and FLAG the single strongest method for .392.
+        1. Map each method onto the .392 A2/A3 outcomes: if the aggregator beat vote -> what scales it (full
+           set-encoder, SCOPE per-region evidence); if it tied -> what is the next lever (more pool, MSV
+           cross-sequence, a generative reconciler that SYNTHESIZES a corrected grid rather than only
+           selecting); the code disambiguation read (data-sparsity vs thesis bound) -> the .393 direction.
+        2. Update research-studying.md (mark ingested) and FLAG the single strongest method for .393.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. Records ingestion completed with verifiable citations."
         methods_mapped:
           principle: "Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication (adversarial_verify discipline)."
-        flagged_for_v392:
-          principle: "Closes discover->ingest->plan: names the strongest method for the next planner (e.g. AggLM-style aggregator for ARC, or an AgentAuditor localized-evidence verifier)."
-      ACCEPTANCE: a mapping note with >=3 sources each with a real arXiv ID/URL, one method flagged for .392.
+        flagged_for_v393:
+          principle: "Closes discover->ingest->plan: names the strongest method for the next planner, conditioned on the A2/A3 outcomes."
+      ACCEPTANCE: a mapping note with >=3 sources each with a real arXiv ID/URL, one method flagged for .393.
 
-      Run: `python3 {project_root}/results/experiment_4226_sota_ingestion_learned_aggregator.py`
+      Run: `python3 {project_root}/results/experiment_4238_sota_ingestion_cross_candidate_aggregator.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4227-verifier-registry-gaps-hygiene
-    milestone: 2026.06.391
-    title: "PHASE D2 -- VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard; FLAG-FIXED). Bit-exact OFFLINE re-eval reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates (zero codex/GGUF/GPU). RECORD the .391 state into ops/verifier_gaps.md: the ORACLE-DISTINCT A2 verdict (exp4221 oracle_distinct_beats_vote + delta/CI + verifier_is_oracle=false + the exp4220 off-fold AUROC), the verifier-as-reward A-vs-B (exp4223 verifier_label_carries_signal + delta/CI + Youden-J), the detector AUROCs (exp4208 carried forward). Update the GAP-ORACLE-DISTINCT ledger entry (the open frontier). FLAG FIX: declare inference_substrate + random_seed + reproducibility_checksum + model_specs so this does NOT re-trip DURATION_TOO_SHORT / METHODOLOGY_MISSING (the exp4216 flag). Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source of truth (never-prune)."
+  - id: exp4239-verifier-registry-gaps-hygiene
+    milestone: 2026.06.392
+    title: "PHASE D2 -- VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard; FLAG-CLEAN). Bit-exact OFFLINE re-eval reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates (zero codex/GGUF/GPU). RECORD the .392 state into ops/verifier_gaps.md: the strengthened ORACLE-DISTINCT A2 verdict (exp4232 oracle_distinct_beats_vote + delta/CI + held_out_task_n + verifier_is_oracle=false + the exp4231 off-fold AUROC), the CODE disambiguation (exp4233 disambiguation_read), the verifier-as-reward A-vs-B (exp4235 verifier_label_carries_signal or live_lora_retired). Update the GAP-ORACLE-DISTINCT ledger entry (the open frontier; record whether .392 strengthened-and-still-ties or won). DECLARE inference_substrate + random_seed + reproducibility_checksum + model_specs so this stays clean (no DURATION_TOO_SHORT / METHODOLOGY_MISSING). Keep ops/verifier_registry.yaml + ops/verifier_gaps.md the honest source of truth (never-prune)."
     priority: medium
     track: infra
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved infra slot): verifier-registry + gaps hygiene regression guard -- false-positive scope-match vs prior hygiene tasks (exp4216); structurally never a doomed rerun (bit-exact GAP-4 regression replay each milestone)."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine reserved infra slot): verifier-registry + gaps hygiene regression guard -- false-positive scope-match vs prior hygiene tasks (exp4227); structurally never a doomed rerun (bit-exact GAP-4 regression replay each milestone)."
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4227_verifier_registry_gaps_hygiene.json
+    deliverable: results/experiment_4239_verifier_registry_gaps_hygiene.json
     prompt: |
       CONTEXT: Keep the verifier registry + gap ledger honest, catch a silent GAP-4 regression via a
-      bit-exact replay, and record the .391 oracle-distinct + reward outcomes (the program's first
-      oracle-distinct beats-vote read). FLAG FIX: .390's exp4216 flagged METHODOLOGY_MISSING (no
-      random_seed/checksum/model_specs) + DURATION_TOO_SHORT; this version declares them so it stays clean.
+      bit-exact replay, and record the .392 strengthened-oracle-distinct + code-disambiguation + reward
+      outcomes. The .391 version (exp4227) was clean; keep methodology fields declared so this stays clean.
 
       EXISTING CODE TO READ FIRST:
         - ops/verifier_registry.yaml, ops/verifier_gaps.md (GAP-1..GAP-5; GAP-MOAT; GAP-REWARD; GAP-ORACLE-DISTINCT; the schema)
         - the canonical GAP-4 ARC-1 cached candidate set + its prior numbers (vote 0.4516 -> gated 0.5806)
-        - results/experiment_4221_*.json (oracle-distinct A2), 4220_*.json (build off-fold AUROC), 4223_*.json (verifier-as-reward A-vs-B), 4208_*.json (detector AUROCs)
-        - results/experiment_4216_verifier_registry_gaps_hygiene.json (the .390 version -- note its METHODOLOGY_MISSING flag, fixed here)
+        - results/experiment_4232_*.json (strengthened oracle-distinct A2), 4231_*.json (aggregator build off-fold AUROC), 4233_*.json (code disambiguation), 4235_*.json (verifier-as-reward A-vs-B / retire)
+        - results/experiment_4227_verifier_registry_gaps_hygiene.json (the .391 version -- the clean template)
 
-      TASK: regression-guard the GAP-4 numbers; record the .391 oracle-distinct + reward outcomes into the gap ledger; declare methodology fields.
+      TASK: regression-guard the GAP-4 numbers; record the .392 oracle-distinct + code + reward outcomes into the gap ledger; declare methodology fields.
 
       CONCRETE STEPS:
         1. Bit-exact offline re-eval reproducing the canonical GAP-4 ARC-1 numbers from cached candidates
            (zero codex/GGUF/GPU). READ-ONLY w.r.t. TRM training (do not touch the stable checkpoint).
-        2. RECORD into ops/verifier_gaps.md (append, never-prune): the ORACLE-DISTINCT A2 verdict (exp4221
-           oracle_distinct_beats_vote + delta + CI + verifier_is_oracle=false + the exp4220 off-fold AUROC +
-           wrong_majority_n); the verifier-as-reward A-vs-B (exp4223 verifier_label_carries_signal + delta +
-           CI + Youden-J); the detector AUROCs (exp4208 carried forward). Update the GAP-ORACLE-DISTINCT
-           ledger entry. Update GAP-MOAT/status only as the .391 evidence warrants.
-        3. METHODOLOGY: set random_seed, reproducibility_checksum (hash of the cached GAP-4 candidate set),
-           and model_specs (the cached-candidate-replay description) so adversarial_verify does NOT flag
-           METHODOLOGY_MISSING; declare inference_substrate=verifier_ensemble_against_cached_candidates.
+        2. RECORD into ops/verifier_gaps.md (append, never-prune): the strengthened ORACLE-DISTINCT A2 verdict
+           (exp4232 oracle_distinct_beats_vote + delta + CI + held_out_task_n + verifier_is_oracle=false + the
+           exp4231 off-fold AUROC + wrong_majority_n); the CODE disambiguation (exp4233 disambiguation_read +
+           code delta/CI); the verifier-as-reward A-vs-B (exp4235 verifier_label_carries_signal + delta + CI +
+           Youden-J, OR live_lora_retired). Update the GAP-ORACLE-DISTINCT ledger entry (did .392's stronger
+           build + power change the .391 ties read?).
+        3. METHODOLOGY: set random_seed, reproducibility_checksum (hash of the cached GAP-4 candidate set), and
+           model_specs (the cached-candidate-replay description); declare inference_substrate=verifier_ensemble_against_cached_candidates.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. Records the registry/gaps reconciled to the .391 truth."
+          principle: "Terminal-prefixed. Records the registry/gaps reconciled to the .392 truth."
         regression_guard_passed:
           principle: "BARE bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression."
         gaps_updated:
-          principle: "Lists the verifier_gaps entries touched (the GAP-ORACLE-DISTINCT frontier entry + the A2 beats-vote + verifier-as-reward + detector notes)."
+          principle: "Lists the verifier_gaps entries touched (the GAP-ORACLE-DISTINCT frontier entry + the strengthened A2 + code disambiguation + verifier-as-reward notes)."
         random_seed:
-          principle: "Determinism precondition + the methodology field that prevents the exp4216 METHODOLOGY_MISSING re-flag."
+          principle: "Determinism precondition + the methodology field that prevents a METHODOLOGY_MISSING flag."
         reproducibility_checksum:
-          principle: "Hash of the cached GAP-4 candidate set; the methodology field that prevents the exp4216 re-flag and catches silent candidate drift."
-      ACCEPTANCE: regression_guard_passed True; the oracle-distinct A2 + verifier-as-reward + detector status recorded in the ledger; random_seed + reproducibility_checksum present (no METHODOLOGY_MISSING flag).
+          principle: "Hash of the cached GAP-4 candidate set; catches silent candidate drift."
+      ACCEPTANCE: regression_guard_passed True; the strengthened oracle-distinct A2 + code disambiguation + verifier-as-reward status recorded in the ledger; random_seed + reproducibility_checksum present.
 
-      Run: `python3 {project_root}/results/experiment_4227_verifier_registry_gaps_hygiene.py`
+      Run: `python3 {project_root}/results/experiment_4239_verifier_registry_gaps_hygiene.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4228-hardware-continuity
-    milestone: 2026.06.391
-    title: "PHASE D3 -- Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 terminal/opportunistic). Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile flash). PolarFire (ssh polarfire; toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board."
+  - id: exp4240-hardware-continuity
+    milestone: 2026.06.392
+    title: "PHASE D3 -- Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 terminal/opportunistic). Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; .391 was unreachable -> recover IDCODE visibility, then n=16 Ising tile flash). PolarFire (ssh polarfire; .391 hash-verified CPU dispatch -> toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board."
     priority: medium
     track: hardware
     max_turns: 70
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 2 (active hardware-continuity task): GateMate/PolarFire drive-to-terminal mandated by the Hardware-Task Continuity Discipline until terminal -- false-positive scope-match vs prior hardware exps (exp4217); required forward work."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 2 (active hardware-continuity task): GateMate/PolarFire drive-to-terminal mandated by the Hardware-Task Continuity Discipline until terminal -- false-positive scope-match vs prior hardware exps (exp4228); required forward work."
     inference_substrate: hardware_smoke
-    deliverable: results/experiment_4228_hardware_continuity.json
+    deliverable: results/experiment_4240_hardware_continuity.json
     prompt: |
       CONTEXT: As long as boards are attached, every milestone reserves one task per non-terminal board.
-      KV260 is terminal; GateMate + PolarFire are not.
+      KV260 is terminal; GateMate + PolarFire are not. .391: GateMate was unreachable (blocked); PolarFire
+      hash-verified a CPU dispatch; KV260 confirmed terminal via SSH.
 
       EXISTING CODE TO READ FIRST:
-        - ops/hardware-bringup-prep.md (per-board state), results/experiment_4217_hardware_continuity.json (.390)
+        - ops/hardware-bringup-prep.md (per-board state), results/experiment_4228_hardware_continuity.json (.391)
         - CLAUDE.md "KV260 SSH-Not-SD-Card Discipline" + "Pre-Launch Preconditions" hardware rows
 
       TASK: per-board reachability + next concrete step, distinct timers, SSH/USB-detect preconditions only.
 
       CONCRETE STEPS (DISTINCT wall-clock timers per board):
-        0. PRECONDITIONS per board (SSH / USB-detect ONLY -- host SD-card-device preconditions are retired
-           per the KV260 SSH-Not-SD-Card Discipline):
+        0. PRECONDITIONS per board (SSH / USB-detect ONLY -- host SD-card-device preconditions are retired per
+           the KV260 SSH-Not-SD-Card Discipline):
            - GateMate: `openFPGALoader -c dirtyJtag --detect` returns the GM1Ax IDCODE.
            - PolarFire: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'` exits 0.
            - KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` exits 0 (opportunistic).
            For any unreachable board, write `blocked_<board>_unreachable` for that board and CONTINUE.
-        1. GateMate: next concrete step toward the n=16 Ising tile flash.
+        1. GateMate: next concrete step toward the n=16 Ising tile flash (recover IDCODE visibility first if .391-unreachable).
         2. PolarFire: next concrete step toward end-to-end Carnot dispatch with hash-match.
         3. KV260: confirm terminal state via SSH.
       REQUIRED ARTIFACT FIELDS:
@@ -693,68 +809,73 @@ tasks:
           principle: "Records the SSH/USB-detect preconditions run; enforces SSH-Not-SD-Card."
       ACCEPTANCE: per-board reachability recorded via SSH/USB-detect (never a host SD-card device); next concrete step named per non-terminal board.
 
-      Run: `python3 {project_root}/results/experiment_4228_hardware_continuity.py`
+      Run: `python3 {project_root}/results/experiment_4240_hardware_continuity.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4229-capstone-v391
-    milestone: 2026.06.391
-    title: "PHASE D4 -- Capstone .391 (UNGATED): headline question is DID A LEARNED (ORACLE-DISTINCT) VERIFIER BEAT VOTE ON ARC, now that the gate actually RAN -- exp4221 oracle_distinct_beats_vote (verifier_is_oracle=false, matched control + ARBITER override, CI95-excl-0): the first oracle-distinct verifier win (closes GAP-3-ties-vote; flips the DiffusionGemma gate) OR an honest ties-vote-with-headroom null. Aggregate: ORACLE-DISTINCT = exp4221 + exp4220 (off-fold AUROC + wrong_majority_n) + exp4208 (detector divergence carried forward); VERIFIER-AS-REWARD = exp4223 (verifier_label_carries_signal + A-vs-B delta/CI + Youden-J + positive_control) gated on exp4222 (harness smoke); ARC = exp4224 (total_levels>=17) + exp4225 (live solver accuracy-vs-floor); SOTA = exp4226; registry = exp4227; hardware = exp4228. SKIP any flagged_adversarial artifact; cite upstream sha256. HONOR verifier_is_oracle (a circular result may NOT headline a moat). NO gated_on."
+  - id: exp4241-capstone-v392
+    milestone: 2026.06.392
+    title: "PHASE D4 -- Capstone .392 (UNGATED): headline question is DID THE STRENGTHENED ORACLE-DISTINCT VERIFIER BEAT VOTE -- exp4232 (cross-candidate aggregator + calibrated loss at power, verifier_is_oracle=false, matched control + margin-triggered override, CI95-excl-0): a first oracle-distinct win (closes GAP-3-ties-vote; flips the DiffusionGemma gate) OR a STRONGER ties-at-power null than .391. Aggregate: ORACLE-DISTINCT = exp4232 + exp4231 (off-fold AUROC + held_out_task_n) + exp4233 (CODE disambiguation: ARC-null-is-data-sparsity vs thesis-bound) + exp4208 (detector divergence carried); VERIFIER-AS-REWARD = exp4235 (verifier_label_carries_signal + A-vs-B delta/CI + Youden-J, OR live_lora_retired) gated on exp4234 (real-training smoke); ARC = exp4236 (total_levels>=18) + exp4237 (live solver accuracy-vs-floor); SOTA = exp4238; registry = exp4239; hardware = exp4240. SKIP any flagged_adversarial artifact; cite upstream sha256. HONOR verifier_is_oracle (a circular result may NOT headline a moat). NO gated_on."
     priority: high
     track: infra
     max_turns: 90
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): capstone-vN aggregation -- false-positive scope-match vs prior capstone-v* tasks (exp4218); structurally never a doomed rerun."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): capstone-vN aggregation -- false-positive scope-match vs prior capstone-v* tasks (exp4229); structurally never a doomed rerun."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4229_capstone_v391.json
+    deliverable: results/experiment_4241_capstone_v392.json
     prompt: |
-      CONTEXT: Aggregate the .391 results into one honest decision-grade verdict on the 2026-06-14 P0
-      directive: did a LEARNED (oracle-distinct) verifier beat majority vote on ARC where execution is NOT
-      the oracle -- now that the .390 infra blockers (wrong-file label lookup, PEFT attach) are fixed and
-      the gate actually RAN? Plus the OWED verifier-as-reward A-vs-B read.
+      CONTEXT: Aggregate the .392 results into one honest decision-grade verdict on the 2026-06-14 P0
+      directive: did the STRENGTHENED oracle-distinct verifier (cross-candidate aggregator + calibrated loss,
+      at power) beat majority vote where execution is NOT the oracle -- now that the .391 null's three causes
+      (isolated scoring, class imbalance, under-power) are addressed? Plus the CODE disambiguation and the
+      OWED verifier-as-reward A-vs-B / retirement read.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4220_*.json (learned ARC verifier build off-fold AUROC + wrong_majority_n),
-          4221_*.json (THE oracle-distinct beats-vote gate + ARBITER override), 4208_*.json (detector AUROC divergence, carried forward),
-          4222_*.json (LoRA harness smoke), 4223_*.json (verifier-as-reward A-vs-B),
-          4224_*.json (ARC +1), 4225_*.json (live solver accuracy), 4226_*.json (SOTA), 4227_*.json (registry), 4228_*.json (hardware)
+        - results/experiment_4231_*.json (aggregator build off-fold AUROC + held_out_task_n),
+          4232_*.json (THE strengthened oracle-distinct beats-vote gate + margin override),
+          4233_*.json (CODE disambiguation read), 4208_*.json (detector AUROC divergence, carried),
+          4234_*.json (real-training LoRA smoke), 4235_*.json (verifier-as-reward A-vs-B / retire),
+          4236_*.json (ARC +1), 4237_*.json (live solver accuracy), 4238_*.json (SOTA), 4239_*.json (registry), 4240_*.json (hardware)
         - scripts/summarize_artifact.py (read each via this), scripts/adversarial_verify.py (CIRCULAR_MOAT_OVERCLAIM)
         - ops/north-star.md §0/§5 + ops/known-issues.md 2026-06-14 oracle-distinct P0 directive
         - CLAUDE.md "Circularity / Oracle-Distinctness Discipline"
 
-      TASK: one honest headline + the standing of the oracle-distinct frontier + the verifier-as-reward pivot after .391.
+      TASK: one honest headline + the standing of the oracle-distinct frontier + the verifier-as-reward pivot after .392.
 
       CONCRETE STEPS:
-        1. Read exp4220..4228. SKIP any flagged_adversarial=true. Cite each upstream sha256. HONOR
-           verifier_is_oracle: a circular (execution-oracle) result is labeled execution_grounded and may
-           NOT headline a moat or flip the DiffusionGemma gate.
-        2. Answer: (a) did exp4221 show oracle_distinct_beats_vote (verifier_is_oracle=false, matched
-           control + ARBITER override, CI95-excl-0, headroom present) -- the gate that NEVER RAN in .390?
-           (b) what off-fold AUROC + wrong_majority_n did the learned ARC verifier reach (exp4220)? (c) the
-           detector-AUROC-vs-selection-headroom divergence (exp4208, carried forward)? (d) did exp4223 show
-           verifier_label_carries_signal (A-vs-B CI excl 0) with positive_control_confirmed, and did the B1
-           harness smoke (exp4222) pass? (e) total ARC levels (exp4224) + did the live solver complete a
-           level (exp4225)? (f) strongest SOTA flagged for .392 (exp4226).
-        3. Honest headline: one of {{oracle_distinct_verifier_beats_vote_first_moat,
-           oracle_distinct_verifier_ties_vote_with_headroom_null, oracle_distinct_no_headroom_or_no_learnable_signal,
-           verifier_reward_real_label_carries_signal, verifier_reward_null_distillation}}. Whether the
-           DiffusionGemma gate is now resolvable (ONLY on an oracle-distinct win with a matched control).
+        1. Read exp4231..4240. SKIP any flagged_adversarial=true. Cite each upstream sha256. HONOR
+           verifier_is_oracle: a circular (execution-oracle) result is labeled execution_grounded and may NOT
+           headline a moat or flip the DiffusionGemma gate.
+        2. Answer: (a) did exp4232 show oracle_distinct_beats_vote (verifier_is_oracle=false, matched control +
+           margin override, CI95-excl-0, headroom present) at held_out_task_n>=30 -- the strengthened retry of
+           the .391 ties null? (b) what off-fold AUROC + held_out_task_n did the aggregator reach (exp4231),
+           and did it improve on the .391 logistic 0.779? (c) the CODE disambiguation (exp4233): is the .391
+           ARC null DATA-SPARSITY (code beats vote) or a THESIS BOUND (code also ties)? (d) the detector-vs-
+           selector divergence (exp4208, carried)? (e) did exp4235 show verifier_label_carries_signal (A-vs-B
+           CI excl 0) with positive_control_confirmed, OR did the live-LoRA path retire (live_lora_retired),
+           and did the B1 real-training smoke (exp4234) pass? (f) total ARC levels (exp4236) + did the live
+           solver complete a level (exp4237)? (g) strongest SOTA flagged for .393 (exp4238).
+        3. Honest headline: one of {{oracle_distinct_aggregator_beats_vote_first_moat,
+           oracle_distinct_aggregator_ties_vote_at_power_stronger_null, oracle_distinct_arc_null_is_data_sparsity_code_wins,
+           oracle_distinct_selection_thesis_bounded_both_tie, verifier_reward_real_label_carries_signal,
+           verifier_reward_null_distillation, verifier_reward_live_lora_retired}}. Whether the DiffusionGemma
+           gate is now resolvable (ONLY on an oracle-distinct win with a matched control).
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. An honest 'ties-vote null' or 'no learnable oracle-distinct signal' is COMPLETE and decision-grade -- it tells .392 whether the oracle-distinct frontier is reachable on ARC (and this time the gate RAN)."
+          principle: "Terminal-prefixed. An honest 'ties-at-power null' or 'ARC-null-is-data-sparsity' or 'thesis-bounded' is COMPLETE and decision-grade -- it tells .393 whether the oracle-distinct frontier is reachable, and where."
         headline_outcome:
-          principle: "One of the enumerated set -- forces a single unambiguous read of the oracle-distinct frontier + the verifier-as-reward pivot."
+          principle: "One of the enumerated set -- forces a single unambiguous read of the oracle-distinct frontier (ARC + code) + the verifier-as-reward pivot."
         oracle_distinct_status:
-          principle: "MOAT-WON (learned verifier beats vote off-oracle, CI excl 0) / TIES-VOTE-NULL / NO-HEADROOM-OR-NO-SIGNAL -- the 2026-06-14 P0 directive's standing after .391; a circular result does NOT count here."
+          principle: "MOAT-WON (aggregator beats vote off-oracle, CI excl 0, n>=30) / TIES-AT-POWER-NULL / ARC-NULL-IS-DATA-SPARSITY (code wins) / THESIS-BOUNDED (both tie) / NO-HEADROOM -- the 2026-06-14 P0 directive's standing after .392; a circular result does NOT count here."
         verifier_as_reward_status:
-          principle: "REAL (A-vs-B label carries signal) / NULL (distillation/spurious) / INVALID-or-UNDERPOWERED / ACCUMULATING / HARNESS-DEFERRED -- the owed 2026-06-11 pivot's standing after .391."
+          principle: "REAL (A-vs-B label carries signal) / NULL (distillation/spurious) / INVALID-or-UNDERPOWERED / RETIRED-LIVE-LORA / HARNESS-DEFERRED -- the owed 2026-06-11 pivot's standing after .392."
         diffusiongemma_gate_resolvable:
           principle: "BARE bool: true ONLY if an oracle-distinct win landed with a matched control (verifier_is_oracle=false, CI95-excl-0); a circular execution win keeps it STILL-PENDING."
         total_arc_levels_solved:
-          principle: "The monotonic ARC progress metric after .391 (must be >= 16)."
+          principle: "The monotonic ARC progress metric after .392 (must be >= 17)."
         upstream_provenance:
           principle: "{{experiment_id, fields_imported, sha256}} per cited upstream; the audit trail that a capstone synthesizes nothing from nothing."
-      ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited; verifier_is_oracle honored (no circular moat headline); the oracle-distinct + verifier-as-reward statuses explicitly decided.
+      ACCEPTANCE: a single headline_outcome chosen from the enumerated set; flagged artifacts excluded; upstream sha256 cited; verifier_is_oracle honored (no circular moat headline); the oracle-distinct (ARC + code) + verifier-as-reward statuses explicitly decided.
 
-      Run: `python3 {project_root}/results/experiment_4229_capstone_v391.py`
+      Run: `python3 {project_root}/results/experiment_4241_capstone_v392.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
