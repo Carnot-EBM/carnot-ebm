@@ -1,0 +1,499 @@
+{
+  "arc_aggregator_gate": {
+    "aggregator_minus_vote_ci95": [
+      0.0,
+      0.0
+    ],
+    "aggregator_minus_vote_delta": 0.0,
+    "arc_status": "TIES-AT-POWER-NULL",
+    "candidate_count": 28419,
+    "ci95_excludes_zero": false,
+    "gate_ran": true,
+    "headroom_present": true,
+    "held_out_task_n": 52,
+    "honest_verdict": "complete: oracle_distinct_aggregator_ties_vote_with_headroom_at_power",
+    "margin_override_minus_vote": 0.0,
+    "matched_control_delta": 0.0384615385,
+    "matched_control_present": true,
+    "oracle_at_k": 0.3653846154,
+    "oracle_distinct_beats_vote": false,
+    "oracle_minus_vote": 0.1730769231,
+    "pass_rates": {
+      "aggregator_at_1": 0.1923076923,
+      "margin_override_at_1": 0.1923076923,
+      "matched_control_at_1": 0.1538461538,
+      "vote_at_1": 0.1923076923
+    },
+    "powered_held_out_n": true,
+    "status": "included",
+    "verifier_is_oracle": false,
+    "wrong_majority_n": 9
+  },
+  "arc_aggregator_model": {
+    "accepted_rejected_n": {
+      "accepted": 20,
+      "rejected": 28399,
+      "total": 28419
+    },
+    "baseline_auroc_391": 0.778980279,
+    "build_artifact_status": "skipped_flagged_adversarial",
+    "build_honest_verdict": "",
+    "held_out_task_n": 52,
+    "improved_over_391": true,
+    "metric_source": "computed_from_clean_4231_model_oof_rows",
+    "model_type": "standardized_logistic_regression_isotonic_calibrated",
+    "off_fold_auroc": 0.8397117856262545,
+    "oof_row_n": 28419,
+    "positive_candidate_n": 0,
+    "status": "included",
+    "verifier_is_oracle": false,
+    "wrong_majority_n": 0
+  },
+  "arc_progress": {
+    "acceptance_gate_passed": true,
+    "honest_verdict": "success: incremental_progress_sc25-635fd71a_advanced_to_L4_total18",
+    "levels_completed": 4,
+    "new_levels_solved_this_task": 1,
+    "prior_total_levels_solved": 17,
+    "real_env_confirmed": true,
+    "status": "included",
+    "target_game": "sc25-635fd71a",
+    "target_level": 4,
+    "total_arc_games_solved": 13,
+    "total_arc_levels_solved": 18
+  },
+  "code_disambiguation": {
+    "candidate_pool": {
+      "candidate_n": 2294,
+      "pass_rate": 0.6469049695,
+      "positive_n": 1484,
+      "source_id": "verifier_reward_3arm_lora_rft_a83b52882c198954",
+      "source_paths": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/corpora/arm_A.jsonl",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/corpora/arm_B.jsonl",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/corpora/arm_C.jsonl"
+      ],
+      "task_n": 160
+    },
+    "ci95_excludes_zero": true,
+    "code_oracle_distinct_beats_vote": true,
+    "code_predictor_minus_vote_ci95": [
+      0.00625,
+      0.0625
+    ],
+    "code_predictor_minus_vote_delta": 0.03125,
+    "code_status": "CODE-WON",
+    "disambiguation_read": "ARC_null_is_data_sparsity",
+    "gate_ran": true,
+    "headroom_present": true,
+    "held_out_task_n": 160,
+    "honest_verdict": "complete: code_oracle_distinct_beats_vote",
+    "matched_control_delta": 0.00625,
+    "matched_control_present": true,
+    "off_fold_auroc": 0.9739318159,
+    "oracle_at_k": 0.9625,
+    "pass_rates": {
+      "matched_control_at_1": 0.94375,
+      "predictor_at_1": 0.95,
+      "vote_at_1": 0.91875
+    },
+    "powered_held_out_n": true,
+    "status": "included",
+    "verifier_is_oracle": false
+  },
+  "detector_selection_divergence": {
+    "detection_auroc_by_domain": {
+      "arc": 0.9016,
+      "code": 1.0,
+      "math": 1.0,
+      "sudoku": 1.0
+    },
+    "detection_auroc_ci95_by_domain": {
+      "arc": [
+        0.7828,
+        0.9984
+      ],
+      "code": [
+        1.0,
+        1.0
+      ],
+      "math": [
+        1.0,
+        1.0
+      ],
+      "sudoku": [
+        1.0,
+        1.0
+      ]
+    },
+    "divergence_domains": [
+      "sudoku",
+      "math"
+    ],
+    "honest_verdict": "complete: detector_selection_divergence_sudoku_math",
+    "n_by_domain": {
+      "arc": 8041,
+      "code": 100,
+      "math": 651,
+      "sudoku": 4224
+    },
+    "selector_headroom_by_domain": {
+      "arc": 0.129,
+      "code": 0.18,
+      "math": 0.0,
+      "sudoku": 0.0007
+    },
+    "status": "included",
+    "verifier_is_oracle_by_domain": {
+      "arc": false,
+      "code": true,
+      "math": true,
+      "sudoku": true
+    }
+  },
+  "diffusiongemma_gate_resolvable": true,
+  "duration_s": 0.2699355420190841,
+  "experiment_id": 4241,
+  "field_principles": {
+    "diffusiongemma_gate_resolvable": "BARE bool: true ONLY if an oracle-distinct win landed with a matched control (verifier_is_oracle=false, CI95-excl-0); a circular execution win keeps it STILL-PENDING.",
+    "headline_outcome": "One of the enumerated set -- forces a single unambiguous read of the oracle-distinct frontier (ARC + code) + the verifier-as-reward pivot.",
+    "honest_verdict": "Terminal-prefixed. An honest 'ties-at-power null' or 'ARC-null-is-data-sparsity' or 'thesis-bounded' is COMPLETE and decision-grade -- it tells .393 whether the oracle-distinct frontier is reachable, and where.",
+    "oracle_distinct_status": "MOAT-WON (aggregator beats vote off-oracle, CI excl 0, n>=30) / TIES-AT-POWER-NULL / ARC-NULL-IS-DATA-SPARSITY (code wins) / THESIS-BOUNDED (both tie) / NO-HEADROOM -- the 2026-06-14 P0 directive's standing after .392; a circular result does NOT count here.",
+    "total_arc_levels_solved": "The monotonic ARC progress metric after .392 (must be >= 17).",
+    "upstream_provenance": "{experiment_id, fields_imported, sha256} per cited upstream; the audit trail that a capstone synthesizes nothing from nothing.",
+    "verifier_as_reward_status": "REAL (A-vs-B label carries signal) / NULL (distillation/spurious) / INVALID-or-UNDERPOWERED / RETIRED-LIVE-LORA / HARNESS-DEFERRED -- the owed 2026-06-11 pivot's standing after .392."
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "artifact_key": "4231_build",
+      "experiment_id": 4231,
+      "honest_verdict": "complete_oracle_distinct_arc_aggregator_no_learnable_gain_auroc0.7866",
+      "path": "results/experiment_4231_oracle_distinct_arc_aggregator_build.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "7edfea299eb192068217390bed4b7837398a1158e12512d33e2b297db84d519a"
+    },
+    {
+      "artifact_key": "4234_smoke",
+      "experiment_id": 4234,
+      "honest_verdict": "blocked_lora_training_cannot_run_in_window",
+      "path": "results/experiment_4234_verifier_reward_lora_harness_real_training_smoke.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "c088314a9f7fecbf40124eb2892678f87e3d7fe1e5859228ccdea250e5a1cf27"
+    }
+  ],
+  "hardware_continuity": {
+    "fabric_acceleration_claimed": false,
+    "gatemate_step_taken": "blocked_gatemate_unreachable",
+    "honest_verdict": "complete: hardware_continuity_4240_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+    "kv260_terminal_confirmed": true,
+    "per_board_reachability": {
+      "gatemate": false,
+      "kv260": true,
+      "polarfire": true
+    },
+    "per_board_status": {
+      "gatemate": {
+        "duration_s": 0.020847,
+        "next_concrete_step": "Recover GM1Ax IDCODE visibility with `openFPGALoader -c dirtyJtag --detect`, then rerun the n=16 GateMate flash from the most recent GateMate artifact.",
+        "precondition_available": false,
+        "precondition_command": "openFPGALoader -c dirtyJtag --detect",
+        "precondition_exit_code": 0,
+        "precondition_resource": "gatemate_jtag_detect",
+        "reachable": false,
+        "status": "blocked_gatemate_unreachable",
+        "terminal_state": "blocked_gatemate_unreachable",
+        "timer_id": "gatemate_precondition_plus_forward_step_wall_clock",
+        "timer_scope": "precondition_plus_forward_step_wall_clock"
+      },
+      "kv260": {
+        "duration_s": 4.668826,
+        "next_concrete_step": "kv260_terminal_state_confirmed_via_ssh",
+        "precondition_available": true,
+        "precondition_command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+        "precondition_exit_code": 0,
+        "precondition_resource": "kv260_ssh",
+        "reachable": true,
+        "status": "kv260_terminal_confirmed_ssh_only",
+        "terminal_state": "opportunistic_terminal_confirmed_ssh_only",
+        "timer_id": "kv260_precondition_plus_forward_step_wall_clock",
+        "timer_scope": "precondition_plus_forward_step_wall_clock"
+      },
+      "polarfire": {
+        "duration_s": 6.997996,
+        "hash_match": true,
+        "next_concrete_step": "polarfire_hash_verified_cpu_dispatch_succeeded",
+        "precondition_available": true,
+        "precondition_command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+        "precondition_exit_code": 0,
+        "precondition_resource": "polarfire_ssh",
+        "reachable": true,
+        "status": "polarfire_hash_verified_cpu_dispatch_succeeded",
+        "terminal_state": "reachable_hash_verified_cpu_dispatch_recorded",
+        "timer_id": "polarfire_precondition_plus_forward_step_wall_clock",
+        "timer_scope": "precondition_plus_forward_step_wall_clock"
+      }
+    },
+    "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded",
+    "speedup_claim_made": false,
+    "status": "included"
+  },
+  "headline_outcome": "oracle_distinct_arc_null_is_data_sparsity_code_wins",
+  "honest_verdict": "complete: capstone_v392_oracle_distinct_arc_null_is_data_sparsity_code_wins_oracle_ARC-NULL-IS-DATA-SPARSITY_reward_HARNESS-DEFERRED_arc_levels18_flagged_skipped2_diffusiongemma_resolvable",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "live_solver_accuracy": {
+    "honest_verdict": "complete: solver_completes_0_levels_live_lp85-305b61c3_efficiency_only",
+    "levels_completed": 0,
+    "live_env_reachable": true,
+    "observed_frame_levels_completed": 1,
+    "score": 0.0,
+    "scorecard_closed": false,
+    "scorecard_levels_completed": 0,
+    "solver_beats_floor_accuracy": false,
+    "solver_beats_floor_efficiency": true,
+    "solver_beats_floor_overall": true,
+    "solver_completes_level": false,
+    "status": "included"
+  },
+  "missing_upstream_artifacts": [],
+  "oracle_distinct_status": "ARC-NULL-IS-DATA-SPARSITY",
+  "random_seed": 4241,
+  "registry_hygiene": {
+    "code_disambiguation_read": "ARC_null_is_data_sparsity",
+    "honest_verdict": "complete: registry_gaps_reconciled_to_v392_truth_regression_guard_passed_True_oracle_distinct_open_a2_ties_vote_with_headroom_at_power_code_filled_code_oracle_distinct_beats_vote_reward_open_live_lora_blocked_pre_gate",
+    "live_lora_retired": false,
+    "oracle_distinct_status": "open_a2_ties_vote_with_headroom_at_power",
+    "regression_guard_passed": true,
+    "status": "included",
+    "verifier_reward_status": "open_live_lora_blocked_pre_gate"
+  },
+  "reproducibility_checksum": "2009f756cbe2a3c7882a017717c08809afee83443351f6d7259d22d5e0584364",
+  "schema": "carnot.capstone_v392_4241.v1",
+  "sota_v393": {
+    "flagged_for_v393": "bigger_arc_pool_full_set_encoder_agglm_aggregator_v393",
+    "honest_verdict": "complete: sota_ingestion_cross_candidate_aggregator_mapped_v393",
+    "methods_mapped_count": 8,
+    "status": "included",
+    "strongest_method_name": "Set-Encoder full cross-candidate attention",
+    "strongest_method_url": "https://arxiv.org/abs/2404.06912"
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4241",
+    "SCENARIO-CAPSTONE-4241"
+  ],
+  "strongest_sota_flagged_for_v393": "bigger_arc_pool_full_set_encoder_agglm_aggregator_v393",
+  "total_arc_levels_solved": 18,
+  "upstream_provenance": [
+    {
+      "artifact_key": "4208_detector",
+      "experiment_id": 4208,
+      "fields_imported": [
+        "detection_auroc_by_domain",
+        "detection_auroc_ci95_by_domain",
+        "selector_headroom_by_domain",
+        "verifier_is_oracle_by_domain",
+        "n_by_domain",
+        "divergence_domains"
+      ],
+      "honest_verdict": "complete: detector_selection_divergence_sudoku_math",
+      "path": "results/experiment_4208_verifier_as_detector_auroc.json",
+      "sha256": "74067e5d0f73c2ed5990b7177475831b6a73774eb35298e7ac349db91aad0753",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "artifact_key": "4231_build",
+      "experiment_id": 4231,
+      "fields_imported": [],
+      "honest_verdict": "complete_oracle_distinct_arc_aggregator_no_learnable_gain_auroc0.7866",
+      "path": "results/experiment_4231_oracle_distinct_arc_aggregator_build.json",
+      "sha256": "7edfea299eb192068217390bed4b7837398a1158e12512d33e2b297db84d519a",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "artifact_key": "4231_model",
+      "experiment_id": 4231,
+      "fields_imported": [
+        "oof_rows",
+        "held_out_task_n",
+        "accepted_rejected_n",
+        "model_type",
+        "verifier_is_oracle"
+      ],
+      "honest_verdict": "",
+      "path": "results/experiment_4231_oracle_distinct_arc_aggregator_model.json",
+      "sha256": "2d0100edfc4b948c2534bd0efcd3506f004b993b44ea9b7fca46af0efdaacc4e",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "artifact_key": "4232_arc_gate",
+      "experiment_id": 4232,
+      "fields_imported": [
+        "verifier_is_oracle",
+        "oracle_distinct_beats_vote",
+        "aggregator_minus_vote_delta",
+        "aggregator_minus_vote_ci95",
+        "margin_override_minus_vote",
+        "matched_control_delta",
+        "matched_control_policy",
+        "headroom_exists",
+        "held_out_task_n",
+        "oracle_at_k",
+        "pass_rates",
+        "task_rows"
+      ],
+      "honest_verdict": "complete: oracle_distinct_aggregator_ties_vote_with_headroom_at_power",
+      "path": "results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json",
+      "sha256": "5b34fd35bc7e6b4375f099fbfb1c238ba5d47259bb23842f37ab27849574929d",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "artifact_key": "4233_code",
+      "experiment_id": 4233,
+      "fields_imported": [
+        "verifier_is_oracle",
+        "code_oracle_distinct_beats_vote",
+        "code_predictor_minus_vote_delta",
+        "code_predictor_minus_vote_ci95",
+        "matched_control_delta",
+        "headroom_exists",
+        "held_out_task_n",
+        "off_fold_auroc",
+        "disambiguation_read",
+        "candidate_pool"
+      ],
+      "honest_verdict": "complete: code_oracle_distinct_beats_vote",
+      "path": "results/experiment_4233_oracle_distinct_code_beats_vote.json",
+      "sha256": "bb684a96fd09b4a9ffd32faf8ac7ce205e7c09f67e48be6855db337c7dba458b",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "artifact_key": "4234_smoke",
+      "experiment_id": 4234,
+      "fields_imported": [],
+      "honest_verdict": "blocked_lora_training_cannot_run_in_window",
+      "path": "results/experiment_4234_verifier_reward_lora_harness_real_training_smoke.json",
+      "sha256": "c088314a9f7fecbf40124eb2892678f87e3d7fe1e5859228ccdea250e5a1cf27",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "artifact_key": "4235_reward",
+      "experiment_id": 4235,
+      "fields_imported": [
+        "a_vs_b_delta",
+        "a_vs_b_ci95",
+        "verifier_label_carries_signal",
+        "positive_control_confirmed",
+        "live_lora_retired",
+        "blocked_at_layer",
+        "gate_check_summary"
+      ],
+      "honest_verdict": "blocked_gate_check_failed",
+      "path": "results/experiment_4235_verifier_as_reward_3arm_window_boxed.json",
+      "sha256": "03b8e19dbb1b1794aba8f773128df2e6e9cfd50fc0bc04a3a923c2523a20983e",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "artifact_key": "4236_arc_progress",
+      "experiment_id": 4236,
+      "fields_imported": [
+        "total_levels_solved",
+        "total_games_solved",
+        "new_levels_solved_this_task",
+        "levels_completed",
+        "real_env_confirmed"
+      ],
+      "honest_verdict": "success: incremental_progress_sc25-635fd71a_advanced_to_L4_total18",
+      "path": "results/experiment_4236_arc_incremental_progress.json",
+      "sha256": "a535d95eaa23de935755429ed722fd21c65e8ea0ed860b6a5a66e81ebb0230e7",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "artifact_key": "4237_live_solver",
+      "experiment_id": 4237,
+      "fields_imported": [
+        "solver_completes_level",
+        "live_env_metrics",
+        "solver_beats_floor",
+        "live_env_reachable"
+      ],
+      "honest_verdict": "complete: solver_completes_0_levels_live_lp85-305b61c3_efficiency_only",
+      "path": "results/experiment_4237_arc_live_env_solver_accuracy.json",
+      "sha256": "c634b64ffd79a8cc83715eb9675831b40aa3ea7e56ab31c97ea84c0f41256ecb",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "artifact_key": "4238_sota",
+      "experiment_id": 4238,
+      "fields_imported": [
+        "flagged_for_v393",
+        "methods_mapped"
+      ],
+      "honest_verdict": "complete: sota_ingestion_cross_candidate_aggregator_mapped_v393",
+      "path": "results/experiment_4238_sota_ingestion_cross_candidate_aggregator.json",
+      "sha256": "644aad7f6e46b90db1640faedc1c1a182b04835e197e6d1256ef49803a3a6a0e",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "artifact_key": "4239_registry",
+      "experiment_id": 4239,
+      "fields_imported": [
+        "regression_guard_passed",
+        "oracle_distinct_outcome.status",
+        "code_disambiguation_outcome.disambiguation_read",
+        "verifier_reward_outcome.status",
+        "verifier_reward_outcome.live_lora_retired"
+      ],
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v392_truth_regression_guard_passed_True_oracle_distinct_open_a2_ties_vote_with_headroom_at_power_code_filled_code_oracle_distinct_beats_vote_reward_open_live_lora_blocked_pre_gate",
+      "path": "results/experiment_4239_verifier_registry_gaps_hygiene.json",
+      "sha256": "a970f4f3a17c3121f286b13bcca226c031f3931b450851b3517d14a38da4dbf1",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "artifact_key": "4240_hardware",
+      "experiment_id": 4240,
+      "fields_imported": [
+        "per_board_reachability",
+        "per_board_status",
+        "gatemate_step_taken",
+        "polarfire_step_taken",
+        "kv260_terminal_confirmed",
+        "fabric_acceleration_claimed",
+        "speedup_claim_made"
+      ],
+      "honest_verdict": "complete: hardware_continuity_4240_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+      "path": "results/experiment_4240_hardware_continuity.json",
+      "sha256": "111ee5747f733b4adaaaf116c49f5adbab208141b86fba31253408440d30cc8e",
+      "skip_reason": "",
+      "skipped": false
+    }
+  ],
+  "verifier_as_reward": {
+    "a_vs_b_ci95": null,
+    "a_vs_b_ci_excludes_zero": false,
+    "a_vs_b_delta": null,
+    "b1_real_training_smoke": {
+      "harness_smoke_passed": false,
+      "status": "skipped_flagged_adversarial"
+    },
+    "blocked_at_layer": "conductor_pre_gate",
+    "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp4234-verifier-reward-lora-harness-real-training-smoke.harness_smoke_passed (actual=False == expected=True)",
+    "honest_verdict": "blocked_gate_check_failed",
+    "live_lora_retired": false,
+    "positive_control_confirmed": null,
+    "registry_status": "open_live_lora_blocked_pre_gate",
+    "status": "included",
+    "verifier_as_reward_status": "HARNESS-DEFERRED",
+    "verifier_label_carries_signal": null
+  },
+  "verifier_as_reward_status": "HARNESS-DEFERRED"
+}
