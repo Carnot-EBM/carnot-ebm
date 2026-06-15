@@ -21846,6 +21846,92 @@ not claim `.392` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4242 | Implemented (`python/carnot/reporting/archive_v392_activate_v393_4242.py`, `python/carnot/experiment_4242_archive_v392_activate_v393.py`) | Implemented (`tests/python/test_experiment_4242_archive_v392_activate_v393.py`) |
 
+### REQ-REPORT-4255: Archive .393, Activate .394, And Harden The First ARC Oracle-Distinct Win
+
+The Exp 4255 workflow SHALL archive milestone `2026.06.393`, confirm milestone
+`2026.06.394` is active, and write the record-only artifact
+`results/experiment_4255_archive_v393_activate_v394.json`. It SHALL run no live
+model training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`.
+
+Before writing the complete artifact or editing `research-complete.yaml`, the
+workflow SHALL verify these preconditions and stop with a `blocked_<resource>`
+honest verdict if any fail:
+
+- `research-complete.yaml` parses under `yaml.safe_load`.
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`.
+- The smart-subset pre-test gate is green.
+
+The workflow SHALL ensure `research-complete.yaml` contains a single `.393`
+archive record, appending the canonical `.393` record only when absent and
+removing duplicate top-level `.393` records if interrupted conductor appends
+created any. The workflow SHALL keep `research-complete.yaml` parseable after
+any edit.
+
+The complete artifact SHALL include the principle-annotated fields
+`honest_verdict`, `v393_close_state`, and `preconditions_checked` with these
+exact principles:
+
+- `honest_verdict`: `Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.`
+- `v393_close_state`: `Honest record (first ARC oracle-distinct win + its three caveats + owed axes) so the .394 agents frame the milestone as HARDEN-then-extend-then-stage, not a redo and not premature scale-up.`
+- `preconditions_checked`: `Records resources verified; pre-empts the silent-missing-resource fabrication mode.`
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v393_close_state` SHALL truthfully record
+that `.393` produced the program's first ARC oracle-distinct win: Exp 4245
+reported `ARC-MOAT-WON`, `set_encoder@1-vote@1=+0.4423`, CI95 `[0.308, 0.596]`
+excluding zero, `exclusion_manifest_count=0`, `verifier_is_oracle=false`,
+`oracle@K=0.827`, and `n=52`. It SHALL also record the three caveats that keep
+the win from immediate headline or scale-up status: it is single-seed on `n=52`,
+it carries provenance-leak risk from gold or GAP-4-induced labels plus
+origin-encoding features, and the win came from the grown candidate pool rather
+than the set-encoder architecture because Exp 4244's DeepSets AUROC `0.963`
+underperformed the same-fold logistic AUROC `0.980`; stated plainly, the win was
+from the grown pool rather than the set-encoder architecture.
+
+The close-state SHALL record the owed axes without laundering them into success:
+code replication was blocked by Exp 4246 (`blocked_code_second_corpus_missing`);
+verifier-as-reward hit its seventh failure in Exp 4247, whose artifact is
+`flagged_adversarial:true` with CRITICAL `DURATION_TOO_SHORT` while still
+recording `live_lora_retired=true`; ARC progress reached `total_levels_solved=19`
+in Exp 4249; the live solver completed `0` levels and was efficiency-only in Exp
+4250; and `diffusiongemma_gate_resolvable=true` is true only as a staging gate
+for a hardened ARC win. It SHALL frame `.394` as
+`HARDEN the win (leak-audit + multi-seed + cross-game) then EXTEND (synthesis) then STAGE (DiffusionGemma preflight, full run deferred to .395) + resolve the owed axes (reward out-of-band, code retry)`.
+
+#### SCENARIO-REPORT-4255: The Archive Preserves The .393 First ARC Win And Caveats
+
+**Given** `.393` has the Exp 4254 capstone, Exp 4245 ARC oracle-distinct win, Exp
+4244 set-encoder build, Exp 4246 blocked code replication, Exp 4247 flagged
+reward retirement artifact, Exp 4249 ARC progress, and Exp 4250 live solver
+artifact, the history and exclusion-manifest YAML files parse, the smart-subset
+pre-test gate is green, and `.394` is active
+**When** the Exp 4255 archive workflow runs
+**Then** it archives `.393`, confirms `.394`, keeps the YAML history parseable
+with one `.393` record, writes
+`results/experiment_4255_archive_v393_activate_v394.json`, records the first ARC
+oracle-distinct win and its three caveats, records blocked code replication,
+records the seventh verifier-as-reward failure and live-LoRA retirement context,
+records ARC `19` levels, live efficiency-only/no-level result,
+`diffusiongemma_gate_resolvable=true`, and `.394` harden-then-extend-then-stage
+framing in `v393_close_state`, records the checked resources in
+`preconditions_checked`, declares `aggregation_from_upstream_artifacts`, and
+emits a terminal-prefixed honest verdict.
+
+#### SCENARIO-REPORT-4255-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4255 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does
+not claim `.393` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4255)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4255 | Implemented (`python/carnot/reporting/archive_v393_activate_v394_4255.py`, `python/carnot/experiment_4255_archive_v393_activate_v394.py`) | Implemented (`tests/python/test_experiment_4255_archive_v393_activate_v394.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
