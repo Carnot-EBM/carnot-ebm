@@ -15551,6 +15551,88 @@ hygiene role, writes `gaps_updated` containing `GAP-ORACLE-DISTINCT`,
 `model_specs`, and runs adversarial verification without a
 `METHODOLOGY_MISSING` flag.
 
+### REQ-VERIFY-4252: Verifier Registry And Gaps Hygiene For .393 Set-Encoder And Reward Retirement Outcomes
+
+The repository SHALL provide Exp 4252 at
+`python/carnot/experiment_4252_verifier_registry_gaps_hygiene.py` and
+`results/experiment_4252_verifier_registry_gaps_hygiene.py` to keep the
+verifier registry, gap ledger, and exclusion manifest honest for the `.393`
+ARC set-encoder oracle-distinct read, code replication status, offline
+verifier-as-reward gate status, and live-LoRA retirement. The runner SHALL
+replay the canonical GAP-4 ARC-1 cached candidate set offline from
+`results/arc3_gap3_stage2_eval_pool.json.gz` and
+`results/arc3_gap4_induced_programs.json`, SHALL reproduce vote pass@2
+`0.4516` and gated pass@2 `0.5806` bit-exact, and SHALL NOT run Codex, GGUF
+inference, GPU inference, stable checkpoint writes, or TRM training.
+
+The runner SHALL read
+`results/experiment_4245_arc_set_encoder_beats_vote.json`,
+`results/experiment_4244_arc_set_encoder_aggregator_build.json`,
+`results/experiment_4246_code_oracle_distinct_replication.json`,
+`results/experiment_4248_verifier_as_reward_offline_3arm.json`, and
+`results/experiment_4247_verifier_reward_offline_harness_retire_livelora.json`.
+It SHALL record the Exp 4245 ARC A3 oracle-distinct verdict with
+`oracle_distinct_beats_vote=true`, `set_encoder_minus_vote_delta=0.4423076923`,
+`set_encoder_minus_vote_ci95=[0.3076923077, 0.5961538462]`,
+`held_out_task_n=52`, and `verifier_is_oracle=false`. It SHALL record the
+paired Exp 4244 set-encoder build fields `oracle_distinct_auroc=0.9633173387`,
+`set_encoder_vs_logistic_auroc_delta=-0.0161846276`, and
+`wrong_majority_n=30`. It SHALL record the Exp 4246 code replication with
+`replication_read=blocked_code_second_corpus_missing`,
+`code_predictor_minus_vote_delta=0.0`,
+`code_predictor_minus_vote_ci95=[0.0, 0.0]`, `held_out_task_n=0`, and
+`verifier_is_oracle=false`. It SHALL record Exp 4248 offline
+verifier-as-reward status as blocked by the Exp 4247 smoke gate, with
+`verifier_label_carries_signal=false`, `a_vs_b_delta=null`,
+`a_vs_b_ci95=null`, and `youden_j=null`, rather than fabricating an A-vs-B
+reward signal.
+
+If Exp 4247 has `live_lora_retired=true`, the runner SHALL add an exclusion
+manifest entry for the live-LoRA verifier-as-reward path with
+`operator_reopen_required=true`, `retire_if_same_verdict=true`, and a reason
+that records the 6 infra failures. The gaps ledger SHALL append entries for
+`GAP-ORACLE-DISTINCT`, the ARC A3 set-encoder read, the code replication
+status, the offline verifier-as-reward A-vs-B status, and the live-LoRA
+retirement note. `GAP-ORACLE-DISTINCT` SHALL be updated to record that `.393`
+changes the `.392` ties-vote read on the grown-pool set-encoder path while
+remaining explicit that `verifier_is_oracle=false`. GAP-MOAT SHALL NOT be
+silently upgraded by registry hygiene alone.
+
+The terminal artifact SHALL write
+`results/experiment_4252_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_updated`,
+bare bool `live_lora_retired_recorded`, bare bool `registry_updated`,
+`oracle_distinct_outcome`, `code_replication_outcome`,
+`verifier_reward_outcome`, bare int `random_seed`,
+`reproducibility_checksum`, `model_specs`,
+`inference_substrate=verifier_ensemble_against_cached_candidates`, and
+`adversarial_verify`. Its `field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled to the .393 truth + the live-LoRA retirement.`;
+`regression_guard_passed` = `BARE bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression.`;
+`gaps_updated` = `Lists the verifier_gaps entries touched (GAP-ORACLE-DISTINCT frontier + the A3 ARC + code replication + offline verifier-as-reward + live-LoRA retirement notes).`;
+`live_lora_retired_recorded` = `BARE bool: true iff the live-LoRA retirement (exp4247) was recorded to the exclusion manifest + gap ledger so it is never re-proposed.`;
+`random_seed` = `Determinism precondition + the methodology field that prevents a METHODOLOGY_MISSING flag.`;
+`reproducibility_checksum` = `Hash of the cached GAP-4 candidate set; catches silent candidate drift.`
+
+### SCENARIO-VERIFY-4252: Cached Replay Records .393 Set-Encoder Reward And Retirement Truth
+
+Given the GAP-4 cached ARC-1 pool, saved induced-program artifact, Exp 4244,
+Exp 4245, Exp 4246, Exp 4247, Exp 4248, `ops/verifier_registry.yaml`,
+`ops/verifier_gaps.md`, and `ops/exclusion_manifest.yaml` are readable, when
+Exp 4252 runs, then it writes the terminal artifact with
+`regression_guard_passed=true`, records vote `0.4516` to gated `0.5806`,
+records the Exp 4245 ARC A3 set-encoder as a non-oracle vote-beating read with
+positive CI, records the Exp 4244 off-fold AUROC and `wrong_majority_n=30`,
+records Exp 4246 code replication as blocked without a positive replication
+claim, records Exp 4248 offline verifier-as-reward as blocked without a reward
+signal, records the Exp 4247 live-LoRA retirement in both the gap ledger and
+the exclusion manifest, annotates the registry with the Exp 4252 replay plus
+`.393` hygiene role, writes `gaps_updated` containing `GAP-ORACLE-DISTINCT`,
+`GAP-ORACLE-DISTINCT-A3-4245`, `GAP-CODE-REPLICATION-4246`,
+`GAP-REWARD`, and `GAP-REWARD-LIVE-LORA-RETIREMENT-4247`, declares
+`random_seed`, `reproducibility_checksum`, and `model_specs`, and runs
+adversarial verification without a `METHODOLOGY_MISSING` flag.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at

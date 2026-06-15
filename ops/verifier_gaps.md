@@ -979,3 +979,53 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: re-scope to an offline reward-weighted form or land a valid non-blocked A-vs-B eval before promotion.
 - priority: high
 <!-- exp4239-gap-reward:end -->
+
+<!-- exp4252-oracle-distinct:start -->
+### GAP-ORACLE-DISTINCT: Exp 4252 .393 oracle-distinct frontier
+- status: filled_arc_a3_set_encoder_beats_vote_non_oracle
+- evidence: `results/experiment_4245_arc_set_encoder_beats_vote.json` with build `results/experiment_4244_arc_set_encoder_aggregator_build.json`; oracle_distinct_beats_vote=true; set_encoder_minus_vote_delta=0.4423076923; set_encoder_minus_vote_ci95=[0.3076923077, 0.5961538462]; held_out_task_n=52; matched_control_delta=0.4807692308; oracle_at_k=0.8269230769; oracle_minus_vote=0.5769230769; verifier_is_oracle=false; oracle_distinct_auroc=0.9633173387; oracle_distinct_auroc_ci95=[0.9185239956, 0.9911212918]; set_encoder_vs_logistic_auroc_delta=-0.0161846276; wrong_majority_n=30; honest_verdict=complete: arc_oracle_distinct_set_encoder_beats_vote. This changed the .392 ties-vote read on the grown-pool set-encoder path. GAP-MOAT unchanged: registry hygiene records the frontier result but does not silently upgrade a moat claim.
+- failure mode: closed for the measured ARC A3 oracle-distinct selection read; other reward and replication axes remain separate.
+- missing discriminator: none for the measured non-oracle ARC A3 vote-beating read.
+- candidate design: preserve the grown-pool set-encoder methodology and retest only with explicit non-oracle and positive-CI gates.
+- priority: high
+<!-- exp4252-oracle-distinct:end -->
+
+<!-- exp4252-oracle-distinct-a3:start -->
+### GAP-ORACLE-DISTINCT-A3-4245: Exp 4252 .393 ARC A3 set-encoder read
+- status: filled_arc_a3_set_encoder_beats_vote_non_oracle
+- evidence: `results/experiment_4245_arc_set_encoder_beats_vote.json`; oracle_distinct_beats_vote=true; set_encoder_minus_vote_delta=0.4423076923; set_encoder_minus_vote_ci95=[0.3076923077, 0.5961538462]; held_out_task_n=52; margin_override_minus_vote=0.4230769231; matched_control_delta=0.4807692308; oracle_at_k=0.8269230769; verifier_is_oracle=false; oracle_distinct_auroc=0.9633173387; oracle_distinct_auroc_ci95=[0.9185239956, 0.9911212918]; set_encoder_vs_logistic_auroc_delta=-0.0161846276; wrong_majority_n=30.
+- failure mode: no ARC A3 failure for this measured read; the set-encoder converted the grown-pool candidate signal into a CI-positive vote-beating selector.
+- missing discriminator: none for this measured read; keep the non-oracle and held-out task gates load-bearing.
+- candidate design: compare future variants against both vote and same-pool controls.
+- priority: high
+<!-- exp4252-oracle-distinct-a3:end -->
+
+<!-- exp4252-code-replication:start -->
+### GAP-CODE-REPLICATION-4246: Exp 4252 .393 code replication status
+- status: blocked_code_second_corpus_missing
+- evidence: `results/experiment_4246_code_oracle_distinct_replication.json`; replication_read=blocked_code_second_corpus_missing; code_replication_beats_vote=false; code_predictor_minus_vote_delta=0.0; code_predictor_minus_vote_ci95=[0.0, 0.0]; held_out_task_n=0; verifier_is_oracle=false; off_fold_auroc=0.0; oracle_at_k=0.0.
+- failure mode: no second distinct code corpus was available, so the code oracle-distinct win was neither replicated nor refuted.
+- missing discriminator: a source-distinct code candidate corpus for replication.
+- candidate design: rerun only after the source-distinctness gate has a nonempty corpus.
+- priority: medium
+<!-- exp4252-code-replication:end -->
+
+<!-- exp4252-gap-reward:start -->
+### GAP-REWARD: Exp 4252 .393 offline verifier-as-reward A-vs-B axis
+- status: blocked_offline_reward_gate_failed_live_lora_retired
+- evidence: `results/experiment_4248_verifier_as_reward_offline_3arm.json` with retirement artifact `results/experiment_4247_verifier_reward_offline_harness_retire_livelora.json`; verifier_label_carries_signal=false; a_vs_b_delta=None; a_vs_b_ci95=None; youden_j=None; live_lora_retired=true; blocked_at_layer=conductor_pre_gate; honest_verdict=blocked_gate_check_failed.
+- failure mode: Exp 4248 was blocked by the Exp 4247 harness smoke gate, so no held-out A-vs-B reward signal exists.
+- missing discriminator: decision-grade offline evidence that verifier-certified labels beat same-generator random-label controls.
+- candidate design: repair or replace the offline smoke harness before any reward-signal promotion; do not reopen the live-LoRA path without operator approval.
+- priority: high
+<!-- exp4252-gap-reward:end -->
+
+<!-- exp4252-live-lora-retirement:start -->
+### GAP-REWARD-LIVE-LORA-RETIREMENT-4247: Exp 4252 live-LoRA retirement note
+- status: retired_live_lora_path_after_6_infra_failures
+- evidence: `results/experiment_4247_verifier_reward_offline_harness_retire_livelora.json`; live_lora_retired=true; harness_smoke_passed=false; infra_failure_count=6; operator_reopen_required=true; retire_if_same_verdict=true; honest_verdict=blocked_offline_reward_weighted_training_cannot_run_in_window.
+- failure mode: the live-LoRA verifier-as-reward path accumulated 6 infra failures and is retired so it is not re-proposed as another live run.
+- missing discriminator: none for live-LoRA retirement; future reward work must use the offline path unless an operator explicitly reopens live-LoRA.
+- candidate design: keep the exclusion manifest entry authoritative with operator_reopen_required=true and retire_if_same_verdict=true.
+- priority: high
+<!-- exp4252-live-lora-retirement:end -->

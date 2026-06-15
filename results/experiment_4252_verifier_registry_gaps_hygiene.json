@@ -1,0 +1,230 @@
+{
+  "adversarial_verify": {
+    "flag_count": 0,
+    "flags": [],
+    "methodology_missing_clean": true,
+    "returncode": 0,
+    "status": "clean"
+  },
+  "cited_upstream_artifacts": [
+    "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "results/arc3_gap4_induced_programs.json",
+    "results/experiment_4244_arc_set_encoder_aggregator_build.json",
+    "results/experiment_4245_arc_set_encoder_beats_vote.json",
+    "results/experiment_4246_code_oracle_distinct_replication.json",
+    "results/experiment_4247_verifier_reward_offline_harness_retire_livelora.json",
+    "results/experiment_4248_verifier_as_reward_offline_3arm.json"
+  ],
+  "code_replication_outcome": {
+    "artifact_path": "results/experiment_4246_code_oracle_distinct_replication.json",
+    "candidate_pool": {
+      "candidate_n": 0,
+      "pass_rate": 0.0,
+      "positive_n": 0,
+      "source_id": "",
+      "task_n": 0
+    },
+    "code_predictor_minus_vote_ci95": [
+      0.0,
+      0.0
+    ],
+    "code_predictor_minus_vote_delta": 0.0,
+    "code_replication_beats_vote": false,
+    "gap_id": "GAP-CODE-REPLICATION-4246",
+    "held_out_task_n": 0,
+    "honest_verdict": "blocked_code_second_corpus_missing",
+    "matched_control_delta": 0.0,
+    "missing_discriminator": "second_distinct_code_candidate_corpus_for_replication",
+    "off_fold_auroc": 0.0,
+    "oracle_at_k": 0.0,
+    "oracle_minus_vote": 0.0,
+    "pass_rates": {
+      "matched_control_at_1": 0.0,
+      "predictor_at_1": 0.0,
+      "vote_at_1": 0.0
+    },
+    "replication_read": "blocked_code_second_corpus_missing",
+    "source_artifacts": [
+      "results/experiment_4246_code_oracle_distinct_replication.json"
+    ],
+    "status": "blocked_code_second_corpus_missing",
+    "verifier_is_oracle": false
+  },
+  "duration_s": 0.525982,
+  "exclusion_manifest_path": "ops/exclusion_manifest.yaml",
+  "experiment": "experiment_4252_verifier_registry_gaps_hygiene",
+  "field_principles": {
+    "gaps_updated": "Lists the verifier_gaps entries touched (GAP-ORACLE-DISTINCT frontier + the A3 ARC + code replication + offline verifier-as-reward + live-LoRA retirement notes).",
+    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled to the .393 truth + the live-LoRA retirement.",
+    "live_lora_retired_recorded": "BARE bool: true iff the live-LoRA retirement (exp4247) was recorded to the exclusion manifest + gap ledger so it is never re-proposed.",
+    "random_seed": "Determinism precondition + the methodology field that prevents a METHODOLOGY_MISSING flag.",
+    "regression_guard_passed": "BARE bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression.",
+    "reproducibility_checksum": "Hash of the cached GAP-4 candidate set; catches silent candidate drift."
+  },
+  "gaps_path": "ops/verifier_gaps.md",
+  "gaps_updated": [
+    "GAP-ORACLE-DISTINCT",
+    "GAP-ORACLE-DISTINCT-A3-4245",
+    "GAP-CODE-REPLICATION-4246",
+    "GAP-REWARD",
+    "GAP-REWARD-LIVE-LORA-RETIREMENT-4247"
+  ],
+  "honest_verdict": "complete: registry_gaps_reconciled_to_v393_truth_regression_guard_passed_True_oracle_distinct_filled_arc_a3_set_encoder_beats_vote_non_oracle_code_blocked_code_second_corpus_missing_reward_blocked_offline_reward_gate_failed_live_lora_retired_live_lora_recorded_True",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "live_lora_retired_recorded": true,
+  "live_lora_retirement": {
+    "artifact_path": "results/experiment_4247_verifier_reward_offline_harness_retire_livelora.json",
+    "gap_id": "GAP-REWARD-LIVE-LORA-RETIREMENT-4247",
+    "harness_smoke_passed": false,
+    "honest_verdict": "blocked_offline_reward_weighted_training_cannot_run_in_window",
+    "infra_failure_count": 6,
+    "live_lora_retired": true,
+    "live_lora_retirement_rationale": "retired after 6 live-LoRA infrastructure failures; accumulate-floor met; offline reward-weighted SFT is finite-step and window-bounded",
+    "operator_reopen_required": true,
+    "retire_if_same_verdict": true,
+    "retirement_entry_id": "live_lora_verifier_as_reward_path_retired_exp4247",
+    "smoke_failure_reason": "ValueError: Target module Gemma4ClippableLinear(\n  (linear): Linear(in_features=768, out_features=768, bias=False)\n) is not supported. Currently, only the following modules are supported: `torch.nn.Linear`, `torch.nn.Embedding`, `torch.nn.Conv1d`, `torch.nn.Conv2d`, `torch.nn.Conv3d`, `transformers.pytorch_utils.Conv1D`, `torch.nn.MultiheadAttention.`.",
+    "source_artifacts": [
+      "results/experiment_4247_verifier_reward_offline_harness_retire_livelora.json"
+    ],
+    "status": "retired_live_lora_path_after_6_infra_failures",
+    "verifier_is_oracle": true
+  },
+  "model_specs": {
+    "candidate_set": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "candidate_set_sha256": "sha256:08f8c9d795755fee0b6f1bf36dfcceaf71a7c5da86e76e60944da0551da16d16",
+    "codex_calls": 0,
+    "gguf_inference": false,
+    "gpu_inference": false,
+    "live_model_inference": false,
+    "method": "cached_gap4_candidate_replay_and_v393_ledger_reconciliation",
+    "program_outputs": "results/arc3_gap4_induced_programs.json",
+    "scoring_description": "offline verifier ensemble replay over checked-in candidates",
+    "stable_checkpoint_write": false,
+    "trm_training_touched": false
+  },
+  "offline_replay": {
+    "arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+    "expected": {
+      "arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      }
+    },
+    "no_codex_calls": true,
+    "no_gguf_inference": true,
+    "regression_guard_passed": true,
+    "trm_training_touched": false
+  },
+  "oracle_distinct_outcome": {
+    "a3_gap_id": "GAP-ORACLE-DISTINCT-A3-4245",
+    "accepted_rejected_n": {
+      "accepted": 48,
+      "rejected": 28395,
+      "total": 28443
+    },
+    "aggregator_trained": true,
+    "artifact_path": "results/experiment_4245_arc_set_encoder_beats_vote.json",
+    "build_artifact_path": "results/experiment_4244_arc_set_encoder_aggregator_build.json",
+    "build_honest_verdict": "complete_arc_set_encoder_no_gain_over_logistic_auroc0.9633",
+    "candidate_count": 28443,
+    "candidate_pool_sha256": "ab174673aa3c75f4f0e0952d845f78fbbcf5dee483be51c0ad7008597bdf818c",
+    "gap_id": "GAP-ORACLE-DISTINCT",
+    "gap_moat_update": "unchanged_registry_hygiene_does_not_upgrade_moat",
+    "gap_oracle_distinct_update": "changed_v393_grown_pool_set_encoder_beats_vote",
+    "headline_outcome": "arc_oracle_distinct_set_encoder_beats_vote",
+    "headroom_exists": true,
+    "held_out_task_n": 52,
+    "honest_verdict": "complete: arc_oracle_distinct_set_encoder_beats_vote",
+    "learned_verifier_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4244_arc_set_encoder_aggregator_model.json",
+    "logistic_auroc": 0.9795019663,
+    "logistic_auroc_ci95": [
+      0.9640693129,
+      0.9915690725
+    ],
+    "margin_override_minus_vote": 0.4230769231,
+    "matched_control_delta": 0.4807692308,
+    "missing_discriminator": "none_for_measured_arc_a3_non_oracle_vote_beating_read",
+    "oracle_at_k": 0.8269230769,
+    "oracle_distinct_auroc": 0.9633173387,
+    "oracle_distinct_auroc_ci95": [
+      0.9185239956,
+      0.9911212918
+    ],
+    "oracle_distinct_beats_vote": true,
+    "oracle_minus_vote": 0.5769230769,
+    "pass_rates": {
+      "margin_override_at_1": 0.6730769231,
+      "matched_control_at_1": 0.2115384615,
+      "set_encoder_at_1": 0.6923076923,
+      "vote_at_1": 0.25
+    },
+    "positive_candidate_n": 48,
+    "set_encoder_minus_vote_ci95": [
+      0.3076923077,
+      0.5961538462
+    ],
+    "set_encoder_minus_vote_delta": 0.4423076923,
+    "set_encoder_vs_logistic_auroc_delta": -0.0161846276,
+    "source_artifacts": [
+      "results/experiment_4245_arc_set_encoder_beats_vote.json",
+      "results/experiment_4244_arc_set_encoder_aggregator_build.json"
+    ],
+    "status": "filled_arc_a3_set_encoder_beats_vote_non_oracle",
+    "verifier_is_oracle": false,
+    "wrong_majority_n": 30
+  },
+  "random_seed": 4252,
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_updated": true,
+  "regression_guard_passed": true,
+  "reproducibility_checksum": "sha256:08f8c9d795755fee0b6f1bf36dfcceaf71a7c5da86e76e60944da0551da16d16",
+  "schema": "carnot.experiment_4252_verifier_registry_gaps_hygiene.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4252",
+    "SCENARIO-VERIFY-4252"
+  ],
+  "verifier_reward_outcome": {
+    "a_vs_b_ci95": null,
+    "a_vs_b_delta": null,
+    "artifact_path": "results/experiment_4248_verifier_as_reward_offline_3arm.json",
+    "blocked_at_layer": "conductor_pre_gate",
+    "gap_id": "GAP-REWARD",
+    "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp4247-verifier-reward-offline-harness-retire-livelora.harness_smoke_passed (actual=False == expected=True)",
+    "gates_evaluated": [
+      {
+        "actual": false,
+        "artifact_field": "harness_smoke_passed",
+        "expected": true,
+        "op": "==",
+        "passed": false,
+        "reason": "actual=False == expected=True",
+        "upstream": "exp4247-verifier-reward-offline-harness-retire-livelora"
+      }
+    ],
+    "honest_verdict": "blocked_gate_check_failed",
+    "live_lora_retired": true,
+    "missing_discriminator": "decision_grade_offline_a_vs_b_reward_signal_after_valid_harness_smoke",
+    "retirement_artifact_path": "results/experiment_4247_verifier_reward_offline_harness_retire_livelora.json",
+    "retirement_gap_id": "GAP-REWARD-LIVE-LORA-RETIREMENT-4247",
+    "source_artifacts": [
+      "results/experiment_4248_verifier_as_reward_offline_3arm.json",
+      "results/experiment_4247_verifier_reward_offline_harness_retire_livelora.json"
+    ],
+    "status": "blocked_offline_reward_gate_failed_live_lora_retired",
+    "verifier_is_oracle": true,
+    "verifier_label_carries_signal": false,
+    "youden_j": null
+  }
+}
