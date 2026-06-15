@@ -1,0 +1,117 @@
+{
+  "acceptance_gate": true,
+  "duration_s": 0.336149,
+  "field_principles": {
+    "full_run_cost_estimate_s": "BARE float: extrapolated wall-clock for a full .395 benchmark -- tells the planner whether .395 runs it in-window or out-of-band.",
+    "guidance_changes_selection": "BARE bool: the verifier-as-guidance-energy actually changed per-step token selection vs unguided -- the load-bearing mechanism check (a guidance hook that does nothing is a NO-GO).",
+    "honest_verdict": "Terminal-prefixed. A GO preflight AND an honest NO-GO (harness gap / cost too high) are BOTH COMPLETE and decision-grade for .395.",
+    "model_specs": "DiffusionGemma GGUF id + the verifier ensemble wired as guidance + denoising step count; required methodology.",
+    "preconditions_checked": "Records DiffusionGemma cache + loader + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.",
+    "preflight_go": "BARE bool: .395 gates the full run on this; true iff DiffusionGemma loaded, the verifier-guidance hook reweights token selection, and the extrapolated full-run cost is feasible.",
+    "random_seed": "Determinism precondition for the denoising smoke.",
+    "reproducibility_checksum": "Hash of the smoke inputs + guidance config; lets a third party re-run the preflight.",
+    "verifier_is_oracle": "BARE bool=false -- the guidance energy is the learned/ensemble verifier shaping generation, not an executable oracle; keeps the bet oracle-distinct."
+  },
+  "full_run_cost_estimate_s": 0.0,
+  "guidance_changes_selection": false,
+  "guidance_reweighted_token_count": 0,
+  "guidance_selection_change_count": 0,
+  "honest_verdict": "blocked_diffusiongemma_gguf_loader_failed",
+  "inference_substrate": "gguf_vocab_preflight_tiny_denoising",
+  "model_specs": {
+    "denoising": {
+      "full_benchmark_examples": 395,
+      "full_benchmark_steps": 24,
+      "smoke_examples": [
+        "math_2_plus_2",
+        "sudoku_row_missing_9",
+        "code_return_value"
+      ],
+      "smoke_steps": 4
+    },
+    "diffusiongemma": {
+      "active_params_b": 4,
+      "auto_tokenizer_used": false,
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "gguf_loader": "llama_cpp.Llama(vocab_only=True)",
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "license": "Apache-2.0",
+      "model_loaded": false,
+      "quantization": "Q4_K_M",
+      "total_params_b": 26
+    },
+    "verifier_ensemble": {
+      "guidance_config": {
+        "candidate_count": 3,
+        "feasible_cost_window_s": 86400.0,
+        "guidance_lambda": 0.7,
+        "steps": 4
+      },
+      "guidance_equation": "logit' = logit - lambda * verifier_energy",
+      "name": "carnot_verifier_ensemble_guidance_smoke",
+      "source": "carnot verifier-energy guidance hook smoke; no executable correctness oracle invoked",
+      "verifier_is_oracle": false
+    }
+  },
+  "preconditions_checked": [
+    {
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "cache_entries_preview": [
+        "blobs",
+        "refs",
+        "snapshots"
+      ],
+      "cache_error": null,
+      "cache_non_empty": true,
+      "command": "ls /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/",
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "ok": true,
+      "resolve_error": null,
+      "resource": "diffusiongemma_cache"
+    },
+    {
+      "active_training_processes": [],
+      "ok": true,
+      "process_check_error": null,
+      "resource": "trm_training_stand_down",
+      "results_trm_runs_touched": false
+    },
+    {
+      "auto_tokenizer_used": false,
+      "backend": "llama_cpp",
+      "detail": "ValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "elapsed_s": 0.323728,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "mode": "vocab_only",
+      "ok": false,
+      "resource": "gguf_vocab_loader",
+      "token_count": 0,
+      "token_ids_preview": [],
+      "vocab_only": true
+    }
+  ],
+  "preflight_go": false,
+  "random_seed": 4260,
+  "reproducibility_checksum": "90bee2dfcb658679ca0507b434e15036d61cb4e4945b0b0f98bd4d11963b3046",
+  "smoke_measurements": {
+    "cost_feasible": false,
+    "examples": 0,
+    "full_run_cost_estimate_s": 0.0,
+    "guidance_changes_selection": false,
+    "guidance_reweighted_token_count": 0,
+    "guidance_selection_change_count": 0,
+    "memory_delta_mb": 0.0,
+    "memory_peak_mb": 0.0,
+    "status": "blocked_diffusiongemma_gguf_loader_failed",
+    "steps_per_example": 0,
+    "wall_clock_s": 0.0
+  },
+  "spec_refs": [
+    "REQ-VERIFY-4260",
+    "SCENARIO-VERIFY-4260"
+  ],
+  "verifier_is_oracle": false
+}
