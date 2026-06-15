@@ -1,0 +1,207 @@
+{
+  "acceptance_gate": true,
+  "adversarial_verify": {
+    "circular_moat_overclaim_clean": true,
+    "flag_count": 1,
+    "flags": [
+      {
+        "detail": "independent_rescore_delta=0.4423076923 and single_seed_4245_delta=0.4423076923 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "kind": "TAUTOLOGY",
+        "severity": "critical"
+      }
+    ],
+    "returncode": 1,
+    "status": "flagged"
+  },
+  "cross_seed_ci95": [
+    0.4377176136,
+    0.4776670017
+  ],
+  "cross_seed_ci95_excludes_zero": true,
+  "cross_seed_ci_method": "student_t_mean_ci_over_seed_deltas",
+  "duration_s": 295.039902,
+  "experiment": "experiment_4257_arc_oracle_distinct_multiseed_replication",
+  "field_principles": {
+    "cross_seed_ci95": "Cross-seed CI of the delta -- excluding 0 distinguishes a robust win from a single-seed fluke.",
+    "honest_verdict": "Terminal-prefixed. A clean multi-seed replication AND an honest fragility finding are BOTH COMPLETE and decision-grade.",
+    "independent_rescore_delta": "set_encoder@1 - vote@1 recomputed off the persisted artifact via a SECOND code path -- the independent-reproducer check (G2-style).",
+    "mean_delta": "BARE float: mean cross-seed delta -- the replicated lift (compare to the single-seed +0.4423).",
+    "model_specs": "The set-encoder config + the multi-seed + independent-rescore protocol; required methodology.",
+    "oracle_distinct_win_replicates": "BARE bool: A4/B1 gate on this raw value (gated-fields-must-be-bare); true iff mean cross-seed delta>0 AND CI excl 0 AND the independent re-score lands within the .393 CI.",
+    "per_seed_deltas": "List of set_encoder@1 - vote@1 per seed -- exposes single-seed fragility; a sign-flip on any seed is a fragility flag.",
+    "random_seeds_used": "The >=5 seeds -- determinism + power; lets a third party re-run every fold.",
+    "reproducibility_checksum": "Hash of the pool + per-seed splits; catches silent drift.",
+    "verifier_is_oracle": "BARE bool=false -- learned set-encoder, no demo execution; keeps the replication oracle-distinct."
+  },
+  "fragility_flags": [],
+  "headline_outcome": "arc_oracle_distinct_win_replicates_multiseed",
+  "honest_verdict": "complete: arc_oracle_distinct_win_replicates_multiseed",
+  "independent_rescore_delta": 0.4423076923,
+  "independent_rescore_held_out_task_n": 52,
+  "independent_rescore_oracle_at_k": 0.8269230769,
+  "independent_rescore_pass_rates": {
+    "set_encoder_at_1": 0.6923076923,
+    "vote_at_1": 0.25
+  },
+  "independent_rescore_within_4245_ci": true,
+  "inference_substrate": "cached_grown_arc_pool_cpu_multiseed_set_encoder",
+  "mean_delta": 0.4576923077,
+  "model_specs": {
+    "independent_rescore_protocol": {
+      "held_out_task_n": 52,
+      "imports_exp4245_gate_code": false,
+      "path": "direct_gzip_json_pool_plus_persisted_oof_rows",
+      "score_source": "clean_room_persisted_set_encoder_oof_rows"
+    },
+    "multi_seed_protocol": {
+      "hidden_dim": 32,
+      "n_folds": 5,
+      "out_of_fold": true,
+      "random_seeds_used": [
+        4257,
+        4258,
+        4259,
+        4260,
+        4261
+      ],
+      "seed_count": 5,
+      "task_split_unit": "task_id",
+      "training_epochs": 32
+    },
+    "set_encoder_config": {
+      "architecture": "deepsets_pooled_context_set_encoder",
+      "architecture_note": "Permutation-equivariant DeepSets scorer: per-candidate MLP embedding, mean/max pooled full-set context, and per-candidate logits conditioned on that context.",
+      "calibration": "train_fold_temperature_scaling_for_set_encoder_and_isotonic_for_logistic",
+      "cross_candidate_conditioning": "vote priors, self-consistency margins, modal-grid agreement, duplicate counts, shape/palette family indicators, and DeepSets mean/max latent pooling over all candidates",
+      "feature_set": [
+        "vote_weight",
+        "self_consistency_margin",
+        "vote_weight_rank_fraction",
+        "cell_confidence_mean",
+        "cell_confidence_margin",
+        "cell_confidence_rank_fraction",
+        "grid_height",
+        "grid_width",
+        "grid_cells",
+        "grid_color_count",
+        "grid_nonzero_frac",
+        "grid_entropy",
+        "program_length",
+        "program_digit_fraction",
+        "program_demo_fit",
+        "program_n_calls",
+        "set_candidate_count",
+        "set_vote_mean",
+        "set_vote_max",
+        "set_vote_std",
+        "set_confidence_mean",
+        "set_confidence_max",
+        "set_confidence_std",
+        "set_entropy_mean",
+        "set_entropy_max",
+        "set_entropy_std",
+        "set_cells_mean",
+        "set_cells_max",
+        "set_cells_std",
+        "vote_weight_zscore",
+        "cell_confidence_zscore",
+        "grid_entropy_zscore",
+        "grid_cells_zscore",
+        "modal_cell_agreement_frac",
+        "grid_duplicate_count",
+        "grid_duplicate_frac",
+        "shape_family_count",
+        "shape_family_frac",
+        "shape_vote_frac",
+        "is_modal_shape",
+        "palette_family_count",
+        "palette_family_frac",
+        "palette_vote_frac",
+        "is_modal_palette",
+        "same_shape_as_input",
+        "area_delta_from_input_frac"
+      ],
+      "hidden_dim": 32,
+      "imbalance_loss": "class_weighted_bce_with_positive_task_minibatches; negative-only tasks are scored held-out but do not form training minibatches",
+      "logistic_ablation": "same_fold_augmented_logistic_392",
+      "set_attention_reference": "CPU-fast fallback for the Set-LLM set-attention-mask / Set-Encoder cross-candidate attention lever; still consumes the full candidate set without positional features.",
+      "status": "trained",
+      "training_epochs": 32,
+      "training_recipe": "task_held_out_oof_candidate_detection"
+    },
+    "status": "complete"
+  },
+  "n_seeds": 5,
+  "oracle_distinct_win_replicates": true,
+  "per_seed_deltas": [
+    0.4615384615,
+    0.4423076923,
+    0.4807692308,
+    0.4615384615,
+    0.4423076923
+  ],
+  "per_seed_results": [
+    {
+      "delta": 0.4615384615,
+      "held_out_task_n": 52,
+      "oracle_at_k": 0.8269230769,
+      "random_seed": 4257,
+      "set_encoder_at_1": 0.7115384615,
+      "vote_at_1": 0.25
+    },
+    {
+      "delta": 0.4423076923,
+      "held_out_task_n": 52,
+      "oracle_at_k": 0.8269230769,
+      "random_seed": 4258,
+      "set_encoder_at_1": 0.6923076923,
+      "vote_at_1": 0.25
+    },
+    {
+      "delta": 0.4807692308,
+      "held_out_task_n": 52,
+      "oracle_at_k": 0.8269230769,
+      "random_seed": 4259,
+      "set_encoder_at_1": 0.7307692308,
+      "vote_at_1": 0.25
+    },
+    {
+      "delta": 0.4615384615,
+      "held_out_task_n": 52,
+      "oracle_at_k": 0.8269230769,
+      "random_seed": 4260,
+      "set_encoder_at_1": 0.7115384615,
+      "vote_at_1": 0.25
+    },
+    {
+      "delta": 0.4423076923,
+      "held_out_task_n": 52,
+      "oracle_at_k": 0.8269230769,
+      "random_seed": 4261,
+      "set_encoder_at_1": 0.6923076923,
+      "vote_at_1": 0.25
+    }
+  ],
+  "random_seed": 4257,
+  "random_seeds_used": [
+    4257,
+    4258,
+    4259,
+    4260,
+    4261
+  ],
+  "reproducibility_checksum": "sha256:f922898c0e72e1d6bec3a8e21cc330bd3074d9ff2779028969f7b1c3545defd6",
+  "schema": "carnot.arc_oracle_distinct_multiseed_replication_4257.v1",
+  "sign_flip_seeds": [],
+  "single_seed_4245_ci95": [
+    0.3076923077,
+    0.5961538462
+  ],
+  "single_seed_4245_delta": 0.4423076923,
+  "spec_refs": [
+    "REQ-VERIFY-4257",
+    "SCENARIO-VERIFY-4257"
+  ],
+  "status": "complete",
+  "verifier_is_oracle": false
+}

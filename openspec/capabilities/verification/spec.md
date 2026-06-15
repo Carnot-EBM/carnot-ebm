@@ -15699,6 +15699,81 @@ reconstructed, then the artifact is still terminal with
 `honest_verdict=blocked_arc_provenance_unrecoverable` and does not claim the
 `.393` win survived.
 
+### REQ-VERIFY-4257: ARC Oracle-Distinct Multi-Seed Replication
+
+The repository SHALL provide Exp 4257 at
+`python/carnot/reporting/arc_oracle_distinct_multiseed_replication_4257.py` and
+`results/experiment_4257_arc_oracle_distinct_multiseed_replication.py` to harden
+the single-seed Exp 4245 ARC Set-Encoder beats-vote win before it can headline
+or justify DiffusionGemma scale-up. The runner SHALL first verify that
+`results/experiment_4243_arc_candidate_pool_grow_pool.json.gz`,
+`results/experiment_4244_arc_set_encoder_aggregator_build.json`,
+`results/experiment_4244_arc_set_encoder_aggregator_model.json`, and
+`results/experiment_4245_arc_set_encoder_beats_vote.json` are readable and that
+the Exp 4244/4245 verifier artifacts declare `verifier_is_oracle=false`. If the
+grown pool is absent or unreadable, it SHALL write the terminal artifact with
+`honest_verdict=blocked_arc_grown_pool_missing`,
+`oracle_distinct_win_replicates=false`, `verifier_is_oracle=false`, empty
+`per_seed_deltas`, zero `mean_delta`, zero `cross_seed_ci95`, zero
+`independent_rescore_delta`, and SHALL stop without fabricating replication
+numbers.
+
+When the preconditions hold, the runner SHALL independently reshuffle the ARC
+task split over the grown pool for at least five seeds, retrain the Exp 4244
+Set-Encoder out-of-fold for each seed, and compute
+`set_encoder@1 - vote@1` on that seed's held-out task scores. It SHALL report
+`per_seed_deltas`, bare float `mean_delta`, `cross_seed_ci95` over the seed
+deltas, `random_seeds_used`, and a fragility flag for every seed whose delta is
+non-positive. The cross-seed CI SHALL be decision-oriented: excluding zero is
+required before the replication can be treated as robust.
+
+The runner SHALL also provide a separate clean-room independent re-score
+function that does not import the Exp 4245 gate module. That function SHALL
+reload the persisted grown pool and the Exp 4244 trained model artifact,
+recompute `set_encoder@1`, `vote@1`, and `oracle@K` directly from the artifact
+rows, and report bare float `independent_rescore_delta`. The raw gate
+`oracle_distinct_win_replicates` SHALL be true iff `mean_delta > 0`, the
+cross-seed CI excludes zero, and `independent_rescore_delta` lands inside the
+Exp 4245 reported CI. The artifact SHALL declare `verifier_is_oracle=false`,
+include `reproducibility_checksum`, `model_specs`, `field_principles`, and
+`spec_refs`, and SHALL run `scripts/adversarial_verify.py` with
+`CIRCULAR_MOAT_OVERCLAIM` clean.
+
+The terminal artifact SHALL write
+`results/experiment_4257_arc_oracle_distinct_multiseed_replication.json` with
+`honest_verdict`, bare bool `oracle_distinct_win_replicates`,
+`per_seed_deltas`, bare float `mean_delta`, `cross_seed_ci95`, bare float
+`independent_rescore_delta`, bare bool `verifier_is_oracle=false`,
+`random_seeds_used`, `reproducibility_checksum`, `model_specs`,
+`field_principles`, `spec_refs`, `acceptance_gate`, and
+`adversarial_verify`. Its `field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. A clean multi-seed replication AND an honest fragility finding are BOTH COMPLETE and decision-grade.`;
+`oracle_distinct_win_replicates` = `BARE bool: A4/B1 gate on this raw value (gated-fields-must-be-bare); true iff mean cross-seed delta>0 AND CI excl 0 AND the independent re-score lands within the .393 CI.`;
+`per_seed_deltas` = `List of set_encoder@1 - vote@1 per seed -- exposes single-seed fragility; a sign-flip on any seed is a fragility flag.`;
+`mean_delta` = `BARE float: mean cross-seed delta -- the replicated lift (compare to the single-seed +0.4423).`;
+`cross_seed_ci95` = `Cross-seed CI of the delta -- excluding 0 distinguishes a robust win from a single-seed fluke.`;
+`independent_rescore_delta` = `set_encoder@1 - vote@1 recomputed off the persisted artifact via a SECOND code path -- the independent-reproducer check (G2-style).`;
+`verifier_is_oracle` = `BARE bool=false -- learned set-encoder, no demo execution; keeps the replication oracle-distinct.`;
+`random_seeds_used` = `The >=5 seeds -- determinism + power; lets a third party re-run every fold.`;
+`reproducibility_checksum` = `Hash of the pool + per-seed splits; catches silent drift.`;
+`model_specs` = `The set-encoder config + the multi-seed + independent-rescore protocol; required methodology.`
+
+### SCENARIO-VERIFY-4257: Multi-Seed Replication And Clean-Room Re-Score Gate
+
+Given the Exp 4243 grown pool, Exp 4244 Set-Encoder build/model artifacts, and
+Exp 4245 beats-vote artifact are readable and oracle-distinct, when Exp 4257
+runs, then it retrains the Set-Encoder out-of-fold over at least five
+independently reshuffled task seeds, reports `per_seed_deltas`, `mean_delta`,
+`cross_seed_ci95`, sign-flip seed details, and `random_seeds_used`, computes
+`independent_rescore_delta` through the separate no-Exp-4245-import code path,
+sets bare bool `oracle_distinct_win_replicates` only when the mean lift is
+positive, the cross-seed CI excludes zero, and the independent re-score falls
+inside the Exp 4245 CI, keeps `verifier_is_oracle=false`, writes the required
+field principles and checksum, and runs adversarial verification cleanly. If
+the grown pool is missing, then it writes
+`honest_verdict=blocked_arc_grown_pool_missing` and stops honestly without
+claiming replication.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
