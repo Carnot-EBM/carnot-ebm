@@ -1,0 +1,207 @@
+{
+  "activated_milestone": "2026.06.393",
+  "active_milestone_confirmed": "2026.06.393",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.392",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4241_capstone_v392.json",
+      "experiment_id": "4241",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "a6046fd4d55c8a02779f9bf3fa75a801a7cfad1b5cfab81326c7ab58893f655f"
+    },
+    {
+      "deliverable": "results/experiment_4233_oracle_distinct_code_beats_vote.json",
+      "experiment_id": "4233",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "bb684a96fd09b4a9ffd32faf8ac7ce205e7c09f67e48be6855db337c7dba458b"
+    },
+    {
+      "deliverable": "results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json",
+      "experiment_id": "4232",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "5b34fd35bc7e6b4375f099fbfb1c238ba5d47259bb23842f37ab27849574929d"
+    },
+    {
+      "deliverable": "results/experiment_4234_verifier_reward_lora_harness_real_training_smoke.json",
+      "experiment_id": "4234",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "c088314a9f7fecbf40124eb2892678f87e3d7fe1e5859228ccdea250e5a1cf27"
+    }
+  ],
+  "duration_s": 13.157104,
+  "exclusion_manifest_parses": true,
+  "experiment_id": 4242,
+  "field_principles": {
+    "activated_milestone": "Confirms .393 is live for the LAND-the-ARC-win frame.",
+    "active_milestone_confirmed": "Records the active roadmap milestone actually observed.",
+    "archived_milestone": "Provenance: the milestone being closed, 2026.06.392.",
+    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
+    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
+    "honest_verdict": "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.",
+    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
+    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
+    "v392_close_state": "Honest record (oracle-distinct CODE win + ARC data-sparsity tie + verifier-as-reward still-deferred + ARC 18) so the .393 agents frame the milestone as LAND-the-ARC-win + finish-the-reward-pivot, not a redo."
+  },
+  "honest_verdict": "success: archived_v392_v393_active_first_oracle_distinct_code_win_arc_data_sparsity_reward_deferred_arc18_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "active_milestone": {
+      "actual": "2026.06.393",
+      "expected": "2026.06.393",
+      "matches": true,
+      "path": "research-roadmap.yaml"
+    },
+    "exclusion_manifest_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/exclusion_manifest.yaml"
+    },
+    "research_complete_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "smart_subset_pretest": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4242_archive_v392_activate_v393.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "green": true,
+      "stderr_tail": "",
+      "stdout_tail": "........................................................................ [ 80%]\n.................                                                        [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n89 passed, 1 warning in 4.81s\n"
+    },
+    "source_artifacts": {
+      "4232": {
+        "exists": true,
+        "path": "results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json",
+        "sha256": "5b34fd35bc7e6b4375f099fbfb1c238ba5d47259bb23842f37ab27849574929d"
+      },
+      "4233": {
+        "exists": true,
+        "path": "results/experiment_4233_oracle_distinct_code_beats_vote.json",
+        "sha256": "bb684a96fd09b4a9ffd32faf8ac7ce205e7c09f67e48be6855db337c7dba458b"
+      },
+      "4234": {
+        "exists": true,
+        "path": "results/experiment_4234_verifier_reward_lora_harness_real_training_smoke.json",
+        "sha256": "c088314a9f7fecbf40124eb2892678f87e3d7fe1e5859228ccdea250e5a1cf27"
+      },
+      "4241": {
+        "exists": true,
+        "path": "results/experiment_4241_capstone_v392.json",
+        "sha256": "a6046fd4d55c8a02779f9bf3fa75a801a7cfad1b5cfab81326c7ab58893f655f"
+      }
+    }
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4242,
+  "reproducibility_checksum": "28977c8989780aec318e6eb6bab0646ab7833ae885a25b4742ef62f9ed086253",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "updated",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v392_to_v393_4242.v1",
+  "spec_refs": [
+    "REQ-REPORT-4242",
+    "SCENARIO-REPORT-4242"
+  ],
+  "task_id": "exp4242-archive-v392-activate-v393",
+  "v392_close_state": {
+    "arc_accepted_rejected_n": {
+      "accepted": 20,
+      "rejected": 28399,
+      "total": 28419
+    },
+    "arc_aggregator_minus_vote_ci95": [
+      0.0,
+      0.0
+    ],
+    "arc_aggregator_minus_vote_delta": 0.0,
+    "arc_base_rate": 0.0007,
+    "arc_build_artifact_status": "skipped_flagged_adversarial",
+    "arc_candidate_count": 28419,
+    "arc_data_sparsity_diagnosis": true,
+    "arc_gate_ran": true,
+    "arc_headroom_present": true,
+    "arc_held_out_task_n": 52,
+    "arc_model_type": "standardized_logistic_regression_isotonic_calibrated",
+    "arc_oracle_at_k": 0.3654,
+    "arc_oracle_distinct_beats_vote": false,
+    "arc_pass_rates": {
+      "aggregator_at_1": 0.1923,
+      "margin_override_at_1": 0.1923,
+      "matched_control_at_1": 0.1538,
+      "vote_at_1": 0.1923
+    },
+    "arc_positive_sparsity_flag": true,
+    "arc_status": "TIES-AT-POWER-NULL",
+    "arc_still_ties": true,
+    "arc_verifier_is_oracle": false,
+    "auto_retire_never_fired_because_b2_never_ran": true,
+    "code_adversarial_clean": true,
+    "code_ci95_excludes_zero": true,
+    "code_gate_ran": true,
+    "code_held_out_task_n": 160,
+    "code_matched_control_delta": 0.00625,
+    "code_off_fold_auroc": 0.974,
+    "code_oracle_at_k": 0.9625,
+    "code_oracle_distinct_beats_vote": true,
+    "code_pass_rates": {
+      "matched_control_at_1": 0.9437,
+      "predictor_at_1": 0.95,
+      "vote_at_1": 0.9187
+    },
+    "code_predictor_minus_vote_ci95": [
+      0.00625,
+      0.0625
+    ],
+    "code_predictor_minus_vote_delta": 0.03125,
+    "code_status": "CODE-WON",
+    "code_verifier_is_oracle": false,
+    "diffusiongemma_gate_resolvable_on_code": true,
+    "exp4234_corpora": {
+      "A": 776,
+      "B": 776,
+      "C": 742
+    },
+    "exp4234_duration_s": 17.7184,
+    "exp4234_flagged_adversarial": true,
+    "exp4234_harness_smoke_passed": false,
+    "exp4234_honest_verdict": "blocked_lora_training_cannot_run_in_window",
+    "exp4235_blocked_at_layer": "conductor_pre_gate",
+    "exp4235_gate_check_summary": "1 of 1 gate(s) failed; first failure: exp4234-verifier-reward-lora-harness-real-training-smoke.harness_smoke_passed (actual=False == expected=True)",
+    "flagged_artifacts_skipped": [
+      4231,
+      4234
+    ],
+    "headline_outcome": "oracle_distinct_arc_null_is_data_sparsity_code_wins",
+    "live_lora_retired": false,
+    "live_solver_efficiency_only_no_level": true,
+    "live_solver_honest_verdict": "complete: solver_completes_0_levels_live_lp85-305b61c3_efficiency_only",
+    "live_solver_levels_completed": 0,
+    "oracle_distinct_status": "ARC-NULL-IS-DATA-SPARSITY",
+    "sota_flagged_for_v393": "bigger_arc_pool_full_set_encoder_agglm_aggregator_v393",
+    "sota_strongest_method": "Set-Encoder full cross-candidate attention",
+    "summary": "code_oracle_distinct_won_arc_data_sparsity_tie_reward_deferred_arc18",
+    "total_games_solved": 13,
+    "total_levels_solved": 18,
+    "v393_frame": "LAND the ARC oracle-distinct win (fix the diagnosed data-sparsity with the flagged full Set-Encoder, re-test at power) + RETIRE live-LoRA and PIVOT verifier-as-reward to the OFFLINE form that fits the window",
+    "verifier_as_reward_status": "HARNESS-DEFERRED"
+  }
+}
