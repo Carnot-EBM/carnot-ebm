@@ -8569,3 +8569,4 @@ c |
 | 2026-06-15 21:11 UTC | PHASE C2 (HEADLINE confirmation) -- code oracle-di | OK | 89 passed, 1 warning in 7.49s |
 | 2026-06-15 21:27 UTC | PHASE D1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 102 passed, 1 warning in 4.97s |
 | 2026-06-15 21:45 UTC | PHASE D2 (hygiene) -- reconcile the verifier regis | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-15 22:00 UTC | PHASE D3 (hardware continuity; opportunistic per n | OK | 86 passed, 1 warning in 6.12s |
