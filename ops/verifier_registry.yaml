@@ -361,6 +361,34 @@ verifiers:
     exp4252_code_predictor_minus_vote_delta: 0.0
     exp4252_verifier_label_carries_signal: false
     exp4252_live_lora_retired: true
+    eval_exp_4266: results/experiment_4266_verifier_registry_gaps_hygiene.json
+    exp4266_regression_guard_passed: true
+    exp4266_arc1_rule_exec_vote_pass2: 0.4516
+    exp4266_arc1_rule_exec_gated_pass2: 0.5806
+    exp4266_arc1_headroom_recovered: 4
+    exp4266_arc1_vote_wins_lost: 0
+    exp4266_v394_hardened_state: within_pool_hardened_provenance_blind_multiseed__cross_game_blocked__synthesis_underperforms_selection
+    exp4266_a1_provenance_blind_survives: true
+    exp4266_a1_provenance_blind_delta: 0.3846153846
+    exp4266_a2_multiseed_replicates: true
+    exp4266_a2_mean_delta: 0.4576923077
+    exp4266_a3_cross_game_status: blocked_arc_game_ids_unrecoverable
+    exp4266_a3_cross_game_transfer_claim: false
+    exp4266_a4_synthesis_beats_selection: false
+    exp4266_a4_synthesis_breaks_oracle_ceiling: false
+    exp4266_a4_synthesis_minus_oracle_delta: -0.2826086957
+    exp4266_b1_preflight_go: false
+    exp4266_b1_honest_verdict: blocked_diffusiongemma_gguf_loader_failed
+    exp4266_c1_ready_for_out_of_band: true
+    exp4266_c1_verifier_as_reward_retired: false
+    exp4266_c2_replication_read: corpus_specific
+    exp4266_c2_code_replication_beats_vote: false
+    exp4266_c2_code_predictor_minus_vote_delta: -0.00625
+    exp4266_gaps_logged:
+    - GAP-ARC-CROSS-GAME-SELECTION-4266
+    - GAP-ARC-SUPRA-ORACLE-K-SYNTHESIS-4266
+    - GAP-DIFFUSIONGEMMA-LOADER-GUIDANCE-4266
+    - GAP-CODE-ORACLE-DISTINCT-ROBUSTNESS-4266
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -4115,3 +4143,37 @@ verifiers:
     gap_oracle_distinct_update: changed_v393_grown_pool_set_encoder_beats_vote
     gap_moat_update: unchanged_registry_hygiene_does_not_upgrade_moat
     eval_exp_4252: results/experiment_4252_verifier_registry_gaps_hygiene.json
+  - role_id: oracle_distinct_v394_hardened_hygiene_4266
+    experiment: results/experiment_4266_verifier_registry_gaps_hygiene.json
+    role: registry_gap_ledger_hygiene_v394
+    status: v394_hardened_outcomes_recorded_missing_verifier_gaps_logged
+    v394_hardened_state: within_pool_hardened_provenance_blind_multiseed__cross_game_blocked__synthesis_underperforms_selection
+    a1_artifact: results/experiment_4256_arc_oracle_distinct_leak_audit.json
+    a1_win_survives_provenance_blind: true
+    a1_provenance_blind_delta: 0.3846153846
+    a2_artifact: results/experiment_4257_arc_oracle_distinct_multiseed_replication.json
+    a2_oracle_distinct_win_replicates: true
+    a2_mean_delta: 0.4576923077
+    a3_artifact: results/experiment_4258_arc_oracle_distinct_cross_game_transfer.json
+    a3_cross_game_status: blocked_arc_game_ids_unrecoverable
+    a3_cross_game_transfer_claim: false
+    a4_artifact: results/experiment_4259_arc_agglm_grid_synthesis.json
+    a4_synthesis_beats_selection: false
+    a4_synthesis_breaks_oracle_ceiling: false
+    a4_synthesis_minus_oracle_delta: -0.2826086957
+    b1_artifact: results/experiment_4260_diffusiongemma_energy_guided_preflight.json
+    b1_preflight_go: false
+    b1_honest_verdict: blocked_diffusiongemma_gguf_loader_failed
+    c1_artifact: results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json
+    c1_ready_for_out_of_band: true
+    c1_verifier_as_reward_retired: false
+    c2_artifact: results/experiment_4264_code_oracle_distinct_replication_retry.json
+    c2_replication_read: corpus_specific
+    c2_code_replication_beats_vote: false
+    c2_code_predictor_minus_vote_delta: -0.00625
+    gap_ids_logged:
+    - GAP-ARC-CROSS-GAME-SELECTION-4266
+    - GAP-ARC-SUPRA-ORACLE-K-SYNTHESIS-4266
+    - GAP-DIFFUSIONGEMMA-LOADER-GUIDANCE-4266
+    - GAP-CODE-ORACLE-DISTINCT-ROBUSTNESS-4266
+    eval_exp_4266: results/experiment_4266_verifier_registry_gaps_hygiene.json

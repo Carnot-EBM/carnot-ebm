@@ -1029,3 +1029,43 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: keep the exclusion manifest entry authoritative with operator_reopen_required=true and retire_if_same_verdict=true.
 - priority: high
 <!-- exp4252-live-lora-retirement:end -->
+
+<!-- exp4266-gap-arc-cross-game-selection-4266:start -->
+### GAP-ARC-CROSS-GAME-SELECTION-4266: Exp 4266 .394 missing-verifier gap
+- status: open
+- evidence: results/experiment_4258_arc_oracle_distinct_cross_game_transfer.json; honest_verdict=blocked_arc_game_ids_unrecoverable; held_out_game_n=0; held_out_task_n=0.
+- failure mode: The ARC oracle-distinct selector is hardened within-pool, but cross-game transfer could not be measured because game/family ids were unrecoverable.
+- missing discriminator: game/family provenance for every ARC candidate row so selection can be evaluated on family-disjoint held-out games.
+- candidate design: Persist source-kind, generator family, game id, fold id, and target hash in the ARC candidate manifest, then rerun the set-encoder against vote on held-out families.
+- priority: high
+<!-- exp4266-gap-arc-cross-game-selection-4266:end -->
+
+<!-- exp4266-gap-arc-supra-oracle-k-synthesis-4266:start -->
+### GAP-ARC-SUPRA-ORACLE-K-SYNTHESIS-4266: Exp 4266 .394 missing-verifier gap
+- status: open
+- evidence: results/experiment_4259_arc_agglm_grid_synthesis.json; synthesis_beats_selection=False; synthesis_breaks_oracle_ceiling=False; synthesis_minus_oracle_delta=-0.2826086957.
+- failure mode: Score-weighted grid synthesis underperformed selection and did not solve tasks beyond oracle@K candidate availability.
+- missing discriminator: a supra-oracle@K verifier signal that can infer missing output cells or shapes when no cached candidate is correct.
+- candidate design: Add rule-consistency or latent task-family constraints to propose cells outside the selected candidate family, with exact-match and selector-only controls.
+- priority: high
+<!-- exp4266-gap-arc-supra-oracle-k-synthesis-4266:end -->
+
+<!-- exp4266-gap-diffusiongemma-loader-guidance-4266:start -->
+### GAP-DIFFUSIONGEMMA-LOADER-GUIDANCE-4266: Exp 4266 .394 missing-verifier gap
+- status: open
+- evidence: results/experiment_4260_diffusiongemma_energy_guided_preflight.json; honest_verdict=blocked_diffusiongemma_gguf_loader_failed; preflight_go=False; guidance_changes_selection=False.
+- failure mode: DiffusionGemma energy guidance remained blocked before the guidance hook could demonstrate verifier-shaped token selection.
+- missing discriminator: a loader-validated diffusion guidance path that proves verifier energy changes denoising selections before a full run is scheduled.
+- candidate design: Repair the GGUF vocab loader path, then run a tiny deterministic guidance smoke that records changed selections and exact verifier controls.
+- priority: medium
+<!-- exp4266-gap-diffusiongemma-loader-guidance-4266:end -->
+
+<!-- exp4266-gap-code-oracle-distinct-robustness-4266:start -->
+### GAP-CODE-ORACLE-DISTINCT-ROBUSTNESS-4266: Exp 4266 .394 missing-verifier gap
+- status: open
+- evidence: results/experiment_4264_code_oracle_distinct_replication_retry.json; replication_read=corpus_specific; code_replication_beats_vote=False; code_predictor_minus_vote_delta=-0.00625.
+- failure mode: The code oracle-distinct read is corpus-specific; the second corpus did not replicate a vote-beating predictor despite oracle headroom.
+- missing discriminator: source-robust code candidate features that distinguish real hidden-test pass signal from corpus-specific lexical or vote-signature artifacts.
+- candidate design: Evaluate source-disjoint code pools with normalized-code, AST, agreement, and self-consistency features, plus per-source ablations before any robustness claim.
+- priority: medium
+<!-- exp4266-gap-code-oracle-distinct-robustness-4266:end -->

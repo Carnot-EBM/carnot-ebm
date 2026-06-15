@@ -16066,6 +16066,89 @@ no accepted SOTA GGUF file is cached, then it writes
 built in-window despite cached GGUF availability, then it writes
 `code_replication_retired=true` and does not claim a replication win.
 
+### REQ-VERIFY-4266: Verifier Registry And Gaps Hygiene For .394 Hardened Fork Outcomes
+
+The repository SHALL provide Exp 4266 at
+`python/carnot/experiment_4266_verifier_registry_gaps_hygiene.py` and
+`results/experiment_4266_verifier_registry_gaps_hygiene.py` to reconcile
+`ops/verifier_registry.yaml` and `ops/verifier_gaps.md` to the `.394` fork
+truth. The runner SHALL parse both ledgers and read these required upstream
+artifacts before mutating ledgers:
+`results/experiment_4252_verifier_registry_gaps_hygiene.json`,
+`results/experiment_4256_arc_oracle_distinct_leak_audit.json`,
+`results/experiment_4257_arc_oracle_distinct_multiseed_replication.json`,
+`results/experiment_4258_arc_oracle_distinct_cross_game_transfer.json`,
+`results/experiment_4259_arc_agglm_grid_synthesis.json`,
+`results/experiment_4260_diffusiongemma_energy_guided_preflight.json`,
+`results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json`, and
+`results/experiment_4264_code_oracle_distinct_replication_retry.json`. If any
+ledger cannot parse or any `.394` artifact is absent or unreadable, the runner
+SHALL write a terminal artifact with
+`honest_verdict=blocked_v394_artifacts_missing`, `regression_guard_passed=false`,
+empty `gaps_logged`, and SHALL stop without recording a `.394` win.
+
+When preconditions hold, the runner SHALL run the GAP-4 execution regression
+guard against the `.393` Exp 4252 recorded numbers. The guard SHALL replay the
+canonical cached GAP-4 ARC-1 candidate set and require no regression in vote
+pass@2 `0.4516`, gated pass@2 `0.5806`, `headroom_recovered=4`, and
+`vote_wins_lost=0`. It SHALL expose bare bool `regression_guard_passed` and
+SHALL keep `inference_substrate=verifier_ensemble_against_cached_candidates`.
+
+The runner SHALL record the `.394` outcomes in the GAP-4 / oracle-distinct ARC
+registry slot: A1 Exp 4256 `win_survives_provenance_blind=true` with
+`provenance_blind_delta=0.3846153846`; A2 Exp 4257
+`oracle_distinct_win_replicates=true` with `mean_delta=0.4576923077`; A3 Exp
+4258 `honest_verdict=blocked_arc_game_ids_unrecoverable` with no cross-game
+transfer claim; A4 Exp 4259 `synthesis_beats_selection=false`,
+`synthesis_breaks_oracle_ceiling=false`, and
+`synthesis_minus_oracle_delta=-0.2826086957`; B1 Exp 4260
+`preflight_go=false` with `honest_verdict=blocked_diffusiongemma_gguf_loader_failed`;
+C1 Exp 4263 `ready_for_out_of_band=true` and
+`verifier_as_reward_retired=false`; and C2 Exp 4264
+`replication_read=corpus_specific`, `code_replication_beats_vote=false`, and
+`code_predictor_minus_vote_delta=-0.00625`. The oracle-distinct ARC slot SHALL
+carry a `.394` hardened state showing that the within-pool selector is hardened
+by provenance-blind and multi-seed reads while cross-game generalization remains
+blocked and synthesis does not beat selection.
+
+The gaps ledger SHALL log new missing-verifier backlog entries using the
+schema in `ops/verifier_gaps.md`. At minimum Exp 4266 SHALL log a cross-game
+ARC selection provenance gap (`GAP-ARC-CROSS-GAME-SELECTION-4266`) for the
+unrecoverable game/family discriminator, a supra-oracle-at-K synthesis gap
+(`GAP-ARC-SUPRA-ORACLE-K-SYNTHESIS-4266`) for the failure to synthesize beyond
+selection/oracle@K, a DiffusionGemma loader-guidance preflight gap
+(`GAP-DIFFUSIONGEMMA-LOADER-GUIDANCE-4266`) for the blocked energy-guided
+diffusion path, and a code oracle-distinct robustness gap
+(`GAP-CODE-ORACLE-DISTINCT-ROBUSTNESS-4266`) for the corpus-specific C2 retry.
+The artifact SHALL expose top-level
+`gaps_logged` as the list of new gap entries, each with `failure_mode`,
+`missing_discriminator`, `candidate_design`, and `priority`.
+
+The terminal artifact SHALL write
+`results/experiment_4266_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_logged`,
+bare bool `registry_reconciled`, `v394_outcomes`, `random_seed`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`duration_s`, `inference_substrate`, and `adversarial_verify`. Its field
+principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled + regression guard result.`;
+`regression_guard_passed` = `BARE bool: the GAP-4 execution numbers did not regress vs .393 -- the standing-capability guard.`;
+`gaps_logged` = `List of new missing-verifier gap entries (failure mode + missing discriminator + candidate design + priority) -- the verifier build backlog (Missing-Verifier Gap Logging).`;
+`reproducibility_checksum` = `Hash of the reconciled registry + gaps; catches silent drift.`
+
+### SCENARIO-VERIFY-4266: .394 Reconciliation Logs New Missing-Verifier Gaps
+
+Given the `.393` hygiene artifact, the `.394` A1-A4, B1, C1, and C2 artifacts,
+`ops/verifier_registry.yaml`, and `ops/verifier_gaps.md` are readable, when Exp
+4266 runs, then it writes the terminal artifact with
+`regression_guard_passed=true`, reconciles the registry to the `.394` hardened
+state, logs the new cross-game ARC selection, supra-oracle-at-K synthesis,
+DiffusionGemma loader-guidance, and code robustness gap entries, reports those
+entries through `gaps_logged`, and declares a reproducibility checksum over the
+reconciled registry and gaps files. If any required artifact or ledger parse is
+missing, then it writes `honest_verdict=blocked_v394_artifacts_missing` and
+does not fabricate registry reconciliation.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
