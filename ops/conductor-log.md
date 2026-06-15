@@ -8506,3 +8506,4 @@ c |
 | 2026-06-14 23:20 UTC | PHASE C2 -- ARC-AGI-3 LIVE-env, ACCURACY-seeking.  | OK | 89 passed, 1 warning in 6.59s |
 | 2026-06-14 23:36 UTC | PHASE D1 -- SOTA-INGESTION SLOT (reserved; bleedin | OK | 102 passed, 1 warning in 7.64s |
 | 2026-06-14 23:52 UTC | PHASE D2 -- VERIFIER-REGISTRY + GAPS HYGIENE (rese | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-15 00:13 UTC | PHASE D3 -- Hardware continuity (consolidated; Gat | OK | 87 passed, 1 warning in 4.52s |
