@@ -8566,3 +8566,4 @@ c |
 | 2026-06-15 20:19 UTC | PHASE B2 (ARC north star) -- monotonic ARC +1: adv | OK | 95 passed, 1 warning in 4.70s |
 | 2026-06-15 20:34 UTC | PHASE B3 (ARC north star; efficiency+accuracy) --  | OK | 87 passed, 1 warning in 6.72s |
 | 2026-06-15 20:50 UTC | PHASE C1 (OWED FR-11 self-learning; the discipline | OK | 87 passed, 1 warning in 6.47s |
+| 2026-06-15 21:11 UTC | PHASE C2 (HEADLINE confirmation) -- code oracle-di | OK | 89 passed, 1 warning in 7.49s |
