@@ -40309,7 +40309,15 @@ milestones:
     ARC +1 (->18), and the live-env accuracy probe.'
   doc: openspec/change-proposals/research-roadmap-v392.md
   completed: '2026-06-15'
-  finding: '.392 close-state: FIRST oracle-distinct CODE win, plus ARC data-sparsity tie. CODE-WON: predictor@1-vote@1=+0.03125, CI95 [0.00625, 0.0625], oracle@K=0.9625, off-fold AUROC=0.974, n=160, verifier_is_oracle=false, adversarial-clean. ARC TIED at power: aggregator@1-vote@1=0.0, CI95 [0.0, 0.0], n=52, oracle@K=0.3654, headroom present; diagnosis DATA-SPARSITY with 20 positives / 28419 candidates (base-rate=0.0007), not a thesis bound. Verifier-as-reward HARNESS-DEFERRED: exp4234 blocked_lora_training_cannot_run_in_window, exp4235 blocked at conductor pre-gate, live_lora_retired=false because B2 never ran. ARC total_levels_solved=18, total_games_solved=13; live solver completed 0 levels efficiency-only; flagged-skipped artifacts were 4231 and 4234; DiffusionGemma is resolvable on CODE but ARC still ties. .393 frame: LAND the ARC oracle-distinct win (fix the diagnosed data-sparsity with the flagged full Set-Encoder, re-test at power) + RETIRE live-LoRA and PIVOT verifier-as-reward to the OFFLINE form that fits the window.'
+  finding: '.392 close-state: FIRST oracle-distinct CODE win, plus ARC data-sparsity tie. CODE-WON: predictor@1-vote@1=+0.03125,
+    CI95 [0.00625, 0.0625], oracle@K=0.9625, off-fold AUROC=0.974, n=160, verifier_is_oracle=false, adversarial-clean. ARC
+    TIED at power: aggregator@1-vote@1=0.0, CI95 [0.0, 0.0], n=52, oracle@K=0.3654, headroom present; diagnosis DATA-SPARSITY
+    with 20 positives / 28419 candidates (base-rate=0.0007), not a thesis bound. Verifier-as-reward HARNESS-DEFERRED: exp4234
+    blocked_lora_training_cannot_run_in_window, exp4235 blocked at conductor pre-gate, live_lora_retired=false because B2
+    never ran. ARC total_levels_solved=18, total_games_solved=13; live solver completed 0 levels efficiency-only; flagged-skipped
+    artifacts were 4231 and 4234; DiffusionGemma is resolvable on CODE but ARC still ties. .393 frame: LAND the ARC oracle-distinct
+    win (fix the diagnosed data-sparsity with the flagged full Set-Encoder, re-test at power) + RETIRE live-LoRA and PIVOT
+    verifier-as-reward to the OFFLINE form that fits the window.'
   activation_recorded: exp4242-archive-v392-activate-v393
   tasks:
   - id: exp4230-archive-v391-activate-v392
@@ -40438,4 +40446,167 @@ milestones:
       hardware = exp4240. SKIP any flagged_adversarial artifact; cite upstream sha256. HONOR verifier_is_oracle (a circular
       result may NOT headline a moat). NO gated_on.'
     deliverable: results/experiment_4241_capstone_v392.json
+    result: OK (conductor)
+- id: 2026.06.393
+  title: 'LAND THE ARC ORACLE-DISTINCT WIN -- .392 PROVED the oracle-distinct verifier BEATS vote on CODE (a LEARNED, NON-executing
+    pass-predictor: predictor@1-vote@1 = +0.03125, bootstrap CI95 [0.00625, 0.0625] EXCLUDES 0, oracle@K 0.9625, off-fold
+    AUROC 0.974, n=160, verifier_is_oracle=false -- the FIRST oracle-distinct win) but TIED on ARC (aggregator@1-vote@1 =
+    0.0, CI95 [0,0], n=52 held-out, oracle@K 0.365 so HEADROOM EXISTS) because the ARC candidate pool had only 20 positive/correct
+    candidates across 28419 (base-rate 0.0007) -- the .392 capstone''s disambiguation_read is ARC_NULL_IS_DATA_SPARSITY, NOT
+    a thesis bound. .393 is DEPTH on the headline: A1 GROW the ARC pool toward >=40 wrong-majority held-out tasks + many more
+    minority-correct positives (the data-sparsity fix the .392 SOTA-ingestion flagged: bigger_arc_pool_full_set_encoder_agglm_aggregator_v393);
+    A2 train the FULL permutation-invariant SET-ENCODER cross-candidate aggregator (Set-Encoder 2404.06912, the architecture
+    the .392 augmented-logistic form LACKED) with the calibrated imbalance-aware loss; A3 RE-TEST the decisive beats-vote
+    gate at power -- THE HEADLINE (a first ARC oracle-distinct win closes GAP-3-ties-vote on the north-star domain and justifies
+    activating the gated DiffusionGemma bet). A4 CONFIRM the code win generalizes on a SECOND balanced corpus. PHASE B FINISHES
+    the owed verifier-as-reward pivot the RIGHT way: RETIRE the live-LoRA path (6th infra failure -- exp4234 blocked_lora_training_cannot_run_in_window,
+    accumulate-floor met) and pivot to an OFFLINE reward-weighted form that FITS THE WINDOW (the de-confounded A-vs-B label-carries-signal
+    test on the intact A/B/C corpora). PHASE C: monotonic ARC +1 (->19) + the live-env accuracy probe. PHASE D: SOTA-ingestion
+    + registry/gaps hygiene + hardware continuity + capstone.'
+  doc: openspec/change-proposals/research-roadmap-v393.md
+  completed: '2026-06-15'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4242-archive-v392-activate-v393
+    title: Archive .392 -> activate .393; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
+      + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .392
+      close-state truthfully (oracle-distinct CODE WON -- learned no-execution pass-predictor predictor@1-vote@1=+0.03125
+      CI95 [0.00625,0.0625] excl 0, oracle@K 0.9625, off-fold AUROC 0.974, n=160, verifier_is_oracle=false, the FIRST oracle-distinct
+      win; ARC TIED at power -- aggregator@1-vote@1=0.0 CI95 [0,0] n=52, oracle@K 0.365 headroom present, diagnosed DATA-SPARSITY
+      (20 positives/28419, base-rate 0.0007); verifier-as-reward HARNESS-DEFERRED -- exp4234 blocked_lora_training_cannot_run_in_window
+      flagged, exp4235 pre-gate blocked, live_lora_retired STILL false; ARC 18 levels/13 games exp4236; live solver 0 levels
+      efficiency-only exp4237; 2 flagged-skipped exp4231-build/exp4234-smoke; diffusiongemma_gate_resolvable true on the code
+      win but ARC -- the north-star domain -- still ties).
+    deliverable: results/experiment_4242_archive_v392_activate_v393.json
+    result: OK (conductor)
+  - id: exp4243-arc-candidate-pool-grow
+    title: 'PHASE A1 (HEADLINE; the DATA-SPARSITY fix) -- GROW the labeled ARC candidate pool so the oracle-distinct aggregator
+      has minority-correct evidence to learn from. .392''s ARC tie was diagnosed DATA-SPARSITY: only 20 positive/correct candidates
+      across 28419 (base-rate 0.0007), wrong_majority_n 0-9 on the held-out split -- too few minority-correct examples to
+      learn or test a wrong-majority recoverer. FIX: assemble the MAXIMAL cached pool (ALL GAP-4 stage2 games + the GAP-4
+      induced programs + the existing 28419 candidate set), dedupe + relabel is_correct (candidate grid == gold/induced pred_grid),
+      GROUPED by task_id; and IF positives remain below target, a BOUNDED candidate TOP-UP via the cached explore-induce-verify
+      solver (exp4236) on the wrong-majority tasks (cap candidates/task + tasks to FIT THE WINDOW; honest partial if the cap
+      is reached). Target: >=40 wrong-majority held-out tasks (oracle@K>vote@1) and a meaningfully larger positive_candidate_n
+      than .392''s 20. Report arc_pool_grown (BARE bool) + positive_candidate_n + wrong_majority_n + held_out_task_n + pool_artifact_path.
+      NO TRM training; READ-ONLY w.r.t. the TRM checkpoint.'
+    deliverable: results/experiment_4243_arc_candidate_pool_grow.json
+    result: OK (conductor)
+  - id: exp4244-arc-set-encoder-aggregator-build
+    title: 'PHASE A2 (HEADLINE BUILD, gated_on A1 arc_pool_grown) -- TRAIN the FULL permutation-invariant SET-ENCODER cross-candidate
+      aggregator on the grown pool. .392''s aggregator (exp4231) was an AUGMENTED-LOGISTIC form (explicit set-summary features
+      bolted onto per-candidate logistic regression); the .392 SOTA-ingestion (exp4238) flagged that ''explicit summary features
+      were not enough'' and named the next lever: a TRUE permutation-invariant candidate-SET encoder with inter-candidate
+      attention over all grids and vote basins (Set-Encoder 2404.06912; MSV 2603.03417 cross-sequence). Train a DeepSets/attention
+      set-encoder that scores each candidate CONDITIONED on the full per-task candidate set, with the calibrated imbalance-aware
+      loss (2509.19681: class-weighted/focal + stratified-balanced minibatches + temperature/isotonic calibration), OUT-OF-FOLD
+      (held-out-task split), verifier_is_oracle=false. ABLATE against the .392 augmented-logistic aggregator on the SAME split.
+      Report off-fold AUROC (set-encoder vs augmented-logistic) + aggregator_trained + learned_verifier_path. Honest no-gain-over-logistic
+      is COMPLETE and still feeds A3.'
+    deliverable: results/experiment_4244_arc_set_encoder_aggregator_build.json
+    result: OK (conductor)
+  - id: exp4245-arc-set-encoder-beats-vote
+    title: 'PHASE A3 (THE HEADLINE GATE, gated_on A2 aggregator_trained) -- does the FULL SET-ENCODER aggregator BEAT majority
+      vote OFF-ORACLE on ARC at power? On a HELD-OUT ARC split (disjoint from A2 folds, target N>=40), rerank with the A2
+      Set-Encoder (verifier_is_oracle=false; does NOT execute demos) vs majority-vote vs a MATCHED no-verifier control (same
+      candidates/budget) vs oracle@K (the positive-control ceiling) vs a MARGIN-TRIGGERED override (2606.04323: override vote
+      ONLY when the set-encoder margin clears a pre-registered threshold tuned on the A2 fold). The LOAD-BEARING gate: set_encoder@1
+      - vote@1, bootstrap CI95 EXCLUDES 0 AND headroom exists. YES -> the FIRST ARC oracle-distinct win (closes GAP-3-ties-vote
+      on the north-star domain; justifies activating the gated DiffusionGemma bet). TIES-at-power-on-the-grown-pool -> a much
+      STRONGER null than .392 (now the data-sparsity confound is removed -> a real selection bound). No-headroom -> uninformative
+      (FALSE_NEGATIVE_RISK).'
+    deliverable: results/experiment_4245_arc_set_encoder_beats_vote.json
+    result: OK (conductor)
+  - id: exp4246-code-oracle-distinct-replication
+    title: PHASE A4 (HEADLINE CONFIRMATION; independent) -- CONFIRM the .392 code oracle-distinct win generalizes on a SECOND
+      balanced code corpus. .392 (exp4233) showed a LEARNED no-execution code pass-predictor beats vote (+3.1pp, CI95 [0.006,0.0625],
+      n=160) on ONE candidate pool (the verifier_reward_3arm corpora). A single-corpus +3.1pp is a real but THIN win. Replicate
+      the SAME oracle-distinct gate (learned pass-predictor over candidate code text + cross-candidate agreement, NO test
+      execution at inference, verifier_is_oracle=false) on a DIFFERENT cached code candidate pool (MBPP / EvalPlus / a second
+      HumanEval ensemble eval). predictor@1 vs vote@1 vs matched control vs oracle@K, task-level bootstrap CI95-excl-0, N
+      as large as the cached pool allows. Replicates -> the code oracle-distinct win is robust (strengthens the headline;
+      corroborates ARC if A3 wins, isolates ARC-specificity if A3 ties). Honest no-replication is COMPLETE (the .392 win was
+      corpus-specific). STOP re-running CIRCULAR code-execution selection.
+    deliverable: results/experiment_4246_code_oracle_distinct_replication.json
+    result: OK (conductor)
+  - id: exp4247-verifier-reward-offline-harness-retire-livelora
+    title: 'PHASE B1 (OWED pivot; RETIRE live-LoRA + OFFLINE harness smoke) -- the live-LoRA verifier-as-reward path has now
+      failed 6x on INFRA (exp4198 bg-death, exp4199 gate-block, exp4211 PEFT attach, exp4222/exp4223 DURATION short-circuits,
+      exp4234 blocked_lora_training_cannot_run_in_window) and NEVER reached science; the operator''s accumulate-floor (3 consecutive
+      no-usable windows) is long since met. RETIRE the live-LoRA path (live_lora_retired BARE bool=true) and PIVOT to an OFFLINE
+      reward-weighted form that FITS THE WINDOW: precompute per-example reward weights from the intact A/B/C corpora, then
+      run a BOUNDED offline reward-weighted LoRA-SFT (RAFT/reward-weighted-regression/filtered-BC -- a finite, deterministic-step
+      training, NOT open-ended live RL). SMOKE it as a POSITIVE CONTROL that PROVES real training: LoRA attaches with >0 trainable
+      params on a small NON-Qwen base via AutoModelForCausalLM, >=20 REAL optimizer steps on a fixture, loss MOVES (final<initial),
+      wall-clock exceeds a plausibility floor. harness_smoke_passed BARE bool. NO full A/B/C here (that is B2). NO TRM.'
+    deliverable: results/experiment_4247_verifier_reward_offline_harness_retire_livelora.json
+    result: OK (conductor)
+  - id: exp4248-verifier-as-reward-offline-3arm
+    title: 'PHASE B2 (OWED; self-learning/FR-11, gated_on B1 harness_smoke_passed) -- the de-confounded verifier-as-reward
+      A-vs-B-vs-C on CODE via OFFLINE reward-weighted SFT (the pivot off the dead live-LoRA path), with the PROVEN-TO-TRAIN
+      harness. Offline reward-weighted LoRA-SFT on (A) verifier-certified, (B) same-generator random-label ablation (the Spurious-Rewards
+      control 2506.10947), (C) gold corpora -- identical bounded step budget per arm. THE LOAD-BEARING gate is A vs B: held-out
+      hidden-test pass@1 bootstrap CI95 excludes 0? gold-control (Arm C >= base) + truncation guard (<5%) MUST pass or INVALID.
+      Youden-J (2601.04411) + memorization-shortcut diagnostic (2601.11061). verifier_is_oracle=true (HONEST -- reward axis).
+      A>>B -> the verifier''s LABEL carries training signal (verifier-as-reward is REAL); A~=B -> distillation/spurious (honest
+      null). This is the OFFLINE finish of the owed pivot -- the live-LoRA path is retired (B1), so no 6th identical live
+      run. NO TRM.'
+    deliverable: results/experiment_4248_verifier_as_reward_offline_3arm.json
+    result: OK (conductor)
+  - id: exp4249-arc-incremental-progress
+    title: 'PHASE C1 -- ARC-AGI-3 monotonic +1 (total_levels >= 19). .392 advanced sc25 to L4 (exp4236, total_levels_solved=18,
+      total_games=13). Bank +1 more real level: the next deeper level of an already-solved game (sc25 L5), or a different
+      solved game''s next level, or a new spatial game''s L1 if blocked. Use the HARDENED GAP-4 stack (exp4187) as the act-validation
+      verifier. OFFLINE/air-gapped only (online play stays operator-gated). Honest no-solve is COMPLETE (progress-not-perfection).'
+    deliverable: results/experiment_4249_arc_incremental_progress.json
+    result: OK (conductor)
+  - id: exp4250-arc-live-env-solver-accuracy
+    title: PHASE C2 -- ARC-AGI-3 LIVE-env, ACCURACY-seeking with the strengthened verifier routing. .392's live solver beat
+      the random/greedy floor on EFFICIENCY only (exp4237) but completed 0 levels. Run the explore-induce-verify solver against
+      the LIVE env on ONE easy game targeting a level COMPLETION (levels_completed>=1), applying the margin-triggered re-arbitration
+      (2606.04323) to goal-predicate induction / action selection + a larger bounded budget. Report accuracy (EnvironmentScore.score
+      / levels_completed) AND efficiency (actions vs baseline_actions) vs the floor. NO leaderboard submission (operator-only);
+      honest blocked_arc_live_* if access fails.
+    deliverable: results/experiment_4250_arc_live_env_solver_accuracy.json
+    result: OK (conductor)
+  - id: exp4251-sota-ingestion-set-encoder-offline-rft
+    title: 'PHASE D1 -- SOTA-INGESTION SLOT (reserved; bleeding-edge ORACLE-DISTINCT set-encoder + OFFLINE-RFT track). Ingest
+      the .393 sweep mapped onto the A3 ARC headline + the B2 offline reward-weighted pivot: Set-Encoder (2404.06912), AggLM
+      generative reconciler (2509.06870), MSV (2603.03417), AgentAuditor localized evidence (2602.09341), GenSelect learned
+      selection (2602.02143); and for the reward pivot, offline reward-weighting (RAFT / reward-weighted regression / filtered-BC)
+      + Spurious-Rewards (2506.10947). Plus a fresh focused pass. SOTA->experiment mapping note; flag the strongest for .394
+      conditioned on the A3/B2 outcomes. Cite real arXiv IDs.'
+    deliverable: results/experiment_4251_sota_ingestion_set_encoder_offline_rft.json
+    result: OK (conductor)
+  - id: exp4252-verifier-registry-gaps-hygiene
+    title: 'PHASE D2 -- VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard; FLAG-CLEAN). Bit-exact OFFLINE
+      re-eval reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates (zero codex/GGUF/GPU).
+      RECORD the .393 state into ops/verifier_gaps.md: the ARC oracle-distinct A3 verdict (exp4245 oracle_distinct_beats_vote
+      + delta/CI + held_out_task_n + verifier_is_oracle=false + the exp4244 set-encoder off-fold AUROC + set_encoder_vs_logistic
+      delta), the CODE replication (exp4246 replication_read), the verifier-as-reward OFFLINE A-vs-B (exp4248 verifier_label_carries_signal)
+      AND the live-LoRA RETIREMENT (exp4247 live_lora_retired=true -> add to ops/exclusion_manifest.yaml). Update the GAP-ORACLE-DISTINCT
+      ledger (did the grown-pool + set-encoder change the .392 ARC ties read?). DECLARE inference_substrate + random_seed
+      + reproducibility_checksum + model_specs so this stays clean.'
+    deliverable: results/experiment_4252_verifier_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4253-hardware-continuity
+    title: 'PHASE D3 -- Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 terminal/opportunistic).
+      Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; .392 was unreachable ->
+      recover IDCODE visibility, then n=16 Ising tile flash). PolarFire (ssh polarfire; .392 hash-verified CPU dispatch ->
+      toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal). Per KV260 SSH-Not-SD-Card Discipline:
+      SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock timers per board.'
+    deliverable: results/experiment_4253_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4254-capstone-v393
+    title: 'PHASE D4 -- Capstone .393 (UNGATED): headline question is DID THE FULL SET-ENCODER ON THE GROWN POOL LAND THE
+      FIRST ARC ORACLE-DISTINCT WIN -- exp4245 (set-encoder beats vote off-oracle, verifier_is_oracle=false, matched control
+      + margin override, CI95-excl-0, N>=40): a first ARC oracle-distinct win (closes GAP-3-ties-vote on the north-star domain;
+      justifies activating the gated DiffusionGemma bet) OR a STRONGER ties-at-power null than .392 (data-sparsity removed
+      -> a real selection bound). Aggregate: ORACLE-DISTINCT = exp4245 + exp4244 (set-encoder off-fold AUROC + ablation vs
+      logistic) + exp4243 (grown pool positive_candidate_n + wrong_majority_n) + exp4246 (CODE replication: robust vs corpus-specific);
+      VERIFIER-AS-REWARD = exp4248 (OFFLINE A-vs-B verifier_label_carries_signal + delta/CI + Youden-J) gated on exp4247 (offline
+      harness smoke + live_lora_retired); ARC = exp4249 (total_levels>=19) + exp4250 (live solver accuracy-vs-floor); SOTA
+      = exp4251; registry = exp4252; hardware = exp4253. SKIP any flagged_adversarial artifact; cite upstream sha256. HONOR
+      verifier_is_oracle (a circular result may NOT headline a moat). NO gated_on.'
+    deliverable: results/experiment_4254_capstone_v393.json
     result: OK (conductor)
