@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.390",
+  "generated_at": "2026-06-15T00:35:24Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.06.390 has 0 committed experiments and 0 minutes of measured wall time as of this retrospective. With 0 compute-bound tasks recorded, GPU-idle is not assessable (null) and is therefore NOT a bottleneck — the RTX 3090 pair sitting at 0% utilization is correct behaviour when no GGUF/CUDA task ran. No per-experiment timing data exists, so slowest-experiment ranking, GPU-efficiency assessment, and DualGPURunner-miss detection are all not computable this milestone.",
+  "bottlenecks_identified": [
+    "No experiment commits were found in the 2026.06.390 window, so the operational retrospective has zero per-experiment timing to analyze. This is a data-availability gap, not a measured slowdown — the retro cannot rank slow experiments or quantify wasted wall time when nothing committed.",
+    "The zero-completion state is opaque: the timing-data block reports 'no commits found' but does not distinguish (a) the retro firing before experiment artifacts were committed, from (b) all tasks gate-blocking / doomed-rerun-blocking / 3-fail-skipping, from (c) a conductor stall. Without a task-disposition breakdown the cause is not diagnosable from this data alone."
+  ],
+  "improvements_suggested": [
+    "Add a pre-retro guard in the conductor: confirm at least 1 experiment commit exists in the milestone window before generating an operational retrospective; if none, defer the retro or stamp it retro_type='operational_data_incomplete' so a zero-completion milestone is not mistaken for a clean, efficiently-executed one.",
+    "Emit task-disposition counts (launched / completed / blocked / doomed-rerun-blocked / 3-fail-skipped) in the TIMING DATA block. A zero-completion milestone then becomes self-explaining (e.g. 'launched 0' vs 'launched 13, all blocked') instead of opaque.",
+    "When experiments_completed == 0, surface a sentinel/alert at milestone close rather than producing an all-zeros retro silently — distinguishes 'milestone produced nothing' from 'retro ran early before artifacts landed'.",
+    "Do NOT propose DualGPURunner or GPU-utilization fixes this milestone: no compute-bound task ran, so 0% GPU util is correct, and any GPU optimization here would be optimizing a non-existent workload."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Make zero-completion diagnosable: add task-disposition counts (launched/completed/blocked/skipped) to the conductor's timing-data emission so a retro on an empty milestone can name the cause instead of reporting all-zeros.",
+    "Gate operational-retro generation on >=1 committed experiment in the window (or explicitly mark it data-incomplete), preventing an all-zeros artifact from reading as a healthy, fast milestone.",
+    "Confirm whether the retro fired before artifacts were committed (timing race between milestone-close and artifact commit); if so, sequence the operational retro strictly after the milestone's last experiment commit."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "A milestone that commits zero experiments produces an un-measurable retrospective — there is no wall time to compress and no GPU workload to rebalance, so estimated_time_savings_pct is honestly 0. The highest-value process improvement is therefore not a speed optimization but an observability one: making the zero-completion state diagnosable (task-disposition counts) and gating the retro on real committed data, so the loop can tell 'nothing ran' apart from 'everything ran fast'."
+}
