@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.394",
+  "generated_at": "2026-06-15T22:26:17Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "No experiment commits were recorded since activation of milestone 2026.06.394, so there is zero execution-timing data to analyze (experiments_completed=0, total_wall_time_minutes=0). Both RTX 3090 GPUs were idle (0% util, 4MB each), which is correct behavior given no compute-bound task ran — not a bottleneck. This retrospective reports the empty window honestly rather than inferring numbers from prior milestones.",
+  "bottlenecks_identified": [
+    "Zero experiment commits since milestone activation: the timing window the retro covers contains no measurable experiment work. This empty window is itself the only operational signal available this milestone.",
+    "GPU idle (0% on both RTX 3090s) is explicitly NOT flagged as a bottleneck: with compute_bound_experiments_count=0 there is no compute-bound task to starve, so idle GPUs are expected, not wasted cycles."
+  ],
+  "improvements_suggested": [
+    "Disambiguate the empty window before the next retro: confirm whether zero commits reflect a real stall (all task slots gate-blocked / 3-fail-skipped / doomed-rerun-blocked) versus the retro firing before experiment commits landed — the two have opposite remedies.",
+    "If the milestone genuinely stalled, inspect pick_next_task and the activation guard for a gate-block or doomed-rerun cascade that silently consumed every task slot without producing a results artifact.",
+    "Have the timing-data extractor emit a per-task outcome tally (completed / blocked / skipped) alongside the commit scan, so an empty retro can attribute the cause instead of only reporting the absence."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Audit the 2026.06.394 task ledger for gate-block / skip / doomed-rerun outcomes to explain the zero-commit window (mid-flight vs stalled).",
+    "Wire a pre-retro outcome tally into the timing-data extractor so future empty windows self-attribute their cause.",
+    "If a stall is confirmed, fix the blocking task slot rather than re-proposing the same scope next milestone (Failed-Experiment Rerun Discipline)."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "With no experiment-timing data this milestone, the meta-lesson is observability, not throughput: an empty retro window should resolve automatically to a cause (mid-flight vs stalled) rather than leaving the operator to infer it. Reporting 'no data available this milestone' honestly — rather than recycling prior-milestone numbers — is the correct outcome under the anti-hallucination guard."
+}
