@@ -1,0 +1,199 @@
+{
+  "adversarial_verify": {
+    "flag_count": 0,
+    "flags": [],
+    "methodology_missing_clean": true,
+    "returncode": 0,
+    "status": "clean"
+  },
+  "cited_upstream_artifacts": [
+    "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "results/arc3_gap4_induced_programs.json",
+    "results/experiment_4231_oracle_distinct_arc_aggregator_build.json",
+    "results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json",
+    "results/experiment_4233_oracle_distinct_code_beats_vote.json",
+    "results/experiment_4235_verifier_as_reward_3arm_window_boxed.json"
+  ],
+  "code_disambiguation_outcome": {
+    "artifact_path": "results/experiment_4233_oracle_distinct_code_beats_vote.json",
+    "candidate_pool": {
+      "candidate_n": 2294,
+      "pass_rate": 0.6469049695,
+      "positive_n": 1484,
+      "source_id": "verifier_reward_3arm_lora_rft_a83b52882c198954",
+      "source_paths": [
+        "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/corpora/arm_A.jsonl",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/corpora/arm_B.jsonl",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/corpora/arm_C.jsonl"
+      ],
+      "task_n": 160
+    },
+    "code_oracle_distinct_beats_vote": true,
+    "code_predictor_minus_vote_ci95": [
+      0.00625,
+      0.0625
+    ],
+    "code_predictor_minus_vote_delta": 0.03125,
+    "disambiguation_read": "ARC_null_is_data_sparsity",
+    "gap_id": "GAP-CODE-DISAMBIGUATION-4233",
+    "held_out_task_n": 160,
+    "honest_verdict": "complete: code_oracle_distinct_beats_vote",
+    "matched_control_delta": 0.00625,
+    "missing_discriminator": "arc_pool_scale_or_features_matching_code_domain_power",
+    "off_fold_auroc": 0.9739318159,
+    "oracle_at_k": 0.9625,
+    "oracle_minus_vote": 0.04375,
+    "pass_rates": {
+      "matched_control_at_1": 0.94375,
+      "predictor_at_1": 0.95,
+      "vote_at_1": 0.91875
+    },
+    "source_artifacts": [
+      "results/experiment_4233_oracle_distinct_code_beats_vote.json"
+    ],
+    "status": "filled_code_oracle_distinct_beats_vote",
+    "verifier_is_oracle": false
+  },
+  "duration_s": 0.619107,
+  "experiment": "experiment_4239_verifier_registry_gaps_hygiene",
+  "field_principles": {
+    "gaps_updated": "Lists the verifier_gaps entries touched (the GAP-ORACLE-DISTINCT frontier entry + the strengthened A2 + code disambiguation + verifier-as-reward notes).",
+    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled to the .392 truth.",
+    "random_seed": "Determinism precondition + the methodology field that prevents a METHODOLOGY_MISSING flag.",
+    "regression_guard_passed": "BARE bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression.",
+    "reproducibility_checksum": "Hash of the cached GAP-4 candidate set; catches silent candidate drift."
+  },
+  "gaps_path": "ops/verifier_gaps.md",
+  "gaps_updated": [
+    "GAP-ORACLE-DISTINCT",
+    "GAP-ORACLE-DISTINCT-A2-4232",
+    "GAP-CODE-DISAMBIGUATION-4233",
+    "GAP-REWARD"
+  ],
+  "honest_verdict": "complete: registry_gaps_reconciled_to_v392_truth_regression_guard_passed_True_oracle_distinct_open_a2_ties_vote_with_headroom_at_power_code_filled_code_oracle_distinct_beats_vote_reward_open_live_lora_blocked_pre_gate",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "model_specs": {
+    "candidate_set": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "candidate_set_sha256": "sha256:08f8c9d795755fee0b6f1bf36dfcceaf71a7c5da86e76e60944da0551da16d16",
+    "codex_calls": 0,
+    "live_model_inference": false,
+    "method": "cached_gap4_candidate_replay_and_v392_ledger_reconciliation",
+    "program_outputs": "results/arc3_gap4_induced_programs.json",
+    "scoring_description": "offline verifier ensemble replay over checked-in candidates",
+    "stable_checkpoint_write": false,
+    "trm_training_touched": false
+  },
+  "offline_replay": {
+    "arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+    "expected": {
+      "arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      }
+    },
+    "no_codex_calls": true,
+    "no_gguf_inference": true,
+    "regression_guard_passed": true,
+    "trm_training_touched": false
+  },
+  "oracle_distinct_outcome": {
+    "a2_gap_id": "GAP-ORACLE-DISTINCT-A2-4232",
+    "aggregator_minus_vote_ci95": [
+      0.0,
+      0.0
+    ],
+    "aggregator_minus_vote_delta": 0.0,
+    "aggregator_trained": true,
+    "artifact_path": "results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json",
+    "build_artifact_path": "results/experiment_4231_oracle_distinct_arc_aggregator_build.json",
+    "build_corrigendum_pending": [
+      {
+        "detail": "detector_row_n=28420.0 and raw_candidate_n=28420.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "kind": "TAUTOLOGY",
+        "severity": "critical"
+      }
+    ],
+    "build_flagged_adversarial": true,
+    "build_honest_verdict": "complete_oracle_distinct_arc_aggregator_no_learnable_gain_auroc0.7866",
+    "gap_id": "GAP-ORACLE-DISTINCT",
+    "gap_moat_update": "unchanged_v392_ties_vote_with_headroom",
+    "headline_outcome": "oracle_distinct_aggregator_ties_vote_with_headroom_at_power",
+    "headroom_exists": true,
+    "held_out_task_n": 52,
+    "honest_verdict": "complete: oracle_distinct_aggregator_ties_vote_with_headroom_at_power",
+    "learned_verifier_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4231_oracle_distinct_arc_aggregator_model.json",
+    "margin_override_minus_vote": 0.0,
+    "matched_control_delta": 0.0384615385,
+    "missing_discriminator": "learned_non_oracle_arc_selector_with_positive_vote_beating_ci",
+    "oracle_at_k": 0.3653846154,
+    "oracle_distinct_auroc": 0.7865558646,
+    "oracle_distinct_auroc_ci95": [
+      0.6319719028,
+      0.9258842843
+    ],
+    "oracle_distinct_beats_vote": false,
+    "oracle_minus_vote": 0.1730769231,
+    "pass_rates": {
+      "aggregator_at_1": 0.1923076923,
+      "margin_override_at_1": 0.1923076923,
+      "matched_control_at_1": 0.1538461538,
+      "vote_at_1": 0.1923076923
+    },
+    "source_artifacts": [
+      "results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json",
+      "results/experiment_4231_oracle_distinct_arc_aggregator_build.json"
+    ],
+    "status": "open_a2_ties_vote_with_headroom_at_power",
+    "verifier_is_oracle": false,
+    "wrong_majority_n": 9
+  },
+  "random_seed": 4239,
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_updated": true,
+  "regression_guard_passed": true,
+  "reproducibility_checksum": "sha256:08f8c9d795755fee0b6f1bf36dfcceaf71a7c5da86e76e60944da0551da16d16",
+  "schema": "carnot.experiment_4239_verifier_registry_gaps_hygiene.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4239",
+    "SCENARIO-VERIFY-4239"
+  ],
+  "verifier_reward_outcome": {
+    "a_vs_b_ci95": null,
+    "a_vs_b_delta": null,
+    "artifact_path": "results/experiment_4235_verifier_as_reward_3arm_window_boxed.json",
+    "blocked_at_layer": "conductor_pre_gate",
+    "gap_id": "GAP-REWARD",
+    "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp4234-verifier-reward-lora-harness-real-training-smoke.harness_smoke_passed (actual=False == expected=True)",
+    "gates_evaluated": [
+      {
+        "actual": false,
+        "artifact_field": "harness_smoke_passed",
+        "expected": true,
+        "op": "==",
+        "passed": false,
+        "reason": "actual=False == expected=True",
+        "upstream": "exp4234-verifier-reward-lora-harness-real-training-smoke"
+      }
+    ],
+    "honest_verdict": "blocked_gate_check_failed",
+    "live_lora_retired": false,
+    "missing_discriminator": "decision_grade_a_vs_b_training_signal_or_declared_live_lora_retirement",
+    "source_artifacts": [
+      "results/experiment_4235_verifier_as_reward_3arm_window_boxed.json"
+    ],
+    "status": "open_live_lora_blocked_pre_gate",
+    "verifier_label_carries_signal": false,
+    "youden_j": null
+  }
+}

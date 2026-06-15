@@ -323,6 +323,25 @@ verifiers:
     exp4227_verifier_label_carries_signal: false
     exp4227_a_vs_b_delta: null
     exp4227_detector_arc_auroc: 0.9016
+    eval_exp_4239: results/experiment_4239_verifier_registry_gaps_hygiene.json
+    exp4239_regression_guard_passed: true
+    exp4239_arc1_rule_exec_vote_pass2: 0.4516
+    exp4239_arc1_rule_exec_gated_pass2: 0.5806
+    exp4239_arc1_headroom_recovered: 4
+    exp4239_arc1_vote_wins_lost: 0
+    exp4239_oracle_distinct_beats_vote: false
+    exp4239_aggregator_minus_vote_delta: 0.0
+    exp4239_aggregator_minus_vote_ci95: &id004
+    - 0.0
+    - 0.0
+    exp4239_held_out_task_n: 52
+    exp4239_verifier_is_oracle: false
+    exp4239_oracle_distinct_auroc: 0.7865558646
+    exp4239_wrong_majority_n: 9
+    exp4239_code_oracle_distinct_beats_vote: true
+    exp4239_code_predictor_minus_vote_delta: 0.03125
+    exp4239_verifier_label_carries_signal: false
+    exp4239_live_lora_retired: false
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -3991,3 +4010,43 @@ verifiers:
       - 0.9984
     gap_moat_update: unchanged_a2_did_not_beat_vote
     eval_exp_4227: results/experiment_4227_verifier_registry_gaps_hygiene.json
+  - role_id: oracle_distinct_code_reward_hygiene_4239
+    experiment: results/experiment_4239_verifier_registry_gaps_hygiene.json
+    role: registry_gap_ledger_hygiene_v392
+    status: oracle_distinct_a2_code_reward_recorded
+    oracle_distinct_gap_id: GAP-ORACLE-DISTINCT
+    oracle_distinct_a2_gap_id: GAP-ORACLE-DISTINCT-A2-4232
+    oracle_distinct_status: open_a2_ties_vote_with_headroom_at_power
+    oracle_distinct_artifact: results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json
+    oracle_distinct_build_artifact: results/experiment_4231_oracle_distinct_arc_aggregator_build.json
+    oracle_distinct_beats_vote: false
+    aggregator_minus_vote_delta: 0.0
+    aggregator_minus_vote_ci95: *id004
+    held_out_task_n: 52
+    matched_control_delta: 0.0384615385
+    oracle_at_k: 0.3653846154
+    verifier_is_oracle: false
+    oracle_distinct_auroc: 0.7865558646
+    oracle_distinct_auroc_ci95:
+    - 0.6319719028
+    - 0.9258842843
+    wrong_majority_n: 9
+    build_flagged_adversarial: true
+    code_disambiguation_gap_id: GAP-CODE-DISAMBIGUATION-4233
+    code_disambiguation_status: filled_code_oracle_distinct_beats_vote
+    code_disambiguation_read: ARC_null_is_data_sparsity
+    code_oracle_distinct_beats_vote: true
+    code_predictor_minus_vote_delta: 0.03125
+    code_predictor_minus_vote_ci95:
+    - 0.00625
+    - 0.0625
+    verifier_reward_gap_id: GAP-REWARD
+    verifier_reward_status: open_live_lora_blocked_pre_gate
+    verifier_reward_artifact: results/experiment_4235_verifier_as_reward_3arm_window_boxed.json
+    verifier_label_carries_signal: false
+    a_vs_b_delta: null
+    a_vs_b_ci95: null
+    youden_j: null
+    live_lora_retired: false
+    gap_moat_update: unchanged_v392_ties_vote_with_headroom
+    eval_exp_4239: results/experiment_4239_verifier_registry_gaps_hygiene.json
