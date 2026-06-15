@@ -8538,3 +8538,5 @@ c |
 | 2026-06-15 10:27 UTC | PHASE D2 -- VERIFIER-REGISTRY + GAPS HYGIENE (rese | OK | 89 passed, 1 warning in 7.14s |
 | 2026-06-15 10:38 UTC | PHASE D3 -- Hardware continuity (consolidated; Gat | OK | 87 passed, 1 warning in 4.85s |
 | 2026-06-15 10:57 UTC | PHASE D4 -- Capstone .392 (UNGATED): headline ques | OK | 85 passed, 1 warning in 6.36s |
+| 2026-06-15 11:42 UTC | Plan milestone 2026.06.393 | OK | 13 tasks proposed |
+| 2026-06-15 11:44 UTC | Milestone 2026.06.393 activated | OK | 13 tasks queued |
