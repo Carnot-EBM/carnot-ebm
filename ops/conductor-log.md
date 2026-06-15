@@ -8507,3 +8507,4 @@ c |
 | 2026-06-14 23:36 UTC | PHASE D1 -- SOTA-INGESTION SLOT (reserved; bleedin | OK | 102 passed, 1 warning in 7.64s |
 | 2026-06-14 23:52 UTC | PHASE D2 -- VERIFIER-REGISTRY + GAPS HYGIENE (rese | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-15 00:13 UTC | PHASE D3 -- Hardware continuity (consolidated; Gat | OK | 87 passed, 1 warning in 4.52s |
+| 2026-06-15 00:29 UTC | PHASE D4 -- Capstone .390 (UNGATED): headline ques | OK | 85 passed, 1 warning in 6.24s |
