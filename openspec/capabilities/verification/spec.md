@@ -15846,6 +15846,81 @@ mapped to games, it writes
 `honest_verdict=blocked_arc_game_ids_unrecoverable` with
 `verifier_is_oracle=false` and does not claim a cross-game transfer result.
 
+### REQ-VERIFY-4259: ARC Set-Encoder Grid Synthesis
+
+The repository SHALL provide Exp 4259 at
+`python/carnot/reporting/arc_agglm_grid_synthesis_4259.py` and
+`results/experiment_4259_arc_agglm_grid_synthesis.py` to test whether
+score-weighted per-cell reconciliation over the Exp 4244/4245
+set-encoder-ranked candidate family can synthesize a corrected ARC output grid
+instead of merely selecting an existing candidate. The runner SHALL first load
+the Exp 4256 provenance-blind audit and Exp 4257 multi-seed replication
+artifacts. If `win_survives_provenance_blind` is not bare true or
+`oracle_distinct_win_replicates` is not bare true, it SHALL write the terminal
+artifact with
+`honest_verdict=complete_arc_synthesis_deferred_win_not_hardened`, keep
+`verifier_is_oracle=false`, and stop before scoring synthesis.
+
+When the hardened preconditions hold, the runner SHALL load the Exp 4243 grown
+candidate pool, the Exp 4244 learned set-encoder out-of-fold score rows, and
+the source gold/induced target grids used by Exp 4243 to assign labels. For
+each held-out task, it SHALL rank candidates by learned set-encoder score,
+take the configured top-K family, choose the output shape by score-weighted
+shape vote, and synthesize each output cell by score-weighted color vote over
+the top-K candidates with that shape. The synthesized grid MAY differ from
+every cached candidate.
+
+The runner SHALL validate every synthesized grid by exact ARC grid match
+against the reconstructed gold or induced target grid hashes. It SHALL compute
+`synthesis@1`, `vote@1`, selector-only `@1`, a no-synthesis best-single-score
+baseline, and `oracle@K`, and SHALL report bare float
+`synthesis_minus_vote_delta` and bare float `synthesis_minus_oracle_delta`.
+It SHALL compute task-level bootstrap CI95 intervals for synthesis minus vote,
+synthesis minus selector-only, and synthesis minus oracle. The bare bool
+`synthesis_beats_selection` SHALL be true only when `synthesis@1` exceeds
+selector-only `@1` and the synthesis-minus-selector CI95 excludes zero. The
+bare bool `synthesis_breaks_oracle_ceiling` SHALL be true only when
+`synthesis@1` exceeds `oracle@K` and the synthesis-minus-oracle CI95 excludes
+zero. The runner SHALL include a no-synthesis baseline and matched
+selector-only controls so a generative reconciliation claim cannot hide a
+selection-only win.
+
+The terminal artifact SHALL write
+`results/experiment_4259_arc_agglm_grid_synthesis.json` with required fields
+`honest_verdict`, bare bool `synthesis_beats_selection`, bare bool
+`synthesis_breaks_oracle_ceiling`, bare float
+`synthesis_minus_vote_delta`, bare float `synthesis_minus_oracle_delta`, bare
+bool `exact_match_validated=true`, bare bool `verifier_is_oracle=false`, bare
+int `random_seed`, `reproducibility_checksum`, `model_specs`,
+`field_principles`, `spec_refs`, `acceptance_gate`, and
+`adversarial_verify`. Its `field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. A ceiling-break, a selection-matches-synthesis, and a no-gain are ALL COMPLETE and decision-grade.`;
+`synthesis_beats_selection` = `BARE bool: synthesis@1 > selector-only@1 with CI95-excl-0 -- does reconciliation add value over picking the best cached candidate.`;
+`synthesis_breaks_oracle_ceiling` = `BARE bool: synthesis@1 > oracle@K with CI95-excl-0 -- the headline: synthesis solved tasks where NO candidate was correct (Compute-as-Teacher thesis).`;
+`synthesis_minus_vote_delta` = `synthesis@1 - vote@1 -- the total lift over majority vote.`;
+`synthesis_minus_oracle_delta` = `synthesis@1 - oracle@K -- the ceiling-break magnitude; positive is the un-fakeable evidence synthesis exceeds selection.`;
+`exact_match_validated` = `BARE bool=true -- every synthesized grid scored by EXACT ARC grid match (the fabrication guard); a synthesis claim without exact-match validation is void.`;
+`verifier_is_oracle` = `BARE bool=false -- synthesis is guided by the learned set-encoder scores, no demo execution; keeps it oracle-distinct.`;
+`random_seed` = `Determinism precondition; the held-out split + bootstrap reproducible.`;
+`reproducibility_checksum` = `Hash of the pool + ranked families + synthesized grids; lets a third party re-run.`;
+`model_specs` = `The per-cell reconciliation (+ optional bounded GGUF AggLM arm) + controls; required methodology.`
+
+### SCENARIO-VERIFY-4259: Score-Weighted Grid Synthesis Measures Ceiling Break
+
+Given the hardened Exp 4256 and Exp 4257 gates are true and the grown pool,
+set-encoder score rows, and gold/induced target grids are readable, when Exp
+4259 runs, then it synthesizes one grid per held-out task by top-K
+score-weighted shape and cell voting, validates every synthesized grid by
+exact target-grid match, reports synthesis, vote, selector-only,
+no-synthesis, and oracle controls, reports `synthesis_minus_vote_delta`,
+`synthesis_minus_oracle_delta`, task-level bootstrap CI95 intervals, bare bool
+`synthesis_beats_selection`, bare bool `synthesis_breaks_oracle_ceiling`,
+`exact_match_validated=true`, `verifier_is_oracle=false`, `random_seed`,
+`reproducibility_checksum`, and `model_specs`, and runs adversarial
+verification cleanly. If the hardened gates are not true, then it writes
+`honest_verdict=complete_arc_synthesis_deferred_win_not_hardened` and does not
+claim synthesis evidence.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
