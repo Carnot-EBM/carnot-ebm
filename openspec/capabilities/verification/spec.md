@@ -14314,6 +14314,98 @@ not importable, when Exp 4220 runs, then it writes
 `wrong_majority_n=0`, `verifier_is_oracle=false`, leaves
 `learned_verifier_path` empty, and stops before training.
 
+### REQ-VERIFY-4221: Oracle-Distinct ARC Verifier Beats-Vote Gate
+
+The repository SHALL provide
+`python/carnot/reporting/oracle_distinct_arc_verifier_4221.py` and
+`results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.py` to run the
+held-out ARC rerank gate for the learned verifier built by Exp 4220. The runner
+SHALL first read
+`results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json`; if
+`selector_trained` is not the bare bool `true`, if `verifier_is_oracle` is not
+the bare bool `false`, or if `learned_verifier_path` is absent or unreadable,
+it SHALL write
+`honest_verdict=complete_oracle_distinct_arc_gate_deferred_no_built_verifier`,
+`oracle_distinct_beats_vote=false`, `verifier_is_oracle=false`, and SHALL stop
+before measuring the gate.
+
+When the Exp 4220 verifier is available, the runner SHALL rebuild the held-out
+ARC candidate pool from `results/arc3_gap3_stage2_eval_pool.json.gz` and
+`results/arc3_gap4_induced_programs.json` using the Exp 4220 label path. The
+measured learned score SHALL be oracle-distinct: it MAY use Exp 4220
+out-of-fold learned scores whose `train_task_ids` exclude the scored task, or
+the persisted learned verifier coefficients, but it SHALL NOT execute demos,
+call a GAP execution verifier, or use candidate correctness as an inference
+rank key.
+
+For each ARC task the runner SHALL compute `vote@1` as the majority candidate,
+`verifier@1` as the candidate maximizing the learned score, `oracle@K` as any
+candidate exactly correct, a budget-matched no-verifier control using the same
+candidates with a deterministic first-of-K policy, and an ARBITER-style
+conservative override that keeps the vote candidate unless the learned-score
+margin between the learned top-1 candidate and the vote candidate clears a
+fixed pre-registered threshold. It SHALL report task-level pass rates and a
+task-bootstrap CI95 with at least 2000 resamples for `verifier@1 - vote@1`.
+
+The positive control SHALL be evaluated before interpreting a null. If
+`oracle@K` does not exceed `vote@1`, the terminal verdict SHALL be
+`oracle_distinct_arc_no_headroom_uninformative` and the artifact SHALL NOT claim
+that the verifier failed. Otherwise, the bare bool
+`oracle_distinct_beats_vote` SHALL be true only when headroom exists,
+`verifier@1 - vote@1` is positive, and its CI95 excludes zero. A headroom-present
+run with a non-exclusive CI SHALL report
+`oracle_distinct_verifier_ties_vote_with_headroom`. The runner SHALL run
+`scripts/adversarial_verify.py` on the written artifact and SHALL keep
+`verifier_is_oracle=false` so `CIRCULAR_MOAT_OVERCLAIM` remains clean.
+
+The terminal artifact SHALL write
+`results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json` with
+required fields `honest_verdict`, bare bool `oracle_distinct_beats_vote`, bare
+float `verifier_minus_vote_delta`, `verifier_minus_vote_ci95`, bare float
+`arbiter_override_minus_vote`, bare float `oracle_at_k`, bare float
+`matched_control_delta`, bare bool `verifier_is_oracle=false`, bare int
+`random_seed`, `reproducibility_checksum`, `field_principles`, `spec_refs`, and
+`acceptance_gate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. A clean beats-vote win, a clean ties-vote-with-headroom null, and an honest no-headroom-uninformative are ALL COMPLETE -- the first clean read on the oracle-distinct frontier either way (this time the gate RAN).`;
+`oracle_distinct_beats_vote` = `BARE bool: verifier@1 - vote@1 CI95 excludes 0 AND delta>0 AND headroom exists -- the de-confounded oracle-distinct win (GAP-3-ties-vote closed); NOT a circular execution result.`;
+`verifier_minus_vote_delta` = `verifier@1 - vote@1 on held-out ARC -- the oracle-distinct lift; recovers the wrong-majority-failure answers (ARBITER/AggLM) a flat vote discards.`;
+`verifier_minus_vote_ci95` = `Task-level bootstrap CI95 of the delta -- excluding 0 is what distinguishes a real oracle-distinct win from noise.`;
+`arbiter_override_minus_vote` = `Conservative-override (keep vote unless high learned margin) minus vote -- the ARBITER 2605.26172 deployment pattern; can win where a flat rerank loses by overriding only on confident cases.`;
+`oracle_at_k` = `The positive-control ceiling (any candidate exactly correct) -- if oracle@K ~= vote the null is uninformative (FALSE_NEGATIVE_RISK), not a verifier failure.`;
+`matched_control_delta` = `verifier@1 minus the budget-matched no-verifier control -- isolates the verifier's contribution from the candidate budget (arXiv:2511.02886).`;
+`verifier_is_oracle` = `BARE bool=false -- this measurement uses the LEARNED verifier (no demo execution); only this makes the result headline/gate-eligible (Circularity Discipline; adversarial_verify CIRCULAR_MOAT_OVERCLAIM must stay clean).`;
+`random_seed` = `Determinism precondition; the held-out split + bootstrap must be reproducible.`;
+`reproducibility_checksum` = `Hash of the held-out pool + the learned verifier; lets a third party re-run the decisive gate.`
+
+### SCENARIO-VERIFY-4221: Held-Out Learned Verifier Beats Vote With Headroom
+
+Given Exp 4220 reports `selector_trained=true`, `verifier_is_oracle=false`, and
+a readable `learned_verifier_path`, and the rebuilt ARC pool has
+`oracle@K > vote@1`, when Exp 4221 runs, then it reports vote, learned verifier,
+oracle, matched-control, and ARBITER override task pass rates, computes
+`verifier_minus_vote_delta` and a CI95 with at least 2000 bootstrap resamples,
+sets `oracle_distinct_beats_vote` to true only for a positive CI-exclusive
+learned lift, keeps `verifier_is_oracle=false`, records the fixed override
+threshold, writes the required field principles and checksum, and runs
+adversarial verification without a `CIRCULAR_MOAT_OVERCLAIM` flag.
+
+### SCENARIO-VERIFY-4221-NO-HEADROOM: Positive Control Blocks False Negative
+
+Given the held-out ARC pool has `oracle@K` equal to `vote@1`, when Exp 4221
+runs, then it still reports the measured deltas and controls, but writes an
+honest no-headroom-uninformative verdict, sets
+`oracle_distinct_beats_vote=false`, and does not claim that the learned verifier
+failed.
+
+### SCENARIO-VERIFY-4221-DEFERRED: Missing Built Verifier Defers Honestly
+
+Given Exp 4220 is missing, reports `selector_trained=false`, reports
+`verifier_is_oracle=true`, or points at an unreadable learned verifier, when Exp
+4221 runs, then it writes
+`honest_verdict=complete_oracle_distinct_arc_gate_deferred_no_built_verifier`,
+sets `oracle_distinct_beats_vote=false`, keeps `verifier_is_oracle=false`, and
+stops before measuring ARC candidates.
+
 ### REQ-VERIFY-4177: Decisive Headroom-Controlled Verifier Moat Test
 
 The repository SHALL provide
