@@ -8561,3 +8561,4 @@ c |
 | 2026-06-15 17:38 UTC | PHASE A1 (HEADLINE; cross-check the surprising win | OK | 88 passed, 1 warning in 6.11s |
 | 2026-06-15 18:00 UTC | PHASE A2 (HEADLINE; cross-check the surprising win | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-06-15 18:19 UTC | PHASE A3 (HEADLINE; the real OOD test) -- CROSS-GA | OK | 88 passed, 1 warning in 8.02s |
+| 2026-06-15 19:37 UTC | PHASE A4 (EXTEND the win; gated_on A1 win_survives | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
