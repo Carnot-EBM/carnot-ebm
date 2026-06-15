@@ -1,0 +1,18 @@
+{
+  "corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/reward_weighted_corpus.jsonl",
+  "corpus_sizes": {
+    "A": 776,
+    "B": 776,
+    "C": 742
+  },
+  "expected_runtime": "Approximately 5-20 minutes on a single CUDA GPU for the small non-Qwen smoke; CPU or first-time model download can take longer.",
+  "one_command_invocation": "python3 /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/run_out_of_band_reward_weighted_lora.py --corpus /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/reward_weighted_corpus.jsonl --output /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/training_result.json --adapter-dir /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/lora_adapter --base-model HuggingFaceTB/SmolLM2-135M-Instruct --min-steps 20 --min-duration-s 10.0",
+  "reproducibility_checksum": "sha256:3ff41cbf5966dc0232161f2caa09c02ad252813060e384400651e5e8db83ebf3",
+  "reward_weight_counts": {
+    "0.25": 776,
+    "1.0": 1518
+  },
+  "runner_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/run_out_of_band_reward_weighted_lora.py",
+  "schema": "carnot.experiment_4263.out_of_band_package_manifest.v1",
+  "validation_gate": "LoRA trainable params >0, optimizer_steps >=20, loss_final < loss_initial, duration plausibility floor."
+}

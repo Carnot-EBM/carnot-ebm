@@ -1,0 +1,121 @@
+{
+  "acceptance_gate": {
+    "condition": "ready_for_out_of_band reported with out_of_band_runner_path (and verifier_as_reward_retired if prep infeasible) AND verifier_is_oracle=true, OR an honest blocked_abc_corpora_missing verdict",
+    "principle": "After 7 in-window failures, the disciplined resolution is to move training out-of-band OR retire -- not an 8th doomed in-window rerun; either outcome is decision-grade and closes the owed axis.",
+    "satisfied": true
+  },
+  "created_at": "2026-06-15T20:47:38Z",
+  "duration_s": 0.124766,
+  "expected_runtime": "Approximately 5-20 minutes on a single CUDA GPU for the small non-Qwen smoke; CPU or first-time model download can take longer.",
+  "experiment": "experiment_4263_verifier_as_reward_out_of_band_or_retire",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed. An out-of-band package READY and an honest RETIRE are BOTH COMPLETE -- both resolve the 7x-failed axis without an 8th doomed in-window attempt.",
+    "model_specs": "The small NON-Qwen base + RAFT/RWR weighting + runner config; required methodology.",
+    "out_of_band_runner_path": "Path to the written one-command runner + validation harness the operator executes; the deliverable that moves training out of the infeasible window.",
+    "random_seed": "Determinism precondition for the corpus weighting.",
+    "ready_for_out_of_band": "BARE bool: true iff the reward-weighted corpus is precomputed AND a one-command out-of-band runner + validation harness are written -- the operator then runs the training (TRM pattern).",
+    "reproducibility_checksum": "Hash of the precomputed reward-weighted corpus; lets the out-of-band run be reproducible.",
+    "verifier_as_reward_retired": "BARE bool: true iff even out-of-band prep is infeasible -> the in-loop axis is retired and FoVer +0.0185 (exp2837) stands as the self-learning evidence.",
+    "verifier_is_oracle": "BARE bool=true -- the reward axis uses the verifier label as a training reward (the honest reward framing); declared per Circularity Discipline."
+  },
+  "honest_verdict": "complete: ready_for_out_of_band_verifier_reward_training",
+  "model_specs": {
+    "load_method": "transformers.AutoModelForCausalLM.from_pretrained(\"HuggingFaceTB/SmolLM2-135M-Instruct\")",
+    "lora_config": {
+      "learning_rate": 0.0002,
+      "lora_alpha": 16,
+      "lora_dropout": 0.05,
+      "method": "LoRA-SFT",
+      "r": 8,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ],
+      "task_type": "CAUSAL_LM"
+    },
+    "offline_reward_weighting_scheme": {
+      "fixed_optimizer_steps": 20,
+      "hidden_gold_weight": 1.0,
+      "in_window_training": false,
+      "live_generation": false,
+      "method": "offline_raft_reward_weighted_regression_filtered_bc",
+      "random_label_control_weight": 0.25,
+      "rationale": "Verifier-certified and hidden-gold rows get full BC weight; same-generator random labels are kept only as a low-weight control.",
+      "verifier_certified_weight": 1.0
+    },
+    "out_of_band_runner_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/run_out_of_band_reward_weighted_lora.py",
+    "qwen_train_base_forbidden": true,
+    "reward_weighted_corpus_checksum": "sha256:3ff41cbf5966dc0232161f2caa09c02ad252813060e384400651e5e8db83ebf3",
+    "reward_weighted_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/reward_weighted_corpus.jsonl",
+    "runner_config": {
+      "min_optimizer_steps": 20,
+      "min_plausible_duration_s": 10.0,
+      "validation_requires": [
+        "AutoModelForCausalLM load",
+        "LoRA attached",
+        "trainable_param_count > 0",
+        "optimizer_steps >= 20",
+        "loss_final < loss_initial",
+        "duration_s >= plausibility floor"
+      ]
+    },
+    "trainable_base": "HuggingFaceTB/SmolLM2-135M-Instruct",
+    "trainable_base_is_gguf": false,
+    "trainable_base_is_non_qwen": true,
+    "training_result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/training_result.json",
+    "training_result_written_by_exp4263": false
+  },
+  "one_command_invocation": "python3 /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/run_out_of_band_reward_weighted_lora.py --corpus /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/reward_weighted_corpus.jsonl --output /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/training_result.json --adapter-dir /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/lora_adapter --base-model HuggingFaceTB/SmolLM2-135M-Instruct --min-steps 20 --min-duration-s 10.0",
+  "out_of_band_runner_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/run_out_of_band_reward_weighted_lora.py",
+  "package_manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/package_manifest.json",
+  "preconditions": {
+    "abc_corpora_loaded": true,
+    "abc_corpus_paths": {
+      "A": "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/corpora/arm_A.jsonl",
+      "B": "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/corpora/arm_B.jsonl",
+      "C": "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/corpora/arm_C.jsonl"
+    },
+    "abc_corpus_sizes": {
+      "A": 776,
+      "B": 776,
+      "C": 742
+    },
+    "missing_abc_corpora": [],
+    "qwen_train_base_forbidden": true,
+    "trained_base_is_non_qwen": true,
+    "training_run_by_exp4263": false,
+    "trm_runs_touched": false
+  },
+  "random_seed": 4263,
+  "ready_for_out_of_band": true,
+  "reproducibility_checksum": "sha256:3ff41cbf5966dc0232161f2caa09c02ad252813060e384400651e5e8db83ebf3",
+  "retirement_evidence": {},
+  "schema": "carnot.experiment_4263_verifier_as_reward_out_of_band_or_retire.v1",
+  "spec_refs": [
+    "REQ-LEARN-4263",
+    "SCENARIO-LEARN-4263-READY",
+    "SCENARIO-LEARN-4263-BLOCKED"
+  ],
+  "verifier_as_reward_retired": false,
+  "verifier_is_oracle": true,
+  "weighted_corpus": {
+    "avsb_diagnostic": "clean_a_vs_b_supported_by_verifier_certified_vs_random_label_control",
+    "corpus_sizes": {
+      "A": 776,
+      "B": 776,
+      "C": 742
+    },
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/reward_weighted_corpus.jsonl",
+    "reward_weight_counts": {
+      "0.25": 776,
+      "1.0": 1518
+    },
+    "rows": 2294,
+    "supports_clean_avsb": true
+  }
+}

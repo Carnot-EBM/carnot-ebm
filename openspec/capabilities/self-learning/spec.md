@@ -13834,3 +13834,60 @@ passes.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4088 | Proposed (python/carnot/agentic/arc_exp4088_verifier_reward_rft_corpus_build.py; scripts/experiments/exp4088_verifier_reward_rft_corpus_build.py, Exp 4088) | Proposed (tests/python/test_experiment_4088_verifier_reward_rft_corpus_build.py) |
+
+---
+
+## REQ-LEARN-4263: FR-11 Verifier-As-Reward Out-Of-Band Package Or Retirement
+
+**Given** the verifier-as-reward in-window LoRA axis has already failed seven
+times, Exp 4247 reports `cannot_run_in_window`, Exp 4248 never ran its
+A-vs-B-vs-C gate, and the intact A/B/C corpora from the stable offline harness
+are available
+**When** Exp 4263 runs
+**Then** it SHALL perform only preparation work: load the intact verifier-
+certified (A), same-generator random-label (B), and hidden-gold (C) corpora;
+precompute a deterministic reward-weighted JSONL training artifact; write a
+single-command out-of-band runner plus validation harness; and write
+`results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json`.
+
+The experiment SHALL NOT run training, SHALL NOT touch `results/trm_runs/`,
+SHALL NOT use Qwen as the trained base, and SHALL set `verifier_is_oracle=true`
+because the reward label is the execution verifier. The terminal artifact SHALL
+include bare top-level fields `ready_for_out_of_band`,
+`verifier_as_reward_retired`, `out_of_band_runner_path`, `random_seed`,
+`reproducibility_checksum`, `model_specs`, and `honest_verdict` with the field
+principles required by the milestone prompt.
+
+If the A/B/C corpora are missing or unreadable, Exp 4263 SHALL stop before
+runner generation with `honest_verdict="blocked_abc_corpora_missing"`,
+`ready_for_out_of_band=false`, and no fake training artifact. If the corpora
+load but cannot support a clean A-vs-B reward contrast, Exp 4263 SHALL retire
+the in-loop verifier-as-reward axis by setting `verifier_as_reward_retired=true`
+and recording that the FoVer +0.0185 memory-ablation evidence from Exp 2837
+stands as the self-learning evidence.
+
+### SCENARIO-LEARN-4263-READY: Out-Of-Band Package Prepared Without Training
+
+**Given** all three stable A/B/C corpora are present and non-empty
+**When** Exp 4263 prepares the package
+**Then** the reward-weighted corpus is written, the runner script is written,
+`ready_for_out_of_band=true`, `verifier_as_reward_retired=false`,
+`verifier_is_oracle=true`, and `out_of_band_runner_path` names the written
+single-command runner whose validation requires LoRA attachment, more than zero
+trainable parameters, at least 20 optimizer steps, `loss_final < loss_initial`,
+and plausible runtime on a small non-Qwen base loaded through
+`AutoModelForCausalLM`.
+
+### SCENARIO-LEARN-4263-BLOCKED: Missing A/B/C Corpora Stop The Prep
+
+**Given** one or more of the stable A/B/C corpus files is missing or empty
+**When** Exp 4263 runs
+**Then** it writes `honest_verdict="blocked_abc_corpora_missing"`,
+`ready_for_out_of_band=false`, `verifier_as_reward_retired=false`, and does not
+write a fake training artifact.
+
+## Implementation Status (REQ-LEARN-4263)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4263 | Proposed (python/carnot/experiment_4263_verifier_as_reward_out_of_band_or_retire.py; results/experiment_4263_verifier_as_reward_out_of_band_or_retire.py, Exp 4263) | Proposed (tests/python/test_experiment_4263_verifier_as_reward_out_of_band_or_retire.py) |
