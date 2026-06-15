@@ -8521,3 +8521,4 @@ c |
 | 2026-06-15 05:38 UTC | PHASE D1 -- SOTA-INGESTION SLOT (reserved; bleedin | OK | 102 passed, 1 warning in 7.11s |
 | 2026-06-15 06:01 UTC | PHASE D2 -- VERIFIER-REGISTRY + GAPS HYGIENE (rese | OK | 90 passed, 1 warning in 7.19s |
 | 2026-06-15 06:13 UTC | PHASE D3 -- Hardware continuity (consolidated; Gat | OK | 87 passed, 1 warning in 5.85s |
+| 2026-06-15 06:31 UTC | PHASE D4 -- Capstone .391 (UNGATED): headline ques | OK | 85 passed, 1 warning in 5.83s |
