@@ -1,3 +1,68 @@
+## 2026-06-15 .391 planning sweep — the de-risked ORACLE-DISTINCT retry (learned aggregator/selector beats vote) + the harness-first verifier-as-reward fix
+
+Added by the `.391 planning sweep (Claude Opus 4.8, outer-loop). `.390 ran the oracle-distinct headline
+but the decisive A3 beats-vote gate was **blocked on INFRA, not science**: the A2 build (exp4209)
+returned `blocked_arc_pool_no_candidate_labels` because it looked for per-candidate `is_correct` labels
+in `results/arc3_trm_verifier_rerank.json` (which holds rerank summaries, not training rows), so A3
+(exp4210) gate-blocked on `selector_trained=False`. CRUCIALLY, the SAME milestone's detector probe
+(exp4208) **did** label 8,041 ARC candidates and measured an **oracle-distinct ARC detection AUROC of
+0.9016 (CI95 [0.78, 0.998], verifier_is_oracle=false)** via `scripts/exp_verifier_detector_auroc.py:load_arc_rows()`
+reading `arc3_gap3_stage2_eval_pool.json.gz` + `arc3_gap4_induced_programs.json` (per-candidate label =
+grid-match vs the GAP-4 induced program's `pred_grid`). So the oracle-distinct signal demonstrably
+EXISTS; `.391's headline build just reuses the WORKING label path. The detector axis is also a clean
+`.390 win on its own: detection AUROC 1.0 on sudoku/math where SELECTION headroom is ~0 — the verifier
+earns its place as an abstention/detector even with zero selection headroom (those domains are
+execution-oracle/circular; ARC's 0.90 is the oracle-distinct one). Separately, the verifier-as-reward
+finish (exp4211) failed a 3rd time on a NEW, fixable harness bug: PEFT/LoRA refused the custom
+`Gemma4ClippableLinear` wrapper (`ValueError: Target module ... is not supported`); the operating point
+(Phase-0 0.956, Youden-J 0.414) + N-matched corpora (A=776/B=776/C=742) are intact on disk.
+
+**New methods (verified via WebSearch 2026-06-15; real arXiv IDs) — direct precedents that a LEARNED
+aggregator/selector BEATS majority vote (the `.391 headline mechanism):**
+
+- **AggLM — "The Majority is not always right: RL training for solution aggregation"
+  (arXiv:2509.06870).** Trains an aggregator to REVIEW + RECONCILE + SYNTHESIZE a final answer via RLVR,
+  balancing easy-majority and hard-minority examples; **recovers minority-but-correct answers AND
+  outperforms strong rule-based + reward-model baselines** across benchmarks. The closest direct
+  precedent for the `.391 oracle-distinct-beats-vote headline — a learned signal that beats vote BY
+  recovering the outvoted-correct answer (exactly ARBITER's wrong-majority headroom). MAP: the A2/A3
+  learned ARC verifier can be framed as an aggregator (not only a reranker); the A3 gate (verifier@1 −
+  vote@1, CI95-excl-0) is the same test AggLM passes.
+- **AgentAuditor — "Auditing Multi-Agent LLM Reasoning Trees Outperforms Majority Vote and LLM-as-Judge"
+  (arXiv:2602.09341).** Audits LOCALIZED branch evidence on a reasoning tree to select the correct
+  MINORITY answer; vote "collapses rich reasoning traces into context-free tallies." Beats BOTH majority
+  vote AND LLM-as-judge — so it advances the headline (beats vote) AND the north-star efficiency frame
+  (beats the expensive LLM-judge) at once. MAP: localized-evidence features for the A2 ARC verifier
+  (per-region demo-fit consistency rather than a flat global vote tally).
+- **GenSelect for Best-of-N — "Learning Generative Selection for Best-of-N" (arXiv:2602.02143).**
+  RL-trained (DAPO) generative SELECTION consistently beats prompting and majority vote on math + coding.
+  MAP: corroborates that a LEARNED selector beats vote where flat aggregation plateaus — the A3 thesis.
+- **MSV — "Parallel Test-Time Scaling with Multi-Sequence Verifiers" (arXiv:2603.03417).** A verifier
+  that reads ACROSS multiple sampled sequences improves Best-of-N calibration; gains GROW with N. MAP:
+  the A2 ARC verifier should consume cross-candidate features (self-consistency margin across the
+  per-task candidate set), not score each candidate in isolation.
+- **SR-TTRL — "Beyond Majority Voting: Self-Reflective Test-Time Reinforcement Learning for LLM
+  Reasoning" (ICML 2026 poster, icml.cc/virtual/2026/poster/62036).** Majority-vote pseudo-labels break
+  when the correct solution is a logical MINORITY; self-reflective verification yields high-fidelity
+  pseudo-labels. MAP: motivates the verifier-as-reward (Phase B) self-learning loop — a learned
+  verifier label can out-supervise vote-based pseudo-labels.
+- **"Online Learnability of Chain-of-Thought Verifiers: Soundness and Completeness Trade-offs"
+  (arXiv:2603.03538).** Theory of online-learnable CoT verifiers (the soundness/completeness frontier).
+  MAP: the FR-11 self-learning-verifier framing (the verifier improves online as it sees more traces).
+
+**Bottom line for the `.391 roadmap.** HEADLINE (Phase A) = the DE-RISKED oracle-distinct retry: a single
+robust build task that OWNS label construction (reuse `load_arc_rows()` / the GAP-4 pools that already
+yielded 8,041 labeled ARC candidates), trains the V-STaR/aggregator learned ARC verifier on
+ACCEPTED+REJECTED, stratifies to wrong-majority tasks (oracle@K > vote, the ARBITER/AggLM headroom), then
+a gated A3 beats-vote gate with an ARBITER-style conservative-override (override vote only on high learned
+margin) + matched control + CI95-excl-0. OWED (Phase B) = the harness-FIRST verifier-as-reward fix:
+build+smoke-test a LoRA harness that loads the NON-Qwen base via standard `AutoModelForCausalLM` (standard
+`nn.Linear` target_modules, NOT the custom Gemma4 wrapper) and asserts 1 finite training step on a
+fixture, THEN the gated synchronous 3-arm A-vs-B run on the intact operating point. NORTH STAR (Phase C) =
+monotonic ARC +1 (→17) + the live-env accuracy probe with the ARBITER conservative-override applied to
+goal-predicate induction. The strongest single method flagged for `.391: AggLM (2509.06870) — a learned
+aggregator that recovers minority-correct answers is the precedent the A3 gate aims to match on ARC.
+
 ## 2026-06-14 .390 planning sweep — the ORACLE-DISTINCT frontier (does a LEARNED verifier capture the WRONG-MAJORITY headroom where execution is NOT the oracle)
 
 Added by the `.390 planning sweep (Claude Opus 4.8, outer-loop). The `.390 headline takes the
