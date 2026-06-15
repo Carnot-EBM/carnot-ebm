@@ -1,3 +1,74 @@
+## 2026-06-15 .394 planning sweep — HARDEN the first ARC oracle-distinct win (it landed at +44pp but is single-seed/n=52/leak-risk), then EXTEND selection→SYNTHESIS, then STAGE the now-resolvable DiffusionGemma bet
+
+Added by the `.394 planning sweep (Claude Opus 4.8, outer-loop). `.393 LANDED the program's FIRST genuine
+ARC oracle-distinct verifier-beats-vote win (exp4245, ARC-MOAT-WON): set_encoder@1 0.692 vs vote@1 0.25,
+delta **+0.4423**, bootstrap CI95 [0.308, 0.596] EXCLUDES 0, verifier_is_oracle=false, oracle@K 0.827, n=52
+held-out, adversarial-clean. This flips `diffusiongemma_gate_resolvable=true`. BUT the win demands hardening
+before it headlines a paper or triggers the expensive DiffusionGemma scale-up, for three reasons the
+capstone did NOT address: (1) **+44pp is surprising** (from .392's exact tie 0.0) and is the program's #1
+positive -> CLAUDE.md "cross-check surprising results" MANDATES replication; it is **single-seed (4245),
+n=52**. (2) The win came from the **GROWN POOL (A1 data-sparsity fix, positives 20->48), NOT the set-encoder
+architecture**: exp4244's DeepSets set-encoder AUROC 0.963 *underperformed* the .392 augmented-logistic
+(0.980, delta -0.016). (3) **Provenance-leak risk**: positive labels = "exact match to gold-flagged or
+**GAP-4 induced pred_grid**"; features include "shape/palette family indicators" + "duplicate counts" that
+could encode candidate ORIGIN (induced vs sampled) rather than correctness. The owed axes stayed stuck:
+verifier-as-reward (FR-11) failed a **7th** time (exp4247 offline pivot also "cannot_run_in_window", flagged
+CRITICAL) -> in-window training is infeasible; code oracle-distinct replication BLOCKED (exp4246, second
+corpus missing).
+
+**New methods (verified via WebSearch 2026-06-15; real arXiv IDs) — each maps onto a NAMED `.394 fork:**
+
+- **Compute as Teacher — "Turning Inference Compute Into Reference-Free Supervision" (arXiv:2509.14234).**
+  The load-bearing thesis for the SYNTHESIS fork: *selection methods can at best recover the best rollout,
+  while generative SYNTHESIS can construct a new response that EXCEEDS the best rollout.* MAP: `.393's
+  selection win is capped at oracle@K=0.827 (17% of tasks have NO correct candidate); the `.394 AggLM
+  grid-synthesis fork (exp4259) reconciles the set-encoder-ranked candidate family into a corrected grid
+  that can break that ceiling. This is the formal justification for going beyond selection.
+- **"LLMs Can Generate a Better Answer by Aggregating Their Own Responses" (arXiv:2503.04104).** Generative
+  aggregation beats model-based SELECTION and feedback across tasks/models. MAP: corroborates exp4259 —
+  reconcile-and-synthesize the ARC grid rather than only picking a cached candidate.
+- **"Learning Generative Selection for Best-of-N" (arXiv:2602.02143).** A 1.7B model trained for generative
+  selection consistently beats majority vote and GenSelect prompting. MAP: the high-capacity selector
+  baseline for the bigger-pool arm (already ingested at `.391/`.392 as GenSelect-BoN).
+- **"Scaling Generative Verifiers for NL Math Proof Verification and Selection" (arXiv:2511.13027).**
+  GenSelect + LLM-judge scaled to millions of tokens is the most effective verify+select framework. MAP:
+  the cost/quality framing for the verifier-vs-LLM-judge efficiency axis (north-star §5 EFFICIENCY).
+- **"A Survey on Data Contamination for LLMs" (arXiv:2502.14425)** + **"Detecting Data Contamination via
+  In-Context Learning" (arXiv:2510.27055).** "Provenance is a first-order confound: if train/RL data
+  overlap the eval set, measured 'reasoning' may reflect memorization." Detection = matching-based
+  (substring/n-gram/near-duplicate), behavior-based (leaked-vs-held-out performance gap), membership
+  inference (SimMIA). MAP: the `.394 LEAK-AUDIT fork (exp4256) — provenance-blind feature ablation + an
+  explicit candidate-ORIGIN probe (can the features predict induced-vs-sampled?) + strict task-disjoint
+  folds; the win must survive provenance-blind features.
+- **"Unlocking Guidance for Discrete State-Space Diffusion and Flow Models" (arXiv:2406.01572)** + **"Guided
+  Transfer Learning for Discrete Diffusion Models" (arXiv:2512.10877, ICLR 2026 ReALM-GEN)** + **EDLM
+  (Energy-based Diffusion Language Model, per the discrete-diffusion survey arXiv:2506.13759).** The
+  technical substrate for the now-gate-resolvable DiffusionGemma bet: predictor/classifier guidance on
+  discrete-token diffusion; GTL samples from a target distribution WITHOUT modifying the pretrained denoiser
+  (linear in vocab). MAP: the `.394 DiffusionGemma PREFLIGHT (exp4260) wires the verifier ensemble as a
+  guidance energy on DiffusionGemma's denoising for a TINY smoke (GO/NO-GO + cost estimate); the full run is
+  gated to `.395 on the `.394 win surviving. DiffusionGemma is CACHED (google/diffusiongemma-26B-A4B-it +
+  unsloth GGUF). EDLM was an operator-seeded preflight (`.347 exp3793 returned GO).
+- **"The ARC of Progress: A Living Survey of Abstraction and Reasoning" (arXiv:2603.13372)** + **ARCTraj
+  (arXiv:2511.11079).** ARC-AGI is the canonical OOD-generalization challenge; the unresolved frontier is
+  "compositional reasoning under extreme data scarcity" with cross-task transfer. MAP: the `.394 CROSS-GAME
+  transfer probe (exp4258) — train the learned verifier on a subset of GAMES, test on HELD-OUT GAMES (not
+  just held-out tasks within seen games); this is the real OOD test distinguishing a general selection
+  signal from per-game-basin memorization (cf. the ARC-1->ARC-2 collapse, project_gap3_verifier_program).
+
+**Bottom line for the `.394 roadmap.** HEADLINE (Phase A) = HARDEN the first ARC oracle-distinct win before
+it headlines or scales: (A1) LEAK-AUDIT with provenance-blind features + an origin probe (2502.14425 /
+2510.27055); (A2) MULTI-SEED + independent clean-room replication (the win is single-seed/n=52); (A3)
+CROSS-GAME transfer (2603.13372 — the real OOD test); then (A4) EXTEND selection->SYNTHESIS via AggLM
+grid-reconciliation (2509.14234 / 2503.04104) to break the oracle@K=0.827 ceiling, gated on A1+A2 (don't
+build on a leaked/fluke win). SCALE-UP (Phase B) = STAGE the DiffusionGemma bet as a PREFLIGHT only
+(2406.01572 / 2512.10877), gated on the win surviving; + monotonic ARC +1 (->20) + the live-env accuracy
+probe. OWED (Phase C) = verifier-as-reward RE-SCOPED to OUT-OF-BAND (7x in-window failures = infeasible;
+prepare corpus+runner for operator/outer-loop execution like the TRM checkpoint, or RETIRE with FoVer
++0.0185 as the standing self-learning evidence) + code-replication retry on a FRESH second corpus or retire.
+Strongest single method flagged for `.394: Compute-as-Teacher (2509.14234) — synthesis can exceed the best
+rollout, the formal reason to extend the selection win into grid-synthesis once it is hardened.
+
 ## 2026-06-15 .392 planning sweep — STRENGTHEN the oracle-distinct verifier (the .391 beats-vote gate RAN and TIED vote; diagnose the null, fix all three causes)
 
 Added by the `.392 planning sweep (Claude Opus 4.8, outer-loop). `.391 finally RAN the oracle-distinct
