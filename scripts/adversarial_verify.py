@@ -698,8 +698,22 @@ def _is_aggregation_only(d: dict[str, Any]) -> bool:
 
 
 def _is_deterministic_verifier(d: dict[str, Any]) -> bool:
-    """True when the artifact declares replay over checked-in verifier evidence."""
-    return d.get("inference_substrate") in DETERMINISTIC_VERIFIER_SUBSTRATES
+    """True when the artifact declares replay / reconciliation over checked-in evidence.
+
+    Besides the canonical sentinels, recognise substrate names that self-declare
+    deterministic replay or ledger reconciliation over checked-in artifacts and make
+    NO live LLM call of their own (e.g. registry/gaps-hygiene tasks declaring
+    `cached_gap4_replay_and_ledger_reconciliation`). These finish in milliseconds and
+    must use the JSON-work floor, not the 60s live-model floor. Their GGUF/CUDA markers
+    are inherited from the upstream artifacts they replay, not invoked here. This was a
+    recurring DURATION_TOO_SHORT false-positive on .390 infra tasks (B2/D2). Live
+    inference artifacts declare `live_llm_inference`, so this never masks a real
+    fast-fabrication of a live-model claim. (Inference-Substrate Declaration Discipline.)
+    """
+    sub = str(d.get("inference_substrate") or "")
+    if sub in DETERMINISTIC_VERIFIER_SUBSTRATES:
+        return True
+    return any(tok in sub for tok in ("replay", "reconciliation"))
 
 
 def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
