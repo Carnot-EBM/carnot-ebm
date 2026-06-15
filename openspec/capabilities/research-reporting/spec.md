@@ -20760,6 +20760,97 @@ files untouched.
 |---|---|---|
 | REQ-REPORT-4226 | Implemented (`python/carnot/experiment_4226_sota_ingestion_learned_aggregator.py`, `docs/research-notes/sota-ingestion-learned-aggregator-v392-2026-06-15.md`) | Implemented (`tests/python/test_experiment_4226_sota_ingestion_learned_aggregator.py`) |
 
+### REQ-REPORT-4238: Ingest The .392 Cross-Candidate Aggregator Sweep Into A .393 Plan
+
+The Exp 4238 SOTA-ingestion workflow SHALL ingest the `.392 planning sweep`
+from `research-references.md` into an actionable SOTA-to-experiment mapping
+for the `.393` planner. The workflow SHALL read the `.392 planning sweep`,
+`research-studying.md`,
+`results/experiment_4231_oracle_distinct_arc_aggregator_build.json`,
+`results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json`, and
+`results/experiment_4233_oracle_distinct_code_beats_vote.json`; SHALL run the
+reliable discovery helpers `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py` with focused low-concurrency queries; SHALL
+verify the top mapped sources with low-concurrency WebSearch/WebFetch; and
+SHALL NOT invoke `/deep-research` or modify `scripts/research_conductor.py`.
+
+The markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-cross-candidate-aggregator-v393-2026-06-15.md`
+and the machine-checkable mapping artifact SHALL be written to
+`results/experiment_4238_sota_ingestion_cross_candidate_aggregator.json`. The
+required runner SHALL be
+`results/experiment_4238_sota_ingestion_cross_candidate_aggregator.py` and
+SHALL delegate to
+`python/carnot/experiment_4238_sota_ingestion_cross_candidate_aggregator.py`.
+
+The note SHALL map the three `.392` null-cause fixes to the actual A2/A3
+outcomes: Set-Encoder (`arXiv:2404.06912`) fixes isolated scoring with
+permutation-invariant cross-candidate attention; Calibrated Reasoning
+(`arXiv:2509.19681`) fixes class-imbalance score collapse with calibrated
+verifier scoring; and margin-triggered re-arbitration (`arXiv:2606.04323`)
+fixes override degeneracy by keeping vote unless a pre-registered margin fires.
+It SHALL also map SCOPE (`arXiv:2512.15146`), adaptive verification allocation
+(`arXiv:2602.03975`), MSV (`arXiv:2603.03417`), AggLM
+(`arXiv:2509.06870`), and AgentAuditor (`arXiv:2602.09341`) when those sources
+are cited in the mapping. For each mapped method, the note SHALL state the
+Carnot stack mapping, what the method implies under the Exp 4232 ARC tie, where
+the method fails or does not by itself prove Carnot's claim, and the concrete
+`.393` experiment target.
+
+The note SHALL record that Exp 4231 trained a cross-candidate augmented
+calibrated logistic aggregator with `oracle_distinct_auroc=0.7865558646`,
+`positive_candidate_n=20`, `wrong_majority_n=9`, and
+`no_learnable_gain_reason=too_few_positives_after_growth`; that Exp 4232 tied
+vote despite headroom with `aggregator_minus_vote_delta=0.0`,
+`oracle_minus_vote=0.1730769231`, `held_out_task_n=52`, and
+`oracle_distinct_beats_vote=false`; and that Exp 4233 beat vote on code with
+`code_predictor_minus_vote_delta=0.03125`, CI95 `[0.00625, 0.0625]`, and
+`disambiguation_read=ARC_null_is_data_sparsity`.
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v393`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, and `flagged_for_v393`. `honest_verdict`
+SHALL use a terminal prefix and, on the complete path, start with
+`complete: sota_ingestion_cross_candidate_aggregator_mapped_v393`.
+`methods_mapped` SHALL contain five to eight dicts with exactly `name`,
+`arxiv_id_or_url`, `url`, `carnot_stack_mapping`, `a2_a3_mapping`,
+`failure_mode`, and `experiment_mapping`; each `arxiv_id_or_url` SHALL be one
+of the WebFetch-verified arXiv IDs or URLs, preventing fabricated or uncited
+method rows. `flagged_for_v393` SHALL be a non-empty concrete roadmap slug
+naming the single strongest `.393` method, conditioned on Exp 4232 tying ARC
+vote while Exp 4233 labels the ARC null as data sparsity; for this ingestion it
+SHALL name a bigger ARC pool plus full Set-Encoder/AggLM-style
+cross-candidate aggregator follow-up.
+
+The workflow SHALL update `research-studying.md` idempotently to mark the
+`.392 planning sweep` as ingested, SHALL include `flagged_for_v393`, and SHALL
+NOT update `ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-4238: The .392 Sweep Closes Into A .393 Cross-Candidate Aggregator Plan
+
+**Given** the `.392 planning sweep` filed Set-Encoder, Calibrated Reasoning,
+margin-triggered re-arbitration, SCOPE, adaptive verification allocation, MSV,
+AggLM, and AgentAuditor as source-backed fixes for isolated scoring, class
+imbalance, under-power, and wrong-majority aggregation
+**And** Exp 4231 reports a trained but sparse cross-candidate ARC aggregator
+**And** Exp 4232 reports ARC headroom while the aggregator ties vote
+**And** Exp 4233 reports a high-power code verifier win with
+`disambiguation_read=ARC_null_is_data_sparsity`
+**When** the Exp 4238 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON mapping artifact, maps
+verified sources to Carnot stack implications, failure modes, and concrete
+`.393` experiment targets, updates `research-studying.md` idempotently, flags
+the single strongest `.393` follow-up, and leaves conductor and reconciliation
+files untouched.
+
+## Implementation Status (REQ-REPORT-4238)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4238 | Implemented (`python/carnot/experiment_4238_sota_ingestion_cross_candidate_aggregator.py`, `docs/research-notes/sota-ingestion-cross-candidate-aggregator-v393-2026-06-15.md`) | Implemented (`tests/python/test_experiment_4238_sota_ingestion_cross_candidate_aggregator.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
