@@ -536,6 +536,26 @@ to find out); the 2026-06-11 overnight synthesis (4-agent sweep); `reference_ant
 (hack-resistant evals = the bottleneck the verifier-as-reward uniquely addresses); CLAUDE.md
 research-program self-learning + "Scope-Reduction-When-Flagged".
 
+**TECHNICAL BLOCKER — LoRA-attach REGRESSION (outer-loop diagnosis 2026-06-15, .393 B1).**
+The verifier-as-reward harness smoke has now failed ~7× and NEVER reached the A-vs-B science. There
+are TWO distinct, separable failure modes — the next attempt must fix BOTH:
+1. **ATTACH (Gemma4ClippableLinear not supported).** PEFT/LoRA cannot wrap the custom
+   `Gemma4ClippableLinear` wrapper (its real `nn.Linear` is the `.linear` submodule). **This is
+   SOLVED** — `.391` exp4222 attached 5.7M trainable params by targeting the INNER linear:
+   `target_modules=[q_proj.linear, k_proj.linear, v_proj.linear, o_proj.linear, gate_proj.linear,
+   up_proj.linear, down_proj.linear]` (`lora_attach_path=wrapper_inner_linear_target_modules`).
+   **`.393` exp4247 REGRESSED** off this fix — it used `standard_auto_model_for_causal_lm_target_modules`
+   (plain `q_proj/...`) → `trainable_param_count=0`, `steps_run=0`, same ValueError. The next harness
+   MUST reuse exp4222's inner-`.linear` target list (or load the standard `google/gemma-4-E4B-it` base
+   so PEFT sees plain `nn.Linear`), NOT the standard wrapper target names.
+2. **WINDOW (training cannot complete in the task timeout).** Even when attach succeeds (exp4222),
+   the real-training smoke (exp4234) hit `blocked_lora_training_cannot_run_in_window`. The offline
+   reward-weighted pivot (RAFT/RWR/filtered-BC, bounded deterministic steps) is the right shape — but
+   it must (a) apply fix #1 first, and (b) size the step budget to FINISH a >=20-step smoke + the A/B/C
+   eval inside one task window. A real but fast (<60s) offline smoke is honest; declare
+   `inference_substrate` (e.g. a `*_offline_sft` value — NOT bare live_llm_inference) so it isn't
+   DURATION_TOO_SHORT-flagged (the flag has been incidental on every failure, masking the real verdict).
+
 ### NEW 2026-06-11 (TOP PRIORITY — operator-directed): POWERING RUNS MUST ACCUMULATE ACROSS MILESTONES (resume-not-restart)
 
 **Origin:** 2026-06-11 operator directive ("Let's address that") after the recurring failure
