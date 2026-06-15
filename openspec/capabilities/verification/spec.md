@@ -14699,6 +14699,105 @@ unreadable pool artifact, when Exp 4244 runs, then it writes
 `verifier_is_oracle=false`, leaves `learned_verifier_path` empty, and stops
 before training.
 
+### REQ-VERIFY-4245: Held-Out ARC Set-Encoder Beats-Vote Gate
+
+The repository SHALL provide
+`python/carnot/reporting/arc_set_encoder_beats_vote_4245.py` and
+`results/experiment_4245_arc_set_encoder_beats_vote.py` to run the decisive
+held-out ARC rerank gate for the learned Set-Encoder built by Exp 4244. The
+runner SHALL first read
+`results/experiment_4244_arc_set_encoder_aggregator_build.json`; if
+`aggregator_trained` is not the bare bool `true`, if `verifier_is_oracle` is
+not the bare bool `false`, or if `learned_verifier_path` is absent or
+unreadable, it SHALL write
+`honest_verdict=complete_arc_oracle_distinct_gate_deferred_no_built_aggregator`,
+`oracle_distinct_beats_vote=false`, `verifier_is_oracle=false`, and SHALL stop
+before measuring ARC candidates.
+
+When the Exp 4244 Set-Encoder is available, the runner SHALL load the Exp 4243
+grown ARC pool and the Exp 4244 out-of-fold Set-Encoder rows. A candidate may
+contribute to the gate only when its task id is absent from that score row's
+`train_task_ids`; otherwise the whole task SHALL be dropped from the measured
+held-out pool. The measured Set-Encoder score SHALL be oracle-distinct: the
+runner SHALL NOT execute demos, call an ARC execution verifier, or use
+candidate correctness as an inference rank key.
+
+For each retained held-out ARC task the runner SHALL compute `vote@1` as the
+majority candidate, `set_encoder@1` as the candidate maximizing the learned
+Exp 4244 Set-Encoder score, `oracle@K` as any candidate exactly correct, a
+budget-matched no-verifier control using the same candidates with a
+deterministic first-of-K policy, and a 2606.04323 margin-triggered override
+that keeps the vote candidate unless the learned-score margin between the
+Set-Encoder top-1 and the vote candidate clears the pre-registered A2-fold
+threshold. It SHALL report task-level pass rates, bare int `held_out_task_n`,
+and a task-bootstrap CI95 with at least 2000 resamples for
+`set_encoder@1 - vote@1`. It SHALL flag `clt_floor_caveat=true` when
+`held_out_task_n < 30`.
+
+The positive control SHALL be interpreted before any null. If `oracle@K` does
+not exceed `vote@1`, the terminal headline SHALL be
+`arc_oracle_distinct_no_headroom_uninformative` and the artifact SHALL NOT
+claim that the Set-Encoder failed. Otherwise, the bare bool
+`oracle_distinct_beats_vote` SHALL be true only when headroom exists,
+`set_encoder@1 - vote@1` is positive, and its CI95 excludes zero. A
+headroom-present run with a non-exclusive CI SHALL report
+`arc_oracle_distinct_ties_vote_at_power_on_grown_pool`. A positive
+CI-exclusive run SHALL report `arc_oracle_distinct_set_encoder_beats_vote`.
+The runner SHALL run `scripts/adversarial_verify.py` on the written artifact
+and SHALL keep `verifier_is_oracle=false` so `CIRCULAR_MOAT_OVERCLAIM` remains
+clean.
+
+The terminal artifact SHALL write
+`results/experiment_4245_arc_set_encoder_beats_vote.json` with required fields
+`honest_verdict`, bare bool `oracle_distinct_beats_vote`, bare float
+`set_encoder_minus_vote_delta`, `set_encoder_minus_vote_ci95`, bare float
+`margin_override_minus_vote`, bare float `matched_control_delta`, bare float
+`oracle_at_k`, bare int `held_out_task_n`, bare bool
+`verifier_is_oracle=false`, bare int `random_seed`,
+`reproducibility_checksum`, `field_principles`, `spec_refs`, and
+`acceptance_gate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. A clean beats-vote win, a clean ties-at-power-on-the-grown-pool null (data-sparsity removed -> a real bound), and an honest no-headroom are ALL COMPLETE and decision-grade.`;
+`oracle_distinct_beats_vote` = `BARE bool: set_encoder@1 - vote@1 CI95 excludes 0 AND delta>0 AND headroom exists -- the de-confounded FIRST ARC oracle-distinct win (GAP-3-ties-vote closed on the north-star domain); NOT a circular execution result.`;
+`set_encoder_minus_vote_delta` = `set_encoder@1 - vote@1 on held-out ARC -- the oracle-distinct lift; recovers the wrong-majority-failure answers (ARBITER/AggLM) a flat vote discards.`;
+`set_encoder_minus_vote_ci95` = `Task-level bootstrap CI95 of the delta -- excluding 0 is what distinguishes a real oracle-distinct win from noise.`;
+`margin_override_minus_vote` = `Margin-triggered override (keep vote unless high set-encoder margin, threshold pre-registered on the A2 fold) minus vote -- the 2606.04323 deployment pattern; can win where a flat rerank loses by overriding only on confident wrong-majority cases (the .392 override never fired).`;
+`matched_control_delta` = `set_encoder@1 minus the budget-matched no-verifier control -- isolates the set-encoder's contribution from the candidate budget.`;
+`oracle_at_k` = `The positive-control ceiling (any candidate exactly correct) -- if oracle@K ~= vote the null is uninformative (FALSE_NEGATIVE_RISK), not a verifier failure.`;
+`held_out_task_n` = `BARE int: the gate's actual N -- target >=40 so the win/null is not under-powered.`;
+`verifier_is_oracle` = `BARE bool=false -- this measurement uses the LEARNED Set-Encoder (no demo execution); only this makes the result headline/gate-eligible (adversarial_verify CIRCULAR_MOAT_OVERCLAIM must stay clean).`;
+`random_seed` = `Determinism precondition; the held-out split + bootstrap must be reproducible.`;
+`reproducibility_checksum` = `Hash of the held-out pool + the learned set-encoder; lets a third party re-run the decisive gate.`
+
+### SCENARIO-VERIFY-4245: Held-Out Set-Encoder Beats Vote With Controls
+
+Given Exp 4244 reports `aggregator_trained=true`, `verifier_is_oracle=false`,
+and a readable `learned_verifier_path`, and the grown held-out ARC pool has
+`oracle@K > vote@1`, when Exp 4245 runs, then it reports vote, learned
+Set-Encoder, oracle, matched-control, and margin-triggered override task pass
+rates, computes `set_encoder_minus_vote_delta` and a CI95 with at least 2000
+bootstrap resamples, sets `oracle_distinct_beats_vote` to true only for a
+positive CI-exclusive learned lift, records `held_out_task_n`, keeps
+`verifier_is_oracle=false`, records the pre-registered override threshold,
+writes the required field principles and checksum, and runs adversarial
+verification without a `CIRCULAR_MOAT_OVERCLAIM` flag.
+
+### SCENARIO-VERIFY-4245-NO-HEADROOM: Positive Control Blocks False Negative
+
+Given the grown held-out ARC pool has `oracle@K` equal to `vote@1`, when Exp
+4245 runs, then it still reports the measured deltas and controls, but writes
+an honest no-headroom-uninformative verdict, sets
+`oracle_distinct_beats_vote=false`, and does not claim that the learned
+Set-Encoder failed.
+
+### SCENARIO-VERIFY-4245-DEFERRED: Missing Built Set-Encoder Defers Honestly
+
+Given Exp 4244 is missing, reports `aggregator_trained=false`, reports
+`verifier_is_oracle=true`, or points at an unreadable learned Set-Encoder,
+when Exp 4245 runs, then it writes
+`honest_verdict=complete_arc_oracle_distinct_gate_deferred_no_built_aggregator`,
+sets `oracle_distinct_beats_vote=false`, keeps `verifier_is_oracle=false`, and
+stops before measuring ARC candidates.
+
 ### REQ-VERIFY-4233: Oracle-Distinct Code Pass-Predictor Beats-Vote Gate
 
 The repository SHALL provide
