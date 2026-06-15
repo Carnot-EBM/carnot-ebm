@@ -1,0 +1,363 @@
+{
+  "arc_progress": {
+    "acceptance_gate_passed": true,
+    "honest_verdict": "success: incremental_progress_sc25-635fd71a_advanced_to_L2_total16",
+    "levels_completed": 2,
+    "new_levels_solved_this_task": 1,
+    "real_env_confirmed": true,
+    "status": "included",
+    "total_arc_games_solved": 13,
+    "total_arc_levels_solved": 16
+  },
+  "certified_corpus_latent_or_absent": {
+    "latent_or_absent": "SKIPPED-FLAGGED",
+    "status": "skipped_flagged_adversarial"
+  },
+  "detector_selection_divergence": {
+    "detection_auroc_by_domain": {
+      "arc": 0.9016,
+      "code": 1.0,
+      "math": 1.0,
+      "sudoku": 1.0
+    },
+    "detection_auroc_ci95_by_domain": {
+      "arc": [
+        0.7828,
+        0.9984
+      ],
+      "code": [
+        1.0,
+        1.0
+      ],
+      "math": [
+        1.0,
+        1.0
+      ],
+      "sudoku": [
+        1.0,
+        1.0
+      ]
+    },
+    "honest_verdict": "complete: detector_selection_divergence_sudoku_math",
+    "n_by_domain": {
+      "arc": 8041,
+      "code": 100,
+      "math": 651,
+      "sudoku": 4224
+    },
+    "selector_headroom_by_domain": {
+      "arc": 0.129,
+      "code": 0.18,
+      "math": 0.0,
+      "sudoku": 0.0007
+    },
+    "status": "included",
+    "verifier_is_oracle_by_domain": {
+      "arc": false,
+      "code": true,
+      "math": true,
+      "sudoku": true
+    }
+  },
+  "diffusiongemma_gate_resolvable": false,
+  "duration_s": 0.001269333006348461,
+  "experiment_id": 4218,
+  "field_principles": {
+    "diffusiongemma_gate_resolvable": "BARE bool: true ONLY if an oracle-distinct win landed with a matched control (verifier_is_oracle=false, CI95-excl-0); a circular execution win keeps it STILL-PENDING.",
+    "headline_outcome": "One of the enumerated set -- forces a single unambiguous read of the oracle-distinct frontier + the verifier-as-reward pivot.",
+    "honest_verdict": "Terminal-prefixed. An honest 'ties-vote null' or 'no learnable oracle-distinct signal' is COMPLETE and decision-grade -- it tells .391 whether the oracle-distinct frontier is reachable on ARC.",
+    "oracle_distinct_status": "MOAT-WON (learned verifier beats vote off-oracle, CI excl 0) / TIES-VOTE-NULL / NO-HEADROOM-OR-NO-SIGNAL -- the 2026-06-14 P0 directive's standing after .390; a circular result does NOT count here.",
+    "total_arc_levels_solved": "The monotonic ARC progress metric after .390 (must be >= 15).",
+    "upstream_provenance": "{experiment_id, fields_imported, sha256} per cited upstream; the audit trail that a capstone synthesizes nothing from nothing.",
+    "verifier_as_reward_status": "REAL (A-vs-B label carries signal) / NULL (distillation/spurious) / INVALID-or-UNDERPOWERED / ACCUMULATING -- the owed 2026-06-11 pivot's standing after .390."
+  },
+  "flagged_artifacts_skipped": [
+    {
+      "experiment_id": 4212,
+      "honest_verdict": "complete: certified_arc_corpus_absent_lift_ci_touches_zero_corpus16_precision0.9375_ci0.0_0.0",
+      "path": "results/experiment_4212_certified_arc_corpus_distill_lift.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "7bb487f4027e62e4bd6668e6292f55eda99015889722cce46912a53bab2f0ede"
+    },
+    {
+      "experiment_id": 4216,
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v390_truth_regression_guard_passed_True_oracle_distinct_open_a3_blocked_selector_not_trained_reward_open_accumulating_reward_no_eval_yet_certified_corpus_certified_corpus_built_distill_lift_absent",
+      "path": "results/experiment_4216_verifier_registry_gaps_hygiene.json",
+      "reason": "flagged_adversarial:true",
+      "sha256": "06b0410951f6b5fc44cea3f815e150e58bf45b92c32f639a643cf43d9883030b"
+    }
+  ],
+  "hardware_continuity": {
+    "gatemate_step_taken": "blocked_gatemate_unreachable",
+    "honest_verdict": "complete: hardware_continuity_4217_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+    "kv260_terminal_confirmed": true,
+    "per_board_reachability": {
+      "gatemate": false,
+      "kv260": true,
+      "polarfire": true
+    },
+    "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded",
+    "status": "included"
+  },
+  "headline_outcome": "oracle_distinct_no_headroom_or_no_learnable_signal",
+  "honest_verdict": "complete: capstone_v390_oracle_distinct_no_headroom_or_no_learnable_signal_oracle_NO-HEADROOM-OR-NO-SIGNAL_reward_ACCUMULATING_arc_levels16_flagged_skipped2_diffusiongemma_still_pending",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "learned_arc_verifier": {
+    "accepted_rejected_n": {
+      "accepted": 0,
+      "rejected": 0,
+      "total": 0
+    },
+    "honest_verdict": "blocked_arc_pool_no_candidate_labels",
+    "learned_verifier_path": "",
+    "off_fold_auroc": 0.0,
+    "off_fold_auroc_ci95": [
+      0.0,
+      0.0
+    ],
+    "selector_trained": false,
+    "status": "included",
+    "verifier_is_oracle": false
+  },
+  "live_solver_accuracy": {
+    "honest_verdict": "complete: solver_completes_0_levels_live_lp85-305b61c3_efficiency_only",
+    "levels_completed": 0,
+    "live_env_reachable": true,
+    "score": 0.0,
+    "solver_beats_floor_accuracy": false,
+    "solver_beats_floor_efficiency": true,
+    "solver_beats_floor_overall": true,
+    "solver_completes_level": false,
+    "status": "included"
+  },
+  "missing_upstream_artifacts": [],
+  "oracle_distinct_frontier": {
+    "blocked_at_layer": "conductor_pre_gate",
+    "ci95_excludes_zero": false,
+    "comparison_ran": false,
+    "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp4209-oracle-distinct-arc-verifier-build.selector_trained (actual=False == expected=True)",
+    "headroom_present": true,
+    "honest_verdict": "blocked_gate_check_failed",
+    "matched_control": false,
+    "oracle_distinct_beats_vote": false,
+    "oracle_distinct_ci95": null,
+    "oracle_distinct_delta": null,
+    "oracle_distinct_status": "NO-HEADROOM-OR-NO-SIGNAL",
+    "status": "included",
+    "verifier_is_oracle": false
+  },
+  "oracle_distinct_status": "NO-HEADROOM-OR-NO-SIGNAL",
+  "random_seed": 4218,
+  "registry_hygiene": {
+    "regression_guard_passed": false,
+    "status": "skipped_flagged_adversarial"
+  },
+  "reproducibility_checksum": "d6663db6eb698c6cb284b55faa1ba3053ba0549a982e8e902bc5e6e21127d84c",
+  "schema": "carnot.capstone_v390_4218.v1",
+  "sota_v391": {
+    "flagged_for_v391": "arbiter_conservative_override_arc_wrong_majority_v391",
+    "honest_verdict": "complete: sota_ingestion_oracle_distinct_mapped_v391",
+    "methods_mapped_count": 8,
+    "status": "included"
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4218",
+    "SCENARIO-CAPSTONE-4218"
+  ],
+  "strongest_sota_flagged_for_v391": "arbiter_conservative_override_arc_wrong_majority_v391",
+  "total_arc_levels_solved": 16,
+  "upstream_provenance": [
+    {
+      "experiment_id": 4208,
+      "fields_imported": [
+        "detection_auroc_by_domain",
+        "detection_auroc_ci95_by_domain",
+        "selector_headroom_by_domain",
+        "verifier_is_oracle_by_domain",
+        "n_by_domain"
+      ],
+      "honest_verdict": "complete: detector_selection_divergence_sudoku_math",
+      "path": "results/experiment_4208_verifier_as_detector_auroc.json",
+      "sha256": "74067e5d0f73c2ed5990b7177475831b6a73774eb35298e7ac349db91aad0753",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4209,
+      "fields_imported": [
+        "selector_trained",
+        "oracle_distinct_auroc",
+        "oracle_distinct_auroc_ci95",
+        "verifier_is_oracle",
+        "learned_verifier_path",
+        "accepted_rejected_n"
+      ],
+      "honest_verdict": "blocked_arc_pool_no_candidate_labels",
+      "path": "results/experiment_4209_oracle_distinct_arc_verifier_build.json",
+      "sha256": "9fdd46ab273a6916384b6960c3c366433ba553c9888928f7081f39ffd2845b8a",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4210,
+      "fields_imported": [
+        "status",
+        "gate_check_summary",
+        "blocked_at_layer",
+        "oracle_distinct_beats_vote",
+        "oracle_distinct_delta",
+        "oracle_distinct_ci95",
+        "matched_control",
+        "headroom_present",
+        "verifier_is_oracle"
+      ],
+      "honest_verdict": "blocked_gate_check_failed",
+      "path": "results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json",
+      "sha256": "57266e0a71f0f3cdaee04eefffed49325e081ba52a26a0393b9b6d06158688f4",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4211,
+      "fields_imported": [
+        "a_vs_b_delta",
+        "a_vs_b_ci95",
+        "verifier_label_carries_signal",
+        "positive_control_confirmed",
+        "accumulated_n",
+        "pass_at_1",
+        "evaluation",
+        "training",
+        "verifier_is_oracle",
+        "youden_j"
+      ],
+      "honest_verdict": "progress: accumulating_verifier_reward_training_no_eval_yet",
+      "path": "results/experiment_4211_verifier_as_reward_finish_synchronous.json",
+      "sha256": "40d6c7d798aa539e0c82d96e68c8b2eb442cfa5e86e93f2355bf2c6df487bb2b",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4212,
+      "fields_imported": [],
+      "honest_verdict": "complete: certified_arc_corpus_absent_lift_ci_touches_zero_corpus16_precision0.9375_ci0.0_0.0",
+      "path": "results/experiment_4212_certified_arc_corpus_distill_lift.json",
+      "sha256": "7bb487f4027e62e4bd6668e6292f55eda99015889722cce46912a53bab2f0ede",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4213,
+      "fields_imported": [
+        "total_levels_solved",
+        "total_games_solved",
+        "new_levels_solved_this_task",
+        "levels_completed",
+        "real_env_confirmed"
+      ],
+      "honest_verdict": "success: incremental_progress_sc25-635fd71a_advanced_to_L2_total16",
+      "path": "results/experiment_4213_arc_incremental_progress.json",
+      "sha256": "867674b91454b5b27d8121421196d2f8219a3e435242d403ebcced4a69c8eb6c",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4214,
+      "fields_imported": [
+        "solver_completes_level",
+        "live_env_metrics",
+        "solver_beats_floor",
+        "live_env_reachable"
+      ],
+      "honest_verdict": "complete: solver_completes_0_levels_live_lp85-305b61c3_efficiency_only",
+      "path": "results/experiment_4214_arc_live_env_solver_accuracy.json",
+      "sha256": "4529bb7e7629fd19f6a74df2ce4942242bc867bb0b90ea0ff6a2daa3feeed926",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4215,
+      "fields_imported": [
+        "flagged_for_v391",
+        "methods_mapped"
+      ],
+      "honest_verdict": "complete: sota_ingestion_oracle_distinct_mapped_v391",
+      "path": "results/experiment_4215_sota_ingestion_oracle_distinct.json",
+      "sha256": "afdd154809519e2bae3028c564241da97872284f1cb48cc8c2aa7cc878b1e480",
+      "skip_reason": "",
+      "skipped": false
+    },
+    {
+      "experiment_id": 4216,
+      "fields_imported": [],
+      "honest_verdict": "complete: registry_gaps_reconciled_to_v390_truth_regression_guard_passed_True_oracle_distinct_open_a3_blocked_selector_not_trained_reward_open_accumulating_reward_no_eval_yet_certified_corpus_certified_corpus_built_distill_lift_absent",
+      "path": "results/experiment_4216_verifier_registry_gaps_hygiene.json",
+      "sha256": "06b0410951f6b5fc44cea3f815e150e58bf45b92c32f639a643cf43d9883030b",
+      "skip_reason": "flagged_adversarial:true",
+      "skipped": true
+    },
+    {
+      "experiment_id": 4217,
+      "fields_imported": [
+        "per_board_reachability",
+        "gatemate_step_taken",
+        "polarfire_step_taken",
+        "kv260_terminal_confirmed"
+      ],
+      "honest_verdict": "complete: hardware_continuity_4217_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_kv260_opportunistic_terminal_confirmed_ssh_only_ssh_usb_detect_only",
+      "path": "results/experiment_4217_hardware_continuity.json",
+      "sha256": "92f1be623bc354a991e508470c214996c69ffd5954386309c59f443eac5979ad",
+      "skip_reason": "",
+      "skipped": false
+    }
+  ],
+  "verifier_as_reward": {
+    "a_vs_b_ci95": null,
+    "a_vs_b_ci_excludes_zero": false,
+    "a_vs_b_delta": null,
+    "accumulated_n": {
+      "eval": 0,
+      "train_A": 0,
+      "train_B": 0,
+      "train_C": 0,
+      "train_D": 0
+    },
+    "evaluation": {
+      "bootstrap_resamples": 2000,
+      "error": null,
+      "memorization_shortcut_diagnostic": null,
+      "pass_at_1": {},
+      "seeds": [],
+      "status": "pending_heldout_eval",
+      "task_rows": [],
+      "truncation_rate": {}
+    },
+    "honest_verdict": "progress: accumulating_verifier_reward_training_no_eval_yet",
+    "pass_at_1": {},
+    "positive_control_confirmed": false,
+    "status": "included",
+    "training": {
+      "accumulated_train_examples": {
+        "A": 0,
+        "B": 0,
+        "C": 0,
+        "D": 0
+      },
+      "error": "ValueError: Target module Gemma4ClippableLinear(\n  (linear): Linear(in_features=768, out_features=768, bias=False)\n) is not supported. Currently, only the following modules are supported: `torch.nn.Linear`, `torch.nn.Embedding`, `torch.nn.Conv1d`, `torch.nn.Conv2d`, `torch.nn.Conv3d`, `transformers.pytorch_utils.Conv1D`, `torch.nn.MultiheadAttention.`.",
+      "per_arm": {},
+      "progress_events": [],
+      "runner_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/runner_artifact.json",
+      "status": "failed",
+      "used_detached_process": false
+    },
+    "truncation_guard": {
+      "max_allowed_truncation_rate": 0.05,
+      "max_observed_truncation_rate": null
+    },
+    "verifier_as_reward_status": "ACCUMULATING",
+    "verifier_is_oracle": true,
+    "verifier_label_carries_signal": false,
+    "youden_j": 0.4137931034482759
+  },
+  "verifier_as_reward_status": "ACCUMULATING"
+}
