@@ -1,0 +1,58 @@
+{
+  "acceptance_gate": true,
+  "adversarial_verify": {
+    "circular_moat_overclaim_clean": true,
+    "flag_count": 0,
+    "flags": [],
+    "returncode": 0,
+    "status": "clean"
+  },
+  "bootstrap_resamples": 0,
+  "ci95_excludes_zero": false,
+  "cross_game_ci95": null,
+  "cross_game_delta": null,
+  "dropped_task_n": 0,
+  "duration_s": 2.385319,
+  "experiment": "experiment_4258_arc_oracle_distinct_cross_game_transfer",
+  "false_negative_risk": false,
+  "field_principles": {
+    "cross_game_ci95": "Task-level bootstrap CI95 of the cross-game delta -- excluding 0 means the verifier generalizes to unseen games.",
+    "cross_game_delta": "BARE float: set_encoder@1 - vote@1 on HELD-OUT GAMES -- the real OOD lift; the load-bearing generalization number.",
+    "held_out_game_n": "BARE int: number of games never seen in training -- the OOD breadth; report alongside held_out_task_n for power.",
+    "honest_verdict": "Terminal-prefixed. A cross-game win, a within-game-only collapse, and a no-headroom are ALL COMPLETE and decision-grade for scoping the headline.",
+    "model_specs": "The game-disjoint split protocol + set-encoder config; required methodology.",
+    "oracle_at_k": "Positive-control ceiling on held-out games -- if ~=vote the cross-game null is uninformative, not a verifier failure.",
+    "random_seed": "Determinism precondition; the game-split + bootstrap reproducible.",
+    "reproducibility_checksum": "Hash of the pool + game partition; lets a third party re-run.",
+    "verifier_is_oracle": "BARE bool=false -- learned set-encoder, no demo execution; keeps the transfer result oracle-distinct.",
+    "within_game_minus_cross_game_gap": "The .393 within-game +0.4423 minus cross_game_delta -- quantifies how much the win is per-game-basin memorization vs general signal."
+  },
+  "headline_outcome": "arc_oracle_distinct_cross_game_transfer_blocked",
+  "headroom_exists": null,
+  "held_out_game_n": 0,
+  "held_out_task_n": 0,
+  "honest_read": "blocked",
+  "honest_verdict": "blocked_arc_game_ids_unrecoverable",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "matched_control_delta": null,
+  "matched_control_policy": "deterministic_first_of_k_no_verifier",
+  "model_specs": {
+    "blocked_reason": "blocked_arc_game_ids_unrecoverable",
+    "missing_task_ids_sample": [],
+    "status": "blocked"
+  },
+  "oracle_at_k": null,
+  "oracle_minus_vote": null,
+  "pass_rates": {},
+  "random_seed": 4258,
+  "reproducibility_checksum": "sha256:98dcfd47931b8fbdb773f77215bf656f223940faef92b0b380298b9b5e9390a0",
+  "schema": "carnot.arc_oracle_distinct_cross_game_transfer_4258.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4258",
+    "SCENARIO-VERIFY-4258"
+  ],
+  "status": "complete",
+  "task_rows": [],
+  "verifier_is_oracle": false,
+  "within_game_minus_cross_game_gap": null
+}

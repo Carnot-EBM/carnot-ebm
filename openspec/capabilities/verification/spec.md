@@ -15774,6 +15774,78 @@ the grown pool is missing, then it writes
 `honest_verdict=blocked_arc_grown_pool_missing` and stops honestly without
 claiming replication.
 
+### REQ-VERIFY-4258: ARC Oracle-Distinct Cross-Game Transfer
+
+The repository SHALL provide Exp 4258 at
+`python/carnot/reporting/arc_oracle_distinct_cross_game_transfer_4258.py` and
+`results/experiment_4258_arc_oracle_distinct_cross_game_transfer.py` to test
+whether the `.393` Exp 4245 within-game set-encoder win transfers to ARC tasks
+from games never seen during training. The runner SHALL first load
+`results/experiment_4243_arc_candidate_pool_grow_pool.json.gz`,
+`results/arc3_win_condition_survey.json`,
+`results/experiment_4244_arc_set_encoder_aggregator_build.json`, and
+`results/experiment_4244_arc_set_encoder_aggregator_model.json`, and SHALL
+recover a complete `task_id -> game_id` mapping either from the pool metadata
+or from an explicit survey/GAP-4 join. If the mapping is incomplete or games
+are not separable, it SHALL write a terminal artifact with
+`honest_verdict=blocked_arc_game_ids_unrecoverable`,
+`verifier_is_oracle=false`, and SHALL stop without fabricating cross-game
+metrics. It SHALL NOT run Codex, GGUF inference, GPU inference, stable
+checkpoint writes, or TRM training.
+
+When game ids are recoverable, the runner SHALL partition candidates by game
+using a deterministic game-disjoint k-fold protocol: every fold trains the
+set-encoder only on train-game candidates and scores only held-out-game
+candidates, and no game may appear in both train and test within a fold. It
+SHALL compute held-out-game `set_encoder@1`, `vote@1`, `oracle@K`, and the
+deterministic first-candidate matched control, then report bare float
+`cross_game_delta = set_encoder@1 - vote@1`, two-float `cross_game_ci95` from
+task-level bootstrap resampling, bare int `held_out_game_n`, bare int
+`held_out_task_n`, bare float `oracle_at_k`, bare float
+`matched_control_delta`, and bare float `within_game_minus_cross_game_gap`
+using the `.393` within-game lift `0.4423076923`. If `oracle@K` does not
+exceed `vote@1` on held-out games, it SHALL return an honest no-headroom
+verdict rather than treating the null as a verifier failure. Otherwise the
+honest read SHALL be one of `cross_game_transfers` or `within_game_only`,
+depending on whether the cross-game delta is positive with CI excluding zero.
+The artifact SHALL declare `verifier_is_oracle=false`, include `random_seed`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`acceptance_gate`, and `adversarial_verify`.
+
+The terminal artifact SHALL write
+`results/experiment_4258_arc_oracle_distinct_cross_game_transfer.json` with
+`honest_verdict`, `cross_game_delta`, `cross_game_ci95`,
+`within_game_minus_cross_game_gap`, bare int `held_out_game_n`, bare int
+`held_out_task_n`, bare float `oracle_at_k`, bare float
+`matched_control_delta`, bare bool `verifier_is_oracle=false`, bare int
+`random_seed`, `reproducibility_checksum`, `model_specs`,
+`field_principles`, `spec_refs`, `acceptance_gate`, and
+`adversarial_verify`. Its `field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. A cross-game win, a within-game-only collapse, and a no-headroom are ALL COMPLETE and decision-grade for scoping the headline.`;
+`cross_game_delta` = `BARE float: set_encoder@1 - vote@1 on HELD-OUT GAMES -- the real OOD lift; the load-bearing generalization number.`;
+`cross_game_ci95` = `Task-level bootstrap CI95 of the cross-game delta -- excluding 0 means the verifier generalizes to unseen games.`;
+`within_game_minus_cross_game_gap` = `The .393 within-game +0.4423 minus cross_game_delta -- quantifies how much the win is per-game-basin memorization vs general signal.`;
+`held_out_game_n` = `BARE int: number of games never seen in training -- the OOD breadth; report alongside held_out_task_n for power.`;
+`oracle_at_k` = `Positive-control ceiling on held-out games -- if ~=vote the cross-game null is uninformative, not a verifier failure.`;
+`verifier_is_oracle` = `BARE bool=false -- learned set-encoder, no demo execution; keeps the transfer result oracle-distinct.`;
+`random_seed` = `Determinism precondition; the game-split + bootstrap reproducible.`;
+`reproducibility_checksum` = `Hash of the pool + game partition; lets a third party re-run.`;
+`model_specs` = `The game-disjoint split protocol + set-encoder config; required methodology.`
+
+### SCENARIO-VERIFY-4258: Cross-Game Split Blocks Or Scores Unseen Games
+
+Given the Exp 4243 grown pool, ARC game survey, and Exp 4244 set-encoder
+artifacts are readable, when Exp 4258 runs, then it either recovers complete
+game ids, trains and scores only game-disjoint folds, reports
+`cross_game_delta`, `cross_game_ci95`, `within_game_minus_cross_game_gap`,
+`held_out_game_n`, `held_out_task_n`, `oracle_at_k`,
+`matched_control_delta`, `verifier_is_oracle=false`, `random_seed`,
+`reproducibility_checksum`, and `model_specs`, and runs adversarial
+verification without `CIRCULAR_MOAT_OVERCLAIM`; or, if task ids cannot be
+mapped to games, it writes
+`honest_verdict=blocked_arc_game_ids_unrecoverable` with
+`verifier_is_oracle=false` and does not claim a cross-game transfer result.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
