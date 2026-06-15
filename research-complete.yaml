@@ -39929,7 +39929,13 @@ milestones:
     \ verifier's Youden J=TPR-FPR>>0 clears the training-reward precondition the grid/noisy content-EBMs failed"
   doc: openspec/change-proposals/research-roadmap-v389.md
   completed: '2026-06-14'
-  finding: '.389 close-state correction: verifier-as-reward code operating point CLEARED (exp4197 phase0_precision=0.956, Youden J=0.414, headroom=0.600, harness_ready=true). Exp4198 corpora are N-matched (A=776, B=776, C=742, base_passrate=0.6) BUT the BACKGROUND LoRA process exited before checkpoint, so decisive A-vs-B was NEVER collected (exp4199 gate-blocked). The capstone NO-OPERATING-POINT headline is an INFRA artifact, NOT NO-OPERATING-POINT science; .390 must resume checkpoint code_verifier_reward_lora_rft_a83b52882c198954 SYNCHRONOUSLY and finish the owed verifier-as-reward A-vs-B. ARC total_levels_solved=15, total_games_solved=13; live solver was efficiency-only with no level completed. .390 headline frame: oracle-distinct frontier plus verifier-as-reward FINISH.'
+  finding: '.389 close-state correction: verifier-as-reward code operating point CLEARED (exp4197 phase0_precision=0.956,
+    Youden J=0.414, headroom=0.600, harness_ready=true). Exp4198 corpora are N-matched (A=776, B=776, C=742, base_passrate=0.6)
+    BUT the BACKGROUND LoRA process exited before checkpoint, so decisive A-vs-B was NEVER collected (exp4199 gate-blocked).
+    The capstone NO-OPERATING-POINT headline is an INFRA artifact, NOT NO-OPERATING-POINT science; .390 must resume checkpoint
+    code_verifier_reward_lora_rft_a83b52882c198954 SYNCHRONOUSLY and finish the owed verifier-as-reward A-vs-B. ARC total_levels_solved=15,
+    total_games_solved=13; live solver was efficiency-only with no level completed. .390 headline frame: oracle-distinct frontier
+    plus verifier-as-reward FINISH.'
   activation_recorded: exp4207-archive-v389-activate-v390
   tasks:
   - id: exp4196-archive-v388-activate-v389
@@ -40029,4 +40035,127 @@ milestones:
       corpus + latent-vs-absent); ARC = exp4201 (total_levels) + exp4202 (live solver-vs-floor); SOTA = exp4203; registry
       = exp4204; hardware = exp4205. SKIP any flagged_adversarial artifact; cite upstream sha256. NO gated_on.'
     deliverable: results/experiment_4206_capstone_v389.json
+    result: OK (conductor)
+- id: 2026.06.390
+  title: "RE-AIM AT THE ORACLE-DISTINCT FRONTIER \u2014 does a LEARNED (oracle-distinct) verifier beat majority vote on ARC\
+    \ where execution is NOT the oracle (close GAP-3-ties-vote), and FINISH the owed de-confounded verifier-as-reward A-vs-B\
+    \ on code (the .389 operating point CLEARED \u2014 only the BACKGROUND training infra died)"
+  doc: openspec/change-proposals/research-roadmap-v390.md
+  completed: '2026-06-15'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4207-archive-v389-activate-v390
+    title: Archive .389 -> activate .390; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
+      + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .389
+      close-state truthfully (verifier-as-reward code operating point CLEARED exp4197 phase0=0.956/J=0.414/headroom=0.600;
+      corpora N-matched A=776/B=776/C=742 exp4198 BUT background training process EXITED before checkpoint -> decisive A-vs-B
+      NEVER collected -- an INFRA failure, NOT NO-OPERATING-POINT; ARC total_levels=15/games=13; live solver efficiency-only-no-level
+      exp4202; SOTA flagged=non_qwen_random_label_ablation).
+    deliverable: results/experiment_4207_archive_v389_activate_v390.json
+    result: OK (conductor)
+  - id: exp4208-verifier-as-detector-auroc
+    title: 'PHASE A1 (HEADLINE-COMPLEMENTARY; cheap, cached) -- verifier-as-DETECTOR measurement. The 2026-06-14 P0 item 2:
+      where SELECTION headroom is ~0, can the verifier still FLAG/REJECT a wrong output? Compute detection AUROC (verifier_score
+      ranking is_correct) + precision@recall=0.9 + the accuracy-vs-coverage abstention curve across cached pools {{Sudoku
+      TRM snapshots, code HumanEval/MBPP, ARC GAP-4 pool, GSM8K}}, and report it AGAINST each domain''s SELECTION headroom
+      (.387/.388). The headline is the DIVERGENCE: detection value where selection had none. Positive/negative controls (base
+      rate + random-AUROC~0.5); sanity-check decoding before trusting any number; declare verifier_is_oracle per domain. NO
+      new generation, NO training.'
+    deliverable: results/experiment_4208_verifier_as_detector_auroc.json
+    result: OK (conductor)
+  - id: exp4209-oracle-distinct-arc-verifier-build
+    title: 'PHASE A2 (HEADLINE BUILD) -- BUILD the ORACLE-DISTINCT learned ARC verifier. The 2026-06-14 P0 item 1: a LEARNED
+      (not execution-oracle) verifier that scores ARC candidate solutions WITHOUT executing. REUSE the .386 V-STaR class (exp4176,
+      arXiv:2402.06457: train on ACCEPTED + REJECTED traces -> a correctness boundary, not winner-imitation) on the ARC GAP-4
+      candidate pool (results/arc3_trm_verifier_rerank.json). Out-of-fold; report off-fold detection AUROC + the learned-verifier
+      artifact path. verifier_is_oracle=false (it does NOT execute the demos). Deliverable consumed by A3. This is the oracle-distinct
+      verifier CLASS the GAP-3 content energies lacked -- distilling the discriminating signal into a learned scorer.'
+    deliverable: results/experiment_4209_oracle_distinct_arc_verifier_build.json
+    result: OK (conductor)
+  - id: exp4210-oracle-distinct-arc-verifier-beats-vote
+    title: 'PHASE A3 (THE HEADLINE GATE, gated_on A2 selector_trained) -- does the ORACLE-DISTINCT learned ARC verifier BEAT
+      majority vote OFF-ORACLE? On a HELD-OUT ARC candidate pool, rerank with the A2 learned verifier (verifier_is_oracle=false;
+      does NOT execute the demos) vs majority-vote vs a MATCHED no-verifier control (same candidates/budget) vs oracle@K (the
+      positive-control ceiling). The LOAD-BEARING gate: verifier@1 - vote@1, bootstrap CI95 EXCLUDES 0 AND headroom exists
+      (oracle@K >> vote). Framed by ARBITER (arXiv:2605.26172) ''wrong-majority failures'' -- the correct answer is in the
+      pool but loses to a bigger wrong basin; the oracle-distinct verifier''s job is to recover it. YES -> the first oracle-distinct
+      verifier win (closes GAP-3-ties-vote; informs the DiffusionGemma gate). TIE-with-headroom -> honest null (GAP-3 frontier
+      persists). No-headroom -> uninformative.'
+    deliverable: results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json
+    result: OK (conductor)
+  - id: exp4211-verifier-as-reward-finish-synchronous
+    title: 'PHASE B1 (OWED; self-learning/FR-11) -- FINISH the de-confounded verifier-as-reward A-vs-B on CODE, infra-fixed.
+      .389 CLEARED the operating point (Phase-0 0.956, J=0.414, headroom 0.600) and BUILT N-matched corpora (A=776 certified
+      / B=776 same-generator random-label / C=742 gold) but the BACKGROUND training process died before checkpoint. FIX: RESUME
+      the stable checkpoint code_verifier_reward_lora_rft_a83b52882c198954 and run the 3-arm LoRA-RFT SYNCHRONOUSLY in-process
+      / resume-accumulate / per-step progress prints (NO background launch). The LOAD-BEARING gate is A(verifier-certified)
+      vs B(same-generator random-label = the Spurious-Rewards control arXiv:2506.10947): held-out hidden-test pass@1 bootstrap
+      CI95 excludes 0? gold-control (C>=base) + truncation guard (<5%) MUST pass or INVALID. Add Youden-J reporting (arXiv:2601.04411)
+      + the memorization-shortcut diagnostic (arXiv:2601.11061). verifier_is_oracle=true (HONEST -- reward axis, not a moat).
+      Apply the accumulate-floor (3 no-usable windows -> auto-retire). NO TRM.'
+    deliverable: results/experiment_4211_verifier_as_reward_finish_synchronous.json
+    result: OK (conductor)
+  - id: exp4212-certified-arc-corpus-distill-lift
+    title: 'PHASE B2 (self-learning / sovereignty; north-star) -- certified-ARC-corpus distill-lift (Invisible-Leash latent-vs-absent).
+      RESUME + extend exp4200''s GAP-4-certified ARC program corpus (16 demo-perfect, precision 0.9375): codex induces a LARGER
+      induced-program pool -> the model-free GAP-4 graded gate certifies demo-perfect programs -> a bigger VERIFIER-CERTIFIED
+      corpus (the automated ground-truth reward engine). Then the cheap test (arXiv:2507.14843 Invisible Leash): does seeding
+      the LOCAL base (SOTA GGUF) with k verifier-certified exemplars in-context raise its ARC induction above the 0.23 ceiling
+      (exp4188)? LATENT (lift CI excl 0) -> full LoRA-distill viable (.391); ABSENT -> need a stronger base. verifier_is_oracle=true
+      (GAP-4 execution certifier). NO full fine-tune this milestone.'
+    deliverable: results/experiment_4212_certified_arc_corpus_distill_lift.json
+    result: OK (conductor)
+  - id: exp4213-arc-incremental-progress
+    title: 'PHASE C1 -- ARC-AGI-3 INCREMENTAL +1 (monotonic). Advance the solved-LEVEL count by >=1 via the PROVEN explore-first
+      method, using the HARDENED GAP-4 stack (exp4187): bounded active-exploration OBSERVES transitions -> induce mechanic
+      + goal predicate -> GAP-4 verifier validates on HELD-OUT transitions -> act only if validated. Target the next deeper
+      level of an already-solved game or a spatial L1. REAL-ENV-CONFIRM any solve; STOP at the first level that fails. Honest
+      no-solve is COMPLETE. total_levels_solved must be >= 16.'
+    deliverable: results/experiment_4213_arc_incremental_progress.json
+    result: OK (conductor)
+  - id: exp4214-arc-live-env-solver-accuracy
+    title: PHASE C2 -- ARC-AGI-3 LIVE-env, ACCURACY-seeking. .389's live solver beat the random/greedy floor on EFFICIENCY
+      only (5 vs 6 actions) but completed 0 levels (no accuracy win). Now run the PROVEN explore-induce-verify solver against
+      the LIVE env on ONE easy game with the goal of COMPLETING a level (levels_completed >= 1), and report accuracy (EnvironmentScore.score
+      / levels_completed) AND efficiency (actions vs baseline_actions) vs the floor (exp4202). NO leaderboard submission (operator-only);
+      bounded action budget; honest blocked_arc_live_* if access fails.
+    deliverable: results/experiment_4214_arc_live_env_solver_accuracy.json
+    result: OK (conductor)
+  - id: exp4215-sota-ingestion-oracle-distinct
+    title: 'PHASE D1 -- SOTA-INGESTION SLOT (reserved; bleeding-edge ORACLE-DISTINCT verifier track). Ingest the .390 sweep
+      mapped onto the oracle-distinct headline: ARBITER (arXiv:2605.26172, wrong-majority basins -- the headroom the learned
+      verifier targets), SCOPE (2512.15146, fine-grained learned reward beats vote), ThinkPRM (2504.16828, learned process
+      verifier beats vote), V-STaR (2402.06457, accepted+rejected boundary), Calibrated-Reasoning (2509.19681, explanatory/abstention
+      verifier), PRM survey (2510.08049), ExecVerify (2603.11226) + EVOM (2604.00442, execution-reward baselines for the B1
+      framing). SOTA->experiment mapping note; flag the strongest for .391. Cite real arXiv IDs.'
+    deliverable: results/experiment_4215_sota_ingestion_oracle_distinct.json
+    result: OK (conductor)
+  - id: exp4216-verifier-registry-gaps-hygiene
+    title: 'PHASE D2 -- VERIFIER-REGISTRY + GAPS HYGIENE (reserved infra slot; regression guard). Bit-exact OFFLINE re-eval
+      reproducing the canonical GAP-4 ARC-1 numbers (vote 0.4516 -> gated 0.5806) from cached candidates (zero codex/GGUF/GPU).
+      RECORD the .390 state into ops/verifier_gaps.md: the ORACLE-DISTINCT A3 verdict (exp4210 oracle_distinct_beats_vote
+      + delta/CI + verifier_is_oracle=false), the detector AUROCs (exp4208), the verifier-as-reward A-vs-B (exp4211 verifier_label_carries_signal
+      + delta/CI), and the certified-ARC-corpus distill-lift (exp4212). Open/update a GAP-ORACLE-DISTINCT ledger entry (the
+      open frontier: a learned verifier that beats vote where execution is not the oracle). Keep ops/verifier_registry.yaml
+      + ops/verifier_gaps.md the honest source of truth (never-prune).'
+    deliverable: results/experiment_4216_verifier_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4217-hardware-continuity
+    title: 'PHASE D3 -- Hardware continuity (consolidated; GateMate + PolarFire drive-toward-terminal; KV260 terminal/opportunistic).
+      Per-board reachability + next concrete step. GateMate (openFPGALoader -c dirtyJtag --detect; toward n=16 Ising tile
+      flash). PolarFire (ssh polarfire; toward end-to-end Carnot dispatch). KV260 opportunistic-confirm (ssh kria; terminal).
+      Per KV260 SSH-Not-SD-Card Discipline: SSH-reachability / USB-detect are the ONLY valid preconditions. DISTINCT wall-clock
+      timers per board.'
+    deliverable: results/experiment_4217_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4218-capstone-v390
+    title: 'PHASE D4 -- Capstone .390 (UNGATED): headline question is DID A LEARNED (ORACLE-DISTINCT) VERIFIER BEAT VOTE ON
+      ARC -- exp4210 oracle_distinct_beats_vote (verifier_is_oracle=false, matched control, CI95-excl-0): the first oracle-distinct
+      verifier win (closes GAP-3-ties-vote; informs the DiffusionGemma gate) OR an honest ties-vote-with-headroom null. Aggregate:
+      ORACLE-DISTINCT = exp4210 + exp4209 (off-fold AUROC) + exp4208 (detector divergence); VERIFIER-AS-REWARD = exp4211 (verifier_label_carries_signal
+      + A-vs-B delta/CI + Youden-J + positive_control); SOVEREIGNTY-DISTILL = exp4212 (certified corpus + latent-vs-absent);
+      ARC = exp4213 (total_levels) + exp4214 (live solver accuracy-vs-floor); SOTA = exp4215; registry = exp4216; hardware
+      = exp4217. SKIP any flagged_adversarial artifact; cite upstream sha256. HONOR verifier_is_oracle (a circular result
+      may NOT headline a moat). NO gated_on.'
+    deliverable: results/experiment_4218_capstone_v390.json
     result: OK (conductor)
