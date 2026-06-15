@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.393",
+  "generated_at": "2026-06-15T16:20:41Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.06.393 has no experiment commits since activation: 0 experiments completed, 0 compute-bound, 0 wall-time minutes recorded. Both RTX 3090s were idle (0% util, 4MB) at retro time, which is correct behaviour because no compute-bound task ran. There is no execution-efficiency signal to analyze this milestone — this is an operational-empty retro reported honestly rather than inferred from prior milestones.",
+  "bottlenecks_identified": [
+    "The only operational signal is the absence of any committed experiment artifact since activation of 2026.06.393. Either this retro fired at/just-after activation before tasks executed, or task launch stalled before any result committed.",
+    "No GPU bottleneck is flagged: gpu_idle_on_compute_bound_tasks is null because zero compute-bound tasks ran. Idle GPUs with no compute-bound workload queued is expected, not a bug, per the GPU IDLE INTERPRETATION RULE."
+  ],
+  "improvements_suggested": [
+    "Confirm whether 2026.06.393 actually launched its planned tasks or whether the retro ran prematurely at/just-after activation — inspect conductor logs for activation-to-first-task latency.",
+    "If tasks stalled at launch, check the pre-launch precondition / doomed-rerun / exclusion-manifest gates for a cascade block that produced no result artifacts.",
+    "Gate the operational-retro trigger on experiments_completed >= 1 so an empty milestone does not spend a retro turn producing a zero-signal artifact.",
+    "Do not infer slowest-experiment or GPU-efficiency numbers when the milestone-scoped timing data is empty — report 'no data available this milestone' (as done here)."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Verify the activation-to-execution path for 2026.06.393 in the conductor logs: did any task launch, and if not, which gate blocked it?",
+    "Gate the operational-retro trigger on at least one committed experiment artifact to avoid zero-signal empty retros.",
+    "Once tasks do run, confirm the launch path dispatches compute-bound work to a GPU (idle-GPU concern only becomes actionable when compute-bound tasks are present)."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "An operational retrospective over zero experiments has no execution-efficiency signal to mine; the meta-lesson is that the retro trigger should require at least one committed artifact. The single actionable observation is structural — confirm the milestone's tasks actually launched rather than inferring efficiency from absent data."
+}
