@@ -15185,6 +15185,86 @@ replay plus `.391` hygiene role, writes `gaps_updated` containing
 and `model_specs`, and runs adversarial verification without a
 `METHODOLOGY_MISSING` flag.
 
+### REQ-VERIFY-4239: Verifier Registry And Gaps Hygiene For .392 Strengthened Oracle-Distinct Outcomes
+
+The repository SHALL provide Exp 4239 at
+`python/carnot/experiment_4239_verifier_registry_gaps_hygiene.py` and
+`results/experiment_4239_verifier_registry_gaps_hygiene.py` to keep the
+verifier registry and gap ledger honest for the `.392` strengthened
+oracle-distinct ARC A2, code disambiguation, and verifier-as-reward status.
+The runner SHALL replay the canonical GAP-4 ARC-1 cached candidate set offline
+from `results/arc3_gap3_stage2_eval_pool.json.gz` and
+`results/arc3_gap4_induced_programs.json`, SHALL reproduce vote pass@2
+`0.4516` and gated pass@2 `0.5806` bit-exact, and SHALL NOT run Codex, GGUF
+inference, GPU inference, stable checkpoint writes, or TRM training.
+
+The runner SHALL read
+`results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json`,
+`results/experiment_4231_oracle_distinct_arc_aggregator_build.json`,
+`results/experiment_4233_oracle_distinct_code_beats_vote.json`, and
+`results/experiment_4235_verifier_as_reward_3arm_window_boxed.json`. It SHALL
+record the Exp 4232 strengthened ARC A2 oracle-distinct verdict with
+`oracle_distinct_beats_vote=false`, `aggregator_minus_vote_delta=0.0`,
+`aggregator_minus_vote_ci95=[0.0, 0.0]`, `held_out_task_n=52`,
+`matched_control_delta=0.0384615385`, `oracle_at_k=0.3653846154`, and
+`verifier_is_oracle=false`. It SHALL record the paired Exp 4231 build fields
+`oracle_distinct_auroc=0.7865558646`,
+`oracle_distinct_auroc_ci95=[0.6319719028, 0.9258842843]`, and
+`wrong_majority_n=9`, while preserving the upstream
+`flagged_adversarial=true` marker as context rather than treating it as a
+moat win. It SHALL record the Exp 4233 code disambiguation with
+`disambiguation_read=ARC_null_is_data_sparsity`,
+`code_oracle_distinct_beats_vote=true`,
+`code_predictor_minus_vote_delta=0.03125`,
+`code_predictor_minus_vote_ci95=[0.00625, 0.0625]`,
+`held_out_task_n=160`, and `verifier_is_oracle=false`. It SHALL record Exp
+4235 verifier-as-reward status without fabricating a held-out A-vs-B read:
+`honest_verdict=blocked_gate_check_failed`,
+`verifier_label_carries_signal=false`, `a_vs_b_delta=null`,
+`a_vs_b_ci95=null`, `youden_j=null`, and `live_lora_retired=false`.
+
+The registry SHALL annotate the `gap4_program_induction_stack` entry with an
+Exp 4239 replay marker and a `.392` oracle-distinct/code/reward hygiene role.
+The gaps ledger SHALL append entries for `GAP-ORACLE-DISTINCT`, the
+strengthened A2 note, the code disambiguation note, and the verifier-as-reward
+A-vs-B note. `GAP-ORACLE-DISTINCT` SHALL remain open because the stronger
+`.392` build and larger held-out task count still tied vote with headroom.
+GAP-MOAT status SHALL NOT be upgraded by Exp 4239 because no non-oracle ARC
+selector produced a CI-exclusive vote-beating read.
+
+The terminal artifact SHALL write
+`results/experiment_4239_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_updated`,
+bare bool `registry_updated`, `oracle_distinct_outcome`,
+`code_disambiguation_outcome`, `verifier_reward_outcome`, bare int
+`random_seed`, `reproducibility_checksum`, `model_specs`,
+`inference_substrate=verifier_ensemble_against_cached_candidates`, and
+`adversarial_verify`. Its `field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled to the .392 truth.`;
+`regression_guard_passed` = `BARE bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression.`;
+`gaps_updated` = `Lists the verifier_gaps entries touched (the GAP-ORACLE-DISTINCT frontier entry + the strengthened A2 + code disambiguation + verifier-as-reward notes).`;
+`random_seed` = `Determinism precondition + the methodology field that prevents a METHODOLOGY_MISSING flag.`;
+`reproducibility_checksum` = `Hash of the cached GAP-4 candidate set; catches silent candidate drift.`
+
+### SCENARIO-VERIFY-4239: Cached Replay Records .392 Oracle-Distinct Code And Reward Truth
+
+Given the GAP-4 cached ARC-1 pool, saved induced-program artifact, Exp 4231,
+Exp 4232, Exp 4233, Exp 4235, `ops/verifier_registry.yaml`, and
+`ops/verifier_gaps.md` are readable, when Exp 4239 runs, then it writes the
+terminal artifact with `regression_guard_passed=true`, records vote `0.4516`
+to gated `0.5806`, records the Exp 4232 strengthened A2 oracle-distinct
+verdict as a non-oracle trained-selector read that still tied vote with
+headroom at `held_out_task_n=52`, records the Exp 4231 off-fold AUROC and
+`wrong_majority_n=9`, records Exp 4233 code disambiguation as
+`code_oracle_distinct_beats_vote=true` with a CI-exclusive positive delta,
+records Exp 4235 verifier-as-reward as blocked without a reward signal or live
+LoRA retirement, annotates the registry with the Exp 4239 replay plus `.392`
+hygiene role, writes `gaps_updated` containing `GAP-ORACLE-DISTINCT`,
+`GAP-ORACLE-DISTINCT-A2-4232`, `GAP-CODE-DISAMBIGUATION-4233`, and
+`GAP-REWARD`, declares `random_seed`, `reproducibility_checksum`, and
+`model_specs`, and runs adversarial verification without a
+`METHODOLOGY_MISSING` flag.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at

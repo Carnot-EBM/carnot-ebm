@@ -939,3 +939,43 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: use the detector as a training or calibration source for the oracle-distinct selector, then measure selection lift with bootstrap CI.
 - priority: medium
 <!-- exp4227-detector-auroc:end -->
+
+<!-- exp4239-oracle-distinct:start -->
+### GAP-ORACLE-DISTINCT: Exp 4239 .392 oracle-distinct frontier
+- status: open_a2_ties_vote_with_headroom_at_power
+- evidence: `results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json` with build `results/experiment_4231_oracle_distinct_arc_aggregator_build.json`; oracle_distinct_beats_vote=false; aggregator_minus_vote_delta=0.0; aggregator_minus_vote_ci95=[0.0, 0.0]; held_out_task_n=52; matched_control_delta=0.0384615385; oracle_at_k=0.3653846154; verifier_is_oracle=false; oracle_distinct_auroc=0.7865558646; oracle_distinct_auroc_ci95=[0.6319719028, 0.9258842843]; wrong_majority_n=9; build_flagged_adversarial=true; honest_verdict=complete: oracle_distinct_aggregator_ties_vote_with_headroom_at_power. GAP-MOAT unchanged: .392 stronger build + power did not change the .391 ties-vote read.
+- failure mode: the strengthened non-oracle ARC aggregator still tied vote despite headroom and a larger held-out task count.
+- missing discriminator: a learned non-oracle ARC selector whose vote-beating delta has a positive CI on the headroom-present slice.
+- candidate design: grow the ARC pool or feature set using the code-domain disambiguation result before re-testing A2.
+- priority: high
+<!-- exp4239-oracle-distinct:end -->
+
+<!-- exp4239-oracle-distinct-a2:start -->
+### GAP-ORACLE-DISTINCT-A2-4232: Exp 4239 .392 strengthened A2 read
+- status: open_a2_ties_vote_with_headroom_at_power
+- evidence: `results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json`; oracle_distinct_beats_vote=false; aggregator_minus_vote_delta=0.0; aggregator_minus_vote_ci95=[0.0, 0.0]; held_out_task_n=52; margin_override_minus_vote=0.0; matched_control_delta=0.0384615385; oracle_at_k=0.3653846154; verifier_is_oracle=false; oracle_distinct_auroc=0.7865558646; oracle_distinct_auroc_ci95=[0.6319719028, 0.9258842843]; wrong_majority_n=9.
+- failure mode: the power increase made the null cleaner rather than closing the oracle-distinct frontier.
+- missing discriminator: an ARC candidate scorer that converts off-fold discrimination into vote-beating top-1 selection.
+- candidate design: scale ARC positives or use richer candidate-set features, then require CI-exclusive lift before upgrading the frontier.
+- priority: high
+<!-- exp4239-oracle-distinct-a2:end -->
+
+<!-- exp4239-code-disambiguation:start -->
+### GAP-CODE-DISAMBIGUATION-4233: Exp 4239 .392 code disambiguation note
+- status: filled_code_oracle_distinct_beats_vote
+- evidence: `results/experiment_4233_oracle_distinct_code_beats_vote.json`; disambiguation_read=ARC_null_is_data_sparsity; code_oracle_distinct_beats_vote=true; code_predictor_minus_vote_delta=0.03125; code_predictor_minus_vote_ci95=[0.00625, 0.0625]; held_out_task_n=160; verifier_is_oracle=false; off_fold_auroc=0.9739318159; oracle_at_k=0.9625.
+- failure mode: ARC's null does not generalize to high-power code; the ARC frontier is more likely data/positive-sparsity bound.
+- missing discriminator: ARC-scale positives or features with the power that made code vote-beating.
+- candidate design: build a larger ARC oracle-distinct candidate pool before retiring the selection thesis.
+- priority: high
+<!-- exp4239-code-disambiguation:end -->
+
+<!-- exp4239-gap-reward:start -->
+### GAP-REWARD: Exp 4239 .392 verifier-as-reward A-vs-B axis
+- status: open_live_lora_blocked_pre_gate
+- evidence: `results/experiment_4235_verifier_as_reward_3arm_window_boxed.json`; verifier_label_carries_signal=false; a_vs_b_delta=None; a_vs_b_ci95=None; youden_j=None; live_lora_retired=false; blocked_at_layer=conductor_pre_gate; honest_verdict=blocked_gate_check_failed.
+- failure mode: Exp 4235 did not reach a held-out A-vs-B measurement because the real-training smoke pre-gate failed.
+- missing discriminator: decision-grade evidence that verifier-certified labels beat same-generator random-label controls, or an explicit live-LoRA retirement artifact.
+- candidate design: re-scope to an offline reward-weighted form or land a valid non-blocked A-vs-B eval before promotion.
+- priority: high
+<!-- exp4239-gap-reward:end -->
