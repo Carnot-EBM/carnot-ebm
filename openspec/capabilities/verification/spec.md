@@ -12398,6 +12398,73 @@ bootstrap CI95 for guided minus unguided, record the AR baseline result, and set
 `diffusiongemma_feasible=true` only after the model loads and the hook fires
 end-to-end.
 
+### REQ-VERIFY-4260: DiffusionGemma GGUF Energy-Guided Preflight
+
+The repository SHALL provide Exp 4260 at
+`python/carnot/experiment_4260_diffusiongemma_energy_guided_preflight.py` and
+`results/experiment_4260_diffusiongemma_energy_guided_preflight.py` to preflight
+the DiffusionGemma energy-guided discrete-diffusion harness without running the
+full `.395` benchmark. Before any denoising smoke, the runner SHALL verify that
+the local Hugging Face cache directory
+`~/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/` is
+non-empty, that the resolved `.gguf` path loads through `llama_cpp.Llama` with
+`vocab_only=True`, and that no TRM training process is active. The runner SHALL
+use the GGUF path and SHALL NOT call `AutoTokenizer.from_pretrained()` on a
+GGUF repo id. If the cache is missing, it SHALL write
+`honest_verdict=blocked_diffusiongemma_not_cached`; if the GGUF vocab loader
+fails, it SHALL write
+`honest_verdict=blocked_diffusiongemma_gguf_loader_failed`; if TRM training is
+active, it SHALL write `honest_verdict=blocked_trm_training_active`.
+
+When all preconditions pass, the runner SHALL run a bounded smoke over at most
+five small code, Sudoku, and arithmetic prompts. The smoke SHALL use the loaded
+GGUF tokenizer path, a short deterministic denoising loop, and a verifier
+guidance hook that applies the discrete guidance rule
+`logit' = logit - lambda * verifier_energy`, equivalent to reweighting token
+selection by `exp(-lambda * verifier_energy)`. The runner SHALL compare guided
+and unguided per-step token selection on the same candidate distributions and
+SHALL report `guidance_changes_selection=true` only when at least one selected
+token differs because of the verifier-energy reweighting.
+
+The terminal artifact SHALL write
+`results/experiment_4260_diffusiongemma_energy_guided_preflight.json` with
+top-level fields `honest_verdict`, bare bool `preflight_go`, bare bool
+`guidance_changes_selection`, bare float `full_run_cost_estimate_s`, bare bool
+`verifier_is_oracle=false`, `preconditions_checked`, bare int `random_seed`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`duration_s`, and `inference_substrate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. A GO preflight AND an honest NO-GO (harness gap / cost too high) are BOTH COMPLETE and decision-grade for .395.`;
+`preflight_go` = `BARE bool: .395 gates the full run on this; true iff DiffusionGemma loaded, the verifier-guidance hook reweights token selection, and the extrapolated full-run cost is feasible.`;
+`guidance_changes_selection` = `BARE bool: the verifier-as-guidance-energy actually changed per-step token selection vs unguided -- the load-bearing mechanism check (a guidance hook that does nothing is a NO-GO).`;
+`full_run_cost_estimate_s` = `BARE float: extrapolated wall-clock for a full .395 benchmark -- tells the planner whether .395 runs it in-window or out-of-band.`;
+`verifier_is_oracle` = `BARE bool=false -- the guidance energy is the learned/ensemble verifier shaping generation, not an executable oracle; keeps the bet oracle-distinct.`;
+`preconditions_checked` = `Records DiffusionGemma cache + loader + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.`;
+`random_seed` = `Determinism precondition for the denoising smoke.`;
+`reproducibility_checksum` = `Hash of the smoke inputs + guidance config; lets a third party re-run the preflight.`;
+`model_specs` = `DiffusionGemma GGUF id + the verifier ensemble wired as guidance + denoising step count; required methodology.`
+
+### SCENARIO-VERIFY-4260: GGUF Loader Blocks Or Guidance Hook Reweights Selection
+
+Given the DiffusionGemma GGUF cache directory is missing or empty, when Exp
+4260 runs, then it writes the terminal artifact with
+`honest_verdict=blocked_diffusiongemma_not_cached`, `preflight_go=false`,
+`guidance_changes_selection=false`, bare float `full_run_cost_estimate_s=0.0`,
+and does not run the denoising smoke.
+
+Given the cache directory is non-empty but `llama_cpp.Llama(model_path=...,
+vocab_only=True)` cannot load the resolved `.gguf`, when Exp 4260 runs, then it
+writes `honest_verdict=blocked_diffusiongemma_gguf_loader_failed`, records the
+load error under `preconditions_checked`, keeps `verifier_is_oracle=false`, and
+does not fabricate guidance-change or cost measurements.
+
+Given the cache, GGUF vocab loader, and TRM stand-down preconditions all pass,
+when Exp 4260 runs, then it uses no `AutoTokenizer` GGUF repo-id path, runs the
+tiny deterministic denoising smoke, records how many candidate tokens were
+reweighted and how many selections changed, measures per-example wall-clock and
+memory, extrapolates the full `.395` benchmark cost, and sets
+`preflight_go=true` only if the model loaded, guidance changed selection, and
+the extrapolated full-run cost fits a bounded conductor or out-of-band window.
+
 ### REQ-VERIFY-4036: Decentralization Stronger-Base Best-of-N Build Gate
 
 The repository SHALL provide Exp 4036 at
