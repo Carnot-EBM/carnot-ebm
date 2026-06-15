@@ -20950,6 +20950,96 @@ follow-up, and leaves conductor and reconciliation files untouched.
 |---|---|---|
 | REQ-REPORT-4251 | Implemented (`python/carnot/experiment_4251_sota_ingestion_set_encoder_offline_rft.py`, `docs/research-notes/sota-ingestion-set-encoder-offline-rft-v394-2026-06-15.md`) | Implemented (`tests/python/test_experiment_4251_sota_ingestion_set_encoder_offline_rft.py`) |
 
+### REQ-REPORT-4265: Ingest The .394 Fork Outcomes Into A .395 SOTA Plan
+
+The Exp 4265 SOTA-ingestion workflow SHALL ingest the `.394` fork outcomes
+from Exp 4256 through Exp 4264, SHALL read `research-studying.md`,
+`research-references.md`, `results/experiment_4251_sota_ingestion_set_encoder_offline_rft.json`,
+`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, and the
+`CLAUDE.md` SOTA-Ingestion Cycle Discipline, SHALL run the reliable discovery
+helpers with focused low-concurrency queries, SHALL verify the top mapped
+sources with low-concurrency WebSearch/WebFetch, and SHALL NOT invoke
+`/deep-research` or modify `scripts/research_conductor.py`.
+
+The workflow SHALL stop with `honest_verdict=blocked_sota_channels_unavailable`
+only if both reliable discovery channels are unavailable: the sweep helpers do
+not import or emit usable queries AND WebSearch/WebFetch cannot fetch source
+pages. If either reliable channel works, the workflow SHALL write a complete
+mapping. The markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-v395-2026-06-15.md`, the machine-checkable
+artifact SHALL be written to `results/experiment_4265_sota_ingestion_v395.json`,
+and the required runner SHALL be `results/experiment_4265_sota_ingestion_v395.py`
+delegating to `python/carnot/experiment_4265_sota_ingestion_v395.py`.
+
+The mapping SHALL not re-ingest methods already covered by the `.392`, `.393`,
+or `.394` sweeps. It SHALL record Compute-as-Teacher, GSA, Reward-Guided
+Stitching, S3, EDLM, 2406.01572 guidance, CoDeC, ARC of Progress, ARCTraj, and
+Compositional Neuro-Symbolic Reasoning as prior-covered context when they are
+mentioned, not as newly mapped methods. Newly mapped methods SHALL be selected
+from WebFetch-verified sources including ARC-TGI (`arXiv:2603.05099`),
+Reliability Gap in Benchmark Auditing (`arXiv:2606.03305`), DPRM
+(`arXiv:2604.24357`), diffusion-LLM entropy-guided step selection
+(`arXiv:2603.12554`), and L-VARC (`arXiv:2606.12847`).
+
+The verified source URLs SHALL be `https://arxiv.org/abs/2603.05099`,
+`https://arxiv.org/abs/2606.03305`, `https://arxiv.org/abs/2604.24357`,
+`https://arxiv.org/abs/2603.12554`, and
+`https://arxiv.org/abs/2606.12847`.
+
+The note SHALL condition the `.395` recommendation on the actual `.394`
+outcomes: Exp 4256 reports `arc_provenance_blind_win_survives` with
+`provenance_blind_delta=0.3846153846`; Exp 4257 reports
+`arc_oracle_distinct_win_replicates_multiseed` with `mean_delta=0.4576923077`;
+Exp 4258 reports `blocked_arc_game_ids_unrecoverable`; Exp 4259 reports
+`arc_synthesis_underperforms_selection`, `synthesis_breaks_oracle_ceiling=false`,
+and `synthesis_minus_oracle_delta=-0.2826086957`; Exp 4260 reports
+`blocked_diffusiongemma_gguf_loader_failed` and `preflight_go=false`; and Exp
+4264 reports `code_oracle_distinct_replication_corpus_specific` with
+`code_replication_beats_vote=false`.
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v395`, `random_seed`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, `flagged_for_v395`, and `random_seed`.
+`honest_verdict` SHALL use a terminal prefix and, on the complete path, start
+with `complete: sota_ingestion_v395_mapped`. `methods_mapped` SHALL contain
+three to five dicts with exactly `name`, `arxiv_id_or_url`, `url`, `track`,
+`source_read`, `v394_outcome_conditioning`, `carnot_stack_mapping`,
+`failure_mode`, and `experiment_mapping`; each `arxiv_id_or_url` SHALL be one
+of the WebFetch-verified arXiv IDs or URLs, preventing fabricated or uncited
+method rows. `flagged_for_v395` SHALL be a non-empty concrete roadmap slug
+naming the strongest `.395` method, conditioned on the `.394` hardened selection
+win surviving while synthesis underperformed selection, cross-game transfer was
+blocked by missing game IDs, DiffusionGemma preflight was loader-blocked, and
+code replication read corpus-specific. For this ingestion it SHALL name an
+ARC-TGI-style task-family generator and cross-game split recovery method.
+`random_seed` SHALL record the deterministic discovery query set seed.
+
+The workflow SHALL update `research-studying.md` idempotently to mark the
+`.394` forks as ingested, SHALL include `flagged_for_v395`, and SHALL NOT update
+`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-4265: The .394 Forks Close Into A .395 Cross-Game Generalization Plan
+
+**Given** the `.394` forks hardened the ARC oracle-distinct Set-Encoder win
+through provenance-blind and multi-seed checks
+**And** synthesis failed to break the selector ceiling
+**And** cross-game transfer was blocked because game IDs were unrecoverable
+**And** DiffusionGemma preflight was blocked by the GGUF loader
+**When** the Exp 4265 SOTA-ingestion workflow runs through the reliable channel
+**Then** it writes the required markdown note and JSON mapping artifact, maps
+three to five verified sources to Carnot stack implications, failure modes, and
+concrete `.395` experiment targets, updates `research-studying.md`
+idempotently, flags the single strongest `.395` follow-up, records
+`random_seed`, and leaves conductor and reconciliation files untouched.
+
+## Implementation Status (REQ-REPORT-4265)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4265 | Implemented (`python/carnot/experiment_4265_sota_ingestion_v395.py`, `docs/research-notes/sota-ingestion-v395-2026-06-15.md`) | Implemented (`tests/python/test_experiment_4265_sota_ingestion_v395.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone

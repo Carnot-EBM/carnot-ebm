@@ -1,0 +1,68 @@
+{
+  "field_principles": {
+    "flagged_for_v395": "Closes discover->ingest->plan: names the strongest method for the .395 planner, conditioned on the .394 outcomes.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method MUST carry a real arXiv ID/URL (no citation = fabrication per adversarial_verify discipline) + a one-line .395 experiment mapping.",
+    "random_seed": "Determinism placeholder for the discovery query set (recorded for reproducibility of the sweep)."
+  },
+  "flagged_for_v395": "arc_tgi_family_generator_cross_game_generalization_v395",
+  "honest_verdict": "complete: sota_ingestion_v395_mapped",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2603.05099",
+      "carnot_stack_mapping": "Materialize generator/family IDs beside each ARC candidate pool row, then build train-family/test-family splits with exact target hashes and the existing Set-Encoder scoring path.",
+      "experiment_mapping": ".395: recover or attach task-family IDs, build an ARC-TGI-style family-disjoint candidate pool, and rerun Set-Encoder versus vote on held-out families.",
+      "failure_mode": "Generator-generated data can become its own distribution. The .395 gate must keep original ARC tasks as a held-out sanity read and report family-disjoint and original-task metrics separately.",
+      "name": "ARC-TGI task-family generators for cross-game generalization",
+      "source_read": "ARC-TGI releases human-validated task-family generators with reasoning-chain templates and task-level constraints for controlled ARC sampling.",
+      "track": "cross-game ARC transfer",
+      "url": "https://arxiv.org/abs/2603.05099",
+      "v394_outcome_conditioning": "Exp 4258 blocked because game IDs were unrecoverable, while Exp 4256 and Exp 4257 hardened the within-pool selector win. The next question is therefore controlled game-disjoint generalization, not another within-pool rerank."
+    },
+    {
+      "arxiv_id_or_url": "2606.03305",
+      "carnot_stack_mapping": "Add source-kind, generator-family, fold, and target-hash manifests as first-class pool columns before training, then require every reported split to cite those manifests.",
+      "experiment_mapping": ".395: pre-register a provenance manifest and reject any selector, synthesis, or cross-game claim whose rows cannot be traced to a source-kind and family split.",
+      "failure_mode": "A detector-only clean read can be underpowered or shifted. Treat detector scores as diagnostics and make transparent provenance the acceptance gate.",
+      "name": "Reliability Gap benchmark-auditing provenance discipline",
+      "source_read": "The paper finds contamination detectors fail under distribution shift and small benchmark scale, and cannot replace transparent data provenance for benchmark-level auditing.",
+      "track": "learned-verifier leak and contamination auditing",
+      "url": "https://arxiv.org/abs/2606.03305",
+      "v394_outcome_conditioning": "Exp 4256 survived a provenance-blind feature audit, but the origin probe was high. .395 should preserve explicit source manifests instead of relying on statistical leak detectors after the fact."
+    },
+    {
+      "arxiv_id_or_url": "2604.24357",
+      "carnot_stack_mapping": "Map the Set-Encoder or process verifier score into a token/cell ordering policy for a loader-fixed masked diffusion run, with a tiny smoke before any full ARC budget.",
+      "experiment_mapping": ".395 only after loader repair: tiny DPRM-style guided reveal smoke using verifier rewards, then GO/NO-GO for a full DiffusionGemma run.",
+      "failure_mode": "Ordering guidance can optimize partial reveal confidence rather than exact ARC grid correctness. Exact-match validation and a selector-only baseline remain mandatory.",
+      "name": "DPRM token-ordering guidance for diffusion language models",
+      "source_read": "DPRM is a plug-in Doob h-transform process-reward module that keeps the host diffusion LM fixed and changes token ordering through reward-tilted reveal decisions.",
+      "track": "discrete-diffusion verifier and process-reward guidance",
+      "url": "https://arxiv.org/abs/2604.24357",
+      "v394_outcome_conditioning": "Exp 4260 blocked at the DiffusionGemma GGUF loader, so DPRM is not a full-run recommendation yet. It is the right method to queue after loader repair because it uses verifier/process rewards without changing the base denoiser."
+    },
+    {
+      "arxiv_id_or_url": "2603.12554",
+      "carnot_stack_mapping": "If a diffusion LM loads, use verifier rewards as intermediate advantages over denoising steps instead of final-output-only reward or monolithic live LoRA training.",
+      "experiment_mapping": ".395 deferred path: after DiffusionGemma loader repair, run a bounded entropy-step smoke with exact-grid rewards and compare to unguided diffusion.",
+      "failure_mode": "The method is a post-training recipe. It will not help while the DiffusionGemma loader is blocked, and sparse ARC exact-match rewards may still be too coarse without per-cell evidence.",
+      "name": "Entropy-guided step selection and stepwise advantages for diffusion LLM RL",
+      "source_read": "This method formulates diffusion sequence generation as a denoising MDP with exact stepwise policy gradients and entropy-guided step selection for efficient updates.",
+      "track": "discrete-diffusion training and guidance",
+      "url": "https://arxiv.org/abs/2603.12554",
+      "v394_outcome_conditioning": "Because Exp 4260 never loaded DiffusionGemma and Exp 4259 showed deterministic synthesis underperformed, this belongs behind a loader-repair and smoke gate, not ahead of the cross-game fix."
+    },
+    {
+      "arxiv_id_or_url": "2606.12847",
+      "carnot_stack_mapping": "Attach task-family or reasoning-template embeddings during training of an ARC selector/visual model, then evaluate with those privileged signals removed on held-out families.",
+      "experiment_mapping": ".395 ablation: train with and without language/template privileged features on ARC-TGI families, discard them at inference, and score held-out family exact matches.",
+      "failure_mode": "Language descriptions can leak hidden rules. The branch must be training-only, family-disjoint, and audited against target leakage before it can support a generalization claim.",
+      "name": "L-VARC language-guided abstraction with inference-time visual backbone",
+      "source_read": "L-VARC trains a lightweight visual ARC model with a language-guided privileged-information branch, then discards that branch at inference.",
+      "track": "cross-task ARC abstraction transfer",
+      "url": "https://arxiv.org/abs/2606.12847",
+      "v394_outcome_conditioning": "Exp 4259 says naive grid synthesis did not beat selection. L-VARC suggests using language-derived abstractions as training-only structure for generalization, while preserving non-language inference-time claims."
+    }
+  ],
+  "random_seed": 4265
+}
