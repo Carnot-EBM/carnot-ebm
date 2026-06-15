@@ -1,0 +1,182 @@
+{
+  "a_vs_b_ci95": null,
+  "a_vs_b_delta": null,
+  "a_vs_c_delta": null,
+  "a_vs_d_delta": null,
+  "acceptance_gate": {
+    "condition": "positive_control_confirmed true AND a_vs_b_delta + a_vs_b_ci95 reported (verifier_label_carries_signal resolved), OR an honest accumulating/invalid/retired/deferred verdict",
+    "satisfied": true
+  },
+  "accumulated_n": {
+    "eval": 0,
+    "train_A": 0,
+    "train_B": 0,
+    "train_C": 0,
+    "train_D": 0
+  },
+  "adversarial_verify": null,
+  "arm_corpus_sizes": {
+    "A": 776,
+    "B": 776,
+    "C": 742,
+    "D": 0
+  },
+  "created_at": "2026-06-15T03:47:13Z",
+  "duration_s": 36.694545,
+  "evaluation": {
+    "bootstrap_resamples": 2000,
+    "error": null,
+    "memorization_shortcut_diagnostic": null,
+    "pass_at_1": {},
+    "seeds": [],
+    "status": "pending_heldout_eval",
+    "task_rows": [],
+    "truncation_rate": {}
+  },
+  "experiment": "experiment_4223_verifier_as_reward_3arm_synchronous",
+  "field_principles": {
+    "a_vs_b_ci95": "Task-level bootstrap CI95 of the A-vs-B delta -- excluding 0 distinguishes a real lift from the spurious-reward floor.",
+    "a_vs_b_delta": "pass@1(certified A) - pass@1(random-label B) on held-out hidden tests -- isolates the verifier's LABEL from the generator's intelligence (arXiv:2506.10947 / 2509.20837 open question).",
+    "accumulated_n": "Running total eval N across windows (resume-accumulate) -- a single window adding tasks is PROGRESS; the accumulate-floor auto-retires only after 3 no-usable windows.",
+    "honest_verdict": "Terminal-prefixed. A clean 'label carries signal', a clean 'A~=B distillation null', and an honest 'accumulating/underpowered' are ALL COMPLETE -- the project's first clean verifier-as-reward read either way.",
+    "model_specs": "The NON-Qwen base + the B1-proven LoRA config + the on-policy generator; required methodology for a live-LLM training artifact.",
+    "positive_control_confirmed": "BARE bool: gold-control (Arm C >= base) AND truncation_rate<5% on all arms -- without these the A-vs-B number is INVALID, not a finding.",
+    "random_seed": "Determinism precondition; torch generation + LoRA init seeded so the run is reproducible across windows.",
+    "reproducibility_checksum": "Hash of the corpora + LoRA config; lets a third party confirm the same training inputs.",
+    "verifier_is_oracle": "BARE bool=true -- HONEST: the reward is the execution oracle (RLVR/RLEF reward axis), NOT a moat claim; declaring it true keeps the result out of the oracle-distinct headline lane (Circularity Discipline).",
+    "verifier_label_carries_signal": "BARE bool: a_vs_b_ci95 excludes 0 AND delta>0 -- the de-confounded answer to the operator's pivot. NOT a_vs_cold_base (that conflates the verifier's label with the spurious-reward confound).",
+    "youden_j": "BARE float TPR-FPR of the execution certifier vs hidden-pass -- the arXiv:2601.04411 precondition; an exact execution label should show J>>0."
+  },
+  "honest_verdict": "progress: accumulating_verifier_reward_training_no_eval_yet",
+  "inference_substrate": "live_gpu_synchronous_lora_sft",
+  "memorization_shortcut_diagnostic": {
+    "answer_token_perplexity_proxy": null,
+    "source": "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954",
+    "status": "pending_eval",
+    "wrong_label_shortcut_probe": null
+  },
+  "model_specs": {
+    "a1_artifact_checksum": "sha256:39f0ea0f4b6f47f2847305be2f740570a7aa0029107b6435c1974224e7fd15f0",
+    "a1_operating_point": {
+      "K": 5,
+      "base": "google/gemma-4-E4B-it",
+      "base_passrate": 0.6,
+      "corpus": "HumanEval Exp1999 deterministic 10-task headroom slice + EvalPlus visible/hidden label checkpoint",
+      "max_new_tokens": 512,
+      "no_answer_rate": 0.0,
+      "own_visible_perfect_rate": 0.6,
+      "truncation_rate": 0.0
+    },
+    "b1_harness_smoke_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4222_verifier_reward_lora_harness_fix_smoke.json",
+    "generation_checkpoint": "/home/ianblenke/github.com/ianblenke/carnot/results/offarc_power_sync_gemma12b_evalplus_k5.checkpoint.json",
+    "lora_attach_path": "wrapper_inner_linear_target_modules",
+    "lora_config": {
+      "exclude_modules": [
+        "vision_tower"
+      ],
+      "learning_rate": 0.0002,
+      "lora_alpha": 32,
+      "lora_dropout": 0.05,
+      "max_length": 1024,
+      "method": "LoRA-SFT",
+      "r": 16,
+      "target_modules": [
+        "q_proj.linear",
+        "k_proj.linear",
+        "v_proj.linear",
+        "o_proj.linear",
+        "gate_proj.linear",
+        "up_proj.linear",
+        "down_proj.linear"
+      ],
+      "task_type": "CAUSAL_LM"
+    },
+    "on_policy_generator": "google/gemma-4-E4B-it",
+    "qwen_train_base_forbidden": true,
+    "runner": "scripts/experiments/verifier_reward_code_lora_rft_3arm.py",
+    "trainable_base": "google/gemma-4-E4B-it",
+    "trainable_base_cache_path": "/home/ianblenke/.cache/huggingface/hub/models--google--gemma-4-E4B-it",
+    "trainable_base_is_non_qwen": true
+  },
+  "pass_at_1": {},
+  "positive_control_confirmed": false,
+  "preconditions": {
+    "arm_corpus_sizes": {
+      "A": 776,
+      "B": 776,
+      "C": 742,
+      "D": 0
+    },
+    "arms_n_matched": true,
+    "b1_harness_smoke_passed": true,
+    "b1_harness_smoke_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4222_verifier_reward_lora_harness_fix_smoke.json",
+    "b1_harness_smoke_readable": true,
+    "b1_lora_attach_path": "wrapper_inner_linear_target_modules",
+    "cached_base": {
+      "cache_path": "/home/ianblenke/.cache/huggingface/hub/models--google--gemma-4-E4B-it",
+      "model_id": "google/gemma-4-E4B-it"
+    },
+    "cuda_available": true,
+    "nonqwen_base_cached": true,
+    "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954",
+    "stable_checkpoint_readable": true
+  },
+  "random_seed": 4198,
+  "reproducibility_checksum": "sha256:0418d329dfca14e54d0dd043a4dcd361fae4a08cdfdc03ca3a25e74d907d5e6c",
+  "schema": "carnot.experiment_4223_verifier_as_reward_3arm_synchronous.v1",
+  "spec_refs": [
+    "REQ-CODE-4223",
+    "SCENARIO-CODE-4223-DEFERRED-HARNESS",
+    "SCENARIO-CODE-4223-SYNC-ACCUMULATE",
+    "SCENARIO-CODE-4223-VERDICT-GATES"
+  ],
+  "stable_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954",
+  "training": {
+    "accumulated_train_examples": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0
+    },
+    "error": null,
+    "per_arm": {
+      "A": {
+        "arm": "A_certified",
+        "completed_steps": 0,
+        "n_examples": 776,
+        "status": "blocked_loss_without_grad",
+        "trainable_params": 5701632
+      },
+      "B": {
+        "arm": "B_random_same_generator",
+        "completed_steps": 0,
+        "n_examples": 776,
+        "status": "blocked_loss_without_grad",
+        "trainable_params": 5701632
+      },
+      "C": {
+        "arm": "C_hidden_gold",
+        "completed_steps": 0,
+        "n_examples": 742,
+        "status": "blocked_loss_without_grad",
+        "trainable_params": 5701632
+      },
+      "D": {
+        "arm": "D_cold_base",
+        "n_examples": 0,
+        "status": "cold_base_eval_only"
+      }
+    },
+    "progress_events": [],
+    "runner_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954/runner_artifact.json",
+    "status": "partial",
+    "used_detached_process": false
+  },
+  "truncation_guard": {
+    "max_allowed_truncation_rate": 0.05,
+    "max_observed_truncation_rate": null
+  },
+  "verifier_is_oracle": true,
+  "verifier_label_carries_signal": false,
+  "youden_j": 0.4137931034482759
+}

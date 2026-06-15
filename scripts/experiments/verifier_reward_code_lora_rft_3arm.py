@@ -54,6 +54,19 @@ def _jsonable(value: Any) -> Any:
     return value
 
 
+def _prepare_model_for_lora_sft(model: Any) -> Any:
+    """Apply the Gemma/PEFT settings required for LoRA losses to carry gradients."""
+
+    if hasattr(model, "config"):
+        model.config.use_cache = False
+    if hasattr(model, "gradient_checkpointing_enable"):
+        model.gradient_checkpointing_enable()
+    if hasattr(model, "enable_input_require_grads"):
+        model.enable_input_require_grads()
+    model.train()
+    return model
+
+
 def run_execution_tests(
     code: str,
     entry_point: str,
@@ -216,8 +229,8 @@ def _train_lora_sft(
             "lora_attach_path": lora_attach_path,
             "lora_config": attached_lora_config,
         }
+    _prepare_model_for_lora_sft(model)
     optimizer = torch.optim.AdamW((p for p in model.parameters() if p.requires_grad), lr=2e-4)
-    model.train()
     steps = completed_steps
     last_print = 0.0
     for example in examples[completed_steps:]:
