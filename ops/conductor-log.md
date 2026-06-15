@@ -8557,3 +8557,4 @@ c |
 | 2026-06-15 16:15 UTC | PHASE D4 -- Capstone .393 (UNGATED): headline ques | OK | 85 passed, 1 warning in 4.58s |
 | 2026-06-15 17:02 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-06-15 17:05 UTC | Milestone 2026.06.394 activated | OK | 14 tasks queued |
+| 2026-06-15 17:20 UTC | Archive .393 -> activate .394; KEEP the hardened g | OK | 89 passed, 1 warning in 5.31s |
