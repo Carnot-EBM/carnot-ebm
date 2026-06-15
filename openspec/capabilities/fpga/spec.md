@@ -8090,6 +8090,88 @@ The artifact MUST include `field_principles` entries for the required fields:
 
 ---
 
+### REQ-HW-4228
+
+**Title:** Hardware continuity MUST produce per-board SSH/USB status for Exp 4228
+
+**Description:**
+Experiment 4228 MUST produce
+`results/experiment_4228_hardware_continuity.json` as the next per-board
+hardware-continuity artifact for KV260, GateMate, and PolarFire. It MUST read
+`results/experiment_4217_hardware_continuity.json` as prior context, preserve
+one reachability plus next-step record per attached board, and continue checking
+reachable boards when another board is blocked. As long as boards are attached,
+each milestone reserves one task for every non-terminal board. KV260 is terminal
+and receives only opportunistic SSH confirmation. GateMate and PolarFire are
+non-terminal and MUST each name the next concrete forward step.
+
+The only valid preconditions are:
+
+- GateMate: `openFPGALoader -c dirtyJtag --detect`, accepted only when it
+  reports the GM1Ax IDCODE (`0x20000001`).
+- PolarFire: `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'`.
+- KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`.
+
+KV260 MUST NOT use a host SD-card block-device precondition such as
+`/dev/mmcblk`; the SSH-Not-SD-Card discipline is mandatory. GateMate's
+non-terminal status MUST name the next concrete step toward the n=16 Ising tile
+flash. PolarFire's non-terminal status MUST name the next concrete step toward
+end-to-end Carnot dispatch with a hash match. For any unreachable board, the
+board's status MUST be `blocked_<board>_unreachable`, and the experiment MUST
+continue checking the other boards.
+
+The artifact MUST include `field_principles` entries for the required fields:
+
+- `honest_verdict`: `Terminal-prefixed. An honest blocked_<board> for an unreachable board is a COMPLETE verdict for that board.`
+- `per_board_status`: `One reachability + next-step record per board so a board is never silently forgotten.`
+- `preconditions_checked`: `Records the SSH/USB-detect preconditions run; enforces SSH-Not-SD-Card.`
+
+**Acceptance criteria:**
+- `results/experiment_4228_hardware_continuity.json` is generated.
+- `per_board_status` is a dict keyed by `kv260`, `gatemate`, and `polarfire`;
+  each entry records `reachable`, `status`, `next_concrete_step`,
+  `precondition_resource`, `precondition_command`, `duration_s`, and a distinct
+  board-specific `timer_id`.
+- `preconditions_checked` records exactly the GateMate DirtyJTAG detect,
+  PolarFire SSH BatchMode, and KV260 SSH BatchMode preconditions; no host
+  SD-card marker such as `/dev/mmcblk` appears in the artifact.
+- GateMate reachability requires the GM1Ax/`0x20000001` IDCODE from
+  `openFPGALoader -c dirtyJtag --detect`.
+- GateMate reachable runs or records the next concrete step toward flashing the
+  n=16 Ising tile; if unreachable, `per_board_status["gatemate"]["status"]` is
+  `blocked_gatemate_unreachable`.
+- PolarFire reachable runs or records the next concrete step toward end-to-end
+  Carnot dispatch with a hash match; if unreachable,
+  `per_board_status["polarfire"]["status"]` is `blocked_polarfire_unreachable`.
+- KV260 terminal state is confirmed via SSH when reachable; if unreachable,
+  `per_board_status["kv260"]["status"]` is `blocked_kv260_unreachable`.
+- `honest_verdict` starts with `complete:` or `blocked_`.
+
+**Implementation status:** Implemented (Exp 4228)
+
+---
+
+### SCENARIO-HW-4228
+
+**Scenario:** Exp 4228 records SSH/USB reachability and concrete next work per board.
+
+**Given:** GateMate and PolarFire remain non-terminal, KV260 is terminal, and
+the milestone requires board continuity to use only SSH/USB-detect
+preconditions.
+**When:** Experiment 4228 reads Exp 4217 context, runs the GateMate DirtyJTAG
+detect, PolarFire SSH BatchMode, and KV260 SSH BatchMode preconditions, and
+records the next concrete step per non-terminal board.
+**Then:** It writes `results/experiment_4228_hardware_continuity.json` with a
+terminal-prefixed verdict, `inference_substrate="hardware_smoke"`, required
+field principles, `per_board_status`, precondition evidence for the three
+allowed board checks, distinct per-board timer identifiers and wall-clock
+durations, deterministic seed, checksum, and no KV260 host SD-card
+precondition.
+
+**Implementation status:** Implemented (Exp 4228)
+
+---
+
 ### REQ-HW-4217
 
 **Title:** Hardware continuity MUST produce per-board SSH/USB status for Exp 4217
