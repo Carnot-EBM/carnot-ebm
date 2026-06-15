@@ -14509,6 +14509,102 @@ module is not importable, when Exp 4231 runs, then it writes
 `held_out_task_n=0`, `wrong_majority_n=0`, `verifier_is_oracle=false`, leaves
 `learned_verifier_path` empty, and stops before training.
 
+### REQ-VERIFY-4232: Held-Out Oracle-Distinct ARC Aggregator Beats-Vote Gate
+
+The repository SHALL provide
+`python/carnot/reporting/oracle_distinct_arc_aggregator_4232.py` and
+`results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.py` to run
+the powered held-out ARC rerank gate for the learned aggregator built by Exp
+4231. The runner SHALL first read
+`results/experiment_4231_oracle_distinct_arc_aggregator_build.json`; if
+`aggregator_trained` is not the bare bool `true`, if `verifier_is_oracle` is
+not the bare bool `false`, or if `learned_verifier_path` is absent or
+unreadable, it SHALL write
+`honest_verdict=complete_oracle_distinct_arc_gate_deferred_no_built_aggregator`,
+`oracle_distinct_beats_vote=false`, `verifier_is_oracle=false`, and SHALL stop
+before measuring ARC candidates.
+
+When the Exp 4231 aggregator is available, the runner SHALL rebuild the grown
+ARC candidate pool through the Exp 4231 loader, preserving source-qualified
+task ids. The measured aggregator score SHALL be oracle-distinct and held out:
+selection MAY use Exp 4231 out-of-fold candidate scores only when the candidate
+task is absent from that score row's `train_task_ids`; otherwise the candidate
+or task SHALL not contribute to the gate. The runner SHALL NOT execute demos,
+call a GAP execution verifier, or use candidate correctness as an inference
+rank key.
+
+For each held-out ARC task the runner SHALL compute `vote@1` as the majority
+candidate, `aggregator@1` as the candidate maximizing the Exp 4231 learned
+score, `oracle@K` as any candidate exactly correct, a budget-matched
+no-verifier control using the same candidates with a deterministic first-of-K
+policy, and a 2606.04323 margin-triggered override that keeps the vote
+candidate unless the learned-score margin between the aggregator top-1 and the
+vote candidate clears the pre-registered A1-fold threshold. It SHALL report
+task-level pass rates, bare int `held_out_task_n`, and a task-bootstrap CI95
+with at least 2000 resamples for `aggregator@1 - vote@1`.
+
+The positive control SHALL be evaluated before interpreting a null. If
+`oracle@K` does not exceed `vote@1`, the terminal headline SHALL be
+`oracle_distinct_arc_no_headroom_uninformative` and the artifact SHALL NOT
+claim that the aggregator failed. Otherwise, the bare bool
+`oracle_distinct_beats_vote` SHALL be true only when headroom exists,
+`aggregator@1 - vote@1` is positive, and its CI95 excludes zero. A
+headroom-present run with a non-exclusive CI SHALL report
+`oracle_distinct_aggregator_ties_vote_with_headroom_at_power`. The runner SHALL
+run `scripts/adversarial_verify.py` on the written artifact and SHALL keep
+`verifier_is_oracle=false` so `CIRCULAR_MOAT_OVERCLAIM` remains clean.
+
+The terminal artifact SHALL write
+`results/experiment_4232_oracle_distinct_arc_aggregator_beats_vote.json` with
+required fields `honest_verdict`, bare bool `oracle_distinct_beats_vote`, bare
+float `aggregator_minus_vote_delta`, `aggregator_minus_vote_ci95`, bare float
+`margin_override_minus_vote`, bare float `oracle_at_k`, bare float
+`matched_control_delta`, bare int `held_out_task_n`, bare bool
+`verifier_is_oracle=false`, bare int `random_seed`, `reproducibility_checksum`,
+`field_principles`, `spec_refs`, and `acceptance_gate`. Its field principles
+SHALL include:
+`honest_verdict` = `Terminal-prefixed. A clean beats-vote win, a clean ties-at-power null, and an honest no-headroom-uninformative are ALL COMPLETE -- a stronger read on the oracle-distinct frontier than .391's under-powered n=14.`;
+`oracle_distinct_beats_vote` = `BARE bool: aggregator@1 - vote@1 CI95 excludes 0 AND delta>0 AND headroom exists -- the de-confounded oracle-distinct win (GAP-3-ties-vote closed); NOT a circular execution result.`;
+`aggregator_minus_vote_delta` = `aggregator@1 - vote@1 on held-out ARC -- the oracle-distinct lift; recovers the wrong-majority-failure answers (ARBITER/AggLM) a flat vote discards.`;
+`aggregator_minus_vote_ci95` = `Task-level bootstrap CI95 of the delta -- excluding 0 is what distinguishes a real oracle-distinct win from noise.`;
+`margin_override_minus_vote` = `Margin-triggered override (keep vote unless high aggregator margin, threshold pre-registered on the A1 fold) minus vote -- the 2606.04323 deployment pattern; can win where a flat rerank loses by overriding only on confident wrong-majority cases (the .391 ARBITER override never fired).`;
+`oracle_at_k` = `The positive-control ceiling (any candidate exactly correct) -- if oracle@K ~= vote the null is uninformative (FALSE_NEGATIVE_RISK), not a verifier failure.`;
+`matched_control_delta` = `aggregator@1 minus the budget-matched no-verifier control -- isolates the aggregator's contribution from the candidate budget.`;
+`held_out_task_n` = `BARE int: the gate's actual N -- target >=30 so the win/null is not under-powered like the .391 n=14.`;
+`verifier_is_oracle` = `BARE bool=false -- this measurement uses the LEARNED aggregator (no demo execution); only this makes the result headline/gate-eligible (adversarial_verify CIRCULAR_MOAT_OVERCLAIM must stay clean).`;
+`random_seed` = `Determinism precondition; the held-out split + bootstrap must be reproducible.`;
+`reproducibility_checksum` = `Hash of the held-out pool + the learned aggregator; lets a third party re-run the decisive gate.`
+
+### SCENARIO-VERIFY-4232: Held-Out Aggregator Beats Vote With Controls
+
+Given Exp 4231 reports `aggregator_trained=true`, `verifier_is_oracle=false`,
+and a readable `learned_verifier_path`, and the grown held-out ARC pool has
+`oracle@K > vote@1`, when Exp 4232 runs, then it reports vote, learned
+aggregator, oracle, matched-control, and margin-triggered override task pass
+rates, computes `aggregator_minus_vote_delta` and a CI95 with at least 2000
+bootstrap resamples, sets `oracle_distinct_beats_vote` to true only for a
+positive CI-exclusive learned lift, records `held_out_task_n`, keeps
+`verifier_is_oracle=false`, records the pre-registered override threshold,
+writes the required field principles and checksum, and runs adversarial
+verification without a `CIRCULAR_MOAT_OVERCLAIM` flag.
+
+### SCENARIO-VERIFY-4232-NO-HEADROOM: Positive Control Blocks False Negative
+
+Given the held-out ARC pool has `oracle@K` equal to `vote@1`, when Exp 4232
+runs, then it still reports the measured deltas and controls, but writes an
+honest no-headroom-uninformative verdict, sets
+`oracle_distinct_beats_vote=false`, and does not claim that the learned
+aggregator failed.
+
+### SCENARIO-VERIFY-4232-DEFERRED: Missing Built Aggregator Defers Honestly
+
+Given Exp 4231 is missing, reports `aggregator_trained=false`, reports
+`verifier_is_oracle=true`, or points at an unreadable learned aggregator, when
+Exp 4232 runs, then it writes
+`honest_verdict=complete_oracle_distinct_arc_gate_deferred_no_built_aggregator`,
+sets `oracle_distinct_beats_vote=false`, keeps `verifier_is_oracle=false`, and
+stops before measuring ARC candidates.
+
 ### REQ-VERIFY-4177: Decisive Headroom-Controlled Verifier Moat Test
 
 The repository SHALL provide
