@@ -1,0 +1,99 @@
+{
+  "field_principles": {
+    "flagged_for_v394": "Closes discover->ingest->plan: names the strongest method for the next planner, conditioned on the A3/A4/B2 outcomes.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication (adversarial_verify discipline)."
+  },
+  "flagged_for_v394": "agglm_synthesize_corrected_grid_from_set_encoder_evidence_v394",
+  "honest_verdict": "complete: sota_ingestion_set_encoder_offline_rft_mapped_v394",
+  "methods_mapped": [
+    {
+      "a3_arc_mapping": "Exp 4245 already shows the CPU-fast DeepSets set encoder beat vote by 0.4423076923 with CI95 excluding zero. Set-LLM is therefore a scale-up architecture, not a reason to re-litigate set awareness.",
+      "a4_code_mapping": "Exp 4246 blocked before a distinct second code corpus, so Set-LLM does not yet prove cross-domain robustness. Keep code as a separate candidate-corpus discovery gate.",
+      "arxiv_id_or_url": "2505.15433",
+      "b2_reward_mapping": "Set-LLM is orthogonal to the blocked offline reward-weighted SFT path. Do not use the ARC win to claim reward-training progress.",
+      "carnot_stack_mapping": "Maps the proven ARC set-encoder direction onto a stronger permutation-invariant LLM architecture: set-aware masking and position encodings for unordered candidate pools.",
+      "experiment_mapping": "Use it as the high-capacity selector baseline over a bigger ARC pool, paired with the current DeepSets model to separate architecture scale from data growth.",
+      "failure_mode": "Set-LLM evidence is multiple-choice/set-text, not ARC grid synthesis. A direct .394 use still needs exact grid-match validation and a larger ARC pool.",
+      "name": "Set-LLM permutation-invariant set architecture",
+      "url": "https://arxiv.org/abs/2505.15433"
+    },
+    {
+      "a3_arc_mapping": "Because Exp 4245 proved set-aware selection can beat vote, the next ARC lever is not another selector-only rerun. AggLM scales the win by using the selected evidence to synthesize the corrected grid.",
+      "a4_code_mapping": "The code replication block keeps AggLM's immediate scope on ARC. A code version should wait until Exp 4246 has a source-distinct hidden label candidate pool.",
+      "arxiv_id_or_url": "2509.06870",
+      "b2_reward_mapping": "AggLM does not unblock LoRA training. If its generated grids become training data later, the B2 same-base random-label control still has to remain intact.",
+      "carnot_stack_mapping": "Maps to a generative reconciler that reviews the Set-Encoder-ranked candidate family, reconciles conflicting local evidence, and synthesizes a corrected grid rather than only selecting a cached one.",
+      "experiment_mapping": "Flag for .394: Set-Encoder evidence in, AggLM-style corrected grid out, exact grid validation, SCOPE per-region ablation, and vote plus selector-only controls on a bigger pool.",
+      "failure_mode": "Generative reconciliation increases fabrication risk. It must be gated by exact ARC grid match, matched selector-only controls, and an explicit no-synthesis baseline.",
+      "name": "AggLM review-reconcile-synthesize aggregation",
+      "url": "https://arxiv.org/abs/2509.06870"
+    },
+    {
+      "a3_arc_mapping": "Exp 4245's margin override beat vote by 0.4230769231, so ARBITER becomes the framing and diagnostic for which basins the set encoder recovers, not the primary architecture.",
+      "a4_code_mapping": "No second code corpus means ARBITER-style basin recovery has not been replicated outside the ARC pool in this milestone.",
+      "arxiv_id_or_url": "2605.26172",
+      "b2_reward_mapping": "ARBITER is a test-time aggregation method. It does not provide the offline reward-weighted training evidence B2 was gated to test.",
+      "carnot_stack_mapping": "Maps to wrong-majority recovery: treat vote as a prior, add bounded same-pool evidence, and only override when evidence clears the pre-registered margin.",
+      "experiment_mapping": "Report basin-level wrong-majority recovery for the AggLM arm: vote prior, Set-Encoder margin, ARBITER-style evidence sum, and exact recovery count.",
+      "failure_mode": "Hidden-state ARBITER variants are gray-box. Carnot's .394 use should stay on sampled outputs, local grid evidence, and calibrated margins to preserve the oracle-distinct claim.",
+      "name": "ARBITER conservative evidence over vote prior",
+      "url": "https://arxiv.org/abs/2605.26172"
+    },
+    {
+      "a3_arc_mapping": "The A3 win and matched_control_delta=0.4807692308 justify treating the set encoder as value-added over budget alone. The .394 plan should now cost-normalize that win.",
+      "a4_code_mapping": "The blocked A4 result means no robustness claim should be made for code until a distinct candidate pool exists.",
+      "arxiv_id_or_url": "2510.14913",
+      "b2_reward_mapping": "The hybrid verifier is a selection-time method, not reward training. Keep it separate from B2's execution-oracle reward axis.",
+      "carnot_stack_mapping": "Maps to the hybrid policy already supported by Exp 4245: keep self-consistency as a cheap prior, then spend discriminative verification only where the learned margin can change the answer.",
+      "experiment_mapping": "Add fixed-budget accounting to the AggLM run: vote, Set-Encoder, margin-triggered hybrid, and generative reconciler at matched candidate and token budgets.",
+      "failure_mode": "A hybrid can hide verifier weakness behind the vote prior. The .394 report must keep selector-only, vote-only, and matched-budget controls visible.",
+      "name": "Budget-aware discriminative verification hybrid",
+      "url": "https://arxiv.org/abs/2510.14913"
+    },
+    {
+      "a3_arc_mapping": "A3 does not depend on reward training. RAFT should not be used to reinterpret the ARC Set-Encoder win.",
+      "a4_code_mapping": "A4's missing second code pool limits code robustness evidence, but the stable A/B/C corpora remain the right source for a bounded RAFT smoke once the harness actually trains.",
+      "arxiv_id_or_url": "2504.11343",
+      "b2_reward_mapping": "B2 blocked because harness_smoke_passed=false, steps_run=0, and trainable_param_count=0. RAFT remains the correct offline form only after the harness proves real optimizer steps and loss movement.",
+      "carnot_stack_mapping": "Maps to the offline reward pivot: train on positively rewarded samples with a simple SFT-style objective before attempting a more complex online RL loop.",
+      "experiment_mapping": "For .394, keep RAFT as an owed B-path gate: fix adapter attachment, prove at least 20 real steps, then compare verifier-certified Arm A against same-generator random Arm B.",
+      "failure_mode": "Reward-positive SFT can learn dataset and generator artifacts. It must be paired with the same-base random-label ablation.",
+      "name": "RAFT rejection-sampled reward-positive SFT",
+      "url": "https://arxiv.org/abs/2504.11343"
+    },
+    {
+      "a3_arc_mapping": "VAR is not the strongest next ARC method because A3 already landed without training the base model. It belongs to the owed reward path.",
+      "a4_code_mapping": "Code replication did not run on a second corpus, so VAR cannot be claimed as a robustness amplifier yet.",
+      "arxiv_id_or_url": "2502.11026",
+      "b2_reward_mapping": "The blocked B2 result says the next refinement is mechanical first: make the non-Qwen offline harness attach LoRA to supported modules, then run reward-weighted SFT with A-vs-B controls.",
+      "carnot_stack_mapping": "Maps to the exact loss-shape refinement for B2: an offline reward-driven re-weighted SFT objective rather than live LoRA RL.",
+      "experiment_mapping": "Use VAR as the B2 loss implementation once training is real: fixed step budget, reward weights preserved, A minus B pass@1 CI95, and gold-control non-regression.",
+      "failure_mode": "A weighted SFT loss can look stable while learning spurious labels. The random-label control and gold Arm C must remain pass/fail gates.",
+      "name": "VAR offline reward-weighted alignment",
+      "url": "https://arxiv.org/abs/2502.11026"
+    },
+    {
+      "a3_arc_mapping": "This control is not needed to accept the A3 selection win, because A3 is test-time reranking with verifier_is_oracle=false, not model training from rewards.",
+      "a4_code_mapping": "The missing second code corpus leaves robustness unresolved, but it does not weaken the requirement that reward-training controls use the same base and same generator.",
+      "arxiv_id_or_url": "2506.10947",
+      "b2_reward_mapping": "B2 could not run, so no A-vs-B inference is available. The .394 reward task must preserve the same-base random-label control before claiming verifier reward signal.",
+      "carnot_stack_mapping": "Maps to the de-confounder for any reward-weighted training claim: Arm A verifier labels must beat same-generator random labels on the same non-Qwen base.",
+      "experiment_mapping": "Make the B-path acceptance gate explicit: verifier-certified Arm A must beat same-generator random Arm B with CI95 excluding zero, with Qwen training forbidden.",
+      "failure_mode": "Spurious reward effects are model-family dependent. A single Qwen success would be invalid here; the trainable base must stay non-Qwen.",
+      "name": "Spurious Rewards same-base random-label control",
+      "url": "https://arxiv.org/abs/2506.10947"
+    },
+    {
+      "a3_arc_mapping": "Exp 4245's Set-Encoder win is the right substrate for SCOPE-style features. The .394 reconciler should explain which grid regions support the synthesized answer.",
+      "a4_code_mapping": "SCOPE's ARC use does not resolve the missing code corpus. Code needs its own trace/evidence source before a comparable region signal exists.",
+      "arxiv_id_or_url": "2512.15146",
+      "b2_reward_mapping": "SCOPE can shape future pseudo-labels, but the blocked B2 result means it must not be promoted into training until the offline harness runs.",
+      "carnot_stack_mapping": "Maps to per-region ARC evidence for candidate-grid disagreement: use local confidence and subgroup signals so a minority-correct grid has evidence beyond final-answer frequency.",
+      "experiment_mapping": "Pair AggLM synthesis with a SCOPE per-region evidence ablation: synthesis with and without local evidence, exact grid validation, and wrong-majority recovery counts.",
+      "failure_mode": "Fine-grained pseudo-labels can amplify confirmation bias if they are not tied to exact ARC grid labels and local disagreement evidence.",
+      "name": "SCOPE fine-grained per-region evidence",
+      "url": "https://arxiv.org/abs/2512.15146"
+    }
+  ]
+}
