@@ -8530,3 +8530,4 @@ c |
 | 2026-06-15 08:36 UTC | PHASE A3 (HEADLINE DISAMBIGUATION; independent) -- | OK | 85 passed, 1 warning in 4.55s |
 | 2026-06-15 08:55 UTC | PHASE B1 (HARNESS-FIRST + REAL-TRAINING ASSERTION) | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-15 08:57 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4234-verifier-reward-lora-harness-real- |
+| 2026-06-15 08:59 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4234-verifier-reward-lora-harness-real- |
