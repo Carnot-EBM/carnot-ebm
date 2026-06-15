@@ -15913,6 +15913,80 @@ mapped to games, it writes
 `honest_verdict=blocked_arc_game_ids_unrecoverable` with
 `verifier_is_oracle=false` and does not claim a cross-game transfer result.
 
+### REQ-VERIFY-4270: ARC Family Provenance Recovery Manifest
+
+The repository SHALL provide Exp 4270 at
+`python/carnot/reporting/arc_family_provenance_recovery_4270.py` and
+`results/experiment_4270_arc_family_provenance_recovery.py` to recover
+per-row provenance for the Exp 4243 grown ARC candidate pool before any
+held-out-family oracle-distinct transfer claim is attempted. The runner SHALL
+first verify that
+`results/experiment_4243_arc_candidate_pool_grow_pool.json.gz` loads and that
+at least one join target among `results/arc3_win_condition_survey.json`,
+`results/arc3_gap3_stage2_eval_pool.json.gz`, and
+`results/arc3_gap4_induced_programs.json` exists. If no source mapping can be
+reconstructed at all, it SHALL write an honest terminal artifact with
+`honest_verdict=blocked_arc_source_taxonomy_unavailable` and stop without
+fabricating family metrics.
+
+When source mapping is available, the runner SHALL recover a manifest row for
+every pool task with `task_id`, `raw_task_id`, `source_id`, `source_kind`,
+`family_id`, `game_id`, `fold`, `target_hash`, and a recovery-method field.
+It SHALL join `raw_task_id` and `source_id` back to available source ARC task
+artifacts and any checked-in ARC-TGI-style taxonomy or ARC-AGI-3 game survey
+metadata. Where a clean ARC-TGI family id is unavailable, it SHALL use the
+honest fallback unit `original_arc_task:<raw_task_id>`, set
+`recovered_by=original_arc_task_fallback`, and list those rows in the
+artifact's fallback audit. The manifest SHALL be persisted as
+`results/experiment_4270_arc_family_manifest.json` and SHALL be treated as a
+first-class provenance artifact.
+
+The runner SHALL compute bare int `distinct_family_n`, histogram
+`per_family_task_count`, and bare bool `family_split_feasible`, where
+`family_split_feasible` is true iff at least four distinct family units are
+present and a deterministic family-disjoint split can hold out folds with at
+least approximately ten tasks each on the existing pool. It SHALL emit why the
+split is infeasible when the existing pool is too family-concentrated. The
+artifact SHALL declare `verifier_is_oracle=false`, bare int `random_seed`,
+`reproducibility_checksum` hashing the pool, join sources, and manifest,
+`model_specs` describing join sources and fallback policy, `field_principles`,
+`spec_refs`, `acceptance_gate`, and `adversarial_verify`. The runner SHALL NOT
+run Codex, GGUF inference, GPU inference, stable checkpoint writes, or TRM
+training.
+
+The terminal artifact SHALL write
+`results/experiment_4270_arc_family_provenance_recovery.json` with
+`honest_verdict`, bare bool `family_split_feasible`, bare int
+`distinct_family_n`, `per_family_task_count`, `provenance_manifest_path`,
+bare bool `verifier_is_oracle=false`, bare int `random_seed`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`acceptance_gate`, and `adversarial_verify`. Its `field_principles` SHALL
+include:
+`honest_verdict` = `Terminal-prefixed. A recovered manifest (feasible) AND an honest infeasible-pool finding are BOTH COMPLETE and decision-grade (feasible -> A2 tests existing; infeasible -> A3 builds fresh).`;
+`family_split_feasible` = `BARE bool: A2 gates on ==true, A3 on ==false, A4 on ==true (gated-fields-must-be-bare); true iff a family-disjoint split with >=4 families and >=~10 tasks per held-out fold exists on the existing pool.`;
+`distinct_family_n` = `BARE int: number of distinct task-families recovered -- the OOD breadth; <4 means the existing pool cannot support a powered cross-family test.`;
+`per_family_task_count` = `Histogram of tasks per family -- exposes family concentration (the reason exp4258's pool may be untestable cross-family).`;
+`provenance_manifest_path` = `Path to the first-class per-row {source_kind, family_id, game_id, fold, target_hash} manifest -- the Reliability Gap artifact every downstream cross-family claim must trace to.`;
+`verifier_is_oracle` = `BARE bool=false -- this is a data-provenance recovery for the learned selector, not an executable oracle.`;
+`random_seed` = `Determinism precondition; the fold assignment must be reproducible.`;
+`reproducibility_checksum` = `Hash of the pool + join sources + manifest; lets a third party re-derive the provenance.`;
+`model_specs` = `The join sources (ARC-TGI taxonomy / 25-game survey / source pools) + the fallback-unit policy; required methodology.`
+
+### SCENARIO-VERIFY-4270: Family Manifest Gates Existing-Pool Transfer Feasibility
+
+Given the Exp 4243 grown pool and at least one source join artifact are
+readable, when Exp 4270 runs, then it writes one provenance manifest row per
+pool task, recovers or honestly falls back to a disjoint `family_id`, assigns
+deterministic folds, records fallback rows, writes
+`results/experiment_4270_arc_family_manifest.json`, reports
+`family_split_feasible`, `distinct_family_n`, `per_family_task_count`,
+`provenance_manifest_path`, `verifier_is_oracle=false`, `random_seed`,
+`reproducibility_checksum`, and `model_specs`, and runs adversarial
+verification cleanly. If the pool or every source join target is unavailable,
+then it writes `honest_verdict=blocked_arc_source_taxonomy_unavailable`,
+keeps the required bare gate fields present, and does not report duplicate
+counts as distinct metrics.
+
 ### REQ-VERIFY-4259: ARC Set-Encoder Grid Synthesis
 
 The repository SHALL provide Exp 4259 at
