@@ -14605,6 +14605,100 @@ Exp 4232 runs, then it writes
 sets `oracle_distinct_beats_vote=false`, keeps `verifier_is_oracle=false`, and
 stops before measuring ARC candidates.
 
+### REQ-VERIFY-4244: Grown-Pool ARC Set-Encoder Aggregator Build
+
+The repository SHALL provide
+`python/carnot/reporting/arc_set_encoder_aggregator_4244.py` and
+`results/experiment_4244_arc_set_encoder_aggregator_build.py` to train the
+full set-aware ARC aggregator on the Exp 4243 grown pool. The runner SHALL
+first read `results/experiment_4243_arc_candidate_pool_grow.json`, require
+`arc_pool_grown=true`, require a readable `pool_artifact_path`, and stop
+honestly with
+`honest_verdict=complete_arc_set_encoder_deferred_no_grown_pool` before
+training when that precondition is absent.
+
+When the grown pool is available, the runner SHALL build per-task candidate
+sets from the persisted pool artifact as
+`{task_id, [candidate_features...], [is_correct...]}`. Per-candidate features
+SHALL include the Exp 4231/.392 grid statistics and cross-candidate signals:
+vote weight, self-consistency margin, per-cell/modal-grid agreement,
+set-level vote/confidence/entropy/cell summaries, within-set ranks/z-scores,
+duplicate grid counts, and competing shape/palette transformation-family
+indicators. The supervised label MAY be the cached `is_correct` field from the
+grown pool, but the learned scorer SHALL NOT execute demos or call a GAP
+execution verifier at inference.
+
+The model SHALL be a permutation-invariant set encoder that scores each
+candidate conditioned on its full competing candidate set, using either a
+DeepSets pooled-context scorer or a self-attention set encoder over the
+per-candidate feature vectors. The training SHALL be out-of-fold over held-out
+task ids, use an imbalance-aware objective such as class-weighted or focal
+binary loss with positive-bearing task minibatches, apply post-hoc calibration
+such as temperature or isotonic calibration on train-fold scores, and report
+bare float `oracle_distinct_auroc` plus bootstrap CI95 over out-of-fold
+candidate scores.
+
+On the exact same task folds, the runner SHALL train and score the Exp
+4231/.392 augmented-logistic aggregator over the same feature vectors and
+report bare float `set_encoder_vs_logistic_auroc_delta` as set-encoder AUROC
+minus logistic AUROC. The set encoder artifact SHALL be persisted for A3 even
+when it does not improve on the logistic baseline. If the set encoder does not
+improve on the same-fold logistic ablation and the `.392` AUROC range, the
+terminal verdict SHALL be
+`complete_arc_set_encoder_no_gain_over_logistic_auroc<x>` rather than a
+positive claim.
+
+The terminal artifact SHALL write
+`results/experiment_4244_arc_set_encoder_aggregator_build.json` with required
+fields `honest_verdict`, bare bool `aggregator_trained`, bare float
+`oracle_distinct_auroc`, `oracle_distinct_auroc_ci95`, bare float
+`set_encoder_vs_logistic_auroc_delta`, bare int `wrong_majority_n`, bare int
+`held_out_task_n`, `learned_verifier_path`, bare bool
+`verifier_is_oracle=false`, `model_specs`, bare int `random_seed`,
+`reproducibility_checksum`, `field_principles`, `spec_refs`, and
+`acceptance_gate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. A trained out-of-fold set-encoder OR an honest 'no gain over the .392 logistic baseline' is COMPLETE -- both feed A3, and the ablation makes a no-gain a real negative not a sparsity artifact.`;
+`aggregator_trained` = `BARE bool: A3's gate compares this raw value (gated-fields-must-be-bare); true iff a learned permutation-invariant Set-Encoder artifact was persisted out-of-fold.`;
+`oracle_distinct_auroc` = `BARE float: off-fold detection AUROC of the SET-ENCODER vs is_correct -- the oracle-distinct discrimination; >0.5 CI95-excl is the precondition for a beats-vote win, and it should improve on the .392 augmented-logistic.`;
+`set_encoder_vs_logistic_auroc_delta` = `BARE float: set_encoder off-fold AUROC minus the .392 augmented-logistic AUROC on the SAME folds -- the decision-grade ablation answering whether a true cross-candidate encoder helps over hand-built summary features.`;
+`wrong_majority_n` = `BARE int: held-out wrong-majority tasks the A3 gate scores on -- carried from the grown pool; the ARBITER/AggLM headroom the aggregator targets.`;
+`held_out_task_n` = `BARE int: tasks the A3 gate will score on -- target >=40 so the A3 result is not under-powered.`;
+`learned_verifier_path` = `The persisted Set-Encoder artifact A3 loads to rerank held-out ARC candidates; the build deliverable.`;
+`verifier_is_oracle` = `BARE bool=false -- the set-encoder scores WITHOUT executing demos (Circularity Discipline); this is what makes an A3 win headline/gate-eligible, unlike a circular execution verifier.`;
+`model_specs` = `The set-encoder architecture (DeepSets/attention) + cross-candidate feature set + calibrated imbalance-aware loss; required methodology.`;
+`random_seed` = `Determinism precondition; fold split + model init seeded so the AUROC is reproducible.`;
+`reproducibility_checksum` = `Hash of the grown pool + fold split + features; catches silent drift before A3 measures.`
+
+### SCENARIO-VERIFY-4244: Set-Encoder Trains And Ablates Out Of Fold
+
+Given Exp 4243 reports `arc_pool_grown=true` and its pool artifact is readable,
+when Exp 4244 runs, then it builds task-grouped candidate sets from the grown
+pool, trains a permutation-invariant set encoder with task-held-out folds,
+scores every held-out candidate with a model whose training tasks exclude that
+candidate's task, calibrates the scores, trains the same-fold augmented-logistic
+ablation, reports AUROC, CI95, and `set_encoder_vs_logistic_auroc_delta`,
+persists the learned verifier artifact, sets `aggregator_trained=true`, keeps
+`verifier_is_oracle=false`, and writes the required field principles and
+checksum.
+
+### SCENARIO-VERIFY-4244-NO-GAIN: Same-Fold Logistic Null Is Complete
+
+Given the grown pool is available but the set encoder does not improve on the
+same-fold augmented-logistic ablation or the `.392` AUROC range, when Exp 4244
+runs, then it still persists the set-encoder artifact for A3, records the
+measured AUROC and same-fold delta, sets `aggregator_trained=true`, keeps
+`verifier_is_oracle=false`, and writes
+`complete_arc_set_encoder_no_gain_over_logistic_auroc<x>`.
+
+### SCENARIO-VERIFY-4244-DEFERRED: Missing Grown Pool Defers Honestly
+
+Given Exp 4243 is missing, reports `arc_pool_grown=false`, or points at an
+unreadable pool artifact, when Exp 4244 runs, then it writes
+`honest_verdict=complete_arc_set_encoder_deferred_no_grown_pool`, keeps
+`aggregator_trained=false`, reports zero AUROC and zero logistic delta, keeps
+`verifier_is_oracle=false`, leaves `learned_verifier_path` empty, and stops
+before training.
+
 ### REQ-VERIFY-4233: Oracle-Distinct Code Pass-Predictor Beats-Vote Gate
 
 The repository SHALL provide
