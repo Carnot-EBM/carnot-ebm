@@ -20679,6 +20679,87 @@ files untouched.
 |---|---|---|
 | REQ-REPORT-4215 | Implemented (`python/carnot/experiment_4215_sota_ingestion_oracle_distinct.py`, `docs/research-notes/sota-ingestion-oracle-distinct-v391-2026-06-14.md`) | Implemented (`tests/python/test_experiment_4215_sota_ingestion_oracle_distinct.py`) |
 
+### REQ-REPORT-4226: Ingest The .391 Learned-Aggregator Sweep Into A .392 Plan
+
+The Exp 4226 SOTA-ingestion workflow SHALL ingest the `.391 planning sweep`
+from `research-references.md` into an actionable SOTA-to-experiment mapping
+for the `.392` planner. The workflow SHALL read the `.391 planning sweep`,
+`research-studying.md`,
+`results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json`, and
+`results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json`; SHALL
+run the reliable discovery helpers `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py` with focused low-concurrency queries; SHALL
+verify the top mapped sources with low-concurrency WebSearch/WebFetch; and
+SHALL NOT invoke `/deep-research` or modify `scripts/research_conductor.py`.
+
+The markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-learned-aggregator-v392-2026-06-15.md` and
+the machine-checkable mapping artifact SHALL be written to
+`results/experiment_4226_sota_ingestion_learned_aggregator.json`. The required
+runner SHALL be
+`results/experiment_4226_sota_ingestion_learned_aggregator.py` and SHALL
+delegate to
+`python/carnot/experiment_4226_sota_ingestion_learned_aggregator.py`.
+
+The note SHALL map AggLM (`arXiv:2509.06870`) and AgentAuditor
+(`arXiv:2602.09341`) to strengthening the A2 ARC verifier into an aggregator
+that reviews, reconciles, and synthesizes or selects from localized evidence
+instead of only reranking a candidate by flat score. It SHALL map GenSelect-BoN
+(`arXiv:2602.02143`) to the RL-trained generative-selection recipe and its
+limits as selection rather than reconciliation. It SHALL map MSV
+(`arXiv:2603.03417`) to cross-candidate features and calibration over a whole
+candidate set rather than isolated candidate scoring. It SHALL map the
+SR-TTRL/CoT-verifier self-learning line, anchored by Online Learnability of
+Chain-of-Thought Verifiers (`arXiv:2603.03538`), to the verifier-as-reward
+self-learning loop after a positive aggregator gate, including soundness and
+completeness failure risk.
+
+For each mapped method, the note SHALL state the Carnot stack mapping, what the
+method implies for the next experiment, where the method fails or does not by
+itself prove Carnot's claim, and the concrete experiment target. The note SHALL
+record that Exp 4220 trained an oracle-distinct ARC verifier but with sparse
+positives and `wrong_majority_n=5`, and that Exp 4221 reports headroom but no
+vote-beating selector result (`oracle_distinct_beats_vote=false`).
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v392`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, and `flagged_for_v392`. `honest_verdict`
+SHALL use a terminal prefix and, on the complete path, start with
+`complete: sota_ingestion_learned_aggregator_mapped_v392`. `methods_mapped`
+SHALL contain five to eight dicts with exactly `name`, `arxiv_id_or_url`,
+`url`, `carnot_stack_mapping`, `implication`, `failure_mode`, and
+`experiment_mapping`; each `arxiv_id_or_url` SHALL be one of the
+WebFetch-verified arXiv IDs or URLs, preventing fabricated or uncited method
+rows. `flagged_for_v392` SHALL be a non-empty concrete roadmap slug naming the
+single strongest `.392` method, and for this ingestion SHALL name the
+AggLM-style ARC review-and-reconcile aggregator follow-up.
+
+The workflow SHALL update `research-studying.md` idempotently to mark the
+`.391 planning sweep` as ingested, SHALL include `flagged_for_v392`, and SHALL
+NOT update `ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-4226: The .391 Sweep Closes Into A .392 Learned-Aggregator Plan
+
+**Given** the `.391 planning sweep` filed learned aggregation, localized
+auditing, generative Best-of-N selection, multi-sequence verification, and
+self-learning verifier precedents
+**And** Exp 4220 reports a trained but sparse oracle-distinct ARC verifier
+**And** Exp 4221 reports headroom while `oracle_distinct_beats_vote=false`
+**When** the Exp 4226 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON mapping artifact, maps
+verified sources to Carnot stack implications, failure modes, and concrete
+experiment targets, updates `research-studying.md` idempotently, flags the
+single strongest `.392` follow-up, and leaves conductor and reconciliation
+files untouched.
+
+## Implementation Status (REQ-REPORT-4226)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4226 | Implemented (`python/carnot/experiment_4226_sota_ingestion_learned_aggregator.py`, `docs/research-notes/sota-ingestion-learned-aggregator-v392-2026-06-15.md`) | Implemented (`tests/python/test_experiment_4226_sota_ingestion_learned_aggregator.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
