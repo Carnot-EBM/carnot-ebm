@@ -21313,6 +21313,95 @@ claim `.389` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4207 | Implemented (`python/carnot/reporting/archive_v389_activate_v390_4207.py`, `python/carnot/experiment_4207_archive_v389_activate_v390.py`) | Implemented (`tests/python/test_experiment_4207_archive_v389_activate_v390.py`) |
 
+### REQ-REPORT-4219: Archive .390, Activate .391, And Preserve The Oracle-Distinct Infra Correction
+
+The Exp 4219 workflow SHALL archive milestone `2026.06.390`, confirm milestone
+`2026.06.391` is active, and write the record-only aggregation artifact
+`results/experiment_4219_archive_v390_activate_v391.json`. It SHALL run no live
+training, SHALL NOT modify `scripts/research_conductor.py`, and SHALL declare
+`inference_substrate` as `aggregation_from_upstream_artifacts`.
+
+Before claiming completion the workflow SHALL confirm:
+
+- `research-complete.yaml` parses under `yaml.safe_load`
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`
+- the smart-subset pre-test gate is green
+- `results/experiment_4218_capstone_v390.json` exists
+- `results/experiment_4209_oracle_distinct_arc_verifier_build.json` exists
+- `results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json` exists
+- `results/experiment_4208_verifier_as_detector_auroc.json` exists
+- `results/experiment_4211_verifier_as_reward_finish_synchronous.json` exists
+- milestone `2026.06.391` is the active roadmap milestone
+
+If any precondition is absent or red, the workflow SHALL write a blocked
+artifact whose `honest_verdict` starts with `blocked_`, record the failed
+resource in `preconditions_checked`, and stop without claiming a terminal
+archive or editing `research-complete.yaml`.
+
+The complete artifact SHALL include the principle-annotated fields
+`honest_verdict`, `v390_close_state`, and `preconditions_checked` with these
+exact principles:
+
+- `honest_verdict`: `Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.`
+- `v390_close_state`: `Honest record (oracle-distinct gate blocked on a wrong-file DATA bug not a null; the signal exists at AUROC 0.90; reward died on a PEFT attach with operating point intact; ARC 16) so the .391 agents frame the milestone as a de-risked retry + collection, not a redo from scratch.`
+- `preconditions_checked`: `Records resources verified; pre-empts the silent-missing-resource fabrication mode.`
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v390_close_state` SHALL truthfully record
+that `.390` did not run the oracle-distinct beats-vote gate: Exp 4209 read
+candidate labels from `results/arc3_trm_verifier_rerank.json`, produced
+`accepted=0`, `rejected=0`, `total=0`, and left `selector_trained=false`; Exp
+4210 then gate-blocked on `exp4209-oracle-distinct-arc-verifier-build.selector_trained
+(actual=False == expected=True)`. It SHALL record that this was a wrong-file DATA
+bug, not a science null or a no-headroom result, because Exp 4208's working
+`scripts/exp_verifier_detector_auroc.py:load_arc_rows()` path over
+`arc3_gap3_stage2_eval_pool.json.gz` plus `arc3_gap4_induced_programs.json`
+yielded `8041` labeled ARC candidates, ARC detection AUROC `0.9016`, CI95
+`[0.7828, 0.9984]`, selector headroom `0.129`, and
+`verifier_is_oracle=false`. It SHALL record that the verifier-as-reward run died
+on the third infrastructure failure with the PEFT error
+`Gemma4ClippableLinear is not supported`, while preserving the operating point:
+Phase-0 precision `0.956`, Youden-J `0.4138`, corpora `A=776`, `B=776`,
+`C=742`, and readable checkpoint directory
+`code_verifier_reward_lora_rft_a83b52882c198954`. It SHALL also record ARC
+progress as `total_levels_solved=16` and `total_games_solved=13`, the live
+solver result as efficiency-only with no level completed, and the two
+flagged-skipped artifacts `4212` and `4216`. It SHALL frame `.391` as
+`the de-risked oracle-distinct retry + the harness-first verifier-as-reward FINISH`.
+
+#### SCENARIO-REPORT-4219: The Archive Corrects The .390 Infra Artifact
+
+**Given** `.390` has the Exp 4218 capstone, Exp 4209 wrong-file build block, Exp
+4210 selector-trained gate block, Exp 4208 working ARC detector path, and Exp
+4211 PEFT attach failure, the history and exclusion-manifest YAML files parse,
+the smart-subset pre-test gate is green, and `.391` is active
+**When** the Exp 4219 archive workflow runs
+**Then** it archives `.390`, confirms `.391`, keeps the YAML history parseable
+with one `.390` record, writes
+`results/experiment_4219_archive_v390_activate_v391.json`, records that the
+`NO-HEADROOM-OR-NO-SIGNAL` headline was an infrastructure artifact caused by a
+wrong-file label lookup, records the existing ARC oracle-distinct detector signal
+at AUROC `0.9016`, records the PEFT `Gemma4ClippableLinear` failure with the
+reward operating point and checkpoint intact, records ARC `16` levels / `13`
+games, live efficiency-only/no-level result, and `.391` retry-plus-harness-first
+framing in `v390_close_state`, records the checked resources in
+`preconditions_checked`, declares `aggregation_from_upstream_artifacts`, and
+emits a terminal-prefixed honest verdict.
+
+#### SCENARIO-REPORT-4219-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4219 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does not
+claim `.390` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4219)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4219 | Implemented (`python/carnot/reporting/archive_v390_activate_v391_4219.py`, `python/carnot/experiment_4219_archive_v390_activate_v391.py`) | Implemented (`tests/python/test_experiment_4219_archive_v390_activate_v391.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone

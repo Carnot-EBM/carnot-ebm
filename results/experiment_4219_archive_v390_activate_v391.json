@@ -1,0 +1,204 @@
+{
+  "activated_milestone": "2026.06.391",
+  "active_milestone_confirmed": "2026.06.391",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.390",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4218_capstone_v390.json",
+      "experiment_id": "4218",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "2fa02439e1a4874d804cdfc7393ce4bfa6f0803974a510f76cc50023b46c5402"
+    },
+    {
+      "deliverable": "results/experiment_4209_oracle_distinct_arc_verifier_build.json",
+      "experiment_id": "4209",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "9fdd46ab273a6916384b6960c3c366433ba553c9888928f7081f39ffd2845b8a"
+    },
+    {
+      "deliverable": "results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json",
+      "experiment_id": "4210",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "57266e0a71f0f3cdaee04eefffed49325e081ba52a26a0393b9b6d06158688f4"
+    },
+    {
+      "deliverable": "results/experiment_4208_verifier_as_detector_auroc.json",
+      "experiment_id": "4208",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "74067e5d0f73c2ed5990b7177475831b6a73774eb35298e7ac349db91aad0753"
+    },
+    {
+      "deliverable": "results/experiment_4211_verifier_as_reward_finish_synchronous.json",
+      "experiment_id": "4211",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "63b78e59b3b82ba6c9d47cd5fb361f32382155b91e4e7c5afea17009e11edc46"
+    }
+  ],
+  "duration_s": 12.436787,
+  "exclusion_manifest_parses": true,
+  "experiment_id": 4219,
+  "field_principles": {
+    "activated_milestone": "Confirms .391 is live for the corrected retry frame.",
+    "active_milestone_confirmed": "Records the active roadmap milestone actually observed.",
+    "archived_milestone": "Provenance: the milestone being closed, 2026.06.390.",
+    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
+    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
+    "honest_verdict": "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.",
+    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
+    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
+    "v390_close_state": "Honest record (oracle-distinct gate blocked on a wrong-file DATA bug not a null; the signal exists at AUROC 0.90; reward died on a PEFT attach with operating point intact; ARC 16) so the .391 agents frame the milestone as a de-risked retry + collection, not a redo from scratch."
+  },
+  "honest_verdict": "success: archived_v390_v391_active_oracle_distinct_wrong_file_data_bug_signal_exists_auroc0.9016_reward_peft_attach_failed_arc16_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "active_milestone": {
+      "actual": "2026.06.391",
+      "expected": "2026.06.391",
+      "matches": true,
+      "path": "research-roadmap.yaml"
+    },
+    "exclusion_manifest_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/exclusion_manifest.yaml"
+    },
+    "research_complete_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "smart_subset_pretest": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4219_archive_v390_activate_v391.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "green": true,
+      "stderr_tail": "",
+      "stdout_tail": "........................................................................ [ 79%]\n...................                                                      [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n91 passed, 1 warning in 5.06s\n"
+    },
+    "source_artifacts": {
+      "4208": {
+        "exists": true,
+        "path": "results/experiment_4208_verifier_as_detector_auroc.json",
+        "sha256": "74067e5d0f73c2ed5990b7177475831b6a73774eb35298e7ac349db91aad0753"
+      },
+      "4209": {
+        "exists": true,
+        "path": "results/experiment_4209_oracle_distinct_arc_verifier_build.json",
+        "sha256": "9fdd46ab273a6916384b6960c3c366433ba553c9888928f7081f39ffd2845b8a"
+      },
+      "4210": {
+        "exists": true,
+        "path": "results/experiment_4210_oracle_distinct_arc_verifier_beats_vote.json",
+        "sha256": "57266e0a71f0f3cdaee04eefffed49325e081ba52a26a0393b9b6d06158688f4"
+      },
+      "4211": {
+        "exists": true,
+        "path": "results/experiment_4211_verifier_as_reward_finish_synchronous.json",
+        "sha256": "63b78e59b3b82ba6c9d47cd5fb361f32382155b91e4e7c5afea17009e11edc46"
+      },
+      "4218": {
+        "exists": true,
+        "path": "results/experiment_4218_capstone_v390.json",
+        "sha256": "2fa02439e1a4874d804cdfc7393ce4bfa6f0803974a510f76cc50023b46c5402"
+      }
+    }
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4219,
+  "reproducibility_checksum": "6cef181e2c5d88283ec44dcd9a8b3558d35381aa2098aea445cbc5b8e89bf8be",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "updated",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v390_to_v391_4219.v1",
+  "spec_refs": [
+    "REQ-REPORT-4219",
+    "SCENARIO-REPORT-4219"
+  ],
+  "task_id": "exp4219-archive-v390-activate-v391",
+  "v390_close_state": {
+    "accepted_rejected_n": {
+      "accepted": 0,
+      "rejected": 0,
+      "total": 0
+    },
+    "arc_detector_verifier_is_oracle": false,
+    "arc_incremental_honest_verdict": "success: incremental_progress_sc25-635fd71a_advanced_to_L2_total16",
+    "arc_labeled_candidate_n": 8041,
+    "arc_selector_headroom": 0.129,
+    "capstone_headline_is_infra_artifact": true,
+    "capstone_headline_outcome": "oracle_distinct_no_headroom_or_no_learnable_signal",
+    "capstone_honest_verdict": "complete: capstone_v390_oracle_distinct_no_headroom_or_no_learnable_signal_oracle_NO-HEADROOM-OR-NO-SIGNAL_reward_ACCUMULATING_arc_levels16_flagged_skipped2_diffusiongemma_still_pending",
+    "capstone_oracle_distinct_status": "NO-HEADROOM-OR-NO-SIGNAL",
+    "conductor_stands_down_on_trm_training": true,
+    "flagged_artifacts_skipped": [
+      4212,
+      4216
+    ],
+    "forbidden_conductor_actions": [
+      "launch_trm_training",
+      "pkill_or_kill_train_py",
+      "write_results_trm_runs_sudoku_extreme_baseline"
+    ],
+    "gate_blocked_at_layer": "conductor_pre_gate",
+    "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp4209-oracle-distinct-arc-verifier-build.selector_trained (actual=False == expected=True)",
+    "live_solver_efficiency_only_no_level": true,
+    "live_solver_honest_verdict": "complete: solver_completes_0_levels_live_lp85-305b61c3_efficiency_only",
+    "live_solver_levels_completed": 0,
+    "no_conductor_training_rule": true,
+    "oracle_distinct_arc_detection_auroc": 0.9016,
+    "oracle_distinct_arc_detection_auroc_ci95": [
+      0.7828,
+      0.9984
+    ],
+    "oracle_distinct_comparison_ran": false,
+    "oracle_distinct_gate_blocked_on_data": true,
+    "oracle_distinct_signal_exists": true,
+    "outer_loop_sigterm_reported": true,
+    "outer_loop_trm_training_done": true,
+    "outer_loop_trm_val": 0.8227,
+    "reward_base_passrate": 0.6,
+    "reward_checkpoint_intact": true,
+    "reward_checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/verifier_reward_3arm_lora_rft/code_verifier_reward_lora_rft_a83b52882c198954",
+    "reward_checkpoint_slug": "code_verifier_reward_lora_rft_a83b52882c198954",
+    "reward_corpora": {
+      "A": 776,
+      "B": 776,
+      "C": 742
+    },
+    "reward_peft_attach_failed": true,
+    "reward_phase0_precision": 0.956,
+    "reward_third_infra_failure": true,
+    "reward_training_error": "ValueError: Target module Gemma4ClippableLinear(\n  (linear): Linear(in_features=768, out_features=768, bias=False)\n) is not supported. Currently, only the following modules are supported: `torch.nn.Linear`, `torch.nn.Embedding`, `torch.nn.Conv1d`, `torch.nn.Conv2d`, `torch.nn.Conv3d`, `transformers.pytorch_utils.Conv1D`, `torch.nn.MultiheadAttention.`.",
+    "reward_training_status": "failed",
+    "reward_verifier_is_oracle": true,
+    "reward_youden_j": 0.4138,
+    "selector_trained": false,
+    "summary": "oracle_distinct_wrong_file_data_bug_signal_exists_reward_peft_arc16",
+    "total_games_solved": 13,
+    "total_levels_solved": 16,
+    "v391_frame": "the de-risked oracle-distinct retry + the harness-first verifier-as-reward FINISH",
+    "working_label_loader": "scripts/exp_verifier_detector_auroc.py:load_arc_rows",
+    "working_label_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "working_programs_path": "results/arc3_gap4_induced_programs.json",
+    "wrong_file_candidate_pool_source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_trm_verifier_rerank.json"
+  }
+}
