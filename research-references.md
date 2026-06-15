@@ -22777,3 +22777,99 @@ the .387 A2 method), SEDD 2310.16834, EDLM 2410.21357, EntRGi 2602.05000, classi
 
 Sources (this sweep): arxiv.org/abs/{2605.07395, 2504.01005, 2504.16828, 2510.20607, 2512.11847,
 2602.01849, 2602.21189, 2509.13866, 2605.05138}.
+
+## .393 planning sweep (2026-06-15, Opus 4.8 outer-loop) — LAND the ARC oracle-distinct win (full set-encoder on a grown pool) + the OFFLINE reward-weighting pivot
+
+Added by the `.393 planning sweep. Context: `.392 produced the program's FIRST oracle-distinct win — a
+LEARNED, NON-executing code pass-predictor BEAT majority vote (predictor@1−vote@1 = +0.03125, bootstrap
+CI95 [0.00625, 0.0625] EXCLUDES 0, oracle@K 0.9625, off-fold AUROC 0.974, n=160, `verifier_is_oracle=false`,
+adversarial-clean) — while ARC TIED at power (delta 0.0, n=52, oracle@K 0.365 so headroom exists) because the
+ARC pool had only 20 positive candidates / 28419 (base-rate 0.0007). The `.392 capstone disambiguation_read is
+`ARC_null_is_data_sparsity`, NOT a thesis bound. `.393 fixes data-sparsity (grow the pool) + replaces the
+augmented-logistic reranker with a full permutation-invariant set-encoder + re-tests the SAME beats-vote gate
+at power. All arXiv IDs below were verified to resolve to real papers (WebFetch/WebSearch, 2026-06-15); none
+fabricated. Numbers are source-reported by the papers — re-derive before any forward-facing use.
+
+**A. Aggregator architecture (the ARC headline build, exp4244):**
+- **arXiv:2505.15433** — *Set-LLM: A Permutation-Invariant LLM* (NeurIPS 2025). Adapts a pretrained LLM with
+  a set-attention mask + set positional encodings; **beats majority-vote in 16/20 cases in a single run** on
+  ARC-Challenge/PIQA/CSQA/SIQA (vote needs exponential permutations). → **PRIMARY architecture pick for the
+  `.393 set-encoder aggregator**; supersedes the IR-domain Set-Encoder (2404.06912) for candidate selection
+  and is already benchmarked on ARC-Challenge. Caveat: multiple-choice option-selection, not free-form
+  grid-candidate pools — adapt to variable-size ARC candidate sets; the window-safe fallback is a small
+  DeepSets/attention head over per-candidate feature vectors.
+- **arXiv:2404.06912** — *Set-Encoder: Permutation-Invariant Inter-Passage Attention for Listwise Passage
+  Re-Ranking* (the `.392-flagged method). The `[INT]` interaction-token cross-candidate attention pattern; the
+  IR-domain ancestor of Set-LLM. Cite as lineage, not primary.
+- **arXiv:2603.03417** — *Parallel Test-Time Scaling with Multi-Sequence Verifiers* (MSV). "First verifier
+  designed to jointly process all candidate solutions and model their interactions" — the closest
+  cross-candidate competitor; differentiate the Carnot novelty on ARC + offline + permutation-invariant.
+- **arXiv:2510.14913** — *Budget-aware Test-time Scaling via Discriminative Verification* (2025). A
+  discriminative verifier (cheap, oracle-distinct) is weak ALONE but, hybridized with self-consistency, gives
+  a "free" +up to 15.3% on AIME2025 under fixed budget. → validates the **discriminative+vote hybrid /
+  margin-triggered-override** design: KEEP the vote prior, ADD the verifier on top (do not replace vote).
+
+**B. Minority-correct recovery / wrong-majority failure (the headline framing, exp4245):**
+- **arXiv:2605.26172** — *ARBITER: Reasoning Trajectory Basins and Majority Vote Failures in Test-Time
+  Sampling* (2026). Sampled solutions cluster into "basins"; vote picks the most STABLE, not most ACCURATE;
+  ARBITER adds conservative additive evidence over the consensus prior to recover minority-correct answers. →
+  the cleanest 2026 formalization of the exact wrong-majority problem; the additive-evidence-over-prior design
+  is a near-drop-in for the margin-triggered override. Caveat: its strong variant uses base-model hidden
+  states (gray-box) — stays oracle-distinct only because it does NOT execute demos.
+- **arXiv:2509.06870** — *The Majority is not always right: RL training for solution aggregation* (AggLM,
+  `.392-mapped). RL-trains "review, reconcile, synthesize"; explicitly balances training data to recover
+  minority-correct answers; fewer tokens than vote. The generative aggregator alternative; the Carnot
+  offline/discriminative set-encoder is the cheaper oracle-distinct counterpart. A `.394 candidate arm
+  (generative reconciler that SYNTHESIZES a corrected grid rather than only selecting).
+- **arXiv:2510.01499** — *Beyond Majority Voting: LLM Aggregation by Leveraging Higher-Order Information*
+  (2025). Training-free Optimal-Weight + Inverse-Surprising-Popularity aggregators using first/second-order
+  answer correlations; provably beat vote under stated conditions. A cheap training-free baseline to beat +
+  a theory frame for WHEN aggregation can beat vote. Caveat: multi-MODEL heterogeneity assumption;
+  single-model self-consistency pools may violate the correlation conditions.
+
+**C. ARC-AGI candidate selection / learned verifier (novelty check):**
+- **arXiv:2603.13372** — *The ARC of Progress towards AGI: A Living Survey* (2026). Surveys 82 ARC approaches;
+  classical selection baselines = program-simplicity / program-likelihood; **does NOT cover
+  learned-verifier-for-selection in depth** → confirms learned permutation-invariant cross-candidate selection
+  on static ARC grids is a genuine open niche (novelty for `.393).
+- **arXiv:2601.10904** — *ARC Prize 2025: Technical Report* (Chollet et al.). Authoritative current ARC SOTA
+  landscape (iterative refinement + evolutionary synthesis); the selection-layer contribution is orthogonal.
+
+**D. OFFLINE reward-weighted SFT — the re-scoped verifier-as-reward path (exp4247/exp4248):**
+- **arXiv:2504.11343** — *A Minimalist Approach to LLM Reasoning: from Rejection Sampling to Reinforce*
+  (2025). **RAFT (SFT on positively-rewarded samples only) is COMPETITIVE with GRPO and PPO**; most of RL's
+  gain is down-weighting wrong responses. → **PRIMARY justification** for re-scoping live-LoRA-RL → offline
+  reward-filtered SFT (the dead live-LoRA path failed 6× on infra). Caveat: math corpora; "competitive" not
+  "superior".
+- **arXiv:2502.11026** — *RLHF in an SFT Way: From Optimal Solution to Reward-Weighted Alignment* (VAR,
+  2025). Reformulates RLHF as offline reward-driven re-weighted SFT (a minor loss adjustment); +7.16% over
+  DPO, better stability. → the formal recipe for "weight the SFT loss by the verifier reward offline" = the
+  exact `.393 B-phase training form.
+- **arXiv:2506.10947** — *Spurious Rewards: Rethinking Training Signals in RLVR* (the `.392-mapped control).
+  Random/spurious rewards recover ~74% of RLVR gains via clipping-bias amplification — the de-confounder the
+  verifier-as-reward A-vs-B test must beat. CRITICAL caveat: "highly model-dependent" (strong on Qwen, weaker
+  elsewhere) → the random-label ablation (Arm B) MUST hold the SAME base model as Arm A, or the control is
+  invalid. (Reinforces the HARD RULE that Qwen is forbidden as the trained base.)
+
+**E. Class-imbalanced / sparse-positive verifier calibration (exp4244 loss):**
+- **arXiv:2506.09338** — *Know What You Don't Know: Uncertainty Calibration of Process Reward Models* (2025).
+  PRMs systematically OVERESTIMATE step-success probability; fixes via **quantile-regression** calibration,
+  improving inference-time selection. → best fit for the "calibrate a sparse-positive verifier so its scores
+  are usable for selection" problem; a concrete alternative to focal/isotonic for the imbalanced ARC pool.
+- **arXiv:2512.09054** — *Improving Multi-Class Calibration through Normalization-Aware Isotonic Techniques*
+  (2025). Isotonic regression respecting probability normalization; beats one-vs-rest isotonic on ECE/NLL.
+  The isotonic option in a 2025 form. Caveat: generic classification; the 20/180 ARC sparsity may still break it.
+- Note (focal loss): no LLM-verifier-native focal-loss paper exists yet; pair standard focal loss with the
+  quantile-regression / isotonic calibration above rather than over-citing.
+
+**Bottom line for `.393:** (1) lead the set-encoder build with **Set-LLM 2505.15433** (single-run beats vote on
+ARC-Challenge) over the IR Set-Encoder; (2) frame the wrong-majority headline with **ARBITER 2605.26172** +
+**AggLM 2509.06870** (recover minority-correct, additive-evidence-over-consensus), differentiate on
+oracle-distinct + offline + ARC; (3) **2510.14913** says keep the vote prior and ADD the discriminative
+verifier (margin-triggered override); (4) the ARC learned-selection novelty is real (survey 2603.13372
+confirms the gap); (5) the offline reward-weighting pivot is well-supported by **RAFT 2504.11343** + **VAR
+2502.11026**, with **Spurious-Rewards 2506.10947** the non-negotiable same-base-model random-label control;
+(6) calibrate the sparse-positive verifier with **quantile-regression 2506.09338**.
+
+Sources (this sweep): arxiv.org/abs/{2505.15433, 2404.06912, 2603.03417, 2510.14913, 2605.26172, 2509.06870,
+2510.01499, 2603.13372, 2601.10904, 2504.11343, 2502.11026, 2506.10947, 2506.09338, 2512.09054}.
