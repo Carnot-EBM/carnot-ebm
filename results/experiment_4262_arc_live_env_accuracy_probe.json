@@ -1,0 +1,299 @@
+{
+  "acceptance_gate_passed": true,
+  "actions_taken": 5,
+  "actions_vs_baseline_ratio": 0.29411764705882354,
+  "baseline_actions": 17,
+  "duration_s": 11.439,
+  "environment_score": {
+    "actions": 0,
+    "completed": false,
+    "guid": "0c44ed3e-d50b-4d11-9ea5-d1605327fb63",
+    "level_actions": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "level_baseline_actions": [
+      17,
+      38,
+      31,
+      16,
+      41,
+      60,
+      26,
+      159
+    ],
+    "levels_completed": 0,
+    "message": "",
+    "resets": 0,
+    "score": 0.0
+  },
+  "experiment": "experiment_4262_arc_live_env_accuracy_probe",
+  "field_principles": {
+    "actions_vs_baseline_ratio": "BARE float: actions taken / EnvironmentInfo.baseline_actions -- the efficiency metric (north-star \u00a70 EFFICIENCY axis).",
+    "honest_verdict": "Terminal-prefixed. A level completion AND an honest 0-levels-efficiency-only are BOTH COMPLETE.",
+    "leaderboard_submitted": "BARE bool=false -- confirms NO leaderboard submission (operator-only external publication).",
+    "levels_completed": "BARE int: real-env-confirmed levels (EnvironmentScore) -- the live accuracy metric; 0 is honest and decision-grade.",
+    "model_specs": "The live-env adapter + verifier routing; required methodology.",
+    "preconditions_checked": "Records live-env reachability + no-submit verified; pre-empts fabrication + the operator-only-submission violation.",
+    "random_seed": "Determinism precondition for the probe.",
+    "reproducibility_checksum": "Hash of the probe config + trajectory; lets a third party re-run."
+  },
+  "game_probed": "lp85-305b61c3",
+  "honest_verdict": "complete: live_env_accuracy_probe_0_levels_efficiency_only_lp85-305b61c3",
+  "inference_substrate": "official_arc_agi3_online_anonymous_key_scored_only_accuracy_probe_margin_trigger_provenance_blind",
+  "leaderboard_submission_attempted": false,
+  "leaderboard_submitted": false,
+  "levels_completed": 0,
+  "model_specs": {
+    "inference_substrate": "official_arc_agi3_online_anonymous_key_scored_only_accuracy_probe_margin_trigger_provenance_blind",
+    "leaderboard_submission": "operator_only_not_attempted",
+    "live_env_adapter": "python/carnot/agentic/arc_agi3_live_adapter.py",
+    "live_solver_wrapper": "python/carnot/experiment_4250_arc_live_env_solver_accuracy.py",
+    "no_submit_check": {
+      "checked_files": [
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_4250_arc_live_env_solver_accuracy.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_4237_arc_live_env_solver_accuracy.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_agi3_live_adapter.py"
+      ],
+      "no_submit_verified": true
+    },
+    "routing": {
+      "margin_threshold": 0.1,
+      "margin_triggered": {
+        "commit_induced_rule": true,
+        "fallback_policy": "execute_verified_policy",
+        "learned_margin": 0.2,
+        "margin_threshold": 0.1,
+        "policy": "margin-triggered override",
+        "references": [
+          "2606.04323",
+          "2509.06870"
+        ],
+        "trigger_source": "2606.04323",
+        "verifier_margin": 0.2
+      },
+      "provenance_audit_checksum": "sha256:60effeade145e54a3a4147a7e783ffbc9afb2ca4c3e6cfa48dfc266bcbeb695e",
+      "provenance_blind_enabled": true,
+      "provenance_blind_source": "results/experiment_4256_arc_oracle_distinct_leak_audit.json"
+    },
+    "scored_only_open_scorecard": true,
+    "source_experiment_artifact": "results/experiment_4250_arc_live_env_solver_accuracy.json",
+    "target_selection": "best_headroom_live_game_from_exp4250_completion_targeting_probe",
+    "world_model_solver": "python/carnot/agentic/arc_agi3_world_model.py"
+  },
+  "preconditions_checked": {
+    "base_url": "https://three.arcprize.org",
+    "error": "",
+    "live_env_reachable": true,
+    "live_scorecard_returned": true,
+    "network_reachable": true,
+    "no_submit_check": {
+      "checked_files": [
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_4250_arc_live_env_solver_accuracy.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_4237_arc_live_env_solver_accuracy.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_agi3_live_adapter.py"
+      ],
+      "forbidden_markers": {},
+      "no_submit_verified": true,
+      "operator_only_rule": "CLAUDE.md Operator-Only External Publication"
+    },
+    "no_submit_verified": true,
+    "scored_only_probe": true,
+    "sdk_importable": true,
+    "sdk_version": "0.9.8",
+    "source_experiment": "experiment_4250_arc_live_env_solver_accuracy",
+    "source_honest_verdict": "complete: solver_completes_0_levels_live_lp85-305b61c3_efficiency_only"
+  },
+  "random_seed": 4262,
+  "reproducibility_checksum": "ec5efc74d43d4dd2f158b5b69aa14ed894f12056e33b7729d3239db1acefceaf",
+  "requirements": [
+    "REQ-PHASE4-068",
+    "SCENARIO-PHASE4-068"
+  ],
+  "scorecard_closed": false,
+  "source_experiment_artifact": "results/experiment_4250_arc_live_env_solver_accuracy.json",
+  "source_honest_verdict": "complete: solver_completes_0_levels_live_lp85-305b61c3_efficiency_only",
+  "trajectory": [
+    {
+      "action": {
+        "action_id": 6,
+        "action_key": [
+          6,
+          4,
+          32
+        ],
+        "data": {
+          "x": 4,
+          "y": 32
+        },
+        "source": "banked_lp85_L1_replay_margin_trigger_verified"
+      },
+      "action_index": 1,
+      "frame_hash_after": "ca583f9734c29df3",
+      "frame_hash_before": "19f055852e514a3a",
+      "game_over": false,
+      "level_delta": 0,
+      "levels_completed_after": 0,
+      "margin_triggered_override": {
+        "commit_induced_rule": true,
+        "fallback_policy": "execute_verified_policy",
+        "learned_margin": 0.2,
+        "margin_threshold": 0.1,
+        "policy": "margin-triggered override",
+        "references": [
+          "2606.04323",
+          "2509.06870"
+        ],
+        "trigger_source": "2606.04323",
+        "verifier_margin": 0.2
+      },
+      "n_changed": 293
+    },
+    {
+      "action": {
+        "action_id": 6,
+        "action_key": [
+          6,
+          4,
+          32
+        ],
+        "data": {
+          "x": 4,
+          "y": 32
+        },
+        "source": "banked_lp85_L1_replay_margin_trigger_verified"
+      },
+      "action_index": 2,
+      "frame_hash_after": "039a650f9b0968be",
+      "frame_hash_before": "ca583f9734c29df3",
+      "game_over": false,
+      "level_delta": 0,
+      "levels_completed_after": 0,
+      "margin_triggered_override": {
+        "commit_induced_rule": true,
+        "fallback_policy": "execute_verified_policy",
+        "learned_margin": 0.2,
+        "margin_threshold": 0.1,
+        "policy": "margin-triggered override",
+        "references": [
+          "2606.04323",
+          "2509.06870"
+        ],
+        "trigger_source": "2606.04323",
+        "verifier_margin": 0.2
+      },
+      "n_changed": 293
+    },
+    {
+      "action": {
+        "action_id": 6,
+        "action_key": [
+          6,
+          4,
+          32
+        ],
+        "data": {
+          "x": 4,
+          "y": 32
+        },
+        "source": "banked_lp85_L1_replay_margin_trigger_verified"
+      },
+      "action_index": 3,
+      "frame_hash_after": "480d385a4809921d",
+      "frame_hash_before": "039a650f9b0968be",
+      "game_over": false,
+      "level_delta": 0,
+      "levels_completed_after": 0,
+      "margin_triggered_override": {
+        "commit_induced_rule": true,
+        "fallback_policy": "execute_verified_policy",
+        "learned_margin": 0.2,
+        "margin_threshold": 0.1,
+        "policy": "margin-triggered override",
+        "references": [
+          "2606.04323",
+          "2509.06870"
+        ],
+        "trigger_source": "2606.04323",
+        "verifier_margin": 0.2
+      },
+      "n_changed": 293
+    },
+    {
+      "action": {
+        "action_id": 6,
+        "action_key": [
+          6,
+          4,
+          32
+        ],
+        "data": {
+          "x": 4,
+          "y": 32
+        },
+        "source": "banked_lp85_L1_replay_margin_trigger_verified"
+      },
+      "action_index": 4,
+      "frame_hash_after": "26ecc17bc1678714",
+      "frame_hash_before": "480d385a4809921d",
+      "game_over": false,
+      "level_delta": 0,
+      "levels_completed_after": 0,
+      "margin_triggered_override": {
+        "commit_induced_rule": true,
+        "fallback_policy": "execute_verified_policy",
+        "learned_margin": 0.2,
+        "margin_threshold": 0.1,
+        "policy": "margin-triggered override",
+        "references": [
+          "2606.04323",
+          "2509.06870"
+        ],
+        "trigger_source": "2606.04323",
+        "verifier_margin": 0.2
+      },
+      "n_changed": 293
+    },
+    {
+      "action": {
+        "action_id": 6,
+        "action_key": [
+          6,
+          4,
+          32
+        ],
+        "data": {
+          "x": 4,
+          "y": 32
+        },
+        "source": "banked_lp85_L1_replay_margin_trigger_verified"
+      },
+      "action_index": 5,
+      "frame_hash_after": "f8b0dd6cf9f3194e",
+      "frame_hash_before": "26ecc17bc1678714",
+      "game_over": false,
+      "level_delta": 1,
+      "levels_completed_after": 1,
+      "margin_triggered_override": {
+        "commit_induced_rule": true,
+        "fallback_policy": "execute_verified_policy",
+        "learned_margin": 0.2,
+        "margin_threshold": 0.1,
+        "policy": "margin-triggered override",
+        "references": [
+          "2606.04323",
+          "2509.06870"
+        ],
+        "trigger_source": "2606.04323",
+        "verifier_margin": 0.2
+      },
+      "n_changed": 1505
+    }
+  ]
+}
