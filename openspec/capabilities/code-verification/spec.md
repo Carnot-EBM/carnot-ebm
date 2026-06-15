@@ -2012,6 +2012,7 @@ not reliable enough to skip execution tests at this accuracy level.
 | REQ-CODE-4222 | Planned (`python/carnot/experiment_4222_verifier_reward_lora_harness_fix_smoke.py`) |
 | REQ-CODE-4223 | Implemented (`python/carnot/experiment_4223_verifier_as_reward_3arm_synchronous.py`) |
 | REQ-CODE-4234 | Planned (`python/carnot/experiment_4234_verifier_reward_lora_harness_real_training_smoke.py`) |
+| REQ-CODE-4247 | Implemented (`python/carnot/experiment_4247_verifier_reward_offline_harness_retire_livelora.py`) |
 
 ### REQ-CODE-3573: Verifier Ensemble Generalization to Code
 The verifier ensemble MUST be evaluated for generalization on code domains (correct vs buggy execution-labeled completions).
@@ -2339,6 +2340,72 @@ count, prints every optimizer step and loss, records at least 20 step/loss
 events, requires `loss_final < loss_initial`, requires wall-clock duration at or
 above the plausibility floor, and sets `harness_smoke_passed=true` only when all
 of those checks pass.
+
+### REQ-CODE-4247: Offline Reward-Weighted SFT Harness Retires Live LoRA
+
+The repository shall provide Exp 4247 at
+`python/carnot/experiment_4247_verifier_reward_offline_harness_retire_livelora.py`
+and `results/experiment_4247_verifier_reward_offline_harness_retire_livelora.py`
+to retire the failed live-LoRA verifier-as-reward path and prove the bounded
+offline reward-weighted SFT harness can perform real optimizer work before B2
+launches the full A/B/C contrast. The smoke MUST:
+
+- set the bare boolean `live_lora_retired=true` with a one-line rationale that
+  the live path accumulated six infrastructure failures and met the
+  accumulate-floor retirement condition;
+- check CUDA before model loading and write `honest_verdict` equal to
+  `blocked_cuda_unavailable` when CUDA is unavailable;
+- select a cached non-Qwen standard HuggingFace trainable base, preferring
+  `google/gemma-4-E4B-it` and falling back only to
+  `unsloth/gemma-4-12B-it`, never Qwen and never a GGUF training repo;
+- build a 16-32 example fixture from the stable
+  `code_verifier_reward_lora_rft_a83b52882c198954` Arm A/B/C corpora when
+  readable, or rebuild a tiny same-operating-point fixture when the corpora are
+  absent;
+- precompute deterministic per-example reward weights for offline SFT so
+  verifier-certified and gold rows receive the positive reward weight while
+  ablation/control rows receive the configured control weight;
+- load the selected base only through
+  `transformers.AutoModelForCausalLM.from_pretrained(..., local_files_only=True)`
+  and attach PEFT LoRA only to standard projection module names `q_proj`,
+  `k_proj`, `v_proj`, `o_proj`, `gate_proj`, `up_proj`, and `down_proj`;
+- run a finite, fixed-step, reward-weighted supervised loss with no live
+  generation and no RL loop; and
+- write
+  `results/experiment_4247_verifier_reward_offline_harness_retire_livelora.json`
+  with bare fields `honest_verdict`, `live_lora_retired`,
+  `harness_smoke_passed`, `steps_run`, `loss_initial`, `loss_final`,
+  `lora_attach_path`, `trainable_param_count`, `verifier_is_oracle`,
+  `model_specs`, `random_seed`, and `reproducibility_checksum`, plus field
+  principles and the per-step loss trace.
+
+`harness_smoke_passed` SHALL be the bare boolean `true` only when LoRA exposes
+`trainable_param_count > 0`, at least 20 real optimizer steps run, the final
+step loss is lower than the first step loss by a non-trivial margin, and the
+wall clock exceeds the configured plausibility floor. `verifier_is_oracle`
+SHALL be the bare boolean `true` because the reward label is the executable
+correctness oracle. A smoke that cannot perform real offline reward-weighted
+training in the current window SHALL write
+`honest_verdict="blocked_offline_reward_weighted_training_cannot_run_in_window"`
+rather than a `progress_*` verdict.
+
+### SCENARIO-CODE-4247-BLOCKED-PRECONDITION: Missing Live Resource Stops Offline Smoke
+
+Given the stable verifier-reward corpora may or may not be present, when Exp
+4247 runs without CUDA or without an approved cached non-Qwen base, then it
+writes the corresponding blocked artifact, leaves `harness_smoke_passed=false`,
+sets `steps_run=0`, sets `trainable_param_count=0`, sets
+`live_lora_retired=true`, and does not attempt LoRA attachment or training.
+
+### SCENARIO-CODE-4247-OFFLINE-REAL-TRAINING: Reward-Weighted SFT Requires Sustained Optimizer Work
+
+Given CUDA, an approved cached non-Qwen base, and a 16-32 example weighted
+fixture, when Exp 4247 runs, then PEFT attaches LoRA through the standard
+`AutoModelForCausalLM` projection targets, prints and records a positive
+trainable parameter count, prints every offline optimizer step and weighted
+loss, records at least 20 step/loss events, requires `loss_final <
+loss_initial`, requires wall-clock duration at or above the plausibility floor,
+and sets `harness_smoke_passed=true` only when all of those checks pass.
 
 
 ### REQ-CODE-VERIFY-3602: FoVer Math-Trained PRM Transfer to Code Benchmark
