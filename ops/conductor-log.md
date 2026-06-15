@@ -8535,3 +8535,4 @@ c |
 | 2026-06-15 09:34 UTC | PHASE C1 -- ARC-AGI-3 INCREMENTAL +1 (monotonic).  | OK | 87 passed, 1 warning in 4.50s |
 | 2026-06-15 09:54 UTC | PHASE C2 -- ARC-AGI-3 LIVE-env, ACCURACY-seeking w | OK | 87 passed, 1 warning in 7.04s |
 | 2026-06-15 10:10 UTC | PHASE D1 -- SOTA-INGESTION SLOT (reserved; bleedin | OK | 102 passed, 1 warning in 8.53s |
+| 2026-06-15 10:27 UTC | PHASE D2 -- VERIFIER-REGISTRY + GAPS HYGIENE (rese | OK | 89 passed, 1 warning in 7.14s |
