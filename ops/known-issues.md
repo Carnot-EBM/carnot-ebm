@@ -37,6 +37,23 @@ still-UNPROVEN claim is an oracle-DISTINCT verifier.
    results, already known, and NOT headline-eligible (the lint WARNs them). Re-measuring
    them is churn (Depth-Over-Breadth / north-star §1).
 
+**TECHNICAL NOTE — DiffusionGemma runtime, use the PR binary (outer-loop, 2026-06-15).**
+The `.394 preflight (exp4260) failed `blocked_diffusiongemma_gguf_loader_failed`
+(preflight_go=False) and the full-run gate is NO-GO. TWO blockers, separate: (a) SCIENCE —
+the ARC oracle-distinct win hardened only WITHIN-POOL (cross-game OOD was BLOCKED, exp4258);
+the gate stays NO-GO until the win proves cross-game generalization regardless of runtime.
+(b) WRONG-LOADER — the diffusion-gemma arch is NOT loadable by `llama-cpp-python` 0.3.29,
+`transformers` (49GB>48GB / meta-tensor), or vLLM 0.23.0 (gemma-4 per-layer-KV-head config
+crash). The ONE working path is the **llama.cpp PR #24423 binary**:
+`~/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval <gguf> <prompt_ids.i32>
+<canvas_ids.i32> <out_logits.bin>` (canvas = 256 mask tokens id=4; vocab 262144), which already
+extracts the (256,262144) energy-prior score — see `scripts/exp_diffusiongemma_energy_prior_extract.py`
++ `results/diffusiongemma_energy_prior_extracted.json`. The Q4_K_M GGUF (16GB) loads on one
+3090. Any `.395 DiffusionGemma preflight/run MUST invoke that PR binary, not a standard GGUF
+loader. (Detector aside: the diffusion-surprisal as an error DETECTOR is weak — length-
+confounded, residual ~0.68; see the FoVer detector artifact. The energy-prior is for guidance,
+not headline detection.)
+
 ## GATED FORWARD-QUEUE (queued; explicitly NOT a MANDATORY-NEXT-MILESTONE priority; do NOT force-pick-up)
 
 Entries here are SPECCED and QUEUED but GATED on a condition. The planner MUST NOT
