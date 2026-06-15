@@ -307,6 +307,22 @@ verifiers:
     exp4216_a_vs_b_delta: null
     exp4216_certified_corpus_size: 16
     exp4216_distill_lift_latent_vs_absent: absent
+    eval_exp_4227: results/experiment_4227_verifier_registry_gaps_hygiene.json
+    exp4227_regression_guard_passed: true
+    exp4227_arc1_rule_exec_vote_pass2: 0.4516
+    exp4227_arc1_rule_exec_gated_pass2: 0.5806
+    exp4227_arc1_headroom_recovered: 4
+    exp4227_arc1_vote_wins_lost: 0
+    exp4227_oracle_distinct_beats_vote: false
+    exp4227_verifier_minus_vote_delta: -0.0714285714
+    exp4227_verifier_minus_vote_ci95: &id003
+    - -0.2142857143
+    - 0.0
+    exp4227_oracle_distinct_auroc: 0.778980279
+    exp4227_wrong_majority_n: 5
+    exp4227_verifier_label_carries_signal: false
+    exp4227_a_vs_b_delta: null
+    exp4227_detector_arc_auroc: 0.9016
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -3924,3 +3940,54 @@ verifiers:
     corpus_verifier_is_oracle: true
     gap_moat_update: unchanged_a3_blocked_no_oracle_distinct_win
     eval_exp_4216: results/experiment_4216_verifier_registry_gaps_hygiene.json
+  - role_id: oracle_distinct_reward_detector_hygiene_4227
+    experiment: results/experiment_4227_verifier_registry_gaps_hygiene.json
+    role: registry_gap_ledger_hygiene_v391
+    status: oracle_distinct_a2_reward_detector_recorded
+    oracle_distinct_gap_id: GAP-ORACLE-DISTINCT
+    oracle_distinct_a2_gap_id: GAP-ORACLE-DISTINCT-A2-4221
+    oracle_distinct_status: open_a2_ties_vote_with_headroom
+    oracle_distinct_artifact: results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json
+    oracle_distinct_build_artifact: results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json
+    oracle_distinct_beats_vote: false
+    verifier_minus_vote_delta: -0.0714285714
+    verifier_minus_vote_ci95: *id003
+    arbiter_override_minus_vote: 0.0
+    matched_control_delta: 0.0
+    oracle_at_k: 1.0
+    verifier_is_oracle: false
+    selector_trained: true
+    oracle_distinct_auroc: 0.778980279
+    oracle_distinct_auroc_ci95:
+    - 0.6146676853
+    - 0.9174508427
+    wrong_majority_n: 5
+    verifier_reward_gap_id: GAP-REWARD
+    verifier_reward_status: open_accumulating_reward_no_eval_yet
+    verifier_reward_artifact: results/experiment_4223_verifier_as_reward_3arm_synchronous.json
+    verifier_label_carries_signal: false
+    a_vs_b_delta: null
+    a_vs_b_ci95: null
+    youden_j: 0.4137931034482759
+    detector_gap_id: GAP-DETECTOR-AUROC-4208
+    detector_status: detector_auroc_recorded_all_domains_ci_exclusive
+    detector_auroc_by_domain:
+      sudoku: 1.0
+      code: 1.0
+      math: 1.0
+      arc: 0.9016
+    detector_ci95_by_domain:
+      sudoku:
+      - 1.0
+      - 1.0
+      code:
+      - 1.0
+      - 1.0
+      math:
+      - 1.0
+      - 1.0
+      arc:
+      - 0.7828
+      - 0.9984
+    gap_moat_update: unchanged_a2_did_not_beat_vote
+    eval_exp_4227: results/experiment_4227_verifier_registry_gaps_hygiene.json

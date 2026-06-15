@@ -899,3 +899,43 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: materialize a real seeded checkpoint or LoRA-distill follow-up before claiming certified labels improve a local generator.
 - priority: high
 <!-- exp4216-certified-corpus:end -->
+
+<!-- exp4227-oracle-distinct:start -->
+### GAP-ORACLE-DISTINCT: Exp 4227 .391 oracle-distinct frontier
+- status: open_a2_ties_vote_with_headroom
+- evidence: `results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json` with build `results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json`; oracle_distinct_beats_vote=false; verifier_minus_vote_delta=-0.0714285714; verifier_minus_vote_ci95=[-0.2142857143, 0.0]; verifier_is_oracle=false; selector_trained=true; oracle_distinct_auroc=0.778980279; wrong_majority_n=5; honest_verdict=complete: oracle_distinct_verifier_ties_vote_with_headroom. GAP-MOAT unchanged.
+- failure mode: the trained non-oracle A2 verifier did not produce a CI-exclusive vote-beating read on the headroom-present ARC slice.
+- missing discriminator: a learned verifier that beats vote where execution is not the oracle.
+- candidate design: use the wrong-majority rows and detector signal to improve the oracle-distinct selector before re-testing A2.
+- priority: high
+<!-- exp4227-oracle-distinct:end -->
+
+<!-- exp4227-oracle-distinct-a2:start -->
+### GAP-ORACLE-DISTINCT-A2-4221: Exp 4227 .391 A2 beats-vote read
+- status: open_a2_ties_vote_with_headroom
+- evidence: `results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json`; oracle_distinct_beats_vote=false; verifier_minus_vote_delta=-0.0714285714; verifier_minus_vote_ci95=[-0.2142857143, 0.0]; arbiter_override_minus_vote=0.0; matched_control_delta=0.0; oracle_at_k=1.0; verifier_is_oracle=false; oracle_distinct_auroc=0.778980279; oracle_distinct_auroc_ci95=[0.6146676853, 0.9174508427]; wrong_majority_n=5.
+- failure mode: A2 is the first trained oracle-distinct read, but the held-out rerank still ties/underperforms vote rather than capturing the wrong-majority headroom.
+- missing discriminator: a non-oracle ARC selector that converts off-fold candidate discrimination into vote-beating top-1 selection.
+- candidate design: reweight or enrich the learned selector, then require a positive bootstrap CI before upgrading the frontier.
+- priority: high
+<!-- exp4227-oracle-distinct-a2:end -->
+
+<!-- exp4227-gap-reward:start -->
+### GAP-REWARD: Exp 4227 .391 verifier-as-reward A-vs-B axis
+- status: open_accumulating_reward_no_eval_yet
+- evidence: `results/experiment_4223_verifier_as_reward_3arm_synchronous.json`; verifier_label_carries_signal=false; a_vs_b_delta=None; a_vs_b_ci95=None; youden_j=0.4137931034482759; positive_control_confirmed=false; accumulated_n={'eval': 0, 'train_A': 0, 'train_B': 0, 'train_C': 0, 'train_D': 0}; verifier_is_oracle=true; honest_verdict=progress: accumulating_verifier_reward_training_no_eval_yet.
+- failure mode: the synchronous reward path still has no held-out A-vs-B eval rows, so verifier-label reward signal remains unproven.
+- missing discriminator: decision-grade evidence that verifier-certified labels beat same-generator random-label controls on held-out hidden tests.
+- candidate design: continue only until eval rows exist, then promote only if the A-vs-B CI excludes zero with a valid positive control.
+- priority: high
+<!-- exp4227-gap-reward:end -->
+
+<!-- exp4227-detector-auroc:start -->
+### GAP-DETECTOR-AUROC-4208: Exp 4227 detector AUROC status note
+- status: detector_auroc_recorded_all_domains_ci_exclusive
+- evidence: `results/experiment_4208_verifier_as_detector_auroc.json`; sudoku=1.0; code=1.0; math=1.0; arc=0.9016; ci95_by_domain={'sudoku': [1.0, 1.0], 'code': [1.0, 1.0], 'math': [1.0, 1.0], 'arc': [0.7828, 0.9984]}; verifier_is_oracle_by_domain={'sudoku': True, 'code': True, 'math': True, 'arc': False}.
+- failure mode: detector AUROC separates good from bad candidates but has not yet become a selector that beats vote.
+- missing discriminator: a selection policy that converts detector signal into a vote-beating ranker on a headroom-present pool.
+- candidate design: use the detector as a training or calibration source for the oracle-distinct selector, then measure selection lift with bootstrap CI.
+- priority: medium
+<!-- exp4227-detector-auroc:end -->

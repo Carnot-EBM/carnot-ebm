@@ -1,0 +1,208 @@
+{
+  "adversarial_verify": {
+    "flag_count": 0,
+    "flags": [],
+    "methodology_missing_clean": true,
+    "returncode": 0,
+    "status": "clean"
+  },
+  "cited_upstream_artifacts": [
+    "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "results/arc3_gap4_induced_programs.json",
+    "results/experiment_4208_verifier_as_detector_auroc.json",
+    "results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json",
+    "results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json",
+    "results/experiment_4223_verifier_as_reward_3arm_synchronous.json"
+  ],
+  "detector_aurocs": {
+    "artifact_path": "results/experiment_4208_verifier_as_detector_auroc.json",
+    "detection_auroc_by_domain": {
+      "arc": 0.9016,
+      "code": 1.0,
+      "math": 1.0,
+      "sudoku": 1.0
+    },
+    "detection_auroc_ci95_by_domain": {
+      "arc": [
+        0.7828,
+        0.9984
+      ],
+      "code": [
+        1.0,
+        1.0
+      ],
+      "math": [
+        1.0,
+        1.0
+      ],
+      "sudoku": [
+        1.0,
+        1.0
+      ]
+    },
+    "detection_beats_random_ci95_exclusive_by_domain": {
+      "arc": true,
+      "code": true,
+      "math": true,
+      "sudoku": true
+    },
+    "gap_id": "GAP-DETECTOR-AUROC-4208",
+    "honest_verdict": "complete: detector_selection_divergence_sudoku_math",
+    "missing_discriminator": "selection_policy_that_converts_detector_signal_into_vote_beating_ranker",
+    "n_by_domain": {
+      "arc": 8041,
+      "code": 100,
+      "math": 651,
+      "sudoku": 4224
+    },
+    "selector_headroom_by_domain": {
+      "arc": 0.129,
+      "code": 0.18,
+      "math": 0.0,
+      "sudoku": 0.0007
+    },
+    "source_artifacts": [
+      "results/experiment_4208_verifier_as_detector_auroc.json"
+    ],
+    "status": "detector_auroc_recorded_all_domains_ci_exclusive",
+    "verifier_is_oracle_by_domain": {
+      "arc": false,
+      "code": true,
+      "math": true,
+      "sudoku": true
+    }
+  },
+  "duration_s": 0.442916,
+  "experiment": "experiment_4227_verifier_registry_gaps_hygiene",
+  "field_principles": {
+    "gaps_updated": "Lists the verifier_gaps entries touched (the GAP-ORACLE-DISTINCT frontier entry + the A2 beats-vote + verifier-as-reward + detector notes).",
+    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled to the .391 truth.",
+    "random_seed": "Determinism precondition + the methodology field that prevents the exp4216 METHODOLOGY_MISSING re-flag.",
+    "regression_guard_passed": "BARE bool: the canonical GAP-4 numbers still reproduce bit-exact; catches a silent verifier regression.",
+    "reproducibility_checksum": "Hash of the cached GAP-4 candidate set; the methodology field that prevents the exp4216 re-flag and catches silent candidate drift."
+  },
+  "gaps_path": "ops/verifier_gaps.md",
+  "gaps_updated": [
+    "GAP-ORACLE-DISTINCT",
+    "GAP-ORACLE-DISTINCT-A2-4221",
+    "GAP-REWARD",
+    "GAP-DETECTOR-AUROC-4208"
+  ],
+  "honest_verdict": "complete: registry_gaps_reconciled_to_v391_truth_regression_guard_passed_True_oracle_distinct_open_a2_ties_vote_with_headroom_reward_open_accumulating_reward_no_eval_yet",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "model_specs": {
+    "candidate_set": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "candidate_set_sha256": "sha256:08f8c9d795755fee0b6f1bf36dfcceaf71a7c5da86e76e60944da0551da16d16",
+    "codex_calls": 0,
+    "live_model_inference": false,
+    "method": "cached_gap4_candidate_replay_and_ledger_reconciliation",
+    "program_outputs": "results/arc3_gap4_induced_programs.json",
+    "scoring_description": "offline verifier ensemble replay over checked-in candidates",
+    "stable_checkpoint_write": false,
+    "trm_training_touched": false
+  },
+  "offline_replay": {
+    "arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+    "expected": {
+      "arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      }
+    },
+    "no_codex_calls": true,
+    "no_gguf_inference": true,
+    "regression_guard_passed": true,
+    "trm_training_touched": false
+  },
+  "oracle_distinct_outcome": {
+    "a2_gap_id": "GAP-ORACLE-DISTINCT-A2-4221",
+    "arbiter_override_minus_vote": 0.0,
+    "artifact_path": "results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json",
+    "build_artifact_path": "results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json",
+    "build_honest_verdict": "complete: oracle_distinct_arc_verifier_trained_auroc_0.7790",
+    "gap_id": "GAP-ORACLE-DISTINCT",
+    "gap_moat_update": "unchanged_a2_did_not_beat_vote",
+    "headline_outcome": "oracle_distinct_verifier_ties_vote_with_headroom",
+    "headroom_exists": true,
+    "honest_verdict": "complete: oracle_distinct_verifier_ties_vote_with_headroom",
+    "learned_verifier_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4220_oracle_distinct_arc_verifier_model.json",
+    "matched_control_delta": 0.0,
+    "missing_discriminator": "learned_verifier_that_beats_vote_where_execution_is_not_the_oracle",
+    "n_tasks": 14,
+    "oracle_at_k": 1.0,
+    "oracle_distinct_auroc": 0.778980279,
+    "oracle_distinct_auroc_ci95": [
+      0.6146676853,
+      0.9174508427
+    ],
+    "oracle_distinct_beats_vote": false,
+    "pass_rates": {
+      "arbiter_override_at_1": 0.6428571429,
+      "matched_control_at_1": 0.5714285714,
+      "verifier_at_1": 0.5714285714,
+      "vote_at_1": 0.6428571429
+    },
+    "selector_trained": true,
+    "source_artifacts": [
+      "results/experiment_4221_oracle_distinct_arc_verifier_beats_vote.json",
+      "results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json"
+    ],
+    "status": "open_a2_ties_vote_with_headroom",
+    "verifier_is_oracle": false,
+    "verifier_minus_vote_ci95": [
+      -0.2142857143,
+      0.0
+    ],
+    "verifier_minus_vote_delta": -0.0714285714,
+    "wrong_majority_n": 5
+  },
+  "random_seed": 4227,
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_updated": true,
+  "regression_guard_passed": true,
+  "reproducibility_checksum": "sha256:08f8c9d795755fee0b6f1bf36dfcceaf71a7c5da86e76e60944da0551da16d16",
+  "schema": "carnot.experiment_4227_verifier_registry_gaps_hygiene.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4227",
+    "SCENARIO-VERIFY-4227"
+  ],
+  "verifier_reward_outcome": {
+    "a_vs_b_ci95": null,
+    "a_vs_b_delta": null,
+    "accumulated_n": {
+      "eval": 0,
+      "train_A": 0,
+      "train_B": 0,
+      "train_C": 0,
+      "train_D": 0
+    },
+    "artifact_path": "results/experiment_4223_verifier_as_reward_3arm_synchronous.json",
+    "gap_id": "GAP-REWARD",
+    "honest_verdict": "progress: accumulating_verifier_reward_training_no_eval_yet",
+    "missing_discriminator": "decision_grade_a_vs_b_training_signal_beyond_random_label_control",
+    "pass_at_1": {},
+    "positive_control_confirmed": false,
+    "source_artifacts": [
+      "results/experiment_4223_verifier_as_reward_3arm_synchronous.json"
+    ],
+    "status": "open_accumulating_reward_no_eval_yet",
+    "truncation_guard": {
+      "max_allowed_truncation_rate": 0.05,
+      "max_observed_truncation_rate": null
+    },
+    "verifier_is_oracle": true,
+    "verifier_label_carries_signal": false,
+    "youden_j": 0.4137931034482759
+  }
+}
