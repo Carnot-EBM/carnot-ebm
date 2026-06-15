@@ -105,7 +105,7 @@ tasks:
 
   - id: exp4270-arc-family-provenance-recovery
     milestone: 2026.06.395
-    title: "PHASE A1 (DEPTH; fix exp4258's root cause) -- FAMILY/GAME PROVENANCE RECOVERY + diversity audit. exp4258 (cross-game transfer) BLOCKED blocked_arc_game_ids_unrecoverable: the 52-task grown pool's gap3_stage2:XXXX task_ids could not be mapped to game/family identities, so no family-disjoint split could be built. FIX: recover a task-FAMILY id (and game id where applicable) for EVERY pool row by joining raw_task_id/source_id back to the source ARC task definitions -> the ARC-TGI family taxonomy (arXiv:2603.05099) and/or the 25-game survey (results/arc3_win_condition_survey.json). Materialize a FIRST-CLASS provenance manifest per the Reliability Gap discipline (arXiv:2606.03305): per-row {source_kind, family_id, game_id, fold, target_hash}. Emit family_split_feasible BARE bool := (>=4 distinct families AND each held-out fold has >=~10 tasks for bootstrap power) + distinct_family_n + per_family_task_count. This task makes the cross-family test POSSIBLE; it does NOT run the test. CPU-only; NO GGUF/GPU."
+    title: "PHASE A1 (DEPTH; fix exp4258's root cause) -- FAMILY/GAME PROVENANCE RECOVERY + diversity audit. exp4258 (cross-game transfer) BLOCKED blocked_arc_game_ids_unrecoverable: the 52-task grown pool's gap3_stage2:XXXX task_ids could not be mapped to game/family identities, so no family-disjoint split could be built. FIX: recover a task-FAMILY id (and game id where applicable) for EVERY pool row by joining raw_task_id/source_id back to the source ARC task definitions -> the ARC-TGI family taxonomy (arXiv:2603.05099) and/or the 25-game survey (results/arc3_win_condition_survey.json). Materialize a FIRST-CLASS provenance manifest per the Reliability Gap discipline (arXiv:2606.03305): per-row {{source_kind, family_id, game_id, fold, target_hash}}. Emit family_split_feasible BARE bool := (>=4 distinct families AND each held-out fold has >=~10 tasks for bootstrap power) + distinct_family_n + per_family_task_count. This task makes the cross-family test POSSIBLE; it does NOT run the test. CPU-only; NO GGUF/GPU."
     priority: critical
     track: verifier-oracle-distinct
     max_turns: 75
@@ -144,7 +144,7 @@ tasks:
            b. At least ONE join target exists (arc3_win_condition_survey.json AND/OR the gap3_stage2/gap4 source
               pools). If NO source mapping can be reconstructed at all -> honest_verdict
               `blocked_arc_source_taxonomy_unavailable` and STOP. CPU sufficient; no GGUF/GPU.
-        1. For EVERY pool row, recover {source_kind (induced vs sampled), family_id, game_id, target_hash} by
+        1. For EVERY pool row, recover {{source_kind (induced vs sampled), family_id, game_id, target_hash}} by
            joining raw_task_id/source_id -> the source ARC task -> the ARC-TGI family taxonomy and/or the
            25-game survey. Where a clean family id is unrecoverable, fall back to a coarser but HONEST disjoint
            unit (e.g. the original ARC task id) and record which rows used the fallback. Persist the manifest as
@@ -165,7 +165,7 @@ tasks:
         per_family_task_count:
           principle: "Histogram of tasks per family -- exposes family concentration (the reason exp4258's pool may be untestable cross-family)."
         provenance_manifest_path:
-          principle: "Path to the first-class per-row {source_kind, family_id, game_id, fold, target_hash} manifest -- the Reliability Gap artifact every downstream cross-family claim must trace to."
+          principle: "Path to the first-class per-row {{source_kind, family_id, game_id, fold, target_hash}} manifest -- the Reliability Gap artifact every downstream cross-family claim must trace to."
         verifier_is_oracle:
           principle: "BARE bool=false -- this is a data-provenance recovery for the learned selector, not an executable oracle."
         random_seed:

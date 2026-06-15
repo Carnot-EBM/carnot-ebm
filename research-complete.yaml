@@ -40638,7 +40638,8 @@ milestones:
     D: SOTA-ingestion + registry/gaps + hardware + capstone.'
   doc: openspec/change-proposals/research-roadmap-v394.md
   completed: '2026-06-15'
-  finding: See conductor log for per-experiment results.
+  finding: '.394 close-state: first ARC oracle-distinct win HARDENED 2 of 3 axes. Leak audit SURVIVED: provenance-blind delta=+0.385, AUROC=0.990. Multi-seed REPLICATED: mean delta=+0.458, independent re-score=+0.442. Cross-game OOD BLOCKED, not collapsed: game_ids_unrecoverable; the held-out game/family test NEVER RAN, so hardened_win=False and diffusiongemma_full_run_gate=False. Synthesis did NOT break oracle@K (synthesis_minus_oracle=-0.283); DiffusionGemma preflight blocked on gguf_loader_failed; ARC held at 19 levels; verifier-as-reward is OUT-OF-BAND; code oracle-distinct is CORPUS-SPECIFIC (delta=-0.006); paper_ready=True. .395 frame: CLOSE the cross-family OOD question (recover provenance -> held-out-family test) then repair the DiffusionGemma loader + advance ARC +1.'
+  activation_recorded: exp4269-archive-v394-activate-v395
   tasks:
   - id: exp4255-archive-v393-activate-v394
     title: Archive .393 -> activate .394; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
