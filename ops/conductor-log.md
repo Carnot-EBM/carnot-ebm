@@ -8508,3 +8508,5 @@ c |
 | 2026-06-14 23:52 UTC | PHASE D2 -- VERIFIER-REGISTRY + GAPS HYGIENE (rese | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-15 00:13 UTC | PHASE D3 -- Hardware continuity (consolidated; Gat | OK | 87 passed, 1 warning in 4.52s |
 | 2026-06-15 00:29 UTC | PHASE D4 -- Capstone .390 (UNGATED): headline ques | OK | 85 passed, 1 warning in 6.24s |
+| 2026-06-15 01:16 UTC | Plan milestone 2026.06.391 | OK | 11 tasks proposed |
+| 2026-06-15 01:18 UTC | Milestone 2026.06.391 activated | OK | 11 tasks queued |
