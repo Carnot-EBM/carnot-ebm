@@ -8532,3 +8532,4 @@ c |
 | 2026-06-15 08:57 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4234-verifier-reward-lora-harness-real- |
 | 2026-06-15 08:59 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4234-verifier-reward-lora-harness-real- |
 | 2026-06-15 09:02 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4234-verifier-reward-lora-harness-real- |
+| 2026-06-15 09:34 UTC | PHASE C1 -- ARC-AGI-3 INCREMENTAL +1 (monotonic).  | OK | 87 passed, 1 warning in 4.50s |
