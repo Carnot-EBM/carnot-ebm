@@ -8513,3 +8513,4 @@ c |
 | 2026-06-15 01:35 UTC | Archive .390 -> activate .391; KEEP the hardened g | OK | 91 passed, 1 warning in 4.74s |
 | 2026-06-15 01:54 UTC | PHASE A1 (HEADLINE BUILD; the de-risked retry) --  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
 | 2026-06-15 02:13 UTC | PHASE A2 (THE HEADLINE GATE, gated_on A1 selector_ | OK | 87 passed, 1 warning in 6.48s |
+| 2026-06-15 02:29 UTC | PHASE B1 (HARNESS-FIRST, the .360 discipline) -- F | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_4222_verifie |
