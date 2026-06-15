@@ -8,6 +8,53 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-15 Exp 4265 - .394 fork SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-v395-2026-06-15.md`.
+
+**Filtered track:** .394 ARC oracle-distinct forks after the selector win
+survived provenance-blind and multi-seed hardening, while cross-game transfer
+was blocked, synthesis underperformed selection, DiffusionGemma preflight was
+loader-blocked, and code replication read corpus-specific.
+
+**Fresh-pass candidates marked ingested:**
+- ARC-TGI, arXiv:2603.05099 - mapped as the strongest .395 method: recover the
+  missing task-family/game-disjoint transfer substrate.
+- Reliability Gap in Benchmark Auditing, arXiv:2606.03305 - mapped to
+  provenance-first leak discipline after the high-origin-probe but surviving
+  provenance-blind audit.
+- DPRM, arXiv:2604.24357 - mapped to verifier/process-reward token ordering
+  only after DiffusionGemma loader repair.
+- Entropy-guided step selection for diffusion LLM RL, arXiv:2603.12554 - mapped
+  to a deferred denoising-step reward smoke after loader repair.
+- L-VARC, arXiv:2606.12847 - mapped to training-only semantic abstraction over
+  ARC-TGI families, with privileged features removed at inference.
+
+Already-covered context not re-ingested as fresh method rows: Compute-as-Teacher,
+GSA, GenSelect-BoN, Reward-Guided Stitching, S3, EDLM, arXiv:2406.01572
+discrete guidance, CoDeC, ARC of Progress, ARCTraj, and Compositional
+Neuro-Symbolic Reasoning.
+
+.394 status mapped honestly: Exp 4256 `arc_provenance_blind_win_survives` with
+`provenance_blind_delta=0.3846153846`; Exp 4257
+`arc_oracle_distinct_win_replicates_multiseed` with `mean_delta=0.4576923077`;
+Exp 4258 `blocked_arc_game_ids_unrecoverable`; Exp 4259
+`arc_synthesis_underperforms_selection` with `synthesis_breaks_oracle_ceiling=false`
+and `synthesis_minus_oracle_delta=-0.2826086957`; Exp 4260
+`blocked_diffusiongemma_gguf_loader_failed` with `preflight_go=false`; Exp 4264
+`code_oracle_distinct_replication_corpus_specific` with
+`code_replication_beats_vote=false`.
+
+flagged_for_v395:
+`arc_tgi_family_generator_cross_game_generalization_v395`.
+
+Flagged for .395: `arc_tgi_family_generator_cross_game_generalization_v395`.
+
+**Bottom line for the .395 roadmap:** do not spend .395 on full DiffusionGemma
+or another synthesis headline yet. First repair the transfer substrate with a
+provenance manifest and ARC-TGI-style family-disjoint candidate pool, then test
+whether the hardened Set-Encoder win survives held-out task families. Keep DiffusionGemma as loader repair, not a full-run .395 bet.
+
 ## 2026-06-15 Exp 4251 - .393 planning sweep SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-set-encoder-offline-rft-v394-2026-06-15.md`.
