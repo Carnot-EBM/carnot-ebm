@@ -40042,7 +40042,8 @@ milestones:
     \ on code (the .389 operating point CLEARED \u2014 only the BACKGROUND training infra died)"
   doc: openspec/change-proposals/research-roadmap-v390.md
   completed: '2026-06-15'
-  finding: See conductor log for per-experiment results.
+  finding: '.390 close-state correction: the oracle-distinct NO-HEADROOM-OR-NO-SIGNAL headline was an INFRA artifact, not a science null. Exp4209 hit a wrong-file DATA bug: it read ARC candidate labels from the wrong file, produced accepted=0/rejected=0/total=0, and left selector_trained=false; exp4210 therefore gate-blocked before the beats-vote comparison ran. The working label path exists via scripts/exp_verifier_detector_auroc.py:load_arc_rows over results/arc3_gap3_stage2_eval_pool.json.gz + results/arc3_gap4_induced_programs.json: 8041 labeled ARC candidates with oracle-distinct detector AUROC=0.9016. Verifier-as-reward hit its third infra failure when PEFT rejected Gemma4ClippableLinear, with the operating point intact (Phase-0 precision=0.956, Youden-J=0.4138, corpora A=776/B=776/C=742, checkpoint intact). ARC total_levels_solved=16, total_games_solved=13; live solver was efficiency-only with no level completed; flagged-skipped artifacts were 4212 and 4216. .391 frame: the de-risked oracle-distinct retry + the harness-first verifier-as-reward FINISH.'
+  activation_recorded: exp4219-archive-v390-activate-v391
   tasks:
   - id: exp4207-archive-v389-activate-v390
     title: Archive .389 -> activate .390; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
