@@ -76,7 +76,15 @@ LORA_CONFIG = {
     "lora_dropout": 0.05,
     "learning_rate": 2e-4,
     "max_length": 1024,
-    "target_modules": ["linear"],
+    "target_modules": [
+        "q_proj.linear",
+        "k_proj.linear",
+        "v_proj.linear",
+        "o_proj.linear",
+        "gate_proj.linear",
+        "up_proj.linear",
+        "down_proj.linear",
+    ],
 }
 
 
