@@ -1,0 +1,83 @@
+{
+  "field_principles": {
+    "flagged_for_v393": "Closes discover->ingest->plan: names the strongest method for the next planner, conditioned on the A2/A3 outcomes.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method MUST carry a real arXiv ID/URL; an ingestion note without verifiable citations is treated as fabrication (adversarial_verify discipline)."
+  },
+  "flagged_for_v393": "bigger_arc_pool_full_set_encoder_agglm_aggregator_v393",
+  "honest_verdict": "complete: sota_ingestion_cross_candidate_aggregator_mapped_v393",
+  "methods_mapped": [
+    {
+      "a2_a3_mapping": "Exp 4232 tied vote with headroom after Exp 4231 used an augmented logistic aggregator. The next lever is a full set encoder, because the tied A3 read says explicit summary features were not enough.",
+      "arxiv_id_or_url": "2404.06912",
+      "carnot_stack_mapping": "Maps the ARC selector from hand-built set summary features to a true permutation-invariant candidate-set encoder with inter-candidate attention over all grids and vote basins.",
+      "experiment_mapping": "Build a larger ARC candidate pool, train a task-held-out Set-Encoder over full candidate sets, and ablate it against the Exp 4231 cross-candidate augmented logistic aggregator on the same A3 gate.",
+      "failure_mode": "Set-Encoder is an information-retrieval architecture, not an ARC grid solver. It scales cause (1), isolated scoring, but still needs a larger ARC pool and minority-correct evidence to avoid learning vote.",
+      "name": "Set-Encoder full cross-candidate attention",
+      "url": "https://arxiv.org/abs/2404.06912"
+    },
+    {
+      "a2_a3_mapping": "Exp 4231 still had only 20 positive candidates after growth and reported no learnable AUROC gain. Exp 4233's balanced code pool won, so the ARC direction is more positives plus calibrated training.",
+      "arxiv_id_or_url": "2509.19681",
+      "carnot_stack_mapping": "Maps to a calibrated verifier objective for sparse ARC positives: class-balanced or focal loss, train-fold calibration, and score diagnostics that detect collapse under severe imbalance.",
+      "experiment_mapping": "Require positive-candidate growth before .393, then compare class-weighted, focal, and calibrated pairwise losses with the same held-out ARC split and score-collapse checks.",
+      "failure_mode": "Calibration can make scores honest without adding missing evidence. If the ARC pool remains sparse, a better loss will still be underpowered for wrong-majority selection.",
+      "name": "Calibrated Reasoning explanatory verifier",
+      "url": "https://arxiv.org/abs/2509.19681"
+    },
+    {
+      "a2_a3_mapping": "Exp 4232's margin override also tied vote at 0.0 lift, so the margin policy is a guardrail, not the main .393 research lever until the underlying set-aware score has nonzero separation.",
+      "arxiv_id_or_url": "2606.04323",
+      "carnot_stack_mapping": "Maps to the deployment gate: keep vote unless the learned aggregator has a pre-registered confidence margin over the vote candidate.",
+      "experiment_mapping": "Keep the fixed margin-trigger policy in .393 as an evaluation arm, but only interpret it after the full set encoder creates measurable score margins on wrong-majority ARC tasks.",
+      "failure_mode": "The cited video QA re-arbitration is sensitive to triggered-subset composition. Used alone, it can preserve every vote decision or fire on brittle margins.",
+      "name": "Margin-triggered question re-arbitration",
+      "url": "https://arxiv.org/abs/2606.04323"
+    },
+    {
+      "a2_a3_mapping": "Because Exp 4232 tied vote while oracle_minus_vote remained 0.1731, the next ARC run needs denser region-level supervision for the cases where a correct candidate exists but vote fails.",
+      "arxiv_id_or_url": "2512.15146",
+      "carnot_stack_mapping": "Maps to ARC per-region evidence: local confidence and subgroup signals should explain why a minority grid is correct, instead of treating the final answer frequency as the reward.",
+      "experiment_mapping": "Add localized ARC disagreement features and report whether they change full-set encoder decisions on wrong-majority tasks before any verifier-as-reward training is attempted.",
+      "failure_mode": "SCOPE is a test-time RL pseudo-labeling recipe; it does not by itself provide ARC grid-local labels or solve the small wrong-majority count.",
+      "name": "SCOPE fine-grained reward signal",
+      "url": "https://arxiv.org/abs/2512.15146"
+    },
+    {
+      "a2_a3_mapping": "Exp 4232's matched control was close to the aggregator, so .393 should separate architecture gain from compute allocation and route verification to informative candidate basins.",
+      "arxiv_id_or_url": "2602.03975",
+      "carnot_stack_mapping": "Maps to compute routing for ARC candidate families: spend expensive evidence checks on uncertain transformation families and avoid redundant verifier calls on duplicate grids.",
+      "experiment_mapping": "Use adaptive allocation as a secondary ablation: fixed all-candidate Set-Encoder versus uncertainty-routed evidence collection under the same candidate budget.",
+      "failure_mode": "Allocation improves efficiency but cannot turn an uninformative score into a vote-beating selector. It should follow, not replace, the bigger-pool set-encoder experiment.",
+      "name": "Adaptive verification allocation over categorical structure",
+      "url": "https://arxiv.org/abs/2602.03975"
+    },
+    {
+      "a2_a3_mapping": "MSV supports the Set-Encoder direction after the Exp 4232 tie: the augmented-feature aggregator approximated context, but the next model should jointly process candidate interactions directly.",
+      "arxiv_id_or_url": "2603.03417",
+      "carnot_stack_mapping": "Maps to verifier calibration across all candidate solutions rather than independent row scores, with interactions between competing answers exposed to the scorer.",
+      "experiment_mapping": "Report isolated scoring, explicit summary features, and full multi-sequence/set attention as three arms on the expanded ARC pool.",
+      "failure_mode": "Cross-sequence calibration can still learn frequency if the target pool is too sparse. It needs the Exp 4233 data-sparsity lesson: grow ARC before treating another tie as a thesis bound.",
+      "name": "MSV multi-sequence verifier",
+      "url": "https://arxiv.org/abs/2603.03417"
+    },
+    {
+      "a2_a3_mapping": "Exp 4232's selector tie leaves oracle headroom unused. AggLM is the best synthesis precedent for cases where the correct evidence is distributed across candidate families.",
+      "arxiv_id_or_url": "2509.06870",
+      "carnot_stack_mapping": "Maps to an aggregator that can synthesize a corrected grid from candidate evidence, not only select one cached candidate.",
+      "experiment_mapping": "Make synthesis an optional .393 arm after the full set encoder: selector-only Set-Encoder versus AggLM-style review/reconcile output, both scored by exact grid match.",
+      "failure_mode": "A generative reconciler expands the claim surface: it can hallucinate a grid unless exact ARC validation and matched selector controls stay in the gate.",
+      "name": "AggLM review-reconcile-synthesize aggregation",
+      "url": "https://arxiv.org/abs/2509.06870"
+    },
+    {
+      "a2_a3_mapping": "AgentAuditor explains why the Exp 4232 tie is not just a threshold problem. The scorer needs local evidence for wrong-majority cases, not only global vote and set statistics.",
+      "arxiv_id_or_url": "2602.09341",
+      "carnot_stack_mapping": "Maps to localized ARC evidence auditing: compare branches where candidate transformations diverge and reward evidence-based minority selection over popular errors.",
+      "experiment_mapping": "Use AgentAuditor as the localized-evidence comparator for .393: measure whether region disagreements explain Set-Encoder overrides and whether the cost beats an LLM-as-judge fallback.",
+      "failure_mode": "Reasoning-tree evidence is richer than cached ARC rows. Without region-level candidate traces, the auditor can collapse into another LLM judge rather than a cheap verifier.",
+      "name": "AgentAuditor localized branch evidence",
+      "url": "https://arxiv.org/abs/2602.09341"
+    }
+  ]
+}

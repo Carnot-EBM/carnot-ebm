@@ -8,6 +8,47 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-15 Exp 4238 - .392 planning sweep SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-cross-candidate-aggregator-v393-2026-06-15.md`.
+
+**Filtered track:** strengthened oracle-distinct ARC aggregation after Exp 4231
+built a sparse cross-candidate aggregator, Exp 4232 tied vote despite headroom,
+and Exp 4233 beat vote on code with `disambiguation_read=ARC_null_is_data_sparsity`.
+
+**Seed and fresh-pass candidates marked ingested:**
+- Set-Encoder, arXiv:2404.06912 - mapped as the strongest .393 architecture
+  lever: full cross-candidate attention instead of Exp 4231's augmented-feature
+  logistic aggregator.
+- Calibrated Reasoning, arXiv:2509.19681 - mapped to imbalance-aware calibrated
+  losses, but only after ARC positive-candidate growth.
+- Margin-triggered re-arbitration, arXiv:2606.04323 - kept as the deployment
+  guard because Exp 4232's margin override also tied vote.
+- SCOPE, arXiv:2512.15146 - mapped to per-region ARC evidence and dense
+  confidence signals for wrong-majority cases.
+- Adaptive verification allocation, arXiv:2602.03975 - mapped to compute
+  routing after a stronger score exists.
+- MSV, arXiv:2603.03417 - mapped to joint cross-sequence scoring as the
+  direct model-class corroboration for Set-Encoder.
+- AggLM, arXiv:2509.06870, and AgentAuditor, arXiv:2602.09341 - mapped to
+  review/reconcile/synthesize and localized evidence audit arms if selection
+  still leaves oracle headroom unused.
+
+Exp 4231 status mapped honestly: `oracle_distinct_auroc=0.7865558646`,
+`positive_candidate_n=20`, `wrong_majority_n=9`, and
+`no_learnable_gain_reason=too_few_positives_after_growth`. Exp 4232 status
+mapped honestly: `aggregator_minus_vote_delta=0.0`,
+`oracle_minus_vote=0.1730769231`, and `oracle_distinct_beats_vote=false`.
+Exp 4233 status mapped honestly: `code_predictor_minus_vote_delta=0.03125`,
+CI95 `[0.00625, 0.0625]`, and
+`disambiguation_read=ARC_null_is_data_sparsity`.
+
+flagged_for_v393:
+`bigger_arc_pool_full_set_encoder_agglm_aggregator_v393`.
+
+Flagged for .393: `bigger_arc_pool_full_set_encoder_agglm_aggregator_v393`.
+
+**Bottom line for the .393 roadmap:** grow ARC positives, run a full Set-Encoder against the augmented-feature aggregator, and build a bigger ARC pool before declaring the oracle-distinct selection thesis bounded.
 ## 2026-06-15 Exp 4226 - .391 planning sweep SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-learned-aggregator-v392-2026-06-15.md`.
