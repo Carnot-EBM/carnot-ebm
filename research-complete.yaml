@@ -40465,7 +40465,14 @@ milestones:
     + registry/gaps hygiene + hardware continuity + capstone.'
   doc: openspec/change-proposals/research-roadmap-v393.md
   completed: '2026-06-15'
-  finding: '.393 close-state: FIRST ARC oracle-distinct win (exp4245 ARC-MOAT-WON): set_encoder@1-vote@1=+0.4423, CI95 [0.308, 0.596], excl 0, verifier_is_oracle=false, oracle@K=0.827, n=52. CAVEATS: single-seed/n=52; provenance-leak risk from gold/GAP-4-induced labels and origin-encoding features; win came from the GROWN POOL not the set-encoder architecture (DeepSets AUROC 0.963 < logistic 0.980). Code replication BLOCKED (exp4246 blocked_code_second_corpus_missing). Verifier-as-reward hit a 7th failure (exp4247 flagged CRITICAL; live_lora_retired=true; exp4248 offline pending). ARC total_levels_solved=19; live solver completed 0 levels efficiency-only; diffusiongemma_gate_resolvable=true. .394 frame: HARDEN the win (leak-audit + multi-seed + cross-game) then EXTEND (synthesis) then STAGE (DiffusionGemma preflight, full run deferred to .395) + resolve the owed axes (reward out-of-band, code retry).'
+  finding: '.393 close-state: FIRST ARC oracle-distinct win (exp4245 ARC-MOAT-WON): set_encoder@1-vote@1=+0.4423, CI95 [0.308,
+    0.596], excl 0, verifier_is_oracle=false, oracle@K=0.827, n=52. CAVEATS: single-seed/n=52; provenance-leak risk from gold/GAP-4-induced
+    labels and origin-encoding features; win came from the GROWN POOL not the set-encoder architecture (DeepSets AUROC 0.963
+    < logistic 0.980). Code replication BLOCKED (exp4246 blocked_code_second_corpus_missing). Verifier-as-reward hit a 7th
+    failure (exp4247 flagged CRITICAL; live_lora_retired=true; exp4248 offline pending). ARC total_levels_solved=19; live
+    solver completed 0 levels efficiency-only; diffusiongemma_gate_resolvable=true. .394 frame: HARDEN the win (leak-audit
+    + multi-seed + cross-game) then EXTEND (synthesis) then STAGE (DiffusionGemma preflight, full run deferred to .395) +
+    resolve the owed axes (reward out-of-band, code retry).'
   activation_recorded: exp4255-archive-v393-activate-v394
   tasks:
   - id: exp4242-archive-v392-activate-v393
@@ -40610,4 +40617,179 @@ milestones:
       = exp4251; registry = exp4252; hardware = exp4253. SKIP any flagged_adversarial artifact; cite upstream sha256. HONOR
       verifier_is_oracle (a circular result may NOT headline a moat). NO gated_on.'
     deliverable: results/experiment_4254_capstone_v393.json
+    result: OK (conductor)
+- id: 2026.06.394
+  title: 'HARDEN the first ARC oracle-distinct win then EXTEND selection->synthesis then STAGE DiffusionGemma -- .393 LANDED
+    the program''s FIRST genuine ARC oracle-distinct verifier-beats-vote win (exp4245 ARC-MOAT-WON: set_encoder@1 0.692 vs
+    vote@1 0.25, delta +0.4423, bootstrap CI95 [0.308,0.596] EXCLUDES 0, verifier_is_oracle=false, oracle@K 0.827, n=52, adversarial-clean;
+    flips diffusiongemma_gate_resolvable=true) but the win is SINGLE-SEED (4245), n=52, and carries a PROVENANCE-LEAK risk
+    (positive labels = exact match to gold/GAP-4-induced pred_grid; features include shape/palette-family + duplicate-counts
+    that could encode candidate ORIGIN not correctness) AND came from the GROWN POOL (A1 positives 20->48) NOT the set-encoder
+    architecture (exp4244 DeepSets AUROC 0.963 UNDERPERFORMED the .392 logistic 0.980). Per CLAUDE.md ''cross-check surprising
+    results'', the program''s #1 positive is NOT headline-eligible nor scale-up-eligible until it SURVIVES adversarial scrutiny.
+    .394 is DEPTH on the headline: PHASE A HARDENS it -- A1 LEAK-AUDIT (provenance-blind features + an explicit candidate-ORIGIN
+    probe), A2 MULTI-SEED (>=5 seeds) + independent clean-room replication, A3 CROSS-GAME transfer (train on a subset of games,
+    test on HELD-OUT games -- the real OOD test, cf. ARC-1->ARC-2 collapse) -- then A4 EXTENDS selection->SYNTHESIS (AggLM
+    grid-reconciliation, gated_on A1^A2, breaks the oracle@K=0.827 ceiling per Compute-as-Teacher 2509.14234). PHASE B STAGES
+    the scale-up: B1 DiffusionGemma energy-guided PREFLIGHT only (cached; gated_on A1^A2; full run deferred to .395 on the
+    win surviving) + B2 monotonic ARC +1 (->20) + B3 live-env accuracy probe. PHASE C RESOLVES the owed axes the disciplined
+    way: C1 verifier-as-reward RE-SCOPED to OUT-OF-BAND (7th in-window failure = infeasible; prepare corpus+runner for operator
+    execution like the TRM checkpoint, or RETIRE) + C2 code oracle-distinct replication on a FRESH 2nd corpus or retire. PHASE
+    D: SOTA-ingestion + registry/gaps + hardware + capstone.'
+  doc: openspec/change-proposals/research-roadmap-v394.md
+  completed: '2026-06-15'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4255-archive-v393-activate-v394
+    title: Archive .393 -> activate .394; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
+      + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .393
+      close-state truthfully (FIRST ARC oracle-distinct win exp4245 ARC-MOAT-WON delta +0.4423 CI95 [0.308,0.596] excl 0 verifier_is_oracle=false
+      oracle@K 0.827 n=52 -- BUT single-seed, leak-risk, and from the GROWN POOL not the set-encoder which underperformed
+      the logistic 0.963<0.980; code replication BLOCKED exp4246; verifier-as-reward 7th-failure exp4247 flagged CRITICAL
+      live_lora_retired=true; ARC 19 levels exp4249; live solver 0 levels efficiency-only exp4250; diffusiongemma_gate_resolvable=true).
+      Frame .394 as HARDEN-the-win (leak-audit + multi-seed + cross-game) then EXTEND (synthesis) then STAGE (DiffusionGemma
+      preflight, full run deferred to .395).
+    deliverable: results/experiment_4255_archive_v393_activate_v394.json
+    result: OK (conductor)
+  - id: exp4256-arc-oracle-distinct-leak-audit
+    title: 'PHASE A1 (HEADLINE; cross-check the surprising win) -- LEAK-AUDIT the +44pp ARC oracle-distinct win. exp4245 won
+      by +0.4423 (CI95 [0.308,0.596]) but positive labels = exact match to gold/GAP-4-INDUCED pred_grid and features include
+      shape/palette-family + duplicate-counts that could encode candidate ORIGIN (induced-program output vs sampled candidate)
+      rather than correctness -- a leaked/circular detector would inflate AUROC to ~0.96 and the delta to +44pp while NOT
+      being oracle-distinct. AUDIT: (1) train an explicit candidate-ORIGIN probe (predict induced-vs-sampled from the features)
+      and measure how predictive it is AND whether origin correlates with is_correct (the leak signature); (2) RE-RUN the
+      decisive beats-vote gate with PROVENANCE-BLIND features (strip every origin-encoding feature, keep only genuinely oracle-distinct
+      CONTENT signals: vote-priors, cross-candidate agreement, self-consistency margin); report the provenance-blind delta
+      + CI95 vs the .393 +0.4423. Emit win_survives_provenance_blind BARE bool (delta>0 AND CI95 excl 0 on provenance-blind
+      features). verifier_is_oracle=false. A SURVIVING win is decision-grade; a COLLAPSE (the win was provenance leak) is
+      an even MORE important decision-grade negative that STOPS the DiffusionGemma scale-up.'
+    deliverable: results/experiment_4256_arc_oracle_distinct_leak_audit.json
+    result: OK (conductor)
+  - id: exp4257-arc-oracle-distinct-multiseed-replication
+    title: 'PHASE A2 (HEADLINE; cross-check the surprising win) -- MULTI-SEED + INDEPENDENT replication of the +44pp ARC oracle-distinct
+      win. exp4245 reported delta +0.4423 on a SINGLE seed (4245), n=52. A surprising result is not headline-eligible until
+      replicated (n>1 seeds, same direction; CLAUDE.md). RE-RUN the decisive beats-vote gate across >=5 SEEDS (independent
+      fold reshuffles of the train/held-out split over the grown pool), report per-seed delta + the MEAN delta + a cross-seed
+      CI (and flag any seed where the win flips sign). SEPARATELY, an INDEPENDENT clean-room re-score: reload the persisted
+      A1/.393 pool artifact and recompute set_encoder@1, vote@1, oracle@K via a SECOND code path (not the .393 script) to
+      confirm the numbers reproduce off the artifact (mirrors the G2 FoVer independent-reproducer pattern). Emit oracle_distinct_win_replicates
+      BARE bool := (mean cross-seed delta>0 AND cross-seed CI excl 0 AND the independent re-score lands within the .393 CI).
+      verifier_is_oracle=false.'
+    deliverable: results/experiment_4257_arc_oracle_distinct_multiseed_replication.json
+    result: OK (conductor)
+  - id: exp4258-arc-oracle-distinct-cross-game-transfer
+    title: 'PHASE A3 (HEADLINE; the real OOD test) -- CROSS-GAME transfer of the ARC oracle-distinct verifier. The .393 win
+      used HELD-OUT TASKS within the SAME games; the real generalization test is HELD-OUT GAMES. Carnot''s own prior evidence
+      warns this is where learned ARC signals collapse (ARC-1->ARC-2 transfer: induction 0.93->0.57, project_gap3_verifier_program).
+      Split the grown pool BY GAME: train the set-encoder on a subset of games, test the beats-vote gate on candidates from
+      games NEVER seen in training. Report cross_game_delta (set_encoder@1 - vote@1 on held-out GAMES) + CI95 + the held-out-game
+      count + the within-game-vs-cross-game gap. A surviving cross-game win = a GENERAL selection signal (huge for the north
+      star). A collapse = the verifier memorizes per-game basins (decision-grade; SCOPES the headline to within-game and refocuses
+      .395 on cross-game generalization). verifier_is_oracle=false.'
+    deliverable: results/experiment_4258_arc_oracle_distinct_cross_game_transfer.json
+    result: OK (conductor)
+  - id: exp4259-arc-agglm-grid-synthesis
+    title: 'PHASE A4 (EXTEND the win; gated_on A1 win_survives_provenance_blind AND A2 oracle_distinct_win_replicates) --
+      selection->SYNTHESIS: break the oracle@K ceiling. The .393 win is SELECTION (pick the best cached candidate), capped
+      at oracle@K=0.827 -- 17% of held-out tasks have NO correct candidate, so selection can NEVER solve them. Compute-as-Teacher
+      (2509.14234) + Generative-Aggregation (2503.04104): SYNTHESIS can construct an answer that EXCEEDS the best rollout.
+      Build an AggLM-style review-reconcile-SYNTHESIZE step: DeepSets-weighted per-CELL reconciliation over the top-ranked
+      candidate family (weight each candidate''s per-cell vote by the learned set-encoder score) -> a synthesized grid that
+      MAY differ from every candidate; validate by EXACT ARC grid match. Report synthesis@1 vs vote@1 vs selector-only@1 (the
+      .393 set-encoder) vs a no-synthesis baseline vs oracle@K, task-level bootstrap CI95. Headline target: synthesis@1 >
+      oracle@K on the held-out split (recovering tasks where NO candidate was correct). verifier_is_oracle=false. Fabrication
+      guard: EXACT grid-match gate + the explicit no-synthesis control (per the .393 SOTA-ingestion warning).'
+    deliverable: results/experiment_4259_arc_agglm_grid_synthesis.json
+    result: OK (conductor)
+  - id: exp4260-diffusiongemma-energy-guided-preflight
+    title: 'PHASE B1 (STAGE the scale-up; gated_on A1 win_survives_provenance_blind AND A2 oracle_distinct_win_replicates)
+      -- DiffusionGemma energy-guided-diffusion PREFLIGHT (NOT the full run). The oracle-distinct gate is now resolvable (exp4245)
+      AND DiffusionGemma is CACHED (google/diffusiongemma-26B-A4B-it + unsloth/diffusiongemma-26B-A4B-it-GGUF). The gated
+      forward-queue entry (docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md) becomes activatable -- but
+      ONLY after the .394 win is hardened, and ONLY as a PREFLIGHT this milestone (the operator was twice-burned by premature
+      scale-up over-claims). PREFLIGHT: load DiffusionGemma-GGUF (vocab_only or a tiny smoke), wire the verifier ensemble
+      as a GUIDANCE energy that reweights per-step token selection on a TINY denoising smoke (few steps, <=5 examples), confirm
+      the guidance hook actually changes token selection vs unguided, and emit a GO/NO-GO + a cost estimate for the full .395
+      run. Methods: discrete-diffusion guidance (2406.01572), GTL (2512.10877), EDLM (2506.13759). NO full benchmark; NO training;
+      the full run is DEFERRED to .395.'
+    deliverable: results/experiment_4260_diffusiongemma_energy_guided_preflight.json
+    result: OK (conductor)
+  - id: exp4261-arc-incremental-progress
+    title: 'PHASE B2 (ARC north star) -- monotonic ARC +1: advance ONE game by >=1 NEW real-env-confirmed level beyond the
+      .393 best (total_levels 19 -> >=20). Per ARC-AGI-3 Incremental-Progress Scoping (progress is the metric; +1, NOT all-levels).
+      Use the offline hardened explore-induce-verify solver with the margin-triggered verifier routing; pick the game/level
+      with the best headroom from the .393 survey + solve artifacts. Report total_levels (>=20) + the game advanced + levels_completed
+      (real-env-confirmed). NO TRM training; NO leaderboard submission.'
+    deliverable: results/experiment_4261_arc_incremental_progress.json
+    result: OK (conductor)
+  - id: exp4262-arc-live-env-accuracy-probe
+    title: PHASE B3 (ARC north star; efficiency+accuracy) -- live-env ACCURACY probe with the hardened verifier routing. .393
+      (exp4250) reached the official ARC-AGI-3 env via the anonymous key and beat the random floor on EFFICIENCY only (0 levels
+      completed). RE-RUN the live-env solver targeting a LEVEL COMPLETION with the margin-triggered + (if the .394 win hardened)
+      provenance-blind verifier routing; report levels_completed (real-env EnvironmentScore) + actions-vs-baseline efficiency.
+      NO leaderboard submission (operator-only). An honest 0-levels-but-improved-efficiency is COMPLETE and decision-grade.
+    deliverable: results/experiment_4262_arc_live_env_accuracy_probe.json
+    result: OK (conductor)
+  - id: exp4263-verifier-as-reward-out-of-band-or-retire
+    title: 'PHASE C1 (OWED FR-11 self-learning; the disciplined decision after 7 in-window failures) -- verifier-as-reward
+      has now failed 7x on INFRA (live-LoRA x6 + the .393 OFFLINE pivot exp4247 cannot_run_in_window, flagged CRITICAL) and
+      NEVER reached science. Per Failed-Experiment Rerun Discipline, NO 8th in-window attempt. The diagnosed root cause: ANY
+      real fine-tuning does NOT fit the 80-min conductor window. FIX = change WHERE training runs: RE-SCOPE to OUT-OF-BAND
+      -- this task PREPARES (does NOT run training): precompute the offline reward-weighted corpus from the intact A/B/C corpora,
+      write a single-command runner script + a validation harness that asserts real training (>=20 steps, loss moved) when
+      run out-of-band, and emit ready_for_out_of_band BARE bool. The operator/outer-loop then runs the actual training out-of-band
+      (like the TRM checkpoint). IF even the prep is infeasible -> RETIRE the in-loop verifier-as-reward axis (the FoVer +0.0185
+      memory-ablation, exp2837, stands as the self-learning evidence) and emit verifier_as_reward_retired BARE bool. verifier_is_oracle=true
+      (HONEST reward axis). NO in-window training; NO TRM; Qwen FORBIDDEN as the trained base.'
+    deliverable: results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json
+    result: OK (conductor)
+  - id: exp4264-code-oracle-distinct-replication-retry
+    title: 'PHASE C2 (HEADLINE confirmation) -- code oracle-distinct replication RETRY on a FRESH second corpus. .393 (exp4246)
+      BLOCKED (blocked_code_second_corpus_missing) -- no distinct cached second code pool was found, so the .392 code win
+      (+3.1pp, single corpus) stays unreplicated. FIX the root cause: GENERATE a fresh second code candidate pool (cached
+      SOTA GGUF best-of-N on MBPP/EvalPlus, per-candidate hidden-test pass labels) if none distinct exists, then run the SAME
+      oracle-distinct gate (learned no-execution pass-predictor over candidate code features + cross-candidate agreement,
+      verifier_is_oracle=false): predictor@1 vs vote@1 vs matched control vs oracle@K, bootstrap CI95-excl-0. Replicates ->
+      the code oracle-distinct win is robust. Honest no-replication (corpus-specific) is COMPLETE. If a fresh pool ALSO cannot
+      be built in-window -> RETIRE the code-replication ask (the .392 +3.1pp stands as a thin single-corpus result). STOP
+      re-running CIRCULAR code-execution selection.'
+    deliverable: results/experiment_4264_code_oracle_distinct_replication_retry.json
+    result: OK (conductor)
+  - id: exp4265-sota-ingestion-v395
+    title: PHASE D1 (SOTA-ingestion; mandatory per SOTA-Ingestion Cycle Discipline) -- ingest the SOTA for the .394 bleeding-edge
+      forks (synthesis robustness, discrete-diffusion verifier-guidance, learned-verifier leak/contamination auditing, cross-game
+      ARC transfer) and MAP the strongest 3-5 methods onto the .395 roadmap. Use the RELIABLE channel ONLY (scripts/sweep_clusters.py
+      / sweep_semscholar.py + low-concurrency WebSearch/WebFetch of the top papers) -- the /deep-research harness is BANNED
+      from the autonomous loop. Every method MUST carry a real arXiv ID/URL (no citation = fabrication). Update research-studying.md
+      (mark ingested) and emit flagged_for_v395 (the strongest method conditioned on the .394 A1-A4/B1 outcomes).
+    deliverable: results/experiment_4265_sota_ingestion_v395.json
+    result: OK (conductor)
+  - id: exp4266-verifier-registry-gaps-hygiene
+    title: 'PHASE D2 (hygiene) -- reconcile the verifier registry + gaps to .394 truth, run the GAP-4 regression guard, and
+      LOG missing-verifier gaps. Record the .394 outcomes: the ARC oracle-distinct win''s hardened status (survived provenance-blind?
+      replicated multi-seed? transferred cross-game? synthesis broke the ceiling?), the DiffusionGemma preflight GO/NO-GO,
+      the verifier-as-reward out-of-band/retire decision, the code-replication read. Update ops/verifier_registry.yaml + ops/verifier_gaps.md
+      (per Missing-Verifier Gap Logging: any present-but-unselectable ARC failure the set-encoder still misses is a gap entry).
+      Run the GAP-4 execution regression guard (no regression vs .393). Emit regression_guard_passed BARE bool.'
+    deliverable: results/experiment_4266_verifier_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4267-hardware-continuity
+    title: "PHASE D3 (hardware continuity; opportunistic per north-star \xA73) -- KV260 terminal/opportunistic (SSH-only reachability\
+      \ + xmutil listapps; NO host SD-card precondition), PolarFire CPU dispatch hash-verify, GateMate USB detect. KV260 is\
+      \ at its terminal state (north-star \xA73) so the per-board mandate relaxes to opportunistic; this task keeps the boards\
+      \ visible without blocking the milestone. Report per-board reachability + any opportunistic result. NO board blocks\
+      \ the milestone (honest blocked_<board> per board is fine)."
+    deliverable: results/experiment_4267_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4268-capstone-v394
+    title: 'PHASE D4 (capstone .394, UNGATED) -- headline question: DID THE FIRST ARC ORACLE-DISTINCT WIN SURVIVE HARDENING
+      (leak-audit + multi-seed + cross-game) AND DID SYNTHESIS BREAK THE oracle@K CEILING? Aggregate: HARDENED-WIN = exp4256
+      (win_survives_provenance_blind + origin_probe) + exp4257 (multi-seed mean_delta + cross-seed CI + independent re-score)
+      + exp4258 (cross_game_delta -- the OOD verdict); EXTEND = exp4259 (synthesis_breaks_oracle_ceiling); SCALE-UP = exp4260
+      (DiffusionGemma preflight_go + cost); ARC = exp4261 (total_levels>=20) + exp4262 (live levels_completed + efficiency);
+      REWARD = exp4263 (ready_for_out_of_band / verifier_as_reward_retired); CODE = exp4264 (replication_read); registry =
+      exp4266; hardware = exp4267. Emit headline_outcome + diffusiongemma_full_run_gate (resolvable iff the win hardened AND
+      preflight GO). SKIP any flagged_adversarial artifact; HONOR verifier_is_oracle (a leaked/circular result may NOT headline).
+      Compute the G1-G4 publication gate via publication_gate.py. NO gated_on.'
+    deliverable: results/experiment_4268_capstone_v394.json
     result: OK (conductor)
