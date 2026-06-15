@@ -14406,6 +14406,109 @@ Given Exp 4220 is missing, reports `selector_trained=false`, reports
 sets `oracle_distinct_beats_vote=false`, keeps `verifier_is_oracle=false`, and
 stops before measuring ARC candidates.
 
+### REQ-VERIFY-4231: Cross-Candidate Oracle-Distinct ARC Aggregator Build
+
+The repository SHALL provide
+`python/carnot/reporting/oracle_distinct_arc_aggregator_4231.py` and
+`results/experiment_4231_oracle_distinct_arc_aggregator_build.py` to build the
+strengthened ARC oracle-distinct aggregator after Exp 4221 showed headroom but
+only tied vote. The runner SHALL first confirm that the primary GAP-4 ARC pools
+`results/arc3_gap3_stage2_eval_pool.json.gz` and
+`results/arc3_gap4_induced_programs.json` parse, that the Exp 4208 detector
+module imports, and that any compatible additional GAP-4 pool/program pair is
+schema-compatible before using it. If the primary preconditions fail, it SHALL
+write `honest_verdict=blocked_arc_gap4_pools_missing`,
+`aggregator_trained=false`, `oracle_distinct_auroc=0.0`,
+`held_out_task_n=0`, `wrong_majority_n=0`, `verifier_is_oracle=false`, an empty
+`learned_verifier_path`, and SHALL stop before training.
+
+When the GAP pools are available, the runner SHALL reuse the Exp 4208 ARC label
+loading path over `load_arc_rows()` / `arc_rows_from_entries()` and SHALL build
+per-candidate rows grouped by full ARC task candidate set. The training target
+SHALL be candidate-grid equality with the GAP-4 induced program `pred_grid`;
+this target MAY be used as the supervised label but SHALL NOT be called by the
+learned aggregator at inference. The model SHALL score candidates conditioned
+on the per-task candidate set using oracle-distinct features that include the
+Exp 4220 per-candidate grid statistics and explicit cross-candidate summaries:
+vote weight, self-consistency margin and rank, per-cell/per-region agreement
+with the task modal grid, set mean/max/std and within-set ranks, candidate
+duplicate agreement counts, and competing shape/palette transformation-family
+indicators. The scorer SHALL NOT call `Gap4ExecutionVerifier`,
+`extract_dsl_rules`, `apply_rule`, or `get_consistency_energy`.
+
+The runner SHALL grow the labeled pool with compatible additional cached GAP-4
+ARC game pools when they parse, while preserving source identity in candidate
+ids so duplicate task names do not collide. It SHALL report bare int
+`held_out_task_n` for the task groups scored out of fold and bare int
+`wrong_majority_n` for task groups where oracle@K is present but vote@1 is
+wrong. If fewer than 30 wrong-majority tasks remain after growth, the artifact
+SHALL record the under-powered stratum honestly rather than claiming the ARC
+null is settled.
+
+The aggregator SHALL train out of fold with held-out task splits, use a
+calibrated imbalance-aware objective such as class-weighted logistic loss plus
+post-hoc isotonic or temperature calibration, and report bare float
+`oracle_distinct_auroc` with bootstrap CI95 over the out-of-fold candidate
+scores. It SHALL persist a learned aggregator artifact for A2 even when the
+result is a no-learnable-gain null. If the off-fold AUROC does not improve on
+the Exp 4220/.391 logistic baseline of `0.778980279` by measurable margin, or
+the positive labels remain too few to support a stronger read, the terminal
+verdict SHALL be
+`complete_oracle_distinct_arc_aggregator_no_learnable_gain_auroc<x>` while
+still setting `aggregator_trained=true` when an artifact was persisted.
+
+The terminal artifact SHALL write
+`results/experiment_4231_oracle_distinct_arc_aggregator_build.json` with
+required fields `honest_verdict`, bare bool `aggregator_trained`, bare float
+`oracle_distinct_auroc`, `oracle_distinct_auroc_ci95`, bare int
+`held_out_task_n`, bare int `wrong_majority_n`, `learned_verifier_path`, bare
+bool `verifier_is_oracle=false`, `model_specs`, bare int `random_seed`,
+`reproducibility_checksum`, `field_principles`, `spec_refs`, and
+`acceptance_gate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed (complete:/success:/passed:/shipped:). A trained off-fold aggregator OR an honest 'no learnable gain over the .391 logistic baseline' is COMPLETE -- both feed A2.`;
+`aggregator_trained` = `BARE bool: A2's gate compares this raw value (gated-fields-must-be-bare); true iff a learned cross-candidate ARC aggregator artifact was persisted out-of-fold.`;
+`oracle_distinct_auroc` = `BARE float: off-fold detection AUROC of the AGGREGATOR vs is_correct -- the oracle-distinct discrimination; must improve on the .391 logistic 0.779 for a stronger A2 read, and >0.5 CI95-excl is the precondition for a beats-vote win.`;
+`held_out_task_n` = `BARE int: number of held-out tasks the A2 gate will score on -- target >=30 (CLT floor) so the A2 null/win is not under-powered like the .391 n=14.`;
+`wrong_majority_n` = `BARE int: count of stratified tasks where oracle@K > vote@1 -- the ARBITER/AggLM headroom the aggregator targets; A2 measures vote-beating ON these.`;
+`learned_verifier_path` = `The persisted aggregator artifact A2 loads to rerank held-out ARC candidates; the build deliverable.`;
+`verifier_is_oracle` = `BARE bool=false -- the aggregator scores WITHOUT executing the demos (Circularity Discipline); this is what makes an A2 win headline/gate-eligible, unlike the circular execution verifier.`;
+`model_specs` = `The set-encoder/aggregator architecture + the cross-candidate feature set + the calibrated imbalance-aware loss; required methodology.`;
+`random_seed` = `Determinism precondition; the fold split + model init seeded so the AUROC is reproducible.`;
+`reproducibility_checksum` = `Hash of the ARC pools + fold split + features; catches silent pool/feature drift before A2 measures.`
+
+### SCENARIO-VERIFY-4231: Cross-Candidate Aggregator Trains Out Of Fold
+
+Given the primary GAP-4 ARC candidate pool and induced-program artifact parse,
+and a compatible additional GAP-4 ARC pool is present, when Exp 4231 runs, then
+it builds labels by candidate-grid equality with each task's `pred_grid`, grows
+the task pool without candidate-id collisions, conditions every candidate score
+on its task candidate set through cross-candidate summary features, trains with
+task-held-out folds and calibrated class-balanced loss, reports
+`held_out_task_n`, `wrong_majority_n`, off-fold AUROC and CI95, persists the
+learned aggregator at `learned_verifier_path`, sets `aggregator_trained=true`,
+keeps `verifier_is_oracle=false`, and writes the required field principles and
+checksum.
+
+### SCENARIO-VERIFY-4231-NO-GAIN: Underpowered Or Non-Improving Aggregator Is Complete
+
+Given the grown ARC pool has too few positives or the cross-candidate
+aggregator's off-fold AUROC does not improve over the Exp 4220 `.391` AUROC,
+when Exp 4231 runs, then it still persists the out-of-fold aggregator artifact,
+sets `aggregator_trained=true`, records the measured AUROC and CI95, records
+`held_out_task_n` and `wrong_majority_n`, keeps `verifier_is_oracle=false`, and
+writes a terminal
+`complete_oracle_distinct_arc_aggregator_no_learnable_gain_auroc<x>` verdict
+instead of claiming oracle-distinct ARC selection cannot beat vote.
+
+### SCENARIO-VERIFY-4231-BLOCKED: Missing Primary GAP-4 Pools Block Honestly
+
+Given either primary GAP pool is absent or malformed, or the Exp 4208 detector
+module is not importable, when Exp 4231 runs, then it writes
+`honest_verdict=blocked_arc_gap4_pools_missing`, keeps
+`aggregator_trained=false`, reports `oracle_distinct_auroc=0.0`,
+`held_out_task_n=0`, `wrong_majority_n=0`, `verifier_is_oracle=false`, leaves
+`learned_verifier_path` empty, and stops before training.
+
 ### REQ-VERIFY-4177: Decisive Headroom-Controlled Verifier Moat Test
 
 The repository SHALL provide
