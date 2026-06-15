@@ -8548,3 +8548,4 @@ c |
 | 2026-06-15 14:29 UTC | PHASE B1 (OWED pivot; RETIRE live-LoRA + OFFLINE h | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-15 14:31 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4247-verifier-reward-offline-harness-re |
 | 2026-06-15 14:33 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4247-verifier-reward-offline-harness-re |
+| 2026-06-15 14:35 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4247-verifier-reward-offline-harness-re |
