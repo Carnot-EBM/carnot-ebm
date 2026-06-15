@@ -8550,3 +8550,4 @@ c |
 | 2026-06-15 14:33 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4247-verifier-reward-offline-harness-re |
 | 2026-06-15 14:35 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4247-verifier-reward-offline-harness-re |
 | 2026-06-15 14:58 UTC | PHASE C1 -- ARC-AGI-3 monotonic +1 (total_levels > | OK | 87 passed, 1 warning in 5.38s |
+| 2026-06-15 15:13 UTC | PHASE C2 -- ARC-AGI-3 LIVE-env, ACCURACY-seeking w | OK | 85 passed, 1 warning in 6.64s |
