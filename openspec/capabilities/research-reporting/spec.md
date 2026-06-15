@@ -22022,6 +22022,91 @@ not claim `.393` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4255 | Implemented (`python/carnot/reporting/archive_v393_activate_v394_4255.py`, `python/carnot/experiment_4255_archive_v393_activate_v394.py`) | Implemented (`tests/python/test_experiment_4255_archive_v393_activate_v394.py`) |
 
+### REQ-REPORT-4269: Archive .394, Activate .395, And Close The Cross-Family OOD Question
+
+The Exp 4269 workflow SHALL archive milestone `2026.06.394`, confirm milestone
+`2026.06.395` is active, and write the record-only artifact
+`results/experiment_4269_archive_v394_activate_v395.json`. It SHALL run no live
+model training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`.
+
+Before writing the complete artifact or editing `research-complete.yaml`, the
+workflow SHALL verify these preconditions and stop with a `blocked_<resource>`
+honest verdict if any fail:
+
+- `research-complete.yaml` parses under `yaml.safe_load`.
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`.
+- The smart-subset pre-test gate is green.
+
+The workflow SHALL ensure `research-complete.yaml` contains a single `.394`
+archive record, appending the canonical `.394` record only when absent and
+removing duplicate top-level `.394` records if interrupted conductor appends
+created any. The workflow SHALL keep `research-complete.yaml` parseable after
+any edit.
+
+The complete artifact SHALL include the principle-annotated fields
+`honest_verdict`, `v394_close_state`, and `preconditions_checked` with these
+exact principles:
+
+- `honest_verdict`: `Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.`
+- `v394_close_state`: `Honest record (win hardened 2-of-3, cross-game OOD blocked-not-collapsed, owed axes resolved) so the .395 agents frame the milestone as CLOSE-the-cross-family-question, not a redo and not premature scale-up.`
+- `preconditions_checked`: `Records resources verified; pre-empts the silent-missing-resource fabrication mode.`
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v394_close_state` SHALL truthfully record
+that `.394` hardened the first ARC oracle-distinct win on two of three required
+axes: Exp 4256 survived the provenance-blind leak audit with de-leaked delta
+`+0.385` and AUROC `0.990`, and Exp 4257 replicated across at least five seeds
+with mean delta `+0.458` and independent re-score delta `+0.442`. It SHALL also
+record that the decisive cross-game OOD test did not run because Exp 4258 blocked
+with `blocked_arc_game_ids_unrecoverable`; therefore `hardened_win=false` is a
+blocked-not-collapsed result, not evidence the win failed out of distribution.
+
+The close-state SHALL record the owed `.394` axes without laundering them into
+success: `diffusiongemma_full_run_gate=false`; synthesis did not break the
+oracle@K ceiling because Exp 4259 reported `synthesis_minus_oracle=-0.283`;
+DiffusionGemma preflight blocked on Exp 4260 `blocked_diffusiongemma_gguf_loader_failed`;
+ARC held at `19` levels in Exp 4261; verifier-as-reward moved out-of-band in
+Exp 4263 with `ready_for_out_of_band=true`; code oracle-distinct was
+corpus-specific and retired after Exp 4264 reported fresh-corpus delta `-0.006`;
+and `paper_ready=true` remains true from the publication gate. It SHALL frame
+`.395` as
+`CLOSE the cross-family OOD question (recover provenance -> held-out-family test) then repair the DiffusionGemma loader + advance ARC +1`.
+
+#### SCENARIO-REPORT-4269: The Archive Records The .394 Hardened-But-Blocked Close-State
+
+**Given** `.394` has the Exp 4268 capstone, Exp 4256 leak audit, Exp 4257
+multi-seed replication, Exp 4258 blocked cross-game transfer, and the required
+owed-axis artifacts through Exp 4264, the history and exclusion-manifest YAML
+files parse, the smart-subset pre-test gate is green, and `.395` is active
+**When** the Exp 4269 archive workflow runs
+**Then** it archives `.394`, confirms `.395`, keeps the YAML history parseable
+with one `.394` record, writes
+`results/experiment_4269_archive_v394_activate_v395.json`, records the
+two-of-three hardening result, records cross-game OOD as
+`game_ids_unrecoverable` blocked-not-collapsed, records
+`hardened_win=false`, `diffusiongemma_full_run_gate=false`, synthesis
+under-oracle, DiffusionGemma loader blockage, ARC `19` levels, verifier-as-reward
+out-of-band, code oracle-distinct corpus-specific retirement, `paper_ready=true`,
+and `.395` close-the-cross-family-question framing in `v394_close_state`, records
+the checked resources in `preconditions_checked`, declares
+`aggregation_from_upstream_artifacts`, and emits a terminal-prefixed honest
+verdict.
+
+#### SCENARIO-REPORT-4269-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4269 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does
+not claim `.394` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4269)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4269 | Implemented (`python/carnot/reporting/archive_v394_activate_v395_4269.py`, `python/carnot/experiment_4269_archive_v394_activate_v395.py`, `results/experiment_4269_archive_v394_activate_v395.py`) | Implemented (`tests/python/test_experiment_4269_archive_v394_activate_v395.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone

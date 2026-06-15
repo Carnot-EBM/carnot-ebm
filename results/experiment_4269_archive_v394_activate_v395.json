@@ -1,0 +1,224 @@
+{
+  "activated_milestone": "2026.06.395",
+  "active_milestone_confirmed": "2026.06.395",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.394",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4268_capstone_v394.json",
+      "experiment_id": "4268",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "f396ab48ca6f7f78bf0b7330b740f1e33109f7cf95173ad8ba9be5d4d95a181c"
+    },
+    {
+      "deliverable": "results/experiment_4256_arc_oracle_distinct_leak_audit.json",
+      "experiment_id": "4256",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "b94c485520ddb0718b45900a980cb6e513033fa5af0338eebb01e6d72ec73576"
+    },
+    {
+      "deliverable": "results/experiment_4257_arc_oracle_distinct_multiseed_replication.json",
+      "experiment_id": "4257",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "54b954d94e45f4fbfab13d50c78520e62782c7c043303f3758cf4590be089168"
+    },
+    {
+      "deliverable": "results/experiment_4258_arc_oracle_distinct_cross_game_transfer.json",
+      "experiment_id": "4258",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "a97ef571d5e8b7ac4bbe2fe4aaf7d4b56a311a9a5b60a9e4bdd2eadae2d52779"
+    },
+    {
+      "deliverable": "results/experiment_4259_arc_agglm_grid_synthesis.json",
+      "experiment_id": "4259",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "6d4f9b86f8d75bca874c53c72ce031e8072c0ddb822717a2276d2c0c708e0151"
+    },
+    {
+      "deliverable": "results/experiment_4260_diffusiongemma_energy_guided_preflight.json",
+      "experiment_id": "4260",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "4b88e97ccd9d1fefe50d1ec15ec61c2e43e9293e451c70a2afc92e3e825ca7e4"
+    },
+    {
+      "deliverable": "results/experiment_4261_arc_incremental_progress.json",
+      "experiment_id": "4261",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "fdce3b3adfec96f1a2b268ab1e03199c57026f3a0340f304c7ccc1575c95f528"
+    },
+    {
+      "deliverable": "results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json",
+      "experiment_id": "4263",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "1c2f5f2591c8427e5f51fdca15af29883bb660c4ccf80bf2040c246601cf829c"
+    },
+    {
+      "deliverable": "results/experiment_4264_code_oracle_distinct_replication_retry.json",
+      "experiment_id": "4264",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "e022bfcecdb53af091ca74cf59d67d0a5f700650669aa9481bbcc75291bcab7a"
+    }
+  ],
+  "duration_s": 12.007237,
+  "exclusion_manifest_parses": true,
+  "experiment_id": 4269,
+  "field_principles": {
+    "activated_milestone": "Confirms .395 is live for the close-cross-family-question frame.",
+    "active_milestone_confirmed": "Records the active roadmap milestone actually observed.",
+    "archived_milestone": "Provenance: the milestone being closed, 2026.06.394.",
+    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
+    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
+    "honest_verdict": "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.",
+    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
+    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
+    "v394_close_state": "Honest record (win hardened 2-of-3, cross-game OOD blocked-not-collapsed, owed axes resolved) so the .395 agents frame the milestone as CLOSE-the-cross-family-question, not a redo and not premature scale-up."
+  },
+  "honest_verdict": "success: archived_v394_v395_active_arc_win_hardened_2_of_3_cross_game_blocked_not_collapsed_paper_ready_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "active_milestone": {
+      "actual": "2026.06.395",
+      "expected": "2026.06.395",
+      "matches": true,
+      "path": "research-roadmap.yaml"
+    },
+    "exclusion_manifest_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/exclusion_manifest.yaml"
+    },
+    "research_complete_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "smart_subset_pretest": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4269_archive_v394_activate_v395.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "green": true,
+      "stderr_tail": "",
+      "stdout_tail": "........................................................................ [ 80%]\n.................                                                        [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n89 passed, 1 warning in 4.87s\n"
+    },
+    "source_artifacts": {
+      "4256": {
+        "exists": true,
+        "path": "results/experiment_4256_arc_oracle_distinct_leak_audit.json",
+        "sha256": "b94c485520ddb0718b45900a980cb6e513033fa5af0338eebb01e6d72ec73576"
+      },
+      "4257": {
+        "exists": true,
+        "path": "results/experiment_4257_arc_oracle_distinct_multiseed_replication.json",
+        "sha256": "54b954d94e45f4fbfab13d50c78520e62782c7c043303f3758cf4590be089168"
+      },
+      "4258": {
+        "exists": true,
+        "path": "results/experiment_4258_arc_oracle_distinct_cross_game_transfer.json",
+        "sha256": "a97ef571d5e8b7ac4bbe2fe4aaf7d4b56a311a9a5b60a9e4bdd2eadae2d52779"
+      },
+      "4259": {
+        "exists": true,
+        "path": "results/experiment_4259_arc_agglm_grid_synthesis.json",
+        "sha256": "6d4f9b86f8d75bca874c53c72ce031e8072c0ddb822717a2276d2c0c708e0151"
+      },
+      "4260": {
+        "exists": true,
+        "path": "results/experiment_4260_diffusiongemma_energy_guided_preflight.json",
+        "sha256": "4b88e97ccd9d1fefe50d1ec15ec61c2e43e9293e451c70a2afc92e3e825ca7e4"
+      },
+      "4261": {
+        "exists": true,
+        "path": "results/experiment_4261_arc_incremental_progress.json",
+        "sha256": "fdce3b3adfec96f1a2b268ab1e03199c57026f3a0340f304c7ccc1575c95f528"
+      },
+      "4263": {
+        "exists": true,
+        "path": "results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json",
+        "sha256": "1c2f5f2591c8427e5f51fdca15af29883bb660c4ccf80bf2040c246601cf829c"
+      },
+      "4264": {
+        "exists": true,
+        "path": "results/experiment_4264_code_oracle_distinct_replication_retry.json",
+        "sha256": "e022bfcecdb53af091ca74cf59d67d0a5f700650669aa9481bbcc75291bcab7a"
+      },
+      "4268": {
+        "exists": true,
+        "path": "results/experiment_4268_capstone_v394.json",
+        "sha256": "f396ab48ca6f7f78bf0b7330b740f1e33109f7cf95173ad8ba9be5d4d95a181c"
+      }
+    }
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4269,
+  "reproducibility_checksum": "03e809248e3f3bbf135fef82199b898b27ec14a92f7f2dffec6f7b5ce7f3e51c",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "updated",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v394_to_v395_4269.v1",
+  "spec_refs": [
+    "REQ-REPORT-4269",
+    "SCENARIO-REPORT-4269"
+  ],
+  "task_id": "exp4269-archive-v394-activate-v395",
+  "v394_close_state": {
+    "code_off_fold_auroc": 0.697,
+    "code_predictor_minus_vote_delta": -0.006,
+    "code_replication_beats_vote": false,
+    "code_replication_read": "corpus_specific",
+    "cross_game_block_reason": "game_ids_unrecoverable",
+    "cross_game_blocked_not_collapsed": true,
+    "cross_game_delta": null,
+    "cross_game_ood_ran": false,
+    "diffusiongemma_block_reason": "blocked_diffusiongemma_gguf_loader_failed",
+    "diffusiongemma_full_run_gate": false,
+    "diffusiongemma_preflight_go": false,
+    "flagged_artifacts_excluded": [
+      4259,
+      4260,
+      4266
+    ],
+    "hardened_axes_passed": 2,
+    "hardened_axes_total": 3,
+    "hardened_win": false,
+    "headline_outcome": "within_pool_win_survived_but_cross_game_blocked_synthesis_excluded_preflight_excluded_arc19_live0_reward_out_of_band_code_corpus_specific_paper_ready",
+    "independent_rescore_delta": 0.442,
+    "leak_audit_survived": true,
+    "multiseed_mean_delta": 0.458,
+    "multiseed_replicated": true,
+    "n_seeds": 5,
+    "origin_probe_auroc": 0.948,
+    "paper_ready": true,
+    "provenance_blind_auroc": 0.99,
+    "provenance_blind_delta": 0.385,
+    "reward_honest_verdict": "complete: ready_for_out_of_band_verifier_reward_training",
+    "reward_ready_for_out_of_band": true,
+    "summary": "first_arc_oracle_distinct_win_hardened_2_of_3_ood_blocked",
+    "synthesis_breaks_oracle_ceiling": false,
+    "synthesis_minus_oracle_delta": -0.283,
+    "total_levels_solved": 19,
+    "unmet_gates": [],
+    "v395_frame": "CLOSE the cross-family OOD question (recover provenance -> held-out-family test) then repair the DiffusionGemma loader + advance ARC +1"
+  }
+}
