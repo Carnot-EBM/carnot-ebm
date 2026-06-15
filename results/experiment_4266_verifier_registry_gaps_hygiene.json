@@ -1,0 +1,237 @@
+{
+  "adversarial_verify": {
+    "flag_count": 1,
+    "flags": [
+      {
+        "detail": "duration_s=0.459496 but artifact declares verifier-scoring substrate. Even verifier scoring of a few hundred candidates takes >=1.0s; this completed too fast to have scored anything.",
+        "kind": "DURATION_TOO_SHORT",
+        "severity": "critical"
+      }
+    ],
+    "methodology_missing_clean": true,
+    "returncode": 1,
+    "status": "flagged"
+  },
+  "cited_upstream_artifacts": [
+    "results/experiment_4252_verifier_registry_gaps_hygiene.json",
+    "results/experiment_4256_arc_oracle_distinct_leak_audit.json",
+    "results/experiment_4257_arc_oracle_distinct_multiseed_replication.json",
+    "results/experiment_4258_arc_oracle_distinct_cross_game_transfer.json",
+    "results/experiment_4259_arc_agglm_grid_synthesis.json",
+    "results/experiment_4260_diffusiongemma_energy_guided_preflight.json",
+    "results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json",
+    "results/experiment_4264_code_oracle_distinct_replication_retry.json",
+    "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "results/arc3_gap4_induced_programs.json"
+  ],
+  "duration_s": 0.459496,
+  "experiment": "experiment_4266_verifier_registry_gaps_hygiene",
+  "field_principles": {
+    "gaps_logged": "List of new missing-verifier gap entries (failure mode + missing discriminator + candidate design + priority) -- the verifier build backlog (Missing-Verifier Gap Logging).",
+    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled + regression guard result.",
+    "regression_guard_passed": "BARE bool: the GAP-4 execution numbers did not regress vs .393 -- the standing-capability guard.",
+    "reproducibility_checksum": "Hash of the reconciled registry + gaps; catches silent drift."
+  },
+  "gaps_logged": [
+    {
+      "candidate_design": "Persist source-kind, generator family, game id, fold id, and target hash in the ARC candidate manifest, then rerun the set-encoder against vote on held-out families.",
+      "evidence": "results/experiment_4258_arc_oracle_distinct_cross_game_transfer.json; honest_verdict=blocked_arc_game_ids_unrecoverable; held_out_game_n=0; held_out_task_n=0",
+      "failure_mode": "The ARC oracle-distinct selector is hardened within-pool, but cross-game transfer could not be measured because game/family ids were unrecoverable.",
+      "gap_id": "GAP-ARC-CROSS-GAME-SELECTION-4266",
+      "missing_discriminator": "game/family provenance for every ARC candidate row so selection can be evaluated on family-disjoint held-out games.",
+      "priority": "high",
+      "status": "open"
+    },
+    {
+      "candidate_design": "Add rule-consistency or latent task-family constraints to propose cells outside the selected candidate family, with exact-match and selector-only controls.",
+      "evidence": "results/experiment_4259_arc_agglm_grid_synthesis.json; synthesis_beats_selection=False; synthesis_breaks_oracle_ceiling=False; synthesis_minus_oracle_delta=-0.2826086957",
+      "failure_mode": "Score-weighted grid synthesis underperformed selection and did not solve tasks beyond oracle@K candidate availability.",
+      "gap_id": "GAP-ARC-SUPRA-ORACLE-K-SYNTHESIS-4266",
+      "missing_discriminator": "a supra-oracle@K verifier signal that can infer missing output cells or shapes when no cached candidate is correct.",
+      "priority": "high",
+      "status": "open"
+    },
+    {
+      "candidate_design": "Repair the GGUF vocab loader path, then run a tiny deterministic guidance smoke that records changed selections and exact verifier controls.",
+      "evidence": "results/experiment_4260_diffusiongemma_energy_guided_preflight.json; honest_verdict=blocked_diffusiongemma_gguf_loader_failed; preflight_go=False; guidance_changes_selection=False",
+      "failure_mode": "DiffusionGemma energy guidance remained blocked before the guidance hook could demonstrate verifier-shaped token selection.",
+      "gap_id": "GAP-DIFFUSIONGEMMA-LOADER-GUIDANCE-4266",
+      "missing_discriminator": "a loader-validated diffusion guidance path that proves verifier energy changes denoising selections before a full run is scheduled.",
+      "priority": "medium",
+      "status": "open"
+    },
+    {
+      "candidate_design": "Evaluate source-disjoint code pools with normalized-code, AST, agreement, and self-consistency features, plus per-source ablations before any robustness claim.",
+      "evidence": "results/experiment_4264_code_oracle_distinct_replication_retry.json; replication_read=corpus_specific; code_replication_beats_vote=False; code_predictor_minus_vote_delta=-0.00625",
+      "failure_mode": "The code oracle-distinct read is corpus-specific; the second corpus did not replicate a vote-beating predictor despite oracle headroom.",
+      "gap_id": "GAP-CODE-ORACLE-DISTINCT-ROBUSTNESS-4266",
+      "missing_discriminator": "source-robust code candidate features that distinguish real hidden-test pass signal from corpus-specific lexical or vote-signature artifacts.",
+      "priority": "medium",
+      "status": "open"
+    }
+  ],
+  "gaps_path": "ops/verifier_gaps.md",
+  "honest_verdict": "complete: registry_gaps_reconciled_to_v394_truth_regression_guard_passed_True_gaps_logged_4",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "model_specs": {
+    "codex_calls": 0,
+    "gap4_candidate_set": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "gap4_program_outputs": "results/arc3_gap4_induced_programs.json",
+    "gguf_inference": false,
+    "gpu_inference": false,
+    "live_model_inference": false,
+    "method": "cached_v394_ledger_reconciliation",
+    "stable_checkpoint_write": false,
+    "trm_training_touched": false,
+    "upstream_artifacts": [
+      "results/experiment_4252_verifier_registry_gaps_hygiene.json",
+      "results/experiment_4256_arc_oracle_distinct_leak_audit.json",
+      "results/experiment_4257_arc_oracle_distinct_multiseed_replication.json",
+      "results/experiment_4258_arc_oracle_distinct_cross_game_transfer.json",
+      "results/experiment_4259_arc_agglm_grid_synthesis.json",
+      "results/experiment_4260_diffusiongemma_energy_guided_preflight.json",
+      "results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json",
+      "results/experiment_4264_code_oracle_distinct_replication_retry.json"
+    ]
+  },
+  "random_seed": 4266,
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_reconciled": true,
+  "regression_guard": {
+    "offline_replay": {
+      "arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      },
+      "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+      "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+      "expected": {
+        "arc1_rule_exec": {
+          "gated_pass2": 0.5806,
+          "headroom_recovered": 4,
+          "n": 31,
+          "vote_pass2": 0.4516,
+          "vote_wins_lost": 0
+        }
+      },
+      "no_codex_calls": true,
+      "no_gguf_inference": true,
+      "regression_guard_passed": true,
+      "trm_training_touched": false
+    },
+    "prior_artifact_path": "results/experiment_4252_verifier_registry_gaps_hygiene.json",
+    "recorded_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "regression_guard_passed": true,
+    "replayed_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    }
+  },
+  "regression_guard_passed": true,
+  "reproducibility_checksum": "sha256:a0daa7785567cab6366761146edadd653e569d0f4ff154421cb295bde9669a41",
+  "schema": "carnot.experiment_4266_verifier_registry_gaps_hygiene.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4266",
+    "SCENARIO-VERIFY-4266"
+  ],
+  "v394_hardened_state": "within_pool_hardened_provenance_blind_multiseed__cross_game_blocked__synthesis_underperforms_selection",
+  "v394_outcomes": {
+    "a1_provenance_blind": {
+      "artifact_path": "results/experiment_4256_arc_oracle_distinct_leak_audit.json",
+      "headline_outcome": "arc_provenance_blind_win_survives",
+      "honest_verdict": "complete: arc_set_encoder_win_survives_provenance_blind_audit",
+      "origin_probe_auroc": 0.9481745077,
+      "provenance_blind_ci95": [
+        0.25,
+        0.5192307692
+      ],
+      "provenance_blind_delta": 0.3846153846,
+      "verifier_is_oracle": false,
+      "win_survives_provenance_blind": true
+    },
+    "a2_multiseed": {
+      "artifact_path": "results/experiment_4257_arc_oracle_distinct_multiseed_replication.json",
+      "cross_seed_ci95": [
+        0.4377176136,
+        0.4776670017
+      ],
+      "cross_seed_ci95_excludes_zero": true,
+      "headline_outcome": "arc_oracle_distinct_win_replicates_multiseed",
+      "honest_verdict": "complete: arc_oracle_distinct_win_replicates_multiseed",
+      "mean_delta": 0.4576923077,
+      "n_seeds": 5,
+      "oracle_distinct_win_replicates": true,
+      "verifier_is_oracle": false
+    },
+    "a3_cross_game": {
+      "artifact_path": "results/experiment_4258_arc_oracle_distinct_cross_game_transfer.json",
+      "cross_game_ci95": null,
+      "cross_game_delta": null,
+      "cross_game_transfer_claim": false,
+      "headline_outcome": "arc_oracle_distinct_cross_game_transfer_blocked",
+      "held_out_game_n": 0,
+      "held_out_task_n": 0,
+      "honest_read": "blocked",
+      "honest_verdict": "blocked_arc_game_ids_unrecoverable",
+      "verifier_is_oracle": false
+    },
+    "a4_synthesis": {
+      "artifact_path": "results/experiment_4259_arc_agglm_grid_synthesis.json",
+      "flagged_adversarial": true,
+      "headline_outcome": "arc_synthesis_underperforms_selection",
+      "honest_verdict": "complete: arc_synthesis_underperforms_selection",
+      "oracle_at_k": 0.8913043478,
+      "synthesis_beats_selection": false,
+      "synthesis_breaks_oracle_ceiling": false,
+      "synthesis_minus_oracle_delta": -0.2826086957,
+      "synthesis_minus_selection_ci95": [
+        -0.2608695652,
+        -0.0652173913
+      ],
+      "synthesis_minus_vote_delta": 0.347826087,
+      "verifier_is_oracle": false
+    },
+    "b1_diffusiongemma": {
+      "artifact_path": "results/experiment_4260_diffusiongemma_energy_guided_preflight.json",
+      "guidance_changes_selection": false,
+      "guidance_selection_change_count": 0,
+      "honest_verdict": "blocked_diffusiongemma_gguf_loader_failed",
+      "preflight_go": false,
+      "verifier_is_oracle": false
+    },
+    "c1_verifier_reward": {
+      "artifact_path": "results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json",
+      "honest_verdict": "complete: ready_for_out_of_band_verifier_reward_training",
+      "out_of_band_runner_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/run_out_of_band_reward_weighted_lora.py",
+      "ready_for_out_of_band": true,
+      "verifier_as_reward_retired": false,
+      "verifier_is_oracle": true
+    },
+    "c2_code_replication": {
+      "artifact_path": "results/experiment_4264_code_oracle_distinct_replication_retry.json",
+      "code_predictor_minus_vote_ci95": [
+        -0.01875,
+        0.0
+      ],
+      "code_predictor_minus_vote_delta": -0.00625,
+      "code_replication_beats_vote": false,
+      "honest_verdict": "complete: code_oracle_distinct_replication_corpus_specific",
+      "off_fold_auroc": 0.6967654987,
+      "oracle_at_k": 0.9625,
+      "replication_read": "corpus_specific",
+      "verifier_is_oracle": false
+    }
+  }
+}
