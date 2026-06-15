@@ -8511,3 +8511,4 @@ c |
 | 2026-06-15 01:16 UTC | Plan milestone 2026.06.391 | OK | 11 tasks proposed |
 | 2026-06-15 01:18 UTC | Milestone 2026.06.391 activated | OK | 11 tasks queued |
 | 2026-06-15 01:35 UTC | Archive .390 -> activate .391; KEEP the hardened g | OK | 91 passed, 1 warning in 4.74s |
+| 2026-06-15 01:54 UTC | PHASE A1 (HEADLINE BUILD; the de-risked retry) --  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
