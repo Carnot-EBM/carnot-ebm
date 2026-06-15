@@ -15988,6 +15988,84 @@ verification cleanly. If the hardened gates are not true, then it writes
 `honest_verdict=complete_arc_synthesis_deferred_win_not_hardened` and does not
 claim synthesis evidence.
 
+### REQ-VERIFY-4264: Code Oracle-Distinct Replication Retry Or Retirement
+
+The repository SHALL provide Exp 4264 at
+`python/carnot/reporting/code_oracle_distinct_replication_retry_4264.py` and
+`results/experiment_4264_code_oracle_distinct_replication_retry.py` to retry
+the Exp 4246 blocked second-corpus replication of the Exp 4233 oracle-distinct
+code pass predictor. The runner SHALL first re-scan cached MBPP, EvalPlus, or
+HumanEval-style best-of-N code pools for a source-distinct second corpus with
+per-candidate hidden-test pass labels. Source distinctness SHALL reject any
+pool whose source-file SHA-256 overlaps the Exp 4233 source corpus. If a
+cached distinct pool exists, the runner SHALL use it and SHALL NOT start fresh
+GGUF generation.
+
+If no cached distinct hidden-label pool exists, the runner SHALL check for a
+cached SOTA GGUF generation model before attempting live generation. The
+accepted cache candidates include `unsloth/gemma-4-12B-it-GGUF`,
+`unsloth/Qwen3.6-35B-A3B-GGUF`, and `unsloth/gemma-4-31B-it-GGUF`, resolved to
+concrete `.gguf` files rather than HuggingFace tokenizer files. If no accepted
+GGUF file is cached, the runner SHALL write
+`honest_verdict=blocked_code_gen_model_not_cached`, SHALL keep
+`verifier_is_oracle=false`, and SHALL stop without fabricating a generation
+result. If the model is cached but a fresh pool still cannot be built in the
+task window, the runner SHALL write `code_replication_retired=true` so the Exp
+4233 +3.1pp result remains explicitly single-corpus rather than blocking a
+third time.
+
+For any scored second corpus, the runner SHALL build per-candidate rows from
+code text and hidden-test labels, where hidden-test pass is the supervised
+training target only. The predictor SHALL score candidates out-of-fold by task
+using oracle-distinct features computable without running tests at inference:
+code text hash embeddings, lexical and AST statistics, normalized-code
+cross-candidate agreement, and self-consistency margins. It SHALL use a
+calibrated imbalance-aware logistic loss, report off-fold AUROC, and compute
+predictor@1, vote@1, matched-control@1, and oracle@K. It SHALL compute a
+task-level bootstrap CI95 with at least 2000 resamples. The bare bool
+`code_replication_beats_vote` SHALL be true only when
+`predictor@1 - vote@1` is positive, the CI95 excludes zero, and oracle@K shows
+headroom above vote@1. The result SHALL keep `verifier_is_oracle=false` and
+run adversarial verification without `CIRCULAR_MOAT_OVERCLAIM`.
+
+The terminal artifact SHALL write
+`results/experiment_4264_code_oracle_distinct_replication_retry.json` with
+required fields `honest_verdict`, bare bool `code_replication_beats_vote`,
+bare float `code_predictor_minus_vote_delta`, two-float
+`code_predictor_minus_vote_ci95`, bare float `oracle_at_k`,
+`replication_read`, bare bool `code_replication_retired`, bare bool
+`verifier_is_oracle=false`, bare int `random_seed`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`acceptance_gate`, and `adversarial_verify`. Its `field_principles` SHALL
+include:
+`honest_verdict` = `Terminal-prefixed. A replication win, a corpus-specific tie, a no-headroom, AND a retire are ALL COMPLETE -- each calibrates the robustness of the .392 code win.`;
+`code_replication_beats_vote` = `BARE bool: predictor@1 - vote@1 CI95-excl-0 AND headroom on the SECOND corpus -- robustness of the oracle-distinct code win; NOT the circular execution result.`;
+`code_predictor_minus_vote_delta` = `predictor@1 - vote@1 on the 2nd corpus -- compare to .392's +0.03125.`;
+`oracle_at_k` = `2nd-corpus positive-control ceiling (any candidate passes) -- if ~=vote the null is uninformative.`;
+`replication_read` = `replicates / corpus_specific / no_headroom -- the robustness read anchoring the .394 headline alongside the ARC result.`;
+`code_replication_retired` = `BARE bool: true iff a fresh distinct pool cannot be built in-window -> the .392 single-corpus +3.1pp stands (no 3rd block).`;
+`verifier_is_oracle` = `BARE bool=false -- the predictor scores code WITHOUT executing tests at inference (label is the training target only).`;
+`random_seed` = `Determinism precondition; gen + fold split seeded.`;
+`reproducibility_checksum` = `Hash of the 2nd code pool + fold split; lets a third party re-run.`;
+`model_specs` = `The gen model (SOTA GGUF) + pass-predictor + oracle-distinct feature set + calibrated loss; required methodology.`
+
+### SCENARIO-VERIFY-4264: Fresh Distinct Code Pool Replicates Or Retires Honestly
+
+Given Exp 4233 and Exp 4246 are readable and a cached MBPP, EvalPlus, or
+HumanEval-style best-of-N pool may be present, when Exp 4264 runs, then it
+first rejects non-distinct or unlabeled pools, accepts a source-distinct
+hidden-label pool if one exists, trains the oracle-distinct pass predictor
+out-of-fold without executing tests at inference, reports
+`code_replication_beats_vote`, `code_predictor_minus_vote_delta`,
+`code_predictor_minus_vote_ci95`, `oracle_at_k`, `replication_read`,
+`code_replication_retired=false`, `verifier_is_oracle=false`, `random_seed`,
+`reproducibility_checksum`, and `model_specs`, and runs adversarial
+verification without `CIRCULAR_MOAT_OVERCLAIM`. If no cached pool exists and
+no accepted SOTA GGUF file is cached, then it writes
+`honest_verdict=blocked_code_gen_model_not_cached`. If a fresh pool cannot be
+built in-window despite cached GGUF availability, then it writes
+`code_replication_retired=true` and does not claim a replication win.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
