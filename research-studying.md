@@ -8,6 +8,47 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-15 Exp 4251 - .393 planning sweep SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-set-encoder-offline-rft-v394-2026-06-15.md`.
+
+**Filtered track:** ARC oracle-distinct set-encoder scale-up after Exp 4245
+landed the clean A3 beats-vote win, with Exp 4246 code replication blocked on a
+missing distinct candidate corpus and Exp 4248 offline reward-weighted SFT
+blocked by the upstream harness smoke.
+
+**Seed and fresh-pass candidates marked ingested:**
+- Set-LLM, arXiv:2505.15433 - mapped as the high-capacity selector scale-up
+  after the Exp 4245 DeepSets-style set encoder already beat vote.
+- AggLM, arXiv:2509.06870 - mapped as the strongest .394 method: a generative
+  reconciler that synthesizes a corrected grid from Set-Encoder evidence.
+- ARBITER, arXiv:2605.26172 - mapped to wrong-majority basin diagnostics and
+  conservative evidence-over-vote accounting.
+- Budget-aware discriminative verification, arXiv:2510.14913 - mapped to
+  cost-normalized vote-plus-verifier hybrid reporting.
+- RAFT, arXiv:2504.11343, and VAR, arXiv:2502.11026 - mapped to the owed
+  offline reward-weighted SFT path after the harness proves real training.
+- Spurious Rewards, arXiv:2506.10947 - mapped to the required same-base
+  random-label Arm B control for any reward-training claim.
+- SCOPE, arXiv:2512.15146 - mapped to per-region ARC evidence for the .394
+  AggLM synthesis ablation.
+
+Exp 4245 status mapped honestly: `headline_outcome=arc_oracle_distinct_set_encoder_beats_vote`,
+`set_encoder_minus_vote_delta=0.4423076923`, CI95 `[0.3076923077, 0.5961538462]`,
+`margin_override_minus_vote=0.4230769231`, and `oracle_distinct_beats_vote=true`.
+Exp 4246 status mapped honestly: `blocked_code_second_corpus_missing`; code
+robustness is unresolved, not refuted. Exp 4248 status mapped honestly:
+`blocked_gate_check_failed` because Exp 4247 reported `harness_smoke_passed=false`,
+`steps_run=0`, and `trainable_param_count=0`.
+
+flagged_for_v394:
+`agglm_synthesize_corrected_grid_from_set_encoder_evidence_v394`.
+
+Flagged for .394: `agglm_synthesize_corrected_grid_from_set_encoder_evidence_v394`.
+
+**Bottom line for the .394 roadmap:** scale the proven ARC set-encoder win with
+AggLM-style corrected-grid synthesis plus SCOPE per-region evidence on a bigger
+pool. Keep code replication as a robustness gate and treat reward-weighted SFT as an owed gate after the harness proves real training.
 ## 2026-06-15 Exp 4238 - .392 planning sweep SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-cross-candidate-aggregator-v393-2026-06-15.md`.

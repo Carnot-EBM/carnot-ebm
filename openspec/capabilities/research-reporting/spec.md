@@ -20851,6 +20851,105 @@ files untouched.
 |---|---|---|
 | REQ-REPORT-4238 | Implemented (`python/carnot/experiment_4238_sota_ingestion_cross_candidate_aggregator.py`, `docs/research-notes/sota-ingestion-cross-candidate-aggregator-v393-2026-06-15.md`) | Implemented (`tests/python/test_experiment_4238_sota_ingestion_cross_candidate_aggregator.py`) |
 
+### REQ-REPORT-4251: Ingest The .393 Set-Encoder And Offline RFT Sweep Into A .394 Plan
+
+The Exp 4251 SOTA-ingestion workflow SHALL ingest the `.393 planning sweep`
+and the carried `.392 planning sweep` from `research-references.md` into an
+actionable SOTA-to-experiment mapping for the `.394` planner. The workflow
+SHALL read `research-studying.md`,
+`results/experiment_4245_arc_set_encoder_beats_vote.json`,
+`results/experiment_4246_code_oracle_distinct_replication.json`,
+`results/experiment_4247_verifier_reward_offline_harness_retire_livelora.json`,
+and `results/experiment_4248_verifier_as_reward_offline_3arm.json`; SHALL run
+the reliable discovery helpers `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py` with focused low-concurrency queries; SHALL
+verify the top mapped sources with low-concurrency WebSearch/WebFetch; and
+SHALL NOT invoke `/deep-research` or modify `scripts/research_conductor.py`.
+
+The markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-set-encoder-offline-rft-v394-2026-06-15.md`
+and the machine-checkable mapping artifact SHALL be written to
+`results/experiment_4251_sota_ingestion_set_encoder_offline_rft.json`. The
+required runner SHALL be
+`results/experiment_4251_sota_ingestion_set_encoder_offline_rft.py` and SHALL
+delegate to
+`python/carnot/experiment_4251_sota_ingestion_set_encoder_offline_rft.py`.
+
+The note SHALL map Set-LLM (`arXiv:2505.15433`), AggLM
+(`arXiv:2509.06870`), ARBITER (`arXiv:2605.26172`), budget-aware
+discriminative verification (`arXiv:2510.14913`), RAFT
+(`arXiv:2504.11343`), VAR (`arXiv:2502.11026`), Spurious Rewards
+(`arXiv:2506.10947`), and SCOPE (`arXiv:2512.15146`) when those sources are
+cited in the mapping. For each
+mapped method, the note SHALL state the Carnot stack mapping, what the method
+implies under the Exp 4245 ARC A3 win, the Exp 4246 code A4 robustness read,
+and the Exp 4248 offline reward-weighting B2 gate, where the method fails or
+does not by itself prove Carnot's claim, and the concrete `.394` experiment
+target.
+
+The verified source URLs SHALL be `https://arxiv.org/abs/2505.15433`,
+`https://arxiv.org/abs/2509.06870`, `https://arxiv.org/abs/2605.26172`,
+`https://arxiv.org/abs/2510.14913`, `https://arxiv.org/abs/2504.11343`,
+`https://arxiv.org/abs/2502.11026`, `https://arxiv.org/abs/2506.10947`, and
+`https://arxiv.org/abs/2512.15146`.
+
+The note SHALL record that Exp 4245 produced a clean ARC A3 win with
+`headline_outcome=arc_oracle_distinct_set_encoder_beats_vote`,
+`set_encoder_minus_vote_delta=0.4423076923`, CI95
+`[0.3076923077, 0.5961538462]`, `margin_override_minus_vote=0.4230769231`,
+`matched_control_delta=0.4807692308`, `oracle_at_k=0.8269230769`,
+`held_out_task_n=52`, and `oracle_distinct_beats_vote=true`; that Exp 4246
+blocked the code replication as `blocked_code_second_corpus_missing` with no
+distinct viable hidden-label candidate pool; and that Exp 4248 blocked before
+offline training with `blocked_gate_check_failed` because Exp 4247 reported
+`harness_smoke_passed=false`, `steps_run=0`, and `trainable_param_count=0`.
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v394`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, and `flagged_for_v394`. `honest_verdict`
+SHALL use a terminal prefix and, on the complete path, start with
+`complete: sota_ingestion_set_encoder_offline_rft_mapped_v394`.
+`methods_mapped` SHALL contain three to eight dicts with exactly `name`,
+`arxiv_id_or_url`, `url`, `carnot_stack_mapping`, `a3_arc_mapping`,
+`a4_code_mapping`, `b2_reward_mapping`, `failure_mode`, and
+`experiment_mapping`; each `arxiv_id_or_url` SHALL be one of the
+WebFetch-verified arXiv IDs or URLs, preventing fabricated or uncited method
+rows. `flagged_for_v394` SHALL be a non-empty concrete roadmap slug naming the
+single strongest `.394` method, conditioned on Exp 4245 proving the ARC
+set-encoder win while Exp 4246 and Exp 4248 remain robustness and reward-path
+gates; for this ingestion it SHALL name an AggLM-style generative reconciler
+that synthesizes a corrected ARC grid from Set-Encoder/SCOPE evidence.
+
+The workflow SHALL update `research-studying.md` idempotently to mark the
+`.393 planning sweep` as ingested, SHALL include `flagged_for_v394`, and SHALL
+NOT update `ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-4251: The .393 Sweep Closes Into A .394 Generative Reconciler Plan
+
+**Given** the `.393 planning sweep` filed Set-LLM, AggLM, ARBITER,
+budget-aware discriminative verification, RAFT, VAR, Spurious Rewards, and
+SCOPE as source-backed methods for set-aware selection, per-region evidence,
+and offline reward weighting
+**And** Exp 4245 reports a clean ARC oracle-distinct Set-Encoder beats-vote win
+**And** Exp 4246 reports the code replication blocked on a missing distinct
+second candidate corpus
+**And** Exp 4248 reports the offline reward-weighted A-vs-B run blocked by the
+upstream harness smoke
+**When** the Exp 4251 SOTA-ingestion workflow runs
+**Then** it writes the required markdown note and JSON mapping artifact, maps
+verified sources to Carnot stack implications, A3/A4/B2 outcome implications,
+failure modes, and concrete `.394` experiment targets, updates
+`research-studying.md` idempotently, flags the single strongest `.394`
+follow-up, and leaves conductor and reconciliation files untouched.
+
+## Implementation Status (REQ-REPORT-4251)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4251 | Implemented (`python/carnot/experiment_4251_sota_ingestion_set_encoder_offline_rft.py`, `docs/research-notes/sota-ingestion-set-encoder-offline-rft-v394-2026-06-15.md`) | Implemented (`tests/python/test_experiment_4251_sota_ingestion_set_encoder_offline_rft.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
