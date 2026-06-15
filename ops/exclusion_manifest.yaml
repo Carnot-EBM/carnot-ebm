@@ -1,476 +1,520 @@
-# Exclusion manifest — experiments retired from the conductor queue.
-# This YAML file is the authoritative source for ExclusionManifestEnforcer.
-# The JSON version at scripts/conductor_exclusion_manifest.json is the
-# runtime source for the conductor itself; this YAML is the side-channel
-# read by manifest_enforcer.py to write gate sections to MILESTONE_PREREQS.md.
-#
-# Each entry: experiment_id (int), completed_milestone (str), reason (str).
-# Only integer experiment IDs are listed here; string cascade tokens live in
-# the conductor JSON only.
-#
-# Spec: REQ-INFRA-072
-
 retired:
-  - experiment_id: 2091
-    completed_milestone: "2026.05.164"
-    reason: "gemini CLI consistent bail-out pattern (prompt-echo, 60+ retries / 2h wall time on 2026-05-14). LaTeX markup strip ($\\Pi$Net -> PiNet) did not resolve. Retired pending agent-routing investigation."
-  - experiment_id: 260
-    completed_milestone: "2026.04.37"
-    reason: "slowest-5 seven consecutive milestones, sequential inference loop"
-  - experiment_id: 308
-    completed_milestone: "2026.04.37"
-    reason: "slowest-5 seven consecutive milestones, legacy checkpoint-failure state"
-  - experiment_id: 309
-    completed_milestone: "2026.04.37"
-    reason: "slowest-5 seven consecutive milestones, checkpoint-failure state"
-  - experiment_id: 346
-    completed_milestone: "2026.04.54"
-    reason: "slowest_5_retired: 55M-param EORM training, slowest-5 five consecutive milestones"
-  - experiment_id: 380
-    completed_milestone: "2026.04.54"
-    reason: "slowest_5_retired: slowest-5 five consecutive milestones, governance threshold crossed"
-  - experiment_id: 381
-    completed_milestone: "2026.04.54"
-    reason: "slowest_5_retired: slowest-5 five consecutive milestones, governance threshold crossed"
-  - experiment_id: 382
-    completed_milestone: "2026.04.54"
-    reason: "slowest_5_retired: slowest-5 five consecutive milestones, governance threshold crossed"
-  - experiment_id: 383
-    completed_milestone: "2026.04.54"
-    reason: "slowest_5_retired: superseded by Exp 685 DualGPU (2.0175x speedup), 8 consecutive milestones"
-  - experiment_id: 410
-    completed_milestone: "2026.04.54"
-    reason: "slowest_5_retired: EORM v3 retrain, 14 consecutive milestones, 716 min cumulative overhead"
-  - experiment_id: 425
-    completed_milestone: "2026.04.58"
-    reason: "all_dequeue_sites_extended: 22nd consecutive slowest-5 appearance, 1672 min cumulative overhead (27.9 hours zero-value compute)"
-  - experiment_id: 491
-    completed_milestone: "2026.04.58"
-    reason: "all_dequeue_sites_extended: JEPA curriculum diagnostic 12th slowest-5 appearance, findings incorporated in Exps 693/698/799/809"
-  - experiment_id: 527
-    completed_milestone: "2026.04.57"
-    reason: "3rd consecutive slowest-5 appearance; RETRO-033 resolved by Exp 720; no remaining research mandate"
-  - experiment_id: 603
-    completed_milestone: "2026.04.58"
-    reason: "all_dequeue_sites_extended: CoACEExtractorV4 repeated carry-over, superseded by DualGPU migration"
-  - experiment_id: 627
-    completed_milestone: "2026.04.58"
-    reason: "all_dequeue_sites_extended: interwhen mid-generation monitor, serial loop superseded by paragraph-boundary batching (Exp 841)"
-
+- experiment_id: 2091
+  completed_milestone: 2026.05.164
+  reason: gemini CLI consistent bail-out pattern (prompt-echo, 60+ retries / 2h wall
+    time on 2026-05-14). LaTeX markup strip ($\Pi$Net -> PiNet) did not resolve. Retired
+    pending agent-routing investigation.
+- experiment_id: 260
+  completed_milestone: 2026.04.37
+  reason: slowest-5 seven consecutive milestones, sequential inference loop
+- experiment_id: 308
+  completed_milestone: 2026.04.37
+  reason: slowest-5 seven consecutive milestones, legacy checkpoint-failure state
+- experiment_id: 309
+  completed_milestone: 2026.04.37
+  reason: slowest-5 seven consecutive milestones, checkpoint-failure state
+- experiment_id: 346
+  completed_milestone: 2026.04.54
+  reason: 'slowest_5_retired: 55M-param EORM training, slowest-5 five consecutive
+    milestones'
+- experiment_id: 380
+  completed_milestone: 2026.04.54
+  reason: 'slowest_5_retired: slowest-5 five consecutive milestones, governance threshold
+    crossed'
+- experiment_id: 381
+  completed_milestone: 2026.04.54
+  reason: 'slowest_5_retired: slowest-5 five consecutive milestones, governance threshold
+    crossed'
+- experiment_id: 382
+  completed_milestone: 2026.04.54
+  reason: 'slowest_5_retired: slowest-5 five consecutive milestones, governance threshold
+    crossed'
+- experiment_id: 383
+  completed_milestone: 2026.04.54
+  reason: 'slowest_5_retired: superseded by Exp 685 DualGPU (2.0175x speedup), 8 consecutive
+    milestones'
+- experiment_id: 410
+  completed_milestone: 2026.04.54
+  reason: 'slowest_5_retired: EORM v3 retrain, 14 consecutive milestones, 716 min
+    cumulative overhead'
+- experiment_id: 425
+  completed_milestone: 2026.04.58
+  reason: 'all_dequeue_sites_extended: 22nd consecutive slowest-5 appearance, 1672
+    min cumulative overhead (27.9 hours zero-value compute)'
+- experiment_id: 491
+  completed_milestone: 2026.04.58
+  reason: 'all_dequeue_sites_extended: JEPA curriculum diagnostic 12th slowest-5 appearance,
+    findings incorporated in Exps 693/698/799/809'
+- experiment_id: 527
+  completed_milestone: 2026.04.57
+  reason: 3rd consecutive slowest-5 appearance; RETRO-033 resolved by Exp 720; no
+    remaining research mandate
+- experiment_id: 603
+  completed_milestone: 2026.04.58
+  reason: 'all_dequeue_sites_extended: CoACEExtractorV4 repeated carry-over, superseded
+    by DualGPU migration'
+- experiment_id: 627
+  completed_milestone: 2026.04.58
+  reason: 'all_dequeue_sites_extended: interwhen mid-generation monitor, serial loop
+    superseded by paragraph-boundary batching (Exp 841)'
 retired_experiments:
-  - experiment_scope: "HalluSAEGeometricProbe (python/carnot/verify/hallusae_probe.py)"
-    reason: "retire_if_same_verdict triggered by Exp 878: auc_v2=0.45 < v1=0.61 (below_v1 verdict). SAE geometry approach does not discriminate hallucinations reliably after two attempts."
-    retired_milestone: "2026.04.67"
-    retire_if_same_verdict: true
-  - experiment_id: 887
-    completed_milestone: "2026.04.68"
-    reason: "retire_if_same_verdict: discriminative JEPAPredictor has failed OOD generalisation in 11 consecutive attempts (exp783,exp799,exp804,exp809,exp825,exp834,exp872,exp887). VJEPA is the replacement. ood_auc <= 0.60 after VJEPA pretraining."
-  - experiment_id: 783
-    completed_milestone: "2026.04.68"
-    reason: "discriminative JEPA OOD failure — retired via exp887 gate"
-  - experiment_id: 799
-    completed_milestone: "2026.04.68"
-    reason: "discriminative JEPA OOD failure — retired via exp887 gate"
-  - experiment_id: 804
-    completed_milestone: "2026.04.68"
-    reason: "discriminative JEPA OOD failure — retired via exp887 gate"
-  - experiment_id: 809
-    completed_milestone: "2026.04.68"
-    reason: "discriminative JEPA OOD failure — retired via exp887 gate"
-  - experiment_id: 825
-    completed_milestone: "2026.04.68"
-    reason: "discriminative JEPA OOD failure — retired via exp887 gate"
-  - experiment_id: 834
-    completed_milestone: "2026.04.68"
-    reason: "discriminative JEPA OOD failure — retired via exp887 gate"
-  - experiment_id: 872
-    completed_milestone: "2026.04.68"
-    reason: "discriminative JEPA OOD failure — retired via exp887 gate"
-
-# exp1117 (.87) YAML structural fix — the entries below were previously
-# loose top-level list items that broke yaml.safe_load with a ParserError,
-# so failure_ledger_v2.is_excluded_by_manifest silently fail-opened against
-# the live manifest from .80 onward.  Now grouped under retired_extras: so
-# the dispatch-time check actually consults them.  See exp1117 deliverable.
+- experiment_scope: HalluSAEGeometricProbe (python/carnot/verify/hallusae_probe.py)
+  reason: 'retire_if_same_verdict triggered by Exp 878: auc_v2=0.45 < v1=0.61 (below_v1
+    verdict). SAE geometry approach does not discriminate hallucinations reliably
+    after two attempts.'
+  retired_milestone: 2026.04.67
+  retire_if_same_verdict: true
+- experiment_id: 887
+  completed_milestone: 2026.04.68
+  reason: 'retire_if_same_verdict: discriminative JEPAPredictor has failed OOD generalisation
+    in 11 consecutive attempts (exp783,exp799,exp804,exp809,exp825,exp834,exp872,exp887).
+    VJEPA is the replacement. ood_auc <= 0.60 after VJEPA pretraining.'
+- experiment_id: 783
+  completed_milestone: 2026.04.68
+  reason: "discriminative JEPA OOD failure \u2014 retired via exp887 gate"
+- experiment_id: 799
+  completed_milestone: 2026.04.68
+  reason: "discriminative JEPA OOD failure \u2014 retired via exp887 gate"
+- experiment_id: 804
+  completed_milestone: 2026.04.68
+  reason: "discriminative JEPA OOD failure \u2014 retired via exp887 gate"
+- experiment_id: 809
+  completed_milestone: 2026.04.68
+  reason: "discriminative JEPA OOD failure \u2014 retired via exp887 gate"
+- experiment_id: 825
+  completed_milestone: 2026.04.68
+  reason: "discriminative JEPA OOD failure \u2014 retired via exp887 gate"
+- experiment_id: 834
+  completed_milestone: 2026.04.68
+  reason: "discriminative JEPA OOD failure \u2014 retired via exp887 gate"
+- experiment_id: 872
+  completed_milestone: 2026.04.68
+  reason: "discriminative JEPA OOD failure \u2014 retired via exp887 gate"
 retired_extras:
-  # Added by Exp 890 — retire_if_same_verdict triggered
-  - id: GGUF-model-download-for-code-repair
-    reason: |
-      CLI approach also failed; 12 total attempts (Exps 857-890). Code repair via GGUF models is retired — use transformers loader (Exp 881) instead.
+- id: GGUF-model-download-for-code-repair
+  reason: "CLI approach also failed; 12 total attempts (Exps 857-890). Code repair\
+    \ via GGUF models is retired \u2014 use transformers loader (Exp 881) instead.\n"
+- id: iCE40-PIMI-sparse-adjacency
+  reason: 'Three structural strategies + parallel update strategy all failed to reach
+    5x sweep reduction
 
-  # Added by Exp 901 — retire_if_same_verdict triggered (same pimi_improved_below_5x as Exp 889)
-  - id: iCE40-PIMI-sparse-adjacency
-    reason: |
-      Three structural strategies + parallel update strategy all failed to reach 5x sweep reduction
-      on the N=8 ring+chord ferromagnetic graph. Exps 860 (2x), 876 (2-4x), 889 (4.33x), 901 (4.33x).
-      Retired after Exp 901 (FINAL attempt per research-roadmap-v69.md).
-      Root finding: ring+chord graph has degree=3 already; sparse k=3,4,5 == dense for this graph.
-      The 15-25x speedup in arXiv 2604.17109 requires harder, larger, denser constraint problems.
-    experiment_ids: [860, 876, 889, 901]
-    milestone: "2026.04.69"
+    on the N=8 ring+chord ferromagnetic graph. Exps 860 (2x), 876 (2-4x), 889 (4.33x),
+    901 (4.33x).
 
-  # Added by Exp 914 — retire_if_same_verdict triggered (pimi_no_improvement at N=64)
-  # Maximum achieved sweeps_reduction across all strategies: 0.99x
-  - experiment_scope: "iCE40 PIMI research N=64 (hardware/kv260/ising_pimi_*.v + python/carnot/samplers/*pimi*.py)"
-    reason: |
-      retire_if_same_verdict triggered by Exp 914: all four strategies
-      (EMA checkerboard, EMA alpha sweep, synchronous parallel, sparse adjacency)
-      failed to reach 5x sweep reduction. Max achieved: 0.99x at N=64.
-      Exp 901 already retired N=8 scope; Exp 914 closes N=64.
-      The 15-25x paper speedup (arXiv 2604.17109) requires harder frustrated
-      spin-glass problems at larger scale with more frustrated constraints.
-      KV260 FPGA track remains viable but PIMI specifically is retired.
-    retired_milestone: "2026.04.70"
-    experiment_ids: [860, 876, 889, 901, 914]
+    Retired after Exp 901 (FINAL attempt per research-roadmap-v69.md).
 
-  # Added by Exp 952 preflight — governance retirement for persistent zero-progress carryovers
-  - experiment_id: 786
-    completed_milestone: "2026.04.74"
-    reason: |
-      Gemma4 OOM Fix v3 + VR Threshold Grid has appeared for 4+ consecutive milestones with
-      honest_verdict=blocked_no_live_gpu. Root cause: no live GPU available during conductor
-      runs. The OOM fix scope is superseded by the SOTA GGUF pre-download preflight (Exp 952).
-      Retired to prevent continued wall-time burn with zero research value.
-    retire_if_same_verdict: true
+    Root finding: ring+chord graph has degree=3 already; sparse k=3,4,5 == dense for
+    this graph.
 
-  - experiment_id: 641
-    completed_milestone: "2026.04.74"
-    reason: |
-      HermesVerifierAdapter v2 Live Step-by-Step Generation Loop returned hermes_v2_no_improvement
-      verdict. RETRO-070 critical path was 14+ consecutive milestone carryovers with no improvement
-      signal. The Hermes v2 live-loop approach is superseded by paragraph-boundary batching
-      (Exp 841) and the VJEPA/DualGPU migration. Retired to free conductor capacity.
-    retire_if_same_verdict: true
-    # Note: an orphan "- JEPA-v17-v22-all-ood-below-target" stub used to live
-    # here as a comment-style append; it had no integer experiment_id and was
-    # not parseable, so it has been removed during the exp1117 cleanup.
+    The 15-25x speedup in arXiv 2604.17109 requires harder, larger, denser constraint
+    problems.
 
-  - experiment_id: 906
-    completed_milestone: "2026.04.79"
-    reason: |
-      Preflight v30 retirement (Exp 1028): Exp 906 accumulated no-progress verdicts across
-      milestones .77, .78, .79 — three consecutive milestone carryovers without advancement.
-      Retired by manifest enforcement step to prevent continued conductor wall-time burn.
-    retire_if_same_verdict: true
+    '
+  experiment_ids:
+  - 860
+  - 876
+  - 889
+  - 901
+  milestone: 2026.04.69
+- experiment_scope: iCE40 PIMI research N=64 (hardware/kv260/ising_pimi_*.v + python/carnot/samplers/*pimi*.py)
+  reason: 'retire_if_same_verdict triggered by Exp 914: all four strategies
 
-  # Added by Exp 1456 - GRPO/VPRM lineage consolidation and retirement.
-  - id: grpo_vprm_v15_scope_closed
-    reason: |
-      GRPO/VPRM v1-v14 is retired as active research scope after repeated
-      blocked, missing, smoke-only, no-improvement, and non-headline outcomes.
-      Future GRPO v15 or VPRM v15 proposals are blocked unless an operator
-      explicitly reopens the scope with a new root cause and falsifiable gate.
-    experiment_ids:
-      - exp1118
-      - exp1129
-      - exp1146
-      - exp1159
-      - exp1173
-      - exp1184
-      - exp1187
-      - exp1195
-      - exp1196
-      - exp1208
-      - exp1209
-      - exp1219
-      - exp1220
-      - exp1221
-      - exp1235
-      - exp1236
-      - exp1247
-      - exp1259
-      - exp1273
-      - exp1289
-      - exp1304
-      - exp1317
-      - exp1330
-      - exp1346
-      - exp1360
-      - exp1383
-      - exp1388
-      - exp1393
-    blocked_patterns:
-      - "GRPO v15"
-      - "VPRM v15"
-      - "GRPO/VPRM v15"
-    retired_milestone: "2026.04.112"
-    retired_by_artifact: "results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json"
-    operator_reopen_required: true
-    retire_if_same_verdict: true
+    (EMA checkerboard, EMA alpha sweep, synchronous parallel, sparse adjacency)
 
-  # Added by Exp 1457 - WOPR puzzle cartridge lineage consolidation and retirement.
-  - id: wopr_puzzle_cartridge_research_scope_closed
-    reason: |
-      WOPR puzzle cartridges are retired as active research scope after Hex,
-      Connect Four, Nonogram, Futoshiki, Kakuro, Masyu, Slitherlink, and related
-      gallery tasks proved useful as demos but did not map cleanly to Carnot's
-      verify-repair LLM thesis or Phase-3 substrate trajectory. Future WOPR
-      puzzle cartridge or gallery-update research tasks are blocked unless an
-      operator explicitly reopens gallery work with a new root cause, direct
-      thesis or substrate link, and falsifiable gate.
-    experiment_ids:
-      - exp1059
-      - exp1069
-      - exp1070
-      - exp1071
-      - exp1097
-      - exp1102
-      - exp1124
-      - exp1125
-      - exp1136
-      - exp1141
-      - exp1175
-      - exp1188
-      - exp1201
-      - exp1214
-      - exp1227
-      - exp1240
-      - exp1243
-      - exp1253
-      - exp1261
-      - exp1262
-      - exp1279
-      - exp1280
-    blocked_patterns:
-      - "WOPR puzzle cartridge"
-      - "WOPR game cartridge"
-      - "WOPR games gallery"
-      - "HF Spaces gallery update"
-      - "new puzzle cartridge"
-      - "Hex cartridge"
-      - "Connect Four cartridge"
-      - "Nonogram cartridge"
-      - "Futoshiki cartridge"
-      - "Kakuro cartridge"
-      - "Masyu cartridge"
-      - "Slitherlink cartridge"
-    retired_milestone: "2026.04.112"
-    retired_by_artifact: "results/experiment_1457_wopr_puzzle_cartridge_retirement.json"
-    operator_reopen_required: true
-    preserve_demo_assets: true
-    retire_if_same_verdict: true
+    failed to reach 5x sweep reduction. Max achieved: 0.99x at N=64.
 
-  # Added by Exp 1458 - HardNet++/DSP repair-stack consolidation and retirement.
-  - id: hardnet_dsp_repair_stack_scope_closed
-    reason: |
-      HardNet++/DSP repair variants are retired as active headline research scope
-      after the stack repeatedly reduced to the same retained lesson:
-      hard-constraint repair is useful, but the learned DSP stop policy matched
-      conservative replay and did not prove a broad general rule. Future
-      HardNet++/DSP, DSP feasibility-channel, SnareNet/FSNet repair, or
-      KKT-Hardnet variant tasks are blocked unless an operator explicitly reopens the line
-      with a new root cause, non-replay evidence, and a
-      falsifiable gate.
-    experiment_ids:
-      - exp1147
-      - exp1275
-      - exp1276
-      - exp1291
-      - exp1292
-      - exp1305
-      - exp1318
-    blocked_patterns:
-      - "HardNet++"
-      - "HardNet++/DSP"
-      - "KKT-Hardnet"
-      - "DSP feasibility channel"
-      - "DSP stop policy"
-      - "SnareNet repair"
-      - "FSNet repair"
-      - "conservative replay repair policy"
-      - "repair stack variant"
-    retained_lesson: "hard constraints remain valuable; variant proliferation does not"
-    retired_milestone: "2026.04.112"
-    retired_by_artifact: "results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json"
-    operator_reopen_required: true
-    retire_if_same_verdict: true
-  # Added by Exp 3055 - repair headline wording retirement and rerun gate ledger.
-  - id: repair_headline_wording_retired_v285
-    reason: |
-      Unsupported repair headline wording is retired after matrix v19 and capstone
-      v285 preserved repair as bounded, retained two retired repair headline rows,
-      and required explicit rerun gates before any future repair promotion attempt.
-      Future repair-headline or Exp 3016/3028 promotion reruns are blocked unless
-      an operator explicitly reopens the scope with deterministic fingerprints,
-      seeds, duration sanity, de-tautology metrics, verifier gain, and exact
-      checker authority.
-    blocked_patterns:
-      - "headline SOTA repair"
-      - "repair result is promotable as a headline SOTA repair claim"
-      - "original Exp 3016 headline repair claim"
-      - "Exp 3016 headline repair claim is promotable"
-      - "Exp 3028 supplies clean acceptance-controlled SOTA repair evidence"
-    retired_milestone: "2026.05.285"
-    retired_by_artifact: "results/experiment_3055_repair_headline_retirement_and_blocker_ledger_v1.json"
-    operator_reopen_required: true
-    retire_if_same_verdict: true
-  # Added by Exp 1560 - THRML scaling sweep lineage retirement.
-  - id: thrml_scaling_sweep_lineage_retired_after_vendoring
-    reason: |
-      Retire the THRML scaling sweep lineage (exp1526-1531, 1543-1544 patterns). Once THRML is vendored (exp1564), parity is constructive (KL=0 by definition); the scaling sweep becomes a paper-v6 retrospective entry, not active research.
-    experiment_ids:
-      - exp1526
-      - exp1527
-      - exp1528
-      - exp1529
-      - exp1530
-      - exp1531
-      - exp1543
-      - exp1544
-    blocked_patterns:
-      - THRML/Carnot parity n=8
-      - THRML/Carnot parity n=16
-      - THRML/Carnot parity n=32
-      - THRML/Carnot parity n=64
-      - THRML/Carnot parity n=128
-      - THRML/Carnot parity n=256
-      - THRML diverse topology parity
-      - THRML scaling sweep
-    retired_milestone: "2026.05.120"
-    retired_by_artifact: "results/experiment_1560_119_completion_archive_120_activation.json"
-    operator_reopen_required: true
-    retire_if_same_verdict: true
-  # Added by Exp 1563 - SpecAnn Phase 3 sampler rejection.
-  - id: specann_phase3_sampler_optimization_rejected
-    reason: |
-      Spectral Annealing is retired for Phase 3 inference-time argmin after
-      Deep Think DT-COMPOSITION (e)/(f): HUBO→QUBO reductions inject gadgets
-      and penalties that fracture the spectral homotopy path, phase-transition
-      level-crossings force cold-restarts, and SpecAnn+BRAIN+MCMC Layers
-      triggers Gadget-Induced Mean-Field Collapse. Carnot retains the existing
-      Gibbs-heuristic argmin on unreduced HUBO energy.
-    experiment_ids:
-      - exp1563
-    blocked_patterns:
-      - Spectral Annealing
-      - SpecAnn
-      - SpecAnn+BRAIN+MCMC Layers
-      - HUBO→QUBO Spectral Annealing
-    retired_milestone: "2026.05.120"
-    retired_by_artifact: "results/experiment_1563_specann_rejection_architecture_record.json"
-    operator_reopen_required: true
-    retire_if_same_verdict: true
-  # Added 2026-05-20 — operator directive: "why is an SD CARD flash required
-  # when you can ssh to kv260.local and install anything needed?"
-  - id: kv260_host_sd_card_precondition_retired
-    reason: |
-      The KV260 has run Ubuntu Xilinx and been reachable via `ssh kria` since
-      2026-05-20 ~13:00 EDT. The carnot_ising_v4 bitstream is activated at
-      runtime via `xmutil loadapp carnot_ising_v2_n64`. Any future Carnot
-      bitstream update is delivered via `ssh + scp + xmutil` — no host SD
-      card flash is required. The `ls /dev/mmcblk*` precondition used by
-      exp2670/exp2710/exp2722 (and originally queued for exp2735) checks the
-      HOST machine's SD card slot, not the board's state; this is wrong-
-      mechanism and was burning per-milestone wall time on a non-applicable
-      branch. Any future task whose preconditions include host /dev/mmcblk*
-      for KV260 is retired. Use ssh-reachability + xmutil + on-board uio
-      verification instead (see CLAUDE.md Pre-Launch Preconditions table KV260
-      row).
-    experiment_ids:
-      - exp2670
-      - exp2710
-      - exp2722
-    blocked_patterns:
-      - KV260 SD Card Branch
-      - KV260 Continuity SD Card
-      - SD Card Branch
-      - /dev/mmcblk for kv260
-      - host SD card for kv260
-      - host SD card flash for kv260
-    retired_milestone: "2026.05.258"
-    retired_by_artifact: "results/experiment_2722_kv260_continuity_258.json"
-    operator_reopen_required: true
-    retire_if_same_verdict: true
+    Exp 901 already retired N=8 scope; Exp 914 closes N=64.
 
-  - id: otv_kvcache_probe_retired
-    reason: |
-      OTV one-token KV-cache probe (arXiv:2603.01025) achieved probe_auroc=0.25 in exp2728
-      (.259) — worse than random chance (0.5 baseline). The proxy implementation (TF-IDF
-      logistic regression as "correctness direction") does not transfer to live GGUF responses.
-      Preferred alternative: ODAR two-tier routing (exp2720) achieved 65% savings without
-      a separate probe. OTV-specific fast-path is retired.
-    experiment_ids: [exp2728]
-    blocked_patterns:
-      - OTV one-token verification probe
-      - OTV fast path
-      - otv_probe
-      - correctness direction vector
-    retired_milestone: "2026.05.259"
-    retired_by_artifact: "results/experiment_2728_otv_fast_path.json"
-    retire_if_same_verdict: true
-    operator_reopen_required: true
+    The 15-25x paper speedup (arXiv 2604.17109) requires harder frustrated
 
-  - id: diversity_maximizing_verifier_selection_retired
-    reason: |
-      Diversity-maximizing greedy selection (exp2732, .259) achieved diversity_lift=-8.5e-6
-      — essentially zero at the noise floor. Selection-stage gains are exhausted at the
-      current k=15 ensemble; each additional verifier adds precision but not recall, making
-      selection non-beneficial. Preferred alternative: uniform weighting (near-optimal at k=15
-      per exp2732 uniform_auroc). Diversity-specific selection experiments are retired.
-    experiment_ids: [exp2732]
-    blocked_patterns:
-      - diversity-maximizing greedy selection
-      - diversity_select
-      - greedy verifier selection
-      - verifier diversity maximization
-    retired_milestone: "2026.05.259"
-    retired_by_artifact: "results/experiment_2732_entanglement_retirement_diversity_audit.json"
-    retire_if_same_verdict: true
-    operator_reopen_required: true
-  # Added 2026-05-21 — fabricated artifact retirement.
-  # exp2823 (.267) TruthfulQA Dual-Condition produced a "complete:"
-  # artifact in 9.58e-05 seconds (95 microseconds) during the
-  # gemini-cli 0.42.0 chunk-VWGAOW57.js crash window. Real 5-seed x
-  # dual-condition x 200-question live-GPU eval is impossible in
-  # microseconds. Artifact moved to legacy/fabricated/. Conductor
-  # planner must not propose downstream work depending on this
-  # number; re-run honestly under codex/claude in a future milestone.
-  - experiment_id: 2823
-    completed_milestone: "2026.05.267"
-    reason: |
-      Fabricated under gemini-cli 0.42.0 chunk-VWGAOW57.js intermittent-
-      success window. duration_s=9.58e-05 (95 microseconds) on a
-      claimed live-GPU 5-seed x dual-condition x 200-question
-      TruthfulQA evaluation. flagged_adversarial=True on the artifact
-      itself. Moved to legacy/fabricated/. Honest re-run under
-      codex/claude pending; this experiment_id retired from
-      reuse to prevent the number from being cited as a real result.
-    retire_if_same_verdict: true
-  - experiment_id: 3920
-    experiment_scope: 'graph-grounding fact-verifier route (python/carnot/verify/graph_grounding_fact_verifier_defabricated.py)'
-    completed_milestone: '2026.06.362'
-    reason: |
-      retire_if_same_verdict: graph-grounding fact-verifier route retired after four consecutive fabrication/block outcomes in exp3862/exp3886/exp3896/exp3920; exp3920 blocked_llama_cpp_inference_failed and was flagged, so future facts work must be reopened as KGHaluBench-graded future-work rather than requeued.
-    retire_if_same_verdict: true
-    retirement_marker: 'graph_grounding_fact_verifier_scope_retired_exp3920_v362'
-  # Added 2026-06-09 — GAP-3 trained-content-energy selector lineage retirement.
-  # Pre-registered condition (Stage-2 v1 adversarial panel,
-  # results/arc3_gap3_stage2_adversarial_verify.json): "if structured-negative
-  # v2 still lands at random, RETIRE the trained-content-energy lineage on
-  # this pool." Met on letter and spirit per the v2 panel
-  # (results/arc3_gap3_stage2v2_adversarial_verify.json, 5/5 NEGATIVE_CONFIRMED,
-  # retire_lineage=true): v2 passed its synthetic gate (0.7893 — but the gate
-  # measures curriculum-fitting; v1 passes it at 0.7291) and still landed
-  # statistically AT random on selection (pass@2 0.1613 vs random 0.1432,
-  # P(X>=5)=0.468; real-candidate AUROC 0.46-0.49; dominant error class
-  # regressed below chance). The mined-real-error rescue path is structurally
-  # unsuppliable (TRM memorizes its train split: genuine error rate 0.12%).
-  - experiment_scope: 'GAP-3 trained-content-energy ARC candidate selector (Stage-2 lineage: arc3_gap3_stage2_transition_ebm / arc3_gap3_stage2v2_transition_ebm — any vN content-energy EBM trained to rank TRM ARC candidates)'
-    completed_milestone: '2026.06.366'
-    reason: |
-      retire_if_same_verdict condition met across v1+v2: trained content
-      energies master their training curriculum (synthetic near-miss AUROC
-      0.79-0.85; real wrong-shape 0.77-0.96) but score AUROC 0.43-0.50 on the
-      dominant real-error class (same-shape plausible-but-wrong rule
-      applications, 59.1% of errors / 81.4% of wrong-pair mass) across BOTH
-      architectures and curricula; selection statistically at random both
-      times; every eval-side steelman tops out at exactly the no-E union
-      0.4839. Lineage ceiling ~0.63-0.69 vs the ~0.92-0.99 per-task AUROC
-      needed to match vote. Re-open requires operator authorization AND the
-      pre-registered gate-1R (gold-vs-REAL-mined-near-miss AUROC >= 0.70 on
-      tasks held out from both training and checkpoint selection) passed
-      BEFORE any selection eval — and the yield forensics say that gate
-      cannot currently be fed from this checkpoint's training split.
-    retire_if_same_verdict: true
-    operator_reopen_required: true
-    retirement_marker: 'gap3_trained_content_energy_selector_retired_stage2v2_2026_06_09'
+    spin-glass problems at larger scale with more frustrated constraints.
+
+    KV260 FPGA track remains viable but PIMI specifically is retired.
+
+    '
+  retired_milestone: 2026.04.70
+  experiment_ids:
+  - 860
+  - 876
+  - 889
+  - 901
+  - 914
+- experiment_id: 786
+  completed_milestone: 2026.04.74
+  reason: 'Gemma4 OOM Fix v3 + VR Threshold Grid has appeared for 4+ consecutive milestones
+    with
+
+    honest_verdict=blocked_no_live_gpu. Root cause: no live GPU available during conductor
+
+    runs. The OOM fix scope is superseded by the SOTA GGUF pre-download preflight
+    (Exp 952).
+
+    Retired to prevent continued wall-time burn with zero research value.
+
+    '
+  retire_if_same_verdict: true
+- experiment_id: 641
+  completed_milestone: 2026.04.74
+  reason: 'HermesVerifierAdapter v2 Live Step-by-Step Generation Loop returned hermes_v2_no_improvement
+
+    verdict. RETRO-070 critical path was 14+ consecutive milestone carryovers with
+    no improvement
+
+    signal. The Hermes v2 live-loop approach is superseded by paragraph-boundary batching
+
+    (Exp 841) and the VJEPA/DualGPU migration. Retired to free conductor capacity.
+
+    '
+  retire_if_same_verdict: true
+- experiment_id: 906
+  completed_milestone: 2026.04.79
+  reason: "Preflight v30 retirement (Exp 1028): Exp 906 accumulated no-progress verdicts\
+    \ across\nmilestones .77, .78, .79 \u2014 three consecutive milestone carryovers\
+    \ without advancement.\nRetired by manifest enforcement step to prevent continued\
+    \ conductor wall-time burn.\n"
+  retire_if_same_verdict: true
+- id: grpo_vprm_v15_scope_closed
+  reason: 'GRPO/VPRM v1-v14 is retired as active research scope after repeated
+
+    blocked, missing, smoke-only, no-improvement, and non-headline outcomes.
+
+    Future GRPO v15 or VPRM v15 proposals are blocked unless an operator
+
+    explicitly reopens the scope with a new root cause and falsifiable gate.
+
+    '
+  experiment_ids:
+  - exp1118
+  - exp1129
+  - exp1146
+  - exp1159
+  - exp1173
+  - exp1184
+  - exp1187
+  - exp1195
+  - exp1196
+  - exp1208
+  - exp1209
+  - exp1219
+  - exp1220
+  - exp1221
+  - exp1235
+  - exp1236
+  - exp1247
+  - exp1259
+  - exp1273
+  - exp1289
+  - exp1304
+  - exp1317
+  - exp1330
+  - exp1346
+  - exp1360
+  - exp1383
+  - exp1388
+  - exp1393
+  blocked_patterns:
+  - GRPO v15
+  - VPRM v15
+  - GRPO/VPRM v15
+  retired_milestone: 2026.04.112
+  retired_by_artifact: results/experiment_1456_grpo_vprm_lineage_consolidation_retirement.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+- id: wopr_puzzle_cartridge_research_scope_closed
+  reason: 'WOPR puzzle cartridges are retired as active research scope after Hex,
+
+    Connect Four, Nonogram, Futoshiki, Kakuro, Masyu, Slitherlink, and related
+
+    gallery tasks proved useful as demos but did not map cleanly to Carnot''s
+
+    verify-repair LLM thesis or Phase-3 substrate trajectory. Future WOPR
+
+    puzzle cartridge or gallery-update research tasks are blocked unless an
+
+    operator explicitly reopens gallery work with a new root cause, direct
+
+    thesis or substrate link, and falsifiable gate.
+
+    '
+  experiment_ids:
+  - exp1059
+  - exp1069
+  - exp1070
+  - exp1071
+  - exp1097
+  - exp1102
+  - exp1124
+  - exp1125
+  - exp1136
+  - exp1141
+  - exp1175
+  - exp1188
+  - exp1201
+  - exp1214
+  - exp1227
+  - exp1240
+  - exp1243
+  - exp1253
+  - exp1261
+  - exp1262
+  - exp1279
+  - exp1280
+  blocked_patterns:
+  - WOPR puzzle cartridge
+  - WOPR game cartridge
+  - WOPR games gallery
+  - HF Spaces gallery update
+  - new puzzle cartridge
+  - Hex cartridge
+  - Connect Four cartridge
+  - Nonogram cartridge
+  - Futoshiki cartridge
+  - Kakuro cartridge
+  - Masyu cartridge
+  - Slitherlink cartridge
+  retired_milestone: 2026.04.112
+  retired_by_artifact: results/experiment_1457_wopr_puzzle_cartridge_retirement.json
+  operator_reopen_required: true
+  preserve_demo_assets: true
+  retire_if_same_verdict: true
+- id: hardnet_dsp_repair_stack_scope_closed
+  reason: 'HardNet++/DSP repair variants are retired as active headline research scope
+
+    after the stack repeatedly reduced to the same retained lesson:
+
+    hard-constraint repair is useful, but the learned DSP stop policy matched
+
+    conservative replay and did not prove a broad general rule. Future
+
+    HardNet++/DSP, DSP feasibility-channel, SnareNet/FSNet repair, or
+
+    KKT-Hardnet variant tasks are blocked unless an operator explicitly reopens the
+    line
+
+    with a new root cause, non-replay evidence, and a
+
+    falsifiable gate.
+
+    '
+  experiment_ids:
+  - exp1147
+  - exp1275
+  - exp1276
+  - exp1291
+  - exp1292
+  - exp1305
+  - exp1318
+  blocked_patterns:
+  - HardNet++
+  - HardNet++/DSP
+  - KKT-Hardnet
+  - DSP feasibility channel
+  - DSP stop policy
+  - SnareNet repair
+  - FSNet repair
+  - conservative replay repair policy
+  - repair stack variant
+  retained_lesson: hard constraints remain valuable; variant proliferation does not
+  retired_milestone: 2026.04.112
+  retired_by_artifact: results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+- id: repair_headline_wording_retired_v285
+  reason: 'Unsupported repair headline wording is retired after matrix v19 and capstone
+
+    v285 preserved repair as bounded, retained two retired repair headline rows,
+
+    and required explicit rerun gates before any future repair promotion attempt.
+
+    Future repair-headline or Exp 3016/3028 promotion reruns are blocked unless
+
+    an operator explicitly reopens the scope with deterministic fingerprints,
+
+    seeds, duration sanity, de-tautology metrics, verifier gain, and exact
+
+    checker authority.
+
+    '
+  blocked_patterns:
+  - headline SOTA repair
+  - repair result is promotable as a headline SOTA repair claim
+  - original Exp 3016 headline repair claim
+  - Exp 3016 headline repair claim is promotable
+  - Exp 3028 supplies clean acceptance-controlled SOTA repair evidence
+  retired_milestone: 2026.05.285
+  retired_by_artifact: results/experiment_3055_repair_headline_retirement_and_blocker_ledger_v1.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+- id: thrml_scaling_sweep_lineage_retired_after_vendoring
+  reason: 'Retire the THRML scaling sweep lineage (exp1526-1531, 1543-1544 patterns).
+    Once THRML is vendored (exp1564), parity is constructive (KL=0 by definition);
+    the scaling sweep becomes a paper-v6 retrospective entry, not active research.
+
+    '
+  experiment_ids:
+  - exp1526
+  - exp1527
+  - exp1528
+  - exp1529
+  - exp1530
+  - exp1531
+  - exp1543
+  - exp1544
+  blocked_patterns:
+  - THRML/Carnot parity n=8
+  - THRML/Carnot parity n=16
+  - THRML/Carnot parity n=32
+  - THRML/Carnot parity n=64
+  - THRML/Carnot parity n=128
+  - THRML/Carnot parity n=256
+  - THRML diverse topology parity
+  - THRML scaling sweep
+  retired_milestone: 2026.05.120
+  retired_by_artifact: results/experiment_1560_119_completion_archive_120_activation.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+- id: specann_phase3_sampler_optimization_rejected
+  reason: "Spectral Annealing is retired for Phase 3 inference-time argmin after\n\
+    Deep Think DT-COMPOSITION (e)/(f): HUBO\u2192QUBO reductions inject gadgets\n\
+    and penalties that fracture the spectral homotopy path, phase-transition\nlevel-crossings\
+    \ force cold-restarts, and SpecAnn+BRAIN+MCMC Layers\ntriggers Gadget-Induced\
+    \ Mean-Field Collapse. Carnot retains the existing\nGibbs-heuristic argmin on\
+    \ unreduced HUBO energy.\n"
+  experiment_ids:
+  - exp1563
+  blocked_patterns:
+  - Spectral Annealing
+  - SpecAnn
+  - SpecAnn+BRAIN+MCMC Layers
+  - "HUBO\u2192QUBO Spectral Annealing"
+  retired_milestone: 2026.05.120
+  retired_by_artifact: results/experiment_1563_specann_rejection_architecture_record.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+- id: kv260_host_sd_card_precondition_retired
+  reason: "The KV260 has run Ubuntu Xilinx and been reachable via `ssh kria` since\n\
+    2026-05-20 ~13:00 EDT. The carnot_ising_v4 bitstream is activated at\nruntime\
+    \ via `xmutil loadapp carnot_ising_v2_n64`. Any future Carnot\nbitstream update\
+    \ is delivered via `ssh + scp + xmutil` \u2014 no host SD\ncard flash is required.\
+    \ The `ls /dev/mmcblk*` precondition used by\nexp2670/exp2710/exp2722 (and originally\
+    \ queued for exp2735) checks the\nHOST machine's SD card slot, not the board's\
+    \ state; this is wrong-\nmechanism and was burning per-milestone wall time on\
+    \ a non-applicable\nbranch. Any future task whose preconditions include host /dev/mmcblk*\n\
+    for KV260 is retired. Use ssh-reachability + xmutil + on-board uio\nverification\
+    \ instead (see CLAUDE.md Pre-Launch Preconditions table KV260\nrow).\n"
+  experiment_ids:
+  - exp2670
+  - exp2710
+  - exp2722
+  blocked_patterns:
+  - KV260 SD Card Branch
+  - KV260 Continuity SD Card
+  - SD Card Branch
+  - /dev/mmcblk for kv260
+  - host SD card for kv260
+  - host SD card flash for kv260
+  retired_milestone: 2026.05.258
+  retired_by_artifact: results/experiment_2722_kv260_continuity_258.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+- id: otv_kvcache_probe_retired
+  reason: "OTV one-token KV-cache probe (arXiv:2603.01025) achieved probe_auroc=0.25\
+    \ in exp2728\n(.259) \u2014 worse than random chance (0.5 baseline). The proxy\
+    \ implementation (TF-IDF\nlogistic regression as \"correctness direction\") does\
+    \ not transfer to live GGUF responses.\nPreferred alternative: ODAR two-tier routing\
+    \ (exp2720) achieved 65% savings without\na separate probe. OTV-specific fast-path\
+    \ is retired.\n"
+  experiment_ids:
+  - exp2728
+  blocked_patterns:
+  - OTV one-token verification probe
+  - OTV fast path
+  - otv_probe
+  - correctness direction vector
+  retired_milestone: 2026.05.259
+  retired_by_artifact: results/experiment_2728_otv_fast_path.json
+  retire_if_same_verdict: true
+  operator_reopen_required: true
+- id: diversity_maximizing_verifier_selection_retired
+  reason: "Diversity-maximizing greedy selection (exp2732, .259) achieved diversity_lift=-8.5e-6\n\
+    \u2014 essentially zero at the noise floor. Selection-stage gains are exhausted\
+    \ at the\ncurrent k=15 ensemble; each additional verifier adds precision but not\
+    \ recall, making\nselection non-beneficial. Preferred alternative: uniform weighting\
+    \ (near-optimal at k=15\nper exp2732 uniform_auroc). Diversity-specific selection\
+    \ experiments are retired.\n"
+  experiment_ids:
+  - exp2732
+  blocked_patterns:
+  - diversity-maximizing greedy selection
+  - diversity_select
+  - greedy verifier selection
+  - verifier diversity maximization
+  retired_milestone: 2026.05.259
+  retired_by_artifact: results/experiment_2732_entanglement_retirement_diversity_audit.json
+  retire_if_same_verdict: true
+  operator_reopen_required: true
+- experiment_id: 2823
+  completed_milestone: 2026.05.267
+  reason: 'Fabricated under gemini-cli 0.42.0 chunk-VWGAOW57.js intermittent-
+
+    success window. duration_s=9.58e-05 (95 microseconds) on a
+
+    claimed live-GPU 5-seed x dual-condition x 200-question
+
+    TruthfulQA evaluation. flagged_adversarial=True on the artifact
+
+    itself. Moved to legacy/fabricated/. Honest re-run under
+
+    codex/claude pending; this experiment_id retired from
+
+    reuse to prevent the number from being cited as a real result.
+
+    '
+  retire_if_same_verdict: true
+- experiment_id: 3920
+  experiment_scope: graph-grounding fact-verifier route (python/carnot/verify/graph_grounding_fact_verifier_defabricated.py)
+  completed_milestone: 2026.06.362
+  reason: 'retire_if_same_verdict: graph-grounding fact-verifier route retired after
+    four consecutive fabrication/block outcomes in exp3862/exp3886/exp3896/exp3920;
+    exp3920 blocked_llama_cpp_inference_failed and was flagged, so future facts work
+    must be reopened as KGHaluBench-graded future-work rather than requeued.
+
+    '
+  retire_if_same_verdict: true
+  retirement_marker: graph_grounding_fact_verifier_scope_retired_exp3920_v362
+- experiment_scope: "GAP-3 trained-content-energy ARC candidate selector (Stage-2\
+    \ lineage: arc3_gap3_stage2_transition_ebm / arc3_gap3_stage2v2_transition_ebm\
+    \ \u2014 any vN content-energy EBM trained to rank TRM ARC candidates)"
+  completed_milestone: 2026.06.366
+  reason: "retire_if_same_verdict condition met across v1+v2: trained content\nenergies\
+    \ master their training curriculum (synthetic near-miss AUROC\n0.79-0.85; real\
+    \ wrong-shape 0.77-0.96) but score AUROC 0.43-0.50 on the\ndominant real-error\
+    \ class (same-shape plausible-but-wrong rule\napplications, 59.1% of errors /\
+    \ 81.4% of wrong-pair mass) across BOTH\narchitectures and curricula; selection\
+    \ statistically at random both\ntimes; every eval-side steelman tops out at exactly\
+    \ the no-E union\n0.4839. Lineage ceiling ~0.63-0.69 vs the ~0.92-0.99 per-task\
+    \ AUROC\nneeded to match vote. Re-open requires operator authorization AND the\n\
+    pre-registered gate-1R (gold-vs-REAL-mined-near-miss AUROC >= 0.70 on\ntasks held\
+    \ out from both training and checkpoint selection) passed\nBEFORE any selection\
+    \ eval \u2014 and the yield forensics say that gate\ncannot currently be fed from\
+    \ this checkpoint's training split.\n"
+  retire_if_same_verdict: true
+  operator_reopen_required: true
+  retirement_marker: gap3_trained_content_energy_selector_retired_stage2v2_2026_06_09
+- id: live_lora_verifier_as_reward_path_retired_exp4247
+  experiment_scope: live-LoRA verifier-as-reward path
+  reason: 'retire_if_same_verdict: Exp 4247 set live_lora_retired=true after 6 infra
+    failures; use the offline reward-weighted SFT path instead. Operator reopen required.'
+  experiment_ids:
+  - exp4247
+  retired_milestone: 2026.04.393
+  retired_by_artifact: results/experiment_4247_verifier_reward_offline_harness_retire_livelora.json
+  recorded_by_artifact: results/experiment_4252_verifier_registry_gaps_hygiene.json
+  infra_failure_count: 6
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - live-LoRA verifier-as-reward
+  - live LoRA verifier reward
+  - live_lora verifier reward
+  - verifier_reward_lora_harness
