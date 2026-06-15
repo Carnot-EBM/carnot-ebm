@@ -8525,3 +8525,4 @@ c |
 | 2026-06-15 07:17 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-06-15 07:19 UTC | Milestone 2026.06.392 activated | OK | 12 tasks queued |
 | 2026-06-15 07:37 UTC | Archive .391 -> activate .392; KEEP the hardened g | OK | 91 passed, 1 warning in 7.25s |
+| 2026-06-15 07:58 UTC | PHASE A1 (HEADLINE BUILD; STRENGTHEN) -- BUILD a C | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
