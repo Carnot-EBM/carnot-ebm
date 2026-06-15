@@ -8546,3 +8546,4 @@ c |
 | 2026-06-15 13:04 UTC | PHASE A3 (THE HEADLINE GATE, gated_on A2 aggregato | OK | 87 passed, 1 warning in 7.06s |
 | 2026-06-15 13:20 UTC | PHASE A4 (HEADLINE CONFIRMATION; independent) -- C | OK | 88 passed, 1 warning in 6.51s |
 | 2026-06-15 14:29 UTC | PHASE B1 (OWED pivot; RETIRE live-LoRA + OFFLINE h | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-15 14:31 UTC | PHASE B2 (OWED; self-learning/FR-11, gated_on B1 h | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4247-verifier-reward-offline-harness-re |
