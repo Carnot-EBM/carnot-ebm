@@ -1,3 +1,71 @@
+## 2026-06-15 .392 planning sweep — STRENGTHEN the oracle-distinct verifier (the .391 beats-vote gate RAN and TIED vote; diagnose the null, fix all three causes)
+
+Added by the `.392 planning sweep (Claude Opus 4.8, outer-loop). `.391 finally RAN the oracle-distinct
+beats-vote gate (the `.390 infra blockers were fixed): on a held-out ARC split, the LEARNED
+oracle-distinct verifier (verifier_is_oracle=false) **TIED majority vote** — `verifier@1 − vote@1 =
+−0.0714, bootstrap CI95 [−0.214, 0.0]` (exp4221, clean / not flagged), `oracle@K = 1.0` (headroom EXISTS),
+the ARBITER conservative-override degenerated to "keep vote" (0.643 = 0.643, never overrode), and the
+matched no-verifier control exactly tied the verifier (both 0.5714). The build (exp4220) trained a
+**plain per-candidate logistic regression on 14 ACCEPTED / 1782 REJECTED rows** (base-rate 0.008,
+off-fold AUROC 0.779), and the held-out gate was **n=14 tasks** (below the CLT floor). So the `.391 null
+has THREE diagnosable, separable causes — NOT a settled refutation of the oracle-distinct thesis:
+(1) **isolated per-candidate scoring** (the verifier scored each candidate alone, with no view of the
+competing candidate set / vote basin); (2) **extreme class imbalance** (14 positives collapsed the
+discriminator); (3) **underpowered held-out** (n=14). The detector-vs-selector divergence (exp4208,
+carried) shows detection AUROC ≈ 1.0 on math/sudoku/code but SELECTION headroom only on ARC (0.129) and
+code (0.18) — so ARC and code are the only two domains where a beats-vote win is even possible. The
+verifier-as-reward (Phase B) failed a **4th/5th** time on infra (exp4222 harness smoke 14s / exp4223
+3-arm 36.7s — both DURATION_TOO_SHORT-flagged: the live LoRA training short-circuited to a fake-short
+"progress" artifact instead of training), reaching the operator's own accumulate-floor (3 no-usable
+windows).
+
+**New methods (verified via WebSearch 2026-06-15; real arXiv IDs) — each fixes a NAMED `.391 cause:**
+
+- **Set-Encoder — "Permutation-Invariant Inter-Passage Attention for Listwise Re-Ranking"
+  (arXiv:2404.06912).** A cross-encoder that attends ACROSS the whole candidate set (permutation-
+  invariant inter-candidate attention) instead of scoring each item in isolation. FIXES `.391 cause (1):
+  the A2 verifier must consume the FULL per-task candidate set (vote basin, competing transformation
+  families, cross-candidate agreement), not one row at a time. MAP: the `.392 ARC aggregator is a
+  set-encoder over the per-task candidate set, emitting a calibrated per-candidate score conditioned on
+  its competitors.
+- **Calibrated Reasoning — "An Explanatory Verifier for Dynamic and Efficient Problem-Solving"
+  (arXiv:2509.19681).** Trains the verifier to emit a continuous 0–10 calibrated rating with a
+  BCE-variant reward that resists the score-collapse class imbalance induces (a binary MSE verifier on a
+  near-degenerate class ratio collapses to one value — exactly the `.391 14/1782 failure). FIXES `.391
+  cause (2). MAP: train the `.392 aggregator with an imbalance-aware / calibrated objective (class-
+  weighted or focal loss + isotonic/temperature calibration) and stratified-balanced minibatches so the
+  14-positive slice does not wash out.
+- **Margin-Triggered Question Re-Arbitration (arXiv:2606.04323, CVPR-2026-VidLLMs).** Answer
+  self-consistency with a MARGIN-TRIGGERED re-arbitration: only override the self-consistent answer when
+  a confidence-margin threshold fires. FIXES the `.391 ARBITER-override degeneracy (it kept vote on every
+  task because no principled margin trigger fired). MAP: the `.392 override fires on a pre-registered
+  learned-margin threshold tuned on the A1 fold, recovering wrong-majority answers ONLY where the
+  aggregator is confident — beating vote where a flat rerank loses.
+- **SCOPE — "Beyond Majority Voting: Fine-grained and More Reliable Reward Signal for TTRL"
+  (arXiv:2512.15146).** Step/region-level reward beats coarse outcome vote; fine-grained signal recovers
+  reliability where vote tallies are context-free. MAP: per-region grid-evidence features for the ARC
+  aggregator (where two candidate grids diverge), the localized-evidence frame AgentAuditor (2602.09341)
+  also argues.
+- **Adaptive Test-Time Compute Allocation over Categorical Structure (arXiv:2602.03975).** Best-of-N with
+  an aggregated verifier score that MARGINALIZES across candidates sharing a final answer (set-aware
+  aggregation), plus learned compute routing. MAP: the aggregator should marginalize over same-grid
+  candidates (vote-basin-aware) rather than treat duplicates as independent rows; corroborates the
+  efficiency/routing frame for Phase C.
+
+**Bottom line for the `.392 roadmap.** HEADLINE (Phase A) = STRENGTHEN, do not merely re-run: build a
+CROSS-CANDIDATE set-encoder aggregator (2404.06912 / MSV 2603.03417 / AggLM 2509.06870) with a
+CALIBRATED imbalance-aware loss (2509.19681) on a GROWN labeled ARC pool (target ≥30 held-out tasks),
+then the gated beats-vote gate with a MARGIN-TRIGGERED override (2606.04323) + matched control +
+CI95-excl-0 — AND a higher-power, less-imbalanced CODE replication (learned pass-predictor, NO execution
+at inference → still verifier_is_oracle=false) to disambiguate "the `.391 null was ARC data-sparsity"
+from "the oracle-distinct selection thesis is bounded." OWED (Phase B) = the verifier-as-reward, RE-SCOPED
+to FIT THE WINDOW (small SOTA base, bounded deterministic step budget, a harness-first smoke that asserts
+REAL training — duration floor + loss-moved — so it CANNOT short-circuit to a fake-short progress
+artifact) + a hard retire-if-same-verdict (5th no-usable window → auto-retire the live-LoRA path).
+NORTH STAR (Phase C) = monotonic ARC +1 (→18) + the live-env accuracy probe with the margin-triggered
+override applied to goal-predicate induction. Strongest single method flagged for `.392: the AggLM/
+Set-Encoder CROSS-CANDIDATE AGGREGATOR — the architecture the `.391 isolated logistic reranker lacked.
+
 ## 2026-06-15 .391 planning sweep — the de-risked ORACLE-DISTINCT retry (learned aggregator/selector beats vote) + the harness-first verifier-as-reward fix
 
 Added by the `.391 planning sweep (Claude Opus 4.8, outer-loop). `.390 ran the oracle-distinct headline
