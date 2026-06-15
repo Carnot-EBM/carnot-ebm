@@ -1,3 +1,56 @@
+## 2026-06-15 .395 planning sweep — CLOSE the cross-family/cross-game OOD question: does the hardened ARC oracle-distinct selector win GENERALIZE beyond the pool it was tuned on?
+
+Added by the `.395 planning sweep (Claude Opus 4.8, outer-loop). `.394 HARDENED the program's first ARC
+oracle-distinct verifier-beats-vote win on **2 of 3** axes — it SURVIVED the provenance-blind leak audit
+(exp4256: de-leaked delta **+0.385**, AUROC **0.990**, origin_probe_auroc 0.948) AND REPLICATED across ≥5 seeds
++ an independent re-score (exp4257: mean **+0.458**, independent re-score **+0.442** matching single-seed,
+oracle@K 0.827, n=52) — **but the decisive cross-game OOD test BLOCKED** on a data-provenance bug (exp4258
+`blocked_arc_game_ids_unrecoverable`: the 52-task grown pool's `gap3_stage2:…` task_ids could not be mapped to
+game/family identities, so no family-disjoint split could be built). The capstone (exp4268) therefore set
+`hardened_win=False` and held the DiffusionGemma scale-up gate CLOSED — **not because the win collapsed, but
+because the load-bearing OOD test never ran.** Synthesis did NOT break the oracle@K ceiling (exp4259:
+synthesis−oracle **−0.283**), so selection is the ceiling on this corpus. The DiffusionGemma preflight BLOCKED
+on the discrete-diffusion GGUF loader (exp4260). Owed axes resolved: verifier-as-reward → OUT-OF-BAND
+(exp4263, operator-owned), code oracle-distinct → CORPUS-SPECIFIC (exp4264: fresh-corpus delta **−0.006**,
+RETIRE). `paper_ready=True` (FoVer 0.9131, G1–G4 met) unchanged.
+
+`.395 is DEPTH (north-star §1): it does ONE thing — close the cross-family/cross-game OOD question. The
+SOTA-ingestion (exp4265) already flagged this as `flagged_for_v395` #1 and mapped 5 real-arXiv methods; the
+`.395 sweep re-verified the top papers (WebSearch 2026-06-15) and adds 2 verifier-transfer corroborators:
+
+- **ARC-TGI — Human-Validated Task Generators with Reasoning Chain Templates (arXiv:2603.05099).** 461 task-FAMILY
+  generators (compact Python programs sampling diverse ARC tasks while preserving a latent rule; family ids +
+  reasoning-chain templates), covering 180 ARC-Mini + 215 ARC-AGI-1 tasks. **Verified real (WebSearch).** MAP:
+  the natural disjoint unit for the held-out-FAMILY OOD test → `.395 Phase A (provenance recovery → family-disjoint
+  cross-family transfer; fresh ARC-TGI pool if the existing pool is too family-concentrated).
+- **Reliability Gap — benchmark-auditing provenance discipline (arXiv:2606.03305).** Contamination detectors fail
+  under distribution shift + small-n; *transparent provenance* (source-kind + family + fold + target-hash as
+  first-class columns) must be the acceptance gate, not a post-hoc statistical detector. MAP: motivated by
+  exp4256's high origin_probe_auroc (0.948) → `.395 A1 materializes a first-class provenance manifest BEFORE any
+  cross-family claim.
+- **DPRM — token-ordering process-reward guidance for diffusion LMs (arXiv:2604.24357)** + **Entropy-guided step
+  selection / stepwise advantages for diffusion-LLM RL (arXiv:2603.12554).** MAP: `.395 Phase B DiffusionGemma
+  guided-reveal smoke AFTER the loader repair (the verifier ensemble as a per-step guidance energy); full run
+  deferred to `.396.
+- **L-VARC — language-guided abstraction with an inference-time visual backbone (arXiv:2606.12847).** MAP: a
+  leak-control ablation on the cross-family test (train with privileged family/template features, discard them at
+  inference, score held-out-family exact match).
+- **TrajAD — Trajectory Anomaly Detection for Trustworthy LLM Agents (arXiv:2602.06443).** Runs explicit
+  Cross-Domain Transfer experiments under OOD settings to ask *whether a learned verifier learns universal logic
+  or domain-specific patterns* — exactly the `.395 cross-family question, framed for verifiers. (Corroborator.)
+- **"Putting the Value Back in RL: Better Test-Time Scaling by Unifying LLM Reasoners With Verifiers"
+  (arXiv:2505.04842).** Verifier-based Best-of-N selection shows strong OUT-OF-DOMAIN generalization (>10pp on
+  GPQA Physics) — precedent that a learned verifier/selector CAN transfer OOD. (Corroborator: the hope-case for a
+  surviving cross-family delta.)
+
+**Bottom line for the `.395 roadmap:** the cross-family OOD test is the single decision-grade question — survive
+(delta>0, CI95-excl-0 on held-out families) → a GENERAL selection signal (north-star-grade; opens the
+DiffusionGemma gate); collapse → per-family-basin memorization (scope the headline to within-pool). The fork is
+mechanically gated on whether the existing pool's recovered family provenance can support a powered split
+(exp4270 `family_split_feasible`).
+
+---
+
 ## 2026-06-15 .394 planning sweep — HARDEN the first ARC oracle-distinct win (it landed at +44pp but is single-seed/n=52/leak-risk), then EXTEND selection→SYNTHESIS, then STAGE the now-resolvable DiffusionGemma bet
 
 Added by the `.394 planning sweep (Claude Opus 4.8, outer-loop). `.393 LANDED the program's FIRST genuine
