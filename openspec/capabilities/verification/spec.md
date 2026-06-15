@@ -14237,6 +14237,83 @@ reports off-fold AUROC with CI95, persists a learned verifier at
 `learned_verifier_path`, sets `selector_trained=true`, and keeps
 `verifier_is_oracle=false`.
 
+### REQ-VERIFY-4220: GAP-4 Labeled Oracle-Distinct ARC Verifier Build
+
+The repository SHALL provide
+`python/carnot/reporting/oracle_distinct_arc_verifier_4220.py` and
+`results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.py` to
+build the de-risked ARC oracle-distinct verifier from the GAP-3 candidate pool
+and GAP-4 induced-program labels. The runner SHALL first confirm that
+`results/arc3_gap3_stage2_eval_pool.json.gz` and
+`results/arc3_gap4_induced_programs.json` parse, and that
+`scripts/exp_verifier_detector_auroc.py` imports. If either precondition fails,
+it SHALL write a terminal artifact with
+`honest_verdict=blocked_arc_gap4_pools_missing`, `selector_trained=false`,
+`oracle_distinct_auroc=0.0`, `wrong_majority_n=0`,
+`verifier_is_oracle=false`, an empty `learned_verifier_path`, and SHALL stop
+before training.
+
+When the GAP pools are available, the runner SHALL reuse the Exp 4208 ARC label
+loading path over `load_arc_rows()` / `arc_rows_from_entries()` and SHALL build
+per-candidate rows keyed by ARC task id. The training target SHALL be the
+candidate output grid matching the GAP-4 induced program `pred_grid`; this
+execution-grounded target is allowed only as the supervised label. The learned
+verifier's inference features SHALL be oracle-distinct and computable without
+executing demos: vote weight, cross-candidate self-consistency margin,
+per-cell/per-region confidence summaries, grid height/width/cell/color/nonzero
+fraction/entropy statistics, and induced-program length/digit-fraction summary.
+The scorer SHALL NOT call `Gap4ExecutionVerifier`, `extract_dsl_rules`,
+`apply_rule`, or `get_consistency_energy`.
+
+The runner SHALL stratify to tasks with at least two candidates and at least
+one correct candidate, report bare int `wrong_majority_n` for tasks where
+oracle@K is present but vote@1 is wrong, and flag positive-label sparsity when
+fewer than 30 positive candidates remain. It SHALL split folds by ARC task id,
+train an accepted+rejected V-STaR/AggLM-style logistic selector only on
+non-held-out task labels, score held-out candidates out of fold, report bare
+float `oracle_distinct_auroc` and `oracle_distinct_auroc_ci95`, and persist a
+deployable learned verifier artifact for A2. If the learned signal is chance or
+too sparse to train a non-null model, it SHALL still persist a null verifier
+artifact and report a terminal complete no-learnable-signal verdict.
+
+The terminal artifact SHALL write
+`results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json` with
+required fields `honest_verdict`, bare bool `selector_trained`, bare float
+`oracle_distinct_auroc`, `oracle_distinct_auroc_ci95`, bare int
+`wrong_majority_n`, `learned_verifier_path`, bare bool
+`verifier_is_oracle=false`, `model_specs`, `random_seed`,
+`reproducibility_checksum`, `field_principles`, `spec_refs`, and
+`acceptance_gate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed (complete:/success:/passed:/shipped:). A trained off-fold verifier OR an honest 'no learnable oracle-distinct signal / too-few-positives' is COMPLETE -- both feed A2.`;
+`selector_trained` = `BARE bool: A2's gate compares this raw value (gated-fields-must-be-bare); true iff a learned ARC verifier artifact was persisted out-of-fold.`;
+`oracle_distinct_auroc` = `BARE float: off-fold detection AUROC of the LEARNED verifier vs is_correct -- the oracle-distinct discrimination the GAP-3 content energies lacked; >0.5 CI95-excl is the precondition for an A2 beats-vote win.`;
+`wrong_majority_n` = `BARE int: count of stratified tasks where oracle@K > vote@1 -- the ARBITER/AggLM headroom the learned verifier targets; A2 measures vote-beating ON these.`;
+`learned_verifier_path` = `The persisted artifact A2 loads to rerank held-out ARC candidates; the build deliverable.`;
+`verifier_is_oracle` = `BARE bool=false -- the learned verifier scores WITHOUT executing the demos (Circularity Discipline); this is what makes an A2 win headline/gate-eligible, unlike the circular execution verifier.`;
+`model_specs` = `The V-STaR/aggregator probe architecture + the oracle-distinct feature set; required methodology.`;
+`random_seed` = `Determinism precondition; the fold split + probe init seeded so the AUROC is reproducible.`;
+`reproducibility_checksum` = `Hash of the ARC pools + fold split + features; catches silent pool/feature drift before A2 measures.`
+
+### SCENARIO-VERIFY-4220: GAP-4 Pools Train Labeled ARC Verifier Out Of Fold
+
+Given the GAP-3 ARC candidate pool and GAP-4 induced-program artifact parse,
+when Exp 4220 runs, then it builds labels by candidate-grid equality with each
+task's `pred_grid`, filters to tasks with at least two candidates and at least
+one correct candidate, trains accepted and rejected candidates with
+task-held-out folds, reports `wrong_majority_n`, off-fold AUROC and CI95,
+persists a learned verifier at `learned_verifier_path`, sets
+`selector_trained=true`, keeps `verifier_is_oracle=false`, and writes the
+required field principles and checksum.
+
+### SCENARIO-VERIFY-4220-BLOCKED: Missing GAP-4 Pools Block Honestly
+
+Given either GAP pool is absent or malformed, or the Exp 4208 detector module is
+not importable, when Exp 4220 runs, then it writes
+`honest_verdict=blocked_arc_gap4_pools_missing`, keeps
+`selector_trained=false`, reports `oracle_distinct_auroc=0.0`,
+`wrong_majority_n=0`, `verifier_is_oracle=false`, leaves
+`learned_verifier_path` empty, and stops before training.
+
 ### REQ-VERIFY-4177: Decisive Headroom-Controlled Verifier Moat Test
 
 The repository SHALL provide

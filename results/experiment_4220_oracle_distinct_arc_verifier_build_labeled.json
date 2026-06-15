@@ -1,0 +1,95 @@
+{
+  "acceptance_gate": true,
+  "accepted_rejected_n": {
+    "accepted": 14,
+    "rejected": 1782,
+    "total": 1796
+  },
+  "candidate_pool_source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap3_stage2_eval_pool.json.gz",
+  "detector_row_n": 8041,
+  "duration_s": 5.983266,
+  "experiment": "experiment_4220_oracle_distinct_arc_verifier_build_labeled",
+  "feature_names": [
+    "vote_weight",
+    "self_consistency_margin",
+    "vote_rank_fraction",
+    "cell_confidence_mean",
+    "cell_confidence_margin",
+    "cell_confidence_rank_fraction",
+    "grid_height",
+    "grid_width",
+    "grid_cells",
+    "grid_color_count",
+    "grid_nonzero_frac",
+    "grid_entropy",
+    "program_length",
+    "program_digit_fraction"
+  ],
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed (complete:/success:/passed:/shipped:). A trained off-fold verifier OR an honest 'no learnable oracle-distinct signal / too-few-positives' is COMPLETE -- both feed A2.",
+    "learned_verifier_path": "The persisted artifact A2 loads to rerank held-out ARC candidates; the build deliverable.",
+    "model_specs": "The V-STaR/aggregator probe architecture + the oracle-distinct feature set; required methodology.",
+    "oracle_distinct_auroc": "BARE float: off-fold detection AUROC of the LEARNED verifier vs is_correct -- the oracle-distinct discrimination the GAP-3 content energies lacked; >0.5 CI95-excl is the precondition for an A2 beats-vote win.",
+    "random_seed": "Determinism precondition; the fold split + probe init seeded so the AUROC is reproducible.",
+    "reproducibility_checksum": "Hash of the ARC pools + fold split + features; catches silent pool/feature drift before A2 measures.",
+    "selector_trained": "BARE bool: A2's gate compares this raw value (gated-fields-must-be-bare); true iff a learned ARC verifier artifact was persisted out-of-fold.",
+    "verifier_is_oracle": "BARE bool=false -- the learned verifier scores WITHOUT executing the demos (Circularity Discipline); this is what makes an A2 win headline/gate-eligible, unlike the circular execution verifier.",
+    "wrong_majority_n": "BARE int: count of stratified tasks where oracle@K > vote@1 -- the ARBITER/AggLM headroom the learned verifier targets; A2 measures vote-beating ON these."
+  },
+  "honest_verdict": "complete: oracle_distinct_arc_verifier_trained_auroc_0.7790",
+  "induced_programs_source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_gap4_induced_programs.json",
+  "inference_substrate": "cached_gap_arc_pool_oof_vstar_agglm_selector",
+  "label_source": "candidate_grid_equals_gap4_induced_pred_grid",
+  "learned_verifier_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4220_oracle_distinct_arc_verifier_model.json",
+  "model_specs": {
+    "architecture": "class_weight_balanced_standardized_logistic_regression",
+    "base": "Exp4176 V-STaR/AggLM logistic selector",
+    "feature_set": [
+      "vote_weight",
+      "self_consistency_margin",
+      "vote_rank_fraction",
+      "cell_confidence_mean",
+      "cell_confidence_margin",
+      "cell_confidence_rank_fraction",
+      "grid_height",
+      "grid_width",
+      "grid_cells",
+      "grid_color_count",
+      "grid_nonzero_frac",
+      "grid_entropy",
+      "program_length",
+      "program_digit_fraction"
+    ],
+    "oracle_distinct_feature_groups": [
+      "vote_weight",
+      "cross_candidate_self_consistency_margin",
+      "per_cell_confidence",
+      "grid_statistics",
+      "program_text_statistics"
+    ],
+    "status": "trained",
+    "training_recipe": "accepted_and_rejected_arc_candidates_task_held_out"
+  },
+  "no_learnable_signal_reason": null,
+  "oof_folds": 5,
+  "oracle_distinct_auroc": 0.778980279,
+  "oracle_distinct_auroc_ci95": [
+    0.6146676853,
+    0.9174508427
+  ],
+  "positive_candidate_n": 14,
+  "positive_sparsity_flag": true,
+  "random_seed": 4220,
+  "raw_candidate_n": 8041,
+  "reproducibility_checksum": "b732c46ba5dbffeb8ecd91eb5ec602dbd8fcca6f35e9b9880d327b096ab3b139",
+  "schema": "carnot.oracle_distinct_arc_verifier_4220.v1",
+  "selector_trained": true,
+  "spec_refs": [
+    "REQ-VERIFY-4220",
+    "SCENARIO-VERIFY-4220",
+    "SCENARIO-VERIFY-4220-BLOCKED"
+  ],
+  "stratified_task_n": 14,
+  "verifier_is_oracle": false,
+  "wrong_majority_n": 5
+}
