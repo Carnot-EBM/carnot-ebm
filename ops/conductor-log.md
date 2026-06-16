@@ -8580,3 +8580,4 @@ c |
 | 2026-06-16 00:07 UTC | PHASE A3 (DEPTH; the fresh-pool fallback; gated_on | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4270-arc-family-provenance-recovery.fam |
 | 2026-06-16 00:09 UTC | PHASE A3 (DEPTH; the fresh-pool fallback; gated_on | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4270-arc-family-provenance-recovery.fam |
 | 2026-06-16 00:25 UTC | PHASE A4 (CONTINUOUS SELF-LEARNING -- the mandated | OK | 85 passed, 1 warning in 8.07s |
+| 2026-06-16 00:45 UTC | PHASE B1 (INFRA de-risk; fix exp4260's root cause; | OK | 91 passed, 1 warning in 6.44s |
