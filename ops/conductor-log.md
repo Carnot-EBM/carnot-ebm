@@ -8600,3 +8600,4 @@ c |
 | 2026-06-16 08:05 UTC | PHASE F4 (capstone .396, UNGATED) -- headline ques | OK | 87 passed, 1 warning in 6.45s |
 | 2026-06-16 08:52 UTC | Plan milestone 2026.06.397 | OK | 12 tasks proposed |
 | 2026-06-16 08:54 UTC | Milestone 2026.06.397 activated | OK | 12 tasks queued |
+| 2026-06-16 09:10 UTC | Archive .396 -> activate .397; KEEP the hardened g | OK | 89 passed, 1 warning in 5.00s |
