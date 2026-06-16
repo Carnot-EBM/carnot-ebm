@@ -8578,3 +8578,4 @@ c |
 | 2026-06-16 00:02 UTC | PHASE A2 (DEPTH; THE real OOD test; gated_on A1 fa | OK | 88 passed, 1 warning in 9.39s |
 | 2026-06-16 00:05 UTC | PHASE A3 (DEPTH; the fresh-pool fallback; gated_on | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4270-arc-family-provenance-recovery.fam |
 | 2026-06-16 00:07 UTC | PHASE A3 (DEPTH; the fresh-pool fallback; gated_on | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4270-arc-family-provenance-recovery.fam |
+| 2026-06-16 00:09 UTC | PHASE A3 (DEPTH; the fresh-pool fallback; gated_on | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4270-arc-family-provenance-recovery.fam |
