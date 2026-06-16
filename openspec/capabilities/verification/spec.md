@@ -17330,6 +17330,91 @@ manifest files. If any required artifact or ledger parse is missing, then it
 writes `honest_verdict=blocked_v396_artifacts_missing` and does not fabricate
 registry, gap, or manifest reconciliation.
 
+### REQ-VERIFY-4299: Verifier Registry And Gaps Hygiene For .397 Truth
+
+The repository SHALL provide Exp 4299 at
+`python/carnot/experiment_4299_verifier_registry_gaps_hygiene.py` and
+`results/experiment_4299_verifier_registry_gaps_hygiene.py` to reconcile
+`ops/verifier_registry.yaml`, `ops/verifier_gaps.md`, and
+`ops/exclusion_manifest.yaml` to the `.397` verifier truth. Before mutating
+ledgers, the runner SHALL parse all three ledgers and read
+`results/experiment_4287_verifier_registry_gaps_hygiene.json`,
+`results/experiment_4291_arcgen_cross_generator_nondegenerate.json`,
+`results/experiment_4292_partial_state_diffusion_scorer_build.json`,
+`results/experiment_4294_verifier_efficiency_harden_strong_judge.json`,
+`results/experiment_4295_self_learning_tier2_fixed_retrieval.json`, and
+`results/experiment_4296_arc_incremental_progress_new_game.json`. If
+`results/experiment_4293_diffusiongemma_energy_guided_run_partial_state.json`
+exists, the runner SHALL record its in-generation moat result and any
+`flagged_adversarial`/corrigendum state; if it does not exist, the runner SHALL
+record the in-generation axis as not run rather than fabricating a result. If
+any required ledger cannot parse or any required `.397` outcome artifact is
+absent or unreadable, the runner SHALL write a terminal artifact with
+`honest_verdict=blocked_v397_artifacts_missing`,
+`regression_guard_passed=false`, empty `gaps_logged`, and SHALL stop without
+fabricating `.397` reconciliation.
+
+When preconditions hold, the runner SHALL run the GAP-4 execution regression
+guard against the `.396` Exp 4287 recorded numbers. The guard SHALL replay the
+canonical cached GAP-4 ARC-1 candidate set and require no regression in vote
+pass@2 `0.4516`, gated pass@2 `0.5806`, `headroom_recovered=4`, and
+`vote_wins_lost=0`. It SHALL expose bare bool `regression_guard_passed`.
+
+The runner SHALL record the `.397` outcomes in the GAP-4 / oracle-distinct ARC
+registry slot: Exp 4291 `cross_generator_holds=true` with
+`cross_generator_delta=0.5`, `cross_generator_ci95=[0.2916666667, 0.7083333333]`,
+`vote_at_1=0.25`, `oracle_at_k=0.75`, and `held_out_task_n=24`; Exp 4292
+`partial_state_scorer_built=true`, `partial_state_leak_free=true`,
+`partial_state_auroc=0.966143`, and `leak_ablation_auroc=0.937365`; optional
+Exp 4293 `diffusiongemma_guidance_moat=true` while preserving
+`flagged_adversarial=true` if present; Exp 4294 `efficiency_pareto_holds` and
+`cost_ratio`; Exp 4295 `online_adaptation_helps=true`,
+`static_cross_family_delta=0.4166666667`, `online_cross_family_delta=0.4833333333`,
+and `tier2_retrieval_cross_family_delta=0.4555555556`; and Exp 4296
+`total_levels=22`, `total_levels_solved=22`, `new_levels_solved_this_task=1`,
+and `game_advanced=r11l-495a7899`. The oracle-distinct ARC slot SHALL carry a
+`.397` state showing that the cross-generator axis holds, the partial-state
+scorer exists and is leak-free, self-learning improves after the tier-2 retrieval
+fix, efficiency is represented by the hardened strong-judge read, and ARC
+advanced by one level over the `.396` 21-level truth.
+
+The gaps ledger SHALL log any new missing-verifier backlog entry using the
+schema in `ops/verifier_gaps.md`. At minimum the runner SHALL log
+`GAP-ARC-CROSS-GENERATOR-SELECTION-4299` if Exp 4291 reports
+`cross_generator_holds=false`, and
+`GAP-DIFFUSIONGEMMA-LEAK-FREE-PARTIAL-STATE-4299` if Exp 4292 reports that the
+partial-state scorer was not built or was not leak-free. The artifact SHALL
+expose top-level `gaps_logged` as the list of new gap entries, each with
+`failure_mode`, `missing_discriminator`, `candidate_design`, and `priority`.
+
+The terminal artifact SHALL write
+`results/experiment_4299_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_logged`, bare
+bool `registry_reconciled`, bare bool `manifest_reconciled`, `v397_outcomes`,
+`random_seed`, `reproducibility_checksum`, `model_specs`, `field_principles`,
+`spec_refs`, `duration_s`, and `inference_substrate`. Its field principles
+SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled + regression guard result.`;
+`regression_guard_passed` = `BARE bool: the GAP-4 execution numbers did not regress vs .396 -- the standing-capability guard.`;
+`gaps_logged` = `List of new missing-verifier gap entries (failure mode + missing discriminator + candidate design + priority) -- the verifier build backlog.`;
+`reproducibility_checksum` = `Hash of the reconciled registry + gaps + manifest; catches silent drift.`
+
+### SCENARIO-VERIFY-4299: .397 Reconciliation Records Outcomes Or Blocks Honestly
+
+Given the `.396` hygiene artifact, the `.397` cross-generator, partial-state
+scorer, hardened efficiency, self-learning, and ARC progress artifacts,
+`ops/verifier_registry.yaml`, `ops/verifier_gaps.md`, and
+`ops/exclusion_manifest.yaml` are readable, when Exp 4299 runs, then it writes
+the terminal artifact with `regression_guard_passed=true`, reconciles the
+registry to the `.397` state, records the cross-generator hold, leak-free
+partial-state scorer build, optional in-generation moat state, hardened
+efficiency read, tier-2 self-learning improvement, ARC `total_levels=22`, reports
+any new missing-verifier gaps through `gaps_logged`, and declares a
+reproducibility checksum over the reconciled registry, gaps, and manifest files.
+If any required artifact or ledger parse is missing, then it writes
+`honest_verdict=blocked_v397_artifacts_missing` and does not fabricate registry,
+gap, or manifest reconciliation.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at

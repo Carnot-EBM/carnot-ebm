@@ -1,0 +1,124 @@
+{
+  "duration_s": 0.42796,
+  "experiment": "experiment_4299_verifier_registry_gaps_hygiene",
+  "field_principles": {
+    "gaps_logged": "List of new missing-verifier gap entries (failure mode + missing discriminator + candidate design + priority) -- the verifier build backlog.",
+    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled + regression guard result.",
+    "regression_guard_passed": "BARE bool: the GAP-4 execution numbers did not regress vs .396 -- the standing-capability guard.",
+    "reproducibility_checksum": "Hash of the reconciled registry + gaps + manifest; catches silent drift."
+  },
+  "gaps_logged": [],
+  "honest_verdict": "blocked_v397_artifacts_missing",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "manifest_reconciled": false,
+  "model_specs": {
+    "codex_calls": 0,
+    "gap4_candidate_set": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "gap4_program_outputs": "results/arc3_gap4_induced_programs.json",
+    "gguf_inference": false,
+    "gpu_inference": false,
+    "live_model_inference": false,
+    "method": "cached_v397_ledger_reconciliation",
+    "optional_upstream_artifacts": [
+      "results/experiment_4293_diffusiongemma_energy_guided_run_partial_state.json"
+    ],
+    "required_upstream_artifacts": [
+      "results/experiment_4287_verifier_registry_gaps_hygiene.json",
+      "results/experiment_4291_arcgen_cross_generator_nondegenerate.json",
+      "results/experiment_4292_partial_state_diffusion_scorer_build.json",
+      "results/experiment_4294_verifier_efficiency_harden_strong_judge.json",
+      "results/experiment_4295_self_learning_tier2_fixed_retrieval.json",
+      "results/experiment_4296_arc_incremental_progress_new_game.json"
+    ],
+    "stable_checkpoint_write": false,
+    "trm_training_touched": false
+  },
+  "preconditions": {
+    "blocked_resource": "experiment_4294_verifier_efficiency_harden_strong_judge",
+    "checks": [
+      {
+        "available": true,
+        "error": "",
+        "path": "ops/verifier_registry.yaml",
+        "resource": "verifier_registry"
+      },
+      {
+        "available": true,
+        "error": "",
+        "path": "ops/verifier_gaps.md",
+        "resource": "verifier_gaps"
+      },
+      {
+        "available": true,
+        "error": "",
+        "path": "ops/exclusion_manifest.yaml",
+        "resource": "exclusion_manifest"
+      },
+      {
+        "available": true,
+        "error": "",
+        "path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+        "resource": "gap4_arc1_candidate_pool"
+      },
+      {
+        "available": true,
+        "error": "",
+        "path": "results/arc3_gap4_induced_programs.json",
+        "resource": "gap4_arc1_programs"
+      },
+      {
+        "available": true,
+        "error": "",
+        "path": "results/experiment_4287_verifier_registry_gaps_hygiene.json",
+        "resource": "experiment_4287_verifier_registry_gaps_hygiene"
+      },
+      {
+        "available": true,
+        "error": "",
+        "path": "results/experiment_4291_arcgen_cross_generator_nondegenerate.json",
+        "resource": "experiment_4291_arcgen_cross_generator_nondegenerate"
+      },
+      {
+        "available": true,
+        "error": "",
+        "path": "results/experiment_4292_partial_state_diffusion_scorer_build.json",
+        "resource": "experiment_4292_partial_state_diffusion_scorer_build"
+      },
+      {
+        "available": false,
+        "error": "FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4294_verifier_efficiency_harden_strong_judge.json'",
+        "path": "results/experiment_4294_verifier_efficiency_harden_strong_judge.json",
+        "resource": "experiment_4294_verifier_efficiency_harden_strong_judge"
+      },
+      {
+        "available": true,
+        "error": "",
+        "path": "results/experiment_4295_self_learning_tier2_fixed_retrieval.json",
+        "resource": "experiment_4295_self_learning_tier2_fixed_retrieval"
+      },
+      {
+        "available": true,
+        "error": "",
+        "path": "results/experiment_4296_arc_incremental_progress_new_game.json",
+        "resource": "experiment_4296_arc_incremental_progress_new_game"
+      },
+      {
+        "available": true,
+        "error": "",
+        "path": "results/experiment_4293_diffusiongemma_energy_guided_run_partial_state.json",
+        "resource": "experiment_4293_diffusiongemma_energy_guided_run_partial_state"
+      }
+    ],
+    "ok": false
+  },
+  "random_seed": 4299,
+  "registry_reconciled": false,
+  "regression_guard_passed": false,
+  "reproducibility_checksum": "blocked:v397_artifacts_missing",
+  "schema": "carnot.experiment_4299_verifier_registry_gaps_hygiene.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4299",
+    "SCENARIO-VERIFY-4299"
+  ],
+  "v397_outcomes": {}
+}
