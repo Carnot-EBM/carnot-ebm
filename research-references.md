@@ -1,3 +1,71 @@
+## 2026-06-16 .396 planning sweep — SCALE the now-unlocked DiffusionGemma energy-guided full run (the §5 "energy VERIFIES → shapes GENERATION" thesis at LLM scale) + HARDEN the cross-family win on a 2nd independent substrate (ARC-GEN) + the owed §5 EFFICIENCY-parity axis
+
+Added by the `.396 planning sweep (Claude Opus 4.8, outer-loop). `.395 LANDED a LANDMARK POSITIVE: the hardened
+ARC oracle-distinct verifier-beats-vote win **GENERALIZED cross-family** (exp4271 `cross_family_delta` **+0.4038**
+on held-out families, CI95 [0.25, 0.558] EXCLUDES 0; within-pool matched control +0.4423, so `within_minus_cross_gap`
+is only **0.0385** — the win barely shrinks OOD; `held_out_family_n=52`; `verifier_is_oracle=false`). The capstone
+(exp4279) therefore set **`hardened_win=True`** (all 3 axes now: provenance-blind leak-audit + multi-seed +
+cross-family OOD) and **flipped `diffusiongemma_full_run_gate=True`**. The DiffusionGemma discrete-diffusion loader
+was REPAIRED (exp4274 `loader_repaired=true`, `preflight_go=true`, `guidance_changes_selection=true`) via the
+llama.cpp PR-binary path (`~/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval`). ARC advanced +1 to **20
+levels** (exp4275, game wa30 L1). Continuous self-learning hit a ceiling: online weight-adaptation did NOT beat the
+static selector with power (exp4273 `online_minus_static` +0.096 but CI95 [0.0, 0.192] TOUCHES 0 at n=52 — `static
+is the ceiling`). `paper_ready=True` (FoVer 0.9131, G1–G4 all met) unchanged.
+
+`.396 is DEPTH on the now-hardened thesis, not churn. The deferred-from-`.395 DiffusionGemma full run is now
+ACTIVATABLE (gate open); `.396 runs it WITH matched no-Carnot-verifier controls so the over-claim trap the operator
+was twice-burned by cannot recur. The SOTA-ingestion (exp4276) flagged
+`rfg_diffusiongemma_full_run_plus_arcgen_transfer_stress_v396`; this sweep re-verified every paper (WebSearch
+2026-06-16) and adds the energy-based + efficiency corroborators:
+
+- **RFG — Test-Time Scaling for Diffusion LLM Reasoning with Reward-Free Guidance (arXiv:2509.25604, Chen/Xu/
+  Leskovec/Ermon, Sep 2025).** Verified real. Parameterizes the process reward by the LOG-LIKELIHOOD RATIO of an
+  enhanced vs reference dLLM (the model's OWN self-guidance, NO external verifier); +9.2% math/code, no extra
+  training. MAP: this is the **no-Carnot-verifier control** for the `.396 DiffusionGemma run. The moat question
+  becomes: does Carnot's EXTERNAL energy verifier (verifier_is_oracle=false) beat BOTH unguided AND RFG
+  model-self-guidance? A win over RFG = the external verifier earns its place IN the generative loop (the
+  moat-scissor at LLM scale).
+- **EDLM — Energy-based Diffusion Language Model (arXiv:2506.13759).** Augments a pretrained diffusion model with
+  an UNNORMALIZED energy model: a residual/joint denoising distribution that REWEIGHTS diffusion samples by an
+  energy function (importance sampling). MAP: this is, almost verbatim, the Carnot verifier-ensemble-as-energy
+  thesis realized on discrete diffusion — the theoretical scaffolding + a peer baseline for the DiffusionGemma
+  guidance arm. (Energy from an AR model or finetuned diffusion; Carnot substitutes the verifier ensemble.)
+- **EntRGi — Entropy-Aware Reward Guidance for Diffusion Language Models (arXiv:2602.05000).** Entropy-aware step/
+  token guidance for dLLMs. MAP: a second guidance-control arm (alongside RFG) so the DiffusionGemma comparison
+  has TWO independent no-Carnot-verifier baselines, not one.
+- **ARC-GEN — A Mimetic Procedural Benchmark Generator for the ARC (arXiv:2511.00162, Moffitt, Google; Oct 2025;
+  github.com/google/ARC-GEN).** Verified real + open-source. Mimetic procedural generator faithfully covering ALL
+  400 ARC-AGI-1 tasks + 500 ARC-AGI-2 tasks, each a parameterized generator (native family id). MAP: the SECOND,
+  construction-disjoint family substrate for the cross-family STRESS test — replicating the exp4271 win on an
+  INDEPENDENT generator closes the "specific to the recovered 52-task manifest partition" critique. Report selector
+  lift SEPARATELY on original-ARC / ARC-TGI / ARC-GEN families (the generators-become-their-own-distribution
+  failure mode). Complements ARC-TGI (arXiv:2603.05099).
+- **Paying Less Generalization Tax: cross-domain RL transfer recipe (arXiv:2601.18217).** State-information richness +
+  planning complexity + step-by-step thinking drive transfer more than surface domain realism. MAP: a randomized
+  family-rich / distractor-invariance stress split on the cross-family test (verify the Set-Encoder lift survives
+  when family-rich-but-label-irrelevant features are randomized/removed) — robustness-not-theater.
+- **§5 EFFICIENCY-parity corroborators (the owed north-star §5 axis — verifier earns its place at LOWER cost):**
+  **CompassVerifier (arXiv:2508.03686)** unified robust verifier + outcome reward; **Calibrated Reasoning — an
+  Explanatory Verifier (arXiv:2509.19681)**; and the industry precedent that small purpose-built verifiers
+  (DeBERTa-440M, Galileo Luna-2 3B/8B sub-200ms, distilled 0.5–3B) rival GPT-4o-class judges at **60–1000× lower
+  cost**. MAP: the `.396 energy-verifier-vs-LLM-judge head-to-head — report accuracy parity (within CI) AND the
+  compute/latency ratio; target "parity at 10–100× cheaper" (north-star §5 win condition).
+- **Corroborators (diffusion verification frontier):** Reward-Guided Stitching for dLLM test-time scaling
+  (arXiv:2602.22871); "Stop the Flip-Flop" context-preserving verification for revocable diffusion decoding
+  (arXiv:2602.06161) — both frame post-hoc verification/reward inside the diffusion decode loop, the niche the
+  Carnot verifier-as-guidance-energy occupies.
+
+**Bottom line for the `.396 roadmap:** `.395 hardened the SELECTION moat (cross-family) and opened the gate; `.396
+(1) RUNS the deferred DiffusionGemma energy-guided full benchmark with matched RFG/EntRGi no-Carnot-verifier
+controls — does the EXTERNAL verifier improve GENERATION, not just rank it? (the §5 thesis at LLM scale, the
+in-generation moat); (2) HARDENS the cross-family win on the independent ARC-GEN substrate (closes the
+single-partition critique); (3) re-powers the self-learning online-adaptation CI on the larger ARC-GEN family set;
+(4) pays the owed §5 EFFICIENCY axis (verifier-vs-LLM-judge cost); (5) advances ARC +1. Every verifier-value task
+declares `verifier_is_oracle` honestly (a guidance win driven by an EXECUTABLE oracle is execution-grounded/circular,
+NOT a moat; the moat is the LEARNED-energy guidance beating RFG with CI95-excl-0).
+
+---
+
 ## 2026-06-15 .395 planning sweep — CLOSE the cross-family/cross-game OOD question: does the hardened ARC oracle-distinct selector win GENERALIZE beyond the pool it was tuned on?
 
 Added by the `.395 planning sweep (Claude Opus 4.8, outer-loop). `.394 HARDENED the program's first ARC
