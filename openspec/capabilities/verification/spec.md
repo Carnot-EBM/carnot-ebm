@@ -16822,6 +16822,78 @@ verifier gap as `missing_verifier_gaps`. If fewer than three domains load, then
 it writes `honest_verdict=blocked_insufficient_domains` with all required bare
 fields present.
 
+### REQ-VERIFY-4306: Powered Cross-Domain Self-Learning Bootstrap
+
+The repository SHALL provide Exp 4306 at
+`python/carnot/experiment_4306_self_learning_powered_ci_cross_domain.py` and
+`results/experiment_4306_self_learning_powered_ci_cross_domain.py` to harden
+the Exp 4295 self-learning read in the Exp 4305 cross-domain regime. Before
+measurement, the runner SHALL load the Exp 4305 cross-domain pool and manifest,
+verify that the ARC family, ARC-GEN generator, and FoVer/math domain sources
+are present, and import the Exp 4295 Tier-1 online-reweighting, Tier-2
+constraint-memory, and Tier-2 retrieval components. If these pools are missing
+or malformed, it SHALL write `honest_verdict=blocked_pools_missing`, keep the
+required bare fields present, keep `verifier_is_oracle=false`, and stop without
+fabricating an adaptive result.
+
+When the pools load, the runner SHALL stream the combined cross-domain family
+set with a deterministic seed. It SHALL score four selectors on the same tasks:
+(a) STATIC frozen selector rows derived from the cross-domain selector read,
+(b) ONLINE Tier-1 CPU counter updates from already-seen families, (c) TIER-2
+MEMORY using per-family selector-pattern cache lookup from the nearest seen
+family, and (d) TIER-2 RETRIEVAL using retrieved curated context from nearest
+seen-family contexts without model weight mutation. The runner SHALL NOT run
+live LoRA, fine-tune a model, train foundation/model weights, or use an
+executable oracle as the selector. Current-family labels SHALL update counters,
+memory, and retrieval contexts only after the whole family has been scored.
+
+The runner SHALL compute a positive-control headroom check showing
+`oracle_at_k > vote_at_1` on the same cross-domain tasks. It SHALL compute bare
+per-arm cross-family deltas for `static`, `online`, `tier2_memory`, and
+`tier2_retrieval`, select the best adaptive arm by cross-family delta, and
+report bare float `best_adaptive_minus_static_delta`. It SHALL compute a
+powered family-level bootstrap CI95 for the selected best adaptive arm minus
+static using at least 2000 resamples by default. Bare bool
+`online_adaptation_helps` SHALL be true iff
+`best_adaptive_minus_static_delta > 0` and
+`best_adaptive_minus_static_ci95` excludes zero.
+
+The terminal artifact
+`results/experiment_4306_self_learning_powered_ci_cross_domain.json` SHALL emit
+`honest_verdict`, bare bool `online_adaptation_helps`, bare float
+`best_adaptive_minus_static_delta`, `best_adaptive_minus_static_ci95`,
+`arm_deltas`, `positive_control_headroom`, bare bool
+`verifier_is_oracle=false`, bare int `random_seed`,
+`reproducibility_checksum`, `model_specs`, field principles, spec refs, an
+acceptance gate, and adversarial verification. The `model_specs` SHALL declare
+the four arms, the cross-domain pools, the retrieval mechanism, and the
+bootstrap protocol.
+
+The required field principles are:
+`honest_verdict` = `Terminal-prefixed. A powered 'online adaptation helps' (CI95-excl-0), a powered null (static is genuinely the ceiling), and an honest blocked_pools_missing are ALL COMPLETE and decision-grade.`;
+`online_adaptation_helps` = `BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff best-adaptive - static > 0 AND its powered CI95 excludes 0 -- cheap Tier-1/Tier-2 adaptation beats the static selector, decision-grade (not the .397 unpowered delta).`;
+`best_adaptive_minus_static_delta` = `BARE float: (best of online/tier2-memory/tier2-retrieval) - static -- the load-bearing self-learning gain (compare to the .397 +0.067).`;
+`best_adaptive_minus_static_ci95` = `Powered bootstrap CI95 (>=2000 resamples) of the best-adaptive-minus-static delta -- excluding 0 makes 'helps' decision-grade; including 0 retires the ask.`;
+`arm_deltas` = `Per-arm cross-family delta (static / online / tier2_memory / tier2_retrieval) -- shows WHICH adaptation tier helps (and that tier-2 is no longer a no-op).`;
+`positive_control_headroom` = `Oracle-minus-vote headroom on the same cross-domain tasks -- the FALSE_NEGATIVE_RISK guard that makes a null informative instead of degenerate.`;
+`verifier_is_oracle` = `BARE bool=false -- online/retrieval reweighting of a learned selector, NO executable oracle, NO weight mutation.`;
+`random_seed` = `Determinism precondition for the adaptation order + bootstrap.`;
+`reproducibility_checksum` = `Hash of the arms + the cross-domain pools + the bootstrap; lets a third party re-run.`;
+`model_specs` = `The four arms + the cross-domain pools + the retrieval mechanism + the bootstrap protocol; required methodology.`
+
+### SCENARIO-VERIFY-4306: Powered Cross-Domain Adaptive Arms Beat Or Retire Static
+
+Given the Exp 4305 cross-domain pool and manifest load, the domain source files
+for ARC, ARC-GEN, and FoVer/math are present, and the Exp 4295 online,
+constraint-memory, and retrieval components import, when Exp 4306 runs, then it
+streams the combined cross-domain family set, reports
+`online_adaptation_helps`, `best_adaptive_minus_static_delta`,
+`best_adaptive_minus_static_ci95`, `arm_deltas`, `positive_control_headroom`,
+`verifier_is_oracle=false`, `random_seed`, `reproducibility_checksum`, and
+`model_specs`, uses at least 2000 bootstrap resamples by default, and runs
+adversarial verification cleanly. If the pools are missing, then it writes
+`honest_verdict=blocked_pools_missing` with the required bare fields present.
+
 ### REQ-VERIFY-4273: ARC Cross-Family Online Adaptation
 
 The repository SHALL provide Exp 4273 at
