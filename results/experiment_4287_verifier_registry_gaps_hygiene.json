@@ -1,0 +1,228 @@
+{
+  "cited_upstream_artifacts": [
+    "results/experiment_4277_verifier_registry_gaps_hygiene.json",
+    "results/experiment_4281_diffusiongemma_energy_guided_full_run.json",
+    "results/experiment_4282_arcgen_cross_family_stress.json",
+    "results/experiment_4283_self_learning_repowered_arcgen.json",
+    "results/experiment_4284_verifier_efficiency_vs_llm_judge.json",
+    "results/experiment_4285_arc_incremental_progress_new_game.json",
+    "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "results/arc3_gap4_induced_programs.json"
+  ],
+  "duration_s": 0.713032,
+  "exclusion_manifest_path": "ops/exclusion_manifest.yaml",
+  "experiment": "experiment_4287_verifier_registry_gaps_hygiene",
+  "field_principles": {
+    "gaps_logged": "List of new missing-verifier gap entries (failure mode + missing discriminator + candidate design + priority) -- the verifier build backlog.",
+    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled + regression guard result.",
+    "regression_guard_passed": "BARE bool: the GAP-4 execution numbers did not regress vs .395 -- the standing-capability guard.",
+    "reproducibility_checksum": "Hash of the reconciled registry + gaps + manifest; catches silent drift."
+  },
+  "gaps_logged": [
+    {
+      "candidate_design": "Add a score_partial_state or score_masked_canvas verifier interface, train it on masked diffusion-token canvases with final-answer labels held out by task family, and require a non-circular guidance-vs-unguided CI gate before any moat claim.",
+      "evidence": "results/experiment_4281_diffusiongemma_energy_guided_full_run.json; honest_verdict=complete_diffusiongemma_learned_verifier_cannot_score_partial_states; diffusiongemma_guidance_moat=False; learned_partial_state_can_score=False; guidance_changes_selection=True",
+      "failure_mode": "DiffusionGemma guidance can reweight token choices in smoke tests, but the headline learned-verifier arm cannot score masked/partial diffusion token states, so the moat cannot be measured without falling back to circular execution-grounded verification.",
+      "gap_id": "GAP-DIFFUSIONGEMMA-PARTIAL-STATE-SCORER-4287",
+      "missing_discriminator": "learned partial-state diffusion scorer that assigns non-oracle energy to incomplete or masked token canvases before a full candidate exists.",
+      "priority": "high",
+      "status": "open"
+    }
+  ],
+  "gaps_path": "ops/verifier_gaps.md",
+  "honest_verdict": "complete: registry_gaps_manifest_reconciled_to_v396_truth_regression_guard_passed_True_gaps_logged_1",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "manifest_reconciled": true,
+  "model_specs": {
+    "codex_calls": 0,
+    "gap4_candidate_set": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "gap4_program_outputs": "results/arc3_gap4_induced_programs.json",
+    "gguf_inference": false,
+    "gpu_inference": false,
+    "live_model_inference": false,
+    "method": "cached_v396_ledger_reconciliation",
+    "stable_checkpoint_write": false,
+    "trm_training_touched": false,
+    "upstream_artifacts": [
+      "results/experiment_4277_verifier_registry_gaps_hygiene.json",
+      "results/experiment_4281_diffusiongemma_energy_guided_full_run.json",
+      "results/experiment_4282_arcgen_cross_family_stress.json",
+      "results/experiment_4283_self_learning_repowered_arcgen.json",
+      "results/experiment_4284_verifier_efficiency_vs_llm_judge.json",
+      "results/experiment_4285_arc_incremental_progress_new_game.json"
+    ]
+  },
+  "random_seed": 4287,
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_reconciled": true,
+  "regression_guard": {
+    "offline_replay": {
+      "arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      },
+      "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+      "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+      "expected": {
+        "arc1_rule_exec": {
+          "gated_pass2": 0.5806,
+          "headroom_recovered": 4,
+          "n": 31,
+          "vote_pass2": 0.4516,
+          "vote_wins_lost": 0
+        }
+      },
+      "no_codex_calls": true,
+      "no_gguf_inference": true,
+      "regression_guard_passed": true,
+      "trm_training_touched": false
+    },
+    "prior_artifact_path": "results/experiment_4277_verifier_registry_gaps_hygiene.json",
+    "recorded_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "regression_guard_passed": true,
+    "replayed_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    }
+  },
+  "regression_guard_passed": true,
+  "reproducibility_checksum": "sha256:78cf4cc3be9da2811ebb92837d9e11d6c15972eb8a2b2a65fe9baba86d576b33",
+  "schema": "carnot.experiment_4287_verifier_registry_gaps_hygiene.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4287",
+    "SCENARIO-VERIFY-4287"
+  ],
+  "v396_outcomes": {
+    "arc_progress": {
+      "acceptance_gate_passed": true,
+      "artifact_path": "results/experiment_4285_arc_incremental_progress_new_game.json",
+      "game_advanced": "ls20-9607627b",
+      "honest_verdict": "success: incremental_progress_ls20-9607627b_advanced_to_L1_total21",
+      "levels_completed": 1,
+      "new_levels_solved_this_task": 1,
+      "prior_level": 0,
+      "prior_total_levels_solved": 20,
+      "real_env_confirmed": true,
+      "selection_mode": "best_headroom_unattempted_non_wa30_non_sc25",
+      "target_game": "ls20-9607627b",
+      "target_level": 1,
+      "total_levels": 21,
+      "total_levels_solved": 21,
+      "verifier_validated": true
+    },
+    "arcgen_cross_family": {
+      "arcgen_cross_family_holds": true,
+      "arcgen_cross_family_holds_outerloop_corrected": false,
+      "artifact_path": "results/experiment_4282_arcgen_cross_family_stress.json",
+      "cross_family_ci95": [
+        1.0,
+        1.0
+      ],
+      "cross_family_delta": 1.0,
+      "generalization_state": "arcgen_cross_family_generalizes_second_substrate",
+      "held_out_family_n": 10,
+      "held_out_task_n": 50,
+      "honest_verdict": "complete: arcgen_cross_family_generalizes",
+      "matched_control_delta": 1.0,
+      "oracle_at_k": 1.0,
+      "oracle_minus_vote": 1.0,
+      "pass_rates": {
+        "matched_control_at_1": 0.0,
+        "online_adapt_at_1": 0.98,
+        "set_encoder_at_1": 1.0,
+        "vote_at_1": 0.0
+      },
+      "randomized_stress_ci95": [
+        1.0,
+        1.0
+      ],
+      "randomized_stress_delta": 1.0,
+      "randomized_stress_holds": true,
+      "verifier_is_oracle": false
+    },
+    "diffusiongemma": {
+      "artifact_path": "results/experiment_4281_diffusiongemma_energy_guided_full_run.json",
+      "carnot_minus_rfg_delta": 0.0,
+      "carnot_minus_unguided_delta": 0.0,
+      "diffusiongemma_guidance_moat": false,
+      "execution_grounded_guidance_delta": 0.0,
+      "guidance_changes_selection": true,
+      "guidance_moat_ci95": [
+        0.0,
+        0.0
+      ],
+      "headline_status": "blocked_partial_state_verifier",
+      "honest_verdict": "complete_diffusiongemma_learned_verifier_cannot_score_partial_states",
+      "partial_state_reason": "No learned verifier in carnot.verify exposes score_partial_state, score_masked_canvas, score_diffusion_canvas, or energy_partial_state for DiffusionGemma token canvases. Existing verifier surfaces score complete candidate text, telemetry, or executable artifacts.",
+      "partial_state_support": false,
+      "verifier_is_oracle": false
+    },
+    "efficiency": {
+      "accuracy_delta": 0.4423076923,
+      "accuracy_delta_ci95": [
+        0.3076923077,
+        0.5769230769
+      ],
+      "accuracy_energy_verifier": 0.6538461538,
+      "accuracy_llm_judge": 0.2115384615,
+      "artifact_path": "results/experiment_4284_verifier_efficiency_vs_llm_judge.json",
+      "cost_ratio": 1.95e-08,
+      "efficiency_parity_at_lower_cost": true,
+      "honest_verdict": "complete: efficiency_parity_at_lower_cost_true_delta_0.4423",
+      "selection_task_n": 52,
+      "verifier_is_oracle": false
+    },
+    "self_learning": {
+      "adaptive_minus_static_ci95": {
+        "best_adaptive_arm": "online",
+        "online": [
+          0.0,
+          0.1612903226
+        ],
+        "tier2": [
+          -0.0806451613,
+          0.0967741935
+        ]
+      },
+      "artifact_path": "results/experiment_4283_self_learning_repowered_arcgen.json",
+      "family_count_vs_v395": {
+        "arcgen_family_n": 10,
+        "arcgen_used": true,
+        "held_out_family_n": 62,
+        "original_family_n": 52,
+        "power_gain_family_n": 10,
+        "powered": true,
+        "read": "repowered_with_arcgen_family_gain",
+        "v395_family_n": 52
+      },
+      "held_out_family_n": 62,
+      "held_out_task_n": 102,
+      "honest_verdict": "complete: powered_static_is_the_ceiling_for_self_learning",
+      "online_adaptation_helps": false,
+      "online_cross_family_delta": 0.5806451613,
+      "pass_rates": {
+        "online_family_mean_at_1": 0.7903225806,
+        "static_family_mean_at_1": 0.7096774194,
+        "tier2_family_mean_at_1": 0.7096774194,
+        "vote_family_mean_at_1": 0.2096774194
+      },
+      "static_cross_family_delta": 0.5,
+      "tier1_counter_update": "cpu_counter_update_only_lt_1us_no_model_retrain",
+      "tier2_cross_family_delta": 0.5,
+      "tier2_memory_update": "cpu_system_memory_nearest_family_pattern_cache_no_model_retrain",
+      "verifier_is_oracle": false
+    }
+  }
+}
