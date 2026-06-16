@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.396",
+  "generated_at": "2026-06-16T08:11:11Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.06.396's milestone-scoped timing detector reported experiments_completed=0, compute_bound_experiments_count=0, total_wall_time_minutes=0 — the recurring false-zero detector gap, NOT an idle milestone (on-disk ops/changelog.md shows the milestone ran). Per the anti-hallucination guard the locked numeric fields stay at the detector's honest-zero. With 0 compute-bound tasks in the detector's window, both RTX 3090s reading 0% (gpu_idle_on_compute_bound_tasks=null) is correct idle behaviour, not a bottleneck.",
+  "bottlenecks_identified": [
+    "Observability, not execution: the milestone-scoped timing detector again attributed 0 experiments / 0 wall-minutes to this milestone — the recurring false-zero gap. The retro's authoritative timing numbers are therefore zero, so no per-experiment slow-task or GPU-efficiency analysis is possible from the timing block.",
+    "The operational-retro trigger is not gated on experiments_completed >= 1, so a full retro turn is spent producing a zero-signal artifact whenever the detector mis-attributes the commit window."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone-scoped timing detector's commit attribution (activation-SHA boundary / commit window) so the retro sees real per-experiment durations instead of a false zero.",
+    "Add an on-disk results/*.json mtime fallback plus a detector_gap_suspected tripwire so the retro cross-checks the detector's zero against actual artifacts before reporting.",
+    "Gate the operational-retro trigger on experiments_completed >= 1 (or emit a one-line detector-gap / empty-window no-op) so a full retro turn is not spent on a zero-signal window.",
+    "Engage the idle dual-GPU capacity (both 3090s at 0%/24GB free) with the next milestone's compute-bound tasks; capacity is available and is not the constraint this window."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the milestone-scoped timing detector's commit attribution — this single observability bug has produced false-zero retro data across many consecutive milestones and is the only standing operational defect.",
+    "Add the on-disk results/ mtime fallback + detector_gap_suspected tripwire so retros self-correct when the detector under-reports.",
+    "Gate the retro on experiments_completed >= 1 so zero-signal retro turns are not spent."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The recurring operational failure is observability, not execution: the milestone-scoped timing detector reports a false zero while the milestone in fact runs its experiments. The highest-leverage fix is to repair commit attribution (plus an on-disk mtime fallback and retro gating) so retrospectives measure real durations rather than spending a turn on a zero-signal artifact."
+}
