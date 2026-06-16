@@ -23133,3 +23133,70 @@ confirms the gap); (5) the offline reward-weighting pivot is well-supported by *
 
 Sources (this sweep): arxiv.org/abs/{2505.15433, 2404.06912, 2603.03417, 2510.14913, 2605.26172, 2509.06870,
 2510.01499, 2603.13372, 2601.10904, 2504.11343, 2502.11026, 2506.10947, 2506.09338, 2512.09054}.
+
+---
+
+## .398 planning sweep (2026-06-16, outer-loop Claude Opus 4.8 — reliable channel, all arXiv-verified)
+
+Conditioned on the .397 scorecard: cross-GENERATOR axis CLOSED (exp4291 +0.50, oracle-distinct);
+partial-state diffusion scorer BUILT leak-free (exp4292 AUROC 0.966); in-generation moat NOT held
+(exp4293 degenerate no-op controls); efficiency-harden FAILED to run (exp4294 doomed-looped 2h cap).
+.398 attacks the two unresolved §5 axes (efficiency-parity + does-the-verifier-improve-generation) and
+broadens the proven selection moat to cross-DOMAIN. The strongest methods per front (all WebFetch-verified):
+
+**A. EFFICIENCY-PARITY verifiers (the §5 win condition — exp4303):**
+- **arXiv:2510.14913** — *Budget-aware Test-time Scaling via Discriminative Verification* (2026). A
+  discriminative verifier (one forward pass) + self-consistency hybrid beats SOTA generative verification
+  **under a FIXED compute budget** (+15.3% AIME2025). → **THE iso-FLOPs accuracy-curve protocol** for the
+  energy-verifier-vs-judge head-to-head (accuracy-at-equal-FLOPs, not "1 verifier call vs 1 judge call").
+- **arXiv:2509.13332** — *Thinking Small Models are Efficient LLM Judges* (2026). Qwen3 0.6–4B judges on
+  RewardBench, accuracy AND FLOPs jointly; thinking judges +~10pp at <2× FLOPs, few-shot >8× cost for
+  modest gain. → how to build a GENUINELY-strong CoT judge (so the .398 strong-judge control is honest) +
+  FLOPs accounting; the few-shot-is-expensive finding is itself Pareto-dominance ammunition.
+- **arXiv:2508.03686** (CompassVerifier) + **arXiv:2509.19681** (Calibrated Reasoning) — lightweight
+  multi-domain verifiers rival frontier judges at 60–1000× lower cost; the small-verifier precedent + an
+  optional 2nd-comparator arm.
+
+**B. ENERGY-GUIDED DISCRETE DIFFUSION + the non-degenerate RFG control (exp4304 — the key fix):**
+- **arXiv:2509.25604** (RFG, ICLR 2026) — reward-free guidance = log-likelihood ratio of an *enhanced*
+  dLLM over a *reference* dLLM. **CRITICAL: RFG no-ops to ==unguided ONLY when enhanced==reference** — so
+  .397's degenerate RFG arm had no distinct reference. **The fix:** a strictly-weaker reference
+  (base/un-post-trained/lower-temp DiffusionGemma) vs the enhanced generator, with guidance strength γ>0.
+- **arXiv:2602.05000** (EntRGi) — entropy-aware gradient-free reward guidance; interpolates per-token
+  between continuous relaxations and hard tokens by predictive entropy. → a SINGLE-model control that
+  engages WITHOUT a 2nd checkpoint (the guaranteed-engaged non-Carnot baseline) + the recipe to inject
+  Carnot's energy on hard discrete tokens without collapse.
+- **arXiv:2506.10971** — *What Exactly Does Guidance Do in Masked Discrete Diffusion* — closed-form γ
+  effect. → pick γ in the provably-engaged regime (the analytical backstop against another degenerate control).
+- **arXiv:2410.21357** (EDLM) — a sequence-level EBM correcting a discrete diffusion LM. Architectural
+  prior; Carnot's oracle-distinct *external* verifier is the differentiator.
+
+**C. CROSS-DOMAIN / router selector generalization (exp4305 — the .397 SOTA-ingestion flag):**
+- **arXiv:2606.11182** (EEVEE) — first multi-dataset test-time prompt learning; a router partitions
+  heterogeneous task streams + interleaved router↔prompt co-evolution (the anti-overfit mechanism).
+  *Anti-leak caveat (flagged):* abstract does NOT detail domain-identity-leak prevention → .398 MUST add a
+  LABEL-ABLATION arm (router sees only features vs sees the domain label) + held-out-domain freeze.
+- **arXiv:2507.17849** (DG-PRM) — a reward tree of multi-dimensional criteria + dynamic per-step signal
+  selection + Pareto-dominance pair mining; strong OOD generalization by avoiding domain-tied heuristics.
+  → the selector-side route to cross-domain generalization (give the verifier multiple invariant
+  dimensions, select per domain); maps onto the verifier_gaps.md missing-discriminator program.
+- **arXiv:2605.19633** (GEPA / optimize_anything) — universal LLM-based text-parameter optimizer with
+  cross-domain transfer. → the router-config optimization engine; validate on FROZEN held-out domains.
+
+**D. RETRIEVAL-AUGMENTED self-learning WITHOUT weight mutation (exp4306):**
+- **arXiv:2504.07952** (Dynamic Cheatsheet) — persistent self-curated memory of transferable snippets,
+  reused at inference, "without modifying underlying parameters." → a powered context-memory selector arm.
+- **arXiv:2604.04373** (Decocted) — extracts essence → organizes → retrieves into improved context (a
+  curation layer beyond plain RAG), no weight updates. → the retrieval-only curated-context recipe.
+- (Excluded as wrong-fit: **arXiv:2601.11443** TTARAG — DOES update model weights at inference; cite only
+  as a weight-updating-TTA contrast, NOT as the no-weight-mutation exemplar.)
+
+**Bottom line for .398:** (A) report the efficiency head-to-head as an **iso-FLOPs accuracy curve**
+(2510.14913) with a genuinely-strong CoT judge (2509.13332); (B) fix the degenerate RFG control with a
+**strictly-weaker reference at γ>0** (2509.25604) or single-model **EntRGi** (2602.05000) + a mechanical
+no-op guard; (C) broaden to cross-DOMAIN with EEVEE (2606.11182) + DG-PRM multi-dimensional discriminators
+(2507.17849) + a **label-ablation** anti-leak arm; (D) powered retrieval self-learning via Dynamic
+Cheatsheet (2504.07952) / Decocted (2604.04373), no weight mutation.
+
+Sources (this sweep): arxiv.org/abs/{2510.14913, 2509.13332, 2508.03686, 2509.19681, 2509.25604,
+2602.05000, 2506.10971, 2410.21357, 2606.11182, 2507.17849, 2605.19633, 2504.07952, 2604.04373, 2601.11443}.
