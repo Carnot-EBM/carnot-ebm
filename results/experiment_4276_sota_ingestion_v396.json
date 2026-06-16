@@ -1,0 +1,68 @@
+{
+  "field_principles": {
+    "flagged_for_v396": "Closes discover->ingest->plan: names the strongest method for the .396 planner, conditioned on whether cross-family generalized or collapsed.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method MUST carry a real arXiv ID/URL (no citation = fabrication per adversarial_verify discipline) + a one-line .396 experiment mapping.",
+    "random_seed": "Determinism placeholder for the discovery query set (recorded for reproducibility of the sweep)."
+  },
+  "flagged_for_v396": "rfg_diffusiongemma_full_run_plus_arcgen_transfer_stress_v396",
+  "honest_verdict": "complete: sota_ingestion_v396_mapped",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2601.18217",
+      "carnot_stack_mapping": "Add family-rich but label-irrelevant ARC meta-features and controlled distractor channels to the held-out-family split, then verify that the Set-Encoder lift remains positive when these features are randomized or removed.",
+      "experiment_mapping": ".396: strengthen the cross-family headline with randomized family-rich stress splits and report selector lift separately on original ARC, ARC-TGI, and ARC-GEN families.",
+      "failure_mode": "Environment randomization can create robustness theater if the randomized feature is not causally tied to the held-out rule. Keep original-task, ARC-TGI, and ARC-GEN reads separate.",
+      "name": "Paying Less Generalization Tax cross-domain RL recipe",
+      "source_read": "The paper studies RL agents deployed on unknown domains and finds that state-information richness, planning complexity, and step-by-step thinking matter more for transfer than superficial domain realism or text similarity.",
+      "track": "cross-family verifier generalization",
+      "url": "https://arxiv.org/abs/2601.18217",
+      "v395_outcome_conditioning": "Exp 4271 reports cross_family_generalizes, so .396 should not treat the selector as a within-pool artifact. It should widen the stress test with richer family metadata and distractor-style invariance checks."
+    },
+    {
+      "arxiv_id_or_url": "2511.00162",
+      "carnot_stack_mapping": "Build a second family-disjoint candidate pool from ARC-GEN tasks, materialize generator IDs and target hashes, and rerun the Set-Encoder versus vote gate with the same bootstrap protocol.",
+      "experiment_mapping": ".396: run an ARC-GEN transfer stress gate as an independent procedural-family replication of the Exp 4271 generalization win.",
+      "failure_mode": "Mimetic generators can clone original task quirks. The split must report generator-family, original-task, and mixed-source metrics rather than pooling them into one transfer number.",
+      "name": "ARC-GEN mimetic procedural ARC generator",
+      "source_read": "ARC-GEN is an open-source procedural generator intended to extend the original ARC-AGI training set faithfully, covering all 400 ARC-AGI-1 tasks with a mimetic generator design.",
+      "track": "procedural ARC family-generator follow-up",
+      "url": "https://arxiv.org/abs/2511.00162",
+      "v395_outcome_conditioning": "Because Exp 4271 generalized on recovered original-task families, .396 needs a second generator substrate to check that the result is not specific to the ARC-TGI or recovered-manifest partition."
+    },
+    {
+      "arxiv_id_or_url": "2509.25604",
+      "carnot_stack_mapping": "Pair loader-fixed DiffusionGemma with a reference unguided pass, apply reward-free likelihood-ratio guidance at denoising time, and use the generalized selector only as the final exact-grid arbiter.",
+      "experiment_mapping": ".396: run a bounded DiffusionGemma RFG full-run arm against unguided diffusion, DPRM/EntRGi-inspired guidance controls, and the existing selector-only baseline.",
+      "failure_mode": "Reward-free guidance can amplify a post-trained model's biases and may not optimize ARC exact match. It needs unguided, selector-only, DPRM-style, and EntRGi-style controls.",
+      "name": "RFG reward-free guidance for diffusion LLM reasoning",
+      "source_read": "RFG guides diffusion LLM reasoning without an explicit process reward by using log-likelihood ratios between enhanced and reference diffusion models, improving math and code benchmarks.",
+      "track": "discrete-diffusion verifier and guidance full run",
+      "url": "https://arxiv.org/abs/2509.25604",
+      "v395_outcome_conditioning": "The cross-family selector generalized, and the .395 loader path moves DiffusionGemma from deferred smoke toward a full run. RFG is the safest full-run anchor when explicit ARC process rewards are still sparse or noisy."
+    },
+    {
+      "arxiv_id_or_url": "2510.07841",
+      "carnot_stack_mapping": "Trigger adaptation only on low-margin held-out-family tasks, create synthetic same-rule variants from the family generator, fine-tune only a tiny selector head, and compare to a frozen-selector control.",
+      "experiment_mapping": ".396: add a low-margin TT-SI selector-head adaptation arm on held-out ARC-GEN families with frozen-selector and random-update controls.",
+      "failure_mode": "Test-time adaptation can leak target structure or overfit a single family. It must keep target outputs hidden, use adaptation budgets, and report when frozen raw trajectories outperform distilled updates.",
+      "name": "Self-Improving LLM Agents at Test-Time",
+      "source_read": "The method identifies uncertain cases, generates similar examples, and uses them for test-time fine-tuning or teacher-distilled adaptation, reporting average gains with far fewer samples.",
+      "track": "online adaptation and test-time self-improvement",
+      "url": "https://arxiv.org/abs/2510.07841",
+      "v395_outcome_conditioning": "Since Exp 4271 already shows a static selector transfer signal, .396 can test whether uncertainty-triggered adaptation improves held-out families without turning every task into per-family memory."
+    },
+    {
+      "arxiv_id_or_url": "2603.25111",
+      "carnot_stack_mapping": "Wrap any online selector/refiner update in a contract that checks grid shape, palette, immutable train examples, and exact target-hash provenance, with fallback to the frozen generalized selector.",
+      "experiment_mapping": ".396: guard TT-SI and DiffusionGemma refinement arms with verified fallback contracts before counting any online-adaptation lift.",
+      "failure_mode": "Formal contracts can enforce syntax and provenance but not semantic ARC correctness. They reduce unsafe updates; they do not replace held-out exact-match gates.",
+      "name": "SEVerA verified synthesis for self-evolving agents",
+      "source_read": "SEVerA wraps self-evolving agent programs with formal output contracts and verified fallbacks, then learns soft objectives while preserving the hard constraints.",
+      "track": "guarded online selector self-improvement",
+      "url": "https://arxiv.org/abs/2603.25111",
+      "v395_outcome_conditioning": "A generalized selector makes online improvement tempting, but .396 needs hard guardrails before any self-modifying selector or diffusion refiner can affect ARC outputs."
+    }
+  ],
+  "random_seed": 4276
+}

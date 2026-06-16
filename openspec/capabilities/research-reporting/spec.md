@@ -21040,6 +21040,92 @@ idempotently, flags the single strongest `.395` follow-up, records
 |---|---|---|
 | REQ-REPORT-4265 | Implemented (`python/carnot/experiment_4265_sota_ingestion_v395.py`, `docs/research-notes/sota-ingestion-v395-2026-06-15.md`) | Implemented (`tests/python/test_experiment_4265_sota_ingestion_v395.py`) |
 
+### REQ-REPORT-4276: Ingest The .395 Fork Outcomes Into A .396 SOTA Plan
+
+The Exp 4276 SOTA-ingestion workflow SHALL ingest the `.395` fork outcomes,
+especially the cross-family ARC selector transfer result from
+`results/experiment_4271_arc_cross_family_transfer_existing_pool.json` or the
+fresh-pool fallback artifact, SHALL read `research-studying.md`,
+`research-references.md`, `results/experiment_4265_sota_ingestion_v395.json`,
+`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, and the `CLAUDE.md`
+SOTA-Ingestion Cycle Discipline, SHALL run reliable focused discovery through
+the sweep helpers and low-concurrency WebSearch/WebFetch, and SHALL NOT invoke
+`/deep-research` or modify `scripts/research_conductor.py`.
+
+The workflow SHALL stop with `honest_verdict=blocked_sota_channels_unavailable`
+only if both reliable discovery channels are unavailable: the sweep helpers do
+not import or emit usable queries AND WebSearch/WebFetch cannot fetch source
+pages. If either reliable channel works, the workflow SHALL write a complete
+mapping. The markdown note SHALL be written to
+`docs/research-notes/sota-ingestion-v396-2026-06-16.md`, the machine-checkable
+artifact SHALL be written to `results/experiment_4276_sota_ingestion_v396.json`,
+and the required runner SHALL be `results/experiment_4276_sota_ingestion_v396.py`
+delegating to `python/carnot/experiment_4276_sota_ingestion_v396.py`.
+
+The mapping SHALL not re-ingest methods already covered by the `.394` or `.395`
+sweeps. It SHALL record ARC-TGI, Reliability Gap, DPRM, entropy-guided
+diffusion RL, L-VARC, TrajAD, RL^V, EntRGi, and Self-Trained Verification as
+prior-covered context when they are mentioned, not as newly mapped methods.
+Newly mapped methods SHALL be selected from WebFetch-verified sources including
+Paying Less Generalization Tax (`arXiv:2601.18217`), ARC-GEN
+(`arXiv:2511.00162`), RFG reward-free diffusion guidance (`arXiv:2509.25604`),
+Self-Improving LLM Agents at Test-Time (`arXiv:2510.07841`), and SEVerA
+(`arXiv:2603.25111`).
+
+The verified source URLs SHALL be `https://arxiv.org/abs/2601.18217`,
+`https://arxiv.org/abs/2511.00162`, `https://arxiv.org/abs/2509.25604`,
+`https://arxiv.org/abs/2510.07841`, and
+`https://arxiv.org/abs/2603.25111`.
+
+The note SHALL condition the `.396` recommendation on the actual `.395`
+cross-family outcome. When Exp 4271 reports `cross_family_generalizes`,
+`cross_family_win_holds=true`, `cross_family_delta=0.4038461538`, and
+`cross_family_ci95=[0.25, 0.5576923077]`, the workflow SHALL flag a `.396`
+full-run method that spends the opened scale-up budget on DiffusionGemma
+guidance while also widening the generalization claim with a stronger
+generator-family stress test. If the cross-family result instead collapses, the
+workflow SHALL flag a generalizing-verifier repair path based on family-invariant
+signals, meta-features, and online adaptation rather than a diffusion full run.
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v396`, `random_seed`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, `flagged_for_v396`, and `random_seed`.
+`honest_verdict` SHALL use a terminal prefix and, on the complete path, start
+with `complete: sota_ingestion_v396_mapped`. `methods_mapped` SHALL contain
+three to five dicts with exactly `name`, `arxiv_id_or_url`, `url`, `track`,
+`source_read`, `v395_outcome_conditioning`, `carnot_stack_mapping`,
+`failure_mode`, and `experiment_mapping`; each `arxiv_id_or_url` SHALL be one
+of the WebFetch-verified arXiv IDs or URLs, preventing fabricated or uncited
+method rows. `flagged_for_v396` SHALL be a non-empty concrete roadmap slug
+naming the strongest `.396` method, conditioned on whether cross-family transfer
+generalized or collapsed. `random_seed` SHALL record the deterministic discovery
+query set seed.
+
+The workflow SHALL update `research-studying.md` idempotently to mark the
+`.395` forks as ingested, SHALL include `flagged_for_v396`, and SHALL NOT update
+`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-4276: The .395 Cross-Family Result Closes Into A .396 Full-Run Plan
+
+**Given** Exp 4271 reports that the hardened ARC selector generalizes to held-out
+families with positive CI-excluding-zero cross-family delta
+**And** prior `.395` SOTA ingestion already covered ARC-TGI, DPRM, entropy-step
+diffusion RL, L-VARC, TrajAD, RL^V, EntRGi, and Self-Trained Verification
+**When** the Exp 4276 SOTA-ingestion workflow runs through the reliable channel
+**Then** it writes the required markdown note and JSON mapping artifact, maps
+three to five newly verified sources to Carnot stack implications, failure
+modes, and concrete `.396` experiment targets, updates `research-studying.md`
+idempotently, flags the strongest `.396` follow-up, records `random_seed`, and
+leaves conductor and reconciliation files untouched.
+
+## Implementation Status (REQ-REPORT-4276)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4276 | Planned (`python/carnot/experiment_4276_sota_ingestion_v396.py`, `docs/research-notes/sota-ingestion-v396-2026-06-16.md`) | Planned (`tests/python/test_experiment_4276_sota_ingestion_v396.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
