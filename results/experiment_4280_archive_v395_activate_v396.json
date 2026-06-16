@@ -1,0 +1,195 @@
+{
+  "activated_milestone": "2026.06.396",
+  "active_milestone_confirmed": "2026.06.396",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.395",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4279_capstone_v395.json",
+      "experiment_id": "4279",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "4a7dbe106eb3b9d1632be1668e4a9d58e20f50cd6841692f65aa4ab6d82157ca"
+    },
+    {
+      "deliverable": "results/experiment_4271_arc_cross_family_transfer_existing_pool.json",
+      "experiment_id": "4271",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "e3bd48d3f2219fa67186693c8d0e7ddb9f5cafc2530e7e7164d15cc04d532ae0"
+    },
+    {
+      "deliverable": "results/experiment_4273_arc_cross_family_online_adaptation.json",
+      "experiment_id": "4273",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "dd5ca19b4bf066dec1c11e65bc233834a89caa251f0d3d2604bdbb48d95b7ed9"
+    },
+    {
+      "deliverable": "results/experiment_4274_diffusiongemma_loader_fix_preflight.json",
+      "experiment_id": "4274",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "0812f30a8a8752b038efaaca0761de92384eabac9207ae394bb9ba2803cb653b"
+    },
+    {
+      "deliverable": "results/experiment_4275_arc_incremental_progress_new_game.json",
+      "experiment_id": "4275",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "506cda548814df778d0ae8013cc15d33a3f9ce8819fda7d285909d4da85f4512"
+    },
+    {
+      "deliverable": "results/experiment_4277_verifier_registry_gaps_hygiene.json",
+      "experiment_id": "4277",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "8304357834848e321ba0a32b471aa6c98223deb607b41f60ddb4abc281342d5f"
+    }
+  ],
+  "duration_s": 14.157086,
+  "exclusion_manifest_parses": true,
+  "experiment_id": 4280,
+  "field_principles": {
+    "activated_milestone": "Confirms .396 is live for the deferred-scale-up frame.",
+    "active_milestone_confirmed": "Records the active roadmap milestone actually observed.",
+    "archived_milestone": "Provenance: the milestone being closed, 2026.06.395.",
+    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
+    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
+    "honest_verdict": "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.",
+    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
+    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
+    "v395_close_state": "Honest record (cross-family GENERALIZED, gate flipped open, loader repaired, ARC 20, self-learning ceiling) so the .396 agents frame the milestone as RUN-the-deferred-scale-up + HARDEN-on-ARC-GEN, not a redo and not a fresh over-claim."
+  },
+  "honest_verdict": "success: archived_v395_v396_active_cross_family_generalized_True_hardened_win_True_diffusiongemma_gate_True_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "active_milestone": {
+      "actual": "2026.06.396",
+      "expected": "2026.06.396",
+      "matches": true,
+      "path": "research-roadmap.yaml"
+    },
+    "exclusion_manifest_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/exclusion_manifest.yaml"
+    },
+    "research_complete_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "smart_subset_pretest": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4280_archive_v395_activate_v396.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "green": true,
+      "stderr_tail": "",
+      "stdout_tail": "........................................................................ [ 80%]\n.................                                                        [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n89 passed, 1 warning in 5.48s\n"
+    },
+    "source_artifacts": {
+      "4271": {
+        "exists": true,
+        "path": "results/experiment_4271_arc_cross_family_transfer_existing_pool.json",
+        "sha256": "e3bd48d3f2219fa67186693c8d0e7ddb9f5cafc2530e7e7164d15cc04d532ae0"
+      },
+      "4273": {
+        "exists": true,
+        "path": "results/experiment_4273_arc_cross_family_online_adaptation.json",
+        "sha256": "dd5ca19b4bf066dec1c11e65bc233834a89caa251f0d3d2604bdbb48d95b7ed9"
+      },
+      "4274": {
+        "exists": true,
+        "path": "results/experiment_4274_diffusiongemma_loader_fix_preflight.json",
+        "sha256": "0812f30a8a8752b038efaaca0761de92384eabac9207ae394bb9ba2803cb653b"
+      },
+      "4275": {
+        "exists": true,
+        "path": "results/experiment_4275_arc_incremental_progress_new_game.json",
+        "sha256": "506cda548814df778d0ae8013cc15d33a3f9ce8819fda7d285909d4da85f4512"
+      },
+      "4277": {
+        "exists": true,
+        "path": "results/experiment_4277_verifier_registry_gaps_hygiene.json",
+        "sha256": "8304357834848e321ba0a32b471aa6c98223deb607b41f60ddb4abc281342d5f"
+      },
+      "4279": {
+        "exists": true,
+        "path": "results/experiment_4279_capstone_v395.json",
+        "sha256": "4a7dbe106eb3b9d1632be1668e4a9d58e20f50cd6841692f65aa4ab6d82157ca"
+      }
+    }
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4280,
+  "reproducibility_checksum": "1f805cecf87778f5e7d17a8bc24ee5ecda150616ce42c7c11a612c68858a89ea",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "updated",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v395_to_v396_4280.v1",
+  "spec_refs": [
+    "REQ-REPORT-4280",
+    "SCENARIO-REPORT-4280"
+  ],
+  "task_id": "exp4280-archive-v395-activate-v396",
+  "v395_close_state": {
+    "arc_game_advanced": "wa30-ee6fef47",
+    "arc_levels_completed": 1,
+    "arc_total_levels_solved": 20,
+    "code_oracle_distinct_retired": true,
+    "cross_family_ci95": [
+      0.25,
+      0.558
+    ],
+    "cross_family_ci95_excludes_zero": true,
+    "cross_family_delta": 0.404,
+    "cross_family_generalizes": true,
+    "diffusiongemma_full_run_gate": true,
+    "flagged_artifacts_excluded": [],
+    "full_run_cost_estimate_s": 0.071224,
+    "guidance_changes_selection": true,
+    "hardened_win": true,
+    "hardening_axes_passed": 3,
+    "hardening_axes_total": 3,
+    "headline_outcome": "cross_family_generalizes_self_learning_static_ceiling_diffusiongemma_full_run_ready_arc20_game_wa30-ee6fef47_paper_ready",
+    "held_out_family_n": 52,
+    "held_out_task_n": 52,
+    "loader_repaired": true,
+    "matched_control_delta": 0.442,
+    "multiseed_mean_delta": 0.458,
+    "multiseed_replicated": true,
+    "online_adaptation_helps": false,
+    "online_cross_family_delta": 0.5,
+    "online_minus_static_ci95": [
+      0.0,
+      0.192
+    ],
+    "oracle_at_k": 0.827,
+    "paper_ready": true,
+    "preflight_go": true,
+    "provenance_blind_delta": 0.385,
+    "provenance_blind_survived": true,
+    "self_learning_status": "static_is_the_ceiling",
+    "self_learning_task_n": 52,
+    "static_cross_family_delta": 0.404,
+    "summary": "cross_family_generalized_gate_open_loader_repaired_arc20",
+    "v396_frame": "RUN the deferred DiffusionGemma full run with matched controls + HARDEN the cross-family win on ARC-GEN + pay the efficiency axis",
+    "verifier_as_reward_in_loop_retired": true,
+    "verifier_is_oracle": false,
+    "within_minus_cross_gap": 0.0385
+  }
+}
