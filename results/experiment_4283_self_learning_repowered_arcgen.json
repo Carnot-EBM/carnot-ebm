@@ -3476,5 +3476,13 @@
     "original_arc_task:fafd9572": "feature:cell_confidence_margin"
   },
   "tier2_memory_update": "cpu_system_memory_nearest_family_pattern_cache_no_model_retrain",
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "static_cross_family_delta=0.5 and tier2_cross_family_delta=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ]
 }
