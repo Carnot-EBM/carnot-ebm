@@ -8584,3 +8584,4 @@ c |
 | 2026-06-16 01:03 UTC | PHASE C1 (ARC north star; accuracy) -- monotonic A | OK | 91 passed, 1 warning in 5.68s |
 | 2026-06-16 01:15 UTC | PHASE D1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 103 passed, 1 warning in 5.49s |
 | 2026-06-16 01:32 UTC | PHASE D2 (hygiene) -- reconcile the verifier regis | OK | 89 passed, 1 warning in 7.62s |
+| 2026-06-16 02:42 UTC | PHASE D3 (hardware continuity; opportunistic per n | OK | 85 passed, 1 warning in 5.26s |
