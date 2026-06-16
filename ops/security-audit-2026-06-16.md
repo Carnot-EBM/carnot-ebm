@@ -37,19 +37,28 @@ test that copies a plaintext secret into a fixture would get auto-committed.
   (does NOT delete the working files; only removes them from version control). Held back from
   doing autonomously given the scale + concurrent conductor commits.
 
-## Issue 2 (FLAGGED) — hardcoded `trust_remote_code=True` (policy gap)
+## Issue 2 (PARTIALLY FIXED) — hardcoded `trust_remote_code=True` (policy gap, PERVASIVE)
 
 CLAUDE.md policy: HF model loading must gate remote-code execution behind
-`CARNOT_TRUST_REMOTE_CODE=1` (default False). These 5 sites hardcode `True`, executing
-arbitrary remote repo code unconditionally:
-- `python/carnot/agentic/arc_exp4077_verifier_reward_rft_corpus_build.py` (L225, 728, 734)
-- `python/carnot/agentic/arc_exp4078_verifier_reward_rft_train_launch.py` (L178)
-- `scripts/collect_multi_dataset_activations.py` (L212)
+`CARNOT_TRUST_REMOTE_CODE=1` (default False). The CORE code (`inference/llm_solver.py`,
+`inference/model_loader.py`, `pipeline/verify_repair.py`) already gates correctly. But the
+pattern is hardcoded `True` in **~46 experiment/script sites across ~43 files** (a full sweep,
+not the 5 the initial narrow grep showed).
 
-Low practical severity (they load specific known repos like MiniCPM5 that genuinely require it,
-in a dev context), but it violates the project's own gating policy. **Recommended fix:**
-`trust_remote_code=os.environ.get("CARNOT_TRUST_REMOTE_CODE") == "1"`. Not auto-applied — it
-changes experiment behavior (the load fails without the env set), so it's an operator call.
+- **FIXED (the in-loop / active path):** the 3 files the conductor actually runs —
+  `agentic/arc_exp4077_verifier_reward_rft_corpus_build.py` (3 sites),
+  `agentic/arc_exp4078_verifier_reward_rft_train_launch.py` (1),
+  `scripts/collect_multi_dataset_activations.py` (2) — gated to
+  `os.environ.get("CARNOT_TRUST_REMOTE_CODE", "") == "1"`. **NOTE: these now require
+  `CARNOT_TRUST_REMOTE_CODE=1` to run** (secure default).
+- **REMAINING (~43 legacy files, FLAGGED not fixed):** `scripts/experiment_2x/3x/5x/6x/...`,
+  the activation collectors (`collect_qa/token/truthfulqa_activations*`), `train_ebm/ebt_*`.
+  Lower autonomous-execution risk (NOT run by the conductor; one-off/manual; load known repos).
+  A blind sed sweep is UNSAFE — several matches are in docstrings (`experiment_69`,
+  `experiment_91`) and inside f-string-generated subprocess code
+  (`experiment_117/58/67/68/93`) that would corrupt. Needs a careful per-file pass.
+  **Operator decision:** full careful sweep of the 43, or accept as low-risk-legacy +
+  add a lint that blocks NEW hardcoded `trust_remote_code=True` going forward.
 
 ## Issue 3 (FLAGGED, low) — `shell=True` subprocess calls
 
