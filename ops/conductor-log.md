@@ -8619,3 +8619,4 @@ c |
 | 2026-06-16 19:41 UTC | Archive .397 -> activate .398; KEEP the hardened g | OK | 89 passed, 1 warning in 5.93s |
 | 2026-06-16 20:30 UTC | PHASE A1 (THE HEADLINE; §5 win condition; re-scope | OK | 110 passed, 1 warning in 10.61s |
 | 2026-06-16 21:54 UTC | PHASE B1 (the §5 in-generation headline; fix the . | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ath / "diffusi |
+| 2026-06-16 22:07 UTC | PHASE B1 (the §5 in-generation headline; fix the . | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_4304_diffusi |
