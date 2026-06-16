@@ -1172,5 +1172,14 @@
       "vote_correct": false
     }
   ],
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DEGENERATE_SEPARATION",
+      "severity": "critical",
+      "detail": "cross_family_delta=1.0 CI[1.0,1.0] is a CONSTRUCTION ARTIFACT not generalization: vote_at_1=0.0 (wrong-majority-only pool, vote can never win) + set_encoder_at_1=1.0 (4 candidates/task, correct trivially separable). Measures pool degeneracy, not cross-generator transfer. arcgen_cross_family_holds is NOT headline-eligible; the cross-GENERATOR axis remains OPEN. See docs/research-notes/exp4282-arcgen-degenerate-audit-2026-06-16.md"
+    }
+  ],
+  "arcgen_cross_family_holds_outerloop_corrected": false
 }
