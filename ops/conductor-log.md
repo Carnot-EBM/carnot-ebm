@@ -8575,3 +8575,4 @@ c |
 | 2026-06-15 23:08 UTC | Milestone 2026.06.395 activated | OK | 11 tasks queued |
 | 2026-06-15 23:24 UTC | Archive .394 -> activate .395; KEEP the hardened g | OK | 89 passed, 1 warning in 6.44s |
 | 2026-06-15 23:41 UTC | PHASE A1 (DEPTH; fix exp4258's root cause) -- FAMI | OK | 86 passed, 1 warning in 4.52s |
+| 2026-06-16 00:02 UTC | PHASE A2 (DEPTH; THE real OOD test; gated_on A1 fa | OK | 88 passed, 1 warning in 9.39s |
