@@ -8577,3 +8577,4 @@ c |
 | 2026-06-15 23:41 UTC | PHASE A1 (DEPTH; fix exp4258's root cause) -- FAMI | OK | 86 passed, 1 warning in 4.52s |
 | 2026-06-16 00:02 UTC | PHASE A2 (DEPTH; THE real OOD test; gated_on A1 fa | OK | 88 passed, 1 warning in 9.39s |
 | 2026-06-16 00:05 UTC | PHASE A3 (DEPTH; the fresh-pool fallback; gated_on | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4270-arc-family-provenance-recovery.fam |
+| 2026-06-16 00:07 UTC | PHASE A3 (DEPTH; the fresh-pool fallback; gated_on | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4270-arc-family-provenance-recovery.fam |
