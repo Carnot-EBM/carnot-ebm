@@ -22193,6 +22193,86 @@ not claim `.394` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4269 | Implemented (`python/carnot/reporting/archive_v394_activate_v395_4269.py`, `python/carnot/experiment_4269_archive_v394_activate_v395.py`, `results/experiment_4269_archive_v394_activate_v395.py`) | Implemented (`tests/python/test_experiment_4269_archive_v394_activate_v395.py`) |
 
+### REQ-REPORT-4280: Archive .395, Activate .396, And Preserve The Landmark Cross-Family Win
+
+The Exp 4280 workflow SHALL archive milestone `2026.06.395`, confirm milestone
+`2026.06.396` is active, and write the record-only artifact
+`results/experiment_4280_archive_v395_activate_v396.json`. It SHALL run no live
+model training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`.
+
+Before writing the complete artifact or editing `research-complete.yaml`, the
+workflow SHALL verify these preconditions and stop with a `blocked_<resource>`
+honest verdict if any fail:
+
+- `research-complete.yaml` parses under `yaml.safe_load`.
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`.
+- The smart-subset pre-test gate is green.
+
+The workflow SHALL ensure `research-complete.yaml` contains a single `.395`
+archive record, appending the canonical `.395` record only when absent and
+removing duplicate top-level `.395` records if interrupted conductor appends
+created any. The workflow SHALL keep `research-complete.yaml` parseable after
+any edit.
+
+The complete artifact SHALL include the principle-annotated fields
+`honest_verdict`, `v395_close_state`, and `preconditions_checked` with these
+exact principles:
+
+- `honest_verdict`: `Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.`
+- `v395_close_state`: `Honest record (cross-family GENERALIZED, gate flipped open, loader repaired, ARC 20, self-learning ceiling) so the .396 agents frame the milestone as RUN-the-deferred-scale-up + HARDEN-on-ARC-GEN, not a redo and not a fresh over-claim.`
+- `preconditions_checked`: `Records resources verified; pre-empts the silent-missing-resource fabrication mode.`
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v395_close_state` SHALL truthfully record
+that `.395` was a LANDMARK: the hardened ARC oracle-distinct
+verifier-beats-vote win generalized to held-out task-families. It SHALL record
+Exp 4271 `cross_family_delta` `+0.404`, CI95 excluding zero, `held_out_task_n`
+`52`, `within_minus_cross_gap` `0.0385`, and `verifier_is_oracle=false`.
+It SHALL record `hardened_win=true` from all three axes: provenance-blind delta
+`+0.385`, multi-seed mean delta `+0.458`, and cross-family delta `+0.404`.
+
+The close-state SHALL record that `diffusiongemma_full_run_gate=true`,
+DiffusionGemma loader repair succeeded in Exp 4274 with `loader_repaired=true`
+and `preflight_go=true`, ARC advanced to `20` levels on `wa30-ee6fef47`,
+self-learning found `static_is_the_ceiling` while the online-minus-static CI
+touched zero at `n=52`, code oracle-distinct and verifier-as-reward in-loop are
+retired/operator-owned axes, and `paper_ready=true`. It SHALL frame `.396` as
+`RUN the deferred DiffusionGemma full run with matched controls + HARDEN the
+cross-family win on ARC-GEN + pay the efficiency axis`.
+
+#### SCENARIO-REPORT-4280: The Archive Records The .395 Landmark Close-State
+
+**Given** `.395` has the Exp 4279 capstone, Exp 4271 cross-family transfer,
+Exp 4274 DiffusionGemma loader-fix preflight, the history and exclusion-manifest
+YAML files parse, the smart-subset pre-test gate is green, and `.396` is active
+**When** the Exp 4280 archive workflow runs
+**Then** it archives `.395`, confirms `.396`, keeps the YAML history parseable
+with one `.395` record, writes
+`results/experiment_4280_archive_v395_activate_v396.json`, records
+cross-family generalization with CI95 excluding zero, records
+`hardened_win=true`, `diffusiongemma_full_run_gate=true`, loader repaired and
+`preflight_go=true`, ARC `20` levels, self-learning static-ceiling with CI
+touching zero at `n=52`, retired code oracle-distinct and verifier-as-reward
+axes, `paper_ready=true`, and `.396` deferred-scale-up / ARC-GEN / efficiency
+framing in `v395_close_state`, records the checked resources in
+`preconditions_checked`, declares `aggregation_from_upstream_artifacts`, and
+emits a terminal-prefixed honest verdict.
+
+#### SCENARIO-REPORT-4280-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4280 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does
+not claim `.395` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4280)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4280 | Planned (`python/carnot/reporting/archive_v395_activate_v396_4280.py`, `python/carnot/experiment_4280_archive_v395_activate_v396.py`, `results/experiment_4280_archive_v395_activate_v396.py`) | Planned (`tests/python/test_experiment_4280_archive_v395_activate_v396.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
