@@ -8,6 +8,66 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-16 Exp 4286 - .396 fork SOTA ingestion ingested
+
+**Status:** INGESTED into `results/experiment_4286_sota_ingestion_v397.json`.
+
+**Reliable-channel provenance:** `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py` imported successfully; `sweep_clusters.py`
+emitted the focused arXiv discovery URLs; Semantic Scholar returned HTTP 429
+for the two low-concurrency keyword probes, so it was reachable as code but did
+not promote sources. WebSearch/WebFetch verified arXiv:2605.14531,
+arXiv:2506.10971, arXiv:2601.22588, arXiv:2603.20334, and arXiv:2604.04373.
+The banned `/deep-research` channel was not invoked.
+
+**Filtered track:** .396 outcomes after the DiffusionGemma full run,
+ARC-GEN cross-family stress, self-learning repower, and verifier-efficiency
+head-to-head.
+
+**.396 outcome conditioning:**
+- Exp 4281: `diffusiongemma_guidance_moat=false` and
+  `blocked_partial_state_verifier`; the learned verifier cannot score partial
+  DiffusionGemma token canvases.
+- Exp 4282: raw `arcgen_cross_family_holds=true`, but the outer-loop correction
+  records `arcgen_cross_family_holds_outerloop_corrected=false` with
+  `DEGENERATE_SEPARATION`, so ARC-GEN is not headline-clean generalization.
+- Exp 4284: `efficiency_parity_at_lower_cost=true`,
+  `accuracy_delta=0.4423076923`, CI95 `[0.3076923077, 0.5769230769]`, and
+  `cost_ratio=1.95e-08`; the cheap energy verifier remains the efficient
+  judging path.
+
+**Fresh-pass candidates marked ingested:**
+- Manta-LM closed-loop diffusion control, arXiv:2605.14531 - mapped to the
+  missing partial-state scorer/controller required before another
+  DiffusionGemma guidance headline.
+- Masked discrete diffusion guidance dynamics, arXiv:2506.10971 - mapped to a
+  guidance-strength and trajectory-stability audit for masked denoising.
+- INSPECTOR Representation-as-a-Judge, arXiv:2601.22588 - mapped to small
+  representation-probe verifier distillation after Exp 4284's cost win.
+- ABPR trace-guided procedural refinement, arXiv:2603.20334 - mapped to a
+  non-degenerate proof-trace cross-substrate generalization stress gate.
+- Decocted experience for test-time inference, arXiv:2604.04373 - mapped to
+  retrieval-only selector context while the online-weight-update result remains
+  under tautology correction.
+
+Already-covered context not re-ingested as fresh method rows: RFG, EDLM,
+EntRGi, ARC-GEN, Paying Less Generalization Tax, S3, Self-Improving LLM Agents
+at Test-Time, SEVerA, ARC-TGI, DPRM, Reward-Guided Stitching, and COVER.
+
+flagged_for_v397:
+`manta_partial_state_scorer_diffusiongemma_v397`.
+
+Flagged for .397: `manta_partial_state_scorer_diffusiongemma_v397`.
+
+random_seed=4286
+
+**Bottom line for the .397 roadmap:** the DiffusionGemma moat FAILED for a
+specific engineering reason, not because a learned external verifier lost to
+RFG. Build the learned partial-state scorer first, keep ARC-GEN out of the
+headline until the degenerate pool is repaired with proof-trace or relational
+substrates, preserve the cheap-verifier efficiency path, and keep online updates
+retrieval-only until the tautology audit is fixed.
+
 ## 2026-06-16 Exp 4276 - .395 fork SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-v396-2026-06-16.md`.
