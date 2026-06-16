@@ -1,0 +1,68 @@
+{
+  "field_principles": {
+    "flagged_for_v397": "Closes discover->ingest->plan: names the strongest method for the .397 planner, conditioned on the .396 outcomes.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method MUST carry a real arXiv ID/URL (no citation = fabrication per adversarial_verify discipline) + a one-line .397 experiment mapping.",
+    "random_seed": "Determinism placeholder for the discovery query set (recorded for reproducibility of the sweep)."
+  },
+  "flagged_for_v397": "manta_partial_state_scorer_diffusiongemma_v397",
+  "honest_verdict": "complete: sota_ingestion_v397_mapped",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2605.14531",
+      "carnot_stack_mapping": "Train a small masked-canvas value head over DiffusionGemma partial states using final exact-grid outcomes and energy-verifier labels, then expose score_partial_state before rerunning verifier guidance.",
+      "experiment_mapping": ".397: build and gate a learned partial-state scorer for DiffusionGemma masked canvases before any new guided-generation headline.",
+      "failure_mode": "The paper's latent controller is not a drop-in verifier. If partial targets leak final answers, the rerun becomes circular rather than a learned external guidance moat.",
+      "name": "Manta-LM closed-loop diffusion control",
+      "source_read": "Language Generation as Optimal Control frames diffusion generation as a stochastic control problem and approximates a closed-loop policy in latent control space.",
+      "track": "learned partial-state diffusion scorer",
+      "url": "https://arxiv.org/abs/2605.14531",
+      "v396_outcome_conditioning": "Exp 4281 reports diffusiongemma_guidance_moat=false because no learned Carnot verifier can score partial DiffusionGemma token canvases. .397 needs the missing partial-state scorer first."
+    },
+    {
+      "arxiv_id_or_url": "2506.10971",
+      "carnot_stack_mapping": "Log guidance strength, mask entropy, token-change covariance, and trajectory stability for unguided, RFG, EntRGi, and Carnot-scored partial-state arms.",
+      "experiment_mapping": ".397: add a masked-diffusion guidance dynamics audit that rejects over-guided partial-state scorers before full-run promotion.",
+      "failure_mode": "The theory assumes clean model scores and simplified mixtures; ARC exact-match grids may violate those assumptions, so it is a diagnostic gate rather than a success metric.",
+      "name": "Masked discrete diffusion guidance dynamics",
+      "source_read": "What Exactly Does Guidance Do in Masked Discrete Diffusion Models derives how classifier-free guidance shapes reverse masked diffusion dynamics and convergence behavior.",
+      "track": "guidance-strength diagnostic for masked diffusion",
+      "url": "https://arxiv.org/abs/2506.10971",
+      "v396_outcome_conditioning": "Exp 4281 showed guidance changes selection but the learned arm could not score partial states. .397 should add trajectory-level diagnostics before treating stronger guidance as progress."
+    },
+    {
+      "arxiv_id_or_url": "2601.22588",
+      "carnot_stack_mapping": "Distill held-out selector outcomes and Qwen judge disagreements into a decoding-free representation probe, then compare it against the existing Set-Encoder energy verifier.",
+      "experiment_mapping": ".397: train a small representation judge as an efficiency-axis replication of Exp 4284, with exact-grid calibration gates.",
+      "failure_mode": "Representation probes can inherit teacher-judge bias and may miss grid-specific exactness. Keep exact target hashes as the final acceptance object.",
+      "name": "INSPECTOR Representation-as-a-Judge",
+      "source_read": "Representation-as-a-Judge replaces prompted LLM judging with lightweight probes over small-model hidden states, arguing that evaluation needs less semantic capacity than generation.",
+      "track": "small-verifier efficiency and distillation",
+      "url": "https://arxiv.org/abs/2601.22588",
+      "v396_outcome_conditioning": "Exp 4284 already shows the Carnot energy verifier beats the LLM judge by +0.4423 accuracy at cost_ratio=1.95e-08. .397 should broaden cheap judging without returning to generative judges."
+    },
+    {
+      "arxiv_id_or_url": "2603.20334",
+      "carnot_stack_mapping": "Require candidate selectors to emit or consume proof-tree features on ARC-AGI-2 and RAVEN-style tasks, then test whether the cheap energy verifier transfers across grid and relational substrates.",
+      "experiment_mapping": ".397: replace the degenerate ARC-GEN headline with a proof-trace cross-substrate generalization stress gate.",
+      "failure_mode": "ABPR depends on executable symbolic hypotheses. Pure grid outputs without stable traces cannot be scored this way without adding a trace extractor.",
+      "name": "ABPR trace-guided procedural refinement",
+      "source_read": "Abduction-Based Procedural Refinement couples LLM hypotheses with a Prolog meta-interpreter and proof-tree traces, with reported extensions beyond ARC into RAVEN-style relational abstractions.",
+      "track": "cross-substrate verifier generalization",
+      "url": "https://arxiv.org/abs/2603.20334",
+      "v396_outcome_conditioning": "Exp 4282's raw ARC-GEN win is adversarial-corrected as degenerate separation, so .397 needs a non-degenerate relational substrate rather than another same-shaped generator pool."
+    },
+    {
+      "arxiv_id_or_url": "2604.04373",
+      "carnot_stack_mapping": "Build a provenance-safe memory of failed selector cases, retrieve only train-side rule summaries, and feed those summaries as frozen context features to the selector.",
+      "experiment_mapping": ".397: test retrieval-only selector context on held-out families before reviving online weight updates.",
+      "failure_mode": "Experience retrieval can leak target-family structure or stale incorrect rules. Keep target outputs hidden and report frozen context versus random-context controls.",
+      "name": "Decocted experience for test-time inference",
+      "source_read": "Decocted Experience studies context construction from accumulated experience as a test-time scaling axis for reasoning and agentic tasks without updating model parameters.",
+      "track": "online selector improvement without weight mutation",
+      "url": "https://arxiv.org/abs/2604.04373",
+      "v396_outcome_conditioning": "Exp 4283's online adaptation result is adversarial-flagged for a tautology-style metric match, so .397 should prefer retrieval-only experience context before any selector-head update."
+    }
+  ],
+  "random_seed": 4286
+}

@@ -21126,6 +21126,101 @@ leaves conductor and reconciliation files untouched.
 |---|---|---|
 | REQ-REPORT-4276 | Planned (`python/carnot/experiment_4276_sota_ingestion_v396.py`, `docs/research-notes/sota-ingestion-v396-2026-06-16.md`) | Planned (`tests/python/test_experiment_4276_sota_ingestion_v396.py`) |
 
+### REQ-REPORT-4286: Ingest The .396 Fork Outcomes Into A .397 SOTA Plan
+
+The Exp 4286 SOTA-ingestion workflow SHALL ingest the `.396` fork outcomes from
+`results/experiment_4281_diffusiongemma_energy_guided_full_run.json`,
+`results/experiment_4282_arcgen_cross_family_stress.json`, and
+`results/experiment_4284_verifier_efficiency_vs_llm_judge.json`, SHALL read
+`research-studying.md`, `research-references.md`,
+`results/experiment_4276_sota_ingestion_v396.json`, `scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, and the `CLAUDE.md` SOTA-Ingestion Cycle
+Discipline, SHALL run reliable focused discovery through the sweep helpers and
+low-concurrency WebSearch/WebFetch, and SHALL NOT invoke `/deep-research` or
+modify `scripts/research_conductor.py`.
+
+The workflow SHALL stop with `honest_verdict=blocked_sota_channels_unavailable`
+only if both reliable discovery channels are unavailable: the sweep helpers do
+not import or emit usable queries AND WebSearch/WebFetch cannot fetch source
+pages. If either reliable channel works, the workflow SHALL write a complete
+mapping. The machine-checkable artifact SHALL be written to
+`results/experiment_4286_sota_ingestion_v397.json`, and the required runner
+SHALL be `results/experiment_4286_sota_ingestion_v397.py` delegating to
+`python/carnot/experiment_4286_sota_ingestion_v397.py`.
+
+The mapping SHALL not re-ingest methods already covered by the `.395` or `.396`
+sweeps. It SHALL record RFG, EDLM, EntRGi, ARC-GEN, Paying Less Generalization
+Tax, S3, Self-Improving LLM Agents at Test-Time, SEVerA, ARC-TGI, DPRM, and
+Reward-Guided Stitching as prior-covered context when they are mentioned, not
+as newly mapped methods. Newly mapped methods SHALL be selected from
+WebFetch-verified sources including closed-loop diffusion control
+(`arXiv:2605.14531`), masked-discrete-diffusion guidance dynamics
+(`arXiv:2506.10971`), Representation-as-a-Judge (`arXiv:2601.22588`),
+Abduction-Based Procedural Refinement (`arXiv:2603.20334`), and decocted
+test-time experience (`arXiv:2604.04373`).
+
+The verified source URLs SHALL be `https://arxiv.org/abs/2605.14531`,
+`https://arxiv.org/abs/2506.10971`, `https://arxiv.org/abs/2601.22588`,
+`https://arxiv.org/abs/2603.20334`, and
+`https://arxiv.org/abs/2604.04373`.
+
+The note in `research-studying.md` SHALL condition the `.397` recommendation on
+the actual `.396` outcomes. When Exp 4281 reports
+`diffusiongemma_guidance_moat=false` and `blocked_partial_state_verifier`
+because the learned verifier cannot score partial DiffusionGemma states, the
+workflow SHALL flag a learned partial-state scorer/controller before any
+stronger guided-generation headline. When Exp 4282
+reports `arcgen_cross_family_holds=true` but also records
+`flagged_adversarial=true`, `arcgen_cross_family_holds_outerloop_corrected=false`,
+and the `DEGENERATE_SEPARATION` corrigendum, the workflow SHALL treat ARC-GEN as
+open rather than headline-hardened. When Exp 4284 reports
+`efficiency_parity_at_lower_cost=true`, `accuracy_delta=0.4423076923`,
+`accuracy_delta_ci95=[0.3076923077, 0.5769230769]`, and
+`cost_ratio=1.95e-08`, the workflow SHALL preserve the small-verifier efficiency
+path as a `.397` secondary method.
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v397`, `random_seed`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, `flagged_for_v397`, and `random_seed`.
+`honest_verdict` SHALL use a terminal prefix and, on the complete path, start
+with `complete: sota_ingestion_v397_mapped`. `methods_mapped` SHALL contain
+three to five dicts with exactly `name`, `arxiv_id_or_url`, `url`, `track`,
+`source_read`, `v396_outcome_conditioning`, `carnot_stack_mapping`,
+`failure_mode`, and `experiment_mapping`; each `arxiv_id_or_url` SHALL be one
+of the WebFetch-verified arXiv IDs or URLs, preventing fabricated or uncited
+method rows. `flagged_for_v397` SHALL be a non-empty concrete roadmap slug
+naming the strongest `.397` method, conditioned on whether DiffusionGemma
+guidance held, failed on partial-state scoring, or whether ARC-GEN hardening was
+clean versus degenerate. `random_seed` SHALL record the deterministic discovery
+query set seed.
+
+The workflow SHALL update `research-studying.md` idempotently to mark the
+`.396` forks as ingested, SHALL include `flagged_for_v397`, and SHALL NOT update
+`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-4286: The .396 Outcomes Close Into A .397 Partial-State Scorer Plan
+
+**Given** Exp 4281 reports the learned DiffusionGemma guidance moat failed
+because no learned verifier can score partial masked token states
+**And** Exp 4282 is corrected as ARC-GEN degenerate rather than headline-clean
+cross-substrate generalization
+**And** Exp 4284 reports the cheap energy verifier beats the LLM judge at much
+lower cost
+**When** the Exp 4286 SOTA-ingestion workflow runs through the reliable channel
+**Then** it writes the required JSON mapping artifact, maps three to five newly
+verified sources to Carnot stack implications, failure modes, and concrete
+`.397` experiment targets, updates `research-studying.md` idempotently, flags
+the strongest `.397` follow-up, records `random_seed`, and leaves conductor and
+reconciliation files untouched.
+
+## Implementation Status (REQ-REPORT-4286)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4286 | Planned (`python/carnot/experiment_4286_sota_ingestion_v397.py`) | Planned (`tests/python/test_experiment_4286_sota_ingestion_v397.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
