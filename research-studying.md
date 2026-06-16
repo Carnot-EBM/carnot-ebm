@@ -8,6 +8,41 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-16 DMoE (arXiv:2606.14243) - candidate substrate for the (out-of-band) verifier-as-reward retry
+
+**Source:** operator-directed read, 2026-06-16. Yue et al. (Tsinghua),
+"Decoupled Mixture-of-Experts for Parametric Knowledge Injection" (arXiv:2606.14243).
+Single-source (abstract-level) read — treat as a CANDIDATE, not a validated direction.
+
+**Score: 3 x 3 x 2 x 2 = 36** — moderate-low. It does NOT touch the verifier
+moat, ARC, or the in-generation/diffusion question (north-star alignment is low;
+it is about knowledge injection, not verification). The leverage is on the
+SECONDARY self-learning track, which is currently out-of-band.
+
+**Position:** The verifier-as-reward / self-learning track failed 7x this run on
+LIVE LoRA-RFT (Gemma4ClippableLinear attach, then "cannot train in the task
+window"), and got punted out-of-band (exp4263). DMoE proposes a cleaner
+modularity for the SAME goal — folding verifier-certified knowledge into the
+sovereign model — that directly addresses the two failure modes:
+- knowledge becomes a DECOUPLED, independently-updatable expert (base untouched
+  -> no catastrophic forgetting / knowledge conflict that full-finetune risks);
+- experts attach ONLY to the final-layer FFN, PRESERVING KV-cache (cheap to run,
+  and a far smaller training surface than full/LoRA RFT -> likelier to fit a
+  bounded window);
+- a lightweight uncertainty-aware router activates the expert only when needed
+  (a peer of Carnot's cascade-router / verifier-as-router; the verifier signal
+  could itself gate activation).
+- Decentralization fit: users add/swap domain experts LOCALLY without retraining
+  the base — same shape as the local-first sovereignty constraint.
+
+**Next experiment (candidate, not queued):** when self-learning re-opens, re-attempt
+verifier-as-reward distillation as DMoE-style expert injection of verifier-certified
+traces (final-FFN decoupled expert + uncertainty router) INSTEAD of full/LoRA RFT.
+Smoke-first: does a final-FFN decoupled expert attach + train >=20 steps in-window on
+the gemma-4-E4B base (the harness that the LoRA path could not), loss moving, no base
+regression? Honest null if it also cannot fit the window. Pair with the literature
+two-source rule before any novelty claim (DMoE vs prior adapter/MoE knowledge-injection).
+
 ## 2026-06-16 Exp 4286 - .396 fork SOTA ingestion ingested
 
 **Status:** INGESTED into `results/experiment_4286_sota_ingestion_v397.json`.
