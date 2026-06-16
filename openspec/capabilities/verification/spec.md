@@ -16826,6 +16826,87 @@ If any required artifact or ledger parse is missing, then it writes
 `honest_verdict=blocked_v395_artifacts_missing` and does not fabricate registry,
 gap, or manifest reconciliation.
 
+### REQ-VERIFY-4287: Verifier Registry And Gaps Hygiene For .396 Truth
+
+The repository SHALL provide Exp 4287 at
+`python/carnot/experiment_4287_verifier_registry_gaps_hygiene.py` and
+`results/experiment_4287_verifier_registry_gaps_hygiene.py` to reconcile
+`ops/verifier_registry.yaml`, `ops/verifier_gaps.md`, and
+`ops/exclusion_manifest.yaml` to the `.396` truth. Before mutating ledgers, the
+runner SHALL parse all three ledgers and read
+`results/experiment_4277_verifier_registry_gaps_hygiene.json`,
+`results/experiment_4281_diffusiongemma_energy_guided_full_run.json`,
+`results/experiment_4282_arcgen_cross_family_stress.json`,
+`results/experiment_4283_self_learning_repowered_arcgen.json`,
+`results/experiment_4284_verifier_efficiency_vs_llm_judge.json`, and
+`results/experiment_4285_arc_incremental_progress_new_game.json`. If any
+required ledger cannot parse or any required `.396` outcome artifact is absent
+or unreadable, the runner SHALL write a terminal artifact with
+`honest_verdict=blocked_v396_artifacts_missing`,
+`regression_guard_passed=false`, empty `gaps_logged`, and SHALL stop without
+fabricating `.396` reconciliation.
+
+When preconditions hold, the runner SHALL run the GAP-4 execution regression
+guard against the `.395` Exp 4277 recorded numbers. The guard SHALL replay the
+canonical cached GAP-4 ARC-1 candidate set and require no regression in vote
+pass@2 `0.4516`, gated pass@2 `0.5806`, `headroom_recovered=4`, and
+`vote_wins_lost=0`. It SHALL expose bare bool `regression_guard_passed`.
+
+The runner SHALL record the `.396` outcomes in the GAP-4 / oracle-distinct ARC
+registry slot: Exp 4281 DiffusionGemma `diffusiongemma_guidance_moat=false`,
+`carnot_minus_unguided_delta=0.0`, and
+`honest_verdict=complete_diffusiongemma_learned_verifier_cannot_score_partial_states`;
+Exp 4282 ARC-GEN second-substrate verdict `arcgen_cross_family_holds=true`,
+`cross_family_delta=1.0`, `cross_family_ci95=[1.0, 1.0]`, and
+`held_out_task_n=50`; Exp 4283 repowered self-learning
+`online_adaptation_helps=false`, `static_cross_family_delta=0.5`,
+`online_cross_family_delta=0.5806451613`, and `held_out_task_n=102`; Exp 4284
+efficiency read `efficiency_parity_at_lower_cost=true`,
+`accuracy_delta=0.4423076923`, `accuracy_delta_ci95=[0.3076923077, 0.5769230769]`,
+and `cost_ratio=0.0000000195`; and Exp 4285 ARC progress
+`total_levels_solved=21`, `new_levels_solved_this_task=1`, and
+`game_advanced=ls20-9607627b`. The oracle-distinct ARC slot SHALL carry a `.396`
+generalization and guidance state showing that cross-family selection holds on
+ARC-GEN, online adaptation remains a powered static-ceiling/null read,
+DiffusionGemma guidance is blocked by missing learned partial-state scoring, the
+energy verifier has lower-cost efficiency parity, and ARC advanced by one level.
+
+The gaps ledger SHALL log any new missing-verifier backlog entry using the
+schema in `ops/verifier_gaps.md`. At minimum Exp 4287 SHALL log
+`GAP-DIFFUSIONGEMMA-PARTIAL-STATE-SCORER-4287` with `failure_mode`,
+`missing_discriminator`, `candidate_design`, and `priority`, because the
+DiffusionGemma full-run moat arm could not score masked/partial diffusion token
+states with any existing learned Carnot verifier.
+
+The terminal artifact SHALL write
+`results/experiment_4287_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_logged`, bare
+bool `registry_reconciled`, bare bool `manifest_reconciled`, `v396_outcomes`,
+`random_seed`, `reproducibility_checksum`, `model_specs`, `field_principles`,
+`spec_refs`, `duration_s`, and `inference_substrate`. Its field principles
+SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled + regression guard result.`;
+`regression_guard_passed` = `BARE bool: the GAP-4 execution numbers did not regress vs .395 -- the standing-capability guard.`;
+`gaps_logged` = `List of new missing-verifier gap entries (failure mode + missing discriminator + candidate design + priority) -- the verifier build backlog.`;
+`reproducibility_checksum` = `Hash of the reconciled registry + gaps + manifest; catches silent drift.`
+
+### SCENARIO-VERIFY-4287: .396 Reconciliation Logs Partial-State Verifier Gap
+
+Given the `.395` hygiene artifact, the `.396` DiffusionGemma, ARC-GEN,
+self-learning, efficiency, and ARC progress artifacts,
+`ops/verifier_registry.yaml`, `ops/verifier_gaps.md`, and
+`ops/exclusion_manifest.yaml` are readable, when Exp 4287 runs, then it writes
+the terminal artifact with `regression_guard_passed=true`, reconciles the
+registry to the `.396` state, records the ARC-GEN second-substrate generalization
+hold, records the powered static-ceiling self-learning read, records the
+DiffusionGemma partial-state guidance block, records the lower-cost efficiency
+parity result, records ARC `total_levels_solved=21`, logs
+`GAP-DIFFUSIONGEMMA-PARTIAL-STATE-SCORER-4287` through `gaps_logged`, and
+declares a reproducibility checksum over the reconciled registry, gaps, and
+manifest files. If any required artifact or ledger parse is missing, then it
+writes `honest_verdict=blocked_v396_artifacts_missing` and does not fabricate
+registry, gap, or manifest reconciliation.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at

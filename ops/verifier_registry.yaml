@@ -420,6 +420,51 @@ verifiers:
     - verifier_as_reward_in_loop_axis_out_of_band_exp4263
     exp4277_gaps_logged:
     - GAP-ARC-ONLINE-ADAPTATION-CALIBRATION-4277
+    eval_exp_4287: results/experiment_4287_verifier_registry_gaps_hygiene.json
+    exp4287_regression_guard_passed: true
+    exp4287_arc1_rule_exec_vote_pass2: 0.4516
+    exp4287_arc1_rule_exec_gated_pass2: 0.5806
+    exp4287_arc1_headroom_recovered: 4
+    exp4287_arc1_vote_wins_lost: 0
+    exp4287_v396_hardened_state: arcgen_cross_family_holds__online_adaptation_static_ceiling__diffusiongemma_partial_state_gap__efficiency_parity_lower_cost__arc_plus_one
+    exp4287_generalization_state: arcgen_cross_family_generalizes_second_substrate
+    exp4287_guidance_state: diffusiongemma_guidance_blocked_missing_partial_state_scorer
+    exp4287_diffusiongemma_artifact: results/experiment_4281_diffusiongemma_energy_guided_full_run.json
+    exp4287_diffusiongemma_honest_verdict: complete_diffusiongemma_learned_verifier_cannot_score_partial_states
+    exp4287_diffusiongemma_guidance_moat: false
+    exp4287_diffusiongemma_guidance_changes_selection: true
+    exp4287_diffusiongemma_partial_state_support: false
+    exp4287_diffusiongemma_carnot_minus_unguided_delta: 0.0
+    exp4287_arcgen_artifact: results/experiment_4282_arcgen_cross_family_stress.json
+    exp4287_arcgen_cross_family_holds: true
+    exp4287_arcgen_cross_family_delta: 1.0
+    exp4287_arcgen_cross_family_ci95: &id008
+    - 1.0
+    - 1.0
+    exp4287_arcgen_held_out_task_n: 50
+    exp4287_online_adaptation_helps: false
+    exp4287_static_cross_family_delta: 0.5
+    exp4287_online_cross_family_delta: 0.5806451613
+    exp4287_tier2_cross_family_delta: 0.5
+    exp4287_adaptive_minus_static_ci95:
+      best_adaptive_arm: online
+      online:
+      - 0.0
+      - 0.1612903226
+      tier2:
+      - -0.0806451613
+      - 0.0967741935
+    exp4287_efficiency_parity_at_lower_cost: true
+    exp4287_efficiency_accuracy_delta: 0.4423076923
+    exp4287_efficiency_accuracy_delta_ci95:
+    - 0.3076923077
+    - 0.5769230769
+    exp4287_efficiency_cost_ratio: 1.95e-08
+    exp4287_arc_total_levels_solved: 21
+    exp4287_arc_new_levels_solved: 1
+    exp4287_arc_game_advanced: ls20-9607627b
+    exp4287_gaps_logged:
+    - GAP-DIFFUSIONGEMMA-PARTIAL-STATE-SCORER-4287
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -4242,3 +4287,33 @@ verifiers:
     - GAP-ARC-CROSS-GAME-SELECTION-4266
     - GAP-DIFFUSIONGEMMA-LOADER-GUIDANCE-4266
     eval_exp_4277: results/experiment_4277_verifier_registry_gaps_hygiene.json
+  - role_id: oracle_distinct_v396_registry_gaps_hygiene_4287
+    experiment: results/experiment_4287_verifier_registry_gaps_hygiene.json
+    role: registry_gap_manifest_hygiene_v396
+    status: v396_arcgen_diffusiongemma_efficiency_arc_recorded
+    v396_hardened_state: arcgen_cross_family_holds__online_adaptation_static_ceiling__diffusiongemma_partial_state_gap__efficiency_parity_lower_cost__arc_plus_one
+    cross_family_status: arcgen_cross_family_generalizes_second_substrate
+    diffusiongemma_guidance_state: diffusiongemma_guidance_blocked_missing_partial_state_scorer
+    diffusiongemma_artifact: results/experiment_4281_diffusiongemma_energy_guided_full_run.json
+    diffusiongemma_guidance_moat: false
+    diffusiongemma_partial_state_support: false
+    arcgen_artifact: results/experiment_4282_arcgen_cross_family_stress.json
+    arcgen_cross_family_holds: true
+    arcgen_cross_family_delta: 1.0
+    arcgen_cross_family_ci95: *id008
+    arcgen_held_out_task_n: 50
+    self_learning_artifact: results/experiment_4283_self_learning_repowered_arcgen.json
+    online_adaptation_helps: false
+    static_cross_family_delta: 0.5
+    online_cross_family_delta: 0.5806451613
+    efficiency_artifact: results/experiment_4284_verifier_efficiency_vs_llm_judge.json
+    efficiency_parity_at_lower_cost: true
+    efficiency_accuracy_delta: 0.4423076923
+    efficiency_cost_ratio: 1.95e-08
+    arc_progress_artifact: results/experiment_4285_arc_incremental_progress_new_game.json
+    arc_total_levels_solved: 21
+    arc_new_levels_solved: 1
+    arc_game_advanced: ls20-9607627b
+    gap_ids_logged:
+    - GAP-DIFFUSIONGEMMA-PARTIAL-STATE-SCORER-4287
+    eval_exp_4287: results/experiment_4287_verifier_registry_gaps_hygiene.json

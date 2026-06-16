@@ -1079,3 +1079,13 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: Use a hierarchical family calibrator with frozen static-selector controls, per-family uncertainty intervals, and a pre-registered online-minus-static CI gate.
 - priority: medium
 <!-- exp4277-gap-arc-online-adaptation-calibration-4277:end -->
+
+<!-- exp4287-gap-diffusiongemma-partial-state-scorer-4287:start -->
+### GAP-DIFFUSIONGEMMA-PARTIAL-STATE-SCORER-4287: Exp 4287 .396 missing-verifier gap
+- status: open
+- evidence: results/experiment_4281_diffusiongemma_energy_guided_full_run.json; honest_verdict=complete_diffusiongemma_learned_verifier_cannot_score_partial_states; diffusiongemma_guidance_moat=False; learned_partial_state_can_score=False; guidance_changes_selection=True.
+- failure mode: DiffusionGemma guidance can reweight token choices in smoke tests, but the headline learned-verifier arm cannot score masked/partial diffusion token states, so the moat cannot be measured without falling back to circular execution-grounded verification.
+- missing discriminator: learned partial-state diffusion scorer that assigns non-oracle energy to incomplete or masked token canvases before a full candidate exists.
+- candidate design: Add a score_partial_state or score_masked_canvas verifier interface, train it on masked diffusion-token canvases with final-answer labels held out by task family, and require a non-circular guidance-vs-unguided CI gate before any moat claim.
+- priority: high
+<!-- exp4287-gap-diffusiongemma-partial-state-scorer-4287:end -->
