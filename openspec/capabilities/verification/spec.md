@@ -16225,6 +16225,81 @@ only family-disjoint folds, reports `cross_family_win_holds`,
 `honest_verdict=complete_arc_cross_family_deferred_pool_infeasible` with the
 required bare fields present and does not train a selector.
 
+### REQ-VERIFY-4284: ARC Energy-Verifier Efficiency Versus LLM-As-Judge
+
+The repository SHALL provide Exp 4284 at
+`python/carnot/reporting/verifier_efficiency_vs_llm_judge_4284.py` and
+`results/experiment_4284_verifier_efficiency_vs_llm_judge.py` to measure the
+north-star §5 efficiency-parity axis on the oracle-distinct ARC cross-family
+selection task, not on retired executable-code verification. Before any judge
+inference, the runner SHALL check that a mandated local judge GGUF is cached
+with a non-empty `.gguf` path, that `llama_cpp` can be imported, and that the
+Exp 4270 manifest, Exp 4271 cross-family selections, Exp 4243 candidate pool,
+and Exp 4244 learned Set-Encoder verifier load. If no judge GGUF is cached, it
+SHALL write `honest_verdict=blocked_judge_model_not_cached`, record
+`preconditions_checked`, keep required bare fields present, and stop without
+fabricating judge calls. If another required resource is missing, it SHALL write
+the corresponding `blocked_<resource>` verdict and stop before inference.
+
+When preconditions pass, the runner SHALL evaluate at least 30 held-out-family
+ARC task selections from the Exp 4271 cross-family artifact. The energy arm
+SHALL report the learned family-disjoint Set-Encoder selections from Exp 4271
+as the cheap oracle-distinct verifier arm, and SHALL load the persisted Exp
+4244 Set-Encoder to measure forward-pass wall-clock and FLOPs-proxy cost over
+the same candidate finalists. The LLM-as-judge arm SHALL load the selected
+cached GGUF through `llama_cpp.Llama(model_path=...)`, prompt it to pick the
+best candidate from the same ARC selector-finalist candidates, parse a
+zero-based candidate index, and record per-task latency, prompt tokens,
+completion tokens, and selected candidate correctness. The runner SHALL compute
+bare float `accuracy_energy_verifier`, bare float `accuracy_llm_judge`,
+`accuracy_delta_ci95` as a task-level bootstrap CI95 for
+`accuracy_energy_verifier - accuracy_llm_judge`, and bare float `cost_ratio` as
+energy-verifier estimated dollars per 1k selections divided by LLM-judge
+estimated dollars per 1k selections, with wall-clock and FLOPs/token proxy
+details recorded in `cost_accounting`.
+
+The terminal artifact SHALL write
+`results/experiment_4284_verifier_efficiency_vs_llm_judge.json` with required
+fields `honest_verdict`, bare bool `efficiency_parity_at_lower_cost`, bare
+float `accuracy_energy_verifier`, bare float `accuracy_llm_judge`,
+`accuracy_delta_ci95`, bare float `cost_ratio`, bare bool
+`verifier_is_oracle=false`, `preconditions_checked`, bare int `random_seed`,
+string `reproducibility_checksum`, `model_specs`, `field_principles`,
+`spec_refs`, `inference_substrate`, `duration_s`, and `adversarial_verify`.
+`efficiency_parity_at_lower_cost` SHALL be true iff the energy verifier is not
+significantly worse than the LLM judge under the bootstrap interval and
+`cost_ratio <= 0.1`. The artifact SHALL run `scripts/adversarial_verify.py`
+after the JSON is written when live judge measurement occurs.
+
+The required field principles are:
+`honest_verdict` = `Terminal-prefixed. Parity-at-lower-cost AND an honest 'judge is more accurate' or 'no cost advantage' are ALL COMPLETE -- the §5 efficiency axis is decision-grade either way.`;
+`efficiency_parity_at_lower_cost` = `BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff the energy verifier matches the LLM-judge's accuracy (within CI) at <=0.1x the cost -- the north-star §5 win condition.`;
+`accuracy_energy_verifier` = `BARE float: the learned energy verifier's selection accuracy on held-out families -- the cheap forward-pass arm.`;
+`accuracy_llm_judge` = `BARE float: the LLM-as-judge's selection accuracy on the SAME candidates -- the expensive generative-judge baseline.`;
+`accuracy_delta_ci95` = `Bootstrap CI95 of (energy-verifier - LLM-judge) accuracy -- 'parity' means this CI includes 0 / is not significantly negative; a positive lower bound would be a Pareto win.`;
+`cost_ratio` = `BARE float: energy-verifier cost / LLM-judge cost (wall-clock + FLOPs-proxy + $/1k) -- the efficiency multiplier; target <=0.1 (10x cheaper), ideally <=0.01 (100x).`;
+`verifier_is_oracle` = `BARE bool=false -- the energy verifier on the cross-family selection is oracle-distinct (NOT the executable oracle); keeps the efficiency measurement non-circular (unlike retired code-efficiency).`;
+`preconditions_checked` = `Records the judge GGUF cache + candidate load verified; pre-empts the silent-missing-resource fabrication mode.`;
+`random_seed` = `Determinism precondition for the selection + bootstrap.`;
+`reproducibility_checksum` = `Hash of the candidates + the two selectors' outputs + the cost accounting; lets a third party re-run.`;
+`model_specs` = `The LLM-judge GGUF id + the energy verifier + the cost-accounting method (wall-clock/FLOPs/$); required methodology.`
+
+### SCENARIO-VERIFY-4284: ARC Efficiency-Parity Reports Accuracy And Cost
+
+Given the cached SOTA GGUF judge, `llama_cpp`, Exp 4270 manifest, Exp 4271
+cross-family selections, Exp 4243 candidate pool, and Exp 4244 learned
+Set-Encoder are available, when Exp 4284 runs, then it evaluates at least 30
+held-out-family ARC tasks, reports the energy-verifier and LLM-judge selection
+accuracies on the same candidate finalist sets, reports the bootstrap CI95 for
+their accuracy delta, reports the energy/LLM cost ratio with wall-clock,
+FLOPs-proxy, token-count, and estimated dollars per 1k selection details,
+declares `verifier_is_oracle=false`, records the selected GGUF and cost method
+in `model_specs`, writes a reproducibility checksum, and runs adversarial
+verification cleanly. If the judge GGUF cache precondition fails, then it writes
+`honest_verdict=blocked_judge_model_not_cached`, records the failed
+precondition, keeps the required bare fields present, and performs no judge
+calls.
+
 ### REQ-VERIFY-4273: ARC Cross-Family Online Adaptation
 
 The repository SHALL provide Exp 4273 at
