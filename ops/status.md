@@ -1,5 +1,58 @@
 # Carnot — Operational Status
 
+## Session 2026-06-16 — Milestone 2026.06.397 Research Planning Staged
+
+Planned milestone **2026.06.397** ("CLOSE THE LAST OPEN MOAT AXIS (cross-GENERATOR) + UNBLOCK THE §5
+IN-GENERATION THESIS + HARDEN THE EFFICIENCY PARETO WIN") as the NEXT milestone after all 10 `.396 tasks
+completed. `.396 gave a sharp, honest scorecard against the §5 thesis (read via `scripts/summarize_artifact.py`
++ the outer-loop degenerate audit):
+
+- **EFFICIENCY (exp4284) — clean oracle-distinct PARETO WIN.** Energy verifier **0.654** vs Qwen3.6-35B
+  LLM-judge **0.212**, accuracy delta CI95 **[0.308, 0.577]** (excludes 0), `cost_ratio` **1.95e-08** (~50M×
+  cheaper), `verifier_is_oracle=false`. The §5 efficiency win condition is MET — but the judge scored *below
+  random* (0.25 for 4 candidates), so it needs hardening against the weak-prompt critique.
+- **DiffusionGemma in-generation guidance (exp4281) — BLOCKED.** `cannot_score_partial_states`: no learned
+  verifier can score masked DiffusionGemma denoising canvases. The §5 "improve generation, not just rank"
+  question is UNANSWERED at its real blocker.
+- **Cross-GENERATOR (exp4282) — STILL OPEN (FLAGGED degenerate).** The +1.0 CI[1.0,1.0] was a construction
+  artifact (wrong-majority-only pool + 4 candidates → trivially separable). The within-pool cross-family win
+  (.395 exp4271, +0.40, leak-free, 5-seed) STANDS; the cross-*generator* axis is the LAST open moat axis.
+- **Self-learning (exp4283) — powered "static is the ceiling" but tier-2 arm BUGGY** (FLAGGED tautology:
+  tier2==static==0.5, a no-op). The powered null is suspect until the tier-2 mechanism actually does something.
+- **ARC (exp4285) — +1 to 21 levels (ls20).** `paper_ready=True` (FoVer 0.9131, G1–G4 met).
+
+**The shape (12 tasks, exp4290–exp4301).** Standing direction (`ops/known-issues.md` P0 2026-06-14 "2+3+1"):
+the ORACLE-DISTINCT frontier; every verifier task `verifier_is_oracle=false` + a matched control, CI95-excl-0;
+stop circular (code/execution) confirmations. Phase 0 archive/activate (exp4290). **Phase A — THE HEADLINE
+(close the cross-GENERATOR axis):** rebuild a NON-degenerate ARC-GEN pool (vote@1>0, oracle<1.0) → held-out
+generator beats-vote gate (exp4291). **Phase B — unblock §5 in-generation (harness-first):** BUILD + leak-audit
+a learned partial-state diffusion scorer (exp4292, Prism 2602.01842 / Manta-LM 2605.14531) THEN — GATED on a
+leak-free build — the DiffusionGemma energy-guided run vs unguided/RFG/EntRGi (exp4293). **Phase C — harden the
+efficiency headline:** stronger judge prompt + 2nd judge model to rule out the weak-prompt confound (exp4294).
+**Phase D — continuous self-learning (mandated):** re-run with the tier-2 no-op bug FIXED + a retrieval arm
+(exp4295, Decocted 2604.04373). **Phase E — ARC +1 on a new game** (exp4296, total>=22). **Phase F —** INFRA
+DEGENERATE_SEPARATION check for adversarial_verify.py (exp4297, the safety net that would have caught exp4282),
+SOTA-ingestion→.398 (exp4298), registry/gaps hygiene + GAP-4 guard (exp4299), hardware continuity (exp4300),
+capstone (exp4301, the verifier scorecard).
+
+Wrote `openspec/change-proposals/research-roadmap-v397.md` (= `research-roadmap-vNEXT.md`) and
+`research-roadmap-next.yaml` (12 tasks). Updated `research-references.md` (`.397 planning sweep: re-verified
+the SOTA via WebSearch 2026-06-16 — Prism 2602.01842 for partial-state dLLM verification, CompassVerifier
+2508.03686 / Calibrated Reasoning 2509.19681 for efficiency, Generalizable PRMs 2505.15960 for cross-generator,
+Decocted 2604.04373 for retrieval self-learning). Validation: YAML schema OK (12 tasks, all `.397`, codex+gpt-5.5
+routing, prior_failures 4-subfield on the 5 reruns, gated_on bare-bool on exp4293←exp4292, BARE-scalar +
+terminal-prefix + principle-annotated discipline, footers present); `milestone ==
+_expected_next_milestone('2026.06.396') = 2026.06.397`; exclusion-manifest lint = 4 SCOPE_MATCHED WARNINGs all
+carrying `operator_override` (activation proceeds); canonical-URL + overdue-priority lints exit 0. Left
+`research-roadmap.yaml` and `scripts/research_conductor.py` untouched. Did NOT push.
+
+**Invariants carried:** `paper_ready=True` (G1–G4; frozen FoVer 0.9131 NEVER substituted — `.397 adds the
+cross-generator + in-generation + efficiency-hardening LENSES, not a new headline); oracle-distinct discipline
+(`verifier_is_oracle=false` + matched control on every verifier task); the within-pool cross-family win
+(exp4271 +0.40) stands while the cross-generator axis is hardened; TRM checkpoint DONE (val 0.8227), conductor
+stood-down on TRM training; gated/required fields emitted BARE; no flagged-adversarial artifact aggregated; no
+autonomous public-doc edits; online ARC play operator-gated; DiffusionGemma via the llama.cpp PR binary only.
+
 ## Session 2026-06-08 — ARC-AGI-3 first-solve push: offline agent stack built; FIRST trustworthy world-model; conductor reconfigured to Claude Opus 4.8
 
 **What's working (NEW — the offline ARC-AGI-3 agent, all committed, all offline/air-gapped):**

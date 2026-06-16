@@ -1,3 +1,71 @@
+## 2026-06-16 (later) — .397 planning sweep — CLOSE the last open moat axis (cross-GENERATOR) + UNBLOCK the §5 in-generation thesis (a learned PARTIAL-STATE diffusion scorer) + HARDEN the efficiency Pareto win to headline-grade
+
+Added by the `.397 planning sweep (Claude Opus 4.8, outer-loop). `.396 landed a SHARP, HONEST scorecard against
+the §5 thesis (read via `scripts/summarize_artifact.py` + the outer-loop audit `docs/research-notes/
+exp4282-arcgen-degenerate-audit-2026-06-16.md`):
+
+- **EFFICIENCY axis — clean PARETO WIN (exp4284).** On the ORACLE-DISTINCT cross-family ARC selection, the learned
+  energy verifier scored **0.654** vs a Qwen3.6-35B LLM-as-judge **0.212** (accuracy delta CI95 [0.308, 0.577],
+  EXCLUDES 0 — a Pareto win, not mere parity) at `cost_ratio` **1.95e-08** (~50-million-x cheaper). `verifier_is_oracle=false`.
+  The §5 efficiency win condition is MET — but the judge scored *below random* (0.25 for 4 candidates), so a skeptic
+  attributes it to a weak prompt. `.397 HARDENS this to headline-grade (stronger prompt + a 2nd judge model).
+- **DiffusionGemma in-generation guidance moat — BLOCKED (exp4281).** `diffusiongemma_guidance_moat=false`,
+  verdict `complete_diffusiongemma_learned_verifier_cannot_score_partial_states`, all deltas 0.0. The §5 question
+  ("does the external verifier IMPROVE generation, not just rank it?") is UNANSWERED because no learned Carnot
+  verifier can score PARTIAL (masked) DiffusionGemma denoising canvases. `.397 BUILDS the missing partial-state scorer first.
+- **Cross-GENERATOR axis — STILL OPEN (exp4282 FLAGGED degenerate).** The reported `cross_family_delta=1.0` CI[1.0,1.0]
+  is a CONSTRUCTION ARTIFACT (wrong-majority-only pool → vote@1=0.0 structurally; 4 candidates/task → correct trivially
+  separable → set_encoder@1=1.0). It measures pool degeneracy, NOT cross-generator transfer. The genuine within-pool
+  cross-family win (.395 exp4271, +0.40, leak-free, 5-seed) STANDS; the cross-*generator* axis (a construction-disjoint
+  generator) is the LAST open axis of the selection moat. `.397 rebuilds a NON-degenerate ARC-GEN pool.
+- **Self-learning — powered "static is the ceiling" but tier-2 arm BUGGY (exp4283 FLAGGED TAUTOLOGY).** static==tier2==0.5
+  (identical → a bug, the tier-2 arm was a no-op); online=0.581 showed a small uplift not reaching CI. `.397 fixes the
+  tier-2 arm + adds a retrieval-augmented selector-context arm.
+- **ARC — +1 to 21 levels (exp4285, game ls20).** Monotonic progress continues. `paper_ready=True` (FoVer 0.9131, G1–G4).
+
+Standing direction (`ops/known-issues.md` P0 2026-06-14 "2+3+1"): re-aim at the ORACLE-DISTINCT frontier — a
+learned/energy verifier that captures headroom where execution is NOT the oracle, with a matched control + CI95-excl-0;
+stop re-running circular (code/execution) confirmations. All `.397 verifier tasks set `verifier_is_oracle: false`.
+
+SOTA re-verified (WebSearch 2026-06-16) + the in-loop ingestion (exp4286, flagged `manta_partial_state_scorer_diffusiongemma_v397`):
+
+- **Prism — Efficient Test-Time Scaling via Hierarchical Search and Self-Verification for Discrete Diffusion LLMs
+  (arXiv:2602.01842).** DIRECTLY addresses verification of PARTIALLY-MASKED dLLM states: intermediate denoising states
+  are partially masked and do NOT follow a left-to-right prefix, so standard PRMs are "brittle or ill-calibrated" —
+  exactly the exp4281 failure. MAP: the design template for the `.397 learned partial-state scorer (Phase B build).
+- **Manta-LM — Language Generation as Optimal Control (arXiv:2605.14531).** Diffusion generation as stochastic control;
+  approximates a closed-loop policy in latent control space. MAP (exp4286 flag): a small masked-canvas value head over
+  DiffusionGemma partial states, trained on final exact-grid outcomes, exposed as `score_partial_state`. CAVEAT: if
+  partial targets LEAK the final answer the rerun is circular — the build MUST carry a leak audit.
+- **Beyond Masked and Unmasked: Discrete Diffusion via Partial Masking / "Prime" (arXiv:2505.18495).** Tokens take
+  intermediate (interpolated) states enabling predictions from partially-observed info — the representation a partial-state scorer reads.
+- **What Exactly Does Guidance Do in Masked Discrete Diffusion Models (arXiv:2506.10971).** Derives how guidance shapes
+  reverse masked-diffusion dynamics/convergence. MAP: a guidance-strength DIAGNOSTIC gate (mask entropy, token-change
+  covariance, trajectory stability) that rejects over-guided scorers before promoting the full run — NOT a success metric.
+- **Generalizable Process Reward Models via Formally Verified Training Data (arXiv:2505.15960)** + **From Mathematical
+  Reasoning to Code: Generalization of PRMs (arXiv:2506.00027)** + **Process Reward Models That Think (ThinkPRM,
+  arXiv:2504.16828).** PRMs trained on verified data show cross-task / out-of-domain generalization. MAP: corroborate
+  the cross-GENERATOR hypothesis (a learned selector trained on one generator family transfers to held-out families);
+  the ARC-GEN substrate is the construction-disjoint test.
+- **CompassVerifier (arXiv:2508.03686)** + **Calibrated Reasoning: An Explanatory Verifier (arXiv:2509.19681)** +
+  **Thinking Small Models are Efficient LLM Judges (arXiv:2509.13332)** + **Putting the Value Back in RL
+  (arXiv:2505.04842)** + **INSPECTOR Representation-as-a-Judge (arXiv:2601.22588).** Small purpose-built verifiers
+  (0.5B–7B) rival/beat frontier LLM-judges at 60–1000x lower cost. MAP: the precedent for the `.397 efficiency-headline
+  hardening (Phase C) — a small oracle-distinct verifier matching a *well-prompted* frontier judge at ~free cost.
+- **Decocted experience for test-time inference (arXiv:2604.04373)** + **ABPR trace-guided procedural refinement
+  (arXiv:2603.20334).** Retrieval-only / trace-guided test-time context. MAP: the Tier-2 retrieval-augmented
+  self-learning arm (Phase D) — retrieval-only selector context on held-out families, NO weight mutation, NO LoRA.
+
+Sources: [Prism 2602.01842](https://arxiv.org/abs/2602.01842), [Manta-LM 2605.14531](https://arxiv.org/abs/2605.14531),
+[Partial Masking 2505.18495](https://arxiv.org/abs/2505.18495), [Guidance in Masked Diffusion 2506.10971](https://arxiv.org/abs/2506.10971),
+[Generalizable PRMs 2505.15960](https://arxiv.org/abs/2505.15960), [PRM math→code 2506.00027](https://arxiv.org/abs/2506.00027),
+[ThinkPRM 2504.16828](https://arxiv.org/abs/2504.16828), [CompassVerifier 2508.03686](https://arxiv.org/abs/2508.03686),
+[Calibrated Reasoning 2509.19681](https://arxiv.org/abs/2509.19681), [Thinking Small Judges 2509.13332](https://arxiv.org/abs/2509.13332),
+[Value Back in RL 2505.04842](https://arxiv.org/abs/2505.04842), [INSPECTOR 2601.22588](https://arxiv.org/abs/2601.22588),
+[Decocted 2604.04373](https://arxiv.org/abs/2604.04373), [ABPR 2603.20334](https://arxiv.org/abs/2603.20334).
+
+---
+
 ## 2026-06-16 .396 planning sweep — SCALE the now-unlocked DiffusionGemma energy-guided full run (the §5 "energy VERIFIES → shapes GENERATION" thesis at LLM scale) + HARDEN the cross-family win on a 2nd independent substrate (ARC-GEN) + the owed §5 EFFICIENCY-parity axis
 
 Added by the `.396 planning sweep (Claude Opus 4.8, outer-loop). `.395 LANDED a LANDMARK POSITIVE: the hardened
