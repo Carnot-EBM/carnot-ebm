@@ -174,6 +174,42 @@ def test_fnr_does_not_fire_when_oracle_exceeds_baseline_even_if_null():
     assert "FALSE_NEGATIVE_RISK" not in _kinds(flags)
 
 
+# --- 4. DEGENERATE_SEPARATION catches wrong-majority synthetic wins --------
+
+def test_degenerate_separation_flags_vote_zero_delta_one_arcgen_win():
+    """REQ-VERIFY-4291: a +1 selector-vs-vote win with vote@1=0 and oracle@K=1
+    is a degenerate ARC-GEN pool construction, not transfer evidence."""
+    flags = []
+    av.check_degenerate_separation(
+        {
+            "honest_verdict": "complete: arcgen_cross_generator_generalizes",
+            "cross_generator_delta": 1.0,
+            "vote_at_1": 0.0,
+            "oracle_at_k": 1.0,
+            "verifier_is_oracle": False,
+        },
+        flags,
+    )
+    assert "DEGENERATE_SEPARATION" in _kinds(flags)
+
+
+def test_degenerate_separation_allows_nondegenerate_arcgen_read():
+    """SCENARIO-VERIFY-4291: non-zero vote, sub-ceiling oracle, and delta<0.95
+    must pass the ARC-GEN non-degeneracy guard."""
+    flags = []
+    av.check_degenerate_separation(
+        {
+            "honest_verdict": "complete: arcgen_cross_generator_generalizes",
+            "cross_generator_delta": 0.42,
+            "vote_at_1": 0.25,
+            "oracle_at_k": 0.88,
+            "verifier_is_oracle": False,
+        },
+        flags,
+    )
+    assert "DEGENERATE_SEPARATION" not in _kinds(flags)
+
+
 # --- 4. Backfill backstop precision (DURATION live-claim guard) -------------
 
 def test_claims_live_model():

@@ -16435,6 +16435,73 @@ adversarial verification cleanly. If ARC-GEN is unavailable, then it writes
 `honest_verdict=blocked_arcgen_unavailable` with the required bare fields
 present and no positive ARC-GEN claim.
 
+### REQ-VERIFY-4291: ARC-GEN Cross-Generator Non-Degenerate Pool
+
+The repository SHALL provide Exp 4291 at
+`python/carnot/reporting/arcgen_cross_generator_nondegenerate_4291.py` and
+`results/experiment_4291_arcgen_cross_generator_nondegenerate.py` to close the
+ARC-GEN cross-generator axis left open after Exp 4282's degenerate
+wrong-majority-only construction. Before any measurement, the runner SHALL
+require an ARC-GEN checkout at the gitignored `external/ARC-GEN` path and SHALL
+require the Exp 4244 Set-Encoder build/model artifacts to load with
+`verifier_is_oracle=false`. If ARC-GEN is absent or unusable, it SHALL write
+`honest_verdict=blocked_arcgen_unavailable`, keep `cross_generator_holds=false`,
+keep `verifier_is_oracle=false`, and stop without fabricating generator rows.
+
+When ARC-GEN is available, the runner SHALL build a non-degenerate candidate
+pool from ARC-GEN native generators. Each manifest row SHALL carry `task_id`,
+native `family_id`, native `generator_id`, deterministic generator-disjoint
+`fold`, exact `target_hash`, `source_kind=arcgen`, and generator provenance.
+The pool SHALL include tasks where vote can win rather than filtering to
+wrong-majority-only rows, SHALL use a realistic candidate count above four
+where feasible, and SHALL persist both the pool and generator manifest under
+`results/`. The held-out ARC-GEN read SHALL be considered non-degenerate only
+when `vote_at_1 > 0.05`, `oracle_at_k < 1.0`, and
+`cross_generator_delta < 0.95`.
+
+The runner SHALL train the Set-Encoder on train generators, score only held-out
+ARC-GEN generators, compute `set_encoder@1`, `vote@1`, `oracle@K`, and matched
+control, and compute a task-level bootstrap CI95 from at least 2000 resamples.
+It SHALL report original-ARC, ARC-TGI, and ARC-GEN substrate reads separately
+in `per_substrate_delta` and SHALL NOT pool those substrates. The terminal
+artifact `results/experiment_4291_arcgen_cross_generator_nondegenerate.json`
+SHALL emit bare `cross_generator_holds`, bare float `cross_generator_delta`,
+bare float `vote_at_1`, bare float `oracle_at_k`, `per_substrate_delta`, bare
+int `held_out_generator_n`, bare int `held_out_task_n`, bare bool
+`verifier_is_oracle=false`, bare int `random_seed`, `reproducibility_checksum`,
+`model_specs`, field principles, spec refs, and adversarial verification. The
+`cross_generator_holds` bool SHALL be true only when the held-out ARC-GEN
+delta is positive, the CI95 excludes zero, `vote_at_1 > 0.05`,
+`oracle_at_k < 1.0`, and `cross_generator_delta < 0.95`.
+Its `field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. A faithful cross-generator survive (win transfers to construction-disjoint generators), a collapse (win was partition-specific), a degenerate-guard trip, and an honest blocked-clone are ALL COMPLETE and decision-grade.`;
+`cross_generator_holds` = `BARE bool: the capstone reads this as the cross-GENERATOR verdict (gated-fields-must-be-bare); true iff held-out-generator set_encoder@1 - vote@1 > 0 AND CI95-excl-0 AND the non-degenerate guards pass -- closes the single-partition critique honestly.`;
+`cross_generator_delta` = `BARE float: set_encoder@1 - vote@1 on held-out ARC-GEN generators -- compare to the .395 within-pool +0.40 (a similar delta on a NON-degenerate pool hardens the moat to cross-generator).`;
+`vote_at_1` = `BARE float: the vote baseline on held-out generators -- MUST be > 0.05 (if it is 0, the pool is wrong-majority-only and the delta is a degenerate artifact, NOT transfer).`;
+`oracle_at_k` = `BARE float: positive-control ceiling on held-out generators -- MUST be < 1.0 (if it is 1.0 the correct answer is trivially separable; real headroom requires a sub-1.0 ceiling the verifier must earn).`;
+`per_substrate_delta` = `The lift reported SEPARATELY on original-ARC / ARC-TGI / ARC-GEN -- guards the generators-become-their-own-distribution failure mode (a win only on generator data is weaker than one that holds on original ARC).`;
+`held_out_generator_n` = `BARE int: number of held-out ARC-GEN generators -- the cross-generator OOD breadth; report with held_out_task_n for power.`;
+`verifier_is_oracle` = `BARE bool=false -- learned set-encoder over an independent procedural-generator pool, no demo execution.`;
+`random_seed` = `Determinism precondition; the ARC-GEN sampling + generator-split reproducible.`;
+`reproducibility_checksum` = `Hash of the ARC-GEN pool + generator manifest; lets a third party re-run.`;
+`model_specs` = `The ARC-GEN generator provenance + the NON-degenerate pool construction + the generator-disjoint split protocol; required methodology.`
+
+### SCENARIO-VERIFY-4291: Non-Degenerate ARC-GEN Cross-Generator Verdict
+
+Given ARC-GEN is cloned into the ignored external path and the Exp 4244
+Set-Encoder artifacts are readable and oracle-distinct, when Exp 4291 runs, then
+it writes an ARC-GEN candidate pool and generator manifest with native family
+and generator IDs, trains and scores generator-disjoint folds, reports
+`cross_generator_holds`, `cross_generator_delta`, `cross_generator_ci95`,
+`vote_at_1`, `oracle_at_k`, `per_substrate_delta`, `held_out_generator_n`,
+`held_out_task_n`, `verifier_is_oracle=false`, `random_seed`,
+`reproducibility_checksum`, and `model_specs`, and runs adversarial
+verification cleanly. If the generated pool is degenerate, then the artifact
+SHALL report a terminal `complete: arcgen_cross_generator_degenerate_guard_trip`
+or collapse verdict with `cross_generator_holds=false`; if ARC-GEN is
+unavailable, then it writes `honest_verdict=blocked_arcgen_unavailable` with the
+required bare fields present and no positive ARC-GEN claim.
+
 ### REQ-VERIFY-4283: Repowered ARC Self-Learning Cross-Family Adaptation
 
 The repository SHALL provide Exp 4283 at
