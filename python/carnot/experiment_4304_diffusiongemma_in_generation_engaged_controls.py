@@ -74,7 +74,7 @@ DEFAULT_MINIMUM_LIVE_DURATION_S = 60.0
 CONTROL_KEYS = ("unguided", "entrgi")
 ENGAGED_CONTROL_KEYS = ("entrgi",)
 CONDITION_KEYS = ("unguided", "entrgi", "carnot")
-ENTRGI_GAMMA = 1.0
+ENTRGI_GAMMA = 2.0
 
 FIELD_PRINCIPLES = {
     "honest_verdict": (
@@ -263,6 +263,7 @@ def run_engaged_choice_benchmark(
     gguf_path: str,
     config: GuidanceConfig,
     option_prior_fn: Callable[..., dict[str, Any]] = extract_option_logits_prior,
+    target_successes: int | None = None,
 ) -> dict[str, Any]:
     """Run unguided, EntRGi, and Carnot over matched task-level choices."""
 
@@ -270,6 +271,8 @@ def run_engaged_choice_benchmark(
     records: list[dict[str, Any]] = []
     failures: list[dict[str, Any]] = []
     for task in tasks:
+        if target_successes is not None and len(rows) >= int(target_successes):
+            break
         prior = option_prior_fn(
             task=task,
             tokenizer=tokenizer,
@@ -324,6 +327,7 @@ def select_conditions(
         choice.option: float(scorer.score_partial_state(choice.canvas_ids, choice.scorer_step))
         for choice in task.choices
     }
+    mean_logit = statistics.fmean(option_logits.values())
     mean_energy = statistics.fmean(energies.values())
     entropy_gate = float(mask_entropy) if mask_entropy > 0.0 else _entropy_from_logits(
         list(option_logits.values())
@@ -331,9 +335,13 @@ def select_conditions(
     scores = {
         "unguided": {option: option_logits[option] for option in CHOICE_OPTIONS},
         "entrgi": {
-            choice.option: option_logits[choice.option]
-            + ENTRGI_GAMMA * entropy_gate * _entrgi_candidate_prior(choice.step_text)
-            for choice in task.choices
+            option: _entrgi_entropy_gated_score(
+                option=option,
+                option_logits=option_logits,
+                mean_logit=mean_logit,
+                entropy_gate=entropy_gate,
+            )
+            for option in CHOICE_OPTIONS
         },
         "carnot": {
             option: option_logits[option]
@@ -676,7 +684,8 @@ def run(
         _write_json(Path(artifact_path), artifact)
         return artifact
 
-    tasks = build_choice_tasks(items, max_tasks=max_tasks, seed=RANDOM_SEED)
+    attempt_count = _attempt_task_count(items, target_successes=max_tasks)
+    tasks = build_choice_tasks(items, max_tasks=attempt_count, seed=RANDOM_SEED)
     cache = _resource(preconditions, "diffusiongemma_cache")
     benchmark = run_engaged_choice_benchmark(
         tasks=tasks,
@@ -686,6 +695,7 @@ def run(
         gguf_path=str(cache.get("gguf_path")),
         config=config,
         option_prior_fn=option_prior_fn,
+        target_successes=max_tasks,
     )
     rows = benchmark["rows"]
     summary = (
@@ -797,6 +807,7 @@ def _model_specs(
             "entrgi": {
                 "type": "single-model entropy-gated guidance",
                 "gamma": ENTRGI_GAMMA,
+                "score": "logit - gamma * mask_entropy * abs(logit - mean_logit)",
                 "changes_selection": controls.get("guidance_changes_selection", {}).get(
                     "entrgi",
                     False,
@@ -830,15 +841,31 @@ def _model_specs(
     }
 
 
-def _entrgi_candidate_prior(step_text: str) -> float:
-    text = str(step_text).lower()
-    positive = any(word in text for word in ("verified", "valid", "coherent"))
-    negative = any(word in text for word in ("unsupported", "contradict", "guess"))
-    if positive and not negative:
-        return 1.0
-    if negative and not positive:
-        return -1.0
-    return 0.0
+def _entrgi_entropy_gated_score(
+    *,
+    option: str,
+    option_logits: dict[str, float],
+    mean_logit: float,
+    entropy_gate: float,
+) -> float:
+    """Single-model EntRGi control that engages using only native logit uncertainty."""
+
+    logit = float(option_logits[option])
+    return logit - ENTRGI_GAMMA * float(entropy_gate) * abs(logit - float(mean_logit))
+
+
+def _attempt_task_count(
+    items: Sequence[dict[str, Any]],
+    *,
+    target_successes: int,
+) -> int:
+    """Allow PR-binary failures while preserving the required measured-row count."""
+
+    positive_count = sum(
+        1 for item in items if str(item.get("label", "")).lower() == "correct"
+    )
+    slack = max(6, int(math.ceil(int(target_successes) * 0.5)))
+    return max(int(target_successes), min(positive_count, int(target_successes) + slack))
 
 
 def _entropy_from_logits(logits: Sequence[float]) -> float:
