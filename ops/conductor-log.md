@@ -8582,3 +8582,4 @@ c |
 | 2026-06-16 00:25 UTC | PHASE A4 (CONTINUOUS SELF-LEARNING -- the mandated | OK | 85 passed, 1 warning in 8.07s |
 | 2026-06-16 00:45 UTC | PHASE B1 (INFRA de-risk; fix exp4260's root cause; | OK | 91 passed, 1 warning in 6.44s |
 | 2026-06-16 01:03 UTC | PHASE C1 (ARC north star; accuracy) -- monotonic A | OK | 91 passed, 1 warning in 5.68s |
+| 2026-06-16 01:15 UTC | PHASE D1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 103 passed, 1 warning in 5.49s |
