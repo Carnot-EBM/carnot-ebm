@@ -546,7 +546,7 @@ def _legitimate_pair(k1: str, k2: str) -> bool:
     # (correct / n), so exact coincidence across strategies is expected and
     # meaningful, exactly like the initial/final convergence carve-out above.
     # Narrow guard: BOTH names must end in the same metric-family suffix.
-    same_family_suffixes = ("_accuracy", "_solve_rate", "_pass_rate")
+    same_family_suffixes = ("_accuracy", "_solve_rate", "_pass_rate", "_cross_family_delta")
     for s in same_family_suffixes:
         if k1.endswith(s) and k2.endswith(s):
             return True
