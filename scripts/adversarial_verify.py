@@ -466,6 +466,53 @@ def check_ceiling_saturation(d: dict[str, Any], flags: list[Flag]) -> None:
             )
 
 
+def _metric_from_top_or_pass_rates(d: dict[str, Any], key: str) -> float | None:
+    value = d.get(key)
+    if _is_finite_number(value):
+        return float(value)
+    pass_rates = d.get("pass_rates")
+    if isinstance(pass_rates, dict) and _is_finite_number(pass_rates.get(key)):
+        return float(pass_rates[key])
+    return None
+
+
+def check_degenerate_separation(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Detect synthetic selection wins where vote cannot win and oracle saturates.
+
+    Exp 4282 exposed a false-positive pattern that the older artifact checks
+    missed: a candidate pool filtered to wrong-majority rows with only a few
+    candidates per task can produce `delta=1.0`, `vote@1=0.0`, and
+    `oracle@K=1.0`. That proves the pool construction is separable, not that a
+    learned selector generalized. Exp 4291's cross-generator gate therefore
+    requires non-zero vote, sub-ceiling oracle, and delta below the trivial
+    +1.0 separation band.
+    """
+    delta = _metric_from_top_or_pass_rates(d, "cross_generator_delta")
+    if delta is None:
+        delta = _metric_from_top_or_pass_rates(d, "cross_family_delta")
+    vote_at_1 = _metric_from_top_or_pass_rates(d, "vote_at_1")
+    oracle_at_k = _metric_from_top_or_pass_rates(d, "oracle_at_k")
+    if delta is None or vote_at_1 is None or oracle_at_k is None:
+        return
+    verdict = str(d.get("honest_verdict", "")).lower()
+    if not any(marker in verdict for marker in ("arcgen", "cross_generator", "cross_family", "generaliz")):
+        return
+    if delta >= 0.95 and (vote_at_1 <= 0.05 or oracle_at_k >= 1.0):
+        flags.append(
+            Flag(
+                kind="DEGENERATE_SEPARATION",
+                severity="critical",
+                detail=(
+                    f"Selector-vs-vote delta={delta} with vote_at_1={vote_at_1} "
+                    f"and oracle_at_k={oracle_at_k}: this matches the degenerate "
+                    f"wrong-majority/trivial-separation pool signature. Rebuild "
+                    f"the candidate pool with vote-winning tasks, realistic "
+                    f"candidate counts, and oracle_at_k<1 before claiming transfer."
+                ),
+            )
+        )
+
+
 def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
     """Detect distinct metrics agreeing to TAUTOLOGY_DIGITS sig figs.
 
@@ -1215,6 +1262,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_implausible_tight_ci(d, flags)
     check_false_negative_risk(d, flags)
     check_ceiling_saturation(d, flags)
+    check_degenerate_separation(d, flags)
     check_circular_moat_overclaim(d, flags)
 
     verdict_raw = d_raw.get("honest_verdict") or ""
