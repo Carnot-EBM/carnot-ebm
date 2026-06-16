@@ -16814,6 +16814,75 @@ back to the Exp 4270/4273 family stream, keeps the required bare fields
 present, and marks the family-count read as still under-powered rather than
 settled.
 
+### REQ-VERIFY-4295: Self-Learning Tier-2 Fixed Memory And Retrieval Verdict
+
+The repository SHALL provide Exp 4295 at
+`python/carnot/reporting/self_learning_tier2_fixed_retrieval_4295.py` and
+`results/experiment_4295_self_learning_tier2_fixed_retrieval.py` to rerun the
+static-vs-online-vs-tier2 comparison after the Exp 4283/.396 Tier-2 no-op
+corrigendum. The runner SHALL require the Exp 4244 Set-Encoder build/model
+artifacts and at least the Exp 4270/.395 recovered ARC family manifest to load.
+The Exp 4291 ARC-GEN generator manifest and pool SHALL be treated as a soft
+input: if present and readable, the runner SHALL append those generator
+families to the stream and report that it used them; if absent or thin, it
+SHALL fall back to the .395 family stream and report that fallback honestly.
+
+For each streamed held-out family, the runner SHALL score four selectors:
+(a) STATIC cached Set-Encoder selection, (b) ONLINE Tier-1 selector using
+CPU-only per-feature/per-sub-verifier precision counters updated only from
+already-seen families, (c) TIER-2 MEMORY fixed to a genuinely distinct
+constraint-memory mechanism that caches per-family selection patterns and
+reuses the nearest already-seen family's pattern, and (d) TIER-2 RETRIEVAL
+that retrieves the k nearest already-seen family contexts and conditions the
+selector on those contexts without mutating model weights. The runner SHALL NOT
+run live LoRA, fine-tune a model, train foundation/model weights, or execute
+demo programs as a selector. Current-family labels SHALL update counters and
+memory only after the whole family has been scored.
+
+The terminal artifact
+`results/experiment_4295_self_learning_tier2_fixed_retrieval.json` SHALL emit
+bare bool `online_adaptation_helps`, bare float `static_cross_family_delta`,
+bare float `online_cross_family_delta`, bare float
+`tier2_memory_cross_family_delta`, bare float
+`tier2_retrieval_cross_family_delta`, bare bool `tier2_not_noop`,
+`adaptation_curve`, bare bool `verifier_is_oracle=false`, bare int
+`random_seed`, `reproducibility_checksum`, `model_specs`, field principles,
+spec refs, an acceptance gate, and adversarial verification. It SHALL compute a
+powered family-level bootstrap CI95 for `(best_adaptive - static)` and SHALL
+set `online_adaptation_helps` true only when the best adaptive selector exceeds
+static and that CI95 excludes zero with power. It SHALL explicitly guard the
+Exp 4283 no-op bug by requiring at least one Tier-2 arm to differ from static
+on at least one streamed family; a Tier-2 arm identical to static is a bug, not
+a static-is-the-ceiling finding.
+
+Its `field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. An adaptive gain AND a now-bug-free static-is-the-ceiling null are BOTH COMPLETE -- both valid self-learning findings (the bug-free null retires the ask).`;
+`online_adaptation_helps` = `BARE bool: true iff the best adaptive selector (online / tier2-memory / tier2-retrieval) exceeds static AND the (adaptive-static) CI95 excludes 0 with power -- the self-learning value verdict the .396 tier-2 bug could not settle.`;
+`static_cross_family_delta` = `BARE float: the static set-encoder's held-out-family delta -- the no-adaptation baseline.`;
+`online_cross_family_delta` = `BARE float: the online-reweighted selector's delta -- the Tier-1 self-learning result.`;
+`tier2_memory_cross_family_delta` = `BARE float: the FIXED constraint-memory selector's delta -- MUST differ from static (the .396 no-op bug is fixed).`;
+`tier2_retrieval_cross_family_delta` = `BARE float: the retrieval-augmented selector's delta -- the Decocted-style no-weight-mutation arm.`;
+`tier2_not_noop` = `BARE bool: true iff at least one tier-2 arm differs from static on >=1 family -- the explicit guard against repeating the .396 tautology (a tier-2 arm identical to static is a bug, not a finding).`;
+`adaptation_curve` = `Per-family (best-adaptive - static) gain as families stream in -- shows whether adaptation compounds (the continuous-self-learning signature) or is flat.`;
+`verifier_is_oracle` = `BARE bool=false -- learned selector with online weight updates + a pattern cache + retrieval, no demo execution and no fine-tuning.`;
+`random_seed` = `Determinism precondition; the family stream order + reweighting reproducible.`;
+`reproducibility_checksum` = `Hash of the folds + reweighting + memory + retrieval trace; lets a third party re-run.`;
+`model_specs` = `The Tier-1 reweighting rule + the FIXED Tier-2 memory rule + the Tier-2 retrieval rule + the combined family stream; required methodology.`
+
+### SCENARIO-VERIFY-4295: Fixed Tier-2 Arms Are Not Static No-Ops
+
+Given the Exp 4244 Set-Encoder artifacts load and the .395 recovered family
+stream loads, when Exp 4295 runs with Exp 4291 ARC-GEN inputs present, then it
+streams the combined held-out family set, reports
+`static_cross_family_delta`, `online_cross_family_delta`,
+`tier2_memory_cross_family_delta`, `tier2_retrieval_cross_family_delta`,
+`tier2_not_noop`, `adaptation_curve`, `verifier_is_oracle=false`,
+`random_seed`, `reproducibility_checksum`, and `model_specs`, computes the
+powered bootstrap CI95 on best-adaptive minus static, and runs adversarial
+verification without repeating the Exp 4283 TAUTOLOGY. If Exp 4291 inputs are
+absent or thin, then it falls back to the .395 family stream while keeping all
+required bare fields present and saying so in `model_specs`.
+
 ### REQ-VERIFY-4259: ARC Set-Encoder Grid Synthesis
 
 The repository SHALL provide Exp 4259 at
