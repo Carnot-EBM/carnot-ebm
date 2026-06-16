@@ -16550,6 +16550,92 @@ then it writes `honest_verdict=blocked_judge_models_not_cached`, records the
 failed preconditions, keeps the required bare fields present, and performs no
 judge calls.
 
+### REQ-VERIFY-4303: ARC Efficiency-Parity Iso-FLOPs Strong Judge Rerun
+
+The repository SHALL provide Exp 4303 at
+`python/carnot/reporting/verifier_efficiency_parity_isoflops_4303.py` and
+`results/experiment_4303_verifier_efficiency_parity_isoflops.py` to rerun the
+Exp 4294 hardened efficiency measurement under explicit window discipline and
+to report the head-to-head as an iso-FLOPs accuracy curve. Before any judge
+inference, the runner SHALL check the requested local judge GGUF caches for
+`unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`, SHALL load
+GGUFs only by non-empty `.gguf` paths rather than HuggingFace tokenizer APIs,
+SHALL check `llama_cpp` only after at least one judge GGUF is available, SHALL
+check the Exp 4270 manifest, Exp 4271 cross-family selections, Exp 4243
+candidate pool, and Exp 4244 learned Set-Encoder verifier, and SHALL record
+that the run performs no TRM training and does not touch `results/trm_runs/`.
+If both judge GGUFs are missing, it SHALL write
+`honest_verdict=blocked_judge_models_not_cached`, record
+`preconditions_checked`, keep required bare fields present, and stop without
+fabricating judge calls. If the run window expires before one available judge
+finishes at least 30 task selections, it SHALL write
+`honest_verdict=blocked_window_exceeded` with the partial checkpoint path.
+
+When at least one judge precondition passes, the runner SHALL evaluate at least
+30 held-out-family ARC task selections from the Exp 4271 cross-family artifact.
+The energy arm SHALL be the learned family-disjoint Set-Encoder selections from
+Exp 4271, and SHALL measure CPU forward-pass wall-clock plus FLOPs-proxy cost
+over the same candidates. Each available LLM judge arm SHALL use the same
+strong prompt as Exp 4294: few-shot ARC selection examples, explicit
+grid-reasoning instructions, chain-of-thought style deliberation, and a final
+zero-based candidate index. The runner SHALL run synchronously, print per-task
+progress, write a checkpoint after every judge call, resume completed judge
+task selections from that checkpoint on restart, and accept a partial
+single-judge result with `selection_task_n>=30` as a complete decision-grade
+artifact rather than blocking on the second judge.
+
+The terminal artifact SHALL write
+`results/experiment_4303_verifier_efficiency_parity_isoflops.json` with
+required fields `honest_verdict`, bare bool `efficiency_pareto_holds`, bare
+float `accuracy_energy_verifier`, bare float `accuracy_best_judge`,
+two-float `accuracy_delta_ci95`, bare float `cost_ratio`,
+`iso_flops_curve`, bare bool `verifier_is_oracle=false`,
+`preconditions_checked`, bare int `random_seed`, string
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`inference_substrate`, `duration_s`, `adversarial_verify`,
+`checkpoint_path`, and per-judge metrics. `efficiency_pareto_holds` SHALL be
+true iff the energy verifier is not significantly worse than the
+best-prompted available judge under the bootstrap interval and
+`cost_ratio <= 0.1`. `iso_flops_curve` SHALL report accuracy versus total
+FLOPs-proxy for the energy verifier and every completed judge arm, including
+the best judge used for `cost_ratio`. The artifact SHALL run
+`scripts/adversarial_verify.py` after the JSON is written when live judge
+measurement occurs, and SHALL set `verifier_is_oracle=false` because the
+learned energy verifier is oracle-distinct from executable correctness.
+
+The required field principles are:
+`honest_verdict` = `Terminal-prefixed. A hardened Pareto win (beats well-prompted judges at lower cost), a parity-at-lower-cost, a 'a stronger judge closes the accuracy gap', and an honest blocked_window_exceeded are ALL COMPLETE -- the §5 efficiency axis is decision-grade either way.`;
+`efficiency_pareto_holds` = `BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff the energy verifier matches/beats the BEST-prompted judge (within/above CI) at <=0.1x cost -- the skeptic-proof §5 efficiency headline, the operator's stated win condition.`;
+`accuracy_energy_verifier` = `BARE float: the learned energy verifier's selection accuracy on held-out families -- the cheap forward-pass arm (compare to the .396 0.654).`;
+`accuracy_best_judge` = `BARE float: the BEST of the WELL-prompted judges -- if a stronger prompt lifts the judge well above the .396 0.212, the weak-prompt confound was real and the win is now honest at the corrected number.`;
+`accuracy_delta_ci95` = `Bootstrap CI95 of (energy - best judge) accuracy -- 'parity' means this CI includes 0 / is not significantly negative; a positive lower bound is a Pareto win even against a strong judge.`;
+`cost_ratio` = `BARE float: energy-verifier cost / best-judge cost (wall-clock + FLOPs-proxy + $/1k) -- the efficiency multiplier; target <=0.1 (10x cheaper), ideally <=0.01 (100x).`;
+`iso_flops_curve` = `Accuracy-vs-total-FLOPs for the verifier and the judge (Budget-aware Discriminative Verification 2510.14913) -- the honest head-to-head metric (a fair iso-compute comparison, not '1 verifier call vs 1 judge call').`;
+`verifier_is_oracle` = `BARE bool=false -- the energy verifier on cross-family selection is oracle-distinct (NOT the executable oracle); keeps the efficiency measurement non-circular (unlike the retired code-efficiency).`;
+`preconditions_checked` = `Records the judge GGUF caches + candidate load + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.`;
+`random_seed` = `Determinism precondition for the selection + bootstrap.`;
+`reproducibility_checksum` = `Hash of the candidates + the selectors' outputs + the cost accounting; lets a third party re-run.`;
+`model_specs` = `The judge GGUF ids + the stronger prompt + the energy verifier + the cost-accounting method; required methodology.`
+
+### SCENARIO-VERIFY-4303: Iso-FLOPs Strong Judge Result Is Checkpointed
+
+Given at least one of the requested local SOTA GGUF judges is cached,
+`llama_cpp` is importable, Exp 4270 manifest, Exp 4271 cross-family
+selections, Exp 4243 candidate pool, and Exp 4244 learned Set-Encoder are
+available, when Exp 4303 runs, then it evaluates at least 30 held-out-family
+ARC tasks for the energy verifier and at least one well-prompted judge, writes
+a checkpoint after every judge call, resumes already-completed judge calls from
+that checkpoint on restart, reports the energy-verifier and each completed
+judge selection accuracy on the same candidate finalist sets, reports the
+bootstrap CI95 for the energy-minus-best-judge accuracy delta with at least
+2000 resamples by default, reports `cost_ratio`, reports `iso_flops_curve`,
+declares `verifier_is_oracle=false`, records the requested GGUF ids, strong
+prompt, energy verifier, cost method, random seed, and reproducibility
+checksum in `model_specs`, and runs adversarial verification cleanly. If both
+judge GGUF cache preconditions fail, then it writes
+`honest_verdict=blocked_judge_models_not_cached`, records the failed
+preconditions, keeps required bare fields present, and performs no judge calls.
+
 ### REQ-VERIFY-4273: ARC Cross-Family Online Adaptation
 
 The repository SHALL provide Exp 4273 at
