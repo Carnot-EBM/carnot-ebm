@@ -8589,3 +8589,4 @@ c |
 | 2026-06-16 03:43 UTC | Plan milestone 2026.06.396 | OK | 10 tasks proposed |
 | 2026-06-16 03:45 UTC | Milestone 2026.06.396 activated | OK | 10 tasks queued |
 | 2026-06-16 04:03 UTC | Archive .395 -> activate .396; KEEP the hardened g | OK | 89 passed, 1 warning in 6.87s |
+| 2026-06-16 04:32 UTC | PHASE A1 (THE HEADLINE; the deferred-from-.395 sca | OK | 94 passed, 1 warning in 4.78s |
