@@ -1,565 +1,479 @@
-milestone: 2026.06.395
-milestone_title: "CLOSE the cross-family/cross-game OOD question -- DOES the hardened ARC oracle-distinct selector win GENERALIZE beyond the pool it was tuned on? .394 HARDENED the program's first ARC oracle-distinct verifier-beats-vote win on 2 of 3 axes (exp4256 win_survives_provenance_blind: de-leaked delta +0.385 AUROC 0.990; exp4257 oracle_distinct_win_replicates: mean +0.458 across >=5 seeds + independent re-score +0.442 matching single-seed, oracle@K 0.827 n=52) BUT the decisive cross-game OOD test BLOCKED on a data-provenance bug (exp4258 blocked_arc_game_ids_unrecoverable -- the 52-task grown pool's gap3_stage2 task_ids could not be mapped to game/family identities, so no family-disjoint split could be built). The capstone (exp4268) therefore set hardened_win=False and held the diffusiongemma_full_run_gate CLOSED -- NOT because the win collapsed, but because the load-bearing OOD test NEVER RAN. .395 is DEPTH (north-star §1, Depth-Over-Breadth): it does ONE thing -- CLOSE the cross-family question. PHASE A recovers the missing FAMILY/GAME provenance (fixing exp4258's root cause per Reliability Gap 2606.03305 provenance discipline) and runs the held-out-FAMILY test -- on the existing pool if family-diverse enough (A2), else on a fresh ARC-TGI (2603.05099) family-disjoint pool (A3) -- plus a Tier-1 online-adaptation self-learning arm (A4). GENERALIZES (cross_family_delta>0 CI95-excl-0) -> a GENERAL selection signal (north-star-grade; opens the DiffusionGemma gate). COLLAPSES -> scope the headline to within-pool and refocus. PHASE B repairs the DiffusionGemma discrete-diffusion GGUF loader (exp4260 blocked) + re-preflights so the scale-up is READY the moment the win generalizes (full run DEFERRED to .396). PHASE C advances ARC accuracy +1 on a NEW game. PHASE D records the owed-axis decisions (code oracle-distinct -> corpus-specific/RETIRED exp4264; verifier-as-reward -> out-of-band operator-owned exp4263) + SOTA-ingestion + registry/gaps + hardware + capstone."
-milestone_doc: openspec/change-proposals/research-roadmap-v395.md
+milestone: 2026.06.396
+milestone_title: "RUN the now-unlocked DiffusionGemma energy-guided FULL benchmark (does the EXTERNAL verifier improve GENERATION, not just rank it? -- the §5 energy-VERIFIES-shapes-GENERATION thesis at LLM scale, with matched no-Carnot-verifier RFG/EntRGi controls so the twice-burned over-claim trap cannot recur) + HARDEN the cross-family selection win on a 2nd, construction-disjoint substrate (ARC-GEN) + pay the owed north-star §5 EFFICIENCY-parity axis + re-power continuous self-learning + advance ARC +1. .395 LANDED A LANDMARK: the hardened ARC oracle-distinct verifier-beats-vote win GENERALIZED cross-family (exp4271 cross_family_delta +0.4038 held-out, CI95-excl-0, within_minus_cross_gap only 0.0385, verifier_is_oracle=false) -> hardened_win=True (all 3 axes) -> diffusiongemma_full_run_gate FLIPPED True; the DiffusionGemma loader was REPAIRED (exp4274 preflight_go) via the llama.cpp PR binary; ARC +1 to 20 levels (exp4275 wa30 L1); self-learning hit a ceiling (exp4273 static-is-the-ceiling, online-adaptation CI touched 0 at n=52); paper_ready=True (FoVer 0.9131, G1-G4)."
+milestone_doc: openspec/change-proposals/research-roadmap-v396.md
 milestone_overview: |
-  .394 hardened the first ARC oracle-distinct win on 2 of 3 axes (leak-audit SURVIVED, multi-seed REPLICATED)
-  but the real OOD test -- held-out GAMES/FAMILIES -- BLOCKED because the grown pool's task_ids were not
-  mappable to game/family identities (exp4258 blocked_arc_game_ids_unrecoverable). hardened_win stayed False
-  and the DiffusionGemma scale-up gate stayed CLOSED for that single reason. The synthesis fork did NOT break
-  the oracle@K ceiling (exp4259 synthesis_underperforms_selection: -0.283 vs oracle), so selection IS the
-  ceiling on this corpus and per-cell reconciliation is a dead end here. The DiffusionGemma preflight BLOCKED on
-  the discrete-diffusion GGUF loader (exp4260). ARC held at 19 levels. The owed axes resolved: verifier-as-reward
-  moved OUT-OF-BAND (exp4263 ready_for_out_of_band=true, operator-owned like the TRM checkpoint), and the code
-  oracle-distinct replication came back CORPUS-SPECIFIC (exp4264 delta -0.006, did not replicate). paper_ready
-  stays True (FoVer 0.9131 headline, G1-G4 met).
+  .395 hardened the SELECTION moat on all three axes (provenance-blind leak-audit +0.385, multi-seed +0.458,
+  cross-family OOD +0.404 -- the win barely shrinks out-of-distribution) and FLIPPED the DiffusionGemma full-run
+  gate OPEN. The DiffusionGemma discrete-diffusion loader was repaired (exp4274, via the llama.cpp PR binary
+  llama-diffusion-gemma-eval -- the ONLY working path; llama-cpp-python/transformers/vLLM all crash on the arch).
+  ARC reached 20 levels. Self-learning found static is the ceiling, but at n=52 the (online-static) CI only
+  TOUCHED 0 (an n-limit, not a proven null). paper_ready=True (FoVer 0.9131 headline, G1-G4 met).
 
-  .395 is DEPTH, not churn. It does ONE thing: CLOSE the cross-family/cross-game generalization question that
-  gates everything (the headline-eligibility of the +44pp win AND the DiffusionGemma scale-up).
+  .396 is DEPTH on the now-hardened thesis (north-star §1 Depth-Over-Breadth). It does five things, in order of
+  load-bearing-ness:
 
-    PHASE A -- CLOSE THE CROSS-FAMILY OOD QUESTION:
-      A1 (exp4270) FAMILY/GAME PROVENANCE RECOVERY: fix exp4258's root cause -- recover a task-FAMILY id for
-        every pool row (join raw_task_id/source_id -> source ARC task -> ARC-TGI family taxonomy / the 25-game
-        survey); materialize a first-class provenance manifest (Reliability Gap 2606.03305). Emit
-        family_split_feasible BARE bool + distinct_family_n.
-      A2 (exp4271, gated_on A1 family_split_feasible==true) CROSS-FAMILY transfer on the EXISTING pool:
-        train on a subset of families, test beats-vote on HELD-OUT families; static + online-adapt arms.
-        Emit cross_family_win_holds BARE bool. verifier_is_oracle=false.
-      A3 (exp4272, gated_on A1 family_split_feasible==false) FRESH ARC-TGI family-disjoint pool + cross-family
-        transfer (the fallback when the existing pool is too concentrated). Emit cross_family_win_holds. verifier_is_oracle=false.
-      A4 (exp4273, gated_on A1 family_split_feasible==true) SELF-LEARNING Tier-1 online verifier-weight
-        adaptation across the family folds (the mandated continuous-self-learning experiment; CPU reweighting,
-        NOT the retired live-LoRA path).
-    PHASE B -- REPAIR THE LOADER + RE-PREFLIGHT (infra de-risk; NO full run):
-      B1 (exp4274) DiffusionGemma discrete-diffusion GGUF LOADER FIX + tiny guidance preflight. Emit
-        preflight_go + guidance_changes_selection + cost. Full run DEFERRED to .396 (gated on hardened_win).
-    PHASE C -- ARC NORTH STAR:
-      C1 (exp4275) offline ARC incremental +1 on a NEW game (total_levels>=20). NO TRM; NO submission.
-    PHASE D -- HYGIENE, DECISIONS & CAPSTONE:
-      D1 (exp4276) SOTA-ingestion -> .396 forks. D2 (exp4277) registry/gaps hygiene + GAP-4 regression guard +
-        RECORD the code/reward retirements. D3 (exp4278) hardware continuity opportunistic. D4 (exp4279)
-        capstone .395 -- emit cross_family_generalizes + hardened_win + diffusiongemma_full_run_gate + G1-G4.
+    PHASE A -- RUN THE DEFERRED DiffusionGemma ENERGY-GUIDED FULL BENCHMARK (the headline scale-up):
+      A1 (exp4281) the verifier ensemble as a per-step GUIDANCE energy reweighting DiffusionGemma's denoising,
+        via the PR binary, on n>=30 per arm. HEADLINE arm = a LEARNED energy verifier (verifier_is_oracle=false)
+        on a REASONING domain vs unguided vs RFG (the model's own self-guidance, arXiv:2509.25604) vs EntRGi
+        (arXiv:2602.05000) -- emit diffusiongemma_guidance_moat := (Carnot-guided - RFG > 0 AND CI95-excl-0).
+        SUPPORTING arm = an executable-oracle verifier on code/Sudoku (verifier_is_oracle=true) reported as
+        execution_grounded (cheap/automatic/decentralized, NOT a moat). Matched controls defuse the over-claim trap.
+    PHASE B -- HARDEN THE CROSS-FAMILY WIN ON A 2ND SUBSTRATE:
+      B1 (exp4282) ARC-GEN (arXiv:2511.00162, github.com/google/ARC-GEN) family-disjoint cross-family stress;
+        report lift SEPARATELY on original-ARC / ARC-TGI / ARC-GEN + a randomized family-rich stress split. Emit
+        arcgen_cross_family_holds. verifier_is_oracle=false. Closes the single-partition critique.
+    PHASE C -- CONTINUOUS SELF-LEARNING, RE-POWERED (mandated):
+      C1 (exp4283) Tier-1 online verifier-weight adaptation re-run on the COMBINED family set (.395 manifest +
+        ARC-GEN's many families) so the CI is POWERED, + a Tier-2 constraint-memory arm. Emit online_adaptation_helps.
+    PHASE D -- PAY THE OWED §5 EFFICIENCY AXIS:
+      D1 (exp4284) energy-verifier vs LLM-as-judge on the ORACLE-DISTINCT cross-family ARC selection (NOT code):
+        accuracy parity (within CI) + cost/latency ratio. Emit efficiency_parity_at_lower_cost. Target 10-100x cheaper.
+    PHASE E -- ARC NORTH STAR:
+      E1 (exp4285) offline ARC +1 on a NEW game (NOT wa30, NOT sc25); total_levels >= 21.
+    PHASE F -- HYGIENE & CAPSTONE:
+      F0 (exp4280) archive .395 -> activate .396. F1 (exp4286) SOTA-ingestion -> .397. F2 (exp4287) registry/gaps
+        hygiene + GAP-4 regression guard. F3 (exp4288) hardware continuity opportunistic. F4 (exp4289) capstone .396.
 
-  HARD RULE (every task): the TRM Sudoku checkpoint is DONE (val 0.8227) and the conductor stays stood-down.
-  NO task may launch TRM training, run pkill/kill against train.py, or WRITE results/trm_runs/. Qwen is
-  FORBIDDEN as the TRAINED base (Spurious-Rewards confound); Qwen GGUF as an off-policy teacher/certifier is
-  fine. DiffusionGemma FULL RUN stays DEFERRED to .396 (B1 is a loader-fix + preflight only). Every
-  verifier-value task MUST declare verifier_is_oracle honestly (Circularity Discipline). Online ARC play stays
-  operator-gated (NO leaderboard submission).
+  HARD RULE (every task): the TRM Sudoku checkpoint is DONE (val 0.8227) and the conductor stays stood-down. NO
+  task may launch TRM training, run pkill/kill against train.py, or WRITE results/trm_runs/. Qwen is FORBIDDEN as
+  the TRAINED base (Spurious-Rewards confound); Qwen GGUF as an off-policy teacher/judge is fine. Every
+  verifier-value task MUST declare verifier_is_oracle honestly (Circularity Discipline): an EXECUTABLE-oracle
+  guidance/selection win is execution_grounded (cheap, valid, NOT a moat); the moat is the LEARNED-energy result
+  with a matched control, CI95-excl-0. NO autonomous edits to docs/index.html / README / paper prose. Online ARC
+  play stays operator-gated (NO leaderboard submission). The code-oracle-distinct-replication and
+  verifier-as-reward-in-loop axes are RETIRED/operator-owned -- do NOT re-propose them.
 
 tasks:
-  - id: exp4269-archive-v394-activate-v395
-    milestone: 2026.06.395
-    title: "Archive .394 -> activate .395; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .394 close-state truthfully (the first ARC oracle-distinct win HARDENED on 2 of 3 axes -- exp4256 win_survives_provenance_blind de-leaked delta +0.385 AUROC 0.990; exp4257 oracle_distinct_win_replicates mean +0.458 >=5 seeds + independent re-score +0.442 -- BUT the cross-game OOD test BLOCKED exp4258 blocked_arc_game_ids_unrecoverable so hardened_win=False and diffusiongemma_full_run_gate=False; synthesis did NOT break oracle@K exp4259 -0.283; DiffusionGemma preflight BLOCKED exp4260 gguf_loader_failed; ARC 19 levels exp4261; verifier-as-reward OUT-OF-BAND exp4263 ready_for_out_of_band; code oracle-distinct CORPUS-SPECIFIC exp4264 -0.006). Frame .395 as CLOSE-the-cross-family-OOD-question (recover provenance -> held-out-family test) then repair the DiffusionGemma loader + advance ARC +1."
+  - id: exp4280-archive-v395-activate-v396
+    milestone: 2026.06.396
+    title: "Archive .395 -> activate .396; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .395 LANDMARK close-state truthfully: the hardened ARC oracle-distinct win GENERALIZED cross-family (exp4271 cross_family_delta +0.4038 held-out, CI95-excl-0, within_minus_cross_gap 0.0385, verifier_is_oracle=false) -> hardened_win=True (all 3 axes) -> diffusiongemma_full_run_gate FLIPPED True; DiffusionGemma loader REPAIRED (exp4274 preflight_go, via the llama.cpp PR binary); ARC +1 to 20 levels (exp4275 wa30 L1); self-learning static-is-the-ceiling (exp4273, CI touched 0 at n=52); code oracle-distinct CORPUS-SPECIFIC + verifier-as-reward OUT-OF-BAND both RETIRED; paper_ready=True (FoVer 0.9131, G1-G4). Frame .396 as RUN-the-deferred-DiffusionGemma-full-run + HARDEN-cross-family-on-ARC-GEN + pay-the-EFFICIENCY-axis."
     priority: critical
     track: infra
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): archive-vN-activate-vN+1 -- false-positive scope-match vs all prior archive-v* tasks (exp4255); structurally never a doomed rerun. 2026-06-12 quota-conserve: archive on codex."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): archive-vN-activate-vN+1 -- false-positive scope-match vs all prior archive-v* tasks (exp4269); structurally never a doomed rerun. 2026-06-12 quota-conserve: archive on codex."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4269_archive_v394_activate_v395.json
+    deliverable: results/experiment_4280_archive_v395_activate_v396.json
     prompt: |
-      CONTEXT: Close .394, activate .395. The outer-loop owns TRM training (DONE: val 0.8227) and the conductor
-      stays stood-down on TRM training. This archive runs on CODEX (mechanical). CRITICAL framing to record:
-      .394 HARDENED the first ARC oracle-distinct win on 2 of 3 axes (leak-audit SURVIVED + multi-seed
-      REPLICATED) but the decisive cross-game OOD test BLOCKED on a data-provenance bug (game_ids_unrecoverable)
-      -- so hardened_win=False NOT because the win collapsed but because the OOD test NEVER RAN. .395 CLOSES
-      that one question. NOT a redo, NOT a concession.
+      CONTEXT: Close .395, activate .396. The outer-loop owns TRM training (DONE: val 0.8227); the conductor stays
+      stood-down on TRM training. This archive runs on CODEX (mechanical). CRITICAL framing to record: .395 was a
+      LANDMARK -- the hardened ARC oracle-distinct verifier-beats-vote win GENERALIZED to held-out task-families
+      (the OOD test .394 could not run), so hardened_win FLIPPED True and the DiffusionGemma full-run gate opened.
+      .396 RUNS that deferred full run (with matched no-Carnot-verifier controls), HARDENS the cross-family win on
+      a 2nd substrate (ARC-GEN), pays the owed efficiency axis, and advances ARC +1. NOT a redo.
 
       EXISTING CODE TO READ FIRST:
         - research-complete.yaml (the archive target), ops/exclusion_manifest.yaml (parse check)
-        - results/experiment_4268_capstone_v394.json (the .394 close-state: hardened_win=False,
-          diffusiongemma_full_run_gate=False, excluded_3, paper_ready=True)
-        - results/experiment_4256_arc_oracle_distinct_leak_audit.json (win SURVIVES provenance-blind)
-        - results/experiment_4257_arc_oracle_distinct_multiseed_replication.json (REPLICATES multi-seed)
-        - results/experiment_4258_arc_oracle_distinct_cross_game_transfer.json (the BLOCK: game_ids_unrecoverable)
-        - openspec/change-proposals/research-roadmap-v395.md (the .395 design doc)
+        - results/experiment_4279_capstone_v395.json (the .395 close-state: cross_family_generalizes=True,
+          hardened_win=True, diffusiongemma_full_run_gate=True, paper_ready=True, excluded_0)
+        - results/experiment_4271_arc_cross_family_transfer_existing_pool.json (cross_family_delta +0.4038)
+        - results/experiment_4274_diffusiongemma_loader_fix_preflight.json (loader_repaired, preflight_go)
+        - openspec/change-proposals/research-roadmap-v396.md (the .396 design doc)
 
-      TASK: archive .394, activate .395, record the .394 close-state truthfully.
+      TASK: archive .395, activate .396, record the .395 close-state truthfully.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (check BEFORE any subsequent step):
            a. `python3 -c "import yaml; yaml.safe_load(open('research-complete.yaml')); yaml.safe_load(open('ops/exclusion_manifest.yaml'))"` exits 0.
            b. The smart-subset pre-test gate is green.
            If ANY fails -> honest_verdict `blocked_<resource>` and STOP.
-        1. Archive .394 into research-complete.yaml; activate .395.
-        2. Record the .394 close-state: the first ARC oracle-distinct win HARDENED 2 of 3 (exp4256 survived
-           provenance-blind de-leaked +0.385 AUROC 0.990; exp4257 replicated mean +0.458 >=5 seeds + independent
-           re-score +0.442) BUT cross-game OOD BLOCKED (exp4258 game_ids_unrecoverable) -> hardened_win=False,
-           diffusiongemma_full_run_gate=False; synthesis did NOT break oracle@K (exp4259 -0.283); DiffusionGemma
-           preflight BLOCKED (exp4260 gguf_loader_failed); ARC 19 levels (exp4261); verifier-as-reward OUT-OF-BAND
-           (exp4263 ready_for_out_of_band); code oracle-distinct CORPUS-SPECIFIC (exp4264 -0.006, retired);
-           paper_ready=True. Frame .395 as "CLOSE the cross-family OOD question (recover provenance -> held-out-family
-           test) then repair the DiffusionGemma loader + advance ARC +1".
+        1. Archive .395 into research-complete.yaml; activate .396.
+        2. Record the .395 close-state: cross-family GENERALIZED (exp4271 +0.4038 held-out, CI95-excl-0) ->
+           hardened_win=True (provenance-blind +0.385 / multi-seed +0.458 / cross-family +0.404) ->
+           diffusiongemma_full_run_gate=True; loader REPAIRED (exp4274 preflight_go); ARC 20 levels (exp4275 wa30);
+           self-learning static-is-the-ceiling (exp4273, CI touched 0 at n=52); code oracle-distinct + verifier-as-reward
+           RETIRED; paper_ready=True. Frame .396 per the design doc.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
-        v394_close_state:
-          principle: "Honest record (win hardened 2-of-3, cross-game OOD blocked-not-collapsed, owed axes resolved) so the .395 agents frame the milestone as CLOSE-the-cross-family-question, not a redo and not premature scale-up."
+        v395_close_state:
+          principle: "Honest record (cross-family GENERALIZED, gate flipped open, loader repaired, ARC 20, self-learning ceiling) so the .396 agents frame the milestone as RUN-the-deferred-scale-up + HARDEN-on-ARC-GEN, not a redo and not a fresh over-claim."
         preconditions_checked:
           principle: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
-      ACCEPTANCE: honest_verdict terminal-prefixed; .395 activated; close-state recorded truthfully.
+      ACCEPTANCE: honest_verdict terminal-prefixed; .396 activated; close-state recorded truthfully.
 
-      Run: `python3 {project_root}/results/experiment_4269_archive_v394_activate_v395.py` (or your archive script).
+      Run: `python3 {project_root}/results/experiment_4280_archive_v395_activate_v396.py` (or your archive script).
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4270-arc-family-provenance-recovery
-    milestone: 2026.06.395
-    title: "PHASE A1 (DEPTH; fix exp4258's root cause) -- FAMILY/GAME PROVENANCE RECOVERY + diversity audit. exp4258 (cross-game transfer) BLOCKED blocked_arc_game_ids_unrecoverable: the 52-task grown pool's gap3_stage2:XXXX task_ids could not be mapped to game/family identities, so no family-disjoint split could be built. FIX: recover a task-FAMILY id (and game id where applicable) for EVERY pool row by joining raw_task_id/source_id back to the source ARC task definitions -> the ARC-TGI family taxonomy (arXiv:2603.05099) and/or the 25-game survey (results/arc3_win_condition_survey.json). Materialize a FIRST-CLASS provenance manifest per the Reliability Gap discipline (arXiv:2606.03305): per-row {{source_kind, family_id, game_id, fold, target_hash}}. Emit family_split_feasible BARE bool := (>=4 distinct families AND each held-out fold has >=~10 tasks for bootstrap power) + distinct_family_n + per_family_task_count. This task makes the cross-family test POSSIBLE; it does NOT run the test. CPU-only; NO GGUF/GPU."
+  - id: exp4281-diffusiongemma-energy-guided-full-run
+    milestone: 2026.06.396
+    title: "PHASE A1 (THE HEADLINE; the deferred-from-.395 scale-up, gate now OPEN) -- DiffusionGemma energy-guided FULL benchmark with matched no-Carnot-verifier controls. The .395 capstone flipped diffusiongemma_full_run_gate=True (hardened_win=True AND exp4274 preflight_go=True). RUN the full benchmark via the llama.cpp PR binary (~/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval -- the ONLY working loader). Wire the verifier ensemble as a per-step GUIDANCE energy reweighting denoising token selection. On n>=30 per arm: HEADLINE/oracle-distinct arm (verifier_is_oracle=false) = a LEARNED energy verifier guiding on a REASONING domain (FoVer-step/math, where the verifier is NOT the executable oracle) vs unguided vs RFG (arXiv:2509.25604, the model's own log-likelihood-ratio self-guidance -- the NO-external-verifier control) vs EntRGi (arXiv:2602.05000); emit diffusiongemma_guidance_moat BARE bool := (Carnot-guided - RFG > 0 AND CI95-excl-0). SUPPORTING/execution-grounded arm (verifier_is_oracle=true) = an executable-oracle verifier on code/Sudoku, reported as execution_grounded (cheap/automatic/decentralized, NOT a moat). If the learned verifier cannot score partial (masked) denoising states, that is an HONEST finding (the moat arm blocks; the control comparison + execution-grounded arm still land). NO TRM training; NO leaderboard submission."
     priority: critical
-    track: verifier-oracle-distinct
-    max_turns: 75
+    track: diffusiongemma-scaleup
+    max_turns: 100
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the oracle-distinct ARC verifier is MANDATED by the 2026-06-14 P0 directive (HEADLINE oracle-distinct verifier) + the .394 capstone left cross-game generalization as the SOLE reason hardened_win=False -- false-positive scope-match vs retired GAP-3 content-EBM lineage / the .393 ARC gate (exp4245); forward difference = recover the FAMILY/GAME provenance exp4258 could not (the data-provenance fix that makes the held-out-family OOD test possible), per the SOTA-ingestion flagged_for_v395 (ARC-TGI + Reliability Gap). verifier_is_oracle=false."
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4270_arc_family_provenance_recovery.json
+    operator_override: "2026-06-13/2026-06-14 gated forward-queue (DiffusionGemma) NOW RESOLVABLE: the .395 capstone (exp4279) flipped diffusiongemma_full_run_gate=True (hardened_win=True on all 3 axes AND exp4274 preflight_go=True), which is exactly the spec gate (diffusiongemma-energy-guided-diffusion-spec.md THE GATE: activate when an oracle-distinct learned-verifier win lands with a matched control, CI95-excl-0). False-positive scope-match vs the retired EDLM/energy-guided preflight lineage (exp3793) and the .395 preflight (exp4274, which SUCCEEDED); forward difference = the FULL benchmark the .395 roadmap explicitly DEFERRED to .396, now activatable, run WITH matched RFG/EntRGi no-Carnot-verifier controls. verifier_is_oracle declared per-arm honestly."
+    inference_substrate: live_llm_inference
+    deliverable: results/experiment_4281_diffusiongemma_energy_guided_full_run.json
     prior_failures:
-      - experiment_id: exp4258-arc-oracle-distinct-cross-game-transfer
-        verdict: blocked_arc_game_ids_unrecoverable
-        addressed_by: "exp4258 blocked because the grown pool's gap3_stage2 task_ids carried no recoverable game/family identity. This task does NOT re-run the blocked cross-game TEST; it FIXES the root cause first -- it recovers per-row family/game provenance by joining raw_task_id/source_id back to the source ARC tasks + the ARC-TGI family taxonomy (2603.05099) + the 25-game survey, and materializes an explicit provenance manifest (Reliability Gap 2606.03305). The cross-family test then runs in exp4271/exp4272 ON the recovered manifest."
+      - experiment_id: exp4260-diffusiongemma-energy-guided-preflight
+        verdict: blocked_diffusiongemma_gguf_loader_failed
+        addressed_by: "exp4260's preflight blocked because the discrete-diffusion GGUF loader failed; exp4274 (.395) REPAIRED it (loader_repaired=true, preflight_go=true) via the llama.cpp PR binary llama-diffusion-gemma-eval. This task runs ON that repaired loader path -- the root cause (broken loader) is fixed upstream, confirmed by the PR-binary preflight, not assumed."
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT: north-star §0 -- the ARC oracle-distinct selector must GENERALIZE to be useful in the ARC-AGI-3
-      harness (new games/levels constantly). .394's capstone set hardened_win=False for ONE reason: the
-      held-out-game OOD test (exp4258) blocked because the pool's task_ids had no recoverable game/family id.
-      This task fixes that. ARC-TGI (arXiv:2603.05099) releases 461 human-validated task-FAMILY generators
-      (family ids + reasoning-chain templates) covering ARC-Mini + ARC-AGI-1 tasks -- the natural disjoint unit.
-      Reliability Gap (arXiv:2606.03305): transparent provenance (source_kind + family + fold + target_hash as
-      first-class columns) must be the acceptance gate, NOT a post-hoc statistical leak detector.
+      CONTEXT: north-star §5 -- energy VERIFIES, refinement GENERATES. .395 proved the verifier RANKS candidates
+      from unseen families (the post-hoc selection moat). This task asks the deeper question: does the EXTERNAL
+      energy verifier improve GENERATION when wired into a 26B discrete-diffusion LLM's denoising loop -- beating
+      the model's OWN reward-free self-guidance (RFG)? The gate is OPEN (diffusiongemma_full_run_gate=True). The
+      operator was TWICE-BURNED by premature DiffusionGemma over-claims, so this run is gated on matched
+      no-Carnot-verifier controls (unguided / RFG / EntRGi) and per-arm verifier_is_oracle honesty -- a "win"
+      requires beating RFG with CI95-excl-0 using a LEARNED (oracle-distinct) verifier, NOT just beating unguided
+      and NOT a circular execution-grounded win. Methods: RFG log-likelihood-ratio guidance (arXiv:2509.25604),
+      EntRGi entropy-aware guidance (arXiv:2602.05000), EDLM energy-reweighted denoising (arXiv:2506.13759).
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4258_arc_oracle_distinct_cross_game_transfer.json (the block: model_specs.blocked_reason, what it tried)
-        - results/experiment_4243_arc_candidate_pool_grow_pool.json.gz (the grown pool: tasks[] carry raw_task_id, source_id, task_id like gap3_stage2:50a16a69)
-        - results/arc3_win_condition_survey.json (the 25-game survey -- game identities)
-        - results/arc3_gap4_induced_programs.json + results/arc3_gap3_stage2_eval_pool.json.gz (the source pools the task_ids came from -- the join targets)
-        - scripts/exp_verifier_detector_auroc.py, scripts/adversarial_verify.py, scripts/summarize_artifact.py
-        - CLAUDE.md "Circularity / Oracle-Distinctness Discipline", "Adversarial Artifact Verification + Sample-Size Rigor"
+        - results/experiment_4274_diffusiongemma_loader_fix_preflight.json (the repaired loader + guidance hook: how it wired the verifier as per-step energy; preflight_go, guidance_changes_selection, full_run_cost_estimate_s)
+        - scripts/exp_diffusiongemma_energy_prior_extract.py + results/diffusiongemma_energy_prior_extracted.json (the PR-binary call: llama-diffusion-gemma-eval <gguf> <prompt_ids.i32> <canvas_ids.i32> <out_logits.bin>; canvas=256 mask tokens id=4; vocab 262144 -> the (256,262144) energy-prior)
+        - docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md (THE GATE + the guidance design)
+        - python/carnot/verify/ (the verifier ensemble to wire as the guidance energy; the LEARNED verifiers for the oracle-distinct arm vs the EXECUTABLE oracle for the execution-grounded arm)
+        - scripts/experiment_template.py (cached_sota_pair), scripts/adversarial_verify.py, scripts/summarize_artifact.py
+        - CLAUDE.md "Circularity / Oracle-Distinctness Discipline", "Pre-Launch Preconditions", "Inference-Substrate Declaration", "GGUF tokenizer rule", "Adversarial Artifact Verification + Sample-Size Rigor"
 
-      TASK: recover per-row family/game provenance for the grown pool; materialize a manifest; emit feasibility.
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS (check BEFORE any analysis):
-           a. The grown pool loads: `python3 -c "import json,gzip; json.load(gzip.open('results/experiment_4243_arc_candidate_pool_grow_pool.json.gz'))"`.
-           b. At least ONE join target exists (arc3_win_condition_survey.json AND/OR the gap3_stage2/gap4 source
-              pools). If NO source mapping can be reconstructed at all -> honest_verdict
-              `blocked_arc_source_taxonomy_unavailable` and STOP. CPU sufficient; no GGUF/GPU.
-        1. For EVERY pool row, recover {{source_kind (induced vs sampled), family_id, game_id, target_hash}} by
-           joining raw_task_id/source_id -> the source ARC task -> the ARC-TGI family taxonomy and/or the
-           25-game survey. Where a clean family id is unrecoverable, fall back to a coarser but HONEST disjoint
-           unit (e.g. the original ARC task id) and record which rows used the fallback. Persist the manifest as
-           a first-class artifact (results/experiment_4270_arc_family_manifest.json).
-        2. Audit diversity: distinct_family_n, per_family_task_count histogram, and the largest held-out fold
-           that keeps >=~10 tasks for bootstrap power. Emit family_split_feasible BARE bool := (distinct_family_n
-           >= 4 AND a family-disjoint split exists where each held-out fold has >=~10 tasks). If infeasible,
-           say WHY (pool too family-concentrated -> A3 builds a fresh ARC-TGI pool).
-        3. Run adversarial_verify.py (clean). Declare random_seed + reproducibility_checksum + model_specs (the
-           join sources + the fallback policy). Do NOT emit duplicate counts as distinct metrics (TAUTOLOGY).
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal-prefixed. A recovered manifest (feasible) AND an honest infeasible-pool finding are BOTH COMPLETE and decision-grade (feasible -> A2 tests existing; infeasible -> A3 builds fresh)."
-        family_split_feasible:
-          principle: "BARE bool: A2 gates on ==true, A3 on ==false, A4 on ==true (gated-fields-must-be-bare); true iff a family-disjoint split with >=4 families and >=~10 tasks per held-out fold exists on the existing pool."
-        distinct_family_n:
-          principle: "BARE int: number of distinct task-families recovered -- the OOD breadth; <4 means the existing pool cannot support a powered cross-family test."
-        per_family_task_count:
-          principle: "Histogram of tasks per family -- exposes family concentration (the reason exp4258's pool may be untestable cross-family)."
-        provenance_manifest_path:
-          principle: "Path to the first-class per-row {{source_kind, family_id, game_id, fold, target_hash}} manifest -- the Reliability Gap artifact every downstream cross-family claim must trace to."
-        verifier_is_oracle:
-          principle: "BARE bool=false -- this is a data-provenance recovery for the learned selector, not an executable oracle."
-        random_seed:
-          principle: "Determinism precondition; the fold assignment must be reproducible."
-        reproducibility_checksum:
-          principle: "Hash of the pool + join sources + manifest; lets a third party re-derive the provenance."
-        model_specs:
-          principle: "The join sources (ARC-TGI taxonomy / 25-game survey / source pools) + the fallback-unit policy; required methodology."
-      ACCEPTANCE GATE:
-        - condition: "family_split_feasible + distinct_family_n + per_family_task_count + provenance_manifest_path reported AND verifier_is_oracle=false, OR an honest blocked_arc_source_taxonomy_unavailable verdict"
-          principle: "exp4258 blocked for lack of family provenance; recovering it (or honestly finding the pool too concentrated) is the precondition for the held-out-family OOD test that gates the whole milestone."
-
-      Run: `python3 {project_root}/results/experiment_4270_arc_family_provenance_recovery.py`
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp4271-arc-cross-family-transfer-existing-pool
-    milestone: 2026.06.395
-    title: "PHASE A2 (DEPTH; THE real OOD test; gated_on A1 family_split_feasible==true) -- CROSS-FAMILY transfer on the EXISTING pool. Using the recovered provenance manifest, train the set-encoder on a SUBSET of task-families and test the beats-vote gate on candidates from HELD-OUT families (NO family in both train and test) -- the real OOD test the within-pool .393 split did not run. Report cross_family_delta (set_encoder@1 - vote@1 on held-out families) + task-level bootstrap CI95 (>=2000 resamples) + held_out_family_n + held_out_task_n + within_minus_cross_gap (how much the win shrinks vs the within-pool +0.4423) + oracle@K positive control. Include a STATIC vs ONLINE-ADAPTED arm. GENERALIZES (cross_family_delta>0 AND CI95-excl-0) = a GENERAL selection signal (north-star-grade -> opens the DiffusionGemma gate). COLLAPSES = per-family-basin memorization (decision-grade -> scope the headline to within-pool). verifier_is_oracle=false."
-    priority: critical
-    track: verifier-oracle-distinct
-    max_turns: 80
-    agent_type: codex
-    model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the oracle-distinct ARC verifier is MANDATED by the 2026-06-14 P0 directive + the .394 capstone left cross-game generalization as the SOLE reason hardened_win=False -- false-positive scope-match vs retired GAP-3 content-EBM lineage / the .393 ARC gate (exp4245); forward difference = the held-out-FAMILY OOD test on the A1-recovered provenance manifest (the test exp4258 could not run). verifier_is_oracle=false."
-    inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4271_arc_cross_family_transfer_existing_pool.json
-    gated_on:
-      - upstream: exp4270-arc-family-provenance-recovery
-        artifact_field: family_split_feasible
-        op: '=='
-        value: true
-    prior_failures:
-      - experiment_id: exp4258-arc-oracle-distinct-cross-game-transfer
-        verdict: blocked_arc_game_ids_unrecoverable
-        addressed_by: "exp4258 blocked because family/game ids were unrecoverable. This attempt runs ON the A1 (exp4270) provenance manifest that recovers them; gated_on family_split_feasible==true so it only runs when a powered family-disjoint split exists. The root cause (no recoverable disjoint unit) is fixed upstream by A1."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT: gated_on A1's recovered provenance (family_split_feasible==true). This is THE decision-grade test:
-      a within-pool +44pp could be per-family-basin memorization, not a general selection signal. Carnot's own
-      GAP-4 ARC-1->ARC-2 probe collapsed (induction 0.93->0.57, project_gap3_verifier_program); the ARC survey
-      (arXiv:2603.13372) frames cross-task transfer as THE unresolved ARC frontier. Train on some families, test
-      on UNSEEN families. Corroborator for the verifier-transfer framing: TrajAD (arXiv:2602.06443) runs exactly
-      this cross-domain-under-OOD test to ask whether a learned verifier learns universal logic or domain-specific
-      patterns.
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_4270_arc_family_manifest.json (the per-row family/game/fold manifest from A1)
-        - results/experiment_4270_arc_family_provenance_recovery.json (family_split_feasible + distinct_family_n)
-        - results/experiment_4245_arc_set_encoder_beats_vote.json (the within-pool win + gate protocol to extend)
-        - results/experiment_4244_arc_set_encoder_aggregator_build.json + _model.json (the set-encoder to retrain per family-split)
-        - results/experiment_4243_arc_candidate_pool_grow_pool.json.gz (the grown pool candidates)
-        - scripts/exp_verifier_detector_auroc.py, scripts/adversarial_verify.py
-        - CLAUDE.md "Circularity / Oracle-Distinctness Discipline", "Adversarial Artifact Verification"
-
-      TASK: train the set-encoder on a subset of FAMILIES, test the beats-vote gate on HELD-OUT families.
+      TASK: run the DiffusionGemma energy-guided full benchmark; report guided-vs-controls deltas + the moat verdict.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: A1 family_split_feasible==true (the conductor gate enforces this; if reached anyway and
-           false -> honest_verdict `complete_arc_cross_family_deferred_pool_infeasible` and STOP). The manifest +
-           grown pool load. CPU sufficient.
-        1. Partition the pool BY FAMILY into train-families vs held-out-families (leave-one-family-out or a
-           family-disjoint k-fold; report held_out_family_n + held_out_task_n). NO family in both train and test.
-        2. Train the set-encoder on train-family candidates only; on held-out-FAMILY candidates compute
-           set_encoder@1, vote@1, oracle@K, matched control. Report cross_family_delta + task-level bootstrap
-           CI95 (>=2000 resamples), within_minus_cross_gap (vs the within-pool +0.4423), and the positive control
-           (oracle@K vs vote -- if oracle@K~=vote on held-out families the null is uninformative, FALSE_NEGATIVE_RISK).
-        3. ONLINE-ADAPT arm: alongside the STATIC selector, report an online-reweighted selector cross_family_delta
-           (the same Tier-1 mechanism A4 studies in depth) so the static-vs-adaptive comparison is in this artifact too.
-        4. Emit cross_family_win_holds BARE bool := (static cross_family_delta>0 AND its CI95 excludes 0). Run
-           adversarial_verify.py (clean; verifier_is_oracle=false). Declare random_seed + reproducibility_checksum +
-           model_specs. HONEST read: cross_family_generalizes / within_pool_only / no_headroom.
+        0. PRECONDITIONS (check BEFORE any inference):
+           a. PR binary: `ls ~/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval` returns non-empty (confirmed 2026-06-16).
+           b. DiffusionGemma GGUF cached: `ls ~/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/` non-empty (confirmed 2026-06-16). 1x RTX 3090 fits the Q4_K_M (16GB).
+           c. The conductor is stood-down on TRM training; this task does NO training and does NOT touch results/trm_runs/.
+           If ANY precondition fails -> honest_verdict `blocked_<resource>` and STOP. DO NOT fabricate inference.
+        1. Build the guidance harness on the repaired PR-binary path: extract the per-position energy-prior, wire
+           the verifier ensemble as a per-step guidance energy reweighting token selection (the exp4274 hook).
+           Confirm guidance_changes_selection on a 2-example smoke before the full run.
+        2. HEADLINE / oracle-distinct arm (verifier_is_oracle=false): on a REASONING corpus (FoVer-step / math,
+           n>=30), run four conditions -- unguided, RFG (arXiv:2509.25604 log-likelihood-ratio self-guidance),
+           EntRGi (arXiv:2602.05000), Carnot-verifier-guided (a LEARNED energy verifier, NOT the executable oracle).
+           Report per-condition accuracy/pass + the Carnot-minus-RFG and Carnot-minus-unguided deltas + task-level
+           bootstrap CI95 (>=2000 resamples). Emit diffusiongemma_guidance_moat BARE bool := (Carnot-guided - RFG
+           > 0 AND its CI95 excludes 0). If the learned verifier cannot score partial/masked denoising states ->
+           honest_verdict `complete_diffusiongemma_learned_verifier_cannot_score_partial_states` with the diagnosis
+           (the moat arm blocks; still report the unguided/RFG/EntRGi control comparison + the execution-grounded arm).
+        3. SUPPORTING / execution-grounded arm (verifier_is_oracle=true): on code/Sudoku (n>=30), guide with an
+           EXECUTABLE-oracle verifier; report execution_grounded_guidance_delta. Frame as cheap/automatic/decentralized,
+           explicitly NOT a moat (circular -- the verifier IS the oracle).
+        4. Run adversarial_verify.py (clean). Declare random_seed + reproducibility_checksum + model_specs
+           (DiffusionGemma GGUF id + the PR binary + the verifier ensemble + denoising step count + the corpora).
+           Plausible duration (live 26B inference -- minutes, DURATION floor applies). Checkpoint periodically; an
+           HONEST partial (>=30 per arm on the headline arm) is fine. NO leaderboard submission.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. A cross-family win, a within-pool-only collapse, and a no-headroom are ALL COMPLETE and decision-grade."
-        cross_family_win_holds:
-          principle: "BARE bool: the capstone reads this as the OOD verdict (gated-fields-must-be-bare); true iff the held-out-family set_encoder@1 - vote@1 > 0 AND CI95-excl-0 -- the real generalization signal."
-        cross_family_delta:
-          principle: "BARE float: set_encoder@1 - vote@1 on HELD-OUT FAMILIES -- the load-bearing OOD lift (compare to the within-pool +0.4423)."
-        cross_family_ci95:
-          principle: "Task-level bootstrap CI95 of the cross-family delta -- excluding 0 means the verifier generalizes to unseen families."
-        within_minus_cross_gap:
-          principle: "The within-pool +0.4423 minus cross_family_delta -- quantifies how much of the win was per-family-basin memorization."
-        held_out_family_n:
-          principle: "BARE int: number of families never seen in training -- the OOD breadth; report with held_out_task_n for power."
-        oracle_at_k:
-          principle: "Positive-control ceiling on held-out families -- if ~=vote the cross-family null is uninformative, not a verifier failure."
-        online_adapt_cross_family_delta:
-          principle: "The online-reweighted selector's cross-family delta -- the static-vs-adaptive self-learning comparison (deepened in A4)."
+          principle: "Terminal-prefixed. A guidance moat (learned-verifier beats RFG, CI95-excl-0), a bounded null (ties RFG), and a partial-state-blocked finding are ALL COMPLETE and decision-grade for the §5 thesis."
+        diffusiongemma_guidance_moat:
+          principle: "BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff the LEARNED (oracle-distinct) verifier-guided run beats RFG model-self-guidance AND CI95-excl-0 -- the moat-scissor realized in generation at LLM scale."
+        carnot_minus_rfg_delta:
+          principle: "BARE float: Carnot-verifier-guided minus RFG accuracy on the reasoning corpus -- the load-bearing comparison (beating the model's own self-guidance is what shows an EXTERNAL verifier adds value in-generation)."
+        carnot_minus_unguided_delta:
+          principle: "BARE float: Carnot-verifier-guided minus unguided -- the weaker control (a guidance hook that does anything beats unguided; the moat needs the RFG comparison too)."
+        guidance_moat_ci95:
+          principle: "Task-level bootstrap CI95 of the Carnot-minus-RFG delta -- excluding 0 means the external verifier genuinely steers generation better than model self-guidance."
+        execution_grounded_guidance_delta:
+          principle: "The executable-oracle arm's guided-minus-unguided delta -- valid but CIRCULAR (verifier_is_oracle=true); framed as cheap/automatic/decentralized, NOT a moat headline."
         verifier_is_oracle:
-          principle: "BARE bool=false -- learned set-encoder, no demo execution; keeps the transfer result oracle-distinct."
+          principle: "BARE bool: declared PER ARM (false for the learned-verifier headline arm, true for the execution-grounded arm) -- honoring the Circularity Discipline so a circular guidance win cannot headline."
+        preconditions_checked:
+          principle: "Records the PR-binary + GGUF cache + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode."
         random_seed:
-          principle: "Determinism precondition; the family-split + bootstrap reproducible."
+          principle: "Determinism precondition for the denoising + bootstrap."
         reproducibility_checksum:
-          principle: "Hash of the pool + family partition + manifest; lets a third party re-run."
+          principle: "Hash of the corpora + guidance config + PR-binary inputs; lets a third party re-run."
         model_specs:
-          principle: "The family-disjoint split protocol + set-encoder config + online-adapt rule; required methodology."
+          principle: "DiffusionGemma GGUF id + the PR binary + the verifier ensemble wired as guidance + denoising steps + the four conditions + the corpora; required methodology."
       ACCEPTANCE GATE:
-        - condition: "cross_family_win_holds + cross_family_delta + cross_family_ci95 + within_minus_cross_gap + held_out_family_n + oracle_at_k reported AND verifier_is_oracle=false, OR an honest deferred/no-headroom verdict"
-          principle: "Held-out-FAMILY transfer is the real OOD test; a survive is a general selection signal (north-star-grade, opens the DiffusionGemma gate), a collapse scopes the headline to within-pool."
+        - condition: "diffusiongemma_guidance_moat + carnot_minus_rfg_delta + guidance_moat_ci95 + execution_grounded_guidance_delta reported with per-arm verifier_is_oracle declared and preconditions_checked, OR an honest blocked_/partial-state verdict"
+          principle: "The deferred scale-up answers the deepest open §5 question (does the external verifier improve GENERATION, beating model self-guidance) with matched controls + circularity honesty -- defusing the twice-burned over-claim trap mechanically."
 
-      Run: `python3 {project_root}/results/experiment_4271_arc_cross_family_transfer_existing_pool.py`
+      Run: `python3 {project_root}/results/experiment_4281_diffusiongemma_energy_guided_full_run.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4272-arc-cross-family-transfer-fresh-tgi-pool
-    milestone: 2026.06.395
-    title: "PHASE A3 (DEPTH; the fresh-pool fallback; gated_on A1 family_split_feasible==false) -- build a FRESH ARC-TGI family-disjoint candidate pool, then run the cross-family beats-vote gate. Runs ONLY when A1 finds the existing 52-task pool too family-concentrated for a powered held-out-family test. Use the ARC-TGI task-family generators (arXiv:2603.05099; 461 generators covering ARC-Mini + ARC-AGI-1) and/or expand candidate coverage across MORE cached source families to build a larger family-diverse pool with materialized family_id + exact target_hash per row. Train the set-encoder on train-families, test on HELD-OUT families. Keep ORIGINAL ARC tasks as a held-out sanity read (ARC-TGI warning: generator data can become its own distribution -- report generator-family and original-task metrics SEPARATELY). Report cross_family_delta + CI95 + held_out_family_n + oracle@K. Emit cross_family_win_holds BARE bool. verifier_is_oracle=false. HARD-CAP the build to the 80-min window; honest partial is fine."
+  - id: exp4282-arcgen-cross-family-stress
+    milestone: 2026.06.396
+    title: "PHASE B1 (HARDEN the cross-family win on a 2nd, construction-disjoint substrate) -- ARC-GEN family-disjoint cross-family stress. .395 proved cross-family generalization (exp4271 +0.4038 held-out) but on ONE substrate (the recovered 52-task manifest), inviting the 'specific to your partition' critique. ARC-GEN (arXiv:2511.00162, github.com/google/ARC-GEN) is Google's mimetic procedural generator faithfully covering ALL 400 ARC-AGI-1 + 500 ARC-AGI-2 tasks, each a parameterized generator with a NATIVE family id -- an INDEPENDENT family substrate. Clone it (GITIGNORED -- no embedded-repo gitlink), build a family-disjoint candidate pool with native family ids + exact target hashes, train the set-encoder on train-families, test beats-vote on HELD-OUT generator-families. Report cross_family_delta SEPARATELY on original-ARC / ARC-TGI / ARC-GEN families (the generators-become-their-own-distribution failure mode) + a randomized family-rich stress split (arXiv:2601.18217). Emit arcgen_cross_family_holds BARE bool := (held-out-family delta>0 AND CI95-excl-0 on the ARC-GEN families). verifier_is_oracle=false. HARD-CAP to the window; an honest partial pool (>=4 families, >=~10 held-out tasks/fold) is fine."
     priority: high
     track: verifier-oracle-distinct
     max_turns: 90
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the oracle-distinct ARC verifier is MANDATED by the 2026-06-14 P0 directive + the SOTA-ingestion flagged_for_v395 (ARC-TGI 2603.05099 family-disjoint pool) -- false-positive scope-match vs retired GAP-3 content-EBM lineage / the .393 ARC gate (exp4245); forward difference = a FRESH ARC-TGI family-disjoint pool (the fallback when the existing pool is too concentrated), enabling the held-out-family OOD test exp4258 could not run. verifier_is_oracle=false."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 3 (versioned-lineage continuation): the oracle-distinct ARC verifier is MANDATED by the 2026-06-14 P0 directive + the .395 cross-family win generalized on ONE substrate and the SOTA-ingestion (exp4276) flagged ARC-GEN (2511.00162) as the 2nd-substrate stress for v396 -- false-positive scope-match vs retired GAP-3 content-EBM lineage / the .393 ARC gate (exp4245) / the .395 cross-family test (exp4271, which SUCCEEDED); forward difference = an INDEPENDENT procedural-generator substrate (ARC-GEN native family ids) that closes the single-partition critique exp4271 could not. verifier_is_oracle=false."
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4272_arc_cross_family_transfer_fresh_tgi_pool.json
-    gated_on:
-      - upstream: exp4270-arc-family-provenance-recovery
-        artifact_field: family_split_feasible
-        op: '=='
-        value: false
+    deliverable: results/experiment_4282_arcgen_cross_family_stress.json
     prior_failures:
       - experiment_id: exp4258-arc-oracle-distinct-cross-game-transfer
         verdict: blocked_arc_game_ids_unrecoverable
-        addressed_by: "exp4258 blocked on unrecoverable family/game ids AND the existing 52-task pool may be too family-concentrated to ever support a powered cross-family split. This attempt builds a FRESH family-diverse pool with materialized family ids (ARC-TGI generators 2603.05099 + cached-source expansion) so a family-disjoint test is possible by construction; gated_on family_split_feasible==false so it only runs when the existing pool cannot support the test."
+        addressed_by: "exp4258 blocked because the grown pool's task_ids carried no recoverable family/game identity. ARC-GEN generators carry a NATIVE family id by construction (no recovery needed), so a family-disjoint split exists by design. This is the independent-substrate confirmation of exp4271's recovered-manifest win, not a re-run of the blocked test."
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT: gated_on A1 family_split_feasible==false -- the existing pool is too family-concentrated for a
-      powered held-out-family test, so build a fresh one. ARC-TGI (arXiv:2603.05099) releases 461 human-validated
-      task-family generators (compact Python programs that sample diverse ARC tasks preserving a latent rule,
-      with family ids + reasoning-chain templates). The disjoint unit is the family; the pool must materialize
-      family_id + exact target_hash per row. ARC-TGI failure mode: generator-generated data can become its own
-      distribution -> keep ORIGINAL ARC tasks as a held-out sanity read and report generator-family vs original-task
-      metrics SEPARATELY (Reliability Gap 2606.03305 provenance discipline).
+      CONTEXT: the .395 cross-family win (exp4271 +0.4038 held-out, CI95-excl-0) is hardened but on the recovered
+      52-task manifest only. A skeptic: 'you generalized across families YOU carved from one pool.' ARC-GEN
+      (arXiv:2511.00162; github.com/google/ARC-GEN, Moffitt/Google) is an INDEPENDENT mimetic procedural generator
+      covering all 400 ARC-1 + 500 ARC-2 tasks, each with a native family id -- a 2nd, construction-disjoint family
+      substrate. Replicating the win here closes the single-partition critique. ARC-GEN failure mode: generator data
+      can become its own distribution -> report original-ARC / ARC-TGI / ARC-GEN lift SEPARATELY (Reliability Gap
+      2606.03305). 'Paying Less Generalization Tax' (arXiv:2601.18217): a randomized family-rich stress split checks
+      the lift is causal, not robustness-theater.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4270_arc_family_provenance_recovery.json (why the existing pool is infeasible; distinct_family_n)
-        - results/experiment_4243_arc_candidate_pool_grow.json + _pool.json.gz (the .393 pool-grow path to mirror for a bigger pool)
-        - results/arc3_win_condition_survey.json + results/arc3_gap3_stage2_eval_pool.json.gz + results/arc3_gap4_induced_programs.json (cached sources to expand candidate coverage across more families)
+        - results/experiment_4271_arc_cross_family_transfer_existing_pool.json (the .395 win + the family-disjoint gate protocol to mirror)
+        - results/experiment_4270_arc_family_manifest.json (the recovered manifest schema: per-row family_id/fold/target_hash to match for ARC-GEN rows)
+        - results/experiment_4244_arc_set_encoder_aggregator_build.json + _model.json (the set-encoder to retrain per family-split)
         - python/carnot/agentic/arc_agi3_world_model.py (the explore-induce-verify solver, if candidate generation is needed)
         - scripts/exp_verifier_detector_auroc.py, scripts/adversarial_verify.py
-        - CLAUDE.md "Circularity / Oracle-Distinctness Discipline", "Pre-Launch Preconditions", "Adversarial Artifact Verification"
+        - CLAUDE.md "Circularity / Oracle-Distinctness Discipline", "No embedded-repo gitlinks" (gitignore the clone), "Adversarial Artifact Verification + Sample-Size Rigor"
 
-      TASK: build a fresh ARC-TGI family-disjoint candidate pool; run the cross-family beats-vote gate.
+      TASK: build an ARC-GEN family-disjoint pool; run the cross-family beats-vote gate; report per-substrate lift.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: A1 family_split_feasible==false (conductor gate). The cached source pools + survey load.
-           If ARC-TGI generators are not installable AND no cached-source expansion is possible -> honest_verdict
-           `blocked_arc_tgi_and_cached_sources_unavailable` and STOP. CPU sufficient.
-        1. Build a fresh family-diverse candidate pool: either (a) sample via the ARC-TGI generators (family_id
-           native) or (b) expand candidate coverage across MORE cached source families, attaching a recovered
-           family_id + exact target_hash per row. HARD-CAP families x tasks x candidates to fit the window; an
-           honest partial pool with >=4 families and >=~10 held-out tasks per fold is fine. Persist the pool +
-           manifest.
-        2. Train the set-encoder on train-families; on HELD-OUT families compute set_encoder@1, vote@1, oracle@K,
-           matched control. Report cross_family_delta + task-level bootstrap CI95 + held_out_family_n. Report the
-           ORIGINAL-ARC-task held-out sanity read SEPARATELY from generator-family metrics.
-        3. Emit cross_family_win_holds BARE bool := (cross_family_delta>0 AND CI95-excl-0 on the held-out
-           families). Run adversarial_verify.py (clean; verifier_is_oracle=false). Declare random_seed +
-           reproducibility_checksum + model_specs (the generator/source provenance + the held-out-family split).
+        0. PRECONDITIONS (check BEFORE any analysis):
+           a. `git clone https://github.com/google/ARC-GEN` into a GITIGNORED path (e.g. external/ARC-GEN/ -- add
+              to .gitignore FIRST so git add -A cannot swallow it as a mode-160000 gitlink). If the clone fails
+              (network) AND no cached ARC-GEN exists -> honest_verdict `blocked_arcgen_unavailable` and STOP.
+           b. The set-encoder + .395 manifest load. CPU sufficient; no GGUF/GPU.
+        1. Generate a family-diverse candidate pool from ARC-GEN generators: each row carries a NATIVE family_id +
+           exact target_hash + source_kind=arcgen. HARD-CAP families x tasks x candidates to fit the window; an
+           honest partial pool with >=4 ARC-GEN families and >=~10 held-out tasks/fold is fine. Persist the pool + manifest.
+        2. Train the set-encoder on train-families; on HELD-OUT ARC-GEN families compute set_encoder@1, vote@1,
+           oracle@K, matched control. Report cross_family_delta + task-level bootstrap CI95 (>=2000 resamples) +
+           held_out_family_n. Report original-ARC and ARC-TGI held-out reads SEPARATELY from ARC-GEN (do NOT pool).
+           Add a randomized family-rich stress split (randomize family-rich-but-label-irrelevant features; confirm
+           the lift survives).
+        3. Emit arcgen_cross_family_holds BARE bool := (ARC-GEN held-out delta>0 AND CI95-excl-0). Run
+           adversarial_verify.py (clean; verifier_is_oracle=false). Declare random_seed + reproducibility_checksum +
+           model_specs (the ARC-GEN provenance + the family-disjoint split + the stress split).
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. A cross-family win on the fresh pool, a collapse, a no-headroom, AND an honest blocked-sources are ALL COMPLETE and decision-grade."
-        cross_family_win_holds:
-          principle: "BARE bool: the capstone reads this as the OOD verdict when A3 ran (gated-fields-must-be-bare); true iff held-out-family set_encoder@1 - vote@1 > 0 AND CI95-excl-0."
+          principle: "Terminal-prefixed. A 2nd-substrate survive (win generalizes beyond the recovered manifold), a collapse (win was partition-specific), and an honest blocked-clone are ALL COMPLETE and decision-grade."
+        arcgen_cross_family_holds:
+          principle: "BARE bool: the capstone reads this as the 2nd-substrate verdict (gated-fields-must-be-bare); true iff held-out ARC-GEN-family set_encoder@1 - vote@1 > 0 AND CI95-excl-0 -- closes the single-partition critique."
         cross_family_delta:
-          principle: "BARE float: set_encoder@1 - vote@1 on held-out FAMILIES of the fresh pool -- the OOD lift."
-        cross_family_ci95:
-          principle: "Task-level bootstrap CI95 of the cross-family delta -- excluding 0 means generalization to unseen families."
+          principle: "BARE float: set_encoder@1 - vote@1 on held-out ARC-GEN families -- compare to the .395 recovered-manifest +0.4038 (a similar delta hardens the generalization)."
+        per_substrate_delta:
+          principle: "The lift reported SEPARATELY on original-ARC / ARC-TGI / ARC-GEN families -- guards the generators-become-their-own-distribution failure mode (a win only on generator data is weaker than one that holds on original ARC)."
+        randomized_stress_delta:
+          principle: "The cross-family delta under a randomized family-rich split -- if the lift survives randomizing label-irrelevant family features, it is causal, not robustness-theater (arXiv:2601.18217)."
         held_out_family_n:
-          principle: "BARE int: number of held-out families -- the OOD breadth; report with held_out_task_n for power."
-        original_task_sanity_delta:
-          principle: "The held-out ORIGINAL-ARC-task delta (NOT generator-sampled) -- guards the ARC-TGI failure mode where generator data becomes its own distribution."
+          principle: "BARE int: number of held-out ARC-GEN families -- the OOD breadth; report with held_out_task_n for power."
         oracle_at_k:
-          principle: "Positive-control ceiling on held-out families -- if ~=vote the null is uninformative."
+          principle: "Positive-control ceiling on held-out families -- if ~=vote the null is uninformative, not a verifier failure."
         verifier_is_oracle:
-          principle: "BARE bool=false -- learned set-encoder over a freshly-built pool, no demo execution."
+          principle: "BARE bool=false -- learned set-encoder over an independent procedural-generator pool, no demo execution."
         random_seed:
-          principle: "Determinism precondition; the build + family-split reproducible."
+          principle: "Determinism precondition; the ARC-GEN sampling + family-split reproducible."
         reproducibility_checksum:
-          principle: "Hash of the fresh pool + family manifest; lets a third party re-run."
+          principle: "Hash of the ARC-GEN pool + family manifest; lets a third party re-run."
         model_specs:
-          principle: "The ARC-TGI / cached-source provenance + the family-disjoint split protocol; required methodology."
+          principle: "The ARC-GEN generator provenance + the family-disjoint split protocol + the stress split; required methodology."
       ACCEPTANCE GATE:
-        - condition: "cross_family_win_holds + cross_family_delta + cross_family_ci95 + held_out_family_n + original_task_sanity_delta + oracle_at_k reported AND verifier_is_oracle=false, OR an honest blocked/no-headroom verdict"
-          principle: "When the existing pool can't support the OOD test, a fresh ARC-TGI family-disjoint pool makes it possible by construction; the held-out-family delta is the same decision-grade generalization verdict."
+        - condition: "arcgen_cross_family_holds + cross_family_delta + per_substrate_delta + randomized_stress_delta + held_out_family_n + oracle_at_k reported AND verifier_is_oracle=false, OR an honest blocked_/collapse verdict"
+          principle: "An independent-substrate replication closes the single-partition critique on the .395 cross-family win; a collapse scopes the headline to the recovered manifold (both decision-grade)."
 
-      Run: `python3 {project_root}/results/experiment_4272_arc_cross_family_transfer_fresh_tgi_pool.py`
+      Run: `python3 {project_root}/results/experiment_4282_arcgen_cross_family_stress.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4273-arc-cross-family-online-adaptation-selflearning
-    milestone: 2026.06.395
-    title: "PHASE A4 (CONTINUOUS SELF-LEARNING -- the mandated self-learning experiment; gated_on A1 family_split_feasible==true) -- Tier-1 ONLINE verifier-weight adaptation across the family folds. research-program.md mandates >=1 self-learning experiment per milestone; Tier 1 (online weight/counter updates, CPU, <1us/update, NOT the retired live-LoRA fine-tuning) is the practical tier. QUESTION: does cheap online adaptation recover cross-family headroom the STATIC selector loses? On each held-out family, compare the STATIC set-encoder selector vs an ONLINE-reweighted selector that upweights features/sub-verifiers which selected correctly on the nearest SEEN family (running per-feature precision, updated as families stream in). Report static_cross_family_delta vs online_cross_family_delta + the per-family adaptation curve + CI95 on the (online - static) gain. A positive gain = the verifier self-improves toward generalization (north-star-grade self-learning evidence). A null = static is the ceiling (honest, decision-grade). verifier_is_oracle=false. NO fine-tuning; NO TRM; NO live-LoRA."
+  - id: exp4283-self-learning-repowered-arcgen
+    milestone: 2026.06.396
+    title: "PHASE C1 (CONTINUOUS SELF-LEARNING -- the mandated self-learning experiment) -- re-power the online verifier-weight adaptation test on the LARGER family set. research-program.md mandates >=1 self-learning experiment/milestone; Tier 1 = online weight/counter updates (CPU, <1us/update, NOT the retired live-LoRA path). .395 found static-is-the-ceiling BUT the (online-static) CI only TOUCHED 0 at n=52 ([0.0, 0.192]) -- an n-limit, not a proven null. RE-RUN the Tier-1 online reweighting across the COMBINED family set (the .395 recovered manifest + ARC-GEN's many families from exp4282, a soft input) so the CI is POWERED, AND add a Tier-2 constraint-memory arm (cache per-family selection patterns, reuse on the nearest-neighbor seen family) as a distinct mechanism. Report static vs online vs Tier-2 cross-family delta + the per-family adaptation curve + a POWERED CI95 on (online-static). Emit online_adaptation_helps BARE bool := (online-static>0 AND CI95-excl-0). A positive gain = the verifier self-improves toward generalization (north-star-grade); a null WITH POWER = static is genuinely the ceiling (retire the online-adaptation-helps ask). verifier_is_oracle=false. NO fine-tuning; NO TRM; NO live-LoRA."
     priority: medium
     track: self-learning
-    max_turns: 70
+    max_turns: 75
     agent_type: codex
     model: gpt-5.5
-    operator_override: "research-program.md Continuous Self-Learning mandate (standing: >=1 self-learning experiment per milestone) + 2026-06-14 P0 oracle-distinct verifier directive -- false-positive scope-match vs the RETIRED live-LoRA verifier-as-reward path (exclusion_manifest live_lora_verifier_as_reward_path_retired_exp4247, blocked_patterns: verifier_reward_lora_harness / live-LoRA verifier-as-reward); forward difference = this is Tier-1 ONLINE REWEIGHTING (per-feature precision counter updates, CPU, NO model training, NO LoRA, NO fine-tuning) applied to the cross-family selector folds, a DISTINCT mechanism from the retired in-window fine-tuning. verifier_is_oracle=false."
+    operator_override: "research-program.md Continuous Self-Learning mandate (standing: >=1 self-learning experiment/milestone) -- false-positive scope-match vs the RETIRED live-LoRA verifier-as-reward path (exclusion_manifest live_lora_verifier_as_reward_path_retired_exp4247, blocked_patterns: verifier_reward_lora_harness / live-LoRA verifier-as-reward); forward difference = this is Tier-1 ONLINE REWEIGHTING (per-feature precision counter updates, CPU, NO model training, NO LoRA, NO fine-tuning) + a Tier-2 constraint-memory arm, a DISTINCT mechanism from the retired in-window fine-tuning. verifier_is_oracle=false."
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4273_arc_cross_family_online_adaptation.json
-    gated_on:
-      - upstream: exp4270-arc-family-provenance-recovery
-        artifact_field: family_split_feasible
-        op: '=='
-        value: true
+    deliverable: results/experiment_4283_self_learning_repowered_arcgen.json
+    prior_failures:
+      - experiment_id: exp4273-arc-cross-family-online-adaptation-selflearning
+        verdict: complete_static_is_the_ceiling_for_online_adaptation
+        addressed_by: "exp4273 found static-is-the-ceiling but the (online-static) CI only TOUCHED 0 at n=52 ([0.0, 0.192]) -- an under-powered null, not a proven one. This re-runs the SAME Tier-1 mechanism on the COMBINED .395-manifest + ARC-GEN family set (many more families -> POWERED CI) and adds a Tier-2 constraint-memory arm. If static STILL wins with power, the null is then real and the online-adaptation-helps-the-ARC-selector ask is retired (retire_if_same_verdict)."
+        retire_if_same_verdict: true
     prompt: |
-      CONTEXT: research-program.md "Continuous Self-Learning (CORE ARCHITECTURAL GOAL)" -- Carnot must get
-      smarter over time, and every learning mechanism must have a hardware path. Tier 1 = online weight updates
-      (counter updates, pure CPU, <1us/update). This is the .395 self-learning experiment, applied to THE depth
-      question: does online adaptation help the selector GENERALIZE to unseen families? This is NOT the retired
-      verifier-as-reward live-LoRA path (no fine-tuning, no model training) -- it is per-feature precision
-      reweighting as families stream in.
+      CONTEXT: research-program.md 'Continuous Self-Learning (CORE ARCHITECTURAL GOAL)' -- Carnot must get smarter
+      over time, every mechanism with a hardware path. Tier 1 = online weight updates (counter updates, CPU,
+      <1us/update). .395's online-adaptation test was UNDER-POWERED (CI touched 0 at n=52). This re-powers it on the
+      larger ARC-GEN family set and adds a Tier-2 (constraint-memory) arm. NOT the retired verifier-as-reward
+      live-LoRA path (no fine-tuning, no model training) -- per-feature precision reweighting + a pattern cache.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4270_arc_family_manifest.json (the family folds from A1)
-        - results/experiment_4271_arc_cross_family_transfer_existing_pool.json (the static cross-family baseline + its online-adapt arm to deepen)
+        - results/experiment_4273_arc_cross_family_online_adaptation.json (the .395 under-powered result: static_cross_family_delta, online_cross_family_delta, the CI that touched 0 -- the mechanism to re-power)
+        - results/experiment_4282_arcgen_cross_family_stress.json + its ARC-GEN family manifest (the larger family set -- SOFT input; fall back to the .395 manifest if exp4282 is thin or absent)
+        - results/experiment_4270_arc_family_manifest.json (the .395 recovered families)
         - results/experiment_4244_arc_set_encoder_aggregator_build.json + _model.json (the set-encoder features to reweight)
-        - python/carnot/ (the FR-11 online-tracker / adaptive-weighter modules, if present -- Tier-1 online weights)
-        - CLAUDE.md "Adversarial Artifact Verification", research-program.md "Continuous Self-Learning" Tiers 1-4
+        - python/carnot/ (the FR-11 online-tracker / adaptive-weighter modules + any constraint-memory module, if present)
+        - CLAUDE.md "Adversarial Artifact Verification" (FALSE_NEGATIVE_RISK: a null needs a positive control), research-program.md "Continuous Self-Learning" Tiers 1-2
 
-      TASK: compare STATIC vs ONLINE-reweighted cross-family selection across the family folds.
+      TASK: re-power static-vs-online (+ a Tier-2 memory arm) cross-family selection across the LARGER family set.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: A1 family_split_feasible==true (conductor gate) AND the manifest + set-encoder load. If
-           A1 infeasible (A3 path) -> honest_verdict `complete_self_learning_deferred_to_fresh_pool` and STOP
-           (the static-vs-online arm in A3 covers the fork). CPU sufficient.
-        1. Stream the held-out families one at a time. For each, score with (a) the STATIC set-encoder and (b) an
-           ONLINE-reweighted selector that maintains a running per-feature/per-sub-verifier precision (updated from
-           the outcomes on already-seen families) and upweights the features that selected correctly on the
-           nearest seen family. NO fine-tuning -- only weight/counter updates.
-        2. Report static_cross_family_delta, online_cross_family_delta, the per-family adaptation curve (does the
-           gain grow as more families stream in?), and a bootstrap CI95 on (online - static). Emit
-           online_adaptation_helps BARE bool := (online - static > 0 AND its CI95 excludes 0).
-        3. Run adversarial_verify.py (clean; verifier_is_oracle=false). Declare random_seed +
-           reproducibility_checksum + model_specs (the reweighting rule). HONEST read: a positive gain = the
-           verifier self-improves toward generalization; a null = static is the ceiling (both COMPLETE).
+        0. PRECONDITIONS: the set-encoder + at least the .395 manifest load. The ARC-GEN family set (exp4282) is a
+           SOFT input -- use it if present to grow the family count; if absent/thin, fall back to the .395 manifest
+           and SAY SO (the result is then 'still under-powered', honest). CPU sufficient. NO live-LoRA, NO fine-tuning.
+        1. Stream the held-out families (combined set). For each, score with (a) STATIC set-encoder, (b) ONLINE-reweighted
+           (running per-feature/per-sub-verifier precision, updated from already-seen families, upweight features that
+           selected correctly on the nearest seen family), (c) TIER-2 memory (cache per-family selection patterns; on a
+           new family, reuse the nearest-neighbor seen family's pattern). NO fine-tuning -- only weight/counter updates + a cache.
+        2. Report static_cross_family_delta, online_cross_family_delta, tier2_cross_family_delta, the per-family
+           adaptation curve, and a POWERED bootstrap CI95 on (online - static) and (tier2 - static). State the family
+           count vs .395's n=52 (the power gain). Emit online_adaptation_helps BARE bool := (best-adaptive - static > 0
+           AND its CI95 excludes 0).
+        3. Run adversarial_verify.py (clean; verifier_is_oracle=false). Declare random_seed + reproducibility_checksum +
+           model_specs (the reweighting rule + the memory rule + the family count). HONEST read: a positive gain WITH
+           POWER = the verifier self-improves; a null WITH POWER = static is genuinely the ceiling (both COMPLETE; the
+           latter retires the ask per retire_if_same_verdict).
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. An online-adaptation gain AND an honest static-is-the-ceiling null are BOTH COMPLETE -- both are valid self-learning findings."
+          principle: "Terminal-prefixed. An online/Tier-2 gain AND a now-POWERED static-is-the-ceiling null are BOTH COMPLETE -- both are valid self-learning findings (the powered null retires the ask)."
         online_adaptation_helps:
-          principle: "BARE bool: true iff online-reweighted cross-family delta exceeds static AND the (online-static) CI95 excludes 0 -- the self-learning value verdict."
+          principle: "BARE bool: true iff the best adaptive selector (online or Tier-2) exceeds static AND the (adaptive-static) CI95 excludes 0 with power -- the self-learning value verdict the .395 n-limit could not settle."
         static_cross_family_delta:
           principle: "BARE float: the static set-encoder's held-out-family delta -- the no-adaptation baseline."
         online_cross_family_delta:
-          principle: "BARE float: the online-reweighted selector's held-out-family delta -- the Tier-1 self-learning result."
+          principle: "BARE float: the online-reweighted selector's held-out-family delta -- the Tier-1 self-learning result, now on a powered family set."
+        tier2_cross_family_delta:
+          principle: "BARE float: the constraint-memory (Tier-2) selector's delta -- a distinct self-learning mechanism beyond online reweighting."
+        family_count_vs_v395:
+          principle: "The held-out family count vs the .395 n=52 -- quantifies the power gain (the .395 CI touched 0 because n was small; a non-touching CI here needs more families)."
         adaptation_curve:
-          principle: "Per-family (online - static) gain as families stream in -- shows whether adaptation compounds (the continuous-self-learning signature) or is flat."
+          principle: "Per-family (adaptive - static) gain as families stream in -- shows whether adaptation compounds (the continuous-self-learning signature) or is flat."
         verifier_is_oracle:
-          principle: "BARE bool=false -- learned selector with online weight updates, no demo execution and no fine-tuning."
+          principle: "BARE bool=false -- learned selector with online weight updates + a pattern cache, no demo execution and no fine-tuning."
         random_seed:
           principle: "Determinism precondition; the family stream order + reweighting reproducible."
         reproducibility_checksum:
-          principle: "Hash of the folds + reweighting trace; lets a third party re-run."
+          principle: "Hash of the folds + reweighting + memory trace; lets a third party re-run."
         model_specs:
-          principle: "The Tier-1 online-reweighting rule (per-feature precision update) + the family stream protocol; required methodology."
+          principle: "The Tier-1 online-reweighting rule + the Tier-2 memory rule + the combined family stream; required methodology."
       ACCEPTANCE GATE:
-        - condition: "online_adaptation_helps + static_cross_family_delta + online_cross_family_delta + adaptation_curve reported AND verifier_is_oracle=false, OR an honest complete_self_learning_deferred_to_fresh_pool verdict"
-          principle: "The mandated self-learning experiment: does cheap Tier-1 online reweighting recover cross-family headroom the static selector loses -- a positive gain is north-star-grade self-improvement evidence, a null is an honest ceiling."
+        - condition: "online_adaptation_helps + static_cross_family_delta + online_cross_family_delta + tier2_cross_family_delta + family_count_vs_v395 + adaptation_curve reported AND verifier_is_oracle=false"
+          principle: "The mandated self-learning experiment, re-powered: does cheap Tier-1/Tier-2 adaptation recover cross-family headroom the static selector loses, settled WITH power -- a positive gain is north-star-grade self-improvement, a powered null is an honest ceiling that retires the ask."
 
-      Run: `python3 {project_root}/results/experiment_4273_arc_cross_family_online_adaptation.py`
+      Run: `python3 {project_root}/results/experiment_4283_self_learning_repowered_arcgen.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4274-diffusiongemma-loader-fix-preflight
-    milestone: 2026.06.395
-    title: "PHASE B1 (INFRA de-risk; fix exp4260's root cause; NO full run) -- DiffusionGemma discrete-diffusion GGUF LOADER FIX + re-preflight. exp4260 BLOCKED blocked_diffusiongemma_gguf_loader_failed (flagged CRITICAL, 0.34s -- the loader never worked). FIX the loader: get DiffusionGemma loading via the .gguf path (llama.cpp / the project loader; NOT AutoTokenizer on a GGUF repo per the GGUF tokenizer rule). Then re-run the TINY guidance preflight: wire the verifier ensemble as a per-step guidance energy on a <=5-example denoising smoke, confirm it reweights token selection vs unguided (DPRM 2604.24357 / entropy-step 2603.12554), emit preflight_go + guidance_changes_selection + full_run_cost_estimate_s. NO full benchmark, NO training -- the full run stays DEFERRED to .396 (gated on hardened_win; operator twice-burned by premature scale-up). verifier_is_oracle=false."
+  - id: exp4284-verifier-efficiency-vs-llm-judge
+    milestone: 2026.06.396
+    title: "PHASE D1 (the owed north-star §5 EFFICIENCY axis) -- energy-verifier vs LLM-as-judge head-to-head on the ORACLE-DISTINCT cross-family ARC selection. north-star §5 names the verifier's win condition: 'equally effective as the LM at lower cost/latency' (efficiency-parity), and names this head-to-head as load-bearing-owed work. On the SAME held-out-family cross-family selection task (the oracle-distinct domain -- NOT code, whose efficiency-vs-judge is retired/circular), compare the learned energy verifier's selection accuracy vs an LLM-as-judge (a cached SOTA GGUF -- Qwen3.6-35B-A3B or gemma-4 -- selecting from the same candidates). Report accuracy parity (within CI) AND the compute/latency/cost ratio (wall-clock, FLOPs-proxy, $/1k selections). Emit efficiency_parity_at_lower_cost BARE bool := (energy-verifier accuracy within the LLM-judge CI AND energy-verifier cost <= 0.1x the LLM-judge cost). Target: 'parity at 10-100x cheaper' (CompassVerifier 2508.03686 / Luna-2 small-verifier precedent: 60-1000x). verifier_is_oracle=false. This is a NEW measurement (the §5 owed axis), NOT a re-run."
     priority: medium
-    track: diffusiongemma-scaleup
-    max_turns: 90
+    track: verifier-efficiency
+    max_turns: 80
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-06-13/2026-06-14 gated forward-queue (DiffusionGemma) + the .394 capstone left the loader BROKEN (exp4260 gguf_loader_failed) -- false-positive scope-match vs the retired EDLM/energy-guided preflight lineage (exp3793) / the .394 preflight (exp4260); forward difference = REPAIR the discrete-diffusion GGUF loader exp4260 could not load, then a tiny preflight ONLY (full run deferred to .396, gated on hardened_win). verifier_is_oracle=false."
+    operator_override: "north-star §5 (THE LOAD-BEARING NEXT WORK, axis B EFFICIENCY: energy-verifier vs LLM-judge head-to-head, target parity at 10-100x cheaper) + 2026-06-06 operator win-condition directive (verifier earns its place at lower cost) -- false-positive scope-match vs the RETIRED/CIRCULAR efficiency-vs-LLM-judge-ON-CODE measurement (known-issues §0: STOP re-running circular code-efficiency confirmations); forward difference = the head-to-head is on the ORACLE-DISTINCT cross-family ARC SELECTION (verifier_is_oracle=false, NOT code where the verifier is the executable oracle), a NEW non-circular efficiency measurement that pays the owed §5 axis. verifier_is_oracle=false."
     inference_substrate: live_llm_inference
-    deliverable: results/experiment_4274_diffusiongemma_loader_fix_preflight.json
-    prior_failures:
-      - experiment_id: exp4260-diffusiongemma-energy-guided-preflight
-        verdict: blocked_diffusiongemma_gguf_loader_failed
-        addressed_by: "exp4260 blocked because the DiffusionGemma discrete-diffusion GGUF loader failed (and bailed in 0.34s, flagged CRITICAL). This attempt's PRIMARY deliverable is REPAIRING that loader path (load via the .gguf path with the correct discrete-diffusion loader, not AutoTokenizer on a GGUF repo), then re-running the same tiny preflight. The root cause (loader broken) is the explicit target, not assumed-fixed."
-        retire_if_same_verdict: true
+    deliverable: results/experiment_4284_verifier_efficiency_vs_llm_judge.json
     prompt: |
-      CONTEXT: gated forward-queue DiffusionGemma bet (docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md):
-      use Carnot's verifier ensemble as a GUIDANCE energy reweighting DiffusionGemma's per-step token selection
-      during denoising. exp4260's preflight BLOCKED because the discrete-diffusion GGUF loader failed. This task
-      FIXES the loader, then re-runs the tiny preflight ONLY. The full run is DEFERRED to .396 (gated on the
-      cross-family win) -- the operator was twice-burned by premature scale-up over-claims, so de-risk the
-      harness, do NOT run the benchmark. Methods: DPRM token-ordering guidance (arXiv:2604.24357), entropy-guided
-      step selection (arXiv:2603.12554), discrete-diffusion guidance (arXiv:2406.01572), EDLM (arXiv:2506.13759).
+      CONTEXT: north-star §5 -- the verifier earns its place if it is 'equally effective as the LM at lower
+      cost/latency' (efficiency-parity), and §5 explicitly OWES this head-to-head (axis B). RSI-scale load-bearing:
+      verifying a machine-scale virtual lab can't afford a generative LLM-judge per artifact, so a cheap,
+      forward-pass, externally-grounded verifier is the property that makes scaled verification tractable. Measure
+      it on the ORACLE-DISTINCT cross-family ARC selection (NOT code -- code efficiency-vs-judge is circular/retired).
+      Precedent: small purpose-built verifiers (CompassVerifier 2508.03686; Calibrated Reasoning 2509.19681; Luna-2)
+      rival frontier judges at 60-1000x lower cost.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4260_diffusiongemma_energy_guided_preflight.json (the loader failure: the exact error / where it bailed)
-        - docs/research-notes/diffusiongemma-energy-guided-diffusion-spec.md (THE GATE + the design)
-        - scripts/experiment_template.py (cached_sota_pair + the GGUF loader path)
-        - python/carnot/ (the GGUF loaders -- Gemma4QuantizedLoader / llama_cpp path; DiffusionGemma is discrete-diffusion, load via the .gguf path)
-        - python/carnot/verify/ (the verifier ensemble to wire as the guidance energy)
-        - CLAUDE.md "Pre-Launch Preconditions", "Inference-Substrate Declaration", "GGUF tokenizer rule" (load via .gguf path, NOT AutoTokenizer on a GGUF repo), "Circularity / Oracle-Distinctness Discipline"
+        - results/experiment_4271_arc_cross_family_transfer_existing_pool.json (the cross-family selection task + the learned energy verifier's accuracy to match)
+        - results/experiment_4270_arc_family_manifest.json (the held-out-family candidates the judge selects from)
+        - scripts/experiment_template.py (cached_sota_pair -- the LLM-judge GGUF), python/carnot/verify/ (the energy verifier)
+        - scripts/adversarial_verify.py, scripts/summarize_artifact.py
+        - CLAUDE.md "Circularity / Oracle-Distinctness Discipline", "SOTA Local Models", "Pre-Launch Preconditions", "Adversarial Artifact Verification + Sample-Size Rigor"
 
-      TASK: repair the DiffusionGemma GGUF loader; re-run the tiny guidance preflight; emit GO/NO-GO + cost.
+      TASK: energy-verifier vs LLM-as-judge selection accuracy + cost on the cross-family ARC selection task.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (check BEFORE any inference):
-           a. DiffusionGemma cached: `ls ~/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/`
-              returns non-empty (confirmed present 2026-06-15). If missing -> honest_verdict
-              `blocked_diffusiongemma_not_cached` and STOP.
-           b. The conductor is stood-down on TRM training; this task does NO training and does NOT touch results/trm_runs/.
-           If ANY precondition fails -> honest_verdict `blocked_<resource>` and STOP. DO NOT fabricate a smoke.
-        1. FIX THE LOADER: diagnose exp4260's loader failure and load DiffusionGemma via the correct .gguf path
-           (vocab_only or a tiny weight load is sufficient for preflight; NOT AutoTokenizer on the GGUF repo id).
-           Record loader_repaired BARE bool + what the fix was. If the loader genuinely cannot be made to work in
-           the window -> honest_verdict `blocked_diffusiongemma_loader_unfixable_in_window` with the diagnosis and STOP.
-        2. On <=5 small examples (cached code/Sudoku/math prompts), run a SHORT denoising loop with the verifier
-           ensemble wired as a per-step guidance energy; confirm the guidance hook CHANGES token selection vs
-           unguided (guidance_changes_selection BARE bool + how many steps/tokens were reweighted). Measure
-           per-example wall-clock + memory; extrapolate full_run_cost_estimate_s for a .396 benchmark.
-        3. Emit preflight_go BARE bool := (loader_repaired AND guidance_changes_selection AND the extrapolated
-           full-run cost fits a single window or a bounded out-of-band run). Declare random_seed +
-           reproducibility_checksum + model_specs (DiffusionGemma GGUF id + the verifier ensemble + step count).
-           Plausible duration (model load is minutes; adversarial_verify DURATION floor applies -- live inference).
-           NO full benchmark; the full run is DEFERRED to .396.
+           a. An LLM-judge GGUF is cached: `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/`
+              OR a gemma-4 GGUF returns non-empty. If none -> honest_verdict `blocked_judge_model_not_cached` and STOP.
+           b. The cross-family candidates + the energy verifier load. CPU is sufficient for the energy verifier;
+              the judge uses the cached GGUF (CUDA/CPU).
+           If ANY precondition fails -> honest_verdict `blocked_<resource>` and STOP. DO NOT fabricate judge calls.
+        1. On the held-out-family candidates (n>=30 tasks), select the best candidate with (a) the LEARNED energy
+           verifier (forward-pass scoring) and (b) the LLM-as-judge (prompt the cached GGUF to pick the best
+           candidate). Measure selection accuracy for both (vs the gold) + wall-clock + a FLOPs/token-count proxy +
+           an estimated $/1k-selections for each.
+        2. Report accuracy_energy_verifier, accuracy_llm_judge, the accuracy delta + its CI95, and cost_ratio
+           (energy-verifier cost / LLM-judge cost). Emit efficiency_parity_at_lower_cost BARE bool := (energy-verifier
+           accuracy within the LLM-judge's bootstrap CI -- i.e. not significantly worse -- AND cost_ratio <= 0.1).
+        3. Run adversarial_verify.py (clean; verifier_is_oracle=false). Declare random_seed + reproducibility_checksum
+           + model_specs (the judge GGUF id + the energy verifier + the cost-accounting method). Plausible duration
+           (live judge inference -- DURATION floor applies to the judge arm).
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. A repaired loader + GO preflight AND an honest NO-GO (loader unfixable / cost too high) are BOTH COMPLETE and decision-grade for .396."
-        loader_repaired:
-          principle: "BARE bool: true iff DiffusionGemma now loads via the .gguf path -- the primary deliverable that fixes exp4260's root cause."
-        preflight_go:
-          principle: "BARE bool: .396 gates the full run on this AND hardened_win; true iff the loader is repaired, the verifier-guidance hook reweights token selection, and the extrapolated full-run cost is feasible."
-        guidance_changes_selection:
-          principle: "BARE bool: the verifier-as-guidance-energy actually changed per-step token selection vs unguided -- a guidance hook that does nothing is a NO-GO."
-        full_run_cost_estimate_s:
-          principle: "BARE float: extrapolated wall-clock for a full .396 benchmark -- tells the planner whether .396 runs it in-window or out-of-band."
+          principle: "Terminal-prefixed. Parity-at-lower-cost AND an honest 'judge is more accurate' or 'no cost advantage' are ALL COMPLETE -- the §5 efficiency axis is decision-grade either way."
+        efficiency_parity_at_lower_cost:
+          principle: "BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff the energy verifier matches the LLM-judge's accuracy (within CI) at <=0.1x the cost -- the north-star §5 win condition."
+        accuracy_energy_verifier:
+          principle: "BARE float: the learned energy verifier's selection accuracy on held-out families -- the cheap forward-pass arm."
+        accuracy_llm_judge:
+          principle: "BARE float: the LLM-as-judge's selection accuracy on the SAME candidates -- the expensive generative-judge baseline."
+        accuracy_delta_ci95:
+          principle: "Bootstrap CI95 of (energy-verifier - LLM-judge) accuracy -- 'parity' means this CI includes 0 / is not significantly negative; a positive lower bound would be a Pareto win."
+        cost_ratio:
+          principle: "BARE float: energy-verifier cost / LLM-judge cost (wall-clock + FLOPs-proxy + $/1k) -- the efficiency multiplier; target <=0.1 (10x cheaper), ideally <=0.01 (100x)."
         verifier_is_oracle:
-          principle: "BARE bool=false -- the guidance energy is the learned/ensemble verifier shaping generation, not an executable oracle."
+          principle: "BARE bool=false -- the energy verifier on the cross-family selection is oracle-distinct (NOT the executable oracle); keeps the efficiency measurement non-circular (unlike retired code-efficiency)."
         preconditions_checked:
-          principle: "Records DiffusionGemma cache + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode."
+          principle: "Records the judge GGUF cache + candidate load verified; pre-empts the silent-missing-resource fabrication mode."
         random_seed:
-          principle: "Determinism precondition for the denoising smoke."
+          principle: "Determinism precondition for the selection + bootstrap."
         reproducibility_checksum:
-          principle: "Hash of the smoke inputs + guidance config; lets a third party re-run the preflight."
+          principle: "Hash of the candidates + the two selectors' outputs + the cost accounting; lets a third party re-run."
         model_specs:
-          principle: "DiffusionGemma GGUF id + the loader fix + the verifier ensemble wired as guidance + denoising step count; required methodology."
+          principle: "The LLM-judge GGUF id + the energy verifier + the cost-accounting method (wall-clock/FLOPs/$); required methodology."
       ACCEPTANCE GATE:
-        - condition: "loader_repaired + preflight_go + guidance_changes_selection + full_run_cost_estimate_s reported with preconditions_checked AND verifier_is_oracle=false, OR an honest blocked_/no-go verdict"
-          principle: "Fixing the loader + a working guidance hook + a feasible cost makes .396's full run activatable the moment the cross-family win lands; a preflight de-risks the scale-up without burning the full budget."
+        - condition: "efficiency_parity_at_lower_cost + accuracy_energy_verifier + accuracy_llm_judge + accuracy_delta_ci95 + cost_ratio reported with preconditions_checked AND verifier_is_oracle=false, OR an honest blocked_judge_model_not_cached verdict"
+          principle: "The owed §5 efficiency axis: the verifier earns its place if it matches the LM at lower cost; measuring it on the oracle-distinct selection (not circular code) is the non-gameable version of that claim."
 
-      Run: `python3 {project_root}/results/experiment_4274_diffusiongemma_loader_fix_preflight.py`
+      Run: `python3 {project_root}/results/experiment_4284_verifier_efficiency_vs_llm_judge.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4275-arc-incremental-progress-new-game
-    milestone: 2026.06.395
-    title: "PHASE C1 (ARC north star; accuracy) -- monotonic ARC +1 on a NEW game. exp4261 found NO verifier-validated level-up candidate on sc25 L6 (no advance, 19 levels held). Per ARC-AGI-3 Incremental-Progress Scoping (+1, NOT all-levels) + Failed-Experiment Rerun Discipline (a new approach, not a re-run): target the best-headroom UNATTEMPTED game from the 25-game survey, with the hardened set-encoder routing the offline solver's candidate ranking. Advance ONE game by >=1 NEW real-env-confirmed level (total_levels 19 -> >=20). Report total_levels + the game advanced + levels_completed (from the solver's real-env-confirmed output, not a self-report). NO TRM training; NO leaderboard submission. An honest no-advance is COMPLETE and informs the next game pick (NOT churn -- it is a different game than .394)."
+  - id: exp4285-arc-incremental-progress-new-game
+    milestone: 2026.06.396
+    title: "PHASE E1 (ARC north star; accuracy) -- monotonic ARC +1 on a NEW game (total_levels >= 21). .395 advanced wa30 to L1 (20 levels); .394 walled on sc25 L6. Per ARC-AGI-3 Incremental-Progress Scoping (+1, NOT all-levels) + Failed-Experiment Rerun Discipline (a NEW game, not a re-run): target the best-headroom UNATTEMPTED game from the 25-game survey (NOT wa30, NOT sc25), with the hardened set-encoder routing the offline solver's candidate ranking. Advance ONE game by >=1 NEW real-env-confirmed level (total_levels 20 -> >=21). Report total_levels + the game advanced + levels_completed (from the solver's real-env-confirmed output, not a self-report). NO TRM training; NO leaderboard submission. An honest no-advance is COMPLETE and informs the next game pick (it is a DIFFERENT game than .395)."
     priority: medium
     track: arc-northstar
     max_turns: 70
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-06-09 operator directive (ARC-AGI-3 Incremental-Progress Scoping, standing) + north-star §0: monotonic ARC +1 is MANDATED forward work -- false-positive scope-match vs prior ARC incremental tasks (exp4261/exp4249, not retired); forward difference = a NEW best-headroom game (NOT sc25 where exp4261 found no candidate) + the hardened set-encoder routing the solver, a different game/level than the prior attempt."
+    operator_override: "2026-06-09 operator directive (ARC-AGI-3 Incremental-Progress Scoping, standing) + north-star §0: monotonic ARC +1 is MANDATED forward work -- false-positive scope-match vs prior ARC incremental tasks (exp4275 advanced wa30 / exp4261 sc25 wall, not retired); forward difference = a NEW best-headroom game (NOT wa30 where exp4275 advanced, NOT sc25 where exp4261 walled) + the hardened set-encoder routing the solver, a different game/level than the prior attempts."
     inference_substrate: offline_arc_agi3_solver_incremental_progress
-    deliverable: results/experiment_4275_arc_incremental_progress_new_game.json
+    deliverable: results/experiment_4285_arc_incremental_progress_new_game.json
     prior_failures:
       - experiment_id: exp4261-arc-incremental-progress
         verdict: complete_incremental_progress_no_advance_sc25_no_verifier_validated_level_up_candidate
-        addressed_by: "exp4261 found no verifier-validated level-up candidate on sc25 L6 (the solver hit a wall on THAT game). This attempt changes the game: it targets the best-headroom UNATTEMPTED game from the 25-game survey (not sc25) and uses the .394-hardened set-encoder to rank the solver's candidates (new routing). Re-running the same solver on the same game would repeat the wall; a new game + hardened routing is the forward difference."
+        addressed_by: "exp4261 found no level-up candidate on sc25 L6 (a wall on THAT game). This attempt targets a NEW best-headroom game (NOT sc25, NOT wa30 which exp4275 already advanced) with the hardened set-encoder routing the solver -- a new game + new routing, not a re-run of the walled game."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT: north-star §0 -- ARC-AGI-3 accuracy. The metric is MONOTONIC level progress (+1, not all-levels).
-      .394 held at 19 levels: exp4261 found no level-up candidate on sc25 L6. Advance a DIFFERENT game. This task
-      uses the OFFLINE solver (CPU/cached); NO TRM training; the conductor is stood-down.
+      .395 reached 20 levels (exp4275, wa30 L1); .394 walled on sc25 L6. Advance a DIFFERENT game. OFFLINE solver
+      (CPU/cached); NO TRM training; the conductor is stood-down.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4261_arc_incremental_progress.json (the .394 wall: sc25 L6, no candidate -- AVOID sc25)
-        - results/experiment_4249_arc_incremental_progress.json (the .393 best: 19 levels, which games solved)
+        - results/experiment_4275_arc_incremental_progress_new_game.json (the .395 advance: wa30 L1, total 20 -- AVOID wa30)
+        - results/experiment_4261_arc_incremental_progress.json (the .394 wall: sc25 L6 -- AVOID sc25)
         - python/carnot/agentic/arc_agi3_world_model.py (the offline explore-induce-verify solver)
         - results/arc3_win_condition_survey.json (the 25-game survey -- pick the best-headroom UNATTEMPTED game)
         - results/experiment_4244_arc_set_encoder_aggregator_model.json (the hardened set-encoder for candidate routing)
         - CLAUDE.md "ARC-AGI-3 Incremental-Progress Scoping", "Pre-Launch Preconditions"
 
-      TASK: advance ONE new game by >=1 new level; total_levels >= 20.
+      TASK: advance ONE new game by >=1 new level; total_levels >= 21.
 
       CONCRETE STEPS:
         0. PRECONDITIONS: the offline solver imports AND the ARC fixtures load (arc3_win_condition_survey.json).
-           If missing -> honest_verdict `blocked_arc_fixtures_missing` and STOP. NO TRM training; do NOT touch
-           results/trm_runs/.
-        1. Pick the best-headroom UNATTEMPTED game (NOT sc25); run the offline solver with the hardened
-           set-encoder routing candidate ranking to solve >=1 NEW level. Confirm levels_completed from the
-           solver's real-env-confirmed output (not a self-report).
-        2. Report total_levels (= .394 best + new levels, target >=20), the game advanced, the new
-           levels_completed, and which game/level the solver chose + why. Declare random_seed +
-           reproducibility_checksum + model_specs.
+           If missing -> honest_verdict `blocked_arc_fixtures_missing` and STOP. NO TRM training; do NOT touch results/trm_runs/.
+        1. Pick the best-headroom UNATTEMPTED game (NOT wa30, NOT sc25); run the offline solver with the hardened
+           set-encoder routing candidate ranking to solve >=1 NEW level. Confirm levels_completed from the solver's
+           real-env-confirmed output (not a self-report).
+        2. Report total_levels (= 20 + new levels, target >=21), the game advanced, the new levels_completed, and
+           which game/level the solver chose + why. Declare random_seed + reproducibility_checksum + model_specs.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. A +1 advance is success; an honest no-advance (no solvable headroom this game) is COMPLETE and informs the next game pick."
         total_levels:
-          principle: "BARE int: cumulative solved levels -- target >=20 (monotonic +1 over the .394 19); the north-star accuracy progress metric."
+          principle: "BARE int: cumulative solved levels -- target >=21 (monotonic +1 over the .395 20); the north-star accuracy progress metric."
         levels_completed:
           principle: "BARE int: NEW real-env-confirmed levels this task (>=1 for an advance), from the solver output not a self-report."
         game_advanced:
-          principle: "The game id advanced -- keeps progress attributable per-game; must NOT be sc25 (exp4261's wall)."
+          principle: "The game id advanced -- keeps progress attributable per-game; must NOT be wa30 (exp4275's advance) or sc25 (exp4261's wall)."
         random_seed:
           principle: "Determinism precondition for the solver run."
         reproducibility_checksum:
@@ -567,141 +481,135 @@ tasks:
         model_specs:
           principle: "The offline solver + hardened set-encoder routing config; required methodology."
       ACCEPTANCE GATE:
-        - condition: "total_levels + levels_completed + game_advanced (not sc25) reported, OR an honest blocked_/no-advance verdict"
+        - condition: "total_levels + levels_completed + game_advanced (not wa30, not sc25) reported, OR an honest blocked_/no-advance verdict"
           principle: "Monotonic +1 on a NEW game is the north-star accuracy progress; an honest no-advance on a fresh game is decision-grade for the next pick (not churn)."
 
-      Run: `python3 {project_root}/results/experiment_4275_arc_incremental_progress_new_game.py`
+      Run: `python3 {project_root}/results/experiment_4285_arc_incremental_progress_new_game.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4276-sota-ingestion-v396
-    milestone: 2026.06.395
-    title: "PHASE D1 (SOTA-ingestion; mandatory per SOTA-Ingestion Cycle Discipline) -- ingest the SOTA for the .395 bleeding-edge forks (cross-family/cross-task verifier generalization, ARC-TGI family-generator pools, discrete-diffusion verifier-guidance after the loader fix, online-adaptation self-learning) and MAP the strongest 3-5 methods onto the .396 roadmap conditioned on the .395 cross-family outcome. Use the RELIABLE channel ONLY (scripts/sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch) -- the /deep-research harness is BANNED in-loop. Every method MUST carry a real arXiv ID/URL. Update research-studying.md (mark ingested) and emit flagged_for_v396 (the strongest method conditioned on whether cross-family generalized or collapsed)."
+  - id: exp4286-sota-ingestion-v397
+    milestone: 2026.06.396
+    title: "PHASE F1 (SOTA-ingestion; mandatory per SOTA-Ingestion Cycle Discipline) -- ingest the SOTA for the .396 bleeding-edge forks (energy/verifier-guided discrete diffusion after the full run, cross-substrate verifier generalization, verifier efficiency-parity, online/Tier-2 self-learning) and MAP the strongest 3-5 methods onto the .397 roadmap conditioned on the .396 outcomes (did the DiffusionGemma guidance moat hold? did cross-family harden on ARC-GEN? did efficiency-parity land?). Use the RELIABLE channel ONLY (scripts/sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch) -- /deep-research is BANNED in-loop. Every method MUST carry a real arXiv ID/URL. Update research-studying.md (mark ingested) and emit flagged_for_v397."
     priority: low
     track: sota-ingestion
     max_turns: 50
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-06-11 SOTA-Ingestion Cycle Discipline (standing, mandatory for bleeding-edge headline milestones): the per-milestone SOTA-ingestion slot is REQUIRED forward work -- false-positive scope-match vs prior SOTA-ingestion tasks (exp4265/exp4251, SUCCEEDED, not retired); forward difference = the .395 forks (cross-family generalization / ARC-TGI / diffusion-guidance-after-loader-fix / online-adaptation) mapped to .396."
+    operator_override: "2026-06-11 SOTA-Ingestion Cycle Discipline (standing, mandatory for bleeding-edge headline milestones): the per-milestone SOTA-ingestion slot is REQUIRED forward work -- false-positive scope-match vs prior SOTA-ingestion tasks (exp4276/exp4265, SUCCEEDED, not retired); forward difference = the .396 forks (DiffusionGemma guidance moat / ARC-GEN cross-substrate / efficiency-parity / re-powered self-learning) mapped to .397."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4276_sota_ingestion_v396.json
+    deliverable: results/experiment_4286_sota_ingestion_v397.json
     prompt: |
       CONTEXT: SOTA-Ingestion Cycle Discipline (CLAUDE.md) -- every bleeding-edge headline milestone reserves a
-      SOTA-ingestion slot using the RELIABLE channel (NOT /deep-research, which rate-limited 4x and burned ~6M
-      tokens for zero output in the autonomous loop). Ingest SOTA for the .395 forks and map the strongest methods
-      to .396 conditioned on the cross-family outcome.
+      SOTA-ingestion slot using the RELIABLE channel (NOT /deep-research, which rate-limited 4x for zero output
+      in-loop). Ingest SOTA for the .396 forks and map the strongest methods to .397 conditioned on the outcomes.
 
       EXISTING CODE TO READ FIRST:
-        - research-studying.md + research-references.md (the .394/.395 sweeps -- do NOT re-ingest already-covered methods)
-        - results/experiment_4265_sota_ingestion_v395.json (the .394 ingestion -> v395 map, to extend)
-        - results/experiment_4271_arc_cross_family_transfer_existing_pool.json OR results/experiment_4272_arc_cross_family_transfer_fresh_tgi_pool.json (the .395 cross-family outcome to condition on)
+        - research-studying.md + research-references.md (the .395/.396 sweeps -- do NOT re-ingest already-covered methods)
+        - results/experiment_4276_sota_ingestion_v396.json (the .395 ingestion -> v396 map, to extend)
+        - results/experiment_4281_diffusiongemma_energy_guided_full_run.json + results/experiment_4282_arcgen_cross_family_stress.json + results/experiment_4284_verifier_efficiency_vs_llm_judge.json (the .396 outcomes to condition on)
         - scripts/sweep_clusters.py + scripts/sweep_semscholar.py (the reliable arXiv/Semantic-Scholar discovery helpers)
         - CLAUDE.md "SOTA-Ingestion Cycle Discipline" (reliable-channel mandate; /deep-research banned in-loop)
 
-      TASK: ingest SOTA for the .395 forks; map the strongest 3-5 methods to .396; update research-studying.md.
+      TASK: ingest SOTA for the .396 forks; map the strongest 3-5 methods to .397; update research-studying.md.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: the sweep helpers import AND WebSearch/WebFetch are reachable. If neither discovery
-           channel works -> honest_verdict `blocked_sota_channels_unavailable` and STOP. Do NOT invoke /deep-research.
-        1. Focused discovery (low-concurrency) on: cross-task/cross-family VERIFIER generalization (does a learned
-           selector transfer OOD), ARC-TGI / procedural-ARC family-generator follow-ups, discrete-diffusion
-           verifier/process-reward GUIDANCE (DPRM / entropy-step / EDLM follow-ups for the .396 full run), and
-           online-adaptation / test-time self-improvement for selectors. WebFetch the top 5-8 papers.
+        0. PRECONDITIONS: the sweep helpers import AND WebSearch/WebFetch are reachable. If neither discovery channel
+           works -> honest_verdict `blocked_sota_channels_unavailable` and STOP. Do NOT invoke /deep-research.
+        1. Focused discovery (low-concurrency) on: energy/verifier-guided discrete diffusion follow-ups (EDLM / RFG /
+           EntRGi successors for the .397 DiffusionGemma direction), cross-substrate / procedural-generator verifier
+           generalization, verifier efficiency / small-verifier distillation, and online/test-time self-improvement for
+           selectors. WebFetch the top 5-8 papers.
         2. Synthesize a SOTA->experiment mapping (strongest 3-5 methods, each with a real arXiv ID/URL, what each
            would take on the current stack, where each fails). Update research-studying.md (mark ingested). Emit
-           flagged_for_v396 conditioned on the .395 cross-family outcome (e.g. if cross-family GENERALIZED, flag
-           the DiffusionGemma full-run method + a stronger generalization headline; if it COLLAPSED, flag a
-           generalizing-verifier method -- meta-features, family-invariant signals).
+           flagged_for_v397 conditioned on the .396 outcomes (e.g. if the DiffusionGemma guidance moat HELD, flag a
+           stronger guided-generation headline; if it FAILED, flag a learned-partial-state-scorer method; if
+           cross-family hardened on ARC-GEN, flag a broader-domain generalization method).
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "Terminal-prefixed. Records ingestion completed with verifiable citations."
         methods_mapped:
-          principle: "Each method MUST carry a real arXiv ID/URL (no citation = fabrication per adversarial_verify discipline) + a one-line .396 experiment mapping."
-        flagged_for_v396:
-          principle: "Closes discover->ingest->plan: names the strongest method for the .396 planner, conditioned on whether cross-family generalized or collapsed."
+          principle: "Each method MUST carry a real arXiv ID/URL (no citation = fabrication per adversarial_verify discipline) + a one-line .397 experiment mapping."
+        flagged_for_v397:
+          principle: "Closes discover->ingest->plan: names the strongest method for the .397 planner, conditioned on the .396 outcomes."
         random_seed:
           principle: "Determinism placeholder for the discovery query set (recorded for reproducibility of the sweep)."
       ACCEPTANCE GATE:
-        - condition: "methods_mapped (>=3, each with a real arXiv ID/URL) + flagged_for_v396 reported, OR an honest blocked_sota_channels_unavailable verdict"
+        - condition: "methods_mapped (>=3, each with a real arXiv ID/URL) + flagged_for_v397 reported, OR an honest blocked_sota_channels_unavailable verdict"
           principle: "Discover->ingest->plan must close each bleeding-edge milestone so SOTA flows into the next roadmap; citations gate against fabrication."
 
-      Run: `python3 {project_root}/results/experiment_4276_sota_ingestion_v396.py`
+      Run: `python3 {project_root}/results/experiment_4286_sota_ingestion_v397.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4277-verifier-registry-gaps-hygiene
-    milestone: 2026.06.395
-    title: "PHASE D2 (hygiene) -- reconcile the verifier registry + gaps to .395 truth, run the GAP-4 regression guard, RECORD the .394/.395 retirements, and LOG missing-verifier gaps. Record the .395 outcomes: the cross-family OOD verdict (did the win GENERALIZE to held-out families or collapse to within-pool?), the online-adaptation self-learning result, the DiffusionGemma loader-fix + preflight GO/NO-GO, the ARC +1 advance. RECORD the standing retirements into ops/exclusion_manifest.yaml: code oracle-distinct replication CORPUS-SPECIFIC (exp4264 delta -0.006 -> the .392 +3.1pp stands single-corpus, RETIRE the code-replication ask) and verifier-as-reward OUT-OF-BAND (exp4263 ready_for_out_of_band -> in-loop axis is operator-owned). Update ops/verifier_registry.yaml + ops/verifier_gaps.md (per Missing-Verifier Gap Logging: e.g. a 'cross-family ARC selection' gap if A2/A3 collapsed). Run the GAP-4 execution regression guard (no regression vs .394). Emit regression_guard_passed BARE bool."
+  - id: exp4287-verifier-registry-gaps-hygiene
+    milestone: 2026.06.396
+    title: "PHASE F2 (hygiene) -- reconcile the verifier registry + gaps to .396 truth, run the GAP-4 regression guard, and LOG missing-verifier gaps. Record the .396 outcomes: the DiffusionGemma guidance moat verdict (did the EXTERNAL verifier improve generation, beating RFG?), the ARC-GEN 2nd-substrate cross-family verdict, the re-powered self-learning result, the efficiency-parity result, the ARC +1 advance. Update ops/verifier_registry.yaml + ops/verifier_gaps.md (per Missing-Verifier Gap Logging: e.g. a 'learned partial-state diffusion scorer' gap if the DiffusionGemma moat arm blocked on partial states; a 'cross-substrate ARC selection' gap if ARC-GEN collapsed). Run the GAP-4 execution regression guard (no regression vs .395). Emit regression_guard_passed BARE bool."
     priority: low
     track: infra
     max_turns: 50
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-06-09 Missing-Verifier Gap Logging + registry hygiene (standing): the per-milestone registry/gaps reconciliation + GAP-4 regression guard is REQUIRED forward work -- false-positive scope-match vs prior registry-hygiene tasks (exp4266/exp4252, SUCCEEDED, not retired); forward difference = reconcile to the .395 truth (cross-family OOD verdict + online-adaptation + loader-fix preflight + ARC +1) and record the code/reward retirements."
+    operator_override: "2026-06-09 Missing-Verifier Gap Logging + registry hygiene (standing): the per-milestone registry/gaps reconciliation + GAP-4 regression guard is REQUIRED forward work -- false-positive scope-match vs prior registry-hygiene tasks (exp4277/exp4266, SUCCEEDED, not retired); forward difference = reconcile to the .396 truth (DiffusionGemma guidance moat + ARC-GEN cross-substrate + efficiency-parity + re-powered self-learning + ARC +1)."
     inference_substrate: verifier_ensemble_against_cached_candidates
-    deliverable: results/experiment_4277_verifier_registry_gaps_hygiene.json
+    deliverable: results/experiment_4287_verifier_registry_gaps_hygiene.json
     prompt: |
-      CONTEXT: keep ops/verifier_registry.yaml (verifiers we HAVE) + ops/verifier_gaps.md (verifiers we NEED) +
-      the GAP-4 regression guard reconciled to the .395 truth, and RECORD the standing retirements. Carnot's
-      value-add IS the verifier; logging gaps is direct progress on the core (Missing-Verifier Gap Logging).
+      CONTEXT: keep ops/verifier_registry.yaml (verifiers we HAVE) + ops/verifier_gaps.md (verifiers we NEED) + the
+      GAP-4 regression guard reconciled to the .396 truth. Carnot's value-add IS the verifier; logging gaps is
+      direct progress on the core (Missing-Verifier Gap Logging).
 
       EXISTING CODE TO READ FIRST:
         - ops/verifier_registry.yaml + ops/verifier_gaps.md + ops/exclusion_manifest.yaml (the ledgers to reconcile)
-        - results/experiment_4266_verifier_registry_gaps_hygiene.json (the .394 reconciliation to extend)
-        - the .395 A1-A4 + B1 + C1 artifacts (the outcomes to record)
-        - results/experiment_4264_code_oracle_distinct_replication_retry.json (code CORPUS-SPECIFIC -> retire) + results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json (reward OUT-OF-BAND)
+        - results/experiment_4277_verifier_registry_gaps_hygiene.json (the .395 reconciliation to extend)
+        - the .396 A1-E1 artifacts (exp4281..4285 -- the outcomes to record)
         - CLAUDE.md "Missing-Verifier Gap Logging", "Failed-Experiment Rerun Discipline" (retirement mechanic)
 
-      TASK: reconcile registry + gaps to .395 truth; record retirements; run the GAP-4 regression guard; log new gaps.
+      TASK: reconcile registry + gaps to .396 truth; run the GAP-4 regression guard; log new gaps.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: the registry + gaps + manifest parse AND the .395 artifacts exist. If missing ->
-           honest_verdict `blocked_v395_artifacts_missing` and STOP.
-        1. Record the .395 outcomes in the registry: the cross-family OOD verdict (exp4271 OR exp4272
-           cross_family_win_holds), the online-adaptation result (exp4273), the DiffusionGemma loader-fix +
-           preflight (exp4274), the ARC +1 (exp4275). Mark the oracle-distinct ARC slot's generalization state.
-        2. RECORD the retirements into ops/exclusion_manifest.yaml (with retire_if_same_verdict + the artifact
-           pointer): code oracle-distinct replication CORPUS-SPECIFIC (exp4264; the .392 +3.1pp stands
-           single-corpus); verifier-as-reward in-loop axis OUT-OF-BAND/operator-owned (exp4263). Do NOT re-propose
-           either as an in-loop task.
-        3. LOG any new missing-verifier gap (per ops/verifier_gaps.md schema): e.g. if cross-family collapsed, a
-           "cross-family ARC selection (family-invariant signal)" gap. Run the GAP-4 execution regression guard
-           (no regression vs .394's recorded GAP-4 numbers). Emit regression_guard_passed BARE bool. Declare
+        0. PRECONDITIONS: the registry + gaps + manifest parse AND the .396 artifacts exist. If missing ->
+           honest_verdict `blocked_v396_artifacts_missing` and STOP.
+        1. Record the .396 outcomes in the registry: the DiffusionGemma guidance moat (exp4281 diffusiongemma_guidance_moat),
+           the ARC-GEN 2nd-substrate verdict (exp4282 arcgen_cross_family_holds), the re-powered self-learning
+           (exp4283 online_adaptation_helps), the efficiency-parity (exp4284 efficiency_parity_at_lower_cost), the
+           ARC +1 (exp4285 total_levels). Mark the oracle-distinct ARC slot's generalization + guidance state.
+        2. LOG any new missing-verifier gap (per ops/verifier_gaps.md schema): e.g. if the DiffusionGemma moat arm
+           blocked on partial (masked) states, a 'learned partial-state diffusion scorer' gap; if ARC-GEN collapsed,
+           a 'cross-substrate family-invariant ARC selection' gap. Run the GAP-4 execution regression guard (no
+           regression vs .395's recorded GAP-4 numbers). Emit regression_guard_passed BARE bool. Declare
            reproducibility_checksum.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. Records the registry/gaps reconciled + retirements recorded + regression guard result."
+          principle: "Terminal-prefixed. Records the registry/gaps reconciled + regression guard result."
         regression_guard_passed:
-          principle: "BARE bool: the GAP-4 execution numbers did not regress vs .394 -- the standing-capability guard."
-        retirements_recorded:
-          principle: "List of the .394/.395 retirements written to the exclusion manifest (code oracle-distinct corpus-specific; verifier-as-reward out-of-band) -- stops re-proposal of resolved/doomed axes."
+          principle: "BARE bool: the GAP-4 execution numbers did not regress vs .395 -- the standing-capability guard."
         gaps_logged:
           principle: "List of new missing-verifier gap entries (failure mode + missing discriminator + candidate design + priority) -- the verifier build backlog."
         reproducibility_checksum:
           principle: "Hash of the reconciled registry + gaps + manifest; catches silent drift."
       ACCEPTANCE GATE:
-        - condition: "regression_guard_passed + retirements_recorded + gaps_logged reported with the registry reconciled to .395, OR an honest blocked_v395_artifacts_missing verdict"
-          principle: "The registry/gaps/manifest are the verifier's truth ledger; reconciling + recording retirements + logging gaps each milestone makes the verifier improve monotonically and stops doomed reruns."
+        - condition: "regression_guard_passed + gaps_logged reported with the registry reconciled to .396, OR an honest blocked_v396_artifacts_missing verdict"
+          principle: "The registry/gaps are the verifier's truth ledger; reconciling + logging gaps each milestone makes the verifier improve monotonically."
 
-      Run: `python3 {project_root}/results/experiment_4277_verifier_registry_gaps_hygiene.py`
+      Run: `python3 {project_root}/results/experiment_4287_verifier_registry_gaps_hygiene.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4278-hardware-continuity
-    milestone: 2026.06.395
-    title: "PHASE D3 (hardware continuity; opportunistic per north-star §3) -- KV260 terminal/opportunistic (SSH-only reachability + xmutil listapps; NO host SD-card precondition), PolarFire CPU dispatch hash-verify, GateMate USB detect. KV260 is terminal (north-star §3) so the per-board mandate relaxes to opportunistic; this task keeps the boards visible without blocking the milestone. Report per-board reachability + any opportunistic result. NO board blocks the milestone (honest blocked_<board> per board is fine)."
+  - id: exp4288-hardware-continuity
+    milestone: 2026.06.396
+    title: "PHASE F3 (hardware continuity; opportunistic per north-star §3) -- KV260 terminal/opportunistic (SSH-only reachability + xmutil listapps; NO host SD-card precondition), PolarFire CPU dispatch hash-verify, GateMate USB detect. KV260 is terminal (north-star §3) so the per-board mandate relaxes to opportunistic; this task keeps the boards visible without blocking the milestone. Report per-board reachability + any opportunistic result. NO board blocks the milestone (honest blocked_<board> per board is fine)."
     priority: low
     track: hardware
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-18 Hardware-Task Continuity Discipline + north-star §3 (KV260 terminal -> opportunistic), standing: the per-milestone hardware-continuity slot is REQUIRED forward work -- false-positive scope-match vs prior hardware-continuity tasks (exp4267/exp4253, SUCCEEDED, not retired); forward difference = opportunistic per-board check at the .395 state."
+    operator_override: "2026-05-18 Hardware-Task Continuity Discipline + north-star §3 (KV260 terminal -> opportunistic), standing: the per-milestone hardware-continuity slot is REQUIRED forward work -- false-positive scope-match vs prior hardware-continuity tasks (exp4278/exp4267, SUCCEEDED, not retired); forward difference = opportunistic per-board check at the .396 state."
     inference_substrate: hardware_smoke
-    deliverable: results/experiment_4278_hardware_continuity.json
+    deliverable: results/experiment_4288_hardware_continuity.json
     prompt: |
-      CONTEXT: Hardware-Task Continuity Discipline -- keep the attached FPGA boards visible each milestone.
-      Per north-star §3, KV260 is terminal so the mandate is opportunistic. KV260 SSH-Not-SD-Card Discipline:
-      the KV260 precondition is SSH reachability, NEVER a host SD-card block-device check.
+      CONTEXT: Hardware-Task Continuity Discipline -- keep the attached FPGA boards visible each milestone. Per
+      north-star §3, KV260 is terminal so the mandate is opportunistic. KV260 SSH-Not-SD-Card Discipline: the KV260
+      precondition is SSH reachability, NEVER a host SD-card block-device check.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4267_hardware_continuity.json (the .394 hardware state: KV260 terminal SSH-only xmutil rc=1, PolarFire hash-verified, GateMate unreachable)
+        - results/experiment_4278_hardware_continuity.json (the .395 hardware state: KV260 terminal SSH-only xmutil rc=1, PolarFire hash-verified, GateMate unreachable)
         - CLAUDE.md "KV260 SSH-Not-SD-Card Discipline", "Hardware-Task Continuity Discipline", "Pre-Launch Preconditions" (board rows)
 
       TASK: opportunistic per-board continuity check; report reachability; block nothing.
@@ -728,70 +636,75 @@ tasks:
         - condition: "per_board_status reported for KV260 + PolarFire + GateMate with preconditions_checked"
           principle: "Opportunistic continuity keeps the FPGA boards visible per the discipline + north-star §3 relaxation; no board blocks the milestone."
 
-      Run: `python3 {project_root}/results/experiment_4278_hardware_continuity.py`
+      Run: `python3 {project_root}/results/experiment_4288_hardware_continuity.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp4279-capstone-v395
-    milestone: 2026.06.395
-    title: "PHASE D4 (capstone .395, UNGATED) -- headline question: DID THE HARDENED ARC ORACLE-DISTINCT WIN GENERALIZE to held-out FAMILIES/GAMES (the real OOD test .394 could not run)? Aggregate: CROSS-FAMILY = exp4271 (existing pool) OR exp4272 (fresh ARC-TGI pool) cross_family_win_holds + cross_family_delta + CI95 + within_minus_cross_gap; SELF-LEARNING = exp4273 online_adaptation_helps; SCALE-UP READINESS = exp4274 loader_repaired + preflight_go + cost; ARC = exp4275 total_levels (>=20?) + the game advanced; hygiene = exp4277 regression_guard_passed; hardware = exp4278. Emit cross_family_generalizes + hardened_win (now requires cross-family delta>0 AND CI95-excl-0, on top of the .394 leak-audit + multi-seed) + diffusiongemma_full_run_gate (resolvable iff hardened_win AND preflight_go). SKIP any flagged_adversarial artifact; HONOR verifier_is_oracle (a leaked/circular result may NOT headline). Compute the G1-G4 publication gate via publication_gate.py. NO gated_on."
+  - id: exp4289-capstone-v396
+    milestone: 2026.06.396
+    title: "PHASE F4 (capstone .396, UNGATED) -- headline question: DID THE EXTERNAL ENERGY VERIFIER IMPROVE GENERATION (not just rank it)? Aggregate: DIFFUSIONGEMMA = exp4281 diffusiongemma_guidance_moat + carnot_minus_rfg_delta + CI95 + execution_grounded_guidance_delta (HONOR verifier_is_oracle per-arm -- a circular execution-grounded win is NOT a moat); CROSS-FAMILY 2ND-SUBSTRATE = exp4282 arcgen_cross_family_holds + per_substrate_delta; SELF-LEARNING = exp4283 online_adaptation_helps (re-powered); EFFICIENCY = exp4284 efficiency_parity_at_lower_cost + cost_ratio; ARC = exp4285 total_levels (>=21?) + game advanced; hygiene = exp4287 regression_guard_passed; hardware = exp4288. Emit guidance_moat_holds + cross_family_hardens_on_arcgen + verifier_efficiency_parity + diffusiongemma_thesis_state (one honest string). SKIP any flagged_adversarial artifact; HONOR verifier_is_oracle. Compute the G1-G4 publication gate via publication_gate.py. NO gated_on."
     priority: high
     track: capstone
     max_turns: 90
     agent_type: codex
     model: gpt-5.5
-    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): capstone-vN -- false-positive scope-match vs all prior capstone-v* tasks (exp4268); structurally never a doomed rerun. Capstones default to codex."
+    operator_override: "2026-05-29 operator directive (standing) auto-override class 1 (routine milestone-transition task): capstone-vN -- false-positive scope-match vs all prior capstone-v* tasks (exp4279); structurally never a doomed rerun. Capstones default to codex."
     inference_substrate: aggregation_from_upstream_artifacts
-    deliverable: results/experiment_4279_capstone_v395.json
+    deliverable: results/experiment_4289_capstone_v396.json
     prompt: |
-      CONTEXT: the .395 capstone. The headline question: did the hardened ARC oracle-distinct win GENERALIZE to
-      held-out families/games -- the real OOD test .394's capstone could not run (game_ids_unrecoverable, the SOLE
-      reason hardened_win was False)? Aggregate the .395 phases into an honest headline + the DiffusionGemma
-      full-run gate. CRITICAL: SKIP any flagged_adversarial artifact (do NOT aggregate its numbers); HONOR
-      verifier_is_oracle (a leaked/circular result may NOT headline a moat); cite upstream sha256.
+      CONTEXT: the .396 capstone. The headline question: did the EXTERNAL energy verifier improve GENERATION when
+      wired into DiffusionGemma's denoising -- beating the model's OWN reward-free self-guidance (RFG) with a LEARNED
+      (oracle-distinct) verifier (the §5 thesis at LLM scale)? Plus: did the cross-family win harden on the
+      independent ARC-GEN substrate, did the verifier hit efficiency-parity at lower cost, did self-learning beat
+      static with power? CRITICAL: SKIP any flagged_adversarial artifact (do NOT aggregate its numbers); HONOR
+      verifier_is_oracle PER ARM (a circular execution-grounded guidance win may NOT headline a moat); cite upstream sha256.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_4270..4275 (the .395 phase artifacts; exactly one of exp4271/exp4272 ran) + exp4277 + exp4278
+        - results/experiment_4281..4285 (the .396 phase artifacts) + exp4287 + exp4288
         - scripts/summarize_artifact.py (read each via the fixed reading order), scripts/adversarial_verify.py, scripts/publication_gate.py
-        - ops/north-star.md (§0 ARC accuracy+efficiency, §1 headline, §2 G1-G4 gate), CLAUDE.md "Circularity / Oracle-Distinctness Discipline", "Adversarial Artifact Verification" (fabrication gate: skip flagged)
+        - ops/north-star.md (§0 ARC accuracy+efficiency, §1 headline, §2 G1-G4 gate, §5 energy-verifies-shapes-generation), CLAUDE.md "Circularity / Oracle-Distinctness Discipline", "Adversarial Artifact Verification" (fabrication gate: skip flagged)
 
-      TASK: aggregate .395 into an honest headline_outcome + the DiffusionGemma full-run gate + the G1-G4 status.
+      TASK: aggregate .396 into an honest headline + the diffusiongemma_thesis_state + the G1-G4 status.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: the .395 phase artifacts exist AND parse. For EACH, run summarize_artifact.py + a LIVE
-           adversarial re-check; if flagged_adversarial -> EXCLUDE it from aggregation and record the exclusion.
-           If core artifacts are missing -> honest_verdict `blocked_v395_artifacts_missing` and STOP.
-        1. Aggregate (skipping flagged): the CROSS-FAMILY verdict (read cross_family_win_holds + cross_family_delta
-           + CI95 + within_minus_cross_gap from whichever of exp4271/exp4272 ran; if A1 blocked and neither ran,
-           the OOD question stays OPEN -- say so honestly); the SELF-LEARNING result (exp4273
-           online_adaptation_helps); the SCALE-UP readiness (exp4274 loader_repaired + preflight_go); ARC progress
-           (exp4275 total_levels + game advanced). Cite each upstream sha256.
-        2. Emit cross_family_generalizes (one honest string) + hardened_win BARE bool := (the .394 leak-audit +
-           multi-seed held AND cross_family_win_holds==true) + diffusiongemma_full_run_gate BARE bool :=
-           (hardened_win AND exp4274 preflight_go). Compute the G1-G4 gate via publication_gate.py --json and
-           record paper_ready + unmet_gates. HONOR verifier_is_oracle on every cited result (a circular/leaked
-           result is NOT a moat headline).
+        0. PRECONDITIONS: the .396 phase artifacts exist AND parse. For EACH, run summarize_artifact.py + a LIVE
+           adversarial re-check; if flagged_adversarial -> EXCLUDE it from aggregation and record the exclusion. If
+           core artifacts are missing -> honest_verdict `blocked_v396_artifacts_missing` and STOP.
+        1. Aggregate (skipping flagged): the DIFFUSIONGEMMA guidance verdict (exp4281 diffusiongemma_guidance_moat +
+           carnot_minus_rfg_delta + CI95; honor verifier_is_oracle per-arm -- report the execution_grounded arm
+           SEPARATELY as cheap-not-moat); the ARC-GEN 2nd-substrate verdict (exp4282 arcgen_cross_family_holds +
+           per_substrate_delta); the re-powered SELF-LEARNING (exp4283 online_adaptation_helps); the EFFICIENCY
+           (exp4284 efficiency_parity_at_lower_cost + cost_ratio); ARC progress (exp4285 total_levels + game). Cite
+           each upstream sha256.
+        2. Emit guidance_moat_holds BARE bool := (exp4281 diffusiongemma_guidance_moat==true AND its arm
+           verifier_is_oracle==false) + cross_family_hardens_on_arcgen BARE bool (exp4282 arcgen_cross_family_holds) +
+           verifier_efficiency_parity BARE bool (exp4284 efficiency_parity_at_lower_cost) + diffusiongemma_thesis_state
+           (one honest string: 'external_verifier_improves_generation' / 'ties_model_self_guidance' /
+           'execution_grounded_only' / 'partial_state_blocked'). Compute the G1-G4 gate via publication_gate.py --json
+           and record paper_ready + unmet_gates. HONOR verifier_is_oracle on every cited result.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
-          principle: "Terminal-prefixed. The .395 close-state -- whether the hardened win generalized cross-family (the OOD verdict that gates the headline + the scale-up)."
+          principle: "Terminal-prefixed. The .396 close-state -- whether the external verifier improved GENERATION (the §5 thesis verdict) + the cross-family/efficiency/ARC reads."
         headline_outcome:
-          principle: "One honest string aggregating the cross-family + self-learning + scale-up-readiness + ARC reads; the single line the .396 planner frames from."
-        cross_family_generalizes:
-          principle: "BARE bool: did the held-out-family set_encoder@1 - vote@1 stay >0 with CI95-excl-0 -- the real OOD generalization verdict (north-star-grade if true, scopes-the-headline if false)."
-        hardened_win:
-          principle: "BARE bool: the +44pp win is real (provenance-blind, .394), robust (multi-seed, .394), AND general (cross-family, .395) -- the full headline-eligibility verdict."
-        diffusiongemma_full_run_gate:
-          principle: "BARE bool: resolvable iff hardened_win AND preflight_go -- whether .396 may activate the DiffusionGemma full run."
+          principle: "One honest string aggregating the DiffusionGemma-guidance + ARC-GEN + efficiency + self-learning + ARC reads; the single line the .397 planner frames from."
+        guidance_moat_holds:
+          principle: "BARE bool: did the LEARNED (oracle-distinct) verifier-guided DiffusionGemma beat RFG model-self-guidance with CI95-excl-0 -- the §5 in-generation moat verdict (NOT a circular execution-grounded win)."
+        cross_family_hardens_on_arcgen:
+          principle: "BARE bool: did the cross-family selection win replicate on the independent ARC-GEN substrate -- closing the single-partition critique."
+        verifier_efficiency_parity:
+          principle: "BARE bool: did the energy verifier match the LLM-judge at <=0.1x cost -- the owed §5 efficiency win condition."
+        diffusiongemma_thesis_state:
+          principle: "One honest string for the §5 thesis state (external_verifier_improves_generation / ties_model_self_guidance / execution_grounded_only / partial_state_blocked) -- the framing the .397 planner inherits."
         flagged_artifacts_excluded:
-          principle: "List of .395 artifacts excluded for flagged_adversarial -- the fabrication gate (their numbers are NOT aggregated)."
+          principle: "List of .396 artifacts excluded for flagged_adversarial -- the fabrication gate (their numbers are NOT aggregated)."
         paper_ready:
-          principle: "From publication_gate.py --json -- the G1-G4 status (FoVer headline stays the publication target; a cross-family-general ARC win is a new supporting/headline result)."
+          principle: "From publication_gate.py --json -- the G1-G4 status (FoVer headline stays the publication target; a verified in-generation moat would be a new headline-grade supporting result)."
         verifier_is_oracle_honored:
-          principle: "BARE bool=true -- confirms every cited moat/headline result carried verifier_is_oracle=false (no circular result headlines a moat)."
+          principle: "BARE bool=true -- confirms every cited moat/headline result carried verifier_is_oracle=false (no circular/execution-grounded result headlines a moat)."
         reproducibility_checksum:
           principle: "Hash of the aggregated upstream sha256 set; lets a third party re-derive the capstone."
       ACCEPTANCE GATE:
-        - condition: "headline_outcome + cross_family_generalizes + hardened_win + diffusiongemma_full_run_gate + flagged_artifacts_excluded + paper_ready + verifier_is_oracle_honored reported, OR an honest blocked_v395_artifacts_missing verdict"
-          principle: "The capstone must report an honest cross-family generalization verdict + the scale-up gate while skipping flagged artifacts and honoring oracle-distinctness -- the discipline that prevents a within-pool-only or leaked win from headlining or triggering DiffusionGemma."
+        - condition: "headline_outcome + guidance_moat_holds + cross_family_hardens_on_arcgen + verifier_efficiency_parity + diffusiongemma_thesis_state + flagged_artifacts_excluded + paper_ready + verifier_is_oracle_honored reported, OR an honest blocked_v396_artifacts_missing verdict"
+          principle: "The capstone must report an honest in-generation-moat verdict + the cross-substrate/efficiency reads while skipping flagged artifacts and honoring oracle-distinctness -- the discipline that prevents a circular guidance win or a single-substrate result from over-headlining."
 
-      Run: `python3 {project_root}/results/experiment_4279_capstone_v395.py`
+      Run: `python3 {project_root}/results/experiment_4289_capstone_v396.py`
       Do NOT push. Do NOT modify scripts/research_conductor.py.
