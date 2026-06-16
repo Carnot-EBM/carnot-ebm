@@ -8598,3 +8598,5 @@ c |
 | 2026-06-16 06:40 UTC | PHASE F2 (hygiene) -- reconcile the verifier regis | OK | 89 passed, 1 warning in 6.93s |
 | 2026-06-16 07:46 UTC | PHASE F3 (hardware continuity; opportunistic per n | OK | 85 passed, 1 warning in 4.87s |
 | 2026-06-16 08:05 UTC | PHASE F4 (capstone .396, UNGATED) -- headline ques | OK | 87 passed, 1 warning in 6.45s |
+| 2026-06-16 08:52 UTC | Plan milestone 2026.06.397 | OK | 12 tasks proposed |
+| 2026-06-16 08:54 UTC | Milestone 2026.06.397 activated | OK | 12 tasks queued |
