@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.395",
+  "generated_at": "2026-06-16T03:04:39Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The milestone-scoped timing detector reported 0 experiments / 0 wall-time minutes / 0 compute-bound tasks for 2026.06.395, so the locked numeric fields stay at zero per the anti-hallucination guard. This is the SAME recurring false-zero detector artifact documented across .363-.394, not an empty milestone: on-disk results/ artifacts for this window indicate experiments did run; the detector simply failed to attribute their commits to the milestone. No wall-time bottleneck can be measured from a zero-row timing feed.",
+  "bottlenecks_identified": [
+    "Recurring milestone-scoped timing-detector false-zero: the authoritative timing feed reported 0 experiment commits even though on-disk results/ artifacts exist for this window. This is an OBSERVABILITY bug (commit-to-milestone attribution), not an execution or wall-time bottleneck, and it has now recurred across .363-.395.",
+    "Because no compute-bound task appears in the timing data, the observed 0% GPU utilization on both RTX 3090s is expected idle state at the snapshot, NOT a bottleneck (per the GPU-idle interpretation rule, GPU idle is only a bug when a compute-bound task is present; gpu_idle_on_compute_bound_tasks is therefore null)."
+  ],
+  "improvements_suggested": [
+    "Fix the milestone-scoped timing detector so it attributes experiment commits to the active milestone (the recurring root cause of the false-zero across .363-.395). Candidate: key off the activation commit boundary and the on-disk results/experiment_*.json mtimes rather than whatever window heuristic currently misses them.",
+    "Until the detector is repaired, have the retro fall back to on-disk results/ mtimes plus the ops/changelog.md milestone window so the wall-time and slowest-experiment analysis can still be produced instead of degrading to a zero-row report.",
+    "Emit a detector_gap_suspected flag whenever the timing feed reports 0 experiments but on-disk artifacts exist for the window, so a false-zero is never silently read as a clean or empty milestone."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Repair the milestone-scoped timing detector (commit-to-milestone attribution) so retros stop degrading to false-zero; this is the single highest-leverage operational fix and has been outstanding for 30+ milestones.",
+    "Wire an on-disk results/ mtime fallback into the retro path so a detector miss does not erase the entire timing analysis.",
+    "Auto-raise detector_gap_suspected when timing reports 0 but on-disk artifacts exist, making the false-zero self-evident rather than ambiguous."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Reflecting on HOW rather than WHAT: execution this milestone was fine; the operational failure is observability. The retro's own input feed reported zero experiments while artifacts sat on disk, the same false-zero seen since .363. The highest-value process fix is not a faster experiment but a timing detector that actually finds the work, plus a detector_gap_suspected tripwire so the gap can never again masquerade as an empty milestone."
+}
