@@ -12794,6 +12794,120 @@ checksum, and model specs. The moat bool is true only when the learned scorer
 beats RFG and the CI95 excludes zero; otherwise the artifact is a bounded null
 or an honest partial.
 
+### REQ-VERIFY-4304: DiffusionGemma Engaged-Control In-Generation Moat Rerun
+
+The repository SHALL provide Exp 4304 at
+`python/carnot/experiment_4304_diffusiongemma_in_generation_engaged_controls.py`
+and `results/experiment_4304_diffusiongemma_in_generation_engaged_controls.py`
+to rerun the DiffusionGemma in-generation benchmark with the Exp 4292 learned
+partial-state scorer, an independent leak re-check, at least one genuinely
+engaged non-Carnot guidance control, and a mechanical no-op guard. Before any
+inference, the runner SHALL verify that the local llama.cpp PR binary
+`~/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval` exists and is
+non-empty, the DiffusionGemma GGUF cache
+`~/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/`
+is non-empty, no TRM training process is active, the GGUF tokenizer can be
+loaded through the repaired metadata path, and
+`results/experiment_4292_partial_state_diffusion_scorer_build.json` reports
+bare bool `partial_state_scorer_built=true` with a loadable
+`results/partial_state_diffusion_scorer_exp4292.pkl`. If any precondition is
+missing, the runner SHALL write a terminal artifact with
+`honest_verdict=blocked_<resource>`, record the failed and skipped checks in
+`preconditions_checked`, keep `diffusiongemma_guidance_moat=false`, keep
+`controls_differentiated=false`, keep `verifier_is_oracle=false`, and stop
+before inference.
+
+When preconditions pass, Exp 4304 SHALL independently re-check the Exp 4292
+scorer on a fresh held-out fixture by masking answer-bearing cells before
+scoring. The terminal artifact SHALL report bare bool
+`scorer_leak_recheck_passed=true` only when the answer-masked AUROC remains
+above chance (`>0.6`). If the answer-masked signal collapses, the runner SHALL
+write `honest_verdict=scorer_leaky_rebuild_needed`,
+`scorer_leak_recheck_passed=false`, and stop before running the generation
+benchmark.
+
+Exp 4304 SHALL construct at least one non-Carnot engaged control using either
+RFG with a strictly weaker reference at non-zero guidance strength or EntRGi
+single-model entropy-gated guidance. It SHALL smoke-test every non-Carnot
+guidance arm and record `guidance_changes_selection` per arm. If no non-Carnot
+guidance arm changes token selection versus unguided, or if any two control
+arms among unguided/RFG/EntRGi have bit-identical task accuracy, the runner
+SHALL write `honest_verdict=controls_not_differentiable`,
+`controls_differentiated=false`, keep `diffusiongemma_guidance_moat=false`,
+and stop without reporting a moat.
+
+When the scorer re-check and controls pass, Exp 4304 SHALL run a reasoning
+corpus with at least 30 task-level rows over unguided, the engaged control
+arms, and Carnot-partial-state-guided. It SHALL report per-condition accuracy,
+bare float `carnot_minus_best_control_delta`, bare float
+`carnot_minus_unguided_delta`, and a task-level paired bootstrap CI95 using at
+least 2000 resamples. It SHALL emit bare bool
+`diffusiongemma_guidance_moat=true` only when Carnot-guided minus the best
+genuinely engaged non-Carnot control is positive, the CI95 excludes zero, and
+`controls_differentiated=true`. It SHALL record a guidance-dynamics diagnostic
+containing mask entropy, token-change covariance, and trajectory stability so
+over-guided or unstable runs bound the conclusion.
+
+The terminal artifact SHALL write
+`results/experiment_4304_diffusiongemma_in_generation_engaged_controls.json`
+with top-level fields `honest_verdict`, bare bool
+`diffusiongemma_guidance_moat`, bare bool `controls_differentiated`, bare
+float `carnot_minus_best_control_delta`, bare float
+`carnot_minus_unguided_delta`, `guidance_moat_ci95`, bare bool
+`scorer_leak_recheck_passed`, `guidance_dynamics_diagnostic`, bare bool
+`verifier_is_oracle=false`, `preconditions_checked`, bare int `random_seed`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`duration_s`, and `inference_substrate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. A guidance moat (learned-verifier beats a GENUINELY-ENGAGED control, CI95-excl-0), a bounded null (ties the engaged control), a controls_not_differentiable (no control could be engaged -- moat stays open), and a scorer_leaky_rebuild_needed are ALL COMPLETE and decision-grade for the section 5 thesis.`;
+`diffusiongemma_guidance_moat` = `BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff the LEARNED (oracle-distinct) partial-state-guided run beats the BEST GENUINELY-ENGAGED control AND CI95-excl-0 AND controls_differentiated -- the moat-scissor realized in generation at LLM scale (NOT beats a no-op).`;
+`controls_differentiated` = `BARE bool: true iff no two control arms (unguided/rfg/entrgi) tie bit-identically -- the mechanical guard that the exp4293 no-op signature does NOT recur (a moat off no-op controls is meaningless).`;
+`carnot_minus_best_control_delta` = `BARE float: Carnot-guided minus the BEST genuinely-engaged non-Carnot control -- the load-bearing comparison (beating an ENGAGED baseline shows an EXTERNAL verifier adds value in-generation).`;
+`carnot_minus_unguided_delta` = `BARE float: Carnot-guided minus unguided -- the weaker control (a guidance hook that does anything beats unguided; the moat needs the engaged-control comparison too).`;
+`guidance_moat_ci95` = `Task-level bootstrap CI95 of the Carnot-minus-best-engaged-control delta -- excluding 0 means the external verifier genuinely steers generation better than an engaged baseline.`;
+`scorer_leak_recheck_passed` = `BARE bool: the independent leak re-check on the exp4292 scorer (AUROC 0.966 yellow flag) -- true iff the scorer's signal SURVIVES masking the answer cells; false retires the run to scorer_leaky_rebuild_needed.`;
+`guidance_dynamics_diagnostic` = `Mask entropy / token-change covariance / trajectory stability -- bounds the result (an over-guided unstable scorer's win is robustness-theater).`;
+`verifier_is_oracle` = `BARE bool=false -- the learned partial-state scorer is oracle-distinct (NOT the executable oracle); a circular guidance win cannot headline.`;
+`preconditions_checked` = `Records the PR-binary + GGUF cache + scorer-loadable + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.`;
+`random_seed` = `Determinism precondition for the denoising + bootstrap.`;
+`reproducibility_checksum` = `Hash of the corpus + guidance config + control construction + PR-binary inputs; lets a third party re-run.`;
+`model_specs` = `DiffusionGemma GGUF + PR binary + the partial-state scorer + the control construction (RFG reference / EntRGi) + denoising steps + the corpus; required methodology.`
+
+### SCENARIO-VERIFY-4304: Engaged Controls Or Honest Blocker For DiffusionGemma Guidance
+
+Given the PR binary is missing or empty, when Exp 4304 runs, then it writes
+`honest_verdict=blocked_pr_binary`, records the binary check in
+`preconditions_checked`, leaves `diffusiongemma_guidance_moat=false`, leaves
+`controls_differentiated=false`, and does not inspect the GGUF or scorer.
+
+Given Exp 4292 is missing, not built, oracle-circular, or points to an
+unloadable scorer, when Exp 4304 runs, then it writes
+`honest_verdict=blocked_partial_state_scorer_unavailable`, records the scorer
+gate failure, leaves `diffusiongemma_guidance_moat=false`, and does not launch
+the full benchmark.
+
+Given all preconditions pass but the independent answer-masked held-out
+re-check collapses to chance, when Exp 4304 runs, then it writes
+`honest_verdict=scorer_leaky_rebuild_needed`,
+`scorer_leak_recheck_passed=false`, leaves
+`diffusiongemma_guidance_moat=false`, and stops before the generation
+benchmark.
+
+Given all preconditions pass but every non-Carnot guidance arm either fails to
+change token selection versus unguided or ties another control arm at
+bit-identical accuracy, when Exp 4304 runs, then it writes
+`honest_verdict=controls_not_differentiable`,
+`controls_differentiated=false`, leaves `diffusiongemma_guidance_moat=false`,
+and does not report a moat.
+
+Given all preconditions pass, the leak re-check survives answer masking, and
+at least one non-Carnot control is genuinely engaged and differentiated, when
+Exp 4304 runs at least 30 reasoning rows, then it reports per-condition
+accuracy, `carnot_minus_best_control_delta`, `carnot_minus_unguided_delta`,
+bootstrap CI95, guidance-dynamics diagnostic, `verifier_is_oracle=false`,
+reproducibility checksum, and model specs. The moat bool is true only when the
+learned scorer beats the best engaged control and the CI95 excludes zero;
+otherwise the artifact is a bounded null.
+
 ### REQ-VERIFY-4036: Decentralization Stronger-Base Best-of-N Build Gate
 
 The repository SHALL provide Exp 4036 at
