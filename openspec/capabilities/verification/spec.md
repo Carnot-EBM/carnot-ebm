@@ -16284,6 +16284,82 @@ adversarial verification cleanly. If Exp 4270 reports
 `honest_verdict=complete_self_learning_deferred_to_fresh_pool` with the required
 bare fields present and does not claim an online adaptation result.
 
+### REQ-VERIFY-4282: ARC-GEN Cross-Family Stress Replication
+
+The repository SHALL provide Exp 4282 at
+`python/carnot/reporting/arcgen_cross_family_stress_4282.py` and
+`results/experiment_4282_arcgen_cross_family_stress.py` to test whether the
+Exp 4271 `.395` family-disjoint Set-Encoder beats-vote win survives a
+construction-disjoint ARC-GEN substrate. Before any measurement, the runner
+SHALL require an ARC-GEN checkout at a gitignored path such as
+`external/ARC-GEN`, require the Exp 4244 Set-Encoder build/model artifacts to
+load, and require the Exp 4270 family manifest to load. If ARC-GEN is absent
+or unusable, it SHALL write an honest terminal artifact with
+`honest_verdict=blocked_arcgen_unavailable`, keep
+`arcgen_cross_family_holds=false`, keep `verifier_is_oracle=false`, and stop
+without fabricating generator rows.
+
+When ARC-GEN is available, the runner SHALL build a hard-capped ARC-GEN
+candidate pool with at least four ARC-GEN native families when possible. Every
+manifest row SHALL carry `task_id`, ARC-GEN-native `family_id`, deterministic
+`fold`, exact `target_hash`, `source_kind=arcgen`, and generator provenance.
+Every candidate row SHALL be scored only from non-oracle candidate features;
+candidate correctness and target hashes MAY be used for supervised labels and
+evaluation, but SHALL NOT be used as an inference rank key. The pool and
+manifest SHALL be persisted under `results/`.
+
+The runner SHALL retrain the Exp 4244 Set-Encoder on train-family candidate
+sets and score only held-out ARC-GEN families. It SHALL report
+`set_encoder@1`, `vote@1`, `oracle@K`, and a deterministic matched control,
+then compute bare float `cross_family_delta = set_encoder@1 - vote@1`,
+two-float `cross_family_ci95` from at least 2000 task-level bootstrap
+resamples, bare int `held_out_family_n`, bare int `held_out_task_n`, bare float
+`oracle_at_k`, and bare bool `arcgen_cross_family_holds` that is true iff the
+ARC-GEN held-out-family delta is positive and the CI95 excludes zero. It SHALL
+report original-ARC, ARC-TGI, and ARC-GEN substrate reads separately in
+`per_substrate_delta` and SHALL NOT pool generator rows with original ARC or
+ARC-TGI rows. It SHALL also run a randomized family-rich stress split,
+randomizing label-irrelevant family-rich split/features while preserving
+labels and candidate grids, and report `randomized_stress_delta`.
+
+The terminal artifact SHALL write
+`results/experiment_4282_arcgen_cross_family_stress.json` with
+`honest_verdict`, bare bool `arcgen_cross_family_holds`, bare float
+`cross_family_delta`, `cross_family_ci95`, `per_substrate_delta`,
+`randomized_stress_delta`, bare int `held_out_family_n`, bare int
+`held_out_task_n`, bare float `oracle_at_k`, bare float
+`matched_control_delta`, bare bool `verifier_is_oracle=false`, bare int
+`random_seed`, `reproducibility_checksum`, `model_specs`, `field_principles`,
+`spec_refs`, `acceptance_gate`, and `adversarial_verify`. Its
+`field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. A 2nd-substrate survive (win generalizes beyond the recovered manifold), a collapse (win was partition-specific), and an honest blocked-clone are ALL COMPLETE and decision-grade.`;
+`arcgen_cross_family_holds` = `BARE bool: the capstone reads this as the 2nd-substrate verdict (gated-fields-must-be-bare); true iff held-out ARC-GEN-family set_encoder@1 - vote@1 > 0 AND CI95-excl-0 -- closes the single-partition critique.`;
+`cross_family_delta` = `BARE float: set_encoder@1 - vote@1 on held-out ARC-GEN families -- compare to the .395 recovered-manifest +0.4038 (a similar delta hardens the generalization).`;
+`per_substrate_delta` = `The lift reported SEPARATELY on original-ARC / ARC-TGI / ARC-GEN families -- guards the generators-become-their-own-distribution failure mode (a win only on generator data is weaker than one that holds on original ARC).`;
+`randomized_stress_delta` = `The cross-family delta under a randomized family-rich split -- if the lift survives randomizing label-irrelevant family features, it is causal, not robustness-theater (arXiv:2601.18217).`;
+`held_out_family_n` = `BARE int: number of held-out ARC-GEN families -- the OOD breadth; report with held_out_task_n for power.`;
+`oracle_at_k` = `Positive-control ceiling on held-out families -- if ~=vote the null is uninformative, not a verifier failure.`;
+`verifier_is_oracle` = `BARE bool=false -- learned set-encoder over an independent procedural-generator pool, no demo execution.`;
+`random_seed` = `Determinism precondition; the ARC-GEN sampling + family-split reproducible.`;
+`reproducibility_checksum` = `Hash of the ARC-GEN pool + family manifest; lets a third party re-run.`;
+`model_specs` = `The ARC-GEN generator provenance + the family-disjoint split protocol + the stress split; required methodology.`
+
+### SCENARIO-VERIFY-4282: ARC-GEN Replication Emits Separate Substrate Reads
+
+Given ARC-GEN is cloned into the ignored external path, the Exp 4244
+Set-Encoder artifacts are readable, and the Exp 4270 family manifest is
+readable, when Exp 4282 runs, then it generates and persists an ARC-GEN
+candidate pool and family manifest with native ARC-GEN family IDs and target
+hashes, trains and scores only family-disjoint folds, reports
+`arcgen_cross_family_holds`, `cross_family_delta`, `cross_family_ci95`,
+`per_substrate_delta`, `randomized_stress_delta`, `held_out_family_n`,
+`held_out_task_n`, `oracle_at_k`, `matched_control_delta`,
+`verifier_is_oracle=false`, `random_seed`, `reproducibility_checksum`, and
+`model_specs`, writes the required field principles and checksum, and runs
+adversarial verification cleanly. If ARC-GEN is unavailable, then it writes
+`honest_verdict=blocked_arcgen_unavailable` with the required bare fields
+present and no positive ARC-GEN claim.
+
 ### REQ-VERIFY-4259: ARC Set-Encoder Grid Synthesis
 
 The repository SHALL provide Exp 4259 at
