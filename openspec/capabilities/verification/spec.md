@@ -16430,6 +16430,99 @@ reconciled registry and gaps files. If any required artifact or ledger parse is
 missing, then it writes `honest_verdict=blocked_v394_artifacts_missing` and
 does not fabricate registry reconciliation.
 
+### REQ-VERIFY-4277: Verifier Registry, Gaps, And Retirement Hygiene For .395
+
+The repository SHALL provide Exp 4277 at
+`python/carnot/experiment_4277_verifier_registry_gaps_hygiene.py` and
+`results/experiment_4277_verifier_registry_gaps_hygiene.py` to reconcile
+`ops/verifier_registry.yaml`, `ops/verifier_gaps.md`, and
+`ops/exclusion_manifest.yaml` to the `.395` truth. Before mutating ledgers, the
+runner SHALL parse all three ledgers and read
+`results/experiment_4266_verifier_registry_gaps_hygiene.json`,
+`results/experiment_4270_arc_family_provenance_recovery.json`,
+`results/experiment_4271_arc_cross_family_transfer_existing_pool.json` or
+`results/experiment_4272_arc_cross_family_transfer_fresh_tgi_pool.json`,
+`results/experiment_4273_arc_cross_family_online_adaptation.json`,
+`results/experiment_4274_diffusiongemma_loader_fix_preflight.json`,
+`results/experiment_4275_arc_incremental_progress_new_game.json`,
+`results/experiment_4264_code_oracle_distinct_replication_retry.json`, and
+`results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json`. If any
+required ledger cannot parse or the required `.395` outcome artifacts are absent
+or unreadable, the runner SHALL write a terminal artifact with
+`honest_verdict=blocked_v395_artifacts_missing`, `regression_guard_passed=false`,
+empty `retirements_recorded`, empty `gaps_logged`, and SHALL stop without
+fabricating `.395` reconciliation.
+
+When preconditions hold, the runner SHALL run the GAP-4 execution regression
+guard against the `.394` Exp 4266 recorded numbers. The guard SHALL replay the
+canonical cached GAP-4 ARC-1 candidate set and require no regression in vote
+pass@2 `0.4516`, gated pass@2 `0.5806`, `headroom_recovered=4`, and
+`vote_wins_lost=0`. It SHALL expose bare bool `regression_guard_passed`.
+
+The runner SHALL record the `.395` outcomes in the GAP-4 / oracle-distinct ARC
+registry slot: Exp 4271 or Exp 4272 cross-family OOD verdict
+`cross_family_win_holds=true` with `cross_family_delta=0.4038461538`,
+`cross_family_ci95=[0.25, 0.5576923077]`, and `held_out_task_n=52`; Exp 4273
+online adaptation `online_adaptation_helps=false` with
+`online_minus_static_delta=0.0961538462` and
+`online_minus_static_ci95=[0.0, 0.1923076923]`; Exp 4274 DiffusionGemma
+`loader_repaired=true`, `preflight_go=true`, `guidance_changes_selection=true`,
+and `guidance_selection_change_count=12`; and Exp 4275 ARC progress
+`total_levels_solved=20`, `new_levels_solved_this_task=1`, and
+`game_advanced=wa30-ee6fef47`. The oracle-distinct ARC slot SHALL carry a `.395`
+generalization state showing that the hardened selector generalized to
+held-out families, online Tier-1 adaptation remains a static-ceiling/null
+self-learning read, DiffusionGemma preflight is open for the `.396` gate, and
+ARC advanced by one level.
+
+The runner SHALL record two standing retirements in `ops/exclusion_manifest.yaml`
+with `retire_if_same_verdict=true` and source artifact pointers:
+`code_oracle_distinct_replication_corpus_specific_retired_exp4264`, because Exp
+4264 reports `replication_read=corpus_specific`,
+`code_replication_beats_vote=false`, and `code_predictor_minus_vote_delta=-0.00625`
+so the `.392` +3.1pp code read stands only as single-corpus evidence; and
+`verifier_as_reward_in_loop_axis_out_of_band_exp4263`, because Exp 4263 reports
+`ready_for_out_of_band=true`, moving verifier-as-reward training out of the
+in-loop conductor path to operator-owned execution. Future planners SHALL NOT
+re-propose either retired in-loop axis without explicit operator reopening.
+
+The gaps ledger SHALL remain reconciled to `.395`: the previous cross-family
+provenance gap and DiffusionGemma loader-guidance gap SHALL be marked filled by
+the `.395` artifacts, and the runner SHALL log any new missing-verifier backlog
+entry using the schema in `ops/verifier_gaps.md`. For the `.395` static-ceiling
+online-adaptation read, Exp 4277 SHALL log
+`GAP-ARC-ONLINE-ADAPTATION-CALIBRATION-4277` with `failure_mode`,
+`missing_discriminator`, `candidate_design`, and `priority`.
+
+The terminal artifact SHALL write
+`results/experiment_4277_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list
+`retirements_recorded`, list `gaps_logged`, bare bool `registry_reconciled`,
+bare bool `manifest_reconciled`, `v395_outcomes`, `random_seed`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`duration_s`, and `inference_substrate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled + retirements recorded + regression guard result.`;
+`regression_guard_passed` = `BARE bool: the GAP-4 execution numbers did not regress vs .394 -- the standing-capability guard.`;
+`retirements_recorded` = `List of the .394/.395 retirements written to the exclusion manifest (code oracle-distinct corpus-specific; verifier-as-reward out-of-band) -- stops re-proposal of resolved/doomed axes.`;
+`gaps_logged` = `List of new missing-verifier gap entries (failure mode + missing discriminator + candidate design + priority) -- the verifier build backlog.`;
+`reproducibility_checksum` = `Hash of the reconciled registry + gaps + manifest; catches silent drift.`
+
+### SCENARIO-VERIFY-4277: .395 Reconciliation Records Retirements And Logs Gaps
+
+Given the `.394` hygiene artifact, the `.395` cross-family, online-adaptation,
+DiffusionGemma preflight, and ARC progress artifacts, the Exp 4264 and Exp 4263
+retirement source artifacts, `ops/verifier_registry.yaml`, `ops/verifier_gaps.md`,
+and `ops/exclusion_manifest.yaml` are readable, when Exp 4277 runs, then it
+writes the terminal artifact with `regression_guard_passed=true`, reconciles the
+registry to the `.395` generalization state, records the code corpus-specific and
+verifier-as-reward out-of-band retirements in the exclusion manifest, marks the
+filled `.394` cross-family-provenance and DiffusionGemma loader gaps, logs the new
+online-adaptation calibration gap through `gaps_logged`, and declares a
+reproducibility checksum over the reconciled registry, gaps, and manifest files.
+If any required artifact or ledger parse is missing, then it writes
+`honest_verdict=blocked_v395_artifacts_missing` and does not fabricate registry,
+gap, or manifest reconciliation.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at

@@ -518,3 +518,39 @@ retired_extras:
   - live LoRA verifier reward
   - live_lora verifier reward
   - verifier_reward_lora_harness
+- id: code_oracle_distinct_replication_corpus_specific_retired_exp4264
+  experiment_scope: code oracle-distinct replication in-loop rerun axis
+  reason: 'retire_if_same_verdict: Exp 4264 reported replication_read=corpus_specific
+    with code_replication_beats_vote=False and code_predictor_minus_vote_delta=-0.00625;
+    the .392 +3.1pp code result stands as single-corpus evidence only.'
+  experiment_ids:
+  - exp4264
+  retired_milestone: 2026.06.395
+  retired_by_artifact: results/experiment_4264_code_oracle_distinct_replication_retry.json
+  recorded_by_artifact: results/experiment_4277_verifier_registry_gaps_hygiene.json
+  verdict: corpus_specific
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - code oracle-distinct replication retry
+  - code oracle-distinct in-loop replication
+  - code_oracle_distinct_replication_retry
+- id: verifier_as_reward_in_loop_axis_out_of_band_exp4263
+  experiment_scope: verifier-as-reward in-loop training axis
+  reason: 'retire_if_same_verdict: Exp 4263 prepared the reward-weighted corpus and
+    one-command runner, so verifier-as-reward training is now out-of-band/operator-owned
+    rather than an in-loop conductor task.'
+  experiment_ids:
+  - exp4263
+  retired_milestone: 2026.06.395
+  retired_by_artifact: results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json
+  recorded_by_artifact: results/experiment_4277_verifier_registry_gaps_hygiene.json
+  ready_for_out_of_band: true
+  out_of_band_runner_path: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/run_out_of_band_reward_weighted_lora.py
+  operator_owned: true
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - verifier-as-reward in-loop training
+  - in-loop verifier-as-reward
+  - in_loop verifier reward training

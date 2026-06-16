@@ -1031,12 +1031,12 @@ registry version that closed them when a new verifier captures a previously-open
 <!-- exp4252-live-lora-retirement:end -->
 
 <!-- exp4266-gap-arc-cross-game-selection-4266:start -->
-### GAP-ARC-CROSS-GAME-SELECTION-4266: Exp 4266 .394 missing-verifier gap
-- status: open
-- evidence: results/experiment_4258_arc_oracle_distinct_cross_game_transfer.json; honest_verdict=blocked_arc_game_ids_unrecoverable; held_out_game_n=0; held_out_task_n=0.
-- failure mode: The ARC oracle-distinct selector is hardened within-pool, but cross-game transfer could not be measured because game/family ids were unrecoverable.
-- missing discriminator: game/family provenance for every ARC candidate row so selection can be evaluated on family-disjoint held-out games.
-- candidate design: Persist source-kind, generator family, game id, fold id, and target hash in the ARC candidate manifest, then rerun the set-encoder against vote on held-out families.
+### GAP-ARC-CROSS-GAME-SELECTION-4266: Exp 4277 .395 filled provenance gap
+- status: filled (arc_family_provenance_recovery_4270_cross_family_4271)
+- evidence: results/experiment_4270_arc_family_provenance_recovery.json; family_split_feasible=True; distinct_family_n=52. results/experiment_4271_arc_cross_family_transfer_existing_pool.json; cross_family_win_holds=True; cross_family_delta=0.4038461538; cross_family_ci95=[0.25, 0.5576923077]; held_out_task_n=52.
+- failure mode: filled for the original missing game/family provenance blocker; the recovered family manifest made a held-out-family test possible and the win held.
+- missing discriminator: none for provenance recovery; future work should preserve family_id, fold, source_kind, and target hash on every candidate row.
+- candidate design: keep the manifest join as a required input to any future cross-family selector evaluation.
 - priority: high
 <!-- exp4266-gap-arc-cross-game-selection-4266:end -->
 
@@ -1051,12 +1051,12 @@ registry version that closed them when a new verifier captures a previously-open
 <!-- exp4266-gap-arc-supra-oracle-k-synthesis-4266:end -->
 
 <!-- exp4266-gap-diffusiongemma-loader-guidance-4266:start -->
-### GAP-DIFFUSIONGEMMA-LOADER-GUIDANCE-4266: Exp 4266 .394 missing-verifier gap
-- status: open
-- evidence: results/experiment_4260_diffusiongemma_energy_guided_preflight.json; honest_verdict=blocked_diffusiongemma_gguf_loader_failed; preflight_go=False; guidance_changes_selection=False.
-- failure mode: DiffusionGemma energy guidance remained blocked before the guidance hook could demonstrate verifier-shaped token selection.
-- missing discriminator: a loader-validated diffusion guidance path that proves verifier energy changes denoising selections before a full run is scheduled.
-- candidate design: Repair the GGUF vocab loader path, then run a tiny deterministic guidance smoke that records changed selections and exact verifier controls.
+### GAP-DIFFUSIONGEMMA-LOADER-GUIDANCE-4266: Exp 4277 .395 filled loader-guidance gap
+- status: filled (diffusiongemma_loader_fix_preflight_4274)
+- evidence: results/experiment_4274_diffusiongemma_loader_fix_preflight.json; loader_repaired=True; preflight_go=True; guidance_changes_selection=True; guidance_selection_change_count=12.
+- failure mode: filled for the loader/preflight blocker; the .396 full run is now gated on hardened_win and this preflight_go result rather than loader reachability.
+- missing discriminator: none for the loader-guidance preflight; full-run quality remains a separate .396 measurement.
+- candidate design: use the repaired GGUF metadata loader and tiny guidance smoke as the preflight before any full benchmark.
 - priority: medium
 <!-- exp4266-gap-diffusiongemma-loader-guidance-4266:end -->
 
@@ -1069,3 +1069,13 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: Evaluate source-disjoint code pools with normalized-code, AST, agreement, and self-consistency features, plus per-source ablations before any robustness claim.
 - priority: medium
 <!-- exp4266-gap-code-oracle-distinct-robustness-4266:end -->
+
+<!-- exp4277-gap-arc-online-adaptation-calibration-4277:start -->
+### GAP-ARC-ONLINE-ADAPTATION-CALIBRATION-4277: Exp 4277 .395 missing-verifier gap
+- status: open
+- evidence: results/experiment_4273_arc_cross_family_online_adaptation.json; online_adaptation_helps=False; online_minus_static_delta=0.0961538462; online_minus_static_ci95=[0.0, 0.1923076923].
+- failure mode: Tier-1 online adaptation improved the point estimate but its CI touched zero, so static cross-family selection remains the decision-grade ceiling.
+- missing discriminator: uncertainty-aware family-transfer calibration that tells when online feature and subverifier precision counters should override the static selector.
+- candidate design: Use a hierarchical family calibrator with frozen static-selector controls, per-family uncertainty intervals, and a pre-registered online-minus-static CI gate.
+- priority: medium
+<!-- exp4277-gap-arc-online-adaptation-calibration-4277:end -->

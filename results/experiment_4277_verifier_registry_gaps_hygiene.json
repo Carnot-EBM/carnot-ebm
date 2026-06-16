@@ -1,0 +1,258 @@
+{
+  "cited_upstream_artifacts": [
+    "results/experiment_4266_verifier_registry_gaps_hygiene.json",
+    "results/experiment_4270_arc_family_provenance_recovery.json",
+    "results/experiment_4273_arc_cross_family_online_adaptation.json",
+    "results/experiment_4274_diffusiongemma_loader_fix_preflight.json",
+    "results/experiment_4275_arc_incremental_progress_new_game.json",
+    "results/experiment_4264_code_oracle_distinct_replication_retry.json",
+    "results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json",
+    "results/experiment_4271_arc_cross_family_transfer_existing_pool.json",
+    "results/experiment_4272_arc_cross_family_transfer_fresh_tgi_pool.json",
+    "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "results/arc3_gap4_induced_programs.json"
+  ],
+  "duration_s": 0.834548,
+  "exclusion_manifest_path": "ops/exclusion_manifest.yaml",
+  "experiment": "experiment_4277_verifier_registry_gaps_hygiene",
+  "field_principles": {
+    "gaps_logged": "List of new missing-verifier gap entries (failure mode + missing discriminator + candidate design + priority) -- the verifier build backlog.",
+    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled + retirements recorded + regression guard result.",
+    "regression_guard_passed": "BARE bool: the GAP-4 execution numbers did not regress vs .394 -- the standing-capability guard.",
+    "reproducibility_checksum": "Hash of the reconciled registry + gaps + manifest; catches silent drift.",
+    "retirements_recorded": "List of the .394/.395 retirements written to the exclusion manifest (code oracle-distinct corpus-specific; verifier-as-reward out-of-band) -- stops re-proposal of resolved/doomed axes."
+  },
+  "gaps_logged": [
+    {
+      "candidate_design": "Use a hierarchical family calibrator with frozen static-selector controls, per-family uncertainty intervals, and a pre-registered online-minus-static CI gate.",
+      "evidence": "results/experiment_4273_arc_cross_family_online_adaptation.json; online_adaptation_helps=False; online_minus_static_delta=0.0961538462; online_minus_static_ci95=[0.0, 0.1923076923]",
+      "failure_mode": "Tier-1 online adaptation improved the point estimate but its CI touched zero, so static cross-family selection remains the decision-grade ceiling.",
+      "gap_id": "GAP-ARC-ONLINE-ADAPTATION-CALIBRATION-4277",
+      "missing_discriminator": "uncertainty-aware family-transfer calibration that tells when online feature and subverifier precision counters should override the static selector.",
+      "priority": "medium",
+      "status": "open"
+    }
+  ],
+  "gaps_path": "ops/verifier_gaps.md",
+  "honest_verdict": "complete: registry_gaps_manifest_reconciled_to_v395_truth_regression_guard_passed_True_retirements_2_gaps_logged_1",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "manifest_reconciled": true,
+  "model_specs": {
+    "codex_calls": 0,
+    "gap4_candidate_set": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "gap4_program_outputs": "results/arc3_gap4_induced_programs.json",
+    "gguf_inference": false,
+    "gpu_inference": false,
+    "live_model_inference": false,
+    "method": "cached_v395_ledger_reconciliation",
+    "stable_checkpoint_write": false,
+    "trm_training_touched": false,
+    "upstream_artifacts": [
+      "results/experiment_4266_verifier_registry_gaps_hygiene.json",
+      "results/experiment_4270_arc_family_provenance_recovery.json",
+      "results/experiment_4273_arc_cross_family_online_adaptation.json",
+      "results/experiment_4274_diffusiongemma_loader_fix_preflight.json",
+      "results/experiment_4275_arc_incremental_progress_new_game.json",
+      "results/experiment_4264_code_oracle_distinct_replication_retry.json",
+      "results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json",
+      "results/experiment_4271_arc_cross_family_transfer_existing_pool.json",
+      "results/experiment_4272_arc_cross_family_transfer_fresh_tgi_pool.json"
+    ]
+  },
+  "random_seed": 4277,
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_reconciled": true,
+  "regression_guard": {
+    "offline_replay": {
+      "arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      },
+      "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+      "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+      "expected": {
+        "arc1_rule_exec": {
+          "gated_pass2": 0.5806,
+          "headroom_recovered": 4,
+          "n": 31,
+          "vote_pass2": 0.4516,
+          "vote_wins_lost": 0
+        }
+      },
+      "no_codex_calls": true,
+      "no_gguf_inference": true,
+      "regression_guard_passed": true,
+      "trm_training_touched": false
+    },
+    "prior_artifact_path": "results/experiment_4266_verifier_registry_gaps_hygiene.json",
+    "recorded_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "regression_guard_passed": true,
+    "replayed_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    }
+  },
+  "regression_guard_passed": true,
+  "reproducibility_checksum": "sha256:e5fb927d48bd892cd1f423e9ef972c41cc64e4910841b11fcb0b9f1befbbea09",
+  "retirements_recorded": [
+    {
+      "blocked_patterns": [
+        "code oracle-distinct replication retry",
+        "code oracle-distinct in-loop replication",
+        "code_oracle_distinct_replication_retry"
+      ],
+      "experiment_ids": [
+        "exp4264"
+      ],
+      "experiment_scope": "code oracle-distinct replication in-loop rerun axis",
+      "id": "code_oracle_distinct_replication_corpus_specific_retired_exp4264",
+      "operator_reopen_required": true,
+      "reason": "retire_if_same_verdict: Exp 4264 reported replication_read=corpus_specific with code_replication_beats_vote=False and code_predictor_minus_vote_delta=-0.00625; the .392 +3.1pp code result stands as single-corpus evidence only.",
+      "recorded_by_artifact": "results/experiment_4277_verifier_registry_gaps_hygiene.json",
+      "retire_if_same_verdict": true,
+      "retired_by_artifact": "results/experiment_4264_code_oracle_distinct_replication_retry.json",
+      "retired_milestone": "2026.06.395",
+      "verdict": "corpus_specific"
+    },
+    {
+      "blocked_patterns": [
+        "verifier-as-reward in-loop training",
+        "in-loop verifier-as-reward",
+        "in_loop verifier reward training"
+      ],
+      "experiment_ids": [
+        "exp4263"
+      ],
+      "experiment_scope": "verifier-as-reward in-loop training axis",
+      "id": "verifier_as_reward_in_loop_axis_out_of_band_exp4263",
+      "operator_owned": true,
+      "operator_reopen_required": true,
+      "out_of_band_runner_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/run_out_of_band_reward_weighted_lora.py",
+      "ready_for_out_of_band": true,
+      "reason": "retire_if_same_verdict: Exp 4263 prepared the reward-weighted corpus and one-command runner, so verifier-as-reward training is now out-of-band/operator-owned rather than an in-loop conductor task.",
+      "recorded_by_artifact": "results/experiment_4277_verifier_registry_gaps_hygiene.json",
+      "retire_if_same_verdict": true,
+      "retired_by_artifact": "results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json",
+      "retired_milestone": "2026.06.395"
+    }
+  ],
+  "schema": "carnot.experiment_4277_verifier_registry_gaps_hygiene.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4277",
+    "SCENARIO-VERIFY-4277"
+  ],
+  "v395_outcomes": {
+    "arc_progress": {
+      "acceptance_gate_passed": true,
+      "artifact_path": "results/experiment_4275_arc_incremental_progress_new_game.json",
+      "game_advanced": "wa30-ee6fef47",
+      "honest_verdict": "success: incremental_progress_wa30-ee6fef47_advanced_to_L1_total20",
+      "levels_completed": 1,
+      "new_levels_solved_this_task": 1,
+      "prior_level": 0,
+      "prior_total_levels_solved": 19,
+      "real_env_confirmed": true,
+      "target_level": 1,
+      "total_levels_solved": 20,
+      "verifier_validated": true
+    },
+    "code_retirement_source": {
+      "artifact_path": "results/experiment_4264_code_oracle_distinct_replication_retry.json",
+      "code_predictor_minus_vote_ci95": [
+        -0.01875,
+        0.0
+      ],
+      "code_predictor_minus_vote_delta": -0.00625,
+      "code_replication_beats_vote": false,
+      "honest_verdict": "complete: code_oracle_distinct_replication_corpus_specific",
+      "oracle_at_k": 0.9625,
+      "oracle_minus_vote": 0.01875,
+      "replication_read": "corpus_specific",
+      "verifier_is_oracle": false
+    },
+    "cross_family": {
+      "artifact_path": "results/experiment_4271_arc_cross_family_transfer_existing_pool.json",
+      "ci95_excludes_zero": true,
+      "cross_family_ci95": [
+        0.25,
+        0.5576923077
+      ],
+      "cross_family_delta": 0.4038461538,
+      "cross_family_win_holds": true,
+      "generalization_state": "generalizes_held_out_family",
+      "headline_outcome": "cross_family_generalizes",
+      "held_out_family_n": 52,
+      "held_out_task_n": 52,
+      "honest_verdict": "complete: cross_family_generalizes",
+      "matched_control_delta": 0.4423076923,
+      "online_adapt_cross_family_delta": 0.3653846154,
+      "oracle_at_k": 0.8269230769,
+      "oracle_minus_vote": 0.5769230769,
+      "pass_rates": {
+        "matched_control_at_1": 0.2115384615,
+        "online_adapt_at_1": 0.6153846154,
+        "set_encoder_at_1": 0.6538461538,
+        "vote_at_1": 0.25
+      },
+      "verifier_is_oracle": false,
+      "within_minus_cross_gap": 0.0384615385
+    },
+    "diffusiongemma": {
+      "artifact_path": "results/experiment_4274_diffusiongemma_loader_fix_preflight.json",
+      "full_run_cost_estimate_s": 0.071224,
+      "guidance_changes_selection": true,
+      "guidance_reweighted_token_count": 36,
+      "guidance_selection_change_count": 12,
+      "honest_verdict": "complete: diffusiongemma_loader_fix_preflight_go",
+      "loader_repaired": true,
+      "preflight_go": true,
+      "verifier_is_oracle": false
+    },
+    "family_provenance": {
+      "artifact_path": "results/experiment_4270_arc_family_provenance_recovery.json",
+      "distinct_family_n": 52,
+      "family_split_feasible": true,
+      "honest_verdict": "complete: arc_family_manifest_recovered_existing_pool_feasible",
+      "verifier_is_oracle": false
+    },
+    "online_adaptation": {
+      "artifact_path": "results/experiment_4273_arc_cross_family_online_adaptation.json",
+      "honest_verdict": "complete: static_is_the_ceiling_for_online_adaptation",
+      "online_adaptation_helps": false,
+      "online_cross_family_delta": 0.5,
+      "online_minus_static_ci95": [
+        0.0,
+        0.1923076923
+      ],
+      "online_minus_static_delta": 0.0961538462,
+      "pass_rates": {
+        "online_reweighted_at_1": 0.75,
+        "static_set_encoder_at_1": 0.6538461538,
+        "vote_at_1": 0.25
+      },
+      "static_cross_family_delta": 0.4038461538,
+      "tier1_counter_update": "cpu_counter_update_only_lt_1us_no_model_retrain",
+      "verifier_is_oracle": false
+    },
+    "reward_retirement_source": {
+      "artifact_path": "results/experiment_4263_verifier_as_reward_out_of_band_or_retire.json",
+      "honest_verdict": "complete: ready_for_out_of_band_verifier_reward_training",
+      "out_of_band_runner_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4263_verifier_as_reward_out_of_band/run_out_of_band_reward_weighted_lora.py",
+      "ready_for_out_of_band": true,
+      "verifier_as_reward_retired": false,
+      "verifier_is_oracle": true
+    }
+  }
+}

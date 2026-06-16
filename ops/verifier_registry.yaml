@@ -389,6 +389,37 @@ verifiers:
     - GAP-ARC-SUPRA-ORACLE-K-SYNTHESIS-4266
     - GAP-DIFFUSIONGEMMA-LOADER-GUIDANCE-4266
     - GAP-CODE-ORACLE-DISTINCT-ROBUSTNESS-4266
+    eval_exp_4277: results/experiment_4277_verifier_registry_gaps_hygiene.json
+    exp4277_regression_guard_passed: true
+    exp4277_arc1_rule_exec_vote_pass2: 0.4516
+    exp4277_arc1_rule_exec_gated_pass2: 0.5806
+    exp4277_arc1_headroom_recovered: 4
+    exp4277_arc1_vote_wins_lost: 0
+    exp4277_hardened_state: cross_family_generalized__online_adaptation_static_ceiling__diffusiongemma_preflight_go__arc_plus_one
+    exp4277_generalization_state: generalizes_held_out_family
+    exp4277_cross_family_artifact: results/experiment_4271_arc_cross_family_transfer_existing_pool.json
+    exp4277_cross_family_win_holds: true
+    exp4277_cross_family_delta: 0.4038461538
+    exp4277_cross_family_ci95: &id006
+    - 0.25
+    - 0.5576923077
+    exp4277_held_out_task_n: 52
+    exp4277_online_adaptation_helps: false
+    exp4277_online_minus_static_delta: 0.0961538462
+    exp4277_online_minus_static_ci95: &id007
+    - 0.0
+    - 0.1923076923
+    exp4277_diffusiongemma_loader_repaired: true
+    exp4277_diffusiongemma_preflight_go: true
+    exp4277_diffusiongemma_guidance_changes_selection: true
+    exp4277_arc_total_levels_solved: 20
+    exp4277_arc_new_levels_solved: 1
+    exp4277_arc_game_advanced: wa30-ee6fef47
+    exp4277_retirements_recorded:
+    - code_oracle_distinct_replication_corpus_specific_retired_exp4264
+    - verifier_as_reward_in_loop_axis_out_of_band_exp4263
+    exp4277_gaps_logged:
+    - GAP-ARC-ONLINE-ADAPTATION-CALIBRATION-4277
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -4177,3 +4208,37 @@ verifiers:
     - GAP-DIFFUSIONGEMMA-LOADER-GUIDANCE-4266
     - GAP-CODE-ORACLE-DISTINCT-ROBUSTNESS-4266
     eval_exp_4266: results/experiment_4266_verifier_registry_gaps_hygiene.json
+  - role_id: oracle_distinct_v395_cross_family_hygiene_4277
+    experiment: results/experiment_4277_verifier_registry_gaps_hygiene.json
+    role: registry_gap_manifest_hygiene_v395
+    status: v395_cross_family_diffusiongemma_arc_retirements_recorded
+    v395_hardened_state: cross_family_generalized__online_adaptation_static_ceiling__diffusiongemma_preflight_go__arc_plus_one
+    cross_family_status: generalizes_held_out_family
+    cross_family_artifact: results/experiment_4271_arc_cross_family_transfer_existing_pool.json
+    cross_family_win_holds: true
+    cross_family_delta: 0.4038461538
+    cross_family_ci95: *id006
+    held_out_task_n: 52
+    online_adaptation_artifact: results/experiment_4273_arc_cross_family_online_adaptation.json
+    online_adaptation_helps: false
+    online_minus_static_delta: 0.0961538462
+    online_minus_static_ci95: *id007
+    diffusiongemma_artifact: results/experiment_4274_diffusiongemma_loader_fix_preflight.json
+    diffusiongemma_loader_repaired: true
+    diffusiongemma_preflight_go: true
+    diffusiongemma_guidance_changes_selection: true
+    arc_progress_artifact: results/experiment_4275_arc_incremental_progress_new_game.json
+    arc_total_levels_solved: 20
+    arc_new_levels_solved: 1
+    arc_game_advanced: wa30-ee6fef47
+    code_retirement_id: code_oracle_distinct_replication_corpus_specific_retired_exp4264
+    reward_retirement_id: verifier_as_reward_in_loop_axis_out_of_band_exp4263
+    retirements_recorded:
+    - code_oracle_distinct_replication_corpus_specific_retired_exp4264
+    - verifier_as_reward_in_loop_axis_out_of_band_exp4263
+    gap_ids_logged:
+    - GAP-ARC-ONLINE-ADAPTATION-CALIBRATION-4277
+    filled_gap_ids:
+    - GAP-ARC-CROSS-GAME-SELECTION-4266
+    - GAP-DIFFUSIONGEMMA-LOADER-GUIDANCE-4266
+    eval_exp_4277: results/experiment_4277_verifier_registry_gaps_hygiene.json
