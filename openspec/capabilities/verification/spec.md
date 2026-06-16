@@ -12706,6 +12706,94 @@ partials, then it persists a loadable scorer module, reports held-out
 `partial_state_leak_free=true` only when the answer-masked AUROC clears 0.6,
 and keeps `verifier_is_oracle=false`.
 
+### REQ-VERIFY-4293: DiffusionGemma Partial-State Guided Full Benchmark
+
+The repository SHALL provide Exp 4293 at
+`python/carnot/experiment_4293_diffusiongemma_energy_guided_run_partial_state.py`
+and `results/experiment_4293_diffusiongemma_energy_guided_run_partial_state.py`
+to run the DiffusionGemma energy-guided generation benchmark gated on the Exp
+4292 learned partial-state scorer. Before any inference, the runner SHALL
+verify that the local llama.cpp PR binary
+`~/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval` exists and is
+non-empty, the DiffusionGemma GGUF cache
+`~/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/`
+is non-empty, no TRM training process is active, the GGUF tokenizer can be
+loaded through the repaired metadata path, and
+`results/experiment_4292_partial_state_diffusion_scorer_build.json` reports
+bare bools `partial_state_scorer_built=true` and
+`partial_state_leak_free=true` with a loadable
+`results/partial_state_diffusion_scorer_exp4292.pkl`. If any precondition is
+missing, the runner SHALL write a terminal artifact with
+`honest_verdict=blocked_<resource>`, record the failed and skipped checks in
+`preconditions_checked`, keep `diffusiongemma_guidance_moat=false`, keep
+`verifier_is_oracle=false`, and stop before inference.
+
+When preconditions pass, Exp 4293 SHALL wire the Exp 4292 scorer as
+per-step guidance by applying `logit' = logit - lambda *
+partial_state_energy` during DiffusionGemma token selection. Before the
+benchmark, it SHALL run a two-example guidance smoke and require
+`guidance_changes_selection=true`; otherwise it SHALL stop with
+`honest_verdict=blocked_guidance_selection_not_changed`.
+
+The benchmark SHALL run a reasoning corpus with at least 30 task-level rows
+and four matched conditions: unguided, RFG, EntRGi, and
+Carnot-partial-state-guided. It SHALL report per-condition accuracy/pass,
+bare float `carnot_minus_rfg_delta`, bare float
+`carnot_minus_unguided_delta`, and a task-level paired bootstrap CI95 using at
+least 2000 resamples. It SHALL emit bare bool
+`diffusiongemma_guidance_moat=true` only when Carnot-guided minus RFG is
+positive and the CI95 excludes zero. It SHALL record a guidance-dynamics
+diagnostic containing mask entropy, token-change covariance, and trajectory
+stability so over-guided or unstable runs bound the conclusion.
+
+The terminal artifact SHALL write
+`results/experiment_4293_diffusiongemma_energy_guided_run_partial_state.json`
+with top-level fields `honest_verdict`, bare bool
+`diffusiongemma_guidance_moat`, bare float `carnot_minus_rfg_delta`, bare
+float `carnot_minus_unguided_delta`, `guidance_moat_ci95`,
+`guidance_dynamics_diagnostic`, bare bool `verifier_is_oracle=false`,
+`preconditions_checked`, bare int `random_seed`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`duration_s`, and `inference_substrate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. A guidance moat (learned-verifier beats RFG, CI95-excl-0), a bounded null (ties RFG), and an over-guided-diagnostic finding are ALL COMPLETE and decision-grade for the section 5 thesis.`;
+`diffusiongemma_guidance_moat` = `BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff the LEARNED (oracle-distinct) partial-state-guided run beats RFG model-self-guidance AND CI95-excl-0 -- the moat-scissor realized in generation at LLM scale.`;
+`carnot_minus_rfg_delta` = `BARE float: Carnot-partial-state-guided minus RFG accuracy on the reasoning corpus -- the load-bearing comparison (beating the model's own self-guidance shows an EXTERNAL verifier adds value in-generation).`;
+`carnot_minus_unguided_delta` = `BARE float: Carnot-guided minus unguided -- the weaker control (a guidance hook that does anything beats unguided; the moat needs the RFG comparison too).`;
+`guidance_moat_ci95` = `Task-level bootstrap CI95 of the Carnot-minus-RFG delta -- excluding 0 means the external verifier genuinely steers generation better than model self-guidance.`;
+`guidance_dynamics_diagnostic` = `Mask entropy / token-change covariance / trajectory stability -- bounds the result (an over-guided unstable scorer's win is robustness-theater, not real generation improvement).`;
+`verifier_is_oracle` = `BARE bool=false -- the learned partial-state scorer is oracle-distinct (NOT the executable oracle); a circular guidance win cannot headline.`;
+`preconditions_checked` = `Records the PR-binary + GGUF cache + scorer-leak-free + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.`;
+`random_seed` = `Determinism precondition for the denoising + bootstrap.`;
+`reproducibility_checksum` = `Hash of the corpus + guidance config + PR-binary inputs; lets a third party re-run.`;
+`model_specs` = `DiffusionGemma GGUF + PR binary + the partial-state scorer wired as guidance + denoising steps + the four conditions + the corpus; required methodology.`
+
+### SCENARIO-VERIFY-4293: Partial-State Scorer Gates DiffusionGemma Guidance
+
+Given the PR binary is missing or empty, when Exp 4293 runs, then it writes
+`honest_verdict=blocked_pr_binary`, records the binary check in
+`preconditions_checked`, leaves `diffusiongemma_guidance_moat=false`, and does
+not inspect the GGUF or scorer.
+
+Given the PR binary and DiffusionGemma cache pass but TRM training is active,
+when Exp 4293 runs, then it writes
+`honest_verdict=blocked_trm_training_active`, records the active process,
+does not touch `results/trm_runs/`, and does not launch inference.
+
+Given Exp 4292 is missing, not built, leaky, oracle-circular, or points to an
+unloadable scorer, when Exp 4293 runs, then it writes
+`honest_verdict=blocked_partial_state_scorer_not_leak_free`, records the
+scorer gate failure, leaves `diffusiongemma_guidance_moat=false`, and does not
+launch the full benchmark.
+
+Given all preconditions pass and the two-example smoke changes token
+selection, when Exp 4293 runs at least 30 reasoning rows over unguided, RFG,
+EntRGi, and Carnot-partial-state-guided conditions, then it reports the
+Carnot-minus-RFG delta, Carnot-minus-unguided delta, bootstrap CI95,
+guidance-dynamics diagnostic, `verifier_is_oracle=false`, reproducibility
+checksum, and model specs. The moat bool is true only when the learned scorer
+beats RFG and the CI95 excludes zero; otherwise the artifact is a bounded null
+or an honest partial.
+
 ### REQ-VERIFY-4036: Decentralization Stronger-Base Best-of-N Build Gate
 
 The repository SHALL provide Exp 4036 at
