@@ -22540,6 +22540,90 @@ not claim `.396` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4290 | Implemented (`python/carnot/reporting/archive_v396_activate_v397_4290.py`, `python/carnot/experiment_4290_archive_v396_activate_v397.py`, `results/experiment_4290_archive_v396_activate_v397.py`) | Implemented (`tests/python/test_experiment_4290_archive_v396_activate_v397.py`) |
 
+### REQ-REPORT-4302: Archive .397, Activate .398, And Preserve The True Close-State
+
+The Exp 4302 workflow SHALL archive milestone `2026.06.397`, confirm milestone
+`2026.06.398` is active, and write the record-only artifact
+`results/experiment_4302_archive_v397_activate_v398.json`. It SHALL run NO live
+model training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`, and it SHALL NOT modify
+`scripts/research_conductor.py`.
+
+Before writing the complete artifact or editing `research-complete.yaml`, the
+workflow SHALL verify these preconditions and stop with a `blocked_<resource>`
+honest verdict if any fail:
+
+- `research-complete.yaml` parses under `yaml.safe_load`.
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`.
+- The smart-subset pre-test gate is green.
+
+The workflow SHALL ensure `research-complete.yaml` contains a single `.397`
+archive record, appending the canonical `.397` record only when absent and
+removing duplicate top-level `.397` records if interrupted conductor appends
+created any. The workflow SHALL keep `research-complete.yaml` parseable after
+the edit.
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v397_close_state` SHALL truthfully record
+that the Exp 4301 capstone artifact blocked spuriously with
+`blocked_v397_artifacts_missing` and defaulted all booleans to false because
+Exp 4294 was missing; this was a capstone-aggregation robustness bug, not the
+true result.
+
+The close-state SHALL record that the cross-generator axis CLOSED legitimately
+from clean Exp 4291 (`cross_generator_delta=0.50`, CI95 `[0.29,0.71]`,
+`vote_at_1=0.25`, `oracle_at_k=0.75`, non-degenerate guards pass,
+`verifier_is_oracle=false`), the partial-state scorer was built leak-free in
+Exp 4292 (`partial_state_auroc=0.966`, with a yellow-flag recheck), the
+in-generation moat is NOT held because Exp 4293 was quarantined for degenerate
+controls, efficiency is UNRESOLVED because Exp 4294 failed and produced no
+artifact rather than a measured null, self-learning online adaptation helps in
+Exp 4295, ARC reached `22` levels in Exp 4296, capstone/hygiene blocked
+spuriously, and `paper_ready=true`. It SHALL frame `.398` as
+prove-efficiency-parity plus establish-in-generation plus broaden-to-cross-domain,
+not a redo or a re-open of the closed cross-generator axis.
+
+The artifact SHALL include these field-principle strings exactly:
+
+- `honest_verdict`: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
+- `v397_close_state`: "Honest record (cross-generator CLOSED, in-generation degenerate-controls, efficiency task-failed-not-null, self-learning online-helps, ARC 22) so the .398 agents frame the milestone as prove-efficiency-parity + establish-in-generation + broaden-to-cross-domain, not a redo or a re-open of the closed cross-generator axis."
+- `preconditions_checked`: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
+
+#### SCENARIO-REPORT-4302: The Archive Records The True .397 Close-State
+
+**Given** `.397` has clean Exp 4291 cross-generator evidence, Exp 4292
+partial-state scorer evidence, Exp 4293 quarantined degenerate-control evidence,
+missing Exp 4294 efficiency evidence, Exp 4295 self-learning evidence, Exp 4296
+ARC progress, the audit notes for Exp 4301 and Exp 4293, the `.398` design doc,
+parseable history and exclusion-manifest YAML files, a green smart-subset
+pre-test gate, and `.398` active
+**When** the Exp 4302 archive workflow runs
+**Then** it archives `.397`, confirms `.398`, keeps the YAML history parseable
+with one `.397` record, writes
+`results/experiment_4302_archive_v397_activate_v398.json`, records the closed
+cross-generator axis, leak-free partial-state scorer with yellow flag, rejected
+in-generation claim, unresolved efficiency task failure, self-learning
+online-help result, ARC `22`, spurious Exp 4301/4299 blocked state,
+`paper_ready=true`, and `.398` prove-efficiency-parity / establish-in-generation
+/ broaden-to-cross-domain framing in `v397_close_state`, records the checked
+resources in `preconditions_checked`, declares
+`aggregation_from_upstream_artifacts`, and emits a terminal-prefixed honest
+verdict.
+
+#### SCENARIO-REPORT-4302-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4302 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does
+not claim `.397` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4302)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4302 | Implemented (`python/carnot/reporting/archive_v397_activate_v398_4302.py`, `python/carnot/experiment_4302_archive_v397_activate_v398.py`, `results/experiment_4302_archive_v397_activate_v398.py`) | Implemented (`tests/python/test_experiment_4302_archive_v397_activate_v398.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
