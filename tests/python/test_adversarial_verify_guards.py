@@ -84,6 +84,19 @@ def test_tautology_real_metric_kept_even_with_identifiers_present():
     assert "TAUTOLOGY" in _kinds(flags)
 
 
+def test_tautology_allows_same_corpus_selector_cross_family_delta_tie():
+    """REQ-VERIFY-4283: selector arms may legitimately tie on the same corpus."""
+    flags = []
+    av.check_tautology(
+        {
+            "static_cross_family_delta": 0.5,
+            "tier2_cross_family_delta": 0.5,
+        },
+        flags,
+    )
+    assert "TAUTOLOGY" not in _kinds(flags)
+
+
 # --- 3. FALSE_NEGATIVE_RISK on degenerate null claims ----------------------
 
 def test_fnr_flip_count_zero():

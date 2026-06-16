@@ -16360,6 +16360,68 @@ adversarial verification cleanly. If ARC-GEN is unavailable, then it writes
 `honest_verdict=blocked_arcgen_unavailable` with the required bare fields
 present and no positive ARC-GEN claim.
 
+### REQ-VERIFY-4283: Repowered ARC Self-Learning Cross-Family Adaptation
+
+The repository SHALL provide Exp 4283 at
+`python/carnot/reporting/self_learning_repowered_arcgen_4283.py` and
+`results/experiment_4283_self_learning_repowered_arcgen.py` to re-power the
+Exp 4273 static-vs-online self-learning comparison over the larger combined
+family stream formed from the Exp 4270 recovered ARC manifest plus the Exp
+4282 ARC-GEN family set when that ARC-GEN set is present and non-thin. If the
+ARC-GEN set is absent or thin, the runner SHALL fall back to the Exp 4270/4273
+manifest, report that fallback in `family_count_vs_v395`, and preserve an
+honest under-powered read rather than claiming the .395 limitation was settled.
+
+The runner SHALL require the Exp 4244 Set-Encoder build/model artifacts and at
+least the Exp 4270/4273 family manifest and static held-out task rows to load.
+It SHALL NOT run live LoRA, fine-tune a model, train foundation/model weights,
+or execute demo programs as a selector. For each streamed held-out family, it
+SHALL score: (a) the static Set-Encoder selection from cached family-disjoint
+rows, (b) a Tier-1 online selector that maintains CPU-only per-feature and
+per-sub-verifier precision counters updated only from already-seen family
+outcomes, and (c) a Tier-2 constraint-memory selector that caches per-family
+selection patterns and reuses the nearest already-seen family's pattern for a
+new family. Current-family labels SHALL update the counters/cache only after
+that entire family has been scored.
+
+The terminal artifact SHALL write
+`results/experiment_4283_self_learning_repowered_arcgen.json` with
+`honest_verdict`, bare bool `online_adaptation_helps`, bare float
+`static_cross_family_delta`, bare float `online_cross_family_delta`, bare
+float `tier2_cross_family_delta`, `family_count_vs_v395`,
+`adaptation_curve`, bare bool `verifier_is_oracle=false`, bare int
+`random_seed`, `reproducibility_checksum`, `model_specs`,
+`field_principles`, `spec_refs`, `acceptance_gate`, and
+`adversarial_verify`. It SHALL also report powered paired bootstrap CI95s for
+`online - static` and `tier2 - static` at the family level. Its
+`field_principles` SHALL include:
+`honest_verdict` = `Terminal-prefixed. An online/Tier-2 gain AND a now-POWERED static-is-the-ceiling null are BOTH COMPLETE -- both are valid self-learning findings (the powered null retires the ask).`;
+`online_adaptation_helps` = `BARE bool: true iff the best adaptive selector (online or Tier-2) exceeds static AND the (adaptive-static) CI95 excludes 0 with power -- the self-learning value verdict the .395 n-limit could not settle.`;
+`static_cross_family_delta` = `BARE float: the static set-encoder's held-out-family delta -- the no-adaptation baseline.`;
+`online_cross_family_delta` = `BARE float: the online-reweighted selector's held-out-family delta -- the Tier-1 self-learning result, now on a powered family set.`;
+`tier2_cross_family_delta` = `BARE float: the constraint-memory (Tier-2) selector's delta -- a distinct self-learning mechanism beyond online reweighting.`;
+`family_count_vs_v395` = `The held-out family count vs the .395 n=52 -- quantifies the power gain (the .395 CI touched 0 because n was small; a non-touching CI here needs more families).`;
+`adaptation_curve` = `Per-family (adaptive - static) gain as families stream in -- shows whether adaptation compounds (the continuous-self-learning signature) or is flat.`;
+`verifier_is_oracle` = `BARE bool=false -- learned selector with online weight updates + a pattern cache, no demo execution and no fine-tuning.`;
+`random_seed` = `Determinism precondition; the family stream order + reweighting reproducible.`;
+`reproducibility_checksum` = `Hash of the folds + reweighting + memory trace; lets a third party re-run.`;
+`model_specs` = `The Tier-1 online-reweighting rule + the Tier-2 memory rule + the combined family stream; required methodology.`
+
+### SCENARIO-VERIFY-4283: Repowered Online And Tier-2 Arms Stream Combined Families
+
+Given the Exp 4244 Set-Encoder artifacts load, the Exp 4270/4273 recovered
+families load, and the Exp 4282 ARC-GEN family set is present and non-thin,
+when Exp 4283 runs, then it streams the combined held-out family set, reports
+`online_adaptation_helps`, `static_cross_family_delta`,
+`online_cross_family_delta`, `tier2_cross_family_delta`,
+`family_count_vs_v395`, `adaptation_curve`, `verifier_is_oracle=false`,
+`random_seed`, `reproducibility_checksum`, and `model_specs`, writes powered
+paired bootstrap CI95s for both adaptive arms against static, and runs
+adversarial verification cleanly. If ARC-GEN is absent or thin, then it falls
+back to the Exp 4270/4273 family stream, keeps the required bare fields
+present, and marks the family-count read as still under-powered rather than
+settled.
+
 ### REQ-VERIFY-4259: ARC Set-Encoder Grid Synthesis
 
 The repository SHALL provide Exp 4259 at
