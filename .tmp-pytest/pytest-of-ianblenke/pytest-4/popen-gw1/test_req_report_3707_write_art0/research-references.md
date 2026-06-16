@@ -1,2 +1,0 @@
-- Reward Model Selection Crisis (arXiv:2512.23067): discrimination and selection utility decouple.
-- Reward Learning from Best-of-N (arXiv:2605.30619): margin-vs-connectivity tradeoff explains downstream selection failures.

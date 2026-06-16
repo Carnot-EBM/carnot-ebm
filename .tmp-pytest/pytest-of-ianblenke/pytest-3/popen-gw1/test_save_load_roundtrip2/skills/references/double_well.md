@@ -1,1 +1,0 @@
-[success_pattern] lesson 1: Description for lesson 1

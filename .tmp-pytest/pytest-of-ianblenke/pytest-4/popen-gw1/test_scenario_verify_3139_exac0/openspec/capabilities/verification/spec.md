@@ -1,3 +1,0 @@
-REQ-VERIFY-3139
-SCENARIO-VERIFY-3139
-results/experiment_3139_live_sota_verifier_rerun_v7.json

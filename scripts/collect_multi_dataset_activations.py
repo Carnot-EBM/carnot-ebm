@@ -209,10 +209,13 @@ def collect_activations(
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"\nLoading {model_name}...")
-    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(
+        model_name,
+        trust_remote_code=os.environ.get("CARNOT_TRUST_REMOTE_CODE", "") == "1",
+    )
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
-        trust_remote_code=True,
+        trust_remote_code=os.environ.get("CARNOT_TRUST_REMOTE_CODE", "") == "1",
         output_hidden_states=True,
         torch_dtype="auto" if device == "cuda" else None,
     )

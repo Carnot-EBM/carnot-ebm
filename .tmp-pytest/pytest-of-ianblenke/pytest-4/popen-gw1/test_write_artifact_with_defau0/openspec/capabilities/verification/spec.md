@@ -1,3 +1,0 @@
-REQ-VERIFY-3170
-SCENARIO-VERIFY-3170
-results/experiment_3170_counterexample_certificate_repair_pilot_v2.json

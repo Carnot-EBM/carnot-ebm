@@ -1,1 +1,0 @@
-def def broken syntax:

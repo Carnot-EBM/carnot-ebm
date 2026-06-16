@@ -1,3 +1,0 @@
-REQ-VERIFY-3150
-SCENARIO-VERIFY-3150
-results/experiment_3150_adversarial_verifier_evidence_corrigendum_v1.json

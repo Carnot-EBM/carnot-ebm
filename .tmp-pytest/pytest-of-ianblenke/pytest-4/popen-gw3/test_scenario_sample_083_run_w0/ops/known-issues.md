@@ -1,1 +1,0 @@
-THRML/Carnot parity independent-RNG audit remains a .119 gate.

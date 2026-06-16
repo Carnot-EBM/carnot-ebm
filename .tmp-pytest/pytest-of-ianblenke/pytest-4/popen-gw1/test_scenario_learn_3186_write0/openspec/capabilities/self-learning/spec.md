@@ -1,4 +1,0 @@
-REQ-LEARN-3186
-SCENARIO-LEARN-3186
-SCENARIO-LEARN-3186-BLOCKED
-results/experiment_3186_fr11_controller_memory_promotion_pack_v1.json

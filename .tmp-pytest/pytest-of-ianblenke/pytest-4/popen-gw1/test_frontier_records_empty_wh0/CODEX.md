@@ -1,2 +1,0 @@
-Spec First
-Tests First
