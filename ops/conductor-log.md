@@ -8621,3 +8621,4 @@ c |
 | 2026-06-16 21:54 UTC | PHASE B1 (the §5 in-generation headline; fix the . | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ath / "diffusi |
 | 2026-06-16 22:07 UTC | PHASE B1 (the §5 in-generation headline; fix the . | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_4304_diffusi |
 | 2026-06-16 22:25 UTC | PHASE B1 (the §5 in-generation headline; fix the . | OK | 93 passed, 1 warning in 4.98s |
+| 2026-06-16 22:50 UTC | PHASE C1 (BROADEN the selection moat to cross-DOMA | OK | 95 passed, 1 warning in 7.25s |
