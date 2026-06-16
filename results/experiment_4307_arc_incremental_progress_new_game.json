@@ -1,0 +1,173 @@
+{
+  "acceptance_gate_passed": true,
+  "action_plan": [],
+  "candidate_baseline_actions": 26,
+  "duration_s": 0.438,
+  "executed_real_env_actions": 0,
+  "experiment": "experiment_4307_arc_incremental_progress_new_game",
+  "exploration_actions_used": 0,
+  "field_principles": {
+    "game_advanced": "The NEW game targeted (NOT r11l/ls20/wa30/sc25) -- the incremental-progress unit.",
+    "honest_verdict": "Terminal-prefixed. An advance (+1 level on a new game) AND an honest no-advance (informs the next game pick) are BOTH COMPLETE -- progress is the metric, but a real no-advance is decision-grade.",
+    "levels_completed": "BARE int: levels solved on this game from the solver's REAL-ENV output (NOT a self-report) -- the no-fabrication anchor.",
+    "preconditions_checked": "Records the offline-env reachability + survey load; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the solver.",
+    "reproducibility_checksum": "Hash of the solver trace + the env outcome; lets a third party re-run.",
+    "total_levels": "BARE int: the cumulative real-env-confirmed solved-level count -- MUST be monotonic (>= the .397 22); the north-star accuracy metric."
+  },
+  "game_advanced": "re86-8af5384d",
+  "game_levels_completed": 0,
+  "honest_verdict": "complete: incremental_progress_no_advance_re86-8af5384d_L1_selected_frontier_adapter_unavailable",
+  "levels_completed": 0,
+  "model_specs": {
+    "compute": "CPU/cached offline ARC fixtures",
+    "conductor": "stood_down",
+    "hardened_set_encoder_routing": {
+      "architecture": "deepsets_pooled_context_set_encoder",
+      "artifact": "results/experiment_4291_arcgen_cross_generator_nondegenerate.json",
+      "candidate_ranking": "exclude_r11l_ls20_wa30_sc25_and_banked_prefixes_then_lowest_l1_baseline_with_exp4291_set_encoder_ready_gate",
+      "feature_count": 46,
+      "source_experiment": 4291,
+      "status": "trained"
+    },
+    "inference_substrate": "offline_arc_agi3_world_model_hardened_exp4291_set_encoder_re86_l1_attempt",
+    "route_acceptance": "accept only when hardened route is retained and the offline real env increments levels_completed",
+    "solver": "python/carnot/agentic/arc_agi3_world_model.py",
+    "target": {
+      "baseline_actions": 26,
+      "excluded_game_prefixes": [
+        "r11l",
+        "lp85",
+        "sc25",
+        "su15",
+        "tn36",
+        "cd82",
+        "dc22",
+        "sb26",
+        "ft09",
+        "s5i5",
+        "tu93",
+        "bp35",
+        "ls20",
+        "wa30",
+        "vc33"
+      ],
+      "game": "re86",
+      "game_id": "re86-8af5384d",
+      "headroom_score": 974,
+      "n_levels": 8,
+      "prior_level": 0,
+      "selection_mode": "best_headroom_unattempted_non_recent_lowest_baseline",
+      "selection_reason": "selected re86 L1 because it is the lowest-baseline unattempted survey game after excluding r11l/ls20/wa30/sc25 and banked prior prefixes, with a local fixture and hardened Exp 4291 set-encoder routing available",
+      "survey_rank": 15,
+      "target_level": 1
+    },
+    "training": "none",
+    "trm_training": false,
+    "world_model_graph": "GameGraph"
+  },
+  "new_levels_solved_this_task": 0,
+  "observed_transition_count": 0,
+  "phase_trace": [
+    {
+      "frame_hash": "bbc0f3f69abc29d9",
+      "levels_completed": 0,
+      "phase": "observe",
+      "source": "offline_reset",
+      "target_game": "re86-8af5384d",
+      "target_level": 1,
+      "world_model": "GameGraph"
+    },
+    {
+      "phase": "hardened-set-encoder-route",
+      "reason": "no_verified_re86_frontier_adapter_available",
+      "retained": false,
+      "router": "experiment_4291_arcgen_cross_generator_nondegenerate",
+      "score": 0.0,
+      "target_game": "re86-8af5384d",
+      "target_level": 1
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "GameGraph import OK",
+      "resource": "offline_solver_import"
+    },
+    {
+      "available": true,
+      "detail": "loaded",
+      "resource": "arc3_win_condition_survey"
+    },
+    {
+      "available": true,
+      "detail": "total_levels=22",
+      "resource": "prior_exp4296_progress"
+    },
+    {
+      "available": true,
+      "detail": "ready",
+      "resource": "hardened_set_encoder_routing_exp4291"
+    },
+    {
+      "available": true,
+      "detail": "reset levels_completed=0",
+      "resource": "offline_arc_env"
+    }
+  ],
+  "prior_level": 0,
+  "prior_total_levels_solved": 22,
+  "random_seed": 4307,
+  "real_env_confirmed": false,
+  "reproducibility_checksum": "a06a956708d2977b172d88b051107fe53191fa98c644a5e6ff761c81bbcb0c2f",
+  "requirements": [
+    "REQ-PHASE4-072",
+    "SCENARIO-PHASE4-072"
+  ],
+  "selected_candidate_reason": "selected re86 L1 because it is the lowest-baseline unattempted survey game after excluding r11l/ls20/wa30/sc25 and banked prior prefixes, with a local fixture and hardened Exp 4291 set-encoder routing available",
+  "selection_mode": "best_headroom_unattempted_non_recent_lowest_baseline",
+  "solve_trace": {
+    "actions": [],
+    "phase_trace": [
+      {
+        "frame_hash": "bbc0f3f69abc29d9",
+        "levels_completed": 0,
+        "phase": "observe",
+        "source": "offline_reset",
+        "target_game": "re86-8af5384d",
+        "target_level": 1,
+        "world_model": "GameGraph"
+      },
+      {
+        "phase": "hardened-set-encoder-route",
+        "reason": "no_verified_re86_frontier_adapter_available",
+        "retained": false,
+        "router": "experiment_4291_arcgen_cross_generator_nondegenerate",
+        "score": 0.0,
+        "target_game": "re86-8af5384d",
+        "target_level": 1
+      }
+    ],
+    "prior_level": 0,
+    "selection_mode": "best_headroom_unattempted_non_recent_lowest_baseline",
+    "selection_reason": "selected re86 L1 because it is the lowest-baseline unattempted survey game after excluding r11l/ls20/wa30/sc25 and banked prior prefixes, with a local fixture and hardened Exp 4291 set-encoder routing available",
+    "solver_trace": {
+      "candidate_count": 0,
+      "candidate_route": "none",
+      "graph_edges_seen": 0,
+      "graph_nodes_seen": 1,
+      "max_levels_observed": 0,
+      "route_basis": "Exp 4291 set-encoder admitted target ranking, but no verified RE86 frontier adapter exists",
+      "world_model": "GameGraph"
+    },
+    "target_game": "re86-8af5384d",
+    "target_level": 1
+  },
+  "submitted_to_leaderboard": false,
+  "target_game": "re86-8af5384d",
+  "target_level": 1,
+  "title": "arc3_incremental_progress_exp4307_new_game_offline",
+  "total_levels": 22,
+  "total_levels_solved": 22,
+  "verifier_validated": false
+}
