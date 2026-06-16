@@ -22368,6 +22368,86 @@ not claim `.395` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4280 | Planned (`python/carnot/reporting/archive_v395_activate_v396_4280.py`, `python/carnot/experiment_4280_archive_v395_activate_v396.py`, `results/experiment_4280_archive_v395_activate_v396.py`) | Planned (`tests/python/test_experiment_4280_archive_v395_activate_v396.py`) |
 
+### REQ-REPORT-4290: Archive .396, Activate .397, And Preserve The Honest Scorecard
+
+The Exp 4290 workflow SHALL archive milestone `2026.06.396`, confirm milestone
+`2026.06.397` is active, and write the record-only artifact
+`results/experiment_4290_archive_v396_activate_v397.json`. It SHALL run NO live
+model training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`.
+
+Before writing the complete artifact or editing `research-complete.yaml`, the
+workflow SHALL verify these preconditions and stop with a `blocked_<resource>`
+honest verdict if any fail:
+
+- `research-complete.yaml` parses under `yaml.safe_load`.
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`.
+- The smart-subset pre-test gate is green.
+
+The workflow SHALL ensure `research-complete.yaml` contains a single `.396`
+archive record, appending the canonical `.396` record only when absent and
+removing duplicate top-level `.396` records if interrupted conductor appends
+created any. The workflow SHALL keep `research-complete.yaml` parseable after
+the edit.
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v396_close_state` SHALL truthfully record
+that `.396` was not a redo and not a clean close of the §5 thesis: Exp 4284
+gave an oracle-distinct efficiency Pareto win (`accuracy_energy_verifier=0.654`,
+`accuracy_llm_judge=0.212`, `accuracy_delta_ci95=[0.308,0.577]`,
+`cost_ratio=1.95e-08`, `verifier_is_oracle=false`), but the judge was
+below-random and therefore the efficiency claim needs hardening. It SHALL record
+that Exp 4281 blocked DiffusionGemma guidance on `partial_state_blocked` /
+`cannot_score_partial_states`, so the in-generation thesis remains open.
+
+The close-state SHALL record that cross-generator transfer remains open because
+Exp 4282 was flagged degenerate (`cross_family_delta=1.0`, CI95 `[1.0,1.0]`,
+`vote_at_1=0.0`, `oracle_at_k=1.0`, wrong-majority-only four-candidate pool),
+while the within-pool Exp 4271 `+0.40` win still stands. It SHALL record the
+Exp 4283 self-learning tier-2 no-op bug, ARC progress to `21` levels in Exp
+4285, `paper_ready=true`, and the capstone exclusions for Exp 4282 and Exp
+4283. It SHALL frame `.397` as closing the cross-generator axis, unblocking
+in-generation via a learned partial-state scorer, and hardening the efficiency
+Pareto win.
+
+The artifact SHALL include these field-principle strings exactly:
+
+- `honest_verdict`: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
+- `v396_close_state`: "Honest record (efficiency Pareto win but needs hardening, DiffusionGemma partial-state-blocked, cross-generator still-open/degenerate, self-learning tier-2 bug, ARC 21) so the .397 agents frame the milestone as close-cross-generator + unblock-in-generation + harden-efficiency, not a redo."
+- `preconditions_checked`: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
+
+#### SCENARIO-REPORT-4290: The Archive Records The .396 Honest Scorecard
+
+**Given** `.396` has the Exp 4289 capstone, Exp 4284 efficiency win, Exp 4281
+partial-state block, Exp 4282 degenerate ARC-GEN result, Exp 4283 self-learning
+tier-2 no-op result, Exp 4285 ARC progress, the history and exclusion-manifest
+YAML files parse, the smart-subset pre-test gate is green, and `.397` is active
+**When** the Exp 4290 archive workflow runs
+**Then** it archives `.396`, confirms `.397`, keeps the YAML history parseable
+with one `.396` record, writes
+`results/experiment_4290_archive_v396_activate_v397.json`, records the
+efficiency Pareto win that needs hardening, DiffusionGemma partial-state block,
+degenerate/open cross-generator axis, standing within-pool Exp 4271 win,
+self-learning tier-2 no-op bug, ARC `21`, `paper_ready=true`, and `.397`
+close-cross-generator / unblock-in-generation / harden-efficiency framing in
+`v396_close_state`, records the checked resources in `preconditions_checked`,
+declares `aggregation_from_upstream_artifacts`, and emits a terminal-prefixed
+honest verdict.
+
+#### SCENARIO-REPORT-4290-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4290 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does
+not claim `.396` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4290)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4290 | Implemented (`python/carnot/reporting/archive_v396_activate_v397_4290.py`, `python/carnot/experiment_4290_archive_v396_activate_v397.py`, `results/experiment_4290_archive_v396_activate_v397.py`) | Implemented (`tests/python/test_experiment_4290_archive_v396_activate_v397.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
