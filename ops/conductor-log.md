@@ -8616,3 +8616,4 @@ c |
 | 2026-06-16 18:13 UTC | PHASE F4 (capstone .397, UNGATED) -- the verifier  | OK | 87 passed, 1 warning in 7.00s |
 | 2026-06-16 19:08 UTC | Plan milestone 2026.06.398 | OK | 11 tasks proposed |
 | 2026-06-16 19:11 UTC | Milestone 2026.06.398 activated | OK | 11 tasks queued |
+| 2026-06-16 19:41 UTC | Archive .397 -> activate .398; KEEP the hardened g | OK | 89 passed, 1 warning in 5.93s |
