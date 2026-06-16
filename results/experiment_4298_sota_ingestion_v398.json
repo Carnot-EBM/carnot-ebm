@@ -1,0 +1,68 @@
+{
+  "field_principles": {
+    "flagged_for_v398": "Closes discover->ingest->plan: names the strongest method for the .398 planner, conditioned on the .397 outcomes.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method MUST carry a real arXiv ID/URL (no citation = fabrication per adversarial_verify discipline) + a one-line .398 experiment mapping.",
+    "random_seed": "Determinism placeholder for the discovery query set (recorded for reproducibility of the sweep)."
+  },
+  "flagged_for_v398": "eevee_router_prompt_broader_domain_selector_v398",
+  "honest_verdict": "complete: sota_ingestion_v398_mapped",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2606.11182",
+      "carnot_stack_mapping": "Add a domain router above ARC, ARC-GEN, and DiffusionGemma selector features, then co-evolve per-domain selector prompts only on train-side outcomes with held-out families frozen.",
+      "experiment_mapping": ".398: test router-prompt selector generalization across ARC, ARC-GEN, and diffusion partial-state families.",
+      "failure_mode": "Router-prompt learning can leak family identity or overfit public tasks. The .398 gate must freeze held-out domains before any router update is selected.",
+      "name": "EEVEE router-prompt co-evolution",
+      "source_read": "EEVEE introduces multi-dataset test-time prompt learning for LLM agents, using a router to partition heterogeneous task streams and co-evolve router and prompt configurations.",
+      "track": "broader-domain selector generalization",
+      "url": "https://arxiv.org/abs/2606.11182",
+      "v397_outcome_conditioning": "Exp 4291 closes the non-degenerate ARC-GEN cross-generator question, so .398 should broaden beyond another same-substrate generator split."
+    },
+    {
+      "arxiv_id_or_url": "2605.19633",
+      "carnot_stack_mapping": "Expose selector rubrics, retrieval policies, score-fusion rules, and curriculum text as locked text parameters optimized against train-only exact-grid scores plus validation leakage guards.",
+      "experiment_mapping": ".398: run GEPA-style optimization over selector configuration text with exact held-out-domain acceptance gates.",
+      "failure_mode": "A text optimizer can optimize methodology away or memorize the evaluation set. It needs an allowlist of mutable fields and a separate adversarial holdout.",
+      "name": "optimize_anything / GEPA text-parameter search",
+      "source_read": "optimize_anything frames prompts, code, agent architectures, and configuration text as optimizable artifacts under scoring functions, with GEPA-style reflective Pareto search and cross-task transfer.",
+      "track": "test-time selector and harness optimization",
+      "url": "https://arxiv.org/abs/2605.19633",
+      "v397_outcome_conditioning": "With cross-generator transfer now positive, the next risk is not a single weak generator pool but brittle selector and harness text that fails on unseen domains."
+    },
+    {
+      "arxiv_id_or_url": "2606.14211",
+      "carnot_stack_mapping": "Attach a reflection/confidence head to selector decisions after retrieved train-side feedback, reward agreement with exact outcomes, and freeze the reflection signal before target evaluation.",
+      "experiment_mapping": ".398: calibrate selector self-reflection from exact train outcomes and use it for selective prediction on held-out families.",
+      "failure_mode": "The method requires real outcome feedback during training. If used at target time without delayed outcomes, it collapses into ordinary self-assessment.",
+      "name": "RefGRPO reflection-outcome calibration",
+      "source_read": "RefGRPO adds a free calibration bonus that contrasts an agent's post-feedback reflection with the real outcome, improving calibrated self-verification and selective prediction.",
+      "track": "retrieval-augmented selector self-improvement",
+      "url": "https://arxiv.org/abs/2606.14211",
+      "v397_outcome_conditioning": "Exp 4292 built a leak-free partial-state scorer, so .398 can train selector reflection on known outcomes without using a separate LLM judge as the reward source."
+    },
+    {
+      "arxiv_id_or_url": "2606.07810",
+      "carnot_stack_mapping": "Run Phi/Qwen/Gemma-scale small judges as cheap comparators beside the Set-Encoder energy verifier, then distill only disagreements whose exact-grid labels are known.",
+      "experiment_mapping": ".398: replace the missing strong-judge hardening result with a small-judge efficiency battery against the Carnot energy verifier.",
+      "failure_mode": "SLMJury reports domain gaps and no single dominant small judge. ARC exact-grid correctness must remain the authority, not judge consensus.",
+      "name": "SLMJury small-judge budget function",
+      "source_read": "SLMJury benchmarks 16 small-language-model judges across closed binary correctness and open-ended scoring, formalizing judging as a budget-conditioned function.",
+      "track": "small-verifier efficiency and distillation",
+      "url": "https://arxiv.org/abs/2606.07810",
+      "v397_outcome_conditioning": "The requested Exp 4294 strong-judge artifact is absent, so .398 should harden the efficiency axis with a transparent small-judge battery instead of claiming a missing result."
+    },
+    {
+      "arxiv_id_or_url": "2503.00307",
+      "carnot_stack_mapping": "Use the partial-state scorer to rank remasking schedules and intermediate DiffusionGemma canvases, with answer-bearing cells masked during scorer audits.",
+      "experiment_mapping": ".398: add a ReMDM-style remasking guidance arm as the secondary guided-generation follow-up once broader-domain routing is planned.",
+      "failure_mode": "The sampler is not guaranteed to match DiffusionGemma internals. More remasking steps can increase compute without improving exact ARC grids, and final-answer leakage would invalidate the moat.",
+      "name": "ReMDM remasking inference-time scaling",
+      "source_read": "ReMDM restores iterative refinement to masked discrete diffusion by allowing generated tokens to be remasked and updated, giving inference-time compute scaling and guidance control.",
+      "track": "guided masked diffusion generation",
+      "url": "https://arxiv.org/abs/2503.00307",
+      "v397_outcome_conditioning": "Exp 4292's scorer is built and leak-free, so stronger in-generation guidance is now technically unblocked but should be secondary to the broader-domain headline after Exp 4291."
+    }
+  ],
+  "random_seed": 4298
+}

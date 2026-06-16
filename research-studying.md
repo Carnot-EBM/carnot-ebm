@@ -8,6 +8,75 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-16 Exp 4298 - .397 fork SOTA ingestion ingested
+
+**Status:** INGESTED into `results/experiment_4298_sota_ingestion_v398.json`.
+
+**Reliable-channel provenance:** `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py` imported successfully; `sweep_clusters.py`
+emitted focused arXiv discovery URLs. Semantic Scholar was reachable through
+the helper but returned HTTP 429 for several low-concurrency probes, while one
+small-judge query returned arXiv IDs. WebSearch/WebFetch verified
+arXiv:2606.11182, arXiv:2605.19633, arXiv:2606.14211, arXiv:2606.07810, and
+arXiv:2503.00307. The banned `/deep-research` channel was not invoked.
+
+**Filtered track:** .397 outcomes after the non-degenerate ARC-GEN
+cross-generator run, partial-state DiffusionGemma scorer build, and the missing
+strong-judge efficiency hardening artifact.
+
+**.397 outcome conditioning:**
+- Exp 4291: `cross_generator_holds=true`,
+  `non_degenerate_guards_pass=true`, and
+  `headline_outcome=arcgen_cross_generator_generalizes`; the ARC-GEN
+  cross-generator moat is closed rather than still degenerate.
+- Exp 4292: `partial_state_scorer_built=true`,
+  `partial_state_leak_free=true`, `partial_state_auroc=0.966143`, and
+  `leak_ablation_auroc=0.937365`; the missing scorer from `.396` now exists
+  and survived the leak audit.
+- Exp 4294: `strong_judge_efficiency_outcome=unavailable_missing_exp4294_json`
+  because `results/experiment_4294_verifier_efficiency_harden_strong_judge.json`
+  was not present at ingestion time. Do not claim the strong-judge efficiency
+  hardening result until the artifact exists.
+
+**Fresh-pass candidates marked ingested:**
+- EEVEE router-prompt co-evolution, arXiv:2606.11182 - mapped to the .398
+  broader-domain selector generalization headline after cross-generator ARC-GEN
+  transfer held.
+- optimize_anything / GEPA text-parameter search, arXiv:2605.19633 - mapped to
+  train-only selector/harness text optimization with locked held-out domains.
+- RefGRPO reflection-outcome calibration, arXiv:2606.14211 - mapped to
+  exact-outcome-calibrated selector self-reflection and selective prediction.
+- SLMJury small-judge budget function, arXiv:2606.07810 - mapped to the
+  efficiency-axis fallback while Exp 4294 remains unavailable.
+- ReMDM remasking inference-time scaling, arXiv:2503.00307 - mapped to the
+  secondary guided-generation path now that the partial-state scorer is
+  leak-free.
+
+**Screened but not mapped as strongest rows:** SIA (arXiv:2605.27276), SE-GA
+(arXiv:2605.16883), and Sensi (arXiv:2603.17683) were read as adjacent
+self-improvement and agentic-curriculum evidence. They remain weaker for `.398`
+because SIA mutates weights/harness together, SE-GA is GUI-specific, and Sensi
+depends on an LLM-as-judge curriculum while reporting a perception bottleneck.
+
+Already-covered context not re-ingested as fresh method rows: ARC-TGI, ARC-GEN,
+RFG, EDLM, EntRGi, Self-Improving LLM Agents at Test-Time, SEVerA, DPRM,
+Reward-Guided Stitching, Manta-LM, masked-discrete-diffusion guidance dynamics,
+INSPECTOR Representation-as-a-Judge, ABPR, Decocted Experience, and COVER.
+
+flagged_for_v398:
+`eevee_router_prompt_broader_domain_selector_v398`.
+
+Flagged for .398: `eevee_router_prompt_broader_domain_selector_v398`.
+
+random_seed=4298
+
+**Bottom line for the .398 roadmap:** the ARC-GEN transfer critique is now
+closed on a non-degenerate pool and the partial-state scorer is leak-free, so
+the next headline should broaden selector generalization across heterogeneous
+domains using EEVEE-style router-prompt co-evolution. Keep ReMDM as the
+secondary guided-generation branch, and treat small-verifier efficiency as
+unconfirmed until Exp 4294 exists.
+
 ## 2026-06-16 DMoE (arXiv:2606.14243) - candidate substrate for the (out-of-band) verifier-as-reward retry
 
 **Source:** operator-directed read, 2026-06-16. Yue et al. (Tsinghua),
