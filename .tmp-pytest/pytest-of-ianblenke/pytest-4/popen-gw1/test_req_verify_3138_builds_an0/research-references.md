@@ -1,1 +1,0 @@
-VeriCoT premise grounding

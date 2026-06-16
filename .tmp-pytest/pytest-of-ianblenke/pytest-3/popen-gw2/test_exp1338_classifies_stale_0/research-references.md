@@ -1,1 +1,0 @@
-The .104 branch should use trigger-before-constrain certificate tails, dynamic grammar dispatch, and semantic validation before reopening gates.

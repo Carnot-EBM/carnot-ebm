@@ -1,1 +1,0 @@
-Build an Extropic/Z1 access-readiness packet, not a hardware claim.

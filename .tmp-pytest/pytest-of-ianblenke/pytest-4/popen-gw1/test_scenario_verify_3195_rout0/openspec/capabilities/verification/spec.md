@@ -1,3 +1,0 @@
-REQ-VERIFY-3195
-SCENARIO-VERIFY-3195
-results/experiment_3195_adaptive_verification_granularity_policy_v1.json

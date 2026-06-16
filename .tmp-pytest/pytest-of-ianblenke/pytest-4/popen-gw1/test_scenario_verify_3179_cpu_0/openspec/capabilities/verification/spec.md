@@ -1,5 +1,0 @@
-REQ-VERIFY-3179
-SCENARIO-VERIFY-3179
-results/experiment_3179_local_sota_receipt_smoke_v3.json
-full_local_sota_receipt
-cpu_fallback_receipt_only

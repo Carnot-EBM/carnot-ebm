@@ -1,3 +1,0 @@
-REQ-VERIFY-3192
-SCENARIO-VERIFY-3192
-results/experiment_3192_receipt_adversarial_contract_v4.json

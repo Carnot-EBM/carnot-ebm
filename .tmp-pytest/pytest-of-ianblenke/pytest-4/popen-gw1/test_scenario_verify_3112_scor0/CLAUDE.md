@@ -1,1 +1,0 @@
-No fake verifier recovery

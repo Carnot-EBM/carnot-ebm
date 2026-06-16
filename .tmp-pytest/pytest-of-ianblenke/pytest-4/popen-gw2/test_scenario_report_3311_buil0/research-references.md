@@ -1,4 +1,0 @@
-DataFlip/KAD arXiv:2507.05630
-PCFI arXiv:2603.18433
-ARGUS arXiv:2605.03378
-PromptArmor arXiv:2507.15219

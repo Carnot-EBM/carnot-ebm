@@ -1,1 +1,0 @@
-module wrong_width_gatemate; endmodule

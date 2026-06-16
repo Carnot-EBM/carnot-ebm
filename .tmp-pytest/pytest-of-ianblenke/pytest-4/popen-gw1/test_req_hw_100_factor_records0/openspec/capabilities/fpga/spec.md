@@ -1,3 +1,0 @@
-REQ-HW-100
-SCENARIO-HW-100
-results/experiment_3202_sparse_potts_paoa_thrml_factor_boundary_v1.json

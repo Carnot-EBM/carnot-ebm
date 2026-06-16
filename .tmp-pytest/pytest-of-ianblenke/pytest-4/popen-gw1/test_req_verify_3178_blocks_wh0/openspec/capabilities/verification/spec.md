@@ -1,3 +1,0 @@
-REQ-VERIFY-3178
-SCENARIO-VERIFY-3178
-results/experiment_3178_receipt_backed_authenticity_contract_v3.json

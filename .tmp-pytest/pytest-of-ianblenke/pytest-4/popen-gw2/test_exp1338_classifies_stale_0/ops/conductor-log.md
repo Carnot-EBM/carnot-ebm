@@ -1,5 +1,0 @@
-| 2026-05-05 07:25 UTC | Triggered Certificate Extraction v5 | FAIL | Codex CLI error: [Errno 122] Disk quota exceeded |
-| 2026-05-05 07:31 UTC | SatIR/NSVIF Constraint Index + Semantic Validator | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1325-triggered-certificate-extraction-v5-runtime-fixed-dccd-gbnf) |
-| 2026-05-05 07:31 UTC | BEAVER-lite/Cactus Safe-Prefix Acceptance v5 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1326-satir-nsvif-semantic-validator-gated-on-parse-ge-075.validator_execution_pass_rate |
-| 2026-05-05 07:44 UTC | DVI Certificate-Tail Online Update v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1325-triggered-certificate-extraction-v5-runtime-fixed-dccd-gbnf) |
-| 2026-05-05 07:44 UTC | GRPO/VPRM v12 Micro-Audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1328-continuous-self-learning-memory-promotion-v2) |

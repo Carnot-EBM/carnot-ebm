@@ -14,6 +14,7 @@ than vanish when the agent exits.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import time
 from collections.abc import Callable, Mapping, Sequence
@@ -175,7 +176,7 @@ def check_preconditions(*, repo_root: str | Path = REPO_ROOT) -> list[Preconditi
         PreconditionCheck(
             **check_hf_safetensors_model(
                 "openbmb/MiniCPM5-1B",
-                trust_remote_code=True,
+                trust_remote_code=os.environ.get("CARNOT_TRUST_REMOTE_CODE", "") == "1",
             ).to_dict()
         ),
         PreconditionCheck(**check_trainer_imports().to_dict()),

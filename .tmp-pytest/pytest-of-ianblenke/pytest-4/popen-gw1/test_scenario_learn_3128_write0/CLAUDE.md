@@ -1,1 +1,0 @@
-no fake verifier claims

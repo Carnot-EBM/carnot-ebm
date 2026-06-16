@@ -1,1 +1,0 @@
-Planned milestone 2026.05.301 after .300 remained paper_ready=false with publication_blocker_count=106, local_sota_receipt_status=blocked, prompt-injection v4 and DCCD work gate-blocked behind the missing local SOTA receipt, FR-11 failure memory completed controller-side.

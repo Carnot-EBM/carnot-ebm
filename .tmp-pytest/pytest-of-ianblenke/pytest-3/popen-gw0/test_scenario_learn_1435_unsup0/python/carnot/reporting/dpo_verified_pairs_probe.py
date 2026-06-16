@@ -1,2 +1,0 @@
-train_reranker_fallback
-GGUF files are inference artifacts

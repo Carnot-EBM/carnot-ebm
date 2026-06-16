@@ -15,6 +15,7 @@ from __future__ import annotations
 import gzip
 import importlib
 import json
+import os
 import time
 from collections import defaultdict
 from collections.abc import Callable, Mapping, Sequence
@@ -222,7 +223,10 @@ def check_preconditions(*, repo_root: str | Path = REPO_ROOT) -> list[Preconditi
     root = Path(repo_root)
     return [
         check_hf_safetensors_model("Qwen/Qwen3.5-0.8B"),
-        check_hf_safetensors_model("openbmb/MiniCPM5-1B", trust_remote_code=True),
+        check_hf_safetensors_model(
+            "openbmb/MiniCPM5-1B",
+            trust_remote_code=os.environ.get("CARNOT_TRUST_REMOTE_CODE", "") == "1",
+        ),
         check_trainer_imports(),
         check_cuda_visible(),
         check_arc_pool(root / DEFAULT_ARC1_POOL, "arc1_pool"),
@@ -725,13 +729,17 @@ def _run_trl_lora_smoke(records: list[dict[str, object]], arms: list[str]) -> bo
 
     del arms
     model_id = "Qwen/Qwen3.5-0.8B"
-    tokenizer = AutoTokenizer.from_pretrained(model_id, local_files_only=True, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(
+        model_id,
+        local_files_only=True,
+        trust_remote_code=os.environ.get("CARNOT_TRUST_REMOTE_CODE", "") == "1",
+    )
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
     model = AutoModelForCausalLM.from_pretrained(
         model_id,
         local_files_only=True,
-        trust_remote_code=True,
+        trust_remote_code=os.environ.get("CARNOT_TRUST_REMOTE_CODE", "") == "1",
         device_map="auto",
     )
     dataset = Dataset.from_list([{"text": str(row["text"])} for row in records[:2]])

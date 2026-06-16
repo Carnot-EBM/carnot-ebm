@@ -1,1 +1,0 @@
-No speedup without transcript.

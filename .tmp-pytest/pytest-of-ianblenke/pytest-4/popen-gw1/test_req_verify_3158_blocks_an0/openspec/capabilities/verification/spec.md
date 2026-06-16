@@ -1,6 +1,0 @@
-REQ-VERIFY-3158
-SCENARIO-VERIFY-3158
-results/experiment_3158_ebcn_energy_sidecar_calibration_v1.json
-scalar_energy_auc
-violation_localization_coverage
-live_integration_claim_allowed=false

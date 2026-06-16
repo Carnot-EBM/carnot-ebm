@@ -1,1 +1,0 @@
-dual-threshold trigger pattern
