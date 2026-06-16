@@ -1,0 +1,236 @@
+{
+  "activated_milestone": "2026.06.397",
+  "active_milestone_confirmed": "2026.06.397",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.396",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4289_capstone_v396.json",
+      "experiment_id": "4289",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "97da927b489a26e07d7da5feb58ed4d279b82d3feb69c7528bc181397d7052f7"
+    },
+    {
+      "deliverable": "results/experiment_4284_verifier_efficiency_vs_llm_judge.json",
+      "experiment_id": "4284",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "002930fa80d546dc142e279f4d87d74dd6e8f712a514562661dbc91c86211c08"
+    },
+    {
+      "deliverable": "results/experiment_4281_diffusiongemma_energy_guided_full_run.json",
+      "experiment_id": "4281",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "898c65cc821e635a188846a784aae800d05b7316089de35eb9e0098b78fcd1c1"
+    },
+    {
+      "deliverable": "results/experiment_4282_arcgen_cross_family_stress.json",
+      "experiment_id": "4282",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "b1c04188fbd3d5c389d8b842b8840beb7fccea3128a8e70616230e05a5033cfd"
+    },
+    {
+      "deliverable": "results/experiment_4283_self_learning_repowered_arcgen.json",
+      "experiment_id": "4283",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "be8fee3fc22e8c21463e97d6ad199166a8335f2139df0136e26d1a2098953ce5"
+    },
+    {
+      "deliverable": "results/experiment_4285_arc_incremental_progress_new_game.json",
+      "experiment_id": "4285",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "2b1e64e8ad72fc93a383d606e65d8343db284b68af092946990fac154799626b"
+    },
+    {
+      "deliverable": "results/experiment_4271_arc_cross_family_transfer_existing_pool.json",
+      "experiment_id": "4271",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "e3bd48d3f2219fa67186693c8d0e7ddb9f5cafc2530e7e7164d15cc04d532ae0"
+    },
+    {
+      "deliverable": "docs/research-notes/exp4282-arcgen-degenerate-audit-2026-06-16.md",
+      "experiment_id": "audit",
+      "kind": "document",
+      "required": true,
+      "sha256": "d805fc99c4804931007e9c8801a8d76c86c25ebee835e9afec198afc08812b4c"
+    },
+    {
+      "deliverable": "openspec/change-proposals/research-roadmap-v397.md",
+      "experiment_id": "v397_design",
+      "kind": "document",
+      "required": true,
+      "sha256": "40f6844e376c6e15681cea94159f35a98b397ca825cb6d1a761439df52674cd7"
+    }
+  ],
+  "duration_s": 14.21763,
+  "exclusion_manifest_parses": true,
+  "experiment_id": 4290,
+  "field_principles": {
+    "activated_milestone": "Confirms .397 is live for the close/open/harden frame.",
+    "active_milestone_confirmed": "Records the active roadmap milestone actually observed.",
+    "archived_milestone": "Provenance: the milestone being closed, 2026.06.396.",
+    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
+    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
+    "honest_verdict": "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.",
+    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
+    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
+    "v396_close_state": "Honest record (efficiency Pareto win but needs hardening, DiffusionGemma partial-state-blocked, cross-generator still-open/degenerate, self-learning tier-2 bug, ARC 21) so the .397 agents frame the milestone as close-cross-generator + unblock-in-generation + harden-efficiency, not a redo."
+  },
+  "honest_verdict": "success: archived_v396_v397_active_efficiency_pareto_True_partial_state_blocked_True_cross_generator_open_True_arc21_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "active_milestone": {
+      "actual": "2026.06.397",
+      "expected": "2026.06.397",
+      "matches": true,
+      "path": "research-roadmap.yaml"
+    },
+    "exclusion_manifest_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/exclusion_manifest.yaml"
+    },
+    "research_complete_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "smart_subset_pretest": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4290_archive_v396_activate_v397.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "green": true,
+      "stderr_tail": "",
+      "stdout_tail": "........................................................................ [ 80%]\n.................                                                        [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n89 passed, 1 warning in 5.80s\n"
+    },
+    "source_artifacts": {
+      "4271": {
+        "exists": true,
+        "path": "results/experiment_4271_arc_cross_family_transfer_existing_pool.json",
+        "sha256": "e3bd48d3f2219fa67186693c8d0e7ddb9f5cafc2530e7e7164d15cc04d532ae0"
+      },
+      "4281": {
+        "exists": true,
+        "path": "results/experiment_4281_diffusiongemma_energy_guided_full_run.json",
+        "sha256": "898c65cc821e635a188846a784aae800d05b7316089de35eb9e0098b78fcd1c1"
+      },
+      "4282": {
+        "exists": true,
+        "path": "results/experiment_4282_arcgen_cross_family_stress.json",
+        "sha256": "b1c04188fbd3d5c389d8b842b8840beb7fccea3128a8e70616230e05a5033cfd"
+      },
+      "4283": {
+        "exists": true,
+        "path": "results/experiment_4283_self_learning_repowered_arcgen.json",
+        "sha256": "be8fee3fc22e8c21463e97d6ad199166a8335f2139df0136e26d1a2098953ce5"
+      },
+      "4284": {
+        "exists": true,
+        "path": "results/experiment_4284_verifier_efficiency_vs_llm_judge.json",
+        "sha256": "002930fa80d546dc142e279f4d87d74dd6e8f712a514562661dbc91c86211c08"
+      },
+      "4285": {
+        "exists": true,
+        "path": "results/experiment_4285_arc_incremental_progress_new_game.json",
+        "sha256": "2b1e64e8ad72fc93a383d606e65d8343db284b68af092946990fac154799626b"
+      },
+      "4289": {
+        "exists": true,
+        "path": "results/experiment_4289_capstone_v396.json",
+        "sha256": "97da927b489a26e07d7da5feb58ed4d279b82d3feb69c7528bc181397d7052f7"
+      },
+      "audit": {
+        "exists": true,
+        "path": "docs/research-notes/exp4282-arcgen-degenerate-audit-2026-06-16.md",
+        "sha256": "d805fc99c4804931007e9c8801a8d76c86c25ebee835e9afec198afc08812b4c"
+      },
+      "v397_design": {
+        "exists": true,
+        "path": "openspec/change-proposals/research-roadmap-v397.md",
+        "sha256": "40f6844e376c6e15681cea94159f35a98b397ca825cb6d1a761439df52674cd7"
+      }
+    }
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4290,
+  "reproducibility_checksum": "678fb59b2a4a3102824dd5a2c07d11808e185e1d30ac54d9eb284dc28632e34a",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "updated",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v396_to_v397_4290.v1",
+  "spec_refs": [
+    "REQ-REPORT-4290",
+    "SCENARIO-REPORT-4290"
+  ],
+  "task_id": "exp4290-archive-v396-activate-v397",
+  "v396_close_state": {
+    "accuracy_delta": 0.442,
+    "accuracy_delta_ci95": [
+      0.308,
+      0.577
+    ],
+    "accuracy_energy_verifier": 0.654,
+    "accuracy_llm_judge": 0.212,
+    "arc_game_advanced": "ls20-9607627b",
+    "arc_levels_completed": 1,
+    "arc_total_levels_solved": 21,
+    "arcgen_candidates_per_task": 4,
+    "arcgen_cross_family_ci95": [
+      1.0,
+      1.0
+    ],
+    "arcgen_cross_family_delta": 1.0,
+    "arcgen_degenerate": true,
+    "arcgen_oracle_at_k": 1.0,
+    "arcgen_vote_at_1": 0.0,
+    "can_score_partial_states": false,
+    "cost_ratio": 1.95e-08,
+    "cross_generator_open": true,
+    "diffusiongemma_guidance_blocked": true,
+    "diffusiongemma_thesis_state": "partial_state_blocked",
+    "efficiency_needs_hardening": true,
+    "efficiency_pareto_win": true,
+    "efficiency_verifier_is_oracle": false,
+    "flagged_artifact_ids": [
+      4282,
+      4283
+    ],
+    "guidance_moat_holds": false,
+    "headline_outcome": "partial_state_blocked_arcgen_excluded_flagged_efficiency_parity_self_learning_excluded_flagged_arc21_game_ls20-9607627b_paper_ready",
+    "judge_below_random": true,
+    "judge_random_baseline": 0.25,
+    "online_adaptation_helps": false,
+    "paper_ready": true,
+    "self_learning_tier2_noop_bug": true,
+    "static_cross_family_delta": 0.5,
+    "summary": "efficiency_pareto_partial_state_blocked_cross_generator_open_arc21",
+    "tier2_cross_family_delta": 0.5,
+    "tier2_equals_static": true,
+    "v397_frame": "CLOSE the cross-generator axis + UNBLOCK the in-generation thesis with a learned partial-state scorer + HARDEN the efficiency Pareto win",
+    "within_pool_ci95": [
+      0.25,
+      0.558
+    ],
+    "within_pool_cross_family_delta": 0.404,
+    "within_pool_win_stands": true
+  }
+}
