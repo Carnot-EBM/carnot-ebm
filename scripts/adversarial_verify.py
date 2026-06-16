@@ -63,6 +63,14 @@ Detection rules (each emits a discrete flag with severity):
     metric near 0.15 at N=30 is ~0.18/sqrt(30) ~ 0.03 — the
     observed CI is 100x tighter than the floor.
 
+  DEGENERATE_SEPARATION
+    A selector-vs-vote transfer artifact with a near-perfect delta
+    while vote or matched control is near zero, OR a perfect
+    set-encoder selector with oracle@K saturated at 1.0. Example:
+    exp4282 reported cross_family_delta=1.0, vote_at_1=0.0,
+    set_encoder_at_1=1.0, and oracle_at_k=1.0 on a wrong-majority
+    ARC-GEN pool; that is a pool-construction artifact, not transfer.
+
 Output: a JSON report listing flagged artifacts with per-flag details.
 Exit code: 0 if no flags, 1 if any flags present.
 
@@ -93,6 +101,11 @@ from typing import Any
 # legitimate cases (two implementations of the same function with the
 # same seed) should be deliberate and documented.
 TAUTOLOGY_DIGITS = 5
+
+DEGENERATE_DELTA_THRESHOLD = 0.95
+DEGENERATE_BASELINE_THRESHOLD = 0.05
+DEGENERATE_DELTA_KEYS = ("cross_generator_delta", "cross_family_delta")
+DEGENERATE_BASELINE_KEYS = ("vote_at_1", "matched_control_at_1")
 
 # Compute-bound markers — if the artifact mentions any of these, the
 # experiment was supposed to invoke real hardware/model work.
@@ -476,6 +489,21 @@ def _metric_from_top_or_pass_rates(d: dict[str, Any], key: str) -> float | None:
     return None
 
 
+def _metric_items_from_top_or_pass_rates(
+    d: dict[str, Any], keys: tuple[str, ...]
+) -> list[tuple[str, float]]:
+    items: list[tuple[str, float]] = []
+    pass_rates = d.get("pass_rates")
+    for key in keys:
+        value = d.get(key)
+        if _is_finite_number(value):
+            items.append((key, float(value)))
+            continue
+        if isinstance(pass_rates, dict) and _is_finite_number(pass_rates.get(key)):
+            items.append((key, float(pass_rates[key])))
+    return items
+
+
 def check_degenerate_separation(d: dict[str, Any], flags: list[Flag]) -> None:
     """Detect synthetic selection wins where vote cannot win and oracle saturates.
 
@@ -483,34 +511,65 @@ def check_degenerate_separation(d: dict[str, Any], flags: list[Flag]) -> None:
     missed: a candidate pool filtered to wrong-majority rows with only a few
     candidates per task can produce `delta=1.0`, `vote@1=0.0`, and
     `oracle@K=1.0`. That proves the pool construction is separable, not that a
-    learned selector generalized. Exp 4291's cross-generator gate therefore
-    requires non-zero vote, sub-ceiling oracle, and delta below the trivial
-    +1.0 separation band.
+    learned selector generalized. The guard also catches the saturated-oracle
+    variant where a perfect set-encoder selector reaches oracle@K exactly.
     """
-    delta = _metric_from_top_or_pass_rates(d, "cross_generator_delta")
-    if delta is None:
-        delta = _metric_from_top_or_pass_rates(d, "cross_family_delta")
-    vote_at_1 = _metric_from_top_or_pass_rates(d, "vote_at_1")
+    verdict = " ".join(
+        str(d.get(key, "")).lower() for key in ("honest_verdict", "experiment", "schema")
+    )
+    if not any(
+        marker in verdict
+        for marker in ("arcgen", "cross_generator", "cross_family", "generaliz")
+    ):
+        return
+
+    deltas = _metric_items_from_top_or_pass_rates(d, DEGENERATE_DELTA_KEYS)
+    baselines = _metric_items_from_top_or_pass_rates(d, DEGENERATE_BASELINE_KEYS)
     oracle_at_k = _metric_from_top_or_pass_rates(d, "oracle_at_k")
-    if delta is None or vote_at_1 is None or oracle_at_k is None:
+    set_encoder_at_1 = _metric_from_top_or_pass_rates(d, "set_encoder_at_1")
+
+    near_perfect_delta = [
+        (key, value) for key, value in deltas if value >= DEGENERATE_DELTA_THRESHOLD
+    ]
+    trivial_baseline = [
+        (key, value) for key, value in baselines if value <= DEGENERATE_BASELINE_THRESHOLD
+    ]
+    saturated_oracle_selector = (
+        oracle_at_k is not None
+        and set_encoder_at_1 is not None
+        and math.isclose(oracle_at_k, 1.0, rel_tol=0.0, abs_tol=1e-12)
+        and math.isclose(set_encoder_at_1, 1.0, rel_tol=0.0, abs_tol=1e-12)
+    )
+
+    if not ((near_perfect_delta and trivial_baseline) or saturated_oracle_selector):
         return
-    verdict = str(d.get("honest_verdict", "")).lower()
-    if not any(marker in verdict for marker in ("arcgen", "cross_generator", "cross_family", "generaliz")):
-        return
-    if delta >= 0.95 and (vote_at_1 <= 0.05 or oracle_at_k >= 1.0):
-        flags.append(
-            Flag(
-                kind="DEGENERATE_SEPARATION",
-                severity="critical",
-                detail=(
-                    f"Selector-vs-vote delta={delta} with vote_at_1={vote_at_1} "
-                    f"and oracle_at_k={oracle_at_k}: this matches the degenerate "
-                    f"wrong-majority/trivial-separation pool signature. Rebuild "
-                    f"the candidate pool with vote-winning tasks, realistic "
-                    f"candidate counts, and oracle_at_k<1 before claiming transfer."
-                ),
-            )
+
+    delta_detail = (
+        ", ".join(f"{key}={value}" for key, value in near_perfect_delta)
+        if near_perfect_delta
+        else "no near-perfect delta field"
+    )
+    baseline_detail = (
+        ", ".join(f"{key}={value}" for key, value in trivial_baseline)
+        if trivial_baseline
+        else "no near-zero baseline field"
+    )
+    oracle_detail = "missing" if oracle_at_k is None else str(oracle_at_k)
+    selector_detail = "missing" if set_encoder_at_1 is None else str(set_encoder_at_1)
+    flags.append(
+        Flag(
+            kind="DEGENERATE_SEPARATION",
+            severity="critical",
+            detail=(
+                f"Selector-vs-vote degenerate signal: {delta_detail}; "
+                f"baselines {baseline_detail}; oracle_at_k={oracle_detail}; "
+                f"set_encoder_at_1={selector_detail}. This matches a "
+                f"wrong-majority/trivial-separation pool signature. Rebuild "
+                f"the candidate pool with vote-winning tasks, realistic "
+                f"candidate counts, and oracle_at_k<1 before claiming transfer."
+            ),
         )
+    )
 
 
 def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
