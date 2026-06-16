@@ -8090,6 +8090,92 @@ The artifact MUST include `field_principles` entries for the required fields:
 
 ---
 
+### REQ-HW-4300
+
+**Title:** Hardware continuity MUST report opportunistic per-board reachability for Exp 4300
+
+**Description:**
+Experiment 4300 MUST produce
+`results/experiment_4300_hardware_continuity.json` as an opportunistic
+per-board hardware-continuity artifact for KV260, GateMate, and PolarFire. It
+MUST read `results/experiment_4288_hardware_continuity.json` as the prior .396
+hardware state and preserve the continuity discipline: KV260 is terminal and
+SSH-only, PolarFire is opportunistic hash-verified CPU dispatch, and GateMate may
+be honestly blocked when DirtyJTAG detect does not expose the board.
+
+The experiment MUST run exactly the per-board reachability preconditions below,
+and no board being unreachable may block the milestone:
+
+- KV260: `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. This is the
+  only valid KV260 precondition; host SD-card block-device checks such as
+  `/dev/mmcblk` are forbidden.
+- PolarFire: `ssh -o ConnectTimeout=5 polarfire 'true'`.
+- GateMate: `openFPGALoader -c dirtyJtag --detect`, accepted only when it
+  reports the GM1Ax IDCODE (`0x20000001`).
+
+When KV260 is reachable, the experiment MUST run `ssh kria 'xmutil listapps'`
+and record SSH-only terminal status without making a fabric speedup claim. When
+PolarFire is reachable, the experiment MUST run or inject a CPU-dispatch
+hash-verify smoke and record the result hash status. When GateMate is detected,
+the experiment MUST record the IDCODE; otherwise the GateMate status MUST be
+`blocked_gatemate_unreachable`. For any unreachable board, the board's status
+MUST be `blocked_<board>_unreachable`, and the experiment MUST continue checking
+the other boards.
+
+The artifact MUST include `field_principles` entries for the required fields:
+
+- `honest_verdict`: `Terminal-prefixed. A per-board reachability report (including honest blocked_<board>) is COMPLETE; no board blocks the milestone.`
+- `per_board_status`: `Per-board reachability + any opportunistic result -- keeps the boards visible (continuity) without blocking on operator hardware actions.`
+- `preconditions_checked`: `Records the SSH/USB reachability checks (KV260 via SSH NOT SD-card); pre-empts the wrong-mechanism + fabrication modes.`
+- `reproducibility_checksum`: `Hash of the per-board probe outputs; auditable.`
+
+**Acceptance criteria:**
+- `python3 results/experiment_4300_hardware_continuity.py` writes
+  `results/experiment_4300_hardware_continuity.json`.
+- `per_board_status` is a dict keyed by `kv260`, `polarfire`, and `gatemate`;
+  each entry records `reachable`, `status`, `next_concrete_step`,
+  `precondition_resource`, `precondition_command`, `duration_s`, and a distinct
+  board-specific `timer_id`.
+- `preconditions_checked` records the KV260 SSH BatchMode, PolarFire SSH, and
+  GateMate DirtyJTAG detect preconditions; no host SD-card marker such as
+  `/dev/mmcblk` appears in the artifact.
+- KV260 reachable records `ssh_only_terminal_status` and an `xmutil listapps`
+  command transcript; if unreachable, `per_board_status["kv260"]["status"]` is
+  `blocked_kv260_unreachable`.
+- PolarFire reachable records a CPU-dispatch hash-verify smoke result; if
+  unreachable, `per_board_status["polarfire"]["status"]` is
+  `blocked_polarfire_unreachable`.
+- GateMate reachable records the detected IDCODE; if unreachable,
+  `per_board_status["gatemate"]["status"]` is
+  `blocked_gatemate_unreachable`.
+- `honest_verdict` starts with `complete:` or `blocked_`.
+
+**Implementation status:** Implemented (Exp 4300)
+
+---
+
+### SCENARIO-HW-4300
+
+**Scenario:** Exp 4300 reports KV260, PolarFire, and GateMate continuity without milestone blocking.
+
+**Given:** KV260 is terminal and SSH-only per north-star §3, PolarFire and
+GateMate are opportunistic, and the milestone requires board continuity to use
+only SSH/USB reachability checks.
+**When:** Experiment 4300 reads Exp 4288 context, runs the KV260 SSH, PolarFire
+SSH, and GateMate DirtyJTAG detect preconditions, performs reachable-board
+opportunistic checks, and records honest `blocked_<board>` statuses for
+unreachable boards.
+**Then:** It writes `results/experiment_4300_hardware_continuity.json` with a
+terminal-prefixed verdict, `inference_substrate="hardware_smoke"`, required
+field principles, `per_board_status`, precondition evidence for the three
+allowed board checks, distinct per-board timer identifiers and wall-clock
+durations, deterministic seed, checksum, and no KV260 host SD-card
+precondition.
+
+**Implementation status:** Implemented (Exp 4300)
+
+---
+
 ### REQ-HW-4288
 
 **Title:** Hardware continuity MUST report opportunistic per-board reachability for Exp 4288
