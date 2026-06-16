@@ -8612,3 +8612,4 @@ c |
 | 2026-06-16 16:10 UTC | PHASE F0 (INFRA safety net; defense-in-depth) -- a | OK | 84 passed, 1 warning in 7.09s |
 | 2026-06-16 16:24 UTC | PHASE F1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 104 passed, 1 warning in 4.38s |
 | 2026-06-16 17:45 UTC | PHASE F2 (hygiene) -- reconcile the verifier regis | OK | 89 passed, 1 warning in 6.10s |
+| 2026-06-16 17:56 UTC | PHASE F3 (hardware continuity; opportunistic per n | OK | 85 passed, 1 warning in 5.87s |
