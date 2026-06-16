@@ -12465,6 +12465,77 @@ memory, extrapolates the full `.395` benchmark cost, and sets
 `preflight_go=true` only if the model loaded, guidance changed selection, and
 the extrapolated full-run cost fits a bounded conductor or out-of-band window.
 
+### REQ-VERIFY-4274: DiffusionGemma GGUF Loader Repair Preflight
+
+The repository SHALL provide Exp 4274 at
+`python/carnot/experiment_4274_diffusiongemma_loader_fix_preflight.py` and
+`results/experiment_4274_diffusiongemma_loader_fix_preflight.py` to repair the
+Exp 4260 DiffusionGemma GGUF loader failure and rerun only the tiny guidance
+preflight for `.396`. Before any smoke loop, the runner SHALL verify that
+`~/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/`
+is non-empty and that no TRM training process is active. It SHALL load from the
+resolved `.gguf` file path, SHALL NOT call `AutoTokenizer.from_pretrained()` on
+a GGUF repo id, and SHALL preserve the blocked verdicts
+`blocked_diffusiongemma_not_cached` and `blocked_trm_training_active` when
+those preconditions fail.
+
+The loader repair SHALL first attempt the existing `llama_cpp.Llama` vocab-only
+path and, when the installed llama.cpp rejects the `diffusion-gemma` GGUF
+architecture, SHALL record that failure and fall back to reading the embedded
+GGUF metadata vocabulary from the same `.gguf` file. The fallback SHALL parse
+`tokenizer.ggml.tokens`, expose a tokenizer object usable by the tiny preflight,
+and set bare bool `loader_repaired=true` only when tokenization succeeds from
+the `.gguf` file path without any Hugging Face tokenizer.
+
+When the loader is repaired, Exp 4274 SHALL run at most five deterministic
+code, Sudoku, and math smoke prompts with the verifier ensemble represented as
+per-step guidance energy. The smoke SHALL compare guided and unguided token
+selection on identical candidate distributions, report bare bool
+`guidance_changes_selection=true` only when verifier-energy reweighting changes
+at least one per-step choice, measure per-example wall-clock and memory, and
+extrapolate bare float `full_run_cost_estimate_s` for a deferred `.396`
+benchmark. It SHALL not run the full benchmark.
+
+The terminal artifact SHALL write
+`results/experiment_4274_diffusiongemma_loader_fix_preflight.json` with
+top-level fields `honest_verdict`, bare bool `loader_repaired`, bare bool
+`preflight_go`, bare bool `guidance_changes_selection`, bare float
+`full_run_cost_estimate_s`, bare bool `verifier_is_oracle=false`,
+`preconditions_checked`, bare int `random_seed`, `reproducibility_checksum`,
+`model_specs`, `field_principles`, `spec_refs`, `duration_s`, and
+`inference_substrate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. A repaired loader + GO preflight AND an honest NO-GO (loader unfixable / cost too high) are BOTH COMPLETE and decision-grade for .396.`;
+`loader_repaired` = `BARE bool: true iff DiffusionGemma now loads via the .gguf path -- the primary deliverable that fixes exp4260's root cause.`;
+`preflight_go` = `BARE bool: .396 gates the full run on this AND hardened_win; true iff the loader is repaired, the verifier-guidance hook reweights token selection, and the extrapolated full-run cost is feasible.`;
+`guidance_changes_selection` = `BARE bool: the verifier-as-guidance-energy actually changed per-step token selection vs unguided -- a guidance hook that does nothing is a NO-GO.`;
+`full_run_cost_estimate_s` = `BARE float: extrapolated wall-clock for a full .396 benchmark -- tells the planner whether .396 runs it in-window or out-of-band.`;
+`verifier_is_oracle` = `BARE bool=false -- the guidance energy is the learned/ensemble verifier shaping generation, not an executable oracle.`;
+`preconditions_checked` = `Records DiffusionGemma cache + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.`;
+`random_seed` = `Determinism precondition for the denoising smoke.`;
+`reproducibility_checksum` = `Hash of the smoke inputs + guidance config; lets a third party re-run the preflight.`;
+`model_specs` = `DiffusionGemma GGUF id + the loader fix + the verifier ensemble wired as guidance + denoising step count; required methodology.`
+
+### SCENARIO-VERIFY-4274: Repaired GGUF Loader Enables Tiny Guidance Preflight
+
+Given the DiffusionGemma GGUF cache directory is missing or empty, when Exp
+4274 runs, then it writes `honest_verdict=blocked_diffusiongemma_not_cached`,
+`loader_repaired=false`, `preflight_go=false`, and does not run the loader or
+smoke.
+
+Given TRM training is active after the cache precondition passes, when Exp
+4274 runs, then it writes `honest_verdict=blocked_trm_training_active`,
+`loader_repaired=false`, `preflight_go=false`, and does not run the loader or
+smoke.
+
+Given `llama_cpp.Llama(model_path=..., vocab_only=True)` rejects the cached
+DiffusionGemma GGUF but the file contains `tokenizer.ggml.tokens`, when Exp
+4274 runs, then it records the llama.cpp failure, uses the embedded GGUF
+metadata tokenizer fallback, sets `loader_repaired=true`, keeps
+`verifier_is_oracle=false`, runs the tiny deterministic denoising smoke,
+reports changed selections and reweighted token counts, emits
+`preflight_go=true` only when the cost estimate is feasible, and does not run
+the full `.396` benchmark.
+
 ### REQ-VERIFY-4036: Decentralization Stronger-Base Best-of-N Build Gate
 
 The repository SHALL provide Exp 4036 at

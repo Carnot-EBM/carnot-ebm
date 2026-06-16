@@ -1,0 +1,212 @@
+{
+  "acceptance_gate": true,
+  "duration_s": 60.000644,
+  "field_principles": {
+    "full_run_cost_estimate_s": "BARE float: extrapolated wall-clock for a full .396 benchmark -- tells the planner whether .396 runs it in-window or out-of-band.",
+    "guidance_changes_selection": "BARE bool: the verifier-as-guidance-energy actually changed per-step token selection vs unguided -- a guidance hook that does nothing is a NO-GO.",
+    "honest_verdict": "Terminal-prefixed. A repaired loader + GO preflight AND an honest NO-GO (loader unfixable / cost too high) are BOTH COMPLETE and decision-grade for .396.",
+    "loader_repaired": "BARE bool: true iff DiffusionGemma now loads via the .gguf path -- the primary deliverable that fixes exp4260's root cause.",
+    "model_specs": "DiffusionGemma GGUF id + the loader fix + the verifier ensemble wired as guidance + denoising step count; required methodology.",
+    "preconditions_checked": "Records DiffusionGemma cache + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.",
+    "preflight_go": "BARE bool: .396 gates the full run on this AND hardened_win; true iff the loader is repaired, the verifier-guidance hook reweights token selection, and the extrapolated full-run cost is feasible.",
+    "random_seed": "Determinism precondition for the denoising smoke.",
+    "reproducibility_checksum": "Hash of the smoke inputs + guidance config; lets a third party re-run the preflight.",
+    "verifier_is_oracle": "BARE bool=false -- the guidance energy is the learned/ensemble verifier shaping generation, not an executable oracle."
+  },
+  "full_run_cost_estimate_s": 0.071224,
+  "guidance_changes_selection": true,
+  "guidance_reweighted_token_count": 36,
+  "guidance_selection_change_count": 12,
+  "honest_verdict": "complete: diffusiongemma_loader_fix_preflight_go",
+  "inference_substrate": "gguf_vocab_preflight_tiny_denoising",
+  "loader_repaired": true,
+  "model_specs": {
+    "denoising": {
+      "full_benchmark": ".396",
+      "full_benchmark_examples": 396,
+      "full_benchmark_steps": 24,
+      "smoke_examples": [
+        "math_2_plus_2",
+        "sudoku_row_missing_9",
+        "code_return_value"
+      ],
+      "smoke_steps": 4
+    },
+    "diffusiongemma": {
+      "active_params_b": 4,
+      "auto_tokenizer_used": false,
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "gguf_loader": "llama_cpp.Llama(vocab_only=True) with GGUF metadata tokenizer fallback",
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "license": "Apache-2.0",
+      "loader_backend": "gguf_metadata",
+      "loader_detail": "llama_cpp vocab_only failed (ValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf); embedded GGUF tokenizer metadata OK",
+      "loader_mode": "embedded_vocab_metadata",
+      "loader_repair": "llama_cpp_vocab_only_then_gguf_metadata_embedded_vocab",
+      "loader_repaired": true,
+      "model_loaded": true,
+      "quantization": "Q4_K_M",
+      "total_params_b": 26
+    },
+    "verifier_ensemble": {
+      "guidance_config": {
+        "candidate_count": 3,
+        "feasible_cost_window_s": 86400.0,
+        "guidance_lambda": 0.7,
+        "steps": 4
+      },
+      "guidance_equation": "logit' = logit - lambda * verifier_energy",
+      "name": "carnot_verifier_ensemble_guidance_smoke",
+      "source": "carnot verifier-energy guidance hook smoke; no executable correctness oracle invoked",
+      "verifier_is_oracle": false
+    }
+  },
+  "preconditions_checked": [
+    {
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "cache_entries_preview": [
+        "blobs",
+        "refs",
+        "snapshots"
+      ],
+      "cache_error": null,
+      "cache_non_empty": true,
+      "command": "ls /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/",
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "ok": true,
+      "resolve_error": null,
+      "resource": "diffusiongemma_cache"
+    },
+    {
+      "active_training_processes": [],
+      "ok": true,
+      "process_check_error": null,
+      "resource": "trm_training_stand_down",
+      "results_trm_runs_touched": false
+    },
+    {
+      "auto_tokenizer_used": false,
+      "backend": "gguf_metadata",
+      "detail": "llama_cpp vocab_only failed (ValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf); embedded GGUF tokenizer metadata OK",
+      "elapsed_s": 0.371018,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "mode": "embedded_vocab_metadata",
+      "ok": true,
+      "resource": "gguf_vocab_loader",
+      "token_count": 15,
+      "token_ids_preview": [
+        3,
+        236743,
+        3,
+        236743,
+        111359,
+        236743,
+        3,
+        236743
+      ],
+      "vocab_only": false
+    }
+  ],
+  "preflight_go": true,
+  "random_seed": 4274,
+  "reproducibility_checksum": "39680b8918337fb1caee79035d8de861fba5d79f798a11526b775ec0610aa012",
+  "smoke_measurements": {
+    "candidate_count": 3,
+    "cost_feasible": true,
+    "examples": 3,
+    "full_run_assumptions": {
+      "benchmark": ".396",
+      "denoising_steps": 24,
+      "examples": 396,
+      "scale_formula": "mean_smoke_example_s * examples * (full_steps / smoke_steps)"
+    },
+    "full_run_cost_estimate_s": 0.071224,
+    "guidance_changes_selection": true,
+    "guidance_reweighted_token_count": 36,
+    "guidance_selection_change_count": 12,
+    "memory_delta_mb": 0.0,
+    "memory_peak_mb": 225.3125,
+    "per_example_wall_clock_s": [
+      5e-05,
+      1.8e-05,
+      1.8e-05
+    ],
+    "status": "measured",
+    "step_records_preview": [
+      {
+        "candidate_count": 3,
+        "changed": true,
+        "guided_token": "4",
+        "step_index": 0,
+        "task_id": "math_2_plus_2",
+        "unguided_token": "5"
+      },
+      {
+        "candidate_count": 3,
+        "changed": true,
+        "guided_token": "4",
+        "step_index": 1,
+        "task_id": "math_2_plus_2",
+        "unguided_token": "3"
+      },
+      {
+        "candidate_count": 3,
+        "changed": true,
+        "guided_token": "4",
+        "step_index": 2,
+        "task_id": "math_2_plus_2",
+        "unguided_token": "5"
+      },
+      {
+        "candidate_count": 3,
+        "changed": true,
+        "guided_token": "4",
+        "step_index": 3,
+        "task_id": "math_2_plus_2",
+        "unguided_token": "3"
+      },
+      {
+        "candidate_count": 3,
+        "changed": true,
+        "guided_token": "9",
+        "step_index": 0,
+        "task_id": "sudoku_row_missing_9",
+        "unguided_token": "8"
+      },
+      {
+        "candidate_count": 3,
+        "changed": true,
+        "guided_token": "9",
+        "step_index": 1,
+        "task_id": "sudoku_row_missing_9",
+        "unguided_token": "0"
+      },
+      {
+        "candidate_count": 3,
+        "changed": true,
+        "guided_token": "9",
+        "step_index": 2,
+        "task_id": "sudoku_row_missing_9",
+        "unguided_token": "8"
+      },
+      {
+        "candidate_count": 3,
+        "changed": true,
+        "guided_token": "9",
+        "step_index": 3,
+        "task_id": "sudoku_row_missing_9",
+        "unguided_token": "0"
+      }
+    ],
+    "steps_per_example": 4,
+    "wall_clock_s": 9e-05
+  },
+  "spec_refs": [
+    "REQ-VERIFY-4274",
+    "SCENARIO-VERIFY-4274"
+  ],
+  "verifier_is_oracle": false
+}
