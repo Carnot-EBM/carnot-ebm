@@ -40638,7 +40638,13 @@ milestones:
     D: SOTA-ingestion + registry/gaps + hardware + capstone.'
   doc: openspec/change-proposals/research-roadmap-v394.md
   completed: '2026-06-15'
-  finding: '.394 close-state: first ARC oracle-distinct win HARDENED 2 of 3 axes. Leak audit SURVIVED: provenance-blind delta=+0.385, AUROC=0.990. Multi-seed REPLICATED: mean delta=+0.458, independent re-score=+0.442. Cross-game OOD BLOCKED, not collapsed: game_ids_unrecoverable; the held-out game/family test NEVER RAN, so hardened_win=False and diffusiongemma_full_run_gate=False. Synthesis did NOT break oracle@K (synthesis_minus_oracle=-0.283); DiffusionGemma preflight blocked on gguf_loader_failed; ARC held at 19 levels; verifier-as-reward is OUT-OF-BAND; code oracle-distinct is CORPUS-SPECIFIC (delta=-0.006); paper_ready=True. .395 frame: CLOSE the cross-family OOD question (recover provenance -> held-out-family test) then repair the DiffusionGemma loader + advance ARC +1.'
+  finding: '.394 close-state: first ARC oracle-distinct win HARDENED 2 of 3 axes. Leak audit SURVIVED: provenance-blind delta=+0.385,
+    AUROC=0.990. Multi-seed REPLICATED: mean delta=+0.458, independent re-score=+0.442. Cross-game OOD BLOCKED, not collapsed:
+    game_ids_unrecoverable; the held-out game/family test NEVER RAN, so hardened_win=False and diffusiongemma_full_run_gate=False.
+    Synthesis did NOT break oracle@K (synthesis_minus_oracle=-0.283); DiffusionGemma preflight blocked on gguf_loader_failed;
+    ARC held at 19 levels; verifier-as-reward is OUT-OF-BAND; code oracle-distinct is CORPUS-SPECIFIC (delta=-0.006); paper_ready=True.
+    .395 frame: CLOSE the cross-family OOD question (recover provenance -> held-out-family test) then repair the DiffusionGemma
+    loader + advance ARC +1.'
   activation_recorded: exp4269-archive-v394-activate-v395
   tasks:
   - id: exp4255-archive-v393-activate-v394
@@ -40793,4 +40799,147 @@ milestones:
       preflight GO). SKIP any flagged_adversarial artifact; HONOR verifier_is_oracle (a leaked/circular result may NOT headline).
       Compute the G1-G4 publication gate via publication_gate.py. NO gated_on.'
     deliverable: results/experiment_4268_capstone_v394.json
+    result: OK (conductor)
+- id: 2026.06.395
+  title: "CLOSE the cross-family/cross-game OOD question -- DOES the hardened ARC oracle-distinct selector win GENERALIZE\
+    \ beyond the pool it was tuned on? .394 HARDENED the program's first ARC oracle-distinct verifier-beats-vote win on 2\
+    \ of 3 axes (exp4256 win_survives_provenance_blind: de-leaked delta +0.385 AUROC 0.990; exp4257 oracle_distinct_win_replicates:\
+    \ mean +0.458 across >=5 seeds + independent re-score +0.442 matching single-seed, oracle@K 0.827 n=52) BUT the decisive\
+    \ cross-game OOD test BLOCKED on a data-provenance bug (exp4258 blocked_arc_game_ids_unrecoverable -- the 52-task grown\
+    \ pool's gap3_stage2 task_ids could not be mapped to game/family identities, so no family-disjoint split could be built).\
+    \ The capstone (exp4268) therefore set hardened_win=False and held the diffusiongemma_full_run_gate CLOSED -- NOT because\
+    \ the win collapsed, but because the load-bearing OOD test NEVER RAN. .395 is DEPTH (north-star \xA71, Depth-Over-Breadth):\
+    \ it does ONE thing -- CLOSE the cross-family question. PHASE A recovers the missing FAMILY/GAME provenance (fixing exp4258's\
+    \ root cause per Reliability Gap 2606.03305 provenance discipline) and runs the held-out-FAMILY test -- on the existing\
+    \ pool if family-diverse enough (A2), else on a fresh ARC-TGI (2603.05099) family-disjoint pool (A3) -- plus a Tier-1\
+    \ online-adaptation self-learning arm (A4). GENERALIZES (cross_family_delta>0 CI95-excl-0) -> a GENERAL selection signal\
+    \ (north-star-grade; opens the DiffusionGemma gate). COLLAPSES -> scope the headline to within-pool and refocus. PHASE\
+    \ B repairs the DiffusionGemma discrete-diffusion GGUF loader (exp4260 blocked) + re-preflights so the scale-up is READY\
+    \ the moment the win generalizes (full run DEFERRED to .396). PHASE C advances ARC accuracy +1 on a NEW game. PHASE D\
+    \ records the owed-axis decisions (code oracle-distinct -> corpus-specific/RETIRED exp4264; verifier-as-reward -> out-of-band\
+    \ operator-owned exp4263) + SOTA-ingestion + registry/gaps + hardware + capstone."
+  doc: openspec/change-proposals/research-roadmap-v395.md
+  completed: '2026-06-16'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4269-archive-v394-activate-v395
+    title: Archive .394 -> activate .395; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
+      + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .394
+      close-state truthfully (the first ARC oracle-distinct win HARDENED on 2 of 3 axes -- exp4256 win_survives_provenance_blind
+      de-leaked delta +0.385 AUROC 0.990; exp4257 oracle_distinct_win_replicates mean +0.458 >=5 seeds + independent re-score
+      +0.442 -- BUT the cross-game OOD test BLOCKED exp4258 blocked_arc_game_ids_unrecoverable so hardened_win=False and diffusiongemma_full_run_gate=False;
+      synthesis did NOT break oracle@K exp4259 -0.283; DiffusionGemma preflight BLOCKED exp4260 gguf_loader_failed; ARC 19
+      levels exp4261; verifier-as-reward OUT-OF-BAND exp4263 ready_for_out_of_band; code oracle-distinct CORPUS-SPECIFIC exp4264
+      -0.006). Frame .395 as CLOSE-the-cross-family-OOD-question (recover provenance -> held-out-family test) then repair
+      the DiffusionGemma loader + advance ARC +1.
+    deliverable: results/experiment_4269_archive_v394_activate_v395.json
+    result: OK (conductor)
+  - id: exp4270-arc-family-provenance-recovery
+    title: 'PHASE A1 (DEPTH; fix exp4258''s root cause) -- FAMILY/GAME PROVENANCE RECOVERY + diversity audit. exp4258 (cross-game
+      transfer) BLOCKED blocked_arc_game_ids_unrecoverable: the 52-task grown pool''s gap3_stage2:XXXX task_ids could not
+      be mapped to game/family identities, so no family-disjoint split could be built. FIX: recover a task-FAMILY id (and
+      game id where applicable) for EVERY pool row by joining raw_task_id/source_id back to the source ARC task definitions
+      -> the ARC-TGI family taxonomy (arXiv:2603.05099) and/or the 25-game survey (results/arc3_win_condition_survey.json).
+      Materialize a FIRST-CLASS provenance manifest per the Reliability Gap discipline (arXiv:2606.03305): per-row {{source_kind,
+      family_id, game_id, fold, target_hash}}. Emit family_split_feasible BARE bool := (>=4 distinct families AND each held-out
+      fold has >=~10 tasks for bootstrap power) + distinct_family_n + per_family_task_count. This task makes the cross-family
+      test POSSIBLE; it does NOT run the test. CPU-only; NO GGUF/GPU.'
+    deliverable: results/experiment_4270_arc_family_provenance_recovery.json
+    result: OK (conductor)
+  - id: exp4271-arc-cross-family-transfer-existing-pool
+    title: PHASE A2 (DEPTH; THE real OOD test; gated_on A1 family_split_feasible==true) -- CROSS-FAMILY transfer on the EXISTING
+      pool. Using the recovered provenance manifest, train the set-encoder on a SUBSET of task-families and test the beats-vote
+      gate on candidates from HELD-OUT families (NO family in both train and test) -- the real OOD test the within-pool .393
+      split did not run. Report cross_family_delta (set_encoder@1 - vote@1 on held-out families) + task-level bootstrap CI95
+      (>=2000 resamples) + held_out_family_n + held_out_task_n + within_minus_cross_gap (how much the win shrinks vs the within-pool
+      +0.4423) + oracle@K positive control. Include a STATIC vs ONLINE-ADAPTED arm. GENERALIZES (cross_family_delta>0 AND
+      CI95-excl-0) = a GENERAL selection signal (north-star-grade -> opens the DiffusionGemma gate). COLLAPSES = per-family-basin
+      memorization (decision-grade -> scope the headline to within-pool). verifier_is_oracle=false.
+    deliverable: results/experiment_4271_arc_cross_family_transfer_existing_pool.json
+    result: OK (conductor)
+  - id: exp4272-arc-cross-family-transfer-fresh-tgi-pool
+    title: 'PHASE A3 (DEPTH; the fresh-pool fallback; gated_on A1 family_split_feasible==false) -- build a FRESH ARC-TGI family-disjoint
+      candidate pool, then run the cross-family beats-vote gate. Runs ONLY when A1 finds the existing 52-task pool too family-concentrated
+      for a powered held-out-family test. Use the ARC-TGI task-family generators (arXiv:2603.05099; 461 generators covering
+      ARC-Mini + ARC-AGI-1) and/or expand candidate coverage across MORE cached source families to build a larger family-diverse
+      pool with materialized family_id + exact target_hash per row. Train the set-encoder on train-families, test on HELD-OUT
+      families. Keep ORIGINAL ARC tasks as a held-out sanity read (ARC-TGI warning: generator data can become its own distribution
+      -- report generator-family and original-task metrics SEPARATELY). Report cross_family_delta + CI95 + held_out_family_n
+      + oracle@K. Emit cross_family_win_holds BARE bool. verifier_is_oracle=false. HARD-CAP the build to the 80-min window;
+      honest partial is fine.'
+    deliverable: results/experiment_4272_arc_cross_family_transfer_fresh_tgi_pool.json
+    result: OK (conductor)
+  - id: exp4273-arc-cross-family-online-adaptation-selflearning
+    title: 'PHASE A4 (CONTINUOUS SELF-LEARNING -- the mandated self-learning experiment; gated_on A1 family_split_feasible==true)
+      -- Tier-1 ONLINE verifier-weight adaptation across the family folds. research-program.md mandates >=1 self-learning
+      experiment per milestone; Tier 1 (online weight/counter updates, CPU, <1us/update, NOT the retired live-LoRA fine-tuning)
+      is the practical tier. QUESTION: does cheap online adaptation recover cross-family headroom the STATIC selector loses?
+      On each held-out family, compare the STATIC set-encoder selector vs an ONLINE-reweighted selector that upweights features/sub-verifiers
+      which selected correctly on the nearest SEEN family (running per-feature precision, updated as families stream in).
+      Report static_cross_family_delta vs online_cross_family_delta + the per-family adaptation curve + CI95 on the (online
+      - static) gain. A positive gain = the verifier self-improves toward generalization (north-star-grade self-learning evidence).
+      A null = static is the ceiling (honest, decision-grade). verifier_is_oracle=false. NO fine-tuning; NO TRM; NO live-LoRA.'
+    deliverable: results/experiment_4273_arc_cross_family_online_adaptation.json
+    result: OK (conductor)
+  - id: exp4274-diffusiongemma-loader-fix-preflight
+    title: 'PHASE B1 (INFRA de-risk; fix exp4260''s root cause; NO full run) -- DiffusionGemma discrete-diffusion GGUF LOADER
+      FIX + re-preflight. exp4260 BLOCKED blocked_diffusiongemma_gguf_loader_failed (flagged CRITICAL, 0.34s -- the loader
+      never worked). FIX the loader: get DiffusionGemma loading via the .gguf path (llama.cpp / the project loader; NOT AutoTokenizer
+      on a GGUF repo per the GGUF tokenizer rule). Then re-run the TINY guidance preflight: wire the verifier ensemble as
+      a per-step guidance energy on a <=5-example denoising smoke, confirm it reweights token selection vs unguided (DPRM
+      2604.24357 / entropy-step 2603.12554), emit preflight_go + guidance_changes_selection + full_run_cost_estimate_s. NO
+      full benchmark, NO training -- the full run stays DEFERRED to .396 (gated on hardened_win; operator twice-burned by
+      premature scale-up). verifier_is_oracle=false.'
+    deliverable: results/experiment_4274_diffusiongemma_loader_fix_preflight.json
+    result: OK (conductor)
+  - id: exp4275-arc-incremental-progress-new-game
+    title: 'PHASE C1 (ARC north star; accuracy) -- monotonic ARC +1 on a NEW game. exp4261 found NO verifier-validated level-up
+      candidate on sc25 L6 (no advance, 19 levels held). Per ARC-AGI-3 Incremental-Progress Scoping (+1, NOT all-levels) +
+      Failed-Experiment Rerun Discipline (a new approach, not a re-run): target the best-headroom UNATTEMPTED game from the
+      25-game survey, with the hardened set-encoder routing the offline solver''s candidate ranking. Advance ONE game by >=1
+      NEW real-env-confirmed level (total_levels 19 -> >=20). Report total_levels + the game advanced + levels_completed (from
+      the solver''s real-env-confirmed output, not a self-report). NO TRM training; NO leaderboard submission. An honest no-advance
+      is COMPLETE and informs the next game pick (NOT churn -- it is a different game than .394).'
+    deliverable: results/experiment_4275_arc_incremental_progress_new_game.json
+    result: OK (conductor)
+  - id: exp4276-sota-ingestion-v396
+    title: PHASE D1 (SOTA-ingestion; mandatory per SOTA-Ingestion Cycle Discipline) -- ingest the SOTA for the .395 bleeding-edge
+      forks (cross-family/cross-task verifier generalization, ARC-TGI family-generator pools, discrete-diffusion verifier-guidance
+      after the loader fix, online-adaptation self-learning) and MAP the strongest 3-5 methods onto the .396 roadmap conditioned
+      on the .395 cross-family outcome. Use the RELIABLE channel ONLY (scripts/sweep_clusters.py / sweep_semscholar.py + low-concurrency
+      WebSearch/WebFetch) -- the /deep-research harness is BANNED in-loop. Every method MUST carry a real arXiv ID/URL. Update
+      research-studying.md (mark ingested) and emit flagged_for_v396 (the strongest method conditioned on whether cross-family
+      generalized or collapsed).
+    deliverable: results/experiment_4276_sota_ingestion_v396.json
+    result: OK (conductor)
+  - id: exp4277-verifier-registry-gaps-hygiene
+    title: 'PHASE D2 (hygiene) -- reconcile the verifier registry + gaps to .395 truth, run the GAP-4 regression guard, RECORD
+      the .394/.395 retirements, and LOG missing-verifier gaps. Record the .395 outcomes: the cross-family OOD verdict (did
+      the win GENERALIZE to held-out families or collapse to within-pool?), the online-adaptation self-learning result, the
+      DiffusionGemma loader-fix + preflight GO/NO-GO, the ARC +1 advance. RECORD the standing retirements into ops/exclusion_manifest.yaml:
+      code oracle-distinct replication CORPUS-SPECIFIC (exp4264 delta -0.006 -> the .392 +3.1pp stands single-corpus, RETIRE
+      the code-replication ask) and verifier-as-reward OUT-OF-BAND (exp4263 ready_for_out_of_band -> in-loop axis is operator-owned).
+      Update ops/verifier_registry.yaml + ops/verifier_gaps.md (per Missing-Verifier Gap Logging: e.g. a ''cross-family ARC
+      selection'' gap if A2/A3 collapsed). Run the GAP-4 execution regression guard (no regression vs .394). Emit regression_guard_passed
+      BARE bool.'
+    deliverable: results/experiment_4277_verifier_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4278-hardware-continuity
+    title: "PHASE D3 (hardware continuity; opportunistic per north-star \xA73) -- KV260 terminal/opportunistic (SSH-only reachability\
+      \ + xmutil listapps; NO host SD-card precondition), PolarFire CPU dispatch hash-verify, GateMate USB detect. KV260 is\
+      \ terminal (north-star \xA73) so the per-board mandate relaxes to opportunistic; this task keeps the boards visible\
+      \ without blocking the milestone. Report per-board reachability + any opportunistic result. NO board blocks the milestone\
+      \ (honest blocked_<board> per board is fine)."
+    deliverable: results/experiment_4278_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4279-capstone-v395
+    title: 'PHASE D4 (capstone .395, UNGATED) -- headline question: DID THE HARDENED ARC ORACLE-DISTINCT WIN GENERALIZE to
+      held-out FAMILIES/GAMES (the real OOD test .394 could not run)? Aggregate: CROSS-FAMILY = exp4271 (existing pool) OR
+      exp4272 (fresh ARC-TGI pool) cross_family_win_holds + cross_family_delta + CI95 + within_minus_cross_gap; SELF-LEARNING
+      = exp4273 online_adaptation_helps; SCALE-UP READINESS = exp4274 loader_repaired + preflight_go + cost; ARC = exp4275
+      total_levels (>=20?) + the game advanced; hygiene = exp4277 regression_guard_passed; hardware = exp4278. Emit cross_family_generalizes
+      + hardened_win (now requires cross-family delta>0 AND CI95-excl-0, on top of the .394 leak-audit + multi-seed) + diffusiongemma_full_run_gate
+      (resolvable iff hardened_win AND preflight_go). SKIP any flagged_adversarial artifact; HONOR verifier_is_oracle (a leaked/circular
+      result may NOT headline). Compute the G1-G4 publication gate via publication_gate.py. NO gated_on.'
+    deliverable: results/experiment_4279_capstone_v395.json
     result: OK (conductor)
