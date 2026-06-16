@@ -16883,6 +16883,43 @@ verification without repeating the Exp 4283 TAUTOLOGY. If Exp 4291 inputs are
 absent or thin, then it falls back to the .395 family stream while keeping all
 required bare fields present and saying so in `model_specs`.
 
+### REQ-VERIFY-4297: Degenerate Separation Adversarial Verify Guard
+
+The repository SHALL extend `scripts/adversarial_verify.py` with a
+`DEGENERATE_SEPARATION` critical flag for synthetic selection wins where the
+candidate pool construction makes the vote or matched-control baseline unable
+to win. The check SHALL flag cross-family or cross-generator transfer artifacts
+when any selection-beats-vote delta field such as `cross_family_delta` or
+`cross_generator_delta` is at least 0.95 and any available baseline field such
+as `vote_at_1` or `matched_control_at_1` is at most 0.05. It SHALL also flag
+artifacts whose `oracle_at_k` is exactly 1.0 while `set_encoder_at_1` is
+exactly 1.0, because that indicates a saturated oracle with a perfect selector
+rather than an earned transfer margin.
+
+The check SHALL inspect top-level metrics and the common `pass_rates` nested
+container, SHALL emit severity `critical`, and SHALL avoid false positives on
+genuine high-but-not-perfect wins such as Exp 4271 where vote is 0.25,
+set-encoder is about 0.65, and the delta is about +0.40. The terminal Exp 4297
+artifact SHALL be written by
+`results/experiment_4297_adversarial_verify_degenerate_separation_check.py`
+and SHALL include bare bools `degenerate_check_added`,
+`degenerate_check_flags_exp4282`, `degenerate_check_clean_on_exp4271`, and a
+`reproducibility_checksum` hashing the patched linter and regression test. If
+the verifier cannot import or either required Exp 4282/4271 artifact is
+missing, the script SHALL write `honest_verdict=blocked_artifacts_missing`.
+
+### SCENARIO-VERIFY-4297: Exp4282 Is Flagged And Exp4271 Stays Clean
+
+Given `scripts/adversarial_verify.py` imports and both
+`results/experiment_4282_arcgen_cross_family_stress.json` and
+`results/experiment_4271_arc_cross_family_transfer_existing_pool.json` exist,
+when the Exp 4297 regression test and result script run, then the verifier
+flags Exp 4282 with `DEGENERATE_SEPARATION`, does not flag Exp 4271 with
+`DEGENERATE_SEPARATION`, records the three required bare bools, and writes a
+checksum over the linter plus the regression test. If any precondition is
+missing, then the result script stops with `blocked_artifacts_missing` rather
+than fabricating a success.
+
 ### REQ-VERIFY-4259: ARC Set-Encoder Grid Synthesis
 
 The repository SHALL provide Exp 4259 at

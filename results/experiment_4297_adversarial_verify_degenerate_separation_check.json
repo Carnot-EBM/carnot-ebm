@@ -1,0 +1,40 @@
+{
+  "acceptance_gate_passed": true,
+  "adversarial_verify": {
+    "exp4271_flag_kinds": [],
+    "exp4282_flag_kinds": [
+      "DEGENERATE_SEPARATION"
+    ]
+  },
+  "degenerate_check_added": true,
+  "degenerate_check_clean_on_exp4271": true,
+  "degenerate_check_flags_exp4282": true,
+  "duration_s": 2.071,
+  "experiment": "experiment_4297_adversarial_verify_degenerate_separation_check",
+  "field_principles": {
+    "degenerate_check_added": "BARE bool: the DEGENERATE_SEPARATION check is now in adversarial_verify.py -- the mechanical safety net the .396 incident proved missing.",
+    "degenerate_check_clean_on_exp4271": "BARE bool: the check does NOT flag the genuine .395 win (the false-positive guard -- a real high win must survive).",
+    "degenerate_check_flags_exp4282": "BARE bool: the check FLAGS the .396 degenerate artifact (the true-positive regression test).",
+    "honest_verdict": "Terminal-prefixed. Records the check added + the regression test passing.",
+    "reproducibility_checksum": "Hash of the patched linter + the test; catches silent drift."
+  },
+  "honest_verdict": "success: degenerate_separation_check_added_regression_test_passed",
+  "preconditions_checked": {
+    "adversarial_verify_imports": true,
+    "exp4271_exists": true,
+    "exp4282_exists": true
+  },
+  "reproducibility_checksum": "sha256:25d121a0956c01de2a258c9842984b45b31b8965b8f0e1248ee897acfff4abbe",
+  "schema": "carnot.adversarial_verify_degenerate_separation_check_4297.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4297",
+    "SCENARIO-VERIFY-4297"
+  ],
+  "unit_test": {
+    "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest -o addopts= tests/python/test_adversarial_verify_degenerate_separation.py -q -n0",
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "...                                                                      [100%]\n3 passed in 0.71s\n"
+  },
+  "unit_test_passed": true
+}
