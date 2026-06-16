@@ -8595,3 +8595,4 @@ c |
 | 2026-06-16 05:54 UTC | PHASE D1 (the owed north-star §5 EFFICIENCY axis)  | OK | 89 passed, 1 warning in 6.48s |
 | 2026-06-16 06:10 UTC | PHASE E1 (ARC north star; accuracy) -- monotonic A | OK | 91 passed, 1 warning in 5.05s |
 | 2026-06-16 06:24 UTC | PHASE F1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 104 passed, 1 warning in 4.11s |
+| 2026-06-16 06:40 UTC | PHASE F2 (hygiene) -- reconcile the verifier regis | OK | 89 passed, 1 warning in 6.93s |
