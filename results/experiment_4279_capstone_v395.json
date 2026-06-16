@@ -1,0 +1,346 @@
+{
+  "arc_progress": {
+    "game_advanced": "wa30-ee6fef47",
+    "honest_verdict": "success: incremental_progress_wa30-ee6fef47_advanced_to_L1_total20",
+    "levels_completed": 1,
+    "new_levels_solved_this_task": 1,
+    "status": "included",
+    "total_levels": 20,
+    "total_levels_solved": 20
+  },
+  "cross_family": {
+    "ci95_excludes_zero": true,
+    "cross_family_ci95": [
+      0.25,
+      0.5576923077
+    ],
+    "cross_family_delta": 0.4038461538,
+    "cross_family_win_holds": true,
+    "held_out_family_n": 52,
+    "held_out_task_n": 52,
+    "honest_verdict": "complete: cross_family_generalizes",
+    "matched_control_delta": 0.4423076923,
+    "online_adapt_cross_family_delta": 0.3653846154,
+    "oracle_at_k": 0.8269230769,
+    "reported_cross_family_win_holds": true,
+    "source_artifact_key": "4271_cross_family_existing",
+    "status": "cross_family_generalizes",
+    "used_as_oracle_distinct": true,
+    "verifier_is_oracle": false,
+    "within_minus_cross_gap": 0.0384615385
+  },
+  "cross_family_generalizes": true,
+  "diffusiongemma_full_run_gate": true,
+  "duration_s": 0.35229,
+  "experiment": 4279,
+  "field_principles": {
+    "cross_family_generalizes": "BARE bool: did the held-out-family set_encoder@1 - vote@1 stay >0 with CI95-excl-0 -- the real OOD generalization verdict (north-star-grade if true, scopes-the-headline if false).",
+    "diffusiongemma_full_run_gate": "BARE bool: resolvable iff hardened_win AND preflight_go -- whether .396 may activate the DiffusionGemma full run.",
+    "flagged_artifacts_excluded": "List of .395 artifacts excluded for flagged_adversarial -- the fabrication gate (their numbers are NOT aggregated).",
+    "hardened_win": "BARE bool: the +44pp win is real (provenance-blind, .394), robust (multi-seed, .394), AND general (cross-family, .395) -- the full headline-eligibility verdict.",
+    "headline_outcome": "One honest string aggregating the cross-family + self-learning + scale-up-readiness + ARC reads; the single line the .396 planner frames from.",
+    "honest_verdict": "Terminal-prefixed. The .395 close-state -- whether the hardened win generalized cross-family (the OOD verdict that gates the headline + the scale-up).",
+    "paper_ready": "From publication_gate.py --json -- the G1-G4 status (FoVer headline stays the publication target; a cross-family-general ARC win is a new supporting/headline result).",
+    "reproducibility_checksum": "Hash of the aggregated upstream sha256 set; lets a third party re-derive the capstone.",
+    "upstream_provenance": "{experiment_id, fields_imported, sha256} per cited upstream; skipped upstreams import no numbers.",
+    "verifier_is_oracle_honored": "BARE bool=true -- confirms every cited moat/headline result carried verifier_is_oracle=false (no circular result headlines a moat)."
+  },
+  "flagged_artifacts_excluded": [],
+  "hardened_win": true,
+  "hardening": {
+    "hardened_win": true,
+    "multiseed": {
+      "cross_seed_ci95": [
+        0.4377176136,
+        0.4776670017
+      ],
+      "cross_seed_ci95_excludes_zero": true,
+      "honest_verdict": "complete: arc_oracle_distinct_win_replicates_multiseed",
+      "mean_delta": 0.4576923077,
+      "n_seeds": 5,
+      "oracle_distinct_win_replicates": true,
+      "reported_oracle_distinct_win_replicates": true,
+      "status": "included",
+      "used_as_oracle_distinct": true,
+      "verifier_is_oracle": false
+    },
+    "provenance_blind": {
+      "honest_verdict": "complete: arc_set_encoder_win_survives_provenance_blind_audit",
+      "provenance_blind_ci95": [
+        0.25,
+        0.5192307692
+      ],
+      "provenance_blind_delta": 0.3846153846,
+      "reported_win_survives_provenance_blind": true,
+      "status": "included",
+      "used_as_oracle_distinct": true,
+      "verifier_is_oracle": false,
+      "win_survives_provenance_blind": true
+    }
+  },
+  "hardware_read": {
+    "gatemate_step_taken": "blocked_gatemate_unreachable",
+    "honest_verdict": "complete: hardware_continuity_4278_kv260_kv260_terminal_xmutil_listapps_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_gatemate_blocked_gatemate_unreachable_ssh_usb_reachability_only",
+    "kv260_terminal_confirmed": false,
+    "polarfire_step_taken": "polarfire_hash_verified_cpu_dispatch_succeeded",
+    "status": "included"
+  },
+  "headline_outcome": "cross_family_generalizes_self_learning_static_ceiling_diffusiongemma_full_run_ready_arc20_game_wa30-ee6fef47_paper_ready",
+  "honest_verdict": "complete: capstone_v395_cross_family_generalizes_self_learning_static_ceiling_diffusiongemma_full_run_ready_arc20_game_wa30-ee6fef47_paper_ready_cross_family_generalizes_True_hardened_win_True_diffusiongemma_full_run_gate_True_excluded_0",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "live_adversarial_recheck": "scripts/adversarial_verify.py verify_artifact per upstream",
+  "missing_upstream_artifacts": [],
+  "paper_ready": true,
+  "publication_gate": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "publication_gate_command": "python3 scripts/publication_gate.py --json",
+  "random_seed": 4279,
+  "registry_read": {
+    "honest_verdict": "complete: registry_gaps_manifest_reconciled_to_v395_truth_regression_guard_passed_True_retirements_2_gaps_logged_1",
+    "registry_reconciled": true,
+    "regression_guard_passed": true,
+    "status": "included"
+  },
+  "reproducibility_checksum": "a6ae9f1ee8a30e51c6b148db37e7818b0189df540e5791c178e4e9a347846e94",
+  "scale_up_readiness": {
+    "full_run_cost_estimate_s": 0.071224,
+    "guidance_changes_selection": true,
+    "honest_verdict": "complete: diffusiongemma_loader_fix_preflight_go",
+    "loader_repaired": true,
+    "preflight_go": true,
+    "reported_preflight_go": true,
+    "status": "preflight_go",
+    "verifier_is_oracle": false
+  },
+  "schema": "carnot.capstone_v395_4279.v1",
+  "self_learning": {
+    "honest_verdict": "complete: static_is_the_ceiling_for_online_adaptation",
+    "online_adaptation_helps": false,
+    "online_cross_family_delta": 0.5,
+    "online_minus_static_ci95": [
+      0.0,
+      0.1923076923
+    ],
+    "reported_online_adaptation_helps": false,
+    "static_cross_family_delta": 0.4038461538,
+    "status": "static_ceiling",
+    "verifier_is_oracle": false
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4279",
+    "SCENARIO-CAPSTONE-4279"
+  ],
+  "summarize_command": "python3 scripts/summarize_artifact.py <artifact>",
+  "unmet_gates": [],
+  "upstream_provenance": [
+    {
+      "artifact_key": "4256_leak_audit",
+      "experiment_id": 4256,
+      "fields_imported": [
+        "verifier_is_oracle",
+        "win_survives_provenance_blind",
+        "provenance_blind_delta",
+        "provenance_blind_ci95"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4256_arc_oracle_distinct_leak_audit.json",
+      "payload_reproducibility_checksum": "60effeade145e54a3a4147a7e783ffbc9afb2ca4c3e6cfa48dfc266bcbeb695e",
+      "sha256": "b94c485520ddb0718b45900a980cb6e513033fa5af0338eebb01e6d72ec73576",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4257_multiseed",
+      "experiment_id": 4257,
+      "fields_imported": [
+        "verifier_is_oracle",
+        "oracle_distinct_win_replicates",
+        "mean_delta",
+        "cross_seed_ci95",
+        "cross_seed_ci95_excludes_zero",
+        "n_seeds"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4257_arc_oracle_distinct_multiseed_replication.json",
+      "payload_reproducibility_checksum": "f922898c0e72e1d6bec3a8e21cc330bd3074d9ff2779028969f7b1c3545defd6",
+      "sha256": "54b954d94e45f4fbfab13d50c78520e62782c7c043303f3758cf4590be089168",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4270_family_recovery",
+      "experiment_id": 4270,
+      "fields_imported": [
+        "family_split_feasible",
+        "distinct_family_n",
+        "provenance_manifest_path",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4270_arc_family_provenance_recovery.json",
+      "payload_reproducibility_checksum": "126d26a037972851f4aa8d4db65bcc91686e14ccc2baa9495b9ff6ab0b972663",
+      "sha256": "b35577087e5122a33722cd1cecd974284f2dcd0db2575be6eaef9d0ba2de2b96",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4271_cross_family_existing",
+      "experiment_id": 4271,
+      "fields_imported": [
+        "verifier_is_oracle",
+        "cross_family_win_holds",
+        "cross_family_delta",
+        "cross_family_ci95",
+        "ci95_excludes_zero",
+        "within_minus_cross_gap",
+        "held_out_family_n",
+        "held_out_task_n",
+        "oracle_at_k",
+        "matched_control_delta",
+        "online_adapt_cross_family_delta"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4271_arc_cross_family_transfer_existing_pool.json",
+      "payload_reproducibility_checksum": "1b51ef20bed2f67b77e4dfe8283b17d381da463e9c051b666076cd6c9e2fdec7",
+      "sha256": "e3bd48d3f2219fa67186693c8d0e7ddb9f5cafc2530e7e7164d15cc04d532ae0",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4272_cross_family_fresh",
+      "experiment_id": 4272,
+      "fields_imported": [],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4272_arc_cross_family_transfer_fresh_tgi_pool.json",
+      "payload_reproducibility_checksum": "",
+      "sha256": "7d52ca4bc6b348716d679a79c35b60403a611bdd8bd4bd9dbddaac97ef713737",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4273_self_learning",
+      "experiment_id": 4273,
+      "fields_imported": [
+        "verifier_is_oracle",
+        "online_adaptation_helps",
+        "static_cross_family_delta",
+        "online_cross_family_delta",
+        "online_minus_static_ci95"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4273_arc_cross_family_online_adaptation.json",
+      "payload_reproducibility_checksum": "a910e63749ea5cbd9dc2309085ed6d3e2d8bf4b12d302e36d742564a8c5cd916",
+      "sha256": "dd5ca19b4bf066dec1c11e65bc233834a89caa251f0d3d2604bdbb48d95b7ed9",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4274_preflight",
+      "experiment_id": 4274,
+      "fields_imported": [
+        "verifier_is_oracle",
+        "loader_repaired",
+        "preflight_go",
+        "guidance_changes_selection",
+        "full_run_cost_estimate_s"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4274_diffusiongemma_loader_fix_preflight.json",
+      "payload_reproducibility_checksum": "39680b8918337fb1caee79035d8de861fba5d79f798a11526b775ec0610aa012",
+      "sha256": "0812f30a8a8752b038efaaca0761de92384eabac9207ae394bb9ba2803cb653b",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4275_arc_progress",
+      "experiment_id": 4275,
+      "fields_imported": [
+        "total_levels",
+        "total_levels_solved",
+        "levels_completed",
+        "new_levels_solved_this_task",
+        "game_advanced"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4275_arc_incremental_progress_new_game.json",
+      "payload_reproducibility_checksum": "aff05641840ca5efb6e3593636cf37e05452823709c49738957540816d9b46cf",
+      "sha256": "506cda548814df778d0ae8013cc15d33a3f9ce8819fda7d285909d4da85f4512",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4277_registry",
+      "experiment_id": 4277,
+      "fields_imported": [
+        "registry_reconciled",
+        "regression_guard_passed"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4277_verifier_registry_gaps_hygiene.json",
+      "payload_reproducibility_checksum": "e5fb927d48bd892cd1f423e9ef972c41cc64e4910841b11fcb0b9f1befbbea09",
+      "sha256": "8304357834848e321ba0a32b471aa6c98223deb607b41f60ddb4abc281342d5f",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4278_hardware",
+      "experiment_id": 4278,
+      "fields_imported": [
+        "kv260_terminal_confirmed",
+        "polarfire_step_taken",
+        "gatemate_step_taken"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "path": "results/experiment_4278_hardware_continuity.json",
+      "payload_reproducibility_checksum": "e1e200f6a4a031c3fe76f87816e07afcb10b6a120bf530b1e1f5995a7224388c",
+      "sha256": "54715240fba4ea42a26f82042e71ee77d06e3a6007e80b28f12314df2e6f0e95",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_exit_code": 0
+    }
+  ],
+  "verifier_is_oracle_honored": true
+}
