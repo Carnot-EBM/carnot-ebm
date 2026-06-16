@@ -15987,6 +15987,83 @@ then it writes `honest_verdict=blocked_arc_source_taxonomy_unavailable`,
 keeps the required bare gate fields present, and does not report duplicate
 counts as distinct metrics.
 
+### REQ-VERIFY-4271: ARC Cross-Family Transfer Existing Pool
+
+The repository SHALL provide Exp 4271 at
+`python/carnot/reporting/arc_cross_family_transfer_existing_pool_4271.py` and
+`results/experiment_4271_arc_cross_family_transfer_existing_pool.py` to test
+whether the Exp 4245 within-pool Set-Encoder beats-vote win survives a
+family-disjoint held-out split over the existing Exp 4243 grown ARC candidate
+pool. The runner SHALL first load
+`results/experiment_4270_arc_family_provenance_recovery.json`,
+`results/experiment_4270_arc_family_manifest.json`,
+`results/experiment_4243_arc_candidate_pool_grow_pool.json.gz`,
+`results/experiment_4244_arc_set_encoder_aggregator_build.json`, and the Exp
+4244 learned set-encoder model artifact. If Exp 4270 reports
+`family_split_feasible=false`, the runner SHALL write the terminal verdict
+`complete_arc_cross_family_deferred_pool_infeasible`, keep
+`cross_family_win_holds=false`, keep `verifier_is_oracle=false`, and stop
+without fabricating cross-family metrics.
+
+When the family split is feasible, the runner SHALL partition tasks by
+`family_id` from the Exp 4270 manifest using a deterministic family-disjoint
+k-fold protocol: every fold trains the Exp 4244 Set-Encoder only on
+train-family candidates and scores only held-out-family candidates, and no
+family may appear in both train and test within a fold. It SHALL compute
+held-out-family `set_encoder@1`, `vote@1`, `oracle@K`, a deterministic
+first-candidate matched control, and an online-reweighted selector that
+updates selector weights only from prior held-out task outcomes. It SHALL
+report bare float `cross_family_delta = set_encoder@1 - vote@1`,
+two-float `cross_family_ci95` from at least 2000 task-level bootstrap
+resamples, bare float `within_minus_cross_gap` against the Exp 4245
+within-pool `+0.4423076923` lift, bare int `held_out_family_n`, bare int
+`held_out_task_n`, bare float `oracle_at_k`, bare float
+`matched_control_delta`, and bare float `online_adapt_cross_family_delta`.
+If `oracle@K` does not exceed `vote@1` on held-out families, it SHALL return
+an honest no-headroom verdict rather than treating the null as a verifier
+failure. Otherwise the honest read SHALL be one of `cross_family_generalizes`
+or `within_pool_only`, depending on whether the static cross-family delta is
+positive with CI excluding zero.
+
+The terminal artifact SHALL write
+`results/experiment_4271_arc_cross_family_transfer_existing_pool.json` with
+`honest_verdict`, bare bool `cross_family_win_holds`, bare float
+`cross_family_delta`, `cross_family_ci95`, bare float
+`within_minus_cross_gap`, bare int `held_out_family_n`, bare int
+`held_out_task_n`, bare float `oracle_at_k`, bare float
+`matched_control_delta`, bare float `online_adapt_cross_family_delta`, bare
+bool `verifier_is_oracle=false`, bare int `random_seed`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`acceptance_gate`, and `adversarial_verify`. Its `field_principles` SHALL
+include:
+`honest_verdict` = `Terminal-prefixed. A cross-family win, a within-pool-only collapse, and a no-headroom are ALL COMPLETE and decision-grade.`;
+`cross_family_win_holds` = `BARE bool: the capstone reads this as the OOD verdict (gated-fields-must-be-bare); true iff the held-out-family set_encoder@1 - vote@1 > 0 AND CI95-excl-0 -- the real generalization signal.`;
+`cross_family_delta` = `BARE float: set_encoder@1 - vote@1 on HELD-OUT FAMILIES -- the load-bearing OOD lift (compare to the within-pool +0.4423).`;
+`cross_family_ci95` = `Task-level bootstrap CI95 of the cross-family delta -- excluding 0 means the verifier generalizes to unseen families.`;
+`within_minus_cross_gap` = `The within-pool +0.4423 minus cross_family_delta -- quantifies how much of the win was per-family-basin memorization.`;
+`held_out_family_n` = `BARE int: number of families never seen in training -- the OOD breadth; report with held_out_task_n for power.`;
+`oracle_at_k` = `Positive-control ceiling on held-out families -- if ~=vote the cross-family null is uninformative, not a verifier failure.`;
+`online_adapt_cross_family_delta` = `The online-reweighted selector's cross-family delta -- the static-vs-adaptive self-learning comparison (deepened in A4).`;
+`verifier_is_oracle` = `BARE bool=false -- learned set-encoder, no demo execution; keeps the transfer result oracle-distinct.`;
+`random_seed` = `Determinism precondition; the family-split + bootstrap reproducible.`;
+`reproducibility_checksum` = `Hash of the pool + family partition + manifest; lets a third party re-run.`;
+`model_specs` = `The family-disjoint split protocol + set-encoder config + online-adapt rule; required methodology.`
+
+### SCENARIO-VERIFY-4271: Cross-Family Split Scores Unseen Families
+
+Given Exp 4270 reports `family_split_feasible=true`, the family manifest is
+readable, the Exp 4243 grown pool loads, and the Exp 4244 Set-Encoder artifacts
+are readable and oracle-distinct, when Exp 4271 runs, then it trains and scores
+only family-disjoint folds, reports `cross_family_win_holds`,
+`cross_family_delta`, `cross_family_ci95`, `within_minus_cross_gap`,
+`held_out_family_n`, `held_out_task_n`, `oracle_at_k`,
+`matched_control_delta`, `online_adapt_cross_family_delta`,
+`verifier_is_oracle=false`, `random_seed`, `reproducibility_checksum`, and
+`model_specs`, and runs adversarial verification cleanly. If Exp 4270 reports
+`family_split_feasible=false`, then it writes
+`honest_verdict=complete_arc_cross_family_deferred_pool_infeasible` with the
+required bare fields present and does not train a selector.
+
 ### REQ-VERIFY-4259: ARC Set-Encoder Grid Synthesis
 
 The repository SHALL provide Exp 4259 at
