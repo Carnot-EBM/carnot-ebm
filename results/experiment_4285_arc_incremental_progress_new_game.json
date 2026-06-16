@@ -1,0 +1,575 @@
+{
+  "acceptance_gate_passed": true,
+  "action_plan": [
+    {
+      "action": 3,
+      "kind": "keyboard_move"
+    },
+    {
+      "action": 3,
+      "kind": "keyboard_move"
+    },
+    {
+      "action": 3,
+      "kind": "keyboard_move"
+    },
+    {
+      "action": 1,
+      "kind": "keyboard_move"
+    },
+    {
+      "action": 1,
+      "kind": "keyboard_move"
+    },
+    {
+      "action": 1,
+      "kind": "keyboard_move"
+    },
+    {
+      "action": 1,
+      "kind": "keyboard_move"
+    },
+    {
+      "action": 4,
+      "kind": "keyboard_move"
+    },
+    {
+      "action": 4,
+      "kind": "keyboard_move"
+    },
+    {
+      "action": 4,
+      "kind": "keyboard_move"
+    },
+    {
+      "action": 1,
+      "kind": "keyboard_move"
+    },
+    {
+      "action": 1,
+      "kind": "keyboard_move"
+    },
+    {
+      "action": 1,
+      "kind": "keyboard_move"
+    }
+  ],
+  "candidate_baseline_actions": 22,
+  "duration_s": 0.924,
+  "executed_real_env_actions": 13,
+  "experiment": "experiment_4285_arc_incremental_progress_new_game",
+  "exploration_actions_used": 13,
+  "field_principles": {
+    "game_advanced": "The game id advanced -- keeps progress attributable per-game; must NOT be wa30 (exp4275's advance) or sc25 (exp4261's wall).",
+    "honest_verdict": "Terminal-prefixed. A +1 advance is success; an honest no-advance (no solvable headroom this game) is COMPLETE and informs the next game pick.",
+    "levels_completed": "BARE int: NEW real-env-confirmed levels this task (>=1 for an advance), from the solver output not a self-report.",
+    "model_specs": "The offline solver + hardened set-encoder routing config; required methodology.",
+    "random_seed": "Determinism precondition for the solver run.",
+    "reproducibility_checksum": "Hash of the solver inputs + trajectory; lets a third party re-run.",
+    "total_levels": "BARE int: cumulative solved levels -- target >=21 (monotonic +1 over the .395 20); the north-star accuracy progress metric."
+  },
+  "game_advanced": "ls20-9607627b",
+  "game_levels_completed": 1,
+  "honest_verdict": "success: incremental_progress_ls20-9607627b_advanced_to_L1_total21",
+  "levels_completed": 1,
+  "model_specs": {
+    "compute": "CPU/cached offline ARC fixtures",
+    "conductor": "stood_down",
+    "hardened_set_encoder_routing": {
+      "architecture": "deepsets_pooled_context_set_encoder",
+      "artifact": "results/experiment_4244_arc_set_encoder_aggregator_model.json",
+      "candidate_ranking": "exclude_banked_or_decision_grade_prefixes_then_smallest_l1_baseline_with_set_encoder_ready_gate",
+      "feature_count": 46,
+      "source_experiment": 4244,
+      "status": "trained"
+    },
+    "inference_substrate": "offline_arc_agi3_world_model_hardened_set_encoder_ls20_l1_incremental_progress",
+    "route_acceptance": "accept only when hardened route is retained and the offline real env increments levels_completed",
+    "solver": "python/carnot/agentic/arc_agi3_world_model.py",
+    "target": {
+      "baseline_actions": 22,
+      "excluded_game_prefixes": [
+        "r11l",
+        "lp85",
+        "sc25",
+        "su15",
+        "tn36",
+        "cd82",
+        "dc22",
+        "sb26",
+        "ft09",
+        "s5i5",
+        "tu93",
+        "bp35",
+        "wa30",
+        "vc33"
+      ],
+      "game": "ls20",
+      "game_id": "ls20-9607627b",
+      "headroom_score": 978,
+      "n_levels": 7,
+      "prior_level": 0,
+      "selection_mode": "best_headroom_unattempted_non_wa30_non_sc25",
+      "selection_reason": "selected ls20 L1 because it is the smallest-baseline unattempted non-wa30 non-sc25 game after prior banked prefixes, with 7 levels, a local fixture, and hardened set-encoder routing available",
+      "survey_rank": 13,
+      "target_level": 1
+    },
+    "training": "none",
+    "trm_training": false,
+    "world_model_graph": "GameGraph"
+  },
+  "new_levels_solved_this_task": 1,
+  "observed_transition_count": 13,
+  "phase_trace": [
+    {
+      "levels_completed": 0,
+      "phase": "observe",
+      "source": "offline_ls20_reset",
+      "target_game": "ls20-9607627b",
+      "target_level": 1,
+      "world_model": "GameGraph"
+    },
+    {
+      "candidate_action_count": 13,
+      "mechanic": "ls20 L1 requires one rotation trigger at (19,30), then entry into the visible goal at (34,10)",
+      "phase": "induce"
+    },
+    {
+      "observed_transition_count": 13,
+      "phase": "hardened-set-encoder-route",
+      "predicted_final_level": 1,
+      "retained": true,
+      "route_family": "ls20_l1_rotate_then_target",
+      "router": "experiment_4244_arc_set_encoder_aggregator_model",
+      "score": 0.89,
+      "target_game": "ls20-9607627b",
+      "target_level": 1
+    },
+    {
+      "action": 3,
+      "action_index": 1,
+      "levels_completed": 0,
+      "n_changed": 52,
+      "phase": "act",
+      "player_xy": [
+        29,
+        45
+      ],
+      "rotation_index": 3
+    },
+    {
+      "action": 3,
+      "action_index": 2,
+      "levels_completed": 0,
+      "n_changed": 52,
+      "phase": "act",
+      "player_xy": [
+        24,
+        45
+      ],
+      "rotation_index": 3
+    },
+    {
+      "action": 3,
+      "action_index": 3,
+      "levels_completed": 0,
+      "n_changed": 52,
+      "phase": "act",
+      "player_xy": [
+        19,
+        45
+      ],
+      "rotation_index": 3
+    },
+    {
+      "action": 1,
+      "action_index": 4,
+      "levels_completed": 0,
+      "n_changed": 52,
+      "phase": "act",
+      "player_xy": [
+        19,
+        40
+      ],
+      "rotation_index": 3
+    },
+    {
+      "action": 1,
+      "action_index": 5,
+      "levels_completed": 0,
+      "n_changed": 52,
+      "phase": "act",
+      "player_xy": [
+        19,
+        35
+      ],
+      "rotation_index": 3
+    },
+    {
+      "action": 1,
+      "action_index": 6,
+      "levels_completed": 0,
+      "n_changed": 58,
+      "phase": "act",
+      "player_xy": [
+        19,
+        30
+      ],
+      "rotation_index": 0
+    },
+    {
+      "action": 1,
+      "action_index": 7,
+      "levels_completed": 0,
+      "n_changed": 52,
+      "phase": "act",
+      "player_xy": [
+        19,
+        25
+      ],
+      "rotation_index": 0
+    },
+    {
+      "action": 4,
+      "action_index": 8,
+      "levels_completed": 0,
+      "n_changed": 52,
+      "phase": "act",
+      "player_xy": [
+        24,
+        25
+      ],
+      "rotation_index": 0
+    },
+    {
+      "action": 4,
+      "action_index": 9,
+      "levels_completed": 0,
+      "n_changed": 52,
+      "phase": "act",
+      "player_xy": [
+        29,
+        25
+      ],
+      "rotation_index": 0
+    },
+    {
+      "action": 4,
+      "action_index": 10,
+      "levels_completed": 0,
+      "n_changed": 52,
+      "phase": "act",
+      "player_xy": [
+        34,
+        25
+      ],
+      "rotation_index": 0
+    },
+    {
+      "action": 1,
+      "action_index": 11,
+      "levels_completed": 0,
+      "n_changed": 52,
+      "phase": "act",
+      "player_xy": [
+        34,
+        20
+      ],
+      "rotation_index": 0
+    },
+    {
+      "action": 1,
+      "action_index": 12,
+      "levels_completed": 0,
+      "n_changed": 52,
+      "phase": "act",
+      "player_xy": [
+        34,
+        15
+      ],
+      "rotation_index": 0
+    },
+    {
+      "action": 1,
+      "action_index": 13,
+      "levels_completed": 1,
+      "n_changed": 1459,
+      "phase": "act",
+      "player_xy": [
+        29,
+        40
+      ],
+      "rotation_index": 0
+    }
+  ],
+  "prior_level": 0,
+  "prior_total_levels_solved": 20,
+  "random_seed": 4285,
+  "real_env_confirmed": true,
+  "reproducibility_checksum": "21341bb4f7fc7b43a0847af13ff88caf31fc92e5d872d13e2e699ca116463144",
+  "requirements": [
+    "REQ-PHASE4-070",
+    "SCENARIO-PHASE4-070"
+  ],
+  "selected_candidate_reason": "selected ls20 L1 because it is the smallest-baseline unattempted non-wa30 non-sc25 game after prior banked prefixes, with 7 levels, a local fixture, and hardened set-encoder routing available",
+  "selection_mode": "best_headroom_unattempted_non_wa30_non_sc25",
+  "solve_trace": {
+    "actions": [
+      {
+        "action": 3,
+        "kind": "keyboard_move"
+      },
+      {
+        "action": 3,
+        "kind": "keyboard_move"
+      },
+      {
+        "action": 3,
+        "kind": "keyboard_move"
+      },
+      {
+        "action": 1,
+        "kind": "keyboard_move"
+      },
+      {
+        "action": 1,
+        "kind": "keyboard_move"
+      },
+      {
+        "action": 1,
+        "kind": "keyboard_move"
+      },
+      {
+        "action": 1,
+        "kind": "keyboard_move"
+      },
+      {
+        "action": 4,
+        "kind": "keyboard_move"
+      },
+      {
+        "action": 4,
+        "kind": "keyboard_move"
+      },
+      {
+        "action": 4,
+        "kind": "keyboard_move"
+      },
+      {
+        "action": 1,
+        "kind": "keyboard_move"
+      },
+      {
+        "action": 1,
+        "kind": "keyboard_move"
+      },
+      {
+        "action": 1,
+        "kind": "keyboard_move"
+      }
+    ],
+    "phase_trace": [
+      {
+        "levels_completed": 0,
+        "phase": "observe",
+        "source": "offline_ls20_reset",
+        "target_game": "ls20-9607627b",
+        "target_level": 1,
+        "world_model": "GameGraph"
+      },
+      {
+        "candidate_action_count": 13,
+        "mechanic": "ls20 L1 requires one rotation trigger at (19,30), then entry into the visible goal at (34,10)",
+        "phase": "induce"
+      },
+      {
+        "observed_transition_count": 13,
+        "phase": "hardened-set-encoder-route",
+        "predicted_final_level": 1,
+        "retained": true,
+        "route_family": "ls20_l1_rotate_then_target",
+        "router": "experiment_4244_arc_set_encoder_aggregator_model",
+        "score": 0.89,
+        "target_game": "ls20-9607627b",
+        "target_level": 1
+      },
+      {
+        "action": 3,
+        "action_index": 1,
+        "levels_completed": 0,
+        "n_changed": 52,
+        "phase": "act",
+        "player_xy": [
+          29,
+          45
+        ],
+        "rotation_index": 3
+      },
+      {
+        "action": 3,
+        "action_index": 2,
+        "levels_completed": 0,
+        "n_changed": 52,
+        "phase": "act",
+        "player_xy": [
+          24,
+          45
+        ],
+        "rotation_index": 3
+      },
+      {
+        "action": 3,
+        "action_index": 3,
+        "levels_completed": 0,
+        "n_changed": 52,
+        "phase": "act",
+        "player_xy": [
+          19,
+          45
+        ],
+        "rotation_index": 3
+      },
+      {
+        "action": 1,
+        "action_index": 4,
+        "levels_completed": 0,
+        "n_changed": 52,
+        "phase": "act",
+        "player_xy": [
+          19,
+          40
+        ],
+        "rotation_index": 3
+      },
+      {
+        "action": 1,
+        "action_index": 5,
+        "levels_completed": 0,
+        "n_changed": 52,
+        "phase": "act",
+        "player_xy": [
+          19,
+          35
+        ],
+        "rotation_index": 3
+      },
+      {
+        "action": 1,
+        "action_index": 6,
+        "levels_completed": 0,
+        "n_changed": 58,
+        "phase": "act",
+        "player_xy": [
+          19,
+          30
+        ],
+        "rotation_index": 0
+      },
+      {
+        "action": 1,
+        "action_index": 7,
+        "levels_completed": 0,
+        "n_changed": 52,
+        "phase": "act",
+        "player_xy": [
+          19,
+          25
+        ],
+        "rotation_index": 0
+      },
+      {
+        "action": 4,
+        "action_index": 8,
+        "levels_completed": 0,
+        "n_changed": 52,
+        "phase": "act",
+        "player_xy": [
+          24,
+          25
+        ],
+        "rotation_index": 0
+      },
+      {
+        "action": 4,
+        "action_index": 9,
+        "levels_completed": 0,
+        "n_changed": 52,
+        "phase": "act",
+        "player_xy": [
+          29,
+          25
+        ],
+        "rotation_index": 0
+      },
+      {
+        "action": 4,
+        "action_index": 10,
+        "levels_completed": 0,
+        "n_changed": 52,
+        "phase": "act",
+        "player_xy": [
+          34,
+          25
+        ],
+        "rotation_index": 0
+      },
+      {
+        "action": 1,
+        "action_index": 11,
+        "levels_completed": 0,
+        "n_changed": 52,
+        "phase": "act",
+        "player_xy": [
+          34,
+          20
+        ],
+        "rotation_index": 0
+      },
+      {
+        "action": 1,
+        "action_index": 12,
+        "levels_completed": 0,
+        "n_changed": 52,
+        "phase": "act",
+        "player_xy": [
+          34,
+          15
+        ],
+        "rotation_index": 0
+      },
+      {
+        "action": 1,
+        "action_index": 13,
+        "levels_completed": 1,
+        "n_changed": 1459,
+        "phase": "act",
+        "player_xy": [
+          29,
+          40
+        ],
+        "rotation_index": 0
+      }
+    ],
+    "prior_level": 0,
+    "selection_mode": "best_headroom_unattempted_non_wa30_non_sc25",
+    "selection_reason": "selected ls20 L1 because it is the smallest-baseline unattempted non-wa30 non-sc25 game after prior banked prefixes, with 7 levels, a local fixture, and hardened set-encoder routing available",
+    "solver_trace": {
+      "candidate_count": 1,
+      "candidate_route": "ls20_l1_rotate_then_target",
+      "graph_edges_seen": 13,
+      "graph_nodes_seen": 14,
+      "max_levels_observed": 1,
+      "route_basis": "BFS over visible grid cells plus one induced rotation trigger, executed in the real offline env",
+      "world_model": "GameGraph"
+    },
+    "target_game": "ls20-9607627b",
+    "target_level": 1
+  },
+  "submitted_to_leaderboard": false,
+  "target_game": "ls20-9607627b",
+  "target_level": 1,
+  "title": "arc3_incremental_progress_exp4285_different_game_offline",
+  "total_levels": 21,
+  "total_levels_solved": 21,
+  "verifier_validated": true
+}
