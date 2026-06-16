@@ -37,6 +37,20 @@ still-UNPROVEN claim is an oracle-DISTINCT verifier.
    results, already known, and NOT headline-eligible (the lint WARNs them). Re-measuring
    them is churn (Depth-Over-Breadth / north-star §1).
 
+**SCORECARD CORRECTION — the .397 capstone (exp4301) is BLOCKED/spurious (outer-loop, 2026-06-16).**
+exp4301 reports `headline_outcome: blocked_v397_artifacts_missing` and defaulted EVERY boolean to
+False (`cross_generator_moat_closes=False`, etc.) because ONE required artifact (exp4294 efficiency-
+harden) was missing (C1 failed 3x + 3-fail-skipped). This is a capstone robustness bug, NOT the
+result. **TRUE .397 scorecard:** the cross-GENERATOR axis CLOSED legitimately (exp4291,
+cross_generator_delta +0.50, CI95 [0.29,0.71], vote@1=0.25, oracle@K=0.75, non-degenerate guards
+passed) — the LAST open axis of the selection moat is now closed; in-generation moat NOT held
+(exp4293 degenerate controls, quarantined); efficiency-harden UNRESOLVED (exp4294 failed, not a
+measured null). **.398 planner: do NOT re-open cross-generator as failed.** Open items are
+re-scoping C1 efficiency-harden to fit the window (it doomed-looped on the 2h cap) and the
+in-generation moat's differentiated controls. Fix the capstone to aggregate available artifacts +
+report per-axis gaps instead of hard-block-all-False. Full audit:
+`docs/research-notes/exp4301-capstone-blocked-spurious-false-2026-06-16.md`.
+
 **TECHNICAL NOTE — DiffusionGemma runtime, use the PR binary (outer-loop, 2026-06-15).**
 The `.394 preflight (exp4260) failed `blocked_diffusiongemma_gguf_loader_failed`
 (preflight_go=False) and the full-run gate is NO-GO. TWO blockers, separate: (a) SCIENCE —
