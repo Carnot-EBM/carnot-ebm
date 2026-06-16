@@ -1,0 +1,245 @@
+{
+  "acceptance_gate": true,
+  "duration_s": 60.000162,
+  "energy_prior_smoke": {
+    "eval_rc": 0,
+    "expected_logits_file_size_bytes": 268435456,
+    "logits_file_size_bytes": 268435456,
+    "pos0_top_tokens": [
+      [
+        4,
+        "<mask>",
+        22.9574
+      ],
+      [
+        108,
+        "\n\n",
+        22.9046
+      ],
+      [
+        32107,
+        " corrected",
+        22.4528
+      ],
+      [
+        623,
+        " \"",
+        22.0738
+      ],
+      [
+        236778,
+        "2",
+        21.7857
+      ],
+      [
+        236775,
+        "\"",
+        21.7644
+      ]
+    ],
+    "prompt_ids_count": 15,
+    "score_finite_sample": true,
+    "score_shape": [
+      256,
+      262144
+    ],
+    "status": "extracted"
+  },
+  "experiment": 4292,
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed. A built leak-free scorer (unblocks exp4293), a built-but-leaky scorer (circular -- exp4293 gates off), and a cannot-build (retire the approach) are ALL COMPLETE and decision-grade.",
+    "leak_ablation_auroc": "BARE float: the scorer's AUROC with the answer-bearing cells masked -- if it collapses toward 0.5 the scorer was reading the answer (leaky); if it stays high the signal is genuine partial-state structure.",
+    "model_specs": "DiffusionGemma GGUF + PR binary + the value-head architecture + the training corpus + the leak-ablation protocol; required methodology.",
+    "partial_state_auroc": "BARE float: the held-out partial-state scoring AUROC -- the non-degeneracy measure (>0.6 = a real learned signal, not chance).",
+    "partial_state_leak_free": "BARE bool: gated_on by exp4293; true iff the scorer's signal SURVIVES masking the answer-bearing cells -- the circularity guard (a leaky scorer just reads the oracle = NOT a learned external moat).",
+    "partial_state_scorer_built": "BARE bool: gated_on by exp4293 (gated-fields-must-be-bare); true iff the scorer scores held-out partial states at partial_state_auroc > 0.6 AND is loadable -- the harness-first gate that the missing capability now exists.",
+    "preconditions_checked": "Records the PR-binary + GGUF cache + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the value-head training + the eval.",
+    "reproducibility_checksum": "Hash of the corpus + value-head config + PR-binary inputs; lets a third party re-train.",
+    "verifier_is_oracle": "BARE bool=false -- a learned value head over partial states, NOT the executable oracle; the leak audit is what KEEPS it oracle-distinct."
+  },
+  "heldout_label_counts": {
+    "correct": 38,
+    "incorrect": 38
+  },
+  "heldout_n": 228,
+  "heldout_preview": [
+    {
+      "answer_cell_count": 0,
+      "label": false,
+      "revealed_cells": 59,
+      "source_text_sha256": "c27a6e7cf21a9d67fde1b6658a8fdf009c90a479201fdea445dbee0673314529",
+      "step": 0,
+      "task_id": "199"
+    },
+    {
+      "answer_cell_count": 0,
+      "label": false,
+      "revealed_cells": 91,
+      "source_text_sha256": "c27a6e7cf21a9d67fde1b6658a8fdf009c90a479201fdea445dbee0673314529",
+      "step": 1,
+      "task_id": "199"
+    },
+    {
+      "answer_cell_count": 0,
+      "label": false,
+      "revealed_cells": 130,
+      "source_text_sha256": "c27a6e7cf21a9d67fde1b6658a8fdf009c90a479201fdea445dbee0673314529",
+      "step": 2,
+      "task_id": "199"
+    },
+    {
+      "answer_cell_count": 22,
+      "label": true,
+      "revealed_cells": 45,
+      "source_text_sha256": "f67b6ebc5eb7f5f6ed86d75aeda0784d94dda75b64907ea3deabb5d2396e45eb",
+      "step": 0,
+      "task_id": "gsm8k_1364_5_0"
+    },
+    {
+      "answer_cell_count": 22,
+      "label": true,
+      "revealed_cells": 70,
+      "source_text_sha256": "f67b6ebc5eb7f5f6ed86d75aeda0784d94dda75b64907ea3deabb5d2396e45eb",
+      "step": 1,
+      "task_id": "gsm8k_1364_5_0"
+    }
+  ],
+  "heldout_task_n": 76,
+  "honest_verdict": "complete: partial_state_diffusion_scorer_built_leak_free",
+  "inference_substrate": "live_llm_inference",
+  "leak_ablation_auroc": 0.937365,
+  "leak_audit": {
+    "answer_masked_cells": 2031,
+    "answer_revealed_heldout_records": 74,
+    "auroc_floor": 0.6,
+    "leak_free": true,
+    "protocol": "mask answer_cell_indices to DiffusionGemma mask_token_id before scoring"
+  },
+  "model_specs": {
+    "corpus": {
+      "heldout_fraction": 0.25,
+      "heldout_task_n": 76,
+      "labels": {
+        "heldout": {
+          "correct": 38,
+          "incorrect": 38
+        },
+        "train": {
+          "correct": 112,
+          "incorrect": 112
+        }
+      },
+      "name": "FoVer/math in-distribution error corpus v1",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/in_distribution_error_corpus_v1.json",
+      "task_disjoint_split": true,
+      "train_task_n": 224
+    },
+    "diffusiongemma": {
+      "active_params_b": 4,
+      "auto_tokenizer_used": false,
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "canvas_len": 256,
+      "energy_prior_smoke_status": "extracted",
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "mask_token_id": 4,
+      "model_loaded": true,
+      "pr_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "pr_binary_call": "llama-diffusion-gemma-eval <gguf> <prompt_ids.i32> <canvas_ids.i32> <out_logits.bin>",
+      "quantization": "Q4_K_M",
+      "runtime": "llama.cpp PR diffusion-gemma eval binary",
+      "total_params_b": 26,
+      "vocab_size": 262144
+    },
+    "leak_ablation_protocol": {
+      "ablation": "replace answer-bearing canvas cells with mask_token_id before scoring",
+      "answer_cells": "regex spans for GSM/FoVer answers (<<expr=answer>>answer and boxed{answer})",
+      "leak_free_floor": 0.6
+    },
+    "value_head": {
+      "architecture": "char_wb TF-IDF ngram(3,5) + balanced LogisticRegression(liblinear)",
+      "class": "PartialStateDiffusionScorer",
+      "heldout_n": 228,
+      "max_features": 5000,
+      "module": "carnot.verify.partial_state_diffusion_scorer",
+      "score_api": "score_partial_state(canvas_ids, step) -> energy",
+      "train_n": 672
+    }
+  },
+  "partial_state_auroc": 0.966143,
+  "partial_state_leak_free": true,
+  "partial_state_scorer_built": true,
+  "preconditions_checked": [
+    {
+      "command": "ls /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "exists": true,
+      "ok": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "resource": "pr_binary",
+      "size_bytes": 26400
+    },
+    {
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "cache_entries_preview": [
+        "blobs",
+        "refs",
+        "snapshots"
+      ],
+      "cache_error": null,
+      "cache_non_empty": true,
+      "command": "ls /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/",
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "ok": true,
+      "resolve_error": null,
+      "resource": "diffusiongemma_cache"
+    },
+    {
+      "active_training_processes": [],
+      "ok": true,
+      "process_check_error": null,
+      "resource": "trm_training_stand_down",
+      "results_trm_runs_touched": false
+    },
+    {
+      "auto_tokenizer_used": false,
+      "backend": "gguf_metadata",
+      "detail": "llama_cpp vocab_only failed (ValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf); embedded GGUF tokenizer metadata OK",
+      "elapsed_s": 0.285573,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "mode": "embedded_vocab_metadata",
+      "ok": true,
+      "resource": "gguf_vocab_loader",
+      "token_count": 15,
+      "token_ids_preview": [
+        3,
+        236743,
+        3,
+        236743,
+        111359,
+        236743,
+        3,
+        236743
+      ],
+      "vocab_only": false
+    }
+  ],
+  "random_seed": 4292,
+  "reproducibility_checksum": "8308d1487b884e46bf527d7b3a86b9f1e7b815404b4bd2302a25d49809859d15",
+  "schema": "partial_state_diffusion_scorer_build_v1",
+  "scorer_loadable": true,
+  "scorer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/partial_state_diffusion_scorer_exp4292.pkl",
+  "spec_refs": [
+    "REQ-VERIFY-4292",
+    "SCENARIO-VERIFY-4292"
+  ],
+  "train_label_counts": {
+    "correct": 112,
+    "incorrect": 112
+  },
+  "train_n": 672,
+  "train_task_n": 224,
+  "verifier_is_oracle": false
+}
