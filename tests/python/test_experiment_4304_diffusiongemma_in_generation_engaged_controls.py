@@ -178,7 +178,7 @@ def _prior_for_moat(*, task: exp.ChoiceTask, tokenizer: object, **_: object) -> 
             )
             for choice in task.choices
         },
-        "mask_entropy": 1.2,
+        "mask_entropy": 1.2 if index < 15 else 0.2,
         "prompt_ids_count": 8,
         "score_shape": [exp.CANVAS_LEN, exp.VOCAB_SIZE],
     }
@@ -420,6 +420,56 @@ def test_scenario_4304_controls_not_differentiable_guard_fires(tmp_path: Path) -
     assert artifact["control_noop_guard"]["bit_identical_accuracy_pairs"]
 
 
+def test_req_verify_4304_collects_target_rows_after_prior_failures() -> None:
+    """REQ-VERIFY-4304: benchmark keeps trying until it has 30 measured rows."""
+
+    tasks = exp.build_choice_tasks(_reasoning_items(), max_tasks=36, seed=4304)
+
+    def flaky_prior(*, task: exp.ChoiceTask, tokenizer: object, **kwargs: object) -> dict[str, object]:
+        index = int(task.task_id.rsplit("_", 1)[-1])
+        if index < 6:
+            return {"status": "blocked_pr_binary_eval_failed", "task_id": task.task_id}
+        return _prior_for_moat(task=task, tokenizer=tokenizer, **kwargs)
+
+    benchmark = exp.run_engaged_choice_benchmark(
+        tasks=tasks,
+        scorer=KeywordScorer(),
+        tokenizer=TinyTokenizer(),
+        pr_binary_path=Path("/tmp/pr-binary"),
+        gguf_path="/tmp/diffusiongemma.gguf",
+        config=exp._default_guidance_config(),
+        option_prior_fn=flaky_prior,
+        target_successes=30,
+    )
+
+    assert len(benchmark["failures"]) == 6
+    assert len(benchmark["rows"]) == 30
+    assert benchmark["rows"][0]["task_id"] == "fover_math_choice_006"
+    assert benchmark["rows"][-1]["task_id"] == "fover_math_choice_035"
+
+
+def test_req_verify_4304_entrgi_entropy_gate_changes_selection() -> None:
+    """REQ-VERIFY-4304: EntRGi is a non-zero single-model entropy-gated control."""
+
+    task = exp.build_choice_tasks(_reasoning_items(), max_tasks=1, seed=4304)[0]
+    logits = {choice.option: 1.0 for choice in task.choices}
+    wrong_option = next(choice.option for choice in task.choices if not choice.label)
+    logits[wrong_option] = 5.0
+    logits[task.correct_option] = 4.4
+
+    selections = exp.select_conditions(
+        task=task,
+        option_logits=logits,
+        scorer=KeywordScorer(),
+        config=exp._default_guidance_config(),
+        mask_entropy=1.2,
+    )
+
+    assert selections["unguided"]["option"] == wrong_option
+    assert selections["entrgi"]["option"] == task.correct_option
+    assert selections["carnot"]["option"] == task.correct_option
+
+
 def test_scenario_4304_partial_bounded_and_overguided_verdicts(tmp_path: Path) -> None:
     """SCENARIO-VERIFY-4304: partial, bounded-null, and over-guided outcomes are distinct."""
 
@@ -595,7 +645,12 @@ def test_req_verify_4304_validation_and_helper_edges(tmp_path: Path) -> None:
     assert exp.assess_control_differentiation([], [])["controls_differentiated"] is False
     with pytest.raises(ValueError, match="at least one condition row"):
         exp.summarize_engaged_rows([])
-    assert exp._entrgi_candidate_prior("ambiguous neutral text") == 0.0
+    assert exp._entrgi_entropy_gated_score(
+        option="A",
+        option_logits={"A": 2.0, "B": 2.0},
+        mean_logit=2.0,
+        entropy_gate=1.0,
+    ) == 2.0
     assert exp._entropy_from_logits([]) == 0.0
     assert exp._covariance([1.0], [1.0, 2.0]) == 0.0
 

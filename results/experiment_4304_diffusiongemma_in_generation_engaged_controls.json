@@ -1,79 +1,14 @@
 {
   "acceptance_gate": true,
-  "benchmark_failures": [
-    {
-      "prior": {
-        "eval_rc": -15,
-        "option_token_ids": {
-          "A": 236776,
-          "B": 236799,
-          "C": 236780,
-          "D": 236796
-        },
-        "prompt_ids_count": 512,
-        "status": "blocked_pr_binary_eval_failed",
-        "stderr_tail": "raph_reserve: reserving a graph for ubatch with n_tokens =    1, n_seqs =  1, n_outputs =    1\ngraph_reserve: reserving a graph for ubatch with n_tokens =  768, n_seqs =  1, n_outputs =  768\nsched_reserve:      CUDA0 compute buffer size =  1370.25 MiB\nsched_reserve:  CUDA_Host compute buffer size =    21.01 MiB\nsched_reserve: graph nodes  = 2800 (with bs=768), 2615 (with bs=1)\nsched_reserve: graph splits = 661 (with bs=768), 1 (with bs=1)\nsched_reserve: reserve took 89.55 ms, sched copies = 1\nset_causal_attn: value = 0\ndecode: cannot decode batches with this context (calling encode() instead)\n",
-        "stdout_tail": ""
-      },
-      "task_id": "fover_math_choice_008"
-    },
-    {
-      "prior": {
-        "eval_rc": -15,
-        "option_token_ids": {
-          "A": 236776,
-          "B": 236799,
-          "C": 236780,
-          "D": 236796
-        },
-        "prompt_ids_count": 389,
-        "status": "blocked_pr_binary_eval_failed",
-        "stderr_tail": "aph_reserve: reserving a graph for ubatch with n_tokens =    1, n_seqs =  1, n_outputs =    1\ngraph_reserve: reserving a graph for ubatch with n_tokens =  645, n_seqs =  1, n_outputs =  645\nsched_reserve:      CUDA0 compute buffer size =  1243.29 MiB\nsched_reserve:  CUDA_Host compute buffer size =    17.04 MiB\nsched_reserve: graph nodes  = 2800 (with bs=645), 2615 (with bs=1)\nsched_reserve: graph splits = 661 (with bs=645), 1 (with bs=1)\nsched_reserve: reserve took 105.54 ms, sched copies = 1\nset_causal_attn: value = 0\ndecode: cannot decode batches with this context (calling encode() instead)\n",
-        "stdout_tail": ""
-      },
-      "task_id": "fover_math_choice_012"
-    },
-    {
-      "prior": {
-        "eval_rc": -15,
-        "option_token_ids": {
-          "A": 236776,
-          "B": 236799,
-          "C": 236780,
-          "D": 236796
-        },
-        "prompt_ids_count": 326,
-        "status": "blocked_pr_binary_eval_failed",
-        "stderr_tail": "aph_reserve: reserving a graph for ubatch with n_tokens =    1, n_seqs =  1, n_outputs =    1\ngraph_reserve: reserving a graph for ubatch with n_tokens =  582, n_seqs =  1, n_outputs =  582\nsched_reserve:      CUDA0 compute buffer size =  1178.26 MiB\nsched_reserve:  CUDA_Host compute buffer size =    15.09 MiB\nsched_reserve: graph nodes  = 2800 (with bs=582), 2615 (with bs=1)\nsched_reserve: graph splits = 661 (with bs=582), 1 (with bs=1)\nsched_reserve: reserve took 105.03 ms, sched copies = 1\nset_causal_attn: value = 0\ndecode: cannot decode batches with this context (calling encode() instead)\n",
-        "stdout_tail": ""
-      },
-      "task_id": "fover_math_choice_017"
-    },
-    {
-      "prior": {
-        "eval_rc": -15,
-        "option_token_ids": {
-          "A": 236776,
-          "B": 236799,
-          "C": 236780,
-          "D": 236796
-        },
-        "prompt_ids_count": 427,
-        "status": "blocked_pr_binary_eval_failed",
-        "stderr_tail": "aph_reserve: reserving a graph for ubatch with n_tokens =    1, n_seqs =  1, n_outputs =    1\ngraph_reserve: reserving a graph for ubatch with n_tokens =  683, n_seqs =  1, n_outputs =  683\nsched_reserve:      CUDA0 compute buffer size =  1282.51 MiB\nsched_reserve:  CUDA_Host compute buffer size =    18.24 MiB\nsched_reserve: graph nodes  = 2800 (with bs=683), 2615 (with bs=1)\nsched_reserve: graph splits = 661 (with bs=683), 1 (with bs=1)\nsched_reserve: reserve took 121.32 ms, sched copies = 1\nset_causal_attn: value = 0\ndecode: cannot decode batches with this context (calling encode() instead)\n",
-        "stdout_tail": ""
-      },
-      "task_id": "fover_math_choice_020"
-    }
-  ],
-  "benchmark_n": 26,
+  "benchmark_failures": [],
+  "benchmark_n": 30,
   "benchmark_records_preview": [
     {
       "carnot_correct": true,
       "carnot_option": "B",
       "correct_option": "B",
-      "entrgi_correct": true,
-      "entrgi_option": "B",
+      "entrgi_correct": false,
+      "entrgi_option": "C",
       "mask_entropy": 1.244398,
       "option_logits": {
         "A": 13.230801582336426,
@@ -90,11 +25,11 @@
           "score": 14.512278
         },
         "entrgi": {
-          "correct": true,
-          "logit": 14.448931,
-          "option": "B",
-          "partial_state_energy": 0.792368,
-          "score": 14.448931
+          "correct": false,
+          "logit": 14.287576,
+          "option": "C",
+          "partial_state_energy": 0.86024,
+          "score": 13.073611
         },
         "unguided": {
           "correct": true,
@@ -112,7 +47,7 @@
       "carnot_option": "D",
       "correct_option": "B",
       "entrgi_correct": false,
-      "entrgi_option": "D",
+      "entrgi_option": "C",
       "mask_entropy": 0.565804,
       "option_logits": {
         "A": 11.694141387939453,
@@ -130,10 +65,10 @@
         },
         "entrgi": {
           "correct": false,
-          "logit": 15.416245,
-          "option": "D",
-          "partial_state_energy": 1.208772,
-          "score": 15.416245
+          "logit": 13.411588,
+          "option": "C",
+          "partial_state_energy": 1.056991,
+          "score": 13.07315
         },
         "unguided": {
           "correct": false,
@@ -151,7 +86,7 @@
       "carnot_option": "D",
       "correct_option": "C",
       "entrgi_correct": false,
-      "entrgi_option": "D",
+      "entrgi_option": "B",
       "mask_entropy": 1.109714,
       "option_logits": {
         "A": 11.244248390197754,
@@ -169,10 +104,10 @@
         },
         "entrgi": {
           "correct": false,
-          "logit": 13.309862,
-          "option": "D",
-          "partial_state_energy": 0.922096,
-          "score": 13.309862
+          "logit": 12.52339,
+          "option": "B",
+          "partial_state_energy": 0.889,
+          "score": 11.808845
         },
         "unguided": {
           "correct": false,
@@ -190,7 +125,7 @@
       "carnot_option": "D",
       "correct_option": "A",
       "entrgi_correct": false,
-      "entrgi_option": "D",
+      "entrgi_option": "C",
       "mask_entropy": 1.067849,
       "option_logits": {
         "A": 6.132151126861572,
@@ -208,10 +143,10 @@
         },
         "entrgi": {
           "correct": false,
-          "logit": 13.299166,
-          "option": "D",
-          "partial_state_energy": 0.896282,
-          "score": 13.299166
+          "logit": 12.672649,
+          "option": "C",
+          "partial_state_energy": 0.904546,
+          "score": 9.650946
         },
         "unguided": {
           "correct": false,
@@ -229,7 +164,7 @@
       "carnot_option": "B",
       "correct_option": "B",
       "entrgi_correct": false,
-      "entrgi_option": "D",
+      "entrgi_option": "C",
       "mask_entropy": 1.147577,
       "option_logits": {
         "A": 14.61284065246582,
@@ -247,10 +182,10 @@
         },
         "entrgi": {
           "correct": false,
-          "logit": 17.128874,
-          "option": "D",
-          "partial_state_energy": 0.963392,
-          "score": 17.128874
+          "logit": 16.15123,
+          "option": "C",
+          "partial_state_energy": 0.852672,
+          "score": 16.064929
         },
         "unguided": {
           "correct": false,
@@ -266,41 +201,36 @@
   ],
   "best_engaged_control": "entrgi",
   "bootstrap_resamples": 2000,
-  "carnot_minus_best_control_delta": 0.115385,
-  "carnot_minus_unguided_delta": 0.115385,
+  "carnot_minus_best_control_delta": 0.133334,
+  "carnot_minus_unguided_delta": 0.1,
   "condition_accuracy": {
-    "carnot": 0.423077,
-    "entrgi": 0.307692,
-    "unguided": 0.307692
+    "carnot": 0.366667,
+    "entrgi": 0.233333,
+    "unguided": 0.266667
   },
   "condition_pass_counts": {
     "carnot": 11,
-    "entrgi": 8,
+    "entrgi": 7,
     "unguided": 8
   },
   "control_noop_guard": {
-    "bit_identical_accuracy_pairs": [
-      [
-        "unguided",
-        "entrgi"
-      ]
-    ],
+    "bit_identical_accuracy_pairs": [],
     "control_accuracy": {
-      "entrgi": 0.307692,
-      "unguided": 0.307692
+      "entrgi": 0.233333,
+      "unguided": 0.266667
     },
-    "controls_differentiated": false,
+    "controls_differentiated": true,
     "engaged_controls": [
       "entrgi"
     ],
     "guidance_changes_selection": {
-      "entrgi": false
+      "entrgi": true
     },
-    "reason": "control arms tied or did not change selection"
+    "reason": "ok"
   },
-  "controls_differentiated": false,
+  "controls_differentiated": true,
   "diffusiongemma_guidance_moat": false,
-  "duration_s": 209.943754,
+  "duration_s": 201.519575,
   "experiment": 4304,
   "field_principles": {
     "carnot_minus_best_control_delta": "BARE float: Carnot-guided minus the BEST genuinely-engaged non-Carnot control -- the load-bearing comparison (beating an ENGAGED baseline shows an EXTERNAL verifier adds value in-generation).",
@@ -318,22 +248,22 @@
     "verifier_is_oracle": "BARE bool=false -- the learned partial-state scorer is oracle-distinct (NOT the executable oracle); a circular guidance win cannot headline."
   },
   "guidance_changes_selection": {
-    "entrgi": false
+    "entrgi": true
   },
   "guidance_dynamics_diagnostic": {
-    "mask_entropy_mean": 0.889305,
-    "mask_entropy_stdev": 0.229849,
+    "mask_entropy_mean": 0.903828,
+    "mask_entropy_stdev": 0.228057,
     "over_guided_finding": false,
     "status": "measured",
-    "token_change_covariance": 0.093195,
-    "token_change_rate": 0.192308,
-    "trajectory_stability": 0.807692
+    "token_change_covariance": 0.026667,
+    "token_change_rate": 0.8,
+    "trajectory_stability": 0.2
   },
   "guidance_moat_ci95": [
-    0.0,
-    0.230769
+    -0.066667,
+    0.366667
   ],
-  "honest_verdict": "partial: diffusiongemma_guidance_prior_eval_incomplete",
+  "honest_verdict": "complete: diffusiongemma_guidance_bounded_null_vs_engaged_control",
   "independent_leak_recheck": {
     "answer_masked_auroc": 0.9792,
     "answer_masked_cells": 2865,
@@ -352,18 +282,14 @@
         "entrgi"
       ],
       "entrgi": {
-        "changes_selection": false,
-        "gamma": 1.0,
+        "changes_selection": true,
+        "gamma": 2.0,
+        "score": "logit - gamma * mask_entropy * abs(logit - mean_logit)",
         "type": "single-model entropy-gated guidance",
         "uses_second_checkpoint": false
       },
       "noop_guard": {
-        "bit_identical_accuracy_pairs": [
-          [
-            "unguided",
-            "entrgi"
-          ]
-        ],
+        "bit_identical_accuracy_pairs": [],
         "requires_no_bit_identical_control_accuracy": true
       },
       "rfg": {
@@ -470,7 +396,7 @@
       "auto_tokenizer_used": false,
       "backend": "gguf_metadata",
       "detail": "llama_cpp vocab_only failed (ValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf); embedded GGUF tokenizer metadata OK",
-      "elapsed_s": 0.421241,
+      "elapsed_s": 0.385955,
       "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
       "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
       "mode": "embedded_vocab_metadata",
