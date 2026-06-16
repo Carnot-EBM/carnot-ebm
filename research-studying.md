@@ -8,6 +8,48 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-16 Exp 4276 - .395 fork SOTA ingestion ingested
+
+**Status:** INGESTED into `docs/research-notes/sota-ingestion-v396-2026-06-16.md`.
+
+**Filtered track:** .395 ARC cross-family transfer after the hardened
+oracle-distinct Set-Encoder selector generalized on held-out families
+(`cross_family_delta=0.4038461538`, CI95 `[0.25, 0.5576923077]`) while the
+fresh ARC-TGI fallback was correctly gate-blocked because the existing family
+split was feasible.
+
+**Fresh-pass candidates marked ingested:**
+- Paying Less Generalization Tax, arXiv:2601.18217 - mapped to a stronger
+  cross-family stress split with richer randomized family metadata.
+- ARC-GEN, arXiv:2511.00162 - mapped to an independent procedural-family
+  replication of the Exp 4271 transfer win.
+- RFG, arXiv:2509.25604 - mapped as the queued DiffusionGemma full-run method
+  now that cross-family selector generalization opened the scale-up gate.
+- Self-Improving LLM Agents at Test-Time, arXiv:2510.07841 - mapped to
+  low-margin selector-head adaptation on held-out generated families.
+- SEVerA, arXiv:2603.25111 - mapped to verified fallback contracts for any
+  self-improving selector or diffusion-refiner branch.
+
+Already-covered context not re-ingested as fresh method rows: ARC-TGI,
+Reliability Gap, DPRM, entropy-guided diffusion RL, L-VARC, TrajAD, RL^V,
+EntRGi, and Self-Trained Verification.
+
+.395 status mapped honestly: Exp 4271 `cross_family_generalizes` with
+`cross_family_win_holds=true`, `cross_family_delta=0.4038461538`,
+`cross_family_ci95=[0.25, 0.5576923077]`, `held_out_family_n=52`, and
+`verifier_is_oracle=false`; Exp 4272 was blocked because the existing-pool
+family split was feasible.
+
+flagged_for_v396:
+`rfg_diffusiongemma_full_run_plus_arcgen_transfer_stress_v396`.
+
+Flagged for .396: `rfg_diffusiongemma_full_run_plus_arcgen_transfer_stress_v396`.
+
+**Bottom line for the .396 roadmap:** cross-family did GENERALIZE, so run the
+bounded RFG-style DiffusionGemma full-run arm with exact-grid selector
+arbitration, and use ARC-GEN to independently stress the transfer claim while
+keeping a stronger generalization stress test.
+
 ## 2026-06-15 Exp 4265 - .394 fork SOTA ingestion ingested
 
 **Status:** INGESTED into `docs/research-notes/sota-ingestion-v395-2026-06-15.md`.
