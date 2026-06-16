@@ -16064,6 +16064,65 @@ only family-disjoint folds, reports `cross_family_win_holds`,
 `honest_verdict=complete_arc_cross_family_deferred_pool_infeasible` with the
 required bare fields present and does not train a selector.
 
+### REQ-VERIFY-4273: ARC Cross-Family Online Adaptation
+
+The repository SHALL provide Exp 4273 at
+`python/carnot/reporting/arc_cross_family_online_adaptation_4273.py` and
+`results/experiment_4273_arc_cross_family_online_adaptation.py` to test whether
+Tier-1 online per-feature precision reweighting improves cross-family selection
+over the static Exp 4271 family-disjoint Set-Encoder baseline. The runner SHALL
+first load `results/experiment_4270_arc_family_provenance_recovery.json`,
+`results/experiment_4270_arc_family_manifest.json`,
+`results/experiment_4271_arc_cross_family_transfer_existing_pool.json`,
+`results/experiment_4244_arc_set_encoder_aggregator_build.json`, and the Exp
+4244 learned set-encoder model artifact. If Exp 4270 reports
+`family_split_feasible=false`, the runner SHALL write the terminal verdict
+`complete_self_learning_deferred_to_fresh_pool`, keep
+`online_adaptation_helps=false`, keep `verifier_is_oracle=false`, and stop
+without fabricating static-vs-online metrics.
+
+When the family split is feasible, the runner SHALL stream held-out families in
+a deterministic seed-controlled order. For each family, it SHALL score the
+static Set-Encoder selection from Exp 4271 and an online-reweighted selector
+that maintains CPU-only per-feature/per-sub-verifier precision counters from
+already-seen family outcomes. The online selector SHALL use no fine-tuning, no
+model training, and no demo execution; its only adaptation is counter updates
+that upweight selector arms that selected correctly on the nearest previously
+seen family, with global precision counters as a cold-start fallback.
+
+The terminal artifact SHALL write
+`results/experiment_4273_arc_cross_family_online_adaptation.json` with
+`honest_verdict`, bare bool `online_adaptation_helps`, bare float
+`static_cross_family_delta`, bare float `online_cross_family_delta`,
+`online_minus_static_ci95`, `adaptation_curve`, bare bool
+`verifier_is_oracle=false`, bare int `random_seed`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`acceptance_gate`, and `adversarial_verify`. Its `field_principles` SHALL
+include:
+`honest_verdict` = `Terminal-prefixed. An online-adaptation gain AND an honest static-is-the-ceiling null are BOTH COMPLETE -- both are valid self-learning findings.`;
+`online_adaptation_helps` = `BARE bool: true iff online-reweighted cross-family delta exceeds static AND the (online-static) CI95 excludes 0 -- the self-learning value verdict.`;
+`static_cross_family_delta` = `BARE float: the static set-encoder's held-out-family delta -- the no-adaptation baseline.`;
+`online_cross_family_delta` = `BARE float: the online-reweighted selector's held-out-family delta -- the Tier-1 self-learning result.`;
+`adaptation_curve` = `Per-family (online - static) gain as families stream in -- shows whether adaptation compounds (the continuous-self-learning signature) or is flat.`;
+`verifier_is_oracle` = `BARE bool=false -- learned selector with online weight updates, no demo execution and no fine-tuning.`;
+`random_seed` = `Determinism precondition; the family stream order + reweighting reproducible.`;
+`reproducibility_checksum` = `Hash of the folds + reweighting trace; lets a third party re-run.`;
+`model_specs` = `The Tier-1 online-reweighting rule (per-feature precision update) + the family stream protocol; required methodology.`
+
+### SCENARIO-VERIFY-4273: Online Reweighting Streams Held-Out Families
+
+Given Exp 4270 reports `family_split_feasible=true`, the family manifest is
+readable, the Exp 4244 Set-Encoder artifacts are readable and oracle-distinct,
+and Exp 4271 has static held-out-family task rows, when Exp 4273 runs, then it
+streams held-out families one at a time, reports `online_adaptation_helps`,
+`static_cross_family_delta`, `online_cross_family_delta`,
+`online_minus_static_ci95`, `adaptation_curve`, `verifier_is_oracle=false`,
+`random_seed`, `reproducibility_checksum`, and `model_specs`, and runs
+adversarial verification cleanly. If Exp 4270 reports
+`family_split_feasible=false`, then it writes
+`honest_verdict=complete_self_learning_deferred_to_fresh_pool` with the required
+bare fields present and does not claim an online adaptation result.
+
 ### REQ-VERIFY-4259: ARC Set-Encoder Grid Synthesis
 
 The repository SHALL provide Exp 4259 at
