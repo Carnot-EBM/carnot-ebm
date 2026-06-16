@@ -109,6 +109,13 @@ from .tier0y_conformal_calibration import ConformalCalibrationVerifier
 
 from .tier0y_conformal_calibration import ConformalCalibrationVerifier
 
+from .partial_state_diffusion_scorer import PartialStateDiffusionScorer
+
+try:
+    __all__.append("PartialStateDiffusionScorer")
+except NameError:  # pragma: no cover - only possible if early optional imports fail.
+    __all__ = ["PartialStateDiffusionScorer"]
+
 from .tier0y_conformal_calibration import ConformalCalibrationVerifier
 
 from .tier0y_conformal_calibration import ConformalCalibrationVerifier

@@ -12626,6 +12626,86 @@ changed token choice, declares the headline arm
 `verifier_is_oracle=true`, sets `diffusiongemma_guidance_moat=false`, and does
 not report a learned-verifier generation win.
 
+### REQ-VERIFY-4292: Partial-State Diffusion Scorer Build And Leak Audit
+
+The repository SHALL provide Exp 4292 at
+`python/carnot/experiment_4292_partial_state_diffusion_scorer_build.py` and
+`results/experiment_4292_partial_state_diffusion_scorer_build.py` to build the
+missing learned partial-state scorer required before Exp 4293 may run
+DiffusionGemma verifier-guided generation. Before any inference, the runner
+SHALL verify that the local llama.cpp PR binary
+`~/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval` exists and is
+non-empty, the DiffusionGemma GGUF cache
+`~/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/`
+is non-empty, and no TRM training process is active. If any precondition is
+missing, the runner SHALL write a terminal artifact with
+`honest_verdict=blocked_<resource>`, record the failed and skipped checks in
+`preconditions_checked`, keep `verifier_is_oracle=false`, and stop before
+inference or training.
+
+When preconditions pass, Exp 4292 SHALL exercise the repaired PR-binary path by
+extracting at least one DiffusionGemma per-position energy-prior tensor through
+`llama-diffusion-gemma-eval <gguf> <prompt_ids.i32> <canvas_ids.i32>
+<out_logits.bin>` with `canvas_len=256`, `mask_token_id=4`, and
+`vocab_size=262144`. It SHALL build a task-disjoint reasoning corpus of partial
+masked canvases paired with final FoVer/math correctness labels, train a small
+loadable value head exposing `score_partial_state(canvas, step) -> energy`, and
+evaluate the head on held-out partial states. The terminal artifact SHALL report
+bare float `partial_state_auroc`, bare int `heldout_n`, and bare bool
+`partial_state_scorer_built=true` only when `partial_state_auroc > 0.6` and the
+persisted scorer can be loaded and used to score a held-out canvas.
+
+Exp 4292 SHALL run a leak audit on the held-out partial states by masking every
+answer-bearing revealed cell before scoring. The artifact SHALL report bare
+float `leak_ablation_auroc` and bare bool `partial_state_leak_free=true` only
+when the masked-answer AUROC remains above chance (`>0.6`). A built scorer whose
+signal collapses after masking SHALL be reported as built but circular/leaky and
+MUST NOT unblock Exp 4293.
+
+The terminal artifact SHALL write
+`results/experiment_4292_partial_state_diffusion_scorer_build.json` with
+top-level fields `honest_verdict`, bare bool `partial_state_scorer_built`,
+bare bool `partial_state_leak_free`, bare float `partial_state_auroc`, bare
+float `leak_ablation_auroc`, bare bool `verifier_is_oracle=false`,
+`preconditions_checked`, bare int `random_seed`, `reproducibility_checksum`,
+`model_specs`, `field_principles`, `spec_refs`, `duration_s`,
+`inference_substrate`, `heldout_n`, `scorer_path`, and `leak_audit`. Its field
+principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. A built leak-free scorer (unblocks exp4293), a built-but-leaky scorer (circular -- exp4293 gates off), and a cannot-build (retire the approach) are ALL COMPLETE and decision-grade.`;
+`partial_state_scorer_built` = `BARE bool: gated_on by exp4293 (gated-fields-must-be-bare); true iff the scorer scores held-out partial states at partial_state_auroc > 0.6 AND is loadable -- the harness-first gate that the missing capability now exists.`;
+`partial_state_leak_free` = `BARE bool: gated_on by exp4293; true iff the scorer's signal SURVIVES masking the answer-bearing cells -- the circularity guard (a leaky scorer just reads the oracle = NOT a learned external moat).`;
+`partial_state_auroc` = `BARE float: the held-out partial-state scoring AUROC -- the non-degeneracy measure (>0.6 = a real learned signal, not chance).`;
+`leak_ablation_auroc` = `BARE float: the scorer's AUROC with the answer-bearing cells masked -- if it collapses toward 0.5 the scorer was reading the answer (leaky); if it stays high the signal is genuine partial-state structure.`;
+`verifier_is_oracle` = `BARE bool=false -- a learned value head over partial states, NOT the executable oracle; the leak audit is what KEEPS it oracle-distinct.`;
+`preconditions_checked` = `Records the PR-binary + GGUF cache + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.`;
+`random_seed` = `Determinism precondition for the value-head training + the eval.`;
+`reproducibility_checksum` = `Hash of the corpus + value-head config + PR-binary inputs; lets a third party re-train.`;
+`model_specs` = `DiffusionGemma GGUF + PR binary + the value-head architecture + the training corpus + the leak-ablation protocol; required methodology.`
+
+### SCENARIO-VERIFY-4292: Held-Out Partial-State Scorer Survives Answer Masking
+
+Given the PR binary is missing or empty, when Exp 4292 runs, then it writes
+`honest_verdict=blocked_pr_binary`, records the binary check in
+`preconditions_checked`, leaves `partial_state_scorer_built=false`, and does
+not inspect the GGUF cache or train a scorer.
+
+Given the PR binary exists but the DiffusionGemma GGUF cache is missing or
+empty, when Exp 4292 runs, then it writes
+`honest_verdict=blocked_diffusiongemma_not_cached`, records the cache failure,
+keeps `verifier_is_oracle=false`, and does not launch inference.
+
+Given the PR binary and cache pass but TRM training is active, when Exp 4292
+runs, then it writes `honest_verdict=blocked_trm_training_active`, records the
+active process, and does not touch `results/trm_runs/`.
+
+Given all preconditions pass and the PR-binary energy-prior smoke succeeds,
+when Exp 4292 trains the partial-state value head on task-disjoint reasoning
+partials, then it persists a loadable scorer module, reports held-out
+`partial_state_auroc`, reports answer-masked `leak_ablation_auroc`, sets
+`partial_state_scorer_built=true` only when the held-out AUROC clears 0.6, sets
+`partial_state_leak_free=true` only when the answer-masked AUROC clears 0.6,
+and keeps `verifier_is_oracle=false`.
+
 ### REQ-VERIFY-4036: Decentralization Stronger-Base Best-of-N Build Gate
 
 The repository SHALL provide Exp 4036 at
