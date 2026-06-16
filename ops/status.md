@@ -1,5 +1,67 @@
 # Carnot — Operational Status
 
+## Session 2026-06-16 — Milestone 2026.06.398 Research Planning Staged
+
+Planned milestone **2026.06.398** ("PROVE EFFICIENCY-PARITY + ESTABLISH THE IN-GENERATION MOAT WITH
+DIFFERENTIATED CONTROLS + BROADEN THE SELECTION MOAT TO CROSS-DOMAIN") as the NEXT milestone after all
+12 `.397 tasks completed. The TRUE `.397 scorecard (read via `scripts/summarize_artifact.py` + the
+outer-loop audits — the capstone exp4301 BLOCKED spuriously, so do NOT read it as all-False):
+
+- **Cross-GENERATOR axis CLOSED (exp4291)** — `cross_generator_delta` **+0.50**, CI95 **[0.29, 0.71]**,
+  `vote@1=0.25`, `oracle@K=0.75`, non-degenerate guards PASS, `verifier_is_oracle=false`, n=8 gen/24
+  tasks. The LAST open axis of the selection moat. The moat now holds across families (`.395 +0.40) AND
+  generators (`.397 +0.50) — but only WITHIN ARC.
+- **Partial-state diffusion scorer BUILT leak-free (exp4292)** — AUROC 0.966 (a yellow flag for masked
+  states; warrants an independent leak re-check).
+- **In-generation moat NOT held (exp4293)** — FLAGGED TAUTOLOGY: `condition_accuracy {carnot 0.867, rfg
+  0.3, unguided 0.3, entrgi 0.3}` — three controls bit-identical = no-op signature; "Carnot beats a
+  no-op," not "beats the model's self-guidance." Quarantined.
+- **Efficiency-harden UNRESOLVED (exp4294)** — no artifact; failed 3× (2h cap + a `strong_judge.py`
+  bug). A FAILED task, NOT a measured null; the `.396 Pareto win stands un-hardened.
+- **Self-learning online-helps (exp4295)** — online 0.483 > static 0.417 (+0.067), tier-2 fixed; no
+  powered CI yet. **ARC +1 to 22 (exp4296).** **INFRA (exp4297):** DEGENERATE_SEPARATION check landed.
+- **Capstone (exp4301) + hygiene (exp4299) BLOCKED spuriously** — one missing artifact (exp4294)
+  hard-blocked the whole aggregation, defaulting ALL booleans False. `paper_ready=True` (FoVer 0.9131,
+  G1–G4 as last computed `.395). Audits: `exp4301-capstone-blocked-spurious-false`,
+  `exp4293-in-generation-moat-degenerate-controls`.
+
+**The shape (11 tasks, exp4302–exp4312).** Standing direction (`ops/known-issues.md` P0 2026-06-14):
+ORACLE-DISTINCT frontier; every verifier task `verifier_is_oracle=false` + a matched control,
+CI95-excl-0. Phase 0 archive/activate (exp4302, records the TRUE scorecard). **Phase A — THE HEADLINE
+(prove efficiency-parity; the §5 win condition; re-scope the failed C1):** energy-verifier vs a
+WELL-prompted judge + 2nd model on an iso-FLOPs accuracy curve, RE-SCOPED to fit the window (synchronous
+resume-accumulate, checkpoint per judge call, progress prints, partial accepted) (exp4303). **Phase B —
+establish the in-generation moat with DIFFERENTIATED controls:** reuse the exp4292 scorer + an
+INDEPENDENT leak re-check + a GENUINELY-ENGAGED control (RFG enhanced≠reference at γ>0 / EntRGi) + a
+mechanical no-op guard rejecting bit-identical arms (exp4304). **Phase C — broaden to cross-DOMAIN
+(EEVEE):** a router over ARC + ARC-GEN + FoVer, held-out DOMAIN frozen + a label-ablation anti-leak arm
+(exp4305). **Phase D — continuous self-learning (mandated):** powered CI on (best-adaptive − static) in
+the cross-domain regime, retrieval-only (Decocted/Dynamic Cheatsheet) (exp4306). **Phase E — ARC +1 on a
+new game** (exp4307, total ≥23). **Phase F —** INFRA (DEGENERATE_CONTROLS check + a robust
+aggregate-available-report-gaps capstone helper — fixes BOTH `.397 harness bugs, exp4308),
+SOTA-ingestion→.399 (exp4309), registry/gaps hygiene + GAP-4 guard (exp4310, re-run via the robust
+aggregator), hardware continuity (exp4311), capstone (exp4312, the verifier scorecard).
+
+Wrote `openspec/change-proposals/research-roadmap-vNEXT.md` (= `research-roadmap-v398.md`; archived prior
+as `research-roadmap-v397.md`) and `research-roadmap-next.yaml` (11 tasks). Updated `research-references.md`
+(`.398 sweep, all arXiv-verified: iso-FLOPs verifier-vs-judge 2510.14913 + Thinking-Small-Judges
+2509.13332 for efficiency; the RFG-no-op fix 2509.25604 [enhanced≠reference, γ>0] + EntRGi 2602.05000 +
+guidance-dynamics 2506.10971 for in-generation; EEVEE 2606.11182 + DG-PRM 2507.17849 for cross-domain;
+Dynamic Cheatsheet 2504.07952 / Decocted 2604.04373 for retrieval self-learning). Validation: YAML schema
+OK (11 tasks, all `.398, codex+gpt-5.5 routing, prior_failures 4-subfield on the 3 reruns exp4303/4304/4306,
+BARE-scalar + terminal-prefix + principle-annotated discipline, footers present); `milestone ==
+_expected_next_milestone('2026.06.397') = 2026.06.398`; exclusion-manifest lint = 6 SCOPE_MATCHED WARNINGs
+all carrying `operator_override` (activation proceeds); canonical-URL + overdue-priority lints exit 0. Left
+`research-roadmap.yaml` and `scripts/research_conductor.py` untouched. Did NOT push.
+
+**Invariants carried:** `paper_ready=True` (G1–G4; frozen FoVer 0.9131 NEVER substituted — `.398 adds the
+efficiency-parity + in-generation + cross-domain LENSES, not a new headline); oracle-distinct discipline
+(`verifier_is_oracle=false` + matched control on every verifier task); the selection moat (cross-family
+`.395 +0.40 + cross-generator `.397 +0.50) STANDS while cross-domain is tested; TRM checkpoint DONE (val
+0.8227), conductor stood-down on TRM training; gated/required fields emitted BARE; no flagged-adversarial
+artifact aggregated; no autonomous public-doc edits; online ARC play operator-gated; DiffusionGemma via
+the llama.cpp PR binary only.
+
 ## Session 2026-06-16 — Milestone 2026.06.397 Research Planning Staged
 
 Planned milestone **2026.06.397** ("CLOSE THE LAST OPEN MOAT AXIS (cross-GENERATOR) + UNBLOCK THE §5
