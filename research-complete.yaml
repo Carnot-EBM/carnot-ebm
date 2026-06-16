@@ -40820,7 +40820,14 @@ milestones:
     \ operator-owned exp4263) + SOTA-ingestion + registry/gaps + hardware + capstone."
   doc: openspec/change-proposals/research-roadmap-v395.md
   completed: '2026-06-16'
-  finding: '.395 close-state: LANDMARK -- the hardened ARC oracle-distinct verifier-beats-vote win cross-family GENERALIZED. Exp4271 held-out-family delta=+0.404, CI95=[0.25, 0.558], held_out_task_n=52, within_minus_cross_gap=0.0385, verifier_is_oracle=false. The hardening stack is now 3 of 3: provenance-blind delta=+0.385, multi-seed mean delta=+0.458, and cross-family delta=+0.404; therefore hardened_win=True and the DiffusionGemma full-run gate OPEN. DiffusionGemma loader REPAIRED (exp4274 loader_repaired=true, preflight_go=true); ARC advanced to 20 levels on wa30-ee6fef47; self-learning read static-is-the-ceiling with online-minus-static CI touching 0 at n=52; code oracle-distinct and verifier-as-reward in-loop are retired/operator-owned; paper_ready=True. .396 frame: RUN the deferred DiffusionGemma full run with matched controls + HARDEN the cross-family win on ARC-GEN + pay the efficiency axis.'
+  finding: '.395 close-state: LANDMARK -- the hardened ARC oracle-distinct verifier-beats-vote win cross-family GENERALIZED.
+    Exp4271 held-out-family delta=+0.404, CI95=[0.25, 0.558], held_out_task_n=52, within_minus_cross_gap=0.0385, verifier_is_oracle=false.
+    The hardening stack is now 3 of 3: provenance-blind delta=+0.385, multi-seed mean delta=+0.458, and cross-family delta=+0.404;
+    therefore hardened_win=True and the DiffusionGemma full-run gate OPEN. DiffusionGemma loader REPAIRED (exp4274 loader_repaired=true,
+    preflight_go=true); ARC advanced to 20 levels on wa30-ee6fef47; self-learning read static-is-the-ceiling with online-minus-static
+    CI touching 0 at n=52; code oracle-distinct and verifier-as-reward in-loop are retired/operator-owned; paper_ready=True.
+    .396 frame: RUN the deferred DiffusionGemma full run with matched controls + HARDEN the cross-family win on ARC-GEN +
+    pay the efficiency axis.'
   activation_recorded: exp4280-archive-v395-activate-v396
   tasks:
   - id: exp4269-archive-v394-activate-v395
@@ -40943,4 +40950,132 @@ milestones:
       (resolvable iff hardened_win AND preflight_go). SKIP any flagged_adversarial artifact; HONOR verifier_is_oracle (a leaked/circular
       result may NOT headline). Compute the G1-G4 publication gate via publication_gate.py. NO gated_on.'
     deliverable: results/experiment_4279_capstone_v395.json
+    result: OK (conductor)
+- id: 2026.06.396
+  title: "RUN the now-unlocked DiffusionGemma energy-guided FULL benchmark (does the EXTERNAL verifier improve GENERATION,\
+    \ not just rank it? -- the \xA75 energy-VERIFIES-shapes-GENERATION thesis at LLM scale, with matched no-Carnot-verifier\
+    \ RFG/EntRGi controls so the twice-burned over-claim trap cannot recur) + HARDEN the cross-family selection win on a 2nd,\
+    \ construction-disjoint substrate (ARC-GEN) + pay the owed north-star \xA75 EFFICIENCY-parity axis + re-power continuous\
+    \ self-learning + advance ARC +1. .395 LANDED A LANDMARK: the hardened ARC oracle-distinct verifier-beats-vote win GENERALIZED\
+    \ cross-family (exp4271 cross_family_delta +0.4038 held-out, CI95-excl-0, within_minus_cross_gap only 0.0385, verifier_is_oracle=false)\
+    \ -> hardened_win=True (all 3 axes) -> diffusiongemma_full_run_gate FLIPPED True; the DiffusionGemma loader was REPAIRED\
+    \ (exp4274 preflight_go) via the llama.cpp PR binary; ARC +1 to 20 levels (exp4275 wa30 L1); self-learning hit a ceiling\
+    \ (exp4273 static-is-the-ceiling, online-adaptation CI touched 0 at n=52); paper_ready=True (FoVer 0.9131, G1-G4)."
+  doc: openspec/change-proposals/research-roadmap-v396.md
+  completed: '2026-06-16'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4280-archive-v395-activate-v396
+    title: 'Archive .395 -> activate .396; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
+      + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the .395
+      LANDMARK close-state truthfully: the hardened ARC oracle-distinct win GENERALIZED cross-family (exp4271 cross_family_delta
+      +0.4038 held-out, CI95-excl-0, within_minus_cross_gap 0.0385, verifier_is_oracle=false) -> hardened_win=True (all 3
+      axes) -> diffusiongemma_full_run_gate FLIPPED True; DiffusionGemma loader REPAIRED (exp4274 preflight_go, via the llama.cpp
+      PR binary); ARC +1 to 20 levels (exp4275 wa30 L1); self-learning static-is-the-ceiling (exp4273, CI touched 0 at n=52);
+      code oracle-distinct CORPUS-SPECIFIC + verifier-as-reward OUT-OF-BAND both RETIRED; paper_ready=True (FoVer 0.9131,
+      G1-G4). Frame .396 as RUN-the-deferred-DiffusionGemma-full-run + HARDEN-cross-family-on-ARC-GEN + pay-the-EFFICIENCY-axis.'
+    deliverable: results/experiment_4280_archive_v395_activate_v396.json
+    result: OK (conductor)
+  - id: exp4281-diffusiongemma-energy-guided-full-run
+    title: 'PHASE A1 (THE HEADLINE; the deferred-from-.395 scale-up, gate now OPEN) -- DiffusionGemma energy-guided FULL benchmark
+      with matched no-Carnot-verifier controls. The .395 capstone flipped diffusiongemma_full_run_gate=True (hardened_win=True
+      AND exp4274 preflight_go=True). RUN the full benchmark via the llama.cpp PR binary (~/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval
+      -- the ONLY working loader). Wire the verifier ensemble as a per-step GUIDANCE energy reweighting denoising token selection.
+      On n>=30 per arm: HEADLINE/oracle-distinct arm (verifier_is_oracle=false) = a LEARNED energy verifier guiding on a REASONING
+      domain (FoVer-step/math, where the verifier is NOT the executable oracle) vs unguided vs RFG (arXiv:2509.25604, the
+      model''s own log-likelihood-ratio self-guidance -- the NO-external-verifier control) vs EntRGi (arXiv:2602.05000); emit
+      diffusiongemma_guidance_moat BARE bool := (Carnot-guided - RFG > 0 AND CI95-excl-0). SUPPORTING/execution-grounded arm
+      (verifier_is_oracle=true) = an executable-oracle verifier on code/Sudoku, reported as execution_grounded (cheap/automatic/decentralized,
+      NOT a moat). If the learned verifier cannot score partial (masked) denoising states, that is an HONEST finding (the
+      moat arm blocks; the control comparison + execution-grounded arm still land). NO TRM training; NO leaderboard submission.'
+    deliverable: results/experiment_4281_diffusiongemma_energy_guided_full_run.json
+    result: OK (conductor)
+  - id: exp4282-arcgen-cross-family-stress
+    title: PHASE B1 (HARDEN the cross-family win on a 2nd, construction-disjoint substrate) -- ARC-GEN family-disjoint cross-family
+      stress. .395 proved cross-family generalization (exp4271 +0.4038 held-out) but on ONE substrate (the recovered 52-task
+      manifest), inviting the 'specific to your partition' critique. ARC-GEN (arXiv:2511.00162, github.com/google/ARC-GEN)
+      is Google's mimetic procedural generator faithfully covering ALL 400 ARC-AGI-1 + 500 ARC-AGI-2 tasks, each a parameterized
+      generator with a NATIVE family id -- an INDEPENDENT family substrate. Clone it (GITIGNORED -- no embedded-repo gitlink),
+      build a family-disjoint candidate pool with native family ids + exact target hashes, train the set-encoder on train-families,
+      test beats-vote on HELD-OUT generator-families. Report cross_family_delta SEPARATELY on original-ARC / ARC-TGI / ARC-GEN
+      families (the generators-become-their-own-distribution failure mode) + a randomized family-rich stress split (arXiv:2601.18217).
+      Emit arcgen_cross_family_holds BARE bool := (held-out-family delta>0 AND CI95-excl-0 on the ARC-GEN families). verifier_is_oracle=false.
+      HARD-CAP to the window; an honest partial pool (>=4 families, >=~10 held-out tasks/fold) is fine.
+    deliverable: results/experiment_4282_arcgen_cross_family_stress.json
+    result: OK (conductor)
+  - id: exp4283-self-learning-repowered-arcgen
+    title: PHASE C1 (CONTINUOUS SELF-LEARNING -- the mandated self-learning experiment) -- re-power the online verifier-weight
+      adaptation test on the LARGER family set. research-program.md mandates >=1 self-learning experiment/milestone; Tier
+      1 = online weight/counter updates (CPU, <1us/update, NOT the retired live-LoRA path). .395 found static-is-the-ceiling
+      BUT the (online-static) CI only TOUCHED 0 at n=52 ([0.0, 0.192]) -- an n-limit, not a proven null. RE-RUN the Tier-1
+      online reweighting across the COMBINED family set (the .395 recovered manifest + ARC-GEN's many families from exp4282,
+      a soft input) so the CI is POWERED, AND add a Tier-2 constraint-memory arm (cache per-family selection patterns, reuse
+      on the nearest-neighbor seen family) as a distinct mechanism. Report static vs online vs Tier-2 cross-family delta +
+      the per-family adaptation curve + a POWERED CI95 on (online-static). Emit online_adaptation_helps BARE bool := (online-static>0
+      AND CI95-excl-0). A positive gain = the verifier self-improves toward generalization (north-star-grade); a null WITH
+      POWER = static is genuinely the ceiling (retire the online-adaptation-helps ask). verifier_is_oracle=false. NO fine-tuning;
+      NO TRM; NO live-LoRA.
+    deliverable: results/experiment_4283_self_learning_repowered_arcgen.json
+    result: OK (conductor)
+  - id: exp4284-verifier-efficiency-vs-llm-judge
+    title: "PHASE D1 (the owed north-star \xA75 EFFICIENCY axis) -- energy-verifier vs LLM-as-judge head-to-head on the ORACLE-DISTINCT\
+      \ cross-family ARC selection. north-star \xA75 names the verifier's win condition: 'equally effective as the LM at lower\
+      \ cost/latency' (efficiency-parity), and names this head-to-head as load-bearing-owed work. On the SAME held-out-family\
+      \ cross-family selection task (the oracle-distinct domain -- NOT code, whose efficiency-vs-judge is retired/circular),\
+      \ compare the learned energy verifier's selection accuracy vs an LLM-as-judge (a cached SOTA GGUF -- Qwen3.6-35B-A3B\
+      \ or gemma-4 -- selecting from the same candidates). Report accuracy parity (within CI) AND the compute/latency/cost\
+      \ ratio (wall-clock, FLOPs-proxy, $/1k selections). Emit efficiency_parity_at_lower_cost BARE bool := (energy-verifier\
+      \ accuracy within the LLM-judge CI AND energy-verifier cost <= 0.1x the LLM-judge cost). Target: 'parity at 10-100x\
+      \ cheaper' (CompassVerifier 2508.03686 / Luna-2 small-verifier precedent: 60-1000x). verifier_is_oracle=false. This\
+      \ is a NEW measurement (the \xA75 owed axis), NOT a re-run."
+    deliverable: results/experiment_4284_verifier_efficiency_vs_llm_judge.json
+    result: OK (conductor)
+  - id: exp4285-arc-incremental-progress-new-game
+    title: 'PHASE E1 (ARC north star; accuracy) -- monotonic ARC +1 on a NEW game (total_levels >= 21). .395 advanced wa30
+      to L1 (20 levels); .394 walled on sc25 L6. Per ARC-AGI-3 Incremental-Progress Scoping (+1, NOT all-levels) + Failed-Experiment
+      Rerun Discipline (a NEW game, not a re-run): target the best-headroom UNATTEMPTED game from the 25-game survey (NOT
+      wa30, NOT sc25), with the hardened set-encoder routing the offline solver''s candidate ranking. Advance ONE game by
+      >=1 NEW real-env-confirmed level (total_levels 20 -> >=21). Report total_levels + the game advanced + levels_completed
+      (from the solver''s real-env-confirmed output, not a self-report). NO TRM training; NO leaderboard submission. An honest
+      no-advance is COMPLETE and informs the next game pick (it is a DIFFERENT game than .395).'
+    deliverable: results/experiment_4285_arc_incremental_progress_new_game.json
+    result: OK (conductor)
+  - id: exp4286-sota-ingestion-v397
+    title: PHASE F1 (SOTA-ingestion; mandatory per SOTA-Ingestion Cycle Discipline) -- ingest the SOTA for the .396 bleeding-edge
+      forks (energy/verifier-guided discrete diffusion after the full run, cross-substrate verifier generalization, verifier
+      efficiency-parity, online/Tier-2 self-learning) and MAP the strongest 3-5 methods onto the .397 roadmap conditioned
+      on the .396 outcomes (did the DiffusionGemma guidance moat hold? did cross-family harden on ARC-GEN? did efficiency-parity
+      land?). Use the RELIABLE channel ONLY (scripts/sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch)
+      -- /deep-research is BANNED in-loop. Every method MUST carry a real arXiv ID/URL. Update research-studying.md (mark
+      ingested) and emit flagged_for_v397.
+    deliverable: results/experiment_4286_sota_ingestion_v397.json
+    result: OK (conductor)
+  - id: exp4287-verifier-registry-gaps-hygiene
+    title: 'PHASE F2 (hygiene) -- reconcile the verifier registry + gaps to .396 truth, run the GAP-4 regression guard, and
+      LOG missing-verifier gaps. Record the .396 outcomes: the DiffusionGemma guidance moat verdict (did the EXTERNAL verifier
+      improve generation, beating RFG?), the ARC-GEN 2nd-substrate cross-family verdict, the re-powered self-learning result,
+      the efficiency-parity result, the ARC +1 advance. Update ops/verifier_registry.yaml + ops/verifier_gaps.md (per Missing-Verifier
+      Gap Logging: e.g. a ''learned partial-state diffusion scorer'' gap if the DiffusionGemma moat arm blocked on partial
+      states; a ''cross-substrate ARC selection'' gap if ARC-GEN collapsed). Run the GAP-4 execution regression guard (no
+      regression vs .395). Emit regression_guard_passed BARE bool.'
+    deliverable: results/experiment_4287_verifier_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4288-hardware-continuity
+    title: "PHASE F3 (hardware continuity; opportunistic per north-star \xA73) -- KV260 terminal/opportunistic (SSH-only reachability\
+      \ + xmutil listapps; NO host SD-card precondition), PolarFire CPU dispatch hash-verify, GateMate USB detect. KV260 is\
+      \ terminal (north-star \xA73) so the per-board mandate relaxes to opportunistic; this task keeps the boards visible\
+      \ without blocking the milestone. Report per-board reachability + any opportunistic result. NO board blocks the milestone\
+      \ (honest blocked_<board> per board is fine)."
+    deliverable: results/experiment_4288_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4289-capstone-v396
+    title: 'PHASE F4 (capstone .396, UNGATED) -- headline question: DID THE EXTERNAL ENERGY VERIFIER IMPROVE GENERATION (not
+      just rank it)? Aggregate: DIFFUSIONGEMMA = exp4281 diffusiongemma_guidance_moat + carnot_minus_rfg_delta + CI95 + execution_grounded_guidance_delta
+      (HONOR verifier_is_oracle per-arm -- a circular execution-grounded win is NOT a moat); CROSS-FAMILY 2ND-SUBSTRATE =
+      exp4282 arcgen_cross_family_holds + per_substrate_delta; SELF-LEARNING = exp4283 online_adaptation_helps (re-powered);
+      EFFICIENCY = exp4284 efficiency_parity_at_lower_cost + cost_ratio; ARC = exp4285 total_levels (>=21?) + game advanced;
+      hygiene = exp4287 regression_guard_passed; hardware = exp4288. Emit guidance_moat_holds + cross_family_hardens_on_arcgen
+      + verifier_efficiency_parity + diffusiongemma_thesis_state (one honest string). SKIP any flagged_adversarial artifact;
+      HONOR verifier_is_oracle. Compute the G1-G4 publication gate via publication_gate.py. NO gated_on.'
+    deliverable: results/experiment_4289_capstone_v396.json
     result: OK (conductor)
