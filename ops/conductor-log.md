@@ -8623,3 +8623,4 @@ c |
 | 2026-06-16 22:25 UTC | PHASE B1 (the §5 in-generation headline; fix the . | OK | 93 passed, 1 warning in 4.98s |
 | 2026-06-16 22:50 UTC | PHASE C1 (BROADEN the selection moat to cross-DOMA | OK | 95 passed, 1 warning in 7.25s |
 | 2026-06-16 23:11 UTC | PHASE D1 (CONTINUOUS SELF-LEARNING -- the mandated | OK | 104 passed, 1 warning in 10.60s |
+| 2026-06-16 23:29 UTC | PHASE E1 (ARC north star; accuracy) -- monotonic A | FLAGGED | adversarial_verify CRITICAL: GATE_PASSED_WITHOUT_DATA — result quarantined, not  |
