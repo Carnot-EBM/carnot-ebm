@@ -8607,3 +8607,4 @@ c |
 | 2026-06-16 11:51 UTC | PHASE C1 (HARDEN the §5 efficiency headline; oracl | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output:              " |
 | 2026-06-16 13:04 UTC | PHASE C1 (HARDEN the §5 efficiency headline; oracl | FAIL | Codex CLI error: trong_judge.py' in /home/ianblenke/github.com/ianblenke/carn |
 | 2026-06-16 14:27 UTC | PHASE C1 (HARDEN the §5 efficiency headline; oracl | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: No new progres |
+| 2026-06-16 14:46 UTC | PHASE D1 (CONTINUOUS SELF-LEARNING -- the mandated | OK | 86 passed, 1 warning in 7.42s |
