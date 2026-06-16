@@ -12536,6 +12536,96 @@ reports changed selections and reweighted token counts, emits
 `preflight_go=true` only when the cost estimate is feasible, and does not run
 the full `.396` benchmark.
 
+### REQ-VERIFY-4281: DiffusionGemma Energy-Guided Full-Run Gate
+
+The repository SHALL provide Exp 4281 at
+`python/carnot/experiment_4281_diffusiongemma_energy_guided_full_run.py` and
+`results/experiment_4281_diffusiongemma_energy_guided_full_run.py` to execute
+the `.396` DiffusionGemma energy-guided benchmark gate without fabricating live
+26B inference. Before any inference, the runner SHALL verify that the local
+llama.cpp PR binary
+`~/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval` exists and is
+non-empty, the DiffusionGemma GGUF cache
+`~/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/`
+is non-empty, no TRM training process is active, and the GGUF tokenizer can be
+loaded through the repaired Exp 4274 path without calling
+`AutoTokenizer.from_pretrained()` on the GGUF repo id. If any precondition is
+missing, the runner SHALL write a terminal artifact with
+`honest_verdict=blocked_<resource>`, record the failed and skipped checks in
+`preconditions_checked`, and stop before inference.
+
+When preconditions pass, Exp 4281 SHALL exercise the repaired PR-binary path by
+extracting a per-position energy prior from the cached GGUF using
+`llama-diffusion-gemma-eval <gguf> <prompt_ids.i32> <canvas_ids.i32>
+<out_logits.bin>` with `canvas_len=256`, `mask_token_id=4`, and
+`vocab_size=262144`. It SHALL also run a two-example denoising guidance smoke
+that applies `logit' = logit - lambda * verifier_energy` and records
+`guidance_changes_selection=true` only when guided and unguided token choices
+diverge on matched candidate distributions.
+
+The headline arm SHALL be oracle-distinct: planned conditions are unguided,
+RFG, EntRGi, and Carnot learned-verifier guidance on a reasoning corpus with
+`n>=30` and task-level bootstrap CI95 from at least 2000 resamples. Exp 4281
+SHALL declare `verifier_is_oracle=false` for this arm. If the learned verifier
+ensemble cannot score partial/masked DiffusionGemma denoising states, the
+runner SHALL write
+`honest_verdict=complete_diffusiongemma_learned_verifier_cannot_score_partial_states`,
+set bare bool `diffusiongemma_guidance_moat=false`, keep the measured
+Carnot-vs-control deltas marked as blocked in the per-arm records, and SHALL
+not fabricate a generation win.
+
+The supporting execution-grounded arm SHALL declare `verifier_is_oracle=true`
+when it uses an executable oracle on code or Sudoku. Any positive
+`execution_grounded_guidance_delta` SHALL be framed as circular and not a moat.
+
+The terminal artifact SHALL write
+`results/experiment_4281_diffusiongemma_energy_guided_full_run.json` with
+top-level fields `honest_verdict`, bare bool
+`diffusiongemma_guidance_moat`, bare float `carnot_minus_rfg_delta`, bare
+float `carnot_minus_unguided_delta`, `guidance_moat_ci95`, bare float
+`execution_grounded_guidance_delta`, per-arm `verifier_is_oracle`,
+`preconditions_checked`, bare int `random_seed`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`duration_s`, and `inference_substrate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. A guidance moat (learned-verifier beats RFG, CI95-excl-0), a bounded null (ties RFG), and a partial-state-blocked finding are ALL COMPLETE and decision-grade for the §5 thesis.`;
+`diffusiongemma_guidance_moat` = `BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff the LEARNED (oracle-distinct) verifier-guided run beats RFG model-self-guidance AND CI95-excl-0 -- the moat-scissor realized in generation at LLM scale.`;
+`carnot_minus_rfg_delta` = `BARE float: Carnot-verifier-guided minus RFG accuracy on the reasoning corpus -- the load-bearing comparison (beating the model's own self-guidance is what shows an EXTERNAL verifier adds value in-generation).`;
+`carnot_minus_unguided_delta` = `BARE float: Carnot-verifier-guided minus unguided -- the weaker control (a guidance hook that does anything beats unguided; the moat needs the RFG comparison too).`;
+`guidance_moat_ci95` = `Task-level bootstrap CI95 of the Carnot-minus-RFG delta -- excluding 0 means the external verifier genuinely steers generation better than model self-guidance.`;
+`execution_grounded_guidance_delta` = `The executable-oracle arm's guided-minus-unguided delta -- valid but CIRCULAR (verifier_is_oracle=true); framed as cheap/automatic/decentralized, NOT a moat headline.`;
+`verifier_is_oracle` = `BARE bool: declared PER ARM (false for the learned-verifier headline arm, true for the execution-grounded arm) -- honoring the Circularity Discipline so a circular guidance win cannot headline.`;
+`preconditions_checked` = `Records the PR-binary + GGUF cache + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.`;
+`random_seed` = `Determinism precondition for the denoising + bootstrap.`;
+`reproducibility_checksum` = `Hash of the corpora + guidance config + PR-binary inputs; lets a third party re-run.`;
+`model_specs` = `DiffusionGemma GGUF id + the PR binary + the verifier ensemble wired as guidance + denoising steps + the four conditions + the corpora; required methodology.`
+
+### SCENARIO-VERIFY-4281: Full-Run Gate Blocks Honestly On Missing Resources Or Partial-State Verifier
+
+Given the PR binary is missing or empty, when Exp 4281 runs, then it writes
+`honest_verdict=blocked_pr_binary`, records the binary check in
+`preconditions_checked`, leaves `diffusiongemma_guidance_moat=false`, and does
+not inspect the GGUF or launch inference.
+
+Given the PR binary exists but the DiffusionGemma GGUF cache is missing or
+empty, when Exp 4281 runs, then it writes
+`honest_verdict=blocked_diffusiongemma_not_cached`, records the cache failure,
+and does not launch inference.
+
+Given the PR binary and cache pass but TRM training is active, when Exp 4281
+runs, then it writes `honest_verdict=blocked_trm_training_active`, records the
+active process, and does not touch `results/trm_runs/`.
+
+Given all preconditions pass and the PR-binary energy-prior smoke succeeds but
+the learned verifier ensemble exposes only complete-candidate or text-mask
+scoring rather than a partial DiffusionGemma canvas scoring API, when Exp 4281
+runs, then it writes
+`honest_verdict=complete_diffusiongemma_learned_verifier_cannot_score_partial_states`,
+records `guidance_changes_selection=true` from the smoke if the guidance hook
+changed token choice, declares the headline arm
+`verifier_is_oracle=false`, declares the execution-grounded arm
+`verifier_is_oracle=true`, sets `diffusiongemma_guidance_moat=false`, and does
+not report a learned-verifier generation win.
+
 ### REQ-VERIFY-4036: Decentralization Stronger-Base Best-of-N Build Gate
 
 The repository SHALL provide Exp 4036 at

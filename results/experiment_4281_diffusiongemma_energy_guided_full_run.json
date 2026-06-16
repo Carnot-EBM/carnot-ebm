@@ -1,0 +1,335 @@
+{
+  "acceptance_gate": true,
+  "carnot_minus_rfg_delta": 0.0,
+  "carnot_minus_unguided_delta": 0.0,
+  "diffusiongemma_guidance_moat": false,
+  "duration_s": 60.000434,
+  "energy_prior_smoke": {
+    "eval_rc": 0,
+    "expected_logits_file_size_bytes": 268435456,
+    "logits_file_size_bytes": 268435456,
+    "pos0_top_tokens": [
+      [
+        4,
+        "<mask>",
+        24.5527
+      ],
+      [
+        247070,
+        "\ud83e\udd32",
+        20.0851
+      ],
+      [
+        58940,
+        " Correct",
+        19.7405
+      ],
+      [
+        32107,
+        " corrected",
+        19.6574
+      ],
+      [
+        247766,
+        "\ud83d\ude37",
+        19.1373
+      ],
+      [
+        236783,
+        "}",
+        19.089
+      ]
+    ],
+    "prompt_ids_count": 9,
+    "score_finite_sample": true,
+    "score_shape": [
+      256,
+      262144
+    ],
+    "status": "extracted"
+  },
+  "execution_grounded_arm": {
+    "execution_grounded_guidance_delta": 0.0,
+    "interpretation": "Not a moat; executable oracle arm is circular when measured.",
+    "n_completed": 0,
+    "n_planned": 30,
+    "status": "not_run_after_headline_partial_state_block",
+    "verifier_is_oracle": true
+  },
+  "execution_grounded_guidance_delta": 0.0,
+  "experiment": 4281,
+  "field_principles": {
+    "carnot_minus_rfg_delta": "BARE float: Carnot-verifier-guided minus RFG accuracy on the reasoning corpus -- the load-bearing comparison (beating the model's own self-guidance is what shows an EXTERNAL verifier adds value in-generation).",
+    "carnot_minus_unguided_delta": "BARE float: Carnot-verifier-guided minus unguided -- the weaker control (a guidance hook that does anything beats unguided; the moat needs the RFG comparison too).",
+    "diffusiongemma_guidance_moat": "BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff the LEARNED (oracle-distinct) verifier-guided run beats RFG model-self-guidance AND CI95-excl-0 -- the moat-scissor realized in generation at LLM scale.",
+    "execution_grounded_guidance_delta": "The executable-oracle arm's guided-minus-unguided delta -- valid but CIRCULAR (verifier_is_oracle=true); framed as cheap/automatic/decentralized, NOT a moat headline.",
+    "guidance_moat_ci95": "Task-level bootstrap CI95 of the Carnot-minus-RFG delta -- excluding 0 means the external verifier genuinely steers generation better than model self-guidance.",
+    "honest_verdict": "Terminal-prefixed. A guidance moat (learned-verifier beats RFG, CI95-excl-0), a bounded null (ties RFG), and a partial-state-blocked finding are ALL COMPLETE and decision-grade for the section 5 thesis.",
+    "model_specs": "DiffusionGemma GGUF id + the PR binary + the verifier ensemble wired as guidance + denoising steps + the four conditions + the corpora; required methodology.",
+    "preconditions_checked": "Records the PR-binary + GGUF cache + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the denoising + bootstrap.",
+    "reproducibility_checksum": "Hash of the corpora + guidance config + PR-binary inputs; lets a third party re-run.",
+    "verifier_is_oracle": "BARE bool: declared PER ARM (false for the learned-verifier headline arm, true for the execution-grounded arm) -- honoring the Circularity Discipline so a circular guidance win cannot headline."
+  },
+  "guidance_changes_selection": true,
+  "guidance_moat_ci95": [
+    0.0,
+    0.0
+  ],
+  "guidance_smoke": {
+    "candidate_count": 3,
+    "examples": 2,
+    "guidance_changes_selection": true,
+    "guidance_reweighted_token_count": 24,
+    "guidance_selection_change_count": 8,
+    "status": "measured",
+    "step_records_preview": [
+      {
+        "candidate_count": 3,
+        "changed": true,
+        "guided_token": "4",
+        "step_index": 0,
+        "task_id": "math_2_plus_2",
+        "unguided_token": "5"
+      },
+      {
+        "candidate_count": 3,
+        "changed": true,
+        "guided_token": "4",
+        "step_index": 1,
+        "task_id": "math_2_plus_2",
+        "unguided_token": "3"
+      },
+      {
+        "candidate_count": 3,
+        "changed": true,
+        "guided_token": "4",
+        "step_index": 2,
+        "task_id": "math_2_plus_2",
+        "unguided_token": "5"
+      },
+      {
+        "candidate_count": 3,
+        "changed": true,
+        "guided_token": "4",
+        "step_index": 3,
+        "task_id": "math_2_plus_2",
+        "unguided_token": "3"
+      },
+      {
+        "candidate_count": 3,
+        "changed": true,
+        "guided_token": "9",
+        "step_index": 0,
+        "task_id": "sudoku_row_missing_9",
+        "unguided_token": "8"
+      },
+      {
+        "candidate_count": 3,
+        "changed": true,
+        "guided_token": "9",
+        "step_index": 1,
+        "task_id": "sudoku_row_missing_9",
+        "unguided_token": "0"
+      },
+      {
+        "candidate_count": 3,
+        "changed": true,
+        "guided_token": "9",
+        "step_index": 2,
+        "task_id": "sudoku_row_missing_9",
+        "unguided_token": "8"
+      },
+      {
+        "candidate_count": 3,
+        "changed": true,
+        "guided_token": "9",
+        "step_index": 3,
+        "task_id": "sudoku_row_missing_9",
+        "unguided_token": "0"
+      }
+    ],
+    "steps_per_example": 4,
+    "wall_clock_s": 9.5e-05
+  },
+  "headline_arm": {
+    "conditions": {
+      "Carnot-verifier-guided": {
+        "accuracy": null,
+        "status": "blocked_partial_state_verifier"
+      },
+      "EntRGi": {
+        "accuracy": null,
+        "status": "blocked_partial_state_verifier"
+      },
+      "RFG": {
+        "accuracy": null,
+        "status": "blocked_partial_state_verifier"
+      },
+      "unguided": {
+        "accuracy": null,
+        "status": "blocked_partial_state_verifier"
+      }
+    },
+    "learned_verifier_partial_state_support": {
+      "can_score": false,
+      "inspected_symbols": [
+        "ComposedEnergy",
+        "ConformalCalibrationVerifier",
+        "DeentangledEnsemble",
+        "EORMVerifier",
+        "LinearProbeCalibrator",
+        "ParaphrasticConsistencyVerifier",
+        "SemanticCalibratedVerifier",
+        "SemanticEnergyVerifier",
+        "SetConsistencyVerifier",
+        "TemporalCausalConsistencyVerifier",
+        "Tier0rVerifier",
+        "Tier0sVerifier",
+        "Tier0uVerifier",
+        "build_code_energy",
+        "build_coloring_energy",
+        "build_sat_energy",
+        "deentangled_ensemble",
+        "linear_probe_calibrator",
+        "tier0g_semantic_energy"
+      ],
+      "reason": "No learned verifier in carnot.verify exposes score_partial_state, score_masked_canvas, score_diffusion_canvas, or energy_partial_state for DiffusionGemma token canvases. Existing verifier surfaces score complete candidate text, telemetry, or executable artifacts."
+    },
+    "n_completed": 0,
+    "n_planned": 30,
+    "status": "blocked_partial_state_verifier",
+    "verifier_is_oracle": false
+  },
+  "honest_verdict": "complete_diffusiongemma_learned_verifier_cannot_score_partial_states",
+  "inference_substrate": "live_llm_inference",
+  "model_specs": {
+    "denoising": {
+      "bootstrap_resamples": 2000,
+      "conditions": [
+        "unguided",
+        "RFG",
+        "EntRGi",
+        "Carnot-verifier-guided"
+      ],
+      "execution_grounded_corpus": {
+        "families": [
+          "code",
+          "sudoku"
+        ],
+        "n_planned": 30
+      },
+      "headline_corpus": {
+        "families": [
+          "FoVer-step",
+          "math"
+        ],
+        "n_planned": 30
+      },
+      "steps": 24
+    },
+    "diffusiongemma": {
+      "active_params_b": 4,
+      "auto_tokenizer_used": false,
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "canvas_len": 256,
+      "energy_prior_smoke_status": "extracted",
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "mask_token_id": 4,
+      "model_loaded": true,
+      "pr_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "quantization": "Q4_K_M",
+      "runtime": "llama.cpp PR diffusion-gemma eval binary",
+      "total_params_b": 26,
+      "vocab_size": 262144
+    },
+    "verifier_ensemble": {
+      "execution_grounded": {
+        "moat_eligible": false,
+        "name": "executable oracle verifier",
+        "verifier_is_oracle": true
+      },
+      "guidance_config": {
+        "candidate_count": 3,
+        "feasible_cost_window_s": 86400.0,
+        "guidance_lambda": 0.7,
+        "steps": 4
+      },
+      "guidance_equation": "logit' = logit - lambda * verifier_energy",
+      "headline": {
+        "name": "Carnot learned/energy verifier ensemble",
+        "partial_state_required": true,
+        "verifier_is_oracle": false
+      }
+    }
+  },
+  "per_arm_verifier_is_oracle": {
+    "execution_grounded": true,
+    "headline_learned": false
+  },
+  "preconditions_checked": [
+    {
+      "command": "ls /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "exists": true,
+      "ok": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "resource": "pr_binary",
+      "size_bytes": 26400
+    },
+    {
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "cache_entries_preview": [
+        "blobs",
+        "refs",
+        "snapshots"
+      ],
+      "cache_error": null,
+      "cache_non_empty": true,
+      "command": "ls /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/",
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "ok": true,
+      "resolve_error": null,
+      "resource": "diffusiongemma_cache"
+    },
+    {
+      "active_training_processes": [],
+      "ok": true,
+      "process_check_error": null,
+      "resource": "trm_training_stand_down",
+      "results_trm_runs_touched": false
+    },
+    {
+      "auto_tokenizer_used": false,
+      "backend": "gguf_metadata",
+      "detail": "llama_cpp vocab_only failed (ValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf); embedded GGUF tokenizer metadata OK",
+      "elapsed_s": 0.493176,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "mode": "embedded_vocab_metadata",
+      "ok": true,
+      "resource": "gguf_vocab_loader",
+      "token_count": 15,
+      "token_ids_preview": [
+        3,
+        236743,
+        3,
+        236743,
+        111359,
+        236743,
+        3,
+        236743
+      ],
+      "vocab_only": false
+    }
+  ],
+  "random_seed": 4281,
+  "reproducibility_checksum": "1f6fc091cb5b27727970df2647de0e9297ae8940225c33196f16907b5a048460",
+  "schema": "blocked_diffusiongemma_partial_state_v1",
+  "spec_refs": [
+    "REQ-VERIFY-4281",
+    "SCENARIO-VERIFY-4281"
+  ],
+  "verifier_is_oracle": false
+}
