@@ -2,21 +2,17 @@
 offline-reproducible). No replay of live recordings.
 
 sc25 mechanics (reverse-engineered from environment_files/sc25/.../sc25.py):
-  - 3x3 cast grid: clicking the `clzbxlm-sptivk-slsrhr` cell sprite at display
-    coords (24+5c, 49+5r) TOGGLES xhhaqjfncnp[r][c] (camera is identity).
-    (The hardcoded SC25_GRID_COORDS in the live solver are WRONG for the env.)
-  - cast: select `sptivk-{spell}` sprite, set xhhaqjfncnp == zzpoabuniyn[spell],
-    re-click the spell to fire -> multi-frame animation; let it resolve.
-  - moves: ACTION1/2/3/4 move the active sprite; abvgsmnbrj() -> next_level when a
-    winning move completes. Step budget enforced.
-
-Env-cloned BFS over {cast each castable spell} + {moves}, animations resolved,
-deduped by a goal-relevant key, chained level-by-level from the offline reset.
+  - 3x3 cast grid: clicking the `clzbxlm-sptivk-slsrhr` cell sprite at coords
+    (24+5c, 49+5r) TOGGLES xhhaqjfncnp[r][c] (camera is identity). cast = select
+    `sptivk-{spell}` sprite, set xhhaqjfncnp==zzpoabuniyn[spell], re-click to fire.
+  - player `pluyoo` (= self.plnqvukupu, auto-set on level load) moves via
+    ACTION1/2/3/4; reaching the exit `exydhv` triggers next_level. Step budget.
+  - NOTE: env._game deepcopy-injection is BROKEN for sc25 (unlike lp85), so we
+    BFS by REPLAY-FROM-RESET on the real env; the level is read from the FRAME.
 Zero quota.
 """
 from __future__ import annotations
 
-import copy
 import json
 import sys
 from collections import deque
@@ -32,149 +28,134 @@ from arcengine import GameAction
 from carnot.agentic.arc_agi3_live_adapter import _levels_completed
 
 TARGET = 5
-MAX_STATES = 40000
+MAX_NODES = 30000
+DEPTH = {1: 24, 2: 30, 3: 30, 4: 30, 5: 30}
 PHASES = ["vbublqskwzw", "ggotuphkheh", "obrrczymkxn", "wmnlnlscbpq", "jwlqyoqyagv", "agzbtzaakna"]
 MOVE_IDS = (1, 2, 3, 4)
 
 
-def cell_xy(r, c):
-    return (24 + 5 * c, 49 + 5 * r)
+def busy(g):
+    return any(getattr(g, p, {}).get("acyylh") for p in PHASES) or getattr(g, "eycwbtepcvs", False)
 
 
-def anim_active(g):
-    return any(getattr(g, p, {}).get("acyylh") for p in PHASES)
-
-
-def resolve(env):
-    # advance only while an animation phase is active (action ignored during anim)
+def resolve(env, f):
     for _ in range(80):
-        if not anim_active(env._game):
+        if not busy(env._game):
             break
-        env.step(GameAction.ACTION5)
-    return env._game
+        f = env.step(GameAction.ACTION5)
+    return f
 
 
 def spell_sprite(g, spell):
-    for s in g.current_level.get_sprites():
-        if str(getattr(s, "name", "")) == f"sptivk-{spell}":
-            return s
-    return None
+    return next((s for s in g.current_level.get_sprites()
+                 if str(getattr(s, "name", "")) == f"sptivk-{spell}"), None)
 
 
 def castable_spells(g):
     pats = getattr(g, "zzpoabuniyn", {})
     cur = g.xhhaqjfncnp
-    out = []
-    for sp, pat in pats.items():
-        if spell_sprite(g, sp) is None:
-            continue
-        if any(bool(pat[r][c]) != bool(cur[r][c]) for r in range(3) for c in range(3)):
-            out.append(sp)
-    return out
+    return [sp for sp, pat in pats.items()
+            if spell_sprite(g, sp) is not None
+            and any(bool(pat[r][c]) != bool(cur[r][c]) for r in range(3) for c in range(3))]
 
 
-def cast(env, spell):
-    g = env._game
-    ss = spell_sprite(g, spell)
+def do_cast(env, spell, f):
+    ss = spell_sprite(env._game, spell)
     if ss is None:
-        return env._game
-    env.step(GameAction.ACTION6, data={"x": int(ss.x), "y": int(ss.y)})  # select
-    g = env._game
-    pat = g.zzpoabuniyn[spell]
+        return f
+    f = env.step(GameAction.ACTION6, data={"x": int(ss.x), "y": int(ss.y)})
+    pat = env._game.zzpoabuniyn[spell]
     for r in range(3):
         for c in range(3):
             if bool(pat[r][c]) != bool(env._game.xhhaqjfncnp[r][c]):
-                x, y = cell_xy(r, c)
-                env.step(GameAction.ACTION6, data={"x": x, "y": y})  # toggle to match
+                f = env.step(GameAction.ACTION6, data={"x": 24 + 5 * c, "y": 49 + 5 * r})
     ss = spell_sprite(env._game, spell)
     if ss is not None:
-        env.step(GameAction.ACTION6, data={"x": int(ss.x), "y": int(ss.y)})  # fire
-    return resolve(env)
+        f = env.step(GameAction.ACTION6, data={"x": int(ss.x), "y": int(ss.y)})
+    return resolve(env, f)
 
 
-def goal_key(g):
-    sprites = g.current_level.get_sprites()
-    pos = tuple(sorted((str(getattr(s, "name", "")), int(getattr(s, "x", 0)), int(getattr(s, "y", 0)))
-                       for s in sprites))
-    return (str(g.xhhaqjfncnp), pos)
+def do_move(env, m, f):
+    f = env.step(getattr(GameAction, f"ACTION{m}"))
+    return resolve(env, f)
 
 
-def composite(env, game_state):
-    env._game = copy.deepcopy(game_state)
-    acts = [("cast:" + sp, lambda sp=sp: cast(env, sp)) for sp in castable_spells(env._game)]
-    acts += [(f"move{m}", lambda m=m: (env.step(getattr(GameAction, f"ACTION{m}")), resolve(env))[1])
-             for m in MOVE_IDS]
-    return acts
+def apply(env, label, f):
+    if label.startswith("cast:"):
+        return do_cast(env, label.split(":", 1)[1], f)
+    return do_move(env, int(label[-1]), f)
 
 
-def solve_one(env, start_level):
-    original = copy.deepcopy(env._game)
-    seen = {goal_key(original)}
-    q = deque([(copy.deepcopy(original), [])])
-    states = 0
-    while q and states < MAX_STATES:
-        gs, path = q.popleft()
-        states += 1
-        for label, fn in composite(env, gs):
-            env._game = copy.deepcopy(gs)
-            try:
-                fn()
-            except Exception:
-                continue
-            lv = _levels_completed(None) if False else _level(env)
-            if lv > start_level:
-                env._game = copy.deepcopy(original)
-                return path + [label], states
-            k = goal_key(env._game)
+def replay(env, path):
+    f = env.reset()
+    f = env.step(GameAction.ACTION5)  # the first action after reset is consumed (no-op); warm it up
+    for label in path:
+        f = apply(env, label, f)
+    return f
+
+
+def state_key(g):
+    p = getattr(g, "plnqvukupu", None)
+    pp = (int(p.x), int(p.y)) if p else None
+    facing = getattr(g, "jdmucabyqar", None)  # player facing — turn vs move is state-dependent
+    sprites = tuple(sorted((str(getattr(s, "name", "")), int(getattr(s, "x", 0)), int(getattr(s, "y", 0)))
+                           for s in g.current_level.get_sprites()))
+    return (pp, facing, str(g.xhhaqjfncnp), sprites)
+
+
+def actions(env):
+    return ["cast:" + sp for sp in castable_spells(env._game)] + [f"move{m}" for m in MOVE_IDS]
+
+
+def solve_one(env, start_level, depth_cap, prefix):
+    replay(env, prefix)
+    seen = {state_key(env._game)}
+    frontier = deque([[]])
+    nodes = 0
+    while frontier and nodes < MAX_NODES:
+        path = frontier.popleft()
+        if len(path) >= depth_cap:
+            continue
+        replay(env, prefix + path)
+        for label in actions(env):
+            f2 = apply(env, label, None)
+            nodes += 1
+            if _levels_completed(f2) > start_level:
+                return path + [label], nodes
+            k = state_key(env._game)
             if k not in seen:
                 seen.add(k)
-                q.append((copy.deepcopy(env._game), path + [label]))
-    env._game = copy.deepcopy(original)
-    return None, states
-
-
-def _level(env):
-    try:
-        return int(getattr(env._game, "levels_completed", 0) or 0)
-    except Exception:
-        return 0
-
-
-def apply(env, label):
-    if label.startswith("cast:"):
-        cast(env, label.split(":", 1)[1])
-    else:
-        env.step(getattr(GameAction, f"ACTION{label[-1]}"))
-        resolve(env)
+                frontier.append(path + [label])
+            replay(env, prefix + path)  # restore for next sibling
+    return None, nodes
 
 
 def main() -> int:
-    print("== sc25 FROM-SCRATCH offline solver v2 (discovered cast coords, zero quota) ==")
+    print("== sc25 FROM-SCRATCH offline solver v3 (replay-from-reset, zero quota) ==")
     arc = Arcade(arc_api_key="", operation_mode=OperationMode.OFFLINE,
                  environments_dir=str(REPO / "environment_files"))
     env = arc.make("sc25", scorecard_id=arc.open_scorecard())
-    env.reset()
-    cur = _level(env)
+    f = env.reset()
+    cur = _levels_completed(f)
     print(f"reset: level={cur} castable={castable_spells(env._game)}")
 
     full = []
     for lvl in range(cur + 1, TARGET + 1):
-        path, states = solve_one(env, cur)
+        path, nodes = solve_one(env, cur, DEPTH.get(lvl, 30), full)
         if path is None:
-            print(f"  STUCK L{cur}->L{lvl} ({states} states)")
+            print(f"  STUCK L{cur}->L{lvl} ({nodes} nodes)")
             break
-        for label in path:
-            apply(env, label)
-        cur = _level(env)
+        f = replay(env, full + path)
+        cur = _levels_completed(f)
         full += path
-        print(f"  solved L{cur}: +{len(path)} actions (total {len(full)}, {states} states)")
+        print(f"  solved L{cur}: +{len(path)} actions (total {len(full)}, {nodes} nodes)")
         if cur < lvl:
             print("  WARN under-target; stop"); break
 
     print(f"\n  sc25 result: reached L{cur} via {len(full)} composite actions")
     out = REPO / "results" / "arc3_sc25_offline_resolve.json"
     out.write_text(json.dumps({"game": "sc25", "reached_level": cur, "composite_actions": full,
-                               "mode": "from_scratch_offline_bfs_no_quota"}, indent=2))
+                               "mode": "from_scratch_offline_replay_bfs_no_quota"}, indent=2))
     print(f"  wrote {out.relative_to(REPO)}")
     return 0 if cur >= TARGET else 1
 
