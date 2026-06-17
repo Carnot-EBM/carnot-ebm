@@ -8652,3 +8652,4 @@ c |
 | 2026-06-17 10:56 UTC | PHASE B1 (ARC NORTH STAR; operator MANDATORY 2026- | OK | 95 passed, 1 warning in 8.29s |
 | 2026-06-17 11:12 UTC | PHASE B2 (ARC NORTH STAR; operator MANDATORY 2026- | OK | 95 passed, 1 warning in 6.09s |
 | 2026-06-17 11:28 UTC | PHASE B3 (ARC NORTH STAR; operator MANDATORY 2026- | OK | 96 passed, 1 warning in 6.90s |
+| 2026-06-17 11:57 UTC | PHASE C (ARC NORTH STAR; shallow tail) -- adapter- | OK | 113 passed, 1 warning in 6.38s |
