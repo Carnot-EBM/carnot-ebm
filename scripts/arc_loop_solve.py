@@ -56,7 +56,8 @@ def solve_adaptered(game: str, target_level: int) -> dict:
         verifier_src = "hand_verifier_cold_start"
 
     solver = kit.OfflineSolver(game, ad.action_labels, ad.apply, ad.state_key,
-                               warmup_label=ad.warmup_label, verifier=verifier)
+                               warmup_label=ad.warmup_label, verifier=verifier,
+                               branch_mode=getattr(ad, "branch_mode", "replay"))
     f = solver._replay(env, [])
     cur = kit.frame_level(f)
     full, total_states, X, y = [], 0, [], []
