@@ -13891,3 +13891,71 @@ write a fake training artifact.
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4263 | Proposed (python/carnot/experiment_4263_verifier_as_reward_out_of_band_or_retire.py; results/experiment_4263_verifier_as_reward_out_of_band_or_retire.py, Exp 4263) | Proposed (tests/python/test_experiment_4263_verifier_as_reward_out_of_band_or_retire.py) |
+
+---
+
+## REQ-LEARN-4318: ARC Cross-Game Learned Value-Head Transfer
+
+**Given** at least three reproducibly solved ARC-AGI-3 games with replayable solve
+traces
+**When** Exp 4318 performs leave-one-game-out training of
+`arc_value_learner.LearnedVerifier` on the other games' traces
+**Then** the held-out game SHALL be solved with `arc_solver_kit.OfflineSolver`
+twice: once with a uniform untrained heuristic and once with the transferred
+value-head
+**And** the artifact SHALL report per-level search states, per-held-out-game
+state reduction, an aggregate `cross_game_state_reduction`, a bootstrap
+`cross_game_state_reduction_ci95` using at least 2000 resamples, and a bare
+`cross_game_transfer_helps` bool that is true only when the reduction and CI
+lower bound both exceed 1.0.
+The required top-level artifact fields are `honest_verdict`,
+`cross_game_transfer_helps`, `cross_game_state_reduction`,
+`cross_game_state_reduction_ci95`, `per_held_out_game_reduction`,
+`baseline_solves_held_out`, `verifier_is_oracle`, `random_seed`,
+`reproducibility_checksum`, and `model_specs`.
+
+### REQ-LEARN-4318 Sub-requirements
+
+- REQ-LEARN-4318-1: Preconditions SHALL verify that `arc_solver_kit`,
+  `arc_value_learner`, and the solved-game traces for r11l, ls20, wa30, and lp85
+  are loadable before running the experiment.
+- REQ-LEARN-4318-2: If fewer than three games have usable traces with at least
+  one reproduced level, Exp 4318 SHALL emit `honest_verdict` containing
+  `blocked_insufficient_solve_traces` and SHALL NOT fabricate transfer metrics.
+- REQ-LEARN-4318-3: For every held-out game, the training split SHALL exclude all
+  levels from that game and the artifact SHALL record the train/held-out split in
+  `model_specs`.
+- REQ-LEARN-4318-4: The uniform baseline SHALL solve every held-out level before
+  a null is considered informative, and the bare `baseline_solves_held_out`
+  field SHALL report that positive control.
+- REQ-LEARN-4318-5: The artifact SHALL set `verifier_is_oracle=false`,
+  `random_seed`, `reproducibility_checksum`, and `model_specs`; the value-head is
+  a CPU linear heuristic over solver state and SHALL NOT mutate LLM weights.
+- REQ-LEARN-4318-6: If `cross_game_transfer_helps=false` after the positive
+  control passes, Exp 4318 SHALL log a game-invariant ARC value-representation
+  missing-verifier gap.
+
+### SCENARIO-LEARN-4318: Leave-One-Game-Out Reports Decision-Grade Transfer Or Null
+
+**Given** r11l, ls20, wa30, and lp85 solved traces are present
+**When** Exp 4318 trains a value-head on all games except the held-out game
+**Then** the held-out game result records `states_uniform`,
+`states_transferred`, and `state_reduction`
+**And** the aggregate artifact reports `cross_game_transfer_helps` as a bare
+bool, `cross_game_state_reduction` as a bare float, and
+`cross_game_state_reduction_ci95` as a two-float list.
+
+### SCENARIO-LEARN-4318-BLOCKED: Insufficient Solve Traces Stop Honestly
+
+**Given** fewer than three solved games have usable replay traces
+**When** Exp 4318 runs
+**Then** it SHALL write a terminal artifact with
+`honest_verdict=blocked_insufficient_solve_traces`
+**And** `cross_game_transfer_helps=false` and
+`baseline_solves_held_out=false`.
+
+## Implementation Status (Exp 4318)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4318 | Implemented (`python/carnot/experiment_4318_arc_cross_game_learned_verifier_transfer.py`; `results/experiment_4318_arc_cross_game_learned_verifier_transfer.py`; `results/experiment_4318_arc_cross_game_learned_verifier_transfer.json`) | Implemented (`tests/python/test_experiment_4318_arc_cross_game_learned_verifier_transfer.py`) |

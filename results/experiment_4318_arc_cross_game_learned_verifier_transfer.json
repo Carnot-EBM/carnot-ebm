@@ -1,0 +1,308 @@
+{
+  "acceptance_gate_passed": true,
+  "baseline_solves_held_out": true,
+  "cross_game_state_reduction": 1.0,
+  "cross_game_state_reduction_ci95": [
+    1.0,
+    1.0
+  ],
+  "cross_game_transfer_helps": false,
+  "duration_s": 6.005898952484131,
+  "experiment": "experiment_4318_arc_cross_game_learned_verifier_transfer",
+  "field_principles": {
+    "baseline_solves_held_out": "BARE bool: the uniform-heuristic solver actually solves the held-out levels (the positive control) -- a no-reduction is only informative if the baseline succeeds (FALSE_NEGATIVE_RISK guard).",
+    "cross_game_state_reduction": "BARE float: held-out states_uniform / states_transferred (>1.0 = transfer helps; ~1.0 = per-game-bound) -- the north-star EFFICIENCY metric (fewer search states = more efficient solve).",
+    "cross_game_state_reduction_ci95": "Bootstrap CI95 (>=2000 resamples) over held-out levels of the state-reduction -- a lower bound > 1.0 makes 'transfer helps' decision-grade.",
+    "cross_game_transfer_helps": "BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff the value-head trained on OTHER games reduces held-out-game search states (reduction > 1.0 AND CI95 lower bound > 1.0) -- cross-game self-learning for ARC search efficiency.",
+    "honest_verdict": "Terminal-prefixed. A cross-game transfer win (the value-head reduces search states on a held-out game -- self-learning + efficiency), an honest null (per-game heads do not transfer -> log the gap), and an honest blocked_insufficient_solve_traces are ALL COMPLETE and decision-grade.",
+    "model_specs": "The arc_value_learner architecture + the train/held-out game split + the OfflineSolver state-count instrumentation; required methodology.",
+    "per_held_out_game_reduction": "State-reduction reported SEPARATELY per held-out game -- guards the one-game-dominates failure mode + shows which games transfer.",
+    "random_seed": "Determinism precondition for the value-head training + the solver.",
+    "reproducibility_checksum": "Hash of the solve traces + the value-head + the leave-one-game-out split + the state counts; lets a third party re-run.",
+    "verifier_is_oracle": "BARE bool=false -- a learned value-head over solver state (oracle-distinct heuristic), NOT the executable env oracle; NO LLM weight mutation."
+  },
+  "held_out_level_rows": [
+    {
+      "baseline_solved": true,
+      "held_out_game": "lp85",
+      "level_index": 1,
+      "states_transferred": 15,
+      "states_uniform": 15,
+      "target_level": 1,
+      "transferred_path_len": 5,
+      "transferred_solved": true,
+      "uniform_path_len": 5
+    },
+    {
+      "baseline_solved": true,
+      "held_out_game": "lp85",
+      "level_index": 2,
+      "states_transferred": 24,
+      "states_uniform": 24,
+      "target_level": 2,
+      "transferred_path_len": 8,
+      "transferred_solved": true,
+      "uniform_path_len": 8
+    },
+    {
+      "baseline_solved": true,
+      "held_out_game": "lp85",
+      "level_index": 3,
+      "states_transferred": 49,
+      "states_uniform": 49,
+      "target_level": 3,
+      "transferred_path_len": 16,
+      "transferred_solved": true,
+      "uniform_path_len": 16
+    },
+    {
+      "baseline_solved": true,
+      "held_out_game": "ls20",
+      "level_index": 1,
+      "states_transferred": 41,
+      "states_uniform": 41,
+      "target_level": 1,
+      "transferred_path_len": 13,
+      "transferred_solved": true,
+      "uniform_path_len": 13
+    },
+    {
+      "baseline_solved": true,
+      "held_out_game": "r11l",
+      "level_index": 1,
+      "states_transferred": 11,
+      "states_uniform": 11,
+      "target_level": 1,
+      "transferred_path_len": 3,
+      "transferred_solved": true,
+      "uniform_path_len": 3
+    },
+    {
+      "baseline_solved": true,
+      "held_out_game": "wa30",
+      "level_index": 1,
+      "states_transferred": 101,
+      "states_uniform": 101,
+      "target_level": 1,
+      "transferred_path_len": 33,
+      "transferred_solved": true,
+      "uniform_path_len": 33
+    }
+  ],
+  "honest_verdict": "complete: arc_cross_game_value_head_no_improvement_positive_control_passed",
+  "inference_substrate": "cpu_offline_arc_agi3_trace_frontier_learned_value_head",
+  "methodology_note": "This is a CPU-only value-head search-efficiency measurement over the currently reproduced solved-game traces. The CI is over held-out levels, so a null is logged as a representation gap rather than promoted as a broad impossibility claim.",
+  "missing_verifier_gaps": [
+    {
+      "candidate_design": "learned frame encoder or per-game adapter-conditioned value head",
+      "failure_mode": "transferred linear value-head did not reduce held-out OfflineSolver states",
+      "gap_id": "GAP-4318",
+      "missing_discriminator": "game-invariant ARC value representation",
+      "priority": "medium"
+    }
+  ],
+  "model_specs": {
+    "bootstrap_resamples": 2000,
+    "held_out_action_frontier": "trace-derived reproducible action frontier used only to make the uniform positive-control solve finite; held-out states are excluded from value-head training",
+    "model_weights_by_held_out_game": {
+      "lp85": {
+        "n_samples": 49,
+        "weights": [
+          1345.788308586968,
+          3.516056594097,
+          79.271732921616,
+          6645.148188417042,
+          49.505458815526,
+          -5244.180148464153
+        ]
+      },
+      "ls20": {
+        "n_samples": 65,
+        "weights": [
+          681.639844222707,
+          0.631527587735,
+          14.305040490833,
+          997.252691470795,
+          53.793295222337,
+          -1296.96904243088
+        ]
+      },
+      "r11l": {
+        "n_samples": 75,
+        "weights": [
+          10363.452034883387,
+          -0.40326398022,
+          7.106867432121,
+          36202.06300594604,
+          38.855592391841,
+          -31277.51430782296
+        ]
+      },
+      "wa30": {
+        "n_samples": 45,
+        "weights": [
+          455.098069103107,
+          -0.201001659308,
+          3.319379914243,
+          1405.47556801268,
+          37.296025174081,
+          -1281.972970345149
+        ]
+      }
+    },
+    "splits": {
+      "lp85": {
+        "held_out_game": "lp85",
+        "n_held_out_levels": 3,
+        "n_train_samples": 49,
+        "train_games": [
+          "ls20",
+          "r11l",
+          "wa30"
+        ]
+      },
+      "ls20": {
+        "held_out_game": "ls20",
+        "n_held_out_levels": 1,
+        "n_train_samples": 65,
+        "train_games": [
+          "lp85",
+          "r11l",
+          "wa30"
+        ]
+      },
+      "r11l": {
+        "held_out_game": "r11l",
+        "n_held_out_levels": 1,
+        "n_train_samples": 75,
+        "train_games": [
+          "lp85",
+          "ls20",
+          "wa30"
+        ]
+      },
+      "wa30": {
+        "held_out_game": "wa30",
+        "n_held_out_levels": 1,
+        "n_train_samples": 45,
+        "train_games": [
+          "lp85",
+          "ls20",
+          "r11l"
+        ]
+      }
+    },
+    "state_count_instrumentation": "arc_solver_kit.OfflineSolver.solve_level counts generated child states in last_states_expanded; lower is better",
+    "trace_checksums": {
+      "lp85": "sha256:7f17f90d3c0cc57da14b84e88d85e897dd35ee264d628d941d051058a29ed68c",
+      "ls20": "sha256:c6908c6c3cc3f3d187a8bb6e34d999b42c4120fd11c2fe8671acafaf838be9b0",
+      "r11l": "sha256:0bfc38948e3510a114421a0d9066276c501791406cbbf087283e6ffd4c6a67f3",
+      "wa30": "sha256:506cda548814df778d0ae8013cc15d33a3f9ce8819fda7d285909d4da85f4512"
+    },
+    "value_head": {
+      "architecture": "linear least-squares value head with bias",
+      "class": "LearnedVerifier",
+      "features": "cross_game_features(frame): nonzero density, n colors, object count, spread, dominant color share",
+      "llm_weight_mutation": false,
+      "module": "python/carnot/agentic/arc_value_learner.py",
+      "target": "raw steps_remaining within each solved level",
+      "training_compute": "CPU numpy.linalg.lstsq"
+    }
+  },
+  "n_bootstrap_resamples": 2000,
+  "n_held_out_levels": 6,
+  "per_held_out_game_reduction": {
+    "lp85": {
+      "baseline_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_transferred": 15,
+          "states_uniform": 15,
+          "transferred_solved": true
+        },
+        {
+          "baseline_solved": true,
+          "level_index": 2,
+          "state_reduction": 1.0,
+          "states_transferred": 24,
+          "states_uniform": 24,
+          "transferred_solved": true
+        },
+        {
+          "baseline_solved": true,
+          "level_index": 3,
+          "state_reduction": 1.0,
+          "states_transferred": 49,
+          "states_uniform": 49,
+          "transferred_solved": true
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_transferred": 88,
+      "states_uniform": 88,
+      "transferred_solved": true
+    },
+    "ls20": {
+      "baseline_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_transferred": 41,
+          "states_uniform": 41,
+          "transferred_solved": true
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_transferred": 41,
+      "states_uniform": 41,
+      "transferred_solved": true
+    },
+    "r11l": {
+      "baseline_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_transferred": 11,
+          "states_uniform": 11,
+          "transferred_solved": true
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_transferred": 11,
+      "states_uniform": 11,
+      "transferred_solved": true
+    },
+    "wa30": {
+      "baseline_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_transferred": 101,
+          "states_uniform": 101,
+          "transferred_solved": true
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_transferred": 101,
+      "states_uniform": 101,
+      "transferred_solved": true
+    }
+  },
+  "random_seed": 4318,
+  "reproducibility_checksum": "sha256:2c8025f3f86db19d413ac12254b475ff03a4ceb75d680cc67ec94b54af266c79",
+  "spec_refs": [
+    "REQ-LEARN-4318",
+    "SCENARIO-LEARN-4318"
+  ],
+  "title": "arc_cross_game_learned_value_head_transfer",
+  "verifier_is_oracle": false
+}
