@@ -1388,17 +1388,22 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - priority: high (the foundation of any live-submission capability)
 
 ### GAP-ARC-STRATEGY-ROUTER: route to a solving STRATEGY-class, not just a heuristic
-- status: open
-- evidence: arc_router routes only {bfs,cell_count,region_count} goal-distance heuristics; it has
-  no awareness of the mechanic CLASSES (program-editor, checkpoint-multirun, timed-trap). The
-  per-game solvers are disconnected from the learned router/TRM stack.
-- missing discriminator: mechanic-signal FEATURES (control-type, periodic-obstacles, transform-
-  controls) + strategy-class LABELS in the router's ledger, so an induced new game routes to the
-  right strategy dynamically (frame-only).
-- candidate design: a reusable strategy-class library (path_route / program_editor /
-  checkpoint_multirun / timed_trap_aware) each declaring its applicability features; extend the
-  trained router (leave-one-out validated) from heuristic-selection to strategy-selection.
-- priority: high (turns per-game wins into dynamic transfer)
+- status: building (routing layer SHIPPED 2026-06-17 — python/carnot/agentic/arc_strategy_router.py;
+  remaining: frame-only solvers for the checkpoint_multirun + timed_trap_aware classes)
+- evidence: arc_router routed only {bfs,cell_count,region_count} goal-distance heuristics with no
+  awareness of mechanic CLASSES. NOW: arc_strategy_router is the Tier-1 STRATEGY layer above it —
+  route_for_game(game, mechanic=...) maps a detected mechanic to its strategy and SHORT-CIRCUITS the
+  goal-distance heuristic for program-editor (a category error: tn36 ran graph_explore clean but
+  every heuristic NO-ADVANCEs). recommend_approach() now returns `strategy` as the first decision.
+- missing discriminator (now SUPPLIED at the routing level): mechanic-class detection with live-
+  correct precedence — injected frame-only verdict (arc3_frame_induction.induce, zero internal state)
+  > registry mechanic_class > default graph_explore; tn36 records mechanic_class: program_editor.
+- candidate design (DONE for routing): strategy-class library (program_editor / graph_explore wired;
+  checkpoint_multirun / timed_trap_aware declared, wired: False) each declaring applicability features
+  + solver entrypoint. Unit-tested (tests/python/test_arc_strategy_router.py, 6 tests).
+- priority: high (turns per-game wins into dynamic transfer) — routing turned wins into transfer;
+  the per-class SOLVER builds (esp. the program_editor offline transition verifier,
+  GAP-ARC-PROGRAM-EDITOR-NO-GRADED-FEEDBACK) are the remaining work.
 
 ### GAP-ARC-PROGRAM-EDITOR-NO-GRADED-FEEDBACK: program-editor games are blind-search-only frame-only
 - status: open

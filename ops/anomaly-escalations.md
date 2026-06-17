@@ -491,3 +491,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - CRITICAL adversarial flag ['CIRCULAR_MOAT_OVERCLAIM'] on a non-negative verdict
 - artifact: results/experiment_4346_capstone_v401.json
+
+## experiment_4347_archive_v401_activate_v402.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['CIRCULAR_MOAT_OVERCLAIM'] on a non-negative verdict
+- artifact: results/experiment_4347_archive_v401_activate_v402.json

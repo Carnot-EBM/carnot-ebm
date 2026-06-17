@@ -188,3 +188,36 @@ carries a learned transition model; it is NOT re-induced online. Logged as
 `GAP-ARC-PROGRAM-EDITOR-NO-GRADED-FEEDBACK` in `ops/verifier_gaps.md`. (Mechanic classes that DO expose
 per-move motion -- direct-control / path-routing games -- remain online-inducible; the no-graded-
 feedback limit is specific to atomic-run program-editor games.)
+
+## NEXT LINK DONE: the program-editor model is WIRED into the strategy router (2026-06-17)
+
+Built the STRATEGY-class layer that sits ABOVE the goal-distance heuristic router and routes the
+program-editor model in: `python/carnot/agentic/arc_strategy_router.py`. This closes
+GAP-ARC-STRATEGY-ROUTER at the routing level (the deeper program-editor SOLVER is still blind-search-
+limited per the gap above -- that is the offline-transition-verifier build, not a routing problem).
+
+- **The router is now two-tier.** Tier 1 = STRATEGY CLASS (`arc_strategy_router.route_for_game`):
+  maps a detected mechanic to its solving strategy. Tier 2 = the existing goal-distance HEURISTIC
+  (`arc_router.route`), which now fires ONLY for the `graph_explore` class. The program-editor class
+  SHORT-CIRCUITS the heuristic portfolio -- running it on tn36 was a category error (blind clicks
+  never drive the 5-attribute alignment; every heuristic NO-ADVANCEs), and `recommend_approach` now
+  returns `heuristic_policy: {not_applicable, strategy_solver, needs}` for it instead.
+- **Mechanic detection has the right precedence for live play.** Injected frame-only verdict (an
+  UNSEEN game: `arc3_frame_induction.induce(probe(...))`, zero internal state) > structured
+  `mechanic_class` in `ops/arc_solve_registry.yaml` (a KNOWN game; tn36 now records
+  `program_editor`) > default `graph_explore`. So the live loop probes an unseen game frame-only,
+  gets a class, and routes -- no registry/internal-state dependency on the live path.
+- **The taxonomy is encoded, honestly scoped.** `program_editor` + `graph_explore` are WIRED (a real
+  solver exists). `checkpoint_multirun` + `timed_trap_aware` are DECLARED from the discovered taxonomy
+  but return `wired: False` (their frame-only solvers are pending) -- the router recognises the class
+  without pretending a solver exists.
+- **Verified end-to-end:** tn36 (known) and an injected-mechanic unseen game both route to
+  `program_editor` with the heuristic skipped + the offline-transition-verifier `needs` surfaced; a
+  graph-explore game (r11l) still gets the trained heuristic router. Unit-tested
+  (`tests/python/test_arc_strategy_router.py`, 6 tests) + the frame-only `induce` -> route demo wired
+  into `arc3_frame_induction.main()`.
+
+Net of the three links the operator asked for: an unseen ARC-AGI-3 game can now be (1) DETECTED
+frame-only, (2) ROUTED to a solving strategy class, and (3) for graph-explore, solved; for
+program-editor, the routing + frame-only control are done and the remaining work is the offline
+transition verifier (Carnot's verifier-as-product thesis), not more routing.

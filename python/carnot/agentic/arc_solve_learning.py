@@ -19,11 +19,12 @@ This is the routing layer; the deeper search-acceleration (a verifier/value head
 that prunes the BFS — the north-star verifier-routed-efficiency, cf. exp4071) is
 the next loop on top of it.
 """
+
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 import yaml
 
@@ -31,8 +32,22 @@ REPO = Path(__file__).resolve().parents[3]
 SURVEY = REPO / "results" / "arc3_win_condition_survey.json"
 REGISTRY = REPO / "ops" / "arc_solve_registry.yaml"
 
-_WIN_KEYWORDS = ("align", "goal", "+1", "reflect", "pattern", "template", "rotate",
-                 "exit", "spell", "cast", "drag", "click", "move", "position")
+_WIN_KEYWORDS = (
+    "align",
+    "goal",
+    "+1",
+    "reflect",
+    "pattern",
+    "template",
+    "rotate",
+    "exit",
+    "spell",
+    "cast",
+    "drag",
+    "click",
+    "move",
+    "position",
+)
 
 
 def _action_type(s: str) -> str:
@@ -72,8 +87,11 @@ def _registry() -> dict:
 
 def _solved_games(reg: dict) -> list[dict]:
     """Games with a usable recipe (reproduced, or provisional-with-mechanics)."""
-    return [g for g in reg.get("games", [])
-            if g.get("reproducibility") in ("reproduced", "provisional") and g.get("solver")]
+    return [
+        g
+        for g in reg.get("games", [])
+        if g.get("reproducibility") in ("reproduced", "provisional") and g.get("solver")
+    ]
 
 
 def _similarity(a: dict, b: dict) -> float:
@@ -90,17 +108,31 @@ def _similarity(a: dict, b: dict) -> float:
     return score
 
 
-def recommend_approach(target_game: str) -> dict:
+def recommend_approach(target_game: str, *, mechanic: Optional[str] = None) -> dict:
     """Route a NEW game to the closest proven recipe. Returns the ranked solved
     games with their registry recipe (solver, win-condition, action-model,
     reusable gotchas) + the general gotchas + the matched games' dead-ends.
 
+    The FIRST routing decision is the STRATEGY CLASS (arc_strategy_router): a
+    program-editor game routes to the frame-only program-editor model and SKIPS
+    the goal-distance heuristic portfolio (which only applies to graph-explore);
+    a graph-explore game gets the heuristic policy as before. For an unseen live
+    game, pass the frame-only-detected class via `mechanic=` (else it is read
+    from the registry's structured `mechanic_class`, defaulting to graph_explore).
+
     Call this BEFORE reverse-engineering a new game (CLAUDE.md ARC Solve
     Reproducibility + Solver-Reuse Discipline)."""
+    from . import arc_strategy_router as strat
+
     feats = _survey_features()
     reg = _registry()
+    strategy = strat.route_for_game(target_game, mechanic=mechanic, reg=reg)
     if target_game not in feats:
-        return {"error": f"{target_game} not in survey", "general_gotchas": reg.get("general_gotchas", [])}
+        return {
+            "error": f"{target_game} not in survey",
+            "strategy": strategy,
+            "general_gotchas": reg.get("general_gotchas", []),
+        }
     tf = feats[target_game]
     by_game = {g["game"]: g for g in reg.get("games", [])}
     ranked = []
@@ -109,25 +141,46 @@ def recommend_approach(target_game: str) -> dict:
         if gid == target_game or gid not in feats:
             continue
         sim = _similarity(tf, feats[gid])
-        ranked.append({
-            "game": gid,
-            "similarity": round(sim, 2),
-            "reproducibility": solved.get("reproducibility"),
-            "solver": solved.get("solver"),
-            "win_condition": solved.get("win_condition"),
-            "action_model": solved.get("action_model"),
-            "reusable_gotchas": solved.get("gotchas", []),
-        })
+        ranked.append(
+            {
+                "game": gid,
+                "similarity": round(sim, 2),
+                "reproducibility": solved.get("reproducibility"),
+                "solver": solved.get("solver"),
+                "win_condition": solved.get("win_condition"),
+                "action_model": solved.get("action_model"),
+                "reusable_gotchas": solved.get("gotchas", []),
+            }
+        )
     ranked.sort(key=lambda r: r["similarity"], reverse=True)
+    # The goal-distance heuristic portfolio only applies to the graph-explore class. For a
+    # program-editor (or other non-graph-explore) game it is a category error — surface the strategy's
+    # own solver instead, so the agent does not waste a portfolio run that can never win.
+    if strategy.get("uses_goal_distance_heuristic"):
+        policy = _heuristic_policy()
+    else:
+        policy = {
+            "not_applicable": (
+                f"goal-distance heuristics do not apply to the "
+                f"{strategy['routed_mechanic']} class; use the strategy solver"
+            ),
+            "strategy_solver": strategy.get("solver"),
+            "search_engine": strategy.get("search_engine"),
+            "needs": strategy.get("needs"),
+        }
     return {
         "target_game": target_game,
         "target_features": {**tf, "win_kw": sorted(tf["win_kw"])},
+        "strategy": strategy,
         "recommended": ranked[:3],
-        "heuristic_policy": _heuristic_policy(),
+        "heuristic_policy": policy,
         "general_gotchas": reg.get("general_gotchas", []),
-        "guidance": ("Start from the top-ranked solved game's solver + reuse its action-model "
-                     "and gotchas; only reverse-engineer the DELTA. Import arc_solver_kit; run "
-                     "the reproduction gate; append new mechanics/dead-ends to the registry."),
+        "guidance": (
+            "FIRST follow the routed STRATEGY (strategy.solver); for graph_explore, start "
+            "from the top-ranked solved game's solver + reuse its action-model and gotchas, "
+            "only reverse-engineering the DELTA. Import arc_solver_kit; run the reproduction "
+            "gate; append new mechanics/dead-ends to the registry."
+        ),
     }
 
 
@@ -138,10 +191,10 @@ def _heuristic_policy() -> dict:
     selector ONCE a win-state is available; for a first-ever solve (no target) use pure BFS."""
     return {
         "trained_router": "arc_router.route(features, arc_router.train()) — learned decision tree "
-                          "(thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); "
-                          "predicts approach + explore/exploit by novelty",
+        "(thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); "
+        "predicts approach + explore/exploit by novelty",
         "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) "
-                    "— runs the portfolio, banks the winner, records to the router ledger (online)",
+        "— runs the portfolio, banks the winner, records to the router ledger (online)",
         "feature": "per-action cell impact + bfs_expansions headroom probe",
         "rule": {
             "no_win_state_yet (first solve)": "pure BFS — a goal-distance heuristic needs a target",
@@ -149,12 +202,15 @@ def _heuristic_policy() -> dict:
             "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
             "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
         },
-        "default_if_unmeasured": ("region_count — it NEVER regressed across the 8-game validation "
-                                  "and wins the high-impact games; cell_count only when low-impact"),
+        "default_if_unmeasured": (
+            "region_count — it NEVER regressed across the 8-game validation "
+            "and wins the high-impact games; cell_count only when low-impact"
+        ),
         "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
     }
 
 
 if __name__ == "__main__":  # pragma: no cover - manual probe
     import sys
+
     print(json.dumps(recommend_approach(sys.argv[1] if len(sys.argv) > 1 else "vc33"), indent=2))
