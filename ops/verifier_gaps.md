@@ -1296,3 +1296,34 @@ games) and `misplaced_region_distance` (high cell-impact games) — selected dyn
   is to satisfying the adapter's win predicate; level-general by construction.
 - priority: medium
 <!-- arc-search-heuristic-gaps-2026-06-17:end -->
+
+<!-- arc-router-training-gaps-2026-06-17:start -->
+## TRAINED-ROUTER training-data gaps (2026-06-17)
+
+The trained router (`arc_router`, 8/8 leave-one-out) routes the goal-distance HEURISTIC because
+that is where we have labelled outcomes. The operator's full ask — "properly train our TRMs and
+BFS and DFS and routers" — needs two more label sets the router schema already accommodates:
+
+### GAP-ARC-ROUTER-ENGINE-LABELS: engine-vs-engine A/B per game
+- status: open
+- evidence: ops/arc_router_ledger.json has heuristic-vs-heuristic labels (cell_count/region_count/
+  bfs) per game, but NO engine labels (v2-BFS vs v3-best-first/DFS vs TRM-guided rollout).
+- failure mode: the router cannot route the ENGINE choice (only the heuristic) — for a deep game
+  where BFS exhausts budget, it cannot yet learn "use best-first/DFS" because no such label exists.
+- missing discriminator: per-game reproduction-gated outcomes for each ENGINE (expansions, solved?)
+  so the ledger's approach space extends from {heuristic} to {engine × heuristic × budget}.
+- candidate design: an engine A/B harness (graph_explore_solve_v2 vs v3 vs TRM-guided) run over the
+  solved games, appended to the ledger; retrain the router on the engine dimension.
+- priority: high (deep-tail games need engine routing, not just heuristic routing)
+
+### GAP-ARC-TRM-TRAINED-ON-ARC: an ARC-trained TRM generator/refiner
+- status: open
+- evidence: the running TRM (nano-trm) is sudoku-trained; no TRM is trained on ARC solve traces.
+- failure mode: the hybrid architecture's generator/refiner slot has no ARC-specialised TRM, so the
+  router has no TRM-guided engine to route to and first-contact exploration is search-only.
+- missing discriminator: a TRM trained on the accumulated captured ARC trajectories (gap_fills/ +
+  results/arc_explore_trajectory_*.json) that proposes/refines candidate action sequences.
+- candidate design: prepare an ARC trajectory dataset from the captured solves; train a TRM
+  (full-FT > LoRA per the TTA-TRM finding) on a 3090; wire as a TRM-guided rollout engine.
+- priority: medium (heavier GPU track; gated on enough captured trajectories)
+<!-- arc-router-training-gaps-2026-06-17:end -->

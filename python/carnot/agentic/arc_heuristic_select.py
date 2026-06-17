@@ -143,6 +143,28 @@ def select_best(game: str, win, transitions, *, mask_hud: bool = False, budget: 
             "results": [{k: v for k, v in r.items() if k != "trajectory"} for r in results]}
 
 
+def select_and_learn(game: str, win, transitions, *, mask_hud: bool = False, budget: int = 8000,
+                     max_depth: int = 60, env_factory: Optional[Callable[[], Any]] = None
+                     ) -> Optional[str]:
+    """LIVE LEARNING hook: run the heuristic portfolio (select_best -> banks the winning heuristic
+    to gap_fills/), THEN record the (features -> winner) to the router ledger so the TRAINED router
+    (arc_router) improves with every game we solve. This is how the learning phase stays current
+    for dynamic adaptation to unseen games. Returns the chosen heuristic name. Guarded: ledger
+    recording must never break the solve."""
+    out = select_best(game, win, transitions, mask_hud=mask_hud, budget=budget,
+                      max_depth=max_depth, env_factory=env_factory, bank=True)
+    try:
+        from . import arc_router
+        bfs_exp = next((r["expansions"] for r in out["results"] if r["heuristic"] == "bfs"), None)
+        feats = arc_router.extract_features(game, win, transitions, bfs_exp)
+        outcomes = {r["heuristic"]: {"reproduced": r["reproduced"], "actions": r["actions"],
+                                     "expansions": r["expansions"]} for r in out["results"]}
+        arc_router.record(game, feats, out["chosen"], outcomes, mask_hud=mask_hud)
+    except Exception:
+        pass
+    return out["chosen"]
+
+
 def bank_for_solved_game(game: str, win, transitions, *, mask_hud: bool = False,
                          budget: int = 8000, max_depth: int = 60,
                          env_factory: Optional[Callable[[], Any]] = None) -> Optional[str]:

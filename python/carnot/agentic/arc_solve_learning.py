@@ -137,12 +137,17 @@ def _heuristic_policy() -> dict:
     action cell-impact, measured from a few transitions) — so the policy is: run the portfolio
     selector ONCE a win-state is available; for a first-ever solve (no target) use pure BFS."""
     return {
-        "selector": "arc_heuristic_select.select_best(game, win, transitions, mask_hud=...)",
-        "feature": "per-action cell impact (median cells changed per move) from banked transitions",
+        "trained_router": "arc_router.route(features, arc_router.train()) — learned decision tree "
+                          "(thresholds from ops/arc_router_ledger.json; 8/8 leave-one-out); "
+                          "predicts approach + explore/exploit by novelty",
+        "selector": "arc_heuristic_select.select_and_learn(game, win, transitions, mask_hud=...) "
+                    "— runs the portfolio, banks the winner, records to the router ledger (online)",
+        "feature": "per-action cell impact + bfs_expansions headroom probe",
         "rule": {
             "no_win_state_yet (first solve)": "pure BFS — a goal-distance heuristic needs a target",
-            "high cell-impact (>= ~40 cells/action)": "misplaced_region_distance (8-conn) — move-aligned",
-            "low cell-impact (< ~40)": "cell_count_distance (Hamming) — cell-count ≈ move-count",
+            "low search headroom (BFS solves cheaply)": "BFS — no room for a heuristic to help",
+            "high cell-impact (>= learned ~36 cells/action)": "misplaced_region_distance (8-conn)",
+            "low cell-impact (< learned threshold)": "cell_count_distance (Hamming)",
         },
         "default_if_unmeasured": ("region_count — it NEVER regressed across the 8-game validation "
                                   "and wins the high-impact games; cell_count only when low-impact"),
