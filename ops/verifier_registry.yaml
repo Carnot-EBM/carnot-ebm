@@ -523,6 +523,68 @@ verifiers:
     exp4310_arc_flagged_adversarial: true
     exp4310_gaps_logged:
     - GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305
+    eval_exp_4321: results/experiment_4321_verifier_registry_gaps_hygiene.json
+    exp4321_regression_guard_passed: true
+    exp4321_arc1_rule_exec_vote_pass2: 0.4516
+    exp4321_arc1_rule_exec_gated_pass2: 0.5806
+    exp4321_arc1_headroom_recovered: 4
+    exp4321_arc1_vote_wins_lost: 0
+    exp4321_v399_state: cross_domain_collapses__diffusiongemma_moat_won__always_energy_dominates_cascade__arc_23__cross_game_value_null__off_arc_demofit_transfer_won
+    exp4321_robust_aggregator_used: true
+    exp4321_available_artifact_keys:
+    - 4314_cross_domain
+    - 4315_in_generation_moat
+    - 4316_efficiency_cascade
+    - 4317_arc_progress
+    - 4318_cross_game_transfer
+    - 4319_off_arc_execution
+    exp4321_missing_upstream_artifacts: []
+    exp4321_flagged_artifacts_excluded: []
+    exp4321_cross_domain_artifact: results/experiment_4314_cross_domain_selector_ir3de_cascal.json
+    exp4321_cross_domain_selection_holds: false
+    exp4321_label_ablation_robust: true
+    exp4321_cross_domain_delta: 0.2307692308
+    exp4321_cross_domain_delta_ci95:
+    - -0.1153846154
+    - 0.5384615385
+    exp4321_cross_domain_held_out_task_n: 26
+    exp4321_in_generation_artifact: results/experiment_4315_diffusiongemma_reward_guided_stitching.json
+    exp4321_diffusiongemma_guidance_moat: true
+    exp4321_controls_differentiated: true
+    exp4321_scorer_leak_recheck_passed: true
+    exp4321_carnot_minus_best_control_delta: 0.225
+    exp4321_carnot_minus_unguided_delta: 0.25
+    exp4321_guidance_moat_ci95:
+    - 0.075
+    - 0.375
+    exp4321_efficiency_cascade_artifact: results/experiment_4316_efficiency_cascade_router_deploy.json
+    exp4321_cascade_dominates_controls: false
+    exp4321_accuracy_cascade: 0.55
+    exp4321_accuracy_always_energy: 0.6
+    exp4321_accuracy_always_judge: 0.25
+    exp4321_cost_ratio_cascade: 0.3019632358
+    exp4321_escalation_rate: 0.3
+    exp4321_arc_progress_artifact: results/experiment_4317_arc_incremental_progress_adapter_free.json
+    exp4321_arc_total_levels: 23
+    exp4321_arc_total_levels_solved: 23
+    exp4321_arc_new_levels_solved: 1
+    exp4321_arc_game_advanced: cd82-fb555c5d
+    exp4321_cross_game_artifact: results/experiment_4318_arc_cross_game_learned_verifier_transfer.json
+    exp4321_cross_game_transfer_helps: false
+    exp4321_cross_game_state_reduction: 1.0
+    exp4321_cross_game_n_held_out_levels: 6
+    exp4321_off_arc_artifact: results/experiment_4319_off_arc_execution_verifier_transfer_accumulate.json
+    exp4321_off_arc_demofit_beats_vote: true
+    exp4321_off_arc_demofit_minus_vote_delta: 0.02
+    exp4321_off_arc_delta_ci95:
+    - 0.005
+    - 0.04
+    exp4321_off_arc_accumulated_n: 200
+    exp4321_off_arc_accumulation_window_added: 160
+    exp4321_gaps_logged:
+    - GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305
+    - GAP-4318
+    - GAP-CODE-EXEC-DEMOFIT
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -4403,3 +4465,25 @@ verifiers:
     gap_ids_logged:
     - GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305
     eval_exp_4310: results/experiment_4310_verifier_registry_gaps_hygiene.json
+  - role_id: oracle_distinct_v399_registry_gaps_hygiene_4321
+    experiment: results/experiment_4321_verifier_registry_gaps_hygiene.json
+    role: registry_gap_manifest_hygiene_v399
+    status: v399_outcomes_recorded_with_robust_availability
+    v399_state: cross_domain_collapses__diffusiongemma_moat_won__always_energy_dominates_cascade__arc_23__cross_game_value_null__off_arc_demofit_transfer_won
+    robust_aggregator_used: true
+    cross_domain_artifact: results/experiment_4314_cross_domain_selector_ir3de_cascal.json
+    cross_domain_selection_holds: false
+    diffusiongemma_guidance_moat: true
+    scorer_leak_recheck_passed: true
+    cascade_dominates_controls: false
+    accuracy_always_energy: 0.6
+    arc_total_levels: 23
+    arc_new_levels_solved: 1
+    cross_game_transfer_helps: false
+    off_arc_demofit_beats_vote: true
+    off_arc_demofit_minus_vote_delta: 0.02
+    gap_ids_logged:
+    - GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305
+    - GAP-4318
+    - GAP-CODE-EXEC-DEMOFIT
+    eval_exp_4321: results/experiment_4321_verifier_registry_gaps_hygiene.json
