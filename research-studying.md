@@ -8,6 +8,82 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-17 Exp 4343 - .401 outcome SOTA ingestion ingested
+
+**Status:** INGESTED into `results/experiment_4343_sota_ingestion_v402.json`.
+
+**Preconditions:** network precondition passed via Hugging Face reachability and
+arXiv API verification. If that check had failed, the only honest artifact would
+have been `honest_verdict=blocked_network_unavailable`.
+
+**Reliable-channel provenance:** `scripts/sweep_clusters.py` emitted focused
+arXiv discovery URLs for energy/reward and world-model clusters. The first
+`scripts/sweep_semscholar.py` query returned arXiv:2604.06260 and
+arXiv:2602.23997; subsequent focused Semantic Scholar probes returned HTTP 429.
+Low-concurrency WebSearch/WebFetch plus the arXiv API verified arXiv:2604.06260,
+arXiv:2606.13565, arXiv:2606.08501, arXiv:2606.10829, arXiv:2603.12554,
+arXiv:2509.25420, arXiv:2605.05138, arXiv:2605.15256, arXiv:2602.06291, and
+arXiv:2602.23997. The banned `/deep-research` channel was not invoked.
+
+**Filtered track:** .401 outcomes after leak-robust in-generation moat
+replication, E3 explore-verify-plan reproduction on ar25 and sc25, and
+action-role cross-game self-learning.
+
+**.401 outcome conditioning:**
+- Exp 4338: `honest_verdict=complete: in_generation_moat_replicates`,
+  `in_generation_moat_replicates=true`, `scorer_leak_recheck_passed=true`,
+  `controls_differentiated=true`, `benchmark_n=240`,
+  `carnot_minus_best_control_delta=0.358333`, and
+  `replication_ci95=[0.283333, 0.4375]`; the leak-robust in-generation moat
+  replicated and the .402 headline should scale it rather than pivot away.
+- Exp 4339: `game=ar25`, `offline_reproduced=true`, `plan_executed=true`,
+  `reproduced_levels=1`, and `explore_lemmas_collected=7`; E3 has a reproduced
+  ar25 level and should move to deeper/multi-game progression.
+- Exp 4341: `game=sc25`, `offline_reproduced=true`, `plan_executed=true`,
+  `reproduced_levels=1`, and `explore_lemmas_collected=6`; sc25 reproduction
+  opens the path to converting the live-recorded levels, not another L1 replay.
+- Exp 4342: `learned_encoder_transfer_helps=false`,
+  `cross_game_state_reduction=1.00635593220339`,
+  `cross_game_state_reduction_ci95=[1.0, 1.0168354897287482]`, and
+  `positive_control_passed=true`; action-role cross-game value transfer is a
+  powered null and needs a full interaction-world-model transfer arm or
+  retirement.
+
+**Fresh-pass candidates marked ingested:**
+- S3 Stratified Scaling Search, arXiv:2604.06260 - mapped to the .402 headline:
+  verifier-guided denoising-trajectory search over the leak-robust scorer.
+- A2D2 adaptive any-length discrete diffusion, arXiv:2606.13565 - mapped to a
+  secondary reward-guided fine-tuning arm if the fixed-model S3 scale-up holds.
+- PAPO reward-state alignment, arXiv:2606.08501 - mapped to step-aware process
+  rewards and entropy-guided replay diagnostics for authentic denoising states.
+- Executable World Models for ARC-AGI-3, arXiv:2605.05138 - mapped to a
+  multi-game/deeper-level E3 sweep after ar25 and sc25 L1 reproduced.
+- ReactiveGWM, arXiv:2605.15256 - mapped to the only remaining cross-game path:
+  full interaction-world-model transfer, otherwise retire the transfer line.
+
+**Screened but not mapped as strongest rows:** ADAS (arXiv:2606.10829),
+Entropy-Guided Step Selection (arXiv:2603.12554), Reward-Guided Dual-Phase
+Search (arXiv:2509.25420), Foundation World Models (arXiv:2602.23997), and
+Consequence-Based Utility (arXiv:2602.06291) were verified and read as context.
+Consequence-Based Utility remains the correct lead if a future leak-robust
+moat recheck retires in-generation guidance, but Exp 4338 makes the active
+.402 branch a guided-generation scale-up instead.
+
+flagged_for_v402:
+`s3_stratified_scaling_search_guided_generation_v402`.
+
+Flagged for .402: `s3_stratified_scaling_search_guided_generation_v402`.
+
+random_seed=4343
+
+**Bottom line for the .402 roadmap:** the in-generation moat settled positive in
+Exp 4338, so do not pivot to consequence-based oracle-free ranking as the lead.
+Scale the moat with S3-style verifier-guided denoising-trajectory search under
+fixed-compute controls, keep A2D2/PAPO as training and reward-state ablations,
+turn E3 into a multi-game/deeper-level reproduced-world-model sweep, and either
+upgrade cross-game transfer to a full interaction-world-model representation or
+retire it after the powered action-role null.
+
 ## 2026-06-17 Exp 4332 - .400 fork SOTA ingestion ingested
 
 **Status:** INGESTED into `results/experiment_4332_sota_ingestion_v401.json`.
