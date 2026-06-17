@@ -255,7 +255,11 @@ MISMATCHES:
 
 @dataclass
 class CodexProposer:
+    """DEV-ONLY proposer (codex/gpt-5.5). Requires INTERNET, so it is NOT legal in the
+    OFFLINE competition eval — use it only to validate the E3 loop during development.
+    For the competition, use LocalGGUFProposer (open-weight, offline)."""
     timeout: int = 420
+    offline_legal: bool = False
 
     def induce(self, game: str, trans: list[Transition], cell: int) -> tuple[bool, str]:
         (E3_DIR / game).mkdir(parents=True, exist_ok=True)
@@ -263,6 +267,76 @@ class CodexProposer:
 
     def refactor(self, game: str, vr: VerifyResult) -> tuple[bool, str]:
         return _codex(refactor_prompt(game, vr), self.timeout)
+
+
+def _resolve_gguf(repo_substr: str) -> Optional[str]:
+    """Find a cached GGUF weight file for an open-weight SOTA model (offline)."""
+    import glob
+    base = Path.home() / ".cache" / "huggingface" / "hub"
+    for d in base.glob(f"models--*{repo_substr}*GGUF"):
+        hits = sorted(d.glob("snapshots/*/*.gguf"))
+        if hits:
+            return str(hits[0])
+    return None
+
+
+@dataclass
+class LocalGGUFProposer:
+    """OFFLINE-LEGAL, DECENTRALIZED proposer (CLAUDE.md decentralization rule 1-2): an
+    OPEN-WEIGHT local model induces the world model with NO internet, so it runs inside
+    the competition's offline eval sandbox. Loads a cached gemma-4 GGUF via llama.cpp
+    (the GGUF embeds its tokenizer; load by path, never AutoTokenizer). The induced code
+    quality is GROUNDED by the Carnot WorldModelVerifier regardless of model strength —
+    a weaker local model just earns a lower verifier score, honestly.
+
+    NOT TRM and NOT a closed foundation model: an open local LLM. (A TRM-class model
+    trained offline on game dynamics is the other offline-legal engine — see the
+    competition-loop note; both keep the engine local, never a closed online API.)"""
+    repo_substr: str = "gemma-4-12B-it"     # lightweight SOTA: fast enough for per-game induction
+    n_ctx: int = 8192
+    max_tokens: int = 2048
+    offline_legal: bool = True
+    _llm: Any = None
+
+    def _model(self):
+        if self._llm is None:
+            import llama_cpp
+            path = _resolve_gguf(self.repo_substr)
+            if not path:
+                raise FileNotFoundError(f"no cached GGUF matching {self.repo_substr}")
+            self._llm = llama_cpp.Llama(model_path=path, n_ctx=self.n_ctx, verbose=False)
+        return self._llm
+
+    def _gen_to_file(self, game: str, prompt: str) -> tuple[bool, str]:
+        (E3_DIR / game).mkdir(parents=True, exist_ok=True)
+        try:
+            out = self._model().create_completion(prompt, max_tokens=self.max_tokens,
+                                                  temperature=0.2, stop=["```\n\n"])
+            text = out["choices"][0]["text"]
+        except Exception as e:  # pragma: no cover - depends on local weights
+            return False, f"local gguf induction failed: {e!r}"[:300]
+        code = _extract_python(text)
+        if not code or "def engine" not in code:
+            return False, "local model produced no usable engine() code"
+        (E3_DIR / game / "world_model.py").write_text(code)
+        return True, "local gguf wrote world_model.py"
+
+    def induce(self, game: str, trans: list[Transition], cell: int) -> tuple[bool, str]:
+        return self._gen_to_file(game, induce_prompt(game, trans, cell) +
+                                 "\n\nReturn ONLY one ```python code block with engine + is_level_complete.\n```python\n")
+
+    def refactor(self, game: str, vr: VerifyResult) -> tuple[bool, str]:
+        return self._gen_to_file(game, refactor_prompt(game, vr) +
+                                 "\n\nReturn ONLY the corrected ```python file.\n```python\n")
+
+
+def _extract_python(text: str) -> str:
+    """Pull the first python code block (or the whole text if it looks like code)."""
+    if "```python" in text:
+        text = text.split("```python", 1)[1]
+    if "```" in text:
+        text = text.split("```", 1)[0]
+    return text.strip()
 
 
 # ---------------------------------------------------------------------------
