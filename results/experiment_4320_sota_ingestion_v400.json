@@ -1,0 +1,68 @@
+{
+  "field_principles": {
+    "flagged_for_v400": "Closes discover->ingest->plan: names the strongest method for the .400 planner, conditioned on the .399 outcomes.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method MUST carry a real arXiv ID/URL (no citation = fabrication per adversarial_verify discipline) + a one-line .400 experiment mapping.",
+    "random_seed": "Determinism placeholder for the discovery query set (recorded for reproducibility of the sweep)."
+  },
+  "flagged_for_v400": "scaled_external_verifier_guided_diffusiongemma_generation_v400",
+  "honest_verdict": "complete: sota_ingestion_v400_mapped",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2606.13565",
+      "carnot_stack_mapping": "Use the leak-checked partial-state scorer as the reward for bounded DiffusionGemma insertion/unmasking adaptation, with frozen ARC held-out grids and unguided, EntRGi, and self-reward controls.",
+      "experiment_mapping": ".400: scale the winning Exp 4315 external-verifier guidance into an A2D2-style adaptive DiffusionGemma generation run.",
+      "failure_mode": "Reward fine-tuning can overfit the scorer or mutate away from exact ARC grid validity. The .400 gate needs fresh held-out tasks, no answer-cell leakage, and a no-adaptation control.",
+      "name": "A2D2 adaptive any-length discrete diffusion",
+      "source_read": "A2D2 fine-tunes any-length discrete diffusion by jointly optimizing insertion, unmasking, and a quality-based inference schedule toward a reward-tilted sequence distribution.",
+      "track": "scaled reward-guided DiffusionGemma generation",
+      "url": "https://arxiv.org/abs/2606.13565",
+      "v399_outcome_conditioning": "Exp 4315 closed the in-generation moat: guidance_moat_ci95=[0.075, 0.375], controls_differentiated=true, and scorer_leak_recheck_passed=true."
+    },
+    {
+      "arxiv_id_or_url": "2509.25171",
+      "carnot_stack_mapping": "Run bounded tree search over masked grid-token denoising steps, score partial states with the Exp 4315 scorer, and train only a small adapter or replay policy before exact verifier evaluation.",
+      "experiment_mapping": ".400: compare A2D2-only guidance against TR2-D2 replay-buffer guidance using the same leak-checked verifier reward.",
+      "failure_mode": "MCTS can spend the whole budget exploring scorer loopholes, and the paper's strongest demonstrations are sequence-design domains. Keep oracle-distinct rewards, ESS/cost accounting, and ARC-only holdouts.",
+      "name": "TR2-D2 tree-search trajectory replay",
+      "source_read": "TR2-D2 uses Monte Carlo tree search to build reward-guided trajectory replay buffers, then fine-tunes a discrete diffusion model with an off-policy stochastic-control objective.",
+      "track": "reward-guided discrete diffusion replay buffers",
+      "url": "https://arxiv.org/abs/2509.25171",
+      "v399_outcome_conditioning": "Exp 4315 showed step stitching beats the best engaged control, so .400 should harvest high-scoring partial trajectories rather than only rerank complete samples."
+    },
+    {
+      "arxiv_id_or_url": "2606.15841",
+      "carnot_stack_mapping": "Replace one global cascade threshold with per-stratum comparability audits over energy margin, judge token cost, and domain/candidate pool features; deploy only strata where escalation adds value.",
+      "experiment_mapping": ".400: keep cascade deployment as a side-track by testing cost-stratified thresholds after always-energy dominance.",
+      "failure_mode": "Stratification can become a new leak path if strata encode domain labels or target-task identity. Freeze strata before evaluation and report per-domain false escalation rows.",
+      "name": "Cost-stratified budgeted verification",
+      "source_read": "The paper identifies heteroskedastic uncertainty quality across cost strata in budgeted verification and reports that simple cost-stratified thresholding can recover hit rate where global allocation fails.",
+      "track": "budget-aware cascade diagnostics and verifier deployment",
+      "url": "https://arxiv.org/abs/2606.15841",
+      "v399_outcome_conditioning": "Exp 4316 found cascade_dominates_controls=false: always-energy accuracy was 0.6 while cascade accuracy was 0.55 at cost_ratio=0.3019632358."
+    },
+    {
+      "arxiv_id_or_url": "2502.08773",
+      "carnot_stack_mapping": "Represent ARC, ARC-GEN, FoVer, and any fourth-domain verifier heads by frozen representative-task error vectors, then route without domain labels or family IDs.",
+      "experiment_mapping": ".400: rebuild the failed cross-domain selector as a UniRoute-style performance-fingerprint router before adding a fourth-domain headline.",
+      "failure_mode": "Representative prompts can memorize the target distribution if they are selected post hoc. The prompt bank and cluster map must be frozen before held-out-domain scoring.",
+      "name": "UniRoute unseen-model routing",
+      "source_read": "UniRoute represents each LLM by prediction-error features on representative prompts and routes to previously unseen models via cluster-based or learned cluster-map policies.",
+      "track": "cross-domain selector generalization and anti-leak routing",
+      "url": "https://arxiv.org/abs/2502.08773",
+      "v399_outcome_conditioning": "Exp 4314 kept label_ablation_robust=true but cross_domain_selection_holds=false, so the next router attempt needs domain-invariant performance fingerprints before any fourth-domain claim."
+    },
+    {
+      "arxiv_id_or_url": "2605.05478",
+      "carnot_stack_mapping": "Gate ARC game-to-game value heads by source relevance and TD-error instead of pooling all solved-game traces into one transferred head.",
+      "experiment_mapping": ".400: run an experience-gated multi-source ARC value-head transfer probe only after the scaled guided-generation headline.",
+      "failure_mode": "LLM-generated automata can become an implicit oracle if they inspect held-out levels. Generate transfer summaries only from train traces and log per-source negative transfer.",
+      "name": "LANTERN experience-gated transfer",
+      "source_read": "LANTERN performs multi-source neurosymbolic transfer with LLM-generated automata, similarity-weighted source policies, and adaptive teacher-student gating from uncertainty and temporal-difference error.",
+      "track": "cross-task and cross-game learned-verifier transfer",
+      "url": "https://arxiv.org/abs/2605.05478",
+      "v399_outcome_conditioning": "Exp 4318 reported cross_game_transfer_helps=false and cross_game_state_reduction=1.0 despite a positive-control baseline solver, making naive value-head transfer a representation gap."
+    }
+  ],
+  "random_seed": 4320
+}
