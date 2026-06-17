@@ -73,7 +73,25 @@ within ~12h on the provided GPU); a 5M-param TRM runs trivially, a Q4 12B GGUF f
 MIT-0** — MORE permissive than our Apache-2.0. For prize eligibility the submission +
 bundled weights need CC0/MIT-0, not just Apache-2.0. (Internal use stays Apache-2.0.)
 
-**TO VERIFY in the rules tab:** some ARC tracks (seen in the ARC-AGI-2 description) let
+**LICENSE SCOPE — VERIFIED (2026-06-17, ARC Prize 2026 rules):** "All code and methods
+AUTHORED BY THE SUBMITTER must be made open source under a permissive public domain
+license (e.g., CC0 or MIT-0). Any 3rd party code NOT authored by the submitter must be
+available under at least an open source license which allows public sharing (e.g.,
+Apache-2.0, GPLv3)." So the scope is *submitter-authored code that is part of the
+solution* — NOT the whole dependency tree. Third-party deps (arcengine, numpy,
+llama.cpp, ARC-AGI-3-Agents) stay Apache-2.0/etc. BUT Carnot is OUR code, so every
+Carnot module the submission imports is "submitter-authored code in the solution" and
+MUST be MIT-0/CC0. Practically the submission path is `python/carnot/agentic/*` (agent,
+explorer, solver-kit, world-model, adapters) — the verify/ ensemble + models/ + pipeline/
+are NOT imported by the agent, so the crown-jewel verifier core can stay Apache-2.0 under
+a CARVE-OUT. Decision (operator, sole author): (A) MIT-0 carve-out of just the submission
+modules [keeps patent grant + attribution on the bulk; needs a dependency-boundary audit
+so no Apache-2.0 submitter module leaks into the solution], or (B) relicense the WHOLE
+project to MIT-0 [foolproof compliance + simplest, but drops Apache-2.0's patent
+retaliation clause + attribution everywhere]. MIT-0 preferred over CC0 (real license w/
+warranty disclaimer).
+
+**(superseded) Earlier "TO VERIFY":** some ARC tracks (seen in the ARC-AGI-2 description) let
 submissions call OUT to third-party compute (Modal/Lambda/RunPod) under a ~$10k runtime
 cap — which would re-open external/larger compute. UNCONFIRMED for ARC-AGI-3 (its stated
 rule is "no internet, rules out hosted APIs"). Safe default = fully-offline bundled
