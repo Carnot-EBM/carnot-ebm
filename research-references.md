@@ -1,3 +1,78 @@
+## 2026-06-17 (later) — .401 planning sweep — SETTLE the in-generation moat with a LEAK-ROBUST partial-state reward scorer (the .400 replication failed at the leak check), then drive the FIRST E3 ARC solve with explore-verify-plan
+
+Added by the `.401 planning sweep (Claude Opus 4.8, outer-loop). `.400 was DEPTH on every proven-or-mandated
+direction and came back mostly NULL/PARTIAL — a sobering, decision-grade scorecard (read via
+`scripts/summarize_artifact.py` + the exp4335 capstone, `verifier_thesis_state=in_generation_moat_corpus_specific`):
+
+- **IN-GENERATION MOAT — did NOT REPLICATE; the scorer LEAKED on a 2nd corpus (exp4325).** The exp4292 partial-state
+  scorer that closed the moat on corpus-1 (.399 exp4315) FAILED its independent leak re-check on a 2nd oracle-distinct
+  corpus (`scorer_leak_recheck_passed=false` → `honest_verdict=scorer_leaky_on_second_corpus`,
+  `in_generation_moat_replicates=false`). This is the most important `.400 finding: the `.399 "first oracle-distinct
+  win" is now in DOUBT — it may have depended on a scorer that recovers answer cells from position cues, which passed
+  corpus-1's leak check but not corpus-2's. **DiffusionGemma gate: STILL_PENDING_second_corpus_scorer_leaky.**
+- **ADAPTIVE SCALE-UP — bounded to post-hoc stitching (exp4326).** Schedule-only adaptive guidance did NOT beat the
+  no-adaptation control (`carnot_minus_best_control_delta=+0.15`, CI95 [-0.075, 0.35] INCLUDES 0); ARC-grid generation
+  was infeasible in-window (`domain_used=reasoning_corpus_fallback`). Schedule shaping alone is not enough — a real
+  reward-OPTIMIZATION step is owed.
+- **E3 DEEP TAIL — 0 levels reproduced, but ar25 is CLOSE (exp4327-4329).** Per-game verifier accuracy:
+  **ar25 0.89** (closest), ka59 0.56, ft09 0.10, tr87 0.00. All `offline_reproduced=false`, `plan_executed=false`.
+  The E3 world-model harness induces a partial model but the loop PLANNED before it had enough verified mechanics, and
+  ar25 only got ONE refactor round (timed out under live codex contention). Execution-grounded (`verifier_is_oracle=true`).
+- **SELF-LEARNING — learned frame encoder transfer NULL (exp4331).** `cross_game_state_reduction=1.008`,
+  CI95 [1.0, 1.03], `learned_encoder_transfer_helps=false`, positive control passed. A raw-frame encoder carries no
+  game-invariant search-value signal (a real null, the 2nd cross-game-transfer null after exp4318's generic features).
+- **SHALLOW TAIL — no advance (exp4330).** Adapter-free graph-explore is exhausted on the shallow tail; ARC stays at
+  **13 reproducible levels / 11 games** (+ sc25 provisional 5 live-recorded, 0 reproduced). `paper_ready=True` (FoVer
+  0.9131, G1-G4 pass) throughout.
+
+**SOTA-ingestion mapping (exp4332 → .401; all 5 arXiv IDs INDEPENDENTLY VERIFIED this sweep via WebFetch — titles
+confirmed, none fabricated).** Each method is conditioned on a specific `.400 failure:
+
+- **arXiv:2602.11146** (DiNa-LRM — "Beyond VLM-Based Rewards: Diffusion-Native Latent Reward Modeling") — a
+  timestep-conditioned reward head trained DIRECTLY on noisy/masked diffusion states, noise-calibrated uncertainty,
+  inference-time noise ensembling. → **the headline fix for exp4325's scorer leak**: rebuild the partial-state reward
+  scorer leak-robust, validated under ANSWER-CELL MASKING on ≥2 corpora, before re-running the moat gate.
+- **arXiv:2502.01384** (SEPO — "Fine-Tuning Discrete Diffusion Models with Policy Gradient Methods") — policy-gradient
+  fine-tuning of discrete diffusion over NON-differentiable rewards. → the "real reward optimization" exp4326 was
+  missing. CAUTION: SEPO trains the generator with the verifier as reward = verifier-as-reward LLM training, which is
+  OUT-OF-BAND/operator-owned per the standing rule — flag for operator, do NOT auto-run in-loop.
+- **arXiv:2512.22336** (Agent2World — "Learning to Generate Symbolic World Models via Adaptive Multi-Agent Feedback")
+  — a Testing Team validates the induced world model with ADAPTIVE unit tests + simulation feedback, recording failed
+  tests as training examples. → **the E3 fix**: adaptive world-model testing to surface the ar25 hidden-rule gap before
+  planning. (Keep discovery OFFLINE — drop the paper's web-research sub-agent.)
+- **arXiv:2605.25931** (AERA — "Explore Before You Solve: The Speed-Depth Trade-off in Epistemic Agents for
+  ARC-AGI-3") — separates EXPLORE / VERIFY / PLAN; RHAE quadratic action-efficiency penalty. → **the E3 fix**: the
+  `.400 E3 loop planned before it had verified mechanics (`plan_executed=false`); add an EXPLORE phase that collects
+  verifier-gated transition lemmas, plan only after the model passes mechanic checks.
+- **arXiv:2605.15256** (ReactiveGWM — "Steering NPC in Reactive Game World Models") — decouples player controls from
+  object/NPC behavior into a game-AGNOSTIC interaction representation, zero-shot cross-game transfer. → **the
+  self-learning fix for exp4331's null**: replace raw-frame value features with disentangled ACTION-ROLE /
+  object-interaction features; require state-count reduction under leave-one-game-out.
+
+**Additional finds this sweep (filed for .402 / context):**
+- **arXiv:2602.06291** (CONSEQUENCE-based oracle-free evaluation — "Judging What We Cannot Solve") — scores candidates
+  by their UTILITY as in-context exemplars on RELATED verifiable problems; beats reward models, GenRM, and LLM-judges
+  on research-level math where no oracle exists (Acc@1 67.2→76.3). → the STRONGEST oracle-distinct ranking signal
+  found; the lead `.402 candidate IF the in-generation moat dies (a non-energy oracle-distinct mechanism for the moat).
+- **arXiv:2603.24621** (ARC-AGI-3 benchmark paper) + **arXiv:2512.24156** (graph-explore, median 30/52, no induction)
+  + **arXiv:2605.05138** (executable-world-model coding agent, gpt-5.5 15/25, RHAE 58.12% — the E3 SOTA) — the ARC
+  north-star canon.
+- **arXiv:2603.01563** (LFPO — likelihood-free policy optimization for masked diffusion) + **arXiv:2602.11570** (PRIME
+  — process-outcome alignment benchmark) — secondary discrete-diffusion-reward references.
+- NOVELTY NOTE (scout): no indexed 2026 paper validates a diffusion scorer under ANSWER-CELL MASKING specifically —
+  Carnot's "oracle-distinct under masking" framing is an open novelty slot; DiNa-LRM is the closest substrate to port.
+
+**Bottom line for .401:** (A) HEADLINE — SETTLE the in-generation moat: BUILD a DiNa-LRM-style leak-robust
+partial-state reward scorer (2602.11146) gated on an answer-cell-masked leak audit across ≥2 corpora, THEN re-run the
+2nd-corpus moat replication with it. If even a leak-robust scorer fails to replicate → RETIRE the in-generation moat
+as corpus-specific (decision-grade). (B) ARC NORTH STAR — drive the FIRST E3 solve on ar25 (0.89, closest) with AERA
+explore-verify-plan (2605.25931) + Agent2World adaptive testing (2512.22336); ka59 next; sc25 reproduction via E3
+(the biggest reproducible-level upside, +1..+5). (C) SELF-LEARNING — ReactiveGWM action-role interaction features
+(2605.15256) for cross-game search-value transfer.
+
+Sources (this sweep, all WebFetch-verified): arxiv.org/abs/{2602.11146, 2502.01384, 2512.22336, 2605.25931,
+2605.15256, 2602.06291, 2603.24621, 2512.24156, 2605.05138, 2603.01563, 2602.11570}.
+
 ## 2026-06-17 — .400 planning sweep — SCALE & HARDEN the in-generation oracle-distinct verifier-moat win (the one closed moat) + ATTACK the ARC deep tail with executable world models (operator MANDATORY) + retire the domain-bound cross-domain scope
 
 Added by the `.400 planning sweep (Claude Opus 4.8, outer-loop). `.399 produced a SHARP, DECISION-GRADE scorecard
