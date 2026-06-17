@@ -134,34 +134,45 @@ def _apply_program(env, program, traj):
     return _levels_completed(f)
 
 
-def _winning_programs(env, max_level, cap):
-    """PASS 1 — discover the winning slot-program per level (trying orderings; a failed run just
-    resets the object, so orderings are tried in place). Returns the list of winning programs."""
-    f = env.reset()
-    level, wins = _levels_completed(f), []
-    while level < max_level:
-        moves, reason = compute_moves(*_obj_tgt(env))
+def _fresh_at(arc, game, wins):
+    """A fresh env replayed through the known winning programs to the next-to-solve level.
+    A FRESH env per attempt is REQUIRED: accumulating failed runs on one env eventually trips
+    the game's LOSS condition and resets the whole episode to L0, corrupting the search."""
+    env = arc.make(game, scorecard_id=arc.open_scorecard())
+    env.reset()
+    for p in wins:
+        _apply_program(env, p, [])
+    return env
+
+
+def _winning_programs(arc, game, max_level, cap):
+    """PASS 1 — discover the winning slot-program per level. Each ordering is tried on a FRESH
+    env (replayed to the current level) so accumulated failures can't reset the episode."""
+    wins = []
+    while len(wins) < max_level:
+        probe = _fresh_at(arc, game, wins)
+        moves, reason = compute_moves(*_obj_tgt(probe))
         if moves is None:
             break
-        n = len(_program(env))
-        won = False
+        n = len(_program(probe))
+        target_level = len(wins) + 1
+        found = None
         for program in _orderings(moves, n, cap):
-            if _apply_program(env, program, []) > level:   # throwaway trajectory
-                wins.append(program)
-                level += 1
-                won = True
+            if _apply_program(_fresh_at(arc, game, wins), program, []) >= target_level:
+                found = program
                 break
-        if not won:
+        if found is None:
             break
+        wins.append(found)
     return wins
 
 
-def solve(env, max_level=10, cap=400, *, game="tn36"):
+def solve(env=None, max_level=10, cap=400, *, game="tn36"):
     """Solve tn36 levels with obstacle path-routing. Two-pass: discover the winning program per
-    level (advancing `env`), then replay ONLY the winners on a FRESH env for a clean minimal
-    trajectory (env.reset() does NOT rewind an already-advanced env to L0). Returns (traj, level)."""
-    wins = _winning_programs(env, max_level, cap)
+    level (fresh env per ordering attempt), then replay ONLY the winners on a fresh env for a
+    clean minimal trajectory. `env` is ignored (kept for signature compat). Returns (traj, level)."""
     arc = kit.offline_arcade()
+    wins = _winning_programs(arc, game, max_level, cap)
     env2 = arc.make(game, scorecard_id=arc.open_scorecard())
     f = env2.reset()
     traj, level = [], _levels_completed(f)

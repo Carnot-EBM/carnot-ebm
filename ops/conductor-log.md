@@ -8670,3 +8670,4 @@ c |
 | 2026-06-17 18:39 UTC | PHASE E (INFRA; SOTA-Ingestion Cycle) -- ingest th | OK | 105 passed, 1 warning in 4.89s |
 | 2026-06-17 18:56 UTC | PHASE E (INFRA; Missing-Verifier Gap Logging) -- r | OK | 87 passed, 1 warning in 4.46s |
 | 2026-06-17 19:11 UTC | PHASE E (INFRA; Hardware-Task Continuity, opportun | OK | 86 passed, 1 warning in 8.02s |
+| 2026-06-17 19:30 UTC | PHASE E (CAPSTONE .401, UNGATED) -- the verifier s | FLAGGED | adversarial_verify CRITICAL: CIRCULAR_MOAT_OVERCLAIM — result quarantined, not a |
