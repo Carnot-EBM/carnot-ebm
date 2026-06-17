@@ -1,0 +1,71 @@
+{
+  "game": "tn36",
+  "status": "needs_per_game_RE",
+  "transfer_recommendation": [
+    {
+      "game": "r11l",
+      "similarity": 7.0,
+      "reproducibility": "reproduced",
+      "solver": "results/experiment_4296 solve_trace.actions (replays cleanly offline).",
+      "win_condition": "click-to-template: each colored piece dragged onto its gray template (+1,+1).",
+      "action_model": "ACTION6 click; full reset->win trajectory in the artifact replays offline.",
+      "reusable_gotchas": []
+    },
+    {
+      "game": "lp85",
+      "similarity": 6.0,
+      "reproducibility": "reproduced",
+      "solver": "scripts/arc3_lp85_offline_solver.py \u2014 reuses plan_observed_suffix (goal-key-deduped env-cloned BFS), chained L1->L3 (29 moves).",
+      "win_condition": "align each moveable piece (bghvgbtwcb/fdgmtkfrxl) with its goal sprite at (+1,+1) via button rotations.",
+      "action_model": "click-only [ACTION6]; env-adaptive button discovery (discover_click_buttons).",
+      "reusable_gotchas": [
+        "deepcopy-injection WORKS for lp85 (unlike sc25).",
+        "dedup by goal-relevant key (goal positions), not full grid hash, or the search explodes (26k states -> fails)."
+      ]
+    },
+    {
+      "game": "sc25",
+      "similarity": 5.0,
+      "reproducibility": "provisional",
+      "solver": "scripts/arc3_sc25_offline_solver.py (v3, replay-from-reset BFS) \u2014 infra works, ~90 states explored, L1 blocked on the win-mechanic.",
+      "win_condition": "MULTIPLE paths: (a) move player 'pluyoo' to exit 'exydhv' (abvgsmnbrj->next_level); (b) cast-grid alignment \u2014 align the 9 'clcbko' goal sprites to the 3x3 cast grid at +1,+1 (ianfrutkqg/mtfwxhxooqg). L1 is likely (b) or needs a fireball to clear a wall first.",
+      "action_model": "ACTION6 click to select spell (sptivk-{spell}) + toggle 3x3 cast cells at (24+5c,49+5r) [camera identity] + fire; ACTION1-4 move the player (tank-controls).",
+      "reusable_gotchas": [
+        "deepcopy-injection BROKEN -> replay-from-reset.",
+        "first step after reset consumed -> warm-up step.",
+        "tank-controls: facing (jdmucabyqar) is load-bearing -> include in state-key.",
+        "live solver's SC25_GRID_COORDS are WRONG for the offline env; correct cell (r,c) = (24+5c, 49+5r).",
+        "spell fire clears the cast pattern; multi-frame fireball animation must resolve."
+      ]
+    }
+  ],
+  "general_gotchas": [
+    {
+      "id": "offline_is_a_simulator",
+      "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+    },
+    {
+      "id": "level_on_frame_not_game",
+      "note": "level = frame.levels_completed; env._game has no levels_completed."
+    },
+    {
+      "id": "deepcopy_injection_unreliable",
+      "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+    },
+    {
+      "id": "first_step_after_reset_consumed",
+      "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+    },
+    {
+      "id": "discover_coords_never_hardcode",
+      "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+    },
+    {
+      "id": "state_dependent_controls_and_animations",
+      "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+    }
+  ],
+  "guidance": "Start from the top-ranked solved game's solver + reuse its action-model and gotchas; only reverse-engineer the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+  "instruction": "Reverse-engineer this game's win/action/state DELTA reusing the routed recipe, register a GameAdapter in arc_game_adapters.py, then re-run this loop. Per CLAUDE.md ARC Solve Reproducibility + Solver-Reuse Discipline.",
+  "mode": "standing_arc_loop_routing_only"
+}
