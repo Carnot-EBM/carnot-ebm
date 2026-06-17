@@ -1,0 +1,456 @@
+{
+  "arc_registry": {
+    "path": "ops/arc_solve_registry.yaml",
+    "reproducible_total_levels": 17,
+    "status": "loaded"
+  },
+  "arc_reproducible_total_levels": 17,
+  "availability_report": {
+    "available_artifact_keys": [
+      "4337_leak_robust_scorer",
+      "4338_in_generation_moat",
+      "4339_e3_ar25",
+      "4340_e3_ka59",
+      "4341_e3_sc25",
+      "4342_self_learning",
+      "4344_hygiene"
+    ],
+    "axes": {
+      "arc_e3": {
+        "available_artifact_keys": [
+          "4339_e3_ar25",
+          "4340_e3_ka59",
+          "4341_e3_sc25"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "hygiene": {
+        "available_artifact_keys": [
+          "4344_hygiene"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "in_generation_moat": {
+        "available_artifact_keys": [
+          "4338_in_generation_moat"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "scorer_leak_audit": {
+        "available_artifact_keys": [
+          "4337_leak_robust_scorer"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "self_learning": {
+        "available_artifact_keys": [
+          "4342_self_learning"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      }
+    },
+    "flagged_artifacts_excluded": [],
+    "missing_upstream_artifacts": []
+  },
+  "diffusiongemma_gate_status": "MET_oracle_distinct_leak_robust_replicated",
+  "duration_s": 0.269732,
+  "e3_arc_progress": {
+    "execution_grounded": true,
+    "games": {
+      "ar25": {
+        "game": "ar25",
+        "honest_verdict": "success_e3_ar25_L1_reproduced",
+        "offline_reproduced": true,
+        "plan_executed": true,
+        "reproduced_levels": 1,
+        "residual_mismatch_class": "missing_world_model_rule_gap_hidden_undo_stack_action7",
+        "status": "reproduced",
+        "verifier_accuracy_per_round": [
+          0.8875
+        ],
+        "verifier_best_accuracy": 0.8875,
+        "verifier_is_oracle": true,
+        "win_mechanic_cracked": null
+      },
+      "ka59": {
+        "game": "ka59",
+        "honest_verdict": "complete_e3_ka59_partial_model_0.56",
+        "offline_reproduced": false,
+        "plan_executed": false,
+        "reproduced_levels": 0,
+        "residual_mismatch_class": "hidden_step_counter_hud_gap",
+        "status": "partial",
+        "verifier_accuracy_per_round": [
+          0.5625
+        ],
+        "verifier_best_accuracy": 0.5625,
+        "verifier_is_oracle": true,
+        "win_mechanic_cracked": null
+      },
+      "sc25": {
+        "game": "sc25",
+        "honest_verdict": "success_e3_sc25_L1_reproduced",
+        "offline_reproduced": true,
+        "plan_executed": true,
+        "reproduced_levels": 1,
+        "residual_mismatch_class": "none",
+        "status": "reproduced",
+        "verifier_accuracy_per_round": [
+          1.0
+        ],
+        "verifier_best_accuracy": 1.0,
+        "verifier_is_oracle": true,
+        "win_mechanic_cracked": true
+      }
+    },
+    "reproduced_levels_total": 2,
+    "status": "reproduced"
+  },
+  "experiment": 4346,
+  "field_principles": {
+    "arc_reproducible_total_levels": "BARE int: the cumulative OFFLINE-REPRODUCED ARC solved-level count (the north-star accuracy metric; only reproduced levels count) after the .401 E3 advances (target >=14).",
+    "diffusiongemma_gate_status": "One honest string: 'MET_oracle_distinct_leak_robust_replicated' iff the LEAK-ROBUST scorer (exp4337) replicated the moat (exp4338) with matched controls + CI95-excl-0; 'RETIRED_corpus_specific_<reason>' iff a powered non-replication even with a leak-robust scorer; else 'STILL_PENDING_<reason>'. The operator was twice-burned -> only a leak-robust REPLICATED win flips MET.",
+    "flagged_artifacts_excluded": "List of .401 artifacts excluded for flagged_adversarial -- the fabrication gate (their numbers are NOT aggregated).",
+    "honest_verdict": "Terminal-prefixed. The .401 close-state -- whether the in-generation moat replicated leak-robust (gate flips) or retired (corpus-specific), whether E3 landed the first ARC solve, whether the action-role encoder transferred.",
+    "in_generation_moat_replicates_headline": "BARE bool: did the in-generation oracle-distinct moat REPLICATE with the LEAK-ROBUST scorer on the 2nd corpus (exp4338, CI95-excl-0, controls_differentiated, verifier_is_oracle=false) -- the SETTLED headline.",
+    "paper_ready": "From publication_gate.py --json -- the G1-G4 status (FoVer 0.9131 stays the publication target; a replicated leak-robust in-generation moat would be a new headline-grade supporting result).",
+    "per_axis_gaps": "List of .401 axes whose artifact was MISSING (reported as a gap, NOT defaulted False) -- the robust-aggregator fix (no exp4301-style all-False).",
+    "reproducibility_checksum": "Hash of the aggregated upstream sha256 set; lets a third party re-derive the capstone.",
+    "upstream_provenance": "Each cited upstream artifact {experiment_id, fields_imported, sha256} -- the audit trail that the capstone synthesizes nothing from nothing.",
+    "verifier_is_oracle_honored": "BARE bool=true -- confirms every cited MOAT/headline result carried verifier_is_oracle=false (the E3 solves are reported as execution-grounded ARC progress, NOT moats).",
+    "verifier_thesis_state": "One honest string for the verifier thesis state -- the framing the .402 planner inherits (e.g. in_generation_moat_replicated_leak_robust / in_generation_moat_retired_corpus_specific / first_e3_arc_solve)."
+  },
+  "field_provenance": {
+    "arc_reproducible_total_levels": {
+      "principle": "BARE int: the cumulative OFFLINE-REPRODUCED ARC solved-level count (the north-star accuracy metric; only reproduced levels count) after the .401 E3 advances (target >=14).",
+      "satisfied_by": "aggregation logic"
+    },
+    "diffusiongemma_gate_status": {
+      "principle": "One honest string: 'MET_oracle_distinct_leak_robust_replicated' iff the LEAK-ROBUST scorer (exp4337) replicated the moat (exp4338) with matched controls + CI95-excl-0; 'RETIRED_corpus_specific_<reason>' iff a powered non-replication even with a leak-robust scorer; else 'STILL_PENDING_<reason>'. The operator was twice-burned -> only a leak-robust REPLICATED win flips MET.",
+      "satisfied_by": "aggregation logic"
+    },
+    "flagged_artifacts_excluded": {
+      "principle": "List of .401 artifacts excluded for flagged_adversarial -- the fabrication gate (their numbers are NOT aggregated).",
+      "satisfied_by": "aggregation logic"
+    },
+    "honest_verdict": {
+      "principle": "Terminal-prefixed. The .401 close-state -- whether the in-generation moat replicated leak-robust (gate flips) or retired (corpus-specific), whether E3 landed the first ARC solve, whether the action-role encoder transferred.",
+      "satisfied_by": "aggregation logic"
+    },
+    "in_generation_moat_replicates_headline": {
+      "principle": "BARE bool: did the in-generation oracle-distinct moat REPLICATE with the LEAK-ROBUST scorer on the 2nd corpus (exp4338, CI95-excl-0, controls_differentiated, verifier_is_oracle=false) -- the SETTLED headline.",
+      "satisfied_by": "aggregation logic"
+    },
+    "paper_ready": {
+      "principle": "From publication_gate.py --json -- the G1-G4 status (FoVer 0.9131 stays the publication target; a replicated leak-robust in-generation moat would be a new headline-grade supporting result).",
+      "satisfied_by": "aggregation logic"
+    },
+    "per_axis_gaps": {
+      "principle": "List of .401 axes whose artifact was MISSING (reported as a gap, NOT defaulted False) -- the robust-aggregator fix (no exp4301-style all-False).",
+      "satisfied_by": "aggregation logic"
+    },
+    "reproducibility_checksum": {
+      "principle": "Hash of the aggregated upstream sha256 set; lets a third party re-derive the capstone.",
+      "satisfied_by": "aggregation logic"
+    },
+    "upstream_provenance": {
+      "principle": "Each cited upstream artifact {experiment_id, fields_imported, sha256} -- the audit trail that the capstone synthesizes nothing from nothing.",
+      "satisfied_by": "aggregation logic"
+    },
+    "verifier_is_oracle_honored": {
+      "principle": "BARE bool=true -- confirms every cited MOAT/headline result carried verifier_is_oracle=false (the E3 solves are reported as execution-grounded ARC progress, NOT moats).",
+      "satisfied_by": "aggregation logic"
+    },
+    "verifier_thesis_state": {
+      "principle": "One honest string for the verifier thesis state -- the framing the .402 planner inherits (e.g. in_generation_moat_replicated_leak_robust / in_generation_moat_retired_corpus_specific / first_e3_arc_solve).",
+      "satisfied_by": "aggregation logic"
+    }
+  },
+  "flagged_artifacts_excluded": [],
+  "headline_outcome": "gate_MET_oracle_distinct_leak_robust_replicated__arc_levels_17_e3_2__self_learning_open__paper_ready",
+  "honest_verdict": "complete: v401_in_generation_replicated_leak_robust_gate_MET_oracle_distinct_leak_robust_replicated_arc_levels_17_e3_reproduced_2_self_learning_open_hygiene_passed",
+  "hygiene": {
+    "gaps_logged_count": 3,
+    "honest_verdict": "complete: registry_gaps_manifest_reconciled_to_v401_truth_regression_guard_passed_True_gaps_logged_3",
+    "manifest_reconciled": true,
+    "registry_reconciled": true,
+    "regression_guard_passed": true,
+    "status": "passed"
+  },
+  "in_generation_moat": {
+    "benchmark_n": 240,
+    "carnot_minus_best_control_delta": 0.358333,
+    "carnot_minus_self_reward_smc_delta": 0.320833,
+    "controls_differentiated": true,
+    "honest_verdict": "complete: in_generation_moat_replicates",
+    "in_generation_moat_replicates_headline": true,
+    "replication_ci95": [
+      0.283333,
+      0.4375
+    ],
+    "replication_ci95_excludes_zero": true,
+    "reported_in_generation_moat_replicates": true,
+    "scorer_leak_recheck_passed": true,
+    "status": "replicated",
+    "verifier_is_oracle": false
+  },
+  "in_generation_moat_replicates_headline": true,
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "oracle_distinct_violations": [],
+  "paper_ready": true,
+  "per_axis_gaps": [],
+  "publication_gate": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "random_seed": 4346,
+  "reproducibility_checksum": "a1c751e0e2accfb4d07602acfde56fc3460a64ccd757db7f674d4acc11f33e1e",
+  "required_artifact_fields": [
+    "honest_verdict",
+    "in_generation_moat_replicates_headline",
+    "diffusiongemma_gate_status",
+    "arc_reproducible_total_levels",
+    "verifier_thesis_state",
+    "verifier_is_oracle_honored",
+    "per_axis_gaps",
+    "flagged_artifacts_excluded",
+    "paper_ready",
+    "upstream_provenance",
+    "reproducibility_checksum"
+  ],
+  "schema": "carnot.capstone_v401_4346.v1",
+  "scorer_leak_audit": {
+    "honest_verdict": "complete: leak_robust_partial_state_scorer_built",
+    "masked_answer_recovery_auroc": 0.559682,
+    "process_ranking_auroc": 0.704633,
+    "scorer_leak_audit_passed": true,
+    "scorer_module_path": "/home/ianblenke/github.com/ianblenke/carnot/results/dina_lrm_partial_state_scorer_exp4337.pkl",
+    "status": "passed",
+    "verifier_is_oracle": false
+  },
+  "self_learning": {
+    "cross_game_state_reduction": 1.00635593220339,
+    "cross_game_state_reduction_ci95": [
+      1.0,
+      1.0168354897287482
+    ],
+    "honest_verdict": "complete: action_role_encoder_transfer_no_improvement_positive_control_passed",
+    "learned_encoder_transfer_helps": false,
+    "n_held_out_games": 11,
+    "n_held_out_levels": 13,
+    "positive_control_passed": true,
+    "reported_learned_encoder_transfer_helps": false,
+    "status": "open",
+    "verifier_is_oracle": false
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4346",
+    "SCENARIO-CAPSTONE-4346"
+  ],
+  "unmet_gates": [],
+  "upstream_provenance": [
+    {
+      "artifact_key": "4337_leak_robust_scorer",
+      "experiment_id": 4337,
+      "fields_imported": [
+        "scorer_leak_audit_passed",
+        "masked_answer_recovery_auroc",
+        "process_ranking_auroc",
+        "scorer_module_path",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4337_leak_robust_partial_state_scorer_build.json",
+      "payload_reproducibility_checksum": "2c463742cfc253c3d93ca1cd4a2fee7636d23c30cd8736c224f48aa70eb6268d",
+      "sha256": "383ebc1e6f7cf38360032562c24dc6e4dd2260378517a1d7a403a220d7c74aac",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4338_in_generation_moat",
+      "experiment_id": 4338,
+      "fields_imported": [
+        "in_generation_moat_replicates",
+        "replication_ci95",
+        "controls_differentiated",
+        "scorer_leak_recheck_passed",
+        "benchmark_n",
+        "carnot_minus_best_control_delta",
+        "carnot_minus_self_reward_smc_delta",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4338_in_generation_moat_replicate_leak_robust.json",
+      "payload_reproducibility_checksum": "b985af663d05e129113108b28a0b29fc59b93a0d25075a2c6b8ec76c540f39d8",
+      "sha256": "161eb857a86a12ec657084fd9c426a81fbf14ef952e6bb08f98085ede91b5fc6",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4339_e3_ar25",
+      "experiment_id": 4339,
+      "fields_imported": [
+        "game",
+        "offline_reproduced",
+        "reproduced_levels",
+        "plan_executed",
+        "residual_mismatch_class",
+        "verifier_accuracy_per_round",
+        "verifier_best_accuracy",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4339_e3_explore_verify_plan_ar25.json",
+      "payload_reproducibility_checksum": "8bd8fdc52533c6548138addc9e90d2c20337ba942dcf649e40dfebcebdb49391",
+      "sha256": "016a9e19de761490c5166ae62a5b8dff9077b0cbb6ebb931c09faf7a1bca3e20",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4340_e3_ka59",
+      "experiment_id": 4340,
+      "fields_imported": [
+        "game",
+        "offline_reproduced",
+        "reproduced_levels",
+        "plan_executed",
+        "residual_mismatch_class",
+        "verifier_accuracy_per_round",
+        "verifier_best_accuracy",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4340_e3_explore_verify_plan_ka59.json",
+      "payload_reproducibility_checksum": "9c238354e5ff765c0291ff09777e55cc0dd8661416b71bd69bc4692b7af4d6ea",
+      "sha256": "5a63937257fd01a54679c45203e5978744de776ad289dd38a4c5e9457e0cfea2",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4341_e3_sc25",
+      "experiment_id": 4341,
+      "fields_imported": [
+        "game",
+        "offline_reproduced",
+        "reproduced_levels",
+        "plan_executed",
+        "win_mechanic_cracked",
+        "verifier_accuracy_per_round",
+        "verifier_best_accuracy",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4341_e3_sc25_reproduction.json",
+      "payload_reproducibility_checksum": "fb94af999655687f8f323de71c51be54838b6a39734652d654f4296b278b9e6f",
+      "sha256": "f862af283bab8e8549b54b891296fb5a03ffed25e28acbad644703e1b96205ef",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4342_self_learning",
+      "experiment_id": 4342,
+      "fields_imported": [
+        "learned_encoder_transfer_helps",
+        "cross_game_state_reduction",
+        "cross_game_state_reduction_ci95",
+        "n_held_out_levels",
+        "n_held_out_games",
+        "positive_control_passed",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4342_self_learning_action_role_cross_game_encoder.json",
+      "payload_reproducibility_checksum": "e559ce0bc8605d8da1289dee2310a2c61d1520442fb7b127196d354e10392a72",
+      "sha256": "de6ab299dd15417e63ac3f911c947c4dbdc89b34b491d7a6c52825223fb3a67a",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4344_hygiene",
+      "experiment_id": 4344,
+      "fields_imported": [
+        "regression_guard_passed",
+        "registry_reconciled",
+        "manifest_reconciled",
+        "gaps_logged"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4344_verifier_registry_gaps_hygiene.json",
+      "payload_reproducibility_checksum": "ab25927ac9750f87d5336cb5d0fef1b24c604e164671fdb674037211d526b9b4",
+      "sha256": "ffb119a463b689e805c1a1896729edc4599e76f10e294e502b5d447f9b7eaec6",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    }
+  ],
+  "upstream_sha256_set": [
+    "016a9e19de761490c5166ae62a5b8dff9077b0cbb6ebb931c09faf7a1bca3e20",
+    "161eb857a86a12ec657084fd9c426a81fbf14ef952e6bb08f98085ede91b5fc6",
+    "383ebc1e6f7cf38360032562c24dc6e4dd2260378517a1d7a403a220d7c74aac",
+    "5a63937257fd01a54679c45203e5978744de776ad289dd38a4c5e9457e0cfea2",
+    "de6ab299dd15417e63ac3f911c947c4dbdc89b34b491d7a6c52825223fb3a67a",
+    "f862af283bab8e8549b54b891296fb5a03ffed25e28acbad644703e1b96205ef",
+    "ffb119a463b689e805c1a1896729edc4599e76f10e294e502b5d447f9b7eaec6"
+  ],
+  "verifier_is_oracle_honored": true,
+  "verifier_thesis_state": "in_generation_moat_replicated_leak_robust"
+}

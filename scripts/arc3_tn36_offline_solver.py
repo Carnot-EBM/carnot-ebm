@@ -22,6 +22,7 @@ Reproduces L1 (program [3,3,3,3,3], 5 downs) and L2 ([33,33,33,33], 4 ups) — g
 """
 from __future__ import annotations
 
+import itertools
 import json
 import sys
 from pathlib import Path
@@ -72,9 +73,10 @@ def _bit_clicks(slot_top, diff):
     return [(x, y0 + BIT_DY * b) for b in range(6) if (diff >> b) & 1]
 
 
-def compute_program(obj, tgt, n):
-    """Compute an n-slot move-program (list of codes) netting the obj->tgt deltas, or
-    (None, reason). Each slot is ONE move of STEP (or one scale/rotate step)."""
+def compute_moves(obj, tgt):
+    """The MULTISET of move-codes that nets the obj->tgt delta (unordered), or (None, reason).
+    Each move is one STEP (or one scale/rotate step). ORDER is resolved by routing (some levels
+    have obstacles, so the moves must be sequenced to route the object through a gap)."""
     (ox, oy, osc, orot, osj), (tx, ty, tsc, trot, tsj) = obj, tgt
     if osj != tsj:
         return None, f"needs property change (sjmtdfxdrc {osj}->{tsj}; codes 14/15/63 not yet decoded)"
@@ -91,29 +93,80 @@ def compute_program(obj, tgt, n):
         if code is None:
             return None, f"rotation delta {d} not in {{90,180,270,-90}}"
         moves.append(code)
+    return moves, ""
+
+
+def _orderings(moves, n, cap=400):
+    """Distinct slot-programs (length n) for the move multiset — straight order first, then
+    permutations. Levels with obstacles need a specific order that ROUTES the object through a
+    gap; the search tries orderings until one wins (the game is the path oracle)."""
     if len(moves) > n:
-        return None, f"needs {len(moves)} moves > {n} slots (multi-run not yet implemented)"
-    return moves + [SETTLE] * (n - len(moves)), ""
-
-
-def solve(env, max_level=10):
-    """Solve as many tn36 levels as possible (up to max_level). Returns (trajectory,
-    reached_level); trajectory = [{action:6, data:{x,y}}, ...] from reset."""
-    f = env.reset()
-    traj, level = [], _levels_completed(f)
-    while level < max_level:
-        program, reason = compute_program(*_obj_tgt(env), n=len(_program(env)))
-        if program is None:
+        return []
+    seen, out = set(), []
+    for perm in itertools.chain([tuple(moves)], itertools.permutations(moves)):
+        if perm in seen:
+            continue
+        seen.add(perm)
+        out.append(list(perm) + [SETTLE] * (n - len(perm)))
+        if len(out) >= cap:
             break
-        cur, tops = _program(env), _slot_tops(env)
-        clicks = []
-        for i, top in enumerate(tops):
-            clicks += _bit_clicks(top, cur[i] ^ program[i])
-        clicks.append(_run_xy(env))
-        for cx, cy in clicks:
+    return out
+
+
+def _apply_program(env, program, traj):
+    """Edit the slots to `program` (bit-toggle clicks) and RUN it, appending every env.step to
+    `traj` (resolving any run animation). Returns the resulting level."""
+    cur, tops = _program(env), _slot_tops(env)
+
+    def clk(cx, cy):
+        f = None
+        for _ in range(80):
             traj.append({"action": 6, "data": {"x": cx, "y": cy}})
             f = env.step(_game_action(GameAction, 6), data={"x": cx, "y": cy})
-        new = _levels_completed(f)
+            if not env._game.fdksqlmpki.deredwcqze:
+                break
+        return f
+
+    for i, top in enumerate(tops):
+        for c in _bit_clicks(top, cur[i] ^ program[i]):
+            clk(*c)
+    f = clk(*_run_xy(env))
+    return _levels_completed(f)
+
+
+def _winning_programs(env, max_level, cap):
+    """PASS 1 — discover the winning slot-program per level (trying orderings; a failed run just
+    resets the object, so orderings are tried in place). Returns the list of winning programs."""
+    f = env.reset()
+    level, wins = _levels_completed(f), []
+    while level < max_level:
+        moves, reason = compute_moves(*_obj_tgt(env))
+        if moves is None:
+            break
+        n = len(_program(env))
+        won = False
+        for program in _orderings(moves, n, cap):
+            if _apply_program(env, program, []) > level:   # throwaway trajectory
+                wins.append(program)
+                level += 1
+                won = True
+                break
+        if not won:
+            break
+    return wins
+
+
+def solve(env, max_level=10, cap=400, *, game="tn36"):
+    """Solve tn36 levels with obstacle path-routing. Two-pass: discover the winning program per
+    level (advancing `env`), then replay ONLY the winners on a FRESH env for a clean minimal
+    trajectory (env.reset() does NOT rewind an already-advanced env to L0). Returns (traj, level)."""
+    wins = _winning_programs(env, max_level, cap)
+    arc = kit.offline_arcade()
+    env2 = arc.make(game, scorecard_id=arc.open_scorecard())
+    f = env2.reset()
+    traj, level = [], _levels_completed(f)
+    for program in wins:
+        new = _apply_program(env2, program, traj)
         if new <= level:
             break
         level = new
