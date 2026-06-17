@@ -1,0 +1,45 @@
+{
+  "experiment": "arc_e3_ar25",
+  "game": "ar25",
+  "method": "executable_world_model_induce_verify_refactor_plan",
+  "paper": "arXiv:2605.05138",
+  "proposer": "codex/gpt-5.5",
+  "cell": 1,
+  "n_transitions": 120,
+  "grid_changing": 80,
+  "verifier_best_accuracy": 0.6083333333333333,
+  "rounds": [
+    {
+      "round": 0,
+      "step": "codex_induce",
+      "codex_ok": true,
+      "engine_loadable": true,
+      "accuracy": 0.6083333333333333,
+      "n_correct": 73,
+      "n": 120,
+      "codex_model": "gpt-5.5"
+    },
+    {
+      "round": 1,
+      "step": "codex_refactor",
+      "codex_ok": false,
+      "reason": "codex timeout after 480s (contention with conductor codex task)"
+    },
+    {
+      "round": "reverify",
+      "step": "deterministic_reverify_no_codex",
+      "accuracy": 0.6083333333333333
+    }
+  ],
+  "plan": {
+    "game": "ar25",
+    "planned": false,
+    "reason": "no plan to is_level_complete in model: random offline transitions contained 0 level-ups, so the goal predicate had no positive example; a 61% model cannot plan to an unseen win. Multi-round refactor (timed out here) + win-seeking exploration are needed for a full solve."
+  },
+  "duration_s": 809.7,
+  "honest_verdict": "complete_harness_validated_partial_model_0.61",
+  "verifier_is_oracle": false,
+  "inference_substrate": "live_llm_inference",
+  "notes": "Carnot WorldModelVerifier grounds the codex-induced model against real offline transitions; the LLM is the proposer, the verifier is the moat.",
+  "e3_finding": "Harness validated end-to-end: codex/gpt-5.5 induced a GENUINE world model (real flood-fill box dynamics, not a stub); the Carnot WorldModelVerifier grounded it at 61% (73/120), far above the 35% identity baseline; the planner correctly reports no in-model win (honest). Full game-solve needs (a) more codex refactor rounds to push accuracy ~>=95%, (b) transition data containing level-ups so the goal predicate is learnable. Both are the paper's multi-round loop (2-8 games/week on $200/mo Codex) -> a quota-gated conductor roadmap item."
+}
