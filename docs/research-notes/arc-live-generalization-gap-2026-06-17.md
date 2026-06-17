@@ -139,3 +139,52 @@ So both links the operator asked for are done: the editor is DETECTED and USABLE
 The frame-only solve here uses a heuristic ("make editable slots match the pre-set ones") that wins
 L1 specifically; the GENERAL winner-discovery (program-space search using the frame-only win signal,
 or inducing the code semantics + object/target by motion) is the next link -- still frame-only.
+
+## NEXT LINK DONE: general winner-discovery is BLIND search (no graded feedback) (2026-06-17)
+
+Replaced the L1-specific "match the pre-set" heuristic with a GENERAL frame-only winner-search
+(`frame_only_winner_search` in `scripts/arc3_frame_induction.py`) and, in the course of building it,
+established the load-bearing LIMIT of frame-only solvability for the program-editor class. Three
+probes (each strictly `grid_of(frame)` + `_levels_completed(frame)`, zero `env._game`):
+
+1. **The run is ATOMIC -> object motion is frame-invisible.** Running the program advances the level
+   ON win, but a single `env.step` executes the WHOLE move-program internally and resets the object;
+   advancing the frame with inert clicks after a run leaves the object's salient region unchanged
+   (`(31,21,2268)` for all 8 follow-up steps, level 0). So the per-move object trajectory -- the only
+   thing from which the code semantics (what code 1/3/8/14 DOES) could be induced -- never appears in
+   any frame. **Code-semantics-by-observation is impossible frame-only for this game.**
+
+2. **No correctness/closeness gradient.** Toggling a slot's bit-row changes ~4 cells (the local glyph
+   echo) IDENTICALLY whether the edit moves a slot TOWARD the winning code or AWAY from it
+   (correct-slot-made-wrong: HUD_delta 1, full_delta 4 == need-fix-slot toggled: HUD_delta 1,
+   full_delta 4). The top-band "HUD" delta is just the echo of my own click, not a distance signal.
+
+3. **A losing run renders NO partial-match.** With a FIXED losing program, the run itself changes
+   exactly ONE cell (an attempt counter at y0), IDENTICAL for k=0/1/2 slots-correct, no GAME_OVER on a
+   single attempt. The win predicate is "object matches target on 5 attributes" but the
+   attributes-matched count is NOT frame-visible. Only a FULL win re-renders the board (2607-cell
+   delta, the binary `levels_completed` advance).
+
+**Conclusion: the program-editor mechanic emits ONLY a binary win bit frame-only -- no gradient to
+hill-climb, no pruning.** So general winner-discovery is BLIND program-space search. The implemented
+search proves it works (L1 solved in **4 runs**, zero internal state, no pre-set-match assumption) via
+a UNIFORM-code structural prior (try every observable code as a repeated program) backed by a bounded
+PRODUCT fallback -- but the full reachable space is already **1024** with just the 2 frame-located
+bit-rows (5 slots x 4 reachable glyphs), and the true 6-bit editor alphabet is far larger. With no
+graded feedback the worst case is exponential in program length. **Blind frame-only search does not
+scale.**
+
+### What this means for the live-generalization plan (important)
+
+The earlier links proved frame-only mechanic DETECTION + control USE generalize. This link proves the
+PLANNING step does NOT, for the program-editor class, via online frame-only induction alone: you
+cannot induce the atomic-run dynamics from frames, and there is no gradient for search. The live
+solver therefore needs, for this class, an **offline-trained per-class dynamics/verifier model** (learn
+"editor code -> object transform" once, offline, from the many program-editor games / our banked
+internal-state RE) that the live agent then applies by reading the editor glyphs + target attributes
+from frames and PLANNING with the learned model -- rather than blind online search. This is exactly
+the "strategy/solver-class library + router" architecture (section above): the program-editor strategy
+carries a learned transition model; it is NOT re-induced online. Logged as
+`GAP-ARC-PROGRAM-EDITOR-NO-GRADED-FEEDBACK` in `ops/verifier_gaps.md`. (Mechanic classes that DO expose
+per-move motion -- direct-control / path-routing games -- remain online-inducible; the no-graded-
+feedback limit is specific to atomic-run program-editor games.)

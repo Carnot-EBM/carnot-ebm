@@ -53,3 +53,12 @@ def test_empty_effects_is_unknown():
     out = FI.induce({})
     assert out["mechanic"] == "unknown"
     assert out["n_edit_buttons"] == 0
+
+
+def test_resolve_toggles_finds_pattern_and_rejects_unreachable():
+    # A slot codebook {toggle_pattern -> rendered glyph-bytes}: the blind winner-search resolves a
+    # TARGET glyph back to the bit-row toggles that produce it, or None when the glyph is unreachable.
+    book = {(0, 0): b"A", (1, 0): b"B", (0, 1): b"C", (1, 1): b"D"}
+    assert FI._resolve_toggles(book, b"A") == (0, 0)       # reset glyph -> no toggles
+    assert FI._resolve_toggles(book, b"D") == (1, 1)       # both bit-rows toggled
+    assert FI._resolve_toggles(book, b"Z") is None         # unreachable glyph -> None (not a crash)

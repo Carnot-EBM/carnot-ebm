@@ -1399,4 +1399,28 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
   checkpoint_multirun / timed_trap_aware) each declaring its applicability features; extend the
   trained router (leave-one-out validated) from heuristic-selection to strategy-selection.
 - priority: high (turns per-game wins into dynamic transfer)
+
+### GAP-ARC-PROGRAM-EDITOR-NO-GRADED-FEEDBACK: program-editor games are blind-search-only frame-only
+- status: open
+- evidence: scripts/arc3_frame_induction.py + three frame-only probes (2026-06-17, design note
+  "general winner-discovery is BLIND search"). On tn36: (1) the run is ATOMIC — one env.step runs
+  the whole move-program and resets the object, so per-move motion is frame-invisible (object region
+  (31,21,2268) unchanged across 8 post-run inert steps); (2) a wrong edit echoes the same ~4 cells as
+  a correct edit (no closeness signal); (3) a losing run renders exactly 1 attempt-counter cell,
+  identical for k=0/1/2 slots-correct (no partial-attribute-match). Only a FULL win advances
+  levels_completed. frame_only_winner_search solves L1 in 4 blind runs but the reachable space is
+  already 1024 (5 slots × 4 glyphs, 2 located bit-rows) and exponential in program length.
+- failure mode: with only a binary win bit and no gradient, frame-only winner-discovery is blind
+  program-space search with no pruning — tractable on L1 only via a uniform-program prior + small
+  alphabet; it does not scale, and the code semantics cannot be induced online (atomic run hides the
+  dynamics). The verifier has nothing to rank intermediate programs by.
+- missing discriminator: a per-class DYNAMICS/transition verifier ("editor code → object transform")
+  that scores a candidate program's predicted end-state against the target's frame-read attributes —
+  supplying the gradient the live frame stream withholds.
+- candidate design: train the program-editor transition model OFFLINE (from the banked internal-state
+  RE + multiple program-editor games), package it as the program_editor STRATEGY-class model
+  (GAP-ARC-STRATEGY-ROUTER); the live agent reads editor glyphs + target attributes from frames and
+  PLANS with the learned model instead of blind online search.
+- priority: high (blind search caps live program-editor solvability; the offline-learned transition
+  verifier is the unlock — and is squarely Carnot's verifier-as-product thesis)
 <!-- arc-live-generalization-gaps-2026-06-17:end -->
