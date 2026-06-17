@@ -2933,6 +2933,23 @@ solver over the offline sim reusing `arc_solver_kit`, (b) run the reproduction
 gate, (c) update `ops/arc_solve_registry.yaml`. ARC `total_levels` claims cite the
 registry's `reproducible_total_levels`, never the provisional count.
 
+**STANDING ENTRYPOINT (wired into the loop, 2026-06-16).** The ARC north-star
+solve task's concrete step is to run the standing loop:
+`.venv/bin/python scripts/arc_loop_solve.py --game <target>` (or `--auto`). It
+does the whole loop automatically and self-improves across runs: transfer-routing
+→ verifier-routed best-first solve (warm-started by a saved LEARNED verifier if
+present, else the hand verifier) → reproduction gate → train+checkpoint the
+learned verifier (`models/arc_verifier_<game>.json`, mirror-ready per Rule 3) →
+registry update → milestone artifact. For an **adaptered** game it solves +1
+level and emits `offline_reproduced`/`reproduced_levels`. For an **un-adaptered**
+game it emits the transfer-routing recommendation + general gotchas — the agent's
+per-game RE starting point: the agent reverse-engineers only the win/action/state
+DELTA, registers a `GameAdapter` in `python/carnot/agentic/arc_game_adapters.py`,
+and re-runs the loop. (Validated 2026-06-16: lp85 solves L3, reproduction-gate
+passes, 359-state verifier-routed search; tn36 routes correctly + flags the delta.
+The irreducible per-game cost is the DELTA RE only — the harness, search engine,
+verifier training, gate, and routing are all reused.)
+
 **How to apply (agent-side).** Before solving a NEW game, FIRST call
 `python/carnot/agentic/arc_solve_learning.py:recommend_approach(game)` — it routes
 the game to the closest SOLVED game's proven recipe (solver module, action-model,
