@@ -1,0 +1,1423 @@
+{
+  "acceptance_gate_passed": true,
+  "adversarial_verify": {
+    "flagged_count": 0,
+    "reports": [
+      {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4342_self_learning_action_role_cross_game_encoder.json",
+        "exp_id": "experiment_4342_self_learning_action_role_cross_game_encoder",
+        "flag_count": 0,
+        "flags": [],
+        "honest_verdict": "complete: action_role_encoder_transfer_no_improvement_positive_control_passed",
+        "loaded": true,
+        "max_severity": -1,
+        "title": "self_learning_action_role_cross_game_encoder"
+      }
+    ],
+    "returncode": 0,
+    "status": "clean"
+  },
+  "cross_game_state_reduction": 1.00635593220339,
+  "cross_game_state_reduction_ci95": [
+    1.0,
+    1.0168354897287482
+  ],
+  "duration_s": 114.37481594085693,
+  "experiment": "experiment_4342_self_learning_action_role_cross_game_encoder",
+  "field_principles": {
+    "cross_game_state_reduction": "BARE float: baseline_states / guided_states on the held-out games (>1.0 = the action-role value head helps; compare to exp4331's 1.008 null).",
+    "cross_game_state_reduction_ci95": "CI95 across held-out games -- the lower bound > 1.0 is the decision-grade transfer (a 3rd null retires the direction).",
+    "honest_verdict": "Terminal-prefixed. A transfer WIN (reduction>1.0, CI lower>1.0 -- the self-learning frontier advances) and a powered 3rd null (action-role also fails -> retire the direction) are BOTH decision-grade.",
+    "learned_encoder_transfer_helps": "BARE bool: the capstone reads this; true iff the action-role value head reduces search states on the HELD-OUT game (reduction>1.0 AND CI95 lower bound>1.0) -- the cross-game transfer the raw-frame encoder failed to deliver.",
+    "model_specs": "The action-role encoder architecture + the interaction feature spec + the games + the value-head + the leave-one-game-out protocol; required methodology.",
+    "n_held_out_games": "BARE int: the number of leave-one-game-out folds (the cross-game transfer sample size).",
+    "positive_control_passed": "BARE bool: the baseline solver solves the held-out games (reduction is measurable, not a degenerate test) -- the FALSE_NEGATIVE_RISK guard.",
+    "preconditions_checked": "Records the game-traces availability + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the encoder training + leave-one-game-out.",
+    "reproducibility_checksum": "Hash of the traces + the encoder config + the leave-one-game-out protocol; lets a third party re-run.",
+    "verifier_is_oracle": "BARE bool=false -- the learned value head is oracle-distinct (NOT the executable oracle)."
+  },
+  "held_out_level_rows": [
+    {
+      "baseline_solved": true,
+      "guided_path_len": 5,
+      "guided_solved": true,
+      "held_out_game": "cd82",
+      "level_index": 1,
+      "states_guided": 16,
+      "states_uniform": 17,
+      "target_level": 1,
+      "uniform_path_len": 5
+    },
+    {
+      "baseline_solved": true,
+      "guided_path_len": 13,
+      "guided_solved": true,
+      "held_out_game": "cn04",
+      "level_index": 1,
+      "states_guided": 41,
+      "states_uniform": 41,
+      "target_level": 1,
+      "uniform_path_len": 13
+    },
+    {
+      "baseline_solved": true,
+      "guided_path_len": 5,
+      "guided_solved": true,
+      "held_out_game": "lp85",
+      "level_index": 1,
+      "states_guided": 15,
+      "states_uniform": 15,
+      "target_level": 1,
+      "uniform_path_len": 5
+    },
+    {
+      "baseline_solved": true,
+      "guided_path_len": 8,
+      "guided_solved": true,
+      "held_out_game": "lp85",
+      "level_index": 2,
+      "states_guided": 24,
+      "states_uniform": 24,
+      "target_level": 2,
+      "uniform_path_len": 8
+    },
+    {
+      "baseline_solved": true,
+      "guided_path_len": 16,
+      "guided_solved": true,
+      "held_out_game": "lp85",
+      "level_index": 3,
+      "states_guided": 49,
+      "states_uniform": 49,
+      "target_level": 3,
+      "uniform_path_len": 16
+    },
+    {
+      "baseline_solved": true,
+      "guided_path_len": 13,
+      "guided_solved": true,
+      "held_out_game": "ls20",
+      "level_index": 1,
+      "states_guided": 41,
+      "states_uniform": 41,
+      "target_level": 1,
+      "uniform_path_len": 13
+    },
+    {
+      "baseline_solved": true,
+      "guided_path_len": 15,
+      "guided_solved": true,
+      "held_out_game": "m0r0",
+      "level_index": 1,
+      "states_guided": 47,
+      "states_uniform": 47,
+      "target_level": 1,
+      "uniform_path_len": 15
+    },
+    {
+      "baseline_solved": true,
+      "guided_path_len": 3,
+      "guided_solved": true,
+      "held_out_game": "r11l",
+      "level_index": 1,
+      "states_guided": 10,
+      "states_uniform": 11,
+      "target_level": 1,
+      "uniform_path_len": 3
+    },
+    {
+      "baseline_solved": true,
+      "guided_path_len": 14,
+      "guided_solved": true,
+      "held_out_game": "sk48",
+      "level_index": 1,
+      "states_guided": 43,
+      "states_uniform": 43,
+      "target_level": 1,
+      "uniform_path_len": 14
+    },
+    {
+      "baseline_solved": true,
+      "guided_path_len": 4,
+      "guided_solved": true,
+      "held_out_game": "sp80",
+      "level_index": 1,
+      "states_guided": 9,
+      "states_uniform": 9,
+      "target_level": 1,
+      "uniform_path_len": 4
+    },
+    {
+      "baseline_solved": true,
+      "guided_path_len": 7,
+      "guided_solved": true,
+      "held_out_game": "su15",
+      "level_index": 1,
+      "states_guided": 22,
+      "states_uniform": 22,
+      "target_level": 1,
+      "uniform_path_len": 7
+    },
+    {
+      "baseline_solved": true,
+      "guided_path_len": 18,
+      "guided_solved": true,
+      "held_out_game": "tu93",
+      "level_index": 1,
+      "states_guided": 54,
+      "states_uniform": 55,
+      "target_level": 1,
+      "uniform_path_len": 18
+    },
+    {
+      "baseline_solved": true,
+      "guided_path_len": 33,
+      "guided_solved": true,
+      "held_out_game": "wa30",
+      "level_index": 1,
+      "states_guided": 101,
+      "states_uniform": 101,
+      "target_level": 1,
+      "uniform_path_len": 33
+    }
+  ],
+  "honest_verdict": "complete: action_role_encoder_transfer_no_improvement_positive_control_passed",
+  "inference_substrate": "cpu_offline_arc_agi3_trace_frontier_action_role_value_head",
+  "learned_encoder_transfer_helps": false,
+  "methodology_note": "CPU-only action-role interaction encoder over solved-game traces. The held-out game's rows are excluded from training; its trace supplies the same finite action frontier used by Exp 4318/4331 positive controls.",
+  "missing_verifier_gaps": [
+    {
+      "candidate_design": "larger interaction encoder, richer affordance discovery, or more reproduced traces before retiring cross-game value transfer",
+      "failure_mode": "game-agnostic action-role interaction value head did not produce a decision-grade held-out OfflineSolver state reduction",
+      "gap_id": "GAP-4342",
+      "missing_discriminator": "transferable object-interaction value representation",
+      "priority": "high"
+    }
+  ],
+  "model_specs": {
+    "encoder": {
+      "architecture": "action-role/object-interaction transition encoder",
+      "feature_spec": {
+        "decoupling": "uses action family and transition effects over binary objects, component interactions, and terminal alignment deltas rather than raw per-game pixel identities",
+        "feature_names": [
+          "role_directional",
+          "role_click",
+          "role_commit",
+          "role_special",
+          "has_payload",
+          "is_noop",
+          "changed_fraction",
+          "nonzero_delta_fraction",
+          "changed_nonzero_fraction",
+          "component_delta",
+          "merge_proxy",
+          "split_proxy",
+          "centroid_shift",
+          "bbox_area_delta",
+          "goal_alignment_gain",
+          "terminal_match_after",
+          "object_count_after",
+          "motion_effect",
+          "toggle_effect",
+          "collision_effect"
+        ]
+      },
+      "llm_weight_mutation": false,
+      "module": "python/carnot/experiment_4342_self_learning_action_role_cross_game_encoder.py"
+    },
+    "games": [
+      "cd82",
+      "cn04",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "sk48",
+      "sp80",
+      "su15",
+      "tu93",
+      "wa30"
+    ],
+    "held_out_action_frontier": "trace-derived reproducible action frontier used only to make the positive-control solve finite; held-out feature rows are excluded from encoder and value-head training",
+    "leave_one_game_out_protocol": {
+      "bootstrap_resamples": 2000,
+      "ci_axis": "held_out_game",
+      "decision_gate": "reduction > 1.0 and CI95 lower bound > 1.0",
+      "split_axis": "game"
+    },
+    "models_by_held_out_game": {
+      "cd82": {
+        "encoder": {
+          "architecture": "action_role_interaction_standardizer",
+          "feature_names": [
+            "role_directional",
+            "role_click",
+            "role_commit",
+            "role_special",
+            "has_payload",
+            "is_noop",
+            "changed_fraction",
+            "nonzero_delta_fraction",
+            "changed_nonzero_fraction",
+            "component_delta",
+            "merge_proxy",
+            "split_proxy",
+            "centroid_shift",
+            "bbox_area_delta",
+            "goal_alignment_gain",
+            "terminal_match_after",
+            "object_count_after",
+            "motion_effect",
+            "toggle_effect",
+            "collision_effect"
+          ],
+          "llm_weight_mutation": false,
+          "n_features": 20,
+          "n_samples": 443,
+          "training_compute": "CPU numpy mean/std over train split"
+        },
+        "value_head": {
+          "architecture": "linear least-squares value head with bias",
+          "llm_weight_mutation": false,
+          "n_samples": 443,
+          "ridge": 1e-06,
+          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
+          "training_compute": "CPU numpy.linalg.solve ridge regression",
+          "weights": [
+            1.253251514501,
+            -1.036061365469,
+            -0.715732256705,
+            0.0,
+            -1.036061383103,
+            1.373591611225,
+            -0.585956624571,
+            -0.414695406031,
+            -0.585956620544,
+            -0.010641003145,
+            0.468889437651,
+            0.453771828465,
+            -0.568183827562,
+            0.047385099278,
+            -0.012265154847,
+            1.514139360952,
+            -0.917747043654,
+            0.807946027369,
+            0.791738881162,
+            0.655411378701,
+            10.909706521649
+          ]
+        }
+      },
+      "cn04": {
+        "encoder": {
+          "architecture": "action_role_interaction_standardizer",
+          "feature_names": [
+            "role_directional",
+            "role_click",
+            "role_commit",
+            "role_special",
+            "has_payload",
+            "is_noop",
+            "changed_fraction",
+            "nonzero_delta_fraction",
+            "changed_nonzero_fraction",
+            "component_delta",
+            "merge_proxy",
+            "split_proxy",
+            "centroid_shift",
+            "bbox_area_delta",
+            "goal_alignment_gain",
+            "terminal_match_after",
+            "object_count_after",
+            "motion_effect",
+            "toggle_effect",
+            "collision_effect"
+          ],
+          "llm_weight_mutation": false,
+          "n_features": 20,
+          "n_samples": 419,
+          "training_compute": "CPU numpy mean/std over train split"
+        },
+        "value_head": {
+          "architecture": "linear least-squares value head with bias",
+          "llm_weight_mutation": false,
+          "n_samples": 419,
+          "ridge": 1e-06,
+          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
+          "training_compute": "CPU numpy.linalg.solve ridge regression",
+          "weights": [
+            0.776789611671,
+            -0.606893029858,
+            -0.534979654317,
+            0.0,
+            -0.606893008036,
+            0.693705769558,
+            -1.838819996365,
+            -0.000354059738,
+            -1.838819920009,
+            0.139312794119,
+            0.21255936727,
+            0.410286113491,
+            -1.416563249303,
+            -0.016427914106,
+            2.509849890197,
+            0.361711468219,
+            -0.372713728317,
+            1.960344742428,
+            0.152463449281,
+            0.44201667894,
+            10.894988040823
+          ]
+        }
+      },
+      "lp85": {
+        "encoder": {
+          "architecture": "action_role_interaction_standardizer",
+          "feature_names": [
+            "role_directional",
+            "role_click",
+            "role_commit",
+            "role_special",
+            "has_payload",
+            "is_noop",
+            "changed_fraction",
+            "nonzero_delta_fraction",
+            "changed_nonzero_fraction",
+            "component_delta",
+            "merge_proxy",
+            "split_proxy",
+            "centroid_shift",
+            "bbox_area_delta",
+            "goal_alignment_gain",
+            "terminal_match_after",
+            "object_count_after",
+            "motion_effect",
+            "toggle_effect",
+            "collision_effect"
+          ],
+          "llm_weight_mutation": false,
+          "n_features": 20,
+          "n_samples": 371,
+          "training_compute": "CPU numpy mean/std over train split"
+        },
+        "value_head": {
+          "architecture": "linear least-squares value head with bias",
+          "llm_weight_mutation": false,
+          "n_samples": 371,
+          "ridge": 1e-06,
+          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
+          "training_compute": "CPU numpy.linalg.solve ridge regression",
+          "weights": [
+            0.865453576077,
+            -0.291381524109,
+            -1.110198737215,
+            0.0,
+            -0.291381505546,
+            0.708717238689,
+            -2.045541631124,
+            -0.5482812658,
+            -2.045541379628,
+            -0.003559219936,
+            0.526092355032,
+            0.521030168095,
+            -0.193699875427,
+            0.510135623039,
+            2.74180700057,
+            1.47724567206,
+            -0.683683091473,
+            1.865807788307,
+            -1.488014139583,
+            0.744493234569,
+            11.312668433119
+          ]
+        }
+      },
+      "ls20": {
+        "encoder": {
+          "architecture": "action_role_interaction_standardizer",
+          "feature_names": [
+            "role_directional",
+            "role_click",
+            "role_commit",
+            "role_special",
+            "has_payload",
+            "is_noop",
+            "changed_fraction",
+            "nonzero_delta_fraction",
+            "changed_nonzero_fraction",
+            "component_delta",
+            "merge_proxy",
+            "split_proxy",
+            "centroid_shift",
+            "bbox_area_delta",
+            "goal_alignment_gain",
+            "terminal_match_after",
+            "object_count_after",
+            "motion_effect",
+            "toggle_effect",
+            "collision_effect"
+          ],
+          "llm_weight_mutation": false,
+          "n_features": 20,
+          "n_samples": 419,
+          "training_compute": "CPU numpy mean/std over train split"
+        },
+        "value_head": {
+          "architecture": "linear least-squares value head with bias",
+          "llm_weight_mutation": false,
+          "n_samples": 419,
+          "ridge": 1e-06,
+          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
+          "training_compute": "CPU numpy.linalg.solve ridge regression",
+          "weights": [
+            1.124834607854,
+            -0.791835649491,
+            -0.984399315262,
+            0.0,
+            -0.791835618818,
+            0.709893516725,
+            -2.359371339516,
+            -0.400413191946,
+            -2.359371484061,
+            -0.014080610055,
+            0.541903440556,
+            0.521895055584,
+            -0.931555588469,
+            0.091114781291,
+            3.763648413292,
+            0.652140186271,
+            -0.746116999011,
+            1.205069686684,
+            0.266907640379,
+            0.755870316069,
+            10.894988040823
+          ]
+        }
+      },
+      "m0r0": {
+        "encoder": {
+          "architecture": "action_role_interaction_standardizer",
+          "feature_names": [
+            "role_directional",
+            "role_click",
+            "role_commit",
+            "role_special",
+            "has_payload",
+            "is_noop",
+            "changed_fraction",
+            "nonzero_delta_fraction",
+            "changed_nonzero_fraction",
+            "component_delta",
+            "merge_proxy",
+            "split_proxy",
+            "centroid_shift",
+            "bbox_area_delta",
+            "goal_alignment_gain",
+            "terminal_match_after",
+            "object_count_after",
+            "motion_effect",
+            "toggle_effect",
+            "collision_effect"
+          ],
+          "llm_weight_mutation": false,
+          "n_features": 20,
+          "n_samples": 413,
+          "training_compute": "CPU numpy mean/std over train split"
+        },
+        "value_head": {
+          "architecture": "linear least-squares value head with bias",
+          "llm_weight_mutation": false,
+          "n_samples": 413,
+          "ridge": 1e-06,
+          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
+          "training_compute": "CPU numpy.linalg.solve ridge regression",
+          "weights": [
+            1.589716255902,
+            -1.333624176379,
+            -0.808712345552,
+            0.0,
+            -1.333624226886,
+            2.127594384787,
+            -2.11389462537,
+            -0.375570018296,
+            -2.113894599077,
+            0.007302570889,
+            0.549103010701,
+            0.559481576196,
+            -1.286815556489,
+            0.022553347937,
+            3.740175188208,
+            0.270803124406,
+            -0.630267128025,
+            1.656572656847,
+            1.824861082985,
+            0.787746740287,
+            10.818401910851
+          ]
+        }
+      },
+      "r11l": {
+        "encoder": {
+          "architecture": "action_role_interaction_standardizer",
+          "feature_names": [
+            "role_directional",
+            "role_click",
+            "role_commit",
+            "role_special",
+            "has_payload",
+            "is_noop",
+            "changed_fraction",
+            "nonzero_delta_fraction",
+            "changed_nonzero_fraction",
+            "component_delta",
+            "merge_proxy",
+            "split_proxy",
+            "centroid_shift",
+            "bbox_area_delta",
+            "goal_alignment_gain",
+            "terminal_match_after",
+            "object_count_after",
+            "motion_effect",
+            "toggle_effect",
+            "collision_effect"
+          ],
+          "llm_weight_mutation": false,
+          "n_features": 20,
+          "n_samples": 449,
+          "training_compute": "CPU numpy mean/std over train split"
+        },
+        "value_head": {
+          "architecture": "linear least-squares value head with bias",
+          "llm_weight_mutation": false,
+          "n_samples": 449,
+          "ridge": 1e-06,
+          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
+          "training_compute": "CPU numpy.linalg.solve ridge regression",
+          "weights": [
+            0.982747197514,
+            -0.682575834106,
+            -0.889028723652,
+            0.0,
+            -0.682575812548,
+            0.923078194611,
+            -2.226600559228,
+            -0.365627524783,
+            -2.226600533175,
+            -0.040916195371,
+            0.519445624042,
+            0.461324446248,
+            -0.840667414518,
+            0.092780971063,
+            3.440660160359,
+            0.515984543201,
+            -0.483658001575,
+            1.65237998074,
+            0.457327161381,
+            0.696649214651,
+            10.846325142881
+          ]
+        }
+      },
+      "sk48": {
+        "encoder": {
+          "architecture": "action_role_interaction_standardizer",
+          "feature_names": [
+            "role_directional",
+            "role_click",
+            "role_commit",
+            "role_special",
+            "has_payload",
+            "is_noop",
+            "changed_fraction",
+            "nonzero_delta_fraction",
+            "changed_nonzero_fraction",
+            "component_delta",
+            "merge_proxy",
+            "split_proxy",
+            "centroid_shift",
+            "bbox_area_delta",
+            "goal_alignment_gain",
+            "terminal_match_after",
+            "object_count_after",
+            "motion_effect",
+            "toggle_effect",
+            "collision_effect"
+          ],
+          "llm_weight_mutation": false,
+          "n_features": 20,
+          "n_samples": 416,
+          "training_compute": "CPU numpy mean/std over train split"
+        },
+        "value_head": {
+          "architecture": "linear least-squares value head with bias",
+          "llm_weight_mutation": false,
+          "n_samples": 416,
+          "ridge": 1e-06,
+          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
+          "training_compute": "CPU numpy.linalg.solve ridge regression",
+          "weights": [
+            1.058175082908,
+            -0.754087595107,
+            -0.899519964731,
+            0.0,
+            -0.754087573593,
+            1.067691322832,
+            -1.507499548875,
+            -0.321094201585,
+            -1.507499633187,
+            -0.080242171988,
+            0.565856732216,
+            0.451826135694,
+            -1.244922616408,
+            -0.001932646861,
+            2.198274108847,
+            0.571905867022,
+            0.282858208505,
+            1.632143740087,
+            0.395170142293,
+            0.723128602567,
+            10.86057689697
+          ]
+        }
+      },
+      "sp80": {
+        "encoder": {
+          "architecture": "action_role_interaction_standardizer",
+          "feature_names": [
+            "role_directional",
+            "role_click",
+            "role_commit",
+            "role_special",
+            "has_payload",
+            "is_noop",
+            "changed_fraction",
+            "nonzero_delta_fraction",
+            "changed_nonzero_fraction",
+            "component_delta",
+            "merge_proxy",
+            "split_proxy",
+            "centroid_shift",
+            "bbox_area_delta",
+            "goal_alignment_gain",
+            "terminal_match_after",
+            "object_count_after",
+            "motion_effect",
+            "toggle_effect",
+            "collision_effect"
+          ],
+          "llm_weight_mutation": false,
+          "n_features": 20,
+          "n_samples": 450,
+          "training_compute": "CPU numpy mean/std over train split"
+        },
+        "value_head": {
+          "architecture": "linear least-squares value head with bias",
+          "llm_weight_mutation": false,
+          "n_samples": 450,
+          "ridge": 1e-06,
+          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
+          "training_compute": "CPU numpy.linalg.solve ridge regression",
+          "weights": [
+            0.910082388704,
+            -0.791053039876,
+            -0.459257999706,
+            0.0,
+            -0.791053004607,
+            0.929020844402,
+            -2.126025981311,
+            -0.402978759256,
+            -2.126025885233,
+            -0.010849065583,
+            0.41281636392,
+            0.397403762289,
+            -0.925204952435,
+            0.036501964455,
+            3.270179194008,
+            0.539215480882,
+            -0.675703226923,
+            1.687269102907,
+            0.360126134272,
+            0.575500559463,
+            10.833333309259
+          ]
+        }
+      },
+      "su15": {
+        "encoder": {
+          "architecture": "action_role_interaction_standardizer",
+          "feature_names": [
+            "role_directional",
+            "role_click",
+            "role_commit",
+            "role_special",
+            "has_payload",
+            "is_noop",
+            "changed_fraction",
+            "nonzero_delta_fraction",
+            "changed_nonzero_fraction",
+            "component_delta",
+            "merge_proxy",
+            "split_proxy",
+            "centroid_shift",
+            "bbox_area_delta",
+            "goal_alignment_gain",
+            "terminal_match_after",
+            "object_count_after",
+            "motion_effect",
+            "toggle_effect",
+            "collision_effect"
+          ],
+          "llm_weight_mutation": false,
+          "n_features": 20,
+          "n_samples": 437,
+          "training_compute": "CPU numpy mean/std over train split"
+        },
+        "value_head": {
+          "architecture": "linear least-squares value head with bias",
+          "llm_weight_mutation": false,
+          "n_samples": 437,
+          "ridge": 1e-06,
+          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
+          "training_compute": "CPU numpy.linalg.solve ridge regression",
+          "weights": [
+            1.03083844777,
+            -0.707637972852,
+            -0.929820285057,
+            0.0,
+            -0.707637961249,
+            1.195120942115,
+            -2.419926599534,
+            -0.373381841621,
+            -2.41992651963,
+            -0.044131909723,
+            0.51830138971,
+            0.455600815913,
+            -0.897937448579,
+            -0.248049938728,
+            3.787518416575,
+            0.762063962049,
+            -0.724801629636,
+            2.084346469849,
+            1.221172310227,
+            0.691856679091,
+            10.947368396001
+          ]
+        }
+      },
+      "tu93": {
+        "encoder": {
+          "architecture": "action_role_interaction_standardizer",
+          "feature_names": [
+            "role_directional",
+            "role_click",
+            "role_commit",
+            "role_special",
+            "has_payload",
+            "is_noop",
+            "changed_fraction",
+            "nonzero_delta_fraction",
+            "changed_nonzero_fraction",
+            "component_delta",
+            "merge_proxy",
+            "split_proxy",
+            "centroid_shift",
+            "bbox_area_delta",
+            "goal_alignment_gain",
+            "terminal_match_after",
+            "object_count_after",
+            "motion_effect",
+            "toggle_effect",
+            "collision_effect"
+          ],
+          "llm_weight_mutation": false,
+          "n_features": 20,
+          "n_samples": 404,
+          "training_compute": "CPU numpy mean/std over train split"
+        },
+        "value_head": {
+          "architecture": "linear least-squares value head with bias",
+          "llm_weight_mutation": false,
+          "n_samples": 404,
+          "ridge": 1e-06,
+          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
+          "training_compute": "CPU numpy.linalg.solve ridge regression",
+          "weights": [
+            1.158423958893,
+            -0.594737147697,
+            -1.594725600372,
+            0.0,
+            -0.594737177322,
+            0.596402835146,
+            -3.069837660332,
+            1.382790208369,
+            -3.069837646296,
+            0.351828517403,
+            0.447512094512,
+            0.947551473742,
+            -1.845043721885,
+            -0.173368574565,
+            4.755235221748,
+            0.232616513089,
+            -0.997106600884,
+            2.381576486142,
+            -0.097272262262,
+            0.991429002088,
+            10.64356433009
+          ]
+        }
+      },
+      "wa30": {
+        "encoder": {
+          "architecture": "action_role_interaction_standardizer",
+          "feature_names": [
+            "role_directional",
+            "role_click",
+            "role_commit",
+            "role_special",
+            "has_payload",
+            "is_noop",
+            "changed_fraction",
+            "nonzero_delta_fraction",
+            "changed_nonzero_fraction",
+            "component_delta",
+            "merge_proxy",
+            "split_proxy",
+            "centroid_shift",
+            "bbox_area_delta",
+            "goal_alignment_gain",
+            "terminal_match_after",
+            "object_count_after",
+            "motion_effect",
+            "toggle_effect",
+            "collision_effect"
+          ],
+          "llm_weight_mutation": false,
+          "n_features": 20,
+          "n_samples": 359,
+          "training_compute": "CPU numpy mean/std over train split"
+        },
+        "value_head": {
+          "architecture": "linear least-squares value head with bias",
+          "llm_weight_mutation": false,
+          "n_samples": 359,
+          "ridge": 1e-06,
+          "target": "trace-supervised transition steps-to-go; off-trace decoys receive a penalty",
+          "training_compute": "CPU numpy.linalg.solve ridge regression",
+          "weights": [
+            0.143011150233,
+            -0.052101173911,
+            -0.339535360152,
+            0.0,
+            -0.052101171582,
+            -0.279704948154,
+            -2.802019973078,
+            -0.063487437021,
+            -2.802019754951,
+            -0.438026667037,
+            0.909658119881,
+            0.289336622537,
+            -1.95397939946,
+            0.141444093454,
+            4.390537732447,
+            -1.636008284918,
+            0.112622997896,
+            0.890011013184,
+            -0.636410034734,
+            0.84901284813,
+            8.509749279917
+          ]
+        }
+      }
+    },
+    "splits": {
+      "cd82": {
+        "held_out_game": "cd82",
+        "n_encoder_samples": 443,
+        "n_held_out_levels": 1,
+        "n_train_transition_samples": 443,
+        "train_games": [
+          "cn04",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "cn04": {
+        "held_out_game": "cn04",
+        "n_encoder_samples": 419,
+        "n_held_out_levels": 1,
+        "n_train_transition_samples": 419,
+        "train_games": [
+          "cd82",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "lp85": {
+        "held_out_game": "lp85",
+        "n_encoder_samples": 371,
+        "n_held_out_levels": 3,
+        "n_train_transition_samples": 371,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "ls20": {
+        "held_out_game": "ls20",
+        "n_encoder_samples": 419,
+        "n_held_out_levels": 1,
+        "n_train_transition_samples": 419,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "m0r0": {
+        "held_out_game": "m0r0",
+        "n_encoder_samples": 413,
+        "n_held_out_levels": 1,
+        "n_train_transition_samples": 413,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "ls20",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "r11l": {
+        "held_out_game": "r11l",
+        "n_encoder_samples": 449,
+        "n_held_out_levels": 1,
+        "n_train_transition_samples": 449,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "sk48",
+          "sp80",
+          "su15",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "sk48": {
+        "held_out_game": "sk48",
+        "n_encoder_samples": 416,
+        "n_held_out_levels": 1,
+        "n_train_transition_samples": 416,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sp80",
+          "su15",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "sp80": {
+        "held_out_game": "sp80",
+        "n_encoder_samples": 450,
+        "n_held_out_levels": 1,
+        "n_train_transition_samples": 450,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "su15",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "su15": {
+        "held_out_game": "su15",
+        "n_encoder_samples": 437,
+        "n_held_out_levels": 1,
+        "n_train_transition_samples": 437,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "tu93": {
+        "held_out_game": "tu93",
+        "n_encoder_samples": 404,
+        "n_held_out_levels": 1,
+        "n_train_transition_samples": 404,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15",
+          "wa30"
+        ]
+      },
+      "wa30": {
+        "held_out_game": "wa30",
+        "n_encoder_samples": 359,
+        "n_held_out_levels": 1,
+        "n_train_transition_samples": 359,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15",
+          "tu93"
+        ]
+      }
+    },
+    "state_count_instrumentation": "transition-scored trace-frontier search counts generated child states; lower guided states means better search efficiency",
+    "trace_checksums": {
+      "cd82": "sha256:630a02ea2225ff75c970cb2855f7ccecc25bbfe60400faa1b39439ed733b02d3",
+      "cn04": "sha256:cb9e98a6311317db38890d0d1dcca685924e2f65fd175603e8b2aefc627459f5",
+      "lp85": "sha256:7f17f90d3c0cc57da14b84e88d85e897dd35ee264d628d941d051058a29ed68c",
+      "ls20": "sha256:c6908c6c3cc3f3d187a8bb6e34d999b42c4120fd11c2fe8671acafaf838be9b0",
+      "m0r0": "sha256:748b25a8043f91a05c3659b9469e0c20052a4752ca4602935968c0d77d835074",
+      "r11l": "sha256:0bfc38948e3510a114421a0d9066276c501791406cbbf087283e6ffd4c6a67f3",
+      "sk48": "sha256:1ec397b29b355885ab6efbc511410e319d409e602661ab02c101103f809282f7",
+      "sp80": "sha256:28f1d55293f6f4e430d40740725b59bfbd76a66d2c5f9878b1b2f4385709ae8e",
+      "su15": "sha256:58c03992821f0463801ba59b3c78eee180e12a41c9fe7109622db639565378fc",
+      "tu93": "sha256:9edc5b28d8765c514d14ee32bc45440af04db2859632fa10853f70c8485ce53d",
+      "wa30": "sha256:506cda548814df778d0ae8013cc15d33a3f9ce8819fda7d285909d4da85f4512"
+    },
+    "value_head": {
+      "architecture": "linear least-squares value head with bias over encoded transition features",
+      "llm_weight_mutation": false,
+      "target": "transition steps-to-go; off-trace decoys penalized",
+      "training_compute": "CPU numpy ridge regression"
+    }
+  },
+  "n_bootstrap_resamples": 2000,
+  "n_held_out_games": 11,
+  "n_held_out_levels": 13,
+  "per_held_out_game_reduction": {
+    "cd82": {
+      "baseline_solved": true,
+      "guided_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "guided_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0625,
+          "states_guided": 16,
+          "states_uniform": 17
+        }
+      ],
+      "state_reduction": 1.0625,
+      "states_guided": 16,
+      "states_uniform": 17
+    },
+    "cn04": {
+      "baseline_solved": true,
+      "guided_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "guided_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_guided": 41,
+          "states_uniform": 41
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_guided": 41,
+      "states_uniform": 41
+    },
+    "lp85": {
+      "baseline_solved": true,
+      "guided_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "guided_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_guided": 15,
+          "states_uniform": 15
+        },
+        {
+          "baseline_solved": true,
+          "guided_solved": true,
+          "level_index": 2,
+          "state_reduction": 1.0,
+          "states_guided": 24,
+          "states_uniform": 24
+        },
+        {
+          "baseline_solved": true,
+          "guided_solved": true,
+          "level_index": 3,
+          "state_reduction": 1.0,
+          "states_guided": 49,
+          "states_uniform": 49
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_guided": 88,
+      "states_uniform": 88
+    },
+    "ls20": {
+      "baseline_solved": true,
+      "guided_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "guided_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_guided": 41,
+          "states_uniform": 41
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_guided": 41,
+      "states_uniform": 41
+    },
+    "m0r0": {
+      "baseline_solved": true,
+      "guided_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "guided_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_guided": 47,
+          "states_uniform": 47
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_guided": 47,
+      "states_uniform": 47
+    },
+    "r11l": {
+      "baseline_solved": true,
+      "guided_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "guided_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.1,
+          "states_guided": 10,
+          "states_uniform": 11
+        }
+      ],
+      "state_reduction": 1.1,
+      "states_guided": 10,
+      "states_uniform": 11
+    },
+    "sk48": {
+      "baseline_solved": true,
+      "guided_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "guided_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_guided": 43,
+          "states_uniform": 43
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_guided": 43,
+      "states_uniform": 43
+    },
+    "sp80": {
+      "baseline_solved": true,
+      "guided_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "guided_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_guided": 9,
+          "states_uniform": 9
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_guided": 9,
+      "states_uniform": 9
+    },
+    "su15": {
+      "baseline_solved": true,
+      "guided_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "guided_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_guided": 22,
+          "states_uniform": 22
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_guided": 22,
+      "states_uniform": 22
+    },
+    "tu93": {
+      "baseline_solved": true,
+      "guided_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "guided_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0185185185185186,
+          "states_guided": 54,
+          "states_uniform": 55
+        }
+      ],
+      "state_reduction": 1.0185185185185186,
+      "states_guided": 54,
+      "states_uniform": 55
+    },
+    "wa30": {
+      "baseline_solved": true,
+      "guided_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "guided_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_guided": 101,
+          "states_uniform": 101
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_guided": 101,
+      "states_uniform": 101
+    }
+  },
+  "positive_control_passed": true,
+  "preconditions_checked": {
+    "minimum_usable_games": 3,
+    "missing_trace_games": [],
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_present": true,
+    "registry_reproduced_game_count": 14,
+    "registry_reproduced_games": [
+      "ar25",
+      "cd82",
+      "cn04",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "sc25",
+      "sk48",
+      "sp80",
+      "su15",
+      "tn36",
+      "tu93",
+      "wa30"
+    ],
+    "research_conductor_modified": false,
+    "trace_sources_declared": [
+      "cd82",
+      "cn04",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "sk48",
+      "sp80",
+      "su15",
+      "tu93",
+      "wa30"
+    ],
+    "trm_training_stood_down": true,
+    "usable_trace_game_count": 11,
+    "usable_trace_games": [
+      "cd82",
+      "cn04",
+      "lp85",
+      "ls20",
+      "m0r0",
+      "r11l",
+      "sk48",
+      "sp80",
+      "su15",
+      "tu93",
+      "wa30"
+    ]
+  },
+  "random_seed": 4342,
+  "reproducibility_checksum": "sha256:e559ce0bc8605d8da1289dee2310a2c61d1520442fb7b127196d354e10392a72",
+  "spec_refs": [
+    "REQ-LEARN-4342",
+    "SCENARIO-LEARN-4342"
+  ],
+  "title": "self_learning_action_role_cross_game_encoder",
+  "verifier_is_oracle": false
+}
