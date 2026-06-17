@@ -22900,6 +22900,95 @@ not claim `.398` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4313 | Implemented (`python/carnot/reporting/archive_v398_activate_v399_4313.py`, `python/carnot/experiment_4313_archive_v398_activate_v399.py`, `results/experiment_4313_archive_v398_activate_v399.py`) | Implemented (`tests/python/test_experiment_4313_archive_v398_activate_v399.py`) |
 
+### REQ-REPORT-4324: Archive .399, Activate .400, And Preserve The True Close-State
+
+The Exp 4324 workflow SHALL archive milestone `2026.06.399`, confirm milestone
+`2026.06.400` is active, and write the record-only artifact
+`results/experiment_4324_archive_v399_activate_v400.json`. It SHALL run NO live
+model training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`, it SHALL record that the conductor stays
+stood down on TRM training, and it SHALL NOT modify `scripts/research_conductor.py`.
+
+Before writing the complete artifact or editing `research-complete.yaml`, the
+workflow SHALL verify these preconditions and stop with a `blocked_<resource>`
+honest verdict if any fail:
+
+- `research-complete.yaml` parses under `yaml.safe_load`.
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`.
+- The smart-subset pre-test gate is green.
+
+The workflow SHALL ensure `research-complete.yaml` contains a single `.399`
+archive record, appending the canonical `.399` record only when absent and
+removing duplicate top-level `.399` records if interrupted conductor appends
+created any. The workflow SHALL keep `research-complete.yaml` parseable after
+the edit.
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v399_close_state` SHALL truthfully record
+the Exp 4323 capstone scorecard:
+`verifier_thesis_state=in_generation_moat_holds`, the in-generation moat CLOSED oracle-distinctly, the cross-domain selection moat RETIRED as
+domain-bound, efficiency as always-energy-dominates, ARC as 13 reproducible
+levels across 11 games with the first live submission, cross-game transfer as
+null with generic features, off-ARC execution as a marginal execution-grounded
+win, and `paper_ready=true`.
+
+The close-state SHALL record the in-generation Exp 4315 evidence:
+`diffusiongemma_guidance_moat=true`, `carnot_minus_best_control_delta=0.225`,
+`carnot_minus_self_reward_smc_delta=0.35`,
+`guidance_moat_ci95=[0.075,0.375]` excluding zero,
+`controls_differentiated=true`, `scorer_leak_recheck_passed=true`, and
+`verifier_is_oracle=false`. It SHALL record the cross-domain Exp 4314
+retirement evidence: `cross_domain_selection_holds=false`,
+`cross_domain_delta=0.2307692308`, CI95 `[-0.1153846154,0.5384615385]`
+including zero, `label_ablation_robust=true`, the missing verifier gap
+`GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305`, and
+`retire_if_same_verdict=true`. It SHALL also record Exp 4316 efficiency
+`always_energy_already_dominates`, Exp 4318 cross-game transfer null,
+Exp 4319 off-ARC execution-grounded marginal win, and the ARC registry's first live submission scorecard `0f6273ce-cf0d-426c-83e5-d745e4d45ea2` with
+`13` levels, `11` games, and `11/11` environment match. The `.400` frame SHALL
+be scale-the-in-generation-moat plus E3-deep-tail-ARC plus adapter-free-shallow
+sweep plus learned-frame-encoder, not a re-open of the closed in-generation
+axis or the retired cross-domain selection axis.
+
+The artifact SHALL include these field-principle strings exactly:
+
+- `honest_verdict`: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
+- `v399_close_state`: "Honest record (in-generation moat CLOSED oracle-distinct, cross-domain RETIRED domain-bound, efficiency always-energy-dominates, ARC 13 reproducible + first live submission, cross-game transfer null, off-ARC execution marginal-win) so the .400 agents frame the milestone as scale-the-headline + E3-deep-tail + adapter-free-sweep + learned-frame-encoder -- NOT a re-open of the closed/retired axes."
+- `preconditions_checked`: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
+
+#### SCENARIO-REPORT-4324: The Archive Records The True .399 Close-State
+
+**Given** `.399` has clean Exp 4314 cross-domain retirement evidence, clean
+Exp 4315 in-generation moat evidence, Exp 4323 capstone evidence, the ARC solve
+registry with 13 reproducible levels across 11 games and a first live
+submission, parseable history and exclusion-manifest YAML files, a green
+smart-subset pre-test gate, and `.400` active
+**When** the Exp 4324 archive workflow runs
+**Then** it archives `.399`, confirms `.400`, keeps the YAML history parseable
+with one `.399` record, writes
+`results/experiment_4324_archive_v399_activate_v400.json`, records the
+in-generation oracle-distinct moat close, the cross-domain domain-bound
+retirement, always-energy dominance, ARC first live submission baseline,
+cross-game transfer null, off-ARC marginal execution-grounded win,
+`paper_ready=true`, and `.400` scale/headline/deep-tail/shallow-sweep/frame-
+encoder framing in `v399_close_state`, records the checked resources in
+`preconditions_checked`, declares `aggregation_from_upstream_artifacts`, and
+emits a terminal-prefixed honest verdict.
+
+#### SCENARIO-REPORT-4324-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4324 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does
+not claim `.399` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4324)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4324 | Implemented (`python/carnot/reporting/archive_v399_activate_v400_4324.py`, `python/carnot/experiment_4324_archive_v399_activate_v400.py`, `results/experiment_4324_archive_v399_activate_v400.py`) | Implemented (`tests/python/test_experiment_4324_archive_v399_activate_v400.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
