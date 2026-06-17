@@ -1,3 +1,74 @@
+## 2026-06-17 — .400 planning sweep — SCALE & HARDEN the in-generation oracle-distinct verifier-moat win (the one closed moat) + ATTACK the ARC deep tail with executable world models (operator MANDATORY) + retire the domain-bound cross-domain scope
+
+Added by the `.400 planning sweep (Claude Opus 4.8, outer-loop). `.399 produced a SHARP, DECISION-GRADE scorecard
+(read via the .399 artifacts + the exp4323 capstone, verifier_thesis_state=`in_generation_moat_holds`):
+
+- **IN-GENERATION MOAT — CLOSED, ORACLE-DISTINCT (exp4315).** DiffusionGemma reward-guided step-stitching
+  (2602.22871), with the leak-rechecked exp4292 partial-state scorer as an EXTERNAL process reward, BEAT both the
+  best genuinely-engaged control (EntRGi, +0.225) AND the model's INTRINSIC self-reward SMC (2602.01849, +0.35), with
+  `guidance_moat_ci95=[0.075, 0.375]` EXCLUDING 0, `controls_differentiated=true`, `scorer_leak_recheck_passed=true`,
+  `verifier_is_oracle=false`. n=40/arm, single multiple-choice reasoning corpus. This is the project's FIRST
+  oracle-distinct verifier win IN GENERATION (the external verifier steers generation better than the model's own
+  confidence) — the candidate to flip the DiffusionGemma gate (`docs/research-notes/
+  diffusiongemma-energy-guided-diffusion-spec.md` THE GATE). The operator was TWICE-burned by premature DiffusionGemma
+  over-claims (.396/.397), so `.400 HARDENS before any gate-flip: replicate on a 2nd oracle-distinct corpus + more power.
+- **CROSS-DOMAIN SELECTION MOAT — RETIRED, domain-bound (exp4314).** The IR3DE+CASCAL+ContextPRM rebuild produced the
+  SAME verdict as exp4305 (held-out-DOMAIN delta +0.231, CI95 [-0.115, 0.538] still INCLUDES 0; `label_ablation_robust=true`,
+  no leak). `retire_if_same_verdict: true` fired → the cross-domain SELECTION scope is RETIRED (genuinely math/ARC
+  domain-bound, consistent with `verifier-domain-bound-math-only`). `.400 does NOT re-propose it; the constructive
+  response is verifier DOMAIN EXPANSION (a learned ARC-grid representation), not another selection rerun.
+- **EFFICIENCY — always-energy already DOMINATES (exp4316).** The budget-aware cascade router did not beat the controls
+  because the cheap discriminative energy verifier ALREADY dominates on this corpus (accuracy 0.55, cost_ratio 0.30, no
+  escalation needed). This STRENGTHENS the §5 efficiency thesis (the verifier is Pareto-dominant; the cascade is
+  unnecessary) — re-measuring it is churn.
+- **ARC — +1 to 13 reproducible levels across 11 games + FIRST LIVE SUBMISSION (scorecard 0f6273ce, 13 levels, 11/11
+  env-matched, operator-authorized).** The 2026-06-17 adapter-free graph-explore sweep (2512.24156) cracked the SHALLOW
+  tail (cd82/sp80/su15/tu93 + cn04/m0r0/sk48 via the E1 salience+mask upgrade). The DEEP tail (ar25/ka59/tr87/ft09)
+  RESISTS graph-explore even at 30k expansions (mechanic-limited, NOT budget-limited). The +1-level advance on a SOLVED
+  game is also mechanic-limited (budget does NOT help). The next ARC progress needs the EXECUTABLE-WORLD-MODEL solver.
+- **CROSS-GAME VALUE TRANSFER — NULL with generic features (exp4318).** A value-head trained on other games did NOT
+  reduce search states on a held-out game (reduction ~1.0; positive control passed). Generic grid features don't carry
+  a game-invariant progress signal — mirrors the domain-bound finding. Gap logged: a LEARNED FRAME ENCODER (richer
+  representation) is the candidate fix.
+- **OFF-ARC EXECUTION TRANSFER — marginal WIN, execution-grounded (exp4319).** demo-fit beats vote off-ARC on
+  MBPP/EvalPlus (+0.02, accumulated n=200, CI excl 0), `verifier_is_oracle=true` (the cheap/decentralized execution
+  layer, NOT a moat). Settled; re-accumulating is churn.
+
+SOTA re-verified (WebSearch 2026-06-17, reliable channel; /deep-research banned in-loop):
+
+- **★ Executable World Models for ARC-AGI-3 (arXiv:2605.05138; Rodionov et al.) — CURRENT SOTA, reconfirmed.** A coding
+  agent (GPT-5.5) induces a Python world model, VERIFIES it reproduces observed transitions, refactors toward simpler
+  abstractions (MDL proxy), and plans to the win. GPT-5.5 FULLY solved **15/25** public games (mean per-game RHAE
+  **58.12%**); GPT-5.4 solved 8/25 (41.29%). Quote (load-bearing for the verifier thesis): "LLMs are most reliable used
+  not as final authorities but as PROPOSAL mechanisms inside systems that CHECK their outputs." → `.400 PHASE B (E3):
+  the Carnot `WorldModelVerifier` grounds the induced model; the codex agent is the proposer; target +1 level on the
+  deep tail (ar25/ka59/tr87/ft09) where graph-explore is mechanic-stuck. Harness BUILT + validated on ar25 (genuine
+  flood-fill world model induced, verifier grounded it at 61% vs 35% identity baseline).
+- **Graph-Based Exploration for ARC-AGI-3 (arXiv:2512.24156; Rudakov et al.) — the adapter-free shallow-tail solver,
+  reconfirmed.** Salience-prioritized state-transition graph, shortest-path to untested state-action pairs, NO learning
+  (median 30/52 levels). → `.400 PHASE C: continue the discovery sweep over the remaining unsolved SHALLOW-tail games.
+- **★ Back on Track: Aligning Rewards and States for Reasoning in Diffusion LLMs (arXiv:2606.08501; June 2026) — NEW.**
+  Reward-state alignment for diffusion-LLM reasoning — directly relevant to scaling the exp4315 reward-guided
+  generation win (keeps the external reward aligned to valid intermediate states, the over-guidance failure mode the
+  exp4315 guidance-dynamics diagnostic watches). → `.400 PHASE A: a candidate for the A2D2/adaptive scale-up arm.
+- **Entropy-Guided Step Selection / Stepwise Advantages for diffusion-LLM RL (arXiv:2603.12554) + Attention-Discounted
+  Adaptive Sampler for Masked Diffusion (arXiv:2606.10829) — NEW adjacent.** Step-selection + adaptive sampling for
+  diffusion reasoning; candidates for the in-generation scale-up's denoising schedule.
+- (The .399 SOTA ingestion exp4320 flagged **A2D2 adaptive any-length discrete diffusion (cited 2606.13565)** + **TR2-D2
+  tree-search trajectory replay (2509.25171)** for the scale-up. The 2606.13565 ID did NOT surface in a fresh WebSearch
+  — the `.400 A2D2 task MUST verify the exact arXiv ID in a PRECONDITIONS step before citing it, and may substitute the
+  WebSearch-verified 2606.08501 / 2603.12554 reward-state-alignment + step-selection methods.)
+
+**Bottom line for .400:** (A) HEADLINE — scale & harden the in-generation oracle-distinct moat win: replicate exp4315
+on a 2nd corpus + power, then an adaptive guided-generation scale-up (2606.08501 / 2606.13565), → decide whether the
+DiffusionGemma gate flips; (B) ARC NORTH STAR — E3 executable-world-model solver (2605.05138) on the deep tail
+ar25/ka59/tr87/ft09 (operator MANDATORY 2026-06-17), + an adapter-free discovery sweep (2512.24156) over the shallow
+tail + tn36's ACTION6 click-schema delta-RE; (C) SELF-LEARNING — a LEARNED FRAME ENCODER for cross-game value transfer
+(the gap exp4318 logged); (D) RETIRE the domain-bound cross-domain selection scope; infra/hygiene/capstone as usual.
+
+Sources (this sweep, WebSearch-verified 2026-06-17): arxiv.org/abs/{2605.05138, 2512.24156, 2603.24621, 2606.08501,
+2603.12554, 2606.10829, 2602.22871, 2602.01849}.
+
 ## 2026-06-16 (later) — .397 planning sweep — CLOSE the last open moat axis (cross-GENERATOR) + UNBLOCK the §5 in-generation thesis (a learned PARTIAL-STATE diffusion scorer) + HARDEN the efficiency Pareto win to headline-grade
 
 Added by the `.397 planning sweep (Claude Opus 4.8, outer-loop). `.396 landed a SHARP, HONEST scorecard against
