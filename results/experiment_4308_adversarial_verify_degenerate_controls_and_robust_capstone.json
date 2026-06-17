@@ -1,0 +1,38 @@
+{
+  "aggregator_survives_missing_artifact": true,
+  "degenerate_controls_check_added": true,
+  "degenerate_controls_flags_exp4293": true,
+  "duration_s": 2.892502,
+  "experiment": 4308,
+  "field_principles": {
+    "aggregator_survives_missing_artifact": "BARE bool: with one artifact missing (the exp4301 scenario), the aggregator still computes the other axes' verdicts (NOT defaulted all-False) -- the regression test for the spurious-block bug.",
+    "degenerate_controls_check_added": "BARE bool: the DEGENERATE_CONTROLS check is now in adversarial_verify.py -- the no-op-controls safety net the exp4293 incident proved missing.",
+    "degenerate_controls_flags_exp4293": "BARE bool: the check FLAGS the .397 degenerate-controls artifact (the true-positive regression test).",
+    "honest_verdict": "Terminal-prefixed. Records both checks added + the regression tests passing.",
+    "reproducibility_checksum": "Hash of the patched linter + the helper + the tests; catches silent drift.",
+    "robust_aggregator_added": "BARE bool: the aggregate-available-report-gaps helper exists + the .398 capstone (exp4312) can import it -- the capstone robustness fix the exp4301/exp4299 incident proved missing."
+  },
+  "honest_verdict": "complete: degenerate_controls_and_robust_capstone_guards_added_tests_pass",
+  "inference_substrate": "deterministic_repo_audit",
+  "pytest_command": [
+    "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/pytest",
+    "tests/python/test_adversarial_verify_degenerate_controls.py",
+    "tests/python/test_capstone_aggregate_available.py",
+    "-q",
+    "-n0",
+    "-o",
+    "addopts=",
+    "--no-cov"
+  ],
+  "pytest_output_tail": ".......                                                                  [100%]\n7 passed in 1.02s",
+  "regression_tests_passed": true,
+  "reproducibility_checksum": "365dcebd847b64e291ac9bde8e5ad6a4c52cf329c1022393daf54270004d4bdb",
+  "robust_aggregator_added": true,
+  "schema": "carnot.exp4308_harness_safety_net.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4308",
+    "SCENARIO-VERIFY-4308",
+    "REQ-CAPSTONE-4308",
+    "SCENARIO-CAPSTONE-4308"
+  ]
+}

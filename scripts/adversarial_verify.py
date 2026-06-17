@@ -71,6 +71,13 @@ Detection rules (each emits a discrete flag with severity):
     set_encoder_at_1=1.0, and oracle_at_k=1.0 on a wrong-majority
     ARC-GEN pool; that is a pool-construction artifact, not transfer.
 
+  DEGENERATE_CONTROLS
+    A condition-arm artifact whose distinct control arms report
+    bit-identical accuracy/pass-rate values. Example: exp4293 reported
+    rfg == unguided == entrgi in condition_accuracy, which is the
+    signature of no-op or aliased controls rather than differentiated
+    baselines.
+
 Output: a JSON report listing flagged artifacts with per-flag details.
 Exit code: 0 if no flags, 1 if any flags present.
 
@@ -106,6 +113,30 @@ DEGENERATE_DELTA_THRESHOLD = 0.95
 DEGENERATE_BASELINE_THRESHOLD = 0.05
 DEGENERATE_DELTA_KEYS = ("cross_generator_delta", "cross_family_delta")
 DEGENERATE_BASELINE_KEYS = ("vote_at_1", "matched_control_at_1")
+CONDITION_ARM_MAP_KEYS = ("condition_accuracy", "per_condition_accuracy", "arms")
+CONDITION_ARM_METRIC_KEYS = (
+    "condition_accuracy",
+    "per_condition_accuracy",
+    "accuracy",
+    "pass_rate",
+    "success_rate",
+    "solve_rate",
+    "score",
+)
+CONTROL_ARM_MARKERS = (
+    "baseline",
+    "control",
+    "entrgi",
+    "no_guidance",
+    "no-guidance",
+    "random",
+    "rfg",
+    "self_guidance",
+    "self-guidance",
+    "unguided",
+    "unconditioned",
+)
+PLACEBO_OR_REPLICATE_MARKERS = ("placebo", "replicate", "replica", "duplicate")
 
 # Compute-bound markers — if the artifact mentions any of these, the
 # experiment was supposed to invoke real hardware/model work.
@@ -570,6 +601,105 @@ def check_degenerate_separation(d: dict[str, Any], flags: list[Flag]) -> None:
             ),
         )
     )
+
+
+def _is_control_arm_key(key: str) -> bool:
+    """True when an arm name describes a baseline/control condition."""
+    kl = key.lower()
+    return any(marker in kl for marker in CONTROL_ARM_MARKERS)
+
+
+def _is_placebo_or_replicate_key(key: str) -> bool:
+    """True for intentionally duplicated placebo/replicate controls."""
+    kl = key.lower()
+    return any(marker in kl for marker in PLACEBO_OR_REPLICATE_MARKERS)
+
+
+def _documented_identical_controls(d: dict[str, Any]) -> bool:
+    """True when the artifact explicitly says identical controls are expected."""
+    for key, value in d.items():
+        kl = key.lower()
+        if (
+            isinstance(value, bool)
+            and value is True
+            and "identical" in kl
+            and ("control" in kl or "arm" in kl or "placebo" in kl)
+        ):
+            return True
+        if isinstance(value, str):
+            vl = value.lower()
+            if (
+                ("deliberately identical" in vl or "intentionally identical" in vl)
+                and ("control" in vl or "arm" in vl or "placebo" in vl)
+            ):
+                return True
+    return False
+
+
+def _arm_numeric_value(value: Any) -> float | None:
+    """Extract the accuracy-like value from a flat or nested arm entry."""
+    if _is_finite_number(value):
+        return float(value)
+    if not isinstance(value, dict):
+        return None
+    for metric_key in CONDITION_ARM_METRIC_KEYS:
+        metric = value.get(metric_key)
+        if _is_finite_number(metric):
+            return float(metric)
+    return None
+
+
+def check_degenerate_controls(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Detect condition-arm maps where distinct controls are bit-identical.
+
+    Exp 4293 exposed a no-op-controls failure mode: the headline arm differed,
+    but every control arm reported the exact same aggregate accuracy. That is a
+    harness bug signature for in-generation comparisons because model-self,
+    unguided, and alternate-control arms should be independently exercised.
+    """
+    documented_identical = _documented_identical_controls(d)
+    for map_key in CONDITION_ARM_MAP_KEYS:
+        arm_map = d.get(map_key)
+        if not isinstance(arm_map, dict):
+            continue
+        controls: list[tuple[str, float]] = []
+        for arm_key, value in arm_map.items():
+            if not isinstance(arm_key, str) or not _is_control_arm_key(arm_key):
+                continue
+            numeric_value = _arm_numeric_value(value)
+            if numeric_value is None:
+                continue
+            controls.append((arm_key, numeric_value))
+        if len(controls) < 2:
+            continue
+
+        by_bits: dict[str, list[tuple[str, float]]] = {}
+        for arm_key, numeric_value in controls:
+            by_bits.setdefault(float(numeric_value).hex(), []).append((arm_key, numeric_value))
+
+        for duplicate_controls in by_bits.values():
+            if len(duplicate_controls) < 2:
+                continue
+            if documented_identical or all(
+                _is_placebo_or_replicate_key(arm_key) for arm_key, _ in duplicate_controls
+            ):
+                continue
+            detail = ", ".join(
+                f"{arm_key}={numeric_value:g}"
+                for arm_key, numeric_value in sorted(duplicate_controls)
+            )
+            flags.append(
+                Flag(
+                    kind="DEGENERATE_CONTROLS",
+                    severity="critical",
+                    detail=(
+                        f"{map_key}: distinct control arms have bit-identical "
+                        f"values ({detail}). This matches a no-op/aliased-controls "
+                        f"signature; rerun with independently exercised controls "
+                        f"before claiming the condition-arm comparison."
+                    ),
+                )
+            )
 
 
 def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
@@ -1322,6 +1452,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_false_negative_risk(d, flags)
     check_ceiling_saturation(d, flags)
     check_degenerate_separation(d, flags)
+    check_degenerate_controls(d, flags)
     check_circular_moat_overclaim(d, flags)
 
     verdict_raw = d_raw.get("honest_verdict") or ""
