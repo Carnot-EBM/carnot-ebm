@@ -332,3 +332,34 @@ residual is frame-only induction of the TARGET attrs (tn36 draws the target on t
 GAP-ARC-MAZE-MODEL-FRAME-INDUCTION). So the program-editor live solver is now gated on a single,
 well-scoped perception residual (read the target's attributes from frames), not on the planning
 problem — which the offline transition model has solved.
+
+## NEXT LINK DONE: the target attributes ARE frame-readable — the chain closes (2026-06-17)
+
+The "target draws on the floor" finding was incomplete. Looking at the actual pixels (not the box
+centre, which IS floor): the **target is rendered as a HOLLOW OUTLINE "ghost" sprite** — the object is
+the SOLID version of the same sprite. All five attributes are frame-readable
+(`scripts/arc3_frame_induction.py:induce_object_target_attrs`, zero internal state):
+
+- **position** — the sprite box (object: filled-bbox top-left; target: outline centroid with a
+  notch-bias correction `−nub_vector·scale`, since the directional notch pulls the centroid toward it);
+- **scale** — the box size / 4 (a 4×4 sprite is scale 1, 8×8 is scale 2);
+- **property** — the sprite COLOUR (`knfgrcbayu`/`color_remap` sets the object colour = its property
+  value, so colour *is* the property: object 11, target 15 on L5);
+- **rotation** — the 2-cell directional NOTCH edge, calibrated vs internal truth as **bottom=0,
+  left=90, top=180, right=270** (clockwise — the notch points the way the sprite faces).
+
+**Validated EXACT, and end-to-end.** Frame-induced `(x, y, scale, rotation, property)` == internal-state
+truth for the object AND target on all of tn36 L1-L5. Decisively, feeding the frame-induced object +
+target into the offline transition model's `plan_program` and running the plan in the REAL ENV **wins
+5/5** (L1-L5) — including L4 (scale↔collision) and L5 (rotation+scale+property). Zero internal state on
+the perception+planning path (geometry/walls, separately frame-inducible per `induce_maze_model`).
+Unit-tested (`tests/python/test_arc_target_induction.py`, 3 tests);
+results/experiment_frame_induced_target_attrs_validation.json (adversarial_verify clean).
+
+**The chain closes for the program-editor transform class.** DETECT (frame-only mechanic class) →
+ROUTE (strategy router) → PERCEIVE (object + target attributes, frame-only) → PLAN (offline transition
+model, model-guided) → env-confirmed SOLVE. That is a complete, frame-only, internal-state-free live
+solve of the program-editor transform levels — the live-generalization goal, demonstrated. The only
+residual is the MAZE sub-fields for L6/L7-style routing (checkpoints draw on the floor; at-rest hazards
+are invisible — the maze-routing portion of GAP-ARC-MAZE-MODEL-FRAME-INDUCTION); object, walls, target,
+and all object/target attributes now induce from frames.
