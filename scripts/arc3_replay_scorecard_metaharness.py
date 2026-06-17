@@ -37,6 +37,12 @@ GAME_ARTIFACTS = {
     "cn04": "results/arc_explore_trajectory_cn04.json",                          # L1
     "m0r0": "results/arc_explore_trajectory_m0r0.json",                          # L1
     "sk48": "results/arc_explore_trajectory_sk48.json",                          # L1
+    # PROGRAM-EDITOR class solved FRAME-ONLY (the frame approach: detect->route->perceive->plan->
+    # solve; full frame-only maze solve L6/L7, 2026-06-17). tn36 is the deepest single-game solve.
+    "tn36": "results/arc_explore_trajectory_tn36.json",                          # L7 (frame approach)
+    # E3 explore-verify-plan world-model solves (executed_steps under plan_executed_detail)
+    "ar25": "results/experiment_4339_e3_explore_verify_plan_ar25.json",          # L1
+    "ka59": "results/experiment_4350_e3_explore_verify_plan_ka59.json",          # L1
 }
 
 # from-scratch OFFLINE re-solves (these replay deterministically on the offline
@@ -48,7 +54,8 @@ RESOLVED_ARTIFACTS = {
 
 def load_actions(path: str) -> list[dict]:
     d = json.load(open(REPO / path))
-    for keys in (("solution",), ("trajectory",), ("solve_trace", "actions"), ("solver_trace", "actions")):
+    for keys in (("solution",), ("trajectory",), ("solve_trace", "actions"), ("solver_trace", "actions"),
+                 ("plan_executed_detail", "plan_result", "executed_steps")):
         cur = d
         for k in keys:
             cur = cur.get(k) if isinstance(cur, dict) else None
