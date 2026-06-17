@@ -306,13 +306,19 @@ def _resolve_gguf(repo_substr: str) -> Optional[str]:
     return None
 
 
-# The CUDA-built llama.cpp SERVER (the venv's llama-cpp-python is CPU-ONLY:
-# llama_supports_gpu_offload()==False; and llama-cli/llama-completion either hang on the
-# chat-UI or crash on gemma's chat template). SOTA open-weight models MUST run on GPU —
-# CPU is excruciatingly slow AND pegs ~20 cores, fighting the conductor (operator directive
-# 2026-06-17). The server offloads all layers to the 2x3090s, keeps the model LOADED across
-# calls (fast multi-round refactor), and /completion does RAW completion (no chat template).
-LLAMA_SERVER = Path.home() / ".cache" / "llama.cpp-master" / "build" / "bin" / "llama-server"
+# llama.cpp SERVER, GPU-enforced. PREFER the HIP build (ROCm iGPU gfx1150 / Radeon 890M,
+# ~108GB UNIFIED memory) — it does NOT contend with the conductor's CUDA experiments on the
+# 2x3090s (operator directive 2026-06-17: iGPU is the outer-loop target, never CPU). Falls
+# back to the CUDA build only if the iGPU build is absent. The venv llama-cpp-python is
+# CPU-only; llama-cli/llama-completion hang/crash on gemma's chat template — the server's
+# /completion does RAW completion (no chat template) and keeps the model loaded across calls.
+def _resolve_llama_server() -> Path:
+    base = Path.home() / ".cache" / "llama.cpp-master"
+    hip = base / "build-hip" / "bin" / "llama-server"      # ROCm iGPU — no conductor contention
+    return hip if hip.exists() else base / "build" / "bin" / "llama-server"  # CUDA 3090 fallback
+
+
+LLAMA_SERVER = _resolve_llama_server()
 
 
 @dataclass
@@ -363,16 +369,19 @@ class LocalGGUFProposer:
             time.sleep(2)
         return False
 
-    def _gen_to_file(self, game: str, prompt: str) -> tuple[bool, str]:
+    def generate(self, prompt: str, required: tuple = ("engine", "is_level_complete")) -> tuple[bool, str]:
+        """Generic GPU-server completion: returns (True, code) where `code` contains every
+        `def <name>` in `required` and PARSES, or (False, error). Retries on the iGPU (fast).
+        This is the gap-filler entry point: the LLM writes a FOCUSED component (a
+        goal_distance heuristic, a state_key, a verifier invariant) — not a full solver."""
         import ast
         import json as _json
         import urllib.request
-        (E3_DIR / game).mkdir(parents=True, exist_ok=True)
         if not self._ensure_server():
             return False, (f"GPU llama-server failed for {self.repo_substr}; SOTA models "
                            "must run on GPU (no CPU fallback)")
         last = ""
-        for attempt in range(3):              # retry on no-engine / unparseable code (GPU = fast)
+        for attempt in range(3):
             body = _json.dumps({"prompt": prompt, "n_predict": self.max_tokens,
                                 "temperature": 0.2 + 0.1 * attempt, "cache_prompt": True}).encode()
             try:
@@ -383,15 +392,22 @@ class LocalGGUFProposer:
             except Exception as e:
                 return False, f"local gguf (GPU server) failed: {e!r}"[:200]
             code = _extract_python(text)
-            if not code or "def engine" not in code or "def is_level_complete" not in code:
-                last = "missing engine() or is_level_complete() in output"; continue
+            if not code or any(f"def {fn}" not in code for fn in required):
+                last = f"missing {required} in output"; continue
             try:
-                ast.parse(code)               # never write/use code that doesn't parse
+                ast.parse(code)               # never use code that doesn't parse
             except SyntaxError as se:
                 last = f"syntax error line {se.lineno}: {se.msg}"; continue
+            return True, code
+        return False, f"local model code unusable after 3 tries ({last})"
+
+    def _gen_to_file(self, game: str, prompt: str) -> tuple[bool, str]:
+        (E3_DIR / game).mkdir(parents=True, exist_ok=True)
+        ok, code = self.generate(prompt, ("engine", "is_level_complete"))
+        if ok:
             (E3_DIR / game / "world_model.py").write_text(code)
             return True, "local gguf (GPU server) wrote world_model.py"
-        return False, f"local model code unusable after 3 tries ({last})"
+        return False, code
 
     def stop(self) -> None:
         if self._proc is not None:
