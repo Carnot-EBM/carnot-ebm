@@ -74,15 +74,31 @@ against the offline layout** (no replay of the non-reproducible live recording).
 - **Aggregate offline scorecard: 3 → 6 levels** (r11l L1, ls20 L1, wa30 L1, **lp85
   L3**). Meta-harness now prefers re-solves over banked live recordings
   (`RESOLVED_ARTIFACTS`).
-- **sc25: IN PROGRESS** (`scripts/arc3_sc25_offline_solver.py`, WIP). Mechanics
-  partially reverse-engineered: 3 spell sprites (caxiiu / sieesc_chwjgc / ui),
-  only `sieesc_chwjgc` castable at base (pattern dict `zzpoabuniyn` =
-  tevyeq/sieesc_chwjgc/fibcey; cast = select `sptivk-{spell}` + click its 3×3
-  pattern `zzpoabuniyn[spell]` where `xhhaqjfncnp` is unset; moves = ACTION1/2/3).
-  A spell-cast+move BFS does NOT reach L1 yet — sc25 is a harder constraint-
-  satisfaction puzzle (hidden phase state). NEXT: read the sc25.py win condition
-  + how moves reposition sprites + how new spells/sprites become available;
-  likely needs ACTION4/5/7 (cycle/undo) and sprite-move modeling.
+- **sc25: IN PROGRESS, harder — multi-session** (`scripts/arc3_sc25_offline_solver.py`,
+  WIP). Fully reverse-engineered from `environment_files/sc25/.../sc25.py` (class
+  `Sc25`, obfuscated method names):
+  - **Win pipeline:** select a spell sprite (`sptivk-{spell}`) → click the 3×3
+    cast grid to build pattern `xhhaqjfncnp` → when it exactly matches a spell's
+    pattern (`ettrdfsixg`/`jsdgfdkecx`, spells tevyeq/sieesc_chwjgc/fibcey) the
+    spell fires a multi-frame **fireball animation** (`agzbtzaakna`/`njlgokmbvk`)
+    that travels + removes obstacle sprites ("tagsmh"); then a **move**
+    (`deymuvatgy(dx,dy)`, 2 frames) of the active sprite aligns goal sprites
+    ("clcbko") with cast-grid sprites at **(+1,+1)** (`ianfrutkqg`/`mtfwxhxooqg`) →
+    `abvgsmnbrj()` calls `next_level()`. A **step budget** (`gmznianfeg`,
+    `rrinmfkkstu > eyxbonasvgm` ⇒ `lose()`) bounds it.
+  - **Two blockers** (why a naive BFS fails): (1) sc25's existing primitives use
+    **hardcoded `SC25_GRID_COORDS` (live-env display coords)** — verified a cast
+    registers **0 cells offline** (`xhhaqjfncnp` stays empty), so the cast must be
+    rewritten to **discover the 3×3 grid cell coords from the offline env** (the
+    `clzbxlm-sptivk-slsrhr` sprites at grid x∈[24,34], y∈[49,59] define the grid,
+    `khvdzgjfdz`); (2) actions trigger **multi-frame animations** that must be let
+    to **resolve** (keep stepping until the `*['acyylh']` phase flag clears)
+    before the next action / win check.
+  - **The path (continuable):** rewrite the cast with env-discovered grid coords +
+    an animation-resolution step loop + spell/move search (cast the right spell to
+    clear obstacles, then move to align at +1,+1). This is a real reverse-
+    engineering + reimplementation effort (sc25's primitives, unlike lp85's
+    `discover_click_buttons`, are live-coupled) — not a quick finish.
 
 **Acceptance gate for the priority:** sc25 re-solves to L5 offline → aggregate
 scorecard = 11 levels, all from-scratch offline-reproducible, zero quota → then a
