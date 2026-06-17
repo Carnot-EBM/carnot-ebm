@@ -39,12 +39,14 @@ def test_detect_precedence_injected_then_registry_then_default():
     )
 
 
-def test_program_editor_routes_to_frame_only_model_and_skips_heuristic():
+def test_program_editor_routes_to_model_guided_planner_and_skips_heuristic():
     r = router.route_strategy("program_editor")
     assert r["name"] == "program_editor" and r["wired"] is True
     # the goal-distance heuristic is a category error here -> must be short-circuited
     assert r["uses_goal_distance_heuristic"] is False
-    assert "frame_only_winner_search" in r["solver"]
+    # solver now routes to the offline transition model's guided planner; blind search is the fallback
+    assert "arc_program_editor_model.plan_program" in r["solver"]
+    assert "frame_only_winner_search" in r["search_engine"]
 
 
 def test_graph_explore_is_default_and_uses_heuristic():

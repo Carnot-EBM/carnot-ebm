@@ -1408,7 +1408,12 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
   GAP-ARC-PROGRAM-EDITOR-NO-GRADED-FEEDBACK) are the remaining work.
 
 ### GAP-ARC-PROGRAM-EDITOR-NO-GRADED-FEEDBACK: program-editor games are blind-search-only frame-only
-- status: open
+- status: filled at the MODEL level (python/carnot/agentic/arc_program_editor_model.py, 2026-06-17) —
+  the offline transition model supplies the distance-to-target gradient the frames withhold: 100%
+  win-bit agreement vs the tn36 env (105/105), 5/5 model-guided env-confirmed solves L1-L5, ~47M-blind
+  -> ~5-32 directed expansions (results/experiment_program_editor_transition_model_validation.json).
+  RESIDUAL: frame-only induction of the model INPUTS (object + TARGET attrs) — target attrs are the
+  frame residual (GAP-ARC-MAZE-MODEL-FRAME-INDUCTION); known games read them from internal state.
 - evidence: scripts/arc3_frame_induction.py + three frame-only probes (2026-06-17, design note
   "general winner-discovery is BLIND search"). On tn36: (1) the run is ATOMIC — one env.step runs
   the whole move-program and resets the object, so per-move motion is frame-invisible (object region
@@ -1455,3 +1460,11 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - priority: medium (object+walls induce today; the residual is the same atomic-run/rendering limit as
   the program-editor gap — both point at the offline transition verifier as the durable unlock)
 <!-- arc-live-generalization-gaps-2026-06-17:end -->
+
+### 2026-06-17 Exp4350 ka59 E3 residual gap
+- Spec: REQ-PHASE4-082 / SCENARIO-PHASE4-082
+- Best verifier accuracy: 0.5687
+- Residual mismatch class: `hidden_step_counter_hud_gap`
+- Reproducibility checksum: `8e6e766c670f6890f2a8e3c704e6c5847bb40381e11a51285f283e83849572ee`
+- Gap: bounded explore-verify-plan run did not satisfy the offline reproduced L1 gate.
+
