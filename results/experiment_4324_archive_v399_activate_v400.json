@@ -1,0 +1,229 @@
+{
+  "activated_milestone": "2026.06.400",
+  "active_milestone_confirmed": "2026.06.400",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.399",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4323_capstone_v399.json",
+      "experiment_id": "4323",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "fba5faf16d328086a26360834f1d2eef4e68221f15ca8953f7d5bcda85765f94"
+    },
+    {
+      "deliverable": "results/experiment_4315_diffusiongemma_reward_guided_stitching.json",
+      "experiment_id": "4315",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "d8b41e9ab649d4b0e6dcbb2612402988de81a880022b1307178c87d786e65f53"
+    },
+    {
+      "deliverable": "results/experiment_4314_cross_domain_selector_ir3de_cascal.json",
+      "experiment_id": "4314",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "25e37373090466e8ce14d3c5011b6ba4f9bcc0f25a5c700679fd1d3842dc5abb"
+    },
+    {
+      "deliverable": "ops/arc_solve_registry.yaml",
+      "experiment_id": "arc_solve_registry",
+      "kind": "document",
+      "required": true,
+      "sha256": "f0816bb8233a1452d154459de9d8730d803a4ce5ed07c413e06ac2acc7eeeff1"
+    },
+    {
+      "deliverable": "research-roadmap.yaml",
+      "experiment_id": "v400_active_roadmap",
+      "kind": "document",
+      "required": true,
+      "sha256": "d5abd63941c17fdbfd7962002697679eb700f85e06436adc81c3825d4e305ed1"
+    },
+    {
+      "deliverable": "openspec/change-proposals/research-roadmap-v400.md",
+      "experiment_id": "v400_design_doc",
+      "kind": "document",
+      "required": true,
+      "sha256": "1f5c1495352d946afe0cc235077d21a0a1f22848390e40cf6a4899304321dc1e"
+    }
+  ],
+  "duration_s": 13.709613,
+  "exclusion_manifest_parses": true,
+  "experiment_id": 4324,
+  "field_principles": {
+    "activated_milestone": "Confirms .400 is live for the scale plus ARC deep-tail frame.",
+    "active_milestone_confirmed": "Records the active roadmap milestone actually observed.",
+    "archived_milestone": "Provenance: the milestone being closed, 2026.06.399.",
+    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
+    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
+    "honest_verdict": "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.",
+    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
+    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
+    "v399_close_state": "Honest record (in-generation moat CLOSED oracle-distinct, cross-domain RETIRED domain-bound, efficiency always-energy-dominates, ARC 13 reproducible + first live submission, cross-game transfer null, off-ARC execution marginal-win) so the .400 agents frame the milestone as scale-the-headline + E3-deep-tail + adapter-free-sweep + learned-frame-encoder -- NOT a re-open of the closed/retired axes."
+  },
+  "honest_verdict": "success: archived_v399_v400_active_in_generation_moat_closed_cross_domain_retired_energy_dominates_arc13_live_submission_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "active_milestone": {
+      "actual": "2026.06.400",
+      "expected": "2026.06.400",
+      "matches": true,
+      "path": "research-roadmap.yaml"
+    },
+    "exclusion_manifest_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/exclusion_manifest.yaml"
+    },
+    "research_complete_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "smart_subset_pretest": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4324_archive_v399_activate_v400.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "green": true,
+      "stderr_tail": "",
+      "stdout_tail": "........................................................................ [ 80%]\n.................                                                        [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n89 passed, 1 warning in 5.51s\n"
+    },
+    "source_artifacts": {
+      "4314": {
+        "exists": true,
+        "path": "results/experiment_4314_cross_domain_selector_ir3de_cascal.json",
+        "required": true,
+        "sha256": "25e37373090466e8ce14d3c5011b6ba4f9bcc0f25a5c700679fd1d3842dc5abb"
+      },
+      "4315": {
+        "exists": true,
+        "path": "results/experiment_4315_diffusiongemma_reward_guided_stitching.json",
+        "required": true,
+        "sha256": "d8b41e9ab649d4b0e6dcbb2612402988de81a880022b1307178c87d786e65f53"
+      },
+      "4323": {
+        "exists": true,
+        "path": "results/experiment_4323_capstone_v399.json",
+        "required": true,
+        "sha256": "fba5faf16d328086a26360834f1d2eef4e68221f15ca8953f7d5bcda85765f94"
+      },
+      "arc_solve_registry": {
+        "exists": true,
+        "path": "ops/arc_solve_registry.yaml",
+        "required": true,
+        "sha256": "f0816bb8233a1452d154459de9d8730d803a4ce5ed07c413e06ac2acc7eeeff1"
+      },
+      "v400_active_roadmap": {
+        "exists": true,
+        "path": "research-roadmap.yaml",
+        "required": true,
+        "sha256": "d5abd63941c17fdbfd7962002697679eb700f85e06436adc81c3825d4e305ed1"
+      },
+      "v400_design_doc": {
+        "exists": true,
+        "path": "openspec/change-proposals/research-roadmap-v400.md",
+        "required": true,
+        "sha256": "1f5c1495352d946afe0cc235077d21a0a1f22848390e40cf6a4899304321dc1e"
+      }
+    }
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4324,
+  "reproducibility_checksum": "030950fe2404115f2d119a00f3afa0ec5e35fc4378dec101a3db66e632c69a3f",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "updated",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v399_to_v400_4324.v1",
+  "spec_refs": [
+    "REQ-REPORT-4324",
+    "SCENARIO-REPORT-4324"
+  ],
+  "task_id": "exp4324-archive-v399-activate-v400",
+  "v399_close_state": {
+    "arc_axis_state": "REPRODUCIBLE_13_FIRST_LIVE_SUBMISSION",
+    "arc_capstone_total_levels_reported": 23,
+    "arc_first_live_submission": true,
+    "arc_future_online_gate": "beat_13_levels",
+    "arc_live_submission_games": 11,
+    "arc_live_submission_games_env_matched": "11/11",
+    "arc_live_submission_levels": 13,
+    "arc_live_submission_scorecard_id": "0f6273ce-cf0d-426c-83e5-d745e4d45ea2",
+    "arc_reproducible_total_games": 11,
+    "arc_reproducible_total_levels": 13,
+    "capstone_honest_verdict": "complete: v399_cross_domain_open_in_generation_moat_efficiency_open_arc_levels_23_self_learning_open_off_arc_execution_grounded_win",
+    "conductor_stands_down_on_trm_training": true,
+    "cross_domain_axis_state": "RETIRED_DOMAIN_BOUND",
+    "cross_domain_ci95": [
+      -0.115,
+      0.538
+    ],
+    "cross_domain_ci95_includes_zero": true,
+    "cross_domain_delta": 0.231,
+    "cross_domain_do_not_repropose": true,
+    "cross_domain_gap_id": "GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305",
+    "cross_domain_label_ablation_robust": true,
+    "cross_domain_moat_holds": false,
+    "cross_domain_retire_if_same_verdict": true,
+    "cross_domain_verifier_is_oracle": false,
+    "cross_game_state_reduction": 1.0,
+    "cross_game_state_reduction_ci95": [
+      1.0,
+      1.0
+    ],
+    "cross_game_transfer_helps": false,
+    "efficiency_accuracy_always_energy": 0.6,
+    "efficiency_accuracy_cascade": 0.55,
+    "efficiency_axis_state": "ALWAYS_ENERGY_DOMINATES",
+    "efficiency_cascade_dominates": false,
+    "efficiency_cost_ratio_cascade": 0.3019632358,
+    "efficiency_verifier_is_oracle": false,
+    "headline_outcome": "cross_domain_open__in_generation_moat__efficiency_open__arc_levels_23__self_learning_open__off_arc_execution_grounded_win__paper_ready",
+    "in_generation_axis_state": "CLOSED_ORACLE_DISTINCT",
+    "in_generation_ci95": [
+      0.075,
+      0.375
+    ],
+    "in_generation_ci95_excludes_zero": true,
+    "in_generation_controls_differentiated": true,
+    "in_generation_delta_vs_best_control": 0.225,
+    "in_generation_delta_vs_self_reward_smc": 0.35,
+    "in_generation_moat_holds": true,
+    "in_generation_scorer_leak_recheck_passed": true,
+    "in_generation_single_corpus_needs_scale": true,
+    "in_generation_verifier_is_oracle": false,
+    "learned_frame_encoder_next": true,
+    "not_reopen_closed_or_retired_axes": true,
+    "off_arc_accumulated_n": 200,
+    "off_arc_axis_state": "MARGINAL_EXECUTION_GROUNDED_WIN",
+    "off_arc_ci95_excludes_zero": true,
+    "off_arc_delta": 0.02,
+    "off_arc_delta_ci95": [
+      0.005,
+      0.04
+    ],
+    "off_arc_demofit_beats_vote": true,
+    "off_arc_verifier_is_oracle": true,
+    "outer_loop_trm_training_done": true,
+    "outer_loop_trm_val": 0.8227,
+    "paper_ready": true,
+    "self_learning_axis_state": "CROSS_GAME_TRANSFER_NULL",
+    "self_learning_verifier_is_oracle": false,
+    "summary": "in_generation_moat_closed_cross_domain_retired_efficiency_energy_dominates_arc_live13_self_learning_null_off_arc_marginal",
+    "v400_frame": "scale-the-in-generation-moat + E3-deep-tail-ARC + adapter-free-shallow-sweep + learned-frame-encoder",
+    "verifier_is_oracle_honored": true,
+    "verifier_thesis_state": "in_generation_moat_holds"
+  }
+}
