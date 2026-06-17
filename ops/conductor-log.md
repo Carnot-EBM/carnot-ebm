@@ -8637,3 +8637,4 @@ c |
 | 2026-06-17 05:59 UTC | PHASE C1 (DEPLOY the hardened efficiency verifier  | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: rtifact)
 +     |
 | 2026-06-17 06:32 UTC | PHASE C1 (DEPLOY the hardened efficiency verifier  | OK | cache hit: 84 passed, 1 warning in 7.12s |
+| 2026-06-17 06:54 UTC | PHASE D1 (ARC north star; UNSTALL the exp4307 harn | OK | 90 passed, 1 warning in 5.55s |
