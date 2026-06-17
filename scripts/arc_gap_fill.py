@@ -24,7 +24,7 @@ from carnot.agentic import arc_solver_kit as kit
 from carnot.agentic import arc_executable_world_model as e3
 from carnot.agentic.arc_agi3_world_model import grid_of
 from carnot.agentic.arc_agi3_live_adapter import _levels_completed, _game_action
-from carnot.agentic.arc_graph_explore import graph_explore_solve_v3, trajectory_labels
+from carnot.agentic.arc_graph_explore import graph_explore_solve_v2, trajectory_labels
 
 
 def _mh():
@@ -143,12 +143,16 @@ def main() -> int:
         except Exception:
             return 1e9
 
-    # A/B: value-guided search WITH the LLM heuristic vs novelty-only
+    # A/B: the COMPLETE explorer (v2) WITH the LLM heuristic (A*-style, g+h) vs pure BFS.
+    # v2 (unlike greedy v3) keeps completeness; the heuristic's value is EFFICIENCY (fewer
+    # actions/expansions to the same win) — the lp85 pattern. A heuristic that solves with
+    # FEWER actions than BFS is the captured, reproduction-gated win.
     results = {}
-    for label, vf in [("llm_heuristic", verifier), ("novelty_only", None)]:
+    for label, hf in [("llm_heuristic", verifier), ("bfs_baseline", None)]:
         arc = kit.offline_arcade(); env = arc.make(game, scorecard_id=arc.open_scorecard())
-        t1 = time.time()
-        traj, lvl = graph_explore_solve_v3(env, 0, max_expansions=args.budget, max_depth=60, verifier=vf)
+        t1 = time.time(); st: dict = {}
+        traj, lvl = graph_explore_solve_v2(env, 0, max_expansions=args.budget, max_depth=60,
+                                           heuristic=hf, stats=st)
         solved = bool(traj)
         gate = False
         if solved:
@@ -157,13 +161,22 @@ def main() -> int:
             g = kit.reproduce(game, trajectory_labels(traj), apply, claimed_level=lvl)
             gate = bool(g["reproduced"])
         results[label] = {"solved": solved, "reproduced": gate,
-                          "actions": len(traj) if traj else 0, "secs": round(time.time() - t1, 0)}
+                          "actions": len(traj) if traj else 0, "expansions": st.get("expansions"),
+                          "secs": round(time.time() - t1, 0)}
         print(f"  [{label:13}] solved={solved} reproduced={gate} actions={len(traj) if traj else 0} "
-              f"[{time.time()-t1:.0f}s]", flush=True)
+              f"expansions={st.get('expansions')} [{time.time()-t1:.0f}s]", flush=True)
 
-    helped = (results["llm_heuristic"]["reproduced"] and not results["novelty_only"]["reproduced"]) or \
-             (results["llm_heuristic"]["reproduced"] and results["novelty_only"]["reproduced"] and
-              results["llm_heuristic"]["actions"] < results["novelty_only"]["actions"])
+    # the heuristic HELPED if it solves where BFS doesn't, OR reaches the same win with
+    # fewer ACTIONS, OR (the usual efficiency win on shortest-path games) the same win with
+    # fewer EXPANSIONS — the lp85 efficiency pattern, now measurable.
+    a, b = results["llm_heuristic"], results["bfs_baseline"]
+    def _fewer_expansions() -> bool:
+        return (a["reproduced"] and b["reproduced"] and a["actions"] == b["actions"]
+                and isinstance(a["expansions"], int) and isinstance(b["expansions"], int)
+                and a["expansions"] < b["expansions"])
+    helped = (a["reproduced"] and not b["reproduced"]) or \
+             (a["reproduced"] and b["reproduced"] and a["actions"] < b["actions"]) or \
+             _fewer_expansions()
     verdict = ("success_gap_fill_heuristic_helped_" + game if helped
                else f"complete_gap_fill_{game}_heuristic_no_gain")
     print(f"  HEURISTIC HELPED: {helped}", flush=True)
