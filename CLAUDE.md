@@ -2882,6 +2882,80 @@ Depth-Over-Breadth / progress-not-churn ethos (north-star §1).
 - results/arc3_win_condition_survey.json — the 6 non-spatial first-solve targets
 - `ops/north-star.md` §1 — the headline-progress / no-churn ethos this specializes
 
+## ARC Solve Reproducibility + Solver-Reuse Discipline (MANDATORY)
+
+**Origin:** 2026-06-16 operator directive after the outer-loop spent a long
+session making the deeper sc25/lp85 ARC solves offline-reproducible:
+
+> "How do we prevent having to go through this again? ... we must require
+>  capturing the winning conditions for reproducibility ... otherwise the effort
+>  is effectively wasted. ... if we solved this before, shouldn't we have the
+>  scaffolding in place to apply what we learned previously for future efforts?"
+
+**What went wrong (the waste this prevents).** ARC solves were banked as
+live-recorded `solve_trace.actions` — frozen pixel-coordinate trajectories
+coupled to the LIVE env layout. They replay to **0 levels** on the offline
+`environment_files` env (the coords miss; cf. sc25's hardcoded `SC25_GRID_COORDS`).
+So the *winning condition* (the search/mechanic that derives a solution for the
+actual env) was never captured — only one brittle trajectory was. Of our 11
+claimed levels, only **6 reproduce offline**; the deeper sc25 L5 + lp85 L3 had to
+be **re-derived from scratch** months later. That re-derivation is the wasted
+effort this rule prevents.
+
+**The rule — two halves:**
+
+1. **Reproducibility is a GATE, not an afterthought.** An ARC solve does NOT count
+   toward `total_levels`, and is NOT headline/publish-eligible, until it passes an
+   **offline reproduction gate**: a from-scratch solver (or a state-grounded,
+   env-discovered replay) re-derives the claimed level against the OFFLINE env,
+   verified by `python/carnot/agentic/arc_solver_kit.py:reproduce`. A solve backed
+   only by a live-recorded coordinate trajectory is `provisional` — real but
+   uncounted until reproduced. Every solve experiment MUST emit
+   `offline_reproduced: bool` + `reproduced_levels: int`, and MUST persist its
+   solver/win-condition (not just the trajectory) to `ops/arc_solve_registry.yaml`.
+
+2. **Capture and REUSE the learning (scaffolding, not one-offs).** Per-game
+   mechanics we reverse-engineer are durable assets, not buried in experiment
+   chains. Reusable primitives go in **`arc_solver_kit.py`** (offline arcade,
+   replay-from-reset BFS, warm-up-after-reset, frame-based level, facing-aware
+   dedup, env-adaptive discovery, the reproduction gate). Per-game win-conditions
+   + action-models + gotchas + solver module + reproducibility status go in
+   **`ops/arc_solve_registry.yaml`**. A new game's solver MUST start from the kit +
+   the registry's general gotchas — never re-derive from zero. New general gotchas
+   discovered while solving a game MUST be added to both (kit docstring + registry
+   `general_gotchas`).
+
+**How to apply (planner-side).** Every ARC solve task's REQUIRED ARTIFACT FIELDS
+include `offline_reproduced: bool` (principle: "a solve not reproducible offline
+is wasted effort — only reproduced levels count") and `reproduced_levels: int`.
+The task prompt MUST direct the agent to (a) build the solve as a from-scratch
+solver over the offline sim reusing `arc_solver_kit`, (b) run the reproduction
+gate, (c) update `ops/arc_solve_registry.yaml`. ARC `total_levels` claims cite the
+registry's `reproducible_total_levels`, never the provisional count.
+
+**How to apply (agent-side).** Before solving a game, READ the registry (its
+`general_gotchas` + any prior entry for the game) and import `arc_solver_kit`.
+After solving, run `arc_solver_kit.reproduce(...)`; only on `reproduced: true`
+write the solve as counted, and append/update the game's registry entry (win
+condition, action model, gotchas, solver module). If a solve only exists as a
+live-recorded trajectory, mark it `provisional` — do NOT count it.
+
+**Why this is in CLAUDE.md.** The planner + agents read CLAUDE.md as required
+input. Putting the gate + reuse contract here makes every future ARC solve
+self-documenting and self-reproducing at design time, so the months-later
+re-derivation never recurs. This is the ARC-specific instance of the project's
+self-learning ethos: knowledge captured as reusable scaffolding, verified by a
+gate, compounding across games.
+
+**Cross-references:**
+- 2026-06-16 operator directive — origin
+- `python/carnot/agentic/arc_solver_kit.py` — reusable primitives + reproduction gate
+- `ops/arc_solve_registry.yaml` — per-game mechanics + reproducibility knowledge base
+- `scripts/arc3_replay_scorecard_metaharness.py` — the aggregate offline reproduction harness
+- `docs/research-notes/arc3-offline-reproducibility-audit-2026-06-16.md` — the audit that motivated this
+- CLAUDE.md "Adversarial Artifact Verification" + "Missing-Verifier Gap Logging" — sibling capture-don't-waste disciplines
+- CLAUDE.md "ARC-AGI-3 Incremental-Progress Scoping" — the progress rule this makes durable
+
 ## Missing-Verifier Gap Logging (MANDATORY)
 
 **Origin:** 2026-06-09 operator directive — "make note of any 'missing' Carnot ARC verifiers
