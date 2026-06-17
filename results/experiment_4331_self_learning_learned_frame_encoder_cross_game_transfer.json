@@ -1,0 +1,1044 @@
+{
+  "acceptance_gate_passed": true,
+  "adversarial_verify": {
+    "flagged_count": 0,
+    "reports": [
+      {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json",
+        "exp_id": "experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer",
+        "flag_count": 0,
+        "flags": [],
+        "honest_verdict": "complete: learned_frame_encoder_transfer_no_improvement_positive_control_passed",
+        "loaded": true,
+        "max_severity": -1,
+        "title": "self_learning_learned_frame_encoder_cross_game_transfer"
+      }
+    ],
+    "returncode": 0,
+    "status": "clean"
+  },
+  "baseline_solves_held_out": true,
+  "cross_game_state_reduction": 1.0084925690021231,
+  "cross_game_state_reduction_ci95": [
+    1.0,
+    1.0303068758652514
+  ],
+  "duration_s": 26.192716121673584,
+  "experiment": "experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer",
+  "field_principles": {
+    "baseline_solves_held_out": "BARE bool: the uniform-heuristic solver actually solves the held-out levels (the positive control) -- a no-reduction is only informative if the baseline succeeds (FALSE_NEGATIVE_RISK guard).",
+    "cross_game_state_reduction": "BARE float: held-out states_uniform / states_transferred (>1.0 = transfer helps; ~1.0 = still per-game-bound) -- compare to exp4318's generic-feature 1.0; the north-star EFFICIENCY metric.",
+    "cross_game_state_reduction_ci95": "Bootstrap CI95 (>=2000 resamples) over held-out levels -- a lower bound > 1.0 makes 'transfer helps' decision-grade.",
+    "honest_verdict": "Terminal-prefixed. A learned-encoder transfer win (reduces held-out search states where generic features failed -- the gap closes), a powered null (the encoder is still insufficient -> sharper gap, retire the small-encoder ask), and an honest blocked_insufficient_solve_traces are ALL COMPLETE and decision-grade.",
+    "learned_encoder_transfer_helps": "BARE bool: the capstone reads this; true iff the LEARNED-encoder value-head trained on OTHER games reduces held-out-game search states (reduction > 1.0 AND CI95 lower bound > 1.0) -- cross-game self-learning via a learned game-invariant representation.",
+    "model_specs": "The learned-encoder architecture + the value-head + the train/held-out game split + the OfflineSolver state-count instrumentation; required methodology.",
+    "per_held_out_game_reduction": "State-reduction reported SEPARATELY per held-out game -- guards the one-game-dominates failure mode + shows which games transfer.",
+    "random_seed": "Determinism precondition for the encoder training + the solver.",
+    "reproducibility_checksum": "Hash of the solve traces + the encoder + the leave-one-game-out split + the state counts; lets a third party re-run.",
+    "verifier_is_oracle": "BARE bool=false -- a learned encoder + value-head over solver state (oracle-distinct heuristic), NOT the executable env oracle; NO LLM weight mutation."
+  },
+  "held_out_level_rows": [
+    {
+      "baseline_solved": true,
+      "held_out_game": "cd82",
+      "level_index": 1,
+      "states_transferred": 17,
+      "states_uniform": 17,
+      "target_level": 1,
+      "transferred_path_len": 5,
+      "transferred_solved": true,
+      "uniform_path_len": 5
+    },
+    {
+      "baseline_solved": true,
+      "held_out_game": "cn04",
+      "level_index": 1,
+      "states_transferred": 37,
+      "states_uniform": 41,
+      "target_level": 1,
+      "transferred_path_len": 13,
+      "transferred_solved": true,
+      "uniform_path_len": 13
+    },
+    {
+      "baseline_solved": true,
+      "held_out_game": "lp85",
+      "level_index": 1,
+      "states_transferred": 15,
+      "states_uniform": 15,
+      "target_level": 1,
+      "transferred_path_len": 5,
+      "transferred_solved": true,
+      "uniform_path_len": 5
+    },
+    {
+      "baseline_solved": true,
+      "held_out_game": "lp85",
+      "level_index": 2,
+      "states_transferred": 24,
+      "states_uniform": 24,
+      "target_level": 2,
+      "transferred_path_len": 8,
+      "transferred_solved": true,
+      "uniform_path_len": 8
+    },
+    {
+      "baseline_solved": true,
+      "held_out_game": "lp85",
+      "level_index": 3,
+      "states_transferred": 49,
+      "states_uniform": 49,
+      "target_level": 3,
+      "transferred_path_len": 16,
+      "transferred_solved": true,
+      "uniform_path_len": 16
+    },
+    {
+      "baseline_solved": true,
+      "held_out_game": "ls20",
+      "level_index": 1,
+      "states_transferred": 41,
+      "states_uniform": 41,
+      "target_level": 1,
+      "transferred_path_len": 13,
+      "transferred_solved": true,
+      "uniform_path_len": 13
+    },
+    {
+      "baseline_solved": true,
+      "held_out_game": "m0r0",
+      "level_index": 1,
+      "states_transferred": 47,
+      "states_uniform": 47,
+      "target_level": 1,
+      "transferred_path_len": 15,
+      "transferred_solved": true,
+      "uniform_path_len": 15
+    },
+    {
+      "baseline_solved": true,
+      "held_out_game": "r11l",
+      "level_index": 1,
+      "states_transferred": 11,
+      "states_uniform": 11,
+      "target_level": 1,
+      "transferred_path_len": 3,
+      "transferred_solved": true,
+      "uniform_path_len": 3
+    },
+    {
+      "baseline_solved": true,
+      "held_out_game": "sk48",
+      "level_index": 1,
+      "states_transferred": 43,
+      "states_uniform": 43,
+      "target_level": 1,
+      "transferred_path_len": 14,
+      "transferred_solved": true,
+      "uniform_path_len": 14
+    },
+    {
+      "baseline_solved": true,
+      "held_out_game": "sp80",
+      "level_index": 1,
+      "states_transferred": 9,
+      "states_uniform": 9,
+      "target_level": 1,
+      "transferred_path_len": 4,
+      "transferred_solved": true,
+      "uniform_path_len": 4
+    },
+    {
+      "baseline_solved": true,
+      "held_out_game": "su15",
+      "level_index": 1,
+      "states_transferred": 22,
+      "states_uniform": 22,
+      "target_level": 1,
+      "transferred_path_len": 7,
+      "transferred_solved": true,
+      "uniform_path_len": 7
+    },
+    {
+      "baseline_solved": true,
+      "held_out_game": "tu93",
+      "level_index": 1,
+      "states_transferred": 55,
+      "states_uniform": 55,
+      "target_level": 1,
+      "transferred_path_len": 18,
+      "transferred_solved": true,
+      "uniform_path_len": 18
+    },
+    {
+      "baseline_solved": true,
+      "held_out_game": "wa30",
+      "level_index": 1,
+      "states_transferred": 101,
+      "states_uniform": 101,
+      "target_level": 1,
+      "transferred_path_len": 33,
+      "transferred_solved": true,
+      "uniform_path_len": 33
+    }
+  ],
+  "honest_verdict": "complete: learned_frame_encoder_transfer_no_improvement_positive_control_passed",
+  "inference_substrate": "cpu_offline_arc_agi3_trace_frontier_learned_frame_encoder_value_head",
+  "learned_encoder_transfer_helps": false,
+  "methodology_note": "CPU-only learned frame encoder plus linear value-head over solved-game traces. The held-out game's frames are excluded from that split's training rows; its trace is used only as a positive-control action frontier for OfflineSolver state counts.",
+  "missing_verifier_gaps": [
+    {
+      "candidate_design": "larger learned frame encoder, more reproduced solved traces, or adapter-conditioned value head with a hardware-portable path",
+      "failure_mode": "small learned frame encoder over the current solved set did not produce a decision-grade held-out OfflineSolver state reduction",
+      "gap_id": "GAP-4331",
+      "missing_discriminator": "game-invariant ARC value representation",
+      "priority": "medium"
+    }
+  ],
+  "model_specs": {
+    "bootstrap_resamples": 2000,
+    "encoder": {
+      "architecture": "tiny_cpu_cnn_frame_encoder",
+      "embedding_consumed_by": "arc_value_learner.LearnedVerifier linear value-head",
+      "input": "16 one-hot raw-frame color channels over 16x16 crop/pad",
+      "llm_weight_mutation": false,
+      "module": "python/carnot/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.py"
+    },
+    "held_out_action_frontier": "trace-derived reproducible action frontier used only to make the uniform positive-control solve finite; held-out states are excluded from encoder and value-head training",
+    "models_by_held_out_game": {
+      "cd82": {
+        "encoder": {
+          "architecture": "tiny_cpu_cnn_frame_encoder",
+          "embedding_dim": 8,
+          "epochs": 24,
+          "input": "16 one-hot color channels over 16x16 raw frame crop/pad",
+          "layers": [
+            "PCA-learned 3x3 one-hot convolution filters + ReLU",
+            "mean/std/max spatial pooling",
+            "PCA projection to 8-dim tanh embedding",
+            "ridge auxiliary steps-to-go head for representation fitting"
+          ],
+          "learning_rate": 0.01,
+          "llm_weight_mutation": false,
+          "loss_history": [
+            32.55727678
+          ],
+          "n_filters": 4,
+          "n_samples": 149,
+          "training_compute": "CPU numpy PCA/ridge"
+        },
+        "value_head": {
+          "n_samples": 149,
+          "weights": [
+            -1.080785643435,
+            -1.276804466922,
+            5.119928891492,
+            -2.366866844022,
+            9.379407418363,
+            9.079722038924,
+            9.131045729609,
+            38.188948663676,
+            8.947248806135
+          ]
+        }
+      },
+      "cn04": {
+        "encoder": {
+          "architecture": "tiny_cpu_cnn_frame_encoder",
+          "embedding_dim": 8,
+          "epochs": 24,
+          "input": "16 one-hot color channels over 16x16 raw frame crop/pad",
+          "layers": [
+            "PCA-learned 3x3 one-hot convolution filters + ReLU",
+            "mean/std/max spatial pooling",
+            "PCA projection to 8-dim tanh embedding",
+            "ridge auxiliary steps-to-go head for representation fitting"
+          ],
+          "learning_rate": 0.01,
+          "llm_weight_mutation": false,
+          "loss_history": [
+            30.89744906
+          ],
+          "n_filters": 4,
+          "n_samples": 141,
+          "training_compute": "CPU numpy PCA/ridge"
+        },
+        "value_head": {
+          "n_samples": 141,
+          "weights": [
+            1.364586179976,
+            -5.735599308671,
+            3.069476783332,
+            -4.85594574198,
+            1.797384481433,
+            -19.178821873626,
+            20.844809526694,
+            391.1270125113,
+            9.327410202206
+          ]
+        }
+      },
+      "lp85": {
+        "encoder": {
+          "architecture": "tiny_cpu_cnn_frame_encoder",
+          "embedding_dim": 8,
+          "epochs": 24,
+          "input": "16 one-hot color channels over 16x16 raw frame crop/pad",
+          "layers": [
+            "PCA-learned 3x3 one-hot convolution filters + ReLU",
+            "mean/std/max spatial pooling",
+            "PCA projection to 8-dim tanh embedding",
+            "ridge auxiliary steps-to-go head for representation fitting"
+          ],
+          "learning_rate": 0.01,
+          "llm_weight_mutation": false,
+          "loss_history": [
+            40.46883195
+          ],
+          "n_filters": 4,
+          "n_samples": 125,
+          "training_compute": "CPU numpy PCA/ridge"
+        },
+        "value_head": {
+          "n_samples": 125,
+          "weights": [
+            1.353352343708,
+            -1.425287232455,
+            5.209097936979,
+            0.644025119792,
+            -8.501842335721,
+            2.334934592888,
+            12.413385160611,
+            42.209753224311,
+            9.42367692257
+          ]
+        }
+      },
+      "ls20": {
+        "encoder": {
+          "architecture": "tiny_cpu_cnn_frame_encoder",
+          "embedding_dim": 8,
+          "epochs": 24,
+          "input": "16 one-hot color channels over 16x16 raw frame crop/pad",
+          "layers": [
+            "PCA-learned 3x3 one-hot convolution filters + ReLU",
+            "mean/std/max spatial pooling",
+            "PCA projection to 8-dim tanh embedding",
+            "ridge auxiliary steps-to-go head for representation fitting"
+          ],
+          "learning_rate": 0.01,
+          "llm_weight_mutation": false,
+          "loss_history": [
+            33.13519113
+          ],
+          "n_filters": 4,
+          "n_samples": 141,
+          "training_compute": "CPU numpy PCA/ridge"
+        },
+        "value_head": {
+          "n_samples": 141,
+          "weights": [
+            2.602600424235,
+            -5.99557044993,
+            1.284721354113,
+            -0.923417956857,
+            10.347169499697,
+            -5.240228290074,
+            5.08236108892,
+            -34.231636161952,
+            9.132399701048
+          ]
+        }
+      },
+      "m0r0": {
+        "encoder": {
+          "architecture": "tiny_cpu_cnn_frame_encoder",
+          "embedding_dim": 8,
+          "epochs": 24,
+          "input": "16 one-hot color channels over 16x16 raw frame crop/pad",
+          "layers": [
+            "PCA-learned 3x3 one-hot convolution filters + ReLU",
+            "mean/std/max spatial pooling",
+            "PCA projection to 8-dim tanh embedding",
+            "ridge auxiliary steps-to-go head for representation fitting"
+          ],
+          "learning_rate": 0.01,
+          "llm_weight_mutation": false,
+          "loss_history": [
+            37.19365316
+          ],
+          "n_filters": 4,
+          "n_samples": 139,
+          "training_compute": "CPU numpy PCA/ridge"
+        },
+        "value_head": {
+          "n_samples": 139,
+          "weights": [
+            0.829601074152,
+            -3.671562448326,
+            -2.736350796925,
+            3.385320599914,
+            -0.414372703724,
+            -15.010717254861,
+            -3.463889090231,
+            5.478528423548,
+            8.431780978307
+          ]
+        }
+      },
+      "r11l": {
+        "encoder": {
+          "architecture": "tiny_cpu_cnn_frame_encoder",
+          "embedding_dim": 8,
+          "epochs": 24,
+          "input": "16 one-hot color channels over 16x16 raw frame crop/pad",
+          "layers": [
+            "PCA-learned 3x3 one-hot convolution filters + ReLU",
+            "mean/std/max spatial pooling",
+            "PCA projection to 8-dim tanh embedding",
+            "ridge auxiliary steps-to-go head for representation fitting"
+          ],
+          "learning_rate": 0.01,
+          "llm_weight_mutation": false,
+          "loss_history": [
+            32.16706064
+          ],
+          "n_filters": 4,
+          "n_samples": 151,
+          "training_compute": "CPU numpy PCA/ridge"
+        },
+        "value_head": {
+          "n_samples": 151,
+          "weights": [
+            3.685593495178,
+            -3.123952368659,
+            3.393523270751,
+            1.326079793882,
+            -1.335276334643,
+            -2.768134422629,
+            15.869559115209,
+            -8.282265537486,
+            9.290401734528
+          ]
+        }
+      },
+      "sk48": {
+        "encoder": {
+          "architecture": "tiny_cpu_cnn_frame_encoder",
+          "embedding_dim": 8,
+          "epochs": 24,
+          "input": "16 one-hot color channels over 16x16 raw frame crop/pad",
+          "layers": [
+            "PCA-learned 3x3 one-hot convolution filters + ReLU",
+            "mean/std/max spatial pooling",
+            "PCA projection to 8-dim tanh embedding",
+            "ridge auxiliary steps-to-go head for representation fitting"
+          ],
+          "learning_rate": 0.01,
+          "llm_weight_mutation": false,
+          "loss_history": [
+            33.33671945
+          ],
+          "n_filters": 4,
+          "n_samples": 140,
+          "training_compute": "CPU numpy PCA/ridge"
+        },
+        "value_head": {
+          "n_samples": 140,
+          "weights": [
+            5.968572462797,
+            -0.524224778783,
+            1.912346596906,
+            3.251040616667,
+            -0.538963265881,
+            -16.406949333869,
+            -1.930554724225,
+            15.794491689893,
+            10.645294162724
+          ]
+        }
+      },
+      "sp80": {
+        "encoder": {
+          "architecture": "tiny_cpu_cnn_frame_encoder",
+          "embedding_dim": 8,
+          "epochs": 24,
+          "input": "16 one-hot color channels over 16x16 raw frame crop/pad",
+          "layers": [
+            "PCA-learned 3x3 one-hot convolution filters + ReLU",
+            "mean/std/max spatial pooling",
+            "PCA projection to 8-dim tanh embedding",
+            "ridge auxiliary steps-to-go head for representation fitting"
+          ],
+          "learning_rate": 0.01,
+          "llm_weight_mutation": false,
+          "loss_history": [
+            31.80366641
+          ],
+          "n_filters": 4,
+          "n_samples": 150,
+          "training_compute": "CPU numpy PCA/ridge"
+        },
+        "value_head": {
+          "n_samples": 150,
+          "weights": [
+            1.585992893127,
+            1.568362613874,
+            -5.241073001831,
+            -1.215451757425,
+            1.351473727304,
+            0.876297465726,
+            -29.808142067824,
+            -29.1902278326,
+            8.961859687639
+          ]
+        }
+      },
+      "su15": {
+        "encoder": {
+          "architecture": "tiny_cpu_cnn_frame_encoder",
+          "embedding_dim": 8,
+          "epochs": 24,
+          "input": "16 one-hot color channels over 16x16 raw frame crop/pad",
+          "layers": [
+            "PCA-learned 3x3 one-hot convolution filters + ReLU",
+            "mean/std/max spatial pooling",
+            "PCA projection to 8-dim tanh embedding",
+            "ridge auxiliary steps-to-go head for representation fitting"
+          ],
+          "learning_rate": 0.01,
+          "llm_weight_mutation": false,
+          "loss_history": [
+            32.66185827
+          ],
+          "n_filters": 4,
+          "n_samples": 147,
+          "training_compute": "CPU numpy PCA/ridge"
+        },
+        "value_head": {
+          "n_samples": 147,
+          "weights": [
+            2.430256964086,
+            -6.150775198039,
+            1.088911939102,
+            -0.735031377294,
+            -3.867923097338,
+            -6.789848206325,
+            -17.954909446622,
+            -31.909070899795,
+            9.4053821005
+          ]
+        }
+      },
+      "tu93": {
+        "encoder": {
+          "architecture": "tiny_cpu_cnn_frame_encoder",
+          "embedding_dim": 8,
+          "epochs": 24,
+          "input": "16 one-hot color channels over 16x16 raw frame crop/pad",
+          "layers": [
+            "PCA-learned 3x3 one-hot convolution filters + ReLU",
+            "mean/std/max spatial pooling",
+            "PCA projection to 8-dim tanh embedding",
+            "ridge auxiliary steps-to-go head for representation fitting"
+          ],
+          "learning_rate": 0.01,
+          "llm_weight_mutation": false,
+          "loss_history": [
+            36.75481829
+          ],
+          "n_filters": 4,
+          "n_samples": 136,
+          "training_compute": "CPU numpy PCA/ridge"
+        },
+        "value_head": {
+          "n_samples": 136,
+          "weights": [
+            4.033831971165,
+            -0.715924320929,
+            3.098776495446,
+            -4.700004752058,
+            0.33501620382,
+            -2.074404813482,
+            -29.785534873847,
+            4.738191554756,
+            8.544987600948
+          ]
+        }
+      },
+      "wa30": {
+        "encoder": {
+          "architecture": "tiny_cpu_cnn_frame_encoder",
+          "embedding_dim": 8,
+          "epochs": 24,
+          "input": "16 one-hot color channels over 16x16 raw frame crop/pad",
+          "layers": [
+            "PCA-learned 3x3 one-hot convolution filters + ReLU",
+            "mean/std/max spatial pooling",
+            "PCA projection to 8-dim tanh embedding",
+            "ridge auxiliary steps-to-go head for representation fitting"
+          ],
+          "learning_rate": 0.01,
+          "llm_weight_mutation": false,
+          "loss_history": [
+            15.83767995
+          ],
+          "n_filters": 4,
+          "n_samples": 121,
+          "training_compute": "CPU numpy PCA/ridge"
+        },
+        "value_head": {
+          "n_samples": 121,
+          "weights": [
+            -0.249494735448,
+            -0.217258834119,
+            0.617487571125,
+            -2.230854103069,
+            6.388486232423,
+            2.796864708054,
+            19.432943441828,
+            47.816178998001,
+            6.803428116165
+          ]
+        }
+      }
+    },
+    "splits": {
+      "cd82": {
+        "held_out_game": "cd82",
+        "n_encoder_samples": 149,
+        "n_held_out_levels": 1,
+        "n_train_samples": 149,
+        "train_games": [
+          "cn04",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "cn04": {
+        "held_out_game": "cn04",
+        "n_encoder_samples": 141,
+        "n_held_out_levels": 1,
+        "n_train_samples": 141,
+        "train_games": [
+          "cd82",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "lp85": {
+        "held_out_game": "lp85",
+        "n_encoder_samples": 125,
+        "n_held_out_levels": 3,
+        "n_train_samples": 125,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "ls20": {
+        "held_out_game": "ls20",
+        "n_encoder_samples": 141,
+        "n_held_out_levels": 1,
+        "n_train_samples": 141,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "m0r0": {
+        "held_out_game": "m0r0",
+        "n_encoder_samples": 139,
+        "n_held_out_levels": 1,
+        "n_train_samples": 139,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "ls20",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "r11l": {
+        "held_out_game": "r11l",
+        "n_encoder_samples": 151,
+        "n_held_out_levels": 1,
+        "n_train_samples": 151,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "sk48",
+          "sp80",
+          "su15",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "sk48": {
+        "held_out_game": "sk48",
+        "n_encoder_samples": 140,
+        "n_held_out_levels": 1,
+        "n_train_samples": 140,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sp80",
+          "su15",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "sp80": {
+        "held_out_game": "sp80",
+        "n_encoder_samples": 150,
+        "n_held_out_levels": 1,
+        "n_train_samples": 150,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "su15",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "su15": {
+        "held_out_game": "su15",
+        "n_encoder_samples": 147,
+        "n_held_out_levels": 1,
+        "n_train_samples": 147,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "tu93",
+          "wa30"
+        ]
+      },
+      "tu93": {
+        "held_out_game": "tu93",
+        "n_encoder_samples": 136,
+        "n_held_out_levels": 1,
+        "n_train_samples": 136,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15",
+          "wa30"
+        ]
+      },
+      "wa30": {
+        "held_out_game": "wa30",
+        "n_encoder_samples": 121,
+        "n_held_out_levels": 1,
+        "n_train_samples": 121,
+        "train_games": [
+          "cd82",
+          "cn04",
+          "lp85",
+          "ls20",
+          "m0r0",
+          "r11l",
+          "sk48",
+          "sp80",
+          "su15",
+          "tu93"
+        ]
+      }
+    },
+    "state_count_instrumentation": "arc_solver_kit.OfflineSolver.solve_level counts generated child states in last_states_expanded; lower is better",
+    "trace_checksums": {
+      "cd82": "sha256:630a02ea2225ff75c970cb2855f7ccecc25bbfe60400faa1b39439ed733b02d3",
+      "cn04": "sha256:cb9e98a6311317db38890d0d1dcca685924e2f65fd175603e8b2aefc627459f5",
+      "lp85": "sha256:7f17f90d3c0cc57da14b84e88d85e897dd35ee264d628d941d051058a29ed68c",
+      "ls20": "sha256:c6908c6c3cc3f3d187a8bb6e34d999b42c4120fd11c2fe8671acafaf838be9b0",
+      "m0r0": "sha256:748b25a8043f91a05c3659b9469e0c20052a4752ca4602935968c0d77d835074",
+      "r11l": "sha256:0bfc38948e3510a114421a0d9066276c501791406cbbf087283e6ffd4c6a67f3",
+      "sk48": "sha256:1ec397b29b355885ab6efbc511410e319d409e602661ab02c101103f809282f7",
+      "sp80": "sha256:28f1d55293f6f4e430d40740725b59bfbd76a66d2c5f9878b1b2f4385709ae8e",
+      "su15": "sha256:58c03992821f0463801ba59b3c78eee180e12a41c9fe7109622db639565378fc",
+      "tu93": "sha256:9edc5b28d8765c514d14ee32bc45440af04db2859632fa10853f70c8485ce53d",
+      "wa30": "sha256:506cda548814df778d0ae8013cc15d33a3f9ce8819fda7d285909d4da85f4512"
+    },
+    "value_head": {
+      "architecture": "linear least-squares value head with bias over learned encoder embeddings",
+      "class": "LearnedVerifier",
+      "llm_weight_mutation": false,
+      "module": "python/carnot/agentic/arc_value_learner.py",
+      "target": "raw steps_remaining within each solved level",
+      "training_compute": "CPU numpy.linalg.lstsq"
+    }
+  },
+  "n_bootstrap_resamples": 2000,
+  "n_held_out_levels": 13,
+  "per_held_out_game_reduction": {
+    "cd82": {
+      "baseline_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_transferred": 17,
+          "states_uniform": 17,
+          "transferred_solved": true
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_transferred": 17,
+      "states_uniform": 17,
+      "transferred_solved": true
+    },
+    "cn04": {
+      "baseline_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.1081081081081081,
+          "states_transferred": 37,
+          "states_uniform": 41,
+          "transferred_solved": true
+        }
+      ],
+      "state_reduction": 1.1081081081081081,
+      "states_transferred": 37,
+      "states_uniform": 41,
+      "transferred_solved": true
+    },
+    "lp85": {
+      "baseline_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_transferred": 15,
+          "states_uniform": 15,
+          "transferred_solved": true
+        },
+        {
+          "baseline_solved": true,
+          "level_index": 2,
+          "state_reduction": 1.0,
+          "states_transferred": 24,
+          "states_uniform": 24,
+          "transferred_solved": true
+        },
+        {
+          "baseline_solved": true,
+          "level_index": 3,
+          "state_reduction": 1.0,
+          "states_transferred": 49,
+          "states_uniform": 49,
+          "transferred_solved": true
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_transferred": 88,
+      "states_uniform": 88,
+      "transferred_solved": true
+    },
+    "ls20": {
+      "baseline_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_transferred": 41,
+          "states_uniform": 41,
+          "transferred_solved": true
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_transferred": 41,
+      "states_uniform": 41,
+      "transferred_solved": true
+    },
+    "m0r0": {
+      "baseline_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_transferred": 47,
+          "states_uniform": 47,
+          "transferred_solved": true
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_transferred": 47,
+      "states_uniform": 47,
+      "transferred_solved": true
+    },
+    "r11l": {
+      "baseline_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_transferred": 11,
+          "states_uniform": 11,
+          "transferred_solved": true
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_transferred": 11,
+      "states_uniform": 11,
+      "transferred_solved": true
+    },
+    "sk48": {
+      "baseline_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_transferred": 43,
+          "states_uniform": 43,
+          "transferred_solved": true
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_transferred": 43,
+      "states_uniform": 43,
+      "transferred_solved": true
+    },
+    "sp80": {
+      "baseline_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_transferred": 9,
+          "states_uniform": 9,
+          "transferred_solved": true
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_transferred": 9,
+      "states_uniform": 9,
+      "transferred_solved": true
+    },
+    "su15": {
+      "baseline_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_transferred": 22,
+          "states_uniform": 22,
+          "transferred_solved": true
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_transferred": 22,
+      "states_uniform": 22,
+      "transferred_solved": true
+    },
+    "tu93": {
+      "baseline_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_transferred": 55,
+          "states_uniform": 55,
+          "transferred_solved": true
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_transferred": 55,
+      "states_uniform": 55,
+      "transferred_solved": true
+    },
+    "wa30": {
+      "baseline_solved": true,
+      "levels": [
+        {
+          "baseline_solved": true,
+          "level_index": 1,
+          "state_reduction": 1.0,
+          "states_transferred": 101,
+          "states_uniform": 101,
+          "transferred_solved": true
+        }
+      ],
+      "state_reduction": 1.0,
+      "states_transferred": 101,
+      "states_uniform": 101,
+      "transferred_solved": true
+    }
+  },
+  "random_seed": 4331,
+  "reproducibility_checksum": "sha256:45955e225f79f5860ee53293628c4adc139dfde93a62817c8d25fa2c68db385f",
+  "spec_refs": [
+    "REQ-LEARN-4331",
+    "SCENARIO-LEARN-4331"
+  ],
+  "title": "self_learning_learned_frame_encoder_cross_game_transfer",
+  "verifier_is_oracle": false
+}

@@ -1167,3 +1167,11 @@ registry version that closed them when a new verifier captures a previously-open
 - Residual mismatch class: `missing_world_model_rule_gap_actions_6`
 - Reproducibility checksum: `9d7969995becae6b7704dd94148870d6eee2f7ff7f3c6ffaf036eefcf514ee00`
 - Gap: bounded executable-world-model run did not satisfy the offline reproduced L1 gate.
+
+### GAP-4331: Game-invariant ARC value representation - small encoder insufficient
+- status: open
+- evidence: `results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json` reports cross_game_state_reduction=1.00849 with baseline_solves_held_out=true.
+- failure mode: small learned frame encoder over the current solved set is insufficient to produce a decision-grade held-out search-state reduction.
+- missing discriminator: game-invariant ARC value representation that recognizes progress across navigation, click-placement, rotation, and shallow-tail mechanics.
+- candidate design: larger encoder with more reproduced games, adapter-conditioned value head, or experience-gated source-relevance features; preserve a CPU/hardware path.
+- priority: medium
