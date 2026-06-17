@@ -21313,6 +21313,93 @@ conductor and reconciliation files untouched.
 |---|---|---|
 | REQ-REPORT-4298 | Planned (`python/carnot/experiment_4298_sota_ingestion_v398.py`) | Planned (`tests/python/test_experiment_4298_sota_ingestion_v398.py`) |
 
+### REQ-REPORT-4309: Ingest The .398 Fork Outcomes Into A .399 SOTA Plan
+
+The Exp 4309 SOTA-ingestion workflow SHALL ingest the `.398` fork outcomes from
+`results/experiment_4303_verifier_efficiency_parity_isoflops.json`,
+`results/experiment_4304_diffusiongemma_in_generation_engaged_controls.json`,
+and `results/experiment_4305_cross_domain_selector_generalization.json`. The
+workflow SHALL read `research-studying.md`, `research-references.md`,
+`results/experiment_4298_sota_ingestion_v398.json`, `scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, and the `CLAUDE.md` SOTA-Ingestion Cycle
+Discipline, SHALL run reliable focused discovery through the sweep helpers and
+low-concurrency WebSearch/WebFetch, and SHALL NOT invoke `/deep-research` or
+modify `scripts/research_conductor.py`.
+
+The workflow SHALL stop with `honest_verdict=blocked_sota_channels_unavailable`
+only if both reliable discovery channels are unavailable: the sweep helpers do
+not import or emit usable queries AND WebSearch/WebFetch cannot fetch source
+pages. If either reliable channel works, the workflow SHALL write a complete
+mapping. The machine-checkable artifact SHALL be written to
+`results/experiment_4309_sota_ingestion_v399.json`, and the required runner
+SHALL be `results/experiment_4309_sota_ingestion_v399.py` delegating to
+`python/carnot/experiment_4309_sota_ingestion_v399.py`.
+
+The mapping SHALL not re-ingest methods already covered by the `.397` or `.398`
+sweeps, including EEVEE, optimize_anything / GEPA, RefGRPO, SLMJury, ReMDM,
+ARC-TGI, ARC-GEN, RFG, EDLM, EntRGi, Manta-LM, masked-discrete-diffusion
+guidance dynamics, INSPECTOR Representation-as-a-Judge, ABPR, and Decocted
+Experience. Newly mapped methods SHALL be selected from WebFetch-verified
+sources including Budget-aware Test-time Scaling via Discriminative Verification
+(`arXiv:2510.14913`), IR3DE (`arXiv:2606.06098`), Routing with Generated Data /
+CASCAL (`arXiv:2601.09692`), TTARAG (`arXiv:2601.11443`), and inference-time
+scaling of discrete diffusion via SMC importance weighting (`arXiv:2505.22524`).
+
+The verified source URLs SHALL be `https://arxiv.org/abs/2510.14913`,
+`https://arxiv.org/abs/2606.06098`, `https://arxiv.org/abs/2601.09692`,
+`https://arxiv.org/abs/2601.11443`, and `https://arxiv.org/abs/2505.22524`.
+
+The note in `research-studying.md` SHALL condition the `.399` recommendation on
+the actual `.398` outcomes. When Exp 4303 reports `efficiency_pareto_holds=true`,
+`accuracy_energy_verifier=0.8`, `accuracy_best_judge=0.5`, and
+`cost_ratio=1.03e-08`, the workflow SHALL treat the §5 efficiency axis as
+hardened and favor a deployment/cascade-router follow-up. When Exp 4304 reports
+`diffusiongemma_guidance_moat=false` despite `controls_differentiated=true` and
+`scorer_leak_recheck_passed=true`, the workflow SHALL keep guided generation as
+a secondary repair track rather than the `.399` headline. When Exp 4305 reports
+`cross_domain_selection_holds=false`, `cross_domain_delta=0.2307692308`, and a
+CI95 that includes zero, the workflow SHALL treat broad cross-domain selection
+as collapsed and avoid a fourth-domain headline until the router is rebuilt.
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v399`, `random_seed`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, `flagged_for_v399`, and `random_seed`.
+`honest_verdict` SHALL use a terminal prefix and, on the complete path, start
+with `complete: sota_ingestion_v399_mapped`. `methods_mapped` SHALL contain
+three to five dicts with exactly `name`, `arxiv_id_or_url`, `url`, `track`,
+`source_read`, `v398_outcome_conditioning`, `carnot_stack_mapping`,
+`failure_mode`, and `experiment_mapping`; each `arxiv_id_or_url` SHALL be one
+of the WebFetch-verified arXiv IDs or URLs, preventing fabricated or uncited
+method rows. `flagged_for_v399` SHALL be a non-empty concrete roadmap slug
+naming the strongest `.399` method, conditioned on whether efficiency hardened,
+guided generation held, or cross-domain selection held. `random_seed` SHALL
+record the deterministic discovery query set seed.
+
+The workflow SHALL update `research-studying.md` idempotently to mark the
+`.398` forks as ingested, SHALL include `flagged_for_v399`, and SHALL NOT update
+`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-4309: The .398 Outcomes Close Into A .399 Cascade-Router Plan
+
+**Given** Exp 4303 reports a hardened energy-verifier Pareto win over the best
+well-prompted judge
+**And** Exp 4304 reports engaged controls but no DiffusionGemma guidance moat
+**And** Exp 4305 reports cross-domain selector collapse rather than a held moat
+**When** the Exp 4309 SOTA-ingestion workflow runs through the reliable channel
+**Then** it writes the required JSON mapping artifact, maps three to five newly
+verified sources to Carnot stack implications, failure modes, and concrete
+`.399` experiment targets, updates `research-studying.md` idempotently, flags
+the strongest `.399` budget-aware cascade-router follow-up, records
+`random_seed`, and leaves conductor and reconciliation files untouched.
+
+## Implementation Status (REQ-REPORT-4309)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4309 | Planned (`python/carnot/experiment_4309_sota_ingestion_v399.py`) | Planned (`tests/python/test_experiment_4309_sota_ingestion_v399.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone

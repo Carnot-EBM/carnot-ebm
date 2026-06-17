@@ -8,6 +8,82 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-17 Exp 4309 - .398 fork SOTA ingestion ingested
+
+**Status:** INGESTED into `results/experiment_4309_sota_ingestion_v399.json`.
+
+**Reliable-channel provenance:** `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py` imported successfully; `sweep_clusters.py`
+emitted focused arXiv discovery URLs for verifier/energy clusters. Semantic
+Scholar returned arXiv IDs for budget-aware discriminative verification,
+domain routing, and discrete diffusion probes, and returned HTTP 429 for one
+RAG adaptation probe and one rerouting-security probe. WebSearch/WebFetch
+verified arXiv:2510.14913, arXiv:2606.06098, arXiv:2601.09692,
+arXiv:2601.11443, arXiv:2505.22524, arXiv:2601.21380, arXiv:2602.09424, and
+arXiv:2605.05007. The banned `/deep-research` channel was not invoked.
+
+**Filtered track:** .398 outcomes after the hardened iso-FLOPs verifier-vs-judge
+run, the DiffusionGemma engaged-control guidance run, and the cross-domain
+selector generalization stress.
+
+**.398 outcome conditioning:**
+- Exp 4303: `efficiency_pareto_holds=true`,
+  `accuracy_energy_verifier=0.8`, `accuracy_best_judge=0.5`,
+  `accuracy_delta_ci95=[0.1, 0.5]`, and `cost_ratio=1.03e-08`; the efficiency
+  axis hardened into a decision-grade Pareto win.
+- Exp 4304: `diffusiongemma_guidance_moat=false`,
+  `controls_differentiated=true`, `scorer_leak_recheck_passed=true`,
+  `carnot_minus_best_control_delta=0.133334`, and
+  `guidance_moat_ci95=[-0.066667, 0.366667]`; guided generation improved the
+  point estimate but did not clear the engaged-control CI gate.
+- Exp 4305: `cross_domain_selection_holds=false`,
+  `cross_domain_delta=0.2307692308`,
+  `cross_domain_ci95=[-0.1153846154, 0.5384615385]`, and
+  `label_ablation_robust=true`; the FoVer slice was positive but underpowered,
+  while ARC and ARC-GEN held-out reads collapsed.
+
+**Fresh-pass candidates marked ingested:**
+- Budget-aware discriminative verification, arXiv:2510.14913 - mapped to the
+  .399 deployment/cascade-router headline after Exp 4303 hardened efficiency.
+- IR3DE linear domain-expert router, arXiv:2606.06098 - mapped to a simpler
+  domain-invariant router rebuild after Exp 4305's broad cross-domain collapse.
+- Routing with Generated Data / CASCAL, arXiv:2601.09692 - mapped to
+  generated-data router pretraining with query-only anti-leak controls.
+- TTARAG retrieval-prediction adaptation, arXiv:2601.11443 - mapped to
+  powered retrieval-augmented selector adaptation on train-side traces only.
+- SMC importance weighting for discrete diffusion, arXiv:2505.22524 - mapped
+  to a secondary DiffusionGemma repair track with engaged particle/reweighting
+  controls.
+
+**Screened but not mapped as strongest rows:** RerouteGuard (arXiv:2601.21380),
+CSMC clean-sample Markov chains (arXiv:2602.09424), Uno-Orchestra
+(arXiv:2605.05007), and TRouter (arXiv:2604.09377) were read as adjacent
+routing-security, clean-sample diffusion, selective-delegation, and cold-start
+routing evidence. They remain weaker for `.399` than the mapped rows because
+RerouteGuard is attack-specific, CSMC is molecule/biology-centered,
+Uno-Orchestra is a broader multi-agent policy, and TRouter overlaps the more
+direct IR3DE/CASCAL router rebuild path.
+
+Already-covered context not re-ingested as fresh method rows: EEVEE,
+optimize_anything / GEPA, RefGRPO, SLMJury, ReMDM, ARC-TGI, ARC-GEN, RFG,
+EDLM, EntRGi, Self-Improving LLM Agents at Test-Time, SEVerA, DPRM,
+Reward-Guided Stitching, Manta-LM, masked-discrete-diffusion guidance dynamics,
+INSPECTOR Representation-as-a-Judge, ABPR, Decocted Experience, and COVER.
+
+flagged_for_v399:
+`budget_aware_discriminative_cascade_router_v399`.
+
+Flagged for .399: `budget_aware_discriminative_cascade_router_v399`.
+
+random_seed=4309
+
+**Bottom line for the .399 roadmap:** the efficiency axis is the only .398 fork
+that hardened cleanly, so make the next headline a budget-aware discriminative
+cascade-router. Rebuild the cross-domain router with IR3DE/CASCAL-style
+domain-invariant training before claiming broader transfer, and keep
+keep SMC-guided DiffusionGemma as the secondary repair track rather than the
+.399 headline.
+
 ## 2026-06-16 Exp 4298 - .397 fork SOTA ingestion ingested
 
 **Status:** INGESTED into `results/experiment_4298_sota_ingestion_v398.json`.
