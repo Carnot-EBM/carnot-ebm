@@ -100,15 +100,25 @@ against the offline layout** (no replay of the non-reproducible live recording).
     purely the wrong hardcoded `SC25_GRID_COORDS`. `scripts/arc3_sc25_offline_solver.py`
     v2 casts correctly (select sprite → toggle cells to match `zzpoabuniyn[spell]`
     → re-click to fire → resolve animation while any `*['acyylh']` phase is active).
-  - **Remaining mechanics (multi-session) — why a cast+move BFS still stalls:**
-    (a) firing a spell CLEARS `xhhaqjfncnp` afterward, so a cast with no valid
-    target leaves `goal_key` unchanged (deduped → no progress); the search must
-    cast the spell whose fireball actually hits an obstacle ("tagsmh"); (b) moves
-    (ACTION1-4) act on `self.plnqvukupu`, which is only set by a **sprite-selection
-    click** the model lacks — add clicking moveable sprites to the action set; (c)
-    then move-to-align goal sprites at +1,+1 within the step budget. Net: sc25
-    needs sprite-selection + fireball-target + move-align modeling on top of the
-    now-working cast. A genuine multi-session solver, not a quick finish.
+  - **Search infrastructure now WORKS (`scripts/arc3_sc25_offline_solver.py` v3).**
+    Layers solved this push: cast coords (24+5c,49+5r); `env._game` deepcopy-
+    injection is BROKEN for sc25 (works for lp85) → use **replay-from-reset BFS**
+    on the real env; level reads from the **frame** (`frame.levels_completed`, not
+    the game); player `pluyoo`=`plnqvukupu` auto-set on load; **the first
+    env.step after reset is consumed (no-op)** → `replay()` does a warm-up step;
+    **facing `jdmucabyqar` is load-bearing** (press-new-direction turns; press-
+    same moves; tank controls) → added to the dedup key. With these, the BFS now
+    explores ~90 reachable states (was 5).
+  - **STILL stuck at L0→L1 — the remaining blocker:** the player walls off at
+    x=23 (exit `exydhv` at x=12), so the reachable set is only ~90 states and the
+    walk-to-exit win is unreachable. sc25 has MULTIPLE win paths — the move-to-exit
+    (`abvgsmnbrj`→`next_level`) AND the **cast-grid alignment** (align the 9
+    `clcbko` goal sprites to the 3×3 cast grid at +1,+1 via `ianfrutkqg`/
+    `mtfwxhxooqg`). L1 is likely the cast-grid-alignment win (or needs a spell
+    fireball to clear the x≈21 wall first). NEXT: instrument which win predicate
+    actually fires for L1, then drive the search toward it (cast-grid alignment
+    and/or fireball wall-clear). This is a deep multi-mechanic puzzle — ~10 layers
+    peeled, each revealing another; disproportionate effort vs lp85's clean solve.
 
 **Acceptance gate for the priority:** sc25 re-solves to L5 offline → aggregate
 scorecard = 11 levels, all from-scratch offline-reproducible, zero quota → then a
