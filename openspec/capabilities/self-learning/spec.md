@@ -14175,3 +14175,109 @@ bare bool, `cross_game_state_reduction` as a bare float,
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4342 | Planned (`python/carnot/experiment_4342_self_learning_action_role_cross_game_encoder.py`; `results/experiment_4342_self_learning_action_role_cross_game_encoder.py`; `results/experiment_4342_self_learning_action_role_cross_game_encoder.json`) | Planned (`tests/python/test_experiment_4342_self_learning_action_role_cross_game_encoder.py`) |
+
+---
+
+## REQ-LEARN-4353: ARC Learned Action-Cost Heuristic Improves Held-Out Actions-To-Solve
+
+**Given** at least five reproduced ARC-AGI-3 solved levels with loadable action
+traces from `ops/arc_solve_registry.yaml`, `results/arc_explore_trajectory_*.json`,
+and per-game solver artifacts
+**When** Exp 4353 trains a CPU-only learned A* action-cost heuristic on
+solve-trace states and leaves some reproduced levels out
+**Then** the held-out levels SHALL be planned with both the baseline planner and
+the learned action-cost heuristic
+**And** every counted plan SHALL pass `arc_solver_kit.reproduce`
+**And** the artifact SHALL report the north-star action-efficiency fields as
+bare values: `action_efficiency_improves`, `held_out_actions_baseline`,
+`held_out_actions_learned`, `positive_control_passed`, `reproduction_gated`,
+`verifier_is_oracle=false`, `preconditions_checked`, `random_seed`, and
+`reproducibility_checksum`.
+
+### REQ-LEARN-4353 Sub-requirements
+
+- REQ-LEARN-4353-1: Preconditions SHALL verify the solved-level registry, local
+  trace files, offline reproduction substrate, and TRM stand-down condition. If
+  fewer than five reproduced levels with action traces are loadable, Exp 4353
+  SHALL emit `honest_verdict=blocked_insufficient_solve_traces` and stop without
+  fabricating action-efficiency metrics.
+- REQ-LEARN-4353-2: The training corpus SHALL contain `(state_features,
+  minimal_actions_to_win)` rows extracted from reproduced solve traces, where
+  each row's target is the remaining env-action count in that level.
+- REQ-LEARN-4353-3: The held-out split SHALL exclude the held-out level rows
+  from heuristic training and SHALL record the split plus heuristic config in
+  `model_specs`.
+- REQ-LEARN-4353-4: The learned heuristic SHALL be a lightweight CPU regression
+  over generic grid/action features and SHALL be oracle-distinct from the
+  executable environment/reproduction oracle.
+- REQ-LEARN-4353-5: `action_efficiency_improves` SHALL be true exactly when
+  total held-out env-actions-to-solve with the learned heuristic is strictly
+  lower than the baseline total and the positive-control headroom check passes.
+- REQ-LEARN-4353-6: `reproduction_gated` SHALL be true only when every counted
+  baseline and learned plan passes `arc_solver_kit.reproduce`; a non-reproduced
+  shorter path SHALL NOT count.
+- REQ-LEARN-4353-7: Any held-out level where the learned heuristic cannot reduce
+  actions SHALL be represented in `missing_verifier_gaps` and appended to
+  `ops/verifier_gaps.md` when the experiment writes the artifact.
+- REQ-LEARN-4353-8: The written artifact SHALL run cleanly through
+  `scripts/adversarial_verify.py` and SHALL include the verifier-oracle,
+  random-seed, methodology, and reproducibility-checksum fields required by the
+  adversarial artifact discipline.
+
+### REQ-LEARN-4353 Field Principles
+
+- `honest_verdict`: Terminal-prefixed. An action-efficiency improvement (the
+  learned heuristic lowers env-actions-to-solve on held-out levels) and an
+  honest null with the positive control passing (the value head already captures
+  it) are BOTH decision-grade.
+- `action_efficiency_improves`: BARE bool: the capstone reads this; true iff
+  held-out actions-to-solve is REDUCED with the learned A* path-cost heuristic
+  vs the baseline planner AND the positive control confirms headroom existed
+  (not a degenerate no-headroom null).
+- `held_out_actions_baseline`: BARE int: total env-actions-to-solve across
+  held-out levels with the baseline planner -- the efficiency baseline.
+- `held_out_actions_learned`: BARE int: total env-actions-to-solve across
+  held-out levels with the learned A* heuristic -- the efficiency result (lower
+  is better; the north-star action-efficiency metric).
+- `positive_control_passed`: BARE bool: a level with known optimal action-count
+  confirms headroom existed, so a null is "the value head already captures it",
+  not "no headroom" (FALSE_NEGATIVE_RISK guard).
+- `reproduction_gated`: BARE bool: true iff every counted plan still passes
+  `arc_solver_kit.reproduce` -- an action-minimal plan that does not reproduce
+  does NOT count.
+- `verifier_is_oracle`: BARE bool=false -- the learned action-cost heuristic is
+  not the executable oracle.
+- `preconditions_checked`: Records the solve-trace availability +
+  TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.
+- `random_seed`: Determinism precondition for the heuristic training + the
+  held-out split + the planning.
+- `reproducibility_checksum`: Hash of the training corpus + the held-out split +
+  the heuristic config; lets a third party re-run.
+
+### SCENARIO-LEARN-4353: Learned Action-Cost Artifact Is Reproduction-Gated
+
+**Given** at least five reproduced ARC solved-level traces are loadable
+**When** Exp 4353 trains the action-cost heuristic and evaluates held-out levels
+**Then** the artifact SHALL include bare `action_efficiency_improves`,
+`held_out_actions_baseline`, `held_out_actions_learned`,
+`positive_control_passed`, `reproduction_gated`, `verifier_is_oracle=false`,
+`preconditions_checked`, `random_seed`, and `reproducibility_checksum`
+**And** `action_efficiency_improves=true` only if
+`held_out_actions_learned < held_out_actions_baseline`,
+`positive_control_passed=true`, and `reproduction_gated=true`.
+
+### SCENARIO-LEARN-4353-BLOCKED: Insufficient Solved Traces Stop Honestly
+
+**Given** fewer than five reproduced levels with action traces are loadable
+**When** Exp 4353 runs
+**Then** it SHALL write a terminal artifact with
+`honest_verdict=blocked_insufficient_solve_traces`
+**And** `action_efficiency_improves=false`,
+`held_out_actions_baseline=0`, `held_out_actions_learned=0`,
+`positive_control_passed=false`, and `reproduction_gated=false`.
+
+## Implementation Status (Exp 4353)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4353 | Planned (`python/carnot/experiment_4353_learned_action_cost_heuristic_efficiency.py`; `results/experiment_4353_learned_action_cost_heuristic_efficiency.py`; `results/experiment_4353_learned_action_cost_heuristic_efficiency.json`) | Planned (`tests/python/test_experiment_4353_learned_action_cost_heuristic_efficiency.py`) |
