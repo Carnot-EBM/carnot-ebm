@@ -75,6 +75,34 @@ repurposed for gap-filling. The next build is the **gap-characterizer → adapte
 loop, targeting the games the explorer stalls on (wa30, cn04, sk48) and the tn36 click-schema
 delta, with the LLM writing the small per-game piece, not the solver.
 
+## FINDINGS from the first gap-fill runs (2026-06-17) — what actually blocks it
+
+1. **Autolearning capture-and-reuse: BUILT + correct.** `gap_fills/` (save/load),
+   reuse-first (skip LLM if captured), save-on-success (reproduction-gated), and a runtime
+   `validate` callback that retries on buggy code. It correctly REFUSED to capture every
+   broken heuristic — which is the point.
+2. **Local models write buggy heuristics (prompt-tunable, not size-bound).** gemma-4-12B AND
+   Qwen3.6-35B-A3B both wrote `goal_distance` functions that fall through to `None`;
+   token-capping to avoid that truncated the code instead. A hard "must end in an
+   unconditional float return" contract + a right-sized token budget is the fix; this is
+   prompt-adherence, not model capability (the 35B failed the same way as the 12B).
+   gemma-4-31B DENSE is too slow on the iGPU (timeout) — use a MoE (Qwen-35B-A3B / gemma-26B-A4B).
+3. **THE REAL BLOCKER (architectural): a heuristic needs the RIGHT search engine.** The
+   gap-fill plugged the heuristic into `graph_explore_solve_v3` (value-guided). But v3 does
+   NOT solve cn04 even with a PERFECT deterministic diff-from-win heuristic (nor does
+   novelty-only v3) — whereas `graph_explore_solve_v2` (systematic BFS-frontier) DOES solve
+   cn04. So on cn04 the heuristic was doomed regardless of the LLM: v3 is the wrong engine.
+   **A goal-distance heuristic's value is EFFICIENCY (fewer actions) in a search that already
+   reaches the win** — the proven lp85 pattern (`OfflineSolver` + `hand_verifier` → 10.75x
+   fewer states), NOT making v3 solve-from-scratch a game it structurally can't.
+
+**Correction to the next build:** the gap-fill must target where a heuristic provably helps:
+(a) plug it into the verifier-routed `OfflineSolver` (needs the per-game adapter the LLM also
+writes), or (b) make the STRONG explorer `graph_explore_solve_v2` heuristic-GUIDED (prioritize
+its frontier by the heuristic) so it keeps its solving power AND gains efficiency. Validate on
+a game where a heuristic demonstrably helps (lp85), then generalize. cn04-in-v3 was the wrong
+test combo; the loop machinery is sound.
+
 Cross-refs: CLAUDE.md "ARC Solve Reproducibility + Solver-Reuse" (RE only the delta) +
 "Missing-Verifier Gap Logging"; `python/carnot/agentic/arc_game_adapters.py`,
 `arc_solve_learning.py` (recommend_approach), `ops/verifier_gaps.md`;
