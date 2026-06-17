@@ -17432,6 +17432,66 @@ covariance, and trajectory stability. If resources are missing, controls are
 not differentiable, or the scorer is leaky, then the runner writes the matching
 terminal verdict instead of declaring a moat.
 
+### REQ-VERIFY-4325: In-Generation Moat Replication On Second Corpus
+
+The repository SHALL provide Exp 4325 at
+`python/carnot/experiment_4325_in_generation_moat_replicate_second_corpus.py`
+and `results/experiment_4325_in_generation_moat_replicate_second_corpus.py` to
+replicate the Exp 4315 DiffusionGemma reward-guided step-stitching moat on a
+second oracle-distinct reasoning corpus. The runner SHALL check preconditions
+before inference: the llama.cpp DiffusionGemma PR binary is non-empty, the
+DiffusionGemma GGUF cache is present, Exp 4292 reports a built oracle-distinct
+persisted partial-state scorer that loads, a second reasoning-step corpus
+different from Exp 4315's corpus is available with enough labeled examples for
+at least 80 measured tasks per arm, and TRM training is stood down. If any
+precondition fails, including second-corpus unavailability
+(`blocked_second_corpus_unavailable`), the runner SHALL write an honest
+terminal `blocked_*` verdict and SHALL NOT fabricate inference.
+
+The runner SHALL independently re-check Exp 4292 scorer leakage on the second
+corpus by masking answer-bearing cells. If answer-masked signal collapses to
+chance, the runner SHALL emit bare bool `scorer_leak_recheck_passed=false`,
+`honest_verdict=scorer_leaky_on_second_corpus`, and stop before benchmarking.
+Otherwise it SHALL run at least 80 measured reasoning-choice tasks per arm over
+at least three deterministic seeds for unguided, EntRGi engaged control,
+self-reward SMC using only intrinsic trajectory confidence, and Carnot
+reward-guided step-stitching using the external partial-state scorer. The
+runner SHALL checkpoint after every measured trajectory and SHALL set bare bool
+`controls_differentiated=true` only when no condition arms tie bit-identically
+and each guidance arm changes option selection versus unguided; otherwise it
+SHALL stop with `honest_verdict=controls_not_differentiable`.
+
+The terminal artifact SHALL write
+`results/experiment_4325_in_generation_moat_replicate_second_corpus.json` with
+required fields `honest_verdict`, bare bool `in_generation_moat_replicates`,
+bare float `carnot_minus_best_control_delta`, bare float
+`carnot_minus_self_reward_smc_delta`, bare float
+`carnot_minus_unguided_delta`, `replication_ci95`, bare bool
+`controls_differentiated`, bare bool `scorer_leak_recheck_passed`, bare int
+`benchmark_n`, bare bool `verifier_is_oracle=false`, `preconditions_checked`,
+`random_seed`, `reproducibility_checksum`, `model_specs`, `field_principles`,
+`spec_refs`, `duration_s`, `inference_substrate`, and `adversarial_verify`. The
+bare bool `in_generation_moat_replicates` SHALL be true iff Carnot
+step-stitching beats the best genuinely engaged control, the paired bootstrap
+CI95 for that delta excludes zero, controls are differentiated, the scorer leak
+re-check passed, and Carnot step-stitching also beats self-reward SMC on the
+second corpus.
+
+### SCENARIO-VERIFY-4325: Second-Corpus Replication Is Decision Grade
+
+Given the PR binary, DiffusionGemma GGUF cache, Exp 4292 scorer artifact, TRM
+stand-down, and a second oracle-distinct reasoning corpus hold, when the Exp
+4325 runner executes, then it loads the scorer, performs the independent
+answer-masked leak re-check on the second corpus, runs unguided, EntRGi,
+self-reward SMC, and Carnot reward-guided step-stitching for at least 80
+measured tasks per arm across at least three seeds, reports per-arm accuracy,
+Carnot-minus-best-control, Carnot-minus-self-reward-SMC,
+Carnot-minus-unguided, a task-level bootstrap CI95 with at least 2000 resamples,
+and a guidance-dynamics diagnostic covering mask entropy and token-change
+covariance. If the second corpus is unavailable, controls are not
+differentiable, or the scorer is leaky on the second corpus, then the runner
+writes the matching terminal verdict instead of declaring a replication.
+
 ### REQ-VERIFY-4259: ARC Set-Encoder Grid Synthesis
 
 The repository SHALL provide Exp 4259 at
