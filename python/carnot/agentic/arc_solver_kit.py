@@ -81,7 +81,8 @@ class OfflineSolver:
                  apply: Callable[[Any, str, Any], Any], state_key: Callable[[Any], Hashable],
                  *, warmup_label: Optional[str] = None, max_nodes: int = 30000,
                  verifier: Optional[Callable[[Any], float]] = None,
-                 path_cost_weight: float = 0.0, branch_mode: str = "replay") -> None:
+                 path_cost_weight: float = 0.0, branch_mode: str = "replay",
+                 env_factory: Optional[Callable[[], Any]] = None) -> None:
         self.game_id = game_id
         self.action_labels = action_labels
         self.apply = apply
