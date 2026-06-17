@@ -23265,6 +23265,92 @@ not claim `.400` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4336 | Implemented (`python/carnot/reporting/archive_v400_activate_v401_4336.py`, `python/carnot/experiment_4336_archive_v400_activate_v401.py`, `results/experiment_4336_archive_v400_activate_v401.py`) | Implemented (`tests/python/test_experiment_4336_archive_v400_activate_v401.py`) |
 
+### REQ-REPORT-4347: Archive .401, Activate .402, And Preserve The True Close-State
+
+The Exp 4347 workflow SHALL archive milestone `2026.06.401`, confirm milestone
+`2026.06.402` is active, and write the record-only artifact
+`results/experiment_4347_archive_v401_activate_v402.json`. It SHALL run NO live
+model training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`, it SHALL record that the conductor stays
+stood down on TRM training, and it SHALL NOT modify `scripts/research_conductor.py`.
+
+Before writing the complete artifact or editing `research-complete.yaml`, the
+workflow SHALL verify these preconditions and stop with a `blocked_<resource>`
+honest verdict if any fail:
+
+- `research-complete.yaml` and `ops/exclusion_manifest.yaml` parse under
+  `yaml.safe_load`.
+- The smart-subset pre-test gate is green.
+
+The workflow SHALL ensure `research-complete.yaml` contains a single `.401`
+archive record, appending the canonical `.401` record only when absent and
+removing duplicate top-level `.401` records if interrupted conductor appends
+created any. The workflow SHALL keep `research-complete.yaml` parseable after
+the edit and SHALL record `activation_recorded:
+exp4347-archive-v401-activate-v402` on the `.401` archive row.
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v401_close_state` SHALL truthfully record
+the Exp 4346 capstone scorecard corrected by the authoritative ARC solve
+registry: the in-generation oracle-distinct moat REPLICATED LEAK-ROBUST, the
+DiffusionGemma gate is `MET_oracle_distinct_leak_robust_replicated`,
+`verifier_is_oracle=false`, Exp 4338 reports `in_generation_moat_replicates=true`
+with Carnot minus best control about `+0.358`, Carnot minus self-reward SMC about
+`+0.321`, CI95 about `[0.283, 0.4375]` excluding zero, `n=240`, and
+`scorer_leak_recheck_passed=true`. It SHALL record the Exp 4337 leak audit as
+passed, with masked-answer recovery AUROC about `0.56` and process-ranking AUROC
+about `0.70`.
+
+The close-state SHALL record the first E3 ARC solves as ar25 L1 and sc25 L1
+offline reproduced, SHALL record ka59, tr87, and ft09 as still partial, SHALL use
+the registry as authoritative for the ARC scorecard (`21` reproducible levels
+across `13` games) rather than the stale Exp 4346 `17` count, SHALL record
+cross-game value transfer as RETIRED after Exp 4342's third powered null, SHALL
+record cross-domain selection as RETIRED from Exp 4314, SHALL keep
+`paper_ready=true`, and SHALL frame `.402` as convert-the-proven-moat-to-a-
+generation-gain plus E3-deeper plus learned-action-cost-self-learning, not as a
+re-open of the retired axes.
+
+The artifact SHALL include these field-principle strings exactly:
+
+- `honest_verdict`: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
+- `v401_close_state`: "Honest record (moat REPLICATED LEAK-ROBUST/gate MET; first E3 solves ar25+sc25 L1; ARC 21 reproducible/13 games; cross-game transfer + cross-domain selection RETIRED; paper_ready=True) so the .402 agents frame the milestone as convert-the-moat-to-a-generation-gain + E3-deeper + action-cost-self-learning -- NOT a re-open of the retired axes."
+- `preconditions_checked`: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
+
+#### SCENARIO-REPORT-4347: The Archive Records The True .401 Close-State
+
+**Given** `.401` has clean Exp 4346 capstone evidence, Exp 4338 leak-robust moat
+replication evidence, Exp 4337 leak-audit evidence, ar25 and sc25 E3 L1
+reproduction evidence, Exp 4342 third-null cross-game transfer evidence, the ARC
+solve registry with 21 reproducible levels across 13 games, parseable history
+and exclusion-manifest YAML files, a green smart-subset pre-test gate, and `.402`
+active
+**When** the Exp 4347 archive workflow runs
+**Then** it archives `.401`, confirms `.402`, keeps the YAML history parseable
+with one `.401` record, writes
+`results/experiment_4347_archive_v401_activate_v402.json`, records the
+leak-robust replicated oracle-distinct moat and MET DiffusionGemma gate, first
+E3 solves ar25/sc25 L1, ARC 21/13 from the registry, ka59/tr87/ft09 partial,
+cross-game value transfer and cross-domain selection RETIRED, `paper_ready=true`,
+and `.402` S3/E3-deeper/action-cost framing in `v401_close_state`, records the
+checked resources in `preconditions_checked`, declares
+`aggregation_from_upstream_artifacts`, and emits a terminal-prefixed honest
+verdict.
+
+#### SCENARIO-REPORT-4347-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4347 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does
+not claim `.401` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4347)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4347 | Implemented (`python/carnot/reporting/archive_v401_activate_v402_4347.py`, `python/carnot/experiment_4347_archive_v401_activate_v402.py`, `results/experiment_4347_archive_v401_activate_v402.py`) | Implemented (`tests/python/test_experiment_4347_archive_v401_activate_v402.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone

@@ -313,7 +313,7 @@ tasks:
 
   - id: exp4351-e3-deeper-solved-games
     milestone: 2026.06.402
-    title: "PHASE B2 (ARC NORTH STAR; operator MANDATORY 2026-06-17; biggest reproducible-level upside) -- E3 DEEPER on the CRACKED games: sc25 L2+ (the single biggest upside, +4) + ar25 L2 + tn36 L7, +1 each per Incremental-Progress Scoping. .401 reproduced sc25 L1 (exp4341, the spell-cast/cast-grid mechanic) and ar25 L1 (exp4339); sc25 has 5 LIVE-RECORDED levels (only L1 reproduced -> reproducing L2..L5 is +4 reproducible levels), and the registry notes tn36 L7 (obj 41,28 -> tgt 41,8) is a maze the current multi-run planner does not yet crack. EXTEND the existing world models (results/arc_e3/{sc25,ar25}/world_model.py) and the tn36 program-editor solver (scripts/arc3_tn36_offline_solver.py) to the next level(s) via the SAME explore-verify-plan harness (AERA 2605.25931 + Agent2World 2512.22336). LOOP the three targets with a per-target checkpoint + hard per-target wall-time cap (breadth-of-progress beats all-or-nothing). The codex agent IS the proposer (NO nested CodexProposer). HARD gate per target: a NEW level offline_reproduced=true beyond the prior reproduced best. Report a per-target scorecard + the new reproducible_total_levels. An honest partial per target (best verifier_accuracy + the residual win-mechanic gap CLASS) is PROGRESS. verifier_is_oracle=true (execution-grounded). NO TRM training; NO leaderboard submission; checkpoint after EACH target."
+    title: "PHASE B2 (ARC NORTH STAR; operator MANDATORY 2026-06-17; biggest reproducible-level upside) -- E3 DEEPER on the CRACKED games: sc25 L2+ (the single biggest upside, +4) + ar25 L2 + tn36 L7, +1 each per Incremental-Progress Scoping. .401 reproduced sc25 L1 (exp4341, the spell-cast/cast-grid mechanic) and ar25 L1 (exp4339); sc25 has 5 LIVE-RECORDED levels (only L1 reproduced -> reproducing L2..L5 is +4 reproducible levels), and the registry notes tn36 L7 (obj 41,28 -> tgt 41,8) is a maze the current multi-run planner does not yet crack. EXTEND the existing world models (results/arc_e3/{{sc25,ar25}}/world_model.py) and the tn36 program-editor solver (scripts/arc3_tn36_offline_solver.py) to the next level(s) via the SAME explore-verify-plan harness (AERA 2605.25931 + Agent2World 2512.22336). LOOP the three targets with a per-target checkpoint + hard per-target wall-time cap (breadth-of-progress beats all-or-nothing). The codex agent IS the proposer (NO nested CodexProposer). HARD gate per target: a NEW level offline_reproduced=true beyond the prior reproduced best. Report a per-target scorecard + the new reproducible_total_levels. An honest partial per target (best verifier_accuracy + the residual win-mechanic gap CLASS) is PROGRESS. verifier_is_oracle=true (execution-grounded). NO TRM training; NO leaderboard submission; checkpoint after EACH target."
     priority: high
     track: arc-north-star
     max_turns: 100
@@ -353,7 +353,7 @@ tasks:
         honest_verdict:
           principle: "Terminal-prefixed (success_e3_deeper_<targets>_reproduced or complete_e3_deeper_partial). Any NEW reproduced level on any target is progress; an honest partial across all three is also progress."
         per_target_scorecard:
-          principle: "list of {game, prior_best_level, new_reproduced_level, verifier_accuracy, offline_reproduced} -- the per-target breadth-of-progress record (sc25/ar25/tn36)."
+          principle: "list of {{game, prior_best_level, new_reproduced_level, verifier_accuracy, offline_reproduced}} -- the per-target breadth-of-progress record (sc25/ar25/tn36)."
         reproducible_total_levels:
           principle: "BARE int: the ARC reproducible-level count after this task (>= the prior 21) -- the monotonic north-star accuracy signal; sc25 L2+ is the biggest single upside (+4 possible)."
         new_levels_reproduced:
@@ -413,9 +413,9 @@ tasks:
         honest_verdict:
           principle: "Terminal-prefixed (success_e3_tr87_ft09_<n>_reproduced or complete_e3_tr87_ft09_partial). Any reproduced L1 and an honest partial per game are BOTH progress."
         per_game_scorecard:
-          principle: "list of {game, verifier_accuracy, offline_reproduced, reproduced_levels} -- the breadth-of-progress record for tr87/ft09."
+          principle: "list of {{game, verifier_accuracy, offline_reproduced, reproduced_levels}} -- the breadth-of-progress record for tr87/ft09."
         world_model_paths:
-          principle: "list[str]: results/arc_e3/{tr87,ft09}/world_model.py -- the induced models ARE the deliverables."
+          principle: "list[str]: results/arc_e3/{{tr87,ft09}}/world_model.py -- the induced models ARE the deliverables."
         new_levels_reproduced:
           principle: "BARE int: NEW levels offline-reproduced across tr87+ft09 -- the incremental-progress unit."
         verifier_is_oracle:
@@ -689,7 +689,7 @@ tasks:
         verifier_is_oracle:
           principle: "BARE bool=false for the oracle-distinct moat read (the exp4355 stamp fix) -- so this capstone does NOT trip CIRCULAR_MOAT_OVERCLAIM."
         cited_upstream_artifacts:
-          principle: "list of {experiment_id, fields_imported} -- the audit trail so the capstone numbers trace to real measurements."
+          principle: "list of {{experiment_id, fields_imported}} -- the audit trail so the capstone numbers trace to real measurements."
         preconditions_checked:
           principle: "Records the upstream-artifact + publication_gate availability; pre-empts the silent-missing-resource fabrication mode."
       ACCEPTANCE GATE:
