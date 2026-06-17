@@ -154,10 +154,13 @@ class WorldModelVerifier:
             if pred.shape == t.next_grid.shape and np.array_equal(pred, t.next_grid):
                 n_correct += 1
             elif len(mism) < max_mismatch:
+                ok_shape = pred.shape == t.next_grid.shape
+                # COMPACT mismatch (deltas, not full grids — fits a local model's context):
+                # what the TRUE action did vs where the engine's prediction was wrong.
                 mism.append({"i": i, "action": t.action, "data": t.data,
-                             "before": to_ascii(t.grid), "predicted": to_ascii(pred)
-                             if pred.shape == t.next_grid.shape else f"shape{pred.shape}",
-                             "observed": to_ascii(t.next_grid)})
+                             "true_change": _delta(t.grid, t.next_grid),
+                             "your_prediction_was_wrong_at": (_delta(pred, t.next_grid)
+                                                              if ok_shape else f"wrong shape {pred.shape}")})
         n = len(self.transitions)
         return VerifyResult(n, n_correct, n_correct / max(1, n), mism)
 
@@ -194,18 +197,37 @@ def _codex(prompt: str, timeout: int = 420) -> tuple[bool, str]:
         return False, f"codex timeout after {timeout}s"
 
 
-def _transitions_block(trans: list[Transition], k: int = 10) -> str:
-    """Render a sample of transitions as ascii (before -> action -> after) for the
-    prompt. Prefer grid-CHANGING transitions (they carry the dynamics) but keep a
-    couple of no-ops so the model learns which actions do nothing in which states."""
+def _delta(g0: np.ndarray, g1: np.ndarray, cap: int = 80) -> list:
+    """Changed cells (row, col, from, to) — a COMPACT transition encoding that fits a
+    local model's small context (full 64x64 before/after grids blow it; a few-cell delta
+    is tiny and is arguably MORE learnable: it shows exactly what the action changed)."""
+    g0 = np.asarray(g0); g1 = np.asarray(g1)
+    if g0.shape != g1.shape:
+        return []
+    diff = np.argwhere(g0 != g1)
+    return [(int(r), int(c), int(g0[r, c]), int(g1[r, c])) for r, c in diff[:cap]]
+
+
+def _transitions_block(trans: list[Transition], k: int = 8) -> str:
+    """Compact transition encoding for the induce prompt: ONE full grid (the layout) +
+    per-transition DELTAS (changed cells), + the full WIN state if observed. Prefers
+    grid-CHANGING transitions; keeps a couple of no-ops. Small enough for a local model's
+    context window (the full-grid form overflowed gemma-4-12B at ~67k tokens)."""
     changed = [t for t in trans if not np.array_equal(t.grid, t.next_grid)]
     noop = [t for t in trans if np.array_equal(t.grid, t.next_grid)]
     sample = changed[: k - 2] + noop[:2]
     out = []
+    if sample:
+        out.append("INITIAL GRID (one full example of the state layout; all grids are this shape):\n"
+                   + to_ascii(sample[0].grid))
     for t in sample:
         click = f" data={t.data}" if t.data else ""
-        out.append(f"--- ACTION{t.action}{click}  (level {t.level_before}->{t.level_after})\n"
-                   f"BEFORE:\n{to_ascii(t.grid)}\nAFTER:\n{to_ascii(t.next_grid)}")
+        out.append(f"--- ACTION{t.action}{click} (level {t.level_before}->{t.level_after}): "
+                   f"changed cells (row,col,from,to) = {_delta(t.grid, t.next_grid)}")
+    win = next((t for t in trans if t.level_after > t.level_before), None)
+    if win is not None:
+        out.append("WIN STATE (full grid of a level-complete state — is_level_complete must return True here):\n"
+                   + to_ascii(win.next_grid))
     return "\n".join(out)
 
 
@@ -215,9 +237,12 @@ def induce_prompt(game: str, trans: list[Transition], cell: int) -> str:
     return f"""You are inducing an EXECUTABLE WORLD MODEL for the ARC-AGI-3 game '{game}'.
 
 The game state is a {h}x{w} integer grid (logical resolution; colors {colors}). You are
-given REAL observed transitions: a BEFORE grid, an action, and the resulting AFTER grid.
-Actions are integers 1-7; ACTION6 is a click with data={{'x':px,'y':py}} in PIXEL coords
-(pixel = logical*{cell}). Other actions are keyboard/directional with data=None.
+given REAL observed transitions COMPACTLY: one full INITIAL grid (the layout), then per
+transition the action and its DELTA = the list of changed cells (row, col, from_value,
+to_value). Apply a transition's delta to the prior grid to get the next grid. A full WIN
+STATE grid is shown if a level was completed. Actions are integers 1-7; ACTION6 is a click
+with data={{'x':px,'y':py}} in PIXEL coords (pixel = logical*{cell}); others are
+keyboard/directional with data=None.
 
 Write a Python file at results/arc_e3/{game}/world_model.py with EXACTLY two functions:
 
