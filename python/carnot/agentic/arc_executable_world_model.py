@@ -318,7 +318,7 @@ class LocalGGUFProposer:
     trained offline on game dynamics is the other offline-legal engine — see the
     competition-loop note; both keep the engine local, never a closed online API.)"""
     repo_substr: str = "gemma-4-12B-it"     # lightweight SOTA: fast enough for per-game induction
-    n_ctx: int = 8192
+    n_ctx: int = 16384                       # digit-dense grids tokenize ~1 char/token; 8192 overflowed
     max_tokens: int = 2048
     n_gpu_layers: int = -1                   # -1 = offload all layers to GPU (fast); 0 = CPU
     offline_legal: bool = True
