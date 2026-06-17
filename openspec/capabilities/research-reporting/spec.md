@@ -23095,6 +23095,88 @@ not claim `.399` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4324 | Implemented (`python/carnot/reporting/archive_v399_activate_v400_4324.py`, `python/carnot/experiment_4324_archive_v399_activate_v400.py`, `results/experiment_4324_archive_v399_activate_v400.py`) | Implemented (`tests/python/test_experiment_4324_archive_v399_activate_v400.py`) |
 
+### REQ-REPORT-4336: Archive .400, Activate .401, And Preserve The True Close-State
+
+The Exp 4336 workflow SHALL archive milestone `2026.06.400`, confirm milestone
+`2026.06.401` is active, and write the record-only artifact
+`results/experiment_4336_archive_v400_activate_v401.json`. It SHALL run NO live
+model training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`, it SHALL record that the conductor stays
+stood down on TRM training, and it SHALL NOT modify `scripts/research_conductor.py`.
+
+Before writing the complete artifact or editing `research-complete.yaml`, the
+workflow SHALL verify these preconditions and stop with a `blocked_<resource>`
+honest verdict if any fail:
+
+- `research-complete.yaml` and `ops/exclusion_manifest.yaml` parse under
+  `yaml.safe_load`.
+- The smart-subset pre-test gate is green.
+
+The workflow SHALL ensure `research-complete.yaml` contains a single `.400`
+archive record, appending the canonical `.400` record only when absent and
+removing duplicate top-level `.400` records if interrupted conductor appends
+created any. The workflow SHALL keep `research-complete.yaml` parseable after
+the edit and SHALL record `activation_recorded:
+exp4336-archive-v400-activate-v401` on the `.400` archive row.
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v400_close_state` SHALL truthfully record
+the Exp 4335 capstone scorecard, with the in-generation moat as CORPUS-SPECIFIC:
+`verifier_thesis_state=in_generation_moat_corpus_specific`, the in-generation
+moat as CORPUS-SPECIFIC because Exp 4325 found the Exp 4292 partial-state scorer
+leaked on the second corpus, `diffusiongemma_gate_status` as
+`STILL_PENDING_second_corpus_scorer_leaky`, E3 deep-tail progress as 0
+reproduced levels with ar25 closest at about 0.89 verifier accuracy and
+`plan_executed=false`, self-learning as null, ARC as 13 reproducible levels
+across 11 games with sc25 5 provisional live-recorded levels, cross-domain
+selection as RETIRED from Exp 4314, and `paper_ready=true`.
+
+The close-state SHALL also record the adaptive scale-up as bounded to post-hoc
+stitching (`adaptive_guidance_beats_control=false`, CI95 `[-0.075,0.35]`
+including zero, `domain_used=reasoning_corpus_fallback`) and SHALL frame `.401`
+as settle-the-in-generation-moat-with-a-leak-robust-scorer plus first-E3-solve
+plus sc25-reproduction plus action-role-self-learning, not as a re-open of the
+retired cross-domain selection axis.
+
+The artifact SHALL include these field-principle strings exactly:
+
+- `honest_verdict`: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
+- `v400_close_state`: "Honest record (in-generation moat CORPUS-SPECIFIC/scorer-leaked, gate STILL_PENDING; E3 0 solves ar25 0.89 closest; self-learning null; ARC 13 reproducible; cross-domain RETIRED) so the .401 agents frame the milestone as SETTLE-the-moat-with-a-leak-robust-scorer + first-E3-solve + sc25-reproduction + action-role-self-learning -- NOT a re-open of the retired axes."
+- `preconditions_checked`: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
+
+#### SCENARIO-REPORT-4336: The Archive Records The True .400 Close-State
+
+**Given** `.400` has clean Exp 4335 capstone evidence, Exp 4325 second-corpus
+leak evidence, Exp 4327 ar25 E3 partial evidence, the ARC solve registry with
+13 reproducible levels across 11 games plus sc25 provisional 5, parseable
+history and exclusion-manifest YAML files, a green smart-subset pre-test gate,
+and `.401` active
+**When** the Exp 4336 archive workflow runs
+**Then** it archives `.400`, confirms `.401`, keeps the YAML history parseable
+with one `.400` record, writes
+`results/experiment_4336_archive_v400_activate_v401.json`, records the
+in-generation corpus-specific scorer-leak finding, the still-pending
+DiffusionGemma gate, E3 0 reproduced levels with ar25 closest, self-learning
+null, ARC 13/11 plus sc25 provisional 5, cross-domain RETIRED,
+`paper_ready=true`, and `.401` settle/first-E3/sc25/action-role framing in
+`v400_close_state`, records the checked resources in `preconditions_checked`,
+declares `aggregation_from_upstream_artifacts`, and emits a terminal-prefixed
+honest verdict.
+
+#### SCENARIO-REPORT-4336-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4336 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does
+not claim `.400` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4336)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4336 | Implemented (`python/carnot/reporting/archive_v400_activate_v401_4336.py`, `python/carnot/experiment_4336_archive_v400_activate_v401.py`, `results/experiment_4336_archive_v400_activate_v401.py`) | Implemented (`tests/python/test_experiment_4336_archive_v400_activate_v401.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone

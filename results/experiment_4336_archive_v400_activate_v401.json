@@ -1,0 +1,239 @@
+{
+  "activated_milestone": "2026.06.401",
+  "active_milestone_confirmed": "2026.06.401",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.400",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4335_capstone_v400.json",
+      "experiment_id": "4335",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "b8d0dadf8d64d0514c268d546687badf15a44b17532d7b5a1106ac2269ab3a06"
+    },
+    {
+      "deliverable": "results/experiment_4325_in_generation_moat_replicate_second_corpus.json",
+      "experiment_id": "4325",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "7376d7b725a964b85c5e963f776b797323c97e51102988132a0dd6a2ae10e05f"
+    },
+    {
+      "deliverable": "results/experiment_4327_e3_executable_world_model_ar25.json",
+      "experiment_id": "4327",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "57b7d185da33fad273c546eb1dfe9402627ef4ef659b760f5f1fe05b992f94b7"
+    },
+    {
+      "deliverable": "ops/arc_solve_registry.yaml",
+      "experiment_id": "arc_solve_registry",
+      "kind": "document",
+      "required": true,
+      "sha256": "3d97e3816d69f5621195c67c290d6f0f4e020fc6ffff11150702c806e3137e4f"
+    },
+    {
+      "deliverable": "research-roadmap.yaml",
+      "experiment_id": "v401_active_roadmap",
+      "kind": "document",
+      "required": true,
+      "sha256": "78d842eabd2fd04a8e69fb156cd181b674de9234fc824d0d17af321d0d915f22"
+    },
+    {
+      "deliverable": "openspec/change-proposals/research-roadmap-v401.md",
+      "experiment_id": "v401_design_doc",
+      "kind": "document",
+      "required": true,
+      "sha256": "2b19c3fbebf066cdc5aa30ea9ba5b6fb044b49b7be290e179f67b35dd7994ae9"
+    },
+    {
+      "deliverable": "ops/exclusion_manifest.yaml",
+      "experiment_id": "exclusion_manifest",
+      "kind": "document",
+      "required": true,
+      "sha256": "a24b47933a4ef8b8fb9745671ab2f997349345fbb53971e87e1b2172f2d83ce6"
+    }
+  ],
+  "duration_s": 13.698388,
+  "exclusion_manifest_parses": true,
+  "experiment_id": 4336,
+  "field_principles": {
+    "activated_milestone": "Confirms .401 is live for the settle-the-moat frame.",
+    "active_milestone_confirmed": "Records the active roadmap milestone actually observed.",
+    "archived_milestone": "Provenance: the milestone being closed, 2026.06.400.",
+    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
+    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
+    "honest_verdict": "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.",
+    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
+    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
+    "v400_close_state": "Honest record (in-generation moat CORPUS-SPECIFIC/scorer-leaked, gate STILL_PENDING; E3 0 solves ar25 0.89 closest; self-learning null; ARC 13 reproducible; cross-domain RETIRED) so the .401 agents frame the milestone as SETTLE-the-moat-with-a-leak-robust-scorer + first-E3-solve + sc25-reproduction + action-role-self-learning -- NOT a re-open of the retired axes."
+  },
+  "honest_verdict": "success: archived_v400_v401_active_in_generation_corpus_specific_gate_pending_e3_0_ar25_close_arc13_self_learning_null_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "active_milestone": {
+      "actual": "2026.06.401",
+      "expected": "2026.06.401",
+      "matches": true,
+      "path": "research-roadmap.yaml"
+    },
+    "exclusion_manifest_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/exclusion_manifest.yaml"
+    },
+    "research_complete_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "smart_subset_pretest": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4336_archive_v400_activate_v401.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "green": true,
+      "stderr_tail": "",
+      "stdout_tail": "........................................................................ [ 80%]\n.................                                                        [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n89 passed, 1 warning in 5.30s\n"
+    },
+    "source_artifacts": {
+      "4325": {
+        "exists": true,
+        "path": "results/experiment_4325_in_generation_moat_replicate_second_corpus.json",
+        "required": true,
+        "sha256": "7376d7b725a964b85c5e963f776b797323c97e51102988132a0dd6a2ae10e05f"
+      },
+      "4327": {
+        "exists": true,
+        "path": "results/experiment_4327_e3_executable_world_model_ar25.json",
+        "required": true,
+        "sha256": "57b7d185da33fad273c546eb1dfe9402627ef4ef659b760f5f1fe05b992f94b7"
+      },
+      "4335": {
+        "exists": true,
+        "path": "results/experiment_4335_capstone_v400.json",
+        "required": true,
+        "sha256": "b8d0dadf8d64d0514c268d546687badf15a44b17532d7b5a1106ac2269ab3a06"
+      },
+      "arc_solve_registry": {
+        "exists": true,
+        "path": "ops/arc_solve_registry.yaml",
+        "required": true,
+        "sha256": "3d97e3816d69f5621195c67c290d6f0f4e020fc6ffff11150702c806e3137e4f"
+      },
+      "exclusion_manifest": {
+        "exists": true,
+        "path": "ops/exclusion_manifest.yaml",
+        "required": true,
+        "sha256": "a24b47933a4ef8b8fb9745671ab2f997349345fbb53971e87e1b2172f2d83ce6"
+      },
+      "v401_active_roadmap": {
+        "exists": true,
+        "path": "research-roadmap.yaml",
+        "required": true,
+        "sha256": "78d842eabd2fd04a8e69fb156cd181b674de9234fc824d0d17af321d0d915f22"
+      },
+      "v401_design_doc": {
+        "exists": true,
+        "path": "openspec/change-proposals/research-roadmap-v401.md",
+        "required": true,
+        "sha256": "2b19c3fbebf066cdc5aa30ea9ba5b6fb044b49b7be290e179f67b35dd7994ae9"
+      }
+    }
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4336,
+  "reproducibility_checksum": "85d3eca011c0901769edea0fd6434fd32e3f6f549517f49fcc3a8c4c08610fe6",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "updated",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v400_to_v401_4336.v1",
+  "spec_refs": [
+    "REQ-REPORT-4336",
+    "SCENARIO-REPORT-4336"
+  ],
+  "task_id": "exp4336-archive-v400-activate-v401",
+  "v400_close_state": {
+    "adaptive_axis_state": "BOUNDED_TO_POST_HOC_STITCHING",
+    "adaptive_ci95": [
+      -0.075,
+      0.35
+    ],
+    "adaptive_ci95_includes_zero": true,
+    "adaptive_domain_used": "reasoning_corpus_fallback",
+    "adaptive_guidance_beats_control": false,
+    "adaptive_verifier_is_oracle": false,
+    "arc_registry_current_reproducible_total_levels": 14,
+    "arc_reproducible_total_games": 11,
+    "arc_reproducible_total_levels": 13,
+    "arc_shallow_axis_state": "NO_ADVANCE",
+    "arc_shallow_games_advanced": [],
+    "capstone_honest_verdict": "complete: v400_in_generation_corpus_specific_gate_STILL_PENDING_second_corpus_scorer_leaky_arc_levels_13_e3_reproduced_0_self_learning_open_hygiene_passed",
+    "conductor_stands_down_on_trm_training": true,
+    "cross_domain_axis_state": "RETIRED_DOMAIN_BOUND",
+    "cross_domain_do_not_repropose": true,
+    "cross_domain_manifest_reflected": true,
+    "cross_game_state_reduction": 1.008,
+    "cross_game_state_reduction_ci95": [
+      1.0,
+      1.03
+    ],
+    "diffusiongemma_gate_status": "STILL_PENDING_second_corpus_scorer_leaky",
+    "e3_ar25_offline_reproduced": false,
+    "e3_ar25_plan_executed": false,
+    "e3_ar25_reproduced_levels": 0,
+    "e3_ar25_verifier_best_accuracy": 0.89,
+    "e3_axis_state": "DEEP_TAIL_PARTIAL_0_SOLVES_AR25_CLOSE",
+    "e3_closest_game": "ar25",
+    "e3_closest_verifier_best_accuracy": 0.89,
+    "e3_execution_grounded": true,
+    "e3_per_game_best_accuracy": {
+      "ar25": 0.89,
+      "ft09": 0.1,
+      "ka59": 0.56,
+      "tr87": 0.0
+    },
+    "e3_reproduced_levels_total": 0,
+    "headline_outcome": "in_generation_corpus_specific__adaptive_open_reasoning_corpus_fallback__arc_levels_13_e3_0__self_learning_open__paper_ready",
+    "in_generation_axis_state": "CORPUS_SPECIFIC_SCORER_LEAKED",
+    "in_generation_controls_differentiated": false,
+    "in_generation_delta_vs_best_control": 0.0,
+    "in_generation_delta_vs_self_reward_smc": 0.0,
+    "in_generation_honest_verdict": "scorer_leaky_on_second_corpus",
+    "in_generation_moat_replicates": false,
+    "in_generation_replication_ci95": [
+      0.0,
+      0.0
+    ],
+    "in_generation_replication_ci95_excludes_zero": false,
+    "in_generation_scorer_leak_recheck_passed": false,
+    "in_generation_status": "corpus_specific",
+    "in_generation_verifier_is_oracle": false,
+    "independent_leak_answer_masked_auroc": 0.55,
+    "independent_leak_auroc_floor": 0.6,
+    "learned_encoder_transfer_helps": false,
+    "not_reopen_retired_axes": true,
+    "outer_loop_trm_training_done": true,
+    "outer_loop_trm_val": 0.8227,
+    "paper_ready": true,
+    "sc25_provisional_live_recorded_levels": 5,
+    "self_learning_axis_state": "LEARNED_FRAME_ENCODER_TRANSFER_NULL",
+    "self_learning_verifier_is_oracle": false,
+    "summary": "in_generation_corpus_specific_gate_pending_e3_0_ar25_close_self_learning_null_arc13_cross_domain_retired",
+    "v401_frame": "SETTLE-the-in-generation-moat-with-a-leak-robust-scorer + first-E3-solve + sc25-reproduction + action-role-self-learning",
+    "verifier_is_oracle_honored": true,
+    "verifier_thesis_state": "in_generation_moat_corpus_specific"
+  }
+}
