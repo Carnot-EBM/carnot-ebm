@@ -53,29 +53,40 @@ def characterize(game: str):
     return trans, win
 
 
+def _compact_gap_prompt_grids(trans, win, k: int = 3) -> str:
+    """Heuristic prompts need the WIN STATE (the goal to measure distance to) + a FEW small
+    deltas for game-sense — NOT the full dynamics. cn04-class games have huge per-action
+    deltas, so cap them hard and show few; this keeps the prompt ~2-3k tokens (vs 18k) so it
+    never overflows the context (the delta-compression that fixed the world-model prompt)."""
+    import numpy as np
+    changed = [t for t in trans if not np.array_equal(t.grid, t.next_grid)][:k]
+    out = ["WIN STATE (a level-complete grid — goal_distance must be ~0 here):\n" + e3.to_ascii(win)]
+    for t in changed:
+        d = e3._delta(t.grid, t.next_grid, cap=24)
+        out.append(f"--- ACTION{t.action}: changed cells (row,col,from,to) = {d}")
+    return "\n".join(out)
+
+
 def gap_fill_prompt(game: str, trans, win) -> str:
     h, w = win.shape
     colors = sorted(set(int(v) for v in win.flatten().tolist()))
-    return f"""You are helping a SEARCH algorithm solve the ARC-AGI-3 game '{game}'. The search
-explores game states but STALLS — it needs a HEURISTIC to know which states are closer to
-winning. Write `def goal_distance(grid) -> float`: LOWER = CLOSER to a level-complete (win)
-state. `grid` is a {h}x{w} numpy int array (colors {colors}).
+    return f"""You are helping a SEARCH algorithm solve the ARC-AGI-3 game '{game}'. It needs a
+HEURISTIC: `def goal_distance(grid) -> float`, LOWER = CLOSER to a level-complete (win) state.
+`grid` is a {h}x{w} numpy int array (colors {colors}).
 
-Below are observed transitions (compact: one full grid + per-action deltas) and the full WIN
-STATE. INFER what makes a state close to the win (pieces aligned to targets, a region filled,
-the player adjacent to an exit, etc.) and score it so goal_distance(win_state)≈0 and
-far-from-win states score higher. Use only numpy.
+A global numpy array `WIN` of shape {h}x{w} (a level-complete win-state grid, shown below for
+reference) and `np` (numpy) are ALREADY DEFINED in your scope. DO NOT redefine, hardcode, or
+write out WIN as a literal — REFERENCE the global `WIN`. Write a VERY SHORT function (<= 8
+lines). The simplest robust answer, which you should prefer unless a clearly better structural
+signal exists: `return float((grid != WIN).sum())` (count of differing cells).
 
-CRITICAL CONTRACT: goal_distance MUST `return` a single float for ANY input grid — it must
-NEVER return None or fall off the end. Make the LAST line of the function an unconditional
-`return float(<value>)`. Do not use early returns inside branches without a final fallback
-return. A simple, robust choice: return the count of cells where `grid` differs from the
-fixed win pattern. Keep it short.
+CRITICAL CONTRACT: goal_distance MUST `return float(...)` for ANY grid — NEVER None, never
+fall off the end. The LAST line must be an unconditional `return float(<value>)`.
 
-Output ONLY one ```python code block containing `import numpy as np` and the complete
-function `def goal_distance(grid):` that ends in an unconditional float return.
+Output ONLY one short ```python code block containing just `def goal_distance(grid):` (no
+imports, no WIN definition — np and WIN are provided).
 
-{e3._transitions_block(trans)}
+{_compact_gap_prompt_grids(trans, win)}
 ```python
 """
 
@@ -95,9 +106,13 @@ def main() -> int:
     from carnot.agentic import gap_fills
 
     def _gd_from_code(code_str):
-        ns: dict = {}
+        ns: dict = {"np": np, "WIN": win}      # WIN + np provided as globals (model references them)
         exec(code_str, ns)
         return ns["goal_distance"]
+
+    def _self_contained(code_str) -> str:      # bundle WIN into the saved heuristic (no model cost)
+        return (f"import numpy as np\nWIN = np.array({win.tolist()}, dtype=np.int16)\n\n"
+                + code_str.strip() + "\n")
 
     def _validate(code_str) -> bool:   # runtime smoke-test: must run on win+start -> finite floats
         gd_ = _gd_from_code(code_str)
@@ -110,8 +125,8 @@ def main() -> int:
         print("  REUSING pre-generated heuristic (autolearning; no LLM call)", flush=True)
     else:
         reused = False
-        # 2048 tokens: enough for a heuristic (1200 truncated Qwen mid-code), still fast on a MoE
-        proposer = e3.LocalGGUFProposer(repo_substr=args.repo, max_tokens=2048, timeout=600)
+        # compact prompt (~2-3k tok) + a SHORT steered heuristic -> 1536 output tokens is plenty
+        proposer = e3.LocalGGUFProposer(repo_substr=args.repo, max_tokens=1536, timeout=600)
         ok, code = proposer.generate(gap_fill_prompt(game, trans, win),
                                      required=("goal_distance",), validate=_validate)
         if not ok:
@@ -157,8 +172,9 @@ def main() -> int:
     captured = None
     if helped and not reused:
         path = gap_fills.save_heuristic(
-            game, code, meta=f"reproduced solve in {results['llm_heuristic']['actions']} actions "
-                             f"via {args.repo}; A/B beat novelty-only")
+            game, _self_contained(code),       # self-contained: embeds WIN + the model's goal_distance
+            meta=f"reproduced solve in {results['llm_heuristic']['actions']} actions "
+                 f"via {args.repo}; A/B beat novelty-only")
         captured = str(path.relative_to(REPO))
         print(f"  CAPTURED -> {captured} (autolearning: future runs reuse it, no LLM call)", flush=True)
     _write(game, {"win_dist": d_win, "start_dist": d_start, "results": results, "helped": helped,
