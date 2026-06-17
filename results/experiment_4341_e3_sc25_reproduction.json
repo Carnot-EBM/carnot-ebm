@@ -1,0 +1,300 @@
+{
+  "accepted_plan": [
+    "cell0,1",
+    "cell1,0",
+    "cell1,2",
+    "cell2,1",
+    "move3",
+    "move3",
+    "move3",
+    "move3",
+    "move3",
+    "move3",
+    "move3",
+    "move3",
+    "move3",
+    "move3",
+    "move3",
+    "move3"
+  ],
+  "adaptive_test_results": [
+    {
+      "actions": [
+        "cell0,1",
+        "cell1,0",
+        "cell1,2",
+        "cell2,1"
+      ],
+      "divergence_step": null,
+      "level_up": false,
+      "name": "adaptive_cast_pattern_clear_shrink_spell",
+      "passed": true
+    },
+    {
+      "actions": [],
+      "divergence_step": null,
+      "level_up": false,
+      "name": "adaptive_fireball_animation_rule_declared_no_l1_fireball_available",
+      "note": "L1 exposes sieesc_chwjgc only; fireball rule is encoded in the model and remains a later-level probe.",
+      "passed": true
+    },
+    {
+      "actions": [
+        "cell0,1",
+        "cell1,0",
+        "cell1,2",
+        "cell2,1",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3"
+      ],
+      "divergence_step": null,
+      "level_up": true,
+      "name": "adaptive_sc25_l1_full_win_path",
+      "passed": true
+    }
+  ],
+  "adaptive_tests_generated": 3,
+  "duration_s": 0.75,
+  "experiment": "experiment_4341_e3_sc25_reproduction",
+  "explore_lemmas": [
+    {
+      "action": 6,
+      "changed_cells": 9,
+      "has_data": true,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 6,
+      "changed_cells": 13,
+      "has_data": true,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 6,
+      "changed_cells": 58,
+      "has_data": true,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 3,
+      "changed_cells": 8,
+      "has_data": false,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 3,
+      "changed_cells": 12,
+      "has_data": false,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 3,
+      "changed_cells": 200,
+      "has_data": false,
+      "level_delta": 1,
+      "verifier_gated": true
+    }
+  ],
+  "explore_lemmas_collected": 6,
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed (success_e3_sc25_L1_reproduced or complete_e3_sc25_partial_model_<acc>). A reproduced L1 (the first reproducible sc25 level, opening the path to +5) and an honest partial (induced model + win-mechanic gap) are BOTH progress.",
+    "offline_reproduced": "BARE bool: the real env reaches L1 via the induced-model plan, re-gated -- only reproduced levels count (sc25's 5 levels are LIVE-RECORDED, NOT reproduced -- this is the gate that converts them).",
+    "preconditions_checked": "Records the offline-env presence + harness import + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the induction + exploration + planning.",
+    "reproduced_levels": "BARE int: levels offline-reproduced on sc25 (target >=1) -- the +1 unit, opening the path to the 5 live-recorded levels.",
+    "reproducibility_checksum": "Hash of the world model + the plan + the reproduce() result; lets a third party re-run.",
+    "verifier_accuracy_per_round": "list[float]: the verifier's reproduction rate per refactor round on sc25's complex mechanic.",
+    "verifier_is_oracle": "BARE bool=true -- the SOLVE is execution-grounded (real env defines the win); ARC progress, NOT a moat headline.",
+    "win_mechanic_cracked": "BARE bool: did the induced model capture a complete win path (player-to-exit OR cast-grid alignment) the BFS solver could not? -- the diagnostic for whether E3 unblocks where BFS stalled.",
+    "world_model_path": "results/arc_e3/sc25/world_model.py -- the induced model IS the deliverable.",
+    "world_model_sha256": "Hash of the induced world model -- auditable/reproducible."
+  },
+  "game": "sc25",
+  "honest_verdict": "success_e3_sc25_L1_reproduced",
+  "inference_substrate": "codex_direct_model_edit_offline_env_no_nested_proposer",
+  "method": "aera_explore_verify_plan_agent2world_sc25_world_model_reproduction",
+  "offline_reproduced": true,
+  "plan_executed": true,
+  "plan_executed_detail": {
+    "divergence_step": null,
+    "plan_result": {
+      "divergence_step": null,
+      "executed": true,
+      "executed_steps": [
+        {
+          "action": 6,
+          "data": {
+            "x": 29,
+            "y": 49
+          },
+          "label": "cell0,1",
+          "step": 1
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 24,
+            "y": 54
+          },
+          "label": "cell1,0",
+          "step": 2
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 34,
+            "y": 54
+          },
+          "label": "cell1,2",
+          "step": 3
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 29,
+            "y": 59
+          },
+          "label": "cell2,1",
+          "step": 4
+        },
+        {
+          "action": 3,
+          "data": null,
+          "label": "move3",
+          "step": 5
+        },
+        {
+          "action": 3,
+          "data": null,
+          "label": "move3",
+          "step": 6
+        },
+        {
+          "action": 3,
+          "data": null,
+          "label": "move3",
+          "step": 7
+        },
+        {
+          "action": 3,
+          "data": null,
+          "label": "move3",
+          "step": 8
+        },
+        {
+          "action": 3,
+          "data": null,
+          "label": "move3",
+          "step": 9
+        },
+        {
+          "action": 3,
+          "data": null,
+          "label": "move3",
+          "step": 10
+        },
+        {
+          "action": 3,
+          "data": null,
+          "label": "move3",
+          "step": 11
+        },
+        {
+          "action": 3,
+          "data": null,
+          "label": "move3",
+          "step": 12
+        },
+        {
+          "action": 3,
+          "data": null,
+          "label": "move3",
+          "step": 13
+        },
+        {
+          "action": 3,
+          "data": null,
+          "label": "move3",
+          "step": 14
+        },
+        {
+          "action": 3,
+          "data": null,
+          "label": "move3",
+          "step": 15
+        },
+        {
+          "action": 3,
+          "data": null,
+          "label": "move3",
+          "step": 16
+        }
+      ],
+      "game": "sc25",
+      "level_up": true,
+      "plan_len": 16,
+      "planned": true,
+      "solution": [
+        "cell0,1",
+        "cell1,0",
+        "cell1,2",
+        "cell2,1",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3",
+        "move3"
+      ],
+      "win_path": "cast-grid shrink spell then player-to-exit"
+    }
+  },
+  "preconditions_checked": {
+    "harness_import": true,
+    "leaderboard_submission": false,
+    "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/sc25",
+    "offline_env_present": true,
+    "research_conductor_modified": false,
+    "solver_kit_import": true,
+    "trm_training_stood_down": true
+  },
+  "random_seed": 4341,
+  "reproduced_levels": 1,
+  "reproducibility_checksum": "fb94af999655687f8f323de71c51be54838b6a39734652d654f4296b278b9e6f",
+  "residual_mismatch_class": "none",
+  "spec_refs": [
+    "REQ-PHASE4-080",
+    "SCENARIO-PHASE4-080"
+  ],
+  "submitted_to_leaderboard": false,
+  "verifier_accuracy_per_round": [
+    1.0
+  ],
+  "verifier_best_accuracy": 1.0,
+  "verifier_is_oracle": true,
+  "win_mechanic_cracked": true,
+  "world_model_path": "results/arc_e3/sc25/world_model.py",
+  "world_model_round_budget": 1,
+  "world_model_sha256": "091d7eb90d0f5e70aa15b9652491912efbf5d66b0d382173eae98d99e1cab4ac"
+}
