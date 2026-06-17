@@ -8629,3 +8629,5 @@ c |
 | 2026-06-17 01:08 UTC | PHASE F2 (hygiene; re-run -- .397's exp4299 BLOCKE | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-06-17 01:19 UTC | PHASE F3 (hardware continuity; opportunistic per n | OK | 106 passed, 1 warning in 7.54s |
 | 2026-06-17 01:33 UTC | PHASE F4 (capstone .398, UNGATED) -- the verifier  | OK | 87 passed, 1 warning in 5.83s |
+| 2026-06-17 02:23 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-06-17 02:26 UTC | Milestone 2026.06.399 activated | OK | 11 tasks queued |
