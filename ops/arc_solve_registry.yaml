@@ -56,11 +56,11 @@ games:
 
   - game: lp85
     reproducibility: reproduced
-    levels_reproduced: 3
+    levels_reproduced: 4   # 3 -> 4 (2026-06-17, standing loop adaptered path, target_level=4)
     win_condition: "align each moveable piece (bghvgbtwcb/fdgmtkfrxl) with its goal sprite at (+1,+1) via button rotations."
     action_model: "click-only [ACTION6]; env-adaptive button discovery (discover_click_buttons)."
-    solver: "scripts/arc3_lp85_offline_solver.py — reuses plan_observed_suffix (goal-key-deduped env-cloned BFS), chained L1->L3 (29 moves)."
-    reproduce: "results/arc3_lp85_offline_resolve.json replays to L3 in the meta-harness."
+    solver: "scripts/arc3_lp85_offline_solver.py — reuses plan_observed_suffix (goal-key-deduped env-cloned BFS), chained L1->L3 (29 moves). L4 (2026-06-17): arc_loop_solve.solve_adaptered(lp85, target_level=4) via the OfflineSolver + learned verifier checkpoint (models/arc_verifier_lp85.json); full L1->L4 = 54 moves, 836 states. The prior L3 cap was just the default target_level=3, not a wall."
+    reproduce: "results/arc_loop_solve_lp85.json — offline reproduction gate (kit.reproduce) reproduced=True, claimed_level=4, deterministic on re-run. (results/arc3_lp85_offline_resolve.json replays to L3.)"
     gotchas:
       - "deepcopy-injection WORKS for lp85 (unlike sc25)."
       - "dedup by goal-relevant key (goal positions), not full grid hash, or the search explodes (26k states -> fails)."
@@ -164,11 +164,11 @@ games:
   # vc33: a click-game solved live (arc3_m2_solve) but NOT yet captured reproducibly.
 
 # Aggregate reproducible scorecard (the only count that may be headline/publish-eligible):
-#   reproduced levels = r11l 1 + ls20 1 + wa30 1 + lp85 3 + cd82 1 + sp80 1 + su15 1
-#   + tu93 1 = 10  across 8 games  (the 4 new games landed 2026-06-17 by the
-#   adapter-free sweep, each independently re-gated reproduced=True; verify with
+#   reproduced levels = r11l 1 + ls20 1 + wa30 1 + lp85 4 + cd82 1 + sp80 1 + su15 1
+#   + tu93 1 + cn04 1 + m0r0 1 + sk48 1 = 14  across 11 games  (lp85 L3->L4 landed
+#   2026-06-17 via the standing loop adaptered path, offline-reproduction-gated; verify with
 #   scripts/arc3_replay_scorecard_metaharness.py -> results/arc3_replay_aggregate_scorecard.json)
-reproducible_total_levels: 13   # 6 -> 10 (+cd82,sp80,su15,tu93) -> 13 (+cn04,m0r0,sk48 via E1)
+reproducible_total_levels: 14   # 13 -> 14 (+lp85 L4 via standing loop, 2026-06-17)
 reproducible_total_games: 11    # r11l, ls20, wa30, lp85, cd82, sp80, su15, tu93, cn04, m0r0, sk48
 provisional_total_levels: 5     # sc25 L5 (live-recorded, not yet reproduced)
 
