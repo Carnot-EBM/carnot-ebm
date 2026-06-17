@@ -68,6 +68,76 @@ loader. (Detector aside: the diffusion-surprisal as an error DETECTOR is weak �
 confounded, residual ~0.68; see the FoVer detector artifact. The energy-prior is for guidance,
 not headline detection.)
 
+### 2026-06-17 (MANDATORY-NEXT-MILESTONE, operator-requested): E3 — Carnot executable-world-model solver on the deep-tail ARC-AGI-3 games
+
+**What & why.** The SOTA for FULL ARC-AGI-3 solves is the executable-world-model coding
+agent (arXiv:2605.05138): gpt-5.5 induces a Python world model, VERIFIES it reproduces
+observed transitions, refactors toward simpler abstractions (MDL proxy), and plans to the
+win — "LLMs are most reliable used not as final authorities but as PROPOSAL mechanisms
+inside systems that check their outputs," which IS Carnot's verifier-moat thesis. The
+harness is BUILT + VALIDATED end-to-end (outer-loop 2026-06-17): on ar25, codex/gpt-5.5
+induced a GENUINE world model (real flood-fill box dynamics) and the Carnot
+`WorldModelVerifier` grounded it at 61% (vs 35% identity baseline). The only gap to a
+solve is the MULTI-ROUND refactor loop (the single validation round timed out at 480s
+under live conductor-codex contention) + win-seeking exploration so the goal predicate is
+learnable.
+- Harness: `python/carnot/agentic/arc_executable_world_model.py` (`collect_transitions`,
+  `WorldModelVerifier`, `load_engine`, `plan_and_execute`) + runner `scripts/arc_e3_solve.py`.
+- SOTA mapping note: `docs/research-notes/arc-agi3-sota-ingestion-2026-06-17.md`.
+
+**Deep-tail games** (our `graph_explore_solve_v2` NO-ADVANCEd them even at 30k expansions
+— mechanic-limited, not budget-limited; gpt-5.5 solved them in the paper): **ar25, ka59,
+tr87, ft09**. One task per game (or one task looping the four, +1 level each — breadth of
+progress beats an all-or-nothing task).
+
+**Task spec (each task; planner: honor every discipline below):**
+- `agent_type: codex`, `model: gpt-5.5`. **The codex agent IS the proposer** — it uses the
+  harness functions as tools: `collect_transitions(game)` → offline dataset (zero quota);
+  WRITE `results/arc_e3/<game>/world_model.py` with `engine(grid,action,data)` +
+  `is_level_complete(grid)`; `WorldModelVerifier.score()` → accuracy + mismatch artifacts;
+  refactor the engine against the mismatches; repeat ~4–8 rounds until accuracy ≥ ~0.95 or
+  the round budget; then `plan_and_execute`. **Do NOT call the `CodexProposer` subprocess**
+  (that nests codex-in-codex) — the agent writes the model directly.
+- INCREMENTAL-PROGRESS scoped (CLAUDE.md "ARC-AGI-3 Incremental-Progress Scoping"): target
+  **+1 level (L1)**, NOT "full solve all levels."
+- PRECONDITIONS (step 0): `ls environment_files/<game>/` non-empty (offline sim present);
+  the agent is codex so codex availability is implicit. If missing → `honest_verdict:
+  blocked_offline_env_missing_<game>`, no fabrication.
+- REQUIRED ARTIFACT FIELDS (each `principle:`-annotated per CLAUDE.md):
+  - `verifier_accuracy_per_round: list[float]` — principle: "the verifier is the moat; its
+    reproduction rate is the only trustworthy progress signal for the induced model."
+  - `world_model_path` + `world_model_sha256` — principle: "the induced model is the
+    deliverable; the hash makes the solve auditable/reproducible."
+  - `offline_reproduced: bool` + `reproduced_levels: int` — principle: "per ARC Solve
+    Reproducibility, a solve counts only if it re-derives offline via the reproduction gate
+    (`arc_solver_kit.reproduce`)."
+  - `plan_executed: bool` + `divergence_step` — principle: "execution-grounded
+    confirmation: the real env reporting level_up is ground truth, and halt-on-divergence
+    prevents trusting a wrong model."
+  - `inference_substrate: live_llm_inference` — principle: "codex/gpt-5.5 induces the model
+    live; declares the duration floor."
+  - `verifier_is_oracle: true` (with `principle:` "the SOLVE is EXECUTION-GROUNDED — the
+    real env defines the win — so an E3 solve is ARC NORTH-STAR PROGRESS, NOT an
+    oracle-distinct verifier-moat headline. Do NOT headline a moat from an E3 solve; the
+    oracle-distinct moat is the separate P0 track above.").
+- Falsifiable acceptance gate (+1 level): `offline_reproduced=True AND reproduced_levels>=1`
+  (the real env reaches L1 via the induced-model plan, re-gated). If the round budget is hit
+  without a verified solve → honest partial: record best `verifier_accuracy` + the residual
+  mismatch CLASS as a missing-world-model-rule gap (`ops/verifier_gaps.md`).
+- `honest_verdict` terminal prefix: `success_e3_<game>_L1_reproduced` or
+  `complete_e3_<game>_partial_model_<acc>`.
+- `prior_failures:` our graph-explore NO-ADVANCEd ar25/ka59/tr87/ft09 (mechanic-limited,
+  confirmed at 30k). **DIFFERENT APPROACH** = world-model induction + planning (not blind
+  graph-explore) → NOT a doomed rerun. `retire_if_same_verdict: false` (a captured model +
+  gap is still progress).
+
+**Quota note (operational, load-bearing).** Run E3 when codex is NOT already saturated by a
+concurrent task — the outer-loop validation's refactor round timed out at 480s under live
+contention. Budget ~4–8 codex rounds/game; cap per-task wall-time to fit the conductor
+window; an honest partial (model + gap) is fine. This is ARC-track north-star progress
+(`project_arc_agi3_north_star`), complementary to — NOT a substitute for — the P0
+oracle-distinct verifier work above.
+
 ## GATED FORWARD-QUEUE (queued; explicitly NOT a MANDATORY-NEXT-MILESTONE priority; do NOT force-pick-up)
 
 Entries here are SPECCED and QUEUED but GATED on a condition. The planner MUST NOT
@@ -7972,6 +8042,10 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated 
 **Recurrence prevention TODO:** pin llama-cpp-python build flags in pyproject.toml under `[tool.uv.sources]` or document the CUDA build recipe in CONTRIBUTING.md. The pre-built wheel from `https://abetlen.github.io/llama-cpp-python/whl/cu128/` only covers stable Python 3.x — Python 3.14 wheels not available there, hence the source build.
 
 **Recurrence pattern (cumulative):** 4 missing-or-CPU-only Python packages in 5 days — `pytest-xdist`, `python-sat`, `datasets`, llama-cpp-python (CPU wheel). The venv has drifted from declared deps; recommend `.venv/bin/pip install -e ".[dev,llm,mcp,rust,dwave]"` to re-sync. Or move to `uv sync` workflow which respects the `[tool.uv.sources]` index pins.
+
+
+### NEW Phase 4 Canonical Metric MANDATORY
+Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
 
 
 ### NEW Phase 4 Canonical Metric MANDATORY
