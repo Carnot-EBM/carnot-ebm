@@ -369,11 +369,14 @@ class LocalGGUFProposer:
             time.sleep(2)
         return False
 
-    def generate(self, prompt: str, required: tuple = ("engine", "is_level_complete")) -> tuple[bool, str]:
+    def generate(self, prompt: str, required: tuple = ("engine", "is_level_complete"),
+                 validate=None, tries: int = 3) -> tuple[bool, str]:
         """Generic GPU-server completion: returns (True, code) where `code` contains every
-        `def <name>` in `required` and PARSES, or (False, error). Retries on the iGPU (fast).
-        This is the gap-filler entry point: the LLM writes a FOCUSED component (a
-        goal_distance heuristic, a state_key, a verifier invariant) — not a full solver."""
+        `def <name>` in `required`, PARSES, and (if `validate` is given) passes the
+        runtime check `validate(code) -> bool`. Retries on the iGPU (fast). This is the
+        gap-filler entry point: the LLM writes a FOCUSED component (a goal_distance
+        heuristic, a state_key, a verifier invariant) — not a full solver. `validate` lets
+        the caller reject runtime-buggy code (e.g. a heuristic that returns None)."""
         import ast
         import json as _json
         import urllib.request
@@ -381,7 +384,7 @@ class LocalGGUFProposer:
             return False, (f"GPU llama-server failed for {self.repo_substr}; SOTA models "
                            "must run on GPU (no CPU fallback)")
         last = ""
-        for attempt in range(3):
+        for attempt in range(tries):
             body = _json.dumps({"prompt": prompt, "n_predict": self.max_tokens,
                                 "temperature": 0.2 + 0.1 * attempt, "cache_prompt": True}).encode()
             try:
@@ -398,8 +401,14 @@ class LocalGGUFProposer:
                 ast.parse(code)               # never use code that doesn't parse
             except SyntaxError as se:
                 last = f"syntax error line {se.lineno}: {se.msg}"; continue
+            if validate is not None:
+                try:
+                    if not validate(code):
+                        last = "failed runtime validation (e.g. returned non-number)"; continue
+                except Exception as ve:
+                    last = f"runtime check raised: {ve!r}"[:120]; continue
             return True, code
-        return False, f"local model code unusable after 3 tries ({last})"
+        return False, f"local model code unusable after {tries} tries ({last})"
 
     def _gen_to_file(self, game: str, prompt: str) -> tuple[bool, str]:
         (E3_DIR / game).mkdir(parents=True, exist_ok=True)

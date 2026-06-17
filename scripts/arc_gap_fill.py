@@ -83,22 +83,35 @@ def main() -> int:
         print("  no win-state available (need a banked solve to ground the heuristic)"); return 0
     print(f"  characterized: {len(trans)} transitions, win-state {win.shape}", flush=True)
 
-    proposer = e3.LocalGGUFProposer(repo_substr=args.repo)
-    ok, code = proposer.generate(gap_fill_prompt(game, trans, win), required=("goal_distance",))
-    if not ok:
-        print(f"  LLM heuristic generation FAILED: {code[:160]}", flush=True)
-        _write(game, {"stage": "generate", "ok": False, "error": code[:200]}, t0); return 0
-    # load + smoke-test the heuristic (must run on a grid + return a float)
-    ns: dict = {}
-    try:
-        exec(code, ns)
-        gd = ns["goal_distance"]
-        d_win = float(gd(win)); d_start = float(gd(trans[0].grid))
-    except Exception as ex:
-        print(f"  heuristic failed to run: {repr(ex)[:140]}", flush=True)
-        _write(game, {"stage": "run", "ok": False, "error": repr(ex)[:200]}, t0); return 0
+    import math
+    from carnot.agentic import gap_fills
+
+    def _gd_from_code(code_str):
+        ns: dict = {}
+        exec(code_str, ns)
+        return ns["goal_distance"]
+
+    def _validate(code_str) -> bool:   # runtime smoke-test: must run on win+start -> finite floats
+        gd_ = _gd_from_code(code_str)
+        return math.isfinite(float(gd_(win))) and math.isfinite(float(gd_(trans[0].grid)))
+
+    # AUTOLEARNING reuse-first: a previously-captured heuristic is pre-generated (no LLM call)
+    saved = gap_fills.load_heuristic(game)
+    if saved is not None:
+        gd, code, reused = saved, "<pre-generated>", True
+        print("  REUSING pre-generated heuristic (autolearning; no LLM call)", flush=True)
+    else:
+        reused = False
+        proposer = e3.LocalGGUFProposer(repo_substr=args.repo)
+        ok, code = proposer.generate(gap_fill_prompt(game, trans, win),
+                                     required=("goal_distance",), validate=_validate)
+        if not ok:
+            print(f"  LLM heuristic generation FAILED: {code[:160]}", flush=True)
+            _write(game, {"stage": "generate", "ok": False, "error": code[:200]}, t0); return 0
+        gd = _gd_from_code(code)
+    d_win = float(gd(win)); d_start = float(gd(trans[0].grid))
     print(f"  heuristic runs: goal_distance(win)={d_win:.2f}, goal_distance(start)={d_start:.2f} "
-          f"(want win < start)", flush=True)
+          f"({'REUSED pre-generated' if reused else 'freshly generated'})", flush=True)
 
     def verifier(frame):
         try:
@@ -130,10 +143,20 @@ def main() -> int:
     verdict = ("success_gap_fill_heuristic_helped_" + game if helped
                else f"complete_gap_fill_{game}_heuristic_no_gain")
     print(f"  HEURISTIC HELPED: {helped}", flush=True)
+    # AUTOLEARNING CAPTURE: a freshly-generated heuristic that HELPED (reproduction-gated) is
+    # rolled back in as a pre-generated, deterministic, bundle-able asset for future runs.
+    captured = None
+    if helped and not reused:
+        path = gap_fills.save_heuristic(
+            game, code, meta=f"reproduced solve in {results['llm_heuristic']['actions']} actions "
+                             f"via {args.repo}; A/B beat novelty-only")
+        captured = str(path.relative_to(REPO))
+        print(f"  CAPTURED -> {captured} (autolearning: future runs reuse it, no LLM call)", flush=True)
     _write(game, {"win_dist": d_win, "start_dist": d_start, "results": results, "helped": helped,
-                  "honest_verdict": verdict, "proposer": args.repo,
-                  "inference_substrate": "live_llm_inference_igpu", "verifier_is_oracle": False,
-                  "heuristic_code": code[:2000]}, t0)
+                  "reused_pregenerated": reused, "captured_to": captured,
+                  "honest_verdict": verdict, "proposer": "pre-generated" if reused else args.repo,
+                  "inference_substrate": "pregenerated_deterministic" if reused else "live_llm_inference_igpu",
+                  "verifier_is_oracle": False, "heuristic_code": code[:2000]}, t0)
     return 0
 
 
