@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.399",
+  "generated_at": "2026-06-17T08:50:42Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative milestone-scoped TIMING DATA reports 0 experiments / 0 compute-bound / 0 wall-clock minutes for 2026.06.399 — but this is the recurring milestone-scoped-timing-detector FALSE-ZERO (documented .363 through .398, now .399): on-disk results/ artifacts for this milestone window exist, so the milestone did execute. With no compute-bound task attributed to the window, the snapshot's 0% GPU utilization is the correct idle state, not a bottleneck, so gpu_idle_on_compute_bound_tasks is null.",
+  "bottlenecks_identified": [
+    "Observability, not execution: the conductor's milestone-scoped timing detector false-zeroed again (0 experiment commits reported since activation) while on-disk results/ artifacts for the .399 window exist — the same recurring gap logged across .363-.398. No per-experiment wall-time bottleneck can be derived from the authoritative block because the detector surfaced none.",
+    "Because the detector reports zero compute-bound tasks, no GPU-idle bottleneck can be asserted (gpu_idle_on_compute_bound_tasks=null): both RTX 3090s idle at the snapshot is correct behaviour when no compute-bound task is attributed to the window."
+  ],
+  "improvements_suggested": [
+    "Fix the milestone-scoped timing detector (the dominant recurring operational finding): it has false-zeroed for ~30+ consecutive milestones. Attribute experiments to a milestone by on-disk results/experiment_*.json mtime within the activation->close window (or by commit range), not by a commit-message scan that misses the conductor's batched/auto-commit cadence.",
+    "Emit a detector_gap_suspected flag at retro time when the milestone-scoped count is 0 but results/ contains artifacts newer than the activation timestamp, so the false-zero is self-evident in the artifact instead of re-derived each milestone.",
+    "No GPU or DualGPURunner change is warranted: a null gpu_idle_on_compute_bound_tasks means there is no compute-bound task to have wasted GPU on; DualGPURunner only applies when 2+ models load in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Repair the milestone-scoped timing detector so retros stop false-zeroing — this is a ~30-milestone-old observability defect and the single highest-leverage operational fix; switch attribution to results/ mtime-within-window or commit-range.",
+    "Add a self-evident detector_gap_suspected tripwire (0 reported commits AND newer artifacts on disk) so the false-zero is flagged automatically rather than reconstructed by hand each milestone.",
+    "Take no GPU-efficiency action: idle GPUs at the snapshot are correct given no compute-bound task was attributed — avoid proposing DualGPURunner where no parallel model load exists."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The recurring operational failure here is observability, not execution: the milestone ran, but the timing detector reported nothing, forcing every retro to reconstruct ground truth from on-disk artifacts. Repairing the detector saves no experiment wall-time (hence 0% estimate) but restores honest, low-effort retros — the real cost of leaving it unfixed is ~30 milestones of hand-reconciliation."
+}
