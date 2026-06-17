@@ -8636,3 +8636,4 @@ c |
 | 2026-06-17 04:36 UTC | PHASE B1 (CLOSE THE IN-GENERATION MOAT; rebuild th | OK | 112 passed, 1 warning in 6.35s |
 | 2026-06-17 05:59 UTC | PHASE C1 (DEPLOY the hardened efficiency verifier  | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: rtifact)
 +     |
+| 2026-06-17 06:32 UTC | PHASE C1 (DEPLOY the hardened efficiency verifier  | OK | cache hit: 84 passed, 1 warning in 7.12s |
