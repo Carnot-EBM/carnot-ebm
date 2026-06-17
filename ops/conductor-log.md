@@ -8632,3 +8632,4 @@ c |
 | 2026-06-17 02:23 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-06-17 02:26 UTC | Milestone 2026.06.399 activated | OK | 11 tasks queued |
 | 2026-06-17 03:37 UTC | Archive .398 -> activate .399; KEEP the hardened g | OK | 110 passed, 1 warning in 6.27s |
+| 2026-06-17 03:57 UTC | PHASE A1 (CLOSE THE CROSS-DOMAIN SELECTION MOAT; r | OK | 97 passed, 1 warning in 6.64s |
