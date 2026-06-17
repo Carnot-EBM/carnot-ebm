@@ -8664,3 +8664,4 @@ c |
 | 2026-06-17 15:01 UTC | PHASE A1 (HEADLINE; SETTLE the in-generation moat) | OK | 88 passed, 1 warning in 9.01s |
 | 2026-06-17 16:19 UTC | PHASE A2 (HEADLINE; SETTLE the in-generation moat  | OK | 112 passed, 1 warning in 6.79s |
 | 2026-06-17 16:36 UTC | PHASE B1 (ARC NORTH STAR; operator MANDATORY 2026- | OK | 88 passed, 1 warning in 4.48s |
+| 2026-06-17 16:59 UTC | PHASE B2 (ARC NORTH STAR; operator MANDATORY 2026- | OK | 92 passed, 1 warning in 5.48s |
