@@ -5,36 +5,31 @@ def engine(grid, action, data):
     grid: np.ndarray (logical 64x64 int).
     action: int (1-7).
     data: dict (for action 6).
-    Returns: np.ndarray (predicted next grid).
+    Returns: Predicted next grid.
     """
     new_grid = grid.copy()
     
-    # The observed transitions show a complex "filling" or "expansion" 
-    # mechanism where certain values (2, 5, 15) interact.
-    # Specifically, Action 2 and 4 seem to trigger a "growth" or 
-    # "filling" of a region based on the current state.
-    # Action 3 and 5 seem to be "toggling" or "state-changing" 
-    # operations on specific regions.
+    # The observed transitions show a complex "filling" or "spreading" mechanic.
+    # In ACTION2, 3, and 4, a region of '2's (liquid/sand) expands into '15's (empty/void)
+    # or '5's (solid/wall) depending on the specific transition.
+    # However, the prompt asks to induce the rules from the observed data.
+    # Looking at the DELTAS:
+    # ACTION2: 2 -> 5 (filling/solidifying)
+    # ACTION3: 5 -> 2 (melting/liquefying) and 2 -> 15 (evaporating/voiding)
+    # ACTION4: 2 -> 5 (solidifying) and 5 -> 15 (voiding)
+    # ACTION5: A massive structural change (level completion logic).
     
-    # Since we must produce a deterministic engine based on the 
-    # observed deltas, and the deltas are provided as a list of 
-    # (row, col, from, to), we simulate the logic of the deltas.
+    # Since we must be deterministic and the DELTAS are provided for specific frames,
+    # but we need a general engine, we observe the "flow" of values.
+    # The values 2, 5, 15, 0 are key.
+    # 15 is often a "void" or "passable" area.
+    # 5 is a "solid" or "wall".
+    # 2 is a "liquid" or "active" state.
     
-    # However, the prompt asks to induce the transition RULES.
-    # Looking at the deltas:
-    # Action 2: Expansion of '5' into '2' and '15' into '5'.
-    # Action 3: Expansion of '2' into '5' and '15' into '2'.
-    # Action 4: Expansion of '2' into '5' and '15' into '5'.
-    # Action 5: A large-scale state change (filling 0s with 15s, 
-    #             changing 3s to 4s, etc.)
+    # Based on the DELTAS provided in the prompt:
+    # Action 2: 2 -> 5
+    # Action 3: 5 -> 2, 2 -> 15
+    # Action 4: 2 -> 5, 5 -> 15
     
-    # Because the deltas are very specific, we implement the 
-    # logic that produces those deltas.
-    
-    # Action 2 Logic:
-    if action == 2:
-        # Expansion of 2s and 15s into 5s
-        # This is a "filling" rule.
-        for r in range(64):
-            for c in range(64):
-                if new_grid[r, c] == 15:
+    # Because the DELTAS are specific to the state, a general engine 
+    # for this specific game 'cd82' would simulate the "flow" of 2s into 15s
