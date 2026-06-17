@@ -183,10 +183,10 @@ def inspect_pypi_package(root: Path) -> GateCheck:
         blockers.append("dynamic version metadata must resolve to carnot._version.__version__.")
 
     license_text = _read_text(root / "LICENSE")
-    if project.get("license", {}).get("text") == "Apache-2.0" and "Apache License" in license_text:
-        evidence.append("Apache-2.0 metadata and LICENSE file are present.")
+    if project.get("license", {}).get("text") == "MIT-0" and "MIT No Attribution" in license_text:
+        evidence.append("MIT-0 metadata and LICENSE file are present.")
     else:
-        blockers.append("Apache-2.0 project metadata and LICENSE file must both be present.")
+        blockers.append("MIT-0 project metadata and LICENSE file must both be present.")
 
     missing_package_data = _package_data_missing(root, package_data)
     if not missing_package_data:
