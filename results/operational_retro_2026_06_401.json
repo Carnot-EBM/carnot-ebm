@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.401",
+  "generated_at": "2026-06-17T19:35:50Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative milestone-scoped timing detector reported 0 experiment commits since activation of 2026.06.401, so every locked timing field is 0 (0 experiments completed, 0 compute-bound, 0 wall-time minutes) and gpu_idle_on_compute_bound_tasks=null. Both RTX 3090s were idle at the 19:35Z snapshot, which is CORRECT given 0 compute-bound tasks in the authoritative data -- not a bug. The ops/changelog.md window read this turn shows the milestone actually executed a full PHASE A-E task stream plus a capstone, confirming the recurring false-zero detector gap (documented .363 through .400, now extending to .401) rather than a genuinely empty execution window. The operational failure this milestone is observability, not execution.",
+  "bottlenecks_identified": [
+    "OBSERVABILITY (recurring, primary): the milestone-scoped timing detector again false-zeroed (0 commits attributed since activation) -- the same gap documented across .363-.400, now .401. With 0 entries in the authoritative data, per-experiment wall-time, slowest-experiment ranking, and compute-bound classification cannot be computed, so the four operational questions are unanswerable from the timing block alone.",
+    "No write-time per-experiment telemetry: artifacts are not stamped with their own duration_s and a compute_bound flag at commit time, so even after the commit-scan detector is repaired there is no authoritative per-experiment wall-clock to rank by.",
+    "GPU idle is NOT a bottleneck this milestone: gpu_idle_on_compute_bound_tasks is null because the authoritative data contains 0 compute-bound tasks. Idle GPUs at the snapshot are correct resting-state behaviour; flagging them would be a false positive."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone-scoped timing detector: add an mtime-based scan of results/experiment_*.json plus a changelog-window fallback so a milestone's committed experiments are attributed even when the commit-since-activation heuristic misses them. This is the single fix that restores all four operational questions to answerable.",
+    "Stamp duration_s and a compute_bound flag at artifact write time (in the experiment template's build_result) so each experiment carries its own authoritative wall-clock independent of the commit-scan detector.",
+    "Gate the operational retro on on-disk artifact presence: if the detector reports 0 commits BUT results/experiment_*.json for the milestone exist, emit a detector_gap_suspected flag instead of producing a silent empty retro -- this distinguishes a true zero-experiment window from a detector false-zero.",
+    "Take NO GPU/DualGPURunner action: 0 compute-bound or parallel-multi-model tasks appear in the authoritative data; DualGPURunner applies only when 2+ models are loaded in parallel and enforcing it here would be wrong."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Repair the milestone-scoped timing detector (mtime scan of results/experiment_*.json + changelog-window fallback) so retros stop false-zeroing -- this one fix restores slowest-experiment ranking, GPU-efficiency analysis, parallel-model coverage, and tooling questions to answerable.",
+    "Add write-time duration_s + compute_bound stamping in the experiment template's build_result so per-experiment wall-clock is captured at source rather than reconstructed after the fact.",
+    "Make the retro detector-gap-aware: when the timing detector returns 0 but milestone artifacts exist on disk, set detector_gap_suspected=true so the empty window is diagnosable instead of silently mislabelled as an idle milestone."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "For another consecutive milestone the operational retro's authoritative timing data is a false-zero while the milestone demonstrably executed (a full task stream plus a capstone appear in the changelog read this turn). The lesson is unchanged and now overdue: the highest-leverage operational fix is not a compute change but an observability one -- repair the timing detector and stamp per-experiment wall-clock at write time, so the retro measures real execution instead of reporting an empty window. Until then these retros can only honestly characterize the detector gap, not the milestone's true execution efficiency."
+}
