@@ -1,0 +1,68 @@
+{
+  "field_principles": {
+    "flagged_for_v399": "Closes discover->ingest->plan: names the strongest method for the .399 planner, conditioned on the .398 outcomes.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method MUST carry a real arXiv ID/URL (no citation = fabrication per adversarial_verify discipline) + a one-line .399 experiment mapping.",
+    "random_seed": "Determinism placeholder for the discovery query set (recorded for reproducibility of the sweep)."
+  },
+  "flagged_for_v399": "budget_aware_discriminative_cascade_router_v399",
+  "honest_verdict": "complete: sota_ingestion_v399_mapped",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2510.14913",
+      "carnot_stack_mapping": "Promote the Set-Encoder energy verifier into a budget-aware cascade policy that first runs cheap discriminative scoring, then escalates only low-margin cases to a judge or specialist router.",
+      "experiment_mapping": ".399: deploy a budget-aware discriminative cascade-router and compare accuracy/cost against always-judge and always-energy controls.",
+      "failure_mode": "A cascade can hide regressions if escalation thresholds are tuned on the held-out tasks. The .399 gate needs frozen thresholds, iso-FLOPs curves, and per-domain failure rows.",
+      "name": "Budget-aware discriminative verification",
+      "source_read": "The paper shows that hybrid discriminative verification with self-consistency can outperform generative verification under fixed inference budgets, reporting up to a 15.3 percent AIME2025 gain.",
+      "track": "efficiency-parity and cascade routing",
+      "url": "https://arxiv.org/abs/2510.14913",
+      "v398_outcome_conditioning": "Exp 4303 hardened the Pareto result: the energy verifier reached 0.8 accuracy versus the best judge at 0.5 with cost_ratio=1.03e-08."
+    },
+    {
+      "arxiv_id_or_url": "2606.06098",
+      "carnot_stack_mapping": "Replace the nearest-centroid router with a ridge-regression router over normalized selector features, trained leave-one-domain-out and evaluated with domain labels ablated from inference inputs.",
+      "experiment_mapping": ".399: rebuild the failed cross-domain selector as an IR3DE-style linear router over ARC, ARC-GEN, and FoVer candidates.",
+      "failure_mode": "Linear routing can still learn domain proxies from feature scale or candidate-count artifacts. It needs feature standardization, label ablation, and held-out-domain calibration.",
+      "name": "IR3DE linear domain-expert router",
+      "source_read": "IR3DE uses ridge regression as a cheap router for domain experts, matching baselines in language-modeling settings and reaching 98.4 percent normalized performance in a reasoning setting.",
+      "track": "cross-domain router rebuild",
+      "url": "https://arxiv.org/abs/2606.06098",
+      "v398_outcome_conditioning": "Exp 4305 collapsed on broad cross-domain selection, so .399 should test a simpler domain-expert router before adding more domains."
+    },
+    {
+      "arxiv_id_or_url": "2601.09692",
+      "carnot_stack_mapping": "Generate train-only synthetic selector tasks from domain descriptions, filter generators whose outputs lack performance differentiation, and train query-only selector routers without target labels.",
+      "experiment_mapping": ".399: add a generated-data CASCAL router pretraining arm before retesting held-out-domain selector generalization.",
+      "failure_mode": "Generated tasks can match the generator rather than the target domain. The generator-quality filter and a frozen real held-out split are load-bearing.",
+      "name": "Routing with Generated Data / CASCAL",
+      "source_read": "Routing with Generated Data trains LLM routers from generated queries and answers; its CASCAL query-only router uses consensus voting and hierarchical clustering to estimate model skill niches.",
+      "track": "cold-start router data and anti-leak",
+      "url": "https://arxiv.org/abs/2601.09692",
+      "v398_outcome_conditioning": "Exp 4305's label ablation survived but the cross-domain CI included zero, pointing to insufficient domain-invariant router data rather than an obvious label leak."
+    },
+    {
+      "arxiv_id_or_url": "2601.11443",
+      "carnot_stack_mapping": "Adapt only the selector context or a small retrieval adapter on train-side traces, then freeze it for held-out domains; no base model weight mutation is needed for the headline path.",
+      "experiment_mapping": ".399: run retrieval-augmented selector adaptation with frozen target domains and compare against static retrieval-only context.",
+      "failure_mode": "Unbounded test-time parameter updates would violate Carnot's traceability constraints and can leak target outcomes. Keep the adaptation bounded and replayable.",
+      "name": "TTARAG retrieval-prediction adaptation",
+      "source_read": "TTARAG adapts retrieval-augmented generation at test time by making the model predict retrieved content, improving specialized-domain RAG under distribution shift across six domains.",
+      "track": "powered retrieval-augmented selector adaptation",
+      "url": "https://arxiv.org/abs/2601.11443",
+      "v398_outcome_conditioning": "Exp 4305 showed a positive FoVer held-out delta but an underpowered CI, so .399 needs adaptation that uses retrieved selector evidence without treating domain identity as the signal."
+    },
+    {
+      "arxiv_id_or_url": "2505.22524",
+      "carnot_stack_mapping": "Wrap DiffusionGemma candidates in a particle/reweighting controller using the partial-state scorer as a reward tilt, with unguided, EntRGi, and SMC proposal controls all kept engaged.",
+      "experiment_mapping": ".399: keep SMC-guided DiffusionGemma as a secondary repair track after the cascade-router headline.",
+      "failure_mode": "Particle control can spend more compute without improving exact ARC grids, and a reward tilt can collapse diversity. Report cost, effective sample size, and no-op-control checks.",
+      "name": "SMC importance weighting for discrete diffusion",
+      "source_read": "The SMC discrete-diffusion paper derives tractable importance weights and practical optimal-proposal approximations for inference-time control across language modeling, biology, and text-to-image tasks.",
+      "track": "reward-guided discrete diffusion controls",
+      "url": "https://arxiv.org/abs/2505.22524",
+      "v398_outcome_conditioning": "Exp 4304 engaged EntRGi controls and kept the scorer leak-free, but the Carnot-minus-best-control CI still included zero."
+    }
+  ],
+  "random_seed": 4309
+}
