@@ -102,8 +102,8 @@ def main() -> int:
         print("  REUSING pre-generated heuristic (autolearning; no LLM call)", flush=True)
     else:
         reused = False
-        # a goal-distance heuristic is small (~1k tokens) -> cap tokens (faster) + headroom timeout
-        proposer = e3.LocalGGUFProposer(repo_substr=args.repo, max_tokens=1200, timeout=600)
+        # 2048 tokens: enough for a heuristic (1200 truncated Qwen mid-code), still fast on a MoE
+        proposer = e3.LocalGGUFProposer(repo_substr=args.repo, max_tokens=2048, timeout=600)
         ok, code = proposer.generate(gap_fill_prompt(game, trans, win),
                                      required=("goal_distance",), validate=_validate)
         if not ok:
