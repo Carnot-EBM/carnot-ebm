@@ -1,0 +1,32 @@
+{
+  "win_dist": 0.0,
+  "start_dist": 256.0,
+  "results": {
+    "llm_heuristic": {
+      "solved": true,
+      "reproduced": true,
+      "actions": 7,
+      "expansions": 1406,
+      "secs": 3.0
+    },
+    "bfs_baseline": {
+      "solved": true,
+      "reproduced": true,
+      "actions": 7,
+      "expansions": 1746,
+      "secs": 4.0
+    }
+  },
+  "helped": true,
+  "reused_pregenerated": false,
+  "captured_to": "python/carnot/agentic/gap_fills/su15_goal_distance.py",
+  "honest_verdict": "success_gap_fill_heuristic_helped_su15",
+  "proposer": "Qwen3.6-35B-A3B",
+  "inference_substrate": "live_llm_inference_igpu",
+  "verifier_is_oracle": false,
+  "heuristic_code": "def goal_distance(grid):\n    return float((grid != WIN).sum())",
+  "experiment": "arc_gap_fill_su15",
+  "game": "su15",
+  "duration_s": 30.6,
+  "run_date": "2026-06-17"
+}
