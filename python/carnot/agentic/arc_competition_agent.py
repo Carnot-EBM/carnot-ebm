@@ -278,6 +278,7 @@ class E3AgentPolicy:
         self._prev = None                    # last (grid, action_id, data) for transition pairing
         self.cell = 1
         self.induced = False
+        self.root_grid = None                # the reset-state logical grid; plan_in_model starts here
 
     def _proposer(self):
         if self.proposer is None:
@@ -299,6 +300,8 @@ class E3AgentPolicy:
             if latest is not None:
                 from carnot.agentic.arc_agi3_world_model import grid_of
                 self.cell = detect_cell(grid_of(latest))
+                if self.root_grid is None and self.explorer.root is not None:
+                    self.root_grid = to_logical(grid_of(latest), self.cell)
                 if mv[0] not in ("RESET", None):
                     self._prev = (to_logical(grid_of(latest), self.cell), int(mv[0]), mv[1])
                 else:
@@ -323,15 +326,17 @@ class E3AgentPolicy:
         from carnot.agentic import arc_executable_world_model as e3
         try:
             ok, _ = self._proposer().induce(self.short, self.transitions, self.cell)
-            if not ok:
+            if not ok or self.root_grid is None:
                 return
             engine, is_done = e3.load_engine(self.short)
             vr = e3.WorldModelVerifier(self.transitions).score(engine)
             if vr.accuracy < 0.5:            # too weak to trust for planning
                 return
-            out = e3.plan_and_execute(self.short, engine, is_done)
-            # plan_and_execute runs its own env; here we only want the PLAN to replay.
-            # (kept simple: if it found a level-up plan, the registry of that run holds it.)
+            # plan ENTIRELY in the model (zero real actions); execute phase RESETs then
+            # replays this plan in the real env, halting on divergence.
+            plan = e3.plan_in_model(engine, is_done, self.root_grid)
+            if plan:
+                self.plan = plan
         except Exception:
             return
 
