@@ -313,7 +313,7 @@ class E3AgentPolicy:
             # first, escalate the hard tail.
             won = self.explorer.best_level > (self.explorer.start_level or 0)
             stalled = len(self.transitions) >= self.explore_budget or self.explorer.explored_out
-            if stalled and not won:
+            if stalled and not won and not self.induced:   # escalate ONCE; then tier-1 fallback
                 self.phase = "induce"
             return mv
         if self.phase == "induce" and not self.induced:
