@@ -1,0 +1,240 @@
+{
+  "duration_s": 0.999,
+  "experiment": "experiment_4352_e3_explore_verify_plan_tr87_ft09",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed (success_e3_tr87_ft09_<n>_reproduced or complete_e3_tr87_ft09_partial). Any reproduced L1 and an honest partial per game are BOTH progress.",
+    "new_levels_reproduced": "BARE int: NEW levels offline-reproduced across tr87+ft09 -- the incremental-progress unit.",
+    "per_game_scorecard": "list of {game, verifier_accuracy, offline_reproduced, reproduced_levels} -- the breadth-of-progress record for tr87/ft09.",
+    "preconditions_checked": "Records the offline-env presence per game + harness import + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the induction + exploration + planning.",
+    "reproducibility_checksum": "Hash of the world models + the plans + the reproduce() results; lets a third party re-run.",
+    "verifier_is_oracle": "BARE bool=true -- the SOLVEs are execution-grounded; ARC progress, NOT a moat headline.",
+    "world_model_paths": "list[str]: results/arc_e3/{tr87,ft09}/world_model.py -- the induced models ARE the deliverables."
+  },
+  "games": [
+    "tr87",
+    "ft09"
+  ],
+  "honest_verdict": "complete_e3_tr87_ft09_partial",
+  "inference_substrate": "codex_direct_model_edit_offline_env_no_nested_proposer",
+  "method": "aera_explore_verify_plan_agent2world_adaptive_world_model_testing",
+  "new_levels_reproduced": 0,
+  "per_game_scorecard": [
+    {
+      "adaptive_test_results": [
+        {
+          "accuracy_threshold": 0.95,
+          "hidden_rule_mismatch_class": "tr87_mechanics_not_verified_for_planning",
+          "name": "tr87_agent2world_mechanic_threshold_probe",
+          "observed_accuracy": 0.0,
+          "passed": false
+        }
+      ],
+      "checkpoint_status": "complete_e3_tr87_partial_model_0.00",
+      "explore_lemmas": [
+        {
+          "action": 4,
+          "changed_cells": 28,
+          "has_data": false,
+          "level_delta": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 1,
+          "changed_cells": 12,
+          "has_data": false,
+          "level_delta": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 4,
+          "changed_cells": 28,
+          "has_data": false,
+          "level_delta": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 4,
+          "changed_cells": 29,
+          "has_data": false,
+          "level_delta": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 3,
+          "changed_cells": 28,
+          "has_data": false,
+          "level_delta": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 2,
+          "changed_cells": 9,
+          "has_data": false,
+          "level_delta": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 3,
+          "changed_cells": 28,
+          "has_data": false,
+          "level_delta": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 3,
+          "changed_cells": 29,
+          "has_data": false,
+          "level_delta": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 2,
+          "changed_cells": 15,
+          "has_data": false,
+          "level_delta": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 1,
+          "changed_cells": 16,
+          "has_data": false,
+          "level_delta": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 2,
+          "changed_cells": 15,
+          "has_data": false,
+          "level_delta": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 2,
+          "changed_cells": 9,
+          "has_data": false,
+          "level_delta": 0,
+          "verifier_gated": true
+        }
+      ],
+      "explore_lemmas_collected": 12,
+      "game": "tr87",
+      "mechanic_checks_passed": false,
+      "offline_env_present": true,
+      "offline_reproduced": false,
+      "plan_executed": false,
+      "plan_result": {
+        "game": "tr87",
+        "planned": false,
+        "reason": "mechanic checks did not pass; plan withheld per explore-verify-plan gate"
+      },
+      "reproduce_result": {
+        "claimed_level": 1,
+        "game": "tr87",
+        "mode": "not_reproduced",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "reproduced_levels": 0,
+      "residual_mismatch_class": "missing_world_model_rule_gap_actions_1_2_3_4",
+      "verifier_accuracy": 0.0,
+      "verifier_accuracy_per_round": [
+        0.0
+      ],
+      "world_model_path": "results/arc_e3/tr87/world_model.py",
+      "world_model_sha256": "1f497c0f688a9d8b4e5439f77cfeea445fc7326599a5aa118037388ff14bd21a"
+    },
+    {
+      "adaptive_test_results": [
+        {
+          "accuracy_threshold": 0.95,
+          "hidden_rule_mismatch_class": "ft09_mechanics_not_verified_for_planning",
+          "name": "ft09_agent2world_mechanic_threshold_probe",
+          "observed_accuracy": 0.05,
+          "passed": false
+        }
+      ],
+      "checkpoint_status": "complete_e3_ft09_partial_model_0.05",
+      "explore_lemmas": [
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "has_data": true,
+          "level_delta": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "has_data": true,
+          "level_delta": 0,
+          "verifier_gated": true
+        }
+      ],
+      "explore_lemmas_collected": 2,
+      "game": "ft09",
+      "mechanic_checks_passed": false,
+      "offline_env_present": true,
+      "offline_reproduced": false,
+      "plan_executed": false,
+      "plan_result": {
+        "game": "ft09",
+        "planned": false,
+        "reason": "mechanic checks did not pass; plan withheld per explore-verify-plan gate"
+      },
+      "reproduce_result": {
+        "claimed_level": 1,
+        "game": "ft09",
+        "mode": "not_reproduced",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "reproduced_levels": 0,
+      "residual_mismatch_class": "missing_world_model_rule_gap_actions_6",
+      "verifier_accuracy": 0.05,
+      "verifier_accuracy_per_round": [
+        0.05
+      ],
+      "world_model_path": "results/arc_e3/ft09/world_model.py",
+      "world_model_sha256": "8e4563289295741b6728075a411d0aa4ae7165140d2f3e5e5e885312dcf650ee"
+    }
+  ],
+  "preconditions_checked": {
+    "executable_world_model_import": true,
+    "games": {
+      "ft09": {
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/ft09",
+        "offline_env_present": true
+      },
+      "tr87": {
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/tr87",
+        "offline_env_present": true
+      }
+    },
+    "harness_import": true,
+    "leaderboard_submission": false,
+    "offline_env_present": {
+      "ft09": true,
+      "tr87": true
+    },
+    "research_conductor_modified": false,
+    "solver_kit_import": true,
+    "trm_training_stood_down": true
+  },
+  "random_seed": 4352,
+  "reproducibility_checksum": "88ebeb795a2569c299b14d073f12934f23c2738279d6c561623f8af4293b7f28",
+  "spec_refs": [
+    "REQ-PHASE4-084",
+    "SCENARIO-PHASE4-084"
+  ],
+  "submitted_to_leaderboard": false,
+  "verifier_is_oracle": true,
+  "world_model_path_sha256": {
+    "results/arc_e3/ft09/world_model.py": "8e4563289295741b6728075a411d0aa4ae7165140d2f3e5e5e885312dcf650ee",
+    "results/arc_e3/tr87/world_model.py": "1f497c0f688a9d8b4e5439f77cfeea445fc7326599a5aa118037388ff14bd21a"
+  },
+  "world_model_paths": [
+    "results/arc_e3/tr87/world_model.py",
+    "results/arc_e3/ft09/world_model.py"
+  ]
+}
