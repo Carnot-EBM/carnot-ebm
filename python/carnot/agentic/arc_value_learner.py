@@ -16,6 +16,8 @@ steps-to-go (LOWER = closer to win), the score OfflineSolver descends.
 """
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Any, Callable, Sequence
 
 import numpy as np
@@ -59,3 +61,31 @@ class LearnedVerifier:
             return 0.0  # untrained ⇒ neutral (solver degrades to BFS)
         f = np.asarray([float(v) for v in self.featurize(game)] + [1.0], dtype=float)
         return float(max(0.0, f @ self.w))  # predicted steps-to-go; clamp ≥ 0
+
+    # --- checkpointing: capture the trained weights as a versionable, MIRROR-READY
+    # artifact so the learning loop's output is never lost in a demo file. Mirror to
+    # HuggingFace (Carnot-EBM) + IPFS per CLAUDE.md Decentralization Rule 3 once the
+    # verifier is substantial; the PUBLIC release is operator-only (External Publication).
+    def save(self, path: str | Path, meta: dict | None = None) -> Path:
+        if self.w is None:
+            raise ValueError("nothing to save: verifier is untrained")
+        p = Path(path)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(json.dumps({
+            "schema": "carnot_arc_learned_verifier_v1",
+            "kind": "linear_value_head",
+            "weights": self.w.tolist(),          # [feature weights..., bias]
+            "feature_names": (meta or {}).get("feature_names"),
+            "trained_games": (meta or {}).get("trained_games"),
+            "n_samples": self.n_samples,
+            "provenance": (meta or {}).get("provenance"),
+        }, indent=2))
+        return p
+
+    @classmethod
+    def load(cls, path: str | Path, featurize: Callable[[Any], Sequence[float]]) -> "LearnedVerifier":
+        d = json.loads(Path(path).read_text())
+        v = cls(featurize)
+        v.w = np.asarray(d["weights"], dtype=float)
+        v.n_samples = int(d.get("n_samples", 0))
+        return v
