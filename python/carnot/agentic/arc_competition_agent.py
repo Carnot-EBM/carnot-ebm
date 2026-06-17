@@ -76,7 +76,8 @@ class StepwiseExplorer:
     actions: min(human/agent,1)^2). Stops at the first level-up (+1 incremental unit) or
     when fully explored."""
 
-    def __init__(self, target_levels: int = 1, max_depth: int = 45) -> None:
+    def __init__(self, target_levels: int = 1, max_depth: int = 45, hud_mask=None) -> None:
+        self.hud_mask = hud_mask             # E1: mask step-counter cells out of node identity
         self.graph: dict[str, dict] = {}     # hash -> {"path": [...], "untested": [...]}
         self.root: Optional[str] = None
         self.cur: Optional[str] = None
@@ -89,10 +90,13 @@ class StepwiseExplorer:
         self.explored_out = False
         self.adj: dict[str, list] = {}       # known forward edges: hash -> [(action_dict, next_hash)]
 
-    @staticmethod
-    def _hash(frame) -> str:
+    def _hash(self, frame) -> str:
         from carnot.agentic.arc_agi3_world_model import grid_of, frame_hash
-        return frame_hash(grid_of(frame))
+        g = grid_of(frame)
+        if self.hud_mask is not None and getattr(self.hud_mask, "shape", None) == g.shape:
+            g = g.copy()
+            g[self.hud_mask] = 0             # collapse counter/timer cells so equal game states dedup
+        return frame_hash(g)
 
     @staticmethod
     def _candidates(frame) -> list[dict]:
@@ -214,7 +218,8 @@ class CarnotAgentPolicy:
     stops when the target level is reached or the plan is spent."""
 
     def __init__(self, game_id: str, solutions: Optional[dict] = None,
-                 target_level: Optional[int] = None, force_explore: bool = False) -> None:
+                 target_level: Optional[int] = None, force_explore: bool = False,
+                 hud_mask=None) -> None:
         self.short = str(game_id).split("-", 1)[0]
         sols = solutions if solutions is not None else load_solutions()
         self.plan = [] if force_explore else sols.get(self.short, [])
@@ -223,7 +228,8 @@ class CarnotAgentPolicy:
         self.target = target_level if target_level is not None else CLAIMED.get(self.short, 1)
         self.has_plan = bool(self.plan)
         # eval games are UNSEEN -> no banked plan -> the generic step-wise explorer runs.
-        self.explorer: Optional[StepwiseExplorer] = None if self.has_plan else StepwiseExplorer()
+        self.explorer: Optional[StepwiseExplorer] = (
+            None if self.has_plan else StepwiseExplorer(hud_mask=hud_mask))
 
     def next_move(self, frames, latest_frame) -> tuple:
         """-> ("RESET", None) | (action_id:int, data:dict|None) | (None, None)."""

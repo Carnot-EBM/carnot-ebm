@@ -8640,3 +8640,4 @@ c |
 | 2026-06-17 06:54 UTC | PHASE D1 (ARC north star; UNSTALL the exp4307 harn | OK | 90 passed, 1 warning in 5.55s |
 | 2026-06-17 07:18 UTC | PHASE E1 (CONTINUOUS SELF-LEARNING -- the mandated | OK | 109 passed, 1 warning in 5.85s |
 | 2026-06-17 07:41 UTC | PHASE F1 (OFF-ARC EXECUTION-VERIFIER TRANSFER; GAP | OK | 106 passed, 1 warning in 6.58s |
+| 2026-06-17 07:55 UTC | PHASE G1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 125 passed, 1 warning in 6.01s |

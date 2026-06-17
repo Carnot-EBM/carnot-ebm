@@ -53,6 +53,30 @@ Baseline (2026-06-17): **2 levels from scratch** (lp85 at 11 actions = eff 1.0; 
 **9 open gaps** (worst: r11l, ls20, wa30, cd82, su15, tu93). Every future ARC change is
 measured against this — progress-not-churn (north-star §1).
 
+### Loop turns (2026-06-17)
+
+- **Iter 1 — frontier-distance navigation (KEPT, 2→3 levels).** Tried BFS search-order
+  first → REGRESSED to 0 (killed the deep-ride lp85/sp80 need) → rejected per gate. Kept
+  the orthogonal win: navigate to the shallowest frontier via known FORWARD EDGES when
+  reachable (BFS over the edge graph) instead of always RESET+replay-from-root. Cheaper
+  backtracking → more state coverage per action → **m0r0 now solves from scratch**.
+- **Iter 2 — HUD-masking in the explorer hash (WASH, kept opt-in).** Mask step-counter
+  cells out of node identity (E1's `discover_hud_mask`, env-probed, threaded via
+  `StepwiseExplorer(hud_mask=)`). Neutral on levels (3→3), ~58 fewer actions on sp80, but
+  the probe itself costs competition actions → net wash. Left OFF by default, available
+  opt-in for counter-heavy hidden games.
+- **BUDGET-REALISM FINDING (the big one).** The 6000-action budget badly understated
+  solve-rate. At **20000 actions the explorer solves 8/11** public games from scratch
+  (r11l/ls20/cd82/su15/tu93 all close at 8–11k actions) — those "gaps" were
+  BUDGET-limited, not mechanic-limited, and the competition allows ~96k actions/game.
+  Default eval budget raised 6000→20000. **True scorecard: 8 levels, 3 open gaps.**
+- **The 3 genuinely-hard gaps: wa30, cn04, sk48** — resist even 45k actions. Notably the
+  BATCH solver (`graph_explore_solve_v2`) gets cn04/sk48 in ~12k EXPANSIONS, but the
+  step-wise explorer pays navigation cost PER STATE, so they're unreachable by
+  action-count. These need E3 (plan in an induced model = few real actions) — which is
+  also the EFFICIENCY lever (the 8 solves score ~0 efficiency at 8–11k actions vs a
+  human's handful). **E3 is the next loop lever, not more explorer tweaks.**
+
 ## Why this converges on the leaderboard
 
 Scoring rewards BOTH solve-rate (levels) AND efficiency (squared human-action ratio).
