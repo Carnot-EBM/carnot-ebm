@@ -47,16 +47,45 @@ eval budget), (4) VRAM. The codex run (dev) is the ceiling baseline. Driver alre
 exists: `scripts/arc_e3_agent_solve.py <game> --local` (swap the cached repo via
 `LocalGGUFProposer(repo_substr=...)`).
 
-## The ALTERNATIVE engine — a trained TRM-class model (not an off-the-shelf LLM)
+## The open SOTA LLM is a REQUIRED ESCALATION TIER, not an alternative (operator, 2026-06-17)
 
-Instead of bundling a 12–35B LLM that writes world-model CODE at eval time (heavy: load +
-inference per game), train a SMALL recurrent TRM-class model OFFLINE on ARC-AGI-3 game
-transitions to predict next-frame / good-action directly. Bundled weights are tiny (~5M
-params), forward-pass-only at eval (cheap, fast, fits any GPU), and it's the most
-sandbox-friendly + decentralization-pure option. Our explorer already GENERATES the
-transition corpus to train it. This is the "use TRM, not a foundation model" path — a
-real candidate, distinct from the LLM-proposer route; the two can be benchmarked head to
-head by the same verifier-accuracy + solve loop.
+"There will undoubtedly be cases even with TRM where an open SOTA model will be required
+to try and help solve a game." So the live stack is NOT "TRM vs LLM" — it is a
+**verifier-routed CASCADE**, and the open SOTA LLM is a load-bearing tier that MUST be
+bundled regardless of whether TRM is also bundled:
+
+| Tier | Engine | Handles | Cost |
+|---|---|---|---|
+| 1 | training-free explorer (BFS/DFS + frontier-distance) | shallow/medium games (8/11 of the public set) | cheap, no model |
+| 2 | trained TRM-class dynamics/verifier | efficiency + learned routing/pruning where it generalizes | tiny (~5M), forward-pass only |
+| 3 | **open SOTA LLM (bundled, offline)** — E3 world-model induction + goal reasoning | the HARD tail: novel mechanics, goal induction, anything tiers 1–2 stall on | heavy (load+infer), invoked SELECTIVELY |
+
+**The Carnot VERIFIER is the router AND the ground:** it detects when a cheap tier has
+stalled (escalate) and it grounds the LLM's induced model before trusting its plan (the
+cd82 divergence-halt is this working). The LLM is the top of the cascade, not a swap-in.
+
+**Key budget implication:** because tier 3 fires SELECTIVELY (only the hard games the
+explorer/TRM can't crack — a minority), its per-invocation load+inference cost is
+AMORTIZED across the 8h budget. That RELAXES the "must be tiny" constraint for the LLM:
+we can afford a **stronger** open model (gemma-4-26B-A4B / Qwen3.6-35B-A3B) for the
+escalation tier precisely because it isn't run on every game. Tier 2 (TRM) stays tiny for
+the common case; tier 3 (LLM) can be bigger for the rare hard case.
+
+**Integration step:** unify the agent's current explorer-mode and E3-mode into ONE
+verifier-routed `choose_action`: run the explorer; when the verifier flags a stall (no
+progress within a budget window), escalate to E3 induction with the bundled open LLM;
+grounded by the verifier; plan_in_model; execute with divergence-halt. This is the
+Meta-EBM-Cascade-Router thesis made concrete on ARC-AGI-3.
+
+## The TRM-class engine — the cheap/common tier (tier 2, alongside the LLM tier)
+
+Train a SMALL recurrent TRM-class model OFFLINE on ARC-AGI-3 game transitions to predict
+next-frame / good-action directly. Bundled weights are tiny (~5M params), forward-pass-
+only at eval (cheap, fast, fits any GPU), the most sandbox-friendly + decentralization-
+pure option. Our explorer already GENERATES the transition corpus to train it. This is
+tier 2 of the cascade — it makes the COMMON case efficient (learned dynamics/routing where
+it generalizes); it does NOT replace the tier-3 LLM, which handles the hard tail TRM
+can't. Both are bundled; both benchmark on the same verifier-accuracy + solve loop.
 
 ## Recommendation
 
@@ -65,8 +94,11 @@ head by the same verifier-accuracy + solve loop.
    **gemma-4-12B** if the sandbox is single-T4 (fits easily, Kaggle-hosted).
 2. **Benchmark both (+ gemma-4-26B-A4B) empirically** via `arc_e3_agent_solve --local`
    once the codex dev-ceiling lands, ranking by verifier accuracy + plan-solve + fit.
-3. **In parallel, prototype the trained TRM-class dynamics model** as the lighter,
-   decentralization-pure alternative; compare on the same loop.
+3. **Bundle BOTH tiers** (the cascade, not an either/or): the tiny TRM-class model as
+   tier 2 (cheap/common) AND a stronger open LLM (tier 3) for the hard tail. Selective
+   tier-3 escalation amortizes its cost, so the LLM can be the bigger 26–35B.
+4. **Integration:** unify explorer-mode + E3-mode into one verifier-routed `choose_action`
+   (escalate to the bundled LLM when the verifier flags a stall).
 
 Cross-refs: `docs/research-notes/arc-agi3-kaggle-submission-requirements-2026-06-17.md`
 (offline + bundled-weights mechanics, license scope), `...focused-loop-and-engine...md`
