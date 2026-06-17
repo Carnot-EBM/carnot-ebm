@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.398",
+  "generated_at": "2026-06-17T01:38:33Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Authoritative milestone-scoped timing data reported 0 experiment commits for 2026.06.398, so the locked timing fields are 0/empty and gpu_idle_on_compute_bound_tasks is null (both RTX 3090s correctly idle at rest, no compute-bound task in the timing block). On-disk ground truth read this turn (results/experiment_4303..4312, with a clean unflagged capstone experiment_4312_capstone_v398.json) shows ~10 experiments actually ran and committed: the recurring milestone-scoped-detector false-zero gap documented across .363-.396 now extends to .398. The operational bottleneck this milestone is observability (missing per-experiment wall-time telemetry), not execution.",
+  "bottlenecks_identified": [
+    "Milestone-scoped timing detector false-zero: it reported 0 experiment commits since activation, but on-disk results (experiment_4303 through experiment_4312, including the clean capstone experiment_4312_capstone_v398.json) confirm ~10 experiments ran and committed. This is the same recurring detector gap noted in the .363-.396 research-log entries; it yields a retro with no per-experiment wall-time, so no real execution bottleneck can be measured from authoritative data.",
+    "No per-experiment duration_s telemetry was captured in the authoritative timing block for any of the ~10 on-disk experiments, so slowest-experiment ranking and total wall time cannot be computed without manually recovering ground truth from artifact mtimes + the ops/changelog.md window.",
+    "NOTE: GPU idle is NOT flagged as a bottleneck. gpu_idle_on_compute_bound_tasks is null (the authoritative timing block lists zero compute-bound tasks), and both RTX 3090s at 0% util / 4MB is correct resting behaviour, not a bug."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone-scoped timing detector (the commit-window attribution in the retro data-collection path) so experiment_NNNN commits are attributed to the active milestone; the .363-.398 false-zero streak means every recent operational retro has run blind to its own timing.",
+    "Interim fallback: when the commit-window query returns 0, have the retro data-collector fall back to results/experiment_*.json mtimes + the ops/changelog.md milestone window instead of emitting an empty timing block.",
+    "Stamp each experiment artifact with a top-level duration_s and milestone field at write time (in scripts/experiment_template.py build_result) so slowest-experiment ranking is data-driven rather than git-heuristic-dependent.",
+    "No GPU/scheduling change warranted: both RTX 3090s idle at the snapshot is correct (no compute-bound parallel-model task in the authoritative window); do not enforce DualGPURunner on single-model or synthesis tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the milestone-scoped timing detector (or add the mtime + changelog-window fallback) - this single observability fix would restore real timing analysis to every future operational retro and end the .363-.398 false-zero streak.",
+    "Add write-time duration_s + milestone stamping to the experiment artifact template so slowest-experiment ranking is computed from data, not recovered by hand each milestone.",
+    "Take no action on GPU utilization: idle at rest is correct; reserve DualGPURunner for genuine 2+-model compute-bound tasks only."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "How .398 executed: the ~10 experiments ran and committed cleanly (unflagged capstone, publication gate intact), so execution itself was healthy - the milestone was not slowed by GPU or wall-time bottlenecks. The operational process again failed at observability: the timing detector's recurring false-zero (now spanning .363-.398) forced this retrospective to recover its own ground truth from on-disk artifacts. The highest-leverage process change is fixing the detector so retros stop running blind, not speeding up experiments."
+}
