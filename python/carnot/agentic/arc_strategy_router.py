@@ -93,9 +93,10 @@ STRATEGY_CLASSES: list[dict] = [
         ),
         "search_engine": "waypoint BFS start->checkpoints->target; each edge a <=n-move collision-free leg",
         "needs": (
-            "a MazeModel. arc3_frame_induction.induce_maze_model induces OBJECT (by motion) + WALLS "
-            "(by stability) frame-only, but in tn36 the CHECKPOINTS draw on the floor (not frame-"
-            "distinct) -> the model falls back to internal state (GAP-ARC-MAZE-MODEL-FRAME-INDUCTION)"
+            "a MazeModel. OBJECT/WALLS/TARGET/CHECKPOINTS all induce frame-only "
+            "(induce_object_target_attrs + induce_maze_sub_fields: checkpoints are a DITHERED 4x4 of "
+            "the object colour, read EXACTLY vs truth on tn36 L6/L7). RESIDUAL: complete wall geometry "
+            "+ move-codes to assemble the full-solve MazeModel (GAP-ARC-MAZE-MODEL-FRAME-INDUCTION)"
         ),
     },
     {
@@ -113,9 +114,10 @@ STRATEGY_CLASSES: list[dict] = [
             "schedule + residual hidden hitbox are respected"
         ),
         "needs": (
-            "a MazeModel + hazard cadence. induce_maze_model gets OBJECT + WALLS frame-only, but the "
-            "spike HAZARDS are invisible at rest and CHECKPOINTS draw on the floor in tn36 -> not "
-            "frame-inducible; the model falls back to internal state (GAP-ARC-MAZE-MODEL-FRAME-INDUCTION)"
+            "a MazeModel + hazard band. induce_maze_sub_fields reads CHECKPOINTS (dithered object-colour "
+            "pads) + the HAZARD band (distinct marker colours) frame-only, EXACT vs truth on tn36 L7. "
+            "RESIDUAL for the full timed solve: the spikes_hidden hitbox + complete walls + move-codes "
+            "(GAP-ARC-MAZE-MODEL-FRAME-INDUCTION)"
         ),
     },
     {

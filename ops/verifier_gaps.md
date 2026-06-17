@@ -1436,12 +1436,16 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - priority: high (blind search caps live program-editor solvability; the offline-learned transition
   verifier is the unlock — and is squarely Carnot's verifier-as-product thesis)
 ### GAP-ARC-MAZE-MODEL-FRAME-INDUCTION: a planner-ready MazeModel can't be induced from atomic-run frames
-- status: TARGET-ATTRS RESOLVED (2026-06-17), maze sub-fields still open. The TARGET renders as a
-  HOLLOW OUTLINE sprite; arc3_frame_induction.induce_object_target_attrs reads object+target
-  x/y/scale/rotation/property frame-only EXACTLY -> frame-induced attrs plan to an env-confirmed win on
-  tn36 L1-L5 (5/5; results/experiment_frame_induced_target_attrs_validation.json). So the TRANSFORM-level
-  program-editor live solve is complete frame-only. STILL OPEN: the maze sub-fields (checkpoints draw on
-  the floor; at-rest hazards invisible) for L6/L7-style maze routing.
+- status: FIELDS RESOLVED (2026-06-17) — object, walls, target, object/target ATTRS, AND the maze
+  sub-fields (checkpoints + hazards) all induce from frames; the full-maze-SOLVE integration is the
+  residual. (1) TARGET attrs: induce_object_target_attrs reads object+target x/y/scale/rotation/property
+  EXACTLY (the target is a HOLLOW OUTLINE sprite) -> frame-induced attrs plan to an env-confirmed win on
+  tn36 L1-L5 (5/5; results/experiment_frame_induced_target_attrs_validation.json). (2) MAZE sub-fields:
+  induce_maze_sub_fields reads CHECKPOINTS (a DITHERED 4x4 of the object colour) + the HAZARD band
+  (distinct low-area marker colours) EXACTLY vs internal truth on L6 (3/3 cp, no hazard) and L7 (3/3 cp +
+  exact spike band); results/experiment_frame_induced_maze_subfields_validation.json. RESIDUAL: the full
+  frame-only maze SOLVE needs COMPLETE wall geometry from one frame + move-code induction + the
+  spikes_hidden hitbox — a separate integration step, not a field-induction gap.
 - (was) status: open (frame-only inducer ships for the OBSERVABLE parts; tn36's critical fields are not frame-rendered)
 - evidence: scripts/arc3_frame_induction.py:induce_maze_model + the 2026-06-17 frame probes (design
   note "frame-only MazeModel induction"). The behavioral inducer recovers the OBJECT (the colour whose

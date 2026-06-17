@@ -485,16 +485,83 @@ def induce_object_target_attrs(frame, *, play_top=2, play_rows=40, floor_top=3):
                 x -= nv[0] * scale
                 y -= nv[1] * scale
             sprites.append(
-                (solid, int(col), EditorState(int(x), int(y), int(scale), int(rot), int(col)))
+                (solid, int(col), EditorState(int(x), int(y), int(scale), int(rot), int(col)), nub)
             )
-    obj = next((s for s in sprites if s[0]), None)
-    tgt = next((s for s in sprites if not s[0]), None)
+    # the object/target carry a directional NOTCH (the facing indicator); a notchless solid square is
+    # a WALL, not the object -> prefer a notched sprite, falling back to the first if none is notched.
+    obj = next((s for s in sprites if s[0] and s[3] != "?"), None) or next(
+        (s for s in sprites if s[0]), None
+    )
+    tgt = next((s for s in sprites if not s[0] and s[3] != "?"), None) or next(
+        (s for s in sprites if not s[0]), None
+    )
     return {
         "object": obj[2] if obj else None,
         "target": tgt[2] if tgt else None,
         "object_color": obj[1] if obj else None,
         "target_color": tgt[1] if tgt else None,
     }
+
+
+def induce_maze_sub_fields(frame, *, play_top=2, maze_bottom=32, floor_top=3):
+    """FRAME-ONLY: induce the maze CHECKPOINTS + HAZARD band, zero internal state. The "draws on the
+    floor / invisible" earlier conclusion was wrong — both leave a static marking:
+      - CHECKPOINTS render as a DITHERED 4x4 checkerboard of the OBJECT's colour (isolated diagonal
+        pixels, fill ~0.5) -- distinct from the SOLID object and the HOLLOW-outline target. Found by
+        removing the object + target regions from the object-colour mask, then 8-connecting the
+        remaining dither into pads.
+      - the HAZARD band renders a static MARKER in distinct low-area colours (not floor/object/wall) in
+        a tight horizontal band. Found as the bbox of those marker cells.
+    Returns {checkpoints: [(x,y,w,h)...], hazard_band: (x,y,w,h) | None}. Validated EXACT vs internal
+    truth on tn36 L6 (3/3 checkpoints, no hazard) and L7 (3/3 checkpoints + the exact spike band)."""
+    import scipy.ndimage as ndi
+
+    g = np.asarray(frame.frame if hasattr(frame, "frame") else frame)
+    if g.ndim == 3:
+        g = g[-1]
+    maze = g[play_top:maze_bottom]
+    vals, counts = np.unique(maze, return_counts=True)
+    floor = {
+        int(c) for _, c in sorted(zip(counts.tolist(), vals.tolist()), reverse=True)[:floor_top]
+    }
+    ot = induce_object_target_attrs(
+        g, play_top=play_top, play_rows=maze_bottom, floor_top=floor_top
+    )
+    obj_color = ot["object_color"]
+
+    checkpoints = []
+    if obj_color is not None:
+        m = (maze == obj_color).copy()
+        for spr, pad in (
+            (ot["object"], 0),
+            (ot["target"], 2),
+        ):  # remove SOLID object + HOLLOW target
+            if spr is None:
+                continue
+            sz = 4 * spr.scale + 2 * pad
+            x0, y0 = max(0, spr.x - pad), max(0, spr.y - play_top - pad)
+            m[y0 : y0 + sz, x0 : x0 + sz] = False
+        lab, n = ndi.label(m, structure=np.ones((3, 3)))  # 8-conn groups each dithered pad
+        for i in range(1, n + 1):
+            ys, xs = np.where(lab == i)
+            w, h = int(xs.max() - xs.min() + 1), int(ys.max() - ys.min() + 1)
+            if len(xs) >= 4 and 3 <= w <= 10 and 3 <= h <= 10:
+                checkpoints.append((int(xs.min()), int(ys.min()) + play_top, w, h))
+
+    haz_cells = []
+    for col in (int(c) for c in vals):  # marker colours: low-area, tight band
+        if col in floor or col == obj_color or int((maze == col).sum()) > 30:
+            continue
+        ys, xs = np.where(maze == col)
+        if int(ys.max() - ys.min() + 1) > 8:  # not a tight horizontal band -> not a hazard
+            continue
+        haz_cells += [(int(x), int(y) + play_top) for x, y in zip(xs.tolist(), ys.tolist())]
+    hazard_band = None
+    if haz_cells:
+        hx = [p[0] for p in haz_cells]
+        hy = [p[1] for p in haz_cells]
+        hazard_band = (min(hx), min(hy), max(hx) - min(hx) + 1, max(hy) - min(hy) + 1)
+    return {"checkpoints": sorted(checkpoints), "hazard_band": hazard_band}
 
 
 def main() -> int:

@@ -1,0 +1,27 @@
+{
+  "experiment": "frame_induced_maze_subfields_validation",
+  "run_date": "2026-06-17",
+  "schema": "outer_loop_validation_v1",
+  "summary": "The maze CHECKPOINTS and HAZARDS induce from frames EXACTLY, correcting the earlier 'they draw on the floor / are invisible' conclusion: both leave a static marking that is frame-readable.",
+  "honest_verdict": "complete_maze_subfields_checkpoints_and_hazards_frame_induced_exact_vs_internal_truth",
+  "inference_substrate": "frame_only_perception_validated_against_internal_state_truth_offline_arc_env",
+  "key_finding": "CHECKPOINTS render as a DITHERED 4x4 checkerboard of the OBJECT's colour (isolated diagonal pixels, fill ~0.5) -- distinct from the SOLID object and the HOLLOW-outline target; found by removing the object+target regions from the object-colour mask then 8-connecting the remaining dither. HAZARDS render a static MARKER in distinct low-area colours in a tight horizontal band; found as the bbox of those marker cells. (The earlier probe sampled the box CENTRE -- floor -- and missed both markings.)",
+  "validation_vs_internal_truth": {
+    "L6": {"checkpoints_induced": [[49, 20], [53, 4], [53, 28]], "checkpoints_internal": [[49, 20], [53, 4], [53, 28]], "checkpoints_match": true, "hazard_band_induced": null, "hazard_band_internal": null, "hazard_match": true},
+    "L7": {"checkpoints_induced": [[33, 12], [53, 8], [53, 24]], "checkpoints_internal": [[33, 12], [53, 8], [53, 24]], "checkpoints_match": true, "hazard_band_induced": [37, 16, 24, 4], "hazard_band_internal": [37, 16, 24, 4], "hazard_match": true}
+  },
+  "also_fixed": "induce_object_target_attrs now PREFERS a notched sprite as the object/target (a notchless solid square is a WALL, not the object) -- this excluded the L7 wall (33,16) that was previously mis-picked as the object. The L1-L5 target-attrs end-to-end is unregressed (5/5 env-confirmed).",
+  "verifier_is_oracle": false,
+  "circularity_note": "Frame-only perception validated against internal-state ground truth; NOT a moat / oracle-distinct claim.",
+  "random_seed": 4242,
+  "model_specs": ["frame-only perception (numpy/scipy.ndimage region analysis on grid_of(frame)); no LLM/GPU"],
+  "reproducibility_checksum": "maze_subfields_L6_3of3cp_noHaz_L7_3of3cp_exactHazBand_vs_internal",
+  "closes": "the maze-sub-fields portion of GAP-ARC-MAZE-MODEL-FRAME-INDUCTION: object, walls, target, object/target attrs, AND now checkpoints + hazards all induce from frames.",
+  "remaining": "the full frame-only maze SOLVE (assembling all fields into a planner run) still needs COMPLETE wall geometry from a single frame + move-code induction + the spikes_hidden residual hitbox -- a separate integration step beyond inducing the sub-fields.",
+  "cross_refs": [
+    "scripts/arc3_frame_induction.py:induce_maze_sub_fields",
+    "tests/python/test_arc_maze_subfields.py",
+    "python/carnot/agentic/arc_maze_planner.py",
+    "docs/research-notes/arc-live-generalization-gap-2026-06-17.md"
+  ]
+}
