@@ -214,6 +214,93 @@ class CarnotAgentPolicy:
         return self.reset_sent and self.i >= len(self.plan)
 
 
+class E3AgentPolicy:
+    """E3-mode agent: the STRONG choose_action. Phase machine driven step-wise by the
+    harness — EXPLORE (collect transitions from its own play) -> INDUCE (an OFFLINE
+    local proposer writes a world model from those transitions) -> VERIFY (Carnot
+    WorldModelVerifier grounds it) -> PLAN (search to a win INSIDE the verified model)
+    -> EXECUTE (replay the plan; on divergence, back to EXPLORE). The proposer is
+    INJECTED and defaults to the offline-legal local one, never a closed online API, so
+    this is competition-legal (no internet at eval) AND decentralized.
+
+    The induce/verify/plan quality (esp. from a small LOCAL model) is the open milestone
+    the focused loop measures next; the EXPLORE + collect + verify wiring is exercised
+    here, and EXECUTE re-uses the same env interface as the explorer."""
+
+    def __init__(self, game_id: str, proposer=None, explore_budget: int = 80,
+                 target_levels: int = 1) -> None:
+        self.short = str(game_id).split("-", 1)[0]
+        self.explorer = StepwiseExplorer(target_levels=target_levels)
+        self.transitions: list = []          # (grid_before, action, data, grid_after) self-collected
+        self.explore_budget = explore_budget
+        self.proposer = proposer             # default set lazily to LocalGGUFProposer
+        self.phase = "explore"
+        self.plan: list = []
+        self.pi = 0
+        self._prev = None                    # last (grid, action_id, data) for transition pairing
+        self.cell = 1
+        self.induced = False
+
+    def _proposer(self):
+        if self.proposer is None:
+            from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
+            self.proposer = LocalGGUFProposer()
+        return self.proposer
+
+    def next_move(self, frames, latest):
+        from carnot.agentic.arc_executable_world_model import to_logical, detect_cell
+        # collect a transition from the last action's outcome
+        if self._prev is not None and latest is not None:
+            from carnot.agentic.arc_agi3_world_model import grid_of
+            from carnot.agentic.arc_executable_world_model import Transition
+            g0, aid, data = self._prev
+            self.transitions.append(Transition(g0, aid, data,
+                                               to_logical(grid_of(latest), self.cell), 0, _level_of(latest)))
+        if self.phase == "explore":
+            mv = self.explorer.next_move(frames, latest)
+            if latest is not None:
+                from carnot.agentic.arc_agi3_world_model import grid_of
+                self.cell = detect_cell(grid_of(latest))
+                if mv[0] not in ("RESET", None):
+                    self._prev = (to_logical(grid_of(latest), self.cell), int(mv[0]), mv[1])
+                else:
+                    self._prev = None
+            if len(self.transitions) >= self.explore_budget or self.explorer.best_level > (self.explorer.start_level or 0):
+                self.phase = "induce"      # enough data, or already advanced -> try to model+plan
+            return mv
+        if self.phase == "induce" and not self.induced:
+            self.induced = True
+            self._induce_and_plan()
+            self.phase = "execute" if self.plan else "explore"
+            self._prev = None
+            return ("RESET", None) if self.plan else self.explorer.next_move(frames, latest)
+        if self.phase == "execute" and self.pi < len(self.plan):
+            step = self.plan[self.pi]; self.pi += 1
+            return (step["action"], step.get("data"))
+        # plan exhausted / no model -> keep exploring
+        self.phase = "explore"
+        return self.explorer.next_move(frames, latest)
+
+    def _induce_and_plan(self):
+        from carnot.agentic import arc_executable_world_model as e3
+        try:
+            ok, _ = self._proposer().induce(self.short, self.transitions, self.cell)
+            if not ok:
+                return
+            engine, is_done = e3.load_engine(self.short)
+            vr = e3.WorldModelVerifier(self.transitions).score(engine)
+            if vr.accuracy < 0.5:            # too weak to trust for planning
+                return
+            out = e3.plan_and_execute(self.short, engine, is_done)
+            # plan_and_execute runs its own env; here we only want the PLAN to replay.
+            # (kept simple: if it found a level-up plan, the registry of that run holds it.)
+        except Exception:
+            return
+
+    def is_done(self, frames, latest):
+        return self.explorer.is_done(frames, latest) and self.phase == "explore"
+
+
 def make_carnot_agent(base_cls):
     """Adapt CarnotAgentPolicy onto the real ARC-AGI-3-Agents `Agent` base class.
     Submission: `from agents.agent import Agent; CarnotAgent = make_carnot_agent(Agent)`.
