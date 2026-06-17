@@ -17492,6 +17492,70 @@ covariance. If the second corpus is unavailable, controls are not
 differentiable, or the scorer is leaky on the second corpus, then the runner
 writes the matching terminal verdict instead of declaring a replication.
 
+### REQ-VERIFY-4337: DiNa-LRM Leak-Robust Partial-State Scorer Build
+
+The repository SHALL provide Exp 4337 at
+`python/carnot/experiment_4337_leak_robust_partial_state_scorer_build.py` and
+`results/experiment_4337_leak_robust_partial_state_scorer_build.py` to build a
+DiNa-LRM-style partial-state reward scorer that replaces the Exp 4292
+position-leaky scorer. Before any inference or training, the runner SHALL
+verify that the llama.cpp DiffusionGemma PR binary is non-empty, the
+DiffusionGemma Q4_K_M GGUF cache is present, at least two oracle-distinct
+reasoning corpora are available (`in_distribution_error_corpus_v1` and
+`step_error_balanced_v2`), and TRM training is stood down. If fewer than two
+corpora are available, the runner SHALL write
+`honest_verdict=blocked_second_corpus_unavailable`; if any other precondition
+is missing, it SHALL write the corresponding terminal `blocked_<resource>`
+verdict and SHALL NOT fabricate inference.
+
+When preconditions pass, Exp 4337 SHALL run the PR-binary canvas path for both
+corpora with `canvas_len=256`, `mask_token_id=4`, and `vocab_size=262144`,
+using noisy/masked canvas ids before training. It SHALL train a persisted,
+loadable reward head directly on noisy answer-masked partial states, condition
+the head on denoising timestep and noise level, and expose
+`score_partial_state(canvas_ids, step) -> energy`. The training records SHALL
+mask answer-bearing cells before feature extraction and SHALL NOT include clean
+answer cell values or answer-cell position features.
+
+Exp 4337 SHALL run the hard leak audit on both corpora. The masked-answer
+probe SHALL report bare float `masked_answer_recovery_auroc` as the maximum
+per-corpus AUROC for recovering hidden answer identity from the reward signal
+after answer cells are masked; this must remain near chance. The process
+ranking probe SHALL report bare float `process_ranking_auroc` as the minimum
+per-corpus AUROC for ranking answer-masked partial states by genuine process
+quality; this must be non-degenerate. The terminal bare bool
+`scorer_leak_audit_passed` SHALL be true iff both corpora pass answer-recovery
+and process-ranking gates.
+
+The terminal artifact SHALL write
+`results/experiment_4337_leak_robust_partial_state_scorer_build.json` with
+required fields `honest_verdict`, bare bool `scorer_leak_audit_passed`, bare
+float `masked_answer_recovery_auroc`, bare float `process_ranking_auroc`,
+`scorer_module_path`, bare bool `verifier_is_oracle=false`,
+`preconditions_checked`, bare int `random_seed`, `reproducibility_checksum`,
+`model_specs`, `field_principles`, `spec_refs`, `duration_s`,
+`inference_substrate`, and `adversarial_verify`. Its field principles SHALL
+include the task's oracle-distinctness, leak-audit, precondition, checksum, and
+model-spec rationale so Exp 4338 can gate on the persisted scorer.
+
+### SCENARIO-VERIFY-4337: Two-Corpus Masked-Answer Audit Gates The Scorer
+
+Given the PR binary or DiffusionGemma cache is missing, when Exp 4337 runs,
+then it records the failed precondition, keeps `scorer_leak_audit_passed=false`,
+does not train a scorer, and writes the matching terminal blocked verdict.
+
+Given fewer than two oracle-distinct reasoning corpora are loadable, when Exp
+4337 runs, then it writes `honest_verdict=blocked_second_corpus_unavailable`,
+records the corpus check in `preconditions_checked`, and stops before
+PR-binary canvas extraction or training.
+
+Given all preconditions pass, when Exp 4337 trains the timestep-conditioned
+reward head, then it checkpoints after the per-corpus canvas extraction phase,
+the training phase, and the leak-audit phase; persists the scorer module; runs
+adversarial verification; reports `verifier_is_oracle=false`; and sets
+`scorer_leak_audit_passed=true` only when both corpora have masked-answer
+recovery near chance and non-degenerate process ranking.
+
 ### REQ-VERIFY-4326: Adaptive Guided-Generation Scale-Up
 
 The repository SHALL provide Exp 4326 at
