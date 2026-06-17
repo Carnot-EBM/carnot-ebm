@@ -76,9 +76,17 @@ HEURISTIC: `def goal_distance(grid) -> float`, LOWER = CLOSER to a level-complet
 
 A global numpy array `WIN` of shape {h}x{w} (a level-complete win-state grid, shown below for
 reference) and `np` (numpy) are ALREADY DEFINED in your scope. DO NOT redefine, hardcode, or
-write out WIN as a literal — REFERENCE the global `WIN`. Write a VERY SHORT function (<= 8
-lines). The simplest robust answer, which you should prefer unless a clearly better structural
-signal exists: `return float((grid != WIN).sum())` (count of differing cells).
+write out WIN as a literal — REFERENCE the global `WIN`. Write a SHORT function (<= 12 lines).
+
+PREFER A STRUCTURAL PROGRESS SIGNAL over a plain cell-count. `float((grid != WIN).sum())` is the
+safe FALLBACK, but it is usually DOMINATED by static background cells (every grid differs from
+WIN in the same large constant region), so it barely guides the search and can mislead it into a
+LONGER path. A sharper heuristic uses the per-action deltas shown below — those reveal WHICH
+cells the game's actions actually change (the dynamic region). Prefer a signal like: count
+mismatches ONLY over the cells the actions change (mask the static background), or measure how
+far the changed/moved objects are from their WIN positions (manhattan), or any count that
+strictly DECREASES as the grid approaches WIN. The goal is FEWER expansions AND the OPTIMAL
+(shortest) path — not just any descent.
 
 CRITICAL CONTRACT: goal_distance MUST `return float(...)` for ANY grid — NEVER None, never
 fall off the end. The LAST line must be an unconditional `return float(<value>)`.
