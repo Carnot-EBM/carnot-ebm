@@ -1,0 +1,85 @@
+{
+  "field_principles": {
+    "flagged_for_v403": "Closes discover->ingest->plan: names the single strongest method for the .403 planner, conditioned on the .402 outcomes.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations (or blocked_network_unavailable).",
+    "methods_mapped": "Each method MUST carry a real, VERIFIED arXiv ID/URL (no citation = fabrication) + a one-line .403 experiment mapping + the failure mode + the .402-outcome conditioning.",
+    "out_of_band_flagged": "Records A2D2/SEPO (verifier-as-reward generator training) as operator-owned, NOT auto-run in-loop -- the standing HARD RULE.",
+    "random_seed": "Determinism placeholder for the discovery query set (reproducibility of the sweep)."
+  },
+  "flagged_for_v403": "prism_hardened_s3_verifier_guided_search_v403",
+  "honest_verdict": "complete: sota_ingestion_v403_mapped",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2602.01842",
+      "carnot_stack_mapping": "Wrap the leak-robust partial-state scorer in Prism-style hierarchical trajectory search: prune early/mid denoising branches, partially remask for diversity, and compare self-verified feedback against the external Carnot scorer under fixed NFE.",
+      "experiment_mapping": ".403: run Prism-hardened S3 as the headline non-training verifier-guided diffusion search rerun.",
+      "failure_mode": "Self-verification can become another correlated scorer and HTS can hide diversity collapse; .403 must log branch diversity, leak audits, and scorer-disagreement rows before claiming a generation gain.",
+      "name": "Prism hierarchical trajectory search and self-verification for discrete diffusion LMs",
+      "source_verification": "Verified by low-concurrency WebSearch/WebFetch and arXiv page on 2026-06-17; the existing corpus already carried this paper as a partial-state dLLM search control.",
+      "track": "verifier-guided diffusion-LM search hardening",
+      "url": "https://arxiv.org/abs/2602.01842",
+      "v402_outcome_conditioning": "Exp 4348 has acceptance_gate=true at benchmark_n=240 but reports honest_verdict=controls_not_differentiable and adversarial TAUTOLOGY cautions on the three S3 delta metrics."
+    },
+    {
+      "arxiv_id_or_url": "2604.06260",
+      "carnot_stack_mapping": "Retain S3 as the base search policy over denoising trajectories, but add non-identical control metrics, frontier-diversity receipts, and held-out partial-state leak checks.",
+      "experiment_mapping": ".403: rerun S3 with differentiated controls and adversarial metric-tautology guards.",
+      "failure_mode": "The .402 artifact produced identical deltas across distinct controls, so a naive repeat can overstate lift through metric aliasing rather than a real search gain.",
+      "name": "S3 Stratified Scaling Search for diffusion language models",
+      "source_verification": "Verified by arXiv API and low-concurrency WebFetch on 2026-06-17; carried forward from Exp 4343 and rechecked in the focused .403 pass.",
+      "track": "fixed-model verifier-guided denoising search",
+      "url": "https://arxiv.org/abs/2604.06260",
+      "v402_outcome_conditioning": "Exp 4348 keeps the S3 line alive with acceptance_gate=true, but the controls_not_differentiable verdict means the next run must make the best-of-K, self-reward SMC, and unguided controls separable."
+    },
+    {
+      "arxiv_id_or_url": "2606.08501",
+      "carnot_stack_mapping": "Record authentic denoising states, score high-entropy steps, and audit whether dense process rewards agree with final verifier outcomes without training the generator in-loop.",
+      "experiment_mapping": ".403: add PAPO-style reward-state alignment as a diagnostic sidecar for the Prism/S3 search rerun.",
+      "failure_mode": "Dense process rewards can reward artificial remasking states or leak final answers into intermediate canvases; replay must be authentic-trajectory only.",
+      "name": "PAPO reward-state alignment for diffusion LLM reasoning",
+      "source_verification": "Verified by arXiv page and low-concurrency WebSearch/WebFetch on 2026-06-17.",
+      "track": "reward-state alignment diagnostics for denoising trajectories",
+      "url": "https://arxiv.org/abs/2606.08501",
+      "v402_outcome_conditioning": "Exp 4348 keeps fixed-model search active but exposes scorer-control fragility; PAPO maps to state-alignment diagnostics before any weight-updating reward optimization."
+    },
+    {
+      "arxiv_id_or_url": "2605.05138",
+      "carnot_stack_mapping": "Continue E3 on the residual ar25/sc25 gaps and private-like deep tails with clean workspaces, verifier programs, and per-level offline reproduction receipts.",
+      "experiment_mapping": ".403: target deeper E3 progression on residual games, while keeping verifier_is_oracle=true out of the moat headline.",
+      "failure_mode": "Oracle-grounded E3 solves are ARC progress but not an oracle-free verifier moat; public-game shortcuts and workspace leakage must be audited before feeding capstone claims.",
+      "name": "Executable World Models for ARC-AGI-3",
+      "source_verification": "Verified by arXiv page and low-concurrency WebFetch on 2026-06-17.",
+      "track": "E3 deeper executable-world-model progression",
+      "url": "https://arxiv.org/abs/2605.05138",
+      "v402_outcome_conditioning": "Exp 4351 reports success_e3_deeper_tn36_reproduced, new_levels_reproduced=1, reproducible_total_levels=23, and verifier_is_oracle=true."
+    },
+    {
+      "arxiv_id_or_url": "2503.18809",
+      "carnot_stack_mapping": "Sample small Python heuristic programs for ARC per-game planners, select by reproduced held-out action count, and compare against the current learned linear action-cost heuristic.",
+      "experiment_mapping": ".403: generalize the learned action-cost win into a bounded LLM-generated heuristic search over reproduced ARC levels.",
+      "failure_mode": "LLM-generated heuristics can encode game-specific leakage or overfit tiny held-out splits; .403 needs fresh held-out levels, static-analysis receipts, and reproduction gates.",
+      "name": "Classical planning with LLM-generated heuristics",
+      "source_verification": "Verified by arXiv page during the focused .403 WebSearch/WebFetch pass on 2026-06-17.",
+      "track": "learned ARC action-efficiency heuristics",
+      "url": "https://arxiv.org/abs/2503.18809",
+      "v402_outcome_conditioning": "Exp 4353 reports action_efficiency_improves=true, held_out_actions_baseline=25, held_out_actions_learned=16, positive_control_passed=true, reproduction_gated=true, and verifier_is_oracle=false."
+    }
+  ],
+  "out_of_band_flagged": [
+    {
+      "arxiv_id_or_url": "2606.13565",
+      "name": "A2D2 reward-guided any-length discrete diffusion",
+      "owner_boundary": "operator-owned; NOT auto-run in-loop",
+      "reason": "verifier-as-reward generator training",
+      "url": "https://arxiv.org/abs/2606.13565"
+    },
+    {
+      "arxiv_id_or_url": "2502.01384",
+      "name": "SEPO score-entropy policy optimization",
+      "owner_boundary": "operator-owned; NOT auto-run in-loop",
+      "reason": "policy-gradient fine-tuning over non-differentiable rewards",
+      "url": "https://arxiv.org/abs/2502.01384"
+    }
+  ],
+  "random_seed": 4354
+}

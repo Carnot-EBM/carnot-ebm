@@ -24,7 +24,9 @@ from carnot.agentic.arc_agi3_live_adapter import _levels_completed, _game_over
 # game -> best banked artifact carrying solve_trace.actions (highest real-env level)
 GAME_ARTIFACTS = {
     "r11l": "results/experiment_4296_arc_incremental_progress_new_game.json",  # L1
-    "sc25": "results/experiment_4249_arc_incremental_progress.json",            # L5
+    # sc25 reproduces L1 via the E3 cast-grid plan (executed_steps with corrected coords) + a warmup
+    # step (the first env.step after reset is consumed on sc25 -- see WARMUP_GAMES).
+    "sc25": "results/experiment_4341_e3_sc25_reproduction.json",                # L1
     "lp85": "results/experiment_4190_arc_incremental_progress.json",            # L3
     "ls20": "results/experiment_4285_arc_incremental_progress_new_game.json",   # L1
     "wa30": "results/experiment_4275_arc_incremental_progress_new_game.json",   # L1
@@ -79,11 +81,21 @@ def normalize(a: dict) -> tuple[int | None, dict | None]:
     return (int(aid) if aid is not None else None), data
 
 
+# games whose FIRST env.step after reset is consumed (a no-op) -> prepend a throwaway warmup step
+# so the real action sequence lands (the first-step-after-reset-consumed gotcha; sc25).
+WARMUP_GAMES = {"sc25"}
+
+
 def replay_game(arcade, game: str, scorecard_id: str, actions: list[dict]) -> dict:
     env = arcade.make(game, scorecard_id=scorecard_id)
     frame = env.reset()
     start = _levels_completed(frame)
     applied = 0
+    if game in WARMUP_GAMES and actions:           # consume the swallowed first step
+        aid, data = normalize(actions[0])
+        if aid is not None:
+            frame = env.step(getattr(GameAction, f"ACTION{aid}"), data=data,
+                             reasoning={"policy": "warmup"})
     for a in actions:
         aid, data = normalize(a)
         if aid is None:
