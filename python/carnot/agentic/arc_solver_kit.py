@@ -79,7 +79,8 @@ class OfflineSolver:
     def __init__(self, game_id: str, action_labels: Callable[[Any], Sequence[str]],
                  apply: Callable[[Any, str, Any], Any], state_key: Callable[[Any], Hashable],
                  *, warmup_label: Optional[str] = None, max_nodes: int = 30000,
-                 verifier: Optional[Callable[[Any], float]] = None) -> None:
+                 verifier: Optional[Callable[[Any], float]] = None,
+                 path_cost_weight: float = 0.0) -> None:
         self.game_id = game_id
         self.action_labels = action_labels
         self.apply = apply
@@ -93,6 +94,7 @@ class OfflineSolver:
         # (verifier ≡ 0 → the heap orders by insertion = FIFO). Pass a learned or
         # computed verifier to turn the solver into a verifier-routed search.
         self.verifier = verifier or (lambda _g: 0.0)
+        self.path_cost_weight = float(path_cost_weight)
         self.last_states_expanded = 0
         self.last_frame: Any = None
 
@@ -107,6 +109,10 @@ class OfflineSolver:
             return float(self.verifier(env._game, self.last_frame))  # type: ignore[misc]
         except TypeError:
             return float(self.verifier(env._game))
+
+    def _priority(self, env: Any, path: Sequence[str]) -> float:
+        """Verifier score plus optional path cost. Default 0 keeps legacy greedy routing."""
+        return float(self.path_cost_weight * len(path) + self._call_verifier(env))
 
     def _call_action_labels(self, env: Any, path: Sequence[str]) -> Sequence[str]:
         try:
@@ -134,7 +140,7 @@ class OfflineSolver:
         self._replay(env, list(prefix))
         seen = {self._call_state_key(env)}
         counter = itertools.count()  # FIFO tiebreaker (so verifier≡0 ⇒ BFS)
-        heap = [(self._call_verifier(env), next(counter), [])]
+        heap = [(self._priority(env, []), next(counter), [])]
         nodes = 0
         while heap and nodes < self.max_nodes:
             _, _, path = heapq.heappop(heap)
@@ -151,7 +157,8 @@ class OfflineSolver:
                 k = self._call_state_key(env)
                 if k not in seen:
                     seen.add(k)
-                    heapq.heappush(heap, (self._call_verifier(env), next(counter), path + [label]))
+                    child_path = path + [label]
+                    heapq.heappush(heap, (self._priority(env, child_path), next(counter), child_path))
                 self._replay(env, list(prefix) + path)  # restore for next sibling
         self.last_states_expanded = nodes
         return None, nodes
