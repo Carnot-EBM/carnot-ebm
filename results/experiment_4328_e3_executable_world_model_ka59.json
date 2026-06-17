@@ -1,0 +1,51 @@
+{
+  "duration_s": 1.032,
+  "experiment": "experiment_4328_e3_executable_world_model_ka59",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed (success_e3_ka59_L1_reproduced or complete_e3_ka59_partial_model_<acc>). A reproduced L1 and an honest partial are BOTH progress.",
+    "offline_reproduced": "BARE bool: the real env reaches L1 via the induced-model plan, re-gated -- only reproduced levels count.",
+    "plan_executed": "BARE bool + divergence_step: execution-grounded confirmation; halt-on-divergence.",
+    "preconditions_checked": "Records the offline-env presence + harness import + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the induction + planning.",
+    "reproduced_levels": "BARE int: levels offline-reproduced on ka59 (target >=1) -- the +1 incremental-progress unit.",
+    "reproducibility_checksum": "Hash of the world model + the plan + the reproduce() result; lets a third party re-run.",
+    "verifier_accuracy_per_round": "list[float]: the verifier's reproduction rate per refactor round -- the trustworthy progress signal for the induced model.",
+    "verifier_is_oracle": "BARE bool=true -- the SOLVE is execution-grounded (real env defines the win); ARC progress, NOT a moat headline.",
+    "world_model_path": "results/arc_e3/ka59/world_model.py -- the induced model IS the deliverable.",
+    "world_model_sha256": "Hash of the induced world model -- auditable/reproducible."
+  },
+  "game": "ka59",
+  "honest_verdict": "complete_e3_ka59_partial_model_0.56",
+  "inference_substrate": "codex_direct_model_edit_offline_env_no_nested_proposer",
+  "method": "executable_world_model_verify_plan_reproduce",
+  "offline_reproduced": false,
+  "plan_executed": false,
+  "plan_executed_detail": {
+    "divergence_step": null,
+    "plan_result": {
+      "game": "ka59",
+      "planned": false,
+      "reason": "no plan to is_level_complete in model"
+    }
+  },
+  "preconditions_checked": {
+    "harness_import": true,
+    "leaderboard_submission": false,
+    "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/ka59",
+    "offline_env_present": true,
+    "research_conductor_modified": false,
+    "trm_training_stood_down": true
+  },
+  "random_seed": 4328,
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "c1cc68b82115b2006f1360fe20fa207a467ad74ccb037ce046196c763a255532",
+  "residual_mismatch_class": "missing_world_model_rule_gap_actions_1_2_4_6",
+  "submitted_to_leaderboard": false,
+  "verifier_accuracy_per_round": [
+    0.5625
+  ],
+  "verifier_best_accuracy": 0.5625,
+  "verifier_is_oracle": true,
+  "world_model_path": "results/arc_e3/ka59/world_model.py",
+  "world_model_sha256": "0da67a03910f1e16d11ca0db25ca5feba9cb4b6e3287ff4fc03c5d3511b8ff57"
+}

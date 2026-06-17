@@ -1145,3 +1145,10 @@ registry version that closed them when a new verifier captures a previously-open
 - Reproducibility checksum: `1e926634c023e7d82b793a890ea825f08d82d8ec6e5ebf89b6f2f8fde67af7ad`
 - Gap: bounded executable-world-model run did not satisfy the offline reproduced L1 gate.
 
+### 2026-06-17 Exp4328 ka59 E3 residual gap
+- Spec: REQ-PHASE4-075 / SCENARIO-PHASE4-075
+- Best verifier accuracy: 0.5625
+- Residual mismatch class: `missing_world_model_rule_gap_actions_1_2_4_6`
+- Reproducibility checksum: `c1cc68b82115b2006f1360fe20fa207a467ad74ccb037ce046196c763a255532`
+- Gap: bounded executable-world-model run did not satisfy the offline reproduced L1 gate.
+
