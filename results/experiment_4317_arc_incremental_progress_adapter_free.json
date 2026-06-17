@@ -1,0 +1,337 @@
+{
+  "acceptance_gate_passed": true,
+  "action_plan": [
+    {
+      "action": 3,
+      "action_index": 1,
+      "data": null
+    },
+    {
+      "action": 2,
+      "action_index": 2,
+      "data": null
+    },
+    {
+      "action": 2,
+      "action_index": 3,
+      "data": null
+    },
+    {
+      "action": 4,
+      "action_index": 4,
+      "data": null
+    },
+    {
+      "action": 5,
+      "action_index": 5,
+      "data": null
+    }
+  ],
+  "candidate_baseline_actions": 55,
+  "duration_s": 0.351,
+  "executed_real_env_actions": 5,
+  "experiment": "experiment_4317_arc_incremental_progress_adapter_free",
+  "exploration_actions_used": 5,
+  "field_principles": {
+    "exploration_actions_used": "BARE int: actions the solver actually took in the env -- MUST be > 0 (the exp4307 GATE_PASSED_WITHOUT_DATA flag was exactly exploration_actions_used==0; a real solve takes real actions).",
+    "game_advanced": "The NEW game targeted (NOT r11l/ls20/wa30/sc25) -- the incremental-progress unit.",
+    "honest_verdict": "Terminal-prefixed. An advance (+1 offline-reproduced level on a new game), an honest no-advance WITH real exploration (exploration_actions_used>0, informs the next pick), and an honest blocked_arc_env_unreachable / blocked_arc_solver_cannot_act are ALL COMPLETE -- progress is the metric, but a real no-advance is decision-grade. A no-advance with 0 actions is the exp4307 flag to AVOID.",
+    "levels_completed": "BARE int: levels solved on this game from the solver's REAL-ENV output (NOT a self-report) -- the no-fabrication anchor.",
+    "offline_reproduced": "BARE bool: the level reproduces on the OFFLINE env via arc_solver_kit.reproduce() -- only reproduced levels count toward total_levels (ARC Solve Reproducibility Discipline).",
+    "preconditions_checked": "Records the offline-env reachability + survey load + adapter-free solver; pre-empts the silent-missing-resource + frontier-adapter-dependency fabrication modes.",
+    "random_seed": "Determinism precondition for the solver.",
+    "reproducibility_checksum": "Hash of the solver trace + the env outcome + the reproduce() result; lets a third party re-run.",
+    "total_levels": "BARE int: the cumulative OFFLINE-REPRODUCED solved-level count -- MUST be monotonic (>= 22); the north-star accuracy metric (per ARC Solve Reproducibility, only reproduced levels count)."
+  },
+  "game_advanced": "cd82-fb555c5d",
+  "game_levels_completed": 1,
+  "honest_verdict": "success: adapter_free_incremental_progress_cd82-fb555c5d_advanced_to_L1_total23",
+  "inference_substrate": "offline_arc_agi3_training_free_graph_explore_adapter_free_exp4317",
+  "levels_completed": 1,
+  "model_specs": {
+    "arc_solver_kit": "python/carnot/agentic/arc_solver_kit.py",
+    "compute": "CPU/cached offline ARC fixtures",
+    "extra_adapter_dependency": "none",
+    "frontier_adapter_dependency": "none",
+    "frontier_adapter_free": true,
+    "graph_explore_policy": "graph_explore_solve_v2",
+    "inference_substrate": "offline_arc_agi3_training_free_graph_explore_adapter_free_exp4317",
+    "leaderboard_submission": false,
+    "recommend_approach": {
+      "general_gotchas": [
+        {
+          "id": "offline_is_a_simulator",
+          "note": "Arcade(OFFLINE, environment_files) = deterministic sim, all 25 games, zero quota."
+        },
+        {
+          "id": "level_on_frame_not_game",
+          "note": "level = frame.levels_completed; env._game has no levels_completed."
+        },
+        {
+          "id": "deepcopy_injection_unreliable",
+          "note": "env._game=deepcopy(state) works for lp85, BROKEN for sc25; use replay-from-reset."
+        },
+        {
+          "id": "first_step_after_reset_consumed",
+          "note": "first env.step after reset is a no-op (sc25); warm up after reset."
+        },
+        {
+          "id": "discover_coords_never_hardcode",
+          "note": "live-coupled hardcoded coords miss the offline layout; discover from env."
+        },
+        {
+          "id": "state_dependent_controls_and_animations",
+          "note": "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+        }
+      ],
+      "guidance": "Start from the top-ranked solved game's solver + reuse its action-model and gotchas; only reverse-engineer the DELTA. Import arc_solver_kit; run the reproduction gate; append new mechanics/dead-ends to the registry.",
+      "recommended": [
+        {
+          "action_model": "ACTION6 click to select spell (sptivk-{spell}) + toggle 3x3 cast cells at (24+5c,49+5r) [camera identity] + fire; ACTION1-4 move the player (tank-controls).",
+          "game": "sc25",
+          "reproducibility": "provisional",
+          "reusable_gotchas": [
+            "deepcopy-injection BROKEN -> replay-from-reset.",
+            "first step after reset consumed -> warm-up step.",
+            "tank-controls: facing (jdmucabyqar) is load-bearing -> include in state-key.",
+            "live solver's SC25_GRID_COORDS are WRONG for the offline env; correct cell (r,c) = (24+5c, 49+5r).",
+            "spell fire clears the cast pattern; multi-frame fireball animation must resolve."
+          ],
+          "similarity": 8.0,
+          "solver": "scripts/arc3_sc25_offline_solver.py (v3, replay-from-reset BFS) \u2014 infra works, ~90 states explored, L1 blocked on the win-mechanic.",
+          "win_condition": "MULTIPLE paths: (a) move player 'pluyoo' to exit 'exydhv' (abvgsmnbrj->next_level); (b) cast-grid alignment \u2014 align the 9 'clcbko' goal sprites to the 3x3 cast grid at +1,+1 (ianfrutkqg/mtfwxhxooqg). L1 is likely (b) or needs a fireball to clear a wall first."
+        },
+        {
+          "action_model": "ACTION6 click; full reset->win trajectory in the artifact replays offline.",
+          "game": "r11l",
+          "reproducibility": "reproduced",
+          "reusable_gotchas": [],
+          "similarity": 5.0,
+          "solver": "results/experiment_4296 solve_trace.actions (replays cleanly offline).",
+          "win_condition": "click-to-template: each colored piece dragged onto its gray template (+1,+1)."
+        },
+        {
+          "action_model": "keyboard-only [ACTION4,4,4,5]; ACTION4 = one direction, ACTION5 commit.",
+          "game": "sp80",
+          "reproducibility": "reproduced",
+          "reusable_gotchas": [],
+          "similarity": 5.0,
+          "solver": "results/arc_explore_trajectory_sp80.json (graph_explore_solve_v2, 4 actions).",
+          "win_condition": "first-solve L1 adapter-free; move-right x3 then commit."
+        }
+      ],
+      "target_features": {
+        "action_type": "mixed",
+        "difficulty": "medium",
+        "game": "cd82",
+        "spatial": false,
+        "win_kw": [
+          "click",
+          "pattern",
+          "position"
+        ]
+      },
+      "target_game": "cd82"
+    },
+    "reproduction_gate": "arc_solver_kit.reproduce",
+    "route_acceptance": "accept only when exploration_actions_used>0, real_env_confirmed=true, and offline_reproduced=true via arc_solver_kit.reproduce",
+    "solver": "python/carnot/agentic/arc_graph_explore.py",
+    "target": {
+      "baseline_actions": 55,
+      "excluded_game_prefixes": [
+        "r11l",
+        "ls20",
+        "wa30",
+        "sc25"
+      ],
+      "game": "cd82",
+      "game_id": "cd82-fb555c5d",
+      "headroom_score": 10945,
+      "n_levels": 6,
+      "prior_level": 0,
+      "selection_mode": "adapter_free_cached_graph_explore_nonspatial_headroom",
+      "selection_reason": "selected cd82 L1 because it is a non-excluded survey game with a saved adapter-free graph-explore trajectory, local fixture metadata, and the highest nonspatial headroom score after the exp4307 adapter-dependency flag",
+      "survey_rank": 6,
+      "target_level": 1,
+      "trajectory_path": "results/arc_explore_trajectory_cd82.json"
+    },
+    "training": "none",
+    "world_model_graph": "GameGraph"
+  },
+  "new_levels_solved_this_task": 1,
+  "observed_transition_count": 5,
+  "offline_reproduced": true,
+  "phase_trace": [
+    {
+      "levels_completed": 0,
+      "phase": "observe",
+      "source": "offline_reset",
+      "target_game": "cd82-fb555c5d",
+      "target_level": 1,
+      "world_model": "GameGraph"
+    },
+    {
+      "actions_replayed": 5,
+      "levels_completed": 1,
+      "phase": "adapter-free-graph-explore",
+      "policy": "graph_explore_solve_v2",
+      "trajectory_source": "results/arc_explore_trajectory_cd82.json"
+    },
+    {
+      "gate": "arc_solver_kit.reproduce",
+      "phase": "reproduce",
+      "reached_level": 1,
+      "reproduced": true
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "GameGraph import OK",
+      "resource": "offline_solver_import"
+    },
+    {
+      "available": true,
+      "detail": "reproduce gate import OK",
+      "resource": "arc_solver_kit"
+    },
+    {
+      "available": true,
+      "detail": "graph_explore_solve_v2 import OK",
+      "resource": "adapter_free_graph_explore_solver"
+    },
+    {
+      "available": true,
+      "detail": "no set-encoder or frontier adapter required",
+      "resource": "frontier_adapter_dependency_absent"
+    },
+    {
+      "available": true,
+      "detail": "loaded",
+      "resource": "arc3_win_condition_survey"
+    },
+    {
+      "available": true,
+      "detail": "total_levels=22",
+      "resource": "prior_exp4296_progress"
+    },
+    {
+      "available": true,
+      "detail": "flagged exploration_actions_used=0",
+      "resource": "prior_exp4307_flag"
+    },
+    {
+      "available": true,
+      "detail": "cd82",
+      "resource": "recommend_approach"
+    },
+    {
+      "available": true,
+      "detail": "reset levels_completed=0",
+      "resource": "offline_arc_env"
+    }
+  ],
+  "prior_level": 0,
+  "prior_total_levels_solved": 22,
+  "random_seed": 4317,
+  "real_env_confirmed": true,
+  "reproduced_levels": 1,
+  "reproducibility_checksum": "acde33d5720ac0fb1c42c0b535cfe02b296a2bd8283b8875bd60dccadb4ac702",
+  "reproduction_gate": {
+    "claimed_level": 1,
+    "game": "cd82-fb555c5d",
+    "mode": "offline_reproduction_gate_no_quota",
+    "reached_level": 1,
+    "reproduced": true
+  },
+  "requirements": [
+    "REQ-PHASE4-073",
+    "SCENARIO-PHASE4-073"
+  ],
+  "selected_candidate_reason": "selected cd82 L1 because it is a non-excluded survey game with a saved adapter-free graph-explore trajectory, local fixture metadata, and the highest nonspatial headroom score after the exp4307 adapter-dependency flag",
+  "selection_mode": "adapter_free_cached_graph_explore_nonspatial_headroom",
+  "solve_trace": {
+    "actions": [
+      {
+        "action": 3,
+        "action_index": 1,
+        "data": null
+      },
+      {
+        "action": 2,
+        "action_index": 2,
+        "data": null
+      },
+      {
+        "action": 2,
+        "action_index": 3,
+        "data": null
+      },
+      {
+        "action": 4,
+        "action_index": 4,
+        "data": null
+      },
+      {
+        "action": 5,
+        "action_index": 5,
+        "data": null
+      }
+    ],
+    "phase_trace": [
+      {
+        "levels_completed": 0,
+        "phase": "observe",
+        "source": "offline_reset",
+        "target_game": "cd82-fb555c5d",
+        "target_level": 1,
+        "world_model": "GameGraph"
+      },
+      {
+        "actions_replayed": 5,
+        "levels_completed": 1,
+        "phase": "adapter-free-graph-explore",
+        "policy": "graph_explore_solve_v2",
+        "trajectory_source": "results/arc_explore_trajectory_cd82.json"
+      },
+      {
+        "gate": "arc_solver_kit.reproduce",
+        "phase": "reproduce",
+        "reached_level": 1,
+        "reproduced": true
+      }
+    ],
+    "prior_level": 0,
+    "reproduction_gate": {
+      "claimed_level": 1,
+      "game": "cd82-fb555c5d",
+      "mode": "offline_reproduction_gate_no_quota",
+      "reached_level": 1,
+      "reproduced": true
+    },
+    "selection_mode": "adapter_free_cached_graph_explore_nonspatial_headroom",
+    "selection_reason": "selected cd82 L1 because it is a non-excluded survey game with a saved adapter-free graph-explore trajectory, local fixture metadata, and the highest nonspatial headroom score after the exp4307 adapter-dependency flag",
+    "solver_trace": {
+      "final_level_completed": 1,
+      "policy": "graph_explore_solve_v2",
+      "reproduction_gate": {
+        "claimed_level": 1,
+        "game": "cd82-fb555c5d",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": true
+      },
+      "trajectory_length": 5,
+      "trajectory_source": "results/arc_explore_trajectory_cd82.json"
+    },
+    "target_game": "cd82-fb555c5d",
+    "target_level": 1,
+    "trajectory_path": "results/arc_explore_trajectory_cd82.json"
+  },
+  "submitted_to_leaderboard": false,
+  "target_game": "cd82-fb555c5d",
+  "target_level": 1,
+  "title": "arc3_incremental_progress_exp4317_adapter_free_offline",
+  "total_levels": 23,
+  "total_levels_solved": 23
+}
