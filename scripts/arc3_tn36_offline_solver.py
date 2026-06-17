@@ -40,6 +40,9 @@ BIT_DY = 3                                # bit b button is BIT_DY*b below the s
 SETTLE, LEFT, RIGHT, DOWN, UP = 0, 1, 2, 3, 33
 SCALE_UP, SCALE_DOWN = 8, 9
 ROT = {90: 5, -90: 6, 180: 7, 270: 16}    # rotation delta (deg) -> code
+# property (sjmtdfxdrc) is set ABSOLUTELY by codes 14/15/63 (= knfgrcbayu, decoded 2026-06-17):
+# code 14 -> 9, code 15 -> 8, code 63 -> 15. Map the TARGET property value to its command code.
+PROP_CODE = {9: 14, 8: 15, 15: 63}
 
 
 def _bz(env):
@@ -78,8 +81,6 @@ def compute_moves(obj, tgt):
     Each move is one STEP (or one scale/rotate step). ORDER is resolved by routing (some levels
     have obstacles, so the moves must be sequenced to route the object through a gap)."""
     (ox, oy, osc, orot, osj), (tx, ty, tsc, trot, tsj) = obj, tgt
-    if osj != tsj:
-        return None, f"needs property change (sjmtdfxdrc {osj}->{tsj}; codes 14/15/63 not yet decoded)"
     dx, dy = tx - ox, ty - oy
     if dx % STEP or dy % STEP:
         return None, f"delta not a multiple of STEP={STEP} (dx={dx},dy={dy})"
@@ -92,6 +93,11 @@ def compute_moves(obj, tgt):
         code = ROT.get(d) or ROT.get(d - 360)
         if code is None:
             return None, f"rotation delta {d} not in {{90,180,270,-90}}"
+        moves.append(code)
+    if osj != tsj:
+        code = PROP_CODE.get(tsj)
+        if code is None:
+            return None, f"property {osj}->{tsj} not reachable via codes 14/15/63 (reach {sorted(PROP_CODE)})"
         moves.append(code)
     return moves, ""
 
