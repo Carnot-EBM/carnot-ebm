@@ -53,6 +53,8 @@ def banked_transitions(game: str, cell: int) -> list:
 def main() -> int:
     ap = argparse.ArgumentParser(); ap.add_argument("game"); ap.add_argument("--local", action="store_true")
     ap.add_argument("--timeout", type=int, default=600)
+    ap.add_argument("--rounds", type=int, default=3, help="max induce+refactor rounds (accuracy lever)")
+    ap.add_argument("--repo", default=None, help="LocalGGUFProposer repo_substr (open-model benchmark)")
     args = ap.parse_args(); game = args.game; t0 = time.time()
     print(f"== E3-in-agent solve: {game} (proposer={'local-gguf' if args.local else 'codex-dev'}) ==", flush=True)
 
@@ -62,17 +64,43 @@ def main() -> int:
     wins = sum(1 for t in trans if t.level_after > t.level_before)
     print(f"  collected {len(trans)} transitions (cell={cell}, {wins} winning) for induction", flush=True)
 
-    # 2. induce
-    proposer = e3.LocalGGUFProposer() if args.local else e3.CodexProposer(timeout=args.timeout)
+    # 2-3. induce, then MULTI-ROUND REFACTOR (the accuracy lever): feed mismatches back
+    #      until accuracy clears a target or rounds run out. Keep the BEST engine seen.
+    proposer = (e3.LocalGGUFProposer(repo_substr=args.repo) if args.repo
+                else e3.LocalGGUFProposer()) if args.local else e3.CodexProposer(timeout=args.timeout)
+    verifier = e3.WorldModelVerifier(trans)
     ok, tail = proposer.induce(game, trans, cell)
     if not ok:
         print(f"  induce FAILED: {tail[-200:]}", flush=True)
         _write(game, {"stage": "induce", "ok": False, "tail": tail[-300:]}, t0); return 0
     engine, is_done = e3.load_engine(game)
-
-    # 3. verify
-    vr = e3.WorldModelVerifier(trans).score(engine)
-    print(f"  VERIFY: {vr.n_correct}/{vr.n} = {vr.accuracy:.0%} reproduced; is_level_complete present={is_done is not None}", flush=True)
+    vr = verifier.score(engine)
+    acc_history = [round(vr.accuracy, 4)]
+    print(f"  VERIFY r0: {vr.n_correct}/{vr.n} = {vr.accuracy:.0%}; is_level_complete present={is_done is not None}", flush=True)
+    best_acc = vr.accuracy
+    import shutil
+    best_path = e3.E3_DIR / game / "world_model.best.py"
+    shutil.copy(e3.E3_DIR / game / "world_model.py", best_path)
+    for rnd in range(1, args.rounds):
+        if vr.accuracy >= 0.95 or not vr.mismatches:
+            break
+        rok, rtail = proposer.refactor(game, vr)
+        if not rok:
+            print(f"  refactor r{rnd} failed/timeout: {rtail[-120:]}", flush=True); break
+        try:
+            engine, is_done = e3.load_engine(game)
+            vr = verifier.score(engine)
+        except Exception as ex:
+            print(f"  refactor r{rnd} produced no loadable engine: {ex}", flush=True); break
+        acc_history.append(round(vr.accuracy, 4))
+        print(f"  VERIFY r{rnd}: {vr.n_correct}/{vr.n} = {vr.accuracy:.0%}", flush=True)
+        if vr.accuracy > best_acc:
+            best_acc = vr.accuracy
+            shutil.copy(e3.E3_DIR / game / "world_model.py", best_path)
+    # use the BEST engine for planning (refactor can regress)
+    shutil.copy(best_path, e3.E3_DIR / game / "world_model.py")
+    engine, is_done = e3.load_engine(game)
+    print(f"  accuracy history {acc_history} -> best {best_acc:.0%}", flush=True)
 
     # 4. plan in the model (zero real actions)
     arc = kit.offline_arcade(); env = arc.make(game, scorecard_id=arc.open_scorecard())
@@ -97,13 +125,15 @@ def main() -> int:
                 diverged = step; break
             g = obs
     verdict = ("success_e3_agent_solved_%s_in_%d_actions" % (game, exec_actions) if solved
-               else f"complete_e3_agent_{game}_verify_{vr.accuracy:.2f}_no_solve")
+               else f"complete_e3_agent_{game}_bestverify_{best_acc:.2f}_no_solve")
     print(f"  RESULT: solved={solved} in {exec_actions} real actions "
           f"(explorer needed ~10k+); diverged={diverged is not None}", flush=True)
-    _write(game, {"verifier_accuracy": vr.accuracy, "plan_len": len(plan) if plan else 0,
-                  "solved": solved, "exec_actions": exec_actions, "diverged": diverged,
-                  "honest_verdict": verdict, "proposer": "local-gguf" if args.local else "codex-dev",
-                  "inference_substrate": "live_llm_inference", "verifier_is_oracle": True}, t0)
+    proposer_label = (args.repo or "local-gguf") if args.local else "codex-dev"
+    _write(game, {"verifier_best_accuracy": best_acc, "accuracy_history": acc_history,
+                  "plan_len": len(plan) if plan else 0, "solved": solved,
+                  "exec_actions": exec_actions, "diverged": diverged, "honest_verdict": verdict,
+                  "proposer": proposer_label, "inference_substrate": "live_llm_inference",
+                  "verifier_is_oracle": True}, t0)
     return 0
 
 
