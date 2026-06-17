@@ -151,6 +151,78 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
     return None, best
 
 
+def graph_explore_solve_v3(env: Any, start_level: int = 0, *, max_expansions: int = 30000,
+                           warmup: bool = False, max_depth: int = 80,
+                           verifier=None) -> tuple[Optional[list], int]:
+    """Value/novelty-guided graph-explore for DEEP games (e.g. wa30 ~33-deep keyboard)
+    where uniform BFS exhausts its budget before reaching the win. Best-first over the
+    frontier by: an optional VERIFIER (predicted steps-to-go on the frame, the learned
+    verifier feeding back) else count-based NOVELTY (least-visited coarse-region first)
+    with a depth bias to push deeper. Only frame-CHANGING transitions are enqueued
+    (skips wall-bump no-ops that waste the budget). Replay-navigation. Returns
+    (trajectory, reached_level)."""
+    import heapq
+    import itertools
+    from arcengine import GameAction
+
+    def replay(path):
+        f = _warm(env, warmup)
+        for act in path:
+            f = env.step(_game_action(GameAction, act["action"]), data=act.get("data"))
+        return f
+
+    def coarse(frame):
+        g = grid_of(frame)
+        return (int((g != 0).sum()) // 8, len(set(g.flatten().tolist())))
+
+    def priority(frame, depth):
+        if verifier is not None:
+            return float(verifier(frame))          # lower predicted steps-to-go = better
+        return float(region_visits[coarse(frame)] - 0.25 * depth)  # novelty, push deeper
+
+    f0 = _warm(env, warmup)
+    h0 = frame_hash(grid_of(f0))
+    region_visits: dict = {coarse(f0): 1}
+    states = {h0: {"path": [], "untested": rich_action_candidates(f0)}}
+    counter = itertools.count()
+    heap = [(priority(f0, 0), next(counter), h0)]
+    best = start_level
+    expansions = 0
+    while heap and expansions < max_expansions:
+        _, _, h = heapq.heappop(heap)
+        st = states.get(h)
+        if st is None or not st["untested"] or len(st["path"]) >= max_depth:
+            continue
+        # expand ALL untested actions of this state (re-push if any remain handled by new states)
+        f_here = replay(st["path"])
+        here_hash = frame_hash(grid_of(f_here))
+        while st["untested"]:
+            sel = st["untested"].pop(0)
+            replay(st["path"])
+            nf = env.step(_game_action(GameAction, sel.action_id), data=sel.data,
+                          reasoning={"policy": "graph_explore_v3_value_guided"})
+            expansions += 1
+            if nf is None:
+                continue
+            traj = st["path"] + [{"action": int(sel.action_id), "data": sel.data}]
+            lvl = _levels_completed(nf)
+            if lvl > start_level:
+                return traj, lvl
+            best = max(best, lvl)
+            if _game_over(nf):
+                continue
+            nh = frame_hash(grid_of(nf))
+            if nh == here_hash or nh in states:
+                continue                            # no-op (wall bump) or seen ⇒ skip
+            states[nh] = {"path": traj, "untested": rich_action_candidates(nf)}
+            reg = coarse(nf)
+            region_visits[reg] = region_visits.get(reg, 0) + 1
+            heapq.heappush(heap, (priority(nf, len(traj)), next(counter), nh))
+            if expansions >= max_expansions:
+                break
+    return None, best
+
+
 def trajectory_labels(traj: list) -> list[str]:
     """Encode a captured trajectory as replayable labels (for the reproduction gate
     / a trajectory-replay adapter)."""

@@ -120,14 +120,19 @@ learning_loop:
   # seed, so the NEXT solve is the efficient verifier-routed loop, not blind explore.
   # graph_explore_solve_v2 = SYSTEMATIC frontier BFS over the state-transition graph
   # (shortest-path-to-untested-state-action, replay-navigation) -- toward arXiv:2512.24156.
-  # VALIDATED: solves ls20 L1 ADAPTER-FREE (13 actions) -> full pipeline captures the
-  # trajectory -> reproduction-gates (offline_reproduced=True) -> trains a verifier-seed ->
-  # persists the adapter seed, with NO per-game RE. Remaining explorer limits: r11l needs
-  # exact-coord click candidates (object centroids miss the select/place points -> enrich
-  # candidates via finer object segmentation); wa30 L1 is ~33 actions deep (exceeds the BFS
-  # budget -> needs a salience/value heuristic to go deeper). Those are candidate-enrichment
-  # + heuristic refinements; the architecture + pipeline are complete.
-  adapter_free_explore: python/carnot/agentic/arc_graph_explore.py  # graph_explore_solve_v2
+  # SOLVES ADAPTER-FREE (full capture->gate->seed pipeline, NO per-game RE):
+  #   ls20 L1 (v2, 13 actions); r11l L1 (v2 + rich_action_candidates, 3 actions -- shorter
+  #   than the recorded 4). Both offline_reproduced=True via the standing loop.
+  # rich_action_candidates fixed r11l: every detected object is a click candidate (its
+  #   winning clicks were objects #15/#27 dropped by the old 12-cap).
+  # graph_explore_solve_v3 = value/novelty-guided best-first (optional verifier=predicted
+  #   steps-to-go -> the learned verifier feeds back; else count-based novelty + depth bias;
+  #   frame-change-only transitions). For the DEEP/HARD tail.
+  # HARD TAIL (still no-advance generically): wa30 L1 ~33-deep keyboard navigation resists
+  #   v3 @25k expansions -- the sparse-reward deep games need per-game RE OR a strong
+  #   TRANSFERRED verifier (cross-game value transfer is the next build; v3 already accepts
+  #   it). Consistent with the SOTA median 30/52 (solves many, not all).
+  adapter_free_explore: python/carnot/agentic/arc_graph_explore.py  # v2 (systematic) / v3 (value-guided)
   demos:
     - scripts/arc3_verifier_routed_search_demo.py   # 10.75x fewer states (hand verifier)
     - scripts/arc3_learned_verifier_demo.py         # 9.36x fewer on held-out L3 (learned)
