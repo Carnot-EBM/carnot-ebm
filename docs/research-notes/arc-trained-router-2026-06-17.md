@@ -73,3 +73,19 @@ honestly out of scope and flagged, not faked.
 Cross-refs: `docs/research-notes/arc-llm-as-gap-filler-not-solver-2026-06-17.md` (the heuristics
 the router selects among); CLAUDE.md "ARC Solve Reproducibility + Solver-Reuse" (capture-as-reusable
 -asset); `ops/verifier_gaps.md` (engine/TRM routing data gaps).
+
+## Update: lp85 validated + added (9-game ledger, 9/9 LOO) — 2026-06-17
+
+Operator: "make v2 heuristic-guided and validate on lp85." The v2 A*-heuristic path (already
+shipped) was validated on lp85 from L0: all three approaches solve+reproduce L1 in 5 actions, but
+lp85 L1 is a NO-HEADROOM shallow game (BFS 272 expansions; cell_count 326 = worse; region_count
+272 = ties). So lp85 L1 correctly routes to **bfs** — a HIGH-cell-impact game (step_cells 61) that
+still wins with BFS because there is no search headroom, reinforcing the headroom gate (like
+cd82/sp80). Note lp85's DEEPER levels (L2-L4) are solved by the adaptered OfflineSolver prefix-
+chain, not v2-from-L0; the v2 validation is the L1 first-contact.
+
+Fixed a selector tie-break bug found here: `select_best` labelled a heuristic the winner when it
+merely TIED BFS (it was tried first). Now BFS wins ties — a heuristic only "wins" if it STRICTLY
+beats BFS (no gap_fills file is bundled for a non-improving heuristic). lp85 added to the ledger
+via `select_and_learn` -> winner **bfs** (cell_impact 61, bfs_expansions 272). Ledger now 9 games;
+**leave-one-out generalisation holds at 9/9** (lp85 correctly predicted bfs when held out).

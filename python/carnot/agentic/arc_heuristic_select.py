@@ -130,8 +130,12 @@ def select_best(game: str, win, transitions, *, mask_hud: bool = False, budget: 
 
     chosen = None
     if reproduced:
-        # fewest actions first (path-optimality), then fewest expansions (efficiency)
-        chosen = min(reproduced, key=lambda r: (r["actions"], r["expansions"] or 1 << 30))
+        # fewest actions first (path-optimality), then fewest expansions (efficiency), then PREFER
+        # BFS on a tie — a heuristic only "wins" if it STRICTLY beats plain BFS; if it merely ties,
+        # BFS is the honest choice (no heuristic needed, no gap_fills file to bundle). This keeps
+        # the no-headroom games (cd82/sp80/lp85-L1) correctly labelled bfs.
+        chosen = min(reproduced, key=lambda r: (r["actions"], r["expansions"] or 1 << 30,
+                                                0 if r["heuristic"] == "bfs" else 1))
 
     if bank and chosen is not None and chosen["heuristic"] != "bfs":
         _bank(game, win, chosen["heuristic"], chosen)
