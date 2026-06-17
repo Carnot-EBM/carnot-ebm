@@ -179,6 +179,106 @@ def frame_only_solve(arc, game, layout, run_button):
     return _levels_completed(f)
 
 
+# --- General winner-discovery (frame-only, blind search via the binary win signal) ---------------
+#
+# Empirical finding (tn36, 2026-06-17, three probes in this module's design note): the program-editor
+# mechanic emits NO graded frame feedback. A losing run ticks exactly ONE attempt-counter cell,
+# IDENTICAL for every losing program (k=0/1/2 slots-correct all -> 1-cell delta); a wrong edit echoes
+# the same ~4 cells as a correct edit; the board only re-renders ON a full win (the binary
+# `levels_completed` advance). The run is ATOMIC (the object runs the whole program + resets within
+# one env.step), so per-move object motion is frame-invisible and the code semantics cannot be induced
+# by observation. CONSEQUENCE: general winner-discovery is BLIND program-space search guided ONLY by
+# the binary win bit -- no gradient to hill-climb, no pruning. It is tractable here only via a
+# structural prior (uniform program) + a small reachable alphabet; it is exponential in program length
+# in the worst case and does NOT scale. This is the load-bearing limit for the live program-editor
+# class: the live solver needs an OFFLINE-trained per-class dynamics/verifier model, because ONLINE
+# frame-only induction cannot recover the atomic-run dynamics. (See ops/verifier_gaps.md
+# GAP-ARC-PROGRAM-EDITOR-NO-GRADED-FEEDBACK.)
+
+
+def _resolve_toggles(book, target_glyph):
+    """PURE: given a slot's codebook {toggle_pattern(tuple): glyph_bytes}, return the toggle pattern
+    that renders `target_glyph`, or None if that glyph is unreachable for the slot. (Game-independent;
+    unit-tested.)"""
+    return next((pat for pat, glyph in book.items() if glyph == target_glyph), None)
+
+
+def _learn_slot_codebook(arc, game, layout):
+    """FRAME-ONLY: per slot, learn {toggle_pattern -> rendered glyph-bytes} by clicking each subset of
+    the located bit-rows from reset. The reachable per-slot glyph set is the codebook's values; their
+    union is the program's observable code alphabet. (Bounded by the frame-only-located bit-rows -- the
+    true 6-bit editor alphabet is larger, but this subset suffices to reach L1's winning codes.)"""
+    from itertools import product
+    gxs, bits = layout["slot_glyph_x"], layout["bit_rows"]
+    books = []
+    for gx in gxs:
+        book = {}
+        for pat in product([0, 1], repeat=len(bits)):
+            env = arc.make(game, scorecard_id=arc.open_scorecard())
+            f = env.reset()
+            for use, by in zip(pat, bits):
+                if use:
+                    f = env.step(_game_action(GameAction, 6), data={"x": gx - 1, "y": by})
+            book[pat] = _glyph(grid_of(f), gx).tobytes()
+        books.append(book)
+    return books
+
+
+def _set_program(env, f, layout, books, target_glyphs):
+    """FRAME-ONLY: drive every slot to its target glyph via the learned codebook. Returns the frame, or
+    None if any target glyph is unreachable for its slot."""
+    gxs, bits = layout["slot_glyph_x"], layout["bit_rows"]
+    for i, gx in enumerate(gxs):
+        pat = _resolve_toggles(books[i], target_glyphs[i])
+        if pat is None:
+            return None
+        for use, by in zip(pat, bits):
+            if use:
+                f = env.step(_game_action(GameAction, 6), data={"x": gx - 1, "y": by})
+    return f
+
+
+def frame_only_winner_search(arc, game, layout, run_button, cap=400):
+    """GENERAL FRAME-ONLY winner-discovery: blind program-space search using ONLY the binary
+    level-advance signal -- no internal state, no 'match the pre-set slot' heuristic. Strategy:
+    (1) UNIFORM hypotheses -- set every slot to code C, for each C in the observable alphabet reachable
+        by all slots (a general structural prior that many editor puzzles want a repeated action; NOT a
+        peek at the answer); then
+    (2) bounded PRODUCT fallback over per-slot reachable glyphs (cap'd; reports the full space so the
+        non-scaling is explicit).
+    Returns {found, strategy, runs, product_space}. Fresh env per attempt (the LOSS-reset constraint)."""
+    from itertools import product
+    books = _learn_slot_codebook(arc, game, layout)
+    choices = [sorted(set(b.values())) for b in books]
+    space = 1
+    for c in choices:
+        space *= len(c)
+    alphabet = sorted(set().union(*(set(b.values()) for b in books)))
+    runs = 0
+
+    def _run(target):
+        nonlocal runs
+        env = arc.make(game, scorecard_id=arc.open_scorecard())
+        f = _set_program(env, f0 := env.reset(), layout, books, target)
+        if f is None:
+            return -1
+        f = env.step(_game_action(GameAction, 6), data={"x": run_button[0], "y": run_button[1]})
+        runs += 1
+        return _levels_completed(f)
+
+    for C in alphabet:                                   # (1) uniform hypotheses
+        if not all(C in b.values() for b in books):
+            continue
+        if _run([C] * len(choices)) >= 1:
+            return {"found": True, "strategy": "uniform", "runs": runs, "product_space": space}
+    for combo in product(*choices):                      # (2) bounded product fallback
+        if runs >= cap:
+            break
+        if _run(list(combo)) >= 1:
+            return {"found": True, "strategy": "product", "runs": runs, "product_space": space}
+    return {"found": False, "strategy": None, "runs": runs, "product_space": space}
+
+
 def main() -> int:
     arc = kit.offline_arcade()
     game = sys.argv[1] if len(sys.argv) > 1 else "tn36"
@@ -220,6 +320,12 @@ def main() -> int:
             lvl = frame_only_solve(arc, game, layout, run)
             print(f"  FRAME-ONLY SOLVE of the current level -> level {lvl} "
                   f"{'(SOLVED, zero internal state)' if lvl >= 1 else '(no advance)'}")
+            print("== GENERAL winner-discovery: blind program-space search (binary win signal only) ==",
+                  flush=True)
+            ws = frame_only_winner_search(arc, game, layout, run)
+            print(f"  winner-search: found={ws['found']} via {ws['strategy']} in {ws['runs']} runs "
+                  f"(full product space = {ws['product_space']}); NO graded feedback -> blind, "
+                  f"exponential in program length (does not scale).")
     return 0
 
 
