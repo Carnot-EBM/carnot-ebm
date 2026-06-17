@@ -23,7 +23,8 @@ _FAKE_REG = {
 def test_detect_precedence_injected_then_registry_then_default():
     # injected frame-only verdict wins over everything (the live unseen-game path)
     assert (
-        router.detect_mechanic("anything", mechanic="program_editor", reg=_FAKE_REG) == "program_editor"
+        router.detect_mechanic("anything", mechanic="program_editor", reg=_FAKE_REG)
+        == "program_editor"
     )
     # known game -> structured registry class
     assert router.detect_mechanic("tn36", reg=_FAKE_REG) == "program_editor"
@@ -32,7 +33,10 @@ def test_detect_precedence_injected_then_registry_then_default():
     # unknown game entirely -> default
     assert router.detect_mechanic("zz99", reg=_FAKE_REG) == "graph_explore"
     # an injected class outside the taxonomy falls back to default (route only to what we recognise)
-    assert router.detect_mechanic("tn36", mechanic="martian_mechanic", reg=_FAKE_REG) == "graph_explore"
+    assert (
+        router.detect_mechanic("tn36", mechanic="martian_mechanic", reg=_FAKE_REG)
+        == "graph_explore"
+    )
 
 
 def test_program_editor_routes_to_frame_only_model_and_skips_heuristic():
@@ -51,8 +55,10 @@ def test_graph_explore_is_default_and_uses_heuristic():
 def test_checkpoint_and_timed_classes_route_to_the_maze_planner():
     # both maze classes are now WIRED to the reusable arc_maze_planner (checkpoint_multirun reproduces
     # tn36 L6; timed_trap_aware reproduces tn36 L7) and skip the goal-distance heuristic.
-    for mech, fn in [("checkpoint_multirun", "checkpoint_multirun_plan"),
-                     ("timed_trap_aware", "timed_trap_plan")]:
+    for mech, fn in [
+        ("checkpoint_multirun", "checkpoint_multirun_plan"),
+        ("timed_trap_aware", "timed_trap_plan"),
+    ]:
         r = router.route_strategy(mech)
         assert r["name"] == mech and r["wired"] is True
         assert r["uses_goal_distance_heuristic"] is False
@@ -62,9 +68,15 @@ def test_checkpoint_and_timed_classes_route_to_the_maze_planner():
 def test_route_flags_an_unwired_class_without_pretending():
     # the router must flag a recognised-but-unwired class honestly (no solver pretence). All shipped
     # classes are wired, so inject a temporary unwired class to pin the reason-formatting branch.
-    fake = {"name": "future_class", "mechanic": "future_class", "wired": False,
-            "uses_goal_distance_heuristic": False, "solver": "PENDING", "search_engine": "x",
-            "needs": "a frame-only solver"}
+    fake = {
+        "name": "future_class",
+        "mechanic": "future_class",
+        "wired": False,
+        "uses_goal_distance_heuristic": False,
+        "solver": "PENDING",
+        "search_engine": "x",
+        "needs": "a frame-only solver",
+    }
     router._BY_MECHANIC["future_class"] = fake
     try:
         r = router.route_strategy("future_class")

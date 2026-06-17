@@ -20,6 +20,7 @@ that nets the deltas (down/up/left/right + scale; rotation/property when a level
 them), edits each slot to its code via the bit-toggle clicks, runs, and CHAINS levels.
 Reproduces L1 (program [3,3,3,3,3], 5 downs) and L2 ([33,33,33,33], 4 ups) — gated.
 """
+
 from __future__ import annotations
 
 import itertools
@@ -34,12 +35,12 @@ from carnot.agentic import arc_solver_kit as kit  # noqa: E402
 from carnot.agentic.arc_agi3_live_adapter import _game_action, _levels_completed  # noqa: E402
 from arcengine import GameAction  # noqa: E402
 
-STEP = 4                                  # CSPOIQWER
-BIT_DY = 3                                # bit b button is BIT_DY*b below the slot top
+STEP = 4  # CSPOIQWER
+BIT_DY = 3  # bit b button is BIT_DY*b below the slot top
 # command codes
 SETTLE, LEFT, RIGHT, DOWN, UP = 0, 1, 2, 3, 33
 SCALE_UP, SCALE_DOWN = 8, 9
-ROT = {90: 5, -90: 6, 180: 7, 270: 16}    # rotation delta (deg) -> code
+ROT = {90: 5, -90: 6, 180: 7, 270: 16}  # rotation delta (deg) -> code
 # property (sjmtdfxdrc) is set ABSOLUTELY by codes 14/15/63 (= knfgrcbayu, decoded 2026-06-17):
 # code 14 -> 9, code 15 -> 8, code 63 -> 15. Map the TARGET property value to its command code.
 PROP_CODE = {9: 14, 8: 15, 15: 63}
@@ -97,7 +98,10 @@ def compute_moves(obj, tgt):
     if osj != tsj:
         code = PROP_CODE.get(tsj)
         if code is None:
-            return None, f"property {osj}->{tsj} not reachable via codes 14/15/63 (reach {sorted(PROP_CODE)})"
+            return (
+                None,
+                f"property {osj}->{tsj} not reachable via codes 14/15/63 (reach {sorted(PROP_CODE)})",
+            )
         moves.append(code)
     return moves, ""
 
@@ -178,9 +182,11 @@ def _geom(env):
     """Object box (w,h), obstacle boxes, and checkpoint positions, read from internal state."""
     bz = _bz(env)
     o = bz.htntnzkbzu
-    return ((o.width, o.height),
-            [(i.x, i.y, i.width, i.height) for i in bz.bizgpiltwm],
-            [(i.x, i.y) for i in bz.wgzwawbgew])
+    return (
+        (o.width, o.height),
+        [(i.x, i.y, i.width, i.height) for i in bz.bizgpiltwm],
+        [(i.x, i.y) for i in bz.wgzwawbgew],
+    )
 
 
 def _spikes(env):
@@ -188,8 +194,10 @@ def _spikes(env):
     box is the full lethal band; the hidden hitbox (`olbuwgbgyz`) is what still kills when invisible."""
     bz = _bz(env)
     vis = [(s.x, s.y, s.width, s.height) for s in bz.ekdwmirldx]
-    hid = [(s.olbuwgbgyz.x, s.olbuwgbgyz.y, s.olbuwgbgyz.width, s.olbuwgbgyz.height)
-           for s in bz.ekdwmirldx]
+    hid = [
+        (s.olbuwgbgyz.x, s.olbuwgbgyz.y, s.olbuwgbgyz.width, s.olbuwgbgyz.height)
+        for s in bz.ekdwmirldx
+    ]
     return vis, hid
 
 
@@ -197,21 +205,33 @@ def _maze_model(env, n, *, with_spikes):
     """Build the generic MazeModel (carnot.agentic.arc_maze_planner) from tn36 internal state, or
     None if the level needs a transform (the maze planners are position-only)."""
     from carnot.agentic.arc_maze_planner import MazeModel
+
     bz = _bz(env)
     o, t = bz.htntnzkbzu, bz.aqszntqeae
     if (o.scale, o.rotation, int(o.sjmtdfxdrc)) != (t.scale, t.rotation, int(t.sjmtdfxdrc)):
-        return None                                   # transforms+maze unhandled; position only
+        return None  # transforms+maze unhandled; position only
     (w, h), obs, cps = _geom(env)
     vis, hid = _spikes(env) if with_spikes else ([], [])
-    return MazeModel(object_wh=(w, h), start=(o.x, o.y), target=(t.x, t.y), walls=obs,
-                     checkpoints=cps, move_codes=_MAZE_MOVES, settle_code=SETTLE, n_slots=n,
-                     spikes_visible=vis, spikes_hidden=hid, invisible_slots=3)
+    return MazeModel(
+        object_wh=(w, h),
+        start=(o.x, o.y),
+        target=(t.x, t.y),
+        walls=obs,
+        checkpoints=cps,
+        move_codes=_MAZE_MOVES,
+        settle_code=SETTLE,
+        n_slots=n,
+        spikes_visible=vis,
+        spikes_hidden=hid,
+        invisible_slots=3,
+    )
 
 
 def _multirun_plan(env, n):
     """checkpoint_multirun: stage a position-only path across checkpoints (no hazards). Delegates to
     the reusable planner. Returns a list of leg-programs (padded to n) or None."""
     from carnot.agentic.arc_maze_planner import checkpoint_multirun_plan
+
     model = _maze_model(env, n, with_spikes=False)
     return checkpoint_multirun_plan(model) if model is not None else None
 
@@ -221,6 +241,7 @@ def _timed_multirun_plan(env, n):
     spike band (cross only during the invisible window). Delegates to the reusable planner. Returns a
     list of leg-programs or None (incl. when the level has no spikes — use the plain planner then)."""
     from carnot.agentic.arc_maze_planner import timed_trap_plan
+
     model = _maze_model(env, n, with_spikes=True)
     return timed_trap_plan(model) if model is not None else None
 
@@ -244,12 +265,18 @@ def _winning_solutions(arc, game, max_level, cap):
         # 2) multi-run maze fallback (the path exceeds one program / is obstacle-blocked)
         if found is None:
             plan = _multirun_plan(probe, n)
-            if plan and (_apply_solution(_fresh_at(arc, game, wins), plan, []) or 0) >= target_level:
+            if (
+                plan
+                and (_apply_solution(_fresh_at(arc, game, wins), plan, []) or 0) >= target_level
+            ):
                 found = plan
         # 3) TIMED spike-trap maze fallback (blinking spikes: route + cross during invisible window)
         if found is None:
             plan = _timed_multirun_plan(probe, n)
-            if plan and (_apply_solution(_fresh_at(arc, game, wins), plan, []) or 0) >= target_level:
+            if (
+                plan
+                and (_apply_solution(_fresh_at(arc, game, wins), plan, []) or 0) >= target_level
+            ):
                 found = plan
         if found is None:
             break
@@ -288,13 +315,23 @@ def main() -> int:
         return env.step(_game_action(GameAction, s["action"]), data=s.get("data"))
 
     gate = kit.reproduce("tn36", labels, apply, claimed_level=lvl)
-    print(f"tn36 COMPUTED solve: reached L{lvl} in {len(traj)} clicks; "
-          f"reproduced={gate['reproduced']} claimed_level={gate.get('claimed_level')}")
+    print(
+        f"tn36 COMPUTED solve: reached L{lvl} in {len(traj)} clicks; "
+        f"reproduced={gate['reproduced']} claimed_level={gate.get('claimed_level')}"
+    )
     if lvl >= 1 and gate["reproduced"]:
-        Path("results/arc_explore_trajectory_tn36.json").write_text(json.dumps(
-            {"game": "tn36", "reached_level": lvl, "trajectory": traj,
-             "method": "program_editor_RE_general",
-             "note": "6-bit-per-slot code editor; layout read from pfyayhyovw; chains levels"}, indent=2))
+        Path("results/arc_explore_trajectory_tn36.json").write_text(
+            json.dumps(
+                {
+                    "game": "tn36",
+                    "reached_level": lvl,
+                    "trajectory": traj,
+                    "method": "program_editor_RE_general",
+                    "note": "6-bit-per-slot code editor; layout read from pfyayhyovw; chains levels",
+                },
+                indent=2,
+            )
+        )
         print("WROTE results/arc_explore_trajectory_tn36.json")
     return 0 if (lvl >= 1 and gate["reproduced"]) else 1
 
