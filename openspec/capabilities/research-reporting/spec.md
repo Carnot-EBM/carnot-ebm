@@ -21606,6 +21606,94 @@ records `random_seed`, and leaves conductor and reconciliation files untouched.
 |---|---|---|
 | REQ-REPORT-4332 | Planned (`python/carnot/experiment_4332_sota_ingestion_v401.py`) | Planned (`tests/python/test_experiment_4332_sota_ingestion_v401.py`) |
 
+### REQ-REPORT-4343: Ingest SOTA For The .402 Headline Branch From The .401 Outcomes
+
+The Exp 4343 workflow SHALL close the discover-to-ingest-to-plan loop for the
+`.402` headline open problem by reading the `.401` outcome artifacts,
+filtering `research-studying.md` and `research-references.md` to the active
+in-generation guided-generation, E3 ARC, and cross-game-transfer tracks, and
+running the reliable discovery channel (`scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, plus low-concurrency WebSearch/WebFetch). The
+workflow SHALL NOT invoke `/deep-research`, SHALL NOT modify
+`scripts/research_conductor.py`, and SHALL leave `ops/changelog.md`,
+`ops/status.md`, and `_bmad/traceability.md` untouched for the separate
+reconciliation step.
+
+Before writing a complete mapping, the workflow SHALL require network
+reachability to either Hugging Face or the arXiv API. If network is unavailable,
+it SHALL stop with `honest_verdict=blocked_network_unavailable` and SHALL NOT
+fabricate citations. When network is available, each mapped method SHALL carry a
+WebFetch/arXiv-API-verified arXiv ID and URL.
+
+The workflow SHALL branch on the actual `.401` artifacts. When Exp 4338 reports
+`honest_verdict=complete: in_generation_moat_replicates`,
+`in_generation_moat_replicates=true`, `scorer_leak_recheck_passed=true`,
+`controls_differentiated=true`, `benchmark_n=240`,
+`carnot_minus_best_control_delta=0.358333`, and
+`replication_ci95=[0.283333, 0.4375]`, the `.402` headline SHALL prioritize
+adaptive guided-generation scale-up. When the in-generation moat is instead
+retired or fails leak-robust replication, the `.402` headline SHALL pivot to
+Consequence-Based Utility (`arXiv:2602.06291`) and other oracle-distinct
+mechanisms rather than scaling the failed energy-guidance track. When Exp 4339
+reports `offline_reproduced=true`, `plan_executed=true`,
+`reproduced_levels=1`, `game=ar25`, and `explore_lemmas_collected=7`, and Exp
+4341 reports `offline_reproduced=true`, `plan_executed=true`,
+`reproduced_levels=1`, `game=sc25`, and `explore_lemmas_collected=6`, the E3
+follow-up SHALL favor multi-game/deeper-level verified executable-world-model
+work rather than another partial-model repair. When Exp 4342 reports
+`learned_encoder_transfer_helps=false`,
+`cross_game_state_reduction=1.00635593220339`,
+`cross_game_state_reduction_ci95=[1.0, 1.0168354897287482]`, and
+`positive_control_passed=true`, the cross-game-transfer follow-up SHALL treat
+the action-role value head as a powered null and require a materially stronger
+world-model interaction representation or retirement.
+
+The machine-checkable artifact SHALL be written to
+`results/experiment_4343_sota_ingestion_v402.json`, and the required runner
+SHALL be `results/experiment_4343_sota_ingestion_v402.py` delegating to
+`python/carnot/experiment_4343_sota_ingestion_v402.py`.
+
+The JSON artifact SHALL contain exactly the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v402`, `random_seed`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, `flagged_for_v402`, and `random_seed`.
+`honest_verdict` SHALL use a terminal prefix and, on the complete path, start
+with `complete: sota_ingestion_v402_mapped`. `methods_mapped` SHALL contain
+three to five dicts with exactly `name`, `arxiv_id_or_url`, `url`,
+`source_verification`, `track`, `v401_outcome_conditioning`,
+`carnot_stack_mapping`, `failure_mode`, and `experiment_mapping`. Each
+`arxiv_id_or_url` SHALL be one of the verified arXiv IDs
+`2604.06260`, `2606.13565`, `2606.08501`, `2605.05138`, or `2605.15256`.
+`flagged_for_v402` SHALL be a non-empty concrete roadmap slug naming the single
+strongest `.402` method conditioned on the `.401` in-generation-moat, E3, and
+self-learning outcomes. `random_seed` SHALL record the deterministic discovery
+query set seed.
+
+The workflow SHALL update `research-studying.md` idempotently to mark the `.401`
+forks as ingested, SHALL include `flagged_for_v402`, SHALL declare
+`random_seed=4343`, and SHALL cite the WebFetch/arXiv-API-verified sources
+`https://arxiv.org/abs/2604.06260`, `https://arxiv.org/abs/2606.13565`,
+`https://arxiv.org/abs/2606.08501`, `https://arxiv.org/abs/2605.05138`, and
+`https://arxiv.org/abs/2605.15256`.
+
+#### SCENARIO-REPORT-4343: The .401 Outcomes Close Into A .402 Guided-Generation Scale-Up Plan
+
+**Given** Exp 4338 reports a leak-robust replicated in-generation moat
+**And** Exp 4339 and Exp 4341 report offline-reproduced E3 levels on ar25 and sc25
+**And** Exp 4342 reports another cross-game-transfer null despite a positive control
+**When** the Exp 4343 SOTA-ingestion workflow runs through the reliable channel
+**Then** it writes the required JSON mapping artifact, maps three to five
+verified arXiv sources to concrete `.402` experiment targets, flags the strongest
+`.402` adaptive guided-generation scale-up method, updates `research-studying.md`
+idempotently, records `random_seed`, and leaves conductor and reconciliation
+files untouched.
+
+## Implementation Status (REQ-REPORT-4343)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4343 | Planned (`python/carnot/experiment_4343_sota_ingestion_v402.py`) | Planned (`tests/python/test_experiment_4343_sota_ingestion_v402.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
