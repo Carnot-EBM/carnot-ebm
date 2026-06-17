@@ -118,11 +118,11 @@ games:
 
   - game: tu93
     reproducibility: reproduced
-    levels_reproduced: 1
-    win_condition: "first-solve L1 adapter-free; 18-move keyboard navigation (maze/path)."
-    action_model: "keyboard-only [ACTION1-4 directional]; 18-step path [4,2,2,4,1,4,2,2,3,3,2,4,4,2,4,1,4,2]."
-    solver: "results/arc_explore_trajectory_tu93.json (graph_explore_solve_v2, 18 actions)."
-    reproduce: "re-gated reproduced=True L1."
+    levels_reproduced: 2   # 1 -> 2 (2026-06-17 forward-progress sweep: graph_explore_solve_v2 from L1 -> L2)
+    win_condition: "L1+L2 adapter-free keyboard navigation (maze/path); L2 reached by graph-exploring from the replayed L1 state."
+    action_model: "keyboard-only [ACTION1-4 directional]; L1 18-step path, then L2 via graph_explore_solve_v2 (43 actions total)."
+    solver: "results/arc_explore_trajectory_tu93.json (graph_explore_solve_v2, L1->L2, 43 actions)."
+    reproduce: "re-gated reproduced=True L2 (kit.reproduce, claimed_level=2, full L1+L2 path)."
     gotchas:
       - "earlier routing flagged tu93 ~ wa30/ls20 family; the systematic explorer cracked it without an adapter."
 
