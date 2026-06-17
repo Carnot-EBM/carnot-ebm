@@ -1,0 +1,846 @@
+{
+  "acceptance_gate": true,
+  "adversarial_verify": {
+    "critical_flags": [],
+    "parsed_report": null,
+    "returncode": 0,
+    "status": "clean",
+    "stderr_tail": "",
+    "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+    "warn_flags": []
+  },
+  "benchmark_failures": [],
+  "benchmark_n": 240,
+  "benchmark_n_per_seed": 80,
+  "benchmark_records_preview": [
+    {
+      "carnot_stitched_correct": true,
+      "carnot_stitched_option": "D",
+      "correct_option": "D",
+      "entrgi_option": "D",
+      "intrinsic_confidence": {},
+      "mask_entropy": 1.187075,
+      "option_logits": {
+        "A": 11.604304313659668,
+        "B": 13.451492309570312,
+        "C": 12.24743938446045,
+        "D": 12.90811538696289
+      },
+      "seed": 4325,
+      "selections": {
+        "carnot_stitched": {
+          "correct": true,
+          "intrinsic_confidence": 0.284916,
+          "logit": 12.908115,
+          "option": "D",
+          "partial_state_energy": 0.254378,
+          "score": 15.733173,
+          "stitch_support": {
+            "A": 0,
+            "B": 0,
+            "C": 0,
+            "D": 4
+          },
+          "stitched_steps": [
+            {
+              "energy": 0.318915,
+              "option": "D",
+              "step_index": 0
+            },
+            {
+              "energy": 0.233013,
+              "option": "D",
+              "step_index": 1
+            },
+            {
+              "energy": 0.172506,
+              "option": "D",
+              "step_index": 2
+            },
+            {
+              "energy": 0.293078,
+              "option": "D",
+              "step_index": 3
+            }
+          ],
+          "uses_external_scorer": true
+        },
+        "entrgi": {
+          "correct": true,
+          "intrinsic_confidence": 0.284916,
+          "logit": 12.908115,
+          "option": "D",
+          "partial_state_energy": 0.254378,
+          "score": 12.064633,
+          "uses_external_scorer": false
+        },
+        "self_reward_smc": {
+          "correct": false,
+          "intrinsic_confidence": 0.490571,
+          "logit": 13.451492,
+          "option": "B",
+          "partial_state_energy": 2.095916,
+          "score": 12.967635,
+          "uses_external_scorer": false
+        },
+        "unguided": {
+          "correct": false,
+          "intrinsic_confidence": 0.490571,
+          "logit": 13.451492,
+          "option": "B",
+          "partial_state_energy": 2.095916,
+          "score": 13.451492,
+          "uses_external_scorer": false
+        }
+      },
+      "self_reward_smc_correct": false,
+      "self_reward_smc_option": "B",
+      "stitched_steps": [
+        {
+          "energy": 0.318915,
+          "option": "D",
+          "step_index": 0
+        },
+        {
+          "energy": 0.233013,
+          "option": "D",
+          "step_index": 1
+        },
+        {
+          "energy": 0.172506,
+          "option": "D",
+          "step_index": 2
+        },
+        {
+          "energy": 0.293078,
+          "option": "D",
+          "step_index": 3
+        }
+      ],
+      "task_id": "second_corpus_seed4325_choice_000",
+      "unguided_option": "B"
+    },
+    {
+      "carnot_stitched_correct": false,
+      "carnot_stitched_option": "D",
+      "correct_option": "C",
+      "entrgi_option": "B",
+      "intrinsic_confidence": {},
+      "mask_entropy": 0.887237,
+      "option_logits": {
+        "A": 14.66933536529541,
+        "B": 17.026342391967773,
+        "C": 13.333128929138184,
+        "D": 17.169921875
+      },
+      "seed": 4325,
+      "selections": {
+        "carnot_stitched": {
+          "correct": false,
+          "intrinsic_confidence": 0.507652,
+          "logit": 17.169922,
+          "option": "D",
+          "partial_state_energy": 0.741526,
+          "score": 17.625555,
+          "stitch_support": {
+            "A": 0,
+            "B": 0,
+            "C": 3,
+            "D": 1
+          },
+          "stitched_steps": [
+            {
+              "energy": 0.449623,
+              "option": "C",
+              "step_index": 0
+            },
+            {
+              "energy": 0.666068,
+              "option": "C",
+              "step_index": 1
+            },
+            {
+              "energy": 0.619252,
+              "option": "D",
+              "step_index": 2
+            },
+            {
+              "energy": 0.639814,
+              "option": "C",
+              "step_index": 3
+            }
+          ],
+          "uses_external_scorer": true
+        },
+        "entrgi": {
+          "correct": false,
+          "intrinsic_confidence": 0.439755,
+          "logit": 17.026342,
+          "option": "B",
+          "partial_state_energy": 1.859898,
+          "score": 14.406047,
+          "uses_external_scorer": false
+        },
+        "self_reward_smc": {
+          "correct": false,
+          "intrinsic_confidence": 0.439755,
+          "logit": 17.026342,
+          "option": "B",
+          "partial_state_energy": 1.859898,
+          "score": 17.015852,
+          "uses_external_scorer": false
+        },
+        "unguided": {
+          "correct": false,
+          "intrinsic_confidence": 0.507652,
+          "logit": 17.169922,
+          "option": "D",
+          "partial_state_energy": 0.741526,
+          "score": 17.169922,
+          "uses_external_scorer": false
+        }
+      },
+      "self_reward_smc_correct": false,
+      "self_reward_smc_option": "B",
+      "stitched_steps": [
+        {
+          "energy": 0.449623,
+          "option": "C",
+          "step_index": 0
+        },
+        {
+          "energy": 0.666068,
+          "option": "C",
+          "step_index": 1
+        },
+        {
+          "energy": 0.619252,
+          "option": "D",
+          "step_index": 2
+        },
+        {
+          "energy": 0.639814,
+          "option": "C",
+          "step_index": 3
+        }
+      ],
+      "task_id": "second_corpus_seed4325_choice_001",
+      "unguided_option": "D"
+    },
+    {
+      "carnot_stitched_correct": true,
+      "carnot_stitched_option": "C",
+      "correct_option": "C",
+      "entrgi_option": "A",
+      "intrinsic_confidence": {},
+      "mask_entropy": 1.295574,
+      "option_logits": {
+        "A": 12.137225151062012,
+        "B": 11.306427955627441,
+        "C": 11.661262512207031,
+        "D": 12.466117858886719
+      },
+      "seed": 4325,
+      "selections": {
+        "carnot_stitched": {
+          "correct": true,
+          "intrinsic_confidence": 0.18027,
+          "logit": 11.661263,
+          "option": "C",
+          "partial_state_energy": 0.767612,
+          "score": 12.502095,
+          "stitch_support": {
+            "A": 1,
+            "B": 0,
+            "C": 3,
+            "D": 0
+          },
+          "stitched_steps": [
+            {
+              "energy": 0.682863,
+              "option": "A",
+              "step_index": 0
+            },
+            {
+              "energy": 0.476798,
+              "option": "C",
+              "step_index": 1
+            },
+            {
+              "energy": 0.715097,
+              "option": "C",
+              "step_index": 2
+            },
+            {
+              "energy": 1.028708,
+              "option": "C",
+              "step_index": 3
+            }
+          ],
+          "uses_external_scorer": true
+        },
+        "entrgi": {
+          "correct": false,
+          "intrinsic_confidence": 0.290156,
+          "logit": 12.137225,
+          "option": "A",
+          "partial_state_energy": 0.965161,
+          "score": 11.503776,
+          "uses_external_scorer": false
+        },
+        "self_reward_smc": {
+          "correct": false,
+          "intrinsic_confidence": 0.403152,
+          "logit": 12.466118,
+          "option": "D",
+          "partial_state_energy": 1.168853,
+          "score": 12.137421,
+          "uses_external_scorer": false
+        },
+        "unguided": {
+          "correct": false,
+          "intrinsic_confidence": 0.403152,
+          "logit": 12.466118,
+          "option": "D",
+          "partial_state_energy": 1.168853,
+          "score": 12.466118,
+          "uses_external_scorer": false
+        }
+      },
+      "self_reward_smc_correct": false,
+      "self_reward_smc_option": "D",
+      "stitched_steps": [
+        {
+          "energy": 0.682863,
+          "option": "A",
+          "step_index": 0
+        },
+        {
+          "energy": 0.476798,
+          "option": "C",
+          "step_index": 1
+        },
+        {
+          "energy": 0.715097,
+          "option": "C",
+          "step_index": 2
+        },
+        {
+          "energy": 1.028708,
+          "option": "C",
+          "step_index": 3
+        }
+      ],
+      "task_id": "second_corpus_seed4325_choice_002",
+      "unguided_option": "D"
+    },
+    {
+      "carnot_stitched_correct": true,
+      "carnot_stitched_option": "B",
+      "correct_option": "B",
+      "entrgi_option": "C",
+      "intrinsic_confidence": {},
+      "mask_entropy": 1.162542,
+      "option_logits": {
+        "A": 14.266751289367676,
+        "B": 15.832942008972168,
+        "C": 15.139723777770996,
+        "D": 14.17532730102539
+      },
+      "seed": 4325,
+      "selections": {
+        "carnot_stitched": {
+          "correct": true,
+          "intrinsic_confidence": 0.526483,
+          "logit": 15.832942,
+          "option": "B",
+          "partial_state_energy": 0.792303,
+          "score": 16.845052,
+          "stitch_support": {
+            "A": 2,
+            "B": 2,
+            "C": 0,
+            "D": 0
+          },
+          "stitched_steps": [
+            {
+              "energy": 0.757033,
+              "option": "A",
+              "step_index": 0
+            },
+            {
+              "energy": 0.72843,
+              "option": "B",
+              "step_index": 1
+            },
+            {
+              "energy": 0.766178,
+              "option": "A",
+              "step_index": 2
+            },
+            {
+              "energy": 0.756818,
+              "option": "B",
+              "step_index": 3
+            }
+          ],
+          "uses_external_scorer": true
+        },
+        "entrgi": {
+          "correct": false,
+          "intrinsic_confidence": 0.263223,
+          "logit": 15.139724,
+          "option": "C",
+          "partial_state_energy": 1.174912,
+          "score": 14.474662,
+          "uses_external_scorer": false
+        },
+        "self_reward_smc": {
+          "correct": true,
+          "intrinsic_confidence": 0.526483,
+          "logit": 15.832942,
+          "option": "B",
+          "partial_state_energy": 0.792303,
+          "score": 14.930908,
+          "uses_external_scorer": false
+        },
+        "unguided": {
+          "correct": true,
+          "intrinsic_confidence": 0.526483,
+          "logit": 15.832942,
+          "option": "B",
+          "partial_state_energy": 0.792303,
+          "score": 15.832942,
+          "uses_external_scorer": false
+        }
+      },
+      "self_reward_smc_correct": true,
+      "self_reward_smc_option": "B",
+      "stitched_steps": [
+        {
+          "energy": 0.757033,
+          "option": "A",
+          "step_index": 0
+        },
+        {
+          "energy": 0.72843,
+          "option": "B",
+          "step_index": 1
+        },
+        {
+          "energy": 0.766178,
+          "option": "A",
+          "step_index": 2
+        },
+        {
+          "energy": 0.756818,
+          "option": "B",
+          "step_index": 3
+        }
+      ],
+      "task_id": "second_corpus_seed4325_choice_003",
+      "unguided_option": "B"
+    },
+    {
+      "carnot_stitched_correct": true,
+      "carnot_stitched_option": "B",
+      "correct_option": "B",
+      "entrgi_option": "D",
+      "intrinsic_confidence": {},
+      "mask_entropy": 0.756267,
+      "option_logits": {
+        "A": 12.21764850616455,
+        "B": 14.740083694458008,
+        "C": 10.994656562805176,
+        "D": 13.250886917114258
+      },
+      "seed": 4325,
+      "selections": {
+        "carnot_stitched": {
+          "correct": true,
+          "intrinsic_confidence": 0.752195,
+          "logit": 14.740084,
+          "option": "B",
+          "partial_state_energy": 0.331163,
+          "score": 16.580634,
+          "stitch_support": {
+            "A": 0,
+            "B": 4,
+            "C": 0,
+            "D": 0
+          },
+          "stitched_steps": [
+            {
+              "energy": 0.30584,
+              "option": "B",
+              "step_index": 0
+            },
+            {
+              "energy": 0.30233,
+              "option": "B",
+              "step_index": 1
+            },
+            {
+              "energy": 0.284671,
+              "option": "B",
+              "step_index": 2
+            },
+            {
+              "energy": 0.431813,
+              "option": "B",
+              "step_index": 3
+            }
+          ],
+          "uses_external_scorer": true
+        },
+        "entrgi": {
+          "correct": false,
+          "intrinsic_confidence": 0.16966,
+          "logit": 13.250887,
+          "option": "D",
+          "partial_state_energy": 0.729175,
+          "score": 12.570144,
+          "uses_external_scorer": false
+        },
+        "self_reward_smc": {
+          "correct": true,
+          "intrinsic_confidence": 0.752195,
+          "logit": 14.740084,
+          "option": "B",
+          "partial_state_energy": 0.331163,
+          "score": 15.199473,
+          "uses_external_scorer": false
+        },
+        "unguided": {
+          "correct": true,
+          "intrinsic_confidence": 0.752195,
+          "logit": 14.740084,
+          "option": "B",
+          "partial_state_energy": 0.331163,
+          "score": 14.740084,
+          "uses_external_scorer": false
+        }
+      },
+      "self_reward_smc_correct": true,
+      "self_reward_smc_option": "B",
+      "stitched_steps": [
+        {
+          "energy": 0.30584,
+          "option": "B",
+          "step_index": 0
+        },
+        {
+          "energy": 0.30233,
+          "option": "B",
+          "step_index": 1
+        },
+        {
+          "energy": 0.284671,
+          "option": "B",
+          "step_index": 2
+        },
+        {
+          "energy": 0.431813,
+          "option": "B",
+          "step_index": 3
+        }
+      ],
+      "task_id": "second_corpus_seed4325_choice_004",
+      "unguided_option": "B"
+    }
+  ],
+  "best_engaged_control": "entrgi",
+  "bootstrap_resamples": 2000,
+  "carnot_minus_best_control_delta": 0.358333,
+  "carnot_minus_self_reward_smc_delta": 0.320833,
+  "carnot_minus_unguided_delta": 0.3125,
+  "condition_accuracy": {
+    "carnot_stitched": 0.5625,
+    "entrgi": 0.204167,
+    "self_reward_smc": 0.241667,
+    "unguided": 0.25
+  },
+  "condition_pass_counts": {
+    "carnot_stitched": 135,
+    "entrgi": 49,
+    "self_reward_smc": 58,
+    "unguided": 60
+  },
+  "control_noop_guard": {
+    "bit_identical_accuracy_pairs": [],
+    "bit_identical_selection_pairs": [],
+    "condition_accuracy": {
+      "carnot_stitched": 0.5625,
+      "entrgi": 0.204167,
+      "self_reward_smc": 0.241667,
+      "unguided": 0.25
+    },
+    "controls_differentiated": true,
+    "engaged_controls": [
+      "entrgi"
+    ],
+    "guidance_changes_selection": {
+      "carnot_stitched": true,
+      "entrgi": true,
+      "self_reward_smc": true
+    },
+    "reason": "ok"
+  },
+  "controls_differentiated": true,
+  "duration_s": 1429.92283,
+  "experiment": 4338,
+  "field_principles": {
+    "benchmark_n": "BARE int: per-arm n on the 2nd corpus -- MUST be >= 80.",
+    "carnot_minus_best_control_delta": "BARE float: Carnot-stitched minus the best engaged control on the 2nd corpus.",
+    "carnot_minus_self_reward_smc_delta": "BARE float: Carnot-stitched minus self-reward SMC on the 2nd corpus.",
+    "carnot_minus_unguided_delta": "BARE float: Carnot-stitched minus unguided on the 2nd corpus.",
+    "controls_differentiated": "BARE bool: true iff no two control arms tie bit-identically.",
+    "honest_verdict": "Terminal-prefixed. A replication (moat holds on a 2nd corpus with a leak-robust scorer, CI95-excl-0 -- gate FLIPS), a POWERED failure-to-replicate (corpus-specific -> RETIRE), a controls_not_differentiable, and a scorer_leaky_despite_rebuild are ALL decision-grade.",
+    "in_generation_moat_replicates": "BARE bool: true iff the LEAK-ROBUST-scorer reward-guided-stitched run beats the BEST engaged control AND CI95-excl-0 AND controls_differentiated AND beats self-reward SMC ON THE 2ND CORPUS.",
+    "model_specs": "DiffusionGemma GGUF + PR binary + the leak-robust scorer + reward-guided stitching config + controls + denoising steps + n + seeds.",
+    "preconditions_checked": "Records the leak-robust scorer + PR-binary + GGUF + 2nd corpus + TRM-stand-down checks.",
+    "random_seed": "Determinism precondition for denoising, stitching, and bootstrap.",
+    "replication_ci95": "Task-level bootstrap CI95 (>=2000 resamples) of the Carnot-minus-best-engaged-control delta on the 2nd corpus.",
+    "reproducibility_checksum": "Hash of the 2nd corpus + stitching config + controls + PR-binary inputs.",
+    "scorer_leak_recheck_passed": "BARE bool: true iff the independent leak re-check of the LEAK-ROBUST scorer on the 2nd corpus survives masking the answer cells.",
+    "verifier_is_oracle": "BARE bool=false -- the learned reward head is oracle-distinct."
+  },
+  "guidance_changes_selection": {
+    "carnot_stitched": true,
+    "entrgi": true,
+    "self_reward_smc": true
+  },
+  "guidance_dynamics_diagnostic": {
+    "mask_entropy_mean": 1.020523,
+    "mask_entropy_stdev": 0.234886,
+    "over_guided_finding": false,
+    "status": "measured",
+    "token_change_covariance": 0.143038,
+    "token_change_rate": 0.554167,
+    "trajectory_stability": 0.445833
+  },
+  "honest_verdict": "complete: in_generation_moat_replicates",
+  "in_generation_moat_replicates": true,
+  "independent_leak_recheck": {
+    "answer_masked_auroc": 0.840698,
+    "answer_masked_cells": 120,
+    "auroc_floor": 0.6,
+    "fresh_heldout_n": 990,
+    "fresh_heldout_task_n": 330,
+    "protocol": "fresh split; replace answer-bearing canvas cells with mask_token_id",
+    "scorer_leak_recheck_passed": true,
+    "status": "measured",
+    "unmasked_auroc": 0.841073
+  },
+  "inference_substrate": "live_llm_inference",
+  "model_specs": {
+    "control_construction": {
+      "engaged_controls": [
+        "entrgi"
+      ],
+      "noop_guard": {
+        "bit_identical_accuracy_pairs": [],
+        "bit_identical_selection_pairs": [],
+        "requires_no_bit_identical_condition_accuracy": true,
+        "requires_no_bit_identical_selection_sequence": true
+      }
+    },
+    "diffusiongemma": {
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "canvas_len": 256,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "mask_token_id": 4,
+      "model_loaded": true,
+      "pr_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "quantization": "Q4_K_M",
+      "runtime": "llama.cpp PR diffusion-gemma eval binary",
+      "vocab_size": 262144
+    },
+    "independent_leak_recheck": {
+      "answer_masked_auroc": 0.840698,
+      "answer_masked_cells": 120,
+      "auroc_floor": 0.6,
+      "fresh_heldout_n": 990,
+      "fresh_heldout_task_n": 330,
+      "protocol": "fresh split; replace answer-bearing canvas cells with mask_token_id",
+      "scorer_leak_recheck_passed": true,
+      "status": "measured",
+      "unmasked_auroc": 0.841073
+    },
+    "partial_state_scorer": {
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4337_leak_robust_partial_state_scorer_build.json",
+      "masked_answer_recovery_auroc": 0.559682,
+      "process_ranking_auroc": 0.704633,
+      "score_api": "score_partial_state(canvas_ids, step) -> energy",
+      "scorer_leak_audit_passed": true,
+      "scorer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/dina_lrm_partial_state_scorer_exp4337.pkl",
+      "source_experiment": 4337,
+      "verifier_is_oracle": false
+    },
+    "reward_guided_stitching": {
+      "benchmark_n_measured": 240,
+      "benchmark_n_per_seed": 80,
+      "bootstrap_resamples": 2000,
+      "candidate_count": 4,
+      "denoising_steps": 4,
+      "guidance_config": {
+        "candidate_count": 4,
+        "feasible_cost_window_s": 86400.0,
+        "guidance_lambda": 2.0,
+        "steps": 4
+      },
+      "guidance_equation": "logit + external_reward_delta + stitch_support_bonus; lower energy is better",
+      "random_seeds": [
+        4325,
+        4326,
+        4327
+      ],
+      "step_reward": "Exp 4337 DiNa-LRM leak-robust partial-state scorer",
+      "stitch_support_weight": 0.2
+    },
+    "second_corpus": {
+      "checksum": "4d66d052127c46564d7aec212c37d5bb8d0ec43b1247dd79ba4db89e5c9eabee",
+      "item_count": 1000,
+      "label_counts": {
+        "correct": 500,
+        "incorrect": 500
+      },
+      "name": "step_error_balanced_v2",
+      "oracle_distinct_from_exp4315": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/step_error_balanced_v2.json"
+    },
+    "self_reward_smc_baseline": {
+      "confidence_weight": 2.0,
+      "description": "particle-filter proxy using intrinsic trajectory confidence only",
+      "uses_external_scorer": false,
+      "verifier_is_oracle": false
+    }
+  },
+  "preconditions_checked": [
+    {
+      "command": "ls /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "exists": true,
+      "ok": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "resource": "pr_binary",
+      "size_bytes": 26400
+    },
+    {
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "cache_entries_preview": [
+        "blobs",
+        "refs",
+        "snapshots"
+      ],
+      "cache_error": null,
+      "cache_non_empty": true,
+      "command": "ls /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/",
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "ok": true,
+      "resolve_error": null,
+      "resource": "diffusiongemma_cache"
+    },
+    {
+      "active_training_processes": [],
+      "ok": true,
+      "process_check_error": null,
+      "resource": "trm_training_stand_down",
+      "results_trm_runs_touched": false
+    },
+    {
+      "auto_tokenizer_used": false,
+      "backend": "gguf_metadata",
+      "detail": "llama_cpp vocab_only failed (ValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf); embedded GGUF tokenizer metadata OK",
+      "elapsed_s": 0.330079,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "mode": "embedded_vocab_metadata",
+      "ok": true,
+      "resource": "gguf_vocab_loader",
+      "token_count": 15,
+      "token_ids_preview": [
+        3,
+        236743,
+        3,
+        236743,
+        111359,
+        236743,
+        3,
+        236743
+      ],
+      "vocab_only": false
+    },
+    {
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4337_leak_robust_partial_state_scorer_build.json",
+      "artifact_scorer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/dina_lrm_partial_state_scorer_exp4337.pkl",
+      "masked_answer_recovery_auroc": 0.559682,
+      "ok": true,
+      "probe_energy": 0.329024,
+      "process_ranking_auroc": 0.704633,
+      "resource": "leak_robust_scorer_gate",
+      "scorer_exists": true,
+      "scorer_leak_audit_passed": true,
+      "scorer_loadable": true,
+      "scorer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/dina_lrm_partial_state_scorer_exp4337.pkl",
+      "source_experiment": 4337,
+      "verifier_is_oracle": false
+    },
+    {
+      "baseline_exp4315_corpus_checksum": "68ce4c21d0d1a5ba589178160372a28cf5b9f893c3a05162e5898257af11dce7",
+      "checksum": "4d66d052127c46564d7aec212c37d5bb8d0ec43b1247dd79ba4db89e5c9eabee",
+      "item_count": 1000,
+      "label_counts": {
+        "correct": 500,
+        "incorrect": 500
+      },
+      "minimum_tasks_per_seed": 80,
+      "name": "step_error_balanced_v2",
+      "ok": true,
+      "oracle_distinct_from_exp4315": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/step_error_balanced_v2.json",
+      "path_exists": true,
+      "reason": "ok",
+      "resource": "second_oracle_distinct_corpus",
+      "seed_count": 3
+    }
+  ],
+  "random_seed": 4338,
+  "random_seeds": [
+    4325,
+    4326,
+    4327
+  ],
+  "replication_ci95": [
+    0.283333,
+    0.4375
+  ],
+  "reproducibility_checksum": "b985af663d05e129113108b28a0b29fc59b93a0d25075a2c6b8ec76c540f39d8",
+  "schema": "in_generation_moat_replicate_leak_robust_v1",
+  "scorer_leak_recheck_passed": true,
+  "second_corpus_check": {
+    "baseline_exp4315_corpus_checksum": "68ce4c21d0d1a5ba589178160372a28cf5b9f893c3a05162e5898257af11dce7",
+    "checksum": "4d66d052127c46564d7aec212c37d5bb8d0ec43b1247dd79ba4db89e5c9eabee",
+    "item_count": 1000,
+    "label_counts": {
+      "correct": 500,
+      "incorrect": 500
+    },
+    "minimum_tasks_per_seed": 80,
+    "name": "step_error_balanced_v2",
+    "ok": true,
+    "oracle_distinct_from_exp4315": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/data/step_error_balanced_v2.json",
+    "path_exists": true,
+    "reason": "ok",
+    "resource": "second_oracle_distinct_corpus",
+    "seed_count": 3
+  },
+  "seed_count": 3,
+  "spec_refs": [
+    "REQ-VERIFY-4338",
+    "SCENARIO-VERIFY-4338"
+  ],
+  "verifier_is_oracle": false
+}
