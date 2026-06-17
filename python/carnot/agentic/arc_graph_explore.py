@@ -76,6 +76,59 @@ def graph_explore_solve(env: Any, start_level: int = 0, *, max_actions: int = 14
     return None, best_level
 
 
+def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: int = 6000,
+                           warmup: bool = False, max_depth: int = 60) -> tuple[Optional[list], int]:
+    """SYSTEMATIC graph-explore (toward arXiv:2512.24156): maintain a directed
+    state-transition graph and take the SHORTEST PATH to a state with an untested
+    state-action pair (BFS frontier), navigating by replay-from-reset (deepcopy-
+    injection is unreliable). Complete over the reachable state-action space up to
+    the budget — far stronger than greedy-restart. Returns (trajectory, reached_level).
+    """
+    from collections import deque
+    from arcengine import GameAction
+
+    def _candidates(frame):
+        return list(_action_candidates(frame))
+
+    def replay(path):
+        f = _warm(env, warmup)
+        for act in path:
+            f = env.step(_game_action(GameAction, act["action"]), data=act.get("data"))
+        return f
+
+    f0 = _warm(env, warmup)
+    h0 = frame_hash(grid_of(f0))
+    states = {h0: {"path": [], "untested": _candidates(f0)}}
+    frontier = deque([h0])              # BFS order ⇒ shortest path first
+    best = start_level
+    expansions = 0
+    while frontier and expansions < max_expansions:
+        h = frontier[0]
+        st = states[h]
+        if not st["untested"] or len(st["path"]) >= max_depth:
+            frontier.popleft()
+            continue
+        sel = st["untested"].pop(0)
+        replay(st["path"])              # navigate to this state
+        nf = env.step(_game_action(GameAction, sel.action_id), data=sel.data,
+                      reasoning={"policy": "graph_explore_v2_shortest_path"})
+        expansions += 1
+        if nf is None:
+            continue
+        traj = st["path"] + [{"action": int(sel.action_id), "data": sel.data}]
+        lvl = _levels_completed(nf)
+        if lvl > start_level:
+            return traj, lvl
+        best = max(best, lvl)
+        if _game_over(nf):
+            continue
+        nh = frame_hash(grid_of(nf))
+        if nh not in states:           # new state ⇒ add to graph + frontier
+            states[nh] = {"path": traj, "untested": _candidates(nf)}
+            frontier.append(nh)
+    return None, best
+
+
 def trajectory_labels(traj: list) -> list[str]:
     """Encode a captured trajectory as replayable labels (for the reproduction gate
     / a trajectory-replay adapter)."""

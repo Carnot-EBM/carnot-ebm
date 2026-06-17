@@ -31,7 +31,7 @@ from carnot.agentic import arc_solver_kit as kit
 from carnot.agentic import arc_game_adapters as adapters
 from carnot.agentic import arc_solve_learning as learning
 from carnot.agentic.arc_value_learner import LearnedVerifier, collect_trajectory_data
-from carnot.agentic.arc_graph_explore import graph_explore_solve, trajectory_labels
+from carnot.agentic.arc_graph_explore import graph_explore_solve_v2, trajectory_labels
 
 CKPT_DIR = REPO / "models"
 RESULTS = REPO / "results"
@@ -93,7 +93,7 @@ def solve_adaptered(game: str, target_level: int) -> dict:
     }
 
 
-def solve_via_explore(game: str, max_actions: int = 140, restarts: int = 60,
+def solve_via_explore(game: str, max_expansions: int = 6000, max_depth: int = 60,
                       warmup: bool = False) -> Optional[dict]:
     """ADAPTER-FREE first contact: graph-explore the game; if it advances a level,
     CAPTURE the trajectory, reproduction-gate it, train a verifier from it, and
@@ -106,7 +106,8 @@ def solve_via_explore(game: str, max_actions: int = 140, restarts: int = 60,
 
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
-    traj, lvl = graph_explore_solve(env, 0, max_actions=max_actions, restarts=restarts, warmup=warmup)
+    traj, lvl = graph_explore_solve_v2(env, 0, max_expansions=max_expansions,
+                                       max_depth=max_depth, warmup=warmup)
     if traj is None:
         return None
 
