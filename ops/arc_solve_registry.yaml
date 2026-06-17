@@ -118,13 +118,16 @@ learning_loop:
   # advances a level it CAPTURES the trajectory -> reproduction-gates it -> trains a
   # verifier-seed (generic grid features) -> persists the trajectory as the adapter
   # seed, so the NEXT solve is the efficient verifier-routed loop, not blind explore.
-  # The downstream capture->gate->seed pipeline is validated functional (r11l trajectory
-  # -> L1 reproduced). The BASIC explorer is WEAK on our games (generic object-centroid
-  # clicks miss exact coords; keyboard games need deep directed search) -> falls through
-  # to the routing recommendation (per-game RE). UPGRADE PATH: strengthen the explorer
-  # toward the SOTA (arXiv:2512.24156 frame-segmentation + salience + shortest-path to
-  # untested state-action; median 30/52 levels) -- no loop-wiring change needed.
-  adapter_free_explore: python/carnot/agentic/arc_graph_explore.py
+  # graph_explore_solve_v2 = SYSTEMATIC frontier BFS over the state-transition graph
+  # (shortest-path-to-untested-state-action, replay-navigation) -- toward arXiv:2512.24156.
+  # VALIDATED: solves ls20 L1 ADAPTER-FREE (13 actions) -> full pipeline captures the
+  # trajectory -> reproduction-gates (offline_reproduced=True) -> trains a verifier-seed ->
+  # persists the adapter seed, with NO per-game RE. Remaining explorer limits: r11l needs
+  # exact-coord click candidates (object centroids miss the select/place points -> enrich
+  # candidates via finer object segmentation); wa30 L1 is ~33 actions deep (exceeds the BFS
+  # budget -> needs a salience/value heuristic to go deeper). Those are candidate-enrichment
+  # + heuristic refinements; the architecture + pipeline are complete.
+  adapter_free_explore: python/carnot/agentic/arc_graph_explore.py  # graph_explore_solve_v2
   demos:
     - scripts/arc3_verifier_routed_search_demo.py   # 10.75x fewer states (hand verifier)
     - scripts/arc3_learned_verifier_demo.py         # 9.36x fewer on held-out L3 (learned)
