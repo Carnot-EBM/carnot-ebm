@@ -1,0 +1,372 @@
+{
+  "arc_progress": {
+    "status": "excluded_flagged_adversarial"
+  },
+  "availability_report": {
+    "available_artifact_keys": [
+      "4303_efficiency",
+      "4304_in_generation",
+      "4305_cross_domain",
+      "4306_self_learning"
+    ],
+    "axes": {
+      "arc_progress": {
+        "available_artifact_keys": [],
+        "flagged_artifacts": [
+          {
+            "artifact_key": "4307_arc_progress",
+            "axis": "arc_progress",
+            "experiment_id": 4307,
+            "reason": "flagged_adversarial"
+          }
+        ],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "cross_domain": {
+        "available_artifact_keys": [
+          "4305_cross_domain"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "efficiency": {
+        "available_artifact_keys": [
+          "4303_efficiency"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "in_generation": {
+        "available_artifact_keys": [
+          "4304_in_generation"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "self_learning": {
+        "available_artifact_keys": [
+          "4306_self_learning"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      }
+    },
+    "flagged_artifacts_excluded": [
+      {
+        "artifact_key": "4307_arc_progress",
+        "axis": "arc_progress",
+        "experiment_id": 4307,
+        "reason": "flagged_adversarial"
+      }
+    ],
+    "missing_upstream_artifacts": []
+  },
+  "cross_domain": {
+    "cross_domain_ci95": [
+      -0.1153846154,
+      0.5384615385
+    ],
+    "cross_domain_delta": 0.2307692308,
+    "cross_domain_moat_holds": false,
+    "held_out_task_n": 26,
+    "honest_verdict": "complete: cross_domain_selection_collapses_domain_bound",
+    "label_ablation_robust": true,
+    "reported_cross_domain_selection_holds": false,
+    "status": "open",
+    "verifier_is_oracle": false
+  },
+  "cross_domain_moat_holds": false,
+  "duration_s": 0.311234,
+  "efficiency": {
+    "accuracy_best_judge": 0.5,
+    "accuracy_delta_ci95": [
+      0.1,
+      0.5
+    ],
+    "accuracy_energy_verifier": 0.8,
+    "cost_ratio": 1.03e-08,
+    "efficiency_pareto_hardened": true,
+    "honest_verdict": "complete: hardened_pareto_win_delta_0.3000",
+    "reported_efficiency_pareto_holds": true,
+    "status": "hardened",
+    "verifier_is_oracle": false
+  },
+  "efficiency_pareto_hardened": true,
+  "experiment": 4312,
+  "field_principles": {
+    "cross_domain_moat_holds": "BARE bool: did the selection moat transfer to a HELD-OUT DOMAIN with label_ablation_robust -- escaping the verifier's math/ARC domain bound.",
+    "efficiency_pareto_hardened": "BARE bool: did the energy verifier match/beat a WELL-PROMPTED judge at <=0.1x cost on an iso-FLOPs curve -- the operator's \u00a75 win condition, finally hardened.",
+    "flagged_artifacts_excluded": "List of .398 artifacts excluded for flagged_adversarial -- the fabrication gate (their numbers are NOT aggregated).",
+    "headline_outcome": "One honest string aggregating the efficiency + in-generation + cross-domain + self-learning + ARC reads; the single line the .399 planner frames from.",
+    "honest_verdict": "Terminal-prefixed. The .398 close-state -- whether efficiency-parity hardened, the in-generation moat held with engaged controls, the selection moat broadened to cross-domain.",
+    "in_generation_moat_holds": "BARE bool: did the LEARNED partial-state-guided DiffusionGemma beat a GENUINELY-ENGAGED control (controls_differentiated) with CI95-excl-0 -- the \u00a75 in-generation moat (false if gated off / no-op controls / ties / scorer leaked).",
+    "paper_ready": "From publication_gate.py --json -- the G1-G4 status (FoVer headline stays the publication target; a hardened efficiency-parity, an established in-generation moat, or a cross-domain win would be a new headline-grade supporting result).",
+    "per_axis_gaps": "List of .398 axes whose artifact was MISSING (reported as a gap, NOT defaulted False) -- the robust-aggregator fix that prevents the .397 spurious-all-False capstone bug.",
+    "reproducibility_checksum": "Hash of the aggregated upstream sha256 set; lets a third party re-derive the capstone.",
+    "verifier_is_oracle_honored": "BARE bool=true -- confirms every cited moat/headline result carried verifier_is_oracle=false (no circular/execution-grounded result headlines a moat).",
+    "verifier_thesis_state": "One honest string for the verifier thesis state (efficiency_parity_hardened / in_generation_moat_holds / cross_domain_moat_holds / selection_moat_arc_only / in_generation_still_open) -- the framing the .399 planner inherits."
+  },
+  "field_provenance": {
+    "cross_domain_moat_holds": {
+      "principle": "BARE bool: did the selection moat transfer to a HELD-OUT DOMAIN with label_ablation_robust -- escaping the verifier's math/ARC domain bound.",
+      "satisfied_by": "aggregation logic"
+    },
+    "efficiency_pareto_hardened": {
+      "principle": "BARE bool: did the energy verifier match/beat a WELL-PROMPTED judge at <=0.1x cost on an iso-FLOPs curve -- the operator's \u00a75 win condition, finally hardened.",
+      "satisfied_by": "aggregation logic"
+    },
+    "flagged_artifacts_excluded": {
+      "principle": "List of .398 artifacts excluded for flagged_adversarial -- the fabrication gate (their numbers are NOT aggregated).",
+      "satisfied_by": "aggregation logic"
+    },
+    "headline_outcome": {
+      "principle": "One honest string aggregating the efficiency + in-generation + cross-domain + self-learning + ARC reads; the single line the .399 planner frames from.",
+      "satisfied_by": "aggregation logic"
+    },
+    "honest_verdict": {
+      "principle": "Terminal-prefixed. The .398 close-state -- whether efficiency-parity hardened, the in-generation moat held with engaged controls, the selection moat broadened to cross-domain.",
+      "satisfied_by": "aggregation logic"
+    },
+    "in_generation_moat_holds": {
+      "principle": "BARE bool: did the LEARNED partial-state-guided DiffusionGemma beat a GENUINELY-ENGAGED control (controls_differentiated) with CI95-excl-0 -- the \u00a75 in-generation moat (false if gated off / no-op controls / ties / scorer leaked).",
+      "satisfied_by": "aggregation logic"
+    },
+    "paper_ready": {
+      "principle": "From publication_gate.py --json -- the G1-G4 status (FoVer headline stays the publication target; a hardened efficiency-parity, an established in-generation moat, or a cross-domain win would be a new headline-grade supporting result).",
+      "satisfied_by": "aggregation logic"
+    },
+    "per_axis_gaps": {
+      "principle": "List of .398 axes whose artifact was MISSING (reported as a gap, NOT defaulted False) -- the robust-aggregator fix that prevents the .397 spurious-all-False capstone bug.",
+      "satisfied_by": "aggregation logic"
+    },
+    "reproducibility_checksum": {
+      "principle": "Hash of the aggregated upstream sha256 set; lets a third party re-derive the capstone.",
+      "satisfied_by": "aggregation logic"
+    },
+    "verifier_is_oracle_honored": {
+      "principle": "BARE bool=true -- confirms every cited moat/headline result carried verifier_is_oracle=false (no circular/execution-grounded result headlines a moat).",
+      "satisfied_by": "aggregation logic"
+    },
+    "verifier_thesis_state": {
+      "principle": "One honest string for the verifier thesis state (efficiency_parity_hardened / in_generation_moat_holds / cross_domain_moat_holds / selection_moat_arc_only / in_generation_still_open) -- the framing the .399 planner inherits.",
+      "satisfied_by": "aggregation logic"
+    }
+  },
+  "flagged_artifacts_excluded": [
+    {
+      "artifact_key": "4307_arc_progress",
+      "experiment_id": 4307,
+      "live_critical": true,
+      "live_critical_flags": [
+        {
+          "detail": "acceptance_gate_passed=true but these fields are null/zero: exploration_actions_used=0",
+          "kind": "GATE_PASSED_WITHOUT_DATA",
+          "severity": "critical"
+        }
+      ],
+      "parse_error": "",
+      "path": "results/experiment_4307_arc_incremental_progress_new_game.json",
+      "reason": "flagged_adversarial",
+      "sha256": "6e75a7b3230ea440daa5b11ea67b6f0cc38c614b485456d1690366e00efb7d7c",
+      "stamped_flagged_adversarial": true
+    }
+  ],
+  "headline_outcome": "efficiency_hardened__in_generation_open__cross_domain_open__self_learning_helps__arc_excluded__paper_ready",
+  "honest_verdict": "complete: v398_efficiency_hardened_in_generation_open_cross_domain_open_self_learning_helps_arc_excluded",
+  "in_generation": {
+    "carnot_minus_best_control_delta": 0.133334,
+    "controls_differentiated": true,
+    "guidance_moat_ci95": [
+      -0.066667,
+      0.366667
+    ],
+    "honest_verdict": "complete: diffusiongemma_guidance_bounded_null_vs_engaged_control",
+    "in_generation_moat_holds": false,
+    "reported_diffusiongemma_guidance_moat": false,
+    "scorer_leak_recheck_passed": true,
+    "status": "open",
+    "verifier_is_oracle": false
+  },
+  "in_generation_moat_holds": false,
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "oracle_distinct_violations": [],
+  "paper_ready": true,
+  "per_axis_gaps": [],
+  "publication_gate": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "random_seed": 4312,
+  "reproducibility_checksum": "2facf36b69b682b0a531a57e3094446063015001451c50afd5704b39226e4b33",
+  "required_artifact_fields": [
+    "honest_verdict",
+    "headline_outcome",
+    "efficiency_pareto_hardened",
+    "in_generation_moat_holds",
+    "cross_domain_moat_holds",
+    "verifier_thesis_state",
+    "flagged_artifacts_excluded",
+    "per_axis_gaps",
+    "paper_ready",
+    "verifier_is_oracle_honored",
+    "reproducibility_checksum"
+  ],
+  "schema": "carnot.capstone_v398_4312.v1",
+  "self_learning": {
+    "best_adaptive_minus_static_ci95": [
+      0.4080808081,
+      0.6505050505
+    ],
+    "best_adaptive_minus_static_delta": 0.5292929293,
+    "held_out_task_n": 102,
+    "honest_verdict": "complete: powered_cross_domain_online_adaptation_helps",
+    "online_adaptation_helps": true,
+    "reported_online_adaptation_helps": true,
+    "status": "helps",
+    "verifier_is_oracle": false
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4312",
+    "SCENARIO-CAPSTONE-4312"
+  ],
+  "unmet_gates": [],
+  "upstream_provenance": [
+    {
+      "artifact_key": "4303_efficiency",
+      "experiment_id": 4303,
+      "fields_imported": [
+        "efficiency_pareto_holds",
+        "cost_ratio",
+        "accuracy_delta_ci95",
+        "accuracy_energy_verifier",
+        "accuracy_best_judge",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4303_verifier_efficiency_parity_isoflops.json",
+      "payload_reproducibility_checksum": "d0d49f36621f29eaf6b747485a79bfb9312f0349ea08adad94cfa61a914ad0ca",
+      "sha256": "be1163785290204629149b15907b69a46d2a404b693e47bc03f58c13359de278",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4304_in_generation",
+      "experiment_id": 4304,
+      "fields_imported": [
+        "diffusiongemma_guidance_moat",
+        "controls_differentiated",
+        "scorer_leak_recheck_passed",
+        "carnot_minus_best_control_delta",
+        "guidance_moat_ci95",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4304_diffusiongemma_in_generation_engaged_controls.json",
+      "payload_reproducibility_checksum": "6245ca3a4f6d7aca7cd63e77778a15cfb5cf15b297381aa17db530b23a51bf61",
+      "sha256": "2f40f81154030fdd9b7867337625abda23304fe3c1465c77da9eccd3b783f35f",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4305_cross_domain",
+      "experiment_id": 4305,
+      "fields_imported": [
+        "cross_domain_selection_holds",
+        "cross_domain_delta",
+        "cross_domain_ci95",
+        "label_ablation_robust",
+        "held_out_task_n",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4305_cross_domain_selector_generalization.json",
+      "payload_reproducibility_checksum": "c76c589b9810b90eab25417ce64b1068f093d910776419debc38cad4d7f46a97",
+      "sha256": "4b840420cdd58e32a31878d217035f47f53effd8dc1682b8cbfa2c15316bdd15",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4306_self_learning",
+      "experiment_id": 4306,
+      "fields_imported": [
+        "online_adaptation_helps",
+        "best_adaptive_minus_static_delta",
+        "best_adaptive_minus_static_ci95",
+        "held_out_task_n",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4306_self_learning_powered_ci_cross_domain.json",
+      "payload_reproducibility_checksum": "360736e091cc76258e443d683618d078ac21999a9938d010b7aa65fe774c9a64",
+      "sha256": "9cc050a2162d69c1b8c4357e8dff7ac8020761176ab822cc49ccf35e878f75c3",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4307_arc_progress",
+      "experiment_id": 4307,
+      "fields_imported": [],
+      "live_adversarial_flags": [
+        {
+          "detail": "acceptance_gate_passed=true but these fields are null/zero: exploration_actions_used=0",
+          "kind": "GATE_PASSED_WITHOUT_DATA",
+          "severity": "critical"
+        }
+      ],
+      "live_critical": true,
+      "parse_error": "",
+      "path": "results/experiment_4307_arc_incremental_progress_new_game.json",
+      "payload_reproducibility_checksum": "a06a956708d2977b172d88b051107fe53191fa98c644a5e6ff761c81bbcb0c2f",
+      "sha256": "6e75a7b3230ea440daa5b11ea67b6f0cc38c614b485456d1690366e00efb7d7c",
+      "skipped": true,
+      "stamped_flagged_adversarial": true,
+      "summarize_error": "",
+      "summarize_exit_code": 2
+    }
+  ],
+  "verifier_is_oracle_honored": true,
+  "verifier_thesis_state": "efficiency_parity_hardened"
+}
