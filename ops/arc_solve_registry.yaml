@@ -89,3 +89,30 @@ games:
 #   scripts/arc3_replay_scorecard_metaharness.py -> results/arc3_replay_aggregate_scorecard.json)
 reproducible_total_levels: 6
 provisional_total_levels: 5   # sc25 L5 (live-recorded, not yet reproduced)
+
+# ---- THE STANDING LEARNING LOOP (each solve compounds onto the next) ----
+# A new game's solver flow, all in the harness, zero quota:
+#   1. recommend_approach(game)  [arc_solve_learning] — route to the closest SOLVED
+#      game's proven recipe by survey-feature similarity (reverse-engineer only the delta).
+#   2. OfflineSolver(..., verifier=v)  [arc_solver_kit] — verifier-routed BEST-FIRST
+#      search; an energy/goal-distance score prunes the search. Demonstrated on lp85:
+#      3860 (plain BFS) -> 359 states = 10.75x fewer (arc3_verifier_routed_search_demo).
+#   3. LearnedVerifier  [arc_value_learner] — train the verifier on our OWN solve
+#      traces (state->steps-to-go); it improves from each solve. Demonstrated on lp85:
+#      trained on L1-L2, cut HELD-OUT L3 search 3163 -> 338 states = 9.36x fewer,
+#      approaching the hand-tuned bound (286) without being told the heuristic
+#      (arc3_learned_verifier_demo).
+#   4. reproduce(...)  [arc_solver_kit] — the offline reproduction GATE; only
+#      reproduced levels count.
+#   5. update this registry (win-condition, action-model, gotchas, DEAD-ENDS).
+# Learns from SUCCESSES (recipe routing + trained verifier) and FAILURES (dead-ends).
+# Next: train the verifier CROSS-game (transfer the value head), and A* (path-cost +
+# learned heuristic) for leaderboard action-efficiency, not just search compute.
+learning_loop:
+  transfer_routing: python/carnot/agentic/arc_solve_learning.py
+  verifier_routed_search: python/carnot/agentic/arc_solver_kit.py  # OfflineSolver verifier=
+  learned_verifier: python/carnot/agentic/arc_value_learner.py
+  reproduction_gate: python/carnot/agentic/arc_solver_kit.py        # reproduce()
+  demos:
+    - scripts/arc3_verifier_routed_search_demo.py   # 10.75x fewer states (hand verifier)
+    - scripts/arc3_learned_verifier_demo.py         # 9.36x fewer on held-out L3 (learned)
