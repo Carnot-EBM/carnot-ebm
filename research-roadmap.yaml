@@ -613,8 +613,8 @@ tasks:
            oracle-free verifier (arXiv:2602.06291) + alternative oracle-distinct mechanisms as the LEAD .402 candidate.
            ALSO map the strongest E3 / cross-game-transfer follow-ups conditioned on exp4339/4341/4342.
         2. Run a FOCUSED fresh pass (sweep_clusters.py / sweep_semscholar.py + WebFetch the top 5-8). VERIFY every arXiv
-           ID before citing (no unverifiable citation). Synthesize the mapping: strongest 3-5 methods, each {name, arXiv
-           ID/URL VERIFIED, one-line .402 experiment mapping, failure mode, the .401-outcome it is conditioned on}.
+           ID before citing (no unverifiable citation). Synthesize the mapping: strongest 3-5 methods, each {{name, arXiv
+           ID/URL VERIFIED, one-line .402 experiment mapping, failure mode, the .401-outcome it is conditioned on}}.
         3. Update research-studying.md (mark ingested) + emit flagged_for_v402 (the single strongest method for the .402
            planner). Declare random_seed.
       REQUIRED ARTIFACT FIELDS:
@@ -728,7 +728,7 @@ tasks:
         kv260_reachable:
           principle: "BARE bool: KV260 SSH-reachable (the sovereignty story's board-state; the SSH precondition, NEVER host SD-card)."
         boards_probed:
-          principle: "list: each board {name, reachable, state} -- keeps the boards visible in the milestone retro per the continuity discipline."
+          principle: "list: each board {{name, reachable, state}} -- keeps the boards visible in the milestone retro per the continuity discipline."
         preconditions_checked:
           principle: "Records the SSH reachability checks (NEVER a host-SD-card device-node check); pre-empts the silent-missing-resource fabrication mode + the retired-mechanism trap."
       ACCEPTANCE GATE:
@@ -783,7 +783,7 @@ tasks:
            offline_reproduced solves count). SELF-LEARNING: read exp4342's learned_encoder_transfer_helps.
         4. Emit in_generation_moat_replicates_headline + diffusiongemma_gate_status + arc_reproducible_total_levels +
            verifier_thesis_state (one honest string) + verifier_is_oracle_honored + per_axis_gaps +
-           flagged_artifacts_excluded + upstream_provenance (each {experiment_id, fields_imported, sha256}). Compute
+           flagged_artifacts_excluded + upstream_provenance (each {{experiment_id, fields_imported, sha256}}). Compute
            paper_ready via publication_gate.py --json (G1-G4). Declare reproducibility_checksum.
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
@@ -805,7 +805,7 @@ tasks:
         paper_ready:
           principle: "From publication_gate.py --json -- the G1-G4 status (FoVer 0.9131 stays the publication target; a replicated leak-robust in-generation moat would be a new headline-grade supporting result)."
         upstream_provenance:
-          principle: "Each cited upstream artifact {experiment_id, fields_imported, sha256} -- the audit trail that the capstone synthesizes nothing from nothing."
+          principle: "Each cited upstream artifact {{experiment_id, fields_imported, sha256}} -- the audit trail that the capstone synthesizes nothing from nothing."
         reproducibility_checksum:
           principle: "Hash of the aggregated upstream sha256 set; lets a third party re-derive the capstone."
       ACCEPTANCE GATE:
