@@ -295,6 +295,7 @@ class LocalGGUFProposer:
     repo_substr: str = "gemma-4-12B-it"     # lightweight SOTA: fast enough for per-game induction
     n_ctx: int = 8192
     max_tokens: int = 2048
+    n_gpu_layers: int = -1                   # -1 = offload all layers to GPU (fast); 0 = CPU
     offline_legal: bool = True
     _llm: Any = None
 
@@ -304,7 +305,8 @@ class LocalGGUFProposer:
             path = _resolve_gguf(self.repo_substr)
             if not path:
                 raise FileNotFoundError(f"no cached GGUF matching {self.repo_substr}")
-            self._llm = llama_cpp.Llama(model_path=path, n_ctx=self.n_ctx, verbose=False)
+            self._llm = llama_cpp.Llama(model_path=path, n_ctx=self.n_ctx,
+                                        n_gpu_layers=self.n_gpu_layers, verbose=False)
         return self._llm
 
     def _gen_to_file(self, game: str, prompt: str) -> tuple[bool, str]:
