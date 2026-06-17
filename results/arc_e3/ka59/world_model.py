@@ -85,21 +85,31 @@ def _refresh_block_marks(out):
 
 
 def _target_underlay(out, y, x):
-    # Reconstruct only the visible target border cells around an occupied target.
     fill = np.full((3, 3), BACKGROUND, dtype=out.dtype)
     h, w = out.shape
     for ty in range(max(0, y - 5), min(h - 4, y + 2) + 1):
         for tx in range(max(0, x - 5), min(w - 4, x + 2) + 1):
-            border = out[ty : ty + 5, tx : tx + 5]
-            if border.shape != (5, 5):
+            if not _is_target_border(out[ty : ty + 5, tx : tx + 5]):
                 continue
-            if np.count_nonzero(border == TARGET) >= 8:
-                for yy in range(3):
-                    for xx in range(3):
-                        gy, gx = y + yy, x + xx
-                        if gy in (ty, ty + 4) or gx in (tx, tx + 4):
-                            fill[yy, xx] = TARGET
+            for yy in range(3):
+                for xx in range(3):
+                    gy, gx = y + yy, x + xx
+                    inside = ty <= gy <= ty + 4 and tx <= gx <= tx + 4
+                    on_border = gy in (ty, ty + 4) or gx in (tx, tx + 4)
+                    if inside and on_border:
+                        fill[yy, xx] = TARGET
     return fill
+
+
+def _is_target_border(patch):
+    if patch.shape != (5, 5):
+        return False
+    top = bool(np.all(patch[0, :] == TARGET))
+    bottom = bool(np.all(patch[4, :] == TARGET))
+    left = bool(np.all(patch[:, 0] == TARGET))
+    right = bool(np.all(patch[:, 4] == TARGET))
+    border = np.concatenate((patch[0, :], patch[4, :], patch[1:4, 0], patch[1:4, 4]))
+    return bool((top or bottom) and (left or right) and np.count_nonzero(border == TARGET) >= 8)
 
 
 def _erase_block(out, y, x):
