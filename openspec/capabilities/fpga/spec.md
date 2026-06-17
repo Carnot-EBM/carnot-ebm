@@ -8154,6 +8154,78 @@ The artifact MUST include `field_principles` entries for the required fields:
 
 ---
 
+### REQ-HW-4345
+
+**Title:** Opportunistic hardware continuity MUST record KV260 SSH state and board reachability
+
+**Description:**
+Experiment 4345 MUST produce
+`results/experiment_4345_hardware_continuity.json` as the opportunistic
+hardware-continuity artifact after the `.400` baseline
+`results/experiment_4334_hardware_continuity.json`. The experiment MUST treat
+KV260 as SSH-only, per north-star §3 and the KV260 SSH-Not-SD-Card discipline:
+the only valid KV260 precondition is
+`ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`. Host SD-card block-device checks
+are a retired mechanism and MUST NOT appear in the artifact.
+
+If KV260 SSH is unreachable, the experiment MUST write an honest
+`blocked_kv260_ssh_unreachable` verdict, record the failed SSH precondition,
+set `kv260_reachable` to bare `false`, and stop without fabricating GateMate or
+PolarFire state. If KV260 SSH is reachable, the experiment MUST run
+`ssh kria 'xmutil listapps'` to record whether the Carnot Ising bitstream is
+loadable, then opportunistically probe GateMate with
+`openFPGALoader -c dirtyJtag --detect` and PolarFire with
+`ssh -o ConnectTimeout=5 polarfire 'true'`. The result MUST preserve board
+visibility with a `boards_probed` list, where each entry has `name`,
+`reachable`, and `state` fields, and MUST include a board-state transcript of
+the commands that were actually run.
+
+The artifact MUST include `field_principles` entries for the required fields:
+
+- `honest_verdict`: `Terminal-prefixed. Records the KV260 SSH continuity + opportunistic board reachability (or blocked_kv260_ssh_unreachable -- an honest non-fabrication).`
+- `kv260_reachable`: `BARE bool: KV260 SSH-reachable (the sovereignty story's board-state; the SSH precondition, NEVER host SD-card).`
+- `boards_probed`: `list: each board {name, reachable, state} -- keeps the boards visible in the milestone retro per the continuity discipline.`
+- `preconditions_checked`: `Records the SSH reachability checks (NEVER a host-SD-card device-node check); pre-empts the silent-missing-resource fabrication mode + the retired-mechanism trap.`
+
+**Acceptance criteria:**
+- `python3 results/experiment_4345_hardware_continuity.py` writes
+  `results/experiment_4345_hardware_continuity.json`.
+- If KV260 is unreachable, `honest_verdict` is exactly
+  `blocked_kv260_ssh_unreachable`, `kv260_reachable` is a bare boolean false,
+  and `preconditions_checked` records the KV260 SSH command and exit code.
+- If KV260 is reachable, `kv260_reachable` is a bare boolean true,
+  `boards_probed` includes KV260, GateMate, and PolarFire entries, and the
+  board-state transcript includes `ssh kria 'xmutil listapps'`,
+  `openFPGALoader -c dirtyJtag --detect`, and
+  `ssh -o ConnectTimeout=5 polarfire 'true'` results.
+- `preconditions_checked` records the actual SSH/USB reachability probes that
+  were run before any board state is claimed, and no host SD-card marker appears
+  in the JSON artifact.
+- `honest_verdict` starts with `complete:` for reachable KV260 continuity or is
+  exactly `blocked_kv260_ssh_unreachable`.
+
+**Implementation status:** Pending (Exp 4345)
+
+---
+
+### SCENARIO-HW-4345
+
+**Scenario:** Exp 4345 records KV260 SSH continuity and opportunistic board reachability.
+
+**Given:** KV260 is the terminal sovereignty board and must be checked by SSH
+only, while GateMate and PolarFire are opportunistic continuity probes.
+**When:** Experiment 4345 runs the KV260 SSH precondition and, only when it
+succeeds, runs KV260 `xmutil listapps`, GateMate DirtyJTAG detect, and PolarFire
+SSH reachability.
+**Then:** It writes `results/experiment_4345_hardware_continuity.json` with the
+required field principles, bare `kv260_reachable`, `boards_probed`,
+`preconditions_checked`, a board-state transcript, deterministic seed,
+checksum, no fabric speedup claim, and no KV260 host SD-card precondition.
+
+**Implementation status:** Pending (Exp 4345)
+
+---
+
 ### SCENARIO-HW-4334
 
 **Scenario:** Exp 4334 reports KV260, PolarFire, and GateMate continuity without milestone blocking.
