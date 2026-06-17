@@ -23200,3 +23200,94 @@ Cheatsheet (2504.07952) / Decocted (2604.04373), no weight mutation.
 
 Sources (this sweep): arxiv.org/abs/{2510.14913, 2509.13332, 2508.03686, 2509.19681, 2509.25604,
 2602.05000, 2506.10971, 2410.21357, 2606.11182, 2507.17849, 2605.19633, 2504.07952, 2604.04373, 2601.11443}.
+
+## 2026-06-16 (later still) — .399 planning sweep — CLOSE the two OPEN §5 moats (cross-DOMAIN selection + in-generation guidance), DEPLOY the hardened efficiency verifier as a cascade router, UNSTALL ARC
+
+Added by the `.399 planning sweep (Claude Opus 4.8, outer-loop). `.398 produced a sharp scorecard
+(`verifier_thesis_state: efficiency_parity_hardened`, read via `scripts/summarize_artifact.py` +
+`results/experiment_4312_capstone_v398.json`):
+
+- **EFFICIENCY-PARITY — HARDENED (exp4303).** The energy verifier scored **0.8** vs a well-prompted
+  judge **0.5** on cross-family ARC selection (delta CI95 [0.1, 0.5], excludes 0) at `cost_ratio`
+  **1.03e-08**. The operator's §5 win condition is MET — but n was small (≥30); `.399 broadens + deploys it.
+- **IN-GENERATION moat — OPEN (exp4304).** `carnot_minus_best_control_delta=+0.133` but CI95
+  [-0.067, 0.367] **includes 0** (underpowered-positive, NOT refuted). Controls were differentiated and
+  the scorer leak-free, so the harness is sound and the signal needs a stronger architecture + more power.
+- **CROSS-DOMAIN moat — OPEN (exp4305).** `cross_domain_delta=+0.231` but CI95 [-0.115, 0.538]
+  **includes 0** (underpowered-positive). `label_ablation_robust=true` (no domain-label leak). Logged
+  GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305.
+- **SELF-LEARNING — HELPS, powered (exp4306).** `best_adaptive_minus_static_delta=+0.529`, CI95
+  [0.408, 0.651] excludes 0. Decision-grade; `.399 advances to a NEW mechanism (cross-game transfer).
+- **ARC — STALLED at 22 (exp4307 FLAGGED GATE_PASSED_WITHOUT_DATA).** Frontier adapter unavailable,
+  `exploration_actions_used=0`, `real_env_confirmed=false`. `.399 unstalls with a frontier-adapter-free solver.
+
+The two open moats are **underpowered-positive**, not refuted — so depth (a stronger method + more
+power) is well-motivated, NOT a doomed rerun. New SOTA verified this sweep (WebFetch-checked live
+abstracts; IDs confirmed):
+
+**A. IN-GENERATION energy/reward-guided discrete diffusion (exp4315 — the deepest open §5 axis):**
+- **arXiv:2602.22871** (Test-Time Scaling with Diffusion LMs via Reward-Guided Stitching) — sample diverse
+  diffusion reasoning trajectories, an *external* process reward model scores every intermediate step,
+  stitch highest-scoring steps into a composite rationale (+23.8%, up to 1.8x faster). → THE architecture
+  for Carnot's external partial-state scorer steering DiffusionGemma in-generation (oracle-distinct moat).
+- **arXiv:2602.01849** (Self-Rewarding Sequential Monte Carlo for Masked Diffusion LMs) — particle filter
+  using trajectory-level *self*-confidence as an implicit reward; NO external reward model. → the
+  must-beat INTRINSIC-CONFIDENCE baseline: Carnot's external verifier must add headroom beyond it (the
+  oracle-distinct test in generation).
+- **arXiv:2602.09424** (Reward-Guided Discrete Diffusion via Clean-Sample Markov Chain, CSMC) — training-free
+  MH chain over CLEAN samples, avoiding noisy intermediate rewards. → a principled guidance kernel
+  ("guide on clean states, not noisy intermediates").
+- **arXiv:2505.22524** (SMC importance weighting for discrete diffusion — flagged by exp4309) → secondary
+  particle-controller repair track wrapping DiffusionGemma candidates.
+
+**B. CROSS-DOMAIN selector generalization (exp4314 — rebuild the underpowered exp4305):**
+- **arXiv:2606.06098** (IR3DE linear domain-expert router — flagged by exp4309) → ridge-regression router
+  over normalized selector features, leave-one-domain-out, domain labels ablated at inference (replaces the
+  nearest-centroid router that underpowered in exp4305).
+- **arXiv:2601.09692** (Routing with Generated Data, CASCAL — flagged by exp4309) → synthetic train-only
+  selector-task pretraining before the held-out-domain test (more router training signal without target labels).
+- **arXiv:2509.24460** (ContextPRM — Contextual Coherence for Multi-Domain Test-Time Scaling) — shifts PRM
+  learning from domain-specific knowledge to domain-AGNOSTIC logical-flow/step-coherence; +6.5% over vote
+  across nine non-math domains, beats math-focused PRMs. → the transferable "verify the logical connection,
+  not the domain fact" principle for a domain-invariant Carnot verifier.
+
+**C. EFFICIENCY deploy + peers (exp4316 — deploy the hardened exp4303 win):**
+- **arXiv:2510.14913** (Budget-aware Discriminative Verification — already known, flagged by exp4309) → the
+  cascade policy: cheap discriminative energy scoring first, escalate only low-margin cases to the LLM judge;
+  report accuracy/cost vs always-judge and always-energy.
+- **arXiv:2506.18203** (Weaver — Shrinking the Generation-Verification Gap with Weak Verifiers) — weak-verifier
+  ensemble (no labels) distilled into a 400M cross-encoder, reaching o3-mini accuracy. → closest external
+  PEER to Carnot's verifier-ensemble + efficiency-parity claim at once (cite as prior art).
+- **arXiv:2603.03417** (Parallel Test-Time Scaling with Multi-Sequence Verifiers, MSV) — a lightweight
+  verifier scoring each candidate CONDITIONED on the full sampled set (+6% best-of-64 at <half latency). →
+  independent evidence the SET-conditioned scoring (Carnot's set-encoder) beats per-candidate scoring.
+
+**D. ARC north-star unstall + execution-grounding (exp4317 / exp4319):**
+- **arXiv:2512.24156** (Graph-Based Exploration for ARC-AGI-3) — TRAINING-FREE agent: segment frames,
+  prioritize by salience, maintain a state-transition graph, shortest-path to untested state-action pairs;
+  median 30/52 levels with NO learning. → the frontier-adapter-FREE solver to unstall ARC (the exp4307
+  failure was a missing adapter) AND the action-pruning baseline a verifier-routed agent must beat.
+- **arXiv:2603.24621** (ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence — the benchmark paper)
+  — turn-based environments, infer goal+dynamics+plan, Relative Human Action Efficiency (RHAE) scoring. →
+  the canonical north-star target + the efficiency metric to report.
+- **arXiv:2507.15877** (Out-of-Distribution Generalization in the ARC-AGI Domain) — execution-guided neural
+  program synthesis OUTPERFORMS test-time fine-tuning for novel composition; TTFT mostly elicits
+  in-distribution knowledge. → evidence that execution-grounding > weight-mutation (supports the off-ARC
+  execution-verifier transfer, exp4319).
+
+**E. Self-learning WITHOUT weight mutation (context for exp4318):**
+- **arXiv:2605.26356** (In-Context Optimization for RAG: A Gradient-Descent Perspective) — frozen retriever +
+  backbone, a context-conditioned forward-pass update approaching gradient adaptation at far lower per-query
+  cost. → the cleanest "adapt without weight mutation" template (Carnot's continuous self-learning tier).
+- (CAUTION carried from the `.398 sweep: **arXiv:2601.11443** TTARAG DOES update weights at inference — it is
+  NOT a no-weight-mutation exemplar; cite only as a weight-updating-TTA contrast.)
+
+**Bottom line for .399:** (A) rebuild the in-generation moat with external-PRM reward-guided step-stitching
+(2602.22871), must-beat self-reward SMC (2602.01849); (B) rebuild the cross-domain selector with an IR3DE
+linear router (2606.06098) + CASCAL generated-data pretrain (2601.09692) + ContextPRM coherence features
+(2509.24460); (C) deploy the hardened efficiency verifier as a budget-aware cascade router (2510.14913),
+peers Weaver (2506.18203) / MSV (2603.03417); (D) unstall ARC with the training-free graph-explore solver
+(2512.24156, benchmark 2603.24621); off-ARC execution transfer grounded by 2507.15877.
+
+Sources (this sweep, all WebFetch-verified): arxiv.org/abs/{2602.22871, 2602.01849, 2602.09424, 2606.06098,
+2601.09692, 2509.24460, 2510.14913, 2506.18203, 2603.03417, 2512.24156, 2603.24621, 2507.15877, 2605.26356}.
