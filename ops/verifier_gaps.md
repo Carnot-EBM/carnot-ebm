@@ -1388,8 +1388,10 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - priority: high (the foundation of any live-submission capability)
 
 ### GAP-ARC-STRATEGY-ROUTER: route to a solving STRATEGY-class, not just a heuristic
-- status: building (routing layer SHIPPED 2026-06-17 — python/carnot/agentic/arc_strategy_router.py;
-  remaining: frame-only solvers for the checkpoint_multirun + timed_trap_aware classes)
+- status: building (routing layer + ALL FOUR class solvers SHIPPED 2026-06-17 —
+  arc_strategy_router.py + arc_maze_planner.py {checkpoint_multirun_plan reproduces tn36 L6,
+  timed_trap_plan reproduces tn36 L7 = first L7 solve}; remaining: frame-only induction of each
+  class's MODEL — the program-editor transition verifier + the maze MazeModel from frames)
 - evidence: arc_router routed only {bfs,cell_count,region_count} goal-distance heuristics with no
   awareness of mechanic CLASSES. NOW: arc_strategy_router is the Tier-1 STRATEGY layer above it —
   route_for_game(game, mechanic=...) maps a detected mechanic to its strategy and SHORT-CIRCUITS the

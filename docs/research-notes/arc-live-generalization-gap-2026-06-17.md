@@ -221,3 +221,32 @@ Net of the three links the operator asked for: an unseen ARC-AGI-3 game can now 
 frame-only, (2) ROUTED to a solving strategy class, and (3) for graph-explore, solved; for
 program-editor, the routing + frame-only control are done and the remaining work is the offline
 transition verifier (Carnot's verifier-as-product thesis), not more routing.
+
+## NEXT LINK DONE: checkpoint_multirun + timed_trap_aware solvers wired (tn36 L7 first solve) (2026-06-17)
+
+The two strategy classes that were `wired: False` are now WIRED to a reusable, game-agnostic planner
+`python/carnot/agentic/arc_maze_planner.py` (extracted from the tn36 per-game RE):
+
+- **`checkpoint_multirun_plan`** — waypoint BFS start→checkpoints→target, each edge a ≤n-move
+  collision-free leg (a run ending on a checkpoint advances the object's base). Reproduces tn36 L6.
+- **`timed_trap_plan`** — the NEW timed-state planner: the same staged routing where each leg is a BFS
+  over (position, run-slot-index) that respects the blinking-spike schedule (invisible slots 0–2,
+  visible 3–5, a death-check on the post-slot-2 toggle, plus the residual hidden hitbox while
+  invisible). It **solves tn36 L7 — the first L7 solve** — found by search and **validated against the
+  real env + reproduction-gated** (`reached L7 in 102 clicks, reproduced=True`). Winning plan:
+  `[up,up,right,right,right,down]→cp(53,24)`, `[up×4]→cp(53,8)`, `[down,left,left,left,up]→target(41,8)`.
+
+Both planners operate on a generic `MazeModel` (object box, walls, checkpoints, hazard boxes, the
+move-code map + hazard cadence) — NOT on internal game state. For tn36 the model is read from internal
+state (`scripts/arc3_tn36_offline_solver.py` builds it and validates the plan against the real env);
+the **frame-only MazeModel induction** (walls/checkpoints/hazard-cadence from frames) is the documented
+live port — the same honest pattern as the program-editor strategy (the routing + algorithm are done;
+the frame-only model-extraction is the remaining live piece). The planners are pure + unit-tested on
+synthetic models (`tests/python/test_arc_maze_planner.py`, 6 tests, independent re-walk correctness),
+and the strategy router now reports all four taxonomy classes WIRED. Registry: tn36 `levels_reproduced:
+7`, `reproducible_total_levels: 22`.
+
+So all four discovered mechanic classes (program_editor, graph_explore, checkpoint_multirun,
+timed_trap_aware) now route to a real solver. The remaining live-generalization work is uniformly the
+**frame-only induction of each class's model** (the program-editor transition verifier; the maze
+MazeModel from frames) — a verifier/perception build, not a routing or planning gap.

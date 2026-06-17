@@ -23,6 +23,7 @@ toggle at the end of slot (invisible_slots-1). A losing/checkpoint run fires an 
 (mid-run + end-of-run), so every run starts with the band invisible again — the schedule holds per
 leg. Other games may toggle on a different cadence; `invisible_slots` makes that explicit.
 """
+
 from __future__ import annotations
 
 from collections import deque
@@ -40,15 +41,15 @@ class MazeModel:
     object_wh: tuple[int, int]
     start: Cell
     target: Cell
-    walls: list[Box]                       # collision REVERTS the move (not lethal)
-    checkpoints: list[Cell]                # ending a run here advances the base
-    move_codes: list[tuple[Cell, int]]     # [((dx,dy), command_code), ...] the 4 steps
-    settle_code: int                       # the no-op padding code
-    n_slots: int                           # program length per run
+    walls: list[Box]  # collision REVERTS the move (not lethal)
+    checkpoints: list[Cell]  # ending a run here advances the base
+    move_codes: list[tuple[Cell, int]]  # [((dx,dy), command_code), ...] the 4 steps
+    settle_code: int  # the no-op padding code
+    n_slots: int  # program length per run
     bounds: int = 64
-    spikes_visible: list[Box] = field(default_factory=list)   # lethal when visible (full band)
-    spikes_hidden: list[Box] = field(default_factory=list)    # lethal when invisible (residual)
-    invisible_slots: int = 3               # slots [0, this) are invisible; this.. are visible
+    spikes_visible: list[Box] = field(default_factory=list)  # lethal when visible (full band)
+    spikes_hidden: list[Box] = field(default_factory=list)  # lethal when invisible (residual)
+    invisible_slots: int = 3  # slots [0, this) are invisible; this.. are visible
 
 
 def _overlap(ax: int, ay: int, aw: int, ah: int, b: Box) -> bool:
@@ -79,21 +80,23 @@ def _leg(model: MazeModel, src: Cell, dst: Cell, timed: bool) -> Optional[list[i
     seen = {(src, 0)}
     while q:
         (x, y), idx, codes = q.popleft()
-        if (x, y) == dst and (not timed or (
-                not _spike_death(model, x, y, True) and not _spike_death(model, x, y, False))):
+        if (x, y) == dst and (
+            not timed
+            or (not _spike_death(model, x, y, True) and not _spike_death(model, x, y, False))
+        ):
             return codes + [model.settle_code] * (n - len(codes))
         if idx >= n:
             continue
         for (dx, dy), code in steps:
             nx, ny = x + dx, y + dy
             if _collide(model, nx, ny):
-                nx, ny = x, y                          # wall collision reverts the move
+                nx, ny = x, y  # wall collision reverts the move
             if timed:
                 visible = idx >= model.invisible_slots
                 if _spike_death(model, nx, ny, visible):
-                    continue                            # dies during this slot's move-check
+                    continue  # dies during this slot's move-check
                 if idx == model.invisible_slots - 1 and _spike_death(model, nx, ny, True):
-                    continue                            # dies on the visibility toggle after this slot
+                    continue  # dies on the visibility toggle after this slot
             st = ((nx, ny), idx + 1)
             if st in seen:
                 continue
