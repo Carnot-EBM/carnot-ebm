@@ -656,6 +656,58 @@ verifiers:
     exp4333_e3_ft09_reproduced_levels: 0
     exp4333_e3_ft09_residual_mismatch_class: missing_world_model_rule_gap_actions_6
     exp4333_e3_ft09_verifier_best_accuracy: 0.1
+    eval_exp_4344: results/experiment_4344_verifier_registry_gaps_hygiene.json
+    exp4344_regression_guard_passed: true
+    exp4344_arc1_rule_exec_vote_pass2: 0.4516
+    exp4344_arc1_rule_exec_gated_pass2: 0.5806
+    exp4344_arc1_headroom_recovered: 4
+    exp4344_arc1_vote_wins_lost: 0
+    exp4344_v401_state: in_generation_moat_replicated__e3_ar25_sc25_reproduced__ka59_hidden_step_counter_gap__action_role_transfer_third_null_retired
+    exp4344_available_artifact_keys:
+    - 4338_in_generation_moat
+    - 4339_e3_ar25
+    - 4340_e3_ka59
+    - 4341_e3_sc25
+    - 4342_action_role_transfer
+    exp4344_missing_upstream_artifacts: []
+    exp4344_flagged_artifacts_excluded: []
+    exp4344_filled_gaps:
+    - GAP-DIFFUSIONGEMMA-SECOND-CORPUS-LEAK-FREE-SCORER-4325
+    exp4344_in_generation_artifact: results/experiment_4338_in_generation_moat_replicate_leak_robust.json
+    exp4344_in_generation_moat_replicates: true
+    exp4344_in_generation_controls_differentiated: true
+    exp4344_scorer_leak_recheck_passed: true
+    exp4344_in_generation_benchmark_n: 240
+    exp4344_in_generation_carnot_minus_best_control_delta: 0.358333
+    exp4344_in_generation_replication_ci95:
+    - 0.283333
+    - 0.4375
+    exp4344_e3_reproduced_levels_total: 2
+    exp4344_e3_offline_reproduced_any: true
+    exp4344_learned_encoder_artifact: results/experiment_4342_self_learning_action_role_cross_game_encoder.json
+    exp4344_learned_encoder_transfer_helps: false
+    exp4344_cross_game_state_reduction: 1.00635593220339
+    exp4344_cross_game_state_reduction_ci95:
+    - 1.0
+    - 1.0168354897287482
+    exp4344_cross_game_n_held_out_levels: 13
+    exp4344_cross_game_third_null_retired: true
+    exp4344_gaps_logged:
+    - GAP-E3-WORLD-MODEL-RULE-AR25-4339
+    - GAP-E3-WORLD-MODEL-RULE-KA59-4340
+    - GAP-4342
+    exp4344_e3_ar25_offline_reproduced: true
+    exp4344_e3_ar25_reproduced_levels: 1
+    exp4344_e3_ar25_residual_mismatch_class: missing_world_model_rule_gap_hidden_undo_stack_action7
+    exp4344_e3_ar25_verifier_best_accuracy: 0.8875
+    exp4344_e3_ka59_offline_reproduced: false
+    exp4344_e3_ka59_reproduced_levels: 0
+    exp4344_e3_ka59_residual_mismatch_class: hidden_step_counter_hud_gap
+    exp4344_e3_ka59_verifier_best_accuracy: 0.5625
+    exp4344_e3_sc25_offline_reproduced: true
+    exp4344_e3_sc25_reproduced_levels: 1
+    exp4344_e3_sc25_residual_mismatch_class: none
+    exp4344_e3_sc25_verifier_best_accuracy: 1.0
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -4580,3 +4632,19 @@ verifiers:
     - GAP-E3-WORLD-MODEL-RULE-FT09-4329
     - GAP-4331
     eval_exp_4333: results/experiment_4333_verifier_registry_gaps_hygiene.json
+  - role_id: oracle_distinct_v401_registry_gaps_hygiene_4344
+    experiment: results/experiment_4344_verifier_registry_gaps_hygiene.json
+    role: registry_gap_manifest_hygiene_v401
+    status: v401_outcomes_recorded_with_robust_availability
+    v401_state: in_generation_moat_replicated__e3_ar25_sc25_reproduced__ka59_hidden_step_counter_gap__action_role_transfer_third_null_retired
+    in_generation_moat_replicates: true
+    e3_reproduced_levels_total: 2
+    learned_encoder_transfer_helps: false
+    cross_game_state_reduction: 1.00635593220339
+    gap_ids_logged:
+    - GAP-E3-WORLD-MODEL-RULE-AR25-4339
+    - GAP-E3-WORLD-MODEL-RULE-KA59-4340
+    - GAP-4342
+    filled_gap_ids:
+    - GAP-DIFFUSIONGEMMA-SECOND-CORPUS-LEAK-FREE-SCORER-4325
+    eval_exp_4344: results/experiment_4344_verifier_registry_gaps_hygiene.json

@@ -1177,12 +1177,12 @@ registry version that closed them when a new verifier captures a previously-open
 - priority: medium
 
 <!-- exp4333-gap-diffusiongemma-second-corpus-leak-free-scorer-4325:start -->
-### GAP-DIFFUSIONGEMMA-SECOND-CORPUS-LEAK-FREE-SCORER-4325: Exp 4333 .400 verifier gap update
-- status: open
-- evidence: results/experiment_4325_in_generation_moat_replicate_second_corpus.json; in_generation_moat_replicates=False; scorer_leak_recheck_passed=False; benchmark_n=0; answer_masked_auroc=0.549719.
-- failure mode: the second-corpus in-generation replication did not run decision-grade rows because the partial-state scorer failed the independent leak recheck
-- missing discriminator: corpus-general leak-free partial-state scorer that remains predictive after answer-bearing cells are masked
-- candidate design: retrain and calibrate the scorer on multiple oracle-distinct corpora with fresh masked held-out AUROC gates before accepting another guided-generation moat
+### GAP-DIFFUSIONGEMMA-SECOND-CORPUS-LEAK-FREE-SCORER-4325: Exp 4344 .401 filled verifier gap update
+- status: filled (leak_robust_in_generation_partial_state_scorer_exp4338)
+- evidence: results/experiment_4338_in_generation_moat_replicate_leak_robust.json; in_generation_moat_replicates=True; controls_differentiated=True; scorer_leak_recheck_passed=True; benchmark_n=240; replication_ci95=[0.283333, 0.4375].
+- failure mode: the prior second-corpus leak-free scorer gap is filled by the leak-robust .401 replication.
+- missing discriminator: none; the scorer now passes the answer-masked held-out leak recheck for this replication scope.
+- candidate design: preserve the exp4338 leak-robust scorer protocol as the in-generation moat gate.
 - priority: high
 <!-- exp4333-gap-diffusiongemma-second-corpus-leak-free-scorer-4325:end -->
 
@@ -1337,3 +1337,32 @@ BFS and DFS and routers" — needs two more label sets the router schema already
 - Reproducibility checksum: `9c238354e5ff765c0291ff09777e55cc0dd8661416b71bd69bc4692b7af4d6ea`
 - Gap: bounded explore-verify-plan run did not satisfy the offline reproduced L1 gate.
 
+<!-- exp4344-gap-e3-world-model-rule-ar25-4339:start -->
+### GAP-E3-WORLD-MODEL-RULE-AR25-4339: Exp 4344 .401 verifier gap update
+- status: open_residual_after_l1_reproduction
+- evidence: results/experiment_4339_e3_explore_verify_plan_ar25.json; game=ar25; offline_reproduced=True; reproduced_levels=1; verifier_best_accuracy=0.8875; residual_mismatch_class=missing_world_model_rule_gap_hidden_undo_stack_action7.
+- failure mode: E3 induced world model for ar25 still exposes residual mismatch missing_world_model_rule_gap_hidden_undo_stack_action7 after the .401 run
+- missing discriminator: ar25 executable world-model rule coverage for missing_world_model_rule_gap_hidden_undo_stack_action7
+- candidate design: mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate
+- priority: high
+<!-- exp4344-gap-e3-world-model-rule-ar25-4339:end -->
+
+<!-- exp4344-gap-e3-world-model-rule-ka59-4340:start -->
+### GAP-E3-WORLD-MODEL-RULE-KA59-4340: Exp 4344 .401 verifier gap update
+- status: open
+- evidence: results/experiment_4340_e3_explore_verify_plan_ka59.json; game=ka59; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.5625; residual_mismatch_class=hidden_step_counter_hud_gap.
+- failure mode: E3 induced world model for ka59 still exposes residual mismatch hidden_step_counter_hud_gap after the .401 run
+- missing discriminator: ka59 executable world-model rule coverage for hidden_step_counter_hud_gap
+- candidate design: mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate
+- priority: high
+<!-- exp4344-gap-e3-world-model-rule-ka59-4340:end -->
+
+<!-- exp4344-gap-4342:start -->
+### GAP-4342: Exp 4344 .401 verifier gap update
+- status: open_third_null_retired_direction
+- evidence: results/experiment_4342_self_learning_action_role_cross_game_encoder.json; upstream_missing_verifier_gap=true.
+- failure mode: game-agnostic action-role interaction value head did not produce a decision-grade held-out OfflineSolver state reduction
+- missing discriminator: transferable object-interaction value representation
+- candidate design: larger interaction encoder, richer affordance discovery, or more reproduced traces before retiring cross-game value transfer
+- priority: high
+<!-- exp4344-gap-4342:end -->

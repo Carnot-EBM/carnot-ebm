@@ -18578,6 +18578,93 @@ gaps, and manifest files. If the registry, gaps, or manifest cannot parse, then
 it writes `honest_verdict=blocked_ledgers_unparseable` and stops without
 reconciliation.
 
+### REQ-VERIFY-4344: Verifier Registry And Gaps Hygiene For .401 Truth
+
+The repository SHALL provide Exp 4344 at
+`python/carnot/experiment_4344_verifier_registry_gaps_hygiene.py` and
+`results/experiment_4344_verifier_registry_gaps_hygiene.py` to reconcile
+`ops/verifier_registry.yaml`, `ops/verifier_gaps.md`, and
+`ops/exclusion_manifest.yaml` to the `.401` verifier truth. Before mutating
+ledgers, the runner SHALL parse all three ledgers with YAML-safe loading for
+the registry and exclusion manifest and Markdown read for the gap ledger. If
+any required ledger cannot parse, the runner SHALL write a terminal artifact
+with `honest_verdict=blocked_<file>_unparseable`, bare bool
+`regression_guard_passed=false`, bare bool `registry_reconciled=false`, bare
+bool `manifest_reconciled=false`, bare int `gaps_logged=0`, and SHALL stop
+without mutating the registry, gaps, or manifest.
+
+The runner SHALL use the robust `aggregate_available_report_gaps` helper from
+`python/carnot/reporting/capstone_aggregate_available.py` for the `.401`
+outcome artifacts
+`results/experiment_4338_in_generation_moat_replicate_leak_robust.json`,
+`results/experiment_4339_e3_explore_verify_plan_ar25.json`,
+`results/experiment_4340_e3_explore_verify_plan_ka59.json`,
+`results/experiment_4341_e3_sc25_reproduction.json`, and
+`results/experiment_4342_self_learning_action_role_cross_game_encoder.json`.
+Missing or flagged `.401` artifacts SHALL be recorded as per-axis gaps in the
+availability report and SHALL NOT hard-block reconciliation of other available
+axes. The runner SHALL cite Exp 4333 as the `.400` hygiene baseline and reuse
+its GAP-4 execution regression guard helper so the ARC-1 vote pass@2 `0.4516`,
+gated pass@2 `0.5806`, `headroom_recovered=4`, and `vote_wins_lost=0` do not
+regress.
+
+The runner SHALL record the `.401` outcomes in the GAP-4 / oracle-distinct ARC
+registry slot: Exp 4338 `in_generation_moat_replicates=true`,
+`controls_differentiated=true`, `scorer_leak_recheck_passed=true`,
+`benchmark_n=240`, `carnot_minus_best_control_delta=0.358333`, and
+`replication_ci95=[0.283333,0.4375]`; Exp 4339 ar25 and Exp 4341 sc25
+`offline_reproduced=true` with one reproduced level each; Exp 4340 ka59
+`offline_reproduced=false`, `reproduced_levels=0`, and
+`residual_mismatch_class=hidden_step_counter_hud_gap`; and Exp 4342
+`learned_encoder_transfer_helps=false`,
+`cross_game_state_reduction=1.00635593220339`,
+`cross_game_state_reduction_ci95=[1.0,1.0168354897287482]`, and
+`n_held_out_levels=13`.
+
+The gaps ledger SHALL append or update `.401` missing-verifier backlog entries
+using the schema in `ops/verifier_gaps.md`. At minimum the runner SHALL log
+`GAP-E3-WORLD-MODEL-RULE-AR25-4339` for the residual
+`missing_world_model_rule_gap_hidden_undo_stack_action7`,
+`GAP-E3-WORLD-MODEL-RULE-KA59-4340` for the residual `hidden_step_counter_hud_gap`,
+and the upstream `GAP-4342` action-role cross-game transfer gap. The exclusion
+manifest SHALL reflect the action-role / cross-game value-transfer direction
+retirement if Exp 4342 is the third null. Because Exp 4338 replicated the
+in-generation moat, no in-generation moat retirement SHALL be added for `.401`.
+
+The terminal artifact SHALL write
+`results/experiment_4344_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, bare bool
+`registry_reconciled`, bare bool `manifest_reconciled`, bare int `gaps_logged`,
+`reproducibility_checksum`, `v401_outcomes`, `availability_report`,
+`random_seed`, `model_specs`, `field_principles`, `spec_refs`, `duration_s`,
+and `inference_substrate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records registry/gaps/manifest reconciled to .401 truth + the GAP-4 regression-guard result.`;
+`regression_guard_passed` = `BARE bool: the GAP-4 ARC execution win did not regress (the execution-grounded baseline is preserved).`;
+`registry_reconciled` = `BARE bool: ops/verifier_registry.yaml reflects the .401 verifier state (filled gaps moved to status: filled).`;
+`manifest_reconciled` = `BARE bool: ops/exclusion_manifest.yaml reflects the .401 retirements (the in-generation moat if exp4338 retired it; the cross-game-transfer direction if exp4342 is a 3rd null).`;
+`gaps_logged` = `BARE int: the count of .401 missing-verifier gaps appended to ops/verifier_gaps.md (the E3 residual-mismatch gaps + any new failure modes) -- the build backlog for future verifiers.`;
+`reproducibility_checksum` = `Hash of the reconciled registry/gaps/manifest state; lets a third party verify the reconciliation.`
+
+### SCENARIO-VERIFY-4344: .401 Reconciliation Guards GAP-4 And Logs Residual Gaps
+
+Given the registry, gaps, and exclusion manifest parse, the `.401`
+in-generation moat, E3 ar25/ka59/sc25, and action-role cross-game transfer
+artifacts may be partially available, and the Exp 4333 robust hygiene baseline
+is present, when Exp 4344 runs, then it uses the robust helper to record missing
+or flagged `.401` artifacts as per-axis availability gaps rather than blocking
+the entire run, runs the GAP-4 execution regression guard against the `.400`
+recorded replay, writes `regression_guard_passed=true`, reconciles the registry
+to the available `.401` truth, records the Exp 4338 in-generation replication,
+the ar25 and sc25 reproduced E3 levels, the ka59 residual
+`hidden_step_counter_hud_gap`, and the Exp 4342 action-role transfer null, logs
+`GAP-E3-WORLD-MODEL-RULE-AR25-4339`,
+`GAP-E3-WORLD-MODEL-RULE-KA59-4340`, and `GAP-4342` through the bare int
+`gaps_logged=3`, records the cross-game-transfer retirement in the exclusion
+manifest while leaving the in-generation moat unretired, and declares a
+reproducibility checksum over the reconciled registry, gaps, and manifest
+files. If the registry, gaps, or manifest cannot parse, then it writes
+`honest_verdict=blocked_<file>_unparseable` and stops without reconciliation.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at

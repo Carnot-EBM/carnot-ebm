@@ -572,3 +572,22 @@ retired_extras:
   - cross-domain verifier selection
   - cross_domain_selector_ir3de_cascal
   - family-invariant cross-domain selection rerun
+- id: cross_game_value_transfer_retired_exp4342_v401
+  experiment_scope: ARC cross-game learned value-transfer direction after raw-frame,
+    small-frame, and action-role encoder nulls
+  reason: 'retire_if_same_verdict: Exp 4342 is the third cross-game transfer null
+    after Exp 4318 and Exp 4331; future cross-game value-transfer reruns need a new
+    discriminator, more reproduced traces, and operator authorization.'
+  experiment_ids:
+  - exp4318
+  - exp4331
+  - exp4342
+  retired_milestone: 2026.06.401
+  retired_by_artifact: results/experiment_4342_self_learning_action_role_cross_game_encoder.json
+  recorded_by_artifact: results/experiment_4344_verifier_registry_gaps_hygiene.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - cross-game value transfer
+  - cross_game_state_reduction rerun
+  - action-role cross-game encoder rerun
