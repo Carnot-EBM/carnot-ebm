@@ -1,0 +1,29 @@
+{
+  "experiment": "full_frame_only_maze_solve_validation",
+  "run_date": "2026-06-17",
+  "schema": "outer_loop_validation_v1",
+  "summary": "The FULL frame-only maze solve is wired end-to-end: a single frame -> complete MazeModel (object/target/walls/checkpoints/hazards) -> maze planner -> executed -> the real env WINS, for tn36 L6 (checkpoint-multirun) AND L7 (timed-trap, first L7 solve). Zero internal state on the perception path.",
+  "honest_verdict": "complete_full_frame_only_maze_solve_L6_and_L7_env_confirmed",
+  "inference_substrate": "frame_only_perception_plus_offline_codes_plus_maze_planner_validated_against_live_offline_arc_env",
+  "pipeline": "frame_to_maze_model (scripts/arc3_frame_induction.py) assembles arc_maze_planner.MazeModel from one frame -> checkpoint_multirun_plan / timed_trap_plan -> the leg-programs are executed in the real env.",
+  "frame_induced_fields": "object start + target (hollow-outline sprite attrs), WALLS (the structural colour decomposed into ROW-RUNS so concave passages stay open), CHECKPOINTS (dithered object-colour pads), HAZARD band (marker colours) + the residual hidden hitboxes (band left/right edges).",
+  "offline_fields": "move-codes (direction -> command code) + the invisible_slots cadence come from the offline program-editor transition model (atomic-run dynamics are not frame-inducible -- consistent across all findings).",
+  "results": {
+    "L6": {"mechanic": "checkpoint_multirun", "start": [33, 28], "target": [37, 8], "n_walls_rowruns": 50, "checkpoints": [[49, 20], [53, 4], [53, 28]], "hazard": false, "plan_legs": 2, "env_won": true},
+    "L7": {"mechanic": "timed_trap", "start": [41, 28], "target": [41, 8], "n_walls_rowruns": 25, "checkpoints": [[33, 12], [53, 8], [53, 24]], "hazard_band": [37, 16, 24, 4], "plan_legs": 3, "env_won": true}
+  },
+  "key_fix": "walls decomposed into ROW-RUNS not bounding boxes: the color-6 CC for L7's arch wall has a bbox that FILLS the interior passage at x[41,45) y[8,12) (open in the frame -> colours 4/11), which over-blocked the timed planner; row-runs preserve the gap and the timed plan is found. Also: induce_maze_sub_fields now excludes the target colour from hazard detection.",
+  "verifier_is_oracle": false,
+  "circularity_note": "Frame-only perception + offline-model planning; the final plan is execution-grounded (env-confirmed). NOT a moat / oracle-distinct claim.",
+  "random_seed": 4242,
+  "model_specs": ["frame-only perception (numpy/scipy.ndimage); arc_maze_planner; arc_program_editor_model codes; no LLM/GPU"],
+  "reproducibility_checksum": "full_frame_maze_L6_checkpoint_won_L7_timed_won_tn36",
+  "closes": "GAP-ARC-MAZE-MODEL-FRAME-INDUCTION end-to-end: the full live-generalization chain (DETECT -> ROUTE -> PERCEIVE -> PLAN -> env-confirmed SOLVE) now works frame-only for the program-editor MAZE class (L6 + L7), as it already did for the transform class (L1-L5).",
+  "cross_refs": [
+    "scripts/arc3_frame_induction.py:frame_to_maze_model",
+    "python/carnot/agentic/arc_maze_planner.py",
+    "python/carnot/agentic/arc_program_editor_model.py",
+    "tests/python/test_arc_maze_solve.py",
+    "docs/research-notes/arc-live-generalization-gap-2026-06-17.md"
+  ]
+}
