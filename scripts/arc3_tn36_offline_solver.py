@@ -1,26 +1,24 @@
 """tn36 offline solver — the captured per-game RE for the PROGRAM-EDITOR puzzle.
 
-tn36 (fully reverse-engineered 2026-06-17): the object runs a 5-slot MOVE-PROGRAM
+tn36 (fully reverse-engineered 2026-06-17): the object runs an N-slot MOVE-PROGRAM
 (`vkuvtkaerv`); each slot holds a command code (tn36.py:2171 okllwtboml: 0=settle,
 1=left, 2=right, 3=down, 33=up, 5/6/7/16=rotate, 8/9=scale+/-, 14/15/63=property).
 Step size CSPOIQWER=4. WIN = the object matches the target on FIVE attributes
 (x, y, scale, rotation, sjmtdfxdrc); running the program transforms the object, and if
 it lands on the target the level completes (else it resets to base).
 
-TOOL PALETTE (cracked): each slot has TWO BIT-buttons at (slotX, y=41) and (slotX, y=44):
-the y=41 button toggles bit0 (+1), the y=44 button toggles bit1 (+2). So code 3 (down)
-= BOTH buttons. Slot x-centers = 19 + 5*slot = {19,24,29,34,39}. RUN the program by
-clicking the object's sub-button `sxhtkytekm` (~36,55).
+THE TOOL PALETTE (fully mapped 2026-06-17): each slot is a 6-BIT code editor. Bit b's
+toggle-button is at (slot_x, slot_y_top + 3*b), for b in 0..5 (values 1,2,4,8,16,32).
+So ANY code is settable as the sum of its set bits: down(3)=bit0+bit1, up(33)=bit0+bit5,
+scale+(8)=bit3, rotate+90(5)=bit0+bit2, etc. The slot positions ARE READABLE from
+internal state (controller.pfyayhyovw[i].{x,y}) — they re-lay-out per level (L1: 5 slots,
+L2: 4 slots, different x/y), so the solver DISCOVERS them rather than hardcoding. RUN the
+program by clicking the object's sub-button `sxhtkytekm` (center, also discovered).
 
-This solver READS the object/target internal state, COMPUTES a program of directional
-moves (down/left/right — the codes reachable via the 2 bit-buttons) that nets the needed
-(dx,dy), maps it to the bit-toggle clicks + a run, and returns the click trajectory. It
-generalises L1's hand-found [3,3,3,3,3]; it does NOT yet handle levels needing up-move
-(code 33) / scale / rotation / property (those need buttons not yet mapped) — those abort
-with a clear reason, to be extended when a level needs them.
-
-L1: obj y13->target y33 (dy=+20=5 downs), dx=0 -> program [3,3,3,3,3], 7 clicks,
-reproduction-gated reproduced=True.
+This solver READS the object/target deltas + the button layout, COMPUTES a move-program
+that nets the deltas (down/up/left/right + scale; rotation/property when a level needs
+them), edits each slot to its code via the bit-toggle clicks, runs, and CHAINS levels.
+Reproduces L1 (program [3,3,3,3,3], 5 downs) and L2 ([33,33,33,33], 4 ups) — gated.
 """
 from __future__ import annotations
 
@@ -36,77 +34,98 @@ from carnot.agentic.arc_agi3_live_adapter import _game_action, _levels_completed
 from arcengine import GameAction  # noqa: E402
 
 STEP = 4                                  # CSPOIQWER
-NSLOTS = 5
-SLOT_X = [19 + 5 * i for i in range(NSLOTS)]   # {19,24,29,34,39}
-BIT0_Y, BIT1_Y = 41, 44                   # y=41 toggles +1, y=44 toggles +2
-RUN_XY = (36, 55)                         # the object sub-button sxhtkytekm
-# directional codes reachable via the 2 bit-buttons (0..3):
-SETTLE, LEFT, RIGHT, DOWN = 0, 1, 2, 3
+BIT_DY = 3                                # bit b button is BIT_DY*b below the slot top
+# command codes
+SETTLE, LEFT, RIGHT, DOWN, UP = 0, 1, 2, 3, 33
+SCALE_UP, SCALE_DOWN = 8, 9
+ROT = {90: 5, -90: 6, 180: 7, 270: 16}    # rotation delta (deg) -> code
+
+
+def _bz(env):
+    return env._game.fdksqlmpki.bzirenxmrg
 
 
 def _obj_tgt(env):
-    o = env._game.fdksqlmpki.bzirenxmrg.htntnzkbzu
-    t = env._game.fdksqlmpki.bzirenxmrg.aqszntqeae
-    g = lambda s, a: (s.x, s.y, s.scale, s.rotation, int(s.sjmtdfxdrc))  # noqa: E731
-    return g(o, "o"), g(t, "t")
+    bz = _bz(env)
+    o, t = bz.htntnzkbzu, bz.aqszntqeae
+    attrs = lambda s: (s.x, s.y, s.scale, s.rotation, int(s.sjmtdfxdrc))  # noqa: E731
+    return attrs(o), attrs(t)
 
 
-def _current_program(env):
-    return list(env._game.fdksqlmpki.bzirenxmrg.vupcwzjtxu.vkuvtkaerv)
+def _program(env):
+    return list(_bz(env).vupcwzjtxu.vkuvtkaerv)
 
 
-def compute_program(obj, tgt):
-    """Compute a <=5-move directional program netting (dx,dy). Returns (program, reason).
-    program is a length-5 list of codes in {0,1,2,3}; reason!='' means unsolvable here."""
+def _slot_tops(env):
+    """The (x, y_top) of each program slot, read from the controller's slot visuals."""
+    return [(int(s.x), int(s.y)) for s in _bz(env).vupcwzjtxu.pfyayhyovw]
+
+
+def _run_xy(env):
+    sx = _bz(env).sxhtkytekm
+    return (int(sx.x + sx.width // 2), int(sx.y + sx.height // 2))
+
+
+def _bit_clicks(slot_top, diff):
+    """Clicks to toggle the bits in `diff` for a slot at (x, y_top): bit b at (x, y_top+3b)."""
+    x, y0 = slot_top
+    return [(x, y0 + BIT_DY * b) for b in range(6) if (diff >> b) & 1]
+
+
+def compute_program(obj, tgt, n):
+    """Compute an n-slot move-program (list of codes) netting the obj->tgt deltas, or
+    (None, reason). Each slot is ONE move of STEP (or one scale/rotate step)."""
     (ox, oy, osc, orot, osj), (tx, ty, tsc, trot, tsj) = obj, tgt
-    if (osc, orot, osj) != (tsc, trot, tsj):
-        return None, "needs scale/rotation/property change (codes 8/9/5/6/7/14/15 — buttons not yet mapped)"
+    if osj != tsj:
+        return None, f"needs property change (sjmtdfxdrc {osj}->{tsj}; codes 14/15/63 not yet decoded)"
     dx, dy = tx - ox, ty - oy
     if dx % STEP or dy % STEP:
         return None, f"delta not a multiple of STEP={STEP} (dx={dx},dy={dy})"
     moves = []
-    if dy < 0:
-        return None, "needs UP movement (code 33 — button not yet mapped)"
-    moves += [DOWN] * (dy // STEP)
-    moves += [RIGHT] * (dx // STEP) if dx >= 0 else [LEFT] * (-dx // STEP)
-    if len(moves) > NSLOTS:
-        return None, f"needs {len(moves)} moves > {NSLOTS} slots (multi-run not yet implemented)"
-    program = moves + [SETTLE] * (NSLOTS - len(moves))
-    return program, ""
+    moves += [DOWN] * (dy // STEP) if dy > 0 else [UP] * (-dy // STEP)
+    moves += [RIGHT] * (dx // STEP) if dx > 0 else [LEFT] * (-dx // STEP)
+    moves += [SCALE_UP] * (tsc - osc) if tsc > osc else [SCALE_DOWN] * (osc - tsc)
+    if orot != trot:
+        d = (trot - orot) % 360
+        code = ROT.get(d) or ROT.get(d - 360)
+        if code is None:
+            return None, f"rotation delta {d} not in {{90,180,270,-90}}"
+        moves.append(code)
+    if len(moves) > n:
+        return None, f"needs {len(moves)} moves > {n} slots (multi-run not yet implemented)"
+    return moves + [SETTLE] * (n - len(moves)), ""
 
 
-def _edit_clicks(current, target):
-    """Clicks to morph the slot codes from `current` to `target` via the bit-toggle buttons."""
-    clicks = []
-    for i in range(NSLOTS):
-        diff = current[i] ^ target[i]          # bits that must toggle
-        if diff & 1:
-            clicks.append((SLOT_X[i], BIT0_Y))
-        if diff & 2:
-            clicks.append((SLOT_X[i], BIT1_Y))
-    return clicks
-
-
-def solve(env):
-    """Return (trajectory, reached_level). trajectory = [{action:6, data:{x,y}}, ...]."""
+def solve(env, max_level=10):
+    """Solve as many tn36 levels as possible (up to max_level). Returns (trajectory,
+    reached_level); trajectory = [{action:6, data:{x,y}}, ...] from reset."""
     f = env.reset()
-    obj, tgt = _obj_tgt(env)
-    program, reason = compute_program(obj, tgt)
-    if program is None:
-        return None, reason
-    clicks = _edit_clicks(_current_program(env), program) + [RUN_XY]
-    traj = [{"action": 6, "data": {"x": cx, "y": cy}} for cx, cy in clicks]
-    for cx, cy in clicks:
-        f = env.step(_game_action(GameAction, 6), data={"x": cx, "y": cy})
-    return traj, _levels_completed(f)
+    traj, level = [], _levels_completed(f)
+    while level < max_level:
+        program, reason = compute_program(*_obj_tgt(env), n=len(_program(env)))
+        if program is None:
+            break
+        cur, tops = _program(env), _slot_tops(env)
+        clicks = []
+        for i, top in enumerate(tops):
+            clicks += _bit_clicks(top, cur[i] ^ program[i])
+        clicks.append(_run_xy(env))
+        for cx, cy in clicks:
+            traj.append({"action": 6, "data": {"x": cx, "y": cy}})
+            f = env.step(_game_action(GameAction, 6), data={"x": cx, "y": cy})
+        new = _levels_completed(f)
+        if new <= level:
+            break
+        level = new
+    return traj, level
 
 
 def main() -> int:
     arc = kit.offline_arcade()
     env = arc.make("tn36", scorecard_id=arc.open_scorecard())
     traj, lvl = solve(env)
-    if traj is None:
-        print(f"tn36 solve aborted: {lvl}")
+    if not traj:
+        print("tn36 solve produced no actions")
         return 1
     labels = [json.dumps(t) for t in traj]
 
@@ -117,6 +136,12 @@ def main() -> int:
     gate = kit.reproduce("tn36", labels, apply, claimed_level=lvl)
     print(f"tn36 COMPUTED solve: reached L{lvl} in {len(traj)} clicks; "
           f"reproduced={gate['reproduced']} claimed_level={gate.get('claimed_level')}")
+    if lvl >= 1 and gate["reproduced"]:
+        Path("results/arc_explore_trajectory_tn36.json").write_text(json.dumps(
+            {"game": "tn36", "reached_level": lvl, "trajectory": traj,
+             "method": "program_editor_RE_general",
+             "note": "6-bit-per-slot code editor; layout read from pfyayhyovw; chains levels"}, indent=2))
+        print("WROTE results/arc_explore_trajectory_tn36.json")
     return 0 if (lvl >= 1 and gate["reproduced"]) else 1
 
 
