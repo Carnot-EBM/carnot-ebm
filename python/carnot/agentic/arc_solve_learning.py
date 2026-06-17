@@ -123,10 +123,30 @@ def recommend_approach(target_game: str) -> dict:
         "target_game": target_game,
         "target_features": {**tf, "win_kw": sorted(tf["win_kw"])},
         "recommended": ranked[:3],
+        "heuristic_policy": _heuristic_policy(),
         "general_gotchas": reg.get("general_gotchas", []),
         "guidance": ("Start from the top-ranked solved game's solver + reuse its action-model "
                      "and gotchas; only reverse-engineer the DELTA. Import arc_solver_kit; run "
                      "the reproduction gate; append new mechanics/dead-ends to the registry."),
+    }
+
+
+def _heuristic_policy() -> dict:
+    """The learned WHEN-to-use-which-heuristic policy (arc_heuristic_select). The choice is
+    DATA-DRIVEN per game and cannot be decided from survey features alone (it needs the per-
+    action cell-impact, measured from a few transitions) — so the policy is: run the portfolio
+    selector ONCE a win-state is available; for a first-ever solve (no target) use pure BFS."""
+    return {
+        "selector": "arc_heuristic_select.select_best(game, win, transitions, mask_hud=...)",
+        "feature": "per-action cell impact (median cells changed per move) from banked transitions",
+        "rule": {
+            "no_win_state_yet (first solve)": "pure BFS — a goal-distance heuristic needs a target",
+            "high cell-impact (>= ~40 cells/action)": "misplaced_region_distance (8-conn) — move-aligned",
+            "low cell-impact (< ~40)": "cell_count_distance (Hamming) — cell-count ≈ move-count",
+        },
+        "default_if_unmeasured": ("region_count — it NEVER regressed across the 8-game validation "
+                                  "and wins the high-impact games; cell_count only when low-impact"),
+        "captured": "reuse gap_fills/<game>_goal_distance.py first (no recompute) when present",
     }
 
 

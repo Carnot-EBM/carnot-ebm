@@ -1245,3 +1245,54 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: larger learned frame encoder, more reproduced solved traces, or adapter-conditioned value head with a hardware-portable path
 - priority: medium
 <!-- exp4333-gap-4331:end -->
+
+<!-- arc-search-heuristic-gaps-2026-06-17:start -->
+## Missing SEARCH-HEURISTIC classes (move-distance program, 2026-06-17)
+
+The goal-distance heuristic is a cheap, oracle-distinct PROGRESS verifier for the search (it
+ranks states by estimated moves-to-win). We now have two — `cell_count_distance` (low cell-impact
+games) and `misplaced_region_distance` (high cell-impact games) — selected dynamically by
+`arc_heuristic_select`. The 8-game validation surfaced the heuristic CLASSES we still lack:
+
+### GAP-ARC-HEURISTIC-DEEP-SPARSE: deep-sparse-win progress signal (wa30-class)
+- status: open
+- evidence: /tmp move-dist A/B + registry HARD TAIL note — wa30 (~33-deep keyboard nav) is NOT
+  solved by BFS, cell_count, OR region_count at budget 8000 (all no-advance); cross-game verifier
+  also did not transfer (66s vs 77s, both no-advance).
+- failure mode: region-count is flat early in a long sparse game (every far-from-win state has a
+  similar number of wrong regions), so it gives no usable gradient until near the goal; BFS
+  exhausts the budget before reaching the win.
+- missing discriminator: a progress signal that increases monotonically along a LONG plan before
+  the grid visibly approaches the win (sub-goal / bottleneck / reachability distance, not surface).
+- candidate design: learned game-specific value head (per-game RE / adapter), OR a sub-goal
+  decomposition heuristic, OR depth-biased novelty (v3) with a much larger budget.
+- priority: high (the deep tail is the bulk of the unsolved games)
+
+### GAP-ARC-HEURISTIC-OBJECT-DISPLACEMENT: manhattan-to-target for piece-moving games
+- status: open
+- evidence: r11l region-count finds the optimal path, but for games where a specific agent/object
+  must REACH a target cell, region-count only counts "wrong regions" — it cannot tell a piece 2
+  cells from its goal from one 20 cells away (both = 1 wrong region).
+- failure mode: region-count is move-aligned for FIX-IN-PLACE edits but blind to DISTANCE for
+  move-an-object-to-a-target mechanics; it under-discriminates within an equal region-count tier.
+- missing discriminator: summed manhattan distance of each misplaced object to its WIN position
+  (object correspondence + displacement), as a tie-breaker within equal region counts.
+- candidate design: a `manhattan_displacement_distance(win)` heuristic (match components grid↔win
+  by color/shape, sum centroid manhattan); register in arc_heuristic_select; select for spatial
+  piece-moving games (survey is_spatial_planning + low region-count variance).
+- priority: medium
+
+### GAP-ARC-HEURISTIC-CONDITION-WIN: predicate-distance for non-target-grid wins
+- status: open
+- evidence: all current goal-distance heuristics need a concrete win GRID to diff against; games
+  whose win is a CONDITION ("all X collected", "counter == N") have no single target grid, so the
+  heuristics are inapplicable (and a banked L1 win-grid mis-grounds a different level).
+- failure mode: a grid-diff heuristic grounded on one level's win-state does not transfer to other
+  levels of the same game when levels are different puzzles sharing only the win CONDITION.
+- missing discriminator: distance measured against the win PREDICATE (count of unmet sub-conditions
+  / distance to the condition boundary), not a fixed grid — ties this to the GameAdapter
+  hand_verifier as the goal signal.
+- candidate design: a `condition_distance(hand_verifier)` heuristic that scores how close a frame
+  is to satisfying the adapter's win predicate; level-general by construction.
+- priority: medium
+<!-- arc-search-heuristic-gaps-2026-06-17:end -->
