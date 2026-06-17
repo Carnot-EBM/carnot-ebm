@@ -1,0 +1,260 @@
+{
+  "arc_registry_path": "ops/arc_solve_registry.yaml",
+  "capstone_stamp_fix": {
+    "capstone_stamp_fix_verified": true,
+    "circular_moat_overclaim_fired": false,
+    "command": [
+      "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python3",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "--json",
+      "/tmp/carnot_exp4355_drsexwzg/sample_capstone_v401_stamped.json"
+    ],
+    "flags": [],
+    "returncode": 0,
+    "sample_verifier_is_oracle": false,
+    "stderr_tail": "",
+    "stdout_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/tmp/carnot_exp4355_drsexwzg/sample_capstone_v401_stamped.json\",\n      \"loaded\": true,\n      \"exp_id\": 4346,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete: v401_in_generation_replicated_leak_robust_gate_MET_oracle_distinct_lea\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": []\n    }\n  ],\n  \"flagged_count\": 0\n}\n"
+  },
+  "capstone_stamp_fix_verified": true,
+  "duration_s": 0.79638,
+  "experiment": "experiment_4355_registry_gaps_hygiene_capstone_stamp_fix",
+  "field_principles": {
+    "capstone_stamp_fix_verified": "BARE bool: the capstone aggregation now propagates verifier_is_oracle (false for an oracle-distinct moat) -> adversarial_verify.py no longer fires CIRCULAR_MOAT_OVERCLAIM on a correct capstone.",
+    "gap4_regression_guard_passed": "BARE bool: the ARC oracle-distinct verifier-beats-vote result has not silently regressed.",
+    "honest_verdict": "Terminal-prefixed. Records hygiene reconciled + guard run + stamp fix verified.",
+    "preconditions_checked": "Records the registry/gaps file readability; pre-empts the silent-missing-resource fabrication mode.",
+    "registries_reconciled": "BARE bool: verifier_registry.yaml + verifier_gaps.md + arc_solve_registry.yaml updated with the .402 outcomes (never-prune)."
+  },
+  "gap4_regression_guard": {
+    "exp4333_guard": {
+      "offline_replay": {
+        "arc1_rule_exec": {
+          "gated_pass2": 0.5806,
+          "headroom_recovered": 4,
+          "n": 31,
+          "vote_pass2": 0.4516,
+          "vote_wins_lost": 0
+        },
+        "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+        "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+        "expected": {
+          "arc1_rule_exec": {
+            "gated_pass2": 0.5806,
+            "headroom_recovered": 4,
+            "n": 31,
+            "vote_pass2": 0.4516,
+            "vote_wins_lost": 0
+          }
+        },
+        "no_codex_calls": true,
+        "no_gguf_inference": true,
+        "regression_guard_passed": true,
+        "trm_training_touched": false
+      },
+      "prior_artifact_path": "results/experiment_4321_verifier_registry_gaps_hygiene.json",
+      "recorded_arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      },
+      "regression_guard_passed": true,
+      "replayed_arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      }
+    },
+    "prior_artifact_path": "results/experiment_4333_verifier_registry_gaps_hygiene.json",
+    "recorded_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "regression_guard_passed": true,
+    "replayed_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    }
+  },
+  "gap4_regression_guard_passed": true,
+  "gaps_path": "ops/verifier_gaps.md",
+  "honest_verdict": "complete: registry_gaps_arc_reconciled_to_v402_truth_gap4_guard_passed_True_capstone_stamp_fix_verified_True",
+  "inference_substrate": "cached_registry_reconciliation_and_capstone_stamp_audit",
+  "model_specs": {
+    "capstone_stamp_source": "carnot.reporting.capstone_v401_4346",
+    "codex_calls": 0,
+    "gap4_guard_source": "carnot.reporting.verifier_registry_gaps_hygiene_4344",
+    "gguf_inference": false,
+    "gpu_inference": false,
+    "live_model_inference": false,
+    "method": "cached_v402_ledger_reconciliation_plus_capstone_stamp_audit",
+    "upstream_artifacts": [
+      "results/experiment_4348_s3_stratified_verifier_guided_search.json",
+      "results/experiment_4350_e3_explore_verify_plan_ka59.json",
+      "results/experiment_4351_e3_deeper_solved_games.json",
+      "results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json",
+      "results/experiment_4353_learned_action_cost_heuristic_efficiency.json"
+    ]
+  },
+  "preconditions_checked": {
+    "blocked_file": null,
+    "files": {
+      "arc_solve_registry": {
+        "error": "",
+        "path": "ops/arc_solve_registry.yaml",
+        "readable": true
+      },
+      "verifier_gaps": {
+        "error": "",
+        "path": "ops/verifier_gaps.md",
+        "readable": true
+      },
+      "verifier_registry": {
+        "error": "",
+        "path": "ops/verifier_registry.yaml",
+        "readable": true
+      }
+    },
+    "ok": true
+  },
+  "random_seed": 4355,
+  "registries_reconciled": true,
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_reconciliation": {
+    "arc_solve_registry_reconciled": true,
+    "filled_gap_ids": [
+      "GAP-E3-WORLD-MODEL-RULE-KA59-4328"
+    ],
+    "gaps_logged_ids": [
+      "GAP-E3-WORLD-MODEL-RULE-KA59-4350",
+      "GAP-E3-WORLD-MODEL-RULE-SC25-L2-4351",
+      "GAP-E3-WORLD-MODEL-RULE-AR25-L2-4351",
+      "GAP-E3-WORLD-MODEL-RULE-TR87-4352",
+      "GAP-E3-WORLD-MODEL-RULE-FT09-4352"
+    ],
+    "registries_reconciled": true,
+    "verifier_gaps_reconciled": true,
+    "verifier_registry_reconciled": true
+  },
+  "reproducibility_checksum": "sha256:a8ad7c397e01fef784835d2e4df48873b93c87cd265f1361346625d3687c07c0",
+  "schema": "carnot.experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4355",
+    "SCENARIO-VERIFY-4355"
+  ],
+  "v402_outcomes": {
+    "action_cost_heuristic": {
+      "acceptance_gate_passed": true,
+      "action_efficiency_improves": true,
+      "artifact_path": "results/experiment_4353_learned_action_cost_heuristic_efficiency.json",
+      "available": true,
+      "held_out_actions_baseline": 25,
+      "held_out_actions_learned": 16,
+      "honest_verdict": "success: learned_action_cost_reduces_actions_25_to_16",
+      "missing_verifier_gaps": [],
+      "positive_control_passed": true,
+      "reproducibility_checksum": "sha256:bb2239bae156eb0fae288a54a8d20855e79543ba07db250b0d47e61173c731fa",
+      "reproduction_gated": true,
+      "verifier_is_oracle": false
+    },
+    "arc_e3": {
+      "deeper": {
+        "artifact_path": "results/experiment_4351_e3_deeper_solved_games.json",
+        "available": true,
+        "honest_verdict": "success_e3_deeper_tn36_reproduced",
+        "new_levels_reproduced": 1,
+        "reproducibility_checksum": "72ad0cdfb5c23845b4272b9b98c30c4b0fa4a27b47980107fc76862aa45f45c9",
+        "reproducible_total_levels": 23,
+        "targets": {
+          "ar25": {
+            "game": "ar25",
+            "new_reproduced_level": 1,
+            "offline_reproduced": false,
+            "residual_win_mechanic_gap_class": "ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap",
+            "world_model_path": "results/arc_e3/ar25/world_model.py"
+          },
+          "sc25": {
+            "game": "sc25",
+            "new_reproduced_level": 1,
+            "offline_reproduced": false,
+            "residual_win_mechanic_gap_class": "sc25_l2_live_recorded_not_offline_reproduced_spell_delta_gap",
+            "world_model_path": "results/arc_e3/sc25/world_model.py"
+          },
+          "tn36": {
+            "game": "tn36",
+            "new_reproduced_level": 7,
+            "offline_reproduced": true,
+            "residual_win_mechanic_gap_class": "none",
+            "world_model_path": "scripts/arc3_tn36_offline_solver.py"
+          }
+        },
+        "verifier_is_oracle": true
+      },
+      "ka59": {
+        "artifact_path": "results/experiment_4350_e3_explore_verify_plan_ka59.json",
+        "available": true,
+        "game": "ka59",
+        "honest_verdict": "success_e3_ka59_L1_reproduced",
+        "offline_reproduced": true,
+        "reproduced_levels": 1,
+        "reproducibility_checksum": "3d282a1804ca818ee28d4e6b34d4dd8d76fb4258c013a6f630926a8df675fa06",
+        "residual_mismatch_class": "hidden_step_counter_hud_gap",
+        "verifier_best_accuracy": 0.6375,
+        "verifier_is_oracle": true,
+        "world_model_path": "results/arc_e3/ka59/world_model.py",
+        "world_model_sha256": "ec4c777b8f416d8522ba36b3fbc2156f918dd03229a840cadca9438de45c8cba"
+      },
+      "partial_tr87_ft09": {
+        "artifact_path": "results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json",
+        "available": true,
+        "games": {
+          "ft09": {
+            "game": "ft09",
+            "offline_reproduced": false,
+            "reproduced_levels": 0,
+            "residual_mismatch_class": "missing_world_model_rule_gap_actions_6",
+            "verifier_accuracy": 0.05,
+            "world_model_path": "results/arc_e3/ft09/world_model.py"
+          },
+          "tr87": {
+            "game": "tr87",
+            "offline_reproduced": false,
+            "reproduced_levels": 0,
+            "residual_mismatch_class": "missing_world_model_rule_gap_actions_1_2_3_4",
+            "verifier_accuracy": 0.0,
+            "world_model_path": "results/arc_e3/tr87/world_model.py"
+          }
+        },
+        "honest_verdict": "complete_e3_tr87_ft09_partial",
+        "new_levels_reproduced": 0,
+        "reproducibility_checksum": "88ebeb795a2569c299b14d073f12934f23c2738279d6c561623f8af4293b7f28",
+        "verifier_is_oracle": true
+      }
+    },
+    "s3_moat_utility": {
+      "acceptance_gate": true,
+      "artifact_path": "results/experiment_4348_s3_stratified_verifier_guided_search.json",
+      "available": true,
+      "benchmark_n": 240,
+      "controls_differentiated": false,
+      "flagged_adversarial": true,
+      "honest_verdict": "controls_not_differentiable",
+      "reproducibility_checksum": "6f6e37ce8128fe9e77c5ad4623c1d6dfc07b4a0b9d323318eed8734d4d16c938",
+      "s3_gain_ci95": [
+        0.208333,
+        0.329167
+      ],
+      "s3_guided_beats_control": false,
+      "verifier_is_oracle": false
+    }
+  }
+}

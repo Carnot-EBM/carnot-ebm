@@ -18730,6 +18730,77 @@ reproducibility checksum over the reconciled registry, gaps, and manifest
 files. If the registry, gaps, or manifest cannot parse, then it writes
 `honest_verdict=blocked_<file>_unparseable` and stops without reconciliation.
 
+### REQ-VERIFY-4355: Registry/Gaps Hygiene And Capstone Oracle Stamp For .402 Truth
+
+The repository SHALL provide Exp 4355 at
+`python/carnot/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py` and
+`results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.py` to reconcile
+`ops/verifier_registry.yaml`, `ops/verifier_gaps.md`, and
+`ops/arc_solve_registry.yaml` to the `.402` verifier and ARC outcomes. Before
+mutating ledgers, the runner SHALL parse `ops/verifier_registry.yaml` and
+`ops/arc_solve_registry.yaml` with YAML-safe loading and SHALL read
+`ops/verifier_gaps.md` as Markdown text. If any required file is unreadable or
+unparseable, the runner SHALL write
+`honest_verdict=blocked_<file>_unreadable`, bare bool
+`gap4_regression_guard_passed=false`, bare bool
+`capstone_stamp_fix_verified=false`, bare bool `registries_reconciled=false`,
+and SHALL stop without mutating the registry or gap ledgers.
+
+When preconditions hold, the runner SHALL run the Exp 4344 GAP-4 regression
+guard and require that the ARC oracle-distinct verifier-beats-vote result has
+not regressed. The runner SHALL record the `.402` outcomes in the registry and
+gap ledgers: Exp 4348's S3 moat-utility result is recorded as
+`controls_differentiated=false`, `s3_guided_beats_control=false`, and
+`flagged_adversarial=true`; Exp 4350's ka59 L1 reproduction is recorded without
+claiming the remaining `hidden_step_counter_hud_gap` is solved; Exp 4351's
+deeper ARC reproduction state is recorded with `reproducible_total_levels=23`
+and tn36 L7 reproduced; Exp 4352's tr87/ft09 partial world models are recorded
+as open residual gaps; and Exp 4353's action-cost heuristic is recorded as an
+oracle-distinct action-efficiency result with `action_efficiency_improves=true`,
+`held_out_actions_baseline=25`, and `held_out_actions_learned=16`. The runner
+SHALL never prune old entries; prior gaps that are actually filled SHALL move to
+`status: filled (...)`, and residual or newly exposed missing-verifier classes
+SHALL remain open with explicit evidence.
+
+The capstone aggregation code SHALL propagate a top-level
+`verifier_is_oracle: bool` from the moat artifact(s) it imports. For the
+oracle-distinct in-generation moat replicated by Exp 4338, a gate-flipping
+capstone SHALL carry `verifier_is_oracle=false` so
+`scripts/adversarial_verify.py:check_circular_moat_overclaim` does not emit
+`CIRCULAR_MOAT_OVERCLAIM` on a correct oracle-distinct capstone. Exp 4355 SHALL
+verify this by running `scripts/adversarial_verify.py` on a stamped sample
+capstone artifact.
+
+The terminal artifact SHALL write
+`results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.json` with
+`honest_verdict`, bare bool `gap4_regression_guard_passed`, bare bool
+`capstone_stamp_fix_verified`, bare bool `registries_reconciled`,
+`preconditions_checked`, `reproducibility_checksum`, `v402_outcomes`,
+`registry_reconciliation`, `gap4_regression_guard`, `capstone_stamp_fix`,
+`random_seed`, `model_specs`, `field_principles`, `spec_refs`, `duration_s`,
+and `inference_substrate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records hygiene reconciled + guard run + stamp fix verified.`;
+`gap4_regression_guard_passed` = `BARE bool: the ARC oracle-distinct verifier-beats-vote result has not silently regressed.`;
+`capstone_stamp_fix_verified` = `BARE bool: the capstone aggregation now propagates verifier_is_oracle (false for an oracle-distinct moat) -> adversarial_verify.py no longer fires CIRCULAR_MOAT_OVERCLAIM on a correct capstone.`;
+`registries_reconciled` = `BARE bool: verifier_registry.yaml + verifier_gaps.md + arc_solve_registry.yaml updated with the .402 outcomes (never-prune).`;
+`preconditions_checked` = `Records the registry/gaps file readability; pre-empts the silent-missing-resource fabrication mode.`
+
+### SCENARIO-VERIFY-4355: .402 Hygiene Guards GAP-4 And Fixes Capstone Stamp
+
+Given `ops/verifier_registry.yaml`, `ops/verifier_gaps.md`, and
+`ops/arc_solve_registry.yaml` parse, the `.402` artifacts from Exp 4348, Exp
+4350, Exp 4351, Exp 4352, and Exp 4353 are present, and the Exp 4344 GAP-4
+guard inputs are present, when Exp 4355 runs, then it records the S3
+controls-not-differentiated result, the ka59 and tn36 reproduced ARC state, the
+tr87/ft09 partial residuals, the oracle-distinct action-cost heuristic win, and
+any new residual missing-verifier gaps; preserves the GAP-4 regression guard as
+passed; verifies that a gate-flipping capstone sample carries
+`verifier_is_oracle=false` and has no `CIRCULAR_MOAT_OVERCLAIM`; writes
+`gap4_regression_guard_passed=true`, `capstone_stamp_fix_verified=true`, and
+`registries_reconciled=true`; and emits a terminal `honest_verdict`. If any
+required registry/gap file is unreadable or unparseable, then it writes
+`honest_verdict=blocked_<file>_unreadable` and stops without reconciliation.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at

@@ -128,6 +128,11 @@ FIELD_PRINCIPLES = {
         "verifier_is_oracle=false (the E3 solves are reported as execution-grounded "
         "ARC progress, NOT moats)."
     ),
+    "verifier_is_oracle": (
+        "BARE bool propagated from the imported moat artifact when the capstone "
+        "headlines or flips a verifier gate; false means the gate-eligible moat "
+        "is oracle-distinct."
+    ),
     "per_axis_gaps": (
         "List of .401 axes whose artifact was MISSING (reported as a gap, NOT "
         "defaulted False) -- the robust-aggregator fix (no exp4301-style all-False)."
@@ -572,6 +577,25 @@ def verifier_thesis_state(
     return "verifier_domain_bound_self_learning_open"
 
 
+def propagated_verifier_is_oracle(
+    gate_status: str,
+    in_generation: Mapping[str, Any],
+    self_learning: Mapping[str, Any],
+) -> bool | None:
+    """REQ-VERIFY-4355: stamp capstones with the imported moat oracle status."""
+    if (
+        gate_status == GATE_MET
+        or in_generation.get("in_generation_moat_replicates_headline") is True
+        or in_generation.get("reported_in_generation_moat_replicates") is True
+    ):
+        value = in_generation.get("verifier_is_oracle")
+        return value if isinstance(value, bool) else None
+    if self_learning.get("reported_learned_encoder_transfer_helps") is True:
+        value = self_learning.get("verifier_is_oracle")
+        return value if isinstance(value, bool) else None
+    return False
+
+
 def _oracle_violations(
     scorer: Mapping[str, Any],
     in_generation: Mapping[str, Any],
@@ -780,6 +804,11 @@ def build_artifact(
         "arc_registry": registry,
         "verifier_thesis_state": thesis,
         "verifier_is_oracle_honored": not violations,
+        "verifier_is_oracle": propagated_verifier_is_oracle(
+            gate_status,
+            in_generation,
+            self_learning,
+        ),
         "oracle_distinct_violations": violations,
         "per_axis_gaps": list(availability_report.get("missing_upstream_artifacts", [])),
         "flagged_artifacts_excluded": exclusions,
