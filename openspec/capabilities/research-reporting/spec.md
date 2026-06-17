@@ -22711,6 +22711,95 @@ not claim `.397` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4302 | Implemented (`python/carnot/reporting/archive_v397_activate_v398_4302.py`, `python/carnot/experiment_4302_archive_v397_activate_v398.py`, `results/experiment_4302_archive_v397_activate_v398.py`) | Implemented (`tests/python/test_experiment_4302_archive_v397_activate_v398.py`) |
 
+### REQ-REPORT-4313: Archive .398, Activate .399, And Preserve The True Close-State
+
+The Exp 4313 workflow SHALL archive milestone `2026.06.398`, confirm milestone
+`2026.06.399` is active, and write the record-only artifact
+`results/experiment_4313_archive_v398_activate_v399.json`. It SHALL run NO live
+model training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`, and it SHALL NOT modify
+`scripts/research_conductor.py`.
+
+Before writing the complete artifact or editing `research-complete.yaml`, the
+workflow SHALL verify these preconditions and stop with a `blocked_<resource>`
+honest verdict if any fail:
+
+- `research-complete.yaml` parses under `yaml.safe_load`.
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`.
+- The smart-subset pre-test gate is green.
+
+The workflow SHALL ensure `research-complete.yaml` contains a single `.398`
+archive record, appending the canonical `.398` record only when absent and
+removing duplicate top-level `.398` records if interrupted conductor appends
+created any. The workflow SHALL keep `research-complete.yaml` parseable after
+the edit.
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v398_close_state` SHALL truthfully record
+the Exp 4312 capstone scorecard:
+`verifier_thesis_state=efficiency_parity_hardened`, efficiency-parity HARDENED,
+self-learning HELPS, in-generation OPEN/UNDERPOWERED-POSITIVE, cross-domain
+OPEN/UNDERPOWERED-POSITIVE, ARC stalled on a harness failure, and
+`paper_ready=true`.
+
+The close-state SHALL record that efficiency-parity hardened from clean Exp 4303
+(`efficiency_pareto_holds=true`, energy verifier accuracy `0.8` versus best
+judge `0.5`, `cost_ratio=1.03e-08`, `accuracy_delta_ci95=[0.1,0.5]`, and
+`verifier_is_oracle=false`), self-learning helps from powered Exp 4306
+(`best_adaptive_minus_static_delta=0.529`, CI95 `[0.408,0.651]`, and
+`verifier_is_oracle=false`), the in-generation moat remains
+OPEN/UNDERPOWERED-POSITIVE from clean Exp 4304 (`carnot_minus_best_control_delta`
+`+0.133`, CI95 includes zero, controls differentiated, scorer leak recheck
+passed, and `verifier_is_oracle=false`), and the cross-domain moat remains
+OPEN/UNDERPOWERED-POSITIVE from clean Exp 4305 (`cross_domain_delta=+0.231`,
+CI95 includes zero, label-ablation robust, GAP-CROSS-DOMAIN-FAMILY-INVARIANT-
+SELECTION-4305 logged, and `verifier_is_oracle=false`). It SHALL also record
+that ARC remained at `22` because Exp 4307 was flagged
+`GATE_PASSED_WITHOUT_DATA` with `exploration_actions_used=0` due to the frontier
+adapter being unavailable; this is a harness failure, not a science failure.
+The `.399` frame SHALL be close-the-two-open-moats plus deploy-efficiency-cascade
+plus unstall-ARC, not a redo and not a re-open of the closed efficiency or
+self-learning axes.
+
+The artifact SHALL include these field-principle strings exactly:
+
+- `honest_verdict`: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
+- `v398_close_state`: "Honest record (efficiency-parity HARDENED, self-learning HELPS, in-generation + cross-domain UNDERPOWERED-POSITIVE/OPEN, ARC stalled-on-harness-failure) so the .399 agents frame the milestone as close-the-two-open-moats + deploy-efficiency-cascade + unstall-ARC, not a redo and not a re-open of the closed efficiency/self-learning axes."
+- `preconditions_checked`: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
+
+#### SCENARIO-REPORT-4313: The Archive Records The True .398 Close-State
+
+**Given** `.398` has clean Exp 4303 efficiency evidence, Exp 4304
+underpowered-positive in-generation evidence, Exp 4305 underpowered-positive
+cross-domain evidence, Exp 4306 powered self-learning evidence, Exp 4307
+flagged ARC harness-failure evidence, the Exp 4312 capstone artifact, parseable
+history and exclusion-manifest YAML files, a green smart-subset pre-test gate,
+and `.399` active
+**When** the Exp 4313 archive workflow runs
+**Then** it archives `.398`, confirms `.399`, keeps the YAML history parseable
+with one `.398` record, writes
+`results/experiment_4313_archive_v398_activate_v399.json`, records the hardened
+efficiency-parity axis, powered self-learning helps result, two clean
+underpowered-positive open moats, ARC harness stall at `22`, `paper_ready=true`,
+and `.399` close-the-two-open-moats / deploy-efficiency-cascade / unstall-ARC
+framing in `v398_close_state`, records the checked resources in
+`preconditions_checked`, declares `aggregation_from_upstream_artifacts`, and
+emits a terminal-prefixed honest verdict.
+
+#### SCENARIO-REPORT-4313-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4313 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does
+not claim `.398` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4313)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4313 | Implemented (`python/carnot/reporting/archive_v398_activate_v399_4313.py`, `python/carnot/experiment_4313_archive_v398_activate_v399.py`, `results/experiment_4313_archive_v398_activate_v399.py`) | Implemented (`tests/python/test_experiment_4313_archive_v398_activate_v399.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
