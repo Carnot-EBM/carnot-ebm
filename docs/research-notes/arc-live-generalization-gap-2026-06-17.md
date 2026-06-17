@@ -117,3 +117,25 @@ so an unseen game can be probed and routed to a strategy without internal-state 
 Net: the FIRST link (frame-only mechanic-class detection) is proven. The remaining induction
 (run-trigger, decomposition, object/target-by-motion, then code semantics) is the scoped next build
 toward a live solver — all still frame-only, no internal state.
+
+## NEXT LINK DONE: the editor is now USABLE frame-only (2026-06-17)
+
+Extended `scripts/arc3_frame_induction.py` from DETECTION to USE -- the run-trigger + the
+click->(slot,bit) mapping, both derived frame-only, demonstrated by an end-to-end FRAME-ONLY solve
+of tn36 L1 (zero `env._game`):
+
+- **click->(slot,bit) mapping** (`induce_editor_layout`): each edit click toggles a GLYPH at its
+  slot's display; clustering edit cells by glyph-toggle-x separates the 5 SLOTS (x 21,26,31,36,41),
+  the edit-cell y's give the 2 BIT-rows (y 42,45). (Resolved a gotcha: the y=40 per-slot header
+  differs between same-code slots; the code glyph is y41..47 -- compare that, not the header.)
+- **run-trigger** (`find_run_button`): with the program set to a winning config, the RUN button is
+  the non-editor cell whose click advances the level -> found (32,51), matching the internal
+  sxhtkytekm exactly.
+- **end-to-end frame-only solve** (`frame_only_solve`): set the program via the derived controls
+  (toggle each editable slot's glyph to match the pre-set slots) + click the derived run -> LEVEL
+  ADVANCES TO 1. Zero internal state on the solve path.
+
+So both links the operator asked for are done: the editor is DETECTED and USABLE from frames alone.
+The frame-only solve here uses a heuristic ("make editable slots match the pre-set ones") that wins
+L1 specifically; the GENERAL winner-discovery (program-space search using the frame-only win signal,
+or inducing the code semantics + object/target by motion) is the next link -- still frame-only.
