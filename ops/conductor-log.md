@@ -8625,3 +8625,4 @@ c |
 | 2026-06-16 23:11 UTC | PHASE D1 (CONTINUOUS SELF-LEARNING -- the mandated | OK | 104 passed, 1 warning in 10.60s |
 | 2026-06-16 23:29 UTC | PHASE E1 (ARC north star; accuracy) -- monotonic A | FLAGGED | adversarial_verify CRITICAL: GATE_PASSED_WITHOUT_DATA — result quarantined, not  |
 | 2026-06-17 00:36 UTC | PHASE F0 (INFRA safety net; defense-in-depth; fixe | OK | 88 passed, 1 warning in 6.25s |
+| 2026-06-17 00:51 UTC | PHASE F1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 104 passed, 1 warning in 7.20s |
