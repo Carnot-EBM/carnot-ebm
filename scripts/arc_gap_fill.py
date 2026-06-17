@@ -78,15 +78,18 @@ A global numpy array `WIN` of shape {h}x{w} (a level-complete win-state grid, sh
 reference) and `np` (numpy) are ALREADY DEFINED in your scope. DO NOT redefine, hardcode, or
 write out WIN as a literal — REFERENCE the global `WIN`. Write a SHORT function (<= 12 lines).
 
-PREFER A STRUCTURAL PROGRESS SIGNAL over a plain cell-count. `float((grid != WIN).sum())` is the
-safe FALLBACK, but it is usually DOMINATED by static background cells (every grid differs from
-WIN in the same large constant region), so it barely guides the search and can mislead it into a
-LONGER path. A sharper heuristic uses the per-action deltas shown below — those reveal WHICH
-cells the game's actions actually change (the dynamic region). Prefer a signal like: count
-mismatches ONLY over the cells the actions change (mask the static background), or measure how
-far the changed/moved objects are from their WIN positions (manhattan), or any count that
-strictly DECREASES as the grid approaches WIN. The goal is FEWER expansions AND the OPTIMAL
-(shortest) path — not just any descent.
+USE A MOVE-DISTANCE SIGNAL, NOT A CELL-COUNT. `float((grid != WIN).sum())` over-estimates how
+many MOVES remain (in these games one action changes MANY cells), so it sends the search greedy
+and into a LONGER path. The PROVEN default (validated 2026-06-17 across r11l/m0r0/sk48/ls20/su15:
+optimal paths with up to -88% expansions) is the count of 8-connected MISPLACED REGIONS — each
+action typically fixes one region, so this drops ~1 per move:
+
+    import scipy.ndimage as ndi
+    return float(ndi.label(grid != WIN, structure=np.ones((3, 3), dtype=int))[1])
+
+Use exactly that unless the per-action deltas below reveal a CLEARLY better game-specific signal
+(e.g. manhattan distance of a moved object to its WIN position). `scipy.ndimage as ndi` may be
+imported. The goal is FEWER expansions AND the OPTIMAL (shortest) path — not just any descent.
 
 CRITICAL CONTRACT: goal_distance MUST `return float(...)` for ANY grid — NEVER None, never
 fall off the end. The LAST line must be an unconditional `return float(<value>)`.
@@ -113,13 +116,18 @@ def main() -> int:
     import math
     from carnot.agentic import gap_fills
 
+    import scipy.ndimage as _ndi             # for the proven region-count move-distance heuristic
+
     def _gd_from_code(code_str):
-        ns: dict = {"np": np, "WIN": win}      # WIN + np provided as globals (model references them)
+        # WIN + np + ndi provided as globals (model references them; the region-count default
+        # uses ndi.label). Keeps the model's emitted code tiny and free of import boilerplate.
+        ns: dict = {"np": np, "WIN": win, "ndi": _ndi}
         exec(code_str, ns)
         return ns["goal_distance"]
 
-    def _self_contained(code_str) -> str:      # bundle WIN into the saved heuristic (no model cost)
-        return (f"import numpy as np\nWIN = np.array({win.tolist()}, dtype=np.int16)\n\n"
+    def _self_contained(code_str) -> str:      # bundle WIN+imports into the saved heuristic (no model cost)
+        return (f"import numpy as np\nimport scipy.ndimage as ndi\n"
+                f"WIN = np.array({win.tolist()}, dtype=np.int16)\n\n"
                 + code_str.strip() + "\n")
 
     def _validate(code_str) -> bool:   # runtime smoke-test: must run on win+start -> finite floats
