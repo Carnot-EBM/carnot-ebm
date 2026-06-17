@@ -64,13 +64,11 @@ state. `grid` is a {h}x{w} numpy int array (colors {colors}).
 Below are observed transitions (compact: one full grid + per-action deltas) and the full WIN
 STATE. INFER what makes a state close to the win (pieces aligned to targets, a region filled,
 the player adjacent to an exit, etc.) and score it so goal_distance(win_state)≈0 and
-far-from-win states score higher. Use only numpy. Output ONLY one ```python code block with
-`import numpy as np` and the single function `goal_distance`.
+far-from-win states score higher. Use only numpy. Output ONLY one ```python code block
+containing `import numpy as np` and the complete function `def goal_distance(grid):`.
 
 {e3._transitions_block(trans)}
 ```python
-import numpy as np
-def goal_distance(grid):
 """
 
 
