@@ -89,8 +89,9 @@ STRATEGY_CLASSES: list[dict] = [
         ),
         "search_engine": "waypoint BFS start->checkpoints->target; each edge a <=n-move collision-free leg",
         "needs": (
-            "frame-only MazeModel induction (object box, walls, checkpoints) — for a KNOWN game the "
-            "model is read from internal state; frame-only checkpoint detection is the live port"
+            "a MazeModel. arc3_frame_induction.induce_maze_model induces OBJECT (by motion) + WALLS "
+            "(by stability) frame-only, but in tn36 the CHECKPOINTS draw on the floor (not frame-"
+            "distinct) -> the model falls back to internal state (GAP-ARC-MAZE-MODEL-FRAME-INDUCTION)"
         ),
     },
     {
@@ -108,8 +109,9 @@ STRATEGY_CLASSES: list[dict] = [
             "schedule + residual hidden hitbox are respected"
         ),
         "needs": (
-            "frame-only MazeModel + hazard-cadence induction (periodic-visibility detection) — for a "
-            "KNOWN game the model is read from internal state; that detection is the live port"
+            "a MazeModel + hazard cadence. induce_maze_model gets OBJECT + WALLS frame-only, but the "
+            "spike HAZARDS are invisible at rest and CHECKPOINTS draw on the floor in tn36 -> not "
+            "frame-inducible; the model falls back to internal state (GAP-ARC-MAZE-MODEL-FRAME-INDUCTION)"
         ),
     },
     {
