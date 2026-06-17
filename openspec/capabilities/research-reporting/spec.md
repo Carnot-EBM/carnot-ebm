@@ -21400,6 +21400,106 @@ the strongest `.399` budget-aware cascade-router follow-up, records
 |---|---|---|
 | REQ-REPORT-4309 | Planned (`python/carnot/experiment_4309_sota_ingestion_v399.py`) | Planned (`tests/python/test_experiment_4309_sota_ingestion_v399.py`) |
 
+### REQ-REPORT-4320: Ingest The .399 Fork Outcomes Into A .400 SOTA Plan
+
+The Exp 4320 SOTA-ingestion workflow SHALL ingest the `.399` fork outcomes from
+`results/experiment_4314_cross_domain_selector_ir3de_cascal.json`,
+`results/experiment_4315_diffusiongemma_reward_guided_stitching.json`,
+`results/experiment_4316_efficiency_cascade_router_deploy.json`, and
+`results/experiment_4318_arc_cross_game_learned_verifier_transfer.json`. The
+workflow SHALL read `research-studying.md`, `research-references.md`,
+`results/experiment_4309_sota_ingestion_v399.json`, `scripts/sweep_clusters.py`,
+`scripts/sweep_semscholar.py`, and the `CLAUDE.md` SOTA-Ingestion Cycle
+Discipline, SHALL run reliable focused discovery through the sweep helpers and
+low-concurrency WebSearch/WebFetch, and SHALL NOT invoke `/deep-research` or
+modify `scripts/research_conductor.py`.
+
+The workflow SHALL stop with `honest_verdict=blocked_sota_channels_unavailable`
+only if both reliable discovery channels are unavailable: the sweep helpers do
+not import or emit usable queries AND WebSearch/WebFetch cannot fetch source
+pages. If either reliable channel works, the workflow SHALL write a complete
+mapping. The machine-checkable artifact SHALL be written to
+`results/experiment_4320_sota_ingestion_v400.json`, and the required runner
+SHALL be `results/experiment_4320_sota_ingestion_v400.py` delegating to
+`python/carnot/experiment_4320_sota_ingestion_v400.py`.
+
+The mapping SHALL not re-ingest methods already covered by the `.398` or `.399`
+sweeps, including Budget-aware Discriminative Verification, IR3DE, Routing with
+Generated Data / CASCAL, TTARAG, SMC importance weighting for discrete
+diffusion, Reward-Guided Stitching (`arXiv:2602.22871`), Self-Rewarding SMC
+(`arXiv:2602.01849`), CSMC (`arXiv:2602.09424`), EntRGi, Manta-LM, EEVEE,
+optimize_anything / GEPA, RefGRPO, SLMJury, ReMDM, ARC-TGI, ARC-GEN, RFG,
+EDLM, INSPECTOR Representation-as-a-Judge, ABPR, and Decocted Experience.
+Newly mapped methods SHALL be selected from WebFetch-verified sources including
+A2D2 (`arXiv:2606.13565`), TR2-D2 (`arXiv:2509.25171`), Heteroskedastic Signals
+in Budgeted LLM Verification (`arXiv:2606.15841`), UniRoute
+(`arXiv:2502.08773`), and LANTERN (`arXiv:2605.05478`).
+
+The verified source URLs SHALL be `https://arxiv.org/abs/2606.13565`,
+`https://arxiv.org/abs/2509.25171`, `https://arxiv.org/abs/2606.15841`,
+`https://arxiv.org/abs/2502.08773`, and `https://arxiv.org/abs/2605.05478`.
+
+The note in `research-studying.md` SHALL condition the `.400` recommendation on
+the actual `.399` outcomes. When Exp 4314 reports
+`cross_domain_selection_holds=false`, `cross_domain_delta=0.2307692308`,
+`cross_domain_delta_ci95=[-0.1153846154, 0.5384615385]`, and
+`label_ablation_robust=true`, the workflow SHALL treat cross-domain selection as
+still domain-bound rather than promote a fourth-domain headline. When Exp 4315
+reports `diffusiongemma_guidance_moat=true`, `controls_differentiated=true`,
+`scorer_leak_recheck_passed=true`, `carnot_minus_best_control_delta=0.225`, and
+`guidance_moat_ci95=[0.075, 0.375]`, the workflow SHALL treat the in-generation
+moat as closed and favor a scaled external-verifier-guided DiffusionGemma
+headline. When Exp 4316 reports `cascade_dominates_controls=false`,
+`accuracy_always_energy=0.6`, `accuracy_cascade=0.55`, and
+`cost_ratio_cascade=0.3019632358`, the workflow SHALL treat the cascade as a
+diagnostic/deployment side track rather than a dominant production headline.
+When Exp 4318 reports `cross_game_transfer_helps=false`,
+`cross_game_state_reduction=1.0`, and `baseline_solves_held_out=true`, the
+workflow SHALL treat broad cross-game transfer as a representation gap until an
+experience-gated source-relevance method beats the uniform positive control.
+
+The JSON artifact SHALL contain the top-level fields `honest_verdict`,
+`methods_mapped`, `flagged_for_v400`, `random_seed`, and `field_principles`.
+`field_principles` SHALL contain exactly the principle annotations for
+`honest_verdict`, `methods_mapped`, `flagged_for_v400`, and `random_seed`.
+`honest_verdict` SHALL use a terminal prefix and, on the complete path, start
+with `complete: sota_ingestion_v400_mapped`. `methods_mapped` SHALL contain
+three to five dicts with exactly `name`, `arxiv_id_or_url`, `url`, `track`,
+`source_read`, `v399_outcome_conditioning`, `carnot_stack_mapping`,
+`failure_mode`, and `experiment_mapping`; each `arxiv_id_or_url` SHALL be one
+of the WebFetch-verified arXiv IDs or URLs, preventing fabricated or uncited
+method rows. `flagged_for_v400` SHALL be a non-empty concrete roadmap slug
+naming the strongest `.400` method, conditioned on whether in-generation
+guidance held, the cascade dominated, cross-domain selection held, or cross-game
+transfer helped. `random_seed` SHALL record the deterministic discovery query
+set seed.
+
+The workflow SHALL update `research-studying.md` idempotently to mark the
+`.399` forks as ingested, SHALL include `flagged_for_v400`, and SHALL NOT update
+`ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, or
+`scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-4320: The .399 Outcomes Close Into A .400 Guided-Generation Plan
+
+**Given** Exp 4314 reports the IR3DE+CASCAL cross-domain selector remains
+domain-bound
+**And** Exp 4315 reports a decision-grade DiffusionGemma reward-guided
+step-stitching moat
+**And** Exp 4316 reports the cascade does not dominate the always-energy control
+**And** Exp 4318 reports no cross-game learned-verifier transfer improvement
+**When** the Exp 4320 SOTA-ingestion workflow runs through the reliable channel
+**Then** it writes the required JSON mapping artifact, maps three to five newly
+verified sources to Carnot stack implications, failure modes, and concrete
+`.400` experiment targets, updates `research-studying.md` idempotently, flags
+the strongest `.400` scaled external-verifier-guided DiffusionGemma follow-up,
+records `random_seed`, and leaves conductor and reconciliation files untouched.
+
+## Implementation Status (REQ-REPORT-4320)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4320 | Planned (`python/carnot/experiment_4320_sota_ingestion_v400.py`) | Planned (`tests/python/test_experiment_4320_sota_ingestion_v400.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone

@@ -8,6 +8,87 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-17 Exp 4320 - .399 fork SOTA ingestion ingested
+
+**Status:** INGESTED into `results/experiment_4320_sota_ingestion_v400.json`.
+
+**Reliable-channel provenance:** `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py` imported successfully; `sweep_clusters.py`
+emitted focused arXiv discovery URLs for verifier, energy, and routing
+clusters. Semantic Scholar was reachable through the helper but returned HTTP
+429 for the four focused keyword probes in this loop. Low-concurrency
+WebSearch/WebFetch verified arXiv:2606.13565, arXiv:2509.25171,
+arXiv:2606.15841, arXiv:2502.08773, arXiv:2605.05478, arXiv:2602.22871,
+arXiv:2602.01849, arXiv:2603.04445, arXiv:2512.02543, and arXiv:2605.09965.
+The banned `/deep-research` channel was not invoked.
+
+**Filtered track:** .399 outcomes after the IR3DE+CASCAL cross-domain router,
+the DiffusionGemma reward-guided step-stitching run, the efficiency cascade
+deployment run, and the ARC cross-game learned-verifier transfer run.
+
+**.399 outcome conditioning:**
+- Exp 4314: `cross_domain_selection_holds=false`,
+  `cross_domain_delta=0.2307692308`,
+  `cross_domain_delta_ci95=[-0.1153846154, 0.5384615385]`, and
+  `label_ablation_robust=true`; the selector survived the label-ablation check
+  but did not make a decision-grade cross-domain moat.
+- Exp 4315: `diffusiongemma_guidance_moat=true`,
+  `controls_differentiated=true`, `scorer_leak_recheck_passed=true`,
+  `carnot_minus_best_control_delta=0.225`, and
+  `guidance_moat_ci95=[0.075, 0.375]`; the external-verifier-guided
+  in-generation moat closed.
+- Exp 4316: `cascade_dominates_controls=false`,
+  `accuracy_always_energy=0.6`, `accuracy_cascade=0.55`, and
+  `cost_ratio_cascade=0.3019632358`; the cascade was useful as a diagnostic but
+  the always-energy verifier remained the cleaner operating point.
+- Exp 4318: `cross_game_transfer_helps=false`,
+  `cross_game_state_reduction=1.0`, and `baseline_solves_held_out=true`; the
+  uniform positive-control solver worked, but the learned value-head did not
+  reduce held-out search states.
+
+**Fresh-pass candidates marked ingested:**
+- A2D2 adaptive any-length discrete diffusion, arXiv:2606.13565 - mapped to the
+  .400 scaled external-verifier-guided DiffusionGemma generation headline.
+- TR2-D2 tree-search trajectory replay, arXiv:2509.25171 - mapped to bounded
+  reward-guided replay buffers for DiffusionGemma partial-state denoising.
+- Heteroskedastic Signals in Budgeted LLM Verification, arXiv:2606.15841 -
+  mapped to cost-stratified cascade diagnostics after the Exp 4316 global
+  cascade failed to dominate.
+- UniRoute unseen-model routing, arXiv:2502.08773 - mapped to cross-domain
+  performance-fingerprint routing without domain labels or family IDs.
+- LANTERN experience-gated transfer, arXiv:2605.05478 - mapped to gated
+  multi-source ARC value-head transfer after the Exp 4318 flat result.
+
+**Screened but not mapped as strongest rows:** Reward-Guided Stitching
+(arXiv:2602.22871), Self-Rewarding SMC (arXiv:2602.01849), CSMC
+(arXiv:2602.09424), Dynamic Model Routing and Cascading (arXiv:2603.04445),
+Inference-Time Distillation (arXiv:2512.02543), and Game Multiverse
+(arXiv:2605.09965) were read as relevant context. They were not re-ingested as
+fresh method rows because Reward-Guided Stitching and Self-Rewarding SMC are
+already in earlier sweeps and the others are weaker fits than the five mapped
+rows for the observed .399 outcomes.
+
+Already-covered context not re-ingested as fresh method rows: Budget-aware
+Discriminative Verification, IR3DE, Routing with Generated Data / CASCAL,
+TTARAG, SMC importance weighting for discrete diffusion, EEVEE,
+optimize_anything / GEPA, RefGRPO, SLMJury, ReMDM, ARC-TGI, ARC-GEN, RFG,
+EDLM, EntRGi, Manta-LM, masked-discrete-diffusion guidance dynamics, INSPECTOR
+Representation-as-a-Judge, ABPR, and Decocted Experience.
+
+flagged_for_v400:
+`scaled_external_verifier_guided_diffusiongemma_generation_v400`.
+
+Flagged for .400: `scaled_external_verifier_guided_diffusiongemma_generation_v400`.
+
+random_seed=4320
+
+**Bottom line for the .400 roadmap:** Exp 4315 is the only .399 fork that closed
+decision-grade, so make .400 an A2D2/TR2-D2-style scaled guided generation
+headline over the existing leak-checked DiffusionGemma scorer. Keep
+cross-domain routing on UniRoute-style frozen fingerprints, convert cascade work
+into heteroskedastic threshold diagnostics, and only retry cross-game transfer
+with LANTERN-style experience gates.
+
 ## 2026-06-17 Exp 4309 - .398 fork SOTA ingestion ingested
 
 **Status:** INGESTED into `results/experiment_4309_sota_ingestion_v399.json`.
