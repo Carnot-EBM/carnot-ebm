@@ -107,7 +107,7 @@ Use `carnot verify-code examples/math_funcs.py --func gcd --pbt`.
         _write(root / "data/token_activations_tqa_qwen35.safetensors", "placeholder")
 
     for model_id in REQUIRED_PER_TOKEN_EXPORTS:
-        _write(root / f"exports/{model_id}/README.md", "---\nlicense: apache-2.0\n---\n")
+        _write(root / f"exports/{model_id}/README.md", "---\nlicense: other\nlicense_name: mit-0\n---\n")
         _write(root / f"exports/{model_id}/config.json", "{}\n")
         _write(root / f"exports/{model_id}/model.safetensors", "placeholder")
         _write(root / f"exports/{model_id}/training_metadata.json", "{}\n")

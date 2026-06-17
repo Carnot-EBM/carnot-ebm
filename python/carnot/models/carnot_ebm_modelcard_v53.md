@@ -1,6 +1,8 @@
 ---
 language: en
-license: apache-2.0
+license: other
+license_name: mit-0
+license_link: LICENSE
 tags:
   - energy-based-model
   - verifiable-reasoning

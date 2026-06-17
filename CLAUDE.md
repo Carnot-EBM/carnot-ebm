@@ -565,16 +565,16 @@ If any answer is yes, the change is not ready.
 
 ## Project Vision (Three Phases + Parallel Tracks)
 
-1. **Phase 1 (current):** Verify and repair LLM outputs using constraint-based energy models. **Ship a useful, operational software product** (Apache-2.0 package + MCP server + CLI + HuggingFace mirror). Phase 1 ship gate is purely *software-operational*:
+1. **Phase 1 (current):** Verify and repair LLM outputs using constraint-based energy models. **Ship a useful, operational software product** (MIT-0 package + MCP server + CLI + HuggingFace mirror). Phase 1 ship gate is purely *software-operational*:
    - All FR-* technical requirements implemented (✓ as of 2026-05-08)
-   - PyPI package + Apache-2.0 license shipped
+   - PyPI package + MIT-0 license shipped (relicensed from Apache-2.0 on 2026-06-17 for ARC Prize prize-eligibility; sole-author decision)
    - HuggingFace mirror per Rule 3 (mandatory mirroring)
    - MCP server + CLI documentation for external integrators
    - At least one independent reproducer (could be a teammate, a CI run, or an external user)
 
    Phase 1 ship is **NOT gated on**: paper publication, hardware validation, FPGA bring-up, Phase 4 active-inference validation, or any non-software deliverable (operator directives 2026-05-08).
 2. **Phase 2 (medium-term):** Hardware acceleration via Extropic TSU, FPGA Ising machines, and potentially photonic computing. Sovereignty hardware demos (GateMate, PolarFire SoC, Tenstorrent eval) live here, not in Phase 1.
-3. **Phase 3 (long-term):** Evolve into an open-source foundation model based on hardware-acceleratable EBM/EBT. Functional parity with Kona — continuous latent space, non-autoregressive reasoning, self-correcting. Apache 2.0, hardware-portable.
+3. **Phase 3 (long-term):** Evolve into an open-source foundation model based on hardware-acceleratable EBM/EBT. Functional parity with Kona — continuous latent space, non-autoregressive reasoning, self-correcting. MIT-0, hardware-portable.
 
 **Parallel tracks** (run alongside whatever phase is current — do not gate phase advancement):
 

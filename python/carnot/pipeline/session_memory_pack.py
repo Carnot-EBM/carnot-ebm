@@ -27,7 +27,7 @@ from carnot.pipeline.session_memory import SessionMemory, _escape_model_id
 PACK_SCHEMA = "carnot.session_memory_pack.v1"
 PACK_SCHEMA_VERSION = "1.0.0"
 PACK_SCHEMA_URL = "https://carnot-ebm.org/schemas/session_memory_v1.json"
-DEFAULT_LICENSE = "Apache-2.0"
+DEFAULT_LICENSE = "MIT-0"
 
 JsonDict = dict[str, Any]
 PackInput = JsonDict | str | pathlib.Path | PathLike[str]
