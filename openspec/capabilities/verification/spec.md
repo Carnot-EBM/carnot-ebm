@@ -17787,6 +17787,103 @@ If any required artifact or ledger parse is missing, then it writes
 `honest_verdict=blocked_v397_artifacts_missing` and does not fabricate registry,
 gap, or manifest reconciliation.
 
+### REQ-VERIFY-4310: Verifier Registry And Gaps Hygiene For .398 Truth
+
+The repository SHALL provide Exp 4310 at
+`python/carnot/experiment_4310_verifier_registry_gaps_hygiene.py` and
+`results/experiment_4310_verifier_registry_gaps_hygiene.py` to reconcile
+`ops/verifier_registry.yaml`, `ops/verifier_gaps.md`, and
+`ops/exclusion_manifest.yaml` to the `.398` verifier truth. Before mutating
+ledgers, the runner SHALL parse all three ledgers. If any required ledger cannot
+parse, the runner SHALL write a terminal artifact with
+`honest_verdict=blocked_ledgers_unparseable`, bare bool
+`regression_guard_passed=false`, empty `gaps_logged`, and SHALL stop without
+mutating the registry, gaps, or manifest.
+
+The runner SHALL use the reusable `aggregate_available_report_gaps` helper from
+`python/carnot/reporting/capstone_aggregate_available.py` for the `.398` outcome
+artifacts `results/experiment_4303_verifier_efficiency_parity_isoflops.json`,
+`results/experiment_4304_diffusiongemma_in_generation_engaged_controls.json`,
+`results/experiment_4305_cross_domain_selector_generalization.json`,
+`results/experiment_4306_self_learning_powered_ci_cross_domain.json`, and
+`results/experiment_4307_arc_incremental_progress_new_game.json`. Missing or
+flagged `.398` artifacts SHALL be recorded as per-axis gaps in the aggregate
+availability report and SHALL NOT hard-block reconciliation of other available
+axes. The runner SHALL cite
+`results/experiment_4308_adversarial_verify_degenerate_controls_and_robust_capstone.json`
+as the robust aggregator evidence and require
+`robust_aggregator_added=true` and `aggregator_survives_missing_artifact=true`
+when that artifact is present.
+
+When ledgers parse, the runner SHALL run the GAP-4 execution regression guard
+against the `.397` recorded standing capability. If Exp 4299 is blocked and does
+not contain recorded GAP-4 replay numbers, the runner SHALL fall back to the
+latest available recorded replay from Exp 4287 rather than hard-blocking on the
+blocked `.397` capstone-aggregation bug. The guard SHALL replay the canonical
+cached GAP-4 ARC-1 candidate set and require no regression in vote pass@2
+`0.4516`, gated pass@2 `0.5806`, `headroom_recovered=4`, and
+`vote_wins_lost=0`. It SHALL expose bare bool `regression_guard_passed`.
+
+The runner SHALL record the `.398` outcomes that are available in the GAP-4 /
+oracle-distinct ARC registry slot: Exp 4303 `efficiency_pareto_holds=true`,
+`accuracy_energy_verifier=0.8`, `accuracy_best_judge=0.5`,
+`accuracy_delta_ci95=[0.1, 0.5]`, and `cost_ratio=0.0000000103`; Exp 4304
+`diffusiongemma_guidance_moat=false`, `controls_differentiated=true`,
+`scorer_leak_recheck_passed=true`,
+`carnot_minus_best_control_delta=0.133334`, and
+`guidance_moat_ci95=[-0.066667, 0.366667]`; Exp 4305
+`cross_domain_selection_holds=false`, `label_ablation_robust=true`,
+`cross_domain_delta=0.2307692308`, `cross_domain_ci95=[-0.1153846154, 0.5384615385]`,
+and `held_out_task_n=26`; Exp 4306 `online_adaptation_helps=true`,
+`best_adaptive_minus_static_delta=0.5292929293`,
+`best_adaptive_minus_static_ci95=[0.4080808081, 0.6505050505]`, and
+`held_out_task_n=102`; and Exp 4307 `total_levels=22`,
+`total_levels_solved=22`, `new_levels_solved_this_task=0`,
+`game_advanced=re86-8af5384d`, and `flagged_adversarial=true`. The `.398`
+state SHALL show efficiency remains a Pareto win, in-generation guidance is a
+bounded/null moat read despite differentiated controls and leak re-check, the
+cross-domain selector collapses, powered self-learning helps, and ARC remains
+at the `.397` 22-level truth with no new level.
+
+The gaps ledger SHALL log any new missing-verifier backlog entry using the
+schema in `ops/verifier_gaps.md`. At minimum the runner SHALL preserve any
+upstream Exp 4305 `missing_verifier_gaps` entries as `gaps_logged`, including
+`GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305` when
+`cross_domain_selection_holds=false`, with `failure_mode`,
+`missing_discriminator`, `candidate_design`, and `priority`. The runner SHALL
+also log a leak-free partial-state diffusion scorer gap if Exp 4304 reports a
+failed leak re-check.
+
+The terminal artifact SHALL write
+`results/experiment_4310_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_logged`, bare
+bool `registry_reconciled`, bare bool `manifest_reconciled`, `v398_outcomes`,
+`availability_report`, `random_seed`, `reproducibility_checksum`,
+`model_specs`, `field_principles`, `spec_refs`, `duration_s`, and
+`inference_substrate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled + regression guard result (using the robust aggregator, NOT a hard-block).`;
+`regression_guard_passed` = `BARE bool: the GAP-4 execution numbers did not regress vs .397 -- the standing-capability guard.`;
+`gaps_logged` = `List of new missing-verifier gap entries (failure mode + missing discriminator + candidate design + priority) -- the verifier build backlog.`;
+`reproducibility_checksum` = `Hash of the reconciled registry + gaps + manifest; catches silent drift.`
+
+### SCENARIO-VERIFY-4310: .398 Reconciliation Uses Robust Aggregator And Logs Gaps
+
+Given the registry, gaps, and exclusion manifest parse, the `.398` efficiency,
+in-generation DiffusionGemma, cross-domain selector, self-learning, and ARC
+progress artifacts may be partially available, and the Exp 4308 robust
+aggregate-available helper is present, when Exp 4310 runs, then it uses the
+robust helper to record missing or flagged `.398` artifacts as per-axis
+availability gaps rather than blocking the entire run, runs the GAP-4 regression
+guard with the latest available recorded replay, writes
+`regression_guard_passed=true`, reconciles the registry to the available `.398`
+truth, records the efficiency Pareto win, bounded/null DiffusionGemma guidance
+read, cross-domain collapse, powered self-learning improvement, and ARC
+`total_levels=22`, logs
+`GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305` through `gaps_logged`, and
+declares a reproducibility checksum over the reconciled registry, gaps, and
+manifest files. If the registry, gaps, or manifest cannot parse, then it writes
+`honest_verdict=blocked_ledgers_unparseable` and stops without reconciliation.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at

@@ -1089,3 +1089,13 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: Add a score_partial_state or score_masked_canvas verifier interface, train it on masked diffusion-token canvases with final-answer labels held out by task family, and require a non-circular guidance-vs-unguided CI gate before any moat claim.
 - priority: high
 <!-- exp4287-gap-diffusiongemma-partial-state-scorer-4287:end -->
+
+<!-- exp4310-gap-cross-domain-family-invariant-selection-4305:start -->
+### GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305: Exp 4310 .398 missing-verifier gap
+- status: open
+- evidence: results/experiment_4305_cross_domain_selector_generalization.json; upstream_missing_verifier_gap=true; failure_mode=cross_domain_selection_collapses_domain_bound.
+- failure mode: cross_domain_selection_collapses_domain_bound
+- missing discriminator: domain-invariant selector features that preserve wrong-majority recovery across ARC, ARC-GEN, and FoVer/math step candidates without using domain labels
+- candidate design: DG-PRM-style multi-invariant verifier dimensions with a learned task-structure router validated on held-out fover
+- priority: high
+<!-- exp4310-gap-cross-domain-family-invariant-selection-4305:end -->

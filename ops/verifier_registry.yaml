@@ -465,6 +465,64 @@ verifiers:
     exp4287_arc_game_advanced: ls20-9607627b
     exp4287_gaps_logged:
     - GAP-DIFFUSIONGEMMA-PARTIAL-STATE-SCORER-4287
+    eval_exp_4310: results/experiment_4310_verifier_registry_gaps_hygiene.json
+    exp4310_regression_guard_passed: true
+    exp4310_arc1_rule_exec_vote_pass2: 0.4516
+    exp4310_arc1_rule_exec_gated_pass2: 0.5806
+    exp4310_arc1_headroom_recovered: 4
+    exp4310_arc1_vote_wins_lost: 0
+    exp4310_v398_state: efficiency_pareto_holds__diffusiongemma_bounded_null__cross_domain_collapses__self_learning_helps__arc_22_no_new_level
+    exp4310_robust_aggregator_used: true
+    exp4310_available_artifact_keys:
+    - 4303_efficiency
+    - 4304_in_generation
+    - 4305_cross_domain
+    - 4306_self_learning
+    exp4310_missing_upstream_artifacts: []
+    exp4310_flagged_artifacts_excluded:
+    - axis: arc_progress
+      artifact_key: 4307_arc_progress
+      experiment_id: 4307
+      reason: flagged_adversarial
+    exp4310_efficiency_artifact: results/experiment_4303_verifier_efficiency_parity_isoflops.json
+    exp4310_efficiency_pareto_holds: true
+    exp4310_efficiency_accuracy_energy_verifier: 0.8
+    exp4310_efficiency_accuracy_best_judge: 0.5
+    exp4310_efficiency_accuracy_delta_ci95:
+    - 0.1
+    - 0.5
+    exp4310_efficiency_cost_ratio: 1.03e-08
+    exp4310_in_generation_artifact: results/experiment_4304_diffusiongemma_in_generation_engaged_controls.json
+    exp4310_diffusiongemma_guidance_moat: false
+    exp4310_controls_differentiated: true
+    exp4310_scorer_leak_recheck_passed: true
+    exp4310_carnot_minus_best_control_delta: 0.133334
+    exp4310_guidance_moat_ci95:
+    - -0.066667
+    - 0.366667
+    exp4310_cross_domain_artifact: results/experiment_4305_cross_domain_selector_generalization.json
+    exp4310_cross_domain_selection_holds: false
+    exp4310_label_ablation_robust: true
+    exp4310_cross_domain_delta: 0.2307692308
+    exp4310_cross_domain_ci95:
+    - -0.1153846154
+    - 0.5384615385
+    exp4310_cross_domain_held_out_task_n: 26
+    exp4310_self_learning_artifact: results/experiment_4306_self_learning_powered_ci_cross_domain.json
+    exp4310_online_adaptation_helps: true
+    exp4310_best_adaptive_minus_static_delta: 0.5292929293
+    exp4310_best_adaptive_minus_static_ci95:
+    - 0.4080808081
+    - 0.6505050505
+    exp4310_self_learning_held_out_task_n: 102
+    exp4310_arc_progress_artifact: results/experiment_4307_arc_incremental_progress_new_game.json
+    exp4310_arc_total_levels: 22
+    exp4310_arc_total_levels_solved: 22
+    exp4310_arc_new_levels_solved: 0
+    exp4310_arc_game_advanced: re86-8af5384d
+    exp4310_arc_flagged_adversarial: true
+    exp4310_gaps_logged:
+    - GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -4317,3 +4375,31 @@ verifiers:
     gap_ids_logged:
     - GAP-DIFFUSIONGEMMA-PARTIAL-STATE-SCORER-4287
     eval_exp_4287: results/experiment_4287_verifier_registry_gaps_hygiene.json
+  - role_id: oracle_distinct_v398_registry_gaps_hygiene_4310
+    experiment: results/experiment_4310_verifier_registry_gaps_hygiene.json
+    role: registry_gap_manifest_hygiene_v398
+    status: v398_outcomes_recorded_with_robust_availability
+    v398_state: efficiency_pareto_holds__diffusiongemma_bounded_null__cross_domain_collapses__self_learning_helps__arc_22_no_new_level
+    robust_aggregator_used: true
+    efficiency_artifact: results/experiment_4303_verifier_efficiency_parity_isoflops.json
+    efficiency_pareto_holds: true
+    efficiency_cost_ratio: 1.03e-08
+    in_generation_artifact: results/experiment_4304_diffusiongemma_in_generation_engaged_controls.json
+    diffusiongemma_guidance_moat: false
+    controls_differentiated: true
+    scorer_leak_recheck_passed: true
+    cross_domain_artifact: results/experiment_4305_cross_domain_selector_generalization.json
+    cross_domain_selection_holds: false
+    label_ablation_robust: true
+    cross_domain_delta: 0.2307692308
+    self_learning_artifact: results/experiment_4306_self_learning_powered_ci_cross_domain.json
+    online_adaptation_helps: true
+    best_adaptive_minus_static_delta: 0.5292929293
+    arc_progress_artifact: results/experiment_4307_arc_incremental_progress_new_game.json
+    arc_total_levels: 22
+    arc_new_levels_solved: 0
+    arc_game_advanced: re86-8af5384d
+    arc_flagged_adversarial: true
+    gap_ids_logged:
+    - GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305
+    eval_exp_4310: results/experiment_4310_verifier_registry_gaps_hygiene.json
