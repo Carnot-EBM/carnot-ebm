@@ -8639,3 +8639,4 @@ c |
 | 2026-06-17 06:32 UTC | PHASE C1 (DEPLOY the hardened efficiency verifier  | OK | cache hit: 84 passed, 1 warning in 7.12s |
 | 2026-06-17 06:54 UTC | PHASE D1 (ARC north star; UNSTALL the exp4307 harn | OK | 90 passed, 1 warning in 5.55s |
 | 2026-06-17 07:18 UTC | PHASE E1 (CONTINUOUS SELF-LEARNING -- the mandated | OK | 109 passed, 1 warning in 5.85s |
+| 2026-06-17 07:41 UTC | PHASE F1 (OFF-ARC EXECUTION-VERIFIER TRANSFER; GAP | OK | 106 passed, 1 warning in 6.58s |
