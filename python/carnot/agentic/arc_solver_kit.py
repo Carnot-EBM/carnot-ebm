@@ -94,38 +94,64 @@ class OfflineSolver:
         # computed verifier to turn the solver into a verifier-routed search.
         self.verifier = verifier or (lambda _g: 0.0)
         self.last_states_expanded = 0
+        self.last_frame: Any = None
+
+    def _call_state_key(self, env: Any) -> Hashable:
+        try:
+            return self.state_key(env._game, self.last_frame)  # type: ignore[misc]
+        except TypeError:
+            return self.state_key(env._game)
+
+    def _call_verifier(self, env: Any) -> float:
+        try:
+            return float(self.verifier(env._game, self.last_frame))  # type: ignore[misc]
+        except TypeError:
+            return float(self.verifier(env._game))
+
+    def _call_action_labels(self, env: Any, path: Sequence[str]) -> Sequence[str]:
+        try:
+            return self.action_labels(env, self.last_frame, tuple(path))  # type: ignore[misc]
+        except TypeError:
+            try:
+                return self.action_labels(env, self.last_frame)  # type: ignore[misc]
+            except TypeError:
+                return self.action_labels(env)
 
     def _replay(self, env: Any, path: Sequence[str]) -> Any:
         f = env.reset()
+        self.last_frame = f
         if self.warmup_label is not None:
             f = self.apply(env, self.warmup_label, f)  # gotcha #4
+            self.last_frame = f
         for label in path:
             f = self.apply(env, label, f)
+            self.last_frame = f
         return f
 
     def solve_level(self, env: Any, start_level: int, prefix: Sequence[str], depth_cap: int):
         """Search one level forward from `prefix` — verifier-routed BEST-FIRST (or
         plain BFS when no verifier). Returns (extension_path, states_expanded)."""
         self._replay(env, list(prefix))
-        seen = {self.state_key(env._game)}
+        seen = {self._call_state_key(env)}
         counter = itertools.count()  # FIFO tiebreaker (so verifier≡0 ⇒ BFS)
-        heap = [(self.verifier(env._game), next(counter), [])]
+        heap = [(self._call_verifier(env), next(counter), [])]
         nodes = 0
         while heap and nodes < self.max_nodes:
             _, _, path = heapq.heappop(heap)
             if len(path) >= depth_cap:
                 continue
             self._replay(env, list(prefix) + path)
-            for label in self.action_labels(env):
+            for label in self._call_action_labels(env, path):
                 f2 = self.apply(env, label, None)
+                self.last_frame = f2
                 nodes += 1
                 if frame_level(f2) > start_level:
                     self.last_states_expanded = nodes
                     return path + [label], nodes
-                k = self.state_key(env._game)
+                k = self._call_state_key(env)
                 if k not in seen:
                     seen.add(k)
-                    heapq.heappush(heap, (self.verifier(env._game), next(counter), path + [label]))
+                    heapq.heappush(heap, (self._call_verifier(env), next(counter), path + [label]))
                 self._replay(env, list(prefix) + path)  # restore for next sibling
         self.last_states_expanded = nodes
         return None, nodes

@@ -1099,3 +1099,11 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: DG-PRM-style multi-invariant verifier dimensions with a learned task-structure router validated on held-out fover
 - priority: high
 <!-- exp4310-gap-cross-domain-family-invariant-selection-4305:end -->
+
+### GAP-4318: Game-invariant ARC value representation
+- status: open
+- evidence: `results/experiment_4318_arc_cross_game_learned_verifier_transfer.json` reports cross_game_state_reduction=1 with baseline_solves_held_out=true.
+- failure mode: a value-head trained on other solved games did not produce a decision-grade held-out search-state reduction.
+- missing discriminator: game-invariant ARC value representation that recognizes progress across navigation, click-placement, and rotation mechanics.
+- candidate design: learned frame encoder or adapter-conditioned value head trained on more reproduced solve traces, with hardware-portable CPU features first and an accelerator path later.
+- priority: medium
