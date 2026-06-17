@@ -1,0 +1,307 @@
+{
+  "acceptance_gate": true,
+  "adversarial_verify": {
+    "critical_flags": [],
+    "parsed_report": null,
+    "returncode": 1,
+    "status": "clean",
+    "stderr_tail": "",
+    "stdout_tail": "Scanned 1 artifact(s); 1 flagged.\n\n[INFO] exp4325 () -- 3 flag(s)\n  - INFO     IMPLAUSIBLE_PERFECT            carnot_minus_best_control_delta=0.0 (exactly zero). Confirm this is not a stub default.\n  - INFO     IMPLAUSIBLE_PERFECT            carnot_minus_self_reward_smc_delta=0.0 (exactly zero). Confirm this is not a stub default.\n  - INFO     IMPLAUSIBLE_PERFECT            carnot_minus_unguided_delta=0.0 (exactly zero). Confirm this is not a stub default.\n\n",
+    "warn_flags": []
+  },
+  "benchmark_failures": [],
+  "benchmark_n": 0,
+  "benchmark_n_per_seed": 80,
+  "benchmark_records_preview": [],
+  "best_engaged_control": "",
+  "bootstrap_resamples": 2000,
+  "carnot_minus_best_control_delta": 0.0,
+  "carnot_minus_self_reward_smc_delta": 0.0,
+  "carnot_minus_unguided_delta": 0.0,
+  "condition_accuracy": {},
+  "condition_pass_counts": {},
+  "control_noop_guard": {
+    "bit_identical_accuracy_pairs": [],
+    "bit_identical_selection_pairs": [],
+    "condition_accuracy": {},
+    "controls_differentiated": false,
+    "guidance_changes_selection": {
+      "carnot_stitched": false,
+      "entrgi": false,
+      "self_reward_smc": false
+    },
+    "reason": "no benchmark rows"
+  },
+  "controls_differentiated": false,
+  "duration_s": 1.330277,
+  "experiment": 4325,
+  "field_principles": {
+    "benchmark_n": "BARE int: measured per-arm task rows on the second corpus.",
+    "carnot_minus_best_control_delta": "BARE float: Carnot-stitched minus the best engaged control on the 2nd corpus.",
+    "carnot_minus_self_reward_smc_delta": "BARE float: Carnot-stitched minus self-reward SMC on the 2nd corpus.",
+    "carnot_minus_unguided_delta": "BARE float: Carnot-stitched minus unguided on the 2nd corpus.",
+    "controls_differentiated": "BARE bool: true iff no two condition arms tie bit-identically and every guidance arm changes selection versus unguided.",
+    "honest_verdict": "Terminal-prefixed. A replication (the moat holds on a 2nd corpus, CI95-excl-0 -- gate-flip candidate), a POWERED failure-to-replicate (corpus-specific -> the headline narrows), a controls_not_differentiable, and a scorer_leaky_on_second_corpus are ALL COMPLETE and decision-grade.",
+    "in_generation_moat_replicates": "BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff the LEARNED (oracle-distinct) reward-guided-stitched run beats the BEST engaged control AND CI95-excl-0 AND controls_differentiated AND beats self-reward SMC ON THE 2ND CORPUS.",
+    "model_specs": "DiffusionGemma GGUF + PR binary + partial-state scorer + 2nd corpus + stitching config + control construction + denoising steps + n + seeds.",
+    "preconditions_checked": "Records the PR-binary + GGUF cache + scorer-loadable + 2nd-corpus + TRM-stand-down checks.",
+    "random_seed": "Determinism precondition for denoising, stitching, and bootstrap.",
+    "replication_ci95": "Task-level bootstrap CI95 (>=2000 resamples) of the Carnot-minus-best-engaged-control delta on the 2nd corpus.",
+    "reproducibility_checksum": "Hash of the 2nd corpus + stitching config + control construction + PR-binary inputs.",
+    "scorer_leak_recheck_passed": "BARE bool: true iff the scorer's signal survives answer-cell masking on the second corpus.",
+    "verifier_is_oracle": "BARE bool=false -- the learned partial-state scorer is oracle-distinct."
+  },
+  "guidance_changes_selection": {
+    "carnot_stitched": false,
+    "entrgi": false,
+    "self_reward_smc": false
+  },
+  "guidance_dynamics_diagnostic": {
+    "mask_entropy_mean": 0.0,
+    "mask_entropy_stdev": 0.0,
+    "over_guided_finding": false,
+    "status": "not_run",
+    "token_change_covariance": 0.0,
+    "token_change_rate": 0.0,
+    "trajectory_stability": 0.0
+  },
+  "honest_verdict": "scorer_leaky_on_second_corpus",
+  "in_generation_moat_replicates": false,
+  "independent_leak_recheck": {
+    "answer_masked_auroc": 0.549719,
+    "answer_masked_cells": 102,
+    "auroc_floor": 0.6,
+    "fresh_heldout_n": 990,
+    "fresh_heldout_task_n": 330,
+    "protocol": "fresh split; replace answer-bearing canvas cells with mask_token_id",
+    "scorer_leak_recheck_passed": false,
+    "status": "measured",
+    "unmasked_auroc": 0.548005
+  },
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "model_specs": {
+    "control_construction": {
+      "engaged_controls": [
+        "entrgi"
+      ],
+      "entrgi": {
+        "changes_selection": false,
+        "gamma": 2.0,
+        "paper": "2602.05000",
+        "type": "single-model entropy-gated guidance"
+      },
+      "noop_guard": {
+        "bit_identical_accuracy_pairs": [],
+        "bit_identical_selection_pairs": [],
+        "requires_no_bit_identical_condition_accuracy": true,
+        "requires_no_bit_identical_selection_sequence": true
+      }
+    },
+    "diffusiongemma": {
+      "active_params_b": 4,
+      "auto_tokenizer_used": false,
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "canvas_len": 256,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "mask_token_id": 4,
+      "model_loaded": true,
+      "pr_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "quantization": "Q4_K_M",
+      "runtime": "llama.cpp PR diffusion-gemma eval binary",
+      "total_params_b": 26,
+      "vocab_size": 262144
+    },
+    "independent_leak_recheck": {
+      "answer_masked_auroc": 0.549719,
+      "answer_masked_cells": 102,
+      "auroc_floor": 0.6,
+      "fresh_heldout_n": 990,
+      "fresh_heldout_task_n": 330,
+      "protocol": "fresh split; replace answer-bearing canvas cells with mask_token_id",
+      "scorer_leak_recheck_passed": false,
+      "status": "measured",
+      "unmasked_auroc": 0.548005
+    },
+    "partial_state_scorer": {
+      "artifact_partial_state_leak_free": true,
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4292_partial_state_diffusion_scorer_build.json",
+      "leak_ablation_auroc": 0.937365,
+      "partial_state_auroc": 0.966143,
+      "partial_state_scorer_built": true,
+      "score_api": "score_partial_state(canvas_ids, step) -> energy",
+      "scorer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/partial_state_diffusion_scorer_exp4292.pkl",
+      "verifier_is_oracle": false
+    },
+    "reward_guided_stitching": {
+      "architecture_prior": "2602.22871-style diverse trajectory step scoring/stitching",
+      "benchmark_n_measured": 0,
+      "benchmark_n_per_seed": 80,
+      "bootstrap_resamples": 2000,
+      "candidate_count": 4,
+      "denoising_steps": 4,
+      "guidance_config": {
+        "candidate_count": 4,
+        "feasible_cost_window_s": 86400.0,
+        "guidance_lambda": 2.0,
+        "steps": 4
+      },
+      "guidance_equation": "logit + external_reward_delta + stitch_support_bonus; lower energy is better",
+      "random_seeds": [
+        4325,
+        4326,
+        4327
+      ],
+      "step_reward": "Exp 4292 external partial-state scorer",
+      "stitch_support_weight": 0.2
+    },
+    "second_corpus": {
+      "baseline_exp4315_corpus_checksum": "68ce4c21d0d1a5ba589178160372a28cf5b9f893c3a05162e5898257af11dce7",
+      "checksum": "4d66d052127c46564d7aec212c37d5bb8d0ec43b1247dd79ba4db89e5c9eabee",
+      "families": [
+        "PRMBench-step-error"
+      ],
+      "item_count": 1000,
+      "label_counts": {
+        "correct": 500,
+        "incorrect": 500
+      },
+      "name": "step_error_balanced_v2",
+      "oracle_distinct_from_exp4315": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/step_error_balanced_v2.json"
+    },
+    "self_reward_smc_baseline": {
+      "confidence_weight": 2.0,
+      "description": "particle-filter proxy using intrinsic trajectory confidence only",
+      "paper": "2602.01849",
+      "uses_external_scorer": false,
+      "verifier_is_oracle": false
+    }
+  },
+  "preconditions_checked": [
+    {
+      "command": "ls /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "exists": true,
+      "ok": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "resource": "pr_binary",
+      "size_bytes": 26400
+    },
+    {
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "cache_entries_preview": [
+        "blobs",
+        "refs",
+        "snapshots"
+      ],
+      "cache_error": null,
+      "cache_non_empty": true,
+      "command": "ls /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/",
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "ok": true,
+      "resolve_error": null,
+      "resource": "diffusiongemma_cache"
+    },
+    {
+      "active_training_processes": [],
+      "ok": true,
+      "process_check_error": null,
+      "resource": "trm_training_stand_down",
+      "results_trm_runs_touched": false
+    },
+    {
+      "auto_tokenizer_used": false,
+      "backend": "gguf_metadata",
+      "detail": "llama_cpp vocab_only failed (ValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf); embedded GGUF tokenizer metadata OK",
+      "elapsed_s": 0.322947,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "mode": "embedded_vocab_metadata",
+      "ok": true,
+      "resource": "gguf_vocab_loader",
+      "token_count": 15,
+      "token_ids_preview": [
+        3,
+        236743,
+        3,
+        236743,
+        111359,
+        236743,
+        3,
+        236743
+      ],
+      "vocab_only": false
+    },
+    {
+      "artifact_partial_state_leak_free": true,
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4292_partial_state_diffusion_scorer_build.json",
+      "artifact_scorer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/partial_state_diffusion_scorer_exp4292.pkl",
+      "leak_ablation_auroc": 0.937365,
+      "ok": true,
+      "partial_state_auroc": 0.966143,
+      "partial_state_scorer_built": true,
+      "probe_energy": 0.034862,
+      "resource": "partial_state_scorer_gate",
+      "scorer_exists": true,
+      "scorer_loadable": true,
+      "scorer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/partial_state_diffusion_scorer_exp4292.pkl",
+      "verifier_is_oracle": false
+    },
+    {
+      "baseline_exp4315_corpus_checksum": "68ce4c21d0d1a5ba589178160372a28cf5b9f893c3a05162e5898257af11dce7",
+      "checksum": "4d66d052127c46564d7aec212c37d5bb8d0ec43b1247dd79ba4db89e5c9eabee",
+      "item_count": 1000,
+      "label_counts": {
+        "correct": 500,
+        "incorrect": 500
+      },
+      "minimum_tasks_per_seed": 80,
+      "name": "step_error_balanced_v2",
+      "ok": true,
+      "oracle_distinct_from_exp4315": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/step_error_balanced_v2.json",
+      "path_exists": true,
+      "reason": "ok",
+      "resource": "second_oracle_distinct_corpus",
+      "seed_count": 3
+    }
+  ],
+  "random_seed": 4325,
+  "random_seeds": [
+    4325,
+    4326,
+    4327
+  ],
+  "replication_ci95": [
+    0.0,
+    0.0
+  ],
+  "reproducibility_checksum": "e6fdb22eef485a38cc683a5f511ee9eb68f163c89d5c8ef4d4bd9156517f0d00",
+  "schema": "in_generation_moat_replicate_second_corpus_v1",
+  "scorer_leak_recheck_passed": false,
+  "second_corpus_check": {
+    "baseline_exp4315_corpus_checksum": "68ce4c21d0d1a5ba589178160372a28cf5b9f893c3a05162e5898257af11dce7",
+    "checksum": "4d66d052127c46564d7aec212c37d5bb8d0ec43b1247dd79ba4db89e5c9eabee",
+    "item_count": 1000,
+    "label_counts": {
+      "correct": 500,
+      "incorrect": 500
+    },
+    "minimum_tasks_per_seed": 80,
+    "name": "step_error_balanced_v2",
+    "ok": true,
+    "oracle_distinct_from_exp4315": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/data/step_error_balanced_v2.json",
+    "path_exists": true,
+    "reason": "ok",
+    "resource": "second_oracle_distinct_corpus",
+    "seed_count": 3
+  },
+  "seed_count": 3,
+  "spec_refs": [
+    "REQ-VERIFY-4325",
+    "SCENARIO-VERIFY-4325"
+  ],
+  "verifier_is_oracle": false
+}
