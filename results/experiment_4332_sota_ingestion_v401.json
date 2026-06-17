@@ -1,0 +1,68 @@
+{
+  "field_principles": {
+    "flagged_for_v401": "Closes discover->ingest->plan: names the strongest method for the .401 planner, conditioned on the .400 outcomes.",
+    "honest_verdict": "Terminal-prefixed. Records ingestion completed with verifiable citations.",
+    "methods_mapped": "Each method MUST carry a real, VERIFIED arXiv ID/URL (no citation = fabrication per adversarial_verify discipline) + a one-line .401 experiment mapping.",
+    "random_seed": "Determinism placeholder for the discovery query set (recorded for reproducibility of the sweep)."
+  },
+  "flagged_for_v401": "leak_robust_diffusion_native_partial_state_reward_v401",
+  "honest_verdict": "complete: sota_ingestion_v401_mapped",
+  "methods_mapped": [
+    {
+      "arxiv_id_or_url": "2602.11146",
+      "carnot_stack_mapping": "Replace the leaky Exp 4292 partial-state scorer with a reward head trained on masked/noisy intermediate states and answer-cell-masked validation before reusing it inside DiffusionGemma guidance.",
+      "experiment_mapping": ".401: build a DiNa-LRM-style leak-robust partial-state reward scorer and rerun the second-corpus moat gate before any scaled generation claim.",
+      "failure_mode": "The paper is image-latent diffusion, not ARC grid-token diffusion. The .401 port must prove that noisy-state rewards stay oracle-distinct under answer masking and do not recover final cells from position cues.",
+      "name": "DiNa-LRM diffusion-native latent reward modeling",
+      "source_read": "DiNa-LRM trains a timestep-conditioned reward head directly on noisy diffusion states, with noise-calibrated uncertainty and inference-time noise ensembling for robust reward evaluation.",
+      "track": "leak-robust noisy-state reward modeling for diffusion generation",
+      "url": "https://arxiv.org/abs/2602.11146",
+      "v400_outcome_conditioning": "Exp 4325 returned honest_verdict=scorer_leaky_on_second_corpus with in_generation_moat_replicates=false and scorer_leak_recheck_passed=false."
+    },
+    {
+      "arxiv_id_or_url": "2502.01384",
+      "carnot_stack_mapping": "Use exact ARC or leak-robust verifier rewards as black-box terminal signals for a tiny DiffusionGemma adapter or replay head, with unguided and reward-score-matching controls.",
+      "experiment_mapping": ".401: run a bounded SEPO adapter over discrete denoising trajectories only after the new partial-state reward scorer passes leak audit.",
+      "failure_mode": "Policy-gradient updates can optimize verifier artifacts and damage grid syntax. Keep KL-to-base constraints, syntax-validity gates, and held-out corpus leak checks load-bearing.",
+      "name": "SEPO score-entropy policy optimization",
+      "source_read": "SEPO fine-tunes discrete diffusion models over non-differentiable rewards with a policy-gradient objective designed for score-entropy parameterizations.",
+      "track": "policy-gradient fine-tuning of discrete diffusion with external rewards",
+      "url": "https://arxiv.org/abs/2502.01384",
+      "v400_outcome_conditioning": "Exp 4326 found adaptive_guidance_beats_control=false with CI95 [-0.075, 0.35], so .401 needs a real reward-optimization step rather than another schedule-only adaptive sampler."
+    },
+    {
+      "arxiv_id_or_url": "2512.22336",
+      "carnot_stack_mapping": "Turn the E3 verifier into an adaptive test-team loop that searches for hidden transition mismatches before planning, then records the failed tests as training examples for future world-model induction.",
+      "experiment_mapping": ".401: repair the ar25 hidden-undo-stack rule gap with adaptive world-model tests before attempting a multi-game E3 sweep.",
+      "failure_mode": "Agent2World includes a web-research sub-agent in its original design; Carnot's in-loop port must keep discovery offline and only import the adaptive testing and simulation-validation pattern.",
+      "name": "Agent2World adaptive world-model testing",
+      "source_read": "Agent2World generates symbolic world models and validates them with adaptive unit tests plus simulation-based feedback, producing multi-turn trajectories for later supervised improvement.",
+      "track": "executable world-model induction and behavior-aware verification",
+      "url": "https://arxiv.org/abs/2512.22336",
+      "v400_outcome_conditioning": "Exp 4327 reached verifier_best_accuracy=0.8875 but offline_reproduced=false and reproduced_levels=0, so the gap is behavior-level model coverage."
+    },
+    {
+      "arxiv_id_or_url": "2605.25931",
+      "carnot_stack_mapping": "Add an explicit exploration budget that collects verifier-targeted transition lemmas, then allow planning only after the world model passes those mechanics checks.",
+      "experiment_mapping": ".401: make E3 explore-before-plan on ar25/ka59, with verifier-gated mechanic lemmas as the success precondition.",
+      "failure_mode": "The paper also documents public-set shortcuts, so .401 must reject shortcut action schemas and report private/offline-env verifier outcomes rather than leaderboard-style public RHAE alone.",
+      "name": "AERA explore-verify-plan ARC-AGI-3 agent",
+      "source_read": "AERA separates EXPLORE, VERIFY, and PLAN phases and frames ARC-AGI-3 performance as a speed-depth trade-off between action efficiency and information gain.",
+      "track": "information-gain budgeting for interactive ARC-AGI-3 reasoning",
+      "url": "https://arxiv.org/abs/2605.25931",
+      "v400_outcome_conditioning": "Exp 4327 had plan_executed=false and no reproduced level, indicating that the current E3 loop planned before it had enough verified mechanics."
+    },
+    {
+      "arxiv_id_or_url": "2605.15256",
+      "carnot_stack_mapping": "Replace raw-frame-only value features with disentangled action-role and object-interaction embeddings, then train held-out search values on role transitions rather than per-game pixels.",
+      "experiment_mapping": ".401: run a richer cross-game value encoder over action-role interaction features after the tiny frame encoder's flat result.",
+      "failure_mode": "ReactiveGWM targets video-game NPC world models, not symbolic ARC grids. The .401 representation must show state-count reduction under leave-one-game-out splits, not just prettier embeddings.",
+      "name": "ReactiveGWM game-agnostic interaction representation",
+      "source_read": "ReactiveGWM decouples player controls from NPC behavior and learns game-agnostic interaction modules that transfer zero-shot across game world models.",
+      "track": "cross-game interaction logic representation for search values",
+      "url": "https://arxiv.org/abs/2605.15256",
+      "v400_outcome_conditioning": "Exp 4331 reported learned_encoder_transfer_helps=false with cross_game_state_reduction_ci95 lower bound exactly 1.0 despite baseline_solves_held_out=true."
+    }
+  ],
+  "random_seed": 4332
+}
