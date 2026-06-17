@@ -28,10 +28,16 @@ sys.path.insert(0, str(REPO / "python"))
 from carnot.agentic import arc_solver_kit as kit  # noqa: E402
 from carnot.agentic.arc_agi3_live_adapter import _game_action, _levels_completed  # noqa: E402
 from carnot.agentic.arc_agi3_world_model import grid_of  # noqa: E402
+from carnot.agentic.arc_program_editor_model import EditorState  # noqa: E402
 from arcengine import GameAction  # noqa: E402
 
 LOCAL_MAX = 8  # a click changing <= this many non-HUD cells is a "local toggle" (an edit button)
 HUD_FRAC = 0.5  # a cell changed by >= this fraction of all clicks is action-invariant HUD
+
+# the sprite's directional "notch" edge -> rotation (calibrated vs tn36 internal truth, L1-L5;
+# clockwise: bottom=0, left=90, top=180, right=270). The notch points the way the sprite faces.
+NUB_TO_ROTATION = {"B": 0, "L": 90, "T": 180, "R": 270}
+_NUB_VECTOR = {"B": (0, 1), "T": (0, -1), "R": (1, 0), "L": (-1, 0)}
 
 
 def _single_click(arc, game, cell):
@@ -402,6 +408,92 @@ def induce_maze_model(grids, *, play_top=2, play_rows=32, floor_top=3):
             "(tn36) are NOT frame-inducible -> the model falls back to internal state "
             "(GAP-ARC-MAZE-MODEL-FRAME-INDUCTION)."
         ),
+    }
+
+
+# --- Frame-only OBJECT + TARGET attribute induction (the program-editor model's INPUTS) -----------
+#
+# The offline transition model (arc_program_editor_model) needs the object's and target's five
+# attributes (x, y, scale, rotation, property). The TARGET is rendered as a HOLLOW OUTLINE "ghost"
+# sprite (the object is the SOLID version of the same sprite), so all five attributes ARE frame-
+# readable, resolving the residual the maze/program-editor live solver was gated on:
+#   - position  = the sprite's box (solid: filled bbox; outline: centroid, notch-bias corrected)
+#   - scale     = the box size / 4 (a 4x4 sprite is scale 1, 8x8 is scale 2)
+#   - property  = the sprite's COLOUR (knfgrcbayu sets the object colour = its property value)
+#   - rotation  = the 2-cell directional NOTCH edge -> NUB_TO_ROTATION (calibrated vs tn36 L1-L5)
+# Validated end-to-end: frame-induced object+target -> transition model -> guided plan -> the REAL env
+# WINS for tn36 L1-L5 (5/5), zero internal state on the perception+planning path.
+
+
+def _nub_edge(mask, bx, by, w, h):
+    """The sprite's directional notch edge ('B'/'T'/'L'/'R') — the 2-cell asymmetry. For a SOLID
+    sprite the notch is the floor holes inside the box; for an OUTLINE it is the colour cells that
+    protrude into the interior. The asymmetry's direction from the box centre gives the facing."""
+    sub = mask[by : by + h, bx : bx + w]
+    if sub.sum() > w * h * 0.6:  # solid -> anomaly = the holes
+        ys, xs = np.where(~sub)
+    else:  # outline -> anomaly = interior fills
+        interior = np.zeros_like(sub)
+        interior[1:-1, 1:-1] = True
+        ys, xs = np.where(sub & interior)
+    if len(xs) == 0:
+        return "?"
+    cx, cy = (w - 1) / 2, (h - 1) / 2
+    dx, dy = xs.mean() - cx, ys.mean() - cy
+    if abs(dy) >= abs(dx):
+        return "B" if dy > 0 else "T"
+    return "R" if dx > 0 else "L"
+
+
+def induce_object_target_attrs(frame, *, play_top=2, play_rows=40, floor_top=3):
+    """FRAME-ONLY: read the OBJECT (solid sprite) and TARGET (hollow outline sprite) as EditorState
+    (the program-editor transition model's state), zero internal state. Returns
+    {object, target, object_color, target_color} — object/target are EditorState or None."""
+    import scipy.ndimage as ndi
+
+    g = np.asarray(frame.frame if hasattr(frame, "frame") else frame)
+    if g.ndim == 3:
+        g = g[-1]
+    play = g[play_top:play_rows]
+    vals, counts = np.unique(play, return_counts=True)
+    floor = {
+        int(c) for _, c in sorted(zip(counts.tolist(), vals.tolist()), reverse=True)[:floor_top]
+    }
+    sprites = []
+    for col in set(int(v) for v in vals) - floor:
+        mask = play == col
+        lab, n = ndi.label(mask)
+        for i in range(1, n + 1):
+            ys, xs = np.where(lab == i)
+            bx, by = int(xs.min()), int(ys.min())
+            w, h = int(xs.max() - bx + 1), int(ys.max() - by + 1)
+            if not (3 <= w <= 12 and 3 <= h <= 12 and abs(w - h) <= 2):
+                continue  # not a square-ish sprite
+            # SOLID (object) vs OUTLINE (target): the box CENTRE is the sprite colour vs floor.
+            solid = play[by + h // 2, bx + w // 2] == col
+            nub = _nub_edge(mask, bx, by, w, h)
+            rot = NUB_TO_ROTATION.get(nub, 0)
+            if solid:
+                scale = max(1, round(w / 4))
+                x, y = bx, by + play_top
+            else:
+                scale = max(1, round((w - 2) / 4))  # outline bbox is the sprite + ~1px each side
+                size = 4 * scale
+                x = round(xs.mean() - (size - 1) / 2)
+                y = round(ys.mean() - (size - 1) / 2) + play_top
+                nv = _NUB_VECTOR.get(nub, (0, 0))  # the notch biases the centroid by ~scale
+                x -= nv[0] * scale
+                y -= nv[1] * scale
+            sprites.append(
+                (solid, int(col), EditorState(int(x), int(y), int(scale), int(rot), int(col)))
+            )
+    obj = next((s for s in sprites if s[0]), None)
+    tgt = next((s for s in sprites if not s[0]), None)
+    return {
+        "object": obj[2] if obj else None,
+        "target": tgt[2] if tgt else None,
+        "object_color": obj[1] if obj else None,
+        "target_color": tgt[1] if tgt else None,
     }
 
 

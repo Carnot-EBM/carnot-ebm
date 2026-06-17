@@ -1436,7 +1436,13 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - priority: high (blind search caps live program-editor solvability; the offline-learned transition
   verifier is the unlock — and is squarely Carnot's verifier-as-product thesis)
 ### GAP-ARC-MAZE-MODEL-FRAME-INDUCTION: a planner-ready MazeModel can't be induced from atomic-run frames
-- status: open (frame-only inducer ships for the OBSERVABLE parts; tn36's critical fields are not frame-rendered)
+- status: TARGET-ATTRS RESOLVED (2026-06-17), maze sub-fields still open. The TARGET renders as a
+  HOLLOW OUTLINE sprite; arc3_frame_induction.induce_object_target_attrs reads object+target
+  x/y/scale/rotation/property frame-only EXACTLY -> frame-induced attrs plan to an env-confirmed win on
+  tn36 L1-L5 (5/5; results/experiment_frame_induced_target_attrs_validation.json). So the TRANSFORM-level
+  program-editor live solve is complete frame-only. STILL OPEN: the maze sub-fields (checkpoints draw on
+  the floor; at-rest hazards invisible) for L6/L7-style maze routing.
+- (was) status: open (frame-only inducer ships for the OBSERVABLE parts; tn36's critical fields are not frame-rendered)
 - evidence: scripts/arc3_frame_induction.py:induce_maze_model + the 2026-06-17 frame probes (design
   note "frame-only MazeModel induction"). The behavioral inducer recovers the OBJECT (the colour whose
   centroid moves across frames) and WALLS (static non-floor structure) — validated on synthetic frames

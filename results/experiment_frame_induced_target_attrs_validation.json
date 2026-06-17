@@ -1,0 +1,31 @@
+{
+  "experiment": "frame_induced_target_attrs_validation",
+  "run_date": "2026-06-17",
+  "schema": "outer_loop_validation_v1",
+  "summary": "The TARGET attributes (x, y, scale, rotation, property) are induced FROM FRAMES exactly for the program-editor class, closing the last live residual: frame-induced object+target -> offline transition model -> guided plan -> the real env WINS, 5/5 on tn36 L1-L5, zero internal state on the perception+planning path.",
+  "honest_verdict": "complete_target_attrs_frame_induced_exactly_5of5_endtoend_env_confirmed",
+  "inference_substrate": "frame_only_perception_plus_deterministic_model_validated_against_live_offline_arc_env",
+  "key_finding": "The target is rendered as a HOLLOW OUTLINE 'ghost' sprite (the object is the SOLID version of the same sprite). All five attributes are frame-readable: position = the sprite box (solid: filled bbox; outline: centroid with a notch-bias correction of -nub_vector*scale), scale = box size/4, property = the sprite COLOUR (knfgrcbayu sets object colour = property), rotation = the 2-cell directional NOTCH edge (calibrated bottom=0, left=90, top=180, right=270 -- clockwise).",
+  "target_attr_match_vs_internal_truth": {
+    "L1": true, "L2": true, "L3": true, "L4": true, "L5": true,
+    "note": "frame-induced (x,y,scale,rotation,property) == internal-state truth for all 5 levels (exact, all 5 attributes)."
+  },
+  "end_to_end_env_confirmed_solves": {
+    "solved": 5,
+    "levels": 5,
+    "note": "for each level the frame-induced object+target were fed to arc_program_editor_model.plan_program; the resulting plan was run in a fresh real env and advanced the level (won). 5/5."
+  },
+  "verifier_is_oracle": false,
+  "circularity_note": "Perception (frame-only) + amortized planning (offline transition model); the final plan is execution-grounded (env-confirmed). NOT a moat / oracle-distinct claim.",
+  "random_seed": 4242,
+  "model_specs": ["frame-only perception (numpy/scipy.ndimage region analysis on grid_of(frame)); deterministic transition model; no LLM/GPU"],
+  "reproducibility_checksum": "target_attrs_5of5_exact_endtoend_5of5_env_confirmed_tn36_L1toL5",
+  "closes": "the program-editor live-solve residual (GAP-ARC-MAZE-MODEL-FRAME-INDUCTION, target-attrs portion). Detect -> route -> perceive (object+target) -> plan -> env-confirmed solve is now complete frame-only for the program-editor transform levels.",
+  "remaining": "the MAZE sub-fields (checkpoints draw on floor; at-rest hazards invisible) are still not frame-distinct (the maze-routing residual of GAP-ARC-MAZE-MODEL-FRAME-INDUCTION); object+walls+target+object-attrs all induce.",
+  "cross_refs": [
+    "scripts/arc3_frame_induction.py:induce_object_target_attrs",
+    "python/carnot/agentic/arc_program_editor_model.py",
+    "tests/python/test_arc_target_induction.py",
+    "docs/research-notes/arc-live-generalization-gap-2026-06-17.md"
+  ]
+}

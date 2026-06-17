@@ -74,10 +74,11 @@ STRATEGY_CLASSES: list[dict] = [
             "winner. Falls back to frame_only_winner_search (blind) when no model is available"
         ),
         "needs": (
-            "the offline transition model is BUILT + validated (100% win-bit agreement vs the env, "
-            "5/5 guided solves L1-L5). Remaining LIVE piece: frame-only induction of the model INPUTS "
-            "(object + TARGET attributes) — target attrs are the frame residual "
-            "(GAP-ARC-MAZE-MODEL-FRAME-INDUCTION); known games read them from internal state"
+            "COMPLETE for the transform levels: the offline transition model (100% win-bit agreement, "
+            "5/5 guided solves) + frame-only induction of its INPUTS (object SOLID sprite + target "
+            "HOLLOW-outline sprite -> x/y/scale/rotation/property) via "
+            "arc3_frame_induction.induce_object_target_attrs — frame-induced attrs plan to an "
+            "env-confirmed win on tn36 L1-L5 (5/5), zero internal state on the perception+planning path"
         ),
     },
     {
