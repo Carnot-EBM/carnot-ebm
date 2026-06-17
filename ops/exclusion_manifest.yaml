@@ -554,3 +554,21 @@ retired_extras:
   - verifier-as-reward in-loop training
   - in-loop verifier-as-reward
   - in_loop verifier reward training
+- id: cross_domain_selection_retired_exp4314_v399
+  experiment_scope: cross-domain verifier selection axis after repeated domain-bound
+    IR3DE/CASCAL/ContextPRM selector verdicts
+  reason: 'retire_if_same_verdict: Exp 4314 repeated Exp 4305''s domain-bound cross-domain
+    selection verdict; future cross-domain selector reruns need a new root cause,
+    a different discriminator, and operator authorization.'
+  experiment_ids:
+  - exp4305
+  - exp4314
+  retired_milestone: 2026.06.400
+  retired_by_artifact: results/experiment_4314_cross_domain_selector_ir3de_cascal.json
+  recorded_by_artifact: results/experiment_4333_verifier_registry_gaps_hygiene.json
+  operator_reopen_required: true
+  retire_if_same_verdict: true
+  blocked_patterns:
+  - cross-domain verifier selection
+  - cross_domain_selector_ir3de_cascal
+  - family-invariant cross-domain selection rerun

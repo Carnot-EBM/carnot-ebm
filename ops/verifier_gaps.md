@@ -1175,3 +1175,73 @@ registry version that closed them when a new verifier captures a previously-open
 - missing discriminator: game-invariant ARC value representation that recognizes progress across navigation, click-placement, rotation, and shallow-tail mechanics.
 - candidate design: larger encoder with more reproduced games, adapter-conditioned value head, or experience-gated source-relevance features; preserve a CPU/hardware path.
 - priority: medium
+
+<!-- exp4333-gap-diffusiongemma-second-corpus-leak-free-scorer-4325:start -->
+### GAP-DIFFUSIONGEMMA-SECOND-CORPUS-LEAK-FREE-SCORER-4325: Exp 4333 .400 verifier gap update
+- status: open
+- evidence: results/experiment_4325_in_generation_moat_replicate_second_corpus.json; in_generation_moat_replicates=False; scorer_leak_recheck_passed=False; benchmark_n=0; answer_masked_auroc=0.549719.
+- failure mode: the second-corpus in-generation replication did not run decision-grade rows because the partial-state scorer failed the independent leak recheck
+- missing discriminator: corpus-general leak-free partial-state scorer that remains predictive after answer-bearing cells are masked
+- candidate design: retrain and calibrate the scorer on multiple oracle-distinct corpora with fresh masked held-out AUROC gates before accepting another guided-generation moat
+- priority: high
+<!-- exp4333-gap-diffusiongemma-second-corpus-leak-free-scorer-4325:end -->
+
+<!-- exp4333-gap-arc-grid-generation-scorer-4326:start -->
+### GAP-ARC-GRID-GENERATION-SCORER-4326: Exp 4333 .400 verifier gap update
+- status: open
+- evidence: results/experiment_4326_adaptive_guided_generation_scaleup.json; adaptive_guidance_beats_control=False; domain_used=reasoning_corpus_fallback; adaptive_ci95=[-0.075, 0.35]; carnot_minus_best_control_delta=0.15.
+- failure mode: adaptive DiffusionGemma guidance stayed bounded to a reasoning-corpus null and did not establish an ARC-grid generation scorer
+- missing discriminator: oracle-distinct ARC-grid partial-state generation scorer that can rank candidate grid states during denoising rather than post-hoc reasoning choices
+- candidate design: build a grid-native canvas scorer with masked-cell leak checks, no-adaptation controls, and ARC environment reproduction gates before rerunning adaptive guidance
+- priority: high
+<!-- exp4333-gap-arc-grid-generation-scorer-4326:end -->
+
+<!-- exp4333-gap-e3-world-model-rule-ar25-4327:start -->
+### GAP-E3-WORLD-MODEL-RULE-AR25-4327: Exp 4333 .400 verifier gap update
+- status: open
+- evidence: results/experiment_4327_e3_executable_world_model_ar25.json; game=ar25; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.8875; residual_mismatch_class=missing_world_model_rule_gap_hidden_undo_stack_action7.
+- failure mode: E3 induced world model for ar25 remained partial and could not execute a reproduced level through the real offline environment
+- missing discriminator: ar25 executable world-model rule coverage for missing_world_model_rule_gap_hidden_undo_stack_action7
+- candidate design: mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate
+- priority: high
+<!-- exp4333-gap-e3-world-model-rule-ar25-4327:end -->
+
+<!-- exp4333-gap-e3-world-model-rule-ka59-4328:start -->
+### GAP-E3-WORLD-MODEL-RULE-KA59-4328: Exp 4333 .400 verifier gap update
+- status: open
+- evidence: results/experiment_4328_e3_executable_world_model_ka59.json; game=ka59; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.5625; residual_mismatch_class=missing_world_model_rule_gap_actions_1_2_4_6.
+- failure mode: E3 induced world model for ka59 remained partial and could not execute a reproduced level through the real offline environment
+- missing discriminator: ka59 executable world-model rule coverage for missing_world_model_rule_gap_actions_1_2_4_6
+- candidate design: mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate
+- priority: high
+<!-- exp4333-gap-e3-world-model-rule-ka59-4328:end -->
+
+<!-- exp4333-gap-e3-world-model-rule-tr87-4329:start -->
+### GAP-E3-WORLD-MODEL-RULE-TR87-4329: Exp 4333 .400 verifier gap update
+- status: open
+- evidence: results/experiment_4329_e3_executable_world_model_tr87_ft09.json; game=tr87; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.0; residual_mismatch_class=missing_world_model_rule_gap_actions_1_2_4.
+- failure mode: E3 induced world model for tr87 remained partial and could not execute a reproduced level through the real offline environment
+- missing discriminator: tr87 executable world-model rule coverage for missing_world_model_rule_gap_actions_1_2_4
+- candidate design: mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate
+- priority: high
+<!-- exp4333-gap-e3-world-model-rule-tr87-4329:end -->
+
+<!-- exp4333-gap-e3-world-model-rule-ft09-4329:start -->
+### GAP-E3-WORLD-MODEL-RULE-FT09-4329: Exp 4333 .400 verifier gap update
+- status: open
+- evidence: results/experiment_4329_e3_executable_world_model_tr87_ft09.json; game=ft09; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.1; residual_mismatch_class=missing_world_model_rule_gap_actions_6.
+- failure mode: E3 induced world model for ft09 remained partial and could not execute a reproduced level through the real offline environment
+- missing discriminator: ft09 executable world-model rule coverage for missing_world_model_rule_gap_actions_6
+- candidate design: mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate
+- priority: high
+<!-- exp4333-gap-e3-world-model-rule-ft09-4329:end -->
+
+<!-- exp4333-gap-4331:start -->
+### GAP-4331: Exp 4333 .400 verifier gap update
+- status: open_small_encoder_insufficient
+- evidence: results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json; upstream_missing_verifier_gap=true.
+- failure mode: small learned frame encoder over the current solved set did not produce a decision-grade held-out OfflineSolver state reduction
+- missing discriminator: game-invariant ARC value representation
+- candidate design: larger learned frame encoder, more reproduced solved traces, or adapter-conditioned value head with a hardware-portable path
+- priority: medium
+<!-- exp4333-gap-4331:end -->
