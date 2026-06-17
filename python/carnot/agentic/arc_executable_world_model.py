@@ -329,7 +329,7 @@ class LocalGGUFProposer:
     other local engine)."""
     repo_substr: str = "gemma-4-12B-it"     # lightweight SOTA: fast on GPU for per-game induction
     n_ctx: int = 16384                       # digit-dense grids tokenize ~1 char/token; 8192 overflowed
-    max_tokens: int = 2048
+    max_tokens: int = 4096                    # a full world-model engine needs >2048 (it truncated mid-code)
     timeout: int = 300
     port: int = 8919
     offline_legal: bool = True
@@ -363,26 +363,34 @@ class LocalGGUFProposer:
         return False
 
     def _gen_to_file(self, game: str, prompt: str) -> tuple[bool, str]:
+        import ast
         import json as _json
         import urllib.request
         (E3_DIR / game).mkdir(parents=True, exist_ok=True)
         if not self._ensure_server():
             return False, (f"GPU llama-server failed for {self.repo_substr}; SOTA models "
                            "must run on GPU (no CPU fallback)")
-        body = _json.dumps({"prompt": prompt, "n_predict": self.max_tokens,
-                            "temperature": 0.2, "cache_prompt": True}).encode()
-        try:
-            req = urllib.request.Request(self._url() + "/completion", data=body,
-                                         headers={"Content-Type": "application/json"})
-            with urllib.request.urlopen(req, timeout=self.timeout) as r:
-                text = _json.load(r).get("content", "")
-        except Exception as e:
-            return False, f"local gguf (GPU server) failed: {e!r}"[:200]
-        code = _extract_python(text)
-        if not code or "def engine" not in code:
-            return False, f"local model produced no usable engine() code (tail: {text[-200:]!r})"
-        (E3_DIR / game / "world_model.py").write_text(code)
-        return True, "local gguf (GPU server) wrote world_model.py"
+        last = ""
+        for attempt in range(3):              # retry on no-engine / unparseable code (GPU = fast)
+            body = _json.dumps({"prompt": prompt, "n_predict": self.max_tokens,
+                                "temperature": 0.2 + 0.1 * attempt, "cache_prompt": True}).encode()
+            try:
+                req = urllib.request.Request(self._url() + "/completion", data=body,
+                                             headers={"Content-Type": "application/json"})
+                with urllib.request.urlopen(req, timeout=self.timeout) as r:
+                    text = _json.load(r).get("content", "")
+            except Exception as e:
+                return False, f"local gguf (GPU server) failed: {e!r}"[:200]
+            code = _extract_python(text)
+            if not code or "def engine" not in code:
+                last = "no engine() in output"; continue
+            try:
+                ast.parse(code)               # never write/use code that doesn't parse
+            except SyntaxError as se:
+                last = f"syntax error line {se.lineno}: {se.msg}"; continue
+            (E3_DIR / game / "world_model.py").write_text(code)
+            return True, "local gguf (GPU server) wrote world_model.py"
+        return False, f"local model code unusable after 3 tries ({last})"
 
     def stop(self) -> None:
         if self._proc is not None:

@@ -73,8 +73,12 @@ def main() -> int:
     if not ok:
         print(f"  induce FAILED: {tail[-200:]}", flush=True)
         _write(game, {"stage": "induce", "ok": False, "tail": tail[-300:]}, t0); return 0
-    engine, is_done = e3.load_engine(game)
-    vr = verifier.score(engine)
+    try:
+        engine, is_done = e3.load_engine(game)
+        vr = verifier.score(engine)
+    except Exception as ex:                    # induced code parsed but failed at import/run
+        print(f"  induced engine failed to load/run: {repr(ex)[:160]}", flush=True)
+        _write(game, {"stage": "load", "ok": False, "error": repr(ex)[:200]}, t0); return 0
     acc_history = [round(vr.accuracy, 4)]
     print(f"  VERIFY r0: {vr.n_correct}/{vr.n} = {vr.accuracy:.0%}; is_level_complete present={is_done is not None}", flush=True)
     best_acc = vr.accuracy

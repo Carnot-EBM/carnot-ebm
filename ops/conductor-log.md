@@ -8643,3 +8643,4 @@ c |
 | 2026-06-17 07:55 UTC | PHASE G1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 125 passed, 1 warning in 6.01s |
 | 2026-06-17 08:13 UTC | PHASE G2 (hygiene; per Missing-Verifier Gap Loggin | OK | 88 passed, 1 warning in 5.48s |
 | 2026-06-17 08:26 UTC | PHASE G3 (hardware continuity; opportunistic per n | OK | 106 passed, 1 warning in 8.04s |
+| 2026-06-17 08:45 UTC | PHASE G4 (capstone .399, UNGATED) -- the verifier  | OK | 108 passed, 1 warning in 7.72s |
