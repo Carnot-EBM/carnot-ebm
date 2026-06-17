@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.402",
+  "generated_at": "2026-06-17T23:52:58Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "PHASE E4 capstone milestone. The retro's authoritative milestone-scoped timing detector attributed 0 experiment commits, 0 compute-bound tasks and 0 wall-time minutes since activation; with 0 compute-bound tasks attributed, the two idle RTX 3090s (0% util, 4MB each at the 23:52Z snapshot) are correct behaviour, so gpu_idle_on_compute_bound_tasks=null and GPU idle is NOT flagged. However the .402 phase artifacts (archive/activate exp4347 through capstone exp4357) are present on disk with mtimes spanning 16:35->19:44Z (~3h), and capstone exp4357 landed clean (paper_ready=true, unmet_gates=[]). So the milestone executed to completion and the 0/0/0 is the recurring false-zero milestone-scoped-timing-detector gap documented across .363-.401, now extending to .402, not an idle or failed run.",
+  "bottlenecks_identified": [
+    "RECURRING false-zero milestone-scoped timing detector: it attributed 0 experiment commits since activation while artifacts exp4347-exp4357 demonstrably exist on disk (mtimes 16:35->19:44Z, ~3h wall, capstone exp4357 clean). This is the same observability gap documented across .363-.401; the operational failure this milestone is observability, not execution.",
+    "GPU idle is NOT a bottleneck this milestone: with 0 compute-bound tasks attributed, gpu_idle_on_compute_bound_tasks=null and idle GPUs at the post-capstone snapshot are correct per the GPU IDLE INTERPRETATION RULE (no compute-bound GPU code path attributed to evaluate; the GPU-using S3-search phase finished ~4h before the 23:52Z snapshot)."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone-scoped timing detector: when git-commit attribution returns 0, fall back to a results/ mtime scan bounded by the ops/changelog activation window, so the retro stops false-zeroing on milestones whose artifacts exist on disk.",
+    "Stamp duration_s plus a compute_bound flag onto every experiment artifact at write time, so slowest_experiments and compute_bound_experiments_count are computed from ground-truth artifacts rather than from commit attribution.",
+    "Emit detector_gap_suspected=true whenever artifacts for the active milestone exist on disk but the detector reports 0 commits, so the false-zero self-flags instead of being re-diagnosed by hand each milestone.",
+    "Tag aggregation/capstone milestones in the retro pipeline so a low compute-bound count reads as expected-for-aggregation rather than anomalous."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the milestone-scoped timing detector (mtime + changelog-window fallback) -- the single recurring operational defect from .363 through .402, and the only thing blocking accurate efficiency retros.",
+    "Stamp duration_s + compute_bound on artifacts at emit time so slowest_experiments and compute_bound_experiments_count populate from ground truth.",
+    "Self-flag the gap (detector_gap_suspected) when on-disk artifacts contradict a 0-commit attribution, eliminating the per-milestone manual re-diagnosis."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "The milestone executed cleanly end-to-end (capstone exp4357 paper_ready=true, unmet_gates=[]); the only operational defect is the now-chronic false-zero timing detector, which has recurred .363->.402 without a code fix. Re-documenting the gap each milestone is itself wasted effort -- the highest-value move is to land the detector fix so future retros measure real per-experiment timing instead of re-deriving 'the artifacts are on disk' by hand."
+}

@@ -41,6 +41,17 @@ def _ckpt_path(game: str) -> Path:
     return CKPT_DIR / f"arc_verifier_{game}.json"
 
 
+def _label_to_action(label: str) -> dict:
+    """Normalize an adapter's opaque action LABEL to a metaharness-replayable action dict.
+    Adapter labels are JSON ({"action": N} for keyboard games, {"x": X, "y": Y} for click games);
+    the metaharness's normalize() reads either shape. Falls back to {"raw": label} for non-JSON."""
+    try:
+        d = json.loads(label)
+        return d if isinstance(d, dict) else {"action": d}
+    except (ValueError, TypeError):
+        return {"raw": label}
+
+
 def solve_adaptered(game: str, target_level: int) -> dict:
     ad = adapters.get_adapter(game)
     arc = kit.offline_arcade()
@@ -90,6 +101,12 @@ def solve_adaptered(game: str, target_level: int) -> dict:
         "offline_reproduced": bool(gate["reproduced"]), "reproduced_levels": cur,
         "learned_verifier_checkpoint": ckpt_written,
         "reproduction_gate": gate,
+        # PERSIST the winning action path (not just the verdict) so it is replay-gateable by the
+        # offline metaharness / a third party -- per the ARC Solve Reproducibility discipline
+        # (capture the winning condition, not a brittle one-off). Labels are the adapter's opaque
+        # strings; "solution" normalizes them to metaharness-compatible action dicts.
+        "solution_labels": list(full),
+        "solution": [_label_to_action(lbl) for lbl in full],
         "mode": "standing_arc_loop_offline_no_quota",
     }
 

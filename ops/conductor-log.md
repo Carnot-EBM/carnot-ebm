@@ -8685,3 +8685,4 @@ c |
 | 2026-06-17 22:54 UTC | PHASE E1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 106 passed, 1 warning in 5.05s |
 | 2026-06-17 23:14 UTC | PHASE E2 (INFRA/HYGIENE) -- registry/gaps hygiene  | OK | 89 passed, 1 warning in 6.35s |
 | 2026-06-17 23:29 UTC | PHASE E3 (HARDWARE CONTINUITY; KV260 opportunistic | OK | 111 passed, 1 warning in 6.65s |
+| 2026-06-17 23:47 UTC | PHASE E4 (CAPSTONE .402) -- the milestone scorecar | OK | 110 passed, 1 warning in 7.19s |
