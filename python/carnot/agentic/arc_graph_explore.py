@@ -99,15 +99,25 @@ def graph_explore_solve(env: Any, start_level: int = 0, *, max_actions: int = 14
 
 
 def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: int = 6000,
-                           warmup: bool = False, max_depth: int = 60) -> tuple[Optional[list], int]:
+                           warmup: bool = False, max_depth: int = 60,
+                           prefix: Optional[list] = None) -> tuple[Optional[list], int]:
     """SYSTEMATIC graph-explore (toward arXiv:2512.24156): maintain a directed
     state-transition graph and take the SHORTEST PATH to a state with an untested
     state-action pair (BFS frontier), navigating by replay-from-reset (deepcopy-
     injection is unreliable). Complete over the reachable state-action space up to
     the budget — far stronger than greedy-restart. Returns (trajectory, reached_level).
+
+    `prefix` (optional) is a KNOWN winning trajectory that gets the env to a starting
+    state (e.g. the L1 solution); the search is ROOTED at the post-prefix state and
+    only explores the frontier BEYOND it. Pair with `start_level` = the level the
+    prefix reaches, so the search returns the full prefix+suffix trajectory to the
+    NEXT level. This is the INCREMENTAL-PROGRESS lever: pin what we know, explore only
+    the new frontier — far cheaper than re-discovering the early levels from L0.
     """
     from collections import deque
     from arcengine import GameAction
+
+    prefix = list(prefix or [])
 
     def _candidates(frame):
         return rich_action_candidates(frame)   # all objects, no 12-cap (fixes r11l)
@@ -118,9 +128,9 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
             f = env.step(_game_action(GameAction, act["action"]), data=act.get("data"))
         return f
 
-    f0 = _warm(env, warmup)
+    f0 = replay(prefix)                 # root at the post-prefix state (L0 if no prefix)
     h0 = frame_hash(grid_of(f0))
-    states = {h0: {"path": [], "untested": _candidates(f0)}}
+    states = {h0: {"path": list(prefix), "untested": _candidates(f0)}}
     frontier = deque([h0])              # BFS order ⇒ shortest path first
     best = start_level
     expansions = 0

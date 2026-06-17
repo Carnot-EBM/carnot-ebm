@@ -17375,6 +17375,63 @@ bools, and writes a checksum over the linter, helper, and regression tests. If
 the verifier cannot import or the artifact is missing, then the result script
 stops with `blocked_artifacts_missing` rather than fabricating success.
 
+### REQ-VERIFY-4315: DiffusionGemma Reward-Guided Step-Stitching Moat Gate
+
+The repository SHALL provide Exp 4315 at
+`python/carnot/experiment_4315_diffusiongemma_reward_guided_stitching.py` and
+`results/experiment_4315_diffusiongemma_reward_guided_stitching.py` to run a
+powered DiffusionGemma in-generation benchmark that wires the Exp 4292 learned
+partial-state scorer into a step-stitching denoising loop. The runner SHALL
+check preconditions before inference: the llama.cpp DiffusionGemma PR binary is
+non-empty, the DiffusionGemma GGUF cache is present, Exp 4292 reports
+`partial_state_scorer_built=true` and the persisted scorer loads, and TRM
+training is stood down. If any precondition fails, the runner SHALL write an
+honest terminal `blocked_*` verdict and SHALL NOT fabricate inference.
+
+The runner SHALL independently re-check scorer leakage on a fresh held-out
+fixture by masking answer-bearing cells. If answer-masked signal collapses to
+chance, the runner SHALL emit bare bool `scorer_leak_recheck_passed=false`,
+`honest_verdict=scorer_leaky_rebuild_needed`, and stop before benchmarking.
+Otherwise it SHALL run at least 40 measured reasoning-choice tasks per arm over
+unguided, at least one genuinely engaged non-Carnot control, self-reward SMC
+using only intrinsic trajectory confidence, and Carnot reward-guided
+step-stitching that samples diverse intermediate reasoning trajectories, scores
+every intermediate step with the external partial-state scorer, and stitches
+the highest-scoring steps. The no-op guard SHALL set bare bool
+`controls_differentiated=true` only when no two condition arms tie
+bit-identically and each guidance arm changes token/option selection versus
+unguided; otherwise the runner SHALL stop with
+`honest_verdict=controls_not_differentiable`.
+
+The terminal artifact SHALL write
+`results/experiment_4315_diffusiongemma_reward_guided_stitching.json` with
+required fields `honest_verdict`, bare bool `diffusiongemma_guidance_moat`,
+bare bool `controls_differentiated`, bare float
+`carnot_minus_best_control_delta`, bare float
+`carnot_minus_self_reward_smc_delta`, bare float
+`carnot_minus_unguided_delta`, `guidance_moat_ci95`, bare bool
+`scorer_leak_recheck_passed`, `guidance_dynamics_diagnostic`, bare bool
+`verifier_is_oracle=false`, `preconditions_checked`, `random_seed`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`duration_s`, `inference_substrate`, and `adversarial_verify`. The bare bool
+`diffusiongemma_guidance_moat` SHALL be true iff Carnot step-stitching beats the
+best genuinely engaged control, the paired bootstrap CI95 for that delta
+excludes zero, controls are differentiated, the scorer leak re-check passed,
+and Carnot step-stitching also beats self-reward SMC.
+
+### SCENARIO-VERIFY-4315: Powered Step-Stitching Compares External Reward To Intrinsic Confidence
+
+Given the PR binary, DiffusionGemma GGUF cache, Exp 4292 scorer artifact, and
+TRM stand-down preconditions hold, when the Exp 4315 runner executes, then it
+loads the scorer, performs the independent answer-masked leak re-check, runs
+at least 40 measured reasoning tasks per arm, reports per-arm accuracy for
+unguided, engaged control, self-reward SMC, and Carnot reward-guided
+step-stitching, reports paired bootstrap CI95 with at least 2000 resamples, and
+records a guidance-dynamics diagnostic covering mask entropy, token-change
+covariance, and trajectory stability. If resources are missing, controls are
+not differentiable, or the scorer is leaky, then the runner writes the matching
+terminal verdict instead of declaring a moat.
+
 ### REQ-VERIFY-4259: ARC Set-Encoder Grid Synthesis
 
 The repository SHALL provide Exp 4259 at
