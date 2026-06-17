@@ -30,10 +30,16 @@ GAME_ARTIFACTS = {
     "wa30": "results/experiment_4275_arc_incremental_progress_new_game.json",   # L1
 }
 
+# from-scratch OFFLINE re-solves (these replay deterministically on the offline
+# layout; take precedence over the non-reproducible live-recorded banked traces)
+RESOLVED_ARTIFACTS = {
+    "lp85": "results/arc3_lp85_offline_resolve.json",  # L3, re-derived offline
+}
+
 
 def load_actions(path: str) -> list[dict]:
     d = json.load(open(REPO / path))
-    for keys in (("solve_trace", "actions"), ("solver_trace", "actions")):
+    for keys in (("solution",), ("solve_trace", "actions"), ("solver_trace", "actions")):
         cur = d
         for k in keys:
             cur = cur.get(k) if isinstance(cur, dict) else None
@@ -82,7 +88,8 @@ def main() -> int:
 
     rows, total = [], 0
     for game, art in GAME_ARTIFACTS.items():
-        actions = load_actions(art)
+        src = RESOLVED_ARTIFACTS.get(game, art)  # prefer the offline re-solve
+        actions = load_actions(src)
         if not actions:
             print(f"  {game}: NO banked trajectory in {art}")
             continue
