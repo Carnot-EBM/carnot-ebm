@@ -1305,16 +1305,18 @@ that is where we have labelled outcomes. The operator's full ask — "properly t
 BFS and DFS and routers" — needs two more label sets the router schema already accommodates:
 
 ### GAP-ARC-ROUTER-ENGINE-LABELS: engine-vs-engine A/B per game
-- status: open
-- evidence: ops/arc_router_ledger.json has heuristic-vs-heuristic labels (cell_count/region_count/
-  bfs) per game, but NO engine labels (v2-BFS vs v3-best-first/DFS vs TRM-guided rollout).
-- failure mode: the router cannot route the ENGINE choice (only the heuristic) — for a deep game
-  where BFS exhausts budget, it cannot yet learn "use best-first/DFS" because no such label exists.
-- missing discriminator: per-game reproduction-gated outcomes for each ENGINE (expansions, solved?)
-  so the ledger's approach space extends from {heuristic} to {engine × heuristic × budget}.
-- candidate design: an engine A/B harness (graph_explore_solve_v2 vs v3 vs TRM-guided) run over the
-  solved games, appended to the ledger; retrain the router on the engine dimension.
-- priority: high (deep-tail games need engine routing, not just heuristic routing)
+- status: answered 2026-06-17 (engine choice ruled out as the deep-tail lever; v2-BFS dominant)
+- evidence: engine A/B (results/arc_engine_ab.json; docs/research-notes/arc-engine-ab-2026-06-17.md)
+  ran v2-BFS vs v3-novelty vs v3+learned-verifier over 3 solved + 3 deep games.
+- finding: v2-BFS WINS every solvable game on path-optimality (v3-novelty solves but with 4-15x
+  longer paths: 29/58/15 vs 7/3/5 actions). v3 cracks NO deep game (wa30/g50t/sb26 fail under BOTH
+  at 20k). A learned verifier guiding v3 cuts expansions -52% (r11l 1064 vs 2236) but loses
+  path-optimality -> the efficiency lever is a GOOD per-game verifier (= the OfflineSolver/
+  verifier-routed path), NOT a generic engine swap.
+- resolution: engine routing collapses to "v2-BFS for first-contact"; no separate engine-selector
+  needed. The deep tail's lever is per-game RE + GAP-ARC-TRM-TRAINED-ON-ARC (a well-trained per-game
+  verifier/representation), not engine choice. graph_explore_solve_v3 gained a stats param for the
+  measurement.
 
 ### GAP-ARC-TRM-TRAINED-ON-ARC: an ARC-trained TRM generator/refiner
 - status: open
