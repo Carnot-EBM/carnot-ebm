@@ -13959,3 +13959,111 @@ bool, `cross_game_state_reduction` as a bare float, and
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4318 | Implemented (`python/carnot/experiment_4318_arc_cross_game_learned_verifier_transfer.py`; `results/experiment_4318_arc_cross_game_learned_verifier_transfer.py`; `results/experiment_4318_arc_cross_game_learned_verifier_transfer.json`) | Implemented (`tests/python/test_experiment_4318_arc_cross_game_learned_verifier_transfer.py`) |
+
+---
+
+## REQ-LEARN-4331: ARC Cross-Game Learned Frame Encoder Transfer
+
+**Given** at least three reproducibly solved ARC-AGI-3 games with replayable
+solve traces and the existing `arc_solver_kit`, `arc_value_learner`, and
+cross-game trainer imports available
+**When** Exp 4331 performs leave-one-game-out training of a CPU-only learned
+frame encoder on the other solved games' raw frames
+**Then** the held-out game SHALL be solved with `arc_solver_kit.OfflineSolver`
+twice: once with a uniform untrained heuristic positive control and once with a
+learned-encoder value-head whose linear head consumes the encoder embedding
+**And** the artifact SHALL report `learned_encoder_transfer_helps` as a bare
+bool that is true only when aggregate held-out `cross_game_state_reduction` is
+greater than 1.0 and the bootstrap `cross_game_state_reduction_ci95` lower bound
+is greater than 1.0.
+The required top-level artifact fields are `honest_verdict`,
+`learned_encoder_transfer_helps`, `cross_game_state_reduction`,
+`cross_game_state_reduction_ci95`, `per_held_out_game_reduction`,
+`baseline_solves_held_out`, `verifier_is_oracle`, `random_seed`,
+`reproducibility_checksum`, and `model_specs`.
+
+### REQ-LEARN-4331 Sub-requirements
+
+- REQ-LEARN-4331-1: Preconditions SHALL verify that `arc_solver_kit`,
+  `arc_value_learner`, the cross-game trainer, and solved-game trace files are
+  importable/loadable before running the learned-encoder experiment.
+- REQ-LEARN-4331-2: If fewer than three games have usable replay traces with at
+  least one reproduced level, Exp 4331 SHALL emit
+  `honest_verdict=blocked_insufficient_solve_traces` and SHALL NOT fabricate
+  transfer metrics.
+- REQ-LEARN-4331-3: For every held-out game, the training split SHALL exclude
+  all frames from the held-out game and SHALL record the train/held-out split in
+  `model_specs`.
+- REQ-LEARN-4331-4: The learned frame encoder SHALL be a tiny CPU-trained
+  learned convolutional feature map over raw ARC frames, with no LLM weight
+  mutation, and the value-head SHALL be the existing CPU linear
+  `LearnedVerifier` over the encoder embedding.
+- REQ-LEARN-4331-5: The uniform baseline SHALL solve every held-out level before
+  a null is considered informative, and the bare `baseline_solves_held_out`
+  field SHALL report that positive control.
+- REQ-LEARN-4331-6: The artifact SHALL set `verifier_is_oracle=false`,
+  `random_seed`, `reproducibility_checksum`, `model_specs`, and run
+  `scripts/adversarial_verify.py` cleanly.
+- REQ-LEARN-4331-7: If `learned_encoder_transfer_helps=false` after the positive
+  control passes, Exp 4331 SHALL sharpen the game-invariant ARC value
+  representation gap: a small learned frame encoder over the current solved set
+  is insufficient.
+
+### REQ-LEARN-4331 Field Principles
+
+- `honest_verdict`: Terminal-prefixed. A learned-encoder transfer win (reduces
+  held-out search states where generic features failed -- the gap closes), a
+  powered null (the encoder is still insufficient -> sharper gap, retire the
+  small-encoder ask), and an honest blocked_insufficient_solve_traces are ALL
+  COMPLETE and decision-grade.
+- `learned_encoder_transfer_helps`: BARE bool: the capstone reads this; true iff
+  the LEARNED-encoder value-head trained on OTHER games reduces held-out-game
+  search states (reduction > 1.0 AND CI95 lower bound > 1.0) -- cross-game
+  self-learning via a learned game-invariant representation.
+- `cross_game_state_reduction`: BARE float: held-out states_uniform /
+  states_transferred (>1.0 = transfer helps; ~1.0 = still per-game-bound) --
+  compare to exp4318's generic-feature 1.0; the north-star EFFICIENCY metric.
+- `cross_game_state_reduction_ci95`: Bootstrap CI95 (>=2000 resamples) over
+  held-out levels -- a lower bound > 1.0 makes 'transfer helps' decision-grade.
+- `per_held_out_game_reduction`: State-reduction reported SEPARATELY per
+  held-out game -- guards the one-game-dominates failure mode + shows which
+  games transfer.
+- `baseline_solves_held_out`: BARE bool: the uniform-heuristic solver actually
+  solves the held-out levels (the positive control) -- a no-reduction is only
+  informative if the baseline succeeds (FALSE_NEGATIVE_RISK guard).
+- `verifier_is_oracle`: BARE bool=false -- a learned encoder + value-head over
+  solver state (oracle-distinct heuristic), NOT the executable env oracle; NO
+  LLM weight mutation.
+- `random_seed`: Determinism precondition for the encoder training + the solver.
+- `reproducibility_checksum`: Hash of the solve traces + the encoder + the
+  leave-one-game-out split + the state counts; lets a third party re-run.
+- `model_specs`: The learned-encoder architecture + the value-head + the
+  train/held-out game split + the OfflineSolver state-count instrumentation;
+  required methodology.
+
+### SCENARIO-LEARN-4331: Leave-One-Game-Out Learned Encoder Reports Decision-Grade Transfer Or Null
+
+**Given** solved traces for the reproduced ARC games are present
+**When** Exp 4331 trains the learned frame encoder and value-head on all games
+except the held-out game
+**Then** each held-out level records `states_uniform`, `states_transferred`, and
+`state_reduction`
+**And** the aggregate artifact reports `learned_encoder_transfer_helps` as a
+bare bool, `cross_game_state_reduction` as a bare float,
+`cross_game_state_reduction_ci95` as a two-float list, and
+`verifier_is_oracle=false`.
+
+### SCENARIO-LEARN-4331-BLOCKED: Insufficient Solve Traces Stop Honestly
+
+**Given** fewer than three solved games have usable replay traces
+**When** Exp 4331 runs
+**Then** it SHALL write a terminal artifact with
+`honest_verdict=blocked_insufficient_solve_traces`
+**And** `learned_encoder_transfer_helps=false` and
+`baseline_solves_held_out=false`.
+
+## Implementation Status (Exp 4331)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4331 | Planned (`python/carnot/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.py`; `results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.py`; `results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json`) | Planned (`tests/python/test_experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.py`) |
