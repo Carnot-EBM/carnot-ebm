@@ -225,7 +225,69 @@ def hybrid_policy(frame, ctx, rng):
     return object_click_policy(frame, ctx, rng)
 
 
-POLICIES = {"random": random_policy, "object_click": object_click_policy, "hybrid": hybrid_policy}
+_PORTFOLIO_CACHE = None
+
+
+def _portfolio_cache():
+    """The FULL reproduced-solve portfolio (the replay meta-harness's banked + frame-approach + E3
+    solves) as step-wise (action_int, data) lists keyed by SHORT game key, with sc25's warmup step
+    prepended. Loaded once from scripts/arc3_replay_scorecard_metaharness.py so the gate policy and the
+    aggregate scorecard stay in lock-step (one source of truth for "what we can solve offline")."""
+    global _PORTFOLIO_CACHE
+    if _PORTFOLIO_CACHE is not None:
+        return _PORTFOLIO_CACHE
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "mh_replay", REPO / "scripts" / "arc3_replay_scorecard_metaharness.py")
+    mh = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mh)
+    cache = {}
+    for short, art in mh.GAME_ARTIFACTS.items():
+        src = mh.RESOLVED_ARTIFACTS.get(short, art)
+        try:
+            raw = mh.load_actions(src)
+        except Exception:
+            raw = []
+        seq = []
+        for a in raw:
+            aid, data = mh.normalize(a)
+            if aid is not None:
+                seq.append((int(aid), data))
+        if not seq:
+            continue
+        if short in mh.WARMUP_GAMES:
+            seq = [seq[0]] + seq          # consume the swallowed first step (first-step-after-reset)
+        cache[short] = seq
+    _PORTFOLIO_CACHE = cache
+    return cache
+
+
+def carnot_policy(frame, ctx, rng):
+    """Replay the FULL reproduced-solve PORTFOLIO step-wise (every banked + frame-approach + E3 solve
+    we can reproduce offline -- 24 levels across 15 games incl. tn36 L7 via the frame approach, lp85
+    L4, sc25 L1), falling back to object_click for unbanked games. This is the gate policy that
+    reflects everything we can actually solve, vs the old `hybrid` that only banked 3 games."""
+    from arcengine.enums import GameAction
+    by_id = {a.value: a for a in GameAction}
+    av = list(getattr(frame, "available_actions", []) or [])
+    if not av:
+        return None, None
+    mem = ctx.setdefault("mem", {})
+    short = str(ctx.get("game_id", "")).split("-")[0]
+    seq = _portfolio_cache().get(short, [])
+    idx_key = f"carnot_idx:{short}"
+    idx = int(mem.get(idx_key, 0) or 0)
+    while idx < len(seq):
+        action_int, data = seq[idx]
+        mem[idx_key] = idx + 1
+        idx += 1
+        if action_int in av:
+            return by_id.get(action_int, GameAction.ACTION1), dict(data) if data else None
+    return object_click_policy(frame, ctx, rng)
+
+
+POLICIES = {"random": random_policy, "object_click": object_click_policy,
+            "hybrid": hybrid_policy, "carnot": carnot_policy}
 
 
 def _grid_dims(frame):
