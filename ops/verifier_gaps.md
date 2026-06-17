@@ -1137,3 +1137,11 @@ registry version that closed them when a new verifier captures a previously-open
 - candidate design: Use the accumulated GAP-4 visible-test demo-fit execution selector as the filled cheap execution layer; reopen only if a future powered replay loses the positive hidden-test CI.
 - priority: high
 <!-- exp4321-gap-code-exec-demofit:end -->
+
+### 2026-06-17 Exp4327 ar25 E3 residual gap
+- Spec: REQ-PHASE4-074 / SCENARIO-PHASE4-074
+- Best verifier accuracy: 0.8875
+- Residual mismatch class: `missing_world_model_rule_gap_hidden_undo_stack_action7`
+- Reproducibility checksum: `1e926634c023e7d82b793a890ea825f08d82d8ec6e5ebf89b6f2f8fde67af7ad`
+- Gap: bounded executable-world-model run did not satisfy the offline reproduced L1 gate.
+

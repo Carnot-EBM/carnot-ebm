@@ -15,8 +15,10 @@ def engine(grid, action, data):
             if out[y, w - 1] != 5:
                 out[y, w - 1] = 5
                 break
-    else:
+    elif action != 7:
         return out
+    else:
+        pass
 
     if action == 5:
         return out
@@ -65,7 +67,7 @@ def engine(grid, action, data):
         dx = 0
         if action == 1:
             dy = -3
-        elif action == 2:
+        elif action in (2, 7):
             dy = 3
         elif action == 3:
             dx = -3 if color == 5 else 3
