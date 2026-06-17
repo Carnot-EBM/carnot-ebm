@@ -9,7 +9,7 @@ end-to-end real-env check; these pin the algorithm itself.)
 
 Spec: REQ-PHASE4-081, SCENARIO-PHASE4-081 (the strategy-class solvers the router dispatches).
 """
-from carnot.agentic import arc_maze_planner as MP
+from carnot.agentic import arc_maze_planner as planner
 from carnot.agentic.arc_maze_planner import MazeModel
 
 # command codes for the synthetic games (arbitrary, just distinct): up/down/left/right + settle
@@ -29,12 +29,12 @@ def _walk(model, plan):
         for idx, code in enumerate(leg):
             dx, dy = _DELTA.get(code, (0, 0))
             nx, ny = pos[0] + dx, pos[1] + dy
-            if MP._collide(model, nx, ny):
+            if planner._collide(model, nx, ny):
                 nx, ny = pos                                   # wall reverts
             visible = idx >= model.invisible_slots
-            if MP._spike_death(model, nx, ny, visible):
+            if planner._spike_death(model, nx, ny, visible):
                 return (nx, ny), True
-            if idx == model.invisible_slots - 1 and MP._spike_death(model, nx, ny, True):
+            if idx == model.invisible_slots - 1 and planner._spike_death(model, nx, ny, True):
                 return (nx, ny), True
             pos = (nx, ny)
         if pos in model.checkpoints:                            # ending on a checkpoint advances base
@@ -52,7 +52,7 @@ def _model(**kw):
 def test_checkpoint_multirun_direct_leg():
     # target reachable within one run's slots, no checkpoint needed -> a single padded leg.
     m = _model(start=(8, 8), target=(8, 16))
-    plan = MP.checkpoint_multirun_plan(m)
+    plan = planner.checkpoint_multirun_plan(m)
     assert plan is not None and len(plan) == 1
     assert all(len(leg) == m.n_slots for leg in plan)         # padded to the slot budget
     assert _walk(m, plan) == ((8, 16), False)
@@ -61,7 +61,7 @@ def test_checkpoint_multirun_direct_leg():
 def test_checkpoint_multirun_stages_via_checkpoint():
     # target is 6 steps away but each run has only 3 slots -> must stage via the checkpoint.
     m = _model(start=(4, 4), target=(4, 28), checkpoints=[(4, 16)], n_slots=3)
-    plan = MP.checkpoint_multirun_plan(m)
+    plan = planner.checkpoint_multirun_plan(m)
     assert plan is not None and len(plan) == 2                 # two legs: start->cp, cp->target
     assert _walk(m, plan) == ((4, 28), False)
 
@@ -70,13 +70,13 @@ def test_checkpoint_multirun_unreachable_returns_none():
     # target fully walled in -> no plan.
     walls = [(4, 0, 4, 4), (4, 8, 4, 4), (0, 4, 4, 4), (8, 4, 4, 4)]
     m = _model(start=(40, 40), target=(4, 4), walls=walls)
-    assert MP.checkpoint_multirun_plan(m) is None
+    assert planner.checkpoint_multirun_plan(m) is None
 
 
 def test_timed_trap_requires_spikes():
     # no spikes declared -> the timed planner declines (use the plain checkpoint planner).
     m = _model(start=(8, 24), target=(8, 8))
-    assert MP.timed_trap_plan(m) is None
+    assert planner.timed_trap_plan(m) is None
 
 
 def test_timed_trap_crosses_during_invisible_window():
@@ -84,7 +84,7 @@ def test_timed_trap_crosses_during_invisible_window():
     # (out of band when it turns visible) -> a safe single-leg crossing the timed planner must find.
     band = [(0, 16, 64, 4)]
     m = _model(start=(8, 24), target=(8, 8), spikes_visible=band, spikes_hidden=[], invisible_slots=3)
-    plan = MP.timed_trap_plan(m)
+    plan = planner.timed_trap_plan(m)
     assert plan is not None
     pos, died = _walk(m, plan)
     assert pos == (8, 8) and not died                          # reached target, never on a visible spike
@@ -95,4 +95,4 @@ def test_timed_trap_none_when_band_cannot_be_cleared_in_time():
     # by the slot-2 toggle (3 ups only reach y16, in-band) -> no safe crossing exists.
     band = [(0, 16, 64, 4)]
     m = _model(start=(8, 28), target=(8, 8), spikes_visible=band, spikes_hidden=[], invisible_slots=3)
-    assert MP.timed_trap_plan(m) is None
+    assert planner.timed_trap_plan(m) is None

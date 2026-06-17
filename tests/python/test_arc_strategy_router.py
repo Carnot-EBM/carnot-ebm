@@ -9,7 +9,7 @@ graph-explore default, and honest handling of recognised-but-unwired classes.
 Spec: REQ-PHASE4-081, SCENARIO-PHASE4-081 (ARC-AGI-3 frame-only mechanic-class strategy router).
 """
 
-from carnot.agentic import arc_strategy_router as SR
+from carnot.agentic import arc_strategy_router as router
 
 
 _FAKE_REG = {
@@ -23,20 +23,20 @@ _FAKE_REG = {
 def test_detect_precedence_injected_then_registry_then_default():
     # injected frame-only verdict wins over everything (the live unseen-game path)
     assert (
-        SR.detect_mechanic("anything", mechanic="program_editor", reg=_FAKE_REG) == "program_editor"
+        router.detect_mechanic("anything", mechanic="program_editor", reg=_FAKE_REG) == "program_editor"
     )
     # known game -> structured registry class
-    assert SR.detect_mechanic("tn36", reg=_FAKE_REG) == "program_editor"
+    assert router.detect_mechanic("tn36", reg=_FAKE_REG) == "program_editor"
     # game with no recorded class -> default graph_explore
-    assert SR.detect_mechanic("lp85", reg=_FAKE_REG) == "graph_explore"
+    assert router.detect_mechanic("lp85", reg=_FAKE_REG) == "graph_explore"
     # unknown game entirely -> default
-    assert SR.detect_mechanic("zz99", reg=_FAKE_REG) == "graph_explore"
+    assert router.detect_mechanic("zz99", reg=_FAKE_REG) == "graph_explore"
     # an injected class outside the taxonomy falls back to default (route only to what we recognise)
-    assert SR.detect_mechanic("tn36", mechanic="martian_mechanic", reg=_FAKE_REG) == "graph_explore"
+    assert router.detect_mechanic("tn36", mechanic="martian_mechanic", reg=_FAKE_REG) == "graph_explore"
 
 
 def test_program_editor_routes_to_frame_only_model_and_skips_heuristic():
-    r = SR.route_strategy("program_editor")
+    r = router.route_strategy("program_editor")
     assert r["name"] == "program_editor" and r["wired"] is True
     # the goal-distance heuristic is a category error here -> must be short-circuited
     assert r["uses_goal_distance_heuristic"] is False
@@ -44,7 +44,7 @@ def test_program_editor_routes_to_frame_only_model_and_skips_heuristic():
 
 
 def test_graph_explore_is_default_and_uses_heuristic():
-    r = SR.route_strategy("graph_explore")
+    r = router.route_strategy("graph_explore")
     assert r["name"] == "graph_explore" and r["uses_goal_distance_heuristic"] is True
 
 
@@ -53,7 +53,7 @@ def test_checkpoint_and_timed_classes_route_to_the_maze_planner():
     # tn36 L6; timed_trap_aware reproduces tn36 L7) and skip the goal-distance heuristic.
     for mech, fn in [("checkpoint_multirun", "checkpoint_multirun_plan"),
                      ("timed_trap_aware", "timed_trap_plan")]:
-        r = SR.route_strategy(mech)
+        r = router.route_strategy(mech)
         assert r["name"] == mech and r["wired"] is True
         assert r["uses_goal_distance_heuristic"] is False
         assert "arc_maze_planner" in r["solver"] and fn in r["solver"]
@@ -65,16 +65,16 @@ def test_route_flags_an_unwired_class_without_pretending():
     fake = {"name": "future_class", "mechanic": "future_class", "wired": False,
             "uses_goal_distance_heuristic": False, "solver": "PENDING", "search_engine": "x",
             "needs": "a frame-only solver"}
-    SR._BY_MECHANIC["future_class"] = fake
+    router._BY_MECHANIC["future_class"] = fake
     try:
-        r = SR.route_strategy("future_class")
+        r = router.route_strategy("future_class")
         assert r["name"] == "future_class" and r["wired"] is False
         assert "not yet wired" in r["reason"].lower()
     finally:
-        del SR._BY_MECHANIC["future_class"]
+        del router._BY_MECHANIC["future_class"]
 
 
 def test_route_for_game_combines_detect_and_route():
-    out = SR.route_for_game("tn36", reg=_FAKE_REG)
+    out = router.route_for_game("tn36", reg=_FAKE_REG)
     assert out["game"] == "tn36" and out["name"] == "program_editor"
     assert out["routed_mechanic"] == "program_editor"

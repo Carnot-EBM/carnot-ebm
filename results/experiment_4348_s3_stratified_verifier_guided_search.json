@@ -740,5 +740,23 @@
     "REQ-VERIFY-4348",
     "SCENARIO-VERIFY-4348"
   ],
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "s3_minus_best_of_k_delta=0.266667 and s3_minus_self_reward_smc_delta=0.266667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "s3_minus_best_of_k_delta=0.266667 and s3_minus_unguided_delta=0.266667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "s3_minus_self_reward_smc_delta=0.266667 and s3_minus_unguided_delta=0.266667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ]
 }

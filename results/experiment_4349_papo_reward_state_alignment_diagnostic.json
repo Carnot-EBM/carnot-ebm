@@ -1,0 +1,24 @@
+{
+  "experiment": 4349,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-06-17",
+  "started_at": "2026-06-17T21:23:19.379181+00:00",
+  "finished_at": "2026-06-17T21:23:19.379181+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "PHASE A2 (HEADLINE skeptic-proofing; GATED on exp4348 s3_guided_beats_control==true) -- PAPO REWARD-STATE-ALIGNMENT DIAGNOSTIC (arXiv:2606.08501 VERIFIED 'Back on Track: Aligning Rewards and States for Reasoning in Diffusion LLMs'). IF exp4348 shows an S3 generation gain, the operator (twice-burned on DiffusionGemma over-claims, .396/.397) will ask: is the gain from rewards aligned to AUTHENTIC denoising states, or an artifact of remasking / position cues / the scorer correlating with something other than process quality? PAPO is the diagnostic: evaluate the leak-robust scorer's one-step partial-state predictions against AUTHENTIC recorded denoising trajectories vs RANDOMLY-REMASKED (artificial-context) states, and report the reward-state ALIGNMENT (does the reward track genuine intermediate process quality, not reconstructed/leaked context?). Emit reward_state_alignment_passed BARE bool := (the scorer's reward correlates with authentic-trajectory process quality SIGNIFICANTLY MORE than with randomly-remasked states, CI95-excl-0). verifier_is_oracle=false. A pass = the S3 gain is genuine (headline graduates); a fail = the gain is alignment-confounded and is QUARANTINED (not headline-eligible) + the residual logged as a missing-verifier gap. NO training; NO TRM training; DiffusionGemma via the llama.cpp PR binary.",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp4348-s3-stratified-verifier-guided-search.s3_guided_beats_control (actual=False == expected=True)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp4348-s3-stratified-verifier-guided-search",
+      "artifact_field": "s3_guided_beats_control",
+      "op": "==",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "reason": "actual=False == expected=True"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
