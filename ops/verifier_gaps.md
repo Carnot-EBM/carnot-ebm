@@ -1366,3 +1366,37 @@ BFS and DFS and routers" — needs two more label sets the router schema already
 - candidate design: larger interaction encoder, richer affordance discovery, or more reproduced traces before retiring cross-game value transfer
 - priority: high
 <!-- exp4344-gap-4342:end -->
+
+<!-- arc-live-generalization-gaps-2026-06-17:start -->
+## ARC live-generalization gaps (2026-06-17) — per-game RE does not transfer
+
+The tn36 deep-RE climb solved L1-L6 by reading INTERNAL game state + manual RE. It does NOT
+generalize to live unseen games (only rendered frames available live). See
+docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds that close it:
+
+### GAP-ARC-LIVE-FRAME-ONLY-INDUCTION: discover a game's mechanic from FRAMES alone
+- status: open (E3 world-model substrate exists; deep mechanics not yet induced frame-only)
+- evidence: scripts/arc3_tn36_offline_solver.py has 12 internal-state accesses
+  (env._game.fdksqlmpki...); a live submission exposes only 64x64 frames, so this computation
+  is non-transferable. Manual LLM RE is not an automated process.
+- missing discriminator: an automated probe->observe->induce loop that derives the transition
+  model + win predicate + control mechanic (program-editor, timed-trap, checkpoint) from frame
+  transitions only, replacing the internal-state reads + manual RE.
+- candidate design: extend arc_executable_world_model.py (E3, frame-only) to detect the discovered
+  mechanic CLASSES from observable frame signals (palette-of-glyphs->program-editor; periodic-cell-
+  visibility->timed-trap; base-advance-on-region->checkpoint).
+- priority: high (the foundation of any live-submission capability)
+
+### GAP-ARC-STRATEGY-ROUTER: route to a solving STRATEGY-class, not just a heuristic
+- status: open
+- evidence: arc_router routes only {bfs,cell_count,region_count} goal-distance heuristics; it has
+  no awareness of the mechanic CLASSES (program-editor, checkpoint-multirun, timed-trap). The
+  per-game solvers are disconnected from the learned router/TRM stack.
+- missing discriminator: mechanic-signal FEATURES (control-type, periodic-obstacles, transform-
+  controls) + strategy-class LABELS in the router's ledger, so an induced new game routes to the
+  right strategy dynamically (frame-only).
+- candidate design: a reusable strategy-class library (path_route / program_editor /
+  checkpoint_multirun / timed_trap_aware) each declaring its applicability features; extend the
+  trained router (leave-one-out validated) from heuristic-selection to strategy-selection.
+- priority: high (turns per-game wins into dynamic transfer)
+<!-- arc-live-generalization-gaps-2026-06-17:end -->
