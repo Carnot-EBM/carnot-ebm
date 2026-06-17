@@ -1,0 +1,32 @@
+{
+  "win_dist": 0.0,
+  "start_dist": 1375.0,
+  "results": {
+    "llm_heuristic": {
+      "solved": true,
+      "reproduced": true,
+      "actions": 5,
+      "expansions": 335,
+      "secs": 1.0
+    },
+    "bfs_baseline": {
+      "solved": true,
+      "reproduced": true,
+      "actions": 3,
+      "expansions": 2236,
+      "secs": 3.0
+    }
+  },
+  "helped": false,
+  "reused_pregenerated": false,
+  "captured_to": null,
+  "honest_verdict": "complete_gap_fill_r11l_heuristic_no_gain",
+  "proposer": "Qwen3.6-35B-A3B",
+  "inference_substrate": "live_llm_inference_igpu",
+  "verifier_is_oracle": false,
+  "heuristic_code": "def goal_distance(grid):\n    # Identify the dynamic region by finding cells that differ from the static background (0)\n    # or by using the provided WIN grid to find mismatches. \n    # The prompt suggests using per-action deltas, but we don't have them here.\n    # However, we can infer the dynamic region by comparing grid to a \"static\" version.\n    # A simpler, robust approach for ARC-AGI-3 is to count mismatches against WIN,\n    # but weighted or masked if possible. Since we can't easily mask without action history,\n    # we fall back to a structural signal: count mismatches in the non-background regions.\n    # Background is often 0 or a specific color. Let's assume 0 is background for masking.\n    # But looking at WIN, 0 is used in the dynamic parts too.\n    # Let's use the provided WIN to compute a simple mismatch count, but try to focus on\n    # the \"object\" pixels. A good heuristic is the number of cells that are not 0 (background)\n    # and do not match WIN.\n    \n    # Alternative: The prompt mentions \"per-action deltas\". Since we don't have them,\n    # we can approximate the dynamic region by finding cells that are NOT 0 (assuming 0 is empty/background)\n    # and checking if they match WIN. But 0 is not always background.\n    \n    # Let's use a simpler structural signal: The number of cells that differ from WIN,\n    # but only for cells that are part of the \"objects\". We can identify objects as cells != 0.\n    # However, WIN has 0s in the background. So, we can count mismatches where grid != 0 or WIN != 0.\n    \n    # Let's try: count mismatches where grid != WIN, but only in regions where grid != 0 or WIN != 0.\n    # This avoids counting background mismatches if the background is 0.\n    \n    # Create a mask for dynamic cells: cells that are not 0 in either grid or WIN\n    mask = (grid != 0) | (WIN != 0)\n    \n    # Count mismatches only in the dynamic region\n    mismatches = (grid != WIN) & mask\n    \n    return float(mismatches.sum())",
+  "experiment": "arc_gap_fill_r11l",
+  "game": "r11l",
+  "duration_s": 47.0,
+  "run_date": "2026-06-17"
+}
