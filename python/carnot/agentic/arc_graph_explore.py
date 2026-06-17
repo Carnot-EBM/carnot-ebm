@@ -185,7 +185,10 @@ def graph_explore_solve(env: Any, start_level: int = 0, *, max_actions: int = 14
 def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: int = 6000,
                            warmup: bool = False, max_depth: int = 60,
                            prefix: Optional[list] = None,
-                           mask_hud: bool = False) -> tuple[Optional[list], int]:
+                           mask_hud: bool = False,
+                           heuristic=None, heuristic_weight: float = 1.0,
+                           stats: Optional[dict] = None
+                           ) -> tuple[Optional[list], int]:
     """SYSTEMATIC graph-explore (toward arXiv:2512.24156): maintain a directed
     state-transition graph and take the SHORTEST PATH to a state with an untested
     state-action pair (BFS frontier), navigating by replay-from-reset (deepcopy-
@@ -198,6 +201,17 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
     prefix reaches, so the search returns the full prefix+suffix trajectory to the
     NEXT level. This is the INCREMENTAL-PROGRESS lever: pin what we know, explore only
     the new frontier — far cheaper than re-discovering the early levels from L0.
+
+    `heuristic` (optional `goal_distance(frame_or_grid) -> float`, lower = closer to a
+    win): when provided, the frontier is ordered A*-style by `depth + heuristic_weight *
+    heuristic(frame)` instead of FIFO. This KEEPS v2's completeness — the depth (g) term
+    prevents the greedy-best-first local-minimum trap that makes a pure-heuristic order
+    (v3) fail on games like cn04 — while reaching the win with FEWER expansions. A
+    goal-distance heuristic's value is EFFICIENCY in a search that already reaches the
+    win (the lp85 pattern), NOT making the search solve a game it structurally can't.
+    This is the plug-in slot for an LLM-written / captured gap-fill heuristic
+    (scripts/arc_gap_fill.py, python/carnot/agentic/gap_fills/). When None, the search
+    is byte-for-byte the original pure-BFS (no regression to the proven solves).
     """
     from collections import deque
     from arcengine import GameAction
@@ -227,34 +241,87 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
     f0 = replay(prefix)                 # root at the post-prefix state (L0 if no prefix)
     h0 = node_id(f0)
     states = {h0: {"path": list(prefix), "untested": _candidates(f0)}}
-    frontier = deque([h0])              # BFS order ⇒ shortest path first
     best = start_level
     expansions = 0
-    while frontier and expansions < max_expansions:
-        h = frontier[0]
-        st = states[h]
-        if not st["untested"] or len(st["path"]) >= max_depth:
-            frontier.popleft()
+
+    def _ret(traj, lvl):
+        # record search cost so an A/B can measure the heuristic's EFFICIENCY win
+        # (fewer expansions to the same win) — not just the action count, which ties
+        # whenever both arms find the shortest path.
+        if stats is not None:
+            stats["expansions"] = expansions
+            stats["states"] = len(states)
+        return traj, lvl
+
+    if heuristic is None:
+        # --- pure BFS (UNCHANGED from the original; preserves the proven 8/11 solves) ---
+        frontier = deque([h0])          # BFS order ⇒ shortest path first
+        while frontier and expansions < max_expansions:
+            h = frontier[0]
+            st = states[h]
+            if not st["untested"] or len(st["path"]) >= max_depth:
+                frontier.popleft()
+                continue
+            sel = st["untested"].pop(0)
+            replay(st["path"])          # navigate to this state
+            nf = env.step(_game_action(GameAction, sel.action_id), data=sel.data,
+                          reasoning={"policy": "graph_explore_v2_shortest_path"})
+            expansions += 1
+            if nf is None:
+                continue
+            traj = st["path"] + [{"action": int(sel.action_id), "data": sel.data}]
+            lvl = _levels_completed(nf)
+            if lvl > start_level:
+                return _ret(traj, lvl)
+            best = max(best, lvl)
+            if _game_over(nf):
+                continue
+            nh = node_id(nf)
+            if nh not in states:        # new state ⇒ add to graph + frontier
+                states[nh] = {"path": traj, "untested": _candidates(nf)}
+                frontier.append(nh)
+        return _ret(None, best)
+
+    # --- A*-style heuristic-guided best-first (COMPLETE + efficient) ---
+    import heapq
+    import itertools
+
+    def _h(frame) -> float:
+        try:
+            return heuristic_weight * float(heuristic(frame))
+        except Exception:
+            return 1e9                   # a broken heuristic must never crash the search
+
+    counter = itertools.count()
+    # priority = g (depth) + h (weighted goal-distance); root popped first regardless
+    heap = [(len(states[h0]["path"]) + _h(f0), next(counter), h0)]
+    while heap and expansions < max_expansions:
+        _, _, h = heapq.heappop(heap)
+        st = states.get(h)
+        if st is None or not st["untested"] or len(st["path"]) >= max_depth:
             continue
-        sel = st["untested"].pop(0)
-        replay(st["path"])              # navigate to this state
-        nf = env.step(_game_action(GameAction, sel.action_id), data=sel.data,
-                      reasoning={"policy": "graph_explore_v2_shortest_path"})
-        expansions += 1
-        if nf is None:
-            continue
-        traj = st["path"] + [{"action": int(sel.action_id), "data": sel.data}]
-        lvl = _levels_completed(nf)
-        if lvl > start_level:
-            return traj, lvl
-        best = max(best, lvl)
-        if _game_over(nf):
-            continue
-        nh = node_id(nf)
-        if nh not in states:           # new state ⇒ add to graph + frontier
-            states[nh] = {"path": traj, "untested": _candidates(nf)}
-            frontier.append(nh)
-    return None, best
+        # fully expand this (most-promising) state's untested actions (A* graph search:
+        # each state expanded once, in priority order)
+        while st["untested"]:
+            sel = st["untested"].pop(0)
+            replay(st["path"])          # navigate to this state
+            nf = env.step(_game_action(GameAction, sel.action_id), data=sel.data,
+                          reasoning={"policy": "graph_explore_v2_heuristic_guided"})
+            expansions += 1
+            if nf is not None:
+                traj = st["path"] + [{"action": int(sel.action_id), "data": sel.data}]
+                lvl = _levels_completed(nf)
+                if lvl > start_level:
+                    return _ret(traj, lvl)
+                best = max(best, lvl)
+                if not _game_over(nf):
+                    nh = node_id(nf)
+                    if nh not in states:    # new state ⇒ add with A* priority g+h
+                        states[nh] = {"path": traj, "untested": _candidates(nf)}
+                        heapq.heappush(heap, (len(traj) + _h(nf), next(counter), nh))
+            if expansions >= max_expansions:
+                break
+    return _ret(None, best)
 
 
 def graph_explore_solve_v3(env: Any, start_level: int = 0, *, max_expansions: int = 30000,

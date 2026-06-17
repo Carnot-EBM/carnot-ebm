@@ -561,3 +561,205 @@ Modules in eval mode: 0
 Total FLOPs: 0                                                                  
 Restored all states from the checkpoint at /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
 [[36m2026-06-16 15:42:43,494[0m][[34msrc.nn.data.sudoku_datamodule[0m][[32mINFO[0m] - [rank: 0] Creating train dataloader with batch size 768 and num_workers 0 and prefetch_factor None[0m
+=== relaunch 2026-06-17T11:47:29Z (outer-loop, GPU1, resume val0.8227) ===
+[[36m2026-06-17 07:47:33,325[0m][[34msrc.nn.utils.utils[0m][[32mINFO[0m] - [rank: 0] Enforcing tags! <cfg.extras.enforce_tags=True>[0m
+[[36m2026-06-17 07:47:33,330[0m][[34msrc.nn.utils.utils[0m][[32mINFO[0m] - [rank: 0] Printing config tree with Rich! <cfg.extras.print_config=True>[0m
+CONFIG
+├── data
+│   └── _target_: src.nn.data.SudokuDataModule
+│       _recursive_: false
+│       batch_size: 768
+│       num_workers: 0
+│       num_train_puzzles: 0
+│       num_val_puzzles: 0
+│       num_test_puzzles: 0
+│       grid_size: 9
+│       max_grid_size: 9
+│       min_givens: null
+│       max_givens: null
+│       seed: 42
+│       data_dir: ./data/sudoku_extreme_1k_aug_1k
+│       pad_value: 0
+│       
+├── model
+│   └── _target_: src.nn.models.trm.TRMModule
+│       _recursive_: false
+│       ffn_expansion: 4
+│       hidden_size: 512
+│       num_layers: 2
+│       N_supervision: 16
+│       N_supervision_val: 16
+│       learning_rate: 0.0001
+│       H_cycles: 3
+│       L_cycles: 6
+│       learning_rate_emb: 0.0001
+│       weight_decay: 1.0
+│       halt_exploration_prob: 0.1
+│       warmup_steps: 2000
+│       num_heads: 8
+│       puzzle_emb_dim: 0
+│       puzzle_emb_len: 0
+│       rope_theta: 10000
+│       pos_emb_type: 'null'
+│       lr_min_ratio: 0.01
+│       use_mlp_t: true
+│       use_conv_swiglu: false
+│       use_board_swiglu: false
+│       use_muon: false
+│       output_dir: None
+│       num_puzzles: 0
+│       batch_size: 0
+│       pad_value: 0
+│       max_grid_size: 0
+│       vocab_size: 0
+│       seq_len: 0
+│       
+├── callbacks
+│   └── model_checkpoint:
+│         _target_: lightning.pytorch.callbacks.ModelCheckpoint
+│         dirpath: /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/
+│         filename: epoch_{epoch:03d}
+│         monitor: val/exact_accuracy
+│         verbose: false
+│         save_last: true
+│         save_top_k: 1
+│         mode: max
+│         auto_insert_metric_name: false
+│         save_weights_only: false
+│         every_n_train_steps: null
+│         train_time_interval: null
+│         every_n_epochs: null
+│         save_on_train_epoch_end: null
+│       ema:
+│         _target_: src.nn.callbacks.ema.EMACallback
+│         decay: 0.999
+│         use_ema_for_validation: true
+│         use_ema_for_test: true
+│       
+├── logger
+│   └── csv:
+│         _target_: lightning.pytorch.loggers.csv_logs.CSVLogger
+│         save_dir: /home/ianblenke/github.com/ianblenke/carnot/nano-trm/train/r
+│         name: csv/
+│         prefix: ''
+│       
+├── trainer
+│   └── _target_: lightning.pytorch.trainer.Trainer
+│       min_epochs: 1
+│       max_epochs: 50000
+│       accelerator: gpu
+│       devices: 1
+│       check_val_every_n_epoch: 100
+│       deterministic: false
+│       precision: bf16-mixed
+│       max_time: 00:12:00:00
+│       
+├── paths
+│   └── log_dir: .
+│       output_dir: /home/ianblenke/github.com/ianblenke/carnot/nano-trm/train/r
+│       
+├── extras
+│   └── ignore_warnings: false
+│       enforce_tags: true
+│       print_config: true
+│       
+├── task_name
+│   └── train
+├── tags
+│   └── ['sudoku', 'trm', 'extreme']
+├── ckpt_path
+│   └── /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extr
+├── save_dir
+│   └── None
+├── seed
+│   └── 4108
+├── sweep_mode
+│   └── False
+├── append_wandb_name_to_save_dir
+│   └── False
+├── timekeeping
+│   └── max_epochs: 50000
+│       batch_size: 768
+│       num_workers: 0
+│       
+└── model_tuning
+    └── learning_rate: 0.0001
+        learning_rate_emb: 0.0001
+        warmup_steps: 2000
+        weight_decay: 1.0
+        lr_min_ratio: 0.01
+        num_heads: 8
+        halt_exploration_prob: 0.1
+        N_supervision: 16
+        N_supervision_val: 16
+        H_cycles: 3
+        L_cycles: 6
+        num_layers: 2
+        puzzle_emb_dim: 0
+        puzzle_emb_len: 0
+        hidden_size: 512
+        ffn_expansion: 4
+        rope_theta: 10000
+        pos_emb_type: 'null'
+        use_mlp_t: true
+        use_conv_swiglu: false
+        use_board_swiglu: false
+        use_muon: false
+        
+Seed set to 4108
+[[36m2026-06-17 07:47:33,369[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Instantiating datamodule <src.nn.data.SudokuDataModule>[0m
+[[36m2026-06-17 07:47:33,373[0m][[34msrc.nn.data.sudoku_datamodule[0m][[32mINFO[0m] - [rank: 0] ✓ Loaded metadata from ./data/sudoku_extreme_1k_aug_1k/metadata.json[0m
+[[36m2026-06-17 07:47:33,373[0m][[34msrc.nn.data.sudoku_datamodule[0m][[32mINFO[0m] - [rank: 0]   Train: 1000 groups, 1001000 total puzzles[0m
+[[36m2026-06-17 07:47:33,384[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Setting model config from data module:  num_puzzles = 1 batch_size = 768 vocab_size = 12[0m
+[[36m2026-06-17 07:47:33,384[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Instantiating model <src.nn.models.trm.TRMModule>[0m
+Failed to import adam2
+Auto-casting TRM to torch.bfloat16
+[[36m2026-06-17 07:47:34,094[0m][[34msrc.nn.models.trm[0m][[32mINFO[0m] - [rank: 0] Creating TRM with vocab size=12, seq_len=81, puzzle_emb_len=0 pos_emb_type='null' puzzle_emb_dim=0[0m
+[[36m2026-06-17 07:47:34,094[0m][[34msrc.nn.models.trm[0m][[32mINFO[0m] - [rank: 0] use_mlp_t=True, use_conv_swiglu=False, use_board_swiglu=False[0m
+[[36m2026-06-17 07:47:34,121[0m][[34msrc.nn.models.trm[0m][[32mINFO[0m] - [rank: 0] Not using Rotary Embeddings[0m
+[[36m2026-06-17 07:47:34,144[0m][[34msrc.nn.models.trm[0m][[32mINFO[0m] - [rank: 0] puzzle_emb_dim <= 0, not creating puzzle embeddings[0m
+[[36m2026-06-17 07:47:34,144[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Instantiating callbacks...[0m
+[[36m2026-06-17 07:47:34,144[0m][[34msrc.nn.utils.instantiators[0m][[32mINFO[0m] - [rank: 0] Instantiating callback <lightning.pytorch.callbacks.ModelCheckpoint>[0m
+[[36m2026-06-17 07:47:34,147[0m][[34msrc.nn.utils.instantiators[0m][[32mINFO[0m] - [rank: 0] Instantiating callback <src.nn.callbacks.ema.EMACallback>[0m
+[[36m2026-06-17 07:47:34,148[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Instantiating loggers...[0m
+[[36m2026-06-17 07:47:34,148[0m][[34msrc.nn.utils.instantiators[0m][[32mINFO[0m] - [rank: 0] Instantiating logger <lightning.pytorch.loggers.csv_logs.CSVLogger>[0m
+[[36m2026-06-17 07:47:34,148[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Instantiating trainer <lightning.pytorch.trainer.Trainer>[0m
+Using bfloat16 Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+[[36m2026-06-17 07:47:34,155[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Logging hyperparameters![0m
+[[36m2026-06-17 07:47:34,163[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Starting training![0m
+[[36m2026-06-17 07:47:34,166[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Val check interval: default (1.0)[0m
+[[36m2026-06-17 07:47:34,166[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Check val every n epoch: 100[0m
+[[36m2026-06-17 07:47:34,166[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Steps per epoch: 1303[0m
+[[36m2026-06-17 07:47:34,166[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Max epochs: 50000[0m
+[[36m2026-06-17 07:47:34,166[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Batch size: 768[0m
+You are using a CUDA device ('NVIDIA GeForce RTX 3090') that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision('medium' | 'high')` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
+[[36m2026-06-17 07:47:34,373[0m][[34msrc.nn.models.trm[0m][[32mINFO[0m] - [rank: 0] Training configuration:[0m
+[[36m2026-06-17 07:47:34,373[0m][[34msrc.nn.models.trm[0m][[32mINFO[0m] - [rank: 0]   Groups (unique puzzles): 1000[0m
+[[36m2026-06-17 07:47:34,373[0m][[34msrc.nn.models.trm[0m][[32mINFO[0m] - [rank: 0]   Total puzzles (with aug): 1001000[0m
+[[36m2026-06-17 07:47:34,373[0m][[34msrc.nn.models.trm[0m][[32mINFO[0m] - [rank: 0]   Steps per epoch: 1[0m
+[[36m2026-06-17 07:47:34,373[0m][[34msrc.nn.models.trm[0m][[32mINFO[0m] - [rank: 0]   Total steps: 50000[0m
+[[36m2026-06-17 07:47:34,374[0m][[34msrc.nn.models.trm[0m][[32mINFO[0m] - [rank: 0] Compiling inner_forward with torch.compile...[0m
+[[36m2026-06-17 07:47:34,374[0m][[34msrc.nn.models.trm[0m][[32mINFO[0m] - [rank: 0] Compilation successful[0m
+Restoring states from the checkpoint path at /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[[36m2026-06-17 07:47:34,453[0m][[34msrc.nn.models.trm[0m][[32mINFO[0m] - [rank: 0] Restored manual LR step: 40906[0m
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [1]
+┏━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name            ┃ Type            ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ input_embedding │ CastedEmbedding │  6.1 K │ train │     0 │
+│ 1 │ lenet           │ ReasoningModule │  4.8 M │ train │     0 │
+│ 2 │ lm_head         │ CastedLinear    │  6.1 K │ train │     0 │
+│ 3 │ q_head          │ CastedLinear    │    513 │ train │     0 │
+└───┴─────────────────┴─────────────────┴────────┴───────┴───────┘
+Trainable params: 4.9 M                                                         
+Non-trainable params: 0                                                         
+Total params: 4.9 M                                                             
+Total estimated model params size (MB): 19.423                                  
+Modules in train mode: 19                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+Restored all states from the checkpoint at /home/ianblenke/github.com/ianblenke/carnot/results/trm_runs/sudoku_extreme_baseline/last.ckpt
+[[36m2026-06-17 07:47:34,499[0m][[34msrc.nn.data.sudoku_datamodule[0m][[32mINFO[0m] - [rank: 0] Creating train dataloader with batch size 768 and num_workers 0 and prefetch_factor None[0m
