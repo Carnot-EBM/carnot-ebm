@@ -28,6 +28,11 @@ GAME_ARTIFACTS = {
     "lp85": "results/experiment_4190_arc_incremental_progress.json",            # L3
     "ls20": "results/experiment_4285_arc_incremental_progress_new_game.json",   # L1
     "wa30": "results/experiment_4275_arc_incremental_progress_new_game.json",   # L1
+    # 2026-06-17 adapter-free sweep solves (graph_explore_solve_v2); trajectory format
+    "cd82": "results/arc_explore_trajectory_cd82.json",                          # L1
+    "sp80": "results/arc_explore_trajectory_sp80.json",                          # L1
+    "su15": "results/arc_explore_trajectory_su15.json",                          # L1
+    "tu93": "results/arc_explore_trajectory_tu93.json",                          # L1
 }
 
 # from-scratch OFFLINE re-solves (these replay deterministically on the offline
@@ -39,7 +44,7 @@ RESOLVED_ARTIFACTS = {
 
 def load_actions(path: str) -> list[dict]:
     d = json.load(open(REPO / path))
-    for keys in (("solution",), ("solve_trace", "actions"), ("solver_trace", "actions")):
+    for keys in (("solution",), ("trajectory",), ("solve_trace", "actions"), ("solver_trace", "actions")):
         cur = d
         for k in keys:
             cur = cur.get(k) if isinstance(cur, dict) else None
@@ -52,6 +57,8 @@ def load_actions(path: str) -> list[dict]:
 
 def normalize(a: dict) -> tuple[int | None, dict | None]:
     aid = a.get("action")
+    if "data" in a:                          # arc_explore_trajectory format: {"action", "data": {x,y}|null}
+        return (int(aid) if aid is not None else None), a.get("data")
     x = a.get("x", a.get("world_x"))
     y = a.get("y", a.get("world_y"))
     has_xy = x is not None and y is not None
