@@ -278,7 +278,7 @@ def plan_and_execute(game: str, engine, is_level_complete, *, warmup: bool = Fal
     from arcengine import GameAction
     from carnot.agentic.arc_agi3_world_model import grid_of
     from carnot.agentic.arc_agi3_live_adapter import _levels_completed, _game_action
-    from carnot.agentic.arc_graph_explore import rich_action_candidates, _warm, to_logical as _tl  # noqa
+    from carnot.agentic.arc_graph_explore import rich_action_candidates, _warm
     from carnot.agentic import arc_solver_kit as kit
 
     arc = kit.offline_arcade()

@@ -24,6 +24,8 @@ def main() -> int:
     ap.add_argument("--n-trans", type=int, default=120)
     ap.add_argument("--timeout", type=int, default=480, help="per-codex-call timeout (s)")
     ap.add_argument("--no-plan", action="store_true")
+    ap.add_argument("--reuse", action="store_true",
+                    help="skip codex; re-verify + re-plan the existing world_model.py (zero quota)")
     args = ap.parse_args()
     game = args.game
     t0 = time.time()
@@ -37,7 +39,16 @@ def main() -> int:
     proposer = e3.CodexProposer(timeout=args.timeout)
     history, best_acc = [], 0.0
 
-    for rnd in range(args.rounds):
+    rounds = 0 if args.reuse else args.rounds
+    if args.reuse:
+        engine, _ = e3.load_engine(game)
+        vr = verifier.score(engine)
+        best_acc = vr.accuracy
+        history.append({"round": "reuse", "engine_loadable": True, "accuracy": vr.accuracy,
+                        "n_correct": vr.n_correct, "n": vr.n})
+        print(f"    REUSE VERIFY: {vr.n_correct}/{vr.n} = {vr.accuracy:.0%}", flush=True)
+
+    for rnd in range(rounds):
         if rnd == 0:
             print(f"  [round {rnd}] codex INDUCE world_model.py ...", flush=True)
             ok, tail = proposer.induce(game, trans, cell)
