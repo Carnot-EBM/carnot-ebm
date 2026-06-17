@@ -48,10 +48,30 @@ def test_graph_explore_is_default_and_uses_heuristic():
     assert r["name"] == "graph_explore" and r["uses_goal_distance_heuristic"] is True
 
 
-def test_recognised_but_unwired_class_is_flagged_not_pretended():
-    r = SR.route_strategy("timed_trap_aware")
-    assert r["name"] == "timed_trap_aware" and r["wired"] is False
-    assert "not yet wired" in r["reason"].lower()
+def test_checkpoint_and_timed_classes_route_to_the_maze_planner():
+    # both maze classes are now WIRED to the reusable arc_maze_planner (checkpoint_multirun reproduces
+    # tn36 L6; timed_trap_aware reproduces tn36 L7) and skip the goal-distance heuristic.
+    for mech, fn in [("checkpoint_multirun", "checkpoint_multirun_plan"),
+                     ("timed_trap_aware", "timed_trap_plan")]:
+        r = SR.route_strategy(mech)
+        assert r["name"] == mech and r["wired"] is True
+        assert r["uses_goal_distance_heuristic"] is False
+        assert "arc_maze_planner" in r["solver"] and fn in r["solver"]
+
+
+def test_route_flags_an_unwired_class_without_pretending():
+    # the router must flag a recognised-but-unwired class honestly (no solver pretence). All shipped
+    # classes are wired, so inject a temporary unwired class to pin the reason-formatting branch.
+    fake = {"name": "future_class", "mechanic": "future_class", "wired": False,
+            "uses_goal_distance_heuristic": False, "solver": "PENDING", "search_engine": "x",
+            "needs": "a frame-only solver"}
+    SR._BY_MECHANIC["future_class"] = fake
+    try:
+        r = SR.route_strategy("future_class")
+        assert r["name"] == "future_class" and r["wired"] is False
+        assert "not yet wired" in r["reason"].lower()
+    finally:
+        del SR._BY_MECHANIC["future_class"]
 
 
 def test_route_for_game_combines_detect_and_route():

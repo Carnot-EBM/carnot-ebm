@@ -80,22 +80,37 @@ STRATEGY_CLASSES: list[dict] = [
     {
         "name": "checkpoint_multirun",
         "mechanic": "checkpoint_multirun",
-        "wired": False,  # internal-state solver exists; frame-only port pending
+        "wired": True,  # arc_maze_planner.checkpoint_multirun_plan; reproduces tn36 L6
         "uses_goal_distance_heuristic": False,
         "applies_features": "a region where ending a run advances the object's base (progress carries across runs)",
-        "solver": "arc3_tn36_offline_solver._multirun_plan (internal-state; frame-only port pending)",
-        "search_engine": "waypoint BFS across checkpoints with a box-collision model",
-        "needs": "frame-only checkpoint detection (a cell that, when the run ends on it, persists base advance)",
+        "solver": (
+            "carnot.agentic.arc_maze_planner.checkpoint_multirun_plan — waypoint BFS over "
+            "checkpoints (reproduces tn36 L6)"
+        ),
+        "search_engine": "waypoint BFS start->checkpoints->target; each edge a <=n-move collision-free leg",
+        "needs": (
+            "frame-only MazeModel induction (object box, walls, checkpoints) — for a KNOWN game the "
+            "model is read from internal state; frame-only checkpoint detection is the live port"
+        ),
     },
     {
         "name": "timed_trap_aware",
         "mechanic": "timed_trap_aware",
-        "wired": False,  # tn36 L7 timed path-planner not yet built
+        "wired": True,  # arc_maze_planner.timed_trap_plan; reproduces tn36 L7 (first L7 solve, gated)
         "uses_goal_distance_heuristic": False,
         "applies_features": "obstacle cells that toggle visibility on a fixed move cadence (lethal on contact)",
-        "solver": "PENDING — timed path-planner (tn36 L7 not yet solved; no fabrication)",
-        "search_engine": "timed-state planner over (position, run-move-index, hazard-visibility-parity)",
-        "needs": "frame-only periodic-visibility detection + a timed-state search",
+        "solver": (
+            "carnot.agentic.arc_maze_planner.timed_trap_plan — timed waypoint BFS, crosses the "
+            "blinking band only during its invisible window (reproduces tn36 L7)"
+        ),
+        "search_engine": (
+            "waypoint BFS whose legs are BFS over (position, run-slot-index) so the spike-visibility "
+            "schedule + residual hidden hitbox are respected"
+        ),
+        "needs": (
+            "frame-only MazeModel + hazard-cadence induction (periodic-visibility detection) — for a "
+            "KNOWN game the model is read from internal state; that detection is the live port"
+        ),
     },
     {
         "name": "graph_explore",

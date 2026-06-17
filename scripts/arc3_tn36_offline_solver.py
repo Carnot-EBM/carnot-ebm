@@ -160,8 +160,18 @@ def _fresh_at(arc, game, wins):
     return env
 
 
-# --- multi-run maze path-planning (for levels whose collision-free path exceeds one program) ---
-_MAZE_MOVES = [((0, -4), UP), ((0, 4), DOWN), ((-4, 0), LEFT), ((4, 0), RIGHT)]
+# --- multi-run maze path-planning (delegated to the reusable, game-agnostic package planners) ---
+#
+# checkpoint_multirun (L6) + timed_trap_aware (L7, blinking spikes) both stage a path across
+# CHECKPOINTS (a run that ends on a checkpoint advances the object's base) — the timed variant also
+# crosses the spike band only during its invisible window. The planning ALGORITHMS live in
+# `carnot.agentic.arc_maze_planner` so the STRATEGY router can dispatch them to any game of these
+# classes; this module just builds the generic MazeModel from tn36's internal state and validates the
+# returned plan against the real env. The spike band (`ekdwmirldx`) is invisible at run start and
+# toggles visible after slot index 2 (`jmwdvdqntf`); a move onto a spike kills the object while
+# visible (full box) or via its residual hidden hitbox (`olbuwgbgyz`) while invisible — encoded as
+# spikes_visible / spikes_hidden + invisible_slots in the model.
+_MAZE_MOVES = [((0, -STEP), UP), ((0, STEP), DOWN), ((-STEP, 0), LEFT), ((STEP, 0), RIGHT)]
 
 
 def _geom(env):
@@ -173,56 +183,46 @@ def _geom(env):
             [(i.x, i.y) for i in bz.wgzwawbgew])
 
 
-def _leg_codes(src, dst, collide, max_moves):
-    """Shortest collision-free single-step path src->dst as move codes, or None (BFS)."""
-    from collections import deque
-    q, seen = deque([(src, [])]), {src}
-    while q:
-        (x, y), codes = q.popleft()
-        if (x, y) == dst:
-            return codes
-        if len(codes) >= max_moves:
-            continue
-        for (dx, dy), code in _MAZE_MOVES:
-            n = (x + dx, y + dy)
-            if n not in seen and not collide(*n):
-                seen.add(n)
-                q.append((n, codes + [code]))
-    return None
+def _spikes(env):
+    """Spike boxes read from internal state: (visible_boxes, hidden_residual_hitboxes). The visible
+    box is the full lethal band; the hidden hitbox (`olbuwgbgyz`) is what still kills when invisible."""
+    bz = _bz(env)
+    vis = [(s.x, s.y, s.width, s.height) for s in bz.ekdwmirldx]
+    hid = [(s.olbuwgbgyz.x, s.olbuwgbgyz.y, s.olbuwgbgyz.width, s.olbuwgbgyz.height)
+           for s in bz.ekdwmirldx]
+    return vis, hid
 
 
-def _multirun_plan(env, n):
-    """For a PURE-POSITION level whose direct path is obstacle-blocked beyond `n` moves: plan a
-    multi-run path start -> checkpoint(s) -> target, each leg <= n moves (a checkpoint advances
-    the base between runs). Returns a list of leg-programs (padded to n) or None."""
-    from collections import deque
+def _maze_model(env, n, *, with_spikes):
+    """Build the generic MazeModel (carnot.agentic.arc_maze_planner) from tn36 internal state, or
+    None if the level needs a transform (the maze planners are position-only)."""
+    from carnot.agentic.arc_maze_planner import MazeModel
     bz = _bz(env)
     o, t = bz.htntnzkbzu, bz.aqszntqeae
     if (o.scale, o.rotation, int(o.sjmtdfxdrc)) != (t.scale, t.rotation, int(t.sjmtdfxdrc)):
         return None                                   # transforms+maze unhandled; position only
     (w, h), obs, cps = _geom(env)
+    vis, hid = _spikes(env) if with_spikes else ([], [])
+    return MazeModel(object_wh=(w, h), start=(o.x, o.y), target=(t.x, t.y), walls=obs,
+                     checkpoints=cps, move_codes=_MAZE_MOVES, settle_code=SETTLE, n_slots=n,
+                     spikes_visible=vis, spikes_hidden=hid, invisible_slots=3)
 
-    def collide(x, y):
-        if x < 0 or y < 0 or x + w > 64 or y + h > 64:
-            return True
-        return any(x < ox + ow and x + w > ox and y < oy + oh and y + h > oy
-                   for ox, oy, ow, oh in obs)
 
-    start, target = (o.x, o.y), (t.x, t.y)
-    # BFS over waypoints (start + checkpoints), edge = a <= n-move collision-free leg
-    q, seen = deque([(start, [])]), {start}
-    while q:
-        node, legs = q.popleft()
-        if node == target:
-            return [codes + [SETTLE] * (n - len(codes)) for _, codes in legs]
-        for nxt in cps + [target]:
-            if nxt == node or nxt in seen:
-                continue
-            lp = _leg_codes(node, nxt, collide, n)
-            if lp is not None:
-                seen.add(nxt)
-                q.append((nxt, legs + [(nxt, lp)]))
-    return None
+def _multirun_plan(env, n):
+    """checkpoint_multirun: stage a position-only path across checkpoints (no hazards). Delegates to
+    the reusable planner. Returns a list of leg-programs (padded to n) or None."""
+    from carnot.agentic.arc_maze_planner import checkpoint_multirun_plan
+    model = _maze_model(env, n, with_spikes=False)
+    return checkpoint_multirun_plan(model) if model is not None else None
+
+
+def _timed_multirun_plan(env, n):
+    """timed_trap_aware: stage a position-only path across checkpoints while avoiding the blinking
+    spike band (cross only during the invisible window). Delegates to the reusable planner. Returns a
+    list of leg-programs or None (incl. when the level has no spikes — use the plain planner then)."""
+    from carnot.agentic.arc_maze_planner import timed_trap_plan
+    model = _maze_model(env, n, with_spikes=True)
+    return timed_trap_plan(model) if model is not None else None
 
 
 def _winning_solutions(arc, game, max_level, cap):
@@ -244,10 +244,13 @@ def _winning_solutions(arc, game, max_level, cap):
         # 2) multi-run maze fallback (the path exceeds one program / is obstacle-blocked)
         if found is None:
             plan = _multirun_plan(probe, n)
-            if plan is not None:
-                test = _fresh_at(arc, game, wins)
-                if _apply_solution(test, plan, []) >= target_level:
-                    found = plan
+            if plan and (_apply_solution(_fresh_at(arc, game, wins), plan, []) or 0) >= target_level:
+                found = plan
+        # 3) TIMED spike-trap maze fallback (blinking spikes: route + cross during invisible window)
+        if found is None:
+            plan = _timed_multirun_plan(probe, n)
+            if plan and (_apply_solution(_fresh_at(arc, game, wins), plan, []) or 0) >= target_level:
+                found = plan
         if found is None:
             break
         wins.append(found)

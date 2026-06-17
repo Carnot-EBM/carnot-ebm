@@ -1,0 +1,744 @@
+{
+  "acceptance_gate": true,
+  "adversarial_verify": {
+    "critical_flags": [],
+    "parsed_report": null,
+    "returncode": 1,
+    "status": "clean",
+    "stderr_tail": "",
+    "stdout_tail": "Scanned 1 artifact(s); 1 flagged.\n\n[CRITICAL] exp4348 () -- 3 flag(s)\n  - CRITICAL TAUTOLOGY                      s3_minus_best_of_k_delta=0.266667 and s3_minus_self_reward_smc_delta=0.266667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.\n  - CRITICAL TAUTOLOGY                      s3_minus_best_of_k_delta=0.266667 and s3_minus_unguided_delta=0.266667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.\n  - CRITICAL TAUTOLOGY                      s3_minus_self_reward_smc_delta=0.266667 and s3_minus_unguided_delta=0.266667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.\n\n",
+    "warn_flags": []
+  },
+  "benchmark_failures": [],
+  "benchmark_n": 240,
+  "benchmark_n_per_seed": 80,
+  "benchmark_records_preview": [
+    {
+      "best_of_k_bonus": {},
+      "best_of_k_option": "D",
+      "correct_option": "C",
+      "intrinsic_confidence": {},
+      "mask_entropy": 1.020684,
+      "option_logits": {
+        "A": 13.982976913452148,
+        "B": 12.646461486816406,
+        "C": 12.371442794799805,
+        "D": 14.72913932800293
+      },
+      "s3_carnot_correct": false,
+      "s3_carnot_option": "D",
+      "seed": 4348,
+      "selections": {
+        "best_of_k": {
+          "correct": false,
+          "intrinsic_confidence": 0.590522,
+          "logit": 14.729139,
+          "nfe_budget": 16,
+          "option": "D",
+          "partial_state_energy": 1.130699,
+          "score": 14.729139,
+          "uses_external_scorer": false
+        },
+        "s3_carnot": {
+          "correct": false,
+          "frontier_preview": [
+            {
+              "energy": 1.130699,
+              "option": "D",
+              "score": 12.468905
+            },
+            {
+              "energy": 0.896561,
+              "option": "A",
+              "score": 12.21295
+            }
+          ],
+          "intrinsic_confidence": 0.590522,
+          "logit": 14.729139,
+          "nfe_budget": 16,
+          "option": "D",
+          "partial_state_energy": 1.130699,
+          "score": 14.234998,
+          "uses_external_scorer": true
+        },
+        "self_reward_smc": {
+          "correct": false,
+          "intrinsic_confidence": 0.590522,
+          "logit": 14.729139,
+          "nfe_budget": 16,
+          "option": "D",
+          "partial_state_energy": 1.130699,
+          "score": 15.410183,
+          "uses_external_scorer": false
+        },
+        "unguided": {
+          "correct": false,
+          "intrinsic_confidence": 0.590522,
+          "logit": 14.729139,
+          "nfe_budget": 16,
+          "option": "D",
+          "partial_state_energy": 1.130699,
+          "score": 14.729139,
+          "uses_external_scorer": false
+        }
+      },
+      "self_reward_smc_correct": false,
+      "self_reward_smc_option": "D",
+      "task_id": "second_corpus_seed4348_choice_000",
+      "unguided_option": "D"
+    },
+    {
+      "best_of_k_bonus": {},
+      "best_of_k_option": "B",
+      "correct_option": "C",
+      "intrinsic_confidence": {},
+      "mask_entropy": 0.72204,
+      "option_logits": {
+        "A": 9.579009056091309,
+        "B": 14.228071212768555,
+        "C": 12.116863250732422,
+        "D": 12.437435150146484
+      },
+      "s3_carnot_correct": false,
+      "s3_carnot_option": "B",
+      "seed": 4348,
+      "selections": {
+        "best_of_k": {
+          "correct": false,
+          "intrinsic_confidence": 0.770703,
+          "logit": 14.228071,
+          "nfe_budget": 16,
+          "option": "B",
+          "partial_state_energy": 1.013758,
+          "score": 14.228071,
+          "uses_external_scorer": false
+        },
+        "s3_carnot": {
+          "correct": false,
+          "frontier_preview": [
+            {
+              "energy": 1.013758,
+              "option": "B",
+              "score": 12.201825
+            },
+            {
+              "energy": 0.663442,
+              "option": "C",
+              "score": 10.762158
+            }
+          ],
+          "intrinsic_confidence": 0.770703,
+          "logit": 14.228071,
+          "nfe_budget": 16,
+          "option": "B",
+          "partial_state_energy": 1.013758,
+          "score": 14.492715,
+          "uses_external_scorer": true
+        },
+        "self_reward_smc": {
+          "correct": false,
+          "intrinsic_confidence": 0.770703,
+          "logit": 14.228071,
+          "nfe_budget": 16,
+          "option": "B",
+          "partial_state_energy": 1.013758,
+          "score": 15.269478,
+          "uses_external_scorer": false
+        },
+        "unguided": {
+          "correct": false,
+          "intrinsic_confidence": 0.770703,
+          "logit": 14.228071,
+          "nfe_budget": 16,
+          "option": "B",
+          "partial_state_energy": 1.013758,
+          "score": 14.228071,
+          "uses_external_scorer": false
+        }
+      },
+      "self_reward_smc_correct": false,
+      "self_reward_smc_option": "B",
+      "task_id": "second_corpus_seed4348_choice_001",
+      "unguided_option": "B"
+    },
+    {
+      "best_of_k_bonus": {},
+      "best_of_k_option": "B",
+      "correct_option": "B",
+      "intrinsic_confidence": {},
+      "mask_entropy": 1.045026,
+      "option_logits": {
+        "A": 13.370558738708496,
+        "B": 16.600048065185547,
+        "C": 16.04319953918457,
+        "D": 15.190942764282227
+      },
+      "s3_carnot_correct": true,
+      "s3_carnot_option": "B",
+      "seed": 4348,
+      "selections": {
+        "best_of_k": {
+          "correct": true,
+          "intrinsic_confidence": 0.538517,
+          "logit": 16.600048,
+          "nfe_budget": 16,
+          "option": "B",
+          "partial_state_energy": 0.325571,
+          "score": 16.600048,
+          "uses_external_scorer": false
+        },
+        "s3_carnot": {
+          "correct": true,
+          "frontier_preview": [
+            {
+              "energy": 0.325571,
+              "option": "B",
+              "score": 15.915622
+            },
+            {
+              "energy": 0.921038,
+              "option": "C",
+              "score": 14.239096
+            }
+          ],
+          "intrinsic_confidence": 0.538517,
+          "logit": 16.600048,
+          "nfe_budget": 16,
+          "option": "B",
+          "partial_state_energy": 0.325571,
+          "score": 18.163336,
+          "uses_external_scorer": true
+        },
+        "self_reward_smc": {
+          "correct": true,
+          "intrinsic_confidence": 0.538517,
+          "logit": 16.600048,
+          "nfe_budget": 16,
+          "option": "B",
+          "partial_state_energy": 0.325571,
+          "score": 17.177082,
+          "uses_external_scorer": false
+        },
+        "unguided": {
+          "correct": true,
+          "intrinsic_confidence": 0.538517,
+          "logit": 16.600048,
+          "nfe_budget": 16,
+          "option": "B",
+          "partial_state_energy": 0.325571,
+          "score": 16.600048,
+          "uses_external_scorer": false
+        }
+      },
+      "self_reward_smc_correct": true,
+      "self_reward_smc_option": "B",
+      "task_id": "second_corpus_seed4348_choice_002",
+      "unguided_option": "B"
+    },
+    {
+      "best_of_k_bonus": {},
+      "best_of_k_option": "B",
+      "correct_option": "B",
+      "intrinsic_confidence": {},
+      "mask_entropy": 1.095504,
+      "option_logits": {
+        "A": 13.497419357299805,
+        "B": 15.469804763793945,
+        "C": 13.642196655273438,
+        "D": 14.76680850982666
+      },
+      "s3_carnot_correct": true,
+      "s3_carnot_option": "B",
+      "seed": 4348,
+      "selections": {
+        "best_of_k": {
+          "correct": true,
+          "intrinsic_confidence": 0.557096,
+          "logit": 15.469805,
+          "nfe_budget": 16,
+          "option": "B",
+          "partial_state_energy": 0.391269,
+          "score": 15.469805,
+          "uses_external_scorer": false
+        },
+        "s3_carnot": {
+          "correct": true,
+          "frontier_preview": [
+            {
+              "energy": 0.391269,
+              "option": "B",
+              "score": 14.666297
+            },
+            {
+              "energy": 1.226597,
+              "option": "D",
+              "score": 12.331655
+            }
+          ],
+          "intrinsic_confidence": 0.557096,
+          "logit": 15.469805,
+          "nfe_budget": 16,
+          "option": "B",
+          "partial_state_energy": 0.391269,
+          "score": 16.609685,
+          "uses_external_scorer": true
+        },
+        "self_reward_smc": {
+          "correct": true,
+          "intrinsic_confidence": 0.557096,
+          "logit": 15.469805,
+          "nfe_budget": 16,
+          "option": "B",
+          "partial_state_energy": 0.391269,
+          "score": 16.083997,
+          "uses_external_scorer": false
+        },
+        "unguided": {
+          "correct": true,
+          "intrinsic_confidence": 0.557096,
+          "logit": 15.469805,
+          "nfe_budget": 16,
+          "option": "B",
+          "partial_state_energy": 0.391269,
+          "score": 15.469805,
+          "uses_external_scorer": false
+        }
+      },
+      "self_reward_smc_correct": true,
+      "self_reward_smc_option": "B",
+      "task_id": "second_corpus_seed4348_choice_003",
+      "unguided_option": "B"
+    },
+    {
+      "best_of_k_bonus": {},
+      "best_of_k_option": "A",
+      "correct_option": "B",
+      "intrinsic_confidence": {},
+      "mask_entropy": 0.449908,
+      "option_logits": {
+        "A": 14.937235832214355,
+        "B": 12.630036354064941,
+        "C": 9.48291015625,
+        "D": 11.527212142944336
+      },
+      "s3_carnot_correct": false,
+      "s3_carnot_option": "A",
+      "seed": 4348,
+      "selections": {
+        "best_of_k": {
+          "correct": false,
+          "intrinsic_confidence": 0.879617,
+          "logit": 14.937236,
+          "nfe_budget": 16,
+          "option": "A",
+          "partial_state_energy": 0.658693,
+          "score": 14.937236,
+          "uses_external_scorer": false
+        },
+        "s3_carnot": {
+          "correct": false,
+          "frontier_preview": [
+            {
+              "energy": 0.658693,
+              "option": "A",
+              "score": 13.601968
+            },
+            {
+              "energy": 0.928129,
+              "option": "B",
+              "score": 10.759883
+            }
+          ],
+          "intrinsic_confidence": 0.879617,
+          "logit": 14.937236,
+          "nfe_budget": 16,
+          "option": "A",
+          "partial_state_energy": 0.658693,
+          "score": 16.185356,
+          "uses_external_scorer": true
+        },
+        "self_reward_smc": {
+          "correct": false,
+          "intrinsic_confidence": 0.879617,
+          "logit": 14.937236,
+          "nfe_budget": 16,
+          "option": "A",
+          "partial_state_energy": 0.658693,
+          "score": 16.196471,
+          "uses_external_scorer": false
+        },
+        "unguided": {
+          "correct": false,
+          "intrinsic_confidence": 0.879617,
+          "logit": 14.937236,
+          "nfe_budget": 16,
+          "option": "A",
+          "partial_state_energy": 0.658693,
+          "score": 14.937236,
+          "uses_external_scorer": false
+        }
+      },
+      "self_reward_smc_correct": false,
+      "self_reward_smc_option": "A",
+      "task_id": "second_corpus_seed4348_choice_004",
+      "unguided_option": "A"
+    }
+  ],
+  "bootstrap_resamples": 2000,
+  "condition_accuracy": {
+    "best_of_k": 0.245833,
+    "s3_carnot": 0.5125,
+    "self_reward_smc": 0.245833,
+    "unguided": 0.245833
+  },
+  "condition_pass_counts": {
+    "best_of_k": 59,
+    "s3_carnot": 123,
+    "self_reward_smc": 59,
+    "unguided": 59
+  },
+  "control_noop_guard": {
+    "bit_identical_accuracy_pairs": [
+      [
+        "unguided",
+        "best_of_k"
+      ],
+      [
+        "unguided",
+        "self_reward_smc"
+      ],
+      [
+        "best_of_k",
+        "self_reward_smc"
+      ]
+    ],
+    "bit_identical_selection_pairs": [
+      [
+        "unguided",
+        "best_of_k"
+      ],
+      [
+        "unguided",
+        "self_reward_smc"
+      ],
+      [
+        "best_of_k",
+        "self_reward_smc"
+      ]
+    ],
+    "condition_accuracy": {
+      "best_of_k": 0.245833,
+      "s3_carnot": 0.5125,
+      "self_reward_smc": 0.245833,
+      "unguided": 0.245833
+    },
+    "control_keys": [
+      "unguided",
+      "best_of_k",
+      "self_reward_smc"
+    ],
+    "controls_differentiated": false,
+    "guidance_changes_selection": {
+      "best_of_k": false,
+      "s3_carnot": true,
+      "self_reward_smc": false
+    },
+    "reason": "condition arms tied or did not change"
+  },
+  "controls_differentiated": false,
+  "duration_s": 1451.857042,
+  "experiment": 4348,
+  "field_principles": {
+    "benchmark_n": "BARE int: per-arm n -- MUST be >= 80.",
+    "controls_differentiated": "BARE bool: true iff no two arms tie bit-identically.",
+    "honest_verdict": "Terminal-prefixed. A generation gain (S3 beats the compute-matched + intrinsic controls at fixed NFE -- moat is USEFUL), a powered null (the proven scorer does not convert to a fixed-NFE gain -> retire the in-generation scale-up direction), a controls_not_differentiable, and a scorer_leaky_in_search_corpus are ALL decision-grade.",
+    "model_specs": "DiffusionGemma GGUF + PR binary + the leak-robust scorer + the S3 config + K + NFE budget + the controls + n + seeds; required methodology.",
+    "nfe_budget": "BARE int: the FIXED denoising-compute (NFE) budget held equal across all arms.",
+    "preconditions_checked": "Records the PR-binary + GGUF + leak-robust-scorer + TRM-stand-down checks.",
+    "random_seed": "Determinism precondition for the denoising + search + bootstrap.",
+    "reproducibility_checksum": "Hash of the search corpus + the S3 config + the controls + PR-binary inputs.",
+    "s3_gain_ci95": "Task-level bootstrap CI95 (>=2000 resamples) of the S3-Carnot minus best-of-K@NFE delta.",
+    "s3_guided_beats_control": "BARE bool: true iff S3-Carnot beats best-of-K@matched-NFE AND CI95-excl-0 AND controls_differentiated AND beats self-reward SMC.",
+    "s3_minus_best_of_k_delta": "BARE float: S3-Carnot minus best-of-K at matched NFE.",
+    "s3_minus_self_reward_smc_delta": "BARE float: S3-Carnot minus self-reward SMC.",
+    "scorer_leak_recheck_passed": "BARE bool: the independent leak re-check of the scorer on the search corpus.",
+    "verifier_is_oracle": "BARE bool=false -- the leak-robust reward head is oracle-distinct."
+  },
+  "guidance_changes_selection": {
+    "best_of_k": false,
+    "s3_carnot": true,
+    "self_reward_smc": false
+  },
+  "guidance_dynamics_diagnostic": {
+    "mask_entropy_mean": 1.003127,
+    "mask_entropy_stdev": 0.24202,
+    "over_guided_finding": true,
+    "status": "measured",
+    "token_change_covariance": 0.0,
+    "token_change_rate": 1.0,
+    "trajectory_stability": 0.0
+  },
+  "honest_verdict": "controls_not_differentiable",
+  "independent_leak_recheck": {
+    "answer_masked_auroc": 0.86112,
+    "answer_masked_cells": 105,
+    "auroc_floor": 0.6,
+    "fresh_heldout_n": 990,
+    "fresh_heldout_task_n": 330,
+    "protocol": "fresh split; replace answer-bearing canvas cells with mask_token_id",
+    "scorer_leak_recheck_passed": true,
+    "status": "measured",
+    "unmasked_auroc": 0.861647
+  },
+  "inference_substrate": "live_llm_inference",
+  "model_specs": {
+    "best_of_k_baseline": {
+      "k": 4,
+      "nfe_budget": 16,
+      "uses_external_scorer": false
+    },
+    "control_construction": {
+      "control_keys": [
+        "unguided",
+        "best_of_k",
+        "self_reward_smc"
+      ],
+      "noop_guard": {
+        "bit_identical_accuracy_pairs": [
+          [
+            "unguided",
+            "best_of_k"
+          ],
+          [
+            "unguided",
+            "self_reward_smc"
+          ],
+          [
+            "best_of_k",
+            "self_reward_smc"
+          ]
+        ],
+        "bit_identical_selection_pairs": [
+          [
+            "unguided",
+            "best_of_k"
+          ],
+          [
+            "unguided",
+            "self_reward_smc"
+          ],
+          [
+            "best_of_k",
+            "self_reward_smc"
+          ]
+        ],
+        "requires_no_bit_identical_condition_accuracy": true,
+        "requires_no_bit_identical_selection_sequence": true
+      }
+    },
+    "diffusiongemma": {
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "canvas_len": 256,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "mask_token_id": 4,
+      "model_loaded": true,
+      "pr_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "quantization": "Q4_K_M",
+      "runtime": "llama.cpp PR diffusion-gemma eval binary",
+      "vocab_size": 262144
+    },
+    "independent_leak_recheck": {
+      "answer_masked_auroc": 0.86112,
+      "answer_masked_cells": 105,
+      "auroc_floor": 0.6,
+      "fresh_heldout_n": 990,
+      "fresh_heldout_task_n": 330,
+      "protocol": "fresh split; replace answer-bearing canvas cells with mask_token_id",
+      "scorer_leak_recheck_passed": true,
+      "status": "measured",
+      "unmasked_auroc": 0.861647
+    },
+    "partial_state_scorer": {
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4337_leak_robust_partial_state_scorer_build.json",
+      "masked_answer_recovery_auroc": 0.559682,
+      "process_ranking_auroc": 0.704633,
+      "score_api": "score_partial_state(canvas_ids, step) -> energy",
+      "scorer_leak_audit_passed": true,
+      "scorer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/dina_lrm_partial_state_scorer_exp4337.pkl",
+      "source_experiment": 4337,
+      "verifier_is_oracle": false
+    },
+    "s3_config": {
+      "benchmark_n_measured": 240,
+      "benchmark_n_per_seed": 80,
+      "best_of_k": 4,
+      "bootstrap_resamples": 2000,
+      "compute_matching": {
+        "best_of_k": "K independent samples, K * denoising_steps == B",
+        "s3_carnot": "frontier_width * denoising_steps == B",
+        "self_reward_smc": "intrinsic-confidence particles at B",
+        "unguided": "single unbranched denoising pass budgeted to NFE B"
+      },
+      "denoising_steps": 4,
+      "diversity_weight": 0.05,
+      "frontier_width": 4,
+      "guidance_lambda": 2.0,
+      "nfe_budget": 16,
+      "random_seeds": [
+        4348,
+        4349,
+        4350
+      ],
+      "s3_reference": "arXiv:2604.06260",
+      "self_reward_confidence_weight": 2.0
+    },
+    "search_corpus": {
+      "checksum": "4d66d052127c46564d7aec212c37d5bb8d0ec43b1247dd79ba4db89e5c9eabee",
+      "item_count": 1000,
+      "label_counts": {
+        "correct": 500,
+        "incorrect": 500
+      },
+      "name": "step_error_balanced_v2",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/step_error_balanced_v2.json"
+    },
+    "self_reward_smc_baseline": {
+      "confidence_weight": 2.0,
+      "description": "intrinsic trajectory-confidence particle filter",
+      "paper": "arXiv:2602.01849",
+      "uses_external_scorer": false
+    }
+  },
+  "nfe_budget": 16,
+  "preconditions_checked": [
+    {
+      "command": "ls /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "exists": true,
+      "ok": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "resource": "pr_binary",
+      "size_bytes": 26400
+    },
+    {
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "cache_entries_preview": [
+        "blobs",
+        "refs",
+        "snapshots"
+      ],
+      "cache_error": null,
+      "cache_non_empty": true,
+      "command": "ls /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/",
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "ok": true,
+      "resolve_error": null,
+      "resource": "diffusiongemma_cache"
+    },
+    {
+      "active_training_processes": [],
+      "ok": true,
+      "process_check_error": null,
+      "resource": "trm_training_stand_down",
+      "results_trm_runs_touched": false
+    },
+    {
+      "auto_tokenizer_used": false,
+      "backend": "gguf_metadata",
+      "detail": "llama_cpp vocab_only failed (ValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf); embedded GGUF tokenizer metadata OK",
+      "elapsed_s": 0.43229,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "mode": "embedded_vocab_metadata",
+      "ok": true,
+      "resource": "gguf_vocab_loader",
+      "token_count": 15,
+      "token_ids_preview": [
+        3,
+        236743,
+        3,
+        236743,
+        111359,
+        236743,
+        3,
+        236743
+      ],
+      "vocab_only": false
+    },
+    {
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4337_leak_robust_partial_state_scorer_build.json",
+      "artifact_scorer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/dina_lrm_partial_state_scorer_exp4337.pkl",
+      "masked_answer_recovery_auroc": 0.559682,
+      "ok": true,
+      "probe_energy": 0.329024,
+      "process_ranking_auroc": 0.704633,
+      "resource": "leak_robust_scorer_gate",
+      "scorer_exists": true,
+      "scorer_leak_audit_passed": true,
+      "scorer_loadable": true,
+      "scorer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/dina_lrm_partial_state_scorer_exp4337.pkl",
+      "source_experiment": 4337,
+      "verifier_is_oracle": false
+    },
+    {
+      "baseline_exp4315_corpus_checksum": "",
+      "checksum": "4d66d052127c46564d7aec212c37d5bb8d0ec43b1247dd79ba4db89e5c9eabee",
+      "item_count": 1000,
+      "label_counts": {
+        "correct": 500,
+        "incorrect": 500
+      },
+      "minimum_tasks_per_seed": 80,
+      "name": "step_error_balanced_v2",
+      "ok": true,
+      "oracle_distinct_from_exp4315": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/step_error_balanced_v2.json",
+      "path_exists": true,
+      "reason": "ok",
+      "resource": "s3_search_corpus",
+      "seed_count": 3
+    }
+  ],
+  "random_seed": 4348,
+  "random_seeds": [
+    4348,
+    4349,
+    4350
+  ],
+  "reproducibility_checksum": "6f6e37ce8128fe9e77c5ad4623c1d6dfc07b4a0b9d323318eed8734d4d16c938",
+  "s3_gain_ci95": [
+    0.208333,
+    0.329167
+  ],
+  "s3_guided_beats_control": false,
+  "s3_minus_best_of_k_delta": 0.266667,
+  "s3_minus_self_reward_smc_delta": 0.266667,
+  "s3_minus_unguided_delta": 0.266667,
+  "schema": "s3_stratified_verifier_guided_search_v1",
+  "scorer_leak_recheck_passed": true,
+  "search_corpus_check": {
+    "baseline_exp4315_corpus_checksum": "",
+    "checksum": "4d66d052127c46564d7aec212c37d5bb8d0ec43b1247dd79ba4db89e5c9eabee",
+    "item_count": 1000,
+    "label_counts": {
+      "correct": 500,
+      "incorrect": 500
+    },
+    "minimum_tasks_per_seed": 80,
+    "name": "step_error_balanced_v2",
+    "ok": true,
+    "oracle_distinct_from_exp4315": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/data/step_error_balanced_v2.json",
+    "path_exists": true,
+    "reason": "ok",
+    "resource": "s3_search_corpus",
+    "seed_count": 3
+  },
+  "seed_count": 3,
+  "spec_refs": [
+    "REQ-VERIFY-4348",
+    "SCENARIO-VERIFY-4348"
+  ],
+  "verifier_is_oracle": false
+}
