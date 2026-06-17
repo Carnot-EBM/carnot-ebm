@@ -142,10 +142,11 @@ def solve_via_explore(game: str, max_expansions: int = 6000, max_depth: int = 60
     seed = RESULTS / f"arc_explore_trajectory_{game}.json"
     seed.write_text(json.dumps({"game": game, "reached_level": lvl, "trajectory": traj}, indent=2))
 
-    # LEARN + BANK the best goal-distance heuristic for this game (dynamic adaptation): now that
-    # we have a win-state, pick the rule-recommended heuristic by measured per-action cell-impact,
-    # reproduction-gate it, and bank it to gap_fills/ so the NEXT solve of this game is heuristic-
-    # guided. Fully guarded: heuristic-learning must NEVER break the solve itself.
+    # LEARN the best goal-distance heuristic for this game AND TRAIN the router (dynamic
+    # adaptation): now that we have a win-state, run the heuristic portfolio, bank the winner to
+    # gap_fills/ (so the NEXT solve is heuristic-guided), AND record (features -> winner) to the
+    # router ledger so the trained router (arc_router) generalises to unseen games over time.
+    # Fully guarded: heuristic-learning must NEVER break the solve itself.
     heuristic_learned = None
     try:
         if gate["reproduced"] and traj:
@@ -159,7 +160,7 @@ def solve_via_explore(game: str, max_expansions: int = 6000, max_depth: int = 60
                 g0 = grid_of(f2)
                 f2 = apply(env, lab, f2)
                 trans.append(types.SimpleNamespace(grid=g0, next_grid=grid_of(f2)))
-            heuristic_learned = hsel.bank_for_solved_game(
+            heuristic_learned = hsel.select_and_learn(
                 game, grid_of(f2), trans, mask_hud=False, budget=max_expansions)
     except Exception:
         heuristic_learned = None

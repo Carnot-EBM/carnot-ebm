@@ -25,9 +25,8 @@ from __future__ import annotations
 
 import json
 import math
-from collections import Counter
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 REPO = Path(__file__).resolve().parents[3]
 LEDGER_PATH = REPO / "ops" / "arc_router_ledger.json"
@@ -80,19 +79,45 @@ def _distance(a: dict, b: dict, stats: dict) -> float:
     return math.sqrt(d2)
 
 
+def _learn_thresholds(entries: list[dict]) -> dict:
+    """Learn the two decision thresholds FROM the ledger as midpoints between well-separated
+    classes (stable on sparse data, unlike a free greedy tree whose split-order flips):
+      - headroom: between the bfs-winners' BFS expansions (a cheap BFS solve ⇒ no heuristic
+        helps) and the heuristic-winners' BFS expansions.
+      - impact: between cell_count-winners' and region_count-winners' per-action cell-impact.
+    None when a class is unobserved (caller falls back)."""
+    def _imp(w):
+        return [float(e["features"]["cell_impact"]) for e in entries if e.get("winner") == w]
+    def _bfsx(pred):
+        return [float(e["features"].get("bfs_expansions", 8000))
+                for e in entries if pred(e.get("winner"))]
+    bfs_x, heur_x = _bfsx(lambda w: w == "bfs"), _bfsx(lambda w: w in ("cell_count", "region_count"))
+    cell_i, region_i = _imp("cell_count"), _imp("region_count")
+    headroom = (max(bfs_x) + min(heur_x)) / 2.0 if bfs_x and heur_x else None
+    impact = ((max(cell_i) + min(region_i)) / 2.0 if cell_i and region_i
+              else (sum(cell_i) / len(cell_i) if cell_i else None) if not region_i
+              else None)
+    from .arc_heuristic_select import HIGH_IMPACT_CELLS
+    return {"headroom": headroom, "impact": impact if impact is not None else float(HIGH_IMPACT_CELLS)}
+
+
 def train(entries: Optional[list[dict]] = None) -> dict:
-    """'Train' the router. Instance-based: the model IS the labelled ledger plus normalisation
-    stats. Returns a model dict usable by `route`."""
+    """Train the router: a CAUSALLY-STRUCTURED 2-node decision tree whose thresholds are learned
+    from the ledger. The structure (headroom gate FIRST, then heuristic choice) is fixed because
+    it is causally correct — 'does any heuristic help?' precedes 'which heuristic?' — and because
+    a free greedy tree's split-order is unstable on sparse data (it scored 4/8 LOO vs the
+    structured 8/8). Keeps entries + normalisation stats for the novelty/proximity gate."""
     entries = entries if entries is not None else load_ledger()
     labelled = [e for e in entries if e.get("winner")]
     return {"entries": labelled, "stats": _feature_stats(labelled) if labelled else {},
-            "n": len(labelled)}
+            "thresholds": _learn_thresholds(labelled) if labelled else {}, "n": len(labelled)}
 
 
 def route(features: dict, model: dict, k: int = 3) -> dict:
-    """Predict the heuristic for a game's `features` by distance-weighted k-NN over the ledger.
-    Returns the predicted heuristic, a [0,1] confidence, the EXPLOIT/EXPLORE decision, and the
-    neighbours used. With an empty ledger -> EXPLORE (nothing learned yet)."""
+    """Predict the heuristic for `features` via the structured rule (learned thresholds), gated
+    by NOVELTY. The prediction is the structured decision; the distance to the nearest solved
+    game gives proximity in [0,1]. A game UNLIKE anything solved ⇒ EXPLORE (run the portfolio and
+    learn) even when the rule is confident. Empty ledger ⇒ EXPLORE."""
     entries = model.get("entries", [])
     if not entries:
         return {"predicted": None, "confidence": 0.0, "decision": "explore",
@@ -101,19 +126,23 @@ def route(features: dict, model: dict, k: int = 3) -> dict:
     stats = model["stats"]
     scored = sorted(((_distance(features, e["features"], stats), e) for e in entries),
                     key=lambda t: t[0])[:k]
-    # distance-weighted vote (weight = 1/(1+d)); confidence blends vote margin + nearest distance
-    votes: Counter = Counter()
-    for d, e in scored:
-        votes[e["winner"]] += 1.0 / (1.0 + d)
-    predicted, top_w = votes.most_common(1)[0]
-    total_w = sum(votes.values())
-    margin = top_w / total_w if total_w else 0.0
-    nearest_d = scored[0][0]
-    proximity = 1.0 / (1.0 + nearest_d)          # 1.0 when an identical game is in the ledger
-    confidence = round(margin * proximity, 3)
+    proximity = 1.0 / (1.0 + scored[0][0])       # 1.0 when an identical game is in the ledger
+    th = model.get("thresholds", {})
+    headroom, impact = th.get("headroom"), th.get("impact")
+    if headroom is not None and float(features.get("bfs_expansions", 8000)) < headroom:
+        predicted = "bfs"                         # cheap BFS solve ⇒ no heuristic headroom
+    elif impact is not None:
+        predicted = ("cell_count" if float(features.get("cell_impact", 0.0)) < impact
+                     else "region_count")
+    else:
+        from .arc_heuristic_select import recommend_order
+        predicted = recommend_order(float(features.get("cell_impact", 0.0)), True)[0]
+    confidence = round(proximity, 3)
     decision = "exploit" if confidence >= EXPLOIT_CONFIDENCE else "explore"
     return {"predicted": predicted, "confidence": confidence, "decision": decision,
-            "reason": (f"{len(scored)}-NN vote margin {margin:.2f} × proximity {proximity:.2f}"),
+            "reason": (f"structured rule (headroom<{headroom:.0f}→bfs; impact<{impact:.0f}→cell) "
+                       f"× proximity {proximity:.2f}" if headroom is not None
+                       else f"cell-impact rule × proximity {proximity:.2f}"),
             "neighbors": [{"game": e["game"], "winner": e["winner"], "dist": round(d, 2)}
                           for d, e in scored]}
 
@@ -146,6 +175,28 @@ def leave_one_out(entries: Optional[list[dict]] = None, k: int = 3) -> dict:
                         "confidence": pred["confidence"], "correct": ok})
     return {"accuracy": round(correct / len(entries), 3) if entries else None,
             "n": len(entries), "results": results}
+
+
+def extract_features(game: str, win, transitions, bfs_expansions: Optional[float]) -> dict:
+    """Build the router feature vector for a game from its win-state + banked transitions + the
+    measured BFS-arm expansions (the headroom probe). Mirrors how the ledger was collected."""
+    import numpy as np
+    import scipy.ndimage as ndi
+    from .arc_heuristic_select import per_action_cell_impact
+    from . import arc_solve_learning as learning
+    win = np.asarray(win)
+    start = np.asarray(transitions[0].grid)
+    feats = learning._survey_features().get(game, {})
+    return {
+        "cell_impact": per_action_cell_impact(transitions),
+        "bfs_expansions": float(bfs_expansions if bfs_expansions is not None else 8000),
+        "start_wrong_cells": float((start != win).sum()),
+        "start_wrong_regions": float(ndi.label(start != win, structure=np.ones((3, 3), dtype=int))[1]),
+        "solution_depth": float(len(transitions)),
+        "action_type": feats.get("action_type", "unknown"),
+        "spatial": bool(feats.get("spatial", False)),
+        "difficulty": str(feats.get("difficulty", "")),
+    }
 
 
 def record(game: str, features: dict, winner: Optional[str], outcomes: dict,

@@ -8658,3 +8658,5 @@ c |
 | 2026-06-17 12:53 UTC | PHASE E2 (hygiene; per Missing-Verifier Gap Loggin | OK | 87 passed, 1 warning in 7.48s |
 | 2026-06-17 13:02 UTC | PHASE E3 (hardware continuity; opportunistic per n | OK | 85 passed, 1 warning in 7.22s |
 | 2026-06-17 13:22 UTC | PHASE E4 (capstone .400, UNGATED) -- the verifier  | OK | 87 passed, 1 warning in 6.73s |
+| 2026-06-17 14:09 UTC | Plan milestone 2026.06.401 | OK | 11 tasks proposed |
+| 2026-06-17 14:11 UTC | Milestone 2026.06.401 activated | OK | 11 tasks queued |
