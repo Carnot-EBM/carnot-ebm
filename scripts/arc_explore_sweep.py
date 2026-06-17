@@ -17,9 +17,14 @@ from carnot.agentic import arc_solver_kit as kit
 from carnot.agentic.arc_graph_explore import graph_explore_solve_v2, trajectory_labels
 from carnot.agentic.arc_agi3_live_adapter import _game_action
 
-UNSOLVED = "ar25 bp35 cd82 cn04 dc22 ft09 g50t ka59 lf52 m0r0 re86 s5i5 sb26 sk48 sp80 su15 tn36 tr87 tu93".split()
-MAX_EXPANSIONS = 4000
-MAX_DEPTH = 45
+import os
+# 15 still-unsolved games (cd82/sp80/su15/tu93 solved in the 2026-06-17 sweep; tn36
+# errored on its click schema — keep it for an E1 retry now that candidates are
+# salience-ordered and HUD-masking is available).
+UNSOLVED = "ar25 bp35 cn04 dc22 ft09 g50t ka59 lf52 m0r0 re86 s5i5 sb26 sk48 tn36 tr87".split()
+MAX_EXPANSIONS = int(os.environ.get("ARC_MAX_EXPANSIONS", "4000"))
+MAX_DEPTH = int(os.environ.get("ARC_MAX_DEPTH", "45"))
+MASK_HUD = os.environ.get("ARC_MASK_HUD", "0") == "1"   # E1 status-bar masking
 
 
 def apply(env, label, frame):
@@ -32,7 +37,7 @@ def attempt(game: str, warmup: bool):
     env = arc.make(game, scorecard_id=arc.open_scorecard())
     t0 = time.time()
     traj, lvl = graph_explore_solve_v2(env, 0, max_expansions=MAX_EXPANSIONS,
-                                       max_depth=MAX_DEPTH, warmup=warmup)
+                                       max_depth=MAX_DEPTH, warmup=warmup, mask_hud=MASK_HUD)
     return traj, lvl, time.time() - t0
 
 

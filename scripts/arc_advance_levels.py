@@ -31,8 +31,10 @@ SOLVED = {
     "wa30": (1, "results/experiment_4275_arc_incremental_progress_new_game.json",
              ("solve_trace", "actions")),
 }
-SUFFIX_DEPTH = 45        # actions to explore BEYOND the prefix
-MAX_EXPANSIONS = 4000
+import os
+SUFFIX_DEPTH = int(os.environ.get("ARC_SUFFIX_DEPTH", "45"))        # actions to explore BEYOND the prefix
+MAX_EXPANSIONS = int(os.environ.get("ARC_MAX_EXPANSIONS", "4000"))  # operator may raise the effort budget
+MASK_HUD = os.environ.get("ARC_MASK_HUD", "0") == "1"               # E1: mask step-driven HUD cells
 
 
 def _dig(d: dict, keys: tuple) -> list:
@@ -88,7 +90,7 @@ def main() -> int:
             env = arc.make(game, scorecard_id=arc.open_scorecard())
             t0 = time.time()
             traj, lvl = graph_explore_solve_v2(
-                env, start_level=best, prefix=prefix,
+                env, start_level=best, prefix=prefix, mask_hud=MASK_HUD,
                 max_expansions=MAX_EXPANSIONS, max_depth=len(prefix) + SUFFIX_DEPTH)
             dt = time.time() - t0
             if traj and lvl > best:
