@@ -31,6 +31,7 @@ from carnot.agentic import arc_solver_kit as kit
 from carnot.agentic import arc_game_adapters as adapters
 from carnot.agentic import arc_solve_learning as learning
 from carnot.agentic.arc_value_learner import LearnedVerifier, collect_trajectory_data
+from carnot.agentic.arc_graph_explore import graph_explore_solve, trajectory_labels
 
 CKPT_DIR = REPO / "models"
 RESULTS = REPO / "results"
@@ -92,6 +93,63 @@ def solve_adaptered(game: str, target_level: int) -> dict:
     }
 
 
+def solve_via_explore(game: str, max_actions: int = 140, restarts: int = 60,
+                      warmup: bool = False) -> Optional[dict]:
+    """ADAPTER-FREE first contact: graph-explore the game; if it advances a level,
+    CAPTURE the trajectory, reproduction-gate it, train a verifier from it, and
+    persist the trajectory as the adapter SEED — so the next solve is the efficient
+    verifier-routed loop, not blind exploration. Returns None if no advance (caller
+    falls back to the routing recommendation for per-game RE)."""
+    from arcengine import GameAction
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+    from carnot.agentic.arc_agi3_world_model import grid_of, frame_hash
+
+    arc = kit.offline_arcade()
+    env = arc.make(game, scorecard_id=arc.open_scorecard())
+    traj, lvl = graph_explore_solve(env, 0, max_actions=max_actions, restarts=restarts, warmup=warmup)
+    if traj is None:
+        return None
+
+    def apply(env, label, frame):
+        step = json.loads(label)
+        return env.step(_game_action(GameAction, step["action"]), data=step.get("data"))
+
+    labels = trajectory_labels(traj)
+    gate = kit.reproduce(game, labels, apply, claimed_level=lvl)
+
+    # SEED a verifier from the first solve (generic grid features -> steps-to-go),
+    # so the captured solve trains the verifier that will route future searches.
+    def featurize_frame(frame):
+        g = grid_of(frame)
+        nz = int((g != 0).sum())
+        return [float(nz), float(len(set(g.flatten().tolist()))), float(g.shape[0] * g.shape[1])]
+    X, y = [], []
+    f = env.reset()
+    if warmup and traj:
+        f = apply(env, labels[0], f)
+    for i, lab in enumerate(labels):
+        X.append(featurize_frame(f)); y.append(float(len(labels) - i))
+        f = apply(env, lab, f)
+    ckpt = None
+    if X:
+        lv = LearnedVerifier(featurize_frame).fit(X, y)
+        ckpt = CKPT_DIR / f"arc_verifier_{game}.json"
+        lv.save(ckpt, meta={"trained_games": [game], "feature_names": ["nonzero", "colors", "cells"],
+                            "provenance": f"graph_explore first-solve {game}->L{lvl}"})
+
+    # persist the captured trajectory as the adapter SEED
+    seed = RESULTS / f"arc_explore_trajectory_{game}.json"
+    seed.write_text(json.dumps({"game": game, "reached_level": lvl, "trajectory": traj}, indent=2))
+    return {
+        "game": game, "method": "graph_explore_adapter_free", "reached_level": lvl,
+        "moves": len(traj), "offline_reproduced": bool(gate["reproduced"]),
+        "reproduced_levels": lvl, "trajectory_seed": str(seed.relative_to(REPO)),
+        "verifier_seed_checkpoint": (str(ckpt.relative_to(REPO)) if ckpt else None),
+        "next": "register a GameAdapter from the seed for verifier-routed re-solving",
+        "mode": "standing_arc_loop_graph_explore_no_quota",
+    }
+
+
 def needs_re(game: str) -> dict:
     rec = learning.recommend_approach(game)
     return {
@@ -123,7 +181,10 @@ def main(argv) -> int:
         ap.error("specify --game X or --auto")
 
     print(f"== standing ARC loop: game={game} ==")
-    out = solve_adaptered(game, args.target_level) if adapters.get_adapter(game) else needs_re(game)
+    if adapters.get_adapter(game):
+        out = solve_adaptered(game, args.target_level)        # verifier-routed (efficient)
+    else:
+        out = solve_via_explore(game) or needs_re(game)       # adapter-free first contact, else route to RE
     RESULTS.mkdir(exist_ok=True)
     (RESULTS / f"arc_loop_solve_{game}.json").write_text(json.dumps(out, indent=2))
     for k in ("status", "reached_level", "offline_reproduced", "reproduced_levels",

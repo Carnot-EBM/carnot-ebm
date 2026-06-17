@@ -113,6 +113,18 @@ learning_loop:
   verifier_routed_search: python/carnot/agentic/arc_solver_kit.py  # OfflineSolver verifier=
   learned_verifier: python/carnot/agentic/arc_value_learner.py
   reproduction_gate: python/carnot/agentic/arc_solver_kit.py        # reproduce()
+  # ADAPTER-FREE FALLBACK (first contact, no per-game RE): scripts/arc_loop_solve.py
+  # routes an un-adaptered game to graph_explore_solve (arc_graph_explore.py); if it
+  # advances a level it CAPTURES the trajectory -> reproduction-gates it -> trains a
+  # verifier-seed (generic grid features) -> persists the trajectory as the adapter
+  # seed, so the NEXT solve is the efficient verifier-routed loop, not blind explore.
+  # The downstream capture->gate->seed pipeline is validated functional (r11l trajectory
+  # -> L1 reproduced). The BASIC explorer is WEAK on our games (generic object-centroid
+  # clicks miss exact coords; keyboard games need deep directed search) -> falls through
+  # to the routing recommendation (per-game RE). UPGRADE PATH: strengthen the explorer
+  # toward the SOTA (arXiv:2512.24156 frame-segmentation + salience + shortest-path to
+  # untested state-action; median 30/52 levels) -- no loop-wiring change needed.
+  adapter_free_explore: python/carnot/agentic/arc_graph_explore.py
   demos:
     - scripts/arc3_verifier_routed_search_demo.py   # 10.75x fewer states (hand verifier)
     - scripts/arc3_learned_verifier_demo.py         # 9.36x fewer on held-out L3 (learned)
