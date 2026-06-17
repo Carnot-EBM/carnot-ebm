@@ -97,9 +97,19 @@ class OfflineSolver:
         #             the EXACT env state rather than reconstructing it. Use for games where
         #             replay-from-reset does not faithfully reproduce the searched state (the verifier
         #             then finds a path that fails the reproduction gate). Costs a deepcopy per node;
-        #             requires env._game to be deepcopy-able + injectable (works for tu93; the
-        #             deepcopy-injection gotcha #3 means it is NOT universal — keep "replay" the default).
+        #             requires env._game to be deepcopy-able + injectable — the deepcopy-injection
+        #             gotcha #3 means it is NOT universal (works for lp85, BROKEN for sc25/tu93).
+        #   "fresh_env": make a BRAND-NEW env (env_factory, default a fresh arc.make of game_id) for
+        #             EVERY candidate evaluation and replay prefix+path from reset on it. The fix for a
+        #             game whose env.reset() is NON-IDEMPOTENT (gotcha #7: tu93's reset leaves a
+        #             parity-toggling hidden state, so the reuse-one-env search detects parity-contingent
+        #             "wins" that fail the fresh-env reproduction gate). A fresh env always starts at the
+        #             SAME pristine parity the gate uses, so found paths reproduce. Costs a fresh env +
+        #             full replay per evaluation — slower, so reserve it for non-idempotent-reset games.
         self.branch_mode = branch_mode
+        self.env_factory = env_factory       # () -> fresh env, for branch_mode="fresh_env"
+        self._fresh_arcade: Any = None       # lazily-cached arcade + scorecard for the default factory
+        self._fresh_scorecard: Any = None
         # VERIFIER-ROUTED SEARCH (the north-star efficiency loop): a score on a
         # state (LOWER = closer to the win, an energy/goal-distance). When given,
         # the search is best-first ordered by it, so it expands promising branches
@@ -152,6 +162,8 @@ class OfflineSolver:
         plain BFS when no verifier). Returns (extension_path, states_expanded)."""
         if self.branch_mode == "deepcopy":
             return self._solve_level_deepcopy(env, start_level, prefix, depth_cap)
+        if self.branch_mode == "fresh_env":
+            return self._solve_level_fresh(env, start_level, prefix, depth_cap)
         self._replay(env, list(prefix))
         seen = {self._call_state_key(env)}
         counter = itertools.count()  # FIFO tiebreaker (so verifier≡0 ⇒ BFS)
@@ -211,6 +223,54 @@ class OfflineSolver:
                     child_path = path + [label]
                     heapq.heappush(heap, (self._priority(env, child_path), next(counter),
                                           child_path, copy.deepcopy(env._game), f2))
+        self.last_states_expanded = nodes
+        return None, nodes
+
+    def _fresh_env(self) -> Any:
+        """A BRAND-NEW env for branch_mode='fresh_env' — pristine reset parity. Default: a fresh
+        arc.make of self.game_id over a lazily-cached offline arcade + scorecard."""
+        if self.env_factory is not None:
+            return self.env_factory()
+        if self._fresh_arcade is None:
+            self._fresh_arcade = offline_arcade()
+            self._fresh_scorecard = self._fresh_arcade.open_scorecard()
+        return self._fresh_arcade.make(self.game_id, scorecard_id=self._fresh_scorecard)
+
+    def _solve_level_fresh(self, env: Any, start_level: int, prefix: Sequence[str], depth_cap: int):
+        """FRESH-ENV-PER-NODE variant of solve_level. EVERY candidate is evaluated on a BRAND-NEW env
+        (replay prefix+path from reset), so each evaluation sees the same pristine reset parity the
+        reproduction gate uses — the fix for non-idempotent-reset games (gotcha #7: a game whose
+        env.reset() leaves parity-toggling hidden state, where the reuse-one-env search detects
+        parity-contingent wins that fail the fresh-env gate). The `env` arg is unused — the factory
+        mints fresh envs. Slower (a fresh env + full replay per evaluation); reserve for such games."""
+
+        def at(path: Sequence[str]):
+            e = self._fresh_env()
+            self._replay(e, list(prefix) + list(path))   # reset+replay on the fresh env; sets last_frame
+            return e
+
+        e0 = at([])
+        seen = {self._call_state_key(e0)}
+        counter = itertools.count()
+        heap = [(self._priority(e0, []), next(counter), [])]
+        nodes = 0
+        while heap and nodes < self.max_nodes:
+            _, _, path = heapq.heappop(heap)
+            if len(path) >= depth_cap:
+                continue
+            e_node = at(path)                             # fresh env at the node (for action_labels)
+            for label in self._call_action_labels(e_node, path):
+                e_child = at(path + [label])
+                f2 = self.last_frame
+                nodes += 1
+                if frame_level(f2) > start_level:
+                    self.last_states_expanded = nodes
+                    return path + [label], nodes
+                k = self._call_state_key(e_child)
+                if k not in seen:
+                    seen.add(k)
+                    heapq.heappush(heap, (self._priority(e_child, path + [label]),
+                                          next(counter), path + [label]))
         self.last_states_expanded = nodes
         return None, nodes
 

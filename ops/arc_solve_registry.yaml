@@ -30,6 +30,8 @@ general_gotchas:
     note: "live-coupled hardcoded coords miss the offline layout; discover from env."
   - id: state_dependent_controls_and_animations
     note: "tank-controls facing + multi-frame animations; include facing/phase in the dedup key and resolve animations before win-check."
+  - id: non_idempotent_reset
+    note: "gotcha #7 (tu93): env.reset() is NOT idempotent -- it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). A reuse-one-env replay/deepcopy search detects parity-CONTINGENT wins that fail the fresh-env reproduction gate (gate correctly rejects -- no false claim). Fix: OfflineSolver branch_mode='fresh_env' (a brand-new env per candidate eval) so each evaluation sees the same pristine parity-0 the gate uses. Detect by replaying ONE path on N fresh envs vs 1 env reset N times: if levels differ, reset is non-idempotent."
 
 games:
   - game: r11l
@@ -118,13 +120,15 @@ games:
 
   - game: tu93
     reproducibility: reproduced
-    levels_reproduced: 2   # 1 -> 2 (2026-06-17 forward-progress sweep: graph_explore_solve_v2 from L1 -> L2)
-    win_condition: "L1+L2 adapter-free keyboard navigation (maze/path); L2 reached by graph-exploring from the replayed L1 state."
-    action_model: "keyboard-only [ACTION1-4 directional]; L1 18-step path, then L2 via graph_explore_solve_v2 (43 actions total)."
-    solver: "results/arc_explore_trajectory_tu93.json (graph_explore_solve_v2, L1->L2, 43 actions)."
-    reproduce: "re-gated reproduced=True L2 (kit.reproduce, claimed_level=2, full L1+L2 path)."
+    levels_reproduced: 3   # 2 -> 3 (2026-06-17: GameAdapter + OfflineSolver branch_mode='fresh_env', reproduction-gated)
+    mechanic_class: graph_explore   # 4-direction keyboard maze; frame-based RE (player=colour-9, goal=static colour-14)
+    win_condition: "L1-L3 4-direction keyboard navigation to the colour-14 goal; goal-distance-routed best-first search (player->goal Manhattan)."
+    action_model: "keyboard-only [ACTION1-4 directional]; 47-action L1->L3 path, verifier-routed (5903 states)."
+    solver: "GameAdapter _tu93 (arc_game_adapters.py) + arc_solver_kit.OfflineSolver branch_mode='fresh_env'; results/arc_loop_solve_tu93.json."
+    reproduce: "re-gated reproduced=True L3 (kit.reproduce, claimed_level=3, full 47-action path); states_expanded=5903."
     gotchas:
-      - "earlier routing flagged tu93 ~ wa30/ls20 family; the systematic explorer cracked it without an adapter."
+      - "earlier routing flagged tu93 ~ wa30/ls20 family; first contact (L1->L2) was adapter-free graph_explore_solve_v2."
+      - "gotcha #7 NON-IDEMPOTENT reset: tu93's env.reset() leaves a parity-toggling hidden state, so the reuse-one-env replay/deepcopy search finds parity-contingent L2+ wins that FAIL the fresh-env reproduction gate (correctly rejected). Adapter sets branch_mode='fresh_env' (fresh env per candidate eval) -> L3 reproduces. deepcopy is ALSO broken here (env._game not deepcopy-injectable, like sc25)."
 
   - game: tn36
     reproducibility: reproduced   # SOLVED 2026-06-17 via program-editor RE (L1-L6, reproduction-gated)

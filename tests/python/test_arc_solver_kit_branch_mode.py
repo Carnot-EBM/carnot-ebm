@@ -79,3 +79,60 @@ def test_deepcopy_mode_matches_replay_and_reproduces():
     assert rep_win == 1 and dc_win == 1                 # both reach the win, reproducibly
     assert rep_path == ["R", "R", "R"]                  # verifier-routed shortest path
     assert dc_path == rep_path                          # deepcopy branching == replay branching
+
+
+# ---- fresh_env mode: the fix for a NON-IDEMPOTENT reset (gotcha #7, tu93) ----
+class _PFrame:
+    def __init__(self, pos, win):
+        self.pos = pos
+        self.levels_completed = 1 if win else 0
+
+
+class _PGame:
+    __slots__ = ("pos",)
+
+    def __init__(self, pos=0):
+        self.pos = pos
+
+
+class _PristineEnv:
+    """Toy whose reset() is NON-IDEMPOTENT: each reset increments n_resets, and a win (pos>=2) only
+    registers while the env is PRISTINE (n_resets==1). A reuse-one-env 'replay' search resets repeatedly
+    (n_resets climbs past 1) so it can NEVER observe the win; a 'fresh_env' search evaluates each
+    candidate on a brand-new env (n_resets==1) so it finds -- and reproduces -- the win. This is the
+    unit-test analogue of tu93's parity-toggling reset (gotcha #7)."""
+
+    def __init__(self):
+        self._game = _PGame(0)
+        self.n_resets = 0
+
+    def reset(self):
+        self._game = _PGame(0)
+        self.n_resets += 1
+        return _PFrame(0, False)
+
+    def step(self, label, **kw):
+        self._game.pos = max(0, self._game.pos + (1 if label == "R" else -1))
+        return _PFrame(self._game.pos, self._game.pos >= 2 and self.n_resets == 1)
+
+
+def _solve_pristine(mode):
+    # env_factory mints pristine envs for fresh_env mode (the default factory is offline_arcade, which
+    # only knows real games); replay/deepcopy ignore it and reuse the passed env.
+    solver = OfflineSolver("pristine", _labels, _apply, _state_key, verifier=_verifier,
+                           branch_mode=mode, env_factory=_PristineEnv)
+    path, _ = solver.solve_level(_PristineEnv(), 0, [], depth_cap=6)
+    g = _PristineEnv()                              # reproduction gate: replay on a brand-new env
+    f = g.reset()
+    for lab in (path or []):
+        f = _apply(g, lab, f)
+    return path, f.levels_completed
+
+
+def test_fresh_env_mode_solves_nonidempotent_reset_game():
+    # replay reuses one env -> reset count climbs past 1 -> the pristine-only win is never observable
+    rep_path, rep_win = _solve_pristine("replay")
+    assert rep_path is None and rep_win == 0
+    # fresh_env evaluates each candidate on a brand-new env -> finds AND reproduces the win
+    fe_path, fe_win = _solve_pristine("fresh_env")
+    assert fe_win == 1 and fe_path == ["R", "R"]

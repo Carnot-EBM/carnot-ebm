@@ -78,14 +78,17 @@ def _tu93():
     motion: only colour-9 + the colour-4 key drift across moves; colour-14 is static). The
     hand_verifier is the player->goal Manhattan distance (goal-distance-routed best-first search).
 
-    VALIDATED: solves L1 reproducibly (18 moves, offline_reproduced=True). KNOWN LIMITATION at L2+: tu93
-    carries HIDDEN/RNG state (beyond the rendered grid) that the OfflineSolver's REUSED single env
-    accumulates across the search, so a verifier-found L2 path does NOT reproduce on a fresh env (the
-    reproduction gate correctly rejects it -- no false claim). graph_explore avoids this by DEEPCOPYING
-    the env per node; the OfflineSolver does not. Deep-solving tu93 via this adapter therefore needs a
-    deepcopy-per-node (fresh-env) mode in arc_solver_kit.OfflineSolver -- a kit-level change, not an
-    adapter fix. featurize is None (the learned verifier is fed env._game internals via
-    collect_trajectory_data, which this frame-based RE doesn't read)."""
+    branch_mode='fresh_env' is LOAD-BEARING here (gotcha #7): tu93's env.reset() is NON-IDEMPOTENT --
+    it leaves a parity-toggling hidden state (same path, 6 reset+replays -> levels [1,2,1,2,1,2]). The
+    default reuse-one-env 'replay' search therefore detects parity-CONTINGENT 'wins' that fail the
+    fresh-env reproduction gate (the gate correctly rejects them -- no false claim), so 'replay' only
+    reproduces L1. Evaluating EVERY candidate on a brand-new env (fresh_env mode) makes each see the
+    same pristine parity-0 the gate uses, so found paths reproduce. (deepcopy mode does NOT work for
+    tu93 -- its env._game is not deepcopy-injectable, gotcha #3, like sc25.)
+
+    VALIDATED 2026-06-17: with branch_mode='fresh_env' the adapter DEEP-SOLVES to L3 reproducibly
+    (47 moves, offline_reproduced=True), vs L1 under replay. featurize is None (the learned verifier
+    is fed env._game internals via collect_trajectory_data, which this frame-based RE doesn't read)."""
     import numpy as np
     from carnot.agentic.arc_agi3_world_model import grid_of
     from carnot.agentic.arc_agi3_live_adapter import _game_action
@@ -134,6 +137,7 @@ def _tu93():
         game="tu93", action_labels=action_labels, apply=apply, state_key=state_key,
         featurize=None, hand_verifier=hand_verifier, warmup_label=None,
         depth_caps={1: 40, 2: 60, 3: 80, 4: 90, 5: 90},
+        branch_mode="fresh_env",   # gotcha #7: tu93 reset is non-idempotent -> fresh env per node
     )
 
 
