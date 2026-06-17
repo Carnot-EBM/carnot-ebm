@@ -205,6 +205,56 @@ honest stopping point: ONE clean capture banked (su15), the cell-count ceiling c
 explained, and the next lever (move-distance heuristics, fed by the per-action cell-impact the
 prompt already shows) identified for a directed session.
 
+## BREAKTHROUGH: the move-distance heuristic = 8-connected misplaced-REGION count (2026-06-17)
+
+Built and validated the move-distance-aware heuristic the prior section called for. The winner is
+**`misplaced_region_distance(win)`** (`python/carnot/agentic/arc_graph_explore.py`): the number of
+**8-connected CONNECTED COMPONENTS in the `(grid != WIN)` mask** — how many distinct "wrong
+regions" remain. It is MOVE-ALIGNED by construction: each game action typically fixes one
+localized region, so the count drops ~1 per move, giving BOTH the right scale (≈ moves) AND a real
+gradient — exactly what a cell-count lacks.
+
+**Measurement bug first (recorded for honesty):** the first run had every heuristic read
+identical-to-BFS — because the heuristics took a GRID but `graph_explore_solve_v2` passes a FRAME,
+so they threw and v2's `try/except` returned a constant `1e9` → A* degenerated to BFS. Fix: wrap
+with `grid_of(frame)`. (Lesson: a constant heuristic is silently a no-op; always sanity-check that
+the A/B differs from BFS.)
+
+**Validated A/B (v2-A*, budget 8000, vs pure BFS), 8 games — region-count HELPS 5, NEUTRAL 3,
+REGRESSES 0:**
+
+| game | BFS acts/exp | region-count acts/exp | result |
+|------|--------------|-----------------------|--------|
+| r11l | 3 / 2236 | **3 / 257**  | OPTIMAL path, **−88% expansions** (cell-count could NOT: no weight gives both) |
+| sk48 | 14 / 4365 | 14 / 2496 | **−43%**; cell-count FAILS this game entirely (0/8000) |
+| m0r0 | — / 8000 (NO solve) | **15 / 6188** | solves where BFS exhausts budget, at the registry-optimal 15 actions |
+| ls20 | 13 / 1777 | 13 / 1317 | **−26%** |
+| su15 | 7 / 1746 | 7 / 1574 | helps (−10%), but cell-count is better here (1406) → su15 keeps H0 |
+| cd82 | 5 / 525  | 5 / 765  | neutral (tiny game, no headroom) |
+| sp80 | 4 / 301  | 4 / 389  | neutral |
+| tu93 | 18 / 2114 | 18 / 2114 | neutral (identical) |
+
+No game gets a longer path or fails where BFS solved. **Crucially it cracks the high-cell-impact
+games (r11l/m0r0/sk48) that defeated every cell-count heuristic** — the move-distance lever works.
+
+**Shipped:**
+- `misplaced_region_distance(win, connectivity=8)` reusable heuristic factory + 5 unit tests
+  (`tests/python/test_misplaced_region_distance.py`: zero-at-win, region-counting, 8-vs-4-conn,
+  finite-float, monotone-under-fixing-a-region).
+- CAPTURED reproduction-gated to `gap_fills/` for the games it wins: **r11l (3/257), ls20
+  (13/1317), m0r0 (15/6188), sk48 (14/2496)** — each self-contained (embeds WIN + region-count),
+  re-verified through the full load path, bundle-able for the offline competition. su15 keeps its
+  better cell-count capture. `gap_fills/` now: ls20, m0r0, r11l, sk48, su15.
+- `arc_gap_fill.py` prompt now directs the LLM to the proven region-count form (not Hamming), with
+  `ndi` available in the exec scope + self-contained bundle.
+
+**The deeper takeaway for the verifier program.** The right heuristic is about the STRUCTURE of
+the goal (distinct things still wrong), not the SURFACE (how many pixels differ). This is the same
+"verify structure not surface" principle as the energy verifier — and the region-count is itself a
+cheap, oracle-distinct progress signal. Next levers (flagged, not auto-pursued): per-region
+manhattan-to-WIN for ordering within equal region-counts; making region-count the default heuristic
+for fresh discovery once a partial win-state is known; using it to crack wa30 (neither solves @8000).
+
 Cross-refs: CLAUDE.md "ARC Solve Reproducibility + Solver-Reuse" (RE only the delta) +
 "Missing-Verifier Gap Logging"; `python/carnot/agentic/arc_game_adapters.py`,
 `arc_solve_learning.py` (recommend_approach), `ops/verifier_gaps.md`;
