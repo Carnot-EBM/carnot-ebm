@@ -25,15 +25,63 @@ from carnot.agentic.arc_agi3_live_adapter import (
 from carnot.agentic.arc_agi3_world_model import GameGraph, frame_hash, grid_of, objects
 
 
-def rich_action_candidates(frame: Any, max_click: int = 48) -> list:
-    """Like _action_candidates but WITHOUT the 12-click cap — every detected object
-    is a click candidate (the winning clicks for e.g. r11l are objects #15/#27 that
-    the cap dropped). Keyboard actions unchanged."""
+def _components_detailed(grid) -> list:
+    """Connected non-background components with (centroid_y, centroid_x, area, color).
+    Same 4-neighbour flood fill as world_model.objects(), but also returns area+color
+    so candidates can be ordered by VISUAL SALIENCE (segment size × color rarity) —
+    the key ingredient from the graph-explore SOTA (arXiv:2512.24156) that lets the
+    search try the most salient interactive elements first instead of treating all
+    objects uniformly."""
+    import numpy as np
+    vals, counts = np.unique(grid, return_counts=True)
+    bg = int(vals[counts.argmax()])
+    mask = grid != bg
+    h, w = grid.shape
+    seen = np.zeros_like(mask, dtype=bool)
+    comps = []
+    for i in range(h):
+        for j in range(w):
+            if mask[i, j] and not seen[i, j]:
+                stack = [(i, j)]
+                seen[i, j] = True
+                cells = []
+                while stack:
+                    y, x = stack.pop()
+                    cells.append((y, x))
+                    for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        ny, nx = y + dy, x + dx
+                        if 0 <= ny < h and 0 <= nx < w and mask[ny, nx] and not seen[ny, nx]:
+                            seen[ny, nx] = True
+                            stack.append((ny, nx))
+                cy = sum(c[0] for c in cells) // len(cells)
+                cx = sum(c[1] for c in cells) // len(cells)
+                comps.append((cy, cx, len(cells), int(grid[i, j])))
+    return comps
+
+
+def rich_action_candidates(frame: Any, max_click: int = 48, by_salience: bool = True) -> list:
+    """Every detected object is a click candidate (no 12-click cap — the winning
+    clicks for e.g. r11l are objects #15/#27 that the cap dropped). Keyboard actions
+    unchanged.
+
+    `by_salience` (default on, E1 / arXiv:2512.24156): order the click candidates by
+    VISUAL SALIENCE = segment area × color-rarity, so the explorer tries large,
+    rare-colored (interactive-looking) objects before small, common-colored (HUD /
+    background-texture) ones. Pure ordering change — the trajectory it ultimately
+    records is still a valid deterministic replay; it just reaches the win within a
+    smaller budget. Set False for the legacy raster order."""
     ids = _available_action_ids(frame)
     out = [ArcAction(a, None, "available_keyboard_action") for a in ids if a != 6]
     if 6 in ids:
         grid = grid_of(frame)
-        pts = [(int(x), int(y)) for y, x in objects(grid)]
+        comps = _components_detailed(grid)
+        if by_salience and comps:
+            from collections import Counter
+            color_cells = Counter(int(v) for v in grid.flatten().tolist())
+            # salience: big segments + globally-rare colors score highest
+            comps.sort(key=lambda c: c[2] * (1.0 + 1.0 / (1 + color_cells.get(c[3], 0))),
+                       reverse=True)
+        pts = [(int(cx), int(cy)) for (cy, cx, _area, _color) in comps]
         if not pts:
             h, w = grid.shape
             pts = [(w // 2, h // 2)]
@@ -45,6 +93,42 @@ def rich_action_candidates(frame: Any, max_click: int = 48) -> list:
             seen.add(p)
             out.append(ArcAction(6, {"x": p[0], "y": p[1]}, "object_click"))
     return out
+
+
+def discover_hud_mask(env, warmup: bool, n_probe: int = 4):
+    """Deterministically find STEP-DRIVEN HUD cells (score / timer / move-counter) so
+    they can be masked OUT of the node-identity hash (E1 / arXiv:2512.24156 status-bar
+    masking). A HUD counter advances the SAME way regardless of which action is taken;
+    a board cell changes DIFFERENTLY per action. So: probe several distinct first
+    actions from reset, and mark any cell that (a) changed from the reset frame AND
+    (b) took an IDENTICAL value across all probes. Those are action-invariant = HUD.
+
+    Computed ONCE at search start (a static mask) so node identity stays stationary —
+    a drifting mask would alias states mid-search. Returns a bool mask or None."""
+    import numpy as np
+    from arcengine import GameAction
+    base = grid_of(_warm(env, warmup))
+    cands = [c for c in _action_candidates(_warm(env, warmup))]
+    seen_keys, probes = set(), []
+    for c in cands:
+        if c.key in seen_keys:
+            continue
+        seen_keys.add(c.key)
+        f = _warm(env, warmup)
+        nf = env.step(_game_action(GameAction, c.action_id), data=c.data)
+        if nf is None:
+            continue
+        g = grid_of(nf)
+        if g.shape == base.shape:
+            probes.append(g)
+        if len(probes) >= n_probe:
+            break
+    if len(probes) < 2:
+        return None
+    same = np.logical_and.reduce([p == probes[0] for p in probes[1:]])
+    changed = probes[0] != base
+    mask = same & changed
+    return mask if bool(mask.any()) else None
 
 
 def _warm(env, do_warmup):
@@ -100,7 +184,8 @@ def graph_explore_solve(env: Any, start_level: int = 0, *, max_actions: int = 14
 
 def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: int = 6000,
                            warmup: bool = False, max_depth: int = 60,
-                           prefix: Optional[list] = None) -> tuple[Optional[list], int]:
+                           prefix: Optional[list] = None,
+                           mask_hud: bool = False) -> tuple[Optional[list], int]:
     """SYSTEMATIC graph-explore (toward arXiv:2512.24156): maintain a directed
     state-transition graph and take the SHORTEST PATH to a state with an untested
     state-action pair (BFS frontier), navigating by replay-from-reset (deepcopy-
@@ -119,8 +204,19 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
 
     prefix = list(prefix or [])
 
+    # E1: optionally mask step-driven HUD cells out of node identity so a ticking
+    # score/timer doesn't make every state look new (state-explosion) or alias states.
+    hud = discover_hud_mask(env, warmup) if mask_hud else None
+
+    def node_id(frame):
+        g = grid_of(frame)
+        if hud is not None and hud.shape == g.shape:
+            g = g.copy()
+            g[hud] = 0
+        return frame_hash(g)
+
     def _candidates(frame):
-        return rich_action_candidates(frame)   # all objects, no 12-cap (fixes r11l)
+        return rich_action_candidates(frame)   # salience-ordered, all objects (fixes r11l)
 
     def replay(path):
         f = _warm(env, warmup)
@@ -129,7 +225,7 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
         return f
 
     f0 = replay(prefix)                 # root at the post-prefix state (L0 if no prefix)
-    h0 = frame_hash(grid_of(f0))
+    h0 = node_id(f0)
     states = {h0: {"path": list(prefix), "untested": _candidates(f0)}}
     frontier = deque([h0])              # BFS order ⇒ shortest path first
     best = start_level
@@ -154,7 +250,7 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
         best = max(best, lvl)
         if _game_over(nf):
             continue
-        nh = frame_hash(grid_of(nf))
+        nh = node_id(nf)
         if nh not in states:           # new state ⇒ add to graph + frontier
             states[nh] = {"path": traj, "untested": _candidates(nf)}
             frontier.append(nh)
