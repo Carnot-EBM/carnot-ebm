@@ -78,3 +78,42 @@ Cross-refs: `docs/research-notes/arc-trained-router-2026-06-17.md` (the heuristi
 `python/carnot/agentic/arc_executable_world_model.py` (frame-only E3 induction substrate);
 `ops/arc_solve_registry.yaml` (the mechanic taxonomy, per-game); `ops/verifier_gaps.md`
 (GAP-ARC-LIVE-FRAME-ONLY-INDUCTION, GAP-ARC-STRATEGY-ROUTER).
+
+## PROOF RESULT: frame-only mechanic detection works (2026-06-17)
+
+Built `scripts/arc3_frame_induction.py` — a probe that uses ONLY `grid_of(frame)` +
+`_levels_completed(frame)` (zero `env._game` access) to induce a game's control mechanic, and ran
+it on tn36. Result:
+
+- **DETECTED MECHANIC: program_editor** — classified correctly from frames alone.
+- HUD counter at (61,1) detected as action-invariant (changed by ~every click) and MASKED.
+- Edit-button palette located: 150 local-toggle cells in a dense block bbox (19,41)-(43,46),
+  density 1.0 — the program-editor signature (a dense grid of small toggle-buttons), distinct from
+  a direct-control game (where a click moves the avatar = a LARGE board change).
+- Play-area sprites (object + target candidates) located above the editor.
+- VALIDATION (separate, NOT used by the detector): "program-editor detected AND bbox covers the
+  true internal slots (x 19..39): True." The frame-only detection matches the internal ground truth
+  it never read.
+
+This validates the load-bearing assumption: **mechanic-CLASS detection is achievable frame-only**,
+so an unseen game can be probed and routed to a strategy without internal-state RE. Unit-tested
+(`tests/python/test_arc_frame_induction.py`): editor vs direct-control vs empty.
+
+### Honest limits found (the next induction steps)
+
+1. **Run-button is frame-invisible with a losing program.** Clicking 'run' on a non-winning program
+   resets the object (net frame change = HUD only) — no visual feedback. So the run trigger is NOT
+   directly detectable by a single probe; it must be found via a level-advance with a winning
+   program, or by observing the object animate (which needs multi-step run frames). This is a real
+   frame-only limit, not a detector bug.
+2. **Slot/bit decomposition is not gap-separable at 64x64 resolution.** The editor is a CONTIGUOUS
+   block (any click in it edits the nearest slot), so the discrete 5-slots x 6-bits structure can't
+   be read by gap-clustering. Using the editor needs a click->(slot,bit) mapping by position, or the
+   toggle-glyph-location signal (which glyph each button flips) — the next refinement.
+3. **Object-vs-target requires motion.** Both are play-area sprites; distinguishing the MOVABLE
+   object from the FIXED target needs observing which one moves under a run — again gated on the
+   run-frame visibility.
+
+Net: the FIRST link (frame-only mechanic-class detection) is proven. The remaining induction
+(run-trigger, decomposition, object/target-by-motion, then code semantics) is the scoped next build
+toward a live solver — all still frame-only, no internal state.
