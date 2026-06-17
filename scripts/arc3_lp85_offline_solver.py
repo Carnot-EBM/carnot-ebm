@@ -1,15 +1,13 @@
 """From-scratch OFFLINE solver for lp85 (priority: make deeper ARC solves
-offline-reproducible). No replay of live recordings — BFS over the offline env
-(a deterministic simulator) using env-adaptive button discovery, checking the
-real levels_completed signal. Zero quota.
-
-lp85: click-only [ACTION6]; win = every moveable piece aligned with its goal
-sprite at (x+1, y+1). L1 budget = 13 moves.
+offline-reproducible). No replay of live recordings. Reuses the existing
+goal-key-deduped env-cloned searcher `plan_observed_suffix` (exp4179) and chains
+it level-by-level from the offline reset, so each level is RE-DERIVED for the
+offline layout. Zero quota.
 """
 from __future__ import annotations
 
+import json
 import sys
-from collections import deque
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
@@ -19,94 +17,52 @@ from arc_agi import Arcade
 from arc_agi.base import OperationMode
 from arcengine import GameAction
 
-from carnot.agentic.arc_agi3_live_adapter import _levels_completed
-from carnot.agentic.arc_agi3_world_model import grid_of, frame_hash
-from carnot.experiment_4179_arc_incremental_progress import discover_click_buttons
+from carnot.experiment_4179_arc_incremental_progress import (
+    plan_observed_suffix,
+    _levels_completed,
+)
 
-MAX_DEPTH = 16          # L1 budget is 13; allow a little slack
-MAX_NODES = 40000
-
-
-def make_env(arcade):
-    env = arcade.make("lp85", scorecard_id=arcade.open_scorecard())
-    return env, env.reset()
-
-
-def actions_at(env) -> list[dict]:
-    try:
-        return discover_click_buttons(env)
-    except Exception:
-        return []
-
-
-def replay(env, path: list[dict]):
-    f = env.reset()
-    for b in path:
-        f = env.step(GameAction.ACTION6, data={"x": int(b["x"]), "y": int(b["y"])})
-    return f
+TARGET = 3
+# per-level move budget -> search depth cap (survey: L1=13, L2=60, L3=80) + slack
+DEPTH = {1: 20, 2: 70, 3: 90}
 
 
 def main() -> int:
-    print("== lp85 FROM-SCRATCH offline BFS solver (zero quota) ==")
+    print("== lp85 FROM-SCRATCH offline solver (plan_observed_suffix, zero quota) ==")
     arc = Arcade(arc_api_key="", operation_mode=OperationMode.OFFLINE,
                  environments_dir=str(REPO / "environment_files"))
-    env, f0 = make_env(arc)
-    print(f"reset: level={_levels_completed(f0)} buttons@base={[b.get('button') for b in actions_at(env)]}")
+    env = arc.make("lp85", scorecard_id=arc.open_scorecard())
+    f = env.reset()
+    print(f"reset: level={_levels_completed(f, env)}")
 
-    TARGET = 3                  # the deeper level we need reproducible
-    BUDGET = {1: 16, 2: 64, 3: 84}  # per-level move budget (survey + slack)
-    full_solution: list[dict] = []
-    cur_level = 0
-    while cur_level < TARGET:
-        # BFS from the current solved prefix to advance exactly one level
-        prefix = list(full_solution)
-        base_f = replay(env, prefix)
-        seen = {frame_hash(grid_of(base_f))}
-        frontier = deque([[]])
-        nodes = 0
-        found = None
-        depth_cap = BUDGET.get(cur_level + 1, 84)
-        while frontier and nodes < MAX_NODES and found is None:
-            path = frontier.popleft()
-            if len(path) >= depth_cap:
-                continue
-            replay(env, prefix + path)
-            for b in actions_at(env):
-                f2 = env.step(GameAction.ACTION6, data={"x": int(b["x"]), "y": int(b["y"])})
-                nodes += 1
-                if f2 is None:
-                    env = make_env(arc)[0]
-                    continue
-                if _levels_completed(f2) >= cur_level + 1:
-                    found = path + [b]
-                    break
-                h = frame_hash(grid_of(f2))
-                if h not in seen:
-                    seen.add(h)
-                    frontier.append(path + [b])
-                replay(env, prefix + path)
-            else:
-                continue
-        if found is None:
-            print(f"\n  STUCK at L{cur_level} -> L{cur_level+1}: no path in {nodes} nodes "
-                  f"(depth_cap={depth_cap}, states_seen={len(seen)})")
+    full: list[dict] = []
+    cur = 0
+    for lvl in range(1, TARGET + 1):
+        path, trace = plan_observed_suffix(env, GameAction, start_level=cur,
+                                           max_depth=DEPTH.get(lvl, 90))
+        if not path or not trace.get("found"):
+            print(f"  STUCK L{cur}->L{lvl}: expanded={trace.get('expanded_states')} "
+                  f"transitions={trace.get('observed_transition_count')}")
             break
-        full_solution += found
-        cur_level += 1
-        print(f"  solved L{cur_level}: +{len(found)} moves (total {len(full_solution)}), {nodes} nodes")
+        # apply the re-derived path to advance the real env
+        for step in path:
+            f = env.step(GameAction.ACTION6, data={"x": int(step["x"]), "y": int(step["y"])})
+        cur = _levels_completed(f, env)
+        full += path
+        print(f"  solved L{cur}: +{len(path)} moves (total {len(full)}), expanded={trace.get('expanded_states')}")
+        if cur < lvl:
+            print(f"  WARN: applied path but level={cur} < {lvl}; stop")
+            break
 
-    print(f"\n  lp85 FROM-SCRATCH offline result: reached L{cur_level} in {len(full_solution)} moves")
-    if cur_level >= 1:
-        import json
-        out = REPO / "results" / "arc3_lp85_offline_resolve.json"
-        out.write_text(json.dumps({
-            "game": "lp85", "reached_level": cur_level, "moves": len(full_solution),
-            "solution": [{"action": 6, "x": int(b["x"]), "y": int(b["y"]), "button": b.get("button")}
-                         for b in full_solution],
-            "mode": "from_scratch_offline_bfs_no_quota",
-        }, indent=2))
-        print(f"  wrote {out.relative_to(REPO)}")
-    return 0 if cur_level >= TARGET else 1
+    print(f"\n  lp85 FROM-SCRATCH offline result: reached L{cur} in {len(full)} moves")
+    out = REPO / "results" / "arc3_lp85_offline_resolve.json"
+    out.write_text(json.dumps({
+        "game": "lp85", "reached_level": cur, "moves": len(full),
+        "solution": [{"action": 6, "x": int(s["x"]), "y": int(s["y"]), "button": s.get("button")} for s in full],
+        "mode": "from_scratch_offline_plan_observed_suffix_no_quota",
+    }, indent=2))
+    print(f"  wrote {out.relative_to(REPO)}")
+    return 0 if cur >= TARGET else 1
 
 
 if __name__ == "__main__":
