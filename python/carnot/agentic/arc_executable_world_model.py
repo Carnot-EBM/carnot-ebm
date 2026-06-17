@@ -305,48 +305,50 @@ def _resolve_gguf(repo_substr: str) -> Optional[str]:
     return None
 
 
+# The CUDA-built llama.cpp binary (the venv's llama-cpp-python is CPU-ONLY:
+# llama_supports_gpu_offload()==False). SOTA open-weight models MUST run on GPU —
+# CPU is excruciatingly slow AND pegs ~20 cores, fighting the conductor (operator
+# directive 2026-06-17). This binary offloads all layers to the 2x3090s.
+LLAMA_CLI = Path.home() / ".cache" / "llama.cpp-master" / "build" / "bin" / "llama-cli"
+
+
 @dataclass
 class LocalGGUFProposer:
-    """OFFLINE-LEGAL, DECENTRALIZED proposer (CLAUDE.md decentralization rule 1-2): an
-    OPEN-WEIGHT local model induces the world model with NO internet, so it runs inside
-    the competition's offline eval sandbox. Loads a cached gemma-4 GGUF via llama.cpp
-    (the GGUF embeds its tokenizer; load by path, never AutoTokenizer). The induced code
-    quality is GROUNDED by the Carnot WorldModelVerifier regardless of model strength —
-    a weaker local model just earns a lower verifier score, honestly.
+    """OFFLINE-LEGAL, DECENTRALIZED, GPU-ENFORCED proposer (CLAUDE.md decentralization
+    rule 1-2 + the always-GPU directive): an OPEN-WEIGHT local model induces the world
+    model with NO internet, so it runs inside the competition's offline eval sandbox. The
+    induced code quality is GROUNDED by the Carnot WorldModelVerifier regardless of model
+    strength — a weaker local model just earns a lower verifier score, honestly.
 
-    NOT TRM and NOT a closed foundation model: an open local LLM. (A TRM-class model
-    trained offline on game dynamics is the other offline-legal engine — see the
-    competition-loop note; both keep the engine local, never a closed online API.)"""
-    repo_substr: str = "gemma-4-12B-it"     # lightweight SOTA: fast enough for per-game induction
+    GPU-ENFORCED: uses the CUDA-built llama.cpp binary (-ngl 999 = all layers on GPU). If
+    the GPU binary is missing it FAILS LOUD rather than silently falling back to CPU (the
+    CPU path is excruciatingly slow and a 20-core conductor-fight). NOT TRM and NOT a
+    closed model: an open local LLM (a TRM-class trained model is the other local engine)."""
+    repo_substr: str = "gemma-4-12B-it"     # lightweight SOTA: fast on GPU for per-game induction
     n_ctx: int = 16384                       # digit-dense grids tokenize ~1 char/token; 8192 overflowed
     max_tokens: int = 2048
-    n_gpu_layers: int = -1                   # -1 = offload all layers to GPU (fast); 0 = CPU
+    timeout: int = 300
     offline_legal: bool = True
-    _llm: Any = None
-
-    def _model(self):
-        if self._llm is None:
-            import llama_cpp
-            path = _resolve_gguf(self.repo_substr)
-            if not path:
-                raise FileNotFoundError(f"no cached GGUF matching {self.repo_substr}")
-            self._llm = llama_cpp.Llama(model_path=path, n_ctx=self.n_ctx,
-                                        n_gpu_layers=self.n_gpu_layers, verbose=False)
-        return self._llm
 
     def _gen_to_file(self, game: str, prompt: str) -> tuple[bool, str]:
         (E3_DIR / game).mkdir(parents=True, exist_ok=True)
+        path = _resolve_gguf(self.repo_substr)
+        if not path:
+            return False, f"no cached GGUF matching {self.repo_substr}"
+        if not LLAMA_CLI.exists():            # GPU enforcement: no silent CPU fallback
+            return False, (f"GPU llama.cpp binary missing at {LLAMA_CLI}; SOTA models must "
+                           "run on GPU (the venv llama-cpp-python is CPU-only)")
+        cmd = [str(LLAMA_CLI), "-m", path, "-ngl", "999", "-no-cnv", "--no-display-prompt",
+               "-c", str(self.n_ctx), "-n", str(self.max_tokens), "--temp", "0.2", "-p", prompt]
         try:
-            out = self._model().create_completion(prompt, max_tokens=self.max_tokens,
-                                                  temperature=0.2, stop=["```\n\n"])
-            text = out["choices"][0]["text"]
-        except Exception as e:  # pragma: no cover - depends on local weights
-            return False, f"local gguf induction failed: {e!r}"[:300]
-        code = _extract_python(text)
+            p = subprocess.run(cmd, capture_output=True, text=True, timeout=self.timeout)
+        except subprocess.TimeoutExpired:
+            return False, f"local gguf (GPU) timeout after {self.timeout}s"
+        code = _extract_python(p.stdout)
         if not code or "def engine" not in code:
-            return False, "local model produced no usable engine() code"
+            return False, f"local model produced no usable engine() code (tail: {p.stdout[-200:]!r})"
         (E3_DIR / game / "world_model.py").write_text(code)
-        return True, "local gguf wrote world_model.py"
+        return True, "local gguf (GPU) wrote world_model.py"
 
     def induce(self, game: str, trans: list[Transition], cell: int) -> tuple[bool, str]:
         return self._gen_to_file(game, induce_prompt(game, trans, cell) +
