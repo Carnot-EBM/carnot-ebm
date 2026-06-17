@@ -8,6 +8,85 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-17 Exp 4332 - .400 fork SOTA ingestion ingested
+
+**Status:** INGESTED into `results/experiment_4332_sota_ingestion_v401.json`.
+
+**Reliable-channel provenance:** `scripts/sweep_clusters.py` and
+`scripts/sweep_semscholar.py` imported successfully; `sweep_clusters.py`
+emitted focused arXiv discovery URLs for verifier/reward and world-model
+clusters. Semantic Scholar was reachable through the helper but returned HTTP
+429 for the three focused keyword probes in this loop. Low-concurrency
+WebSearch/WebFetch verified arXiv:2602.11146, arXiv:2502.01384,
+arXiv:2512.22336, arXiv:2605.25931, arXiv:2605.15256, arXiv:2604.17415,
+arXiv:2605.18548, arXiv:2606.00291, arXiv:2605.26491, and arXiv:2510.23691.
+The banned `/deep-research` channel was not invoked.
+
+**Filtered track:** .400 outcomes after second-corpus guided-generation
+replication, adaptive guided-generation scale-up, E3 executable-world-model
+induction on ar25, and learned frame-encoder cross-game value transfer.
+
+**.400 outcome conditioning:**
+- Exp 4325: `honest_verdict=scorer_leaky_on_second_corpus`,
+  `in_generation_moat_replicates=false`, `controls_differentiated=false`,
+  `scorer_leak_recheck_passed=false`, `benchmark_n=0`,
+  `carnot_minus_best_control_delta=0.0`, and `replication_ci95=[0.0, 0.0]`;
+  the first in-generation moat did not replicate because the second-corpus
+  scorer failed the independent leak recheck.
+- Exp 4326: `adaptive_guidance_beats_control=false`,
+  `adaptive_ci95=[-0.075, 0.35]`, `adaptive_controls_differentiated=true`, and
+  `adaptive_benchmark_n=40`; adaptive guidance differentiated controls but did
+  not beat the engaged control.
+- Exp 4327: `offline_reproduced=false`, `plan_executed=false`,
+  `reproduced_levels=0`, `verifier_best_accuracy=0.8875`, and
+  `residual_mismatch_class=missing_world_model_rule_gap_hidden_undo_stack_action7`;
+  E3 made a useful partial world model but no reproduced solve.
+- Exp 4331: `learned_encoder_transfer_helps=false`,
+  `cross_game_state_reduction=1.0084925690021231`,
+  `cross_game_state_reduction_ci95=[1.0, 1.0303068758652514]`, and
+  `baseline_solves_held_out=true`; the positive-control solver worked, but the
+  learned frame encoder still did not reduce held-out search states.
+
+**Fresh-pass candidates marked ingested:**
+- DiNa-LRM diffusion-native latent reward modeling, arXiv:2602.11146 - mapped to
+  a leak-robust partial-state reward scorer before any scaled generation claim.
+- SEPO score-entropy policy optimization, arXiv:2502.01384 - mapped to bounded
+  discrete-diffusion reward optimization after the adaptive schedule-only null.
+- Agent2World adaptive world-model testing, arXiv:2512.22336 - mapped to
+  behavior-aware E3 verifier tests for hidden transition gaps.
+- AERA explore-verify-plan ARC-AGI-3 agent, arXiv:2605.25931 - mapped to an
+  explicit information-gain budget before E3 planning.
+- ReactiveGWM game-agnostic interaction representation, arXiv:2605.15256 -
+  mapped to richer cross-game value features after the tiny frame encoder stayed flat.
+
+**Screened but not mapped as strongest rows:** Reward Score Matching
+(arXiv:2604.17415), STT-Arena (arXiv:2605.18548), Representation-Rationalizability
+(arXiv:2606.00291), Diffusion LAIR (arXiv:2605.26491), and Game-TARS
+(arXiv:2510.23691) were read as relevant context. They were not selected as
+strongest rows because the observed .400 failures point more directly to
+leak-robust noisy-state rewards, adaptive world-model tests, explore-before-plan
+discipline, and game-invariant interaction features.
+
+Already-covered context not re-ingested as fresh method rows: A2D2
+(arXiv:2606.13565), TR2-D2 (arXiv:2509.25171), Reward-State Alignment
+(arXiv:2606.08501), diffusion step selection (arXiv:2603.12554), Executable
+World Models for ARC-AGI-3 (arXiv:2605.05138), and Graph-Based Exploration for
+ARC-AGI-3 (arXiv:2512.24156).
+
+flagged_for_v401:
+`leak_robust_diffusion_native_partial_state_reward_v401`.
+
+Flagged for .401: `leak_robust_diffusion_native_partial_state_reward_v401`.
+
+random_seed=4332
+
+**Bottom line for the .401 roadmap:** do not scale the Exp 4315 guided-generation
+claim yet. The second-corpus leak check failed and the adaptive run was a bounded
+null, so the strongest .401 entry is leak-robust diffusion-native partial-state reward
+scoring. Keep E3 on adaptive testing plus explore-before-plan repair, and
+retry cross-game value transfer only with richer game-invariant interaction
+features.
+
 ## 2026-06-17 Exp 4320 - .399 fork SOTA ingestion ingested
 
 **Status:** INGESTED into `results/experiment_4320_sota_ingestion_v400.json`.
