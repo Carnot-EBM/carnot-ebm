@@ -93,10 +93,9 @@ STRATEGY_CLASSES: list[dict] = [
         ),
         "search_engine": "waypoint BFS start->checkpoints->target; each edge a <=n-move collision-free leg",
         "needs": (
-            "a MazeModel. OBJECT/WALLS/TARGET/CHECKPOINTS all induce frame-only "
-            "(induce_object_target_attrs + induce_maze_sub_fields: checkpoints are a DITHERED 4x4 of "
-            "the object colour, read EXACTLY vs truth on tn36 L6/L7). RESIDUAL: complete wall geometry "
-            "+ move-codes to assemble the full-solve MazeModel (GAP-ARC-MAZE-MODEL-FRAME-INDUCTION)"
+            "COMPLETE frame-only: arc3_frame_induction.frame_to_maze_model assembles the full MazeModel "
+            "from one frame (object/target/walls-as-row-runs/checkpoints) -> checkpoint_multirun_plan -> "
+            "the real env WINS on tn36 L6 (2 legs). Move-codes from the offline transition model"
         ),
     },
     {
@@ -114,10 +113,9 @@ STRATEGY_CLASSES: list[dict] = [
             "schedule + residual hidden hitbox are respected"
         ),
         "needs": (
-            "a MazeModel + hazard band. induce_maze_sub_fields reads CHECKPOINTS (dithered object-colour "
-            "pads) + the HAZARD band (distinct marker colours) frame-only, EXACT vs truth on tn36 L7. "
-            "RESIDUAL for the full timed solve: the spikes_hidden hitbox + complete walls + move-codes "
-            "(GAP-ARC-MAZE-MODEL-FRAME-INDUCTION)"
+            "COMPLETE frame-only: frame_to_maze_model assembles the full timed MazeModel from one frame "
+            "(checkpoints + hazard band + spikes_hidden = the band's left/right edges) -> timed_trap_plan "
+            "-> the real env WINS on tn36 L7 (3 legs; first L7 solve). Move-codes from the offline model"
         ),
     },
     {

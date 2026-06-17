@@ -528,6 +528,7 @@ def induce_maze_sub_fields(frame, *, play_top=2, maze_bottom=32, floor_top=3):
         g, play_top=play_top, play_rows=maze_bottom, floor_top=floor_top
     )
     obj_color = ot["object_color"]
+    tgt_color = ot["target_color"]
 
     checkpoints = []
     if obj_color is not None:
@@ -550,7 +551,7 @@ def induce_maze_sub_fields(frame, *, play_top=2, maze_bottom=32, floor_top=3):
 
     haz_cells = []
     for col in (int(c) for c in vals):  # marker colours: low-area, tight band
-        if col in floor or col == obj_color or int((maze == col).sum()) > 30:
+        if col in floor or col in (obj_color, tgt_color) or int((maze == col).sum()) > 30:
             continue
         ys, xs = np.where(maze == col)
         if int(ys.max() - ys.min() + 1) > 8:  # not a tight horizontal band -> not a hazard
@@ -562,6 +563,84 @@ def induce_maze_sub_fields(frame, *, play_top=2, maze_bottom=32, floor_top=3):
         hy = [p[1] for p in haz_cells]
         hazard_band = (min(hx), min(hy), max(hx) - min(hx) + 1, max(hy) - min(hy) + 1)
     return {"checkpoints": sorted(checkpoints), "hazard_band": hazard_band}
+
+
+def _frame_walls(maze, obj_color, floor, play_top):
+    """Walls = the STRUCTURAL colour (the non-floor, non-object colour with the most cells that forms
+    MULTIPLE connected components -- excludes the single-CC editor-panel border). Decomposed into
+    horizontal ROW-RUNS (not bounding boxes) so a concave wall's interior PASSAGE is preserved -- a
+    bbox would fill the gap and over-block the planner (the L7 failure mode)."""
+    import scipy.ndimage as ndi
+
+    best_cells, wall_color = -1, None
+    for col in {int(c) for c in np.unique(maze)} - floor:
+        if col == obj_color:
+            continue
+        cells = int((maze == col).sum())
+        _, n = ndi.label(maze == col)
+        if n >= 2 and cells > best_cells:  # structural = multi-CC, most cells
+            best_cells, wall_color = cells, col
+    boxes = []
+    if wall_color is not None:
+        mask = maze == wall_color
+        for ry in range(mask.shape[0]):
+            x = 0
+            row = mask[ry]
+            while x < len(row):
+                if row[x]:
+                    x0 = x
+                    while x < len(row) and row[x]:
+                        x += 1
+                    boxes.append((x0, ry + play_top, x - x0, 1))  # one box per contiguous run
+                else:
+                    x += 1
+    return boxes
+
+
+def frame_to_maze_model(
+    frame, n_slots, move_codes, *, settle_code=0, invisible_slots=3, play_top=2, maze_bottom=32
+):
+    """FRAME-ONLY: assemble a complete arc_maze_planner.MazeModel from a single frame, zero internal
+    state. Geometry (object start, target, walls, checkpoints, hazard band + residual hidden hitboxes)
+    is frame-induced; the `move_codes` (direction -> command code) + `invisible_slots` cadence come
+    from the offline program-editor transition model (atomic-run, not frame-inducible). Returns a
+    MazeModel ready for checkpoint_multirun_plan / timed_trap_plan, or None if the object/target
+    cannot be read."""
+    from carnot.agentic.arc_maze_planner import MazeModel
+
+    g = np.asarray(frame.frame if hasattr(frame, "frame") else frame)
+    if g.ndim == 3:
+        g = g[-1]
+    maze = g[play_top:maze_bottom]
+    vals, counts = np.unique(maze, return_counts=True)
+    floor = {int(c) for _, c in sorted(zip(counts.tolist(), vals.tolist()), reverse=True)[:3]}
+    ot = induce_object_target_attrs(g, play_top=play_top, play_rows=maze_bottom)
+    obj, tgt = ot["object"], ot["target"]
+    if obj is None or tgt is None:
+        return None
+    sub = induce_maze_sub_fields(g, play_top=play_top, maze_bottom=maze_bottom)
+    walls = _frame_walls(maze, ot["object_color"], floor, play_top)
+    spikes_visible, spikes_hidden = [], []
+    if sub["hazard_band"] is not None:
+        hx, hy, hw, hh = sub["hazard_band"]
+        spikes_visible = [sub["hazard_band"]]
+        # the residual hidden hitboxes sit at the band's left + right edges (the marker concentrates
+        # there); validated == tn36 internal hidden boxes (37,16,4,4)+(57,16,4,4) on L7.
+        spikes_hidden = [(hx, hy, 4, hh), (hx + hw - 4, hy, 4, hh)]
+    return MazeModel(
+        object_wh=(4, 4),
+        start=(obj.x, obj.y),
+        target=(tgt.x, tgt.y),
+        walls=tuple(walls),
+        checkpoints=[(c[0], c[1]) for c in sub["checkpoints"]],
+        move_codes=move_codes,
+        settle_code=settle_code,
+        n_slots=n_slots,
+        bounds=64,
+        spikes_visible=spikes_visible,
+        spikes_hidden=spikes_hidden,
+        invisible_slots=invisible_slots,
+    )
 
 
 def main() -> int:

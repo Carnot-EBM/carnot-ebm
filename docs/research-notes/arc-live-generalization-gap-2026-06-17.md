@@ -393,3 +393,40 @@ maze-SOLVE *integration*: assembling them into a working planner run needs COMPL
 one frame (the single-frame wall pass is currently partial) + move-code induction + the spikes_hidden
 residual hitbox. The perception layer the live maze solver was gated on is now built and validated
 field-by-field.
+
+## CHAIN COMPLETE: the full frame-only maze solve, end-to-end, env-confirmed (2026-06-17)
+
+`scripts/arc3_frame_induction.py:frame_to_maze_model` assembles a complete
+`arc_maze_planner.MazeModel` from a SINGLE frame — object start, target, walls, checkpoints, hazard
+band + the residual hidden hitboxes — zero internal state on the perception path. The planner runs over
+it and the leg-programs execute in the real env:
+
+- **tn36 L6** (checkpoint-multirun): frame → model → `checkpoint_multirun_plan` (2 legs) → **env WINS**.
+- **tn36 L7** (timed-trap): frame → model → `timed_trap_plan` (3 legs) → **env WINS** (the first L7
+  solve, now reached frame-only).
+
+Two fixes made the assembly correct:
+
+1. **Walls as ROW-RUNS, not bounding boxes.** L7's arch wall is a single colour-6 connected component
+   whose *bounding box* fills the interior passage at x[41,45) y[8,12) — which is OPEN in the frame
+   (colours 4/11, not the wall colour). A bbox over-blocks and the timed planner returns no plan;
+   decomposing the wall colour into per-row contiguous runs preserves the gap, and the 3-leg timed plan
+   is found and wins.
+2. **`spikes_hidden` from the band edges.** The residual hidden hitboxes are the hazard band's left and
+   right 4-wide columns — `(37,16,4,4)` and `(57,16,4,4)` for the `(37,16,24,4)` band, exactly the
+   internal hidden boxes. (Also: `induce_maze_sub_fields` now excludes the target colour from hazard
+   detection, so a target that renders in a non-object colour is not mistaken for a hazard.)
+
+The only non-frame inputs are the **move-codes** (direction → command code) and the **invisible_slots**
+cadence, which come from the offline program-editor transition model — consistent with every prior
+finding that the atomic-run dynamics are not frame-inducible and live in the offline model, not the
+frame stream. (`results/experiment_full_frame_only_maze_solve_validation.json`, adversarial_verify
+clean; unit-tested `tests/python/test_arc_maze_solve.py`, 4 tests.)
+
+**The live-generalization chain is now complete frame-only for the entire program-editor family:**
+DETECT (mechanic class) → ROUTE (strategy router) → PERCEIVE (object/target attrs for transforms;
++ walls/checkpoints/hazards for mazes) → PLAN (offline transition model + maze planner) → env-confirmed
+SOLVE — demonstrated on tn36 L1-L5 (transforms, 5/5) and L6-L7 (mazes, 2/2). What lives in frames
+(geometry) is induced from frames; what cannot (the atomic-run code dynamics) lives in the offline
+model. That division — perception from pixels, dynamics from an offline world model — is the
+load-bearing result of the whole sequence.

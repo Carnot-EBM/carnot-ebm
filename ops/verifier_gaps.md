@@ -1436,9 +1436,16 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - priority: high (blind search caps live program-editor solvability; the offline-learned transition
   verifier is the unlock — and is squarely Carnot's verifier-as-product thesis)
 ### GAP-ARC-MAZE-MODEL-FRAME-INDUCTION: a planner-ready MazeModel can't be induced from atomic-run frames
-- status: FIELDS RESOLVED (2026-06-17) — object, walls, target, object/target ATTRS, AND the maze
-  sub-fields (checkpoints + hazards) all induce from frames; the full-maze-SOLVE integration is the
-  residual. (1) TARGET attrs: induce_object_target_attrs reads object+target x/y/scale/rotation/property
+- status: RESOLVED end-to-end (2026-06-17). frame_to_maze_model assembles a complete
+  arc_maze_planner.MazeModel from ONE frame -> the maze planner -> executed -> the real env WINS on tn36
+  L6 (checkpoint-multirun, 2 legs) AND L7 (timed-trap, 3 legs); zero internal state on the perception
+  path (move-codes + cadence from the offline transition model). Key fix: walls are ROW-RUNS not bboxes
+  (a bbox fills a concave passage and over-blocks the planner — the L7 failure mode).
+  results/experiment_full_frame_only_maze_solve_validation.json. The live-generalization chain (detect
+  -> route -> perceive -> plan -> env-confirmed solve) is now complete frame-only for BOTH the
+  program-editor transform class (L1-L5) and the maze class (L6-L7).
+  --- field-level detail (still valid): ---
+  (1) TARGET attrs: induce_object_target_attrs reads object+target x/y/scale/rotation/property
   EXACTLY (the target is a HOLLOW OUTLINE sprite) -> frame-induced attrs plan to an env-confirmed win on
   tn36 L1-L5 (5/5; results/experiment_frame_induced_target_attrs_validation.json). (2) MAZE sub-fields:
   induce_maze_sub_fields reads CHECKPOINTS (a DITHERED 4x4 of the object colour) + the HAZARD band
