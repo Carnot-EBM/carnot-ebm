@@ -305,11 +305,13 @@ def _resolve_gguf(repo_substr: str) -> Optional[str]:
     return None
 
 
-# The CUDA-built llama.cpp binary (the venv's llama-cpp-python is CPU-ONLY:
-# llama_supports_gpu_offload()==False). SOTA open-weight models MUST run on GPU —
-# CPU is excruciatingly slow AND pegs ~20 cores, fighting the conductor (operator
-# directive 2026-06-17). This binary offloads all layers to the 2x3090s.
-LLAMA_CLI = Path.home() / ".cache" / "llama.cpp-master" / "build" / "bin" / "llama-cli"
+# The CUDA-built llama.cpp SERVER (the venv's llama-cpp-python is CPU-ONLY:
+# llama_supports_gpu_offload()==False; and llama-cli/llama-completion either hang on the
+# chat-UI or crash on gemma's chat template). SOTA open-weight models MUST run on GPU —
+# CPU is excruciatingly slow AND pegs ~20 cores, fighting the conductor (operator directive
+# 2026-06-17). The server offloads all layers to the 2x3090s, keeps the model LOADED across
+# calls (fast multi-round refactor), and /completion does RAW completion (no chat template).
+LLAMA_SERVER = Path.home() / ".cache" / "llama.cpp-master" / "build" / "bin" / "llama-server"
 
 
 @dataclass
@@ -320,35 +322,72 @@ class LocalGGUFProposer:
     induced code quality is GROUNDED by the Carnot WorldModelVerifier regardless of model
     strength — a weaker local model just earns a lower verifier score, honestly.
 
-    GPU-ENFORCED: uses the CUDA-built llama.cpp binary (-ngl 999 = all layers on GPU). If
-    the GPU binary is missing it FAILS LOUD rather than silently falling back to CPU (the
-    CPU path is excruciatingly slow and a 20-core conductor-fight). NOT TRM and NOT a
-    closed model: an open local LLM (a TRM-class trained model is the other local engine)."""
+    GPU-ENFORCED via a CUDA llama-server (-ngl 999 = all layers on GPU); FAILS LOUD if the
+    server can't start — never a silent CPU fallback (the CPU path is excruciatingly slow
+    and a 20-core conductor-fight). The model stays loaded across induce/refactor calls.
+    NOT TRM and NOT a closed model: an open local LLM (a TRM-class trained model is the
+    other local engine)."""
     repo_substr: str = "gemma-4-12B-it"     # lightweight SOTA: fast on GPU for per-game induction
     n_ctx: int = 16384                       # digit-dense grids tokenize ~1 char/token; 8192 overflowed
     max_tokens: int = 2048
     timeout: int = 300
+    port: int = 8919
     offline_legal: bool = True
+    _proc: Any = None
+
+    def _url(self) -> str:
+        return f"http://127.0.0.1:{self.port}"
+
+    def _healthy(self) -> bool:
+        import urllib.request
+        try:
+            with urllib.request.urlopen(self._url() + "/health", timeout=2) as r:
+                return b"ok" in r.read()
+        except Exception:
+            return False
+
+    def _ensure_server(self) -> bool:
+        if self._healthy():
+            return True                       # reuse an already-running server (loaded model)
+        path = _resolve_gguf(self.repo_substr)
+        if not path or not LLAMA_SERVER.exists():
+            return False                      # GPU enforcement: no CPU fallback
+        self._proc = subprocess.Popen(
+            [str(LLAMA_SERVER), "-m", path, "-ngl", "999", "-c", str(self.n_ctx),
+             "--port", str(self.port), "--host", "127.0.0.1"],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        for _ in range(90):                   # model load on GPU can take ~10-30s
+            if self._healthy():
+                return True
+            time.sleep(2)
+        return False
 
     def _gen_to_file(self, game: str, prompt: str) -> tuple[bool, str]:
+        import json as _json
+        import urllib.request
         (E3_DIR / game).mkdir(parents=True, exist_ok=True)
-        path = _resolve_gguf(self.repo_substr)
-        if not path:
-            return False, f"no cached GGUF matching {self.repo_substr}"
-        if not LLAMA_CLI.exists():            # GPU enforcement: no silent CPU fallback
-            return False, (f"GPU llama.cpp binary missing at {LLAMA_CLI}; SOTA models must "
-                           "run on GPU (the venv llama-cpp-python is CPU-only)")
-        cmd = [str(LLAMA_CLI), "-m", path, "-ngl", "999", "-no-cnv", "--no-display-prompt",
-               "-c", str(self.n_ctx), "-n", str(self.max_tokens), "--temp", "0.2", "-p", prompt]
+        if not self._ensure_server():
+            return False, (f"GPU llama-server failed for {self.repo_substr}; SOTA models "
+                           "must run on GPU (no CPU fallback)")
+        body = _json.dumps({"prompt": prompt, "n_predict": self.max_tokens,
+                            "temperature": 0.2, "cache_prompt": True}).encode()
         try:
-            p = subprocess.run(cmd, capture_output=True, text=True, timeout=self.timeout)
-        except subprocess.TimeoutExpired:
-            return False, f"local gguf (GPU) timeout after {self.timeout}s"
-        code = _extract_python(p.stdout)
+            req = urllib.request.Request(self._url() + "/completion", data=body,
+                                         headers={"Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=self.timeout) as r:
+                text = _json.load(r).get("content", "")
+        except Exception as e:
+            return False, f"local gguf (GPU server) failed: {e!r}"[:200]
+        code = _extract_python(text)
         if not code or "def engine" not in code:
-            return False, f"local model produced no usable engine() code (tail: {p.stdout[-200:]!r})"
+            return False, f"local model produced no usable engine() code (tail: {text[-200:]!r})"
         (E3_DIR / game / "world_model.py").write_text(code)
-        return True, "local gguf (GPU) wrote world_model.py"
+        return True, "local gguf (GPU server) wrote world_model.py"
+
+    def stop(self) -> None:
+        if self._proc is not None:
+            self._proc.terminate()
+            self._proc = None
 
     def induce(self, game: str, trans: list[Transition], cell: int) -> tuple[bool, str]:
         return self._gen_to_file(game, induce_prompt(game, trans, cell) +
