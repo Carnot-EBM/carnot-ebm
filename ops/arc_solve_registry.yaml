@@ -128,11 +128,19 @@ learning_loop:
   # graph_explore_solve_v3 = value/novelty-guided best-first (optional verifier=predicted
   #   steps-to-go -> the learned verifier feeds back; else count-based novelty + depth bias;
   #   frame-change-only transitions). For the DEEP/HARD tail.
-  # HARD TAIL (still no-advance generically): wa30 L1 ~33-deep keyboard navigation resists
-  #   v3 @25k expansions -- the sparse-reward deep games need per-game RE OR a strong
-  #   TRANSFERRED verifier (cross-game value transfer is the next build; v3 already accepts
-  #   it). Consistent with the SOTA median 30/52 (solves many, not all).
+  # HARD TAIL (still no-advance generically): wa30 L1 ~33-deep keyboard navigation.
+  #   CROSS-GAME VALUE TRANSFER built (scripts/arc_cross_game_verifier_train.py:
+  #   pool r11l+ls20+lp85 trajectories -> game-agnostic frame features -> normalized
+  #   steps-to-go -> a transferred verifier wired into v3). HONEST A/B on wa30: cross-game
+  #   verifier does NOT help (both no-advance; 66s vs 77s). Generic grid features
+  #   (nonzero/colors/objects/spread/dominant) don't transfer to wa30's game-specific
+  #   progress signal -- mirrors the project's domain-bound-verifier finding. CONCLUSION:
+  #   the deep/sparse hard tail needs PER-GAME RE (an adapter) or a much richer LEARNED
+  #   representation (more solved games + a learned frame encoder), NOT generic transfer.
+  # CALIBRATED ARC STRATEGY: easy/medium -> adapter-free systematic explore (r11l,ls20 work);
+  #   adaptered -> verifier-routed efficient solve (lp85, self-improving); hard/deep -> per-game RE.
   adapter_free_explore: python/carnot/agentic/arc_graph_explore.py  # v2 (systematic) / v3 (value-guided)
+  cross_game_verifier: scripts/arc_cross_game_verifier_train.py      # built; generic features too weak for hard tail
   demos:
     - scripts/arc3_verifier_routed_search_demo.py   # 10.75x fewer states (hand verifier)
     - scripts/arc3_learned_verifier_demo.py         # 9.36x fewer on held-out L3 (learned)
