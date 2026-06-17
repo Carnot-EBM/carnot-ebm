@@ -17556,6 +17556,73 @@ adversarial verification; reports `verifier_is_oracle=false`; and sets
 `scorer_leak_audit_passed=true` only when both corpora have masked-answer
 recovery near chance and non-degenerate process ranking.
 
+### REQ-VERIFY-4338: Leak-Robust Second-Corpus In-Generation Moat Replication
+
+The repository SHALL provide Exp 4338 at
+`python/carnot/experiment_4338_in_generation_moat_replicate_leak_robust.py`
+and `results/experiment_4338_in_generation_moat_replicate_leak_robust.py` to
+rerun the Exp 4315 reward-guided step-stitching replication on the Exp 4325
+second corpus using only the Exp 4337 persisted DiNa-LRM leak-robust scorer.
+Before any inference, the runner SHALL verify that Exp 4337 reports bare bool
+`scorer_leak_audit_passed=true`, that its `scorer_module_path` exists and
+loads, that the llama.cpp DiffusionGemma PR binary is non-empty, that the
+DiffusionGemma Q4_K_M GGUF cache is present, that the second oracle-distinct
+corpus is available with enough labeled examples for at least 80 measured
+tasks per arm over at least three seeds, and that TRM training is stood down.
+If the Exp 4337 scorer artifact is missing, failed, circular, absent, or
+unloadable, the runner SHALL write terminal
+`honest_verdict=blocked_leak_robust_scorer_unavailable`; if any other resource
+is missing, it SHALL write the corresponding terminal `blocked_<resource>`
+verdict and SHALL NOT fabricate inference.
+
+The runner SHALL independently re-check the Exp 4337 scorer on the second
+corpus by masking answer-bearing cells before benchmarking. If the masked
+signal fails this re-check, the runner SHALL emit bare bool
+`scorer_leak_recheck_passed=false`,
+`honest_verdict=scorer_leaky_despite_rebuild`, and stop before benchmarking.
+Otherwise it SHALL run the exact Exp 4315/4325 matched arms: unguided, EntRGi
+engaged control, self-reward SMC using only intrinsic trajectory confidence,
+and Carnot reward-guided step-stitching using the leak-robust scorer. The run
+SHALL measure at least 80 tasks per arm on the second corpus across at least
+three deterministic seeds, checkpoint after every measured trajectory, and set
+bare bool `controls_differentiated=true` only when no condition arms tie
+bit-identically and each guidance arm changes option selection versus
+unguided; otherwise it SHALL stop with
+`honest_verdict=controls_not_differentiable`.
+
+The terminal artifact SHALL write
+`results/experiment_4338_in_generation_moat_replicate_leak_robust.json` with
+required fields `honest_verdict`, bare bool `in_generation_moat_replicates`,
+bare float `carnot_minus_best_control_delta`, bare float
+`carnot_minus_self_reward_smc_delta`, bare float
+`carnot_minus_unguided_delta`, `replication_ci95`, bare bool
+`controls_differentiated`, bare bool `scorer_leak_recheck_passed`, bare int
+`benchmark_n`, bare bool `verifier_is_oracle=false`, `preconditions_checked`,
+`random_seed`, `reproducibility_checksum`, `model_specs`, `field_principles`,
+`spec_refs`, `duration_s`, `inference_substrate`, and
+`adversarial_verify`. The bare bool `in_generation_moat_replicates` SHALL be
+true iff Carnot leak-robust step-stitching beats the best genuinely engaged
+control, the paired bootstrap CI95 for that delta excludes zero, controls are
+differentiated, the leak-robust scorer re-check passed, and Carnot
+step-stitching also beats self-reward SMC on the second corpus.
+
+### SCENARIO-VERIFY-4338: Leak-Robust Replication Decides The DiffusionGemma Gate
+
+Given the PR binary, DiffusionGemma GGUF cache, Exp 4337 leak-robust scorer
+artifact, TRM stand-down, and second oracle-distinct reasoning corpus hold,
+when the Exp 4338 runner executes, then it loads the DiNa-LRM scorer, performs
+the independent answer-masked leak re-check on the second corpus, runs
+unguided, EntRGi, self-reward SMC, and Carnot reward-guided step-stitching for
+at least 80 measured tasks per arm across at least three seeds, reports
+per-arm accuracy, Carnot-minus-best-control, Carnot-minus-self-reward-SMC,
+Carnot-minus-unguided, a task-level bootstrap CI95 with at least 2000
+resamples, a reproducibility checksum, and `verifier_is_oracle=false`. If the
+leak-robust scorer is unavailable, controls are not differentiable, or the
+scorer fails the second-corpus leak re-check, then the runner writes the
+matching terminal verdict instead of declaring a replication; otherwise a
+powered non-replication is terminal evidence that retires the in-generation
+moat as corpus-specific.
+
 ### REQ-VERIFY-4326: Adaptive Guided-Generation Scale-Up
 
 The repository SHALL provide Exp 4326 at
