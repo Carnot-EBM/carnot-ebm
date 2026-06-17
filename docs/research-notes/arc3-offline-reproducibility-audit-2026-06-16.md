@@ -59,7 +59,37 @@ re-solve, so near-zero quota). Track "make the deeper solves offline-reproducibl
 separate hardening task (it also fixes the fragility above), and add sc25/lp85 to the
 published scorecard once they re-solve cleanly.
 
+## UPDATE 2026-06-16 — priority pursued; from-scratch offline solving WORKS (lp85 done)
+
+Operator made offline-reproducibility a priority. Key realization: the offline
+`environment_files/` ship the **real game source**, and the offline env is a
+**deterministic simulator** — so deeper levels can be **re-solved from scratch
+against the offline layout** (no replay of the non-reproducible live recording).
+
+- **lp85: SOLVED to L3** (`scripts/arc3_lp85_offline_solver.py`,
+  `results/arc3_lp85_offline_resolve.json`). Reuses the existing goal-key-deduped
+  env-cloned searcher `plan_observed_suffix` (exp4179), chained level-by-level
+  from reset: L1 +5 (8 states), L2 +8 (114), L3 +16 (791) = 29 moves. The
+  re-derived trajectory **replays deterministically** into the offline scorecard.
+- **Aggregate offline scorecard: 3 → 6 levels** (r11l L1, ls20 L1, wa30 L1, **lp85
+  L3**). Meta-harness now prefers re-solves over banked live recordings
+  (`RESOLVED_ARTIFACTS`).
+- **sc25: IN PROGRESS** (`scripts/arc3_sc25_offline_solver.py`, WIP). Mechanics
+  partially reverse-engineered: 3 spell sprites (caxiiu / sieesc_chwjgc / ui),
+  only `sieesc_chwjgc` castable at base (pattern dict `zzpoabuniyn` =
+  tevyeq/sieesc_chwjgc/fibcey; cast = select `sptivk-{spell}` + click its 3×3
+  pattern `zzpoabuniyn[spell]` where `xhhaqjfncnp` is unset; moves = ACTION1/2/3).
+  A spell-cast+move BFS does NOT reach L1 yet — sc25 is a harder constraint-
+  satisfaction puzzle (hidden phase state). NEXT: read the sc25.py win condition
+  + how moves reposition sprites + how new spells/sprites become available;
+  likely needs ACTION4/5/7 (cycle/undo) and sprite-move modeling.
+
+**Acceptance gate for the priority:** sc25 re-solves to L5 offline → aggregate
+scorecard = 11 levels, all from-scratch offline-reproducible, zero quota → then a
+single operator-gated live run can publish the full set.
+
 ## Provenance
 - `scripts/arc3_offline_scorecard_validation.py`, `scripts/arc3_replay_scorecard_metaharness.py`
-- `results/arc3_replay_aggregate_scorecard.json` (total_levels=3, per-game)
-- Source solvers: `experiment_4179` (lp85), `experiment_4236`/`4249` (sc25 chain)
+- `scripts/arc3_lp85_offline_solver.py` (lp85 L3 SOLVED), `scripts/arc3_sc25_offline_solver.py` (WIP)
+- `results/arc3_replay_aggregate_scorecard.json` (total_levels=6, per-game)
+- Source solvers: `experiment_4179` (lp85 `plan_observed_suffix`), `experiment_4236`/`4249` (sc25 chain)
