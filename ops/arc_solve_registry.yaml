@@ -123,10 +123,39 @@ games:
   - game: tn36
     reproducibility: unsolved
     levels_reproduced: 0
-    win_condition: "unknown; explorer ERRORED before advancing."
+    win_condition: "unknown; explorer ERRORED before advancing (still errors under E1 salience ordering)."
     gotchas:
-      - "DEAD-END (2026-06-17 sweep): ACTION6 raises KeyError 'x' in the game's perform_action — tn36's click payload schema is NOT {x,y}. rich_action_candidates emits {x,y} clicks that tn36 rejects. This is tn36's per-game DELTA: reverse-engineer its ACTION6 data format (and wrap clicks accordingly) before the explorer can advance it. Keyboard-only explore may sidestep it."
-    next: "RE tn36's ACTION6 data schema; until then route keyboard-only candidates or skip ACTION6 for tn36."
+      - "DEAD-END (2026-06-17 sweep, confirmed again post-E1): ACTION6 raises KeyError 'x' in the game's perform_action — tn36's click payload schema is NOT {x,y}. rich_action_candidates emits {x,y} clicks that tn36 rejects. This is tn36's per-game DELTA: reverse-engineer its ACTION6 data format. Keyboard-only explore also no-advanced (it IS a click game)."
+    next: "RE tn36's ACTION6 data schema; wrap clicks in the game's expected payload before the explorer can advance it."
+
+  # ---- E1-ENABLED SWEEP SOLVES (2026-06-17, after the salience-ordering + HUD-masking
+  # explorer upgrade per arXiv:2512.24156). These three were NO-ADVANCE in the pre-E1
+  # 4000-budget sweep; the E1 upgrade (salience-ordered candidates + step-counter
+  # masking + 12000 budget) cracked them. All re-gated reproduced=True L1. ----
+  - game: cn04
+    reproducibility: reproduced
+    levels_reproduced: 1
+    win_condition: "first-solve L1 adapter-free (E1); 13-action sequence replays offline."
+    solver: "results/arc_explore_trajectory_cn04.json (graph_explore_solve_v2 + salience/mask, 13 actions)."
+    reproduce: "re-gated reproduced=True L1."
+    gotchas:
+      - "Only solvable after the E1 salience-ordering upgrade — the winning actions were low in the pre-E1 raster order."
+
+  - game: m0r0
+    reproducibility: reproduced
+    levels_reproduced: 1
+    win_condition: "first-solve L1 adapter-free (E1); 15-action sequence replays offline."
+    solver: "results/arc_explore_trajectory_m0r0.json (graph_explore_solve_v2 + salience/mask, 15 actions)."
+    reproduce: "re-gated reproduced=True L1."
+    gotchas: []
+
+  - game: sk48
+    reproducibility: reproduced
+    levels_reproduced: 1
+    win_condition: "first-solve L1 adapter-free (E1); 14-action sequence replays offline."
+    solver: "results/arc_explore_trajectory_sk48.json (graph_explore_solve_v2 + salience/mask, 14 actions)."
+    reproduce: "re-gated reproduced=True L1."
+    gotchas: []
 
   # ... 15 still-unsolved games (ar25, bp35, cn04, dc22, ft09, g50t, ka59, lf52,
   # m0r0, re86, s5i5, sb26, sk48, sp80<-SOLVED, tr87, vc33; tn36 errored=delta-RE-needed)
@@ -139,8 +168,8 @@ games:
 #   + tu93 1 = 10  across 8 games  (the 4 new games landed 2026-06-17 by the
 #   adapter-free sweep, each independently re-gated reproduced=True; verify with
 #   scripts/arc3_replay_scorecard_metaharness.py -> results/arc3_replay_aggregate_scorecard.json)
-reproducible_total_levels: 10   # was 6; +4 adapter-free sweep solves (cd82, sp80, su15, tu93)
-reproducible_total_games: 8     # r11l, ls20, wa30, lp85, cd82, sp80, su15, tu93
+reproducible_total_levels: 13   # 6 -> 10 (+cd82,sp80,su15,tu93) -> 13 (+cn04,m0r0,sk48 via E1)
+reproducible_total_games: 11    # r11l, ls20, wa30, lp85, cd82, sp80, su15, tu93, cn04, m0r0, sk48
 provisional_total_levels: 5     # sc25 L5 (live-recorded, not yet reproduced)
 
 # ---- THE STANDING LEARNING LOOP (each solve compounds onto the next) ----
