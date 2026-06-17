@@ -1,0 +1,114 @@
+{
+  "board_state_transcript": [
+    {
+      "board": "kv260",
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.687515,
+      "exit_code": 0,
+      "output_excerpt": "returncode=0",
+      "stage": "kv260_ssh_precondition"
+    },
+    {
+      "board": "kv260",
+      "command": "ssh kria 'xmutil listapps'",
+      "duration_s": 0.832899,
+      "exit_code": 1,
+      "output_excerpt": "xmutil should be called with root privileges. Please try again using 'sudo'.",
+      "stage": "kv260_xmutil_listapps"
+    },
+    {
+      "board": "gatemate",
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.047815,
+      "exit_code": 0,
+      "output_excerpt": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "stage": "gatemate_dirtyjtag_detect"
+    },
+    {
+      "board": "polarfire",
+      "command": "ssh -o ConnectTimeout=5 polarfire true",
+      "duration_s": 0.911805,
+      "exit_code": 0,
+      "output_excerpt": "returncode=0",
+      "stage": "polarfire_ssh_precondition"
+    }
+  ],
+  "boards_probed": [
+    {
+      "name": "kv260",
+      "reachable": true,
+      "state": "kv260_xmutil_listapps_blocked_returncode_1"
+    },
+    {
+      "name": "gatemate",
+      "reachable": false,
+      "state": "blocked_gatemate_unreachable"
+    },
+    {
+      "name": "polarfire",
+      "reachable": true,
+      "state": "polarfire_ssh_reachable"
+    }
+  ],
+  "duration_s": 6.480765,
+  "experiment": 4345,
+  "fabric_acceleration_claimed": false,
+  "field_principles": {
+    "boards_probed": "list: each board {name, reachable, state} -- keeps the boards visible in the milestone retro per the continuity discipline.",
+    "honest_verdict": "Terminal-prefixed. Records the KV260 SSH continuity + opportunistic board reachability (or blocked_kv260_ssh_unreachable -- an honest non-fabrication).",
+    "kv260_reachable": "BARE bool: KV260 SSH-reachable (the sovereignty story's board-state; the SSH precondition, NEVER host SD-card).",
+    "preconditions_checked": "Records the SSH reachability checks (NEVER a host-SD-card device-node check); pre-empts the silent-missing-resource fabrication mode + the retired-mechanism trap."
+  },
+  "honest_verdict": "complete: hardware_continuity_4345_kv260_kv260_xmutil_listapps_blocked_returncode_1_gatemate_blocked_gatemate_unreachable_polarfire_polarfire_ssh_reachable_ssh_only_opportunistic",
+  "inference_substrate": "hardware_smoke",
+  "kv260_reachable": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria true",
+      "duration_s": 4.687515,
+      "exit_code": 0,
+      "mechanism": "ssh",
+      "observed": "returncode=0",
+      "resource": "kv260_ssh"
+    },
+    {
+      "available": false,
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "duration_s": 0.047815,
+      "exit_code": 0,
+      "mechanism": "usb_dirtyjtag",
+      "observed": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "resource": "gatemate_jtag_detect"
+    },
+    {
+      "available": true,
+      "command": "ssh -o ConnectTimeout=5 polarfire true",
+      "duration_s": 0.911805,
+      "exit_code": 0,
+      "mechanism": "ssh",
+      "observed": "returncode=0",
+      "resource": "polarfire_ssh"
+    }
+  ],
+  "random_seed": 4345,
+  "reproducibility_checksum": "e668166d3017e5bbd13cca29054016821447e2390ed261c2a85ed5d44c876d9c",
+  "schema": "carnot.hardware_continuity_opportunistic_reachability.v1",
+  "source_context": {
+    "most_recent_hardware_continuity_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4334_hardware_continuity.json",
+    "previous_artifact_read": true,
+    "previous_experiment": 4334,
+    "previous_honest_verdict": "complete: hardware_continuity_4334_kv260_kv260_terminal_xmutil_listapps_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_gatemate_blocked_gatemate_unreachable_ssh_usb_reachability_only",
+    "previous_kv260_reachable": true,
+    "previous_per_board_reachability": {
+      "gatemate": false,
+      "kv260": true,
+      "polarfire": true
+    }
+  },
+  "spec_refs": [
+    "REQ-HW-4345",
+    "SCENARIO-HW-4345"
+  ],
+  "speedup_claim_made": false
+}
