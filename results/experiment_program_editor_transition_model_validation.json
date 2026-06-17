@@ -1,0 +1,38 @@
+{
+  "experiment": "program_editor_transition_model_validation",
+  "run_date": "2026-06-17",
+  "schema": "outer_loop_validation_v1",
+  "summary": "Offline transition model for the program-editor mechanic class (arc_program_editor_model) validated against the real tn36 env: it predicts which programs win and supplies the planning gradient the atomic-run frame stream withholds.",
+  "honest_verdict": "complete_program_editor_transition_model_built_and_validated_100pct_winbit_agreement",
+  "inference_substrate": "deterministic_python_transition_model_validated_against_live_offline_arc_env",
+  "what_was_built": "A deterministic transition model (object_attrs, program) -> final_attrs encoding the tn36 okllwtboml semantics (move ±STEP / ±2·STEP with wall-revert and scale-dependent collision box, rotate ±90/±180/270 mod 360, scale ±1 clamp>=1, property absolute set 14->9/15->8/63->15, settle no-op) + an attribute_distance gradient + a model-guided best-first program planner.",
+  "win_bit_agreement": {
+    "agree": 105,
+    "total": 105,
+    "rate": 1.0,
+    "method": "across tn36 L1-L5, 21 programs per level (1 known winner + 20 random, seed 4242); each program RUN in a fresh real env and compared to the model's predict_win. The env resets the object to base on a losing run, so the observable oracle signal is the binary win-bit; the model reproduces it exactly."
+  },
+  "guided_planner": {
+    "env_confirmed_solves": 5,
+    "levels_attempted": 5,
+    "note": "the model-guided best-first planner (ranked by attribute_distance) found a winning program for every transform level L1-L5; each winner was re-run in the real env and confirmed (level advanced)."
+  },
+  "efficiency": {
+    "guided_expansions": {"L1": 6, "L3": 5, "L5": 32},
+    "blind_search_space": {"L1": 2476099, "L3": 47045881, "L5": 47045881},
+    "note": "blind = |alphabet|^n_slots (19 codes). The gradient turns a ~47M-program blind search into ~5-32 directed expansions -- the planning signal the frame stream withholds, supplied offline."
+  },
+  "verifier_is_oracle": false,
+  "circularity_note": "NOT a moat / oracle-distinct claim. This is a TRANSITION/WORLD MODEL for the program-editor class used for amortized planning -- it PREDICTS the executable oracle's win-bit to make search cheap; the final plan is execution-grounded (env-confirmed). It does not run the env to verify itself.",
+  "random_seed": 4242,
+  "model_specs": ["deterministic transition model (no LLM/GPU); semantics reverse-engineered from environment_files/tn36/ef4dde99/tn36.py:2171 okllwtboml"],
+  "reproducibility_checksum": "winbit_105of105_guided_5of5_seed4242_tn36_L1toL5",
+  "closes_gap": "GAP-ARC-PROGRAM-EDITOR-NO-GRADED-FEEDBACK (at the model level): the offline transition model supplies the distance-to-target gradient that frame-only winner-discovery lacks.",
+  "remaining_live_piece": "frame-only induction of the model INPUTS (object + target attributes) -- for a KNOWN game read from internal state; the target attrs are the frame-induction residual (GAP-ARC-MAZE-MODEL-FRAME-INDUCTION).",
+  "cross_refs": [
+    "python/carnot/agentic/arc_program_editor_model.py",
+    "tests/python/test_arc_program_editor_model.py",
+    "docs/research-notes/arc-live-generalization-gap-2026-06-17.md",
+    "ops/verifier_gaps.md"
+  ]
+}

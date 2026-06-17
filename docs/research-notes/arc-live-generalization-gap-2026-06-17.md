@@ -293,3 +293,42 @@ usable; the planner-critical fields are induced when a game renders them and are
 (not faked) when, as in tn36, the game draws them on the floor or hides them. The live solver for the
 atomic-run program-editor/maze class is gated on the offline transition verifier, consistently across
 all three findings.
+
+## NEXT LINK DONE: the offline transition model for the program-editor class (2026-06-17)
+
+Built the durable unlock the three findings pointed at: `python/carnot/agentic/arc_program_editor_model.py`
+— a deterministic OFFLINE transition model `(object_attrs, program) -> final_attrs` for the
+program-editor mechanic, encoding the tn36 `okllwtboml` semantics (move ±STEP/±2·STEP with wall-revert
+and scale-dependent collision box, rotate ±90/±180/270 mod 360, scale ±1 clamp, property absolute set
+14->9/15->8/63->15, settle) + an `attribute_distance` gradient + a model-guided best-first
+`plan_program`.
+
+**Validated against the real env (the oracle).** Because a losing run resets the object to base, the
+observable oracle signal is the binary WIN-BIT — so the model's job is to predict which programs win:
+
+- **WIN-BIT AGREEMENT 105/105 = 1.000** across tn36 L1-L5 (21 programs/level: 1 known winner + 20
+  random, seed 4242), each run in a fresh real env and compared to `predict_win`. The model reproduces
+  the env's win/lose verdict exactly — including L4 (scale↔collision) and L5 (rotation+scale+property).
+- **Guided planner: 5/5 env-confirmed solves.** The model-guided best-first search (ranked by
+  `attribute_distance`) found a winning program for every transform level L1-L5, each re-run and
+  confirmed in the real env.
+- **Efficiency — the gradient's value.** Guided expansions: L1=6, L3=5, L5=32, vs blind
+  |alphabet|^n_slots = 19^6 ≈ **47,045,881**. The model turns a 47-million-program blind search into
+  ~5-32 directed expansions — exactly the planning signal the atomic-run frame stream withholds,
+  supplied offline. (results/experiment_program_editor_transition_model_validation.json; unit-tested
+  tests/python/test_arc_program_editor_model.py, 6 tests.)
+
+**This closes GAP-ARC-PROGRAM-EDITOR-NO-GRADED-FEEDBACK at the model level.** The frame-only finding
+was "blind search, no gradient, doesn't scale"; the offline transition model IS the gradient. It is
+NOT a moat / oracle-distinct claim (CLAUDE.md Circularity Discipline): it is a transition/world model
+used for amortized planning — it PREDICTS the executable oracle's win-bit to make search cheap, and the
+final plan is execution-grounded (env-confirmed). The `program_editor` strategy now routes to
+`plan_program` (model-guided), falling back to blind `frame_only_winner_search` only when no model is
+available.
+
+**What remains (uniform across the live-generalization architecture).** The transition model needs
+INPUTS: the object + target attributes. For a KNOWN game these come from internal state; the LIVE
+residual is frame-only induction of the TARGET attrs (tn36 draws the target on the floor —
+GAP-ARC-MAZE-MODEL-FRAME-INDUCTION). So the program-editor live solver is now gated on a single,
+well-scoped perception residual (read the target's attributes from frames), not on the planning
+problem — which the offline transition model has solved.

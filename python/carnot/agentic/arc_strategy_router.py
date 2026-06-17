@@ -64,17 +64,20 @@ STRATEGY_CLASSES: list[dict] = [
             "separate run trigger (arc3_frame_induction.induce → 'program_editor')"
         ),
         "solver": (
-            "scripts/arc3_frame_induction.py — induce_editor_layout + find_run_button + "
-            "frame_only_winner_search (frame-only; zero internal state)"
+            "carnot.agentic.arc_program_editor_model.plan_program — MODEL-GUIDED program search over "
+            "the offline transition model (the editor controls come from "
+            "arc3_frame_induction.induce_editor_layout + find_run_button)"
         ),
         "search_engine": (
-            "blind program-space search via the BINARY win signal — uniform-code prior "
-            "+ bounded product fallback"
+            "best-first over programs ranked by attribute_distance from the offline transition model "
+            "(turns ~47M-program blind search into ~5-32 directed expansions); the env confirms the "
+            "winner. Falls back to frame_only_winner_search (blind) when no model is available"
         ),
         "needs": (
-            "offline-trained transition verifier ('editor code → object transform') to replace "
-            "blind search; frame-only gives NO graded feedback "
-            "(GAP-ARC-PROGRAM-EDITOR-NO-GRADED-FEEDBACK)"
+            "the offline transition model is BUILT + validated (100% win-bit agreement vs the env, "
+            "5/5 guided solves L1-L5). Remaining LIVE piece: frame-only induction of the model INPUTS "
+            "(object + TARGET attributes) — target attrs are the frame residual "
+            "(GAP-ARC-MAZE-MODEL-FRAME-INDUCTION); known games read them from internal state"
         ),
     },
     {
