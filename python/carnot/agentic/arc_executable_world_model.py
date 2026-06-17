@@ -383,8 +383,8 @@ class LocalGGUFProposer:
             except Exception as e:
                 return False, f"local gguf (GPU server) failed: {e!r}"[:200]
             code = _extract_python(text)
-            if not code or "def engine" not in code:
-                last = "no engine() in output"; continue
+            if not code or "def engine" not in code or "def is_level_complete" not in code:
+                last = "missing engine() or is_level_complete() in output"; continue
             try:
                 ast.parse(code)               # never write/use code that doesn't parse
             except SyntaxError as se:
