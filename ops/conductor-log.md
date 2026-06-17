@@ -8627,3 +8627,4 @@ c |
 | 2026-06-17 00:36 UTC | PHASE F0 (INFRA safety net; defense-in-depth; fixe | OK | 88 passed, 1 warning in 6.25s |
 | 2026-06-17 00:51 UTC | PHASE F1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 104 passed, 1 warning in 7.20s |
 | 2026-06-17 01:08 UTC | PHASE F2 (hygiene; re-run -- .397's exp4299 BLOCKE | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-06-17 01:19 UTC | PHASE F3 (hardware continuity; opportunistic per n | OK | 106 passed, 1 warning in 7.54s |
