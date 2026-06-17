@@ -1,5 +1,3 @@
 import numpy as np
-def engine(grid, action, data):
-    return np.array(grid)
-def is_level_complete(grid):
-    return False
+def engine(g,a,d):return np.array(g)
+def is_level_complete(g):return False
