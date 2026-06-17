@@ -184,19 +184,35 @@ games:
       - "Visible target cells are layer-owned and must not be copied as part of moving component patches."
       - "ACTION7 pops a hidden undo stack that is not encoded in the visible grid; verifier mismatches on ACTION7 are a real missing-world-model-rule gap."
 
-  # ... 15 still-unsolved games (ar25, bp35, cn04, dc22, ft09, g50t, ka59, lf52,
-  # m0r0, re86, s5i5, sb26, sk48, sp80<-SOLVED, tr87, vc33; tn36 errored=delta-RE-needed)
+
+  - game: ka59
+    reproducibility: reproduced
+    levels_reproduced: 1
+    win_condition: "E3 executable-world-model L1: use the selected 3x3 block to push the second block through the central wall, place the left block on the left target, then place the pushed block on the right target."
+    action_model: "mixed keyboard+click [4,4,4,3,2,3,3,3,C:1,1,4]; C:1 dynamically clicks the second movable block after the first block is placed."
+    solver: "results/experiment_4350_e3_explore_verify_plan_ka59.json + results/arc_e3/ka59/world_model.py"
+    reproduce: "arc_solver_kit.reproduce(ka59, ['4', '4', '4', '3', '2', '3', '3', '3', 'C:1', '1', '4'], Exp4350 apply) reproduced=True L1; checksum 3d282a1804ca818ee28d4e6b34d4dd8d76fb4258c013a6f630926a8df675fa06."
+    world_model: "results/arc_e3/ka59/world_model.py"
+    world_model_sha256: "ec4c777b8f416d8522ba36b3fbc2156f918dd03229a840cadca9438de45c8cba"
+    gotchas:
+      - "Target underlay restoration must be bounded to the confirmed 5x5 target border; nearby target rows must not leak into erased block cells."
+      - "The bottom row is a hidden StepCounter HUD; exact tick prediction is not visible-state deterministic and remains a verifier residual."
+      - "A selected block collision pushes the other movable block by five 3-pixel steps through the central wall; ordinary movement cannot cross it."
+      - "Clicks must be derived from the current offline camera/grid offset and movable sprite centers, not hardcoded live pixels."
+
+  # Remaining still-unsolved games include bp35, dc22, ft09, g50t, lf52,
+  # re86, s5i5, sb26, tr87, vc33.
   # — reproducibility: unsolved. The 2026-06-17 adapter-free sweep advanced 4 of 19
   # (cd82, sp80, su15, tu93); 14 resisted at L0 (deeper win-mechanics / per-game deltas).
   # vc33: a click-game solved live (arc3_m2_solve) but NOT yet captured reproducibly.
 
 # Aggregate reproducible scorecard (the only count that may be headline/publish-eligible):
 #   reproduced levels = r11l 1 + ls20 1 + wa30 1 + lp85 4 + cd82 1 + sp80 1 + su15 1
-#   + tu93 1 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 = 15 across 12 games  (lp85 L3->L4 landed
+#   + tu93 1 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 + ka59 1 + tn36 7 = 23 across 14 games  (lp85 L3->L4 landed
 #   2026-06-17 via the standing loop adaptered path, offline-reproduction-gated; verify with
 #   scripts/arc3_replay_scorecard_metaharness.py -> results/arc3_replay_aggregate_scorecard.json)
-reproducible_total_levels: 22   # ... -> 20 (+tn36 L5 property) -> 21 (+tn36 L6 multi-run maze path-planner) -> 22 (+tn36 L7 TIMED spike-trap planner, 2026-06-17; first L7 solve)
-reproducible_total_games: 13    # r11l, ls20, wa30, lp85, cd82, sp80, su15, tu93, cn04, m0r0, sk48, ar25, tn36
+reproducible_total_levels: 23   # ... -> 22 (+tn36 L7 timed spike-trap planner) -> 23 (+ka59 L1 E3 world-model plan, 2026-06-17)
+reproducible_total_games: 14    # r11l, ls20, wa30, lp85, cd82, sp80, su15, tu93, cn04, m0r0, sk48, ar25, ka59, tn36
 provisional_total_levels: 5     # sc25 L5 (live-recorded, not yet reproduced)
 
 # ---- LIVE LEADERBOARD SUBMISSIONS (operator-gated External Publication) ----
