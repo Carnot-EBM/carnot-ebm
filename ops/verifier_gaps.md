@@ -1329,3 +1329,11 @@ BFS and DFS and routers" — needs two more label sets the router schema already
   (full-FT > LoRA per the TTA-TRM finding) on a 3090; wire as a TRM-guided rollout engine.
 - priority: medium (heavier GPU track; gated on enough captured trajectories)
 <!-- arc-router-training-gaps-2026-06-17:end -->
+
+### 2026-06-17 Exp4340 ka59 E3 residual gap
+- Spec: REQ-PHASE4-079 / SCENARIO-PHASE4-079
+- Best verifier accuracy: 0.5625
+- Residual mismatch class: `hidden_step_counter_hud_gap`
+- Reproducibility checksum: `9c238354e5ff765c0291ff09777e55cc0dd8661416b71bd69bc4692b7af4d6ea`
+- Gap: bounded explore-verify-plan run did not satisfy the offline reproduced L1 gate.
+

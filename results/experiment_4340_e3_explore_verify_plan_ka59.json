@@ -1,0 +1,246 @@
+{
+  "adaptive_test_results": [
+    {
+      "actions": [
+        "4",
+        "4",
+        "4"
+      ],
+      "divergence_step": {
+        "action": 4,
+        "data": null,
+        "label": "4",
+        "step": 2
+      },
+      "level_up": false,
+      "name": "adaptive_ka59_l1_prefix_1",
+      "passed": false
+    },
+    {
+      "actions": [
+        "4",
+        "4",
+        "4",
+        "3",
+        "2",
+        "3",
+        "3",
+        "3"
+      ],
+      "divergence_step": {
+        "action": 4,
+        "data": null,
+        "label": "4",
+        "step": 2
+      },
+      "level_up": false,
+      "name": "adaptive_ka59_l1_prefix_2",
+      "passed": false
+    },
+    {
+      "actions": [
+        "4",
+        "4",
+        "4",
+        "3",
+        "2",
+        "3",
+        "3",
+        "3",
+        "C:1",
+        "1"
+      ],
+      "divergence_step": {
+        "action": 4,
+        "data": null,
+        "label": "4",
+        "step": 2
+      },
+      "level_up": false,
+      "name": "adaptive_ka59_l1_prefix_3",
+      "passed": false
+    },
+    {
+      "actions": [
+        "4",
+        "4",
+        "4",
+        "3",
+        "2",
+        "3",
+        "3",
+        "3",
+        "C:1",
+        "1",
+        "4"
+      ],
+      "divergence_step": {
+        "action": 4,
+        "data": null,
+        "label": "4",
+        "step": 2
+      },
+      "level_up": false,
+      "name": "adaptive_ka59_l1_prefix_4",
+      "passed": false
+    }
+  ],
+  "adaptive_tests_generated": 4,
+  "duration_s": 1.01,
+  "experiment": "experiment_4340_e3_explore_verify_plan_ka59",
+  "explore_lemmas": [
+    {
+      "action": 4,
+      "changed_cells": 19,
+      "has_data": false,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 6,
+      "changed_cells": 1,
+      "has_data": true,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 1,
+      "changed_cells": 19,
+      "has_data": false,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 2,
+      "changed_cells": 19,
+      "has_data": false,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 4,
+      "changed_cells": 1,
+      "has_data": false,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 3,
+      "changed_cells": 19,
+      "has_data": false,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 1,
+      "changed_cells": 1,
+      "has_data": false,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 2,
+      "changed_cells": 1,
+      "has_data": false,
+      "level_delta": 0,
+      "verifier_gated": true
+    }
+  ],
+  "explore_lemmas_collected": 8,
+  "field_principles": {
+    "explore_lemmas_collected": "BARE int: verifier-gated transition lemmas confirmed before planning (the AERA explore-before-plan discipline).",
+    "honest_verdict": "Terminal-prefixed (success_e3_ka59_L1_reproduced or complete_e3_ka59_partial_model_<acc>). A reproduced L1 and an honest partial are BOTH progress.",
+    "offline_reproduced": "BARE bool: the real env reaches L1 via the induced-model plan, re-gated -- only reproduced levels count.",
+    "plan_executed": "BARE bool + divergence_step: execution-grounded confirmation; halt-on-divergence.",
+    "preconditions_checked": "Records the offline-env presence + harness import + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the induction + exploration + planning.",
+    "reproduced_levels": "BARE int: levels offline-reproduced on ka59 (target >=1) -- the +1 incremental-progress unit.",
+    "reproducibility_checksum": "Hash of the world model + the plan + the reproduce() result; lets a third party re-run.",
+    "verifier_accuracy_per_round": "list[float]: the verifier's reproduction rate per refactor round -- the trustworthy progress signal (compare to .400's 0.56).",
+    "verifier_is_oracle": "BARE bool=true -- the SOLVE is execution-grounded (real env defines the win); ARC progress, NOT a moat headline.",
+    "world_model_path": "results/arc_e3/ka59/world_model.py -- the induced model IS the deliverable.",
+    "world_model_sha256": "Hash of the induced world model -- auditable/reproducible."
+  },
+  "game": "ka59",
+  "honest_verdict": "complete_e3_ka59_partial_model_0.56",
+  "inference_substrate": "codex_direct_model_edit_offline_env_no_nested_proposer",
+  "method": "aera_explore_verify_plan_agent2world_adaptive_world_model_testing",
+  "offline_reproduced": false,
+  "plan_executed": false,
+  "plan_executed_detail": {
+    "divergence_step": {
+      "action": 4,
+      "data": null,
+      "label": "4",
+      "step": 2
+    },
+    "plan_result": {
+      "divergence_step": {
+        "action": 4,
+        "data": null,
+        "label": "4",
+        "step": 2
+      },
+      "executed": false,
+      "executed_steps": [
+        {
+          "action": 4,
+          "data": null,
+          "label": "4",
+          "step": 1
+        },
+        {
+          "action": 4,
+          "data": null,
+          "label": "4",
+          "step": 2
+        }
+      ],
+      "game": "ka59",
+      "hud_masked_step_counter": true,
+      "level_up": false,
+      "plan_len": 11,
+      "plan_source": "verified_ka59_push_through_wall_l1_plan",
+      "planned": true,
+      "reason": "visible model prediction diverged from observation -- halted",
+      "solution": [
+        "4",
+        "4",
+        "4",
+        "3",
+        "2",
+        "3",
+        "3",
+        "3",
+        "C:1",
+        "1",
+        "4"
+      ]
+    }
+  },
+  "preconditions_checked": {
+    "harness_import": true,
+    "leaderboard_submission": false,
+    "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/ka59",
+    "offline_env_present": true,
+    "research_conductor_modified": false,
+    "solver_kit_import": true,
+    "trm_training_stood_down": true
+  },
+  "random_seed": 4340,
+  "reproduced_levels": 0,
+  "reproducibility_checksum": "9c238354e5ff765c0291ff09777e55cc0dd8661416b71bd69bc4692b7af4d6ea",
+  "residual_mismatch_class": "hidden_step_counter_hud_gap",
+  "spec_refs": [
+    "REQ-PHASE4-079",
+    "SCENARIO-PHASE4-079"
+  ],
+  "submitted_to_leaderboard": false,
+  "verifier_accuracy_per_round": [
+    0.5625
+  ],
+  "verifier_best_accuracy": 0.5625,
+  "verifier_is_oracle": true,
+  "world_model_path": "results/arc_e3/ka59/world_model.py",
+  "world_model_sha256": "b0766f0494863c6cafdef793ad9afbfa168e60103698e6d2bd80459df32e9dd4"
+}
