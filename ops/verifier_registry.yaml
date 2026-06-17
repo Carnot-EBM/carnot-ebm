@@ -585,6 +585,77 @@ verifiers:
     - GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305
     - GAP-4318
     - GAP-CODE-EXEC-DEMOFIT
+    eval_exp_4333: results/experiment_4333_verifier_registry_gaps_hygiene.json
+    exp4333_regression_guard_passed: true
+    exp4333_arc1_rule_exec_vote_pass2: 0.4516
+    exp4333_arc1_rule_exec_gated_pass2: 0.5806
+    exp4333_arc1_headroom_recovered: 4
+    exp4333_arc1_vote_wins_lost: 0
+    exp4333_v400_state: second_corpus_scorer_leaky__adaptive_guidance_null__e3_world_models_partial__arc_13_shallow_no_advance__learned_encoder_transfer_null
+    exp4333_robust_aggregator_used: true
+    exp4333_available_artifact_keys:
+    - 4325_in_generation_replication
+    - 4326_adaptive_scaleup
+    - 4327_e3_ar25
+    - 4328_e3_ka59
+    - 4329_e3_tr87_ft09
+    - 4330_shallow_tail_sweep
+    - 4331_learned_encoder_transfer
+    exp4333_missing_upstream_artifacts: []
+    exp4333_flagged_artifacts_excluded: []
+    exp4333_in_generation_artifact: results/experiment_4325_in_generation_moat_replicate_second_corpus.json
+    exp4333_in_generation_moat_replicates: false
+    exp4333_in_generation_controls_differentiated: false
+    exp4333_scorer_leak_recheck_passed: false
+    exp4333_in_generation_benchmark_n: 0
+    exp4333_in_generation_answer_masked_auroc: 0.549719
+    exp4333_adaptive_artifact: results/experiment_4326_adaptive_guided_generation_scaleup.json
+    exp4333_adaptive_guidance_beats_control: false
+    exp4333_adaptive_domain_used: reasoning_corpus_fallback
+    exp4333_adaptive_controls_differentiated: true
+    exp4333_adaptive_scorer_leak_recheck_passed: true
+    exp4333_adaptive_carnot_minus_best_control_delta: 0.15
+    exp4333_adaptive_ci95:
+    - -0.075
+    - 0.35
+    exp4333_e3_reproduced_levels_total: 0
+    exp4333_e3_offline_reproduced_any: false
+    exp4333_shallow_artifact: results/experiment_4330_arc_adapter_free_discovery_sweep_shallow_tail.json
+    exp4333_shallow_reproducible_total_levels: 13
+    exp4333_shallow_games_advanced: []
+    exp4333_tn36_schema: 'ACTION6 data must be top-level {"x": int, "y": int}'
+    exp4333_tn36_normalizer: normalise_tn36_click_payload
+    exp4333_learned_encoder_artifact: results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json
+    exp4333_learned_encoder_transfer_helps: false
+    exp4333_cross_game_state_reduction: 1.0084925690021231
+    exp4333_cross_game_state_reduction_ci95:
+    - 1.0
+    - 1.0303068758652514
+    exp4333_cross_game_n_held_out_levels: 13
+    exp4333_gaps_logged:
+    - GAP-DIFFUSIONGEMMA-SECOND-CORPUS-LEAK-FREE-SCORER-4325
+    - GAP-ARC-GRID-GENERATION-SCORER-4326
+    - GAP-E3-WORLD-MODEL-RULE-AR25-4327
+    - GAP-E3-WORLD-MODEL-RULE-KA59-4328
+    - GAP-E3-WORLD-MODEL-RULE-TR87-4329
+    - GAP-E3-WORLD-MODEL-RULE-FT09-4329
+    - GAP-4331
+    exp4333_e3_ar25_offline_reproduced: false
+    exp4333_e3_ar25_reproduced_levels: 0
+    exp4333_e3_ar25_residual_mismatch_class: missing_world_model_rule_gap_hidden_undo_stack_action7
+    exp4333_e3_ar25_verifier_best_accuracy: 0.8875
+    exp4333_e3_ka59_offline_reproduced: false
+    exp4333_e3_ka59_reproduced_levels: 0
+    exp4333_e3_ka59_residual_mismatch_class: missing_world_model_rule_gap_actions_1_2_4_6
+    exp4333_e3_ka59_verifier_best_accuracy: 0.5625
+    exp4333_e3_tr87_offline_reproduced: false
+    exp4333_e3_tr87_reproduced_levels: 0
+    exp4333_e3_tr87_residual_mismatch_class: missing_world_model_rule_gap_actions_1_2_4
+    exp4333_e3_tr87_verifier_best_accuracy: 0.0
+    exp4333_e3_ft09_offline_reproduced: false
+    exp4333_e3_ft09_reproduced_levels: 0
+    exp4333_e3_ft09_residual_mismatch_class: missing_world_model_rule_gap_actions_6
+    exp4333_e3_ft09_verifier_best_accuracy: 0.1
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -4487,3 +4558,25 @@ verifiers:
     - GAP-4318
     - GAP-CODE-EXEC-DEMOFIT
     eval_exp_4321: results/experiment_4321_verifier_registry_gaps_hygiene.json
+  - role_id: oracle_distinct_v400_registry_gaps_hygiene_4333
+    experiment: results/experiment_4333_verifier_registry_gaps_hygiene.json
+    role: registry_gap_manifest_hygiene_v400
+    status: v400_outcomes_recorded_with_robust_availability
+    v400_state: second_corpus_scorer_leaky__adaptive_guidance_null__e3_world_models_partial__arc_13_shallow_no_advance__learned_encoder_transfer_null
+    robust_aggregator_used: true
+    in_generation_moat_replicates: false
+    adaptive_guidance_beats_control: false
+    e3_reproduced_levels_total: 0
+    shallow_reproducible_total_levels: 13
+    tn36_schema: 'ACTION6 data must be top-level {"x": int, "y": int}'
+    learned_encoder_transfer_helps: false
+    cross_game_state_reduction: 1.0084925690021231
+    gap_ids_logged:
+    - GAP-DIFFUSIONGEMMA-SECOND-CORPUS-LEAK-FREE-SCORER-4325
+    - GAP-ARC-GRID-GENERATION-SCORER-4326
+    - GAP-E3-WORLD-MODEL-RULE-AR25-4327
+    - GAP-E3-WORLD-MODEL-RULE-KA59-4328
+    - GAP-E3-WORLD-MODEL-RULE-TR87-4329
+    - GAP-E3-WORLD-MODEL-RULE-FT09-4329
+    - GAP-4331
+    eval_exp_4333: results/experiment_4333_verifier_registry_gaps_hygiene.json

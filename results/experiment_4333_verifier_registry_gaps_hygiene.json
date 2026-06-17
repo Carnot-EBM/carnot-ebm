@@ -1,0 +1,431 @@
+{
+  "artifact_errors": {},
+  "availability_report": {
+    "available_artifact_keys": [
+      "4325_in_generation_replication",
+      "4326_adaptive_scaleup",
+      "4327_e3_ar25",
+      "4328_e3_ka59",
+      "4329_e3_tr87_ft09",
+      "4330_shallow_tail_sweep",
+      "4331_learned_encoder_transfer"
+    ],
+    "axes": {
+      "adaptive_scaleup": {
+        "available_artifact_keys": [
+          "4326_adaptive_scaleup"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "e3_deep_tail": {
+        "available_artifact_keys": [
+          "4327_e3_ar25",
+          "4328_e3_ka59",
+          "4329_e3_tr87_ft09"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "in_generation_replication": {
+        "available_artifact_keys": [
+          "4325_in_generation_replication"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "learned_encoder_transfer": {
+        "available_artifact_keys": [
+          "4331_learned_encoder_transfer"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "shallow_tail_sweep": {
+        "available_artifact_keys": [
+          "4330_shallow_tail_sweep"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      }
+    },
+    "flagged_artifacts_excluded": [],
+    "missing_upstream_artifacts": []
+  },
+  "cited_upstream_artifacts": [
+    "results/experiment_4325_in_generation_moat_replicate_second_corpus.json",
+    "results/experiment_4326_adaptive_guided_generation_scaleup.json",
+    "results/experiment_4327_e3_executable_world_model_ar25.json",
+    "results/experiment_4328_e3_executable_world_model_ka59.json",
+    "results/experiment_4329_e3_executable_world_model_tr87_ft09.json",
+    "results/experiment_4330_arc_adapter_free_discovery_sweep_shallow_tail.json",
+    "results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json",
+    "results/experiment_4308_adversarial_verify_degenerate_controls_and_robust_capstone.json"
+  ],
+  "duration_s": 0.510093,
+  "exclusion_manifest_path": "ops/exclusion_manifest.yaml",
+  "experiment": "experiment_4333_verifier_registry_gaps_hygiene",
+  "field_principles": {
+    "gaps_logged": "List of new/updated missing-verifier gap entries (failure mode + missing discriminator + candidate design + priority) -- the verifier build backlog.",
+    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled + regression guard result (using the robust aggregator, NOT a hard-block).",
+    "regression_guard_passed": "BARE bool: the GAP-4 execution numbers did not regress vs .399 -- the standing-capability guard.",
+    "reproducibility_checksum": "Hash of the reconciled registry + gaps + manifest; catches silent drift."
+  },
+  "gaps_logged": [
+    {
+      "candidate_design": "retrain and calibrate the scorer on multiple oracle-distinct corpora with fresh masked held-out AUROC gates before accepting another guided-generation moat",
+      "evidence": "results/experiment_4325_in_generation_moat_replicate_second_corpus.json; in_generation_moat_replicates=False; scorer_leak_recheck_passed=False; benchmark_n=0; answer_masked_auroc=0.549719",
+      "failure_mode": "the second-corpus in-generation replication did not run decision-grade rows because the partial-state scorer failed the independent leak recheck",
+      "gap_id": "GAP-DIFFUSIONGEMMA-SECOND-CORPUS-LEAK-FREE-SCORER-4325",
+      "missing_discriminator": "corpus-general leak-free partial-state scorer that remains predictive after answer-bearing cells are masked",
+      "priority": "high",
+      "status": "open"
+    },
+    {
+      "candidate_design": "build a grid-native canvas scorer with masked-cell leak checks, no-adaptation controls, and ARC environment reproduction gates before rerunning adaptive guidance",
+      "evidence": "results/experiment_4326_adaptive_guided_generation_scaleup.json; adaptive_guidance_beats_control=False; domain_used=reasoning_corpus_fallback; adaptive_ci95=[-0.075, 0.35]; carnot_minus_best_control_delta=0.15",
+      "failure_mode": "adaptive DiffusionGemma guidance stayed bounded to a reasoning-corpus null and did not establish an ARC-grid generation scorer",
+      "gap_id": "GAP-ARC-GRID-GENERATION-SCORER-4326",
+      "missing_discriminator": "oracle-distinct ARC-grid partial-state generation scorer that can rank candidate grid states during denoising rather than post-hoc reasoning choices",
+      "priority": "high",
+      "status": "open"
+    },
+    {
+      "candidate_design": "mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate",
+      "evidence": "results/experiment_4327_e3_executable_world_model_ar25.json; game=ar25; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.8875; residual_mismatch_class=missing_world_model_rule_gap_hidden_undo_stack_action7",
+      "failure_mode": "E3 induced world model for ar25 remained partial and could not execute a reproduced level through the real offline environment",
+      "gap_id": "GAP-E3-WORLD-MODEL-RULE-AR25-4327",
+      "missing_discriminator": "ar25 executable world-model rule coverage for missing_world_model_rule_gap_hidden_undo_stack_action7",
+      "priority": "high",
+      "status": "open"
+    },
+    {
+      "candidate_design": "mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate",
+      "evidence": "results/experiment_4328_e3_executable_world_model_ka59.json; game=ka59; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.5625; residual_mismatch_class=missing_world_model_rule_gap_actions_1_2_4_6",
+      "failure_mode": "E3 induced world model for ka59 remained partial and could not execute a reproduced level through the real offline environment",
+      "gap_id": "GAP-E3-WORLD-MODEL-RULE-KA59-4328",
+      "missing_discriminator": "ka59 executable world-model rule coverage for missing_world_model_rule_gap_actions_1_2_4_6",
+      "priority": "high",
+      "status": "open"
+    },
+    {
+      "candidate_design": "mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate",
+      "evidence": "results/experiment_4329_e3_executable_world_model_tr87_ft09.json; game=tr87; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.0; residual_mismatch_class=missing_world_model_rule_gap_actions_1_2_4",
+      "failure_mode": "E3 induced world model for tr87 remained partial and could not execute a reproduced level through the real offline environment",
+      "gap_id": "GAP-E3-WORLD-MODEL-RULE-TR87-4329",
+      "missing_discriminator": "tr87 executable world-model rule coverage for missing_world_model_rule_gap_actions_1_2_4",
+      "priority": "high",
+      "status": "open"
+    },
+    {
+      "candidate_design": "mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate",
+      "evidence": "results/experiment_4329_e3_executable_world_model_tr87_ft09.json; game=ft09; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.1; residual_mismatch_class=missing_world_model_rule_gap_actions_6",
+      "failure_mode": "E3 induced world model for ft09 remained partial and could not execute a reproduced level through the real offline environment",
+      "gap_id": "GAP-E3-WORLD-MODEL-RULE-FT09-4329",
+      "missing_discriminator": "ft09 executable world-model rule coverage for missing_world_model_rule_gap_actions_6",
+      "priority": "high",
+      "status": "open"
+    },
+    {
+      "candidate_design": "larger learned frame encoder, more reproduced solved traces, or adapter-conditioned value head with a hardware-portable path",
+      "evidence": "results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json; upstream_missing_verifier_gap=true",
+      "failure_mode": "small learned frame encoder over the current solved set did not produce a decision-grade held-out OfflineSolver state reduction",
+      "gap_id": "GAP-4331",
+      "missing_discriminator": "game-invariant ARC value representation",
+      "priority": "medium",
+      "status": "open_small_encoder_insufficient"
+    }
+  ],
+  "gaps_path": "ops/verifier_gaps.md",
+  "honest_verdict": "complete: registry_gaps_manifest_reconciled_to_v400_truth_regression_guard_passed_True_gaps_logged_7_robust_aggregator_used",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "manifest_reconciled": true,
+  "model_specs": {
+    "codex_calls": 0,
+    "gap4_candidate_set": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "gap4_program_outputs": "results/arc3_gap4_induced_programs.json",
+    "gguf_inference": false,
+    "gpu_inference": false,
+    "live_model_inference": false,
+    "method": "cached_v400_ledger_reconciliation",
+    "prior_hygiene_artifact": "results/experiment_4321_verifier_registry_gaps_hygiene.json",
+    "robust_aggregator_artifact": "results/experiment_4308_adversarial_verify_degenerate_controls_and_robust_capstone.json",
+    "robust_aggregator_helper": "carnot.reporting.capstone_aggregate_available",
+    "stable_checkpoint_write": false,
+    "trm_training_touched": false,
+    "upstream_artifacts": [
+      "results/experiment_4325_in_generation_moat_replicate_second_corpus.json",
+      "results/experiment_4326_adaptive_guided_generation_scaleup.json",
+      "results/experiment_4327_e3_executable_world_model_ar25.json",
+      "results/experiment_4328_e3_executable_world_model_ka59.json",
+      "results/experiment_4329_e3_executable_world_model_tr87_ft09.json",
+      "results/experiment_4330_arc_adapter_free_discovery_sweep_shallow_tail.json",
+      "results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json"
+    ]
+  },
+  "random_seed": 4333,
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_reconciled": true,
+  "regression_guard": {
+    "offline_replay": {
+      "arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      },
+      "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+      "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+      "expected": {
+        "arc1_rule_exec": {
+          "gated_pass2": 0.5806,
+          "headroom_recovered": 4,
+          "n": 31,
+          "vote_pass2": 0.4516,
+          "vote_wins_lost": 0
+        }
+      },
+      "no_codex_calls": true,
+      "no_gguf_inference": true,
+      "regression_guard_passed": true,
+      "trm_training_touched": false
+    },
+    "prior_artifact_path": "results/experiment_4321_verifier_registry_gaps_hygiene.json",
+    "recorded_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "regression_guard_passed": true,
+    "replayed_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    }
+  },
+  "regression_guard_passed": true,
+  "reproducibility_checksum": "sha256:6d3eb1410b6d1c79958e764178294fa558cc3b783352e6b87f73882691ce3c40",
+  "schema": "carnot.experiment_4333_verifier_registry_gaps_hygiene.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4333",
+    "SCENARIO-VERIFY-4333"
+  ],
+  "v400_outcomes": {
+    "adaptive_scaleup": {
+      "adaptive_ci95": [
+        -0.075,
+        0.35
+      ],
+      "adaptive_guidance_beats_control": false,
+      "artifact_path": "results/experiment_4326_adaptive_guided_generation_scaleup.json",
+      "available": true,
+      "benchmark_n": 40,
+      "best_control": "entrgi",
+      "carnot_minus_best_control_delta": 0.15,
+      "condition_accuracy": {
+        "carnot_adaptive": 0.425,
+        "entrgi": 0.275,
+        "unguided": 0.25
+      },
+      "controls_differentiated": true,
+      "domain_used": "reasoning_corpus_fallback",
+      "honest_verdict": "complete: adaptive_guidance_bounded_to_stitching_null",
+      "scorer_leak_recheck_passed": true,
+      "verifier_is_oracle": false
+    },
+    "e3_deep_tail": {
+      "artifact_paths": [
+        "results/experiment_4327_e3_executable_world_model_ar25.json",
+        "results/experiment_4328_e3_executable_world_model_ka59.json",
+        "results/experiment_4329_e3_executable_world_model_tr87_ft09.json"
+      ],
+      "available": true,
+      "games": {
+        "ar25": {
+          "artifact_path": "results/experiment_4327_e3_executable_world_model_ar25.json",
+          "available": true,
+          "game": "ar25",
+          "honest_verdict": "complete_e3_ar25_partial_model_0.89",
+          "offline_reproduced": false,
+          "plan_executed": false,
+          "reproduced_levels": 0,
+          "residual_mismatch_class": "missing_world_model_rule_gap_hidden_undo_stack_action7",
+          "verifier_accuracy_per_round": [
+            0.8875
+          ],
+          "verifier_best_accuracy": 0.8875,
+          "verifier_is_oracle": true,
+          "world_model_path": "results/arc_e3/ar25/world_model.py",
+          "world_model_sha256": "2f25b01b0faa47ccdf02dcc23bdc0be85057163b96aa9d1d0efc950fb4a23005"
+        },
+        "ft09": {
+          "artifact_path": "results/experiment_4329_e3_executable_world_model_tr87_ft09.json",
+          "available": true,
+          "game": "ft09",
+          "honest_verdict": "complete_e3_ft09_partial_model_0.10",
+          "offline_reproduced": false,
+          "plan_executed": false,
+          "reproduced_levels": 0,
+          "residual_mismatch_class": "missing_world_model_rule_gap_actions_6",
+          "verifier_accuracy_per_round": [
+            0.1
+          ],
+          "verifier_best_accuracy": 0.1,
+          "verifier_is_oracle": true,
+          "world_model_path": "results/arc_e3/ft09/world_model.py",
+          "world_model_sha256": "8e4563289295741b6728075a411d0aa4ae7165140d2f3e5e5e885312dcf650ee"
+        },
+        "ka59": {
+          "artifact_path": "results/experiment_4328_e3_executable_world_model_ka59.json",
+          "available": true,
+          "game": "ka59",
+          "honest_verdict": "complete_e3_ka59_partial_model_0.56",
+          "offline_reproduced": false,
+          "plan_executed": false,
+          "reproduced_levels": 0,
+          "residual_mismatch_class": "missing_world_model_rule_gap_actions_1_2_4_6",
+          "verifier_accuracy_per_round": [
+            0.5625
+          ],
+          "verifier_best_accuracy": 0.5625,
+          "verifier_is_oracle": true,
+          "world_model_path": "results/arc_e3/ka59/world_model.py",
+          "world_model_sha256": "0da67a03910f1e16d11ca0db25ca5feba9cb4b6e3287ff4fc03c5d3511b8ff57"
+        },
+        "tr87": {
+          "artifact_path": "results/experiment_4329_e3_executable_world_model_tr87_ft09.json",
+          "available": true,
+          "game": "tr87",
+          "honest_verdict": "complete_e3_tr87_partial_model_0.00",
+          "offline_reproduced": false,
+          "plan_executed": false,
+          "reproduced_levels": 0,
+          "residual_mismatch_class": "missing_world_model_rule_gap_actions_1_2_4",
+          "verifier_accuracy_per_round": [
+            0.0
+          ],
+          "verifier_best_accuracy": 0.0,
+          "verifier_is_oracle": true,
+          "world_model_path": "results/arc_e3/tr87/world_model.py",
+          "world_model_sha256": "1f497c0f688a9d8b4e5439f77cfeea445fc7326599a5aa118037388ff14bd21a"
+        }
+      },
+      "offline_reproduced_any": false,
+      "reproduced_levels_total": 0
+    },
+    "in_generation_replication": {
+      "artifact_path": "results/experiment_4325_in_generation_moat_replicate_second_corpus.json",
+      "available": true,
+      "benchmark_n": 0,
+      "benchmark_n_per_seed": 80,
+      "carnot_minus_best_control_delta": 0.0,
+      "carnot_minus_self_reward_smc_delta": 0.0,
+      "carnot_minus_unguided_delta": 0.0,
+      "controls_differentiated": false,
+      "honest_verdict": "scorer_leaky_on_second_corpus",
+      "in_generation_moat_replicates": false,
+      "independent_leak_recheck": {
+        "answer_masked_auroc": 0.549719,
+        "answer_masked_cells": 102,
+        "auroc_floor": 0.6,
+        "fresh_heldout_n": 990,
+        "fresh_heldout_task_n": 330,
+        "protocol": "fresh split; replace answer-bearing canvas cells with mask_token_id",
+        "scorer_leak_recheck_passed": false,
+        "status": "measured",
+        "unmasked_auroc": 0.548005
+      },
+      "replication_ci95": [
+        0.0,
+        0.0
+      ],
+      "scorer_leak_recheck_passed": false,
+      "verifier_is_oracle": false
+    },
+    "learned_encoder_transfer": {
+      "acceptance_gate_passed": true,
+      "artifact_path": "results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json",
+      "available": true,
+      "baseline_solves_held_out": true,
+      "cross_game_state_reduction": 1.0084925690021231,
+      "cross_game_state_reduction_ci95": [
+        1.0,
+        1.0303068758652514
+      ],
+      "honest_verdict": "complete: learned_frame_encoder_transfer_no_improvement_positive_control_passed",
+      "learned_encoder_transfer_helps": false,
+      "missing_verifier_gaps": [
+        {
+          "candidate_design": "larger learned frame encoder, more reproduced solved traces, or adapter-conditioned value head with a hardware-portable path",
+          "failure_mode": "small learned frame encoder over the current solved set did not produce a decision-grade held-out OfflineSolver state reduction",
+          "gap_id": "GAP-4331",
+          "missing_discriminator": "game-invariant ARC value representation",
+          "priority": "medium"
+        }
+      ],
+      "n_held_out_levels": 13,
+      "verifier_is_oracle": false
+    },
+    "robust_aggregator": {
+      "aggregator_survives_missing_artifact": true,
+      "artifact_path": "results/experiment_4308_adversarial_verify_degenerate_controls_and_robust_capstone.json",
+      "available": true,
+      "error": "",
+      "honest_verdict": "complete: degenerate_controls_and_robust_capstone_guards_added_tests_pass",
+      "robust_aggregator_added": true
+    },
+    "shallow_tail_sweep": {
+      "artifact_path": "results/experiment_4330_arc_adapter_free_discovery_sweep_shallow_tail.json",
+      "available": true,
+      "excluded_games": [
+        "ar25",
+        "ka59",
+        "tr87",
+        "ft09",
+        "sc25"
+      ],
+      "games_advanced": [],
+      "honest_verdict": "complete: adapter_free_shallow_tail_no_advance_real_exploration_total13",
+      "offline_reproduced": false,
+      "prior_reproducible_total_levels": 13,
+      "reproducible_total_levels": 13,
+      "swept_games": [
+        "bp35",
+        "dc22",
+        "g50t",
+        "lf52",
+        "re86",
+        "s5i5",
+        "sb26",
+        "vc33",
+        "tn36"
+      ],
+      "tn36_schema_finding": {
+        "action": "ACTION6",
+        "dead_end_class": "solver_exception_TypeError",
+        "exploration_actions_used": 26,
+        "game": "tn36",
+        "normalizer": "normalise_tn36_click_payload",
+        "payload_schema": {
+          "x": "int display_x",
+          "y": "int display_y"
+        },
+        "rejects_nested_payloads": true,
+        "schema": "ACTION6 data must be top-level {\"x\": int, \"y\": int}",
+        "source_evidence": "self.action.data[\"x\"], self.action.data[\"y\"]",
+        "wrapped_payload_explorer_advanced": false
+      },
+      "verifier_is_oracle": true
+    }
+  }
+}

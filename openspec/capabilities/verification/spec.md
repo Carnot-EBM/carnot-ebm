@@ -18347,6 +18347,106 @@ checksum over the reconciled registry, gaps, and manifest files. If the
 registry, gaps, or manifest cannot parse, then it writes
 `honest_verdict=blocked_ledgers_unparseable` and stops without reconciliation.
 
+### REQ-VERIFY-4333: Verifier Registry And Gaps Hygiene For .400 Truth
+
+The repository SHALL provide Exp 4333 at
+`python/carnot/experiment_4333_verifier_registry_gaps_hygiene.py` and
+`results/experiment_4333_verifier_registry_gaps_hygiene.py` to reconcile
+`ops/verifier_registry.yaml`, `ops/verifier_gaps.md`, and
+`ops/exclusion_manifest.yaml` to the `.400` verifier truth. Before mutating
+ledgers, the runner SHALL parse all three ledgers. If any required ledger cannot
+parse, the runner SHALL write a terminal artifact with
+`honest_verdict=blocked_ledgers_unparseable`, bare bool
+`regression_guard_passed=false`, empty `gaps_logged`, and SHALL stop without
+mutating the registry, gaps, or manifest.
+
+The runner SHALL use the reusable `aggregate_available_report_gaps` helper from
+`python/carnot/reporting/capstone_aggregate_available.py` for the `.400` outcome
+artifacts `results/experiment_4325_in_generation_moat_replicate_second_corpus.json`,
+`results/experiment_4326_adaptive_guided_generation_scaleup.json`,
+`results/experiment_4327_e3_executable_world_model_ar25.json`,
+`results/experiment_4328_e3_executable_world_model_ka59.json`,
+`results/experiment_4329_e3_executable_world_model_tr87_ft09.json`,
+`results/experiment_4330_arc_adapter_free_discovery_sweep_shallow_tail.json`,
+and `results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json`.
+Missing or flagged `.400` artifacts SHALL be recorded as per-axis gaps in the
+aggregate availability report and SHALL NOT hard-block reconciliation of other
+available axes. The runner SHALL cite
+`results/experiment_4308_adversarial_verify_degenerate_controls_and_robust_capstone.json`
+as the robust aggregator evidence and require `robust_aggregator_added=true` and
+`aggregator_survives_missing_artifact=true` when that artifact is present.
+
+When ledgers parse, the runner SHALL run the GAP-4 execution regression guard
+against the `.399` recorded standing capability from
+`results/experiment_4321_verifier_registry_gaps_hygiene.json`. The guard SHALL
+replay the canonical cached GAP-4 ARC-1 candidate set and require no regression
+in vote pass@2 `0.4516`, gated pass@2 `0.5806`, `headroom_recovered=4`, and
+`vote_wins_lost=0`. It SHALL expose bare bool `regression_guard_passed`.
+
+The runner SHALL record the `.400` outcomes that are available in the GAP-4 /
+oracle-distinct ARC registry slot: Exp 4325 `in_generation_moat_replicates=false`,
+`controls_differentiated=false`, `scorer_leak_recheck_passed=false`, and
+`honest_verdict=scorer_leaky_on_second_corpus`; Exp 4326
+`adaptive_guidance_beats_control=false`, `domain_used=reasoning_corpus_fallback`,
+`controls_differentiated=true`, `scorer_leak_recheck_passed=true`,
+`carnot_minus_best_control_delta=0.15`, and `adaptive_ci95=[-0.075,0.35]`;
+Exp 4327/4328/4329 E3 partials with `offline_reproduced=false`,
+`reproduced_levels=0`, and their residual missing-world-model-rule classes;
+Exp 4330 `reproducible_total_levels=13`, `games_advanced=[]`, and the tn36
+ACTION6 top-level `{x,y}` schema finding; and Exp 4331
+`learned_encoder_transfer_helps=false`, `cross_game_state_reduction=1.0084925690021231`,
+`cross_game_state_reduction_ci95=[1.0,1.0303068758652514]`, and
+`n_held_out_levels=13`. The `.400` state SHALL show the in-generation replication
+did not hold on the second corpus, adaptive generation stayed bounded/null, E3
+recorded missing world-model-rule gaps without reproduced levels, the shallow-tail
+sweep held the reproducible total at 13 while recording the tn36 schema, and the
+learned frame encoder sharpened rather than closed the game-invariant value gap.
+
+The gaps ledger SHALL log or update missing-verifier backlog entries using the
+schema in `ops/verifier_gaps.md`. At minimum the runner SHALL log a leak-free
+second-corpus partial-state scorer gap from Exp 4325 when the scorer is leaky,
+log `GAP-ARC-GRID-GENERATION-SCORER-4326` when Exp 4326's adaptive arm remains
+open, log per-game missing-world-model-rule gaps from E3 partials including
+`GAP-E3-WORLD-MODEL-RULE-AR25-4327`, `GAP-E3-WORLD-MODEL-RULE-KA59-4328`,
+`GAP-E3-WORLD-MODEL-RULE-TR87-4329`, and
+`GAP-E3-WORLD-MODEL-RULE-FT09-4329`, and update the game-invariant ARC value
+representation gap from Exp 4331. The exclusion
+manifest SHALL reflect the Exp 4314 cross-domain selection retirement so that
+future planners do not re-open the retired domain-bound selection axis without
+operator authorization.
+
+The terminal artifact SHALL write
+`results/experiment_4333_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_logged`, bare
+bool `registry_reconciled`, bare bool `manifest_reconciled`, `v400_outcomes`,
+`availability_report`, `random_seed`, `reproducibility_checksum`,
+`model_specs`, `field_principles`, `spec_refs`, `duration_s`, and
+`inference_substrate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled + regression guard result (using the robust aggregator, NOT a hard-block).`;
+`regression_guard_passed` = `BARE bool: the GAP-4 execution numbers did not regress vs .399 -- the standing-capability guard.`;
+`gaps_logged` = `List of new/updated missing-verifier gap entries (failure mode + missing discriminator + candidate design + priority) -- the verifier build backlog.`;
+`reproducibility_checksum` = `Hash of the reconciled registry + gaps + manifest; catches silent drift.`
+
+### SCENARIO-VERIFY-4333: .400 Reconciliation Uses Robust Aggregator And Logs Gaps
+
+Given the registry, gaps, and exclusion manifest parse, the `.400`
+in-generation replication, adaptive guided generation, E3 deep-tail world-model,
+shallow-tail sweep, and learned-encoder cross-game transfer artifacts may be
+partially available, and the Exp 4308 robust aggregate-available helper is
+present, when Exp 4333 runs, then it uses the robust helper to record missing or
+flagged `.400` artifacts as per-axis availability gaps rather than blocking the
+entire run, runs the GAP-4 regression guard against the `.399` recorded replay,
+writes `regression_guard_passed=true`, reconciles the registry to the available
+`.400` truth, records the second-corpus leak, adaptive bounded null, E3 missing
+world-model-rule partials, shallow-tail no-advance plus tn36 schema, and learned
+encoder transfer null, logs or updates `GAP-ARC-GRID-GENERATION-SCORER-4326`,
+the E3 per-game missing-world-model-rule gaps, and `GAP-4331` through
+`gaps_logged`, reflects the cross-domain selection retirement in the exclusion
+manifest, and declares a reproducibility checksum over the reconciled registry,
+gaps, and manifest files. If the registry, gaps, or manifest cannot parse, then
+it writes `honest_verdict=blocked_ledgers_unparseable` and stops without
+reconciliation.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
