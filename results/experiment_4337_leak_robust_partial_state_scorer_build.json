@@ -1,0 +1,567 @@
+{
+  "acceptance_gate": true,
+  "adversarial_verify": {
+    "critical_flags": [],
+    "parsed_report": null,
+    "returncode": 0,
+    "status": "clean",
+    "stderr_tail": "",
+    "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n",
+    "warn_flags": []
+  },
+  "canvas_generation": [
+    {
+      "canvas_non_mask_count": 23,
+      "corpus_name": "in_distribution_error_corpus_v1",
+      "eval_rc": 0,
+      "expected_logits_file_size_bytes": 268435456,
+      "logits_file_size_bytes": 268435456,
+      "noise_level": 0.3,
+      "pos0_top_tokens": [
+        [
+          236743,
+          " ",
+          26.2421
+        ],
+        [
+          4,
+          "<mask>",
+          25.1838
+        ],
+        [
+          1437,
+          "the",
+          24.495
+        ],
+        [
+          236787,
+          ":",
+          23.3962
+        ],
+        [
+          659,
+          " are",
+          23.3961
+        ],
+        [
+          236771,
+          "0",
+          23.2966
+        ]
+      ],
+      "prompt_ids_count": 13,
+      "score_finite_sample": true,
+      "score_shape": [
+        256,
+        262144
+      ],
+      "status": "extracted"
+    },
+    {
+      "canvas_non_mask_count": 45,
+      "corpus_name": "step_error_balanced_v2",
+      "eval_rc": 0,
+      "expected_logits_file_size_bytes": 268435456,
+      "logits_file_size_bytes": 268435456,
+      "noise_level": 0.3,
+      "pos0_top_tokens": [
+        [
+          236743,
+          " ",
+          27.4657
+        ],
+        [
+          4,
+          "<mask>",
+          26.5932
+        ],
+        [
+          236772,
+          "-",
+          26.4852
+        ],
+        [
+          236862,
+          "+",
+          25.6032
+        ],
+        [
+          236751,
+          "s",
+          25.3382
+        ],
+        [
+          236771,
+          "0",
+          25.3144
+        ]
+      ],
+      "prompt_ids_count": 13,
+      "score_finite_sample": true,
+      "score_shape": [
+        256,
+        262144
+      ],
+      "status": "extracted"
+    }
+  ],
+  "duration_s": 60.000571,
+  "experiment": 4337,
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed. A leak-robust scorer BUILT (scorer_leak_audit_passed=true on >=2 corpora -- unblocks exp4338) and a complete_no_leak_robust_partial_state_scorer (the direction is not viable, retire) are BOTH decision-grade.",
+    "masked_answer_recovery_auroc": "BARE float: max per-corpus AUROC of recovering hidden answer identity from the MASKED canvas reward signal -- must be near chance; a high value means the scorer still leaks.",
+    "model_specs": "DiffusionGemma GGUF + PR binary + the reward-head architecture + the timestep conditioning + the 2 corpora + n + seeds; required methodology.",
+    "preconditions_checked": "Records the PR-binary + GGUF cache + >=2-corpora + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.",
+    "process_ranking_auroc": "BARE float: min per-corpus AUROC of ranking partial states by genuine process quality -- must be non-degenerate (>0.5) so the scorer is a real reward, not a constant.",
+    "random_seed": "Determinism precondition for the canvas generation + reward-head training + leak audit.",
+    "reproducibility_checksum": "Hash of the 2 corpora + the reward-head config + PR-binary inputs; lets a third party re-run.",
+    "scorer_leak_audit_passed": "BARE bool: exp4338 is gated on this; true iff the scorer SURVIVES the answer-cell-masked leak audit on BOTH corpora (no answer recovery AND non-degenerate process ranking) -- the diagnosed fix for exp4325's leak.",
+    "scorer_module_path": "Path to the persisted leak-robust scorer module -- the deliverable exp4338 reuses.",
+    "verifier_is_oracle": "BARE bool=false -- the learned reward head is oracle-distinct (NOT the executable oracle)."
+  },
+  "honest_verdict": "complete: leak_robust_partial_state_scorer_built",
+  "inference_substrate": "live_llm_inference",
+  "masked_answer_recovery_auroc": 0.559682,
+  "model_specs": {
+    "canvas_generation": {
+      "answer_cells_visible_to_head": false,
+      "canvas_len": 256,
+      "mask_token_id": 4,
+      "per_corpus": [
+        {
+          "canvas_non_mask_count": 23,
+          "corpus_name": "in_distribution_error_corpus_v1",
+          "eval_rc": 0,
+          "expected_logits_file_size_bytes": 268435456,
+          "logits_file_size_bytes": 268435456,
+          "noise_level": 0.3,
+          "pos0_top_tokens": [
+            [
+              236743,
+              " ",
+              26.2421
+            ],
+            [
+              4,
+              "<mask>",
+              25.1838
+            ],
+            [
+              1437,
+              "the",
+              24.495
+            ],
+            [
+              236787,
+              ":",
+              23.3962
+            ],
+            [
+              659,
+              " are",
+              23.3961
+            ],
+            [
+              236771,
+              "0",
+              23.2966
+            ]
+          ],
+          "prompt_ids_count": 13,
+          "score_finite_sample": true,
+          "score_shape": [
+            256,
+            262144
+          ],
+          "status": "extracted"
+        },
+        {
+          "canvas_non_mask_count": 45,
+          "corpus_name": "step_error_balanced_v2",
+          "eval_rc": 0,
+          "expected_logits_file_size_bytes": 268435456,
+          "logits_file_size_bytes": 268435456,
+          "noise_level": 0.3,
+          "pos0_top_tokens": [
+            [
+              236743,
+              " ",
+              27.4657
+            ],
+            [
+              4,
+              "<mask>",
+              26.5932
+            ],
+            [
+              236772,
+              "-",
+              26.4852
+            ],
+            [
+              236862,
+              "+",
+              25.6032
+            ],
+            [
+              236751,
+              "s",
+              25.3382
+            ],
+            [
+              236771,
+              "0",
+              25.3144
+            ]
+          ],
+          "prompt_ids_count": 13,
+          "score_finite_sample": true,
+          "score_shape": [
+            256,
+            262144
+          ],
+          "status": "extracted"
+        }
+      ]
+    },
+    "corpora": [
+      {
+        "checksum": "68ce4c21d0d1a5ba589178160372a28cf5b9f893c3a05162e5898257af11dce7",
+        "label_counts": {
+          "correct": 150,
+          "incorrect": 150
+        },
+        "n": 300,
+        "name": "in_distribution_error_corpus_v1",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/in_distribution_error_corpus_v1.json"
+      },
+      {
+        "checksum": "4d66d052127c46564d7aec212c37d5bb8d0ec43b1247dd79ba4db89e5c9eabee",
+        "label_counts": {
+          "correct": 500,
+          "incorrect": 500
+        },
+        "n": 1000,
+        "name": "step_error_balanced_v2",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/step_error_balanced_v2.json"
+      }
+    ],
+    "diffusiongemma": {
+      "active_params_b": 4,
+      "auto_tokenizer_used": false,
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "canvas_len": 256,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "loader_backend": "gguf_metadata",
+      "mask_token_id": 4,
+      "model_loaded": true,
+      "pr_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "pr_binary_call": "llama-diffusion-gemma-eval <gguf> <prompt_ids.i32> <canvas_ids.i32> <out_logits.bin>",
+      "quantization": "Q4_K_M",
+      "runtime": "llama.cpp PR diffusion-gemma eval binary",
+      "total_params_b": 26,
+      "vocab_size": 262144
+    },
+    "leak_audit": {
+      "answer_recovery_ceiling": 0.6,
+      "per_corpus": {
+        "in_distribution_error_corpus_v1": {
+          "answer_masked_cells": 2031,
+          "answer_recovery_passed": true,
+          "heldout_records": 228,
+          "masked_answer_recovery_auroc": 0.558633,
+          "preview": [
+            {
+              "answer_cell_count": 22,
+              "answer_signature_label": true,
+              "corpus_name": "in_distribution_error_corpus_v1",
+              "label": true,
+              "noise_level": 0.35,
+              "revealed_cells": 24,
+              "source_text_sha256": "f67b6ebc5eb7f5f6ed86d75aeda0784d94dda75b64907ea3deabb5d2396e45eb",
+              "task_id": "gsm8k_1364_5_0",
+              "timestep": 0
+            },
+            {
+              "answer_cell_count": 22,
+              "answer_signature_label": true,
+              "corpus_name": "in_distribution_error_corpus_v1",
+              "label": true,
+              "noise_level": 0.22,
+              "revealed_cells": 48,
+              "source_text_sha256": "f67b6ebc5eb7f5f6ed86d75aeda0784d94dda75b64907ea3deabb5d2396e45eb",
+              "task_id": "gsm8k_1364_5_0",
+              "timestep": 1
+            },
+            {
+              "answer_cell_count": 22,
+              "answer_signature_label": true,
+              "corpus_name": "in_distribution_error_corpus_v1",
+              "label": true,
+              "noise_level": 0.1,
+              "revealed_cells": 72,
+              "source_text_sha256": "f67b6ebc5eb7f5f6ed86d75aeda0784d94dda75b64907ea3deabb5d2396e45eb",
+              "task_id": "gsm8k_1364_5_0",
+              "timestep": 2
+            }
+          ],
+          "process_ranking_auroc": 0.910511,
+          "process_ranking_passed": true
+        },
+        "step_error_balanced_v2": {
+          "answer_masked_cells": 54,
+          "answer_recovery_passed": true,
+          "heldout_records": 750,
+          "masked_answer_recovery_auroc": 0.559682,
+          "preview": [
+            {
+              "answer_cell_count": 0,
+              "answer_signature_label": false,
+              "corpus_name": "step_error_balanced_v2",
+              "label": false,
+              "noise_level": 0.35,
+              "revealed_cells": 20,
+              "source_text_sha256": "ec46390ff99987de1f6fbb8c69b997db1859df2c579ff3f5b140e177344d9abd",
+              "task_id": "deception_prm_train_p1_6:step_0006",
+              "timestep": 0
+            },
+            {
+              "answer_cell_count": 0,
+              "answer_signature_label": false,
+              "corpus_name": "step_error_balanced_v2",
+              "label": false,
+              "noise_level": 0.22,
+              "revealed_cells": 40,
+              "source_text_sha256": "ec46390ff99987de1f6fbb8c69b997db1859df2c579ff3f5b140e177344d9abd",
+              "task_id": "deception_prm_train_p1_6:step_0006",
+              "timestep": 1
+            },
+            {
+              "answer_cell_count": 0,
+              "answer_signature_label": false,
+              "corpus_name": "step_error_balanced_v2",
+              "label": false,
+              "noise_level": 0.1,
+              "revealed_cells": 62,
+              "source_text_sha256": "ec46390ff99987de1f6fbb8c69b997db1859df2c579ff3f5b140e177344d9abd",
+              "task_id": "deception_prm_train_p1_6:step_0006",
+              "timestep": 2
+            }
+          ],
+          "process_ranking_auroc": 0.704633,
+          "process_ranking_passed": true
+        }
+      },
+      "process_ranking_floor": 0.6
+    },
+    "random_seed": 4337,
+    "reward_head": {
+      "architecture": "answer-masked noisy canvas char_wb TF-IDF ngram(3,5) + balanced LogisticRegression(liblinear)",
+      "class": "DinaLRMPartialStateScorer",
+      "inference_time_noise_ensembling": "probability averaged over noise-level offsets -0.05/0/+0.05",
+      "max_features": 8000,
+      "module": "carnot.verify.dina_lrm_partial_state_scorer",
+      "noise_calibrated_uncertainty": "per-timestep train residual mean added as an energy penalty",
+      "noise_levels": [
+        0.35,
+        0.22,
+        0.1
+      ],
+      "score_api": "score_partial_state(canvas_ids, step) -> energy",
+      "timestep_conditioning": "feature tokens for denoising timestep and noise-level bin",
+      "train_records": 2922,
+      "visible_fractions": [
+        0.35,
+        0.55,
+        0.8
+      ]
+    }
+  },
+  "per_corpus_audit": {
+    "in_distribution_error_corpus_v1": {
+      "answer_masked_cells": 2031,
+      "answer_recovery_passed": true,
+      "heldout_records": 228,
+      "masked_answer_recovery_auroc": 0.558633,
+      "preview": [
+        {
+          "answer_cell_count": 22,
+          "answer_signature_label": true,
+          "corpus_name": "in_distribution_error_corpus_v1",
+          "label": true,
+          "noise_level": 0.35,
+          "revealed_cells": 24,
+          "source_text_sha256": "f67b6ebc5eb7f5f6ed86d75aeda0784d94dda75b64907ea3deabb5d2396e45eb",
+          "task_id": "gsm8k_1364_5_0",
+          "timestep": 0
+        },
+        {
+          "answer_cell_count": 22,
+          "answer_signature_label": true,
+          "corpus_name": "in_distribution_error_corpus_v1",
+          "label": true,
+          "noise_level": 0.22,
+          "revealed_cells": 48,
+          "source_text_sha256": "f67b6ebc5eb7f5f6ed86d75aeda0784d94dda75b64907ea3deabb5d2396e45eb",
+          "task_id": "gsm8k_1364_5_0",
+          "timestep": 1
+        },
+        {
+          "answer_cell_count": 22,
+          "answer_signature_label": true,
+          "corpus_name": "in_distribution_error_corpus_v1",
+          "label": true,
+          "noise_level": 0.1,
+          "revealed_cells": 72,
+          "source_text_sha256": "f67b6ebc5eb7f5f6ed86d75aeda0784d94dda75b64907ea3deabb5d2396e45eb",
+          "task_id": "gsm8k_1364_5_0",
+          "timestep": 2
+        }
+      ],
+      "process_ranking_auroc": 0.910511,
+      "process_ranking_passed": true
+    },
+    "step_error_balanced_v2": {
+      "answer_masked_cells": 54,
+      "answer_recovery_passed": true,
+      "heldout_records": 750,
+      "masked_answer_recovery_auroc": 0.559682,
+      "preview": [
+        {
+          "answer_cell_count": 0,
+          "answer_signature_label": false,
+          "corpus_name": "step_error_balanced_v2",
+          "label": false,
+          "noise_level": 0.35,
+          "revealed_cells": 20,
+          "source_text_sha256": "ec46390ff99987de1f6fbb8c69b997db1859df2c579ff3f5b140e177344d9abd",
+          "task_id": "deception_prm_train_p1_6:step_0006",
+          "timestep": 0
+        },
+        {
+          "answer_cell_count": 0,
+          "answer_signature_label": false,
+          "corpus_name": "step_error_balanced_v2",
+          "label": false,
+          "noise_level": 0.22,
+          "revealed_cells": 40,
+          "source_text_sha256": "ec46390ff99987de1f6fbb8c69b997db1859df2c579ff3f5b140e177344d9abd",
+          "task_id": "deception_prm_train_p1_6:step_0006",
+          "timestep": 1
+        },
+        {
+          "answer_cell_count": 0,
+          "answer_signature_label": false,
+          "corpus_name": "step_error_balanced_v2",
+          "label": false,
+          "noise_level": 0.1,
+          "revealed_cells": 62,
+          "source_text_sha256": "ec46390ff99987de1f6fbb8c69b997db1859df2c579ff3f5b140e177344d9abd",
+          "task_id": "deception_prm_train_p1_6:step_0006",
+          "timestep": 2
+        }
+      ],
+      "process_ranking_auroc": 0.704633,
+      "process_ranking_passed": true
+    }
+  },
+  "preconditions_checked": [
+    {
+      "command": "ls /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "exists": true,
+      "ok": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "resource": "pr_binary",
+      "size_bytes": 26400
+    },
+    {
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "cache_entries_preview": [
+        "blobs",
+        "refs",
+        "snapshots"
+      ],
+      "cache_error": null,
+      "cache_non_empty": true,
+      "command": "ls /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/",
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "ok": true,
+      "resolve_error": null,
+      "resource": "diffusiongemma_cache"
+    },
+    {
+      "active_training_processes": [],
+      "ok": true,
+      "process_check_error": null,
+      "resource": "trm_training_stand_down",
+      "results_trm_runs_touched": false
+    },
+    {
+      "auto_tokenizer_used": false,
+      "backend": "gguf_metadata",
+      "detail": "llama_cpp vocab_only failed (ValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf); embedded GGUF tokenizer metadata OK",
+      "elapsed_s": 0.491335,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "mode": "embedded_vocab_metadata",
+      "ok": true,
+      "resource": "gguf_vocab_loader",
+      "token_count": 15,
+      "token_ids_preview": [
+        3,
+        236743,
+        3,
+        236743,
+        111359,
+        236743,
+        3,
+        236743
+      ],
+      "vocab_only": false
+    },
+    {
+      "corpora": [
+        {
+          "checksum": "68ce4c21d0d1a5ba589178160372a28cf5b9f893c3a05162e5898257af11dce7",
+          "has_both_labels": true,
+          "item_count": 300,
+          "label_counts": {
+            "correct": 150,
+            "incorrect": 150
+          },
+          "name": "in_distribution_error_corpus_v1",
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/data/in_distribution_error_corpus_v1.json"
+        },
+        {
+          "checksum": "4d66d052127c46564d7aec212c37d5bb8d0ec43b1247dd79ba4db89e5c9eabee",
+          "has_both_labels": true,
+          "item_count": 1000,
+          "label_counts": {
+            "correct": 500,
+            "incorrect": 500
+          },
+          "name": "step_error_balanced_v2",
+          "path": "/home/ianblenke/github.com/ianblenke/carnot/data/step_error_balanced_v2.json"
+        }
+      ],
+      "ok": true,
+      "reason": "ok",
+      "resource": "two_oracle_distinct_reasoning_corpora"
+    }
+  ],
+  "process_ranking_auroc": 0.704633,
+  "random_seed": 4337,
+  "reproducibility_checksum": "2c463742cfc253c3d93ca1cd4a2fee7636d23c30cd8736c224f48aa70eb6268d",
+  "schema": "leak_robust_partial_state_scorer_build_v1",
+  "scorer_leak_audit_passed": true,
+  "scorer_loadable": true,
+  "scorer_module_path": "/home/ianblenke/github.com/ianblenke/carnot/results/dina_lrm_partial_state_scorer_exp4337.pkl",
+  "spec_refs": [
+    "REQ-VERIFY-4337",
+    "SCENARIO-VERIFY-4337"
+  ],
+  "train_records": 2922,
+  "verifier_is_oracle": false
+}
