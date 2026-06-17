@@ -16822,6 +16822,89 @@ verifier gap as `missing_verifier_gaps`. If fewer than three domains load, then
 it writes `honest_verdict=blocked_insufficient_domains` with all required bare
 fields present.
 
+### REQ-VERIFY-4314: IR3DE+CASCAL Cross-Domain Selector Rerun
+
+The repository SHALL provide Exp 4314 at
+`python/carnot/experiment_4314_cross_domain_selector_ir3de_cascal.py` and
+`results/experiment_4314_cross_domain_selector_ir3de_cascal.py` to rebuild the
+Exp 4305 cross-domain selector with an IR3DE-style linear domain-expert router,
+CASCAL train-only synthetic selector-task pretraining, and ContextPRM-style
+domain-agnostic step-coherence features. Before measurement, the runner SHALL
+load the ARC family pool, the ARC-GEN non-degenerate pool, a FoVer/math
+step-selection pool, and the Exp 4244 Set-Encoder build/model. If fewer than
+three domains load, it SHALL write
+`honest_verdict=blocked_insufficient_domains`, keep
+`cross_domain_selection_holds=false`, keep `verifier_is_oracle=false`, record
+the available and missing domains, and stop without fabricating a held-out
+domain result.
+
+When at least three domains load, the runner SHALL assemble and persist a
+cross-domain candidate pool and manifest where every task row carries
+`domain_id`, family/generator provenance, exact `target_hash`, realistic
+candidate counts, held-out `vote_at_1 > 0.05`, and held-out `oracle_at_k < 1.0`.
+The router SHALL train only on TRAIN domains and freeze a HELD-OUT domain with
+at least roughly 16 held-out tasks when available. The IR3DE router SHALL be a
+ridge-regressed linear domain-expert mixture over normalized selector features.
+The CASCAL pretraining data SHALL be generated only from train-domain selector
+tasks and SHALL not use held-out-domain target labels. The ContextPRM feature
+block SHALL be domain-agnostic coherence features derived from each candidate's
+relation to its candidate set rather than from domain or family identity. The
+runner SHALL compute router+set_encoder@1, vote@1, oracle@K, matched control,
+bare float `cross_domain_delta = router+set_encoder@1 - vote@1`, and a
+task-level bootstrap CI95 from at least 2000 resamples for the primary
+held-out-domain read. It SHALL report held-out-domain lifts separately in
+`per_domain_delta`.
+
+The runner SHALL perform a load-bearing label-ablation arm by rerunning the
+router with domain and family labels removed from its input. The ablation SHALL
+keep all ContextPRM and normalized selector features available.
+`label_ablation_robust` SHALL be true only when held-out accuracy survives this
+label removal and the ablated delta remains positive. The terminal artifact
+SHALL write `results/experiment_4314_cross_domain_selector_ir3de_cascal.json`
+with `honest_verdict`, bare bool `cross_domain_selection_holds`, bare float
+`cross_domain_delta`, `cross_domain_delta_ci95`, bare float `vote_at_1`, bare
+float `oracle_at_k`, bare bool `label_ablation_robust`, `per_domain_delta`,
+bare bool `verifier_is_oracle=false`, bare int `random_seed`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`inference_substrate`, `duration_s`, `acceptance_gate`, and
+`adversarial_verify`. `cross_domain_selection_holds` SHALL be true iff the
+held-out-domain delta is positive, the CI95 excludes zero, `vote_at_1 > 0.05`,
+`oracle_at_k < 1.0`, `cross_domain_delta < 0.95`, and
+`label_ablation_robust=true`. If the powered gate does not hold, the artifact
+SHALL report the residual `GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305`
+missing-verifier gap.
+
+The required field principles are:
+`honest_verdict` = `Terminal-prefixed. A cross-domain survive (the moat escapes the domain bound), a POWERED collapse (the moat is domain-bound -> retire the ask), a label-ablation failure (the router read the label), and an honest blocked_insufficient_domains are ALL COMPLETE and decision-grade.`;
+`cross_domain_selection_holds` = `BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff held-out-DOMAIN router+set_encoder@1 - vote@1 > 0 AND CI95-excl-0 AND non-degenerate guards AND label_ablation_robust -- the strongest selection result (escapes the math/ARC domain bound).`;
+`cross_domain_delta` = `BARE float: held-out-DOMAIN router+set_encoder@1 - vote@1 -- compare to exp4305's +0.231 (the IR3DE+CASCAL upgrade should tighten the CI; a positive held-out delta with CI95-excl-0 is the cross-domain moat).`;
+`cross_domain_delta_ci95` = `Task-level bootstrap CI95 (>=2000 resamples) of the held-out delta -- excluding 0 is the decision-grade close (exp4305's [-0.115,0.538] included 0).`;
+`vote_at_1` = `BARE float: the vote baseline on the held-out domain -- MUST be > 0.05 (if 0, the pool is wrong-majority-only and the delta is degenerate).`;
+`oracle_at_k` = `BARE float: positive-control ceiling on the held-out domain -- MUST be < 1.0 (a sub-1.0 ceiling is real headroom the verifier must earn).`;
+`label_ablation_robust` = `BARE bool: true iff held-out accuracy SURVIVES removing the domain/family label from the router input -- the anti-leak proof (the moat must use task structure, not domain identity).`;
+`per_domain_delta` = `The lift reported SEPARATELY per held-out domain (arc / arcgen / fover) -- guards the one-domain-dominates failure mode.`;
+`verifier_is_oracle` = `BARE bool=false -- a learned IR3DE router + set-encoder over cross-domain pools, no demo execution (oracle-distinct).`;
+`random_seed` = `Determinism precondition; the cross-domain sampling + domain-split + CASCAL synthetic-task generation reproducible.`;
+`reproducibility_checksum` = `Hash of the cross-domain pool + the domain manifest + the IR3DE router + the CASCAL synthetic set; lets a third party re-run.`;
+`model_specs` = `The 3-domain provenance + the IR3DE linear router + the CASCAL pretrain + the ContextPRM coherence features + the domain-disjoint split + the label-ablation protocol; required methodology.`
+
+### SCENARIO-VERIFY-4314: Powered Held-Out Domain Gate With Label Ablation
+
+Given the ARC family pool, ARC-GEN non-degenerate pool, FoVer/math step pool,
+and Exp 4244 Set-Encoder artifacts are readable, when Exp 4314 runs, then it
+persists the cross-domain pool and manifest, trains the IR3DE+CASCAL router only
+on train domains, freezes the held-out domain, reports
+`cross_domain_selection_holds`, `cross_domain_delta`,
+`cross_domain_delta_ci95`, `vote_at_1`, `oracle_at_k`,
+`label_ablation_robust`, `per_domain_delta`, `verifier_is_oracle=false`,
+`random_seed`, `reproducibility_checksum`, and `model_specs`, and runs
+adversarial verification cleanly without tripping `DEGENERATE_SEPARATION`. If
+the held-out-domain gate collapses or the label ablation fails, then it still
+writes a complete decision-grade artifact and reports the residual missing
+verifier gap as `missing_verifier_gaps`. If fewer than three domains load, then
+it writes `honest_verdict=blocked_insufficient_domains` with all required bare
+fields present.
+
 ### REQ-VERIFY-4306: Powered Cross-Domain Self-Learning Bootstrap
 
 The repository SHALL provide Exp 4306 at
