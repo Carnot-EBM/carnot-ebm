@@ -1,0 +1,26 @@
+{
+  "experiment": "arc_e3_cd82",
+  "game": "cd82",
+  "method": "executable_world_model_induce_verify_refactor_plan",
+  "paper": "arXiv:2605.05138",
+  "proposer": "codex/gpt-5.5",
+  "cell": 1,
+  "n_transitions": 120,
+  "grid_changing": 87,
+  "verifier_best_accuracy": 0.275,
+  "rounds": [
+    {
+      "round": "reuse",
+      "engine_loadable": true,
+      "accuracy": 0.275,
+      "n_correct": 33,
+      "n": 120
+    }
+  ],
+  "plan": null,
+  "duration_s": 0.5,
+  "honest_verdict": "complete_harness_validated_partial_model_0.28",
+  "verifier_is_oracle": false,
+  "inference_substrate": "live_llm_inference",
+  "notes": "Carnot WorldModelVerifier grounds the codex-induced model against real offline transitions; the LLM is the proposer, the verifier is the moat."
+}

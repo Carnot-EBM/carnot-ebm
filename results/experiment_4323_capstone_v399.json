@@ -1,0 +1,477 @@
+{
+  "arc": {
+    "acceptance_gate_passed": true,
+    "honest_verdict": "success: adapter_free_incremental_progress_cd82-fb555c5d_advanced_to_L1_total23",
+    "levels_completed": 1,
+    "new_levels_solved_this_task": 1,
+    "offline_reproduced": true,
+    "status": "included",
+    "total_levels": 23,
+    "total_levels_solved": 23
+  },
+  "availability_report": {
+    "available_artifact_keys": [
+      "4314_cross_domain",
+      "4315_in_generation",
+      "4316_efficiency",
+      "4317_arc",
+      "4318_self_learning",
+      "4319_off_arc",
+      "4321_registry",
+      "4322_hardware"
+    ],
+    "axes": {
+      "arc": {
+        "available_artifact_keys": [
+          "4317_arc"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "cross_domain": {
+        "available_artifact_keys": [
+          "4314_cross_domain"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "efficiency": {
+        "available_artifact_keys": [
+          "4316_efficiency"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "hardware": {
+        "available_artifact_keys": [
+          "4322_hardware"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "in_generation": {
+        "available_artifact_keys": [
+          "4315_in_generation"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "off_arc": {
+        "available_artifact_keys": [
+          "4319_off_arc"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "registry": {
+        "available_artifact_keys": [
+          "4321_registry"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "self_learning": {
+        "available_artifact_keys": [
+          "4318_self_learning"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      }
+    },
+    "flagged_artifacts_excluded": [],
+    "missing_upstream_artifacts": []
+  },
+  "cross_domain": {
+    "cross_domain_delta": 0.2307692308,
+    "cross_domain_delta_ci95": [
+      -0.1153846154,
+      0.5384615385
+    ],
+    "cross_domain_moat_holds": false,
+    "held_out_task_n": 26,
+    "honest_verdict": "complete: powered_collapse_cross_domain_domain_bound",
+    "label_ablation_robust": true,
+    "primary_held_out_domain": "fover",
+    "reported_cross_domain_selection_holds": false,
+    "status": "open",
+    "verifier_is_oracle": false
+  },
+  "cross_domain_moat_holds": false,
+  "duration_s": 0.39064,
+  "efficiency": {
+    "accuracy_always_energy": 0.6,
+    "accuracy_always_judge": 0.25,
+    "accuracy_cascade": 0.55,
+    "cost_ratio_cascade": 0.3019632358,
+    "efficiency_cascade_dominates": false,
+    "escalation_rate": 0.3,
+    "honest_verdict": "complete: always_energy_already_dominates_acc_cascade_0.5500_cost_ratio_0.3019632358",
+    "reported_cascade_dominates_controls": false,
+    "status": "open",
+    "verifier_is_oracle": false
+  },
+  "efficiency_cascade_dominates": false,
+  "experiment": 4323,
+  "field_principles": {
+    "cross_domain_moat_holds": "BARE bool: did the IR3DE+CASCAL rebuild close the cross-domain moat (held-out-DOMAIN CI95-excl-0, label_ablation_robust) -- escaping the verifier's math/ARC domain bound.",
+    "efficiency_cascade_dominates": "BARE bool: did the budget-aware cascade router reach near-judge accuracy at a fraction of cost -- the deployed \u00a75 efficiency operating point.",
+    "flagged_artifacts_excluded": "List of .399 artifacts excluded for flagged_adversarial -- the fabrication gate (their numbers are NOT aggregated).",
+    "headline_outcome": "One honest string aggregating the cross-domain + in-generation + efficiency + ARC + self-learning + off-ARC reads; the single line the .400 planner frames from.",
+    "honest_verdict": "Terminal-prefixed. The .399 close-state -- whether the cross-domain moat closed, the in-generation moat closed, the efficiency cascade deployed.",
+    "in_generation_moat_holds": "BARE bool: did reward-guided stitching close the in-generation moat (beats the engaged control AND self-reward SMC, controls_differentiated, CI95-excl-0) -- the external verifier steers generation better than intrinsic confidence.",
+    "paper_ready": "From publication_gate.py --json -- the G1-G4 status (FoVer headline stays the publication target; a closed cross-domain or in-generation moat, or a deployed cascade router, would be a new headline-grade supporting result).",
+    "per_axis_gaps": "List of .399 axes whose artifact was MISSING (reported as a gap, NOT defaulted False) -- the robust-aggregator fix that prevents the .397 spurious-all-False capstone bug.",
+    "reproducibility_checksum": "Hash of the aggregated upstream sha256 set; lets a third party re-derive the capstone.",
+    "verifier_is_oracle_honored": "BARE bool=true -- confirms every cited moat/headline result carried verifier_is_oracle=false (no circular/execution-grounded result -- e.g. exp4319 off-ARC -- headlines a moat).",
+    "verifier_thesis_state": "One honest string for the verifier thesis state -- the framing the .400 planner inherits."
+  },
+  "field_provenance": {
+    "cross_domain_moat_holds": {
+      "principle": "BARE bool: did the IR3DE+CASCAL rebuild close the cross-domain moat (held-out-DOMAIN CI95-excl-0, label_ablation_robust) -- escaping the verifier's math/ARC domain bound.",
+      "satisfied_by": "aggregation logic"
+    },
+    "efficiency_cascade_dominates": {
+      "principle": "BARE bool: did the budget-aware cascade router reach near-judge accuracy at a fraction of cost -- the deployed \u00a75 efficiency operating point.",
+      "satisfied_by": "aggregation logic"
+    },
+    "flagged_artifacts_excluded": {
+      "principle": "List of .399 artifacts excluded for flagged_adversarial -- the fabrication gate (their numbers are NOT aggregated).",
+      "satisfied_by": "aggregation logic"
+    },
+    "headline_outcome": {
+      "principle": "One honest string aggregating the cross-domain + in-generation + efficiency + ARC + self-learning + off-ARC reads; the single line the .400 planner frames from.",
+      "satisfied_by": "aggregation logic"
+    },
+    "honest_verdict": {
+      "principle": "Terminal-prefixed. The .399 close-state -- whether the cross-domain moat closed, the in-generation moat closed, the efficiency cascade deployed.",
+      "satisfied_by": "aggregation logic"
+    },
+    "in_generation_moat_holds": {
+      "principle": "BARE bool: did reward-guided stitching close the in-generation moat (beats the engaged control AND self-reward SMC, controls_differentiated, CI95-excl-0) -- the external verifier steers generation better than intrinsic confidence.",
+      "satisfied_by": "aggregation logic"
+    },
+    "paper_ready": {
+      "principle": "From publication_gate.py --json -- the G1-G4 status (FoVer headline stays the publication target; a closed cross-domain or in-generation moat, or a deployed cascade router, would be a new headline-grade supporting result).",
+      "satisfied_by": "aggregation logic"
+    },
+    "per_axis_gaps": {
+      "principle": "List of .399 axes whose artifact was MISSING (reported as a gap, NOT defaulted False) -- the robust-aggregator fix that prevents the .397 spurious-all-False capstone bug.",
+      "satisfied_by": "aggregation logic"
+    },
+    "reproducibility_checksum": {
+      "principle": "Hash of the aggregated upstream sha256 set; lets a third party re-derive the capstone.",
+      "satisfied_by": "aggregation logic"
+    },
+    "verifier_is_oracle_honored": {
+      "principle": "BARE bool=true -- confirms every cited moat/headline result carried verifier_is_oracle=false (no circular/execution-grounded result -- e.g. exp4319 off-ARC -- headlines a moat).",
+      "satisfied_by": "aggregation logic"
+    },
+    "verifier_thesis_state": {
+      "principle": "One honest string for the verifier thesis state -- the framing the .400 planner inherits.",
+      "satisfied_by": "aggregation logic"
+    }
+  },
+  "flagged_artifacts_excluded": [],
+  "hardware": {
+    "gatemate": {},
+    "hardware_continuity_recorded": true,
+    "honest_verdict": "complete: hardware_continuity_4322_kv260_kv260_terminal_xmutil_listapps_blocked_returncode_1_polarfire_polarfire_hash_verified_cpu_dispatch_succeeded_gatemate_blocked_gatemate_unreachable_ssh_usb_reachability_only",
+    "kv260": {},
+    "polarfire": {},
+    "status": "recorded"
+  },
+  "headline_outcome": "cross_domain_open__in_generation_moat__efficiency_open__arc_levels_23__self_learning_open__off_arc_execution_grounded_win__paper_ready",
+  "honest_verdict": "complete: v399_cross_domain_open_in_generation_moat_efficiency_open_arc_levels_23_self_learning_open_off_arc_execution_grounded_win",
+  "in_generation": {
+    "carnot_minus_best_control_delta": 0.225,
+    "carnot_minus_self_reward_smc_delta": 0.35,
+    "controls_differentiated": true,
+    "guidance_moat_ci95": [
+      0.075,
+      0.375
+    ],
+    "honest_verdict": "complete: diffusiongemma_step_stitching_moat_won",
+    "in_generation_moat_holds": true,
+    "reported_diffusiongemma_guidance_moat": true,
+    "status": "moat_holds",
+    "verifier_is_oracle": false
+  },
+  "in_generation_moat_holds": true,
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "off_arc": {
+    "accumulated_n": 200,
+    "honest_verdict": "success: off_arc_demofit_beats_vote_accumulated_ci_excludes_zero",
+    "off_arc_delta_ci95": [
+      0.005,
+      0.04
+    ],
+    "off_arc_demofit_beats_vote": true,
+    "off_arc_demofit_minus_vote_delta": 0.02,
+    "status": "execution_grounded_win",
+    "verifier_is_oracle": true
+  },
+  "oracle_distinct_violations": [],
+  "paper_ready": true,
+  "per_axis_gaps": [],
+  "publication_gate": {
+    "gates": {
+      "G1": {
+        "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      },
+      "G2": {
+        "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+        "pass": true
+      },
+      "G3": {
+        "detail": "no retracted phrasings asserted as live claims",
+        "hits": [],
+        "pass": true
+      },
+      "G4": {
+        "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+        "pass": true,
+        "source": "experiment_2850_fover_dual_condition_integrity_v4.json"
+      }
+    },
+    "note": "Stable 4-condition gate (ops/north-star.md \u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.",
+    "paper_ready": true,
+    "unmet_gates": []
+  },
+  "random_seed": 4323,
+  "registry": {
+    "honest_verdict": "complete: registry_gaps_manifest_reconciled_to_v399_truth_regression_guard_passed_True_gaps_logged_3_robust_aggregator_used",
+    "manifest_reconciled": true,
+    "registry_reconciled": true,
+    "regression_guard_passed": true,
+    "status": "reconciled"
+  },
+  "reproducibility_checksum": "b2b03885f13b2691c9662577cad7a9cefdc2e1f518bc812e97360bb8739a1b3c",
+  "required_artifact_fields": [
+    "honest_verdict",
+    "headline_outcome",
+    "cross_domain_moat_holds",
+    "in_generation_moat_holds",
+    "efficiency_cascade_dominates",
+    "verifier_thesis_state",
+    "flagged_artifacts_excluded",
+    "per_axis_gaps",
+    "paper_ready",
+    "verifier_is_oracle_honored",
+    "reproducibility_checksum"
+  ],
+  "schema": "carnot.capstone_v399_4323.v1",
+  "self_learning": {
+    "acceptance_gate_passed": true,
+    "cross_game_state_reduction": 1.0,
+    "cross_game_state_reduction_ci95": [
+      1.0,
+      1.0
+    ],
+    "cross_game_transfer_helps": false,
+    "honest_verdict": "complete: arc_cross_game_value_head_no_improvement_positive_control_passed",
+    "n_held_out_levels": 6,
+    "reported_cross_game_transfer_helps": false,
+    "status": "open",
+    "verifier_is_oracle": false
+  },
+  "spec_refs": [
+    "REQ-CAPSTONE-4323",
+    "SCENARIO-CAPSTONE-4323"
+  ],
+  "unmet_gates": [],
+  "upstream_provenance": [
+    {
+      "artifact_key": "4314_cross_domain",
+      "experiment_id": 4314,
+      "fields_imported": [
+        "cross_domain_selection_holds",
+        "cross_domain_delta",
+        "cross_domain_delta_ci95",
+        "label_ablation_robust",
+        "held_out_task_n",
+        "primary_held_out_domain",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4314_cross_domain_selector_ir3de_cascal.json",
+      "payload_reproducibility_checksum": "ac20e8d47fd66eaaa7a5ea5365d7130f48485c9c496042bbead451db0292b1b2",
+      "sha256": "25e37373090466e8ce14d3c5011b6ba4f9bcc0f25a5c700679fd1d3842dc5abb",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4315_in_generation",
+      "experiment_id": 4315,
+      "fields_imported": [
+        "diffusiongemma_guidance_moat",
+        "controls_differentiated",
+        "carnot_minus_best_control_delta",
+        "carnot_minus_self_reward_smc_delta",
+        "guidance_moat_ci95",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4315_diffusiongemma_reward_guided_stitching.json",
+      "payload_reproducibility_checksum": "4c4718a71874ea5a2f48e5cc8e6ea7ea6b370232d05f00b0dccca70abfce3e20",
+      "sha256": "d8b41e9ab649d4b0e6dcbb2612402988de81a880022b1307178c87d786e65f53",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4316_efficiency",
+      "experiment_id": 4316,
+      "fields_imported": [
+        "cascade_dominates_controls",
+        "accuracy_cascade",
+        "accuracy_always_energy",
+        "accuracy_always_judge",
+        "cost_ratio_cascade",
+        "escalation_rate",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4316_efficiency_cascade_router_deploy.json",
+      "payload_reproducibility_checksum": "5bc8aec4e5a2334ecd14c18b98111eb2dbe11956b6a30e92e1141e03d9401e9e",
+      "sha256": "82484f5c2779c5d6c2773537906e5d35e316d88fa81833ae64bc80919eb285a2",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4317_arc",
+      "experiment_id": 4317,
+      "fields_imported": [
+        "acceptance_gate_passed",
+        "total_levels",
+        "total_levels_solved",
+        "offline_reproduced",
+        "levels_completed",
+        "new_levels_solved_this_task"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4317_arc_incremental_progress_adapter_free.json",
+      "payload_reproducibility_checksum": "acde33d5720ac0fb1c42c0b535cfe02b296a2bd8283b8875bd60dccadb4ac702",
+      "sha256": "2bd11b27a2f00f0d172e7174f36633741ff6125a69eb98529c67f85930e200a1",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4318_self_learning",
+      "experiment_id": 4318,
+      "fields_imported": [
+        "acceptance_gate_passed",
+        "cross_game_transfer_helps",
+        "cross_game_state_reduction",
+        "cross_game_state_reduction_ci95",
+        "n_held_out_levels",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4318_arc_cross_game_learned_verifier_transfer.json",
+      "payload_reproducibility_checksum": "2c8025f3f86db19d413ac12254b475ff03a4ceb75d680cc67ec94b54af266c79",
+      "sha256": "9fb3979bbb9d4603c61cf5aa5e9cd30a47089199cbcf857e53110069a4afdfa5",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4319_off_arc",
+      "experiment_id": 4319,
+      "fields_imported": [
+        "off_arc_demofit_beats_vote",
+        "off_arc_demofit_minus_vote_delta",
+        "off_arc_delta_ci95",
+        "accumulated_n",
+        "verifier_is_oracle"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4319_off_arc_execution_verifier_transfer_accumulate.json",
+      "payload_reproducibility_checksum": "1c7c11a8b21e691955818b486c503913725a2b2f6b5efe44b3a2c3d9fd6abf2b",
+      "sha256": "4d417aa91bba43020cd499372c4411a8397fd3971ce41f1f8298803cbfdf6100",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4321_registry",
+      "experiment_id": 4321,
+      "fields_imported": [
+        "regression_guard_passed",
+        "registry_reconciled",
+        "manifest_reconciled"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4321_verifier_registry_gaps_hygiene.json",
+      "payload_reproducibility_checksum": "a636710f702888e1f404a4d941edf7ae0f7d76603e3b5e5ba24fbd175b7316e8",
+      "sha256": "1850faf790b7c94470a1fc6d983e775ddcb06f36f9c6ef70ef7a6324585887e5",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    },
+    {
+      "artifact_key": "4322_hardware",
+      "experiment_id": 4322,
+      "fields_imported": [
+        "kv260",
+        "polarfire",
+        "gatemate"
+      ],
+      "live_adversarial_flags": [],
+      "live_critical": false,
+      "parse_error": "",
+      "path": "results/experiment_4322_hardware_continuity.json",
+      "payload_reproducibility_checksum": "75b23b4b585c4bd9e4ffc0750978069b906e6e771905300f17ff8970293883d5",
+      "sha256": "72323a6b2e01d75d783207216019af5f34eabc4c7174653ebeb915c7055eed30",
+      "skipped": false,
+      "stamped_flagged_adversarial": false,
+      "summarize_error": "",
+      "summarize_exit_code": 0
+    }
+  ],
+  "upstream_sha256_set": [
+    "1850faf790b7c94470a1fc6d983e775ddcb06f36f9c6ef70ef7a6324585887e5",
+    "25e37373090466e8ce14d3c5011b6ba4f9bcc0f25a5c700679fd1d3842dc5abb",
+    "2bd11b27a2f00f0d172e7174f36633741ff6125a69eb98529c67f85930e200a1",
+    "4d417aa91bba43020cd499372c4411a8397fd3971ce41f1f8298803cbfdf6100",
+    "72323a6b2e01d75d783207216019af5f34eabc4c7174653ebeb915c7055eed30",
+    "82484f5c2779c5d6c2773537906e5d35e316d88fa81833ae64bc80919eb285a2",
+    "9fb3979bbb9d4603c61cf5aa5e9cd30a47089199cbcf857e53110069a4afdfa5",
+    "d8b41e9ab649d4b0e6dcbb2612402988de81a880022b1307178c87d786e65f53"
+  ],
+  "verifier_is_oracle_honored": true,
+  "verifier_thesis_state": "in_generation_moat_holds"
+}
