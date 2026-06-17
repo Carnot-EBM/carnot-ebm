@@ -2933,12 +2933,19 @@ solver over the offline sim reusing `arc_solver_kit`, (b) run the reproduction
 gate, (c) update `ops/arc_solve_registry.yaml`. ARC `total_levels` claims cite the
 registry's `reproducible_total_levels`, never the provisional count.
 
-**How to apply (agent-side).** Before solving a game, READ the registry (its
-`general_gotchas` + any prior entry for the game) and import `arc_solver_kit`.
-After solving, run `arc_solver_kit.reproduce(...)`; only on `reproduced: true`
-write the solve as counted, and append/update the game's registry entry (win
-condition, action model, gotchas, solver module). If a solve only exists as a
-live-recorded trajectory, mark it `provisional` — do NOT count it.
+**How to apply (agent-side).** Before solving a NEW game, FIRST call
+`python/carnot/agentic/arc_solve_learning.py:recommend_approach(game)` — it routes
+the game to the closest SOLVED game's proven recipe (solver module, action-model,
+reusable gotchas) by survey-feature similarity, so you reverse-engineer only the
+DELTA instead of starting from zero (sc25 took ~10 layers precisely because this
+routing did not exist). Then import `arc_solver_kit`, reuse the recommended recipe
++ the `general_gotchas`. After solving, run `arc_solver_kit.reproduce(...)`; only
+on `reproduced: true` write the solve as counted, and append/update the game's
+registry entry (win condition, action model, gotchas/dead-ends, solver module).
+If a solve only exists as a live-recorded trajectory, mark it `provisional` — do
+NOT count it. **Record DEAD-ENDS** (a search approach that stalled + why) in the
+game's registry entry so the next attempt skips them — learning from failures,
+not just successes.
 
 **Why this is in CLAUDE.md.** The planner + agents read CLAUDE.md as required
 input. Putting the gate + reuse contract here makes every future ARC solve
