@@ -20,9 +20,31 @@ import random
 from typing import Any, Optional
 
 from carnot.agentic.arc_agi3_live_adapter import (
-    _action_candidates, _game_action, _game_over, _levels_completed,
+    ArcAction, _action_candidates, _available_action_ids, _game_action, _game_over, _levels_completed,
 )
-from carnot.agentic.arc_agi3_world_model import GameGraph, frame_hash, grid_of
+from carnot.agentic.arc_agi3_world_model import GameGraph, frame_hash, grid_of, objects
+
+
+def rich_action_candidates(frame: Any, max_click: int = 48) -> list:
+    """Like _action_candidates but WITHOUT the 12-click cap — every detected object
+    is a click candidate (the winning clicks for e.g. r11l are objects #15/#27 that
+    the cap dropped). Keyboard actions unchanged."""
+    ids = _available_action_ids(frame)
+    out = [ArcAction(a, None, "available_keyboard_action") for a in ids if a != 6]
+    if 6 in ids:
+        grid = grid_of(frame)
+        pts = [(int(x), int(y)) for y, x in objects(grid)]
+        if not pts:
+            h, w = grid.shape
+            pts = [(w // 2, h // 2)]
+        seen: set = set()
+        for x, y in pts[:max_click]:
+            p = (max(0, int(x)), max(0, int(y)))
+            if p in seen:
+                continue
+            seen.add(p)
+            out.append(ArcAction(6, {"x": p[0], "y": p[1]}, "object_click"))
+    return out
 
 
 def _warm(env, do_warmup):
@@ -88,7 +110,7 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
     from arcengine import GameAction
 
     def _candidates(frame):
-        return list(_action_candidates(frame))
+        return rich_action_candidates(frame)   # all objects, no 12-cap (fixes r11l)
 
     def replay(path):
         f = _warm(env, warmup)
