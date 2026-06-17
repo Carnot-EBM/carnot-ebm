@@ -41443,7 +41443,13 @@ milestones:
     \ wins (off-ARC) declare verifier_is_oracle=true honestly."
   doc: openspec/change-proposals/research-roadmap-v399.md
   completed: '2026-06-17'
-  finding: '.399 close-state: TRUE scorecard per exp4323. in-generation moat CLOSED oracle-distinct: exp4315 reward-guided stitching beat best engaged control +0.225 and self-reward SMC +0.350, CI95=[0.075, 0.375], controls differentiated, leak recheck passed, verifier_is_oracle=false. cross-domain RETIRED domain-bound: exp4314 repeated exp4305''s verdict (delta=+0.231, CI95=[-0.115, 0.538] includes 0); retire_if_same_verdict fired, do NOT re-propose. efficiency always-energy-dominates; cascade unnecessary. ARC 13 reproducible levels / 11 games + FIRST live submission 0f6273ce-cf0d-426c-83e5-d745e4d45ea2 (11/11 env-matched). cross-game transfer null with generic features; off-ARC execution marginal-win execution-grounded. paper_ready=True. .400 frame: scale-the-in-generation-moat + E3-deep-tail-ARC + adapter-free-shallow-sweep + learned-frame-encoder.'
+  finding: '.399 close-state: TRUE scorecard per exp4323. in-generation moat CLOSED oracle-distinct: exp4315 reward-guided
+    stitching beat best engaged control +0.225 and self-reward SMC +0.350, CI95=[0.075, 0.375], controls differentiated, leak
+    recheck passed, verifier_is_oracle=false. cross-domain RETIRED domain-bound: exp4314 repeated exp4305''s verdict (delta=+0.231,
+    CI95=[-0.115, 0.538] includes 0); retire_if_same_verdict fired, do NOT re-propose. efficiency always-energy-dominates;
+    cascade unnecessary. ARC 13 reproducible levels / 11 games + FIRST live submission 0f6273ce-cf0d-426c-83e5-d745e4d45ea2
+    (11/11 env-matched). cross-game transfer null with generic features; off-ARC execution marginal-win execution-grounded.
+    paper_ready=True. .400 frame: scale-the-in-generation-moat + E3-deep-tail-ARC + adapter-free-shallow-sweep + learned-frame-encoder.'
   activation_recorded: exp4324-archive-v399-activate-v400
   tasks:
   - id: exp4313-archive-v398-activate-v399
@@ -41611,4 +41617,185 @@ milestones:
       honest string). SKIP any flagged_adversarial artifact; HONOR verifier_is_oracle (a circular/execution-grounded win is
       NOT a moat). Compute the G1-G4 publication gate via publication_gate.py. NO gated_on.'
     deliverable: results/experiment_4323_capstone_v399.json
+    result: OK (conductor)
+- id: 2026.06.400
+  title: 'SCALE & HARDEN the IN-GENERATION oracle-distinct verifier-moat win (the one CLOSED moat: exp4315 reward-guided step-stitching
+    beat the engaged control +0.225 AND the intrinsic self-reward SMC +0.35, CI95 [0.075,0.375] excl 0, verifier_is_oracle=false)
+    -- replicate on a 2nd corpus + power, then an ADAPTIVE guided-generation scale-up, and DECIDE the DiffusionGemma gate.
+    ATTACK the ARC DEEP TAIL with the EXECUTABLE-WORLD-MODEL solver (operator MANDATORY 2026-06-17: ar25/ka59/tr87/ft09, harness
+    BUILT+validated, gpt-5.5 SOTA 15/25 RHAE 58.12% per arXiv:2605.05138) + an adapter-free DISCOVERY SWEEP over the shallow
+    tail + tn36 click-schema RE. SELF-LEARNING = a LEARNED FRAME ENCODER for cross-game value transfer (the gap exp4318''s
+    generic-feature null logged). RETIRE the cross-domain selection scope (exp4314 repeated the domain-bound verdict -> retire_if_same_verdict
+    fired). .399 close-state: in-generation moat CLOSED oracle-distinct (verifier_thesis_state=in_generation_moat_holds);
+    cross-domain RETIRED domain-bound; efficiency always-energy-dominates; ARC 13 reproducible levels / 11 games + FIRST live
+    submission (scorecard 0f6273ce); cross-game transfer NULL with generic features; off-ARC execution marginal-win (execution-grounded);
+    paper_ready=True.'
+  doc: openspec/change-proposals/research-roadmap-v400.md
+  completed: '2026-06-17'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4324-archive-v399-activate-v400
+    title: 'Archive .399 -> activate .400; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml
+      + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the TRUE
+      .399 close-state truthfully (per exp4323 capstone): verifier_thesis_state=in_generation_moat_holds; IN-GENERATION MOAT
+      CLOSED oracle-distinct (exp4315 diffusiongemma_guidance_moat=true, carnot_minus_best_control_delta +0.225, carnot_minus_self_reward_smc_delta
+      +0.35, guidance_moat_ci95 [0.075,0.375] excl 0, controls_differentiated=true, scorer_leak_recheck_passed=true, verifier_is_oracle=false);
+      CROSS-DOMAIN SELECTION RETIRED domain-bound (exp4314 repeated the exp4305 verdict, cross_domain_selection_holds=false,
+      CI95 [-0.115,0.538] incl 0, label_ablation_robust=true -> retire_if_same_verdict fired); EFFICIENCY always-energy-dominates
+      (exp4316 cascade unnecessary, acc 0.55, cost_ratio 0.30); ARC 13 reproducible levels / 11 games + FIRST live submission
+      (scorecard 0f6273ce, 11/11 env-matched); CROSS-GAME transfer NULL with generic features (exp4318 reduction 1.0, gap
+      logged); OFF-ARC execution marginal-WIN execution-grounded (exp4319 +0.02, n=200, CI excl 0, verifier_is_oracle=true);
+      paper_ready=True (FoVer 0.9131, G1-G4 pass). Frame .400 as scale-the-in-generation-moat + E3-deep-tail-ARC + adapter-free-shallow-sweep
+      + learned-frame-encoder-self-learning.'
+    deliverable: results/experiment_4324_archive_v399_activate_v400.json
+    result: OK (conductor)
+  - id: exp4325-in-generation-moat-replicate-second-corpus
+    title: 'PHASE A1 (HEADLINE; HARDEN the CLOSED in-generation moat) -- REPLICATE exp4315''s reward-guided step-stitching
+      win on a 2ND oracle-distinct corpus + MORE power. .399 (exp4315) CLOSED the in-generation moat oracle-distinctly: reward-guided
+      step-stitching (2602.22871) with the leak-rechecked exp4292 partial-state scorer beat the best engaged control (EntRGi,
+      +0.225) AND the model''s INTRINSIC self-reward SMC (2602.01849, +0.35), guidance_moat_ci95 [0.075,0.375] EXCLUDING 0,
+      controls_differentiated=true, scorer_leak_recheck_passed=true -- BUT on n=40/arm and a SINGLE multiple-choice reasoning
+      corpus. The operator was TWICE-burned by premature DiffusionGemma over-claims (.396/.397), so before any DiffusionGemma-gate-flip
+      claim the win MUST replicate on a DIFFERENT oracle-distinct reasoning corpus at MORE power (n>=80/arm, >=3 seeds). Reuse
+      the EXACT exp4315 harness: unguided + the engaged control (EntRGi 2602.05000) + self-reward SMC (2602.01849, intrinsic,
+      the must-beat baseline) + Carnot reward-guided stitching; the no-op guard (controls_differentiated); an INDEPENDENT
+      leak re-check on the exp4292 scorer on THIS corpus. Emit in_generation_moat_replicates BARE bool := (Carnot-stitched
+      - best-engaged-control > 0 AND CI95-excl-0 AND controls_differentiated AND Carnot-stitched - self-reward-SMC > 0) ON
+      THE 2ND CORPUS. verifier_is_oracle=false. A replication is the strongest evidence yet (gate-flip candidate); a powered
+      failure-to-replicate is decision-grade (the win was corpus-specific). NO TRM training; NO leaderboard submission; DiffusionGemma
+      via the llama.cpp PR binary.'
+    deliverable: results/experiment_4325_in_generation_moat_replicate_second_corpus.json
+    result: OK (conductor)
+  - id: exp4326-adaptive-guided-generation-scaleup
+    title: 'PHASE A2 (HEADLINE; SCALE the CLOSED in-generation moat) -- ADAPTIVE guided-generation scale-up of the exp4315
+      win. .399 stitched the highest-scoring of DIVERSE complete trajectories; .400 scales to an ADAPTIVE generation loop
+      where the leak-checked exp4292 partial-state scorer is the EXTERNAL reward that shapes DiffusionGemma''s bounded adaptive
+      denoising (insertion/unmasking schedule), per the .399 SOTA-ingestion flag. METHODS (VERIFY the exact arXiv ID in PRECONDITIONS
+      before citing; if 2606.13565 cannot be verified, SUBSTITUTE the WebSearch-verified 2606.08501 reward-state alignment
+      or 2603.12554 entropy-guided step selection): A2D2 adaptive any-length discrete diffusion (cited 2606.13565), TR2-D2
+      tree-search trajectory replay (2509.25171), Back-on-Track reward-state alignment (2606.08501). HARNESS (skeptic-proof,
+      reuse exp4315/exp4308): a NO-ADAPTATION control + >=1 genuinely-engaged non-Carnot control + the no-op guard (controls_differentiated)
+      + an INDEPENDENT leak re-check + frozen held-out. ASPIRATION (unify the headline with the north star): run the adaptive
+      guidance on ARC-GRID generation (DiffusionGemma generates candidate ARC grids on the 256-mask canvas, the Carnot scorer
+      rewards) -- if ARC-grid generation is infeasible in the window, fall back to a reasoning corpus and SAY SO. Emit adaptive_guidance_beats_control
+      BARE bool := (Carnot-adaptive - best-engaged/no-adaptation control > 0 AND CI95-excl-0 AND controls_differentiated).
+      verifier_is_oracle=false. NO TRM training; NO leaderboard submission; DiffusionGemma via the llama.cpp PR binary. RE-SCOPE
+      to fit the window (an honest partial reasoning-corpus run is COMPLETE).'
+    deliverable: results/experiment_4326_adaptive_guided_generation_scaleup.json
+    result: OK (conductor)
+  - id: exp4327-e3-executable-world-model-ar25
+    title: 'PHASE B1 (ARC NORTH STAR; operator MANDATORY 2026-06-17) -- E3 EXECUTABLE-WORLD-MODEL solve of ar25 -> L1. The
+      SOTA for FULL ARC-AGI-3 solves is the executable-world-model coding agent (arXiv:2605.05138: gpt-5.5 induces a Python
+      world model, VERIFIES it reproduces observed transitions, refactors toward simpler abstractions, plans to the win; SOLVED
+      15/25 games, RHAE 58.12%). The harness is BUILT + validated end-to-end on ar25 (the codex agent induced a GENUINE flood-fill
+      world model, the Carnot WorldModelVerifier grounded it at 61% vs 35% identity baseline); the only gap to a solve was
+      the MULTI-ROUND refactor loop + win-seeking exploration. The codex agent IS the proposer (uses collect_transitions/WorldModelVerifier/load_engine/plan_and_execute
+      as tools; WRITES results/arc_e3/ar25/world_model.py; do NOT nest a CodexProposer subprocess). INCREMENTAL-PROGRESS scoped:
+      target +1 level (L1), NOT a full solve. HARD gate: offline_reproduced=true AND reproduced_levels>=1 (arc_solver_kit.reproduce)
+      -- the real env reaching L1 via the induced-model plan, re-gated. An honest partial (best verifier_accuracy + the residual
+      mismatch CLASS as a missing-world-model-rule gap) is PROGRESS. verifier_is_oracle=true (the SOLVE is EXECUTION-GROUNDED
+      -- the real env defines the win -- ARC north-star progress, NOT an oracle-distinct moat headline). NO TRM training;
+      NO leaderboard submission; cap per-task wall-time to fit the window.'
+    deliverable: results/experiment_4327_e3_executable_world_model_ar25.json
+    result: OK (conductor)
+  - id: exp4328-e3-executable-world-model-ka59
+    title: 'PHASE B2 (ARC NORTH STAR; operator MANDATORY 2026-06-17) -- E3 EXECUTABLE-WORLD-MODEL solve of ka59 -> L1, same
+      harness as exp4327 (arXiv:2605.05138; the codex agent induces + refines a Python world model, the Carnot WorldModelVerifier
+      grounds it, plan_and_execute to the win). ka59 is a deep-tail game graph-explore NO-ADVANCEd (mechanic-limited); gpt-5.5
+      solved it in the SOTA paper. The codex agent IS the proposer (WRITES results/arc_e3/ka59/world_model.py; NO nested CodexProposer).
+      INCREMENTAL-PROGRESS scoped: +1 level (L1). HARD gate: offline_reproduced=true AND reproduced_levels>=1. An honest partial
+      (best verifier_accuracy + the residual mismatch class as a missing-world-model-rule gap) is PROGRESS. verifier_is_oracle=true
+      (execution-grounded ARC progress, NOT a moat). NO TRM training; NO leaderboard submission; cap per-task wall-time.'
+    deliverable: results/experiment_4328_e3_executable_world_model_ka59.json
+    result: OK (conductor)
+  - id: exp4329-e3-executable-world-model-tr87-ft09
+    title: 'PHASE B3 (ARC NORTH STAR; operator MANDATORY 2026-06-17) -- E3 EXECUTABLE-WORLD-MODEL solves of tr87 AND ft09,
+      +1 level (L1) EACH, looped with a checkpoint per game + a hard per-game wall-time cap (breadth-of-progress beats an
+      all-or-nothing single-game swing). Same harness as exp4327/exp4328 (arXiv:2605.05138; the codex agent induces + refines
+      a Python world model per game, the Carnot WorldModelVerifier grounds it, plan_and_execute). Both are deep-tail games
+      graph-explore NO-ADVANCEd (mechanic-limited); gpt-5.5 solved both in the SOTA paper. The codex agent IS the proposer
+      (WRITES results/arc_e3/<game>/world_model.py per game; NO nested CodexProposer). HARD gate per game: offline_reproduced=true
+      AND reproduced_levels>=1. An honest partial per game (best verifier_accuracy + the residual mismatch class as a missing-world-model-rule
+      gap) is PROGRESS. Report a per-game scorecard. verifier_is_oracle=true (execution-grounded ARC progress, NOT a moat).
+      NO TRM training; NO leaderboard submission; checkpoint after EACH game so a window-exhaustion preserves the first game''s
+      result.'
+    deliverable: results/experiment_4329_e3_executable_world_model_tr87_ft09.json
+    result: OK (conductor)
+  - id: exp4330-arc-adapter-free-discovery-sweep-shallow-tail
+    title: 'PHASE C (ARC NORTH STAR; shallow tail) -- adapter-free graph-explore DISCOVERY SWEEP over the remaining unsolved
+      SHALLOW-tail games + reverse-engineer tn36''s ACTION6 click-payload schema. The 2026-06-17 sweep cracked 7 games adapter-free
+      (cd82/sp80/su15/tu93 + cn04/m0r0/sk48 via E1 salience+mask); 13 games remain unsolved. EXCLUDE the deep-tail E3 games
+      (ar25/ka59/tr87/ft09 -- exp4327-4329 own those) and sc25 (provisional). SWEEP the shallow-tail candidates (bp35/dc22/g50t/lf52/re86/s5i5/sb26/vc33)
+      with graph_explore_solve_v2/v3 (arXiv:2512.24156: salience-prioritized state-transition graph, shortest-path to untested
+      state-action pairs) at the 12k DISCOVERY budget (per the budget finding: 12k is load-bearing for first-level discovery;
+      do NOT inflate the +1-advance budget). RE tn36''s ACTION6 data schema (it raises KeyError ''x'' -- its click payload
+      is NOT {{x,y}}; wrap clicks in tn36''s expected payload before the explorer can advance it). CAPTURE + reproduction-gate
+      any new L1 solves (arc_solver_kit.reproduce). Update ops/arc_solve_registry.yaml. Monotonic +1+: report reproducible_total_levels
+      (>= the current 13, ideally more) + games_advanced. verifier_is_oracle=true (execution-grounded). An honest no-advance
+      WITH exploration_actions_used>0 per game is COMPLETE and informs the next pick; capture the per-game dead-ends. NO TRM
+      training; NO leaderboard submission.'
+    deliverable: results/experiment_4330_arc_adapter_free_discovery_sweep_shallow_tail.json
+    result: OK (conductor)
+  - id: exp4331-self-learning-learned-frame-encoder-cross-game-transfer
+    title: 'PHASE D (CONTINUOUS SELF-LEARNING -- the mandated self-learning experiment; NEW mechanism = a LEARNED FRAME ENCODER)
+      -- does a LEARNED frame encoder (vs the GENERIC grid features that nulled in exp4318) carry a game-invariant progress
+      signal that transfers cross-game? .399 (exp4318) PROVED generic grid features (nonzero/colors/objects/spread/dominant)
+      do NOT transfer cross-game (reduction ~1.0, positive control passed) and LOGGED a ''game-invariant ARC value representation''
+      gap. research-program.md mandates >=1 self-learning experiment/milestone; re-measuring generic-feature transfer is churn.
+      The NEW mechanism (the gap''s candidate fix): train a small LEARNED frame ENCODER (a tiny CNN / learned feature map
+      over raw frames, CPU) on the now-11 reproducibly-solved games'' traces, producing a learned embedding the value-head
+      consumes; re-test LEAVE-ONE-GAME-OUT cross-game search-efficiency transfer (does the learned-encoder value-head reduce
+      OfflineSolver search states on a held-out game vs an untrained/uniform heuristic?). POSITIVE CONTROL: confirm the baseline
+      solver solves the held-out level (FALSE_NEGATIVE_RISK guard). Report cross_game_state_reduction (held-out states_uniform
+      / states_transferred) + per-held-out-game reads + a bootstrap CI95. Emit learned_encoder_transfer_helps BARE bool :=
+      (reduction > 1.0 AND CI95 lower bound > 1.0). verifier_is_oracle=false. A learned-encoder transfer where generic features
+      failed CLOSES the gap (a richer game-invariant representation); a powered null SHARPENS the gap (the representation
+      is still insufficient -> more solved games or a different encoder) and is decision-grade. NO TRM training; NO LLM weight
+      mutation (the encoder + value-head are a tiny CPU heuristic over solver state).'
+    deliverable: results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json
+    result: OK (conductor)
+  - id: exp4332-sota-ingestion-v401
+    title: PHASE E1 (SOTA-ingestion; mandatory per SOTA-Ingestion Cycle Discipline) -- ingest the SOTA for the .400 bleeding-edge
+      forks (scaled external-verifier-guided DiffusionGemma generation, executable-world-model ARC solving, learned-frame-encoder
+      cross-game transfer) and MAP the strongest 3-5 methods onto the .401 roadmap conditioned on the .400 outcomes (did the
+      in-generation moat REPLICATE on a 2nd corpus / did the adaptive scale-up beat its control? did E3 land a deep-tail solve?
+      did the learned encoder transfer?). Use the RELIABLE channel ONLY (scripts/sweep_clusters.py / sweep_semscholar.py +
+      low-concurrency WebSearch/WebFetch) -- /deep-research is BANNED in-loop. Every method MUST carry a real arXiv ID/URL
+      (VERIFY each). Update research-studying.md (mark ingested) and emit flagged_for_v401.
+    deliverable: results/experiment_4332_sota_ingestion_v401.json
+    result: OK (conductor)
+  - id: exp4333-verifier-registry-gaps-hygiene
+    title: 'PHASE E2 (hygiene; per Missing-Verifier Gap Logging + registry hygiene) -- reconcile the verifier registry + gaps
+      to .400 truth, run the GAP-4 execution regression guard, and LOG missing-verifier gaps. Record the .400 outcomes: the
+      in-generation moat replication (exp4325 in_generation_moat_replicates + controls_differentiated), the adaptive scale-up
+      (exp4326 adaptive_guidance_beats_control + domain_used), the E3 deep-tail solves (exp4327/4328/4329 offline_reproduced
+      + verifier_accuracy_per_round + any missing-world-model-rule gaps), the shallow-tail sweep (exp4330 reproducible_total_levels
+      + tn36_schema_finding), the learned-encoder cross-game transfer (exp4331 learned_encoder_transfer_helps). Update ops/verifier_registry.yaml
+      + ops/verifier_gaps.md (e.g. close/sharpen the ''game-invariant ARC value representation'' gap per exp4331; log any
+      missing-world-model-rule gaps from E3; the ARC-grid-generation-scorer gap if exp4326''s adaptive arm stayed open). Run
+      the GAP-4 execution regression guard (no regression vs .399). Use the robust aggregate-available helper (read available
+      artifacts, report gaps -- do NOT hard-block all-False if one is missing). Emit regression_guard_passed BARE bool.'
+    deliverable: results/experiment_4333_verifier_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4334-hardware-continuity
+    title: "PHASE E3 (hardware continuity; opportunistic per north-star \xA73) -- KV260 terminal/opportunistic (SSH-only reachability\
+      \ + xmutil listapps; NO host SD-card precondition), PolarFire CPU dispatch hash-verify, GateMate USB detect (`openFPGALoader\
+      \ -c dirtyJtag --detect`). KV260 is terminal (north-star \xA73) so the per-board mandate relaxes to opportunistic; this\
+      \ task keeps the boards visible without blocking the milestone. Report per-board reachability + any opportunistic result.\
+      \ NO board blocks the milestone (honest blocked_<board> per board is fine)."
+    deliverable: results/experiment_4334_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4335-capstone-v400
+    title: 'PHASE E4 (capstone .400, UNGATED) -- the verifier scorecard + the DiffusionGemma GATE DECISION, using the robust
+      aggregate-available-report-gaps helper (NO hard-block-all-False). Headline questions: (1) did the in-generation oracle-distinct
+      moat REPLICATE on a 2nd corpus (exp4325 in_generation_moat_replicates, CI95-excl-0) AND scale to an adaptive loop (exp4326
+      adaptive_guidance_beats_control)? -> does the DiffusionGemma gate (diffusiongemma-energy-guided-diffusion-spec.md THE
+      GATE: oracle-distinct learned-verifier win + matched control + CI95-excl-0, REPLICATED) now flip MET? (2) did E3 land
+      a deep-tail ARC solve (exp4327/4328/4329 offline_reproduced) -> reproducible_total_levels? (3) did the shallow-tail
+      sweep advance (exp4330)? (4) did the learned-encoder cross-game transfer help (exp4331)? Aggregate (skipping flagged,
+      reporting missing as per-axis gaps; HONORING verifier_is_oracle -- the E3/sweep solves are execution-grounded, verifier_is_oracle=true,
+      ARC progress NOT a moat; the in-generation/self-learning results are oracle-distinct, verifier_is_oracle=false). Cite
+      each upstream sha256. Emit in_generation_moat_replicates_headline + diffusiongemma_gate_status + arc_reproducible_total_levels
+      + verifier_thesis_state (one honest string). Compute the G1-G4 publication gate via publication_gate.py. NO gated_on.'
+    deliverable: results/experiment_4335_capstone_v400.json
     result: OK (conductor)
