@@ -363,3 +363,33 @@ solve of the program-editor transform levels — the live-generalization goal, d
 residual is the MAZE sub-fields for L6/L7-style routing (checkpoints draw on the floor; at-rest hazards
 are invisible — the maze-routing portion of GAP-ARC-MAZE-MODEL-FRAME-INDUCTION); object, walls, target,
 and all object/target attributes now induce from frames.
+
+## NEXT LINK DONE: checkpoints + hazards ARE frame-readable too (2026-06-17)
+
+"Checkpoints draw on the floor, hazards are invisible" was — like the target finding — an artifact of
+sampling the wrong cells (the box CENTRE). Both leave a static marking that is frame-readable
+(`scripts/arc3_frame_induction.py:induce_maze_sub_fields`, zero internal state):
+
+- **Checkpoints** render as a **DITHERED 4×4 checkerboard of the OBJECT's colour** (8 isolated diagonal
+  pixels, fill ~0.5) — distinct from the SOLID object and the HOLLOW-outline target (both also the
+  object colour). Found by removing the object + target regions from the object-colour mask, then
+  **8-connecting** the remaining dither (the diagonal pixels are 8-connected) into pads.
+- **Hazards** render a static **MARKER in distinct low-area colours** (not floor/object/wall) in a tight
+  horizontal band — found as the bbox of those marker cells. (The spikes are invisible *as obstacles*,
+  but the band carries a faint marker even at rest.)
+
+**Validated EXACT vs internal truth.** tn36 **L6: checkpoints 3/3** `(49,20),(53,4),(53,28)`, hazard
+band correctly `None`; **L7: checkpoints 3/3** `(33,12),(53,8),(53,24)` + hazard band `(37,16,24,4)` ==
+the exact internal spike band. (`results/experiment_frame_induced_maze_subfields_validation.json`,
+adversarial_verify clean; unit-tested `tests/python/test_arc_maze_subfields.py`, 3 tests.)
+
+A required fix fell out: `induce_object_target_attrs` now **prefers a notched sprite** as the
+object/target — a notchless solid square is a WALL, not the object. This excluded the L7 wall (33,16)
+that was previously mis-picked as the object; the L1-L5 target-attrs end-to-end is unregressed (5/5).
+
+**So every MazeModel FIELD now induces from frames** — object, walls, target, object/target attributes,
+checkpoints, and the hazard band. The remaining residual is no longer field induction but the full
+maze-SOLVE *integration*: assembling them into a working planner run needs COMPLETE wall geometry from
+one frame (the single-frame wall pass is currently partial) + move-code induction + the spikes_hidden
+residual hitbox. The perception layer the live maze solver was gated on is now built and validated
+field-by-field.
