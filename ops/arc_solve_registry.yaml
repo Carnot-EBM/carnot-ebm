@@ -227,6 +227,19 @@ learning_loop:
   #   representation (more solved games + a learned frame encoder), NOT generic transfer.
   # CALIBRATED ARC STRATEGY: easy/medium -> adapter-free systematic explore (r11l,ls20 work);
   #   adaptered -> verifier-routed efficient solve (lp85, self-improving); hard/deep -> per-game RE.
+  # BUDGET FINDING (2026-06-17 ablation, operator "if the larger budget is not helping
+  # roll it back"). The effort budget is a PER-TASK-TYPE decision, not a global knob:
+  #   - DISCOVERY sweep (first-level on a NEW game): ~12000 expansions is load-bearing.
+  #     cn04/m0r0/sk48 were each re-confirmed to NO-ADVANCE at the 4000 default (even
+  #     with E1 salience+mask) and only solve at >4000. The 4000->12000 bump earned +3
+  #     games. Use ~12000 for a thorough discovery sweep.
+  #   - +1-LEVEL ADVANCE (next level on a SOLVED game): budget does NOT help. Raising it
+  #     to 30000 produced 0 reproducible advances (ls20 burned 1218s; sp80 "found" L2 but
+  #     reproduced=False — hidden state beyond HUD-masking). This frontier is
+  #     MECHANIC-limited; it needs E3 (learned world model) or per-game RE, NOT budget.
+  #     Rolled back the 30k advance run; keep the advance at the 4000 default and don't
+  #     re-inflate it. Committed code defaults stay 4000 (conservative); raise per-run via
+  #     ARC_MAX_EXPANSIONS only for a discovery sweep.
   adapter_free_explore: python/carnot/agentic/arc_graph_explore.py  # v2 (systematic) / v3 (value-guided)
   cross_game_verifier: scripts/arc_cross_game_verifier_train.py      # built; generic features too weak for hard tail
   demos:
