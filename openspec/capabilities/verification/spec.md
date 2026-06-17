@@ -18024,6 +18024,70 @@ declares a reproducibility checksum over the reconciled registry, gaps, and
 manifest files. If the registry, gaps, or manifest cannot parse, then it writes
 `honest_verdict=blocked_ledgers_unparseable` and stops without reconciliation.
 
+### REQ-VERIFY-4316: Budget-Aware Energy-Verifier Cascade Router Deployment
+
+The repository SHALL provide Exp 4316 at
+`python/carnot/reporting/efficiency_cascade_router_deploy_4316.py` and
+`results/experiment_4316_efficiency_cascade_router_deploy.py` to deploy the
+oracle-distinct ARC energy verifier as a budget-aware discriminative cascade
+router. Before any judge inference, the runner SHALL check that at least one of
+`unsloth/Qwen3.6-35B-A3B-GGUF` or `unsloth/gemma-4-31B-it-GGUF` resolves to a
+cached `.gguf` file, that `llama_cpp` is importable, that the ARC selection
+corpus and energy verifier load, and that TRM training is stood down for this
+task. If all judge models are missing, the runner SHALL write
+`honest_verdict=blocked_judge_models_not_cached` and stop without fabricating
+judge metrics; if the synchronous window is exceeded before enough judge rows
+exist for the accepted partial, it SHALL write
+`honest_verdict=blocked_window_exceeded`.
+
+When preconditions hold, the runner SHALL score at least one selection corpus
+with at least forty evaluation tasks (a one-corpus n>=40 partial is complete),
+run a strong well-prompted GGUF judge through the `.gguf` path, checkpoint after
+every judge decision, tune the cascade margin threshold on a held-out split, and
+compare three policies on the evaluation split: always-energy, always-judge, and
+the cascade that runs energy first and escalates only low-margin cases to the
+judge. It SHALL measure per-policy selection accuracy, wall-clock, FLOPs proxy,
+estimated dollars per 1k selections, escalation rate, and bootstrap CI95s with
+at least 2000 resamples for accuracy and cost ratios.
+
+The terminal artifact SHALL write
+`results/experiment_4316_efficiency_cascade_router_deploy.json` with
+`honest_verdict`, bare bool `cascade_dominates_controls`, bare float
+`accuracy_cascade`, bare float `accuracy_always_energy`, bare float
+`accuracy_always_judge`, bare float `cost_ratio_cascade`, bare float
+`escalation_rate`, `pareto_curve`, bare bool `verifier_is_oracle=false`,
+`preconditions_checked`, `random_seed`, `reproducibility_checksum`,
+`model_specs`, `accuracy_ci95s`, `cost_ci95s`, `cost_always_energy`,
+`cost_always_judge`, `cost_cascade`, `field_principles`, `spec_refs`,
+`inference_substrate`, `duration_s`, and `adversarial_verify`. Its field
+principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. A cascade Pareto-win (most of the judge's accuracy at a fraction of the cost), a parity-at-lower-cost, an 'always-energy already dominates' (the cascade is unnecessary -- a clean finding), and an honest blocked_judge_models_not_cached / blocked_window_exceeded are ALL COMPLETE.`;
+`cascade_dominates_controls` = `BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff the cascade reaches always-judge accuracy (within CI) at a cost strictly between always-energy and always-judge AND is Pareto-non-dominated -- the deployed §5 efficiency operating point.`;
+`accuracy_cascade` = `BARE float: the cascade policy's selection accuracy -- the deployed accuracy (target: >= always-judge within CI).`;
+`accuracy_always_energy` = `BARE float: the cheap always-energy baseline accuracy (compare to exp4303's 0.8).`;
+`accuracy_always_judge` = `BARE float: the well-prompted always-judge accuracy (the expensive ceiling; compare to exp4303's 0.5).`;
+`cost_ratio_cascade` = `BARE float: cascade cost / always-judge cost (wall-clock + FLOPs-proxy + $/1k) -- the deployed efficiency multiplier (the cascade buys accuracy by escalating only the hard cases).`;
+`escalation_rate` = `BARE float: fraction of tasks escalated to the judge -- the cascade's cost knob (low escalation + near-judge accuracy is the win).`;
+`pareto_curve` = `Accuracy-vs-cost for always-energy, cascade, always-judge (and intermediate thresholds) -- the honest Pareto frontier (Budget-aware Discriminative Verification 2510.14913).`;
+`verifier_is_oracle` = `BARE bool=false -- the energy verifier on cross-family/ARC-GEN/FoVer selection is oracle-distinct (NOT the executable oracle); keeps the efficiency measurement non-circular (unlike the retired code-efficiency).`;
+`preconditions_checked` = `Records the judge GGUF caches + corpus load + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.`;
+`random_seed` = `Determinism precondition for the selection + bootstrap + threshold tuning.`;
+`reproducibility_checksum` = `Hash of the corpora + the policies' outputs + the cascade threshold + the cost accounting; lets a third party re-run.`;
+`model_specs` = `The judge GGUF ids + the strong prompt + the energy verifier + the cascade threshold + the cost-accounting method + the corpora; required methodology.`
+
+### SCENARIO-VERIFY-4316: Cascade Router Reports Pareto Verdict Or Blocks Honestly
+
+Given at least one cached judge GGUF, a loadable ARC selection corpus, a loadable
+oracle-distinct energy verifier, and no TRM training for this task, when Exp 4316
+runs, then it checkpoint-scores the strong judge, tunes a held-out low-margin
+threshold, evaluates always-energy, always-judge, and cascade on at least forty
+evaluation tasks, writes the required accuracy/cost fields, keeps
+`verifier_is_oracle=false`, reports a Pareto curve over intermediate thresholds,
+runs adversarial verification cleanly, and exposes `cascade_dominates_controls`
+as a bare bool. If the judge GGUF cache is absent or the synchronous window
+cannot produce the accepted partial, then it writes the corresponding blocked
+terminal artifact and does not fabricate cascade metrics.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
