@@ -111,6 +111,74 @@ def play_area_sprites(arc, game, hud, editor_bbox):
     return sorted(sprites, key=lambda s: -s[2])[:6]
 
 
+def induce_editor_layout(arc, game):
+    """FRAME-ONLY: derive the click->(slot, bit) mapping. Each edit click toggles a GLYPH at its
+    slot's display; clustering edit cells by glyph-toggle x separates the SLOTS, and the edit-cell
+    y's give the BIT rows. Returns {slot_glyph_x: [...], bit_rows: [y_lo, y_hi]}."""
+    glyph_x, rows = [], set()
+    for cy in range(40, 48):
+        for cx in range(16, 46):
+            env = arc.make(game, scorecard_id=arc.open_scorecard())
+            g0 = grid_of(env.reset())
+            g1 = grid_of(env.step(_game_action(GameAction, 6), data={"x": cx, "y": cy}))
+            ys, xs = np.where(g0 != g1)
+            chg = [(int(x), int(y)) for x, y in zip(xs, ys) if (int(x), int(y)) != (61, 1)]
+            if 0 < len(chg) <= 4:
+                glyph_x.append(int(np.median([p[0] for p in chg])))
+                rows.add(cy)
+    uniq = sorted(set(glyph_x))
+    slots, cur = [], [uniq[0]]                       # cluster glyph-x into slot columns (gap>2)
+    for v in uniq[1:]:
+        if v - cur[-1] > 2:
+            slots.append(cur); cur = []
+        cur.append(v)
+    slots.append(cur)
+    bit_rows = sorted(rows)
+    return {"slot_glyph_x": [int(round(np.mean(s))) for s in slots],
+            "bit_rows": [bit_rows[0] + 1, bit_rows[-1] - 1]}
+
+
+def _glyph(grid, gx):
+    """The slot's code-glyph region (frame-only) — y41..47 excludes the y40 per-slot header."""
+    return grid[41:48, gx - 2:gx + 3].copy()
+
+
+def _set_program_match_preset(env, layout, frame):
+    """FRAME-ONLY heuristic solve: toggle every editable slot until its glyph matches the FIRST
+    slot's (the puzzle's pre-set move). Wins levels whose answer is 'all slots = the pre-set code'
+    (e.g. tn36 L1 = all-downs). The general winner-discovery (search / code semantics) is the next
+    link; this proves the derived controls are USABLE."""
+    gxs, bits = layout["slot_glyph_x"], layout["bit_rows"]
+    template = _glyph(grid_of(frame), gxs[0])
+    f = frame
+    for gx in gxs:
+        if not np.array_equal(_glyph(grid_of(f), gx), template):
+            for by in bits:
+                f = env.step(_game_action(GameAction, 6), data={"x": gx - 1, "y": by})
+    return f
+
+
+def find_run_button(arc, game, layout):
+    """FRAME-ONLY: with the program set to a winning config, the RUN trigger is the (non-editor)
+    cell whose click advances the level. Search a candidate band below the editor."""
+    for cy in range(48, 62):
+        for cx in range(28, 46):
+            env = arc.make(game, scorecard_id=arc.open_scorecard())
+            f = _set_program_match_preset(env, layout, env.reset())
+            f = env.step(_game_action(GameAction, 6), data={"x": cx, "y": cy})
+            if _levels_completed(f) >= 1:
+                return (cx, cy)
+    return None
+
+
+def frame_only_solve(arc, game, layout, run_button):
+    """End-to-end FRAME-ONLY solve of the current level via the derived controls. No internal state."""
+    env = arc.make(game, scorecard_id=arc.open_scorecard())
+    f = _set_program_match_preset(env, layout, env.reset())
+    f = env.step(_game_action(GameAction, 6), data={"x": run_button[0], "y": run_button[1]})
+    return _levels_completed(f)
+
+
 def main() -> int:
     arc = kit.offline_arcade()
     game = sys.argv[1] if len(sys.argv) > 1 else "tn36"
@@ -139,6 +207,19 @@ def main() -> int:
         print(f"  [validate] program-editor detected AND bbox covers the true slots: {ok}")
     except Exception as e:  # pragma: no cover
         print(f"  [validate] (internal check unavailable: {type(e).__name__})")
+
+    if out["mechanic"] == "program_editor":
+        print("== make the editor USABLE frame-only (click->(slot,bit) mapping + run-trigger) ==",
+              flush=True)
+        layout = induce_editor_layout(arc, game)
+        print(f"  derived {len(layout['slot_glyph_x'])} slots at glyph-x {layout['slot_glyph_x']}; "
+              f"bit-rows y {layout['bit_rows']}")
+        run = find_run_button(arc, game, layout)
+        print(f"  derived RUN button: {run}")
+        if run:
+            lvl = frame_only_solve(arc, game, layout, run)
+            print(f"  FRAME-ONLY SOLVE of the current level -> level {lvl} "
+                  f"{'(SOLVED, zero internal state)' if lvl >= 1 else '(no advance)'}")
     return 0
 
 

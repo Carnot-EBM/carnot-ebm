@@ -320,5 +320,13 @@
     "v402_frame": "CONVERT-the-proven-moat-to-a-generation-gain (S3) + E3-deeper + learned-action-cost-self-learning",
     "verifier_is_oracle_honored": true,
     "verifier_thesis_state": "in_generation_moat_replicated_leak_robust"
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "CIRCULAR_MOAT_OVERCLAIM",
+      "severity": "critical",
+      "detail": "Artifact flips a gate/headlines a moat but verifier_is_oracle=None (not False). A circular or oracle-undeclared verifier cannot flip a gate or headline 'moat proven' -- only an oracle-DISTINCT (learned/energy) win is headline/gate-eligible. Declare verifier_is_oracle=False and use an oracle-distinct verifier, or do not flip the gate."
+    }
+  ]
 }
