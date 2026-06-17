@@ -103,6 +103,40 @@ its frontier by the heuristic) so it keeps its solving power AND gains efficienc
 a game where a heuristic demonstrably helps (lp85), then generalize. cn04-in-v3 was the wrong
 test combo; the loop machinery is sound.
 
+## SECOND build + findings (2026-06-17, outer-loop): v2 heuristic-guided A* shipped
+
+Implemented correction (b). `graph_explore_solve_v2` now takes an optional
+`heuristic=goal_distance` (+ `heuristic_weight`, `stats`): when given, the frontier is
+ordered **A\*-style by `depth + weight*heuristic(frame)`** (a heap), not FIFO. The `g`
+(depth) term is the fix for why greedy `v3` (pure-`h`) fails — it keeps v2's COMPLETENESS
+(no local-minimum trap) while letting the heuristic prioritize. When `heuristic is None` the
+path is **byte-for-byte the original pure-BFS** (zero regression; the proven 8/11 solves and
+the 20 graph-explore tests still pass). `stats` records `expansions`/`states` so an A/B can
+measure the EFFICIENCY win (fewer states to the same win), which the action-count metric
+misses on shortest-path games. `scripts/arc_gap_fill.py` now A/Bs the heuristic through this
+v2 path (not v3) and credits "helped" on fewer-actions OR (equal-actions AND fewer-expansions).
+
+**Empirical A/B of a naive diff-from-win (Hamming) heuristic vs pure BFS** (`(grid!=WIN).sum()`,
+budget 8000, from L0; all solve+reproduce under BOTH arms — the engine is correct):
+
+| game | A* actions / expansions | BFS actions / expansions | verdict |
+|------|-------------------------|--------------------------|---------|
+| cd82 | 5 / 955  | 5 / 525  | A* WORSE (+430 exp) |
+| sp80 | 6 / 1085 | 4 / 301  | A* WORSE (+784 exp AND a LONGER 6-vs-4 path) |
+| su15 | 7 / 1406 | 7 / 1746 | A* HELPED (−340 exp) |
+
+**The honest lesson — heuristic QUALITY, not the engine, is now the gap.** The A* engine is
+correct and the right infrastructure, but a Hamming-distance-to-win heuristic is too crude: it
+helped only 1/3 games and on sp80 it produced a SUBOPTIMAL (longer) trajectory (A* with an
+inadmissible `h` is not optimal). This SHARPENS the LLM-gap-filler value proposition: the LLM's
+job is to write a heuristic that captures GAME STRUCTURE better than Hamming (e.g. misplaced-
+object count weighted by manhattan-to-target, or a progress monotone), now directly MEASURABLE
+via this A/B (expansions + reproduction gate). The reproduction-gated capture correctly REFUSES
+to bank a heuristic that doesn't help — so autolearning only compounds verified efficiency wins.
+Also confirmed: cn04 does NOT solve from plain v2-L0 at budget 8000 (with or without
+`mask_hud`) — its registry solve is a captured TRAJECTORY, so cn04 is the wrong A/B target for
+plain v2; use games v2 solves from L0 (cd82/sp80/su15/…) when measuring a heuristic.
+
 Cross-refs: CLAUDE.md "ARC Solve Reproducibility + Solver-Reuse" (RE only the delta) +
 "Missing-Verifier Gap Logging"; `python/carnot/agentic/arc_game_adapters.py`,
 `arc_solve_learning.py` (recommend_approach), `ops/verifier_gaps.md`;
