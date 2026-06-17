@@ -17623,6 +17623,71 @@ matching terminal verdict instead of declaring a replication; otherwise a
 powered non-replication is terminal evidence that retires the in-generation
 moat as corpus-specific.
 
+### REQ-VERIFY-4348: S3 Fixed-NFE Verifier-Guided Diffusion Search
+
+The repository SHALL provide Exp 4348 at
+`python/carnot/experiment_4348_s3_stratified_verifier_guided_search.py` and
+`results/experiment_4348_s3_stratified_verifier_guided_search.py` to decide
+whether the Exp 4337 leak-robust scorer improves DiffusionGemma generation
+when placed inside an S3-style stratified denoising search loop at fixed
+denoising-compute (NFE). Before any inference, the runner SHALL verify that
+the llama.cpp DiffusionGemma PR binary is non-empty, the DiffusionGemma Q4_K_M
+GGUF cache is present, the Exp 4337 leak-robust scorer artifact passed its
+audit and the persisted scorer loads, the second oracle-distinct search corpus
+can support at least 80 measured tasks per arm across at least three seeds,
+and TRM training is stood down. If the leak-robust scorer is missing or
+unloadable, the runner SHALL write
+`honest_verdict=blocked_leak_robust_scorer_unavailable`; if any other
+precondition fails, it SHALL write the matching terminal `blocked_*` verdict
+and SHALL NOT fabricate inference.
+
+The runner SHALL independently re-check the scorer on the search corpus by
+masking answer-bearing cells before benchmarking. If the answer-masked signal
+fails this re-check, the runner SHALL emit bare bool
+`scorer_leak_recheck_passed=false`,
+`honest_verdict=scorer_leaky_in_search_corpus`, and stop before benchmarking.
+Otherwise it SHALL run synchronous fixed-NFE arms with checkpointing after
+every seed and per-arm/per-seed progress: unguided single-pass at the fixed
+budget, best-of-K with K chosen so denoising steps times K equals the same
+NFE budget, self-reward SMC using only intrinsic trajectory confidence at the
+same budget, and S3-Carnot with per-step frontier expansion, leak-robust scorer
+scoring, stratified resampling, and diversity preservation at the same budget.
+The no-op guard SHALL set bare bool `controls_differentiated=true` only when no
+two arms tie bit-identically in accuracy or selected-option sequence; otherwise
+the runner SHALL stop with `honest_verdict=controls_not_differentiable`.
+
+The terminal artifact SHALL write
+`results/experiment_4348_s3_stratified_verifier_guided_search.json` with
+required fields `honest_verdict`, bare bool `s3_guided_beats_control`, bare
+float `s3_minus_best_of_k_delta`, bare float
+`s3_minus_self_reward_smc_delta`, `s3_gain_ci95`, bare int `nfe_budget`, bare
+bool `controls_differentiated`, bare bool `scorer_leak_recheck_passed`, bare
+int `benchmark_n`, bare bool `verifier_is_oracle=false`,
+`preconditions_checked`, bare int `random_seed`, `reproducibility_checksum`,
+`model_specs`, `field_principles`, `spec_refs`, `duration_s`,
+`inference_substrate`, and `adversarial_verify`. The bare bool
+`s3_guided_beats_control` SHALL be true iff S3-Carnot beats best-of-K at
+matched NFE, the task-level paired bootstrap CI95 with at least 2000 resamples
+excludes zero, controls are differentiated, the scorer leak re-check passed,
+and S3-Carnot also beats self-reward SMC. A powered null SHALL be terminal
+evidence that the proven in-generation oracle-distinct scorer did not convert
+to a fixed-NFE generation gain.
+
+### SCENARIO-VERIFY-4348: Fixed-NFE S3 Search Decides Utility Beyond The Moat
+
+Given the PR binary, DiffusionGemma GGUF cache, Exp 4337 leak-robust scorer,
+TRM stand-down, and search corpus preconditions hold, when the Exp 4348 runner
+executes, then it loads the scorer, performs the independent answer-masked leak
+re-check on the search corpus, runs unguided, best-of-K, self-reward SMC, and
+S3-Carnot for at least 80 measured tasks per arm across at least three seeds
+at the same NFE budget, reports per-arm accuracy, S3-Carnot-minus-best-of-K,
+S3-Carnot-minus-self-reward-SMC, a task-level bootstrap CI95 with at least 2000
+resamples, model specs including K and the fixed NFE budget, a reproducibility
+checksum, and `verifier_is_oracle=false`. If the leak-robust scorer is
+unavailable, controls are not differentiable, or the scorer fails the search
+corpus leak re-check, then the runner writes the matching terminal verdict
+instead of declaring a useful fixed-NFE gain.
+
 ### REQ-VERIFY-4326: Adaptive Guided-Generation Scale-Up
 
 The repository SHALL provide Exp 4326 at

@@ -13,6 +13,7 @@ by the detector.
 
 Frame-only contract: the detector uses ONLY `grid_of(frame)` and `_levels_completed(frame)`.
 """
+
 from __future__ import annotations
 
 import sys
@@ -29,8 +30,8 @@ from carnot.agentic.arc_agi3_live_adapter import _game_action, _levels_completed
 from carnot.agentic.arc_agi3_world_model import grid_of  # noqa: E402
 from arcengine import GameAction  # noqa: E402
 
-LOCAL_MAX = 8        # a click changing <= this many non-HUD cells is a "local toggle" (an edit button)
-HUD_FRAC = 0.5       # a cell changed by >= this fraction of all clicks is action-invariant HUD
+LOCAL_MAX = 8  # a click changing <= this many non-HUD cells is a "local toggle" (an edit button)
+HUD_FRAC = 0.5  # a cell changed by >= this fraction of all clicks is action-invariant HUD
 
 
 def _single_click(arc, game, cell):
@@ -79,8 +80,9 @@ def induce(effects):
     block_h = (bbox[3] - bbox[1] + 1) if bbox else 0
     density = len(edits) / (block_w * block_h) if bbox else 0.0
     # an editor palette: many toggle-buttons, densely filling a compact rectangle
-    is_editor = (len(edits) >= 20 and bbox is not None
-                 and block_w <= 40 and block_h <= 40 and density >= 0.5)
+    is_editor = (
+        len(edits) >= 20 and bbox is not None and block_w <= 40 and block_h <= 40 and density >= 0.5
+    )
     return {
         "mechanic": "program_editor" if is_editor else "unknown",
         "hud_cells": sorted(hud),
@@ -96,12 +98,13 @@ def play_area_sprites(arc, game, hud, editor_bbox):
     """FRAME-ONLY: salient connected sprites in the PLAY AREA (above the editor block) at reset —
     the movable object + the goal/target. Returns a list of (centroid_x, centroid_y, area)."""
     import scipy.ndimage as ndi
+
     g0 = grid_of(arc.make(game, scorecard_id=arc.open_scorecard()).reset())
     play_top = editor_bbox[1] - 2 if editor_bbox else 64
     vals, counts = np.unique(g0, return_counts=True)
     bg = int(vals[counts.argmax()])
-    mask = (g0 != bg)
-    mask[play_top:, :] = False                     # drop the editor + HUD rows
+    mask = g0 != bg
+    mask[play_top:, :] = False  # drop the editor + HUD rows
     lab, n = ndi.label(mask)
     sprites = []
     for i in range(1, n + 1):
@@ -127,20 +130,23 @@ def induce_editor_layout(arc, game):
                 glyph_x.append(int(np.median([p[0] for p in chg])))
                 rows.add(cy)
     uniq = sorted(set(glyph_x))
-    slots, cur = [], [uniq[0]]                       # cluster glyph-x into slot columns (gap>2)
+    slots, cur = [], [uniq[0]]  # cluster glyph-x into slot columns (gap>2)
     for v in uniq[1:]:
         if v - cur[-1] > 2:
-            slots.append(cur); cur = []
+            slots.append(cur)
+            cur = []
         cur.append(v)
     slots.append(cur)
     bit_rows = sorted(rows)
-    return {"slot_glyph_x": [int(round(np.mean(s))) for s in slots],
-            "bit_rows": [bit_rows[0] + 1, bit_rows[-1] - 1]}
+    return {
+        "slot_glyph_x": [int(round(np.mean(s))) for s in slots],
+        "bit_rows": [bit_rows[0] + 1, bit_rows[-1] - 1],
+    }
 
 
 def _glyph(grid, gx):
     """The slot's code-glyph region (frame-only) — y41..47 excludes the y40 per-slot header."""
-    return grid[41:48, gx - 2:gx + 3].copy()
+    return grid[41:48, gx - 2 : gx + 3].copy()
 
 
 def _set_program_match_preset(env, layout, frame):
@@ -209,6 +215,7 @@ def _learn_slot_codebook(arc, game, layout):
     union is the program's observable code alphabet. (Bounded by the frame-only-located bit-rows -- the
     true 6-bit editor alphabet is larger, but this subset suffices to reach L1's winning codes.)"""
     from itertools import product
+
     gxs, bits = layout["slot_glyph_x"], layout["bit_rows"]
     books = []
     for gx in gxs:
@@ -248,6 +255,7 @@ def frame_only_winner_search(arc, game, layout, run_button, cap=400):
         non-scaling is explicit).
     Returns {found, strategy, runs, product_space}. Fresh env per attempt (the LOSS-reset constraint)."""
     from itertools import product
+
     books = _learn_slot_codebook(arc, game, layout)
     choices = [sorted(set(b.values())) for b in books]
     space = 1
@@ -266,12 +274,12 @@ def frame_only_winner_search(arc, game, layout, run_button, cap=400):
         runs += 1
         return _levels_completed(f)
 
-    for C in alphabet:                                   # (1) uniform hypotheses
+    for C in alphabet:  # (1) uniform hypotheses
         if not all(C in b.values() for b in books):
             continue
         if _run([C] * len(choices)) >= 1:
             return {"found": True, "strategy": "uniform", "runs": runs, "product_space": space}
-    for combo in product(*choices):                      # (2) bounded product fallback
+    for combo in product(*choices):  # (2) bounded product fallback
         if runs >= cap:
             break
         if _run(list(combo)) >= 1:
@@ -286,46 +294,78 @@ def main() -> int:
     effects = probe(arc, game, step=1)
     out = induce(effects)
     print(f"DETECTED MECHANIC: {out['mechanic']}")
+    # Wire the frame-only verdict into the STRATEGY ROUTER (the live path: an unseen game's detected
+    # mechanic routes to a solving strategy with NO internal state / registry lookup).
+    from carnot.agentic import arc_strategy_router as strat  # noqa: E402
+
+    routed = strat.route_strategy(
+        out["mechanic"] if out["mechanic"] != "unknown" else "graph_explore"
+    )
+    print(
+        f"  STRATEGY ROUTE (frame-only): {routed['name']} (wired={routed['wired']}) — {routed['reason']}"
+    )
+    print(f"    solver: {routed['solver']}")
     print(f"  HUD cells (masked): {out['hud_cells']}")
-    print(f"  edit-button palette: {out['n_edit_buttons']} toggle-cells, bbox {out['editor_bbox']} "
-          f"({out['editor_block_wh'][0]}x{out['editor_block_wh'][1]}, density {out['editor_density']})")
+    print(
+        f"  edit-button palette: {out['n_edit_buttons']} toggle-cells, bbox {out['editor_bbox']} "
+        f"({out['editor_block_wh'][0]}x{out['editor_block_wh'][1]}, density {out['editor_density']})"
+    )
     sprites = play_area_sprites(arc, game, set(out["hud_cells"]), out["editor_bbox"])
     print(f"  play-area sprites (object + target candidates): {sprites}")
 
     # VALIDATION (separate; NOT used by the detector) -- compare to the internal layout.
-    env = arc.make(game, scorecard_id=arc.open_scorecard()); env.reset()
+    env = arc.make(game, scorecard_id=arc.open_scorecard())
+    env.reset()
     try:
         bz = env._game.fdksqlmpki.bzirenxmrg
         true_x = sorted({int(s.x) for s in bz.vupcwzjtxu.pfyayhyovw})
         o, t = bz.htntnzkbzu, bz.aqszntqeae
-        print(f"  [validate] true editor slot-x span = {true_x[0]}..{true_x[-1]} "
-              f"(detector bbox x {out['editor_bbox'][0]}..{out['editor_bbox'][2]})")
-        print(f"  [validate] true object @({o.x},{o.y}) target @({t.x},{t.y}) "
-              f"vs detected play-area sprites above")
+        print(
+            f"  [validate] true editor slot-x span = {true_x[0]}..{true_x[-1]} "
+            f"(detector bbox x {out['editor_bbox'][0]}..{out['editor_bbox'][2]})"
+        )
+        print(
+            f"  [validate] true object @({o.x},{o.y}) target @({t.x},{t.y}) "
+            f"vs detected play-area sprites above"
+        )
         ed = out["editor_bbox"]
-        ok = (out["mechanic"] == "program_editor" and ed[0] <= true_x[0] + 3 and ed[2] >= true_x[-1] - 3)
+        ok = (
+            out["mechanic"] == "program_editor"
+            and ed[0] <= true_x[0] + 3
+            and ed[2] >= true_x[-1] - 3
+        )
         print(f"  [validate] program-editor detected AND bbox covers the true slots: {ok}")
     except Exception as e:  # pragma: no cover
         print(f"  [validate] (internal check unavailable: {type(e).__name__})")
 
     if out["mechanic"] == "program_editor":
-        print("== make the editor USABLE frame-only (click->(slot,bit) mapping + run-trigger) ==",
-              flush=True)
+        print(
+            "== make the editor USABLE frame-only (click->(slot,bit) mapping + run-trigger) ==",
+            flush=True,
+        )
         layout = induce_editor_layout(arc, game)
-        print(f"  derived {len(layout['slot_glyph_x'])} slots at glyph-x {layout['slot_glyph_x']}; "
-              f"bit-rows y {layout['bit_rows']}")
+        print(
+            f"  derived {len(layout['slot_glyph_x'])} slots at glyph-x {layout['slot_glyph_x']}; "
+            f"bit-rows y {layout['bit_rows']}"
+        )
         run = find_run_button(arc, game, layout)
         print(f"  derived RUN button: {run}")
         if run:
             lvl = frame_only_solve(arc, game, layout, run)
-            print(f"  FRAME-ONLY SOLVE of the current level -> level {lvl} "
-                  f"{'(SOLVED, zero internal state)' if lvl >= 1 else '(no advance)'}")
-            print("== GENERAL winner-discovery: blind program-space search (binary win signal only) ==",
-                  flush=True)
+            print(
+                f"  FRAME-ONLY SOLVE of the current level -> level {lvl} "
+                f"{'(SOLVED, zero internal state)' if lvl >= 1 else '(no advance)'}"
+            )
+            print(
+                "== GENERAL winner-discovery: blind program-space search (binary win signal only) ==",
+                flush=True,
+            )
             ws = frame_only_winner_search(arc, game, layout, run)
-            print(f"  winner-search: found={ws['found']} via {ws['strategy']} in {ws['runs']} runs "
-                  f"(full product space = {ws['product_space']}); NO graded feedback -> blind, "
-                  f"exponential in program length (does not scale).")
+            print(
+                f"  winner-search: found={ws['found']} via {ws['strategy']} in {ws['runs']} runs "
+                f"(full product space = {ws['product_space']}); NO graded feedback -> blind, "
+                f"exponential in program length (does not scale)."
+            )
     return 0
 
 
