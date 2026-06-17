@@ -14067,3 +14067,111 @@ bare bool, `cross_game_state_reduction` as a bare float,
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4331 | Planned (`python/carnot/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.py`; `results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.py`; `results/experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.json`) | Planned (`tests/python/test_experiment_4331_self_learning_learned_frame_encoder_cross_game_transfer.py`) |
+
+---
+
+## REQ-LEARN-4342: ARC Cross-Game Action-Role Interaction Encoder Transfer
+
+**Given** at least three reproducibly solved ARC-AGI-3 games with replayable
+solve traces and the existing `arc_solver_kit`, `arc_value_learner`, and
+cross-game trace-frontier solver imports available
+**When** Exp 4342 performs leave-one-game-out training of a CPU-only
+game-agnostic action-role / object-interaction encoder on the other solved
+games' traces
+**Then** the held-out game SHALL be solved with a uniform positive-control
+search and with a transferred value head over action-role interaction features
+**And** the artifact SHALL report `learned_encoder_transfer_helps` as a bare
+bool that is true only when aggregate held-out
+`cross_game_state_reduction > 1.0` and the bootstrap
+`cross_game_state_reduction_ci95` lower bound is greater than 1.0.
+The required top-level artifact fields are `honest_verdict`,
+`learned_encoder_transfer_helps`, `cross_game_state_reduction`,
+`cross_game_state_reduction_ci95`, `positive_control_passed`,
+`n_held_out_games`, `verifier_is_oracle`, `preconditions_checked`,
+`random_seed`, `reproducibility_checksum`, and `model_specs`.
+
+### REQ-LEARN-4342 Sub-requirements
+
+- REQ-LEARN-4342-1: Preconditions SHALL verify that
+  `ops/arc_solve_registry.yaml`, the cached solved-game trace files, the
+  trace-frontier search substrate, and the TRM stand-down condition are present
+  before running the action-role encoder experiment.
+- REQ-LEARN-4342-2: If fewer than three games have usable replay traces with at
+  least one reproduced level, Exp 4342 SHALL emit
+  `honest_verdict=blocked_insufficient_game_traces` and SHALL NOT fabricate
+  transfer metrics.
+- REQ-LEARN-4342-3: For every held-out game, the training split SHALL exclude
+  all feature rows from that game and SHALL record the train/held-out split in
+  `model_specs`.
+- REQ-LEARN-4342-4: The action-role encoder SHALL expose game-agnostic features
+  derived from transition effects rather than per-game pixels: action role,
+  movement/select/toggle/commit/fire-style effects, changed-object counts,
+  centroid/bounding-box motion, component merge/split collision proxies, and
+  terminal-interaction alignment deltas.
+- REQ-LEARN-4342-5: The uniform baseline SHALL solve every held-out game before
+  a null is considered informative, and the bare `positive_control_passed`
+  field SHALL report that FALSE_NEGATIVE_RISK guard.
+- REQ-LEARN-4342-6: The artifact SHALL set `verifier_is_oracle=false`,
+  `random_seed`, `reproducibility_checksum`, `model_specs`, and SHALL run
+  `scripts/adversarial_verify.py` cleanly.
+- REQ-LEARN-4342-7: The artifact SHALL report `n_held_out_games` as the number
+  of leave-one-game-out folds and SHALL compute `cross_game_state_reduction_ci95`
+  across held-out games, not across repeated rows from one game.
+
+### REQ-LEARN-4342 Field Principles
+
+- `honest_verdict`: Terminal-prefixed. A transfer WIN (reduction>1.0, CI
+  lower>1.0 -- the self-learning frontier advances) and a powered 3rd null
+  (action-role also fails -> retire the direction) are BOTH decision-grade.
+- `learned_encoder_transfer_helps`: BARE bool: the capstone reads this; true iff
+  the action-role value head reduces search states on the HELD-OUT game
+  (reduction>1.0 AND CI95 lower bound>1.0) -- the cross-game transfer the
+  raw-frame encoder failed to deliver.
+- `cross_game_state_reduction`: BARE float: baseline_states / guided_states on
+  the held-out games (>1.0 = the action-role value head helps; compare to
+  exp4331's 1.008 null).
+- `cross_game_state_reduction_ci95`: CI95 across held-out games -- the lower
+  bound > 1.0 is the decision-grade transfer (a 3rd null retires the direction).
+- `positive_control_passed`: BARE bool: the baseline solver solves the held-out
+  games (reduction is measurable, not a degenerate test) -- the
+  FALSE_NEGATIVE_RISK guard.
+- `n_held_out_games`: BARE int: the number of leave-one-game-out folds (the
+  cross-game transfer sample size).
+- `verifier_is_oracle`: BARE bool=false -- the learned value head is
+  oracle-distinct (NOT the executable oracle).
+- `preconditions_checked`: Records the game-traces availability +
+  TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.
+- `random_seed`: Determinism precondition for the encoder training +
+  leave-one-game-out.
+- `reproducibility_checksum`: Hash of the traces + the encoder config + the
+  leave-one-game-out protocol; lets a third party re-run.
+- `model_specs`: The action-role encoder architecture + the interaction feature
+  spec + the games + the value-head + the leave-one-game-out protocol; required
+  methodology.
+
+### SCENARIO-LEARN-4342: Leave-One-Game-Out Action-Role Encoder Reports Decision-Grade Transfer Or Null
+
+**Given** solved traces for the reproduced ARC games are present
+**When** Exp 4342 trains the action-role interaction encoder and value head on
+all games except the held-out game
+**Then** each held-out game records baseline and guided state counts
+**And** the aggregate artifact reports `learned_encoder_transfer_helps` as a
+bare bool, `cross_game_state_reduction` as a bare float,
+`cross_game_state_reduction_ci95` as a two-float list,
+`positive_control_passed=true`, `n_held_out_games`, and
+`verifier_is_oracle=false`.
+
+### SCENARIO-LEARN-4342-BLOCKED: Insufficient Game Traces Stop Honestly
+
+**Given** fewer than three solved games have usable replay traces
+**When** Exp 4342 runs
+**Then** it SHALL write a terminal artifact with
+`honest_verdict=blocked_insufficient_game_traces`
+**And** `learned_encoder_transfer_helps=false`,
+`positive_control_passed=false`, and `n_held_out_games=0`.
+
+## Implementation Status (Exp 4342)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4342 | Planned (`python/carnot/experiment_4342_self_learning_action_role_cross_game_encoder.py`; `results/experiment_4342_self_learning_action_role_cross_game_encoder.py`; `results/experiment_4342_self_learning_action_role_cross_game_encoder.json`) | Planned (`tests/python/test_experiment_4342_self_learning_action_role_cross_game_encoder.py`) |
