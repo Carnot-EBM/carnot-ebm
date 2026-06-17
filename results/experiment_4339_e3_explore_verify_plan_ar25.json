@@ -1,0 +1,275 @@
+{
+  "adaptive_test_results": [
+    {
+      "actions": [
+        "3"
+      ],
+      "divergence_step": null,
+      "level_up": false,
+      "name": "adaptive_l1_prefix_1",
+      "passed": true
+    },
+    {
+      "actions": [
+        "3",
+        "3",
+        "3",
+        "3",
+        "3"
+      ],
+      "divergence_step": null,
+      "level_up": false,
+      "name": "adaptive_l1_prefix_2",
+      "passed": true
+    },
+    {
+      "actions": [
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2"
+      ],
+      "divergence_step": null,
+      "level_up": false,
+      "name": "adaptive_l1_prefix_3",
+      "passed": true
+    },
+    {
+      "actions": [
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2"
+      ],
+      "divergence_step": null,
+      "level_up": true,
+      "name": "adaptive_l1_prefix_4",
+      "passed": true
+    }
+  ],
+  "adaptive_tests_generated": 4,
+  "duration_s": 1.169,
+  "experiment": "experiment_4339_e3_explore_verify_plan_ar25",
+  "explore_lemmas": [
+    {
+      "action": 1,
+      "changed_cells": 109,
+      "has_data": false,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 7,
+      "changed_cells": 108,
+      "has_data": false,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 5,
+      "changed_cells": 1,
+      "has_data": false,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 6,
+      "changed_cells": 0,
+      "has_data": true,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 4,
+      "changed_cells": 109,
+      "has_data": false,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 3,
+      "changed_cells": 109,
+      "has_data": false,
+      "level_delta": 0,
+      "verifier_gated": true
+    },
+    {
+      "action": 2,
+      "changed_cells": 109,
+      "has_data": false,
+      "level_delta": 0,
+      "verifier_gated": true
+    }
+  ],
+  "explore_lemmas_collected": 7,
+  "field_principles": {
+    "explore_lemmas_collected": "BARE int: the count of verifier-gated transition lemmas the EXPLORE phase confirmed before planning -- the AERA explore-before-plan discipline that fixes the .400 plan_executed=false failure.",
+    "honest_verdict": "Terminal-prefixed (success_e3_ar25_L1_reproduced or complete_e3_ar25_partial_model_<acc>). A reproduced L1 solve and an honest partial (refined model + residual gap) are BOTH progress.",
+    "offline_reproduced": "BARE bool: the real env reaches L1 via the induced-model plan, re-gated by arc_solver_kit.reproduce() -- only reproduced levels count.",
+    "plan_executed": "BARE bool + divergence_step: execution-grounded confirmation; halt-on-divergence prevents trusting a wrong model (the .400 failure was plan_executed=false).",
+    "preconditions_checked": "Records the offline-env presence + harness import + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the induction + exploration + planning.",
+    "reproduced_levels": "BARE int: levels offline-reproduced on ar25 (target >=1) -- the +1 incremental-progress unit.",
+    "reproducibility_checksum": "Hash of the world model + the plan + the reproduce() result; lets a third party re-run.",
+    "verifier_accuracy_per_round": "list[float]: the verifier is the moat; its reproduction rate per refactor round is the only trustworthy progress signal (compare to .400's single 0.89 round).",
+    "verifier_is_oracle": "BARE bool=true -- the SOLVE is EXECUTION-GROUNDED (the real env defines the win); ARC NORTH-STAR PROGRESS, NOT an oracle-distinct verifier-moat headline.",
+    "world_model_path": "results/arc_e3/ar25/world_model.py -- the induced model IS the deliverable.",
+    "world_model_sha256": "Hash of the induced world model -- makes the solve auditable/reproducible."
+  },
+  "game": "ar25",
+  "honest_verdict": "success_e3_ar25_L1_reproduced",
+  "inference_substrate": "codex_direct_model_edit_offline_env_no_nested_proposer",
+  "method": "aera_explore_verify_plan_agent2world_adaptive_world_model_testing",
+  "offline_reproduced": true,
+  "plan_executed": true,
+  "plan_executed_detail": {
+    "divergence_step": null,
+    "plan_result": {
+      "divergence_step": null,
+      "executed": true,
+      "executed_steps": [
+        {
+          "action": 3,
+          "data": null,
+          "step": 1
+        },
+        {
+          "action": 3,
+          "data": null,
+          "step": 2
+        },
+        {
+          "action": 3,
+          "data": null,
+          "step": 3
+        },
+        {
+          "action": 3,
+          "data": null,
+          "step": 4
+        },
+        {
+          "action": 3,
+          "data": null,
+          "step": 5
+        },
+        {
+          "action": 2,
+          "data": null,
+          "step": 6
+        },
+        {
+          "action": 2,
+          "data": null,
+          "step": 7
+        },
+        {
+          "action": 2,
+          "data": null,
+          "step": 8
+        },
+        {
+          "action": 2,
+          "data": null,
+          "step": 9
+        },
+        {
+          "action": 2,
+          "data": null,
+          "step": 10
+        },
+        {
+          "action": 2,
+          "data": null,
+          "step": 11
+        },
+        {
+          "action": 2,
+          "data": null,
+          "step": 12
+        },
+        {
+          "action": 2,
+          "data": null,
+          "step": 13
+        },
+        {
+          "action": 2,
+          "data": null,
+          "step": 14
+        },
+        {
+          "action": 2,
+          "data": null,
+          "step": 15
+        }
+      ],
+      "game": "ar25",
+      "level_up": true,
+      "plan_len": 15,
+      "plan_source": "verified_l1_reflection_plan_from_refined_world_model",
+      "planned": true,
+      "solution": [
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2"
+      ]
+    }
+  },
+  "preconditions_checked": {
+    "harness_import": true,
+    "leaderboard_submission": false,
+    "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/ar25",
+    "offline_env_present": true,
+    "research_conductor_modified": false,
+    "solver_kit_import": true,
+    "trm_training_stood_down": true
+  },
+  "random_seed": 4339,
+  "reproduced_levels": 1,
+  "reproducibility_checksum": "8bd8fdc52533c6548138addc9e90d2c20337ba942dcf649e40dfebcebdb49391",
+  "residual_mismatch_class": "missing_world_model_rule_gap_hidden_undo_stack_action7",
+  "spec_refs": [
+    "REQ-PHASE4-078",
+    "SCENARIO-PHASE4-078"
+  ],
+  "submitted_to_leaderboard": false,
+  "verifier_accuracy_per_round": [
+    0.8875
+  ],
+  "verifier_best_accuracy": 0.8875,
+  "verifier_is_oracle": true,
+  "world_model_path": "results/arc_e3/ar25/world_model.py",
+  "world_model_sha256": "d6274374375774291731d21258fc2ddb77b521fb13a7d762de693602897c492f"
+}
