@@ -23,6 +23,28 @@ from typing import Any, Callable, Sequence
 import numpy as np
 
 
+def cross_game_features(frame: Any) -> list[float]:
+    """GAME-AGNOSTIC frame features for a CROSS-GAME verifier (transfer the value
+    head across games). Computable from any ARC-AGI-3 frame grid; normalized so the
+    scale is comparable across games. The bet: some of these correlate with
+    progress-toward-win regardless of game, giving a deep/sparse game (e.g. wa30) a
+    search heuristic before it has its own solved trajectory."""
+    from collections import Counter
+    from carnot.agentic.arc_agi3_world_model import grid_of, objects
+    g = grid_of(frame)
+    total = max(1, g.size)
+    flat = g.flatten().tolist()
+    cnt = Counter(flat)
+    n_nonzero = total - cnt.get(0, 0)
+    n_colors = len([c for c in cnt if c != 0])
+    n_objects = len(objects(g))
+    nz = (g != 0)
+    ys, xs = np.where(nz)
+    spread = float((np.std(xs) + np.std(ys)) / max(1, max(g.shape))) if len(xs) else 0.0
+    dom = (max((v for k, v in cnt.items() if k != 0), default=0) / max(1, n_nonzero))
+    return [n_nonzero / total, float(n_colors), float(n_objects) / 32.0, spread, float(dom)]
+
+
 def collect_trajectory_data(env: Any, solver: Any, prefix: Sequence[str],
                             level_path: Sequence[str], featurize: Callable[[Any], Sequence[float]]):
     """Replay a solved LEVEL path and emit (features, steps_remaining) per state —
