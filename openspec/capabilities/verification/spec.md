@@ -17264,6 +17264,34 @@ checksum over the linter plus the regression test. If any precondition is
 missing, then the result script stops with `blocked_artifacts_missing` rather
 than fabricating a success.
 
+### REQ-VERIFY-4308: Degenerate Controls Adversarial Verify Guard
+
+The repository SHALL extend `scripts/adversarial_verify.py` with a
+`DEGENERATE_CONTROLS` critical flag for in-generation or condition-arm
+artifacts whose control arms are no-ops of each other. The check SHALL inspect
+`condition_accuracy`, `per_condition_accuracy`, and `arms` maps and SHALL flag
+when at least two distinct control-arm keys have bit-identical finite numeric
+values. Control-arm keys include model-self-guidance, unguided, random, and
+baseline controls such as `rfg`, `unguided`, and `entrgi`.
+
+The check SHALL avoid false positives for single-arm maps and explicitly
+documented placebo/replicate controls that are intentionally identical. The
+Exp 4308 terminal artifact SHALL include bare bools
+`degenerate_controls_check_added` and `degenerate_controls_flags_exp4293`, and
+the regression test SHALL prove the checked-in Exp 4293 artifact is flagged
+while a differentiated controls map is not.
+
+### SCENARIO-VERIFY-4308: Exp4293 Degenerate Controls Are Flagged
+
+Given `scripts/adversarial_verify.py` imports and
+`results/experiment_4293_diffusiongemma_energy_guided_run_partial_state.json`
+exists, when the Exp 4308 regression test and result script run, then the
+verifier flags Exp 4293 with `DEGENERATE_CONTROLS` because `rfg`, `unguided`,
+and `entrgi` report the same condition accuracy, records the required bare
+bools, and writes a checksum over the linter, helper, and regression tests. If
+the verifier cannot import or the artifact is missing, then the result script
+stops with `blocked_artifacts_missing` rather than fabricating success.
+
 ### REQ-VERIFY-4259: ARC Set-Encoder Grid Synthesis
 
 The repository SHALL provide Exp 4259 at
