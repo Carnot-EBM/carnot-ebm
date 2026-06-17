@@ -41273,7 +41273,12 @@ milestones:
     \ + a matched control, CI95-excl-0."
   doc: openspec/change-proposals/research-roadmap-v398.md
   completed: '2026-06-17'
-  finding: '.398 close-state: TRUE scorecard per exp4312. efficiency-parity HARDENED: energy=0.8 vs judge=0.5, cost_ratio=1.03e-08, CI95=[0.1, 0.5], verifier_is_oracle=false. self-learning HELPS: delta=0.529, CI95=[0.408, 0.651]. in-generation moat OPEN/UNDERPOWERED-POSITIVE: delta=+0.133, CI95=[-0.067, 0.367], controls differentiated, scorer leak-free. cross-domain moat OPEN/UNDERPOWERED-POSITIVE: delta=+0.231, CI95=[-0.115, 0.538], gap=GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305. ARC stalled-on-harness-failure at 22: frontier adapter unavailable, exploration_actions_used=0, not a science failure. paper_ready=True. .399 frame: close-the-two-open-moats + deploy-efficiency-cascade + unstall-ARC.'
+  finding: '.398 close-state: TRUE scorecard per exp4312. efficiency-parity HARDENED: energy=0.8 vs judge=0.5, cost_ratio=1.03e-08,
+    CI95=[0.1, 0.5], verifier_is_oracle=false. self-learning HELPS: delta=0.529, CI95=[0.408, 0.651]. in-generation moat OPEN/UNDERPOWERED-POSITIVE:
+    delta=+0.133, CI95=[-0.067, 0.367], controls differentiated, scorer leak-free. cross-domain moat OPEN/UNDERPOWERED-POSITIVE:
+    delta=+0.231, CI95=[-0.115, 0.538], gap=GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305. ARC stalled-on-harness-failure
+    at 22: frontier adapter unavailable, exploration_actions_used=0, not a science failure. paper_ready=True. .399 frame:
+    close-the-two-open-moats + deploy-efficiency-cascade + unstall-ARC.'
   activation_recorded: exp4313-archive-v398-activate-v399
   tasks:
   - id: exp4302-archive-v397-activate-v398
@@ -41422,4 +41427,187 @@ milestones:
       \ artifact; HONOR verifier_is_oracle (a circular/execution-grounded win is NOT a moat). Compute the G1-G4 publication\
       \ gate via publication_gate.py. NO gated_on."
     deliverable: results/experiment_4312_capstone_v398.json
+    result: OK (conductor)
+- id: 2026.06.399
+  title: "CLOSE THE TWO OPEN \xA75 MOATS -- CROSS-DOMAIN SELECTION (rebuild w/ IR3DE linear router + CASCAL generated-data\
+    \ pretrain + ContextPRM coherence) AND IN-GENERATION GUIDANCE (rebuild w/ external-PRM reward-guided STEP-STITCHING, must-beat\
+    \ self-reward SMC) -- DEPLOY the hardened efficiency verifier as a budget-aware CASCADE ROUTER -- UNSTALL ARC (frontier-adapter-free\
+    \ graph-explore solver). .398 HARDENED efficiency-parity (exp4303 energy 0.8 vs judge 0.5 @ cost_ratio 1.03e-08, CI95\
+    \ [0.1,0.5] excl 0 -- the operator's \xA75 win condition, MET) and POWERED self-learning (exp4306 +0.529, CI95 [0.408,0.651]\
+    \ excl 0), but left the IN-GENERATION moat (exp4304 +0.133, CI95 [-0.067,0.367] incl 0 -- UNDERPOWERED-POSITIVE, controls\
+    \ differentiated, scorer leak-free) and the CROSS-DOMAIN moat (exp4305 +0.231, CI95 [-0.115,0.538] incl 0 -- UNDERPOWERED-POSITIVE,\
+    \ label-ablation robust, GAP logged) OPEN, and ARC STALLED at 22 (exp4307 FLAGGED GATE_PASSED_WITHOUT_DATA: frontier adapter\
+    \ unavailable, 0 exploration actions). .399 is DEPTH on exactly the two underpowered-positive open moats with the flagged\
+    \ SOTA, plus the ARC unstall + the mandated self-learning (cross-game transfer) + off-ARC execution transfer. Oracle-distinct\
+    \ frontier (P0 2026-06-14): every LEARNED-verifier task verifier_is_oracle=false + a matched control + CI95-excl-0; execution-grounded\
+    \ wins (off-ARC) declare verifier_is_oracle=true honestly."
+  doc: openspec/change-proposals/research-roadmap-v399.md
+  completed: '2026-06-17'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp4313-archive-v398-activate-v399
+    title: "Archive .398 -> activate .399; KEEP the hardened green-gate + poison-test quarantine. Assert research-complete.yaml\
+      \ + ops/exclusion_manifest.yaml parse under yaml.safe_load; run the smart-subset pre-test gate green; RECORD the TRUE\
+      \ .398 close-state truthfully (per exp4312 capstone): verifier_thesis_state=efficiency_parity_hardened; EFFICIENCY-PARITY\
+      \ HARDENED (exp4303 efficiency_pareto_holds=true, energy 0.8 vs judge 0.5, cost_ratio 1.03e-08, accuracy_delta_ci95\
+      \ [0.1,0.5] excl 0, verifier_is_oracle=false -- the operator's \xA75 win condition, MET); SELF-LEARNING HELPS powered\
+      \ (exp4306 online_adaptation_helps=true, +0.529, CI95 [0.408,0.651] excl 0); IN-GENERATION moat OPEN/UNDERPOWERED-POSITIVE\
+      \ (exp4304 diffusiongemma_guidance_moat=false, carnot_minus_best_control_delta +0.133, CI95 [-0.067,0.367] incl 0, controls_differentiated=true,\
+      \ scorer_leak_recheck_passed=true -- a clean harness needing a stronger method + more power); CROSS-DOMAIN moat OPEN/UNDERPOWERED-POSITIVE\
+      \ (exp4305 cross_domain_selection_holds=false, cross_domain_delta +0.231, CI95 [-0.115,0.538] incl 0, label_ablation_robust=true,\
+      \ GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305 logged); ARC stalled at 22 on a HARNESS failure (exp4307 FLAGGED\
+      \ GATE_PASSED_WITHOUT_DATA: frontier adapter unavailable, exploration_actions_used=0 -- NOT a science failure); INFRA\
+      \ shipped (exp4308 DEGENERATE_CONTROLS check + robust aggregate-available helper); paper_ready=True (FoVer 0.9131, G1-G4\
+      \ pass). Frame .399 as close-the-two-open-moats (cross-domain + in-generation) + deploy-efficiency-cascade + unstall-ARC."
+    deliverable: results/experiment_4313_archive_v398_activate_v399.json
+    result: OK (conductor)
+  - id: exp4314-cross-domain-selector-ir3de-cascal
+    title: 'PHASE A1 (CLOSE THE CROSS-DOMAIN SELECTION MOAT; rebuild the underpowered exp4305) -- a domain router + per-domain
+      set-encoder that generalizes selection to a HELD-OUT DOMAIN, rebuilt with the flagged SOTA + more power. .398 (exp4305)
+      reported a POSITIVE point estimate (cross_domain_delta +0.231) but CI95 [-0.115,0.538] INCLUDED 0 (underpowered, NOT
+      refuted); label_ablation_robust=true (no domain-label leak); GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305 logged.
+      The .398 SOTA ingestion (exp4309) + the .399 sweep flagged the precise upgrades: (1) replace the nearest-centroid router
+      with an IR3DE LINEAR domain-expert router (ridge regression over normalized selector features, leave-one-domain-out;
+      arXiv:2606.06098); (2) add CASCAL GENERATED-DATA synthetic-task pretraining (train-only synthetic selector tasks from
+      domain descriptions, query-only routers, no target labels; arXiv:2601.09692) for more router training signal; (3) add
+      ContextPRM domain-AGNOSTIC step-COHERENCE features (verify the logical connection, not the domain fact; arXiv:2509.24460)
+      as the domain-invariant discriminator; (4) MORE held-out tasks (>=~24) for power. Keep the LABEL-ABLATION anti-leak
+      arm + the non-degenerate guards (vote@1>0.05, oracle<1.0, delta<0.95) so the adversarial_verify DEGENERATE_SEPARATION
+      check does not fire. Domains: ARC families + ARC-GEN generators (reuse exp4291''s non-degenerate pool) + FoVer-step/math
+      (NOT code -- exp4319 owns code-execution). Emit cross_domain_selection_holds BARE bool := (held-out-domain delta>0 AND
+      CI95-excl-0 AND non-degenerate guards AND label_ablation_robust). verifier_is_oracle=false. A held-out-domain win escapes
+      the math/ARC domain bound (the strongest selection result yet); a powered collapse is a genuine, decision-grade scope
+      boundary. HARD-CAP to the window; an honest partial (>=3 domains, >=1 held-out, >=~16 held-out tasks) is fine.'
+    deliverable: results/experiment_4314_cross_domain_selector_ir3de_cascal.json
+    result: OK (conductor)
+  - id: exp4315-diffusiongemma-reward-guided-stitching
+    title: 'PHASE B1 (CLOSE THE IN-GENERATION MOAT; rebuild the underpowered exp4304 w/ a stronger architecture) -- DiffusionGemma
+      in-generation, external-PRM REWARD-GUIDED STEP-STITCHING, must-beat the self-reward SMC intrinsic baseline. .398 (exp4304)
+      had a CLEAN harness (controls_differentiated=true, scorer_leak_recheck_passed=true) and a POSITIVE point estimate (carnot_minus_best_control_delta
+      +0.133) but CI95 [-0.067,0.367] INCLUDED 0 (underpowered, NOT refuted). The .399 sweep flagged the architecture upgrade:
+      instead of a single guided pass, use REWARD-GUIDED STITCHING (arXiv:2602.22871) -- sample DIVERSE diffusion reasoning
+      trajectories, score EVERY intermediate step with the exp4292 external partial-state scorer, and STITCH the highest-scoring
+      steps into a composite (+23.8% in the paper). CRITICAL must-beat baseline (arXiv:2602.01849, the .399 sweep): SELF-REWARD
+      SMC -- a particle filter using the model''s OWN trajectory self-confidence (NO external scorer) -- so the moat now means
+      Carnot''s EXTERNAL verifier beats the model''s INTRINSIC self-confidence -- the sharpest oracle-distinct test in generation.
+      Keep: (1) an INDEPENDENT leak re-check on the exp4292 scorer, (2) >=1 genuinely-engaged non-Carnot control (RFG enhanced!=reference
+      at gamma>0, 2509.25604, OR EntRGi 2602.05000) + the exp4308 DEGENERATE_CONTROLS no-op guard, (3) MORE power (n>=40 per
+      arm). Emit diffusiongemma_guidance_moat BARE bool := (Carnot-stitched - best-engaged-control > 0 AND CI95-excl-0 AND
+      controls_differentiated AND beats self-reward SMC). verifier_is_oracle=false. NO TRM training; NO leaderboard submission;
+      DiffusionGemma via the llama.cpp PR binary.'
+    deliverable: results/experiment_4315_diffusiongemma_reward_guided_stitching.json
+    result: OK (conductor)
+  - id: exp4316-efficiency-cascade-router-deploy
+    title: "PHASE C1 (DEPLOY the hardened efficiency verifier as a budget-aware CASCADE ROUTER; the .399 SOTA-ingestion headline;\
+      \ broaden the exp4303 win) -- .398 (exp4303) HARDENED the efficiency-parity win (energy 0.8 vs well-prompted judge 0.5,\
+      \ cost_ratio 1.03e-08, CI95 [0.1,0.5] excl 0) but at n>=30 on cross-family ARC selection only. Convert the PROVEN result\
+      \ into a DEPLOYED budget-aware CASCADE policy (arXiv:2510.14913): score every candidate with the cheap discriminative\
+      \ energy verifier first, and escalate ONLY the low-margin (uncertain) cases to the LLM judge -- the operating point\
+      \ that buys most of the judge's accuracy at most of the energy verifier's cost. Compare the CASCADE against always-energy\
+      \ (cheap, lower accuracy) and always-judge (expensive, higher accuracy) controls on a LARGER, multi-corpus n (broaden\
+      \ beyond the exp4303 n>=30: add a 2nd selection corpus -- ARC-GEN generators and/or FoVer-step). Peers to cite: Weaver\
+      \ 2506.18203 (weak-verifier ensemble distilled to 400M rivals o3-mini), MSV 2603.03417 (set-conditioned verifier). Emit\
+      \ cascade_dominates_controls BARE bool := (cascade accuracy >= always-judge accuracy within CI AND cascade cost strictly\
+      \ between always-energy and always-judge AND cascade is Pareto-non-dominated). verifier_is_oracle=false. RE-SCOPE to\
+      \ fit the window (synchronous resume-accumulate, checkpoint after every judge escalation, per-task progress prints;\
+      \ a PARTIAL one-corpus n>=40 ACCEPTED). NOT the retired circular efficiency-vs-judge-ON-CODE (known-issues \xA70) --\
+      \ this is the oracle-distinct ARC/cross-family selection."
+    deliverable: results/experiment_4316_efficiency_cascade_router_deploy.json
+    result: OK (conductor)
+  - id: exp4317-arc-incremental-progress-adapter-free
+    title: 'PHASE D1 (ARC north star; UNSTALL the exp4307 harness failure) -- monotonic ARC +1 on a NEW game (total_levels
+      >= 23) with a FRONTIER-ADAPTER-FREE solver. .398 (exp4307) STALLED at 22 and was FLAGGED GATE_PASSED_WITHOUT_DATA: it
+      selected a game but exploration_actions_used=0 and real_env_confirmed=false because the frontier adapter was unavailable
+      -- a HARNESS failure, not a science failure. .399 removes the adapter dependency: use the TRAINING-FREE GRAPH-EXPLORE
+      solver (arXiv:2512.24156 -- segment frames into components, prioritize actions by visual salience, maintain a directed
+      state-transition graph, take the shortest path to an untested state-action pair; median 30/52 levels with NO learning)
+      so the solve does NOT depend on an unavailable adapter. Target the best-headroom UNATTEMPTED game from the 25-game survey
+      (NOT r11l/ls20/wa30/sc25). HARD anti-flag gate (the exp4307 flag must NOT recur): exploration_actions_used>0 AND real_env_confirmed=true
+      AND offline_reproduced=true (per ARC Solve Reproducibility Discipline -- only offline-reproduced levels count). Advance
+      ONE game by >=1 NEW real-env-confirmed level (total 22 -> >=23). Report total_levels + game_advanced + levels_completed
+      + exploration_actions_used + offline_reproduced. NO TRM training; NO leaderboard submission. An honest no-advance WITH
+      exploration_actions_used>0 is COMPLETE and informs the next game pick (a no-advance with 0 actions is the flag to avoid).'
+    deliverable: results/experiment_4317_arc_incremental_progress_adapter_free.json
+    result: OK (conductor)
+  - id: exp4318-arc-cross-game-learned-verifier-transfer
+    title: 'PHASE E1 (CONTINUOUS SELF-LEARNING -- the mandated self-learning experiment; NEW mechanism = cross-game transfer)
+      -- does the ARC learned verifier (arc_value_learner: state->steps-to-go), trained on the SOLVED games'' solve traces,
+      reduce SEARCH STATES on a HELD-OUT game (leave-one-game-out)? research-program.md mandates >=1 self-learning experiment/milestone.
+      .398 (exp4306) PROVED online/retrieval adaptation HELPS (+0.529, powered) -- so re-measuring it is churn; the NEW frontier
+      (per ops/verifier_registry.yaml: ''cross-game verifier transfer: not yet pursued; POC is per-game value head'') is whether
+      a value-head trained on OTHER games transfers its search-efficiency benefit to a new game. This is the north-star EFFICIENCY
+      axis (fewer search states = more efficient solve, the Exp1165 ~4x-fewer-actions thesis) + the self-learning mandate
+      in ONE. Train arc_value_learner on the reproducibly-solved games'' traces (r11l/ls20/wa30/lp85); test LEAVE-ONE-GAME-OUT:
+      does the transferred value-head reduce OfflineSolver search states on the held-out game vs an untrained/uniform heuristic?
+      Report cross_game_state_reduction (held-out states_uniform / states_transferred) + per-held-out-game reads. Honest null
+      (per-game heads do NOT transfer, reduction ~1.0) LOGS a ''game-invariant ARC value representation'' missing-verifier
+      gap. verifier_is_oracle=false. NO TRM training; NO live-LoRA; NO weight mutation of any LLM (the value-head is a tiny
+      learned heuristic over solver state, CPU).'
+    deliverable: results/experiment_4318_arc_cross_game_learned_verifier_transfer.json
+    result: OK (conductor)
+  - id: exp4319-off-arc-execution-verifier-transfer-accumulate
+    title: 'PHASE F1 (OFF-ARC EXECUTION-VERIFIER TRANSFER; GAP-CODE-EXEC-DEMOFIT; known-issues MANDATORY 2026-06-11; decentralization)
+      -- run the GAP-4 execution primitive (induce program from demos -> restricted-exec -> demo-fit selection) OFF-ARC on
+      MBPP/EvalPlus, ACCUMULATING to power. The GAP-4 rule-execution verifier is domain-general BY CONSTRUCTION (induce program
+      -> exec -> exact-output-match) but its off-ARC transfer is UNDER-MEASURED: exp4032 found no off-ARC transfer (delta_pp=5.0,
+      CI95 [0.0,12.5] incl 0) at low n; GAP-CODE-EXEC-DEMOFIT is OPEN. Map: visible tests = demos (the induction signal),
+      hidden tests = gold (the held-out target). Two arms: vote@1 (majority candidate) vs demo-fit selection (the candidate
+      whose induced program passes the visible/demo tests). Decentralization: local SOTA GGUF generator (gemma-4-12B-it --
+      many candidates per task, fast), model-free execution verifier. ACCUMULATE-not-restart (memory powering-run-background-mechanism-fails
+      + known-issues ''powering runs must accumulate''): resume the exp4032/exp4051/exp4063 EvalPlus checkpoint (corpus+model
+      keyed, NOT exp-id keyed) and EXTEND n; report ACCUMULATED-N with a bootstrap CI. Gate: demo-fit selection earns held-out
+      (hidden-test) headroom over vote (the ARC-1 analog: vote 0.4516 -> gated 0.5806). Emit off_arc_demofit_beats_vote BARE
+      bool := (hidden-test demo-fit - vote > 0 AND CI95-excl-0). Execution-grounded => verifier_is_oracle=true (HONEST: the
+      cheap/automatic/decentralized execution layer, NOT the oracle-distinct moat). HARD FLOOR: if accumulated n added < a
+      real increment for this window AND the CI still includes 0, LOG the gap + flag for the 3-consecutive-window auto-retire
+      check.'
+    deliverable: results/experiment_4319_off_arc_execution_verifier_transfer_accumulate.json
+    result: OK (conductor)
+  - id: exp4320-sota-ingestion-v400
+    title: PHASE G1 (SOTA-ingestion; mandatory per SOTA-Ingestion Cycle Discipline) -- ingest the SOTA for the .399 bleeding-edge
+      forks (cross-domain selector generalization w/ linear router + generated-data + coherence features, in-generation reward-guided
+      step-stitching vs self-reward SMC, budget-aware cascade-router deployment, cross-game learned-verifier transfer) and
+      MAP the strongest 3-5 methods onto the .400 roadmap conditioned on the .399 outcomes (did the cross-domain moat close?
+      did the in-generation moat close? did the cascade router dominate? did cross-game transfer help?). Use the RELIABLE
+      channel ONLY (scripts/sweep_clusters.py / sweep_semscholar.py + low-concurrency WebSearch/WebFetch) -- /deep-research
+      is BANNED in-loop. Every method MUST carry a real arXiv ID/URL. Update research-studying.md (mark ingested) and emit
+      flagged_for_v400.
+    deliverable: results/experiment_4320_sota_ingestion_v400.json
+    result: OK (conductor)
+  - id: exp4321-verifier-registry-gaps-hygiene
+    title: 'PHASE G2 (hygiene; per Missing-Verifier Gap Logging + registry hygiene) -- reconcile the verifier registry + gaps
+      to .399 truth, run the GAP-4 regression guard, and LOG missing-verifier gaps. Record the .399 outcomes: the cross-domain
+      selection verdict (exp4314 cross_domain_selection_holds + label_ablation_robust), the in-generation moat (exp4315 diffusiongemma_guidance_moat
+      + controls_differentiated + carnot_minus_self_reward_smc_delta), the efficiency cascade-router (exp4316 cascade_dominates_controls
+      + cost_ratio_cascade), the ARC +1 (exp4317 total_levels + offline_reproduced), the cross-game transfer (exp4318 cross_game_transfer_helps),
+      the off-ARC execution transfer (exp4319 off_arc_demofit_beats_vote + accumulated_n). Update ops/verifier_registry.yaml
+      + ops/verifier_gaps.md (e.g. update GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305 per exp4314; a ''game-invariant
+      ARC value representation'' gap if exp4318 nulled; GAP-CODE-EXEC-DEMOFIT per exp4319). Run the GAP-4 execution regression
+      guard (no regression vs .398). Use the robust aggregate-available helper from exp4308 (read available artifacts, report
+      gaps -- do NOT hard-block all-False if one is missing). Emit regression_guard_passed BARE bool.'
+    deliverable: results/experiment_4321_verifier_registry_gaps_hygiene.json
+    result: OK (conductor)
+  - id: exp4322-hardware-continuity
+    title: "PHASE G3 (hardware continuity; opportunistic per north-star \xA73) -- KV260 terminal/opportunistic (SSH-only reachability\
+      \ + xmutil listapps; NO host SD-card precondition), PolarFire CPU dispatch hash-verify, GateMate USB detect (try `openFPGALoader\
+      \ -c dirtyJtag --detect` to recover the IDCODE visibility lost in .398). KV260 is terminal (north-star \xA73) so the\
+      \ per-board mandate relaxes to opportunistic; this task keeps the boards visible without blocking the milestone. Report\
+      \ per-board reachability + any opportunistic result. NO board blocks the milestone (honest blocked_<board> per board\
+      \ is fine)."
+    deliverable: results/experiment_4322_hardware_continuity.json
+    result: OK (conductor)
+  - id: exp4323-capstone-v399
+    title: 'PHASE G4 (capstone .399, UNGATED) -- the verifier scorecard, using the robust aggregate-available-report-gaps
+      helper from exp4308 (NO hard-block-all-False). Headline questions: (1) did the CROSS-DOMAIN selection moat CLOSE (held-out-domain
+      CI95-excl-0, label-ablation robust) with the IR3DE+CASCAL rebuild? (2) did the IN-GENERATION moat CLOSE (reward-guided
+      stitching beats the engaged control AND self-reward SMC, CI95-excl-0)? (3) did the efficiency CASCADE ROUTER dominate
+      (near-judge accuracy at a fraction of cost)? Aggregate (skipping flagged; reporting missing as per-axis gaps): CROSS-DOMAIN
+      = exp4314 cross_domain_selection_holds + cross_domain_delta_ci95 + label_ablation_robust; IN-GENERATION = exp4315 diffusiongemma_guidance_moat
+      + controls_differentiated + carnot_minus_self_reward_smc_delta; EFFICIENCY = exp4316 cascade_dominates_controls + cost_ratio_cascade;
+      ARC = exp4317 total_levels + offline_reproduced (>=23?); SELF-LEARNING = exp4318 cross_game_transfer_helps; OFF-ARC
+      = exp4319 off_arc_demofit_beats_vote (verifier_is_oracle=true, execution-grounded NOT a moat); hygiene = exp4321 regression_guard_passed.
+      Emit cross_domain_moat_holds + in_generation_moat_holds + efficiency_cascade_dominates + verifier_thesis_state (one
+      honest string). SKIP any flagged_adversarial artifact; HONOR verifier_is_oracle (a circular/execution-grounded win is
+      NOT a moat). Compute the G1-G4 publication gate via publication_gate.py. NO gated_on.'
+    deliverable: results/experiment_4323_capstone_v399.json
     result: OK (conductor)
