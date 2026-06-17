@@ -87,6 +87,7 @@ class StepwiseExplorer:
         self.pending: list[dict] = []        # queued nav/probe actions
         self.awaiting: Optional[dict] = None # last probe, to attribute its result
         self.explored_out = False
+        self.adj: dict[str, list] = {}       # known forward edges: hash -> [(action_dict, next_hash)]
 
     @staticmethod
     def _hash(frame) -> str:
@@ -117,10 +118,15 @@ class StepwiseExplorer:
         if self.awaiting is not None:
             o = self.awaiting
             self.awaiting = None
-            if not self._game_over(latest) and h not in self.graph:
-                opath = self.graph.get(o["origin"], {}).get("path", [])
-                self.graph[h] = {"path": opath + [{"action": o["action"], "data": o["data"]}],
-                                 "untested": self._candidates(latest)}
+            if not self._game_over(latest):
+                act = {"action": o["action"], "data": o["data"]}
+                # record the forward edge for frontier-distance navigation (only if the
+                # action actually CHANGED state — a no-op self-edge is useless to navigate)
+                if h != o["origin"]:
+                    self.adj.setdefault(o["origin"], []).append((act, h))
+                if h not in self.graph:
+                    opath = self.graph.get(o["origin"], {}).get("path", [])
+                    self.graph[h] = {"path": opath + [act], "untested": self._candidates(latest)}
         self.cur = h
         if self.root is None:
             self.root = h
@@ -133,6 +139,27 @@ class StepwiseExplorer:
                 if best is None or len(node["path"]) < len(self.graph[best]["path"]):
                     best = h
         return best
+
+    def _shortest_path(self, src: Optional[str], dst: str) -> Optional[list]:
+        """Frontier-distance navigation: BFS over the KNOWN forward edges from src to dst.
+        Returns the action sequence to walk there WITHOUT a RESET (cheaper than replay-
+        from-root), or None if dst isn't forward-reachable from src in the known graph."""
+        from collections import deque
+        if src is None or src == dst:
+            return [] if src == dst else None
+        seen = {src}
+        q = deque([(src, [])])
+        while q:
+            node, path = q.popleft()
+            for act, nxt in self.adj.get(node, []):
+                if nxt in seen:
+                    continue
+                npath = path + [act]
+                if nxt == dst:
+                    return npath
+                seen.add(nxt)
+                q.append((nxt, npath))
+        return None
 
     def _serve(self) -> tuple:
         item = self.pending.pop(0)
@@ -150,23 +177,28 @@ class StepwiseExplorer:
             return self._serve()
         over = latest is not None and self._game_over(latest)
         cur_node = self.graph.get(self.cur) if not over else None
-        # 1) Ride the current branch DEPTH-first while it has untested SALIENT actions and
-        #    is under the depth cap (no navigation cost — reaches deep wins like wa30/sp80).
+        # 1) DEPTH-first ride: expand the current state's untested SALIENT actions while
+        #    under the depth cap (no nav cost; reaches the deep wins lp85/sp80 need —
+        #    BFS-order regressed those, so the deep-ride stays the search order).
         if cur_node and cur_node["untested"] and len(cur_node["path"]) < self.max_depth:
             a = cur_node["untested"].pop(0)
             self.awaiting = {"origin": self.cur, "action": a["action"], "data": a["data"]}
             return (a["action"], a["data"])
-        # 2) Current exhausted / dead-end / depth-capped: navigate to the SHALLOWEST
-        #    frontier state with an untested action by RESET + replay (the only live nav).
+        # 2) Current exhausted / dead-end / depth-capped: go to the shallowest frontier,
+        #    navigating via known forward edges if reachable (FRONTIER-DISTANCE, cheap)
+        #    else RESET + replay from root. This only changes nav COST, not search order.
         th = self._frontier()
         if th is None:
             self.explored_out = True
             return (None, None)
         node = self.graph[th]
         a = node["untested"].pop(0)
-        self.pending = [{"kind": "RESET", "data": None, "probe": False}]
-        for step in node["path"]:
-            self.pending.append({"kind": step["action"], "data": step["data"], "probe": False})
+        fwd = self._shortest_path(self.cur, th) if not over else None
+        if fwd is not None:
+            self.pending = [{"kind": s["action"], "data": s["data"], "probe": False} for s in fwd]
+        else:
+            self.pending = [{"kind": "RESET", "data": None, "probe": False}]
+            self.pending += [{"kind": s["action"], "data": s["data"], "probe": False} for s in node["path"]]
         self.pending.append({"kind": a["action"], "data": a["data"], "probe": True, "origin": th})
         return self._serve()
 
