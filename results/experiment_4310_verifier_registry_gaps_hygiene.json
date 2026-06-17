@@ -359,5 +359,13 @@
       },
       "verifier_is_oracle": false
     }
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.45632 but artifact declares verifier-scoring substrate. Even verifier scoring of a few hundred candidates takes >=1.0s; this completed too fast to have scored anything."
+    }
+  ]
 }
