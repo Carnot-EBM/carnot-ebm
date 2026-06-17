@@ -31,6 +31,10 @@ class GameAdapter:
     hand_verifier: Optional[Callable[[Any], float]] = None
     warmup_label: Optional[str] = None
     depth_caps: dict = field(default_factory=lambda: {})
+    # how the OfflineSolver navigates between search nodes: "replay" (default; replay-from-reset) or
+    # "deepcopy" (snapshot/restore env._game per node). Use "deepcopy" only for a game whose env is
+    # deepcopy-injectable AND whose replay-from-reset doesn't faithfully reproduce the searched state.
+    branch_mode: str = "replay"
 
 
 # ---------------- lp85 (reference adapter; click-only rotation puzzle) ----------------

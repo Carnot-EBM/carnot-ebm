@@ -36,6 +36,7 @@ Hard-won general gotchas (apply to ANY ARC-AGI-3 game; see ops/arc_solve_registr
 """
 from __future__ import annotations
 
+import copy
 import heapq
 import itertools
 from pathlib import Path
@@ -80,13 +81,24 @@ class OfflineSolver:
                  apply: Callable[[Any, str, Any], Any], state_key: Callable[[Any], Hashable],
                  *, warmup_label: Optional[str] = None, max_nodes: int = 30000,
                  verifier: Optional[Callable[[Any], float]] = None,
-                 path_cost_weight: float = 0.0) -> None:
+                 path_cost_weight: float = 0.0, branch_mode: str = "replay") -> None:
         self.game_id = game_id
         self.action_labels = action_labels
         self.apply = apply
         self.state_key = state_key
         self.warmup_label = warmup_label  # an action to consume the no-op first slot (gotcha #4)
         self.max_nodes = max_nodes
+        # BRANCH MODE — how the search navigates between nodes:
+        #   "replay"  (default, UNCHANGED): replay-from-reset (env.reset() + re-apply the path) per
+        #             node. Correct + memory-light for games whose state is fully a function of the
+        #             action prefix from reset (lp85, sc25). The proven default; do not change it.
+        #   "deepcopy": snapshot copy.deepcopy(env._game) per node and restore by deepcopy, branching
+        #             the EXACT env state rather than reconstructing it. Use for games where
+        #             replay-from-reset does not faithfully reproduce the searched state (the verifier
+        #             then finds a path that fails the reproduction gate). Costs a deepcopy per node;
+        #             requires env._game to be deepcopy-able + injectable (works for tu93; the
+        #             deepcopy-injection gotcha #3 means it is NOT universal — keep "replay" the default).
+        self.branch_mode = branch_mode
         # VERIFIER-ROUTED SEARCH (the north-star efficiency loop): a score on a
         # state (LOWER = closer to the win, an energy/goal-distance). When given,
         # the search is best-first ordered by it, so it expands promising branches
@@ -137,6 +149,8 @@ class OfflineSolver:
     def solve_level(self, env: Any, start_level: int, prefix: Sequence[str], depth_cap: int):
         """Search one level forward from `prefix` — verifier-routed BEST-FIRST (or
         plain BFS when no verifier). Returns (extension_path, states_expanded)."""
+        if self.branch_mode == "deepcopy":
+            return self._solve_level_deepcopy(env, start_level, prefix, depth_cap)
         self._replay(env, list(prefix))
         seen = {self._call_state_key(env)}
         counter = itertools.count()  # FIFO tiebreaker (so verifier≡0 ⇒ BFS)
@@ -160,6 +174,42 @@ class OfflineSolver:
                     child_path = path + [label]
                     heapq.heappush(heap, (self._priority(env, child_path), next(counter), child_path))
                 self._replay(env, list(prefix) + path)  # restore for next sibling
+        self.last_states_expanded = nodes
+        return None, nodes
+
+    def _solve_level_deepcopy(self, env: Any, start_level: int, prefix: Sequence[str], depth_cap: int):
+        """DEEPCOPY-PER-NODE variant of solve_level. Instead of replaying-from-reset to navigate, it
+        SNAPSHOTS copy.deepcopy(env._game) per node and restores by deepcopy — branching the EXACT env
+        state (incl. anything replay-from-reset doesn't faithfully reconstruct). Each heap node carries
+        its (snapshot, frame) so state_key/verifier see the right frame; the found path is identical in
+        shape to the replay variant (a sequence of labels) so the reproduction gate is unchanged."""
+        self._replay(env, list(prefix))
+        seen = {self._call_state_key(env)}
+        counter = itertools.count()
+        root = (self._priority(env, []), next(counter), [], copy.deepcopy(env._game), self.last_frame)
+        heap = [root]
+        nodes = 0
+        while heap and nodes < self.max_nodes:
+            _, _, path, snap, frame = heapq.heappop(heap)
+            if len(path) >= depth_cap:
+                continue
+            env._game = copy.deepcopy(snap)            # restore this node's exact state
+            self.last_frame = frame
+            for label in self._call_action_labels(env, path):
+                env._game = copy.deepcopy(snap)        # branch from the node for each child
+                self.last_frame = frame
+                f2 = self.apply(env, label, None)
+                self.last_frame = f2
+                nodes += 1
+                if frame_level(f2) > start_level:
+                    self.last_states_expanded = nodes
+                    return path + [label], nodes
+                k = self._call_state_key(env)
+                if k not in seen:
+                    seen.add(k)
+                    child_path = path + [label]
+                    heapq.heappush(heap, (self._priority(env, child_path), next(counter),
+                                          child_path, copy.deepcopy(env._game), f2))
         self.last_states_expanded = nodes
         return None, nodes
 
