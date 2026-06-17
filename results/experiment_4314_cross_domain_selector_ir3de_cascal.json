@@ -1,0 +1,626 @@
+{
+  "acceptance_gate": {
+    "condition": "cross_domain_delta>0 AND CI95-excl-0 AND vote_at_1>0.05 AND oracle_at_k<1.0 AND cross_domain_delta<0.95 AND label_ablation_robust",
+    "passed": false
+  },
+  "adversarial_verify": {
+    "circular_moat_overclaim_clean": true,
+    "degenerate_separation_clean": true,
+    "flag_count": 0,
+    "flags": [],
+    "returncode": 0,
+    "status": "clean"
+  },
+  "bootstrap_resamples": 2000,
+  "cross_domain_delta": 0.2307692308,
+  "cross_domain_delta_ci95": [
+    -0.1153846154,
+    0.5384615385
+  ],
+  "cross_domain_pool_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4314_cross_domain_selector_ir3de_cascal_pool.json.gz",
+  "cross_domain_pool_sha256": "sha256:cfbdc18d91fc52e6520c966b9c4da06cbaf401a2ebc8d2df251b652be086452a",
+  "cross_domain_selection_holds": false,
+  "domain_manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4314_cross_domain_selector_ir3de_cascal_manifest.json",
+  "domain_manifest_sha256": "sha256:7784b760263cc5a9eb1c70accd16ab3f10874f124683dc56f659a1d30897e767",
+  "duration_s": 60.970312,
+  "experiment": "experiment_4314_cross_domain_selector_ir3de_cascal",
+  "field_principles": {
+    "cross_domain_delta": "BARE float: held-out-DOMAIN router+set_encoder@1 - vote@1 -- compare to exp4305's +0.231 (the IR3DE+CASCAL upgrade should tighten the CI; a positive held-out delta with CI95-excl-0 is the cross-domain moat).",
+    "cross_domain_delta_ci95": "Task-level bootstrap CI95 (>=2000 resamples) of the held-out delta -- excluding 0 is the decision-grade close (exp4305's [-0.115,0.538] included 0).",
+    "cross_domain_selection_holds": "BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff held-out-DOMAIN router+set_encoder@1 - vote@1 > 0 AND CI95-excl-0 AND non-degenerate guards AND label_ablation_robust -- the strongest selection result (escapes the math/ARC domain bound).",
+    "honest_verdict": "Terminal-prefixed. A cross-domain survive (the moat escapes the domain bound), a POWERED collapse (the moat is domain-bound -> retire the ask), a label-ablation failure (the router read the label), and an honest blocked_insufficient_domains are ALL COMPLETE and decision-grade.",
+    "label_ablation_robust": "BARE bool: true iff held-out accuracy SURVIVES removing the domain/family label from the router input -- the anti-leak proof (the moat must use task structure, not domain identity).",
+    "model_specs": "The 3-domain provenance + the IR3DE linear router + the CASCAL pretrain + the ContextPRM coherence features + the domain-disjoint split + the label-ablation protocol; required methodology.",
+    "oracle_at_k": "BARE float: positive-control ceiling on the held-out domain -- MUST be < 1.0 (a sub-1.0 ceiling is real headroom the verifier must earn).",
+    "per_domain_delta": "The lift reported SEPARATELY per held-out domain (arc / arcgen / fover) -- guards the one-domain-dominates failure mode.",
+    "random_seed": "Determinism precondition; the cross-domain sampling + domain-split + CASCAL synthetic-task generation reproducible.",
+    "reproducibility_checksum": "Hash of the cross-domain pool + the domain manifest + the IR3DE router + the CASCAL synthetic set; lets a third party re-run.",
+    "verifier_is_oracle": "BARE bool=false -- a learned IR3DE router + set-encoder over cross-domain pools, no demo execution (oracle-distinct).",
+    "vote_at_1": "BARE float: the vote baseline on the held-out domain -- MUST be > 0.05 (if 0, the pool is wrong-majority-only and the delta is degenerate)."
+  },
+  "held_out_task_n": 26,
+  "honest_verdict": "complete: powered_collapse_cross_domain_domain_bound",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "label_ablation": {
+    "cross_domain_delta": 0.2307692308,
+    "cross_domain_delta_ci95": [
+      -0.1153846154,
+      0.5384615385
+    ],
+    "protocol": "domain_id and family_id removed from router input; ContextPRM features retained",
+    "router_set_encoder_at_1": 0.5
+  },
+  "label_ablation_robust": true,
+  "matched_control_delta": -0.2692307692,
+  "missing_verifier_gaps": [
+    {
+      "candidate_design": "stronger family-invariant verifier dimensions beyond IR3DE+CASCAL+ContextPRM, validated on held-out fover",
+      "failure_mode": "powered_collapse_cross_domain_domain_bound",
+      "gap_id": "GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305",
+      "missing_discriminator": "domain-invariant selector features that preserve wrong-majority recovery across ARC, ARC-GEN, and FoVer/math step candidates without using domain labels",
+      "priority": "P0 cross-domain verifier scope boundary"
+    }
+  ],
+  "model_specs": {
+    "available_domains": [
+      "arc",
+      "arcgen",
+      "fover"
+    ],
+    "blocked_reason": null,
+    "cascal_pretraining": {
+      "held_out_target_labels_used": false,
+      "kind": "generated_train_domain_selector_tasks",
+      "synthetic_checksum": "sha256:ecd1b538e209beb63d17ccbba25b6c1eedb230300b2a466445049c64d5a98cb9",
+      "synthetic_task_n": 85905
+    },
+    "contextprm_features": {
+      "domain_agnostic": true,
+      "feature_names": [
+        "contextprm_step_coherence",
+        "contextprm_coherence_margin",
+        "contextprm_vote_coherence_alignment",
+        "contextprm_candidate_set_support",
+        "contextprm_contradiction_pressure",
+        "contextprm_structure_consistency"
+      ],
+      "kind": "domain_agnostic_step_coherence",
+      "label_fields_excluded": [
+        "domain_id",
+        "family_id",
+        "target_hash"
+      ]
+    },
+    "domain_disjoint_split": {
+      "leave_one_domain_out_domains": [
+        "arc",
+        "arcgen",
+        "fover"
+      ],
+      "primary_held_out_domain": "fover"
+    },
+    "domain_provenance": {
+      "arc": {
+        "provenance": {
+          "candidate_n": 28443,
+          "manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4270_arc_family_manifest.json",
+          "manifest_sha256": "sha256:67c21873a57b9c0dd13df278f06eb633037b31f7612008bdb0c1f51042034866",
+          "task_n": 52
+        },
+        "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4243_arc_candidate_pool_grow_pool.json.gz",
+        "source_sha256": "sha256:ab174673aa3c75f4f0e0952d845f78fbbcf5dee483be51c0ad7008597bdf818c"
+      },
+      "arcgen": {
+        "provenance": {
+          "candidate_n": 192,
+          "manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4291_arcgen_generator_manifest.json",
+          "manifest_sha256": "sha256:76e04fa947ee3e676d1c20a5c640ce196ee6df5c6796b87bd0008c775d072b78",
+          "task_n": 24
+        },
+        "source_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4291_arcgen_cross_generator_pool.json.gz",
+        "source_sha256": "sha256:c4e3cb9064db166ee3792b39bd3397ec441dc19501dca780b2a048db29a2f92e"
+      },
+      "fover": {
+        "provenance": {
+          "candidate_n": 130,
+          "candidates_per_task": 5,
+          "construction": "cached_fover_labeled_steps_to_selection_tasks",
+          "task_n": 26,
+          "vote_oracle_pattern": "mode0 vote-correct, mode1/2 wrong-majority, mode3 no-oracle"
+        },
+        "source_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json",
+        "source_sha256": "sha256:c5710308eb72575591165ad1df672086e3d91ae3270c174c409e8c1ef48725e2"
+      }
+    },
+    "label_ablation_protocol": "rerun held-out routing with domain_id/family_id label features removed while retaining normalized selector and ContextPRM coherence features",
+    "missing_domains": [],
+    "per_domain_set_encoder": {
+      "kind": "Exp 4244 standardized correct-minus-wrong set profile used as domain experts",
+      "training_scope": "train domains only for each leave-one-domain-out read"
+    },
+    "persisted_pool": {
+      "manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4314_cross_domain_selector_ir3de_cascal_manifest.json",
+      "manifest_sha256": "sha256:7784b760263cc5a9eb1c70accd16ab3f10874f124683dc56f659a1d30897e767",
+      "pool_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4314_cross_domain_selector_ir3de_cascal_pool.json.gz",
+      "pool_sha256": "sha256:cfbdc18d91fc52e6520c966b9c4da06cbaf401a2ebc8d2df251b652be086452a"
+    },
+    "router": {
+      "feature_names": [
+        "vote_weight",
+        "self_consistency_margin",
+        "vote_weight_rank_fraction",
+        "cell_confidence_mean",
+        "cell_confidence_margin",
+        "cell_confidence_rank_fraction",
+        "grid_entropy",
+        "program_demo_fit",
+        "vote_weight_zscore",
+        "cell_confidence_zscore",
+        "modal_cell_agreement_frac",
+        "shape_vote_frac",
+        "palette_vote_frac",
+        "is_modal_shape",
+        "is_modal_palette",
+        "same_shape_as_input",
+        "contextprm_step_coherence",
+        "contextprm_coherence_margin",
+        "contextprm_vote_coherence_alignment",
+        "contextprm_candidate_set_support",
+        "contextprm_contradiction_pressure",
+        "contextprm_structure_consistency",
+        "ir3de_expert_mean_score",
+        "ir3de_expert_max_score",
+        "ir3de_expert_score_margin",
+        "label_domain_hash",
+        "label_family_hash",
+        "label_domain_arc",
+        "label_domain_arcgen",
+        "label_domain_fover"
+      ],
+      "kind": "ir3de_linear_domain_expert_ridge",
+      "label_features": "domain/family labels allowed only in primary arm; ablation zeroes them",
+      "ridge_alpha": 1.0,
+      "train_domain_ids": [
+        "arc",
+        "arcgen"
+      ]
+    },
+    "set_encoder_precondition": {
+      "build_checksum": "sha256:46f10e24230c37adba6563d6dd696064be82b74b3f11743e3aa86bd651b828cb",
+      "build_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4244_arc_set_encoder_aggregator_build.json",
+      "model_checksum": "sha256:46f10e24230c37adba6563d6dd696064be82b74b3f11743e3aa86bd651b828cb",
+      "model_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4244_arc_set_encoder_aggregator_model.json",
+      "status": "loaded",
+      "verifier_is_oracle": false
+    },
+    "status": "complete"
+  },
+  "oracle_at_k": 0.7692307692,
+  "oracle_minus_vote": 0.5,
+  "pass_rates": {
+    "matched_control_at_1": 0.7692307692,
+    "router_set_encoder_at_1": 0.5,
+    "vote_at_1": 0.2692307692
+  },
+  "per_domain_delta": {
+    "arc": {
+      "cross_domain_delta": 0.1923076923,
+      "cross_domain_delta_ci95": [
+        0.0192307692,
+        0.3653846154
+      ],
+      "cross_domain_selection_holds": true,
+      "held_out_task_n": 52,
+      "label_ablation_robust": true,
+      "matched_control_delta": 0.2307692308,
+      "oracle_at_k": 0.8269230769,
+      "router_set_encoder_at_1": 0.4423076923,
+      "vote_at_1": 0.25
+    },
+    "arcgen": {
+      "cross_domain_delta": 0.25,
+      "cross_domain_delta_ci95": [
+        -0.0833333333,
+        0.5833333333
+      ],
+      "cross_domain_selection_holds": false,
+      "held_out_task_n": 24,
+      "label_ablation_robust": true,
+      "matched_control_delta": 0.4583333333,
+      "oracle_at_k": 0.75,
+      "router_set_encoder_at_1": 0.5,
+      "vote_at_1": 0.25
+    },
+    "fover": {
+      "cross_domain_delta": 0.2307692308,
+      "cross_domain_delta_ci95": [
+        -0.1153846154,
+        0.5384615385
+      ],
+      "cross_domain_selection_holds": false,
+      "held_out_task_n": 26,
+      "label_ablation_robust": true,
+      "matched_control_delta": -0.2692307692,
+      "oracle_at_k": 0.7692307692,
+      "router_set_encoder_at_1": 0.5,
+      "vote_at_1": 0.2692307692
+    }
+  },
+  "primary_held_out_domain": "fover",
+  "random_seed": 20260617,
+  "reproducibility_checksum": "sha256:ac20e8d47fd66eaaa7a5ea5365d7130f48485c9c496042bbead451db0292b1b2",
+  "schema": "carnot.cross_domain_selector_ir3de_cascal_4314.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4314",
+    "SCENARIO-VERIFY-4314"
+  ],
+  "status": "complete",
+  "task_rows": [
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:0",
+      "matched_control_candidate_id": "fover:step_selection:000::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:000::candidate4",
+      "router_set_encoder_correct": false,
+      "target_hash": "sha256:5521ad8845560048b9c723198d49eddd8d8cdb08d26d5cfc246823e18d280079",
+      "task_id": "fover:step_selection:000",
+      "vote_candidate_id": "fover:step_selection:000::candidate0",
+      "vote_correct": true
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:1",
+      "matched_control_candidate_id": "fover:step_selection:001::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:001::candidate0",
+      "router_set_encoder_correct": true,
+      "target_hash": "sha256:902e7796e95dce5b16a78578ae22625ddf07442ba27f2d484fe0bbb1073cead4",
+      "task_id": "fover:step_selection:001",
+      "vote_candidate_id": "fover:step_selection:001::candidate1",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:2",
+      "matched_control_candidate_id": "fover:step_selection:002::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:002::candidate0",
+      "router_set_encoder_correct": true,
+      "target_hash": "sha256:e19d45cb2320ce857c30b47c4a3761853f696975402f0513faec7870b6cc8ee3",
+      "task_id": "fover:step_selection:002",
+      "vote_candidate_id": "fover:step_selection:002::candidate1",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:3",
+      "matched_control_candidate_id": "fover:step_selection:003::candidate0",
+      "matched_control_correct": false,
+      "oracle_hit": false,
+      "router_set_encoder_candidate_id": "fover:step_selection:003::candidate4",
+      "router_set_encoder_correct": false,
+      "target_hash": "sha256:3a31cb002e87ce36859449a700ce5e33a13b63fa77e3dd85b6cedf42915e206c",
+      "task_id": "fover:step_selection:003",
+      "vote_candidate_id": "fover:step_selection:003::candidate0",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:4",
+      "matched_control_candidate_id": "fover:step_selection:004::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:004::candidate4",
+      "router_set_encoder_correct": false,
+      "target_hash": "sha256:5e4ae136b795fa5164f29af8be80c3c4dc8d9ce7ffed6d0db88fb53e67bc0c48",
+      "task_id": "fover:step_selection:004",
+      "vote_candidate_id": "fover:step_selection:004::candidate0",
+      "vote_correct": true
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:5",
+      "matched_control_candidate_id": "fover:step_selection:005::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:005::candidate0",
+      "router_set_encoder_correct": true,
+      "target_hash": "sha256:a88ca31be1880969de40c45a24038912683edf4369e274e199f64337c4f8187c",
+      "task_id": "fover:step_selection:005",
+      "vote_candidate_id": "fover:step_selection:005::candidate1",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:0",
+      "matched_control_candidate_id": "fover:step_selection:006::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:006::candidate0",
+      "router_set_encoder_correct": true,
+      "target_hash": "sha256:38b51c83991b3cbfc98663c6eaf9ff3c6ae0ed56089ab7ff1d315336dead7ec9",
+      "task_id": "fover:step_selection:006",
+      "vote_candidate_id": "fover:step_selection:006::candidate1",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:1",
+      "matched_control_candidate_id": "fover:step_selection:007::candidate0",
+      "matched_control_correct": false,
+      "oracle_hit": false,
+      "router_set_encoder_candidate_id": "fover:step_selection:007::candidate4",
+      "router_set_encoder_correct": false,
+      "target_hash": "sha256:980dd4d2d639014d4b100cae2c82c600d7b3e5badcd63791249659973a392dbb",
+      "task_id": "fover:step_selection:007",
+      "vote_candidate_id": "fover:step_selection:007::candidate0",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:2",
+      "matched_control_candidate_id": "fover:step_selection:008::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:008::candidate4",
+      "router_set_encoder_correct": false,
+      "target_hash": "sha256:bfb0a0b3a9c2a5576204bd324e7afcc38e937575ddde95a0c423c19891613476",
+      "task_id": "fover:step_selection:008",
+      "vote_candidate_id": "fover:step_selection:008::candidate0",
+      "vote_correct": true
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:3",
+      "matched_control_candidate_id": "fover:step_selection:009::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:009::candidate0",
+      "router_set_encoder_correct": true,
+      "target_hash": "sha256:1bb8021f47d3833802313b3c7fbaba276e9b989a1360dec6f8decd4487c4a468",
+      "task_id": "fover:step_selection:009",
+      "vote_candidate_id": "fover:step_selection:009::candidate1",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:4",
+      "matched_control_candidate_id": "fover:step_selection:010::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:010::candidate0",
+      "router_set_encoder_correct": true,
+      "target_hash": "sha256:67e43e016817bcb6c4302940e571d2fa28a75bfc8e4a5f36428d5fd028b00b9e",
+      "task_id": "fover:step_selection:010",
+      "vote_candidate_id": "fover:step_selection:010::candidate1",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:5",
+      "matched_control_candidate_id": "fover:step_selection:011::candidate0",
+      "matched_control_correct": false,
+      "oracle_hit": false,
+      "router_set_encoder_candidate_id": "fover:step_selection:011::candidate4",
+      "router_set_encoder_correct": false,
+      "target_hash": "sha256:19c0b86cceaa6229c280b60bc7f2b30e8cdf9f878e0bb6d2d8f5ac1d098e2ba6",
+      "task_id": "fover:step_selection:011",
+      "vote_candidate_id": "fover:step_selection:011::candidate0",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:0",
+      "matched_control_candidate_id": "fover:step_selection:012::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:012::candidate4",
+      "router_set_encoder_correct": false,
+      "target_hash": "sha256:bb9c2bf46ecdb75c086837effa4fdbafd65f2e5d81e3ed889810d1fca40643f0",
+      "task_id": "fover:step_selection:012",
+      "vote_candidate_id": "fover:step_selection:012::candidate0",
+      "vote_correct": true
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:1",
+      "matched_control_candidate_id": "fover:step_selection:013::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:013::candidate0",
+      "router_set_encoder_correct": true,
+      "target_hash": "sha256:779f47a84c6b135c304b4221b27267993c8df78a8ac39a2180c793d3a0031b13",
+      "task_id": "fover:step_selection:013",
+      "vote_candidate_id": "fover:step_selection:013::candidate1",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:2",
+      "matched_control_candidate_id": "fover:step_selection:014::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:014::candidate0",
+      "router_set_encoder_correct": true,
+      "target_hash": "sha256:334f541325ca58d7c3779ba59d61fd51faec46c754986cb51ad601ec8d441328",
+      "task_id": "fover:step_selection:014",
+      "vote_candidate_id": "fover:step_selection:014::candidate1",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:3",
+      "matched_control_candidate_id": "fover:step_selection:015::candidate0",
+      "matched_control_correct": false,
+      "oracle_hit": false,
+      "router_set_encoder_candidate_id": "fover:step_selection:015::candidate4",
+      "router_set_encoder_correct": false,
+      "target_hash": "sha256:25e95dc6a8802be7a6893152fb0e592944268c38fde2c6e7abcbac4842ca6965",
+      "task_id": "fover:step_selection:015",
+      "vote_candidate_id": "fover:step_selection:015::candidate0",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:4",
+      "matched_control_candidate_id": "fover:step_selection:016::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:016::candidate4",
+      "router_set_encoder_correct": false,
+      "target_hash": "sha256:c7744c393785ccfae412873ba0b3a3dd97737a1635780f319cdeea7520c7b34d",
+      "task_id": "fover:step_selection:016",
+      "vote_candidate_id": "fover:step_selection:016::candidate0",
+      "vote_correct": true
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:5",
+      "matched_control_candidate_id": "fover:step_selection:017::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:017::candidate0",
+      "router_set_encoder_correct": true,
+      "target_hash": "sha256:168eb492c1095a73876ec2ab618f45f52ba8e5dc0c57a4e5443cf721a9b82110",
+      "task_id": "fover:step_selection:017",
+      "vote_candidate_id": "fover:step_selection:017::candidate1",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:0",
+      "matched_control_candidate_id": "fover:step_selection:018::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:018::candidate0",
+      "router_set_encoder_correct": true,
+      "target_hash": "sha256:cc32002c586e6161b6ac93a8fb78578faa498794746cfee75038eea76d70fe90",
+      "task_id": "fover:step_selection:018",
+      "vote_candidate_id": "fover:step_selection:018::candidate1",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:1",
+      "matched_control_candidate_id": "fover:step_selection:019::candidate0",
+      "matched_control_correct": false,
+      "oracle_hit": false,
+      "router_set_encoder_candidate_id": "fover:step_selection:019::candidate4",
+      "router_set_encoder_correct": false,
+      "target_hash": "sha256:9afa44f129391e8bb16eebab5d55fc66ec9f1bfdfd33f333b49d7a3f1793d8c2",
+      "task_id": "fover:step_selection:019",
+      "vote_candidate_id": "fover:step_selection:019::candidate0",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:2",
+      "matched_control_candidate_id": "fover:step_selection:020::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:020::candidate4",
+      "router_set_encoder_correct": false,
+      "target_hash": "sha256:d9229b74629d0e85e280bb420a10d302d7aab2fe1f3b870ea0082a6d408d20d1",
+      "task_id": "fover:step_selection:020",
+      "vote_candidate_id": "fover:step_selection:020::candidate0",
+      "vote_correct": true
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:3",
+      "matched_control_candidate_id": "fover:step_selection:021::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:021::candidate0",
+      "router_set_encoder_correct": true,
+      "target_hash": "sha256:ba0e4d3a554ac6d5639b22aa66c4da4e4ac7f1717c69eb80b5ed053e061434d3",
+      "task_id": "fover:step_selection:021",
+      "vote_candidate_id": "fover:step_selection:021::candidate1",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:4",
+      "matched_control_candidate_id": "fover:step_selection:022::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:022::candidate0",
+      "router_set_encoder_correct": true,
+      "target_hash": "sha256:d59dfa8aaedea8e0fb65d51d12b9733c9ba021a89d077e6c448dd0a4ab6fc866",
+      "task_id": "fover:step_selection:022",
+      "vote_candidate_id": "fover:step_selection:022::candidate1",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:5",
+      "matched_control_candidate_id": "fover:step_selection:023::candidate0",
+      "matched_control_correct": false,
+      "oracle_hit": false,
+      "router_set_encoder_candidate_id": "fover:step_selection:023::candidate4",
+      "router_set_encoder_correct": false,
+      "target_hash": "sha256:4551a4c3a1699db6dce5843280dd2ed3f5942a239fabaf7701b8fb139ec36368",
+      "task_id": "fover:step_selection:023",
+      "vote_candidate_id": "fover:step_selection:023::candidate0",
+      "vote_correct": false
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:0",
+      "matched_control_candidate_id": "fover:step_selection:024::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:024::candidate4",
+      "router_set_encoder_correct": false,
+      "target_hash": "sha256:eab9b037e1353d30a46ba19d8f431f5a861c9b23941b3aea6166cb5f9157769e",
+      "task_id": "fover:step_selection:024",
+      "vote_candidate_id": "fover:step_selection:024::candidate0",
+      "vote_correct": true
+    },
+    {
+      "candidate_count": 5,
+      "domain_id": "fover",
+      "family_id": "fover_question:1",
+      "matched_control_candidate_id": "fover:step_selection:025::candidate0",
+      "matched_control_correct": true,
+      "oracle_hit": true,
+      "router_set_encoder_candidate_id": "fover:step_selection:025::candidate0",
+      "router_set_encoder_correct": true,
+      "target_hash": "sha256:85cc804a23569bd58a5384a9e9dc19007274bf0f31373b87199b0316043c870a",
+      "task_id": "fover:step_selection:025",
+      "vote_candidate_id": "fover:step_selection:025::candidate1",
+      "vote_correct": false
+    }
+  ],
+  "verifier_is_oracle": false,
+  "vote_at_1": 0.2692307692
+}
