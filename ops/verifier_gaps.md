@@ -1207,12 +1207,12 @@ registry version that closed them when a new verifier captures a previously-open
 <!-- exp4333-gap-e3-world-model-rule-ar25-4327:end -->
 
 <!-- exp4333-gap-e3-world-model-rule-ka59-4328:start -->
-### GAP-E3-WORLD-MODEL-RULE-KA59-4328: Exp 4333 .400 verifier gap update
-- status: open
-- evidence: results/experiment_4328_e3_executable_world_model_ka59.json; game=ka59; offline_reproduced=False; reproduced_levels=0; verifier_best_accuracy=0.5625; residual_mismatch_class=missing_world_model_rule_gap_actions_1_2_4_6.
-- failure mode: E3 induced world model for ka59 remained partial and could not execute a reproduced level through the real offline environment
-- missing discriminator: ka59 executable world-model rule coverage for missing_world_model_rule_gap_actions_1_2_4_6
-- candidate design: mine the divergent transition traces, add the missing action/rule cases to the executable model, and keep halt-on-divergence plus reproduce() as the gate
+### GAP-E3-WORLD-MODEL-RULE-KA59-4328: Exp 4355 .402 filled verifier gap update
+- status: filled (exp4350_ka59_l1_world_model)
+- evidence: results/experiment_4350_e3_explore_verify_plan_ka59.json; offline_reproduced=True; reproduced_levels=1; verifier_best_accuracy=0.6375; world_model_path=results/arc_e3/ka59/world_model.py.
+- failure mode: the prior ka59 action-rule blocker no longer prevents an offline reproduced L1 solve.
+- missing discriminator: none for the L1 push-through-wall action plan; the remaining hidden HUD residual is tracked separately as GAP-E3-WORLD-MODEL-RULE-KA59-4350.
+- candidate design: preserve the Exp 4350 adaptive transition tests and reproduce() gate for ka59 L1.
 - priority: high
 <!-- exp4333-gap-e3-world-model-rule-ka59-4328:end -->
 
@@ -1501,3 +1501,52 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - Reproducibility checksum: `88ebeb795a2569c299b14d073f12934f23c2738279d6c561623f8af4293b7f28`
 - Gap: bounded explore-verify-plan did not satisfy the offline reproduced L1 gate.
 
+<!-- exp4355-gap-e3-world-model-rule-ka59-4350:start -->
+### GAP-E3-WORLD-MODEL-RULE-KA59-4350: Exp 4355 .402 verifier gap update
+- status: open_residual_after_l1_reproduction
+- evidence: results/experiment_4350_e3_explore_verify_plan_ka59.json; offline_reproduced=True; reproduced_levels=1; verifier_best_accuracy=0.6375; residual_mismatch_class=hidden_step_counter_hud_gap.
+- failure mode: ka59 L1 now reproduces, but the executable world model still has residual mismatch hidden_step_counter_hud_gap
+- missing discriminator: ka59 hidden StepCounter HUD dynamics
+- candidate design: model the hidden bottom-row HUD counter separately from win-state movement so exact transition tests can pass without corrupting L1 solve logic
+- priority: high
+<!-- exp4355-gap-e3-world-model-rule-ka59-4350:end -->
+
+<!-- exp4355-gap-e3-world-model-rule-sc25-l2-4351:start -->
+### GAP-E3-WORLD-MODEL-RULE-SC25-L2-4351: Exp 4355 .402 verifier gap update
+- status: open_deeper_level_residual
+- evidence: results/experiment_4351_e3_deeper_solved_games.json; game=sc25; offline_reproduced=False; new_reproduced_level=1; residual=sc25_l2_live_recorded_not_offline_reproduced_spell_delta_gap.
+- failure mode: sc25 deeper level remains unreproduced due to sc25_l2_live_recorded_not_offline_reproduced_spell_delta_gap
+- missing discriminator: sc25 executable rule coverage for sc25_l2_live_recorded_not_offline_reproduced_spell_delta_gap
+- candidate design: mine divergent deeper-level traces, add the missing executable transition cases, and keep reproduce() as the only solved-level gate
+- priority: high
+<!-- exp4355-gap-e3-world-model-rule-sc25-l2-4351:end -->
+
+<!-- exp4355-gap-e3-world-model-rule-ar25-l2-4351:start -->
+### GAP-E3-WORLD-MODEL-RULE-AR25-L2-4351: Exp 4355 .402 verifier gap update
+- status: open_deeper_level_residual
+- evidence: results/experiment_4351_e3_deeper_solved_games.json; game=ar25; offline_reproduced=False; new_reproduced_level=1; residual=ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap.
+- failure mode: ar25 deeper level remains unreproduced due to ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap
+- missing discriminator: ar25 executable rule coverage for ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap
+- candidate design: mine divergent deeper-level traces, add the missing executable transition cases, and keep reproduce() as the only solved-level gate
+- priority: high
+<!-- exp4355-gap-e3-world-model-rule-ar25-l2-4351:end -->
+
+<!-- exp4355-gap-e3-world-model-rule-tr87-4352:start -->
+### GAP-E3-WORLD-MODEL-RULE-TR87-4352: Exp 4355 .402 verifier gap update
+- status: open
+- evidence: results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json; game=tr87; offline_reproduced=False; reproduced_levels=0; verifier_accuracy=0.0; residual_mismatch_class=missing_world_model_rule_gap_actions_1_2_3_4.
+- failure mode: tr87 E3 world model remains partial: missing_world_model_rule_gap_actions_1_2_3_4
+- missing discriminator: tr87 executable world-model rule coverage for missing_world_model_rule_gap_actions_1_2_3_4
+- candidate design: continue explore-verify-plan only after the mechanic checks pass; add transition tests for the named action residual
+- priority: high
+<!-- exp4355-gap-e3-world-model-rule-tr87-4352:end -->
+
+<!-- exp4355-gap-e3-world-model-rule-ft09-4352:start -->
+### GAP-E3-WORLD-MODEL-RULE-FT09-4352: Exp 4355 .402 verifier gap update
+- status: open
+- evidence: results/experiment_4352_e3_explore_verify_plan_tr87_ft09.json; game=ft09; offline_reproduced=False; reproduced_levels=0; verifier_accuracy=0.05; residual_mismatch_class=missing_world_model_rule_gap_actions_6.
+- failure mode: ft09 E3 world model remains partial: missing_world_model_rule_gap_actions_6
+- missing discriminator: ft09 executable world-model rule coverage for missing_world_model_rule_gap_actions_6
+- candidate design: continue explore-verify-plan only after the mechanic checks pass; add transition tests for the named action residual
+- priority: high
+<!-- exp4355-gap-e3-world-model-rule-ft09-4352:end -->
