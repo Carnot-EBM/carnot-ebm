@@ -24,9 +24,24 @@ the ARC-AGI-3-Agents framework README + template agent.
 - **Milestones / prizes:** #1 **2026-06-30** ($25K/$10K/$2.5K, open-sourced); #2 2026-09-30
   (same); Top Score Awards $40K/$15K/$10K/$5K/$5K (1st–5th); Grand Prize **$700K** (100%).
 
-## The decisive open question: PUBLIC-25 vs HIDDEN eval set
+## RESOLVED (2026-06-17): eval is a HIDDEN/private set — the agent never sees the eval games
 
-Not disclosed on the pages read. This determines whether our existing work transfers:
+Confirmed across sources (ARC-AGI-3 Technical Report public/private split; Preview
+30-day-learnings; "agents must learn, not memorize"): **competition scoring runs the
+agent on a SEPARATE PRIVATE set of games it has NEVER seen**, "intentionally
+out-of-distribution relative to the mechanics found in the public environments"
+(public/semi-private/fully-private; the fully-private set is the official leaderboard).
+The preview used 3 public + 3 private as a holdout; the main 2026 competition uses a
+much larger private holdout (reports cite ~110 games split public/private leaderboard).
+**Consequence: our 11 banked replays score ~0 on the leaderboard (those public games are
+not in the eval set). The recognize-and-replay v1 agent validated the harness
+integration but is WORTHLESS for scoring. The GENERIC step-wise solver (#2) is the
+ENTIRE competitive value.** Scoring also rewards EFFICIENCY:
+per-level score = `min(human_actions / agent_actions, 1.0)`, squared — so fewer actions
+(our verifier-routed search) is directly worth more. Final eval cap (preview): 8h
+wall-clock, 10 steps/sec.
+
+### (historical) The open question this resolved:
 - **If eval == the public 25 games (same layouts):** an agent that runs our solver +
   replays our 13 banked solutions when it recognizes a game would score our 13 levels
   directly (the offline sims are deterministic).
