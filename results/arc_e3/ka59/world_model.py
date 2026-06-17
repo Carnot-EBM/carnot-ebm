@@ -2,6 +2,7 @@ import numpy as np
 
 
 STEP = 3
+PUSH_STEPS = 5
 BACKGROUND = 1
 PADDING = 2
 TARGET = 4
@@ -15,19 +16,26 @@ def _blocks(grid):
     arr = np.asarray(grid)
     out = []
     h, w = arr.shape
-    for y in range(0, h - 2):
-        for x in range(0, w - 2):
+    for cy in range(1, h - 1):
+        for cx in range(1, w - 1):
+            if int(arr[cy, cx]) not in (SELECTED, TARGET, UNSELECTED_INITIAL):
+                continue
+            y, x = cy - 1, cx - 1
             patch = arr[y : y + 3, x : x + 3]
             if (
-                patch[0, 0] == BLOCK_BORDER
-                and patch[0, 1] == BLOCK_BORDER
-                and patch[0, 2] == BLOCK_BORDER
-                and patch[1, 0] == BLOCK_BORDER
-                and patch[1, 2] == BLOCK_BORDER
-                and patch[2, 0] == BLOCK_BORDER
-                and patch[2, 1] == BLOCK_BORDER
-                and patch[2, 2] == BLOCK_BORDER
+                patch[0, 0] in (BLOCK_BORDER, SELECTED)
+                and patch[0, 1] in (BLOCK_BORDER, SELECTED)
+                and patch[0, 2] in (BLOCK_BORDER, SELECTED)
+                and patch[1, 0] in (BLOCK_BORDER, SELECTED)
+                and patch[1, 2] in (BLOCK_BORDER, SELECTED)
+                and patch[2, 0] in (BLOCK_BORDER, SELECTED)
+                and patch[2, 1] in (BLOCK_BORDER, SELECTED)
+                and patch[2, 2] in (BLOCK_BORDER, SELECTED)
                 and int(patch[1, 1]) in (SELECTED, TARGET, UNSELECTED_INITIAL)
+                and (
+                    (patch[0, 1] == BLOCK_BORDER and patch[2, 1] == BLOCK_BORDER)
+                    or (patch[1, 0] == BLOCK_BORDER and patch[1, 2] == BLOCK_BORDER)
+                )
             ):
                 out.append((y, x, int(patch[1, 1])))
     return out
@@ -41,37 +49,103 @@ def _selected_block(grid):
     return (blocks[0][0], blocks[0][1]) if blocks else None
 
 
-def _restore_center(out, y, x):
-    out[y + 1, x + 1] = TARGET
-
-
 def _draw_block(out, y, x, center):
     out[y : y + 3, x : x + 3] = BLOCK_BORDER
     out[y + 1, x + 1] = center
 
 
-def _underlay_for(out, y, x):
-    patch = out[y : y + 3, x : x + 3]
-    if np.any(patch == TARGET):
-        return TARGET
-    return BACKGROUND
+def _normalize_block_borders(out):
+    for y, x, center in _blocks(out):
+        out[y : y + 3, x : x + 3] = BLOCK_BORDER
+        out[y + 1, x + 1] = center
+
+
+def _mark_selected_contacts(out):
+    selected = _selected_block(out)
+    if selected is None:
+        return
+    y, x = selected
+    for by, bx, _center in _blocks(out):
+        if by == y and bx == x:
+            continue
+        if by + 3 == y and bx < x + 3 and bx + 3 > x:
+            out[y, x : x + 3] = SELECTED
+        if y + 3 == by and bx < x + 3 and bx + 3 > x:
+            out[y + 2, x : x + 3] = SELECTED
+        if bx + 3 == x and by < y + 3 and by + 3 > y:
+            out[y : y + 3, x] = SELECTED
+        if x + 3 == bx and by < y + 3 and by + 3 > y:
+            out[y : y + 3, x + 2] = SELECTED
+    out[y + 1, x + 1] = SELECTED
+
+
+def _refresh_block_marks(out):
+    _normalize_block_borders(out)
+    _mark_selected_contacts(out)
+
+
+def _target_underlay(out, y, x):
+    # Reconstruct only the visible target border cells around an occupied target.
+    fill = np.full((3, 3), BACKGROUND, dtype=out.dtype)
+    h, w = out.shape
+    for ty in range(max(0, y - 5), min(h - 4, y + 2) + 1):
+        for tx in range(max(0, x - 5), min(w - 4, x + 2) + 1):
+            border = out[ty : ty + 5, tx : tx + 5]
+            if border.shape != (5, 5):
+                continue
+            if np.count_nonzero(border == TARGET) >= 8:
+                for yy in range(3):
+                    for xx in range(3):
+                        gy, gx = y + yy, x + xx
+                        if gy in (ty, ty + 4) or gx in (tx, tx + 4):
+                            fill[yy, xx] = TARGET
+    return fill
 
 
 def _erase_block(out, y, x):
-    fill = _underlay_for(out, y, x)
-    out[y : y + 3, x : x + 3] = fill
+    out[y : y + 3, x : x + 3] = _target_underlay(out, y, x)
 
 
-def _blocked(out, y, x, old_y, old_x):
+def _rects_overlap(a_y, a_x, b_y, b_x):
+    return a_y < b_y + 3 and a_y + 3 > b_y and a_x < b_x + 3 and a_x + 3 > b_x
+
+
+def _blocked_static(out, y, x):
     h, w = out.shape
     if y < 0 or x < 0 or y + 3 > h - 1 or x + 3 > w:
         return True
-    patch = out[y : y + 3, x : x + 3].copy()
-    old = out[old_y : old_y + 3, old_x : old_x + 3].copy()
-    out[old_y : old_y + 3, old_x : old_x + 3] = _underlay_for(out, old_y, old_x)
-    allowed = np.isin(out[y : y + 3, x : x + 3], [BACKGROUND, TARGET])
-    out[old_y : old_y + 3, old_x : old_x + 3] = old
-    return not bool(np.all(allowed)) or bool(np.any(np.isin(patch, [PADDING, WALL])))
+    patch = out[y : y + 3, x : x + 3]
+    return bool(np.any(np.isin(patch, [PADDING, WALL])))
+
+
+def _move_hits_block(out, y, x, old_y, old_x):
+    hits = []
+    for by, bx, center in _blocks(out):
+        if by == old_y and bx == old_x:
+            continue
+        if _rects_overlap(y, x, by, bx):
+            hits.append((by, bx, center))
+    return hits
+
+
+def _can_place_after_erasing(out, y, x, old_y, old_x):
+    if _blocked_static(out, y, x):
+        return False
+    temp = out.copy()
+    _erase_block(temp, old_y, old_x)
+    patch = temp[y : y + 3, x : x + 3]
+    return bool(np.all(np.isin(patch, [BACKGROUND, TARGET])))
+
+
+def _push_block(out, by, bx, center, dy, dx):
+    ny = by + dy * STEP * PUSH_STEPS
+    nx = bx + dx * STEP * PUSH_STEPS
+    h, w = out.shape
+    if ny < 0 or nx < 0 or ny + 3 > h - 1 or nx + 3 > w:
+        return False
+    _erase_block(out, by, bx)
+    _draw_block(out, ny, nx, center)
+    return True
 
 
 def _tick(out):
@@ -92,8 +166,9 @@ def _click_select(out, data):
         if by <= y <= by + 2 and bx <= x <= bx + 2:
             current = _selected_block(out)
             if current is not None:
-                _restore_center(out, current[0], current[1])
+                out[current[0] + 1, current[1] + 1] = TARGET
             out[by + 1, bx + 1] = SELECTED
+            _refresh_block_marks(out)
             return
 
 
@@ -116,16 +191,26 @@ def engine(grid, action, data):
         return out
     y, x = selected
     dy, dx = {
-        1: (-STEP, 0),
-        2: (STEP, 0),
-        3: (0, -STEP),
-        4: (0, STEP),
+        1: (-1, 0),
+        2: (1, 0),
+        3: (0, -1),
+        4: (0, 1),
     }[action]
-    ny, nx = y + dy, x + dx
-    if _blocked(out, ny, nx, y, x):
+    ny, nx = y + dy * STEP, x + dx * STEP
+
+    hits = _move_hits_block(out, ny, nx, y, x)
+    if hits:
+        for by, bx, center in hits:
+            _push_block(out, by, bx, center, dy, dx)
+        _refresh_block_marks(out)
+        return out
+
+    if not _can_place_after_erasing(out, ny, nx, y, x):
+        _refresh_block_marks(out)
         return out
     _erase_block(out, y, x)
     _draw_block(out, ny, nx, SELECTED)
+    _refresh_block_marks(out)
     return out
 
 
@@ -133,9 +218,8 @@ def is_level_complete(grid):
     arr = np.asarray(grid)
     if arr.ndim != 2:
         return False
-    blocks = _blocks(arr)
     occupied = []
-    for by, bx, _center in blocks:
+    for by, bx, _center in _blocks(arr):
         border = arr[max(0, by - 1) : by + 4, max(0, bx - 1) : bx + 4]
         if border.shape == (5, 5) and np.count_nonzero(border == TARGET) >= 12:
             occupied.append((by, bx))
