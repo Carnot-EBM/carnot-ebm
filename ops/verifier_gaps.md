@@ -1478,3 +1478,19 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - Reproducibility checksum: `8e6e766c670f6890f2a8e3c704e6c5847bb40381e11a51285f283e83849572ee`
 - Gap: bounded explore-verify-plan run did not satisfy the offline reproduced L1 gate.
 
+### 2026-06-17 Exp4352 tr87 E3 residual gap
+- Spec: REQ-PHASE4-084 / SCENARIO-PHASE4-084
+- Game: `tr87`
+- Best verifier accuracy: 0.0000
+- Residual mismatch class: `missing_world_model_rule_gap_actions_1_2_3_4`
+- Reproducibility checksum: `88ebeb795a2569c299b14d073f12934f23c2738279d6c561623f8af4293b7f28`
+- Gap: bounded explore-verify-plan did not satisfy the offline reproduced L1 gate.
+
+### 2026-06-17 Exp4352 ft09 E3 residual gap
+- Spec: REQ-PHASE4-084 / SCENARIO-PHASE4-084
+- Game: `ft09`
+- Best verifier accuracy: 0.0500
+- Residual mismatch class: `missing_world_model_rule_gap_actions_6`
+- Reproducibility checksum: `88ebeb795a2569c299b14d073f12934f23c2738279d6c561623f8af4293b7f28`
+- Gap: bounded explore-verify-plan did not satisfy the offline reproduced L1 gate.
+
