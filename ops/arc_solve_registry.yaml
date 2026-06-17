@@ -14,7 +14,7 @@
 #   unsolved    = no solve yet.
 
 schema_version: 1
-updated: "2026-06-16"
+updated: "2026-06-17"
 
 # ---- GENERAL GOTCHAS (apply to ANY game; encoded in arc_solver_kit) ----
 general_gotchas:
@@ -80,15 +80,68 @@ games:
       - "spell fire clears the cast pattern; multi-frame fireball animation must resolve."
     next: "instrument WHICH win predicate fires for L1; drive search toward cast-grid alignment and/or fireball wall-clear."
 
-  # ... 20 untouched games (ar25, bp35, cd82, cn04, dc22, ft09, g50t, ka59, lf52,
-  # m0r0, re86, s5i5, sb26, sk48, sp80, su15, tn36, tr87, tu93, vc33) — reproducibility: unsolved.
+  # ---- ADAPTER-FREE SWEEP SOLVES (2026-06-17, scripts/arc_explore_sweep.py over the
+  # 19 unsolved games; graph_explore_solve_v2 + rich_action_candidates; all four
+  # independently re-gated reproduced=True, L1). NO per-game RE — first contact. ----
+  - game: cd82
+    reproducibility: reproduced
+    levels_reproduced: 1
+    win_condition: "first-solve L1 adapter-free; keyboard directional + confirm sequence replays offline."
+    action_model: "keyboard-only [ACTION3,2,2,4,5]; ACTION1-4 directional, ACTION5 confirm/commit."
+    solver: "results/arc_explore_trajectory_cd82.json (graph_explore_solve_v2, 5 actions)."
+    reproduce: "re-gated reproduced=True L1 (arc_solver_kit.reproduce)."
+    gotchas: []
+
+  - game: sp80
+    reproducibility: reproduced
+    levels_reproduced: 1
+    win_condition: "first-solve L1 adapter-free; move-right x3 then commit."
+    action_model: "keyboard-only [ACTION4,4,4,5]; ACTION4 = one direction, ACTION5 commit."
+    solver: "results/arc_explore_trajectory_sp80.json (graph_explore_solve_v2, 4 actions)."
+    reproduce: "re-gated reproduced=True L1."
+    gotchas: []
+
+  - game: su15
+    reproducibility: reproduced
+    levels_reproduced: 1
+    win_condition: "first-solve L1 adapter-free; click-to-connect — 7 clicks along a diagonal line (x up, y down)."
+    action_model: "click-only [ACTION6]; coords (10,53)->(44,19) stepping ~(+6,-6); rich_action_candidates surfaced the object clicks the 12-cap would have dropped."
+    solver: "results/arc_explore_trajectory_su15.json (graph_explore_solve_v2, 7 clicks)."
+    reproduce: "re-gated reproduced=True L1."
+    gotchas: []
+
+  - game: tu93
+    reproducibility: reproduced
+    levels_reproduced: 1
+    win_condition: "first-solve L1 adapter-free; 18-move keyboard navigation (maze/path)."
+    action_model: "keyboard-only [ACTION1-4 directional]; 18-step path [4,2,2,4,1,4,2,2,3,3,2,4,4,2,4,1,4,2]."
+    solver: "results/arc_explore_trajectory_tu93.json (graph_explore_solve_v2, 18 actions)."
+    reproduce: "re-gated reproduced=True L1."
+    gotchas:
+      - "earlier routing flagged tu93 ~ wa30/ls20 family; the systematic explorer cracked it without an adapter."
+
+  - game: tn36
+    reproducibility: unsolved
+    levels_reproduced: 0
+    win_condition: "unknown; explorer ERRORED before advancing."
+    gotchas:
+      - "DEAD-END (2026-06-17 sweep): ACTION6 raises KeyError 'x' in the game's perform_action — tn36's click payload schema is NOT {x,y}. rich_action_candidates emits {x,y} clicks that tn36 rejects. This is tn36's per-game DELTA: reverse-engineer its ACTION6 data format (and wrap clicks accordingly) before the explorer can advance it. Keyboard-only explore may sidestep it."
+    next: "RE tn36's ACTION6 data schema; until then route keyboard-only candidates or skip ACTION6 for tn36."
+
+  # ... 15 still-unsolved games (ar25, bp35, cn04, dc22, ft09, g50t, ka59, lf52,
+  # m0r0, re86, s5i5, sb26, sk48, sp80<-SOLVED, tr87, vc33; tn36 errored=delta-RE-needed)
+  # — reproducibility: unsolved. The 2026-06-17 adapter-free sweep advanced 4 of 19
+  # (cd82, sp80, su15, tu93); 14 resisted at L0 (deeper win-mechanics / per-game deltas).
   # vc33: a click-game solved live (arc3_m2_solve) but NOT yet captured reproducibly.
 
 # Aggregate reproducible scorecard (the only count that may be headline/publish-eligible):
-#   reproduced levels = r11l 1 + ls20 1 + wa30 1 + lp85 3 = 6   (verified by
+#   reproduced levels = r11l 1 + ls20 1 + wa30 1 + lp85 3 + cd82 1 + sp80 1 + su15 1
+#   + tu93 1 = 10  across 8 games  (the 4 new games landed 2026-06-17 by the
+#   adapter-free sweep, each independently re-gated reproduced=True; verify with
 #   scripts/arc3_replay_scorecard_metaharness.py -> results/arc3_replay_aggregate_scorecard.json)
-reproducible_total_levels: 6
-provisional_total_levels: 5   # sc25 L5 (live-recorded, not yet reproduced)
+reproducible_total_levels: 10   # was 6; +4 adapter-free sweep solves (cd82, sp80, su15, tu93)
+reproducible_total_games: 8     # r11l, ls20, wa30, lp85, cd82, sp80, su15, tu93
+provisional_total_levels: 5     # sc25 L5 (live-recorded, not yet reproduced)
 
 # ---- THE STANDING LEARNING LOOP (each solve compounds onto the next) ----
 # A new game's solver flow, all in the harness, zero quota:
@@ -123,6 +176,12 @@ learning_loop:
   # SOLVES ADAPTER-FREE (full capture->gate->seed pipeline, NO per-game RE):
   #   ls20 L1 (v2, 13 actions); r11l L1 (v2 + rich_action_candidates, 3 actions -- shorter
   #   than the recorded 4). Both offline_reproduced=True via the standing loop.
+  #   2026-06-17 SWEEP (scripts/arc_explore_sweep.py over all 19 unsolved games) added
+  #   FOUR more, all re-gated reproduced=True L1: cd82 (5 kbd), sp80 (4 kbd), su15 (7
+  #   diagonal clicks), tu93 (18 kbd nav). 14/19 resisted at L0 (deeper win-mechanics);
+  #   tn36 ERRORED (its ACTION6 wants a non-{x,y} click payload -> per-game delta-RE).
+  #   Net: the systematic explorer cracks the SHALLOW-win tail for free; the residual is
+  #   the genuinely-deep games + per-game click-schema deltas.
   # rich_action_candidates fixed r11l: every detected object is a click candidate (its
   #   winning clicks were objects #15/#27 dropped by the old 12-cap).
   # graph_explore_solve_v3 = value/novelty-guided best-first (optional verifier=predicted
