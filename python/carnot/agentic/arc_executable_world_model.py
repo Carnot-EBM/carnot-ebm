@@ -343,6 +343,63 @@ def _extract_python(text: str) -> str:
 # plan in the verified model, execute in reality, halt on divergence
 # ---------------------------------------------------------------------------
 
+def _model_candidates(grid: np.ndarray) -> list[dict]:
+    """Action candidates to try when planning INSIDE the induced model (no env): the 5
+    directional/confirm keyboard actions + a click on each detected object (salience-
+    ordered). Pure-grid, so it works on the engine's predicted grids."""
+    from carnot.agentic.arc_graph_explore import _components_detailed
+    cands = [{"action": a, "data": None} for a in (1, 2, 3, 4, 5)]
+    comps = _components_detailed(grid)
+    if comps:
+        from collections import Counter
+        cc = Counter(int(v) for v in grid.flatten().tolist())
+        comps.sort(key=lambda c: c[2] * (1.0 + 1.0 / (1 + cc.get(c[3], 0))), reverse=True)
+        for (cy, cx, _a, _c) in comps[:32]:
+            cands.append({"action": 6, "data": {"x": int(cx), "y": int(cy)}})
+    return cands
+
+
+def plan_in_model(engine, is_level_complete, start_grid: np.ndarray, *,
+                  max_nodes: int = 20000, max_depth: int = 40) -> Optional[list]:
+    """BFS a path to an is_level_complete state ENTIRELY INSIDE the induced model
+    (engine is pure: grid,action,data -> grid; no environment). Returns the action
+    sequence [{"action","data"}] that the model believes reaches a win, or None. This
+    is the harness-friendly planner: the agent computes the plan with zero real actions,
+    then executes it in the real env (few real actions = the EFFICIENCY win), halting if
+    reality diverges from the model."""
+    from collections import deque
+    if is_level_complete is None:
+        return None
+    start = np.asarray(start_grid)
+    seen = {to_ascii(start)}
+    q = deque([(start, [])])
+    nodes = 0
+    while q and nodes < max_nodes:
+        grid, path = q.popleft()
+        if len(path) >= max_depth:
+            continue
+        for c in _model_candidates(grid):
+            try:
+                ng = np.asarray(engine(grid.copy(), c["action"], c["data"]))
+            except Exception:
+                continue
+            nodes += 1
+            if ng.shape != start.shape:
+                continue
+            key = to_ascii(ng)
+            if key in seen:
+                continue
+            seen.add(key)
+            npath = path + [c]
+            try:
+                if bool(is_level_complete(ng)):
+                    return npath
+            except Exception:
+                pass
+            q.append((ng, npath))
+    return None
+
+
 def plan_and_execute(game: str, engine, is_level_complete, *, warmup: bool = False,
                      max_plan: int = 200, max_depth: int = 40) -> dict:
     """BFS to an is_level_complete state INSIDE the induced model, then execute the plan
