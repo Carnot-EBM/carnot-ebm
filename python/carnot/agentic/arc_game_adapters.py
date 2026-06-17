@@ -67,7 +67,73 @@ def _lp85():
     )
 
 
-_BUILDERS = {"lp85": _lp85}
+# ---------------- tu93 (4-direction keyboard maze; frame-based RE) ----------------
+def _tu93():
+    """tu93 -- a 4-direction keyboard maze (ACTION1-4). FRAME-BASED RE (no internal-state read): the
+    PLAYER is the moving colour-9 sprite, the GOAL is the static colour-14 marker (RE'd 2026-06-17 by
+    motion: only colour-9 + the colour-4 key drift across moves; colour-14 is static). The
+    hand_verifier is the player->goal Manhattan distance (goal-distance-routed best-first search).
+
+    VALIDATED: solves L1 reproducibly (18 moves, offline_reproduced=True). KNOWN LIMITATION at L2+: tu93
+    carries HIDDEN/RNG state (beyond the rendered grid) that the OfflineSolver's REUSED single env
+    accumulates across the search, so a verifier-found L2 path does NOT reproduce on a fresh env (the
+    reproduction gate correctly rejects it -- no false claim). graph_explore avoids this by DEEPCOPYING
+    the env per node; the OfflineSolver does not. Deep-solving tu93 via this adapter therefore needs a
+    deepcopy-per-node (fresh-env) mode in arc_solver_kit.OfflineSolver -- a kit-level change, not an
+    adapter fix. featurize is None (the learned verifier is fed env._game internals via
+    collect_trajectory_data, which this frame-based RE doesn't read)."""
+    import numpy as np
+    from carnot.agentic.arc_agi3_world_model import grid_of
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+
+    PLAYER, GOAL = 9, 14
+
+    def _grid2d(frame):
+        g = grid_of(frame)
+        if g.ndim == 1:                                # some stepped frames flatten -> reshape square
+            s = int(round(g.size ** 0.5))
+            if s * s == g.size:
+                g = g.reshape(s, s)
+        return g
+
+    def _centroid(g, col):
+        ys, xs = np.where(g == col)
+        return (float(xs.mean()), float(ys.mean())) if len(xs) else None
+
+    def action_labels(env, frame=None, path=None):
+        av = list(getattr(frame, "available_actions", []) or []) if frame is not None else []
+        moves = [a for a in av if a in (1, 2, 3, 4)] or [1, 2, 3, 4]
+        return [json.dumps({"action": int(a)}) for a in moves]
+
+    def apply(env, label, frame):
+        return env.step(_game_action(GameAction, json.loads(label)["action"]))
+
+    def state_key(game, frame=None):
+        # frame-based dedup: the FULL grid (player position + maze + key + the blocked-move counter).
+        # Do NOT mask any region -- the corner counter is LOAD-BEARING (masking it collapses distinct
+        # states and yields a non-reproducing path; the full-grid hash is what graph_explore reproduces
+        # tu93 with).
+        if frame is None:
+            return None
+        return _grid2d(frame).tobytes()
+
+    def hand_verifier(game, frame=None):
+        if frame is None:
+            return 1000.0
+        g = _grid2d(frame)
+        p, t = _centroid(g, PLAYER), _centroid(g, GOAL)
+        if p is None or t is None:
+            return 1000.0
+        return abs(p[0] - t[0]) + abs(p[1] - t[1])     # lower == closer to the goal
+
+    return GameAdapter(
+        game="tu93", action_labels=action_labels, apply=apply, state_key=state_key,
+        featurize=None, hand_verifier=hand_verifier, warmup_label=None,
+        depth_caps={1: 40, 2: 60, 3: 80, 4: 90, 5: 90},
+    )
+
+
+_BUILDERS = {"lp85": _lp85, "tu93": _tu93}
 
 
 def get_adapter(game: str) -> Optional[GameAdapter]:
