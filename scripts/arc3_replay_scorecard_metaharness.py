@@ -50,7 +50,8 @@ GAME_ARTIFACTS = {
 # from-scratch OFFLINE re-solves (these replay deterministically on the offline
 # layout; take precedence over the non-reproducible live-recorded banked traces)
 RESOLVED_ARTIFACTS = {
-    "lp85": "results/arc3_lp85_offline_resolve.json",  # L3, re-derived offline
+    # L4 re-derived offline (solve_adaptered + learned verifier), reproduction-gated reached_level=4
+    "lp85": "results/arc_explore_trajectory_lp85_l4.json",  # L4
 }
 
 
