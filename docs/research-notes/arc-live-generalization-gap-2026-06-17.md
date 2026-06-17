@@ -250,3 +250,46 @@ So all four discovered mechanic classes (program_editor, graph_explore, checkpoi
 timed_trap_aware) now route to a real solver. The remaining live-generalization work is uniformly the
 **frame-only induction of each class's model** (the program-editor transition verifier; the maze
 MazeModel from frames) — a verifier/perception build, not a routing or planning gap.
+
+## NEXT LINK: frame-only MazeModel induction — object+walls induce, target/checkpoints do not (2026-06-17)
+
+Built `scripts/arc3_frame_induction.py:induce_maze_model` — the perception layer that builds a
+`MazeModel` (for the maze planners) FROM FRAMES, zero internal state. It induces the
+behaviorally-observable geometry: the **OBJECT** is the colour whose region centroid VARIES across
+frames (the thing that moves under control); the **WALLS** are the static non-floor structure (stable
+connected components, minus the playfield border + slivers). On synthetic frames that render a
+distinct object+walls+target it returns a complete `usable_model=True` (unit-tested,
+`tests/python/test_arc_maze_induction.py`, 3 tests).
+
+**Honest measured limit on tn36 (the maze classes' home game).** Three frame probes established that a
+*usable* MazeModel is NOT frame-inducible for tn36's atomic-run program-editor maze:
+
+- **Object + walls DO induce.** The object renders as a distinct colour (11) and moves across the
+  multi-run solve; the walls render as a distinct colour (6). The behavioral inducer recovers both
+  (object-by-motion, walls-by-stability).
+- **Target + checkpoints DO NOT render distinctly.** At the L7 start the TARGET box sits on floor
+  colour 4 and the CHECKPOINTS sit on the floor checkerboard (colour 5) — they are not separable from
+  the floor frame-only. These are the planner-CRITICAL fields (the whole checkpoint_multirun mechanic
+  is "end a run on a checkpoint"), so without them no MazeModel can be assembled from frames.
+- **Hazards are invisible at rest.** The spikes are not drawn until they flash mid-run, and the run is
+  atomic — so they cannot be probed frame-by-frame either.
+
+So `induce_maze_model("tn36")` returns `usable_model=False` and honestly reports
+`{object: True, walls: True, target: False, checkpoints: "not_rendered_distinctly", hazards_at_rest:
+"invisible_until_run"}`. The tn36 maze model therefore stays sourced from internal state (and the
+real-env-validated plan is the oracle). Logged as `GAP-ARC-MAZE-MODEL-FRAME-INDUCTION`.
+
+**This is the THIRD instance of the same root limit.** tn36's atomic-run program-editor architecture
+hides its execution-layer dynamics/geometry from the frame stream: (1) no graded feedback for
+winner-discovery, (2) atomic motion blocks code-semantics induction, (3) the maze model's target +
+checkpoints + at-rest hazards are not rendered. All three point at the SAME durable unlock — an
+**offline-trained transition/world model** for the program-editor class — rather than more frame-only
+perception. For a DIRECT-CONTROL maze (object visibly moving, distinct target + walls), the same
+`induce_maze_model` primitives yield a complete model today (the synthetic clean case proves the
+algorithm); tn36 is specifically blocked by what it chooses to render, not by the inducer.
+
+Net: the frame-only MazeModel induction is wired — the object/walls primitives are validated and
+usable; the planner-critical fields are induced when a game renders them and are honestly flagged
+(not faked) when, as in tn36, the game draws them on the floor or hides them. The live solver for the
+atomic-run program-editor/maze class is gated on the offline transition verifier, consistently across
+all three findings.

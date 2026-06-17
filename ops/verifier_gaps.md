@@ -1430,4 +1430,28 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
   PLANS with the learned model instead of blind online search.
 - priority: high (blind search caps live program-editor solvability; the offline-learned transition
   verifier is the unlock — and is squarely Carnot's verifier-as-product thesis)
+### GAP-ARC-MAZE-MODEL-FRAME-INDUCTION: a planner-ready MazeModel can't be induced from atomic-run frames
+- status: open (frame-only inducer ships for the OBSERVABLE parts; tn36's critical fields are not frame-rendered)
+- evidence: scripts/arc3_frame_induction.py:induce_maze_model + the 2026-06-17 frame probes (design
+  note "frame-only MazeModel induction"). The behavioral inducer recovers the OBJECT (the colour whose
+  centroid moves across frames) and WALLS (static non-floor structure) — validated on synthetic frames
+  + observed on tn36 (object colour 11 moves; walls colour 6). BUT the planner-CRITICAL fields are not
+  frame-distinct in tn36: the TARGET draws on floor colour 4, the CHECKPOINTS draw on the floor
+  checkerboard (colour 5), and the spike HAZARDS are invisible at rest (and the run is atomic, hiding
+  the mid-run flash). So induce_maze_model returns usable_model=False for tn36 — the maze model falls
+  back to internal state.
+- failure mode: the maze planners (arc_maze_planner) need target + checkpoints + hazard boxes; for the
+  atomic-run program-editor maze (tn36 L6/L7) those are not in the frames, so a fully frame-only live
+  solve of that class is blocked. (A DIRECT-CONTROL maze that renders a distinct target + walls IS
+  fully inducible by the same primitives — usable_model=True on the synthetic clean case.)
+- missing discriminator: a perception/verifier that recovers the floor-blended checkpoints + the
+  invisible hazards — e.g. EFFECT-probing (a cell that, when a run ends on it, persists base advance =
+  checkpoint) and TEMPORAL hazard detection across run-animation frames — or, for the program-editor
+  class, the offline transition verifier (GAP-ARC-PROGRAM-EDITOR-NO-GRADED-FEEDBACK) that supplies the
+  model the frames withhold.
+- candidate design: (1) effect-probe checkpoints (run-end base-persistence); (2) temporal blink
+  detection over the run-animation frame stream for hazards; (3) for atomic-run editors, source the
+  MazeModel from the offline-trained transition model rather than live frames.
+- priority: medium (object+walls induce today; the residual is the same atomic-run/rendering limit as
+  the program-editor gap — both point at the offline transition verifier as the durable unlock)
 <!-- arc-live-generalization-gaps-2026-06-17:end -->

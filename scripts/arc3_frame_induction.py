@@ -287,6 +287,124 @@ def frame_only_winner_search(arc, game, layout, run_button, cap=400):
     return {"found": False, "strategy": None, "runs": runs, "product_space": space}
 
 
+# --- Frame-only MazeModel induction (the perception layer for the maze strategy classes) ----------
+#
+# The maze planners (carnot.agentic.arc_maze_planner) need a MazeModel: object box, target,
+# walls, checkpoints, hazard boxes. For a KNOWN game that model is read from internal state; the LIVE
+# requirement is to induce it FROM FRAMES. This function induces the BEHAVIORALLY-observable geometry
+# with zero internal state: the OBJECT is whatever moves under control (its colour's centroid varies
+# across frames), and WALLS are the static non-floor structure. It reports, per field, what frames can
+# and cannot supply.
+#
+# HONEST LIMIT measured on tn36 (2026-06-17): object + walls induce, but the planner-CRITICAL fields
+# do NOT render distinctly — the TARGET draws on the floor colour, CHECKPOINTS draw on the floor
+# checkerboard, and the spike HAZARDS are invisible at rest (only flash mid-run, which the atomic run
+# hides). So a USABLE MazeModel for the atomic-run program-editor maze (tn36 L6/L7) is NOT
+# frame-inducible — it falls back to internal state. For a DIRECT-CONTROL maze that renders a distinct
+# target + walls, the same primitives yield a complete model (validated on synthetic frames). See
+# GAP-ARC-MAZE-MODEL-FRAME-INDUCTION + the design note.
+
+
+def induce_maze_model(grids, *, play_top=2, play_rows=32, floor_top=3):
+    """FRAME-ONLY: induce maze geometry from a list of play-area grids in which the OBJECT is at
+    DIFFERENT positions (probe a direct-control game with directional actions, or snapshot a
+    multi-run solve). No internal state. Returns the behaviorally-inducible geometry + an honest
+    per-field `frame_inducible` report + `usable_model` (True only when object + a distinct target +
+    walls all resolve — a planner-ready model)."""
+    import scipy.ndimage as ndi
+
+    plays = [np.asarray(g)[play_top:play_rows] for g in grids]
+    h_rows, w_cols = plays[0].shape
+    flat = np.concatenate([p.ravel() for p in plays])
+    vals, counts = np.unique(flat, return_counts=True)
+    ranked = sorted(zip(counts.tolist(), vals.tolist()), reverse=True)
+    floor = {c for _, c in ranked[:floor_top]}  # background + checkerboard = top areas
+    nonfloor = [c for _, c in ranked if c not in floor]
+
+    def _cc(mask):
+        lab, n = ndi.label(mask)
+        boxes = []
+        for i in range(1, n + 1):
+            ys, xs = np.where(lab == i)
+            boxes.append(
+                (
+                    int(xs.min()),
+                    int(ys.min()),
+                    int(xs.max() - xs.min() + 1),
+                    int(ys.max() - ys.min() + 1),
+                    int(len(xs)),
+                )
+            )
+        return boxes
+
+    def _filtered(masks0):  # CCs minus slivers + the playfield border
+        return [
+            b for b in _cc(masks0) if b[4] > 2 and not (b[2] >= w_cols - 2 and b[3] >= h_rows - 2)
+        ]
+
+    # OBJECT = the non-floor colour whose region centroid VARIES most across frames (it moves).
+    obj_color, best_var = None, -1.0
+    for c in nonfloor:
+        cents = [
+            (np.where(p == c)[1].mean(), np.where(p == c)[0].mean())
+            for p in plays
+            if (p == c).any()
+        ]
+        if len(cents) >= 2:
+            v = float(np.var([a for a, _ in cents]) + np.var([b for _, b in cents]))
+            if v > best_var:
+                best_var, obj_color = v, c
+    obj_box = None
+    if obj_color is not None and best_var > 0:
+        ccs = _cc(plays[-1] == obj_color)
+        if ccs:
+            x, y, w, hh, _ = max(ccs, key=lambda b: b[4])  # largest CC = the sprite
+            obj_box = (x, y + play_top, w, hh)
+
+    # STATIC non-floor, non-object colours -> split into WALLS (structural: multiple/large CCs) vs a
+    # TARGET candidate (a lone compact sprite distinct from the walls).
+    walls, target_box = [], None
+    for c in nonfloor:
+        if c == obj_color:
+            continue
+        masks = [(p == c) for p in plays]
+        if not all(m.any() for m in masks) or not all(np.array_equal(masks[0], m) for m in masks):
+            continue  # absent in some frame or moves -> not static
+        boxes = _filtered(masks[0])
+        if not boxes:
+            continue
+        sprite_area = (obj_box[2] * obj_box[3]) if obj_box else 16
+        if len(boxes) == 1 and boxes[0][4] <= 2 * sprite_area and target_box is None:
+            x, y, w, hh, _ = boxes[0]
+            target_box = (x, y + play_top, w, hh)  # lone compact static sprite = the goal
+        else:
+            walls += [(x, y + play_top, w, hh) for x, y, w, hh, _ in boxes]
+
+    report = {
+        "object": obj_box is not None,  # by motion
+        "walls": len(walls) > 0,  # by stability
+        "target": target_box is not None,  # a distinct lone static sprite
+        # in tn36 these draw on the floor / are invisible at rest -> not frame-inducible:
+        "checkpoints": "not_rendered_distinctly",
+        "hazards_at_rest": "invisible_until_run",
+    }
+    usable = obj_box is not None and target_box is not None and len(walls) > 0
+    return {
+        "object_color": obj_color,
+        "object_box": obj_box,
+        "target_box": target_box,
+        "walls": sorted(walls),
+        "frame_inducible": report,
+        "usable_model": usable,
+        "note": (
+            "frame-only induces OBJECT (by motion) + WALLS (by stability) + a distinct TARGET "
+            "sprite when one renders; CHECKPOINTS/at-rest HAZARDS that draw on the floor "
+            "(tn36) are NOT frame-inducible -> the model falls back to internal state "
+            "(GAP-ARC-MAZE-MODEL-FRAME-INDUCTION)."
+        ),
+    }
+
+
 def main() -> int:
     arc = kit.offline_arcade()
     game = sys.argv[1] if len(sys.argv) > 1 else "tn36"
