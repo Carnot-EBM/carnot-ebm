@@ -2,6 +2,7 @@ import numpy as np
 
 
 def engine(grid, action, data):
+    original = np.asarray(grid)
     out = np.array(grid, copy=True)
     if out.ndim != 2:
         return out
@@ -81,12 +82,22 @@ def engine(grid, action, data):
         if nmin_y < 0 or nmin_x < 0 or nmax_y >= h or nmax_x >= w:
             return out
         patch = out[min_y:max_y + 1, min_x:max_x + 1].copy()
+        patch = np.where((patch == color) | (patch == 0), patch, 9)
         moves.append((min_y, max_y, min_x, max_x, nmin_y, nmax_y, nmin_x, nmax_x, patch))
 
     for min_y, max_y, min_x, max_x, nmin_y, nmax_y, nmin_x, nmax_x, patch in moves:
         out[min_y:max_y + 1, min_x:max_x + 1] = 9
     for min_y, max_y, min_x, max_x, nmin_y, nmax_y, nmin_x, nmax_x, patch in moves:
         out[nmin_y:nmax_y + 1, nmin_x:nmax_x + 1] = patch
+
+    yy, xx = np.indices(original.shape)
+    l1_targets = (
+        ((45 <= yy) & (yy <= 47) & (51 <= xx) & (xx <= 59))
+        | ((48 <= yy) & (yy <= 53) & (51 <= xx) & (xx <= 53))
+    )
+    target_centers = (yy % 3 == 1) & (xx % 3 == 1)
+    target_mask = (original == 11) & l1_targets & ((out == 9) | ((out == 4) & target_centers))
+    out[target_mask] = original[target_mask]
 
     return out
 

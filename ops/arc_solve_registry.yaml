@@ -157,6 +157,21 @@ games:
     reproduce: "re-gated reproduced=True L1."
     gotchas: []
 
+
+  - game: ar25
+    reproducibility: reproduced
+    levels_reproduced: 1
+    win_condition: "E3 executable-world-model L1: move the selected L-shaped object left 5 and down 10 so its reflection across the vertical mirror covers the lower-right target L."
+    action_model: "keyboard-only [ACTION3 x5, ACTION2 x10]; ACTION3 moves selected object left, ACTION2 moves selected object down; ACTION7 is hidden undo-stack and remains a verifier gap outside the L1 plan."
+    solver: "results/experiment_4339_e3_explore_verify_plan_ar25.json + results/arc_e3/ar25/world_model.py"
+    reproduce: "arc_solver_kit.reproduce(ar25, ['3']*5 + ['2']*10, Exp4339 apply) reproduced=True L1; checksum 8bd8fdc52533c6548138addc9e90d2c20337ba942dcf649e40dfebcebdb49391."
+    world_model: "results/arc_e3/ar25/world_model.py"
+    world_model_sha256: "d6274374375774291731d21258fc2ddb77b521fb13a7d762de693602897c492f"
+    gotchas:
+      - "Rendered grid is 64x64 display space, not a constant-cell logical grid; movement appears as 3-pixel shifts."
+      - "Visible target cells are layer-owned and must not be copied as part of moving component patches."
+      - "ACTION7 pops a hidden undo stack that is not encoded in the visible grid; verifier mismatches on ACTION7 are a real missing-world-model-rule gap."
+
   # ... 15 still-unsolved games (ar25, bp35, cn04, dc22, ft09, g50t, ka59, lf52,
   # m0r0, re86, s5i5, sb26, sk48, sp80<-SOLVED, tr87, vc33; tn36 errored=delta-RE-needed)
   # — reproducibility: unsolved. The 2026-06-17 adapter-free sweep advanced 4 of 19
@@ -165,11 +180,11 @@ games:
 
 # Aggregate reproducible scorecard (the only count that may be headline/publish-eligible):
 #   reproduced levels = r11l 1 + ls20 1 + wa30 1 + lp85 4 + cd82 1 + sp80 1 + su15 1
-#   + tu93 1 + cn04 1 + m0r0 1 + sk48 1 = 14  across 11 games  (lp85 L3->L4 landed
+#   + tu93 1 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 = 15 across 12 games  (lp85 L3->L4 landed
 #   2026-06-17 via the standing loop adaptered path, offline-reproduction-gated; verify with
 #   scripts/arc3_replay_scorecard_metaharness.py -> results/arc3_replay_aggregate_scorecard.json)
-reproducible_total_levels: 14   # 13 -> 14 (+lp85 L4 via standing loop, 2026-06-17)
-reproducible_total_games: 11    # r11l, ls20, wa30, lp85, cd82, sp80, su15, tu93, cn04, m0r0, sk48
+reproducible_total_levels: 15   # 13 -> 14 (+lp85 L4 via standing loop, 2026-06-17)
+reproducible_total_games: 12    # r11l, ls20, wa30, lp85, cd82, sp80, su15, tu93, cn04, m0r0, sk48
 provisional_total_levels: 5     # sc25 L5 (live-recorded, not yet reproduced)
 
 # ---- LIVE LEADERBOARD SUBMISSIONS (operator-gated External Publication) ----
