@@ -18130,6 +18130,105 @@ CI95, `off_arc_demofit_beats_vote` as a bare bool, and
 `verifier_is_oracle=true`. If the GGUF cache is missing, then it writes the
 blocked generator verdict without attempting inference or hidden-test scoring.
 
+### REQ-VERIFY-4321: Verifier Registry And Gaps Hygiene For .399 Truth
+
+The repository SHALL provide Exp 4321 at
+`python/carnot/experiment_4321_verifier_registry_gaps_hygiene.py` and
+`results/experiment_4321_verifier_registry_gaps_hygiene.py` to reconcile
+`ops/verifier_registry.yaml`, `ops/verifier_gaps.md`, and
+`ops/exclusion_manifest.yaml` to the `.399` verifier truth. Before mutating
+ledgers, the runner SHALL parse all three ledgers. If any required ledger cannot
+parse, the runner SHALL write a terminal artifact with
+`honest_verdict=blocked_ledgers_unparseable`, bare bool
+`regression_guard_passed=false`, empty `gaps_logged`, and SHALL stop without
+mutating the registry, gaps, or manifest.
+
+The runner SHALL use the reusable `aggregate_available_report_gaps` helper from
+`python/carnot/reporting/capstone_aggregate_available.py` for the `.399` outcome
+artifacts `results/experiment_4314_cross_domain_selector_ir3de_cascal.json`,
+`results/experiment_4315_diffusiongemma_reward_guided_stitching.json`,
+`results/experiment_4316_efficiency_cascade_router_deploy.json`,
+`results/experiment_4317_arc_incremental_progress_adapter_free.json`,
+`results/experiment_4318_arc_cross_game_learned_verifier_transfer.json`, and
+`results/experiment_4319_off_arc_execution_verifier_transfer_accumulate.json`.
+Missing or flagged `.399` artifacts SHALL be recorded as per-axis gaps in the
+aggregate availability report and SHALL NOT hard-block reconciliation of other
+available axes. The runner SHALL cite
+`results/experiment_4308_adversarial_verify_degenerate_controls_and_robust_capstone.json`
+as the robust aggregator evidence and require `robust_aggregator_added=true` and
+`aggregator_survives_missing_artifact=true` when that artifact is present.
+
+When ledgers parse, the runner SHALL run the GAP-4 execution regression guard
+against the `.398` recorded standing capability from
+`results/experiment_4310_verifier_registry_gaps_hygiene.json`. The guard SHALL
+replay the canonical cached GAP-4 ARC-1 candidate set and require no regression
+in vote pass@2 `0.4516`, gated pass@2 `0.5806`, `headroom_recovered=4`, and
+`vote_wins_lost=0`. It SHALL expose bare bool `regression_guard_passed`.
+
+The runner SHALL record the `.399` outcomes that are available in the GAP-4 /
+oracle-distinct ARC registry slot: Exp 4314 `cross_domain_selection_holds=false`,
+`label_ablation_robust=true`, `cross_domain_delta=0.2307692308`,
+`cross_domain_delta_ci95=[-0.1153846154, 0.5384615385]`, and
+`held_out_task_n=26`; Exp 4315 `diffusiongemma_guidance_moat=true`,
+`controls_differentiated=true`, `scorer_leak_recheck_passed=true`,
+`carnot_minus_best_control_delta=0.225`, `carnot_minus_unguided_delta=0.25`, and
+`guidance_moat_ci95=[0.075, 0.375]`; Exp 4316
+`cascade_dominates_controls=false`, `accuracy_cascade=0.55`,
+`accuracy_always_energy=0.6`, `accuracy_always_judge=0.25`,
+`cost_ratio_cascade=0.3019632358`, and `escalation_rate=0.3`; Exp 4317
+`acceptance_gate_passed=true`, `total_levels=23`, `total_levels_solved=23`,
+`new_levels_solved_this_task=1`, and `game_advanced=cd82-fb555c5d`; Exp 4318
+`cross_game_transfer_helps=false`, `cross_game_state_reduction=1.0`, and
+`n_held_out_levels=6`; and Exp 4319 `off_arc_demofit_beats_vote=true`,
+`off_arc_demofit_minus_vote_delta=0.02`, `off_arc_delta_ci95=[0.005, 0.04]`,
+`accumulated_n=200`, and `accumulation_window_added=160`. The `.399` state SHALL
+show the cross-domain selector remains domain-bound, the in-generation
+DiffusionGemma moat is won with leak re-check passing, the cascade router is not
+needed because always-energy already dominates, ARC advances to 23 solved
+levels, cross-game value transfer is still null, and off-ARC demo-fit execution
+transfer is confirmed.
+
+The gaps ledger SHALL log or update missing-verifier backlog entries using the
+schema in `ops/verifier_gaps.md`. At minimum the runner SHALL update
+`GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305` from Exp 4314, log a
+game-invariant ARC value representation gap when Exp 4318 reports
+`cross_game_transfer_helps=false`, update `GAP-CODE-EXEC-DEMOFIT` from Exp 4319
+as filled when `off_arc_demofit_beats_vote=true`, and log a leak-free /
+steering partial-state diffusion scorer gap if Exp 4315 fails to preserve a
+leak-free in-generation moat.
+
+The terminal artifact SHALL write
+`results/experiment_4321_verifier_registry_gaps_hygiene.json` with
+`honest_verdict`, bare bool `regression_guard_passed`, list `gaps_logged`, bare
+bool `registry_reconciled`, bare bool `manifest_reconciled`, `v399_outcomes`,
+`availability_report`, `random_seed`, `reproducibility_checksum`,
+`model_specs`, `field_principles`, `spec_refs`, `duration_s`, and
+`inference_substrate`. Its field principles SHALL include:
+`honest_verdict` = `Terminal-prefixed. Records the registry/gaps reconciled + regression guard result (using the robust aggregator, NOT a hard-block).`;
+`regression_guard_passed` = `BARE bool: the GAP-4 execution numbers did not regress vs .398 -- the standing-capability guard.`;
+`gaps_logged` = `List of new/updated missing-verifier gap entries (failure mode + missing discriminator + candidate design + priority) -- the verifier build backlog.`;
+`reproducibility_checksum` = `Hash of the reconciled registry + gaps + manifest; catches silent drift.`
+
+### SCENARIO-VERIFY-4321: .399 Reconciliation Uses Robust Aggregator And Logs Gaps
+
+Given the registry, gaps, and exclusion manifest parse, the `.399`
+cross-domain selection, in-generation DiffusionGemma moat, efficiency cascade,
+ARC progress, cross-game value transfer, and off-ARC execution-transfer
+artifacts may be partially available, and the Exp 4308 robust
+aggregate-available helper is present, when Exp 4321 runs, then it uses the
+robust helper to record missing or flagged `.399` artifacts as per-axis
+availability gaps rather than blocking the entire run, runs the GAP-4 regression
+guard against the `.398` recorded replay, writes `regression_guard_passed=true`,
+reconciles the registry to the available `.399` truth, records the cross-domain
+collapse, leak-free DiffusionGemma moat win, always-energy-dominates cascade
+finding, ARC `total_levels=23`, cross-game value-transfer null, and off-ARC
+demo-fit transfer win, logs or updates
+`GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305`, `GAP-4318`, and
+`GAP-CODE-EXEC-DEMOFIT` through `gaps_logged`, and declares a reproducibility
+checksum over the reconciled registry, gaps, and manifest files. If the
+registry, gaps, or manifest cannot parse, then it writes
+`honest_verdict=blocked_ledgers_unparseable` and stops without reconciliation.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at

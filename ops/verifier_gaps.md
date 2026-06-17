@@ -1107,3 +1107,33 @@ registry version that closed them when a new verifier captures a previously-open
 - missing discriminator: game-invariant ARC value representation that recognizes progress across navigation, click-placement, and rotation mechanics.
 - candidate design: learned frame encoder or adapter-conditioned value head trained on more reproduced solve traces, with hardware-portable CPU features first and an accelerator path later.
 - priority: medium
+
+<!-- exp4321-gap-cross-domain-family-invariant-selection-4305:start -->
+### GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305: Exp 4321 .399 verifier gap update
+- status: open
+- evidence: results/experiment_4314_cross_domain_selector_ir3de_cascal.json; upstream_missing_verifier_gap=true; failure_mode=powered_collapse_cross_domain_domain_bound.
+- failure mode: powered_collapse_cross_domain_domain_bound
+- missing discriminator: domain-invariant selector features that preserve wrong-majority recovery across ARC, ARC-GEN, and FoVer/math step candidates without using domain labels
+- candidate design: stronger family-invariant verifier dimensions beyond IR3DE+CASCAL+ContextPRM, validated on held-out fover
+- priority: high
+<!-- exp4321-gap-cross-domain-family-invariant-selection-4305:end -->
+
+<!-- exp4321-gap-4318:start -->
+### GAP-4318: Exp 4321 .399 verifier gap update
+- status: open
+- evidence: results/experiment_4318_arc_cross_game_learned_verifier_transfer.json; upstream_missing_verifier_gap=true; failure_mode=transferred linear value-head did not reduce held-out OfflineSolver states.
+- failure mode: transferred linear value-head did not reduce held-out OfflineSolver states
+- missing discriminator: game-invariant ARC value representation
+- candidate design: learned frame encoder or per-game adapter-conditioned value head
+- priority: medium
+<!-- exp4321-gap-4318:end -->
+
+<!-- exp4321-gap-code-exec-demofit:start -->
+### GAP-CODE-EXEC-DEMOFIT: Exp 4321 .399 verifier gap update
+- status: filled (gap4_code_demo_fit_execution_transfer_4319)
+- evidence: results/experiment_4319_off_arc_execution_verifier_transfer_accumulate.json; off_arc_demofit_beats_vote=True; off_arc_demofit_minus_vote_delta=0.02; off_arc_delta_ci95=[0.005, 0.04]; accumulated_n=200.
+- failure mode: candidates can pass visible demo tests while failing hidden semantic tests
+- missing discriminator: code_demo_fit_visible_tests_do_not_discriminate_hidden_semantics
+- candidate design: Use the accumulated GAP-4 visible-test demo-fit execution selector as the filled cheap execution layer; reopen only if a future powered replay loses the positive hidden-test CI.
+- priority: high
+<!-- exp4321-gap-code-exec-demofit:end -->
