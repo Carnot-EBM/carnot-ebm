@@ -213,6 +213,29 @@ learning_loop:
   verifier_routed_search: python/carnot/agentic/arc_solver_kit.py  # OfflineSolver verifier=
   learned_verifier: python/carnot/agentic/arc_value_learner.py
   reproduction_gate: python/carnot/agentic/arc_solver_kit.py        # reproduce()
+  goal_distance_heuristics: python/carnot/agentic/arc_heuristic_select.py
+  # GOAL-DISTANCE HEURISTIC SELECTION (the "when to use which" learning, 2026-06-17).
+  # The search (graph_explore_solve_v2) takes an optional A*-style goal heuristic. We have two,
+  # and they are NOT interchangeable -- the selector picks by measured per-action CELL IMPACT
+  # (median cells one action changes, from a few banked transitions):
+  #   - cell_count_distance (Hamming): best for LOW cell-impact games (su15 ~20 cells/action;
+  #     cell-count ~= move-count). Over-estimates move-distance on high-impact games -> greedy.
+  #   - misplaced_region_distance (8-conn wrong-region count): best for HIGH cell-impact games
+  #     (r11l~70 / sk48~74 / m0r0~100). Move-aligned (one action ~ fixes one region) -> finds the
+  #     OPTIMAL path with far fewer expansions (r11l 3-act @257 vs BFS 2236; sk48 -43%; m0r0
+  #     solves where BFS exhausts 8000). NEVER regressed across the 8-game validation.
+  #   - bfs (no heuristic): the complete fallback, and the CORRECT choice when NO win-state/target
+  #     is known yet (a first-ever solve) -- a goal-distance heuristic needs a target.
+  # RULE (arc_heuristic_select.recommend_order): no target -> bfs; cell-impact >= ~40 ->
+  #   region_count first; < 40 -> cell_count first; bfs always last.
+  # DYNAMIC ADAPTATION to unseen games: select_best() runs the portfolio, reproduction-gates each,
+  #   picks the winner (path-optimality then expansions), and BANKS it to gap_fills/. The standing
+  #   loop (arc_loop_solve.solve_via_explore) calls bank_for_solved_game() after every fresh solve,
+  #   so each new game's best heuristic is learned + captured live (guarded, never breaks the solve).
+  #   recommend_approach() now surfaces this policy in every new-game recipe.
+  # CAPTURED (reproduction-gated gap_fills/): su15=cell_count; r11l/ls20/m0r0/sk48=region_count.
+  # TO EXTEND (add a new heuristic): register it in arc_heuristic_select.factory()/HEURISTIC_NAMES
+  #   + add its selection condition to recommend_order; it then joins the portfolio automatically.
   # ADAPTER-FREE FALLBACK (first contact, no per-game RE): scripts/arc_loop_solve.py
   # routes an un-adaptered game to graph_explore_solve (arc_graph_explore.py); if it
   # advances a level it CAPTURES the trajectory -> reproduction-gates it -> trains a

@@ -141,11 +141,35 @@ def solve_via_explore(game: str, max_expansions: int = 6000, max_depth: int = 60
     # persist the captured trajectory as the adapter SEED
     seed = RESULTS / f"arc_explore_trajectory_{game}.json"
     seed.write_text(json.dumps({"game": game, "reached_level": lvl, "trajectory": traj}, indent=2))
+
+    # LEARN + BANK the best goal-distance heuristic for this game (dynamic adaptation): now that
+    # we have a win-state, pick the rule-recommended heuristic by measured per-action cell-impact,
+    # reproduction-gate it, and bank it to gap_fills/ so the NEXT solve of this game is heuristic-
+    # guided. Fully guarded: heuristic-learning must NEVER break the solve itself.
+    heuristic_learned = None
+    try:
+        if gate["reproduced"] and traj:
+            import types
+            from carnot.agentic import arc_heuristic_select as hsel
+            f2 = env.reset()
+            if warmup:
+                f2 = apply(env, labels[0], f2)
+            trans = []
+            for lab in (labels[1:] if warmup else labels):
+                g0 = grid_of(f2)
+                f2 = apply(env, lab, f2)
+                trans.append(types.SimpleNamespace(grid=g0, next_grid=grid_of(f2)))
+            heuristic_learned = hsel.bank_for_solved_game(
+                game, grid_of(f2), trans, mask_hud=False, budget=max_expansions)
+    except Exception:
+        heuristic_learned = None
+
     return {
         "game": game, "method": "graph_explore_adapter_free", "reached_level": lvl,
         "moves": len(traj), "offline_reproduced": bool(gate["reproduced"]),
         "reproduced_levels": lvl, "trajectory_seed": str(seed.relative_to(REPO)),
         "verifier_seed_checkpoint": (str(ckpt.relative_to(REPO)) if ckpt else None),
+        "heuristic_learned": heuristic_learned,
         "next": "register a GameAdapter from the seed for verifier-routed re-solving",
         "mode": "standing_arc_loop_graph_explore_no_quota",
     }

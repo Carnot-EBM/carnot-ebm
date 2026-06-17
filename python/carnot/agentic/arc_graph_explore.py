@@ -324,6 +324,22 @@ def graph_explore_solve_v2(env: Any, start_level: int = 0, *, max_expansions: in
     return _ret(None, best)
 
 
+def cell_count_distance(win):
+    """Baseline goal heuristic: `goal_distance(grid) -> float` = the number of cells differing
+    from the win-state (`(grid != win).sum()`, Hamming distance). It is move-distance-accurate
+    ONLY in LOW-cell-impact games (where one action changes few cells, so cell-count ≈ move
+    count — e.g. su15, where it slightly beats region-count). In HIGH-cell-impact games it
+    over-estimates move-distance and sends A* greedy → use `misplaced_region_distance` instead.
+    The `arc_heuristic_select` router picks between the two by per-action cell impact."""
+    import numpy as np
+    win_arr = np.asarray(win)
+
+    def goal_distance(grid) -> float:
+        return float((np.asarray(grid) != win_arr).sum())
+
+    return goal_distance
+
+
 def misplaced_region_distance(win, connectivity: int = 8):
     """MOVE-DISTANCE-aware goal heuristic factory. Returns `goal_distance(grid) -> float` =
     the number of CONNECTED COMPONENTS in the `(grid != win)` mask — how many distinct
