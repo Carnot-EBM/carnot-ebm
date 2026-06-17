@@ -140,33 +140,114 @@ def _apply_program(env, program, traj):
     return _levels_completed(f)
 
 
+def _apply_solution(env, programs, traj):
+    """Run every program in a level's solution (1 program = single run; 2+ = multi-run through
+    checkpoints, which advance the object's base between runs). Returns the resulting level."""
+    level = None
+    for program in programs:
+        level = _apply_program(env, program, traj)
+    return level
+
+
 def _fresh_at(arc, game, wins):
-    """A fresh env replayed through the known winning programs to the next-to-solve level.
+    """A fresh env replayed through the known winning SOLUTIONS to the next-to-solve level.
     A FRESH env per attempt is REQUIRED: accumulating failed runs on one env eventually trips
     the game's LOSS condition and resets the whole episode to L0, corrupting the search."""
     env = arc.make(game, scorecard_id=arc.open_scorecard())
     env.reset()
-    for p in wins:
-        _apply_program(env, p, [])
+    for programs in wins:
+        _apply_solution(env, programs, [])
     return env
 
 
-def _winning_programs(arc, game, max_level, cap):
-    """PASS 1 — discover the winning slot-program per level. Each ordering is tried on a FRESH
-    env (replayed to the current level) so accumulated failures can't reset the episode."""
+# --- multi-run maze path-planning (for levels whose collision-free path exceeds one program) ---
+_MAZE_MOVES = [((0, -4), UP), ((0, 4), DOWN), ((-4, 0), LEFT), ((4, 0), RIGHT)]
+
+
+def _geom(env):
+    """Object box (w,h), obstacle boxes, and checkpoint positions, read from internal state."""
+    bz = _bz(env)
+    o = bz.htntnzkbzu
+    return ((o.width, o.height),
+            [(i.x, i.y, i.width, i.height) for i in bz.bizgpiltwm],
+            [(i.x, i.y) for i in bz.wgzwawbgew])
+
+
+def _leg_codes(src, dst, collide, max_moves):
+    """Shortest collision-free single-step path src->dst as move codes, or None (BFS)."""
+    from collections import deque
+    q, seen = deque([(src, [])]), {src}
+    while q:
+        (x, y), codes = q.popleft()
+        if (x, y) == dst:
+            return codes
+        if len(codes) >= max_moves:
+            continue
+        for (dx, dy), code in _MAZE_MOVES:
+            n = (x + dx, y + dy)
+            if n not in seen and not collide(*n):
+                seen.add(n)
+                q.append((n, codes + [code]))
+    return None
+
+
+def _multirun_plan(env, n):
+    """For a PURE-POSITION level whose direct path is obstacle-blocked beyond `n` moves: plan a
+    multi-run path start -> checkpoint(s) -> target, each leg <= n moves (a checkpoint advances
+    the base between runs). Returns a list of leg-programs (padded to n) or None."""
+    from collections import deque
+    bz = _bz(env)
+    o, t = bz.htntnzkbzu, bz.aqszntqeae
+    if (o.scale, o.rotation, int(o.sjmtdfxdrc)) != (t.scale, t.rotation, int(t.sjmtdfxdrc)):
+        return None                                   # transforms+maze unhandled; position only
+    (w, h), obs, cps = _geom(env)
+
+    def collide(x, y):
+        if x < 0 or y < 0 or x + w > 64 or y + h > 64:
+            return True
+        return any(x < ox + ow and x + w > ox and y < oy + oh and y + h > oy
+                   for ox, oy, ow, oh in obs)
+
+    start, target = (o.x, o.y), (t.x, t.y)
+    # BFS over waypoints (start + checkpoints), edge = a <= n-move collision-free leg
+    q, seen = deque([(start, [])]), {start}
+    while q:
+        node, legs = q.popleft()
+        if node == target:
+            return [codes + [SETTLE] * (n - len(codes)) for _, codes in legs]
+        for nxt in cps + [target]:
+            if nxt == node or nxt in seen:
+                continue
+            lp = _leg_codes(node, nxt, collide, n)
+            if lp is not None:
+                seen.add(nxt)
+                q.append((nxt, legs + [(nxt, lp)]))
+    return None
+
+
+def _winning_solutions(arc, game, max_level, cap):
+    """PASS 1 — discover each level's winning SOLUTION (a list of programs: 1 for a single run,
+    2+ for a multi-run maze). Fresh env per attempt so accumulated failures can't reset L0."""
     wins = []
     while len(wins) < max_level:
         probe = _fresh_at(arc, game, wins)
-        moves, reason = compute_moves(*_obj_tgt(probe))
-        if moves is None:
-            break
-        n = len(_program(probe))
         target_level = len(wins) + 1
+        moves, reason = compute_moves(*_obj_tgt(probe))
+        n = len(_program(probe))
         found = None
-        for program in _orderings(moves, n, cap):
-            if _apply_program(_fresh_at(arc, game, wins), program, []) >= target_level:
-                found = program
-                break
+        # 1) single run: search orderings of the net moves
+        if moves is not None:
+            for program in _orderings(moves, n, cap):
+                if _apply_program(_fresh_at(arc, game, wins), program, []) >= target_level:
+                    found = [program]
+                    break
+        # 2) multi-run maze fallback (the path exceeds one program / is obstacle-blocked)
+        if found is None:
+            plan = _multirun_plan(probe, n)
+            if plan is not None:
+                test = _fresh_at(arc, game, wins)
+                if _apply_solution(test, plan, []) >= target_level:
+                    found = plan
         if found is None:
             break
         wins.append(found)
@@ -174,17 +255,17 @@ def _winning_programs(arc, game, max_level, cap):
 
 
 def solve(env=None, max_level=10, cap=400, *, game="tn36"):
-    """Solve tn36 levels with obstacle path-routing. Two-pass: discover the winning program per
-    level (fresh env per ordering attempt), then replay ONLY the winners on a fresh env for a
-    clean minimal trajectory. `env` is ignored (kept for signature compat). Returns (traj, level)."""
+    """Solve tn36 levels (single-run transforms/path-routing + multi-run mazes). Two-pass:
+    discover each level's winning solution, then replay them on a fresh env for a clean
+    trajectory. `env` is ignored (signature compat). Returns (traj, level)."""
     arc = kit.offline_arcade()
-    wins = _winning_programs(arc, game, max_level, cap)
+    wins = _winning_solutions(arc, game, max_level, cap)
     env2 = arc.make(game, scorecard_id=arc.open_scorecard())
     f = env2.reset()
     traj, level = [], _levels_completed(f)
-    for program in wins:
-        new = _apply_program(env2, program, traj)
-        if new <= level:
+    for programs in wins:
+        new = _apply_solution(env2, programs, traj)
+        if new is None or new <= level:
             break
         level = new
     return traj, level
