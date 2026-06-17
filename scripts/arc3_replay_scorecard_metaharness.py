@@ -33,6 +33,10 @@ GAME_ARTIFACTS = {
     "sp80": "results/arc_explore_trajectory_sp80.json",                          # L1
     "su15": "results/arc_explore_trajectory_su15.json",                          # L1
     "tu93": "results/arc_explore_trajectory_tu93.json",                          # L1
+    # E1-enabled sweep solves (salience + HUD-mask explorer upgrade)
+    "cn04": "results/arc_explore_trajectory_cn04.json",                          # L1
+    "m0r0": "results/arc_explore_trajectory_m0r0.json",                          # L1
+    "sk48": "results/arc_explore_trajectory_sk48.json",                          # L1
 }
 
 # from-scratch OFFLINE re-solves (these replay deterministically on the offline
