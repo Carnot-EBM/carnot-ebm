@@ -94,11 +94,21 @@ against the offline layout** (no replay of the non-reproducible live recording).
     `khvdzgjfdz`); (2) actions trigger **multi-frame animations** that must be let
     to **resolve** (keep stepping until the `*['acyylh']` phase flag clears)
     before the next action / win check.
-  - **The path (continuable):** rewrite the cast with env-discovered grid coords +
-    an animation-resolution step loop + spell/move search (cast the right spell to
-    clear obstacles, then move to align at +1,+1). This is a real reverse-
-    engineering + reimplementation effort (sc25's primitives, unlike lp85's
-    `discover_click_buttons`, are live-coupled) — not a quick finish.
+  - **UNLOCKED (2026-06-16): the cast works offline.** The camera is the identity
+    (`display_to_grid(x,y)==(x,y)`); the 9 cell sprites sit at (24+5c, 49+5r);
+    clicking one toggles `xhhaqjfncnp[r][c]` (confirmed `[]→[(0,1)]`). The bug was
+    purely the wrong hardcoded `SC25_GRID_COORDS`. `scripts/arc3_sc25_offline_solver.py`
+    v2 casts correctly (select sprite → toggle cells to match `zzpoabuniyn[spell]`
+    → re-click to fire → resolve animation while any `*['acyylh']` phase is active).
+  - **Remaining mechanics (multi-session) — why a cast+move BFS still stalls:**
+    (a) firing a spell CLEARS `xhhaqjfncnp` afterward, so a cast with no valid
+    target leaves `goal_key` unchanged (deduped → no progress); the search must
+    cast the spell whose fireball actually hits an obstacle ("tagsmh"); (b) moves
+    (ACTION1-4) act on `self.plnqvukupu`, which is only set by a **sprite-selection
+    click** the model lacks — add clicking moveable sprites to the action set; (c)
+    then move-to-align goal sprites at +1,+1 within the step budget. Net: sc25
+    needs sprite-selection + fireball-target + move-align modeling on top of the
+    now-working cast. A genuine multi-session solver, not a quick finish.
 
 **Acceptance gate for the priority:** sc25 re-solves to L5 offline → aggregate
 scorecard = 11 levels, all from-scratch offline-reproducible, zero quota → then a
