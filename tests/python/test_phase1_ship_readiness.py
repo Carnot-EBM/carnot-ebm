@@ -50,7 +50,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "{package_name}"
 dynamic = ["version"]
-license = {{text = "Apache-2.0"}}
+license = {{text = "MIT-0"}}
 dependencies = [
     "jax>=0.4.30",
     "safetensors>=0.4",
@@ -69,7 +69,7 @@ carnot = "carnot.cli:main"
 version = {{attr = "carnot._version.__version__"}}
 """,
     )
-    _write(root / "LICENSE", "Apache License\nVersion 2.0\n")
+    _write(root / "LICENSE", "MIT No Attribution\nCopyright 2026 The Carnot Authors\n")
     _write(root / "python/carnot/_version.py", '__version__ = "0.1.0b1"\n')
     _write(root / "python/carnot/schemas/session_memory_v1.json", "{}\n")
     _write(root / "python/carnot/sampling/_vendored_thrml/LICENSE", "Apache License\n")

@@ -18088,6 +18088,48 @@ as a bare bool. If the judge GGUF cache is absent or the synchronous window
 cannot produce the accepted partial, then it writes the corresponding blocked
 terminal artifact and does not fabricate cascade metrics.
 
+### REQ-VERIFY-4319: Off-ARC Execution-Verifier Transfer Accumulation
+
+The repository SHALL provide Exp 4319 at
+`python/carnot/verify/off_arc_execution_verifier_transfer_accumulate.py` and
+`results/experiment_4319_off_arc_execution_verifier_transfer_accumulate.py` to
+resume the GAP-4 off-ARC code execution-verifier measurement by corpus and model
+key, not by experiment id. Before any inference or checkpoint extension, the
+runner SHALL verify the cached `unsloth/gemma-4-12B-it-GGUF` `.gguf` path, an
+MBPP/EvalPlus loadable corpus, readable prior accumulation checkpoints
+including Exp 4032 plus the .375/.376 EvalPlus updates, an importable restricted
+execution sandbox, and TRM stand-down. If the generator cache is absent, it
+SHALL write `honest_verdict=blocked_generator_not_cached` with the required
+bare gate fields and stop.
+
+When preconditions hold, the runner SHALL accumulate task rows from the prior
+corpus/model-keyed artifacts and any current window rows, score hidden-test
+vote@1 and visible-test demo-fit selection on the same candidate pool, and
+compute a bootstrap CI95 with at least 2000 resamples over the paired
+demo-fit-minus-vote hidden-test deltas. The terminal artifact SHALL write
+`results/experiment_4319_off_arc_execution_verifier_transfer_accumulate.json`
+with `honest_verdict`, bare bool `off_arc_demofit_beats_vote`, bare float
+`off_arc_demofit_minus_vote_delta`, `off_arc_delta_ci95`, bare int
+`accumulated_n`, bare int `accumulation_window_added`, bare bool
+`verifier_is_oracle=true`, `preconditions_checked`, `random_seed`,
+`reproducibility_checksum`, `model_specs`, `hidden_test_vote_at_1`,
+`hidden_test_demofit_accuracy`, `field_principles`, `spec_refs`,
+`inference_substrate`, `duration_s`, and `adversarial_verify`. If the CI still
+includes zero, the artifact SHALL retain an open GAP-CODE-EXEC-DEMOFIT verdict
+and record the current window size for the consecutive-window auto-retire
+discipline.
+
+### SCENARIO-VERIFY-4319: Accumulated EvalPlus Demo-Fit Transfer Emits Bare Gate Fields
+
+Given the Gemma 4 12B GGUF cache exists, MBPP/EvalPlus and the restricted
+sandbox load, TRM training is stood down, and prior Exp 4032/.375/.376
+accumulation artifacts are readable, when Exp 4319 runs, then it writes the
+required terminal JSON with accumulated task count, this-window task count,
+hidden-test vote@1, hidden-test demo-fit accuracy, paired delta, 2000-resample
+CI95, `off_arc_demofit_beats_vote` as a bare bool, and
+`verifier_is_oracle=true`. If the GGUF cache is missing, then it writes the
+blocked generator verdict without attempting inference or hidden-test scoring.
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
