@@ -1152,3 +1152,18 @@ registry version that closed them when a new verifier captures a previously-open
 - Reproducibility checksum: `c1cc68b82115b2006f1360fe20fa207a467ad74ccb037ce046196c763a255532`
 - Gap: bounded executable-world-model run did not satisfy the offline reproduced L1 gate.
 
+### 2026-06-17 Exp4329 tr87 E3 residual gap
+- Spec: REQ-PHASE4-076 / SCENARIO-PHASE4-076
+- Game: `tr87`
+- Best verifier accuracy: 0.0000
+- Residual mismatch class: `missing_world_model_rule_gap_actions_1_2_4`
+- Reproducibility checksum: `9d7969995becae6b7704dd94148870d6eee2f7ff7f3c6ffaf036eefcf514ee00`
+- Gap: bounded executable-world-model run did not satisfy the offline reproduced L1 gate.
+
+### 2026-06-17 Exp4329 ft09 E3 residual gap
+- Spec: REQ-PHASE4-076 / SCENARIO-PHASE4-076
+- Game: `ft09`
+- Best verifier accuracy: 0.1000
+- Residual mismatch class: `missing_world_model_rule_gap_actions_6`
+- Reproducibility checksum: `9d7969995becae6b7704dd94148870d6eee2f7ff7f3c6ffaf036eefcf514ee00`
+- Gap: bounded executable-world-model run did not satisfy the offline reproduced L1 gate.

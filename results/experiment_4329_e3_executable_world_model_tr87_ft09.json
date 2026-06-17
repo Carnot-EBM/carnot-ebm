@@ -1,0 +1,131 @@
+{
+  "duration_s": 1.11,
+  "experiment": "experiment_4329_e3_executable_world_model_tr87_ft09",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed (success_e3_tr87_ft09_<n>_L1_reproduced or complete_e3_tr87_ft09_partial). Any reproduced L1 OR an honest partial per game is progress.",
+    "per_game_scorecard": "Per game (tr87, ft09): offline_reproduced + reproduced_levels + best verifier_accuracy + world_model_sha256 -- breadth-of-progress, guards the one-game-dominates failure mode.",
+    "preconditions_checked": "Records the per-game offline-env presence + harness import + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the induction + planning.",
+    "reproduced_levels_total": "BARE int: total offline-reproduced levels across tr87+ft09 this task -- the +1+ incremental-progress unit.",
+    "reproducibility_checksum": "Hash of the world models + the plans + the reproduce() results; lets a third party re-run.",
+    "verifier_is_oracle": "BARE bool=true -- the SOLVES are execution-grounded; ARC progress, NOT a moat headline."
+  },
+  "games": [
+    "tr87",
+    "ft09"
+  ],
+  "honest_verdict": "complete_e3_tr87_ft09_partial",
+  "inference_substrate": "codex_direct_model_edit_offline_env_no_nested_proposer",
+  "method": "executable_world_model_verify_plan_reproduce_checkpointed",
+  "per_game_scorecard": {
+    "ft09": {
+      "best_verifier_accuracy": 0.1,
+      "game": "ft09",
+      "offline_env_present": true,
+      "offline_reproduced": false,
+      "plan_executed": false,
+      "plan_executed_detail": {
+        "divergence_step": {
+          "action": 6,
+          "data": {
+            "x": 46,
+            "y": 46
+          }
+        },
+        "plan_result": {
+          "divergence_step": {
+            "action": 6,
+            "data": {
+              "x": 46,
+              "y": 46
+            }
+          },
+          "executed": false,
+          "game": "ft09",
+          "planned": true,
+          "reason": "model prediction diverged from observation \u2014 halted (verifier-grounded)"
+        }
+      },
+      "plan_result": {
+        "divergence_step": {
+          "action": 6,
+          "data": {
+            "x": 46,
+            "y": 46
+          }
+        },
+        "executed": false,
+        "game": "ft09",
+        "planned": true,
+        "reason": "model prediction diverged from observation \u2014 halted (verifier-grounded)"
+      },
+      "reproduce_result": {
+        "claimed_level": 1,
+        "game": "ft09",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "reproduced_levels": 0,
+      "residual_mismatch_class": "missing_world_model_rule_gap_actions_6",
+      "status": "complete_e3_ft09_partial_model_0.10",
+      "verifier_accuracy_per_round": [
+        0.1
+      ],
+      "world_model_path": "results/arc_e3/ft09/world_model.py",
+      "world_model_sha256": "8e4563289295741b6728075a411d0aa4ae7165140d2f3e5e5e885312dcf650ee"
+    },
+    "tr87": {
+      "best_verifier_accuracy": 0.0,
+      "game": "tr87",
+      "offline_env_present": true,
+      "offline_reproduced": false,
+      "plan_executed": false,
+      "plan_executed_detail": {
+        "divergence_step": null,
+        "plan_result": {
+          "game": "tr87",
+          "planned": false,
+          "reason": "no plan to is_level_complete in model"
+        }
+      },
+      "plan_result": {
+        "game": "tr87",
+        "planned": false,
+        "reason": "no plan to is_level_complete in model"
+      },
+      "reproduce_result": {
+        "claimed_level": 1,
+        "game": "tr87",
+        "reached_level": 0,
+        "reproduced": false
+      },
+      "reproduced_levels": 0,
+      "residual_mismatch_class": "missing_world_model_rule_gap_actions_1_2_4",
+      "status": "complete_e3_tr87_partial_model_0.00",
+      "verifier_accuracy_per_round": [
+        0.0
+      ],
+      "world_model_path": "results/arc_e3/tr87/world_model.py",
+      "world_model_sha256": "1f497c0f688a9d8b4e5439f77cfeea445fc7326599a5aa118037388ff14bd21a"
+    }
+  },
+  "preconditions_checked": {
+    "harness_import": true,
+    "leaderboard_submission": false,
+    "offline_env_paths": {
+      "ft09": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/ft09",
+      "tr87": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/tr87"
+    },
+    "offline_env_present": {
+      "ft09": true,
+      "tr87": true
+    },
+    "research_conductor_modified": false,
+    "trm_training_stood_down": true
+  },
+  "random_seed": 4329,
+  "reproduced_levels_total": 0,
+  "reproducibility_checksum": "9d7969995becae6b7704dd94148870d6eee2f7ff7f3c6ffaf036eefcf514ee00",
+  "submitted_to_leaderboard": false,
+  "verifier_is_oracle": true
+}
