@@ -116,3 +116,14 @@ learning_loop:
   demos:
     - scripts/arc3_verifier_routed_search_demo.py   # 10.75x fewer states (hand verifier)
     - scripts/arc3_learned_verifier_demo.py         # 9.36x fewer on held-out L3 (learned)
+  # WEIGHT DISTRIBUTION (CLAUDE.md Decentralization Rule 3 — mirror HF primary + IPFS
+  # secondary). LearnedVerifier.save() captures a versionable, mirror-ready checkpoint
+  # (carnot_arc_learned_verifier_v1). Current weights are a per-game POC (6-float lp85
+  # value head) — NOT yet a headline HF release. Mirror to HuggingFace (Carnot-EBM org)
+  # + IPFS once the verifier is SUBSTANTIAL (cross-game); the PUBLIC release is
+  # OPERATOR-ONLY (External Publication). Pipeline exists: scripts/*_hf_publish.py +
+  # scripts/ipfs_mirror_carnot_ebm.py.
+  weight_distribution:
+    checkpoint_format: carnot_arc_learned_verifier_v1
+    status: not_yet_published_poc_stage
+    publish_gate: operator_only_when_substantial_cross_game
