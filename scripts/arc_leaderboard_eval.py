@@ -46,6 +46,9 @@ def run_game(game: str, solutions: dict, *, explore: bool, budget: int) -> dict:
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
     base = _baseline_actions(env, game)
+    # HUD-masking (StepwiseExplorer hud_mask) is available but OFF by default: measured
+    # neutral on the public set and the env-probe costs real actions in competition.
+    # Enable opt-in per-game if a counter-heavy hidden game shows state-explosion.
     policy = CarnotAgentPolicy(game, solutions, force_explore=explore)
     frames, latest, actions = [], None, 0
     start = None
@@ -85,7 +88,10 @@ def run_game(game: str, solutions: dict, *, explore: bool, budget: int) -> dict:
 def main() -> int:
     argv = sys.argv[1:]
     explore = "replay" not in argv  # default: the from-scratch (competition-relevant) measure
-    budget = 6000
+    # competition allows ~96k actions/game; 6000 badly understated solve-rate (8/11 of the
+    # public games solve from scratch at 8-11k actions). 20000 reveals the true solvable set
+    # while staying fast; the genuinely-hard tail (wa30/cn04/sk48) resists even 45k.
+    budget = 20000
     if "--budget" in argv:
         budget = int(argv[argv.index("--budget") + 1])
     print(f"== ARC leaderboard eval — mode={'explore(from-scratch)' if explore else 'replay'} budget={budget} ==", flush=True)
