@@ -1,0 +1,363 @@
+{
+  "artifact_errors": {},
+  "availability_report": {
+    "available_artifact_keys": [
+      "4303_efficiency",
+      "4304_in_generation",
+      "4305_cross_domain",
+      "4306_self_learning"
+    ],
+    "axes": {
+      "arc_progress": {
+        "available_artifact_keys": [],
+        "flagged_artifacts": [
+          {
+            "artifact_key": "4307_arc_progress",
+            "axis": "arc_progress",
+            "experiment_id": 4307,
+            "reason": "flagged_adversarial"
+          }
+        ],
+        "missing_artifacts": [],
+        "verdict": false,
+        "verdict_error": "'4307_arc_progress'"
+      },
+      "cross_domain": {
+        "available_artifact_keys": [
+          "4305_cross_domain"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "efficiency": {
+        "available_artifact_keys": [
+          "4303_efficiency"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      },
+      "in_generation": {
+        "available_artifact_keys": [
+          "4304_in_generation"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": false
+      },
+      "self_learning": {
+        "available_artifact_keys": [
+          "4306_self_learning"
+        ],
+        "flagged_artifacts": [],
+        "missing_artifacts": [],
+        "verdict": true
+      }
+    },
+    "flagged_artifacts_excluded": [
+      {
+        "artifact_key": "4307_arc_progress",
+        "axis": "arc_progress",
+        "experiment_id": 4307,
+        "reason": "flagged_adversarial"
+      }
+    ],
+    "missing_upstream_artifacts": []
+  },
+  "cited_upstream_artifacts": [
+    "results/experiment_4303_verifier_efficiency_parity_isoflops.json",
+    "results/experiment_4304_diffusiongemma_in_generation_engaged_controls.json",
+    "results/experiment_4305_cross_domain_selector_generalization.json",
+    "results/experiment_4306_self_learning_powered_ci_cross_domain.json",
+    "results/experiment_4307_arc_incremental_progress_new_game.json",
+    "results/experiment_4308_adversarial_verify_degenerate_controls_and_robust_capstone.json"
+  ],
+  "duration_s": 0.45632,
+  "exclusion_manifest_path": "ops/exclusion_manifest.yaml",
+  "experiment": "experiment_4310_verifier_registry_gaps_hygiene",
+  "field_principles": {
+    "gaps_logged": "List of new missing-verifier gap entries (failure mode + missing discriminator + candidate design + priority) -- the verifier build backlog.",
+    "honest_verdict": "Terminal-prefixed. Records the registry/gaps reconciled + regression guard result (using the robust aggregator, NOT a hard-block).",
+    "regression_guard_passed": "BARE bool: the GAP-4 execution numbers did not regress vs .397 -- the standing-capability guard.",
+    "reproducibility_checksum": "Hash of the reconciled registry + gaps + manifest; catches silent drift."
+  },
+  "gaps_logged": [
+    {
+      "candidate_design": "DG-PRM-style multi-invariant verifier dimensions with a learned task-structure router validated on held-out fover",
+      "evidence": "results/experiment_4305_cross_domain_selector_generalization.json; upstream_missing_verifier_gap=true; failure_mode=cross_domain_selection_collapses_domain_bound",
+      "failure_mode": "cross_domain_selection_collapses_domain_bound",
+      "gap_id": "GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305",
+      "missing_discriminator": "domain-invariant selector features that preserve wrong-majority recovery across ARC, ARC-GEN, and FoVer/math step candidates without using domain labels",
+      "priority": "high",
+      "status": "open",
+      "upstream_priority": "P0 cross-domain verifier scope boundary"
+    }
+  ],
+  "gaps_path": "ops/verifier_gaps.md",
+  "honest_verdict": "complete: registry_gaps_manifest_reconciled_to_v398_truth_regression_guard_passed_True_gaps_logged_1_robust_aggregator_used",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "manifest_reconciled": true,
+  "model_specs": {
+    "codex_calls": 0,
+    "gap4_candidate_set": "results/arc3_gap3_stage2_eval_pool.json.gz",
+    "gap4_program_outputs": "results/arc3_gap4_induced_programs.json",
+    "gguf_inference": false,
+    "gpu_inference": false,
+    "live_model_inference": false,
+    "method": "cached_v398_ledger_reconciliation",
+    "prior_hygiene_artifacts": [
+      "results/experiment_4299_verifier_registry_gaps_hygiene.json",
+      "results/experiment_4287_verifier_registry_gaps_hygiene.json"
+    ],
+    "robust_aggregator_artifact": "results/experiment_4308_adversarial_verify_degenerate_controls_and_robust_capstone.json",
+    "robust_aggregator_helper": "carnot.reporting.capstone_aggregate_available",
+    "stable_checkpoint_write": false,
+    "trm_training_touched": false,
+    "upstream_artifacts": [
+      "results/experiment_4303_verifier_efficiency_parity_isoflops.json",
+      "results/experiment_4304_diffusiongemma_in_generation_engaged_controls.json",
+      "results/experiment_4305_cross_domain_selector_generalization.json",
+      "results/experiment_4306_self_learning_powered_ci_cross_domain.json",
+      "results/experiment_4307_arc_incremental_progress_new_game.json"
+    ]
+  },
+  "random_seed": 4310,
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_reconciled": true,
+  "regression_guard": {
+    "blocked_exp4299_seen": true,
+    "offline_replay": {
+      "arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      },
+      "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+      "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+      "expected": {
+        "arc1_rule_exec": {
+          "gated_pass2": 0.5806,
+          "headroom_recovered": 4,
+          "n": 31,
+          "vote_pass2": 0.4516,
+          "vote_wins_lost": 0
+        }
+      },
+      "no_codex_calls": true,
+      "no_gguf_inference": true,
+      "regression_guard_passed": true,
+      "trm_training_touched": false
+    },
+    "prior_artifact_path": "results/experiment_4287_verifier_registry_gaps_hygiene.json",
+    "recorded_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "regression_guard_passed": true,
+    "replayed_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    }
+  },
+  "regression_guard_passed": true,
+  "reproducibility_checksum": "sha256:c90049979993813f0baaa21a26344739b59e6f64c74d387b2ca30d4f302d7cdf",
+  "schema": "carnot.experiment_4310_verifier_registry_gaps_hygiene.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4310",
+    "SCENARIO-VERIFY-4310"
+  ],
+  "v398_outcomes": {
+    "arc_progress": {
+      "acceptance_gate_passed": true,
+      "artifact_path": "results/experiment_4307_arc_incremental_progress_new_game.json",
+      "available": true,
+      "corrigendum_pending": [
+        {
+          "detail": "acceptance_gate_passed=true but these fields are null/zero: exploration_actions_used=0",
+          "kind": "GATE_PASSED_WITHOUT_DATA",
+          "severity": "critical"
+        }
+      ],
+      "flagged_adversarial": true,
+      "game_advanced": "re86-8af5384d",
+      "honest_verdict": "complete: incremental_progress_no_advance_re86-8af5384d_L1_selected_frontier_adapter_unavailable",
+      "levels_completed": 0,
+      "new_levels_solved_this_task": 0,
+      "prior_level": 0,
+      "prior_total_levels_solved": 22,
+      "real_env_confirmed": false,
+      "selection_mode": "best_headroom_unattempted_non_recent_lowest_baseline",
+      "target_game": "re86-8af5384d",
+      "target_level": 1,
+      "total_levels": 22,
+      "total_levels_solved": 22,
+      "verifier_validated": false
+    },
+    "cross_domain": {
+      "artifact_path": "results/experiment_4305_cross_domain_selector_generalization.json",
+      "available": true,
+      "cross_domain_ci95": [
+        -0.1153846154,
+        0.5384615385
+      ],
+      "cross_domain_delta": 0.2307692308,
+      "cross_domain_selection_holds": false,
+      "held_out_task_n": 26,
+      "honest_verdict": "complete: cross_domain_selection_collapses_domain_bound",
+      "label_ablation_robust": true,
+      "matched_control_delta": -0.2692307692,
+      "missing_verifier_gaps": [
+        {
+          "candidate_design": "DG-PRM-style multi-invariant verifier dimensions with a learned task-structure router validated on held-out fover",
+          "failure_mode": "cross_domain_selection_collapses_domain_bound",
+          "gap_id": "GAP-CROSS-DOMAIN-FAMILY-INVARIANT-SELECTION-4305",
+          "missing_discriminator": "domain-invariant selector features that preserve wrong-majority recovery across ARC, ARC-GEN, and FoVer/math step candidates without using domain labels",
+          "priority": "P0 cross-domain verifier scope boundary"
+        }
+      ],
+      "oracle_at_k": 0.7692307692,
+      "per_domain_delta": {
+        "arc": {
+          "cross_domain_ci95": [
+            -0.1730769231,
+            0.1346153846
+          ],
+          "cross_domain_delta": -0.0192307692,
+          "cross_domain_selection_holds": false,
+          "held_out_task_n": 52,
+          "label_ablation_robust": false,
+          "matched_control_delta": 0.0192307692,
+          "oracle_at_k": 0.8269230769,
+          "router_set_encoder_at_1": 0.2307692308,
+          "vote_at_1": 0.25
+        },
+        "arcgen": {
+          "cross_domain_ci95": [
+            -0.4166666667,
+            -0.0833333333
+          ],
+          "cross_domain_delta": -0.25,
+          "cross_domain_selection_holds": false,
+          "held_out_task_n": 24,
+          "label_ablation_robust": false,
+          "matched_control_delta": -0.0416666667,
+          "oracle_at_k": 0.75,
+          "router_set_encoder_at_1": 0.0,
+          "vote_at_1": 0.25
+        },
+        "fover": {
+          "cross_domain_ci95": [
+            -0.1153846154,
+            0.5384615385
+          ],
+          "cross_domain_delta": 0.2307692308,
+          "cross_domain_selection_holds": false,
+          "held_out_task_n": 26,
+          "label_ablation_robust": true,
+          "matched_control_delta": -0.2692307692,
+          "oracle_at_k": 0.7692307692,
+          "router_set_encoder_at_1": 0.5,
+          "vote_at_1": 0.2692307692
+        }
+      },
+      "primary_held_out_domain": "fover",
+      "verifier_is_oracle": false,
+      "vote_at_1": 0.2692307692
+    },
+    "efficiency": {
+      "accuracy_best_judge": 0.5,
+      "accuracy_delta_ci95": [
+        0.1,
+        0.5
+      ],
+      "accuracy_energy_verifier": 0.8,
+      "artifact_path": "results/experiment_4303_verifier_efficiency_parity_isoflops.json",
+      "available": true,
+      "best_judge_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "cost_ratio": 1.03e-08,
+      "efficiency_pareto_holds": true,
+      "honest_verdict": "complete: hardened_pareto_win_delta_0.3000",
+      "selection_task_n": 30,
+      "verifier_is_oracle": false
+    },
+    "in_generation": {
+      "artifact_path": "results/experiment_4304_diffusiongemma_in_generation_engaged_controls.json",
+      "available": true,
+      "carnot_minus_best_control_delta": 0.133334,
+      "carnot_minus_unguided_delta": 0.1,
+      "condition_accuracy": {
+        "carnot": 0.366667,
+        "entrgi": 0.233333,
+        "unguided": 0.266667
+      },
+      "controls_differentiated": true,
+      "diffusiongemma_guidance_moat": false,
+      "flagged_adversarial": false,
+      "guidance_changes_selection": {
+        "entrgi": true
+      },
+      "guidance_moat_ci95": [
+        -0.066667,
+        0.366667
+      ],
+      "honest_verdict": "complete: diffusiongemma_guidance_bounded_null_vs_engaged_control",
+      "independent_leak_recheck": {
+        "answer_masked_auroc": 0.9792,
+        "answer_masked_cells": 2865,
+        "auroc_floor": 0.6,
+        "fresh_heldout_n": 300,
+        "fresh_heldout_task_n": 100,
+        "protocol": "fresh split; replace answer-bearing canvas cells with mask_token_id",
+        "scorer_leak_recheck_passed": true,
+        "status": "measured",
+        "unmasked_auroc": 0.995511
+      },
+      "scorer_leak_recheck_passed": true,
+      "verifier_is_oracle": false
+    },
+    "robust_aggregator": {
+      "aggregator_survives_missing_artifact": true,
+      "artifact_path": "results/experiment_4308_adversarial_verify_degenerate_controls_and_robust_capstone.json",
+      "available": true,
+      "error": "",
+      "honest_verdict": "complete: degenerate_controls_and_robust_capstone_guards_added_tests_pass",
+      "robust_aggregator_added": true
+    },
+    "self_learning": {
+      "arm_deltas": {
+        "online": 0.5050505051,
+        "static": -0.0242424242,
+        "tier2_memory": 0.5,
+        "tier2_retrieval": 0.4393939394
+      },
+      "artifact_path": "results/experiment_4306_self_learning_powered_ci_cross_domain.json",
+      "available": true,
+      "best_adaptive_minus_static_ci95": [
+        0.4080808081,
+        0.6505050505
+      ],
+      "best_adaptive_minus_static_delta": 0.5292929293,
+      "held_out_family_n": 66,
+      "held_out_task_n": 102,
+      "honest_verdict": "complete: powered_cross_domain_online_adaptation_helps",
+      "online_adaptation_helps": true,
+      "pass_rates": {
+        "online_family_mean_at_1": 0.7565656566,
+        "static_family_mean_at_1": 0.2272727273,
+        "tier2_memory_family_mean_at_1": 0.7515151515,
+        "tier2_retrieval_family_mean_at_1": 0.6909090909,
+        "vote_family_mean_at_1": 0.2515151515
+      },
+      "verifier_is_oracle": false
+    }
+  }
+}
