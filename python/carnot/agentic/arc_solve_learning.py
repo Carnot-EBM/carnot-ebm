@@ -1,0 +1,135 @@
+"""ARC-AGI-3 solve LEARNING loop — turn the static reuse-substrate (arc_solver_kit
++ ops/arc_solve_registry.yaml) into something that actively SPEEDS UP the next
+game by routing it to the closest SOLVED game's recipe, and that surfaces prior
+DEAD-ENDS so we don't repeat them.
+
+Why this exists
+---------------
+2026-06-16: the kit + registry capture what we learned, but a new game's solver
+still started from zero (sc25 took ~10 reverse-engineering layers). The operator
+asked: "are we learning from our successes and failures as part of our harness so
+as to speed up progress?" This module is the success/failure feedback loop:
+`recommend_approach(game)` reads the survey features + the registry, ranks the
+solved games by similarity, and hands back the most-applicable proven recipe
+(solver module, win-condition, action-model, reusable gotchas) PLUS the relevant
+dead-ends to avoid. The agent/planner calls it BEFORE reverse-engineering a new
+game, so each solve compounds onto the last instead of restarting.
+
+This is the routing layer; the deeper search-acceleration (a verifier/value head
+that prunes the BFS — the north-star verifier-routed-efficiency, cf. exp4071) is
+the next loop on top of it.
+"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any
+
+import yaml
+
+REPO = Path(__file__).resolve().parents[3]
+SURVEY = REPO / "results" / "arc3_win_condition_survey.json"
+REGISTRY = REPO / "ops" / "arc_solve_registry.yaml"
+
+_WIN_KEYWORDS = ("align", "goal", "+1", "reflect", "pattern", "template", "rotate",
+                 "exit", "spell", "cast", "drag", "click", "move", "position")
+
+
+def _action_type(s: str) -> str:
+    s = (s or "").lower()
+    has_click = "click" in s or "[6]" in s or "6]" in s
+    has_kbd = "keyboard" in s or "action1" in s or "1-4" in s or "1-5" in s or "1-6" in s
+    if has_click and has_kbd:
+        return "mixed"
+    if has_click:
+        return "click"
+    if has_kbd:
+        return "keyboard"
+    return "unknown"
+
+
+def _features(entry: dict) -> dict:
+    wc = str(entry.get("win_condition_summary", "")).lower()
+    return {
+        "game": entry.get("game", ""),
+        "action_type": _action_type(entry.get("available_actions", "")),
+        "spatial": bool(entry.get("is_spatial_planning")),
+        "difficulty": str(entry.get("win_difficulty", "")),
+        "win_kw": {k for k in _WIN_KEYWORDS if k in wc},
+    }
+
+
+def _survey_features() -> dict[str, dict]:
+    d = json.load(open(SURVEY))
+    pgs = d["per_game_surveys"]
+    entries = list(pgs.values()) if isinstance(pgs, dict) else pgs
+    return {e.get("game", ""): _features(e) for e in entries}
+
+
+def _registry() -> dict:
+    return yaml.safe_load(open(REGISTRY))
+
+
+def _solved_games(reg: dict) -> list[dict]:
+    """Games with a usable recipe (reproduced, or provisional-with-mechanics)."""
+    return [g for g in reg.get("games", [])
+            if g.get("reproducibility") in ("reproduced", "provisional") and g.get("solver")]
+
+
+def _similarity(a: dict, b: dict) -> float:
+    score = 0.0
+    if a["action_type"] == b["action_type"] and a["action_type"] != "unknown":
+        score += 3.0
+    elif "mixed" in (a["action_type"], b["action_type"]):
+        score += 1.0  # mixed partially overlaps either
+    if a["spatial"] == b["spatial"]:
+        score += 1.5
+    if a["difficulty"] and a["difficulty"] == b["difficulty"]:
+        score += 0.5
+    score += 1.0 * len(a["win_kw"] & b["win_kw"])  # shared win-condition vocabulary
+    return score
+
+
+def recommend_approach(target_game: str) -> dict:
+    """Route a NEW game to the closest proven recipe. Returns the ranked solved
+    games with their registry recipe (solver, win-condition, action-model,
+    reusable gotchas) + the general gotchas + the matched games' dead-ends.
+
+    Call this BEFORE reverse-engineering a new game (CLAUDE.md ARC Solve
+    Reproducibility + Solver-Reuse Discipline)."""
+    feats = _survey_features()
+    reg = _registry()
+    if target_game not in feats:
+        return {"error": f"{target_game} not in survey", "general_gotchas": reg.get("general_gotchas", [])}
+    tf = feats[target_game]
+    by_game = {g["game"]: g for g in reg.get("games", [])}
+    ranked = []
+    for solved in _solved_games(reg):
+        gid = solved["game"]
+        if gid == target_game or gid not in feats:
+            continue
+        sim = _similarity(tf, feats[gid])
+        ranked.append({
+            "game": gid,
+            "similarity": round(sim, 2),
+            "reproducibility": solved.get("reproducibility"),
+            "solver": solved.get("solver"),
+            "win_condition": solved.get("win_condition"),
+            "action_model": solved.get("action_model"),
+            "reusable_gotchas": solved.get("gotchas", []),
+        })
+    ranked.sort(key=lambda r: r["similarity"], reverse=True)
+    return {
+        "target_game": target_game,
+        "target_features": {**tf, "win_kw": sorted(tf["win_kw"])},
+        "recommended": ranked[:3],
+        "general_gotchas": reg.get("general_gotchas", []),
+        "guidance": ("Start from the top-ranked solved game's solver + reuse its action-model "
+                     "and gotchas; only reverse-engineer the DELTA. Import arc_solver_kit; run "
+                     "the reproduction gate; append new mechanics/dead-ends to the registry."),
+    }
+
+
+if __name__ == "__main__":  # pragma: no cover - manual probe
+    import sys
+    print(json.dumps(recommend_approach(sys.argv[1] if len(sys.argv) > 1 else "vc33"), indent=2))
