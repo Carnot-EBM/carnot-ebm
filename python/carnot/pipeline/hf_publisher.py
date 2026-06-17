@@ -74,7 +74,9 @@ class HuggingFacePublisher:
                 publish_mechanism = "hf_api_direct"
                 # Do the upload
                 model_card = """---
-license: apache-2.0
+license: other
+license_name: mit-0
+license_link: LICENSE
 ---
 
 # ThinkPRM v3
@@ -173,7 +175,7 @@ path = hf_hub_download(repo_id="Carnot-EBM/carnot-thinkprm-v3", filename="checkp
             "hf_url": f"https://huggingface.co/{self.repo_id}" if hf_upload_succeeded else None,
             "external_load_verified": external_load_verified,
             "model_card_has_emojis": False,
-            "model_card_has_apache_license": True,
+            "model_card_has_mit0_license": True,
             "acceptance_gate_passed": (hf_upload_succeeded and external_load_verified) if not blocked else False,
             "acceptance_gate_criteria": "Real HF upload + external load + emoji-free OR honest blocked verdict.",
             "methodology_note": "Per exp1711 PyPI precedent + 2026-05-16 PyPI-via-CI clarification, blocked_credentials is honest. If a CI workflow for HF exists, use tag-push trigger like PyPI.",
