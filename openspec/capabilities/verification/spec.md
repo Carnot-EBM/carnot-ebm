@@ -17492,6 +17492,64 @@ covariance. If the second corpus is unavailable, controls are not
 differentiable, or the scorer is leaky on the second corpus, then the runner
 writes the matching terminal verdict instead of declaring a replication.
 
+### REQ-VERIFY-4326: Adaptive Guided-Generation Scale-Up
+
+The repository SHALL provide Exp 4326 at
+`python/carnot/experiment_4326_adaptive_guided_generation_scaleup.py` and
+`results/experiment_4326_adaptive_guided_generation_scaleup.py` to scale the
+Exp 4315 in-generation reward result from post-hoc step-stitching into a
+bounded adaptive denoising loop. The runner SHALL check preconditions before
+inference: the llama.cpp DiffusionGemma PR binary is non-empty, the Q4_K_M
+DiffusionGemma GGUF cache is present, the Exp 4292 persisted partial-state
+scorer loads, an adaptive-method arXiv citation has been verified and recorded,
+and TRM training is stood down. If any precondition fails, the runner SHALL
+write an honest terminal `blocked_*` verdict and SHALL NOT fabricate inference.
+
+The runner SHALL independently re-check Exp 4292 scorer leakage on a fresh
+held-out fixture by masking answer-bearing cells. If the answer-masked signal
+collapses, the runner SHALL emit bare bool `scorer_leak_recheck_passed=false`,
+`honest_verdict=scorer_leaky_rebuild_needed`, and stop before benchmarking.
+Otherwise it SHALL attempt ARC-grid generation on the 256-mask canvas and SHALL
+record `domain_used="arc_grid_generation"` only when that path is available; if
+ARC-grid generation is infeasible in the window, it SHALL fall back honestly to
+a reasoning corpus and set `domain_used="reasoning_corpus_fallback"`.
+
+The adaptive run SHALL evaluate at least 40 measured tasks per arm over
+unguided/no-adaptation, at least one engaged non-Carnot control, and Carnot
+adaptive guidance. The Carnot arm SHALL use the Exp 4292 external partial-state
+scorer as reward shaping inside the bounded denoising loop rather than as an
+oracle or post-hoc final-answer checker. The no-op guard SHALL set bare bool
+`controls_differentiated=true` only when the Carnot adaptive arm and the
+no-adaptation control do not tie bit-identically; otherwise the runner SHALL
+stop with `honest_verdict=controls_not_differentiable`.
+
+The terminal artifact SHALL write
+`results/experiment_4326_adaptive_guided_generation_scaleup.json` with required
+fields `honest_verdict`, bare bool `adaptive_guidance_beats_control`, bare float
+`carnot_minus_best_control_delta`, `adaptive_ci95`, bare bool
+`controls_differentiated`, bare bool `scorer_leak_recheck_passed`,
+`domain_used`, `verified_citation`, bare bool `verifier_is_oracle=false`,
+`preconditions_checked`, `random_seed`, `reproducibility_checksum`,
+`model_specs`, `guidance_dynamics_diagnostic`, `field_principles`, `spec_refs`,
+`duration_s`, `inference_substrate`, and `adversarial_verify`. The bare bool
+`adaptive_guidance_beats_control` SHALL be true iff Carnot adaptive guidance
+beats the best no-adaptation or engaged control, the paired task-level bootstrap
+CI95 with at least 2000 resamples excludes zero, controls are differentiated,
+and the scorer leak re-check passed.
+
+### SCENARIO-VERIFY-4326: Adaptive Loop Is Skeptic-Proof Against Controls
+
+Given the PR binary, DiffusionGemma GGUF cache, Exp 4292 scorer artifact, a
+verified adaptive-method citation, and TRM stand-down preconditions hold, when
+the Exp 4326 runner executes, then it loads the scorer, performs the independent
+answer-masked leak re-check, runs the no-adaptation control, an engaged
+non-Carnot control, and Carnot adaptive guidance for at least 40 measured tasks
+per arm, checkpoints after each measured task, reports per-arm accuracy,
+Carnot-minus-best-control, a task-level bootstrap CI95 with at least 2000
+resamples, and a guidance-dynamics diagnostic. If resources are missing,
+controls are not differentiable, or the scorer is leaky, then the runner writes
+the matching terminal verdict instead of declaring an adaptive-guidance win.
+
 ### REQ-VERIFY-4259: ARC Set-Encoder Grid Synthesis
 
 The repository SHALL provide Exp 4259 at
