@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.400",
+  "generated_at": "2026-06-17T13:26:39Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.06.400: the authoritative milestone-scoped timing detector reports 0 experiment commits since activation, so all locked timing fields are 0 (0 experiments, 0 compute-bound, 0 wall-time minutes) and slowest_experiments is empty. With no compute-bound (GGUF/CUDA) task present, both RTX 3090s sitting idle at 0% utilization is correct behaviour, not a bottleneck (gpu_idle_on_compute_bound_tasks=null). There is no execution timing to analyze from the data blocks this turn.",
+  "bottlenecks_identified": [
+    "OBSERVABILITY, not execution: the milestone-scoped timing detector found 0 experiment commits since activation of 2026.06.400, leaving the retrospective with zero timing data. The prior milestone's changelog entry documents this same detector false-zeroing across a recurring window while experiments had in fact run on disk, so a 0 here is a telemetry/detector gap rather than evidence the milestone did no work.",
+    "No wall-time efficiency bottleneck is identifiable from the data blocks: with experiments_completed=0 and compute_bound_experiments_count=0, there is no slow experiment to attribute time to.",
+    "GPU idle was explicitly considered and NOT flagged: 0% utilization on both RTX 3090s is correct given no compute-bound task was present (gpu_idle_on_compute_bound_tasks=null). Flagging it would violate the GPU-idle interpretation rule."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone-scoped timing detector that the retro depends on: add an mtime + changelog-window fallback so per-experiment wall-times are recovered even when the commit-since-activation scan returns empty, ending the recurring false-zero that has now produced several empty operational retros.",
+    "Stamp duration_s (and a compute_bound flag) onto each experiment artifact at write time, so timing telemetry is intrinsic to the result JSON and does not depend on commit-window heuristics.",
+    "Gate or defer the operational-retro trigger on at least one recovered timing record for the milestone; when timing data is genuinely empty, emit a short 'no-data, detector-gap suspected' retro rather than a full synthesis.",
+    "When compute-bound tasks resume with 2+ models loaded in parallel, route them through DualGPURunner (carnot.pipeline.dual_gpu_harness) so both currently-idle 3090s are engaged (e.g. Qwen on GPU 0, Gemma on GPU 1); do not enforce this on single-model inference."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the milestone-scoped timing detector (mtime + changelog-window fallback) so retros stop false-zeroing — this is the single change that restores every future operational retro's ability to find real bottlenecks.",
+    "Add write-time duration_s + compute_bound stamping to the experiment artifact schema, making timing observability intrinsic rather than reconstructed.",
+    "Defer/short-circuit the retro when timing data is empty so turn budget is not spent synthesizing analysis over no data."
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "This milestone produced no timing data the retro could read, so execution efficiency cannot be assessed on its own terms. The recurring meta-lesson is that the bottleneck has moved from compute to observability: the operational retro is only as good as the milestone-scoped timing detector feeding it, and that detector's documented false-zero gap is now the highest-leverage thing to fix before the next milestone."
+}
