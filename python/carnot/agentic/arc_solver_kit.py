@@ -36,7 +36,8 @@ Hard-won general gotchas (apply to ANY ARC-AGI-3 game; see ops/arc_solve_registr
 """
 from __future__ import annotations
 
-from collections import deque
+import heapq
+import itertools
 from pathlib import Path
 from typing import Any, Callable, Hashable, Optional, Sequence
 
@@ -77,13 +78,22 @@ class OfflineSolver:
 
     def __init__(self, game_id: str, action_labels: Callable[[Any], Sequence[str]],
                  apply: Callable[[Any, str, Any], Any], state_key: Callable[[Any], Hashable],
-                 *, warmup_label: Optional[str] = None, max_nodes: int = 30000) -> None:
+                 *, warmup_label: Optional[str] = None, max_nodes: int = 30000,
+                 verifier: Optional[Callable[[Any], float]] = None) -> None:
         self.game_id = game_id
         self.action_labels = action_labels
         self.apply = apply
         self.state_key = state_key
         self.warmup_label = warmup_label  # an action to consume the no-op first slot (gotcha #4)
         self.max_nodes = max_nodes
+        # VERIFIER-ROUTED SEARCH (the north-star efficiency loop): a score on a
+        # state (LOWER = closer to the win, an energy/goal-distance). When given,
+        # the search is best-first ordered by it, so it expands promising branches
+        # first and the state count SHRINKS. When None, it degrades to plain BFS
+        # (verifier ≡ 0 → the heap orders by insertion = FIFO). Pass a learned or
+        # computed verifier to turn the solver into a verifier-routed search.
+        self.verifier = verifier or (lambda _g: 0.0)
+        self.last_states_expanded = 0
 
     def _replay(self, env: Any, path: Sequence[str]) -> Any:
         f = env.reset()
@@ -94,13 +104,15 @@ class OfflineSolver:
         return f
 
     def solve_level(self, env: Any, start_level: int, prefix: Sequence[str], depth_cap: int):
-        """BFS one level forward from `prefix`; return (extension_path, nodes) or (None, nodes)."""
+        """Search one level forward from `prefix` — verifier-routed BEST-FIRST (or
+        plain BFS when no verifier). Returns (extension_path, states_expanded)."""
         self._replay(env, list(prefix))
         seen = {self.state_key(env._game)}
-        frontier: deque = deque([[]])
+        counter = itertools.count()  # FIFO tiebreaker (so verifier≡0 ⇒ BFS)
+        heap = [(self.verifier(env._game), next(counter), [])]
         nodes = 0
-        while frontier and nodes < self.max_nodes:
-            path = frontier.popleft()
+        while heap and nodes < self.max_nodes:
+            _, _, path = heapq.heappop(heap)
             if len(path) >= depth_cap:
                 continue
             self._replay(env, list(prefix) + path)
@@ -108,12 +120,14 @@ class OfflineSolver:
                 f2 = self.apply(env, label, None)
                 nodes += 1
                 if frame_level(f2) > start_level:
+                    self.last_states_expanded = nodes
                     return path + [label], nodes
                 k = self.state_key(env._game)
                 if k not in seen:
                     seen.add(k)
-                    frontier.append(path + [label])
+                    heapq.heappush(heap, (self.verifier(env._game), next(counter), path + [label]))
                 self._replay(env, list(prefix) + path)  # restore for next sibling
+        self.last_states_expanded = nodes
         return None, nodes
 
     def solve(self, env: Any, target_level: int, depth_cap: int = 30):
