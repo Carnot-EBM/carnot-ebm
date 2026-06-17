@@ -8644,3 +8644,5 @@ c |
 | 2026-06-17 08:13 UTC | PHASE G2 (hygiene; per Missing-Verifier Gap Loggin | OK | 88 passed, 1 warning in 5.48s |
 | 2026-06-17 08:26 UTC | PHASE G3 (hardware continuity; opportunistic per n | OK | 106 passed, 1 warning in 8.04s |
 | 2026-06-17 08:45 UTC | PHASE G4 (capstone .399, UNGATED) -- the verifier  | OK | 108 passed, 1 warning in 7.72s |
+| 2026-06-17 09:30 UTC | Plan milestone 2026.06.400 | OK | 12 tasks proposed |
+| 2026-06-17 09:33 UTC | Milestone 2026.06.400 activated | OK | 12 tasks queued |
