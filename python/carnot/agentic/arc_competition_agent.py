@@ -306,8 +306,15 @@ class E3AgentPolicy:
                     self._prev = (to_logical(grid_of(latest), self.cell), int(mv[0]), mv[1])
                 else:
                     self._prev = None
-            if len(self.transitions) >= self.explore_budget or self.explorer.best_level > (self.explorer.start_level or 0):
-                self.phase = "induce"      # enough data, or already advanced -> try to model+plan
+            # VERIFIER-ROUTED CASCADE escalation: hand off to the tier-3 LLM (E3 induction)
+            # only when the cheap tier-1 explorer has STALLED — spent its transition budget
+            # without a level-up, or fully explored out. If the explorer WON, is_done ends
+            # the episode (tier-1 success; no costly escalation). This is the router: cheap
+            # first, escalate the hard tail.
+            won = self.explorer.best_level > (self.explorer.start_level or 0)
+            stalled = len(self.transitions) >= self.explore_budget or self.explorer.explored_out
+            if stalled and not won:
+                self.phase = "induce"
             return mv
         if self.phase == "induce" and not self.induced:
             self.induced = True
@@ -344,16 +351,22 @@ class E3AgentPolicy:
         return self.explorer.is_done(frames, latest) and self.phase == "explore"
 
 
-def make_carnot_agent(base_cls):
-    """Adapt CarnotAgentPolicy onto the real ARC-AGI-3-Agents `Agent` base class.
+def make_carnot_agent(base_cls, cascade: bool = True, proposer=None):
+    """Adapt the Carnot policy onto the real ARC-AGI-3-Agents `Agent` base class.
     Submission: `from agents.agent import Agent; CarnotAgent = make_carnot_agent(Agent)`.
-    The base class supplies game_id/arc_env/etc.; we only implement the two abstract
-    methods by delegating to the policy."""
+
+    cascade=True (DEFAULT, the competition path): the VERIFIER-ROUTED CASCADE
+    (E3AgentPolicy) — tier-1 training-free explorer; on STALL escalate to tier-3 E3
+    induction with the bundled open proposer (the verifier routes + grounds). This is the
+    unified choose_action the hard eval needs. cascade=False: pure recognize-and-replay
+    (dev/known games only — useless on the hidden eval)."""
 
     class CarnotAgent(base_cls):  # type: ignore
         def __init__(self, *args, **kwargs) -> None:
             super().__init__(*args, **kwargs)
-            self._policy = CarnotAgentPolicy(getattr(self, "game_id", ""), load_solutions())
+            gid = getattr(self, "game_id", "")
+            self._policy = (E3AgentPolicy(gid, proposer=proposer) if cascade
+                            else CarnotAgentPolicy(gid, load_solutions()))
 
         def is_done(self, frames, latest_frame) -> bool:
             return self._policy.is_done(frames, latest_frame)
