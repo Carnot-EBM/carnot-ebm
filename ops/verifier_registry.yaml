@@ -55,6 +55,57 @@ verifiers:
     - 0.990662
     exp4388_domains_at_chance: []
     exp4388_verifier_is_oracle: false
+    eval_exp_4392: results/experiment_4392_verifiable_process_data_localizer.json
+    eval_exp_4393: results/experiment_4393_localizer_skeptic_proof.json
+    eval_exp_4396: results/experiment_4396_localizer_self_learning_compounds.json
+    eval_exp_4397: results/experiment_4397_cross_domain_detection_calibration.json
+    eval_exp_4399: results/experiment_4399_registry_gaps_hygiene_gap4_guard.json
+    exp4399_localizer_beats_ensemble_baseline: true
+    exp4399_localization_f1_by_domain:
+      FoVer:
+        delta: 0.904
+        delta_ci95:
+        - 0.904
+        - 0.904
+        domain: FoVer
+        ensemble_baseline_0096: 0.096
+        exact_match_count: 114
+        n_error_traces: 114
+        n_traces: 6548
+        split_note: held-out real FoVer step labels
+        synthetic_trained_localizer: 1.0
+      GAP-4 ARC:
+        delta: 0.596308
+        delta_ci95:
+        - 0.461692
+        - 0.711692
+        domain: GAP-4 ARC
+        ensemble_baseline_0096: 0.096
+        exact_match_count: 36
+        n_error_traces: 52
+        n_traces: 52
+        split_note: cached GAP-4 ARC candidate process proxy
+        synthetic_trained_localizer: 0.692308
+    exp4399_localizer_win_is_genuine: false
+    exp4399_beats_position_only_baseline: false
+    exp4399_template_ablation_drop: 0.0
+    exp4399_localizer_compounds: false
+    exp4399_positive_control_passed: true
+    exp4399_compounding_delta_ci95:
+    - 0.0
+    - 0.0
+    exp4399_final_held_out_localization_f1: 1.0
+    exp4399_detection_calibrated_multi_domain: false
+    exp4399_fover_detection_auroc: 0.918304
+    exp4399_fover_detection_ci95:
+    - 0.909218
+    - 0.926669
+    exp4399_gap4_arc_detection_auroc: 0.963317
+    exp4399_gap4_arc_detection_ci95: &id003
+    - 0.921491
+    - 0.990625
+    exp4399_domains_at_chance: []
+    exp4399_verifier_is_oracle: false
   lineage:
     from: v3
     change: 5-seed dual-condition rescue; CI-reproduced (G2, run 26725185125)
@@ -355,7 +406,7 @@ verifiers:
     exp4227_arc1_vote_wins_lost: 0
     exp4227_oracle_distinct_beats_vote: false
     exp4227_verifier_minus_vote_delta: -0.0714285714
-    exp4227_verifier_minus_vote_ci95: &id005
+    exp4227_verifier_minus_vote_ci95: &id006
     - -0.2142857143
     - 0.0
     exp4227_oracle_distinct_auroc: 0.778980279
@@ -371,7 +422,7 @@ verifiers:
     exp4239_arc1_vote_wins_lost: 0
     exp4239_oracle_distinct_beats_vote: false
     exp4239_aggregator_minus_vote_delta: 0.0
-    exp4239_aggregator_minus_vote_ci95: &id006
+    exp4239_aggregator_minus_vote_ci95: &id007
     - 0.0
     - 0.0
     exp4239_held_out_task_n: 52
@@ -390,7 +441,7 @@ verifiers:
     exp4252_arc1_vote_wins_lost: 0
     exp4252_oracle_distinct_beats_vote: true
     exp4252_set_encoder_minus_vote_delta: 0.4423076923
-    exp4252_set_encoder_minus_vote_ci95: &id007
+    exp4252_set_encoder_minus_vote_ci95: &id008
     - 0.3076923077
     - 0.5961538462
     exp4252_held_out_task_n: 52
@@ -440,13 +491,13 @@ verifiers:
     exp4277_cross_family_artifact: results/experiment_4271_arc_cross_family_transfer_existing_pool.json
     exp4277_cross_family_win_holds: true
     exp4277_cross_family_delta: 0.4038461538
-    exp4277_cross_family_ci95: &id008
+    exp4277_cross_family_ci95: &id009
     - 0.25
     - 0.5576923077
     exp4277_held_out_task_n: 52
     exp4277_online_adaptation_helps: false
     exp4277_online_minus_static_delta: 0.0961538462
-    exp4277_online_minus_static_ci95: &id009
+    exp4277_online_minus_static_ci95: &id010
     - 0.0
     - 0.1923076923
     exp4277_diffusiongemma_loader_repaired: true
@@ -478,7 +529,7 @@ verifiers:
     exp4287_arcgen_artifact: results/experiment_4282_arcgen_cross_family_stress.json
     exp4287_arcgen_cross_family_holds: true
     exp4287_arcgen_cross_family_delta: 1.0
-    exp4287_arcgen_cross_family_ci95: &id010
+    exp4287_arcgen_cross_family_ci95: &id011
     - 1.0
     - 1.0
     exp4287_arcgen_held_out_task_n: 50
@@ -850,6 +901,34 @@ verifiers:
     exp4388_filled_gaps: []
     exp4388_gaps_logged:
     - GAP-FOVER-BIPRM-LOCALIZATION-untyped
+    - GAP-E3-WORLD-MODEL-RULE-LP85-L6-4383
+    - GAP-E3-WORLD-MODEL-RULE-TU93-L5-4383
+    - GAP-E3-WORLD-MODEL-RULE-TN36-L8-4383
+    - GAP-E3-WORLD-MODEL-RULE-TR87-L7-4383
+    - GAP-E3-WORLD-MODEL-RULE-AR25-L2-4384
+    - GAP-E3-WORLD-MODEL-RULE-KA59-L2-4384
+    - GAP-E3-WORLD-MODEL-RULE-FT09-L2-4384
+    eval_exp_4399: results/experiment_4399_registry_gaps_hygiene_gap4_guard.json
+    exp4399_gap4_regression_guard_passed: true
+    exp4399_arc1_rule_exec_vote_pass2: 0.4516
+    exp4399_arc1_rule_exec_gated_pass2: 0.5806
+    exp4399_arc1_headroom_recovered: 4
+    exp4399_arc1_vote_wins_lost: 0
+    exp4399_v406_state: localizer_quarantined__localizer_saturated_null__calibration_contract_false__arc_total_34_no_new_levels
+    exp4399_localizer_beats_ensemble_baseline: true
+    exp4399_localizer_win_is_genuine: false
+    exp4399_localizer_compounds: false
+    exp4399_detection_calibrated_multi_domain: false
+    exp4399_cross_domain_gap4_arc_auroc: 0.963317
+    exp4399_cross_domain_gap4_arc_ci95: *id003
+    exp4399_cross_domain_gap4_arc_selection_headroom: 0.129
+    exp4399_arc_reproducible_total_levels: 34
+    exp4399_new_levels_reproduced: 0
+    exp4399_filled_gaps: []
+    exp4399_gaps_logged:
+    - GAP-FOVER-BIPRM-LOCALIZATION-untyped
+    - GAP-4392-FIRST-ERROR-GAP-4-ARC-arc_candidate_process_proxy
+    - GAP-4393-LOCALIZER-POSITION-OR-TEMPLATE-CONFOUND
     - GAP-E3-WORLD-MODEL-RULE-LP85-L6-4383
     - GAP-E3-WORLD-MODEL-RULE-TU93-L5-4383
     - GAP-E3-WORLD-MODEL-RULE-TN36-L8-4383
@@ -4184,7 +4263,7 @@ verifiers:
       metric: heldout_exact_accuracy
       n_matched: 0
       status: deferred_baseline_below_0.85
-    diffusiongemma_gate_state: &id004
+    diffusiongemma_gate_state: &id005
       state: kept_gated
       reason: no_positive_rerank_signal_and_no_training_time_value_added
       moved_by_rerank_signal: false
@@ -4236,7 +4315,7 @@ verifiers:
       n_matched: 0
       status: deferred_outerloop_training
       training_mode: not_run
-    diffusiongemma_gate_state: &id003
+    diffusiongemma_gate_state: &id004
       state: kept_gated
       reason: no_positive_rerank_signal_and_no_training_time_value_added
       rerank_ci_excludes_zero_positive: false
@@ -4261,7 +4340,7 @@ verifiers:
     training_time_status: graft_deferred_outerloop_training
     promoted_toward_candidate: false
     eval_exp_4171: results/experiment_4171_verifier_registry_gaps_hygiene.json
-    diffusiongemma_gate_state: *id003
+    diffusiongemma_gate_state: *id004
   rerank_time_roles:
   - role_id: sudoku_executable_verifier_rerank_time_4158
     experiment: results/experiment_4158_verifier_rerank_recovery_moat.json
@@ -4293,7 +4372,7 @@ verifiers:
       ratio: 23158.363
       status: measured_local_constraint_check
       verifier_mean_per_candidate_us: 43.181
-    diffusiongemma_gate_state: *id004
+    diffusiongemma_gate_state: *id005
     flagged_adversarial: true
     eval_exp_4163: results/experiment_4163_verifier_registry_gaps_hygiene.json
   registry_roles:
@@ -4485,7 +4564,7 @@ verifiers:
     oracle_distinct_build_artifact: results/experiment_4220_oracle_distinct_arc_verifier_build_labeled.json
     oracle_distinct_beats_vote: false
     verifier_minus_vote_delta: -0.0714285714
-    verifier_minus_vote_ci95: *id005
+    verifier_minus_vote_ci95: *id006
     arbiter_override_minus_vote: 0.0
     matched_control_delta: 0.0
     oracle_at_k: 1.0
@@ -4536,7 +4615,7 @@ verifiers:
     oracle_distinct_build_artifact: results/experiment_4231_oracle_distinct_arc_aggregator_build.json
     oracle_distinct_beats_vote: false
     aggregator_minus_vote_delta: 0.0
-    aggregator_minus_vote_ci95: *id006
+    aggregator_minus_vote_ci95: *id007
     held_out_task_n: 52
     matched_control_delta: 0.0384615385
     oracle_at_k: 0.3653846154
@@ -4576,7 +4655,7 @@ verifiers:
     oracle_distinct_build_artifact: results/experiment_4244_arc_set_encoder_aggregator_build.json
     oracle_distinct_beats_vote: true
     set_encoder_minus_vote_delta: 0.4423076923
-    set_encoder_minus_vote_ci95: *id007
+    set_encoder_minus_vote_ci95: *id008
     held_out_task_n: 52
     matched_control_delta: 0.4807692308
     oracle_at_k: 0.8269230769
@@ -4654,12 +4733,12 @@ verifiers:
     cross_family_artifact: results/experiment_4271_arc_cross_family_transfer_existing_pool.json
     cross_family_win_holds: true
     cross_family_delta: 0.4038461538
-    cross_family_ci95: *id008
+    cross_family_ci95: *id009
     held_out_task_n: 52
     online_adaptation_artifact: results/experiment_4273_arc_cross_family_online_adaptation.json
     online_adaptation_helps: false
     online_minus_static_delta: 0.0961538462
-    online_minus_static_ci95: *id009
+    online_minus_static_ci95: *id010
     diffusiongemma_artifact: results/experiment_4274_diffusiongemma_loader_fix_preflight.json
     diffusiongemma_loader_repaired: true
     diffusiongemma_preflight_go: true
@@ -4692,7 +4771,7 @@ verifiers:
     arcgen_artifact: results/experiment_4282_arcgen_cross_family_stress.json
     arcgen_cross_family_holds: true
     arcgen_cross_family_delta: 1.0
-    arcgen_cross_family_ci95: *id010
+    arcgen_cross_family_ci95: *id011
     arcgen_held_out_task_n: 50
     self_learning_artifact: results/experiment_4283_self_learning_repowered_arcgen.json
     online_adaptation_helps: false
@@ -4873,6 +4952,30 @@ verifiers:
     - GAP-E3-WORLD-MODEL-RULE-FT09-L2-4384
     filled_gap_ids: []
     eval_exp_4388: results/experiment_4388_registry_gaps_hygiene_gap4_guard.json
+  - role_id: oracle_distinct_v406_registry_gaps_hygiene_4399
+    experiment: results/experiment_4399_registry_gaps_hygiene_gap4_guard.json
+    role: registry_gaps_arc_hygiene_v406
+    status: v406_outcomes_recorded_with_gap4_guard_and_stamp_durability
+    v406_state: localizer_quarantined__localizer_saturated_null__calibration_contract_false__arc_total_34_no_new_levels
+    localizer_beats_ensemble_baseline: true
+    localizer_win_is_genuine: false
+    localizer_compounds: false
+    detection_calibrated_multi_domain: false
+    arc_reproducible_total_levels: 34
+    new_levels_reproduced: 0
+    gap_ids_logged:
+    - GAP-FOVER-BIPRM-LOCALIZATION-untyped
+    - GAP-4392-FIRST-ERROR-GAP-4-ARC-arc_candidate_process_proxy
+    - GAP-4393-LOCALIZER-POSITION-OR-TEMPLATE-CONFOUND
+    - GAP-E3-WORLD-MODEL-RULE-LP85-L6-4383
+    - GAP-E3-WORLD-MODEL-RULE-TU93-L5-4383
+    - GAP-E3-WORLD-MODEL-RULE-TN36-L8-4383
+    - GAP-E3-WORLD-MODEL-RULE-TR87-L7-4383
+    - GAP-E3-WORLD-MODEL-RULE-AR25-L2-4384
+    - GAP-E3-WORLD-MODEL-RULE-KA59-L2-4384
+    - GAP-E3-WORLD-MODEL-RULE-FT09-L2-4384
+    filled_gap_ids: []
+    eval_exp_4399: results/experiment_4399_registry_gaps_hygiene_gap4_guard.json
 - verifier_id: arc_agi3_learned_action_cost_heuristic_4353
   domain: arc_agi3_interactive
   version: 1
