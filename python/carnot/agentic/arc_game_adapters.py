@@ -153,27 +153,57 @@ def _tr87():
     per action; running out loses. (Later levels add alter_rules / tree_translation / double_translation
     twists; L1-L5 of the base mechanic are handled here.)
 
-    VALIDATED: solves L1 reproducibly (15 moves, offline_reproduced=True). The hand_verifier reads the
-    game's internal config -- the rule map (cifzvbcuwqe) + target (zvojhrjxxm) + current (ztgmtnnufb) --
-    and returns the count of positions NOT yet at their rule-mapped required value (0 == win). This is
-    the SAME internal-state-reading pattern as the lp85 adapter (_goal_key); it routes the best-first
-    search to set each glyph to its target. Frame-only perception (classifying glyph bitmaps + decoding
-    the rule grid from pixels) is a future upgrade; the solve is reproduction-gated regardless (the gate
-    replays ACTIONS, not internal reads). branch_mode='replay' (tr87's reset is idempotent + the config
-    is a deterministic function of the action prefix). state_key is the full-grid hash so the win
-    animation frames stay distinct (the search can traverse them to the level-up)."""
+    The visible reference grid is a REWRITE rule: each target glyph expands to a SEQUENCE of editable
+    glyphs (L1: 1-to-1, e.g. A4->[B3]; L2: 1-to-many, e.g. B3->[C1,C5,C1]). The win = the editable
+    sequence equals the concat of the rule expansion over the target sequence. The hand_verifier reads
+    the game's internal config -- rule map (cifzvbcuwqe) + target (zvojhrjxxm) + current (ztgmtnnufb) --
+    and returns the count of editable positions NOT yet at their rule-expanded value (0 == win); the
+    SAME internal-state-reading pattern as the lp85 adapter (_goal_key). It routes the best-first search
+    to set each glyph to its target.
+
+    VALIDATED: solves L1 (15 moves) AND L2 (1-to-many expansion) reproducibly, offline_reproduced=True.
+    L3+ add a tree_translation / double_translation twist where the EDITABLE glyphs also expand (editable
+    n != expansion n), which the L1/L2 formula leaves a residual on, so the search stops at L2 rather
+    than false-claiming the unmodelled twist -- a clean honest boundary. Frame-only perception
+    (classifying glyph bitmaps + decoding the rule grid from pixels) is a future upgrade; the solve is
+    reproduction-gated regardless (the gate replays ACTIONS, not internal reads). branch_mode='fresh_env'
+    (gotcha #7): the WIN ANIMATION leaves residual state (yfetxjexviz) that a reuse-one-env replay search
+    sees but a fresh replay does not, so the reuse-one-env search finds animation-contingent 'wins' that
+    FAIL the reproduction gate (it reproduced L1 by luck but not L2). Evaluating each candidate on a fresh
+    env makes the search's win-detection match the gate. state_key is the full-grid hash so the
+    win-animation frames stay distinct (the search reaches the level-up)."""
     from carnot.agentic.arc_agi3_world_model import frame_hash, grid_of
     from carnot.agentic.arc_agi3_live_adapter import _game_action
 
     def _val(s):
         return int(s.name[-1])                          # glyph value = trailing digit of the sprite name
 
-    def _mismatches(game):
-        # rule map: A-value -> B-value (the top reference grid, read once per call)
-        amap = {int(lhs[0].name[-1]): int(rhs[0].name[-1]) for lhs, rhs in game.cifzvbcuwqe}
-        cur = [_val(s) for s in game.ztgmtnnufb]         # current editable B-values
-        req = [amap.get(_val(s)) for s in game.zvojhrjxxm]  # required B-value per target A-value
-        return sum(1 for c, r in zip(cur, req) if c != r)
+    def _required_editable(game):
+        # The visible reference grid is a REWRITE rule: each target-series glyph (rule LHS) expands to a
+        # SEQUENCE of editable-series glyphs (rule RHS). The required editable sequence is the concat of
+        # the RHS over the target sequence. Handles 1-to-1 (L1: every RHS length 1, e.g. A4->[B3]) AND
+        # 1-to-many (L2: B3->[C1,C5,C1]) expansion uniformly.
+        rule = {int(lhs[0].name[-1]): [int(s.name[-1]) for s in rhs] for lhs, rhs in game.cifzvbcuwqe}
+        req: list = []
+        for t in game.zvojhrjxxm:
+            req.extend(rule.get(int(t.name[-1]), []))
+        return req
+
+    def _distance(game):
+        req = _required_editable(game)
+        cur = [_val(s) for s in game.ztgmtnnufb]          # current editable values
+        n = min(len(cur), len(req))
+
+        def _cyc(a, b):
+            return min((b - a) % 7, (a - b) % 7)          # cyclic distance over the 7-value wheel
+
+        # SUM of per-glyph cyclic distance (NOT a bare mismatch count): this gives the best-first search
+        # a smooth gradient -- every ACTION1/2 that cycles a glyph TOWARD its target drops the score by 1,
+        # so the search walks straight to the win instead of blindly trying all 6 cycle steps per glyph
+        # (the mismatch-count version exploded at L2's 7 glyphs). The 7x length-gap term keeps L3+ bounded
+        # (editable ALSO expands there -- tree/double_translation -- so the L1/L2 formula leaves a >=7
+        # residual and the search stops rather than false-claiming the unmodelled twist).
+        return float(sum(_cyc(cur[i], req[i]) for i in range(n)) + 7 * abs(len(cur) - len(req)))
 
     def action_labels(env, frame=None, path=None):
         return [json.dumps({"action": a}) for a in (1, 2, 3, 4)]
@@ -187,17 +217,18 @@ def _tr87():
         return frame_hash(grid_of(frame)) if frame is not None else None
 
     def hand_verifier(game, frame=None):
-        # goal-distance = positions not yet at their rule-mapped target value (0 == win). Internal-state
-        # read (the lp85 pattern); routes the best-first search. Guarded so a malformed level never crashes.
+        # goal-distance = summed cyclic distance of each editable glyph to its rule-expanded target
+        # (0 == win). Internal-state read (the lp85 pattern); routes the best-first search. Guarded so a
+        # malformed level never crashes.
         try:
-            return float(_mismatches(game))
+            return _distance(game)
         except Exception:
             return 1000.0
 
     return GameAdapter(
         game="tr87", action_labels=action_labels, apply=apply, state_key=state_key,
         featurize=None, hand_verifier=hand_verifier, warmup_label=None,
-        depth_caps={1: 40, 2: 60, 3: 90, 4: 90, 5: 90}, branch_mode="replay",
+        depth_caps={1: 40, 2: 90, 3: 90, 4: 90, 5: 90}, branch_mode="fresh_env",
     )
 
 
