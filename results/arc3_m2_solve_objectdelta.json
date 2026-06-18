@@ -6,133 +6,117 @@
     "ar25",
     "ka59"
   ],
-  "budget": 160,
-  "explore_steps": 150,
+  "max_expansions": 2500,
+  "explore_steps": 120,
   "random_seed": 0,
-  "goal_oracle_solves": [
+  "bfs_multistep_solves": [],
+  "greedy_solves": [
     "sp80"
   ],
-  "goal_model_solves": [],
-  "goal_direction_sound_model_accuracy_is_the_gap": true,
+  "games_multistep_unlocked_beyond_greedy": [],
   "per_game": [
     {
       "game": "sp80",
-      "goal_model": {
+      "goal_bfs_multistep": {
         "levels_solved": 0,
-        "actions_used": 160,
-        "first_solve_at": null
+        "actions_used": 2500,
+        "first_solve_at": null,
+        "nodes": 2500,
+        "bottleneck": "expansion_bound_exhausted"
       },
-      "goal_oracle": {
+      "goal_oracle_greedy": {
         "levels_solved": 1,
-        "actions_used": 160,
+        "actions_used": 120,
         "first_solve_at": 4
       },
-      "novelty_guided": {
+      "blind": {
         "levels_solved": 0,
-        "actions_used": 160,
+        "actions_used": 120,
         "first_solve_at": null
       },
-      "blind": {
-        "levels_solved": 1,
-        "actions_used": 160,
-        "first_solve_at": 127
-      },
-      "improved_nontrivial_rules": 5,
       "win_trigger": "(5, None)",
       "target_cells": 4096,
-      "goal_oracle_solves": true,
-      "goal_model_solves": false,
-      "goal_oracle_beats_novelty_blind": false
+      "bfs_solves": false,
+      "greedy_solves": true,
+      "multistep_beats_greedy": false
     },
     {
       "game": "cn04",
-      "goal_model": {
+      "goal_bfs_multistep": {
         "levels_solved": 0,
-        "actions_used": 160,
-        "first_solve_at": null
+        "actions_used": 2500,
+        "first_solve_at": null,
+        "nodes": 2500,
+        "bottleneck": "expansion_bound_exhausted"
       },
-      "goal_oracle": {
+      "goal_oracle_greedy": {
         "levels_solved": 0,
-        "actions_used": 160,
-        "first_solve_at": null
-      },
-      "novelty_guided": {
-        "levels_solved": 0,
-        "actions_used": 160,
+        "actions_used": 120,
         "first_solve_at": null
       },
       "blind": {
         "levels_solved": 0,
-        "actions_used": 160,
+        "actions_used": 120,
         "first_solve_at": null
       },
-      "improved_nontrivial_rules": 5,
       "win_trigger": "(5, None)",
       "target_cells": 4096,
-      "goal_oracle_solves": false,
-      "goal_model_solves": false,
-      "goal_oracle_beats_novelty_blind": false
+      "bfs_solves": false,
+      "greedy_solves": false,
+      "multistep_beats_greedy": false
     },
     {
       "game": "ar25",
-      "goal_model": {
+      "goal_bfs_multistep": {
         "levels_solved": 0,
-        "actions_used": 160,
-        "first_solve_at": null
+        "actions_used": 2500,
+        "first_solve_at": null,
+        "nodes": 2500,
+        "bottleneck": "expansion_bound_exhausted"
       },
-      "goal_oracle": {
+      "goal_oracle_greedy": {
         "levels_solved": 0,
-        "actions_used": 160,
-        "first_solve_at": null
-      },
-      "novelty_guided": {
-        "levels_solved": 0,
-        "actions_used": 160,
+        "actions_used": 120,
         "first_solve_at": null
       },
       "blind": {
         "levels_solved": 0,
-        "actions_used": 160,
+        "actions_used": 120,
         "first_solve_at": null
       },
-      "improved_nontrivial_rules": 6,
       "win_trigger": "(2, None)",
       "target_cells": 4096,
-      "goal_oracle_solves": false,
-      "goal_model_solves": false,
-      "goal_oracle_beats_novelty_blind": false
+      "bfs_solves": false,
+      "greedy_solves": false,
+      "multistep_beats_greedy": false
     },
     {
       "game": "ka59",
-      "goal_model": {
+      "goal_bfs_multistep": {
         "levels_solved": 0,
-        "actions_used": 160,
-        "first_solve_at": null
+        "actions_used": 2500,
+        "first_solve_at": null,
+        "nodes": 2500,
+        "bottleneck": "expansion_bound_exhausted"
       },
-      "goal_oracle": {
+      "goal_oracle_greedy": {
         "levels_solved": 0,
-        "actions_used": 160,
-        "first_solve_at": null
-      },
-      "novelty_guided": {
-        "levels_solved": 0,
-        "actions_used": 160,
+        "actions_used": 120,
         "first_solve_at": null
       },
       "blind": {
         "levels_solved": 0,
-        "actions_used": 160,
+        "actions_used": 120,
         "first_solve_at": null
       },
-      "improved_nontrivial_rules": 4,
       "win_trigger": "(4, None)",
       "target_cells": 4096,
-      "goal_oracle_solves": false,
-      "goal_model_solves": false,
-      "goal_oracle_beats_novelty_blind": false
+      "bfs_solves": false,
+      "greedy_solves": false,
+      "multistep_beats_greedy": false
     }
   ],
-  "interpretation": "FOUR arms, real-env-confirmed: goal_ORACLE (goal-direction with the env itself as a perfect 1-step simulator via deepcopy branching) vs goal_MODEL (same goal, but the induced ObjectDeltaModel is the simulator) vs NOVELTY (prior, change/novelty-seeking) vs BLIND. Isolates the two questions the prior measurement conflated: (1) is GOAL-DIRECTION the right idea -- answered by the oracle; (2) is the induced MODEL accurate enough to realize it -- answered by goal_model vs goal_oracle. oracle solves + model does not => goal-direction is sound and model accuracy is the remaining gap (consistent with the dynamics-accuracy findings). oracle ALSO zero => greedy 1-step mismatch-descent is insufficient; the win needs true multi-step planning (Sokoban-class), the deeper M2-v5 wall.",
-  "honest_verdict": "complete_m2_goal_induction_oracle_solves_sp80_model_guided_blocked_by_accuracy",
-  "inference_substrate": "offline_arc_agi3_goal_directed_oracle_and_model_real_env_confirmed"
+  "interpretation": "MULTI-STEP best-first search (best_first_search over deepcopied REAL envs, guided by mismatch-to-target, searching for a level-up) vs the GREEDY 1-step oracle vs BLIND. A level-up in search IS a real win (successors are real-env copies). Tests whether DEEPER search reaches the wins the greedy oracle could not (cn04/ar25/ka59). bfs solves where greedy did not => multi-step planning is the missing piece (the induced world-model must then be accurate enough to run the same search live -- the remaining gap). bfs ALSO zero => the mismatch-to-target heuristic / banked target is insufficient to guide search to the win within the expansion bound (the win config is not reachable from reset / needs a richer goal). best_first_search is the EXISTING planner reused, not a new one.",
+  "honest_verdict": "complete_m2_multistep_planning_zero_target_or_branching_insufficient",
+  "inference_substrate": "offline_arc_agi3_multistep_best_first_search_real_env_confirmed"
 }
