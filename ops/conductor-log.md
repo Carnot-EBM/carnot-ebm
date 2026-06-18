@@ -8742,3 +8742,4 @@ c |
 | 2026-06-18 17:51 UTC | PHASE B2 (ARC NORTH STAR; operator MANDATORY 2026- | OK | 89 passed, 1 warning in 6.31s |
 | 2026-06-18 18:09 UTC | PHASE C (CONTINUOUS SELF-LEARNING; mandated per re | OK | 89 passed, 1 warning in 7.72s |
 | 2026-06-18 18:25 UTC | PHASE D (CROSS-DOMAIN DETECTION CALIBRATION + POOL | OK | 88 passed, 1 warning in 6.22s |
+| 2026-06-18 18:42 UTC | PHASE E1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 105 passed, 1 warning in 7.23s |
