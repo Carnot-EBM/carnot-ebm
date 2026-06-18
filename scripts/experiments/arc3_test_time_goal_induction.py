@@ -131,7 +131,34 @@ def _movers_key(grid, movers, H):
     return tuple(parts)
 
 
-def _pieces_key(grid, min_size=4, max_size=30):
+def active_colors(transitions, min_changes=3):
+    """Colours whose piece-objects actually CHANGE (move/recolor/appear) under actions -- the agent +
+    interactables. Pure-static decoration colours are excluded. RELEVANCE FILTER: only these colours
+    go into the state key, so static clutter does not fragment the search. (Returns the set of colours;
+    if the win genuinely involves many active objects, this set stays large -- an honest signal that
+    relevance filtering cannot collapse that game.)"""
+    from collections import Counter
+    from carnot.agentic.arc_world_model_dsl import _color_components, _background
+
+    def pcs(g):
+        bg = _background(g); out = set()
+        for color in set(int(v) for v in np.unique(g)) - {bg}:
+            for comp in _color_components(g, color):
+                if 4 <= len(comp) <= 30:
+                    ys = [y for y, _ in comp]; xs = [x for _, x in comp]
+                    out.add((color, int(round(float(np.mean(ys)))), int(round(float(np.mean(xs))))))
+        return out
+    ch = Counter()
+    for t in transitions:
+        g0, g1 = np.asarray(t.grid), np.asarray(t.next_grid)
+        if np.array_equal(g0, g1):
+            continue
+        for pc in pcs(g0) ^ pcs(g1):
+            ch[pc[0]] += 1
+    return {c for c, n in ch.items() if n >= min_changes}
+
+
+def _pieces_key(grid, min_size=4, max_size=30, only_colors=None):
     """A state key = the positions of all PIECE-sized objects (size band excludes big walls/frames).
     Captures the agent AND a pushable block WITHOUT having to observe the block move first (random
     explore rarely pushes it, so it never registers as a 'mover'). Static pieces are constant -> no
@@ -139,8 +166,11 @@ def _pieces_key(grid, min_size=4, max_size=30):
     from carnot.agentic.arc_world_model_dsl import _color_components, _background
     g = np.asarray(grid)
     bg = _background(g)
+    cols = set(int(v) for v in np.unique(g)) - {bg}
+    if only_colors is not None:
+        cols &= set(only_colors)                        # RELEVANCE FILTER: track only active colours
     parts = []
-    for color in set(int(v) for v in np.unique(g)) - {bg}:
+    for color in cols:
         for comp in _color_components(g, color):
             if min_size <= len(comp) <= max_size:
                 ys = [y for y, _ in comp]; xs = [x for _, x in comp]
@@ -149,7 +179,7 @@ def _pieces_key(grid, min_size=4, max_size=30):
 
 
 def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000, movers=None,
-                            key_mode="agent", clicks=False):
+                            key_mode="agent", clicks=False, relevant_colors=None):
     """CURIOUS/DIRECTED exploration: BFS over the reachable AGENT-POSITION graph (dedup on the agent's
     centroid, not the full grid), trying every action at each newly-reached position, until a level-up.
     For navigation/movement games the agent position is the state variable that matters, so covering
@@ -171,7 +201,7 @@ def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000
         #   state space of multi-object navigation puzzles, so it is opt-in (the granularity is genuinely
         #   game-dependent; the principled fix is to ESCALATE granularity only when 'agent' search dries up).
         if key_mode == "pieces":
-            pk = _pieces_key(grid)
+            pk = _pieces_key(grid, only_colors=relevant_colors)   # relevance-filtered to active colours
             if pk:
                 return ("pieces",) + pk
         if agent is not None:
@@ -297,6 +327,7 @@ def run_game(game, explore_budget, max_exp, seed, curious=True):
     movers = identify_movers(explore_trans)
     key_used = None
     clicks_used = False
+    rec_rel = None
     if curious:
         # ADAPTIVE: minimal AGENT-position key + keyboard first (navigation, no over-fragmentation);
         # if it dries up, ESCALATE to the multi-object PIECES key WITH piece-centroid CLICKS (the
@@ -305,15 +336,18 @@ def run_game(game, explore_budget, max_exp, seed, curious=True):
                                          max_expansions=explore_budget, key_mode="agent")
         key_used = "agent"
         if prewin is None:
+            rel = active_colors(explore_trans)          # RELEVANCE FILTER: only active (changing) colours
             prewin = curious_explore_for_win(arc, game, agent, GameAction, H,
-                                             max_expansions=explore_budget, key_mode="pieces", clicks=True)
-            key_used, clicks_used = "pieces_clicks_escalated", True
+                                             max_expansions=explore_budget, key_mode="pieces",
+                                             clicks=True, relevant_colors=rel)
+            key_used, clicks_used = "pieces_clicks_relevance_escalated", True
+            rec_rel = sorted(int(c) for c in rel)
     else:
         prewin = explore_for_win(arc, game, GameAction, explore_budget, seed)
     rec = {"game": game, "explore_mode": ("curious_adaptive_bfs" if curious else "random"),
            "state_key_used": key_used,
            "agent": (None if agent is None else {"color": agent["color"]}),
-           "clicks_used": clicks_used,
+           "clicks_used": clicks_used, "relevant_colors": rec_rel,
            "movers": [m["color"] for m in movers], "win_stumbled": prewin is not None}
     if prewin is None or agent is None:
         rec["verdict"] = "no_win_stumbled_or_no_agent_cannot_induce_goal"
