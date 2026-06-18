@@ -18,18 +18,20 @@ class _Sprite:
 
 
 class _Game:
-    """Synthetic tr87 game state: rule A4<->B3, A2<->B2, A3<->B6, A5<->B5, A1<->B1 (the L1 rule map)."""
+    """Synthetic tr87 game state. `rules` is [(lhs_val, [rhs_vals...])] -- the visible rewrite grid that
+    maps each TARGET-series glyph to a SEQUENCE of editable-series glyphs (1-to-1 at L1, 1-to-many at L2).
+    `current`/`target` are the editable/target value lists."""
 
-    def __init__(self, current_b, target_a):
-        self.cifzvbcuwqe = [
-            ([_Sprite("nxA4")], [_Sprite("nxB3")]),
-            ([_Sprite("nxA2")], [_Sprite("nxB2")]),
-            ([_Sprite("nxA3")], [_Sprite("nxB6")]),
-            ([_Sprite("nxA5")], [_Sprite("nxB5")]),
-            ([_Sprite("nxA1")], [_Sprite("nxB1")]),
-        ]
-        self.ztgmtnnufb = [_Sprite(f"nxB{v}") for v in current_b]   # current editable values
-        self.zvojhrjxxm = [_Sprite(f"nxA{v}") for v in target_a]    # target values
+    def __init__(self, current, target, rules):
+        self.cifzvbcuwqe = [([_Sprite(f"nxX{lhs}")], [_Sprite(f"nxY{v}") for v in rhs]) for lhs, rhs in rules]
+        self.ztgmtnnufb = [_Sprite(f"nxY{v}") for v in current]     # current editable values
+        self.zvojhrjxxm = [_Sprite(f"nxX{v}") for v in target]      # target values
+
+
+# L1 rule map (1-to-1): A4->[3], A2->[2], A3->[6], A5->[5], A1->[1]
+_L1_RULES = [(4, [3]), (2, [2]), (3, [6]), (5, [5]), (1, [1])]
+# L2 rule map (1-to-many expansion): B1->[3], B3->[1,5,1], B5->[2,2], B7->[7]
+_L2_RULES = [(1, [3]), (3, [1, 5, 1]), (5, [2, 2]), (7, [7])]
 
 
 def test_tr87_registered_and_structural():
@@ -38,7 +40,7 @@ def test_tr87_registered_and_structural():
     assert ad is not None and ad.game == "tr87"
     for cb in (ad.action_labels, ad.apply, ad.state_key, ad.hand_verifier):
         assert callable(cb)
-    assert ad.branch_mode == "replay"          # tr87 reset is idempotent + config is prefix-deterministic
+    assert ad.branch_mode == "fresh_env"       # gotcha #7: win-animation state leaks across reuse-one-env
     assert ad.featurize is None
 
 
@@ -50,18 +52,39 @@ def test_tr87_action_labels_are_four_keyboard_moves():
     assert acts == [1, 2, 3, 4]                # ACTION1/2 cycle value, ACTION3/4 move selector
 
 
-def test_tr87_hand_verifier_counts_rule_mapped_mismatches():
+def test_tr87_hand_verifier_l1_rule_mapped_cyclic_distance():
     ad = adapters.get_adapter("tr87")
-    # target A4,A2,A3,A5,A1 -> required B3,B2,B6,B5,B1 (via the rule map)
+    # L1 (1-to-1): target A4,A2,A3,A5,A1 -> required editable 3,2,6,5,1 (via the rule map)
     target = [4, 2, 3, 5, 1]
-    solved = _Game(current_b=[3, 2, 6, 5, 1], target_a=target)
+    solved = _Game(current=[3, 2, 6, 5, 1], target=target, rules=_L1_RULES)
     assert ad.hand_verifier(solved) == 0.0     # all positions at the rule-mapped target -> win
 
-    one_off = _Game(current_b=[3, 2, 6, 5, 7], target_a=target)   # last glyph wrong (7 != B1)
-    assert ad.hand_verifier(one_off) == 1.0
+    one_off = _Game(current=[3, 2, 6, 5, 7], target=target, rules=_L1_RULES)  # last 7, want 1
+    assert ad.hand_verifier(one_off) == 1.0    # 7 -> 1 is one cyclic step on the 7-wheel
 
-    start = _Game(current_b=[1, 7, 2, 4, 6], target_a=target)     # the actual L1 start config
-    assert ad.hand_verifier(start) == 5.0      # all five positions wrong at reset
+    start = _Game(current=[1, 7, 2, 4, 6], target=target, rules=_L1_RULES)    # the real L1 start
+    # cyclic dists: |1->3|=2, |7->2|=2, |2->6|=3, |4->5|=1, |6->1|=2  => 10
+    assert ad.hand_verifier(start) == 10.0
+
+
+def test_tr87_hand_verifier_l2_one_to_many_expansion():
+    ad = adapters.get_adapter("tr87")
+    # L2 (1-to-many): target B1,B3,B5,B7 expands to [3]+[1,5,1]+[2,2]+[7] = [3,1,5,1,2,2,7]
+    target = [1, 3, 5, 7]
+    solved = _Game(current=[3, 1, 5, 1, 2, 2, 7], target=target, rules=_L2_RULES)
+    assert ad.hand_verifier(solved) == 0.0     # editable == rule-expanded target -> win
+
+    one_off = _Game(current=[3, 1, 5, 1, 2, 2, 6], target=target, rules=_L2_RULES)  # last 6, want 7
+    assert ad.hand_verifier(one_off) == 1.0    # 6 -> 7 is one cyclic step
+
+
+def test_tr87_hand_verifier_length_gap_bounds_unmodelled_levels():
+    ad = adapters.get_adapter("tr87")
+    # L3+ (the editable ALSO expands): editable count < expansion count -> a >=7 residual the L1/L2
+    # formula cannot zero, so the search stops rather than false-claiming the unmodelled twist.
+    target = [1, 3]                            # expands to [3] + [1,5,1] = 4 required, but only 2 editable
+    g = _Game(current=[3, 1], target=target, rules=_L2_RULES)
+    assert ad.hand_verifier(g) >= 7.0
 
 
 def test_tr87_hand_verifier_never_crashes_on_malformed_game():
