@@ -1,0 +1,146 @@
+{
+  "experiment": "arc3_logo_induction_transfer",
+  "games": [
+    "ar25",
+    "cn04",
+    "ft09",
+    "ka59",
+    "sc25",
+    "tr87"
+  ],
+  "engine_sources": [
+    "ar25",
+    "cn04",
+    "ft09",
+    "ka59",
+    "sc25",
+    "tr87"
+  ],
+  "mean_self_changed_acc": 0.206,
+  "mean_transfer_gain_over_identity": 0.002,
+  "n_games_with_whole_engine_transfer": 0,
+  "whole_engine_transfer_exists": false,
+  "similar_pair_focus": {
+    "pair": [
+      "ar25",
+      "ka59"
+    ],
+    "rationale": "both E3 select-and-move-object-to-goal solves (same mechanic class)",
+    "ar25_to_ka59_changed_acc": 0.0,
+    "ka59_to_ar25_changed_acc": 0.0,
+    "ka59_self_changed_acc": 0.0,
+    "ar25_self_changed_acc": 0.8,
+    "ka59_identity_changed_acc": 0.0,
+    "ar25_identity_changed_acc": 0.0,
+    "dissimilar_control_into_ka59": 0.003,
+    "dissimilar_control_into_ar25": 0.0,
+    "similar_pair_beats_dissimilar": false
+  },
+  "per_game": [
+    {
+      "held_out_game": "ar25",
+      "n_changed": 75,
+      "identity_changed_acc": 0.0,
+      "identity_overall_acc": 0.2,
+      "self_changed_acc": 0.8,
+      "best_cross_changed_acc": 0.0,
+      "best_cross_source": "cn04",
+      "transfer_gain_over_identity": 0.0,
+      "cross_matrix_changed": {
+        "cn04": 0.0,
+        "ft09": 0.0,
+        "ka59": 0.0,
+        "sc25": 0.0,
+        "tr87": 0.0
+      }
+    },
+    {
+      "held_out_game": "cn04",
+      "n_changed": 78,
+      "identity_changed_acc": 0.0,
+      "identity_overall_acc": 0.151,
+      "self_changed_acc": 0.0,
+      "best_cross_changed_acc": 0.0,
+      "best_cross_source": "ar25",
+      "transfer_gain_over_identity": 0.0,
+      "cross_matrix_changed": {
+        "ar25": 0.0,
+        "ft09": 0.0,
+        "ka59": 0.0,
+        "sc25": 0.0,
+        "tr87": 0.0
+      }
+    },
+    {
+      "held_out_game": "ft09",
+      "n_changed": 0,
+      "identity_changed_acc": NaN,
+      "identity_overall_acc": 1.0,
+      "self_changed_acc": null,
+      "best_cross_changed_acc": null,
+      "best_cross_source": "ar25",
+      "transfer_gain_over_identity": null,
+      "cross_matrix_changed": {
+        "ar25": NaN,
+        "cn04": NaN,
+        "ka59": NaN,
+        "sc25": NaN,
+        "tr87": NaN
+      }
+    },
+    {
+      "held_out_game": "ka59",
+      "n_changed": 83,
+      "identity_changed_acc": 0.0,
+      "identity_overall_acc": 0.077,
+      "self_changed_acc": 0.0,
+      "best_cross_changed_acc": 0.012,
+      "best_cross_source": "cn04",
+      "transfer_gain_over_identity": 0.012,
+      "cross_matrix_changed": {
+        "ar25": 0.0,
+        "cn04": 0.012,
+        "ft09": 0.0,
+        "sc25": 0.0,
+        "tr87": 0.0
+      }
+    },
+    {
+      "held_out_game": "sc25",
+      "n_changed": 65,
+      "identity_changed_acc": 0.0,
+      "identity_overall_acc": 0.312,
+      "self_changed_acc": 0.231,
+      "best_cross_changed_acc": 0.0,
+      "best_cross_source": "ar25",
+      "transfer_gain_over_identity": 0.0,
+      "cross_matrix_changed": {
+        "ar25": 0.0,
+        "cn04": 0.0,
+        "ft09": 0.0,
+        "ka59": 0.0,
+        "tr87": 0.0
+      }
+    },
+    {
+      "held_out_game": "tr87",
+      "n_changed": 201,
+      "identity_changed_acc": 0.0,
+      "identity_overall_acc": 0.0,
+      "self_changed_acc": 0.0,
+      "best_cross_changed_acc": 0.0,
+      "best_cross_source": "ar25",
+      "transfer_gain_over_identity": 0.0,
+      "cross_matrix_changed": {
+        "ar25": 0.0,
+        "cn04": 0.0,
+        "ft09": 0.0,
+        "ka59": 0.0,
+        "sc25": 0.0
+      }
+    }
+  ],
+  "interpretation": "self_changed_acc = can our own induced engine model a game's real dynamics. best_cross_changed_acc = the transfer ceiling: the best OTHER game's engine on this game's dynamics. transfer_gain = best_cross - identity (identity never predicts a change, so a positive gain is real whole-engine transfer). If the ceiling is ~identity across games, whole-engine reuse does NOT transfer and the offline->live bridge must be a cross-game INDUCER / mechanic-PRIMITIVE library, not engine reuse.",
+  "honest_verdict": "complete_logo_transfer_no_whole_engine_transfer_bridge_must_be_primitive_level",
+  "inference_substrate": "offline_sim_no_quota_proposer_free_engine_cross_application"
+}
