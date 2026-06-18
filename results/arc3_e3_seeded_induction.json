@@ -1,0 +1,54 @@
+{
+  "experiment": "arc3_e3_seeded_induction",
+  "games": [
+    "cn04"
+  ],
+  "per_game": [
+    {
+      "game": "cn04",
+      "true_win_available": true,
+      "baseline": {
+        "label": "baseline_explore_only",
+        "dataset_n": 80,
+        "dataset_wins": 0,
+        "induce": {
+          "ok": true,
+          "msg": "wrote+loaded proto world_model.py"
+        },
+        "engine_acc": 0.1,
+        "win_pred_fires": false,
+        "plan_found": false,
+        "plan_grounded": false,
+        "exec_levelup": 0,
+        "verdict": "EXPLORE_SAW_NO_WIN"
+      },
+      "seeded": {
+        "label": "seeded_explore_plus_banked_wins",
+        "dataset_n": 93,
+        "dataset_wins": 1,
+        "induce": {
+          "ok": true,
+          "msg": "wrote+loaded proto world_model.py"
+        },
+        "engine_acc": 0.011,
+        "win_pred_fires": false,
+        "plan_found": false,
+        "plan_grounded": false,
+        "exec_levelup": 0,
+        "verdict": "ENGINE_INACCURATE_1%"
+      },
+      "seeding_moved_a_stage": {
+        "dataset_wins": "0->1",
+        "win_pred_fires": "False->False",
+        "plan_found": "False->False",
+        "plan_grounded": "False->False",
+        "exec_levelup": "0->0",
+        "verdict": "EXPLORE_SAW_NO_WIN->ENGINE_INACCURATE_1%"
+      }
+    }
+  ],
+  "any_live_levelup": false,
+  "any_stage_moved": true,
+  "honest_verdict": "complete_seeded_induction_stage_moved_no_levelup",
+  "inference_substrate": "offline_sim_no_quota_e3_local_gguf_induction_port8920"
+}
