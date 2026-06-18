@@ -55,12 +55,15 @@ def _build_policy(kind: str, game: str):
     cascade (graph_explore -> E3 executable-world-model induction on stall) that make_carnot_agent runs."""
     if kind == "e3":
         return E3AgentPolicy(game)
-    if kind == "explorer_vh":                               # BRIDGE: explorer A*-routed by the cross-game value head
+    if kind in ("explorer_vh", "explorer_bf"):              # BRIDGE: value-head-routed explorer
         global _VALUE_HEAD
         if _VALUE_HEAD is None:
             _VALUE_HEAD = load_cross_game_value_head()
+        # explorer_bf = BEST-FIRST search (the graph_explore form where the value head's routing helped,
+        # unlocking cn04); explorer_vh = the default depth-first-ride with an A*-frontier nudge.
+        mode = "best_first" if kind == "explorer_bf" else "depth_first_ride"
         return CarnotAgentPolicy(game, {}, force_explore=True, value_head=_VALUE_HEAD,
-                                 value_weight=_VALUE_WEIGHT)
+                                 value_weight=_VALUE_WEIGHT, search_mode=mode)
     return CarnotAgentPolicy(game, {}, force_explore=True)   # force_explore -> ignores any banked plan
 
 

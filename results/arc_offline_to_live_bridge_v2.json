@@ -18,6 +18,14 @@
     "BEST-FIRST live explorer: refactor StepwiseExplorer to the best-first form (like graph_explore_solve_v2) so the value-head routing that unlocked cn04 transfers to the SUBMITTED agent. This is the way to cash the bridge into live.",
     "STRONGER world-model induction: E3 with gemma-4-12B closed 0/6; a bigger proposer (gemma-4-31B / Qwen3.6-35B) and/or RFT the proposer on our banked solves -- the deep-game lever (tn36/tr87)."
   ],
-  "safe_state": "the SUBMITTED agent (make_carnot_agent -> E3AgentPolicy) is pure-BFS (value_weight=0 default); the value-routing is opt-in via the eval's --value-weight. No regression to the default agent.",
-  "inference_substrate": "offline_sim_no_quota_frame_only_live_agent"
+  "safe_state": "submitted agent (make_carnot_agent -> E3AgentPolicy) unchanged: pure BFS 8/32 baseline (value_head=None, value_weight=0, search_mode=depth_first_ride defaults). All value-routing + best-first are opt-in via the eval (--policy explorer_vh/explorer_bf, --value-weight). No regression.",
+  "inference_substrate": "offline_sim_no_quota_frame_only_live_agent",
+  "best_first_live_explorer": {
+    "v2_head_weight5": "0/32 (TOTAL COLLAPSE: driving best-first by the weak head routes into dead-ends; loses even the easy BFS wins). cn04 did NOT transfer."
+  },
+  "conclusive_finding": "The cheap CROSS-GAME LINEAR value head cannot route the live search. Mapped the full space: v1/v2 features x {frontier-override, depth-primary tiebreak, A*-nudge, best-first-driver}. NONE beats the 8/32 BFS baseline; the MORE control the head gets over search order, the WORSE (override 3, A*-nudge 6, best-first 0) -- proving the head is actively misleading, not merely weak. The search STRUCTURE (best-first) was the right structural idea (it routed cn04 in graph_explore offline), but the value-model CAPACITY/QUALITY is the binding constraint live.",
+  "next_levers_refined": [
+    "REAL learned value model (TRM / grid-embedding CNN) with capacity + MUCH more data -- the linear-on-5-or-41-features approach is fundamentally insufficient to route a search. This is the TRM slot, a GPU training build, fed by the (now-built) offline solve corpus.",
+    "STRONGER world-model induction (bigger proposer gemma-4-31B/Qwen3.6-35B / RFT the proposer on our banked solves) -- the deep-game lever (tn36/tr87); E3 with gemma-4-12B closed 0/6."
+  ]
 }

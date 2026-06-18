@@ -77,7 +77,8 @@ class StepwiseExplorer:
     when fully explored."""
 
     def __init__(self, target_levels: int = 1, max_depth: int = 45, hud_mask=None,
-                 value_head=None, value_weight: float = 0.0) -> None:
+                 value_head=None, value_weight: float = 0.0,
+                 search_mode: str = "depth_first_ride") -> None:
         self.hud_mask = hud_mask             # E1: mask step-counter cells out of node identity
         # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
         # closer). Trained offline on ALL banked solves (the offline->live distillation). The frontier is
@@ -86,6 +87,12 @@ class StepwiseExplorer:
         # toward predicted-closer states (the A* routing that unlocked cn04 in graph_explore_solve_v2).
         self.value_head = value_head
         self.value_weight = float(value_weight)
+        # SEARCH MODE: "depth_first_ride" (default, proven) rides the current branch depth-first (action-
+        # efficient; load-bearing for the deep wins lp85/sp80). "best_first" ALWAYS expands the globally-
+        # best A*-value frontier (depth + value_weight*value) -- this is the graph_explore_solve_v2 search
+        # form where the cross-game value head's routing actually helped (it unlocked cn04). best_first
+        # only beats the ride when the value head is good enough to route the deep wins itself; measure it.
+        self.search_mode = search_mode
         self.graph: dict[str, dict] = {}     # hash -> {"path": [...], "untested": [...], "value": float}
         self.root: Optional[str] = None
         self.cur: Optional[str] = None
@@ -215,22 +222,26 @@ class StepwiseExplorer:
             return self._serve()
         over = latest is not None and self._game_over(latest)
         cur_node = self.graph.get(self.cur) if not over else None
-        # 1) DEPTH-first ride: expand the current state's untested SALIENT actions while
-        #    under the depth cap (no nav cost; reaches the deep wins lp85/sp80 need —
-        #    BFS-order regressed those, so the deep-ride stays the search order).
-        if cur_node and cur_node["untested"] and len(cur_node["path"]) < self.max_depth:
+        # 1) DEPTH-first ride (search_mode="depth_first_ride", default): expand the current state's
+        #    untested SALIENT actions while under the depth cap (no nav cost; reaches the deep wins
+        #    lp85/sp80 need — BFS-order regressed those). best_first SKIPS this and always expands the
+        #    globally-best A*-value frontier (step 2) so the value head drives the search order.
+        if (self.search_mode == "depth_first_ride" and cur_node and cur_node["untested"]
+                and len(cur_node["path"]) < self.max_depth):
             a = cur_node["untested"].pop(0)
             self.awaiting = {"origin": self.cur, "action": a["action"], "data": a["data"]}
             return (a["action"], a["data"])
-        # 2) Current exhausted / dead-end / depth-capped: go to the shallowest frontier,
-        #    navigating via known forward edges if reachable (FRONTIER-DISTANCE, cheap)
-        #    else RESET + replay from root. This only changes nav COST, not search order.
+        # 2) Expand the best frontier (A*-value order). In best_first this is the primary step; in
+        #    depth_first_ride it fires when the current node is exhausted / dead-end / depth-capped.
         th = self._frontier()
         if th is None:
             self.explored_out = True
             return (None, None)
         node = self.graph[th]
         a = node["untested"].pop(0)
+        if th == self.cur and not over:        # best frontier IS the current state -> expand in place (no nav)
+            self.awaiting = {"origin": self.cur, "action": a["action"], "data": a["data"]}
+            return (a["action"], a["data"])
         fwd = self._shortest_path(self.cur, th) if not over else None
         if fwd is not None:
             self.pending = [{"kind": s["action"], "data": s["data"], "probe": False} for s in fwd]
@@ -278,7 +289,8 @@ class CarnotAgentPolicy:
 
     def __init__(self, game_id: str, solutions: Optional[dict] = None,
                  target_level: Optional[int] = None, force_explore: bool = False,
-                 hud_mask=None, value_head=None, value_weight: float = 0.0) -> None:
+                 hud_mask=None, value_head=None, value_weight: float = 0.0,
+                 search_mode: str = "depth_first_ride") -> None:
         self.short = str(game_id).split("-", 1)[0]
         sols = solutions if solutions is not None else load_solutions()
         self.plan = [] if force_explore else sols.get(self.short, [])
@@ -290,7 +302,8 @@ class CarnotAgentPolicy:
         # value_weight A*-route its frontier when provided -- the offline->live bridge).
         self.explorer: Optional[StepwiseExplorer] = (
             None if self.has_plan else
-            StepwiseExplorer(hud_mask=hud_mask, value_head=value_head, value_weight=value_weight))
+            StepwiseExplorer(hud_mask=hud_mask, value_head=value_head, value_weight=value_weight,
+                             search_mode=search_mode))
 
     def next_move(self, frames, latest_frame) -> tuple:
         """-> ("RESET", None) | (action_id:int, data:dict|None) | (None, None)."""
