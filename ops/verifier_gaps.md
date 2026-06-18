@@ -1574,3 +1574,18 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - Residual mismatch class: `lp85_l5_search_path_not_offline_reproduced_reset_replay_gap`
 - Reproducibility checksum: `bce9878e3d5396e127ea1342fd0452b841b61935eb539e1da466055962842a90`
 - Gap: lp85 search reached L5, but reset replay via `arc_solver_kit.reproduce()` only reproduced through L4, so L5 does not count.
+
+### 2026-06-17 Exp4362 ar25 named hidden-rule residual gap
+- Spec: REQ-PHASE4-086 / SCENARIO-PHASE4-086
+- Best verifier accuracy: 0.8688
+- Residual gap class: `ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap`
+- Reproducibility checksum: `3f26809ef8c93a4f0dab633c35a36a516ffe4cc1b7d2d49fb67982681570c77d`
+- Gap: bounded explore-verify-plan did not reproduce a new level beyond L1.
+
+### 2026-06-17 Exp4362 ka59 named hidden-rule residual gap
+- Spec: REQ-PHASE4-086 / SCENARIO-PHASE4-086
+- Best verifier accuracy: 0.6438
+- Residual gap class: `ka59_l2_hidden_step_counter_hud_register_gap`
+- Reproducibility checksum: `3f26809ef8c93a4f0dab633c35a36a516ffe4cc1b7d2d49fb67982681570c77d`
+- Gap: bounded explore-verify-plan did not reproduce a new level beyond L1.
+

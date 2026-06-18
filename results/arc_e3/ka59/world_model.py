@@ -10,6 +10,7 @@ WALL = 15
 BLOCK_BORDER = 14
 SELECTED = 0
 UNSELECTED_INITIAL = 5
+STEP_COUNTER_TOTAL = 100
 
 
 def _blocks(grid):
@@ -162,9 +163,18 @@ def _tick(out):
     if out.ndim != 2 or out.shape[0] < 64 or out.shape[1] < 64:
         return
     row = out[63]
-    filled = np.flatnonzero(row == TARGET)
-    if filled.size:
-        row[int(filled[-1])] = SELECTED
+    filled_count = int(np.count_nonzero(row == TARGET))
+    if filled_count <= 0:
+        return
+    if filled_count >= 64:
+        next_count = round(64 * (STEP_COUNTER_TOTAL - 1) / STEP_COUNTER_TOTAL)
+    else:
+        max_hidden_steps = int((filled_count + 0.5) * STEP_COUNTER_TOTAL / 64)
+        next_count = round(64 * max(max_hidden_steps - 1, 0) / STEP_COUNTER_TOTAL)
+    next_count = max(0, min(64, int(next_count)))
+    row[:] = SELECTED
+    if next_count:
+        row[:next_count] = TARGET
 
 
 def _click_select(out, data):

@@ -1,6 +1,57 @@
 import numpy as np
 
 
+INITIAL_SELECTED_TOP = 15
+INITIAL_SELECTED_LEFT = 18
+
+
+def _largest_box(arr, color):
+    h, w = arr.shape
+    visited = np.zeros((h, w), dtype=bool)
+    best = None
+    for sy in range(h):
+        for sx in range(w):
+            if visited[sy, sx] or arr[sy, sx] != color:
+                continue
+            stack = [(sy, sx)]
+            visited[sy, sx] = True
+            min_y = max_y = sy
+            min_x = max_x = sx
+            area = 0
+            while stack:
+                y, x = stack.pop()
+                area += 1
+                min_y = min(min_y, y)
+                max_y = max(max_y, y)
+                min_x = min(min_x, x)
+                max_x = max(max_x, x)
+                for ny, nx in ((y - 1, x), (y + 1, x), (y, x - 1), (y, x + 1)):
+                    if 0 <= ny < h and 0 <= nx < w and not visited[ny, nx] and arr[ny, nx] == color:
+                        visited[ny, nx] = True
+                        stack.append((ny, nx))
+            if (max_y - min_y + 1) > 1 and (max_x - min_x + 1) > 1 and (
+                best is None or area > best[4]
+            ):
+                best = (min_y, max_y, min_x, max_x, area)
+    return best
+
+
+def _visible_undo_action(arr):
+    box = _largest_box(arr, 5)
+    if box is None:
+        return None
+    min_y, _max_y, min_x, _max_x, _area = box
+    if min_y < INITIAL_SELECTED_TOP:
+        return 2
+    if min_y > INITIAL_SELECTED_TOP:
+        return 1
+    if min_x < INITIAL_SELECTED_LEFT:
+        return 4
+    if min_x > INITIAL_SELECTED_LEFT:
+        return 3
+    return None
+
+
 def engine(grid, action, data):
     original = np.asarray(grid)
     out = np.array(grid, copy=True)
@@ -11,15 +62,18 @@ def engine(grid, action, data):
     if h == 0 or w == 0:
         return out
 
-    if action in (1, 2, 3, 4, 5):
+    if action == 7:
+        undo_action = _visible_undo_action(out)
+        if undo_action is None:
+            return out
+        action = undo_action
+    elif action in (1, 2, 3, 4, 5):
         for y in range(h):
             if out[y, w - 1] != 5:
                 out[y, w - 1] = 5
                 break
-    elif action != 7:
-        return out
     else:
-        pass
+        return out
 
     if action == 5:
         return out

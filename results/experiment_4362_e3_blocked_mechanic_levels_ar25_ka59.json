@@ -1,0 +1,269 @@
+{
+  "duration_s": 1.419,
+  "experiment": "experiment_4362_e3_blocked_mechanic_levels_ar25_ka59",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed (success_e3_ar25_ka59_<n>_reproduced or complete_e3_ar25_ka59_partial). Any new reproduced level and an honest partial per game are BOTH progress.",
+    "new_levels_reproduced": "BARE int: NEW levels offline-reproduced across ar25+ka59 -- the incremental-progress unit.",
+    "per_game_scorecard": "list of {game, prior_best_level, new_reproduced_level, verifier_accuracy, offline_reproduced, residual_gap_class} -- the per-game record for ar25/ka59.",
+    "preconditions_checked": "Records the offline-env presence per game + harness import + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the induction + exploration + planning.",
+    "reproducibility_checksum": "Hash of the extended models + the plans + the reproduce() results; lets a third party re-run.",
+    "reproducible_total_levels": "BARE int: the ARC reproducible-level count after this task (>= the prior 26) -- the monotonic north-star accuracy signal.",
+    "verifier_is_oracle": "BARE bool=true -- the SOLVEs are execution-grounded; ARC progress, NOT a moat headline.",
+    "world_model_paths": "list[str]: results/arc_e3/{ar25,ka59}/world_model.py -- the extended models ARE the deliverables."
+  },
+  "honest_verdict": "complete_e3_ar25_ka59_partial",
+  "method": "offline_e3_named_hidden_rule_explore_verify_plan",
+  "new_levels_reproduced": 0,
+  "per_game_scorecard": [
+    {
+      "checkpoint_status": "honest_partial_no_new_level_reproduced",
+      "game": "ar25",
+      "new_reproduced_level": 1,
+      "offline_reproduced": false,
+      "plan": [
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2"
+      ],
+      "prior_best_level": 1,
+      "reproduce_result": {
+        "claimed_level": 2,
+        "game": "ar25",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": false
+      },
+      "residual_gap_class": "ar25_l2_hidden_rule_delta_not_reproduced_action7_undo_stack_gap",
+      "targeted_gap_lemmas": [
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": true
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": false
+        },
+        {
+          "action": 7,
+          "changed_cells": 78,
+          "level_delta": 0,
+          "predicted_changed_cells": 92,
+          "verifier_gated": false
+        },
+        {
+          "action": 7,
+          "changed_cells": 78,
+          "level_delta": 0,
+          "predicted_changed_cells": 92,
+          "verifier_gated": false
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": true
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": true
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": true
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": false
+        }
+      ],
+      "verifier_accuracy": 0.86875,
+      "verifier_accuracy_per_round": [
+        0.86875
+      ],
+      "world_model_path": "results/arc_e3/ar25/world_model.py"
+    },
+    {
+      "checkpoint_status": "honest_partial_no_new_level_reproduced",
+      "game": "ka59",
+      "new_reproduced_level": 1,
+      "offline_reproduced": false,
+      "plan": [
+        "4",
+        "4",
+        "4",
+        "3",
+        "2",
+        "3",
+        "3",
+        "3",
+        "C:1",
+        "1",
+        "4"
+      ],
+      "prior_best_level": 1,
+      "reproduce_result": {
+        "claimed_level": 2,
+        "game": "ka59",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": false
+      },
+      "residual_gap_class": "ka59_l2_hidden_step_counter_hud_register_gap",
+      "targeted_gap_lemmas": [
+        {
+          "action": 1,
+          "changed_cells": 19,
+          "hud_count_after": 63,
+          "hud_count_before": 64,
+          "hud_count_predicted": 63,
+          "level_delta": 0,
+          "predicted_changed_cells": 19,
+          "verifier_gated": true
+        },
+        {
+          "action": 6,
+          "changed_cells": 1,
+          "hud_count_after": 62,
+          "hud_count_before": 63,
+          "hud_count_predicted": 63,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": false
+        },
+        {
+          "action": 4,
+          "changed_cells": 1,
+          "hud_count_after": 61,
+          "hud_count_before": 62,
+          "hud_count_predicted": 61,
+          "level_delta": 0,
+          "predicted_changed_cells": 1,
+          "verifier_gated": true
+        },
+        {
+          "action": 1,
+          "changed_cells": 19,
+          "hud_count_after": 60,
+          "hud_count_before": 61,
+          "hud_count_predicted": 61,
+          "level_delta": 0,
+          "predicted_changed_cells": 18,
+          "verifier_gated": false
+        },
+        {
+          "action": 3,
+          "changed_cells": 19,
+          "hud_count_after": 59,
+          "hud_count_before": 60,
+          "hud_count_predicted": 60,
+          "level_delta": 0,
+          "predicted_changed_cells": 18,
+          "verifier_gated": false
+        },
+        {
+          "action": 2,
+          "changed_cells": 19,
+          "hud_count_after": 58,
+          "hud_count_before": 59,
+          "hud_count_predicted": 58,
+          "level_delta": 0,
+          "predicted_changed_cells": 19,
+          "verifier_gated": true
+        },
+        {
+          "action": 4,
+          "changed_cells": 19,
+          "hud_count_after": 57,
+          "hud_count_before": 58,
+          "hud_count_predicted": 58,
+          "level_delta": 0,
+          "predicted_changed_cells": 18,
+          "verifier_gated": false
+        },
+        {
+          "action": 4,
+          "changed_cells": 19,
+          "hud_count_after": 56,
+          "hud_count_before": 57,
+          "hud_count_predicted": 56,
+          "level_delta": 0,
+          "predicted_changed_cells": 19,
+          "verifier_gated": true
+        }
+      ],
+      "verifier_accuracy": 0.64375,
+      "verifier_accuracy_per_round": [
+        0.64375
+      ],
+      "world_model_path": "results/arc_e3/ka59/world_model.py"
+    }
+  ],
+  "preconditions_checked": {
+    "executable_world_model_import": true,
+    "games": {
+      "ar25": {
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/ar25",
+        "offline_env_present": true
+      },
+      "ka59": {
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/ka59",
+        "offline_env_present": true
+      }
+    },
+    "harness_import": true,
+    "leaderboard_submission": false,
+    "research_conductor_modified": false,
+    "solver_kit_import": true,
+    "trm_training_stood_down": true
+  },
+  "random_seed": 4362,
+  "reproducibility_checksum": "3f26809ef8c93a4f0dab633c35a36a516ffe4cc1b7d2d49fb67982681570c77d",
+  "reproducible_total_levels": 32,
+  "spec_refs": [
+    "REQ-PHASE4-086",
+    "SCENARIO-PHASE4-086"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_order": [
+    "ar25",
+    "ka59"
+  ],
+  "verifier_is_oracle": true,
+  "world_model_path_sha256": {
+    "results/arc_e3/ar25/world_model.py": "395b5d9bee22d00991e24ba08919993eadf245d401b9d92d34b17303e315202c",
+    "results/arc_e3/ka59/world_model.py": "66af386734341f09c825aec4671f5262d8b1400e994df04c21044268778bfdb3"
+  },
+  "world_model_paths": [
+    "results/arc_e3/ar25/world_model.py",
+    "results/arc_e3/ka59/world_model.py"
+  ]
+}
