@@ -1,0 +1,457 @@
+{
+  "arc_registry_path": "ops/arc_solve_registry.yaml",
+  "capstone_stamp_fix": {
+    "capstone_aggregation_propagates_oracle_stamp": true,
+    "capstone_aggregation_uses_available_helper": true,
+    "capstone_path": "results/experiment_4379_capstone_v404.json",
+    "capstone_stamp_fix_durable": true,
+    "capstone_verifier_is_oracle": false,
+    "capstone_verifier_is_oracle_honored": true,
+    "circular_moat_overclaim_fired": false,
+    "command": [
+      "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python3",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "--json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4379_capstone_v404.json"
+    ],
+    "flag_count": 0,
+    "flags": [],
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4379_capstone_v404.json\",\n      \"loaded\": true,\n      \"exp_id\": 4379,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete: v404_efficiency_linear_is_settled_arc_levels_34_s3_retired_detector_po\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": []\n    }\n  ],\n  \"flagged_count\": 0\n}\n"
+  },
+  "capstone_stamp_fix_durable": true,
+  "duration_s": 0.647367,
+  "experiment": "experiment_4388_registry_gaps_hygiene_gap4_guard",
+  "field_principles": {
+    "capstone_stamp_fix_durable": "BARE bool: the capstone aggregation still propagates verifier_is_oracle (false for an oracle-distinct moat) -> adversarial_verify.py does NOT fire CIRCULAR_MOAT_OVERCLAIM on a correct capstone.",
+    "gap4_regression_guard_passed": "BARE bool: the ARC oracle-distinct verifier-beats-vote result has not silently regressed.",
+    "honest_verdict": "Terminal-prefixed. Records hygiene reconciled + guard run + stamp fix durable.",
+    "preconditions_checked": "Records the registry/gaps file readability; pre-empts the silent-missing-resource fabrication mode.",
+    "registries_reconciled": "BARE bool: verifier_registry.yaml + verifier_gaps.md + arc_solve_registry.yaml updated with the .405 outcomes (never-prune)."
+  },
+  "gap4_regression_guard": {
+    "exp4333_guard": {
+      "offline_replay": {
+        "arc1_rule_exec": {
+          "gated_pass2": 0.5806,
+          "headroom_recovered": 4,
+          "n": 31,
+          "vote_pass2": 0.4516,
+          "vote_wins_lost": 0
+        },
+        "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+        "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+        "expected": {
+          "arc1_rule_exec": {
+            "gated_pass2": 0.5806,
+            "headroom_recovered": 4,
+            "n": 31,
+            "vote_pass2": 0.4516,
+            "vote_wins_lost": 0
+          }
+        },
+        "no_codex_calls": true,
+        "no_gguf_inference": true,
+        "regression_guard_passed": true,
+        "trm_training_touched": false
+      },
+      "prior_artifact_path": "results/experiment_4321_verifier_registry_gaps_hygiene.json",
+      "recorded_arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      },
+      "regression_guard_passed": true,
+      "replayed_arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      }
+    },
+    "prior_artifact_path": "results/experiment_4333_verifier_registry_gaps_hygiene.json",
+    "recorded_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "regression_guard_passed": true,
+    "replayed_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    }
+  },
+  "gap4_regression_guard_passed": true,
+  "gaps_path": "ops/verifier_gaps.md",
+  "honest_verdict": "complete: registry_gaps_arc_reconciled_to_v405_truth_gap4_guard_passed_True_capstone_stamp_fix_durable_True",
+  "inference_substrate": "cached_registry_reconciliation_gap4_guard_and_capstone_stamp_audit",
+  "model_specs": {
+    "capstone_stamp_source": "results/experiment_4379_capstone_v404.json",
+    "codex_calls": 0,
+    "gap4_guard_source": "carnot.reporting.verifier_registry_gaps_hygiene_gap4_guard_4377",
+    "gguf_inference": false,
+    "gpu_inference": false,
+    "live_model_inference": false,
+    "method": "cached_v405_ledger_reconciliation_gap4_guard_and_stamp_audit",
+    "upstream_artifacts": [
+      "results/experiment_4381_biprm_detector_localization_abstention.json",
+      "results/experiment_4382_detector_localization_skeptic_proof.json",
+      "results/experiment_4383_e3_deeper_high_headroom_lookahead.json",
+      "results/experiment_4384_e3_blocked_mechanic_tails_ar25_ka59_ft09.json",
+      "results/experiment_4385_detector_self_learning_compounds.json",
+      "results/experiment_4386_cross_domain_detection_generalization.json",
+      "results/experiment_4379_capstone_v404.json"
+    ]
+  },
+  "preconditions_checked": {
+    "blocked_file": null,
+    "files": {
+      "arc_solve_registry": {
+        "error": "",
+        "path": "ops/arc_solve_registry.yaml",
+        "readable": true
+      },
+      "verifier_gaps": {
+        "error": "",
+        "path": "ops/verifier_gaps.md",
+        "readable": true
+      },
+      "verifier_registry": {
+        "error": "",
+        "path": "ops/verifier_registry.yaml",
+        "readable": true
+      }
+    },
+    "ok": true
+  },
+  "random_seed": 4388,
+  "registries_reconciled": true,
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_reconciliation": {
+    "arc_solve_registry_reconciled": true,
+    "filled_gap_ids": [],
+    "gaps_logged_ids": [
+      "GAP-FOVER-BIPRM-LOCALIZATION-untyped",
+      "GAP-E3-WORLD-MODEL-RULE-LP85-L6-4383",
+      "GAP-E3-WORLD-MODEL-RULE-TU93-L5-4383",
+      "GAP-E3-WORLD-MODEL-RULE-TN36-L8-4383",
+      "GAP-E3-WORLD-MODEL-RULE-TR87-L7-4383",
+      "GAP-E3-WORLD-MODEL-RULE-AR25-L2-4384",
+      "GAP-E3-WORLD-MODEL-RULE-KA59-L2-4384",
+      "GAP-E3-WORLD-MODEL-RULE-FT09-L2-4384"
+    ],
+    "registries_reconciled": true,
+    "verifier_gaps_reconciled": true,
+    "verifier_registry_reconciled": true
+  },
+  "reproducibility_checksum": "sha256:38246fd967b857132b7b9703dc310637e57733f26e3ed79ef099458ab129a0a4",
+  "schema": "carnot.experiment_4388_registry_gaps_hygiene_gap4_guard.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4388",
+    "SCENARIO-VERIFY-4388"
+  ],
+  "v405_outcomes": {
+    "actionable_detector": {
+      "abstention_curve": {
+        "base_rate_fraction_correct": 0.98259,
+        "detector_auroc": 0.979903,
+        "points": [
+          {
+            "coverage": 1.0,
+            "n_retained": 6548,
+            "retained_accuracy": 0.98259,
+            "selective_risk": 0.01741
+          },
+          {
+            "coverage": 0.899969,
+            "n_retained": 5893,
+            "retained_accuracy": 0.998982,
+            "selective_risk": 0.001018
+          },
+          {
+            "coverage": 0.75,
+            "n_retained": 4911,
+            "retained_accuracy": 0.999796,
+            "selective_risk": 0.000204
+          },
+          {
+            "coverage": 0.5,
+            "n_retained": 3274,
+            "retained_accuracy": 1.0,
+            "selective_risk": 0.0
+          },
+          {
+            "coverage": 0.25,
+            "n_retained": 1637,
+            "retained_accuracy": 1.0,
+            "selective_risk": 0.0
+          }
+        ],
+        "precision_at_recall_0_9": 0.205479,
+        "random_score_auroc_control": 0.500295,
+        "random_score_auroc_control_replicates": 128,
+        "recall_target": 0.9,
+        "score_orientation": "higher_error_score_more_suspicious_reject_highest_scores",
+        "useful_criterion": "retained_accuracy >= base_rate + 0.05 at coverage >= 0.5",
+        "useful_operating_point": null
+      },
+      "artifact_path": "results/experiment_4381_biprm_detector_localization_abstention.json",
+      "available": true,
+      "detector_localization_actionable": false,
+      "honest_verdict": "complete: clean_powered_null_bidirectional_not_actionable",
+      "localization_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "localization_f1_by_direction": {
+        "bidirectional_fusion": {
+          "accuracy": 0.096491,
+          "exact_match_count": 11,
+          "f1": 0.096491,
+          "n_error_traces": 114
+        },
+        "causal_online": {
+          "accuracy": 0.096491,
+          "exact_match_count": 11,
+          "f1": 0.096491,
+          "n_error_traces": 114
+        },
+        "unidirectional_l2r": {
+          "accuracy": 0.096491,
+          "exact_match_count": 11,
+          "f1": 0.096491,
+          "n_error_traces": 114
+        }
+      },
+      "missing_verifier_gaps": [
+        {
+          "error_class": "untyped",
+          "gap_id": "GAP-FOVER-BIPRM-LOCALIZATION-untyped",
+          "missed_first_error_traces": 103,
+          "missing_discriminator": "A verifier feature that separates the earliest causal error from later downstream consequences for this class.",
+          "status": "open"
+        }
+      ],
+      "n_error_traces": 114,
+      "n_traces": 6548,
+      "reproducibility_checksum": "sha256:57ceb5170f76741aa315829db30523f7a9afbb9ae1d265ae9b0f2032eadb3b41",
+      "verifier_is_oracle": false
+    },
+    "arc_e3": {
+      "blocked_mechanics": {
+        "artifact_path": "results/experiment_4384_e3_blocked_mechanic_tails_ar25_ka59_ft09.json",
+        "available": true,
+        "honest_verdict": "complete_e3_ar25_ka59_ft09_partial",
+        "new_levels_reproduced": 0,
+        "reproducibility_checksum": "a0661e0d5b21d51275b5700ffdbe9e012c306fcf26f39a27afba305ad11eb3b9",
+        "reproducible_total_levels": 34,
+        "rows": {
+          "ar25": {
+            "game": "ar25",
+            "lookahead_fidelity": 0.733333,
+            "mechanic_checks_passed": false,
+            "mind_studio_skill_file": "results/arc_e3/ar25/skill_4384.json",
+            "new_reproduced_level": 1,
+            "offline_reproduced": false,
+            "prior_best_level": 1,
+            "residual_gap_class": "ar25_l2_action7_undo_stack_hidden_rule_gap",
+            "target_level": null,
+            "verifier_accuracy": 0.90625,
+            "world_model_path": "results/arc_e3/ar25/world_model.py"
+          },
+          "ft09": {
+            "game": "ft09",
+            "lookahead_fidelity": 0.347518,
+            "mechanic_checks_passed": false,
+            "mind_studio_skill_file": "results/arc_e3/ft09/skill_4384.json",
+            "new_reproduced_level": 1,
+            "offline_reproduced": false,
+            "prior_best_level": 1,
+            "residual_gap_class": "ft09_l2_residual_world_model_mismatch_gap",
+            "target_level": null,
+            "verifier_accuracy": 0.166667,
+            "world_model_path": "results/arc_e3/ft09/world_model.py"
+          },
+          "ka59": {
+            "game": "ka59",
+            "lookahead_fidelity": 0.112281,
+            "mechanic_checks_passed": false,
+            "mind_studio_skill_file": "results/arc_e3/ka59/skill_4384.json",
+            "new_reproduced_level": 1,
+            "offline_reproduced": false,
+            "prior_best_level": 1,
+            "residual_gap_class": "ka59_l2_hidden_step_counter_hud_register_gap",
+            "target_level": null,
+            "verifier_accuracy": 0.125,
+            "world_model_path": "results/arc_e3/ka59/world_model.py"
+          }
+        },
+        "verifier_is_oracle": true
+      },
+      "deeper_lookahead": {
+        "artifact_path": "results/experiment_4383_e3_deeper_high_headroom_lookahead.json",
+        "available": true,
+        "honest_verdict": "complete_e3_deeper_partial",
+        "new_levels_reproduced": 0,
+        "reproducibility_checksum": "b4084e173f0d79d39359a63d42ef4144e8ce235a6ca9bcde549c04e4b5d88ab1",
+        "reproducible_total_levels": 34,
+        "rows": {
+          "lp85": {
+            "game": "lp85",
+            "lookahead_fidelity": 0.833333,
+            "mechanic_checks_passed": null,
+            "mind_studio_skill_file": "results/arc_e3/lp85/skill_4383.json",
+            "new_reproduced_level": 5,
+            "offline_reproduced": false,
+            "prior_best_level": 5,
+            "residual_gap_class": "wall_time_cap_exhausted",
+            "target_level": 6,
+            "verifier_accuracy": 0.833333,
+            "world_model_path": "python/carnot/agentic/arc_game_adapters.py"
+          },
+          "tn36": {
+            "game": "tn36",
+            "lookahead_fidelity": 0.875,
+            "mechanic_checks_passed": null,
+            "mind_studio_skill_file": "results/arc_e3/tn36/skill_4383.json",
+            "new_reproduced_level": 7,
+            "offline_reproduced": false,
+            "prior_best_level": 7,
+            "residual_gap_class": "tn36_l8_program_editor_object_control_gap_sxhtkytekm_palette_population",
+            "target_level": 8,
+            "verifier_accuracy": 0.875,
+            "world_model_path": "scripts/arc3_tn36_offline_solver.py"
+          },
+          "tr87": {
+            "game": "tr87",
+            "lookahead_fidelity": 0.857143,
+            "mechanic_checks_passed": null,
+            "mind_studio_skill_file": "results/arc_e3/tr87/skill_4383.json",
+            "new_reproduced_level": 6,
+            "offline_reproduced": false,
+            "prior_best_level": 6,
+            "residual_gap_class": "wall_time_cap_exhausted",
+            "target_level": 7,
+            "verifier_accuracy": 0.857143,
+            "world_model_path": "python/carnot/agentic/arc_game_adapters.py"
+          },
+          "tu93": {
+            "game": "tu93",
+            "lookahead_fidelity": 0.8,
+            "mechanic_checks_passed": null,
+            "mind_studio_skill_file": "results/arc_e3/tu93/skill_4383.json",
+            "new_reproduced_level": 4,
+            "offline_reproduced": false,
+            "prior_best_level": 4,
+            "residual_gap_class": "wall_time_cap_exhausted",
+            "target_level": 5,
+            "verifier_accuracy": 0.8,
+            "world_model_path": "python/carnot/agentic/arc_game_adapters.py"
+          }
+        },
+        "verifier_is_oracle": true
+      }
+    },
+    "cross_domain_detector": {
+      "artifact_path": "results/experiment_4386_cross_domain_detection_generalization.json",
+      "available": true,
+      "detection_by_domain": [
+        {
+          "auroc_ci95": [
+            0.922285,
+            0.990662
+          ],
+          "base_rate": 0.001688,
+          "claim_scope": "n>=1000",
+          "detection_auroc": 0.963317,
+          "domain": "gap4_arc",
+          "n": 28443,
+          "random_score_auroc_control": {
+            "auroc": 0.497011,
+            "replicates": 128,
+            "seed": 4386
+          },
+          "score_orientation": "higher_verifier_score_means_more_likely_correct",
+          "selection_headroom": 0.129,
+          "valid_but_wrong_restricted_auroc": 0.963316,
+          "valid_but_wrong_restricted_n": 28437,
+          "valid_wrong_negative_n": 28389
+        }
+      ],
+      "detector_generalizes_cross_domain": true,
+      "domains_at_chance": [],
+      "honest_verdict": "success: detector_generalizes_cross_domain_non_fover",
+      "missing_verifier_gaps": [],
+      "reproducibility_checksum": "sha256:c3f6b02402ed4fedd5e5416a406f0ca17198c1c98a75caa12e8a36e858a836a1",
+      "verifier_is_oracle": false
+    },
+    "detector_self_learning": {
+      "artifact_path": "results/experiment_4385_detector_self_learning_compounds.json",
+      "available": true,
+      "compounding_delta_ci95": [
+        0.003396,
+        0.032772
+      ],
+      "detector_compounds": true,
+      "final_held_out_localization_f1": 0.387097,
+      "honest_verdict": "success: detector_compounds_heldout_localization_f1",
+      "learning_curve": [
+        {
+          "held_out_auroc": 0.986296,
+          "held_out_localization_f1": 0.371134,
+          "held_out_selective_risk": 0.003193,
+          "train_corpus_size": 491
+        },
+        {
+          "held_out_auroc": 0.986296,
+          "held_out_localization_f1": 0.368932,
+          "held_out_selective_risk": 0.003205,
+          "train_corpus_size": 1228
+        },
+        {
+          "held_out_auroc": 0.986296,
+          "held_out_localization_f1": 0.371134,
+          "held_out_selective_risk": 0.003193,
+          "train_corpus_size": 2456
+        },
+        {
+          "held_out_auroc": 0.986296,
+          "held_out_localization_f1": 0.387097,
+          "held_out_selective_risk": 0.003185,
+          "train_corpus_size": 4911
+        }
+      ],
+      "no_learning_baseline": 0.145773,
+      "positive_control_passed": true,
+      "reproducibility_checksum": "sha256:4dcccddbc263170545a37c126c2ed55d2f592b52eeae38d7b6ae7b90a814e1e1",
+      "verifier_is_oracle": false
+    },
+    "localization_skeptic_proof": {
+      "artifact_path": "results/experiment_4382_detector_localization_skeptic_proof.json",
+      "available": true,
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp4381-biprm-detector-localization-abstention.detector_localization_actionable (actual=False == expected=True)",
+      "gates_evaluated": [
+        {
+          "actual": false,
+          "artifact_field": "detector_localization_actionable",
+          "expected": true,
+          "op": "==",
+          "passed": false,
+          "reason": "actual=False == expected=True",
+          "upstream": "exp4381-biprm-detector-localization-abstention"
+        }
+      ],
+      "honest_verdict": "blocked_gate_check_failed",
+      "status": "blocked"
+    }
+  }
+}
