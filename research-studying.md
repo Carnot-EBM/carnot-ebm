@@ -8,6 +8,93 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-18 Exp 4387 - .405 fork SOTA ingestion ingested
+
+**Status:** INGESTED into `results/experiment_4387_sota_ingestion_v406.json`.
+
+**Preconditions:** network precondition passed via Hugging Face reachability and
+arXiv/WebFetch verification. If that check had failed, the only honest artifact
+would have been `honest_verdict=blocked_network_unavailable`.
+
+**Reliable-channel provenance:** `scripts/sweep_clusters.py` emitted focused
+verifier/process-reward and world-model arXiv discovery URLs. `scripts/sweep_semscholar.py`
+was run on focused bidirectional-PRM, selective-prediction, cross-domain verifier,
+and ARC E3 lookahead queries; it returned arXiv:2603.16253, arXiv:2605.02395,
+arXiv:2601.18984, arXiv:2603.02119, arXiv:2506.11474, arXiv:2601.14209, and
+arXiv:2603.25412 before Semantic Scholar rate-limited the remaining focused
+queries with HTTP 429. Low-concurrency WebSearch/WebFetch plus arXiv abs/html
+checks verified arXiv:2605.02395, arXiv:2102.10395, arXiv:2605.25133,
+arXiv:2504.16828, arXiv:2606.16070, arXiv:2508.01682, arXiv:2605.05138,
+arXiv:2606.13565, and arXiv:2502.01384. The banned `/deep-research` channel was
+not invoked.
+
+**Filtered track:** .405 outcomes after BiPRM detector localization/abstention,
+skeptic-proof gating, detector self-learning compounding, cross-domain detector
+generalization, and ARC E3 lookahead/mechanic-gap work.
+
+**.405 outcome conditioning:**
+- Exp 4381: `complete: clean_powered_null_bidirectional_not_actionable`,
+  `detector_localization_actionable=false`, `localization_delta_ci95=[0.0, 0.0]`,
+  `useful_operating_point=null`, and `verifier_is_oracle=false`. BiPRM-style
+  bidirectional fusion is a baseline/null for this corpus, not the .406 headline.
+- Exp 4382: `blocked_gate_check_failed` because
+  `detector_localization_actionable=false`. The skeptic-proof phase remains
+  gated off until localization becomes actionable.
+- Exp 4385: `success: detector_compounds_heldout_localization_f1`,
+  `detector_compounds=true`, `compounding_delta_ci95=[0.003396, 0.032772]`,
+  and `verifier_is_oracle=false`. Detector self-learning is the clean .405
+  oracle-distinct positive.
+- Exp 4386: `success: detector_generalizes_cross_domain_non_fover`,
+  `detector_generalizes_cross_domain=true`, GAP-4 ARC `detection_auroc=0.963317`,
+  `auroc_ci95=[0.922285, 0.990662]`, `selection_headroom=0.129`,
+  `n=28443`, and `verifier_is_oracle=false`. Detection generalizes beyond
+  FoVer and has real selection headroom, but code/GSM remain unavailable-domain
+  gaps.
+- Exp 4383/4384: `complete_e3_deeper_partial` and
+  `complete_e3_ar25_ka59_ft09_partial`, both with `new_levels_reproduced=0`,
+  `reproducible_total_levels=34`, and `verifier_is_oracle=true`. ARC E3 remains
+  the north star, but .405 yielded mechanic-gap repair work rather than new
+  solves.
+
+**Fresh-pass candidates marked ingested:**
+- Controllable and Verifiable Process Data Synthesis for PRMs, arXiv:2605.02395
+  - mapped to .406 verifiable first-error data for cross-domain localization.
+- On Calibration and Out-of-domain Generalization, arXiv:2102.10395 - mapped to
+  multi-domain detector calibration after the GAP-4 ARC generalization win.
+- Trust but Verify: Prover-Verifier Deliberation for Selective LLM Prediction,
+  arXiv:2605.25133 - mapped to a structured report/abstain layer if abstention
+  is retried after the raw threshold null.
+- ThinkPRM, arXiv:2504.16828 - mapped to bounded explanation labels for the
+  untyped first-error gap, gated by executable or symbolic checks.
+- Mind-Studio executable world models with lookahead evaluation,
+  arXiv:2606.16070 - carried as E3 mechanic-gap repair after zero new .405
+  reproduced levels.
+
+Carried baseline context: BiPRM, arXiv:2508.01682, and Executable World Models
+for ARC-AGI-3, arXiv:2605.05138, remain verified context, but the .405 outcomes
+make them baseline/north-star supports rather than the single .406 flag.
+
+out_of_band_flagged:
+- A2D2 adaptive any-length discrete diffusion, arXiv:2606.13565 -
+  operator-owned verifier-as-reward generator training, NOT auto-run in-loop.
+- SEPO score-entropy policy optimization, arXiv:2502.01384 - operator-owned
+  verifier-as-reward generator training, NOT auto-run in-loop.
+
+flagged_for_v406: verifiable_process_data_cross_domain_localization_v406
+
+Flagged for .406: `verifiable_process_data_cross_domain_localization_v406`
+
+random_seed=4387
+
+**Bottom line for the .406 roadmap:** do not re-headline BiPRM fusion after the
+clean actionable-localization null, and do not unlock skeptic-proofing until a
+localizer exists. The live .405 signal is detector self-learning plus GAP-4 ARC
+cross-domain detection. The .406 flag should therefore add verifiable
+process-supervision data for first-error localization across domains, then use
+multi-domain calibration and structured abstention only after the localizer is
+real. A2D2 and SEPO stay out of band for operator-owned verifier-as-reward
+generator training.
+
 ## 2026-06-18 Exp 4376 - .404 fork SOTA ingestion ingested
 
 **Status:** INGESTED into `results/experiment_4376_sota_ingestion_v405.json`.
