@@ -7,14 +7,14 @@
     4
   ],
   "generation": {
-    "n_predict": 1200,
-    "stop": [
-      "```"
-    ],
-    "bounded": true
+    "n_predict": 1100,
+    "stop": null,
+    "bounded": true,
+    "igpu_tok_per_s": 4.2
   },
   "inference_substrate": "offline_arc_agi3_layerb_llm_scene_reader_iGPU_port8920",
   "llm_proposed_rule": false,
+  "raw_sample": "```python\nimport numpy as np\n\ndef is_win(grid):\n    # The EDITABLE region is rows 63..63, cols 20..63 (Wait, the row 63 is the row at the bottom).\n    # Row 63 is the row at the bottom.\n    # rows 63..63, cols 26..63 (the cells the player edits).\n    # row 63 is the bottom row.\n    # The grid is 64x64.\n    #thought\n    #The EDITABLE region is row 63, cols 26..63.\n    #The rest of the grid contains the rules.\n    #Row 63 is the bottom row.\n    #The rest of the grid contains the rules.\n    #Row 63, cols 26..63.\n    #The rest of grid is the rule.\n    #The rest of grid is the rule.\n    #The rest of grid is grid[63, 26:64].\n    #The rest of grid is grid[63, 26:64].\n    #thought\n    #The EDITABLE region is row 63, cols 26..63.\n    #The rest of grid is the rule.\n    #The EDITABLE region is row 63",
   "honest_verdict": "complete_layerb_llm_failed_to_propose_rule_local_gguf_insufficient",
-  "msg": "local model code unusable after 2 tries (missing def is_win)"
+  "msg": "local model code unusable after 2 tries (syntax error line 60: expected an indented block after function definition on line 3)"
 }
