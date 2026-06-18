@@ -74,6 +74,53 @@ def explore_for_win(arc, game, GameAction, budget, seed, episode_len=25):
     return None
 
 
+def curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=8000):
+    """CURIOUS/DIRECTED exploration: BFS over the reachable AGENT-POSITION graph (dedup on the agent's
+    centroid, not the full grid), trying every action at each newly-reached position, until a level-up.
+    For navigation/movement games the agent position is the state variable that matters, so covering
+    reachable positions is ~O(#positions) instead of the exponential O(branching^depth) of random walks
+    -- it reaches deep wins random play cannot stumble. Returns the pre-win grid, or None. NO banked
+    solve. (Falls back to a coarse grid hash when no agent / agent centroid is unavailable.)"""
+    import copy as _copy
+    from collections import deque
+    env0 = arc.make(game, scorecard_id=arc.open_scorecard())
+    f0 = env0.reset()
+    if f0 is None:
+        return None
+    start_level = _levels_completed(f0)
+
+    def key(grid):
+        if agent is not None:
+            ac = H._agent_centroid(grid, agent)
+            if ac is not None:
+                return ("p", int(round(ac[0])), int(round(ac[1])))
+        return ("g", frame_hash(np.asarray(grid)))
+
+    frontier = deque([(env0, f0)])
+    visited = {key(grid_of(f0))}
+    expansions = 0
+    while frontier and expansions < max_expansions:
+        env, f = frontier.popleft()
+        grid = np.asarray(grid_of(f))
+        if grid.size == 0:
+            continue
+        for c in _kbd(f, GameAction):
+            e2 = _copy.deepcopy(env)
+            nf = e2.step(_game_action(GameAction, c[0]), data=None)
+            expansions += 1
+            if nf is None:
+                continue
+            if _levels_completed(nf) > start_level:
+                return grid                             # the pre-win config we acted from
+            g = np.asarray(grid_of(nf))
+            if g.size == 0:
+                continue
+            k = key(g)
+            if k not in visited:
+                visited.add(k); frontier.append((e2, nf))
+    return None
+
+
 def induce_goal_color(prewin, agent, H):
     """The goal object = the non-background, non-agent colour whose nearest cell is closest to the
     agent in the pre-win config (what the agent reached to win). Returns a colour G, or None."""
@@ -150,15 +197,19 @@ def solve_with_induced_goal(arc, game, agent, G, GameAction, H, max_expansions=5
             "nodes": res.nodes_expanded}
 
 
-def run_game(game, explore_budget, max_exp, seed):
+def run_game(game, explore_budget, max_exp, seed, curious=True):
     from arcengine import GameAction
     H = _harness()
     arc = kit.offline_arcade()
     explore_trans, _ = __import__("carnot.agentic.arc_executable_world_model",
                                   fromlist=["collect_transitions"]).collect_transitions(game, n=150)
     agent = H.identify_agent(explore_trans)
-    prewin = explore_for_win(arc, game, GameAction, explore_budget, seed)
-    rec = {"game": game, "agent": (None if agent is None else {"color": agent["color"]}),
+    if curious:
+        prewin = curious_explore_for_win(arc, game, agent, GameAction, H, max_expansions=explore_budget)
+    else:
+        prewin = explore_for_win(arc, game, GameAction, explore_budget, seed)
+    rec = {"game": game, "explore_mode": ("curious_agent_position_bfs" if curious else "random"),
+           "agent": (None if agent is None else {"color": agent["color"]}),
            "win_stumbled": prewin is not None}
     if prewin is None or agent is None:
         rec["verdict"] = "no_win_stumbled_or_no_agent_cannot_induce_goal"
@@ -178,15 +229,17 @@ def main():
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument("--games", default="sp80,cn04,ar25,ka59")
-    ap.add_argument("--explore-budget", type=int, default=400)
+    ap.add_argument("--explore-budget", type=int, default=8000)
     ap.add_argument("--max-exp", type=int, default=5000)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--random", action="store_true", help="use random exploration instead of curious")
     args = ap.parse_args()
     games = args.games.split(",")
-    print(f"== TEST-TIME GOAL INDUCTION (no banked solve) games={games} ==", flush=True)
+    mode = "RANDOM" if args.random else "CURIOUS (agent-position BFS)"
+    print(f"== TEST-TIME GOAL INDUCTION (no banked solve) explore={mode} games={games} ==", flush=True)
     rows = []
     for g in games:
-        r = run_game(g, args.explore_budget, args.max_exp, args.seed)
+        r = run_game(g, args.explore_budget, args.max_exp, args.seed, curious=not args.random)
         rows.append(r)
         print(f"  [{g}] win_stumbled={r.get('win_stumbled')} agent={r.get('agent')} "
               f"induced_goal_color={r.get('induced_goal_color')} "
