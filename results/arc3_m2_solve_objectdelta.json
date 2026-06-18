@@ -1,11 +1,13 @@
 {
   "experiment": "arc3_m2_solve_objectdelta",
   "games": [
+    "sp80",
     "cn04",
-    "sp80"
+    "ar25",
+    "ka59"
   ],
-  "max_expansions": 3000,
-  "explore_steps": 120,
+  "max_expansions": 5000,
+  "explore_steps": 150,
   "random_seed": 0,
   "bfs_multistep_solves": [
     "sp80"
@@ -15,39 +17,6 @@
   ],
   "games_multistep_unlocked_beyond_greedy": [],
   "per_game": [
-    {
-      "game": "cn04",
-      "goal_bfs_multistep": {
-        "levels_solved": 0,
-        "actions_used": 3000,
-        "first_solve_at": null,
-        "nodes": 3000,
-        "bottleneck": "expansion_bound_exhausted",
-        "agent": {
-          "color": 0,
-          "size": 135
-        },
-        "target_pos": [
-          39.0,
-          42.0
-        ]
-      },
-      "goal_oracle_greedy": {
-        "levels_solved": 0,
-        "actions_used": 100,
-        "first_solve_at": null
-      },
-      "blind": {
-        "levels_solved": 0,
-        "actions_used": 100,
-        "first_solve_at": null
-      },
-      "win_trigger": "(5, None)",
-      "target_cells": 4096,
-      "bfs_solves": false,
-      "greedy_solves": false,
-      "multistep_beats_greedy": false
-    },
     {
       "game": "sp80",
       "goal_bfs_multistep": {
@@ -67,18 +36,117 @@
       },
       "goal_oracle_greedy": {
         "levels_solved": 1,
-        "actions_used": 100,
+        "actions_used": 130,
         "first_solve_at": 4
       },
       "blind": {
-        "levels_solved": 0,
-        "actions_used": 100,
-        "first_solve_at": null
+        "levels_solved": 1,
+        "actions_used": 130,
+        "first_solve_at": 127
       },
       "win_trigger": "(5, None)",
       "target_cells": 4096,
       "bfs_solves": true,
       "greedy_solves": true,
+      "multistep_beats_greedy": false
+    },
+    {
+      "game": "cn04",
+      "goal_bfs_multistep": {
+        "levels_solved": 0,
+        "actions_used": 5000,
+        "first_solve_at": null,
+        "nodes": 5000,
+        "bottleneck": "expansion_bound_exhausted",
+        "agent": {
+          "color": 0,
+          "size": 135
+        },
+        "target_pos": [
+          39.0,
+          42.0
+        ]
+      },
+      "goal_oracle_greedy": {
+        "levels_solved": 0,
+        "actions_used": 130,
+        "first_solve_at": null
+      },
+      "blind": {
+        "levels_solved": 0,
+        "actions_used": 130,
+        "first_solve_at": null
+      },
+      "win_trigger": "(5, None)",
+      "target_cells": 4096,
+      "bfs_solves": false,
+      "greedy_solves": false,
+      "multistep_beats_greedy": false
+    },
+    {
+      "game": "ar25",
+      "goal_bfs_multistep": {
+        "levels_solved": 0,
+        "actions_used": 5000,
+        "first_solve_at": null,
+        "nodes": 5000,
+        "bottleneck": "expansion_bound_exhausted",
+        "agent": {
+          "color": 4,
+          "size": 45
+        },
+        "target_pos": [
+          44.7,
+          53.9
+        ]
+      },
+      "goal_oracle_greedy": {
+        "levels_solved": 0,
+        "actions_used": 130,
+        "first_solve_at": null
+      },
+      "blind": {
+        "levels_solved": 0,
+        "actions_used": 130,
+        "first_solve_at": null
+      },
+      "win_trigger": "(2, None)",
+      "target_cells": 4096,
+      "bfs_solves": false,
+      "greedy_solves": false,
+      "multistep_beats_greedy": false
+    },
+    {
+      "game": "ka59",
+      "goal_bfs_multistep": {
+        "levels_solved": 0,
+        "actions_used": 5000,
+        "first_solve_at": null,
+        "nodes": 5000,
+        "bottleneck": "expansion_bound_exhausted",
+        "agent": {
+          "color": 14,
+          "size": 8
+        },
+        "target_pos": [
+          28.0,
+          43.0
+        ]
+      },
+      "goal_oracle_greedy": {
+        "levels_solved": 0,
+        "actions_used": 130,
+        "first_solve_at": null
+      },
+      "blind": {
+        "levels_solved": 0,
+        "actions_used": 130,
+        "first_solve_at": null
+      },
+      "win_trigger": "(4, None)",
+      "target_cells": 4096,
+      "bfs_solves": false,
+      "greedy_solves": false,
       "multistep_beats_greedy": false
     }
   ],
