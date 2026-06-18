@@ -1646,3 +1646,30 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - missing discriminator: observable grid/action feature that predicts a strictly shorter valid plan than the current linear cost.
 - candidate design: add richer per-game transition features or collect more reproduced levels before re-running generated-program selection.
 - priority: medium
+
+### 2026-06-18 Exp4373 ar25 named active-data residual gap
+- Spec: REQ-PHASE4-4373 / SCENARIO-PHASE4-4373
+- Best verifier accuracy: 0.9583
+- Active transitions collected: 96
+- Target action counts: `{"7": 10}`
+- Residual gap class: `ar25_l2_action7_undo_stack_hidden_rule_gap`
+- Reproducibility checksum: `4c775367e4b09eaf060085f9df2e1617bb79af96c87fcd0996ef15bce2b79310`
+- Gap: bounded targeted active-data pass did not reproduce a new level beyond L1.
+
+### 2026-06-18 Exp4373 ka59 named active-data residual gap
+- Spec: REQ-PHASE4-4373 / SCENARIO-PHASE4-4373
+- Best verifier accuracy: 0.1562
+- Active transitions collected: 96
+- Target action counts: `{"1": 13, "2": 15, "3": 18, "4": 11, "6": 39}`
+- Residual gap class: `ka59_l2_hidden_step_counter_hud_register_gap`
+- Reproducibility checksum: `4c775367e4b09eaf060085f9df2e1617bb79af96c87fcd0996ef15bce2b79310`
+- Gap: bounded targeted active-data pass did not reproduce a new level beyond L1.
+
+### 2026-06-18 Exp4373 ft09 named active-data residual gap
+- Spec: REQ-PHASE4-4373 / SCENARIO-PHASE4-4373
+- Best verifier accuracy: 0.1562
+- Active transitions collected: 95
+- Target action counts: `{"6": 95}`
+- Residual gap class: `ft09_l2_residual_world_model_mismatch_gap`
+- Reproducibility checksum: `4c775367e4b09eaf060085f9df2e1617bb79af96c87fcd0996ef15bce2b79310`
+- Gap: bounded targeted active-data pass did not reproduce a new level beyond L1.
