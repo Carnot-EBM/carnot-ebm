@@ -179,18 +179,31 @@ def _tr87():
         return int(s.name[-1])                          # glyph value = trailing digit of the sprite name
 
     def _required_editable(game):
-        # The visible reference grid is a REWRITE rule: each target-series glyph (rule LHS) expands to a
-        # SEQUENCE of editable-series glyphs (rule RHS). The required editable sequence is the concat of
-        # the RHS over the target sequence. Handles 1-to-1 (L1: every RHS length 1, e.g. A4->[B3]) AND
-        # 1-to-many (L2: B3->[C1,C5,C1]) expansion uniformly.
-        rule = {int(lhs[0].name[-1]): [int(s.name[-1]) for s in rhs] for lhs, rhs in game.cifzvbcuwqe}
+        # GREEDY multi-glyph-LHS rewrite matcher -- mirrors the game's bsqsshqpox win predicate. The
+        # visible reference grid is a rewrite rule LHS->RHS (LHS over the TARGET series, RHS over the
+        # EDITABLE series). Scan the target left-to-right; at each position take the FIRST rule whose LHS
+        # (by glyph name) is a prefix of the remaining target, emit that rule's RHS values, advance both
+        # pointers. Uniformly handles L1 (1-to-1, A4->[B3]), L2 (1-to-many, B3->[C1,C5,C1]) AND L3
+        # (many-to-many, [C3,C3]->[A6,A1]). Returns None if no rule matches a position (a deeper
+        # tree_translation / double_translation / alter_rules twist the base matcher does not model).
+        rules = [([s.name for s in lhs], [int(s.name[-1]) for s in rhs]) for lhs, rhs in game.cifzvbcuwqe]
+        target = [s.name for s in game.zvojhrjxxm]
         req: list = []
-        for t in game.zvojhrjxxm:
-            req.extend(rule.get(int(t.name[-1]), []))
+        pos = 0
+        while pos < len(target):
+            for lhs_names, rhs_vals in rules:
+                if target[pos:pos + len(lhs_names)] == lhs_names:
+                    req.extend(rhs_vals)
+                    pos += len(lhs_names)
+                    break
+            else:
+                return None      # unmodelled twist -> verifier returns large, search stops (no false claim)
         return req
 
     def _distance(game):
         req = _required_editable(game)
+        if req is None:
+            return 1000.0                                 # unmodelled twist -> search stops, no false win
         cur = [_val(s) for s in game.ztgmtnnufb]          # current editable values
         n = min(len(cur), len(req))
 
