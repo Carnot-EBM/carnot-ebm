@@ -1707,3 +1707,34 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - candidate design: mine divergent active traces for the named residual, add transition tests, and count progress only through the offline reproduce() gate
 - priority: high
 <!-- exp4377-gap-e3-world-model-rule-ft09-l2-4373:end -->
+
+### 2026-06-18 Exp4384 ar25 Mind-Studio lookahead residual gap
+- Spec: REQ-PHASE4-4384 / SCENARIO-PHASE4-4384
+- Best verifier accuracy: 0.9062
+- K-step lookahead fidelity: 0.7333
+- Active transitions collected: 96
+- Target action counts: `{"7": 12}`
+- Residual gap class: `ar25_l2_action7_undo_stack_hidden_rule_gap`
+- Reproducibility checksum: `a0661e0d5b21d51275b5700ffdbe9e012c306fcf26f39a27afba305ad11eb3b9`
+- Gap: bounded active-data plus K-step named-register fidelity did not reproduce a new level beyond L1.
+
+### 2026-06-18 Exp4384 ka59 Mind-Studio lookahead residual gap
+- Spec: REQ-PHASE4-4384 / SCENARIO-PHASE4-4384
+- Best verifier accuracy: 0.1250
+- K-step lookahead fidelity: 0.1123
+- Active transitions collected: 96
+- Target action counts: `{"1": 12, "2": 18, "3": 14, "4": 10, "6": 42}`
+- Residual gap class: `ka59_l2_hidden_step_counter_hud_register_gap`
+- Reproducibility checksum: `a0661e0d5b21d51275b5700ffdbe9e012c306fcf26f39a27afba305ad11eb3b9`
+- Gap: bounded active-data plus K-step named-register fidelity did not reproduce a new level beyond L1.
+
+### 2026-06-18 Exp4384 ft09 Mind-Studio lookahead residual gap
+- Spec: REQ-PHASE4-4384 / SCENARIO-PHASE4-4384
+- Best verifier accuracy: 0.1667
+- K-step lookahead fidelity: 0.3475
+- Active transitions collected: 95
+- Target action counts: `{"6": 95}`
+- Residual gap class: `ft09_l2_residual_world_model_mismatch_gap`
+- Reproducibility checksum: `a0661e0d5b21d51275b5700ffdbe9e012c306fcf26f39a27afba305ad11eb3b9`
+- Gap: bounded active-data plus K-step named-register fidelity did not reproduce a new level beyond L1.
+
