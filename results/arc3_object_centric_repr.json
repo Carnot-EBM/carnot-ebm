@@ -1,0 +1,197 @@
+{
+  "experiment": "arc3_object_centric_repr",
+  "games": [
+    "ar25",
+    "ka59",
+    "cn04",
+    "sc25",
+    "tu93",
+    "sp80",
+    "cd82",
+    "m0r0",
+    "sk48"
+  ],
+  "movement_games_unlocked_by_object_repr": [
+    "cn04",
+    "sp80"
+  ],
+  "recolor_toggle_games_distinct_primitive_class": [
+    "ka59",
+    "sc25",
+    "tu93",
+    "sk48"
+  ],
+  "segmentation_failed_need_color_aware": [
+    "m0r0"
+  ],
+  "representation_helps_movement_games": true,
+  "per_game": [
+    {
+      "game": "ar25",
+      "n_changed": 110,
+      "cell": 1,
+      "dynamics_class": {
+        "movement": 96,
+        "recolor": 14
+      },
+      "dominant_dynamics": "movement",
+      "n_movement_transitions": 96,
+      "move_clean_rate": 0.354,
+      "movement_transform_histogram": {
+        "not_object_clean": 62,
+        "multi_2obj": 34
+      },
+      "mean_n_objects": 2.9,
+      "mean_obj_size_px": 152.2,
+      "segmentation_ok": true,
+      "pixel_translation_exact_match": 0.0
+    },
+    {
+      "game": "ka59",
+      "n_changed": 119,
+      "cell": 1,
+      "dynamics_class": {
+        "recolor": 119
+      },
+      "dominant_dynamics": "recolor",
+      "n_movement_transitions": 0,
+      "move_clean_rate": null,
+      "movement_transform_histogram": {},
+      "mean_n_objects": 2.0,
+      "mean_obj_size_px": 423.5,
+      "segmentation_ok": true,
+      "pixel_translation_exact_match": 0.0
+    },
+    {
+      "game": "cn04",
+      "n_changed": 111,
+      "cell": 1,
+      "dynamics_class": {
+        "movement": 95,
+        "recolor": 16
+      },
+      "dominant_dynamics": "movement",
+      "n_movement_transitions": 95,
+      "move_clean_rate": 0.526,
+      "movement_transform_histogram": {
+        "translate_1obj": 50,
+        "not_object_clean": 45
+      },
+      "mean_n_objects": 2.7,
+      "mean_obj_size_px": 126.7,
+      "segmentation_ok": true,
+      "pixel_translation_exact_match": 0.0
+    },
+    {
+      "game": "sc25",
+      "n_changed": 93,
+      "cell": 1,
+      "dynamics_class": {
+        "recolor": 93
+      },
+      "dominant_dynamics": "recolor",
+      "n_movement_transitions": 0,
+      "move_clean_rate": null,
+      "movement_transform_histogram": {},
+      "mean_n_objects": 4.0,
+      "mean_obj_size_px": 159.8,
+      "segmentation_ok": true,
+      "pixel_translation_exact_match": 0.0
+    },
+    {
+      "game": "tu93",
+      "n_changed": 164,
+      "cell": 1,
+      "dynamics_class": {
+        "recolor": 164
+      },
+      "dominant_dynamics": "recolor",
+      "n_movement_transitions": 0,
+      "move_clean_rate": null,
+      "movement_transform_histogram": {},
+      "mean_n_objects": 2.0,
+      "mean_obj_size_px": 300.2,
+      "segmentation_ok": true,
+      "pixel_translation_exact_match": 0.0
+    },
+    {
+      "game": "sp80",
+      "n_changed": 123,
+      "cell": 1,
+      "dynamics_class": {
+        "movement": 70,
+        "recolor": 53
+      },
+      "dominant_dynamics": "movement",
+      "n_movement_transitions": 70,
+      "move_clean_rate": 1.0,
+      "movement_transform_histogram": {
+        "translate_1obj": 70
+      },
+      "mean_n_objects": 3.0,
+      "mean_obj_size_px": 196.0,
+      "segmentation_ok": true,
+      "pixel_translation_exact_match": 0.0
+    },
+    {
+      "game": "cd82",
+      "n_changed": 89,
+      "cell": 1,
+      "dynamics_class": {
+        "movement": 85,
+        "recolor": 4
+      },
+      "dominant_dynamics": "movement",
+      "n_movement_transitions": 85,
+      "move_clean_rate": 0.0,
+      "movement_transform_histogram": {
+        "not_object_clean": 85
+      },
+      "mean_n_objects": 5.0,
+      "mean_obj_size_px": 168.4,
+      "segmentation_ok": true,
+      "pixel_translation_exact_match": 0.0
+    },
+    {
+      "game": "m0r0",
+      "n_changed": 96,
+      "cell": 1,
+      "dynamics_class": {
+        "movement": 96
+      },
+      "dominant_dynamics": "movement",
+      "n_movement_transitions": 96,
+      "move_clean_rate": 0.0,
+      "movement_transform_histogram": {
+        "not_object_clean": 96
+      },
+      "mean_n_objects": 1.5,
+      "mean_obj_size_px": 1842.9,
+      "segmentation_ok": false,
+      "pixel_translation_exact_match": 0.179
+    },
+    {
+      "game": "sk48",
+      "n_changed": 97,
+      "cell": 1,
+      "dynamics_class": {
+        "recolor": 59,
+        "mixed": 37,
+        "movement": 1
+      },
+      "dominant_dynamics": "recolor",
+      "n_movement_transitions": 1,
+      "move_clean_rate": 0.0,
+      "movement_transform_histogram": {
+        "not_object_clean": 1
+      },
+      "mean_n_objects": 2.0,
+      "mean_obj_size_px": 840.8,
+      "segmentation_ok": true,
+      "pixel_translation_exact_match": 0.0
+    }
+  ],
+  "interpretation": "HONEST split (the naive shape-only rate conflated two regimes): MOVEMENT transitions (changes involve background) vs RECOLOR/TOGGLE (in-place color swap). move_clean_rate is computed ONLY over movement transitions. FINDING: object-centric perception genuinely unlocks the MOVEMENT games (cn04/sp80 were 0 at pixel level -> clean single-object translations at object level), confirming representation was a real blocker for that class. BUT it is not a single free transform: (1) RECOLOR/TOGGLE games (ka59/sc25/tu93, 100% in-place recolor) are a DISTINCT clean primitive class -- the shape-only metric falsely scored them 'clean' though no object moves; the bridge's primitive library needs recolor/toggle too. (2) connectivity-only segmentation FAILS where everything is one connected mass (m0r0: a single ~1840px blob) -- needs COLOR-aware segmentation. So: object-centric repr is the right lever for movement games, but the full bridge needs color-aware segmentation + a primitive library spanning translate/reflect/push AND recolor/toggle.",
+  "honest_verdict": "complete_object_centric_repr_unlocks_movement_dynamics_cn04_sp80",
+  "inference_substrate": "offline_sim_no_quota_proposer_free_object_segmentation"
+}
