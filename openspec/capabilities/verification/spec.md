@@ -19496,6 +19496,80 @@ graduated.
 |---|---|---|
 | REQ-VERIFY-4393 | Implemented (`python/carnot/experiment_4393_localizer_skeptic_proof.py`, `results/experiment_4393_localizer_skeptic_proof.py`) | Implemented (`tests/python/test_experiment_4393_localizer_skeptic_proof.py`) |
 
+### REQ-VERIFY-4403: Real Intervention First-Error Localizer Deconfound
+
+The repository SHALL provide Exp 4403 at
+`python/carnot/experiment_4403_real_intervention_localizer_deconfound.py` and
+`results/experiment_4403_real_intervention_localizer_deconfound.py` to replace
+the Exp 4392 synthetic-localizer headline with REAL verifier-checked
+intervention first-error labels. The experiment SHALL use cached corpora only,
+SHALL fit a CPU-only contrastive earliest-error localizer, SHALL NOT train TRM
+or generator models, SHALL NOT run SFT/RL, and SHALL use any SOTA GGUF only as
+an optional cache-checked natural-language intervention realizer.
+
+Before labeling or fitting, the runner SHALL check that the cached FoVer
+step/error corpus from the Exp 2850 lineage, the GAP-4 ARC pool, Exp 4381's
+`0.096` ensemble localization baseline, `ops/verifier_registry.yaml`, and the
+verifier ensemble scoring path are loadable; that at least one domain admits a
+symbolic, executable, or reference intervention check capable of verifying that
+replacing the candidate first-error step redirects the suffix to success; and
+that TRM training is stood down. If the cached corpus or ensemble resources
+needed for at least 1000 real intervention-verified failed labels are not
+available, the runner SHALL write
+`honest_verdict=blocked_cached_corpus_or_ensemble_unavailable` and stop. If no
+domain admits intervention verification, it SHALL write
+`honest_verdict=blocked_no_intervention_verification_path` and stop.
+
+When preconditions hold, the runner SHALL construct at least 1000 REAL
+intervention-verified failed labels, stratified by first-error position and
+template/problem family, by accepting a first-error index only when a cached
+corrected/reference step is verifier-checked to redirect the remaining suffix
+to success. It SHALL train a contrastive earliest-error localizer only on train
+families, evaluate first-error F1 on a held-out-family REAL split, report a
+paired bootstrap CI95 with at least 2000 resamples, and score both FoVer and
+GAP-4 ARC process-proxy domains against the Exp 4381 `0.096` ensemble baseline.
+The headline control SHALL include a content-blind position-only baseline fit
+from the empirical first-error-position distribution alone; the localizer SHALL
+count as genuine only if its held-out-family first-error F1 exceeds that
+baseline with CI95 excluding zero and it shows non-trivial content dependence
+under template-family holdout/scramble controls.
+
+The terminal artifact SHALL write
+`results/experiment_4403_real_intervention_localizer_deconfound.json` with
+top-level fields `honest_verdict`, bare bool
+`localizer_genuinely_beats_position_only`, `localization_f1_by_domain`,
+`intervention_label_receipts`, bare float `position_only_baseline_f1`, bare
+float `template_family_holdout_drop`, bare int `n_traces`, bare bool
+`verifier_is_oracle=false`, `preconditions_checked`, `random_seed`,
+`random_seeds_used`, `reproducibility_checksum`, `model_specs`,
+`missing_verifier_gaps`, `field_principles`, `spec_refs`, `duration_s`,
+`inference_substrate=verifier_ensemble_against_cached_candidates`, and
+`adversarial_verify`. Clean powered nulls SHALL be decision-grade when the
+real-intervention localizer ties the position-only baseline or fails the
+template-family content-dependence control.
+
+### SCENARIO-VERIFY-4403: Real Intervention Controls Decide The Localizer
+
+Given the cached FoVer corpus can supply at least 1000 verifier-checked real
+failed-label interventions, the GAP-4 ARC pool is loadable, the verifier
+ensemble path imports, and an intervention verification path exists, when Exp
+4403 runs, then it records label receipts by first-error position and
+template/problem family, fits the CPU contrastive localizer on train families,
+evaluates a held-out-family REAL split against both the `0.096` ensemble
+baseline and the content-blind position-only baseline, reports template-family
+holdout/scramble controls, sets `verifier_is_oracle=false`, records model specs
+and a reproducibility checksum, and runs adversarial verification. If the
+position-only baseline ties or beats the localizer, or the template-family
+control shows the score is position/template-only, then
+`localizer_genuinely_beats_position_only=false` and the artifact reports a
+clean powered null rather than graduating the localizer headline.
+
+## Implementation Status (REQ-VERIFY-4403)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4403 | Planned (`python/carnot/experiment_4403_real_intervention_localizer_deconfound.py`, `results/experiment_4403_real_intervention_localizer_deconfound.py`) | Planned (`tests/python/test_experiment_4403_real_intervention_localizer_deconfound.py`) |
+
 ### REQ-VERIFY-4396: Localizer Self-Learning Compounding Curve
 
 The repository SHALL provide Exp 4396 at
