@@ -14,7 +14,7 @@
 #   unsolved    = no solve yet.
 
 schema_version: 1
-updated: "2026-06-17"
+updated: "2026-06-18"
 
 # ---- GENERAL GOTCHAS (apply to ANY game; encoded in arc_solver_kit) ----
 general_gotchas:
@@ -58,11 +58,11 @@ games:
 
   - game: lp85
     reproducibility: reproduced
-    levels_reproduced: 4   # 3 -> 4 (2026-06-17, standing loop adaptered path, target_level=4)
+    levels_reproduced: 5   # 4 -> 5 (2026-06-18: Exp4372 offline_reproduced=True, reproduction-gated)
     win_condition: "align each moveable piece (bghvgbtwcb/fdgmtkfrxl) with its goal sprite at (+1,+1) via button rotations."
     action_model: "click-only [ACTION6]; env-adaptive button discovery (discover_click_buttons)."
-    solver: "scripts/arc3_lp85_offline_solver.py — reuses plan_observed_suffix (goal-key-deduped env-cloned BFS), chained L1->L3 (29 moves). L4 (2026-06-17): arc_loop_solve.solve_adaptered(lp85, target_level=4) via the OfflineSolver + learned verifier checkpoint (models/arc_verifier_lp85.json); full L1->L4 = 54 moves, 836 states. The prior L3 cap was just the default target_level=3, not a wall."
-    reproduce: "results/arc_loop_solve_lp85.json — offline reproduction gate (kit.reproduce) reproduced=True, claimed_level=4, deterministic on re-run. (results/arc3_lp85_offline_resolve.json replays to L3.)"
+    solver: "scripts/arc3_lp85_offline_solver.py + arc_loop_solve adaptered path; Exp4372 extends the offline reproduced chain through L5 via python/carnot/agentic/arc_game_adapters.py."
+    reproduce: "Exp4372 per_target_scorecard lp85 offline_reproduced=True, new_reproduced_level=5; reproduction-gated. Prior results/arc_loop_solve_lp85.json remains the L4 gate."
     gotchas:
       - "deepcopy-injection WORKS for lp85 (unlike sc25)."
       - "dedup by goal-relevant key (goal positions), not full grid hash, or the search explodes (26k states -> fails)."
@@ -252,13 +252,13 @@ games:
   # likewise; do NOT re-run a blind branch-mode sweep on them.
 
 # Aggregate reproducible scorecard (the only count that may be headline/publish-eligible):
-#   reproduced levels = r11l 1 + sc25 1 + ls20 1 + wa30 1 + lp85 4 + cd82 1 + sp80 1 + su15 1
-#   + tu93 4 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 + ka59 1 + tn36 7 + tr87 6 + ft09 1 = 33 across 17 games  (tr87
+#   reproduced levels = r11l 1 + sc25 1 + ls20 1 + wa30 1 + lp85 5 + cd82 1 + sp80 1 + su15 1
+#   + tu93 4 + cn04 1 + m0r0 1 + sk48 1 + ar25 1 + ka59 1 + tn36 7 + tr87 6 + ft09 1 = 34 across 17 games  (tr87
 #   FULLY SOLVED 6/6 2026-06-17 via the GameAdapter _tr87 glyph-rewrite RE + verifier-routed search: L1
 #   1-to-1, L2 1-to-many, L3 many-to-many, L4 double_translation 2-pass, L5 alter_rules inverse, L6
 #   alter_rules + 2-pass (2-level decomposition); offline-reproduction-gated; verify
 #   scripts/arc3_replay_scorecard_metaharness.py)
-reproducible_total_levels: 33   # ... -> +tu93 L4 via Exp4361 and +ft09 L1 local-constraint color-cycle re-gated by Exp4363
+reproducible_total_levels: 34   # ... -> +tu93 L4 via Exp4361, +ft09 L1 via Exp4363, and +lp85 L5 via Exp4372
 reproducible_total_games: 17   # adds ft09 via Exp4363 offline reproduction gate
 provisional_total_levels: 5     # sc25 L5 (live-recorded, not yet reproduced)
 
