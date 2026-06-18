@@ -23955,6 +23955,90 @@ not claim `.404` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4380 | Planned (`python/carnot/reporting/archive_v404_activate_v405_4380.py`, `python/carnot/experiment_4380_archive_v404_activate_v405.py`, `results/experiment_4380_archive_v404_activate_v405.py`) | Planned (`tests/python/test_experiment_4380_archive_v404_activate_v405.py`) |
 
+### REQ-REPORT-4391: Archive .405, Activate .406, And Preserve The Detector-Localization Close-State
+
+The Exp 4391 workflow SHALL archive milestone `2026.06.405`, confirm milestone
+`2026.06.406` is active, and write the record-only artifact
+`results/experiment_4391_archive_v405_activate_v406.json`. It SHALL run no live
+training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`.
+
+Before editing `research-complete.yaml` or writing a complete artifact, the
+workflow SHALL verify these preconditions and stop with a `blocked_<resource>`
+honest verdict if any fail:
+
+- `research-complete.yaml` parses under `yaml.safe_load`.
+- `ops/exclusion_manifest.yaml` parses under `yaml.safe_load`.
+- The smart-subset pre-test gate is green.
+- `.406` is the active milestone.
+- The required `.405` source artifacts exist: `experiment_4390_capstone_v405`,
+  `experiment_4381_biprm_detector_localization_abstention`,
+  `experiment_4385_detector_self_learning_compounds`,
+  `experiment_4386_cross_domain_detection_generalization`,
+  `experiment_4387_sota_ingestion_v406`, the ARC solve registry, the `.406`
+  roadmap, and the exclusion manifest.
+
+The workflow SHALL ensure `research-complete.yaml` contains one top-level
+`.405` archive record, updating or appending the canonical close-state and
+collapsing duplicate `.405` records when needed. The workflow SHALL keep
+`research-complete.yaml` parseable before and after any edit.
+
+The artifact SHALL carry the required principle-annotated fields
+`honest_verdict`, `v405_close_state`, and `preconditions_checked`.
+Complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v405_close_state` SHALL truthfully record
+that detection is good but localization is a clean powered null and DATA
+problem (`exp4381` first-error F1 `0.096`, `localization_delta_ci95=[0.0,0.0]`,
+103 of 114 first-error traces missed, `GAP-FOVER-BIPRM-LOCALIZATION` logged);
+that the detector compounds weakly (`exp4385` held-out localization-F1 roughly
+`0.371 -> 0.387`); that detection generalizes cross-domain on one non-FoVer
+domain (`exp4386` GAP-4 ARC AUROC `0.963`, CI95 `[0.922,0.991]`); that ARC is
+stalled at 34 reproducible levels / 17 games with lookahead fidelity
+`0.80-0.875`; that `flagged_for_v406` is
+`verifiable_process_data_cross_domain_localization_v406`; that cross-game
+transfer, cross-domain selection, in-generation, and LLM-heuristic efficiency
+are retired or settled; and that `paper_ready=True`.
+
+The required field principles are:
+
+- `honest_verdict`: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
+- `v405_close_state`: "Honest record (DETECTION good; LOCALIZATION a clean powered null / DATA problem; COMPOUNDS weakly; GENERALIZES cross-domain on one non-FoVer domain; ARC 34/17 fidelity-blocked; flagged_for_v406=verifiable_process_data_cross_domain_localization_v406; cross-game transfer + cross-domain selection + in-generation + LLM-heuristic RETIRED/SETTLED; paper_ready=True) so the .406 agents frame the milestone as turn-detection-into-an-actionable-cross-domain-LOCALIZER + calibrate-cross-domain-detection + localizer-compounds + ARC-deeper-via-fidelity-gate -- NOT a re-open of the settled/retired axes."
+- `preconditions_checked`: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
+
+#### SCENARIO-REPORT-4391: The Archive Preserves The Honest .405 Detector Diagnosis
+
+**Given** the `.405` capstone and registry record detector actionability as
+`detects_but_not_actionable`, ARC as `34/17`, and publication as ready; Exp
+4381 records `detector_localization_actionable=false` with F1 `0.096` and
+delta CI95 `[0.0,0.0]`; Exp 4385 records weak detector compounding; Exp 4386
+records one non-FoVer cross-domain detection win; Exp 4387 records
+`flagged_for_v406=verifiable_process_data_cross_domain_localization_v406`; the
+history and exclusion-manifest YAML files parse; the smart-subset pre-test gate
+is green; and `.406` is active
+**When** the Exp 4391 archive workflow runs
+**Then** it archives `.405`, confirms `.406`, keeps the YAML history parseable
+with one `.405` record, writes
+`results/experiment_4391_archive_v405_activate_v406.json`, records the detector
+localization null, weak compounding, one-domain cross-domain generalization,
+ARC fidelity block, retired/settled axes, SOTA pointer, and paper-ready state in
+`v405_close_state`, records checked resources in `preconditions_checked`,
+declares `aggregation_from_upstream_artifacts`, and emits a terminal-prefixed
+honest verdict.
+
+#### SCENARIO-REPORT-4391-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4391 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does
+not claim `.405` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4391)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4391 | Planned (`python/carnot/reporting/archive_v405_activate_v406_4391.py`, `python/carnot/experiment_4391_archive_v405_activate_v406.py`, `results/experiment_4391_archive_v405_activate_v406.py`) | Planned (`tests/python/test_experiment_4391_archive_v405_activate_v406.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone

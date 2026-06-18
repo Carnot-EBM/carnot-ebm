@@ -1,0 +1,282 @@
+{
+  "activated_milestone": "2026.06.406",
+  "active_milestone_confirmed": "2026.06.406",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.405",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4390_capstone_v405.json",
+      "experiment_id": "4390",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "7f387d01ed0a2c65796fe68254429c9d8f832bf62be80cfc5604560782474890"
+    },
+    {
+      "deliverable": "results/experiment_4381_biprm_detector_localization_abstention.json",
+      "experiment_id": "4381",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "877b5ce0ab639114a56e1ab6e097ebf4a4428f550684b36c73b6c36d84799b2e"
+    },
+    {
+      "deliverable": "results/experiment_4385_detector_self_learning_compounds.json",
+      "experiment_id": "4385",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "281dfc3cef22797d631c6b9866b87d408fa7e11c8bfa38961c6fb531dda6baa0"
+    },
+    {
+      "deliverable": "results/experiment_4386_cross_domain_detection_generalization.json",
+      "experiment_id": "4386",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "d2303d30b97ab8a334d8b9eb64db52c1448f951bd307a3054b0c78fcf4f46d66"
+    },
+    {
+      "deliverable": "results/experiment_4387_sota_ingestion_v406.json",
+      "experiment_id": "4387",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "d567170afe5ff03af1e422c74643ff20aa30c09086f15ab75783bdfbcc61d255"
+    },
+    {
+      "deliverable": "ops/arc_solve_registry.yaml",
+      "experiment_id": "arc_solve_registry",
+      "kind": "document",
+      "required": true,
+      "sha256": "3c5ae66a0ccdc51830cdbd330c0f55883cf7756a7aff33a2ac3089039042261b"
+    },
+    {
+      "deliverable": "research-roadmap.yaml",
+      "experiment_id": "v406_active_roadmap",
+      "kind": "document",
+      "required": true,
+      "sha256": "c42f02795eb59034b9fd48b6352f478fb2b05b4f43e175786179b8a1703192c6"
+    },
+    {
+      "deliverable": "openspec/change-proposals/research-roadmap-v406.md",
+      "experiment_id": "v406_design_doc",
+      "kind": "document",
+      "required": true,
+      "sha256": "93869e15889612f2130ee7810e8003dec14228d434013dab67593514f88a4b80"
+    },
+    {
+      "deliverable": "ops/exclusion_manifest.yaml",
+      "experiment_id": "exclusion_manifest",
+      "kind": "document",
+      "required": true,
+      "sha256": "3bb7d1c55216cdae9ceb0468c383e5acf2c08c248b95ed620d4cb79697cb8bf3"
+    }
+  ],
+  "duration_s": 13.425412,
+  "exclusion_manifest_parses": true,
+  "experiment_id": 4391,
+  "field_principles": {
+    "honest_verdict": "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "v405_close_state": "Honest record (DETECTION good; LOCALIZATION a clean powered null / DATA problem; COMPOUNDS weakly; GENERALIZES cross-domain on one non-FoVer domain; ARC 34/17 fidelity-blocked; flagged_for_v406=verifiable_process_data_cross_domain_localization_v406; cross-game transfer + cross-domain selection + in-generation + LLM-heuristic RETIRED/SETTLED; paper_ready=True) so the .406 agents frame the milestone as turn-detection-into-an-actionable-cross-domain-LOCALIZER + calibrate-cross-domain-detection + localizer-compounds + ARC-deeper-via-fidelity-gate -- NOT a re-open of the settled/retired axes."
+  },
+  "honest_verdict": "success: archived_v405_v406_active_detector_detects_but_not_actionable_localization_null_data_problem_arc34_games17_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "active_milestone": {
+      "actual": "2026.06.406",
+      "expected": "2026.06.406",
+      "matches": true,
+      "path": "research-roadmap.yaml"
+    },
+    "exclusion_manifest_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/exclusion_manifest.yaml"
+    },
+    "research_complete_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "smart_subset_pretest": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4391_archive_v405_activate_v406.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "green": true,
+      "stderr_tail": "",
+      "stdout_tail": "........................................................................ [ 80%]\n.................                                                        [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n89 passed, 1 warning in 5.13s\n"
+    },
+    "source_artifacts": {
+      "4381": {
+        "exists": true,
+        "path": "results/experiment_4381_biprm_detector_localization_abstention.json",
+        "required": true,
+        "sha256": "877b5ce0ab639114a56e1ab6e097ebf4a4428f550684b36c73b6c36d84799b2e"
+      },
+      "4385": {
+        "exists": true,
+        "path": "results/experiment_4385_detector_self_learning_compounds.json",
+        "required": true,
+        "sha256": "281dfc3cef22797d631c6b9866b87d408fa7e11c8bfa38961c6fb531dda6baa0"
+      },
+      "4386": {
+        "exists": true,
+        "path": "results/experiment_4386_cross_domain_detection_generalization.json",
+        "required": true,
+        "sha256": "d2303d30b97ab8a334d8b9eb64db52c1448f951bd307a3054b0c78fcf4f46d66"
+      },
+      "4387": {
+        "exists": true,
+        "path": "results/experiment_4387_sota_ingestion_v406.json",
+        "required": true,
+        "sha256": "d567170afe5ff03af1e422c74643ff20aa30c09086f15ab75783bdfbcc61d255"
+      },
+      "4390": {
+        "exists": true,
+        "path": "results/experiment_4390_capstone_v405.json",
+        "required": true,
+        "sha256": "7f387d01ed0a2c65796fe68254429c9d8f832bf62be80cfc5604560782474890"
+      },
+      "arc_solve_registry": {
+        "exists": true,
+        "path": "ops/arc_solve_registry.yaml",
+        "required": true,
+        "sha256": "3c5ae66a0ccdc51830cdbd330c0f55883cf7756a7aff33a2ac3089039042261b"
+      },
+      "exclusion_manifest": {
+        "exists": true,
+        "path": "ops/exclusion_manifest.yaml",
+        "required": true,
+        "sha256": "3bb7d1c55216cdae9ceb0468c383e5acf2c08c248b95ed620d4cb79697cb8bf3"
+      },
+      "v406_active_roadmap": {
+        "exists": true,
+        "path": "research-roadmap.yaml",
+        "required": true,
+        "sha256": "c42f02795eb59034b9fd48b6352f478fb2b05b4f43e175786179b8a1703192c6"
+      },
+      "v406_design_doc": {
+        "exists": true,
+        "path": "openspec/change-proposals/research-roadmap-v406.md",
+        "required": true,
+        "sha256": "93869e15889612f2130ee7810e8003dec14228d434013dab67593514f88a4b80"
+      }
+    }
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4391,
+  "reproducibility_checksum": "17335ef6b6d967e718cf0e4a45c01fef1d1220d8d1beb3b515f27493d9903059",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "updated",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v405_to_v406_4391.v1",
+  "spec_refs": [
+    "REQ-REPORT-4391",
+    "SCENARIO-REPORT-4391"
+  ],
+  "task_id": "exp4391-archive-v405-activate-v406",
+  "v405_close_state": {
+    "abstention_base_rate_fraction_correct": 0.98259,
+    "abstention_detector_auroc": 0.979903,
+    "abstention_useful_operating_point": null,
+    "arc_axis_state": "STALLED_FIDELITY_BLOCKED",
+    "arc_new_games_since_prior": 0,
+    "arc_new_levels_reproduced_from_artifacts": 0,
+    "arc_new_levels_since_prior": 0,
+    "arc_prior_reproducible_total_games": 17,
+    "arc_prior_reproducible_total_levels": 34,
+    "arc_reproducible_total_games": 17,
+    "arc_reproducible_total_levels": 34,
+    "bidirectional_fusion_measured_noop": true,
+    "capstone_honest_verdict": "complete: v405_detector_detects_but_not_actionable_compounds_true_generalizes_true_arc_levels_34_publication_ready",
+    "compounding_auroc": 0.986296,
+    "compounding_axis_state": "COMPOUNDS_WEAKLY",
+    "compounding_delta_ci95": [
+      0.003396,
+      0.032772
+    ],
+    "compounding_f1_first": 0.371134,
+    "compounding_f1_last": 0.387097,
+    "compounding_honest_verdict": "success: detector_compounds_heldout_localization_f1",
+    "compounding_positive_control_passed": true,
+    "compounding_train_corpus_first": 491,
+    "compounding_train_corpus_last": 4911,
+    "compounding_verifier_is_oracle": false,
+    "conductor_stands_down_on_trm_training": true,
+    "cross_domain_domains": [
+      "gap4_arc"
+    ],
+    "cross_domain_non_fover_domains_count": 1,
+    "cross_domain_selection_axis_state": "RETIRED_EXP4314_DOMAIN_BOUND",
+    "cross_domain_selection_manifest_reflected": true,
+    "cross_domain_unavailable_domains": [
+      "code_humaneval_mbpp",
+      "gsm8k"
+    ],
+    "cross_game_value_transfer_axis_state": "RETIRED_EXP4342_THIRD_NULL",
+    "cross_game_value_transfer_manifest_reflected": true,
+    "detector_actionable_state": "detects_but_not_actionable",
+    "detector_compounds": true,
+    "detector_detects_well": true,
+    "detector_generalizes_cross_domain": true,
+    "detector_localization_actionable": false,
+    "domains_at_chance": [],
+    "flagged_for_v406": "verifiable_process_data_cross_domain_localization_v406",
+    "gap4_arc_auroc_ci95": [
+      0.922285,
+      0.990662
+    ],
+    "gap4_arc_detection_auroc": 0.963317,
+    "gap4_arc_n": 28443,
+    "generalization_axis_state": "GENERALIZES_ONE_NON_FOVER_DOMAIN",
+    "generalization_honest_verdict": "success: detector_generalizes_cross_domain_non_fover",
+    "generalization_verifier_is_oracle": false,
+    "in_generation_axis_state": "RETIRED_EXP4374_FOURTH_BLOCK",
+    "llm_heuristic_efficiency_axis_state": "SETTLED_EXP4370_CLEAN_NULL",
+    "localization_axis_state": "CLEAN_POWERED_NULL_DATA_PROBLEM",
+    "localization_data_problem": true,
+    "localization_delta_ci95": [
+      0.0,
+      0.0
+    ],
+    "localization_f1": 0.096491,
+    "localization_f1_by_direction": {
+      "bidirectional_fusion": 0.096491,
+      "causal_online": 0.096491,
+      "unidirectional_l2r": 0.096491
+    },
+    "localization_honest_verdict": "complete: clean_powered_null_bidirectional_not_actionable",
+    "lookahead_fidelity_max": 0.875,
+    "lookahead_fidelity_min": 0.8,
+    "lookahead_fidelity_values": [
+      0.8,
+      0.875
+    ],
+    "missed_first_error_traces": 103,
+    "missing_localization_gap_id": "GAP-FOVER-BIPRM-LOCALIZATION-untyped",
+    "n_error_traces": 114,
+    "n_traces": 6548,
+    "not_reopen_settled_or_retired_axes": true,
+    "outer_loop_owns_trm_training": true,
+    "paper_ready": true,
+    "publication_unmet_gates": [],
+    "summary": "detector_detects_but_not_actionable_localization_null_compounds_weakly_generalizes_arc34_v406_localizer",
+    "v406_frame": "TURN_DETECTION_INTO_ACTIONABLE_CROSS_DOMAIN_LOCALIZER_VIA_VERIFIABLE_PROCESS_DATA_CALIBRATE_CROSS_DOMAIN_DETECTION_LOCALIZER_COMPOUNDS_ARC_DEEPER_VIA_FIDELITY_GATE",
+    "v406_method_map_arxiv_ids": [
+      "2605.02395",
+      "2102.10395",
+      "2605.25133",
+      "2504.16828",
+      "2606.16070"
+    ],
+    "verifier_thesis_state": "detector_detects_but_not_actionable_detector_compounds_detection_generalizes"
+  }
+}
