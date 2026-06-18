@@ -1,0 +1,89 @@
+{
+  "availability_report": {},
+  "capstone_stamp_fix": {},
+  "capstone_stamp_fix_durable": false,
+  "duration_s": 0.291799,
+  "experiment": "experiment_4410_registry_gaps_hygiene_gap4_guard",
+  "field_principles": {
+    "capstone_stamp_fix_durable": {
+      "principle": "BARE bool: the .407 capstone path inherits the exp4355 verifier_is_oracle stamp fix (so a circular execution-grounded ARC solve is not over-claimed as a moat)."
+    },
+    "gaps_reconciled": {
+      "principle": "list/int: the verifier_gaps.md entries moved/sharpened/filled this milestone (per Missing-Verifier Gap Logging -- the verifier improves monotonically as gaps are built against)."
+    },
+    "honest_verdict": {
+      "principle": "Terminal-prefixed (complete: registry_gaps_arc_reconciled_to_v407_truth_...) -- the reconciliation + guard landed."
+    },
+    "preconditions_checked": {
+      "principle": "Records the registries parse; pre-empts the silent-missing-resource fabrication mode."
+    },
+    "random_seed": {
+      "principle": "Determinism precondition for any sampled audit ordering."
+    },
+    "regression_guard_passed": {
+      "principle": "BARE bool: the capstone reads this; true iff the GAP-4 execution result did NOT regress vs .406 -- the ARC oracle-distinct verifier-beats-vote result is protected."
+    }
+  },
+  "gap4_regression_guard": {},
+  "gaps_reconciled": [],
+  "honest_verdict": "blocked_registry_unreadable",
+  "inference_substrate": "cached_registry_reconciliation_gap4_guard_and_capstone_stamp_audit",
+  "model_specs": {
+    "capstone_stamp_source": "results/experiment_4401_capstone_v406.json",
+    "codex_calls": 0,
+    "gap4_guard_source": "carnot.reporting.verifier_registry_gaps_hygiene_gap4_guard_4399",
+    "gguf_inference": false,
+    "gpu_inference": false,
+    "live_model_inference": false,
+    "method": "cached_v407_ledger_reconciliation_gap4_guard_and_stamp_audit",
+    "upstream_artifacts": [
+      "results/experiment_4403_real_intervention_localizer_deconfound.json",
+      "results/experiment_4404_localizer_typed_taxonomy_cross_domain.json",
+      "results/experiment_4405_e3_deeper_mechanic_unit_tests.json",
+      "results/experiment_4406_e3_blocked_mechanic_tails_unit_tests.json",
+      "results/experiment_4407_active_learning_self_learning_compounds.json",
+      "results/experiment_4408_cross_domain_detection_calibration_repair.json",
+      "results/experiment_4401_capstone_v406.json"
+    ]
+  },
+  "preconditions_checked": {
+    "blocked_file": "verifier_gaps",
+    "files": {
+      "arc_solve_registry": {
+        "error": "",
+        "key": "arc_solve_registry",
+        "path": "ops/arc_solve_registry.yaml",
+        "readable": true,
+        "top_level_type": "dict",
+        "yaml_safe_load": true
+      },
+      "verifier_gaps": {
+        "error": "ScannerError: while scanning an alias\n  in \"<unicode string>\", line 3, column 1:\n    **WHY (operator directive 2026-0 ... \n    ^\nexpected alphabetic or numeric character, but found '*'\n  in \"<unicode string>\", line 3, column 2:\n    **WHY (operator directive 2026-06 ... \n     ^",
+        "key": "verifier_gaps",
+        "path": "ops/verifier_gaps.md",
+        "readable": false,
+        "top_level_type": null,
+        "yaml_safe_load": false
+      },
+      "verifier_registry": {
+        "error": "",
+        "key": "verifier_registry",
+        "path": "ops/verifier_registry.yaml",
+        "readable": true,
+        "top_level_type": "dict",
+        "yaml_safe_load": true
+      }
+    },
+    "ok": false
+  },
+  "random_seed": 4410,
+  "registry_reconciliation": {},
+  "regression_guard_passed": false,
+  "reproducibility_checksum": "blocked:registry_unreadable",
+  "schema": "carnot.experiment_4410_registry_gaps_hygiene_gap4_guard.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4410",
+    "SCENARIO-VERIFY-4410"
+  ],
+  "v407_outcomes": {}
+}
