@@ -1,0 +1,319 @@
+{
+  "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4394_e3_deeper_fidelity_gate.json",
+  "duration_s": 0.03063,
+  "experiment": "experiment_4394_e3_deeper_fidelity_gate",
+  "fidelity_gate": 0.95,
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed (success_e3_deeper_<targets>_reproduced or complete_e3_deeper_partial). Any NEW reproduced level on any target is progress; an honest partial that RAISES fidelity toward the gate across all four is also progress.",
+    "new_levels_reproduced": "BARE int: NEW levels offline-reproduced this task across the four targets -- the incremental-progress unit.",
+    "per_target_scorecard": "list of {game, prior_best_level, new_reproduced_level, lookahead_fidelity, fidelity_gate_passed, verifier_accuracy, offline_reproduced} -- the per-target breadth-of-progress record (lp85/tu93/tn36/tr87) including whether the fidelity gate was reached.",
+    "preconditions_checked": "Records the offline-env presence per target + harness import + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the entropy-selected exploration + induction + planning.",
+    "reproducibility_checksum": "Hash of the extended models + the plans + the reproduce() results; lets a third party re-run.",
+    "reproducible_total_levels": "BARE int: the ARC reproducible-level count after this task (>= the prior 34) -- the monotonic north-star accuracy signal.",
+    "verifier_is_oracle": "BARE bool=true -- the SOLVEs are execution-grounded; ARC progress, NOT a moat headline.",
+    "world_model_paths": "list[str]: the extended world-model / solver paths (the deliverables)."
+  },
+  "honest_verdict": "complete_e3_deeper_partial",
+  "inference_substrate": "offline_arc_e3_harness_no_leaderboard",
+  "lookahead_k": 3,
+  "method": "offline_e3_mind_studio_fidelity_gate_checkpoint",
+  "new_levels_reproduced": 0,
+  "per_target_scorecard": [
+    {
+      "checkpoint_status": "honest_partial_fidelity_gate_not_met",
+      "entropy_selected_traces": [
+        "lp85:entropy_rank0:L5->L6"
+      ],
+      "fidelity_gate_passed": false,
+      "game": "lp85",
+      "lookahead_fidelity": 0.833333,
+      "lookahead_fidelity_per_round": [
+        0.833333
+      ],
+      "lookahead_k": 3,
+      "mind_studio_skill_file": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_e3/lp85/skill_4394.json",
+      "new_reproduced_level": 5,
+      "offline_reproduced": false,
+      "plan": [],
+      "prior_best_level": 5,
+      "prior_residual_win_mechanic_gap_class": "wall_time_cap_exhausted",
+      "reproduce_result": {
+        "claimed_level": 6,
+        "game": "lp85",
+        "reached_level": 5,
+        "reproduced": false,
+        "timeout_s": 30.0
+      },
+      "residual_win_mechanic_gap_class": "lookahead_fidelity_below_gate",
+      "target_level": 6,
+      "target_wall_time_s": 30.0,
+      "verifier_accuracy": 0.833333,
+      "verifier_accuracy_per_round": [
+        0.833333
+      ],
+      "world_model_path": "python/carnot/agentic/arc_game_adapters.py"
+    },
+    {
+      "checkpoint_status": "honest_partial_fidelity_gate_not_met",
+      "entropy_selected_traces": [
+        "tu93:entropy_rank0:L4->L5"
+      ],
+      "fidelity_gate_passed": false,
+      "game": "tu93",
+      "lookahead_fidelity": 0.8,
+      "lookahead_fidelity_per_round": [
+        0.8
+      ],
+      "lookahead_k": 3,
+      "mind_studio_skill_file": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_e3/tu93/skill_4394.json",
+      "new_reproduced_level": 4,
+      "offline_reproduced": false,
+      "plan": [],
+      "prior_best_level": 4,
+      "prior_residual_win_mechanic_gap_class": "wall_time_cap_exhausted",
+      "reproduce_result": {
+        "claimed_level": 5,
+        "game": "tu93",
+        "reached_level": 4,
+        "reproduced": false,
+        "timeout_s": 30.0
+      },
+      "residual_win_mechanic_gap_class": "lookahead_fidelity_below_gate",
+      "target_level": 5,
+      "target_wall_time_s": 30.0,
+      "verifier_accuracy": 0.8,
+      "verifier_accuracy_per_round": [
+        0.8
+      ],
+      "world_model_path": "python/carnot/agentic/arc_game_adapters.py"
+    },
+    {
+      "checkpoint_status": "honest_partial_fidelity_gate_not_met",
+      "entropy_selected_traces": [
+        "tn36:entropy_rank0:L7->L8"
+      ],
+      "fidelity_gate_passed": false,
+      "game": "tn36",
+      "lookahead_fidelity": 0.875,
+      "lookahead_fidelity_per_round": [
+        0.875
+      ],
+      "lookahead_k": 3,
+      "mind_studio_skill_file": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_e3/tn36/skill_4394.json",
+      "new_reproduced_level": 7,
+      "offline_reproduced": false,
+      "plan": [
+        "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 41}}",
+        "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 44}}",
+        "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 41}}",
+        "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 44}}",
+        "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 41}}",
+        "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 44}}",
+        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 55}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 46, \"y\": 58}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 41}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 41}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 38}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 38}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 41}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 44}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}"
+      ],
+      "prior_best_level": 7,
+      "prior_residual_win_mechanic_gap_class": "tn36_l8_program_editor_object_control_gap_sxhtkytekm_palette_population",
+      "reproduce_result": {
+        "claimed_level": 7,
+        "game": "tn36",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 7,
+        "reproduced": true
+      },
+      "residual_win_mechanic_gap_class": "lookahead_fidelity_below_gate",
+      "target_level": 8,
+      "target_wall_time_s": 30.0,
+      "verifier_accuracy": 0.875,
+      "verifier_accuracy_per_round": [
+        0.875
+      ],
+      "world_model_path": "scripts/arc3_tn36_offline_solver.py"
+    },
+    {
+      "checkpoint_status": "honest_partial_fidelity_gate_not_met",
+      "entropy_selected_traces": [
+        "tr87:entropy_rank0:L6->L7"
+      ],
+      "fidelity_gate_passed": false,
+      "game": "tr87",
+      "lookahead_fidelity": 0.857143,
+      "lookahead_fidelity_per_round": [
+        0.857143
+      ],
+      "lookahead_k": 3,
+      "mind_studio_skill_file": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_e3/tr87/skill_4394.json",
+      "new_reproduced_level": 6,
+      "offline_reproduced": false,
+      "plan": [],
+      "prior_best_level": 6,
+      "prior_residual_win_mechanic_gap_class": "wall_time_cap_exhausted",
+      "reproduce_result": {
+        "claimed_level": 7,
+        "game": "tr87",
+        "reached_level": 6,
+        "reproduced": false,
+        "timeout_s": 30.0
+      },
+      "residual_win_mechanic_gap_class": "lookahead_fidelity_below_gate",
+      "target_level": 7,
+      "target_wall_time_s": 30.0,
+      "verifier_accuracy": 0.857143,
+      "verifier_accuracy_per_round": [
+        0.857143
+      ],
+      "world_model_path": "python/carnot/agentic/arc_game_adapters.py"
+    }
+  ],
+  "preconditions_checked": {
+    "arc_solver_kit_import": true,
+    "executable_world_model_import": true,
+    "harness_import": true,
+    "leaderboard_submission": false,
+    "lookahead_fidelity_enabled": true,
+    "offline_envs": {
+      "lp85": {
+        "available": true,
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/lp85",
+        "status": "available"
+      },
+      "tn36": {
+        "available": true,
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/tn36",
+        "status": "available"
+      },
+      "tr87": {
+        "available": true,
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/tr87",
+        "status": "available"
+      },
+      "tu93": {
+        "available": true,
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/tu93",
+        "status": "available"
+      }
+    },
+    "research_conductor_modified": false,
+    "trm_training": "stood_down_not_invoked"
+  },
+  "random_seed": 4394,
+  "reproducibility_checksum": "sha256:7f367b844d520de10d49fdd0490987457bc854297095683d315dd5d29990a376",
+  "reproducible_total_levels": 34,
+  "spec_refs": [
+    "REQ-VERIFY-4394",
+    "SCENARIO-VERIFY-4394"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_order": [
+    "lp85",
+    "tu93",
+    "tn36",
+    "tr87"
+  ],
+  "target_wall_time_s": 30.0,
+  "verifier_is_oracle": true,
+  "world_model_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_e3/lp85/skill_4394.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_e3/tn36/skill_4394.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_e3/tr87/skill_4394.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/arc_e3/tu93/skill_4394.json",
+    "python/carnot/agentic/arc_e3_fidelity_gate.py",
+    "python/carnot/agentic/arc_game_adapters.py",
+    "scripts/arc3_tn36_offline_solver.py"
+  ]
+}
