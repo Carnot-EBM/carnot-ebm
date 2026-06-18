@@ -1,3 +1,59 @@
+## 2026-06-18 — .404 planning sweep — ELEVATE the proven oracle-distinct EFFICIENCY moat with a STRONGER learned-heuristic class; drive ARC accuracy DEEPER; REPAIR-OR-RETIRE the thrice-blocked DiffusionGemma in-generation conversion
+
+Added by the `.404 planning sweep (Claude Opus 4.8, outer-loop planner). The `.403 scorecard
+(exp4368 capstone, read via `scripts/summarize_artifact.py`):
+
+- **HEADLINE (DiffusionGemma moat→generation conversion) STILL OPEN — 3rd consecutive block.**
+  exp4359 (Prism-hardened verifier-guided denoising search, the FIXED harness) halted at the
+  independent leak re-check: `honest_verdict=scorer_leaky_in_search_corpus`, `benchmark_n=0`,
+  `controls_differentiated=false`, `s3_guided_beats_control=false`. The `.401 leak-robust scorer
+  (exp4337) LEAKED on the NEW free-form generation corpus — its leak-robustness is corpus-specific.
+  Block lineage: `.399 degenerate-controls → `.402 MCQ-selection harness bug → `.403 scorer-leak.
+  exp4360 (PAPO) correctly `blocked_gate_check_failed` (gate never opened). `s3_moat_utility=open`,
+  `verifier_thesis_state=harness_still_open`.
+- **ARC north star ADVANCED 26→33 reproducible levels / 17 games** (registry authoritative). Deep
+  tails: tn36=7 (→L8 program-editor), tr87=6 (→L7), lp85=4/tu93=4 (→L5), sc25=1-of-5-live-recorded
+  (→L2, +4 upside), ar25/ka59/ft09=1 (→L2, named hidden-rule gaps).
+- **SELF-LEARNING — CLEAN WIN.** exp4364: the learned A* action-cost heuristic COMPOUNDS (held-out
+  env-actions 25→16), positive-control-passed, reproduction-gated, DEPLOYED into `arc_solver_kit`,
+  `verifier_is_oracle=false`. The stronger LLM-generated-heuristic arm did NOT run (`llm_heuristic_arm.ran=false`).
+- **Publication gate `paper_ready=True`, `unmet_gates=[]`** (FoVer 0.9131, G1–G4). Operator submission only.
+
+**The `.404 fork — build on the WIN, not the blocked path** (the SOTA-ingestion exp4365
+`flagged_for_v404 = llm_generated_action_heuristics_compounding_v404`):
+
+- **arXiv:2503.18809** — "Classical Planning with LLM-Generated Heuristics: Challenging the State of
+  the Art with Python Code" (Corrêa, Pereira, Seipp; Mar 2025, rev Oct 2025; verified arXiv+OpenReview
+  2026-06-18). Ask an LLM to generate several DOMAIN-DEPENDENT heuristic functions as Python code,
+  evaluate them on training tasks in greedy-best-first-search, keep the strongest — it beats SOTA
+  domain-independent heuristics on unseen tasks. **.404 HEADLINE:** the stronger-function-class arm
+  on top of exp4364's clean linear compounding win — an oracle-distinct (`verifier_is_oracle=false`)
+  EFFICIENCY moat (fewer actions-to-solve = the north-star efficiency axis). Failure mode: program
+  heuristics can memorize public ARC layouts / hide game-specific shortcuts / overfit one held-out
+  split → REQUIRES fresh held-out levels + static-leakage analysis + reproduction gates + a
+  contamination skeptic-proof.
+- **arXiv:2603.20216** — "CoDiLA: locally coherent parallel decoding for diffusion LMs" (NEW this
+  sweep; verified 2026-06-18). A small local AR verifier / deterministic block-coherence penalty as a
+  no-EXTERNAL-scorer diffusion control. **.404:** the scorer-INDEPENDENT control that quarantines the
+  leaky exp4337 scorer — measures the in-generation arms without depending on the corpus-specific-leaky
+  external scorer, so a `.404 DiffusionGemma rerun is not hostage to the scorer again.
+- **arXiv:2602.01842** (Prism HTS) + **arXiv:2606.08501** (PAPO reward-state alignment) — carried; both
+  demoted to scorer-REPAIR targets (re-run only after the scorer is requalified leak-robust ON the
+  generation corpus AND the CoDiLA scorer-independent control passes).
+- **arXiv:2605.05138** (Executable World Models for ARC-AGI-3) — carried; the E3 deeper-level engine.
+- **arXiv:2603.24621** — "ARC-AGI-3: A New Challenge for Frontier Agentic Intelligence" (official ARC
+  Prize paper, Mar 2026; verified 2026-06-18). Confirms the north-star EFFICIENCY framing: the scoring
+  metric "enable[s] formal comparison of human and AI action efficiency for the first time… how many
+  actions an AI system requires vs human performance." Frontier LLMs <1% of human efficiency
+  (Gemini 3.1 0.37%, GPT-5.4 0.26%, Opus 4.6 0.25%). Direct citation for the action-cost-heuristic
+  efficiency headline.
+- **OUT-OF-BAND (operator-owned, NOT auto-run in-loop):** A2D2 (arXiv:2606.13565) + SEPO
+  (arXiv:2502.01384) — verifier-as-reward GENERATOR training (the standing HARD RULE).
+
+Sources: [2503.18809](https://arxiv.org/abs/2503.18809) · [2603.20216](https://arxiv.org/abs/2603.20216) · [2603.24621](https://arxiv.org/abs/2603.24621) · [2602.01842](https://arxiv.org/abs/2602.01842) · [2606.08501](https://arxiv.org/abs/2606.08501) · [2605.05138](https://arxiv.org/abs/2605.05138)
+
+---
+
 ## 2026-06-17 (later) — .401 planning sweep — SETTLE the in-generation moat with a LEAK-ROBUST partial-state reward scorer (the .400 replication failed at the leak check), then drive the FIRST E3 ARC solve with explore-verify-plan
 
 Added by the `.401 planning sweep (Claude Opus 4.8, outer-loop). `.400 was DEPTH on every proven-or-mandated
