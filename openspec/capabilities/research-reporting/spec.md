@@ -22131,6 +22131,104 @@ A2D2/SEPO as out-of-band, updates `research-studying.md` idempotently, records
 |---|---|---|
 | REQ-REPORT-4398 | Planned (`python/carnot/experiment_4398_sota_ingestion_v407.py`) | Planned (`tests/python/test_experiment_4398_sota_ingestion_v407.py`) |
 
+### REQ-REPORT-4409: Ingest SOTA For The .408 Headline Branch From The .407 Outcomes
+
+The Exp 4409 workflow SHALL close the discover-to-ingest-to-plan loop for the
+`.408` headline branch by reading the `.407` fork outcome artifacts, filtering
+`research-studying.md` and `research-references.md` to the active
+real-intervention first-error localizer, typed-taxonomy localizer audit,
+active-selection compounding, cross-domain detector calibration, and ARC E3
+per-mechanic executable-world-model tracks, and running the reliable discovery
+channel (`scripts/sweep_clusters.py`, `scripts/sweep_semscholar.py`, plus
+low-concurrency WebSearch/WebFetch). The workflow SHALL NOT invoke
+`/deep-research`, SHALL NOT modify `scripts/research_conductor.py`, and SHALL
+leave `ops/changelog.md`, `ops/status.md`, and `_bmad/traceability.md`
+untouched for the separate reconciliation step.
+
+Before writing a complete mapping, the workflow SHALL require the reliable SOTA
+channel to be reachable. If arXiv/WebSearch/WebFetch are unreachable, it SHALL
+stop with `honest_verdict=blocked_sota_channel_unreachable` and SHALL NOT
+fabricate citations. Semantic Scholar HTTP 429 on the focused pass SHALL be
+reported as partial reliable-channel evidence, not promoted as a verified
+method source. When the channel is available, each mapped method SHALL carry a
+WebFetch/arXiv-API-verified arXiv ID or URL.
+
+The workflow SHALL branch on the actual `.407` artifacts. When Exp 4403 reports
+`honest_verdict=complete: clean_powered_null_position_only_not_beaten`,
+`localizer_genuinely_beats_position_only=false`, FoVer position-only `F1=1.0`,
+GAP-4 ARC `delta_ci95` crossing zero, and `verifier_is_oracle=false`, the
+`.408` plan SHALL record the text localizer as a powered position-only null
+rather than another headline localizer retry. When Exp 4404 reports
+`honest_verdict=blocked_gate_check_failed` because Exp 4403 did not pass the
+genuine-localizer gate, the `.408` plan SHALL keep typed-taxonomy cross-domain
+localizer work gated. When Exp 4407 reports
+`honest_verdict=complete: clean_null_position_bound_or_saturated`,
+`localizer_compounds=false`, `compounding_delta_ci95=[0.0, 0.0]`, and no
+positive-control headroom, the `.408` plan SHALL not repeat active selection
+over the same position-bound localizer. When Exp 4408 reports
+`honest_verdict=complete: calibrated_multi_domain_contract_false_deconfounded`,
+`detection_calibrated_multi_domain=false`, `domains_at_chance` containing
+`code_humaneval`, and `positive_control_passed=true`, the `.408` plan SHALL
+keep calibration repair alive but SHALL treat the deployable multi-domain
+contract as false. When Exp 4405 and Exp 4406 both report zero new E3 levels
+reproduced and `reproducible_total_levels=34`, the `.408` plan SHALL preserve
+ARC E3 as the north-star branch and SHALL prefer behavior-aware adaptive
+world-model testing over another static per-mechanic unit-test pass.
+
+The machine-checkable artifact SHALL be written to
+`results/experiment_4409_sota_ingestion_v408.json`, and the required runner
+SHALL be `results/experiment_4409_sota_ingestion_v408.py` delegating to
+`python/carnot/experiment_4409_sota_ingestion_v408.py`.
+
+The JSON artifact SHALL contain exactly the top-level fields `honest_verdict`,
+`flagged_for_v408`, `methods_mapped`, `out_of_band_flagged`, `random_seed`, and
+`field_principles`. `field_principles` SHALL contain exactly the principle
+annotations for `honest_verdict`, `flagged_for_v408`, `methods_mapped`,
+`out_of_band_flagged`, and `random_seed`. `honest_verdict` SHALL use a terminal
+prefix and, on the complete path, start with
+`complete: sota_ingestion_v408_mapped`. `flagged_for_v408` SHALL be a bare,
+non-empty string naming the single strongest `.408` method conditioned on the
+`.407` localizer null, typed-taxonomy gate block, active-learning null,
+deconfounded calibration failure, and E3 zero-new-level outcomes.
+`methods_mapped` SHALL contain three to five dicts with exactly `name`,
+`arxiv_id_or_url`, `carnot_stack_mapping`, `experiment_mapping`,
+`failure_mode`, `source_verification`, and `v407_outcome_conditioning`. Each
+`arxiv_id_or_url` SHALL be a verified arXiv ID or URL for a fresh or
+carried-forward method relevant to `.408`. `out_of_band_flagged` SHALL record
+A2D2 (`arXiv:2606.13565`) and SEPO (`arXiv:2502.01384`) as operator-owned
+verifier-as-reward generator training that is not auto-run in-loop.
+`random_seed` SHALL record the deterministic discovery query set seed.
+
+The workflow SHALL update `research-studying.md` idempotently to mark the
+`.407` forks as ingested, SHALL include `flagged_for_v408`, SHALL declare
+`random_seed=4409`, SHALL cite all mapped WebFetch/arXiv-API-verified sources,
+and SHALL explicitly flag A2D2/SEPO as out-of-band.
+
+#### SCENARIO-REPORT-4409: The .407 Outcomes Close Into A .408 Adaptive ARC World-Model Repair Plan
+
+**Given** Exp 4403 reports a clean powered null where the real-intervention
+localizer does not beat the position-only baseline
+**And** Exp 4404 blocks the typed-taxonomy cross-domain localizer because the
+genuine-localizer gate failed
+**And** Exp 4407 reports active selection does not compound and has no positive
+control headroom
+**And** Exp 4408 reports the deconfounded calibrated multi-domain detector
+contract remains false with `code_humaneval` at chance
+**And** Exp 4405 and Exp 4406 report honest ARC E3 partials with zero new
+reproduced levels
+**When** the Exp 4409 SOTA-ingestion workflow runs through the reliable channel
+**Then** it writes the required JSON mapping artifact, maps three to five
+verified arXiv sources to concrete `.408` experiment targets, flags the
+strongest `.408` behavior-aware adaptive ARC world-model repair method, records
+A2D2/SEPO as out-of-band, updates `research-studying.md` idempotently, records
+`random_seed`, and leaves conductor and reconciliation files untouched.
+
+## Implementation Status (REQ-REPORT-4409)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4409 | Planned (`python/carnot/experiment_4409_sota_ingestion_v408.py`) | Planned (`tests/python/test_experiment_4409_sota_ingestion_v408.py`) |
+
 ### REQ-REPORT-4115: Archive .380, Activate .381, And Record The Resumable-Training Close-State
 
 The Exp 4115 workflow SHALL archive milestone `2026.06.380`, confirm milestone
