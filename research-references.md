@@ -23437,3 +23437,63 @@ peers Weaver (2506.18203) / MSV (2603.03417); (D) unstall ARC with the training-
 
 Sources (this sweep, all WebFetch-verified): arxiv.org/abs/{2602.22871, 2602.01849, 2602.09424, 2606.06098,
 2601.09692, 2509.24460, 2510.14913, 2506.18203, 2603.03417, 2512.24156, 2603.24621, 2507.15877, 2605.26356}.
+
+## .403 planning sweep (2026-06-17, outer-loop Claude Opus 4.8 — reliable channel, all arXiv-verified) — RE-ATTEMPT the moat→generation CONVERSION (Prism-hardened), ARC north-star DEEPER, COMPOUND the self-learning efficiency win
+
+Added by the `.403 planning sweep. `.402 produced `verifier_thesis_state: "moat_proven_leak_robust_but_s3_utility_open"`
+(`results/experiment_4357_capstone_v402.json`):
+
+- **HEADLINE (S3 verifier-guided search, exp4348) — UNRESOLVED, a HARNESS bug not a null.** The arms were framed
+  as MCQ **selection** (pick option A/B/C/D from option-logits) → best-of-K / self-reward-SMC / unguided collapse to
+  "argmax logit" → the three deltas were bit-identical (0.266667) → CRITICAL TAUTOLOGY + `controls_not_differentiable`.
+  `s3_moat_utility: open`. The conversion question (does the PROVEN leak-robust scorer inside the denoising loop
+  Pareto-improve generation at fixed NFE?) has **never been validly tested**.
+- **ARC north star — ka59 L1 newly cracked (+1 game); tn36 L7; registry now 26 levels / 15 games** (outer-loop tu93
+  L1→L3 etc.). sc25 L2 (spell-delta gap), ar25 L2 (action7 undo-stack gap), tr87/ft09 (world-model accuracy ≈0) open.
+  The fresh_env sweep over the 10 unsolved games got 0 unlocks (the remainder are hard spatial-planning games).
+- **Self-learning — CLEAN WIN (exp4353):** a learned A* action-cost heuristic cut held-out env-actions 25→16
+  (positive control passed, reproduction-gated, `verifier_is_oracle=false`). Cross-game value transfer RETIRED (3 nulls).
+- **paper_ready=True** (G1–G4, FoVer 0.9131). The .401-capstone CIRCULAR_MOAT_OVERCLAIM stamp bug is FIXED (exp4355).
+
+The SOTA-ingestion (exp4354, `flagged_for_v403: prism_hardened_s3_verifier_guided_search_v403`) + a fresh
+WebSearch/WebFetch verification (2026-06-17) confirm the strongest .403 directions:
+
+**A. HEADLINE — Prism-hardened verifier-guided DENOISING SEARCH (the in-generation conversion, re-attempted):**
+- **arXiv:2602.01842** (Prism: Efficient Test-Time Scaling via **Hierarchical Trajectory Search + Self-Verification**
+  for Discrete Diffusion LMs; ICML 2026; code github.com/viiika/Prism) — HTS dynamically prunes/reallocates compute in
+  an early-to-mid denoising window; **Local branching with partial remasking** explores diverse implementations while
+  preserving high-confidence tokens; matches best-of-N at substantially fewer NFE. **THE search mechanism** for the
+  .403 headline — guide it with Carnot's EXTERNAL leak-robust scorer (exp4337) and use Prism's intrinsic
+  **Self-Verified Feedback (SVF)** as the SHARPEST oracle-distinct must-beat (external verifier vs the model verifying
+  itself). Failure mode (Prism warns): SVF can become another correlated scorer and HTS can hide diversity collapse →
+  .403 MUST log branch-diversity receipts, leak re-checks, and scorer-disagreement rows before claiming a gain.
+- **arXiv:2604.06260** (S3 Stratified Scaling Search) — the base policy; .403 fixes the .402 control-collapse with
+  DIFFERENTIATED controls (real token-by-token generation, not MCQ selection) + metric-tautology guards.
+- **arXiv:2602.22871** (Reward-Guided Stitching, external PRM) / **arXiv:2602.01849** (Self-Rewarding SMC, intrinsic) /
+  **arXiv:2509.25604** (Reward-Free Guidance) — the in-generation-guidance family + the must-beat intrinsic/reward-free arms.
+- **arXiv:2606.08501** (PAPO reward-state alignment) — the headline skeptic-proofing diagnostic (gated on an A1 gain;
+  authentic-trajectory vs randomly-remasked states; the operator was twice-burned, so a gain that fails alignment is quarantined).
+
+**B. ARC north star DEEPER (executable world-model induction; verifier_is_oracle=true; operator MANDATORY 2026-06-17):**
+- **arXiv:2605.05138** (Executable World Models for ARC-AGI-3) — codex induces a Python world model, the consistency-energy
+  verifier grounds it (no oracle), plan to the win. Deeper on high-headroom cracked games (sc25→5 live-recorded; tu93/lp85/tn36)
+  + blocked-mechanic L2s (ar25/ka59) + the mechanic-limited tails (tr87/ft09 with active-data disambiguation, the M2-v4 lever).
+- **arXiv:2605.25931** (AERA explore-verify-plan) + **arXiv:2512.22336** (Agent2World adaptive world-model testing) — the harness.
+
+**C. CONTINUOUS SELF-LEARNING that COMPOUNDS (efficiency axis):**
+- **arXiv:2503.18809** (Classical planning with LLM-generated heuristics) — sample small Python heuristic programs per game,
+  select by reproduced held-out action count; the stronger-function-class arm vs the .402 learned linear action-cost heuristic.
+  .403 deploys the .402 win into arc_solver_kit as the standing A* cost + measures the compounding learning curve
+  (held-out actions vs solved-trace-corpus size). NOT cross-game value transfer (RETIRED, exp4342).
+
+**OUT-OF-BAND / operator-owned (flagged, NOT auto-run in-loop — verifier-as-reward GENERATOR training):**
+- **arXiv:2606.13565** (A2D2 reward-guided any-length discrete diffusion), **arXiv:2502.01384** (SEPO score-entropy policy optimization).
+
+**Bottom line for .403:** (A) RE-ATTEMPT the moat→generation conversion with a FIXED, Prism-hardened harness — real
+denoising generation, HTS + partial-remask branching, the external leak-robust scorer, at fixed NFE vs unguided /
+best-of-N@matched-NFE / intrinsic SVF, with differentiated-controls + tautology + branch-diversity + leak + disagreement
+receipts (exp4359); PAPO-validate a win (exp4360). (B) Drive ARC deeper — high-headroom cracked games (exp4361),
+blocked-mechanic L2s (exp4362), mechanic-limited tails (exp4363). (C) Deploy + compound the action-cost heuristic (exp4364).
+
+Sources (this sweep, WebSearch/WebFetch-verified 2026-06-17): arxiv.org/abs/{2602.01842, 2604.06260, 2602.22871,
+2602.01849, 2509.25604, 2606.08501, 2605.05138, 2605.25931, 2512.22336, 2503.18809, 2606.13565, 2502.01384}.

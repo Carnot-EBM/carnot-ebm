@@ -1,5 +1,61 @@
 # Carnot — Operational Status
 
+## Session 2026-06-17 — Milestone 2026.06.403 Research Planning Staged
+
+Planned milestone **2026.06.403** ("RE-ATTEMPT the moat->generation CONVERSION with a FIXED, Prism-hardened
+verifier-guided denoising SEARCH + ARC north-star DEEPER + COMPOUND the self-learning efficiency win") as the NEXT
+milestone after all 11 `.402 tasks completed. The TRUE `.402 scorecard (read via `scripts/summarize_artifact.py` +
+`results/experiment_4357_capstone_v402.json`, `verifier_thesis_state: moat_proven_leak_robust_but_s3_utility_open`):
+
+- **HEADLINE (S3 verifier-guided search, exp4348) — UNRESOLVED, a HARNESS bug not a null.** The arms were framed as
+  multiple-choice SELECTION (pick option A/B/C/D from option-logits), so best-of-K / self-reward-SMC / unguided
+  collapsed to argmax-logit -> the three deltas were bit-identical (0.266667) -> CRITICAL TAUTOLOGY +
+  `controls_not_differentiable`. `s3_moat_utility=open`. The conversion question (does the PROVEN leak-robust scorer
+  inside the denoising loop Pareto-improve generation at fixed NFE?) has NEVER been validly tested. The in-generation
+  moat itself remains PROVEN leak-robust (.401 exp4338). exp4349 (PAPO) correctly BLOCKED (gated on the S3 win).
+- **ARC north star — ka59 L1 newly cracked (+1 game); tn36 L7.** Registry now **26 reproducible levels / 15 games**
+  (authoritative `ops/arc_solve_registry.yaml`, after outer-loop tu93 L1->L3 etc.; the capstone snapshot was 23/14).
+  sc25 L2 (spell-delta gap), ar25 L2 (action7 undo-stack gap), tr87/ft09 (world-model accuracy ~0) OPEN. The
+  fresh_env sweep over the 10 unsolved games got 0 unlocks (honest negative — the remainder are hard spatial games).
+- **Self-learning — CLEAN WIN (exp4353).** A learned A* action-cost heuristic cut held-out env-actions **25->16**
+  (positive control passed, reproduction-gated, `verifier_is_oracle=false`). Cross-game value transfer RETIRED.
+- **paper_ready=True** (G1-G4, FoVer 0.9131). The .401-capstone CIRCULAR_MOAT_OVERCLAIM stamp bug is FIXED + durable
+  (exp4355; the .402 capstone scans 0 flags).
+
+**The shape (11 tasks, exp4358–exp4368).** Phase 0 archive/activate (exp4358). **Phase A — THE HEADLINE
+(re-attempt the conversion, FIXED harness):** exp4359 Prism-hardened verifier-guided DENOISING SEARCH (arXiv:2602.01842
+HTS + partial-remask branching; a REAL token-by-token generation loop NOT MCQ-selection; the .401 leak-robust scorer as
+the EXTERNAL guide; at FIXED NFE vs unguided / best-of-N@matched-NFE / intrinsic Self-Verified-Feedback — the sharpest
+oracle-distinct must-beat; with differentiated-controls + tautology + branch-diversity + leak + disagreement receipts),
+then exp4360 PAPO reward-state-alignment diagnostic (gated on the gain). **Phase B — ARC NORTH STAR (operator MANDATORY
+2026-06-17):** exp4361 deeper high-headroom cracked (sc25 L2+/tu93 L4/lp85 L5/tn36 L8), exp4362 blocked-mechanic L2s
+(ar25 L2 action7-undo-stack / ka59 L2), exp4363 mechanic-limited tails tr87+ft09 with active-data. **Phase C —
+continuous self-learning:** exp4364 DEPLOY the .402 action-cost heuristic into the standing planner + PROVE it COMPOUNDS
+(held-out env-actions vs solve-trace-corpus size), LLM-gen-heuristic stronger arm (2503.18809). **Phase E —** exp4365
+SOTA-ingestion->.404, exp4366 registry/gaps hygiene + GAP-4 guard, exp4367 KV260 continuity, exp4368 capstone .403 + the
+headline decision (did Prism-hardened search convert the moat?) + G1-G4.
+
+Wrote `openspec/change-proposals/research-roadmap-v403.md` (= `research-roadmap-vNEXT.md`) and
+`research-roadmap-next.yaml` (11 tasks). Updated `research-references.md` (`.403 sweep, all arXiv-verified 2026-06-17 via
+the SOTA-ingestion exp4354 `flagged_for_v403: prism_hardened_s3` + a WebSearch/WebFetch verification: Prism 2602.01842
+[ICML 2026, HTS + partial-remask + Self-Verified-Feedback] for the headline; S3 2604.06260 / self-reward SMC 2602.01849 /
+RFG 2509.25604 / PAPO 2606.08501 for the in-generation family; Executable World Models 2605.05138 + AERA 2605.25931 +
+Agent2World 2512.22336 for ARC E3; LLM-generated heuristics 2503.18809 for compounding action-efficiency; A2D2 2606.13565
++ SEPO 2502.01384 flagged OUT-OF-BAND/operator-owned). Validation: YAML schema OK (11 tasks, all `.403, codex+gpt-5.5
+routing, prior_failures 4-subfield on the 2 reruns exp4359/exp4363, gated_on bare-bool on exp4360<-exp4359, BARE-scalar +
+terminal-prefix + principle-annotated discipline, footers present); `milestone == _expected_next_milestone('2026.06.402')
+= 2026.06.403`; exclusion-manifest lint = 6 SCOPE_MATCHED WARNINGs all carrying `operator_override` (activation
+proceeds); canonical-URL + overdue-priority lints exit 0. Left `research-roadmap.yaml` and
+`scripts/research_conductor.py` untouched. Did NOT push.
+
+**Invariants carried:** `paper_ready=True` (G1-G4; frozen FoVer 0.9131 NEVER substituted — `.403 adds the
+conversion/ARC-depth/compounding LENSES, not a new headline); oracle-distinct discipline (`verifier_is_oracle=false` +
+matched control on the moat task; execution-grounded ARC solves are `verifier_is_oracle=true`, NOT moat headlines); the
+in-generation moat is PROVEN (.401) — `.403 tests its UTILITY; conductor STOOD-DOWN on TRM training; Qwen FORBIDDEN as
+trained base; A2D2/SEPO verifier-as-reward-generator-training OUT-OF-BAND; cross-game value transfer (exp4342) +
+cross-domain selection (exp4314) RETIRED; gated/required fields emitted BARE; no flagged-adversarial artifact aggregated;
+no autonomous public-doc edits; online ARC play operator-gated; DiffusionGemma via the llama.cpp PR binary only.
+
 ## Session 2026-06-16 — Milestone 2026.06.398 Research Planning Staged
 
 Planned milestone **2026.06.398** ("PROVE EFFICIENCY-PARITY + ESTABLISH THE IN-GENERATION MOAT WITH
