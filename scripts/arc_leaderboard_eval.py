@@ -34,6 +34,8 @@ from carnot.agentic.arc_competition_agent import (
 )
 
 _VALUE_HEAD = None      # BRIDGE: the cross-game value head, loaded once for the explorer_vh policy
+_PROPOSER = None        # E3: a stronger world-model proposer (a bigger GGUF), loaded once + reused
+_PROPOSER_REPO = ""     # repo substr for the E3 proposer (e.g. "Qwen3.6-35B-A3B"); "" = E3 default 12B
 _VALUE_WEIGHT = 0.0     # A* blend weight for explorer_vh; 0 = depth-primary tiebreak (neutral, safe).
                         # weight 5 REGRESSED the live explorer (6/32 vs 8/32) -- the value head misroutes
                         # the depth-first-ride structure. Set via --value-weight for sweeps.
@@ -54,7 +56,13 @@ def _build_policy(kind: str, game: str):
     (the unseen-game simulation). 'explorer' = tier-1 graph_explore only; 'e3' = the FULL competition
     cascade (graph_explore -> E3 executable-world-model induction on stall) that make_carnot_agent runs."""
     if kind == "e3":
-        return E3AgentPolicy(game)
+        # INDUCTION ARM: optionally use a STRONGER world-model proposer (a bigger GGUF) -- the lever
+        # where gemma-4-12B closed 0/6. One proposer instance is loaded + reused across games.
+        global _PROPOSER
+        if _PROPOSER_REPO and _PROPOSER is None:
+            from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
+            _PROPOSER = LocalGGUFProposer(repo_substr=_PROPOSER_REPO)
+        return E3AgentPolicy(game, proposer=_PROPOSER)
     if kind in ("explorer_vh", "explorer_bf"):              # BRIDGE: value-head-routed explorer
         global _VALUE_HEAD
         if _VALUE_HEAD is None:
@@ -130,8 +138,9 @@ def main() -> int:
     games_mode = _arg(argv, "--games", "claimed")
     policy_kind = _arg(argv, "--policy", "explorer")
     budget = int(_arg(argv, "--budget", "20000"))
-    global _VALUE_WEIGHT
+    global _VALUE_WEIGHT, _PROPOSER_REPO
     _VALUE_WEIGHT = float(_arg(argv, "--value-weight", "0"))   # explorer_vh A* blend weight (0 = neutral)
+    _PROPOSER_REPO = _arg(argv, "--proposer", "")             # e3 stronger proposer repo substr ("" = 12B)
     oracle = _oracle_levels()
     games = sorted(oracle) if games_mode == "oracle" else list(CLAIMED)
     only = _arg(argv, "--only", "")          # --only g1,g2 : target a subset (e.g. the worst gaps)
