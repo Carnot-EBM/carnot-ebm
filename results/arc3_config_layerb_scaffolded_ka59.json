@@ -10,8 +10,8 @@
   "editable_cells": 38,
   "reference_bbox": [
     21,
-    63,
-    0,
+    41,
+    9,
     53
   ],
   "n_nonwins": 6,
@@ -21,14 +21,14 @@
     "scaffolded": true
   },
   "inference_substrate": "offline_arc_agi3_layerb_scaffolded_iGPU_port8920",
-  "raw_sample": "<|channel>thought\n<channel|>```python\nimport numpy as np\n\ndef is_win(grid):\n    # grid: 64x64 numpy int array.\n    e = grid[63:64, 26:64]   # the editable region (1x38)\n    \n    # Analysis of the provided data:\n    # Winning e: 444444444444444444444444444444440000000 (34 fours, 4 zeros)\n    # Non-win 1: 44444444444444444444444444444444444440 (36 fours, 2 zeros)\n    # Non-win 2: 444444444444444444444444444444440000000 (32 fours, 6 zeros)\n    # Non-win 3: 444444444444444444444444444440000000000000 (28 fours, 10 zeros)\n    # Non-win 4: 444444444444444444440000000000000000000 (22 fours, 16 zeros)\n    \n    # The winning configuration has exactly 34 fours followed by 4 zeros.\n    # The non-winning examples have different counts of fours and zeros.\n    # Specifically, the winning configuration is",
+  "raw_sample": "<|channel>\n<|channel>thought\n<channel|>```python\nimport numpy as np\n\ndef is_win(grid):\n    # The editable region is rows 63..63, cols 26..63 (38 cells wide)\n    # The winning configuration for e is:\n    # [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0]\n    # This corresponds to 32 fours followed by 6 zeros.\n    \n    # The reference region (rows 21..41, cols 9..53) contains:\n    # colour 4: total_cells=32, components=2 (r5-9,c35-39,n16) and (r11-15,c2-6,n16)\n    # The count of colour 4 in the reference region is 32.\n    # The count of colour 0 in the reference region is 1.\n    # However, the win condition is specifically 32 fours and 6 zeros.\n    \n    # Looking at the NON-WIN examples:\n    # NON-WIN 1: 37 fours, 1 zero\n  ",
   "coherent_runnable": true,
   "verification": {
-    "fires_on_win": false,
+    "fires_on_win": true,
     "false_positive_rate": 0.0,
     "n_nonwin": 6
   },
-  "rule_grounded": false,
-  "literal_hardcode": true,
-  "honest_verdict": "complete_scaffolded_tier0_coherent_but_rule_not_grounded"
+  "rule_grounded": true,
+  "literal_hardcode": false,
+  "honest_verdict": "complete_scaffolded_tier2_GROUNDED_relational_rule"
 }

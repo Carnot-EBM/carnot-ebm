@@ -90,9 +90,12 @@ def collect():
     if not ch.any():
         return scene, None, bg, None, None, None, []
     rs = np.argwhere(ch); eb = (int(rs[:, 0].min()), int(rs[:, 0].max()), int(rs[:, 1].min()), int(rs[:, 1].max()))
-    # reference region = static (non-bg) cells NOT in the editable bbox -> crop to its bbox
+    # reference region = static (non-bg) cells NOT in the editable ROW(S) -> crop to its bbox. Excluding
+    # the whole editable row (not just the editable cols) keeps UI/frame cells in the editable row out of
+    # the reference, so the reference crops down to the actual 'rule area' and renders (move #1 v1 leaked
+    # the editable row into ref_box, blowing it past the render cap).
     static = (scene != bg).copy()
-    static[eb[0]:eb[1] + 1, eb[2]:eb[3] + 1] = False
+    static[eb[0]:eb[1] + 1, :] = False
     ref_box = None
     if static.any():
         sr = np.argwhere(static)
@@ -116,16 +119,42 @@ def _edit_sub(grid, eb):
     return g[eb[0]:eb[1] + 1, eb[2]:eb[3] + 1]
 
 
+def _summ(sub):
+    """Exact, pre-computed description of an editable sub-array so the model never counts ASCII by eye:
+    flat value list + per-colour counts."""
+    from collections import Counter
+    flat = [int(v) for v in np.asarray(sub).flatten()]
+    counts = dict(sorted(Counter(flat).items()))
+    return f"values={flat}  counts={counts}"
+
+
+def _digest_reference(scene, bg, ref_box):
+    """Digest the static reference region into COMPACT object-centric features (per-colour connected
+    components: count, n_components, bounding boxes) -- NEVER a raw grid. Handing the model a raw grid
+    (even a cropped 21x45) re-triggers the reading-degeneration that move #1 diagnosed; the model narrates
+    the grid cell-by-cell and never writes the predicate. Component features keep the perception burden
+    off the model (the same object-centric representation that is the pipeline's load-bearing finding)."""
+    from carnot.agentic.arc_world_model_dsl import _color_components
+    if ref_box is None:
+        return "(no reference region found)"
+    r0, r1, c0, c1 = ref_box
+    sub = np.asarray(scene)[r0:r1 + 1, c0:c1 + 1]
+    lines = []
+    for col in sorted(set(int(v) for v in sub.flatten()) - {bg}):
+        comps = _color_components(sub, col)
+        boxes = []
+        for comp in comps[:6]:
+            ys = [p[0] for p in comp]; xs = [p[1] for p in comp]
+            boxes.append(f"(r{min(ys)}-{max(ys)},c{min(xs)}-{max(xs)},n{len(comp)})")
+        lines.append(f"  colour {col}: total_cells={int((sub == col).sum())}, components={len(comps)} {' '.join(boxes)}")
+    hdr = f"reference region rows {r0}..{r1}, cols {c0}..{c1} (component coords are RELATIVE to r{r0},c{c0}):"
+    return hdr + "\n" + "\n".join(lines)
+
+
 def build_prompt(scene, eb, bg, ref_box, win, nonwins):
     win_sub = _edit_sub(win, eb)
-    nonwin_strs = "\n\n".join(f"  NON-WIN example {i + 1}:\n{_render(_edit_sub(nw, eb))}" for i, nw in enumerate(nonwins[:4]))
-    ref_str = "(none found)"
-    if ref_box is not None:
-        rb = scene[ref_box[0]:ref_box[1] + 1, ref_box[2]:ref_box[3] + 1]
-        if rb.size <= 1400:
-            ref_str = f"rows {ref_box[0]}..{ref_box[1]}, cols {ref_box[2]}..{ref_box[3]} (background={bg}):\n{_render(rb)}"
-        else:
-            ref_str = f"rows {ref_box[0]}..{ref_box[1]}, cols {ref_box[2]}..{ref_box[3]} -- too large to render; colours present: {sorted(set(int(v) for v in rb.flatten()) - {bg})}"
+    nonwin_strs = "\n".join(f"  NON-WIN {i + 1}: {_summ(_edit_sub(nw, eb))}" for i, nw in enumerate(nonwins[:5]))
+    ref_str = _digest_reference(scene, bg, ref_box)
     return f"""You are inducing the WIN RULE of an ARC-AGI-3 configuration puzzle ('{GAME}'). I have already
 done the hard perception work for you -- you do NOT need to read a full 64x64 grid. Reason ONLY over the
 small extracted regions below.
@@ -134,8 +163,8 @@ The player edits the EDITABLE region: rows {eb[0]}..{eb[1]}, cols {eb[2]}..{eb[3
 The level COMPLETES when the editable region's values satisfy a rule defined by the static REFERENCE
 region elsewhere in the scene.
 
-EDITABLE region in the WINNING configuration:
-{_render(win_sub)}
+EDITABLE region in the WINNING configuration (exact values + per-colour counts; do NOT re-count by eye):
+  WIN: {_summ(win_sub)}
 
 EDITABLE region in NON-winning configurations:
 {nonwin_strs}
@@ -180,19 +209,28 @@ def verify(is_win, win, nonwins):
     return res
 
 
+def _strip_comments(code):
+    """Drop full-line and trailing # comments so the literal-hardcode check inspects EXECUTABLE code
+    only -- the model echoes the win array in comments, which falsely tripped the detector."""
+    out = []
+    for line in code.splitlines():
+        out.append(re.sub(r"#.*$", "", line))
+    return "\n".join(out)
+
+
 def _looks_literal_hardcode(code, win_sub):
-    """Heuristic: does the predicate embed the literal winning values (memorization, not a rule)?
-    Flag if a long run of the win array's distinct digits appears as a literal list in the code."""
+    """Heuristic: does the EXECUTABLE predicate embed the literal winning array (memorization, not a
+    rule)? Flag if a long run of the win array's values appears as a literal in the code (comments
+    stripped first). A derived constant (e.g. count_4 == 32, where 32 was read from the reference) is
+    NOT a literal-array hardcode -- it is a relational rule with the relation pre-evaluated."""
     vals = [int(v) for v in np.asarray(win_sub).flatten()]
     if len(vals) < 6:
         return False
-    seq = ",".join(str(v) for v in vals)
-    flat = re.sub(r"\s+", "", code)
-    # exact flattened sequence, or >=8 consecutive win values as a literal, => hardcode
-    if seq.replace(",", "") in flat.replace(",", ""):
+    flat = re.sub(r"\s+", "", _strip_comments(code))
+    bare = "".join(str(v) for v in vals)
+    if bare in flat:
         return True
-    return any(",".join(str(v) for v in vals[i:i + 8]).replace(",", "") in flat.replace(",", "")
-               for i in range(0, max(1, len(vals) - 8)))
+    return any("".join(str(v) for v in vals[i:i + 8]) in flat for i in range(0, max(1, len(vals) - 8)))
 
 
 def main():
@@ -226,7 +264,8 @@ def main():
                 exec(code, ns)  # noqa: S102 -- inducing a verifier predicate; sandboxed-by-scope
                 v = verify(ns.get("is_win", lambda g: False), win, nonwins)
                 out["verification"] = v
-                grounded = bool(v.get("fires_on_win")) and (v.get("false_positive_rate") or 1.0) < 0.2
+                fpr = v.get("false_positive_rate")  # 0.0 is the BEST value -- do NOT use `or` (falsy-zero)
+                grounded = bool(v.get("fires_on_win")) and fpr is not None and fpr < 0.2
                 literal = _looks_literal_hardcode(code, win_sub)
                 out["rule_grounded"] = grounded
                 out["literal_hardcode"] = bool(literal)

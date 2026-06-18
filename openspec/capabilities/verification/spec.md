@@ -19570,6 +19570,78 @@ clean powered null rather than graduating the localizer headline.
 |---|---|---|
 | REQ-VERIFY-4403 | Planned (`python/carnot/experiment_4403_real_intervention_localizer_deconfound.py`, `results/experiment_4403_real_intervention_localizer_deconfound.py`) | Planned (`tests/python/test_experiment_4403_real_intervention_localizer_deconfound.py`) |
 
+### REQ-VERIFY-4407: Active-Learning First-Error Localizer Compounding Curve
+
+The repository SHALL provide Exp 4407 at
+`python/carnot/experiment_4407_active_learning_self_learning_compounds.py` and
+`results/experiment_4407_active_learning_self_learning_compounds.py` to test
+whether ActPRM-style active trace selection compounds beyond the Exp 4396
+size-only saturated null on the best available oracle-distinct first-error
+localizer. The experiment SHALL use cached corpora only, SHALL fit CPU-only
+contrastive localizers over labeled trace selections, SHALL NOT invoke live LLM
+generation, SHALL NOT train TRM or generator models, and SHALL keep the Exp 4403
+deconfounding controls in the active-learning loop.
+
+Before measuring any curve, the runner SHALL check that Exp 4403's
+real-intervention localizer artifact is loadable, that its cached
+real-intervention labeling corpus can be reconstructed, that the Exp 4381
+baseline/verifier registry context remains available, and that TRM training is
+stood down. If Exp 4403 has no usable localizer but the cached REAL FoVer
+first-error corpus is loadable, the runner SHALL use that REAL FoVer corpus
+directly as the labeling pool. If neither a localizer/corpus from Exp 4403 nor
+the REAL FoVer first-error fallback corpus is loadable, the runner SHALL write
+`honest_verdict=blocked_no_localizer_or_corpus` and stop without fabricating a
+learning curve.
+
+When preconditions hold, the runner SHALL split by held-out template/problem
+family, then at increasing corpus sizes compare two refit-from-scratch
+localizers: an ACTIVE arm that selects the next labels by high prediction
+uncertainty plus under-represented first-error-position diversity, and a RANDOM
+arm that adds uniformly shuffled labels as the Exp 4396 size-only mechanism.
+Each curve point SHALL report held-out first-error F1 for ACTIVE, RANDOM, the
+from-scratch full-pool positive-control ceiling, and the content-blind
+position-only floor on the same held-out-family split.
+
+The runner SHALL compute a paired bootstrap CI95 with at least 2000 resamples
+for the ACTIVE-minus-RANDOM held-out first-error F1 delta at the largest corpus
+size. `localizer_compounds` SHALL be true only when ACTIVE held-out F1 rises
+with corpus size beyond the RANDOM baseline, the largest-size delta CI95
+excludes zero on the positive side, the positive-control ceiling confirms
+non-trivial headroom, and ACTIVE beats the position-only control rather than
+re-learning first-error position. A flat or position-bound result SHALL be
+reported as a clean null rather than a blocked or fabricated win.
+
+The terminal artifact SHALL write
+`results/experiment_4407_active_learning_self_learning_compounds.json` with
+top-level fields `honest_verdict`, bare bool `localizer_compounds`,
+`active_vs_random_learning_curve`, `compounding_delta_ci95`, bare bool
+`verifier_is_oracle=false`, `preconditions_checked`, `random_seed`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`duration_s`, `inference_substrate=verifier_ensemble_against_cached_candidates`,
+and `adversarial_verify`. The model specs SHALL declare the localizer,
+FoVer/real-intervention corpus, active-selection config, positive control, and
+sample counts.
+
+### SCENARIO-VERIFY-4407: Active Selection Reports Win Or Clean Null
+
+Given Exp 4403's cached real-intervention labels or the REAL FoVer fallback
+corpus are loadable, when Exp 4407 runs, then it records the localizer/corpus
+and TRM-stand-down preconditions, builds a held-out-family split, measures
+ACTIVE and RANDOM localizer learning curves at increasing corpus sizes, reports
+the full-pool positive-control ceiling and position-only floor at every point,
+bootstraps the largest-size ACTIVE-minus-RANDOM delta, sets
+`verifier_is_oracle=false`, records model specs and a reproducibility checksum,
+and runs adversarial verification. If ACTIVE does not beat RANDOM with a
+positive CI95 and does not beat the position-only floor with positive-control
+headroom, then `localizer_compounds=false` and the artifact reports a clean null
+rather than a compounding claim.
+
+## Implementation Status (REQ-VERIFY-4407)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4407 | Planned (`python/carnot/experiment_4407_active_learning_self_learning_compounds.py`, `results/experiment_4407_active_learning_self_learning_compounds.py`) | Planned (`tests/python/test_experiment_4407_active_learning_self_learning_compounds.py`) |
+
 ### REQ-VERIFY-4396: Localizer Self-Learning Compounding Curve
 
 The repository SHALL provide Exp 4396 at

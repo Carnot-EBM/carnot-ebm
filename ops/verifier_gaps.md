@@ -1995,3 +1995,11 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - candidate design: only plan/claim L2 after the register-level transition and a replayable offline reproduction gate both pass.
 - priority: high
 <!-- exp4406-gap-ft09-l2:end -->
+
+### GAP-4407-ACTIVE-LOCALIZER-POSITION-BOUND: Exp 4407 active localizer residual
+- status: open
+- evidence: `results/experiment_4407_active_learning_self_learning_compounds.json`.
+- failure mode: complete: clean_null_position_bound_or_saturated
+- missing discriminator: Non-degenerate multi-position real intervention labels with content features that beat a position-only first-error baseline.
+- candidate design: Collect multi-step FoVer interventions with non-empty suffix redirects and typed first-error families before retrying active trace selection.
+- priority: high
