@@ -141,7 +141,67 @@ def _tu93():
     )
 
 
-_BUILDERS = {"lp85": _lp85, "tu93": _tu93}
+# ---------------- tr87 (glyph-substitution configuration puzzle; RE'd 2026-06-17) ----------------
+def _tr87():
+    """tr87 -- a GLYPH-SUBSTITUTION configuration puzzle (RE'd 2026-06-17, frame + internal-state).
+
+    Mechanic: a row of 5 EDITABLE glyphs (sprite series 'B', each a value 1-7) must be set to match a
+    TARGET row (series 'A', values 1-7) THROUGH a substitution rule. The visible top reference grid IS
+    the rule -- it pairs A-values with B-values (e.g. A4<->B3). Win = for every position i,
+    value(editable_i) == rule_map[value(target_i)]. ACTION1/ACTION2 cycle the SELECTED glyph's value
+    (-1/+1 mod 7); ACTION3/ACTION4 move the selector among the 5 glyphs. A move budget (128) decrements
+    per action; running out loses. (Later levels add alter_rules / tree_translation / double_translation
+    twists; L1-L5 of the base mechanic are handled here.)
+
+    VALIDATED: solves L1 reproducibly (15 moves, offline_reproduced=True). The hand_verifier reads the
+    game's internal config -- the rule map (cifzvbcuwqe) + target (zvojhrjxxm) + current (ztgmtnnufb) --
+    and returns the count of positions NOT yet at their rule-mapped required value (0 == win). This is
+    the SAME internal-state-reading pattern as the lp85 adapter (_goal_key); it routes the best-first
+    search to set each glyph to its target. Frame-only perception (classifying glyph bitmaps + decoding
+    the rule grid from pixels) is a future upgrade; the solve is reproduction-gated regardless (the gate
+    replays ACTIONS, not internal reads). branch_mode='replay' (tr87's reset is idempotent + the config
+    is a deterministic function of the action prefix). state_key is the full-grid hash so the win
+    animation frames stay distinct (the search can traverse them to the level-up)."""
+    from carnot.agentic.arc_agi3_world_model import frame_hash, grid_of
+    from carnot.agentic.arc_agi3_live_adapter import _game_action
+
+    def _val(s):
+        return int(s.name[-1])                          # glyph value = trailing digit of the sprite name
+
+    def _mismatches(game):
+        # rule map: A-value -> B-value (the top reference grid, read once per call)
+        amap = {int(lhs[0].name[-1]): int(rhs[0].name[-1]) for lhs, rhs in game.cifzvbcuwqe}
+        cur = [_val(s) for s in game.ztgmtnnufb]         # current editable B-values
+        req = [amap.get(_val(s)) for s in game.zvojhrjxxm]  # required B-value per target A-value
+        return sum(1 for c, r in zip(cur, req) if c != r)
+
+    def action_labels(env, frame=None, path=None):
+        return [json.dumps({"action": a}) for a in (1, 2, 3, 4)]
+
+    def apply(env, label, frame):
+        return env.step(_game_action(GameAction, json.loads(label)["action"]))
+
+    def state_key(game, frame=None):
+        # full-grid hash: distinguishes every (selector, glyph-values) config AND the win-animation
+        # frames (where the config is frozen but the grid changes), so the search reaches the level-up.
+        return frame_hash(grid_of(frame)) if frame is not None else None
+
+    def hand_verifier(game, frame=None):
+        # goal-distance = positions not yet at their rule-mapped target value (0 == win). Internal-state
+        # read (the lp85 pattern); routes the best-first search. Guarded so a malformed level never crashes.
+        try:
+            return float(_mismatches(game))
+        except Exception:
+            return 1000.0
+
+    return GameAdapter(
+        game="tr87", action_labels=action_labels, apply=apply, state_key=state_key,
+        featurize=None, hand_verifier=hand_verifier, warmup_label=None,
+        depth_caps={1: 40, 2: 60, 3: 90, 4: 90, 5: 90}, branch_mode="replay",
+    )
+
+
+_BUILDERS = {"lp85": _lp85, "tu93": _tu93, "tr87": _tr87}
 
 
 def get_adapter(game: str) -> Optional[GameAdapter]:
