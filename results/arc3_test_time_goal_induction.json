@@ -1,0 +1,55 @@
+{
+  "experiment": "arc3_test_time_goal_induction",
+  "games": [
+    "sp80",
+    "cn04",
+    "ar25",
+    "ka59"
+  ],
+  "first_contact_solves": [
+    "sp80"
+  ],
+  "per_game": [
+    {
+      "game": "sp80",
+      "agent": {
+        "color": 9
+      },
+      "win_stumbled": true,
+      "induced_goal_color": 6,
+      "induced_goal_solve": {
+        "solved": true,
+        "actions": 4,
+        "nodes": 321
+      },
+      "solves_first_contact": true
+    },
+    {
+      "game": "cn04",
+      "agent": {
+        "color": 0
+      },
+      "win_stumbled": false,
+      "verdict": "no_win_stumbled_or_no_agent_cannot_induce_goal"
+    },
+    {
+      "game": "ar25",
+      "agent": {
+        "color": 4
+      },
+      "win_stumbled": false,
+      "verdict": "no_win_stumbled_or_no_agent_cannot_induce_goal"
+    },
+    {
+      "game": "ka59",
+      "agent": {
+        "color": 14
+      },
+      "win_stumbled": false,
+      "verdict": "no_win_stumbled_or_no_agent_cannot_induce_goal"
+    }
+  ],
+  "interpretation": "Fully first-contact (NO banked solve): explore -> stumble a win -> induce the agent (general method) -> induce the GOAL OBJECT colour (what the agent reached) -> solve via best_first_search guided by agent-to-goal-colour distance. A first-contact solve = the unseen-game pipeline works end to end on that game. Honest limit: only games whose win is STUMBLE-ABLE within the explore budget can have a goal induced this way; deep-solve games need curious/directed exploration or goal PERCEPTION (the remaining frontier).",
+  "honest_verdict": "complete_test_time_goal_induction_first_contact_solves_sp80",
+  "inference_substrate": "offline_arc_agi3_test_time_goal_induction_no_banked_solve"
+}
