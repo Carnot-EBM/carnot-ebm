@@ -8743,3 +8743,4 @@ c |
 | 2026-06-18 18:09 UTC | PHASE C (CONTINUOUS SELF-LEARNING; mandated per re | OK | 89 passed, 1 warning in 7.72s |
 | 2026-06-18 18:25 UTC | PHASE D (CROSS-DOMAIN DETECTION CALIBRATION + POOL | OK | 88 passed, 1 warning in 6.22s |
 | 2026-06-18 18:42 UTC | PHASE E1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 105 passed, 1 warning in 7.23s |
+| 2026-06-18 19:00 UTC | PHASE E2 (INFRA/HYGIENE) -- registry/gaps hygiene  | OK | 88 passed, 1 warning in 8.30s |
