@@ -84,6 +84,50 @@ def _candidates(frame, GameAction):
     return cands
 
 
+def identify_agent(transitions):
+    """RELIABLE agent identification: the agent is the connected COMPONENT (object) that most
+    consistently TRANSLATES under directional actions -- found per-object (not per-colour), so it
+    works even when the agent shares the background colour (the sp80 case where per-colour-global
+    latched onto the whole background). Tie-broken toward smaller objects (agents are sprites).
+    Returns {'color','shape_sig'} or None."""
+    from collections import Counter, defaultdict
+    from carnot.agentic.arc_world_model_dsl import _color_components, _object_shape_sig, _background
+    tally, sizes = Counter(), defaultdict(list)
+    for t in transitions:
+        if t.level_after != t.level_before or np.array_equal(t.grid, t.next_grid):
+            continue
+        bg = _background(t.grid)
+        for color in set(int(v) for v in np.unique(t.grid)) - {bg}:
+            cs = set(_color_components(t.grid, color)); cs2 = set(_color_components(t.next_grid, color))
+            gone = [c for c in cs if c not in cs2]; came = [c for c in cs2 if c not in cs]
+            if len(gone) == 1 and len(came) == 1 and len(gone[0]) == len(came[0]):
+                a, b = gone[0], came[0]
+                dy = min(y for y, _ in b) - min(y for y, _ in a)
+                dx = min(x for _, x in b) - min(x for _, x in a)
+                if (dy, dx) != (0, 0) and {(y + dy, x + dx) for y, x in a} == set(b):
+                    sig = (color, _object_shape_sig(a)); tally[sig] += 1; sizes[sig].append(len(a))
+    if not tally:
+        return None
+    top = sorted(tally, key=lambda s: (tally[s], -float(np.mean(sizes[s]))), reverse=True)[0]
+    return {"color": top[0], "shape_sig": top[1]}
+
+
+def _agent_centroid(grid, agent):
+    """(y,x) centroid of the agent's component in `grid`: the component of the agent colour whose
+    shape matches the learned agent (so a same-coloured background region is ignored). Falls back to
+    the largest component of the agent colour, then None."""
+    if agent is None:
+        return None
+    from carnot.agentic.arc_world_model_dsl import _color_components, _object_shape_sig
+    comps = _color_components(np.asarray(grid), agent["color"])
+    if not comps:
+        return None
+    match = [c for c in comps if _object_shape_sig(c) == agent["shape_sig"]]
+    comp = match[0] if match else max(comps, key=len)
+    ys = [y for y, _ in comp]; xs = [x for _, x in comp]
+    return (float(np.mean(ys)), float(np.mean(xs)))
+
+
 def _target_and_trigger(game, GameAction):
     """From the banked solve: the PRE-WIN config grid (the goal the agent must reach) and the
     win-trigger action that fires the level-up from it. The goal is the observed target config
@@ -161,6 +205,79 @@ def _play_goal(arc, game, model, target, trigger, budget, GameAction):
     if f is not None and _levels_completed(f) > max_level:
         max_level = _levels_completed(f); first_solve_at = first_solve_at or actions
     return {"levels_solved": max_level, "actions_used": actions, "first_solve_at": first_solve_at}
+
+
+def _play_bfs(arc, game, target, GameAction, agent, target_pos, max_expansions=6000):
+    """MULTI-STEP planning: best-first search (the existing best_first_search) over deepcopied REAL
+    envs (the perfect simulator), guided by the AGENT-TO-GOAL-DISTANCE heuristic (manhattan from the
+    identified agent object's centroid to its target position), searching for a path that LEVELS UP.
+    Because successors are real-env copies, a level-up in search IS a real win. The agent-distance
+    heuristic is informative for movement games (move the controlled sprite toward its goal), unlike
+    the whole-grid mismatch heuristic which solved nothing. Whole-grid mismatch is kept as a small
+    tie-breaker."""
+    import copy as _copy
+    from carnot.agentic.arc_heuristic_search_over_verified_wm import best_first_search
+
+    env0 = arc.make(game, scorecard_id=arc.open_scorecard())
+    f0 = env0.reset()
+    if f0 is None:
+        return {"levels_solved": 0, "actions_used": 0, "first_solve_at": None, "nodes": 0}
+    start_level = _levels_completed(f0)
+    reg = {}                                            # grid_hash -> (env, frame)
+
+    def _kbd_candidates(frame):
+        av = [a for a in (getattr(frame, "available_actions", []) or [1, 2, 3, 4, 5]) if a not in (0, 6)]
+        return [(a,) for a in av] or [(a,) for a in (1, 2, 3, 4, 5)]
+
+    def _adist(grid):
+        if agent is None or target_pos is None:
+            return float(_mismatch(grid, target))       # fall back to mismatch if no agent
+        ac = _agent_centroid(grid, agent)
+        if ac is None:
+            return 9999.0
+        return abs(ac[0] - target_pos[0]) + abs(ac[1] - target_pos[1])
+
+    g0 = np.asarray(grid_of(f0))
+    gh0 = frame_hash(g0)
+    reg[gh0] = (env0, f0)
+    start = {"gh": gh0, "h": _adist(g0) * 100.0 + _mismatch(g0, target) * 0.001, "level": start_level}
+
+    def is_goal(s):
+        return s["level"] > start_level
+
+    def heuristic(s):
+        return float(s["h"])
+
+    def next_states(s):
+        cur = reg.get(s["gh"])
+        if cur is None:
+            return []
+        env, frame = cur
+        out = []
+        for c in _kbd_candidates(frame):
+            e2 = _copy.deepcopy(env)
+            nf = e2.step(_game_action(GameAction, c[0]), data=None)
+            if nf is None:
+                continue
+            g = np.asarray(grid_of(nf))
+            if g.size == 0:
+                continue
+            gh = frame_hash(g)
+            if gh not in reg:
+                reg[gh] = (e2, nf)
+            child = {"gh": gh, "h": _adist(g) * 100.0 + _mismatch(g, target) * 0.001,
+                     "level": _levels_completed(nf)}
+            out.append((c, child))
+        return out
+
+    res = best_first_search(start, next_states=next_states, is_goal=is_goal,
+                            heuristic=heuristic, max_expansions=max_expansions)
+    return {"levels_solved": 1 if res.solved else 0,
+            "actions_used": len(res.actions) if res.solved else res.nodes_expanded,
+            "first_solve_at": (len(res.actions) if res.solved else None),
+            "nodes": res.nodes_expanded, "bottleneck": res.bottleneck if not res.solved else "",
+            "agent": (None if agent is None else {"color": agent["color"], "size": len(agent["shape_sig"])}),
+            "target_pos": (None if target_pos is None else [round(target_pos[0], 1), round(target_pos[1], 1)])}
 
 
 def _play_goal_oracle(arc, game, target, trigger, budget, GameAction):
@@ -257,69 +374,70 @@ def _play(arc, game, model, budget, rng, GameAction, *, guided):
     return {"levels_solved": max_level, "actions_used": actions, "first_solve_at": first_solve_at}
 
 
-def run_game(game, explore_n, budget, seed):
+def run_game(game, explore_n, budget, seed, max_exp):
     from arcengine import GameAction
     arc = kit.offline_arcade()
-    m_imp, _ = _fit(game, explore_n, degraded=False)
     target, trigger = _target_and_trigger(game, GameAction)
+    explore, _ = e3.collect_transitions(game, n=explore_n)
+    agent = identify_agent(explore)
+    target_pos = _agent_centroid(target, agent) if (target is not None and agent is not None) else None
     z = {"levels_solved": 0, "actions_used": 0, "first_solve_at": None, "note": "no banked target"}
-    goal = _play_goal(arc, game, m_imp, target, trigger, budget, GameAction) if target is not None else z
     goal_oracle = _play_goal_oracle(arc, game, target, trigger, budget, GameAction) if target is not None else z
-    novelty = _play(arc, game, m_imp, budget, random.Random(seed), GameAction, guided=True)
-    blind = _play(arc, game, m_imp, budget, random.Random(seed), GameAction, guided=False)
-    nrules_imp = sum(1 for r in m_imp.kbd_rules.values() if r[0] != "noop")
-    return {"game": game, "goal_model": goal, "goal_oracle": goal_oracle, "novelty_guided": novelty,
-            "blind": blind, "improved_nontrivial_rules": nrules_imp,
+    goal_bfs = (_play_bfs(arc, game, target, GameAction, agent, target_pos, max_expansions=max_exp)
+                if target is not None else z)
+    blind = _play(arc, game, None, budget, random.Random(seed), GameAction, guided=False)
+    return {"game": game, "goal_bfs_multistep": goal_bfs, "goal_oracle_greedy": goal_oracle, "blind": blind,
             "win_trigger": str(trigger), "target_cells": (int(target.size) if target is not None else None),
-            "goal_oracle_solves": goal_oracle["levels_solved"] > 0,
-            "goal_model_solves": goal["levels_solved"] > 0,
-            "goal_oracle_beats_novelty_blind": goal_oracle["levels_solved"] > max(novelty["levels_solved"], blind["levels_solved"])}
+            "bfs_solves": goal_bfs["levels_solved"] > 0,
+            "greedy_solves": goal_oracle["levels_solved"] > 0,
+            "multistep_beats_greedy": goal_bfs["levels_solved"] > goal_oracle["levels_solved"]}
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--games", default="cn04,sp80,ar25,ka59")
     ap.add_argument("--explore", type=int, default=150)
-    ap.add_argument("--budget", type=int, default=300)
+    ap.add_argument("--budget", type=int, default=160)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--max-exp", type=int, default=6000)
     args = ap.parse_args()
     games = args.games.split(",")
-    print(f"== M2 plan->execute->solve (ObjectDeltaModel) games={games} budget={args.budget} ==", flush=True)
+    print(f"== M2 MULTI-STEP planning (best_first_search over env) games={games} max_exp={args.max_exp} ==", flush=True)
     rows = []
     for g in games:
-        r = run_game(g, args.explore, args.budget, args.seed)
+        r = run_game(g, args.explore, args.budget, args.seed, args.max_exp)
         rows.append(r)
-        print(f"  [{g}] goal_ORACLE={r['goal_oracle']['levels_solved']}"
-              f"(@{r['goal_oracle']['first_solve_at']}) | goal_model={r['goal_model']['levels_solved']} | "
-              f"novelty={r['novelty_guided']['levels_solved']} | blind={r['blind']['levels_solved']} | "
-              f"trigger={r['win_trigger']} | oracle_beats_baselines={r['goal_oracle_beats_novelty_blind']}", flush=True)
-    oracle_solves = [r["game"] for r in rows if r["goal_oracle_solves"]]
-    model_solves = [r["game"] for r in rows if r["goal_model_solves"]]
-    # the decisive isolation: oracle (perfect sim + goal) solves where the model-guided arm does not
-    goal_is_sound_model_is_the_gap = bool(set(oracle_solves) - set(model_solves))
-    verdict = ("complete_m2_goal_induction_oracle_solves_" + "_".join(oracle_solves)
-               + ("_model_guided_blocked_by_accuracy" if goal_is_sound_model_is_the_gap else "")
-               if oracle_solves else
-               "complete_m2_goal_induction_zero_even_with_perfect_simulator_needs_multistep_planning")
-    out = {"experiment": "arc3_m2_solve_objectdelta", "games": games, "budget": args.budget,
+        bfs, grd = r["goal_bfs_multistep"], r["goal_oracle_greedy"]
+        print(f"  [{g}] BFS_multistep={bfs['levels_solved']}(@{bfs['first_solve_at']}, {bfs.get('nodes')}nodes) | "
+              f"greedy={grd['levels_solved']} | blind={r['blind']['levels_solved']} | trigger={r['win_trigger']} | "
+              f"multistep_beats_greedy={r['multistep_beats_greedy']}", flush=True)
+    bfs_solves = [r["game"] for r in rows if r["bfs_solves"]]
+    greedy_solves = [r["game"] for r in rows if r["greedy_solves"]]
+    multistep_unlocked = [r["game"] for r in rows if r["multistep_beats_greedy"]]
+    verdict = ("complete_m2_multistep_planning_bfs_solves_" + "_".join(bfs_solves)
+               + ("_unlocked_" + "_".join(multistep_unlocked) if multistep_unlocked else "")
+               if bfs_solves else
+               "complete_m2_multistep_planning_zero_target_or_branching_insufficient")
+    out = {"experiment": "arc3_m2_solve_objectdelta", "games": games, "max_expansions": args.max_exp,
            "explore_steps": args.explore, "random_seed": args.seed,
-           "goal_oracle_solves": oracle_solves, "goal_model_solves": model_solves,
-           "goal_direction_sound_model_accuracy_is_the_gap": goal_is_sound_model_is_the_gap,
+           "bfs_multistep_solves": bfs_solves, "greedy_solves": greedy_solves,
+           "games_multistep_unlocked_beyond_greedy": multistep_unlocked,
            "per_game": rows,
            "interpretation": (
-               "FOUR arms, real-env-confirmed: goal_ORACLE (goal-direction with the env itself as a perfect "
-               "1-step simulator via deepcopy branching) vs goal_MODEL (same goal, but the induced "
-               "ObjectDeltaModel is the simulator) vs NOVELTY (prior, change/novelty-seeking) vs BLIND. "
-               "Isolates the two questions the prior measurement conflated: (1) is GOAL-DIRECTION the right "
-               "idea -- answered by the oracle; (2) is the induced MODEL accurate enough to realize it -- "
-               "answered by goal_model vs goal_oracle. oracle solves + model does not => goal-direction is "
-               "sound and model accuracy is the remaining gap (consistent with the dynamics-accuracy "
-               "findings). oracle ALSO zero => greedy 1-step mismatch-descent is insufficient; the win "
-               "needs true multi-step planning (Sokoban-class), the deeper M2-v5 wall."),
+               "MULTI-STEP best-first search (best_first_search over deepcopied REAL envs, guided by "
+               "mismatch-to-target, searching for a level-up) vs the GREEDY 1-step oracle vs BLIND. A "
+               "level-up in search IS a real win (successors are real-env copies). Tests whether DEEPER "
+               "search reaches the wins the greedy oracle could not (cn04/ar25/ka59). bfs solves where "
+               "greedy did not => multi-step planning is the missing piece (the induced world-model must "
+               "then be accurate enough to run the same search live -- the remaining gap). bfs ALSO zero "
+               "=> the mismatch-to-target heuristic / banked target is insufficient to guide search to the "
+               "win within the expansion bound (the win config is not reachable from reset / needs a "
+               "richer goal). best_first_search is the EXISTING planner reused, not a new one."),
            "honest_verdict": verdict,
-           "inference_substrate": "offline_arc_agi3_goal_directed_oracle_and_model_real_env_confirmed"}
+           "inference_substrate": "offline_arc_agi3_multistep_best_first_search_real_env_confirmed"}
     (REPO / "results" / "arc3_m2_solve_objectdelta.json").write_text(json.dumps(out, indent=2, default=str))
-    print(f"\n  goal_ORACLE solves: {oracle_solves} | goal_MODEL solves: {model_solves}\n  -> {verdict}", flush=True)
+    print(f"\n  BFS-multistep solves: {bfs_solves} | greedy solves: {greedy_solves} | "
+          f"multistep unlocked beyond greedy: {multistep_unlocked}\n  -> {verdict}", flush=True)
     print("  wrote results/arc3_m2_solve_objectdelta.json", flush=True)
     return 0
 
