@@ -1,0 +1,43 @@
+You are inducing the WIN RULE of an ARC-AGI-3 configuration puzzle ('tn36'). I have already
+done the hard perception work for you -- you do NOT need to read a full 64x64 grid. Reason ONLY over the
+small extracted regions below.
+
+The player edits the EDITABLE region: rows 1..1, cols 2..61 (background colour=5).
+The level COMPLETES when the editable region's values satisfy a rule defined by the static REFERENCE
+region elsewhere in the scene.
+
+EDITABLE region in the WINNING configuration (exact values + per-colour counts; do NOT re-count by eye):
+  WIN: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 3, 3, 3]  counts={3: 6, 9: 54}
+
+EDITABLE region in NON-winning configurations:
+  NON-WIN 1: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3]  counts={3: 1, 9: 59}
+  NON-WIN 2: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]  counts={3: 11, 9: 49}
+  NON-WIN 3: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]  counts={3: 21, 9: 39}
+  NON-WIN 4: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]  counts={3: 31, 9: 29}
+  NON-WIN 5: values=[9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]  counts={3: 41, 9: 19}
+
+The static REFERENCE region (the 'rule area'); it does not change as the player edits:
+reference region rows 8..59, cols 13..50 (component coords are RELATIVE to r8,c13):
+  colour 0: total_cells=353, components=1 (r0-42,c0-37,n353)
+  colour 1: total_cells=18, components=6 (r34-34,c12-14,n3) (r34-34,c22-24,n3) (r34-34,c27-29,n3) (r36-38,c13-13,n3) (r36-38,c23-23,n3) (r36-38,c28-28,n3)
+  colour 4: total_cells=550, components=36 (r1-4,c5-8,n16) (r1-4,c13-16,n16) (r1-4,c21-24,n16) (r1-4,c29-32,n16) (r5-8,c1-4,n16) (r5-8,c9-12,n16)
+  colour 9: total_cells=69, components=1 (r43-51,c19-27,n69)
+  colour 11: total_cells=30, components=2 (r5-8,c17-20,n14) (r25-29,c16-21,n16)
+
+Write a Python predicate that recomputes the rule and returns True ONLY for winning configurations:
+
+    import numpy as np
+    def is_win(grid):
+        # grid: 64x64 numpy int array.
+        e = grid[1:2, 2:62]   # the editable region
+        # Return True iff e satisfies the win rule implied by the reference region.
+        ...
+
+Rules:
+- Derive a RELATION between the editable region and the reference region (e.g. e equals / mirrors /
+  encodes / counts the reference). Do NOT hardcode the literal winning array -- that will not generalize
+  to other levels and is wrong.
+- Use ONLY numpy + stdlib. Make is_win deterministic. Start immediately with `import numpy as np`.
+
+Return ONLY one ```python code block with def is_win.
+```python
