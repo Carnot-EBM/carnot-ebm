@@ -44,6 +44,15 @@ from typing import Any, Callable, Hashable, Optional, Sequence
 
 REPO = Path(__file__).resolve().parents[3]
 ENV_DIR = REPO / "environment_files"
+ARC_STANDING_PATH_COST_WEIGHT = 1.0
+ARC_BASELINE_PATH_COST_WEIGHT = 0.0
+
+
+def standing_path_cost_weight(path_cost_weight: Optional[float]) -> float:
+    """REQ-LEARN-4364: default ARC planning to additive A* cost; keep 0.0 as baseline."""
+    if path_cost_weight is None:
+        return ARC_STANDING_PATH_COST_WEIGHT
+    return float(path_cost_weight)
 
 
 def offline_arcade() -> Any:  # pragma: no cover - thin SDK boundary
@@ -81,7 +90,7 @@ class OfflineSolver:
                  apply: Callable[[Any, str, Any], Any], state_key: Callable[[Any], Hashable],
                  *, warmup_label: Optional[str] = None, max_nodes: int = 30000,
                  verifier: Optional[Callable[[Any], float]] = None,
-                 path_cost_weight: float = 0.0, branch_mode: str = "replay",
+                 path_cost_weight: Optional[float] = None, branch_mode: str = "replay",
                  env_factory: Optional[Callable[[], Any]] = None) -> None:
         self.game_id = game_id
         self.action_labels = action_labels
@@ -117,7 +126,7 @@ class OfflineSolver:
         # (verifier ≡ 0 → the heap orders by insertion = FIFO). Pass a learned or
         # computed verifier to turn the solver into a verifier-routed search.
         self.verifier = verifier or (lambda _g: 0.0)
-        self.path_cost_weight = float(path_cost_weight)
+        self.path_cost_weight = standing_path_cost_weight(path_cost_weight)
         self.last_states_expanded = 0
         self.last_frame: Any = None
 
@@ -134,7 +143,7 @@ class OfflineSolver:
             return float(self.verifier(env._game))
 
     def _priority(self, env: Any, path: Sequence[str]) -> float:
-        """Verifier score plus optional path cost. Default 0 keeps legacy greedy routing."""
+        """Verifier score plus standing path cost. Pass 0.0 for legacy greedy routing."""
         return float(self.path_cost_weight * len(path) + self._call_verifier(env))
 
     def _call_action_labels(self, env: Any, path: Sequence[str]) -> Sequence[str]:

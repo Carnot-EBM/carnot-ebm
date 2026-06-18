@@ -1,0 +1,303 @@
+{
+  "acceptance_gate_passed": true,
+  "action_efficiency_compounds": true,
+  "adversarial_verify": {
+    "flagged_count": 0,
+    "reports": [
+      {
+        "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4364_self_learning_action_cost_compounds.json",
+        "exp_id": "experiment_4364_self_learning_action_cost_compounds",
+        "flag_count": 0,
+        "flags": [],
+        "honest_verdict": "success: action_efficiency_compounds_25_to_16",
+        "loaded": true,
+        "max_severity": -1,
+        "title": "self_learning_action_cost_compounds"
+      }
+    ],
+    "returncode": 0,
+    "status": "clean"
+  },
+  "compounding_curve": [
+    {
+      "corpus_size_k": 4,
+      "held_out_actions_to_solve": 25
+    },
+    {
+      "corpus_size_k": 8,
+      "held_out_actions_to_solve": 25
+    },
+    {
+      "corpus_size_k": 12,
+      "held_out_actions_to_solve": 25
+    },
+    {
+      "corpus_size_k": 16,
+      "held_out_actions_to_solve": 25
+    },
+    {
+      "corpus_size_k": 19,
+      "held_out_actions_to_solve": 16
+    }
+  ],
+  "deployed_into_solver_kit": true,
+  "duration_s": 42.885621547698975,
+  "experiment": "experiment_4364_self_learning_action_cost_compounds",
+  "field_principles": {
+    "action_efficiency_compounds": "BARE bool: the capstone reads this; true iff held-out env-actions-to-solve DECREASES as the solved-trace corpus grows (learning that compounds) AND the positive control confirms headroom existed (not a degenerate no-headroom null).",
+    "compounding_curve": "list of {corpus_size_k, held_out_actions_to_solve} -- the learning curve; a monotone-ish decrease is the 'gets smarter over time' signal (PRD core).",
+    "deployed_into_solver_kit": "BARE bool: true iff the learned action-cost heuristic is wired into arc_solver_kit as the standing A* cost (every future ARC solve action-minimal by default).",
+    "honest_verdict": "Terminal-prefixed. A compounding result (held-out env-actions fall as the corpus grows) and an honest null with the positive control passing (a plateau the value head already captures) are BOTH decision-grade.",
+    "llm_heuristic_arm": "optional {ran: bool, beats_linear: bool, static_analysis_clean: bool} -- the stronger-function-class probe (2503.18809), if quota allowed.",
+    "model_specs": "CPU heuristic config, solver-kit deployment check, fixed held-out split, corpus-prefix curve, and reproduction substrate.",
+    "positive_control_passed": "BARE bool: a held-out level with known optimal action-count confirms headroom existed, so a null is 'plateau', not 'no headroom' (FALSE_NEGATIVE_RISK guard).",
+    "preconditions_checked": "Records the solve-trace availability + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the heuristic training + the held-out split + the corpus-prefix curve.",
+    "reproducibility_checksum": "Hash of the training corpus + the held-out split + the heuristic config + the curve; lets a third party re-run.",
+    "reproduction_gated": "BARE bool: true iff every counted plan still passes arc_solver_kit.reproduce -- an action-minimal plan that does not reproduce does NOT count.",
+    "verifier_is_oracle": "BARE bool=false -- the learned action-cost heuristic is not the executable oracle."
+  },
+  "held_out_level_rows": [
+    {
+      "baseline_actions": 25,
+      "baseline_full_replay_actions": 38,
+      "baseline_planner": "greedy_learned_value_head_h_only",
+      "baseline_reproduced": true,
+      "baseline_reproduction_gate": {
+        "claimed_level": 3,
+        "game": "lp85-305b61c3",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 3,
+        "reproduced": true
+      },
+      "baseline_states_expanded": 338,
+      "game": "lp85",
+      "headroom_exists": true,
+      "held_out_level_id": "lp85:L3",
+      "known_short_actions": 16,
+      "learned_actions": 16,
+      "learned_full_replay_actions": 29,
+      "learned_planner": "astar_path_cost_g_plus_learned_h",
+      "learned_reproduced": true,
+      "learned_reproduction_gate": {
+        "claimed_level": 3,
+        "game": "lp85-305b61c3",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 3,
+        "reproduced": true
+      },
+      "learned_states_expanded": 245,
+      "positive_control_full_replay_actions": 29,
+      "positive_control_reproduced": true,
+      "positive_control_reproduction_gate": {
+        "claimed_level": 3,
+        "game": "lp85-305b61c3",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 3,
+        "reproduced": true
+      },
+      "positive_control_states_expanded": 3163,
+      "required_train_level_ids": [
+        "lp85:L1",
+        "lp85:L2"
+      ],
+      "target_level": 3
+    }
+  ],
+  "honest_verdict": "success: action_efficiency_compounds_25_to_16",
+  "inference_substrate": "cpu_offline_arc_agi3_per_game_action_cost_compounding_curve",
+  "llm_heuristic_arm": {
+    "beats_linear": false,
+    "ran": false,
+    "static_analysis_clean": true
+  },
+  "methodology_note": "CPU-only offline per-game action-cost heuristic. Exp 4353 supplies the reproduced lp85 held-out baseline and learned plans; Exp 4364 deploys the solver-kit default to g+h and records how fixed held-out actions fall only after the relevant per-game solved traces enter the corpus prefix.",
+  "missing_verifier_gaps": [],
+  "model_specs": {
+    "curve_interpretation": "per-game lp85 action-cost learning; cross-game trace prefixes are counted as solved experience but do not train lp85 until lp85:L1 and lp85:L2 enter the prefix",
+    "deployment_check": {
+      "baseline_constant": 0.0,
+      "baseline_path_cost_weight": 0.0,
+      "default_is_additive_astar": true,
+      "default_path_cost_weight": 1.0,
+      "explicit_zero_keeps_baseline": true,
+      "standing_constant": 1.0
+    },
+    "entrypoint": "results/experiment_4364_self_learning_action_cost_compounds.py",
+    "heuristic": {
+      "action_cost_regressor": {
+        "architecture": "linear ridge regression with bias",
+        "llm_weight_mutation": false,
+        "n_samples": 13,
+        "ridge": 1e-06,
+        "target": "minimal env-actions-to-win",
+        "training_compute": "CPU numpy.linalg.solve",
+        "weights": [
+          0.259690083145,
+          0.313952804942,
+          0.077519032957,
+          -0.00387587928,
+          0.116277972698,
+          -0.430229713693
+        ]
+      },
+      "corpus_prefix_level_ids": [
+        "cd82:L1",
+        "cn04:L1",
+        "ls20:L1",
+        "m0r0:L1",
+        "r11l:L1",
+        "sk48:L1",
+        "sp80:L1",
+        "su15:L1",
+        "tn36:L1",
+        "tn36:L2",
+        "tn36:L3",
+        "tn36:L4",
+        "tn36:L5",
+        "tn36:L6",
+        "tn36:L7",
+        "tu93:L1",
+        "tu93:L2",
+        "lp85:L1",
+        "lp85:L2"
+      ],
+      "corpus_prefix_sizes": [
+        4,
+        8,
+        12,
+        16,
+        19
+      ],
+      "feature_names": [
+        "total_goal_distance",
+        "unsatisfied_goals",
+        "mean_goal_distance",
+        "max_goal_distance",
+        "n_goals"
+      ],
+      "held_out_rows_excluded_from_training": true,
+      "planner_comparison": {
+        "action_count_metric": "held-out L3 suffix env-actions; reproduction gate replays full L0-L3 path",
+        "baseline": "OfflineSolver verifier priority h(state), path_cost_weight=0.0",
+        "learned": "OfflineSolver A* priority g(path_len)+h(state), path_cost_weight=1.0"
+      },
+      "training_corpus": {
+        "n_rows": 13,
+        "source": "offline-reproduced lp85 L1-L2 solver traces",
+        "targets": [
+          5.0,
+          4.0,
+          3.0,
+          2.0,
+          1.0,
+          8.0,
+          7.0,
+          6.0,
+          5.0,
+          4.0,
+          3.0,
+          2.0,
+          1.0
+        ]
+      }
+    },
+    "llm_weight_mutation": false,
+    "module": "python/carnot/experiment_4364_self_learning_action_cost_compounds.py",
+    "offline_solver": "python/carnot/agentic/arc_solver_kit.py:OfflineSolver(default path_cost_weight=1.0)",
+    "source_exp4353": "results/experiment_4353_learned_action_cost_heuristic_efficiency.json",
+    "split": {
+      "held_out_level_ids": [
+        "lp85:L3"
+      ],
+      "held_out_rows_excluded_from_training": true,
+      "positive_control": {
+        "known_short_actions": 16,
+        "level_id": "lp85:L3",
+        "planner": "plain_bfs_shortest_path",
+        "reproduced": true
+      },
+      "split_axis": "lp85_levels",
+      "train_level_ids": [
+        "lp85:L1",
+        "lp85:L2"
+      ]
+    },
+    "verifier_is_oracle": false
+  },
+  "positive_control_passed": true,
+  "preconditions_checked": {
+    "cross_game_value_transfer_retired": true,
+    "curve_training_corpus_level_count": 19,
+    "held_out_level_ids_excluded_from_curve_training": [
+      "lp85:L3"
+    ],
+    "minimum_reproduced_levels": 8,
+    "offline_cpu_only": true,
+    "registry_mentions_reproduced": true,
+    "registry_path": "ops/arc_solve_registry.yaml",
+    "registry_present": true,
+    "registry_sha256": "sha256:c192dc28ea567fddd190ed5664ddef156e711285610f3a0bb91cc6052a4d0ac6",
+    "research_conductor_modified": false,
+    "same_game_non_required_levels_excluded_from_curve_training": true,
+    "standing_solver_deployment_check": {
+      "baseline_constant": 0.0,
+      "baseline_path_cost_weight": 0.0,
+      "default_is_additive_astar": true,
+      "default_path_cost_weight": 1.0,
+      "explicit_zero_keeps_baseline": true,
+      "standing_constant": 1.0
+    },
+    "trace_sources": [
+      "results/arc3_lp85_offline_resolve.json",
+      "results/arc_explore_trajectory_cd82.json",
+      "results/arc_explore_trajectory_cn04.json",
+      "results/arc_explore_trajectory_lp85_l4.json",
+      "results/arc_explore_trajectory_ls20.json",
+      "results/arc_explore_trajectory_m0r0.json",
+      "results/arc_explore_trajectory_r11l.json",
+      "results/arc_explore_trajectory_sk48.json",
+      "results/arc_explore_trajectory_sp80.json",
+      "results/arc_explore_trajectory_su15.json",
+      "results/arc_explore_trajectory_tn36.json",
+      "results/arc_explore_trajectory_tu93.json"
+    ],
+    "trm_training_stood_down": true,
+    "usable_level_ids": [
+      "cd82:L1",
+      "cn04:L1",
+      "lp85:L1",
+      "lp85:L2",
+      "lp85:L3",
+      "lp85:L4",
+      "ls20:L1",
+      "m0r0:L1",
+      "r11l:L1",
+      "sk48:L1",
+      "sp80:L1",
+      "su15:L1",
+      "tn36:L1",
+      "tn36:L2",
+      "tn36:L3",
+      "tn36:L4",
+      "tn36:L5",
+      "tn36:L6",
+      "tn36:L7",
+      "tu93:L1",
+      "tu93:L2",
+      "lp85:L1",
+      "lp85:L2",
+      "lp85:L3"
+    ],
+    "usable_reproduced_level_count": 24
+  },
+  "random_seed": 4364,
+  "reproducibility_checksum": "sha256:31d46454244ed033c9c22f3020d70a57687d9d8a32e6cf38778ccff786fcab7e",
+  "reproduction_gated": true,
+  "spec_refs": [
+    "REQ-LEARN-4364",
+    "SCENARIO-LEARN-4364"
+  ],
+  "title": "self_learning_action_cost_compounds",
+  "verifier_is_oracle": false
+}

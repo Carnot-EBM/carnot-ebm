@@ -14281,3 +14281,116 @@ bare values: `action_efficiency_improves`, `held_out_actions_baseline`,
 | Requirement | Python | Tests |
 |---|---|---|
 | REQ-LEARN-4353 | Planned (`python/carnot/experiment_4353_learned_action_cost_heuristic_efficiency.py`; `results/experiment_4353_learned_action_cost_heuristic_efficiency.py`; `results/experiment_4353_learned_action_cost_heuristic_efficiency.json`) | Planned (`tests/python/test_experiment_4353_learned_action_cost_heuristic_efficiency.py`) |
+
+---
+
+## REQ-LEARN-4364: ARC Action-Cost Heuristic Deployment and Compounding Curve
+
+**Given** at least eight reproduced ARC-AGI-3 solved levels with loadable action
+traces from `ops/arc_solve_registry.yaml` and the local solve-trace artifacts
+**When** Exp 4364 deploys the Exp 4353 learned action-cost heuristic mechanism
+into `arc_solver_kit` and evaluates fixed held-out levels across increasing
+solved-trace corpus prefixes
+**Then** `OfflineSolver` SHALL use an additive A* planner cost (`g + h`) by
+default for ARC planning while preserving an explicit zero path-cost baseline
+for BFS/value-head comparisons
+**And** the experiment artifact SHALL report the compounding learning curve as
+bare fields: `honest_verdict`, `action_efficiency_compounds`,
+`compounding_curve`, `deployed_into_solver_kit`, `positive_control_passed`,
+`reproduction_gated`, `llm_heuristic_arm`, `verifier_is_oracle=false`,
+`preconditions_checked`, `random_seed`, and `reproducibility_checksum`.
+
+### REQ-LEARN-4364 Sub-requirements
+
+- REQ-LEARN-4364-1: Preconditions SHALL verify the solved-level registry, local
+  trace files, offline reproduction substrate, and TRM stand-down condition. If
+  fewer than eight reproduced levels with action traces are loadable, Exp 4364
+  SHALL emit `honest_verdict=blocked_insufficient_solve_traces` and stop without
+  fabricating a compounding curve.
+- REQ-LEARN-4364-2: `OfflineSolver` SHALL default to the standing ARC A* path
+  cost while accepting `path_cost_weight=0.0` for the legacy BFS/value-head
+  baseline.
+- REQ-LEARN-4364-3: The compounding curve SHALL use a fixed held-out level set
+  and increasing solved-trace corpus prefixes, and every counted held-out plan
+  SHALL pass `arc_solver_kit.reproduce`.
+- REQ-LEARN-4364-4: `action_efficiency_compounds` SHALL be true exactly when
+  held-out actions-to-solve decrease as corpus size grows, the positive-control
+  headroom check passes, reproduction gating passes, and the solver-kit
+  deployment check passes.
+- REQ-LEARN-4364-5: The optional LLM-generated heuristic-program arm SHALL be
+  reported as `llm_heuristic_arm={ran:false, beats_linear:false,
+  static_analysis_clean:true}` when skipped for offline/zero-quota execution.
+- REQ-LEARN-4364-6: The learned action-cost heuristic SHALL remain
+  oracle-distinct from the executable environment/reproduction oracle and SHALL
+  report `verifier_is_oracle=false`.
+- REQ-LEARN-4364-7: Any held-out level where the learned heuristic cannot reduce
+  actions after reproduced evaluation SHALL be represented in
+  `missing_verifier_gaps` and appended to `ops/verifier_gaps.md` when the
+  experiment writes the artifact.
+- REQ-LEARN-4364-8: The written artifact SHALL run cleanly through
+  `scripts/adversarial_verify.py` and SHALL include the random seed,
+  methodology note, and reproducibility checksum over the corpus, held-out
+  split, heuristic config, and curve.
+
+### REQ-LEARN-4364 Field Principles
+
+- `honest_verdict`: Terminal-prefixed. A compounding result (held-out
+  env-actions fall as the corpus grows) and an honest null with the positive
+  control passing (a plateau the value head already captures) are BOTH
+  decision-grade.
+- `action_efficiency_compounds`: BARE bool: the capstone reads this; true iff
+  held-out env-actions-to-solve DECREASES as the solved-trace corpus grows
+  (learning that compounds) AND the positive control confirms headroom existed
+  (not a degenerate no-headroom null).
+- `compounding_curve`: list of `{corpus_size_k, held_out_actions_to_solve}` --
+  the learning curve; a monotone-ish decrease is the "gets smarter over time"
+  signal (PRD core).
+- `deployed_into_solver_kit`: BARE bool: true iff the learned action-cost
+  heuristic is wired into `arc_solver_kit` as the standing A* cost (every future
+  ARC solve action-minimal by default).
+- `positive_control_passed`: BARE bool: a held-out level with known optimal
+  action-count confirms headroom existed, so a null is "plateau", not "no
+  headroom" (FALSE_NEGATIVE_RISK guard).
+- `reproduction_gated`: BARE bool: true iff every counted plan still passes
+  `arc_solver_kit.reproduce` -- an action-minimal plan that does not reproduce
+  does NOT count.
+- `llm_heuristic_arm`: optional `{ran: bool, beats_linear: bool,
+  static_analysis_clean: bool}` -- the stronger-function-class probe
+  (2503.18809), if quota allowed.
+- `verifier_is_oracle`: BARE bool=false -- the learned action-cost heuristic is
+  not the executable oracle.
+- `preconditions_checked`: Records the solve-trace availability +
+  TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.
+- `random_seed`: Determinism precondition for the heuristic training + the
+  held-out split + the corpus-prefix curve.
+- `reproducibility_checksum`: Hash of the training corpus + the held-out split +
+  the heuristic config + the curve; lets a third party re-run.
+
+### SCENARIO-LEARN-4364: Deployed Action-Cost Curve Compounds
+
+**Given** at least eight reproduced ARC solved-level traces are loadable
+**When** Exp 4364 evaluates the standing A* action-cost heuristic on the fixed
+held-out level set across increasing corpus prefixes
+**Then** the artifact SHALL include bare `action_efficiency_compounds`,
+`compounding_curve`, `deployed_into_solver_kit`, `positive_control_passed`,
+`reproduction_gated`, `verifier_is_oracle=false`, `preconditions_checked`,
+`random_seed`, and `reproducibility_checksum`
+**And** `action_efficiency_compounds=true` only if the curve decreases,
+`deployed_into_solver_kit=true`, `positive_control_passed=true`, and
+`reproduction_gated=true`.
+
+### SCENARIO-LEARN-4364-BLOCKED: Insufficient Solved Traces Stop Honestly
+
+**Given** fewer than eight reproduced levels with action traces are loadable
+**When** Exp 4364 runs
+**Then** it SHALL write a terminal artifact with
+`honest_verdict=blocked_insufficient_solve_traces`
+**And** `action_efficiency_compounds=false`, `compounding_curve=[]`,
+`deployed_into_solver_kit=false`, `positive_control_passed=false`, and
+`reproduction_gated=false`.
+
+## Implementation Status (Exp 4364)
+
+| Requirement | Python | Tests |
+|---|---|---|
+| REQ-LEARN-4364 | Planned (`python/carnot/experiment_4364_self_learning_action_cost_compounds.py`; `results/experiment_4364_self_learning_action_cost_compounds.py`; `results/experiment_4364_self_learning_action_cost_compounds.json`) | Planned (`tests/python/test_experiment_4364_self_learning_action_cost_compounds.py`) |
