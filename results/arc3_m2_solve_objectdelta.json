@@ -1,122 +1,88 @@
 {
   "experiment": "arc3_m2_solve_objectdelta",
   "games": [
-    "sp80",
     "cn04",
-    "ar25",
-    "ka59"
+    "sp80"
   ],
-  "max_expansions": 2500,
+  "max_expansions": 3000,
   "explore_steps": 120,
   "random_seed": 0,
-  "bfs_multistep_solves": [],
+  "bfs_multistep_solves": [
+    "sp80"
+  ],
   "greedy_solves": [
     "sp80"
   ],
   "games_multistep_unlocked_beyond_greedy": [],
   "per_game": [
     {
-      "game": "sp80",
+      "game": "cn04",
       "goal_bfs_multistep": {
         "levels_solved": 0,
-        "actions_used": 2500,
+        "actions_used": 3000,
         "first_solve_at": null,
-        "nodes": 2500,
-        "bottleneck": "expansion_bound_exhausted"
+        "nodes": 3000,
+        "bottleneck": "expansion_bound_exhausted",
+        "agent": {
+          "color": 0,
+          "size": 135
+        },
+        "target_pos": [
+          39.0,
+          42.0
+        ]
+      },
+      "goal_oracle_greedy": {
+        "levels_solved": 0,
+        "actions_used": 100,
+        "first_solve_at": null
+      },
+      "blind": {
+        "levels_solved": 0,
+        "actions_used": 100,
+        "first_solve_at": null
+      },
+      "win_trigger": "(5, None)",
+      "target_cells": 4096,
+      "bfs_solves": false,
+      "greedy_solves": false,
+      "multistep_beats_greedy": false
+    },
+    {
+      "game": "sp80",
+      "goal_bfs_multistep": {
+        "levels_solved": 1,
+        "actions_used": 4,
+        "first_solve_at": 4,
+        "nodes": 1202,
+        "bottleneck": "",
+        "agent": {
+          "color": 9,
+          "size": 80
+        },
+        "target_pos": [
+          17.5,
+          33.5
+        ]
       },
       "goal_oracle_greedy": {
         "levels_solved": 1,
-        "actions_used": 120,
+        "actions_used": 100,
         "first_solve_at": 4
       },
       "blind": {
         "levels_solved": 0,
-        "actions_used": 120,
+        "actions_used": 100,
         "first_solve_at": null
       },
       "win_trigger": "(5, None)",
       "target_cells": 4096,
-      "bfs_solves": false,
+      "bfs_solves": true,
       "greedy_solves": true,
-      "multistep_beats_greedy": false
-    },
-    {
-      "game": "cn04",
-      "goal_bfs_multistep": {
-        "levels_solved": 0,
-        "actions_used": 2500,
-        "first_solve_at": null,
-        "nodes": 2500,
-        "bottleneck": "expansion_bound_exhausted"
-      },
-      "goal_oracle_greedy": {
-        "levels_solved": 0,
-        "actions_used": 120,
-        "first_solve_at": null
-      },
-      "blind": {
-        "levels_solved": 0,
-        "actions_used": 120,
-        "first_solve_at": null
-      },
-      "win_trigger": "(5, None)",
-      "target_cells": 4096,
-      "bfs_solves": false,
-      "greedy_solves": false,
-      "multistep_beats_greedy": false
-    },
-    {
-      "game": "ar25",
-      "goal_bfs_multistep": {
-        "levels_solved": 0,
-        "actions_used": 2500,
-        "first_solve_at": null,
-        "nodes": 2500,
-        "bottleneck": "expansion_bound_exhausted"
-      },
-      "goal_oracle_greedy": {
-        "levels_solved": 0,
-        "actions_used": 120,
-        "first_solve_at": null
-      },
-      "blind": {
-        "levels_solved": 0,
-        "actions_used": 120,
-        "first_solve_at": null
-      },
-      "win_trigger": "(2, None)",
-      "target_cells": 4096,
-      "bfs_solves": false,
-      "greedy_solves": false,
-      "multistep_beats_greedy": false
-    },
-    {
-      "game": "ka59",
-      "goal_bfs_multistep": {
-        "levels_solved": 0,
-        "actions_used": 2500,
-        "first_solve_at": null,
-        "nodes": 2500,
-        "bottleneck": "expansion_bound_exhausted"
-      },
-      "goal_oracle_greedy": {
-        "levels_solved": 0,
-        "actions_used": 120,
-        "first_solve_at": null
-      },
-      "blind": {
-        "levels_solved": 0,
-        "actions_used": 120,
-        "first_solve_at": null
-      },
-      "win_trigger": "(4, None)",
-      "target_cells": 4096,
-      "bfs_solves": false,
-      "greedy_solves": false,
       "multistep_beats_greedy": false
     }
   ],
   "interpretation": "MULTI-STEP best-first search (best_first_search over deepcopied REAL envs, guided by mismatch-to-target, searching for a level-up) vs the GREEDY 1-step oracle vs BLIND. A level-up in search IS a real win (successors are real-env copies). Tests whether DEEPER search reaches the wins the greedy oracle could not (cn04/ar25/ka59). bfs solves where greedy did not => multi-step planning is the missing piece (the induced world-model must then be accurate enough to run the same search live -- the remaining gap). bfs ALSO zero => the mismatch-to-target heuristic / banked target is insufficient to guide search to the win within the expansion bound (the win config is not reachable from reset / needs a richer goal). best_first_search is the EXISTING planner reused, not a new one.",
-  "honest_verdict": "complete_m2_multistep_planning_zero_target_or_branching_insufficient",
+  "honest_verdict": "complete_m2_multistep_planning_bfs_solves_sp80",
   "inference_substrate": "offline_arc_agi3_multistep_best_first_search_real_env_confirmed"
 }
