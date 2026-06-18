@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.403",
+  "generated_at": "2026-06-18T04:56:41Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative milestone-scoped timing detector reported 0 experiment commits, 0 wall-time minutes, and 0 compute-bound tasks for 2026.06.403 — the same recurring false-zero artifact documented across .363-.402, now extending to .403. Both RTX 3090s were idle at the GPU snapshot, but with 0 compute-bound tasks present the idle GPUs are correct behaviour (gpu_idle_on_compute_bound_tasks=null), not a bottleneck. The sole operational issue this milestone is observability: the detector cannot attribute commits to the active milestone, so no per-experiment wall-time profile is available to optimize.",
+  "bottlenecks_identified": [
+    "Recurring milestone-scoped timing-detector false-zero: 0 experiment commits attributed since activation of 2026.06.403, the same gap documented continuously across .363-.402. The detector cannot map commits to the active milestone window, so the retro has no wall-time profile and no slowest-experiment ranking to analyze.",
+    "No write-time duration_s / compute_bound stamping in the retro pipeline: even when artifacts exist on disk, there is no deterministic per-experiment duration for the retro to rank slowest tasks, so it falls back to hand-reading the changelog/disk every milestone.",
+    "Silent propagation: the detector returning 0 looks identical to a genuinely empty milestone, so the false-zero is only caught by manual on-disk cross-check rather than an automatic tripwire."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone-scoped timing detector: scan results/ artifact mtimes within the activation->close window AND fall back to the ops/changelog.md milestone window when git commit-attribution returns 0.",
+    "Stamp duration_s plus a compute_bound boolean at experiment write-time (in scripts/experiment_template.py build_result) so the retro can rank slowest tasks deterministically without re-deriving timing from git history.",
+    "Emit a detector_gap_suspected tripwire when the commit-based detector returns 0 but on-disk artifacts exist for the milestone window, converting the silent false-zero into a visible signal at retro time.",
+    "Keep the GPU-idle bottleneck gated on >=1 compute-bound task being present (correctly NOT flagged this milestone since gpu_idle_on_compute_bound_tasks=null)."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Repair the milestone-scoped timing detector (mtime-window scan + ops/changelog.md milestone-window fallback) — this is the single recurring operational failure spanning .363-.403 and it blocks every operational retro's numeric analysis.",
+    "Add write-time duration_s + compute_bound stamping in build_result() so slowest-experiment ranking is deterministic and detector-independent.",
+    "Wire a detector_gap_suspected tripwire that fires when commit-attribution=0 yet on-disk artifacts exist, so a false-zero is surfaced automatically instead of propagating into the retro as a phantom empty milestone."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The recurring failure mode this milestone is observability, not execution: per the retro's own authoritative timing detector there is no wall-time to optimize (0/0/null), and the GPU idleness is correct given 0 compute-bound tasks. The honest operational read is that the detector keeps reporting an empty milestone while on-disk ground truth (read this turn) shows .403 ran a full task slate and closed publication-ready — so the highest-leverage operational fix remains making timing self-evident at experiment write-time rather than re-deriving it by hand each retro."
+}
