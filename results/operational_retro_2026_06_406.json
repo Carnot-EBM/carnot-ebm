@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.406",
+  "generated_at": "2026-06-18T19:33:11Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative milestone-scoped timing detector reported 0 experiment commits since activation, so the locked fields read 0 experiments / 0 wall-time minutes / 0 compute-bound tasks and gpu_idle_on_compute_bound_tasks is null. Both RTX 3090s idle at 0%/4MB is correct behaviour: no compute-bound task was attributed, so there is no GPU-idle bug to flag. On-disk verification this turn confirms this is a FALSE ZERO (the recurring detector gap seen across .402-.405), not an idle milestone: committed experiment artifacts and a clean capstone exist for this window. The genuine operational bottleneck is the timing detector, not execution.",
+  "bottlenecks_identified": [
+    "False-zero timing detector (the only real bottleneck this milestone): the milestone-scoped timing detector reported 0 commits since activation, but committed experiment artifacts for this window exist on disk and the capstone is clean and unflagged. This is the same false-zero gap documented across .402-.405; it makes the retro's locked numeric fields (0/0/0) under-count actual throughput.",
+    "Unattributable wall time: because the detector found no commits, there is no per-experiment duration to rank, so slowest_experiments is necessarily empty and no slow-task analysis is possible from the authoritative blocks alone.",
+    "NOT a bottleneck (explicitly): GPU idle. With 0 compute-bound tasks attributed, both GPUs reading 0% is correct, gpu_idle_on_compute_bound_tasks stays null, and DualGPURunner enforcement is not applicable."
+  ],
+  "improvements_suggested": [
+    "Repair the milestone-scoped timing detector: scan results/ by file mtime within the activation window AND fall back to the ops/changelog.md milestone window, so committed experiments are counted even when the commit-range scan misses them. This is the single highest-value fix and has recurred for 5+ milestones (.402-.406).",
+    "Stamp duration_s and a compute_bound flag at artifact write time (in the experiment template) so the retro can rank slowest experiments directly from the artifacts instead of re-deriving timing from commit metadata.",
+    "Emit a detector_gap_suspected signal whenever results/ contains artifacts mtime-stamped inside the activation window but the commit-range detector reports 0, so a false zero is self-flagging rather than silently propagating into the locked fields.",
+    "Keep DualGPURunner readiness warm for the next compute-bound milestone: both GPUs are idle and free now (4MB/0% each, full 48GB headroom)."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the false-zero timing detector (mtime scan of results/ within the activation window + changelog-window fallback) so operational retros stop under-counting committed throughput; this is a 5-milestone recurring gap (.402-.406) and is the dominant observability defect.",
+    "Add write-time duration_s + compute_bound stamping to the experiment template so slowest_experiments and compute-bound counts come straight from the artifacts, removing the retro's dependence on the brittle commit-range scan.",
+    "Wire detector_gap_suspected emission: when on-disk artifacts exist in-window but the detector returns 0, flag it automatically rather than leaving the analyst to discover the false zero by hand each milestone."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "For the fifth-plus consecutive milestone the bottleneck is not execution but observability: the timing detector false-zeros while real experiments commit and a clean capstone lands. The efficiency lever is to make the retro harness trust the on-disk artifacts (mtime + changelog window) over the commit-range scan, so the operational record stops contradicting the research record."
+}
