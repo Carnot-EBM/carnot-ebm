@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.06.405",
+  "generated_at": "2026-06-18T15:43:41Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "No experiment commits landed since activation of milestone 2026.06.405, so every timing field is zero: 0 experiments completed, 0 compute-bound, 0 wall-time minutes recorded. This is a milestone-close/capstone retrospective running with no landed experiment artifacts, so there is no per-experiment execution profile to analyze.",
+  "bottlenecks_identified": [
+    "No experiment timing data was captured this milestone: the operational retro ran against zero landed experiment commits, so no wall-time or GPU-utilization bottleneck can be measured from the authoritative data blocks.",
+    "Both RTX 3090s idle at 0% util (4MB/24576MB each) is EXPECTED and correct here, not a bottleneck: there were zero compute-bound (GGUF/CUDA) tasks, so gpu_idle_on_compute_bound_tasks is null. The GPU-monitor DualGPURunner suggestions are false positives for a no-experiment / synthesis milestone."
+  ],
+  "improvements_suggested": [
+    "Order the conductor so experiment commits land before the operational retro fires (or have the retro key off the conductor task ledger / results/*.json mtimes, not only git commits), so capstone and synthesis milestones still yield a usable execution profile instead of empty timing data.",
+    "Tag synthesis-only / capstone milestones (no compute-bound experiments) with a 'synthesis_milestone' marker so a zero-experiment retro is self-describing rather than indistinguishable from a data-capture failure.",
+    "Suppress the GPU-monitor's DualGPURunner recommendation when no compute-bound task is present in the milestone, so idle GPUs on a synthesis milestone do not surface as actionable suggestions."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Make the operational-retro trigger read the conductor task ledger (or results/ artifact mtimes) as a fallback timing source when no experiment commits are found, eliminating empty-timing retros on capstone milestones.",
+    "Add a 'synthesis_milestone' / no-compute-bound flag to the retro so an all-zero timing profile is expected-by-design rather than ambiguous.",
+    "Leave idle GPUs uncontested on synthesis/capstone milestones: gate the DualGPURunner suggestion on at least one compute-bound task being present (the two GPU-idle suggestions this milestone are false positives)."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "A retrospective with zero experiment data is itself the process signal: the operational-retro trigger and experiment-commit landing are not yet ordered, so a capstone/synthesis milestone surfaces as empty timing. The one durable fix is the data-source ordering (ledger/mtime fallback); the GPU-idle alarms are correctly suppressed because no compute-bound task ran, so there is no measured wall-time to reduce (estimated_time_savings_pct = 0)."
+}
