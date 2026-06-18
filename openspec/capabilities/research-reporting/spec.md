@@ -23602,6 +23602,91 @@ not claim `.402` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4358 | Implemented (`python/carnot/reporting/archive_v402_activate_v403_4358.py`, `python/carnot/experiment_4358_archive_v402_activate_v403.py`, `results/experiment_4358_archive_v402_activate_v403.py`) | Implemented (`tests/python/test_experiment_4358_archive_v402_activate_v403.py`) |
 
+### REQ-REPORT-4369: Archive .403, Activate .404, And Preserve The True Close-State
+
+The Exp 4369 workflow SHALL archive milestone `2026.06.403`, confirm milestone
+`2026.06.404` is active, and write the record-only artifact
+`results/experiment_4369_archive_v403_activate_v404.json`. It SHALL run NO live
+model training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`, it SHALL record that the conductor stays
+stood down on TRM training, and it SHALL NOT modify `scripts/research_conductor.py`.
+
+Before writing the complete artifact or editing `research-complete.yaml`, the
+workflow SHALL verify these preconditions and stop with a `blocked_<resource>`
+honest verdict if any fail:
+
+- `research-complete.yaml` and `ops/exclusion_manifest.yaml` parse under
+  `yaml.safe_load`.
+- The smart-subset pre-test gate is green.
+
+The workflow SHALL ensure `research-complete.yaml` contains a single `.403`
+archive record, appending the canonical `.403` record only when absent and
+removing duplicate top-level `.403` records if interrupted conductor appends
+created any. The workflow SHALL keep `research-complete.yaml` parseable after
+the edit and SHALL record `activation_recorded:
+exp4369-archive-v403-activate-v404` on the `.403` archive row.
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v403_close_state` SHALL truthfully record
+the Exp 4368 capstone scorecard corrected by the authoritative ARC solve
+registry: the DiffusionGemma in-generation conversion is STILL OPEN after its
+third consecutive block because Exp 4359 returned
+`scorer_leaky_in_search_corpus`, `benchmark_n=0`,
+`controls_differentiated=false`, and the `.401` leak-robust scorer proved
+corpus-specific on the free-form generation corpus. The close-state SHALL
+record `s3_moat_utility=open` and `verifier_thesis_state=harness_still_open`.
+
+The close-state SHALL record ARC progress as `26 -> 33` reproducible levels
+across `17` games from `ops/arc_solve_registry.yaml`. It SHALL record the
+efficiency moat as WON: Exp 4364 reports `action_efficiency_compounds=true`,
+held-out env-actions `25 -> 16`, `deployed_into_solver_kit=true`,
+`positive_control_passed=true`, `reproduction_gated=true`,
+`verifier_is_oracle=false`, and `llm_heuristic_arm.ran=false`. It SHALL record
+`flagged_for_v404=llm_generated_action_heuristics_compounding_v404` from Exp
+4365, cross-game value transfer as RETIRED from Exp 4342, cross-domain
+selection as RETIRED from Exp 4314, `paper_ready=true`, and SHALL frame `.404`
+as elevate-efficiency-moat plus ARC-deeper plus repair-or-retire-DiffusionGemma
+plus detector-probe, not as a re-open of the retired axes.
+
+The artifact SHALL include these field-principle strings exactly:
+
+- `honest_verdict`: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
+- `v403_close_state`: "Honest record (DiffusionGemma conversion OPEN/3rd-block scorer-corpus-specific; EFFICIENCY moat WON 25->16 + deployed; ARC 33 levels/17 games; flagged_for_v404=llm_generated_action_heuristics_compounding_v404; cross-game transfer + cross-domain selection RETIRED; paper_ready=True) so the .404 agents frame the milestone as elevate-efficiency-moat + ARC-deeper + repair-or-retire-DiffusionGemma + detector-probe -- NOT a re-open of the retired axes."
+- `preconditions_checked`: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
+
+#### SCENARIO-REPORT-4369: The Archive Records The True .403 Close-State
+
+**Given** `.403` has the Exp 4368 capstone, Exp 4359
+`scorer_leaky_in_search_corpus` evidence, Exp 4364 compounding action-cost
+evidence, Exp 4365 `flagged_for_v404` evidence, the ARC solve registry with 33
+reproducible levels across 17 games, parseable history and exclusion-manifest
+YAML files, a green smart-subset pre-test gate, and `.404` active
+**When** the Exp 4369 archive workflow runs
+**Then** it archives `.403`, confirms `.404`, keeps the YAML history parseable
+with one `.403` record, writes
+`results/experiment_4369_archive_v403_activate_v404.json`, records the
+DiffusionGemma conversion as OPEN/third-block/scorer-corpus-specific, records
+ARC 33/17 with `26 -> 33` progress, records the deployed compounding efficiency
+win 25->16, records `flagged_for_v404`, records cross-game transfer and
+cross-domain selection RETIRED, records `paper_ready=true`, records the checked
+resources in `preconditions_checked`, declares
+`aggregation_from_upstream_artifacts`, and emits a terminal-prefixed honest
+verdict.
+
+#### SCENARIO-REPORT-4369-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4369 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does
+not claim `.403` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4369)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4369 | Planned (`python/carnot/reporting/archive_v403_activate_v404_4369.py`, `python/carnot/experiment_4369_archive_v403_activate_v404.py`, `results/experiment_4369_archive_v403_activate_v404.py`) | Planned (`tests/python/test_experiment_4369_archive_v403_activate_v404.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone
