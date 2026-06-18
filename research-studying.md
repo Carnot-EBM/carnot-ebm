@@ -8,6 +8,80 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-18 Exp 4365 - .403 fork SOTA ingestion ingested
+
+**Status:** INGESTED into `results/experiment_4365_sota_ingestion_v404.json`.
+
+**Preconditions:** network precondition passed via Hugging Face reachability and
+arXiv/WebFetch verification. If that check had failed, the only honest artifact
+would have been `honest_verdict=blocked_network_unavailable`.
+
+**Reliable-channel provenance:** `scripts/sweep_clusters.py` emitted focused
+energy/reward and world-model arXiv discovery URLs; direct arXiv fetch of those
+helper URLs returned HTTP 400 in this pass, so no cluster rows were promoted
+without independent verification. `scripts/sweep_semscholar.py` was run on five
+focused query strings; it returned HTTP 429 for three queries and surfaced
+arXiv:2606.08501 plus arXiv:2503.18809 among usable candidates. Low-concurrency
+WebSearch/WebFetch plus arXiv page checks verified arXiv:2503.18809,
+arXiv:2605.05138, arXiv:2603.20216, arXiv:2606.08501, arXiv:2602.01842,
+arXiv:2606.13565, and arXiv:2502.01384. The banned `/deep-research` channel was
+not invoked.
+
+**Filtered track:** .403 outcomes after Prism-hardened S3 verifier-guided
+diffusion-LM search, E3 deeper executable-world-model progression, and
+self-learning action-cost compounding.
+
+**.403 outcome conditioning:**
+- Exp 4359: `acceptance_gate=true`, `honest_verdict=scorer_leaky_in_search_corpus`,
+  `benchmark_n=0`, `controls_differentiated=false`, and
+  `s3_guided_beats_control=false`. The Prism/S3 line is not a clean null, but
+  it is also not a positive generation result; .404 should quarantine the
+  external scorer and repair controls before reviving the search headline.
+- Exp 4361: `success_e3_deeper_tu93_reproduced`,
+  `new_levels_reproduced=1`, `reproducible_total_levels=33`, and
+  `verifier_is_oracle=true`. E3 remains real ARC progress, but its verifier
+  caveat stays oracle-grounded.
+- Exp 4364: `action_efficiency_compounds=true`,
+  `acceptance_gate_passed=true`, `deployed_into_solver_kit=true`,
+  `reproduction_gated=true`, and `verifier_is_oracle=false`. The LLM heuristic
+  arm did not run, so .404 should test the stronger function class on the clean
+  compounding substrate.
+
+**Fresh-pass candidates marked ingested:**
+- Classical Planning with LLM-Generated Heuristics, arXiv:2503.18809 - mapped
+  to the .404 headline: synthesize small Python heuristic programs and select
+  only by reproduced held-out action count against the deployed linear
+  action-cost heuristic.
+- Executable World Models for ARC-AGI-3, arXiv:2605.05138 - mapped to deeper
+  tu93/sc25/tn36/lp85 progression with `verifier_is_oracle=true` kept explicit.
+- CoDiLA locally coherent parallel decoding, arXiv:2603.20216 - fresh
+  scorer-quarantine control for dLLM search after Exp 4359's leaky external
+  scorer state.
+- PAPO reward-state alignment, arXiv:2606.08501 - mapped to authentic
+  trajectory-state diagnostics before any reward-guided generator training.
+- Prism hierarchical trajectory search/self-verification, arXiv:2602.01842 -
+  carried forward only as a repaired HTS harness target with branch-diversity,
+  scorer-disagreement, and leak receipts.
+
+out_of_band_flagged:
+- A2D2 adaptive any-length discrete diffusion, arXiv:2606.13565 -
+  operator-owned verifier-as-reward generator training, NOT auto-run in-loop.
+- SEPO score-entropy policy optimization, arXiv:2502.01384 - operator-owned
+  verifier-as-reward generator training, NOT auto-run in-loop.
+
+flagged_for_v404: llm_generated_action_heuristics_compounding_v404
+
+Flagged for .404: `llm_generated_action_heuristics_compounding_v404`
+
+random_seed=4365
+
+**Bottom line for the .404 roadmap:** do not spend the next headline slot on an
+unclean Prism/S3 gain. Keep diffusion search in scorer-quarantine repair with
+CoDiLA/PAPO controls, continue E3 as oracle-grounded ARC north-star progress,
+and put the main .404 flag on LLM-generated action heuristics over the clean
+Exp 4364 compounding substrate. A2D2 and SEPO stay out of band for
+operator-owned verifier-as-reward generator training.
+
 ## 2026-06-17 Exp 4354 - .402 fork SOTA ingestion ingested
 
 **Status:** INGESTED into `results/experiment_4354_sota_ingestion_v403.json`.
