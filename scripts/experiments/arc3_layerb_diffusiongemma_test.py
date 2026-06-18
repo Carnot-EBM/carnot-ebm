@@ -28,8 +28,7 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "python"))
 
 DIFF_CLI = Path.home() / ".cache" / "llama.cpp-master" / "build-hip" / "bin" / "llama-diffusion-cli"
-N_PREDICT = 1024  # this is a REASONING model (<|channel>thought); the fixed canvas must hold
-# the chain-of-thought AND the code. 384 filled with reasoning before the code; 1024 lets it finish.
+N_PREDICT = 512  # with reasoning suppressed the code is short; 512 canvas is ample and faster
 
 
 def _find_gguf():
@@ -45,10 +44,19 @@ def _scaffold():
     return m
 
 
+# DiffusionGemma is a reasoning model (<|channel>thought) and the diffusion canvas is FIXED-length: on
+# the verbose scaffolded prompt it loops in chain-of-thought ("Wait, where does 6 come from?") and never
+# reaches the code. It DID write the correct rule on a simple "output only code" prompt. So we suppress
+# reasoning: a hard prefix directive + a primed code opener, forcing it to spend the canvas on code.
+NO_THINK = ("You are a deterministic Python code generator. Output ONLY one ```python code block with "
+            "def is_win. Do NOT think. Do NOT use a thought channel. Do NOT explain or re-count. "
+            "Commit to the single most likely rule immediately.\n\n")
+
+
 def diffusion_generate(gguf, prompt):
     """Run llama-diffusion-cli on the iGPU; return (stdout_text, wall_s, tok_per_s)."""
     pf = REPO / "results" / "_diff_prompt.txt"
-    pf.write_text(prompt)
+    pf.write_text(NO_THINK + prompt)
     t0 = time.time()
     proc = subprocess.run([str(DIFF_CLI), "-m", gguf, "-ngl", "999", "-n", str(N_PREDICT), "-f", str(pf)],
                           capture_output=True, text=True, timeout=600)
