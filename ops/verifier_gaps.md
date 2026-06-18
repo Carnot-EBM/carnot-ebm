@@ -1932,3 +1932,39 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - missing discriminator: Real multi-step intervention labels with non-degenerate first-error positions and suffix redirects.
 - candidate design: Collect typed multi-step FoVer interventions where correction at k is checked against a non-empty suffix, then re-run held-out-family position-only and template-family controls.
 - priority: high
+
+<!-- exp4405-gap-lp85-l6:start -->
+### GAP-4405-LP85-L6: Exp 4405 mechanic-unit-test residual
+- status: open
+- evidence: results/experiment_4405_e3_deeper_mechanic_unit_tests.json; mechanic_unit_tests=1/1; offline_reproduced=False.
+- residual failing mechanic: lp85_l6_permutation_bfs_reproduction_not_proven_after_unit_transition
+- candidate design: extend the target solver only after the residual transition has an executable unit test and the offline reproduce() gate proves a new level.
+- priority: high
+<!-- exp4405-gap-lp85-l6:end -->
+
+<!-- exp4405-gap-tu93-l5:start -->
+### GAP-4405-TU93-L5: Exp 4405 mechanic-unit-test residual
+- status: open
+- evidence: results/experiment_4405_e3_deeper_mechanic_unit_tests.json; mechanic_unit_tests=1/1; offline_reproduced=False.
+- residual failing mechanic: tu93_l5_fresh_env_branch_mode_reproduction_not_proven_after_unit_transition
+- candidate design: extend the target solver only after the residual transition has an executable unit test and the offline reproduce() gate proves a new level.
+- priority: high
+<!-- exp4405-gap-tu93-l5:end -->
+
+<!-- exp4405-gap-tn36-l8:start -->
+### GAP-4405-TN36-L8: Exp 4405 mechanic-unit-test residual
+- status: open
+- evidence: results/experiment_4405_e3_deeper_mechanic_unit_tests.json; mechanic_unit_tests=1/1; offline_reproduced=False.
+- residual failing mechanic: tn36_l8_sxhtkytekm_palette_population_reproduction_not_proven_after_unit_transition
+- candidate design: extend the target solver only after the residual transition has an executable unit test and the offline reproduce() gate proves a new level.
+- priority: high
+<!-- exp4405-gap-tn36-l8:end -->
+
+<!-- exp4405-gap-tr87-l7:start -->
+### GAP-4405-TR87-L7: Exp 4405 mechanic-unit-test residual
+- status: open
+- evidence: results/experiment_4405_e3_deeper_mechanic_unit_tests.json; mechanic_unit_tests=1/1; offline_reproduced=False.
+- residual failing mechanic: tr87_l7_no_offline_level_available_after_two_pass_rewrite_unit_transition
+- candidate design: extend the target solver only after the residual transition has an executable unit test and the offline reproduce() gate proves a new level.
+- priority: high
+<!-- exp4405-gap-tr87-l7:end -->

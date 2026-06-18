@@ -1,0 +1,382 @@
+{
+  "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4405_e3_deeper_mechanic_unit_tests.json",
+  "duration_s": 0.033526,
+  "experiment": "experiment_4405_e3_deeper_mechanic_unit_tests",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed (success_e3_deeper_<targets>_reproduced or complete_e3_deeper_partial). Any NEW reproduced level is progress; per-mechanic unit tests that now PASS (raising fidelity toward the gate) are also progress.",
+    "new_levels_reproduced": "BARE int: NEW levels offline-reproduced this task across the four targets -- the incremental-progress unit.",
+    "per_target_scorecard": "list of {game, prior_best_level, new_reproduced_level, lookahead_fidelity, mechanic_unit_tests_passed, mechanic_unit_tests_total, residual_failing_mechanic, offline_reproduced} -- the per-target breadth-of-progress record including the per-mechanic-test decomposition (which transition the model now gets right vs the residual).",
+    "preconditions_checked": "Records the offline-env presence per target + harness import + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the entropy-selected exploration + induction + planning.",
+    "reproducibility_checksum": "Hash of the extended models + the per-mechanic tests + the plans + the reproduce() results; lets a third party re-run.",
+    "reproducible_total_levels": "BARE int: the ARC reproducible-level count after this task (>= the prior 34) -- the monotonic north-star accuracy signal.",
+    "verifier_is_oracle": "BARE bool=true -- the SOLVEs are execution-grounded; ARC progress, NOT a moat headline.",
+    "world_model_paths": "list[str]: the extended world-model / solver paths + the per-mechanic unit-test paths (the deliverables)."
+  },
+  "honest_verdict": "complete_e3_deeper_partial",
+  "lookahead_k": 3,
+  "method": "offline_e3_mind_studio_mechanic_unit_test_decomposition",
+  "new_levels_reproduced": 0,
+  "per_target_scorecard": [
+    {
+      "checkpoint_status": "honest_partial_mechanic_tests_passed_reproduction_not_proven",
+      "game": "lp85",
+      "lookahead_fidelity": 0.833333,
+      "lookahead_fidelity_per_round": [
+        0.833333
+      ],
+      "mechanic_unit_test_pass_rate": 1.0,
+      "mechanic_unit_tests": [
+        {
+          "expected": [
+            "slot2",
+            "bghvgbtwcb",
+            "slot3",
+            "fdgmtkfrxl"
+          ],
+          "game": "lp85",
+          "name": "lp85_mechanic_transition_unit",
+          "observed": [
+            "slot2",
+            "bghvgbtwcb",
+            "slot3",
+            "fdgmtkfrxl"
+          ],
+          "passed": true,
+          "test_path": "tests/python/test_experiment_4405_e3_deeper_mechanic_unit_tests.py",
+          "transition": "lp85:L6:button_permutation_slot_mapping",
+          "world_model_path": "results/arc_e3/lp85/world_model.py"
+        }
+      ],
+      "mechanic_unit_tests_passed": 1,
+      "mechanic_unit_tests_total": 1,
+      "new_reproduced_level": 5,
+      "offline_reproduced": false,
+      "plan": [],
+      "prior_best_level": 5,
+      "reproduce_result": {
+        "claimed_level": 6,
+        "game": "lp85",
+        "reached_level": 5,
+        "reason": "no_offline_reproduction_runner_configured_for_exp4405",
+        "reproduced": false
+      },
+      "residual_failing_mechanic": "lp85_l6_permutation_bfs_reproduction_not_proven_after_unit_transition",
+      "solver_path": "python/carnot/agentic/arc_game_adapters.py",
+      "target_level": 6,
+      "target_wall_time_s": 30.0,
+      "verifier_accuracy": 0.833333,
+      "verifier_accuracy_per_round": [
+        0.833333
+      ],
+      "world_model_path": "results/arc_e3/lp85/world_model.py"
+    },
+    {
+      "checkpoint_status": "honest_partial_mechanic_tests_passed_reproduction_not_proven",
+      "game": "tu93",
+      "lookahead_fidelity": 0.8,
+      "lookahead_fidelity_per_round": [
+        0.8
+      ],
+      "mechanic_unit_test_pass_rate": 1.0,
+      "mechanic_unit_tests": [
+        {
+          "expected": "BranchState(player=(3, 2), goal=(4, 2), reset_parity=0)",
+          "game": "tu93",
+          "name": "tu93_mechanic_transition_unit",
+          "observed": "BranchState(player=(3, 2), goal=(4, 2), reset_parity=0)",
+          "passed": true,
+          "test_path": "tests/python/test_experiment_4405_e3_deeper_mechanic_unit_tests.py",
+          "transition": "tu93:L5:fresh_env_branch_move",
+          "world_model_path": "results/arc_e3/tu93/world_model.py"
+        }
+      ],
+      "mechanic_unit_tests_passed": 1,
+      "mechanic_unit_tests_total": 1,
+      "new_reproduced_level": 4,
+      "offline_reproduced": false,
+      "plan": [],
+      "prior_best_level": 4,
+      "reproduce_result": {
+        "claimed_level": 5,
+        "game": "tu93",
+        "reached_level": 4,
+        "reason": "no_offline_reproduction_runner_configured_for_exp4405",
+        "reproduced": false
+      },
+      "residual_failing_mechanic": "tu93_l5_fresh_env_branch_mode_reproduction_not_proven_after_unit_transition",
+      "solver_path": "python/carnot/agentic/arc_game_adapters.py",
+      "target_level": 5,
+      "target_wall_time_s": 30.0,
+      "verifier_accuracy": 0.8,
+      "verifier_accuracy_per_round": [
+        0.8
+      ],
+      "world_model_path": "results/arc_e3/tu93/world_model.py"
+    },
+    {
+      "checkpoint_status": "honest_partial_mechanic_tests_passed_reproduction_not_proven",
+      "game": "tn36",
+      "lookahead_fidelity": 0.875,
+      "lookahead_fidelity_per_round": [
+        0.875
+      ],
+      "mechanic_unit_test_pass_rate": 1.0,
+      "mechanic_unit_tests": [
+        {
+          "expected": "EditorState(x=30, y=33, scale=1, rotation=0, prop=11)",
+          "game": "tn36",
+          "name": "tn36_mechanic_transition_unit",
+          "observed": "EditorState(x=30, y=33, scale=1, rotation=0, prop=11)",
+          "passed": true,
+          "test_path": "tests/python/test_experiment_4405_e3_deeper_mechanic_unit_tests.py",
+          "transition": "tn36:L8:sxhtkytekm_program_editor_run",
+          "world_model_path": "results/arc_e3/tn36/world_model.py"
+        }
+      ],
+      "mechanic_unit_tests_passed": 1,
+      "mechanic_unit_tests_total": 1,
+      "new_reproduced_level": 7,
+      "offline_reproduced": false,
+      "plan": [
+        "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 41}}",
+        "{\"action\": 6, \"data\": {\"x\": 24, \"y\": 44}}",
+        "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 41}}",
+        "{\"action\": 6, \"data\": {\"x\": 34, \"y\": 44}}",
+        "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 41}}",
+        "{\"action\": 6, \"data\": {\"x\": 39, \"y\": 44}}",
+        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 55}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 46, \"y\": 58}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 41}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 41}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 38}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 38}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 41}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 44}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 35}}",
+        "{\"action\": 6, \"data\": {\"x\": 32, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 37, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 42, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 47, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 32}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 47}}",
+        "{\"action\": 6, \"data\": {\"x\": 57, \"y\": 58}}"
+      ],
+      "prior_best_level": 7,
+      "reproduce_result": {
+        "claimed_level": 8,
+        "game": "tn36",
+        "reached_level": 7,
+        "reason": "no_offline_reproduction_runner_configured_for_exp4405",
+        "reproduced": false
+      },
+      "residual_failing_mechanic": "tn36_l8_sxhtkytekm_palette_population_reproduction_not_proven_after_unit_transition",
+      "solver_path": "scripts/arc3_tn36_offline_solver.py",
+      "target_level": 8,
+      "target_wall_time_s": 30.0,
+      "verifier_accuracy": 0.875,
+      "verifier_accuracy_per_round": [
+        0.875
+      ],
+      "world_model_path": "results/arc_e3/tn36/world_model.py"
+    },
+    {
+      "checkpoint_status": "honest_partial_mechanic_tests_passed_reproduction_not_proven",
+      "game": "tr87",
+      "lookahead_fidelity": 0.857143,
+      "lookahead_fidelity_per_round": [
+        0.857143
+      ],
+      "mechanic_unit_test_pass_rate": 1.0,
+      "mechanic_unit_tests": [
+        {
+          "expected": [
+            "C6",
+            "C1"
+          ],
+          "game": "tr87",
+          "name": "tr87_mechanic_transition_unit",
+          "observed": [
+            "C6",
+            "C1"
+          ],
+          "passed": true,
+          "test_path": "tests/python/test_experiment_4405_e3_deeper_mechanic_unit_tests.py",
+          "transition": "tr87:L7:two_pass_greedy_rewrite",
+          "world_model_path": "results/arc_e3/tr87/world_model.py"
+        }
+      ],
+      "mechanic_unit_tests_passed": 1,
+      "mechanic_unit_tests_total": 1,
+      "new_reproduced_level": 6,
+      "offline_reproduced": false,
+      "plan": [],
+      "prior_best_level": 6,
+      "reproduce_result": {
+        "claimed_level": 7,
+        "game": "tr87",
+        "reached_level": 6,
+        "reason": "no_offline_reproduction_runner_configured_for_exp4405",
+        "reproduced": false
+      },
+      "residual_failing_mechanic": "tr87_l7_no_offline_level_available_after_two_pass_rewrite_unit_transition",
+      "solver_path": "python/carnot/agentic/arc_game_adapters.py",
+      "target_level": 7,
+      "target_wall_time_s": 30.0,
+      "verifier_accuracy": 0.857143,
+      "verifier_accuracy_per_round": [
+        0.857143
+      ],
+      "world_model_path": "results/arc_e3/tr87/world_model.py"
+    }
+  ],
+  "preconditions_checked": {
+    "arc_solver_kit_import": true,
+    "executable_world_model_import": true,
+    "harness_import": true,
+    "leaderboard_submission": false,
+    "research_conductor_modified": false,
+    "solver_kit_import": true,
+    "targets": {
+      "lp85": {
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/lp85",
+        "offline_env_present": true,
+        "status": "available"
+      },
+      "tn36": {
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/tn36",
+        "offline_env_present": true,
+        "status": "available"
+      },
+      "tr87": {
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/tr87",
+        "offline_env_present": true,
+        "status": "available"
+      },
+      "tu93": {
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/tu93",
+        "offline_env_present": true,
+        "status": "available"
+      }
+    },
+    "trm_training_stood_down": true
+  },
+  "random_seed": 4405,
+  "reproducibility_checksum": "6bcd4562dcdddace73f107eda92b6f4b08a1cb625117c0d380dcc0ef9fb14f18",
+  "reproducible_total_levels": 34,
+  "spec_refs": [
+    "REQ-PHASE4-4405",
+    "SCENARIO-PHASE4-4405"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_order": [
+    "lp85",
+    "tu93",
+    "tn36",
+    "tr87"
+  ],
+  "target_wall_time_s": 30.0,
+  "verifier_is_oracle": true,
+  "world_model_path_sha256": {
+    "python/carnot/agentic/arc_game_adapters.py": "29553f85ea077111f34f17b1dfa4c9fff9efccd2bebf4c8a4b5180415a2ad711",
+    "python/carnot/experiment_4405_e3_deeper_mechanic_unit_tests.py": "0fe499616f8f088ca8a07ba039eafc115d6905c033347fbd9de229d8559389bd",
+    "results/arc_e3/lp85/world_model.py": "df25a9fc351f7328b70a15e8526a4aeb2f87422ae1b7a7198dbaab2d1acc106c",
+    "results/arc_e3/tn36/world_model.py": "2c47107fc5b018d7db5562f24c07dfa718bd7e594bea6bb951b6d94082bdfa0a",
+    "results/arc_e3/tr87/world_model.py": "36d2ccb0dac2ef6a286bf2a997daf738eeee903bec5144da11db3807208f7288",
+    "results/arc_e3/tu93/world_model.py": "a254e5a38d551d78dc9ccd704d730450f64009dbe93c4db0a126dacee31ea701",
+    "results/experiment_4405_e3_deeper_mechanic_unit_tests.py": "572b8068cbed2fe13e6111e62452dfa2e8ee19464d4fc5056c7756d4498b4b8e",
+    "scripts/arc3_tn36_offline_solver.py": "42c527c23c454fae2aaa256b3df947a24ade93091c5a04e75ad2f6fe7be8dd52",
+    "tests/python/test_experiment_4405_e3_deeper_mechanic_unit_tests.py": "cd3a4d3b3fc069fb93dc4e6cbedd9b1a16b7a5735dc5c68eaf2faebbaba43995"
+  },
+  "world_model_paths": [
+    "python/carnot/experiment_4405_e3_deeper_mechanic_unit_tests.py",
+    "results/experiment_4405_e3_deeper_mechanic_unit_tests.py",
+    "tests/python/test_experiment_4405_e3_deeper_mechanic_unit_tests.py",
+    "results/arc_e3/lp85/world_model.py",
+    "python/carnot/agentic/arc_game_adapters.py",
+    "results/arc_e3/tu93/world_model.py",
+    "results/arc_e3/tn36/world_model.py",
+    "scripts/arc3_tn36_offline_solver.py",
+    "results/arc_e3/tr87/world_model.py"
+  ]
+}
