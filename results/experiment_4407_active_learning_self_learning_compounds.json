@@ -1,0 +1,314 @@
+{
+  "active_vs_random_learning_curve": [
+    {
+      "corpus_size": 51,
+      "f1_active": 1.0,
+      "f1_positive_control_ceiling": 1.0,
+      "f1_random": 1.0,
+      "position_only_floor": 1.0
+    },
+    {
+      "corpus_size": 128,
+      "f1_active": 1.0,
+      "f1_positive_control_ceiling": 1.0,
+      "f1_random": 1.0,
+      "position_only_floor": 1.0
+    },
+    {
+      "corpus_size": 256,
+      "f1_active": 1.0,
+      "f1_positive_control_ceiling": 1.0,
+      "f1_random": 1.0,
+      "position_only_floor": 1.0
+    },
+    {
+      "corpus_size": 512,
+      "f1_active": 1.0,
+      "f1_positive_control_ceiling": 1.0,
+      "f1_random": 1.0,
+      "position_only_floor": 1.0
+    }
+  ],
+  "adversarial_verify": {
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n"
+  },
+  "bootstrap_resamples": 2500,
+  "compounding_delta_ci95": [
+    0.0,
+    0.0
+  ],
+  "duration_s": 1.407,
+  "experiment": "experiment_4407_active_learning_self_learning_compounds",
+  "field_principles": {
+    "active_vs_random_learning_curve": "list of {corpus_size, f1_active, f1_random, f1_positive_control_ceiling, position_only_floor} -- the ACTIVE-vs-RANDOM curve; ACTIVE rising above RANDOM and the position-only floor is the compounding signal, both flat = saturated.",
+    "compounding_delta_ci95": "Bootstrap CI95 of the ACTIVE-minus-RANDOM held-out-F1 delta at the largest corpus size -- excluding 0 is the compounding claim.",
+    "honest_verdict": "Terminal-prefixed. A win (active selection compounds beyond random) and a clean null (the localizer signal is saturated/position-bound) are BOTH decision-grade.",
+    "localizer_compounds": "BARE bool: the capstone reads this; true iff held-out first-error F1 under ACTIVE selection rises with corpus size beyond a RANDOM-selection baseline (delta CI95-excl-0) with positive-control headroom AND the position-only control stays beaten -- the self-learning reading on the axis that now has real headroom (NEW mechanism vs the .406 size-only saturated null).",
+    "model_specs": "The localizer + the FoVer corpus + the active-selection config + the positive control + n; required methodology + the oracle-distinct declaration.",
+    "preconditions_checked": "Records the localizer/corpus + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the active/random selection + the localizer fit + the bootstrap.",
+    "reproducibility_checksum": "Hash of the corpus + the active-selection config + the curve; lets a third party re-run.",
+    "verifier_is_oracle": "BARE bool=false -- the learned localizer is oracle-distinct."
+  },
+  "gate_summary": {
+    "active_rises_beyond_random": false,
+    "delta_ci95_excludes_zero": false,
+    "localizer_compounds": false,
+    "position_only_control_beaten": false,
+    "positive_control_headroom": false
+  },
+  "honest_verdict": "complete: clean_null_position_bound_or_saturated",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "localizer_compounds": false,
+  "methodology_note": "CPU-only cached active-learning selection over first-error labels. The ACTIVE arm uses localizer uncertainty plus first-error-position diversity; RANDOM is fixed-seed uniform trace addition. No TRM training, generator training, live LLM inference, or quota-bearing call is invoked.",
+  "missing_verifier_gaps": [
+    {
+      "candidate_design": "Collect multi-step FoVer interventions with non-empty suffix redirects and typed first-error families before retrying active trace selection.",
+      "evidence": "results/experiment_4407_active_learning_self_learning_compounds.json",
+      "failure_mode": "complete: clean_null_position_bound_or_saturated",
+      "gap_id": "GAP-4407-ACTIVE-LOCALIZER-POSITION-BOUND",
+      "missing_discriminator": "Non-degenerate multi-position real intervention labels with content features that beat a position-only first-error baseline.",
+      "priority": "high",
+      "status": "open"
+    }
+  ],
+  "model_specs": {
+    "active_models": [
+      {
+        "model_type": "contrastive_feature_difference_localizer",
+        "threshold": 0.0,
+        "training_summary": {
+          "contrastive_pair_count": 0,
+          "cpu_only": true,
+          "label_source": "synthetic_prefix_invalidity_only",
+          "training_trace_count": 51
+        },
+        "weights": {
+          "detector_score": 0.0,
+          "is_first_step": 0.0,
+          "normalized_position": 0.0,
+          "prefix_invalidity": 0.0,
+          "score_onset": 0.1,
+          "trajectory_consistency": 0.0
+        }
+      },
+      {
+        "model_type": "contrastive_feature_difference_localizer",
+        "threshold": 0.0,
+        "training_summary": {
+          "contrastive_pair_count": 0,
+          "cpu_only": true,
+          "label_source": "synthetic_prefix_invalidity_only",
+          "training_trace_count": 128
+        },
+        "weights": {
+          "detector_score": 0.0,
+          "is_first_step": 0.0,
+          "normalized_position": 0.0,
+          "prefix_invalidity": 0.0,
+          "score_onset": 0.1,
+          "trajectory_consistency": 0.0
+        }
+      },
+      {
+        "model_type": "contrastive_feature_difference_localizer",
+        "threshold": 0.0,
+        "training_summary": {
+          "contrastive_pair_count": 0,
+          "cpu_only": true,
+          "label_source": "synthetic_prefix_invalidity_only",
+          "training_trace_count": 256
+        },
+        "weights": {
+          "detector_score": 0.0,
+          "is_first_step": 0.0,
+          "normalized_position": 0.0,
+          "prefix_invalidity": 0.0,
+          "score_onset": 0.1,
+          "trajectory_consistency": 0.0
+        }
+      },
+      {
+        "model_type": "contrastive_feature_difference_localizer",
+        "threshold": 0.0,
+        "training_summary": {
+          "contrastive_pair_count": 0,
+          "cpu_only": true,
+          "label_source": "synthetic_prefix_invalidity_only",
+          "training_trace_count": 512
+        },
+        "weights": {
+          "detector_score": 0.0,
+          "is_first_step": 0.0,
+          "normalized_position": 0.0,
+          "prefix_invalidity": 0.0,
+          "score_onset": 0.1,
+          "trajectory_consistency": 0.0
+        }
+      }
+    ],
+    "active_selection_config": {
+      "corpus_sizes": [
+        51,
+        128,
+        256,
+        512
+      ],
+      "diversity_signal": "under-represented first-error position_bin",
+      "random_baseline": "uniform shuffled trace addition with fixed seed",
+      "selection_rule": "min(position_count, confidence_margin, trace_id)",
+      "uncertainty_signal": "smallest localizer confidence margin"
+    },
+    "bootstrap_resamples": 2500,
+    "corpus_source": "exp4403_real_intervention",
+    "exp4403_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4403_real_intervention_localizer_deconfound.json",
+    "fover_row_corpus": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+    "fover_step_corpus": "/home/ianblenke/github.com/ianblenke/carnot/data/step_level_prm_training.jsonl",
+    "generator_training": "stood_down_not_invoked",
+    "live_generation": false,
+    "localizer": "contrastive_feature_difference_localizer_refit_per_selection",
+    "positive_control": {
+      "ceiling_held_out_f1": 1.0,
+      "headroom_over_random_at_largest_size": 0.0,
+      "minimum_nontrivial_headroom": 0.02,
+      "positive_control_passed": false
+    },
+    "random_models": [
+      {
+        "model_type": "contrastive_feature_difference_localizer",
+        "threshold": 0.0,
+        "training_summary": {
+          "contrastive_pair_count": 0,
+          "cpu_only": true,
+          "label_source": "synthetic_prefix_invalidity_only",
+          "training_trace_count": 51
+        },
+        "weights": {
+          "detector_score": 0.0,
+          "is_first_step": 0.0,
+          "normalized_position": 0.0,
+          "prefix_invalidity": 0.0,
+          "score_onset": 0.1,
+          "trajectory_consistency": 0.0
+        }
+      },
+      {
+        "model_type": "contrastive_feature_difference_localizer",
+        "threshold": 0.0,
+        "training_summary": {
+          "contrastive_pair_count": 0,
+          "cpu_only": true,
+          "label_source": "synthetic_prefix_invalidity_only",
+          "training_trace_count": 128
+        },
+        "weights": {
+          "detector_score": 0.0,
+          "is_first_step": 0.0,
+          "normalized_position": 0.0,
+          "prefix_invalidity": 0.0,
+          "score_onset": 0.1,
+          "trajectory_consistency": 0.0
+        }
+      },
+      {
+        "model_type": "contrastive_feature_difference_localizer",
+        "threshold": 0.0,
+        "training_summary": {
+          "contrastive_pair_count": 0,
+          "cpu_only": true,
+          "label_source": "synthetic_prefix_invalidity_only",
+          "training_trace_count": 256
+        },
+        "weights": {
+          "detector_score": 0.0,
+          "is_first_step": 0.0,
+          "normalized_position": 0.0,
+          "prefix_invalidity": 0.0,
+          "score_onset": 0.1,
+          "trajectory_consistency": 0.0
+        }
+      },
+      {
+        "model_type": "contrastive_feature_difference_localizer",
+        "threshold": 0.0,
+        "training_summary": {
+          "contrastive_pair_count": 0,
+          "cpu_only": true,
+          "label_source": "synthetic_prefix_invalidity_only",
+          "training_trace_count": 512
+        },
+        "weights": {
+          "detector_score": 0.0,
+          "is_first_step": 0.0,
+          "normalized_position": 0.0,
+          "prefix_invalidity": 0.0,
+          "score_onset": 0.1,
+          "trajectory_consistency": 0.0
+        }
+      }
+    ],
+    "split": {
+      "corpus_source": "exp4403_real_intervention",
+      "held_out_error_trace_count": 947,
+      "held_out_position_distribution": {
+        "0": 947
+      },
+      "held_out_trace_count": 8013,
+      "heldout_family": "gsm8k",
+      "split_axis": "template_family_holdout",
+      "train_error_trace_count": 512,
+      "train_position_distribution": {
+        "0": 512
+      },
+      "train_trace_count": 616
+    },
+    "trm_training": "stood_down_not_invoked",
+    "verifier_is_oracle": false
+  },
+  "positive_control_passed": false,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "fitted localizer present",
+      "resource": "exp4403_real_intervention_localizer"
+    },
+    {
+      "available": true,
+      "detail": "labels=8629; error_labels=1459; families={'arc_challenge': 398, 'fover_v4_numeric': 9, 'gsm8k': 947, 'math': 29, 'math_v3': 76}; positions={'0': 1459}",
+      "resource": "exp4403_real_intervention_corpus"
+    },
+    {
+      "available": false,
+      "detail": "labels=6548; error_labels=114; families={'untyped': 114}; positions={'0': 114}",
+      "resource": "real_fover_first_error_fallback_corpus"
+    },
+    {
+      "available": true,
+      "detail": "baseline=0.096",
+      "resource": "exp4381_ensemble_baseline"
+    },
+    {
+      "available": true,
+      "detail": "fover_production_ensemble present",
+      "resource": "verifier_registry"
+    },
+    {
+      "available": true,
+      "detail": "not invoked; cached contrastive localizer fit only",
+      "resource": "trm_training_stand_down"
+    }
+  ],
+  "random_seed": 4407,
+  "random_seeds_used": [
+    4407
+  ],
+  "reproducibility_checksum": "sha256:0037c29853f24aa0dc00f2626b1cbc3c495ed5fa212054ab636531230a5cf463",
+  "schema": "carnot.active_learning_localizer_compounds.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4407",
+    "SCENARIO-VERIFY-4407"
+  ],
+  "verifier_is_oracle": false
+}
