@@ -49,6 +49,24 @@ signal** (per-position vocab logits = the denoiser's learned distribution = −�
 This Layer-B test ran it **off-label** as an autoregressive-style code generator, where its reasoning
 canvas is a poor fit. Its real value here is the diffusion *energy* it exposes, not CoT code generation.
 
+## DECISIVE constraint: the Kaggle validation environment (16 GB VRAM)
+
+The speed/accuracy analysis below is secondary. The binding constraint is **deployment fit**: the ARC
+Prize Kaggle validation environment has **16 GB VRAM**, and the model must fit **with adequate KV cache**.
+
+| Model | Q4_K_M weights | Free on a 16 GB card | Verdict |
+|---|---|---|---|
+| **gemma-4-12B-it** | **6.7 GB** | ~9.3 GB for KV cache + activations | **FITS comfortably** |
+| Qwopus-27B-Coder | 16.8 GB | **−0.8 GB** (weights alone exceed 16 GB) | does NOT fit |
+| DiffusionGemma-26B-A4B | 16.8 GB | **−0.8 GB** | does NOT fit |
+
+So **gemma-4-12B is the only one of the three deployable in the challenge environment**, independent of
+its speed/accuracy merits. The 27B models are off the table for Kaggle deployment at Q4 (a smaller quant
+would degrade quality and still leave little KV headroom). This is why gemma-4-12B is the model to build
+the ARC pipeline around: it fits 16 GB with ~9 GB of KV-cache headroom, which is what the interactive
+ARC-AGI-3 harness needs (long contexts, per-step verification). The 27B models remain useful for OFFLINE
+development / research on the local rig, not for the validation submission.
+
 ## Bottom line + recommendation
 
 - **For Config Layer B: keep gemma-4-12B as the default.** It grounds the tractable class, is the
