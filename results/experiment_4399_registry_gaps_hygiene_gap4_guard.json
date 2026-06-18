@@ -1,0 +1,685 @@
+{
+  "arc_registry_path": "ops/arc_solve_registry.yaml",
+  "capstone_stamp_fix": {
+    "capstone_aggregation_propagates_oracle_stamp": true,
+    "capstone_aggregation_source": "carnot.reporting.capstone_v405_4390",
+    "capstone_aggregation_uses_available_helper": true,
+    "capstone_path": "results/experiment_4390_capstone_v405.json",
+    "capstone_stamp_fix_durable": true,
+    "capstone_verifier_is_oracle": false,
+    "capstone_verifier_is_oracle_honored": true,
+    "circular_moat_overclaim_fired": false,
+    "command": [
+      "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python3",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "--json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4390_capstone_v405.json"
+    ],
+    "flag_count": 0,
+    "flags": [],
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "{\n  \"reports\": [\n    {\n      \"artifact\": \"/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4390_capstone_v405.json\",\n      \"loaded\": true,\n      \"exp_id\": 4390,\n      \"title\": \"\",\n      \"honest_verdict\": \"complete: v405_detector_detects_but_not_actionable_compounds_true_generalizes_tr\",\n      \"flag_count\": 0,\n      \"max_severity\": -1,\n      \"flags\": []\n    }\n  ],\n  \"flagged_count\": 0\n}\n"
+  },
+  "capstone_stamp_fix_durable": true,
+  "duration_s": 0.82218,
+  "experiment": "experiment_4399_registry_gaps_hygiene_gap4_guard",
+  "field_principles": {
+    "capstone_stamp_fix_durable": "BARE bool: the capstone aggregation still propagates verifier_is_oracle (false for an oracle-distinct moat) -> adversarial_verify.py does NOT fire CIRCULAR_MOAT_OVERCLAIM on a correct capstone.",
+    "gap4_regression_guard_passed": "BARE bool: the ARC oracle-distinct verifier-beats-vote result has not silently regressed.",
+    "honest_verdict": "Terminal-prefixed. Records hygiene reconciled + guard run + stamp fix durable.",
+    "preconditions_checked": "Records the registry/gaps file readability; pre-empts the silent-missing-resource fabrication mode.",
+    "registries_reconciled": "BARE bool: verifier_registry.yaml + verifier_gaps.md (esp. GAP-FOVER-BIPRM-LOCALIZATION) + arc_solve_registry.yaml updated with the .406 outcomes (never-prune)."
+  },
+  "gap4_regression_guard": {
+    "exp4333_guard": {
+      "offline_replay": {
+        "arc1_rule_exec": {
+          "gated_pass2": 0.5806,
+          "headroom_recovered": 4,
+          "n": 31,
+          "vote_pass2": 0.4516,
+          "vote_wins_lost": 0
+        },
+        "cached_pool_path": "results/arc3_gap3_stage2_eval_pool.json.gz",
+        "cached_programs_path": "results/arc3_gap4_induced_programs.json",
+        "expected": {
+          "arc1_rule_exec": {
+            "gated_pass2": 0.5806,
+            "headroom_recovered": 4,
+            "n": 31,
+            "vote_pass2": 0.4516,
+            "vote_wins_lost": 0
+          }
+        },
+        "no_codex_calls": true,
+        "no_gguf_inference": true,
+        "regression_guard_passed": true,
+        "trm_training_touched": false
+      },
+      "prior_artifact_path": "results/experiment_4321_verifier_registry_gaps_hygiene.json",
+      "recorded_arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      },
+      "regression_guard_passed": true,
+      "replayed_arc1_rule_exec": {
+        "gated_pass2": 0.5806,
+        "headroom_recovered": 4,
+        "n": 31,
+        "vote_pass2": 0.4516,
+        "vote_wins_lost": 0
+      }
+    },
+    "prior_artifact_path": "results/experiment_4333_verifier_registry_gaps_hygiene.json",
+    "recorded_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    },
+    "regression_guard_passed": true,
+    "replayed_arc1_rule_exec": {
+      "gated_pass2": 0.5806,
+      "headroom_recovered": 4,
+      "n": 31,
+      "vote_pass2": 0.4516,
+      "vote_wins_lost": 0
+    }
+  },
+  "gap4_regression_guard_passed": true,
+  "gaps_path": "ops/verifier_gaps.md",
+  "honest_verdict": "complete: registry_gaps_arc_reconciled_to_v406_truth_gap4_guard_passed_True_capstone_stamp_fix_durable_True",
+  "inference_substrate": "cached_registry_reconciliation_gap4_guard_and_capstone_stamp_audit",
+  "model_specs": {
+    "capstone_stamp_source": "results/experiment_4390_capstone_v405.json",
+    "codex_calls": 0,
+    "gap4_guard_source": "carnot.reporting.verifier_registry_gaps_hygiene_gap4_guard_4388",
+    "gguf_inference": false,
+    "gpu_inference": false,
+    "live_model_inference": false,
+    "method": "cached_v406_ledger_reconciliation_gap4_guard_and_stamp_audit",
+    "upstream_artifacts": [
+      "results/experiment_4392_verifiable_process_data_localizer.json",
+      "results/experiment_4393_localizer_skeptic_proof.json",
+      "results/experiment_4394_e3_deeper_fidelity_gate.json",
+      "results/experiment_4395_e3_blocked_mechanic_tails_ar25_ka59_ft09.json",
+      "results/experiment_4396_localizer_self_learning_compounds.json",
+      "results/experiment_4397_cross_domain_detection_calibration.json",
+      "results/experiment_4390_capstone_v405.json"
+    ]
+  },
+  "preconditions_checked": {
+    "blocked_file": null,
+    "files": {
+      "arc_solve_registry": {
+        "error": "",
+        "path": "ops/arc_solve_registry.yaml",
+        "readable": true
+      },
+      "verifier_gaps": {
+        "error": "",
+        "path": "ops/verifier_gaps.md",
+        "readable": true
+      },
+      "verifier_registry": {
+        "error": "",
+        "path": "ops/verifier_registry.yaml",
+        "readable": true
+      }
+    },
+    "ok": true
+  },
+  "random_seed": 4399,
+  "registries_reconciled": true,
+  "registry_path": "ops/verifier_registry.yaml",
+  "registry_reconciliation": {
+    "arc_solve_registry_reconciled": true,
+    "filled_gap_ids": [],
+    "gaps_logged_ids": [
+      "GAP-FOVER-BIPRM-LOCALIZATION-untyped",
+      "GAP-4392-FIRST-ERROR-GAP-4-ARC-arc_candidate_process_proxy",
+      "GAP-4393-LOCALIZER-POSITION-OR-TEMPLATE-CONFOUND",
+      "GAP-E3-WORLD-MODEL-RULE-LP85-L6-4383",
+      "GAP-E3-WORLD-MODEL-RULE-TU93-L5-4383",
+      "GAP-E3-WORLD-MODEL-RULE-TN36-L8-4383",
+      "GAP-E3-WORLD-MODEL-RULE-TR87-L7-4383",
+      "GAP-E3-WORLD-MODEL-RULE-AR25-L2-4384",
+      "GAP-E3-WORLD-MODEL-RULE-KA59-L2-4384",
+      "GAP-E3-WORLD-MODEL-RULE-FT09-L2-4384"
+    ],
+    "registries_reconciled": true,
+    "verifier_gaps_reconciled": true,
+    "verifier_registry_reconciled": true
+  },
+  "reproducibility_checksum": "sha256:5d58fbfd0b522307b38fe897d718957c38f590740f8f8d5243c6fc16103f665d",
+  "schema": "carnot.experiment_4399_registry_gaps_hygiene_gap4_guard.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4399",
+    "SCENARIO-VERIFY-4399"
+  ],
+  "v406_outcomes": {
+    "arc_e3": {
+      "blocked_mechanics": {
+        "artifact_path": "results/experiment_4395_e3_blocked_mechanic_tails_ar25_ka59_ft09.json",
+        "available": true,
+        "honest_verdict": "complete_e3_ar25_ka59_ft09_partial",
+        "new_levels_reproduced": 0,
+        "reproducibility_checksum": "sha256:07e9bbf4ba9944f106ca839f7e4f7c084bd61bdc6bde6330f6251773b73df920",
+        "reproducible_total_levels": 34,
+        "rows": {
+          "ar25": {
+            "game": "ar25",
+            "lookahead_fidelity": 0.733333,
+            "mechanic_checks_passed": null,
+            "mind_studio_skill_file": "results/arc_e3/ar25/skill_4395.json",
+            "new_reproduced_level": 1,
+            "offline_reproduced": false,
+            "prior_best_level": 1,
+            "residual_gap_class": "ar25_l2_action7_undo_stack_hidden_rule_gap",
+            "target_level": 2,
+            "verifier_accuracy": 0.90625,
+            "world_model_path": "results/arc_e3/ar25/world_model.py"
+          },
+          "ft09": {
+            "game": "ft09",
+            "lookahead_fidelity": 0.347518,
+            "mechanic_checks_passed": null,
+            "mind_studio_skill_file": "results/arc_e3/ft09/skill_4395.json",
+            "new_reproduced_level": 1,
+            "offline_reproduced": false,
+            "prior_best_level": 1,
+            "residual_gap_class": "ft09_l2_residual_world_model_mismatch_gap",
+            "target_level": 2,
+            "verifier_accuracy": 0.166667,
+            "world_model_path": "results/arc_e3/ft09/world_model.py"
+          },
+          "ka59": {
+            "game": "ka59",
+            "lookahead_fidelity": 0.112281,
+            "mechanic_checks_passed": null,
+            "mind_studio_skill_file": "results/arc_e3/ka59/skill_4395.json",
+            "new_reproduced_level": 1,
+            "offline_reproduced": false,
+            "prior_best_level": 1,
+            "residual_gap_class": "ka59_l2_object_relevance_step_counter_hud_register_gap",
+            "target_level": 2,
+            "verifier_accuracy": 0.125,
+            "world_model_path": "results/arc_e3/ka59/world_model.py"
+          }
+        },
+        "verifier_is_oracle": true
+      },
+      "deeper_fidelity": {
+        "artifact_path": "results/experiment_4394_e3_deeper_fidelity_gate.json",
+        "available": true,
+        "honest_verdict": "complete_e3_deeper_partial",
+        "new_levels_reproduced": 0,
+        "reproducibility_checksum": "sha256:7f367b844d520de10d49fdd0490987457bc854297095683d315dd5d29990a376",
+        "reproducible_total_levels": 34,
+        "rows": {
+          "lp85": {
+            "game": "lp85",
+            "lookahead_fidelity": 0.833333,
+            "mechanic_checks_passed": null,
+            "mind_studio_skill_file": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_e3/lp85/skill_4394.json",
+            "new_reproduced_level": 5,
+            "offline_reproduced": false,
+            "prior_best_level": 5,
+            "residual_gap_class": "lookahead_fidelity_below_gate",
+            "target_level": 6,
+            "verifier_accuracy": 0.833333,
+            "world_model_path": "python/carnot/agentic/arc_game_adapters.py"
+          },
+          "tn36": {
+            "game": "tn36",
+            "lookahead_fidelity": 0.875,
+            "mechanic_checks_passed": null,
+            "mind_studio_skill_file": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_e3/tn36/skill_4394.json",
+            "new_reproduced_level": 7,
+            "offline_reproduced": false,
+            "prior_best_level": 7,
+            "residual_gap_class": "lookahead_fidelity_below_gate",
+            "target_level": 8,
+            "verifier_accuracy": 0.875,
+            "world_model_path": "scripts/arc3_tn36_offline_solver.py"
+          },
+          "tr87": {
+            "game": "tr87",
+            "lookahead_fidelity": 0.857143,
+            "mechanic_checks_passed": null,
+            "mind_studio_skill_file": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_e3/tr87/skill_4394.json",
+            "new_reproduced_level": 6,
+            "offline_reproduced": false,
+            "prior_best_level": 6,
+            "residual_gap_class": "lookahead_fidelity_below_gate",
+            "target_level": 7,
+            "verifier_accuracy": 0.857143,
+            "world_model_path": "python/carnot/agentic/arc_game_adapters.py"
+          },
+          "tu93": {
+            "game": "tu93",
+            "lookahead_fidelity": 0.8,
+            "mechanic_checks_passed": null,
+            "mind_studio_skill_file": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_e3/tu93/skill_4394.json",
+            "new_reproduced_level": 4,
+            "offline_reproduced": false,
+            "prior_best_level": 4,
+            "residual_gap_class": "lookahead_fidelity_below_gate",
+            "target_level": 5,
+            "verifier_accuracy": 0.8,
+            "world_model_path": "python/carnot/agentic/arc_game_adapters.py"
+          }
+        },
+        "verifier_is_oracle": true
+      }
+    },
+    "cross_domain_calibration": {
+      "artifact_path": "results/experiment_4397_cross_domain_detection_calibration.json",
+      "available": true,
+      "detection_by_domain": [
+        {
+          "auroc_ci95": [
+            0.961867,
+            0.9936
+          ],
+          "base_rate": 0.75,
+          "claim_scope": "underpowered_n=100; report_n_only_scope_claim",
+          "detection_auroc": 0.9808,
+          "domain": "code_humaneval",
+          "ece_lodo_calibrated": 0.06406,
+          "ece_uncalibrated": 0.1205,
+          "n": 100,
+          "platt_scaler": {
+            "bias": -2.83269,
+            "mean": 0.209395,
+            "n_train": 38872,
+            "scale": 0.353054,
+            "trained_on_domains": [
+              "fover",
+              "gap4_arc",
+              "gsm8k"
+            ],
+            "weight": 2.847515
+          },
+          "random_score_auroc_control": {
+            "auroc": 0.505188,
+            "replicates": 128,
+            "seed": 4397
+          },
+          "risk_coverage": [
+            {
+              "accuracy": 0.75,
+              "coverage": 1.0,
+              "n_kept": 100,
+              "risk": 0.25,
+              "threshold": 0.075495
+            },
+            {
+              "accuracy": 0.833333,
+              "coverage": 0.9,
+              "n_kept": 90,
+              "risk": 0.166667,
+              "threshold": 0.075495
+            },
+            {
+              "accuracy": 0.946667,
+              "coverage": 0.75,
+              "n_kept": 75,
+              "risk": 0.053333,
+              "threshold": 0.578762
+            },
+            {
+              "accuracy": 1.0,
+              "coverage": 0.5,
+              "n_kept": 50,
+              "risk": 0.0,
+              "threshold": 0.911657
+            },
+            {
+              "accuracy": 1.0,
+              "coverage": 0.25,
+              "n_kept": 25,
+              "risk": 0.0,
+              "threshold": 0.958536
+            }
+          ],
+          "score_orientation": "higher_verifier_score_means_more_likely_correct",
+          "selection_headroom": 0.18,
+          "valid_but_wrong_restricted_auroc": 0.9808,
+          "valid_but_wrong_restricted_n": 100,
+          "valid_wrong_negative_n": 25
+        },
+        {
+          "auroc_ci95": [
+            0.909218,
+            0.926669
+          ],
+          "base_rate": 0.812097,
+          "claim_scope": "n>=1000",
+          "detection_auroc": 0.918304,
+          "domain": "fover",
+          "ece_lodo_calibrated": 0.129427,
+          "ece_uncalibrated": 0.122522,
+          "n": 8829,
+          "platt_scaler": {
+            "bias": -4.390119,
+            "mean": 0.041785,
+            "n_train": 30143,
+            "scale": 0.168995,
+            "trained_on_domains": [
+              "code_humaneval",
+              "gap4_arc",
+              "gsm8k"
+            ],
+            "weight": 1.263769
+          },
+          "random_score_auroc_control": {
+            "auroc": 0.500259,
+            "replicates": 128,
+            "seed": 4397
+          },
+          "risk_coverage": [
+            {
+              "accuracy": 0.812097,
+              "coverage": 1.0,
+              "n_kept": 8829,
+              "risk": 0.187903,
+              "threshold": 0.00899
+            },
+            {
+              "accuracy": 0.876793,
+              "coverage": 0.9,
+              "n_kept": 7946,
+              "risk": 0.123207,
+              "threshold": 0.374484
+            },
+            {
+              "accuracy": 0.968585,
+              "coverage": 0.75,
+              "n_kept": 6621,
+              "risk": 0.031415,
+              "threshold": 0.686735
+            },
+            {
+              "accuracy": 0.984368,
+              "coverage": 0.5,
+              "n_kept": 4414,
+              "risk": 0.015632,
+              "threshold": 0.848107
+            },
+            {
+              "accuracy": 0.972361,
+              "coverage": 0.25,
+              "n_kept": 2207,
+              "risk": 0.027639,
+              "threshold": 0.872397
+            }
+          ],
+          "score_orientation": "higher_verifier_score_means_more_likely_correct",
+          "selection_headroom": 0.0,
+          "valid_but_wrong_restricted_auroc": 0.918304,
+          "valid_but_wrong_restricted_n": 8829,
+          "valid_wrong_negative_n": 1659
+        },
+        {
+          "auroc_ci95": [
+            0.921491,
+            0.990625
+          ],
+          "base_rate": 0.001688,
+          "claim_scope": "n>=1000",
+          "detection_auroc": 0.963317,
+          "domain": "gap4_arc",
+          "ece_lodo_calibrated": 0.005117,
+          "ece_uncalibrated": 0.01145,
+          "n": 28443,
+          "platt_scaler": {
+            "bias": 1.599181,
+            "mean": 0.744589,
+            "n_train": 10529,
+            "scale": 0.241078,
+            "trained_on_domains": [
+              "code_humaneval",
+              "fover",
+              "gsm8k"
+            ],
+            "weight": 2.698224
+          },
+          "random_score_auroc_control": {
+            "auroc": 0.497243,
+            "replicates": 128,
+            "seed": 4397
+          },
+          "risk_coverage": [
+            {
+              "accuracy": 0.001688,
+              "coverage": 1.0,
+              "n_kept": 28443,
+              "risk": 0.998312,
+              "threshold": 0.001188
+            },
+            {
+              "accuracy": 0.001875,
+              "coverage": 0.9,
+              "n_kept": 25598,
+              "risk": 0.998125,
+              "threshold": 0.001188
+            },
+            {
+              "accuracy": 0.002203,
+              "coverage": 0.75,
+              "n_kept": 21332,
+              "risk": 0.997797,
+              "threshold": 0.001188
+            },
+            {
+              "accuracy": 0.003305,
+              "coverage": 0.5,
+              "n_kept": 14221,
+              "risk": 0.996695,
+              "threshold": 0.001188
+            },
+            {
+              "accuracy": 0.00647,
+              "coverage": 0.25,
+              "n_kept": 7110,
+              "risk": 0.99353,
+              "threshold": 0.001199
+            }
+          ],
+          "score_orientation": "higher_verifier_score_means_more_likely_correct",
+          "selection_headroom": 0.129,
+          "valid_but_wrong_restricted_auroc": 0.963316,
+          "valid_but_wrong_restricted_n": 28437,
+          "valid_wrong_negative_n": 28389
+        },
+        {
+          "auroc_ci95": [
+            0.984555,
+            0.994967
+          ],
+          "base_rate": 0.51,
+          "claim_scope": "n>=1000",
+          "detection_auroc": 0.990196,
+          "domain": "gsm8k",
+          "ece_lodo_calibrated": 0.027897,
+          "ece_uncalibrated": 0.0725,
+          "n": 1600,
+          "platt_scaler": {
+            "bias": -2.935794,
+            "mean": 0.198048,
+            "n_train": 37372,
+            "scale": 0.345189,
+            "trained_on_domains": [
+              "code_humaneval",
+              "fover",
+              "gap4_arc"
+            ],
+            "weight": 2.763358
+          },
+          "random_score_auroc_control": {
+            "auroc": 0.500339,
+            "replicates": 128,
+            "seed": 4397
+          },
+          "risk_coverage": [
+            {
+              "accuracy": 0.51,
+              "coverage": 1.0,
+              "n_kept": 1600,
+              "risk": 0.49,
+              "threshold": 0.020217
+            },
+            {
+              "accuracy": 0.565278,
+              "coverage": 0.9,
+              "n_kept": 1440,
+              "risk": 0.434722,
+              "threshold": 0.020217
+            },
+            {
+              "accuracy": 0.673333,
+              "coverage": 0.75,
+              "n_kept": 1200,
+              "risk": 0.326667,
+              "threshold": 0.023644
+            },
+            {
+              "accuracy": 1.0,
+              "coverage": 0.5,
+              "n_kept": 800,
+              "risk": 0.0,
+              "threshold": 0.936051
+            },
+            {
+              "accuracy": 1.0,
+              "coverage": 0.25,
+              "n_kept": 400,
+              "risk": 0.0,
+              "threshold": 0.956222
+            }
+          ],
+          "score_orientation": "higher_verifier_score_means_more_likely_correct",
+          "selection_headroom": 0.0,
+          "valid_but_wrong_restricted_auroc": 0.990196,
+          "valid_but_wrong_restricted_n": 1600,
+          "valid_wrong_negative_n": 784
+        }
+      ],
+      "detection_calibrated_multi_domain": false,
+      "domains_at_chance": [],
+      "honest_verdict": "complete: calibrated_multi_domain_contract_false",
+      "missing_verifier_gaps": [],
+      "reproducibility_checksum": "sha256:727e7ce5f78e58713079abc7a9a6c789b4ba47f7a88c9eaf3dd793f833acd1ce",
+      "verifier_is_oracle": false
+    },
+    "localizer": {
+      "artifact_path": "results/experiment_4392_verifiable_process_data_localizer.json",
+      "available": true,
+      "honest_verdict": "success: synthetic_process_localizer_beats_ensemble_baseline",
+      "localization_f1_by_domain": {
+        "FoVer": {
+          "delta": 0.904,
+          "delta_ci95": [
+            0.904,
+            0.904
+          ],
+          "domain": "FoVer",
+          "ensemble_baseline_0096": 0.096,
+          "exact_match_count": 114,
+          "n_error_traces": 114,
+          "n_traces": 6548,
+          "split_note": "held-out real FoVer step labels",
+          "synthetic_trained_localizer": 1.0
+        },
+        "GAP-4 ARC": {
+          "delta": 0.596308,
+          "delta_ci95": [
+            0.461692,
+            0.711692
+          ],
+          "domain": "GAP-4 ARC",
+          "ensemble_baseline_0096": 0.096,
+          "exact_match_count": 36,
+          "n_error_traces": 52,
+          "n_traces": 52,
+          "split_note": "cached GAP-4 ARC candidate process proxy",
+          "synthetic_trained_localizer": 0.692308
+        }
+      },
+      "localizer_beats_ensemble_baseline": true,
+      "missing_verifier_gaps": [
+        {
+          "candidate_design": "Add typed domain-specific prefix checks and train a leave-domain-out contrastive earliest-error objective.",
+          "domain": "GAP-4 ARC",
+          "error_class": "arc_candidate_process_proxy",
+          "gap_id": "GAP-4392-FIRST-ERROR-GAP-4-ARC-arc_candidate_process_proxy",
+          "missed_first_error_traces": 16,
+          "missing_discriminator": "A domain feature that separates the first causal process break from later inherited or candidate-order artifacts.",
+          "priority": "medium",
+          "status": "open"
+        }
+      ],
+      "n_traces": 6548,
+      "reproducibility_checksum": "sha256:9db32b9e9d05a801de581ff45d4f7a0e9065ec89261d6aa0c14481ac71a18795",
+      "verifier_is_oracle": false
+    },
+    "localizer_self_learning": {
+      "artifact_path": "results/experiment_4396_localizer_self_learning_compounds.json",
+      "available": true,
+      "compounding_delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "fallback_to_ensemble": false,
+      "final_held_out_localization_f1": 1.0,
+      "honest_verdict": "complete: clean_saturated_null_localizer",
+      "learning_curve": [
+        {
+          "held_out_error_trace_count": 274,
+          "held_out_localization_f1": 1.0,
+          "train_corpus_size": 566
+        },
+        {
+          "held_out_error_trace_count": 274,
+          "held_out_localization_f1": 1.0,
+          "train_corpus_size": 1415
+        },
+        {
+          "held_out_error_trace_count": 274,
+          "held_out_localization_f1": 1.0,
+          "train_corpus_size": 2830
+        },
+        {
+          "held_out_error_trace_count": 274,
+          "held_out_localization_f1": 1.0,
+          "train_corpus_size": 5661
+        }
+      ],
+      "localizer_compounds": false,
+      "no_learning_baseline": 0.096,
+      "positive_control_passed": true,
+      "reproducibility_checksum": "sha256:b4514eff7b9181ed8c3b9f19d5319542f630eda75b1a491dabe89ee4b569862c",
+      "verifier_is_oracle": false
+    },
+    "localizer_skeptic_proof": {
+      "artifact_path": "results/experiment_4393_localizer_skeptic_proof.json",
+      "available": true,
+      "beats_position_only_baseline": false,
+      "held_out_real_localization_delta_ci95": [
+        0.904,
+        0.904
+      ],
+      "honest_verdict": "complete: a1_win_quarantined_as_artifact_confounded",
+      "localizer_win_is_genuine": false,
+      "reproducibility_checksum": "sha256:9f1b81d94b831f734ddf5dc4432f21538fd091a154d036e810b8bf50a619d52a",
+      "template_ablation_drop": 0.0,
+      "verifier_is_oracle": false
+    }
+  }
+}
