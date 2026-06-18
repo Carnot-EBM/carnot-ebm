@@ -19038,6 +19038,57 @@ fabricated gain.
 |---|---|---|
 | REQ-VERIFY-4374 | Planned (`python/carnot/experiment_4374_diffusiongemma_scorer_repair_or_retire.py`) | Planned (`tests/python/test_experiment_4374_diffusiongemma_scorer_repair_or_retire.py`) |
 
+### REQ-VERIFY-4375: FoVer Verifier-As-Detector Zero-Selection-Headroom Measurement
+
+The repository SHALL provide Exp 4375 at
+`python/carnot/experiment_4375_verifier_as_detector_measurement.py` and
+`results/experiment_4375_verifier_as_detector_measurement.py` to measure whether
+the cached FoVer verifier ensemble detects step errors on a corpus/condition
+where selection cannot improve the answer. The condition SHALL use cached
+labeled FoVer `(input, candidate, error-label)` rows only, score the production
+verifier ensemble from the existing FoVer path, and model selection as K=1 per
+input so `oracle@K == vote@1` by construction. This is a detector measurement,
+not TRM training and not live generation.
+
+Before scoring, the runner SHALL check that the cached FoVer rows, the FoVer
+scoring path, and the verifier registry are loadable, and that TRM training is
+stood down. If any required cached resource is unavailable, it SHALL write an
+honest `blocked_cached_candidates_unavailable` artifact and stop without
+fabricated metrics. When rows are available, the runner SHALL score at least
+1000 candidates, compute step-error detection AUROC, compute CI95 by bootstrap
+with at least 2000 resamples for the deterministic ensemble, report bare bool
+`detector_beats_chance` only when the AUROC CI95 lower bound exceeds 0.5, and
+record `selection_headroom={oracle_at_k, vote_at_1, headroom}`.
+
+The terminal artifact SHALL write
+`results/experiment_4375_verifier_as_detector_measurement.json` with top-level
+fields `honest_verdict`, bare float `detector_auroc`, bare bool
+`detector_beats_chance`, `selection_headroom`, `detector_auroc_ci95`, bare int
+`n_candidates`, bare bool `verifier_is_oracle=false`, `preconditions_checked`,
+`random_seed`, `random_seeds_used`, `reproducibility_checksum`, `model_specs`,
+`missing_verifier_gaps`, `field_principles`, `spec_refs`, `duration_s`,
+`inference_substrate=verifier_ensemble_against_cached_candidates`, and
+`adversarial_verify`.
+
+### SCENARIO-VERIFY-4375: FoVer Detection Signal Is Reported Where Selection Has No Headroom
+
+Given the cached FoVer labeled rows, the FoVer production scoring path, and
+`ops/verifier_registry.yaml` are available, when Exp 4375 runs, then it scores
+the verifier ensemble against at least 1000 cached candidates, reports
+`selection_headroom.headroom=0.0` with matching `oracle_at_k` and `vote_at_1`,
+records `detector_auroc`, bootstrap `detector_auroc_ci95`, and
+`detector_beats_chance`, sets `verifier_is_oracle=false`, embeds model specs
+and a reproducibility checksum, and runs adversarial verification. If the cached
+rows or scoring path are unavailable, then the artifact SHALL emit
+`honest_verdict=blocked_cached_candidates_unavailable` and no positive detector
+claim.
+
+## Implementation Status (REQ-VERIFY-4375)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4375 | Implemented (`python/carnot/experiment_4375_verifier_as_detector_measurement.py`, `results/experiment_4375_verifier_as_detector_measurement.py`) | Implemented (`tests/python/test_experiment_4375_verifier_as_detector_measurement.py`) |
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
