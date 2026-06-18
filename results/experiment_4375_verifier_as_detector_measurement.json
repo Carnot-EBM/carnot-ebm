@@ -1,0 +1,109 @@
+{
+  "adversarial_verify": {
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n"
+  },
+  "bootstrap_resamples": 2500,
+  "detector_auroc": 0.918304,
+  "detector_auroc_ci95": [
+    0.909296,
+    0.926923
+  ],
+  "detector_beats_chance": true,
+  "duration_s": 3.319,
+  "experiment": "experiment_4375_verifier_as_detector_measurement",
+  "field_principles": {
+    "detector_auroc": "BARE float: the verifier-ensemble step-error detection AUROC on the ~0-selection-headroom corpus -- the oracle-distinct discrimination signal (the capstone reads this).",
+    "detector_auroc_ci95": "CI95 of the detection AUROC (5-seed or bootstrap >=2000 resamples) -- the statistical bar for the beats-chance claim.",
+    "detector_beats_chance": "BARE bool: true iff the detection AUROC CI95 lower bound > 0.5 -- the verifier carries discriminating signal where SELECTION cannot express it.",
+    "honest_verdict": "Terminal-prefixed. A detection-AUROC-beats-chance result (the verifier carries oracle-distinct discriminating signal beyond selection) and an honest null (the verifier cannot detect on this ~0-headroom corpus) are BOTH decision-grade.",
+    "model_specs": "The verifier ensemble + the corpus + the selection-headroom-~0 condition + n + seeds; required methodology.",
+    "n_candidates": "BARE int: scored candidate count -- MUST be >= 1000 for a sub-percentage detection claim (sample-size rigor).",
+    "preconditions_checked": "Records the cached-candidate + ensemble availability + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the (stochastic) ensemble scoring + the bootstrap.",
+    "reproducibility_checksum": "Hash of the corpus + the ensemble config + the AUROC computation; lets a third party re-run.",
+    "selection_headroom": "dict {oracle_at_k, vote_at_1, headroom} -- confirms the ~0 selection headroom so a high detection AUROC is the COMPLEMENT of selection (not double-counting), and a null is 'no detection', not 'no headroom' (FALSE_NEGATIVE_RISK guard).",
+    "verifier_is_oracle": "BARE bool=false -- a learned/energy detection signal scored against cached candidates, oracle-distinct."
+  },
+  "honest_verdict": "complete: detector_beats_chance_zero_selection_headroom_fover",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "label_balance": {
+    "correct": 7170,
+    "error_rate": 0.187903,
+    "incorrect": 1659
+  },
+  "missing_verifier_gaps": [],
+  "model_specs": {
+    "bootstrap_resamples": 2500,
+    "corpus": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+    "corpus_condition": "full_cached_fover_rows_not_exp2850_balanced_seed_subset",
+    "ensemble_components": [
+      "tier0r_curry_howard",
+      "tier0u_logical_consistency",
+      "fr11_session_memory"
+    ],
+    "label_target": "step_error",
+    "live_generation": false,
+    "n": 8829,
+    "random_seed": 4375,
+    "random_seeds_used": [
+      4375
+    ],
+    "scoring_code_path": "python/carnot/eval/fover_memory_leakage_v3.py",
+    "selection_condition": "single_candidate_k1",
+    "trm_training": "stood_down_not_invoked",
+    "verifier_ensemble_id": "fover_production_ensemble",
+    "verifier_registry_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/verifier_registry.yaml"
+  },
+  "n_candidates": 8829,
+  "per_verifier_auroc": {
+    "fr11_session_memory": 0.871382,
+    "tier0r_curry_howard": 0.901686,
+    "tier0s_arithmetic_gap": 0.301618,
+    "tier0u_logical_consistency": 0.509867
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "labeled_rows=8829; correct=7170; incorrect=1659",
+      "resource": "cached_fover_rows"
+    },
+    {
+      "available": true,
+      "detail": "fover_production_ensemble present",
+      "resource": "verifier_registry"
+    },
+    {
+      "available": true,
+      "detail": "production FoVer scoring path imports and scores a probe row",
+      "resource": "fover_scoring_path"
+    },
+    {
+      "available": true,
+      "detail": "not invoked; this experiment scores cached FoVer candidates only",
+      "resource": "trm_training_stand_down"
+    },
+    {
+      "available": true,
+      "detail": "count=21",
+      "resource": "fr11_state_files"
+    }
+  ],
+  "random_seed": 4375,
+  "random_seeds_used": [
+    4375
+  ],
+  "reproducibility_checksum": "sha256:fc6a9ba3db67c9f2c2d7c9290bef13af467850f9aba93e0c7b1ad659498c59ac",
+  "schema": "carnot.verifier_as_detector_measurement.v1",
+  "selection_headroom": {
+    "headroom": 0.0,
+    "oracle_at_k": 0.812097,
+    "vote_at_1": 0.812097
+  },
+  "spec_refs": [
+    "REQ-VERIFY-4375",
+    "SCENARIO-VERIFY-4375"
+  ],
+  "verifier_is_oracle": false
+}
