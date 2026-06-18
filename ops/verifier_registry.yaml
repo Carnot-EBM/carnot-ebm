@@ -15,6 +15,24 @@ verifiers:
     value: 0.9131
     n: 6548
     eval_artifact: results/experiment_2850_fover_dual_condition_integrity_v4.json
+    eval_exp_4375: results/experiment_4375_verifier_as_detector_measurement.json
+    eval_exp_4377: results/experiment_4377_registry_gaps_hygiene_gap4_guard.json
+    exp4377_detector_beats_chance: true
+    exp4377_detector_auroc: 0.918304
+    exp4377_detector_auroc_ci95:
+    - 0.909296
+    - 0.926923
+    exp4377_detector_n_candidates: 8829
+    exp4377_selection_headroom:
+      headroom: 0.0
+      oracle_at_k: 0.812097
+      vote_at_1: 0.812097
+    exp4377_per_verifier_auroc:
+      fr11_session_memory: 0.871382
+      tier0r_curry_howard: 0.901686
+      tier0s_arithmetic_gap: 0.301618
+      tier0u_logical_consistency: 0.509867
+    exp4377_verifier_is_oracle: false
   lineage:
     from: v3
     change: 5-seed dual-condition rescue; CI-reproduced (G2, run 26725185125)
@@ -766,6 +784,31 @@ verifiers:
     - GAP-E3-WORLD-MODEL-RULE-LP85-L5-4361
     - GAP-E3-WORLD-MODEL-RULE-AR25-L2-4362
     - GAP-E3-WORLD-MODEL-RULE-KA59-L2-4362
+    eval_exp_4377: results/experiment_4377_registry_gaps_hygiene_gap4_guard.json
+    exp4377_gap4_regression_guard_passed: true
+    exp4377_arc1_rule_exec_vote_pass2: 0.4516
+    exp4377_arc1_rule_exec_gated_pass2: 0.5806
+    exp4377_arc1_headroom_recovered: 4
+    exp4377_arc1_vote_wins_lost: 0
+    exp4377_v404_state: llm_heuristic_clean_null__arc_total_34_lp85_l5_reproduced__diffusiongemma_retired__fover_detector_positive
+    exp4377_llm_heuristic_beats_linear: false
+    exp4377_arc_reproducible_total_levels: 34
+    exp4377_lp85_reproduced_level: 5
+    exp4377_blocked_mechanics_new_levels: 0
+    exp4377_diffusiongemma_status: retired_in_generation_conversion_unmeasurable
+    exp4377_diffusiongemma_guided_beats_control: false
+    exp4377_detector_beats_chance: true
+    exp4377_detector_auroc: 0.918304
+    exp4377_detector_n_candidates: 8829
+    exp4377_filled_gaps:
+    - GAP-E3-WORLD-MODEL-RULE-LP85-L5-4361
+    exp4377_gaps_logged:
+    - GAP-4370
+    - GAP-E3-WORLD-MODEL-RULE-SC25-L2-4361
+    - GAP-E3-WORLD-MODEL-RULE-TN36-L8-4361
+    - GAP-E3-WORLD-MODEL-RULE-AR25-L2-4362
+    - GAP-E3-WORLD-MODEL-RULE-KA59-L2-4362
+    - GAP-E3-WORLD-MODEL-RULE-FT09-L2-4373
   selection_policy:
     tier_1: snap_tau_lte_0.005
     tier_2: promote_first_fresh_raw_demo_perfect
@@ -4742,6 +4785,25 @@ verifiers:
     - GAP-E3-WORLD-MODEL-RULE-TR87-4352
     - GAP-E3-WORLD-MODEL-RULE-FT09-4352
     eval_exp_4366: results/experiment_4366_registry_gaps_hygiene_gap4_guard.json
+  - role_id: oracle_distinct_v404_registry_gaps_hygiene_4377
+    experiment: results/experiment_4377_registry_gaps_hygiene_gap4_guard.json
+    role: registry_gaps_arc_hygiene_v404
+    status: v404_outcomes_recorded_with_gap4_guard_and_stamp_durability
+    v404_state: llm_heuristic_clean_null__arc_total_34_lp85_l5_reproduced__diffusiongemma_retired__fover_detector_positive
+    llm_heuristic_beats_linear: false
+    arc_reproducible_total_levels: 34
+    diffusiongemma_status: retired_in_generation_conversion_unmeasurable
+    detector_beats_chance: true
+    gap_ids_logged:
+    - GAP-4370
+    - GAP-E3-WORLD-MODEL-RULE-SC25-L2-4361
+    - GAP-E3-WORLD-MODEL-RULE-TN36-L8-4361
+    - GAP-E3-WORLD-MODEL-RULE-AR25-L2-4362
+    - GAP-E3-WORLD-MODEL-RULE-KA59-L2-4362
+    - GAP-E3-WORLD-MODEL-RULE-FT09-L2-4373
+    filled_gap_ids:
+    - GAP-E3-WORLD-MODEL-RULE-LP85-L5-4361
+    eval_exp_4377: results/experiment_4377_registry_gaps_hygiene_gap4_guard.json
 - verifier_id: arc_agi3_learned_action_cost_heuristic_4353
   domain: arc_agi3_interactive
   version: 1
@@ -4774,6 +4836,18 @@ verifiers:
       held_out_actions_to_solve: 25
     - corpus_size_k: 19
       held_out_actions_to_solve: 16
+    eval_exp_4370: results/experiment_4370_llm_generated_action_cost_heuristics.json
+    eval_exp_4377: results/experiment_4377_registry_gaps_hygiene_gap4_guard.json
+    exp4377_llm_heuristic_beats_linear: false
+    exp4377_static_leakage_clean: true
+    exp4377_reproduction_gated: true
+    exp4377_n_held_out_levels: 9
+    exp4377_held_out_actions_by_heuristic:
+      bfs_baseline: 646
+      linear: 646
+      llm_generated: 646
+    exp4377_verifier_is_oracle: false
+    exp4377_gap_id: GAP-4370
   status: candidate
   notes: 'Oracle-distinct learned action-cost heuristic: reduces held-out lp85 L3
     actions from 25 to 16 under reproduction gate.'
