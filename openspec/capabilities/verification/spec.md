@@ -17688,6 +17688,81 @@ unavailable, controls are not differentiable, or the scorer fails the search
 corpus leak re-check, then the runner writes the matching terminal verdict
 instead of declaring a useful fixed-NFE gain.
 
+### REQ-VERIFY-4359: Prism-Hardened Free-Form Verifier-Guided Denoising Search
+
+The repository SHALL provide Exp 4359 at
+`python/carnot/experiment_4359_prism_hardened_verifier_guided_search.py` and
+`results/experiment_4359_prism_hardened_verifier_guided_search.py` to decide
+whether the Exp 4337 leak-robust scorer improves DiffusionGemma free-form
+denoising generation when used inside a Prism-style Hierarchical Trajectory
+Search (HTS) loop with partial-remask local branching at fixed NFE. The harness
+SHALL NOT frame the task as multiple-choice option selection; it SHALL generate
+token completions for executable math/code tasks and evaluate final
+correctness separately from the external scorer. Before any inference, the
+runner SHALL verify the llama.cpp DiffusionGemma PR binary is non-empty, the
+DiffusionGemma Q4_K_M GGUF cache is present, the Exp 4337 leak-robust scorer
+artifact passed its audit and the persisted scorer loads, and TRM training is
+stood down. If the leak-robust scorer is unavailable, it SHALL write
+`honest_verdict=blocked_leak_robust_scorer_unavailable`; if any other
+precondition fails, it SHALL write the matching terminal `blocked_*` verdict
+and SHALL NOT fabricate inference.
+
+The runner SHALL independently re-check the scorer on the search corpus by
+masking answer-bearing cells before benchmarking. If the answer-masked signal
+fails this re-check, it SHALL emit bare bool `scorer_leak_recheck_passed=false`,
+`honest_verdict=scorer_leaky_in_search_corpus`, and stop before benchmarking.
+Otherwise it SHALL run a pre-score no-op guard over free-form denoising
+completions and SHALL stop with `honest_verdict=controls_not_differentiable`
+when any two distinct arms tie bit-identically in generated text or when any
+two headline delta metrics agree to more than five significant figures. A
+full measurement SHALL use synchronous seed windows with checkpoints after
+each seed and per-arm/per-seed progress for unguided single-pass, best-of-N at
+matched NFE, intrinsic Self-Verified Feedback (SVF) at matched NFE without the
+external scorer, and Prism-Carnot at matched NFE using HTS plus partial-remask
+local branching scored by the leak-robust scorer.
+
+The terminal artifact SHALL write
+`results/experiment_4359_prism_hardened_verifier_guided_search.json` with
+required fields `honest_verdict`, bare bool `s3_guided_beats_control`, bare
+float `s3_minus_best_of_n_delta`, bare float
+`s3_minus_intrinsic_svf_delta`, `s3_gain_ci95`, bare int `nfe_budget`, bare
+bool `controls_differentiated`, `branch_diversity`, bare float
+`scorer_disagreement_rate`, bare bool `scorer_leak_recheck_passed`, bare int
+`benchmark_n`, bare bool `verifier_is_oracle=false`, `preconditions_checked`,
+bare int `random_seed`, `reproducibility_checksum`, `model_specs`,
+`field_principles`, `spec_refs`, `duration_s`, `inference_substrate`, and
+`adversarial_verify`. The bare bool `s3_guided_beats_control` SHALL be true
+iff Prism-Carnot beats best-of-N at matched NFE, the task-level paired
+bootstrap CI95 with at least 2000 resamples excludes zero, controls are
+differentiated, the scorer leak re-check passed, and Prism-Carnot also beats
+intrinsic SVF. A clean powered null SHALL be terminal evidence that the proven
+oracle-distinct scorer did not convert to a fixed-NFE generation gain.
+
+### SCENARIO-VERIFY-4359: Prism-Carnot Utility Is Tested On Free-Form Generation
+
+Given the PR binary, DiffusionGemma GGUF cache, Exp 4337 leak-robust scorer,
+TRM stand-down, and free-form executable search corpus preconditions hold,
+when the Exp 4359 runner executes, then it loads the scorer, performs the
+independent answer-masked leak re-check on the search corpus, verifies arms
+produce differentiated free-form completions before scoring, and either stops
+with `controls_not_differentiable` or runs unguided, best-of-N, intrinsic SVF,
+and Prism-Carnot for at least 80 measured tasks per arm across at least three
+seeds at the same NFE budget. The artifact reports per-arm accuracy,
+Prism-Carnot-minus-best-of-N, Prism-Carnot-minus-intrinsic-SVF, a task-level
+bootstrap CI95 with at least 2000 resamples, branch-diversity receipts,
+external-vs-intrinsic scorer disagreement rate, model specs including the
+Prism/HTS config and fixed NFE budget, a reproducibility checksum, and
+`verifier_is_oracle=false`. If the leak-robust scorer is unavailable, controls
+are not differentiable, or the scorer fails the search corpus leak re-check,
+then the runner writes the matching terminal verdict instead of declaring a
+useful fixed-NFE gain.
+
+## Implementation Status (REQ-VERIFY-4359)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4359 | Implemented (`python/carnot/experiment_4359_prism_hardened_verifier_guided_search.py`) | Implemented (`tests/python/test_experiment_4359_prism_hardened_verifier_guided_search.py`) |
+
 ### REQ-VERIFY-4326: Adaptive Guided-Generation Scale-Up
 
 The repository SHALL provide Exp 4326 at

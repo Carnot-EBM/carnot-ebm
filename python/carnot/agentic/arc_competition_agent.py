@@ -76,9 +76,15 @@ class StepwiseExplorer:
     actions: min(human/agent,1)^2). Stops at the first level-up (+1 incremental unit) or
     when fully explored."""
 
-    def __init__(self, target_levels: int = 1, max_depth: int = 45, hud_mask=None) -> None:
+    def __init__(self, target_levels: int = 1, max_depth: int = 45, hud_mask=None,
+                 value_head=None) -> None:
         self.hud_mask = hud_mask             # E1: mask step-counter cells out of node identity
-        self.graph: dict[str, dict] = {}     # hash -> {"path": [...], "untested": [...]}
+        # BRIDGE: a frame-only cross-game value head (frame -> predicted steps-to-next-level-up, LOWER =
+        # closer). Trained offline on ALL banked solves (the offline->live distillation). When set, the
+        # frontier is ordered BEST-FIRST by it instead of shallowest-first (BFS) -- the live agent's
+        # learned routing on an UNSEEN game. None (default) -> unchanged BFS-by-depth behaviour.
+        self.value_head = value_head
+        self.graph: dict[str, dict] = {}     # hash -> {"path": [...], "untested": [...], "value": float}
         self.root: Optional[str] = None
         self.cur: Optional[str] = None
         self.start_level: Optional[int] = None
@@ -111,6 +117,16 @@ class StepwiseExplorer:
         except Exception:
             return False
 
+    def _value(self, frame) -> float:
+        """Frame-only learned progress score (predicted steps-to-next-level-up; LOWER == closer).
+        0.0 when no value head -> the frontier falls back to shallowest-first. Never crashes the loop."""
+        if self.value_head is None:
+            return 0.0
+        try:
+            return float(self.value_head(frame))
+        except Exception:
+            return 0.0
+
     def _ingest(self, latest) -> None:
         if latest is None:
             return
@@ -130,18 +146,27 @@ class StepwiseExplorer:
                     self.adj.setdefault(o["origin"], []).append((act, h))
                 if h not in self.graph:
                     opath = self.graph.get(o["origin"], {}).get("path", [])
-                    self.graph[h] = {"path": opath + [act], "untested": self._candidates(latest)}
+                    self.graph[h] = {"path": opath + [act], "untested": self._candidates(latest),
+                                     "value": self._value(latest)}
         self.cur = h
         if self.root is None:
             self.root = h
-            self.graph.setdefault(h, {"path": [], "untested": self._candidates(latest)})
+            self.graph.setdefault(h, {"path": [], "untested": self._candidates(latest),
+                                      "value": self._value(latest)})
 
     def _frontier(self) -> Optional[str]:
+        # BRIDGE: with a value head, expand the frontier state the learned head predicts is CLOSEST to a
+        # level-up (best-first by value, depth as tiebreak) -- the cross-game routing. Without it, fall
+        # back to the proven shallowest-first (BFS) order. (key = (value, depth); both minimized.)
+        use_value = self.value_head is not None
         best = None
+        best_key = None
         for h, node in self.graph.items():
-            if node["untested"]:
-                if best is None or len(node["path"]) < len(self.graph[best]["path"]):
-                    best = h
+            if not node["untested"]:
+                continue
+            key = (node.get("value", 0.0), len(node["path"])) if use_value else (len(node["path"]),)
+            if best is None or key < best_key:
+                best, best_key = h, key
         return best
 
     def _shortest_path(self, src: Optional[str], dst: str) -> Optional[list]:
@@ -212,6 +237,23 @@ class StepwiseExplorer:
         return self.explored_out
 
 
+def load_cross_game_value_head():
+    """BRIDGE loader: the frame-only cross-game value head (frame -> predicted steps-to-next-level-up),
+    trained offline on ALL banked solves by scripts/arc_cross_game_verifier_train.py. Returns a callable
+    the StepwiseExplorer routes its frontier with on an UNSEEN game, or None if not yet trained. This is
+    the offline->live distillation: continued offline solves retrain it and the live agent inherits them."""
+    from pathlib import Path
+    ckpt = Path(__file__).resolve().parents[3] / "models" / "arc_verifier_cross_game.json"
+    if not ckpt.exists():
+        return None
+    try:
+        from carnot.agentic.arc_value_learner import LearnedVerifier, cross_game_features
+        v = LearnedVerifier.load(ckpt, cross_game_features)
+        return lambda frame: v(frame)        # v.__call__ -> cross_game_features(frame): FRAME-ONLY
+    except Exception:
+        return None
+
+
 class CarnotAgentPolicy:
     """Framework-agnostic decision logic. `next_move` yields ("RESET",None) once, then
     the banked plan one step at a time, then (None,None) when exhausted. `is_done`
@@ -219,7 +261,7 @@ class CarnotAgentPolicy:
 
     def __init__(self, game_id: str, solutions: Optional[dict] = None,
                  target_level: Optional[int] = None, force_explore: bool = False,
-                 hud_mask=None) -> None:
+                 hud_mask=None, value_head=None) -> None:
         self.short = str(game_id).split("-", 1)[0]
         sols = solutions if solutions is not None else load_solutions()
         self.plan = [] if force_explore else sols.get(self.short, [])
@@ -227,9 +269,10 @@ class CarnotAgentPolicy:
         self.reset_sent = False
         self.target = target_level if target_level is not None else CLAIMED.get(self.short, 1)
         self.has_plan = bool(self.plan)
-        # eval games are UNSEEN -> no banked plan -> the generic step-wise explorer runs.
+        # eval games are UNSEEN -> no banked plan -> the generic step-wise explorer runs (value_head
+        # routes its frontier when provided -- the offline->live bridge).
         self.explorer: Optional[StepwiseExplorer] = (
-            None if self.has_plan else StepwiseExplorer(hud_mask=hud_mask))
+            None if self.has_plan else StepwiseExplorer(hud_mask=hud_mask, value_head=value_head))
 
     def next_move(self, frames, latest_frame) -> tuple:
         """-> ("RESET", None) | (action_id:int, data:dict|None) | (None, None)."""
@@ -266,9 +309,9 @@ class E3AgentPolicy:
     here, and EXECUTE re-uses the same env interface as the explorer."""
 
     def __init__(self, game_id: str, proposer=None, explore_budget: int = 80,
-                 target_levels: int = 1) -> None:
+                 target_levels: int = 1, value_head=None) -> None:
         self.short = str(game_id).split("-", 1)[0]
-        self.explorer = StepwiseExplorer(target_levels=target_levels)
+        self.explorer = StepwiseExplorer(target_levels=target_levels, value_head=value_head)
         self.transitions: list = []          # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = explore_budget
         self.proposer = proposer             # default set lazily to LocalGGUFProposer

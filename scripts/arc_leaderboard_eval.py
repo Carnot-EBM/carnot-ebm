@@ -30,8 +30,10 @@ sys.path.insert(0, str(REPO / "python"))
 from arcengine import GameAction
 from carnot.agentic import arc_solver_kit as kit
 from carnot.agentic.arc_competition_agent import (
-    CLAIMED, CarnotAgentPolicy, E3AgentPolicy, load_solutions, _level_of,
+    CLAIMED, CarnotAgentPolicy, E3AgentPolicy, load_cross_game_value_head, load_solutions, _level_of,
 )
+
+_VALUE_HEAD = None      # BRIDGE: the cross-game value head, loaded once for the explorer_vh policy
 
 
 def _oracle_levels() -> dict:
@@ -50,6 +52,11 @@ def _build_policy(kind: str, game: str):
     cascade (graph_explore -> E3 executable-world-model induction on stall) that make_carnot_agent runs."""
     if kind == "e3":
         return E3AgentPolicy(game)
+    if kind == "explorer_vh":                               # BRIDGE: explorer routed by the cross-game value head
+        global _VALUE_HEAD
+        if _VALUE_HEAD is None:
+            _VALUE_HEAD = load_cross_game_value_head()
+        return CarnotAgentPolicy(game, {}, force_explore=True, value_head=_VALUE_HEAD)
     return CarnotAgentPolicy(game, {}, force_explore=True)   # force_explore -> ignores any banked plan
 
 
@@ -118,6 +125,10 @@ def main() -> int:
     budget = int(_arg(argv, "--budget", "20000"))
     oracle = _oracle_levels()
     games = sorted(oracle) if games_mode == "oracle" else list(CLAIMED)
+    only = _arg(argv, "--only", "")          # --only g1,g2 : target a subset (e.g. the worst gaps)
+    if only:
+        keep = set(only.split(","))
+        games = [g for g in games if g in keep]
     print(f"== ARC LIVE-loop eval — games={games_mode} policy={policy_kind} budget={budget} "
           f"(frame-only, no banked plan, no GameAdapter) ==", flush=True)
     rows, total_levels, total_eff, gaps = [], 0, 0.0, []
