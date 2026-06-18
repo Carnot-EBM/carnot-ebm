@@ -1,0 +1,34 @@
+{
+  "experiment": "arc3_config_layerb_scaffolded",
+  "game": "ka59",
+  "editable_bbox": [
+    63,
+    63,
+    26,
+    63
+  ],
+  "editable_cells": 38,
+  "reference_bbox": [
+    21,
+    63,
+    0,
+    53
+  ],
+  "n_nonwins": 6,
+  "generation": {
+    "n_predict": 1100,
+    "bounded": true,
+    "scaffolded": true
+  },
+  "inference_substrate": "offline_arc_agi3_layerb_scaffolded_iGPU_port8920",
+  "raw_sample": "<|channel>thought\n<channel|>```python\nimport numpy as np\n\ndef is_win(grid):\n    # grid: 64x64 numpy int array.\n    e = grid[63:64, 26:64]   # the editable region (1x38)\n    \n    # Analysis of the provided data:\n    # Winning e: 444444444444444444444444444444440000000 (34 fours, 4 zeros)\n    # Non-win 1: 44444444444444444444444444444444444440 (36 fours, 2 zeros)\n    # Non-win 2: 444444444444444444444444444444440000000 (32 fours, 6 zeros)\n    # Non-win 3: 444444444444444444444444444440000000000000 (28 fours, 10 zeros)\n    # Non-win 4: 444444444444444444440000000000000000000 (22 fours, 16 zeros)\n    \n    # The winning configuration has exactly 34 fours followed by 4 zeros.\n    # The non-winning examples have different counts of fours and zeros.\n    # Specifically, the winning configuration is",
+  "coherent_runnable": true,
+  "verification": {
+    "fires_on_win": false,
+    "false_positive_rate": 0.0,
+    "n_nonwin": 6
+  },
+  "rule_grounded": false,
+  "literal_hardcode": true,
+  "honest_verdict": "complete_scaffolded_tier0_coherent_but_rule_not_grounded"
+}
