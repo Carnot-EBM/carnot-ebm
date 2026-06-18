@@ -18944,6 +18944,100 @@ a terminal `honest_verdict`. If any required registry/gap file is unreadable or
 unparseable, then it writes `honest_verdict=blocked_<file>_unreadable` and
 stops without reconciliation.
 
+### REQ-VERIFY-4374: DiffusionGemma Scorer Repair-Or-Retire With CoDiLA Control
+
+The repository SHALL provide Exp 4374 at
+`python/carnot/experiment_4374_diffusiongemma_scorer_repair_or_retire.py` and
+`results/experiment_4374_diffusiongemma_scorer_repair_or_retire.py` to make the
+fourth and final disciplined attempt at measuring whether the proven
+leak-robust DiffusionGemma in-generation oracle-distinct moat converts to
+fixed-NFE generation utility. The runner SHALL address the prior failures
+explicitly: Exp 4348 failed because the MCQ fixed-NFE harness produced
+degenerate controls, and Exp 4359 failed because the Exp 4337 scorer was leaky
+on the free-form generation search corpus. This rerun is different because it
+first requalifies or repairs the scorer on that exact free-form generation
+corpus and adds a scorer-independent CoDiLA-style local coherence control
+(`arXiv:2603.20216`) before any utility claim is allowed.
+
+Before any DiffusionGemma inference or scorer repair, the runner SHALL check the
+PR binary, the cached DiffusionGemma GGUF, TRM-training stand-down, the embedded
+GGUF tokenizer, the Exp 4337 leak-robust scorer pickle, and the free-form
+generation corpus. If the PR binary, GGUF cache, tokenizer, TRM stand-down, or
+scorer pickle fails, the runner SHALL write the corresponding
+`blocked_<resource>` terminal artifact and SHALL NOT fabricate inference. The
+runner SHALL NOT modify `scripts/research_conductor.py`.
+
+The scorer requalification phase SHALL re-ablate answer-bearing cells on the
+free-form generation corpus, not only the `.401` selection corpus. If the Exp
+4337 scorer's signal fails under answer masking, the runner SHALL attempt a
+small scorer-only repair by refitting a partial-state scorer on answer-masked
+generation-corpus rows and SHALL re-test it under the same masked-answer
+protocol. The top-level field `scorer_requalified_leak_clean` SHALL be a bare
+bool that is true only when the scorer signal survives the generation-corpus
+masked-answer audit after any repair. If the scorer cannot be made clean, the
+runner SHALL continue only with the CoDiLA scorer-independent control.
+
+The CoDiLA phase SHALL implement a deterministic local block-coherence scorer
+that can score denoising-frontier completions without calling the external
+Exp 4337 scorer and without using the executable correctness oracle. The
+top-level field `codila_control_differentiates` SHALL be a bare bool that is
+true only when that local control produces non-degenerate, differentiated arm
+rankings on generated free-form arms. If both the scorer requalification fails
+and CoDiLA cannot differentiate, the runner SHALL emit
+`honest_verdict=retired_in_generation_conversion_unmeasurable`.
+
+When at least one clean guidance source remains, the runner SHALL run the
+fixed-NFE free-form Prism search at the same budget `B` for all arms:
+unguided single pass, best-of-N@B, intrinsic self-verified feedback@B with no
+external scorer, and Carnot@B using Prism HTS plus partial-remask branching
+guided by the requalified leak-clean scorer when available and otherwise by
+the CoDiLA local coherence scorer. The benchmark SHALL use at least 80
+examples across at least three seeds for any positive or clean-null utility
+verdict, SHALL checkpoint after every seed, SHALL run the no-op and tautology
+guards, and SHALL report task-level bootstrap CI95 with at least 2000
+resamples.
+
+The machine-checkable artifact SHALL be written to
+`results/experiment_4374_diffusiongemma_scorer_repair_or_retire.json` with
+top-level fields `honest_verdict`, bare bool `s3_guided_beats_control`, bare
+bool `scorer_requalified_leak_clean`, bare bool `codila_control_differentiates`,
+bare float `s3_minus_best_of_n_delta`, `s3_gain_ci95`, bare bool
+`controls_differentiated`, bare int `nfe_budget`, bare bool
+`verifier_is_oracle=false`, `preconditions_checked`, `random_seed`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`duration_s`, `inference_substrate`, and `adversarial_verify`. The positive
+utility gate SHALL set `s3_guided_beats_control=true` only when Carnot beats
+best-of-N@matched-NFE with CI95 excluding zero, controls are differentiated,
+and Carnot also beats intrinsic SVF. A complete null SHALL be reported as a
+clean powered null only when the scorer or CoDiLA measurement is clean and the
+controls are differentiated. A repeated non-differentiable-controls outcome, or
+an irreparably leaky scorer plus non-differentiating CoDiLA control, SHALL retire
+the in-generation conversion direction as `retired_in_generation_conversion_unmeasurable`.
+
+### SCENARIO-VERIFY-4374: Repaired Scorer Or CoDiLA Control Decides The Final In-Generation Conversion Attempt
+
+Given the local PR binary, DiffusionGemma GGUF cache, Exp 4337 scorer pickle,
+TRM stand-down, and free-form generation corpus are available, when Exp 4374
+runs, then it rechecks the scorer on answer-masked generation-corpus canvases,
+repairs and re-tests the scorer if necessary, builds a scorer-independent
+CoDiLA local coherence control, runs the fixed-NFE Prism free-form arms only
+when at least one clean guidance source remains, and writes a terminal artifact
+with `verifier_is_oracle=false`, the required bare gated fields,
+`model_specs`, a reproducibility checksum, and an adversarial verification
+report. If the scorer is irreparably leaky and CoDiLA cannot differentiate, or
+if the generated controls repeat the `.402/.403` non-differentiability failure,
+then the artifact SHALL retire the direction with
+`honest_verdict=retired_in_generation_conversion_unmeasurable`. If the controls
+are differentiated but Carnot does not beat best-of-N and intrinsic SVF at
+matched NFE, then the artifact SHALL emit a clean powered null rather than a
+fabricated gain.
+
+## Implementation Status (REQ-VERIFY-4374)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4374 | Planned (`python/carnot/experiment_4374_diffusiongemma_scorer_repair_or_retire.py`) | Planned (`tests/python/test_experiment_4374_diffusiongemma_scorer_repair_or_retire.py`) |
+
 ### REQ-VERIFY-4033: GAP-4 Verifier Registry Harness Registration
 
 The repository SHALL provide Exp 4033 at
