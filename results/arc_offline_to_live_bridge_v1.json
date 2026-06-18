@@ -1,0 +1,11 @@
+{
+  "experiment": "arc_offline_to_live_bridge_v1",
+  "question": "does the offline->live bridge (cross-game value head) move the live frame-only gap (8/32 oracle levels)?",
+  "baseline_explorer_bfs": "8/32",
+  "value_head_frontier_override": "3/32 (REGRESSION: 5-feature linear head misroutes away from BFS-found shallow wins -- cd82/ls20/m0r0/r11l broke)",
+  "value_head_depth_primary_tiebreak": "8/32 (NEUTRAL: recovers BFS, cannot regress; the cheap head is inert as a tiebreak)",
+  "e3_world_model_induction_gemma4_12b_on_6_gap1_games": "0/6 closed (~310s/game; the small local model's induced engines never produced a winning plan)",
+  "honest_verdict": "complete_bridge_plumbed_cheap_components_do_not_move_8of32_real_levers_richer_value_and_stronger_induction",
+  "conclusion": "The offline->live flywheel is now PLUMBED end-to-end (16-game frame-only corpus -> cross-game value head -> live StepwiseExplorer frontier routing -> live eval) and additive/opt-in (default agent unchanged). But the CHEAP instantiations do not move the live number: a 5-feature linear value head regresses as an override and is neutral as a tiebreak, and gemma-4-12B world-model induction closes 0 gap-1 games. The architecture is right; the components are too weak. Next levers: (1) richer learned value representation (grid-embedding / TRM, not 5 linear features); (2) stronger world-model induction (bigger model / RFT the proposer on our banked solves).",
+  "inference_substrate": "offline_sim_no_quota_frame_only_live_agent"
+}
