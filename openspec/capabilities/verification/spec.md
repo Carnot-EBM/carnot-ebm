@@ -19153,6 +19153,67 @@ are unavailable, then the artifact SHALL emit
 |---|---|---|
 | REQ-VERIFY-4385 | Implemented (`python/carnot/experiment_4385_detector_self_learning_compounds.py`, `results/experiment_4385_detector_self_learning_compounds.py`) | Implemented (`tests/python/test_experiment_4385_detector_self_learning_compounds.py`) |
 
+### REQ-VERIFY-4386: Cross-Domain Detector Generalization On Cached Non-FoVer Pools
+
+The repository SHALL provide Exp 4386 at
+`python/carnot/experiment_4386_cross_domain_detection_generalization.py` and
+`results/experiment_4386_cross_domain_detection_generalization.py` to measure
+whether verifier-as-detector scoring generalizes beyond FoVer on cached,
+labeled, non-FoVer candidate pools. The experiment SHALL score cached candidates
+only, SHALL NOT train TRM models or invoke live generation, and SHALL compare
+per-domain detection AUROC against the corresponding selection headroom so the
+artifact distinguishes detection from the retired cross-domain selection axis.
+
+Before scoring, the runner SHALL check that at least one non-FoVer cached pool
+contains per-output labels and verifier scores, that the verifier registry and
+detector configuration artifacts are loadable, that the headroom census is
+loadable, and that TRM training is stood down. If no non-FoVer cached labeled
+pool with verifier scores is available, it SHALL write an honest
+`blocked_no_non_fover_cached_pool` artifact and stop without fabricated metrics.
+
+When preconditions hold, the runner SHALL compute detection AUROC per available
+domain, CI95 by bootstrap with at least 2000 resamples, base rate, a replicated
+random-score AUROC control, and a valid-but-wrong restricted AUROC for
+ARC/Sudoku-style grid domains where valid-grid metadata is available. For each
+domain it SHALL report the selection headroom `(oracle@K - vote@1)` from the
+headroom census or the domain rerank summary alongside the detection AUROC.
+`detector_generalizes_cross_domain` SHALL be a bare bool true iff the detection
+AUROC CI95 lower bound exceeds 0.5 on at least one non-FoVer domain. Any scored
+domain whose CI95 includes 0.5 SHALL be listed in `domains_at_chance` and SHALL
+produce a missing-verifier gap entry with failure mode, missing discriminator,
+and candidate design.
+
+The terminal artifact SHALL write
+`results/experiment_4386_cross_domain_detection_generalization.json` with
+top-level fields `honest_verdict`, bare bool
+`detector_generalizes_cross_domain`, `detection_by_domain`,
+`domains_at_chance`, bare bool `verifier_is_oracle=false`,
+`preconditions_checked`, `random_seed`, `random_seeds_used`,
+`reproducibility_checksum`, `model_specs`, `field_principles`, `spec_refs`,
+`duration_s`, `inference_substrate=verifier_ensemble_against_cached_candidates`,
+and `adversarial_verify`.
+
+### SCENARIO-VERIFY-4386: Detection AUROC Is Compared With Selection Headroom Cross-Domain
+
+Given at least one non-FoVer cached candidate pool with per-output labels and
+verifier scores, the verifier registry, detector configuration artifacts, and
+headroom census are available, when Exp 4386 runs, then it reports each scored
+domain as `{domain, detection_auroc, auroc_ci95, selection_headroom, n,
+base_rate}`, includes random-score and valid-but-wrong controls where
+applicable, sets `detector_generalizes_cross_domain` from the CI95-lower-bound
+rule, sets `verifier_is_oracle=false`, embeds model specs and a reproducibility
+checksum, and runs adversarial verification. If no non-FoVer cached scored pool
+is available, then the artifact SHALL emit
+`honest_verdict=blocked_no_non_fover_cached_pool`,
+`detector_generalizes_cross_domain=false`, `detection_by_domain=[]`, and no
+positive cross-domain detector claim.
+
+## Implementation Status (REQ-VERIFY-4386)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4386 | Implemented (`python/carnot/experiment_4386_cross_domain_detection_generalization.py`, `results/experiment_4386_cross_domain_detection_generalization.py`) | Implemented (`tests/python/test_experiment_4386_cross_domain_detection_generalization.py`) |
+
 ### REQ-VERIFY-4377: Registry/Gaps Hygiene, GAP-4 Guard, And Durable Capstone Stamp For .404 Truth
 
 The repository SHALL provide Exp 4377 at
