@@ -89,14 +89,26 @@ agnostic); **A-series** (target + rule LHS) are colour-10-framed, **B-series** (
 colour-7-framed; 3 rule bands give 6 (A→B) pairs; win = `editable_B == [map[a] for a in target_A]`.
 
 What works: the **glyph-segmentation primitive** (split a sprite band into 5×5 tiles by on-pixel column
-gaps; `value_id` = on-pixel-bbox bitmap) cleanly segments **every** region (editable, target, 3 rule
-bands) into w=5 tiles, and the rule-band A10/B7 pairing decodes 6 rules correctly. The editable B-glyphs
-match the rule RHS 3/5. What does not (yet): the **target A-glyphs match the rule LHS only 1/5** — the
-same glyph value renders to slightly different bitmaps across regions (18 distinct ids for ~7 values), so
-exact-bitmap clustering over-splits. The honest boundary: **segmentation is solved; cross-region glyph-
-value identity needs a tolerant matcher** (Hamming-nearest or a learned 7-way glyph classifier), not
-exact bitmap equality. This is a reusable sprite-glyph perception primitive — the rewrite-class analogue
-of the connected-component digest that grounded ka59 — one robustness step short of grounding.
+gaps) cleanly segments **every** region (editable, target, 3 rule bands) into w=5 tiles, and the rule-band
+A10/B7 pairing decodes 6 (LHS→RHS) rule prototypes correctly.
+
+What does not (two grounding attempts — exact-bitmap, then Hamming-nearest to the rule codebook): the
+verifier does not ground, and the second attempt revealed the gap is **deeper than tolerant clustering**.
+Three remaining unknowns, each a real perception step that the adapter sidesteps by reading internal
+state: (1) **glyph-value identity** — the same value renders to bitmaps far enough apart that even
+Hamming-nearest collapses *distinct* target glyphs onto one rule LHS (a learned 7-way classifier, not a
+distance heuristic, is likely needed); (2) **target-region identity** — *which* pixel region is the
+"target sequence" is itself uncertain from pixels (rows 41-45 was a guess; its glyphs match the rule LHS
+poorly, suggesting it is not the target series or not the right rows); (3) **the rewrite is a greedy
+multi-glyph-LHS *sequence* rewrite** (per the adapter's `_required_editable`), not a position-wise
+substitution — so even perfect glyph identity needs the sequence-rewrite engine, possibly multi-pass.
+
+Honest boundary: **segmentation + rule-prototype decode are solved; a grounded from-pixels tr87 verifier
+needs a glyph classifier + target-region localization + the greedy sequence-rewrite engine** — i.e. the
+full pixel-perception pipeline the original solve deliberately deferred. The reusable primitive
+(`segment_glyphs`) is banked; the rest is a scoped sub-project, not a one-liner. Pragmatic alternative:
+tr87 already has a *working* internal-state verifier (the adapter); the from-pixels version is a
+sovereignty/first-contact upgrade, not a correctness gap.
 
 ## Implications
 

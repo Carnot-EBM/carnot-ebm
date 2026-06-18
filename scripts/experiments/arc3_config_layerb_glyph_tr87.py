@@ -113,34 +113,51 @@ def collect():
     return win, nonwins[-6:]
 
 
+def _onpat(tile, h=5, w=5):
+    """Fixed h x w on-pattern (top-left aligned, padded/cropped) for Hamming comparison across regions."""
+    on = (np.asarray(tile) == ON).astype(int)
+    out = np.zeros((h, w), int)
+    hh, ww = min(h, on.shape[0]), min(w, on.shape[1])
+    out[:hh, :ww] = on[:hh, :ww]
+    return out
+
+
+def _nearest(pat, codebook):
+    """Index of the codebook entry with the smallest Hamming distance to `pat` (tolerant glyph-value match
+    -- the same value renders to slightly different bitmaps across regions, so exact equality over-splits;
+    nearest-prototype matching against the rule codebook unifies them)."""
+    return min(range(len(codebook)), key=lambda i: int((codebook[i] != pat).sum()))
+
+
 def decode_and_check(grid):
     """Decode glyph values from pixels and return True iff editable == rewrite(target) under the rule map.
     Regions are the RE'd tr87 layout (win frame): rule bands rows 5-9/14-18/23-27, target rows 41-45,
-    editable rows 52-56."""
+    editable rows 52-56. Glyph identity is by HAMMING-NEAREST to the rule codebook (tolerant, not exact)."""
     g = np.asarray(grid)
-    value_id = _value_registry()  # shared id space across ALL regions (A & B glyphs cluster by on-pattern)
 
-    def ids(rows, c0=0, c1=63):
-        tiles = segment_glyphs(g, _content_rows(g, rows[0], rows[1], c0, c1), c0, c1)
-        return [(value_id(t), frame) for (_, _, t, frame) in tiles]
+    def tiles(r0, r1, c0=0, c1=63):
+        return segment_glyphs(g, list(range(r0, r1 + 1)), c0, c1)
 
-    # rule map: in each rule band, glyphs alternate A(frame10) then B(frame7); pair consecutive A->B
-    rule_map = {}
+    # rule codebook: each band = A(10),B(7),A(10),B(7) -> pairs (lhs on-pattern, rhs on-pattern)
+    lhs_codebook, rhs_codebook = [], []
     for band in ((5, 9), (14, 18), (23, 27)):
-        seq = ids(band)
+        seq = tiles(*band)
         a = None
-        for vid, frame in seq:
+        for (_, _, t, frame) in seq:
             if frame == 10:
-                a = vid
+                a = _onpat(t)
             elif frame == 7 and a is not None:
-                rule_map[a] = vid; a = None
-    target = [vid for vid, frame in ids((41, 45))]        # A-series target row
-    editable = [vid for vid, frame in ids((52, 56))]       # B-series editable row
-    if not rule_map or not target or not editable:
-        return False, {"rule_map": len(rule_map), "target": len(target), "editable": len(editable)}
-    expanded = [rule_map.get(a) for a in target]
-    ok = (None not in expanded) and (expanded == editable)
-    return ok, {"rule_map_size": len(rule_map), "target": target, "editable": editable, "expanded": expanded}
+                lhs_codebook.append(a); rhs_codebook.append(_onpat(t)); a = None
+    target = [_onpat(t) for (_, _, t, fr) in tiles(41, 45)]        # A-series target row
+    editable = [_onpat(t) for (_, _, t, fr) in tiles(52, 56)]      # B-series editable row
+    if not lhs_codebook or not target or not editable or len(target) != len(editable):
+        return False, {"rules": len(lhs_codebook), "target": len(target), "editable": len(editable)}
+    # rewrite: each target glyph -> nearest rule LHS -> that rule's RHS prototype index;
+    # each editable glyph -> nearest RHS prototype index; win iff the two index sequences agree.
+    want = [_nearest(t, lhs_codebook) for t in target]                       # rule index per target pos
+    got_rhs = [_nearest(e, rhs_codebook) for e in editable]                  # rhs prototype per editable
+    ok = (want == got_rhs)
+    return ok, {"rules": len(lhs_codebook), "target_rule_idx": want, "editable_rhs_idx": got_rhs}
 
 
 def main():
@@ -168,7 +185,7 @@ def main():
                                    "complete_glyph_pixel_decode_partial_not_grounded")})
     (REPO / "results" / f"arc3_config_layerb_glyph_{GAME}.json").write_text(json.dumps(out, indent=2, default=str))
     print(f"  fires_on_win={fires_win} fpr={fpr} grounded={grounded}", flush=True)
-    print(f"  win decode: target={win_dbg.get('target')} editable={win_dbg.get('editable')} expanded={win_dbg.get('expanded')}", flush=True)
+    print(f"  win decode: target_rule_idx={win_dbg.get('target_rule_idx')} editable_rhs_idx={win_dbg.get('editable_rhs_idx')}", flush=True)
     print(f"  -> {out['honest_verdict']}", flush=True)
     return 0
 
