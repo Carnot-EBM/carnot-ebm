@@ -1,3 +1,86 @@
+## 2026-06-18 — .405 planning sweep — DEEPEN the one surviving oracle-distinct vehicle (the verifier-as-DETECTOR) into an ACTIONABLE capability: BiPRM step-error LOCALIZATION + selective-prediction ABSTENTION; cross-domain detection generalization; ARC E3 deeper with lookahead-fidelity
+
+Added by the `.405 planning sweep (Claude Opus 4.8, outer-loop planner). The `.404 scorecard
+(exp4379 capstone, `verifier_thesis_state: linear_settled_in_generation_retired_detector_positive`,
+read via `scripts/summarize_artifact.py`). `.404 tested THREE oracle-distinct verifier vehicles;
+**two closed, one is alive:**
+
+- **EFFICIENCY moat → SETTLED.** exp4370 LLM-generated-heuristic (arXiv:2503.18809) did NOT beat the
+  deployed linear action-cost baseline (`llm_heuristic_beats_linear=false`, clean powered null, all
+  tied at 646 held-out actions). The moat is REAL + DEPLOYED (exp4364, 25→16, `verifier_is_oracle=false`)
+  but the function class is settled — no remaining headroom.
+- **IN-GENERATION (DiffusionGemma) moat → RETIRED (4th block).** exp4374
+  `retired_in_generation_conversion_unmeasurable` (scorer irreparably leaky on the generation corpus +
+  CoDiLA control could not differentiate the arms). OUT of the autonomous loop.
+- **DETECTION → POSITIVE (the live vehicle).** exp4375 `detector_auroc=0.918`, CI95 lower 0.909, beats
+  chance, n=8,829, `selection_headroom=0.0`, `verifier_is_oracle=false`. The verifier DETECTS step-errors
+  where it cannot SELECT — the surviving, unexploited, oracle-distinct positive.
+- **ARC north star → 34 reproducible levels / 17 games** (lp85 +1 via exp4372; ar25/ka59/ft09 L2 still
+  blocked, exp4373 partial). **paper_ready=True** (G1–G4, FoVer 0.9131).
+
+The `.404 SOTA-ingestion (exp4376) `flagged_for_v405 = biprm_processbench_detector_localization_v405`:
+**make the positive detector signal ACTIONABLE.** All `.405 methods below were arXiv-verified by the
+exp4376 SOTA-ingestion (reliable channel: low-concurrency WebSearch/WebFetch + arXiv page lookup,
+2026-06-18; Semantic-Scholar returned HTTP 429).
+
+**A. HEADLINE — the verifier-as-DETECTOR made ACTIONABLE (oracle-distinct; `verifier_is_oracle=false`):**
+- **arXiv:2508.01682** — "Bidirectional Process Reward Model" (BiPRM). Runs an L2R *and* an R2L step
+  scoring pass and FUSES them; the suffix-aware R2L pass improves earliest-error step LOCALIZATION over a
+  unidirectional L2R PRM on ProcessBench-style step-error benchmarks. **.405 HEADLINE (exp4381):** make
+  the exp4375 detector (AUROC 0.918) ACTIONABLE — bidirectional first-error LOCALIZATION + a
+  selective-prediction ABSTENTION operating point (accuracy-vs-coverage / risk-coverage / precision@recall,
+  the "I don't know" gate from `docs/research-notes/verifier-as-detector-measurement-spec.md`). **Failure
+  mode (load-bearing):** the R2L pass uses FUTURE context unavailable to an in-loop actor → report
+  bidirectional localization as OFFLINE post-hoc and keep a CAUSAL/L2R-only number as the online claim;
+  never conflate them (the exp4376-noted online/offline separation). Skeptic-proof (exp4382): rule out
+  position/length bias, R2L online-invalid leak, single-split overfit. Selective-prediction / abstention /
+  risk-coverage is established prior art (Chow's rule; Geifman–El-Yaniv selective classification) — cited
+  by paradigm, not as a fresh arXiv claim.
+
+**B. ARC north star DEEPER (executable world-model induction; `verifier_is_oracle=true`; operator MANDATORY 2026-06-17):**
+- **arXiv:2606.16070** — "Mind-Studio" executable world models with lookahead evaluation: entropy-selected
+  exploration traces + a lightweight skill file + K-step LOOKAHEAD-FIDELITY checks (the induced model's
+  K-step rollout must match the env) before planning. **.405 (exp4383/exp4384):** the next E3 method after
+  the lp85 advance — augment the explore-verify-plan harness with lookahead-fidelity on the high-headroom
+  games (lp85 L6, tu93 L5, tn36 L8 program-editor, tr87 L7) and the blocked-mechanic tails (ar25 L2
+  action7-undo-stack, ka59 L2 step-counter-HUD, ft09 L2). **Failure mode:** targets pygame/Real-ALE games
+  not ARC-AGI-3; skill files can encode leaked mechanics; executable rollout checks remain oracle-grounded
+  (ARC progress, not a moat headline). Carried baselines: **arXiv:2605.05138** (Executable World Models for
+  ARC-AGI-3), **arXiv:2605.25931** (AERA explore-verify-plan), **arXiv:2512.22336** (Agent2World adaptive testing).
+
+**C. CONTINUOUS SELF-LEARNING (mandated) — the DETECTOR compounds (exp4385):** apply the exp4364
+compounding-curve discipline (held-out metric vs accumulated-corpus size, positive control, reproduction
+gate) to the LIVE detector vehicle (the action-cost heuristic vehicle is SETTLED). Does held-out detection
+localization-F1 / AUROC rise with labeled data beyond a no-learning baseline?
+
+**D. CROSS-DOMAIN DETECTION generalization (exp4386):** does the FoVer detector (AUROC 0.918) detect on a
+NON-FoVer cached corpus (the GAP-4 ARC pool, code HumanEval/MBPP, GSM8K)? Detection AUROC vs selection
+headroom per domain — the divergence (detect where you cannot select; the north-star verifier-domain-
+expansion step). NOT the retired cross-domain SELECTION axis (exp4314).
+
+**SETTLED / RETIRED (carried, do NOT re-headline):**
+- **arXiv:2503.18809** (LLM-generated heuristic programs) — SETTLED for our corpus (exp4370 null); use only
+  as a control.
+- **arXiv:2603.20216** (CoDiLA local-coherence control) — the DiffusionGemma in-generation conversion is
+  RETIRED from the loop (exp4374, 4th block); CoDiLA stays a diagnostic only if the operator revives it.
+
+**OUT-OF-BAND / operator-owned (flagged, NOT auto-run in-loop — verifier-as-reward GENERATOR training):**
+- **arXiv:2606.13565** (A2D2 reward-guided any-length discrete diffusion), **arXiv:2502.01384** (SEPO
+  score-entropy policy optimization).
+
+**Bottom line for .405:** the EFFICIENCY and IN-GENERATION oracle-distinct vehicles are closed
+(settled/retired); DETECTION is the one ALIVE vehicle. Per Depth-Over-Breadth + north-star §0 (the
+oracle-distinct frontier is THE open claim), `.405 DEEPENS the detector from "beats chance" into an
+ACTIONABLE capability — BiPRM bidirectional LOCALIZATION + selective-prediction ABSTENTION (exp4381),
+skeptic-proofed (exp4382) — and probes whether it COMPOUNDS (exp4385) and GENERALIZES beyond FoVer
+(exp4386), while driving ARC deeper with Mind-Studio lookahead-fidelity (exp4383/exp4384). `paper_ready=True`
+(FoVer 0.9131) carried unchanged.
+
+Sources (this sweep, exp4376-verified 2026-06-18): arxiv.org/abs/{2508.01682, 2606.16070, 2605.05138,
+2605.25931, 2512.22336, 2503.18809, 2603.20216, 2606.13565, 2502.01384}.
+
+---
+
 ## 2026-06-18 — .404 planning sweep — ELEVATE the proven oracle-distinct EFFICIENCY moat with a STRONGER learned-heuristic class; drive ARC accuracy DEEPER; REPAIR-OR-RETIRE the thrice-blocked DiffusionGemma in-generation conversion
 
 Added by the `.404 planning sweep (Claude Opus 4.8, outer-loop planner). The `.403 scorecard
