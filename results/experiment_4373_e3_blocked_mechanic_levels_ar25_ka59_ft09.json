@@ -1,0 +1,541 @@
+{
+  "active_dataset_sha256": {
+    "ar25": "12530861805eb20632b795b7fc205470bae6d7cb22f9a382b9fa55afdde61f65",
+    "ft09": "6ccfa378265be4a5698f65a1ed100e676900e28ae4b81d6a635de5f488ce4c1c",
+    "ka59": "ab8d5522d27d53d94f28d3a60fb81c3dcbd534aa6e44eddd774fb1dca78201bf"
+  },
+  "duration_s": 3.767,
+  "experiment": "experiment_4373_e3_blocked_mechanic_levels_ar25_ka59_ft09",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed (success_e3_ar25_ka59_ft09_<n>_reproduced or complete_e3_ar25_ka59_ft09_partial). Any new reproduced level and an honest partial per game are BOTH progress.",
+    "new_levels_reproduced": "BARE int: NEW levels offline-reproduced across ar25+ka59+ft09 -- the incremental-progress unit.",
+    "per_game_scorecard": "list of {game, prior_best_level, new_reproduced_level, verifier_accuracy, offline_reproduced, residual_gap_class} -- the per-game record for ar25/ka59/ft09.",
+    "preconditions_checked": "Records the offline-env presence per game + harness import + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the active-data collection + induction + exploration + planning.",
+    "reproducibility_checksum": "Hash of the active dataset + the extended models + the plans + the reproduce() results; lets a third party re-run.",
+    "reproducible_total_levels": "BARE int: the ARC reproducible-level count after this task (>= the prior 33) -- the monotonic north-star accuracy signal.",
+    "verifier_is_oracle": "BARE bool=true -- the SOLVEs are execution-grounded; ARC progress, NOT a moat headline.",
+    "world_model_paths": "list[str]: results/arc_e3/{ar25,ka59,ft09}/world_model.py -- the extended models ARE the deliverables."
+  },
+  "honest_verdict": "complete_e3_ar25_ka59_ft09_partial",
+  "inference_substrate": "offline_targeted_active_data_plus_arc_solver_kit_reproduction_gate_no_nested_codex",
+  "method": "targeted_active_data_explore_verify_plan_named_hidden_rule_gap_closure",
+  "new_levels_reproduced": 0,
+  "per_game_scorecard": [
+    {
+      "action_counts": {
+        "1": 14,
+        "2": 10,
+        "3": 13,
+        "4": 11,
+        "5": 19,
+        "6": 19,
+        "7": 10
+      },
+      "active_collection_error": "",
+      "active_dataset_path": "results/arc_e3/ar25/active_data_4373.json",
+      "active_dataset_sha256": "12530861805eb20632b795b7fc205470bae6d7cb22f9a382b9fa55afdde61f65",
+      "active_transitions_collected": 96,
+      "checkpoint_status": "honest_partial_no_new_level_reproduced",
+      "diverse_object_config_signatures": 15,
+      "game": "ar25",
+      "mechanic_checks_passed": false,
+      "new_reproduced_level": 1,
+      "offline_env_present": true,
+      "offline_reproduced": false,
+      "plan": [
+        "3",
+        "3",
+        "3",
+        "3",
+        "3",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2",
+        "2"
+      ],
+      "plan_action_count": 15,
+      "plan_executed": false,
+      "plan_source": "prior_reproduced_l1_plan_replayed_against_l2_gate_after_targeted_active_checks",
+      "prior_best_level": 1,
+      "reproduce_result": {
+        "claimed_level": 2,
+        "game": "ar25",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": false
+      },
+      "residual_gap_class": "ar25_l2_action7_undo_stack_hidden_rule_gap",
+      "target_action_counts": {
+        "7": 10
+      },
+      "targeted_gap_lemmas": [
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": false
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": true
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": false
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": false
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": true
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": false
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": true
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": false
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": false
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": false
+        }
+      ],
+      "verifier_accuracy": 0.958333,
+      "verifier_accuracy_per_round": [
+        0.885417,
+        0.635417,
+        0.958333,
+        0.510417
+      ],
+      "world_model_path": "results/arc_e3/ar25/world_model.py",
+      "world_model_sha256": "395b5d9bee22d00991e24ba08919993eadf245d401b9d92d34b17303e315202c"
+    },
+    {
+      "action_counts": {
+        "1": 13,
+        "2": 15,
+        "3": 18,
+        "4": 11,
+        "6": 39
+      },
+      "active_collection_error": "",
+      "active_dataset_path": "results/arc_e3/ka59/active_data_4373.json",
+      "active_dataset_sha256": "ab8d5522d27d53d94f28d3a60fb81c3dcbd534aa6e44eddd774fb1dca78201bf",
+      "active_transitions_collected": 96,
+      "checkpoint_status": "honest_partial_no_new_level_reproduced",
+      "diverse_object_config_signatures": 11,
+      "game": "ka59",
+      "mechanic_checks_passed": false,
+      "new_reproduced_level": 1,
+      "offline_env_present": true,
+      "offline_reproduced": false,
+      "plan": [
+        "4",
+        "4",
+        "4",
+        "3",
+        "2",
+        "3",
+        "3",
+        "3",
+        "C:1",
+        "1",
+        "4"
+      ],
+      "plan_action_count": 11,
+      "plan_executed": false,
+      "plan_source": "prior_reproduced_l1_plan_replayed_against_l2_gate_after_targeted_active_checks",
+      "prior_best_level": 1,
+      "reproduce_result": {
+        "claimed_level": 2,
+        "game": "ka59",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": false
+      },
+      "residual_gap_class": "ka59_l2_hidden_step_counter_hud_register_gap",
+      "target_action_counts": {
+        "1": 13,
+        "2": 15,
+        "3": 18,
+        "4": 11,
+        "6": 39
+      },
+      "targeted_gap_lemmas": [
+        {
+          "action": 3,
+          "changed_cells": 19,
+          "hud_count_after": 63,
+          "hud_count_before": 64,
+          "hud_count_predicted": 59,
+          "level_delta": 0,
+          "predicted_changed_cells": 22,
+          "verifier_gated": false
+        },
+        {
+          "action": 2,
+          "changed_cells": 19,
+          "hud_count_after": 62,
+          "hud_count_before": 63,
+          "hud_count_predicted": 59,
+          "level_delta": 0,
+          "predicted_changed_cells": 21,
+          "verifier_gated": false
+        },
+        {
+          "action": 6,
+          "changed_cells": 1,
+          "hud_count_after": 61,
+          "hud_count_before": 62,
+          "hud_count_predicted": 59,
+          "level_delta": 0,
+          "predicted_changed_cells": 3,
+          "verifier_gated": false
+        },
+        {
+          "action": 1,
+          "changed_cells": 19,
+          "hud_count_after": 60,
+          "hud_count_before": 61,
+          "hud_count_predicted": 59,
+          "level_delta": 0,
+          "predicted_changed_cells": 19,
+          "verifier_gated": false
+        },
+        {
+          "action": 1,
+          "changed_cells": 19,
+          "hud_count_after": 59,
+          "hud_count_before": 60,
+          "hud_count_predicted": 59,
+          "level_delta": 0,
+          "predicted_changed_cells": 18,
+          "verifier_gated": false
+        },
+        {
+          "action": 6,
+          "changed_cells": 1,
+          "hud_count_after": 58,
+          "hud_count_before": 59,
+          "hud_count_predicted": 59,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": false
+        },
+        {
+          "action": 3,
+          "changed_cells": 19,
+          "hud_count_after": 57,
+          "hud_count_before": 58,
+          "hud_count_predicted": 58,
+          "level_delta": 0,
+          "predicted_changed_cells": 17,
+          "verifier_gated": false
+        },
+        {
+          "action": 3,
+          "changed_cells": 19,
+          "hud_count_after": 56,
+          "hud_count_before": 57,
+          "hud_count_predicted": 57,
+          "level_delta": 0,
+          "predicted_changed_cells": 17,
+          "verifier_gated": false
+        },
+        {
+          "action": 2,
+          "changed_cells": 19,
+          "hud_count_after": 55,
+          "hud_count_before": 56,
+          "hud_count_predicted": 56,
+          "level_delta": 0,
+          "predicted_changed_cells": 17,
+          "verifier_gated": false
+        },
+        {
+          "action": 6,
+          "changed_cells": 1,
+          "hud_count_after": 54,
+          "hud_count_before": 55,
+          "hud_count_predicted": 55,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": false
+        },
+        {
+          "action": 2,
+          "changed_cells": 19,
+          "hud_count_after": 53,
+          "hud_count_before": 54,
+          "hud_count_predicted": 54,
+          "level_delta": 0,
+          "predicted_changed_cells": 17,
+          "verifier_gated": false
+        },
+        {
+          "action": 2,
+          "changed_cells": 19,
+          "hud_count_after": 52,
+          "hud_count_before": 53,
+          "hud_count_predicted": 53,
+          "level_delta": 0,
+          "predicted_changed_cells": 17,
+          "verifier_gated": false
+        }
+      ],
+      "verifier_accuracy": 0.15625,
+      "verifier_accuracy_per_round": [
+        0.15625,
+        0.125,
+        0.114583,
+        0.125
+      ],
+      "world_model_path": "results/arc_e3/ka59/world_model.py",
+      "world_model_sha256": "e20305436149d9bf0490980036a6b0e20c26503f0d3fd09573552b8789ff76bf"
+    },
+    {
+      "action_counts": {
+        "6": 95
+      },
+      "active_collection_error": "",
+      "active_dataset_path": "results/arc_e3/ft09/active_data_4373.json",
+      "active_dataset_sha256": "6ccfa378265be4a5698f65a1ed100e676900e28ae4b81d6a635de5f488ce4c1c",
+      "active_transitions_collected": 95,
+      "checkpoint_status": "honest_partial_no_new_level_reproduced",
+      "diverse_object_config_signatures": 3,
+      "game": "ft09",
+      "mechanic_checks_passed": false,
+      "new_reproduced_level": 1,
+      "offline_env_present": true,
+      "offline_reproduced": false,
+      "plan": [
+        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 36}}",
+        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 44}}",
+        "{\"action\": 6, \"data\": {\"x\": 52, \"y\": 44}}",
+        "{\"action\": 6, \"data\": {\"x\": 36, \"y\": 52}}"
+      ],
+      "plan_action_count": 4,
+      "plan_executed": false,
+      "plan_source": "prior_reproduced_l1_plan_replayed_against_l2_gate_after_targeted_active_checks",
+      "prior_best_level": 1,
+      "reproduce_result": {
+        "claimed_level": 2,
+        "game": "ft09",
+        "mode": "offline_reproduction_gate_no_quota",
+        "reached_level": 1,
+        "reproduced": false
+      },
+      "residual_gap_class": "ft09_l2_residual_world_model_mismatch_gap",
+      "target_action_counts": {
+        "6": 95
+      },
+      "targeted_gap_lemmas": [
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 5,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 9,
+          "level_delta": 0,
+          "predicted_changed_cells": 36,
+          "verifier_gated": false
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 4,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 2,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 12,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 8,
+          "level_delta": 0,
+          "predicted_changed_cells": 4,
+          "verifier_gated": false
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 0,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 5,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 8,
+          "level_delta": 0,
+          "predicted_changed_cells": 36,
+          "verifier_gated": false
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 5,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 12,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 8,
+          "level_delta": 0,
+          "predicted_changed_cells": 36,
+          "verifier_gated": false
+        }
+      ],
+      "verifier_accuracy": 0.15625,
+      "verifier_accuracy_per_round": [
+        0.104167,
+        0.15625,
+        0.125,
+        0.104167
+      ],
+      "world_model_path": "results/arc_e3/ft09/world_model.py",
+      "world_model_sha256": "8e4563289295741b6728075a411d0aa4ae7165140d2f3e5e5e885312dcf650ee"
+    }
+  ],
+  "preconditions_checked": {
+    "active_collect_import": true,
+    "active_collect_import_error": "",
+    "executable_world_model_import": true,
+    "games": {
+      "ar25": {
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/ar25",
+        "offline_env_present": true
+      },
+      "ft09": {
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/ft09",
+        "offline_env_present": true
+      },
+      "ka59": {
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/ka59",
+        "offline_env_present": true
+      }
+    },
+    "harness_import": true,
+    "leaderboard_submission": false,
+    "offline_env_present": {
+      "ar25": true,
+      "ft09": true,
+      "ka59": true
+    },
+    "research_conductor_modified": false,
+    "solver_kit_import": true,
+    "trm_training_stood_down": true
+  },
+  "random_seed": 4373,
+  "reproducibility_checksum": "4c775367e4b09eaf060085f9df2e1617bb79af96c87fcd0996ef15bce2b79310",
+  "reproducible_total_levels": 33,
+  "spec_refs": [
+    "REQ-PHASE4-4373",
+    "SCENARIO-PHASE4-4373"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_order": [
+    "ar25",
+    "ka59",
+    "ft09"
+  ],
+  "verifier_is_oracle": true,
+  "world_model_path_sha256": {
+    "results/arc_e3/ar25/world_model.py": "395b5d9bee22d00991e24ba08919993eadf245d401b9d92d34b17303e315202c",
+    "results/arc_e3/ft09/world_model.py": "8e4563289295741b6728075a411d0aa4ae7165140d2f3e5e5e885312dcf650ee",
+    "results/arc_e3/ka59/world_model.py": "e20305436149d9bf0490980036a6b0e20c26503f0d3fd09573552b8789ff76bf"
+  },
+  "world_model_paths": [
+    "results/arc_e3/ar25/world_model.py",
+    "results/arc_e3/ka59/world_model.py",
+    "results/arc_e3/ft09/world_model.py"
+  ]
+}
