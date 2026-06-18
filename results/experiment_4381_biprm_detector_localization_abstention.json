@@ -1,0 +1,183 @@
+{
+  "abstention_curve": {
+    "base_rate_fraction_correct": 0.98259,
+    "detector_auroc": 0.979903,
+    "points": [
+      {
+        "coverage": 1.0,
+        "n_retained": 6548,
+        "retained_accuracy": 0.98259,
+        "selective_risk": 0.01741
+      },
+      {
+        "coverage": 0.899969,
+        "n_retained": 5893,
+        "retained_accuracy": 0.998982,
+        "selective_risk": 0.001018
+      },
+      {
+        "coverage": 0.75,
+        "n_retained": 4911,
+        "retained_accuracy": 0.999796,
+        "selective_risk": 0.000204
+      },
+      {
+        "coverage": 0.5,
+        "n_retained": 3274,
+        "retained_accuracy": 1.0,
+        "selective_risk": 0.0
+      },
+      {
+        "coverage": 0.25,
+        "n_retained": 1637,
+        "retained_accuracy": 1.0,
+        "selective_risk": 0.0
+      }
+    ],
+    "precision_at_recall_0_9": 0.205479,
+    "random_score_auroc_control": 0.500295,
+    "random_score_auroc_control_replicates": 128,
+    "recall_target": 0.9,
+    "score_orientation": "higher_error_score_more_suspicious_reject_highest_scores",
+    "useful_criterion": "retained_accuracy >= base_rate + 0.05 at coverage >= 0.5",
+    "useful_operating_point": null
+  },
+  "adversarial_verify": {
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n"
+  },
+  "bootstrap_resamples": 2500,
+  "detector_localization_actionable": false,
+  "duration_s": 2.169,
+  "experiment": "experiment_4381_biprm_detector_localization_abstention",
+  "field_principles": {
+    "abstention_curve": "The accuracy-vs-coverage / risk-coverage points + precision@recall=0.9 + the selective risk -- the 'I don't know' operating point that makes detection actionable.",
+    "detector_localization_actionable": "BARE bool: true iff bidirectional fusion improves first-error localization over unidirectional L2R (CI95-excl-0) AND the risk-coverage curve yields a useful selective-prediction operating point -- the oracle-distinct detector graduating from 'beats chance' to 'localizes + abstains usefully'.",
+    "honest_verdict": "Terminal-prefixed. A win (bidirectional fusion localizes the earliest error better than unidirectional AND the detection score enables a useful abstention operating point -- the detector graduates 'beats chance'->'actionable') and a CLEAN null (unidirectional is already as good / abstention gives no useful point) are BOTH decision-grade.",
+    "localization_delta_ci95": "Bootstrap CI95 (>=2000 resamples) of (bidirectional - unidirectional) first-error localization -- excluding 0 is the decision-grade gain.",
+    "localization_f1_by_direction": "dict {unidirectional_l2r, bidirectional_fusion, causal_online} -> first-error-step localization accuracy/F1 -- the causal_online number is the in-loop-achievable one (R2L-free).",
+    "model_specs": "Verifier ensemble + cached step-labeled FoVer corpus + BiPRM fusion config + unidirectional baseline + n; oracle-distinct declaration.",
+    "n_traces": "BARE int: scored trace count -- MUST be >= 1000 for the claim.",
+    "online_vs_offline_separated": "BARE bool=true -- bidirectional R2L uses future context and is reported as OFFLINE post-hoc; causal/L2R-only is the ONLINE-actionable number.",
+    "preconditions_checked": "Records cached detector corpus + ensemble + step-labels + TRM stand-down; pre-empts silent missing-resource fabrication.",
+    "random_seed": "Determinism precondition for scoring order, fusion, and bootstrap.",
+    "reproducibility_checksum": "Hash of the corpus + ensemble config + fusion method + localization/abstention computation; lets a third party re-run.",
+    "verifier_is_oracle": "BARE bool=false -- a learned/energy detection signal scored against cached candidates; the executable label defines correctness."
+  },
+  "honest_verdict": "complete: clean_powered_null_bidirectional_not_actionable",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "localization_delta_ci95": [
+    0.0,
+    0.0
+  ],
+  "localization_f1_by_direction": {
+    "bidirectional_fusion": {
+      "accuracy": 0.096491,
+      "exact_match_count": 11,
+      "f1": 0.096491,
+      "n_error_traces": 114
+    },
+    "causal_online": {
+      "accuracy": 0.096491,
+      "exact_match_count": 11,
+      "f1": 0.096491,
+      "n_error_traces": 114
+    },
+    "unidirectional_l2r": {
+      "accuracy": 0.096491,
+      "exact_match_count": 11,
+      "f1": 0.096491,
+      "n_error_traces": 114
+    }
+  },
+  "methodology_note": "R2L scores use future context and are offline post-hoc only; the online-actionable number is the causal L2R baseline.",
+  "missing_verifier_gaps": [
+    {
+      "error_class": "untyped",
+      "gap_id": "GAP-FOVER-BIPRM-LOCALIZATION-untyped",
+      "missed_first_error_traces": 103,
+      "missing_discriminator": "A verifier feature that separates the earliest causal error from later downstream consequences for this class.",
+      "status": "open"
+    }
+  ],
+  "model_specs": {
+    "bootstrap_resamples": 2500,
+    "cached_detector_corpus": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+    "cached_step_labeled_fover_corpus": "/home/ianblenke/github.com/ianblenke/carnot/data/step_level_prm_training.jsonl",
+    "ensemble_components": [
+      "tier0r_curry_howard",
+      "tier0u_logical_consistency",
+      "fr11_session_memory"
+    ],
+    "exp4375_detector_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4375_verifier_as_detector_measurement.json",
+    "fusion_method": "mean_l2r_r2l",
+    "l2r_pass": "causal_prefix_only",
+    "live_generation": false,
+    "n": 6548,
+    "n_error_traces": 114,
+    "offline_posthoc_direction": "bidirectional_fusion_l2r_plus_r2l",
+    "online_actionable_direction": "causal_l2r_only",
+    "r2l_pass": "offline_suffix_aware_future_context",
+    "random_seed": 4381,
+    "random_seeds_used": [
+      4381
+    ],
+    "trm_training": "stood_down_not_invoked",
+    "unidirectional_baseline": "l2r_argmax_step_error_score",
+    "verifier_ensemble_id": "fover_production_ensemble",
+    "verifier_is_oracle": false,
+    "verifier_registry_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/verifier_registry.yaml"
+  },
+  "n_error_traces": 114,
+  "n_traces": 6548,
+  "online_vs_offline_separated": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "labeled_rows=8829",
+      "resource": "exp4375_cached_detector_corpus"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4375_verifier_as_detector_measurement.json",
+      "resource": "exp4375_detector_artifact"
+    },
+    {
+      "available": true,
+      "detail": "fover_production_ensemble present",
+      "resource": "verifier_registry"
+    },
+    {
+      "available": true,
+      "detail": "traces=6548; required>=1000; error_traces=114",
+      "resource": "cached_step_labeled_fover_corpus"
+    },
+    {
+      "available": true,
+      "detail": "first_error_indices_derivable=True; error_traces=114",
+      "resource": "step_labels_for_localization"
+    },
+    {
+      "available": true,
+      "detail": "production FoVer scoring path imports and scores a probe row",
+      "resource": "fover_scoring_path"
+    },
+    {
+      "available": true,
+      "detail": "not invoked; this experiment scores cached candidates only",
+      "resource": "trm_training_stand_down"
+    }
+  ],
+  "random_seed": 4381,
+  "random_seeds_used": [
+    4381
+  ],
+  "reproducibility_checksum": "sha256:57ceb5170f76741aa315829db30523f7a9afbb9ae1d265ae9b0f2032eadb3b41",
+  "schema": "carnot.biprm_detector_localization_abstention.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4381",
+    "SCENARIO-VERIFY-4381"
+  ],
+  "verifier_is_oracle": false
+}
