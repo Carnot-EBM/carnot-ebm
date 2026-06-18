@@ -1,0 +1,537 @@
+{
+  "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4395_e3_blocked_mechanic_tails_ar25_ka59_ft09.json",
+  "duration_s": 0.00276,
+  "experiment": "experiment_4395_e3_blocked_mechanic_tails_ar25_ka59_ft09",
+  "fidelity_gate": 0.95,
+  "field_principles": {
+    "honest_verdict": "Terminal-prefixed (success_e3_ar25_ka59_ft09_<n>_reproduced or complete_e3_ar25_ka59_ft09_partial). Any new reproduced level and an honest partial per game are BOTH progress.",
+    "new_levels_reproduced": "BARE int: NEW levels offline-reproduced across ar25+ka59+ft09 -- the incremental-progress unit.",
+    "per_game_scorecard": "list of {game, prior_best_level, new_reproduced_level, lookahead_fidelity, verifier_accuracy, offline_reproduced, residual_gap_class} -- the per-game record for ar25/ka59/ft09 (ka59 includes the object-relevance discriminator outcome).",
+    "preconditions_checked": "Records the offline-env presence per game + harness import + TRM-stand-down; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the active-data collection + lookahead-fidelity + induction + planning.",
+    "reproducibility_checksum": "Hash of the object-relevance discriminator + the extended models + the plans + the reproduce() results; lets a third party re-run.",
+    "reproducible_total_levels": "BARE int: the ARC reproducible-level count after this task (>= the prior 34) -- the monotonic north-star accuracy signal.",
+    "verifier_is_oracle": "BARE bool=true -- the SOLVEs are execution-grounded; ARC progress, NOT a moat headline.",
+    "world_model_paths": "list[str]: results/arc_e3/{ar25,ka59,ft09}/world_model.py -- the extended models ARE the deliverables."
+  },
+  "honest_verdict": "complete_e3_ar25_ka59_ft09_partial",
+  "inference_substrate": "offline_arc_e3_harness_no_leaderboard_no_nested_codex",
+  "lookahead_k": 3,
+  "method": "offline_e3_named_tail_object_relevance_per_register_fidelity_gate",
+  "mind_studio_skill_paths": [
+    "results/arc_e3/ar25/skill_4395.json",
+    "results/arc_e3/ka59/skill_4395.json",
+    "results/arc_e3/ft09/skill_4395.json"
+  ],
+  "new_levels_reproduced": 0,
+  "per_game_scorecard": [
+    {
+      "active_dataset_sha256": "b049c948e4908ee24446a12db1f371e5b191607b679062787933417ae122fab2",
+      "active_transitions_collected": 96,
+      "checkpoint_status": "honest_partial_fidelity_gate_not_met",
+      "fidelity_gate_passed": false,
+      "game": "ar25",
+      "lookahead_fidelity": 0.733333,
+      "lookahead_fidelity_per_round": [
+        0.733333,
+        0.733333,
+        0.733333,
+        0.733333
+      ],
+      "lookahead_k": 3,
+      "mind_studio_skill_file": "results/arc_e3/ar25/skill_4395.json",
+      "named_register": "action7_undo_stack",
+      "new_reproduced_level": 1,
+      "object_relevance_discriminator": null,
+      "offline_reproduced": false,
+      "plan": [],
+      "prior_best_level": 1,
+      "reproduce_result": {
+        "claimed_level": 2,
+        "game": "ar25",
+        "mode": "lookahead_or_mechanic_gate_failed_no_replayable_plan",
+        "reached_level": 1,
+        "reproduced": false
+      },
+      "residual_gap_class": "ar25_l2_action7_undo_stack_hidden_rule_gap",
+      "target_action_counts": {
+        "7": 12
+      },
+      "target_level": 2,
+      "target_wall_time_s": 30.0,
+      "targeted_gap_lemmas": [
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": true
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": false
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": true
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": false
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": false
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": false
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": false
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": false
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": false
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": true
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": false
+        },
+        {
+          "action": 7,
+          "changed_cells": 108,
+          "level_delta": 0,
+          "predicted_changed_cells": 108,
+          "verifier_gated": true
+        }
+      ],
+      "verifier_accuracy": 0.90625,
+      "verifier_accuracy_per_round": [
+        0.833333,
+        0.90625,
+        0.885417,
+        0.90625
+      ],
+      "world_model_path": "results/arc_e3/ar25/world_model.py"
+    },
+    {
+      "active_dataset_sha256": "28b22c46ea5adb5da5ede70b944e9a198181185a32df1657c92f027b6a1e700c",
+      "active_transitions_collected": 96,
+      "checkpoint_status": "honest_partial_fidelity_gate_not_met",
+      "fidelity_gate_passed": false,
+      "game": "ka59",
+      "lookahead_fidelity": 0.112281,
+      "lookahead_fidelity_per_round": [
+        0.112281,
+        0.112281,
+        0.112281,
+        0.112281
+      ],
+      "lookahead_k": 3,
+      "mind_studio_skill_file": "results/arc_e3/ka59/skill_4395.json",
+      "named_register": "step_counter_hud_register_object_relevance",
+      "new_reproduced_level": 1,
+      "object_relevance_discriminator": {
+        "active_object_candidates": [
+          "selected_block",
+          "second_movable_block",
+          "agent_plus_second_movable_block",
+          "all_piece_objects"
+        ],
+        "blocker_class": "object_relevance_not_clicks_or_multi_object_push",
+        "commit_findings": [
+          "click_capable_piece_centroid_exploration_built_no_ka59_advance",
+          "adaptive_multi_object_push_state_built_no_regression_ka59_remains_over_fragmented"
+        ],
+        "hud_lemma_count": 12,
+        "hud_prediction_accuracy": 0.083333,
+        "lookahead_fidelity_after_discriminator": 0.112281,
+        "outcome": "object_relevance_hypothesis_recorded_but_named_register_fidelity_still_below_gate",
+        "planning_allowed": false,
+        "prior_lookahead_fidelity": 0.112281,
+        "provenance_commits": [
+          "f0b078247",
+          "6fba583c7"
+        ],
+        "selected_object_hypothesis": "agent_plus_second_movable_block"
+      },
+      "offline_reproduced": false,
+      "plan": [],
+      "prior_best_level": 1,
+      "reproduce_result": {
+        "claimed_level": 2,
+        "game": "ka59",
+        "mode": "lookahead_or_mechanic_gate_failed_no_replayable_plan",
+        "reached_level": 1,
+        "reproduced": false
+      },
+      "residual_gap_class": "ka59_l2_object_relevance_step_counter_hud_register_gap",
+      "target_action_counts": {
+        "1": 12,
+        "2": 18,
+        "3": 14,
+        "4": 10,
+        "6": 42
+      },
+      "target_level": 2,
+      "target_wall_time_s": 30.0,
+      "targeted_gap_lemmas": [
+        {
+          "action": 1,
+          "changed_cells": 19,
+          "hud_count_after": 63,
+          "hud_count_before": 64,
+          "hud_count_predicted": 59,
+          "level_delta": 0,
+          "predicted_changed_cells": 22,
+          "verifier_gated": false
+        },
+        {
+          "action": 3,
+          "changed_cells": 19,
+          "hud_count_after": 62,
+          "hud_count_before": 63,
+          "hud_count_predicted": 59,
+          "level_delta": 0,
+          "predicted_changed_cells": 21,
+          "verifier_gated": false
+        },
+        {
+          "action": 4,
+          "changed_cells": 19,
+          "hud_count_after": 61,
+          "hud_count_before": 62,
+          "hud_count_predicted": 59,
+          "level_delta": 0,
+          "predicted_changed_cells": 20,
+          "verifier_gated": false
+        },
+        {
+          "action": 6,
+          "changed_cells": 1,
+          "hud_count_after": 60,
+          "hud_count_before": 61,
+          "hud_count_predicted": 59,
+          "level_delta": 0,
+          "predicted_changed_cells": 2,
+          "verifier_gated": false
+        },
+        {
+          "action": 6,
+          "changed_cells": 1,
+          "hud_count_after": 59,
+          "hud_count_before": 60,
+          "hud_count_predicted": 59,
+          "level_delta": 0,
+          "predicted_changed_cells": 1,
+          "verifier_gated": false
+        },
+        {
+          "action": 6,
+          "changed_cells": 1,
+          "hud_count_after": 58,
+          "hud_count_before": 59,
+          "hud_count_predicted": 59,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": false
+        },
+        {
+          "action": 2,
+          "changed_cells": 19,
+          "hud_count_after": 57,
+          "hud_count_before": 58,
+          "hud_count_predicted": 58,
+          "level_delta": 0,
+          "predicted_changed_cells": 17,
+          "verifier_gated": false
+        },
+        {
+          "action": 6,
+          "changed_cells": 1,
+          "hud_count_after": 56,
+          "hud_count_before": 57,
+          "hud_count_predicted": 57,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": false
+        },
+        {
+          "action": 2,
+          "changed_cells": 19,
+          "hud_count_after": 55,
+          "hud_count_before": 56,
+          "hud_count_predicted": 56,
+          "level_delta": 0,
+          "predicted_changed_cells": 17,
+          "verifier_gated": false
+        },
+        {
+          "action": 6,
+          "changed_cells": 1,
+          "hud_count_after": 54,
+          "hud_count_before": 55,
+          "hud_count_predicted": 55,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": false
+        },
+        {
+          "action": 6,
+          "changed_cells": 1,
+          "hud_count_after": 53,
+          "hud_count_before": 54,
+          "hud_count_predicted": 54,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": false
+        },
+        {
+          "action": 2,
+          "changed_cells": 19,
+          "hud_count_after": 52,
+          "hud_count_before": 53,
+          "hud_count_predicted": 53,
+          "level_delta": 0,
+          "predicted_changed_cells": 17,
+          "verifier_gated": false
+        }
+      ],
+      "verifier_accuracy": 0.125,
+      "verifier_accuracy_per_round": [
+        0.114583,
+        0.104167,
+        0.125,
+        0.09375
+      ],
+      "world_model_path": "results/arc_e3/ka59/world_model.py"
+    },
+    {
+      "active_dataset_sha256": "d4c750231570208a5fe730c3bcf4fc829266da2e777b8377694411c96eb835fe",
+      "active_transitions_collected": 95,
+      "checkpoint_status": "honest_partial_fidelity_gate_not_met",
+      "fidelity_gate_passed": false,
+      "game": "ft09",
+      "lookahead_fidelity": 0.347518,
+      "lookahead_fidelity_per_round": [
+        0.347518,
+        0.347518,
+        0.347518,
+        0.347518
+      ],
+      "lookahead_k": 3,
+      "mind_studio_skill_file": "results/arc_e3/ft09/skill_4395.json",
+      "named_register": "coverage_balanced_residual_world_model",
+      "new_reproduced_level": 1,
+      "object_relevance_discriminator": null,
+      "offline_reproduced": false,
+      "plan": [],
+      "prior_best_level": 1,
+      "reproduce_result": {
+        "claimed_level": 2,
+        "game": "ft09",
+        "mode": "lookahead_or_mechanic_gate_failed_no_replayable_plan",
+        "reached_level": 1,
+        "reproduced": false
+      },
+      "residual_gap_class": "ft09_l2_residual_world_model_mismatch_gap",
+      "target_action_counts": {
+        "6": 95
+      },
+      "target_level": 2,
+      "target_wall_time_s": 30.0,
+      "targeted_gap_lemmas": [
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 2,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 6,
+          "changed_cells": 38,
+          "clicked_color_before": 9,
+          "level_delta": 0,
+          "predicted_changed_cells": 36,
+          "verifier_gated": false
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 4,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 5,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 12,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 11,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 8,
+          "level_delta": 0,
+          "predicted_changed_cells": 36,
+          "verifier_gated": false
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 0,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 8,
+          "level_delta": 0,
+          "predicted_changed_cells": 36,
+          "verifier_gated": false
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 8,
+          "level_delta": 0,
+          "predicted_changed_cells": 36,
+          "verifier_gated": false
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 4,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": true
+        },
+        {
+          "action": 6,
+          "changed_cells": 0,
+          "clicked_color_before": 12,
+          "level_delta": 0,
+          "predicted_changed_cells": 0,
+          "verifier_gated": true
+        }
+      ],
+      "verifier_accuracy": 0.166667,
+      "verifier_accuracy_per_round": [
+        0.145833,
+        0.166667,
+        0.166667,
+        0.166667
+      ],
+      "world_model_path": "results/arc_e3/ft09/world_model.py"
+    }
+  ],
+  "preconditions_checked": {
+    "arc_solver_kit_import": true,
+    "executable_world_model_import": true,
+    "harness_import": true,
+    "leaderboard_submission": false,
+    "offline_envs": {
+      "ar25": {
+        "available": true,
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/ar25",
+        "status": "available"
+      },
+      "ft09": {
+        "available": true,
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/ft09",
+        "status": "available"
+      },
+      "ka59": {
+        "available": true,
+        "offline_env_path": "/home/ianblenke/github.com/ianblenke/carnot/environment_files/ka59",
+        "status": "available"
+      }
+    },
+    "per_register_lookahead_fidelity_enabled": true,
+    "research_conductor_modified": false,
+    "trm_training": "stood_down_not_invoked"
+  },
+  "random_seed": 4395,
+  "reproducibility_checksum": "sha256:07e9bbf4ba9944f106ca839f7e4f7c084bd61bdc6bde6330f6251773b73df920",
+  "reproducible_total_levels": 34,
+  "spec_refs": [
+    "REQ-PHASE4-4395",
+    "SCENARIO-PHASE4-4395"
+  ],
+  "submitted_to_leaderboard": false,
+  "target_order": [
+    "ar25",
+    "ka59",
+    "ft09"
+  ],
+  "target_wall_time_s": 30.0,
+  "verifier_is_oracle": true,
+  "world_model_paths": [
+    "results/arc_e3/ar25/world_model.py",
+    "results/arc_e3/ka59/world_model.py",
+    "results/arc_e3/ft09/world_model.py"
+  ]
+}
