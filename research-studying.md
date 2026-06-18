@@ -8,6 +8,91 @@ loop) executes the current experiments.
 **Updated:** 2026-06-11 (Exp 4081 SOTA ingestion mapped the .377 verifier-as-reward pivot).
 **Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
 
+## 2026-06-18 Exp 4398 - .406 fork SOTA ingestion ingested
+
+**Status:** INGESTED into `results/experiment_4398_sota_ingestion_v407.json`.
+
+**Preconditions:** network precondition passed via Hugging Face reachability and
+arXiv/WebFetch verification. If that check had failed, the only honest artifact
+would have been `honest_verdict=blocked_network_unavailable`.
+
+**Reliable-channel provenance:** `scripts/sweep_clusters.py` emitted focused
+verifier/process-reward and world-model arXiv discovery URLs. `scripts/sweep_semscholar.py`
+was run on focused verifiable-process-data, OOD verifier calibration, selective
+prediction, and ARC E3 lookahead queries; Semantic Scholar returned arXiv:2504.00891,
+arXiv:2502.11520, arXiv:2603.19310, arXiv:2409.13757, arXiv:2602.03412,
+arXiv:2508.04748, arXiv:2407.05693, and arXiv:2606.08728 before HTTP 429 on
+the remaining focused queries. Low-concurrency WebSearch/WebFetch plus arXiv
+abs/html checks verified arXiv:2601.14209, arXiv:2603.25412, arXiv:2504.10559,
+arXiv:2602.07842, arXiv:2606.16070, arXiv:2605.02395, arXiv:2605.25133,
+arXiv:2606.13565, and arXiv:2502.01384. The banned `/deep-research` channel was
+not invoked.
+
+**Filtered track:** .406 outcomes after verifiable-process-data first-error
+localization, localizer skeptic-proofing, localizer self-learning, cross-domain
+detector calibration, and ARC E3 lookahead/mechanic-gap work.
+
+**.406 outcome conditioning:**
+- Exp 4392: `success: synthetic_process_localizer_beats_ensemble_baseline`,
+  `localizer_beats_ensemble_baseline=true`, FoVer `synthetic_trained_localizer=1.0`,
+  GAP-4 ARC `synthetic_trained_localizer=0.692308`, and `verifier_is_oracle=false`.
+  The process-data localizer is the live vehicle, but not yet the trusted headline.
+- Exp 4393: `complete: a1_win_quarantined_as_artifact_confounded`,
+  `localizer_win_is_genuine=false`, `beats_position_only_baseline=false`, and
+  `template_ablation_drop=0.0`. The A1 win is quarantined until real,
+  position-diverse first-error evidence deconfounds it.
+- Exp 4396: `complete: clean_saturated_null_localizer`,
+  `localizer_compounds=false`, `compounding_delta_ci95=[0.0, 0.0]`, and
+  `positive_control_passed=true`. Simple corpus growth saturated; .407 needs
+  active/uncertainty selection rather than more of the same stream.
+- Exp 4397: `complete: calibrated_multi_domain_contract_false`,
+  `detection_calibrated_multi_domain=false`, `domains_at_chance=[]`, non-FoVer
+  domains above chance (`gap4_arc`, `gsm8k`, `code_humaneval`), and
+  `verifier_is_oracle=false`. Detection remains alive, but calibration/base-rate
+  repair is required before a deployable detector contract.
+- Exp 4394/4395: `complete_e3_deeper_partial` and
+  `complete_e3_ar25_ka59_ft09_partial`, both with `new_levels_reproduced=0`,
+  `reproducible_total_levels=34`, and `verifier_is_oracle=true`. ARC E3 remains
+  the north star, but .406 produced mechanic-gap work rather than new solves.
+
+**Fresh-pass candidates marked ingested:**
+- InT Self-Proposed Interventions, arXiv:2601.14209 - mapped to real
+  first-error intervention traces that deconfound the A1 localizer.
+- Reasoning Safety Monitor, arXiv:2603.25412 - mapped to typed step-localizer
+  audit labels and adversarial first-error taxonomy checks.
+- ActPRM active learning, arXiv:2504.10559 - mapped to active uncertainty and
+  first-error-position diversity sampling after the saturated self-learning null.
+- Semantic Confidence Aggregation / MACE, arXiv:2602.07842 - mapped to
+  multi-answer/base-rate calibration repair after the false calibrated
+  multi-domain contract.
+- Mind-Studio executable world models with lookahead evaluation,
+  arXiv:2606.16070 - carried as E3 mechanic-gap tests after zero new .406
+  reproduced levels.
+
+Carried baseline context: Controllable and Verifiable Process Data Synthesis,
+arXiv:2605.02395, and Prover-Verifier Deliberation, arXiv:2605.25133, remain
+verified supports, but the .406 outcomes make real intervention/deconfounding
+the single .407 flag.
+
+out_of_band_flagged:
+- A2D2 adaptive any-length discrete diffusion, arXiv:2606.13565 -
+  operator-owned verifier-as-reward generator training, NOT auto-run in-loop.
+- SEPO score-entropy policy optimization, arXiv:2502.01384 - operator-owned
+  verifier-as-reward generator training, NOT auto-run in-loop.
+
+flagged_for_v407: intervention_active_real_first_error_deconfounding_v407
+
+Flagged for .407: `intervention_active_real_first_error_deconfounding_v407`
+
+random_seed=4398
+
+**Bottom line for the .407 roadmap:** build on the process-data localizer only
+after deconfounding it. The single strongest .407 method is InT-style real
+first-error intervention evidence, actively selected for position/template
+diversity and audited by typed reasoning-monitor labels. Calibration repair and
+E3 mechanic-gap tests stay live supporting tracks. A2D2 and SEPO stay out of
+band for operator-owned verifier-as-reward generator training.
+
 ## 2026-06-18 Exp 4387 - .405 fork SOTA ingestion ingested
 
 **Status:** INGESTED into `results/experiment_4387_sota_ingestion_v406.json`.
