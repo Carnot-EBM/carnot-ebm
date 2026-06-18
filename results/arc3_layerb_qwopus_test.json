@@ -1,0 +1,49 @@
+{
+  "experiment": "arc3_layerb_qwopus_test",
+  "model": "Qwopus3.6-27B-Coder-MTP-Q4_K_M",
+  "mtp": false,
+  "per_game": [
+    {
+      "game": "ka59",
+      "tok_per_s": 2.74,
+      "tokens": 340,
+      "dur_s": 124.1,
+      "coherent": true,
+      "verification": {
+        "fires_on_win": true,
+        "false_positive_rate": 0.0,
+        "n_nonwin": 6
+      },
+      "grounded": true,
+      "literal": false,
+      "tier": "TIER2_GROUNDED_RELATIONAL"
+    },
+    {
+      "game": "tn36",
+      "tok_per_s": 1.54,
+      "tokens": 180,
+      "dur_s": 116.9,
+      "coherent": true,
+      "verification": {
+        "fires_on_win": true,
+        "false_positive_rate": 0.0,
+        "n_nonwin": 6
+      },
+      "grounded": true,
+      "literal": false,
+      "tier": "TIER2_GROUNDED_RELATIONAL"
+    },
+    {
+      "game": "wa30",
+      "tier": "SKIPPED_PROMPT_TOO_LARGE",
+      "approx_tok": 6314
+    }
+  ],
+  "mean_tok_per_s": 2.14,
+  "grounded_games": [
+    "ka59",
+    "tn36"
+  ],
+  "honest_verdict": "complete_qwopus27b_layerb_mtp_False_grounded_2",
+  "inference_substrate": "offline_arc_agi3_qwopus27b_iGPU_port8921"
+}

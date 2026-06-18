@@ -52,12 +52,18 @@ def _healthy():
         return False
 
 
+SERVER_LOG = Path("/tmp/qwopus_test_server.log")
+
+
 def start_server(gguf, mtp=False):
-    args = [str(LLAMA_SERVER), "-m", gguf, "-ngl", "999", "-c", "16384", "--port", str(PORT), "--host", "127.0.0.1"]
+    # -c 6144 fits the count-class prompts (~0.7-1k tok) + 1100 predict with headroom, and keeps the 27B
+    # KV cache small enough to avoid iGPU OOM (a 10k-token prompt at -c 16384 crashed the server).
+    args = [str(LLAMA_SERVER), "-m", gguf, "-ngl", "999", "-c", "6144", "--port", str(PORT), "--host", "127.0.0.1"]
     if mtp:
         # native llama.cpp MTP speculative decoding; the -MTP- GGUF carries the nextn heads as a self-draft
         args += ["--spec-type", "draft-mtp", "--model-draft", gguf]
-    proc = subprocess.Popen(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    log = open(SERVER_LOG, "w")
+    proc = subprocess.Popen(args, stdout=log, stderr=log)
     for _ in range(180):  # 27B load on the iGPU is slower than 12B
         if _healthy():
             return proc
@@ -95,12 +101,28 @@ def main():
     rows = []
     try:
         for g in games:
-            sf.GAME = g
-            scene, eb, bg, ref_box, win, ch, nonwins = sf.collect()
+            try:
+                sf.GAME = g
+                scene, eb, bg, ref_box, win, ch, nonwins = sf.collect()
+            except Exception as ex:
+                rows.append({"game": g, "tier": "COLLECT_ERROR", "err": str(ex)[:100]}); print(f"  {g}: COLLECT_ERROR {ex}", flush=True); continue
             if eb is None or win is None or len(nonwins) < 2:
                 rows.append({"game": g, "tier": "BLOCKED"}); print(f"  {g}: BLOCKED (no win)", flush=True); continue
             win_sub = sf._edit_sub(win, eb)
-            raw, dt, ntok = gen(sf.build_prompt(scene, eb, bg, ref_box, win, nonwins))
+            prompt = sf.build_prompt(scene, eb, bg, ref_box, win, nonwins)
+            if len(prompt) // 4 > 4500:   # would exceed -c 6144 with the 1100-token predict budget
+                rows.append({"game": g, "tier": "SKIPPED_PROMPT_TOO_LARGE", "approx_tok": len(prompt) // 4})
+                print(f"  {g}: SKIPPED prompt ~{len(prompt)//4} tok (large 2-D editable; wrong digest class)", flush=True); continue
+            try:
+                raw, dt, ntok = gen(prompt)
+            except Exception as ex:
+                tail = ""
+                try:
+                    tail = SERVER_LOG.read_text()[-300:]
+                except Exception:
+                    pass
+                rows.append({"game": g, "tier": "GEN_ERROR", "err": str(ex)[:120], "server_tail": tail})
+                print(f"  {g}: GEN_ERROR {ex}", flush=True); continue
             tps = round(ntok / max(dt, 0.01), 2)
             from carnot.agentic.arc_executable_world_model import _extract_python
             code = _extract_python(raw) or raw
