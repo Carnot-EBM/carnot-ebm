@@ -281,27 +281,35 @@ def induce_goal_color(prewin, agent, H):
     agent in the pre-win config (what the agent reached to win). Returns a colour G, or None."""
     if agent is None:
         return None
-    bg = _background(prewin)
-    ac = H._agent_centroid(prewin, agent)
-    if ac is None:
+    p = np.asarray(prewin)
+    bg = _background(p)
+    acells = np.argwhere(p == agent["color"])
+    if len(acells) == 0:
         return None
     best = None
-    for color in set(int(v) for v in np.unique(prewin)) - {bg, agent["color"]}:
-        cells = np.argwhere(prewin == color)
+    for color in set(int(v) for v in np.unique(p)) - {bg, agent["color"]}:
+        cells = np.argwhere(p == color)
         if len(cells) == 0:
             continue
-        d = float(np.min(np.abs(cells[:, 0] - ac[0]) + np.abs(cells[:, 1] - ac[1])))
+        d = float((np.abs(acells[:, None, 0] - cells[None, :, 0])
+                   + np.abs(acells[:, None, 1] - cells[None, :, 1])).min())
         if best is None or d < best[1]:
             best = (color, d)
     return best[0] if best else None
 
 
 def agent_to_color_dist(grid, agent, G, H):
-    ac = H._agent_centroid(grid, agent)
-    cells = np.argwhere(np.asarray(grid) == G)
-    if ac is None or len(cells) == 0:
+    """Min manhattan from ANY agent-colour cell to ANY goal-colour cell. Cell-based (not a single
+    centroid), so it is robust to (a) GROWTH agents whose shape/centroid shifts as they fill, and
+    (b) DISAMBIGUATION when the agent colour has multiple instances -- the nearest approach is the
+    navigation signal regardless of how many agent objects there are."""
+    g = np.asarray(grid)
+    ac = np.argwhere(g == agent["color"])
+    gc = np.argwhere(g == G)
+    if len(ac) == 0 or len(gc) == 0:
         return 9999.0
-    return float(np.min(np.abs(cells[:, 0] - ac[0]) + np.abs(cells[:, 1] - ac[1])))
+    d = np.abs(ac[:, None, 0] - gc[None, :, 0]) + np.abs(ac[:, None, 1] - gc[None, :, 1])
+    return float(d.min())
 
 
 def solve_with_induced_goal(arc, game, agent, G, GameAction, H, max_expansions=5000, clicks=False):
@@ -362,7 +370,7 @@ def run_game(game, explore_budget, max_exp, seed, curious=True):
     arc = kit.offline_arcade()
     explore_trans, _ = __import__("carnot.agentic.arc_executable_world_model",
                                   fromlist=["collect_transitions"]).collect_transitions(game, n=150)
-    agent = H.identify_agent(explore_trans)
+    agent = identify_agent_rich(explore_trans, H)       # translate OR growth dynamics
     movers = identify_movers(explore_trans)
     key_used = None
     clicks_used = False
