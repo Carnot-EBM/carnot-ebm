@@ -204,6 +204,20 @@ games:
       - "A selected block collision pushes the other movable block by five 3-pixel steps through the central wall; ordinary movement cannot cross it."
       - "Clicks must be derived from the current offline camera/grid offset and movable sprite centers, not hardcoded live pixels."
 
+  - game: ft09
+    reproducibility: reproduced
+    levels_reproduced: 1
+    mechanic_class: local_constraint_color_cycle
+    win_condition: "L1 local constraint puzzle: click Hkx cells so bsT zero-neighbor slots equal the center color and non-zero-neighbor slots differ; the real frame level counter is the accept gate."
+    action_model: "ACTION6 click-only; Exp4363 re-gates the four-click plan [(36,36),(36,44),(52,44),(36,52)] through arc_solver_kit.reproduce."
+    solver: "python/carnot/agentic/arc_exp4070_ninth_game_explore_first.py + results/experiment_4363_e3_mechanic_limited_tails_tr87_ft09.json"
+    reproduce: "arc_solver_kit.reproduce(ft09, Exp4363 labels, _apply_ft09_label, claimed_level=1) reproduced=True L1; checksum fe02d5adf671bd769d10dea11d6b3a53ba1ff92e9d54d9c7bbbe8eb4d63e2168."
+    world_model: "results/arc_e3/ft09/world_model.py"
+    world_model_sha256: "8e4563289295741b6728075a411d0aa4ae7165140d2f3e5e5e885312dcf650ee"
+    gotchas:
+      - "Use the real offline frame level counter as the verifier; visible color-cycle satisfaction alone is not enough."
+      - "Click coordinates are display pixels in the offline layout; derive or replay them as {x,y}, not grid-only labels."
+
   - game: tr87
     reproducibility: reproduced   # FULLY SOLVED 2026-06-17 via glyph-rewrite RE (all 6 levels, reproduction-gated)
     mechanic_class: config_substitution  # strategy-router class: configure-to-target via a visible rewrite rule
@@ -223,7 +237,7 @@ games:
       - "L6 sets alter_rules AND tree_translation AND double_translation (the deepest config): the rules are editable (inverse) AND the win is a 2-pass A->B->C chain. The rules split by LHS series into first-level (A->B, rewrites the target) and second-level (B->C, rewrites the intermediate to the editable). Solved by a 2-LEVEL decomposition: enumerate first-level side first-values -> hash the B-intermediate each produces; enumerate second-level side first-values -> for each, check pass2 of any hashed B-intermediate == editable. Multi-glyph sides cycle together (fixed internal offsets), so each side is one first-value + offsets; search is 7^(2*nfirst) + 7^(2*nsecond) ~ 234k for L6's 3+3 rules (~2s, cached per level)."
       - "PATH-DEPENDENCE: the level config (which flags + rule values appear at each index) is NOT fixed -- it depends on the ACTION PATH taken to reach the level (the level setup draws on global RNG state that the action history advances). This is WHY reproduction works (replaying the exact action path reproduces the exact configs) and why the per-level mechanic labels above (L4=double, L5=alter, L6=all-three) are correct FOR THE ADAPTER'S deterministic verifier-routed path, not as absolute level properties -- a different path can see a different mechanic at the same index. Always inspect on the adapter's exact path (replay the banked solution) when RE-ing a deeper level."
 
-  # Remaining still-unsolved games include bp35, dc22, ft09, g50t, lf52,
+  # Remaining still-unsolved games include bp35, dc22, g50t, lf52,
   # re86, s5i5, sb26, vc33.   (tr87 SOLVED 2026-06-17 via glyph-substitution RE -- see entry above)
   # — reproducibility: unsolved. The 2026-06-17 adapter-free sweep advanced 4 of 19
   # (cd82, sp80, su15, tu93); 14 resisted at L0 (deeper win-mechanics / per-game deltas).
@@ -244,8 +258,8 @@ games:
 #   1-to-1, L2 1-to-many, L3 many-to-many, L4 double_translation 2-pass, L5 alter_rules inverse, L6
 #   alter_rules + 2-pass (2-level decomposition); offline-reproduction-gated; verify
 #   scripts/arc3_replay_scorecard_metaharness.py)
-reproducible_total_levels: 32   # ... -> 31 (+tr87 L5) -> 32 (+tr87 L6 alter_rules 2-pass; tr87 COMPLETE 6/6, 2026-06-17)
-reproducible_total_games: 16    # r11l, sc25, ls20, wa30, lp85, cd82, sp80, su15, tu93, cn04, m0r0, sk48, ar25, ka59, tn36, tr87
+reproducible_total_levels: 33   # ... -> +ft09 L1 local-constraint color-cycle re-gated by Exp4363
+reproducible_total_games: 17   # adds ft09 via Exp4363 offline reproduction gate
 provisional_total_levels: 5     # sc25 L5 (live-recorded, not yet reproduced)
 
 # ---- LIVE LEADERBOARD SUBMISSIONS (operator-gated External Publication) ----
