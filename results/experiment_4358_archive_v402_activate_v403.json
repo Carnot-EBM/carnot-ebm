@@ -1,0 +1,248 @@
+{
+  "activated_milestone": "2026.06.403",
+  "active_milestone_confirmed": "2026.06.403",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.402",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4357_capstone_v402.json",
+      "experiment_id": "4357",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "c7dfeda6145278a6da729c29557ee12e37fc1f705f125abf0dfa8b5e774da064"
+    },
+    {
+      "deliverable": "results/experiment_4348_s3_stratified_verifier_guided_search.json",
+      "experiment_id": "4348",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "4723a7966f9fbcc05e8aff69f6e7b0b8a587faea3e37558bb4bc5b930d991001"
+    },
+    {
+      "deliverable": "results/experiment_4353_learned_action_cost_heuristic_efficiency.json",
+      "experiment_id": "4353",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "f66430d110db1338d0f2172a8fc2ef3e862c41caf6edf03eba4592e53f60b61d"
+    },
+    {
+      "deliverable": "results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.json",
+      "experiment_id": "4355",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "ba30a78544c5b9608d255774c68895b5bcc7bc52ac9d84d9fadb6a7fa6b9a11f"
+    },
+    {
+      "deliverable": "ops/arc_solve_registry.yaml",
+      "experiment_id": "arc_solve_registry",
+      "kind": "document",
+      "required": true,
+      "sha256": "bdcfb0c6ec7de242548321c222505311fb943c169529bb87502cc04f5fe1ece0"
+    },
+    {
+      "deliverable": "research-roadmap.yaml",
+      "experiment_id": "v403_active_roadmap",
+      "kind": "document",
+      "required": true,
+      "sha256": "dc3c4e2c48d6f2aeaf86e3f5093d85e4bf01644c63ef5ad335a62e8bdccd1d21"
+    },
+    {
+      "deliverable": "openspec/change-proposals/research-roadmap-v403.md",
+      "experiment_id": "v403_design_doc",
+      "kind": "document",
+      "required": true,
+      "sha256": "ded22212a23b3010fde22988b8226b635acff0d8780782877d1d1e51fed11abf"
+    },
+    {
+      "deliverable": "ops/exclusion_manifest.yaml",
+      "experiment_id": "exclusion_manifest",
+      "kind": "document",
+      "required": true,
+      "sha256": "3bb7d1c55216cdae9ceb0468c383e5acf2c08c248b95ed620d4cb79697cb8bf3"
+    }
+  ],
+  "duration_s": 14.741324,
+  "exclusion_manifest_parses": true,
+  "experiment_id": 4358,
+  "field_principles": {
+    "activated_milestone": "Confirms .403 is live for the fixed-Prism re-attempt frame.",
+    "active_milestone_confirmed": "Records the active roadmap milestone actually observed.",
+    "archived_milestone": "Provenance: the milestone being closed, 2026.06.402.",
+    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
+    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
+    "honest_verdict": "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.",
+    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
+    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
+    "v402_close_state": "Honest record (S3 conversion HARNESS-FAILED / moat utility OPEN but moat still PROVEN leak-robust; ARC 26 levels/15 games, ka59 +1 game; action-cost heuristic WON 25->16; cross-game transfer + cross-domain selection RETIRED; capstone-stamp fix durable; paper_ready=True) so the .403 agents frame the milestone as re-attempt-the-conversion-with-a-fixed-Prism-harness + ARC-deeper + compound-the-action-cost-self-learning -- NOT a re-open of the retired axes."
+  },
+  "honest_verdict": "success: archived_v402_v403_active_s3_harness_failed_utility_open_arc26_games15_action_cost_won_25_to_16_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "active_milestone": {
+      "actual": "2026.06.403",
+      "expected": "2026.06.403",
+      "matches": true,
+      "path": "research-roadmap.yaml"
+    },
+    "exclusion_manifest_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/exclusion_manifest.yaml"
+    },
+    "research_complete_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "smart_subset_pretest": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_arc_tr87_adapter.py",
+        "tests/python/test_experiment_4358_archive_v402_activate_v403.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "green": true,
+      "stderr_tail": "",
+      "stdout_tail": "........................................................................ [ 74%]\n.........................                                                [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n97 passed, 1 warning in 6.29s\n"
+    },
+    "source_artifacts": {
+      "4348": {
+        "exists": true,
+        "path": "results/experiment_4348_s3_stratified_verifier_guided_search.json",
+        "required": true,
+        "sha256": "4723a7966f9fbcc05e8aff69f6e7b0b8a587faea3e37558bb4bc5b930d991001"
+      },
+      "4353": {
+        "exists": true,
+        "path": "results/experiment_4353_learned_action_cost_heuristic_efficiency.json",
+        "required": true,
+        "sha256": "f66430d110db1338d0f2172a8fc2ef3e862c41caf6edf03eba4592e53f60b61d"
+      },
+      "4355": {
+        "exists": true,
+        "path": "results/experiment_4355_registry_gaps_hygiene_capstone_stamp_fix.json",
+        "required": true,
+        "sha256": "ba30a78544c5b9608d255774c68895b5bcc7bc52ac9d84d9fadb6a7fa6b9a11f"
+      },
+      "4357": {
+        "exists": true,
+        "path": "results/experiment_4357_capstone_v402.json",
+        "required": true,
+        "sha256": "c7dfeda6145278a6da729c29557ee12e37fc1f705f125abf0dfa8b5e774da064"
+      },
+      "arc_solve_registry": {
+        "exists": true,
+        "path": "ops/arc_solve_registry.yaml",
+        "required": true,
+        "sha256": "bdcfb0c6ec7de242548321c222505311fb943c169529bb87502cc04f5fe1ece0"
+      },
+      "exclusion_manifest": {
+        "exists": true,
+        "path": "ops/exclusion_manifest.yaml",
+        "required": true,
+        "sha256": "3bb7d1c55216cdae9ceb0468c383e5acf2c08c248b95ed620d4cb79697cb8bf3"
+      },
+      "v403_active_roadmap": {
+        "exists": true,
+        "path": "research-roadmap.yaml",
+        "required": true,
+        "sha256": "dc3c4e2c48d6f2aeaf86e3f5093d85e4bf01644c63ef5ad335a62e8bdccd1d21"
+      },
+      "v403_design_doc": {
+        "exists": true,
+        "path": "openspec/change-proposals/research-roadmap-v403.md",
+        "required": true,
+        "sha256": "ded22212a23b3010fde22988b8226b635acff0d8780782877d1d1e51fed11abf"
+      }
+    }
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4358,
+  "reproducibility_checksum": "83299bf4638afff9500791cbc0bfe242ffba35722b0976d667542e55d01f8d4b",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "updated",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v402_to_v403_4358.v1",
+  "spec_refs": [
+    "REQ-REPORT-4358",
+    "SCENARIO-REPORT-4358"
+  ],
+  "task_id": "exp4358-archive-v402-activate-v403",
+  "v402_close_state": {
+    "action_cost_heuristic_axis_state": "WON_ACTION_COST_HEURISTIC",
+    "action_cost_heuristic_won": true,
+    "action_cost_positive_control_passed": true,
+    "action_cost_reproduction_gated": true,
+    "action_cost_verifier_is_oracle": false,
+    "action_reduction": 9,
+    "action_reduction_fraction": 0.36,
+    "arc_capstone_snapshot_reproducible_total_games": 14,
+    "arc_capstone_snapshot_reproducible_total_levels": 23,
+    "arc_new_games_since_prior": 1,
+    "arc_registry_observed_total_games": 16,
+    "arc_registry_observed_total_levels": 28,
+    "arc_reproducible_total_games": 15,
+    "arc_reproducible_total_levels": 26,
+    "capstone_circular_moat_overclaim_flags_zero": true,
+    "capstone_honest_verdict": "complete: v402_s3_open_arc_levels_23_action_efficiency_improves_publication_ready",
+    "capstone_stamp_fix_durable": true,
+    "capstone_stamp_fix_flagged_count": 0,
+    "capstone_stamp_fix_verified": true,
+    "conductor_stands_down_on_trm_training": true,
+    "controls_not_differentiable": true,
+    "critical_tautology_flags": 3,
+    "cross_domain_axis_state": "RETIRED_EXP4314_DOMAIN_BOUND",
+    "cross_domain_manifest_reflected": true,
+    "cross_game_value_transfer_axis_state": "RETIRED_EXP4342_THIRD_NULL",
+    "cross_game_value_transfer_manifest_reflected": true,
+    "gap4_regression_guard_passed": true,
+    "held_out_actions_baseline": 25,
+    "held_out_actions_learned": 16,
+    "in_generation_moat_utility_untested": true,
+    "ka59_new_game": true,
+    "moat_still_proven_leak_robust": true,
+    "not_reopen_retired_axes": true,
+    "open_arc_gaps": {
+      "ar25_l2": "action7_undo_stack_gap",
+      "ft09": "world_model_accuracy_near_0",
+      "sc25_l2": "spell_delta_gap",
+      "tr87": "world_model_accuracy_0"
+    },
+    "outer_loop_owns_trm_training": true,
+    "paper_ready": true,
+    "publication_unmet_gates": [],
+    "s3_argmax_logit_collapsed_controls": [
+      "best_of_k",
+      "self_reward_smc",
+      "unguided"
+    ],
+    "s3_benchmark_n": 240,
+    "s3_controls_differentiated": false,
+    "s3_conversion_axis_state": "HARNESS_FAILED_CONTROLS_NOT_DIFFERENTIABLE",
+    "s3_conversion_validly_tested": false,
+    "s3_deltas_identical": true,
+    "s3_flagged_adversarial": true,
+    "s3_framing_bug": "multiple_choice_selection_argmax_logit_control_collapse",
+    "s3_guided_beats_control": false,
+    "s3_harness_failed": true,
+    "s3_honest_verdict": "controls_not_differentiable",
+    "s3_moat_utility": "open",
+    "s3_scorer_leak_recheck_passed": true,
+    "s3_verifier_is_oracle": false,
+    "summary": "s3_harness_failed_moat_utility_open_arc26_games15_action_cost_won",
+    "tn36_l7_reproduced": true,
+    "v403_frame": "RE_ATTEMPT_CONVERSION_FIXED_PRISM_HARNESS_ARC_DEEPER_COMPOUND_ACTION_COST_SELF_LEARNING",
+    "verifier_thesis_state": "moat_proven_leak_robust_but_s3_utility_open"
+  }
+}

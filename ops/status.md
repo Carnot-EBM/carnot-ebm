@@ -1,5 +1,24 @@
 # Carnot — Operational Status
 
+## Session 2026-06-18 — Exp 4358 Archive .402 -> .403 Completed
+
+Exp 4358 now writes a successful record-only archive artifact at
+`results/experiment_4358_archive_v402_activate_v403.json` with
+`honest_verdict=success: archived_v402_v403_active_s3_harness_failed_utility_open_arc26_games15_action_cost_won_25_to_16_pretest_green`.
+The workflow confirms `.403` active, records the `.402` close-state truthfully
+(S3 harness failure with `s3_moat_utility=open`, ARC 26/15, action-cost 25->16,
+retired cross-game/cross-domain axes, durable capstone-stamp fix), and updates
+the `.402` row in `research-complete.yaml` with
+`activation_recorded: exp4358-archive-v402-activate-v403`.
+
+Validation for this fix: smart subset
+`test_pipeline_extract.py test_docs.py test_arc_tr87_adapter.py test_experiment_4358_archive_v402_activate_v403.py`
+passed (`97 passed, 1 warning`); Exp 4358 module/script coverage is 100%
+(`291` statements, `0` missing); Ruff check/format passed on the new files;
+targeted spec coverage for `tests/python/test_experiment_4358_archive_v402_activate_v403.py`
+passed. The repo-wide spec coverage audit is still blocked by pre-existing
+unreferenced legacy tests.
+
 ## Session 2026-06-17 — Milestone 2026.06.403 Research Planning Staged
 
 Planned milestone **2026.06.403** ("RE-ATTEMPT the moat->generation CONVERSION with a FIXED, Prism-hardened
