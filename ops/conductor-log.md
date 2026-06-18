@@ -8725,3 +8725,4 @@ c |
 | 2026-06-18 13:01 UTC | PHASE A2 (HEADLINE skeptic-proofing; GATED on exp4 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4381-biprm-detector-localization-absten |
 | 2026-06-18 13:03 UTC | PHASE A2 (HEADLINE skeptic-proofing; GATED on exp4 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4381-biprm-detector-localization-absten |
 | 2026-06-18 13:05 UTC | PHASE A2 (HEADLINE skeptic-proofing; GATED on exp4 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp4381-biprm-detector-localization-absten |
+| 2026-06-18 13:22 UTC | PHASE B1 (ARC NORTH STAR; operator MANDATORY 2026- | OK | 101 passed, 1 warning in 7.04s |
