@@ -1,0 +1,298 @@
+{
+  "acceptance_gate": true,
+  "adversarial_verify": {
+    "critical_flags": [],
+    "parsed_report": null,
+    "returncode": 1,
+    "status": "clean",
+    "stderr_tail": "",
+    "stdout_tail": "Scanned 1 artifact(s); 1 flagged.\n\n[INFO] exp4359 () -- 3 flag(s)\n  - INFO     IMPLAUSIBLE_PERFECT            s3_minus_best_of_n_delta=0.0 (exactly zero). Confirm this is not a stub default.\n  - INFO     IMPLAUSIBLE_PERFECT            s3_minus_intrinsic_svf_delta=0.0 (exactly zero). Confirm this is not a stub default.\n  - INFO     IMPLAUSIBLE_PERFECT            s3_minus_unguided_delta=0.0 (exactly zero). Confirm this is not a stub default.\n\n",
+    "warn_flags": []
+  },
+  "benchmark_failures": [],
+  "benchmark_n": 0,
+  "benchmark_n_per_seed": 80,
+  "benchmark_records_preview": [],
+  "bootstrap_resamples": 2500,
+  "branch_diversity": {
+    "collapsed_frontiers": 0,
+    "frontier_count": 0,
+    "mean_unique_completions": 0.0,
+    "min_unique_completions": 0,
+    "per_frontier_unique_preview": [],
+    "status": "not_run"
+  },
+  "condition_accuracy": {},
+  "condition_pass_counts": {},
+  "control_noop_guard": {
+    "bit_identical_accuracy_pairs": [],
+    "bit_identical_completion_pairs": [],
+    "condition_accuracy": {},
+    "controls_differentiated": false,
+    "guidance_changes_completion": {
+      "best_of_n": false,
+      "intrinsic_svf": false,
+      "prism_carnot": false
+    },
+    "reason": "no benchmark records",
+    "status": "not_run",
+    "tautology_delta_pairs": []
+  },
+  "controls_differentiated": false,
+  "duration_s": 1.776339,
+  "experiment": 4359,
+  "field_principles": {
+    "benchmark_n": "BARE int: per-arm n -- MUST be >= 80 for a full measurement.",
+    "branch_diversity": "Per-frontier unique-completion count -- a collapsed frontier invalidates a gain.",
+    "controls_differentiated": "BARE bool: true iff no two arms tie bit-identically AND no two delta metrics agree to >5 sig figs.",
+    "honest_verdict": "Terminal-prefixed. A generation gain (Carnot beats the compute-matched + intrinsic controls at fixed NFE -- moat is USEFUL), a CLEAN powered null (controls differentiated + scorer leak-free, but Carnot does not beat best-of-N/SVF -> the in-generation scale-up retires), a controls_not_differentiable, and a scorer_leaky_in_search_corpus are ALL decision-grade.",
+    "model_specs": "DiffusionGemma GGUF + PR binary + leak-robust scorer + Prism/HTS config + N + NFE budget + controls + n + seeds; required methodology.",
+    "nfe_budget": "BARE int: the FIXED denoising-compute (NFE) budget held equal across all arms.",
+    "preconditions_checked": "Records the PR-binary + GGUF + leak-robust-scorer + TRM-stand-down verified.",
+    "random_seed": "Determinism precondition for denoising, search, and bootstrap.",
+    "reproducibility_checksum": "Hash of the search corpus + Prism config + controls + PR-binary inputs.",
+    "s3_gain_ci95": "Task-level bootstrap CI95 (>=2000 resamples) of Carnot minus best-of-N@NFE.",
+    "s3_guided_beats_control": "BARE bool: true iff Carnot-guided search beats best-of-N@matched-NFE AND CI95-excl-0 AND controls_differentiated AND beats intrinsic SVF.",
+    "s3_minus_best_of_n_delta": "BARE float: Carnot minus best-of-N at matched NFE -- the headline Pareto claim.",
+    "s3_minus_intrinsic_svf_delta": "BARE float: Carnot minus intrinsic Self-Verified-Feedback -- external verifier vs the model verifying itself.",
+    "scorer_disagreement_rate": "BARE float: fraction of cases where the external leak-robust scorer and intrinsic SVF pick different frontiers.",
+    "scorer_leak_recheck_passed": "BARE bool: true iff the independent leak re-check survives masking answer cells.",
+    "verifier_is_oracle": "BARE bool=false -- the leak-robust reward head is oracle-distinct."
+  },
+  "honest_verdict": "scorer_leaky_in_search_corpus",
+  "independent_leak_recheck": {
+    "answer_masked_auroc": 0.489306,
+    "answer_masked_cells": 2931,
+    "auroc_floor": 0.6,
+    "fresh_heldout_n": 240,
+    "fresh_heldout_task_n": 80,
+    "protocol": "fresh split; replace answer-bearing canvas cells with mask_token_id",
+    "scorer_leak_recheck_passed": false,
+    "status": "measured",
+    "unmasked_auroc": 0.482917
+  },
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "model_specs": {
+    "best_of_n_baseline": {
+      "n": 4,
+      "nfe_budget": 16,
+      "uses_external_scorer": false
+    },
+    "control_construction": {
+      "control_keys": [
+        "unguided",
+        "best_of_n",
+        "intrinsic_svf"
+      ],
+      "noop_guard": {
+        "bit_identical_accuracy_pairs": [],
+        "bit_identical_completion_pairs": [],
+        "requires_no_bit_identical_generated_text": true,
+        "requires_no_tautology_delta_pairs": true,
+        "tautology_delta_pairs": []
+      }
+    },
+    "diffusiongemma": {
+      "auto_tokenizer_used": false,
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "canvas_len": 256,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "mask_token_id": 4,
+      "model_loaded": true,
+      "pr_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "quantization": "Q4_K_M",
+      "runtime": "llama.cpp PR diffusion-gemma eval binary",
+      "vocab_size": 262144
+    },
+    "independent_leak_recheck": {
+      "answer_masked_auroc": 0.489306,
+      "answer_masked_cells": 2931,
+      "auroc_floor": 0.6,
+      "fresh_heldout_n": 240,
+      "fresh_heldout_task_n": 80,
+      "protocol": "fresh split; replace answer-bearing canvas cells with mask_token_id",
+      "scorer_leak_recheck_passed": false,
+      "status": "measured",
+      "unmasked_auroc": 0.482917
+    },
+    "intrinsic_svf_baseline": {
+      "description": "intrinsic Self-Verified Feedback / self-reward scoring",
+      "paper": "arXiv:2602.01842 and arXiv:2602.01849",
+      "uses_external_scorer": false
+    },
+    "partial_state_scorer": {
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4337_leak_robust_partial_state_scorer_build.json",
+      "masked_answer_recovery_auroc": 0.559682,
+      "process_ranking_auroc": 0.704633,
+      "score_api": "score_partial_state(canvas_ids, step) -> energy",
+      "scorer_leak_audit_passed": true,
+      "scorer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/dina_lrm_partial_state_scorer_exp4337.pkl",
+      "source_experiment": 4337,
+      "verifier_is_oracle": false
+    },
+    "prism_hts_config": {
+      "benchmark_n_measured": 0,
+      "benchmark_n_per_seed": 80,
+      "best_of_n": 4,
+      "bootstrap_resamples": 2500,
+      "compute_matching": {
+        "best_of_n": "N independent free-form samples with total NFE B",
+        "intrinsic_svf": "model self-verified feedback only; no external scorer",
+        "prism_carnot": "HTS frontier with partial-remask local branching scored by Exp 4337 scorer",
+        "unguided": "single free-form denoising trajectory budgeted to NFE B"
+      },
+      "denoising_steps": 4,
+      "frontier_width": 4,
+      "generation_tokens": 4,
+      "guidance_lambda": 2.0,
+      "intrinsic_svf_weight": 2.0,
+      "local_branching_width": 2,
+      "nfe_budget": 16,
+      "noop_guard_tasks": 2,
+      "partial_remask_fraction": 0.25,
+      "prism_reference": "arXiv:2602.01842",
+      "random_seeds": [
+        4359,
+        4360,
+        4361
+      ],
+      "s3_reference": "arXiv:2604.06260",
+      "top_k_per_position": 8
+    },
+    "search_corpus": {
+      "checksum": "9a265b0f2916ce2761646cf4c5169582946ff1c8b6be025294f1874161f71dd4",
+      "item_count": 120,
+      "label_counts": {
+        "free_form_tasks": 120
+      },
+      "mcq_selection_framing": false,
+      "name": "free_form_math_code_v1",
+      "task_type": "free_form_executable_math_code"
+    }
+  },
+  "nfe_budget": 16,
+  "preconditions_checked": [
+    {
+      "command": "ls /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "exists": true,
+      "ok": true,
+      "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-diffusion-gemma-eval",
+      "resource": "pr_binary",
+      "size_bytes": 26400
+    },
+    {
+      "cache_dir": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF",
+      "cache_entries_preview": [
+        "blobs",
+        "refs",
+        "snapshots"
+      ],
+      "cache_error": null,
+      "cache_non_empty": true,
+      "command": "ls /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/",
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "ok": true,
+      "resolve_error": null,
+      "resource": "diffusiongemma_cache"
+    },
+    {
+      "active_training_processes": [],
+      "ok": true,
+      "process_check_error": null,
+      "resource": "trm_training_stand_down",
+      "results_trm_runs_touched": false
+    },
+    {
+      "auto_tokenizer_used": false,
+      "backend": "gguf_metadata",
+      "detail": "llama_cpp vocab_only failed (ValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf); embedded GGUF tokenizer metadata OK",
+      "elapsed_s": 0.79445,
+      "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--diffusiongemma-26B-A4B-it-GGUF/snapshots/aab0a2972da0e41310fbcca5ea63fc47eb932a71/diffusiongemma-26B-A4B-it-Q4_K_M.gguf",
+      "hf_id": "unsloth/diffusiongemma-26B-A4B-it-GGUF",
+      "mode": "embedded_vocab_metadata",
+      "ok": true,
+      "resource": "gguf_vocab_loader",
+      "token_count": 15,
+      "token_ids_preview": [
+        3,
+        236743,
+        3,
+        236743,
+        111359,
+        236743,
+        3,
+        236743
+      ],
+      "vocab_only": false
+    },
+    {
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4337_leak_robust_partial_state_scorer_build.json",
+      "artifact_scorer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/dina_lrm_partial_state_scorer_exp4337.pkl",
+      "masked_answer_recovery_auroc": 0.559682,
+      "ok": true,
+      "probe_energy": 0.329024,
+      "process_ranking_auroc": 0.704633,
+      "resource": "leak_robust_scorer_gate",
+      "scorer_exists": true,
+      "scorer_leak_audit_passed": true,
+      "scorer_loadable": true,
+      "scorer_path": "/home/ianblenke/github.com/ianblenke/carnot/results/dina_lrm_partial_state_scorer_exp4337.pkl",
+      "source_experiment": 4337,
+      "verifier_is_oracle": false
+    },
+    {
+      "checksum": "9a265b0f2916ce2761646cf4c5169582946ff1c8b6be025294f1874161f71dd4",
+      "item_count": 120,
+      "label_counts": {
+        "free_form_tasks": 120
+      },
+      "min_tasks_available_per_seed": 80,
+      "minimum_tasks_per_seed": 80,
+      "name": "free_form_math_code_v1",
+      "ok": true,
+      "reason": "ok",
+      "resource": "prism_free_form_search_corpus",
+      "seed_count": 3
+    }
+  ],
+  "random_seed": 4359,
+  "random_seeds": [
+    4359,
+    4360,
+    4361
+  ],
+  "reproducibility_checksum": "35e89213a3d7459ddb5610b79dbc7ab8eb638684e78d4798febd4a22fe4736d7",
+  "s3_gain_ci95": [
+    0.0,
+    0.0
+  ],
+  "s3_guided_beats_control": false,
+  "s3_minus_best_of_n_delta": 0.0,
+  "s3_minus_intrinsic_svf_delta": 0.0,
+  "s3_minus_unguided_delta": 0.0,
+  "schema": "prism_hardened_verifier_guided_search_v1",
+  "scorer_disagreement_rate": 0.0,
+  "scorer_leak_recheck_passed": false,
+  "search_corpus_check": {
+    "checksum": "9a265b0f2916ce2761646cf4c5169582946ff1c8b6be025294f1874161f71dd4",
+    "item_count": 120,
+    "label_counts": {
+      "free_form_tasks": 120
+    },
+    "min_tasks_available_per_seed": 80,
+    "minimum_tasks_per_seed": 80,
+    "name": "free_form_math_code_v1",
+    "ok": true,
+    "reason": "ok",
+    "resource": "prism_free_form_search_corpus",
+    "seed_count": 3
+  },
+  "seed_count": 3,
+  "spec_refs": [
+    "REQ-VERIFY-4359",
+    "SCENARIO-VERIFY-4359"
+  ],
+  "verifier_is_oracle": false
+}
