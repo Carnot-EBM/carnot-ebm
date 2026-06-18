@@ -1,0 +1,47 @@
+{
+  "experiment": "arc3_full_pass_scorecard",
+  "n_games": 2,
+  "l1_first_contact_solved": 1,
+  "solve_rate": 0.5,
+  "solved_games": [
+    "sp80"
+  ],
+  "class_breakdown": {
+    "SOLVED": 1,
+    "FAIL_EXPLORATION": 1
+  },
+  "research_backlog_by_failure_class": [
+    {
+      "failure_class": "FAIL_EXPLORATION",
+      "games_blocked": 1,
+      "example_games": [
+        "cd82"
+      ],
+      "research_capability": "curiosity/directed exploration -- growth-aware + multi-instance state keys, deeper/novelty-weighted coverage to stumble deep wins"
+    }
+  ],
+  "per_game": [
+    {
+      "game": "sp80",
+      "class": "SOLVED",
+      "actions": 4,
+      "agent": 9,
+      "win_stumbled": true,
+      "goal": 6,
+      "dur_s": 3.4
+    },
+    {
+      "game": "cd82",
+      "class": "FAIL_EXPLORATION",
+      "actions": null,
+      "agent": 4,
+      "win_stumbled": false,
+      "goal": null,
+      "dur_s": 1.0
+    }
+  ],
+  "total_duration_s": 4.4,
+  "scope": "L1 first-contact solvability; multi-level continuation is a noted follow-on",
+  "honest_verdict": "complete_full_pass_l1_solve_rate_1_of_2",
+  "inference_substrate": "offline_arc_agi3_generalized_first_contact_no_banked_solve"
+}

@@ -1807,3 +1807,11 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - candidate design: mine divergent active traces for the named residual, add transition tests, and count progress only through the offline reproduce() gate
 - priority: high
 <!-- exp4388-gap-e3-world-model-rule-ft09-l2-4384:end -->
+
+### GAP-4392-FIRST-ERROR-GAP-4-ARC-arc_candidate_process_proxy: Exp 4392 first-error residual
+- status: open
+- evidence: `results/experiment_4392_verifiable_process_data_localizer.json`; missed_first_error_traces=16 on GAP-4 ARC / arc_candidate_process_proxy.
+- failure mode: the synthetic-trained earliest-error localizer ranked a downstream inheritor or proxy candidate ahead of the first error.
+- missing discriminator: A domain feature that separates the first causal process break from later inherited or candidate-order artifacts.
+- candidate design: Add typed domain-specific prefix checks and train a leave-domain-out contrastive earliest-error objective.
+- priority: medium

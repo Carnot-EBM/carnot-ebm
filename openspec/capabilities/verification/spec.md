@@ -19214,6 +19214,76 @@ positive cross-domain detector claim.
 |---|---|---|
 | REQ-VERIFY-4386 | Implemented (`python/carnot/experiment_4386_cross_domain_detection_generalization.py`, `results/experiment_4386_cross_domain_detection_generalization.py`) | Implemented (`tests/python/test_experiment_4386_cross_domain_detection_generalization.py`) |
 
+### REQ-VERIFY-4392: Verifiable Process Data First-Error Localizer
+
+The repository SHALL provide Exp 4392 at
+`python/carnot/experiment_4392_verifiable_process_data_localizer.py` and
+`results/experiment_4392_verifiable_process_data_localizer.py` to synthesize
+verifiable first-error process traces, train a CPU-only contrastive
+earliest-error localizer, and evaluate first-error localization against the
+Exp 4381 ensemble baseline `0.096` on held-out REAL FoVer traces and the cached
+GAP-4 ARC split. The experiment SHALL NOT train TRM models, SHALL NOT invoke
+live generation, and SHALL use any SOTA GGUF only as an optional cached
+natural-language realizer; the localizer fit and evaluation SHALL be cached and
+CPU-only.
+
+Before synthesis or scoring, the runner SHALL check that the cached FoVer
+step-labeled corpus, the GAP-4 ARC candidate pool, Exp 4381 baseline artifact,
+`ops/verifier_registry.yaml`, and the verifier ensemble scoring path are
+loadable; that a symbolic/executable prefix-verification path exists for
+FoVer-math arithmetic traces; and that TRM training is stood down. If the
+cached corpora or ensemble are unavailable, it SHALL write an honest
+`blocked_cached_corpus_or_ensemble_unavailable` artifact and stop. If no domain
+admits prefix verification, it SHALL write an honest
+`blocked_no_prefix_verification_path` artifact and stop.
+
+When preconditions hold, the runner SHALL synthesize at least 1000 arithmetic
+process traces by constructing a correct symbolic chain, injecting a
+template-aware error at known step `k`, recomputing all suffix steps under the
+corrupted state, verifying that step `k` is not derivable from its valid prefix,
+and verifying that suffix steps are trajectory-consistent with the corrupted
+state. The fitted localizer SHALL use synthetic labels only, SHALL expose
+contrastive earliest-error weights or equivalent CPU parameters, and SHALL
+evaluate first-error localization F1 on the held-out real FoVer traces and the
+cached GAP-4 ARC process-proxy split. Each domain result SHALL report the
+Exp 4381 ensemble baseline `0.096`, the synthetic-trained localizer F1, the
+delta, and a paired bootstrap CI95 with at least 2000 resamples.
+
+The terminal artifact SHALL write
+`results/experiment_4392_verifiable_process_data_localizer.json` with top-level
+fields `honest_verdict`, bare bool `localizer_beats_ensemble_baseline`,
+`localization_f1_by_domain`, `synthesis_verification`,
+`structured_abstention`, bare int `n_traces`, bare bool
+`verifier_is_oracle=false`, `preconditions_checked`, `random_seed`,
+`random_seeds_used`, `reproducibility_checksum`, `model_specs`,
+`missing_verifier_gaps`, `field_principles`, `spec_refs`, `duration_s`,
+`inference_substrate=verifier_ensemble_against_cached_candidates`, and
+`adversarial_verify`. `localizer_beats_ensemble_baseline` SHALL be true iff the
+synthetic-trained localizer's first-error F1 exceeds `0.096` and the delta CI95
+excludes zero on at least one held-out real evaluation domain. Clean nulls SHALL
+be reported as decision-grade when synthetic process data does not transfer.
+
+### SCENARIO-VERIFY-4392: Synthetic First-Error Labels Transfer Or Produce A Clean Null
+
+Given the FoVer step-labeled corpus, GAP-4 ARC candidate pool, Exp 4381
+baseline artifact, verifier registry, and arithmetic prefix verifier are
+available, when Exp 4392 runs, then it verifies at least 1000 synthetic
+first-error traces, fits the localizer using only synthetic labels, evaluates
+FoVer and GAP-4 ARC held-out splits against the `0.096` ensemble baseline,
+reports bootstrap delta CI95 by domain, emits structured report/abstain metrics
+with risk-coverage points, precision@recall=0.9, base rate, and random-score
+control, sets `verifier_is_oracle=false`, records model specs and a
+reproducibility checksum, and runs adversarial verification. If a domain's
+residual error class cannot be localized, then the artifact SHALL expose a
+missing-verifier gap entry and append the corresponding ledger entry to
+`ops/verifier_gaps.md` without touching the conductor.
+
+## Implementation Status (REQ-VERIFY-4392)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4392 | Implemented (`python/carnot/experiment_4392_verifiable_process_data_localizer.py`, `results/experiment_4392_verifiable_process_data_localizer.py`) | Implemented (`tests/python/test_experiment_4392_verifiable_process_data_localizer.py`) |
+
 ### REQ-VERIFY-4388: Registry/Gaps Hygiene, GAP-4 Guard, And Durable Capstone Stamp For .405 Truth
 
 The repository SHALL provide Exp 4388 at
