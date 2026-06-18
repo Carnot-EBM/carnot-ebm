@@ -1,6 +1,49 @@
 import numpy as np
 
 
+def greedy_rewrite(seq, rules):
+    """Apply tr87's left-to-right first-prefix rewrite once."""
+    out = []
+    pos = 0
+    seq = tuple(seq)
+    normalized = [(tuple(lhs), tuple(rhs)) for lhs, rhs in rules]
+    while pos < len(seq):
+        for lhs, rhs in normalized:
+            if seq[pos : pos + len(lhs)] == lhs:
+                out.extend(rhs)
+                pos += len(lhs)
+                break
+        else:
+            return None
+    return tuple(out)
+
+
+def rewrite_passes(seq, rules, passes):
+    """Apply the greedy tr87 rewrite for one or more passes."""
+    cur = tuple(seq)
+    for _ in range(passes):
+        cur = greedy_rewrite(cur, rules)
+        if cur is None:
+            return None
+    return cur
+
+
+def transition_fixture():
+    """Executable fixture for the localized two-pass rewrite mismatch."""
+    rules = [
+        (("A4",), ("B3",)),
+        (("B3",), ("C6", "C1")),
+    ]
+    expected = ("C6", "C1")
+    observed = rewrite_passes(("A4",), rules, 2)
+    return {
+        "transition": "tr87:L7:two_pass_greedy_rewrite",
+        "expected": expected,
+        "observed": observed,
+        "passed": observed == expected,
+    }
+
+
 def _advance_timer(out):
     if out.ndim != 2 or out.shape[0] == 0:
         return out

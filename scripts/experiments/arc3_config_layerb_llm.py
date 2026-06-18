@@ -130,6 +130,42 @@ Return ONLY one ```python code block with def is_win.
 """
 
 
+def _generate_bounded(proposer, prompt, n_predict=1100, tries=2):
+    """Bounded completion against the proposer's iGPU llama-server. The iGPU runs ~4.2 tok/s, so the
+    proposer default (n_predict=4096) needs ~975s and trips the 900s timeout. We cap n_predict at 1100
+    (~260s, safely bounded). NO ``` stop sequence: gemma re-emits ```python at the start of its output,
+    which a ``` stop matches immediately (empty output). We capture the raw text and extract the code
+    block. Returns (ok, code_or_msg, raw_sample) -- raw_sample lets the artifact self-document what the
+    model actually produced (e.g. the degenerate comment-rambling that proves a scene-reading limit, not
+    a plumbing bug). Reuses the proposer's server lifecycle (_ensure_server/stop)."""
+    import ast
+    import json as _json
+    import urllib.request
+    from carnot.agentic.arc_executable_world_model import _extract_python
+    if not proposer._ensure_server():
+        return False, f"GPU llama-server failed for {proposer.repo_substr} (no CPU fallback)", ""
+    last = ""; raw = ""
+    for attempt in range(tries):
+        body = _json.dumps({"prompt": prompt, "n_predict": n_predict,
+                            "temperature": 0.2 + 0.1 * attempt, "cache_prompt": True}).encode()
+        try:
+            req = urllib.request.Request(proposer._url() + "/completion", data=body,
+                                         headers={"Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=proposer.timeout) as r:
+                raw = _json.load(r).get("content", "")
+        except Exception as e:
+            return False, f"local gguf (GPU server) failed: {e!r}"[:200], raw
+        code = _extract_python(raw) or raw
+        if "def is_win" not in code:
+            last = "no def is_win in output (model rambled, never wrote the predicate)"; continue
+        try:
+            ast.parse(code)
+        except SyntaxError as se:
+            last = f"syntax error line {se.lineno}: {se.msg}"; continue
+        return True, code, raw
+    return False, f"local model code unusable after {tries} tries ({last})", raw
+
+
 def verify(is_win, win, nonwins):
     res = {"fires_on_win": None, "false_positive_rate": None, "n_nonwin": len(nonwins)}
     try:
@@ -159,14 +195,19 @@ def main():
         (REPO / "results" / f"arc3_config_layerb_llm_{GAME}.json").write_text(json.dumps(out, indent=2, default=str))
         print(f"  -> {out['honest_verdict']}", flush=True)
         return 0
-    # iGPU is ~10x slower than a 3090: a 4096-token rule needs >300s. 900s avoids a false timeout.
-    proposer = e3.LocalGGUFProposer(repo_substr="gemma-4-12B-it", port=8920, timeout=900)
+    # iGPU is ~10x slower than a 3090. The proposer default (n_predict=4096, NO stop) runs PAST 900s on
+    # the iGPU because the model generates to max_tokens. We bound it: the prompt primes ```python so the
+    # model starts coding immediately; cap n_predict low and STOP at the closing fence. An is_win
+    # predicate is short (~300-600 tokens), so 1200 + a fence-stop captures it in a fraction of the time.
+    proposer = e3.LocalGGUFProposer(repo_substr="gemma-4-12B-it", port=8920, timeout=600)
     out = {"experiment": "arc3_config_layerb_llm", "game": GAME,
            "editable_cells": int(ch.sum()), "win_editable_colors": sorted(set(int(win[r, c]) for r, c in np.argwhere(ch))),
+           "generation": {"n_predict": 1100, "stop": None, "bounded": True, "igpu_tok_per_s": 4.2},
            "inference_substrate": "offline_arc_agi3_layerb_llm_scene_reader_iGPU_port8920"}
     try:
-        ok, code = proposer.generate(build_prompt(scene, ch), required=("is_win",))
+        ok, code, raw = _generate_bounded(proposer, build_prompt(scene, ch))
         out["llm_proposed_rule"] = bool(ok)
+        out["raw_sample"] = str(raw)[:800]  # self-documents what the model actually produced
         if not ok:
             out["honest_verdict"] = "complete_layerb_llm_failed_to_propose_rule_local_gguf_insufficient"
             out["msg"] = str(code)[:200]
