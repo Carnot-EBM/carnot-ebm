@@ -8713,3 +8713,4 @@ c |
 | 2026-06-18 08:05 UTC | PHASE C1 (IN-GENERATION ACCURACY moat; REPAIR-OR-R | OK | 92 passed, 1 warning in 7.40s |
 | 2026-06-18 08:26 UTC | PHASE D1 (ORACLE-DISTINCT ACCURACY complementary m | OK | 90 passed, 1 warning in 9.86s |
 | 2026-06-18 08:41 UTC | PHASE E1 (SOTA-ingestion; mandatory per SOTA-Inges | OK | 106 passed, 1 warning in 5.27s |
+| 2026-06-18 09:01 UTC | PHASE E2 (INFRA/HYGIENE) -- registry/gaps hygiene  | OK | 88 passed, 1 warning in 4.92s |
