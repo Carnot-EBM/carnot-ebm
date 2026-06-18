@@ -58,12 +58,23 @@ component digest) — exactly the editable↔reference relation we wanted. The v
    array echoed in a *comment*. Both fixed (strip comments; explicit `None` check). The model had
    grounded a relational rule before the scoring was corrected.
 
-### tr87 result
+### tr87 result: Tier 0 — coherent but not grounded
 
-Re-run with the same generic scaffold (verdict pending at time of writing — the iGPU generation is
-slow; will be appended). tr87 is the hardest class (glyph **rewrite**, not a count), so it tests
-whether the generic component-digest scaffold transfers to rewrite rules or whether that class needs a
-different digest (e.g. a per-glyph mapping table).
+`complete_scaffolded_tier0_coherent_but_rule_not_grounded` — `coherent=True`, `grounded=False`,
+`literal=False`. The headline is still a win for the thesis: scaffolding **fixed the reading problem
+even for tr87** — no degeneration this time (move #1 made tr87 ramble a wrong rule; here it wrote clean
+code: `e = grid[48:64, 15:64]`). But it did not ground, for a concrete structural reason: tr87's
+editable region is **768 cells (16×48, 2-D)**, vs ka59's 38-cell 1-D strip. The flat `values=[…]`
+digest of a 768-cell region is itself 768 numbers; the model spent its **entire 1100-token budget
+echoing that array as a comment** and never reached a `return` (so `is_win` returns `None` →
+`fires_on_win=False`).
+
+Conclusion: the **generic count/component digest does not transfer to the rewrite class** — not because
+the model can't read (it can now), but because a 2-D glyph rewrite over a 768-cell region needs a
+**rewrite-specific digest**: don't dump 768 raw values; characterise the editable region as a grid of
+glyph cells and supply the rewrite **mapping** the reference defines (a per-glyph lookup), so the
+induced predicate is `for each cell: e[cell] == map(reference, cell)` rather than a flat comparison.
+This was the predicted failure mode (a per-glyph mapping table), now confirmed.
 
 ## Implications
 
