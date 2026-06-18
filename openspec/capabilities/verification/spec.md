@@ -19089,6 +19089,70 @@ claim.
 |---|---|---|
 | REQ-VERIFY-4375 | Implemented (`python/carnot/experiment_4375_verifier_as_detector_measurement.py`, `results/experiment_4375_verifier_as_detector_measurement.py`) | Implemented (`tests/python/test_experiment_4375_verifier_as_detector_measurement.py`) |
 
+### REQ-VERIFY-4385: Detector Self-Learning Compounding Curve
+
+The repository SHALL provide Exp 4385 at
+`python/carnot/experiment_4385_detector_self_learning_compounds.py` and
+`results/experiment_4385_detector_self_learning_compounds.py` to measure whether
+the oracle-distinct FoVer detector improves on a fixed held-out split as labeled
+step traces accumulate. The experiment SHALL use cached step-labeled FoVer
+traces only, reuse the Exp 4381 BiPRM detector scoring path, fit only detector
+operating thresholds and L2R/R2L fusion weights, and SHALL NOT train TRM models
+or invoke live generation.
+
+Before fitting, the runner SHALL check that the labeled step corpus, Exp 4381
+detector configuration artifact, Exp 4375 detector baseline artifact, verifier
+registry, and cached scoring path are loadable, and that TRM training is stood
+down. If any required detector or corpus resource is unavailable, it SHALL write
+an honest `blocked_detector_or_corpus_unavailable` artifact and stop without
+fabricated learning-curve metrics.
+
+When preconditions hold, the runner SHALL create a deterministic accumulating
+train stream plus a fixed held-out evaluation set with at least 1000 held-out
+traces. At increasing train-corpus sizes, it SHALL fit detector fusion weights
+and an operating threshold on the accumulated train prefix, then report held-out
+localization-F1, AUROC, and selective-risk. It SHALL also report a no-learning
+baseline using equal L2R/R2L weights and a fixed threshold, and a positive
+control using a from-scratch detector fit on the full train corpus. The
+compounding delta SHALL be bootstrapped as the final-minus-initial held-out
+localization-F1 CI95. `detector_compounds` SHALL be true only when the
+final-minus-initial CI95 excludes zero on the positive side, the final held-out
+metric beats the no-learning baseline, and the positive control confirms
+non-trivial ceiling headroom existed. If the positive control shows no headroom,
+the artifact SHALL emit a clean saturated-null verdict and record cross-domain
+detection as the fresh-headroom direction.
+
+The terminal artifact SHALL write
+`results/experiment_4385_detector_self_learning_compounds.json` with top-level
+fields `honest_verdict`, bare bool `detector_compounds`, `learning_curve`, bare
+float `no_learning_baseline`, bare bool `positive_control_passed`,
+`compounding_delta_ci95`, bare bool `verifier_is_oracle=false`,
+`preconditions_checked`, `random_seed`, `reproducibility_checksum`,
+`model_specs`, `field_principles`, `spec_refs`, `duration_s`,
+`inference_substrate=verifier_ensemble_against_cached_candidates`, and
+`adversarial_verify`.
+
+### SCENARIO-VERIFY-4385: Detector Held-Out Curve Reports Compounding Or Saturation
+
+Given the cached FoVer step-labeled corpus, Exp 4381 detector configuration,
+Exp 4375 detector baseline, and verifier registry are available, when Exp 4385
+runs, then it scores cached traces, fits threshold and BiPRM fusion weights over
+accumulating train prefixes, evaluates a fixed held-out split with at least 1000
+traces, reports `learning_curve`, `no_learning_baseline`,
+`positive_control_passed`, `compounding_delta_ci95`, and bare
+`detector_compounds`, sets `verifier_is_oracle=false`, embeds model specs and a
+reproducibility checksum, and runs adversarial verification. If required inputs
+are unavailable, then the artifact SHALL emit
+`honest_verdict=blocked_detector_or_corpus_unavailable`,
+`detector_compounds=false`, `learning_curve=[]`,
+`positive_control_passed=false`, and no positive compounding claim.
+
+## Implementation Status (REQ-VERIFY-4385)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4385 | Implemented (`python/carnot/experiment_4385_detector_self_learning_compounds.py`, `results/experiment_4385_detector_self_learning_compounds.py`) | Implemented (`tests/python/test_experiment_4385_detector_self_learning_compounds.py`) |
+
 ### REQ-VERIFY-4377: Registry/Gaps Hygiene, GAP-4 Guard, And Durable Capstone Stamp For .404 Truth
 
 The repository SHALL provide Exp 4377 at
