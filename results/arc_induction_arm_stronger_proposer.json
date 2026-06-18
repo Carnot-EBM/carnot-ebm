@@ -1,0 +1,16 @@
+{
+  "experiment": "arc_induction_arm_stronger_proposer",
+  "question": "does a STRONGER world-model proposer close the gap-1 floor games (gemma-4-12B closed 0/6)?",
+  "gemma_4_12B": "0/6 (ar25/cn04/ka59/sc25/sk48/wa30 all L0; ~310s/game)",
+  "qwen_3_6_35B_A3B": "0/6 (identical L0; valid run on isolated port 8920)",
+  "smoking_gun": "the per-game ACTION COUNTS are byte-identical across both models (ar25 7763, cn04 7843, ka59 7728, sc25 7677, sk48 7859, wa30 7818) -> the E3 induce->verify->plan produced a NO-OP plan in BOTH runs (engine fails the verifier-accuracy/plan gate), so the agent fell back to pure exploration and the PROPOSER MODEL NEVER MATTERED.",
+  "honest_verdict": "complete_stronger_proposer_no_help_0of6_induction_pipeline_is_a_no_op_not_model_size_limited",
+  "conclusion": "Model SIZE is not the lever. A 3x-bigger flagship proposer (35B MoE vs 12B) closes 0/6 with identical fallback-explore paths -- the E3 induce->verify->plan pipeline does not produce a usable plan on these games AT ALL. The bottleneck is the induction PIPELINE (the induced engine's accuracy is below the plan gate), not which model induces it.",
+  "next_levers": [
+    "INSTRUMENT the E3 pipeline: log the induced-engine verifier accuracy + whether plan_in_model returns a plan, on a gap-1 game. Determine WHICH stage fails (induce accuracy < 0.5 gate? planner? explore budget of 80 transitions too small to induce from?). Fix the failing stage, not the model.",
+    "RFT the proposer on our banked (frames -> correct engine) solves -- teach induction the game families we already RE'd, rather than a bigger zero-shot model.",
+    "Larger EXPLORE budget before induction (80 transitions may be too few to induce a usable engine)."
+  ],
+  "process_note": "a port-collision (LocalGGUFProposer hardcodes 8919, reuses any server there w/o a model check) made the FIRST Qwen run silently use a stale gemma server; fixed by pinning this eval's proposer to port 8920. The proposer also LEAKS its llama-server on exit -- cleaned up manually.",
+  "inference_substrate": "offline_sim_no_quota_frame_only_e3_local_gguf_induction"
+}
