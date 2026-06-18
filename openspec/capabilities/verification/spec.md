@@ -19283,6 +19283,80 @@ positive calibrated multi-domain detector claim.
 |---|---|---|
 | REQ-VERIFY-4397 | Implemented (`python/carnot/experiment_4397_cross_domain_detection_calibration.py`, `results/experiment_4397_cross_domain_detection_calibration.py`) | Implemented (`tests/python/test_experiment_4397_cross_domain_detection_calibration.py`) |
 
+### REQ-VERIFY-4408: Deconfounded Cross-Domain Detector Calibration Repair
+
+The repository SHALL provide Exp 4408 at
+`python/carnot/experiment_4408_cross_domain_detection_calibration_repair.py`
+and `results/experiment_4408_cross_domain_detection_calibration_repair.py` to
+repair the Exp 4397 calibrated multi-domain detector readout by building proper
+n>=300 cached pools and separating base-rate/multi-valid-answer effects before
+leave-one-domain-out calibration. The experiment SHALL score only existing
+cached candidates, SHALL NOT invoke live generation, SHALL NOT train TRM models,
+and SHALL treat the measurement as verifier-as-DETECTOR calibration rather than
+cross-domain selection.
+
+Before scoring, the runner SHALL check that cached FoVer, GAP-4 ARC, HumanEval
+code, and GSM8K candidate sources are loadable where available; that code and
+GSM8K can each reach n>=300 from existing cached candidates; and that at least
+two non-FoVer domains reach n>=300 after Semantic Confidence Aggregation (SCA).
+If a domain is present but underpowered, the artifact SHALL record
+`report_n_only_scope_claim` for that domain and continue with powered domains.
+If fewer than two non-FoVer domains are powered, it SHALL write
+`honest_verdict=blocked_insufficient_pools_for_multi_domain_claim`,
+`detection_calibrated_multi_domain=false`, `detection_by_domain=[]`, and stop
+without fabricated metrics.
+
+When preconditions hold, the runner SHALL apply Semantic Confidence Aggregation
+(arXiv:2602.07842 mapping from Exp 4398) by grouping semantically equivalent
+candidate answers or verifier-success modes inside each domain and aggregating
+their confidence before calibration. The artifact SHALL record per-domain
+pre-SCA and post-SCA base rates, answer cardinality, raw candidate counts,
+semantic group counts, and any label-conflict groups so base-rate and
+multi-valid-answer effects are separated from genuine calibration failure. It
+SHALL then compute detection AUROC, CI95 by bootstrap, a random-score control,
+uncalibrated ECE, leave-one-domain-out Platt-calibrated ECE, and risk-coverage
+for each scored domain.
+
+`detection_calibrated_multi_domain` SHALL be a bare bool true iff, after
+SCA/base-rate separation, the detection AUROC CI95 lower bound exceeds 0.5 on
+at least two non-FoVer domains and every powered leave-one-domain-out held-out
+domain has calibrated ECE below its uncalibrated baseline. Any domain whose
+deconfounded AUROC CI95 includes 0.5 SHALL be listed in `domains_at_chance` and
+SHALL produce a missing-verifier gap entry.
+
+The terminal artifact SHALL write
+`results/experiment_4408_cross_domain_detection_calibration_repair.json` with
+top-level fields `honest_verdict`, bare bool
+`detection_calibrated_multi_domain`, `detection_by_domain`,
+`base_rate_separation`, bare bool `verifier_is_oracle=false`,
+`preconditions_checked`, `cited_upstream_artifacts`, `random_seed`,
+`reproducibility_checksum`, `model_specs`, `missing_verifier_gaps`,
+`field_principles`, `spec_refs`, `duration_s`,
+`inference_substrate=verifier_ensemble_against_cached_candidates`, and
+`adversarial_verify`.
+
+### SCENARIO-VERIFY-4408: Proper Pools And SCA Decide The Multi-Domain Detector Contract
+
+Given cached FoVer, GAP-4 ARC, HumanEval code, and GSM8K candidate sources are
+available and at least two non-FoVer domains reach n>=300 after SCA, when Exp
+4408 runs, then it reports each scored domain as `{domain, n, base_rate,
+answer_cardinality, detection_auroc, auroc_ci95, ece_uncalibrated,
+ece_lodo_calibrated, risk_coverage, random_score_control}`, records
+`base_rate_separation` for the raw-to-SCA transformation, cites upstream cached
+artifacts with SHA256 hashes, sets `verifier_is_oracle=false`, sets
+`detection_calibrated_multi_domain` from the CI95-lower-bound plus
+ECE-improvement rule, and runs adversarial verification. If fewer than two
+non-FoVer domains are powered, then the artifact SHALL emit
+`honest_verdict=blocked_insufficient_pools_for_multi_domain_claim`,
+`detection_calibrated_multi_domain=false`, `detection_by_domain=[]`, and no
+positive calibrated multi-domain detector claim.
+
+## Implementation Status (REQ-VERIFY-4408)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4408 | Implemented (`python/carnot/experiment_4408_cross_domain_detection_calibration_repair.py`, `results/experiment_4408_cross_domain_detection_calibration_repair.py`) | Implemented (`tests/python/test_experiment_4408_cross_domain_detection_calibration_repair.py`) |
+
 ### REQ-VERIFY-4399: Registry/Gaps Hygiene, GAP-4 Guard, And Durable Capstone Stamp For .406 Truth
 
 The repository SHALL provide Exp 4399 at

@@ -2003,3 +2003,12 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - missing discriminator: Non-degenerate multi-position real intervention labels with content features that beat a position-only first-error baseline.
 - candidate design: Collect multi-step FoVer interventions with non-empty suffix redirects and typed first-error families before retrying active trace selection.
 - priority: high
+
+### GAP-4408-CODE-HUMANEVAL-DECONFOUNDED-DETECTOR-CHANCE
+- status: open
+- domain: code_humaneval
+- failure_mode: Deconfounded detection AUROC CI95 includes chance on code_humaneval after SCA; n=539.
+- missing_discriminator: A domain-native oracle-distinct verifier feature that separates semantically grouped correct answers from plausible wrong answers.
+- candidate_design: Add a verifier score that targets the residual wrong mode, then rerun Exp 4408 with the same SCA and LODO calibration gate.
+- priority: high
+
