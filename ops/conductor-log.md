@@ -8749,3 +8749,4 @@ c |
 | 2026-06-18 20:13 UTC | Plan milestone 2026.06.407 | OK | 11 tasks proposed |
 | 2026-06-18 20:15 UTC | Milestone 2026.06.407 activated | OK | 11 tasks queued |
 | 2026-06-18 20:35 UTC | Archive .406 -> activate .407. Assert research-com | OK | 96 passed, 1 warning in 14.14s |
+| 2026-06-18 20:55 UTC | PHASE A1 (HEADLINE; oracle-distinct LOCALIZER, DEC | OK | 88 passed, 1 warning in 10.62s |
