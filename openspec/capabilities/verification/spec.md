@@ -19354,6 +19354,77 @@ graduated.
 |---|---|---|
 | REQ-VERIFY-4393 | Implemented (`python/carnot/experiment_4393_localizer_skeptic_proof.py`, `results/experiment_4393_localizer_skeptic_proof.py`) | Implemented (`tests/python/test_experiment_4393_localizer_skeptic_proof.py`) |
 
+### REQ-VERIFY-4396: Localizer Self-Learning Compounding Curve
+
+The repository SHALL provide Exp 4396 at
+`python/carnot/experiment_4396_localizer_self_learning_compounds.py` and
+`results/experiment_4396_localizer_self_learning_compounds.py` to measure
+whether the Exp 4392 oracle-distinct first-error localizer improves on a fixed
+held-out split as labeled synthetic and real process traces accumulate. The
+experiment SHALL use cached corpora only, SHALL fit CPU-only localizer weights
+against cached labels, SHALL NOT train TRM models, and SHALL NOT invoke live
+generation.
+
+Before fitting, the runner SHALL check that the Exp 4392 artifact is loadable
+and contains a fitted localizer, that the labeled synthetic-plus-real process
+corpus can be reconstructed from cached inputs, that the Exp 4381 `.405`
+ensemble first-error localization baseline `0.096` is available, that the
+verifier registry is loadable, and that TRM training is stood down. If Exp 4392
+has no fitted localizer but the cached Exp 4385 detector-compounding artifact is
+loadable, the runner SHALL honestly set `fallback_to_ensemble=true` and report
+the ensemble-detector localization-compounding reading over the cached corpus.
+If neither the localizer/corpus nor fallback detector reading is loadable, the
+runner SHALL write `honest_verdict=blocked_localizer_or_corpus_unavailable` and
+stop without fabricated learning-curve metrics.
+
+When localizer preconditions hold, the runner SHALL create a deterministic
+accumulating train stream plus a fixed held-out evaluation set with at least
+1000 held-out traces. At increasing train-corpus sizes such as 10%, 25%, 50%,
+and 100%, it SHALL fit a from-scratch localizer on the accumulated prefix and
+measure held-out first-error localization-F1. It SHALL report the no-learning
+baseline as the bare float `0.096`, a positive control using the from-scratch
+full-train-corpus localizer as the ceiling, and a bootstrap CI95 for the
+final-minus-initial held-out first-error localization-F1. `localizer_compounds`
+SHALL be true only when the final-minus-initial CI95 excludes zero on the
+positive side, the final held-out localization-F1 beats the no-learning baseline,
+and the positive control confirms non-trivial ceiling headroom. A flat curve
+with a passing positive control SHALL be reported as a clean saturated null, not
+as a blocked or fabricated win.
+
+The terminal artifact SHALL write
+`results/experiment_4396_localizer_self_learning_compounds.json` with top-level
+fields `honest_verdict`, bare bool `localizer_compounds`, `learning_curve`, bare
+float `no_learning_baseline`, bare bool `positive_control_passed`,
+`compounding_delta_ci95`, bare bool `fallback_to_ensemble`, bare bool
+`verifier_is_oracle=false`, `preconditions_checked`, `random_seed`,
+`random_seeds_used`, `reproducibility_checksum`, `model_specs`,
+`field_principles`, `spec_refs`, `duration_s`,
+`inference_substrate=verifier_ensemble_against_cached_candidates`, and
+`adversarial_verify`.
+
+### SCENARIO-VERIFY-4396: Localizer Held-Out Curve Reports Compounding Or Saturation
+
+Given the Exp 4392 localizer artifact, cached synthetic/real labeled process
+corpus, Exp 4381 ensemble baseline, and verifier registry are available, when
+Exp 4396 runs, then it fits localizers over accumulating train prefixes,
+evaluates a fixed held-out split with at least 1000 traces, reports
+`learning_curve`, `no_learning_baseline`, `positive_control_passed`,
+`compounding_delta_ci95`, and bare `localizer_compounds`, sets
+`fallback_to_ensemble=false`, sets `verifier_is_oracle=false`, embeds model
+specs and a reproducibility checksum, and runs adversarial verification. If the
+localizer is unavailable but Exp 4385 is loadable, then the artifact SHALL set
+`fallback_to_ensemble=true` and identify the fallback in `preconditions_checked`
+and `model_specs`. If neither measurement target is loadable, then the artifact
+SHALL emit `honest_verdict=blocked_localizer_or_corpus_unavailable`,
+`localizer_compounds=false`, `learning_curve=[]`, `positive_control_passed=false`,
+and no positive compounding claim.
+
+## Implementation Status (REQ-VERIFY-4396)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-4396 | Implemented (`python/carnot/experiment_4396_localizer_self_learning_compounds.py`, `results/experiment_4396_localizer_self_learning_compounds.py`) | Implemented (`tests/python/test_experiment_4396_localizer_self_learning_compounds.py`) |
+
 ### REQ-VERIFY-4388: Registry/Gaps Hygiene, GAP-4 Guard, And Durable Capstone Stamp For .405 Truth
 
 The repository SHALL provide Exp 4388 at
