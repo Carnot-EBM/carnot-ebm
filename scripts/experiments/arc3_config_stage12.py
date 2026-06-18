@@ -114,7 +114,7 @@ def classify_target(T, prewin, E):
     return "c_relational_or_unknown"
 
 
-def executor_solve(game, E, T_grid, GameAction, max_expansions=4000):
+def executor_solve(game, E, T_grid, GameAction, max_expansions=10000):
     """STAGE 2: best_first_search clicking editable cells, heuristic = mismatch(editable now, T), toward
     a real level-up. The real env applies the recolor; we only supply the click candidates + target."""
     import copy as _copy
@@ -152,14 +152,19 @@ def executor_solve(game, E, T_grid, GameAction, max_expansions=4000):
         g = np.asarray(grid_of(frame))
         # candidates = click OBJECT centroids that lie in the editable region (config games respond to
         # clicks on objects/components, not bare cells); prefer objects currently mismatching the target.
-        objs = [(int(y), int(x)) for (y, x) in objects(g)]
-        in_edit = [(y, x) for (y, x) in objs if (y, x) in Eset] or objs
-        if g.shape == T.shape:
-            in_edit.sort(key=lambda yx: 0 if g[yx[0], yx[1]] != T[yx[0], yx[1]] else 1)
+        av = list(getattr(frame, "available_actions", []) or [])
+        cands = [(a, None, None) for a in av if a not in (0, 6)]   # keyboard (mixed kbd+click games)
+        if 6 in av:
+            objs = [(int(y), int(x)) for (y, x) in objects(g)]
+            in_edit = [(y, x) for (y, x) in objs if (y, x) in Eset] or objs
+            if g.shape == T.shape:
+                in_edit.sort(key=lambda yx: 0 if g[yx[0], yx[1]] != T[yx[0], yx[1]] else 1)
+            cands += [(6, x, y) for (y, x) in in_edit[:20]]
         out = []
-        for (y, x) in in_edit[:24]:                     # cap branching for tractability
+        for c in cands:
             e2 = _copy.deepcopy(env)
-            nf = e2.step(_game_action(GameAction, 6), data={"x": x, "y": y})
+            data = {"x": c[1], "y": c[2]} if c[0] == 6 else None
+            nf = e2.step(_game_action(GameAction, c[0]), data=data)
             if nf is None:
                 continue
             ng = np.asarray(grid_of(nf))
@@ -168,7 +173,7 @@ def executor_solve(game, E, T_grid, GameAction, max_expansions=4000):
             gh = frame_hash(ng)
             if gh not in reg:
                 reg[gh] = (e2, nf)
-            out.append(((6, x, y), {"gh": gh, "h": mismatch(ng), "level": _levels_completed(nf)}))
+            out.append((c, {"gh": gh, "h": mismatch(ng), "level": _levels_completed(nf)}))
         return out
 
     res = best_first_search(start, next_states=next_states, is_goal=is_goal,
