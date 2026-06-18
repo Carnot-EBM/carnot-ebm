@@ -23775,6 +23775,96 @@ not claim `.403` was archived successfully.
 |---|---|---|
 | REQ-REPORT-4369 | Planned (`python/carnot/reporting/archive_v403_activate_v404_4369.py`, `python/carnot/experiment_4369_archive_v403_activate_v404.py`, `results/experiment_4369_archive_v403_activate_v404.py`) | Planned (`tests/python/test_experiment_4369_archive_v403_activate_v404.py`) |
 
+### REQ-REPORT-4380: Archive .404, Activate .405, And Preserve The True Close-State
+
+The Exp 4380 workflow SHALL archive milestone `2026.06.404`, confirm milestone
+`2026.06.405` is active, and write the record-only artifact
+`results/experiment_4380_archive_v404_activate_v405.json`. It SHALL run NO live
+model training: its `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`, it SHALL record that the conductor stays
+stood down on TRM training, and it SHALL NOT modify
+`scripts/research_conductor.py`.
+
+Before writing the complete artifact or editing `research-complete.yaml`, the
+workflow SHALL verify these preconditions and stop with a `blocked_<resource>`
+honest verdict if any fail:
+
+- `research-complete.yaml` and `ops/exclusion_manifest.yaml` parse under
+  `yaml.safe_load`.
+- The smart-subset pre-test gate is green.
+
+The workflow SHALL ensure `research-complete.yaml` contains a single `.404`
+archive record, appending the canonical `.404` record only when absent and
+removing duplicate top-level `.404` records if interrupted conductor appends
+created any. The workflow SHALL keep `research-complete.yaml` parseable after
+the edit and SHALL record `activation_recorded:
+exp4380-archive-v404-activate-v405` on the `.404` archive row.
+
+The complete-path `honest_verdict` SHALL start with one of `complete:`,
+`success:`, `passed:`, or `shipped:`. `v404_close_state` SHALL truthfully record
+the Exp 4379 capstone scorecard corrected by the authoritative ARC solve
+registry: the efficiency moat is SETTLED as `linear_is_settled` because Exp
+4370 reports `llm_heuristic_beats_linear=false` in a clean powered null, while
+the moat itself remains REAL and DEPLOYED from Exp 4364 with held-out
+env-actions `25 -> 16` and `verifier_is_oracle=false`; the in-generation
+DiffusionGemma moat is RETIRED on the fourth block because Exp 4374 reports
+`retired_in_generation_conversion_unmeasurable`, `s3_moat_utility=retired`,
+`scorer_requalified_leak_clean=false`, `codila_control_differentiates=false`,
+and `benchmark_n=0`; DETECTION is the one ALIVE oracle-distinct vehicle because
+Exp 4375 reports `detector_auroc=0.918304`, CI95 lower `0.909296`,
+`detector_beats_chance=true`, selection headroom `0.0`, n `8829`, and
+`verifier_is_oracle=false`.
+
+The close-state SHALL record ARC progress as `33 -> 34` reproducible levels
+across `17` games from `ops/arc_solve_registry.yaml`, with lp85 +1 and the
+ar25/ka59/ft09 L2 tails still blocked. It SHALL record
+`flagged_for_v405=biprm_processbench_detector_localization_v405` from Exp 4376,
+cross-game value transfer as RETIRED from Exp 4342, cross-domain selection as
+RETIRED from Exp 4314, `paper_ready=true`, and SHALL frame `.405` as
+deepen-the-detector-into-actionable-localization+abstention plus ARC-deeper plus
+self-learning-compounds-detector plus cross-domain-detection-generalization, not
+as a re-open of the settled or retired axes.
+
+The artifact SHALL include these field-principle strings exactly:
+
+- `honest_verdict`: "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:."
+- `v404_close_state`: "Honest record (EFFICIENCY moat SETTLED but real+deployed; in-generation RETIRED 4th block; DETECTION the one ALIVE oracle-distinct vehicle AUROC 0.918; ARC 34 levels/17 games; flagged_for_v405=biprm_processbench_detector_localization_v405; cross-game transfer + cross-domain selection RETIRED; paper_ready=True) so the .405 agents frame the milestone as deepen-the-detector-into-actionable-localization+abstention + ARC-deeper + self-learning-compounds-detector + cross-domain-detection-generalization -- NOT a re-open of the settled/retired axes."
+- `preconditions_checked`: "Records resources verified; pre-empts the silent-missing-resource fabrication mode."
+
+#### SCENARIO-REPORT-4380: The Archive Records The True .404 Close-State
+
+**Given** `.404` has the Exp 4379 capstone, Exp 4370 clean powered null, Exp
+4374 in-generation retirement, Exp 4375 detector-positive measurement, Exp 4376
+`flagged_for_v405` evidence, the ARC solve registry with 34 reproducible levels
+across 17 games, parseable history and exclusion-manifest YAML files, a green
+smart-subset pre-test gate, and `.405` active
+**When** the Exp 4380 archive workflow runs
+**Then** it archives `.404`, confirms `.405`, keeps the YAML history parseable
+with one `.404` record, writes
+`results/experiment_4380_archive_v404_activate_v405.json`, records the
+efficiency moat as SETTLED but real/deployed 25->16, records the in-generation
+DiffusionGemma direction as RETIRED on its fourth block, records DETECTION as
+the one ALIVE oracle-distinct vehicle with AUROC 0.918 and zero selection
+headroom, records ARC 34/17 with `33 -> 34` progress, records
+`flagged_for_v405`, records cross-game transfer and cross-domain selection
+RETIRED, records `paper_ready=true`, records the checked resources in
+`preconditions_checked`, declares `aggregation_from_upstream_artifacts`, and
+emits a terminal-prefixed honest verdict.
+
+#### SCENARIO-REPORT-4380-BLOCKED-PRECONDITION: Missing Resources Block Without Fabrication
+
+**Given** any required precondition is absent or red
+**When** the Exp 4380 archive workflow runs
+**Then** it writes a blocked artifact whose `honest_verdict` starts with
+`blocked_`, records the failed resource in `preconditions_checked`, and does
+not claim `.404` was archived successfully.
+
+## Implementation Status (REQ-REPORT-4380)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-4380 | Planned (`python/carnot/reporting/archive_v404_activate_v405_4380.py`, `python/carnot/experiment_4380_archive_v404_activate_v405.py`, `results/experiment_4380_archive_v404_activate_v405.py`) | Planned (`tests/python/test_experiment_4380_archive_v404_activate_v405.py`) |
+
 ### REQ-REPORT-4134: Archive .382, Activate .383, And Preserve The Fixed-LR Close-State
 
 The Exp 4134 workflow SHALL archive milestone `2026.06.382`, confirm milestone

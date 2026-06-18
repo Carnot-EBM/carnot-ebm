@@ -1,0 +1,286 @@
+{
+  "activated_milestone": "2026.06.405",
+  "active_milestone_confirmed": "2026.06.405",
+  "active_roadmap_path": "research-roadmap.yaml",
+  "archived_milestone": "2026.06.404",
+  "cited_upstream_artifacts": [
+    {
+      "deliverable": "results/experiment_4379_capstone_v404.json",
+      "experiment_id": "4379",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "ae2d3c2882059efe86a4b220f709bc5eeb1dd3a9aae107c08e0df6b73349b202"
+    },
+    {
+      "deliverable": "results/experiment_4370_llm_generated_action_cost_heuristics.json",
+      "experiment_id": "4370",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "9a14d9c825b2d3a3f17c3413a4d93dbed6fb8f4e9017a308bbf3e2db1bbca561"
+    },
+    {
+      "deliverable": "results/experiment_4364_self_learning_action_cost_compounds.json",
+      "experiment_id": "4364",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "a7c7638a718a277f35cb0ebf20b78957eaa6d1e6c9776b2a8f6349c4f4b9e9bf"
+    },
+    {
+      "deliverable": "results/experiment_4374_diffusiongemma_scorer_repair_or_retire.json",
+      "experiment_id": "4374",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "273402eccc4c8a6e20b5cdf7bb702d700a8febb3d007f229870d86d6a0230c20"
+    },
+    {
+      "deliverable": "results/experiment_4375_verifier_as_detector_measurement.json",
+      "experiment_id": "4375",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "0a1eee866e7036c2d32fd7aaaba3b45f0c638f2771fccc2a0892debfe4d5b586"
+    },
+    {
+      "deliverable": "results/experiment_4376_sota_ingestion_v405.json",
+      "experiment_id": "4376",
+      "kind": "artifact",
+      "required": true,
+      "sha256": "40d7ec6895334c5e7aed1b08963437f5bf7b904843638c570fc54224615711d8"
+    },
+    {
+      "deliverable": "ops/arc_solve_registry.yaml",
+      "experiment_id": "arc_solve_registry",
+      "kind": "document",
+      "required": true,
+      "sha256": "27e0bcc1fa3f4b7441684d9bcf1dd105e4580d1316d8c3199f4886b6952b12a3"
+    },
+    {
+      "deliverable": "research-roadmap.yaml",
+      "experiment_id": "v405_active_roadmap",
+      "kind": "document",
+      "required": true,
+      "sha256": "81adf59ea194a6073bdf9f4ba37b81593138e33f29d6a7f56def94c0604da328"
+    },
+    {
+      "deliverable": "openspec/change-proposals/research-roadmap-v405.md",
+      "experiment_id": "v405_design_doc",
+      "kind": "document",
+      "required": true,
+      "sha256": "96f79fd0a56e0e5a46a884be142ab76598fe3a43619765294b4ca6e2ec6bd6da"
+    },
+    {
+      "deliverable": "ops/exclusion_manifest.yaml",
+      "experiment_id": "exclusion_manifest",
+      "kind": "document",
+      "required": true,
+      "sha256": "3bb7d1c55216cdae9ceb0468c383e5acf2c08c248b95ed620d4cb79697cb8bf3"
+    }
+  ],
+  "duration_s": 11.938785,
+  "exclusion_manifest_parses": true,
+  "experiment_id": 4380,
+  "field_principles": {
+    "activated_milestone": "Confirms .405 is live for the detector-actionability frame.",
+    "active_milestone_confirmed": "Records the active roadmap milestone actually observed.",
+    "archived_milestone": "Provenance: the milestone being closed, 2026.06.404.",
+    "duration_s": "Positive bare wall-clock for this record-only aggregation.",
+    "exclusion_manifest_parses": "Bare bool: the exclusion manifest survived safe_load.",
+    "honest_verdict": "Self-declared terminal state lets the reconciler classify success without re-running; MUST start with complete:/success:/passed:/shipped:.",
+    "inference_substrate": "Declares aggregation only; no live training happens in this task.",
+    "preconditions_checked": "Records resources verified; pre-empts the silent-missing-resource fabrication mode.",
+    "pretest_suite_green": "Bare bool: the smart-subset pre-test gate was green before edits.",
+    "research_complete_yaml_parses": "Bare bool: the history YAML survived safe_load.",
+    "v404_close_state": "Honest record (EFFICIENCY moat SETTLED but real+deployed; in-generation RETIRED 4th block; DETECTION the one ALIVE oracle-distinct vehicle AUROC 0.918; ARC 34 levels/17 games; flagged_for_v405=biprm_processbench_detector_localization_v405; cross-game transfer + cross-domain selection RETIRED; paper_ready=True) so the .405 agents frame the milestone as deepen-the-detector-into-actionable-localization+abstention + ARC-deeper + self-learning-compounds-detector + cross-domain-detection-generalization -- NOT a re-open of the settled/retired axes."
+  },
+  "honest_verdict": "success: archived_v404_v405_active_efficiency_linear_settled_s3_retired_detector_alive_arc34_games17_pretest_green",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "preconditions_checked": {
+    "active_milestone": {
+      "actual": "2026.06.405",
+      "expected": "2026.06.405",
+      "matches": true,
+      "path": "research-roadmap.yaml"
+    },
+    "exclusion_manifest_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "ops/exclusion_manifest.yaml"
+    },
+    "research_complete_yaml": {
+      "exists": true,
+      "parses": true,
+      "path": "research-complete.yaml"
+    },
+    "smart_subset_pretest": {
+      "command": [
+        ".venv/bin/pytest",
+        "tests/python/test_pipeline_extract.py",
+        "tests/python/test_docs.py",
+        "tests/python/test_experiment_4380_archive_v404_activate_v405.py",
+        "-q",
+        "--no-header",
+        "-n",
+        "0",
+        "--no-cov",
+        "-o",
+        "addopts="
+      ],
+      "exit_code": 0,
+      "green": true,
+      "stderr_tail": "",
+      "stdout_tail": "........................................................................ [ 80%]\n.................                                                        [100%]\n=============================== warnings summary ===============================\npython/carnot/extraction/coace_extractor.py:122\n  /home/ianblenke/github.com/ianblenke/carnot/python/carnot/extraction/coace_extractor.py:122: DeprecationWarning: ast.Num is deprecated and will be removed in Python 3.14; use ast.Constant instead\n    if hasattr(ast, \"Num\"):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n89 passed, 1 warning in 4.63s\n"
+    },
+    "source_artifacts": {
+      "4364": {
+        "exists": true,
+        "path": "results/experiment_4364_self_learning_action_cost_compounds.json",
+        "required": true,
+        "sha256": "a7c7638a718a277f35cb0ebf20b78957eaa6d1e6c9776b2a8f6349c4f4b9e9bf"
+      },
+      "4370": {
+        "exists": true,
+        "path": "results/experiment_4370_llm_generated_action_cost_heuristics.json",
+        "required": true,
+        "sha256": "9a14d9c825b2d3a3f17c3413a4d93dbed6fb8f4e9017a308bbf3e2db1bbca561"
+      },
+      "4374": {
+        "exists": true,
+        "path": "results/experiment_4374_diffusiongemma_scorer_repair_or_retire.json",
+        "required": true,
+        "sha256": "273402eccc4c8a6e20b5cdf7bb702d700a8febb3d007f229870d86d6a0230c20"
+      },
+      "4375": {
+        "exists": true,
+        "path": "results/experiment_4375_verifier_as_detector_measurement.json",
+        "required": true,
+        "sha256": "0a1eee866e7036c2d32fd7aaaba3b45f0c638f2771fccc2a0892debfe4d5b586"
+      },
+      "4376": {
+        "exists": true,
+        "path": "results/experiment_4376_sota_ingestion_v405.json",
+        "required": true,
+        "sha256": "40d7ec6895334c5e7aed1b08963437f5bf7b904843638c570fc54224615711d8"
+      },
+      "4379": {
+        "exists": true,
+        "path": "results/experiment_4379_capstone_v404.json",
+        "required": true,
+        "sha256": "ae2d3c2882059efe86a4b220f709bc5eeb1dd3a9aae107c08e0df6b73349b202"
+      },
+      "arc_solve_registry": {
+        "exists": true,
+        "path": "ops/arc_solve_registry.yaml",
+        "required": true,
+        "sha256": "27e0bcc1fa3f4b7441684d9bcf1dd105e4580d1316d8c3199f4886b6952b12a3"
+      },
+      "exclusion_manifest": {
+        "exists": true,
+        "path": "ops/exclusion_manifest.yaml",
+        "required": true,
+        "sha256": "3bb7d1c55216cdae9ceb0468c383e5acf2c08c248b95ed620d4cb79697cb8bf3"
+      },
+      "v405_active_roadmap": {
+        "exists": true,
+        "path": "research-roadmap.yaml",
+        "required": true,
+        "sha256": "81adf59ea194a6073bdf9f4ba37b81593138e33f29d6a7f56def94c0604da328"
+      },
+      "v405_design_doc": {
+        "exists": true,
+        "path": "openspec/change-proposals/research-roadmap-v405.md",
+        "required": true,
+        "sha256": "96f79fd0a56e0e5a46a884be142ab76598fe3a43619765294b4ca6e2ec6bd6da"
+      }
+    }
+  },
+  "pretest_suite_green": true,
+  "random_seed": 4380,
+  "reproducibility_checksum": "f8e4af84af4d3f512acc37c1b7200b85e0631ebb1f2ca11799b0ae03b7832f20",
+  "research_complete_duplicates_removed": 0,
+  "research_complete_record_action": "updated",
+  "research_complete_yaml_parses": true,
+  "schema": "carnot.archive_activation.v404_to_v405_4380.v1",
+  "spec_refs": [
+    "REQ-REPORT-4380",
+    "SCENARIO-REPORT-4380"
+  ],
+  "task_id": "exp4380-archive-v404-activate-v405",
+  "v404_close_state": {
+    "action_efficiency_compounds": true,
+    "action_efficiency_positive_control_passed": true,
+    "action_efficiency_reproduction_gated": true,
+    "action_reduction": 9,
+    "arc_blocked_tails": [
+      "ar25_l2_action7_undo_stack",
+      "ka59_l2_hidden_step_counter_hud",
+      "ft09_l2_residual_world_model_mismatch"
+    ],
+    "arc_capstone_snapshot_reproducible_total_levels": 34,
+    "arc_lp85_plus_one": true,
+    "arc_new_games_since_prior": 0,
+    "arc_new_levels_since_prior": 1,
+    "arc_prior_reproducible_total_games": 17,
+    "arc_prior_reproducible_total_levels": 33,
+    "arc_progress_statement": "33_to_34_reproducible_levels_17_games",
+    "arc_registry_observed_total_games": 17,
+    "arc_registry_observed_total_levels": 34,
+    "arc_reproducible_total_games": 17,
+    "arc_reproducible_total_levels": 34,
+    "benchmark_n": 0,
+    "capstone_honest_verdict": "complete: v404_efficiency_linear_is_settled_arc_levels_34_s3_retired_detector_positive_publication_ready",
+    "codila_control_differentiates": false,
+    "conductor_stands_down_on_trm_training": true,
+    "controls_differentiated": false,
+    "cross_domain_axis_state": "RETIRED_EXP4314_DOMAIN_BOUND",
+    "cross_domain_manifest_reflected": true,
+    "cross_game_value_transfer_axis_state": "RETIRED_EXP4342_THIRD_NULL",
+    "cross_game_value_transfer_manifest_reflected": true,
+    "deployed_efficiency_honest_verdict": "success: action_efficiency_compounds_25_to_16",
+    "deployed_efficiency_moat_real": true,
+    "deployed_into_solver_kit": true,
+    "detector_auroc": 0.918304,
+    "detector_auroc_ci95": [
+      0.909296,
+      0.926923
+    ],
+    "detector_auroc_ci95_lower": 0.909296,
+    "detector_axis_state": "ALIVE_ORACLE_DISTINCT_VEHICLE",
+    "detector_beats_chance": true,
+    "detector_honest_verdict": "complete: detector_beats_chance_zero_selection_headroom_fover",
+    "detector_n_candidates": 8829,
+    "detector_verifier_is_oracle": false,
+    "diffusiongemma_honest_verdict": "retired_in_generation_conversion_unmeasurable",
+    "efficiency_moat_axis_state": "SETTLED_LINEAR_IS_NEAR_OPTIMAL",
+    "efficiency_moat_state": "linear_is_settled",
+    "efficiency_null_honest_verdict": "complete: clean_powered_null_linear_not_beaten",
+    "efficiency_verifier_is_oracle": false,
+    "flagged_for_v405": "biprm_processbench_detector_localization_v405",
+    "fourth_consecutive_block": true,
+    "held_out_actions_by_heuristic": {
+      "bfs_baseline": 646,
+      "linear": 646,
+      "llm_generated": 646
+    },
+    "held_out_actions_first": 25,
+    "held_out_actions_last": 16,
+    "in_generation_retired": true,
+    "llm_heuristic_beats_linear": false,
+    "llm_static_leakage_clean": true,
+    "not_reopen_settled_or_retired_axes": true,
+    "outer_loop_owns_trm_training": true,
+    "paper_ready": true,
+    "publication_unmet_gates": [],
+    "retirement_reason": "scorer_leaky_and_codila_not_differentiating",
+    "s3_conversion_axis_state": "RETIRED_FOURTH_BLOCK",
+    "s3_guided_beats_control": false,
+    "s3_moat_utility": "retired",
+    "s3_verifier_is_oracle": false,
+    "scorer_requalified_leak_clean": false,
+    "selection_headroom": 0.0,
+    "selection_oracle_at_k": 0.812097,
+    "selection_vote_at_1": 0.812097,
+    "summary": "efficiency_settled_s3_retired_detector_alive_arc34_v405_actionable",
+    "v405_frame": "DEEPEN_DETECTOR_ACTIONABLE_LOCALIZATION_ABSTENTION_ARC_DEEPER_SELF_LEARNING_COMPOUNDS_DETECTOR_CROSS_DOMAIN_DETECTION_GENERALIZATION",
+    "v405_headline": "make_detector_actionable",
+    "verifier_thesis_state": "linear_settled_in_generation_retired_detector_positive"
+  }
+}
