@@ -1815,3 +1815,11 @@ docs/research-notes/arc-live-generalization-gap-2026-06-17.md. The two builds th
 - missing discriminator: A domain feature that separates the first causal process break from later inherited or candidate-order artifacts.
 - candidate design: Add typed domain-specific prefix checks and train a leave-domain-out contrastive earliest-error objective.
 - priority: medium
+
+### GAP-4393-LOCALIZER-POSITION-OR-TEMPLATE-CONFOUND: Exp 4393 localizer skeptic-proof residual
+- status: open
+- evidence: `results/experiment_4393_localizer_skeptic_proof.json`.
+- confounder: position_only_baseline_ties_a1
+- missing discriminator: A held-out real split with non-degenerate first-error positions.
+- candidate design: Collect or construct REAL first-error traces with varied first-error positions and retrain the localizer with template-family holdouts.
+- priority: high
