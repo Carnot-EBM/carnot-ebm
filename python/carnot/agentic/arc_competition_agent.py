@@ -155,16 +155,19 @@ class StepwiseExplorer:
                                       "value": self._value(latest)})
 
     def _frontier(self) -> Optional[str]:
-        # BRIDGE: with a value head, expand the frontier state the learned head predicts is CLOSEST to a
-        # level-up (best-first by value, depth as tiebreak) -- the cross-game routing. Without it, fall
-        # back to the proven shallowest-first (BFS) order. (key = (value, depth); both minimized.)
+        # BRIDGE: the frontier is ordered DEPTH-PRIMARY (shallowest-first = the proven BFS order that
+        # finds the easy wins), with the cross-game value head only breaking TIES among equal-depth
+        # frontier states (lower predicted steps-to-level-up first). Depth-primary is load-bearing: a
+        # value-OVERRIDE (value before depth) measurably REGRESSED the baseline (the weak generic-feature
+        # head misroutes away from shallow wins -- cd82/ls20/m0r0 dropped gap-0 -> L0). Tie-break only
+        # provably cannot regress below BFS; it can only help when many frontier states share a depth.
         use_value = self.value_head is not None
         best = None
         best_key = None
         for h, node in self.graph.items():
             if not node["untested"]:
                 continue
-            key = (node.get("value", 0.0), len(node["path"])) if use_value else (len(node["path"]),)
+            key = (len(node["path"]), node.get("value", 0.0)) if use_value else (len(node["path"]),)
             if best is None or key < best_key:
                 best, best_key = h, key
         return best
