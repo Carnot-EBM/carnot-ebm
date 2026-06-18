@@ -76,6 +76,28 @@ glyph cells and supply the rewrite **mapping** the reference defines (a per-glyp
 induced predicate is `for each cell: e[cell] == map(reference, cell)` rather than a flat comparison.
 This was the predicted failure mode (a per-glyph mapping table), now confirmed.
 
+### tr87 rewrite digest: a from-PIXELS glyph-substitution verifier (partial)
+
+`arc3_config_layerb_glyph_tr87.py` — `complete_glyph_pixel_decode_partial_not_grounded`. Reframing:
+tr87's mechanic is **known** (the adapter RE'd it 2026-06-17 — a glyph substitution), so its Layer-B
+verifier is a **deterministic glyph-decode + rewrite check**, not an LLM induction (LLM induction is for
+*unknown* mechanics like ka59). The original solve read the game's **internal state** and explicitly
+deferred "classifying glyph bitmaps + decoding the rule grid from pixels" — this is that pixel upgrade.
+
+Fully RE'd tr87's pixel structure: glyph **value = the 5-on bitmap pattern** of a 5×5 sprite (frame-
+agnostic); **A-series** (target + rule LHS) are colour-10-framed, **B-series** (editable + rule RHS) are
+colour-7-framed; 3 rule bands give 6 (A→B) pairs; win = `editable_B == [map[a] for a in target_A]`.
+
+What works: the **glyph-segmentation primitive** (split a sprite band into 5×5 tiles by on-pixel column
+gaps; `value_id` = on-pixel-bbox bitmap) cleanly segments **every** region (editable, target, 3 rule
+bands) into w=5 tiles, and the rule-band A10/B7 pairing decodes 6 rules correctly. The editable B-glyphs
+match the rule RHS 3/5. What does not (yet): the **target A-glyphs match the rule LHS only 1/5** — the
+same glyph value renders to slightly different bitmaps across regions (18 distinct ids for ~7 values), so
+exact-bitmap clustering over-splits. The honest boundary: **segmentation is solved; cross-region glyph-
+value identity needs a tolerant matcher** (Hamming-nearest or a learned 7-way glyph classifier), not
+exact bitmap equality. This is a reusable sprite-glyph perception primitive — the rewrite-class analogue
+of the connected-component digest that grounded ka59 — one robustness step short of grounding.
+
 ## Implications
 
 - **The scaffolding thesis is validated end-to-end**: an offline 12B that *cannot* read a raw 64×64
