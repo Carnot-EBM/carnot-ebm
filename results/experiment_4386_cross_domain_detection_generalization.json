@@ -1,0 +1,157 @@
+{
+  "adversarial_verify": {
+    "returncode": 0,
+    "stderr_tail": "",
+    "stdout_tail": "Scanned 1 artifact(s); 0 flagged.\n\n"
+  },
+  "bootstrap_resamples": 2500,
+  "detection_by_domain": [
+    {
+      "auroc_ci95": [
+        0.922285,
+        0.990662
+      ],
+      "base_rate": 0.001688,
+      "claim_scope": "n>=1000",
+      "detection_auroc": 0.963317,
+      "domain": "gap4_arc",
+      "n": 28443,
+      "random_score_auroc_control": {
+        "auroc": 0.497011,
+        "replicates": 128,
+        "seed": 4386
+      },
+      "score_orientation": "higher_verifier_score_means_more_likely_correct",
+      "selection_headroom": 0.129,
+      "valid_but_wrong_restricted_auroc": 0.963316,
+      "valid_but_wrong_restricted_n": 28437,
+      "valid_wrong_negative_n": 28389
+    }
+  ],
+  "detector_generalizes_cross_domain": true,
+  "domains_at_chance": [],
+  "duration_s": 4.646,
+  "experiment": "experiment_4386_cross_domain_detection_generalization",
+  "field_principles": {
+    "detection_by_domain": "list of {domain, detection_auroc, auroc_ci95, selection_headroom, n, base_rate} -- the per-domain detection-vs-selection DIVERGENCE (detect where you cannot select), the honest cross-domain reading.",
+    "detector_generalizes_cross_domain": "BARE bool: the capstone reads this (gated-fields-must-be-bare); true iff detection AUROC CI95 lower bound > 0.5 on >=1 NON-FoVer domain -- the detection capability is a GENERAL Carnot property, not FoVer-specific.",
+    "domains_at_chance": "list[str]: domains where detection AUROC CI95 includes 0.5 -- each LOGGED as a missing-verifier gap (the product backlog the operator directed us to grow).",
+    "honest_verdict": "Terminal-prefixed. A generalization win (detection beats chance on a NON-FoVer domain -- the verifier-domain-expansion step) and an honest null (detection is FoVer-bound -> a logged missing-verifier gap = the product backlog) are BOTH decision-grade.",
+    "model_specs": "The verifier ensemble + the non-FoVer corpora + the selection-headroom source + n per domain; required methodology.",
+    "preconditions_checked": "Records the non-FoVer cached pool + ensemble + TRM-stand-down verified; pre-empts the silent-missing-resource fabrication mode.",
+    "random_seed": "Determinism precondition for the (stochastic) ensemble scoring + the bootstrap.",
+    "reproducibility_checksum": "Hash of the cross-domain pools + the ensemble config + the AUROC computation; lets a third party re-run.",
+    "verifier_is_oracle": "BARE bool=false -- a learned/energy detection signal scored against cached candidates, oracle-distinct."
+  },
+  "honest_verdict": "success: detector_generalizes_cross_domain_non_fover",
+  "inference_substrate": "verifier_ensemble_against_cached_candidates",
+  "missing_verifier_gaps": [],
+  "model_specs": {
+    "arc_selection_headroom_summary": "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_trm_verifier_rerank.json",
+    "bootstrap_method": "stratified_candidate_bootstrap",
+    "bootstrap_resamples": 2500,
+    "ensemble_registry_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/verifier_registry.yaml",
+    "live_generation": false,
+    "non_fover_corpora": {
+      "gap4_arc": {
+        "base_rate": 0.001688,
+        "claim_scope": "n>=1000",
+        "n": 28443,
+        "selection_headroom": 0.129
+      }
+    },
+    "random_score_control_replicates": 128,
+    "random_seed": 4386,
+    "random_seeds_used": [
+      4386
+    ],
+    "score_sources": {
+      "biprm_detector_config": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4381_biprm_detector_localization_abstention.json",
+      "fover_detector_baseline": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4375_verifier_as_detector_measurement.json",
+      "gap4_arc": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4244_arc_set_encoder_aggregator_model.json"
+    },
+    "selection_headroom_source": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4175_headroom_gate_executable_census.json",
+    "source_paths": [
+      "/home/ianblenke/github.com/ianblenke/carnot/ops/verifier_registry.yaml",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4375_verifier_as_detector_measurement.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4381_biprm_detector_localization_abstention.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4175_headroom_gate_executable_census.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/arc3_trm_verifier_rerank.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1999_code_verification_humaneval.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/adversarial_gsm8k_data_400.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4244_arc_set_encoder_aggregator_model.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_4243_arc_candidate_pool_grow_pool.json.gz"
+    ],
+    "trm_training": "stood_down_not_invoked",
+    "unavailable_domains": [
+      {
+        "domain": "code_humaneval_mbpp",
+        "reason": "labeled_candidates=100; missing candidate source text or cached verifier_score per output"
+      },
+      {
+        "domain": "gsm8k",
+        "reason": "datasets_present_but_no_multicandidate_verifier_scores"
+      }
+    ],
+    "verifier_ensemble_id": "cross_domain_cached_detector_suite",
+    "verifier_is_oracle": false
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "loaded verifier registry",
+      "resource": "verifier_registry"
+    },
+    {
+      "available": true,
+      "detail": "detector_auroc present",
+      "resource": "fover_detector_baseline"
+    },
+    {
+      "available": true,
+      "detail": "model_specs present",
+      "resource": "biprm_detector_config"
+    },
+    {
+      "available": true,
+      "detail": "per_domain_headroom present",
+      "resource": "selection_headroom_census"
+    },
+    {
+      "available": true,
+      "detail": "oracle_ceiling present",
+      "resource": "gap4_arc_rerank_summary"
+    },
+    {
+      "available": true,
+      "detail": "gap4_arc:n=28443",
+      "resource": "non_fover_cached_scored_pool"
+    },
+    {
+      "available": true,
+      "detail": "not invoked; Exp 4386 scores cached candidates and cached detector outputs only",
+      "resource": "trm_training_stand_down"
+    }
+  ],
+  "random_seed": 4386,
+  "random_seeds_used": [
+    4386
+  ],
+  "reproducibility_checksum": "sha256:c3f6b02402ed4fedd5e5416a406f0ca17198c1c98a75caa12e8a36e858a836a1",
+  "schema": "carnot.cross_domain_detection_generalization.v1",
+  "spec_refs": [
+    "REQ-VERIFY-4386",
+    "SCENARIO-VERIFY-4386"
+  ],
+  "unavailable_domains": [
+    {
+      "domain": "code_humaneval_mbpp",
+      "reason": "labeled_candidates=100; missing candidate source text or cached verifier_score per output"
+    },
+    {
+      "domain": "gsm8k",
+      "reason": "datasets_present_but_no_multicandidate_verifier_scores"
+    }
+  ],
+  "verifier_is_oracle": false
+}
